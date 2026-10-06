@@ -225,6 +225,45 @@ export const EAL_SCHOOL_CLAIM = /\b(EAL|Eastern Athletic League) (school|member)
 export const SEED_CLAIM =
   /(?:\b(?:\d+(?:st|nd|rd|th)|No\. ?\d+|\d+|top|first|second|third|fourth|fifth|sixth|last|lowest|highest|bottom)|#\d+)[- ]seed(?:ed|s)?\b|\bseed(?:ed)? (?:No\. ?|#)?\d+\b|\bseeded (?:first|second|third|fourth|fifth|sixth|last|\d+(?:st|nd|rd|th))\b/i;
 
+// ---------------------------------------------------------------- the SoCal leagues (DESIGN-socal §2.4)
+//
+// The Southern California amendment's claims no page may make. Like the EAL's, each is a sourced fact
+// the copy must not contradict: the Sunset is a field-hockey-only grouping of ten Southern Section
+// schools, NOT the all-sports Sunset League (an Orange County league with other members:
+// research-cifss.md §2a; si.com's Sunset table even carries a Los Alamitos 0-0 phantom), and no SoCal
+// league publishes the rules this site orders its tables by (orderScope 'site'). The non-CCS ban on
+// "at-large" / "automatic qualifier" (scripts/assert-copy.ts forbidCcs) and SEED_CLAIM also cover
+// the SoCal pages: assert-copy applies them by postseason kind.
+
+/**
+ * "Sunset League", which names the all-sports league, said where it is not set apart from it: the
+ * rule reads sentence by sentence (sunsetLeagueClaims) and lets a sentence through only when it also
+ * says "all-sports" ("…, not the all-sports Sunset League."). Case-sensitive, as names are: "Sunset
+ * league games" (MaxPreps' flag, lower case) and "the Sunset field hockey league" are not the name.
+ */
+export const SUNSET_LEAGUE_CLAIM = /\bSunset League\b/;
+
+/**
+ * "Sunset school(s)" or "Sunset member(s)": the copy says "Sunset teams", because the ten belong to a
+ * field hockey grouping, not to a league of schools (EAL_SCHOOL_CLAIM's twin). Case-sensitive.
+ */
+export const SUNSET_SCHOOL_CLAIM = /\bSunset (?:school|member)s?\b/;
+
+/** The sentences of `text` that say "Sunset League" without "all-sports"; [] when clean. */
+export function sunsetLeagueClaims(text: string): string[] {
+  return sentences(text)
+    .filter((s) => SUNSET_LEAGUE_CLAIM.test(s) && !/\ball-sports\b/i.test(s))
+    .map((s) => s.trim());
+}
+
+/**
+ * "rules require" (any case): never on the pages of a league whose table order is this site's own
+ * (LeagueRules.orderScope 'site': the Sunset, City, North County, Metro). No document of theirs
+ * requires anything, so "as {league} rules require" would be false (components/standings/
+ * standings-view.ts orders them with "this site’s 3-1-0 points"). Applied per page by assert-copy.
+ */
+export const RULES_REQUIRE_CLAIM = /\brules require\b/i;
+
 /**
  * Named entities visibleText decodes: React writes text as characters and escapes only `& < > " '`,
  * so these are the escapes plus the typographic names a hand-written string might carry.

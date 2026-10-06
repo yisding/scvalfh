@@ -7,10 +7,16 @@
  * `Date.now()` — so the build is reproducible and the "as of" stamp in the header is honest.
  *
  * The page carries EVERY league's panel in its static HTML; which one shows is decided before first
- * paint by `<html data-league>` and the scope stylesheet (SPEC §8.2). So every view below is built
- * for all five leagues, and all 49 pinned-card views are serialized for the client (the pin, and
- * therefore the league, is known only in the browser). Budget: serialized `teamViews` ≤ 60 KB
- * (tests/ui/home-weight.test.ts) — each view is a handful of strings, never a `Game`.
+ * paint by `<html data-league>`, `<html data-region>` and the scope stylesheet (SPEC §8.2,
+ * DESIGN-socal §2.4). So every view below is built for all nine leagues and the independents, and all 102 pinned-card views
+ * are serialized for the client (the pin, and therefore the league, is known only in the browser).
+ * Budget: serialized `teamViews` (tests/ui/home-weight.test.ts) — each view is a handful of strings,
+ * never a `Game`.
+ *
+ * Region (DESIGN-socal §2.4): the first-visit blocks that summarise "every league" (the status line's
+ * league list, the latest-results block, the league cards' grid) are built once per region, and a
+ * panel's "Other leagues" strip names only the leagues of its own region: a NorCal family does not
+ * need the San Diego leaders under its league, and the region toggle is how a reader crosses over.
  */
 
 import {
@@ -53,23 +59,28 @@ import {
 } from '../../lib/format';
 import { gameHref } from '../../lib/game-id';
 import { hasHistory } from '../../lib/history';
-import { outcomesFor, statusBadge } from '../../lib/standings';
+import { outcomesFor, playoffOutcomeLabel, statusBadge } from '../../lib/standings';
 import {
   CCS,
+  REGIONS,
   divisionHeading,
   getDivision,
   getLeague,
+  isIndependentLeague,
+  standingsLabel,
   isSingleDivision,
   leaguePlayStarts,
   sectionOf,
+  standaloneName,
   type DivisionConfig,
   type LeagueConfig,
   type PostseasonConfig,
+  type RegionConfig,
 } from '../../lib/leagues';
 import { pickerName, pinLabel } from '../../lib/pin-label';
 import type { SearchIndex } from '../../lib/search';
 import { teamOfSide } from '../../lib/teams';
-import type { DivisionId, Game, LeagueId, SeasonPhase, Team, TeamColors } from '../../lib/types';
+import type { DivisionId, Game, LeagueId, RegionId, SeasonPhase, Team, TeamColors } from '../../lib/types';
 import type { LeagueChip } from '../layout/LeagueSwitcher';
 import { leagueChips } from '../layout/league-chips';
 import { fixtureOpponent, nextOfficialFixture } from '../teams/team-view';
@@ -86,7 +97,7 @@ import type {
   LeagueCardView,
   PinTileView,
 } from './home-types';
-import { POSTSEASON_LEAD } from './home-types';
+import { POSTSEASON_LEAD, rungCardText } from './home-types';
 
 // ---------------------------------------------------------------- shared helpers
 
@@ -225,9 +236,25 @@ export function phaseLead(league: LeagueConfig, phase: SeasonPhase, today: strin
   const ps = league.postseason;
   const keyDates = CCS.keyDates;
 
+
   if (phase === 'preseason' || (phase === 'regular' && today < firstLeague)) {
     // Games played SO FAR — a non-league final later in the season has not been played yet.
     const nonLeague = getNonLeagueFinalsPlayed(league.id, today);
+    // A group of independents (the Southern Section independents, DESIGN §24.10) has no league play: its table
+    // counts the games between its members, so the lead names the first of those and the body says what the
+    // table counts. 'Independent' is an adjective, so the sentence names the group (standaloneName).
+    if (league.independents) {
+      return {
+        lead: `The first game between two of ${standaloneName(league.id)} is ${shortDate(firstLeague)}.`,
+        body:
+          nonLeague > 0
+            ? `The table counts only games between the independents, so the ${plural(nonLeague, 'game')} played so far against other teams ${
+                nonLeague === 1 ? 'is' : 'are'
+              } on the schedule and in the overall records, not in the standings.`
+            : 'No games have been played yet, so every record below is empty on purpose.',
+        link: { href: `/schedule/${league.id}`, label: 'Full schedule' },
+      };
+    }
     return {
       lead: `${short} league play starts ${shortDate(firstLeague)}.`,
       body:
@@ -288,6 +315,19 @@ export function phaseLead(league: LeagueConfig, phase: SeasonPhase, today: strin
     };
   }
 
+  if (phase === 'tournament' && ps.kind === 'section-playoffs') {
+    // The San Diego Section's playoffs (Green Book 2026-27 Bylaw 2000.1): the Section places the teams and
+    // draws the brackets, and this site projects neither, so the lead says when and what is published.
+    const seeding = league.keyDates.find((d) => d.id === 'seeding-meeting');
+    return {
+      lead: `${short} league play is over.`,
+      body: `The ${ps.name} are ${dateSpan(ps.dates.first, ps.dates.last)}${
+        seeding ? `; the Section publishes its brackets after its ${shortDate(seeding.date)} seeding meeting` : ''
+      }.`,
+      link: { href: `/playoffs#${league.id}`, label: 'Postseason' },
+    };
+  }
+
   // The CCS tournament: only a league whose postseason is the CCS ladder reaches it.
   if (phase === 'playoffs' && ps.kind === 'ccs-ladder') {
     if (today < keyDates.quarterfinals) {
@@ -311,7 +351,11 @@ export function phaseLead(league: LeagueConfig, phase: SeasonPhase, today: strin
   if (phase === 'complete') {
     return {
       lead: 'The season is over.',
-      body: 'The tables below are the final league standings.',
+      // A 'site' league publishes no standings (the Sunset, the San Diego leagues): the final table is ours.
+      body:
+        league.rules.orderScope === 'site'
+          ? 'The tables below are this site’s final tables, ordered by its own points.'
+          : 'The tables below are the final league standings.',
       // Only a league with a published 2025-26 table has a last season to link to.
       link: hasHistory(league.id) ? { href: `/history/2025-26#${league.id}`, label: 'Last season' } : null,
     };
@@ -415,6 +459,25 @@ export type PostseasonView =
       /** The config's postseason note: format, seeding and site not published, no further path. */
       note: string;
       link: { href: string; label: string };
+    }
+  | {
+      /** The Sunset: no playoffs (CIF-SS Blue Book 2011.1, 3500.2). The line is the config's note. */
+      kind: 'no-postseason';
+      leagueId: LeagueId;
+      line: string;
+      note: null;
+      link: { href: string; label: string };
+    }
+  | {
+      /**
+       * A San Diego league: the Section's playoffs. The line is the config's `qualificationLine` (who the
+       * Section places, and the one place a league decides), never "the top N qualify".
+       */
+      kind: 'section-playoffs';
+      leagueId: LeagueId;
+      line: string;
+      note: string | null;
+      link: { href: string; label: string };
     };
 
 function postseasonView(league: LeagueConfig, phase: SeasonPhase, sectionNote: string | null): PostseasonView {
@@ -433,6 +496,16 @@ function postseasonView(league: LeagueConfig, phase: SeasonPhase, sectionNote: s
       };
     case 'ccs-ladder':
       return ccsLadderView(league, ps, phase);
+    case 'no-postseason':
+      return { kind: 'no-postseason', leagueId: league.id, line: ps.note, note: null, link: { href: `/playoffs#${league.id}`, label: 'Postseason' } };
+    case 'section-playoffs':
+      return {
+        kind: 'section-playoffs',
+        leagueId: league.id,
+        line: ps.qualificationLine,
+        note: sectionNote,
+        link: { href: `/playoffs#${league.id}`, label: ps.name },
+      };
   }
 }
 
@@ -544,6 +617,11 @@ function leagueLeadersLine(league: LeagueConfig): string {
 export interface LeagueTeamsView {
   leagueId: LeagueId;
   shortName: string;
+  /**
+   * The block's heading: 'Teams in SCVAL'; for a group with no league (the Southern Section independents)
+   * 'Independent teams', since its short name is an adjective and no team is "in" it.
+   */
+  title: string;
   singleDivision: boolean;
   groups: Array<{ id: DivisionId; heading: string | null; tiles: PinTileView[] }>;
 }
@@ -564,6 +642,8 @@ function pinTileView(team: Team, leagueShort: string, heading: string | null): P
 
 export interface HomeLeaguePanel {
   id: LeagueId;
+  /** The NorCal/SoCal block the page renders this panel in (DESIGN-socal §2.4). */
+  region: RegionId;
   shortName: string;
   name: string;
   phase: SeasonPhase;
@@ -599,6 +679,7 @@ function buildPanel(summary: LeagueSummary, all: readonly LeagueSummary[], today
 
   return {
     id: league.id,
+    region: summary.region,
     shortName: league.shortName,
     name: league.name,
     phase,
@@ -613,6 +694,7 @@ function buildPanel(summary: LeagueSummary, all: readonly LeagueSummary[], today
     teams: {
       leagueId: league.id,
       shortName: league.shortName,
+      title: isIndependentLeague(league.id) ? `${league.shortName} teams` : `Teams in ${league.shortName}`,
       singleDivision: single,
       groups: league.divisions.map((d) => ({
         id: d.id,
@@ -627,8 +709,9 @@ function buildPanel(summary: LeagueSummary, all: readonly LeagueSummary[], today
       })),
     },
     postseason: postseasonView(league, phase, sectionOf(league.id).noChampionshipNote),
+    // The other leagues of the panel's own region only (DESIGN-socal §2.4).
     others: all
-      .filter((s) => s.id !== league.id)
+      .filter((s) => s.id !== league.id && s.region === summary.region)
       .map((s) => ({
         id: s.id,
         shortName: s.shortName,
@@ -649,6 +732,10 @@ function afterScheduleOf(league: LeagueConfig): HomeLeaguePanel['afterSchedule']
       return { href: `/playoffs#${league.id}`, label: ps.name };
     case 'ccs-ladder':
       return { href: `/playoffs#${league.id}`, label: 'CCS playoffs' };
+    case 'no-postseason':
+      return { href: `/playoffs#${league.id}`, label: 'Postseason' };
+    case 'section-playoffs':
+      return { href: `/playoffs#${league.id}`, label: ps.name };
   }
 }
 
@@ -659,13 +746,14 @@ function homeSide(side: SideView): HomeLastDisplay['home'] {
   return { name: side.shortName || side.name, glyph: side.glyph, hasScore: side.hasScore, weight: side.weight, chip: side.chip };
 }
 
-/** `describeGame()`'s decision, slimmed to what the card draws (the 60 KB budget). */
+/** `describeGame()`'s decision, slimmed to what the card draws (the team-views budget, tests/ui/home-weight.test.ts). */
 function slimDisplay(display: GameDisplay): HomeLastDisplay {
   const marks: NonNullable<HomeLastDisplay['marks']> = {};
   if (display.liveDot) marks.liveDot = true;
   if (display.strikeTime) marks.strikeTime = true;
   if (display.isNonLeague) marks.isNonLeague = true;
   if (display.deciderTag) marks.deciderTag = display.deciderTag;
+  if (display.shootoutLabel) marks.shootoutLabel = display.shootoutLabel;
   if (display.shootoutText) marks.shootoutText = display.shootoutText;
   if (display.sourceMark) marks.sourceMark = display.sourceMark;
   if (display.leagueTag) marks.leagueTag = display.leagueTag;
@@ -782,16 +870,33 @@ export function buildTeamViews(): HomeTeamView[] {
     const outcomes = standing ? outcomesFor(standing) : [];
     const tieBadges =
       line && outcomes.length > 1 ? `${outcomes.map((o) => statusBadge(team.division, o)).join(' or ')} (tied)` : null;
+    // A one-rung label too long for that line ("<who>: <what>", the San Diego Section's champion rung)
+    // gets its short form too (home-types.ts rungCardText); every other label is shown whole.
+    const oneRung =
+      line && outcomes.length === 1
+        ? rungCardText(playoffOutcomeLabel(team.division, outcomes), statusBadge(team.division, outcomes[0]))
+        : null;
+    const shortLabel = tieBadges ?? (oneRung !== null && oneRung !== line?.label ? oneRung : null);
     return {
       // The identity the card draws is the search index's entry for this slug (HomeCardTeam).
       slug: team.slug,
       meta: [hasResults && place ? place : 'No results yet', heading, league.shortName]
         .filter((part): part is string => !!part)
         .join(' · '),
+      // 'x of y played' while games are left; a league with no fixed schedule (the Sunset) has no "of y",
+      // so its card says 'x played' once the team has played (DESIGN-socal §2.1.7).
       played:
-        context && context.remaining > 0 ? `${context.counted} of ${context.scheduled} played` : null,
+        context === undefined
+          ? null
+          : context.scheduled === null || context.remaining === null
+            ? context.counted > 0
+              ? `${context.counted} played`
+              : null
+            : context.remaining > 0
+              ? `${context.counted} of ${context.scheduled} played`
+              : null,
       postseason: line ? `${lead.full} ${line.label}` : null,
-      ...(tieBadges ? { postseasonShort: `${lead.short} ${tieBadges}` } : {}),
+      ...(shortLabel ? { postseasonShort: `${lead.short} ${shortLabel}` } : {}),
       tableHref: `/standings/${league.id}#${team.division}`,
       hasResults,
       leagueRecord: hasResults && standing ? recordString(standing.computed) : EM_DASH,
@@ -816,13 +921,33 @@ export interface CrossLeagueLatest {
 /** Rows per league in the first-visit "Latest" block. */
 const CROSS_LEAGUE_ROWS = 2;
 
-function crossLeagueLatest(leagueIds: readonly LeagueId[]): CrossLeagueLatest | null {
-  const date = getLatestResultsDate();
+/**
+ * The latest results day of `regionLeagues` (one region's leagues), with at most two rows per league.
+ * `allLeagueIds` is every league in config order, so a game between a NorCal and a SoCal team is filed
+ * under the same league on every page (its counted division's, else its first side's league in config
+ * order: the NorCal one) and appears in one region's block only. `total` counts that region's games of
+ * the day, which is what this block says ("All N").
+ */
+function crossLeagueLatest(
+  regionLeagues: readonly LeagueId[],
+  allLeagueIds: readonly LeagueId[],
+): CrossLeagueLatest | null {
+  const dates = regionLeagues
+    .map((id) => getLatestResultsDate({ league: id }))
+    .filter((d): d is string => d !== null)
+    .sort();
+  const date = dates.length > 0 ? dates[dates.length - 1] : null;
   if (!date) return null;
-  const games = getGames({ date }).sort(byKickoff);
-  const groups = leagueIds
+  const mineOf = (g: Game) => {
+    const id = homeLeagueOf(g, allLeagueIds);
+    return id !== null && regionLeagues.includes(id) ? id : null;
+  };
+  const games = getGames({ date })
+    .filter((g) => mineOf(g) !== null)
+    .sort(byKickoff);
+  const groups = regionLeagues
     .map((id) => {
-      const mine = games.filter((g) => homeLeagueOf(g, leagueIds) === id);
+      const mine = games.filter((g) => mineOf(g) === id);
       // Finals first: this block is about results.
       const ordered = [...mine.filter((g) => g.status === 'final'), ...mine.filter((g) => g.status !== 'final')];
       return { leagueId: id, shortName: getLeague(id).shortName, games: ordered.slice(0, CROSS_LEAGUE_ROWS), total: mine.length };
@@ -840,6 +965,23 @@ export interface HomeStatus {
   leagueShorts: string[];
 }
 
+/** One region's half of the first-visit view (DESIGN-socal §2.4): what the region-scoped blocks print. */
+export interface HomeRegion {
+  id: RegionId;
+  /** 'Northern California' | 'Southern California': the card grid's h3. */
+  name: RegionConfig['name'];
+  /** 'NorCal' | 'SoCal' */
+  shortName: RegionConfig['shortName'];
+  /** The status line, over this region's leagues: its latest results day, its teams and its leagues. */
+  status: HomeStatus;
+  /** The region's league cards, config order. */
+  leagueCards: LeagueCardView[];
+  /** The region's latest results day across its leagues, or null before any. */
+  latest: CrossLeagueLatest | null;
+  /** '' for NorCal (today's ids), '-socal' for SoCal: the id rule for a block both regions repeat. */
+  idSuffix: '' | '-socal';
+}
+
 export interface HomeView {
   today: string;
   status: HomeStatus;
@@ -849,7 +991,34 @@ export interface HomeView {
   leagueChips: LeagueChip[];
   leagueCards: LeagueCardView[];
   panels: HomeLeaguePanel[];
-  crossLeagueLatest: CrossLeagueLatest | null;
+  /** NorCal, then SoCal (REGIONS order). */
+  regions: HomeRegion[];
+}
+
+/** A league's card in "Find your team" (`LeagueCard`). */
+function leagueCardView(s: LeagueSummary): LeagueCardView {
+  return {
+    id: s.id,
+    shortName: s.shortName,
+    name: s.name,
+    sectionShort: s.section.shortName,
+    regionId: s.region,
+    cities: s.cities,
+    teamsLine: plural(s.teamCount, 'team', 'teams'),
+    divisions: s.singleDivision ? [] : s.divisions.map((d) => d.label),
+    standingsHref: `/standings/${s.id}`,
+    standingsLabel: standingsLabel(s.id),
+    showName: standaloneName(s.id),
+  };
+}
+
+/** The latest results day over some leagues' summaries, or null before any. */
+function latestOf(summaries: readonly LeagueSummary[]): string | null {
+  const dates = summaries
+    .map((s) => getLatestResultsDate({ league: s.id }))
+    .filter((d): d is string => d !== null)
+    .sort();
+  return dates.length > 0 ? dates[dates.length - 1] : null;
 }
 
 export function buildHomeView(): HomeView {
@@ -857,6 +1026,7 @@ export function buildHomeView(): HomeView {
   const summaries = getLeagueSummaries();
   const leagueIds = summaries.map((s) => s.id);
   const teams = getTeams();
+  const leagueCards = summaries.map(leagueCardView);
   return {
     today,
     status: {
@@ -867,17 +1037,24 @@ export function buildHomeView(): HomeView {
     teamViews: buildTeamViews(),
     searchIndex: getTeamSearchIndex(),
     leagueChips: leagueChips(),
-    leagueCards: summaries.map((s) => ({
-      id: s.id,
-      shortName: s.shortName,
-      name: s.name,
-      sectionShort: s.section.shortName,
-      region: s.region,
-      teamsLine: plural(s.teamCount, 'team', 'teams'),
-      divisions: s.singleDivision ? [] : s.divisions.map((d) => d.label),
-      standingsHref: `/standings/${s.id}`,
-    })),
+    leagueCards,
     panels: summaries.map((s) => buildPanel(s, summaries, today)),
-    crossLeagueLatest: crossLeagueLatest(leagueIds),
+    regions: REGIONS.map((region) => {
+      const mine = summaries.filter((s) => s.region === region.id);
+      const ids = mine.map((s) => s.id);
+      return {
+        id: region.id,
+        name: region.name,
+        shortName: region.shortName,
+        status: {
+          resultsThrough: latestOf(mine),
+          teamCount: teams.filter((t) => ids.includes(t.league)).length,
+          leagueShorts: mine.map((s) => s.shortName),
+        },
+        leagueCards: leagueCards.filter((c) => c.regionId === region.id),
+        latest: crossLeagueLatest(ids, leagueIds),
+        idSuffix: region.id === 'norcal' ? '' : '-socal',
+      };
+    }),
   };
 }

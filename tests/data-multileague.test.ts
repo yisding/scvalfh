@@ -80,13 +80,24 @@ const MCAL_TABLE = [
 const MCAL_SEEDS = ['tamalpais', 'university-sf', 'redwood', 'marin-catholic', 'convent-sacred-heart', 'lick-wilmerding'];
 
 describe('both runs: the corpus leagues through lib/data', () => {
-  it('serve 49 teams, every corpus league fresh (the EAL frozen), and the configured division tables', () => {
+  it('serve 102 teams, every corpus league fresh (the EAL, SoCal and the independents frozen), and the configured division tables', () => {
     for (const v of variants) {
-      expect(v.data.getCounts().teams, `lib/pipeline/steps/assemble.ts: teams [${v.name}]`).toBe(49);
+      expect(v.data.getCounts().teams, `lib/pipeline/steps/assemble.ts: teams [${v.name}]`).toBe(102);
       expect(
         v.data.getLeagueIds().map((l) => `${l}:${v.data.getLeagueHealth(l).state}`),
         `lib/pipeline/steps/standings.ts: LeagueHealth states [${v.name}]`,
-      ).toEqual(['scval:fresh', 'bval:fresh', 'pcal:fresh', 'mcal:fresh', 'eal:frozen']);
+      ).toEqual([
+        'scval:fresh',
+        'bval:fresh',
+        'pcal:fresh',
+        'mcal:fresh',
+        'eal:frozen',
+        'sunset:frozen',
+        'city:frozen',
+        'north-county:frozen',
+        'metro:frozen',
+        'independents:frozen',
+      ]);
       const shape = (['scval', 'bval', 'pcal', 'mcal', 'eal'] as const).map((l) =>
         v.data.getLeagueSummary(l)!.divisions.map((d) => `${d.id}:${d.heading ?? '-'}:${v.data.getStandings(d.id).length}`),
       );

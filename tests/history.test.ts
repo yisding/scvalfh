@@ -647,16 +647,76 @@ describe('history: the league-aware read API', () => {
       ['pcal', 'unavailable'],
       ['mcal', 'unavailable'],
       ['eal', 'unavailable'],
+      ['sunset', 'unavailable'],
+      ['city', 'unavailable'],
+      ['north-county', 'unavailable'],
+      ['metro', 'unavailable'],
+      ['independents', 'unavailable'],
     ]);
-    expect(h.getHistoryLeagues()).toHaveLength(5);
+    expect(h.getHistoryLeagues()).toHaveLength(10);
     expect(h.getAvailableHistoryLeagues().map((l) => l.id)).toEqual(['scval', 'bval']);
-    expect(h.getUnavailableHistoryLeagues().map((l) => l.id)).toEqual(['pcal', 'mcal', 'eal']);
+    expect(h.getUnavailableHistoryLeagues().map((l) => l.id)).toEqual([
+      'pcal', 'mcal', 'eal', 'sunset', 'city', 'north-county', 'metro', 'independents',
+    ]);
     expect(h.hasHistory('eal')).toBe(false);
     expect(h.getHistoryChampions('eal')).toEqual([]);
     expect(h.hasHistory('bval')).toBe(true);
     expect(h.hasHistory('pcal')).toBe(false);
     expect(h.getHistoryProvenance('mcal')).toBeNull();
     expect(h.getHistoryChampions('pcal')).toEqual([]);
+  });
+
+  it('says why each Southern California league has no 2025-26 table, and what was checked (DESIGN-socal §2.2)', async () => {
+    const h = await import('../lib/history');
+    const sunset = h.getHistoryLeagues().find((l) => l.id === 'sunset')!.entry;
+    if (sunset.status !== 'unavailable') throw new Error('sunset should be unavailable');
+    // The design's reason, verbatim: no league document, no playoffs, and the scores site's table is SBLive's.
+    expect(sunset.reason).toBe(
+      'We found no Sunset league website or standings document for 2025-26. The Southern Section holds no field hockey playoffs, and the Sunset table on its scores site (scores.cifss.org) is SBLive’s, built from game labels coaches enter. We do not show standings from third-party sites.',
+    );
+    expect(sunset.checkedOn).toBe('2026-10-06');
+    expect(sunset.checked.some((c) => c.startsWith('https://cifss.org/sports/field-hockey/'))).toBe(true);
+    expect(sunset.checked.some((c) => c.startsWith('https://scores.cifss.org/brackets'))).toBe(true);
+    expect(sunset.alsoPublished).toBeUndefined();
+    for (const id of ['city', 'north-county', 'metro'] as const) {
+      const entry = h.getHistoryLeagues().find((l) => l.id === id)!.entry;
+      if (entry.status !== 'unavailable') throw new Error(`${id} should be unavailable`);
+      expect(entry.reason).toBe(
+        'We found no 2025-26 final standings published by the league or the San Diego Section. The Section’s power rankings list results and each school’s league record from game-type labels its schools enter, not league standings. We do not show standings from third-party sites.',
+      );
+      expect(entry.checkedOn).toBe('2026-10-06');
+      // The power rankings checked are 2025-26's (year_id 175 on the cifsdshome widget), not this season's.
+      expect(entry.checked.some((c) => c.includes('cifsdshome.org/widget/power-rankings') && c.includes('year_id=175'))).toBe(true);
+      expect(entry.checked.some((c) => c.startsWith('https://www.cifsds.org/sports/fh/index'))).toBe(true);
+      // The bracket sheet is linked, labelled without the words an unavailable card may not print.
+      expect(entry.alsoPublished).toEqual([
+        {
+          label: '2025 CIFSDS playoff brackets (Google Sheet)',
+          url: 'https://docs.google.com/spreadsheets/d/1P9J_VFYljarF0IxnE4SP8zHey9T6y97IHz6NZZbaBWg/edit?usp=sharing',
+        },
+      ]);
+      expect(entry.alsoPublished![0].label).not.toMatch(/champion/i);
+      expect(h.hasHistory(id)).toBe(false);
+      expect(h.getHistoryChampions(id)).toEqual([]);
+    }
+    // The Southern Section independents (DESIGN §24.9, §24.10): this site's grouping, so no 2025-26 table of it was
+    // published. MaxPreps' 2025-26 Palomares, League B and Marmonte tables each list only that school, and its
+    // 2025-26 Sunset table lists Bonita and Chaminade (standings API, 2026-10-06).
+    const independents = h.getHistoryLeagues().find((l) => l.id === 'independents')!.entry;
+    if (independents.status !== 'unavailable') throw new Error('independents should be unavailable');
+    expect(independents.reason).toBe(
+      'The Southern Section independents are this site’s grouping, so no 2025-26 table of them was published: Glendora, Harvard-Westlake and Thousand Oaks had no league table, and MaxPreps listed Bonita and Chaminade in its Sunset table.',
+    );
+    expect(independents.checkedOn).toBe('2026-10-06');
+    expect(independents.checked.map((c) => c.split(' ')[0])).toEqual([
+      'https://www.maxpreps.com/ca/field-hockey/25-26/league/palomares/?leagueid=5d795f4f-0e75-450d-856e-0873b46002de',
+      'https://www.maxpreps.com/ca/field-hockey/25-26/league/league-b/?leagueid=c2922327-b045-410b-aadd-87cb63b58405',
+      'https://www.maxpreps.com/ca/field-hockey/25-26/league/marmonte/?leagueid=392fb703-cc64-46d7-8d21-819e13a78c3f',
+      'https://www.maxpreps.com/ca/field-hockey/25-26/league/sunset/?leagueid=1ab67ce6-46a6-42be-a7aa-dd2892d77dff',
+    ]);
+    expect(independents.alsoPublished).toBeUndefined();
+    expect(h.hasHistory('independents')).toBe(false);
+    expect(h.hasHistory('sunset')).toBe(false);
   });
 
   it('serves BVAL tables and champions by division', async () => {

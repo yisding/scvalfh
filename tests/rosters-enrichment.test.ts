@@ -24,7 +24,7 @@ import {
   getRosters,
   getTeamRoster,
 } from '../lib/rosters';
-import { TEAMS, teamsInLeague } from '../lib/teams';
+import { TEAMS, getTeamBySlug, teamsInLeague } from '../lib/teams';
 import { REPO, runScript } from './helpers';
 
 /**
@@ -99,8 +99,8 @@ describe('data/rosters-enrichment.json', () => {
     expect(RosterEnrichmentSchema.safeParse(short).success).toBe(false);
   });
 
-  it('accepts any registry team, in any league, and covers all 49 plus the same season as the MaxPreps file', () => {
-    expect(TEAMS).toHaveLength(49);
+  it('accepts any registry team, in any league, and covers all 102 plus the same season as the MaxPreps file', () => {
+    expect(TEAMS).toHaveLength(102);
     expect(raw.teams.map((t) => t.slug).sort()).toEqual(TEAMS.map((t) => t.slug).sort());
     // A BVAL, PCAL or MCAL team takes a record exactly as an SCVAL one does.
     for (const slug of ['leigh', 'del-mar', 'redwood']) {
@@ -199,10 +199,17 @@ describe('data/rosters-enrichment.json', () => {
       'marin-academy': 'partial',
     });
     // The EAL has had no school-athletics sweep: Corning (empty) records no otherRosters, and its view says not-checked.
-    for (const t of base.teams.filter((x) => x.status === 'empty' && !EAL_SLUGS.has(x.slug))) {
+    // Neither have the four Southern California leagues nor the independents (stub entries, 2026-10-06): an
+    // empty SoCal roster (Chaparral, Fountain Valley, …) is not-checked too, never "none".
+    const SOCAL = new Set(['sunset', 'city', 'north-county', 'metro', 'independents']);
+    const unswept = (slug: string) => EAL_SLUGS.has(slug) || SOCAL.has(getTeamBySlug(slug)!.league);
+    for (const t of base.teams.filter((x) => x.status === 'empty' && !unswept(x.slug))) {
       expect(recorded[t.slug], t.slug).toBeDefined();
     }
     expect(getEnrichedTeamRoster('corning')!.otherRosters).toEqual({ status: 'not-checked' });
+    for (const t of base.teams.filter((x) => x.status === 'empty' && SOCAL.has(getTeamBySlug(x.slug)!.league))) {
+      expect(getEnrichedTeamRoster(t.slug)!.otherRosters, t.slug).toEqual({ status: 'not-checked' });
+    }
     // A team the file says nothing about has not been checked, and its view says so.
     expect(getEnrichedTeamRoster('cupertino')!.otherRosters).toEqual({ status: 'not-checked' });
     // A partial list must say what it lists and link it.

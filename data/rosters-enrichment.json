@@ -8,7 +8,8 @@
     "si.com rosters were rejected: names only, and for several teams a different or prior-season list.",
     "profiles[] links a player's own recruiting page (NCSA, SportsRecruits, Hudl), captured 2026-10-02 (SCVAL), 2026-10-03 (BVAL, PCAL, MCAL) or 2026-10-04 (EAL). A page is linked only when it names the player and field hockey, and either names the player's school or shows the class year the roster shows plus a California hometown; a stated class year must agree with the roster's grade. NCSA pages answer a bot challenge, so SCVAL and PCAL NCSA profiles were matched on the search result (title, the school in the URL path, class year); for BVAL, MCAL and EAL the page itself was read where it answered. A Hudl profile counts when its team list includes this school's field hockey team, even if it lists another sport first. Social media, news and profiles for other sports are not linked. Recall is incomplete for every league: see docs/DATA-SOURCES.md.",
     "A team's otherRosters says what other public sources showed for its CURRENT roster, which is what its page may claim when MaxPreps lists no players: none (looked, nothing current), partial (a source lists current players in a form that cannot be joined, with what it lists and a link) or, when absent, not checked.",
-    "EAL (2026-10-04): recruiting pages only (profiles[]), swept by the same rule. The school-athletics roster sweep (grade, height, number, position, coaches) has still not been done, so the six EAL entries have no coaches or sources and fill no MaxPreps field."
+    "EAL (2026-10-04): recruiting pages only (profiles[]), swept by the same rule. The school-athletics roster sweep (grade, height, number, position, coaches) has still not been done, so the six EAL entries have no coaches or sources and fill no MaxPreps field.",
+    "The 53 Southern California teams (the Sunset, City, North and Metro teams and the three Southern Section independents, Glendora, Harvard-Westlake and Thousand Oaks, all added 2026-10-06) have stub entries with empty lists: no enrichment sweep was made for them, so an empty list there says nothing about whether a public source exists."
   ],
   "season": "26-27",
   "teams": [
@@ -9393,6 +9394,377 @@
         }
       ],
       "slug": "pleasant-valley",
+      "sources": []
+    },
+    {
+      "coaches": [],
+      "notes": [],
+      "players": [],
+      "slug": "chaparral",
+      "sources": []
+    },
+    {
+      "coaches": [],
+      "notes": [],
+      "players": [],
+      "slug": "edison",
+      "sources": []
+    },
+    {
+      "coaches": [],
+      "notes": [],
+      "players": [],
+      "slug": "fountain-valley",
+      "sources": []
+    },
+    {
+      "coaches": [],
+      "notes": [],
+      "players": [],
+      "slug": "great-oak",
+      "sources": []
+    },
+    {
+      "coaches": [],
+      "notes": [],
+      "players": [],
+      "slug": "huntington-beach",
+      "sources": []
+    },
+    {
+      "coaches": [],
+      "notes": [],
+      "players": [],
+      "slug": "marina",
+      "sources": []
+    },
+    {
+      "coaches": [],
+      "notes": [],
+      "players": [],
+      "slug": "newport-harbor",
+      "sources": []
+    },
+    {
+      "coaches": [],
+      "notes": [],
+      "players": [],
+      "slug": "temecula-valley",
+      "sources": []
+    },
+    {
+      "coaches": [],
+      "notes": [],
+      "players": [],
+      "slug": "bishops",
+      "sources": []
+    },
+    {
+      "coaches": [],
+      "notes": [],
+      "players": [],
+      "slug": "canyon-hills",
+      "sources": []
+    },
+    {
+      "coaches": [],
+      "notes": [],
+      "players": [],
+      "slug": "cathedral-catholic",
+      "sources": []
+    },
+    {
+      "coaches": [],
+      "notes": [],
+      "players": [],
+      "slug": "la-jolla",
+      "sources": []
+    },
+    {
+      "coaches": [],
+      "notes": [],
+      "players": [],
+      "slug": "mission-bay",
+      "sources": []
+    },
+    {
+      "coaches": [],
+      "notes": [],
+      "players": [],
+      "slug": "scripps-ranch",
+      "sources": []
+    },
+    {
+      "coaches": [],
+      "notes": [],
+      "players": [],
+      "slug": "clairemont",
+      "sources": []
+    },
+    {
+      "coaches": [],
+      "notes": [],
+      "players": [],
+      "slug": "la-jolla-country-day",
+      "sources": []
+    },
+    {
+      "coaches": [],
+      "notes": [],
+      "players": [],
+      "slug": "mira-mesa",
+      "sources": []
+    },
+    {
+      "coaches": [],
+      "notes": [],
+      "players": [],
+      "slug": "patrick-henry",
+      "sources": []
+    },
+    {
+      "coaches": [],
+      "notes": [],
+      "players": [],
+      "slug": "point-loma",
+      "sources": []
+    },
+    {
+      "coaches": [],
+      "notes": [],
+      "players": [],
+      "slug": "university-city",
+      "sources": []
+    },
+    {
+      "coaches": [],
+      "notes": [],
+      "players": [],
+      "slug": "canyon-crest-academy",
+      "sources": []
+    },
+    {
+      "coaches": [],
+      "notes": [],
+      "players": [],
+      "slug": "la-costa-canyon",
+      "sources": []
+    },
+    {
+      "coaches": [],
+      "notes": [],
+      "players": [],
+      "slug": "mt-carmel",
+      "sources": []
+    },
+    {
+      "coaches": [],
+      "notes": [],
+      "players": [],
+      "slug": "rancho-bernardo",
+      "sources": []
+    },
+    {
+      "coaches": [],
+      "notes": [],
+      "players": [],
+      "slug": "san-marcos",
+      "sources": []
+    },
+    {
+      "coaches": [],
+      "notes": [],
+      "players": [],
+      "slug": "torrey-pines",
+      "sources": []
+    },
+    {
+      "coaches": [],
+      "notes": [],
+      "players": [],
+      "slug": "del-norte",
+      "sources": []
+    },
+    {
+      "coaches": [],
+      "notes": [],
+      "players": [],
+      "slug": "fallbrook",
+      "sources": []
+    },
+    {
+      "coaches": [],
+      "notes": [],
+      "players": [],
+      "slug": "mission-vista",
+      "sources": []
+    },
+    {
+      "coaches": [],
+      "notes": [],
+      "players": [],
+      "slug": "poway",
+      "sources": []
+    },
+    {
+      "coaches": [],
+      "notes": [],
+      "players": [],
+      "slug": "rancho-buena-vista",
+      "sources": []
+    },
+    {
+      "coaches": [],
+      "notes": [],
+      "players": [],
+      "slug": "san-dieguito-academy",
+      "sources": []
+    },
+    {
+      "coaches": [],
+      "notes": [],
+      "players": [],
+      "slug": "valley-center",
+      "sources": []
+    },
+    {
+      "coaches": [],
+      "notes": [],
+      "players": [],
+      "slug": "escondido",
+      "sources": []
+    },
+    {
+      "coaches": [],
+      "notes": [],
+      "players": [],
+      "slug": "mission-hills",
+      "sources": []
+    },
+    {
+      "coaches": [],
+      "notes": [],
+      "players": [],
+      "slug": "sage-creek",
+      "sources": []
+    },
+    {
+      "coaches": [],
+      "notes": [],
+      "players": [],
+      "slug": "san-pasqual",
+      "sources": []
+    },
+    {
+      "coaches": [],
+      "notes": [],
+      "players": [],
+      "slug": "vista",
+      "sources": []
+    },
+    {
+      "coaches": [],
+      "notes": [],
+      "players": [],
+      "slug": "westview",
+      "sources": []
+    },
+    {
+      "coaches": [],
+      "notes": [],
+      "players": [],
+      "slug": "bonita-vista",
+      "sources": []
+    },
+    {
+      "coaches": [],
+      "notes": [],
+      "players": [],
+      "slug": "eastlake",
+      "sources": []
+    },
+    {
+      "coaches": [],
+      "notes": [],
+      "players": [],
+      "slug": "helix",
+      "sources": []
+    },
+    {
+      "coaches": [],
+      "notes": [],
+      "players": [],
+      "slug": "olympian",
+      "sources": []
+    },
+    {
+      "coaches": [],
+      "notes": [],
+      "players": [],
+      "slug": "otay-ranch",
+      "sources": []
+    },
+    {
+      "coaches": [],
+      "notes": [],
+      "players": [],
+      "slug": "el-capitan",
+      "sources": []
+    },
+    {
+      "coaches": [],
+      "notes": [],
+      "players": [],
+      "slug": "granite-hills",
+      "sources": []
+    },
+    {
+      "coaches": [],
+      "notes": [],
+      "players": [],
+      "slug": "hilltop",
+      "sources": []
+    },
+    {
+      "coaches": [],
+      "notes": [],
+      "players": [],
+      "slug": "southwest",
+      "sources": []
+    },
+    {
+      "coaches": [],
+      "notes": [],
+      "players": [],
+      "slug": "bonita",
+      "sources": []
+    },
+    {
+      "coaches": [],
+      "notes": [],
+      "players": [],
+      "slug": "chaminade",
+      "sources": []
+    },
+    {
+      "coaches": [],
+      "notes": [],
+      "players": [],
+      "slug": "glendora",
+      "sources": []
+    },
+    {
+      "coaches": [],
+      "notes": [],
+      "players": [],
+      "slug": "harvard-westlake",
+      "sources": []
+    },
+    {
+      "coaches": [],
+      "notes": [],
+      "players": [],
+      "slug": "thousand-oaks",
       "sources": []
     }
   ]

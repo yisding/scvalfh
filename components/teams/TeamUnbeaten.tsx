@@ -11,22 +11,29 @@ import type { TeamPageView, UnbeatenOpponent } from './team-view';
  *
  * Every opponent in this team's table that it has no win against, soonest meeting first. It is the
  * one question a parent asks that no table answers: a record says how the season went, this says
- * what is still available. Every league here plays a double round robin, so a name can appear
- * with two meetings left, one, or none at all.
+ * what is still available. Every league here but one plays a double round robin, so a name can appear
+ * with two meetings left, one, or none at all. The Sunset has no fixed schedule (gamesPerTeam null):
+ * its teams meet 0, 1 or 2 times, and a meeting is a league game only when MaxPreps marks it, so an
+ * opponent with nothing listed reads "no league game listed", never "no games left".
  *
  * An opponent whose remaining games exist ONLY in the league's official schedule is labelled
  * "unreported", never counted as a scheduled game we have a date and time for. The copy's noun is
  * the league's `gamesWord`: `division opponent` in a two-division league and `league opponent` in a
  * single-division one.
  */
-function statusOf(opponent: UnbeatenOpponent): string {
+/** What is left when nothing is listed: 'no games left', or, with no fixed schedule, 'no league game listed'. */
+function nothingLeft(fixed: boolean): string {
+  return fixed ? 'no games left' : 'no league game listed';
+}
+
+function statusOf(opponent: UnbeatenOpponent, fixed: boolean): string {
   if (opponent.nextDate !== null) return `next ${monthDay(opponent.nextDate)}`;
   if (opponent.remaining > 0) return `${opponent.remaining} to play`;
   if (opponent.unreportedFixtures > 0) return `${opponent.unreportedFixtures} unreported`;
-  return 'no games left';
+  return nothingLeft(fixed);
 }
 
-function sentenceFor(opponent: UnbeatenOpponent, leagueShort: string): string {
+function sentenceFor(opponent: UnbeatenOpponent, leagueShort: string, fixed: boolean): string {
   const played =
     opponent.played === 0
       ? 'not played yet'
@@ -38,11 +45,11 @@ function sentenceFor(opponent: UnbeatenOpponent, leagueShort: string): string {
         ? `${opponent.remaining} still to play`
         : opponent.unreportedFixtures > 0
           ? `${opponent.unreportedFixtures} scheduled per ${leagueShort} with no result reported`
-          : 'no games left';
+          : nothingLeft(fixed);
   return `${opponent.name}: ${played}, ${ahead}`;
 }
 
-function OpponentRow({ opponent, leagueShort }: { opponent: UnbeatenOpponent; leagueShort: string }) {
+function OpponentRow({ opponent, leagueShort, fixed }: { opponent: UnbeatenOpponent; leagueShort: string; fixed: boolean }) {
   const team = getTeamBySlug(opponent.slug);
   return (
     <li>
@@ -54,7 +61,7 @@ function OpponentRow({ opponent, leagueShort }: { opponent: UnbeatenOpponent; le
       <Link
         href={`/teams/${opponent.slug}`}
         prefetch={false}
-        aria-label={sentenceFor(opponent, leagueShort)}
+        aria-label={sentenceFor(opponent, leagueShort, fixed)}
         className="sx-tap flex min-h-12 items-center gap-3 px-gutter py-2 text-meta no-underline"
       >
         <span aria-hidden="true" className="flex min-w-0 flex-1 items-center gap-3">
@@ -75,7 +82,7 @@ function OpponentRow({ opponent, leagueShort }: { opponent: UnbeatenOpponent; le
           className="w-[5.75rem] shrink-0 whitespace-nowrap text-right text-ink-3"
           aria-hidden="true"
         >
-          {statusOf(opponent)}
+          {statusOf(opponent, fixed)}
         </span>
       </Link>
     </li>
@@ -89,6 +96,7 @@ export interface TeamUnbeatenProps {
 export function TeamUnbeaten({ view }: TeamUnbeatenProps) {
   const noun = view.league.gamesWord;
   const short = view.league.shortName;
+  const fixed = view.leagueScheduled !== null;
   if (view.unbeaten.length === 0) {
     return (
       <EmptyState
@@ -103,14 +111,15 @@ export function TeamUnbeaten({ view }: TeamUnbeatenProps) {
       <div className="sx-card sx-flush sx-bleed">
         <ul className="sx-list">
           {view.unbeaten.map((opponent) => (
-            <OpponentRow key={opponent.slug} opponent={opponent} leagueShort={short} />
+            <OpponentRow key={opponent.slug} opponent={opponent} leagueShort={short} fixed={fixed} />
           ))}
         </ul>
       </div>
       <p className="mt-3 mb-0 max-w-prose text-meta text-ink-3">
         {`${view.unbeaten.length} of ${view.divisionSize - 1} ${view.scopeLabel} ${noun} opponents. `}
-        {noun === 'league' ? 'League' : 'Division'} opponents play each other twice, home and away,
-        so a name can be here with two meetings left, one, or none.{' '}
+        {fixed
+          ? `${noun === 'league' ? 'League' : 'Division'} opponents play each other twice, home and away, so a name can be here with two meetings left, one, or none. `
+          : `${short} teams do not all play each other: a meeting is a league game when MaxPreps marks it as one, so a name can be here with no meeting at all. `}
         {view.unbeaten.some((o) => o.unreportedFixtures > 0)
           ? `An “unreported” meeting is scheduled per ${short} with no result reported.`
           : null}

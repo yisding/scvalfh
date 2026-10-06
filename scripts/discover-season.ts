@@ -19,12 +19,18 @@
  * the diff, because a wrong season id would silently publish last year's table.
  *
  * Cost warning: `team-context/v1` is ~738 KB per team (a school's whole 844-season history), so the
- * default pass (one team per division, 7 divisions) moves ~5.2 MB; probing all 49 teams would move
- * ~36 MB. That is why the daily cron never touches this endpoint.
+ * default pass (one team per division of the 15 league divisions, plus each of the three
+ * independents: 18 teams) moves ~13 MB; probing all 102 teams would move ~75 MB. A division configured with no MaxPreps table (maxprepsLeagueId null: the San Diego Section's
+ * Valley) is still probed, and the diff says whether one of its members now carries a league. That is why the daily cron never touches this endpoint.
+ *
+ * A group with no league (the Southern Section independents, DESIGN §24.9) is probed member by member (three
+ * more team contexts, ~2.2 MB): each is the only field hockey team in its own all-sports league, so MaxPreps
+ * lists a league for each, and that is expected. The diff names each member's league and asks a human to
+ * check that the school is still that league's only field hockey team; it is never counted as a change.
  */
 
 import { MaxPrepsClient, MaxPrepsError } from '../lib/sources/maxpreps';
-import { ALL_DIVISIONS } from '../lib/leagues';
+import { ALL_DIVISIONS, isIndependentDivision } from '../lib/leagues';
 import {
   ALL_SEASON_ID,
   BOOTSTRAP_URL,
@@ -85,6 +91,9 @@ interface Row {
   error: string | null;
 }
 
+/** What team-context/v1 gives as `teamData.leagueId` for a team with no league this season. */
+const NO_LEAGUE_GUID = '00000000-0000-0000-0000-000000000000';
+
 const diffs: string[] = [];
 function compare(label: string, ours: string | null, theirs: string | null | undefined): void {
   const t = theirs ?? null;
@@ -131,6 +140,9 @@ async function main(argv: readonly string[]): Promise<number> {
     ? TEAMS.filter((t) => args.teams?.includes(t.slug))
     : ALL_DIVISIONS.flatMap((d) => {
         const members = teamsInDivision(d.id);
+        // The independents share no MaxPreps league (two sit in its Sunset table, three alone in their all-sports
+        // leagues), so one of them says nothing about the others.
+        if (isIndependentDivision(d.id)) return members;
         const rep = members.find((t) => t.dataCoverage !== 'none') ?? members[0];
         return rep ? [rep] : [];
       });
@@ -179,7 +191,9 @@ async function main(argv: readonly string[]): Promise<number> {
   // ---- 3. group by leagueId and assert each league's own metadata
   const byLeague = new Map<string, { name: string; slugs: string[] }>();
   for (const row of rows) {
-    if (!row.leagueId) continue;
+    // MaxPreps gives a team with no league this season the all-zero GUID (the five Orange County Sunset
+    // teams in 2026-27): that is "no league", never a league to read metadata for.
+    if (!row.leagueId || row.leagueId === NO_LEAGUE_GUID) continue;
     const entry = byLeague.get(row.leagueId) ?? { name: row.leagueName ?? '', slugs: [] };
     entry.slugs.push(row.slug);
     if (!entry.name && row.leagueName) entry.name = row.leagueName;
@@ -207,7 +221,7 @@ async function main(argv: readonly string[]): Promise<number> {
     resolved.push({ leagueId, name: entry.name, slugs: entry.slugs, ok });
   }
 
-  const noLeague = rows.filter((r) => !r.leagueId && !r.error).map((r) => r.slug);
+  const noLeague = rows.filter((r) => (!r.leagueId || r.leagueId === NO_LEAGUE_GUID) && !r.error).map((r) => r.slug);
   if (noLeague.length) console.log(`  (no leagueName — independents or not fielding: ${noLeague.join(', ')})`);
   const failed = rows.filter((r) => r.error);
   if (failed.length) console.log(`  (failed: ${failed.map((r) => r.slug).join(', ')})`);
@@ -217,6 +231,40 @@ async function main(argv: readonly string[]): Promise<number> {
   const guesses = new Map<string, { leagueId: string; name: string } | null>();
   for (const division of ALL_DIVISIONS) {
     const probed = wanted.some((t) => t.division === division.id);
+    if (isIndependentDivision(division.id)) {
+      // Each independent has a MaxPreps league upstream (Bonita and Chaminade the Sunset; the other three each
+      // the only field hockey team in their all-sports league, lib/leagues.ts INDEPENDENTS), so one is expected.
+      // Whether the grouping still holds is a question for a human: a league's MaxPreps standings page lists
+      // every field hockey team it has.
+      const members = rows.filter((r) => wanted.some((t) => t.slug === r.slug && t.division === division.id));
+      if (members.length === 0) {
+        console.log(`  ${division.id}: a group with no league, not probed (no --teams member is in this division)`);
+      } else {
+        console.log(`  ${division.id}: a group with no league; check by hand that each is still its league's only field hockey team:`);
+        for (const r of members) {
+          console.log(`      ${r.slug}: ${r.error ? `failed (${r.error})` : `${r.leagueName || '(no league)'} ${r.leagueId ?? ''}`.trim()}`);
+        }
+      }
+      guesses.set(division.id, null);
+      continue;
+    }
+    if (division.maxprepsLeagueId === null) {
+      // Config says MaxPreps publishes no table for this division (the San Diego Section's Valley in
+      // 2026-27: none of its members carries a MaxPreps league). Steps 03 and 04 skip it; here we only
+      // say whether a probed member now carries a league, so a human can decide whether one appeared.
+      const memberLeagues = rows.filter((r) => r.leagueId && r.leagueId !== NO_LEAGUE_GUID && wanted.some((t) => t.slug === r.slug && t.division === division.id));
+      if (!probed) {
+        console.log(`  ${division.id}: no MaxPreps table in config, not probed (no --teams member is in this division)`);
+      } else if (memberLeagues.length === 0) {
+        console.log(`  ${division.id}: no MaxPreps table in config, and no probed member carries a league upstream — unchanged`);
+      } else {
+        const named = memberLeagues.map((r) => `${r.slug}: ${r.leagueName || '(unnamed)'} ${r.leagueId}`).join('; ');
+        diffs.push(`${division.id}: config has no MaxPreps table, but probed members now carry a league (${named}) — check by hand`);
+        console.log(`  ${division.id}: no MaxPreps table in config, but upstream lists ${named}`);
+      }
+      guesses.set(division.id, null);
+      continue;
+    }
     const match = resolved.find((r) => r.leagueId === division.maxprepsLeagueId);
     if (match) {
       console.log(`  ${division.id}: maxprepsLeagueId unchanged (${division.maxprepsLeagueId}) — ${match.slugs.length} probed team(s)`);
@@ -230,7 +278,7 @@ async function main(argv: readonly string[]): Promise<number> {
       console.log(`  ${division.id}: not probed (no --teams member is in this division)`);
       guesses.set(division.id, null);
     } else {
-      const guess = resolved.find((r) => r.name.toLowerCase() === division.maxprepsName.toLowerCase());
+      const guess = resolved.find((r) => r.name.toLowerCase() === (division.maxprepsName ?? '').toLowerCase());
       diffs.push(
         `${division.id} maxprepsLeagueId: ${division.maxprepsLeagueId} → ${guess ? guess.leagueId : 'NOT FOUND — look it up by hand'}`,
       );
@@ -254,6 +302,10 @@ async function main(argv: readonly string[]): Promise<number> {
   for (const division of ALL_DIVISIONS) {
     const g = guesses.get(division.id) ?? null;
     console.log(`  // ${division.id}`);
+    if (!g && division.maxprepsLeagueId === null) {
+      console.log('  maxprepsLeagueId: null, maxprepsName: null, maxprepsSlug: null, // unchanged: MaxPreps publishes no table');
+      continue;
+    }
     console.log(`  maxprepsLeagueId: '${g?.leagueId ?? division.maxprepsLeagueId}',${g ? '' : ' // unchanged: not resolved this run'}`);
     console.log(`  maxprepsName: '${g?.name ?? division.maxprepsName}',`);
   }
@@ -264,9 +316,12 @@ async function main(argv: readonly string[]): Promise<number> {
   );
   for (const d of diffs) console.log(`  - ${d}`);
   console.log(
-    '\nAlso check by hand: the registry in lib/registry/* (membership comes from each league\'s own ' +
-      'official schedule, not from these leagueIds), CCS.keyDates, each league\'s keyDates and the postseason dates. ' +
-      'Provenance by league: SCVAL from the two scval.com PDFs, BVAL/PCAL/MCAL from their bundled official documents.',
+    '\nAlso check by hand: the registry in lib/registry/* (membership comes from each league\'s alignment ' +
+      'source, LeagueConfig.alignmentSource, not from these leagueIds), CCS.keyDates, each league\'s keyDates and the ' +
+      'postseason dates. Provenance by league: SCVAL from the two scval.com PDFs, BVAL/PCAL/MCAL from their bundled ' +
+      'official documents, EAL from MaxPreps\' table and league flag, the Sunset from MaxPreps\' 2024-25 and 2025-26 ' +
+      'Sunset tables, City/North County/Metro from the CIF-SDS League Alignment, the Southern Section independents ' +
+      'from each school\'s MaxPreps team page (each the only field hockey team in its all-sports league).',
   );
   return 0;
 }

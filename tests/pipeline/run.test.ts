@@ -12,7 +12,7 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { ALL_DIVISIONS, DATA_QUALITY, LEAGUES } from '../../lib/leagues';
+import { ALL_DIVISIONS, DATA_QUALITY, LEAGUES, getDivision } from '../../lib/leagues';
 import { RunAbort, resourcePath, type SnapshotMeta, type Transport } from '../../lib/pipeline/contract';
 import { loadCorpus } from '../../lib/pipeline/corpus';
 import { SILENT_SINK, emptyRunState } from '../../lib/pipeline/ledger';
@@ -31,6 +31,8 @@ import { runCorpus, snapshotOf, writeTempVariant } from './support/run-corpus';
 
 const MISSION = Object.keys(DATA_QUALITY.ignoredMaxprepsLeagueIds)[0];
 const opts = { cwd: REPO, now: '2026-10-02T15:00:00.000Z' };
+/** The four Southern California leagues: in no NorCal corpus, so frozen "not fetched in this run". */
+const SOCAL_FROZEN: Array<[string, string]> = ['sunset', 'city', 'north-county', 'metro', 'independents'].map((id) => [id, 'frozen']);
 const tmpOut = () => path.join(mkdtempSync(path.join(tmpdir(), 'scvalfh-out-')), 'snapshot.json');
 
 function bootstrapHtml(ssid: string): string {
@@ -127,7 +129,7 @@ describe('a full corpus run', () => {
     expect(gets.some((l) => l.includes(MISSION))).toBe(false);
     const summary = lines.find((l) => l.startsWith('summary: '));
     expect(summary).toMatch(
-      /^summary: teams 49 · games \d+ \(league \d+\) · finals \d+ · pending \d+ · backfilled 0 · mismatches \d+ · sources ok \d+\/\d+ · requests maxpreps:56 sblive:0 official:0 · leagues scval:fresh bval:fresh pcal:fresh mcal:fresh eal:frozen$/,
+      /^summary: teams 102 · games \d+ \(league \d+\) · finals \d+ · pending \d+ · backfilled 0 · mismatches \d+ · sources ok \d+\/\d+ · requests maxpreps:56 sblive:0 official:0 · leagues scval:fresh bval:fresh pcal:fresh mcal:fresh eal:frozen sunset:frozen city:frozen north-county:frozen metro:frozen independents:frozen$/,
     );
   });
 
@@ -191,6 +193,7 @@ describe('--leagues', () => {
       ['pcal', 'fresh'],
       ['mcal', 'fresh'],
       ['eal', 'frozen'],
+      ...SOCAL_FROZEN,
     ]);
     expect(snapshot.sources.some((s) => s.scope?.league === 'scval' || s.scope?.league === 'bval' || s.scope?.league === 'eal')).toBe(false);
   });
@@ -254,8 +257,13 @@ describe('step 12: a division whose league publishes no schedule (EAL)', () => {
     const eal = leagueHealth.find((h) => h.leagueId === 'eal')!;
     // The two unreported games dated before today; never the postponed one, the future one or a non-league game.
     expect(eal.divisions).toMatchObject([{ divisionId: 'eal', classification: 'contest-type', official: null, countedFinals: 1, missingLeaguePast: 2 }]);
+    // Only a division whose league publishes no schedule (official mode 'none': the EAL, the Sunset and
+    // the seven San Diego divisions) carries the count; the SoCal ones are not in this run and have no
+    // games here, so theirs is 0. Every fixture-backed division has no such field.
     for (const d of leagueHealth.filter((h) => h.leagueId !== 'eal').flatMap((h) => h.divisions)) {
-      expect('missingLeaguePast' in d, d.divisionId).toBe(false);
+      const none = getDivision(d.divisionId).official.mode === 'none';
+      expect('missingLeaguePast' in d, d.divisionId).toBe(none);
+      if (none) expect(d.missingLeaguePast, d.divisionId).toBe(0);
     }
   });
 });
@@ -312,13 +320,16 @@ describe('prepareRun and the outputs', () => {
     const meta = JSON.parse(readFileSync(metaPath, 'utf8')) as SnapshotMeta;
     expect(meta.fetchedAt).toBe('2026-10-02T15:00:00.000Z');
     expect(meta.today).toBe('2026-10-02');
-    expect(meta.commitSummary).toMatch(/^SCVAL \+\d+ finals · BVAL \+\d+ · PCAL \+\d+ · MCAL \+\d+ · EAL frozen \(not fetched\)$/);
+    expect(meta.commitSummary).toMatch(
+      /^SCVAL \+\d+ finals · BVAL \+\d+ · PCAL \+\d+ · MCAL \+\d+ · EAL frozen \(not fetched\) · Sunset frozen \(not fetched\) · City frozen \(not fetched\) · North frozen \(not fetched\) · Metro frozen \(not fetched\) · Independent frozen \(not fetched\)$/,
+    );
     expect(meta.leagues.map((l) => [l.id, l.state])).toEqual([
       ['scval', 'fresh'],
       ['bval', 'fresh'],
       ['pcal', 'fresh'],
       ['mcal', 'fresh'],
       ['eal', 'frozen'],
+      ...SOCAL_FROZEN,
     ]);
     expect(meta.requests).toEqual({ maxpreps: 56, sblive: 0, official: 0 });
     expect(typeof meta.contentHash).toBe('string');
@@ -359,6 +370,7 @@ describe('steps 07-08 never abort the run', () => {
       ['pcal', 'degraded'],
       ['mcal', 'degraded'],
       ['eal', 'frozen'],
+      ...SOCAL_FROZEN,
     ]);
     expect(snapshot.leagueHealth.find((h) => h.leagueId === 'pcal')?.reasons).toEqual([
       "The official PCAL schedule could not be applied this run; league games are identified by MaxPreps' league flag this run.",

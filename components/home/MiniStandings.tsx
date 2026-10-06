@@ -3,9 +3,10 @@ import Link from 'next/link';
 import { GoalDiffCell } from '../ui/GoalDiffBar';
 import PlaceMark from '../ui/PlaceMark';
 import SectionHeader from '../ui/SectionHeader';
-import { NoGoalDiff } from '../ui/StandingsTable';
+import { NoGoalDiff, biggestGoalDiff } from '../ui/StandingsTable';
 import TeamMonogram from '../ui/TeamMonogram';
 import { EM_DASH, monthDay, placeWords } from '../../lib/format';
+import { getDivision, getLeague, regionOf } from '../../lib/leagues';
 import { ladderLineAfter } from '../standings/standings-view';
 
 import type { MiniDivisionView, MiniRow } from './home-view';
@@ -40,6 +41,7 @@ import type { MiniDivisionView, MiniRow } from './home-view';
  * itself wraps onto two lines at a space, never per letter; a word still too long ends in "…".
  *
  * A shared place reads `T4` (sr-only "tied for 4th"), the site-wide tie mark.
+ *
  */
 export interface MiniStandingsProps {
   /** The division's rows, its `href` (`/standings/<league>#<division>`), its `home` config and its heading (null for a single-division league). */
@@ -87,10 +89,19 @@ export function MiniStandings({ division, legend, className }: MiniStandingsProp
     home.lineAfter,
   );
   const lineAt = lineAfter === null ? -1 : lineAfter - 1;
-  const kicker = showDivisionLabel && division.heading ? division.heading : 'League table';
+  // A group of independents (the Southern Section independents, DESIGN §24.10) is in no league: its kicker is
+  // 'Table' and its caption names the group in full, never 'Independent league standings'.
+  const league = getLeague(getDivision(division.id).leagueId);
+  const kicker = showDivisionLabel && division.heading ? division.heading : league.independents ? 'Table' : 'League table';
+  // "Division" only for NorCal: the San Diego Section calls Palomar or Metro Mesa a league, and its
+  // "Division I" / "Division II" are playoff tiers (standings-view.ts tableWords, review 2026-10-06).
   const subject = showDivisionLabel && division.heading
-    ? `${division.heading} Division league standings`
-    : `${division.leagueShort} league standings`;
+    ? regionOf(league.id) === 'socal'
+      ? `${division.heading} league standings`
+      : `${division.heading} Division league standings`
+    : league.independents
+      ? `${league.name} standings`
+      : `${division.leagueShort} league standings`;
   return (
     <section className={className}>
       <SectionHeader
@@ -143,10 +154,13 @@ export function MiniStandings({ division, legend, className }: MiniStandingsProp
         <div className="px-gutter md:px-0">
           <p className="mt-2 mb-0 text-meta text-ink-3">
             Top {shown.length} of {division.total}
-            <span className="hidden @min-[23.4375rem]:inline">
-              {' '}
-              &middot; bars scaled to {where}&rsquo;s biggest goal difference ({division.gdDomain})
-            </span>
+            {/* Only when some team has a goal difference: gdDomain's floor of 1 is a scale, not a fact. */}
+            {biggestGoalDiff(division.rows.map((r) => r.gd)) > 0 ? (
+              <span className="hidden @min-[23.4375rem]:inline">
+                {' '}
+                &middot; bars scaled to {where}&rsquo;s biggest goal difference ({division.gdDomain})
+              </span>
+            ) : null}
           </p>
           {legend ? (
             <details className="sx-disclosure mt-3">

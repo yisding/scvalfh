@@ -22,6 +22,7 @@ import { teamJvStanding } from '../../../components/standings/jv-standings-view'
 import { buildTeamJvView } from '../../../components/teams/jv-view';
 import { buildRosterView, type RosterView } from '../../../components/teams/roster-view';
 import { buildTeamPageView, type TeamPageView } from '../../../components/teams/team-view';
+import { regionIdSuffix } from '../../../components/leaders/leaders-view';
 import Arrow from '../../../components/ui/Arrow';
 import EmptyState from '../../../components/ui/EmptyState';
 import ExternalLink from '../../../components/ui/ExternalLink';
@@ -33,10 +34,10 @@ import MarginStrip from '../../../components/ui/MarginStrip';
 import { formStripName, plural } from '../../../components/ui/plural';
 import SectionHeader from '../../../components/ui/SectionHeader';
 import { DATA_CORRECTIONS_URL, OG_BASE } from '../../../components/layout/site';
-import { getTeamSlugs } from '../../../lib/data';
+import { getTeamSlugs, getToday } from '../../../lib/data';
 import { ordinal, recordString, shortDate } from '../../../lib/format';
 import { getHistoryFor, getHistorySeason, getHistoryStandings } from '../../../lib/history';
-import { divisionHeading, leagueOfDivision } from '../../../lib/leagues';
+import { divisionHeading, leagueOfDivision, regionOf } from '../../../lib/leagues';
 import type { DivisionId, LeagueId } from '../../../lib/types';
 
 /**
@@ -117,9 +118,12 @@ import type { DivisionId, LeagueId } from '../../../lib/types';
  * the official-schedule link to the division's own official schedule (config), which a league that
  * publishes none (the EAL) does not get. The postseason section's anchor is `#postseason` on
  * every page, so no MCAL URL carries a CCS concept either.
+ *
+ * A Southern Section independent (DESIGN §24.10) gets the same page as a league team: its table is the
+ * group's (its games against the other four), so "League" here means those games, as the standings page says.
  */
 
-/** All 49 prerendered; anything else is a 404 rather than a runtime render. */
+/** All 99 prerendered; anything else is a 404 rather than a runtime render. */
 export const dynamicParams = false;
 
 export function generateStaticParams() {
@@ -141,7 +145,7 @@ export async function generateMetadata({ params }: PageProps<'/teams/[slug]'>): 
   );
   return {
     title: `${team.name} field hockey`,
-    description: `${team.name} ${team.mascot} girls varsity field hockey (${view.league.shortName}), unofficial: ${record}. Schedule, results, ${extras}goal margins and ${postseasonKicker(view)}.`,
+    description: `${team.name} ${team.mascot} girls varsity field hockey (${view.league.shortName}), unofficial: ${record}. Schedule, results, ${extras}goal margins and ${postseasonDescription(view)}.`,
     alternates: { canonical: `/teams/${team.slug}` },
     openGraph: {
       ...OG_BASE,
@@ -165,7 +169,11 @@ function rosterExtras(stats: PlayerStatsView | null, roster: RosterView | null):
   return parts.map((p) => `${p}, `).join('');
 }
 
-/** `CCS picture` (SCVAL, BVAL, PCAL) | `MCAL tournament picture` | `Super Regional picture` (EAL), by `postseason.kind`. */
+/**
+ * `CCS picture` (SCVAL, BVAL, PCAL) | `MCAL tournament picture` | `Super Regional picture` (EAL) |
+ * `San Diego Section playoffs picture` (City, North County, Metro) | `Postseason` (the Sunset, which has
+ * none: CIF-SS Blue Book 2011.1, 3500.2, so there is no picture to draw), by `postseason.kind`.
+ */
 function postseasonKicker(view: TeamPageView): string {
   const { postseasonKind, postseasonName, shortName } = view.league;
   switch (postseasonKind) {
@@ -174,8 +182,16 @@ function postseasonKicker(view: TeamPageView): string {
     case 'league-tournament':
       return `${shortName} tournament picture`;
     case 'unbracketed-tournament':
+    case 'section-playoffs':
       return `${postseasonName} picture`;
+    case 'no-postseason':
+      return 'Postseason';
   }
+}
+
+/** The meta description's last words: the kicker, except where there is no postseason to picture. */
+function postseasonDescription(view: TeamPageView): string {
+  return view.league.postseasonKind === 'no-postseason' ? 'why there are no playoffs' : postseasonKicker(view);
 }
 
 /**
@@ -222,6 +238,16 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
   const jvStanding = teamJvStanding(team.slug);
   const playerStats = buildPlayerStatsView(team.slug, [...leagueLog, ...nonLeagueLog]);
   const rosterCount = roster && roster.status !== 'error' ? roster.rows.length : 0;
+  // A team whose every league game is still to come (Metro South Bay before Oct 7, Newport Harbor before
+  // Oct 13) has no league result for MaxPreps to have either, so its empty state names the first game
+  // instead of "MaxPreps may have results we have not picked up yet" (review 2026-10-06). That hedge stays
+  // for a league game dated on or before the snapshot's Pacific day that has no score.
+  const today = getToday();
+  const earliestLeague = leagueLog.reduce<(typeof leagueLog)[number] | null>(
+    (first, g) => (first === null || g.dateLocal < first.dateLocal ? g : first),
+    null,
+  );
+  const firstLeagueGame = earliestLeague !== null && earliestLeague.dateKey > today ? earliestLeague : null;
   const hasPlayedLeagueGames = marginEntries.some(
     (entry) => entry.margin !== null && !entry.excludedFromMargin,
   );
@@ -326,21 +352,25 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
             </section>
 
             <section className="min-w-0 md:max-lg:col-span-2 lg:row-span-2">
-              <SectionHeader kicker="Margin by league game" meta={`${leaguePlayed} played`} />
+              <SectionHeader
+                kicker="Margin by league game"
+                meta={`${leaguePlayed} played`}
+              />
               {/* `slots`: the team's real league slate (`leagueScheduled`, from the official
-                  schedule or the league's games per team). */}
+                  schedule or the league's games per team). A league with no fixed schedule (the
+                  Sunset) has no slate to draw ahead, so its axis is the games it has: no `?` slots. */}
               <div className="sx-card p-4 md:p-5">
                 <MarginStrip
                   entries={marginEntries}
                   teamName={team.name}
-                  slots={leagueScheduled}
+                  slots={leagueScheduled ?? marginEntries.length}
                   className="hidden md:block"
                   height={200}
                 />
                 <MarginStrip
                   entries={marginEntries}
                   teamName={team.name}
-                  slots={leagueScheduled}
+                  slots={leagueScheduled ?? marginEntries.length}
                   className="md:hidden"
                   height={160}
                 />
@@ -350,13 +380,25 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
         ) : (
           <section className="min-w-0 md:col-span-2">
             <SectionHeader kicker="Form and goal margin" />
-            <EmptyState
-              heading={`No league results reported for ${team.name}.`}
-              action={maxprepsAction}
-            >
-              Their schedule is below, and MaxPreps may have results we have not picked up yet. We
-              do not fill the gap with zeroes.
-            </EmptyState>
+            {firstLeagueGame ? (
+              <EmptyState
+                heading={`${team.name} has not played a ${view.scopeLabel} game yet.`}
+                action={maxprepsAction}
+              >
+                The first is {shortDate(firstLeagueGame.dateLocal)}{' '}
+                {firstLeagueGame.away.slug === team.slug && firstLeagueGame.site !== 'neutral' ? 'at' : 'vs'}{' '}
+                {firstLeagueGame.away.slug === team.slug ? firstLeagueGame.home.name : firstLeagueGame.away.name}. Their
+                schedule is below.
+              </EmptyState>
+            ) : (
+              <EmptyState
+                heading={`No league results reported for ${team.name}.`}
+                action={maxprepsAction}
+              >
+                Their schedule is below, and MaxPreps may have results we have not picked up yet. We
+                do not fill the gap with zeroes.
+              </EmptyState>
+            )}
           </section>
         )}
 
@@ -388,7 +430,7 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
         >
           <SectionHeader
             kicker="League game log"
-            meta={`${leaguePlayed} of ${leagueScheduled}`}
+            meta={leagueScheduled === null ? `${leaguePlayed} played` : `${leaguePlayed} of ${leagueScheduled}`}
             action={{ href: view.standingsHref, label: 'Standings' }}
           />
           <TeamGameLog
@@ -396,13 +438,16 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
             perspective={team.slug}
             emptyHeading={`No league games are published for ${team.name}.`}
             emptyBody={
-              view.officialScheduleUrl
+              view.officialScheduleUrl && leagueScheduled !== null
                 ? `The official ${view.league.shortName} schedule has ${plural(
                     leagueScheduled,
                     `${view.league.gamesWord} game`,
                   )} for them; none of those fixtures has a contest in any data source.`
-                : // No official schedule to compare with: the league games are the ones MaxPreps marks.
-                  `MaxPreps marks none of ${team.name}’s games as ${view.league.shortName} league games yet.`
+                : view.league.classification === 'membership'
+                  ? // The San Diego leagues: every game between two division members is a league game.
+                    `No game between ${team.name} and another ${view.scopeLabel} team is on MaxPreps’ schedules yet.`
+                  : // No official schedule to compare with: the league games are the ones MaxPreps marks.
+                    `MaxPreps marks none of ${team.name}’s games as ${view.league.shortName} league games yet.`
             }
           />
         </section>
@@ -540,7 +585,7 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
             <SectionHeader
               kicker="Player stats"
               meta="This season, from MaxPreps"
-              action={{ href: '/leaders#players', label: 'Site leaders' }}
+              action={{ href: `/leaders#players${regionIdSuffix(regionOf(team.league))}`, label: 'Site leaders' }}
             />
             <TeamPlayerStats view={playerStats} />
           </section>

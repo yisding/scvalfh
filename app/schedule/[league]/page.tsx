@@ -24,6 +24,7 @@ import {
   getToday,
 } from '../../../lib/data';
 import { monthDay, plural } from '../../../lib/format';
+import { isIndependentLeague } from '../../../lib/leagues';
 import { SEASON_DISPLAY } from '../../../lib/season';
 
 
@@ -45,7 +46,17 @@ import { SEASON_DISPLAY } from '../../../lib/season';
  *
  * `LIVE` is never a running score anywhere on this site: the snapshot is a once- or twice-daily
  * cron, and `/about#updates` says so in plain words.
+ *
+ * The Southern Section independents (DESIGN §24.9) get the same page; its title is "Independent teams:
+ * schedule and results" (its short name is an adjective) and its header says "the independents".
  */
+
+/** 'SCVAL schedule and results'; for the independents, 'Independent teams: schedule and results'. */
+function scheduleTitle(summary: { id: string; shortName: string }): string {
+  return isIndependentLeague(summary.id)
+    ? `${summary.shortName} teams: schedule and results`
+    : `${summary.shortName} schedule and results`;
+}
 export const dynamicParams = false;
 
 export function generateStaticParams(): { league: string }[] {
@@ -57,8 +68,10 @@ export async function generateMetadata({ params }: PageProps<'/schedule/[league]
   const summary = getLeagueSummary(league);
   if (!summary) return { title: 'League not found' };
   const counts = countGames(getGamesByDate({ league: summary.id }).flatMap((group) => group.games));
-  const title = `${summary.shortName} schedule and results`;
-  const description = `All ${plural(counts.total, 'contest')} involving ${summary.shortName} teams for ${SEASON_DISPLAY}, grouped by date: ${counts.final} final, ${counts.upcoming} still to come. Filter by team, game type or status.`;
+  const title = scheduleTitle(summary);
+  // 'involving SCVAL teams'; the independents' short name is an adjective, so theirs is 'involving the independents'.
+  const involving = isIndependentLeague(summary.id) ? 'the independents' : `${summary.shortName} teams`;
+  const description = `All ${plural(counts.total, 'contest')} involving ${involving} for ${SEASON_DISPLAY}, grouped by date: ${counts.final} final, ${counts.upcoming} still to come. Filter by team, game type or status.`;
   return {
     title,
     description,
@@ -86,12 +99,13 @@ export default async function LeagueSchedulePage({ params }: PageProps<'/schedul
     // estimates mid-flight, and the target slid out of view. An instant jump lands exactly.
     <div className="pb-section-lg [--sx-sticky-stack:var(--spacing-topbar)] md:[--sx-sticky-stack:var(--spacing-topbar-lg)] [html:has(&)]:[scroll-behavior:auto]">
       <PageHeader
-        title={`${summary.shortName} schedule and results`}
+        title={scheduleTitle(summary)}
         description={
           span ? (
             <>
-              {summary.name} &middot; {span} &middot; every contest involving {summary.shortName} teams,
-              league and non-league, oldest first &middot; all times Pacific
+              {summary.name} &middot; {span} &middot; every contest involving {isIndependentLeague(summary.id) ? 'the independents,' : <>{summary.shortName} teams,</>}{' '}
+              league and non-league, oldest
+              first &middot; all times Pacific
             </>
           ) : (
             <>{summary.name}</>
@@ -99,13 +113,14 @@ export default async function LeagueSchedulePage({ params }: PageProps<'/schedul
         }
       />
 
+      {/* The page league's region only, plus All → the index (DESIGN-socal §2.4). */}
       <LeagueSwitcher
         mode="link"
         includeAll
         label="Leagues"
-        leagues={leagueChips()}
+        leagues={leagueChips(summary.region)}
         current={summary.id}
-        hrefs={leagueHrefs('/schedule')}
+        hrefs={leagueHrefs('/schedule', summary.region)}
         className="mt-4"
       />
 

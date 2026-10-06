@@ -1,38 +1,75 @@
 # NorCal High School Field Hockey (repo: scvalfh)
 
 Scores, standings, schedules and playoff pictures for the 49 girls varsity field hockey teams of
-five leagues: SCVAL, BVAL and PCAL in the CIF Central Coast Section, MCAL in the North Coast
-Section and the Northern Section's EAL. Teams outside these five leagues appear only as opponents
-(this is the site's scope note, `SITE_SCOPE_NOTE` in `components/layout/site.ts`). A static Next.js site rebuilt from one JSON
+Northern California's five leagues: SCVAL, BVAL and PCAL in the CIF Central Coast Section, MCAL in
+the North Coast Section and the Northern Section's EAL. The site also covers Southern California's
+53 teams (the Southern Section's Sunset field hockey league, the San Diego Section's City, North
+County and Metro conferences, and the Southern Section's five independents, Bonita, Chaminade,
+Glendora, Harvard-Westlake and Thousand Oaks, schools in no field hockey league) behind a NorCal/SoCal toggle whose
+default is NorCal, because the owner keeps the NorCal focus (2026-10-06); the browser remembers the
+choice, and without JavaScript both regions show, NorCal first. Every California team we found with
+a 2026 varsity game on MaxPreps (2026-10-06) is covered; other teams appear only as opponents (this is the site's scope
+note, `SITE_SCOPE_NOTE` in `components/layout/site.ts`). A static Next.js site rebuilt from one JSON
 snapshot, refreshed twice a day in season by a scheduled GitHub Actions job. The same source also
 builds and serves on vinext (Vite), on Node and as a Cloudflare Worker; see "Deploy notes".
 
-Unofficial. Not affiliated with SCVAL, BVAL, PCAL, MCAL, EAL, CIF-CCS, CIF-NCS, CIF-NS, MaxPreps or
-Sports Illustrated. See "Attribution and legal posture" below.
+Unofficial. Not affiliated with SCVAL, BVAL, PCAL, MCAL, EAL, the Sunset, City, North County or Metro
+leagues, CIF-CCS, CIF-NCS, CIF-NS, CIF-SS, CIF-SDS, the San Diego Field Hockey Officials
+Association, MaxPreps or Sports Illustrated. See "Attribution and legal posture" below.
 
 ## Leagues and teams
 
-| League | Section | Divisions (teams) | Teams |
-|---|---|---|---|
-| SCVAL — Santa Clara Valley Athletic League | CCS | De Anza (7), El Camino (8) | 15 |
-| BVAL — Blossom Valley Athletic League | CCS | Mt. Hamilton (6), Santa Teresa (6) | 12 |
-| PCAL — Pacific Coast Athletic League | CCS | one division (7) | 7 |
-| MCAL — Marin County Athletic League | NCS | one division (9) | 9 |
-| EAL — Eastern Athletic League | NS | one division (6) | 6 |
+| League | Region | Section | Divisions (teams) | Teams |
+|---|---|---|---|---|
+| SCVAL — Santa Clara Valley Athletic League | NorCal | CCS | De Anza (7), El Camino (8) | 15 |
+| BVAL — Blossom Valley Athletic League | NorCal | CCS | Mt. Hamilton (6), Santa Teresa (6) | 12 |
+| PCAL — Pacific Coast Athletic League | NorCal | CCS | one division (7) | 7 |
+| MCAL — Marin County Athletic League | NorCal | NCS | one division (9) | 9 |
+| EAL — Eastern Athletic League | NorCal | NS | one division (6) | 6 |
+| Sunset — Sunset field hockey league | SoCal | SS | one division (8) | 8 |
+| City — City Conference | SoCal | SDS | City Western (6), City Eastern (6) | 12 |
+| North — North County Conference | SoCal | SDS | Avocado (6), Palomar (7), Valley (6) | 19 |
+| Metro — Metro Conference | SoCal | SDS | Metro Mesa (5), Metro South Bay (4) | 9 |
+| Independent — Southern Section independents | SoCal | SS | one table (5): Bonita, Chaminade, Glendora, Harvard-Westlake, Thousand Oaks | 5 |
 
-49 teams in all. PCAL, MCAL and EAL are single-division leagues, so the site shows no division picker
-and no division label for them. Every league fact (ids, MaxPreps ids, rules, tiebreak chains with
-their citations, postseason ladders, official sources, data-quality lists) lives in
-`lib/leagues.ts`; the teams live in `lib/registry/{scval,bval,pcal,mcal,eal}.ts`, assembled by
-`lib/teams.ts`. The CCS holds a 16-team championship fed by SCVAL (7 berths), BVAL (4), PCAL (2)
+102 teams in all, 49 in Northern California and 53 in Southern California, in nine leagues and one
+group of independents. The North County Conference's short name is "North" (owner decision,
+2026-10-06: "North County" made its chip too wide); where the short name would stand alone as a
+control's target or a sentence's subject it reads "North County" (`standaloneName`), so it never reads
+as a direction ("Jump to North County ↓"). The Southern Section independents are not a league: five
+Southern Section schools in no field hockey league, grouped by this site (short name "Independent",
+`independents: true` in `lib/leagues.ts`). Glendora, Harvard-Westlake and Thousand Oaks are each the
+only field hockey team in their all-sports league on MaxPreps (the Palomares League, League B and the
+Marmonte League); Bonita and Chaminade sit in MaxPreps' and si.com's Sunset tables, but MaxPreps marks
+none of their games against the five Orange County Sunset teams as a league game and both play every
+other independent home and away, so they are independents here (owner decision, 2026-10-06). The group
+has a table of its members' games against each other (`classification: 'membership'`, ordered by this
+site's 3-1-0 points; no ladder or postseason), and every count of leagues names it apart ("nine
+leagues and five independents", never "ten leagues"). PCAL, MCAL, EAL and the
+Sunset are single-division leagues, so the site shows no division picker and no division label for
+them. A San Diego conference is a league here and the Section's leagues are its divisions (the
+Section's 2026-27 League Alignment; the division names are ours). Every league fact (ids, MaxPreps
+ids, rules, tiebreak chains with their citations, postseason ladders, official sources,
+data-quality lists) lives in `lib/leagues.ts`, along with the regions (`REGIONS`, `regionOf`); the
+teams live in `lib/registry/{scval,bval,pcal,mcal,eal,sunset,city,north-county,metro,independents}.ts`, assembled
+by `lib/teams.ts`. The CCS holds a 16-team championship fed by SCVAL (7 berths), BVAL (4), PCAL (2)
 and three at-large berths; the NCS holds no field hockey championship, so MCAL's own six-team
 tournament is its postseason; the Northern Section's EAL postseason is the Super Regional (Oct
 30-31, the top six qualify, format and site not published), which the site describes and never
-draws a bracket for. The 2025-26 history covers SCVAL (official PDFs) and BVAL (official
-Google Sheet and all-league documents); PCAL, MCAL and EAL are marked unavailable on the page, with the
-reason (we found no official 2025-26 final standings: PCAL's site stops at 2024-25, MCAL posts
-none of its own and the EAL posts none), and nothing third-party is shown in their place. MCAL's card links the league's
-official 2025 all-league team without reproducing it. Rosters and player stats cover all 49 teams.
+draws a bracket for. The Southern Section holds no field hockey playoffs, so a Sunset team's season
+ends with its last game (Oct 31 at the latest); the San Diego Section playoffs (Nov 2-14, Open 8,
+Division I 12, Division II 12) are placed by the Section from its power rankings, a designated league
+champion is guaranteed at least a play-in, and the site states that rule and never projects a seed.
+The independents have no postseason either, for the same Southern Section reason.
+The 2025-26 history covers SCVAL (official PDFs) and BVAL (official
+Google Sheet and all-league documents); PCAL, MCAL, EAL, the Sunset, City, North County and Metro are
+marked unavailable on the page, with the reason (we found no official 2025-26 final standings: PCAL's
+site stops at 2024-25, MCAL posts none of its own, the EAL posts none, no Sunset document exists that we
+could find, and the San Diego Section's power rankings are not league standings), and nothing
+third-party is shown in their place; the independents' card says they played as independents in
+2025-26 too (MaxPreps' 2025-26 Palomares, League B and Marmonte tables each list one field hockey
+team), so there was no table to publish. MCAL's card links the league's
+official 2025 all-league team without reproducing it. Rosters and player stats cover all 102 teams.
 
 The EAL has no schedule or standings document of its own: its rules come from the CIF Northern
 Section's Field Hockey Guidelines 2026-28, its league games are the games MaxPreps marks as league
@@ -41,35 +78,57 @@ varsity team in 2026 and is left out. Davis and Bella Vista are Sac-Joaquin Sect
 play field hockey in the EAL, so the site prints that note wherever it lists the EAL's schools under a
 league heading.
 
-People pick the league they want to see in two ways: the home page remembers one (chips and a
-"Show <league> here" button, applied before first paint), and a team finder searches all 49
-schools by name, city or mascot and pins one.
+None of the four Southern California leagues publishes a schedule, standings or a points rule that we
+could find, so the site orders their tables by its own 3-1-0 points and says so on every page. The
+Sunset is a field-hockey-only grouping of eight Southern Section schools in Orange and
+Riverside counties (not the all-sports Sunset League); its league games are the games MaxPreps marks as
+league games, and there is no round robin, so the site shows games played without "of N". In the San
+Diego Section every pair of division-mates is scheduled twice except, on 2026-10-05 (Pacific), Metro
+Mesa's Bonita Vista and Helix, who meet once, and a game counts for a division when both sides are its
+members, whatever MaxPreps' league flag says (the flag misses many of them). Under the Section's
+officials' procedures a level varsity game outside a tournament goes to overtime and then a shootout;
+MaxPreps records many of these as a level score marked W and L, and the site counts the flagged team's
+win but prints no decider tag and never says a shootout decided it (no box score carries a tally, and
+si.com and the Section's power rankings record some of these games with the shootout goal added). See
+"How standings are computed".
+
+People pick what they want to see in three ways: a NorCal/SoCal switcher picks the region, the home
+page remembers a league (chips and a "Show <league> here" button, applied before first paint, which
+also sets its region), and a team finder searches all 102 schools by name, city or mascot and pins one.
 
 ## Live routes
 
 Every route is static. Dynamic routes list their params in `generateStaticParams` and set
 `dynamicParams = false`, so an unknown param is a 404; nothing reads `searchParams`.
 
+Region scoping: every index page (`/`, `/standings`, `/teams`, `/schedule`, `/playoffs`, `/leaders`,
+`/jv`, `/history/2025-26`, `/about`) renders both regions, NorCal first, inside `data-region-scope`
+blocks, and shows one after hydration. The region switcher ("NorCal" / "SoCal") sits at the start of
+the home page's scope row and directly under the page header elsewhere. An id that a region block
+repeats gets `-socal` on the Southern California copy (`#latest-every-league-socal`, `#elo-rating-socal`),
+so NorCal's ids are unchanged, and a link to an anchor inside the hidden region opens that region.
+Per-league pages show their own region's league chips.
+
 | Route | What it shows |
 |---|---|
-| `/` | "What just happened in my league, and when is my team's next game?" Find-your-team on a first visit, then one panel per league: latest scores, mini standings, next games, teams and the postseason card |
-| `/standings` | Every division as a compact full table, grouped section → league → division; `#de-anza`, `#el-camino`, `#bval`, `#mcal`, `#ns`, `#eal` and the other division anchors resolve with no JavaScript. Kept for links; the nav's Teams page carries the same tables |
-| `/standings/[league]` | One league's full standings page (5 pages: `scval`, `bval`, `pcal`, `mcal`, `eal`), with PTS, W-L-T, GF/GA/GD, GP, games left and the most points still reachable; a pill links its JV tables on `/jv` |
+| `/` | "What just happened in my league, and when is my team's next game?" Find-your-team on a first visit (one finder over all 102, a card grid per region), then one panel per league of the region shown: latest scores, mini standings, next games, teams and the postseason card (the independents' panel has their group note and team links where the mini standings would be, and its card's link is their schedule) |
+| `/standings` | Every division as a compact full table, grouped region → section → league → division; `#norcal`, `#socal`, `#de-anza`, `#el-camino`, `#bval`, `#mcal`, `#ns`, `#eal`, `#ss`, `#sds`, `#sunset`, `#independents`, `#city`, `#north-county`, `#metro`, `#city-western`, `#palomar` and the other division anchors resolve with no JavaScript (`#independents` is the group's note and team links, with no table). Kept for links; the nav's Teams page carries the same tables |
+| `/standings/[league]` | One league's full standings page (10 pages: `scval`, `bval`, `pcal`, `mcal`, `eal`, `sunset`, `city`, `north-county`, `metro`, `independents`), with PTS, W-L-T, GF/GA/GD, GP, games left and the most points still reachable (the Sunset, with no fixed schedule, shows GP alone); a pill links its JV tables on `/jv`. `/standings/independents` has no table: it says why ("No league table"), links the three team pages and gives the no-postseason card |
 | `/jv` | JV standings: every league's JV tables (`#scval`, …; `#de-anza`, … in a multi-division league), computed and unofficial, each shown once enough of its JV league games have a score |
-| `/schedule` | A light index: league cards, recent and next game days, and an "every game day" list whose `#YYYY-MM-DD` rows keep old date links working |
-| `/schedule/[league]` | One league's whole season, filterable client-side (5 pages) |
-| `/scores/[date]` | One day's scoreboard, grouped by league (one static page per date with a game; OG card per date), then the day's JV games (`#jv`), kept apart from the varsity counts |
+| `/schedule` | A light index: league cards, recent and next game days per region, and one "every game day" list (its game rows region-scoped) whose `#YYYY-MM-DD` rows keep old date links working |
+| `/schedule/[league]` | One league's whole season, filterable client-side (10 pages; `/schedule/independents` is "Independent teams: schedule and results", every contest involving the independents, all of them non-league games) |
+| `/scores/[date]` | One day's scoreboard (one static page per date with a game; OG card per date), the regions kept apart: `#norcal` ("Northern California": its leagues in config order, then its Non-league games), then, on a day that has one, `#between-regions` ("NorCal vs SoCal", shown in both views), then `#socal` (its repeated ids suffixed, `#non-league-socal`); a region with no game says so in one sentence. Then the day's JV games, one block per region (`#jv`, `#jv-socal`), kept apart from the varsity counts. The header counts each region when both have a game ("NorCal: 6 games" … "SoCal: 9 games") |
 | `/game/[id]` | One game's detail page (one static page per game; OG card per game). A game whose score came from si.com has an id like `sblive-123`; one that MaxPreps later published is a stub that links to it |
-| `/teams` | Teams and standings: all 49 teams, a search box, and each division's compact standings table (place, team, GP, W-L-T, PTS, the ladder line, a link to the full league table), grouped section → league → division. The search filters the tables' rows in place |
-| `/teams/[slug]` | One team's record, Elo rating (collapsed, `#elo`), schedule, results, splits and postseason line, then the school's JV games (`#jv`, kept apart from the varsity counts), its player stats and roster (49 pages, all five leagues); a player a public page ties to a club gets a club line linking that club's page |
-| `/clubs` | "Which clubs do players here play for?" The 16 youth field hockey clubs by region; for each, how many players on the 49 varsity rosters a public page ties to it (current and earlier counted separately) and from which schools, then how a player is matched (`#how-matched`) |
+| `/teams` | Teams and standings: all 102 teams, a search box, and each division's compact standings table (the independents: their group's note and team links, no table) (place, team, GP, W-L-T, PTS, the ladder line, a link to the full league table), grouped region → section → league → division. The search filters the tables' rows in place and searches both regions |
+| `/teams/[slug]` | One team's record, Elo rating (collapsed, `#elo`, with its place on its own region's board), schedule, results, splits and postseason line, then the school's JV games (`#jv`, kept apart from the varsity counts), its player stats and roster (102 pages, all nine leagues and the three independents; an independent's page counts every figure over all its games, with no place, league record, GP or ladder); a player a public page ties to a club gets a club line linking that club's page |
+| `/clubs` | "Which clubs do players here play for?" The 16 youth field hockey clubs by region; for each, how many players on the tracked varsity rosters a public page ties to it (current and earlier counted separately) and from which schools, then how a player is matched (`#how-matched`). Only the 49 NorCal teams' schools have been swept for clubs |
 | `/clubs/[slug]` | One club (16 pages, a club with no tied player included): what it is, the players from the tracked varsity rosters a public page ties to it, each with a status and the pages it rests on, its teams and programs, and its own roster pages |
-| `/commits` | "Who here has committed to play in college, and where?" The players on the 49 varsity rosters a public page says have committed to (or signed with) a college team, in field hockey or any other sport, by class year (`#class-2027`), each with the college, the sport, its level and the pages it rests on; then the colleges (`#colleges`) and how a commitment is matched (`#how-matched`). A team page's roster links each committed player's row |
-| `/playoffs` | The CCS picture: the 16-team field by league (`#scval #bval #pcal`), the SCVAL crossover and BVAL play-in, and the bracket once CCS publishes one; a card for the EAL's Super Regional (`#eal`: dates, the top-six rule and the Guidelines, no bracket) |
-| `/playoffs/[league]` | League tournaments: `/playoffs/mcal` is the MCAL six-team tournament (the only league that has a bracket; `/playoffs/eal` is a 404) |
-| `/leaders` | Season leaders across all five leagues (`#schools`, `#players`, and one anchor per board): the schools with the best overall and league records, the most goals and fewest allowed per game, the most clean sheets and, last, the highest Elo rating (top 10, `#elo-rating`), from every final in the snapshot; then the players with the most points, assists, saves and clean sheets, from the coaches' MaxPreps stats (top 10, opening to 25) |
-| `/history/2025-26` | Prior-season final standings by league (`#scval #bval #pcal #mcal #eal`): SCVAL (official PDFs, 15 teams) and BVAL (official sheet, 12 teams) as record-only tables plus all-league awards; PCAL, MCAL and EAL shown as unavailable |
-| `/about` | Per-league rules (`#rules-scval #rules-bval #rules-pcal #rules-mcal #rules-eal`), per-league health (`#health`), sources, the cross-check, every si.com backfill (`#backfills`), how JV games are sourced and shown (`#jv`) and every dropped contest (`#dropped`) |
+| `/commits` | "Who here has committed to play in college, and where?" The players on the tracked varsity rosters (only the 49 NorCal teams' have been swept) a public page says have committed to (or signed with) a college team, in field hockey or any other sport, by class year (`#class-2027`), each with the college, the sport, its level and the pages it rests on; then the colleges (`#colleges`) and how a commitment is matched (`#how-matched`). A team page's roster links each committed player's row |
+| `/playoffs` | "Playoffs", one block per region. `#norcal`: the CCS picture (the 16-team field by league, `#scval #bval #pcal`, the SCVAL crossover and BVAL play-in, and the bracket once CCS publishes one), the MCAL pointer and a card for the EAL's Super Regional (`#eal`: dates, the top-six rule and the Guidelines, no bracket). `#socal`: the San Diego Section playoffs (the qualification rule, round dates and links to the Green Book and the power rankings; no bracket and no seed until the Section publishes them after its Oct 31 seeding meeting), with `#city`, `#north-county` and `#metro` cards giving each team's playoff division (I or II), and a `#sunset` card and an `#independents` card saying the Southern Section holds no field hockey playoffs |
+| `/playoffs/[league]` | League tournaments: `/playoffs/mcal` is the MCAL six-team tournament (the only league that has a bracket; `/playoffs/eal`, `/playoffs/sunset`, `/playoffs/city` and `/playoffs/independents` are 404s) |
+| `/leaders` | Season leaders per region (`#schools`, `#players` for NorCal; `#schools-socal`, `#players-socal` for SoCal; and one anchor per board, suffixed the same way): the schools with the best overall and league records, the most goals and fewest allowed per game, the most clean sheets and, last, the highest Elo rating (top 10, `#elo-rating` / `#elo-rating-socal`; one rating scale across all nine leagues and the three independents, who are on every SoCal board except league record), from every final in the snapshot; then the players with the most points, assists, saves and clean sheets, from the coaches' MaxPreps stats (top 10, opening to 25) |
+| `/history/2025-26` | Prior-season final standings by league (`#scval #bval #pcal #mcal #eal #sunset #city #north-county #metro #independents`): SCVAL (official PDFs, 15 teams) and BVAL (official sheet, 12 teams) as record-only tables plus all-league awards; the other seven leagues shown as unavailable, with the reason, and the independents' card saying they had no league table in 2025-26 either |
+| `/about` | Per-league rules (`#rules-scval`, … `#rules-metro`), per-league health (`#health`), sources, the cross-check, every si.com backfill (`#backfills`), how JV games are sourced and shown (`#jv`) and every dropped contest (`#dropped`) |
 
 Every prerendered game, date, team and league page also has a generated `opengraph-image` route
 (the clubs pages take the site's root card), and the site publishes `sitemap.xml`, `robots.txt` and
@@ -93,9 +152,12 @@ cifccs.org / VNN .ics ──┘
 ```
 
 1. **`scripts/fetch-data.ts`** is the cron entry point, a thin CLI over `lib/pipeline/` (see
-   `docs/DATA-SOURCES.md` for every endpoint, JSON path and gotcha). It runs a **64-request
-   MaxPreps sweep**: 1 bootstrap, 7 league metadata checks, 7 standings tables and 49 team
-   schedules, at most 3 at a time and at least 500 ms apart. Failures are scoped, so one league
+   `docs/DATA-SOURCES.md` for every endpoint, JSON path and gotcha). It runs a **131-request
+   MaxPreps sweep**: 1 bootstrap, 14 league metadata checks, 14 standings tables and 102 team
+   schedules, at most 3 at a time and at least 500 ms apart. There are 15 divisions, but North
+   County's Valley division has no MaxPreps table, so its metadata and table are never requested
+   (never a `/leagues/null/v1` URL) and its cross-check is reported as skipped; the Southern Section
+   independents have no table either, so only their three schedules are read. Failures are scoped, so one league
    never blocks the others:
    - **Run abort** (exit 1, nothing written, the previous snapshot stays): the season ids changed,
      the league or team registry is inconsistent, the assembled snapshot fails validation, or
@@ -115,7 +177,11 @@ cifccs.org / VNN .ics ──┘
    its league games are the games MaxPreps marks as league games, and "a league result is missing"
    means a game MaxPreps counts for the league, dated before today, with no counted result (the
    umpires' grid for the EAL, which equalled MaxPreps' 30 league games on 2026-10-04, is a
-   cross-check only and is never called official). Secondary sources (si.com, the two VNN
+   cross-check only and is never called official). The four Southern California leagues have none
+   either: a Sunset league game is one MaxPreps marks as a league game, and a San Diego division game
+   is one between two members of the division (the Section's 2026-27 League Alignment), whatever
+   MaxPreps' flag says. No game counts for the independents (`classification: 'independent'`): every game
+   they play is non-league. Secondary sources (si.com, the two VNN
    `.ics` feeds, the CCS calendar and bracket poll) are optional and failure-tolerant.
 2. It writes **`data/snapshot.json`** (the full normalized `Team[]`/`Game[]`/`Standing[]`/
    per-league health/dropped contests/`SourceStatus[]`) and **`data/snapshot.meta.json`**
@@ -141,7 +207,7 @@ is there only for the Nov 30 10:00 PM Pacific run, which is already December 1 i
 season itself is bounded by the scripts' own Aug 1 - Nov 30 Pacific window guard
 (`inSeasonWindow` in `lib/pipeline/steps/window.ts`, over the sections' season windows in
 `lib/leagues.ts`; `fetch-player-stats` imports the same function): a run outside it exits without
-writing anything. Right after `fetch-data` it runs `pnpm fetch-player-stats` (all 49 teams; see
+writing anything. Right after `fetch-data` it runs `pnpm fetch-player-stats` (all 102 teams; see
 "Player stats" below) and then `pnpm fetch-jv` (see "JV games" below), each allowed to fail without
 stopping the run. It runs the test suite against what it just wrote; if the suite fails, it tests
 again without this run's `data/jv.json`, then (keeping the new JV file) without this run's
@@ -160,7 +226,7 @@ A manual **Run workflow** (`workflow_dispatch`) takes the same switches as input
 outside the season window), `skip_sblive` (`--no-sblive`), `leagues` (`--leagues`) and
 `accept_regression` (`--accept-regression`, for a finals drop you have checked is real). Its test
 step does not set `CI_GATE`, so the home page's teamViews budget only warns there; `ci.yml` sets
-`CI_GATE` and fails past 60 KB.
+`CI_GATE` and fails past 121 KiB (the 102 views measured 110,556 bytes on 2026-10-06).
 
 For this to work on a deployed copy of this repo:
 1. **Push the repo to GitHub** with Actions enabled.
@@ -223,7 +289,11 @@ the wrong season, an empty table, a 503 feed, a revised official schedule, a fin
 MCAL postseason games). It was not extended for the EAL: under it the EAL is "not fetched in this
 run". `tests/fixtures/corpus/eal-2026-10-04/` is a second corpus, captured live on 2026-10-04 with
 `--leagues eal` (19 files, 9 MaxPreps and 9 si.com requests), that drives the EAL's pipeline and view
-tests and a second copy-honesty pass (`EAL_CORPUS` in `tests/helpers.ts`). Tests that assert
+tests and a second copy-honesty pass (`EAL_CORPUS` in `tests/helpers.ts`).
+`tests/fixtures/corpus/socal-2026-10-06/` is a third, captured live on 2026-10-06 with `--leagues
+sunset,city,north-county,metro --no-official --no-ccs --no-vnn` (65 MaxPreps requests: 1 + 2 × 7 + 50;
+8.2 MB), that drives `tests/pipeline/socal.test.ts`: Valley's skipped table, the membership counts per
+division, Mission Bay's cross-division games and the eight San Diego shootout finals. Tests that assert
 league-specific values build their snapshot from a corpus
 (`corpusSnapshotPath('all-2026-10-02')` in `tests/helpers.ts`); tests over the bundled
 `data/snapshot.json` assert invariants only, because that file changes every run.
@@ -236,7 +306,7 @@ is the only reason to run a live fetch by hand.
 
 ### Official fixtures
 
-The EAL publishes none, so it has no bundled file. BVAL, PCAL and MCAL publish their schedules as
+The EAL and the four Southern California leagues publish none, so they have no bundled file. BVAL, PCAL and MCAL publish their schedules as
 documents, so their league fixtures are bundled in
 `data/official/{bval,pcal,mcal}-2026.json`, written by `pnpm build-official-fixtures` from the
 transcriptions under `tests/fixtures/official/source/` and never hand-edited (`pnpm
@@ -249,7 +319,7 @@ bundled fixtures are still used until someone re-transcribes them (the runbook i
 
 `data/rosters.json` holds every team's player list — name, jersey number, grade, position(s),
 height and captain flag, whatever the coach entered on MaxPreps — built by `pnpm fetch-rosters`
-from the 49 MaxPreps roster pages (every registry team, all five leagues; one entry per team) and
+from the 102 MaxPreps roster pages (every registry team, all nine leagues and the five independents; one entry per team) and
 committed, like the history file, rather than refreshed by the cron (rosters change a few times a
 season; run it by hand or weekly). The page encodes each athlete as a 37-element positional array, so
 `lib/sources/maxpreps-roster.ts` decodes it with MaxPreps' own column list and cross-checks every
@@ -270,10 +340,13 @@ lacks are pending.
 
 `data/rosters-enrichment.json` is what other public sources add to that — the schools' own
 athletics-site rosters, one roster PDF, school and local papers, MaxPreps career and JV pages —
-gathered by hand and joined on the MaxPreps athlete id. It has one entry per team (49): SCVAL was
+gathered by hand and joined on the MaxPreps athlete id. It has one entry per team (102): SCVAL was
 swept on 2026-10-02 and BVAL, PCAL and MCAL on 2026-10-03; the six EAL entries (2026-10-04) hold
 recruiting profiles only, with no coaches or sources, until someone sweeps the schools' athletics
-sites. Every entry lists
+sites; the 53 Southern California entries (2026-10-06) are stubs that say nothing has been swept, so
+those teams' pages say we have not checked other public sources. On 2026-10-06 `data/rosters.json`
+holds 1,682 players, on 87 of the 102 teams (the three independents' were read that day: Glendora 19,
+Harvard-Westlake 25, Thousand Oaks 21). Every entry lists
 what was looked at. What a team with no MaxPreps players may say about other sources is recorded
 per team (`otherRosters`: `none`, or `partial` with what the source lists and a link, as for Marin
 Academy's first-name-and-initial list); a team without it says "we have not checked other public
@@ -283,7 +356,7 @@ other on a grade MaxPreps leaves blank, the grade stays blank and each source is
 way, under the player's `conflicts`. Every value carries its source URL, kind and a confidence. `lib/rosters.ts` is the read API:
 `getTeamRoster(slug)` is MaxPreps alone, `getEnrichedTeamRoster(slug)` the merged view with
 per-field provenance, conflicts and coaches, `sortedPlayers(team)` the display order. Every team
-page, in all five leagues, renders it in a Roster section (`components/teams/TeamRoster.tsx`,
+page, in all nine leagues and the five independents, renders it in a Roster section (`components/teams/TeamRoster.tsx`,
 built by `components/teams/roster-view.ts`): varsity only, a † on every value that did not come
 from MaxPreps, the coaches, every recorded disagreement and a link to each source. A team with no
 list says why instead of showing an empty card: MaxPreps lists no players, the last update failed
@@ -300,7 +373,7 @@ player's facts. Recall is partial: see `docs/DATA-SOURCES.md` §1.1j, which also
 the per-school sources and the overlay's rules.
 
 ```bash
-pnpm fetch-rosters                                      # live: 49 roster pages → data/rosters.json
+pnpm fetch-rosters                                      # live: 102 roster pages → data/rosters.json
 pnpm fetch-rosters --leagues bval,pcal                  # only these leagues; the others keep their rows
 pnpm fetch-rosters --fixtures tests/fixtures/maxpreps   # offline, from the captured pages (SCVAL's: add --leagues scval)
 pnpm fetch-rosters --capture <dir>                      # live, and save each page read as <dir>/roster-<slug>.html
@@ -309,7 +382,7 @@ pnpm fetch-rosters --dry-run                            # parse and report, writ
 
 ### Player stats
 
-All five leagues, like the rosters it joins to: `fetch-player-stats` iterates the 49-team registry,
+All nine leagues and the five independents, like the rosters it joins to: `fetch-player-stats` iterates the 102-team registry,
 and every team page has a Player stats section.
 
 `data/player-stats.json` holds each team's season player stats as the coach entered them on
@@ -320,19 +393,22 @@ in each row's player link. A stat is kept only where the team tracks it (its tea
 zero and at least one player holds some of it), so a 0 is a real zero and an untracked stat is null; per-game and percentage columns are
 dropped. On 2026-10-03, 28 of the 43 teams had published stats (312 players, 41 goalkeepers: SCVAL 10 of
 15 teams, BVAL 8 of 12, PCAL 3 of 7, MCAL 7 of 9); on 2026-10-04, with the six EAL teams, 33 of the 49
-(404 players, 63 goalkeepers; five EAL teams, Corning none); where MaxPreps answers "No data was found" the file says `status: "none"`, and a team no
+(404 players, 63 goalkeepers; five EAL teams, Corning none); on 2026-10-06, with the 50 Southern
+California teams, 62 of the 99 (758 players); on 2026-10-06, with the three independents,
+63 of the 102 (776 players; Harvard-Westlake's 18, Glendora and Thousand Oaks none); where MaxPreps answers "No data was found" the file says `status: "none"`, and a team no
 run has covered yet is `status: "pending"`. `lib/player-stats.ts` is the read API; each team page
 renders it in a Player stats section (`components/teams/TeamPlayerStats.tsx`, built by
 `components/teams/player-stats-view.ts`), which says when MaxPreps last updated and how many games
 the team has played since. See `docs/DATA-SOURCES.md` §1.1k.
 
 The same file feeds the player boards on `/leaders` (`components/leaders/leaders-view.ts`): most
-points, assists, saves and clean sheets (MaxPreps' goalkeeper "shutouts") across all five leagues.
+points, assists, saves and clean sheets (MaxPreps' goalkeeper "shutouts"), one set of boards per
+region.
 A player can only appear where the coach tracks that stat, so each board says how many teams it
 covers and names the ones it leaves out, a 0 never makes a board, and the page names every team
 with no stats and every team whose totals are behind its finals (the team page's "games since"
 rule, shared through `gamesSinceUpdate`). The school boards on the same page come from the snapshot
-instead and cover all 49 teams: overall and league records are the `Standing` rows the standings
+instead and cover all 102 teams, again per region (the independents are on every SoCal school board but the league-record one): overall and league records are the `Standing` rows the standings
 print, clean sheets and goals per game are counted from the finals with forfeits left out, and a
 record or a rate needs at least half the median team's number of results (the teams below that
 are named). Boards rank 1, 2, 2, 4 and list up to 10th place with every row tied for it; a player
@@ -348,10 +424,10 @@ keeps its previous rows; the workflow's manual `leagues` input reaches it too). 
 to the team: one league's outage never blocks another league's stats, and the previous file is
 salvaged row by row exactly as for rosters. The run exits 1, still writing the file, when a team it
 covered failed or a team outside it lost its previous row. The call volume is the MaxPreps client's own
-(≤3 concurrent, ≥500 ms between starts): 49 small calls (about 25 seconds when it was 43).
+(≤3 concurrent, ≥500 ms between starts): 102 small calls (about 25 seconds when it was 43).
 
 ```bash
-pnpm fetch-player-stats                                      # live: 49 rollups → data/player-stats.json
+pnpm fetch-player-stats                                      # live: 102 rollups → data/player-stats.json
 pnpm fetch-player-stats --leagues bval,pcal                  # only these leagues; the others keep their rows
 pnpm fetch-player-stats --fixtures tests/fixtures/maxpreps   # offline, from the captured JSON (SCVAL's: add --leagues scval)
 pnpm fetch-player-stats --capture <dir>                      # live, and save each response body, as received, as <dir>/stats-<slug>.json
@@ -385,7 +461,8 @@ budget and the JV tables are a different kind of claim, stated once at the top o
   counted and is named under the table. JV rows carry the matching league or NL chip; an uncounted
   game carries none. On 2026-10-05: 197 league games (195 by varsity game, 2 by official fixture), 70
   non-league, 5 uncounted.
-- **How a table is ordered.** On the league's points (3 a win, 1 a tie in all five), which is how
+- **How a table is ordered.** On 3 points a win and 1 a tie (the league's own points in the five
+  NorCal leagues; the Southern California leagues publish none, so it is this site's 3-1-0), which is how
   SCVAL ordered its published 2025-26 JV tables. No league publishes a JV tiebreak, so teams level on
   points share a place. A school is in the table when it has at least one JV league game; a school
   with none is named under it.
@@ -402,9 +479,13 @@ each said:
 - **MaxPreps** (`games`): the same `schedule-calculated` call as the varsity feed, with the JV
   season id (`JV_SPORT_SEASON_ID` in `lib/season.ts`, read from `maxpreps.com/ca/field-hockey/jv/`)
   and the school's own registry id; each row becomes a `Game` through `lib/normalize.ts`, exactly
-  as a varsity row does. On 2026-10-05: 260 games for 45 of the 49 schools, 91 with a score
-  (Del Mar, Live Oak, Sobrato and Silver Creek have none).
-- **si.com** (`sblive`): each school's JV team page (48 schools; Marin Academy has no si.com page),
+  as a varsity row does, except that a level JV final is never read as a shootout win (the San
+  Diego shootout procedure is varsity only). On 2026-10-05: 260 games for 45 of the 49 schools, 91
+  with a score (Del Mar, Live Oak, Sobrato and Silver Creek have none). On 2026-10-06, with the
+  Southern California schools: 531 games for 91 of the 99, 208 of them final; with the three
+  independents (Glendora 8 games, Harvard-Westlake 13, Thousand Oaks none), 533 games for 93 of the
+  102, 209 of them final.
+- **si.com** (`sblive`): each school's JV team page (101 schools; Marin Academy has no si.com page),
   scored finals only. A JV side is one of ours only by its si.com JV team id (`lib/jv-teams.ts`,
   read from each varsity page's level switcher), never by name.
 
@@ -423,12 +504,14 @@ scores, added 12 games (mostly PCAL, where MaxPreps had one JV score) and disagr
 stopping the run, writes nothing outside the season window unless `--force`, leaves the file alone
 when only its stamps would change, takes `--leagues`, and scopes failures to the team and the
 source (a failed MaxPreps feed or si.com page keeps that school's previous rows, `carried-forward`).
-Cost per run: 49 small MaxPreps calls through the MaxPreps client's gate and up to 48 si.com pages,
-one at a time, 1 s apart (about a minute). A day page exists only for a date with a varsity game, so
+The previous file is salvaged row by row, as for rosters and stats: each team row, game and si.com row
+is held to its own schema and one that fails costs only itself, so a registry that grew (which fails
+the whole-file schema) no longer sends every team outside a `--leagues` run to `pending`. Cost per run: 102 small MaxPreps calls through the MaxPreps client's gate and up to 101 si.com pages,
+one at a time, 1 s apart (about a minute for the 48 NorCal pages; the 101 now take at least 101 seconds of that spacing alone). A day page exists only for a date with a varsity game, so
 a JV-only date (Aug 18 in 2026) is on the team pages alone.
 
 ```bash
-pnpm fetch-jv                                   # live: 49 MaxPreps JV feeds + 48 si.com JV pages → data/jv.json
+pnpm fetch-jv                                   # live: 102 MaxPreps JV feeds + 101 si.com JV pages → data/jv.json
 pnpm fetch-jv --leagues bval,pcal               # only these leagues; the others keep their rows
 pnpm fetch-jv --no-sblive                       # MaxPreps only; si.com rows are carried
 pnpm fetch-jv --fixtures tests/fixtures/jv --leagues pcal   # offline, from the PCAL captures
@@ -458,7 +541,7 @@ The rules:
   that agrees with the roster grade together with a Northern California location. A name alone
   never makes a match, and a class year that disagrees rules one out. Lacrosse, soccer and ice
   hockey clubs do not count.
-- **Only players already on the 49 tracked varsity rosters are named** (rows the overlay marks JV
+- **Only players already on the tracked varsity rosters are named** (rows the overlay marks JV
   are out), each under the roster's own spelling. A club's own roster lists many more players; the
   club's page links that roster instead of naming them.
 - **Quotes and bases are kept, never rendered.** A page shows each source as a link labelled by
@@ -485,7 +568,8 @@ Coverage, counted from the file: **16 clubs** (San Francisco 2, South Bay 7, Eas
 Sacramento area 2, the North State 1, and HTC, a Connecticut club whose California program trains in La
 Jolla; none on the Peninsula or the Central Coast, both searched; the Sacramento area and the North State
 were not searched for every club) and **94 affiliations for 80 of the 811 varsity rows, at 25 of the 49
-schools**. The 2026-10-03 sweep made 72 of them, for 66 of the 716 varsity rows at 22 of the 43 schools:
+NorCal schools**. The 50 Southern California teams' schools, added on 2026-10-06, have not been swept,
+so none of their players has a club line yet. The 2026-10-03 sweep made 72 of them, for 66 of the 716 varsity rows at 22 of the 43 schools:
 SCVAL 33 players at 12 schools, BVAL 16 at 6, MCAL 17 at 4, PCAL none. By status, 55 of those 72 are
 current, 11 past and 6 unknown; by confidence, 57 are high and 15 medium. The schools of the six EAL
 teams were swept on 2026-10-04 with the same rule. That sweep added eight affiliations for five players,
@@ -539,7 +623,7 @@ first club page with no tied player.
 
 ### College commitments
 
-`data/commits.json` holds which players on the 49 tracked varsity rosters a public page says have
+`data/commits.json` holds which players on the tracked varsity rosters a public page says have
 committed to play a sport in college (field hockey, or any other), and those colleges. A commitment
 (`commitments`, joined to `data/rosters.json` on team slug + MaxPreps athleteId, one per player) has
 the college, the `sport`, a `status` (`committed`, or `signed` only where a source says so), `asOf` (the earliest date a kept
@@ -572,7 +656,8 @@ sources agree with each other on a class a high school roster of the season can 
 
 Coverage on 2026-10-04, counted from the file (the six EAL teams' schools were swept the same day for
 field hockey commitments and then in the every-sport round, and none was found): **16 commitments,
-16 players at 9 of the 49 schools, to 14 colleges (15 programs).** By sport, 7 in field hockey, 7
+16 players at 9 of the 49 schools, to 14 colleges (15 programs).** The 50 Southern California teams'
+schools, added on 2026-10-06, have not been swept, so none of their players has a commitment line yet. By sport, 7 in field hockey, 7
 in lacrosse, 1 in soccer (St. Lawrence) and 1 in basketball (Bryn Mawr). SCVAL 9 (St. Ignatius 6, Los Altos, Saint Francis and Saratoga 1
 each), BVAL 2 (Christopher), PCAL 1 (Stevenson), MCAL 4 (Redwood 2, Berkeley, Marin Catholic), EAL none. By class
 13 from 2027 and 3 from 2028; by level 9 to NCAA Division I programs, 1 to Division II and 6 to
@@ -756,8 +841,11 @@ captured from real (offline) MaxPreps/SCVAL responses live under `tests/fixtures
 ## Next-season bootstrap
 
 MaxPreps' season ids are **never hardcoded into more than one place** — they live in
-`lib/season.ts`, and the seven league ids (and every other league fact) in `lib/leagues.ts`; both are
-re-asserted on every `fetch-data` run. When the season rolls over:
+`lib/season.ts`, and the MaxPreps league ids (and every other league fact) in `lib/leagues.ts`; both
+are re-asserted on every `fetch-data` run. The season ids are global, but **MaxPreps' league ids change
+every season**: the nine leagues have 15 divisions and 14 MaxPreps league ids, because the San Diego
+Section's Valley division has no MaxPreps table (`maxprepsLeagueId: null`); the independents' group
+is a sixteenth division with none either. When the season rolls over:
 
 ```bash
 pnpm discover-season
@@ -766,9 +854,12 @@ pnpm discover-season --help                   # usage; makes no request
 ```
 
 `scripts/discover-season.ts` reads the new `sportSeasonId`/`allSeasonId`/`genderSport`/
-`teamLevel` from MaxPreps' state hub page, resolves each of the seven league ids through
-`team-context/v1` on one representative team per division, asserts they agree with
-`leagues/{id}/v1`, and prints a diff against `lib/season.ts` and `lib/leagues.ts` plus a
+`teamLevel` from MaxPreps' state hub page, resolves each division's league id through
+`team-context/v1` on one representative team per league division (15 teams) and on each of the three
+independents (each sits alone in its own all-sports league, so the script lists their leagues and asks
+for a check by hand that each is still its league's only field hockey team), asserts they agree with
+`leagues/{id}/v1`, reports whether a member of a null-table division (Valley) now carries a league,
+and prints a diff against `lib/season.ts` and `lib/leagues.ts` plus a
 ready-to-paste constants block. **It never writes a file** — a human reviews the diff and edits
 `lib/season.ts` and `lib/leagues.ts`, because a wrong season id would silently publish last
 year's table under this year's URL. The official schedules, by-laws and fixture files are
@@ -784,7 +875,8 @@ tests/fixtures/bval --retrieved-on 2026-10-03` rebuilds the committed file offli
 is required with `--bval-from`). The script validates the result against the schema in `lib/history-schema.ts`
 and writes nothing if it fails or any school does not resolve. It is a record-only file (final W-L-T, and BVAL's overall record, as published; no
 recomputed points, since neither source has game-level data to recompute from), has one entry per
-league (`available`, or `unavailable` with the reason: PCAL, MCAL and EAL for 2025-26), and is committed
+league (`available`, or `unavailable` with the reason: PCAL, MCAL, EAL, Sunset, City, North County,
+Metro and the independents for 2025-26), and is committed
 to the repo, not regenerated by the cron.
 
 Last season's results seed the Elo rating (see "How Elo ratings are computed"), and unlike its
@@ -794,21 +886,25 @@ standings they are on MaxPreps: the schedule read takes a season id, and each te
 (a test fails until the file is the season before `lib/season.ts`'):
 
 ```bash
-pnpm fetch-prior-season                  # the season before lib/season.ts': 1 season lookup + 49 schedules
+pnpm fetch-prior-season                  # the season before lib/season.ts': 1 season lookup + 102 schedules
 pnpm fetch-prior-season --year 24-25     # another season
 pnpm fetch-prior-season --dry-run        # fetch and report, write nothing
 ```
 
 It writes every final between two registry teams, nothing else, and writes nothing at all if a
-feed fails, a row is dated outside the season, or two teams' feeds disagree on a game. Behind a
+feed fails, a live row is dated outside the season, or two teams' feeds disagree on a game (a
+deleted row dated outside the season is listed and counted as deleted instead). Behind a
 proxy that Node's fetch does not read, run it with `NODE_USE_ENV_PROXY=1`.
 
 ## How standings are computed
 
-All five leagues award 3 points for a win, 1 for a tie and 0 for a loss and order their tables by
-points (the EAL uses points to decide its title and publishes no standings, so this site extends them
-to the table and says so). Four of them can end a league game in a tie; the EAL decides a level varsity
-game with 1 v 1s. They differ in the tiebreak chain, in how a tie among three or more
+Every table is ordered by 3 points for a win, 1 for a tie and 0 for a loss. The five NorCal leagues
+award those points themselves (the EAL uses them to decide its title and publishes no standings, so
+this site extends them to the table and says so). The four Southern California leagues publish no
+points rule, no standings and no table order that we could find, so the order is this site's own
+3-1-0 points and every page says so (`orderScope: 'site'`). SCVAL, BVAL, PCAL, MCAL and the Sunset
+can end a league game in a tie; the EAL and the San Diego Section decide a level varsity game by
+1 v 1s or a shootout. They differ in the tiebreak chain, in how a tie among three or more
 teams is worked through and in the postseason, so every rule is data in `lib/leagues.ts` (with the
 by-law citation next to it) and one engine in `lib/standings.ts` runs them. Only games that count
 toward a division table count: a team's non-league and postseason games never do. The full rules,
@@ -898,6 +994,94 @@ Regional, Oct 30-31 (top six EAL/SRL schools, format and site not published, no 
 §III.E.1, §IV-§VI). The Guidelines' seeding text is quoted on `/about` and never applied. See
 `docs/LEAGUE-RULES.md` for the clauses and `docs/DESIGN.md` §22 for what the site does with them.
 
+### Sunset
+
+The Sunset (the site calls it the Sunset field hockey league; MaxPreps and si.com call it "Sunset") is
+a field-hockey-only grouping of eight Southern Section schools
+(Chaparral, Edison, Fountain Valley, Great Oak, Huntington Beach, Marina, Newport Harbor and Temecula
+Valley), not the all-sports Sunset League, which has different members. MaxPreps' 2024-25 and 2025-26
+Sunset tables list these eight and two more, Bonita and Chaminade, which the site lists with the
+Southern Section independents (owner decision, 2026-10-06, below). No Sunset website, schedule,
+standings or rules document exists that we could find. **Which games count:** a game between two of the
+eight that MaxPreps marks as a league game (classification `contest-type`, as for SCVAL and the EAL),
+Aug 25 to Oct 31, the Section's last allowable contest. There is no round robin (of the 28 pairs, 7
+meet twice and 21 once outside tournaments), so `gamesPerTeam` is null: GP is shown without "of N",
+there is no games-left or maximum-points column, and when teams' counts differ by two or more the
+table says points favour teams that have played more. **Points:** no league rule is published, so this
+site applies its own 3-1-0. **A level game** stays level: the Southern Section's Blue Book adopts the
+NFHS rules and says nothing on overtime. A game between Sunset teams has ended level (Fountain Valley
+1-1 Marina, Sep 11; MaxPreps does not mark it as a league game) and a Sunset league game has been
+decided in overtime (Great Oak 2-1 Temecula Valley, Oct 2), so each game is recorded as reported. **Tiebreaks:** none is published, so teams level on points share a place; teams
+level at the top read "Sunset co-leaders" once league play is over. **Postseason:** none. The Southern
+Section holds no field hockey playoffs (Blue Book 2026-27 Bylaws 2011.1 and 3500.2) and CIF holds no
+regional or state championship, so a Sunset team's season ends with its last game. MaxPreps' 2026-27
+Sunset table lists three of the eight with Bonita and Chaminade, ordered by winning percentage, and
+si.com's lists six of the eight with Bonita, Chaminade and two 0-0 rows; both are shown as informational
+only, and Great Oak's Aug 27 win over Bonita, which MaxPreps marks as a league game, is not counted
+here.
+
+### Southern Section independents
+
+Five Southern Section schools in no field hockey league, grouped by this site as "Southern Section
+independents" (short name "Independent", `independents: true` in `lib/leagues.ts`). Glendora,
+Harvard-Westlake and Thousand Oaks are the only field hockey teams in their all-sports leagues (the
+Palomares League, League B and the Marmonte League on MaxPreps' 2026-27 team pages; MaxPreps' 2025-26
+tables for those three leagues each list one field hockey team too). Bonita and Chaminade sit in
+MaxPreps' and si.com's 2026-27 Sunset tables (as in MaxPreps' 2024-25 and 2025-26 tables), but MaxPreps
+marks none of their nine 2026 games against the five Orange County Sunset teams as a league game, and
+each plays every other independent home and away, so the site lists them here (owner decision,
+2026-10-06). **Which games count:** every game between two of the five, whether or not MaxPreps marks it
+a league game (it marks only Bonita's two games with Chaminade), outside tournaments and inside Sep 8 to
+Oct 31 (`classification: 'membership'`, as the San Diego divisions). Nine of the ten pairs meet home and
+away and Chaminade–Thousand Oaks three times, so `gamesPerTeam` is null and GP is shown without "of N".
+The one game MaxPreps flags between an independent and a Sunset team, Bonita at Great Oak on Aug 27,
+counts for neither table. **Points, ties:** no league exists to publish a rule, so the table is this
+site's own 3-1-0 and teams level on points share a place ("Independent co-leaders" at the top once the
+season is over). Every page that shows the table says it is this site's count of the five's games
+against each other (the division's note). **Postseason:** none, for the Sunset's reason (Blue Book
+2026-27 Bylaws 2011.1 and 3500.2), so each independent's season ends with its last game, Oct 31 at the
+latest. No MaxPreps or si.com table groups the five; the site reads their team schedules, and si.com's
+Sunset page and one-school league pages for backfill only. Their games count in the Elo fit and on the
+SoCal school boards; the league-record board leaves them out, since their table is not a league record.
+
+### San Diego Section: City, North County and Metro
+
+The San Diego Section's 40 teams play in seven leagues, which the site shows as divisions of three
+conferences (City: City Western, City Eastern; North County: Avocado, Palomar, Valley; Metro: Metro
+Mesa, Metro South Bay), from the Section's 2026-27 League Alignment. No conference or league publishes
+a schedule, standings or a points rule that we could find. **Which games count:** classification
+`membership`. A game counts for a division when both sides are its members, neither row is a
+tournament or postseason contest, and it falls inside league play (from each division's first game
+between two members to Oct 30, the Section's last regular-season day), whatever MaxPreps' league flag
+says. The flag misses many of them (Patrick Henry 0 of 10, San Pasqual 3, Vista 4, Mt. Carmel 4).
+Every pair of division-mates is scheduled to meet twice on MaxPreps: 10, 10, 10, 12, 10, 8 and 6 games
+a team. The exception, on 2026-10-05 (Pacific), is Metro Mesa's Bonita Vista and Helix, who meet once
+(Oct 23), so unless a second meeting is added each plays a game short of the eight. A game
+MaxPreps flags between two divisions of one conference (Mission Bay's five against City Eastern
+teams) counts in neither table, with a note. **Points:** no league rule is published, so this site
+applies its own 3-1-0. **A level game:** the San Diego Field Hockey Officials Association's 2026
+procedures give a league, non-league or playoff varsity game a 10-minute 7 v 7 sudden-victory period,
+then 1 v 1 shootouts, and credit the shootout winner one goal; they do not cover invitational
+tournaments, and several tournament games between San Diego teams have ended level and stay level here.
+MaxPreps often records a game outside a tournament as a level score marked W and L, with no tally. The
+site counts the flagged team's win, for any two San Diego teams (the rule is the Section's, not a
+conference's), shows MaxPreps' score with no decider tag, and never says a shootout decided the game:
+no box score carries a tally, and si.com and the Section's power rankings both record Mt. Carmel–Poway
+(Sep 11) as 2-0 where MaxPreps has 0-0 marked W and L (`SectionConfig.shootout.inference`
+'unverified'; the EAL's is 'verified' by the 2026-09-28 Chico–Davis box score's "SO Win" column). The
+rule is varsity only: a level JV game stays a tie. **Tiebreaks:** the Green Book leaves them to the Section's preseason
+minutes, which are not published in a form we could read, so teams level on points share a place; the
+league designates its own champion, and teams level at the top read "{conference} co-leaders" once
+league play is over. **Postseason:** the San Diego Section playoffs, Nov 2-14, finals Nov 14 at La Jolla
+HS (Green Book 2026-27 Bylaw 2000.1): Open 8, Division I 12 and Division II 12, placed by the Section
+from its power rankings with no appeal. A designated league champion (not co-champions) is guaranteed
+at least a play-in, and every other team's only route is selection. Round dates come from the
+officials' association's calendar. Each team's playoff division (I or II) is from the Section's 2026
+Divisions sheet; the site draws no bracket and projects no seed. MaxPreps' San Diego tables do not
+follow the alignment (it has no Valley table, files Metro Mesa's five teams under "Metro- South Bay",
+and its City Eastern, Avocado and "Grossmont" tables each leave out or add teams), so every San Diego table is
+labelled informational and the known cause is printed beside the comparison.
+
 ### Computed, not copied
 
 Standings are always **computed from individual game rows**, not read off MaxPreps' own
@@ -906,7 +1090,8 @@ inconsistencies (see `docs/DATA-SOURCES.md` §7). MaxPreps' reported row is kept
 `Standing` for cross-check and shown as a flagged mismatch (⚑) when it disagrees with the
 computed one; see `/about`. A division whose MaxPreps table is known to differ (Santa Teresa
 leaves out Prospect; PCAL's is missing games; MaxPreps orders MCAL and the EAL by winning percentage
-and lists Red Bluff in the EAL) shows
+and lists Red Bluff in the EAL; its Sunset table lists three of the eight, with Bonita and Chaminade; its San Diego tables do not
+follow the Section's alignment) shows
 the known cause beside the comparison instead of an alarm.
 
 ### Official schedules decide which games count
@@ -914,9 +1099,10 @@ the known cause beside the comparison instead of an alarm.
 For BVAL, PCAL and MCAL a MaxPreps game counts toward the league table only when it matches a
 fixture on the league's official schedule (same date and home/away, or the same pair moved within
 two weeks), and never when MaxPreps marks it a tournament or neutral game or it is postseason play.
-SCVAL keeps its own rule: MaxPreps' league flag, corroborated by the official PDF grid. The EAL has
-no official schedule, so MaxPreps' league flag alone decides (a tournament or Super Regional game
-never counts). Official league games with no counted result yet are listed under the table as
+SCVAL keeps its own rule: MaxPreps' league flag, corroborated by the official PDF grid. The EAL and
+the Sunset have no official schedule, so MaxPreps' league flag alone decides (a tournament or
+postseason game never counts). The San Diego divisions have none either, and there division
+membership decides, not the flag (see "San Diego Section" above). Official league games with no counted result yet are listed under the table as
 "missing", never counted; for the EAL, which has no official games to list, that means a game
 MaxPreps marks as a league game, dated before today, with no counted result.
 
@@ -934,8 +1120,8 @@ that includes one) and listed on `/about#backfills` with both values and the rul
    flags contradict its own score; its date is more than a week from the official one while si.com
    has the game final on the official date; or it shows a 0-0 tie in a league with no overtime
    while si.com has a decided final the same day. si.com's score is published and MaxPreps'
-   value is recorded. A level si.com score between two EAL teams is never used for any of these,
-   because si.com does not say who won the 1 v 1s.
+   value is recorded. A level si.com score between two EAL teams, or two San Diego Section teams,
+   is never used for any of these, because si.com does not say who won the 1 v 1s or the shootout.
 
 If both sources have a score and neither of those holds, MaxPreps stays and the disagreement is
 published. si.com is never used for which division a team is in, for records or for standings
@@ -948,10 +1134,12 @@ page becomes a link to it. `--no-sblive` turns the whole thing off. The exact ru
 
 Each team's Elo rating (`lib/ratings.ts`, DESIGN §20) is on its team page behind a closed "Elo
 rating" disclosure under the stat tiles (`#elo`), kept low on purpose so a family checking its
-team meets the record first, and the ten highest are a board on `/leaders` (`#elo-rating`). It is in Elo points (1500 is the average
+team meets the record first, and the ten highest in each region are a board on `/leaders`
+(`#elo-rating` for NorCal, `#elo-rating-socal` for SoCal). The ratings are on one scale across all
+nine leagues and the five independents: there is one fit, over both regions, and each board takes its region's rows from it. It is in Elo points (1500 is the average
 rated team, and a team 400 points higher is about a 10-to-1 favorite) but it is not computed game
 by game: classic Elo moves two ratings after each game, which over one season of about ten games a
-team leaves it mostly where it started. Instead every final between two of the 49 teams is fitted
+team leaves it mostly where it started. Instead every final between two of the 102 teams is fitted
 at once, at every build, starting from last season's:
 
 - **The fit.** The strengths for which `home − away + home edge ≈ goal margin` holds best over the
@@ -961,8 +1149,9 @@ at once, at every build, starting from last season's:
   and a team's rating can move on a day it did not play, when an opponent's later results show it
   was stronger or weaker than it looked.
 - **The start.** Each team starts the season from its rating over last season's finals
-  (`data/prior-season.json`: every 2025-26 final between two of the 49 teams, 412 of them, from
-  MaxPreps), carried over in full. That start counts for one game: it decides the first weeks and
+  (`data/prior-season.json`: every 2025-26 final between two of the 102 teams, 936 of them, from
+  MaxPreps: 412 between NorCal teams, 513 between Southern California teams and 11 between the
+  regions; 40 involve an independent), carried over in full. That start counts for one game: it decides the first weeks and
   fades as the season's own results come in. A team with no result yet this season is shown at its
   start, as "preseason".
 - **How well it predicts.** (Measured over the 43 teams of the four leagues covered on 2026-10-02,
@@ -976,12 +1165,15 @@ at once, at every build, starting from last season's:
   value that best fits Elo's own expected-score curve over those 564 replayed predictions:
   favorites by 100-200 points scored 69% (Elo expects 70%), by 200-300 80% (81%), by 400-600 97%
   (95%).
-- **What counts.** Every final between two of the 49 teams, league or not, postseason included,
+- **What counts.** Every final between two of the 102 teams, league or not, postseason included,
   with its published score (a si.com backfill too). Forfeits, finals without a score and games
-  against schools outside the five leagues are left out, last season's included. The fit uses goals,
-  so an EAL game decided on 1 v 1s counts as level there.
-- **The board.** A team needs half the median team's counted games this season to be on the
-  `/leaders` board, as the record boards do; below that its team page shows the rating as
+  against schools outside the nine leagues and the five independents are left out, last season's included. The fit uses goals,
+  so an EAL game decided on 1 v 1s, or a level San Diego game MaxPreps marks W and L, counts as level
+  there.
+  The model's constants (the 5-goal cap, the one-game weight of last season, 175 points a goal) were
+  set on NorCal seasons and have not been tested on Southern California's.
+- **The board.** A team needs half the median team's counted games this season, in its own region,
+  to be on that region's `/leaders` board, as the record boards do; below that its team page shows the rating as
   provisional. A team page names its place only when the board lists it (the top 10).
 - **Known soft spot.** MCAL links to the three CCS leagues through few games (nine in 2025-26,
   five so far in 2026, as counted before the EAL joined), so how MCAL teams compare with the CCS
@@ -991,6 +1183,15 @@ at once, at every build, starting from last season's:
   Lassen), and this season, as of 2026-10-04, through 5 finals (Davis 2, Bella Vista, Chico and
   Pleasant Valley 1 each), so how EAL teams compare with the other leagues, and how Corning and
   Lassen compare with anyone outside the EAL, rests on very few results.
+  The two regions have the same problem on a larger scale. As of 2026-10-06 they are linked by
+  7 finals this season, all between NorCal and San Diego Section teams (City v SCVAL 3, North County
+  v SCVAL 2, City v MCAL 2; 8 more are scheduled, on Oct 16-17), and by 11 last season
+  (Leigh, Gilroy and Mitty against San Diego and Sunset teams). Inside Southern California the Sunset
+  and the San Diego Section are linked by 38 finals this season. So a NorCal rating and a SoCal
+  rating are on one scale, but how far apart the regions sit rests on a handful of games and can move
+  with each new one; `/leaders` prints those two counts from the data at every
+  build ("comparisons between NorCal and SoCal rest on 7 finals between the regions this season and
+  11 last season, so treat them as rough").
 
 ## Known limitations
 
@@ -1001,6 +1202,15 @@ at once, at every build, starting from last season's:
   `withdrawnNames` of their league in `lib/leagues.ts`, and the team search says so. Red Bluff is not
   fielding a varsity team in 2026 either (MaxPreps' EAL table still lists it as a 0-0-0 row; a JV
   game of its own exists, so the site says only "not fielding a varsity team in 2026").
+  In Southern California, Madison, Santana, Castle Park, Chula Vista, Montgomery and Sweetwater have a
+  2026-27 MaxPreps team but no varsity game there or in the San Diego Section's power rankings; Mayfair
+  has no game and is not on the Southern Section's list of participating schools. Elsewhere in
+  California, River Valley (Yuba City, Sac-Joaquin Section), North Salinas and Notre Dame (Salinas)
+  have no 2026 varsity game on MaxPreps either (each team's schedule returned no game on 2026-10-06),
+  so none has a page. The team search prints a sentence for each. Harvard-Westlake, Thousand Oaks and
+  Glendora, each the only field hockey team in its all-sports league, are covered as the Southern
+  Section independents: they have team pages and count in the Elo fit and the SoCal boards, and their
+  table is this site's count of their games against each other, with no ladder (DESIGN §24.9, §24.10).
 - **MaxPreps is wrong or incomplete for some leagues.** MaxPreps' Santa Teresa table leaves out
   Prospect and counts four of its league games as non-league; its PCAL data is missing some
   official league games and dates others differently; it orders MCAL and the EAL by winning percentage and,
@@ -1011,13 +1221,42 @@ at once, at every build, starting from last season's:
   produce and that may be a 1 v 1 win entered as a goal (shown as MaxPreps has it, with a note). The site computes those tables
   from the league's official schedule (the EAL has none: from MaxPreps' league flag) and says what
   differs, per league, on `/about#health`.
+- **MaxPreps' Southern California league assignments are missing for several teams.** Its 2026-27
+  Sunset table holds three of the eight (Great Oak, Temecula Valley, Chaparral), with Bonita and
+  Chaminade, which this site lists with the independents, and gives the five Orange County schools no
+  league at all. In San Diego it has no Valley table, its City
+  Eastern table leaves out Patrick Henry and lists Madison, its Avocado table leaves out Mt. Carmel and
+  Rancho Bernardo, its "Metro- South Bay" table holds the Metro Mesa teams, and its "Grossmont" table
+  holds El Capitan, Granite Hills and Santana while Hilltop and Southwest have no league. Its league
+  flag misses many San Diego division games, which is why membership decides there. Every Southern
+  California MaxPreps record is shown as informational, with the known cause.
+- **No Southern California league publishes a schedule, standings or tiebreaks that we could find.**
+  The San Diego division games are inferred from MaxPreps' schedules and the Section's alignment, so a
+  meeting MaxPreps does not list is invisible: on 2026-10-06 Metro Mesa shows 19 of its 20 meetings
+  (Bonita Vista and Helix meet once), and no league schedule says whether the second is missing or was
+  never scheduled. The Sunset has no schedule at all, so its teams play different numbers of league
+  games. San Diego tiebreaks are in the Section's preseason minutes, which are not published in a form
+  we could read, so teams level on points share a place; the Sunset publishes none either. Both orders
+  are this site's own 3-1-0 points.
+- **The San Diego playoff divisions can go stale.** Each team's Division I or II on `/playoffs` and its
+  team page comes from the Section's 2026 Divisions sheet (dated 2025-12-23), kept in config; nothing
+  re-checks it, so a re-sheet before the Oct 31 seeding meeting would not show until someone edits
+  `lib/leagues.ts`. The San Diego brackets are not drawn here at all.
 - **MaxPreps' manual entry lags.** Coaches enter scores by hand; at times only a fraction of
   played games carry a score days after the fact, and MaxPreps occasionally corrects a
   previously-entered result. The fetch script re-ingests every team's entire season on every run
   (not just a trailing window) specifically so corrections and backfills are never missed.
-- **SBLive's league buckets are wrong for SCVAL.** Its "De Anza" and "El Camino" pages
-  misfile several SCVAL schools between divisions and omit Santa Clara entirely, and statewide
-  name collisions (University, Los Altos, Santa Clara, Davis) are common. si.com is a cross-check and,
+- **SBLive's league buckets are wrong for SCVAL and the Sunset.** Its "De Anza" and "El Camino" pages
+  misfile several SCVAL schools between divisions and omit Santa Clara entirely; its Sunset table
+  lists six of the eight, Bonita and Chaminade (the independents here) and two 0-0 rows, and files
+  Chaparral and Temecula Valley under "Southwestern". Statewide name collisions are common (University, Los Altos, Santa Clara, Davis,
+  Westview, Del Norte, Marina, San Marcos, Mission Vista, Granite Hills and Southwest), and si.com
+  sometimes puts one of our teams' games on a namesake's page (Westview v Sage Creek on West Los
+  Angeles' Westview; Del Norte's Oct 16 games on Crescent City's), where they do not join.
+- **si.com's statewide scoreboard is read only as far as its first page.** It server-renders the
+  first 24 games of a day and loads the rest in the browser through an API the pipeline does not call,
+  so on a busy day some si.com rows are not read. The parser warns ("si.com scoreboard lists N of M
+  games"), and a row it did not read is never treated as an absent game. si.com is a cross-check and,
   under the narrow backfill rules above, a source of scores MaxPreps lacks or has plainly wrong;
   division membership, league records and standings order are **never** taken from it, and a team is
   matched only by si.com's own ids.
@@ -1055,7 +1294,10 @@ at once, at every build, starting from last season's:
   and Corning have no players on MaxPreps, so there is nothing to join to (Marin Academy's own list of 18 is
   first names, last initials and class years). Los Altos and Homestead publish no roster anywhere, and
   si.com's rosters were rejected as a source (names only, and often a different list of names).
-- **Player stats exist only where a coach enters them.** Rosters and stats cover all 49 teams; the
+- **Player stats exist only where a coach enters them.** Rosters and stats cover all 102 teams. The
+  53 Southern California teams were read live on 2026-10-06 (with them, 1,682 players on 87 of the 102
+  teams, and stats for 63); their overlay entries are unswept stubs, so their pages say we have not
+  checked other public sources. For the NorCal teams, the
   43 teams of the four earlier leagues were read live on 2026-10-03 (all 43 pages parse; SCVAL's rows
   matched the 2026-10-02 captures exactly; 6 BVAL/PCAL/MCAL teams have an empty roster on MaxPreps and
   10 of the 28 have no stats) and the six EAL teams on 2026-10-04 (Corning has no roster and no stats
@@ -1072,7 +1314,8 @@ at once, at every build, starting from last season's:
   of them list no players on MaxPreps at all). A player with no club line may still play for a club. The ties
   were researched once, on 2026-10-03 (the six EAL teams' schools on 2026-10-04, which added eight ties for five players at Davis and
   Pleasant Valley, and three club records; on 2026-10-05 a re-read of the linked recruiting profiles
-  added 14 ties for 13 players), and nothing refreshes them. See `docs/DATA-SOURCES.md` §1.1j2.
+  added 14 ties for 13 players), and nothing refreshes them. The 53 Southern California teams' schools
+  have not been swept at all. See `docs/DATA-SOURCES.md` §1.1j2.
 - **Commitment recall is partial, and the list does not update itself.** A commitment is listed
   only when a public page meets the linking rule, and social media never counts, so on 2026-10-04 16 of
   the 811 varsity rows have a commitment line (in any sport) and 40 schools have none; a player with no
@@ -1080,7 +1323,8 @@ at once, at every build, starting from last season's:
   schools on 2026-10-04, for field hockey and then every sport, with none found, though without
   SportsRecruits' athlete search or web searches for freshmen and sophomores): a later signing,
   decommitment or new commitment (the class of 2027's signing period is in November) is not shown
-  until someone redoes it by hand. See `docs/DATA-SOURCES.md` §1.1j3.
+  until someone redoes it by hand. The 50 Southern California teams' schools have not been swept. See
+  `docs/DATA-SOURCES.md` §1.1j3.
 - JV tables are unofficial and computed: no league publishes JV standings in season, a JV league game
   is identified by its varsity counterpart, and a table is shown only once 60% of its division's played
   JV league games have a score (on 2026-10-05: El Camino, MCAL and the EAL). There are no JV leaders or
@@ -1089,6 +1333,17 @@ at once, at every build, starting from last season's:
   PCAL JV league game; si.com fills part of PCAL's), JV rosters are on MaxPreps for 11 schools and JV
   stats for 4, neither of which the site shows, and nothing says authoritatively which schools field a
   JV team (York, PCAL's JV-only member, appears only as an opponent). See "JV games".
+- **The header wordmark is NorCal again, and its 2026-10-04 measurements apply.** The site name,
+  wordmark, home h1 and manifest stay NorCal (owner decision, 2026-10-06; DESIGN §24.1), so the widths
+  measured in Chromium on 2026-10-04 and recorded in `components/layout/SiteHeader.tsx` stand ("NorCal HS FH" 115 px with its padding below 1280 px, the full wordmark 193 px from
+  1280 px). The home row with the region switcher was measured at 320, 360 and 390 px (DESIGN §24.3):
+  it costs one 48 px row, and the §15.6 fold targets are missed.
+- **axe-core is pinned to the 4.13 line in CI.** axe-core 4.14.0 (published 2026-10-05) widened its
+  `label-content-name-mismatch` rule: it now compares the visible text of `aria-hidden` descendants
+  and keeps the soft hyphens of the team-picker tiles, so it flags three patterns that predate this
+  change and whose accessible names are deliberate sentences: the home pin tiles (`lib/pin-label.ts`),
+  the "Who we haven't beaten" rows and the pinned card's last-game link. With 4.13 the pass is clean
+  (176 page loads, 0 serious or critical). Reworking those three names for 4.14 is a follow-up.
 - MaxPreps' season-year URL segment is cosmetic (it always serves the current
   season, never a prior one); and a handful of MaxPreps/school-calendar start-time disagreements
   and si.com-only games that no official schedule lists are surfaced as warnings rather than
@@ -1105,6 +1360,15 @@ on a self-imposed 1-2-runs-a-day budget well under any observed rate limit, send
 User-Agent, and serves only its own cached static snapshot (it never proxies a live upstream
 request per visitor). See `docs/DATA-SOURCES.md` §6 for the full posture and the exact
 attribution text rendered in the footer.
+
+The Southern California rules and dates come from the CIF Southern Section (the Blue Book 2026-27
+Field Hockey excerpt and its sports calendar), the CIF San Diego Section (the Green Book 2026-27, the
+2026-27 League Alignment, the 2026 Divisions sheet and its power rankings) and the San Diego Field
+Hockey Officials Association (the 2026 overtime procedures and the playoff round dates). Each is named
+where the site uses it, and the footer credits the Southern Section's and San Diego
+Section's rules for the Sunset and the San Diego leagues. None of them is affiliated with this site,
+and none publishes standings that the site copies: the Southern California tables are this site's
+own computation.
 
 ## Deploy notes
 

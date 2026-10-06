@@ -55,6 +55,7 @@ import type {
 } from '../../lib/types';
 
 import { ladderLineAfter, ladderRow } from '../standings/standings-view';
+import { membershipSource } from '../ui/membership-words';
 
 // ---------------------------------------------------------------- small helpers
 
@@ -291,11 +292,16 @@ export function buildDivisionProjection(
   if (!anyResults) {
     // Preseason, or a division the source has not reported at all: there is nothing to project and
     // the play-in notes below would be false rather than merely empty.
-    // A league with no documents of its own (`official.mode: 'none'`) publishes no alignment.
+    // A league with no documents of its own (`official.mode: 'none'`) publishes no alignment. "As
+    // MaxPreps lists it" only where MaxPreps' table for this division lists every row (the EAL);
+    // otherwise the league's membership source (components/ui/membership-words.ts).
+    const source = membershipSource(division, rows.map((r) => r.team.slug));
     const roster =
-      getDivision(division).official.mode === 'none'
+      source.kind === 'maxpreps'
         ? `the ${divisionLabel} table as MaxPreps lists it`
-        : 'the official alignment';
+        : source.kind === 'official'
+          ? 'the official alignment'
+          : `the ${divisionLabel} teams (${source.source})`;
     notes.push(
       `No ${divisionLabel} league results have been reported yet, so there is nothing to project ` +
         `here. The rows below are ${roster}.`,
@@ -586,7 +592,11 @@ export interface TournamentView {
 export interface TournamentInput {
   projection: LeagueTournamentProjection;
   /** The league's table in place order, with each row's team, counted/scheduled games and written status. */
-  rows: ReadonlyArray<{ team: Team; standing: Standing; counted: number; scheduled: number; label: string }>;
+  /**
+   * `scheduled` is the division's gamesPerTeam: null only for a league with no fixed schedule (the
+   * Sunset), which has no tournament, so a seed row then reads the bare count.
+   */
+  rows: ReadonlyArray<{ team: Team; standing: Standing; counted: number; scheduled: number | null; label: string }>;
   /** Slug → team, for bracket slots. */
   teamOf: (slug: TeamSlug) => Team | undefined;
   /** The league's last tournament place (MCAL 6). */
@@ -677,7 +687,7 @@ export function buildTournamentView(input: TournamentInput): TournamentView {
     team,
     standing,
     shared: standing.tiebreak.shared,
-    gpText: `${counted}/${scheduled} GP`,
+    gpText: scheduled === null ? `${counted} GP` : `${counted}/${scheduled} GP`,
     ptsText: standing.hasReportedResults ? `${standing.computed.pts} pts` : EM_DASH,
     label: standing.hasReportedResults ? label : 'No results reported',
   }));

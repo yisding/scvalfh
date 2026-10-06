@@ -5,7 +5,8 @@ import { Fragment } from 'react';
 import ExternalLink from '../ui/ExternalLink';
 import LastUpdated from '../ui/LastUpdated';
 import { getSitePhase } from '../../lib/data';
-import { LEAGUES, SECTIONS, getSection } from '../../lib/leagues';
+import { listWords } from '../../lib/format';
+import { LEAGUES_PROPER, SECTIONS, getSection } from '../../lib/leagues';
 import type { LeagueConfig } from '../../lib/leagues';
 import { SOURCE_LINKS } from '../../lib/season';
 
@@ -24,7 +25,13 @@ import { DATA_CORRECTIONS_URL, SITE_SCOPE_NOTE } from './site';
  * the CIF Northern Section" and can never drift from the config. A league with no document of its
  * own (every division `official.mode === 'none'`: the EAL) takes its rules from its section's
  * guidelines, so it is named in the second clause, linked to its `officialUrl`, not credited with
- * alignment.
+ * alignment. A league whose table this site orders by its own 3-1-0 points (`rules.orderScope ===
+ * 'site'`: the Sunset and the three San Diego leagues, DESIGN-socal §2.1.7) publishes no rules at all,
+ * so it is not credited with rules either: per section, "Sunset: we found no published league rules;
+ * Southern Section rules from the CIF Southern Section" (what we found, not a claim that none exist:
+ * review 2026-10-06), the section linked to the document its rules
+ * are in (SectionConfig.rulesSource: the Blue Book's Article 200, the Green Book's Bylaw 2000.1). The
+ * not-affiliated line names every league and every section (CIF-CCS … CIF-SS, CIF-SDS) from config.
  *
  * Once every league's season is over (`getSitePhase() === 'complete'`) the stamp says so instead
  * of turning into the stale warning. Always visible, never a tooltip. The attribution posture in
@@ -39,9 +46,22 @@ export interface AttributionProps {
   className?: string;
 }
 
-/** Leagues that publish no schedule or standings document of their own (the EAL). */
+/** Leagues that publish no schedule or standings document of their own (the EAL, and every SoCal league). */
 function hasNoDocument(league: LeagueConfig): boolean {
   return league.divisions.every((d) => d.official.mode === 'none');
+}
+
+/** Leagues that publish no rules this site follows: the table order is the site's own (orderScope 'site'). */
+function hasNoRules(league: LeagueConfig): boolean {
+  return league.rules.orderScope === 'site';
+}
+
+/** The orderScope 'site' leagues grouped by section, config order: [[SS, [Sunset]], [SDS, [City, …]]]. */
+function noRulesBySection() {
+  return SECTIONS.flatMap((section) => {
+    const leagues = LEAGUES_PROPER.filter((l) => l.sectionId === section.id && hasNoRules(l));
+    return leagues.length === 0 ? [] : [{ section, leagues }];
+  });
 }
 
 /** 'A, B, C and D' */
@@ -56,8 +76,10 @@ function joined(items: readonly React.ReactNode[]): React.ReactNode[] {
 
 export function Attribution({ snapshotAt, now, className }: AttributionProps) {
   const seasonComplete = getSitePhase() === 'complete';
+  // The leagues only: the Southern Section independents are three schools in no league, not an organization
+  // (DESIGN §24.9); their alignment and rules sentences are the scope note's and the Section's.
   const notAffiliated = [
-    ...LEAGUES.map((l) => l.shortName),
+    ...LEAGUES_PROPER.map((l) => l.shortName),
     ...SECTIONS.map((s) => `CIF-${s.shortName}`),
     'MaxPreps',
   ].join(', ');
@@ -106,17 +128,26 @@ export function Attribution({ snapshotAt, now, className }: AttributionProps) {
             </ExternalLink>
             . League alignment and rules from{' '}
             {joined(
-              LEAGUES.filter((l) => !hasNoDocument(l)).map((l) => (
+              LEAGUES_PROPER.filter((l) => !hasNoDocument(l)).map((l) => (
                 <ExternalLink key={l.id} href={l.officialUrl} arrow={false}>
                   {l.shortName}
                 </ExternalLink>
               )),
             )}
-            {LEAGUES.filter(hasNoDocument).map((l) => (
+            {LEAGUES_PROPER.filter((l) => hasNoDocument(l) && !hasNoRules(l)).map((l) => (
               <Fragment key={l.id}>
                 ; {l.shortName} rules from the{' '}
                 <ExternalLink href={l.officialUrl} arrow={false}>
                   CIF {getSection(l.sectionId).name}
+                </ExternalLink>
+              </Fragment>
+            ))}
+            {noRulesBySection().map(({ section, leagues }) => (
+              <Fragment key={section.id}>
+                ; {listWords(leagues.map((l) => l.shortName))}: we found no published league rules;{' '}
+                {section.name} rules from the{' '}
+                <ExternalLink href={section.rulesSource.url} arrow={false}>
+                  CIF {section.name}
                 </ExternalLink>
               </Fragment>
             ))}

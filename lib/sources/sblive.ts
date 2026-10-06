@@ -270,6 +270,11 @@ export const ScoreboardPropsSchema = z.looseObject({
       date: z.string(),
       games: z.looseObject({
         totalCount: z.number().nullable().optional(),
+        /** si.com serves the first 24 games of a day in the page; the rest load in the browser (see parseScoresPage). */
+        pageInfo: z
+          .looseObject({ hasNextPage: z.boolean().nullable().optional(), endCursor: z.string().nullable().optional() })
+          .nullable()
+          .optional(),
         nodes: z.array(
           z.looseObject({
             id: z.union([z.string(), z.number()]),
@@ -353,10 +358,34 @@ export function sbliveIdFromWebPath(webPath: string | null | undefined): string 
  * Davis: 458605 Davis of Davis and 458828 Davis of Modesto). si.com's team search for the other EAL
  * names (Bella Vista, Chico, Corning, Lassen, Pleasant Valley) found one team of that name each (Chico
  * and Corning also list fuzzy matches under other names), checked 2026-10-04.
+ *
+ * The same search (`/high-school/stats/california/field-hockey/teams?name=…`, browser User-Agent, one
+ * request at a time at least 600 ms apart) was run on 2026-10-06 for the 50 Southern California
+ * names, plus the spellings Southwest SD, Mt Carmel, Bishops, Canyon Crest, San Dieguito, LJCD and
+ * RBV (tests/fixtures/seeds/registry-seed-ss.json and registry-seed-sds.json,
+ * sbliveIdentity.nameSearch). Seven names have a second California team on si.com, so they joined
+ * the list:
+ *   - Westview: ours is 458949 (San Diego); 464882 is the Westview Wildcats of West Los Angeles, which
+ *     si.com shows playing Sage Creek on Sep 30 and Oct 28.
+ *   - Del Norte: ours is 458937 (San Diego); 458609 is Crescent City's (the MaxPreps ghost in
+ *     DATA_QUALITY.ghostTeamIds), which si.com shows playing Tamalpais and Davis on Oct 16.
+ *   - Marina: ours is 458748 (Huntington Beach); 500865 is Marina's own (Monterey County, no games).
+ *   - San Marcos: ours is 459066; 459073 is Santa Barbara's.
+ *   - Mission Vista: ours is 464852 (Oceanside, with the games); 480754 is a second entry located
+ *     "Vista, CA" whose games page serves si.com's index.
+ *   - Granite Hills: ours is 458713 (El Cajon); 554634 (Porterville) and 458466 (Apple Valley).
+ *   - Southwest: 583246 is El Centro's (no games); si.com names ours "Southwest SD" (459138), which
+ *     still resolves by name.
+ * Every other name returned one team of that name (some also list fuzzy matches under other names,
+ * e.g. Bonita Vista for Bonita and Claremont for Clairemont, which are different keys).
+ *
  * A side with one of these names resolves ONLY by a si.com id, never by name.
  */
 export const STATEWIDE_AMBIGUOUS: ReadonlySet<string> = new Set(
-  ['University', 'Los Altos', 'Santa Clara', 'Davis'].map(normalizeTeamKey),
+  [
+    'University', 'Los Altos', 'Santa Clara', 'Davis',
+    'Westview', 'Del Norte', 'Marina', 'San Marcos', 'Mission Vista', 'Granite Hills', 'Southwest',
+  ].map(normalizeTeamKey),
 );
 
 /** Everything si.com exposes about one side of a game or one standings row. */
@@ -515,8 +544,22 @@ export function parseTeamGamesPage(html: string, url = sbliveTeamGamesUrl(''), w
  */
 export function parseScoresPage(html: string, url = sbliveScoresUrl(''), warn?: SbliveParseWarn): SbliveGame[] {
   const props = ScoreboardPropsSchema.parse(requireBlock(html, 'games/GenderSportIndex', url));
+  const games = props.query.scoreboardDate.games;
+  // Pagination (checked 2026-10-06): the page server-renders the day's first 24 games
+  // (`pageInfo: { endCursor: 'MjQ', hasNextPage: true }`, totalCount 29 that day) and the browser loads
+  // the rest through si.com's own GraphQL client. The URL takes no page or cursor parameter (`&after=`,
+  // `&page=2` and `&cursor=` all return the same first 24), so a later page cannot be read from here.
+  // With the Southern California teams a busy day passes 24, so a truncated day is said, never silently
+  // taken for the whole day: it only lowers coverage (an uncovered game is planned for a team page, or
+  // waits for a later run; lib/backfill.ts scoreboardCoverage is positive-only), never a conclusion.
+  const total = games.totalCount ?? null;
+  if (games.pageInfo?.hasNextPage || (total !== null && total > games.nodes.length)) {
+    warn?.(
+      `si.com scoreboard lists ${games.nodes.length} of ${total ?? 'more'} games; the rest load in the browser and are not read (${url})`,
+    );
+  }
   const out: SbliveGame[] = [];
-  for (const node of props.query.scoreboardDate.games.nodes) {
+  for (const node of games.nodes) {
     if (node.gameTeams.length !== 2) continue;
     const gameId = sbliveGameIdOf(node.id);
     if (gameId === null) {

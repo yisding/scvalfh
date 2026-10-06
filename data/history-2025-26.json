@@ -545,6 +545,23 @@
       },
       "status": "available"
     },
+    "city": {
+      "alsoPublished": [
+        {
+          "label": "2025 CIFSDS playoff brackets (Google Sheet)",
+          "url": "https://docs.google.com/spreadsheets/d/1P9J_VFYljarF0IxnE4SP8zHey9T6y97IHz6NZZbaBWg/edit?usp=sharing"
+        }
+      ],
+      "checked": [
+        "https://www.cifsds.org/sports/fh/index (the Section’s field hockey page: the 2025 playoff brackets, power rankings and Green Book links; no league standings)",
+        "https://www.cifsdshome.org/widget/power-rankings?sort-points-desc=1&year_id=175&sport_id=30 (the Section’s 2025-26 power rankings: 40 schools with points, league records and overall records; the Division 1 and Division 2 lists hold 20 each and the Open list is empty; no league tables)",
+        "https://www.cifsds.org/school-resources/CIFSDS_Power_Rankings (the page that embeds those power rankings)"
+      ],
+      "checkedOn": "2026-10-06",
+      "league": "City Conference",
+      "reason": "We found no 2025-26 final standings published by the league or the San Diego Section. The Section’s power rankings list results and each school’s league record from game-type labels its schools enter, not league standings. We do not show standings from third-party sites.",
+      "status": "unavailable"
+    },
     "eal": {
       "checked": [
         "https://www.cifns.org/sports/fh/index (the Section’s field hockey page: guidelines and announcements; its standings panel is empty)",
@@ -554,6 +571,18 @@
       "checkedOn": "2026-10-04",
       "league": "Eastern Athletic League",
       "reason": "The EAL published no 2025-26 final standings of its own. We found no EAL league website, and the CIF Northern Section’s field hockey page and Playoff Center post no field hockey standings or results. We do not show standings from newspapers or third-party sites.",
+      "status": "unavailable"
+    },
+    "independents": {
+      "checked": [
+        "https://www.maxpreps.com/ca/field-hockey/25-26/league/palomares/?leagueid=5d795f4f-0e75-450d-856e-0873b46002de (MaxPreps’ 2025-26 Palomares League table: Glendora is its only field hockey team)",
+        "https://www.maxpreps.com/ca/field-hockey/25-26/league/league-b/?leagueid=c2922327-b045-410b-aadd-87cb63b58405 (MaxPreps’ 2025-26 League B table: Harvard-Westlake is its only field hockey team)",
+        "https://www.maxpreps.com/ca/field-hockey/25-26/league/marmonte/?leagueid=392fb703-cc64-46d7-8d21-819e13a78c3f (MaxPreps’ 2025-26 Marmonte League table: Thousand Oaks is its only field hockey team)",
+        "https://www.maxpreps.com/ca/field-hockey/25-26/league/sunset/?leagueid=1ab67ce6-46a6-42be-a7aa-dd2892d77dff (MaxPreps’ 2025-26 Sunset table: Bonita and Chaminade with the eight Sunset teams)"
+      ],
+      "checkedOn": "2026-10-06",
+      "league": "Southern Section independents",
+      "reason": "The Southern Section independents are this site’s grouping, so no 2025-26 table of them was published: Glendora, Harvard-Westlake and Thousand Oaks had no league table, and MaxPreps listed Bonita and Chaminade in its Sunset table.",
       "status": "unavailable"
     },
     "mcal": {
@@ -571,6 +600,40 @@
       "checkedOn": "2026-10-03",
       "league": "Marin County Athletic League",
       "reason": "MCAL published no 2025-26 final standings of its own. Its field hockey page links \"League Standings\" to MaxPreps' current-season table, and it posts no 2025 play-off sheet. The league's official 2025 All-MCAL team is posted on the same page and is linked here, not reproduced: this archive shows a league's awards only beside its official final standings. We do not show standings from newspapers or third-party sites.",
+      "status": "unavailable"
+    },
+    "metro": {
+      "alsoPublished": [
+        {
+          "label": "2025 CIFSDS playoff brackets (Google Sheet)",
+          "url": "https://docs.google.com/spreadsheets/d/1P9J_VFYljarF0IxnE4SP8zHey9T6y97IHz6NZZbaBWg/edit?usp=sharing"
+        }
+      ],
+      "checked": [
+        "https://www.cifsds.org/sports/fh/index (the Section’s field hockey page: the 2025 playoff brackets, power rankings and Green Book links; no league standings)",
+        "https://www.cifsdshome.org/widget/power-rankings?sort-points-desc=1&year_id=175&sport_id=30 (the Section’s 2025-26 power rankings: 40 schools with points, league records and overall records; the Division 1 and Division 2 lists hold 20 each and the Open list is empty; no league tables)",
+        "https://www.cifsds.org/school-resources/CIFSDS_Power_Rankings (the page that embeds those power rankings)"
+      ],
+      "checkedOn": "2026-10-06",
+      "league": "Metro Conference",
+      "reason": "We found no 2025-26 final standings published by the league or the San Diego Section. The Section’s power rankings list results and each school’s league record from game-type labels its schools enter, not league standings. We do not show standings from third-party sites.",
+      "status": "unavailable"
+    },
+    "north-county": {
+      "alsoPublished": [
+        {
+          "label": "2025 CIFSDS playoff brackets (Google Sheet)",
+          "url": "https://docs.google.com/spreadsheets/d/1P9J_VFYljarF0IxnE4SP8zHey9T6y97IHz6NZZbaBWg/edit?usp=sharing"
+        }
+      ],
+      "checked": [
+        "https://www.cifsds.org/sports/fh/index (the Section’s field hockey page: the 2025 playoff brackets, power rankings and Green Book links; no league standings)",
+        "https://www.cifsdshome.org/widget/power-rankings?sort-points-desc=1&year_id=175&sport_id=30 (the Section’s 2025-26 power rankings: 40 schools with points, league records and overall records; the Division 1 and Division 2 lists hold 20 each and the Open list is empty; no league tables)",
+        "https://www.cifsds.org/school-resources/CIFSDS_Power_Rankings (the page that embeds those power rankings)"
+      ],
+      "checkedOn": "2026-10-06",
+      "league": "North County Conference",
+      "reason": "We found no 2025-26 final standings published by the league or the San Diego Section. The Section’s power rankings list results and each school’s league record from game-type labels its schools enter, not league standings. We do not show standings from third-party sites.",
       "status": "unavailable"
     },
     "pcal": {
@@ -1994,6 +2057,18 @@
         "standingsPdf": "https://www.scval.com/standings/2025-26%20Field%20Hockey%20standings.pdf"
       },
       "status": "available"
+    },
+    "sunset": {
+      "checked": [
+        "https://cifss.org/sports/field-hockey/ (the Section’s field hockey page: season preview, Blue Book and rules links, and a schedules-and-results link to its scores site; no league standings)",
+        "https://scores.cifss.org/brackets?genderSport=FIELD_HOCKEY (“No Brackets Found”: the Section holds no field hockey playoffs)",
+        "https://scores.cifss.org/teams/458746/standings (the Section’s scores site, run by SBLive: its Sunset table is si.com’s, built from the game labels coaches enter)",
+        "A web search for a Sunset field hockey league website, bylaws, schedule or standings (none found)"
+      ],
+      "checkedOn": "2026-10-06",
+      "league": "Sunset field hockey league",
+      "reason": "We found no Sunset league website or standings document for 2025-26. The Southern Section holds no field hockey playoffs, and the Sunset table on its scores site (scores.cifss.org) is SBLive’s, built from game labels coaches enter. We do not show standings from third-party sites.",
+      "status": "unavailable"
     }
   },
   "season": "2025-26",

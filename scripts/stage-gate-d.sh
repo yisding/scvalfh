@@ -118,7 +118,7 @@ install_axe() {
   (
     cd "$AXE_DIR" &&
       { [ -f package.json ] || npm init -y >/dev/null; } &&
-      npm install --no-save --no-audit --no-fund axe-core playwright >/dev/null &&
+      npm install --no-save --no-audit --no-fund axe-core@4.13 playwright >/dev/null &&
       { npx playwright install --with-deps chromium || npx playwright install chromium; }
   ) > "$LOG_DIR/axe-install.log" 2>&1
 }

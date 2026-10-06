@@ -1,6 +1,8 @@
 import Link from 'next/link';
 
 import { longDate, plural, shortDate } from '../../lib/format';
+import { REGIONS } from '../../lib/leagues';
+import type { RegionId } from '../../lib/types';
 import Arrow from '../ui/Arrow';
 import { GameRow } from '../ui/GameRow';
 import SectionHeader from '../ui/SectionHeader';
@@ -19,8 +21,21 @@ import type { IndexDay, LeagueCardData, ScheduleIndexView } from './schedule-vie
  *  - `Every game day`: one row per date with `id="YYYY-MM-DD"`, so an old `/schedule#2026-09-24`
  *    link lands on that day's row, which links `/scores/2026-09-24`.
  *
+ * Regions (DESIGN-socal §2.4): the cards, Recent and Next are rendered once per region inside a
+ * `data-region-scope` block (the SoCal blocks' ids take the `-socal` suffix), and the scope stylesheet
+ * shows the reader's; Recent and Next are each region's OWN last and next game days. The every-game-day
+ * index stays one list, so each `id="YYYY-MM-DD"` exists once, and each row's counts are scoped per
+ * region. A card grid sits inside a plain region `<div>`: the jump links target a card's id, and a
+ * region-scoped grid holding the target would be forced to `display:block` by the deep-link rule
+ * (components/layout/league-scope-css.ts).
+ *
  * A server component over plain data; every row link carries `prefetch={false}`.
  */
+
+/** 'NorCal' | 'SoCal', for each region's count on an every-game-day row. */
+function regionShort(id: RegionId): string {
+  return REGIONS.find((r) => r.id === id)?.shortName ?? id;
+}
 export interface ScheduleIndexProps extends ScheduleIndexView {
   /** Rows per league in Recent and Next. */
   perLeague?: number;
@@ -36,9 +51,35 @@ function cardLine(card: LeagueCardData): string {
   return parts.join(' · ');
 }
 
-function DayBlock({ day, perLeague, headingId }: { day: IndexDay; perLeague: number; headingId: string }) {
+/**
+ * The accessible name of a SoCal copy of a Recent, Next or day section: 'Recent, Southern California'.
+ * With JS off both regions render, so the NorCal and SoCal sections shared the names "Recent", "Next"
+ * and each date (axe landmark-unique, review 2026-10-06); naming the second copy's region makes every
+ * name unique and leaves the NorCal sections as they were (labelled by their headings), as /leaders
+ * names its region sections.
+ */
+function socalLabel(idSuffix: string, words: string): string | undefined {
+  return idSuffix === '' ? undefined : `${words}, ${REGIONS.find((r) => r.id === 'socal')?.name ?? 'Southern California'}`;
+}
+
+function DayBlock({
+  day,
+  perLeague,
+  headingId,
+  idSuffix,
+}: {
+  day: IndexDay;
+  perLeague: number;
+  headingId: string;
+  idSuffix: string;
+}) {
+  const label = socalLabel(idSuffix, longDate(day.date));
   return (
-    <section aria-labelledby={headingId} className="mt-6 first:mt-4">
+    <section
+      aria-labelledby={label ? undefined : headingId}
+      aria-label={label}
+      className="mt-6 first:mt-4"
+    >
       <div className="flex min-h-12 items-center gap-2">
         <h3 id={headingId} className="m-0 text-body font-semibold text-ink">
           <time dateTime={day.date}>
@@ -87,44 +128,68 @@ function DayBlock({ day, perLeague, headingId }: { day: IndexDay; perLeague: num
   );
 }
 
-export function ScheduleIndex({ cards, recent, next, days, perLeague = 3 }: ScheduleIndexProps) {
+export function ScheduleIndex({ cards, regions, days, perLeague = 3 }: ScheduleIndexProps) {
   return (
     <>
-      <ul className="m-0 mt-8 grid list-none gap-3 p-0 md:mt-10 md:grid-cols-2">
-        {cards.map((card) => (
-          <li key={card.id} id={card.id} className="flex">
-            <Link
-              href={`/schedule/${card.id}`}
-              prefetch={false}
-              className="sx-card sx-lift flex w-full flex-col gap-1 p-4 no-underline md:p-5"
+      {regions.map((region) => (
+        <div key={region.id} data-region-scope={region.id}>
+          <ul className="m-0 mt-8 grid list-none gap-3 p-0 md:mt-10 md:grid-cols-2">
+            {cards.filter((card) => card.region === region.id).map((card) => (
+              <li key={card.id} id={card.id} className="flex">
+                <Link
+                  href={`/schedule/${card.id}`}
+                  prefetch={false}
+                  className="sx-card sx-lift flex w-full flex-col gap-1 p-4 no-underline md:p-5"
+                >
+                  <span className="text-lead font-semibold text-ink">{card.shortName}</span>
+                  <span className="text-meta text-ink-3">{card.name}</span>
+                  <span className="text-body text-ink-2">
+                    {cardLine(card)} <Arrow />
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+
+          {region.recent.length > 0 ? (
+            <section
+              aria-labelledby={socalLabel(region.idSuffix, 'Recent') ? undefined : `schedule-recent${region.idSuffix}`}
+              aria-label={socalLabel(region.idSuffix, 'Recent')}
+              className="mt-section md:mt-section-lg"
             >
-              <span className="text-lead font-semibold text-ink">{card.shortName}</span>
-              <span className="text-meta text-ink-3">{card.name}</span>
-              <span className="text-body text-ink-2">
-                {cardLine(card)} <Arrow />
-              </span>
-            </Link>
-          </li>
-        ))}
-      </ul>
+              <SectionHeader id={`schedule-recent${region.idSuffix}`} kicker="Recent" />
+              {region.recent.map((day) => (
+                <DayBlock
+                  key={day.date}
+                  day={day}
+                  perLeague={perLeague}
+                  headingId={`recent-${day.date}${region.idSuffix}`}
+                  idSuffix={region.idSuffix}
+                />
+              ))}
+            </section>
+          ) : null}
 
-      {recent.length > 0 ? (
-        <section aria-labelledby="schedule-recent" className="mt-section md:mt-section-lg">
-          <SectionHeader id="schedule-recent" kicker="Recent" />
-          {recent.map((day) => (
-            <DayBlock key={day.date} day={day} perLeague={perLeague} headingId={`recent-${day.date}`} />
-          ))}
-        </section>
-      ) : null}
-
-      {next.length > 0 ? (
-        <section aria-labelledby="schedule-next" className="mt-section md:mt-section-lg">
-          <SectionHeader id="schedule-next" kicker="Next" />
-          {next.map((day) => (
-            <DayBlock key={day.date} day={day} perLeague={perLeague} headingId={`next-${day.date}`} />
-          ))}
-        </section>
-      ) : null}
+          {region.next.length > 0 ? (
+            <section
+              aria-labelledby={socalLabel(region.idSuffix, 'Next') ? undefined : `schedule-next${region.idSuffix}`}
+              aria-label={socalLabel(region.idSuffix, 'Next')}
+              className="mt-section md:mt-section-lg"
+            >
+              <SectionHeader id={`schedule-next${region.idSuffix}`} kicker="Next" />
+              {region.next.map((day) => (
+                <DayBlock
+                  key={day.date}
+                  day={day}
+                  perLeague={perLeague}
+                  headingId={`next-${day.date}${region.idSuffix}`}
+                  idSuffix={region.idSuffix}
+                />
+              ))}
+            </section>
+          ) : null}
+        </div>
+      ))}
 
       <section aria-labelledby="schedule-days" className="mt-section md:mt-section-lg">
         <SectionHeader id="schedule-days" kicker="Every game day" />
@@ -140,10 +205,16 @@ export function ScheduleIndex({ cards, recent, next, days, perLeague = 3 }: Sche
                   <time dateTime={day.date} className="font-semibold">
                     {shortDate(day.date)}
                   </time>
-                  <span className="text-ink-2">
-                    {` · ${plural(day.total, 'game')}`}
-                    {day.byLeague.map((l) => ` · ${l.shortName} ${l.games}`).join('')}
-                  </span>
+                  {/* One count line per region; the scope stylesheet shows the reader's. Each names its
+                      region ('NorCal: 4 games · SCVAL 1 …'): with JS off both show inside one link, and an
+                      unlabelled second count was ambiguous (review 2026-10-06). */}
+                  {day.byRegion.map((r) => (
+                    <span key={r.region} data-region-scope={r.region} className="text-ink-2">
+                      {r.total === 0
+                        ? ` · no ${regionShort(r.region)} games`
+                        : `${` · ${regionShort(r.region)}: ${plural(r.total, 'game')}`}${r.byLeague.map((l) => ` · ${l.shortName} ${l.games}`).join('')}`}
+                    </span>
+                  ))}
                 </span>
                 <Arrow className="shrink-0 text-ink-3" />
               </Link>

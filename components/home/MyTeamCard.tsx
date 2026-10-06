@@ -100,6 +100,7 @@ function fullDisplay(d: HomeLastDisplay): GameDisplay {
     statusTone: d.statusTone,
     note: d.note,
     deciderTag: m.deciderTag ?? null,
+    shootoutLabel: m.shootoutLabel ?? null,
     shootoutText: m.shootoutText ?? null,
     isNonLeague: m.isNonLeague === true,
     leagueTag: m.leagueTag ?? null,

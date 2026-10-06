@@ -4,7 +4,7 @@
  * and `--fetched-at` are shared with fetch-data too (lib/pipeline/run.ts parseRunArgs), so the
  * three CLIs read those flags by one rule.
  *
- * Both scripts walk the whole 49-team registry. `--leagues scval,bval` narrows a run to those
+ * Both scripts walk the whole 102-team registry. `--leagues scval,bval` narrows a run to those
  * leagues, exactly as `fetch-data --leagues` does: a team of any other league is not fetched and
  * keeps whatever the previous file held for it (or 'pending' when it held nothing valid). Failures are
  * scoped the same way — each team is its own unit, so one team, or one whole league, failing never
@@ -43,7 +43,7 @@ export function parseFetchedAtFlag(value: string, flag = '--fetched-at'): string
   return value;
 }
 
-/** The registry teams a run covers, in registry order: all 49, or those of `leagues`. */
+/** The registry teams a run covers, in registry order: all 102, or those of `leagues`. */
 export function teamsInScope(leagues: readonly LeagueId[] | null): readonly Team[] {
   return leagues === null ? TEAMS : TEAMS.filter((t) => leagues.includes(t.league));
 }

@@ -13,6 +13,16 @@
 > fifth league in a third section, the Northern Section; §22 at the end of this file records what
 > that changed and wins where it disagrees with §15 or anything above it.
 >
+> **Later again: nine leagues and 99 teams in five sections and two regions (§24).** The Southern
+> Section's Sunset field hockey league and the San Diego Section's City, North County and Metro
+> conferences joined on 2026-10-06, behind a NorCal/SoCal region toggle (default NorCal). The site
+> stays "NorCal High School Field Hockey" (owner decision, 2026-10-06); §24 records what the amendment
+> changed and wins where it disagrees with §22 or anything above it. Later the same day the Southern
+> Section's three independents (Glendora, Harvard-Westlake and Thousand Oaks, no league games) joined:
+> 102 teams in nine leagues and one group with no table, and North County's short name became "North"
+> (§24.9). Later still, Bonita and Chaminade moved from the Sunset to the independents, and the
+> group of five got a table of its games against each other (§24.10, which wins over §24.9).
+>
 > **`SPEC §n` and `BUILD-BRIEF` in code comments** refer to the build-time research spec and
 > build brief, which are not kept in this repo. Their §1.x sections survive, condensed, as
 > `docs/DATA-SOURCES.md` §1.x; every other section number does NOT match DATA-SOURCES' numbering,
@@ -2770,6 +2780,9 @@ most baseline + 600 KB. The original §13 budgets (LCP, TBT, CLS, 40 KB of app J
 framework) still apply.
 
 (Extended by §22: a fifth league, the EAL, in a third section, the Northern Section; 49 teams.)
+(Extended by §24: nine leagues in five sections and two regions, 99 teams; the page-weight
+multipliers and the Worker allowance were raised from a measurement on 2026-10-06, §24.6. With the
+three independents, 102 teams, no page line moved, §24.9; the five independents' table, §24.10.)
 
 ## 16. Leaders amendment (2026-10)
 
@@ -3536,3 +3549,478 @@ section wins where §16 and §20 disagree. Everything else stands: the boards ar
   in full took it to 35,499 (89%). Without the cap, a long tie is the one way the page can grow: the
   places are fixed, but not the rows that share them, so a big early-season tie can approach the
   line, and `assert:budgets` says so. First-load JS is unchanged.
+
+## 24. Southern California amendment (2026-10)
+
+The site gained four leagues in two more sections and a second region. The CIF Southern Section's
+Sunset (named on the site the **Sunset field hockey league**, lower case because no source gives it a
+title; MaxPreps and si.com call it "Sunset") has ten teams in one division: Bonita, Chaminade, Chaparral, Edison,
+Fountain Valley, Great Oak, Huntington Beach, Marina, Newport Harbor and Temecula Valley. It is a
+field-hockey-only grouping, not the all-sports Sunset League. The CIF San Diego Section adds three
+conferences with 40 teams in seven divisions:
+
+- **City**: City Western 6, City Eastern 6
+- **North County**: Avocado 6, Palomar 7, Valley 6
+- **Metro**: Metro Mesa 5, Metro South Bay 4
+
+The site now covers **nine leagues and 99 teams in five sections and two regions**. Northern
+California is the CCS, NCS and the Northern Section. Southern California is the Southern Section
+(`ss`) and the San Diego Section (`sds`). This section wins where §1-§23 disagree. Everything else
+stands: static rendering, no `searchParams`, leagues get no hue (§15.5), and the copy rules of §15.8
+and §22.5, extended in §24.5. The Southern Section's three independents and North County's new short
+name ("North") came later the same day: §24.9 records them, and 24.1-24.8 describe the 99-team site
+before them.
+
+The rules, sources and dates behind it are in `docs/LEAGUE-RULES.md` (the Sunset and San Diego
+Section sections) and `docs/DATA-SOURCES.md`. Every number below was measured on 2026-10-06 unless
+it says otherwise.
+
+### 24.1 Decisions this reverses
+
+| Earlier decision | Now | Why |
+|---|---|---|
+| 49 teams, five leagues, three sections, one region (§22); seven MaxPreps league tables | **99 teams, nine leagues, five sections, two regions** (`RegionId` `'norcal' \| 'socal'`, `SectionConfig.region`). The four leagues follow the EAL in `LEAGUES` (Sunset, City, North County, Metro), so every existing order stays put. The MaxPreps sweep is 1 + 2 × 14 tables + 99 teams = 128 requests. | The Southern Section's one field hockey grouping and the San Diego Section's three conferences: every Southern California team with a 2026 varsity league schedule. |
+| Every division has a MaxPreps league table | `maxprepsLeagueId` may be null. North County's **Valley** division has none, so its metadata and table are never requested, it has no MaxPreps source row, and the cross-check is skipped with the reason "MaxPreps publishes no table for this division". | MaxPreps has no Valley league for 2026-27. Inventing a URL or a source row would be dishonest. |
+| Every division has a fixed number of league games (`gamesPerTeam`) | It may be null, and only the **Sunset** uses that. GP is shown bare, the LEFT and MAX columns and the maximum-points sentence are hidden, and the uneven-games footnote drops "of N". When the spread is two games or more, the footnote says points favour teams that have played more. | The Sunset has no league schedule and no round robin. Of its 45 pairs, 9 meet twice, 30 once and 6 never. A Sunset league game is a game between two of the ten that MaxPreps marks as a league game. |
+| A league game is the one MaxPreps flags (`contest-type`) or one on the official schedule (`official-fixtures`) | A third rule, **`membership`**, for the seven San Diego divisions. A game counts when both sides are members of the division, neither row is a tournament or postseason contest (contestType 2 or 4), and it falls inside league play, whatever MaxPreps' flag says. A flagged game between two divisions of one conference counts in neither table and carries a note. | Every pair of division-mates is scheduled twice on MaxPreps, except Bonita Vista and Helix (Metro Mesa), who meet once on 2026-10-05 Pacific (§24.7). MaxPreps' league flag misses many of these games. Patrick Henry has 0 of 10 flagged, San Pasqual 3, Vista 4 and Mt. Carmel 4. Mission Bay's five games against City Eastern teams are flagged although they are cross-division. |
+| A league document orders the table (`orderScope` `'table'`), or decides only the title (`'title'`, the EAL) | A third scope, **`'site'`**, for all four Southern California leagues. No league document awards points or orders a table, so the order is this site's own 3-1-0 points. Every page says so ("The order is this site’s 3-1-0 points; no {league} rule orders the table."). | No Sunset document exists that we could find, and no San Diego conference publishes standings. The Section's power rankings carry league records built from game-type labels, which are not standings. |
+| Three postseason kinds (§22.1) | Five. **`'no-postseason'`** (the Sunset) has one ladder rung for every place ("No section playoffs"), no ladder line and no standings band. **`'section-playoffs'`** (City, North County, Metro) is the San Diego Section playoffs on Nov 2–14. Its two rungs are 1st, "1st: at least a play-in if named league champion" (the label never calls the table's leader the champion; the pinned card shows "1st, at least a play-in if champion" to fit 320px), and 2nd or lower, "No league route" (badge "Selection only"). It draws no bracket and projects no seed. A game between two teams of the Section, dated from Nov 2 or marked contestType 4, is tagged "San Diego Section playoffs" whether or not the sides share a conference. | Southern Section Blue Book 2026-27 Bylaws 2011.1 and 3500.2: no field hockey playoffs. San Diego Section Green Book 2026-27 Bylaw 2000.1: Open 8, Division I 12 and Division II 12, placed by the Section from its power rankings. A designated league champion is guaranteed at least a play-in, and the league names that champion, not this table. |
+| A level score with W and L flags is a shootout (`SO`) between two teams of one league with `leagueOvertime 'shootout'` (§22.1) | The rule is **section-based**. Both sides must be teams of one section whose `SectionConfig.shootout` is set: the Northern Section ("1 v 1s") or the San Diego Section ("a shootout"). The snapshot invariant, normalize, backfill, the game page and every shootout sentence read the section's `words` and `citation`. EAL output is byte-identical. JV games are exempt (`level: 'jv'`). `shootout.inference` says what copy may claim: 'verified' (the Northern Section: the 2026-09-28 Chico 1, Davis 1 box score has an "SO Win" column) prints "won on 1 v 1s" and the `SO` tag; 'unverified' (San Diego) counts the flagged team's win but prints no decider tag and says only "credited with the win" on a level score. `shootout.coversTournaments` false (San Diego) leaves a tournament row (contestType 2) level. | The San Diego Field Hockey Officials Association's 2026 procedures apply across all three conferences to league, non-league and playoff varsity games: a 10-minute 7 v 7 sudden-victory period, then 1 v 1 shootouts, with one goal credited to the winner. They do not cover invitational tournaments, where seven games between San Diego teams are 0-0 ties (Aug 21, Aug 22, Sep 12). MaxPreps recorded eight San Diego finals outside tournaments as level W/L scores by 2026-10-05 Pacific, four of them between conferences, with no tally; si.com and the Section's power rankings record Mt. Carmel–Poway (Sep 11) as 2-0, so the site does not assert a shootout. The JV procedure is "No overtime". |
+| A neutral brand, "California High School Field Hockey" (`SITE_NAME`), wordmark "California HS Field Hockey" / "CA HS FH", home h1 "California High School Field Hockey Teams" (built on 2026-10-06 and reverted the same day) | **The brand stays NorCal (owner decision, 2026-10-06)**: `SITE_NAME`, the wordmark, the h1 and the manifest are unchanged from §22 ("NorCal High School Field Hockey", "NorCal HS Field Hockey" / "NorCal HS FH", "NorCal High School Field Hockey Teams", "NorCal FH"); the description and scope note name both regions. `SITE_DESCRIPTION` leads with NorCal: "… for the 49 NorCal girls varsity field hockey teams in SCVAL, BVAL and PCAL (CCS), MCAL (NCS) and EAL (Northern Section), and for the 50 Southern California teams in Sunset (Southern Section) and City, North County and Metro (San Diego Section). …" | The site is NorCal Field Hockey ("ncfh"); Southern California's results are covered, but the focus is NorCal, and the toggle's default is NorCal. With Southern California selected, the "Southern California" region heading under the h1 says what is shown. |
+| Scope note: "Teams outside these five leagues appear only as opponents." (§22.1) | Built from config: "Covers the CIF Central Coast Section (SCVAL, BVAL, PCAL), the North Coast Section’s MCAL, the Northern Section’s EAL, the Southern Section’s Sunset field hockey league and the San Diego Section’s City, North County and Metro conferences. Teams outside these nine leagues, including the Southern Section’s Glendora, Harvard-Westlake and Thousand Oaks, appear only as opponents." | Glendora, Harvard-Westlake and Thousand Oaks are each the only field hockey team in their all-sports league and play no league games. |
+| One remembered preference scopes the site: the league (§15.3) | A second one, **the region** (`scvalfh.region`, `'norcal'` or `'socal'`). See 24.3. The site now stores four things in the browser: theme, pinned team, league and region. | Showing both regions at once doubles every index page. Hiding one by default keeps a NorCal reader's site as it was. |
+| An id appears once per page | **The id suffix rule**: an id that a region block repeats gets `-socal` on the Southern California copy, and NorCal keeps today's ids. Examples are `#latest-every-league-socal`, `#schools-socal`, `#players-socal` and `#elo-rating-socal`. | Old links keep working, and both regions render without JavaScript. |
+| `LeagueConfig.region` is plain-words geography | It is renamed **`cities`**. "Region" now means NorCal or SoCal. Club regions (`CLUB_REGIONS`) and venue `address.region` are separate and unchanged. | One word, one meaning. |
+| `/playoffs` is the CCS page with cards for other leagues (§22.2) | It is **"Playoffs"**, with a `#norcal` block (the CCS content under an h2 "CCS playoffs", the MCAL pointer and the EAL card) and a `#socal` block (24.4). | A Southern California reader has no CCS. |
+| One site phase: the least advanced league's | `combinedPhase()` is computed per region (`getRegionPhase`). It is preseason only when every league is, and complete only when every league is. | Metro South Bay's first league game is Oct 7, so a whole-site "least advanced" would have read preseason for everyone. |
+| A NorCal school's acronym resolves to it | 16 acronyms now collide (`EXPECTED_ACRONYM_COLLISIONS`), and seven NorCal acronyms stop resolving: BVHS, FHS, MCHS, MHS, MVHS, VCHS and WHS. | Each now names schools in both regions. Search finds them by name instead. |
+
+### 24.2 Routes and counts
+
+| URL | Now |
+|---|---|
+| `/standings/[league]` | 9 pages |
+| `/schedule/[league]` | 9 pages |
+| `/teams/[slug]` | 99 pages |
+| `/playoffs/[league]` | Unchanged: MCAL only. `/playoffs/sunset`, `/playoffs/city` and `/playoffs/socal` are 404s. |
+| `/playoffs` | "Playoffs", with `#norcal` and `#socal` blocks. The Sunset, City, North County and Metro cards carry `id="sunset"`, `"city"`, `"north-county"` and `"metro"`. |
+| `/standings`, `/teams` | Region wrappers `#norcal` and `#socal`, plus the anchors `#ss`, `#sds`, `#sunset`, `#city`, `#north-county`, `#metro`, `#city-western`, `#city-eastern`, `#avocado`, `#palomar`, `#valley`, `#metro-mesa` and `#metro-south-bay` |
+| `/history/2025-26` | Gains `#sunset`, `#city`, `#north-county` and `#metro`, each marked unavailable with its reason (24.7) |
+| `/scores/[date]` | By region, as the other index pages (owner decision, 2026-10-06): `<section id="norcal" data-region-scope="norcal">` under an h2 "Northern California" holding its league groups (config order) and its Non-league group (both sides NorCal, or a NorCal team and a team outside the registry), as h3s; then, only on a day that has one, the unscoped `#between-regions` (h2 "NorCal vs SoCal") for the games with a side in each region, which no region block repeats; then `#socal` ("Southern California"), its repeated ids suffixed (`#non-league-socal`). A region with no game keeps its block with one sentence ("No Southern California games on this day."; "varsity" and a pointer when it has JV games that day). JV: `#jv` and `#jv-socal`, each region-scoped and omitted when empty. The header badges, the "Full season" links and the description go per region only when both regions have a game ("NorCal: 6 games" … "SoCal: 9 games"; a NorCal vs SoCal game counts in both, as on `/schedule`'s every-day rows); a one-region day keeps its whole-day header and description. The region switcher sits under the header. |
+
+The snapshot has 99 teams, 871 games and 64 game days. The sitemap lists **1,080 URLs**:
+
+- 11 fixed pages (`/`, `/about`, `/clubs`, `/commits`, `/jv`, `/leaders`, `/playoffs`, `/schedule`, `/standings`, `/teams` and `/history/2025-26`)
+- 9 `/standings/` and 9 `/schedule/` pages
+- 1 `/playoffs/mcal`
+- 871 `/game/`, 64 `/scores/` and 99 `/teams/` pages
+- 16 `/clubs/` pages
+
+After `pnpm build:vinext`, `scripts/assert-vinext-prerender.ts` reports 2,143 prerendered routes. That is those 1,080 pages plus their OG images and the metadata routes, and the sitemap matches the prerendered pages exactly.
+
+### 24.3 The region toggle
+
+**Storage.** `scvalfh.region` is written only by an explicit act:
+
+- the region switcher;
+- `setLeague(id)`, which writes the league's region alongside the league;
+- pinning, which goes through `setLeague`.
+
+Links never write it.
+
+**Pre-paint stamp.** The prefs script stamps `data-region="socal"` only for Southern California; no
+attribute means NorCal. The first rule that applies sets the region:
+
+1. a valid stored league (the region is that league's);
+2. the stored region (the pinned team's league counts only if it is in that region);
+3. a valid pin;
+4. NorCal.
+
+The script ships the map once, non-default regions only (`R={"socal":"sunset city north-county metro"}`),
+and exposes `window.__sxRegionOf`. Nothing is added to a client bundle.
+
+**What gets hidden.** Without JavaScript both regions render, NorCal first, in DOM order, so the
+layout never shifts. With JavaScript, `league-scope-css.ts` hides the other region's
+`[data-region-scope]` blocks. A deep link to an anchor inside a hidden region opens it (`:has(:target)`,
+plus `:target` on the wrapper itself). On `/teams`, a search shows both regions' lists.
+
+**The control.** `RegionSwitcher` lives in `components/layout/LeagueSwitcher.tsx`, with its state in
+`components/ui/use-league.ts`. There is no new client module and no header toggle.
+
+- Markup: `<div role="group" aria-label="Region">` around two `aria-pressed` buttons, "NorCal" and "SoCal".
+- Style: a segmented control at `min-h-11 min-w-11`, `sx-js-only`, disabled until hydrated.
+- Announcement: a polite live region says "Showing Southern California.", and "All" becomes "Showing every Southern California league."
+
+**Where it renders.**
+
+- On the home page, it leads the scope row, followed by a hairline.
+- As its own row under the page header on `/standings`, `/teams`, `/schedule`, `/scores/[date]`, `/playoffs`, `/jv` and `/history/2025-26`.
+- On `/leaders` and `/history`, above the sticky division tabs, whose pills are region-scoped.
+- On `/about`, at the top of the content column.
+- Per-league pages show only their own region's league chips, plus All.
+
+**Home page.** One Find-your-team block stays outside the region wrappers, and its finder searches
+all 99 teams. Its card grid is two region-scoped lists, each under an h3 naming the region, and the
+odd-count column span is computed per region. League cards are now h4. The status line counts each
+region's teams ("49 NorCal teams", "50 SoCal teams"). A Southern California league card shows the
+short form "1st, at least a play-in" because the full rung label is too wide for the 288 px card line.
+
+**Measured** (2026-10-06, Chromium 141 through `scripts/a11y-axe.mjs` and a Playwright probe
+against `next start` of this build; the stamp that day read "Updated Oct 5 8:19 PM", 137 px on a
+phone and 166 px with its weekday, narrower than the widest stamp §22.3 and SiteHeader.tsx were
+measured with):
+
+| Viewport | Region row | Switcher (All + the region's chips) | League cards | Wholly above the fold |
+|---|---|---|---|---|
+| 320 × 664 and 320 × 844 | 253–301 px, 133 px wide | 6 chips in 2 rows (3 with the region row), bottom 403 px | one column, 288 px wide, at 613–865, 877–1169, 1181–1433, 1445–1717, 1729–1949 | 0 at either height |
+| 360 × 664 and 360 × 844 | 233–281 px, 133 px wide | 2 rows (3 with the region row), bottom 383 px | one column, 328 px wide, at 593–793 … 1461–1681 | 0 |
+| 390 × 664 and 390 × 844 | 233–281 px, 133 px wide | 1 row (2 with the region row), bottom 333 px | two-up, 173 px wide; card 5 spans both columns at 1239–1439 | 0 |
+
+The region row costs the home page one 48 px row plus its gap: the switcher's bottom moves from
+§22.3's 254 px to 403 px at 320 and 360, and from 204 px to 333 px at 390. The §15.6 fold targets,
+read from the same run: with Tamalpais pinned at 390 × 664 the My-team slot ends at 677 px against a
+fold of 608 px (§22.3 had 604 px; the Oct 5 corrections line under the top bar and the region row
+sit above it), so that target is missed; the two Latest-rows targets are missed as they were in
+§22.3. The script reports the misses; it does not fail on them.
+
+The header: the wordmark is unchanged ("NorCal HS FH" below 1280 px, "NorCal HS Field Hockey" from
+1280 px; §24.1), so the widths measured in Chromium on 2026-10-04 and recorded in
+`components/layout/SiteHeader.tsx` stand, as do §22.3's measurements; the region row and the fold
+figures above are this build's. The home-page keyboard probe passed: Tab to "SoCal", Enter stamps
+`data-region="socal"`, renders the SoCal blocks, hides the NorCal ones and keeps focus on the
+button. axe-core 4.13 found 0 serious or critical violations over 176 page loads (the install is
+pinned to 4.13: 4.14.0, published 2026-10-05, flags three pre-existing label patterns — see
+README "Known limitations").
+
+### 24.4 Southern California postseason surfaces
+
+| Surface | Sunset (`no-postseason`) | San Diego leagues (`section-playoffs`) |
+|---|---|---|
+| Home `PostseasonCard` | Kicker "Postseason". "The CIF Southern Section holds no field hockey playoffs (Blue Book Bylaws 2011.1 and 3500.2), and CIF holds no regional or state championship, so a Sunset team’s season ends with its last game, Oct 31 at the latest." | Kicker "Postseason". The qualification line: "San Diego Section playoffs, Nov 2–14 (finals Nov 14 at La Jolla HS): Open 8, Division I 12, Division II 12, placed by the Section from its power rankings; a designated league champion gets at least a play-in." Link "San Diego Section playoffs →". |
+| `/playoffs` | The `#sunset` card: the note and the Blue Book link | The San Diego Section intro: the qualification line, the round dates attributed to the officials' association, the Green Book and power-rankings links, and "the Section publishes brackets after the Oct 31 seeding meeting". It holds the `#city`, `#north-county` and `#metro` cards, each with every team's playoff division (I or II) from the Section's 2026 Divisions sheet, dated 2025-12-23. No bracket, no seed. |
+| `/standings/<league>` | A no-postseason card instead of the band. No LEFT or MAX column. | Band headed "San Diego Section playoffs: the league route, as things stand", with the qualification line as its intro |
+| Team page | "No section playoffs" and the note. No "Projected" line. | Kicker "San Diego Section playoffs picture". The rung, the qualification line, and "The Section lists {team} in Division {I\|II}; Open Division teams are drawn from Division I at the end of the regular season." |
+| `/schedule/<league>` rail chip | None | "Section playoffs Nov 2–14" |
+| Game page | — | "San Diego Section playoffs game — it does not count in the league table." San Diego division labels drop "Division" ("League game · City Western"), because there "Division" means a playoff division. |
+| Top nav "Playoffs" | `/playoffs#sunset` | `/playoffs#city`, `#north-county` or `#metro` |
+
+### 24.5 Copy rules
+
+§22.5 is extended for Southern California. The new rules live in `scripts/copy-rules.ts`. They run in
+`scripts/assert-copy.ts` over every built page's visible and attribute text, and in
+`tests/ui/copy-honesty.test.ts` over the view models.
+
+1. **Never "Sunset League"**, except in a sentence that also says "all-sports" (`SUNSET_LEAGUE_CLAIM`).
+   The rule is case-sensitive, so "Sunset league games" (MaxPreps' flag) passes.
+2. **Never "Sunset school(s)" or "Sunset member(s)"** (`SUNSET_SCHOOL_CLAIM`). Copy says "Sunset teams".
+3. **Never "rules require"** on any page or card of an `orderScope 'site'` league (`RULES_REQUIRE_CLAIM`).
+4. **The non-CCS bans of §22.5 apply to every Southern California page.** San Diego copy says
+   "placed by the Section" or "by selection", never "at-large" or "automatic qualifier". The Green
+   Book's tie sentence uses "automatic qualifier", so it is paraphrased: "the league designates which
+   team goes forward".
+5. **The seed-word ban** applies to `section-playoffs` and `no-postseason` pages and cards.
+   "Seeding meeting" passes. The Green Book sentence that names "the lowest-seeded team" is never
+   quoted (SEED_CLAIM).
+6. **The co-champion check excuses postseason citations.** The Green Book's "(not co-champions or
+   tri-champions)" is a rule quote, not a declaration.
+
+Teams level at the top read "{league} co-leaders" once league play is over, and the site never names
+a San Diego champion. A site-ordered league's zero-games note reads "No {league|division} games
+counted for X yet", not "no results reported".
+
+### 24.6 Budgets
+
+Measured with `next build` at `SCVAL_BUILD_AT` 2026-10-06T12:00:00Z. All figures are gzip bytes.
+
+The columns:
+
+- **2026-10-04** is §22.6's "after" (the five-league tree on that day's snapshot; `/leaders` after
+  §23).
+- **Before** is the five-league tree (commit 43807a3) built at the same instant on its own 49-team
+  snapshot (fetched 2026-10-05T21:22Z, 397 games). The pre-amendment code cannot load the 99-team
+  file, so the two trees differ in data as well as code.
+- **After** is this tree on the committed 99-team snapshot (fetched 2026-10-06T03:19Z, 871 games).
+
+| Page | 2026-10-04 | Before | After | Limit (multiplier; % used) |
+|---|---|---|---|---|
+| `/` HTML | 52,466 | 52,077 | 99,016 | 112,429 (4.4 ×, was 2.2 ×; 88%) |
+| `/` RSC | 31,908 | 31,341 | 61,010 | 69,494 (4.4 ×, was 2.2 ×; 88%) |
+| `/standings` | 21,701 | 22,643 | 34,040 | 39,754 (1.2 ×, was 1.0 ×; 86%) |
+| Largest `/standings/<league>` | — | 39,466 (SCVAL) | 50,431 (North County) | 59,630 (1.8 ×, was 1.25 ×; 85%) |
+| Largest `/schedule/<league>` | — | 143,078 (SCVAL) | 213,698 (North County) | 240,888 (2.0 ×, was 1.25 ×; 89%) |
+| `/schedule` | 39,113 | 38,622 | 62,263 | 72,266 (0.6 ×, was 0.5 ×; 86%) |
+| `/teams` | 27,546 | 28,165 | 44,318 | 50,341 (5.2 ×, was 3.0 ×; 88%) |
+| `/playoffs` | 29,585 | 29,970 | 37,375 | 43,224 (2.3 ×, was 2.0 ×; 86%) |
+| `/leaders` | 35,499 | 38,549 | 66,035 | 76,194 (2.3 ×, was 1.2 ×; 87%) |
+| Largest team page (Tamalpais) | 41,605 | 45,893 | 49,311 | 58,086 (6.0 ×, unchanged; 85%) |
+
+**How the multipliers were set.** Each line that was over its limit, or within 5% of it, got
+ceil10(measured × 1.12 / baseline) / 10, one line at a time. Before the raise, nine lines were over:
+
+- `/` HTML and RSC: 176%
+- `/standings`: 103%
+- the per-league standings loop: North County 122%, SCVAL 105%
+- the per-league schedule loop: North County 142%, City 101%
+- `/schedule`: 103%
+- `/teams`: 153%
+- `/leaders`: 166%
+- the Worker
+
+`/playoffs` was within 1% of its line (99.4%).
+
+`tests/golden/page-weights-main.json` is untouched. The design review's estimates were not used
+(`/` 3.3–3.5 ×, `/teams` 6.5 ×, `/standings` 1.5 ×, `/schedule` 0.75 ×, `/leaders` 2.4 ×).
+
+**Other pages.** The other league pages:
+
+- `/standings/<league>`: City 38,571, BVAL 37,827, Metro 31,403, Sunset 30,216, EAL 28,741
+- `/schedule/<league>`: City 151,813, SCVAL 146,131, Sunset 113,751, Metro 89,982, EAL 56,411
+
+The Southern California team pages run from 27,900 (Southwest) to 45,382 bytes (Canyon Hills).
+
+**First-load client JS** (before → after, uncompressed bytes):
+
+| Route | Before | After | Change | Limit |
+|---|---|---|---|---|
+| `/` | 504,471 | 506,818 | +2,347 | 515,098 |
+| `/schedule/[league]` | 489,050 | 491,294 | +2,244 | 509,175 |
+| `/teams` | 486,099 | 488,494 | +2,395 | 490,367 |
+| `/teams/[slug]` | 476,240 | 477,272 | +1,032 | 490,367 |
+| `/standings/[league]` | 477,128 | 479,372 | +2,244 | 490,367 |
+| `/leaders` | 474,664 | 479,372 | +4,708 | 490,367 |
+
+The growth is the region switcher's state in the existing `LeagueSwitcher` and `use-league` modules;
+`/leaders` also gained the switcher and region-aware tabs. No config reaches a client bundle and the
+"+ 20 KB" rule stands. `/teams` is the tightest, with 1,873 bytes left, so the next client-side
+addition there will cross it.
+
+**Data and the build.**
+
+- **Snapshot.** `data/snapshot.json` is 2,009,846 bytes against the new caps of 3,200,000 (warn
+  2,400,000; 63% used). It has 165 source rows against a cap of 280 (59%). Both caps were raised
+  from 1.6 MB / 1.2 MB and 140 sources (`lib/pipeline/steps/assemble.ts`).
+- **Home team views.** The serialized views are 107,545 bytes for 99 teams (52,868 NorCal, 54,577
+  SoCal). The budget in `tests/ui/home-weight.test.ts` is 118 KiB = 120,832 (89% used). On the
+  offline corpus they are 65,819.
+- **Prefs script.** It is 2,454 bytes against a line of 2,816 (87% used). The design had proposed
+  3,072.
+- **vinext cache.** After `pnpm build:vinext`, `dist/server/prerendered-routes` holds 367,917,653
+  bytes: 1,081 `.html` files (212,432,952 bytes), 1,080 `.rsc` (112,804,113) and 1,062 `.route`
+  (42,680,588). That is 2.26 × the 2026-10-04 folder. Twice it is 735,835,306 bytes, so
+  `cacheMaxMemorySize` went from 384 MB, which was 1.09 × and under the 2 × rule, to **768 MB**
+  (805,306,368 bytes, 2.19 ×).
+- **Cloudflare Worker.** After `pnpm build:cloudflare` it is 2,245,128 bytes gzip over 237 files
+  (8,417,439 raw). The five-league tree built the same way the same day measured 1,916,727 bytes
+  over 236 files, and §22.6 recorded 1805.5 KB. The old line was baseline + 600 KB = 2,040,051, so
+  the allowance became **baseline + 1000 KB = 2,449,651 (92% used)**: the measurement plus about
+  10%, rounded to 100 KB. Of the +328,401 bytes, 323,888 are the nine bundled data files: 728,330
+  bytes gzip -9 against 404,442. The breakdown is in `scripts/assert-budgets.ts`.
+- **Cloudflare's own limit.** Its Workers limits page (developers.cloudflare.com/workers/platform/limits/,
+  read 2026-10-06) sets 64 MiB uncompressed on both the Free and Paid plans, and says there is no
+  compressed size limit. The Worker's 8.0 MiB raw is 13% of that.
+
+### 24.7 Data and history
+
+- **The snapshot** was regenerated by a live `pnpm fetch-data` (`fetchedAt` 2026-10-06T03:19:11Z).
+  It holds 99 teams and 871 games: 505 league games, 531 finals and 11 pending. All nine leagues are
+  `fresh`. The four Southern California leagues have no missing league result; SCVAL has 2, BVAL 1
+  and the EAL 2.
+  - By league (a game between two leagues counts in each): Sunset 120 games, 18 league, 98 finals;
+    City 164, 60, 111; North County 244, 102, 159; Metro 93, 31, 60.
+  - Nine games are `SO`: the EAL's one and eight between San Diego teams.
+  - The snapshot schema version is unchanged. Region is derived from config and never stored.
+- **Corpus.** `tests/fixtures/corpus/socal-2026-10-06` (8.2 MB) was captured live with `--leagues
+  sunset,city,north-county,metro --no-official --no-ccs --no-vnn`. That was 65 MaxPreps requests
+  (1 + 2 × 7 + 50) and 78 source rows, all ok. Its manifest id is `capture-2026-10-05`, the run's
+  Pacific day. `tests/pipeline/socal.test.ts` replays it and pins:
+  - Valley's skip;
+  - the membership counts per division (Patrick Henry's 10 games count, though MaxPreps flags none);
+  - every division a full double round robin except Metro Mesa, which has 19 of 20 meetings (Bonita
+    Vista and Helix meet once on MaxPreps);
+  - Mission Bay's five cross-division notes;
+  - the eight San Diego `SO` finals.
+- **Elo bridge.** The fit is one table over all 99 teams (§20), with constants set on NorCal seasons.
+  Comparisons between the regions rest on few games:
+  - **This season: 7 finals** between the regions, all against San Diego teams (City–SCVAL 3, North
+    County–SCVAL 2, City–MCAL 2), and 8 more scheduled (City–SCVAL 5, North County–MCAL 2, North
+    County–EAL 1).
+  - **Last season: 11 finals** (Leigh, Gilroy and Mitty against San Diego and Sunset teams).
+  - **Within Southern California: 38 finals** between Sunset and San Diego teams this season.
+
+  The `/leaders` Elo notes print the counts from the data at build time: "on one scale across all nine
+  leagues; comparisons between NorCal and SoCal rest on 7 finals between the regions this season and
+  11 last season, so treat them as rough". Each region has its own boards and qualifying minimum. A
+  team page names its place on its own region's board.
+- **Prior season.** `data/prior-season.json` was refetched over all 99 teams. It holds 896 finals:
+  412 NorCal (unchanged), 473 between Southern California teams and 11 between the regions. It
+  excludes 113 deleted rows, 25 not final, 51 outside the registry and 1 forfeit.
+- **Rosters and stats.**
+  - `data/rosters.json`: 1,617 players across 99 entries, 84 of them with players.
+  - `data/player-stats.json`: 758 players on 62 of 99 teams.
+  - `data/jv.json`: 531 games (208 final) for 91 of 99 schools, with si.com JV ids for 98.
+  - `data/rosters-enrichment.json`: the 50 Southern California entries are unswept stubs that say so.
+- **History 2025-26: `unavailable`** for `sunset`, `city`, `north-county` and `metro`, checked 2026-10-06.
+  - **Sunset:** no league website or standings document was found. The Southern Section holds no
+    field hockey playoffs, and the Sunset table on scores.cifss.org is SBLive's.
+  - **San Diego leagues:** the cifsdshome power-rankings widget (year_id=175) lists records from
+    game-type labels, not league standings. Each card links '2025 CIFSDS playoff brackets (Google
+    Sheet)' under "also published".
+  - Nothing third-party is shown.
+
+### 24.8 Not built
+
+- **Independents.** Harvard-Westlake, Thousand Oaks and Glendora appear only as opponents (built
+  later the same day, §24.9). So do Madison, Santana, Castle Park, Chula Vista, Montgomery and
+  Sweetwater (no 2026 varsity game), and Mayfair. Search prints a sentence for each.
+- **No San Diego bracket, seed projection or power-ranking replication.** The site states the rule,
+  the dates and each team's playoff division. The Section seeds at its Oct 31 meeting.
+- **No club or commitment sweep for Southern California.** The 50 teams' rosters have no club or
+  commitment lines, and `/clubs` and `/commits` cover the 49 NorCal teams' schools.
+- **No rosters-enrichment sweep for Southern California.** Its entries are stubs.
+- **No header-level region toggle.** The switcher sits in each page's content.
+- **No 1 v 1 tallies**, as in §22.8. That covers the San Diego shootouts too.
+- **The si.com statewide scoreboard is read only as far as its first page.** It server-renders the
+  first 24 games of a day, and the rest load through a client-side API the pipeline does not call.
+  The parser warns ("si.com scoreboard lists N of M games…") and treats a missing row as unread,
+  never as an absent game.
+- **The playoff division sheet is not re-checked.** If the Section re-sheets before Oct 31, the
+  Division I/II labels on `/playoffs` and team pages go stale.
+
+### 24.9 The Southern Section independents, and North's short name (2026-10-06, later)
+
+> **Superseded in part by §24.10 (the same day, later):** the group has five members (Bonita and
+> Chaminade joined it from the Sunset) and a table of their games against each other. The "no table",
+> "no league games" and "three" rows below describe the state between the two decisions; §24.10 says
+> what stands.
+
+Glendora, Harvard-Westlake and Thousand Oaks joined on 2026-10-06, so every California team we found
+with a 2026 varsity game on MaxPreps is covered: **102 teams, 49 NorCal and 53 SoCal, in nine leagues
+and one group of three independents**. Each is the only field hockey team in its all-sports league on
+MaxPreps (Glendora: the Palomares League; Harvard-Westlake: League B; Thousand Oaks: the Marmonte
+League), and MaxPreps' 2025-26 tables for the same three leagues list one team each, so they play no
+league games and have no league table. The rules and sources are in `docs/LEAGUE-RULES.md` ("Southern
+Section independents") and `docs/DATA-SOURCES.md` §2.1 and §3.1. This subsection wins where 24.1-24.8
+disagree.
+
+| Earlier decision | Now | Why |
+|---|---|---|
+| The three appear only as opponents (24.1 scope note, 24.8) | **A group, not a league**: `LeagueId` `'independents'` (name "Southern Section independents", short name "Independent", section `ss`), after Metro in `LEAGUES`, with one division `independents` (3 teams, `gamesPerTeam` null, `maxprepsLeagueId` null, `official.mode` 'none'). Its registry is `lib/registry/independents.ts`, transcribed from `tests/fixtures/seeds/registry-seed-ss.json`. | They have a 2026 varsity schedule and the Southern Section rules, but no league. Shown only as opponents, their 37 games were invisible except from the other side. |
+| Three classifications (`contest-type`, `official-fixtures`, `membership`) | A fourth, **`independent`**: `lib/classify.ts` returns null for every game of the group, so `countsFor` is always null; `DivisionHealth.classification` and the snapshot schema take the value. | A game between two independents (Harvard-Westlake 5, Glendora 0 on Sep 8) is not a league game: they share no league. |
+| "Nine leagues" is `LEAGUES.length` | **`LEAGUES_WITH_TABLES`** (9; renamed `LEAGUES_PROPER` in §24.10) and **`INDEPENDENT_LEAGUES`** (1) in `lib/leagues.ts`; every count of leagues uses the first and names the independents apart: "nine leagues and the Southern Section's three independents", "all four SoCal leagues and three independents", `coveredLeagueWords()`, `independentsWords()`. The site never prints "ten leagues" (a `leaders-view` test checks). | They are not a league, and a tenth "league" with no games would be a false count. |
+| Scope note: "Teams outside these nine leagues, including … Glendora, Harvard-Westlake and Thousand Oaks, appear only as opponents." | "Covers the CIF Central Coast Section (SCVAL, BVAL, PCAL), the North Coast Section’s MCAL, the Northern Section’s EAL, the Southern Section’s Sunset field hockey league and the San Diego Section’s City, North and Metro conferences, plus the Southern Section’s three independents (Glendora, Harvard-Westlake and Thousand Oaks), which play no league games. Other teams appear only as opponents." `SITE_DESCRIPTION` says "… for the 53 Southern California teams in Sunset (Southern Section), City, North and Metro (San Diego Section) and three Southern Section independents." | The old note's exception is now covered. |
+| North County's short name "North County" | **"North"** (owner decision, 2026-10-06: "North County" made the chip too wide). The name ("North County Conference") and search are unchanged: search keys are the short name and the name, so "North County" still finds it. Where the short name would stand alone as a control's target or a sentence's subject, a new `LeagueConfig.standaloneName` is used through `standaloneName(id)`: "Jump to North County ↓", "Show North County here", "(North County publishes no schedule)". Every other league's is its short name, except the independents' ("Jump to the independents ↓", "Show the independents here"). The scope note's noun is the shared last word: "City, North and Metro conferences". | "Jump to North ↓", alone on a pill, reads as a direction; "Show Independent here" names nothing. In a list ("City, North and Metro"), a label ("North · Palomar") or a row tag ("Poway · North") the context makes it the league. |
+| A league not fetched reads "<SHORT> was not fetched in this run." | For a group: "The Southern Section independents were not fetched in this run." Every league's sentence is unchanged. | "Independent was not fetched" names nothing. |
+| `DATA_QUALITY.notCovered` named the three | They are removed from it; River Valley (Yuba City, Sac-Joaquin Section), North Salinas and Notre Dame (Salinas) are added: "… has no 2026 varsity game on MaxPreps, so it has no page here." Each team's 2026-27 schedule read returned no game on 2026-10-06 (Wilcox's too; it was already listed). | Search answers for every California school a reader might look for. |
+
+**Routes and counts.** `/standings/[league]` and `/schedule/[league]` have 10 pages each (`independents`
+added), `/teams/[slug]` 102, `/playoffs/independents` is a 404, `/playoffs` has an `#independents`
+card, `/history/2025-26` an `#independents` section. `next build` prerenders **1,093 pages** (11 fixed,
+10 + 10 league pages, `/playoffs/mcal`, 879 games, 64 score days, 102 teams, 16 clubs), and the sitemap
+lists the same 1,093 URLs. The MaxPreps sweep is 1 + 2 × 14 + 102 = **131 requests**: no table gathers
+the three, so only their schedules are read.
+
+**Where a table would be** (`IndependentGroupView` from `independentGroupView` in
+`components/standings/standings-view.ts`, drawn by `components/standings/IndependentGroup.tsx`): the
+group's note, the official note of its division, and its three team links, each `[data-team-slug]` with
+the hidden "Your team." note and, on `/teams`, the finder's `data-team-tile` hook. No place, PTS, GP,
+ladder line, caption or legend.
+
+| Surface | The independents |
+|---|---|
+| `/standings`, `/teams` | An h3 "Southern Section independents" (no h4) over the group block; `/teams` says "each in its division’s standings table (the independents play no league games, so they have none)". The overview's header lists only the nine leagues ("Every division in …"), and its points sentence names only the site-ordered leagues. |
+| `/standings/independents` | Header "Southern Section · no league games, so no table", the block under "No league table", the no-postseason card and the Blue Book links; never a "league play starts" notice (`buildNotice` returns null). |
+| `/schedule/independents` | "Independent teams: schedule and results"; "every contest involving the independents, all of them non-league games". |
+| Home | The panel's lead is "No league games." with "These teams play no league games, so there is no table; their first game is Tue Aug 18." only while that date is ahead (none in season); the mini table is the block under "No league table" with no PTS legend; "Independent teams" lists them; the other-leagues strip reads "Independent: No league table". The card says "Show the independents here" and links "Independent games →" (`/schedule/independents`). A pinned independent's card reads "Independent · no league table", its form is over all games and it has no table link. |
+| Team page | Identity "Tartans · Independent · Glendora". The tiles are Place ("Independent", "no league table"), Overall (all opponents), Streak (all games), Goals and Goal diff, with a sentence that there is no place, league record, GP or MAX and that every figure counts all games. Form ("All games, oldest to newest"), the margin strip ("All games · N played") and the splits count every game; there is no "Who we haven't beaten"; the League games section says every game is in the list of all games. The standings link is "Southern Section independents →". The OG card uses the overall record. |
+| Game page | Each independent side reads "No league games · Independent"; "Form going in" says "Plays no league games" (both sides: "Neither side plays league games."). An opponent's line on another team's page reads "10-3-1 overall · Independent" (or "no results yet"). |
+| `/playoffs` | The header adds "no playoffs for the Sunset or the Southern Section independents"; the `#independents` card has the group's no-postseason note. The top nav's Playoffs goes to `/playoffs#independents`. |
+| `/leaders` | On every SoCal board ("schools in all four SoCal leagues and three independents"), except Best league record ("all four SoCal leagues"): they have no league record. The Elo notes say "across all nine leagues and the Southern Section’s three independents". |
+| `/jv` | "Southern Section independents JV": "Glendora, Harvard-Westlake and Thousand Oaks play no league games, so their JV teams have no league table either. Their JV games are on their team pages: …", each name linking the team's `#jv`; a JV game between two of them is non-league (reason `independent`). |
+| `/history/2025-26` | `unavailable`: "Glendora, Harvard-Westlake and Thousand Oaks played as independents in 2025-26 too: there was no league table to publish.", checked 2026-10-06 against MaxPreps' 2025-26 Palomares, League B and Marmonte tables. The header says "… are unavailable: we found no official 2025-26 final standings. The Southern Section independents had no league table to publish." |
+| `/about` | A rules card ("No league · SS") with the group's note and Article 200, a source card, no cross-check, the roster line "for all 102 teams in all nine leagues and the three Southern Section independents". |
+| Search, OG | The group is a search entry ("the Southern Section independents"; aliases "Independents", "independent"). The region OG cards (the root's and `/standings`') list no independents row in their SoCal column; their footer reads "9 leagues, 3 independents · 102 teams · …". |
+
+**Data (2026-10-06).** The runs, in order, with logs kept outside the repo:
+
+- `pnpm fetch-prior-season`: 936 finals between two of the 102 teams (412 NorCal, 513 SoCal, 11
+  between the regions; 40 involve an independent), excluding 113 deleted rows, 26 not final, 16 outside
+  the registry and 1 forfeit.
+- `pnpm fetch-rosters --leagues independents`: Glendora 19, Harvard-Westlake 25, Thousand Oaks 21;
+  1,682 players on 87 of the 102 teams.
+- `pnpm fetch-player-stats --leagues independents`: Harvard-Westlake 18 players, Glendora and Thousand
+  Oaks none; 776 players on 63 of the 102.
+- `pnpm fetch-jv --leagues independents`: Glendora 8 games (4 final), Harvard-Westlake 13 (7), Thousand
+  Oaks none; 533 games (209 final) for 93 of the 102, si.com JV pages for 101.
+- `pnpm fetch-data`: `fetchedAt` 2026-10-06T05:58:34Z, 102 teams, 879 games (506 league), 539 finals, 12
+  pending, all nine leagues and the independents fresh; 131 MaxPreps, 21 si.com and 8 official-host
+  requests; 166 of 168 source rows ok (the CCS calendar and bracket, skipped before Oct 25). The
+  independents have 37 games, 29 final, none counted. `data/snapshot.json` is 2,034,943 bytes.
+- `data/history-2025-26.json` was regenerated offline with the independents' entry.
+  `data/rosters-enrichment.json` has three unswept stubs for them.
+
+**Budgets.** `pnpm assert:budgets` passes with no line raised: `/` HTML 100.2 KB of 109.8, `/teams` 44.8
+of 49.2, `/leaders` 66.2 of 74.4, `/playoffs` 37.2 of 42.2, `/standings/independents` 14.6 and
+`/schedule/independents` 49.2 KB. Two test lines were raised by the 1.12 × rule: the home team views
+(110,556 bytes for 102 teams) from 118 to **121 KiB**, and the prefs script (2,537 bytes, three more
+slugs and one more league) from 2,816 to **3,072 B**.
+
+**Not built.** No league table, standings, ladder, co-leaders or champion for the independents, ever.
+No enrichment sweep for them (stubs, as for the other 50 SoCal teams). `scripts/discover-season.ts`
+probes each of the three and asks a human to check that each is still its league's only field hockey
+team; it does not decide that itself.
+
+### 24.10 Bonita and Chaminade are independents, and the independents have a table (2026-10-06, later still)
+
+Owner decisions, 2026-10-06: "I believe Chaminade and Bonita should be classified as independents and
+not Sunset", and "let's give the independents a standings table also". Both checked against the
+sources before the change, and both built.
+
+**What the sources say about Bonita and Chaminade.** MaxPreps' 2026-27 Sunset table (`aa46adc4-…`)
+lists them with Chaparral, Great Oak and Temecula Valley, and si.com's Sunset table (the one the
+Section's scores site, scores.cifss.org, shows) lists them with six of the eight; MaxPreps' 2024-25 and
+2025-26 Sunset tables listed them too, and si.com's team profiles say "Sunset". No published document
+calls them independents. Against that: MaxPreps marks none of their nine 2026 games against the five
+Orange County Sunset teams as a league game (Bonita: Marina Aug 18, Huntington Beach Aug 25, Newport
+Harbor Sep 1, Edison Sep 10; Chaminade: Fountain Valley Aug 18, Edison Aug 20, Marina Aug 24,
+Huntington Beach Sep 16, Newport Harbor Oct 6; all contestType 1), while it does mark the Temecula
+three's games against those schools; and each of the two plays every one of Glendora, Harvard-Westlake
+and Thousand Oaks, and each other, home and away (all ten pairs of the five meet, nine of them twice,
+Chaminade–Thousand Oaks three times). The one MaxPreps league flag between the two and a Sunset team is
+Bonita at Great Oak, Aug 27. So the site lists them with the independents, says on every surface that
+MaxPreps and si.com list them in the Sunset, and skips their MaxPreps Sunset rows as the Sunset's
+`maxprepsExtraRows` (a registry team of another division may be one; `lib/teams.ts`).
+
+**The group gets a table.** The five are still not a league, and nothing calls them one: a new
+`LeagueConfig.independents: true` flag carries the group identity (`isIndependentLeague`,
+`INDEPENDENT_LEAGUES`, `LEAGUES_PROPER`, the renamed `LEAGUES_WITH_TABLES`), and "nine leagues and
+five independents" stays the count. The `'independent'` classification is gone: the group is a
+`'membership'` division, as the San Diego divisions are, so every game between two of the five dated
+Sep 8 to Oct 31 (tournament and postseason rows left out) counts for its table, whatever MaxPreps'
+flag says, ordered by this site's 3-1-0 points (`orderScope: 'site'`, `gamesPerTeam` null since the
+pairs meet two or three times; `assertLeagues` now allows null on a membership division with no
+document). Everything built for "a group with no table" is removed: `IndependentGroup.tsx`,
+`IndependentGroupView`, the `independent` fields of the division, overview and mini views, the
+independents' branches on the team page (overall-only tiles, "All games" form and margins, no "Who we
+haven't beaten"), the game page ("Plays no league games"), the JV page and tables, the home panel's
+lead and pinned card, the standings pages and the about page's `IndependentRules`. The independents
+now render through every league path, and the site's "league game" vocabulary covers the group's games
+on the strength of the division's note, printed under its tables and on /about: "The table counts
+every game between two of the five, whether or not MaxPreps marks it as a league game (it marks only
+Bonita's two games with Chaminade), and orders them by this site's 3-1-0 points."
+
+| Earlier decision (§24.9) | Now |
+|---|---|
+| Sunset: ten teams, Aug 18 first league date, MaxPreps table five of ten | Eight teams (Chaparral, Edison, Fountain Valley, Great Oak, Huntington Beach, Marina, Newport Harbor, Temecula Valley), `leaguePlay.first` Aug 25 (Chaparral–Temecula Valley), MaxPreps table three of eight plus the two extra rows, `miniRows` 8; the knownCause says Great Oak's Aug 27 win over Bonita, which MaxPreps counts, is not counted here. The overtime citation names only Fountain Valley 1-1 Marina. |
+| Independents: three, `classification: 'independent'`, no table | Five, `independents: true`, `classification: 'membership'`, `leaguePlay` Sep 8 to Oct 31, `expectedTeams` 5, `maxprepsMissing` all five, `miniRows` 5, cities "Glendora, La Verne, Studio City, Thousand Oaks and West Hills", a `membershipNote` under the heading. |
+| Copy: "play no league games", "no league table", "<SHORT> games" links to the schedule | The scope note: "plus the Southern Section’s five independents (Bonita, Chaminade, Glendora, Harvard-Westlake and Thousand Oaks), schools in no field hockey league". Standings links read "Independents standings" (`standingsLabel` in `lib/leagues.ts`: "Independent standings" would read as "unofficial standings"); the overview and /teams count the independents' table ("Every division in SCVAL, …, Metro and the independents"); the preseason notice for the group reads "The first game between two of the independents is …". |
+| Standings notes: "League games are every game between two division members on MaxPreps’ schedules (<league> publishes no schedule)" | For the group, the Notes source line is the division's own note (why the five are grouped, what the table counts); captions read "Southern Section independents standings", never "Independent league standings"; the home mini table's kicker is "Table", not "League table"; the standings page's title is "Independents standings". |
+| Leaders: the league-record board left the independents out because they had no league record | Still left out: their table is not a league record (the board's scope stays "all four SoCal leagues"); every other SoCal board says "and five independents". |
+| The region OG cards listed no independents row; `/history/2025-26` said "had no league table to publish" | The SoCal column of the root and `/standings` OG cards gets an "Independents" row (its division label: the short name is an adjective) with the table's leader clause; the history page and `/about` say "The Southern Section independents are this site’s grouping, so no table of them was published." |
+| `/history/2025-26`: "played as independents in 2025-26 too" | "The Southern Section independents are this site’s grouping, so no 2025-26 table of them was published: Glendora, Harvard-Westlake and Thousand Oaks had no league table, and MaxPreps listed Bonita and Chaminade in its Sunset table.", with MaxPreps' 2025-26 Sunset table added to what was checked. |
+
+**Data (2026-10-06, 12:00Z).** `pnpm fetch-data` again: 102 teams, 879 games (524 league), 542 finals,
+9 pending; the independents' table counts 21 games (13 final), the Sunset 15 (its 18 less Great Oak–Bonita
+and Bonita–Chaminade twice). `data/history-2025-26.json` regenerated offline. The per-team files
+(rosters, player stats, JV, enrichment) were reordered to the registry's new order with the two teams'
+`division` rewritten, their contents unchanged.
+

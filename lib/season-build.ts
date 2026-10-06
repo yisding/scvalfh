@@ -24,8 +24,8 @@ const minOf = (dates: readonly string[]): string | null =>
 
 /**
  * One league's window: over games with at least one registry side in the league AND
- * `postseason === null` (crossover, play-in, MCAL tournament, EAL Super Regional and CCS games never
- * extend it).
+ * `postseason === null` (crossover, play-in, MCAL tournament, EAL Super Regional, San Diego Section playoff
+ * and CCS games never extend it).
  * `lastLeagueGame` = max dateLocal where `countsFor` is one of the league's divisions, any status.
  */
 export function leagueWindowOf(games: readonly Game[], leagueId: LeagueId): SeasonWindow {
@@ -56,6 +56,7 @@ export function buildSeason(games: readonly Game[]): Season {
     divisions: l.divisions.map((d) => ({
       id: d.id,
       label: d.label,
+      // null for a division MaxPreps has no table for (the San Diego Section's Valley), as in config.
       maxprepsLeagueId: d.maxprepsLeagueId,
     })),
     postseasonKind: l.postseason.kind,

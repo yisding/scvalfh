@@ -82,7 +82,7 @@ jobs:
       - name: Lint
         run: pnpm lint
 
-      # CI_GATE turns tests/ui/home-weight.test.ts's teamViews budget (60 KB) on the bundled
+      # CI_GATE turns tests/ui/home-weight.test.ts's teamViews budget (118 KiB) on the bundled
       # snapshot from a warning into a failure. Only here: update-data.yml must never set it, so a
       # heavy live fetch warns (past 90 %) and the data cron is never blocked by it.
       - name: Test
@@ -101,7 +101,7 @@ jobs:
       # lost its generateStaticParams — the site would start rendering on demand. The counts are
       # EXACT and derived from data/snapshot.json, lib/leagues.ts and data/clubs.json (fixed pages;
       # standings and schedule per league; playoffs per league-tournament league; every game plus
-      # the superseded-game stubs; every game date; the 49 teams; the clubs of data/clubs.json), no
+      # the superseded-game stubs; every game date; the registry’s 99 teams; the clubs of data/clubs.json), no
       # prerendered path may contain ':' (a raw `sblive:` id), and each family with an OG image has
       # page/image parity BY NAME.
       - name: Assert every route is static

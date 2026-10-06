@@ -306,9 +306,42 @@ describe('maxpreps roster: drift is loud', () => {
   });
 });
 
+describe('maxpreps roster: one career link on two rows (Huntington Beach, 2026-10-06)', () => {
+  // MaxPreps lists Valentina D'Angelo twice: one row "D'Angelo" (Sr., F) and one "D'angelo" with no
+  // grade, both linking the same career page, both rendered in the table. Each athleteData row takes
+  // its own table row (exact name first), the field checks pass, and the duplicate is a warning: the
+  // page is read as MaxPreps publishes it, never merged and never dropped.
+  it('reads both rows and warns about the duplicate career id', () => {
+    const roster = parse('huntington-beach');
+    expect(roster.players).toHaveLength(17);
+    expect(roster.athleteCount).toBe(17);
+    expect(roster.players.filter((p) => p.careerId === 'k0qcpr2eeq0n7').map((p) => [p.fullName, p.gradeClass, p.position])).toEqual([
+      ["Valentina D'Angelo", 'Sr.', 'F'],
+      ["Valentina D'angelo", null, null],
+    ]);
+    expect(roster.warnings).toEqual([
+      `duplicate career id 2a9d3bf3-fc27-42cd-8a79-97cb3c3d4bb2: "Valentina D'Angelo" and "Valentina D'angelo"`,
+    ]);
+  });
+
+  it('still fails when two athleteData rows share a link the table shows once', () => {
+    const html = fixture('huntington-beach');
+    // Drop the second rendered row of the shared link: two athleteData rows, one table row.
+    const marker = 'valentina-dangelo/?careerid=k0qcpr2eeq0n7';
+    const first = html.indexOf(marker);
+    const second = html.indexOf(marker, first + marker.length);
+    const rowStart = html.lastIndexOf('<tr', second);
+    const rowEnd = html.indexOf('</tr>', second) + '</tr>'.length;
+    expect(second).toBeGreaterThan(first);
+    expect(() => parseRosterPage(html.slice(0, rowStart) + html.slice(rowEnd), { url: 'hb' })).toThrow(
+      /rendered table has 16 rows, athleteData has 17 undeleted rows/,
+    );
+  });
+});
+
 describe('every league has a roster page URL and a claim-free placeholder', () => {
-  it('rosterUrl is the team page plus roster/, for all 49 teams', () => {
-    expect(TEAMS).toHaveLength(49);
+  it('rosterUrl is the team page plus roster/, for all 102 teams', () => {
+    expect(TEAMS).toHaveLength(102);
     for (const team of TEAMS) {
       expect(rosterUrl(team), team.slug).toBe(`${team.external.maxprepsTeamUrl!.replace(/\/+$/, '')}/roster/`);
     }

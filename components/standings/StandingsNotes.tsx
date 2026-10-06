@@ -64,8 +64,13 @@ export interface StandingsNotesProps {
   postponed: MissingRowView[];
   /** Division-specific footnotes, printed last. */
   footnotes?: string[];
-  /** The MaxPreps league table for this division. */
+  /** The MaxPreps league table for this division; absent when MaxPreps publishes none (the San Diego Section's Valley). */
   sourceUrl?: string;
+  /**
+   * Why there is no MaxPreps table to link (`crossCheckSkipReason`: 'MaxPreps publishes no table for this
+   * division'), printed as a note in place of the link, so a missing link is said, not silent.
+   */
+  sourceSkipped?: string | null;
   /** The league's schedule document; null when it publishes none (EAL): no link is drawn. */
   officialSchedule: { href: string; label: string } | null;
   /** `Scheduled per <SHORT>`, or `League games as MaxPreps marks them (<SHORT> publishes no schedule)`. */
@@ -315,6 +320,7 @@ export function StandingsNotes({
   postponed,
   footnotes = [],
   sourceUrl,
+  sourceSkipped = null,
   officialSchedule,
   scheduledPer,
   rankRule,
@@ -377,6 +383,7 @@ export function StandingsNotes({
         {footnotes.map((note) => (
           <li key={note}>{note}</li>
         ))}
+        {sourceSkipped ? <li>{sourceSkipped}, so there is nothing to compare these records with.</li> : null}
       </ul>
       {/* `mt-auto pt-3`: the 12px gap the inset's own `* + *` rule gave, and from lg (where the
           row stretches this block to the postseason card's height) the push to the bottom edge,

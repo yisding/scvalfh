@@ -1,11 +1,16 @@
-# Data sources — NorCal girls varsity field hockey (season "26-27")
+# Data sources — California girls varsity field hockey (season "26-27")
 
-Condensed from the build-time research spec and amended for the five-league site (SCVAL, BVAL and
-PCAL in the CIF Central Coast Section; MCAL in the North Coast Section; EAL in the Northern
-Section). Confidence tags: **[V]** independently verified against a live response or document;
-**[U]** claimed but not independently re-verified; **[TODO]** open item. Values below were
+Condensed from the build-time research spec and amended for the nine-league site: in Northern
+California SCVAL, BVAL and PCAL in the CIF Central Coast Section, MCAL in the North Coast Section and
+EAL in the Northern Section; in Southern California the Sunset in the Southern Section, the City,
+North County and Metro conferences in the San Diego Section, and the Southern Section's five
+independents, Bonita, Chaminade, Glendora, Harvard-Westlake and Thousand Oaks, schools in no field hockey
+league whose games against each other are the group's table (102 teams; DESIGN §24, §24.9, §24.10).
+Confidence tags: **[V]** independently verified against a live response or document; **[U]**
+claimed but not independently re-verified; **[TODO]** open item. Values below were
 captured/verified 2026-09-28 to 2026-10-04; the EAL's captures, and every EAL line below, are
-2026-10-04.
+2026-10-04; the Southern California captures, and every Sunset and San Diego line below, are
+2026-10-06 unless dated otherwise.
 
 See also `docs/LEAGUE-RULES.md` (each league's points, tiebreak chain, postseason and the by-law
 citations), `docs/BYLAWS-2026-27.md` (the verified SCVAL by-laws, which override anything below
@@ -95,7 +100,7 @@ sportSeasonId/year/season/level/stateCode`, plus freshness probes
 | `calculatedFields.contestState` | `0` | unknown | **[U]** not observed |
 | | `1` | **Deleted** — `canonicalUrl` null, may still carry a real score (observed: a scrimmage with a 0-4 score) — **must be dropped before constructing a `Game`** | **[V]** |
 | | `2` | Pregame / scheduled | **[V]** |
-| | `3` | ContestInProgress (live) | **[U]** not observed |
+| | `3` | ContestInProgress (live): observed on three Southern California contests dated 2026-10-05, read that evening (~17:05 PT) while they were being played or had just ended: Otay Ranch at Eastlake `601ffe30-7e13-4bac-92f0-d03c53bac7ea`, Chaparral at Temecula Valley `37865d67-1dd6-480f-b1ca-e36d2bb275e9`, University City at Point Loma `c65dd446-70ac-4df9-9859-b6c62a81b091`. `lib/normalize.ts` reads it as `live` | **[V]** 3 contests, 2026-10-05 |
 | | `4` | Boxscore / final | **[V]** |
 | | `5` | ScoreNotReported | **[V]** |
 | `contest.dateCode` | `0` | date+time known | **[V]** |
@@ -129,7 +134,7 @@ and verified 2026-10-02). There is **no ghost-API roster endpoint**: `gatewayweb
 as the schedule page (1.1i), so it is pinned behind an adapter with loud assertions
 (`lib/sources/maxpreps-roster.ts`, written by `scripts/fetch-rosters.ts` to `data/rosters.json`).
 
-**Scope: every registry team, all five leagues (49).** The roster page is the same page for a team
+**Scope: every registry team, all nine leagues and the five independents (102).** The roster page is the same page for a team
 of any league, so `scripts/fetch-rosters.ts` walks the whole registry (`TEAMS`), and
 `data/rosters.json` (`lib/rosters-schema.ts`) holds exactly one entry per team, in registry order,
 each carrying its registry id and division. Everything below that says "captured 2026-10-02" was
@@ -212,7 +217,7 @@ Gotchas, all **[V]** on the 2026-10-02 captures (342 rows, 16 teams):
   a team. Only Saint Francis (25) and one Palo Alto row carry a height.
   `staffCount` is non-zero on most pages but the coaches are **not** in `pageProps` (they load
   client-side on `/team/staff`; untested).
-- Budget: one 180–340 KB page per team, 49 requests (43 before the EAL joined; 15 for SCVAL alone,
+- Budget: one 180–340 KB page per team, 102 requests (99 before the independents joined; 49 before the Southern California leagues joined; 43 before the EAL; 15 for SCVAL alone,
   `--leagues scval`), at
   the primary client's courtesy ceiling (≤3 concurrent, ≥500 ms between starts). Not in the
   twice-daily cron — rosters change a few times a season; run `pnpm fetch-rosters` by hand or
@@ -228,7 +233,7 @@ Saint Francis's 24 names are exactly the school's **2025-26** roster. Useful onl
 cross-check (17/17 for Los Altos, 13/13 for Cupertino).
 
 **Beyond MaxPreps — school athletics sites (`data/rosters-enrichment.json`).** The overlay has one
-entry per registry team (49), joined on `slug + athleteId`; its rules below hold for every league.
+entry per registry team (102), joined on `slug + athleteId`; its rules below hold for every league.
 SCVAL was swept on 2026-10-02 and BVAL, PCAL and MCAL on 2026-10-03 (the second sweep's tables
 follow the SCVAL one). The six EAL entries, added 2026-10-04, hold **recruiting profiles only** (the
 "Players' own recruiting pages" sweep below, run the same day): no coaches or sources, and each
@@ -1023,7 +1028,7 @@ hand; on a rollover, redo the research (the seniors will have graduated).
 `GET /gatewayweb/react/team-season-player-stats/rollup/v1?teamId=&sportSeasonId=` on the ghost API
 (JSON; captured and verified 2026-10-02 on the 15 SCVAL teams, and 2026-10-03 on a sample of the
 other three leagues; the rest of those were read live by the script, and the six EAL teams on
-2026-10-04). Like the rosters it joins to, it covers every registry team, all five leagues (49): one
+2026-10-04). Like the rosters it joins to, it covers every registry team, all nine leagues and the five independents (102): one
 call per team,
 and `data/player-stats.json` (`lib/player-stats-schema.ts`) holds exactly one entry per team in
 registry order. The same adapter reads every league and throws on any drift. A team's `status` is
@@ -1103,7 +1108,7 @@ Gotchas, all **[V]**:
   49 teams, 404 players, 63 goalkeepers. EAL: Pleasant Valley 21 players, Chico 19, Davis 19, Bella
   Vista 19, Lassen 10; Corning answered HTTP 400 "No data was found" (status `none`, the same
   "no stats" case as the five teams above), and 0 teams failed.
-- Budget: 49 calls of 0.2–35 KB (one per registry team; 43 when it was measured at about 25 s), at
+- Budget: 102 calls of 0.2–35 KB (one per registry team; 99, 49 and 43 at earlier measurements, 43 at about 25 s), at
   the primary client's courtesy ceiling (≤3 concurrent, ≥500 ms between starts), twice a day in season:
   `.github/workflows/update-data.yml` runs `pnpm fetch-player-stats` right after the core sweep
   (non-fatal) and commits `data/player-stats.json` with the snapshot when its content changed; the
@@ -1135,7 +1140,7 @@ Gotchas, all **[V]**:
   Corning and Lassen have none). Red Bluff's 2025-26 games are outside the registry and left out. The
   EAL's 2025-11-01 tournament games carried `contestType` 5 on both rows, with the round in
   `contest.location`.
-- Cost: one `team-context/v1` read (about 0.55 MB) and 49 schedule reads (about 150 KB each; 43 when
+- Cost: one `team-context/v1` read (about 0.55 MB) and 102 schedule reads (about 150 KB each; 99 before the independents joined, 43 when
   measured), through the primary client's budget, once a season. The 2024-25 season (`c388901e-…`, 354
   games) was read the same way to test the starting point and is not kept.
 
@@ -1151,7 +1156,7 @@ decode HTML entities, `JSON.parse`.
 | Purpose | URL form | React class | Path |
 |---|---|---|---|
 | Team schedule + results | `.../teams/{sbliveId}-{slug}/games` | `teams/Games` | `query.team.games.nodes[]`, `.standing` |
-| League standings | `.../leagues/{id}-{slug}/standings` (SCVAL 4242 and 4243, BVAL 4175, PCAL 4231 and 4232, MCAL 4212, EAL 4190) | `organizations/Standings` | `query.organization.teamStandings[]` |
+| League standings | `.../leagues/{id}-{slug}/standings` (SCVAL 4242 and 4243, BVAL 4175, PCAL 4231 and 4232, MCAL 4212, EAL 4190; Sunset 4249, City 4179 and 4178, North County 4170, 4171 and 4234, Metro 4214 and 4199; the independents' one-school leagues Palomares 4235, League B 4207 and Marmonte 4213, read for backfill only) | `organizations/Standings` | `query.organization.teamStandings[]` |
 | Statewide daily scoreboard | `.../scores?date=YYYY-MM-DD` | `games/GenderSportIndex` | `query.scoreboardDate.games.nodes[]` (not `query.games.nodes[]`) |
 | League-scoped scoreboard | `.../leagues/{id}-{slug}/scores` | `organizations/Scores` | `query.organization.scoreboardDate.games.nodes[]` |
 | Single game detail | `.../games/{id}-{slug}` | `games/Show` | `query.game.{id,date,contest,gameTeams[]}` |
@@ -1195,7 +1200,18 @@ team}`, `gameTypeLabel`, `statusId`/`shortStatusText` (`3`/`"F"` = final, `1` = 
    Davis, Modesto). The searches for Bella Vista, Corning, Lassen and Pleasant Valley each named one
    team of that name, and Chico's one team named Chico (458564; the search also returns fuzzy
    matches, Pleasant Valley, Chino, Chino Hills, Ayala and Don Lugo, which are other names). So only
-   Davis joined the name-collision list (§5.3).
+   Davis joined the name-collision list (§5.3). The same search for the 50 Southern California names
+   (2026-10-06) added seven more (§5.3 step 4; `STATEWIDE_AMBIGUOUS` in `lib/sources/sblive.ts`).
+10. ⚠️ **The statewide scoreboard is truncated at 24 games a day.** `.../scores?date=` server-renders
+   only the day's first 24 games; the browser loads the rest through si.com's own GraphQL client.
+   On 2026-10-06 the page's `query.scoreboardDate.games` said `totalCount` 29 with
+   `pageInfo: { endCursor: 'MjQ', hasNextPage: true }` and held 24 nodes. No URL parameter reaches
+   the later games: `&after=`, `&page=2` and `&cursor=` all return the same first 24. With the
+   Southern California teams a busy day passes 24, so `parseScoresPage` warns ("si.com scoreboard
+   lists 24 of 29 games; the rest load in the browser and are not read") and the day is never taken
+   for the whole day: a truncated scoreboard only lowers coverage (a game it does not list is planned
+   for a team page or waits for a later run; `lib/backfill.ts` `scoreboardCoverage` is positive-only),
+   never a conclusion. **[V]** 2026-10-06.
 
 **Role in this project (owner decision D2, §5.2):** a cross-check, a same-day scoreboard with
 timezone-correct timestamps and — under ten mechanical rules, for official league fixtures
@@ -1473,8 +1489,12 @@ tables of their own are computed (`lib/jv-standings.ts`, last bullet). Read 2026
   Aug 18 and Oct 30, 91 final; Del Mar, Live Oak and Sobrato have no rows and Silver Creek only
   deleted ones. Every contest both registry feeds list agrees on score and state (246 of 246).
   Opponents outside the registry are names only (Stuart Hall 8 rows, York, Red Bluff, University
-  Prep Academy). Rows go through `normalizeGames` unchanged, so a JV game is a `Game`, and
-  `countsFor`/`postseason` stay null.
+  Prep Academy). Rows go through `normalizeGames` with `level: 'jv'`, so a JV game is a `Game`, and
+  `countsFor`/`postseason` stay null. `level: 'jv'` turns off one varsity rule: a level final MaxPreps
+  flags W/L between two teams of a section with a shootout rule (Northern, San Diego) is never read as a
+  shootout win, because both rules are varsity rules (the San Diego officials' procedures: "JV—No
+  overtime"); the score stands as a tie and the flags are kept as a contradiction. No JV final had that
+  shape on 2026-10-06 **[V]**.
 - **MaxPreps' JV league flag is not usable.** Of 217 JV contests between two schools of one league,
   200 fall on the same day and pairing as a varsity game, and on 116 of those `contestType` disagrees
   with the varsity game's classification (every PCAL one). No JV game is tagged league or non-league.
@@ -1505,9 +1525,15 @@ tables of their own are computed (`lib/jv-standings.ts`, last bullet). Read 2026
 - **Official documents** list JV only as start times on the varsity fixtures (SCVAL "Varsity 4:00
   followed by JV"; BVAL a JV time per game; MCAL's change notes), and PCAL's `CAT/YOR` slot is York's
   JV in Santa Catalina's place. None is read for JV.
-- **Cost:** 49 MaxPreps JSON calls through the MaxPreps client's gate and up to 48 si.com pages one at
-  a time, 1 s apart (§1.2's client options), about a minute. A failure is scoped to the school and the
-  source: its previous rows are carried (`carried-forward`).
+- **Cost:** 102 MaxPreps JSON calls through the MaxPreps client's gate and up to 101 si.com pages one at
+  a time, 1 s apart (§1.2's client options); the 98 pages take at least 98 seconds of that spacing alone
+  (about a minute in all when it was 49 calls and 48 pages). A failure is scoped to the school and the
+  source: its previous rows are carried (`carried-forward`). The previous file is salvaged row by row,
+  as fetch-rosters and fetch-player-stats salvage theirs: each team row, game and si.com row is held to
+  its own schema, and one that fails costs only itself, named in the log. The whole-file schema fails
+  whenever the registry grows, so before this a `--leagues` run over such a file sent every team
+  outside the run to `pending`; now a team outside the run loses its games only when its own row is
+  dropped (the run then exits 1).
 
 - **JV standings** (`lib/jv-standings.ts`, computed at build time from the file and the snapshot).
   A JV game takes its varsity counterpart's classification: the varsity game of the same pair within
@@ -1568,8 +1594,11 @@ elsewhere. Everything that differs by league lives in `lib/leagues.ts`.
 | `ccs` Central Coast Section | `d9a9ef9c-db12-4669-888b-40ac8462a575` | yes, 16 teams (SCVAL 7, BVAL 4, PCAL 2, 3 at-large) |
 | `ncs` North Coast Section | `89ae2e0f-e108-4054-9df3-329f0579f86d` | none: the NCS and CIF hold no field hockey championship; MCAL's own six-team tournament is its postseason |
 | `ns` Northern Section | `6249819d-12de-4bff-b0ab-38156006b001` | a Section-sanctioned, league-run Super Regional (top six EAL/SRL schools, Oct 30–31, site to be announced); no NorCal/State path |
+| `ss` Southern Section | `8e11e7d4-d3fa-4e6f-827f-652c29439d27` | none: the CIF Southern Section holds no field hockey playoffs (Blue Book 2026-27 Bylaw 2011.1 and 3500.2) and CIF holds no state championship; last allowable contest Sat Oct 31 |
+| `sds` San Diego Section | `bab8c451-e991-413d-93ac-ee77067952a3` | yes: Open 8, Division I 12, Division II 12, placed by the Section from its power rankings (Green Book 2026-27, Bylaw 2000.1), Nov 2–14, finals Nov 14 at La Jolla HS (round dates from the San Diego Field Hockey Officials Association's calendar) |
 
-**The seven MaxPreps league tables** (one per division; the id is what the cron requests):
+**The MaxPreps league tables** (one per division where MaxPreps has one; the id is what the cron
+requests). Seven NorCal tables, then the eight SoCal divisions, seven of which have a table:
 
 | League | Division | MaxPreps league id | MaxPreps table | Teams on MaxPreps / ours | Games a team | League play | What MaxPreps' table is trusted for |
 |---|---|---|---|---|---|---|---|
@@ -1580,12 +1609,31 @@ elsewhere. Everything that differs by league lives in `lib/leagues.ts`.
 | PCAL | PCAL (one division) | `50ac53cd-e46f-4df9-824b-5a954c583b95` | Pacific Coast - Gabilan (MaxPreps' internal table name) | 7 / 7 | 12 | Sep 2 – Oct 29 | informational only |
 | MCAL | MCAL (one division) | `c15255d5-c2ad-49f5-9afb-cf4ba289875c` | Marin County | 9 / 9 | 16 | Aug 24 – Oct 22 | records only (MaxPreps orders by win pct) |
 | EAL | EAL (one division) | `60959b47-b0cf-4d7d-b054-d8ea140870ef` | Eastern Athletic | **7** / 6 (the extra row is Red Bluff) | 10 | Aug 24 – Oct 28 | records only (MaxPreps orders by win pct) |
+| Sunset | Sunset (one division) | `aa46adc4-c188-4e3b-b5fd-857064176297` | Sunset | **5** / 10 (the five Orange County schools are missing) | no fixed number | Aug 18 – Oct 31 | informational only |
+| City | City Western | `35dc98fe-887a-475b-992c-0edfe7fc4c58` | City - Western | 6 / 6 | 10 | Sep 1 – Oct 30 | informational only |
+| City | City Eastern | `6f9a29a0-78af-4d30-a087-cfa9feb91b89` | City - Eastern | 6 / 6 (Patrick Henry missing, Madison an extra 0-game row) | 10 | Sep 15 – Oct 30 | informational only |
+| North County | Avocado | `75ed156b-09c9-4a0c-ac58-11a371443815` | Avocado | **4** / 6 (Mt. Carmel and Rancho Bernardo missing) | 10 | Sep 28 – Oct 30 | informational only |
+| North County | Palomar | `e4a7e9c3-986b-446f-8547-8348be95e282` | Palomar | 7 / 7 | 12 | Sep 9 – Oct 30 | informational only |
+| North County | Valley | none | MaxPreps publishes no table: its six schools have league id `0000…` | — / 6 | 10 | Sep 28 – Oct 30 | nothing: no table, so the cross-check is skipped |
+| Metro | Metro Mesa | `6dfe5a12-b82f-45d7-b103-71a5c13c0093` | **Metro- South Bay** (MaxPreps' name, spelled so) | 5 / 5 | 8 | Sep 28 – Oct 30 | informational only |
+| Metro | Metro South Bay | `ca8e2856-b13d-4aa7-8c15-37cb50a55c60` | **Grossmont** | **3** / 4 (Hilltop and Southwest missing, Santana an extra 0-game row) | 6 | Oct 7 – Oct 30 | informational only |
 
 PCAL is one division on this site. MaxPreps' name for its table (the `Gabilan` in the row above)
 is its own internal label, kept as data only; it is never shown anywhere on the site, which says
 "PCAL". MaxPreps' other table in that league, "Pacific Coast - Mission"
 (`6e1f97d4-5211-4d98-bf59-282cd754bc5c`), has no teams and answers its standings request with
 HTTP 400; it is never configured and never requested.
+
+The SoCal table names are MaxPreps' and are kept as data only. Two of them name the wrong thing:
+MaxPreps' "Metro- South Bay" table holds the five Metro Mesa teams, and its "Grossmont" table holds
+the Metro South Bay teams it lists (El Capitan, Granite Hills, and Santana, which has no varsity game).
+The site says Metro Mesa and Metro South Bay, from the Section's 2026-27 League Alignment. For every
+SoCal table the rule `maxprepsTeamCount + missing − extra = expectedTeams` holds (City Eastern
+6 + 1 − 1, Metro South Bay 3 + 2 − 1, Sunset 5 + 5 − 0). The San Diego "Games a team" are a double
+round robin, (teams − 1) × 2 [V: MaxPreps' schedules, 2026-10-06], with one pair short (§3.1); the
+Sunset has no league schedule and no round robin, so it has no fixed number. Valley has no table, so it
+makes no league-meta or standings request (never `/leagues/null/v1`) and its health says the
+cross-check is skipped because "MaxPreps publishes no table for this division".
 
 "Trusted for" is `reportedTrust` in the config and decides which MaxPreps columns the cross-check
 compares: `full` = league record, overall record, league goals for and against, place and win pct;
@@ -1611,13 +1659,40 @@ of an alarm.
   `maxprepsExtraRows`: 7 rows + 0 missing − 1 extra = 6 teams. Two league games had no score at
   MaxPreps on 2026-10-04 (§1.3a), and the Section's Sport Dates sheet disagrees with the Guidelines
   on the last contest (§1.4).
+- **Sunset:** MaxPreps' Sunset table **lists three of the eight teams** (Great Oak, Temecula Valley,
+  Chaparral), with Bonita and Chaminade (`maxprepsExtraRows`: the site lists them with the Southern
+  Section independents, DESIGN §24.10), and orders them by winning percentage; the five Orange County
+  schools (Edison, Fountain Valley, Huntington Beach, Marina, Newport Harbor) have no MaxPreps league for
+  2026-27. si.com marks more games as league games than MaxPreps does, so its Sunset records differ
+  from ours, and MaxPreps' league flag on Great Oak's Aug 27 win over Bonita counts for neither table
+  here. No Sunset schedule, standings or rules document was found **[U]**; the eight members are eight
+  of the ten in MaxPreps' 2024-25 and 2025-26 Sunset tables.
+- **City:** MaxPreps counts Mission Bay's five games against City Eastern teams as league games (which
+  is why MaxPreps shows Mission Bay 3-5-0 in its table on 2026-10-06); the alignment puts Mission Bay in City Western, so they count in neither
+  table here. MaxPreps' City Eastern table leaves out Patrick Henry, marks none of its league games as
+  league games, and lists Madison, which has no varsity game.
+- **North County:** MaxPreps' Avocado table leaves out Mt. Carmel and Rancho Bernardo, and MaxPreps'
+  league flag misses many North County league games (Mt. Carmel 4 of 10 flagged; in Valley, San
+  Pasqual 3, Vista 4, Escondido 5). Valley has no MaxPreps table. The alignment sheet also lists Rancho
+  Buena Vista under Valley; its league games are against Palomar teams. Two duplicate Palomar rows
+  are excluded (`DATA_QUALITY.excludedContestIds`: Poway–Fallbrook `c7dbdbcc…`, Mission Vista–Fallbrook
+  `9c027452…`).
+- **Metro:** MaxPreps files the five Metro Mesa teams under "Metro- South Bay", and El Capitan and
+  Granite Hills under "Grossmont" with Santana; it lists no league for Hilltop or Southwest (Southwest:
+  2 of 6 league games flagged). On 2026-10-05 (Pacific) Bonita Vista and Helix meet once, not twice (§3.1).
+- **All four SoCal leagues:** no league publishes a schedule, standings or a points rule, so every
+  SoCal division's cross-check is informational (league record only) and the order is this site's own
+  3-1-0 points (`orderScope: 'site'`).
 
-### 2.1 The 49 teams
+### 2.1 The 102 teams
 
 Team identity is the MaxPreps GUID (`schoolId`/`teamId`), re-read from the live responses. Colors,
 mascots and cities also come from MaxPreps; **slugs and abbreviations are ours** (kebab-case short
-names, unique across all 49). The registry is `lib/registry/{scval,bval,pcal,mcal,eal}.ts`, assembled
-by `lib/teams.ts`, and a test pins the 15 SCVAL slugs, abbreviations and GUIDs.
+names, unique across all 102). The registry is
+`lib/registry/{scval,bval,pcal,mcal,eal,sunset,city,north-county,metro,independents}.ts`, assembled by
+`lib/teams.ts` in league order (the 49 NorCal teams first, unchanged, then the 48 SoCal league teams,
+then the five independents), and a
+test pins the 15 SCVAL slugs, abbreviations and GUIDs.
 
 Each school has **one full name and one short name**, and every page prints one of the two. The
 full name (`name`) is the school's name without "High School" or "College Preparatory" (so
@@ -1627,7 +1702,11 @@ own documents write it: the full name itself, whole words of it, or one of the s
 never an abbreviation made up for width. Four differ from the full name: Archbishop Mitty → Mitty,
 Ann Sobrato → Sobrato (the BVAL sheet), San Francisco University → SF University (an alias; MCAL's
 bare "University" reads as a college outside an MCAL table) and Convent of the Sacred Heart →
-Convent. Local nicknames the leagues do not print (Paly, Tam, Lick, SI, Pres) are not used.
+Convent. In Southern California five more differ, each as the CIF San Diego Section's 2026-27 League
+Alignment writes the school: Cathedral Catholic → Cathedral (whole words; deliberately not an alias,
+since Cathedral of Los Angeles and Cathedral City are statewide namesakes), La Jolla Country Day →
+LJCD and Rancho Buena Vista → RBV (both aliases), Canyon Crest Academy → Canyon Crest and San
+Dieguito Academy → San Dieguito (whole words, and aliases). Local nicknames the leagues do not print (Paly, Tam, Lick, SI, Pres) are not used.
 `lib/teams.ts` fails at load on any other short name, and the short name is display only: matching
 keys on the name and the aliases, never on it, so bare "University" (also Irvine's on si.com) stays
 out of the index. Source spellings ("ST. IGNATIUS",
@@ -1636,7 +1715,9 @@ them verbatim but prints the registry name. The si.com ids
 are the numeric id on a team page URL (`/teams/{id}-{slug}`) and, where observed, the school id on
 a school-logo URL; "—" means not observed and is never guessed.
 
-Per division: De Anza 7, El Camino 8, Mt. Hamilton 6, Santa Teresa 6, PCAL 7, MCAL 9, EAL 6 = 49.
+Per division: De Anza 7, El Camino 8, Mt. Hamilton 6, Santa Teresa 6, PCAL 7, MCAL 9, EAL 6 = 49
+in NorCal; Sunset 8, City Western 6, City Eastern 6, Avocado 6, Palomar 7, Valley 6, Metro Mesa 5,
+Metro South Bay 4, independents 5 = 53 in SoCal; 102 in all.
 
 | slug | abbr | league | division | MaxPreps team id (GUID) | name | si.com team id | si.com school id |
 |---|---|---|---|---|---|---|---|
@@ -1689,12 +1770,109 @@ Per division: De Anza 7, El Camino 8, Mt. Hamilton 6, Santa Teresa 6, PCAL 7, MC
 | davis | DV | eal | eal | `288ca10d-8448-41e9-b26e-463df226b8c8` | Davis (MaxPreps: Davis Sr.) | 458605 | 10575 |
 | lassen | LS | eal | eal | `b4268b1c-b3df-4dd5-b52c-5355d8a48e42` | Lassen | 458783 | 11554 |
 | pleasant-valley | PV | eal | eal | `8e01c2fa-4888-483f-8d26-6a45518c1bd8` | Pleasant Valley | 458566 | 10337 |
+| chaparral | CP | sunset | sunset | `d9fa2972-0bc2-4d7b-baa4-aaa7d69c119e` | Chaparral | 459144 | 13456 |
+| edison | ED | sunset | sunset | `c5a36b71-74a5-431f-94a3-8337d66dfbbb` | Edison | 458743 | 11313 |
+| fountain-valley | FV | sunset | sunset | `79582922-a3b0-44a5-b210-8e51f3cfb731` | Fountain Valley | 458744 | 11314 |
+| great-oak | GO | sunset | sunset | `a36c1c30-9183-4514-8cd6-26824a6d7c50` | Great Oak | 459145 | 13457 |
+| huntington-beach | HB | sunset | sunset | `f60cf593-eddc-4900-b1c9-b6362f852856` | Huntington Beach | 458746 | 11316 |
+| marina | MR | sunset | sunset | `96f0228e-b1db-4993-ad1e-5427b5592bcf` | Marina | 458748 | 11317 |
+| newport-harbor | NH | sunset | sunset | `86009247-6ae1-40e1-acfa-58c200528743` | Newport Harbor | 458870 | 12274 |
+| temecula-valley | TV | sunset | sunset | `8f350275-199e-4549-b574-2257e718069f` | Temecula Valley | 459147 | 13461 |
+| bishops | BI | city | city-western | `9d14d198-9976-4ed2-872d-047b9f317035` | Bishop's | 456843 | 201 |
+| canyon-hills | CN | city | city-western | `5bcd4caa-2727-404f-8ea0-627dc9d0b1b1` | Canyon Hills | 459034 | 12931 |
+| cathedral-catholic | CC | city | city-western | `15c34e49-1a29-4298-8a84-00a2ec6ae36b` | Cathedral Catholic | 458202 | 6107 |
+| la-jolla | LJ | city | city-western | `582fa2b1-19ed-467d-85af-fc6971dd5a71` | La Jolla | 459019 | 12915 |
+| mission-bay | MB | city | city-western | `f2ec9dd0-0f24-4161-a2c3-2a9df393f220` | Mission Bay | 459025 | 12919 |
+| scripps-ranch | SR | city | city-western | `7a80ea9f-8ed1-4b25-99cf-ad1b0fcd41a5` | Scripps Ranch | 459032 | 12930 |
+| clairemont | CL | city | city-eastern | `50ebec25-d857-4178-9f5a-1a6241c43b85` | Clairemont | 459017 | 12896 |
+| la-jolla-country-day | CD | city | city-eastern | `c24601db-aee8-4989-ba5d-bfbf0a91b927` | La Jolla Country Day | 456865 | 256 |
+| mira-mesa | MM | city | city-eastern | `e551f0f0-28a3-4c13-8ade-1b9909ffa28c` | Mira Mesa | 459023 | 12918 |
+| patrick-henry | PH | city | city-eastern | `e71f479e-b2c8-48da-a8b4-4f270c3afb92` | Patrick Henry | 464779 | 30661 |
+| point-loma | PL | city | city-eastern | `91a74b43-700f-4e74-819e-d62b6dba12f7` | Point Loma | 459029 | 12921 |
+| university-city | UC | city | city-eastern | `32f08693-bcfd-4a62-a463-77b91360f53b` | University City | 459037 | 12934 |
+| canyon-crest-academy | CY | north-county | avocado | `91a207da-721f-4acf-a69c-cd7fa50a1f7a` | Canyon Crest Academy | 459041 | 12935 |
+| la-costa-canyon | LC | north-county | avocado | `78ad824a-61a0-462b-aa6f-1d5f6fb1bd5f` | La Costa Canyon | 459043 | 12936 |
+| mt-carmel | MT | north-county | avocado | `688ec7f8-2985-4e7e-900a-4d78f845b197` | Mt. Carmel | 458939 | 12670 |
+| rancho-bernardo | RN | north-county | avocado | `132d806e-7fa4-4bce-b92a-9db38786cf7b` | Rancho Bernardo | 458945 | 12672 |
+| san-marcos | SM | north-county | avocado | `ff3dcd2f-cdea-46e6-accf-fd929c0a4374` | San Marcos | 459066 | 13021 |
+| torrey-pines | TP | north-county | avocado | `ad43e80f-2296-4b96-a0a9-44e6a8ea76f2` | Torrey Pines | 459049 | 12940 |
+| del-norte | DN | north-county | palomar | `ddf384b8-3189-4276-8703-71106d47a4d5` | Del Norte | 458937 | 12669 |
+| fallbrook | FB | north-county | palomar | `7453dc74-befb-4c36-92ec-35bf99c3c718` | Fallbrook | 458653 | 10923 |
+| mission-vista | MS | north-county | palomar | `e9446588-3714-4a57-905e-cd9a097a48b0` | Mission Vista | 464852 | 31920 |
+| poway | PW | north-county | palomar | `9adef103-5c38-4dc2-a6c4-b36ea4f5400c` | Poway | 458942 | 12671 |
+| rancho-buena-vista | RV | north-county | palomar | `f1f0e644-5c98-4d70-bd3c-ae7fb8992410` | Rancho Buena Vista | 459174 | 13718 |
+| san-dieguito-academy | SD | north-county | palomar | `a7064567-f2fe-442d-8200-34a28326d1b9` | San Dieguito Academy | 459047 | 12938 |
+| valley-center | VE | north-county | palomar | `673c037d-ae98-4fa1-a388-b127758ac382` | Valley Center | 459167 | 13667 |
+| escondido | ES | north-county | valley | `226ea389-d063-46bb-8ccb-ede6f10c2ca6` | Escondido | 458641 | 10872 |
+| mission-hills | MH | north-county | valley | `643a8f19-47aa-42a2-b5a4-0f52421f80b9` | Mission Hills | 459063 | 13020 |
+| sage-creek | SE | north-county | valley | `475c3bcb-9d28-457f-87b8-d979f9ff070f` | Sage Creek | 464866 | 31992 |
+| san-pasqual | SP | north-county | valley | `a1109c06-7436-4b72-a30e-459eb6d00925` | San Pasqual | 458644 | 10874 |
+| vista | VI | north-county | valley | `1f57d89b-3a6d-444a-9de1-2fba3f0017b6` | Vista | 464777 | 30660 |
+| westview | WV | north-county | valley | `9ef67997-7f5d-4899-b500-2d0b5c758105` | Westview | 458949 | 12673 |
+| bonita-vista | BT | metro | metro-mesa | `7f4d50f0-8690-493c-b4bc-262b512e8851` | Bonita Vista | 459119 | 13407 |
+| eastlake | EL | metro | metro-mesa | `6aa8e46b-7aa9-4df3-9512-89a9d4827f7f` | Eastlake | 459128 | 13412 |
+| helix | HX | metro | metro-mesa | `186dcece-fefd-4b67-b4c7-877b3e12beb2` | Helix | 458715 | 11156 |
+| olympian | OL | metro | metro-mesa | `0465e8ea-3eb0-4619-a74a-183e70c697e2` | Olympian | 480708 | 13417 |
+| otay-ranch | OR | metro | metro-mesa | `77e5b6a4-a166-4a88-b114-a38a9b28ccc4` | Otay Ranch | 459134 | 13419 |
+| el-capitan | EC | metro | metro-south-bay | `15d5e874-4af2-4d24-8e6b-be895937cb8c` | El Capitan | 458711 | 11149 |
+| granite-hills | GH | metro | metro-south-bay | `aa2f89a2-0150-4223-89b4-ac73cbf343e9` | Granite Hills | 458713 | 11152 |
+| hilltop | HT | metro | metro-south-bay | `ec21ffde-b216-47cc-9923-6308e239e9e0` | Hilltop | 459131 | 13413 |
+| southwest | SW | metro | metro-south-bay | `19409229-6768-4537-b8d7-4a7d2814aaad` | Southwest (MaxPreps: Southwest SD) | 459138 | 13422 |
+| bonita | BN | independents | independents | `4c2dd7e8-2f3e-43aa-891b-9218932cdf9d` | Bonita | 458494 | 10097 |
+| chaminade | CM | independents | independents | `742a32d0-2dc9-4aa8-ad92-8c4576f73a12` | Chaminade | 456824 | 141 |
+| glendora | GL | independents | independents | `1228375e-e4c0-453e-aed4-d0b0693b3c52` | Glendora | 458698 | 11109 |
+| harvard-westlake | HW | independents | independents | `9dc04c54-8c9d-4b30-a1d2-fcc167363342` | Harvard-Westlake | 458394 | 9623 |
+| thousand-oaks | TO | independents | independents | `70a363e2-26b8-4ef5-8ad0-20979f66399a` | Thousand Oaks | 458583 | 10465 |
 
 The EAL rows were read from MaxPreps' standings and team-context responses on 2026-10-04 (the team
 GUID equals the standings row's `schoolId` for all seven rows; mascot and city come from team-context,
 not standings) and are in alphabetical order. Chico and Corning share the acronym CHS and Lassen's LHS
 joins an existing one, but BVHS, DSHS and PVHS are unique, so the expected acronym collisions are
 unchanged. The EAL's six abbreviations collide with none of the other 43.
+
+The 50 Southern California rows were read on 2026-10-06 from MaxPreps' team-context and standings
+responses and si.com's league and team pages, and are transcribed by script from
+`tests/fixtures/seeds/registry-seed-ss.json` (Sunset) and `registry-seed-sds.json` (City, North
+County, Metro), which keep each value's provenance; they are alphabetical within each division.
+Names are MaxPreps' `schoolName`, except Southwest, which MaxPreps and si.com call "Southwest SD"
+(kept as an alias and in its MaxPreps path). Mascots are MaxPreps', except Mission Vista's
+"Timberwolves", which neither MaxPreps nor si.com carries and which comes from the school's own site
+(mvhs.vistausd.org, 2026-10-06); Canyon Hills' "Rattlers " is trimmed, and si.com's other mascots for
+Clairemont (Chieftains) and Helix (Highlanders) are aliases. Colours come from the MaxPreps standings
+row, or, for the 16 teams with no 2026-27 standings row (the five Orange County Sunset teams,
+Mt. Carmel, Rancho Bernardo, Patrick Henry, Hilltop, Southwest and the Valley six), from
+team-context's `schoolColor1`/`schoolColor2`, the same MaxPreps fields. Every si.com team id, slug
+and school id was harvested (36 school ids from logo URLs, 14 from the team page's `school.id`),
+never guessed; si.com's league buckets are stale and are never membership evidence.
+
+The independents' rows were read on 2026-10-06 the same way and follow the Sunset's in
+`tests/fixtures/seeds/registry-seed-ss.json` (transcribed by script into `lib/registry/independents.ts`).
+Glendora, Harvard-Westlake and Thousand Oaks are each the only field hockey team in their MaxPreps league
+for 2026-27 (Palomares; League B; Marmonte), and MaxPreps' 2025-26 standings for the same three leagues
+list one row each; Bonita and Chaminade are rows of MaxPreps' Sunset table that the site lists with the
+independents instead (owner decision, 2026-10-06; DESIGN §24.10), so the five are a group in no league,
+with a table of their games against each other. Colours are the MaxPreps standings fields (Glendora and Harvard-Westlake CC0022/222222,
+Thousand Oaks 00824B/FFFFFF); abbreviations GL, HW and TO collide with none of the other 99; si.com's
+team search on 2026-10-06 found no second California team with any of the three names. Their si.com JV
+pages are 481707 (Glendora), 482355 (Harvard-Westlake) and 482332 (Thousand Oaks).
+
+Where the natural abbreviation was taken the SoCal seeds use MR (Marina; MA is Marin Academy), MT
+(Mt. Carmel; MC is Marin Catholic), CN (Canyon Hills; CH is Christopher), CY (Canyon Crest Academy;
+CC is Cathedral Catholic), VE (Valley Center; VC is Valley Christian), MS (Mission Vista; MV is Monta
+Vista), BT (Bonita Vista; BV is Bella Vista), SE (Sage Creek), RN and RV (Rancho Bernardo and Rancho
+Buena Vista; RB is held for Red Bluff) and CD (La Jolla Country Day). With 102 teams the shared
+acronyms are BHS, BVHS, CHS, EHS, FHS, GHS, HHS, LHS, MCHS, MHS, MVHS, PHS, SCHS, SHS, VCHS and WHS.
+Acronyms are display only and are indexed only while one school carries them, so seven NorCal
+acronyms no longer resolve: BVHS (Bella Vista), FHS (Fremont), MCHS (Marin Catholic), MHS
+(Monterey), MVHS (Monta Vista), VCHS (Valley Christian) and WHS (Westmont). No source this site reads
+keys a team on an acronym, and each keeps its name, aliases, slug and GUID.
+
+si.com's team search (§1.2 caveat 9), run on 2026-10-06 for the 50 names, found a second California
+team named Westview (West Los Angeles, 464882), Del Norte (Crescent City, 458609), Marina (Marina,
+500865), San Marcos (Santa Barbara, 459073), Mission Vista (480754, a second entry for "Vista, CA"),
+Granite Hills (Porterville 554634 and Apple Valley 458466) and Southwest (El Centro, 583246; si.com
+calls ours "Southwest SD"). Those seven names joined `STATEWIDE_AMBIGUOUS` (§5.3), so an si.com side
+with one of them resolves to our team only by its si.com team or school id.
 
 ⚠️ **Do not use the Presentation HTML schedule page** — it 200s but serves Los Gatos data
 (MaxPreps routing/canonical bug). This is the single strongest argument for keying everything on
@@ -1709,13 +1887,21 @@ the school Santa Teresa High School fields no team. If it ever does, its slug mu
 | Wilcox (SCVAL De Anza grid) | not fielding a team | in SCVAL's `withdrawnNames`; its 14 grid fixtures are dropped when the PDF is parsed; si.com id 485528 ignored |
 | York (PCAL grid slot `CAT/YOR`) | plays JV field hockey only | in PCAL's `withdrawnNames`; the `CAT/YOR` token maps to Santa Catalina; si.com id 456851 ignored; team search answers "not covered" |
 | Red Bluff (EAL) `4d3da788-bbe2-4ab9-b854-d95aa9786cda` | not fielding a varsity team in 2026 (§3.2) | still a 0-0-0 row in MaxPreps' EAL table (`maxprepsExtraRows`, skipped silently); in the EAL's `withdrawnNames`; si.com ids 490259, 490260 and 635037 ignored; team search answers "not covered" |
-| Del Norte (Crescent City) `8396a0d3-8021-458d-b592-a5cb2c4a366d` | a MaxPreps ghost team (no league, team size 0) | every contest with this side is dropped and listed in the snapshot's `dropped` list |
-| Del Norte (San Diego) `ddf384b8-3189-4276-8703-71106d47a4d5` | a real school outside the registry; MaxPreps lists Davis against it at a neutral site on 2026-10-16 | an ordinary non-member opponent: the game is non-league, with a bare name |
-| Irvington, North Salinas, Notre Dame (Salinas), Gunn, San Jose, North Monterey County, University Prep Academy, Marina (CCS) | no 2026-27 varsity team | nothing to do |
+| Del Norte (Crescent City) `8396a0d3-8021-458d-b592-a5cb2c4a366d` | a MaxPreps ghost team (no league, team size 0) | every contest with this side is dropped and listed in the snapshot's `dropped` list. si.com also has a Crescent City Del Norte (458609), which it shows playing Tamalpais and Davis on 2026-10-16, the games MaxPreps gives Del Norte of San Diego (a registry team since the SoCal amendment, §2.1); "Del Norte" is in `STATEWIDE_AMBIGUOUS`, so neither si.com row resolves by name |
+| Irvington, Gunn, San Jose, North Monterey County, University Prep Academy | no 2026-27 varsity team | nothing to do |
+| North Salinas, Notre Dame (Salinas) (Central Coast Section) | no 2026 varsity game on MaxPreps: each team's 2026-27 `schedule-calculated` read returned no game on 2026-10-06 | nothing to fetch; team search answers "not covered" (`DATA_QUALITY.notCovered`) |
+| River Valley (Yuba City, Sac-Joaquin Section) | no 2026 varsity game on MaxPreps (its 2026-27 schedule read returned no game on 2026-10-06) | nothing to fetch; team search answers "not covered" |
+| Marina (CCS) | no 2026-27 varsity team | nothing to do. si.com lists it (500865, no games); "Marina" now names the Sunset school, and is in `STATEWIDE_AMBIGUOUS` |
+| Mayfair `988e6551-0eb6-440e-b231-99b2bcfb7a7c` (Southern Section) | no 2026 varsity game on MaxPreps, and not on the Southern Section's list of participating schools | nothing to fetch; team search answers "not covered" |
+| Westlake, Los Alamitos (si.com's Sunset table) | 0-0 rows with no games on si.com; no 2026-27 MaxPreps team | nothing to do (si.com league buckets are never membership evidence) |
+| Madison `fef1da70-bea2-4958-a60b-9962851f6a1d` (San Diego Section) | a 0-0-0 row in MaxPreps' City - Eastern table; no 2026 varsity game on MaxPreps or in the Section's power rankings, and not in the Section's 2026-27 field hockey alignment | City Eastern `maxprepsExtraRows` (skipped silently) and the City Conference's `withdrawnNames`; team search answers "not covered" |
+| Santana `1125d6e8-e661-4190-a41d-5722364dee38` (San Diego Section) | a 0-0-0 row in MaxPreps' "Grossmont" table (Metro South Bay's El Capitan and Granite Hills); no 2026 varsity game on MaxPreps or in the Section's power rankings | Metro South Bay `maxprepsExtraRows` and the Metro Conference's `withdrawnNames`; team search answers "not covered" |
+| Castle Park, Chula Vista, Montgomery, Sweetwater (San Diego Section) | no 2026 varsity game on MaxPreps or in the Section's power rankings | nothing to fetch; team search answers "not covered" |
+| si.com's other Westview (West Los Angeles, 464882), San Marcos (Santa Barbara, 459073), Mission Vista (480754), Granite Hills (Porterville 554634, Apple Valley 458466) and Southwest (El Centro, 583246) | si.com teams that share a SoCal member's name (§2.1) | in `STATEWIDE_AMBIGUOUS`: never resolved by name, so their rows never join to ours |
 
 Every other school that appears as an opponent (out-of-area, other sections) is a **non-member**:
 its games are ordinary non-league games, modeled with `teamId: null` and a bare name, never given a
-Team record, and shown as "Not one of the 49 teams this site follows" (the number is the registry's
+Team record, and shown as "Not one of the 102 teams this site follows" (the number is the registry's
 size).
 
 ### 2.3 Name normalization
@@ -1742,6 +1928,9 @@ classification evidence says it is a league game. This is decided once, in the p
 |---|---|---|
 | SCVAL, EAL | MaxPreps `contestType === 0` (SCVAL: corroborated against the live PDF grid, any disagreement is logged; EAL: no official document exists to check against, and the umpire grid of §1.3a equalled it on 2026-10-04) | SCVAL: CCS section games only (postseason tag `ccs`). EAL: `contestType` 2, 4 and 5, and every game between two EAL teams on or after 2026-10-30 (postseason tag `league-postseason`, the Super Regional) |
 | BVAL, PCAL, MCAL | the game matches a fixture on the league's **official schedule** for that division | `contestType` 2 and 4 (tournament / neutral), and every postseason game |
+| Sunset | MaxPreps `contestType === 0` (`contest-type`: no Sunset document exists to check against) | `contestType` 2 and 4 |
+| City, North County, Metro | **membership** (`classification: 'membership'`): both sides are members of the division (the CIF-SDS 2026-27 League Alignment) and the game is dated inside its league play, whatever MaxPreps' league flag says | `contestType` 2 and 4 on either row, every San Diego Section playoff game (on or after Nov 2, or `contestType` 4), and every game outside the division's league-play dates |
+| Southern Section independents | **membership** (`classification: 'membership'`): both sides are two of the five independents (Bonita, Chaminade, Glendora, Harvard-Westlake, Thousand Oaks; this site's grouping, DESIGN §24.10) and the game is dated Sep 8 to Oct 31, whatever MaxPreps' league flag says (it flags only Bonita–Chaminade) | `contestType` 2 and 4 on either row, and every game against a team outside the five (Bonita's Aug 27 game at Great Oak, which MaxPreps flags as a league game, counts for neither table) |
 
 - The official-schedule matcher for BVAL, PCAL and MCAL runs three passes: same date and
   home/away order; same date, either order (records a host conflict); then **rescheduled** games
@@ -1760,6 +1949,14 @@ classification evidence says it is a league game. This is decided once, in the p
   and says why.
 - **PCAL** games between PCAL teams also count only when official; non-league games against BVAL or
   SCVAL opponents appear in the schedule but never in a table.
+- **San Diego membership.** No San Diego Section league publishes a schedule, and MaxPreps' league
+  flag misses many of their games (Patrick Henry 0 of 10 flagged), so these seven divisions count every
+  game between two members inside league play (`lib/classify.ts`). The divisions are scheduled as a
+  double round robin, but not every pair is: on 2026-10-05 (Pacific) MaxPreps shows **Metro Mesa with 19 of its
+  20 meetings**, Bonita Vista and Helix meeting once (Oct 23, `b9d43b5d-5000-4bdc-a50e-00c22f1544c4`)
+  **[V]: the 2026-10-06 SoCal corpus**. Whether the second meeting is missing from MaxPreps or was never
+  scheduled is **[U]**. Under 'contest-type' or 'membership', a league-flagged game between two
+  divisions of one league (Mission Bay's five against City Eastern teams) counts in neither table.
 
 ### 3.2 Withdrawn and non-fielding schools
 
@@ -1798,7 +1995,12 @@ Load-bearing rules baked into it:
   EAL Super Regional (`league-postseason`) games, which never count in a league table.
 - A level EAL final that MaxPreps flags `W` for one team and `L` for the other is a 1 v 1 win:
   `decider: 'SO'`, `shootout: null` (no tally is stored, §1.1b), and the flags decide the result in
-  every W/L/T count. Shootout data exists only when the decider is `SO`.
+  every W/L/T count. Shootout data exists only when the decider is `SO`. A level San Diego final
+  outside a tournament that MaxPreps flags W and L gets `decider: 'SO'` too (the Section's rule,
+  `SectionConfig.shootout`), but its inference is 'unverified': no tally is published anywhere, and
+  si.com and the Section's power rankings record Mt. Carmel–Poway (Sep 11) as 2-0 where MaxPreps has
+  0-0. The flags still decide the result; the pages print MaxPreps' score with no decider tag and say
+  only that the team was credited with the win on a level score.
 - `contestState === 1` rows are **dropped before** a `Game` is constructed (they are not
   "canceled" — one observed row is a scrimmage with a real 0-4 score; storing it would leak a
   scrimmage into the standings).
@@ -1817,37 +2019,47 @@ Load-bearing rules baked into it:
   game later replaced by MaxPreps' own) are part of the snapshot and shown on `/about`.
 ## 5. Cron fetch plan
 
-**Core sweep — 64 MaxPreps requests, run by `scripts/fetch-data.ts` (a thin CLI over
-`lib/pipeline/`) from `.github/workflows/update-data.yml`:** 1 bootstrap page + 7 league-metadata
-assertions + 7 league standings + 49 per-team schedule pulls (one per registry team, so Prospect is
-fetched even though MaxPreps' Santa Teresa table omits it) = every game, including non-league
-fixtures, because the schedule feed is per-team, not per-league.
+**Core sweep — 131 MaxPreps requests, run by `scripts/fetch-data.ts` (a thin CLI over
+`lib/pipeline/`) from `.github/workflows/update-data.yml`:** 1 bootstrap page + 14 league-metadata
+assertions + 14 league standings + 102 per-team schedule pulls (one per registry team, so Prospect,
+Patrick Henry and every other team a MaxPreps table omits is fetched anyway) = every game, including
+non-league fixtures, because the schedule feed is per-team, not per-league. The formula is 1 + 2 ×
+(divisions with a MaxPreps table) + fetchable teams: of the 16 divisions, the San Diego Section's
+Valley has no MaxPreps table (`maxprepsLeagueId: null`), so its two requests are never made (no
+`/leagues/null/v1`) and its cross-check is reported as skipped, and neither has the Southern Section
+independents' group, which no MaxPreps table gathers (two of its five sit in MaxPreps' Sunset table, three
+alone in their own leagues), so only its five schedules are read.
 
-**Player stats — 49 more MaxPreps requests, in a separate process:** the workflow then
-runs `scripts/fetch-player-stats.ts` (one stats rollup per registry team, all five leagues, §1.1k) as a non-fatal step
+**Player stats — 102 more MaxPreps requests, in a separate process:** the workflow then
+runs `scripts/fetch-player-stats.ts` (one stats rollup per registry team, all nine leagues and the five independents, §1.1k) as a non-fatal step
 (`continue-on-error`), so a stats outage never costs the day's scores, and commits
-`data/player-stats.json` with the snapshot when its content changed. It is not part of the 64 below
+`data/player-stats.json` with the snapshot when its content changed. It is not part of the 131 below
 and shares no abort scope with the pipeline.
 
 ### 5.0 Request budget per run
 
 | Host | Requests | Notes |
 |---|---|---|
-| MaxPreps API | 64 | 1 bootstrap + 7 meta + 7 standings + 49 schedules; ≤3 concurrent, ≥500 ms spacing (about 30 s when it was 56 requests; the whole 2026-10-04 run, every host, took about 46 s) |
+| MaxPreps API | 131 | 1 bootstrap + 14 meta + 14 standings + 102 schedules; ≤3 concurrent, ≥500 ms spacing (about 30 s when it was 56 requests; the whole 2026-10-04 run of 64, every host, took about 46 s; the 2026-10-06 run's duration was not recorded) |
 | scval.com | 3 | 2 schedule PDFs + the standings index |
 | drive.google.com, pcalathletics.org, mcalsports.org | 5 | revision checks (BVAL ×2, PCAL, MCAL) + the MCAL `Schedir.htm` changes check |
 | si.com | up to 15 + up to 8 | scoreboards for dates in the trailing 14 days that have a game; targeted team-games pages only for backfill candidates (§5.2 rule 8) |
 | VNN | 2 | the Palo Alto and Los Gatos calendars |
 | cifccs.org + MaxPreps HTML | 2 | only from `CCS.pollFrom` (Oct 25) |
 
-`--sblive-full` (all 49 si.com team pages) is a manual flag, never the cron default. The final
-log line prints the counts per host, e.g. `requests maxpreps:64 sblive:… official:…`. The live run of
-2026-10-04 made 64 MaxPreps, 20 si.com and 8 official-host requests, with no 403 or 429.
+`--sblive-full` (all 102 si.com team pages) is a manual flag, never the cron default. The final
+log line prints the counts per host, e.g. `requests maxpreps:131 sblive:… official:…`. The live run of
+2026-10-04 made 64 MaxPreps, 20 si.com and 8 official-host requests, with no 403 or 429. The live
+run of 2026-10-06 (99 teams) made 128 MaxPreps, 21 si.com and 8 official-host requests, and 163 of
+its 165 source rows were ok. The live run of 2026-10-06 that added the independents (102 teams, the
+committed snapshot, `fetchedAt` 2026-10-06T05:58Z) made 131 MaxPreps, 21 si.com and 8 official-host
+requests, and 166 of its 168 source rows were ok (the other two are the CCS calendar and bracket
+sources, skipped before Oct 25).
 
 ### 5.1 Order, aborts and freezes
 
-Steps run in this order: window guard → bootstrap → league metadata ×7 → reported tables ×7 →
-schedules ×49 → normalize → official schedules → si.com → secondary (VNN, CCS) → classify →
+Steps run in this order: window guard → bootstrap → league metadata ×14 → reported tables ×14 (the 15th
+division, Valley, has no MaxPreps table and makes neither request, nor does the independents' group) → schedules ×102 → normalize → official schedules → si.com → secondary (VNN, CCS) → classify →
 guards → standings → assemble. Failure has three scopes, so **one league never blocks the others**:
 
 | Scope | Effect | Triggers |
@@ -1875,7 +2087,7 @@ row.
 identifies the site and a contact address on every request.
 
 **Backfill of MaxPreps itself:** because `schedule-calculated` returns a team's entire season in
-one request, every run **re-ingests all 49 feeds in full** and upserts on `contestId` — coaches
+one request, every run **re-ingests all 102 feeds in full** and upserts on `contestId` — coaches
 enter results by hand with real lag, and MaxPreps corrections do happen, so nothing is ever treated
 as immutable.
 
@@ -1994,8 +2206,18 @@ in `lib/sources/sblive.ts` identifies each side in this order:
 2. the team id equals a registry team's `sbliveTeamId` → that team (`team-id`);
 3. the **school id** (from a school-logo URL) equals a registry team's `sbliveSchoolId` → that team
    (`school-id`);
-4. the normalized name is `university`, `losaltos`, `santaclara` or `davis` (names shared with other
-   schools statewide: §1.2 caveat 9) → refused (`ambiguous-name`);
+4. the normalized name is `university`, `losaltos`, `santaclara`, `davis`, `westview`, `delnorte`,
+   `marina`, `sanmarcos`, `missionvista`, `granitehills` or `southwest` (names shared with other
+   schools statewide: §1.2 caveat 9; `STATEWIDE_AMBIGUOUS` in `lib/sources/sblive.ts`) → refused
+   (`ambiguous-name`). The last seven come from si.com's team search for the 50 Southern California
+   names on 2026-10-06 **[V]**: Westview (ours 458949, San Diego; 464882 is West Los Angeles's, which
+   si.com shows playing Sage Creek); Del Norte (ours 458937, San Diego; 458609 is Crescent City's, the
+   MaxPreps ghost in `DATA_QUALITY.ghostTeamIds`); Marina (ours 458748, Huntington Beach; 500865 is
+   Marina's own, Monterey County, no games); San Marcos (ours 459066; 459073 is Santa Barbara's);
+   Mission Vista (ours 464852, Oceanside; 480754 is a second entry whose games page serves si.com's
+   index); Granite Hills (ours 458713, El Cajon; 554634 Porterville and 458466 Apple Valley); Southwest
+   (583246 is El Centro's, no games; si.com names ours "Southwest SD", 459138, which still resolves
+   by name). Every other name returned one team of that name;
 5. a name match whose recorded id contradicts an id that **is** present → refused
    (`id-contradicts-name`);
 6. a name match → the team (`name`) — usable for the cross-check display only, **never for a
@@ -2128,15 +2350,24 @@ pairings and times), not copies of the documents.
 page:
 
 > Data from **MaxPreps** and **High School on SI (si.com)**. League alignment and rules from
-> SCVAL, BVAL, PCAL and MCAL; EAL rules from the CIF Northern Section.
-> Unofficial; not affiliated with SCVAL, BVAL, PCAL, MCAL, EAL, CIF-CCS, CIF-NCS, CIF-NS, MaxPreps
-> or SI. Records are computed from published game results and may differ from official standings.
-> Last updated {fetchedAt}.
+> SCVAL, BVAL, PCAL and MCAL; EAL rules from the CIF Northern Section; Sunset: we found no published
+> league rules; Southern Section rules from the CIF Southern Section; City, North and Metro: we
+> found no published league rules; San Diego Section rules from the CIF San Diego Section.
+> Unofficial; not affiliated with SCVAL, BVAL, PCAL, MCAL, EAL, Sunset, City, North, Metro,
+> CIF-CCS, CIF-NCS, CIF-NS, CIF-SS, CIF-SDS, MaxPreps or SI. Records are computed from published game
+> results and may differ from official standings. Last updated {fetchedAt}.
 
-with the site's scope note beneath it: "Covers the CIF Central Coast Section (SCVAL, BVAL, PCAL),
-the North Coast Section’s MCAL and the Northern Section’s EAL. Teams outside these five leagues
-appear only as opponents." (The EAL is named in its own clause because it has no league document:
-its rules come from the Section's Guidelines, and the clause links the Section's field hockey page.)
+with the site's scope note beneath it (`SITE_SCOPE_NOTE`, components/layout/site.ts): "Covers the CIF
+Central Coast Section (SCVAL, BVAL, PCAL), the North Coast Section’s MCAL, the Northern Section’s EAL,
+the Southern Section’s Sunset field hockey league and the San Diego Section’s City, North and Metro
+conferences, plus the Southern Section’s five independents (Bonita, Chaminade, Glendora, Harvard-Westlake
+and Thousand Oaks), schools in no field hockey league. Other teams appear only as opponents." (The EAL is named in its own clause
+because it has no league document: its rules come from the Section's Guidelines, and the clause links
+the Section's field hockey page. The independents have no league, so the footer's lists of leagues
+(the rules clause, "not affiliated with") name the nine leagues only. The SoCal leagues publish no rules we could find, so each is named
+under its section's rules source, linked to the document they are in: the Southern Section's Blue Book
+Article 200 and the San Diego Section's Green Book Bylaw 2000.1. tests/ui/attribution.test.ts pins the
+rules clause.)
 
 ## 7. Known open risks (carried into README "Known limitations")
 
@@ -2188,11 +2419,18 @@ its rules come from the Section's Guidelines, and the clause links the Section's
   them (no MaxPreps score for any past BVAL or PCAL JV league game on 2026-10-05), si.com only partly
   fills that, and nothing says authoritatively which schools field a JV team. A day page exists only
   for a date with a varsity game, so a JV-only date is on the team pages alone.
-- Rosters and player stats cover all 49 teams (§1.1j, §1.1k): the 43 teams of the four earlier leagues
+- Rosters and player stats cover all 102 teams (§1.1j, §1.1k): the 43 teams of the four earlier leagues
   were read live on 2026-10-03 and the six EAL teams on 2026-10-04 (every page parsed, no team failed;
-  Corning has no roster and no stats at MaxPreps), and the school-site and recruiting-page overlay
-  covers the four earlier leagues (SCVAL 2026-10-02; BVAL, PCAL, MCAL 2026-10-03, recall partial in
-  each), with only recruiting profiles for the EAL (2026-10-04). A team's page that does
+  Corning has no roster and no stats at MaxPreps), and all 99 again on 2026-10-05 Pacific (`fetchedAt`
+  2026-10-06T02:26Z, `counts.errors` 0), the first read of the 50 SoCal teams (Bonita and Chaminade among them,
+  then Sunset teams; independents since later that day, DESIGN §24.10); Glendora, Harvard-Westlake and
+  Thousand Oaks were first read on 2026-10-06 (`--leagues independents`: Glendora 19 players, Harvard-Westlake
+  25 and 18 with stats, Thousand Oaks 21; Glendora and Thousand Oaks publish no stats). The school-site and
+  recruiting-page overlay covers the four earlier leagues (SCVAL 2026-10-02; BVAL, PCAL, MCAL
+  2026-10-03, recall partial in each), with only recruiting profiles for the EAL (2026-10-04). The 53
+  Sunset, City, North County, Metro and independent teams have stub overlay entries with empty lists: no enrichment
+  sweep was made for them, so an empty list says nothing about whether a public source exists
+  (`data/rosters-enrichment.json` notes). A team's page that does
   not parse fails that team (carried forward, or `error`), never writes a wrong value; a team no run
   has covered is `pending`. No current-season public source lists positions for most programs, no
   BVAL, PCAL or MCAL roster source (school site, paper, MaxPreps JV or earlier-season page)
@@ -2212,7 +2450,8 @@ its rules come from the Section's Guidelines, and the clause links the Section's
   none at 21 schools), a `current` tie ages, and a roster refetch
   that drops or respells a tied row fails the build until the tie is re-checked by hand.
 - Prior-season (2025-26) final standings exist in the repo for SCVAL and BVAL only (see §2 "2025-26
-  history, by league"); PCAL, MCAL and EAL are marked `unavailable` in `data/history-2025-26.json`,
+  history, by league"); PCAL, MCAL, the EAL and the four SoCal leagues are marked `unavailable` in
+  `data/history-2025-26.json`,
   since a MaxPreps league URL's year segment is cosmetic. Last season's *games* are on MaxPreps for
-  all five leagues (§1.1 (l)) and seed the Elo rating, but they are coaches' entries like this
+  all nine leagues (§1.1 (l)) and seed the Elo rating, but they are coaches' entries like this
   season's, and nothing on the site prints them as a record or a standings table.

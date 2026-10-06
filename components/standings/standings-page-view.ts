@@ -29,8 +29,8 @@ import {
   type LeagueSummary,
 } from '../../lib/data';
 import { plural, recordString, shortDate } from '../../lib/format';
-import { getLeague, leagueOfDivision, leaguePlayStarts } from '../../lib/leagues';
-import type { DivisionId, Game, LeagueId } from '../../lib/types';
+import { REGIONS, getLeague, isIndependentLeague, leagueOfDivision, leaguePlayStarts, standaloneName, type RegionConfig } from '../../lib/leagues';
+import type { DivisionId, Game, LeagueId, RegionId } from '../../lib/types';
 import {
   buildDivisionView,
   buildOverviewDivision,
@@ -151,7 +151,11 @@ export function buildNotice(leagueId: LeagueId, views: DivisionView[]): Standing
   // getNonLeagueFinalsPlayed), so the two notices cannot disagree.
   const nonLeagueFinals = getNonLeagueFinalsPlayed(leagueId);
   return {
-    heading: `${getLeague(leagueId).shortName} league play starts ${shortDate(leaguePlayStarts(leagueId))}.`,
+    // A group of independents has no league play: its games against each other start (its short name is an
+    // adjective, so the sentence names the group: standaloneName).
+    heading: isIndependentLeague(leagueId)
+      ? `The first game between two of ${standaloneName(leagueId)} is ${shortDate(leaguePlayStarts(leagueId))}.`
+      : `${getLeague(leagueId).shortName} league play starts ${shortDate(leaguePlayStarts(leagueId))}.`,
     body: `These tables count league games only, so every record reads 0-0-0 until the first league result is published${
       nonLeagueFinals > 0
         ? `. The ${plural(nonLeagueFinals, 'non-league game')} played so far ${
@@ -164,11 +168,24 @@ export function buildNotice(leagueId: LeagueId, views: DivisionView[]): Standing
 
 // ---------------------------------------------------------------- the /standings overview
 
+/** One region's half of /standings (DESIGN-socal §2.4): its sections, wrapped in `<div id="<region>">`. */
+export interface StandingsOverviewRegion {
+  id: RegionId;
+  name: RegionConfig['name'];
+  shortName: RegionConfig['shortName'];
+  leagues: LeagueSummary[];
+  sections: OverviewSection[];
+}
+
 export interface StandingsOverviewView {
   asOf: string;
   leagues: LeagueSummary[];
   sections: OverviewSection[];
-  /** Per league, each table's leaders (OG card, metadata). */
+  /** NorCal, then SoCal: the same sections, split by region for the page's region wrappers. */
+  regions: StandingsOverviewRegion[];
+  /**
+   * Per league, each table's leaders (OG card, metadata); the Southern Section independents' table included.
+   */
   leaders: Array<{ league: LeagueSummary; lines: LeaderLine[] }>;
   throughDate: string | null;
 }
@@ -190,10 +207,22 @@ export function buildStandingsOverviewView(): StandingsOverviewView {
     asOf: getFetchedAt(),
     leagues,
     sections,
-    leaders: leagues.map((league) => ({
-      league,
-      lines: league.divisions.map((d) => leaderLine(d.id, d.heading)),
-    })),
+    regions: REGIONS.map((region) => {
+      const mine = leagues.filter((l) => l.region === region.id);
+      const ids = new Set<string>(mine.map((l) => l.section.id));
+      return {
+        id: region.id,
+        name: region.name,
+        shortName: region.shortName,
+        leagues: mine,
+        sections: sections.filter((s) => ids.has(s.id)),
+      };
+    }),
+    leaders: leagues
+      .map((league) => ({
+        league,
+        lines: league.divisions.map((d) => leaderLine(d.id, d.heading)),
+      })),
     throughDate: getLastLeagueResultDate(),
   };
 }

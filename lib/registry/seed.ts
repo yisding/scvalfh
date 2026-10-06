@@ -2,7 +2,8 @@
  * One registry seed: the hand-maintained source of a Team (lib/teams.ts `toTeam`).
  *
  * Seeds are transcribed from the verified registry seeds (tests/fixtures/seeds/*.json:
- * registry-seed.json, registry-seed-ncs.json, registry-seed-ns.json; checked field by field by
+ * registry-seed.json, registry-seed-ncs.json, registry-seed-ns.json, and for Southern California
+ * registry-seed-ss.json and registry-seed-sds.json; checked field by field by
  * tests/registry-seeds.test.ts). Slugs and 2-letter abbrs are OURS and are never derived by string
  * munging; ids are MaxPreps GUIDs.
  */

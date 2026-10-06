@@ -1,6 +1,6 @@
 /**
  * The read API for data/rosters.json and data/rosters-enrichment.json — every registry team's
- * roster, all five leagues (SPEC §1.1j).
+ * roster, all nine leagues and the five independents (SPEC §1.1j).
  *
  * Two files, one view:
  *   - data/rosters.json is the MaxPreps roster, rebuilt by `scripts/fetch-rosters.ts` (by hand or
@@ -10,7 +10,7 @@
  *     MaxPreps athleteId. It only ever fills a blank; where a source disagrees with MaxPreps,
  *     MaxPreps stays and the disagreement is recorded. It also links players' own recruiting
  *     profiles (NCSA and the like). `getEnrichedTeamRoster` merges the two and says, per field,
- *     where each value came from. Both files hold one entry per registry team (49); a team no run
+ *     where each value came from. Both files hold one entry per registry team (102); a team no run
  *     has covered yet is status 'pending', and a team nothing was found for has an empty overlay.
  *     A team's entry may also say what other public sources showed for its current roster
  *     (`otherRosters`, below), which is what a team page with no MaxPreps players may claim.

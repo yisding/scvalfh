@@ -16,7 +16,7 @@ import { describe, expect, it } from 'vitest';
 
 import { LEAGUES } from '../lib/leagues';
 import { officialDocumentOf } from '../lib/official/schema';
-import { SNAPSHOT_MAX_BYTES, SOURCES_MAX } from '../lib/pipeline/steps/assemble';
+import { SNAPSHOT_MAX_BYTES, SNAPSHOT_WARN_BYTES, SOURCES_MAX, budgetLabel } from '../lib/pipeline/steps/assemble';
 import { loadSnapshot, snapshotContentHash } from '../lib/snapshot-schema';
 import { TEAMS, getTeamBySlug } from '../lib/teams';
 import type { Snapshot } from '../lib/types';
@@ -36,6 +36,19 @@ if (present) {
   snapshot = loadSnapshot(raw);
 }
 
+// The budgets were raised deliberately for the Southern California amendment (DESIGN-socal §2.2): a
+// change to them is a decision, so it is pinned here, with the labels printed from the constants.
+describe('the snapshot budgets', () => {
+  it('are 3.2 MB (warn 2.4 MB) and 280 source rows', () => {
+    expect([SNAPSHOT_MAX_BYTES, SNAPSHOT_WARN_BYTES, SOURCES_MAX]).toEqual([3_200_000, 2_400_000, 280]);
+    expect([budgetLabel(SNAPSHOT_MAX_BYTES), budgetLabel(SNAPSHOT_WARN_BYTES), budgetLabel(1_600_000)]).toEqual([
+      '3.2 MB',
+      '2.4 MB',
+      '1.6 MB',
+    ]);
+  });
+});
+
 describeIfPresent('the committed snapshot', () => {
   it('loads through loadSnapshot as schema version 2 with the whole registry', () => {
     expect(snapshot.schemaVersion).toBe(2);
@@ -46,11 +59,11 @@ describeIfPresent('the committed snapshot', () => {
     expect(snapshot.leagueHealth.map((h) => h.leagueId)).toEqual(LEAGUES.map((l) => l.id));
   });
 
-  it('stays within the 1.6 MB budget', () => {
+  it(`stays within the ${budgetLabel(SNAPSHOT_MAX_BYTES)} budget`, () => {
     expect(statSync(SNAPSHOT_PATH).size).toBeLessThanOrEqual(SNAPSHOT_MAX_BYTES);
   });
 
-  it('stays within the sources budget', () => {
+  it(`stays within the ${SOURCES_MAX}-row sources budget`, () => {
     expect(snapshot.sources.length).toBeLessThanOrEqual(SOURCES_MAX);
   });
 
@@ -190,12 +203,19 @@ describeIfPresent('the committed snapshot: official fixtures', () => {
    * window escaped this gate once: the Sep 9 grid slot for ST. IGNATIUS @ LOS ALTOS was published
    * as unplayed while the site listed the contest on Oct 8. (The two-phase matcher of the other
    * leagues matches legs one by one, so this property is SCVAL's.)
+   *
+   * "Meet" means a game not already matched to another fixture: the two legs of a round robin are
+   * two fixtures, and a pair whose second leg was played on its grid date (matched, `official` set)
+   * while the first leg is postponed with no make-up date yet does meet in the snapshot — once — and
+   * still leaves the first fixture unmatched honestly (Homestead and Cupertino on 2026-10-05, the
+   * Sep 9 leg unplayed). Only a game with NO official stamp could have matched the fixture by pair.
    */
   it('marks every unmatched SCVAL fixture as one whose TEAMS never meet in the snapshot', () => {
     const fixtures = (snapshot.officialFixtures ?? []).filter((f) => f.league === 'scval');
     if (fixtures.length === 0) return;
     const pairs = new Map<string, string[]>();
     for (const g of snapshot.games) {
+      if (g.official) continue;
       const key = [g.home.slug, g.away.slug].sort().join('~');
       const list = pairs.get(key);
       const row = `${g.dateKey} ${g.away.name} @ ${g.home.name}`;

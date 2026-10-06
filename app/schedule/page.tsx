@@ -1,13 +1,13 @@
 import type { Metadata } from 'next';
 
 import LeagueJumpLinks from '../../components/layout/LeagueJumpLinks';
+import { RegionSwitcher } from '../../components/layout/LeagueSwitcher';
 import PageHeader from '../../components/layout/PageHeader';
-import { OG_BASE, ROOT_OG_IMAGE } from '../../components/layout/site';
+import { OG_BASE, ROOT_OG_IMAGE, coveredLeagueWords } from '../../components/layout/site';
 import ScheduleIndex from '../../components/schedule/ScheduleIndex';
 import { countGames } from '../../components/schedule/filter-data';
 import { buildScheduleIndex } from '../../components/schedule/schedule-view';
 import { getGames, getLeagueSummaries, getTeamBySlug, getToday } from '../../lib/data';
-import { listWords } from '../../lib/format';
 import { SEASON_DISPLAY } from '../../lib/season';
 
 /**
@@ -17,7 +17,8 @@ import { SEASON_DISPLAY } from '../../lib/season';
  * grouped by league, and an index of every game day.
  *
  * Old links keep working with no JavaScript: `/schedule#2026-09-24` lands on that day's index row
- * (`id="2026-09-24"`), which links `/scores/2026-09-24`.
+ * (`id="2026-09-24"`), which links `/scores/2026-09-24`. The cards, Recent and Next are per region
+ * (DESIGN-socal §2.4, components/schedule/ScheduleIndex.tsx); the day index is one list.
  *
  * Static: no search params; "today" is the snapshot's own Pacific day, never `Date.now()`.
  */
@@ -36,7 +37,7 @@ function indexData() {
 
 export function generateMetadata(): Metadata {
   const counts = countGames(getGames());
-  const list = listWords(getLeagueSummaries().map((l) => l.shortName));
+  const list = coveredLeagueWords();
   const description = `${counts.total} girls varsity field hockey contests in ${list} for ${SEASON_DISPLAY}: ${counts.final} final, ${counts.upcoming} still to come. Each league's full schedule, plus every game day.`;
   return {
     title: 'Schedule & results',
@@ -60,6 +61,9 @@ export default function SchedulePage() {
         title="Schedule"
         description="Every league’s season, game by game: pick a league for its full schedule and filters, or a day for every game on it. All times Pacific."
       />
+
+      {/* The region control, its own row under the header (DESIGN-socal §2.4). */}
+      <RegionSwitcher className="mt-4" />
 
       {/* Jump links: shown before paint only for the remembered league (league-scope CSS). */}
       <LeagueJumpLinks leagues={leagues} />

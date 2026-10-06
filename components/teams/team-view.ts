@@ -31,16 +31,30 @@ import {
 import {
   dateSpan,
   gameWhen,
+  listWords,
   monthDay,
   ordinal,
   plural,
   recordString,
   renderScore,
   shortDate,
+  shootoutPhrases,
   sideOutcome,
   timeOfDayPT,
 } from '../../lib/format';
-import { divisionHeading, getDivision, getLeague, leaguePlayEnds } from '../../lib/leagues';
+import {
+  divisionHeading,
+  getDivision,
+  getLeague,
+  REGIONS,
+  getRegion,
+  leaguePlayEnds,
+  leaguesInRegion,
+  regionOf,
+  type LeagueRules,
+  type PostseasonConfig,
+  standingsLabel,
+} from '../../lib/leagues';
 import { pinLabel } from '../../lib/pin-label';
 import { outcomesFor } from '../../lib/standings';
 import type {
@@ -50,15 +64,16 @@ import type {
   OfficialFixture,
   Outcome,
   Record3,
+  RegionId,
   SectionId,
   Standing,
   Team,
   TeamSlug,
 } from '../../lib/types';
-import { getEloBoard } from '../leaders/leaders-view';
+import { getEloBoardForTeam } from '../leaders/leaders-view';
 import { buildOverviewDivision, type OverviewDivision } from '../standings/standings-view';
 import type { FormEntry } from '../ui/FormStrip';
-import { describeGame } from '../ui/describe-game';
+import { describeGame, shootoutSectionOf } from '../ui/describe-game';
 
 /** One opponent in this team's table that it has not beaten yet (DESIGN §3.7). */
 export interface UnbeatenOpponent {
@@ -84,7 +99,7 @@ export interface UnbeatenOpponent {
 export interface TeamEloView {
   /** Whole Elo points; null when the team has neither a final this season nor a start from last. */
   elo: number | null;
-  /** This season's finals its rating counts: every final against one of the five leagues' teams. */
+  /** This season's finals its rating counts: every final against one of the covered leagues' teams. */
   games: number;
   /** Rated from last season alone: no counted final yet this season. */
   preseason: boolean;
@@ -103,11 +118,24 @@ export interface TeamEloView {
   minGames: number;
   /** Its place in the board's top 10, as the board prints it; null when the board does not list it. */
   boardPlace: { rank: number; tied: boolean } | null;
+  /**
+   * Its region's board on /leaders (DESIGN-socal §2.3): `/leaders#elo-rating` for a NorCal team,
+   * `/leaders#elo-rating-socal` for a SoCal one. The rating itself is from the one fit over every team.
+   */
+  boardHref: string;
+  /** 'NorCal' | 'SoCal': whose board the place is on. */
+  boardRegion: string;
+  /** Every team the one fit covers (the registry: 102), for "on one scale with every covered team". */
+  fitTeams: number;
 }
 
-/** The Elo card for one team, read off the board /leaders prints (getEloBoard), so the two cannot disagree. */
-function teamElo(slug: TeamSlug): TeamEloView {
-  const board = getEloBoard();
+/**
+ * The Elo card for one team, read off its region's board as /leaders prints it (getEloBoardForTeam), so the
+ * two cannot disagree.
+ */
+function teamElo(team: Team): TeamEloView {
+  const slug = team.slug;
+  const board = getEloBoardForTeam(team);
   const rating = board.ratingBySlug.get(slug);
   const row = board.board.rows.find((r) => r.team.slug === slug);
   const minGames = board.minimum.min;
@@ -121,6 +149,9 @@ function teamElo(slug: TeamSlug): TeamEloView {
     seeded: rating?.seeded ?? false,
     minGames,
     boardPlace: row ? { rank: row.rank, tied: row.tied } : null,
+    boardHref: `/leaders#${board.board.id}`,
+    boardRegion: getRegion(regionOf(team.league)).shortName,
+    fitTeams: getTeams().length,
   };
 }
 
@@ -132,14 +163,21 @@ export interface TeamLeagueCopy {
   /** 'Santa Clara Valley Athletic League' */
   name: string;
   section: SectionId;
-  postseasonKind: 'ccs-ladder' | 'league-tournament' | 'unbracketed-tournament';
+  postseasonKind: PostseasonConfig['kind'];
   /**
    * The name of the league's own postseason event ('MCAL tournament' is `${short} tournament`;
-   * 'Super Regional' for an unbracketed league); null for a CCS ladder, whose event is CCS's.
+   * 'Super Regional' for an unbracketed league; 'San Diego Section playoffs'); null for a CCS ladder,
+   * whose event is CCS's, and for a league with no postseason (the Sunset).
    */
   postseasonName: string | null;
   /** 'division' (SCVAL, BVAL) | 'league' (PCAL, MCAL, EAL): the noun for a game in this team's table. */
   gamesWord: 'division' | 'league';
+  /**
+   * How a game becomes a league game here (`rules.classification`): the official schedule, MaxPreps' league
+   * flag ('contest-type': the EAL, the Sunset), or every game between two division members ('membership':
+   * the San Diego leagues), so an empty league log says the right thing.
+   */
+  classification: LeagueRules['classification'];
   /** 'Article VI §1 (double round robin; …)' */
   doubleRoundRobin: string;
   /** The last official league date ('2026-10-28'). */
@@ -199,8 +237,11 @@ export interface TeamPageView {
   /** Official fixtures with no published contest. */
   officialFixtures: OfficialFixture[];
   leaguePlayed: number;
-  /** The league's scheduled count for this team (config gamesPerTeam). */
-  leagueScheduled: number;
+  /**
+   * The league's scheduled count for this team (config gamesPerTeam); null for a league with no fixed
+   * schedule (the Sunset), where every reader prints the bare count, never "of N".
+   */
+  leagueScheduled: number | null;
   unbeaten: UnbeatenOpponent[];
   /** Last five league finals, oldest first, each linking to its game page. */
   formEntries: FormEntry[];
@@ -295,6 +336,7 @@ export function leagueCopy(leagueId: LeagueId): TeamLeagueCopy {
     name: league.name,
     section: league.sectionId,
     gamesWord: league.rules.gamesWord,
+    classification: league.rules.classification,
     doubleRoundRobin: league.rules.citations.doubleRoundRobin,
     leaguePlayEnds: ends,
   };
@@ -333,6 +375,32 @@ export function leagueCopy(leagueId: LeagueId): TeamLeagueCopy {
         seasonEndSentence: `${ended}; the ${ps.name} follows, ${dateSpan(ps.dates.first, ps.dates.last)}.`,
         bracketSentence: `We will not guess a bracket: the ${ps.name}\u2019s format and site are not published yet.`,
       };
+    case 'no-postseason': {
+      // The Sunset and the Southern Section independents (CIF-SS Blue Book 2011.1, 3500.2): no playoff game
+      // follows, and the note says why. Both end with the Section's last allowable contest (leaguePlay.last).
+      return {
+        ...base,
+        postseasonKind: ps.kind,
+        postseasonName: null,
+        seasonEndSentence: league.independents
+          ? `The independents’ season ends ${shortDate(ends)}, the Southern Section’s last allowable contest.`
+          : `The ${league.shortName} season ends ${shortDate(ends)}.`,
+        bracketSentence: ps.note,
+      };
+    }
+    case 'section-playoffs': {
+      // The San Diego Section draws its brackets after its seeding meeting (config keyDates), and this site
+      // projects no seed (DESIGN-socal §2.4), so the sentence says when the brackets come, nothing more.
+      const seeding = league.keyDates.find((d) => d.id === 'seeding-meeting');
+      const when = seeding ? ` after its ${shortDate(seeding.date)} seeding meeting` : '';
+      return {
+        ...base,
+        postseasonKind: ps.kind,
+        postseasonName: ps.name,
+        seasonEndSentence: `${ended}; the ${ps.name} follow, ${dateSpan(ps.dates.first, ps.dates.last)}.`,
+        bracketSentence: `We will list a playoff game as soon as the Section publishes its brackets${when}.`,
+      };
+    }
   }
 }
 
@@ -466,16 +534,30 @@ export function earlierMeeting(
   const mine = mineIsHome ? display.home : display.away;
   const theirs = mineIsHome ? display.away : display.home;
   const verb = outcome === 'W' ? 'won' : outcome === 'L' ? 'lost' : 'tied';
+  // A shootout win is worded in the words of the section whose rule decided it ('lost 1–1 on 1 v 1s'
+  // for an EAL meeting, as this line has always read). Only a 'verified' section's game carries the
+  // 'SO' tag here; a San Diego one is worded below. 'a shootout' is the generic fallback.
   const decider =
     display.deciderTag === 'F'
       ? ' by forfeit'
       : display.deciderTag === 'SO'
-        ? ' on 1 v 1s'
+        ? ` ${shootoutPhrases(shootoutSectionOf(game)?.shootout?.words ?? 'a shootout').onPhrase}`
         : display.deciderTag
           ? ` in ${display.deciderTag}`
           : '';
   const where =
     game.site === 'neutral' ? 'at a neutral site' : mineIsHome ? 'at home' : 'away';
+  // A section whose shootout is 'unverified' (San Diego: no tally anywhere, and si.com and the Section's
+  // power rankings record Mt. Carmel–Poway, Sep 11, as 2-0 where MaxPreps has 0-0 marked W and L) gets no
+  // 'SO' tag from describeGame, and this line never says a shootout decided it: "credited with the win
+  // on a level 0–0 score" (shootoutPhrases(words, 'unverified')).
+  const rule = game.decider === 'SO' ? shootoutSectionOf(game)?.shootout ?? null : null;
+  if (rule?.inference === 'unverified' && outcome !== 'T') {
+    const phrases = shootoutPhrases(rule.words, rule.inference);
+    const level = `a level ${mine.glyph}\u2013${theirs.glyph} score`;
+    const what = outcome === 'W' ? `${phrases.wonOn} on ${level}` : `lost on ${level}`;
+    return { contestId: game.contestId, outcome, text: `Earlier: ${what} ${where}, ${monthDay(game.dateLocal)}` };
+  }
   return {
     contestId: game.contestId,
     outcome,
@@ -666,7 +748,7 @@ export function buildTeamPageView(slug: string): TeamPageView | undefined {
       leagueShort: league.shortName,
     }),
     standingsHref: `/standings/${league.id}#${team.division}`,
-    standingsLabel: `${league.shortName} standings`,
+    standingsLabel: standingsLabel(league.id),
     officialScheduleUrl: division.official.mode === 'none' ? null : division.official.scheduleUrl,
     hasResults,
     context,
@@ -684,7 +766,7 @@ export function buildTeamPageView(slug: string): TeamPageView | undefined {
     unbeaten: buildUnbeaten(team, leagueLog, today),
     formEntries,
     nextCard: buildNextCard(team, next, officialFixtures, today, league),
-    elo: teamElo(team.slug),
+    elo: teamElo(team),
     today,
   };
 }
@@ -719,28 +801,77 @@ export interface TeamsSectionGroup {
   leagues: TeamsLeagueGroup[];
 }
 
-/** /teams: section → league → division → standings table, config order (SPEC §10.5, DESIGN §18). */
-export function buildTeamsByLeague(): TeamsSectionGroup[] {
+/** One region's half of /teams (DESIGN-socal §2.4): its sections, in a `<div id="<region>">` wrapper. */
+export interface TeamsRegionGroup {
+  id: RegionId;
+  name: string;
+  sections: TeamsSectionGroup[];
+}
+
+/** /teams: region → section → league → division → standings table, config order (NorCal, then SoCal). */
+export function buildTeamsByRegion(): TeamsRegionGroup[] {
+  return REGIONS.map((region) => ({
+    id: region.id,
+    name: region.name,
+    sections: buildTeamsByLeague(region.id),
+  }));
+}
+
+/**
+ * The sentence that says where each league's membership comes from (DESIGN-socal §2.1.7,
+ * `LeagueConfig.alignmentSource`), grouped. NorCal's half is today's sentence word for word: its four
+ * leagues' official schedules, and the EAL, which publishes none (its six are MaxPreps' EAL table less
+ * Red Bluff). The SoCal half names each source with the leagues that use it, in config order.
+ */
+export function alignmentSentence(): string {
+  const norcal =
+    'League and division alignment comes from each league’s official schedule; the EAL publishes none, so its six teams are the ones MaxPreps lists in its EAL table, less Red Bluff, which is not fielding a varsity team in 2026.';
+  const groups: Array<{ source: string; leagues: string[] }> = [];
+  for (const league of leaguesInRegion('socal')) {
+    const group = groups.find((g) => g.source === league.alignmentSource);
+    // 'the Sunset' reads as a league name; the San Diego conferences read as names already; a group of
+    // independents is named in full ('the Southern Section independents'): its short name is an adjective.
+    const name =
+      league.independents
+        ? `the ${league.name}`
+        : league.divisions.length === 1
+          ? `the ${league.shortName}`
+          : league.shortName;
+    if (group) group.leagues.push(name);
+    else groups.push({ source: league.alignmentSource, leagues: [name] });
+  }
+  if (groups.length === 0) return norcal;
+  const socal = groups.map((g) => `from ${g.source} for ${listWords(g.leagues)}`);
+  return `${norcal} In Southern California it comes ${listWords(socal)}.`;
+}
+
+/** /teams: section → league → division → standings table, config order (SPEC §10.5, DESIGN §18); `region` keeps one region's. */
+export function buildTeamsByLeague(region?: RegionId): TeamsSectionGroup[] {
   const teams = getTeams();
-  return getTeamsGrouped().map(({ section, leagues }) => ({
+  return getTeamsGrouped(region).map(({ section, leagues }) => ({
     id: section.id,
     name: section.name,
-    leagues: leagues.map(({ league, divisions }) => ({
-      league,
-      title: `${league.shortName} — ${league.name}`,
-      meta: plural(league.teamCount, 'team'),
-      membershipNote: getLeague(league.id).membershipNote,
-      standingsHref: `/standings/${league.id}`,
-      standingsLabel: `${league.shortName} standings`,
-      divisions: divisions.map((d) =>
-        buildOverviewDivision({
-          division: d.id,
-          standings: getStandings(d.id),
-          teams,
-          throughDate: getLastLeagueResultDate({ division: d.id }),
-        }),
-      ),
-    })),
+    leagues: leagues.map(({ league, divisions }) => {
+      // A group of independents (the Southern Section independents) is headed by its name: its short name is
+      // an adjective.
+      const independent = getLeague(league.id).independents === true;
+      return {
+        league,
+        title: independent ? league.name : `${league.shortName} — ${league.name}`,
+        meta: plural(league.teamCount, 'team'),
+        membershipNote: getLeague(league.id).membershipNote,
+        standingsHref: `/standings/${league.id}`,
+        standingsLabel: standingsLabel(league.id),
+        divisions: divisions.map((d) =>
+          buildOverviewDivision({
+            division: d.id,
+            standings: getStandings(d.id),
+            teams,
+            throughDate: getLastLeagueResultDate({ division: d.id }),
+          }),
+        ),
+      };
+    }),
   }));
 }
 

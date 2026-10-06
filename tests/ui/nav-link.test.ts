@@ -42,6 +42,11 @@ describe('the league hrefs the bars hand to NavLink', () => {
       pcal: '/schedule/pcal',
       mcal: '/schedule/mcal',
       eal: '/schedule/eal',
+      sunset: '/schedule/sunset',
+      city: '/schedule/city',
+      'north-county': '/schedule/north-county',
+      metro: '/schedule/metro',
+      independents: '/schedule/independents',
     });
     // Teams took over the Table tab's job (DESIGN §18): your league's tables, on /teams.
     expect(HREFS['/teams']).toEqual({
@@ -50,6 +55,11 @@ describe('the league hrefs the bars hand to NavLink', () => {
       pcal: '/teams#pcal',
       mcal: '/teams#mcal',
       eal: '/teams#eal',
+      sunset: '/teams#sunset',
+      city: '/teams#city',
+      'north-county': '/teams#north-county',
+      metro: '/teams#metro',
+      independents: '/teams#independents',
     });
     expect(HREFS['/playoffs']).toEqual({
       scval: '/playoffs#scval',
@@ -58,6 +68,14 @@ describe('the league hrefs the bars hand to NavLink', () => {
       mcal: '/playoffs/mcal',
       // No bracket and no /playoffs/eal page: the EAL's pointer card on the CCS page.
       eal: '/playoffs#eal',
+      // No page of their own either (DESIGN-socal §2.4): the Sunset's 'no-postseason' card and the
+      // three San Diego leagues' 'section-playoffs' cards in the SoCal block of /playoffs.
+      sunset: '/playoffs#sunset',
+      city: '/playoffs#city',
+      'north-county': '/playoffs#north-county',
+      metro: '/playoffs#metro',
+      // The Southern Section independents' 'no-postseason' card (DESIGN §24.9).
+      independents: '/playoffs#independents',
     });
     expect(HREFS['/standings']).toBeUndefined();
     expect(HREFS['/leaders']).toBeUndefined();

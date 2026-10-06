@@ -38,6 +38,7 @@ import {
   monthDay,
   recordString,
   renderScore,
+  shootoutPhrases,
   shortDate,
   sideOutcome,
   timeOfDayPT,
@@ -49,7 +50,6 @@ import {
   findDivision,
   findLeague,
   getLeague,
-  getSection,
   leagueOfDivision,
   type LeagueConfig,
 } from '../../lib/leagues';
@@ -68,7 +68,16 @@ import type {
   TournamentGame,
 } from '../../lib/types';
 import type { FormEntry } from '../ui/FormStrip';
-import { describeGame, overtimeInDoubt, type GameDisplay, type SideView } from '../ui/describe-game';
+import {
+  describeGame,
+  overtimeInDoubt,
+  postseasonTagOf,
+  shootoutCitationParts,
+  shootoutGroupName,
+  shootoutSectionOf,
+  type GameDisplay,
+  type SideView,
+} from '../ui/describe-game';
 
 // ---------------------------------------------------------------- types
 
@@ -204,10 +213,10 @@ export interface GameModel {
   /** The postseason notes: `MCAL tournament game — it does not count in the league table.` + the shootout caveat. */
   postseasonNotes: string[];
   /**
-   * How this site reads a score the feed cannot state plainly, or null: a level final decided on
-   * 1 v 1s (decider 'SO', the EAL) says who MaxPreps marks the winner and that the tally is not
-   * shown; a game whose overtime count the league's rules rule out (`overtimeInDoubt`) says the
-   * score is shown as MaxPreps has it.
+   * How this site reads a score the feed cannot state plainly, or null: a level final decided by a
+   * shootout (decider 'SO': the EAL's 1 v 1s, the San Diego Section's shootout) says who MaxPreps
+   * marks the winner and that the tally is not shown; a game whose overtime count the section's
+   * rules rule out (`overtimeInDoubt`) says the score is shown as MaxPreps has it.
    */
   scoreNote: string | null;
   /** How many teams this site follows (the non-member copy names it). */
@@ -451,7 +460,7 @@ function hasResultConflict(g: Game): boolean {
 function resultConflictNoteFor(game: Game): string | null {
   if (!hasResultConflict(game)) return null;
   const note = (game.provenance.resultConflict as string).trim().replace(/[.\s]+$/, '');
-  // A 1 v 1 win is level on goals and a win here: `scoreNote` says so, so no tie sentence.
+  // A shootout win is level on goals and a win here: `scoreNote` says so, so no tie sentence.
   if (game.decider === 'SO') return `${note}.`;
   const level = game.home.score !== null && game.home.score === game.away.score;
   return level
@@ -478,7 +487,7 @@ function seriesSummary(game: Game, games: Game[], homeName: string, awayName: st
     if (display.kind !== 'final') continue;
     played += 1;
     // The legs are home-and-away, so align every row on THIS game's home side. `sideOutcome`
-    // is the one W/L/T rule, so a 1 v 1 win is a win here, not a tie.
+    // is the one W/L/T rule, so a shootout win is a win here, not a tie.
     const outcome = sideOutcome(g, sideKey(g.home) === keyHome ? 'home' : 'away');
     if (outcome === 'T') {
       ties += 1;
@@ -680,6 +689,20 @@ function postseasonView(game: Game, league: LeagueConfig | null): PostseasonView
       notes: [sentence],
     };
   }
+  if (tag.kind === 'section-playoffs') {
+    // The San Diego Section's playoffs (Green Book 2026-27 Bylaw 2000.1): one tournament across the City,
+    // North County and Metro conferences, so one label whether or not the two sides share a conference
+    // (lib/classify.ts tags it; its leagueId is null across conferences, so the name comes from the sides).
+    const name = postseasonTagOf(game);
+    if (name) {
+      const sentence = `${name} game — it does not count in the league table.`;
+      return {
+        contextLabel: name,
+        countsAs: { label: name, detail: sentence, classificationNote: null },
+        notes: [sentence],
+      };
+    }
+  }
   if (tag.kind === 'ccs') {
     const sentence = 'CCS playoff game — it does not count in any league table.';
     return {
@@ -698,32 +721,59 @@ function postseasonView(game: Game, league: LeagueConfig | null): PostseasonView
 
 /**
  * `scoreNote` (D7): what this site does with a score the feed cannot state plainly. The rule it
- * cites is the one a 1 v 1 league's Guidelines give (only the EAL's has `leagueOvertime`
- * 'shootout' today): a 10-minute sudden-victory period, then 1 v 1s. Goals come from the view's
+ * cites is the section's (SectionConfig.shootout, keyed on the section as lib/normalize.ts keys decider
+ * 'SO'): the Northern Section's Guidelines for the EAL (a 10-minute sudden-victory period, then 1 v 1s)
+ * and the San Diego Field Hockey Officials Association's procedures for the San Diego Section (a
+ * 10-minute 7 v 7 sudden-victory period, then 1 v 1 shootouts), whose rule covers a game between two of
+ * its conferences too. The EAL's sentences are unchanged, word for word. Goals come from the view's
  * glyphs, never from the score fields.
  */
 function scoreNoteFor(
   game: Game,
   display: GameDisplay,
-  league: LeagueConfig | null,
   away: GameSideModel,
   home: GameSideModel,
 ): string | null {
-  if (!league || league.rules.leagueOvertime !== 'shootout') return null;
-  const rule = `${getSection(league.sectionId).name} Field Hockey Guidelines §VII.E.4`;
+  const section = shootoutSectionOf(game);
+  if (!section?.shootout) return null;
+  const group = shootoutGroupName(section);
+  const phrases = shootoutPhrases(section.shootout.words);
+  const { source, procedure } = shootoutCitationParts(section.shootout.citation);
   const notes: string[] = [];
   if (display.kind === 'final' && game.decider === 'SO' && game.shootout === null) {
     const outcome = sideOutcome(game, 'home');
     if (outcome === 'W' || outcome === 'L') {
       const winner = outcome === 'W' ? home.name : away.name;
-      notes.push(
-        `Level at ${display.home.glyph}\u2013${display.away.glyph}; MaxPreps marks ${winner} the winner, which under the ${league.shortName}\u2019s rules means 1 v 1s decided it (a level varsity game goes to a 10-minute sudden-victory period, then 1 v 1s: ${rule}). This site counts it as ${winner}\u2019s win and does not show the 1 v 1 tally.`,
-      );
+      if (section.shootout.inference === 'unverified') {
+        // The San Diego Section (SectionConfig.shootout.inference): the rule is cited, the shootout is not
+        // asserted. si.com and the Section's power rankings record Mt. Carmel–Poway (Sep 11) as 2-0 where
+        // MaxPreps has 0-0 marked W/L, so this note says what MaxPreps lists and why the win counts, then
+        // what the other sources record (`disagreement`). "Outside a tournament": the SDFHOA procedures do
+        // not cover invitational tournaments (coversTournaments false), and lib/normalize.ts reads no 'SO'
+        // from a tournament row.
+        const scope = section.shootout.coversTournaments ? '' : ' outside a tournament';
+        notes.push(
+          `MaxPreps lists ${display.home.glyph}\u2013${display.away.glyph} with no tally and marks ${winner} the winner; a level ${group} varsity game${scope} goes to a sudden-victory period and then ${section.shootout.words} (${source}), so this site counts it as ${winner}\u2019s win.${
+            section.shootout.disagreement ? ` ${section.shootout.disagreement}` : ''
+          }`,
+        );
+      } else {
+        const rule = procedure ? `a level varsity game goes to ${procedure}: ${source}` : source;
+        notes.push(
+          `Level at ${display.home.glyph}\u2013${display.away.glyph}; MaxPreps marks ${winner} the winner, which under the ${group}\u2019s rules means ${phrases.decidedIt} (${rule}). This site counts it as ${winner}\u2019s win and does not show ${phrases.tally}.`,
+        );
+      }
     }
   }
   if (overtimeInDoubt(game)) {
+    // Both sections with a shootout rule play one 10-minute overtime period before it (NS Guidelines
+    // §VII.E.4; SDFHOA 2026 procedures), so the count is the same words for both. overtimeInDoubt leaves out
+    // postseason games and, where the rule does not reach them, tournament rows; the San Diego sentence
+    // says so ("in a regular-season game outside a tournament": the SDFHOA playoff procedure plays two
+    // 10-minute periods). The EAL's sentence is unchanged.
+    const scope = section.shootout.coversTournaments ? '' : ' in a regular-season game outside a tournament';
     notes.push(
-      `MaxPreps records ${game.otPeriods} overtime periods for this game, but the ${league.shortName} plays one 10-minute overtime period and then 1 v 1s (${rule}), so MaxPreps may have recorded a 1 v 1 win as a goal. The score is shown as MaxPreps has it.`,
+      `MaxPreps records ${game.otPeriods} overtime periods for this game, but the ${group} plays one 10-minute overtime period and then ${section.shootout.words}${scope} (${source}), so MaxPreps may have recorded ${phrases.win} as a goal. The score is shown as MaxPreps has it.`,
     );
   }
   return notes.length > 0 ? notes.join(' ') : null;
@@ -752,12 +802,25 @@ function tiebreakNoteFor(division: DivisionId): string | null {
   return null;
 }
 
+/**
+ * A division heading as a noun: 'De Anza Division', 'Mt. Hamilton Division'; a San Diego division's label
+ * alone ('City Western', 'Avocado'), because there "Division" names the Section's PLAYOFF divisions (Open,
+ * Division I, Division II: Green Book 2000.1) and the Section calls these leagues, not divisions. null for a
+ * single-division league, which has no heading.
+ */
+function divisionNoun(division: DivisionId): string | null {
+  const heading = divisionHeading(division);
+  if (heading === null) return null;
+  return leagueOfDivision(division).postseason.kind === 'section-playoffs' ? heading : `${heading} Division`;
+}
+
 function countsAsFor(game: Game): CountsAs {
   if (game.countsFor !== null) {
     const league = leagueOfDivision(game.countsFor);
     const heading = divisionHeading(game.countsFor);
+    const noun = divisionNoun(game.countsFor);
     return {
-      label: heading ? `League game · ${heading} Division` : `League game · ${league.shortName}`,
+      label: noun ? `League game · ${noun}` : `League game · ${league.shortName}`,
       detail: `Counts toward the ${heading ?? league.shortName} standings — ${league.rules.citations.points}.`,
       classificationNote: null,
     };
@@ -819,7 +882,7 @@ export function buildGameView(param: string): GameModel | undefined {
     contextLabel: post?.contextLabel ?? (division ? divisionDisplay(division) : 'Non-league'),
     countsAs: post?.countsAs ?? countsAsFor(game),
     postseasonNotes: post?.notes ?? [],
-    scoreNote: scoreNoteFor(game, display, league, away, home),
+    scoreNote: scoreNoteFor(game, display, away, home),
     memberCount: getTeams().length,
     dayLabel: shortDate(game.dateLocal),
     whenLabel: game.isTimeTba
@@ -905,8 +968,8 @@ function contextNoun(model: GameModel): string {
     return model.contextLabel === 'CCS' ? 'CCS playoff game' : `${model.contextLabel} game`;
   }
   if (model.division) {
-    const heading = divisionHeading(model.division);
-    return heading ? `${heading} Division league game` : `${scopeOf(model.division)} league game`;
+    const noun = divisionNoun(model.division);
+    return noun ? `${noun} league game` : `${scopeOf(model.division)} league game`;
   }
   return 'non-league game';
 }

@@ -2,8 +2,8 @@ import Link from 'next/link';
 import { Fragment } from 'react';
 
 import { listWords } from '../../lib/format';
-import { getDivision } from '../../lib/leagues';
 import BerthMeter from '../ui/BerthMeter';
+import { articleFor, membershipSource } from '../ui/membership-words';
 import PlaceMark from '../ui/PlaceMark';
 import SectionHeader from '../ui/SectionHeader';
 import StatusChip from '../ui/StatusChip';
@@ -162,13 +162,23 @@ export function PlayoffProjection({
   const noData = rows.filter((r) => !r.standing.hasReportedResults).map((r) => r.team.name);
   if (noData.length > 0 && noData.length < rows.length) {
     const single = noData.length === 1;
-    // A league with no documents of its own (`official.mode: 'none'`) publishes no alignment.
+    // A league with no documents of its own (`official.mode: 'none'`) publishes no alignment. "As
+    // MaxPreps lists it" only where MaxPreps' table for this division lists every one of them (the
+    // EAL); otherwise the league's membership source (components/ui/membership-words.ts).
+    const source = membershipSource(
+      projection.division,
+      rows.filter((r) => !r.standing.hasReportedResults).map((r) => r.team.slug),
+    );
     const where =
-      getDivision(projection.division).official.mode === 'none'
-        ? `the ${divisionLabel} table as MaxPreps lists it`
-        : `the official ${divisionLabel} alignment`;
+      source.kind === 'maxpreps'
+        ? `in the ${divisionLabel} table as MaxPreps lists it`
+        : source.kind === 'official'
+          ? `in the official ${divisionLabel} alignment`
+          : single
+            ? `${articleFor(divisionLabel)} ${divisionLabel} team (${source.source})`
+            : `${divisionLabel} teams (${source.source})`;
     footnotes.push(
-      `${listWords(noData)} ${single ? 'is' : 'are'} in ${where} ` +
+      `${listWords(noData)} ${single ? 'is' : 'are'} ${where} ` +
         `but ${single ? 'has' : 'have'} no reported results, so ${
           single ? 'it is' : 'they are'
         } listed last with no record and no place.`,

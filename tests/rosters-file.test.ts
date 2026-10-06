@@ -1,5 +1,5 @@
 /**
- * data/rosters.json: the committed file validates (one entry per registry team, all five leagues),
+ * data/rosters.json: the committed file validates (one entry per registry team, all nine leagues and the independents),
  * the read API serves it, and the script rebuilds every league that has captures from them. A
  * team no run has covered is status 'pending'; failures and `--leagues` scoping are per team.
  */
@@ -53,9 +53,9 @@ describe('data/rosters.json', () => {
     expect(parsed.success, parsed.success ? '' : JSON.stringify(parsed.error.issues.slice(0, 5))).toBe(true);
   });
 
-  it('has one entry per registry team, all five leagues, in registry order, keyed by the registry id', () => {
+  it('has one entry per registry team, all nine leagues and the independents, in registry order, keyed by the registry id', () => {
     expect(ROSTER_TEAM_COUNT).toBe(TEAMS.length);
-    expect(TEAMS).toHaveLength(49);
+    expect(TEAMS).toHaveLength(102);
     expect(raw.teams.map((t) => t.slug)).toEqual(TEAMS.map((t) => t.slug));
     expect(raw.teams.map((t) => t.teamId)).toEqual(TEAMS.map((t) => t.id));
     for (const t of raw.teams) {
@@ -441,7 +441,7 @@ describe('scripts/fetch-rosters.ts over a previous file that is not valid whole'
     const previous = { ...structuredClone(raw), season: '25-26' };
     const scoped = runOver(JSON.stringify(previous), 'scval');
     expect(scoped.status).toBe(1); // the uncovered leagues lost their rows
-    expect(scoped.stderr).toMatch(/WARN previous .* is season 25-26: its 49 row\(s\) are ignored, as if absent/);
+    expect(scoped.stderr).toMatch(/WARN previous .* is season 25-26: its 102 row\(s\) are ignored, as if absent/);
     expect(scoped.stdout).not.toContain('kept as they were');
     const built = read(scoped.out);
     expect(built.season).toBe(raw.season);

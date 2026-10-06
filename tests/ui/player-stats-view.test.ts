@@ -65,7 +65,7 @@ describe('buildPlayerStatsView — rules, over the committed file', () => {
   });
 
   it('builds a view for every team of every league, and null only for a slug that is no team', () => {
-    expect(live).toHaveLength(49);
+    expect(live).toHaveLength(102);
     for (const id of LEAGUE_IDS) {
       for (const t of teamsInLeague(id)) {
         const page = buildTeamPageView(t.slug)!;
@@ -196,7 +196,7 @@ describe('buildPlayerStatsView — the 2026-10-02 captures', () => {
   it('says a team no update has covered is not collected, and never that its coach entered none', () => {
     // The build covers SCVAL only, so every other league's team is pending.
     const pending = fixture.filter((c) => !teamsInLeague('scval').some((t) => t.slug === c.slug));
-    expect(pending).toHaveLength(34);
+    expect(pending).toHaveLength(TEAMS.length - teamsInLeague('scval').length);
     for (const { slug, data, view } of pending) {
       expect(data.status, slug).toBe('pending');
       expect(view.status, slug).toBe('pending');

@@ -1,6 +1,7 @@
 /**
  * v1 → v2 in memory (SPEC §4.3): the committed SCVAL-only snapshot keeps loading. And the "league
- * added" upgrade (v2 → v2): a file written before the EAL existed keeps loading too.
+ * added" upgrade (v2 → v2): a file written before the EAL existed keeps loading too, and so does a
+ * NorCal file written before the Sunset and the three San Diego leagues (and their two sections).
  */
 
 import { readFileSync } from 'node:fs';
@@ -8,7 +9,7 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { LEAGUES } from '../lib/leagues';
+import { LEAGUES, leaguesInRegion } from '../lib/leagues';
 import { addConfiguredLeagues, isSnapshotV1, lacksConfiguredLeagues, migrateV1ToV2 } from '../lib/snapshot-migrate';
 import { loadSnapshot, parseSnapshot } from '../lib/snapshot-schema';
 import { stableStringify } from '../lib/stable-json';
@@ -47,11 +48,11 @@ describe('isSnapshotV1', () => {
 });
 
 describe('migrateV1ToV2 on the committed v1 golden', () => {
-  it('parses as v2 with the 49-team registry, in registry order', () => {
+  it('parses as v2 with the 102-team registry, in registry order', () => {
     expect(migrated.schemaVersion).toBe(2);
     expect(migrated.teams.map((t) => t.id)).toEqual(TEAMS.map((t) => t.id));
-    expect(migrated.teams).toHaveLength(49);
-    expect(migrated.standings).toHaveLength(49);
+    expect(migrated.teams).toHaveLength(102);
+    expect(migrated.standings).toHaveLength(102);
     expect(migrated.fetchedAt).toBe(v1.fetchedAt);
   });
 
@@ -66,7 +67,11 @@ describe('migrateV1ToV2 on the committed v1 golden', () => {
       expect(s.hasReportedResults, s.slug).toBe(false);
       expect(s.computed.gp, s.slug).toBe(0);
       expect(s.reported).toBeNull();
-      expect(s.tiebreak.note, s.slug).toMatch(/^No (division|league) results reported for /);
+      // NorCal rows say 'results reported'; a 'site'-ordered SoCal row says 'games counted' (lib/standings.ts
+      // tiebreakNote: SoCal copy avoids the word 'results'); an independent's says there is no table at all.
+      expect(s.tiebreak.note, s.slug).toMatch(
+        /^(No (division|league) (results reported|games counted) for |Independent: no league games, so no table$)/,
+      );
     }
     const leigh = migrated.standings.find((s) => s.slug === 'leigh')!;
     expect(leigh.tiebreak.note).toMatch(/^No division results reported for Leigh, so it is listed last; Mt\. Hamilton order/);
@@ -84,9 +89,13 @@ describe('migrateV1ToV2 on the committed v1 golden', () => {
       expect(side.slug).toBe('leigh');
       expect(after.leagueDivision).toBeNull(); // an SCVAL opponent: never same-division
     }
-    // A non-member stays a name only.
-    const scripps = migrated.games.find((g) => g.home.name === 'Scripps Ranch' || g.away.name === 'Scripps Ranch')!;
-    expect([scripps.home.slug, scripps.away.slug]).toContain(null);
+    // A San Diego opponent is a registry side now too, in no table with its SCVAL opponent.
+    const scripps = migrated.games.filter((g) => g.home.name === 'Scripps Ranch' || g.away.name === 'Scripps Ranch');
+    expect(scripps.length).toBeGreaterThan(0);
+    for (const g of scripps) {
+      expect([g.home.slug, g.away.slug]).toContain('scripps-ranch');
+      expect([g.leagueDivision, g.countsFor]).toEqual([null, null]);
+    }
   });
 
   it('adds placeholders, then classifies exactly as the pipeline does', () => {
@@ -126,10 +135,11 @@ describe('migrateV1ToV2 on the committed v1 golden', () => {
   });
 
   it('builds the season from config with per-league windows', () => {
-    expect(migrated.season.sections.map((s) => s.id)).toEqual(['ccs', 'ncs', 'ns']);
+    expect(migrated.season.sections.map((s) => s.id)).toEqual(['ccs', 'ncs', 'ns', 'ss', 'sds']);
     expect(migrated.season.leagues.map((l) => [l.id, l.postseasonKind])).toEqual([
       ['scval', 'ccs-ladder'], ['bval', 'ccs-ladder'], ['pcal', 'ccs-ladder'], ['mcal', 'league-tournament'],
-      ['eal', 'unbracketed-tournament'],
+      ['eal', 'unbracketed-tournament'], ['sunset', 'no-postseason'], ['city', 'section-playoffs'],
+      ['north-county', 'section-playoffs'], ['metro', 'section-playoffs'], ['independents', 'no-postseason'],
     ]);
     const scval = migrated.season.leagues[0].window;
     expect(scval.lastGame).toBe('2026-10-28T18:00:00');
@@ -163,7 +173,11 @@ describe('migrateV1ToV2 on the committed v1 golden', () => {
       const short = LEAGUES.find((l) => l.id === h.leagueId)!.shortName;
       expect(h.state).toBe('degraded');
       expect(h.lastFreshAt).toBeNull();
-      expect(h.reasons).toEqual([`No ${short} data in this snapshot yet: it was written before ${short} was added.`]);
+      expect(h.reasons).toEqual([
+        h.leagueId === 'independents'
+          ? 'No data for the Southern Section independents in this snapshot yet: it was written before they were added.'
+          : `No ${short} data in this snapshot yet: it was written before ${short} was added.`,
+      ]);
       for (const d of h.divisions) {
         expect(d.countedFinals).toBe(0);
         expect(d.previousCountedFinals).toBeNull();
@@ -175,10 +189,10 @@ describe('migrateV1ToV2 on the committed v1 golden', () => {
     expect(migrated.dropped).toEqual([]);
     expect(migrated.supersededGames).toEqual({});
     expect(migrated.sbliveCrossCheck?.backfilled).toEqual([]);
-    expect(migrated.counts.teams).toBe(49);
+    expect(migrated.counts.teams).toBe(102);
     expect(migrated.counts.games).toBe(migrated.games.length);
     expect(migrated.counts.leagueGames).toBe(migrated.games.filter((g) => g.countsFor !== null).length);
-    expect(Object.keys(migrated.counts.byLeague)).toEqual(['scval', 'bval', 'pcal', 'mcal', 'eal']);
+    expect(Object.keys(migrated.counts.byLeague)).toEqual(LEAGUES.map((l) => l.id));
     expect(migrated.counts.byLeague.scval.games).toBe(migrated.games.length);
     expect(migrated.counts.byLeague.bval.leagueGames).toBe(0);
   });
@@ -220,7 +234,7 @@ describe('the "league added" upgrade (a v2 file written before the EAL existed)'
   const stripped = withoutEal(full);
 
   it('recognises a v2 file whose leagues are a proper, in-order subsequence of the config', () => {
-    expect(stripped.season.leagues.map((l) => l.id)).toEqual(['scval', 'bval', 'pcal', 'mcal']);
+    expect(stripped.season.leagues.map((l) => l.id)).toEqual(['scval', 'bval', 'pcal', 'mcal', 'sunset', 'city', 'north-county', 'metro', 'independents']);
     // The golden has two Bella Vista games: the stripped file holds them as name-only opponents.
     expect(stripped.games.filter((g) => g.home.name === 'Bella Vista' || g.away.name === 'Bella Vista')).toHaveLength(2);
     expect(lacksConfiguredLeagues(stripped)).toBe(true);
@@ -244,8 +258,12 @@ describe('the "league added" upgrade (a v2 file written before the EAL existed)'
     const upgraded = addConfiguredLeagues(stripped) as Snapshot;
     expect(JSON.stringify(stripped)).toBe(before);
     expect(stableStringify(upgraded.standings.filter((r) => r.division !== 'eal'))).toBe(stableStringify(stripped.standings));
-    expect(stableStringify(upgraded.leagueHealth.slice(0, 4))).toBe(stableStringify(stripped.leagueHealth));
-    expect(upgraded.standings.slice(-6).map((r) => r.slug)).toEqual([...EAL_SLUGS]);
+    expect(stableStringify(upgraded.leagueHealth.filter((h) => h.leagueId !== 'eal'))).toBe(stableStringify(stripped.leagueHealth));
+    // The EAL's rows land where config puts them: after MCAL's, before the Sunset's.
+    const at = upgraded.standings.findIndex((r) => r.division === 'eal');
+    expect(upgraded.standings.slice(at, at + 6).map((r) => r.slug)).toEqual([...EAL_SLUGS]);
+    expect(upgraded.standings[at - 1].division).toBe('marin-county');
+    expect(upgraded.standings[at + 6].division).toBe('sunset');
     const bv = upgraded.games.filter((g) => g.away.name === 'Bella Vista');
     expect(bv.map((g) => [g.away.slug, g.leagueDivision, g.countsFor])).toEqual([
       ['bella-vista', null, null], ['bella-vista', null, null],
@@ -258,9 +276,9 @@ describe('the "league added" upgrade (a v2 file written before the EAL existed)'
     expect(raw.season.leagues.map((l) => l.id)).toEqual(['scval', 'bval', 'pcal', 'mcal']);
     expect(lacksConfiguredLeagues(raw)).toBe(true);
     const loaded = loadSnapshot(raw);
-    expect(loaded.teams).toHaveLength(49);
-    expect(loaded.season.sections.map((s) => s.id)).toEqual(['ccs', 'ncs', 'ns']);
-    expect(loaded.leagueHealth.map((h) => h.leagueId)).toEqual(['scval', 'bval', 'pcal', 'mcal', 'eal']);
+    expect(loaded.teams).toHaveLength(102);
+    expect(loaded.season.sections.map((s) => s.id)).toEqual(['ccs', 'ncs', 'ns', 'ss', 'sds']);
+    expect(loaded.leagueHealth.map((h) => h.leagueId)).toEqual(LEAGUES.map((l) => l.id));
     expect(stableStringify(loaded.leagueHealth.slice(0, 4))).toBe(stableStringify(raw.leagueHealth));
     expect(loaded.leagueHealth[4]).toEqual({
       leagueId: 'eal',
@@ -276,5 +294,113 @@ describe('the "league added" upgrade (a v2 file written before the EAL existed)'
     for (const r of loaded.standings.filter((x) => x.division === 'eal')) {
       expect([r.computed.gp, r.reported, r.hasReportedResults], r.slug).toEqual([0, null, false]);
     }
+  });
+});
+
+// ---------------------------------------------------------------- the Southern California leagues (DESIGN-socal §2.1.10)
+
+const SOCAL_LEAGUES = leaguesInRegion('socal').map((l) => l.id);
+const SOCAL_DIVISIONS = new Set(leaguesInRegion('socal').flatMap((l) => l.divisions.map((d) => d.id)));
+const SOCAL_SLUGS = new Set(TEAMS.filter((t) => SOCAL_LEAGUES.includes(t.league)).map((t) => t.slug));
+
+/** A snapshot as the five-league NorCal site wrote it: no SoCal section, league, team, row or slug. */
+function withoutSoCal(full: Snapshot): Snapshot {
+  const s = structuredClone(full);
+  const unslug = (g: Game): Game => ({
+    ...g,
+    home: g.home.slug && SOCAL_SLUGS.has(g.home.slug) ? { ...g.home, slug: null } : g.home,
+    away: g.away.slug && SOCAL_SLUGS.has(g.away.slug) ? { ...g.away, slug: null } : g.away,
+  });
+  const byLeague = { ...s.counts.byLeague };
+  for (const id of SOCAL_LEAGUES) delete byLeague[id];
+  return {
+    ...s,
+    season: {
+      ...s.season,
+      sections: s.season.sections.filter((x) => x.id !== 'ss' && x.id !== 'sds'),
+      leagues: s.season.leagues.filter((l) => !SOCAL_LEAGUES.includes(l.id)),
+    },
+    teams: s.teams.filter((t) => !SOCAL_LEAGUES.includes(t.league)),
+    games: s.games.map(unslug),
+    standings: s.standings.filter((r) => !SOCAL_DIVISIONS.has(r.division)),
+    playoffs: { ...s.playoffs, games: s.playoffs.games.map(unslug) },
+    leagueHealth: s.leagueHealth.filter((h) => !SOCAL_LEAGUES.includes(h.leagueId)),
+    crossCheck: s.crossCheck.filter((r) => !SOCAL_SLUGS.has(r.slug)),
+    counts: { ...s.counts, teams: s.teams.length - SOCAL_SLUGS.size, byLeague },
+  };
+}
+
+describe('the "league added" upgrade for the four Southern California leagues and their two sections', () => {
+  const full = migrateV1ToV2(readV1()) as Snapshot;
+  const norcal = withoutSoCal(full);
+
+  it('recognises the five-league NorCal file and round-trips it to the nine-league snapshot', () => {
+    expect(norcal.season.leagues.map((l) => l.id)).toEqual(['scval', 'bval', 'pcal', 'mcal', 'eal']);
+    expect(norcal.season.sections.map((s) => s.id)).toEqual(['ccs', 'ncs', 'ns']);
+    expect(norcal.teams).toHaveLength(49);
+    expect(lacksConfiguredLeagues(norcal)).toBe(true);
+    expect(() => parseSnapshot(norcal)).toThrow(/snapshot failed validation/);
+    expect(stableStringify(loadSnapshot(norcal))).toBe(stableStringify(loadSnapshot(full)));
+  });
+
+  it('adds the two sections and four leagues in config order, each league degraded with the reason, NorCal untouched', () => {
+    const before = JSON.stringify(norcal);
+    const upgraded = addConfiguredLeagues(norcal) as Snapshot;
+    expect(JSON.stringify(norcal)).toBe(before);
+    expect(upgraded.season.sections.map((s) => s.id)).toEqual(['ccs', 'ncs', 'ns', 'ss', 'sds']);
+    expect(upgraded.season.leagues.map((l) => l.id)).toEqual(LEAGUES.map((l) => l.id));
+    expect(stableStringify(upgraded.season.leagues.slice(0, 5))).toBe(stableStringify(norcal.season.leagues));
+    expect(stableStringify(upgraded.standings.slice(0, 49))).toBe(stableStringify(norcal.standings));
+    expect(stableStringify(upgraded.leagueHealth.slice(0, 5))).toBe(stableStringify(norcal.leagueHealth));
+    expect(upgraded.leagueHealth.slice(5).map((h) => [h.leagueId, h.state, h.reasons, h.divisions.map((d) => [d.divisionId, d.classification])])).toEqual([
+      ['sunset', 'degraded', ['No Sunset data in this snapshot yet: it was written before Sunset was added.'], [['sunset', 'contest-type']]],
+      ['city', 'degraded', ['No City data in this snapshot yet: it was written before City was added.'],
+        [['city-western', 'membership'], ['city-eastern', 'membership']]],
+      ['north-county', 'degraded', ['No North data in this snapshot yet: it was written before North was added.'],
+        [['avocado', 'membership'], ['palomar', 'membership'], ['valley', 'membership']]],
+      ['metro', 'degraded', ['No Metro data in this snapshot yet: it was written before Metro was added.'],
+        [['metro-mesa', 'membership'], ['metro-south-bay', 'membership']]],
+      ['independents', 'degraded', ['No data for the Southern Section independents in this snapshot yet: it was written before they were added.'],
+        [['independents', 'membership']]],
+    ]);
+    // The new rows carry no results; the Sunset's single rung still gives each a status.
+    const added = upgraded.standings.slice(49);
+    expect(added).toHaveLength(53);
+    for (const r of added) expect([r.computed.gp, r.reported, r.hasReportedResults], r.slug).toEqual([0, null, false]);
+    expect(new Set(added.filter((r) => r.division === 'sunset').map((r) => r.playoffStatus))).toEqual(new Set(['no-postseason']));
+    // A Valley division row carries the null MaxPreps id config gives it.
+    const valley = upgraded.season.leagues.find((l) => l.id === 'north-county')!.divisions.find((d) => d.id === 'valley')!;
+    expect(valley.maxprepsLeagueId).toBeNull();
+  });
+
+  it('re-resolves the San Diego sides of NorCal games; those games stay in no table', () => {
+    const upgraded = addConfiguredLeagues(norcal) as Snapshot;
+    const crossRegion = upgraded.games.filter((g) => [g.home.slug, g.away.slug].some((x) => x !== null && SOCAL_SLUGS.has(x)));
+    expect(crossRegion.length).toBeGreaterThan(0);
+    for (const g of crossRegion) {
+      expect([g.leagueDivision, g.countsFor], g.contestId).toEqual([null, null]);
+      expect(g.home.slug !== null && g.away.slug !== null, g.contestId).toBe(true);
+    }
+  });
+
+  it('loads the committed data/snapshot.json, whichever side of the amendment it was written on', () => {
+    const committed = JSON.parse(readFileSync(path.join(import.meta.dirname, '..', 'data', 'snapshot.json'), 'utf8')) as Snapshot;
+    const predates = lacksConfiguredLeagues(committed);
+    const loaded = loadSnapshot(committed);
+    expect(loaded.teams).toHaveLength(102);
+    expect(loaded.season.leagues.map((l) => l.id)).toEqual(LEAGUES.map((l) => l.id));
+    if (!predates) return;
+    // Written by the five-league site: NorCal stays byte-identical, and every game keeps its classification.
+    const n = committed.season.leagues.length;
+    expect(stableStringify(loaded.leagueHealth.slice(0, n))).toBe(stableStringify(committed.leagueHealth));
+    expect(stableStringify(loaded.standings.slice(0, committed.standings.length))).toBe(stableStringify(committed.standings));
+    expect(loaded.games.map((g) => [g.contestId, g.countsFor, g.postseason])).toEqual(
+      committed.games.map((g) => [g.contestId, g.countsFor, g.postseason]),
+    );
+    // Its NorCal–San Diego games gain their San Diego slugs.
+    const gained = loaded.games.filter((g, i) => (g.home.slug ?? null) !== (committed.games[i].home.slug ?? null)
+      || (g.away.slug ?? null) !== (committed.games[i].away.slug ?? null));
+    expect(gained.length).toBeGreaterThan(0);
+    for (const g of gained) expect([g.home.slug, g.away.slug].some((x) => x !== null && SOCAL_SLUGS.has(x)), g.contestId).toBe(true);
   });
 });

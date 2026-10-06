@@ -8,7 +8,9 @@ import type { GameDisplay, StatusTone } from './describe-game';
  * game (both from `countsFor`), the postseason chip (`SCVAL crossover`, `BVAL play-in`,
  * `MCAL tournament`, `EAL Super Regional`, `CCS`), and the `†` marker of a score published from
  * si.com. The decider tag ('OT', '2 OT', 'SO', 'F') carries its meaning in words for a screen
- * reader: 'by forfeit', 'decided on 1 v 1s' (an EAL 1 v 1 win), else 'after overtime'.
+ * reader: 'by forfeit'; for 'SO', the words of the section whose rule decided the game, resolved by
+ * describeGame (GameDisplay.shootoutLabel: 'decided on 1 v 1s' for an EAL 1 v 1 win, 'decided by a
+ * shootout' for a San Diego Section game); else 'after overtime'.
  *
  * Channel 2 is never abbreviated to a dot, and LIVE always carries the word as well as the
  * accent dot, so the pulse is never load-bearing. Set in 12px sans semibold caps; the strings are
@@ -34,8 +36,17 @@ const TONE: Record<StatusTone, string> = {
   accent: 'text-accent-ink',
 };
 
-/** The accessible words of a decider tag other than 'OT' / '2 OT' (both 'after overtime'). */
-const DECIDER_LABEL: Readonly<Record<string, string>> = { F: 'by forfeit', SO: 'decided on 1 v 1s' };
+/**
+ * The accessible words of a decider tag. 'OT' / '2 OT' are both 'after overtime'; 'SO' reads the
+ * section's own words from the display (this module is client-safe and cannot read the registry),
+ * and a display with none — a hand-built one — falls back to 'decided by a shootout', true of every
+ * shootout.
+ */
+function deciderLabel(display: Pick<GameDisplay, 'deciderTag' | 'shootoutLabel'>): string {
+  if (display.deciderTag === 'F') return 'by forfeit';
+  if (display.deciderTag === 'SO') return display.shootoutLabel ?? 'decided by a shootout';
+  return 'after overtime';
+}
 
 /** The † beside a score published from si.com: a title for a pointer, words for a screen reader. */
 function SourceMark({ display }: { display: Pick<GameDisplay, 'sourceMark'> }) {
@@ -81,7 +92,7 @@ export function StatusLabel({ display, showChips = true, className }: StatusLabe
       {display.liveDot ? <span className="sx-live-dot" aria-hidden="true" /> : null}
       <span className={display.strikeTime ? 'line-through' : undefined}>{display.statusLabel}</span>
       {display.deciderTag ? (
-        <Tag label={DECIDER_LABEL[display.deciderTag] ?? 'after overtime'}>{display.deciderTag}</Tag>
+        <Tag label={deciderLabel(display)}>{display.deciderTag}</Tag>
       ) : null}
       {display.shootoutText ? (
         <span className="sx-num normal-case tracking-normal text-ink-3">

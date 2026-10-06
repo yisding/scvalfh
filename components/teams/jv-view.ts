@@ -11,8 +11,9 @@
 
 import { localDateKey } from '../../lib/format';
 import { getJvClassification, getJvFetchedAt, getJvGamesForTeam, getJvGamesOn, getJvTeam } from '../../lib/jv';
+import { regionOf } from '../../lib/leagues';
 import { getTeamBySlug } from '../../lib/teams';
-import type { Game, GameSide, TeamSlug } from '../../lib/types';
+import type { Game, GameSide, RegionId, TeamSlug } from '../../lib/types';
 
 export interface JvRowView {
   game: Game;
@@ -108,8 +109,18 @@ export function buildTeamJvView(slug: TeamSlug): TeamJvView | null {
   };
 }
 
-/** One day's JV games, by time. */
-export function buildDayJvView(dateKey: string): JvListSummary & { rows: JvRowView[] } {
-  const games = getJvGamesOn(dateKey);
+/**
+ * One day's JV games, by time; with `region`, only those with a registry side in that region (the day
+ * page's `#jv` and `#jv-socal` blocks, DESIGN §24.3), and the footnote's counts over those alone. A JV
+ * game with a side in each region would be listed in both blocks, each the JV schedule of that region's
+ * team: data/jv.json of 2026-10-06 has none (every JV game in it is between two schools of one region), and
+ * the varsity page's NorCal vs SoCal block is for varsity alone.
+ */
+export function buildDayJvView(dateKey: string, region?: RegionId): JvListSummary & { rows: JvRowView[] } {
+  const inRegion = (side: GameSide) => {
+    const team = side.slug ? getTeamBySlug(side.slug) : undefined;
+    return team !== undefined && regionOf(team.league) === region;
+  };
+  const games = getJvGamesOn(dateKey).filter((g) => region === undefined || inRegion(g.home) || inRegion(g.away));
   return { rows: rowsOf(games), ...summarize(games) };
 }

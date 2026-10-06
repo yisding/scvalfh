@@ -10,15 +10,20 @@
 
 import { describe, expect, it } from 'vitest';
 
+import { postseasonSourceLink } from '../components/layout/source-labels';
+import { SITE_SCOPE_NOTE } from '../components/layout/site';
 import { getHistoryLeagues } from '../lib/history';
-import { getLeague } from '../lib/leagues';
+import { LEAGUES, getLeague } from '../lib/leagues';
 import {
   EAL_SCHOOL_CLAIM,
   LEAK_MIN_FRAGMENT,
   LEAK_MIN_PRIVATE,
   RED_BLUFF_STATUS_CLAIM,
+  RULES_REQUIRE_CLAIM,
   SCVAL_ONLY_CLAIM,
   SEED_CLAIM,
+  SUNSET_LEAGUE_CLAIM,
+  SUNSET_SCHOOL_CLAIM,
   UMPIRE_OFFICIAL_CLAIM,
   affiliationLeaks,
   attributeText,
@@ -29,6 +34,7 @@ import {
   nonMemberSectionClaims,
   restates,
   sectionById,
+  sunsetLeagueClaims,
   umpireOfficialClaims,
   visibleText,
   withoutLink,
@@ -823,5 +829,123 @@ describe('the EAL’s own config strings pass all five rules', () => {
     expect(all).toMatch(/Northern Section schools/);
     expect(all).toMatch(/Red Bluff/);
     expect(all).toMatch(/Seeding/);
+  });
+});
+
+// ---------------------------------------------------------------- the SoCal leagues (DESIGN-socal §2.4)
+
+describe('sunsetLeagueClaims / SUNSET_LEAGUE_CLAIM: "Sunset League" only beside "all-sports"', () => {
+  it.each([
+    'Huntington Beach plays in the Sunset League.',
+    'The Sunset League standings.',
+    'Ten teams. Sunset League rules apply',
+    'Sunset League champions',
+  ])('flags %j', (text) => {
+    expect(sunsetLeagueClaims(text)).not.toEqual([]);
+  });
+
+  it.each([
+    'The Sunset here is a field hockey grouping of ten Southern Section schools in Orange, Los Angeles and Riverside counties, not the all-sports Sunset League.',
+    'the Southern Section’s Sunset field hockey league',
+    'Teams have played between 2 and 7 of the games MaxPreps marks as Sunset league games.',
+    'Sunset field hockey league',
+    'Sunset co-leaders',
+  ])('lets %j through', (text) => {
+    expect(sunsetLeagueClaims(text)).toEqual([]);
+  });
+
+  it('reads sentence by sentence: an "all-sports" in another sentence excuses nothing', () => {
+    expect(sunsetLeagueClaims('The all-sports league differs. Edison plays in the Sunset League.')).toEqual([
+      'Edison plays in the Sunset League',
+    ]);
+    expect('Sunset League').toMatch(SUNSET_LEAGUE_CLAIM);
+    expect('sunset league').not.toMatch(SUNSET_LEAGUE_CLAIM);
+  });
+});
+
+describe('SUNSET_SCHOOL_CLAIM: never "Sunset school(s)" or "Sunset member(s)"', () => {
+  it.each(['the ten Sunset schools', 'a Sunset school', 'every Sunset member', 'Sunset members'])('flags %j', (text) => {
+    expect(text).toMatch(SUNSET_SCHOOL_CLAIM);
+  });
+
+  it.each(['the ten Sunset teams', 'Sunset schooling', 'sunset schools'])('lets %j through', (text) => {
+    expect(text).not.toMatch(SUNSET_SCHOOL_CLAIM);
+  });
+});
+
+describe('RULES_REQUIRE_CLAIM: never on an orderScope "site" league’s pages', () => {
+  it('matches the order sentence of a league that publishes its rule, in any case', () => {
+    expect('ordered by points, as SCVAL rules require').toMatch(RULES_REQUIRE_CLAIM);
+    expect('Rules require a playoff').toMatch(RULES_REQUIRE_CLAIM);
+    expect('The order is this site’s 3-1-0 points; no Sunset rule orders the table.').not.toMatch(RULES_REQUIRE_CLAIM);
+  });
+});
+
+describe('the SoCal leagues’ own config strings pass every rule', () => {
+  const strings: Array<[string, string]> = [];
+  for (const league of LEAGUES.filter((l) => l.sectionId === 'ss' || l.sectionId === 'sds')) {
+    const ps = league.postseason;
+    if (league.membershipNote) strings.push([`${league.id} membershipNote`, league.membershipNote]);
+    for (const d of league.divisions) {
+      if (d.official.mode === 'none') strings.push([`${d.id} official.note`, d.official.note]);
+      if (d.knownCause) strings.push([`${d.id} knownCause`, d.knownCause]);
+    }
+    if (ps.kind === 'no-postseason' || ps.kind === 'section-playoffs') {
+      strings.push([`${league.id} postseason note`, ps.note]);
+      for (const [k, v] of Object.entries(ps.citations)) strings.push([`${league.id} postseason citations.${k}`, v]);
+      for (const rung of ps.ladder) {
+        for (const k of ['label', 'phrase', 'badge', 'legend'] as const) strings.push([`${league.id} ladder ${k}`, rung[k]]);
+      }
+    }
+    if (ps.kind === 'section-playoffs') strings.push([`${league.id} qualificationLine`, ps.qualificationLine]);
+    const { stages, ...cites } = league.rules.citations;
+    for (const [k, v] of Object.entries(cites)) if (v !== undefined) strings.push([`${league.id} rules citations.${k}`, v]);
+    for (const [k, v] of Object.entries(stages)) strings.push([`${league.id} rules citations.stages.${k}`, v ?? '']);
+  }
+  strings.push(['SITE_SCOPE_NOTE', SITE_SCOPE_NOTE]);
+
+  it('collects the four leagues and the independents', () => {
+    expect(new Set(strings.map(([k]) => k.split(' ')[0]))).toEqual(
+      new Set(['sunset', 'city-western', 'city-eastern', 'city', 'avocado', 'palomar', 'valley', 'north-county', 'metro-mesa', 'metro-south-bay', 'metro', 'independents', 'SITE_SCOPE_NOTE']),
+    );
+  });
+
+  it('and each passes: no "Sunset League" outside "all-sports", no "Sunset school", no seed word, no "rules require", no CCS words', () => {
+    for (const [what, text] of strings) {
+      expect(sunsetLeagueClaims(text), `${what}: "Sunset League"`).toEqual([]);
+      expect(text, `${what}: "Sunset school"`).not.toMatch(SUNSET_SCHOOL_CLAIM);
+      expect(text, `${what}: a seed word`).not.toMatch(SEED_CLAIM);
+      expect(text, `${what}: "rules require"`).not.toMatch(RULES_REQUIRE_CLAIM);
+      expect(text, `${what}: a CCS word`).not.toMatch(/automatic qualifier|at-large|eliminat/i);
+      expect(umpireOfficialClaims(text), `${what}: umpire/official in one sentence`).toEqual([]);
+    }
+  });
+
+  it('is a real test: the strings name what the rules look for', () => {
+    const all = strings.map(([, v]) => v).join('\n');
+    expect(all).toMatch(/all-sports Sunset League/);
+    expect(all).toMatch(/seeding/i);
+    expect(all).toMatch(/Sunset/);
+  });
+});
+
+describe('postseasonSourceLink (components/layout/source-labels.ts): the source link’s words', () => {
+  it('keeps the EAL’s link text byte-identical', () => {
+    expect(postseasonSourceLink('eal')?.text).toBe('Northern Section Field Hockey Guidelines (PDF)');
+  });
+
+  it('names the SoCal documents from config, never a "Field Hockey Guidelines" the sections do not publish', () => {
+    expect(postseasonSourceLink('sunset')?.text).toBe('CIF-SS Blue Book 2026-27 (PDF)');
+    for (const id of ['city', 'north-county', 'metro']) {
+      expect(postseasonSourceLink(id)?.text, id).toBe('CIF-SDS Green Book 2026-27, Bylaw 2000.1 (Google Doc)');
+    }
+    for (const id of ['sunset', 'city', 'north-county', 'metro']) {
+      expect(postseasonSourceLink(id)?.text, id).not.toMatch(/Field Hockey Guidelines/);
+      expect(postseasonSourceLink(id)?.href, id).toMatch(/^https:\/\//);
+    }
+  });
+
+  it('is null for the leagues whose pages word their own links', () => {
+    for (const id of ['scval', 'bval', 'pcal', 'mcal']) expect(postseasonSourceLink(id), id).toBeNull();
   });
 });

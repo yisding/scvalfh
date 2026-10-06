@@ -93,6 +93,18 @@ describe('team-view.ts over every division (ALL_DIVISIONS)', () => {
         expect(v, `components/teams/team-view.ts ${team.slug}`).toBeDefined();
         if (!v) continue;
         seen += 1;
+        // A Southern Section independent (DESIGN §24.10): a league team's view, with the group's table (no fixed
+        // schedule, so no scheduled count) and its standings link labelled 'Independents standings'.
+        if (leagues.isIndependentDivision(division.id)) {
+          expect(v.scopeLabel, `components/teams/team-view.ts ${team.slug} scope`).toBe('Independent');
+          expect(v.divisionSize, `components/teams/team-view.ts ${team.slug} divisionSize`).toBe(division.expectedTeams);
+          expect(v.standingsHref, `components/teams/team-view.ts ${team.slug} standingsHref`).toBe(
+            `/standings/${division.leagueId}#${division.id}`,
+          );
+          expect(v.standingsLabel, `components/teams/team-view.ts ${team.slug} standingsLabel`).toBe('Independents standings');
+          expect(v.leagueScheduled, `components/teams/team-view.ts ${team.slug} scheduled`).toBeNull();
+          continue;
+        }
         expect(v.divisionSize, `components/teams/team-view.ts ${team.slug} divisionSize`).toBe(division.expectedTeams);
         expect(v.scopeLabel, `components/teams/team-view.ts ${team.slug} scope`).toBe(scope);
         const sub = view.placeSub(v);
@@ -117,7 +129,7 @@ describe('team-view.ts over every division (ALL_DIVISIONS)', () => {
         expect(v.nonLeagueLog.every((g) => g.countsFor === null), `components/teams/team-view.ts nonLeagueLog ${team.slug}`).toBe(true);
       }
     }
-    expect(seen, 'components/teams/team-view.ts: every registry team').toBe(49);
+    expect(seen, 'components/teams/team-view.ts: every registry team').toBe(102);
   });
 
   it('single-division leagues read "of N in <league short>"', () => {
@@ -209,6 +221,10 @@ describe('postseason lines per kind (lib/data.ts getTeamPostseasonLine via team-
           'The top six schools play the Super Regional, Oct 30–31; its format and site are not published yet.',
         );
         expect(`${line.label} ${line.sentence}`, `lib/data.ts ${team.slug}`).not.toMatch(/CCS|at-large|automatic qualifier|seed/i);
+      } else if (v.league.postseasonKind === 'no-postseason' || v.league.postseasonKind === 'section-playoffs') {
+        // The Southern California kinds: their cards on /playoffs, never a CCS or "top N" word.
+        expect(line.href, `lib/data.ts ${team.slug} href`).toBe(`/playoffs#${team.league}`);
+        expect(`${line.label} ${line.sentence}`, `lib/data.ts ${team.slug}`).not.toMatch(/CCS|at-large|automatic qualifier|top \w+ (make|qualify)/i);
       } else {
         expect(line.href, `lib/data.ts ${team.slug} href`).toBe('/playoffs/mcal');
         expect(line.linkText, `lib/data.ts ${team.slug} link`).toBe('MCAL tournament');
@@ -233,6 +249,47 @@ describe('postseason lines per kind (lib/data.ts getTeamPostseasonLine via team-
     const scval = renderToStaticMarkup(createElement(TeamPlayoffLine, { view: view.buildTeamPageView('st-ignatius')! }));
     expect(scval, 'components/teams/TeamPlayoffLine.tsx SCVAL').toContain('CCS playoffs <span aria-hidden="true">→</span>');
     expect(scval, 'components/teams/TeamPlayoffLine.tsx SCVAL').toContain('Official CCS bracket');
+  });
+});
+
+describe('Southern California team pages (DESIGN-socal §2.4)', () => {
+  it('league copy: the Sunset has no playoffs to promise; a San Diego league waits for the Section', () => {
+    const sunset = view.leagueCopy('sunset');
+    expect(sunset.postseasonKind).toBe('no-postseason');
+    expect(sunset.postseasonName).toBeNull();
+    expect(sunset.seasonEndSentence).toBe('The Sunset season ends Sat Oct 31.');
+    expect(sunset.bracketSentence).toMatch(/^The CIF Southern Section holds no field hockey playoffs/);
+    const city = view.leagueCopy('city');
+    expect(city.postseasonKind).toBe('section-playoffs');
+    expect(city.postseasonName).toBe('San Diego Section playoffs');
+    expect(city.seasonEndSentence).toBe('The City league season ends Fri Oct 30; the San Diego Section playoffs follow, Nov 2–14.');
+    expect(city.bracketSentence).toBe('We will list a playoff game as soon as the Section publishes its brackets after its Sat Oct 31 seeding meeting.');
+    expect(city.classification).toBe('membership');
+  });
+
+  it('a Sunset page: kicker "Postseason", the league note whatever it has played, no projection, GP bare', async () => {
+    const v = view.buildTeamPageView('huntington-beach')!;
+    expect(v.leagueScheduled, 'components/teams/team-view.ts no fixed schedule').toBeNull();
+    expect(v.postseasonLine?.href).toBe('/playoffs#sunset');
+    const text = textOf(await renderTeam('huntington-beach'));
+    expect(text).toContain('Postseason');
+    expect(text).toContain('The CIF Southern Section holds no field hockey playoffs');
+    expect(text, 'components/teams/TeamPlayoffLine.tsx').not.toContain('Projected from the table today');
+    expect(text).not.toMatch(/\bof null\b|\/null|CCS|at-large|automatic qualifier|eliminat/i);
+    expect(text, 'components/teams/TeamElo.tsx: one fit').toMatch(/Elo rating/);
+  });
+
+  it('a San Diego page: the Section picture kicker, its own region\u2019s Elo board, no CCS word', async () => {
+    const v = view.buildTeamPageView('poway')!;
+    expect(v.elo.boardHref).toBe('/leaders#elo-rating-socal');
+    expect(v.elo.boardRegion).toBe('SoCal');
+    const html = await renderTeam('poway');
+    const text = textOf(html);
+    expect(text).toContain('San Diego Section playoffs picture');
+    expect(html).toContain('href="/leaders#elo-rating-socal"');
+    expect(text).not.toMatch(/CCS|at-large|automatic qualifier|lowest-seeded|eliminat/i);
+    const norcal = view.buildTeamPageView('leigh')!;
+    expect(norcal.elo.boardHref).toBe('/leaders#elo-rating');
   });
 });
 
@@ -292,8 +349,22 @@ describe('/teams/[slug] pages (app/teams/[slug]/page.tsx)', () => {
       const text = textOf(html);
       expect(text, `components/teams/TeamIdentity.tsx ${team.slug}`).toContain(v.identityLine);
       expect(html, `app/teams/[slug]/page.tsx ${team.slug} standings`).toContain(`href="${v.standingsHref}"`);
+      // A Southern Section independent (DESIGN §24.10): the standings link reads 'Independents standings' (its short
+      // name is an adjective), and its GP tile prints the bare count, as the Sunset's does (no fixed schedule).
+      if (leagues.isIndependentLeague(team.league)) {
+        expect(text, `app/teams/[slug]/page.tsx ${team.slug} group link`).toContain('Independents standings →');
+        expect(text, `app/teams/[slug]/page.tsx ${team.slug} no adjective label`).not.toContain('Independent standings');
+        expect(v.context!.scheduled, `components/teams/team-view.ts ${team.slug} scheduled`).toBeNull();
+        expect(text, `components/teams/TeamStatTiles.tsx ${team.slug} GP`).toMatch(new RegExp(`GP\\s*${v.context!.counted}\\b`));
+        expect(html, `app/teams/[slug]/page.tsx ${team.slug}`).not.toContain('Gabilan');
+        continue;
+      }
       expect(text, `app/teams/[slug]/page.tsx ${team.slug} standings label`).toContain(`${v.league.shortName} standings`);
-      expect(text, `components/teams/TeamStatTiles.tsx ${team.slug} GP`).toContain(
+      // A league with no fixed schedule (the Sunset) prints the bare count: no "of N" (DESIGN-socal §2.1.7).
+      if (v.context!.scheduled === null) {
+        expect(text, `components/teams/TeamStatTiles.tsx ${team.slug} GP`).toMatch(new RegExp(`GP\\s*${v.context!.counted}\\b`));
+        expect(text, `components/teams/TeamStatTiles.tsx ${team.slug} GP`).not.toMatch(/\/null|of null/);
+      } else expect(text, `components/teams/TeamStatTiles.tsx ${team.slug} GP`).toContain(
         `${v.context!.counted}/${v.context!.scheduled}`,
       );
       expect(html, `app/teams/[slug]/page.tsx ${team.slug}`).not.toContain('Gabilan');
@@ -316,10 +387,12 @@ describe('/teams/[slug] pages (app/teams/[slug]/page.tsx)', () => {
         const v = view.buildTeamPageView(team.slug)!;
         if (!v.marginEntries.some((e) => e.margin !== null && !e.excludedFromMargin)) continue;
         const html = await renderTeam(team.slug);
-        const expected = Math.max(division.gamesPerTeam, v.marginEntries.length);
+        // A league with no fixed schedule (the Sunset, gamesPerTeam null) draws only the games it has.
+        const slots = division.gamesPerTeam ?? v.marginEntries.length;
+        const expected = Math.max(slots, v.marginEntries.length);
         const count = (cls: string) => html.split(`${cls}"`).length - 1;
         expect(count(PHONE_CELL), `app/teams/[slug]/page.tsx MarginStrip slots ${team.slug}`).toBe(expected);
-        expect(count(desktopCell(v.leagueScheduled)), `app/teams/[slug]/page.tsx MarginStrip slots ${team.slug}`).toBe(expected);
+        expect(count(desktopCell(slots)), `app/teams/[slug]/page.tsx MarginStrip slots ${team.slug}`).toBe(expected);
         checked += 1;
       }
     }
@@ -328,11 +401,21 @@ describe('/teams/[slug] pages (app/teams/[slug]/page.tsx)', () => {
 
   it('every page: the Elo card is the /leaders board’s rating and place, and names no place below its top 10', async () => {
     const { buildLeadersView } = await import('../../components/leaders/leaders-view');
-    const board = buildLeadersView().schools.find((b) => b.id === 'elo-rating')!;
-    const listed = new Map(board.rows.map((r) => [r.team.slug, r]));
+    // One Elo board per region (DESIGN-socal §2.3): a team's place is on its own region's board, whose id
+    // is `elo-rating` (NorCal) or `elo-rating-socal` (SoCal), and the card links that board.
+    const regions = buildLeadersView().regions;
+    const boardFor = (league: string) => {
+      const region = leagues.regionOf(league);
+      const r = regions.find((x) => x.region === region)!;
+      return r.schools.find((b) => b.id === `elo-rating${r.idSuffix}`)!;
+    };
     let rated = 0;
     for (const team of data.getTeams()) {
+      const board = boardFor(team.league);
+      const listed = new Map(board.rows.map((r) => [r.team.slug, r]));
       const { elo } = view.buildTeamPageView(team.slug)!;
+      expect(elo.boardHref, `components/teams/team-view.ts ${team.slug}: board link`).toBe(`/leaders#${board.id}`);
+      expect(elo.fitTeams, `components/teams/team-view.ts ${team.slug}: one fit`).toBe(data.getTeams().length);
       const html = await renderTeam(team.slug);
       const text = textOf(html);
       const row = listed.get(team.slug);
@@ -340,16 +423,16 @@ describe('/teams/[slug] pages (app/teams/[slug]/page.tsx)', () => {
       expect(html, `components/teams/TeamElo.tsx ${team.slug}: closed disclosure`).toMatch(
         /<details id="elo" class="sx-disclosure"><summary>Elo rating<\/summary>/,
       );
-      expect(html, `components/teams/TeamElo.tsx ${team.slug}: method link`).toContain('href="/leaders#elo-rating"');
+      expect(html, `components/teams/TeamElo.tsx ${team.slug}: method link`).toContain(`href="/leaders#${board.id}"`);
       if (row) {
         expect(elo.boardPlace, `components/teams/team-view.ts ${team.slug}`).toEqual({ rank: row.rank, tied: row.tied });
         expect(String(elo.elo), `components/teams/team-view.ts ${team.slug}`).toBe(row.cells[board.rankedBy].text);
         expect(text, `components/teams/TeamElo.tsx ${team.slug}`).toContain(
-          `${row.tied ? 'tied for ' : ''}${ordinal(row.rank)} on the Elo board`,
+          `${row.tied ? 'tied for ' : ''}${ordinal(row.rank)} on the ${elo.boardRegion} Elo board`,
         );
       } else {
         expect(elo.boardPlace, `components/teams/team-view.ts ${team.slug}`).toBeNull();
-        expect(text, `components/teams/TeamElo.tsx ${team.slug}`).not.toContain('on the Elo board');
+        expect(text, `components/teams/TeamElo.tsx ${team.slug}`).not.toMatch(/on the \w+ Elo board/);
       }
       expect(elo.provisional, `components/teams/team-view.ts ${team.slug} provisional`).toBe(
         elo.elo !== null && elo.games > 0 && elo.games < elo.minGames,
@@ -380,42 +463,59 @@ describe('/teams (app/teams/page.tsx)', () => {
     const html = renderIndex();
     const all = ids(html);
     expect(new Set(all).size, 'app/teams/page.tsx: unique ids').toBe(all.length);
-    for (const id of ['ccs', 'ncs', 'ns', 'scval', 'de-anza', 'el-camino', 'bval', 'mt-hamilton', 'santa-teresa', 'pcal', 'mcal', 'marin-county', 'eal', 'team-list', 'team-league-switcher']) {
+    for (const id of [
+      'ccs', 'ncs', 'ns', 'scval', 'de-anza', 'el-camino', 'bval', 'mt-hamilton', 'santa-teresa', 'pcal', 'mcal', 'marin-county', 'eal',
+      'ss', 'sds', 'sunset', 'city', 'city-western', 'city-eastern', 'north-county', 'avocado', 'palomar', 'valley', 'metro', 'metro-mesa',
+      'metro-south-bay', 'independents', 'norcal', 'socal', 'team-list', 'team-league-switcher',
+    ]) {
       expect(all, `app/teams/page.tsx #${id}`).toContain(id);
     }
     expect(html, 'app/teams/page.tsx CCS h2').toMatch(/<h2[^>]*>Central Coast Section<\/h2>/);
     expect(html, 'app/teams/page.tsx NCS h2').toMatch(/<h2[^>]*>North Coast Section<\/h2>/);
     expect(html, 'app/teams/page.tsx NS h2').toMatch(/<h2[^>]*>Northern Section<\/h2>/);
     expect(html, 'app/teams/page.tsx section labelling').toContain('<section aria-labelledby="ccs"');
-    expect((html.match(/<h3[^>]*>/g) ?? []).length, 'app/teams/page.tsx league h3s').toBe(5);
+    // Nine leagues and the Southern Section independents (one table, so no h4: DESIGN §24.10).
+    expect((html.match(/<h3[^>]*>/g) ?? []).length, 'app/teams/page.tsx league h3s').toBe(10);
     const h4s = [...html.matchAll(/<h4 class="m-0 mb-3 text-lead text-ink">([^<]+)<\/h4>/g)].map((m) => m[1]);
-    expect(h4s, 'app/teams/page.tsx division h4s').toEqual(['De Anza', 'El Camino', 'Mt. Hamilton', 'Santa Teresa']);
-    // Section → league order.
-    const order = ['id="ccs"', 'id="scval"', 'id="de-anza"', 'id="el-camino"', 'id="bval"', 'id="pcal"', 'id="ncs"', 'id="mcal"', 'id="marin-county"', 'id="ns"', 'id="eal"'].map((s) => html.indexOf(s));
+    expect(h4s, 'app/teams/page.tsx division h4s').toEqual([
+      'De Anza', 'El Camino', 'Mt. Hamilton', 'Santa Teresa',
+      'City Western', 'City Eastern', 'Avocado', 'Palomar', 'Valley', 'Metro Mesa', 'Metro South Bay',
+    ]);
+    // Region → section → league order; the regions are `<div id="norcal|socal" data-region-scope>`
+    // inside #team-list (DESIGN-socal §2.4), so the finder's lift can show both while searching.
+    expect(html, 'app/teams/page.tsx region wrappers').toMatch(/<div id="team-list"><div id="norcal" data-region-scope="norcal">/);
+    expect(html, 'app/teams/page.tsx region wrappers').toContain('<div id="socal" data-region-scope="socal">');
+    expect(html, 'app/teams/page.tsx lift hook').toContain('data-teams-page=""');
+    const order = [
+      'id="norcal"', 'id="ccs"', 'id="scval"', 'id="de-anza"', 'id="el-camino"', 'id="bval"', 'id="pcal"', 'id="ncs"', 'id="mcal"',
+      'id="marin-county"', 'id="ns"', 'id="eal"', 'id="socal"', 'id="ss"', 'id="sunset"', 'id="independents"', 'id="sds"', 'id="city"',
+      'id="north-county"', 'id="metro"',
+    ].map((s) => html.indexOf(s));
     expect([...order].sort((a, b) => a - b), 'app/teams/page.tsx order').toEqual(order);
   });
 
-  it('the finder hooks: 49 standings rows with data-team-tile, ladder rows, group wrappers, the switcher', () => {
+  it('the finder hooks: 102 standings rows with data-team-tile, ladder rows, group wrappers, the switcher', () => {
     const html = renderIndex();
     // Every team is a row of its division's standings table (DESIGN §18), and the row is the
     // finder's hook: no <li> tiles any more.
     const rows = [...html.matchAll(/<tr data-team-slug="([^"]+)" data-team-tile="([^"]+)"/g)];
-    expect(rows.length, 'components/standings/CompactStandingsTable.tsx data-team-tile').toBe(49);
+    expect(rows.length, 'components/standings/CompactStandingsTable.tsx data-team-tile').toBe(102);
     for (const [, slug, tile] of rows) expect(tile, slug).toBe(slug);
     expect(new Set(rows.map((m) => m[2])), 'app/teams/page.tsx every team').toEqual(new Set(data.getTeamSlugs()));
     expect(html, 'app/teams/page.tsx no tiles').not.toContain('<li data-team-tile');
     // The pinned row says so in words, not with the accent rule alone: every row's link carries the
     // hidden note the pinned-team CSS reveals (the old tiles did too).
     const links = [...html.matchAll(/<tr data-team-slug="[^"]+"[\s\S]*?<a [^>]*href="\/teams\/[^"]+"[^>]*>([\s\S]*?)<\/a>/g)];
-    expect(links.length, 'components/standings/CompactStandingsTable.tsx row links').toBe(49);
+    expect(links.length, 'components/standings/CompactStandingsTable.tsx row links').toBe(102);
     for (const [, inner] of links) {
       expect(inner, 'components/standings/CompactStandingsTable.tsx pin note').toContain(
         '<span class="sr-only"><span class="sx-pin-note">Your team. </span></span>',
       );
     }
-    // Seven tables, one per division, each in a group wrapper the finder can hide.
-    expect((html.match(/<table/g) ?? []).length, 'app/teams/page.tsx tables').toBe(7);
-    expect((html.match(/data-team-group=""/g) ?? []).length, 'app/teams/page.tsx data-team-group').toBe(3 + 5 + 7);
+    // Sixteen tables, one per division, each in a group wrapper the finder can hide (5 sections, 9
+    // leagues and the independents, 16 divisions; the independents' table is one of them, DESIGN §24.10).
+    expect((html.match(/<table/g) ?? []).length, 'app/teams/page.tsx tables').toBe(16);
+    expect((html.match(/data-team-group=""/g) ?? []).length, 'app/teams/page.tsx data-team-group').toBe(5 + 10 + 16);
     // A division with a ladder line drawn marks it, so a search never leaves it between rows.
     const lines = [...html.matchAll(/<tr data-hide-while-searching="">\s*<td colSpan="5"[^>]*>([^<]+)</g)].map((m) => m[1]);
     expect(lines.length, 'components/standings/CompactStandingsTable.tsx ladder rows').toBeGreaterThan(0);
@@ -428,8 +528,9 @@ describe('/teams (app/teams/page.tsx)', () => {
     expect(html, 'app/teams/page.tsx switcher').toMatch(/<div id="team-league-switcher"[^>]*>\s*<nav/);
     const text = textOf(html);
     expect(text, 'app/teams/page.tsx description').toContain(
-      'All 49 girls varsity teams in SCVAL, BVAL and PCAL (Central Coast Section), MCAL (North Coast Section) and EAL (Northern Section), each in its division’s standings table. League and division alignment comes from each league’s official schedule; the EAL publishes none, so its six teams are the ones MaxPreps lists in its EAL table, less Red Bluff, which is not fielding a varsity team in 2026.',
+      'each in its division’s standings table. League and division alignment comes from each league’s official schedule; the EAL publishes none, so its six teams are the ones MaxPreps lists in its EAL table, less Red Bluff, which is not fielding a varsity team in 2026. In Southern California it comes from MaxPreps’ 2024-25 and 2025-26 Sunset tables for the Sunset, from the CIF-SDS 2026-27 League Alignment for City, North and Metro and from MaxPreps’ 2026-27 team pages and schedules (five Southern Section schools in no field hockey league, which play each other) for the Southern Section independents.',
     );
+    expect(text, 'app/teams/page.tsx description').toContain('All 102 girls varsity teams in ');
     expect(html, 'app/teams/page.tsx').not.toContain('Gabilan');
   });
 
@@ -495,7 +596,7 @@ describe('the NEXT card and the identity place line (UI pass, league-aware)', ()
       const card = v.nextCard;
       if (card.kind === 'game' && card.earlier) {
         expect(card.earlier.text, `components/teams/team-view.ts ${team.slug} earlier`).toMatch(
-          /^Earlier: (won|lost|tied) \d+–\d+/,
+          /^Earlier: ((won|lost|tied) \d+–\d+|(credited with the win|lost) on a level \d+–\d+ score)/,
         );
       }
       if (card.kind !== 'none') expect(card.record ?? '').not.toContain('0-0-0');
@@ -646,7 +747,7 @@ describe('a team with no results (corpus copy, one MCAL team zeroed)', () => {
     const fresh = textOf(renderToStaticMarkup(createElement(TeamElo, { elo: { ...played, seeded: false } })));
     // "Counted": last season's forfeits, unscored finals and games against outside schools are not
     // in the file, so a team can have played and still have no start.
-    expect(fresh, 'components/teams/TeamElo.tsx unseeded').toContain('It had no counted 2025-26 final against the five leagues’ teams, so it started from an average rating.');
+    expect(fresh, 'components/teams/TeamElo.tsx unseeded').toContain('It had no counted 2025-26 final against the nine leagues’ teams and the Southern Section’s five independents, so it started from an average rating.');
     expect(fresh, 'components/teams/TeamElo.tsx unseeded').not.toContain('from its 2025-26 rating');
   });
 
@@ -789,6 +890,11 @@ describe('opponentRecordLine (components/teams/team-view.ts)', () => {
     for (const team of data.getTeams()) {
       const line = view.opponentRecordLine(team, team.league);
       if (line === 'no league results yet') continue;
+      // An independent has no place: its overall record and the group's short name (DESIGN §24.9).
+      if (leagues.isIndependentLeague(team.league)) {
+        expect(line, `components/teams/team-view.ts ${team.slug}`).toMatch(/^(\d+-\d+-\d+ overall \u00b7 Independent|no results yet)$/);
+        continue;
+      }
       const scope = leagues.divisionHeading(team.division) ?? leagues.getLeague(team.league).shortName;
       const m = /^\d+-\d+-\d+ \u00b7 (tied )?\d+(?:st|nd|rd|th) in (.+)$/.exec(line ?? '');
       expect(m, `components/teams/team-view.ts ${team.slug}: ${line}`).not.toBeNull();

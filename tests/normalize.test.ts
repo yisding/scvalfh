@@ -3,13 +3,16 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
+import { sideOutcome } from '../lib/format';
 import { DATA_QUALITY, type DataQualityConfig } from '../lib/leagues';
 import {
+  applyDateOverride,
   applyExclusions,
   cleanRecap,
   dateKeyOf,
   dedupePhantomPairs,
   normalizeGames,
+  pacificMidnightUtc,
   seasonWindowOf,
   splitLocation,
   toUtcIso,
@@ -293,6 +296,13 @@ const corpusRows = [...feeds.values()].flat();
 const corpus = normalizeGames(corpusRows, { fetchedAt: FETCHED_AT });
 const corpusById = new Map(corpus.games.map((g) => [g.contestId, g]));
 
+/**
+ * DATA_QUALITY.excludedContestIds' two duplicate Palomar rows (Poway vs Fallbrook Oct 9, Mission Vista vs
+ * Fallbrook Oct 30: lib/leagues.ts), in config order. Neither is in the 2026-10-02 NorCal corpus, so
+ * applyExclusions reports both as unused there.
+ */
+const SDS_DUPLICATE_ROWS = ['c7dbdbcc-5f41-4192-b8b2-eb79cca2523a', '9c027452-e21e-4e47-9eac-d2e800bfb42c'];
+
 const TBA_CONTESTS = [
   '64c8188b-db94-44ff-8477-d60b4e3db218', // Ann Sobrato, 2026-09-12
   '55207683-8dd2-41c6-aa1b-02919d6bb261', // Stevenson, 2026-10-03
@@ -497,7 +507,8 @@ describe('applyExclusions (SPEC §7.6 step 3)', () => {
     expect(res.dropped).toHaveLength(2);
     expect(res.games).toHaveLength(corpus.games.length - 2);
     expect(res.games).toEqual(corpus.games.filter((g) => !res.dropped.some((d) => d.contestId === g.contestId)));
-    expect(res.unused).toEqual([]);
+    // The two duplicate Palomar rows (San Diego, inventory 2026-10-06) are not in this NorCal corpus.
+    expect(res.unused).toEqual(SDS_DUPLICATE_ROWS);
   });
 
   it('reports an excluded id that no longer appears, and leaves the input alone', () => {
@@ -508,7 +519,8 @@ describe('applyExclusions (SPEC §7.6 step 3)', () => {
     };
     const before = corpus.games.length;
     const r = applyExclusions(corpus.games, dq);
-    expect(r.unused).toEqual(['gone-0000']);
+    // Config order: the San Diego duplicates (absent from this NorCal corpus), then the added id.
+    expect(r.unused).toEqual([...SDS_DUPLICATE_ROWS, 'gone-0000']);
     // Without the ghost list, 5b9ff911 is caught by its own exclusion entry.
     expect(r.dropped.map((d) => [d.contestId.slice(0, 8), d.reason])).toEqual([
       ['5cf5e3df', 'excluded-by-config'],
@@ -525,7 +537,15 @@ describe('dedupePhantomPairs (SPEC §7.6 step 4)', () => {
   const crossDivision = clean.find(
     (g) => g.home.slug && g.away.slug && g.leagueDivision === null && g.status === 'final',
   )!;
-  const nonMember = clean.find((g) => !g.home.slug || !g.away.slug)!;
+  // Every opponent in the 2026-10-02 corpus that was not one of the 49 is a San Diego school, and all of
+  // them are registry teams now (99), so the non-member game is the cross-division one with its away side
+  // swapped for a school outside the registry.
+  const nonMember =
+    clean.find((g) => !g.home.slug || !g.away.slug) ??
+    variant(crossDivision, {
+      away: { teamId: 'eeeeeeee-0000-4000-8000-00000000000e', slug: null, name: 'Outside School', score: crossDivision.away.score, result: crossDivision.away.result },
+      leagueDivision: null,
+    });
 
   it('drops nothing on the 2026-10-02 corpus', () => {
     const res = dedupePhantomPairs(clean);
@@ -609,11 +629,12 @@ describe('normalize: a level final in a 1 v 1 league (EAL)', () => {
     home: [slug: string, score: number, result: string | null],
     away: [slug: string, score: number, result: string | null],
     ot = 0,
+    contestTypes: { home: number; away: number } = { home: 0, away: 0 },
   ): ScheduleRow {
     const row = editTeams(template, (t) => {
       const [slug, score, result] = t.homeAwayType === 0 ? home : away;
       const team = getTeamBySlug(slug)!;
-      return { teamId: team.id, name: team.name, score, result, contestType: 0 };
+      return { teamId: team.id, name: team.name, score, result, contestType: t.homeAwayType === 0 ? contestTypes.home : contestTypes.away };
     });
     return {
       ...row,
@@ -659,6 +680,108 @@ describe('normalize: a level final in a 1 v 1 league (EAL)', () => {
     const [g] = one([pairRow('eeeeeeee-0000-4000-8000-000000000003', ['chico', 1, 'W'], ['tamalpais', 1, 'L'])]).games;
     expect(g.decider).toBe('REG');
     expect(g.provenance.resultConflict).toMatch(/^MaxPreps marks Chico W and Tamalpais L on a 1-1 score\.$/);
+  });
+
+  // The 'SO' rule is keyed on the SECTION (SectionConfig.shootout), not one shared league (DESIGN-socal
+  // §2.1.3): the San Diego Section's shootout covers its three conferences, the Southern Section has no rule.
+  it('reads a San Diego cross-conference 0-0 flagged W/L as a shootout win (Clairemont–Eastlake, Sep 1)', () => {
+    // City Eastern v Metro Mesa: two conferences, one section whose rule ends a level game with a shootout.
+    const id = 'eeeeeeee-0000-4000-8000-0000000000a1';
+    const res = one([pairRow(id, ['clairemont', 0, 'L'], ['eastlake', 0, 'W'])]);
+    const [g] = res.games;
+    expect(g.decider).toBe('SO');
+    expect(g.shootout).toBeNull();
+    expect(g.leagueDivision).toBeNull();
+    expect(g.provenance.resultConflict).toBeUndefined();
+    expect(res.warnings.filter((w) => w.startsWith(`contest ${id}`))).toEqual([]);
+    // Within one conference too (Mt. Carmel–Poway, Sep 11: Avocado v Palomar of North County).
+    const [nc] = one([pairRow(id, ['mt-carmel', 0, 'W'], ['poway', 0, 'L'])]).games;
+    expect(nc.decider).toBe('SO');
+  });
+
+  // A JV game is never a shootout win (NormalizeOptions.level): the San Diego procedure ends a level JV
+  // game at the end of regulation ("JV—No overtime"), and §VII.E.4 is a varsity rule.
+  it('never reads a level JV final flagged W/L as a shootout win, in either section with a shootout rule', () => {
+    const jv = (rows: ScheduleRow[]) => normalizeGames(rows, { fetchedAt: FETCHED_AT, level: 'jv' });
+    const id = 'eeeeeeee-0000-4000-8000-0000000000a9';
+    const res = jv([pairRow(id, ['clairemont', 0, 'L'], ['eastlake', 0, 'W'])]);
+    const [g] = res.games;
+    expect(g.decider, 'lib/normalize.ts level jv').toBe('REG');
+    expect(g.provenance.resultConflict).toBe('MaxPreps marks Clairemont L and Eastlake W on a 0-0 score.');
+    expect(sideOutcome(g, 'home'), 'a JV tie stands').toBe('T');
+    expect(res.warnings.filter((w) => w.startsWith(`contest ${id}`))).toEqual([
+      `contest ${id}: MaxPreps marks Clairemont L and Eastlake W on a 0-0 score.`,
+      `contest ${id}: a level JV final marked W/L between two San Diego Section teams; the Section's shootout rule is a varsity rule, so the flags are left as a contradiction and the game counts as a tie`,
+    ]);
+    // The EAL: the same, in the Northern Section's words.
+    const ns = jv([pairRow(id, ['chico', 1, 'W'], ['davis', 1, 'L'])]);
+    expect(ns.games[0].decider).toBe('REG');
+    expect(ns.warnings).toContain(
+      `contest ${id}: a level JV final marked W/L between two Northern Section teams; the Section's 1 v 1 rule is a varsity rule, so the flags are left as a contradiction and the game counts as a tie`,
+    );
+    // A level JV final with no winner flagged is an ordinary JV tie: no warning at all.
+    const tie = jv([pairRow(id, ['escondido', 1, 'T'], ['el-capitan', 1, 'T'])]);
+    expect(tie.games[0].decider).toBe('REG');
+    expect(tie.warnings.filter((w) => w.startsWith(`contest ${id}`))).toEqual([]);
+    // The varsity default is unchanged.
+    expect(one([pairRow(id, ['clairemont', 0, 'L'], ['eastlake', 0, 'W'])]).games[0].decider).toBe('SO');
+  });
+
+  it('logs a level San Diego final with no shootout winner by the section when the sides span two conferences', () => {
+    const id = 'eeeeeeee-0000-4000-8000-0000000000a2';
+    const res = one([pairRow(id, ['escondido', 1, 'T'], ['el-capitan', 1, 'T'])]);
+    expect(res.games[0].decider).toBe('REG');
+    expect(res.warnings).toContain(`contest ${id}: a level San Diego Section final with no shootout winner flagged`);
+    const same = one([pairRow(id, ['escondido', 1, 'T'], ['vista', 1, 'T'])]);
+    expect(same.warnings).toContain(`contest ${id}: a level North final with no shootout winner flagged`);
+  });
+
+  // The SDFHOA procedures cover the regular season and the playoffs, not invitational tournaments
+  // (SectionConfig.shootout.coversTournaments false): seven SDS-v-SDS tournament games are recorded 0-0, T and T.
+  it('reads nothing into a level San Diego tournament final (contestType 2 on either row): no SO, no warning', () => {
+    const id = 'eeeeeeee-0000-4000-8000-0000000000b1';
+    // Eastlake 0, La Costa Canyon 0, Aug 21 (16947736…): a tie, and no "no shootout winner flagged" line.
+    const tie = one([pairRow(id, ['eastlake', 0, 'T'], ['la-costa-canyon', 0, 'T'], 0, { home: 2, away: 2 })]);
+    expect(tie.games[0].decider).toBe('REG');
+    expect(tie.games[0].provenance.resultConflict).toBeUndefined();
+    expect(tie.warnings.filter((w) => w.startsWith(`contest ${id}`))).toEqual([]);
+    // Either row's type is enough.
+    const half = one([pairRow(id, ['canyon-crest-academy', 0, 'T'], ['san-pasqual', 0, 'T'], 0, { home: 1, away: 2 })]);
+    expect(half.warnings.filter((w) => w.startsWith(`contest ${id}`))).toEqual([]);
+    // A level tournament final flagged W/L is not read as a shootout win the procedures do not provide for:
+    // the flags stay a contradiction and the score's tie stands.
+    const flagged = one([pairRow(id, ['mt-carmel', 0, 'W'], ['poway', 0, 'L'], 0, { home: 2, away: 2 })]);
+    expect(flagged.games[0].decider).toBe('REG');
+    expect(flagged.games[0].provenance.resultConflict).toBe('MaxPreps marks Mt. Carmel W and Poway L on a 0-0 score.');
+    expect(sideOutcome(flagged.games[0], 'home')).toBe('T');
+    // The same pair outside a tournament is unchanged: SO, and the level warning without a flag.
+    expect(one([pairRow(id, ['mt-carmel', 0, 'W'], ['poway', 0, 'L'], 0, { home: 1, away: 1 })]).games[0].decider).toBe('SO');
+    expect(one([pairRow(id, ['eastlake', 0, 'T'], ['la-costa-canyon', 0, 'T'], 0, { home: 1, away: 1 })]).warnings).toContain(
+      `contest ${id}: a level San Diego Section final with no shootout winner flagged`,
+    );
+  });
+
+  it('keeps reading an EAL tournament final flagged W/L as a 1 v 1 win (§VII.E.4 makes no tournament exception)', () => {
+    const [g] = one([pairRow('eeeeeeee-0000-4000-8000-0000000000b2', ['chico', 1, 'W'], ['davis', 1, 'L'], 0, { home: 2, away: 2 })]).games;
+    expect(g.decider).toBe('SO');
+    expect(g.provenance.resultConflict).toBeUndefined();
+  });
+
+  it('keeps a level Sunset final a tie, and a level Sunset final flagged W/L a contradiction (no Southern Section rule)', () => {
+    // Bonita 1-1 Marina, Aug 18: recorded as reported.
+    const tie = one([pairRow('eeeeeeee-0000-4000-8000-0000000000a3', ['bonita', 1, 'T'], ['marina', 1, 'T'])]);
+    expect(tie.games[0].decider).toBe('REG');
+    expect(tie.games[0].provenance.resultConflict).toBeUndefined();
+    expect(tie.warnings.filter((w) => w.includes('level'))).toEqual([]);
+    const [flagged] = one([pairRow('eeeeeeee-0000-4000-8000-0000000000a4', ['bonita', 1, 'W'], ['marina', 1, 'L'])]).games;
+    expect(flagged.decider).toBe('REG');
+    expect(flagged.provenance.resultConflict).toBe('MaxPreps marks Bonita W and Marina L on a 1-1 score.');
+  });
+
+  it('never reads a Sunset team against a San Diego team, level and flagged W/L, as a shootout win (two sections)', () => {
+    const [g] = one([pairRow('eeeeeeee-0000-4000-8000-0000000000a5', ['great-oak', 0, 'W'], ['torrey-pines', 0, 'L'])]).games;
+    expect(g.decider).toBe('REG');
+    expect(g.provenance.resultConflict).toMatch(/^MaxPreps marks Great Oak W and Torrey Pines L on a 0-0 score\.$/);
   });
 
   it('keeps MaxPreps’ overtime count on a decided EAL game, never clamped', () => {
@@ -727,5 +850,63 @@ describe('normalize: a level final in a 1 v 1 league (EAL)', () => {
       expect(res.games[0].decider, `flag ${flag}`).toBe('FORFEIT');
       expect(res.warnings).not.toContain(noWinnerNote(id));
     }
+  });
+});
+
+describe('normalize: a sourced per-contest date correction (DATA_QUALITY.contestDateOverrides)', () => {
+  // Valley Center 0 @ Fallbrook 11: MaxPreps dates it Sep 25 at 4:00 PM, Fallbrook's slot against Rancho
+  // Buena Vista; the Section's power-rankings details for both schools list it on 09/29 with no time.
+  const id = 'fc8be1f8-e3e6-48dc-8b7a-eebc0f1f2ce0';
+  const dir = path.join(corpusDir('socal-2026-10-06'), 'maxpreps', 'schedule');
+  const rowsOf = (slug: string) =>
+    ScheduleResponseSchema.parse(JSON.parse(readFileSync(path.join(dir, `${slug}.json`), 'utf8')) as unknown).data;
+  const rows = [...rowsOf('fallbrook'), ...rowsOf('valley-center')];
+  const at = '2026-10-06T03:19:11.008Z';
+
+  it('is configured for the one contest, with its source', () => {
+    expect(Object.keys(DATA_QUALITY.contestDateOverrides)).toEqual([id]);
+    expect(DATA_QUALITY.contestDateOverrides[id]).toEqual({
+      dateKey: '2026-09-29',
+      timeTba: true,
+      source: 'CIF-SDS power-rankings details, school_id 662 (Fallbrook) and 746 (Valley Center): both list the game on 09/29/2026 with no time; MaxPreps dates it 09/25 at 4:00 PM, the same slot as Fallbrook’s game against Rancho Buena Vista',
+    });
+  });
+
+  it('moves the game to Sep 29 with no time, before the sort, and records what MaxPreps had', () => {
+    const raw = normalizeGames(rows, { fetchedAt: at, dateOverrides: {} }).games.find((g) => g.contestId === id)!;
+    expect([raw.dateLocal, raw.dateKey, raw.isTimeTba]).toEqual(['2026-09-25T16:00:00', '2026-09-25', false]);
+    const { games } = normalizeGames(rows, { fetchedAt: at });
+    const g = games.find((x) => x.contestId === id)!;
+    expect(g.dateLocal).toBe('2026-09-29T00:00:00');
+    expect(g.dateUtc).toBe('2026-09-29T07:00:00Z');
+    expect(g.dateKey).toBe('2026-09-29');
+    expect([g.isTimeTba, g.isDateTba]).toEqual([true, false]);
+    expect(g.provenance.dateCorrection).toEqual({
+      maxprepsDateLocal: '2026-09-25T16:00:00',
+      maxprepsTimeTba: false,
+      source: DATA_QUALITY.contestDateOverrides[id].source,
+    });
+    // Everything but the date is MaxPreps' as before.
+    expect({ ...g, dateLocal: raw.dateLocal, dateUtc: raw.dateUtc, dateKey: raw.dateKey, isTimeTba: raw.isTimeTba, provenance: raw.provenance }).toEqual(raw);
+    // Sorted by the corrected date: after every Sep 25-28 game of the two schools, before Sep 30.
+    expect(games.map((x) => x.contestId)).toEqual([...games].sort((a, b) => a.dateLocal.localeCompare(b.dateLocal) || a.contestId.localeCompare(b.contestId)).map((x) => x.contestId));
+    const i = games.indexOf(g);
+    expect(games.slice(0, i).every((x) => x.dateKey <= '2026-09-29')).toBe(true);
+    expect(games.slice(i + 1).every((x) => x.dateKey >= '2026-09-29')).toBe(true);
+    // Fallbrook no longer hosts two games in the same Sep 25 slot.
+    expect(games.filter((x) => x.dateLocal === '2026-09-25T16:00:00' && x.home.name === 'Fallbrook')).toHaveLength(1);
+  });
+
+  it('leaves every other contest alone, and applies nothing to a game with no override', () => {
+    const plain = normalizeGames(rows, { fetchedAt: at, dateOverrides: {} }).games;
+    const fixed = normalizeGames(rows, { fetchedAt: at }).games;
+    expect(fixed.filter((g) => g.contestId !== id)).toEqual(plain.filter((g) => g.contestId !== id));
+    expect(applyDateOverride(plain[0], undefined)).toBe(plain[0]);
+  });
+
+  it('puts a time-TBA date at Pacific midnight, in daylight and in standard time', () => {
+    expect(pacificMidnightUtc('2026-09-29')).toBe('2026-09-29T07:00:00Z');
+    expect(pacificMidnightUtc('2026-11-02')).toBe('2026-11-02T08:00:00Z');
+    expect(pacificMidnightUtc('2026-11-01')).toBe('2026-11-01T07:00:00Z');
   });
 });

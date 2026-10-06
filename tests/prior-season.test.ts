@@ -39,6 +39,41 @@ describe('data/prior-season.json', () => {
     const keys = file.games.map((g) => `${g.date} ${g.contestId}`);
     expect(keys).toEqual([...keys].sort());
   });
+
+  /**
+   * The 2026-10-06 run over all 99 teams (same 25-26 sportSeasonId). The 412 NorCal finals are the
+   * ones the 49-team run wrote on 2026-10-04, unchanged; the Southern California teams add 473 finals
+   * among themselves and 11 against NorCal teams (Leigh, Gilroy and Mitty's games against San Diego
+   * and Sunset teams), the bridge DESIGN-socal §0 names for the one Elo fit. One deleted Sage Creek
+   * row dated 2026-09-17 (contest 26fef99d…) sat in the 25-26 feed; the script listed it and counted
+   * it as deleted. A refetch that changes these numbers is a new season file and is re-pinned here.
+   *
+   * Refetched the same day over all 102 teams, when the Southern Section independents (Glendora,
+   * Harvard-Westlake, Thousand Oaks) joined the registry: the 412 NorCal, 473 SoCal and 11 cross-region
+   * finals are unchanged, and the three add 40 SoCal–SoCal finals (513), every one against a Southern
+   * California team or each other. outsideRegistry falls from 51 to 16 (their games were rows outside the
+   * registry before), and one more row is not final (26).
+   */
+  it('holds the 2026-10-06 fetch over all 102 teams: 936 finals, 513 SoCal–SoCal, 11 NorCal–SoCal', () => {
+    const SOCAL = new Set(['sunset', 'city', 'north-county', 'metro', 'independents']);
+    const socal = (slug: string) => SOCAL.has(getTeamBySlug(slug)!.league);
+    const pairs = { norcal: 0, socal: 0, cross: 0 };
+    for (const g of file.games) {
+      const [h, a] = [socal(g.homeSlug), socal(g.awaySlug)];
+      if (h && a) pairs.socal += 1;
+      else if (h || a) pairs.cross += 1;
+      else pairs.norcal += 1;
+    }
+    expect(file.games).toHaveLength(936);
+    expect(pairs).toEqual({ norcal: 412, socal: 513, cross: 11 });
+    const INDEPENDENTS = new Set(['glendora', 'harvard-westlake', 'thousand-oaks']);
+    expect(file.games.filter((g) => INDEPENDENTS.has(g.homeSlug) || INDEPENDENTS.has(g.awaySlug))).toHaveLength(40);
+    expect(file.excluded).toEqual({ deleted: 113, notFinal: 26, outsideRegistry: 16, forfeit: 1, unscored: 0 });
+    expect(file.sportSeasonId).toBe('8ae4cbab-caa1-4889-87a8-547fdaca9516');
+    // Every registry team has at least one final, so every one of the 102 starts from a prior rating.
+    const played = new Set(file.games.flatMap((g) => [g.homeSlug, g.awaySlug]));
+    expect(TEAMS.filter((t) => !played.has(t.slug)).map((t) => t.slug)).toEqual([]);
+  });
 });
 
 describe('PriorSeasonSchema', () => {

@@ -9,7 +9,8 @@
  *   3. a missing score is pending, NEVER 0-0
  *   4. home/away from teams[].homeAwayType (0/1/2), never from contestType and never from row order
  *   5. league flag from teams[].contestType === 0
- *   6. store both date forms (naive local + UTC)
+ *   6. store both date forms (naive local + UTC); a contest in DATA_QUALITY.contestDateOverrides takes
+ *      the override's date, with no time, before the date key is taken and the games are sorted
  *   7. opponent identity by GUID; a non-member is a name only
  *
  * SPEC §7.6 adds, in pipeline order (all pure):
@@ -21,8 +22,8 @@
  *   4. `dedupePhantomPairs` — same-division phantom duplicates only
  */
 
-import { byDateThenId } from './format';
-import { getLeague, type DataQualityConfig } from './leagues';
+import { byDateThenId, shootoutPhrases, toLocalTimestamp } from './format';
+import { DATA_QUALITY, getLeague, getSection, type DataQualityConfig, type SectionConfig } from './leagues';
 import { getTeamById, resolveTeam } from './teams';
 import type {
   ContestId,
@@ -43,6 +44,23 @@ export interface NormalizeOptions {
   fetchedAt: string;
   scores?: SourceId;
   schedule?: SourceId;
+  /**
+   * Which team's games these rows are. Default 'varsity'. 'jv' (scripts/fetch-jv.ts, MaxPreps' JV
+   * schedule feed) turns off the shootout inference below: every section shootout rule this site
+   * reads is a VARSITY rule. The San Diego Field Hockey Officials Association's game format says of
+   * JV and frosh games "Teams tied at the end of regulation, game over" (and its 2026 Mercy & Overtime
+   * Procedures: "JV—No overtime"), so a level San Diego JV final is a tie however MaxPreps flags it;
+   * the Northern Section Guidelines' §VII.E.4 (one sudden-victory period, then 1 v 1s) governs a
+   * varsity game and says nothing that would decide a level JV game either. Before the rule was keyed
+   * on the section, the EAL's JV rows went through the same inference as its varsity rows (no JV final
+   * in data/jv.json had that shape on 2026-10-06, so no stored JV game changed); a JV game now never gets
+   * decider 'SO', a level JV final flagged W/L keeps the flags as a contradiction
+   * (`provenance.resultConflict`) and counts as the tie its score says, and a level JV final with no
+   * winner flagged is not worth a warning.
+   */
+  level?: 'varsity' | 'jv';
+  /** Per-contest date corrections (default DATA_QUALITY.contestDateOverrides); tests pass their own. */
+  dateOverrides?: DataQualityConfig['contestDateOverrides'];
 }
 
 export interface NormalizeResult {
@@ -90,6 +108,44 @@ function statusFromContestState(state: number, isLive: boolean): GameStatus {
 /** YYYY-MM-DD from a naive local timestamp — no Date involved, so no zone can shift it. */
 export function dateKeyOf(dateLocal: string): string {
   return dateLocal.slice(0, 10);
+}
+
+/**
+ * The UTC instant of midnight, America/Los_Angeles, on a date key: the `dateUtc` every time-TBA row
+ * carries (MaxPreps stores such a row at local midnight, e.g. '2026-09-29T00:00:00' ↔ '2026-09-29T07:00:00Z').
+ * Midnight is never inside a DST jump in this zone (the clocks change at 2 AM), so one of the two offsets fits.
+ */
+export function pacificMidnightUtc(dateKey: string): string {
+  for (const hours of [7, 8]) {
+    const iso = `${dateKey}T0${hours}:00:00Z`;
+    if (toLocalTimestamp(iso) === `${dateKey}T00:00:00`) return iso;
+  }
+  throw new Error(`normalize: no Pacific midnight for ${dateKey}`);
+}
+
+/**
+ * A contest's date moved to a better source's (DataQualityConfig.contestDateOverrides): the date key, a
+ * time-TBA local midnight and its UTC instant, consistent with every other time-TBA row, and the
+ * provenance the game page prints (MaxPreps' own date and the override's source). The result, sides and
+ * flags are untouched.
+ */
+export function applyDateOverride(
+  game: Game,
+  override: DataQualityConfig['contestDateOverrides'][ContestId] | undefined,
+): Game {
+  if (!override) return game;
+  return {
+    ...game,
+    dateLocal: `${override.dateKey}T00:00:00`,
+    dateUtc: pacificMidnightUtc(override.dateKey),
+    dateKey: override.dateKey,
+    isDateTba: false,
+    isTimeTba: true,
+    provenance: {
+      ...game.provenance,
+      dateCorrection: { maxprepsDateLocal: game.dateLocal, maxprepsTimeTba: game.isTimeTba, source: override.source },
+    },
+  };
 }
 
 /** `calculatedFields.contestDateInGMT` is UTC but unsuffixed; make it explicit. */
@@ -188,7 +244,7 @@ function scoreLine(row: ScheduleRow): string {
   return row.contest.teams.map((t) => `${t.name ?? 'TBA'} ${t.score ?? '–'}`).join(', ');
 }
 
-/** A level score whose result flags are complementary W and L (either order): a 1 v 1 win's shape. */
+/** A level score whose result flags are complementary W and L (either order): a shootout win's shape (an EAL 1 v 1 win). */
 function isLevelWithWinner(home: GameSide, away: GameSide): boolean {
   return (
     home.score !== null &&
@@ -200,19 +256,19 @@ function isLevelWithWinner(home: GameSide, away: GameSide): boolean {
 /**
  * D2 rule 4a evidence for a FINAL: a side's result flag contradicts the score (the side with more
  * goals marked L, a level score marked W, …), or two copies of the contest (one per team feed)
- * disagree on the score. One plain sentence, or undefined. In a shootout league (EAL) a level score
- * flagged W/L on a final that is not a forfeit is how MaxPreps records a 1 v 1 win, so that one shape
- * is not a contradiction there (the caller passes `shootoutLeague` false for a forfeit); the
- * feed-disagreement note still applies.
+ * disagree on the score. One plain sentence, or undefined. Between two teams of a shootout section (the
+ * Northern Section's EAL, the San Diego Section) a level score flagged W/L on a final that is not a
+ * forfeit is how MaxPreps records a shootout win, so that one shape is not a contradiction there (the
+ * caller passes `shootoutSection` false for a forfeit); the feed-disagreement note still applies.
  */
 function resultConflictOf(
   home: GameSide,
   away: GameSide,
   copies: readonly ScheduleRow[],
-  opts: { shootoutLeague: boolean },
+  opts: { shootoutSection: boolean },
 ): string | undefined {
   const notes: string[] = [];
-  if (home.score !== null && away.score !== null && !(opts.shootoutLeague && isLevelWithWinner(home, away))) {
+  if (home.score !== null && away.score !== null && !(opts.shootoutSection && isLevelWithWinner(home, away))) {
     const wrong = [
       { side: home, own: home.score, other: away.score },
       { side: away, own: away.score, other: home.score },
@@ -278,13 +334,15 @@ export function normalizeGames(
   }
 
   const games: Game[] = [];
+  const dateOverrides = opts.dateOverrides ?? DATA_QUALITY.contestDateOverrides;
   for (const [id, row] of best) {
     const game = toGame(row, copies.get(id) ?? [row], opts, warnings);
     if (!game) {
       stats.dropped.malformed += 1;
       continue;
     }
-    games.push(game);
+    // Before the sort, so the corrected date orders schedules, last-5 and streaks.
+    games.push(applyDateOverride(game, dateOverrides[id]));
   }
 
   // Stable order: by local date, then by contestId so the JSON diff is small.
@@ -392,25 +450,51 @@ function toGame(
   const away = sideOf(second, second.name, keepScores ? awayScore : null);
 
   // --- 7 + leagueDivision: set only when BOTH sides are registry members of the same division.
-  // Resolved before the result check: whether a level W/L final is a 1 v 1 win depends on the league.
+  // Resolved before the result check: whether a level W/L final is a shootout win depends on the section.
   const homeTeam = resolveTeam(first.teamId);
   const awayTeam = resolveTeam(second.teamId);
   const leagueDivision: DivisionId | null =
     homeTeam && awayTeam && homeTeam.division === awayTeam.division ? homeTeam.division : null;
-  // Both sides members of one league that decides a level game on 1 v 1s (the EAL).
-  const sharedLeague =
-    homeTeam && awayTeam && homeTeam.league === awayTeam.league ? getLeague(homeTeam.league) : null;
-  const shootoutLeague = sharedLeague?.rules.leagueOvertime === 'shootout';
+  // Both sides teams of one section that ends a level varsity game with a shootout (SectionConfig.shootout):
+  // the Northern Section (the EAL's 1 v 1s, NS Guidelines §VII.E.4) and the San Diego Section (SDFHOA 2026
+  // Mercy & Overtime Procedures). Keyed on the SECTION, not on one shared league, because the San Diego rule
+  // covers every varsity game in the Section: of the eight level W/L finals in the inventory read Mon Oct 5 Pacific,
+  // Clairemont–Eastlake and Escondido–El Capitan (both Sep 1) are between two conferences. A Sunset pair
+  // (Southern Section, no shootout rule) and a Sunset–San Diego pair (two sections) never qualify, so their
+  // level finals stay ties or contradictions. lib/snapshot-schema.ts checks the same rule.
+  // A JV row never qualifies (NormalizeOptions.level): the sections' shootout rules are varsity rules.
+  // Nor does a tournament row (contestType 2 on either side) in a section whose rule does not reach
+  // tournaments (SectionConfig.shootout.coversTournaments false: the SDFHOA procedures cover the regular
+  // season and the playoffs, not invitational tournaments). Seven games between two San Diego teams at
+  // tournaments (Aug 21, Aug 22, Sep 12) are recorded 0-0, T and T: a tie there is a tie, so it raises no
+  // "no shootout winner flagged" warning, and a level W/L tournament final is left as a contradiction
+  // rather than read as a shootout win the procedures do not provide for.
+  const pairSection: SectionConfig | null =
+    homeTeam && awayTeam && homeTeam.section === awayTeam.section && getSection(homeTeam.section).shootout !== null
+      ? getSection(homeTeam.section)
+      : null;
+  const isJv = opts.level === 'jv';
+  const isTournamentRow = c.teams.some((t) => t.contestType === 2);
+  const shootoutSection: SectionConfig | null =
+    isJv || (isTournamentRow && pairSection?.shootout?.coversTournaments === false) ? null : pairSection;
 
   const isForfeit = c.teams.some((t) => t.isForfeit);
 
-  // --- D2 rule 4a evidence, on finals only. A forfeit is never a 1 v 1 win (D7.1), so its level
-  // score flagged W/L stays a contradiction even in a shootout league.
+  // --- D2 rule 4a evidence, on finals only. A forfeit is never a shootout win (D7.1), so its level
+  // score flagged W/L stays a contradiction even in a shootout section.
   const resultConflict =
     status === 'final'
-      ? resultConflictOf(home, away, copies, { shootoutLeague: shootoutLeague && !isForfeit })
+      ? resultConflictOf(home, away, copies, { shootoutSection: shootoutSection !== null && !isForfeit })
       : undefined;
   if (resultConflict) warnings.push(`contest ${c.contestId}: ${resultConflict}`);
+  if (status === 'final' && isJv && pairSection !== null && !isForfeit && isLevelWithWinner(home, away)) {
+    // The varsity pipeline would read this shape as a shootout win; say why the JV pipeline does not.
+    warnings.push(
+      `contest ${c.contestId}: a level JV final marked W/L between two ${pairSection.name} teams; ` +
+        `the Section's ${shootoutPhrases(pairSection.shootout?.words ?? '').noun} rule is a varsity rule, ` +
+        'so the flags are left as a contradiction and the game counts as a tie',
+    );
+  }
 
   const otPeriods = cf.overtimePeriodsPlayed ?? 0;
   const forfeitBy: Game['forfeitBy'] = !isForfeit
@@ -424,18 +508,24 @@ function toGame(
   let decider: Decider | null = null;
   if (status === 'final') {
     // SCVAL By-Laws Article IV: one 7-minute sudden-victory period, then the game ends in a tie.
-    // No SCVAL, BVAL, PCAL or MCAL league game has a shootout (`rules.leagueOvertime` is
-    // 'sudden-victory' or 'none'), so none of them produces 'SO'. The EAL decides a level varsity
-    // game on 1 v 1s (NS Guidelines §VII.E.4): a level final MaxPreps flags W/L between two EAL
-    // teams is a 1 v 1 win, 'SO' with no tally stored. Otherwise the decider is MaxPreps' overtime
-    // count as recorded (never clamped: 3 periods stays '2OT'; the view adds a caveat).
+    // No CCS, NCS or Southern Section game has a shootout (their sections' `shootout` is null), so
+    // none of them produces 'SO'. The Northern Section decides a level varsity game on 1 v 1s (NS
+    // Guidelines §VII.E.4) and the San Diego Section by a shootout (SDFHOA 2026 procedures): a level
+    // final MaxPreps flags W/L between two teams of one of those sections is a shootout win, 'SO'
+    // with no tally stored. Otherwise the decider is MaxPreps' overtime count as recorded (never
+    // clamped: 3 periods stays '2OT'; the view adds a caveat).
     if (isForfeit) decider = 'FORFEIT';
-    else if (shootoutLeague && isLevelWithWinner(home, away)) decider = 'SO';
+    else if (shootoutSection !== null && isLevelWithWinner(home, away)) decider = 'SO';
     else decider = otPeriods >= 2 ? '2OT' : otPeriods === 1 ? 'OT' : 'REG';
-    if (!isForfeit && shootoutLeague && home.score === away.score && decider !== 'SO') {
-      warnings.push(
-        `contest ${c.contestId}: a level ${sharedLeague?.shortName} final with no 1 v 1 winner flagged`,
-      );
+    if (!isForfeit && shootoutSection && home.score === away.score && decider !== 'SO') {
+      // Named by the league the pair shares (the EAL's warning, as it always read), else by the section:
+      // a San Diego pair may span two conferences.
+      const where =
+        homeTeam && awayTeam && homeTeam.league === awayTeam.league
+          ? getLeague(homeTeam.league).shortName
+          : shootoutSection.name;
+      const { noun } = shootoutPhrases(shootoutSection.shootout?.words ?? '');
+      warnings.push(`contest ${c.contestId}: a level ${where} final with no ${noun} winner flagged`);
     }
   }
 

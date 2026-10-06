@@ -6,6 +6,8 @@
  *   BVAL   the official BVAL standings Google Sheet and the two all-league documents, as linked
  *          from bval.org/standings and bval.org/all-league
  *   PCAL, MCAL, EAL  'unavailable', with the reason (below): we found no official 2025-26 final standings
+ *   Sunset, City, North County, Metro  'unavailable' likewise (DESIGN-socal §2.2)
+ *   Southern Section independents  'unavailable': this site's grouping, so no 2025-26 table of it was published (DESIGN §24.10)
  *
  *   pnpm build-history
  *   pnpm build-history --from tests/fixtures/scval \
@@ -338,10 +340,72 @@ async function main(argv: readonly string[]): Promise<number> {
     ],
   };
 
+  // ---- The Sunset and the three San Diego Section leagues (DESIGN-socal §2.2): no official final standings.
+  // Checked 2026-10-06: cifss.org's field hockey page and its scores site (scores.cifss.org, SBLive's), and
+  // cifsds.org's field hockey page and the Section's 2025-26 power rankings (cifsdshome widget, year_id=175).
+  const sunset = {
+    status: 'unavailable',
+    league: getLeague('sunset').name,
+    reason:
+      'We found no Sunset league website or standings document for 2025-26. The Southern Section holds no field hockey playoffs, and the Sunset table on its scores site (scores.cifss.org) is SBLive’s, built from game labels coaches enter. We do not show standings from third-party sites.',
+    checkedOn: '2026-10-06',
+    checked: [
+      'https://cifss.org/sports/field-hockey/ (the Section’s field hockey page: season preview, Blue Book and rules links, and a schedules-and-results link to its scores site; no league standings)',
+      'https://scores.cifss.org/brackets?genderSport=FIELD_HOCKEY (“No Brackets Found”: the Section holds no field hockey playoffs)',
+      'https://scores.cifss.org/teams/458746/standings (the Section’s scores site, run by SBLive: its Sunset table is si.com’s, built from the game labels coaches enter)',
+      'A web search for a Sunset field hockey league website, bylaws, schedule or standings (none found)',
+    ],
+  };
+  // The reason says what we found, not that nothing exists: a league could have posted standings somewhere
+  // the sources below do not reach (the Sunset's reason is worded the same way).
+  const sds = (id: 'city' | 'north-county' | 'metro') => ({
+    status: 'unavailable',
+    league: getLeague(id).name,
+    reason:
+      'We found no 2025-26 final standings published by the league or the San Diego Section. The Section’s power rankings list results and each school’s league record from game-type labels its schools enter, not league standings. We do not show standings from third-party sites.',
+    checkedOn: '2026-10-06',
+    checked: [
+      'https://www.cifsds.org/sports/fh/index (the Section’s field hockey page: the 2025 playoff brackets, power rankings and Green Book links; no league standings)',
+      'https://www.cifsdshome.org/widget/power-rankings?sort-points-desc=1&year_id=175&sport_id=30 (the Section’s 2025-26 power rankings: 40 schools with points, league records and overall records; the Division 1 and Division 2 lists hold 20 each and the Open list is empty; no league tables)',
+      'https://www.cifsds.org/school-resources/CIFSDS_Power_Rankings (the page that embeds those power rankings)',
+    ],
+    // Labelled without 'champion': an unavailable card links documents and claims nothing from them.
+    alsoPublished: [
+      {
+        label: '2025 CIFSDS playoff brackets (Google Sheet)',
+        url: 'https://docs.google.com/spreadsheets/d/1P9J_VFYljarF0IxnE4SP8zHey9T6y97IHz6NZZbaBWg/edit?usp=sharing',
+      },
+    ],
+  });
+
+  // ---- The Southern Section independents (DESIGN §24.9, §24.10): the group is this site's (2026-10-06), so no
+  // 2025-26 table of it was ever published. Checked 2026-10-06 with MaxPreps' standings API for the 2025-26
+  // season (leagues/{id}/standings/v1?sportseasonid=8ae4cbab-…): Glendora's, Harvard-Westlake's and Thousand
+  // Oaks' all-sports league tables for that season (the league ids are those in each team's MaxPreps
+  // team-context lastYearStandingsData) list that school and no other field hockey team, and MaxPreps' 2025-26
+  // Sunset table lists Bonita and Chaminade with the eight Sunset teams (lib/leagues.ts SUNSET). The links are
+  // MaxPreps' public pages for those tables (the canonical URLs team-context gives).
+  const independents = {
+    status: 'unavailable',
+    league: getLeague('independents').name,
+    reason:
+      'The Southern Section independents are this site’s grouping, so no 2025-26 table of them was published: Glendora, Harvard-Westlake and Thousand Oaks had no league table, and MaxPreps listed Bonita and Chaminade in its Sunset table.',
+    checkedOn: '2026-10-06',
+    checked: [
+      'https://www.maxpreps.com/ca/field-hockey/25-26/league/palomares/?leagueid=5d795f4f-0e75-450d-856e-0873b46002de (MaxPreps’ 2025-26 Palomares League table: Glendora is its only field hockey team)',
+      'https://www.maxpreps.com/ca/field-hockey/25-26/league/league-b/?leagueid=c2922327-b045-410b-aadd-87cb63b58405 (MaxPreps’ 2025-26 League B table: Harvard-Westlake is its only field hockey team)',
+      'https://www.maxpreps.com/ca/field-hockey/25-26/league/marmonte/?leagueid=392fb703-cc64-46d7-8d21-819e13a78c3f (MaxPreps’ 2025-26 Marmonte League table: Thousand Oaks is its only field hockey team)',
+      'https://www.maxpreps.com/ca/field-hockey/25-26/league/sunset/?leagueid=1ab67ce6-46a6-42be-a7aa-dd2892d77dff (MaxPreps’ 2025-26 Sunset table: Bonita and Chaminade with the eight Sunset teams)',
+    ],
+  };
+
   const history = {
     season: '2025-26',
     sport: 'Girls Field Hockey',
-    leagues: { scval, bval, pcal, mcal, eal },
+    leagues: {
+      scval, bval, pcal, mcal, eal, sunset, city: sds('city'), 'north-county': sds('north-county'), metro: sds('metro'),
+      independents,
+    },
   };
   const divisions = [...scvalDivisions, ...bvalDivisions];
   for (const p of problems.slice(scvalProblems)) console.warn(`WARN ${p}`);
@@ -356,7 +420,7 @@ async function main(argv: readonly string[]): Promise<number> {
     );
     console.log(`  ${d.standings.varsity.map((r) => `${r.name} ${r.leagueRecord}`).join(' · ')}`);
   }
-  console.log('PCAL, MCAL, EAL: unavailable (see reasons in the file)');
+  console.log('PCAL, MCAL, EAL, Sunset, City, North County, Metro, Southern Section independents: unavailable (see reasons in the file)');
 
   // Validate against the contract before anything is written. lib/history-schema.ts does not load
   // the committed file (lib/history.ts does), so a broken committed file cannot block the rebuild

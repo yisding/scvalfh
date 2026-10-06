@@ -1,15 +1,17 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
-import LeagueSwitcher from '../../components/layout/LeagueSwitcher';
+import LeagueSwitcher, { RegionSwitcher } from '../../components/layout/LeagueSwitcher';
 import PageHeader from '../../components/layout/PageHeader';
 import { leagueChips, leagueHrefs } from '../../components/layout/league-chips';
 import { OG_BASE, ROOT_OG_IMAGE, leaguesBySectionWords } from '../../components/layout/site';
 import TeamFinder from '../../components/search/TeamFinder';
 import OverviewDivisionBlock from '../../components/standings/OverviewDivisionBlock';
-import { buildTeamsByLeague } from '../../components/teams/team-view';
+import { alignmentSentence, buildTeamsByRegion } from '../../components/teams/team-view';
 import SectionHeader from '../../components/ui/SectionHeader';
 import { getCounts, getTeamSearchIndex } from '../../lib/data';
+import { listWords } from '../../lib/format';
+import { LEAGUES_PROPER } from '../../lib/leagues';
 
 /** The page's title, and its og:title too: og:title never carries the site-name suffix (OG_BASE). */
 const PAGE_TITLE = 'Teams and standings';
@@ -18,7 +20,7 @@ const PAGE_TITLE = 'Teams and standings';
  * /teams — "Find my school, and where does it stand?" (DESIGN §3.6, §18; SPEC §10.5, §9.3).
  *
  * The phone's Teams tab, and the desktop nav's Teams link: the team list and the standings in one
- * page (DESIGN §18 merged the Table tab into it). All 49 teams, grouped section → league →
+ * page (DESIGN §18 merged the Table tab into it). All 99 teams, grouped section → league →
  * division, and each division is its COMPACT standings table (place, team, GP, W-L-T, PTS, the
  * league's ladder line), the same table the /standings overview draws, built by the same view
  * (`buildOverviewDivision`), so the two pages never disagree about a place. **Every team**: league
@@ -32,6 +34,11 @@ const PAGE_TITLE = 'Teams and standings';
  * team, and hides the anchor-mode league switcher while a query is typed. Without JavaScript the
  * finder is not painted (`sx-js-only`) and the full set of tables IS the page; the switcher's
  * `#<league>` anchors work either way.
+ *
+ * Regions (DESIGN-socal §2.4): the sections sit in one `<div id="norcal|socal" data-region-scope>` per
+ * region inside `#team-list`, and the scope stylesheet shows the reader's region; the finder stays
+ * outside them and searches all 99, and while it is searching both regions' lists show, so a match it
+ * announces is never a hidden row. The anchor chips' section lists are region-scoped by the switcher.
  *
  * Heading outline (SPEC §10.0): each section is a `<section aria-labelledby>` with an h2
  * (`Central Coast Section` / `North Coast Section` / `Northern Section`, `id="ccs"`/`"ncs"`/`"ns"`)
@@ -47,23 +54,33 @@ const PAGE_TITLE = 'Teams and standings';
  * in the nav. They sit outside `#team-list`, so the finder never hides them, and add no heading
  * and no group wrapper.
  */
+/** Where the teams are listed: each in its division's table, the Southern Section independents' included (DESIGN §24.10). */
+const WHERE_LISTED = 'each in its division’s standings table';
+
 export const metadata: Metadata = {
   title: PAGE_TITLE,
-  description: `All ${getCounts().teams} girls varsity field hockey teams in ${leaguesBySectionWords('name')}, each in its division’s standings table. Find your school.`,
+  description: `All ${getCounts().teams} girls varsity field hockey teams in ${leaguesBySectionWords('name')}, ${WHERE_LISTED}. Find your school.`,
   alternates: { canonical: '/teams' },
   openGraph: { ...OG_BASE, ...ROOT_OG_IMAGE, title: PAGE_TITLE, url: '/teams' },
 };
 
 export default function TeamsPage() {
   const counts = getCounts();
-  const sections = buildTeamsByLeague();
+  const regions = buildTeamsByRegion();
+  // The leagues whose order is this site's own points; a group with no table orders nothing.
+  const siteOrdered = LEAGUES_PROPER.filter((l) => l.rules.orderScope === 'site').map((l) => l.shortName);
 
   return (
     <div className="pb-section-lg" data-teams-page="">
       <PageHeader
         title="Teams and standings"
-        description={`All ${counts.teams} girls varsity teams in ${leaguesBySectionWords('name')}, each in its division’s standings table. League and division alignment comes from each league’s official schedule; the EAL publishes none, so its six teams are the ones MaxPreps lists in its EAL table, less Red Bluff, which is not fielding a varsity team in 2026.`}
+        description={`All ${counts.teams} girls varsity teams in ${leaguesBySectionWords('name')}, ${WHERE_LISTED}. ${alignmentSentence()}`}
       />
+
+      {/* The region control, its own row under the header (DESIGN-socal §2.4). The finder below stays
+          outside the region blocks and searches all 99 teams; while it is searching, both regions'
+          lists show (the /teams lift, components/layout/league-scope-css.ts). */}
+      <RegionSwitcher className="mt-4" />
 
       {/* The finder is client-rendered on the server too, so its 48px field is in the first paint
           whenever JS runs (`html[data-js]` is stamped before paint); without JS it is not painted. */}
@@ -80,38 +97,42 @@ export default function TeamsPage() {
       </div>
 
       <div id="team-list">
-        {sections.map((section, sectionIndex) => (
-          <section
-            key={section.id}
-            aria-labelledby={section.id}
-            data-team-group=""
-            className={sectionIndex === 0 ? 'mt-8 md:mt-10' : 'mt-section md:mt-section-lg'}
-          >
-            <SectionHeader id={section.id} kicker={section.name} />
-            {section.leagues.map((group) => (
+        {regions.map((region) => (
+          <div key={region.id} id={region.id} data-region-scope={region.id}>
+            {region.sections.map((section, sectionIndex) => (
               <section
-                key={group.league.id}
-                aria-labelledby={group.league.id}
+                key={section.id}
+                aria-labelledby={section.id}
                 data-team-group=""
-                className="mt-8"
+                className={sectionIndex === 0 ? 'mt-8 md:mt-10' : 'mt-section md:mt-section-lg'}
               >
-                <SectionHeader
-                  as="h3"
-                  id={group.league.id}
-                  kicker={group.title}
-                  meta={group.meta}
-                  action={{ href: group.standingsHref, label: group.standingsLabel }}
-                />
-                {/* Only where a league's schools are not all in the section it sits under (EAL). */}
-                {group.membershipNote ? (
-                  <p className="m-0 mt-2 max-w-prose text-meta text-ink-3">{group.membershipNote}</p>
-                ) : null}
-                {group.divisions.map((division) => (
-                  <OverviewDivisionBlock key={division.division} division={division} filterable teamGroup />
+                <SectionHeader id={section.id} kicker={section.name} />
+                {section.leagues.map((group) => (
+                  <section
+                    key={group.league.id}
+                    aria-labelledby={group.league.id}
+                    data-team-group=""
+                    className="mt-8"
+                  >
+                    <SectionHeader
+                      as="h3"
+                      id={group.league.id}
+                      kicker={group.title}
+                      meta={group.meta}
+                      action={{ href: group.standingsHref, label: group.standingsLabel }}
+                    />
+                    {/* Only where a league's schools are not all in the section it sits under (EAL). */}
+                    {group.membershipNote ? (
+                      <p className="m-0 mt-2 max-w-prose text-meta text-ink-3">{group.membershipNote}</p>
+                    ) : null}
+                    {group.divisions.map((division) => (
+                      <OverviewDivisionBlock key={division.division} division={division} filterable teamGroup />
+                    ))}
+                  </section>
                 ))}
               </section>
             ))}
-          </section>
+          </div>
         ))}
       </div>
 
@@ -119,7 +140,9 @@ export default function TeamsPage() {
           every page, one line below. The alignment source is already in the page description. */}
       <p className="mt-section mb-0 max-w-prose text-meta text-ink-3">
         Places, GP and W-L-T count league games only; PTS is 3 for a win and 1 for a tie in every
-        league. A dash means no results have been reported yet. Each league&rsquo;s full page has its
+        table{siteOrdered.length > 0
+          ? ` (${listWords(siteOrdered)} publish no points rule, so there the order is this site’s own points)`
+          : ''}. A dash means no results have been reported yet. Each league&rsquo;s full page has its
         tiebreak rules, GD, form, and the games still to play.{' '}
         <Link href="/about" prefetch={false} className="font-medium text-accent hover:underline">
           How standings are computed

@@ -6,8 +6,8 @@ import SetLeagueButton from './SetLeagueButton';
 
 /**
  * One league in "Find your team" (SPEC §10.1): the short name large, then the full name, the
- * section, `<n> teams`, the division labels (none for a single-division league) and the region in
- * plain words — e.g. `BVAL · Blossom Valley Athletic League · 12 teams · Mt. Hamilton, Santa Teresa
+ * section, `<n> teams`, the division labels (none for a single-division league) and its cities in
+ * plain words (`LeagueConfig.cities`) — e.g. `BVAL · Blossom Valley Athletic League · 12 teams · Mt. Hamilton, Santa Teresa
  * · San Jose, Campbell, Saratoga, Morgan Hill and Gilroy`.
  *
  * Two ways on: `Show <SHORT> here` (remembers the league and swaps the home panels; JS only) and the
@@ -35,10 +35,11 @@ export function LeagueCard({ card, className, wide }: LeagueCardProps) {
         .join(' ')}
     >
       <div className="min-w-0">
-        <h3 className="m-0 text-title text-ink">
+        {/* An h4: the card sits under its region's h3 in "Find your team" (DESIGN-socal §2.4). */}
+        <h4 className="m-0 text-title text-ink">
           {card.shortName}
           <span className="sr-only"> · {card.name}</span>
-        </h3>
+        </h4>
         <p aria-hidden="true" className="mt-1 mb-0 text-body text-ink">
           {card.name}
         </p>
@@ -46,7 +47,7 @@ export function LeagueCard({ card, className, wide }: LeagueCardProps) {
           {card.sectionShort} &middot; {card.teamsLine}
           {card.divisions.length > 0 ? <> &middot; {card.divisions.join(', ')}</> : null}
         </p>
-        <p className="mt-1 mb-0 text-meta text-ink-3">{card.region}</p>
+        <p className="mt-1 mb-0 text-meta text-ink-3">{card.cities}</p>
       </div>
       <div
         className={[
@@ -56,13 +57,13 @@ export function LeagueCard({ card, className, wide }: LeagueCardProps) {
           .filter(Boolean)
           .join(' ')}
       >
-        <SetLeagueButton leagueId={card.id} shortName={card.shortName} />
+        <SetLeagueButton leagueId={card.id} shortName={card.showName} />
         <Link
           href={card.standingsHref}
           prefetch={false}
           className="inline-flex min-h-11 items-center text-meta font-medium text-accent no-underline hover:underline"
         >
-          {card.shortName} standings <Arrow />
+          {card.standingsLabel} <Arrow />
         </Link>
       </div>
     </li>

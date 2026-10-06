@@ -1,9 +1,12 @@
 /**
  * Id-first si.com side resolution (SPEC §7.9, owner decision D2 rule 7).
  *
- * The four statewide namesakes — University (Irvine 458756 / San Francisco 456869), Los Altos
+ * The statewide namesakes — University (Irvine 458756 / San Francisco 456869), Los Altos
  * (Hacienda Heights 458731 / Los Altos 458850), Santa Clara (Oxnard 456804 / Santa Clara 496839) and
- * Davis (Modesto 458828 / Davis 458605) — must NEVER resolve by name; a registry team resolves by its si.com team id or school id. Ported from
+ * Davis (Modesto 458828 / Davis 458605), and since the Southern California seeds Westview, Del Norte,
+ * Marina, San Marcos, Mission Vista, Granite Hills and Southwest (si.com's team search, 2026-10-06:
+ * tests/fixtures/seeds/registry-seed-ss.json and registry-seed-sds.json, sbliveIdentity.nameSearch) —
+ * must NEVER resolve by name; a registry team resolves by its si.com team id or school id. Ported from
  * the research draft (tests/fixtures/sblive/identity/sblive-identity.test.draft.ts.txt, prototype in
  * proto-resolver.ts.txt) and run against the captured si.com pages in tests/fixtures/sblive/identity/.
  */
@@ -24,7 +27,7 @@ import {
   resolveSbliveSide,
   sbliveIdsFrom,
 } from '../lib/sources/sblive';
-import { TEAMS, normalizeTeamKey } from '../lib/teams';
+import { TEAMS, getTeamBySlug, normalizeTeamKey } from '../lib/teams';
 import { REPO } from './helpers';
 
 const DIR = path.join(REPO, 'tests', 'fixtures', 'sblive', 'identity');
@@ -93,9 +96,32 @@ const scoreboard = (teams: Array<{ name: string; image: string | null }>) =>
   });
 
 describe('sblive identity: the resolver, step by step', () => {
-  it('lists exactly the four statewide namesakes', () => {
-    expect([...STATEWIDE_AMBIGUOUS].sort()).toEqual(['davis', 'losaltos', 'santaclara', 'university']);
+  it('lists exactly the eleven statewide namesakes', () => {
+    expect([...STATEWIDE_AMBIGUOUS].sort()).toEqual([
+      'davis', 'delnorte', 'granitehills', 'losaltos', 'marina', 'missionvista', 'sanmarcos', 'santaclara',
+      'southwest', 'university', 'westview',
+    ]);
     expect(STATEWIDE_AMBIGUOUS.has(normalizeTeamKey('Los Altos High School'))).toBe(true);
+  });
+
+  it('lists every namesake the SoCal si.com name search found, and each is a registry team', () => {
+    const searched = ['registry-seed-ss.json', 'registry-seed-sds.json'].flatMap((file) => {
+      const seed = JSON.parse(readFileSync(path.join(REPO, 'tests', 'fixtures', 'seeds', file), 'utf8')) as {
+        sbliveIdentity: { nameSearch: { namesakes: Record<string, string> } };
+      };
+      return Object.keys(seed.sbliveIdentity.nameSearch.namesakes);
+    });
+    expect(searched.sort()).toEqual([
+      'del-norte', 'granite-hills', 'marina', 'mission-vista', 'san-marcos', 'southwest', 'westview',
+    ]);
+    for (const slug of searched) {
+      const t = getTeamBySlug(slug)!;
+      expect(t, slug).toBeDefined();
+      expect(STATEWIDE_AMBIGUOUS.has(normalizeTeamKey(t.name)), slug).toBe(true);
+    }
+    // si.com calls our Southwest "Southwest SD", a unique name; bare "Southwest" is El Centro's (583246).
+    expect(resolveSbliveSide({ name: 'Southwest SD' })).toEqual({ slug: 'southwest', via: 'name' });
+    expect(resolveSbliveSide({ name: 'Southwest' })).toEqual({ slug: null, via: null, refused: 'ambiguous-name' });
   });
 
   it('reads the team id from a web path, then a raw id, then a team-logo URL; the school id from a school logo', () => {
@@ -126,6 +152,28 @@ describe('sblive identity: the resolver, step by step', () => {
     ['Davis', null, null, null],
     ['Davis', '458605', null, 'davis'],
     ['Davis', null, '10575', 'davis'],
+    // The Southern California namesakes (si.com team search, 2026-10-06).
+    ['Westview', '464882', null, null],
+    ['Westview', null, null, null],
+    ['Westview', '458949', null, 'westview'],
+    ['Westview', null, '12673', 'westview'],
+    ['Del Norte', '458609', null, null],
+    ['Del Norte', null, '10601', null],
+    ['Del Norte', null, null, null],
+    ['Del Norte', '458937', null, 'del-norte'],
+    ['Marina', '500865', null, null],
+    ['Marina', null, '12097', null],
+    ['Marina', null, '11317', 'marina'],
+    ['San Marcos', '459073', null, null],
+    ['San Marcos', '459066', null, 'san-marcos'],
+    ['Mission Vista', '480754', null, null],
+    ['Mission Vista', '464852', null, 'mission-vista'],
+    ['Granite Hills', '554634', null, null],
+    ['Granite Hills', '458466', null, null],
+    ['Granite Hills', '458713', null, 'granite-hills'],
+    ['Southwest', '583246', null, null],
+    ['Southwest', null, '32018', null],
+    ['Southwest SD', '459138', null, 'southwest'],
   ];
   it.each(cases)('%s (team %s, school %s) → %s', (name, teamId, schoolId, want) => {
     const r = resolveSbliveSide({ name, rawId: teamId, image: schoolId ? IMG_SCHOOL(schoolId) : null });
@@ -233,8 +281,13 @@ describe('sblive identity: the captured si.com pages', () => {
     const namesakes = refs.filter((r) => ['University', 'Los Altos', 'Santa Clara'].includes(r.name));
     expect(namesakes.map((r) => r.sbliveTeamId).sort()).toEqual(['456804', '458731', '458756']);
     expect(namesakes.every((r) => r.slug === null)).toBe(true);
-    // No row on these three Southern California pages is one of our 49 teams.
+    // These three Southern California league pages (si.com's Pacific Coast, Hacienda and Tri-County
+    // Athletic) list 22 teams, none of them one of our 99: no Sunset team and no San Diego Section
+    // team plays in those leagues, so adding the SoCal registry changes nothing here.
+    expect(refs).toHaveLength(22);
     expect(refs.filter((r) => r.slug !== null)).toEqual([]);
+    const registryIds = new Set(TEAMS.map((t) => t.external.sbliveTeamId).filter(Boolean));
+    expect(refs.filter((r) => r.sbliveTeamId !== null && registryIds.has(r.sbliveTeamId))).toEqual([]);
   });
 
   it('the namesakes’ own team pages resolve to null; ours resolve by team id', () => {
@@ -279,6 +332,37 @@ describe('sblive identity: the captured si.com pages', () => {
     for (const s of named('Davis')) expect(s).toMatchObject({ slug: 'davis', via: 'school-id', sbliveSchoolId: '10575' });
     // Nothing ever resolves by name on a scoreboard to one of the namesakes.
     expect(sides.filter((s) => s.via === 'name' && STATEWIDE_AMBIGUOUS.has(normalizeTeamKey(s.name)))).toEqual([]);
+  });
+
+  it('scoreboards: the Southern California sides resolve to our teams through their logo ids', () => {
+    const sides = [...parseScoresPage(read('scores-2026-09-23.html')), ...parseScoresPage(read('scores-2026-09-30.html'))].flatMap((g) => g.sides);
+    const socal = new Set(TEAMS.slice(49).map((t) => t.slug));
+    const ours = sides.filter((s) => s.slug !== null && socal.has(s.slug));
+    // Every SoCal side on the two captured scoreboards that resolves does so by a si.com id.
+    expect(ours.length).toBeGreaterThan(0);
+    expect(ours.every((s) => s.via === 'school-id' || s.via === 'team-id')).toBe(true);
+    expect(new Set(ours.map((s) => s.slug))).toEqual(new Set([
+      'chaparral', 'clairemont', 'el-capitan', 'fountain-valley', 'huntington-beach', 'la-costa-canyon',
+      'la-jolla-country-day', 'mission-bay', 'olympian', 'otay-ranch', 'sage-creek', 'southwest', 'hilltop', 'vista',
+      'newport-harbor', 'edison', 'marina', 'westview', 'mission-hills', 'valley-center', 'del-norte', 'escondido',
+      'san-pasqual', 'glendora', 'harvard-westlake', 'thousand-oaks',
+    ]));
+    expect(sides.find((s) => s.name === 'Southwest SD')).toMatchObject({ slug: 'southwest', via: 'school-id', sbliveSchoolId: '13422' });
+    expect(sides.find((s) => s.name === 'Del Norte')).toMatchObject({ slug: 'del-norte', via: 'school-id', sbliveSchoolId: '12669' });
+    expect(sides.find((s) => s.name === 'Marina')).toMatchObject({ slug: 'marina', via: 'school-id', sbliveSchoolId: '11317' });
+    // Sep 30 lists Westview–Sage Creek twice: once with our Westview's school logo (12673), once with
+    // no logo at all (si.com's West Los Angeles Westview, 464882, carries that game). Only the first is ours.
+    const westviews = sides.filter((s) => s.name === 'Westview');
+    expect(westviews.map((s) => [s.slug, s.via, s.refused ?? null])).toEqual([
+      ['westview', 'school-id', null],
+      [null, null, 'ambiguous-name'],
+    ]);
+    // The Southern Section independents are registry teams now (DESIGN §24.9), resolved by their si.com ids too.
+    for (const [name, slug] of [['Harvard-Westlake', 'harvard-westlake'], ['Thousand Oaks', 'thousand-oaks'], ['Glendora', 'glendora']]) {
+      const found = sides.filter((x) => x.name === name);
+      expect(found.length, name).toBeGreaterThan(0);
+      for (const s of found) expect([s.slug, s.via === 'school-id' || s.via === 'team-id'], name).toEqual([slug, true]);
+    }
   });
 
   it('a game page’s participant ids resolve both MCAL sides (Convent & Stuart Hall 512325, Tamalpais 486964)', () => {

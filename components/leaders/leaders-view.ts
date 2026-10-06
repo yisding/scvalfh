@@ -1,7 +1,14 @@
 /**
- * The /leaders page (DESIGN §16): site-wide leaderboards over all five leagues, derived from the
- * two files the rest of the site already reads. Pure, so tests/ui/leaders-view.test.ts can assert
- * it over the committed data and over synthetic games.
+ * The /leaders page (DESIGN §16): leaderboards over all nine leagues and the five independents, built once per region (NorCal, then
+ * SoCal: DESIGN-socal §2.3, §2.4), derived from the two files the rest of the site already reads. Pure, so
+ * tests/ui/leaders-view.test.ts can assert it over the committed data and over synthetic games.
+ *
+ * Per region. Each region gets its own boards, minimums and notes (`RegionLeadersView`): a NorCal board
+ * ranks NorCal teams and players, a SoCal board SoCal ones, and each board's ids carry the region's suffix
+ * ('' for NorCal, so its anchors stay what they always were; '-socal' for SoCal: `#elo-rating-socal`), so
+ * the page can render both regions on one page (JavaScript off shows both) without a duplicate id. The two
+ * leagues' calendars and numbers of games differ too much for one minimum: San Diego's divisions play 6 to
+ * 12 league games, the Sunset has no fixed schedule, and Metro South Bay's first league game is Oct 7.
  *
  * Players (data/player-stats.json): most points, assists, saves and clean sheets. A player's
  * numbers are exactly what the team page shows: season totals as the coach entered them on
@@ -16,11 +23,16 @@
  * league games the table counts), so a team's record here is its record everywhere. Clean sheets
  * and the per-game rates come from the same finals, with forfeits left out of goals as
  * lib/standings.ts leaves them out (DESIGN §11.6). Records and rates need a minimum number of
- * results, half the median team's, so a 1-0 team does not top a table of 10-game seasons; the
- * teams below it are named. The Elo board's minimum counts the games its fit
- * counts this season (finals between two registry teams), by the same rule; a team under it is
- * still rated on its own page, as provisional. The ratings start from last season's
+ * results, half the median team's in the region, so a 1-0 team does not top a table of 10-game
+ * seasons; the teams below it are named. The Elo board's minimum counts the games its fit
+ * counts this season (finals between two registry teams, either region), by the same rule; a team
+ * under it is still rated on its own page, as provisional. The ratings start from last season's
  * (data/prior-season.json); synthetic sources without one start every team at average.
+ *
+ * Elo is ONE fit over all 99 teams (lib/ratings.ts computeRatings, unchanged): each region's board shows
+ * its own teams' numbers from that one table, so a NorCal and a SoCal rating are on one scale. What links
+ * the two regions is the finals between them, few so far, so every Elo note says how many (this season's
+ * from the snapshot, last season's from data/prior-season.json, both counted at build time, never typed in).
  *
  * Every board ranks with standard competition ranking (1, 2, 2, 4): equal values share a place
  * and tied rows are listed by name. A board shows the places up to 10th, and every player or school
@@ -39,7 +51,16 @@ import {
   signedGd,
   winPct,
 } from '../../lib/format';
-import { LEAGUES, getLeague } from '../../lib/leagues';
+import {
+  INDEPENDENT_LEAGUES,
+  LEAGUES_PROPER,
+  REGIONS,
+  getLeague,
+  getSection,
+  leaguesInRegion,
+  regionOf,
+  type RegionConfig,
+} from '../../lib/leagues';
 import { getPlayerStats } from '../../lib/player-stats';
 import { getPriorSeason } from '../../lib/prior-season';
 import { getAllEnrichedRosters, type MergedPlayer } from '../../lib/rosters';
@@ -50,6 +71,7 @@ import {
   MARGIN_CAP,
   computeRatings,
   getRatings,
+  ratingGames,
   type RatingTable,
   type TeamRating,
 } from '../../lib/ratings';
@@ -59,13 +81,36 @@ import type {
   PlayerStatLine,
   TeamPlayerStats,
 } from '../../lib/player-stats-schema';
-import type { ComputedRecord, Game, Standing, Team, TeamSlug } from '../../lib/types';
+import type { ComputedRecord, Game, RegionId, Standing, Team, TeamSlug } from '../../lib/types';
 import { gamesSinceUpdate, savePercent, statText } from '../teams/player-stats-view';
 import { plural } from '../ui/plural';
 import { positionWords } from '../ui/position-words';
 
-/** 'five': the number of configured leagues, in words (the captions say 'all five leagues'). */
-export const LEAGUE_COUNT = numberWord(LEAGUES.length);
+/**
+ * 'nine': the number of configured leagues proper, in words. The Elo fit spans all of them and the
+ * independent groups too (one scale), so the copy that speaks for the whole fit says 'the nine leagues'
+ * teams' and adds AND_INDEPENDENTS; a board speaks for its region's. Never 'ten leagues': the Southern
+ * Section independents are not a league (DESIGN §24.9).
+ */
+export const LEAGUE_COUNT = numberWord(LEAGUES_PROPER.length);
+
+/**
+ * ' and the Southern Section’s five independents' ('' with no independent group): the covered teams that
+ * are in no league, named after a count of leagues wherever the sentence speaks for every covered team.
+ */
+export const AND_INDEPENDENTS = INDEPENDENT_LEAGUES.map(
+  (g) => ` and the ${getSection(g.sectionId).name}’s ${numberWord(g.divisions.reduce((n, d) => n + d.expectedTeams, 0))} independents`,
+).join('');
+
+/** ' and five independents' ('' with none): the short form, for an eyebrow. */
+export const AND_INDEPENDENTS_SHORT = INDEPENDENT_LEAGUES.map(
+  (g) => ` and ${numberWord(g.divisions.reduce((n, d) => n + d.expectedTeams, 0))} independents`,
+).join('');
+
+/** The id suffix of a region's boards and sections: '' for NorCal (today's anchors), '-socal' for SoCal. */
+export function regionIdSuffix(region: RegionId): '' | '-socal' {
+  return region === 'norcal' ? '' : '-socal';
+}
 
 /**
  * What an Elo number means, without trailing punctuation: the board's note and the team page's
@@ -157,17 +202,57 @@ export interface LeaderExtra {
   rows: LeaderRow[];
 }
 
-export interface LeadersView {
+/** One region's half of /leaders: what the page renders once for NorCal and once for SoCal. */
+export interface RegionLeadersView {
+  region: RegionId;
+  /** 'Northern California' | 'Southern California': the region's heading. */
+  name: RegionConfig['name'];
+  /** 'NorCal' | 'SoCal' */
+  shortName: RegionConfig['shortName'];
+  /** '' | '-socal': appended to every id this region's half renders (boards, sections). */
+  idSuffix: '' | '-socal';
+  /** 'schools' | 'schools-socal': the Schools section's id. */
+  schoolsId: string;
+  /** 'players' | 'players-socal': the Players section's id. */
+  playersId: string;
+  /** The region's configured leagues with a table: 5 NorCal, 4 SoCal. */
+  leagueCount: number;
+  /** The region's independents (teams in no league): 0 NorCal, 3 SoCal. */
+  independentCount: number;
   players: LeaderBoard[];
   schools: LeaderBoard[];
   /** Under the player boards: whose stats are missing, behind or carried forward. */
   playerNotes: string[];
   /** Under the school boards: what the records count and who has not played enough to qualify. */
   schoolNotes: string[];
-  /** Teams with at least one player stat line. */
+  /** The region's teams with at least one player stat line. */
   statTeams: number;
+  /** The region's teams. */
   teamCount: number;
-  /** "Fri Oct 2": the last day with a final, or null before the first one. */
+  /** "Fri Oct 2": the last day with a final involving one of the region's teams, or null before the first one. */
+  resultsThrough: string | null;
+}
+
+/** The finals that put NorCal and SoCal teams on one Elo scale (DESIGN-socal §2.3), counted at build time. */
+export interface CrossRegionFinals {
+  /** This season's finals the Elo fit counts between a NorCal and a SoCal team. */
+  thisSeason: number;
+  /** Last season's (data/prior-season.json) finals between two registry teams of different regions. */
+  lastSeason: number;
+  /**
+   * 'The ratings are on one scale across all nine leagues; comparisons between NorCal and SoCal rest on 7
+   * finals between the regions this season and 11 last season, so treat them as rough.'
+   */
+  sentence: string;
+}
+
+export interface LeadersView {
+  /** One per region that has teams, NorCal first (REGIONS order). */
+  regions: RegionLeadersView[];
+  crossRegion: CrossRegionFinals;
+  /** Every team (99). */
+  teamCount: number;
+  /** "Fri Oct 2": the last day with a final anywhere, or null before the first one. */
   resultsThrough: string | null;
 }
 
@@ -205,6 +290,46 @@ function defaultSources(): LeaderSources {
     games: snapshot.games,
     prior: getPriorSeason(),
     rosters: getAllEnrichedRosters(),
+  };
+}
+
+/** What a board needs to know about the region it ranks: its id suffix and the words for its leagues. */
+interface BoardScope {
+  /** '' | '-socal' */
+  suffix: '' | '-socal';
+  /** 'all five NorCal leagues', 'all four SoCal leagues and five independents': the captions' scope. */
+  leagues: string;
+  /**
+   * The same without the independents ('all four SoCal leagues'): the league-record board's scope. The
+   * independents' table counts their games against each other, not league games, so that board leaves them
+   * out (DESIGN §24.10).
+   */
+  leaguesOnly: string;
+}
+
+/**
+ * A region's leagues proper, and its independents' team count (the Southern Section independents are SoCal's:
+ * no league, so not counted as one, DESIGN §24.9).
+ */
+function regionCounts(region: RegionId): { leagues: number; independents: number } {
+  const all = leaguesInRegion(region);
+  return {
+    leagues: all.filter((l) => !l.independents).length,
+    independents: all
+      .filter((l) => l.independents)
+      .reduce((n, l) => n + l.divisions.reduce((m, d) => m + d.expectedTeams, 0), 0),
+  };
+}
+
+/** A region's board scope: 'all five NorCal leagues', 'all four SoCal leagues and five independents'. */
+function boardScope(region: RegionId): BoardScope {
+  const config = REGIONS.find((r) => r.id === region)!;
+  const counts = regionCounts(region);
+  const leaguesOnly = `all ${numberWord(counts.leagues)} ${config.shortName} leagues`;
+  return {
+    suffix: regionIdSuffix(region),
+    leagues: `${leaguesOnly}${counts.independents > 0 ? ` and ${numberWord(counts.independents)} independents` : ''}`,
+    leaguesOnly,
   };
 }
 
@@ -389,6 +514,7 @@ function playerBoard(
   spec: PlayerBoardSpec,
   entries: readonly PlayerEntry[],
   withStats: readonly { stats: TeamPlayerStats; team: Team }[],
+  scope: BoardScope,
 ): LeaderBoard {
   const tracking = withStats.filter((t) => tracks(t.stats, spec.stat));
   const notTracking = withStats.filter((t) => !tracks(t.stats, spec.stat));
@@ -415,7 +541,7 @@ function playerBoard(
   }));
   const rows = listed.filter((r) => r.rank <= BOARD_PLACES);
   const extra = listed.slice(rows.length);
-  const caption = `${spec.title}, players in all ${LEAGUE_COUNT} leagues, this season`;
+  const caption = `${spec.title}, players in ${scope.leagues}, this season`;
 
   // Name whichever list is shorter: the few teams that do enter the stat, or the few with stats
   // that do not.
@@ -429,7 +555,7 @@ function playerBoard(
           : `Of the ${plural(withStats.length, 'team')} with player stats, ${listWords(names(notTracking.map((t) => t.team)))} ${notTracking.length === 1 ? 'does' : 'do'} not enter ${spec.statWord}.`;
 
   return {
-    id: spec.id,
+    id: `${spec.id}${scope.suffix}`,
     kind: 'player',
     title: spec.title,
     meta: `From ${plural(tracking.length, 'team')}`,
@@ -503,6 +629,7 @@ function recordBoard(
   min: number,
   unitWord: string,
   note: string,
+  scope: BoardScope,
 ): LeaderBoard {
   const sorted = lines
     .filter((l) => pick(l).gp >= min)
@@ -515,7 +642,7 @@ function recordBoard(
     );
   const same = (a: SchoolLine, b: SchoolLine) =>
     pick(a).winPct === pick(b).winPct && pick(a).w === pick(b).w && pick(a).gd === pick(b).gd;
-  return schoolBoard(id, title, `At least ${plural(min, unitWord)}`, sorted, same, {
+  return schoolBoard(id, title, `At least ${plural(min, unitWord)}`, sorted, same, scope, {
     columns: [
       { key: 'record', label: 'W-L-T', title: 'Wins, losses and ties', cell: (l) => recordCell(pick(l)) },
       { key: 'pct', label: 'Pct', title: 'Win percentage', cell: (l) => pctCell(pick(l)) },
@@ -533,6 +660,7 @@ function schoolBoard<L extends { team: Team }>(
   meta: string,
   sorted: readonly L[],
   same: (a: L, b: L) => boolean,
+  scope: BoardScope,
   spec: {
     columns: Array<LeaderColumn & { cell: (l: L) => LeaderCell }>;
     rankedBy: number;
@@ -543,11 +671,11 @@ function schoolBoard<L extends { team: Team }>(
   },
 ): LeaderBoard {
   return {
-    id,
+    id: `${id}${scope.suffix}`,
     kind: 'school',
     title,
     meta,
-    caption: `${title}, schools in all ${LEAGUE_COUNT} leagues, this season`,
+    caption: `${title}, schools in ${scope.leagues}, this season`,
     columns: spec.columns.map(({ key, label, title: t }) => ({ key, label, title: t })),
     rankedBy: spec.rankedBy,
     rows: rankBoard(sorted, same).map(({ item: l, rank, tied }) => ({
@@ -568,31 +696,72 @@ function schoolBoard<L extends { team: Team }>(
 // ---------------------------------------------------------------- the Elo board
 
 export interface EloBoardView {
-  /** The `#elo-rating` board: the top 10 places among the teams past the minimum. */
+  /** The `#elo-rating` board (`#elo-rating-socal` for SoCal): the top 10 places among the teams past the minimum. */
   board: LeaderBoard;
-  /** Every rated team's rating, by slug (provisional and preseason ones included). */
+  /** Every rated team of the board's teams, by slug (provisional and preseason ones included). */
   ratingBySlug: Map<TeamSlug, TeamRating>;
   /** The season the ratings start from ("2025-26"); null when every team starts at average. */
   seededFrom: string | null;
-  /** The board's minimum: half the median of the rated teams' counted games. */
+  /** The board's minimum: half the median of its rated teams' counted games. */
   minimum: { min: number; median: number };
   /** "Del Mar (1)": teams that have played this season but fewer than the minimum, fewest first. */
   below: string[];
 }
 
 /**
- * The Elo board (DESIGN §20), from a rating table over the same teams and games as the rest of the
- * page. getEloBoard is the bundled instance: each team page reads its own place on it, so a team
- * page says "3rd on the Elo board" only for a row this board lists, and the two cannot disagree.
+ * The finals that link the two regions on the Elo scale: this season's that the fit counts
+ * (lib/ratings.ts ratingGames: finals with a score between two registry teams, forfeits left out) between
+ * a NorCal and a SoCal team, and last season's (data/prior-season.json) between two registry teams of
+ * different regions, as the fit's starts read them. Teams outside the configured leagues have no region
+ * and count in neither.
  */
-export function buildEloBoard(teams: readonly Team[], table: RatingTable): EloBoardView {
+export function crossRegionFinals(
+  teams: readonly Team[],
+  games: readonly Game[],
+  prior: PriorSeason | null,
+): CrossRegionFinals {
+  const regionById = new Map(teams.map((t) => [t.id, regionOf(t.league)]));
+  const across = (a: string, b: string) => {
+    const ra = regionById.get(a);
+    const rb = regionById.get(b);
+    return ra !== undefined && rb !== undefined && ra !== rb;
+  };
+  const thisSeason = ratingGames(teams, games).filter((g) => across(g.home.teamId!, g.away.teamId!)).length;
+  const lastSeason = prior ? prior.games.filter((g) => across(g.homeId, g.awayId)).length : 0;
+  return {
+    thisSeason,
+    lastSeason,
+    sentence:
+      `The ratings are on one scale across all ${LEAGUE_COUNT} leagues${AND_INDEPENDENTS}; comparisons between NorCal and SoCal rest on ` +
+      `${plural(thisSeason, 'final')} between the regions this season and ${lastSeason} last season, so treat them as rough.`,
+  };
+}
+
+/**
+ * The Elo board (DESIGN §20) of `teams` (one region's, or every team for a single-board caller), read off
+ * `table`, the ONE fit over every registry team: a board never refits, so its numbers are the unified
+ * table's and a NorCal and a SoCal rating can be compared. The minimum is the board's own teams'. `region`
+ * sets the board's id suffix and caption scope (default NorCal, today's `#elo-rating`); `crossRegion`, when
+ * given, adds the sentence that says how few finals link the regions. getEloBoard is the bundled instance:
+ * each team page reads its own place on its region's board, so a team page says "3rd on the Elo board"
+ * only for a row this board lists, and the two cannot disagree.
+ */
+export function buildEloBoard(
+  teams: readonly Team[],
+  table: RatingTable,
+  opts: { region?: RegionId; crossRegion?: CrossRegionFinals | null; fitTeams?: number } = {},
+): EloBoardView {
+  const scope = boardScope(opts.region ?? 'norcal');
   const teamById = new Map(teams.map((t) => [t.id, t]));
-  const lines = table.ratings.map((rating) => ({ team: teamById.get(rating.teamId)!, rating }));
+  const lines = table.ratings.flatMap((rating) => {
+    const team = teamById.get(rating.teamId);
+    return team ? [{ team, rating }] : [];
+  });
   const minimum = qualifyingMinimum(lines.map((l) => l.rating.games));
   // A team with no counted final last season (new to the registry, or only forfeits and unscored
   // games then) has no rating from it and starts at average: say so only when there is one, so
   // the note never claims a start a team did not have.
-  const unseeded = table.ratings.some((r) => !r.seeded);
+  const unseeded = lines.some((l) => !l.rating.seeded);
   const seeded = table.seededFrom
     ? `Each team started the season from its ${table.seededFrom} rating (the same fit over last season’s ${plural(table.priorGames, 'final')})${unseeded ? `, or from average if it had no counted ${table.seededFrom} final` : ''}; that start counts for one game and fades as this season’s results come in. `
     : '';
@@ -600,12 +769,16 @@ export function buildEloBoard(teams: readonly Team[], table: RatingTable): EloBo
     .filter((l) => l.rating.games >= minimum.min)
     .sort((a, b) => b.rating.elo - a.rating.elo || byName(a.team.name, b.team.name));
   const homeEdge = table.homeEdge > 0 ? `, allowing a home edge of ${plural(table.homeEdge, 'point')}` : '';
+  // The fit spans every registry team, not just this board's: say how many it spans.
+  const fitTeams = opts.fitTeams ?? teams.length;
+  const across = opts.crossRegion ? ` ${opts.crossRegion.sentence}` : '';
   const board = schoolBoard(
     'elo-rating',
     'Highest Elo rating',
     `At least ${plural(minimum.min, 'game')}`,
     sorted,
     (a, b) => a.rating.elo === b.rating.elo,
+    scope,
     {
       columns: [
         { key: 'gp', label: 'GP', title: 'Games counted', cell: (l) => num(l.rating.games) },
@@ -614,12 +787,12 @@ export function buildEloBoard(teams: readonly Team[], table: RatingTable): EloBo
       rankedBy: 1,
       anchor: '#elo',
       note:
-        `Every final between two of the ${plural(teams.length, 'team')}, league or not, fitted at once: the ratings that best explain each game’s goal margin, counted up to ${MARGIN_CAP} goals${homeEdge}. ` +
+        `Every final between two of the ${plural(fitTeams, 'team')}, league or not, fitted at once: the ratings that best explain each game’s goal margin, counted up to ${MARGIN_CAP} goals${homeEdge}. ` +
         seeded +
-        `${ELO_SCALE}, so a team rated 400 points higher is about a 10-to-1 favorite. Forfeits and games against schools outside the ${LEAGUE_COUNT} leagues are left out.`,
+        `${ELO_SCALE}, so a team rated 400 points higher is about a 10-to-1 favorite.${across} Forfeits and games against schools outside the ${LEAGUE_COUNT} leagues${AND_INDEPENDENTS} are left out.`,
       empty: lines.some((l) => l.rating.games > 0)
         ? `No team has played ${plural(minimum.min, 'game')} yet.`
-        : `No final between two of the ${plural(teams.length, 'team')} yet this season.`,
+        : `No final between two of the ${plural(fitTeams, 'team')} yet this season.`,
     },
   );
   return {
@@ -650,25 +823,65 @@ function belowMinimum(
     .map((l) => `${l.team.name} (${gp(l)})`);
 }
 
-let bundledBoard: EloBoardView | null = null;
+const bundledBoards = new Map<RegionId, EloBoardView>();
+let bundledCrossRegion: CrossRegionFinals | null = null;
 
-/**
- * The Elo board over the bundled snapshot and prior season (lib/ratings.ts getRatings), built once
- * per process: what /leaders prints and what each team page reads its place from.
- */
-export function getEloBoard(): EloBoardView {
-  return (bundledBoard ??= buildEloBoard(getSnapshot().teams, getRatings()));
+/** The cross-region counts over the bundled snapshot and prior season, once per process. */
+function getCrossRegionFinals(): CrossRegionFinals {
+  if (!bundledCrossRegion) {
+    const snapshot = getSnapshot();
+    bundledCrossRegion = crossRegionFinals(snapshot.teams, snapshot.games, getPriorSeason());
+  }
+  return bundledCrossRegion;
 }
 
-// ---------------------------------------------------------------- the page
+/**
+ * One region's Elo board over the bundled snapshot and prior season (lib/ratings.ts getRatings: the one
+ * fit over all 99), built once per process: what /leaders prints for the region and what each of its team
+ * pages reads its place from. Defaults to NorCal, the board `/leaders#elo-rating` has always been.
+ */
+export function getEloBoard(region: RegionId = 'norcal'): EloBoardView {
+  let view = bundledBoards.get(region);
+  if (!view) {
+    const teams = getSnapshot().teams;
+    view = buildEloBoard(
+      teams.filter((t) => regionOf(t.league) === region),
+      getRatings(),
+      { region, crossRegion: getCrossRegionFinals(), fitTeams: teams.length },
+    );
+    bundledBoards.set(region, view);
+  }
+  return view;
+}
 
-/** The /leaders page, from the bundled data by default or from `sources` (tests). */
-export function buildLeadersView(sources?: LeaderSources): LeadersView {
-  const elo = sources
-    ? buildEloBoard(sources.teams, computeRatings(sources.teams, sources.games, sources.prior ?? null))
-    : getEloBoard();
-  const { teams, stats, standings, games, rosters = [] } = sources ?? defaultSources();
+/**
+ * The Elo board a team's page reads its place from: its own region's (DESIGN-socal §2.3). Its board link is
+ * `/leaders#elo-rating` for NorCal and `/leaders#elo-rating-socal` for SoCal (`board.id`).
+ */
+export function getEloBoardForTeam(team: Pick<Team, 'league'>): EloBoardView {
+  return getEloBoard(regionOf(team.league));
+}
+
+// ---------------------------------------------------------------- one region
+
+interface RegionInput {
+  region: RegionId;
+  /** The region's teams (registry order). */
+  teams: readonly Team[];
+  stats: readonly TeamPlayerStats[];
+  standings: readonly Standing[];
+  games: readonly Game[];
+  rosters: readonly RosterSource[];
+  elo: EloBoardView;
+}
+
+/** One region's boards and notes: the /leaders page as it was, over the region's teams only. */
+function buildRegion(input: RegionInput): RegionLeadersView {
+  const { region, teams, stats, standings, games, rosters, elo } = input;
+  const config = REGIONS.find((r) => r.id === region)!;
+  const scope = boardScope(region);
   const teamBySlug = new Map(teams.map((t) => [t.slug, t]));
+  const teamIds = new Set(teams.map((t) => t.id));
   const factsByPlayer = new Map(
     rosters.flatMap((r) =>
       r.players.flatMap((p) => (p.athleteId === null ? [] : [[`${r.slug}:${p.athleteId}`, playerFacts(p)] as const])),
@@ -687,7 +900,7 @@ export function buildLeadersView(sources?: LeaderSources): LeadersView {
       facts: (player.athleteId === null ? undefined : factsByPlayer.get(`${s.slug}:${player.athleteId}`)) ?? [],
     })),
   );
-  const players = PLAYER_BOARDS.map((spec) => playerBoard(spec, entries, withStats));
+  const players = PLAYER_BOARDS.map((spec) => playerBoard(spec, entries, withStats, scope));
 
   const statSlugs = new Set(withStats.map((t) => t.team.slug));
   const noStats = teams.filter((t) => !statSlugs.has(t.slug));
@@ -740,6 +953,7 @@ export function buildLeadersView(sources?: LeaderSources): LeadersView {
       overallMin.min,
       'game',
       'Every final, league and non-league, postseason included: the overall record on each team’s page. A tie counts as half a win; equal percentages are split by more wins, then goal difference.',
+      scope,
     ),
     recordBoard(
       'best-league-record',
@@ -749,6 +963,7 @@ export function buildLeadersView(sources?: LeaderSources): LeadersView {
       leagueMin.min,
       'league game',
       'League games only, as the standings count them. Leagues play different numbers of league games, so this compares percentages, not points.',
+      { ...scope, leagues: scope.leaguesOnly },
     ),
     schoolBoard(
       'most-goals',
@@ -765,6 +980,7 @@ export function buildLeadersView(sources?: LeaderSources): LeadersView {
       // Equal rates are split by more games played, so a shared place is an equal rate over the
       // same number of games (cross-multiplied: no float compare).
       (a, b) => a.gf * b.goalGames === b.gf * a.goalGames && a.goalGames === b.goalGames,
+      scope,
       {
         columns: [
           { key: 'gp', label: 'GP', title: 'Games played', cell: (l) => num(l.goalGames) },
@@ -791,6 +1007,7 @@ export function buildLeadersView(sources?: LeaderSources): LeadersView {
             byName(a.team.name, b.team.name),
         ),
       (a, b) => a.ga * b.goalGames === b.ga * a.goalGames && a.goalGames === b.goalGames,
+      scope,
       {
         columns: [
           { key: 'gp', label: 'GP', title: 'Games played', cell: (l) => num(l.goalGames) },
@@ -810,6 +1027,7 @@ export function buildLeadersView(sources?: LeaderSources): LeadersView {
         .filter((l) => l.cleanSheets > 0)
         .sort((a, b) => b.cleanSheets - a.cleanSheets || byName(a.team.name, b.team.name)),
       (a, b) => a.cleanSheets === b.cleanSheets,
+      scope,
       {
         columns: [
           { key: 'gp', label: 'GP', title: 'Games played', cell: (l) => num(l.goalGames) },
@@ -849,17 +1067,64 @@ export function buildLeadersView(sources?: LeaderSources): LeadersView {
   }
   if (elo.minimum.median > 0) {
     schoolNotes.push(
-      `The Elo board needs at least ${plural(elo.minimum.min, 'game')} against the ${LEAGUE_COUNT} leagues’ teams, half the median of ${elo.minimum.median}${notYet(elo.below)}`,
+      `The Elo board needs at least ${plural(elo.minimum.min, 'game')} against the ${LEAGUE_COUNT} leagues’ teams${AND_INDEPENDENTS}, half the median of ${elo.minimum.median}${notYet(elo.below)}`,
     );
   }
 
-  const finals = games.filter((g) => g.status === 'final').map((g) => g.dateKey).sort();
+  const finals = games
+    .filter((g) => g.status === 'final' && ((g.home.teamId !== null && teamIds.has(g.home.teamId)) || (g.away.teamId !== null && teamIds.has(g.away.teamId))))
+    .map((g) => g.dateKey)
+    .sort();
+  const suffix = regionIdSuffix(region);
   return {
+    region,
+    name: config.name,
+    shortName: config.shortName,
+    idSuffix: suffix,
+    schoolsId: `schools${suffix}`,
+    playersId: `players${suffix}`,
+    leagueCount: regionCounts(region).leagues,
+    independentCount: regionCounts(region).independents,
     players,
     schools,
     playerNotes,
     schoolNotes,
     statTeams: withStats.length,
+    teamCount: teams.length,
+    resultsThrough: finals.length ? shortDate(finals[finals.length - 1]) : null,
+  };
+}
+
+// ---------------------------------------------------------------- the page
+
+/**
+ * The /leaders page, from the bundled data by default or from `sources` (tests): one `RegionLeadersView` per
+ * region with teams in the sources, NorCal first, plus the cross-region counts the Elo notes print. The Elo
+ * table is fitted once over every team in the sources and each region's board reads it.
+ */
+export function buildLeadersView(sources?: LeaderSources): LeadersView {
+  const src = sources ?? defaultSources();
+  const { teams, stats, standings, games, rosters = [] } = src;
+  const prior = sources ? (sources.prior ?? null) : getPriorSeason();
+  const table = sources ? computeRatings(teams, games, prior) : getRatings();
+  const crossRegion = sources ? crossRegionFinals(teams, games, prior) : getCrossRegionFinals();
+  const regions = REGIONS.flatMap((config) => {
+    const regionTeams = teams.filter((t) => regionOf(t.league) === config.id);
+    if (regionTeams.length === 0) return [];
+    // Both regions present: the Elo notes say how few finals link them. One region alone (a synthetic
+    // source): there is nothing to compare across, so no such sentence.
+    const both = REGIONS.every((r) => teams.some((t) => regionOf(t.league) === r.id));
+    const elo = sources
+      ? buildEloBoard(regionTeams, table, { region: config.id, crossRegion: both ? crossRegion : null, fitTeams: teams.length })
+      : getEloBoard(config.id);
+    return [
+      buildRegion({ region: config.id, teams: regionTeams, stats, standings, games, rosters, elo }),
+    ];
+  });
+  const finals = games.filter((g) => g.status === 'final').map((g) => g.dateKey).sort();
+  return {
+    regions,
+    crossRegion,
     teamCount: teams.length,
     resultsThrough: finals.length ? shortDate(finals[finals.length - 1]) : null,
   };

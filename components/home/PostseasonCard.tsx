@@ -22,6 +22,11 @@ import type { PostseasonView } from './home-view';
  *   word. The event and its dates with the written qualifier count (`Super Regional, Oct 30–31 —
  *   the top six qualify`), the config's note (format, seeding and site not published, no NorCal or
  *   State path) and `Postseason →` to the league's card on /playoffs.
+ * - The Sunset (Southern Section, 'no-postseason'): the config's note, that the Section holds no
+ *   field hockey playoffs (Blue Book 2011.1, 3500.2), and `Postseason →` to its card on /playoffs.
+ * - A San Diego league ('section-playoffs'): the config's `qualificationLine` (the Section places Open
+ *   8, Division I 12 and Division II 12 from its power rankings; a designated league champion gets at
+ *   least a play-in), never "the top N qualify", and `San Diego Section playoffs →` to its card.
  */
 export interface PostseasonCardProps {
   view: PostseasonView;
@@ -31,7 +36,7 @@ export interface PostseasonCardProps {
 const LINK = 'text-accent hover:underline';
 
 export function PostseasonCard({ view, className }: PostseasonCardProps) {
-  if (view.kind === 'league-tournament' || view.kind === 'unbracketed-tournament') {
+  if (view.kind !== 'ccs-ladder') {
     return (
       <section className={className}>
         <SectionHeader as="h3" kicker="Postseason" />

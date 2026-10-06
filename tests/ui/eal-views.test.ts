@@ -117,7 +117,9 @@ describe('/standings/eal', () => {
     // (§IV, §VII.F); what they lack is a rule for the league table and any published standings.
     const claims = /ranks no table|set no other order|only a champion|publishes no table/;
     expect(textOf(standingsHtml), 'app/standings/[league]/page.tsx eal').not.toMatch(claims);
-    expect(textOf(aboutHtml), 'app/about/page.tsx').not.toMatch(claims);
+    // The San Diego Section's Valley has, in fact, no MaxPreps table, and its health card says so in
+    // lib/standings.ts crossCheckSkipReason's words; that sentence is about Valley, not the EAL.
+    expect(textOf(aboutHtml).replaceAll('MaxPreps publishes no table for this division', ''), 'app/about/page.tsx').not.toMatch(claims);
     const order = leagues.getLeague(LEAGUE).rules.citations.order;
     expect(order, 'lib/leagues.ts EAL citations.order').toContain('§III.E.1 Super Regional seeding criteria are not applied here');
     expect(textOf(aboutHtml), 'app/about/page.tsx rules').toContain(`${order}.`);
@@ -195,12 +197,15 @@ describe('/standings, the EAL block', () => {
     const outline = [...overviewHtml.matchAll(/<h([1-4])[^>]*>([\s\S]*?)<\/h\1>/g)].map(
       (m) => `h${m[1]} ${textOf(m[2]).trim()}`,
     );
-    expect(outline.slice(-2), 'app/standings/page.tsx outline').toEqual(['h2 Northern Section', 'h3 EAL — Eastern Athletic League']);
+    // The last NorCal section (the SoCal sections follow it, in their own region block).
+    const ns = outline.indexOf('h2 Northern Section');
+    expect(outline.slice(ns, ns + 2), 'app/standings/page.tsx outline').toEqual(['h2 Northern Section', 'h3 EAL — Eastern Athletic League']);
+    expect(outline[ns + 2], 'app/standings/page.tsx outline').toBe('h2 Southern Section');
     const block = textOf(sectionLabelledBy(overviewHtml, 'ns'));
     expect(block, 'app/standings/page.tsx EAL block').toContain(leagues.getLeague(LEAGUE).membershipNote!);
     // No ladder line in the compact table (ladderLine null).
     expect(block).not.toMatch(/\bline\b/i);
-    // Only the EAL carries a membership note.
+    // Only the EAL carries a NorCal membership note.
     for (const id of ['ccs', 'ncs']) {
       const other = textOf(sectionLabelledBy(overviewHtml, id));
       expect(other).not.toBe('');
@@ -239,11 +244,15 @@ describe('/about, the EAL parts', () => {
   it('prints no multi-team tie procedure for the EAL, whose chain has no step that separates teams', () => {
     expect(leagues.getLeague(LEAGUE).rules.tiebreaks.default, 'lib/leagues.ts EAL chain').toEqual(['no-rule']);
     expect(textOf(rules()), 'app/about/page.tsx EAL rules').not.toContain('three or more teams are level');
-    // Every other league with generated rules (SCVAL's by-laws are quoted) has a separating step and keeps the paragraph.
+    // Every other league with generated rules (SCVAL's by-laws are quoted) keeps the paragraph exactly when
+    // its chain has a separating step: the Southern California leagues' lone 'no-rule' has none, like the EAL's.
     for (const other of leagues.LEAGUES.filter((l) => l.id !== LEAGUE && l.rules.matcher !== 'legacy')) {
-      expect(textOf(byId(aboutHtml, `rules-${other.id}`)), `app/about/page.tsx ${other.id} rules`).toContain(
-        'three or more teams are level',
-      );
+      const separates =
+        Object.keys(other.rules.tiebreaks.byBucketStart ?? {}).length > 0 ||
+        other.rules.tiebreaks.default.some((stage) => stage !== 'no-rule');
+      const text = textOf(byId(aboutHtml, `rules-${other.id}`));
+      if (separates) expect(text, `app/about/page.tsx ${other.id} rules`).toContain('three or more teams are level');
+      else expect(text, `app/about/page.tsx ${other.id} rules`).not.toContain('three or more teams are level');
     }
   });
 
@@ -263,7 +272,7 @@ describe('/about, the EAL parts', () => {
     expect(textOf(byId(aboutHtml, 'playoffs')), 'app/about/page.tsx Postseason').toContain(
       `Northern Section: ${ps.note} Northern Section Field Hockey Guidelines (PDF)`,
     );
-    expect(text, 'app/about/page.tsx roster line').toMatch(/for all \d+ teams in all five leagues/);
+    expect(text, 'app/about/page.tsx roster line').toMatch(/for all \d+ teams in all nine leagues and the five Southern Section independents:/);
   });
 
   it('names the reported scores, not the Guidelines, as the EAL’s record for seeding, and dates no sweep wrongly', () => {

@@ -3,9 +3,9 @@ import Link from 'next/link';
 
 import PageHeader from '../components/layout/PageHeader';
 import { OG_BASE } from '../components/layout/site';
-import { listWords } from '../lib/format';
+import { listWords, numberWord } from '../lib/format';
 import { getAvailableHistoryLeagues } from '../lib/history';
-import { LEAGUES, getLeague } from '../lib/leagues';
+import { LEAGUES_PROPER, getLeague } from '../lib/leagues';
 
 export const metadata: Metadata = {
   title: 'Page not found',
@@ -14,13 +14,19 @@ export const metadata: Metadata = {
   openGraph: { ...OG_BASE, title: 'Page not found' },
 };
 
-/** 'SCVAL, BVAL, PCAL, MCAL and EAL', from the config (never a literal list). */
-const LEAGUE_LIST = listWords(LEAGUES.map((l) => l.shortName));
+/**
+ * 'the nine leagues', from the config (never a literal count). It named every league ('SCVAL, BVAL, PCAL,
+ * MCAL and EAL') while there were five; with nine across two regions the list outgrew a one-line card
+ * description, so the count stands in for it (the Teams page itself lists them, region by region). It counts
+ * the leagues with a table: the Southern Section independents have none (DESIGN §24.9), so "every table in
+ * the nine leagues" stays exact.
+ */
+const LEAGUE_COUNT = `the ${numberWord(LEAGUES_PROPER.length)} leagues`;
 
 const LINKS: Array<{ href: string; name: string; description: string }> = [
   { href: '/', name: 'Home', description: 'What just happened, and when the next game is' },
   { href: '/schedule', name: 'Schedule & results', description: 'Every league’s season' },
-  { href: '/teams', name: 'Teams and standings', description: `Find your school; every ${LEAGUE_LIST} table` },
+  { href: '/teams', name: 'Teams and standings', description: `Find your school; every table in ${LEAGUE_COUNT}` },
   { href: '/leaders', name: 'Season leaders', description: 'Top scorers, keepers and records, every league' },
   { href: '/playoffs', name: 'Playoffs', description: 'Who is in, and the key dates' },
   {

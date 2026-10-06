@@ -12,7 +12,7 @@
  *
  * Run once a season, at the next-season bootstrap (README): last season is over, so the file never
  * changes in between and the twice-daily cron never runs this. Cost: one team-context read (about
- * 0.5-0.7 MB, to find the season's id) and 49 schedule reads (about 150 KB each), through the
+ * 0.5-0.7 MB, to find the season's id) and 102 schedule reads (about 150 KB each), through the
  * MaxPreps client's own budget (at most 3 at a time, 500 ms between starts, retries on 429/5xx).
  *
  * The season id: MaxPreps' URL year segment is cosmetic (DATA-SOURCES §1.1h), but the ghost API's
@@ -20,8 +20,9 @@
  * it has played under `schoolSportSeasonsData` (Girls · Field Hockey · Varsity · <year>), which is
  * where the id comes from.
  *
- * All or nothing: a team's feed that fails, does not parse or contains no row for that team, a row
- * dated outside the season (MaxPreps serving another season), or a contest whose two feeds
+ * All or nothing: a team's feed that fails, does not parse or contains no row for that team, a live
+ * row dated outside the season (MaxPreps serving another season; a deleted one is listed and
+ * counted as deleted, see main), or a contest whose two feeds
  * disagree stops the run with exit 1 and writes nothing, because a partial season would skew every
  * starting rating. Node's built-in fetch ignores HTTPS_PROXY; behind a proxy run it with
  * NODE_USE_ENV_PROXY=1 (Node 22.21+).
@@ -146,11 +147,25 @@ async function main(argv: readonly string[]): Promise<number> {
     return 1;
   }
 
+  // A row dated outside the season means MaxPreps served another season, unless MaxPreps marks the
+  // row deleted: Sage Creek's 25-26 feed carries a deleted 2026-09-17 row against La Habra (a
+  // 2026-27 contest filed under last season and then deleted). A deleted row is never a game (the
+  // normalization counts it under excluded.deleted), so it cannot skew a rating; it is listed here,
+  // never silently, and only a live row outside the window stops the run.
   const { from, to } = seasonWindow(season);
+  const isOutside = (r: ScheduleRow) => r.contest.date.slice(0, 10) < from || r.contest.date.slice(0, 10) > to;
+  const isDeleted = (r: ScheduleRow) =>
+    r.calculatedFields.contestState === 1 || r.contest.isDeleted || r.contest.teams.some((t) => t.isDeleted);
+  const deletedOutside = [...feeds].flatMap(([slug, rows]) =>
+    rows.filter((r) => isOutside(r) && isDeleted(r)).map((r) => `${slug}: ${r.contest.date.slice(0, 10)} (contest ${r.contest.contestId})`),
+  );
+  if (deletedOutside.length > 0) {
+    console.log(
+      `fetch-prior-season: ${deletedOutside.length} deleted row(s) dated outside ${season}, counted as deleted:\n  ${deletedOutside.join('\n  ')}`,
+    );
+  }
   const outside = [...feeds].flatMap(([slug, rows]) =>
-    rows
-      .filter((r) => r.contest.date.slice(0, 10) < from || r.contest.date.slice(0, 10) > to)
-      .map((r) => `${slug}: ${r.contest.date.slice(0, 10)}`),
+    rows.filter((r) => isOutside(r) && !isDeleted(r)).map((r) => `${slug}: ${r.contest.date.slice(0, 10)}`),
   );
   if (outside.length > 0) {
     console.error(`fetch-prior-season: rows outside ${season} (another season served?), nothing written:\n  ${outside.slice(0, 10).join('\n  ')}`);

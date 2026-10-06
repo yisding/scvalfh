@@ -285,8 +285,8 @@ export function MarginStrip({
       {/* The chart is as wide as its card; the legend is prose, so it keeps a reading measure. */}
       <p className="mt-3 mb-0 max-w-prose text-meta text-ink-3">
         {signedMargin(best)} best &middot; {signedMargin(worst)} worst &middot;{' '}
-        {signedMargin(latest)} most recent. H / A / N is home, away, neutral; <b>?</b> is a league
-        game with no result yet
+        {signedMargin(latest)} most recent. H / A / N is home, away, neutral;{' '}
+        <b>?</b> is a league game with no result yet
         {unreported ? (
           <>
             ; <b>{EN_DASH}</b> is a game whose score was not reported

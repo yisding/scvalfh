@@ -31,6 +31,7 @@ import {
   CCS_LEAGUE_IDS,
   DATA_QUALITY,
   LEAGUES,
+  REGIONS,
   SECTIONS,
   TOURNAMENT_LEAGUE_IDS,
   divisionHeading,
@@ -40,8 +41,9 @@ import {
   getLeague,
   leagueOfDivision,
   leaguePlayEnds,
+  leaguesInRegion,
 } from './leagues';
-import type { LeagueConfig, PairingConfig, PostseasonConfig, SectionConfig } from './leagues';
+import type { LeagueConfig, PairingConfig, PostseasonConfig, RegionConfig, SectionConfig } from './leagues';
 import { buildLeagueTournament } from './postseason';
 import { buildSearchIndex } from './search';
 import type { SearchIndex } from './search';
@@ -74,6 +76,7 @@ import type {
   Outcome,
   PlayoffProjection,
   Record3,
+  RegionId,
   SbliveCrossCheck,
   SeasonPhase,
   SectionId,
@@ -200,7 +203,10 @@ export interface LeagueSummary {
   id: LeagueId;
   name: string;
   shortName: string;
-  region: string;
+  /** NorCal or SoCal: the league's section's region (DESIGN-socal §2.1.1), for the region switcher and wrappers. */
+  region: RegionId;
+  /** Plain words for the league card ('Chico, Corning, Susanville, Davis and Fair Oaks'): LeagueConfig.cities. */
+  cities: string;
   section: { id: SectionId; name: string; shortName: SectionConfig['shortName'] };
   singleDivision: boolean;
   divisions: Array<{ id: DivisionId; label: string; heading: string | null; teamCount: number }>;
@@ -227,7 +233,8 @@ function summaryOf(league: LeagueConfig): LeagueSummary {
     id: league.id,
     name: league.name,
     shortName: league.shortName,
-    region: league.region,
+    region: section.region,
+    cities: league.cities,
     section: { id: section.id, name: section.name, shortName: section.shortName },
     singleDivision: league.divisions.length === 1,
     divisions,
@@ -243,9 +250,39 @@ export function getSections(): readonly SectionConfig[] {
   return SECTIONS;
 }
 
-/** One summary per league, config order (scval, bval, pcal, mcal, eal). */
-export function getLeagueSummaries(): LeagueSummary[] {
-  return SUMMARIES;
+/**
+ * One summary per league, config order (scval, bval, pcal, mcal, eal, sunset, city, north-county, metro), or
+ * one region's (LEAGUES lists NorCal first, so each region's run keeps config order).
+ */
+export function getLeagueSummaries(region?: RegionId): LeagueSummary[] {
+  return region ? SUMMARIES.filter((s) => s.region === region) : SUMMARIES;
+}
+
+/** One region of the site (DESIGN-socal §2.4): its sections, each with its leagues' summaries, config order. */
+export interface RegionSummary {
+  region: RegionConfig;
+  sections: Array<{ section: SectionConfig; leagues: LeagueSummary[] }>;
+  /** The region's registry teams (NorCal 49, SoCal 50). */
+  teamCount: number;
+}
+
+/**
+ * Regions → sections → leagues, config order (NorCal, then SoCal): what a page that renders each region in
+ * its own wrapper (the region switcher's two halves) iterates. Every region has a section and every section a
+ * league (lib/leagues.ts asserts both), so nothing here is empty.
+ */
+export function getRegionSummaries(): RegionSummary[] {
+  return REGIONS.map((region) => {
+    const sections = SECTIONS.filter((s) => s.region === region.id).map((section) => ({
+      section: section as SectionConfig,
+      leagues: SUMMARIES.filter((l) => l.section.id === section.id),
+    }));
+    return {
+      region,
+      sections,
+      teamCount: sections.reduce((n, s) => n + s.leagues.reduce((m, l) => m + l.teamCount, 0), 0),
+    };
+  });
 }
 
 export function getLeagueSummary(id: string): LeagueSummary | undefined {
@@ -270,7 +307,7 @@ export function getLeagueHealth(id: LeagueId): LeagueHealth {
 
 // ---------------------------------------------------------------- teams
 
-/** All 49 (registry order), one division (a bare id), or `{ league?, division? }`. */
+/** All 102 (registry order), one division (a bare id), or `{ league?, division? }`. */
 export function getTeams(filter?: DivisionId | { league?: LeagueId; division?: DivisionId }): readonly Team[] {
   if (filter === undefined) return snapshot.teams;
   const f = typeof filter === 'string' ? { division: filter } : filter;
@@ -279,15 +316,15 @@ export function getTeams(filter?: DivisionId | { league?: LeagueId; division?: D
   );
 }
 
-/** Section → league → division → teams, config order, for /teams. */
-export function getTeamsGrouped(): Array<{
+/** Section → league → division → teams, config order, for /teams; `region` keeps one region's sections. */
+export function getTeamsGrouped(region?: RegionId): Array<{
   section: SectionConfig;
   leagues: Array<{
     league: LeagueSummary;
     divisions: Array<{ id: DivisionId; heading: string | null; teams: readonly Team[] }>;
   }>;
 }> {
-  return SECTIONS.map((section) => ({
+  return SECTIONS.filter((section) => !region || section.region === region).map((section) => ({
     section,
     leagues: SUMMARIES.filter((s) => s.section.id === section.id).map((league) => ({
       league,
@@ -317,7 +354,7 @@ export function getTeamSlugs(): TeamSlug[] {
 
 let searchIndex: SearchIndex | null = null;
 
-/** The pre-serialized 49-team search index (SPEC §9.1), in LEAGUES then registry order. Built once. */
+/** The pre-serialized 102-team search index (SPEC §9.1), in LEAGUES then registry order. Built once. */
 export function getTeamSearchIndex(): SearchIndex {
   if (searchIndex) return searchIndex;
   const teams = LEAGUES.flatMap((l) => snapshot.teams.filter((t) => t.league === l.id)).map((t) => ({
@@ -337,6 +374,7 @@ export function getTeamSearchIndex(): SearchIndex {
     shortName: l.shortName,
     name: l.name,
     sectionShort: sectionConfig(l.sectionId).shortName,
+    ...(l.independents ? { independent: true } : {}),
     divisions: l.divisions.map((d) => ({
       id: d.id,
       label: d.label,
@@ -539,14 +577,21 @@ export function getGoalDiffDomain(division: DivisionId): number {
 
 export interface StandingContext {
   teamId: TeamId;
-  /** division.gamesPerTeam */
-  scheduled: number;
+  /**
+   * division.gamesPerTeam. null where the league has no fixed schedule (the Sunset: its ten teams meet 0, 1
+   * or 2 times, and a Sunset game is one MaxPreps marks as a league game), so no reader may print "of N",
+   * LEFT or MAX for it (DESIGN-socal §2.1.7).
+   */
+  scheduled: number | null;
   /** computed.gp */
   counted: number;
-  /** max(0, scheduled − counted): league games with no counted result yet — still to play, or played and not reported. */
-  remaining: number;
-  /** pts + points.win × remaining. A ceiling, not a projection. */
-  maxPts: number;
+  /**
+   * max(0, scheduled − counted): league games with no counted result yet — still to play, or played and not
+   * reported. null with `scheduled`.
+   */
+  remaining: number | null;
+  /** pts + points.win × remaining. A ceiling, not a projection. null with `scheduled`. */
+  maxPts: number | null;
   /** Rows of kind 'missing' from missingOfficialResults() (lib/standings.ts) that involve this team. */
   missingPast: number;
   /** Counted games whose score came from si.com (provenance.scores === 'sblive'). */
@@ -565,13 +610,13 @@ export function getStandingContext(division: DivisionId, asOf?: string): Readonl
   const counted = divisionGames(snapshot.games, division);
   const out = new Map<TeamId, StandingContext>();
   for (const row of getStandings(division)) {
-    const remaining = Math.max(0, d.gamesPerTeam - row.computed.gp);
+    const remaining = d.gamesPerTeam === null ? null : Math.max(0, d.gamesPerTeam - row.computed.gp);
     out.set(row.teamId, {
       teamId: row.teamId,
       scheduled: d.gamesPerTeam,
       counted: row.computed.gp,
       remaining,
-      maxPts: row.computed.pts + points.win * remaining,
+      maxPts: remaining === null ? null : row.computed.pts + points.win * remaining,
       missingPast: missing.filter((m) => m.homeSlug === row.slug || m.awaySlug === row.slug).length,
       backfilled: counted.filter(
         (g) =>
@@ -639,11 +684,19 @@ export function getMissingOfficialResults(division: DivisionId, asOf?: string): 
   return missingRows(division, asOf).map((row) => ({ ...row, sblive: sbliveFor(row) }));
 }
 
-/** Spread of games played among teams with results in a division (uneven-GP footnote when max − min ≥ 2). */
-export function getGamesPlayedSpread(division: DivisionId): { min: number; max: number; scheduled: number } {
-  const gps = getStandings(division)
-    .filter((s) => s.hasReportedResults)
-    .map((s) => s.computed.gp);
+/**
+ * Spread of games played across EVERY member of a division (uneven-GP footnote when max − min ≥ 2;
+ * lib/standings.ts unevenGamesSentence words it). `scheduled` is null for a league with no fixed schedule
+ * (the Sunset), whose sentence then has no "of N".
+ *
+ * A member with no counted game is in the spread at 0. The sentence says "Teams have played between {min}
+ * and {max}", and the table it sits under lists that member with GP 0: leaving it out printed "between 1 and
+ * 5" over a Sunset table whose Newport Harbor row reads 0 (its four finals against Sunset teams, Aug 26 –
+ * Sep 30, are none of them marked league games). hasReportedResults is exactly gp > 0 (lib/standings.ts),
+ * so the old filter only ever dropped zeros.
+ */
+export function getGamesPlayedSpread(division: DivisionId): { min: number; max: number; scheduled: number | null } {
+  const gps = getStandings(division).map((s) => s.computed.gp);
   return {
     min: gps.length ? Math.min(...gps) : 0,
     max: gps.length ? Math.max(...gps) : 0,
@@ -691,14 +744,39 @@ const PHASE_RANK: Readonly<Record<SeasonPhase, number>> = {
   complete: 4,
 };
 
-/** The least advanced league phase (config order breaks a tie). */
-export function getSitePhase(asOf: string = snapshot.fetchedAt): SeasonPhase {
+/**
+ * The phase of a set of leagues taken together: 'preseason' only when every league is in its preseason,
+ * 'complete' only when every league is complete, and otherwise the least advanced phase among the leagues
+ * that have started (config order breaks a tie). When every league that has started is complete and another
+ * has not started yet, the answer is 'preseason': what happens next is that league's first game.
+ *
+ * Why the leagues that have STARTED, not every league (the rule before the Southern California leagues): the
+ * leagues do not start together. The San Diego Section's Metro South Bay plays its first league game on Oct 7
+ * (Hilltop v Southwest) and the Metro Conference's first game of any kind can come weeks after the NorCal
+ * leagues' first, so "the least advanced league" read 'preseason' for the whole site deep into the NorCal
+ * season. The two consumers that matter (Attribution and SiteHeader's "season complete" stamp) ask only
+ * whether EVERY league is done, which this keeps exact.
+ */
+function combinedPhase(leagues: readonly LeagueConfig[], asOf: string): SeasonPhase {
+  const phases = leagues.map((league) => getSeasonPhase(league.id, asOf));
+  if (phases.every((p) => p === 'preseason')) return 'preseason';
+  if (phases.every((p) => p === 'complete')) return 'complete';
   let best: SeasonPhase | null = null;
-  for (const league of LEAGUES) {
-    const phase = getSeasonPhase(league.id, asOf);
+  for (const phase of phases) {
+    if (phase === 'preseason' || phase === 'complete') continue;
     if (best === null || PHASE_RANK[phase] < PHASE_RANK[best]) best = phase;
   }
   return best ?? 'preseason';
+}
+
+/** The whole site's phase (`combinedPhase` over every league). */
+export function getSitePhase(asOf: string = snapshot.fetchedAt): SeasonPhase {
+  return combinedPhase(LEAGUES, asOf);
+}
+
+/** One region's phase (`combinedPhase` over the region's leagues): NorCal and SoCal run on different calendars. */
+export function getRegionPhase(region: RegionId, asOf: string = snapshot.fetchedAt): SeasonPhase {
+  return combinedPhase(leaguesInRegion(region), asOf);
 }
 
 // ---------------------------------------------------------------- head to head
@@ -739,7 +817,7 @@ export function getHeadToHead(aRef: string, bRef: string): HeadToHead | undefine
       aGoals += aScore;
       bGoals += bScore;
     }
-    // sideOutcome: an EAL 1 v 1 win (decider 'SO', level on goals) is the flagged side's win.
+    // sideOutcome: a shootout win (decider 'SO', level on goals: an EAL 1 v 1 win, a San Diego shootout) is the flagged side's win.
     const outcome = sideOutcome(g, aIsHome ? 'home' : 'away');
     if (outcome === 'W') {
       aRecord.w += 1;
@@ -791,28 +869,27 @@ export function getTeamForm(ref: string): TeamForm | undefined {
   const all = getGames({ teamId: team.id }).sort((a, b) =>
     a.dateLocal.localeCompare(b.dateLocal),
   );
-  const leagueGames: FormGame[] = all
-    .filter((g) => g.countsFor !== null)
-    .map((g) => {
-      const isHome = g.home.teamId === team.id;
-      const mine = isHome ? g.home : g.away;
-      const theirs = isHome ? g.away : g.home;
-      const counted =
-        g.status === 'final' && mine.score !== null && theirs.score !== null && !g.isForfeit;
-      // sideOutcome: an EAL 1 v 1 win (decider 'SO', level on goals) is the flagged side's win.
-      const outcome: Outcome | null = sideOutcome(g, isHome ? 'home' : 'away');
-      return {
-        contestId: g.contestId,
-        date: g.dateKey,
-        opponent: theirs.name,
-        opponentSlug: theirs.slug,
-        site: g.site === 'neutral' ? 'neutral' : isHome ? 'home' : 'away',
-        status: g.status,
-        margin: counted ? (mine.score as number) - (theirs.score as number) : null,
-        outcome,
-        excludedFromMargin: g.isForfeit,
-      };
-    });
+  const allGames: FormGame[] = all.map((g) => {
+    const isHome = g.home.teamId === team.id;
+    const mine = isHome ? g.home : g.away;
+    const theirs = isHome ? g.away : g.home;
+    const counted =
+      g.status === 'final' && mine.score !== null && theirs.score !== null && !g.isForfeit;
+    // sideOutcome: a shootout win (decider 'SO', level on goals: an EAL 1 v 1 win, a San Diego shootout) is the flagged side's win.
+    const outcome: Outcome | null = sideOutcome(g, isHome ? 'home' : 'away');
+    return {
+      contestId: g.contestId,
+      date: g.dateKey,
+      opponent: theirs.name,
+      opponentSlug: theirs.slug,
+      site: g.site === 'neutral' ? 'neutral' : isHome ? 'home' : 'away',
+      status: g.status,
+      margin: counted ? (mine.score as number) - (theirs.score as number) : null,
+      outcome,
+      excludedFromMargin: g.isForfeit,
+    };
+  });
+  const leagueGames = allGames.filter((_, i) => all[i].countsFor !== null);
   return { leagueGames };
 }
 
@@ -898,19 +975,50 @@ export interface TeamPostseasonLine {
   linkText: string;
 }
 
-/** §10.5 copy; null for an unknown ref AND for a team with gp 0 (never placed by merit). */
+/**
+ * §10.5 copy; null for an unknown ref AND for a team with gp 0 (never placed by merit), except in a league
+ * with no postseason at all (the Sunset), where the line is the league's note whatever the team has played:
+ * it says no place leads anywhere, which is as true before a team's first game as after its last.
+ */
 export function getTeamPostseasonLine(ref: string): TeamPostseasonLine | null {
   const team = resolveTeamRef(ref);
   if (!team) return null;
   const row = snapshot.standings.find((s) => s.teamId === team.id);
-  if (!row || row.computed.gp === 0) return null;
+  if (!row) return null;
   const league = findLeague(team.league);
   if (!league) return null;
+  const ps = league.postseason;
+  if (ps.kind === 'no-postseason') {
+    // The Sunset: CIF-SS Blue Book 2026-27 Bylaws 2011.1 and 3500.2. One rung covers every place, so the
+    // label is the rung's ('No section playoffs') and the sentence is the config note, never a "top N".
+    return {
+      label: playoffOutcomeLabel(row.division, outcomesFor(row)),
+      sentence: ps.note,
+      href: `/playoffs#${league.id}`,
+      linkText: 'Postseason',
+    };
+  }
+  if (row.computed.gp === 0) return null;
   const statuses = outcomesFor(row);
   const label = playoffOutcomeLabel(row.division, statuses);
-  const ps = league.postseason;
 
   switch (ps.kind) {
+    case 'section-playoffs': {
+      // The San Diego Section's playoffs (Green Book 2026-27 Bylaw 2000.1): the Section places teams from its
+      // power rankings, so a league place is no route except 1st (a designated champion's play-in). The
+      // sentence is the config's one qualification line, then the team's own playoff division from the
+      // Section's 2026 Divisions sheet; never the EAL's "top N" template, and no seed.
+      const division = ps.playoffDivisionOf[team.slug];
+      const divisionSentence = division
+        ? ` The Section lists ${team.name} in Division ${division}; Open Division teams are drawn from Division I at the end of the regular season.`
+        : '';
+      return {
+        label,
+        sentence: `${ps.qualificationLine}${divisionSentence}`,
+        href: `/playoffs#${league.id}`,
+        linkText: ps.name,
+      };
+    }
     case 'league-tournament': {
       const round = (id: string) => ps.rounds.find((r) => r.id === id);
       const qf = round('qf-1');

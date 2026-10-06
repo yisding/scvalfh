@@ -104,6 +104,14 @@ export function GameDetails({ model, className }: GameDetailsProps) {
                 {monthDay(movedFrom)}.
               </span>
             ) : null}
+            {/* DATA_QUALITY.contestDateOverrides (lib/normalize.ts): the date shown is a better source's,
+                not MaxPreps'; say so, from what, and on whose word (the override's source sentence). */}
+            {game.provenance.dateCorrection ? (
+              <span className="mt-1 block text-meta text-ink-3">
+                Date corrected from MaxPreps&rsquo; {monthDay(game.provenance.dateCorrection.maxprepsDateLocal)}{' '}
+                &mdash; {game.provenance.dateCorrection.source}.
+              </span>
+            ) : null}
           </dd>
         </div>
 

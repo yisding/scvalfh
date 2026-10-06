@@ -9,6 +9,9 @@
  * print the same count; the source row's `rowCount` stays the table as read. A row MaxPreps
  * leaves undated (`modifiedOn` null, parsed as '') never sets the table's upstream date.
  *
+ * A division with `maxprepsLeagueId: null` (the San Diego Section's Valley) has no table: it is not
+ * requested and its health says 'skipped' (NO_MAXPREPS_TABLE_REASON, league-meta.ts).
+ *
  * 0 rows / HTTP error / schema drift / network → SOURCE STALE, never an abort: the previous
  * snapshot's reported rows for that division are carried (`reportedTable: 'carried'`, the row
  * `status: 'stale'` with `carriedFrom`), or, with nothing to carry, `'missing'`. The league becomes
@@ -24,6 +27,7 @@ import type { LeagueId, SourceStatus } from '../../types';
 import { asOfDay, carriedFromOf, type PipelineContext, type RunState } from '../ledger';
 import { classifyFetchError, parseJsonBody } from '../read';
 import { resourceUrl } from '../transport';
+import { NO_MAXPREPS_TABLE_REASON } from './league-meta';
 
 function readFailedReason(division: DivisionConfig, carriedFrom: string | null): string {
   const head = `MaxPreps' ${divisionLabel(division.id)} table could not be read this run`;
@@ -147,6 +151,18 @@ function carryReported(
 export async function stepReported(ctx: PipelineContext, state: RunState): Promise<void> {
   for (const leagueId of ctx.leaguesInRun()) {
     for (const division of getLeague(leagueId).divisions) {
+      if (division.maxprepsLeagueId === null) {
+        // No table to read (league-meta.ts NO_MAXPREPS_TABLE_REASON): no request, no source row (there
+        // is no URL to cite), no carry and no degrade: the league stays fresh, its other divisions'
+        // tables are read as usual, and this division's cross-check is 'skipped' from config.
+        const info = state.divisions.get(division.id);
+        if (info) {
+          info.reportedTable = 'skipped';
+          info.reportedRows = null;
+        }
+        ctx.log(`  standings ${division.id}: skipped (${NO_MAXPREPS_TABLE_REASON})`);
+        continue;
+      }
       await readTable(ctx, state, leagueId, division);
     }
   }

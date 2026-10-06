@@ -12,21 +12,23 @@
  *
  *  - fixed pages: index, about, standings, schedule, playoffs, teams, leaders, history/2025-26, clubs,
  *    commits (DESIGN §21: one page from data/commits.json, with the root OG card);
- *  - `standings/<id>.html` and `schedule/<id>.html` for each league id, `playoffs/<id>.html` for each
- *    league-tournament league (an unbracketed league such as the EAL has none: its card is `id="eal"`
- *    on /playoffs);
+ *  - `standings/<id>.html` and `schedule/<id>.html` for each league id (nine since the Southern
+ *    California amendment), `playoffs/<id>.html` for each league-tournament league (still MCAL only:
+ *    the EAL, the Sunset and the three San Diego leagues have no page of their own, only a card,
+ *    `id="<league>"`, on /playoffs);
  *  - `game/*.html` = every game (param via `gameIdToParam`, so `sblive:N` is `sblive-N`) plus one
  *    stub per `supersededGames` key (counted separately);
- *  - `scores/*.html` = the distinct game dates, `teams/*.html` = the 49 registry slugs (the snapshot's
- *    team slugs must equal TEAMS, in order);
+ *  - `scores/*.html` = the distinct game dates, `teams/*.html` = the registry slugs (102 since the
+ *    Southern Section independents joined, 99 with the Southern California amendment; the snapshot's team
+ *    slugs must equal TEAMS, in order);
  *  - `clubs/*.html` = the slugs of data/clubs.json, by name (DESIGN §17, SPEC §1.1j2). They come
  *    from `getClubSlugs()`, which reads the file through the bundled import lib/clubs.ts validates
  *    at load, not from the working directory: tests/workflows.test.ts runs this script with its cwd
  *    in a temporary tree. A club with no tied player still has a page, so every slug counts. There
  *    is no clubs OG card (the pages take the root one), so no parity check either;
  *  - every `teams/<slug>.html` carries both a Roster (`id="roster"`) and a Player stats
- *    (`id="player-stats"`) section: all 49 teams, in all five leagues (a missing one means a team page
- *    went back to showing them for SCVAL only);
+ *    (`id="player-stats"`) section: every registry team, in every league (a missing one means a team
+ *    page went back to showing them for SCVAL only);
  *  - no prerendered path contains ':' (a raw `sblive:` id leaking into a URL);
  *  - OG/page parity BY NAME per family with an image: `game/X.html` ⇔ `game/X/opengraph-image`,
  *    and the same for `standings/<id>`, `schedule/<id>`, `playoffs/<id>`, `teams/<slug>` and
@@ -105,7 +107,7 @@ for (const p of FIXED_PAGES) if (!fileSet.has(`${p}.html`)) fail(`fixed page not
 const { pagesIn, allFamilies } = makeFamilyChecker(files, { cardSuffix: '/opengraph-image.body', fail });
 allFamilies(expected);
 
-// Roster and Player stats on every team page, all five leagues (the empty states count: a team
+// Roster and Player stats on every team page, every league (the empty states count: a team
 // nothing has been collected for still says so, rather than dropping the section).
 const noSections: string[] = [];
 for (const slug of slugs) {

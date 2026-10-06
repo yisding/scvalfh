@@ -66,9 +66,11 @@ export function TeamStatTiles({ view, className }: TeamStatTilesProps) {
           value={league ? recordString(league) : null}
           sub={league ? `${league.pts} pts · ${league.gp} played` : 'league games only'}
         />
+        {/* A league with no fixed schedule (the Sunset, gamesPerTeam null) has no "of N": GP is the
+            bare count, and MAX, a ceiling over the games left, has nothing to count (DESIGN-socal §2.1.7). */}
         <StatTile
           label="GP"
-          value={context ? `${context.counted}/${context.scheduled}` : null}
+          value={context ? (context.scheduled === null ? context.counted : `${context.counted}/${context.scheduled}`) : null}
           sub={
             left === null
               ? 'league games counted'
@@ -80,7 +82,7 @@ export function TeamStatTiles({ view, className }: TeamStatTilesProps) {
         <StatTile
           label="Max"
           value={context ? context.maxPts : null}
-          sub="points still reachable"
+          sub={context && context.maxPts === null ? 'no fixed league schedule' : 'points still reachable'}
         />
         <StatTile
           label="Overall"
@@ -109,7 +111,16 @@ export function TeamStatTiles({ view, className }: TeamStatTilesProps) {
       <details className="sx-disclosure mt-3">
         <summary>How these numbers are counted</summary>
         <p className="mt-1 mb-2 max-w-prose text-meta text-ink-2">
-          {`League figures count only the games that count toward the ${view.scopeLabel} table: ${view.league.doubleRoundRobin}. GP is counted results out of the ${view.leagueScheduled} scheduled; MAX is the points total if every remaining game were won. `}
+          {`League figures count only the games that count toward the ${view.scopeLabel} table: ${view.league.doubleRoundRobin}. ${
+            view.leagueScheduled === null
+              ? 'GP is counted results; with no fixed number of league games there is no MAX. '
+              : view.league.classification === 'membership'
+                ? // The San Diego leagues publish no schedule: the N is what a full home-and-away schedule
+                  // gives each team, which stays true where MaxPreps lists one meeting fewer (Bonita Vista
+                  // and Helix, Metro Mesa: 7 of 8 on Oct 5; review 2026-10-06), never "N scheduled".
+                  `GP is counted results out of the ${view.leagueScheduled} a full home-and-away schedule gives each team; MAX is the points total if every remaining game were won. `
+                : `GP is counted results out of the ${view.leagueScheduled} scheduled; MAX is the points total if every remaining game were won. `
+          }`}
           A real 0 shows as{' '}
           <span className="sx-num">0</span>; a number we do not have shows as{' '}
           <span aria-hidden="true">{EM_DASH}</span>

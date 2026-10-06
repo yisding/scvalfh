@@ -104,7 +104,8 @@ const winPct = (r: { w: number; t: number; gp: number }): number => (r.gp > 0 ? 
 
 /**
  * A completed game as seen from one team. Returns null when the team is not in it. The outcome is
- * `sideOutcome`'s (lib/format.ts), so an EAL 1 v 1 win (decider 'SO', level on goals) counts as the
+ * `sideOutcome`'s (lib/format.ts), so a shootout win (decider 'SO', level on goals: an EAL 1 v 1 win, a San
+ * Diego Section shootout MaxPreps records as a level score marked W and L) counts as the
  * flagged side's win while its goals stay as recorded.
  */
 function perspective(
@@ -163,7 +164,7 @@ function toComputed(tally: Tally, place: number, points: Points): ComputedRecord
     l,
     t,
     winPct: winPct(tally),
-    // The league's points (3-1-0 in all five leagues; SCVAL Article VI §2).
+    // The league's points (3-1-0 in all nine leagues: SCVAL Article VI §2; this site's own for the 'site' leagues).
     pts: points.win * w + points.tie * t + points.loss * l,
     gf: tally.gf,
     ga: tally.ga,
@@ -877,9 +878,19 @@ function tiebreakNote(
 ): string {
   const { citations, points } = rules;
   if (record.gp === 0) {
-    return `No ${rules.gamesWord} results reported for ${team.name}, so it is listed last; ${divisionLabel(team.division)} order is the order of team points (${citations.order}).`;
+    // A 'site' league's team with no counted game may simply have none yet (a Sunset team plays only the
+    // games MaxPreps marks as league games; Metro South Bay's first is Oct 7), so its note says the games
+    // are not counted, never that results are missing.
+    const none =
+      rules.orderScope === 'site'
+        ? `No ${rules.gamesWord} games counted for ${team.name} yet`
+        : `No ${rules.gamesWord} results reported for ${team.name}`;
+    return `${none}, so it is listed last; ${divisionLabel(team.division)} order is the order of team points (${citations.order}).`;
   }
   if (stage === 'points') {
+    // For a 'site' league (the Sunset, the San Diego leagues) `order` says no league document orders the
+    // table: '3 points (3 per win, 1 per tie) — placed on points alone, no league document orders the
+    // table; this site orders it by its own 3-1-0 points.' Never 'as the rules require'.
     return `${record.pts} points (${points.win} per win, ${points.tie} per tie) — placed on points alone, ${citations.order}.`;
   }
   const others = cluster.filter((id) => id !== team.id).map(nameOf);
@@ -930,9 +941,21 @@ function compareToReported(
 }
 
 /**
+ * Why a division has no MaxPreps comparison at all: MaxPreps publishes no table for it (the San Diego
+ * Section's Valley, whose six teams all carry MaxPreps' zero-GUID "no league"; DivisionConfig.maxprepsLeagueId
+ * null). The same words as the pipeline's DivisionHealth reason (lib/pipeline/steps/league-meta.ts
+ * NO_MAXPREPS_TABLE_REASON), so /about and the health card say one thing. null for every other division.
+ */
+export function crossCheckSkipReason(division: DivisionId): string | null {
+  return leagueStandingsUrl(division) === null ? 'MaxPreps publishes no table for this division' : null;
+}
+
+/**
  * Field-by-field cross-check rows for /about#cross-check (DESIGN §9), by the division's
  * `reportedTrust` (SPEC §5.8): 'full' = all six fields; 'records-only' = records and league
  * goals; 'informational' = league record only. Rows of a division with a known cause carry it.
+ * A division with no MaxPreps table (`crossCheckSkipReason`) is skipped: it has no reported rows
+ * and no page to link, so no row is ever built for it.
  */
 export function buildCrossCheck(standings: readonly Standing[]): CrossCheckRow[] {
   const rows: CrossCheckRow[] = [];
@@ -942,6 +965,7 @@ export function buildCrossCheck(standings: readonly Standing[]): CrossCheckRow[]
     const div = getDivision(s.division);
     const trust = div.reportedTrust;
     const url = leagueStandingsUrl(s.division);
+    if (url === null) continue;
     const push = (field: string, ours: string, theirs: string) => {
       if (ours === theirs) return;
       rows.push({
@@ -981,6 +1005,30 @@ export function buildCrossCheck(standings: readonly Standing[]): CrossCheckRow[]
   return rows;
 }
 
+// ---------------------------------------------------------------- uneven games played
+
+/**
+ * The games-played sentence of the uneven-GP footnote (SPEC §10.3), or null when every team with results
+ * has played within one game of the others. With a fixed schedule (`scheduled` = DivisionConfig.gamesPerTeam)
+ * it is the sentence the standings page has always printed: 'Teams have played between 9 and 12 of 16
+ * league games, so points favour teams that have played more.' A league with no fixed schedule
+ * (gamesPerTeam null: the Sunset, whose ten teams meet 0, 1 or 2 times and play only the games MaxPreps
+ * marks as league games) has no "of N" to say, and no LEFT or MAX column to explain; its sentence says
+ * what the gap is instead (DESIGN-socal §2.1.7). The rest of the footnote — LEFT, MAX and how the table
+ * is ordered — is components/standings/standings-view.ts unevenGpFootnote's, which reads this.
+ */
+export function unevenGamesSentence(
+  leagueId: LeagueId,
+  spread: { min: number; max: number; scheduled: number | null },
+): string | null {
+  if (spread.max - spread.min < 2) return null;
+  if (spread.scheduled !== null) {
+    return `Teams have played between ${spread.min} and ${spread.max} of ${spread.scheduled} league games, so points favour teams that have played more.`;
+  }
+  const league = getLeague(leagueId);
+  return `Teams have played between ${spread.min} and ${spread.max} of the games MaxPreps marks as ${league.shortName} league games, and there is no fixed league schedule, so points favour teams that have played more.`;
+}
+
 // ---------------------------------------------------------------- missing official results
 
 export interface MissingOfficialRow {
@@ -1010,9 +1058,14 @@ const NOT_YET_REPORTED: ReadonlySet<Game['status']> = new Set<Game['status']>([
  * with status 'scheduled' | 'live' | 'score-pending' (kind 'missing') or 'postponed' (kind
  * 'postponed', never counted as missing).
  *
- * A division whose league publishes no schedule (`official.mode === 'none'`: the EAL): there
- * are no fixtures, so the rows are its classified games (countsFor === division) dated before
- * `today`, with the same status rule and the contest id in place of a fixture id.
+ * A division whose league publishes no schedule (`official.mode === 'none'`: the EAL, the Sunset,
+ * the San Diego divisions): there are no fixtures, so the rows are its classified games
+ * (countsFor === division) dated before `today`, with the same status rule and the contest id in
+ * place of a fixture id. What "classified" means is the league's rule (lib/classify.ts): under
+ * 'contest-type' (EAL, Sunset) a game MaxPreps flags as a league game between two members; under
+ * 'membership' (San Diego) EVERY game between two members on MaxPreps' schedule inside leaguePlay,
+ * flagged or not — the double round robin is the schedule, so an unflagged Patrick Henry game
+ * dated before today with no score is a missing league result too.
  */
 export function missingOfficialResults(
   games: readonly Game[],

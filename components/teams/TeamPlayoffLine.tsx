@@ -7,14 +7,20 @@ import ExternalLink from '../ui/ExternalLink';
 import StatusChip from '../ui/StatusChip';
 import type { TeamPageView } from './team-view';
 
-/** 'MCAL tournament' | 'Super Regional' | 'playoff': the event a result-less team has no place in. */
+/**
+ * 'MCAL tournament' | 'Super Regional' | 'San Diego Section playoffs' | 'playoff': the event a
+ * result-less team has no place in. The Sunset ('no-postseason') never reaches it: its line is the
+ * league's note whatever the team has played (lib/data.ts getTeamPostseasonLine).
+ */
 function postseasonPhrase(league: TeamPageView['league']): string {
   switch (league.postseasonKind) {
     case 'league-tournament':
       return `${league.shortName} tournament`;
     case 'unbracketed-tournament':
+    case 'section-playoffs':
       return league.postseasonName ?? 'playoff';
     case 'ccs-ladder':
+    case 'no-postseason':
       return 'playoff';
   }
 }
@@ -32,6 +38,12 @@ function postseasonPhrase(league: TeamPageView['league']): string {
  * - the EAL: the status chip (a Super Regional place or outside the top six) and the Super
  *   Regional's dates and what is not published, from lib/data.ts. No CCS sentence, no CCS link and
  *   no bracket, because none is published.
+ * - the Sunset ('no-postseason'): the chip 'No section playoffs' and the league's note (CIF-SS Blue
+ *   Book 2011.1, 3500.2), for every team whatever it has played; no "projected" line, because no place
+ *   leads anywhere.
+ * - a San Diego league ('section-playoffs'): the ladder label (1st: the designated champion's play-in;
+ *   below it: no league route), the Section's qualification line and the team's own playoff division
+ *   (I or II, the Section's 2026 Divisions sheet), and `San Diego Section playoffs →`. No seed.
  *
  * A team with no results is never placed by merit: the accessor returns null and the block reads
  * `No results reported yet.` Every status is a WRITTEN WORD (DESIGN §7.11). Nothing here is
@@ -66,7 +78,9 @@ export function TeamPlayoffLine({ view }: TeamPlayoffLineProps) {
       {standing?.tiebreak.shared && standing.tiebreak.note ? (
         <p className="mt-2 mb-0 text-ink-2">{standing.tiebreak.note}</p>
       ) : null}
-      <p className="mt-2 mb-0 text-ink-2">Projected from the table today; nothing here is official.</p>
+      {league.postseasonKind === 'no-postseason' ? null : (
+        <p className="mt-2 mb-0 text-ink-2">Projected from the table today; nothing here is official.</p>
+      )}
       <p className="mt-3 mb-0 flex flex-wrap gap-2">
         <Link href={line.href} prefetch={false} className="sx-pill">
           {line.linkText} <Arrow />

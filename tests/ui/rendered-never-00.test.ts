@@ -232,7 +232,7 @@ const games = live.games;
 const finals = games.filter((g) => g.status === 'final');
 
 describe('every league, rendered', () => {
-  it('walks games of all five leagues', () => {
+  it('walks games of every configured league', () => {
     for (const league of getLeagueSummaries()) {
       const mine = games.filter((g) =>
         [g.home.slug, g.away.slug].some((slug) => slug !== null && getTeamBySlug(slug)?.league === league.id),

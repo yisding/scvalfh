@@ -53,6 +53,13 @@ const leagueOf = (slug: string) => getTeamBySlug(slug)!.league;
 
 // The EAL has no sampled capture: its six teams are in the run and fail like any team without one.
 const OTHERS = 'bval,pcal,mcal,eal';
+/**
+ * The leagues these offline runs cover. SCVAL and the four Southern California leagues (added
+ * 2026-10-06) are outside them: their rows are kept exactly as the previous file held them, or
+ * 'pending' with no previous file.
+ */
+const IN_RUN = new Set(OTHERS.split(','));
+const outsideRun = (slug: string) => !IN_RUN.has(leagueOf(slug));
 
 /** A directory holding only the sampled captures. */
 function sampleDir(prefix: 'roster' | 'stats') {
@@ -188,9 +195,9 @@ describe('data/rosters.json, rebuilt from the sampled captures', () => {
     }
   });
 
-  it('marks every team without a capture an error, and SCVAL (outside the run) pending', () => {
+  it('marks every team without a capture an error, and SCVAL and SoCal (outside the run) pending', () => {
     for (const t of pinned().rosters.teams) {
-      if (leagueOf(t.slug) === 'scval') expect(t.status, t.slug).toBe('pending');
+      if (outsideRun(t.slug)) expect(t.status, t.slug).toBe('pending');
       else if (!ROSTER_SAMPLE.includes(t.slug)) expect(t.status, t.slug).toBe('error');
     }
   });
@@ -313,7 +320,7 @@ describe('scripts offline over a partly captured league', () => {
   /** A row the run could read (ok, empty / none, or itself carried forward) is carried; error and pending are not. */
   const carriable = (status: string) => status !== 'error' && status !== 'pending';
 
-  it('fetch-rosters: reads the captured teams, carries forward the rest, leaves SCVAL byte for byte', () => {
+  it('fetch-rosters: reads the captured teams, carries forward the rest, leaves SCVAL and SoCal byte for byte', () => {
     const dir = sampleDir('roster');
     const out = tmpFile('rosters.json');
     copyFileSync(path.join(REPO, 'data', 'rosters.json'), out);
@@ -323,7 +330,7 @@ describe('scripts offline over a partly captured league', () => {
     const built = RostersSchema.parse(JSON.parse(readFileSync(out, 'utf8')) as unknown);
     for (const t of built.teams) {
       const before = committedRoster(t.slug);
-      if (leagueOf(t.slug) === 'scval') {
+      if (outsideRun(t.slug)) {
         expect(t, t.slug).toEqual(before);
       } else if (ROSTER_SAMPLE.includes(t.slug)) {
         // Read from the capture, whatever the committed row held.
@@ -356,7 +363,7 @@ describe('scripts offline over a partly captured league', () => {
     const built = PlayerStatsFileSchema.parse(JSON.parse(readFileSync(out, 'utf8')) as unknown);
     for (const t of built.teams) {
       const before = committedStats(t.slug);
-      if (leagueOf(t.slug) === 'scval') {
+      if (outsideRun(t.slug)) {
         expect(t, t.slug).toEqual(before);
       } else if (STATS_SAMPLE.includes(t.slug)) {
         // Read from the capture, whatever the committed row held.

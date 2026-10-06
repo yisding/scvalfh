@@ -1,4 +1,6 @@
+import { shootoutPhrases } from '../../lib/format';
 import { findDivision, findLeague } from '../../lib/leagues';
+import { shootoutGroupName, shootoutSectionOf } from '../ui/describe-game';
 import ExternalLink from '../ui/ExternalLink';
 import SectionHeader from '../ui/SectionHeader';
 
@@ -30,8 +32,9 @@ import type { GameModel } from './game-view';
  * The cross-check sentence follows the game's league config: a game counted in a division with no
  * official schedule (`official.mode` 'none', spec D23), or a league-postseason game or a game between
  * two members of a league none of whose divisions has one, is "a league game", never "an official" one,
- * and a game between two members of a league that decides a level game on 1 v 1s
- * (`rules.leagueOvertime` 'shootout') adds the backfill's D24 exception: a level si.com score is
+ * and a game between two teams of a section that ends a level game with a shootout
+ * (SectionConfig.shootout: the EAL's 1 v 1s; the San Diego Section's shootout, which covers a game
+ * between two of its conferences too) adds the backfill's D24 exception: a level si.com score is
  * never used there.
  */
 
@@ -162,12 +165,13 @@ export function GameElsewhere({ model, className }: GameElsewhereProps) {
   // The cross-check sentence is about a SCORE, so it only belongs on a game that has one.
   const isFinal = display.kind === 'final';
   if (teamRows.length === 0 && !isFinal) return null;
-  // D24 (lib/backfill.ts): the league BOTH sides belong to, when it decides a level game on 1 v 1s.
-  // Lookups here never throw: the snapshot schema checks a tag's league id only for shape, so an id
-  // no longer configured reads as no league (and the page renders) rather than failing the build.
+  // D24 (lib/backfill.ts): the section BOTH sides are teams of, when it ends a level game with a shootout
+  // (keyed on the section, as lib/normalize.ts keys decider 'SO'). Lookups here never throw: the snapshot
+  // schema checks a tag's league id only for shape, so an id no longer configured reads as no league (and
+  // the page renders) rather than failing the build.
   const pairLeague =
     home.team && away.team && home.team.league === away.team.league ? (findLeague(home.team.league) ?? null) : null;
-  const shootout = pairLeague?.rules.leagueOvertime === 'shootout' ? pairLeague : null;
+  const shootout = shootoutSectionOf(model.game);
   // D23: a game with no schedule document behind it has league games, but no official ones. A
   // counted game reads its division; any other reads the league of its league-postseason tag (the
   // EAL Super Regional), else the league both sides belong to, when none of its divisions has one.
@@ -182,8 +186,15 @@ export function GameElsewhere({ model, className }: GameElsewhereProps) {
   // One string, so a page outside both cases renders the same markup as before.
   const crossCheck =
     `Scores come from MaxPreps and are cross-checked against High School on SI (si.com). When MaxPreps has no result for ${leagueGame}, or its row is clearly wrong, we publish si.com\u2019s score and mark it; when both have a score and disagree, we publish MaxPreps\u2019 and show the disagreement rather than choosing quietly.` +
-    (shootout
-      ? ` A level si.com score between two ${shootout.shortName} teams is never used: a varsity game there is decided on 1 v 1s, and si.com does not say who won them.`
+    (shootout?.shootout
+      ? ` A level si.com score between two ${shootoutGroupName(shootout)} teams is never used: a varsity game there${
+          // The SDFHOA procedures do not cover invitational tournaments (SectionConfig.shootout.
+          // coversTournaments false), where San Diego games have ended level; the EAL's sentence is unchanged.
+          shootout.shootout.coversTournaments ? '' : ' outside a tournament'
+        } is ${
+          // The rule, not this game: 'decided by a shootout' whatever the section's inference.
+          shootoutPhrases(shootout.shootout.words).decidedOn
+        }, and si.com does not say who won ${shootoutPhrases(shootout.shootout.words).pronoun}.`
       : '');
 
   return (

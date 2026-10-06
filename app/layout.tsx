@@ -13,7 +13,7 @@ import { PINNED_TEAM_SCRIPT } from '../components/layout/pinned-team-script';
 import { THEME_SCRIPT } from '../components/layout/theme-script';
 import PinnedTeamMarks from '../components/ui/PinnedTeamMarks';
 import { getFetchedAt, getTeams } from '../lib/data';
-import { LEAGUE_IDS } from '../lib/leagues';
+import { DEFAULT_REGION, LEAGUE_IDS, regionOf } from '../lib/leagues';
 
 import './globals.css';
 
@@ -84,7 +84,14 @@ export const viewport: Viewport = {
 const SLUG_LEAGUE: Readonly<Record<string, string>> = Object.fromEntries(
   getTeams().map((t) => [t.slug, t.league]),
 );
-const PREFS_SCRIPT = buildPrefsScript({ leagueIds: LEAGUE_IDS, slugLeague: SLUG_LEAGUE });
+/** `{ league: region }`, from the config (lib/leagues.ts regionOf): the prefs script ships the non-default part. */
+const LEAGUE_REGION: Readonly<Record<string, string>> = Object.fromEntries(LEAGUE_IDS.map((id) => [id, regionOf(id)]));
+const PREFS_SCRIPT = buildPrefsScript({
+  leagueIds: LEAGUE_IDS,
+  slugLeague: SLUG_LEAGUE,
+  leagueRegion: LEAGUE_REGION,
+  defaultRegion: DEFAULT_REGION,
+});
 const SCOPE_CSS = buildLeagueScopeCss(LEAGUE_IDS);
 
 export default function RootLayout({ children }: LayoutProps<'/'>) {
@@ -100,12 +107,14 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
             <PinnedTeamMarks /> below re-applies it after every client-side navigation; see
             components/layout/pinned-team-script.ts for why this pass still lives here. */}
         <script dangerouslySetInnerHTML={{ __html: PINNED_TEAM_SCRIPT }} />
-        {/* The remembered league (SPEC §8.2), a SEPARATE blocking script: stamps data-js,
-            data-league, data-pin and data-pin-stale on <html> before first paint, so the scope
-            stylesheet below paints the right home panel first (CLS 0, no reordering). */}
+        {/* The remembered league and region (SPEC §8.2, DESIGN-socal §2.4), a SEPARATE blocking
+            script: stamps data-js, data-league, data-region (SoCal only), data-pin and
+            data-pin-stale on <html> before first paint, so the scope stylesheet below paints the
+            right region and home panel first (CLS 0, no reordering). */}
         <script dangerouslySetInnerHTML={{ __html: PREFS_SCRIPT }} />
         {/* Unlayered on purpose: it must outrank every @layer, utilities included. Tailwind
-            cannot generate one selector per league id (components/layout/league-scope-css.ts). */}
+            cannot generate one selector per league id (components/layout/league-scope-css.ts);
+            the region rules ride in the same sheet. */}
         <style dangerouslySetInnerHTML={{ __html: SCOPE_CSS }} />
         {/* Scrolls a <details> the reader just opened into view when its panel lands under the
             phone tab bar; see components/layout/disclosure-script.ts. */}

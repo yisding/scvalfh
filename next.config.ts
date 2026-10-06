@@ -28,15 +28,23 @@ const nextConfig: NextConfig = {
    * /game page, …) while seeding, and their first request renders on demand instead of serving the
    * build, which scripts/smoke-server.sh catches as `x-nextjs-cache: MISS`.
    *
-   * Measured after `pnpm build:vinext` on 2026-10-04 (49 teams in five leagues, 396 games, 57 game
-   * days; SPEC §12.3): dist/server/prerendered-routes holds 163,011,433 bytes — 537 .html
-   * (93,899,335), 536 .rsc (49,602,676) and 522 .route bodies (19,509,422; the OG images, icons,
-   * manifest, sitemap and robots, which vinext seeds into the same cache). The rule is at least 2 ×
-   * that total (326,022,866 bytes); 384 MB (2.5 ×) still meets it and covers the rest of the season,
-   * whose game, date and recap pages are still to come. (On 2026-10-02, with 43 teams and 364 games,
-   * it was 127,990,691 bytes.) Actual use is bounded by the content size, not by this ceiling.
+   * Measured after `pnpm build:vinext` on 2026-10-06 (the Southern California amendment, DESIGN §24:
+   * 99 teams in nine leagues, 871 games, 64 game days; SPEC §12.3): dist/server/prerendered-routes
+   * holds 367,917,653 bytes — 1,081 .html (212,432,952), 1,080 .rsc (112,804,113) and 1,062 .route
+   * bodies (42,680,588; the OG images, icons, manifest, sitemap and robots, which vinext seeds into
+   * the same cache). The rule is at least 2 × that total (735,835,306 bytes), rounded UP to a
+   * multiple of 128 MB: 768 MB (805,306,368 bytes, 2.19 ×). The old 384 MB is 1.09 ×: it still
+   * holds today's folder, but it is under the rule and leaves almost nothing for the season's game,
+   * date and recap pages still to come. Actual use is bounded by the content size, not by this ceiling; the next
+   * measurement to take is the same `du` once the San Diego Section playoffs (Nov 2–14) add their
+   * games.
+   *
+   * Earlier measurements, same method: 163,011,433 bytes on 2026-10-04 (49 teams in five leagues,
+   * 396 games, 57 game days: 537 .html, 536 .rsc, 522 .route; 384 MB was 2.47 ×) and 127,990,691
+   * bytes on 2026-10-02 (43 teams, 364 games). scripts/smoke-server.sh (`x-nextjs-cache: MISS`) is
+   * the check that the setting is enough.
    */
-  cacheMaxMemorySize: 384 * 1024 * 1024,
+  cacheMaxMemorySize: 768 * 1024 * 1024,
 
   /**
    * DESIGN §13: HTML is `s-maxage=300, stale-while-revalidate=86400`.

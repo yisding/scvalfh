@@ -18,10 +18,24 @@ import type { PipelineContext, RunState } from '../ledger';
 import type { RequestCounts } from '../transport';
 import type { StandingsStepResult } from './standings';
 
-/** SPEC §7.11 budgets. */
-export const SNAPSHOT_MAX_BYTES = 1_600_000;
-export const SNAPSHOT_WARN_BYTES = 1_200_000;
-export const SOURCES_MAX = 140;
+/**
+ * SPEC §7.11 budgets, raised deliberately for the Southern California amendment (DESIGN-socal §2.2):
+ * 49 teams in five leagues measured 980 KB with 101 source rows against 1.6 MB / 140. The 50 SoCal
+ * teams roughly double the games, teams and standings rows (~1,700 B per game, ~1,140 B per team,
+ * ~2,430 B per standings row, ~430 B per source row, measured on the 49-team file), so the snapshot
+ * lands near 2.2-2.4 MB and the sources near 200 (1 bootstrap + 2 × 14 MaxPreps tables + 102 schedules
+ * + the official, si.com, VNN and CCS rows). The caps below leave room for the rest of the season's
+ * games; the measured numbers are recorded in DESIGN §24. Labels print from these constants
+ * (budgetLabel), never from a literal.
+ */
+export const SNAPSHOT_MAX_BYTES = 3_200_000;
+export const SNAPSHOT_WARN_BYTES = 2_400_000;
+export const SOURCES_MAX = 280;
+
+/** '3.2 MB' from 3_200_000: the human label of a byte budget (decimal megabytes, one decimal). */
+export function budgetLabel(bytes: number): string {
+  return `${(bytes / 1_000_000).toFixed(1)} MB`;
+}
 
 /**
  * D2 rule 10: a `sblive:<id>` game an earlier run published that a MaxPreps contest now supersedes
@@ -140,8 +154,8 @@ export function stepAssemble(
 
   // Budgets: warn here, fail in tests.
   const bytes = Buffer.byteLength(stableStringify(snapshot), 'utf8');
-  if (bytes > SNAPSHOT_MAX_BYTES) ctx.warn(`budget: snapshot.json is ${bytes} bytes, over the ${SNAPSHOT_MAX_BYTES}-byte budget`);
-  else if (bytes > SNAPSHOT_WARN_BYTES) ctx.warn(`budget: snapshot.json is ${bytes} bytes, approaching the ${SNAPSHOT_MAX_BYTES}-byte budget`);
+  if (bytes > SNAPSHOT_MAX_BYTES) ctx.warn(`budget: snapshot.json is ${bytes} bytes, over the ${SNAPSHOT_MAX_BYTES}-byte budget (${budgetLabel(SNAPSHOT_MAX_BYTES)})`);
+  else if (bytes > SNAPSHOT_WARN_BYTES) ctx.warn(`budget: snapshot.json is ${bytes} bytes, past the ${budgetLabel(SNAPSHOT_WARN_BYTES)} warning line of the ${SNAPSHOT_MAX_BYTES}-byte budget`);
   if (sources.length > SOURCES_MAX) ctx.warn(`budget: ${sources.length} source rows, over the ${SOURCES_MAX}-row budget`);
 
   const health = snapshot.leagueHealth;

@@ -6,12 +6,12 @@
  * scripts/fetch-player-stats.ts can validate what it is about to write without importing what it
  * is about to overwrite — the same split as lib/rosters-schema.ts / lib/rosters.ts.
  *
- * Player stats cover every registry team, all five leagues, like the rosters they join to: slugs
- * and team ids are checked against the 49-team registry, and the file holds exactly one entry per
+ * Player stats cover every registry team, all nine leagues and the five independents, like the rosters they join to: slugs
+ * and team ids are checked against the 102-team registry, and the file holds exactly one entry per
  * team.
  *
  * Invariants:
- *   1. exactly one team per registry team (49), unique slugs, each with its registry id
+ *   1. exactly one team per registry team (102), unique slugs, each with its registry id
  *   2. a stat the team does not track is null for every player; a tracked one is a number or null
  *      (null only when the player is missing from the table that carries it)
  *   3. a team's status says what its players[] are: read this run, published nothing, carried
@@ -26,9 +26,9 @@ import { httpUrl, slugId } from './schema-primitives';
 import { contentKey } from './stable-json';
 import { TEAMS, getTeamBySlug } from './teams';
 
-/** Player stats cover every registry team, all five leagues: one entry per team of TEAMS. */
+/** Player stats cover every registry team, all nine leagues and the five independents: one entry per team of TEAMS. */
 const STATS_SLUGS: ReadonlySet<string> = new Set(TEAMS.map((t) => t.slug));
-/** How many teams a player-stats file holds: TEAMS.length (49). */
+/** How many teams a player-stats file holds: TEAMS.length (102). */
 export const PLAYER_STATS_TEAM_COUNT = STATS_SLUGS.size;
 
 /** What a field player's line can hold, in display order. */
