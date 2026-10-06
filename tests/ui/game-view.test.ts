@@ -400,8 +400,20 @@ describe('Southern California games (corpus copy with synthetic SoCal games, DES
     C = await loadModules();
   }, 600_000);
 
-  it('a San Diego shootout win: SO, the winner named in the Section’s words, its rule cited', () => {
+  it('a San Diego shootout win: SO, the winner named in the Section’s words, its rule cited', async () => {
     const model = C.m.buildGameView(shootoutWin.contestId)!;
+    // The decider in words, wherever a view prints it: the screen-reader label of the SO tag and a team
+    // page's "Earlier:" line say the Section's shootout, never the EAL's 1 v 1s.
+    expect(model.display.shootoutLabel, 'components/ui/describe-game.ts shootoutLabel').toBe('decided by a shootout');
+    const { earlierMeeting } = await import('../../components/teams/team-view');
+    const { getTeamBySlug } = await import('../../lib/teams');
+    expect(
+      earlierMeeting(getTeamBySlug('eastlake')!, getTeamBySlug('clairemont')!, '2026-12-01')?.text,
+      'components/teams/team-view.ts earlierMeeting',
+    ).toBe('Earlier: won 0–0 in a shootout away, Sep 1');
+    expect(earlierMeeting(getTeamBySlug('clairemont')!, getTeamBySlug('eastlake')!, '2026-12-01')?.text).toBe(
+      'Earlier: lost 0–0 in a shootout at home, Sep 1',
+    );
     expect(model.game.decider).toBe('SO');
     expect(model.display.deciderTag, 'components/ui/describe-game.ts').toBe('SO');
     expect(model.display.sentence, 'components/ui/describe-game.ts sentence').toBe(

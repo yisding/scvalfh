@@ -1,11 +1,14 @@
-# Data sources — NorCal girls varsity field hockey (season "26-27")
+# Data sources — California girls varsity field hockey (season "26-27")
 
-Condensed from the build-time research spec and amended for the five-league site (SCVAL, BVAL and
-PCAL in the CIF Central Coast Section; MCAL in the North Coast Section; EAL in the Northern
-Section). Confidence tags: **[V]** independently verified against a live response or document;
-**[U]** claimed but not independently re-verified; **[TODO]** open item. Values below were
+Condensed from the build-time research spec and amended for the nine-league site: in Northern
+California SCVAL, BVAL and PCAL in the CIF Central Coast Section, MCAL in the North Coast Section and
+EAL in the Northern Section; in Southern California the Sunset in the Southern Section and the City,
+North County and Metro conferences in the San Diego Section (99 teams; DESIGN §24).
+Confidence tags: **[V]** independently verified against a live response or document; **[U]**
+claimed but not independently re-verified; **[TODO]** open item. Values below were
 captured/verified 2026-09-28 to 2026-10-04; the EAL's captures, and every EAL line below, are
-2026-10-04.
+2026-10-04; the Southern California captures, and every Sunset and San Diego line below, are
+2026-10-06 unless dated otherwise.
 
 See also `docs/LEAGUE-RULES.md` (each league's points, tiebreak chain, postseason and the by-law
 citations), `docs/BYLAWS-2026-27.md` (the verified SCVAL by-laws, which override anything below
@@ -1484,8 +1487,12 @@ tables of their own are computed (`lib/jv-standings.ts`, last bullet). Read 2026
   Aug 18 and Oct 30, 91 final; Del Mar, Live Oak and Sobrato have no rows and Silver Creek only
   deleted ones. Every contest both registry feeds list agrees on score and state (246 of 246).
   Opponents outside the registry are names only (Stuart Hall 8 rows, York, Red Bluff, University
-  Prep Academy). Rows go through `normalizeGames` unchanged, so a JV game is a `Game`, and
-  `countsFor`/`postseason` stay null.
+  Prep Academy). Rows go through `normalizeGames` with `level: 'jv'`, so a JV game is a `Game`, and
+  `countsFor`/`postseason` stay null. `level: 'jv'` turns off one varsity rule: a level final MaxPreps
+  flags W/L between two teams of a section with a shootout rule (Northern, San Diego) is never read as a
+  shootout win, because both rules are varsity rules (the San Diego officials' procedures: "JV—No
+  overtime"); the score stands as a tie and the flags are kept as a contradiction. No JV final had that
+  shape on 2026-10-06 **[V]**.
 - **MaxPreps' JV league flag is not usable.** Of 217 JV contests between two schools of one league,
   200 fall on the same day and pairing as a varsity game, and on 116 of those `contestType` disagrees
   with the varsity game's classification (every PCAL one). No JV game is tagged league or non-league.
@@ -1980,32 +1987,37 @@ Load-bearing rules baked into it:
   game later replaced by MaxPreps' own) are part of the snapshot and shown on `/about`.
 ## 5. Cron fetch plan
 
-**Core sweep — 64 MaxPreps requests, run by `scripts/fetch-data.ts` (a thin CLI over
-`lib/pipeline/`) from `.github/workflows/update-data.yml`:** 1 bootstrap page + 7 league-metadata
-assertions + 7 league standings + 49 per-team schedule pulls (one per registry team, so Prospect is
-fetched even though MaxPreps' Santa Teresa table omits it) = every game, including non-league
-fixtures, because the schedule feed is per-team, not per-league.
+**Core sweep — 128 MaxPreps requests, run by `scripts/fetch-data.ts` (a thin CLI over
+`lib/pipeline/`) from `.github/workflows/update-data.yml`:** 1 bootstrap page + 14 league-metadata
+assertions + 14 league standings + 99 per-team schedule pulls (one per registry team, so Prospect,
+Patrick Henry and every other team a MaxPreps table omits is fetched anyway) = every game, including
+non-league fixtures, because the schedule feed is per-team, not per-league. The formula is 1 + 2 ×
+(divisions with a MaxPreps table) + fetchable teams: of the 15 divisions, the San Diego Section's
+Valley has no MaxPreps table (`maxprepsLeagueId: null`), so its two requests are never made (no
+`/leagues/null/v1`) and its cross-check is reported as skipped.
 
-**Player stats — 49 more MaxPreps requests, in a separate process:** the workflow then
-runs `scripts/fetch-player-stats.ts` (one stats rollup per registry team, all five leagues, §1.1k) as a non-fatal step
+**Player stats — 99 more MaxPreps requests, in a separate process:** the workflow then
+runs `scripts/fetch-player-stats.ts` (one stats rollup per registry team, all nine leagues, §1.1k) as a non-fatal step
 (`continue-on-error`), so a stats outage never costs the day's scores, and commits
-`data/player-stats.json` with the snapshot when its content changed. It is not part of the 64 below
+`data/player-stats.json` with the snapshot when its content changed. It is not part of the 128 below
 and shares no abort scope with the pipeline.
 
 ### 5.0 Request budget per run
 
 | Host | Requests | Notes |
 |---|---|---|
-| MaxPreps API | 64 | 1 bootstrap + 7 meta + 7 standings + 49 schedules; ≤3 concurrent, ≥500 ms spacing (about 30 s when it was 56 requests; the whole 2026-10-04 run, every host, took about 46 s) |
+| MaxPreps API | 128 | 1 bootstrap + 14 meta + 14 standings + 99 schedules; ≤3 concurrent, ≥500 ms spacing (about 30 s when it was 56 requests; the whole 2026-10-04 run of 64, every host, took about 46 s; the 2026-10-06 run's duration was not recorded) |
 | scval.com | 3 | 2 schedule PDFs + the standings index |
 | drive.google.com, pcalathletics.org, mcalsports.org | 5 | revision checks (BVAL ×2, PCAL, MCAL) + the MCAL `Schedir.htm` changes check |
 | si.com | up to 15 + up to 8 | scoreboards for dates in the trailing 14 days that have a game; targeted team-games pages only for backfill candidates (§5.2 rule 8) |
 | VNN | 2 | the Palo Alto and Los Gatos calendars |
 | cifccs.org + MaxPreps HTML | 2 | only from `CCS.pollFrom` (Oct 25) |
 
-`--sblive-full` (all 49 si.com team pages) is a manual flag, never the cron default. The final
-log line prints the counts per host, e.g. `requests maxpreps:64 sblive:… official:…`. The live run of
-2026-10-04 made 64 MaxPreps, 20 si.com and 8 official-host requests, with no 403 or 429.
+`--sblive-full` (all 99 si.com team pages) is a manual flag, never the cron default. The final
+log line prints the counts per host, e.g. `requests maxpreps:128 sblive:… official:…`. The live run of
+2026-10-04 made 64 MaxPreps, 20 si.com and 8 official-host requests, with no 403 or 429. The live
+run of 2026-10-06 (99 teams, the committed snapshot) made 128 MaxPreps, 21 si.com and 8
+official-host requests, and 163 of its 165 source rows were ok.
 
 ### 5.1 Order, aborts and freezes
 

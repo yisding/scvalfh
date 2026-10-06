@@ -10,9 +10,10 @@
  *  - BVAL, PCAL and MCAL count a game only when it matched a fixture of that division in the
  *    league's official schedule, and never a postseason game or a contestType 2/4 row;
  *  - the San Diego divisions ('membership', DESIGN-socal §2.1.7) count every game between two members
- *    dated inside the division's leaguePlay, whatever MaxPreps' league flag says: every pair of
- *    division-mates meets exactly twice on MaxPreps' schedules (a double round robin, inventory
- *    2026-10-06), while MaxPreps flags as few as 0 of Patrick Henry's 10 as league games.
+ *    dated inside the division's leaguePlay, whatever MaxPreps' league flag says: division-mates
+ *    play each other home and away on MaxPreps' schedules (a double round robin; on 2026-10-06 every
+ *    pair was listed twice except Bonita Vista and Helix, once), while MaxPreps flags as few as 0 of
+ *    Patrick Henry's 10 as league games.
  *
  * Two San Diego additions sit beside the rule (both pure, both in `classifyGames`):
  *  - a game MaxPreps flags as a league game between two DIVISIONS of one league whose divisions publish

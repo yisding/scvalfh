@@ -1208,7 +1208,7 @@ const SUNSET: LeagueConfig = {
 
 /** Every San Diego division's official note (DESIGN-socal §2.1.6, verbatim). */
 const SDS_OFFICIAL_NOTE =
-  'No San Diego Section league publishes a schedule or standings. Members come from the Section’s 2026-27 League Alignment; every pair of members meets twice, and this site counts both games as league games whether or not MaxPreps marks them as league games.';
+  'No San Diego Section league publishes a schedule or standings. Members come from the Section’s 2026-27 League Alignment; its members play each other home and away, and this site counts every game between two members of the division as a league game whether or not MaxPreps marks it as one.';
 
 const SDS_LINKS: LeagueConfig['links'] = [
   { label: 'CIF San Diego Section field hockey', href: SDS_FIELD_HOCKEY_URL },
@@ -1237,7 +1237,7 @@ function sdsRules(shortName: string): LeagueRules {
     multiTeam: 'partition-restart', h2hUnmet: 'skip', drawNumbers: null, leagueOvertime: 'shootout',
     citations: {
       ...SITE_POINTS_CITATIONS,
-      doubleRoundRobin: 'every pair of members meets twice (MaxPreps schedules and the CIF-SDS 2026-27 League Alignment); the league publishes no schedule',
+      doubleRoundRobin: 'members play each other home and away (MaxPreps schedules and the CIF-SDS 2026-27 League Alignment; on Oct 6 one Metro Mesa pair, Bonita Vista and Helix, was listed once); the league publishes no schedule',
       overtime: 'San Diego Field Hockey Officials Association 2026 procedures: a 10-minute 7 v 7 sudden-victory period, then 1 v 1 shootouts; the shootout winner is credited one goal, so a varsity game never ends level. MaxPreps often records such a win as a level score marked W and L, and this site counts it as a win.',
       // Paraphrased: the Green Book's own words name the champion an "automatic qualifier", a phrase no
       // non-CCS page may print (scripts/assert-copy.ts forbidCcs).
@@ -1474,7 +1474,7 @@ const METRO: LeagueConfig = {
       leaguePlay: { first: '2026-09-28', last: SDS_LEAGUE_PLAY_LAST },
       official: sdsOfficial(),
       maxprepsTeamCount: 5, maxprepsMissing: [], maxprepsExtraRows: {}, reportedTrust: 'informational',
-      knownCause: 'MaxPreps files these five teams under ‘Metro- South Bay’.',
+      knownCause: 'MaxPreps files these five teams under ‘Metro- South Bay’. On Oct 6 MaxPreps listed Bonita Vista and Helix meeting once (Oct 23), so unless a second meeting is added each ends a game short of the eight.',
       home: { miniRows: 5, lineAfter: null, lineLabel: null },
       ladderLine: { after: 1, label: 'Champion line' },
     },
@@ -1554,8 +1554,8 @@ export const DATA_QUALITY: DataQualityConfig = {
     '5cf5e3df-6e72-4f44-9b8d-e69da30b85c5': 'Archie Williams at Marin Academy, Aug 18: not on the official MCAL schedule; a spurious unscored row',
     // Two duplicate Palomar rows (inventory 2026-10-06): each sits on a date with no time, and the pair already has
     // its two meetings, so counting either would add a third game and a false "league result missing" row.
-    'c7dbdbcc-5f41-4192-b8b2-eb79cca2523a': 'Poway vs Fallbrook, Oct 9 with no time: a second MaxPreps row for their Palomar game on Oct 13 (0b3cfb7d); the pair meets twice, and both meetings are on the schedule',
-    '9c027452-e21e-4e47-9eac-d2e800bfb42c': 'Mission Vista vs Fallbrook, Oct 30 with no time: a second MaxPreps row for their Palomar game on Oct 29 (5067646d); the pair meets twice, and both meetings are on the schedule',
+    'c7dbdbcc-5f41-4192-b8b2-eb79cca2523a': 'Poway vs Fallbrook, Oct 9 with no time: a second MaxPreps row for their Palomar game on Oct 13 (0b3cfb7d); both of the pair’s meetings are on the schedule',
+    '9c027452-e21e-4e47-9eac-d2e800bfb42c': 'Mission Vista vs Fallbrook, Oct 30 with no time: a second MaxPreps row for their Palomar game on Oct 29 (5067646d); both of the pair’s meetings are on the schedule',
   },
   sbliveIgnoredTeamIds: {
     '456851': 'York (PCAL): JV only',

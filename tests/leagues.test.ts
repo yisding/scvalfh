@@ -933,7 +933,7 @@ describe('leagues: the San Diego Section (City, North County, Metro)', () => {
       for (const d of l.divisions) {
         expect(d.official).toEqual({
           mode: 'none',
-          note: 'No San Diego Section league publishes a schedule or standings. Members come from the Section’s 2026-27 League Alignment; every pair of members meets twice, and this site counts both games as league games whether or not MaxPreps marks them as league games.',
+          note: 'No San Diego Section league publishes a schedule or standings. Members come from the Section’s 2026-27 League Alignment; its members play each other home and away, and this site counts every game between two members of the division as a league game whether or not MaxPreps marks it as one.',
         });
         expect(d.reportedTrust, d.id).toBe('informational');
         expect(d.home, d.id).toEqual({ miniRows: d.expectedTeams, lineAfter: null, lineLabel: null });
@@ -963,7 +963,7 @@ describe('leagues: the San Diego Section (City, North County, Metro)', () => {
         'San Diego Field Hockey Officials Association 2026 procedures: a 10-minute 7 v 7 sudden-victory period, then 1 v 1 shootouts; the shootout winner is credited one goal, so a varsity game never ends level. MaxPreps often records such a win as a level score marked W and L, and this site counts it as a win.',
       );
       expect(l.rules.citations.doubleRoundRobin).toBe(
-        'every pair of members meets twice (MaxPreps schedules and the CIF-SDS 2026-27 League Alignment); the league publishes no schedule',
+        'members play each other home and away (MaxPreps schedules and the CIF-SDS 2026-27 League Alignment; on Oct 6 one Metro Mesa pair, Bonita Vista and Helix, was listed once); the league publishes no schedule',
       );
       expect(l.rules.citations.points).toBe('this site’s 3-1-0 points (the league publishes no points rule)');
       expect(l.rules.citations.coChampions).toMatch(/^the league designates its champion/);
