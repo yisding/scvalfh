@@ -651,11 +651,12 @@ describe('history: the league-aware read API', () => {
       ['city', 'unavailable'],
       ['north-county', 'unavailable'],
       ['metro', 'unavailable'],
+      ['independents', 'unavailable'],
     ]);
-    expect(h.getHistoryLeagues()).toHaveLength(9);
+    expect(h.getHistoryLeagues()).toHaveLength(10);
     expect(h.getAvailableHistoryLeagues().map((l) => l.id)).toEqual(['scval', 'bval']);
     expect(h.getUnavailableHistoryLeagues().map((l) => l.id)).toEqual([
-      'pcal', 'mcal', 'eal', 'sunset', 'city', 'north-county', 'metro',
+      'pcal', 'mcal', 'eal', 'sunset', 'city', 'north-county', 'metro', 'independents',
     ]);
     expect(h.hasHistory('eal')).toBe(false);
     expect(h.getHistoryChampions('eal')).toEqual([]);
@@ -698,6 +699,21 @@ describe('history: the league-aware read API', () => {
       expect(h.hasHistory(id)).toBe(false);
       expect(h.getHistoryChampions(id)).toEqual([]);
     }
+    // The Southern Section independents (DESIGN §24.9): they played as independents in 2025-26 too. MaxPreps'
+    // 2025-26 Palomares, League B and Marmonte tables each list only that school (standings API, 2026-10-06).
+    const independents = h.getHistoryLeagues().find((l) => l.id === 'independents')!.entry;
+    if (independents.status !== 'unavailable') throw new Error('independents should be unavailable');
+    expect(independents.reason).toBe(
+      'Glendora, Harvard-Westlake and Thousand Oaks played as independents in 2025-26 too: there was no league table to publish.',
+    );
+    expect(independents.checkedOn).toBe('2026-10-06');
+    expect(independents.checked.map((c) => c.split(' ')[0])).toEqual([
+      'https://www.maxpreps.com/ca/field-hockey/25-26/league/palomares/?leagueid=5d795f4f-0e75-450d-856e-0873b46002de',
+      'https://www.maxpreps.com/ca/field-hockey/25-26/league/league-b/?leagueid=c2922327-b045-410b-aadd-87cb63b58405',
+      'https://www.maxpreps.com/ca/field-hockey/25-26/league/marmonte/?leagueid=392fb703-cc64-46d7-8d21-819e13a78c3f',
+    ]);
+    expect(independents.alsoPublished).toBeUndefined();
+    expect(h.hasHistory('independents')).toBe(false);
     expect(h.hasHistory('sunset')).toBe(false);
   });
 

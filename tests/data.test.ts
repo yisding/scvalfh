@@ -43,9 +43,9 @@ afterAll(() => {
 describe('data: identity and freshness', () => {
   it('loads the snapshot once and exposes it', () => {
     expect(data.getSnapshot().schemaVersion).toBe(2);
-    expect(data.getSnapshot().teams.length).toBe(99);
+    expect(data.getSnapshot().teams.length).toBe(102);
     expect(data.getFetchedAt()).toBe('2026-10-02T10:48:51.206Z');
-    expect(data.getCounts().teams).toBe(99);
+    expect(data.getCounts().teams).toBe(102);
   });
 
   it('derives today from the snapshot stamp in America/Los_Angeles', () => {
@@ -55,18 +55,18 @@ describe('data: identity and freshness', () => {
 });
 
 describe('data: sections and leagues', () => {
-  it('summarises the nine leagues in config order, each with its region and its cities', () => {
+  it('summarises the nine leagues and the independents in config order, each with its region and its cities', () => {
     const leagues = data.getLeagueSummaries();
-    expect(leagues.map((l) => l.id)).toEqual(['scval', 'bval', 'pcal', 'mcal', 'eal', 'sunset', 'city', 'north-county', 'metro']);
-    expect(leagues.map((l) => l.teamCount)).toEqual([15, 12, 7, 9, 6, 10, 12, 19, 9]);
+    expect(leagues.map((l) => l.id)).toEqual(['scval', 'bval', 'pcal', 'mcal', 'eal', 'sunset', 'city', 'north-county', 'metro', 'independents']);
+    expect(leagues.map((l) => l.teamCount)).toEqual([15, 12, 7, 9, 6, 10, 12, 19, 9, 3]);
     // `region` is NorCal/SoCal (from the section); the card's place words moved to `cities`, unchanged for NorCal.
-    expect(leagues.map((l) => l.region)).toEqual([...Array(5).fill('norcal'), ...Array(4).fill('socal')]);
+    expect(leagues.map((l) => l.region)).toEqual([...Array(5).fill('norcal'), ...Array(5).fill('socal')]);
     expect(leagues.map((l) => l.cities)).toEqual([
       'Santa Clara County and San Francisco', 'San Jose, Campbell, Saratoga, Morgan Hill and Gilroy',
       'Monterey County and Hollister', 'Marin County, San Francisco and Berkeley', 'Chico, Corning, Susanville, Davis and Fair Oaks',
       'Huntington Beach, Newport Beach, Fountain Valley, Temecula, La Verne and West Hills', 'San Diego and La Jolla',
       'Carlsbad, Encinitas, Escondido, Fallbrook, Oceanside, Poway, San Marcos, Valley Center, Vista and north San Diego',
-      'Chula Vista, La Mesa, Lakeside, El Cajon and San Diego',
+      'Chula Vista, La Mesa, Lakeside, El Cajon and San Diego', 'Glendora, Studio City and Thousand Oaks',
     ]);
     expect(data.getLeagueSummary('sunset')!.section).toEqual({ id: 'ss', name: 'Southern Section', shortName: 'SS' });
     expect(data.getLeagueSummary('north-county')!.divisions.map((d) => [d.id, d.heading, d.teamCount])).toEqual([
@@ -92,7 +92,7 @@ describe('data: sections and leagues', () => {
   });
 
   it('lists route params', () => {
-    expect(data.getLeagueIds()).toEqual(['scval', 'bval', 'pcal', 'mcal', 'eal', 'sunset', 'city', 'north-county', 'metro']);
+    expect(data.getLeagueIds()).toEqual(['scval', 'bval', 'pcal', 'mcal', 'eal', 'sunset', 'city', 'north-county', 'metro', 'independents']);
     expect(data.getTournamentLeagueIds()).toEqual(['mcal']);
     expect(data.getSections().map((s) => s.id)).toEqual(['ccs', 'ncs', 'ns', 'ss', 'sds']);
   });
@@ -101,15 +101,15 @@ describe('data: sections and leagues', () => {
     const regions = data.getRegionSummaries();
     expect(regions.map((r) => [r.region.id, r.region.shortName, r.teamCount])).toEqual([
       ['norcal', 'NorCal', 49],
-      ['socal', 'SoCal', 50],
+      ['socal', 'SoCal', 53],
     ]);
     expect(regions.map((r) => r.sections.map((s) => [s.section.id, s.leagues.map((l) => l.id)]))).toEqual([
       [['ccs', ['scval', 'bval', 'pcal']], ['ncs', ['mcal']], ['ns', ['eal']]],
-      [['ss', ['sunset']], ['sds', ['city', 'north-county', 'metro']]],
+      [['ss', ['sunset', 'independents']], ['sds', ['city', 'north-county', 'metro']]],
     ]);
-    expect(data.getLeagueSummaries('socal').map((l) => l.id)).toEqual(['sunset', 'city', 'north-county', 'metro']);
+    expect(data.getLeagueSummaries('socal').map((l) => l.id)).toEqual(['sunset', 'city', 'north-county', 'metro', 'independents']);
     expect(data.getLeagueSummaries('norcal').map((l) => l.id)).toEqual(['scval', 'bval', 'pcal', 'mcal', 'eal']);
-    expect(data.getLeagueSummaries()).toHaveLength(9);
+    expect(data.getLeagueSummaries()).toHaveLength(10);
   });
 
   it('exposes league health', () => {
@@ -121,8 +121,8 @@ describe('data: sections and leagues', () => {
 });
 
 describe('data: teams', () => {
-  it('returns all 99, one division, or one league', () => {
-    expect(data.getTeams().length).toBe(99);
+  it('returns all 102, one division, or one league', () => {
+    expect(data.getTeams().length).toBe(102);
     expect(data.getTeams('de-anza').length).toBe(7);
     expect(data.getTeams({ division: 'el-camino' }).length).toBe(8);
     expect(data.getTeams({ league: 'bval' }).length).toBe(12);
@@ -134,6 +134,7 @@ describe('data: teams', () => {
     expect(data.getTeams({ league: 'sunset' })).toHaveLength(10);
     expect(data.getTeams({ league: 'north-county' })).toHaveLength(19);
     expect(data.getTeams('valley')).toHaveLength(6);
+    expect(data.getTeams({ league: 'independents' }).map((t) => t.slug)).toEqual(['glendora', 'harvard-westlake', 'thousand-oaks']);
   });
 
   it('groups section → league → division', () => {
@@ -144,13 +145,17 @@ describe('data: teams', () => {
     expect(grouped[1].leagues[0].divisions[0].heading).toBeNull();
     expect(grouped[2].leagues.map((l) => l.league.id)).toEqual(['eal']);
     expect(grouped[2].leagues[0].divisions.map((d) => [d.id, d.heading, d.teams.length])).toEqual([['eal', null, 6]]);
-    expect(grouped.flatMap((g) => g.leagues.flatMap((l) => l.divisions.flatMap((d) => d.teams)))).toHaveLength(99);
+    expect(grouped.flatMap((g) => g.leagues.flatMap((l) => l.divisions.flatMap((d) => d.teams)))).toHaveLength(102);
     // One region's sections only.
     const norcal = data.getTeamsGrouped('norcal');
     expect(norcal.map((g) => g.section.id)).toEqual(['ccs', 'ncs', 'ns']);
     expect(norcal.flatMap((g) => g.leagues.flatMap((l) => l.divisions.flatMap((d) => d.teams)))).toHaveLength(49);
     const socal = data.getTeamsGrouped('socal');
     expect(socal.map((g) => g.section.id)).toEqual(['ss', 'sds']);
+    expect(socal[0].leagues.map((l) => [l.league.id, l.divisions.map((d) => [d.id, d.heading, d.teams.length])])).toEqual([
+      ['sunset', [['sunset', null, 10]]],
+      ['independents', [['independents', null, 3]]],
+    ]);
     expect(socal[1].leagues.map((l) => [l.league.id, l.divisions.map((d) => [d.id, d.heading, d.teams.length])])).toEqual([
       ['city', [['city-western', 'City Western', 6], ['city-eastern', 'City Eastern', 6]]],
       ['north-county', [['avocado', 'Avocado', 6], ['palomar', 'Palomar', 7], ['valley', 'Valley', 6]]],
@@ -164,12 +169,12 @@ describe('data: teams', () => {
     expect(data.getTeamById(team!.id)?.slug).toBe('los-altos');
     expect(data.getTeamForm(team!.id)).toBeDefined(); // a GUID resolves as well as a slug
     expect(data.getTeamBySlug('nope')).toBeUndefined();
-    expect(data.getTeamSlugs()).toHaveLength(99);
+    expect(data.getTeamSlugs()).toHaveLength(102);
   });
 
   it('builds the search index in LEAGUES then registry order', () => {
     const index = data.getTeamSearchIndex();
-    expect(index.teams).toHaveLength(99);
+    expect(index.teams).toHaveLength(102);
     expect(index.teams.map((t) => t.slug)).toEqual(data.getTeams().map((t) => t.slug));
     expect(data.getTeamSearchIndex()).toBe(index);
   });
@@ -257,6 +262,7 @@ describe('data: standings and derived facts', () => {
     expect(Object.keys(data.getAllStandings())).toEqual([
       'de-anza', 'el-camino', 'mt-hamilton', 'santa-teresa', 'pcal', 'marin-county', 'eal',
       'sunset', 'city-western', 'city-eastern', 'avocado', 'palomar', 'valley', 'metro-mesa', 'metro-south-bay',
+      'independents',
     ]);
     expect(data.getStandingFor('leigh')?.hasReportedResults).toBe(false);
   });
@@ -667,9 +673,11 @@ describe('data: Southern California tables with results', () => {
       game({ home: 'bonita', away: 'marina', hs: 1, as: 1, date: '2026-08-18' }),
       game({ home: 'edison', away: 'bonita', hs: 0, as: 2, date: '2026-09-01' }),
       game({ home: 'bonita', away: 'chaminade', hs: 3, as: 0, date: '2026-09-10' }),
+      // The Southern Section independents (DESIGN §24.9): a non-league game, so the group has a season too.
+      game({ home: 'harvard-westlake', away: 'great-oak', hs: 2, as: 1, date: '2026-08-18', league: false }),
     ];
     const games = [...base.games, ...added];
-    const socalLeagues = new Set(['sunset', 'city', 'north-county', 'metro']);
+    const socalLeagues = new Set(['sunset', 'city', 'north-county', 'metro', 'independents']);
     const socalDivisions = new Set(
       [...socalLeagues].flatMap((id) => getLeague(id).divisions.map((d) => d.id)),
     );

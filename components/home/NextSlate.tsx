@@ -32,6 +32,9 @@ export interface NextSlateProps {
   nextLeague?: Omit<NextLeagueDay, 'isToday'> | null;
   /** Where the empty state points once the schedule is used up (the league's postseason page). */
   after: { href: string; label: string };
+  /** What the schedule belongs to, in the empty state: 'this league', or 'these teams' for a group
+      with no league (the Southern Section independents, DESIGN §24.9). */
+  scopeNoun?: string;
   className?: string;
 }
 
@@ -48,6 +51,7 @@ export function NextSlate({
   kicker,
   nextLeague,
   after,
+  scopeNoun = 'this league',
   className,
 }: NextSlateProps) {
   const shown = games.slice(0, ROWS);
@@ -131,7 +135,7 @@ export function NextSlate({
         </div>
       ) : (
         <EmptyState heading="Nothing left on the schedule." action={after}>
-          Every contest we have for this league is behind us.
+          {`Every contest we have for ${scopeNoun} is behind us.`}
         </EmptyState>
       )}
     </section>

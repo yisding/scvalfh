@@ -307,7 +307,7 @@ export function getLeagueHealth(id: LeagueId): LeagueHealth {
 
 // ---------------------------------------------------------------- teams
 
-/** All 99 (registry order), one division (a bare id), or `{ league?, division? }`. */
+/** All 102 (registry order), one division (a bare id), or `{ league?, division? }`. */
 export function getTeams(filter?: DivisionId | { league?: LeagueId; division?: DivisionId }): readonly Team[] {
   if (filter === undefined) return snapshot.teams;
   const f = typeof filter === 'string' ? { division: filter } : filter;
@@ -354,7 +354,7 @@ export function getTeamSlugs(): TeamSlug[] {
 
 let searchIndex: SearchIndex | null = null;
 
-/** The pre-serialized 99-team search index (SPEC §9.1), in LEAGUES then registry order. Built once. */
+/** The pre-serialized 102-team search index (SPEC §9.1), in LEAGUES then registry order. Built once. */
 export function getTeamSearchIndex(): SearchIndex {
   if (searchIndex) return searchIndex;
   const teams = LEAGUES.flatMap((l) => snapshot.teams.filter((t) => t.league === l.id)).map((t) => ({
@@ -374,6 +374,7 @@ export function getTeamSearchIndex(): SearchIndex {
     shortName: l.shortName,
     name: l.name,
     sectionShort: sectionConfig(l.sectionId).shortName,
+    ...(l.rules.classification === 'independent' ? { independent: true } : {}),
     divisions: l.divisions.map((d) => ({
       id: d.id,
       label: d.label,
@@ -860,6 +861,11 @@ export interface FormGame {
 export interface TeamForm {
   /** Every counted-division contest in date order, played or not, for the MarginStrip axis. */
   leagueGames: FormGame[];
+  /**
+   * Every contest in date order, played or not: the MarginStrip axis for a team that plays no league games
+   * (the Southern Section independents, DESIGN §24.9), whose page charts all its games and says so.
+   */
+  allGames: FormGame[];
 }
 
 export function getTeamForm(ref: string): TeamForm | undefined {
@@ -868,29 +874,28 @@ export function getTeamForm(ref: string): TeamForm | undefined {
   const all = getGames({ teamId: team.id }).sort((a, b) =>
     a.dateLocal.localeCompare(b.dateLocal),
   );
-  const leagueGames: FormGame[] = all
-    .filter((g) => g.countsFor !== null)
-    .map((g) => {
-      const isHome = g.home.teamId === team.id;
-      const mine = isHome ? g.home : g.away;
-      const theirs = isHome ? g.away : g.home;
-      const counted =
-        g.status === 'final' && mine.score !== null && theirs.score !== null && !g.isForfeit;
-      // sideOutcome: a shootout win (decider 'SO', level on goals: an EAL 1 v 1 win, a San Diego shootout) is the flagged side's win.
-      const outcome: Outcome | null = sideOutcome(g, isHome ? 'home' : 'away');
-      return {
-        contestId: g.contestId,
-        date: g.dateKey,
-        opponent: theirs.name,
-        opponentSlug: theirs.slug,
-        site: g.site === 'neutral' ? 'neutral' : isHome ? 'home' : 'away',
-        status: g.status,
-        margin: counted ? (mine.score as number) - (theirs.score as number) : null,
-        outcome,
-        excludedFromMargin: g.isForfeit,
-      };
-    });
-  return { leagueGames };
+  const allGames: FormGame[] = all.map((g) => {
+    const isHome = g.home.teamId === team.id;
+    const mine = isHome ? g.home : g.away;
+    const theirs = isHome ? g.away : g.home;
+    const counted =
+      g.status === 'final' && mine.score !== null && theirs.score !== null && !g.isForfeit;
+    // sideOutcome: a shootout win (decider 'SO', level on goals: an EAL 1 v 1 win, a San Diego shootout) is the flagged side's win.
+    const outcome: Outcome | null = sideOutcome(g, isHome ? 'home' : 'away');
+    return {
+      contestId: g.contestId,
+      date: g.dateKey,
+      opponent: theirs.name,
+      opponentSlug: theirs.slug,
+      site: g.site === 'neutral' ? 'neutral' : isHome ? 'home' : 'away',
+      status: g.status,
+      margin: counted ? (mine.score as number) - (theirs.score as number) : null,
+      outcome,
+      excludedFromMargin: g.isForfeit,
+    };
+  });
+  const leagueGames = allGames.filter((_, i) => all[i].countsFor !== null);
+  return { leagueGames, allGames };
 }
 
 // ---------------------------------------------------------------- postseason

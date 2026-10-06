@@ -31,6 +31,11 @@ import { placeSub } from './team-view';
  * The tiles are a `<dl>` of StatTile groups: eight label/value pairs, announced as such. The two
  * values that only read well to the eye carry a spoken form: Streak "L5" is "5 losses in a row",
  * Goals F / A "0 / 52" is "0 for, 52 against".
+ *
+ * A team that plays no league games (the Southern Section independents, DESIGN §24.9) has no place, no league
+ * record, no GP and no MAX: its Place tile reads "Independent" over "no league table", the League, GP and MAX
+ * tiles are not drawn, and Streak, Goals and Goal diff count all its games, which their subs and the
+ * disclosure say.
  */
 const STREAK_WORD = { W: ['win', 'wins'], L: ['loss', 'losses'], T: ['tie', 'ties'] } as const;
 
@@ -50,6 +55,8 @@ export function TeamStatTiles({ view, className }: TeamStatTilesProps) {
   const streakSpoken = streak
     ? `${plural(streak.count, STREAK_WORD[streak.result][0], STREAK_WORD[streak.result][1])} in a row`
     : undefined;
+
+  if (view.league.classification === 'independent') return <IndependentTiles view={view} className={className} />;
 
   return (
     <div className={className}>
@@ -121,6 +128,51 @@ export function TeamStatTiles({ view, className }: TeamStatTilesProps) {
                   `GP is counted results out of the ${view.leagueScheduled} a full home-and-away schedule gives each team; MAX is the points total if every remaining game were won. `
                 : `GP is counted results out of the ${view.leagueScheduled} scheduled; MAX is the points total if every remaining game were won. `
           }`}
+          A real 0 shows as{' '}
+          <span className="sx-num">0</span>; a number we do not have shows as{' '}
+          <span aria-hidden="true">{EM_DASH}</span>
+          <span className="sr-only">an em dash</span>. Forfeits count in W-L-T but not in goals.
+        </p>
+      </details>
+    </div>
+  );
+}
+
+/** The tiles of a team with no league games (the Southern Section independents): every figure is all games. */
+function IndependentTiles({ view, className }: TeamStatTilesProps) {
+  const { standing, team } = view;
+  const overall = standing && standing.overall.gp > 0 ? standing.overall : null;
+  const streak = overall?.streak ?? null;
+  const streakSpoken = streak
+    ? `${plural(streak.count, STREAK_WORD[streak.result][0], STREAK_WORD[streak.result][1])} in a row`
+    : undefined;
+  return (
+    <div className={className}>
+      <dl className="m-0 grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
+        <StatTile label="Place" value={view.league.shortName} sub="no league table" emphasis="hero" />
+        <StatTile
+          label="Overall"
+          value={overall ? recordString(overall) : null}
+          sub={overall ? `${plural(overall.gp, 'game')}, all opponents` : 'all opponents'}
+        />
+        <StatTile label="Streak" value={overall ? streakString(streak) : null} srValue={streakSpoken} sub="all games" />
+        <StatTile
+          label="Goals F / A"
+          srLabel="Goals for and against"
+          value={overall ? `${overall.gf} / ${overall.ga}` : null}
+          srValue={overall ? `${overall.gf} for, ${overall.ga} against` : undefined}
+          sub={overall ? `${perGame(overall.gf, overall.gp)} scored per game` : 'all games'}
+        />
+        <StatTile
+          label="Goal diff"
+          value={overall ? signedGd(overall.gd) : null}
+          sub={overall ? `${perGame(overall.ga, overall.gp)} conceded per game` : 'all games'}
+        />
+      </dl>
+      <details className="sx-disclosure mt-3">
+        <summary>How these numbers are counted</summary>
+        <p className="mt-1 mb-2 max-w-prose text-meta text-ink-2">
+          {`${team.name} plays no league games: it is the only field hockey team in its all-sports league, so there is no place, league record, GP or MAX, and every figure here counts all its games. `}
           A real 0 shows as{' '}
           <span className="sx-num">0</span>; a number we do not have shows as{' '}
           <span aria-hidden="true">{EM_DASH}</span>

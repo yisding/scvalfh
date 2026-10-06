@@ -9,7 +9,8 @@ import { buildJvTablesView } from '../../components/standings/jv-standings-view'
 import Arrow from '../../components/ui/Arrow';
 import SectionHeader from '../../components/ui/SectionHeader';
 import { listWords } from '../../lib/format';
-import { LEAGUES, leaguesInRegion, regionOf } from '../../lib/leagues';
+import { getTeams } from '../../lib/data';
+import { LEAGUES, LEAGUES_WITH_TABLES, isIndependentLeague, leaguesInRegion, regionOf } from '../../lib/leagues';
 
 /**
  * `/jv` — "Where does our JV stand?" Every league's JV tables, computed (lib/jv-standings.ts) and
@@ -23,10 +24,15 @@ import { LEAGUES, leaguesInRegion, regionOf } from '../../lib/leagues';
  * enough of its games have a score), which this page states once at the top. Each league standings
  * page links here (`/jv#<league>`), and a team page's JV header links its division (`/jv#<division>`).
  *
+ * A group with no league table (the Southern Section independents, DESIGN §24.9) keeps its section and its
+ * anchor (`#independents`, where a team page's JV header points) but has no JV table to compute: a JV league
+ * game is one whose varsity counterpart counts, and none of theirs does. The section says so and links the
+ * teams, whose pages list their JV games.
+ *
  * One static page, no params, nothing derived from `Date.now()`.
  */
 
-const SHORT_NAMES = listWords(LEAGUES.map((l) => l.shortName));
+const SHORT_NAMES = listWords(LEAGUES_WITH_TABLES.map((l) => l.shortName));
 const PAGE_TITLE = 'JV standings';
 
 export const metadata: Metadata = {
@@ -68,12 +74,32 @@ export default function JvStandingsPage() {
               : 'mt-section scroll-mt-24 md:mt-section-lg'
           }
         >
-          <SectionHeader
-            id={`${league.id}-heading`}
-            kicker={`${league.shortName} JV`}
-            action={{ href: `/standings/${league.id}`, label: 'Varsity table' }}
-          />
-          <JvStandings views={buildJvTablesView(league.id)} multi={league.divisions.length > 1} />
+          {isIndependentLeague(league.id) ? (
+            <>
+              <SectionHeader id={`${league.id}-heading`} kicker={`${league.name} JV`} />
+              <p className="m-0 mt-2 max-w-prose text-body text-ink-2">
+                {listWords(getTeams({ league: league.id }).map((t) => t.name))} play no league games, so their JV
+                teams have no league table either. Their JV games are on their team pages:{' '}
+                {getTeams({ league: league.id }).map((t, i, all) => (
+                  <span key={t.slug}>
+                    <Link href={`/teams/${t.slug}#jv`} prefetch={false} className="font-medium text-accent hover:underline">
+                      {t.name}
+                    </Link>
+                    {i < all.length - 2 ? ', ' : i === all.length - 2 ? ' and ' : '.'}
+                  </span>
+                ))}
+              </p>
+            </>
+          ) : (
+            <>
+              <SectionHeader
+                id={`${league.id}-heading`}
+                kicker={`${league.shortName} JV`}
+                action={{ href: `/standings/${league.id}`, label: 'Varsity table' }}
+              />
+              <JvStandings views={buildJvTablesView(league.id)} multi={league.divisions.length > 1} />
+            </>
+          )}
         </section>
       ))}
     </div>

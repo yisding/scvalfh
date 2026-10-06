@@ -1,5 +1,5 @@
 /**
- * The /leaders page (DESIGN §16): leaderboards over all nine leagues, built once per region (NorCal, then
+ * The /leaders page (DESIGN §16): leaderboards over all nine leagues and the three independents, built once per region (NorCal, then
  * SoCal: DESIGN-socal §2.3, §2.4), derived from the two files the rest of the site already reads. Pure, so
  * tests/ui/leaders-view.test.ts can assert it over the committed data and over synthetic games.
  *
@@ -51,7 +51,16 @@ import {
   signedGd,
   winPct,
 } from '../../lib/format';
-import { LEAGUES, REGIONS, getLeague, leaguesInRegion, regionOf, type RegionConfig } from '../../lib/leagues';
+import {
+  INDEPENDENT_LEAGUES,
+  LEAGUES_WITH_TABLES,
+  REGIONS,
+  getLeague,
+  getSection,
+  leaguesInRegion,
+  regionOf,
+  type RegionConfig,
+} from '../../lib/leagues';
 import { getPlayerStats } from '../../lib/player-stats';
 import { getPriorSeason } from '../../lib/prior-season';
 import { getAllEnrichedRosters, type MergedPlayer } from '../../lib/rosters';
@@ -78,10 +87,25 @@ import { plural } from '../ui/plural';
 import { positionWords } from '../ui/position-words';
 
 /**
- * 'nine': the number of configured leagues, in words. The Elo fit spans all of them (one scale), so the
- * copy that speaks for the whole fit says 'the nine leagues' teams'; a board speaks for its region's.
+ * 'nine': the number of configured leagues with a table, in words. The Elo fit spans all of them and the
+ * independent groups too (one scale), so the copy that speaks for the whole fit says 'the nine leagues'
+ * teams' and adds AND_INDEPENDENTS; a board speaks for its region's. Never 'ten leagues': the Southern
+ * Section independents are not a league (DESIGN §24.9).
  */
-export const LEAGUE_COUNT = numberWord(LEAGUES.length);
+export const LEAGUE_COUNT = numberWord(LEAGUES_WITH_TABLES.length);
+
+/**
+ * ' and the Southern Section’s three independents' ('' with no independent group): the covered teams that
+ * are in no league, named after a count of leagues wherever the sentence speaks for every covered team.
+ */
+export const AND_INDEPENDENTS = INDEPENDENT_LEAGUES.map(
+  (g) => ` and the ${getSection(g.sectionId).name}’s ${numberWord(g.divisions.reduce((n, d) => n + d.expectedTeams, 0))} independents`,
+).join('');
+
+/** ' and three independents' ('' with none): the short form, for an eyebrow. */
+export const AND_INDEPENDENTS_SHORT = INDEPENDENT_LEAGUES.map(
+  (g) => ` and ${numberWord(g.divisions.reduce((n, d) => n + d.expectedTeams, 0))} independents`,
+).join('');
 
 /** The id suffix of a region's boards and sections: '' for NorCal (today's anchors), '-socal' for SoCal. */
 export function regionIdSuffix(region: RegionId): '' | '-socal' {
@@ -191,8 +215,10 @@ export interface RegionLeadersView {
   schoolsId: string;
   /** 'players' | 'players-socal': the Players section's id. */
   playersId: string;
-  /** The region's configured leagues: 5 NorCal, 4 SoCal. */
+  /** The region's configured leagues with a table: 5 NorCal, 4 SoCal. */
   leagueCount: number;
+  /** The region's independents (teams in no league): 0 NorCal, 3 SoCal. */
+  independentCount: number;
   players: LeaderBoard[];
   schools: LeaderBoard[];
   /** Under the player boards: whose stats are missing, behind or carried forward. */
@@ -271,16 +297,38 @@ function defaultSources(): LeaderSources {
 interface BoardScope {
   /** '' | '-socal' */
   suffix: '' | '-socal';
-  /** 'all five NorCal leagues': the captions' scope. */
+  /** 'all five NorCal leagues', 'all four SoCal leagues and three independents': the captions' scope. */
   leagues: string;
+  /**
+   * The same without the independents ('all four SoCal leagues'): the league-record board's scope, since a
+   * team that plays no league games has no league record to rank (DESIGN §24.9).
+   */
+  leaguesOnly: string;
 }
 
-/** A region's board scope. */
+/**
+ * A region's leagues with a table, and its independents' team count (the Southern Section independents are
+ * SoCal's: no league, so not counted as one, DESIGN §24.9).
+ */
+function regionCounts(region: RegionId): { leagues: number; independents: number } {
+  const all = leaguesInRegion(region);
+  return {
+    leagues: all.filter((l) => l.rules.classification !== 'independent').length,
+    independents: all
+      .filter((l) => l.rules.classification === 'independent')
+      .reduce((n, l) => n + l.divisions.reduce((m, d) => m + d.expectedTeams, 0), 0),
+  };
+}
+
+/** A region's board scope: 'all five NorCal leagues', 'all four SoCal leagues and three independents'. */
 function boardScope(region: RegionId): BoardScope {
   const config = REGIONS.find((r) => r.id === region)!;
+  const counts = regionCounts(region);
+  const leaguesOnly = `all ${numberWord(counts.leagues)} ${config.shortName} leagues`;
   return {
     suffix: regionIdSuffix(region),
-    leagues: `all ${numberWord(leaguesInRegion(region).length)} ${config.shortName} leagues`,
+    leagues: `${leaguesOnly}${counts.independents > 0 ? ` and ${numberWord(counts.independents)} independents` : ''}`,
+    leaguesOnly,
   };
 }
 
@@ -683,7 +731,7 @@ export function crossRegionFinals(
     thisSeason,
     lastSeason,
     sentence:
-      `The ratings are on one scale across all ${LEAGUE_COUNT} leagues; comparisons between NorCal and SoCal rest on ` +
+      `The ratings are on one scale across all ${LEAGUE_COUNT} leagues${AND_INDEPENDENTS}; comparisons between NorCal and SoCal rest on ` +
       `${plural(thisSeason, 'final')} between the regions this season and ${lastSeason} last season, so treat them as rough.`,
   };
 }
@@ -740,7 +788,7 @@ export function buildEloBoard(
       note:
         `Every final between two of the ${plural(fitTeams, 'team')}, league or not, fitted at once: the ratings that best explain each game’s goal margin, counted up to ${MARGIN_CAP} goals${homeEdge}. ` +
         seeded +
-        `${ELO_SCALE}, so a team rated 400 points higher is about a 10-to-1 favorite.${across} Forfeits and games against schools outside the ${LEAGUE_COUNT} leagues are left out.`,
+        `${ELO_SCALE}, so a team rated 400 points higher is about a 10-to-1 favorite.${across} Forfeits and games against schools outside the ${LEAGUE_COUNT} leagues${AND_INDEPENDENTS} are left out.`,
       empty: lines.some((l) => l.rating.games > 0)
         ? `No team has played ${plural(minimum.min, 'game')} yet.`
         : `No final between two of the ${plural(fitTeams, 'team')} yet this season.`,
@@ -914,7 +962,7 @@ function buildRegion(input: RegionInput): RegionLeadersView {
       leagueMin.min,
       'league game',
       'League games only, as the standings count them. Leagues play different numbers of league games, so this compares percentages, not points.',
-      scope,
+      { ...scope, leagues: scope.leaguesOnly },
     ),
     schoolBoard(
       'most-goals',
@@ -1018,7 +1066,7 @@ function buildRegion(input: RegionInput): RegionLeadersView {
   }
   if (elo.minimum.median > 0) {
     schoolNotes.push(
-      `The Elo board needs at least ${plural(elo.minimum.min, 'game')} against the ${LEAGUE_COUNT} leagues’ teams, half the median of ${elo.minimum.median}${notYet(elo.below)}`,
+      `The Elo board needs at least ${plural(elo.minimum.min, 'game')} against the ${LEAGUE_COUNT} leagues’ teams${AND_INDEPENDENTS}, half the median of ${elo.minimum.median}${notYet(elo.below)}`,
     );
   }
 
@@ -1034,7 +1082,8 @@ function buildRegion(input: RegionInput): RegionLeadersView {
     idSuffix: suffix,
     schoolsId: `schools${suffix}`,
     playersId: `players${suffix}`,
-    leagueCount: leaguesInRegion(region).length,
+    leagueCount: regionCounts(region).leagues,
+    independentCount: regionCounts(region).independents,
     players,
     schools,
     playerNotes,

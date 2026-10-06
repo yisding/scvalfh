@@ -1,18 +1,18 @@
 {
   "counts": {
     "errors": 0,
-    "goalkeepers": 99,
-    "players": 758,
-    "teams": 99,
-    "teamsWithStats": 62
+    "goalkeepers": 101,
+    "players": 776,
+    "teams": 102,
+    "teamsWithStats": 63
   },
-  "fetchedAt": "2026-10-06T02:26:48.647Z",
+  "fetchedAt": "2026-10-06T05:57:16.632Z",
   "season": "26-27",
   "source": {
     "builtBy": "scripts/fetch-player-stats.ts",
     "id": "maxpreps-api",
     "notes": [
-      "One entry per registry team, all 9 leagues (SCVAL, BVAL, PCAL, MCAL, EAL, Sunset, City, North County, Metro), read the same way. A team with status pending has not been covered by any run yet: nothing was fetched and nothing is claimed for it.",
+      "One entry per registry team, all 9 leagues (SCVAL, BVAL, PCAL, MCAL, EAL, Sunset, City, North, Metro) and the Southern Section independents, read the same way. A team with status pending has not been covered by any run yet: nothing was fetched and nothing is claimed for it.",
       "Rows come from MaxPreps' team-season-player-stats rollup (the JSON behind each team's /stats/ page) and are joined to data/rosters.json on the career id in each row's player link.",
       "Every number is what the coach entered on MaxPreps, for all of this season's varsity games, league and non-league alike. Coverage is the coach's choice: a team MaxPreps has no stats for is status none.",
       "A stat is tracked for a team when the team's own total is above zero and at least one player holds some of it; only then are its cells read, so a tracked 0 is a real zero and an untracked stat is null for every player. A total no player holds any of is dropped with a warning; rows adding up to more than a team total are kept as published and warned about. Per-game and percentage columns are dropped: they are arithmetic on the counts.",
@@ -19873,6 +19873,480 @@
       "statsUrl": "https://www.maxpreps.com/ca/san-diego/southwest-sd-raiders/field-hockey/stats/",
       "status": "none",
       "teamId": "19409229-6768-4537-b8d7-4a7d2814aaad",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-10-06T05:57:16.632Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "1228375e-e4c0-453e-aed4-d0b0693b3c52",
+      "name": "Glendora",
+      "players": [],
+      "slug": "glendora",
+      "statsUrl": "https://www.maxpreps.com/ca/glendora/glendora-tartans/field-hockey/stats/",
+      "status": "none",
+      "teamId": "1228375e-e4c0-453e-aed4-d0b0693b3c52",
+      "totals": {
+        "field": {},
+        "goalkeeping": {}
+      },
+      "tracked": {
+        "field": [],
+        "goalkeeping": []
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-10-06T05:57:16.632Z",
+      "lastUpdated": "2026-10-01T23:28:26",
+      "maxprepsTeamId": "9dc04c54-8c9d-4b30-a1d2-fcc167363342",
+      "name": "Harvard-Westlake",
+      "players": [
+        {
+          "athleteId": "6c15615b-d035-4c1f-acab-0ab9ce6ef834",
+          "careerId": "vc6l1fn6dpgdd",
+          "careerUrl": "https://www.maxpreps.com/ca/studio-city/harvard-westlake-wolverines/athletes/milly-passeri/?careerid=vc6l1fn6dpgdd",
+          "field": {
+            "assists": 0,
+            "gameWinningGoals": null,
+            "gamesPlayed": 4,
+            "goals": 1,
+            "minutes": 0,
+            "points": 2,
+            "shots": null,
+            "shotsOnGoal": null,
+            "steals": null
+          },
+          "fullName": "Milly Passeri",
+          "goalkeeping": null,
+          "jersey": "18",
+          "onRoster": true,
+          "shortName": "M. Passeri"
+        },
+        {
+          "athleteId": "73660d1b-b39a-43eb-bc84-61a790174d8c",
+          "careerId": "j9ups5ajiv1j3",
+          "careerUrl": "https://www.maxpreps.com/ca/studio-city/harvard-westlake-wolverines/athletes/minka-mendoza/?careerid=j9ups5ajiv1j3",
+          "field": {
+            "assists": 0,
+            "gameWinningGoals": null,
+            "gamesPlayed": 13,
+            "goals": 0,
+            "minutes": 60,
+            "points": 0,
+            "shots": null,
+            "shotsOnGoal": null,
+            "steals": null
+          },
+          "fullName": "Minka Mendoza",
+          "goalkeeping": null,
+          "jersey": "13",
+          "onRoster": true,
+          "shortName": "M. Mendoza"
+        },
+        {
+          "athleteId": "0b06c972-6f23-4405-bf11-e632091ea75c",
+          "careerId": "gqu8gtsirauee",
+          "careerUrl": "https://www.maxpreps.com/ca/studio-city/harvard-westlake-wolverines/athletes/noelle-whang/?careerid=gqu8gtsirauee",
+          "field": {
+            "assists": 2,
+            "gameWinningGoals": null,
+            "gamesPlayed": 14,
+            "goals": 1,
+            "minutes": 55,
+            "points": 4,
+            "shots": null,
+            "shotsOnGoal": null,
+            "steals": null
+          },
+          "fullName": "Noelle Whang",
+          "goalkeeping": null,
+          "jersey": "5",
+          "onRoster": true,
+          "shortName": "N. Whang"
+        },
+        {
+          "athleteId": "a516f586-9742-41f9-aac6-ec9bc74f04b8",
+          "careerId": "htqp4dq73gtbb",
+          "careerUrl": "https://www.maxpreps.com/ca/studio-city/harvard-westlake-wolverines/athletes/abigail-ryan/?careerid=htqp4dq73gtbb",
+          "field": {
+            "assists": 6,
+            "gameWinningGoals": null,
+            "gamesPlayed": 14,
+            "goals": 5,
+            "minutes": 60,
+            "points": 16,
+            "shots": null,
+            "shotsOnGoal": null,
+            "steals": null
+          },
+          "fullName": "Abigail Ryan",
+          "goalkeeping": null,
+          "jersey": "9",
+          "onRoster": true,
+          "shortName": "A. Ryan"
+        },
+        {
+          "athleteId": "8b4f6ecb-90b2-4a68-8706-72b7c747f5cd",
+          "careerId": "nrdsamg37e6p9",
+          "careerUrl": "https://www.maxpreps.com/ca/studio-city/harvard-westlake-wolverines/athletes/eleanor-levy/?careerid=nrdsamg37e6p9",
+          "field": {
+            "assists": 8,
+            "gameWinningGoals": null,
+            "gamesPlayed": 14,
+            "goals": 11,
+            "minutes": 60,
+            "points": 30,
+            "shots": null,
+            "shotsOnGoal": null,
+            "steals": null
+          },
+          "fullName": "Eleanor Levy",
+          "goalkeeping": null,
+          "jersey": "1",
+          "onRoster": true,
+          "shortName": "E. Levy"
+        },
+        {
+          "athleteId": "b89bbee8-ebe8-4241-8562-d63736f4a67a",
+          "careerId": "opj93en7b8qbb",
+          "careerUrl": "https://www.maxpreps.com/ca/studio-city/harvard-westlake-wolverines/athletes/mila-detmer/?careerid=opj93en7b8qbb",
+          "field": {
+            "assists": 0,
+            "gameWinningGoals": null,
+            "gamesPlayed": 14,
+            "goals": 0,
+            "minutes": 60,
+            "points": 0,
+            "shots": null,
+            "shotsOnGoal": null,
+            "steals": null
+          },
+          "fullName": "Mila Detmer",
+          "goalkeeping": null,
+          "jersey": "3",
+          "onRoster": true,
+          "shortName": "M. Detmer"
+        },
+        {
+          "athleteId": "13151850-ef91-4128-a0fe-1067f5327a9a",
+          "careerId": "ht7ms6dhb9qo8",
+          "careerUrl": "https://www.maxpreps.com/ca/studio-city/harvard-westlake-wolverines/athletes/kirana-tjoe/?careerid=ht7ms6dhb9qo8",
+          "field": {
+            "assists": 1,
+            "gameWinningGoals": null,
+            "gamesPlayed": 13,
+            "goals": 1,
+            "minutes": 35,
+            "points": 3,
+            "shots": null,
+            "shotsOnGoal": null,
+            "steals": null
+          },
+          "fullName": "Kirana Tjoe",
+          "goalkeeping": null,
+          "jersey": "29",
+          "onRoster": true,
+          "shortName": "K. Tjoe"
+        },
+        {
+          "athleteId": "d534dee1-c412-49c2-b2dc-526aff52c3c5",
+          "careerId": "h3rjpcv4rb122",
+          "careerUrl": "https://www.maxpreps.com/ca/studio-city/harvard-westlake-wolverines/athletes/maddie-saada/?careerid=h3rjpcv4rb122",
+          "field": {
+            "assists": 0,
+            "gameWinningGoals": null,
+            "gamesPlayed": 13,
+            "goals": 0,
+            "minutes": 15,
+            "points": 0,
+            "shots": null,
+            "shotsOnGoal": null,
+            "steals": null
+          },
+          "fullName": "Maddie Saada",
+          "goalkeeping": null,
+          "jersey": "14",
+          "onRoster": true,
+          "shortName": "M. Saada"
+        },
+        {
+          "athleteId": "7d54b31a-c19b-42f3-bf63-d2d5f759212c",
+          "careerId": "vkm8k5ccs5ecc",
+          "careerUrl": "https://www.maxpreps.com/ca/studio-city/harvard-westlake-wolverines/athletes/tess-latham/?careerid=vkm8k5ccs5ecc",
+          "field": {
+            "assists": 0,
+            "gameWinningGoals": null,
+            "gamesPlayed": 9,
+            "goals": 0,
+            "minutes": 60,
+            "points": 0,
+            "shots": null,
+            "shotsOnGoal": null,
+            "steals": null
+          },
+          "fullName": "Tess Latham",
+          "goalkeeping": null,
+          "jersey": "25",
+          "onRoster": true,
+          "shortName": "T. Latham"
+        },
+        {
+          "athleteId": "1df1a847-1296-4a3b-b976-4ed66f3e248b",
+          "careerId": "gmtk2ul2nmpl5",
+          "careerUrl": "https://www.maxpreps.com/ca/studio-city/harvard-westlake-wolverines/athletes/sasha-leibzon/?careerid=gmtk2ul2nmpl5",
+          "field": {
+            "assists": 2,
+            "gameWinningGoals": null,
+            "gamesPlayed": 9,
+            "goals": 3,
+            "minutes": 0,
+            "points": 8,
+            "shots": null,
+            "shotsOnGoal": null,
+            "steals": null
+          },
+          "fullName": "Sasha Leibzon",
+          "goalkeeping": null,
+          "jersey": "10",
+          "onRoster": true,
+          "shortName": "S. Leibzon"
+        },
+        {
+          "athleteId": "bf2971ea-822a-4ec7-be46-9bd1277e3ab0",
+          "careerId": "gfsheruv796td",
+          "careerUrl": "https://www.maxpreps.com/ca/studio-city/harvard-westlake-wolverines/athletes/margaux-schlumberger/?careerid=gfsheruv796td",
+          "field": {
+            "assists": 9,
+            "gameWinningGoals": null,
+            "gamesPlayed": 9,
+            "goals": 16,
+            "minutes": 0,
+            "points": 41,
+            "shots": null,
+            "shotsOnGoal": null,
+            "steals": null
+          },
+          "fullName": "Margaux Schlumberger",
+          "goalkeeping": null,
+          "jersey": "2",
+          "onRoster": true,
+          "shortName": "M. Schlumberger"
+        },
+        {
+          "athleteId": "1ac85829-aae3-485d-baa8-f581ed8a1d20",
+          "careerId": "9ap1tops0aptd",
+          "careerUrl": "https://www.maxpreps.com/ca/studio-city/harvard-westlake-wolverines/athletes/molly-lee/?careerid=9ap1tops0aptd",
+          "field": {
+            "assists": 1,
+            "gameWinningGoals": null,
+            "gamesPlayed": 9,
+            "goals": 2,
+            "minutes": 0,
+            "points": 5,
+            "shots": null,
+            "shotsOnGoal": null,
+            "steals": null
+          },
+          "fullName": "Molly Lee",
+          "goalkeeping": null,
+          "jersey": "11",
+          "onRoster": true,
+          "shortName": "M. Lee"
+        },
+        {
+          "athleteId": "39927159-06e6-4e28-88e7-1dc70acd9ba5",
+          "careerId": "oqb5b916bb377",
+          "careerUrl": "https://www.maxpreps.com/ca/studio-city/harvard-westlake-wolverines/athletes/charlie-cohen/?careerid=oqb5b916bb377",
+          "field": {
+            "assists": 0,
+            "gameWinningGoals": null,
+            "gamesPlayed": 5,
+            "goals": 0,
+            "minutes": 60,
+            "points": 0,
+            "shots": null,
+            "shotsOnGoal": null,
+            "steals": null
+          },
+          "fullName": "Charlie Cohen",
+          "goalkeeping": {
+            "gamesPlayed": 5,
+            "goalsAgainst": 5,
+            "losses": null,
+            "minutes": null,
+            "opponentShotsOnGoal": null,
+            "overtimeMinutes": null,
+            "saves": null,
+            "shutouts": 1,
+            "ties": null,
+            "wins": null
+          },
+          "jersey": null,
+          "onRoster": true,
+          "shortName": "C. Cohen"
+        },
+        {
+          "athleteId": "b532e2cf-cb39-4aaf-936b-bcda2f420bcb",
+          "careerId": "8hll1frui9299",
+          "careerUrl": "https://www.maxpreps.com/ca/studio-city/harvard-westlake-wolverines/athletes/diya-desai/?careerid=8hll1frui9299",
+          "field": {
+            "assists": 1,
+            "gameWinningGoals": null,
+            "gamesPlayed": 14,
+            "goals": 0,
+            "minutes": 55,
+            "points": 1,
+            "shots": null,
+            "shotsOnGoal": null,
+            "steals": null
+          },
+          "fullName": "Diya Desai",
+          "goalkeeping": null,
+          "jersey": "27",
+          "onRoster": true,
+          "shortName": "D. Desai"
+        },
+        {
+          "athleteId": "1d8ad317-d816-4f00-8621-0bf9f887f2cc",
+          "careerId": "bllnb29gv3055",
+          "careerUrl": "https://www.maxpreps.com/ca/studio-city/harvard-westlake-wolverines/athletes/alice-lee/?careerid=bllnb29gv3055",
+          "field": {
+            "assists": 2,
+            "gameWinningGoals": null,
+            "gamesPlayed": 14,
+            "goals": 2,
+            "minutes": 55,
+            "points": 6,
+            "shots": null,
+            "shotsOnGoal": null,
+            "steals": null
+          },
+          "fullName": "Alice Lee",
+          "goalkeeping": null,
+          "jersey": "7",
+          "onRoster": true,
+          "shortName": "A. Lee"
+        },
+        {
+          "athleteId": "e9c8e191-40dd-41a5-a142-1bde7f5d9eb0",
+          "careerId": "sletsrsc9vml5",
+          "careerUrl": "https://www.maxpreps.com/ca/studio-city/harvard-westlake-wolverines/athletes/valentina-hernandez-ruiz/?careerid=sletsrsc9vml5",
+          "field": {
+            "assists": 4,
+            "gameWinningGoals": null,
+            "gamesPlayed": 13,
+            "goals": 17,
+            "minutes": 55,
+            "points": 38,
+            "shots": null,
+            "shotsOnGoal": null,
+            "steals": null
+          },
+          "fullName": "Valentina Hernandez Ruiz",
+          "goalkeeping": null,
+          "jersey": "6",
+          "onRoster": true,
+          "shortName": "V. Hernandez Ruiz"
+        },
+        {
+          "athleteId": "ad9d4e34-6caf-4568-98ca-3140d553c99d",
+          "careerId": "0j60tq1hu6csc",
+          "careerUrl": "https://www.maxpreps.com/ca/studio-city/harvard-westlake-wolverines/athletes/luciene-oneil-dunne/?careerid=0j60tq1hu6csc",
+          "field": {
+            "assists": 5,
+            "gameWinningGoals": null,
+            "gamesPlayed": 13,
+            "goals": 7,
+            "minutes": 45,
+            "points": 19,
+            "shots": null,
+            "shotsOnGoal": null,
+            "steals": null
+          },
+          "fullName": "Luciene Oneil-dunne",
+          "goalkeeping": null,
+          "jersey": "4",
+          "onRoster": true,
+          "shortName": "L. Oneil-dunne"
+        },
+        {
+          "athleteId": "d8b11a5b-1791-46a1-902a-211694eb3d2b",
+          "careerId": "s96vu28n0ank4",
+          "careerUrl": "https://www.maxpreps.com/ca/studio-city/harvard-westlake-wolverines/athletes/juliette-benadon/?careerid=s96vu28n0ank4",
+          "field": null,
+          "fullName": "Juliette Benadon",
+          "goalkeeping": {
+            "gamesPlayed": 9,
+            "goalsAgainst": 2,
+            "losses": null,
+            "minutes": null,
+            "opponentShotsOnGoal": null,
+            "overtimeMinutes": null,
+            "saves": null,
+            "shutouts": 7,
+            "ties": null,
+            "wins": null
+          },
+          "jersey": null,
+          "onRoster": true,
+          "shortName": "J. Benadon"
+        }
+      ],
+      "slug": "harvard-westlake",
+      "statsUrl": "https://www.maxpreps.com/ca/studio-city/harvard-westlake-wolverines/field-hockey/stats/",
+      "status": "ok",
+      "teamId": "9dc04c54-8c9d-4b30-a1d2-fcc167363342",
+      "totals": {
+        "field": {
+          "assists": 41,
+          "gamesPlayed": 14,
+          "goals": 66,
+          "minutes": 675,
+          "points": 173
+        },
+        "goalkeeping": {
+          "gamesPlayed": 14,
+          "goalsAgainst": 7,
+          "shutouts": 8
+        }
+      },
+      "tracked": {
+        "field": [
+          "gamesPlayed",
+          "minutes",
+          "goals",
+          "assists",
+          "points"
+        ],
+        "goalkeeping": [
+          "gamesPlayed",
+          "goalsAgainst",
+          "shutouts"
+        ]
+      },
+      "warnings": []
+    },
+    {
+      "error": null,
+      "fetchedAt": "2026-10-06T05:57:16.632Z",
+      "lastUpdated": null,
+      "maxprepsTeamId": "70a363e2-26b8-4ef5-8ad0-20979f66399a",
+      "name": "Thousand Oaks",
+      "players": [],
+      "slug": "thousand-oaks",
+      "statsUrl": "https://www.maxpreps.com/ca/thousand-oaks/thousand-oaks-lancers/field-hockey/stats/",
+      "status": "none",
+      "teamId": "70a363e2-26b8-4ef5-8ad0-20979f66399a",
       "totals": {
         "field": {},
         "goalkeeping": {}

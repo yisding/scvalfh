@@ -7,7 +7,7 @@
  * card, and the legacy print view (`/print/team_stats.aspx`) carries the same table without the
  * career links. The JSON carries them, so every row joins to the roster on the career id.
  *
- * Every registry team (all nine leagues) is read the same way, and joined to the rosters on the
+ * Every registry team (all nine leagues and the three independents) is read the same way, and joined to the rosters on the
  * career id.
  *
  * Shape [V] 2026-10-02, all 15 SCVAL teams (the other leagues' teams are read by the same code

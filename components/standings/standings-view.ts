@@ -43,10 +43,12 @@ import {
   divisionHeading,
   getDivision,
   getLeague,
+  isIndependentDivision,
   ladderFor,
   leagueStandingsUrl,
   regionOf,
   sectionOf,
+  standaloneName,
   statusesOf,
   type DivisionConfig,
   type LeagueConfig,
@@ -137,9 +139,36 @@ export interface ComparisonView {
   flag: boolean;
 }
 
+/**
+ * A group with no league table (classification 'independent': the Southern Section independents, DESIGN
+ * §24.9). Every surface that would draw a table for a division draws this instead: the division's official
+ * note (why there is no table, from config) and a link to each team's page. No place, no PTS, no GP.
+ */
+export interface IndependentGroupView {
+  /** `DivisionConfig.official.note`: the group's one paragraph, verbatim. */
+  note: string;
+  /** Registry order (the seed file's: alphabetical). */
+  teams: Array<{ slug: TeamSlug; name: string; city: string; href: string }>;
+}
+
+/** The independent group's view, or null for a division with a table. */
+export function independentGroupView(division: DivisionId, teams: readonly Team[]): IndependentGroupView | null {
+  if (!isIndependentDivision(division)) return null;
+  const config = getDivision(division);
+  if (config.official.mode !== 'none') return null;
+  return {
+    note: config.official.note,
+    teams: teams
+      .filter((t) => t.division === division)
+      .map((t) => ({ slug: t.slug, name: t.name, city: t.city, href: `/teams/${t.slug}` })),
+  };
+}
+
 export interface DivisionView {
   division: DivisionId;
   leagueId: LeagueId;
+  /** Set for a group with no league table (the Southern Section independents): drawn instead of the table. */
+  independent: IndependentGroupView | null;
   leagueShort: string;
   /** `divisionHeading(division)`: null for a single-division league. */
   heading: string | null;
@@ -312,9 +341,12 @@ function orderLegendText(league: LeagueConfig): string {
  */
 function scheduledPerText(league: LeagueConfig, official: DivisionConfig['official']): string {
   if (official.mode !== 'none') return `Scheduled per ${league.shortName}`;
+  // The subject is the league alone, so it is its `standaloneName`: 'North publishes no schedule' could
+  // be read as a direction, 'North County publishes no schedule' cannot. Every other league's is its short name.
+  const subject = standaloneName(league.id);
   return league.rules.classification === 'membership'
-    ? `League games are every game between two division members on MaxPreps’ schedules (${league.shortName} publishes no schedule)`
-    : `League games as MaxPreps marks them (${league.shortName} publishes no schedule)`;
+    ? `League games are every game between two division members on MaxPreps’ schedules (${subject} publishes no schedule)`
+    : `League games as MaxPreps marks them (${subject} publishes no schedule)`;
 }
 
 /** The intro of the missing-results list, by whether the league has a schedule document, and by its classification. */
@@ -582,6 +614,7 @@ export function buildDivisionView(input: DivisionViewInput): DivisionView {
   return {
     division: input.division,
     leagueId: league.id,
+    independent: independentGroupView(input.division, input.teams),
     leagueShort: league.shortName,
     heading,
     kicker: heading ?? 'League table',
@@ -754,6 +787,8 @@ export function coLeadersLine(coLeaders: { label: string; teams: readonly Pick<T
 
 export interface OverviewDivision {
   division: DivisionId;
+  /** Set for a group with no league table (the Southern Section independents): the block draws it instead of a table. */
+  independent: IndependentGroupView | null;
   /** Division heading (h4) — null for a single-division league, which has no sub-header. */
   heading: string | null;
   /**
@@ -805,13 +840,16 @@ export function buildOverviewDivision(input: {
     if (team) rows.push({ standing, team });
   }
   const through = input.throughDate ? `, through ${shortDate(input.throughDate)}` : '';
+  const independent = independentGroupView(input.division, input.teams);
   return {
     division: input.division,
+    independent,
     heading,
     anchorId: config.id === league.id ? null : config.id,
     rows,
     ladderLine: config.ladderLine,
-    fullLabel: `Full ${heading ?? league.shortName} table`,
+    // A group with no table links its page by name: there is no "full table" to open.
+    fullLabel: independent ? league.name : `Full ${heading ?? league.shortName} table`,
     fullHref: `/standings/${league.id}#${config.id}`,
     caption: `${heading ? `${league.shortName} ${heading}` : league.shortName} standings, league games only${through}.`,
   };
@@ -833,7 +871,8 @@ export function overviewOutline(
     }
     group.leagues.push({
       id,
-      title: `${league.shortName} — ${league.name}`,
+      // A group with no table is not a league: its heading is its name alone ('Southern Section independents').
+      title: league.rules.classification === 'independent' ? league.name : `${league.shortName} — ${league.name}`,
       shortName: league.shortName,
       membershipNote: league.membershipNote,
       divisions: league.divisions.map((d) => divisionOf(d.id)),

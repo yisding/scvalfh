@@ -1,13 +1,13 @@
 {
   "counts": {
     "errors": 0,
-    "finals": 208,
-    "games": 531,
+    "finals": 209,
+    "games": 533,
     "sbliveRows": 150,
-    "teams": 99,
-    "teamsWithGames": 91
+    "teams": 102,
+    "teamsWithGames": 93
   },
-  "fetchedAt": "2026-10-06T03:27:26.415Z",
+  "fetchedAt": "2026-10-06T05:57:59.621Z",
   "games": [
     {
       "away": {
@@ -180,7 +180,7 @@
         "name": "Harvard-Westlake",
         "result": "W",
         "score": 9,
-        "slug": null,
+        "slug": "harvard-westlake",
         "teamId": "9dc04c54-8c9d-4b30-a1d2-fcc167363342"
       },
       "contestId": "6df2f95d-0001-4e13-87c2-8e3612d8e7a3",
@@ -211,7 +211,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-10-06T03:27:26.415Z",
+        "fetchedAt": "2026-10-06T05:57:59.621Z",
         "maxprepsModifiedOn": "2026-08-20T00:07:23",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -1280,7 +1280,7 @@
         "name": "Harvard-Westlake",
         "result": "W",
         "score": 1,
-        "slug": null,
+        "slug": "harvard-westlake",
         "teamId": "9dc04c54-8c9d-4b30-a1d2-fcc167363342"
       },
       "contestId": "a6bfa418-3a79-469e-925d-9f70b8d01b91",
@@ -1311,7 +1311,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-10-06T03:27:26.415Z",
+        "fetchedAt": "2026-10-06T05:57:59.621Z",
         "maxprepsModifiedOn": "2026-08-26T07:50:23",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -2050,7 +2050,7 @@
         "name": "Harvard-Westlake",
         "result": "W",
         "score": 1,
-        "slug": null,
+        "slug": "harvard-westlake",
         "teamId": "9dc04c54-8c9d-4b30-a1d2-fcc167363342"
       },
       "contestId": "2128d583-5c37-4f16-9bf4-0af9fd45614a",
@@ -2081,7 +2081,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-10-06T03:27:26.415Z",
+        "fetchedAt": "2026-10-06T05:57:59.621Z",
         "maxprepsModifiedOn": "2026-08-28T19:14:23",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -3114,7 +3114,7 @@
         "name": "Glendora",
         "result": "W",
         "score": 1,
-        "slug": null,
+        "slug": "glendora",
         "teamId": "1228375e-e4c0-453e-aed4-d0b0693b3c52"
       },
       "isDateTba": false,
@@ -3126,7 +3126,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-10-06T03:27:26.415Z",
+        "fetchedAt": "2026-10-06T05:57:59.621Z",
         "maxprepsModifiedOn": "2026-09-01T02:50:20",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -4800,7 +4800,7 @@
         "name": "Harvard-Westlake",
         "result": "L",
         "score": 0,
-        "slug": null,
+        "slug": "harvard-westlake",
         "teamId": "9dc04c54-8c9d-4b30-a1d2-fcc167363342"
       },
       "contestId": "300ada3d-eece-4e4b-898e-8f65b66a3a2c",
@@ -4831,7 +4831,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-10-06T03:27:26.415Z",
+        "fetchedAt": "2026-10-06T05:57:59.621Z",
         "maxprepsModifiedOn": "2026-09-17T05:05:12",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -7216,6 +7216,61 @@
     },
     {
       "away": {
+        "city": "Studio City",
+        "name": "Harvard-Westlake",
+        "result": "W",
+        "score": 4,
+        "slug": "harvard-westlake",
+        "teamId": "9dc04c54-8c9d-4b30-a1d2-fcc167363342"
+      },
+      "contestId": "c30a9c12-6e63-4938-9a10-55aa94707240",
+      "contestTypes": {
+        "away": 1,
+        "home": 1
+      },
+      "countsFor": null,
+      "dateKey": "2026-09-10",
+      "dateLocal": "2026-09-10T17:00:00",
+      "dateUtc": "2026-09-11T00:00:00Z",
+      "decider": "REG",
+      "forfeitBy": null,
+      "home": {
+        "city": "Glendora",
+        "name": "Glendora",
+        "result": "L",
+        "score": 1,
+        "slug": "glendora",
+        "teamId": "1228375e-e4c0-453e-aed4-d0b0693b3c52"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": false,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": "independents",
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-10-06T05:57:59.621Z",
+        "maxprepsModifiedOn": "2026-09-18T03:56:21",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "recap": "The Harvard-Westlake JV field hockey team won their away non-conference game against Glendora by a score of 4-1.",
+      "shootout": null,
+      "site": "home",
+      "status": "final",
+      "urls": {
+        "goFan": null,
+        "maxpreps": "https://www.maxpreps.com/ca/field-hockey/game/glendora-vs-harvard-westlake-studio-city/jv/9-10-2026/?c=c30a9c12-6e63-4938-9a10-55aa94707240",
+        "nfhsStream": null
+      },
+      "venue": {
+        "text": null
+      }
+    },
+    {
+      "away": {
         "city": "San Diego",
         "name": "Point Loma",
         "result": null,
@@ -8375,7 +8430,7 @@
         "name": "Glendora",
         "result": null,
         "score": null,
-        "slug": null,
+        "slug": "glendora",
         "teamId": "1228375e-e4c0-453e-aed4-d0b0693b3c52"
       },
       "contestId": "b47242cc-392d-48ab-9085-d1659501047b",
@@ -8406,7 +8461,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-10-06T03:27:26.415Z",
+        "fetchedAt": "2026-10-06T05:57:59.621Z",
         "maxprepsModifiedOn": "2026-08-20T17:03:42",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -9035,7 +9090,7 @@
         "name": "Harvard-Westlake",
         "result": null,
         "score": null,
-        "slug": null,
+        "slug": "harvard-westlake",
         "teamId": "9dc04c54-8c9d-4b30-a1d2-fcc167363342"
       },
       "contestId": "5738710e-12a6-4095-aaf0-485d2ef7d513",
@@ -9066,7 +9121,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-10-06T03:27:26.415Z",
+        "fetchedAt": "2026-10-06T05:57:59.621Z",
         "maxprepsModifiedOn": "2026-07-31T14:34:27",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -10265,7 +10320,7 @@
         "name": "Glendora",
         "result": "L",
         "score": 1,
-        "slug": null,
+        "slug": "glendora",
         "teamId": "1228375e-e4c0-453e-aed4-d0b0693b3c52"
       },
       "isDateTba": false,
@@ -10277,7 +10332,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-10-06T03:27:26.415Z",
+        "fetchedAt": "2026-10-06T05:57:59.621Z",
         "maxprepsModifiedOn": "2026-09-18T15:25:06",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -10430,7 +10485,7 @@
         "name": "Harvard-Westlake",
         "result": "W",
         "score": 4,
-        "slug": null,
+        "slug": "harvard-westlake",
         "teamId": "9dc04c54-8c9d-4b30-a1d2-fcc167363342"
       },
       "isDateTba": false,
@@ -10442,7 +10497,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-10-06T03:27:26.415Z",
+        "fetchedAt": "2026-10-06T05:57:59.621Z",
         "maxprepsModifiedOn": "2026-09-18T04:34:47",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -13619,7 +13674,7 @@
         "name": "Glendora",
         "result": null,
         "score": null,
-        "slug": null,
+        "slug": "glendora",
         "teamId": "1228375e-e4c0-453e-aed4-d0b0693b3c52"
       },
       "isDateTba": false,
@@ -13631,7 +13686,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-10-06T03:27:26.415Z",
+        "fetchedAt": "2026-10-06T05:57:59.621Z",
         "maxprepsModifiedOn": "2026-09-24T17:09:41",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -16625,7 +16680,7 @@
         "name": "Glendora",
         "result": "T",
         "score": 0,
-        "slug": null,
+        "slug": "glendora",
         "teamId": "1228375e-e4c0-453e-aed4-d0b0693b3c52"
       },
       "contestId": "4e8cac2f-0835-4864-972c-d84ce1bfddb3",
@@ -16656,7 +16711,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-10-06T03:27:26.415Z",
+        "fetchedAt": "2026-10-06T05:57:59.621Z",
         "maxprepsModifiedOn": "2026-10-05T04:04:13",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -17194,7 +17249,7 @@
         "name": "Harvard-Westlake",
         "result": "L",
         "score": 0,
-        "slug": null,
+        "slug": "harvard-westlake",
         "teamId": "9dc04c54-8c9d-4b30-a1d2-fcc167363342"
       },
       "isDateTba": false,
@@ -17206,7 +17261,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-10-06T03:27:26.415Z",
+        "fetchedAt": "2026-10-06T05:57:59.621Z",
         "maxprepsModifiedOn": "2026-10-02T06:29:24",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -17340,7 +17395,7 @@
         "name": "Harvard-Westlake",
         "result": null,
         "score": null,
-        "slug": null,
+        "slug": "harvard-westlake",
         "teamId": "9dc04c54-8c9d-4b30-a1d2-fcc167363342"
       },
       "contestId": "23af630c-9595-4f04-84ef-3060a5c6feed",
@@ -17371,7 +17426,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-10-06T03:27:26.415Z",
+        "fetchedAt": "2026-10-06T05:57:59.621Z",
         "maxprepsModifiedOn": "2026-07-15T15:09:36",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -19320,7 +19375,7 @@
         "name": "Harvard-Westlake",
         "result": null,
         "score": null,
-        "slug": null,
+        "slug": "harvard-westlake",
         "teamId": "9dc04c54-8c9d-4b30-a1d2-fcc167363342"
       },
       "contestId": "29128b90-7219-4ca1-8fff-49ccbf6f1b9c",
@@ -19351,7 +19406,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-10-06T03:27:26.415Z",
+        "fetchedAt": "2026-10-06T05:57:59.621Z",
         "maxprepsModifiedOn": "2026-10-05T04:04:14",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -20133,6 +20188,61 @@
       "urls": {
         "goFan": null,
         "maxpreps": "https://www.maxpreps.com/ca/field-hockey/game/canyon-crest-academy-san-diego-vs-mt-carmel-san-diego/jv/10-8-2026/?c=30324b99-8b18-4554-b384-28b014b2d958",
+        "nfhsStream": null
+      },
+      "venue": {
+        "text": null
+      }
+    },
+    {
+      "away": {
+        "city": "Studio City",
+        "name": "Harvard-Westlake",
+        "result": null,
+        "score": null,
+        "slug": "harvard-westlake",
+        "teamId": "9dc04c54-8c9d-4b30-a1d2-fcc167363342"
+      },
+      "contestId": "f6040ce1-856f-4e1d-a916-10f7f46f4efe",
+      "contestTypes": {
+        "away": 1,
+        "home": 1
+      },
+      "countsFor": null,
+      "dateKey": "2026-10-08",
+      "dateLocal": "2026-10-08T17:00:00",
+      "dateUtc": "2026-10-09T00:00:00Z",
+      "decider": null,
+      "forfeitBy": null,
+      "home": {
+        "city": "Glendora",
+        "name": "Glendora",
+        "result": null,
+        "score": null,
+        "slug": "glendora",
+        "teamId": "1228375e-e4c0-453e-aed4-d0b0693b3c52"
+      },
+      "isDateTba": false,
+      "isForfeit": false,
+      "isLeague": false,
+      "isOt": false,
+      "isTimeTba": false,
+      "leagueDivision": "independents",
+      "otPeriods": 0,
+      "postseason": null,
+      "provenance": {
+        "fetchedAt": "2026-10-06T05:57:59.621Z",
+        "maxprepsModifiedOn": "2026-07-02T11:29:20",
+        "schedule": "maxpreps-api",
+        "scores": "maxpreps-api"
+      },
+      "recap": null,
+      "shootout": null,
+      "site": "home",
+      "status": "scheduled",
+      "urls": {
+        "goFan": null,
+        "maxpreps": "https://www.maxpreps.com/ca/field-hockey/game/glendora-vs-harvard-westlake-studio-city/jv/10-8-2026/?c=f6040ce1-856f-4e1d-a916-10f7f46f4efe",
         "nfhsStream": null
       },
       "venue": {
@@ -21429,7 +21539,7 @@
         "name": "Harvard-Westlake",
         "result": null,
         "score": null,
-        "slug": null,
+        "slug": "harvard-westlake",
         "teamId": "9dc04c54-8c9d-4b30-a1d2-fcc167363342"
       },
       "isDateTba": false,
@@ -21441,7 +21551,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-10-06T03:27:26.415Z",
+        "fetchedAt": "2026-10-06T05:57:59.621Z",
         "maxprepsModifiedOn": "2026-08-15T09:25:01",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -23244,7 +23354,7 @@
         "name": "Glendora",
         "result": null,
         "score": null,
-        "slug": null,
+        "slug": "glendora",
         "teamId": "1228375e-e4c0-453e-aed4-d0b0693b3c52"
       },
       "isDateTba": false,
@@ -23256,7 +23366,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-10-06T03:27:26.415Z",
+        "fetchedAt": "2026-10-06T05:57:59.621Z",
         "maxprepsModifiedOn": "2026-07-22T05:34:23",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -25920,7 +26030,7 @@
         "name": "Harvard-Westlake",
         "result": null,
         "score": null,
-        "slug": null,
+        "slug": "harvard-westlake",
         "teamId": "9dc04c54-8c9d-4b30-a1d2-fcc167363342"
       },
       "contestId": "8bb467da-a42b-49d9-9679-0efd91214970",
@@ -25951,7 +26061,7 @@
       "otPeriods": 0,
       "postseason": null,
       "provenance": {
-        "fetchedAt": "2026-10-06T03:27:26.415Z",
+        "fetchedAt": "2026-10-06T05:57:59.621Z",
         "maxprepsModifiedOn": "2026-07-28T15:34:13",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
@@ -30489,7 +30599,7 @@
       "dateIso": "2026-09-03T16:45:00.000-07:00",
       "dateKey": "2026-09-03",
       "pages": [
-        "edison"
+        "harvard-westlake"
       ],
       "sbliveGameId": "6729038",
       "sides": [
@@ -30505,7 +30615,7 @@
           "name": "Harvard-Westlake",
           "sbliveTeamId": "482355",
           "score": 0,
-          "slug": null
+          "slug": "harvard-westlake"
         }
       ],
       "url": "https://www.si.com/high-school/stats/california/field-hockey/games/6729038-harvardwestlake-vs-edison"
@@ -30515,7 +30625,7 @@
       "dateIso": "2026-09-03T18:00:00.000-07:00",
       "dateKey": "2026-09-03",
       "pages": [
-        "edison"
+        "harvard-westlake"
       ],
       "sbliveGameId": "6729039",
       "sides": [
@@ -30531,7 +30641,7 @@
           "name": "Harvard-Westlake",
           "sbliveTeamId": "482355",
           "score": 0,
-          "slug": null
+          "slug": "harvard-westlake"
         }
       ],
       "url": "https://www.si.com/high-school/stats/california/field-hockey/games/6729039-harvardwestlake-vs-edison"
@@ -31753,7 +31863,7 @@
       "dateIso": "2026-09-17T17:15:00.000-07:00",
       "dateKey": "2026-09-17",
       "pages": [
-        "bonita"
+        "harvard-westlake"
       ],
       "sbliveGameId": "6643262",
       "sides": [
@@ -31769,7 +31879,7 @@
           "name": "Harvard-Westlake",
           "sbliveTeamId": "482355",
           "score": 4,
-          "slug": null
+          "slug": "harvard-westlake"
         }
       ],
       "url": "https://www.si.com/high-school/stats/california/field-hockey/games/6643262-bonita-vs-harvardwestlake"
@@ -33181,7 +33291,7 @@
       "dateIso": "2026-10-01T16:30:00.000-07:00",
       "dateKey": "2026-10-01",
       "pages": [
-        "bonita"
+        "glendora"
       ],
       "sbliveGameId": "6838907",
       "sides": [
@@ -33197,7 +33307,7 @@
           "name": "Glendora",
           "sbliveTeamId": "481707",
           "score": 0,
-          "slug": null
+          "slug": "glendora"
         }
       ],
       "url": "https://www.si.com/high-school/stats/california/field-hockey/games/6838907-glendora-vs-bonita"
@@ -33261,7 +33371,7 @@
   "source": {
     "builtBy": "scripts/fetch-jv.ts",
     "notes": [
-      "One entry per registry school, all 9 leagues. games are MaxPreps’ JV contests (the schedule feed read with the JV season id), built exactly as a varsity game is; sblive are si.com’s scored JV finals from each school’s JV team page.",
+      "One entry per registry school, all 9 leagues and the Southern Section independents. games are MaxPreps’ JV contests (the schedule feed read with the JV season id), built exactly as a varsity game is; sblive are si.com’s scored JV finals from each school’s JV team page.",
       "The site shows lib/jv-merge.ts over these two lists: MaxPreps first; si.com fills a score MaxPreps lacks, adds a game MaxPreps does not list, and is noted beside a MaxPreps score it disagrees with.",
       "A si.com JV side is one of ours only by its si.com JV team id (lib/jv-teams.ts), never by name.",
       "JV games are kept apart from varsity: no varsity standings, leaders, ratings or postseason read them. games are stored unclassified; lib/jv-standings.ts decides at load which JV table each counts for, from its varsity counterpart.",
@@ -35150,6 +35260,63 @@
       "sbliveUrl": "https://www.si.com/high-school/stats/california/field-hockey/teams/459139-southwest-sd-raiders-jv/games",
       "slug": "southwest",
       "teamId": "19409229-6768-4537-b8d7-4a7d2814aaad"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-10-06T05:57:59.621Z",
+        "rowCount": 8,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/glendora/glendora-tartans/field-hockey/jv/schedule/",
+      "name": "Glendora",
+      "sblive": {
+        "error": null,
+        "fetchedAt": "2026-10-06T05:57:59.621Z",
+        "rowCount": 1,
+        "status": "ok"
+      },
+      "sbliveUrl": "https://www.si.com/high-school/stats/california/field-hockey/teams/481707-glendora-tartans-jv/games",
+      "slug": "glendora",
+      "teamId": "1228375e-e4c0-453e-aed4-d0b0693b3c52"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-10-06T05:57:59.621Z",
+        "rowCount": 13,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/studio-city/harvard-westlake-wolverines/field-hockey/jv/schedule/",
+      "name": "Harvard-Westlake",
+      "sblive": {
+        "error": null,
+        "fetchedAt": "2026-10-06T05:57:59.621Z",
+        "rowCount": 3,
+        "status": "ok"
+      },
+      "sbliveUrl": "https://www.si.com/high-school/stats/california/field-hockey/teams/482355-harvardwestlake-wolverines-jv/games",
+      "slug": "harvard-westlake",
+      "teamId": "9dc04c54-8c9d-4b30-a1d2-fcc167363342"
+    },
+    {
+      "maxpreps": {
+        "error": null,
+        "fetchedAt": "2026-10-06T05:57:59.621Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "maxprepsScheduleUrl": "https://www.maxpreps.com/ca/thousand-oaks/thousand-oaks-lancers/field-hockey/jv/schedule/",
+      "name": "Thousand Oaks",
+      "sblive": {
+        "error": null,
+        "fetchedAt": "2026-10-06T05:57:59.621Z",
+        "rowCount": 0,
+        "status": "ok"
+      },
+      "sbliveUrl": "https://www.si.com/high-school/stats/california/field-hockey/teams/482332-thousand-oaks-lancers-jv/games",
+      "slug": "thousand-oaks",
+      "teamId": "70a363e2-26b8-4ef5-8ad0-20979f66399a"
     }
   ]
 }

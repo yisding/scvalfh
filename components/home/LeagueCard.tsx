@@ -57,13 +57,13 @@ export function LeagueCard({ card, className, wide }: LeagueCardProps) {
           .filter(Boolean)
           .join(' ')}
       >
-        <SetLeagueButton leagueId={card.id} shortName={card.shortName} />
+        <SetLeagueButton leagueId={card.id} shortName={card.showName} />
         <Link
           href={card.standingsHref}
           prefetch={false}
           className="inline-flex min-h-11 items-center text-meta font-medium text-accent no-underline hover:underline"
         >
-          {card.shortName} standings <Arrow />
+          {card.standingsLabel} <Arrow />
         </Link>
       </div>
     </li>

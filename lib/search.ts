@@ -1,6 +1,6 @@
 /**
  * Team search (SPEC §9.1-§9.2): a pure, zero-network matcher over a pre-serialized index of every registry
- * team (99: both regions, whatever the region switcher shows, so a NorCal visitor can still find a San Diego
+ * team (102: both regions, whatever the region switcher shows, so a NorCal visitor can still find a San Diego
  * school). Its "not covered" entries come from DATA_QUALITY.notCovered (lib/leagues.ts), whole sentences
  * printed verbatim.
  *
@@ -32,6 +32,12 @@ export interface GroupSearchEntry {
   detail: string;             // 'BVAL division · 6 teams' | 'Marin County Athletic League · NCS · 9 teams'
   href: string;               // '/standings/bval#santa-teresa' | '/standings/mcal'
   keys: string[];             // normalized: label, searchAliases, league full name
+  /**
+   * A league group whose short name does not read as a name in a list (the Southern Section independents:
+   * 'Independent' is an adjective) carries the words a list uses instead: 'the Southern Section independents'.
+   * Absent for every other group (the finder lists `label`), so the shipped index grows by one field.
+   */
+  listName?: string;
 }
 export interface NotCoveredEntry { kind: 'not-covered'; name: string; reason: string; keys: string[] }
 export interface SearchIndex { teams: TeamSearchEntry[]; groups: GroupSearchEntry[]; notCovered: NotCoveredEntry[] }
@@ -81,6 +87,8 @@ function unique(xs: Iterable<string>): string[] {
 export function buildSearchIndex(
   teams: readonly SearchInputTeam[],
   leagues: ReadonlyArray<{ id: string; shortName: string; name: string; sectionShort: SectionConfig['shortName'];
+    /** A group with no league table (DESIGN §24.9): its group entry carries `listName`. */
+    independent?: boolean;
     divisions: ReadonlyArray<{ id: string; label: string; heading: string | null; searchAliases: readonly string[]; teamCount: number }> }>,
   notCovered: ReadonlyArray<{ name: string; keys: readonly string[]; reason: string }>,
 ): SearchIndex {
@@ -126,6 +134,7 @@ export function buildSearchIndex(
       detail: `${league.name} · ${league.sectionShort} · ${plural(teamCount, 'team')}`,
       href: `/standings/${league.id}`,
       keys: unique(leagueKeys.map((k) => tokensOf(k).join(' '))),
+      ...(league.independent ? { listName: `the ${league.name}` } : {}),
     });
     if (single) continue;
     for (const d of league.divisions) {

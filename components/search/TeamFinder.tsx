@@ -19,7 +19,7 @@ import {
 
 /**
  * Find a team (SPEC §9.3): a pure, zero-network matcher (lib/search.ts) over the pre-serialized
- * 99-team index the page passes in. Two modes:
+ * 102-team index the page passes in. Two modes:
  *
  * - `filter` (/teams): the page's own server-rendered, grouped list IS the result list. This
  *   toggles `hidden` on its `[data-team-tile="<slug>"]` items (the standings tables' team rows, so
@@ -29,7 +29,7 @@ import {
  *   nothing between filtered rows) while a query is active, and hides `#hideWhileSearchingId` (the
  *   anchor switcher) while a query is typed. Empty query restores all.
  * - `pin` (home): renders its own results — up to `limit` teams in relevance order, then
- *   `Search all 99 on Teams →` when more match. Each result is a `<button>` with NO aria-label:
+ *   `Search all 102 on Teams →` when more match. Each result is a `<button>` with NO aria-label:
  *   the visible short name and `<division heading> · <league short>` line sit inside a name that
  *   reads exactly like the pin tiles' (`pinLabel`, lib/pin-label.ts: `Pin Leigh, Mt. Hamilton ·
  *   BVAL`), the extra words being sr-only, so the accessible name contains the visible text in
@@ -85,7 +85,7 @@ export function pinResultDetail(entry: TeamSearchEntry): string {
 /**
  * The Southern California sections, spelled out (this is a client module: lib/leagues stays out of the
  * bundle). A SoCal league's short name ('City', 'Metro', 'Valley') reads like a place, not a league, to a
- * NorCal reader searching all 99 teams, so its result line names the section too (DESIGN-socal §2.4).
+ * NorCal reader searching all 102 teams, so its result line names the section too (DESIGN-socal §2.4).
  * NorCal results keep today's line.
  */
 const SOCAL_SECTION_WORDS: Readonly<Partial<Record<TeamSearchEntry['sectionShort'], string>>> = {
@@ -101,7 +101,9 @@ export function resultDetail(entry: TeamSearchEntry): string {
 
 /** The league short names in index order: 'SCVAL, BVAL, PCAL, MCAL and EAL'. */
 function leagueList(index: SearchIndex): string {
-  return listWords([...new Set(index.teams.map((t) => t.leagueShort))]);
+  // League groups in index (config) order; a group with no table is listed by its `listName` ('the Southern
+  // Section independents'), never by its adjective short name.
+  return listWords(index.groups.filter((g) => g.kind === 'league').map((g) => g.listName ?? g.label));
 }
 
 export interface FinderView {
@@ -109,7 +111,7 @@ export interface FinderView {
   matches: TeamSearchEntry[];
   /** The teams this finder lists itself (pin mode: the first `limit`; filter mode: none). */
   shown: TeamSearchEntry[];
-  /** pin mode: more teams match than are shown → the "Search all 99 on Teams →" link. */
+  /** pin mode: more teams match than are shown → the "Search all 102 on Teams →" link. */
   more: boolean;
   groups: GroupSearchEntry[];
   notCovered: NotCoveredEntry[];

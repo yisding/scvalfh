@@ -377,7 +377,7 @@ describe('teamStatsPageUrl', () => {
 describe('pendingPlayerStats', () => {
   it('is a valid, claim-free entry for every registry team of every league', () => {
     const teams = REGISTRY.map((t) => pendingPlayerStats(t));
-    expect(teams).toHaveLength(99);
+    expect(teams).toHaveLength(102);
     for (const t of teams) {
       expect(t.status).toBe('pending');
       expect(t.players).toEqual([]);

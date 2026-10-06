@@ -1,14 +1,16 @@
 /**
  * End to end: the real cron script (`scripts/fetch-data.ts --fixtures …`, with the real official
  * and si.com steps) over the two committed corpora (SPEC §7.3, §12.2):
- *   - the SCVAL corpus (2026-09-29): 99 teams in the snapshot, the other eight leagues frozen
+ *   - the SCVAL corpus (2026-09-29): 102 teams in the snapshot, the other nine leagues (the EAL, the
+ *     four SoCal leagues and the Southern Section independents among them) frozen
  *     "not fetched in this run" — never an abort;
  *   - the all-2026-10-02 corpus: per-league counts, LeagueHealth, the §7.9 PCAL and MCAL tables,
  *     the 56 MaxPreps resources in live-shaped order (and never the Mission league), the summary line.
  *     Its manifest names four leagues: the EAL and the four Southern California leagues (added later)
  *     are frozen "not fetched in this run" there, so the run asks for its four leagues' 6 metas, 6
- *     tables and 43 schedules (the live sweep is 128: 1 + 2 × 14 division tables + 99 schedules; the
- *     San Diego Valley division has no MaxPreps table and is never requested).
+ *     tables and 43 schedules (the live sweep is 131: 1 + 2 × 14 division tables + 102 schedules; the
+ *     San Diego Valley division and the Southern Section independents have no MaxPreps table and are
+ *     never requested).
  * Plus the CLI behaviours kept from today's script: stable output, --dry-run, unknown flags, the
  * season-window guard, the empty-feed guard, never-0-0.
  */
@@ -28,12 +30,23 @@ import type { Snapshot, Standing } from '../lib/types';
 import { REPO, corpusDir, corpusSnapshotPath, runFixtureCli, type CliRun } from './helpers';
 import { writeTempVariant } from './pipeline/support/run-corpus';
 
+/**
+ * The freeze reason of a league not in this run (lib/pipeline/steps/guards.ts notInRunReason): '<SHORT> was
+ * not fetched in this run.', and for the Southern Section independents, whose short name is an adjective,
+ * the group by name with a plural verb (DESIGN §24.9).
+ */
+function notFetchedReason(id: Parameters<typeof getLeague>[0]): string {
+  return id === 'independents'
+    ? 'The Southern Section independents were not fetched in this run.'
+    : `${getLeague(id).shortName} was not fetched in this run.`;
+}
+
 const MISSION_LEAGUE_ID = '6e1f97d4-5211-4d98-bf59-282cd754bc5c';
 const SUMMARY_RE =
-  /^summary: teams (\d+) · games (\d+) \(league (\d+)\) · finals (\d+) · pending (\d+) · backfilled (\d+) · mismatches (\d+) · sources ok (\d+)\/(\d+) · requests maxpreps:(\d+) sblive:(\d+) official:(\d+) · leagues scval:(\w+) bval:(\w+) pcal:(\w+) mcal:(\w+) eal:(\w+) sunset:(\w+) city:(\w+) north-county:(\w+) metro:(\w+)$/m;
+  /^summary: teams (\d+) · games (\d+) \(league (\d+)\) · finals (\d+) · pending (\d+) · backfilled (\d+) · mismatches (\d+) · sources ok (\d+)\/(\d+) · requests maxpreps:(\d+) sblive:(\d+) official:(\d+) · leagues scval:(\w+) bval:(\w+) pcal:(\w+) mcal:(\w+) eal:(\w+) sunset:(\w+) city:(\w+) north-county:(\w+) metro:(\w+) independents:(\w+)$/m;
 
 /** The four Southern California leagues, frozen "not fetched in this run" in every NorCal corpus. */
-const SOCAL_FROZEN = ['sunset:frozen', 'city:frozen', 'north-county:frozen', 'metro:frozen'] as const;
+const SOCAL_FROZEN = ['sunset:frozen', 'city:frozen', 'north-county:frozen', 'metro:frozen', 'independents:frozen'] as const;
 
 /** The leagues the all-2026-10-02 corpus was captured for (its manifest): every league but the EAL. */
 const ALL_CORPUS_LEAGUES: readonly string[] = readManifest(corpusDir('all-2026-10-02')).leagues;
@@ -65,11 +78,11 @@ describe('fetch-data --fixtures <the SCVAL corpus>', () => {
     snapshot = readSnapshot(run.out);
   });
 
-  it('publishes all 99 teams; SCVAL fresh, the other leagues frozen "not fetched in this run" — no abort', () => {
+  it('publishes all 102 teams; SCVAL fresh, the other leagues frozen "not fetched in this run" — no abort', () => {
     expect(run.status).toBe(0);
     expect(snapshot.fetchedAt).toBe('2026-09-29T15:00:00.000Z');
-    expect(snapshot.teams.length).toBe(99);
-    expect(snapshot.standings.length).toBe(99);
+    expect(snapshot.teams.length).toBe(102);
+    expect(snapshot.standings.length).toBe(102);
     expect(snapshot.leagueHealth.map((h) => `${h.leagueId}:${h.state}`)).toEqual([
       'scval:fresh',
       'bval:frozen',
@@ -79,16 +92,16 @@ describe('fetch-data --fixtures <the SCVAL corpus>', () => {
       ...SOCAL_FROZEN,
     ]);
     for (const h of snapshot.leagueHealth.filter((x) => x.leagueId !== 'scval')) {
-      expect(h.reasons, h.leagueId).toEqual([`${getLeague(h.leagueId).shortName} was not fetched in this run.`]);
+      expect(h.reasons, h.leagueId).toEqual([notFetchedReason(h.leagueId)]);
       expect(h.lastFreshAt, h.leagueId).toBeNull();
     }
     // Frozen with no previous data: no league games of theirs (only the SCVAL feeds' games against
     // them), every row "no results reported".
-    for (const id of ['bval', 'pcal', 'mcal', 'eal', 'sunset', 'city', 'north-county', 'metro'] as const) {
+    for (const id of ['bval', 'pcal', 'mcal', 'eal', 'sunset', 'city', 'north-county', 'metro', 'independents'] as const) {
       expect(snapshot.counts.byLeague[id].leagueGames, id).toBe(0);
     }
-    // 34 NorCal rows plus the 50 SoCal rows.
-    expect(snapshot.standings.filter((s) => !s.hasReportedResults).length).toBe(84);
+    // 34 NorCal rows plus the 53 SoCal rows.
+    expect(snapshot.standings.filter((s) => !s.hasReportedResults).length).toBe(87);
   });
 
   it('keeps the SCVAL numbers of today’s offline run', () => {
@@ -104,7 +117,7 @@ describe('fetch-data --fixtures <the SCVAL corpus>', () => {
     expect(run.stdout).toMatch(SUMMARY_RE);
     const m = SUMMARY_RE.exec(run.stdout)!;
     expect(m[10]).toBe('20');
-    expect(m.slice(13, 22)).toEqual(['fresh', 'frozen', 'frozen', 'frozen', 'frozen', 'frozen', 'frozen', 'frozen', 'frozen']);
+    expect(m.slice(13, 23)).toEqual(['fresh', 'frozen', 'frozen', 'frozen', 'frozen', 'frozen', 'frozen', 'frozen', 'frozen', 'frozen']);
   });
 
   it('writes the meta file beside it, with per-league rows and the commit summary', () => {
@@ -183,7 +196,7 @@ describe('fetch-data --fixtures <all-2026-10-02>', () => {
     );
     expect(schedules.map((u) => new URL(u).searchParams.get('teamId'))).toEqual(teams.map((t) => t.id));
     expect(teams.length).toBe(43);
-    expect(FETCHABLE_TEAMS.length).toBe(99);
+    expect(FETCHABLE_TEAMS.length).toBe(102);
     // The EAL and the SoCal leagues are not in this corpus's run: none of their MaxPreps resources is
     // asked for (the Valley division has no table at all, so it has no id to look for).
     for (const d of ALL_DIVISIONS.filter((x) => !ALL_CORPUS_LEAGUES.includes(x.leagueId))) {
@@ -197,19 +210,19 @@ describe('fetch-data --fixtures <all-2026-10-02>', () => {
     const line = SUMMARY_RE.exec(run.stdout);
     expect(line, run.stdout.slice(-2000)).not.toBeNull();
     const m = line!;
-    expect(m[1]).toBe('99');
+    expect(m[1]).toBe('102');
     expect(Number(m[2])).toBe(snapshot.games.length);
     expect(Number(m[3])).toBe(snapshot.counts.leagueGames);
     expect(Number(m[4])).toBe(snapshot.counts.finals);
     expect(m[6]).toBe('3');
     expect(Number(m[9])).toBe(snapshot.sources.length);
     expect(m[10]).toBe('56');
-    expect(m.slice(13, 22)).toEqual(['fresh', 'fresh', 'fresh', 'fresh', 'frozen', 'frozen', 'frozen', 'frozen', 'frozen']);
+    expect(m.slice(13, 23)).toEqual(['fresh', 'fresh', 'fresh', 'fresh', 'frozen', 'frozen', 'frozen', 'frozen', 'frozen', 'frozen']);
   });
 
   it('publishes per-league counts', () => {
-    expect(snapshot.teams.length).toBe(99);
-    expect(snapshot.counts.teams).toBe(99);
+    expect(snapshot.teams.length).toBe(102);
+    expect(snapshot.counts.teams).toBe(102);
     // EAL and the SoCal leagues: not in the run, so only the other feeds' games against their teams,
     // and no league game. The San Diego schools became registry teams after this corpus was captured:
     // the NorCal feeds' 14 games against City and North County teams (10 + 4; 4 of them final) now
@@ -226,6 +239,7 @@ describe('fetch-data --fixtures <all-2026-10-02>', () => {
       city: { teams: 12, games: 10, leagueGames: 0, finals: 2, backfilled: 0 },
       'north-county': { teams: 19, games: 4, leagueGames: 0, finals: 2, backfilled: 0 },
       metro: { teams: 9, games: 0, leagueGames: 0, finals: 0, backfilled: 0 },
+      independents: { teams: 3, games: 0, leagueGames: 0, finals: 0, backfilled: 0 },
     });
     const socal = new Set(['sunset', 'city', 'north-county', 'metro']);
     const leagueOf = new Map(TEAMS.map((t) => [t.slug, t.league]));
@@ -251,7 +265,7 @@ describe('fetch-data --fixtures <all-2026-10-02>', () => {
     expect(snapshot.leagueHealth.map((h) => h.leagueId)).toEqual(LEAGUES.map((l) => l.id));
     for (const h of snapshot.leagueHealth.filter((x) => !ALL_CORPUS_LEAGUES.includes(x.leagueId))) {
       expect(h.state, h.leagueId).toBe('frozen');
-      expect(h.reasons, h.leagueId).toEqual([`${getLeague(h.leagueId).shortName} was not fetched in this run.`]);
+      expect(h.reasons, h.leagueId).toEqual([notFetchedReason(h.leagueId)]);
       expect(h.teamFeeds, h.leagueId).toEqual({ total: TEAMS.filter((t) => t.league === h.leagueId).length, ok: 0, carried: 0, failed: 0 });
     }
     // A division with no official schedule (EAL) reports its missing league results outside `official`.
@@ -391,7 +405,7 @@ describe('fetch-data: the season-window guard', () => {
     const res = runFixtureCli({ corpus: 'scval', fetchedAt: '2026-12-15T20:00:00.000Z', extraArgs: ['--force', '--dry-run'] });
     expect(res.status, res.output).toBe(0);
     expect(res.output).not.toMatch(/out of season/);
-    expect(res.stdout).toMatch(/summary: teams 99/);
+    expect(res.stdout).toMatch(/summary: teams 102/);
   });
 
   it('is in season through the whole league and playoff calendar', () => {

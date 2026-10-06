@@ -46,6 +46,7 @@ describe('the league hrefs the bars hand to NavLink', () => {
       city: '/schedule/city',
       'north-county': '/schedule/north-county',
       metro: '/schedule/metro',
+      independents: '/schedule/independents',
     });
     // Teams took over the Table tab's job (DESIGN §18): your league's tables, on /teams.
     expect(HREFS['/teams']).toEqual({
@@ -58,6 +59,7 @@ describe('the league hrefs the bars hand to NavLink', () => {
       city: '/teams#city',
       'north-county': '/teams#north-county',
       metro: '/teams#metro',
+      independents: '/teams#independents',
     });
     expect(HREFS['/playoffs']).toEqual({
       scval: '/playoffs#scval',
@@ -72,6 +74,8 @@ describe('the league hrefs the bars hand to NavLink', () => {
       city: '/playoffs#city',
       'north-county': '/playoffs#north-county',
       metro: '/playoffs#metro',
+      // The Southern Section independents' 'no-postseason' card (DESIGN §24.9).
+      independents: '/playoffs#independents',
     });
     expect(HREFS['/standings']).toBeUndefined();
     expect(HREFS['/leaders']).toBeUndefined();

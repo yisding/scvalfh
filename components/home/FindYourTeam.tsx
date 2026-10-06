@@ -8,7 +8,7 @@ import { focusUnpin } from './MyTeamCard';
 
 /**
  * The first-visit view (SPEC §10.1): shown when no league is remembered (`data-scope="none"`), and
- * never an SCVAL default. A pin-mode finder over every team (99, both regions: DESIGN-socal §2.4 keeps
+ * never an SCVAL default. A pin-mode finder over every team (102, both regions: DESIGN-socal §2.4 keeps
  * ONE finder outside the region blocks, so a family finds its school whichever region is shown), then
  * the league cards (server-rendered by the page and passed in as `children`, so they stay out of the
  * client bundle): one `<h3>` and one `<ul data-region-scope>` grid per region, which the scope

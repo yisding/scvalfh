@@ -29,7 +29,7 @@ import {
   type LeagueSummary,
 } from '../../lib/data';
 import { plural, recordString, shortDate } from '../../lib/format';
-import { REGIONS, getLeague, leagueOfDivision, leaguePlayStarts, type RegionConfig } from '../../lib/leagues';
+import { REGIONS, getLeague, isIndependentLeague, leagueOfDivision, leaguePlayStarts, type RegionConfig } from '../../lib/leagues';
 import type { DivisionId, Game, LeagueId, RegionId } from '../../lib/types';
 import {
   buildDivisionView,
@@ -145,6 +145,9 @@ export function buildStandingsPageView(leagueId: LeagueId): StandingsPageView {
  * tests/ui/standings-view.test.ts, which pins the copy no league's live tables reach today.
  */
 export function buildNotice(leagueId: LeagueId, views: DivisionView[]): StandingsPageView['notice'] {
+  // A group with no league games (the Southern Section independents, DESIGN §24.9) has no league play to
+  // start and no table to read 0-0-0: no notice, ever.
+  if (isIndependentLeague(leagueId)) return null;
   if (views.some((v) => v.leagueFinals > 0)) return null;
   // The start date is config's (validated, so always set) and the count is games played so far,
   // the same two facts the home PhaseLead reads (lib/leagues leaguePlayStarts, lib/data
@@ -179,7 +182,10 @@ export interface StandingsOverviewView {
   sections: OverviewSection[];
   /** NorCal, then SoCal: the same sections, split by region for the page's region wrappers. */
   regions: StandingsOverviewRegion[];
-  /** Per league, each table's leaders (OG card, metadata). */
+  /**
+   * Per league with a table, each table's leaders (OG card, metadata). A group with no table (the Southern
+   * Section independents) has no leaders, so it has no line here.
+   */
   leaders: Array<{ league: LeagueSummary; lines: LeaderLine[] }>;
   throughDate: string | null;
 }
@@ -212,10 +218,12 @@ export function buildStandingsOverviewView(): StandingsOverviewView {
         sections: sections.filter((s) => ids.has(s.id)),
       };
     }),
-    leaders: leagues.map((league) => ({
-      league,
-      lines: league.divisions.map((d) => leaderLine(d.id, d.heading)),
-    })),
+    leaders: leagues
+      .filter((league) => !isIndependentLeague(league.id))
+      .map((league) => ({
+        league,
+        lines: league.divisions.map((d) => leaderLine(d.id, d.heading)),
+      })),
     throughDate: getLastLeagueResultDate(),
   };
 }

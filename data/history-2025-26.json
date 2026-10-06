@@ -573,6 +573,17 @@
       "reason": "The EAL published no 2025-26 final standings of its own. We found no EAL league website, and the CIF Northern Section’s field hockey page and Playoff Center post no field hockey standings or results. We do not show standings from newspapers or third-party sites.",
       "status": "unavailable"
     },
+    "independents": {
+      "checked": [
+        "https://www.maxpreps.com/ca/field-hockey/25-26/league/palomares/?leagueid=5d795f4f-0e75-450d-856e-0873b46002de (MaxPreps’ 2025-26 Palomares League table: Glendora is its only field hockey team)",
+        "https://www.maxpreps.com/ca/field-hockey/25-26/league/league-b/?leagueid=c2922327-b045-410b-aadd-87cb63b58405 (MaxPreps’ 2025-26 League B table: Harvard-Westlake is its only field hockey team)",
+        "https://www.maxpreps.com/ca/field-hockey/25-26/league/marmonte/?leagueid=392fb703-cc64-46d7-8d21-819e13a78c3f (MaxPreps’ 2025-26 Marmonte League table: Thousand Oaks is its only field hockey team)"
+      ],
+      "checkedOn": "2026-10-06",
+      "league": "Southern Section independents",
+      "reason": "Glendora, Harvard-Westlake and Thousand Oaks played as independents in 2025-26 too: there was no league table to publish.",
+      "status": "unavailable"
+    },
     "mcal": {
       "alsoPublished": [
         {

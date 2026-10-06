@@ -503,12 +503,15 @@ describe('rendered rows and the scoreboard (GameRow, ScoreBoard: UI pass, league
 
 describe('every league’s games in the bundled snapshot (invariants)', () => {
   const games = getGames();
-  it('has games in every league', () => {
+  it('has games in every league, and none counted for the independents (no league games, DESIGN §24.9)', () => {
     for (const league of getLeagueSummaries()) {
-      expect(
-        games.filter((g) => g.countsFor !== null && findDivision(g.countsFor)?.leagueId === league.id).length,
-        `lib/data.ts: ${league.id} has counted games`,
-      ).toBeGreaterThan(0);
+      const counted = games.filter((g) => g.countsFor !== null && findDivision(g.countsFor)?.leagueId === league.id).length;
+      if (league.id === 'independents') {
+        expect(counted, 'lib/classify.ts: no game counts for the independents').toBe(0);
+        expect(games.some((g) => [g.home.slug, g.away.slug].some((s) => s === 'glendora')), 'Glendora plays').toBe(true);
+        continue;
+      }
+      expect(counted, `lib/data.ts: ${league.id} has counted games`).toBeGreaterThan(0);
     }
   });
   it('never renders a missing score as 0-0, and renders every real score as published', () => {

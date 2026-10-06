@@ -244,6 +244,26 @@ describe('classify: EAL (contest-type evidence, no official schedule)', () => {
   });
 });
 
+describe('classify: the Southern Section independents (classification independent, DESIGN §24.9)', () => {
+  it('counts no game between two independents, flagged by MaxPreps or not, in or out of the group’s game span', () => {
+    // Harvard-Westlake 5, Glendora 0 on Sep 8: two of the group, so leagueDivision is theirs, but no game counts.
+    for (const league of [true, false]) {
+      const g = game({ home: 'harvard-westlake', away: 'glendora', hs: 5, as: 0, date: '2026-09-08', league });
+      expect(g.leagueDivision, `league flag ${league}`).toBe('independents');
+      expect(g.countsFor, `league flag ${league}`).toBeNull();
+      expect(classifyGame(g), `league flag ${league}`).toBeNull();
+      expect(g.postseason).toBeNull();
+    }
+  });
+
+  it('counts no game against a league team either, and leaves that team’s league untouched', () => {
+    const g = game({ home: 'great-oak', away: 'harvard-westlake', hs: 2, as: 4, date: '2026-08-18' });
+    expect(g.countsFor).toBeNull();
+    const sunset = game({ home: 'great-oak', away: 'bonita', hs: 2, as: 1, date: '2026-09-15' });
+    expect(sunset.countsFor).toBe('sunset');
+  });
+});
+
 describe('classify: San Diego (membership, DESIGN-socal §2.1.7)', () => {
   // City Western's leaguePlay is Sep 1 – Oct 30; every pair of division-mates meets twice on MaxPreps'
   // schedules, flagged by MaxPreps or not.

@@ -173,9 +173,10 @@ describe('data/clubs.json', () => {
     const players = new Set(raw.affiliations.map((a) => `${a.teamSlug} ${a.athleteId}`));
     const schools = new Set(raw.affiliations.map((a) => a.teamSlug));
 
-    // The sweep covered the 49 NorCal schools (SCVAL, BVAL, PCAL, MCAL, EAL). The 50 Southern California
-    // teams joined the registry on 2026-10-06 with no club sweep (DESIGN-socal §3): their 777 roster rows
-    // (data/rosters.json, read 2026-10-06) carry no affiliation, and these counts are over the swept 49.
+    // The sweep covered the 49 NorCal schools (SCVAL, BVAL, PCAL, MCAL, EAL). The 53 Southern California
+    // teams joined the registry on 2026-10-06 with no club sweep (DESIGN-socal §3, §24.9): their 842 roster
+    // rows (data/rosters.json, read 2026-10-06: the 50 league teams' 777 and the three independents' 65) carry
+    // no affiliation, and these counts are over the swept 49.
     const SWEPT = new Set(['scval', 'bval', 'pcal', 'mcal', 'eal']);
     const swept = teams.filter((t) => SWEPT.has(getTeamBySlug(t.slug)!.league));
 
@@ -189,8 +190,8 @@ describe('data/clubs.json', () => {
       expect(rows.filter((r) => r.level === 'jv')).toHaveLength(29);
       expect(new Set(rows.filter((r) => r.level === 'jv').map((r) => r.team))).toEqual(new Set(['los-gatos']));
       expect(swept).toHaveLength(49);
-      expect(teams).toHaveLength(99);
-      expect(teams.filter((t) => !SWEPT.has(getTeamBySlug(t.slug)!.league)).flatMap((t) => t.players)).toHaveLength(777);
+      expect(teams).toHaveLength(102);
+      expect(teams.filter((t) => !SWEPT.has(getTeamBySlug(t.slug)!.league)).flatMap((t) => t.players)).toHaveLength(842);
     });
 
     it('counts 71 current, 13 past and 10 unknown; 79 high and 15 medium', () => {
@@ -341,7 +342,7 @@ describe('data/clubs.json', () => {
       }
     });
 
-    it('finds players in four of the five swept leagues, and none in the four unswept SoCal leagues', () => {
+    it('finds players in four of the five swept leagues, and none in the four unswept SoCal leagues or the independents', () => {
       const byLeague = Object.fromEntries(
         LEAGUES.map((l) => {
           const inLeague = raw.affiliations.filter((a) => getTeamBySlug(a.teamSlug)!.league === l.id);
@@ -361,6 +362,7 @@ describe('data/clubs.json', () => {
         city: [0, 0],
         'north-county': [0, 0],
         metro: [0, 0],
+        independents: [0, 0],
       });
     });
   });

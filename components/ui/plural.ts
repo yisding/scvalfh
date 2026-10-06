@@ -12,7 +12,10 @@ export function gameWord(n: number): string {
   return n === 1 ? 'game' : 'games';
 }
 
-/** The accessible name of a team's form strip: 'Del Mar last 1 league game' / '… last 5 league games'. */
-export function formStripName(teamName: string, count: number): string {
-  return `${teamName} last ${plural(count, 'league game')}`;
+/**
+ * The accessible name of a team's form strip: 'Del Mar last 1 league game' / '… last 5 league games'; with
+ * `scope` 'all' (a team with no league games: the Southern Section independents) '… last 5 games'.
+ */
+export function formStripName(teamName: string, count: number, scope: 'league' | 'all' = 'league'): string {
+  return `${teamName} last ${plural(count, scope === 'all' ? 'game' : 'league game')}`;
 }

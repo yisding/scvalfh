@@ -29,23 +29,29 @@ const SCVAL_FROZEN: ReadonlyArray<[slug: string, abbr: string, id: string, name:
   ['monta-vista', 'MV', '405614ad-a015-4270-b527-18e899c90824', 'Monta Vista', 'el-camino'],
 ];
 
-describe('teams: the registry is the nine leagues', () => {
-  it('holds 99 teams, with per-division counts from the config', () => {
-    expect(TEAMS).toHaveLength(99);
+describe('teams: the registry is the nine leagues and the Southern Section independents', () => {
+  it('holds 102 teams, with per-division counts from the config', () => {
+    expect(TEAMS).toHaveLength(102);
     expect(FETCHABLE_TEAMS).toHaveLength(TEAMS.length);
     for (const d of ALL_DIVISIONS) expect(teamsInDivision(d.id), d.id).toHaveLength(d.expectedTeams);
-    expect(ALL_DIVISIONS.reduce((n, d) => n + d.expectedTeams, 0)).toBe(99);
+    expect(ALL_DIVISIONS.reduce((n, d) => n + d.expectedTeams, 0)).toBe(102);
     expect(LEAGUES.map((l) => [l.id, teamsInLeague(l.id).length])).toEqual([
       ['scval', 15], ['bval', 12], ['pcal', 7], ['mcal', 9], ['eal', 6],
-      ['sunset', 10], ['city', 12], ['north-county', 19], ['metro', 9],
+      ['sunset', 10], ['city', 12], ['north-county', 19], ['metro', 9], ['independents', 3],
     ]);
     // The EAL closes the 49 NorCal teams, which keep their places, in alphabetical seed order.
     expect(TEAMS.slice(43, 49).map((t) => t.slug)).toEqual([
       'bella-vista', 'chico', 'corning', 'davis', 'lassen', 'pleasant-valley',
     ]);
-    // The Sunset opens the SoCal 50, and Metro South Bay closes the registry (alphabetical in each division).
+    // The Sunset opens the SoCal 53, Metro South Bay closes the 50 league teams, and the three independents
+    // close the registry (alphabetical in each division).
     expect(TEAMS[49].slug).toBe('bonita');
-    expect(TEAMS.slice(-4).map((t) => t.slug)).toEqual(['el-capitan', 'granite-hills', 'hilltop', 'southwest']);
+    expect(TEAMS.slice(95, 99).map((t) => t.slug)).toEqual(['el-capitan', 'granite-hills', 'hilltop', 'southwest']);
+    expect(TEAMS.slice(-3).map((t) => [t.slug, t.abbr, t.acronym, t.division])).toEqual([
+      ['glendora', 'GL', 'GHS', 'independents'],
+      ['harvard-westlake', 'HW', 'HWHS', 'independents'],
+      ['thousand-oaks', 'TO', 'TOHS', 'independents'],
+    ]);
     expect(TEAMS.slice(49).every((t) => t.section === 'ss' || t.section === 'sds')).toBe(true);
     expect(TEAMS.slice(0, 49).some((t) => t.section === 'ss' || t.section === 'sds')).toBe(false);
   });
@@ -70,7 +76,7 @@ describe('teams: the registry is the nine leagues', () => {
     }
   });
 
-  it('has unique ids, slugs and abbrs across all 99, and well-formed slugs', () => {
+  it('has unique ids, slugs and abbrs across all 102, and well-formed slugs', () => {
     for (const key of ['id', 'slug', 'abbr'] as const) {
       const values = TEAMS.map((t) => t[key]);
       expect(new Set(values).size, key).toBe(TEAMS.length);
@@ -94,7 +100,7 @@ describe('teams: the registry is the nine leagues', () => {
       ['san-dieguito-academy', 'San Dieguito'],
     ]);
     // Every abbr is unique across both regions: the SoCal fallbacks avoid the 49 NorCal abbrs.
-    expect(new Set(TEAMS.map((t) => t.abbr)).size).toBe(99);
+    expect(new Set(TEAMS.map((t) => t.abbr)).size).toBe(102);
     expect(['marina', 'mt-carmel', 'mission-vista', 'valley-center', 'bonita-vista', 'canyon-hills', 'canyon-crest-academy', 'sage-creek', 'rancho-bernardo']
       .map((slug) => getTeamBySlug(slug)!.abbr)).toEqual(['MR', 'MT', 'MS', 'VE', 'BT', 'CN', 'CY', 'SE', 'RN']);
     expect(resolveTeam('santa-clara')!.abbr).toBe('SC');
@@ -308,14 +314,26 @@ describe('teams: the registry is the nine leagues', () => {
     expect(resolveTeam('  los   altos  ')?.slug).toBe('los-altos');
   });
 
-  it('does not resolve schools outside the nine leagues', () => {
+  it('does not resolve schools outside the nine leagues and the independents', () => {
     // La Jolla and Del Norte (San Diego) are members now; these are not.
     for (const name of [
-      'Yuba City', 'Gunn', 'Irvington', 'Harvard-Westlake', 'Thousand Oaks', 'Glendora', 'Mayfair', 'Castle Park',
-      'Chula Vista', 'Montgomery', 'Sweetwater', 'San Pasqual Academy', 'Claremont',
+      'Yuba City', 'Gunn', 'Irvington', 'Mayfair', 'Castle Park', 'Chula Vista', 'Montgomery', 'Sweetwater',
+      'San Pasqual Academy', 'Claremont', 'River Valley', 'North Salinas', 'Notre Dame',
     ]) {
       expect(resolveTeam(name), name).toBeUndefined();
     }
+    // The Southern Section independents are covered (DESIGN §24.9): their names and aliases resolve, and so do
+    // HWHS and TOHS, which name one school each. GHS does not: Gilroy, Greenfield and Glendora share it.
+    for (const [name, slug] of [
+      ['Glendora', 'glendora'], ['Glendora High School', 'glendora'], ['Glendora Tartans', 'glendora'],
+      ['Harvard-Westlake', 'harvard-westlake'], ['Harvard Westlake', 'harvard-westlake'],
+      ['Harvard-Westlake School', 'harvard-westlake'], ['Harvard-Westlake Wolverines', 'harvard-westlake'],
+      ['Thousand Oaks', 'thousand-oaks'], ['Thousand Oaks High School', 'thousand-oaks'], ['Thousand Oaks Lancers', 'thousand-oaks'],
+    ] as const) {
+      expect(resolveTeam(name)?.slug, name).toBe(slug);
+    }
+    expect(resolveTeam('GHS'), 'GHS').toBeUndefined();
+    expect([resolveTeam('HWHS')?.slug, resolveTeam('TOHS')?.slug]).toEqual(['harvard-westlake', 'thousand-oaks']);
     expect(resolveTeam(null)).toBeUndefined();
     expect(resolveTeam('')).toBeUndefined();
   });

@@ -23,7 +23,7 @@ import { REGRESSED_FINALS } from './support/finals-regression';
 
 const CORPUS = 'all-2026-10-02' as const;
 /** The four Southern California leagues: not in this corpus, so frozen "not fetched in this run". */
-const SOCAL_FROZEN = ['sunset:frozen', 'city:frozen', 'north-county:frozen', 'metro:frozen'] as const;
+const SOCAL_FROZEN = ['sunset:frozen', 'city:frozen', 'north-county:frozen', 'metro:frozen', 'independents:frozen'] as const;
 
 let corpusFile: string;
 let corpus: Snapshot;
@@ -66,7 +66,7 @@ describe('corpusSnapshotPath (tests/helpers.ts)', () => {
     const parsed = parseSnapshot(JSON.parse(readFileSync(corpusFile, 'utf8')) as unknown);
     expect(parsed.schemaVersion, 'tests/helpers.ts: snapshot version').toBe(2);
     expect(parsed.fetchedAt, 'tests/helpers.ts: the corpus stamp').toBe('2026-10-02T15:00:00.000Z');
-    expect(parsed.teams.length).toBe(99);
+    expect(parsed.teams.length).toBe(102);
     const meta = JSON.parse(readFileSync(corpusFile.replace(/\.json$/, '.meta.json'), 'utf8')) as { fetchedAt: string };
     expect(meta.fetchedAt, 'tests/helpers.ts: meta beside the snapshot').toBe(parsed.fetchedAt);
   });

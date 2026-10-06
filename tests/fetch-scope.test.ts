@@ -98,15 +98,20 @@ describe('summarizeByLeague', () => {
       ['city', 12, 0],
       ['north-county', 19, 0],
       ['metro', 9, 0],
+      ['independents', 3, 0],
     ]);
     // BVAL's rows are failures in the file, but a run that did not cover BVAL did not fail them.
     const scoped = summarizeByLeague(teams, ['scval']);
-    expect(scoped.map((s) => s.failed)).toEqual([0, 0, 0, 0, 0, 0, 0, 0, 0]);
-    expect(scoped.map((s) => s.outOfScope)).toEqual([0, 12, 7, 9, 6, 10, 12, 19, 9]);
+    expect(scoped.map((s) => s.failed)).toEqual([0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+    expect(scoped.map((s) => s.outOfScope)).toEqual([0, 12, 7, 9, 6, 10, 12, 19, 9, 3]);
     // A Southern California run (the leagues WP3 fetched rosters, stats and JV for on 2026-10-06).
     const socal = summarizeByLeague(teams, ['sunset', 'city', 'north-county', 'metro']);
-    expect(socal.map((s) => s.outOfScope)).toEqual([15, 12, 7, 9, 6, 0, 0, 0, 0]);
+    expect(socal.map((s) => s.outOfScope)).toEqual([15, 12, 7, 9, 6, 0, 0, 0, 0, 3]);
     expect(runExitCode(socal)).toBe(0);
+    // The independents' own run (2026-10-06, when the group joined the registry): the other 99 kept.
+    const independents = summarizeByLeague(teams, ['independents']);
+    expect(independents.map((s) => s.outOfScope)).toEqual([15, 12, 7, 9, 6, 10, 12, 19, 9, 0]);
+    expect(runExitCode(independents)).toBe(0);
   });
 
   it('formats one line per league', () => {
@@ -122,7 +127,7 @@ describe('summarizeByLeague', () => {
     const dropped = new Set([leigh.slug, delMar.slug, 'st-ignatius']);
     const byLeague = summarizeByLeague(teams, ['scval'], dropped);
     // A covered team's dropped row is the fetch's business (re-read, or an error): not listed here.
-    expect(byLeague.map((s) => s.dropped)).toEqual([[], [leigh.slug, delMar.slug], [], [], [], [], [], [], []]);
+    expect(byLeague.map((s) => s.dropped)).toEqual([[], [leigh.slug, delMar.slug], [], [], [], [], [], [], [], []]);
     expect(formatLeagueSummary(byLeague[1])).toBe(
       `BVAL  12 teams · not in this run · 10 kept as they were · 2 pending, previous row dropped (${leigh.slug}, ${delMar.slug})`,
     );

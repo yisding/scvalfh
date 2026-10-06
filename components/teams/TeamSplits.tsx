@@ -37,8 +37,24 @@ export interface TeamSplitsProps {
   view: TeamPageView;
 }
 
+/** The same splits over all games, for a team that plays no league games (the Southern Section independents). */
+const NO_GAMES_ALL = {
+  Home: 'no home games',
+  Away: 'no away games',
+  Neutral: 'no neutral-site games',
+} as const;
+
 export function TeamSplits({ view }: TeamSplitsProps) {
-  const league = view.hasResults && view.standing ? view.standing.computed : null;
+  // A team with no league games (the Southern Section independents, DESIGN §24.9): its splits are all games.
+  const independent = view.league.classification === 'independent';
+  const league = independent
+    ? view.standing && view.standing.overall.gp > 0
+      ? view.standing.overall
+      : null
+    : view.hasResults && view.standing
+      ? view.standing.computed
+      : null;
+  const noGames = independent ? NO_GAMES_ALL : NO_GAMES;
   const cells: Array<{ label: keyof typeof NO_GAMES; value: string | null }> = [
     { label: 'Home', value: splitValue(league?.homeRecord ?? null) },
     { label: 'Away', value: splitValue(league?.awayRecord ?? null) },
@@ -54,12 +70,14 @@ export function TeamSplits({ view }: TeamSplitsProps) {
           <div key={cell.label} className="sx-card p-3 md:p-4">
             <dt className="mb-0.5 text-meta font-medium text-ink-3 md:mb-1">{cell.label}</dt>
             <dd className="sx-figure m-0 text-lead leading-7 font-semibold whitespace-nowrap text-ink md:text-[1.75rem] md:leading-8 md:tracking-[-0.02em]">
-              {cell.value ?? <MissingValue words={league ? NO_GAMES[cell.label] : 'not reported'} />}
+              {cell.value ?? <MissingValue words={league ? noGames[cell.label] : 'not reported'} />}
             </dd>
           </div>
         ))}
       </dl>
-      <p className="mt-3 mb-0 text-meta text-ink-3">League games only, won-lost-tied.</p>
+      <p className="mt-3 mb-0 text-meta text-ink-3">
+        {independent ? 'All games, won-lost-tied.' : 'League games only, won-lost-tied.'}
+      </p>
     </div>
   );
 }

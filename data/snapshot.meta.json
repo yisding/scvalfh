@@ -1,6 +1,6 @@
 {
-  "commitSummary": "SCVAL +1 finals · BVAL +0 · PCAL +0 · MCAL +0 · EAL +0 · Sunset +0 · City +1 · North County +1 · Metro +0",
-  "contentHash": "52116f630f183047b0fd26e6a9f678f058083e538a752a42ceb45100e52b7879",
+  "commitSummary": "SCVAL +0 finals · BVAL +0 · PCAL +0 · MCAL +0 · EAL +0 · Sunset +0 · City +0 · North +0 · Metro +0 · Independent +0",
+  "contentHash": "96b0598de1b45a0b5b4708679bc8be5ad2ed10ab093ac1a24bb85f76835d8d7a",
   "counts": {
     "byLeague": {
       "bval": {
@@ -23,6 +23,13 @@
         "games": 41,
         "leagueGames": 30,
         "teams": 6
+      },
+      "independents": {
+        "backfilled": 0,
+        "finals": 29,
+        "games": 37,
+        "leagueGames": 0,
+        "teams": 3
       },
       "mcal": {
         "backfilled": 0,
@@ -67,26 +74,26 @@
         "teams": 10
       }
     },
-    "finals": 534,
-    "games": 872,
+    "finals": 539,
+    "games": 879,
     "leagueGames": 506,
-    "mismatches": 17,
+    "mismatches": 15,
     "pending": 12,
-    "teams": 99
+    "teams": 102
   },
   "crossCheck": {
-    "agreements": 152,
+    "agreements": 154,
     "backfilled": 2,
-    "compared": 221,
+    "compared": 223,
     "conflicts": 6,
     "sbliveOnlyScored": 7
   },
-  "fetchedAt": "2026-10-06T05:04:27.483Z",
+  "fetchedAt": "2026-10-06T05:58:34.143Z",
   "leagues": [
     {
       "backfilled": 0,
       "countedFinals": 49,
-      "finalsDelta": 1,
+      "finalsDelta": 0,
       "id": "scval",
       "missingPast": 2,
       "reasons": [],
@@ -140,7 +147,7 @@
     {
       "backfilled": 0,
       "countedFinals": 15,
-      "finalsDelta": 1,
+      "finalsDelta": 0,
       "id": "city",
       "missingPast": 0,
       "reasons": [],
@@ -149,7 +156,7 @@
     {
       "backfilled": 0,
       "countedFinals": 29,
-      "finalsDelta": 1,
+      "finalsDelta": 0,
       "id": "north-county",
       "missingPast": 0,
       "reasons": [],
@@ -163,12 +170,21 @@
       "missingPast": 0,
       "reasons": [],
       "state": "fresh"
+    },
+    {
+      "backfilled": 0,
+      "countedFinals": 0,
+      "finalsDelta": 0,
+      "id": "independents",
+      "missingPast": 0,
+      "reasons": [],
+      "state": "fresh"
     }
   ],
   "officialFixturesUnmatched": 7,
   "officialStandingsPdfUrl": null,
   "requests": {
-    "maxpreps": 128,
+    "maxpreps": 131,
     "official": 8,
     "sblive": 21
   },
@@ -871,6 +887,21 @@
     {
       "label": "southwest schedule",
       "rowCount": 10,
+      "status": "ok"
+    },
+    {
+      "label": "glendora schedule",
+      "rowCount": 14,
+      "status": "ok"
+    },
+    {
+      "label": "harvard-westlake schedule",
+      "rowCount": 20,
+      "status": "ok"
+    },
+    {
+      "label": "thousand-oaks schedule",
+      "rowCount": 14,
       "status": "ok"
     },
     {

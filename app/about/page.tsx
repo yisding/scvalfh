@@ -11,7 +11,7 @@ import Arrow from '../../components/ui/Arrow';
 import EmptyState from '../../components/ui/EmptyState';
 import ExternalLink from '../../components/ui/ExternalLink';
 import SectionHeader from '../../components/ui/SectionHeader';
-import { DATA_CORRECTIONS_URL, OG_BASE, ROOT_OG_IMAGE, SITE_SCOPE_NOTE } from '../../components/layout/site';
+import { DATA_CORRECTIONS_URL, OG_BASE, ROOT_OG_IMAGE, SITE_SCOPE_NOTE, independentsWords } from '../../components/layout/site';
 import { getClubs } from '../../lib/clubs';
 import { getCommitsFile } from '../../lib/commits';
 import {
@@ -41,7 +41,15 @@ import { getAvailableHistoryLeagues, getHistorySeason, getUnavailableHistoryLeag
 import { jvTableTitle } from '../../components/standings/jv-standings-view';
 import { getJvFile, getJvMerge, getJvTables } from '../../lib/jv';
 import { JV_STANDINGS_MIN_REPORTED_SHARE } from '../../lib/jv-standings';
-import { CCS, UNBRACKETED_LEAGUE_IDS, getLeague, getSection, leagueStandingsUrl, regionOf } from '../../lib/leagues';
+import {
+  CCS,
+  UNBRACKETED_LEAGUE_IDS,
+  getLeague,
+  getSection,
+  isIndependentLeague,
+  leagueStandingsUrl,
+  regionOf,
+} from '../../lib/leagues';
 import type { LeagueConfig, SectionConfig } from '../../lib/leagues';
 import { SOURCE_LINKS } from '../../lib/season';
 import { crossCheckSkipReason, statusLegend } from '../../lib/standings';
@@ -86,8 +94,12 @@ function rulesDocument(section: Pick<SectionConfig, 'name' | 'rulesSource'>): st
     : `the ${name}`;
 }
 
-/** 'the EAL', 'the Sunset' (a one-table league is named like one), 'City' (a conference reads as a name). */
-function leagueRef(summary: Pick<LeagueSummary, 'shortName' | 'singleDivision'>): string {
+/**
+ * 'the EAL', 'the Sunset' (a one-table league is named like one), 'City' (a conference reads as a name), 'the
+ * Southern Section independents' (a group with no table is named in full: its short name is an adjective).
+ */
+function leagueRef(summary: Pick<LeagueSummary, 'id' | 'name' | 'shortName' | 'singleDivision'>): string {
+  if (isIndependentLeague(summary.id)) return `the ${summary.name}`;
   return summary.singleDivision ? `the ${summary.shortName}` : summary.shortName;
 }
 const DESCRIPTION =
@@ -119,7 +131,12 @@ function toc(leagues: readonly LeagueSummary[]): Array<{ id: string; label: stri
   return [
     { id: 'sources', label: 'Data sources' },
     { id: 'standings', label: 'Standings, points & tiebreaks' },
-    ...leagues.map((l) => ({ id: `rules-${l.id}`, label: `${l.shortName} rules`, region: l.region })),
+    // A group with no table (the Southern Section independents) has no rules of its own: its entry is its name.
+    ...leagues.map((l) => ({
+      id: `rules-${l.id}`,
+      label: isIndependentLeague(l.id) ? l.name : `${l.shortName} rules`,
+      region: l.region,
+    })),
     { id: 'health', label: 'Data health, by league' },
     { id: 'conventions', label: 'How a score is shown' },
     { id: 'cross-check', label: 'Cross-check log' },
@@ -175,6 +192,39 @@ const MULTI_TEAM_WORDS: Readonly<Record<LeagueConfig['rules']['multiTeam'], stri
 
 function chainItems(league: LeagueConfig, chain: readonly TiebreakStage[]): string[] {
   return chain.map((stage) => league.rules.citations.stages[stage] ?? stage);
+}
+
+/**
+ * A group with no league table (the Southern Section independents, DESIGN §24.9): no points, order, schedule,
+ * co-champions or tiebreak to state, because there are no league games. The block says that once, from the
+ * group's note, keeps the one Section rule that does reach their games (overtime: none is published, so
+ * results stand as reported) and gives the postseason as the Section states it.
+ */
+function IndependentRules({ league }: { league: LeagueConfig }) {
+  const notes = [...new Set(league.divisions.flatMap((d) => (d.official.mode === 'none' ? [d.official.note] : [])))];
+  return (
+    <div className="sx-prose">
+      {notes.map((note) => (
+        <p key={note}>{note}</p>
+      ))}
+      <p>
+        No game counts toward a table, so there are no points, no standings order and no tiebreaks to apply. A
+        game between two of them is a non-league game like any other.
+      </p>
+      <h4 className={H4}>Overtime</h4>
+      <p>{league.rules.citations.overtime}.</p>
+      <h4 className={H4}>Postseason</h4>
+      <GeneratedPostseason league={league} />
+      <p className="text-meta text-ink-2">
+        {league.links.map((l, i) => (
+          <span key={l.href}>
+            {i > 0 ? ' · ' : ''}
+            <ExternalLink href={l.href}>{l.label}</ExternalLink>
+          </span>
+        ))}
+      </p>
+    </div>
+  );
 }
 
 function GeneratedRules({ league }: { league: LeagueConfig }) {
@@ -477,6 +527,10 @@ export default function AboutPage() {
   const counted = statusCounts(sources);
   const erroring = sources.filter((s) => s.status === 'error');
   const leagues = getLeagueSummaries();
+  // The leagues with a table, and the groups without one (the Southern Section independents, DESIGN §24.9):
+  // a sentence about rules, points, tables or cross-checks speaks for the first only.
+  const tabled = leagues.filter((l) => !isIndependentLeague(l.id));
+  const independentGroups = leagues.filter((l) => isIndependentLeague(l.id));
   const sections = getSections();
   const allTeams = getTeams();
   const commitCount = getCommitsFile().commitments.length;
@@ -502,14 +556,14 @@ export default function AboutPage() {
   const unbracketed = leagues.filter((l) => UNBRACKETED_LEAGUE_IDS.includes(l.id));
   const unbracketedSections = sections.filter((s) => unbracketed.some((l) => l.section.id === s.id));
   // Leagues that use their points only to decide a title and publish no standings (EAL).
-  const titleOnly = leagues.filter((l) => getLeague(l.id).rules.orderScope === 'title');
-  const tableOrdered = leagues.filter((l) => getLeague(l.id).rules.orderScope === 'table');
+  const titleOnly = tabled.filter((l) => getLeague(l.id).rules.orderScope === 'title');
+  const tableOrdered = tabled.filter((l) => getLeague(l.id).rules.orderScope === 'table');
   // Leagues that publish no points rule or standings at all (the Sunset, the San Diego leagues): this site
   // applies its own 3-1-0 and says so, never that their rules require it (DESIGN-socal §2.1.7).
-  const siteOrdered = leagues.filter((l) => getLeague(l.id).rules.orderScope === 'site');
+  const siteOrdered = tabled.filter((l) => getLeague(l.id).rules.orderScope === 'site');
   // A division MaxPreps publishes no table for (crossCheckSkipReason), whose cross-check is skipped.
   const anyTableless = leagues.some((l) => getLeague(l.id).divisions.some((d) => crossCheckSkipReason(d.id) !== null));
-  const ruleLeagues = leagues.filter((l) => getLeague(l.id).rules.orderScope !== 'site');
+  const ruleLeagues = tabled.filter((l) => getLeague(l.id).rules.orderScope !== 'site');
   // The sections whose level varsity games end in a shootout (the Northern Section's 1 v 1s, the San Diego
   // Section's shootouts: SectionConfig.shootout), each with its leagues.
   const shootoutSections = sections
@@ -589,7 +643,10 @@ export default function AboutPage() {
   const noDocumentLeagues = perLeague.filter((p) => p.noDocument && regionOf(p.summary.id) === 'norcal').map((p) => p.summary);
   const noDocumentWho = listWords(noDocumentLeagues.map((l) => `the ${l.shortName}`));
   const noDocumentGuidelines = `${listWords([...new Set(noDocumentLeagues.map((l) => `the ${l.section.name}’s`))])} Field Hockey Guidelines`;
-  const socalNoDocument = perLeague.filter((p) => p.noDocument && regionOf(p.summary.id) === 'socal').map((p) => p.summary);
+  // Leagues only: the independents publish nothing because there is no league to publish it (their card says so).
+  const socalNoDocument = perLeague
+    .filter((p) => p.noDocument && regionOf(p.summary.id) === 'socal' && !isIndependentLeague(p.summary.id))
+    .map((p) => p.summary);
   const socalNoDocumentWho = listWords(socalNoDocument.map(leagueRef));
   const socalRulesDocuments = listWords([
     ...new Set(socalNoDocument.map((l) => rulesDocument(getSection(l.section.id)))),
@@ -611,10 +668,18 @@ export default function AboutPage() {
   const jvAllTables = leagues.flatMap((l) => getJvTables(l.id));
   const jvShown = jvAllTables.filter((t) => t.status === 'shown');
   const jvUncounted = jvAllTables.reduce((n, t) => n + t.uncounted.length, 0);
-  const leagueWords = listWords(leagues.map((l) => l.shortName));
+  // 'SCVAL, BVAL, …, Metro and the Southern Section’s three independents': the leagues, then each group by name.
+  const leagueWords = listWords([
+    ...tabled.map((l) => l.shortName),
+    ...independentGroups.map((g) => `the ${g.section.name}’s ${numberWord(g.teamCount)} independents`),
+  ]);
   const historySeason = getHistorySeason();
   const historyAvailable = getAvailableHistoryLeagues();
   const historyUnavailable = getUnavailableHistoryLeagues();
+  // A league we found no standings for, and a group that never had a table (the Southern Section
+  // independents, DESIGN §24.9): the coverage paragraph says each its own way.
+  const historyUnavailableLeagues = historyUnavailable.filter((l) => !isIndependentLeague(l.id));
+  const historyUnavailableGroups = historyUnavailable.filter((l) => isIndependentLeague(l.id));
   const historyPublishedOnly = historyUnavailable.filter((l) => (l.entry.alsoPublished?.length ?? 0) > 0);
   // What was published officially, by PUBLISHER and once per document: a league with no site of its own
   // links its section's document (the San Diego Section's 2025 bracket sheet for City, North County and
@@ -704,7 +769,9 @@ export default function AboutPage() {
                   pages. We read it, never write to it, and never hotlink its mascot images &mdash;
                   each school is shown as a color monogram instead, built from the two colors the feed
                   reports. Each team page&rsquo;s roster and season player stats come from MaxPreps
-                  too, for all {counts.teams} teams in all {numberWord(leagues.length)} leagues: whatever the coach entered,
+                  too, for all {counts.teams} teams in all {numberWord(tabled.length)} leagues{independentGroups.length > 0
+                    ? ` and the ${listWords(independentGroups.map((g) => independentsWords(getLeague(g.id))))}`
+                    : ''}: whatever the coach entered,
                   with anything nobody published left blank. Other public sources, such as a school&rsquo;s
                   own athletics site, only fill a blank MaxPreps leaves: the team page marks every roster
                   value that came from one, and its Sources row links each page behind those values and
@@ -742,13 +809,26 @@ export default function AboutPage() {
             {perLeague.map(({ summary, config, noDocument, officialNotes }) => (
               <div key={summary.id} data-region-scope={summary.region} className="sx-card flex flex-col p-5">
                 <dt>
-                  <span className="block text-lead text-ink">{summary.shortName}</span>
+                  <span className="block text-lead text-ink">
+                    {isIndependentLeague(summary.id) ? summary.name : summary.shortName}
+                  </span>
                   <span className="mt-0.5 block text-meta text-ink-3">
-                    {summary.name} &middot; {summary.section.shortName}
+                    {isIndependentLeague(summary.id) ? 'No league' : summary.name} &middot; {summary.section.shortName}
                   </span>
                 </dt>
                 <dd className="m-0 mt-2 flex flex-1 flex-col text-body text-ink-2">
-                  {noDocument ? (
+                  {isIndependentLeague(summary.id) ? (
+                    // A group with no table: no league rules and no league documents to quote. Its note says
+                    // why; the Section's rules still govern their games (overtime, the season's last date).
+                    <span className="block">
+                      {officialNotes.join(' ')} The Southern Section rules that still apply to their games are
+                      under{' '}
+                      <a href={`#rules-${summary.id}`} className="text-accent hover:underline">
+                        {summary.name}
+                      </a>
+                      , from {rulesDocument(getSection(summary.section.id))}.
+                    </span>
+                  ) : noDocument ? (
                     <span className="block">
                       The rules quoted under{' '}
                       <a href={`#rules-${summary.id}`} className="text-accent hover:underline">
@@ -865,6 +945,16 @@ export default function AboutPage() {
                 rules come from (`rulesSource`), and its postseason in one sentence from config. */}
             {socalSections.map((section) => {
               const sectionLeagues = leagues.filter((l) => l.section.id === section.id);
+              // A group with no table (the Southern Section independents) is under the Section's rules too, but
+              // it is no league that could have published rules or a schedule: the sentence says so apart.
+              const sectionTabled = sectionLeagues.filter((l) => !isIndependentLeague(l.id));
+              const sectionGroups = sectionLeagues.filter((l) => isIndependentLeague(l.id));
+              const noDocumentFor =
+                sectionGroups.length === 0
+                  ? sectionLeagues.length === 1
+                    ? 'it'
+                    : 'them'
+                  : listWords(sectionTabled.map(leagueRef));
               return (
                 <div key={section.id} data-region-scope={section.region} className="sx-card flex flex-col p-5 md:col-span-2">
                   <dt>
@@ -875,7 +965,8 @@ export default function AboutPage() {
                     <span className="block">
                       {`${rulesDocument(section)[0].toUpperCase()}${rulesDocument(section).slice(1)}`} sets the
                       section&rsquo;s rules for {listWords(sectionLeagues.map(leagueRef))}; we found no league
-                      rules, schedule or standings document for {sectionLeagues.length === 1 ? 'it' : 'them'}.{' '}
+                      rules, schedule or standings document for {noDocumentFor}
+                      {sectionGroups.length > 0 ? ', and the independents play in no league' : ''}.{' '}
                       {section.noChampionshipNote ??
                         `The ${section.name} holds its own field hockey playoffs; see Postseason below.`}
                     </span>
@@ -906,15 +997,19 @@ export default function AboutPage() {
             {listWords(historyAvailable.map((l) => getLeague(l.id).shortName))}, each from that
             league&rsquo;s own documents (SCVAL&rsquo;s two PDFs; BVAL&rsquo;s standings sheet and all-league
             documents), because MaxPreps only ever serves the current season.
-            {historyUnavailable.length > 0 ? (
+            {historyUnavailableLeagues.length > 0 ? (
               <>
                 {' '}
-                {listWords(historyUnavailable.map((l) => getLeague(l.id).shortName))}{' '}
-                {historyUnavailable.length === 1 ? 'is' : 'are'} marked unavailable: we found no official{' '}
-                {historySeason} final standings, and we do not fill the gap with standings or awards from
-                third-party sites or newspapers.
+                {listWords(historyUnavailableLeagues.map((l) => getLeague(l.id).shortName))}{' '}
+                {historyUnavailableLeagues.length === 1 ? 'is' : 'are'} marked unavailable: we found no official{' '}
+                {historySeason} final standings, and we do not fill the gap with standings or awards from third-party
+                sites or newspapers.
               </>
             ) : null}
+            {/* The independents had no league table to publish (DESIGN §24.9): said apart, not as a gap. */}
+            {historyUnavailableGroups.length > 0
+              ? ` ${listWords(historyUnavailableGroups.map((l) => `the ${getLeague(l.id).name}`)).replace(/^t/, 'T')} had no league table to publish.`
+              : null}
             {historyPublishedOnly.length > 0 ? (
               <>
                 {' '}
@@ -974,7 +1069,7 @@ export default function AboutPage() {
                   3-1-0 to the rest (never that their rules require it). */}
               {siteOrdered.length > 0
                 ? listWords(ruleLeagues.map((l) => l.shortName))
-                : `All ${numberWord(leagues.length)} leagues`}{' '}
+                : `All ${numberWord(tabled.length)} leagues`}{' '}
               award 3 points for a win and 1 for a tie
               {titleOnly.length === 0 ? (
                 ' and order their tables by points'
@@ -1001,8 +1096,18 @@ export default function AboutPage() {
               className="mt-section"
               aria-labelledby={`rules-${summary.id}-heading`}
             >
-              <SectionHeader as="h3" id={`rules-${summary.id}-heading`} kicker={`${summary.shortName} — ${summary.name}`} />
-              {isQuotedLeague(config) ? <QuotedRules league={config} /> : <GeneratedRules league={config} />}
+              <SectionHeader
+                as="h3"
+                id={`rules-${summary.id}-heading`}
+                kicker={isIndependentLeague(summary.id) ? summary.name : `${summary.shortName} — ${summary.name}`}
+              />
+              {isIndependentLeague(summary.id) ? (
+                <IndependentRules league={config} />
+              ) : isQuotedLeague(config) ? (
+                <QuotedRules league={config} />
+              ) : (
+                <GeneratedRules league={config} />
+              )}
             </section>
           ))}
         </section>
@@ -1101,7 +1206,8 @@ export default function AboutPage() {
             so, rather than silently picking a side. Where a league&rsquo;s MaxPreps table differs for a
             known reason, those rows are listed separately under the reason.
           </p>
-          {perLeague.map((l) => (
+          {/* No group with no table (the Southern Section independents): there is nothing of theirs to compare. */}
+          {perLeague.filter((l) => !isIndependentLeague(l.summary.id)).map((l) => (
             <div key={l.summary.id} data-region-scope={l.summary.region} className="mt-section">
               <h3 className="m-0 mb-3 text-lead text-ink">
                 {l.summary.shortName} vs. MaxPreps&rsquo; {l.summary.singleDivision ? 'table' : 'tables'}
@@ -1351,11 +1457,14 @@ export default function AboutPage() {
               leagues
                 .map((l) => ({ l, ps: getLeague(l.id).postseason }))
                 .filter(({ ps }) => ps.kind === 'no-postseason' || ps.kind === 'section-playoffs')
-                .map(({ l, ps }) => [`${l.section.id}:${ps.kind}`, { l, ps }] as const),
+                // A group with no table keeps its own paragraph: its note speaks of the independents, the
+                // Sunset's of Sunset teams, and the first entry of a key is the one kept.
+                .map(({ l, ps }) => [isIndependentLeague(l.id) ? l.id : `${l.section.id}:${ps.kind}`, { l, ps }] as const)
+                .filter(([key], i, all) => all.findIndex(([k]) => k === key) === i),
             ).values()].map(({ l, ps }) =>
               ps.kind === 'no-postseason' || ps.kind === 'section-playoffs' ? (
-                <p key={`${l.section.id}-${ps.kind}`}>
-                  {l.section.name}: {ps.note}{' '}
+                <p key={isIndependentLeague(l.id) ? l.id : `${l.section.id}-${ps.kind}`}>
+                  {isIndependentLeague(l.id) ? l.name : l.section.name}: {ps.note}{' '}
                   <ExternalLink href={ps.sourceUrl}>{ps.sourceLabel}</ExternalLink>{' '}
                   <Link href={`/playoffs#${l.id}`} prefetch={false} className="sx-action text-accent hover:underline">
                     Playoffs page
@@ -1465,7 +1574,7 @@ export default function AboutPage() {
           <div className="sx-prose">
             <p>
               This is an unofficial fan site. It is not affiliated with, endorsed by, or operated by{' '}
-              {listWords(leagues.map((l) => `the ${l.name} (${l.shortName})`))}, the CIF{' '}
+              {listWords(tabled.map((l) => `the ${l.name} (${l.shortName})`))}, the CIF{' '}
               {listWords(sections.map((s) => `${s.name} (${s.shortName})`))}, MaxPreps or Sports
               Illustrated. All team names, colors and marks belong to their respective schools. Records
               here are computed from published game results and, while we cross-check them and publish

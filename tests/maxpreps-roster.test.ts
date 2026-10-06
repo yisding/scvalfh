@@ -340,8 +340,8 @@ describe('maxpreps roster: one career link on two rows (Huntington Beach, 2026-1
 });
 
 describe('every league has a roster page URL and a claim-free placeholder', () => {
-  it('rosterUrl is the team page plus roster/, for all 99 teams', () => {
-    expect(TEAMS).toHaveLength(99);
+  it('rosterUrl is the team page plus roster/, for all 102 teams', () => {
+    expect(TEAMS).toHaveLength(102);
     for (const team of TEAMS) {
       expect(rosterUrl(team), team.slug).toBe(`${team.external.maxprepsTeamUrl!.replace(/\/+$/, '')}/roster/`);
     }

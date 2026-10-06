@@ -160,16 +160,17 @@ describe('the live resource map', () => {
     expect(resourceUrl({ kind: 'sblive-team-games', team: 'carmel' })).toBe(getTeamBySlug('carmel')?.external.sbliveGamesUrl);
   });
 
-  it('the live MaxPreps sweep is 128 resources: 1 bootstrap + 14 metas + 14 tables + 99 schedules', () => {
+  it('the live MaxPreps sweep is 131 resources: 1 bootstrap + 14 metas + 14 tables + 102 schedules', () => {
     const maxpreps = everyKey().filter((k) => k.kind.startsWith('maxpreps-'));
     const count = (kind: ResourceKey['kind']) => maxpreps.filter((k) => k.kind === kind).length;
-    // 15 divisions, of which one (the San Diego Valley) has no MaxPreps table (DESIGN-socal §2.1.7).
+    // 16 divisions, of which two have no MaxPreps table: the San Diego Valley (DESIGN-socal §2.1.7) and the
+    // Southern Section independents, a group with no league at all (DESIGN §24.9).
     const withTable = ALL_DIVISIONS.filter((d) => d.maxprepsLeagueId !== null);
-    expect(ALL_DIVISIONS.map((d) => d.id).filter((id) => !withTable.some((d) => d.id === id))).toEqual(['valley']);
+    expect(ALL_DIVISIONS.map((d) => d.id).filter((id) => !withTable.some((d) => d.id === id))).toEqual(['valley', 'independents']);
     expect([count('maxpreps-bootstrap'), count('maxpreps-league-meta'), count('maxpreps-standings'), count('maxpreps-schedule')]).toEqual([
-      1, 14, 14, 99,
+      1, 14, 14, 102,
     ]);
-    expect(maxpreps.length).toBe(128);
+    expect(maxpreps.length).toBe(131);
     expect(maxpreps.length).toBe(1 + withTable.length * 2 + TEAMS.length);
   });
 

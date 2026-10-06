@@ -13,7 +13,7 @@
  * load.
  *
  * Invariants:
- *   1. exactly one team per registry team (99), in registry order, each with its registry id
+ *   1. exactly one team per registry team (102), in registry order, each with its registry id
  *   2. every game is a valid Game (the snapshot's own GameSchema: never 0-0 on a non-final, a final
  *      has two numbers), a MaxPreps contest (never `sblive:`), unique, with a registry side
  *   3. every si.com row is a scored final, unique by si.com game id, with at least one side whose
@@ -33,7 +33,7 @@ import { contentKey } from './stable-json';
 import { TEAMS, getTeamBySlug } from './teams';
 
 const JV_SLUGS: ReadonlySet<string> = new Set(TEAMS.map((t) => t.slug));
-/** How many teams a JV file holds: TEAMS.length (99). */
+/** How many teams a JV file holds: TEAMS.length (102). */
 export const JV_TEAM_COUNT = JV_SLUGS.size;
 
 const teamSlug = slugId.refine((slug) => JV_SLUGS.has(slug), 'not a registry team slug');

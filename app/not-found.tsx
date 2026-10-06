@@ -5,7 +5,7 @@ import PageHeader from '../components/layout/PageHeader';
 import { OG_BASE } from '../components/layout/site';
 import { listWords, numberWord } from '../lib/format';
 import { getAvailableHistoryLeagues } from '../lib/history';
-import { LEAGUES, getLeague } from '../lib/leagues';
+import { LEAGUES_WITH_TABLES, getLeague } from '../lib/leagues';
 
 export const metadata: Metadata = {
   title: 'Page not found',
@@ -17,9 +17,11 @@ export const metadata: Metadata = {
 /**
  * 'the nine leagues', from the config (never a literal count). It named every league ('SCVAL, BVAL, PCAL,
  * MCAL and EAL') while there were five; with nine across two regions the list outgrew a one-line card
- * description, so the count stands in for it (the Teams page itself lists them, region by region).
+ * description, so the count stands in for it (the Teams page itself lists them, region by region). It counts
+ * the leagues with a table: the Southern Section independents have none (DESIGN §24.9), so "every table in
+ * the nine leagues" stays exact.
  */
-const LEAGUE_COUNT = `the ${numberWord(LEAGUES.length)} leagues`;
+const LEAGUE_COUNT = `the ${numberWord(LEAGUES_WITH_TABLES.length)} leagues`;
 
 const LINKS: Array<{ href: string; name: string; description: string }> = [
   { href: '/', name: 'Home', description: 'What just happened, and when the next game is' },

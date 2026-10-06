@@ -71,7 +71,7 @@ describe('snapshot schema: accepts a real snapshot', () => {
   it('validates the migrated committed snapshot', () => {
     expect(() => parseSnapshot(baseSnapshot())).not.toThrow();
     expect(MIGRATED.teams).toHaveLength(TEAMS.length);
-    expect(MIGRATED.teams).toHaveLength(99);
+    expect(MIGRATED.teams).toHaveLength(102);
   });
 
   it('loadSnapshot upgrades v1 and passes v2 through', () => {
@@ -442,7 +442,7 @@ describe('snapshot schema: checkAgainstConfig', () => {
     expect(s.season.leagues.map((l) => [l.id, l.postseasonKind])).toEqual([
       ['scval', 'ccs-ladder'], ['bval', 'ccs-ladder'], ['pcal', 'ccs-ladder'], ['mcal', 'league-tournament'],
       ['eal', 'unbracketed-tournament'], ['sunset', 'no-postseason'], ['city', 'section-playoffs'],
-      ['north-county', 'section-playoffs'], ['metro', 'section-playoffs'],
+      ['north-county', 'section-playoffs'], ['metro', 'section-playoffs'], ['independents', 'no-postseason'],
     ]);
     // A division MaxPreps has no table for carries a null league id, exactly as config does.
     const valley = s.season.leagues.find((l) => l.id === 'north-county')!.divisions.find((d) => d.id === 'valley')!;

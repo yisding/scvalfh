@@ -11,7 +11,7 @@ import { buildStandingsOverviewView } from '../../components/standings/standings
 import { leaderClause } from '../../components/standings/standings-view';
 import SectionHeader from '../../components/ui/SectionHeader';
 import { listWords, shortDate } from '../../lib/format';
-import { getLeague } from '../../lib/leagues';
+import { getLeague, isIndependentLeague } from '../../lib/leagues';
 import type { LeagueId } from '../../lib/types';
 
 /**
@@ -49,20 +49,27 @@ export function generateMetadata(): Metadata {
   };
 }
 
-/** 'Sunset, City, North County and Metro': the leagues whose table order is this site's own points. */
+/**
+ * 'Sunset, City, North and Metro': the leagues whose table order is this site's own points. A group with no
+ * table (the Southern Section independents) orders nothing, so it is not one of them.
+ */
 function siteOrderedLeagues(leagues: readonly { id: LeagueId; shortName: string }[]): string[] {
-  return leagues.filter((l) => getLeague(l.id).rules.orderScope === 'site').map((l) => l.shortName);
+  return leagues
+    .filter((l) => getLeague(l.id).rules.orderScope === 'site' && !isIndependentLeague(l.id))
+    .map((l) => l.shortName);
 }
 
 export default function StandingsPage() {
   const { leagues, regions } = buildStandingsOverviewView();
   const siteOrdered = siteOrderedLeagues(leagues);
+  // The leagues with a table; the independents' block (no table) sits under its section like a league's.
+  const tabled = leagues.filter((l) => !isIndependentLeague(l.id));
 
   return (
     <div className="pb-section-lg">
       <PageHeader
         title="Standings"
-        description={`Every division in ${listWords(leagues.map((l) => l.shortName))} · league games only`}
+        description={`Every division in ${listWords(tabled.map((l) => l.shortName))} · league games only`}
       />
 
       {/* The region control, its own row under the header (DESIGN-socal §2.4). */}

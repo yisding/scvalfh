@@ -37,7 +37,7 @@
  */
 
 import { byDateThenId, dayDiff } from './format';
-import { LEAGUES, getLeague } from './leagues';
+import { LEAGUES, getLeague, isIndependentDivision } from './leagues';
 import { recordOver } from './standings';
 import { getTeamBySlug, teamsInDivision } from './teams';
 import type { ComputedRecord, ContestId, DivisionId, Game, LeagueId, OfficialFixture, TeamSlug } from './types';
@@ -49,7 +49,7 @@ export const JV_STANDINGS_MIN_REPORTED_SHARE = 0.6;
 
 export type JvClassification =
   | { kind: 'league'; division: DivisionId; via: 'varsity-game' | 'official-fixture'; ref: string }
-  | { kind: 'non-league'; reason: 'varsity-non-league' | 'different-divisions' | 'outside-registry' }
+  | { kind: 'non-league'; reason: 'varsity-non-league' | 'different-divisions' | 'outside-registry' | 'independent' }
   | { kind: 'uncounted'; reason: 'no-varsity-counterpart' | 'ambiguous' | 'varsity-postseason'; division: DivisionId };
 
 function pairOf(g: { home: { slug: string | null }; away: { slug: string | null } }): string | null {
@@ -94,6 +94,12 @@ export function classifyJvGames(
       continue;
     }
     const sameDivision = home.division === away.division;
+    // Two of the Southern Section independents (DESIGN §24.9): their varsity teams play no league games, so a
+    // JV game between them is a non-league game whatever its counterpart, and never an "uncounted" one.
+    if (sameDivision && isIndependentDivision(home.division)) {
+      out.set(g.contestId, { kind: 'non-league', reason: 'independent' });
+      continue;
+    }
     const twin = nearest(g.dateKey, varsityByPair.get(key) ?? []);
     if (twin === 'ambiguous') {
       out.set(

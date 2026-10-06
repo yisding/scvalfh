@@ -135,7 +135,8 @@ export interface DivisionConfig {
    * Official double round robin: (expectedTeams - 1) * 2. Drives "games left". null only where the league
    * has no fixed schedule (the Sunset: no league schedule is published and its teams meet 0, 1 or 2 times),
    * so no reader may print "of N", LEFT or MAX for it; assertLeagues allows null only with classification
-   * 'contest-type' and official mode 'none'.
+   * 'contest-type' or 'independent' (the Southern Section independents play no league games at all) and
+   * official mode 'none'.
    */
   gamesPerTeam: number | null;
   /**
@@ -215,8 +216,15 @@ export interface LeagueRules {
    * meet twice, a double round robin, except Metro Mesa's Bonita Vista and Helix, listed once, while MaxPreps
    * flags as few as 0 of Patrick Henry's 10). Under all three, excludeContestTypes rows never count; 'membership' needs official mode
    * 'none' (asserted).
+   *
+   * 'independent' = no game ever counts for the division (lib/classify.ts returns null for every game): the
+   * Southern Section independents, Glendora, Harvard-Westlake and Thousand Oaks, each the only field hockey team
+   * in its all-sports MaxPreps league (Palomares, League B, Marmonte), so none plays a league game and the
+   * group has no table, no league result that could be missing and no league-game columns. assertLeagues
+   * pins the rest of the shape: official mode 'none', no MaxPreps table, no fixed schedule (gamesPerTeam
+   * null), no postseason, informational trust, no knownCause, no ladder or home line.
    */
-  classification: 'contest-type' | 'official-fixtures' | 'membership';
+  classification: 'contest-type' | 'official-fixtures' | 'membership' | 'independent';
   /**
    * contestTypes that never count (either row); applies to every classification. SCVAL: [] (byte-identity).
    * BVAL, PCAL, MCAL, Sunset, San Diego: [2, 4]. EAL: [2, 4, 5] (5 = MaxPreps' code for the 2025 EAL tournament).
@@ -400,6 +408,14 @@ export interface LeagueConfig {
   sectionId: SectionId;
   name: string;
   shortName: string;
+  /**
+   * The words for the league where its short name would stand alone: as the thing a control goes to or
+   * shows ('Jump to … ↓', 'Show … here') or as a sentence's subject ('… publishes no schedule'). Set only
+   * where the short name would read as something else there; read through `standaloneName`. 'Jump to North ↓' reads as a compass direction, so the North
+   * County Conference's is 'North County'; 'Independent' is an adjective, so the Southern Section
+   * independents' is 'the independents'. Every other league's is its short name.
+   */
+  standaloneName?: string;
   /**
    * Plain words for the league card: where its schools are ('Chico, Corning, Susanville, Davis and Fair
    * Oaks'). Was `region`, renamed when RegionId (NorCal/SoCal) arrived, so the word means one thing in
@@ -1440,7 +1456,12 @@ const NORTH_COUNTY: LeagueConfig = {
   // NORTH COUNTY tab ("UPDATED 9/20/26") [V]. Rancho Buena Vista is listed under both Palomar and Valley; its
   // league games are Palomar's and MaxPreps' Palomar table lists it, so it is Palomar's here.
   id: 'north-county', sectionId: 'sds',
-  name: 'North County Conference', shortName: 'North County',
+  // shortName 'North' (owner decision, 2026-10-06: 'North County' made the chip too wide); copy that prints it
+  // alone sits beside City and Metro ('City, North and Metro', 'North teams'). 'North County' still finds the
+  // conference in search: the league's search keys are its short name and its name (lib/search.ts).
+  name: 'North County Conference', shortName: 'North',
+  // Alone as a control's target, 'North' reads as a direction ('Jump to North ↓'): there it is 'North County'.
+  standaloneName: 'North County',
   cities: 'Carlsbad, Encinitas, Escondido, Fallbrook, Oceanside, Poway, San Marcos, Valley Center, Vista and north San Diego',
   alignmentSource: 'the CIF-SDS 2026-27 League Alignment',
   officialUrl: SDS_FIELD_HOCKEY_URL,
@@ -1497,6 +1518,7 @@ const NORTH_COUNTY: LeagueConfig = {
       ladderLine: { after: 1, label: 'Champion line' },
     },
   ],
+  // The co-leaders label keeps the conference's full words: 'North co-leaders' would read as a direction.
   rules: sdsRules('North County'),
   postseason: sdsPostseason({
     'canyon-crest-academy': 'I', 'la-costa-canyon': 'I', 'mt-carmel': 'I', 'rancho-bernardo': 'I', 'san-marcos': 'I', 'torrey-pines': 'I',
@@ -1569,8 +1591,112 @@ const METRO: LeagueConfig = {
   officialChanges: null,
 };
 
-/** Config order: NorCal (CCS, NCS, NS) first, then SoCal (the Sunset, then the San Diego leagues). */
-export const LEAGUES: readonly LeagueConfig[] = [SCVAL, BVAL, PCAL, MCAL, EAL, SUNSET, CITY, NORTH_COUNTY, METRO];
+/**
+ * The Southern Section independents (owner decision, 2026-10-06: every California team with a 2026 varsity game
+ * is covered). Glendora, Harvard-Westlake and Thousand Oaks are each the only field hockey team in their
+ * all-sports MaxPreps league for 2026-27: Palomares (37e34960-…), League B (3b29b902-…) and Marmonte (05c0b9ef-…)
+ * each list one team, and none of the three has a game MaxPreps marks as a league game (contestType 0: none on
+ * any row of their schedules, read Mon Oct 5 Pacific; research-cifss.md §2a, inventory §Southern Section
+ * independents). The same was true in 2025-26: MaxPreps' 25-26 Palomares (5d795f4f-…), League B (c2922327-…) and
+ * Marmonte (392fb703-…) tables each list only that school (fetched 2026-10-06).
+ *
+ * So this is a group, not a league: classification 'independent' (no game ever counts for it), no table, no
+ * MaxPreps table to compare, no schedule, no postseason. It sits last in LEAGUES so every other order stays put,
+ * and every count of "leagues" leaves it out (LEAGUES_WITH_TABLES); copy names it separately ("and the Southern
+ * Section’s three independents"). The citations below are all true of a group with no league games: none of
+ * them claims a rule. Games between two of the three (Glendora–Harvard-Westlake, Glendora–Thousand Oaks,
+ * Harvard-Westlake–Thousand Oaks) are ordinary non-league games.
+ */
+const INDEPENDENTS: LeagueConfig = {
+  id: 'independents', sectionId: 'ss',
+  name: 'Southern Section independents', shortName: 'Independent',
+  // 'Show Independent here' names no group: alone as a control's target the group is 'the independents'.
+  standaloneName: 'the independents',
+  cities: 'Glendora, Studio City and Thousand Oaks',
+  alignmentSource: 'MaxPreps’ 2026-27 team pages (each is the only field hockey team in its league)',
+  officialUrl: SS_FIELD_HOCKEY_URL,
+  links: [
+    { label: 'CIF Southern Section field hockey', href: SS_FIELD_HOCKEY_URL },
+    { label: 'CIF-SS Blue Book 2026-27, Field Hockey (PDF)', href: SS_BLUE_BOOK_FH_URL },
+  ],
+  // si.com's one-school league pages (each also lists placeholder rows with no games); harvested for the three
+  // team pages only, never membership.
+  sblive: { leagueSlugs: ['4235-palomares', '4207-league-b', '4213-marmonte'], backfill: true },
+  officialCodes: {},
+  officialNames: {},
+  withdrawnNames: [],
+  membershipNote: null,
+  divisions: [
+    {
+      id: 'independents', leagueId: 'independents', label: 'Independents', searchAliases: ['Independents', 'independent'],
+      // No MaxPreps table groups the three (each sits alone in its own all-sports league), so nothing is requested.
+      maxprepsLeagueId: null, maxprepsName: null, maxprepsSlug: null,
+      // No league games, so no schedule to count against.
+      expectedTeams: 3, gamesPerTeam: null,
+      // The earliest and latest of the three teams' 2026-27 games on MaxPreps' schedules (deleted rows left out;
+      // inventory read Mon Oct 5 Pacific): Harvard-Westlake v Great Oak, Aug 18, and Harvard-Westlake v
+      // Chaminade, Oct 20. Nothing reads these as league dates: no game counts for the division.
+      leaguePlay: { first: '2026-08-18', last: '2026-10-20' },
+      official: {
+        mode: 'none',
+        note: 'Glendora, Harvard-Westlake and Thousand Oaks are the only field hockey teams in their all-sports leagues (the Palomares League, League B and the Marmonte League on MaxPreps), so they play no league games and have no league table. Every game they play is on their team pages, and each counts in the Elo fit.',
+      },
+      maxprepsTeamCount: 0,
+      maxprepsMissing: ['glendora', 'harvard-westlake', 'thousand-oaks'],
+      maxprepsExtraRows: {},
+      reportedTrust: 'informational',
+      knownCause: null,
+      home: { miniRows: 3, lineAfter: null, lineLabel: null },
+      ladderLine: null,
+    },
+  ],
+  rules: {
+    points: { win: 3, tie: 1, loss: 0 }, orderBy: 'points', orderScope: 'site', gamesWord: 'league',
+    // Nothing counts: lib/classify.ts returns null for every game of an 'independent' division.
+    classification: 'independent', excludeContestTypes: [2, 4],
+    postseasonFrom: null, leagueGameOverrides: [],
+    matcher: 'two-phase',
+    tiebreaks: { default: ['no-rule'] },
+    multiTeam: 'partition-restart', h2hUnmet: 'skip', drawNumbers: null, leagueOvertime: 'none',
+    citations: {
+      points: 'no league games: no points are awarded and no table is computed',
+      pointsShort: 'no league games',
+      order: 'no league games, so there is no table to order',
+      doubleRoundRobin: 'no league schedule: each of the three is the only field hockey team in its all-sports league, so none plays a league game',
+      overtime: 'No Southern Section rule on overtime is published (Blue Book Article 200 adopts NFHS rules), so this site records each game as it is reported',
+      coChampions: 'no league games, so there is no champion and no co-leaders',
+      stages: {
+        'no-rule': 'No league table exists, so there is no tie to break',
+      },
+    },
+    // Required by the shape; never printed (no table, so no one is level at the top of one).
+    coChampionsLabel: 'Independent co-leaders',
+    unresolvedSuffix: '',
+  },
+  postseason: {
+    kind: 'no-postseason',
+    ladder: [
+      { divisions: '*', places: [1, 99], status: 'no-postseason', label: 'No section playoffs',
+        phrase: 'no postseason', badge: 'No playoffs',
+        legend: 'The CIF Southern Section holds no field hockey playoffs (Blue Book 2011.1, 3500.2)' },
+    ],
+    note: 'The CIF Southern Section holds no field hockey playoffs (Blue Book Bylaws 2011.1 and 3500.2), and CIF holds no regional or state championship, so each independent’s season ends with its last game, Oct 31 at the latest.',
+    citations: {
+      noPlayoffs: 'CIF-SS Blue Book 2026-27, Bylaw 2011.1 (“No playoffs - See Bylaw 3500.2”) and Bylaw 3500.2 (“No playoffs will be conducted by the CIF Southern Section Office when less than 20% of the membership field teams in that sport”)',
+    },
+    sourceLabel: 'CIF-SS Blue Book 2026-27',
+    sourceUrl: SS_BLUE_BOOK_FH_URL,
+  },
+  phases: [{ phase: 'regular', through: 'league-play' }],
+  keyDates: [{ id: 'last-contest', date: '2026-10-31', label: 'Last allowable Southern Section contest' }],
+  officialChanges: null,
+};
+
+/**
+ * Config order: NorCal (CCS, NCS, NS) first, then SoCal (the Sunset, then the San Diego leagues, then the Southern
+ * Section independents, a group with no league table).
+ */
+export const LEAGUES: readonly LeagueConfig[] = [SCVAL, BVAL, PCAL, MCAL, EAL, SUNSET, CITY, NORTH_COUNTY, METRO, INDEPENDENTS];
 
 /** The CCS section block (section data, not league data). */
 export const CCS: CcsConfig = {
@@ -1649,21 +1775,6 @@ export const DATA_QUALITY: DataQualityConfig = {
     { name: 'York', keys: ['York', 'York School', 'York Falcons'], reason: 'York plays JV field hockey only, so it has no varsity results here.' },
     { name: 'Wilcox', keys: ['Wilcox', 'Adrian Wilcox'], reason: 'Wilcox is not fielding a varsity team in 2026.' },
     { name: 'Red Bluff', keys: ['Red Bluff', 'Red Bluff High School', 'Red Bluff Spartans'], reason: 'Red Bluff is not fielding a varsity team in 2026.' },
-    // Southern Section schools with games but no league: each is the only field hockey team in its all-sports
-    // MaxPreps league (League B, Marmonte, Palomares) and has no league-flagged game (research-cifss.md §2a).
-    // Mascots from their si.com team slugs.
-    {
-      name: 'Harvard-Westlake', keys: ['Harvard Westlake', 'Harvard-Westlake School', 'Harvard-Westlake Wolverines'],
-      reason: 'Harvard-Westlake is the only field hockey team in its league, so it plays no league games and has no table here; its games against teams covered here show it as an opponent.',
-    },
-    {
-      name: 'Thousand Oaks', keys: ['Thousand Oaks High School', 'Thousand Oaks Lancers'],
-      reason: 'Thousand Oaks is the only field hockey team in its league, so it plays no league games and has no table here; its games against teams covered here show it as an opponent.',
-    },
-    {
-      name: 'Glendora', keys: ['Glendora High School', 'Glendora Tartans'],
-      reason: 'Glendora is the only field hockey team in its league, so it plays no league games and has no table here; its games against teams covered here show it as an opponent.',
-    },
     // San Diego Section schools with a 2026-27 MaxPreps team and no game: Madison and Santana are 0-0-0 rows of
     // MaxPreps tables (LEAGUES city and metro withdrawnNames); the other four carry MaxPreps' zero-GUID league.
     // None has a game in the Section's power rankings (Castle Park is listed there with 0 points). Mascots
@@ -1691,6 +1802,21 @@ export const DATA_QUALITY: DataQualityConfig = {
     {
       name: 'Sweetwater', keys: ['Sweetwater High School'],
       reason: 'Sweetwater has no 2026 varsity game on MaxPreps or in the San Diego Section’s power rankings, so it has no page here.',
+    },
+    // Three more California schools with a 2026-27 MaxPreps varsity team and no game (schedule-calculated/v1 returned
+    // no rows for each, read 2026-10-06; scratchpad inventory norcalSchoolsNotInRegistry and the Sac-Joaquin
+    // Section's one team): not fielding a varsity team in 2026 is the rule that keeps Wilcox and Red Bluff out too.
+    {
+      name: 'River Valley', keys: ['River Valley', 'River Valley High School', 'River Valley Falcons'],
+      reason: 'River Valley (Yuba City, Sac-Joaquin Section) has no 2026 varsity game on MaxPreps, so it has no page here.',
+    },
+    {
+      name: 'North Salinas', keys: ['North Salinas', 'North Salinas High School', 'North Salinas Vikings'],
+      reason: 'North Salinas has no 2026 varsity game on MaxPreps, so it has no page here.',
+    },
+    {
+      name: 'Notre Dame (Salinas)', keys: ['Notre Dame', 'Notre Dame Salinas', 'Notre Dame High School Salinas', 'Notre Dame Spirits'],
+      reason: 'Notre Dame (Salinas) has no 2026 varsity game on MaxPreps, so it has no page here.',
     },
     // MaxPreps' one-team "Suburban" league; not on the Southern Section's 2026-27 list of participating schools
     // (the Season Preview, June 2026).
@@ -1729,10 +1855,44 @@ export const UNBRACKETED_LEAGUE_IDS: readonly LeagueId[] = LEAGUES.filter(
   (l) => l.postseason.kind === 'unbracketed-tournament',
 ).map((l) => l.id);
 
-/** Leagues with no postseason at all (['sunset']): /playoffs gives each a card of its own. */
+/** Leagues with no postseason at all (['sunset', 'independents']): /playoffs gives each a card of its own. */
 export const NO_POSTSEASON_LEAGUE_IDS: readonly LeagueId[] = LEAGUES.filter(
   (l) => l.postseason.kind === 'no-postseason',
 ).map((l) => l.id);
+
+/**
+ * Whether the league is a group with no league table (classification 'independent': the Southern Section
+ * independents). Every reader that prints a table, a league-game column, a ladder or a count of "leagues"
+ * branches on this, never on the id.
+ */
+/**
+ * A league's words where its short name would stand alone as a control's target ('Jump to … ↓',
+ * 'Show … here'): `LeagueConfig.standaloneName`, else the short name.
+ */
+export function standaloneName(id: LeagueId): string {
+  const league = getLeague(id);
+  return league.standaloneName ?? league.shortName;
+}
+
+export function isIndependentLeague(id: LeagueId): boolean {
+  return LEAGUE_BY_ID.get(id)?.rules.classification === 'independent';
+}
+
+/** Whether the division belongs to an 'independent' group (no league games, so no table). */
+export function isIndependentDivision(id: DivisionId): boolean {
+  const d = DIVISION_BY_ID.get(id);
+  return d !== undefined && isIndependentLeague(d.leagueId);
+}
+
+/**
+ * The leagues with a league table, config order: every league but an 'independent' group. Copy that counts
+ * leagues ("all nine leagues") counts these, and names the independents separately where it matters
+ * ("and the Southern Section’s three independents"); it never prints "ten leagues".
+ */
+export const LEAGUES_WITH_TABLES: readonly LeagueConfig[] = LEAGUES.filter((l) => l.rules.classification !== 'independent');
+
+/** The 'independent' groups, config order (one today: the Southern Section independents). */
+export const INDEPENDENT_LEAGUES: readonly LeagueConfig[] = LEAGUES.filter((l) => l.rules.classification === 'independent');
 
 /** Leagues whose postseason is their section's own playoffs (['city', 'north-county', 'metro']). */
 export const SECTION_PLAYOFFS_LEAGUE_IDS: readonly LeagueId[] = LEAGUES.filter(
@@ -2217,8 +2377,8 @@ export function assertLeagues(): void {
     for (const d of l.divisions) {
       // A double round robin, or (null) no fixed schedule at all: only where MaxPreps' flag alone says what counts.
       if (d.gamesPerTeam === null) {
-        if (!(rules.classification === 'contest-type' && d.official.mode === 'none')) {
-          fail(`${d.id}: gamesPerTeam null needs classification 'contest-type' and official mode 'none'`);
+        if (!((rules.classification === 'contest-type' || rules.classification === 'independent') && d.official.mode === 'none')) {
+          fail(`${d.id}: gamesPerTeam null needs classification 'contest-type' or 'independent' and official mode 'none'`);
         }
       } else if (d.gamesPerTeam !== (d.expectedTeams - 1) * 2) fail(`${d.id}: gamesPerTeam ${d.gamesPerTeam}`);
       if (d.leaguePlay.first > d.leaguePlay.last) fail(`${d.id}: leaguePlay first after last`);
@@ -2264,6 +2424,18 @@ export function assertLeagues(): void {
       } else {
         if (!GUID_RE.test(d.maxprepsLeagueId)) fail(`${d.id}: maxprepsLeagueId ${d.maxprepsLeagueId} is not a GUID`);
         if (!d.maxprepsName || !d.maxprepsSlug) fail(`${d.id}: a MaxPreps table needs maxprepsName and maxprepsSlug`);
+      }
+      // 13. an independent group: no league games, so nothing a league has — no MaxPreps table, no schedule, no
+      // postseason, no comparison to explain, no line to draw (DESIGN §24.9).
+      if (rules.classification === 'independent') {
+        if (d.official.mode !== 'none') fail(`${d.id}: classification 'independent' needs official mode 'none'`);
+        if (d.maxprepsLeagueId !== null) fail(`${d.id}: classification 'independent' needs maxprepsLeagueId null`);
+        if (d.gamesPerTeam !== null) fail(`${d.id}: classification 'independent' needs gamesPerTeam null`);
+        if (ps.kind !== 'no-postseason') fail(`${d.id}: classification 'independent' needs postseason kind 'no-postseason'`);
+        if (d.reportedTrust !== 'informational') fail(`${d.id}: classification 'independent' needs reportedTrust 'informational'`);
+        if (d.knownCause !== null) fail(`${d.id}: classification 'independent' needs knownCause null`);
+        if (d.ladderLine !== null) fail(`${d.id}: classification 'independent' needs ladderLine null`);
+        if (d.home.lineAfter !== null || d.home.lineLabel !== null) fail(`${d.id}: classification 'independent' needs no home line`);
       }
       // MaxPreps' table: its rows, plus the members it omits, less its known non-member rows, are the registry.
       for (const [id, reason] of Object.entries(d.maxprepsExtraRows)) {

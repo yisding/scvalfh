@@ -329,11 +329,13 @@ describe('the /standings overview', () => {
       'h3 EAL — Eastern Athletic League',
       'h2 Southern Section',
       'h3 Sunset — Sunset field hockey league',
+      // No table, so no h4: the group's note and its three teams (DESIGN §24.9).
+      'h3 Southern Section independents',
       'h2 San Diego Section',
       'h3 City — City Conference',
       'h4 City Western',
       'h4 City Eastern',
-      'h3 North County — North County Conference',
+      'h3 North — North County Conference',
       'h4 Avocado',
       'h4 Palomar',
       'h4 Valley',
@@ -360,7 +362,7 @@ describe('the /standings overview', () => {
     );
     expect(html, 'app/standings/page.tsx region control').toContain('data-region-option="socal"');
     // The points sentence names the 'site' leagues and never says their rules require anything.
-    expect(textOf(html)).toContain('(Sunset, City, North County and Metro publish no points rule, so there the order is this site’s own points)');
+    expect(textOf(html)).toContain('(Sunset, City, North and Metro publish no points rule, so there the order is this site’s own points)');
     const ids = [...html.matchAll(/\sid="([^"]+)"/g)].map((m) => m[1]);
     expect(ids.filter((id, i) => ids.indexOf(id) !== i), 'app/standings/page.tsx duplicate ids').toEqual([]);
   });
@@ -458,6 +460,9 @@ describe('the preseason notice (standings-page-view.ts buildNotice, DESIGN §8)'
   it('is absent once a league has a counted final, and shown while it has none (the EAL here)', () => {
     // The corpus predates the Southern California leagues too: they load with no games at all.
     const empty = ['eal', 'sunset', 'city', 'north-county', 'metro'];
+    // The independents play no league games: never a "league play starts" notice (DESIGN §24.9).
+    expect(sd.buildStandingsPageView('independents').notice, `${SPV}: independents`).toBeNull();
+    empty.push('independents');
     for (const id of data.getLeagueIds().filter((l) => !empty.includes(l))) {
       expect(sd.buildStandingsPageView(id).notice, `${SPV}: ${id}`).toBeNull();
     }
@@ -613,7 +618,9 @@ describe('Southern California tables (standings-view.ts, DESIGN-socal §2.1.7)',
     const html = await renderLeague('city');
     const nav = html.match(/<nav aria-label="Leagues"[\s\S]*?<\/nav>/)![0];
     const hrefs = [...nav.matchAll(/href="([^"]+)"/g)].map((m) => m[1]);
-    expect(hrefs).toEqual(['/standings', '/standings/sunset', '/standings/city', '/standings/north-county', '/standings/metro']);
+    expect(hrefs).toEqual([
+      '/standings', '/standings/sunset', '/standings/independents', '/standings/city', '/standings/north-county', '/standings/metro',
+    ]);
     const scval = (await renderLeague('scval')).match(/<nav aria-label="Leagues"[\s\S]*?<\/nav>/)![0];
     expect(scval).not.toContain('/standings/city');
   });

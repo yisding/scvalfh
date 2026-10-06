@@ -128,7 +128,13 @@ describe('buildLeadersView — rules, over the committed data', () => {
       for (const board of [...r.players, ...r.schools]) {
         expectRanked(board);
         expect(board.columns[board.rankedBy], board.id).toBeDefined();
-        expect(board.caption, board.id).toContain(`in all ${r.leagueCount === 5 ? 'five' : 'four'} ${r.shortName} leagues, this season`);
+        // SoCal's boards also take the Southern Section independents (DESIGN §24.9), named after the leagues,
+        // except the league-record board: a team that plays no league games has no league record to rank.
+        const leagueOnly = board.id.startsWith('best-league-record');
+        const independents = r.independentCount > 0 && !leagueOnly ? ' and three independents' : '';
+        expect(board.caption, board.id).toContain(
+          `in all ${r.leagueCount === 5 ? 'five' : 'four'} ${r.shortName} leagues${independents}, this season`,
+        );
         for (const row of [...board.rows, ...(board.extra?.rows ?? [])]) {
           expect(row.cells, `${board.id} ${row.key}`).toHaveLength(board.columns.length);
           expect(slugs.has(row.team.slug), `${board.id}: ${row.team.slug} is a ${r.shortName} team`).toBe(true);
@@ -256,7 +262,7 @@ describe('buildLeadersView — rules, over the committed data', () => {
     const lastSeason = getPriorSeason()!.games.filter((g) => across(g.homeId, g.awayId)).length;
     expect([view.crossRegion.thisSeason, view.crossRegion.lastSeason]).toEqual([thisSeason, lastSeason]);
     expect(view.crossRegion.sentence).toBe(
-      `The ratings are on one scale across all nine leagues; comparisons between NorCal and SoCal rest on ${thisSeason} final${thisSeason === 1 ? '' : 's'} between the regions this season and ${lastSeason} last season, so treat them as rough.`,
+      `The ratings are on one scale across all nine leagues and the Southern Section’s three independents; comparisons between NorCal and SoCal rest on ${thisSeason} final${thisSeason === 1 ? '' : 's'} between the regions this season and ${lastSeason} last season, so treat them as rough.`,
     );
   });
 
@@ -429,7 +435,7 @@ describe('buildLeadersView — schools, over synthetic games', () => {
     expect(elo.rows.map((r) => r.team.slug)).toEqual(['mitty', 'stevenson', 'tamalpais', 'leigh']);
     expect(elo.rows.map((r) => r.cells[0].text)).toEqual(['6', '6', '6', '7']);
     expect(nc(view).schoolNotes.find((n) => n.startsWith('The Elo board needs'))).toBe(
-      'The Elo board needs at least 3 games against the nine leagues’ teams, half the median of 6; not there yet: Del Mar (1).',
+      'The Elo board needs at least 3 games against the nine leagues’ teams and the Southern Section’s three independents, half the median of 6; not there yet: Del Mar (1).',
     );
     expect(elo.note).toContain('1500 is an average team');
     // No prior season in these sources: every team starts at average, and the note says nothing of one.
@@ -906,13 +912,14 @@ describe('LeaderBoardTable and the /leaders page', () => {
     }
   });
 
-  it('counts the leagues from config: nine on one Elo scale, five NorCal and four SoCal on the boards', () => {
+  it('counts the leagues from config: nine and the independents on one Elo scale, five NorCal and four SoCal (and three independents) on the boards', () => {
     const text = textOf(renderToStaticMarkup(LeadersPage()));
     expect(text, 'components/leaders/leaders-view.ts captions').toMatch(/players in all five NorCal leagues, this season/);
     expect(text, 'components/leaders/leaders-view.ts captions').toMatch(/schools in all five NorCal leagues, this season/);
-    expect(text, 'components/leaders/leaders-view.ts captions').toMatch(/schools in all four SoCal leagues, this season/);
-    expect(text, 'components/leaders/leaders-view.ts Elo note').toContain('on one scale across all nine leagues');
-    expect(text, 'components/leaders/leaders-view.ts').not.toMatch(/all (four|five) leagues/);
+    expect(text, 'components/leaders/leaders-view.ts captions').toMatch(/schools in all four SoCal leagues and three independents, this season/);
+    expect(text, 'components/leaders/leaders-view.ts Elo note').toContain('on one scale across all nine leagues and the Southern Section’s three independents');
+    expect(text, 'components/leaders/leaders-view.ts').not.toMatch(/all (four|five) leagues|\bten leagues\b|\b10 leagues\b/);
+    expect(text, 'app/leaders/page.tsx eyebrow').toContain('All nine leagues and three independents');
   });
 });
 
@@ -940,11 +947,14 @@ describe('buildLeadersView — each region its own boards, one Elo scale', () =>
     const north = nc(view);
     const south = sc(view);
     const record = south.schools.find((b) => b.id === 'best-record-socal')!;
-    expect(record.caption).toBe('Best record, schools in all four SoCal leagues, this season');
+    expect(record.caption).toBe('Best record, schools in all four SoCal leagues and three independents, this season');
+    expect(south.schools.find((b) => b.id === 'best-league-record-socal')!.caption).toBe(
+      'Best league record, schools in all four SoCal leagues, this season',
+    );
     expect(record.rows.map((r) => r.team.slug).sort()).toEqual(['bonita', 'la-jolla', 'marina', 'torrey-pines']);
     expect(north.schools.find((b) => b.id === 'best-record')!.rows.map((r) => r.team.slug).sort()).toEqual(['leigh', 'mitty', 'stevenson']);
     expect(south.players.map((b) => b.id)).toEqual(PLAYER_IDS.map((id) => `${id}-socal`));
-    expect(south.teamCount).toBe(50);
+    expect(south.teamCount).toBe(53);
     expect(north.teamCount).toBe(49);
   });
 
@@ -969,9 +979,9 @@ describe('buildLeadersView — each region its own boards, one Elo scale', () =>
         expect(regionOf(getTeamBySlug(row.team.slug)!.league)).toBe(r.region);
       }
       expect(board.note).toContain(
-        'The ratings are on one scale across all nine leagues; comparisons between NorCal and SoCal rest on 1 final between the regions this season and 0 last season, so treat them as rough.',
+        'The ratings are on one scale across all nine leagues and the Southern Section’s three independents; comparisons between NorCal and SoCal rest on 1 final between the regions this season and 0 last season, so treat them as rough.',
       );
-      expect(board.note).toContain('Every final between two of the 99 teams, league or not, fitted at once');
+      expect(board.note).toContain('Every final between two of the 102 teams, league or not, fitted at once');
     }
     expect(view.crossRegion).toMatchObject({ thisSeason: 1, lastSeason: 0 });
     // The rating La Jolla's board prints is the one the unified table gives it, not a SoCal-only refit.

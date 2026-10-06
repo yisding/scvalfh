@@ -35,6 +35,17 @@ import { TEAMS, getTeamBySlug, teamsInDivision, teamsInLeague } from '../../lib/
 import type { Game, Snapshot } from '../../lib/types';
 import { CORPUS_ROOT, SOCAL_CORPUS, corpusSnapshotPath, runFixtureCli, stubCorpusSnapshot } from '../helpers';
 
+/**
+ * The freeze reason of a league not in this run (lib/pipeline/steps/guards.ts notInRunReason): '<SHORT> was
+ * not fetched in this run.', and for the Southern Section independents, whose short name is an adjective,
+ * the group by name with a plural verb (DESIGN §24.9).
+ */
+function notFetchedReason(id: Parameters<typeof getLeague>[0]): string {
+  return id === 'independents'
+    ? 'The Southern Section independents were not fetched in this run.'
+    : `${getLeague(id).shortName} was not fetched in this run.`;
+}
+
 type DataModule = typeof import('../../lib/data');
 
 const SOCAL = ['sunset', 'city', 'north-county', 'metro'] as const;
@@ -114,15 +125,18 @@ describeIfCaptured('the SoCal corpus run', () => {
     expect(keys.filter((k) => k.startsWith('maxpreps/schedule/'))).toHaveLength(50);
   });
 
-  it('publishes the four SoCal leagues fresh with every feed read, the five NorCal leagues frozen', () => {
+  it('publishes the four SoCal leagues fresh with every feed read, the five NorCal leagues and the independents frozen', () => {
     expect(snapshot.teams, 'lib/pipeline/steps/assemble.ts').toHaveLength(TEAMS.length);
+    // The corpus was captured before the Southern Section independents joined the registry (DESIGN §24.9): it
+    // has no feed of theirs, so the group is "not fetched in this run" here.
     expect(snapshot.leagueHealth.map((h) => `${h.leagueId}:${h.state}`), 'lib/pipeline/steps/standings.ts').toEqual([
       ...NORCAL.map((id) => `${id}:frozen`),
       ...SOCAL.map((id) => `${id}:fresh`),
+      'independents:frozen',
     ]);
     for (const h of snapshot.leagueHealth) {
-      if ((NORCAL as readonly string[]).includes(h.leagueId)) {
-        expect(h.reasons, `lib/pipeline/ledger.ts: ${h.leagueId}`).toEqual([`${getLeague(h.leagueId).shortName} was not fetched in this run.`]);
+      if ((NORCAL as readonly string[]).includes(h.leagueId) || h.leagueId === 'independents') {
+        expect(h.reasons, `lib/pipeline/ledger.ts: ${h.leagueId}`).toEqual([notFetchedReason(h.leagueId)]);
         continue;
       }
       const n = teamsInLeague(h.leagueId).length;
@@ -143,7 +157,7 @@ describeIfCaptured('the SoCal corpus run', () => {
     expect(cli.output, 'lib/pipeline/transport.ts').not.toContain('/leagues/null/');
     expect(cli.output, 'lib/pipeline/steps/league-meta.ts').toContain(`league metadata valley: skipped (${NO_MAXPREPS_TABLE_REASON})`);
     expect(cli.output, 'lib/pipeline/steps/reported.ts').toContain(`standings valley: skipped (${NO_MAXPREPS_TABLE_REASON})`);
-    expect(cli.stdout).toMatch(/ · leagues scval:frozen bval:frozen pcal:frozen mcal:frozen eal:frozen sunset:fresh city:fresh north-county:fresh metro:fresh$/m);
+    expect(cli.stdout).toMatch(/ · leagues scval:frozen bval:frozen pcal:frozen mcal:frozen eal:frozen sunset:fresh city:fresh north-county:fresh metro:fresh independents:frozen$/m);
     expect(cli.output, 'lib/pipeline/steps/reported.ts: unknown-school warning').not.toMatch(/unknown school/);
   });
 
@@ -158,6 +172,9 @@ describeIfCaptured('the SoCal corpus run', () => {
       city: { teams: 12, games: 164, leagueGames: 60, finals: 111, backfilled: 0 },
       'north-county': { teams: 19, games: 244, leagueGames: 102, finals: 159, backfilled: 0 },
       metro: { teams: 9, games: 93, leagueGames: 31, finals: 59, backfilled: 0 },
+      // Not in the run: the Sunset and San Diego feeds' 30 games against the three independents (24 final),
+      // none of them a league game; their games against each other are in no captured feed.
+      independents: { teams: 3, games: 30, leagueGames: 0, finals: 24, backfilled: 0 },
     });
   });
 });
@@ -384,12 +401,10 @@ describeIfCaptured('missing league results and the si.com sides', () => {
         }
       }
     }
-    // The Southern Section independents (DATA_QUALITY.notCovered), York (JV only) and the EAL's si.com
-    // placeholder: none of the si.com phantoms of the league buckets (Westlake, Los Alamitos, Madison,
-    // Santana, Castle Park, Chula Vista, …) appears on a captured scoreboard or team page.
-    expect([...unresolved].sort(), 'lib/sources/sblive.ts').toEqual(
-      ['Educational Outreach Academy', 'Glendora', 'Harvard-Westlake', 'Thousand Oaks', 'York'].sort(),
-    );
+    // York (JV only) and the EAL's si.com placeholder: none of the si.com phantoms of the league buckets
+    // (Westlake, Los Alamitos, Madison, Santana, Castle Park, Chula Vista, …) appears on a captured scoreboard or
+    // team page. Glendora, Harvard-Westlake and Thousand Oaks resolve now: they are the registry's independents.
+    expect([...unresolved].sort(), 'lib/sources/sblive.ts').toEqual(['Educational Outreach Academy', 'York'].sort());
   });
 });
 

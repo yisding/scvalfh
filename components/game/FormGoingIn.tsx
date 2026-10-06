@@ -57,7 +57,10 @@ function FormRow({ side, memberCount }: { side: GameSideModel; memberCount: numb
           <span className="truncate text-body text-ink">{side.name}</span>
         </span>
       )}
-      {side.team ? (
+      {side.team && side.independent ? (
+        // A team in no league (the Southern Section independents): no league form to show, ever.
+        <span className="ml-auto text-meta text-ink-3">Plays no league games</span>
+      ) : side.team ? (
         // The strip and "→ then [chip]" are ONE unit that never splits: when it does not fit
         // beside the name it moves whole, so the outcome chip never sits alone on a line. Below
         // 360px it always takes its own line, aligned under the name, and wraps: a linked strip is
@@ -100,6 +103,9 @@ export function FormGoingIn({ model, className }: FormGoingInProps) {
   const anyTracked = Boolean(away.team || home.team);
   if (!anyTracked) return null;
   const played = [away, home].filter((s) => s.team && s.playedBefore > 0).length;
+  // Every followed side is an independent: there is no league form on that side to speak of.
+  const tracked = [away, home].filter((s) => s.team);
+  const allIndependent = tracked.every((s) => s.independent);
 
   return (
     <section className={className} aria-labelledby="game-form-kicker">
@@ -116,7 +122,11 @@ export function FormGoingIn({ model, className }: FormGoingInProps) {
           <FormRow side={home} memberCount={model.memberCount} />
         </ol>
         <p className="m-0 border-t border-divider px-4 py-3 text-meta text-ink-3">
-          {played === 0
+          {allIndependent
+            ? tracked.length === 2
+              ? 'Neither side plays league games.'
+              : `${tracked[0]!.name} plays no league games.`
+            : played === 0
             ? 'Neither side had a league result before this date.'
             : 'Games with no reported score are skipped, never shown as a result.'}
         </p>

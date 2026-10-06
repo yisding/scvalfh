@@ -302,7 +302,9 @@ describe('Southern California schedule pages (DESIGN-socal §2.4)', () => {
     const html = await renderLeague('sunset');
     const nav = html.match(/<nav aria-label="Leagues"[\s\S]*?<\/nav>/)![0];
     const hrefs = [...nav.matchAll(/href="([^"]+)"/g)].map((m) => m[1]);
-    expect(hrefs).toEqual(['/schedule', '/schedule/sunset', '/schedule/city', '/schedule/north-county', '/schedule/metro']);
+    expect(hrefs).toEqual([
+      '/schedule', '/schedule/sunset', '/schedule/independents', '/schedule/city', '/schedule/north-county', '/schedule/metro',
+    ]);
   });
 });
 

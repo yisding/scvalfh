@@ -1,5 +1,5 @@
 /**
- * `lib/pin-label.ts` over the real 99-team registry (SPEC §10.1).
+ * `lib/pin-label.ts` over the real 102-team registry (SPEC §10.1).
  *
  * WCAG 2.5.3 Label in Name: a tile's VISIBLE label is `shortName`, so the accessible name has to contain it.
  * The picker's break points are asserted against tests/ui/text-metrics.ts (static Geist 12 px / 500 widths),
@@ -45,14 +45,14 @@ describe('pinLabel', () => {
     expect(byslug('huntington-beach')).toBe('Pin Huntington Beach, Sunset');
     expect(byslug('la-jolla')).toBe('Pin La Jolla, City Western · City');
     expect(byslug('la-jolla-country-day')).toBe('Pin LJCD (La Jolla Country Day), City Eastern · City');
-    expect(byslug('rancho-buena-vista')).toBe('Pin RBV (Rancho Buena Vista), Palomar · North County');
+    expect(byslug('rancho-buena-vista')).toBe('Pin RBV (Rancho Buena Vista), Palomar · North');
     expect(byslug('cathedral-catholic')).toBe('Pin Cathedral Catholic, City Western · City');
     expect(pinLabel({ name: 'Full Name', shortName: 'FN', divisionHeading: null, leagueShort: 'MCAL' }))
       .toBe('Pin FN (Full Name), MCAL');
   });
 
-  it('has the label format for all 99 teams', () => {
-    expect(IDENTITIES.length).toBe(99);
+  it('has the label format for all 102 teams', () => {
+    expect(IDENTITIES.length).toBe(102);
     for (const t of IDENTITIES) {
       const label = pinLabel(t);
       const tail = `, ${t.divisionHeading === null ? '' : `${t.divisionHeading} · `}${t.leagueShort}`;
@@ -65,7 +65,7 @@ describe('pinLabel', () => {
     }
   });
 
-  it('contains the visible tile label (WCAG 2.5.3) for all 99 teams', () => {
+  it('contains the visible tile label (WCAG 2.5.3) for all 102 teams', () => {
     for (const t of IDENTITIES) {
       expect(pinLabel(t).toLowerCase(), t.slug).toContain(t.shortName.toLowerCase());
     }

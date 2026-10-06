@@ -18,8 +18,9 @@
  *    `id="<league>"`, on /playoffs);
  *  - `game/*.html` = every game (param via `gameIdToParam`, so `sblive:N` is `sblive-N`) plus one
  *    stub per `supersededGames` key (counted separately);
- *  - `scores/*.html` = the distinct game dates, `teams/*.html` = the registry slugs (99 since the
- *    Southern California amendment; the snapshot's team slugs must equal TEAMS, in order);
+ *  - `scores/*.html` = the distinct game dates, `teams/*.html` = the registry slugs (102 since the
+ *    Southern Section independents joined, 99 with the Southern California amendment; the snapshot's team
+ *    slugs must equal TEAMS, in order);
  *  - `clubs/*.html` = the slugs of data/clubs.json, by name (DESIGN §17, SPEC §1.1j2). They come
  *    from `getClubSlugs()`, which reads the file through the bundled import lib/clubs.ts validates
  *    at load, not from the working directory: tests/workflows.test.ts runs this script with its cwd

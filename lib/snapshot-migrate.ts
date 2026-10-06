@@ -56,6 +56,18 @@ function upgradeSide(side: GameSide): GameSide {
   return { ...side, slug: team.slug, name: team.name };
 }
 
+/**
+ * The health reason of a league a snapshot predates: 'No Sunset data in this snapshot yet: it was written
+ * before Sunset was added.' A group with no table (the Southern Section independents, DESIGN §24.9) is named
+ * in full, since its short name ('Independent') is an adjective.
+ */
+function addedLeagueReason(league: (typeof LEAGUES)[number]): string {
+  if (league.rules.classification === 'independent') {
+    return `No data for the ${league.name} in this snapshot yet: it was written before they were added.`;
+  }
+  return `No ${league.shortName} data in this snapshot yet: it was written before ${league.shortName} was added.`;
+}
+
 /** One v1 game → a v2 game with placeholders (classification runs over the whole list afterwards). */
 function upgradeGame(raw: Json): Game {
   const v1 = raw as unknown as Game & { official?: { scheduledDate: string; source: string } };
@@ -158,9 +170,7 @@ function healthRows(
           leagueId: league.id,
           state: 'degraded',
           lastFreshAt: null,
-          reasons: [
-            `No ${league.shortName} data in this snapshot yet: it was written before ${league.shortName} was added.`,
-          ],
+          reasons: [addedLeagueReason(league)],
           divisions,
           teamFeeds: { total, ok: 0, carried: 0, failed: 0 },
         };
@@ -325,12 +335,11 @@ export function addConfiguredLeagues(raw: unknown): unknown {
   // 5. one degraded health row per missing league, in config order
   const leagueHealth: LeagueHealth[] = LEAGUES.flatMap((league): LeagueHealth[] => {
     if (presentIds.has(league.id)) return v2.leagueHealth.filter((h) => h.leagueId === league.id);
-    const short = league.shortName;
     return [{
       leagueId: league.id,
       state: 'degraded',
       lastFreshAt: null,
-      reasons: [`No ${short} data in this snapshot yet: it was written before ${short} was added.`],
+      reasons: [addedLeagueReason(league)],
       divisions: league.divisions.map((d) => ({
         divisionId: d.id,
         meta: 'skipped',

@@ -6,6 +6,8 @@
  *   BVAL   the official BVAL standings Google Sheet and the two all-league documents, as linked
  *          from bval.org/standings and bval.org/all-league
  *   PCAL, MCAL, EAL  'unavailable', with the reason (below): we found no official 2025-26 final standings
+ *   Sunset, City, North County, Metro  'unavailable' likewise (DESIGN-socal §2.2)
+ *   Southern Section independents  'unavailable': no league table existed to publish (DESIGN §24.9)
  *
  *   pnpm build-history
  *   pnpm build-history --from tests/fixtures/scval \
@@ -376,10 +378,31 @@ async function main(argv: readonly string[]): Promise<number> {
     ],
   });
 
+  // ---- The Southern Section independents (DESIGN §24.9): no league table existed in 2025-26 either. Checked
+  // 2026-10-06 with MaxPreps' standings API for the 2025-26 season (leagues/{id}/standings/v1?sportseasonid=
+  // 8ae4cbab-…): each school's all-sports league table for that season (the league ids are those in each team's
+  // MaxPreps team-context lastYearStandingsData) lists that school and no other field hockey team. The links are
+  // MaxPreps' public pages for those tables (the canonical URLs team-context gives).
+  const independents = {
+    status: 'unavailable',
+    league: getLeague('independents').name,
+    reason:
+      'Glendora, Harvard-Westlake and Thousand Oaks played as independents in 2025-26 too: there was no league table to publish.',
+    checkedOn: '2026-10-06',
+    checked: [
+      'https://www.maxpreps.com/ca/field-hockey/25-26/league/palomares/?leagueid=5d795f4f-0e75-450d-856e-0873b46002de (MaxPreps’ 2025-26 Palomares League table: Glendora is its only field hockey team)',
+      'https://www.maxpreps.com/ca/field-hockey/25-26/league/league-b/?leagueid=c2922327-b045-410b-aadd-87cb63b58405 (MaxPreps’ 2025-26 League B table: Harvard-Westlake is its only field hockey team)',
+      'https://www.maxpreps.com/ca/field-hockey/25-26/league/marmonte/?leagueid=392fb703-cc64-46d7-8d21-819e13a78c3f (MaxPreps’ 2025-26 Marmonte League table: Thousand Oaks is its only field hockey team)',
+    ],
+  };
+
   const history = {
     season: '2025-26',
     sport: 'Girls Field Hockey',
-    leagues: { scval, bval, pcal, mcal, eal, sunset, city: sds('city'), 'north-county': sds('north-county'), metro: sds('metro') },
+    leagues: {
+      scval, bval, pcal, mcal, eal, sunset, city: sds('city'), 'north-county': sds('north-county'), metro: sds('metro'),
+      independents,
+    },
   };
   const divisions = [...scvalDivisions, ...bvalDivisions];
   for (const p of problems.slice(scvalProblems)) console.warn(`WARN ${p}`);
@@ -394,7 +417,7 @@ async function main(argv: readonly string[]): Promise<number> {
     );
     console.log(`  ${d.standings.varsity.map((r) => `${r.name} ${r.leagueRecord}`).join(' · ')}`);
   }
-  console.log('PCAL, MCAL, EAL, Sunset, City, North County, Metro: unavailable (see reasons in the file)');
+  console.log('PCAL, MCAL, EAL, Sunset, City, North County, Metro, Southern Section independents: unavailable (see reasons in the file)');
 
   // Validate against the contract before anything is written. lib/history-schema.ts does not load
   // the committed file (lib/history.ts does), so a broken committed file cannot block the rebuild

@@ -3,17 +3,21 @@ import Link from 'next/link';
 import { Fragment } from 'react';
 
 import LeaderBoardTable from '../../components/leaders/LeaderBoardTable';
-import { LEAGUE_COUNT, buildLeadersView, type RegionLeadersView } from '../../components/leaders/leaders-view';
+import {
+  AND_INDEPENDENTS_SHORT,
+  LEAGUE_COUNT,
+  buildLeadersView,
+  type RegionLeadersView,
+} from '../../components/leaders/leaders-view';
 import { RegionSwitcher } from '../../components/layout/LeagueSwitcher';
 import PageHeader from '../../components/layout/PageHeader';
-import { OG_BASE, ROOT_OG_IMAGE } from '../../components/layout/site';
+import { OG_BASE, ROOT_OG_IMAGE, coveredLeagueWords } from '../../components/layout/site';
 import DivisionTabs from '../../components/standings/DivisionTabs';
 import SectionHeader from '../../components/ui/SectionHeader';
-import { listWords, numberWord } from '../../lib/format';
-import { LEAGUES } from '../../lib/leagues';
+import { numberWord } from '../../lib/format';
 
 /**
- * `/leaders` (DESIGN §16) — "Who leads the whole site?" Leaderboards across all nine leagues: the
+ * `/leaders` (DESIGN §16) — "Who leads the whole site?" Leaderboards across all nine leagues and the three independents: the
  * schools with the best records, the most goals per game, the fewest allowed, the most clean
  * sheets and the highest Elo rating (lib/ratings.ts, DESIGN §20), and the players with the most
  * points, assists, saves and clean sheets.
@@ -35,7 +39,7 @@ import { LEAGUES } from '../../lib/leagues';
  * teams whose totals are behind the scores. The school boards cover every team.
  */
 
-const SHORT_NAMES = listWords(LEAGUES.map((l) => l.shortName));
+const SHORT_NAMES = coveredLeagueWords();
 
 /** The page's title, and its og:title too: og:title never carries the site-name suffix (OG_BASE). */
 const PAGE_TITLE = 'Season leaders';
@@ -63,7 +67,7 @@ export default function LeadersPage() {
     // (6rem); from md the pills sit in the title row and do not stick (as on /history).
     <div className="pb-section-lg [--sx-sticky-top:6rem] md:[--sx-sticky-top:var(--spacing-topbar-lg)]">
       <PageHeader
-        eyebrow={`All ${LEAGUE_COUNT} leagues`}
+        eyebrow={`All ${LEAGUE_COUNT} leagues${AND_INDEPENDENTS_SHORT}`}
         title="Season leaders"
         description={
           <>
@@ -150,7 +154,8 @@ export default function LeadersPage() {
   );
 }
 
-/** "NorCal’s five leagues" | "SoCal’s four leagues": a region section's scope, from config. */
+/** "NorCal’s five leagues" | "SoCal’s four leagues and three independents": a region section's scope, from config. */
 function regionLeagues(region: RegionLeadersView): string {
-  return `${region.shortName}’s ${numberWord(region.leagueCount)} leagues`;
+  const independents = region.independentCount > 0 ? ` and ${numberWord(region.independentCount)} independents` : '';
+  return `${region.shortName}’s ${numberWord(region.leagueCount)} leagues${independents}`;
 }

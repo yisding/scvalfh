@@ -24,7 +24,7 @@ import {
   type UnavailableLeagueHistory,
 } from '../../../lib/history';
 import { listWords } from '../../../lib/format';
-import { getDivision, getLeague, getSection, regionOf } from '../../../lib/leagues';
+import { getDivision, getLeague, getSection, isIndependentLeague, regionOf } from '../../../lib/leagues';
 import type { LeagueId } from '../../../lib/types';
 
 /**
@@ -52,9 +52,20 @@ const HISTORY_LEAGUES = getHistoryLeagues();
 const AVAILABLE = getAvailableHistoryLeagues();
 const UNAVAILABLE = getUnavailableHistoryLeagues();
 const short = (id: LeagueId) => getLeague(id).shortName;
+/**
+ * The unavailable leagues that have a table this season, and the groups that never have one (the Southern
+ * Section independents, DESIGN §24.9): "we found no official final standings" is said of the first only,
+ * since a group with no league games had no standings to find.
+ */
+const UNAVAILABLE_LEAGUES = UNAVAILABLE.filter((l) => !isIndependentLeague(l.id));
+const UNAVAILABLE_GROUPS = UNAVAILABLE.filter((l) => isIndependentLeague(l.id));
 /** "PCAL, MCAL and EAL are", "MCAL is", or null when every league has its tables. */
-const UNAVAILABLE_SUBJECT = UNAVAILABLE.length
-  ? `${listWords(UNAVAILABLE.map((l) => short(l.id)))} ${UNAVAILABLE.length === 1 ? 'is' : 'are'}`
+const UNAVAILABLE_SUBJECT = UNAVAILABLE_LEAGUES.length
+  ? `${listWords(UNAVAILABLE_LEAGUES.map((l) => short(l.id)))} ${UNAVAILABLE_LEAGUES.length === 1 ? 'is' : 'are'}`
+  : null;
+/** "The Southern Section independents had no league table to publish.", or null with no such group. */
+const GROUPS_SENTENCE = UNAVAILABLE_GROUPS.length
+  ? `${listWords(UNAVAILABLE_GROUPS.map((l) => `the ${getLeague(l.id).name}`)).replace(/^t/, 'T')} had no league table to publish.`
   : null;
 
 /** The page's title, and its og:title too: og:title never carries the site-name suffix (OG_BASE). */
@@ -67,7 +78,8 @@ export const metadata: Metadata = {
     ` and all-league awards from the ${SEASON} season, from each league’s own documents.` +
     (UNAVAILABLE_SUBJECT
       ? ` ${UNAVAILABLE_SUBJECT} marked unavailable: we found no official ${SEASON} final standings.`
-      : ''),
+      : '') +
+    (GROUPS_SENTENCE ? ` ${GROUPS_SENTENCE}` : ''),
   alternates: { canonical: '/history/2025-26' },
   openGraph: { ...OG_BASE, ...ROOT_OG_IMAGE, title: PAGE_TITLE, url: '/history/2025-26' },
 };
@@ -294,11 +306,24 @@ function UnavailableLeague({ leagueId, entry }: { leagueId: LeagueId; entry: Una
         {/* `break-words`: the checked list quotes whole URLs, which would otherwise widen a
             320px page past the screen. */}
         <p className="m-0 mt-3 max-w-prose break-words text-meta text-ink-3">
-          Checked {entry.checkedOn}: {entry.checked.join('; ')}. Current-season {league.shortName} standings are on{' '}
-          <Link href={`/standings/${leagueId}`} prefetch={false} className="text-accent hover:underline">
-            the {league.shortName} standings page
-          </Link>{' '}
-          and {ownSite ? 'its official site is' : `its section’s field hockey page is`}{' '}
+          {/* A group with no league table (DESIGN §24.9) has no current standings either: its page lists the teams. */}
+          {isIndependentLeague(leagueId) ? (
+            <>
+              Checked {entry.checkedOn}: {entry.checked.join('; ')}. This season&rsquo;s {league.name} are listed on{' '}
+              <Link href={`/standings/${leagueId}`} prefetch={false} className="text-accent hover:underline">
+                the {league.name} page
+              </Link>{' '}
+              and their section&rsquo;s field hockey page is{' '}
+            </>
+          ) : (
+            <>
+              Checked {entry.checkedOn}: {entry.checked.join('; ')}. Current-season {league.shortName} standings are on{' '}
+              <Link href={`/standings/${leagueId}`} prefetch={false} className="text-accent hover:underline">
+                the {league.shortName} standings page
+              </Link>{' '}
+              and {ownSite ? 'its official site is' : `its section’s field hockey page is`}{' '}
+            </>
+          )}
           <ExternalLink href={league.officialUrl}>{league.officialUrl.replace(/^https?:\/\/(www\.)?/, '')}</ExternalLink>.
         </p>
       </div>
@@ -326,6 +351,7 @@ export default function HistoryPage() {
                 {UNAVAILABLE_SUBJECT} unavailable: we found no official {SEASON} final standings.{' '}
               </>
             ) : null}
+            {GROUPS_SENTENCE ? <>{GROUPS_SENTENCE} </> : null}
             This page doesn&rsquo;t change.
           </>
         }

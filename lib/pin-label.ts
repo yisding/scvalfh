@@ -25,14 +25,15 @@ export function pinLabel(t: { name: string; shortName: string; divisionHeading: 
  * Chromium's `hyphens: auto` never breaks a capitalised word, so the break points are stated here. Two-word
  * names break at their space; 'Lick-Wilmerding' breaks after its hyphen, and 'Wilmerding' (68.9) needs its own.
  *
- * Measured with tests/ui/text-metrics.ts over all 99 short names: Presentation 77.0, Christopher 71.6,
+ * Measured with tests/ui/text-metrics.ts over the 99 league teams' short names: Presentation 77.0, Christopher 71.6,
  * Homestead 70.1, Chaminade 69.5, Huntington (of 'Huntington Beach') 67.9, Clairemont 66.8, Southwest 65.6,
  * Stevenson 64.2, Escondido 63.1, Westmont 62.8, Greenfield 62.6, Tamalpais 61.3 px. Hollister (50.9),
  * University (60.5, also in 'University City') and Cupertino (60.1) fit, and so do the EAL's widest words,
  * Pleasant (53.7) and Corning (47.8), and the other SoCal words near the line: Chaparral (59.5), Cathedral
  * and Westview (59.3), Temecula (58.3), Olympian (57.4), Fallbrook (56.9). The SoCal breaks are at syllables
  * (Cham·i·nade, Hun·ting·ton, Claire·mont, Es·con·di·do, South·west), one each: every piece with its hyphen
- * is ≤ 54 px. Keyed by the exact short name, so a rename stops matching instead of hyphenating the wrong
+ * is ≤ 54 px. The three independents' words fit with no break: Thousand 59.4, Westlake 56.7, Glendora 55.0,
+ * Harvard- 53.6 (Harvard-Westlake breaks after its hyphen, as Lick-Wilmerding does). Keyed by the exact short name, so a rename stops matching instead of hyphenating the wrong
  * word; tests/ui/pin-label.test.ts asserts the key set.
  */
 export const PICKER_BREAKS: Readonly<Record<string, string>> = {

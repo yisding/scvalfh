@@ -74,13 +74,13 @@ function readSnapshot() {
 const snapshot = readSnapshot();
 const LEAGUES = snapshot
   ? snapshot.season.leagues.map((l) => l.id)
-  : ['scval', 'bval', 'pcal', 'mcal', 'eal', 'sunset', 'city', 'north-county', 'metro'];
+  : ['scval', 'bval', 'pcal', 'mcal', 'eal', 'sunset', 'city', 'north-county', 'metro', 'independents'];
 /**
  * The SoCal leagues (DESIGN-socal §2.1.5), for the expected `data-region` stamp. Spelled out: this
  * script runs on plain node and reads no TypeScript config; tests/ui/prefs-script.test.ts holds the
  * prefs script's own map to lib/leagues.ts.
  */
-const SOCAL_LEAGUES = new Set(['sunset', 'city', 'north-county', 'metro']);
+const SOCAL_LEAGUES = new Set(['sunset', 'city', 'north-county', 'metro', 'independents']);
 /** The region a stored league stamps: 'socal', or null (no data-region: NorCal). */
 const regionStampOf = (league) => (league && SOCAL_LEAGUES.has(league) ? 'socal' : null);
 /** The pinned team of the pin run (an MCAL team) and the league the prefs script derives from it. */
@@ -110,6 +110,8 @@ const ROUTES = process.env.SCVAL_A11Y_ROUTES?.split(',') ?? [
   '/standings/mcal',
   '/standings/eal',
   '/standings/city',
+  // A group with no league table (DESIGN §24.9): its standings page and a team page have their own layout.
+  '/standings/independents',
   '/schedule',
   '/schedule/pcal',
   '/schedule/eal',
@@ -119,6 +121,7 @@ const ROUTES = process.env.SCVAL_A11Y_ROUTES?.split(',') ?? [
   '/teams/tamalpais',
   '/teams/davis',
   '/teams/la-jolla',
+  '/teams/glendora',
   '/playoffs',
   '/playoffs/mcal',
   '/leaders',

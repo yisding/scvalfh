@@ -8,7 +8,7 @@
  * si.com gives each JV team its own team id and web path, distinct from the varsity one in the
  * registry. Each path below was read on 2026-10-05 from the level switcher (`level.name` "Junior
  * Varsity", `webPath`) on that school's varsity si.com games page, never guessed (DATA-SOURCES
- * §1.2 caveat 5); the 50 Southern California paths were read the same way on 2026-10-06. Marin
+ * §1.2 caveat 5); the 53 Southern California paths were read the same way on 2026-10-06. Marin
  * Academy has no si.com page at all, so it has no JV path. A JV side is identified only by these
  * ids, never by name: si.com names a JV team as it names the varsity one.
  *
@@ -125,6 +125,10 @@ export const JV_SBLIVE_PATHS: Readonly<Record<TeamSlug, string | null>> = {
   'granite-hills': '458712-granite-hills-eagles-jv',
   hilltop: '459132-hilltop-lancers-jv',
   southwest: '459139-southwest-sd-raiders-jv',
+  // The Southern Section independents, read from each school's si.com games page (`otherTeams`) on 2026-10-06.
+  glendora: '481707-glendora-tartans-jv',
+  'harvard-westlake': '482355-harvardwestlake-wolverines-jv',
+  'thousand-oaks': '482332-thousand-oaks-lancers-jv',
 };
 
 /** The numeric si.com JV team id of a registry team, or null. */

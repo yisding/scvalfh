@@ -58,7 +58,7 @@ beforeAll(async () => {
 describe('trigger d: the league is not in args.leagues', () => {
   it('no previous data: frozen, no games, "<SHORT> was not fetched in this run."', async () => {
     const { snapshot } = await snapshotOf({ corpus: 'scval' });
-    expect(snapshot.teams.length).toBe(99);
+    expect(snapshot.teams.length).toBe(102);
     expect(health(snapshot, 'scval')?.state).toBe('fresh');
     for (const [id, short] of [
       ['bval', 'BVAL'],
@@ -67,12 +67,15 @@ describe('trigger d: the league is not in args.leagues', () => {
       ['eal', 'EAL'],
       ['sunset', 'Sunset'],
       ['city', 'City'],
-      ['north-county', 'North County'],
+      ['north-county', 'North'],
       ['metro', 'Metro'],
+      // A group of independents is named whole, with a plural verb: 'Independent' is an adjective.
+      ['independents', 'The Southern Section independents'],
     ] as const) {
       const h = health(snapshot, id);
       expect(h?.state, id).toBe('frozen');
-      expect(h?.reasons, id).toEqual([`${short} was not fetched in this run.`]);
+      const verb = id === 'independents' ? 'were' : 'was';
+      expect(h?.reasons, id).toEqual([`${short} ${verb} not fetched in this run.`]);
       expect(h?.lastFreshAt, id).toBeNull();
       expect(intraGames(snapshot, id), id).toEqual([]);
       expect(h?.divisions.every((d) => d.meta === 'skipped' && d.reportedTable === 'skipped'), id).toBe(true);

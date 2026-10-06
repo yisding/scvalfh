@@ -13,8 +13,8 @@ const rules = css.split('\n');
 const count = (re: RegExp) => rules.filter((r) => re.test(r)).length;
 
 describe('buildLeagueScopeCss', () => {
-  it('covers the nine configured leagues', () => {
-    expect(LEAGUE_IDS.length).toBe(9);
+  it('covers the nine configured leagues and the independents', () => {
+    expect(LEAGUE_IDS.length).toBe(10);
   });
 
   it('has the first-visit and none rules', () => {

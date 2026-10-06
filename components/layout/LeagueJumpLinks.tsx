@@ -1,7 +1,8 @@
 import Link from 'next/link';
 
-import type { LeagueId } from '../../lib/types';
 import Arrow, { type ArrowProps } from '../ui/Arrow';
+import { standaloneName } from '../../lib/leagues';
+import type { LeagueId } from '../../lib/types';
 
 /**
  * The "Jump to <league>" pills on the three league index pages (/standings, /schedule,
@@ -15,7 +16,8 @@ import Arrow, { type ArrowProps } from '../ui/Arrow';
  * chips (LeagueSwitcher.tsx, DESIGN §15.4), and the row is a per-league list
  * (tests/ui/prefetch-policy.test.ts). They sit on the canvas, so they are canvas pills
  * (`sx-pill-ring`) at the 44px primary height. The arrow says where the target is (down the page
- * by default) and is aria-hidden like every link arrow (components/ui/Arrow.tsx).
+ * by default) and is aria-hidden like every link arrow (components/ui/Arrow.tsx). The pill names the
+ * league by `standaloneName` ('Jump to North County ↓', never 'Jump to North ↓', which reads as a direction).
  */
 export interface LeagueJumpLinksProps {
   /** Config order. */
@@ -34,7 +36,7 @@ export function LeagueJumpLinks({ leagues, hrefs, arrow }: LeagueJumpLinksProps)
         const className = `sx-jump sx-jump-${league.id} sx-pill sx-pill-ring min-h-11`;
         const body = (
           <>
-            Jump to {league.shortName} <Arrow dir={arrow?.(league.id) ?? 'down'} />
+            Jump to {standaloneName(league.id)} <Arrow dir={arrow?.(league.id) ?? 'down'} />
           </>
         );
         return href.startsWith('#') ? (

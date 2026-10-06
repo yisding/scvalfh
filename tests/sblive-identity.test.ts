@@ -345,7 +345,7 @@ describe('sblive identity: the captured si.com pages', () => {
       'chaparral', 'clairemont', 'el-capitan', 'fountain-valley', 'huntington-beach', 'la-costa-canyon',
       'la-jolla-country-day', 'mission-bay', 'olympian', 'otay-ranch', 'sage-creek', 'southwest', 'hilltop', 'vista',
       'newport-harbor', 'edison', 'marina', 'westview', 'mission-hills', 'valley-center', 'del-norte', 'escondido',
-      'san-pasqual',
+      'san-pasqual', 'glendora', 'harvard-westlake', 'thousand-oaks',
     ]));
     expect(sides.find((s) => s.name === 'Southwest SD')).toMatchObject({ slug: 'southwest', via: 'school-id', sbliveSchoolId: '13422' });
     expect(sides.find((s) => s.name === 'Del Norte')).toMatchObject({ slug: 'del-norte', via: 'school-id', sbliveSchoolId: '12669' });
@@ -357,9 +357,11 @@ describe('sblive identity: the captured si.com pages', () => {
       ['westview', 'school-id', null],
       [null, null, 'ambiguous-name'],
     ]);
-    // The schools this site does not cover stay unresolved: Harvard-Westlake, Thousand Oaks, Glendora.
-    for (const name of ['Harvard-Westlake', 'Thousand Oaks', 'Glendora']) {
-      for (const s of sides.filter((x) => x.name === name)) expect(s.slug, name).toBeNull();
+    // The Southern Section independents are registry teams now (DESIGN §24.9), resolved by their si.com ids too.
+    for (const [name, slug] of [['Harvard-Westlake', 'harvard-westlake'], ['Thousand Oaks', 'thousand-oaks'], ['Glendora', 'glendora']]) {
+      const found = sides.filter((x) => x.name === name);
+      expect(found.length, name).toBeGreaterThan(0);
+      for (const s of found) expect([s.slug, s.via === 'school-id' || s.via === 'team-id'], name).toEqual([slug, true]);
     }
   });
 

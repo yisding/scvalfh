@@ -108,9 +108,9 @@ describe('vnn: opponent naming differs per school', () => {
     expect(parsed.map((e) => e.site)).toEqual(['home', 'home']);
   });
 
-  // La Jolla was the outsider here until the San Diego Section joined the registry: it now resolves to
-  // its registry team, and a school outside the registry (Harvard-Westlake, a Southern Section
-  // independent covered only as an opponent) stays a bare name.
+  // La Jolla was the outsider here until the San Diego Section joined the registry, and Harvard-Westlake
+  // until the Southern Section independents did (DESIGN §24.9): both resolve now, and a school outside the
+  // registry (Notre Dame Academy, a Los Angeles school si.com lists with no field hockey games) stays a bare name.
   it('resolves a San Diego Section opponent and keeps a non-registry opponent as a name with no slug', () => {
     const ics = (summary: string) =>
       [
@@ -125,8 +125,10 @@ describe('vnn: opponent naming differs per school', () => {
     const [laJolla] = parseVnnIcs(ics('La Jolla High School'), 'palo-alto');
     expect(laJolla.opponentName).toBe('La Jolla High School');
     expect(laJolla.opponentSlug).toBe('la-jolla');
-    const [outsider] = parseVnnIcs(ics('Harvard-Westlake School'), 'palo-alto');
-    expect(outsider.opponentName).toBe('Harvard-Westlake School');
+    const [harvardWestlake] = parseVnnIcs(ics('Harvard-Westlake School'), 'palo-alto');
+    expect(harvardWestlake.opponentSlug).toBe('harvard-westlake');
+    const [outsider] = parseVnnIcs(ics('Notre Dame Academy'), 'palo-alto');
+    expect(outsider.opponentName).toBe('Notre Dame Academy');
     expect(outsider.opponentSlug).toBeNull();
   });
 });

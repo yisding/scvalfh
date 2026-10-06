@@ -9,7 +9,7 @@
     "profiles[] links a player's own recruiting page (NCSA, SportsRecruits, Hudl), captured 2026-10-02 (SCVAL), 2026-10-03 (BVAL, PCAL, MCAL) or 2026-10-04 (EAL). A page is linked only when it names the player and field hockey, and either names the player's school or shows the class year the roster shows plus a California hometown; a stated class year must agree with the roster's grade. NCSA pages answer a bot challenge, so SCVAL and PCAL NCSA profiles were matched on the search result (title, the school in the URL path, class year); for BVAL, MCAL and EAL the page itself was read where it answered. A Hudl profile counts when its team list includes this school's field hockey team, even if it lists another sport first. Social media, news and profiles for other sports are not linked. Recall is incomplete for every league: see docs/DATA-SOURCES.md.",
     "A team's otherRosters says what other public sources showed for its CURRENT roster, which is what its page may claim when MaxPreps lists no players: none (looked, nothing current), partial (a source lists current players in a form that cannot be joined, with what it lists and a link) or, when absent, not checked.",
     "EAL (2026-10-04): recruiting pages only (profiles[]), swept by the same rule. The school-athletics roster sweep (grade, height, number, position, coaches) has still not been done, so the six EAL entries have no coaches or sources and fill no MaxPreps field.",
-    "The 50 Sunset, City, North County and Metro teams (added 2026-10-06) have stub entries with empty lists: no enrichment sweep was made for them, so an empty list there says nothing about whether a public source exists."
+    "The 53 Southern California teams (the Sunset, City, North and Metro teams and the three Southern Section independents, Glendora, Harvard-Westlake and Thousand Oaks, all added 2026-10-06) have stub entries with empty lists: no enrichment sweep was made for them, so an empty list there says nothing about whether a public source exists."
   ],
   "season": "26-27",
   "teams": [
@@ -9744,6 +9744,27 @@
       "notes": [],
       "players": [],
       "slug": "southwest",
+      "sources": []
+    },
+    {
+      "coaches": [],
+      "notes": [],
+      "players": [],
+      "slug": "glendora",
+      "sources": []
+    },
+    {
+      "coaches": [],
+      "notes": [],
+      "players": [],
+      "slug": "harvard-westlake",
+      "sources": []
+    },
+    {
+      "coaches": [],
+      "notes": [],
+      "players": [],
+      "slug": "thousand-oaks",
       "sources": []
     }
   ]

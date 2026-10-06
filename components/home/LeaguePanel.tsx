@@ -35,6 +35,9 @@ export function LeaguePanel({ panel }: LeaguePanelProps) {
   const { latest, unreported, slate } = panel;
   const multi = panel.divisions.length > 1;
   const lastDivision = panel.divisions.length - 1;
+  // A group with no league (the Southern Section independents, DESIGN §24.9): its short name is an
+  // adjective, so the empty states name the teams instead of "the first Independent games".
+  const independent = panel.divisions.some((d) => d.independent !== null);
 
   return (
     <section data-scope={panel.id} aria-labelledby={headingId} className={STACK}>
@@ -66,7 +69,7 @@ export function LeaguePanel({ panel }: LeaguePanelProps) {
           <SectionHeader as="h3" kicker="Latest scores" />
           <EmptyState heading="No results yet." action={{ href: `/schedule/${panel.id}`, label: 'Full schedule' }}>
             {panel.firstGame
-              ? `The first ${panel.shortName} games are ${longDate(panel.firstGame)}. Scores appear here the morning after they are played.`
+              ? `${independent ? 'The independents’ first games' : `The first ${panel.shortName} games`} are ${longDate(panel.firstGame)}. Scores appear here the morning after they are played.`
               : 'Scores appear here the morning after a game is played.'}
           </EmptyState>
         </section>
@@ -80,6 +83,7 @@ export function LeaguePanel({ panel }: LeaguePanelProps) {
         kicker={latest ? undefined : 'First games'}
         nextLeague={panel.nextLeague}
         after={panel.afterSchedule}
+        scopeNoun={independent ? 'these teams' : undefined}
       />
 
       <div className={multi ? 'flex flex-col gap-y-section md:grid md:grid-cols-2 md:gap-x-6' : undefined}>

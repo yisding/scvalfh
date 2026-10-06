@@ -1,8 +1,8 @@
 /**
  * Team ratings on the Elo scale (DESIGN §20): one number per team that says how strong its results
- * have been, opponents and margins included, comparable across all nine leagues and both regions.
+ * have been, opponents and margins included, comparable across all nine leagues, the three independents and both regions.
  *
- * One fit over all 99 registry teams, NorCal and SoCal together (DESIGN-socal §2.3): nothing here knows
+ * One fit over all 102 registry teams, NorCal and SoCal together (DESIGN-socal §2.3): nothing here knows
  * a region. What makes the two regions one scale is the finals between them, which are few (on
  * 2026-10-06, 7 NorCal–San Diego finals with 8 more scheduled Oct 16–17, and 11 last season through
  * Leigh, Gilroy and Mitty), while the Sunset and the San Diego Section are linked by 38 finals; so
@@ -46,7 +46,7 @@
  *
  * Counted: every final between two registry teams, league or not, postseason included, with its
  * published score (a si.com backfill too). Left out: forfeits (no goals, as in the standings),
- * finals without a score, and games against schools outside the nine leagues: a one-game opponent
+ * finals without a score, and games against schools outside the nine leagues and the three independents: a one-game opponent
  * nothing else connects to says nothing about the strength of the team it played.
  *
  * Pure: `computeRatings` reads only its arguments; `getRatings` is it over the bundled snapshot

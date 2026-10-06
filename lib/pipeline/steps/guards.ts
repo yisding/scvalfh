@@ -42,11 +42,14 @@ export const SYSTEMIC_FAILED_FEEDS_SHARE = 0.6;
 
 /** §7.5 trigger d. */
 export function notInRunReason(previous: PipelineContext['previous'], leagueId: LeagueId): string {
-  const short = getLeague(leagueId).shortName;
+  const league = getLeague(leagueId);
+  // A group of independents is not a league, and its short name ('Independent') is an adjective: the
+  // sentence names the group and takes a plural verb (DESIGN §24.9). Every league's sentence is unchanged.
+  const [subject, verb] = league.rules.classification === 'independent' ? [`The ${league.name}`, 'were'] : [league.shortName, 'was'];
   const stamp = lastFreshStamp(previous, leagueId);
   return stamp
-    ? `${short} was not fetched in this run, so it is shown as of ${stamp}.`
-    : `${short} was not fetched in this run.`;
+    ? `${subject} ${verb} not fetched in this run, so ${verb === 'were' ? 'they are' : 'it is'} shown as of ${stamp}.`
+    : `${subject} ${verb} not fetched in this run.`;
 }
 
 /** Freeze every configured league that is not in this run (§7.5 trigger d). */
@@ -223,6 +226,8 @@ export function divisionClassification(
   // division, whatever MaxPreps' league flag says) need no document, so they never fall back.
   if (league.rules.classification === 'contest-type') return 'contest-type';
   if (league.rules.classification === 'membership') return 'membership';
+  // The Southern Section independents: no game counts, no document to fall back from.
+  if (league.rules.classification === 'independent') return 'independent';
   return degraded.has(divisionId) ? 'fallback-contest-type' : 'official-fixtures';
 }
 

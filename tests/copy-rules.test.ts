@@ -904,9 +904,9 @@ describe('the SoCal leagues’ own config strings pass every rule', () => {
   }
   strings.push(['SITE_SCOPE_NOTE', SITE_SCOPE_NOTE]);
 
-  it('collects the four leagues', () => {
+  it('collects the four leagues and the independents', () => {
     expect(new Set(strings.map(([k]) => k.split(' ')[0]))).toEqual(
-      new Set(['sunset', 'city-western', 'city-eastern', 'city', 'avocado', 'palomar', 'valley', 'north-county', 'metro-mesa', 'metro-south-bay', 'metro', 'SITE_SCOPE_NOTE']),
+      new Set(['sunset', 'city-western', 'city-eastern', 'city', 'avocado', 'palomar', 'valley', 'north-county', 'metro-mesa', 'metro-south-bay', 'metro', 'independents', 'SITE_SCOPE_NOTE']),
     );
   });
 

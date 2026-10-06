@@ -60,15 +60,17 @@ const metroSlug = TEAMS.find((t) => t.league === 'metro')!.slug;
 describe('buildPrefsScript', () => {
   // The line was 2,048 B for 49 teams and 5 leagues (1,317 B measured). With 99 teams, the
   // league→region map and the region precedence it measured 2,454 B on 2026-10-06 (the design
-  // estimated 2.2–2.4 KB and proposed a 3,072 B line). The line is the measurement × 1.12 rounded
-  // up to 256 B: 2,748 → 2,816 B, 87 % used — room for a few more teams, not for another map.
-  it('stays within 2,816 B including the 99-entry slug map', () => {
-    expect(TEAMS.length).toBe(99);
-    expect(Buffer.byteLength(SCRIPT, 'utf8')).toBeLessThanOrEqual(2816);
+  // estimated 2.2–2.4 KB and proposed a 3,072 B line), and the line became the measurement × 1.12
+  // rounded up to 256 B: 2,748 → 2,816 B. The Southern Section independents (DESIGN §24.9: three
+  // slugs and one more league id, in L, G and R) took it to 2,537 B the same day; by the same rule
+  // 2,537 × 1.12 = 2,842 → 3,072 B, 83 % used.
+  it('stays within 3,072 B including the 102-entry slug map', () => {
+    expect(TEAMS.length).toBe(102);
+    expect(Buffer.byteLength(SCRIPT, 'utf8')).toBeLessThanOrEqual(3072);
   });
 
-  it('ships the region map once, non-default regions only: R={"socal":"sunset city north-county metro"}', () => {
-    expect(SCRIPT).toContain('R={"socal":"sunset city north-county metro"}');
+  it('ships the region map once, non-default regions only: R={"socal":"sunset city north-county metro independents"}', () => {
+    expect(SCRIPT).toContain('R={"socal":"sunset city north-county metro independents"}');
     expect(SCRIPT).not.toContain('"norcal":');
   });
 

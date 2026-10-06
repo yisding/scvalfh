@@ -174,7 +174,7 @@ export interface Team {
    * abbreviation; enforced at load (lib/teams.ts). Display only: resolution never keys on it.
    */
   shortName: string;
-  /** 2 letters, unique across the whole registry (99 teams). */
+  /** 2 letters, unique across the whole registry (102 teams). */
   abbr: string;
   /** MaxPreps `schoolNameAcronym`. Display only: NOT unique; indexed for resolution only when unique. */
   acronym: string;
@@ -663,10 +663,10 @@ export interface DivisionHealth {
   reportedRows: number | null;
   /**
    * The division's LeagueRules.classification ('membership' = the San Diego divisions: both sides members,
-   * whatever MaxPreps' league flag says), or 'fallback-contest-type' when an official-fixtures division
-   * fell back to MaxPreps' flag this run.
+   * whatever MaxPreps' league flag says; 'independent' = the Southern Section independents, where no game
+   * counts), or 'fallback-contest-type' when an official-fixtures division fell back to MaxPreps' flag this run.
    */
-  classification: 'contest-type' | 'official-fixtures' | 'membership' | 'fallback-contest-type';
+  classification: 'contest-type' | 'official-fixtures' | 'membership' | 'independent' | 'fallback-contest-type';
   official: {
     source: OfficialSourceId;
     total: number;
@@ -789,7 +789,7 @@ export interface Snapshot {
   /** ISO UTC, when the run started. 'today' everywhere is derived from this. */
   fetchedAt: string;
   season: Season;
-  /** EXACTLY the registry (99), in registry order, left-joined against the feeds. */
+  /** EXACTLY the registry (102), in registry order, left-joined against the feeds. */
   teams: Team[];
   /** Deduped on contestId. */
   games: Game[];

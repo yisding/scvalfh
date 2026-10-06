@@ -25,7 +25,7 @@ const views = TEAMS.map((t) => ({ slug: t.slug, view: buildRosterView(t.slug)! }
 
 describe('buildRosterView', () => {
   it('builds a view for every team of every league, and null only for a slug that is no team', () => {
-    expect(views).toHaveLength(99);
+    expect(views).toHaveLength(102);
     for (const { slug, view } of views) expect(view, slug).toBeTruthy();
     for (const id of LEAGUE_IDS) {
       for (const t of teamsInLeague(id)) expect(buildRosterView(t.slug), `${id} / ${t.slug}`).not.toBeNull();

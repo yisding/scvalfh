@@ -99,8 +99,8 @@ describe('data/rosters-enrichment.json', () => {
     expect(RosterEnrichmentSchema.safeParse(short).success).toBe(false);
   });
 
-  it('accepts any registry team, in any league, and covers all 99 plus the same season as the MaxPreps file', () => {
-    expect(TEAMS).toHaveLength(99);
+  it('accepts any registry team, in any league, and covers all 102 plus the same season as the MaxPreps file', () => {
+    expect(TEAMS).toHaveLength(102);
     expect(raw.teams.map((t) => t.slug).sort()).toEqual(TEAMS.map((t) => t.slug).sort());
     // A BVAL, PCAL or MCAL team takes a record exactly as an SCVAL one does.
     for (const slug of ['leigh', 'del-mar', 'redwood']) {
@@ -199,9 +199,9 @@ describe('data/rosters-enrichment.json', () => {
       'marin-academy': 'partial',
     });
     // The EAL has had no school-athletics sweep: Corning (empty) records no otherRosters, and its view says not-checked.
-    // Neither have the four Southern California leagues (stub entries, 2026-10-06): an empty SoCal roster
-    // (Chaparral, Fountain Valley, …) is not-checked too, never "none".
-    const SOCAL = new Set(['sunset', 'city', 'north-county', 'metro']);
+    // Neither have the four Southern California leagues nor the independents (stub entries, 2026-10-06): an
+    // empty SoCal roster (Chaparral, Fountain Valley, …) is not-checked too, never "none".
+    const SOCAL = new Set(['sunset', 'city', 'north-county', 'metro', 'independents']);
     const unswept = (slug: string) => EAL_SLUGS.has(slug) || SOCAL.has(getTeamBySlug(slug)!.league);
     for (const t of base.teams.filter((x) => x.status === 'empty' && !unswept(x.slug))) {
       expect(recorded[t.slug], t.slug).toBeDefined();

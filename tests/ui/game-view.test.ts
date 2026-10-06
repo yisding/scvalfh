@@ -308,13 +308,13 @@ describe('MCAL postseason note and superseded stubs (corpus copy)', () => {
     S = await loadModules();
   }, 600_000);
 
-  it('FormGoingIn names the 99 teams this site follows for a side outside them (components/game/FormGoingIn.tsx)', async () => {
+  it('FormGoingIn names the 102 teams this site follows for a side outside them (components/game/FormGoingIn.tsx)', async () => {
     const g = S.d.getGames().find((x) => (x.home.slug === null) !== (x.away.slug === null))!;
     expect(g, 'tests: the corpus copy has a game against a non-member').toBeDefined();
     const { FormGoingIn } = await import('../../components/game/FormGoingIn');
     const html = renderToStaticMarkup(createElement(FormGoingIn, { model: S.m.buildGameView(g.contestId)! }));
     expect(textOf(html), 'components/game/FormGoingIn.tsx').toContain(
-      'Not one of the 99 teams this site follows — no record is kept here.',
+      'Not one of the 102 teams this site follows — no record is kept here.',
     );
   });
 

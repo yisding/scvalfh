@@ -13,7 +13,10 @@
  *    dated inside the division's leaguePlay, whatever MaxPreps' league flag says: division-mates
  *    play each other home and away on MaxPreps' schedules (a double round robin; on Mon Oct 5 Pacific
  *    every pair was listed twice except Bonita Vista and Helix, once), while MaxPreps flags as few as 0
- *    of Patrick Henry's 10 as league games.
+ *    of Patrick Henry's 10 as league games;
+ *  - the Southern Section independents ('independent': Glendora, Harvard-Westlake and Thousand Oaks, each the
+ *    only field hockey team in its all-sports league) play no league games, so no game ever counts for their
+ *    division, not even a game between two of them, and none gets a classificationNote.
  *
  * Three San Diego additions sit beside the rule (all pure, all in `classifyGames`):
  *  - a game MaxPreps flags as a league game between two DIVISIONS of one league whose divisions publish
@@ -171,6 +174,8 @@ export function postseasonTag(game: Game): PostseasonTag | null {
 /**
  * The division whose table this game belongs to, for ANY status. null unless leagueDivision !== null. Then by the
  * division's league rule:
+ *  - 'independent' (the Southern Section independents): always null. The group has no league games and no
+ *        table, so a game between two of its teams is a non-league game like any other.
  *  - 'membership' (the San Diego divisions):
  *        null if game.postseason !== null
  *        null if contestTypes.home or contestTypes.away ∈ rules.excludeContestTypes ([2, 4]: tournament and
@@ -193,6 +198,7 @@ export function classifyGame(game: Game, opts: ClassifyOptions = {}): DivisionId
   if (!league) return null;
   const { rules } = league;
 
+  if (rules.classification === 'independent') return null;
   const types = game.contestTypes ?? { home: null, away: null };
   if (rules.classification === 'membership') {
     if (game.postseason !== null && game.postseason !== undefined) return null;

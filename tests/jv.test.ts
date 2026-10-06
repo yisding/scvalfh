@@ -69,8 +69,8 @@ describe('the si.com JV team map', () => {
   it('gives each school its own JV id, never a varsity one, and none to Marin Academy', () => {
     const ids = TEAMS.map((t) => jvSbliveTeamId(t.slug)).filter((id): id is string => id !== null);
     expect(new Set(ids).size).toBe(ids.length);
-    // 48 NorCal JV ids (Marin Academy has none) and the 50 Southern California ones read 2026-10-06.
-    expect(ids).toHaveLength(98);
+    // 48 NorCal JV ids (Marin Academy has none) and the 53 Southern California ones read 2026-10-06.
+    expect(ids).toHaveLength(101);
     const varsity = new Set(TEAMS.map((t) => t.external.sbliveTeamId));
     for (const id of ids) expect(varsity.has(id)).toBe(false);
     expect(jvSbliveTeamId('marin-academy')).toBeNull();

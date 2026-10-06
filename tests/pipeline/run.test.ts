@@ -32,7 +32,7 @@ import { runCorpus, snapshotOf, writeTempVariant } from './support/run-corpus';
 const MISSION = Object.keys(DATA_QUALITY.ignoredMaxprepsLeagueIds)[0];
 const opts = { cwd: REPO, now: '2026-10-02T15:00:00.000Z' };
 /** The four Southern California leagues: in no NorCal corpus, so frozen "not fetched in this run". */
-const SOCAL_FROZEN: Array<[string, string]> = ['sunset', 'city', 'north-county', 'metro'].map((id) => [id, 'frozen']);
+const SOCAL_FROZEN: Array<[string, string]> = ['sunset', 'city', 'north-county', 'metro', 'independents'].map((id) => [id, 'frozen']);
 const tmpOut = () => path.join(mkdtempSync(path.join(tmpdir(), 'scvalfh-out-')), 'snapshot.json');
 
 function bootstrapHtml(ssid: string): string {
@@ -129,7 +129,7 @@ describe('a full corpus run', () => {
     expect(gets.some((l) => l.includes(MISSION))).toBe(false);
     const summary = lines.find((l) => l.startsWith('summary: '));
     expect(summary).toMatch(
-      /^summary: teams 99 · games \d+ \(league \d+\) · finals \d+ · pending \d+ · backfilled 0 · mismatches \d+ · sources ok \d+\/\d+ · requests maxpreps:56 sblive:0 official:0 · leagues scval:fresh bval:fresh pcal:fresh mcal:fresh eal:frozen sunset:frozen city:frozen north-county:frozen metro:frozen$/,
+      /^summary: teams 102 · games \d+ \(league \d+\) · finals \d+ · pending \d+ · backfilled 0 · mismatches \d+ · sources ok \d+\/\d+ · requests maxpreps:56 sblive:0 official:0 · leagues scval:fresh bval:fresh pcal:fresh mcal:fresh eal:frozen sunset:frozen city:frozen north-county:frozen metro:frozen independents:frozen$/,
     );
   });
 
@@ -321,7 +321,7 @@ describe('prepareRun and the outputs', () => {
     expect(meta.fetchedAt).toBe('2026-10-02T15:00:00.000Z');
     expect(meta.today).toBe('2026-10-02');
     expect(meta.commitSummary).toMatch(
-      /^SCVAL \+\d+ finals · BVAL \+\d+ · PCAL \+\d+ · MCAL \+\d+ · EAL frozen \(not fetched\) · Sunset frozen \(not fetched\) · City frozen \(not fetched\) · North County frozen \(not fetched\) · Metro frozen \(not fetched\)$/,
+      /^SCVAL \+\d+ finals · BVAL \+\d+ · PCAL \+\d+ · MCAL \+\d+ · EAL frozen \(not fetched\) · Sunset frozen \(not fetched\) · City frozen \(not fetched\) · North frozen \(not fetched\) · Metro frozen \(not fetched\) · Independent frozen \(not fetched\)$/,
     );
     expect(meta.leagues.map((l) => [l.id, l.state])).toEqual([
       ['scval', 'fresh'],

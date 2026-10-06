@@ -19,12 +19,10 @@ export interface LeagueTeamsProps {
 const GRID = 'm-0 grid list-none grid-cols-4 gap-1.5 p-0 min-[360px]:gap-2';
 
 export function LeagueTeams({ view, className }: LeagueTeamsProps) {
-  const intro = view.singleDivision
-    ? `Teams in ${view.shortName}.`
-    : `Teams in ${view.shortName}, by division.`;
+  const intro = view.singleDivision ? `${view.title}.` : `${view.title}, by division.`;
   return (
     <section className={['[html[data-pin]_&]:hidden', className].filter(Boolean).join(' ')}>
-      <SectionHeader as="h3" kicker={`Teams in ${view.shortName}`} />
+      <SectionHeader as="h3" kicker={view.title} />
       <p className="sr-only">{intro} Choose one to pin it to the top of this page.</p>
       {view.groups.map((group, i) =>
         group.heading ? (

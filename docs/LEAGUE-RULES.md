@@ -6,7 +6,9 @@ standings, so this site extends them to the table). Four of them can end a leagu
 decides a level varsity game with 1 v 1s. The four Southern California leagues (the Sunset and the San
 Diego Section's City, North County and Metro conferences) publish no points rule, no standings and no
 schedule at all: this site orders their tables by its own 3-1-0 points and says so on every page
-(`orderScope: 'site'`). They differ in the tiebreak chain, in how a tie among three or more teams is worked through, in how a division champion is
+(`orderScope: 'site'`). The Southern Section's three independents (Glendora, Harvard-Westlake and
+Thousand Oaks) are not a league and have no table at all: see "Southern Section independents" below.
+The leagues differ in the tiebreak chain, in how a tie among three or more teams is worked through, in how a division champion is
 named and in what the postseason looks like. Every rule below is data in `lib/leagues.ts` with the
 by-law citation beside it; one engine (`lib/standings.ts`) runs them, and `/about#rules-<league>`
 prints them on the site. Where the documents say something this site cannot compute (a coin flip,
@@ -408,7 +410,8 @@ list of participating schools names Bonita, Chaparral, Edison, Fountain Valley, 
 Huntington Beach, Marina, Newport Harbor, Temecula Valley and Thousand Oaks; it omits the private schools
 Chaminade and Harvard-Westlake, which do field teams [V]. Harvard-Westlake, Thousand Oaks and Glendora are
 each the only field hockey team in their all-sports MaxPreps league (League B, Marmonte, Palomares) with no
-league-flagged game [V], so they appear only as opponents. Mayfair has a 2026-27 MaxPreps team but no game
+league-flagged game [V], so the site covers them as a group with no league ("Southern Section independents"
+below), never as Sunset teams. Mayfair has a 2026-27 MaxPreps team but no game
 and is not on the participating list [V].
 
 **Known data gaps.** MaxPreps' Sunset table holds five of the ten and orders them by winning percentage;
@@ -534,6 +537,47 @@ power rankings [V]; search names each.
 
 ---
 
+## Southern Section independents (CIF Southern Section)
+
+**Who.** Glendora, Harvard-Westlake and Thousand Oaks. Each is the only field hockey team in its
+all-sports league on MaxPreps for 2026-27: the Palomares League (Glendora), League B (Harvard-Westlake)
+and the Marmonte League (Thousand Oaks) [V: each team's MaxPreps team page, 2026-10-06]. MaxPreps'
+2025-26 tables for the same three leagues list one field hockey team each [V: 2026-10-06], so they were
+independents last season too. No document groups them; the site does, as "Southern Section independents"
+(short name "Independent"), because all three are Southern Section schools with a 2026 varsity schedule
+and no league to put them in.
+
+**Which games count.** None. The config's classification is `independent`: `lib/classify.ts` returns
+null for every game of the group, whatever MaxPreps' league flag says, so every game an independent plays
+is a non-league game, including a game between two of them (Harvard-Westlake 5, Glendora 0, Sep 8).
+There is no league schedule, so `gamesPerTeam` is null; `leaguePlay` (Aug 18 to Oct 20) is only the span
+of the three teams' MaxPreps schedules on 2026-10-05 Pacific, and nothing reads it as league dates.
+
+**Points, order and ties.** None apply: no points are awarded, no table is computed or ordered, and no one
+can be level at the top of a table that does not exist. The engine still carries the shape (3-1-0 and the
+`no-rule` stage, cited as "No league table exists, so there is no tie to break"), and every page that
+would show a table shows the group's note and its three team links instead. A team page counts every
+figure over all the team's games (overall record, streak, form, margins and splits); it has no place, no
+league record, no GP or MAX and no ladder.
+
+**Level games.** No Southern Section rule on overtime is published (Blue Book Article 200 adopts NFHS
+rules), so each game is recorded as reported, as for the Sunset.
+
+**Postseason.** None, for the Sunset's reason: the CIF Southern Section holds no field hockey playoffs
+(Blue Book 2026-27 Bylaws 2011.1 and 3500.2) and CIF holds no regional or state championship [V], so each
+independent's season ends with its last game, Oct 31 at the latest (the Section's last allowable
+contest). The config's postseason kind is `no-postseason`, with the one "No section playoffs" rung.
+
+**Official sources.** The Blue Book 2026-27 Field Hockey excerpt (Article 200) and cifss.org/sports/field-hockey/,
+as for the Sunset. The Season Preview's list of participating schools names Glendora and Thousand Oaks and
+omits Harvard-Westlake, which fields a team [V].
+
+**Known data gaps.** No MaxPreps or si.com table gathers the three (si.com's one-school league pages,
+Palomares 4235, League B 4207 and Marmonte 4213, are read for backfill only). `/history/2025-26` marks the
+group unavailable: there was no league table to publish.
+
+---
+
 ## At a glance
 
 | | SCVAL | BVAL | PCAL | MCAL | EAL |
@@ -549,14 +593,14 @@ power rankings [V]; search names each.
 | Postseason | CCS: 7 berths (top 3 per division + play-in) | CCS: 4 berths | CCS: 2 berths | MCAL tournament: top 6, byes 1-2 | Super Regional: top 6, Oct 30-31, no bracket published |
 | MaxPreps' table is trusted for | everything | everything (Santa Teresa: records only) | league record only | records and goals only | records and goals only |
 
-| | Sunset | City | North County | Metro |
-|---|---|---|---|---|
-| Section | SS | SDS | SDS | SDS |
-| Teams / divisions | 10 / 1 | 12 / 2 | 19 / 3 | 9 / 2 |
-| League games a team | no fixed number (2 to 7 flagged) | 10 | 10 or 12 | 6 or 8 |
-| Points (W / T / L) | this site's 3 / 1 / 0 (no league rule) | this site's 3 / 1 / 0 | this site's 3 / 1 / 0 | this site's 3 / 1 / 0 |
-| First tiebreak | none (no rule) | none (no rule) | none (no rule) | none (no rule) |
-| League evidence | MaxPreps league flag | division membership | division membership | division membership |
-| Level games | stand as reported | Section shootout (a win) | Section shootout (a win) | Section shootout (a win) |
-| Postseason | none (Blue Book 2011.1, 3500.2) | Section playoffs Nov 2–14: Open 8, I 12, II 12 | same | same |
-| MaxPreps' table is trusted for | informational only | informational only | informational only (Valley: no table) | informational only |
+| | Sunset | City | North County | Metro | Independents |
+|---|---|---|---|---|---|
+| Section | SS | SDS | SDS | SDS | SS |
+| Teams / divisions | 10 / 1 | 12 / 2 | 19 / 3 | 9 / 2 | 3 / no league |
+| League games a team | no fixed number (2 to 7 flagged) | 10 | 10 or 12 | 6 or 8 | none |
+| Points (W / T / L) | this site's 3 / 1 / 0 (no league rule) | this site's 3 / 1 / 0 | this site's 3 / 1 / 0 | this site's 3 / 1 / 0 | none (no table) |
+| First tiebreak | none (no rule) | none (no rule) | none (no rule) | none (no rule) | — |
+| League evidence | MaxPreps league flag | division membership | division membership | division membership | none: every game is non-league |
+| Level games | stand as reported | Section shootout (a win) | Section shootout (a win) | Section shootout (a win) | stand as reported |
+| Postseason | none (Blue Book 2011.1, 3500.2) | Section playoffs Nov 2–14: Open 8, I 12, II 12 | same | same | none (Blue Book 2011.1, 3500.2) |
+| MaxPreps' table is trusted for | informational only | informational only | informational only (Valley: no table) | informational only | no table |

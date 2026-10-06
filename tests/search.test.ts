@@ -15,6 +15,7 @@ const INDEX = buildSearchIndex(
   LEAGUES.map((l) => ({
     id: l.id, shortName: l.shortName, name: l.name,
     sectionShort: SECTIONS.find((s) => s.id === l.sectionId)!.shortName,
+    ...(l.rules.classification === 'independent' ? { independent: true } : {}),
     divisions: l.divisions.map((d) => ({
       id: d.id, label: d.label, heading: l.divisions.length === 1 ? null : d.label,
       searchAliases: d.searchAliases, teamCount: d.expectedTeams,
@@ -38,9 +39,9 @@ describe('normalizeQuery', () => {
 });
 
 describe('buildSearchIndex', () => {
-  it('holds the 99 teams in LEAGUES then registry order, with no league or division labels in team keys', () => {
+  it('holds the 102 teams in LEAGUES then registry order, with no league or division labels in team keys', () => {
     expect(INDEX.teams.map((t) => t.slug)).toEqual(TEAMS.map((t) => t.slug));
-    expect(INDEX.teams).toHaveLength(99);
+    expect(INDEX.teams).toHaveLength(102);
     const labels = new Set(
       LEAGUES.flatMap((l) => [l.shortName, l.name, ...l.divisions.flatMap((d) => [d.label, ...d.searchAliases])])
         .map((s) => normalizeQuery(s).compact),
@@ -65,12 +66,20 @@ describe('buildSearchIndex', () => {
       'league:city', 'division:city-western', 'division:city-eastern',
       'league:north-county', 'division:avocado', 'division:palomar', 'division:valley',
       'league:metro', 'division:metro-mesa', 'division:metro-south-bay',
+      'league:independents',
     ]);
     expect(INDEX.groups.find((g) => g.kind === 'league' && g.id === 'sunset')).toMatchObject({
       label: 'Sunset', detail: 'Sunset field hockey league · SS · 10 teams', href: '/standings/sunset',
     });
     expect(INDEX.groups.find((g) => g.id === 'palomar')).toMatchObject({
-      label: 'Palomar', detail: 'North County division · 7 teams', href: '/standings/north-county#palomar',
+      label: 'Palomar', detail: 'North division · 7 teams', href: '/standings/north-county#palomar',
+    });
+    // The North County Conference's short name is 'North' (2026-10-06); its full name still finds it.
+    expect(INDEX.groups.find((g) => g.kind === 'league' && g.id === 'north-county')).toMatchObject({
+      label: 'North', detail: 'North County Conference · SDS · 19 teams', href: '/standings/north-county',
+    });
+    expect(INDEX.groups.find((g) => g.kind === 'league' && g.id === 'independents')).toMatchObject({
+      label: 'Independent', detail: 'Southern Section independents · SS · 3 teams', href: '/standings/independents',
     });
     expect(INDEX.groups.find((g) => g.kind === 'league' && g.id === 'metro')).toMatchObject({
       label: 'Metro', detail: 'Metro Conference · SDS · 9 teams', href: '/standings/metro',
@@ -245,19 +254,33 @@ describe('searchTeams — §9.2 regression cases', () => {
 });
 
 describe('searchTeams — the Southern California amendment', () => {
-  it('"Harvard-Westlake", "Thousand Oaks", "Glendora" → not covered: the only team in its league', () => {
-    for (const [q, name] of [
-      ['Harvard-Westlake', 'Harvard-Westlake'], ['harvard westlake', 'Harvard-Westlake'],
-      ['Thousand Oaks', 'Thousand Oaks'], ['Thousand Oaks Lancers', 'Thousand Oaks'],
-      ['Glendora', 'Glendora'], ['glendora tartans', 'Glendora'],
+  it('"Harvard-Westlake", "Thousand Oaks", "Glendora" → their team pages: the Southern Section independents (DESIGN §24.9)', () => {
+    for (const [q, slug] of [
+      ['Harvard-Westlake', 'harvard-westlake'], ['harvard westlake', 'harvard-westlake'], ['Harvard', 'harvard-westlake'],
+      ['Thousand Oaks', 'thousand-oaks'], ['Thousand Oaks Lancers', 'thousand-oaks'],
+      ['Glendora', 'glendora'], ['glendora tartans', 'glendora'],
     ] as const) {
       const r = searchTeams(INDEX, q);
-      expect(r.teams, q).toEqual([]);
-      expect(r.notCovered.map((n) => n.reason), q).toEqual([
-        `${name} is the only field hockey team in its league, so it plays no league games and has no table here; its games against teams covered here show it as an opponent.`,
-      ]);
+      expect(r.teams[0]?.entry.slug, q).toBe(slug);
+      expect(r.teams[0]?.entry.leagueShort, q).toBe('Independent');
+      expect(r.notCovered, q).toEqual([]);
     }
-    expect(searchTeams(INDEX, 'Harvard').notCovered).toEqual([]);
+    // The group finds its block by its name and by "independent(s)".
+    for (const q of ['independent', 'Independents', 'Southern Section independents']) {
+      expect(searchTeams(INDEX, q).groups.map((g) => `${g.kind}:${g.id}`), q).toEqual(['league:independents']);
+    }
+  });
+
+  it('"River Valley", "North Salinas", "Notre Dame" → not covered: no 2026 varsity game', () => {
+    expect(searchTeams(INDEX, 'River Valley').notCovered.map((n) => n.reason)).toEqual([
+      'River Valley (Yuba City, Sac-Joaquin Section) has no 2026 varsity game on MaxPreps, so it has no page here.',
+    ]);
+    expect(searchTeams(INDEX, 'North Salinas').notCovered.map((n) => n.reason)).toEqual([
+      'North Salinas has no 2026 varsity game on MaxPreps, so it has no page here.',
+    ]);
+    expect(searchTeams(INDEX, 'Notre Dame').notCovered.map((n) => n.reason)).toEqual([
+      'Notre Dame (Salinas) has no 2026 varsity game on MaxPreps, so it has no page here.',
+    ]);
   });
 
   it('"Madison", "Santana", "Mayfair" → not covered: no 2026 varsity game', () => {

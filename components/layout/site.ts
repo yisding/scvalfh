@@ -9,8 +9,8 @@ import type { Metadata } from 'next';
 
 import { listWords, numberWord } from '../../lib/format';
 import {
-  DATA_QUALITY,
-  LEAGUES,
+  INDEPENDENT_LEAGUES,
+  LEAGUES_WITH_TABLES,
   REGIONS,
   SECTIONS,
   getSection,
@@ -19,7 +19,7 @@ import {
   type LeagueConfig,
   type SectionConfig,
 } from '../../lib/leagues';
-import type { RegionId, SectionId } from '../../lib/types';
+import type { RegionId } from '../../lib/types';
 import { SEASON_CALENDAR_YEAR } from '../../lib/season';
 import { TEAMS } from '../../lib/teams';
 
@@ -54,40 +54,47 @@ export const SITE_WORDMARK = 'NorCal HS Field Hockey';
 export const SITE_SHORT_NAME = 'NorCal FH';
 
 /**
+ * An independent group in a list of what is covered: `three Southern Section independents`, from the config
+ * (the group's team count and its section's briefLabel), so the words follow the registry. The group is
+ * covered but is not a league (it has no table), so no list calls it one and no count of leagues includes it
+ * (LEAGUES_WITH_TABLES, DESIGN §24.9).
+ */
+export function independentsWords(group: LeagueConfig): string {
+  const teams = group.divisions.reduce((n, d) => n + d.expectedTeams, 0);
+  return `${numberWord(teams)} ${getSection(group.sectionId).briefLabel} independents`;
+}
+
+/**
+ * Every covered league by its short name, then each group with no table by its name: 'SCVAL, BVAL, PCAL,
+ * MCAL, EAL, Sunset, City, North, Metro and the Southern Section independents' (DESIGN §24.9). For copy that
+ * names what the site covers in one list; never 'and Independent', whose short name is an adjective.
+ */
+export function coveredLeagueWords(): string {
+  return listWords([...LEAGUES_WITH_TABLES.map((l) => l.shortName), ...INDEPENDENT_LEAGUES.map((l) => `the ${l.name}`)]);
+}
+
+/**
  * Every league, grouped by its section in config order, each group followed by its section in a
  * parenthesis: `SCVAL, BVAL and PCAL (Central Coast Section), MCAL (North Coast Section) and EAL
  * (Northern Section)` with `'name'`, or each section's `briefLabel` with `'short'` (`… (CCS), MCAL
- * (NCS) and EAL (Northern Section)`). From SECTIONS and LEAGUES, so a league added or dropped in the
- * config changes every description that names them. `region` limits it to that region's sections
- * (`'socal'`, short: `Sunset (Southern Section) and City, North County and Metro (San Diego Section)`);
- * omitted, it names all nine leagues in config order, NorCal first.
+ * (NCS) and EAL (Northern Section)`). From SECTIONS and LEAGUES_WITH_TABLES, so a league added or dropped
+ * in the config changes every description that names them. The independent groups follow the leagues as
+ * one item each (`independentsWords`), so a sentence about every covered team stays true: `… City, North
+ * and Metro (San Diego Section) and three Southern Section independents`. `region` limits it to that
+ * region's sections (`'socal'`, short: `Sunset (Southern Section), City, North and Metro (San Diego Section)
+ * and three Southern Section independents`); omitted, it names all nine leagues in config order, NorCal
+ * first, then the independents.
  */
 export function leaguesBySectionWords(style: 'name' | 'short', region?: RegionId): string {
-  const groups = (region === undefined ? SECTIONS : sectionsInRegion(region)).flatMap((section) => {
-    const leagues = LEAGUES.filter((l) => l.sectionId === section.id);
+  const sections = region === undefined ? SECTIONS : sectionsInRegion(region);
+  const groups = sections.flatMap((section) => {
+    const leagues = LEAGUES_WITH_TABLES.filter((l) => l.sectionId === section.id);
     if (leagues.length === 0) return [];
     const label = style === 'name' ? section.name : section.briefLabel;
     return [`${listWords(leagues.map((l) => l.shortName))} (${label})`];
   });
-  return listWords(groups);
-}
-
-/**
- * The independents the scope note names (DESIGN-socal §2.4): Southern Section schools with games against
- * covered teams but no league of their own to cover — each is the only field hockey team in its all-sports
- * MaxPreps league (League B, Marmonte, Palomares; research-cifss.md §2a). A small constant rather than a
- * filter over DATA_QUALITY.notCovered's sentences, so a reworded reason cannot drop a school silently;
- * each name must be a notCovered entry (checked at module load, so a school removed there fails the build
- * rather than staying in the footer). Alphabetical, as the note lists them.
- */
-const INDEPENDENTS: { section: SectionId; names: readonly string[] } = {
-  section: 'ss',
-  names: ['Glendora', 'Harvard-Westlake', 'Thousand Oaks'],
-};
-for (const name of INDEPENDENTS.names) {
-  if (!DATA_QUALITY.notCovered.some((n) => n.name === name)) {
-    throw new Error(`components/layout/site.ts: independent ${name} is not a DATA_QUALITY.notCovered entry`);
-  }
+  const independents = INDEPENDENT_LEAGUES.filter((g) => sections.some((s) => s.id === g.sectionId)).map(independentsWords);
+  return listWords([...groups, ...independents]);
 }
 
 /**
@@ -104,12 +111,15 @@ function leagueNoun(league: LeagueConfig): string | null {
  * One section's part of the scope note, from LEAGUES: `the CIF Central Coast Section (SCVAL, BVAL,
  * PCAL)` when it has several leagues with no shared noun (the form the note always used for the CCS),
  * else `the North Coast Section’s MCAL`, `the Southern Section’s Sunset field hockey league`, `the San
- * Diego Section’s City, North County and Metro conferences`. `cif` prefixes the first part only.
+ * Diego Section’s City, North and Metro conferences`. `cif` prefixes the first part only.
  */
 function sectionCoverage(section: SectionConfig, leagues: readonly LeagueConfig[], cif: boolean): string {
   const lead = `the ${cif ? 'CIF ' : ''}${section.name}`;
   const nouns = new Set(leagues.map(leagueNoun));
-  const noun = nouns.size === 1 ? [...nouns][0] : null;
+  // The North County Conference's short name is 'North', so its noun reads 'county conference' beside City's and
+  // Metro's 'conference': when the nouns differ only before a shared last word, that word is the noun.
+  const lastWords = new Set([...nouns].map((n) => (n === null ? null : n.split(' ').pop() ?? null)));
+  const noun = nouns.size === 1 ? [...nouns][0] : lastWords.size === 1 ? [...lastWords][0] : null;
   if (leagues.length > 1 && noun === null) return `${lead} (${leagues.map((l) => l.shortName).join(', ')})`;
   const names = listWords(leagues.map((l) => l.shortName));
   return `${lead}’s ${names}${noun === null ? '' : ` ${noun}${leagues.length > 1 ? 's' : ''}`}`;
@@ -119,9 +129,9 @@ function sectionCoverage(section: SectionConfig, leagues: readonly LeagueConfig[
  * The site's meta description (root layout, manifest), one clause per region in REGIONS order, so NorCal
  * leads (owner decision, 2026-10-06: the brand and the focus stay NorCal; DESIGN §24.1): "Scores,
  * standings, schedules and playoff pictures for the 49 NorCal girls varsity field hockey teams in SCVAL,
- * BVAL and PCAL (CCS), MCAL (NCS) and EAL (Northern Section), and for the 50 Southern California teams
- * in Sunset (Southern Section) and City, North County and Metro (San Diego Section). Rebuilt twice daily
- * from MaxPreps; unofficial." The counts are the registry's (TEAMS by its league's region), the league
+ * BVAL and PCAL (CCS), MCAL (NCS) and EAL (Northern Section), and for the 53 Southern California teams
+ * in Sunset (Southern Section), City, North and Metro (San Diego Section) and three Southern Section
+ * independents. Rebuilt twice daily from MaxPreps; unofficial." The counts are the registry's (TEAMS by its league's region), the league
  * lists leaguesBySectionWords('short', region): a team or league added in the config changes the
  * sentence. The lead region carries the full noun phrase under its short name, the brand's word; the
  * second names its region in full, as the owner's wording of the sentence does.
@@ -137,23 +147,30 @@ export const SITE_DESCRIPTION = (() => {
 })();
 
 /**
- * What the site covers, in one paragraph for the footer and /about (SPEC §11; DESIGN-socal §2.4), built
- * from SECTIONS and LEAGUES in config order: "Covers the CIF Central Coast Section (SCVAL, BVAL, PCAL),
- * the North Coast Section’s MCAL, the Northern Section’s EAL, the Southern Section’s Sunset field hockey
- * league and the San Diego Section’s City, North County and Metro conferences. Teams outside these nine
- * leagues, including the Southern Section’s Glendora, Harvard-Westlake and Thousand Oaks, appear only as
- * opponents."
+ * What the site covers, in one paragraph for the footer and /about (SPEC §11; DESIGN-socal §2.4, §24.9),
+ * built from SECTIONS, LEAGUES_WITH_TABLES and the independent groups in config order: "Covers the CIF
+ * Central Coast Section (SCVAL, BVAL, PCAL), the North Coast Section’s MCAL, the Northern Section’s EAL, the
+ * Southern Section’s Sunset field hockey league and the San Diego Section’s City, North and Metro
+ * conferences, plus the Southern Section’s three independents (Glendora, Harvard-Westlake and Thousand
+ * Oaks), which play no league games. Other teams appear only as opponents."
+ *
+ * Until 2026-10-06 the second sentence read "Teams outside these nine leagues, including the Southern
+ * Section’s Glendora, Harvard-Westlake and Thousand Oaks, appear only as opponents." The three are covered
+ * now (owner decision: every California team with a 2026 varsity game), so the note names them as covered,
+ * and "outside these nine leagues" would no longer be the whole of what appears only as an opponent.
  */
 export const SITE_SCOPE_NOTE = (() => {
   const parts = SECTIONS.flatMap((section, i) => {
-    const leagues = LEAGUES.filter((l) => l.sectionId === section.id);
+    const leagues = LEAGUES_WITH_TABLES.filter((l) => l.sectionId === section.id);
     return leagues.length === 0 ? [] : [sectionCoverage(section, leagues, i === 0)];
   });
-  const independents = `the ${getSection(INDEPENDENTS.section).name}’s ${listWords(INDEPENDENTS.names)}`;
-  return (
-    `Covers ${listWords(parts)}. Teams outside these ${numberWord(LEAGUES.length)} leagues, including ` +
-    `${independents}, appear only as opponents.`
-  );
+  const plus = INDEPENDENT_LEAGUES.map((g) => {
+    const names = TEAMS.filter((t) => t.league === g.id).map((t) => t.name).sort();
+    const teams = g.divisions.reduce((n, d) => n + d.expectedTeams, 0);
+    return `the ${getSection(g.sectionId).name}’s ${numberWord(teams)} independents (${listWords(names)}), which play no league games`;
+  });
+  const covers = `Covers ${listWords(parts)}${plus.length ? `, plus ${listWords(plus)}` : ''}.`;
+  return `${covers} Other teams appear only as opponents.`;
 })();
 
 /**

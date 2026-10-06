@@ -733,7 +733,7 @@ describe('normalize: a level final in a 1 v 1 league (EAL)', () => {
     expect(res.games[0].decider).toBe('REG');
     expect(res.warnings).toContain(`contest ${id}: a level San Diego Section final with no shootout winner flagged`);
     const same = one([pairRow(id, ['escondido', 1, 'T'], ['vista', 1, 'T'])]);
-    expect(same.warnings).toContain(`contest ${id}: a level North County final with no shootout winner flagged`);
+    expect(same.warnings).toContain(`contest ${id}: a level North final with no shootout winner flagged`);
   });
 
   // The SDFHOA procedures cover the regular season and the playoffs, not invitational tournaments

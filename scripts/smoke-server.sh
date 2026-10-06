@@ -20,16 +20,18 @@
 # game and kept out of the sitemap), and data/clubs.json's count of /clubs/<slug> (DESIGN §17; no
 # OG card of its own, so none is fetched); the old anchors resolve without JavaScript (/standings
 # #de-anza #el-camino and the other section/league/division ids, the two region wrappers #norcal
-# #socal and the Southern California sections, leagues and divisions (DESIGN-socal §2.4), /standings/scval,
+# #socal and the Southern California sections, leagues and divisions (DESIGN-socal §2.4) and the Southern
+# Section independents' block #independents (DESIGN §24.9), /standings/scval,
 # /standings/bval, /playoffs #scval #bval #pcal #eal (the EAL's Super Regional card) #key-dates and
-# the SoCal cards #sunset #city #north-county #metro, a /schedule row per game day); every page the sitemap
+# the SoCal cards #sunset #city #north-county #metro #independents, a /schedule row per game day); every page the sitemap
 # lists answers 200 with its own content (a <main>, one <h1>
 # and the canonical URL of that path) and the next.config headers() cache rule, as do the metadata
 # routes and Route Handlers, whose images must be real PNGs of the declared size; hashed assets keep
 # the immutable cache (a stylesheet, a script chunk and a font; a missing one is a no-store 404);
 # the manifest names the site and its icons and robots.txt allows everything; an unknown URL, or an unknown param in
 # any dynamic family (/standings/nope, /schedule/nope, /playoffs/nope, /playoffs/scval,
-# /playoffs/eal, /playoffs/sunset and /playoffs/city — leagues, but not tournament leagues —
+# /playoffs/eal, /playoffs/sunset, /playoffs/city and /playoffs/independents — leagues or a group, but not
+# tournament leagues —
 # /playoffs/ccs, /teams/nope, /clubs/nope, …), is a no-store 404 with the root not-found page (its
 # OG card, where the family has one, an empty 404, /playoffs/scval/opengraph-image,
 # /playoffs/eal/opengraph-image and /playoffs/sunset/opengraph-image included),
@@ -167,8 +169,8 @@ paths=$(grep -F "$origin/" <<< "$locs" | sed "s#^$origin##" || true)
 [ "$(grep -c . <<< "$locs")" = "$(grep -c . <<< "$paths")" ] || fail /sitemap.xml "a <loc> is not on $origin"
 for path in / /about /standings /schedule /playoffs /teams /leaders /history/2025-26 /clubs /commits \
   /standings/bval /standings/mcal /standings/eal /schedule/scval /schedule/mcal /schedule/eal /playoffs/mcal \
-  /standings/sunset /standings/city /standings/north-county /standings/metro \
-  /schedule/sunset /schedule/city /schedule/north-county /schedule/metro; do
+  /standings/sunset /standings/city /standings/north-county /standings/metro /standings/independents \
+  /schedule/sunset /schedule/city /schedule/north-county /schedule/metro /schedule/independents; do
   grep -qxF "$path" <<< "$paths" || fail /sitemap.xml "does not list $path"
 done
 families=''
@@ -198,7 +200,7 @@ done <<< "$stubs"
 # Anchors that old links and the jump links rely on, with no JavaScript (SPEC §8.1).
 expect /standings 200 text/html "$public"
 for id in ccs ncs ns scval de-anza el-camino bval mt-hamilton santa-teresa pcal mcal marin-county eal \
-  norcal socal ss sds sunset city north-county metro \
+  norcal socal ss sds sunset city north-county metro independents \
   city-western city-eastern avocado palomar valley metro-mesa metro-south-bay; do
   grep -qF "id=\"$id\"" "$tmp/b" || fail /standings "no id=\"$id\" (anchor /standings#$id)"
 done
@@ -208,9 +210,10 @@ expect /standings/bval 200 text/html "$public"
 from_build /standings/bval
 for id in mt-hamilton santa-teresa; do grep -qF "id=\"$id\"" "$tmp/b" || fail /standings/bval "no id=\"$id\""; done
 expect /playoffs 200 text/html "$public"
-# The SoCal cards (DESIGN-socal §2.4): the Sunset's 'no-postseason' card and the three San Diego
-# leagues' 'section-playoffs' cards, which the nav's /playoffs#<id> targets resolve to.
-for id in scval bval pcal eal key-dates sunset city north-county metro; do
+# The SoCal cards (DESIGN-socal §2.4): the Sunset's 'no-postseason' card, the three San Diego
+# leagues' 'section-playoffs' cards and the Southern Section independents' 'no-postseason' card
+# (DESIGN §24.9), which the nav's /playoffs#<id> targets resolve to.
+for id in scval bval pcal eal key-dates sunset city north-county metro independents; do
   grep -qF "id=\"$id\"" "$tmp/b" || fail /playoffs "no id=\"$id\""
 done
 expect /schedule 200 text/html "$public"
@@ -276,7 +279,7 @@ if [ -z "$font" ]; then fail / "no /_next/static font in the HTML"; else expect 
 # the site does not have: each is the root not-found page as a no-store 404.
 for path in /no-such-page /game/not-a-real-id /scores/1999-01-01 /teams/nope /history/2024-25 /favicon.ico \
   /standings/nope /schedule/nope /playoffs/nope /playoffs/scval /playoffs/eal /playoffs/sunset /playoffs/city \
-  /playoffs/ccs /playoffs/socal /game/sblive-0 /clubs/nope; do
+  /playoffs/independents /playoffs/ccs /playoffs/socal /game/sblive-0 /clubs/nope; do
   expect "$path" 404 text/html "$nostore"
   grep -qF 'That page is not here.' "$tmp/b" || fail "$path" "not the root not-found page"
   got_og=$(grep -oE '<meta property="og:image" content="[^"]+"' "$tmp/b" | sed -n 1p || true)

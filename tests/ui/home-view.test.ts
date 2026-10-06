@@ -48,10 +48,12 @@ beforeAll(async () => {
 
 describe('home panels (components/home/home-view.ts → LeaguePanel)', () => {
   it('builds one panel per league, config order', () => {
-    expect(data.panels.map((p) => p.id), `${HV}: panels`).toEqual(['scval', 'bval', 'pcal', 'mcal', 'eal', 'sunset', 'city', 'north-county', 'metro']);
+    expect(data.panels.map((p) => p.id), `${HV}: panels`).toEqual([
+      'scval', 'bval', 'pcal', 'mcal', 'eal', 'sunset', 'city', 'north-county', 'metro', 'independents',
+    ]);
     // Each panel knows its region, from its section (DESIGN-socal §2.4): the page puts it in that block.
     expect(data.panels.map((p) => p.region), `${HV}: panel regions`).toEqual([
-      'norcal', 'norcal', 'norcal', 'norcal', 'norcal', 'socal', 'socal', 'socal', 'socal',
+      'norcal', 'norcal', 'norcal', 'norcal', 'norcal', 'socal', 'socal', 'socal', 'socal', 'socal',
     ]);
     for (const p of data.panels) {
       const html = renderPanel(p.id);
@@ -160,6 +162,18 @@ describe('home panels (components/home/home-view.ts → LeaguePanel)', () => {
         const html = renderToStaticMarkup(
           createElement(MiniStandings, { division }),
         );
+        // A group with no league table (the Southern Section independents, DESIGN §24.9): its note and
+        // its teams, never a table, a GP column or a place.
+        if (division.independent) {
+          expect(html, `components/home/MiniStandings.tsx: ${division.id} no table`).not.toContain('<table');
+          expect(textOf(html), `components/home/MiniStandings.tsx: ${division.id} kicker`).toContain('No league table');
+          expect(textOf(html), `components/home/MiniStandings.tsx: ${division.id} note`).toContain(division.independent.note);
+          for (const t of division.independent.teams) {
+            expect(html, `components/home/MiniStandings.tsx: ${t.slug} link`).toContain(`href="${t.href}"`);
+          }
+          continue;
+        }
+        expect(division.independent, `${HV}: ${division.id} is a league division`).toBeNull();
         const want = expected[division.id];
         const rows = (html.match(/<tr data-team-slug=/g) ?? []).length;
         // `want.rows`, plus any team sharing the place at the cutoff.
@@ -187,13 +201,16 @@ describe('home panels (components/home/home-view.ts → LeaguePanel)', () => {
         );
       }
     }
-    // The points legend: once per league, under its last table, citing the league's own rule.
+    // The points legend: once per league, under its last table, citing the league's own rule. The
+    // independents have no table, so no legend is drawn for them.
     for (const panel of data.panels) {
       expect(panel.pointsLegend, `${HV}: ${panel.id} legend`).toBe(
         `PTS: ${leagues.getLeague(panel.id).rules.citations.points}.`,
       );
       const html = renderPanel(panel.id);
-      expect(html.split(panel.pointsLegend).length - 1, `components/home/LeaguePanel.tsx: ${panel.id} legend once`).toBe(1);
+      expect(html.split(panel.pointsLegend).length - 1, `components/home/LeaguePanel.tsx: ${panel.id} legend once`).toBe(
+        leagues.isIndependentLeague(panel.id) ? 0 : 1,
+      );
     }
   });
 
@@ -221,7 +238,11 @@ describe('home panels (components/home/home-view.ts → LeaguePanel)', () => {
     // Only the panel's own region's leagues (DESIGN-socal §2.4): no SoCal line under a NorCal league.
     expect(bval.others.map((o) => o.id), `${HV}: BVAL strip`).toEqual(['scval', 'pcal', 'mcal', 'eal']);
     const city = data.panels.find((p) => p.id === 'city')!;
-    expect(city.others.map((o) => o.id), `${HV}: City strip`).toEqual(['sunset', 'north-county', 'metro']);
+    expect(city.others.map((o) => o.id), `${HV}: City strip`).toEqual(['sunset', 'north-county', 'metro', 'independents']);
+    // The independents' line never names a leader: they have no table (DESIGN §24.9).
+    expect(line(city, 'independents'), `${HV}: strip independents`).toBe('No league table');
+    // Its link is the group's own /standings page, which says why there is no table and lists the teams.
+    expect(city.others.find((o) => o.id === 'independents')?.href, `${HV}: strip independents href`).toBe('/standings/independents');
     expect(line(bval, 'scval'), `${HV}: strip SCVAL`).toBe('Saint Francis leads De Anza · Mitty leads El Camino');
     expect(line(scval, 'bval'), `${HV}: strip BVAL`).toBe(
       'Christopher leads Mt. Hamilton · Prospect & Westmont lead Santa Teresa',
@@ -234,6 +255,18 @@ describe('home panels (components/home/home-view.ts → LeaguePanel)', () => {
     const lead = (id: string, phase: Parameters<HomeView['phaseLead']>[1], today: string) =>
       home.phaseLead(leagues.getLeague(id), phase, today);
     expect(lead('mcal', 'regular', '2026-10-02'), `${HV}: regular renders nothing`).toBeNull();
+    // The independents (DESIGN §24.9): no league play to start, so the lead says there is no table, and
+    // names their first game only while it is ahead.
+    expect(lead('independents', 'regular', '2026-08-10'), `${HV}: independents before their first game`).toEqual({
+      lead: 'No league games.',
+      body: 'These teams play no league games, so there is no table; their first game is Tue Aug 18.',
+      link: { href: '/schedule/independents', label: 'Full schedule' },
+    });
+    expect(lead('independents', 'preseason', '2026-10-02')?.body, `${HV}: independents, no result yet, after Aug 18`).toBe(
+      'These teams play no league games, so there is no table.',
+    );
+    expect(lead('independents', 'regular', '2026-10-06'), `${HV}: independents in season`).toBeNull();
+    expect(lead('independents', 'complete', '2026-11-01')?.lead, `${HV}: independents complete`).toBe('The season is over.');
     // Before the first league date (config's, lib/leagues leaguePlayStarts), counting the
     // non-league finals played by that day only (lib/data getNonLeagueFinalsPlayed).
     expect(lead('scval', 'regular', '2026-09-01'), `${HV}: SCVAL before league play`).toEqual({
@@ -319,7 +352,9 @@ describe('home panels (components/home/home-view.ts → LeaguePanel)', () => {
 describe('first visit (components/home/FindYourTeam.tsx, LeagueCard.tsx)', () => {
   it('has a card per league with its facts and both ways on', async () => {
     const { LeagueCard } = await import('../../components/home/LeagueCard');
-    expect(data.leagueCards.map((c) => c.id), `${HV}: cards`).toEqual(['scval', 'bval', 'pcal', 'mcal', 'eal', 'sunset', 'city', 'north-county', 'metro']);
+    expect(data.leagueCards.map((c) => c.id), `${HV}: cards`).toEqual([
+      'scval', 'bval', 'pcal', 'mcal', 'eal', 'sunset', 'city', 'north-county', 'metro', 'independents',
+    ]);
     const bval = data.leagueCards.find((c) => c.id === 'bval')!;
     expect(bval, `${HV}: BVAL card`).toMatchObject({
       shortName: 'BVAL',
@@ -347,17 +382,25 @@ describe('first visit (components/home/FindYourTeam.tsx, LeagueCard.tsx)', () =>
       teamsLine: '6 teams',
       divisions: [],
     });
+    expect(data.leagueCards.map((c) => c.showName), `${HV}: card button names`).toEqual([
+      'SCVAL', 'BVAL', 'PCAL', 'MCAL', 'EAL', 'Sunset', 'City', 'North County', 'Metro', 'the independents',
+    ]);
     for (const card of data.leagueCards) {
       const html = renderToStaticMarkup(createElement(LeagueCard, { card }));
-      expect(textOf(html), `components/home/LeagueCard.tsx: ${card.id}`).toContain(`Show ${card.shortName} here`);
-      expect(html, `components/home/LeagueCard.tsx: ${card.id} link`).toContain(`href="/standings/${card.id}"`);
+      // The independents: no standings to open, so the plain link is their schedule (DESIGN §24.9). The
+      // button names the league by its standalone name: 'Show North County here', 'Show the independents here'.
+      const independent = leagues.isIndependentLeague(card.id);
+      expect(textOf(html), `components/home/LeagueCard.tsx: ${card.id}`).toContain(`Show ${leagues.standaloneName(card.id)} here`);
+      expect(html, `components/home/LeagueCard.tsx: ${card.id} link`).toContain(
+        independent ? `href="/schedule/${card.id}"` : `href="/standings/${card.id}"`,
+      );
       expect(html, 'components/home/SetLeagueButton.tsx: js-only, disabled before hydration').toMatch(
         /<button[^>]*disabled=""[^>]*class="sx-js-only/,
       );
     }
   });
 
-  it('the last card of a region’s odd count spans both columns (NorCal five: 2 + 2 + 1; SoCal four: 2 + 2)', () => {
+  it('the last card of a region’s odd count spans both columns (NorCal five: 2 + 2 + 1; SoCal five: 2 + 2 + 1)', () => {
     const cards = [...pageHtml.matchAll(/<li class="sx-card flex[^"]*"/g)].map((m) => m[0]);
     expect(cards, 'app/page.tsx: one card per league').toHaveLength(data.leagueCards.length);
     // Per region grid (DESIGN-socal §2.4): the col-span rule is each grid's own.
@@ -373,7 +416,7 @@ describe('first visit (components/home/FindYourTeam.tsx, LeagueCard.tsx)', () =>
         );
       });
     }
-    expect(data.regions.map((r) => r.leagueCards.length), `${HV}: cards per region`).toEqual([5, 4]);
+    expect(data.regions.map((r) => r.leagueCards.length), `${HV}: cards per region`).toEqual([5, 5]);
     // Each grid is preceded by an h3 naming its region, under the one "Find your team" h2.
     expect(pageHtml).toMatch(/<h3 data-region-scope="norcal"[^>]*>Northern California<\/h3><ul data-region-scope="norcal"/);
     expect(pageHtml).toMatch(/<h3 data-region-scope="socal"[^>]*>Southern California<\/h3><ul data-region-scope="socal"/);
@@ -382,7 +425,7 @@ describe('first visit (components/home/FindYourTeam.tsx, LeagueCard.tsx)', () =>
 
 describe('the rendered home page (app/page.tsx)', () => {
   it('has one data-scope section per league, a first-visit block and the always-on chrome', () => {
-    for (const id of ['scval', 'bval', 'pcal', 'mcal', 'eal', 'sunset', 'city', 'north-county', 'metro']) {
+    for (const id of ['scval', 'bval', 'pcal', 'mcal', 'eal', 'sunset', 'city', 'north-county', 'metro', 'independents']) {
       expect(pageHtml.split(`<section data-scope="${id}"`).length - 1, `app/page.tsx: ${id} panel`).toBe(1);
     }
     expect(pageHtml, 'components/home/FindYourTeam.tsx: first-visit block').toMatch(
@@ -399,7 +442,7 @@ describe('the rendered home page (app/page.tsx)', () => {
     expect(textOf(pageHtml), 'app/page.tsx: status line').toMatch(
       /Results through \w{3} \w{3} \d{1,2} · 49 NorCal teams · SCVAL · BVAL · PCAL · MCAL · EAL/,
     );
-    expect(textOf(pageHtml), 'app/page.tsx: SoCal status line').toMatch(/· 50 SoCal teams · Sunset · City · North County · Metro/);
+    expect(textOf(pageHtml), 'app/page.tsx: SoCal status line').toMatch(/· 53 SoCal teams · Sunset · City · North · Metro · Independent/);
     // ONE finder, outside every region block; the region control leads the scope row.
     expect(pageHtml.split('aria-labelledby="find-your-team"').length - 1).toBe(1);
     expect(pageHtml, 'app/page.tsx: region control').toMatch(/data-region-option="norcal"[\s\S]*data-league-option="all"/);
@@ -419,7 +462,7 @@ describe('the rendered home page (app/page.tsx)', () => {
     expect(dupes, 'app/page.tsx: duplicate ids').toEqual([]);
     for (const id of [
       'my-team-heading', 'find-your-team', 'league-scval', 'league-bval', 'league-pcal', 'league-mcal', 'league-eal',
-      'league-sunset', 'league-city', 'league-north-county', 'league-metro', 'latest-every-league', 'latest-every-league-socal',
+      'league-sunset', 'league-city', 'league-north-county', 'league-metro', 'league-independents', 'latest-every-league', 'latest-every-league-socal',
     ]) {
       expect(ids, `app/page.tsx: #${id}`).toContain(id);
     }
@@ -437,21 +480,21 @@ describe('the rendered home page (app/page.tsx)', () => {
 describe('the pinned card (components/home/MyTeamCard.tsx ← home-view.ts team views)', () => {
   /** The card's identity: the search index entry its view joins to on `slug` (MyTeamCard.tsx). */
   const cardTeam = (slug: string) => data.searchIndex.teams.find((t) => t.slug === slug)!;
-  /** The league a view's team plays in, from its table link (`/standings/<league>#<division>`). */
-  const cardTeamLeague = (slug: string) => data.teamViews.find((v) => v.slug === slug)!.tableHref.split('/')[2].split('#')[0];
+  /** The league a view's team plays in, from its search-index entry (a team with no table has no table link). */
+  const cardTeamLeague = (slug: string) => cardTeam(slug).leagueId;
 
   it('joins every view to exactly one search-index entry, and ships no identity of its own', () => {
     const slugs = data.teamViews.map((v) => v.slug);
-    expect(new Set(slugs).size, `${HV}: one view per team`).toBe(99);
+    expect(new Set(slugs).size, `${HV}: one view per team`).toBe(102);
     expect([...slugs].sort(), `${HV}: views ↔ search index`).toEqual(data.searchIndex.teams.map((t) => t.slug).sort());
     for (const v of data.teamViews) {
       expect(Object.hasOwn(v, 'team'), `${HV}: ${v.slug} carries no second copy of the identity`).toBe(false);
     }
   });
 
-  it('has a view for all 99 teams with the meta, played and postseason lines', async () => {
+  it('has a view for all 102 teams with the meta, played and postseason lines', async () => {
     const { PinnedCard } = await import('../../components/home/MyTeamCard');
-    expect(data.teamViews, `${HV}: team views`).toHaveLength(99);
+    expect(data.teamViews, `${HV}: team views`).toHaveLength(102);
     const leigh = data.teamViews.find((v) => v.slug === 'leigh')!;
     expect(leigh.meta, `${HV}: meta`).toBe('3rd · Mt. Hamilton · BVAL');
     expect(leigh.played, `${HV}: played`).toBe('3 of 10 played');

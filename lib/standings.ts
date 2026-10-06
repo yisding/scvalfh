@@ -877,6 +877,9 @@ function tiebreakNote(
   rules: LeagueRules,
 ): string {
   const { citations, points } = rules;
+  // The Southern Section independents: rows exist for the schema (every registry team has a standing), each
+  // with gp 0, but there is no table, so the note never says games are still to be counted.
+  if (rules.classification === 'independent') return 'Independent: no league games, so no table';
   if (record.gp === 0) {
     // A 'site' league's team with no counted game may simply have none yet (a Sunset team plays only the
     // games MaxPreps marks as league games; Metro South Bay's first is Oct 7), so its note says the games

@@ -38,7 +38,7 @@
  * blocked nothing is stamped and the first-visit view (with every link working) is what renders.
  *
  * This module imports only the import-free pinned-team-script leaf, on purpose: the league ids, the
- * league→region map and the 99-entry `{slug: league}` map are arguments, so it is safe to import
+ * league→region map and the 102-entry `{slug: league}` map are arguments, so it is safe to import
  * from a client module (components/ui/use-league.ts reads `LEAGUE_KEY`, `REGION_KEY`,
  * `PREFS_RESTAMP` and `REGION_OF`) and from the root layout alike.
  *
@@ -100,7 +100,7 @@ export function buildPrefsScript({ leagueIds, slugLeague, leagueRegion, defaultR
     throw new Error(`prefs-script: the default region must be ${STAMPLESS_REGION}, got ${JSON.stringify(defaultRegion)}`);
   }
   // The map is shipped grouped by league, slugs space-joined, which is about half the bytes of a
-  // flat {slug: league} object (99 entries) and keeps the whole script within its 3 KB line
+  // flat {slug: league} object (102 entries) and keeps the whole script within its 3 KB line
   // (2,454 B measured 2026-10-06; tests/ui/prefs-script.test.ts).
   const grouped: Record<string, string[]> = {};
   for (const [slug, league] of Object.entries(slugLeague)) {

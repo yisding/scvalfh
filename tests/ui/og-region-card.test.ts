@@ -92,7 +92,7 @@ async function renderPng(element: ReactElement, height: number): Promise<ReturnT
 }
 
 describe('the two-region leaders card (components/layout/og-region-card.tsx)', () => {
-  it('lays the nine leagues out in two region columns, NorCal first', async () => {
+  it('lays the nine leagues out in two region columns, NorCal first (the independents have no table, so no row)', async () => {
     const { regionCardColumns } = await import('../../components/layout/og-region-card');
     const columns = regionCardColumns();
     expect(columns.map((c) => c.heading)).toEqual(['Northern California', 'Southern California']);
@@ -106,11 +106,11 @@ describe('the two-region leaders card (components/layout/og-region-card.tsx)', (
     const { rootCardProps, standingsCardProps } = await import('../../components/layout/og-region-card');
     const root = rootCardProps();
     expect(root.title).toBe('NorCal HS Field Hockey · 2026');
-    expect(root.footer).toMatch(/^9 leagues · \d+ teams · (results through \S.*|no results yet) · unofficial$/);
+    expect(root.footer).toMatch(/^9 leagues, 3 independents · 102 teams · (results through \S.*|no results yet) · unofficial$/);
     const standings = standingsCardProps();
     expect(standings.eyebrow).toBe('NorCal HS Field Hockey');
     expect(standings.title).toBe('Standings — every league');
-    expect(standings.footer).toMatch(/^9 leagues · \d+ teams( · results through \S.*)? · unofficial$/);
+    expect(standings.footer).toMatch(/^9 leagues, 3 independents · 102 teams( · results through \S.*)? · unofficial$/);
   });
 
   it('both cards fit 1200×630 with every leader line forced to its longest, and render as PNG', async () => {

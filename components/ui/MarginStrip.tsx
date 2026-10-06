@@ -50,6 +50,12 @@ export interface MarginStripProps {
   slots: number;
   /** Phone / desktop, INCLUDING the axis band. */
   height?: 160 | 200;
+  /**
+   * 'league' (default): `entries` are league games. 'all': every game, for a team that plays no league games
+   * (the Southern Section independents, DESIGN §24.9); the legend and the table's caption say "game", never
+   * "league game".
+   */
+  scope?: 'league' | 'all';
   className?: string;
 }
 
@@ -72,13 +78,15 @@ export function MarginStrip({
   teamName,
   slots,
   height = 160,
+  scope = 'league',
   className,
 }: MarginStripProps) {
+  const league = scope === 'league' ? 'league ' : '';
   const played = entries.filter((e) => e.margin !== null && !e.excludedFromMargin);
   if (played.length === 0) {
     return (
       <EmptyState
-        heading={`No league results reported for ${teamName}.`}
+        heading={`No ${league}results reported for ${teamName}.`}
         variant="plain"
         className={className}
       >
@@ -285,8 +293,16 @@ export function MarginStrip({
       {/* The chart is as wide as its card; the legend is prose, so it keeps a reading measure. */}
       <p className="mt-3 mb-0 max-w-prose text-meta text-ink-3">
         {signedMargin(best)} best &middot; {signedMargin(worst)} worst &middot;{' '}
-        {signedMargin(latest)} most recent. H / A / N is home, away, neutral; <b>?</b> is a league
-        game with no result yet
+        {signedMargin(latest)} most recent. H / A / N is home, away, neutral;{' '}
+        {scope === 'all' ? (
+          <>
+            <b>?</b> is a game with no result yet
+          </>
+        ) : (
+          <>
+            <b>?</b> is a league game with no result yet
+          </>
+        )}
         {unreported ? (
           <>
             ; <b>{EN_DASH}</b> is a game whose score was not reported
@@ -301,7 +317,11 @@ export function MarginStrip({
       <details className="sx-disclosure mt-2">
         <summary>Show as table</summary>
         <table className="sx-table mt-2 text-meta">
-          <caption className="sr-only">{teamName} league goal margin by game</caption>
+          {scope === 'all' ? (
+            <caption className="sr-only">{teamName} goal margin by game</caption>
+          ) : (
+            <caption className="sr-only">{teamName} league goal margin by game</caption>
+          )}
           <thead>
             <tr>
               <th scope="col">Date</th>

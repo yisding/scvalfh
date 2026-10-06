@@ -454,7 +454,7 @@ describe('copy honesty over every league’s view models (SPEC §10.9)', () => {
 
   it('no seed word in a SoCal league’s views (San Diego seeding is the Section’s, never applied; the Sunset has no playoffs)', () => {
     const ids = new Set([...leagues.SECTION_PLAYOFFS_LEAGUE_IDS, ...leagues.NO_POSTSEASON_LEAGUE_IDS]);
-    expect([...ids].sort(), 'lib/leagues.ts: section-playoffs and no-postseason leagues').toEqual(['city', 'metro', 'north-county', 'sunset']);
+    expect([...ids].sort(), 'lib/leagues.ts: section-playoffs and no-postseason leagues').toEqual(['city', 'independents', 'metro', 'north-county', 'sunset']);
     for (const s of all().filter((x) => x.league && ids.has(x.league))) {
       expectNone(s, 'prints a seed word', (v) => !isUrl(v) && SEED_CLAIM.test(v));
     }
@@ -469,7 +469,7 @@ describe('copy honesty over every league’s view models (SPEC §10.9)', () => {
 
   it('never "rules require" in the views of a league whose table order is this site’s own (orderScope "site")', () => {
     const ids = new Set(leagues.LEAGUES.filter((l) => l.rules.orderScope === 'site').map((l) => l.id));
-    expect([...ids].sort(), 'lib/leagues.ts: orderScope "site" leagues').toEqual(['city', 'metro', 'north-county', 'sunset']);
+    expect([...ids].sort(), 'lib/leagues.ts: orderScope "site" leagues').toEqual(['city', 'independents', 'metro', 'north-county', 'sunset']);
     for (const s of all().filter((x) => x.league && ids.has(x.league))) {
       expectNone(s, 'says "rules require" (no league rule orders this table)', (v) => !isUrl(v) && RULES_REQUIRE_CLAIM.test(v));
     }

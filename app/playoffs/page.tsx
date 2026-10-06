@@ -40,7 +40,13 @@ import {
 } from '../../lib/data';
 import type { LeagueSummary } from '../../lib/data';
 import { dateSpan, listWords, monthDay, shortDate } from '../../lib/format';
-import { NO_POSTSEASON_LEAGUE_IDS, SECTION_PLAYOFFS_LEAGUE_IDS, UNBRACKETED_LEAGUE_IDS, getLeague } from '../../lib/leagues';
+import {
+  NO_POSTSEASON_LEAGUE_IDS,
+  SECTION_PLAYOFFS_LEAGUE_IDS,
+  UNBRACKETED_LEAGUE_IDS,
+  getLeague,
+  isIndependentLeague,
+} from '../../lib/leagues';
 import type { LeagueConfig } from '../../lib/leagues';
 import type { LeagueId, PlayoffProjection as Projection } from '../../lib/types';
 
@@ -63,7 +69,9 @@ import type { LeagueId, PlayoffProjection as Projection } from '../../lib/types'
  * places teams. One card per conference (`#city`, `#north-county`, `#metro`) gives each division's table
  * leaders and each team's playoff division (I or II, the Section's 2026 Divisions sheet). Then the
  * Sunset's card (`#sunset`): the Southern Section holds no field hockey playoffs (Blue Book 2011.1,
- * 3500.2), with its source. No SoCal sentence says "at-large", "automatic qualifier" or "seed".
+ * 3500.2), with its source; and the Southern Section independents' card (`#independents`, DESIGN §24.9):
+ * the three play as independents (the group's note) and the Section holds no playoffs. No SoCal sentence
+ * says "at-large", "automatic qualifier" or "seed".
  *
  * The NorCal blocks, in order: the CCS intro (+ the not-seeded state, one sentence), the NCS pointer
  * card and the EAL card, "The field" (one BerthMeter row per CCS league + the at-large line), "Key
@@ -173,8 +181,9 @@ function leagueBlock(summary: LeagueSummary): LeagueBlock {
 
 /**
  * Where each league's season leads, from config, in config order: 'the CCS championships (SCVAL, BVAL
- * and PCAL), the MCAL tournament, the EAL’s Super Regional, no playoffs for the Sunset and the San
- * Diego Section playoffs (City, North County and Metro)'.
+ * and PCAL), the MCAL tournament, the EAL’s Super Regional, no playoffs for the Sunset or the Southern
+ * Section independents and the San Diego Section playoffs (City, North and Metro)'. A group with no table
+ * is named in full (its short name, 'Independent', is an adjective).
  */
 function postseasonWords(): string {
   const parts: Array<{ key: string; words: (shorts: string[]) => string; shorts: string[] }> = [];
@@ -196,7 +205,11 @@ function postseasonWords(): string {
         add(summary.id, summary.shortName, () => `the ${summary.shortName}’s ${ps.name}`);
         break;
       case 'no-postseason':
-        add(summary.id, summary.shortName, () => `no playoffs for the ${summary.shortName}`);
+        add(
+          'no-postseason',
+          isIndependentLeague(summary.id) ? summary.name : summary.shortName,
+          (shorts) => `no playoffs for ${listWords(shorts.map((s) => `the ${s}`), 'or')}`,
+        );
         break;
       case 'section-playoffs':
         add(ps.name, summary.shortName, (shorts) => `the ${ps.name} (${listWords(shorts)})`);
@@ -597,14 +610,26 @@ function SectionPlayoffsLeagueCard({ summary }: { summary: LeagueSummary }) {
   );
 }
 
-/** A league with no postseason (the Sunset, `id=<league>`): the config's note and its source, nothing to project. */
+/**
+ * A league with no postseason (the Sunset, `id=<league>`): the config's note and its source, nothing to
+ * project. The Southern Section independents' card (`#independents`) is headed by the group's name and
+ * opens with the group's own note (they play as independents: no league games, no table), then the
+ * Section's.
+ */
 function NoPostseasonCard({ summary }: { summary: LeagueSummary }) {
-  const ps = getLeague(summary.id).postseason;
+  const league = getLeague(summary.id);
+  const ps = league.postseason;
   if (ps.kind !== 'no-postseason') return null;
+  const independent = isIndependentLeague(summary.id);
+  const groupNote = independent && league.divisions[0]?.official.mode === 'none' ? league.divisions[0].official.note : null;
   return (
     <section id={summary.id} aria-labelledby={`${summary.id}-heading`} className="mt-section md:mt-section-lg">
-      <SectionHeader id={`${summary.id}-heading`} kicker={`${summary.shortName} — ${summary.name}`} />
+      <SectionHeader
+        id={`${summary.id}-heading`}
+        kicker={independent ? summary.name : `${summary.shortName} — ${summary.name}`}
+      />
       <div className="sx-inset max-w-3xl text-body text-ink-2">
+        {groupNote ? <p className="m-0 mb-2">{groupNote}</p> : null}
         <p className="m-0">{ps.note}</p>
         <p className="mb-0 text-meta">
           {`${ps.citations.noPlayoffs}.`}{' '}

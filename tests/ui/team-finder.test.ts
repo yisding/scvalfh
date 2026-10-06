@@ -1,7 +1,7 @@
 /**
  * The team finder (components/search/TeamFinder.tsx, SPEC §9.3): its initial markup in both modes
  * (react-dom/server), its wiring to lib/search.ts, the pin-mode buttons' accessible names for all
- * 99 teams, and unique `useId` ids when a page renders two finders.
+ * 102 teams, and unique `useId` ids when a page renders two finders.
  */
 import { Fragment, createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
@@ -84,8 +84,8 @@ describe('TeamFinder initial markup', () => {
 });
 
 describe('TeamFinder wiring to lib/search.ts', () => {
-  it('has the 99-team index', () => {
-    expect(index.teams).toHaveLength(99);
+  it('has the 102-team index', () => {
+    expect(index.teams).toHaveLength(102);
   });
 
   it('filter mode matches every team searchTeams matches, in its order, and lists none itself', () => {
@@ -129,7 +129,7 @@ describe('TeamFinder wiring to lib/search.ts', () => {
 
   it('says what search covers when nothing matches, and the not-covered reason when that matches', () => {
     expect(finderView(index, 'xyz', 'pin').message).toBe(
-      'No team matches "xyz". Search covers the 99 teams in SCVAL, BVAL, PCAL, MCAL, EAL, Sunset, City, North County and Metro.',
+      'No team matches "xyz". Search covers the 102 teams in SCVAL, BVAL, PCAL, MCAL, EAL, Sunset, City, North, Metro and the Southern Section independents.',
     );
     const york = finderView(index, 'york', 'filter');
     expect(york.notCovered).toHaveLength(1);
@@ -155,7 +155,7 @@ describe('TeamFinder wiring to lib/search.ts', () => {
 });
 
 describe('pin-mode result buttons', () => {
-  it('every one of the 99: no aria-label, the name is the pin label (plus a SoCal team’s section), the visible text is inside it in order', () => {
+  it('every one of the 102: no aria-label, the name is the pin label (plus a SoCal team’s section), the visible text is inside it in order', () => {
     for (const entry of index.teams) {
       const html = renderToStaticMarkup(createElement(PinResult, { entry, onPick: () => {} }));
       expect(html.startsWith('<button type="button"'), entry.slug).toBe(true);
@@ -193,7 +193,7 @@ describe('pin-mode result buttons', () => {
     expect(pinResultDetail(tam)).toBe('MCAL');
     expect(resultDetail(tam), 'NorCal: the line is unchanged').toBe('MCAL');
     const palomar = index.teams.find((t) => t.slug === 'poway')!;
-    expect(resultDetail(palomar)).toBe('Palomar · North County · San Diego Section');
+    expect(resultDetail(palomar)).toBe('Palomar · North · San Diego Section');
     const bonita = index.teams.find((t) => t.slug === 'bonita')!;
     expect(resultDetail(bonita)).toBe('Sunset · Southern Section');
   });

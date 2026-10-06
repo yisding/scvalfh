@@ -19,13 +19,18 @@
  * the diff, because a wrong season id would silently publish last year's table.
  *
  * Cost warning: `team-context/v1` is ~738 KB per team (a school's whole 844-season history), so the
- * default pass (one team per division, 15 divisions) moves ~11 MB; probing all 99 teams would move
- * ~73 MB. A division configured with no MaxPreps table (maxprepsLeagueId null: the San Diego Section's
+ * default pass (one team per division of the 15 league divisions, plus each of the three
+ * independents: 18 teams) moves ~13 MB; probing all 102 teams would move ~75 MB. A division configured with no MaxPreps table (maxprepsLeagueId null: the San Diego Section's
  * Valley) is still probed, and the diff says whether one of its members now carries a league. That is why the daily cron never touches this endpoint.
+ *
+ * A group with no league (the Southern Section independents, DESIGN §24.9) is probed member by member (three
+ * more team contexts, ~2.2 MB): each is the only field hockey team in its own all-sports league, so MaxPreps
+ * lists a league for each, and that is expected. The diff names each member's league and asks a human to
+ * check that the school is still that league's only field hockey team; it is never counted as a change.
  */
 
 import { MaxPrepsClient, MaxPrepsError } from '../lib/sources/maxpreps';
-import { ALL_DIVISIONS } from '../lib/leagues';
+import { ALL_DIVISIONS, isIndependentDivision } from '../lib/leagues';
 import {
   ALL_SEASON_ID,
   BOOTSTRAP_URL,
@@ -135,6 +140,8 @@ async function main(argv: readonly string[]): Promise<number> {
     ? TEAMS.filter((t) => args.teams?.includes(t.slug))
     : ALL_DIVISIONS.flatMap((d) => {
         const members = teamsInDivision(d.id);
+        // An independent group's members share no league, so one of them says nothing about the others.
+        if (isIndependentDivision(d.id)) return members;
         const rep = members.find((t) => t.dataCoverage !== 'none') ?? members[0];
         return rep ? [rep] : [];
       });
@@ -223,6 +230,22 @@ async function main(argv: readonly string[]): Promise<number> {
   const guesses = new Map<string, { leagueId: string; name: string } | null>();
   for (const division of ALL_DIVISIONS) {
     const probed = wanted.some((t) => t.division === division.id);
+    if (isIndependentDivision(division.id)) {
+      // Each independent is the only field hockey team in its all-sports league (lib/leagues.ts INDEPENDENTS),
+      // so a league upstream is expected. Whether it is still the only one is a question for a human: the
+      // league's MaxPreps standings page lists every field hockey team it has.
+      const members = rows.filter((r) => wanted.some((t) => t.slug === r.slug && t.division === division.id));
+      if (members.length === 0) {
+        console.log(`  ${division.id}: a group with no league, not probed (no --teams member is in this division)`);
+      } else {
+        console.log(`  ${division.id}: a group with no league; check by hand that each is still its league's only field hockey team:`);
+        for (const r of members) {
+          console.log(`      ${r.slug}: ${r.error ? `failed (${r.error})` : `${r.leagueName || '(no league)'} ${r.leagueId ?? ''}`.trim()}`);
+        }
+      }
+      guesses.set(division.id, null);
+      continue;
+    }
     if (division.maxprepsLeagueId === null) {
       // Config says MaxPreps publishes no table for this division (the San Diego Section's Valley in
       // 2026-27: none of its members carries a MaxPreps league). Steps 03 and 04 skip it; here we only
@@ -295,7 +318,8 @@ async function main(argv: readonly string[]): Promise<number> {
       'source, LeagueConfig.alignmentSource, not from these leagueIds), CCS.keyDates, each league\'s keyDates and the ' +
       'postseason dates. Provenance by league: SCVAL from the two scval.com PDFs, BVAL/PCAL/MCAL from their bundled ' +
       'official documents, EAL from MaxPreps\' table and league flag, the Sunset from MaxPreps\' 2024-25 and 2025-26 ' +
-      'Sunset tables, City/North County/Metro from the CIF-SDS League Alignment.',
+      'Sunset tables, City/North County/Metro from the CIF-SDS League Alignment, the Southern Section independents ' +
+      'from each school\'s MaxPreps team page (each the only field hockey team in its all-sports league).',
   );
   return 0;
 }

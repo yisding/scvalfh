@@ -11,7 +11,7 @@ import LeagueSwitcher, { RegionSwitcher } from '../components/layout/LeagueSwitc
 import PageHeader from '../components/layout/PageHeader';
 import { OG_BASE, SITE_NAME, leaguesBySectionWords } from '../components/layout/site';
 import { listWords, shortDate } from '../lib/format';
-import { LEAGUES } from '../lib/leagues';
+import { INDEPENDENT_LEAGUES, LEAGUES_WITH_TABLES } from '../lib/leagues';
 import { TEAMS } from '../lib/teams';
 
 /**
@@ -42,8 +42,14 @@ export const metadata: Metadata = {
   openGraph: { ...OG_BASE, title: SITE_NAME, url: '/' },
 };
 
-/** 'SCVAL, BVAL, PCAL, MCAL, EAL, Sunset, City, North County and Metro', from the config (never a literal list). */
-const LEAGUE_LIST = listWords(LEAGUES.map((l) => l.shortName));
+/**
+ * 'SCVAL, BVAL, PCAL, MCAL, EAL, Sunset, City, North, Metro and the Southern Section independents', from the
+ * config (never a literal list): the leagues, then each group with no table by its name (DESIGN §24.9).
+ */
+const LEAGUE_LIST = listWords([
+  ...LEAGUES_WITH_TABLES.map((l) => l.shortName),
+  ...INDEPENDENT_LEAGUES.map((l) => `the ${l.name}`),
+]);
 
 /** The card grid of one region in "Find your team": two-up from 390px. */
 const CARD_GRID = 'm-0 mt-3 grid list-none grid-cols-1 gap-3 p-0 min-[390px]:grid-cols-2 md:gap-4';

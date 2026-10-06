@@ -259,10 +259,27 @@ describe('sblive: team /games page', () => {
     expect(game.sides.map((s) => s.score)).toEqual([null, null]);
   });
 
-  // Scripps Ranch was the non-member here until the San Diego Section joined the registry; Thousand
-  // Oaks (si.com 458583, its varsity page as read on 2026-10-06) is a Southern Section school with no
-  // league games, covered only as an opponent (DATA_QUALITY.notCovered).
+  // Scripps Ranch was the non-member here until the San Diego Section joined the registry, and Thousand
+  // Oaks until the Southern Section independents did (DESIGN §24.9). Oaks Christian (si.com 458114, a row of
+  // si.com's Marmonte page with no games, read 2026-10-06) is no registry team: the opponent is synthetic.
   it('leaves a non-member opponent as a name with no slug', () => {
+    const node = teamNode({
+      opponent: {
+        scoreText: '2',
+        isHome: false,
+        team: { name: 'Oaks Christian', webPath: '/california/field-hockey/teams/458114-oaks-christian-lions' },
+      },
+    });
+    const [game] = parseTeamGamesPage(page('teams/Games', teamGamesProps([node])));
+    const outsider = game.sides.find((s) => s.name === 'Oaks Christian');
+    expect(outsider?.slug).toBeNull();
+    expect(outsider?.via).toBeNull();
+    expect(outsider?.refused).toBe('unknown');
+    expect(outsider?.sbliveTeamId).toBe('458114');
+    expect(sbliveGameKey(game)).toBe('2026-09-23|los-altos~name:oakschristian');
+  });
+
+  it('resolves a Southern Section independent by its si.com team id (Thousand Oaks is one of our teams now)', () => {
     const node = teamNode({
       opponent: {
         scoreText: '2',
@@ -271,12 +288,7 @@ describe('sblive: team /games page', () => {
       },
     });
     const [game] = parseTeamGamesPage(page('teams/Games', teamGamesProps([node])));
-    const outsider = game.sides.find((s) => s.name === 'Thousand Oaks');
-    expect(outsider?.slug).toBeNull();
-    expect(outsider?.via).toBeNull();
-    expect(outsider?.refused).toBe('unknown');
-    expect(outsider?.sbliveTeamId).toBe('458583');
-    expect(sbliveGameKey(game)).toBe('2026-09-23|los-altos~name:thousandoaks');
+    expect(game.sides.find((s) => s.name === 'Thousand Oaks')?.slug).toBe('thousand-oaks');
   });
 
   it('resolves a BVAL member by its si.com team id (Leigh is one of our teams now)', () => {
@@ -353,11 +365,11 @@ describe('sblive: statewide scoreboard', () => {
               date: '2026-09-23T15:30:00.000-07:00',
               statusId: 3,
               longStatusText: 'Final',
-              titleText: 'Glendora vs Thousand Oaks',
-              webPath: '/california/field-hockey/games/6635128-glendora-vs-thousand-oaks',
+              titleText: 'Calabasas vs Oaks Christian',
+              webPath: '/california/field-hockey/games/6635128-calabasas-vs-oaks-christian',
               gameTeams: [
-                { scoreText: '0', isWinner: false, isLoser: true, isTbd: false, team: { name: 'Thousand Oaks', state: { abbrev: 'CA' } } },
-                { scoreText: '1', isWinner: true, isLoser: false, isTbd: false, team: { name: 'Glendora', state: { abbrev: 'CA' } } },
+                { scoreText: '0', isWinner: false, isLoser: true, isTbd: false, team: { name: 'Oaks Christian', state: { abbrev: 'CA' } } },
+                { scoreText: '1', isWinner: true, isLoser: false, isTbd: false, team: { name: 'Calabasas', state: { abbrev: 'CA' } } },
               ],
             },
           ],
@@ -389,11 +401,12 @@ describe('sblive: statewide scoreboard', () => {
     expect(game.sides.find((s) => s.name === 'Cupertino')).toMatchObject({ slug: 'cupertino', via: 'name' });
   });
 
-  // Glendora and Thousand Oaks are Southern Section independents, not registry teams (the Sunset
-  // schools, Huntington Beach and Fountain Valley, used here before, are registry teams now).
+  // Calabasas and Oaks Christian (placeholder rows of si.com's Marmonte page, no games: a synthetic game) are
+  // no registry teams. The Sunset schools used here first, then Glendora and Thousand Oaks, are registry
+  // teams now.
   it('keeps games between two non-registry teams, with no slugs, so they simply never join', () => {
     const games = parseScoresPage(page('games/GenderSportIndex', scoresProps));
-    const outside = games.find((g) => g.sides.some((s) => s.name === 'Glendora'));
+    const outside = games.find((g) => g.sides.some((s) => s.name === 'Calabasas'));
     expect(outside?.sides.every((s) => s.slug === null)).toBe(true);
   });
 

@@ -23,7 +23,7 @@ describe('the footer attribution', () => {
     expect(text).toContain(
       'League alignment and rules from SCVAL, BVAL, PCAL and MCAL; EAL rules from the CIF Northern Section; ' +
         'Sunset: we found no published league rules; Southern Section rules from the CIF Southern Section; ' +
-        'City, North County and Metro: we found no published league rules; San Diego Section rules from the CIF San Diego Section.',
+        'City, North and Metro: we found no published league rules; San Diego Section rules from the CIF San Diego Section.',
     );
     expect(text).not.toContain('no league rules are published');
   });

@@ -439,12 +439,12 @@ describe('/playoffs by region (DESIGN-socal §2.4)', () => {
       const at = html.indexOf(`id="${id}"`);
       expect(at > norcal && at < socal, `${PAGE}: #${id} in the NorCal block`).toBe(true);
     }
-    for (const id of ['sds-playoffs', 'city', 'north-county', 'metro', 'sunset']) {
+    for (const id of ['sds-playoffs', 'city', 'north-county', 'metro', 'sunset', 'independents']) {
       expect(html.indexOf(`id="${id}"`), `${PAGE}: #${id} in the SoCal block`).toBeGreaterThan(socal);
     }
     // The CCS description moved into its block; the header names every league's postseason.
     expect(textOf(html), PAGE).toContain(
-      'Where each league’s season leads: the CCS championships (SCVAL, BVAL and PCAL), the MCAL tournament, the EAL’s Super Regional, no playoffs for the Sunset and the San Diego Section playoffs (City, North County and Metro).',
+      'Where each league’s season leads: the CCS championships (SCVAL, BVAL and PCAL), the MCAL tournament, the EAL’s Super Regional, no playoffs for the Sunset or the Southern Section independents and the San Diego Section playoffs (City, North and Metro).',
     );
   });
 

@@ -87,9 +87,9 @@ describe('the EAL corpus run', () => {
     expect(manifest.leagues, 'tests/fixtures/corpus/eal-*/manifest.json').toEqual([LEAGUE]);
   });
 
-  it('publishes nine leagues: the EAL fresh, the other eight frozen "not fetched in this run"', () => {
+  it('publishes nine leagues and the independents: the EAL fresh, the other nine frozen "not fetched in this run"', () => {
     expect(snapshot.season.leagues.map((l) => l.id), 'lib/season-build.ts').toEqual(LEAGUES.map((l) => l.id));
-    expect(snapshot.season.leagues, 'lib/season-build.ts').toHaveLength(9);
+    expect(snapshot.season.leagues, 'lib/season-build.ts').toHaveLength(10);
     for (const h of snapshot.leagueHealth) {
       if (h.leagueId === LEAGUE) {
         expect(h.state, 'lib/pipeline/steps/standings.ts: EAL health').toBe('fresh');

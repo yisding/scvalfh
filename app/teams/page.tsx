@@ -11,7 +11,7 @@ import { alignmentSentence, buildTeamsByRegion } from '../../components/teams/te
 import SectionHeader from '../../components/ui/SectionHeader';
 import { getCounts, getTeamSearchIndex } from '../../lib/data';
 import { listWords } from '../../lib/format';
-import { LEAGUES } from '../../lib/leagues';
+import { INDEPENDENT_LEAGUES, LEAGUES_WITH_TABLES } from '../../lib/leagues';
 
 /** The page's title, and its og:title too: og:title never carries the site-name suffix (OG_BASE). */
 const PAGE_TITLE = 'Teams and standings';
@@ -54,9 +54,17 @@ const PAGE_TITLE = 'Teams and standings';
  * in the nav. They sit outside `#team-list`, so the finder never hides them, and add no heading
  * and no group wrapper.
  */
+/**
+ * Where the teams are listed: each league team in its division's table, and (DESIGN §24.9) the independents,
+ * who play no league games, in their group's block instead of a table.
+ */
+const WHERE_LISTED = `each in its division’s standings table${
+  INDEPENDENT_LEAGUES.length > 0 ? ' (the independents play no league games, so they have none)' : ''
+}`;
+
 export const metadata: Metadata = {
   title: PAGE_TITLE,
-  description: `All ${getCounts().teams} girls varsity field hockey teams in ${leaguesBySectionWords('name')}, each in its division’s standings table. Find your school.`,
+  description: `All ${getCounts().teams} girls varsity field hockey teams in ${leaguesBySectionWords('name')}, ${WHERE_LISTED}. Find your school.`,
   alternates: { canonical: '/teams' },
   openGraph: { ...OG_BASE, ...ROOT_OG_IMAGE, title: PAGE_TITLE, url: '/teams' },
 };
@@ -64,13 +72,14 @@ export const metadata: Metadata = {
 export default function TeamsPage() {
   const counts = getCounts();
   const regions = buildTeamsByRegion();
-  const siteOrdered = LEAGUES.filter((l) => l.rules.orderScope === 'site').map((l) => l.shortName);
+  // The leagues whose order is this site's own points; a group with no table orders nothing.
+  const siteOrdered = LEAGUES_WITH_TABLES.filter((l) => l.rules.orderScope === 'site').map((l) => l.shortName);
 
   return (
     <div className="pb-section-lg" data-teams-page="">
       <PageHeader
         title="Teams and standings"
-        description={`All ${counts.teams} girls varsity teams in ${leaguesBySectionWords('name')}, each in its division’s standings table. ${alignmentSentence()}`}
+        description={`All ${counts.teams} girls varsity teams in ${leaguesBySectionWords('name')}, ${WHERE_LISTED}. ${alignmentSentence()}`}
       />
 
       {/* The region control, its own row under the header (DESIGN-socal §2.4). The finder below stays

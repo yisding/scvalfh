@@ -2,7 +2,7 @@ import { buildStandingsOverviewView, leaderLine } from '../standings/standings-p
 import { leaderClause, type LeaderLine } from '../standings/standings-view';
 import { getLatestResultsDate, getLeagueSummaries, getTeams } from '../../lib/data';
 import { shortDate } from '../../lib/format';
-import { REGIONS } from '../../lib/leagues';
+import { INDEPENDENT_LEAGUES, LEAGUES_WITH_TABLES, REGIONS, isIndependentLeague } from '../../lib/leagues';
 import { SEASON_CALENDAR_YEAR } from '../../lib/season';
 import type { LeagueId, RegionId } from '../../lib/types';
 
@@ -75,10 +75,20 @@ export function regionCardColumns(
   return REGIONS.map((region) => ({
     region: region.id,
     heading: region.name,
+    // A group with no league table (the Southern Section independents) has no leaders, so no row.
     rows: leagues
-      .filter((l) => l.region === region.id)
+      .filter((l) => l.region === region.id && !isIndependentLeague(l.id))
       .map((l) => ({ id: l.id, shortName: l.shortName, text: leaderClause(linesOf(l.id)) })),
   }));
+}
+
+/**
+ * `9 leagues, 3 independents`: the leagues with a table, then the teams in no league (DESIGN §24.9), so a
+ * card never counts the independents as a tenth league.
+ */
+function leagueCountWords(): string {
+  const independents = INDEPENDENT_LEAGUES.reduce((n, g) => n + g.divisions.reduce((m, d) => m + d.expectedTeams, 0), 0);
+  return `${LEAGUES_WITH_TABLES.length} leagues${independents > 0 ? `, ${independents} independents` : ''}`;
 }
 
 export interface RegionCardProps {
@@ -196,14 +206,15 @@ export const REGION_CARD_SIZE = OG_SIZE;
 
 /**
  * The root card (app/opengraph-image.tsx): `NorCal HS Field Hockey · 2026` (SITE_WORDMARK, shorter
- * than SITE_NAME, so one line at 44px) and `9 leagues · 99 teams · results through Oct 2 · unofficial`.
+ * than SITE_NAME, so one line at 44px) and `9 leagues, 3 independents · 102 teams · results through Oct 2 ·
+ * unofficial`.
  */
 export function rootCardProps(columns: readonly RegionCardColumn[] = regionCardColumns()): RegionCardProps {
   const through = getLatestResultsDate();
   return {
     title: `${SITE_WORDMARK} · ${SEASON_CALENDAR_YEAR}`,
     columns,
-    footer: `${getLeagueSummaries().length} leagues · ${getTeams().length} teams · ${
+    footer: `${leagueCountWords()} · ${getTeams().length} teams · ${
       through ? `results through ${shortDate(through)}` : 'no results yet'
     } · unofficial`,
   };
@@ -211,12 +222,12 @@ export function rootCardProps(columns: readonly RegionCardColumn[] = regionCardC
 
 /** The /standings card (app/standings/opengraph-image.tsx): the wordmark as eyebrow, "Standings — every league". */
 export function standingsCardProps(columns: readonly RegionCardColumn[] = regionCardColumns()): RegionCardProps {
-  const { leagues, throughDate } = buildStandingsOverviewView();
+  const { throughDate } = buildStandingsOverviewView();
   return {
     eyebrow: SITE_WORDMARK,
     title: 'Standings — every league',
     columns,
-    footer: `${leagues.length} leagues · ${getTeams().length} teams${
+    footer: `${leagueCountWords()} · ${getTeams().length} teams${
       throughDate ? ` · results through ${shortDate(throughDate)}` : ''
     } · unofficial`,
   };
