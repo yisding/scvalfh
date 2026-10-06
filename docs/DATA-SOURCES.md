@@ -2021,8 +2021,8 @@ official-host requests, and 163 of its 165 source rows were ok.
 
 ### 5.1 Order, aborts and freezes
 
-Steps run in this order: window guard → bootstrap → league metadata ×7 → reported tables ×7 →
-schedules ×49 → normalize → official schedules → si.com → secondary (VNN, CCS) → classify →
+Steps run in this order: window guard → bootstrap → league metadata ×14 → reported tables ×14 (the 15th
+division, Valley, has no MaxPreps table and makes neither request) → schedules ×99 → normalize → official schedules → si.com → secondary (VNN, CCS) → classify →
 guards → standings → assemble. Failure has three scopes, so **one league never blocks the others**:
 
 | Scope | Effect | Triggers |

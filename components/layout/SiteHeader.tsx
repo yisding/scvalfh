@@ -56,6 +56,15 @@ import TopNav from './TopNav';
  * School Field Hockey" below 1280px (SITE_SHORT_NAME, then SITE_NAME sr-only), "California HS FH
  * Field Hockey" from 1280px (SITE_WORDMARK's first two words and its initials, then the tail sr-only).
  * Content is capped at 1200px, with the same 16 / 24 / 32px gutter as <main>.
+ *
+ * Measured in Chromium 141 on 2026-10-06 (Playwright against `next start`, the stamp of that day
+ * "Updated Oct 5 8:19 PM": 137px on a phone, 166px with its weekday, narrower than the widest stamp
+ * the estimates above assume): the short wordmark link "CA HS FH" is 84px with its padding at every
+ * width below 1280 (the old "NorCal HS FH" was 115px, so every margin below 1280 grew by 31px); the
+ * gap from the wordmark to the stamp is 61px at 360; the nav clears the stamp by 76px at 896 and
+ * 139px at 1024, and the pill by 8px at 1120; from 1280 "California HS FH" is 136px (the old full
+ * wordmark was 193px), with 8px to the pill and 99px to the stamp. The spelled-out "California HS
+ * Field Hockey" was not tried in a browser; its ≈ 211px above is still an estimate.
  */
 export interface SiteHeaderProps {
   /** ISO UTC instant — `snapshot.fetchedAt`. */

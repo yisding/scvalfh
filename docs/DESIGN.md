@@ -3656,15 +3656,36 @@ odd-count column span is computed per region. League cards are now h4. The statu
 region's teams ("49 NorCal teams", "50 SoCal teams"). A Southern California league card shows the
 short form "1st, at least a play-in" because the full rung label is too wide for the 288 px card line.
 
-**Not measured.** The home row was not measured at 320, 360 and 390 px in a browser for this
-amendment. No browser was available to the implementation, so §22.3's fold measurements are the
-last measured ones. The header widths for "CA HS FH" and "California HS FH" in
-`components/layout/SiteHeader.tsx` are **estimates**: text metrics scaled by the ratio the old
-labels' estimates bore to their 2026-10-04 Chromium measurements. The spelled-out "California HS
-Field Hockey" is estimated at about 211 px, about 18 px wider than the room measured beside the
-"Report an error" pill from 1280 px, so the header shows "California HS FH" there.
-`scripts/a11y-axe.mjs` now prints the region row's box and row count. Its first run in a browser
-is the measurement to record here.
+**Measured** (2026-10-06, Chromium 141 through `scripts/a11y-axe.mjs` and a Playwright probe
+against `next start` of this build; the stamp that day read "Updated Oct 5 8:19 PM", 137 px on a
+phone and 166 px with its weekday, narrower than the widest stamp §22.3 and SiteHeader.tsx were
+measured with):
+
+| Viewport | Region row | Switcher (All + the region's chips) | League cards | Wholly above the fold |
+|---|---|---|---|---|
+| 320 × 664 and 320 × 844 | 253–301 px, 133 px wide | 6 chips in 2 rows (3 with the region row), bottom 403 px | one column, 288 px wide, at 613–865, 877–1169, 1181–1433, 1445–1717, 1729–1949 | 0 at either height |
+| 360 × 664 and 360 × 844 | 233–281 px, 133 px wide | 2 rows (3 with the region row), bottom 383 px | one column, 328 px wide, at 593–793 … 1461–1681 | 0 |
+| 390 × 664 and 390 × 844 | 233–281 px, 133 px wide | 1 row (2 with the region row), bottom 333 px | two-up, 173 px wide; card 5 spans both columns at 1239–1439 | 0 |
+
+The region row costs the home page one 48 px row plus its gap: the switcher's bottom moves from
+§22.3's 254 px to 403 px at 320 and 360, and from 204 px to 333 px at 390. The §15.6 fold targets,
+read from the same run: with Tamalpais pinned at 390 × 664 the My-team slot ends at 677 px against a
+fold of 608 px (§22.3 had 604 px; the Oct 5 corrections line under the top bar and the region row
+sit above it), so that target is missed; the two Latest-rows targets are missed as they were in
+§22.3. The script reports the misses; it does not fail on them.
+
+The header: the short wordmark "CA HS FH" measures 84 px with its padding (the old "NorCal HS FH"
+was 115 px), so every margin §22.3 and SiteHeader.tsx measured below 1280 px grows by 31 px: with
+this build's stamp the gap from the wordmark to the stamp is 61 px at 360 (the widest stamp would
+leave about 35 px, against 4 px before), the nav clears the stamp by 76 px at 896 and by 139 px at
+1024, and the pill by 8 px at 1120 beside the full set. From 1280 px "California HS FH" is 136 px
+(the old full wordmark was 193 px), leaving the pill 8 px and the stamp 99 px of clearance. The
+spelled-out "California HS Field Hockey" was not tried in a browser; the comment in SiteHeader.tsx
+keeps its estimate. The home-page keyboard probe passed: Tab to "SoCal", Enter stamps
+`data-region="socal"`, renders the SoCal blocks, hides the NorCal ones and keeps focus on the
+button. axe-core 4.13 found 0 serious or critical violations over 176 page loads (the install is
+pinned to 4.13: 4.14.0, published 2026-10-05, flags three pre-existing label patterns — see
+README "Known limitations").
 
 ### 24.4 Southern California postseason surfaces
 

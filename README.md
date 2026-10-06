@@ -1258,13 +1258,19 @@ at once, at every build, starting from last season's:
   PCAL JV league game; si.com fills part of PCAL's), JV rosters are on MaxPreps for 11 schools and JV
   stats for 4, neither of which the site shows, and nothing says authoritatively which schools field a
   JV team (York, PCAL's JV-only member, appears only as an opponent). See "JV games".
-- **The region switcher and the new header wordmark were not measured in a browser.** The header
-  widths for "CA HS FH" (below 1280 px) and "California HS FH" (from 1280 px) in
-  `components/layout/SiteHeader.tsx` are estimates from text metrics, scaled by how the old labels'
-  estimates compared with their 2026-10-04 Chromium measurements; the spelled-out "California HS Field
-  Hockey" is not shown because by that estimate it is about 18 px too wide at 1280. The home scope row
-  with the region switcher was not re-measured at 320, 360 and 390 px either. `scripts/a11y-axe.mjs`
-  prints both on its next browser run.
+- **The header wordmark was measured, the spelled-out form was not.** Measured in Chromium on
+  2026-10-06 (DESIGN §24.3): "CA HS FH" is 84 px with its padding below 1280 px (the old "NorCal HS FH"
+  was 115 px) and "California HS FH" 136 px from 1280 px (the old full wordmark was 193 px), so every
+  margin grew. The spelled-out "California HS Field Hockey" was not tried in a browser; the estimate in
+  `components/layout/SiteHeader.tsx` (about 18 px too wide at 1280 beside the "Report an error" pill)
+  is why the header shows the initials there. The home row with the region switcher was measured at
+  320, 360 and 390 px (DESIGN §24.3): it costs one 48 px row, and the §15.6 fold targets are missed.
+- **axe-core is pinned to the 4.13 line in CI.** axe-core 4.14.0 (published 2026-10-05) widened its
+  `label-content-name-mismatch` rule: it now compares the visible text of `aria-hidden` descendants
+  and keeps the soft hyphens of the team-picker tiles, so it flags three patterns that predate this
+  change and whose accessible names are deliberate sentences: the home pin tiles (`lib/pin-label.ts`),
+  the "Who we haven't beaten" rows and the pinned card's last-game link. With 4.13 the pass is clean
+  (176 page loads, 0 serious or critical). Reworking those three names for 4.14 is a follow-up.
 - MaxPreps' season-year URL segment is cosmetic (it always serves the current
   season, never a prior one); and a handful of MaxPreps/school-calendar start-time disagreements
   and si.com-only games that no official schedule lists are surfaced as warnings rather than
