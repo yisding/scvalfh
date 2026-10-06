@@ -1104,6 +1104,29 @@ Gotchas, all **[V]**:
   goal, then decisions, saves and goals against, and games last.
 - Not found anywhere else: the Home Campus school sites (Saratoga, Lynbrook) have no stats pages,
   Los Gatos' VNN site has no stats tab, and si.com's team stats page carries no player stats.
+- **Stats in the game note.** Some coaches type stats into the contest's 50-character `location`
+  note (§1.1, `splitLocation`) instead of the stats sheet. On 2026-10-06 that is Homestead alone,
+  out of 46 notes in the snapshot: "Lacey played 3Q had 7 saves. Noa played last…" (Sep 28 at Saint
+  Francis; MaxPreps cut it at 50 characters), "goals scored Gabby Molly, Emry Borges" (Sep 30 vs
+  Fremont) and "tied in OT 1:1  goal scored by Emery Borges" (Oct 5 vs Cupertino). Homestead's stats
+  sheet held the same four one-goal scorers (Anton, Ouyang, Leyton Bravo, Moll) on Sep 28, Oct 3 and
+  Oct 6 while the team scored 15, and no goalkeeping at all, so the noted goals are not on it.
+  `lib/note-stats.ts` reads goal and save statements from notes on finals, credits a name only when
+  it resolves to one player on one of the two rosters (full name, a curated alias in
+  `lib/name-aliases.ts`: Emery Borges = Emry Borges, Gabby Molly = Gabrielle Moll; or a first or last
+  name only one player has: Lacey = Lacey Sebastian Carattini), and adds the credits to the MaxPreps
+  numbers the team page and /leaders read (2 points a goal). It never credits more goals in a game
+  than the team scored, and adds none for a team whose MaxPreps goals plus noted goals would pass
+  its goals scored (the sign the coach has since entered them). The team page marks each changed
+  row and card and lists every noted game with its note. MaxPreps' game pages carry no box score,
+  but the sibling `team-season-game-stats/rollup/v1` (same parameters) gives the TEAM's stats game
+  by game **[V]** 2026-10-06: Homestead's four goals are entered on Lynbrook (3) and Los Altos (1, in
+  a game Homestead lost 0-1), and Sep 28, Sep 30 and Oct 5 have 0 goals and 0 saves. That call is
+  not made by any script yet, so the goals-scored cap, and a check of that call or of the stats'
+  git history when a new team's notes start counting, are what keep a goal from counting twice. Not
+  read: the Oct 5 note's "in OT" (the snapshot has `otPeriods` 0 and `decider` REG; a tie scores
+  the same 1 point either way, Article IV), and who played the last quarter in goal on Sep 28,
+  which the note's cut-off leaves without a number.
 - Coverage on 2026-10-04 with the six EAL teams (`fetchedAt` 2026-10-04T13:04:10.832Z): 33 of the
   49 teams, 404 players, 63 goalkeepers. EAL: Pleasant Valley 21 players, Chico 19, Davis 19, Bella
   Vista 19, Lassen 10; Corning answered HTTP 400 "No data was found" (status `none`, the same

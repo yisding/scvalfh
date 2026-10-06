@@ -18,10 +18,15 @@
  * section says so, and it is left out of any card whose entered figures cannot all be true: the
  * coach's "opponent shots on goal" below saves plus goals against (Leland, 2026-10-03: 10 shots
  * on goal, 36 saves, 9 against). The card says the figures disagree instead.
+ *
+ * Some coaches write goals and saves in MaxPreps' game note rather than on the stats sheet
+ * (Homestead: "goals scored Gabby Molly, Emry Borges"). lib/note-stats.ts adds those to the
+ * MaxPreps numbers; every row or card they changed is marked, and the section lists each noted
+ * game with the note as written, so a reader can tell the two sources apart.
  */
 
-import { shortDate } from '../../lib/format';
-import { getTeamPlayerStats } from '../../lib/player-stats';
+import { listWords, numberWord, shortDate } from '../../lib/format';
+import { getTeamPlayerStatsWithNotes, type NoteCredit } from '../../lib/note-stats';
 import type {
   FieldStatKey,
   GoalieStatKey,
@@ -44,6 +49,8 @@ export interface StatRow {
   jersey: string | null;
   /** One per column; null prints as a dash. */
   values: Array<number | null>;
+  /** Some of these numbers come from a game note, not the stats sheet. */
+  noted: boolean;
 }
 
 export interface StatTable {
@@ -59,6 +66,19 @@ export interface GoalieCard {
   stats: Array<{ label: string; text: string | null }>;
   /** Why no Save % is shown although saves and goals against are tracked, or null. */
   flag: string | null;
+  /** Some of these numbers come from a game note, not the stats sheet. */
+  noted: boolean;
+}
+
+/** One game whose note added to the numbers, in the words the section prints. */
+export interface NotedGame {
+  key: string;
+  /** "Wed Sep 30 vs Fremont". */
+  game: string;
+  /** "a goal each for Gabrielle Moll and Emry Borges". */
+  added: string;
+  /** The note as MaxPreps publishes it. */
+  note: string;
 }
 
 export interface PlayerStatsView {
@@ -77,6 +97,10 @@ export interface PlayerStatsView {
   showsPoints: boolean;
   /** Some goalkeeper card shows a Save %, which this site works out: the footnote says how. */
   showsSavePercent: boolean;
+  /** The coach enters some goalkeeping on MaxPreps, so the footnote on entered figures applies. */
+  goalkeepingEntered: boolean;
+  /** The games whose notes added goals or saves, oldest first; empty when none did. */
+  notedGames: NotedGame[];
 }
 
 const SCORING: Array<{ key: FieldStatKey } & Omit<StatColumn, 'key'>> = [
@@ -121,11 +145,56 @@ export function savePercent(saves: number, goalsAgainst: number): string | null 
   return faced > 0 ? `${((saves / faced) * 100).toFixed(1)}%` : null;
 }
 
+/** The credits' players, by the keys a stat line carries. */
+function notedKeys(credits: readonly NoteCredit[], kind: 'goals' | 'saves'): Set<string> {
+  return new Set(
+    credits
+      .filter((c) => c[kind] > 0)
+      .flatMap((c) => [c.careerId, c.athleteId].filter((k): k is string => k !== null)),
+  );
+}
+
+const isNoted = (keys: Set<string>, p: PlayerStatLine) =>
+  (p.careerId !== null && keys.has(p.careerId)) || (p.athleteId !== null && keys.has(p.athleteId));
+
+function count(n: number, one: string, many: string): string {
+  return n === 1 ? `a ${one}` : `${numberWord(n)} ${many}`;
+}
+
+/** "a goal each for A and B", "two goals for A", "seven saves for C". */
+function addedWords(credits: readonly NoteCredit[], kind: 'goals' | 'saves'): string | null {
+  const [one, many] = kind === 'goals' ? ['goal', 'goals'] : ['save', 'saves'];
+  const byCount = new Map<number, string[]>();
+  for (const c of credits) if (c[kind] > 0) byCount.set(c[kind], [...(byCount.get(c[kind]) ?? []), c.fullName]);
+  const parts = [...byCount].map(([n, names]) =>
+    names.length > 1 ? `${count(n, one, many)} each for ${listWords(names)}` : `${count(n, one, many)} for ${names[0]}`,
+  );
+  return parts.length ? listWords(parts) : null;
+}
+
+/** The games the notes added to, one line each, oldest first. */
+export function notedGames(credits: readonly NoteCredit[]): NotedGame[] {
+  const byGame = new Map<string, NoteCredit[]>();
+  for (const c of credits) byGame.set(c.contestId, [...(byGame.get(c.contestId) ?? []), c]);
+  return [...byGame.values()]
+    .sort((a, b) => a[0].dateKey.localeCompare(b[0].dateKey))
+    .map((cs) => {
+      const [first] = cs;
+      return {
+        key: first.contestId,
+        game: `${shortDate(first.dateKey)} ${first.site === 'away' ? 'at' : 'vs'} ${first.opponent}`,
+        added: listWords([addedWords(cs, 'goals'), addedWords(cs, 'saves')].filter((w): w is string => w !== null)),
+        note: first.note,
+      };
+    });
+}
+
 function table(
   team: TeamPlayerStats,
   spec: typeof SCORING,
   players: PlayerStatLine[],
   keep: (values: Array<number | null>) => boolean,
+  noted: Set<string> = new Set(),
 ): StatTable | null {
   const tracked = new Set<string>(team.tracked.field);
   const columns = spec.filter((c) => tracked.has(c.key));
@@ -136,6 +205,7 @@ function table(
       name: p.fullName,
       jersey: p.jersey,
       values: columns.map((c) => p.field?.[c.key] ?? null),
+      noted: isNoted(noted, p),
     }))
     .filter((r) => keep(r.values));
   return rows.length ? { columns: columns.map(({ key, label, title }) => ({ key, label, title })), rows } : null;
@@ -162,7 +232,7 @@ export function goalieFiguresDisagree(g: NonNullable<PlayerStatLine['goalkeeping
   return (g.saves ?? 0) + (g.goalsAgainst ?? 0) > g.opponentShotsOnGoal;
 }
 
-function goalieCard(team: TeamPlayerStats, p: PlayerStatLine, i: number): GoalieCard {
+function goalieCard(team: TeamPlayerStats, p: PlayerStatLine, i: number, noted: Set<string>): GoalieCard {
   const tracked = new Set<string>(team.tracked.goalkeeping);
   const g = p.goalkeeping!;
   const disagree = goalieFiguresDisagree(g);
@@ -190,7 +260,14 @@ function goalieCard(team: TeamPlayerStats, p: PlayerStatLine, i: number): Goalie
       `As entered, these cannot all be right: ${statText(g.opponentShotsOnGoal)} opponent shots on goal, ` +
       `but ${accounted}.${hidesPercent ? ' No save % is worked out.' : ''}`;
   }
-  return { key: p.careerId ?? `${p.shortName}-${i}`, name: p.fullName, jersey: p.jersey, stats, flag };
+  return {
+    key: p.careerId ?? `${p.shortName}-${i}`,
+    name: p.fullName,
+    jersey: p.jersey,
+    stats,
+    flag,
+    noted: isNoted(noted, p),
+  };
 }
 
 /**
@@ -243,28 +320,35 @@ export function gamesSinceUpdate(lastUpdated: string | null, games: readonly Gam
  *
  * @param games the team's league and non-league contests, to count finals played after MaxPreps'
  *   last stats update.
- * @param team the team's stats; defaults to data/player-stats.json's. Tests pass a fixture build,
- *   since the committed file moves with every refresh.
+ * @param team the team's stats; defaults to data/player-stats.json's with the team's game notes
+ *   added (lib/note-stats.ts). Tests pass a fixture build, since the committed file moves with
+ *   every refresh. A team without `noteCredits` is shown as MaxPreps has it.
  */
 export function buildPlayerStatsView(
   slug: TeamSlug,
   games: readonly Game[] = [],
-  team: TeamPlayerStats | undefined = getTeamPlayerStats(slug),
+  team:
+    | (TeamPlayerStats & { noteCredits?: readonly NoteCredit[]; noteTracked?: TeamPlayerStats['tracked'] })
+    | undefined = getTeamPlayerStatsWithNotes(slug),
 ): PlayerStatsView | null {
   if (!team) return null;
+  const credits = team.noteCredits ?? [];
+  const notedGoals = notedKeys(credits, 'goals');
+  const notedSaves = notedKeys(credits, 'saves');
 
   const updatedDay = team.lastUpdated?.slice(0, 10) ?? null;
   const gamesSince = gamesSinceUpdate(team.lastUpdated, games);
 
   const field = team.players.filter((p) => p.field !== null).sort(byScoring);
-  const scoring = table(team, SCORING, field, () => true);
-  // The "more" table lists only players with at least one of its numbers above zero.
+  const scoring = table(team, SCORING, field, () => true, notedGoals);
+  // The "more" table lists only players with at least one of its numbers above zero. Notes add
+  // goals only, which are on the scoring table, so nothing here is marked.
   const more = table(team, MORE, field, (values) => values.some((v) => v !== null && v > 0));
 
   const goalies = team.players
     .filter((p) => p.goalkeeping !== null)
     .sort(byTimeInGoal)
-    .map((p, i) => goalieCard(team, p, i))
+    .map((p, i) => goalieCard(team, p, i, notedSaves))
     .filter((c) => c.stats.length > 0);
 
   return {
@@ -278,5 +362,8 @@ export function buildPlayerStatsView(
     goalies,
     showsPoints: scoring?.columns.some((c) => c.key === 'points') ?? false,
     showsSavePercent: goalies.some((c) => c.stats.some((x) => x.label === 'Save %')),
+    notedGames: notedGames(credits),
+    goalkeepingEntered:
+      goalies.length > 0 && team.tracked.goalkeeping.some((k) => !team.noteTracked?.goalkeeping.includes(k)),
   };
 }

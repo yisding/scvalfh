@@ -12,7 +12,7 @@
  *
  * Players (data/player-stats.json): most points, assists, saves and clean sheets. A player's
  * numbers are exactly what the team page shows: season totals as the coach entered them on
- * MaxPreps. Their grade and position are the team page's roster row's (lib/rosters.ts, joined on
+ * MaxPreps, plus the goals and saves the coach wrote in game notes instead (lib/note-stats.ts). Their grade and position are the team page's roster row's (lib/rosters.ts, joined on
  * the stat line's athleteId), in the roster's words; a player the join misses shows neither. Only teams whose coach tracks a stat can appear on its board, so every board says how
  * many teams it covers and names the ones it leaves out, and the section says whose totals are
  * behind the scores. A 0 never leads a board, and an untracked stat is never read as a 0.
@@ -61,7 +61,7 @@ import {
   regionOf,
   type RegionConfig,
 } from '../../lib/leagues';
-import { getPlayerStats } from '../../lib/player-stats';
+import { getAllPlayerStatsWithNotes } from '../../lib/note-stats';
 import { getPriorSeason } from '../../lib/prior-season';
 import { getAllEnrichedRosters, type MergedPlayer } from '../../lib/rosters';
 import type { PriorSeason } from '../../lib/prior-season-schema';
@@ -285,7 +285,7 @@ function defaultSources(): LeaderSources {
   const snapshot = getSnapshot();
   return {
     teams: snapshot.teams,
-    stats: getPlayerStats().teams,
+    stats: getAllPlayerStatsWithNotes(),
     standings: snapshot.standings,
     games: snapshot.games,
     prior: getPriorSeason(),
