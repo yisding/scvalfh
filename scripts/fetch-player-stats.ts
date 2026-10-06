@@ -34,7 +34,9 @@
  * per-game team totals (lib/sources/maxpreps-game-stats.ts) into `gameTotals`, so a noted stat the
  * coach has also entered is not counted twice: one more small call per such team (one, Homestead,
  * on 2026-10-06). Offline it reads `game-stats-<slug>.json` beside the rollup captures; a missing
- * capture, or a failed call, leaves `gameTotals` out with a warning and never fails the team.
+ * capture, or a failed call, leaves `gameTotals` out with a warning and never fails the team; its
+ * noted stats are then not counted (lib/note-stats.ts counts only what it can check). The previous
+ * run's totals are not carried forward for this: they may predate what the coach has entered since.
  *
  * A partial run still publishes, and failures are scoped to the team (lib/fetch-scope.ts): a team
  * whose call fails or does not parse keeps the previous file's rows with status 'carried-forward'
@@ -172,8 +174,9 @@ const NOTES = [
 ];
 
 /**
- * A noted team's per-game totals, or undefined with a warning when they cannot be had: the note
- * credits then fall back to the season cap (lib/note-stats.ts), and the team itself never fails.
+ * A noted team's per-game totals, or undefined with a warning when they cannot be had: its note
+ * credits are then withheld (lib/note-stats.ts counts only what it can check), and the team itself
+ * never fails.
  */
 async function readGameTotals(
   args: Args,
@@ -187,7 +190,7 @@ async function readGameTotals(
     if (args.fixtures) {
       const file = path.join(args.fixtures, `game-stats-${slug}.json`);
       if (!existsSync(file)) {
-        warnings.push(`game notes: no per-game capture ${path.basename(file)}; noted stats checked against the season totals only`);
+        warnings.push(`game notes: no per-game capture ${path.basename(file)}; its noted stats are not counted until a read succeeds`);
         return undefined;
       }
       return parseGameStats(JSON.parse(readFileSync(file, 'utf8')) as unknown, {
@@ -204,7 +207,7 @@ async function readGameTotals(
         : undefined,
     );
   } catch (err) {
-    warnings.push(`game notes: per-game totals not read (${err instanceof Error ? err.message : String(err)}); noted stats checked against the season totals only`);
+    warnings.push(`game notes: per-game totals not read (${err instanceof Error ? err.message : String(err)}); its noted stats are not counted until a read succeeds`);
     return undefined;
   }
 }

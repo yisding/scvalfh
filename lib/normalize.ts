@@ -192,6 +192,26 @@ export function splitLocation(raw: string | null | undefined): {
   return { text: trimmed };
 }
 
+/**
+ * The overtime periods a game note says were played: 2 for "double OT" / "2OT", 1 for any other
+ * mention of overtime ("tied in OT 1:1", "won in overtime"), 0 for none. "OT" counts only in
+ * capitals and as a word of its own (never "OTHS"); "no OT" and "no overtime" are not overtime.
+ * Homestead–Cupertino (Oct 5): MaxPreps records 0 overtime periods, the coach's note "tied in OT
+ * 1:1  goal scored by Emery Borges".
+ */
+export function overtimeFromNote(text: string | null | undefined): 0 | 1 | 2 {
+  if (!text) return 0;
+  const overtime = /(?<![\p{L}])OT(?![\p{L}])|\bover[\s-]?times?\b/u;
+  const ot = new RegExp(overtime.source, 'giu');
+  const mentions = [...text.matchAll(ot)].filter((m) => {
+    // "OT" only in capitals; "overtime" in any case.
+    if (/^ot$/i.test(m[0]) && m[0] !== 'OT') return false;
+    return !/\bno\s*$/i.test(text.slice(0, m.index));
+  });
+  if (mentions.length === 0) return 0;
+  return /\b(?:double|two|2)[\s-]?(?:OT|over[\s-]?times?)\b|\b2OT\b|\bOT\s?2\b|\b2\s?overtimes\b/i.test(text) ? 2 : 1;
+}
+
 export function cleanRecap(description: string | null | undefined): string | null {
   if (!description) return null;
   let s = description.trim();
@@ -496,7 +516,21 @@ function toGame(
     );
   }
 
-  const otPeriods = cf.overtimePeriodsPlayed ?? 0;
+  // MaxPreps' overtime count, unless it records none and the coach's note on a final says the game
+  // went to overtime. Only a level score or a one-goal margin can come out of overtime (it is
+  // sudden victory everywhere this site covers), so a note on any other score is not believed.
+  const maxprepsOt = cf.overtimePeriodsPlayed ?? 0;
+  const notedOt =
+    maxprepsOt === 0 && status === 'final' && !isForfeit && home.score !== null && away.score !== null
+      ? overtimeFromNote(location.text)
+      : 0;
+  if (notedOt > 0 && Math.abs(home.score! - away.score!) > 1) {
+    warnings.push(
+      `contest ${c.contestId}: the note says overtime, but ${home.score}-${away.score} cannot come out of sudden victory; not read as overtime`,
+    );
+  }
+  const otFromNote = notedOt > 0 && Math.abs(home.score! - away.score!) <= 1;
+  const otPeriods = otFromNote ? notedOt : maxprepsOt;
   const forfeitBy: Game['forfeitBy'] = !isForfeit
     ? null
     : first.isForfeit
@@ -567,6 +601,7 @@ function toGame(
       ...(c.modifiedOn ? { maxprepsModifiedOn: c.modifiedOn } : {}),
       ...(leagueFlagConflict ? { leagueFlagConflict } : {}),
       ...(resultConflict ? { resultConflict } : {}),
+      ...(otFromNote && location.text ? { overtimeNote: location.text } : {}),
     },
   };
   return game;

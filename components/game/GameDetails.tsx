@@ -162,7 +162,15 @@ export function GameDetails({ model, className }: GameDetailsProps) {
           <div className="py-3 first:pt-0 last:pb-0 md:max-lg:col-span-3 md:max-lg:border-t md:max-lg:border-divider">
             <dt className="text-micro font-medium text-ink-3">Note</dt>
             {/* MaxPreps' `location` field, verbatim. It is a note, not a venue. */}
-            <dd className="mt-1 mb-0 ml-0 text-body text-ink-2">{game.venue.text}</dd>
+            <dd className="mt-1 mb-0 ml-0 text-body text-ink-2">
+              {game.venue.text}
+              {/* lib/normalize.ts overtimeFromNote: the OT on this page is the note's, not MaxPreps'. */}
+              {game.provenance.overtimeNote ? (
+                <span className="mt-1 block text-meta text-ink-3">
+                  MaxPreps records no overtime for this game; the overtime shown here is from this note.
+                </span>
+              ) : null}
+            </dd>
           </div>
         ) : null}
       </dl>

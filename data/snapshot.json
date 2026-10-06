@@ -31247,7 +31247,7 @@
       "dateKey": "2026-10-05",
       "dateLocal": "2026-10-05T16:00:00",
       "dateUtc": "2026-10-05T23:00:00Z",
-      "decider": "REG",
+      "decider": "OT",
       "forfeitBy": null,
       "home": {
         "city": "Cupertino",
@@ -31260,7 +31260,7 @@
       "isDateTba": false,
       "isForfeit": false,
       "isLeague": true,
-      "isOt": false,
+      "isOt": true,
       "isTimeTba": false,
       "leagueDivision": "de-anza",
       "official": {
@@ -31270,11 +31270,12 @@
         "scheduledDate": "2026-10-05",
         "source": "scval-pdf"
       },
-      "otPeriods": 0,
+      "otPeriods": 1,
       "postseason": null,
       "provenance": {
         "fetchedAt": "2026-10-06T14:12:12.486Z",
         "maxprepsModifiedOn": "2026-10-06T04:35:30",
+        "overtimeNote": "tied in OT 1:1  goal scored by Emery Borges",
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },

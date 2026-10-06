@@ -30,9 +30,11 @@
  *   - a noted game whose goals, assists or saves the coach has ALSO entered on MaxPreps (the
  *     team's per-game totals, `gameTotals`, read by scripts/fetch-player-stats.ts for every team
  *     a note credits: teamsCreditedByNotes) adds none of that stat: it is on the sheet already;
+ *   - a noted game whose entries cannot be checked (the per-game read failed or does not list the
+ *     game) adds nothing: unverified is not counted. A team with no MaxPreps stats at all (status
+ *     'none') entered nothing, so its notes need no check;
  *   - the MaxPreps goals plus every noted goal cannot exceed the goals the team has scored in all
- *     its finals. If it would, no noted goal is added for that team. This is the only check when
- *     the per-game totals could not be read.
+ *     its finals. If it would, no noted goal is added for that team.
  *
  * Points follow MaxPreps' rule, 2 per goal and 1 per assist (lib/player-stats-schema.ts), on teams
  * that track them.
@@ -512,11 +514,28 @@ function shortNameOf(fullName: string): string {
   return parts.length > 1 ? `${parts[0][0]}. ${parts.slice(1).join(' ')}` : fullName;
 }
 
+/**
+ * Which of a player's numbers include a game note's, on a team withNoteStats built; empty for a
+ * team without notes. A note's saves cover games the coach's goals against and shots on goal do
+ * not, so no figure may be worked out from both (Save %, the shots-on-goal check).
+ */
+export function notedKinds(
+  team: TeamPlayerStats & { noteCredits?: readonly NoteCredit[] },
+  p: Pick<PlayerStatLine, 'careerId' | 'athleteId'>,
+): Set<NoteStatKind> {
+  const mine = (team.noteCredits ?? []).filter(
+    (c) => (p.careerId !== null && c.careerId === p.careerId) || (p.athleteId !== null && c.athleteId === p.athleteId),
+  );
+  return new Set(NOTE_STAT_KINDS.filter((k) => mine.some((c) => c[k] > 0)));
+}
+
 const STAT_WORD: Record<NoteStatKind, string> = { goals: 'goals', assists: 'assists', saves: 'saves' };
 
 /**
  * What the coach entered on MaxPreps for each noted game, when it is known: a team with no stats
- * at all entered nothing, a team whose per-game totals were read entered what they say.
+ * at all entered nothing, a team whose per-game totals were read entered what they say. null when
+ * it is not known (the per-game read failed, or never covered the game): nothing is added then,
+ * since a noted stat that may be on the sheet already cannot be told from one that is not.
  */
 function enteredFor(team: TeamPlayerStats, contestId: string): Record<NoteStatKind, number> | null {
   if (team.status === 'none') return { goals: 0, assists: 0, saves: 0 };
@@ -531,10 +550,16 @@ export function withNoteStats(team: TeamPlayerStats, notes: TeamNoteStats): Note
   const warnings = [...team.warnings, ...notes.warnings];
   let credits = notes.credits.map((c) => ({ ...c }));
 
-  // A noted game whose stat the coach entered on the sheet as well adds none of it.
+  // A noted game whose stat the coach entered on the sheet as well adds none of it, and one whose
+  // entries cannot be checked adds nothing at all.
   for (const c of credits) {
     const entered = enteredFor(team, c.contestId);
-    if (!entered) continue;
+    if (!entered) {
+      const unknown = `${c.dateKey} vs ${c.opponent}: what MaxPreps has entered for the game could not be read`;
+      if (!warnings.some((w) => w.startsWith(unknown))) warnings.push(`${unknown}, so the note's stats are not added`);
+      for (const kind of NOTE_STAT_KINDS) c[kind] = 0;
+      continue;
+    }
     for (const kind of NOTE_STAT_KINDS) {
       if (c[kind] === 0 || entered[kind] === 0) continue;
       const already = `${c.dateKey} vs ${c.opponent}: MaxPreps has ${entered[kind]} ${STAT_WORD[kind]} entered for the game`;
