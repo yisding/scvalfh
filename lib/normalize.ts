@@ -192,6 +192,34 @@ export function splitLocation(raw: string | null | undefined): {
   return { text: trimmed };
 }
 
+/**
+ * The overtime periods a game note says were played: 2 for "double OT" / "2OT", 1 for any other
+ * mention of overtime ("tied in OT 1:1", "won in overtime"), 0 for none. "OT" counts only in
+ * capitals and as a word of its own (never "OTHS"); "no OT" and "no overtime" are not overtime.
+ * Homestead–Cupertino (Oct 5): MaxPreps records 0 overtime periods, the coach's note "tied in OT
+ * 1:1  goal scored by Emery Borges".
+ */
+export function overtimeFromNote(text: string | null | undefined): 0 | 1 | 2 {
+  if (!text) return 0;
+  const ot = /(?<![\p{L}])OT(?![\p{L}])|\bover[\s-]?times?\b/giu;
+  let periods: 0 | 1 | 2 = 0;
+  for (const m of text.matchAll(ot)) {
+    // "OT" only in capitals; "overtime" in any case.
+    if (/^ot$/i.test(m[0]) && m[0] !== 'OT') continue;
+    const before = text.slice(0, m.index);
+    const after = text.slice(m.index + m[0].length);
+    // What makes THIS mention a second period: "double OT", "two overtimes", "2OT", "2 overtimes",
+    // "OT2". A "2" that is part of a score ("3-2 OT", "OT 2-1") does not.
+    const counted = /\b(?:double|two)[\s-]?$/i.exec(before) ?? /(?:^|[\s(])2[\s-]?$/.exec(before);
+    const doubled = counted !== null || /^2(?![\d:\-–])/.test(after);
+    // "no OT", "no double OT": negated whatever counts it.
+    const stem = counted ? before.slice(0, before.length - counted[0].length) : before;
+    if (/\bno\s*$/i.test(stem)) continue;
+    periods = doubled ? 2 : periods === 2 ? 2 : 1;
+  }
+  return periods;
+}
+
 export function cleanRecap(description: string | null | undefined): string | null {
   if (!description) return null;
   let s = description.trim();
@@ -496,7 +524,21 @@ function toGame(
     );
   }
 
-  const otPeriods = cf.overtimePeriodsPlayed ?? 0;
+  // MaxPreps' overtime count, unless it records none and the coach's note on a final says the game
+  // went to overtime. Only a level score or a one-goal margin can come out of overtime (it is
+  // sudden victory everywhere this site covers), so a note on any other score is not believed.
+  const maxprepsOt = cf.overtimePeriodsPlayed ?? 0;
+  const notedOt =
+    maxprepsOt === 0 && status === 'final' && !isForfeit && home.score !== null && away.score !== null
+      ? overtimeFromNote(location.text)
+      : 0;
+  if (notedOt > 0 && Math.abs(home.score! - away.score!) > 1) {
+    warnings.push(
+      `contest ${c.contestId}: the note says overtime, but ${home.score}-${away.score} cannot come out of sudden victory; not read as overtime`,
+    );
+  }
+  const otFromNote = notedOt > 0 && Math.abs(home.score! - away.score!) <= 1;
+  const otPeriods = otFromNote ? notedOt : maxprepsOt;
   const forfeitBy: Game['forfeitBy'] = !isForfeit
     ? null
     : first.isForfeit
@@ -567,6 +609,7 @@ function toGame(
       ...(c.modifiedOn ? { maxprepsModifiedOn: c.modifiedOn } : {}),
       ...(leagueFlagConflict ? { leagueFlagConflict } : {}),
       ...(resultConflict ? { resultConflict } : {}),
+      ...(otFromNote && location.text ? { overtimeNote: location.text } : {}),
     },
   };
   return game;

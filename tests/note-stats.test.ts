@@ -13,10 +13,12 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
+import { buildLeadersView } from '../components/leaders/leaders-view';
 import { buildPlayerStatsView } from '../components/teams/player-stats-view';
 import { getSnapshot } from '../lib/data';
 import { NAME_ALIASES } from '../lib/name-aliases';
 import {
+  notedKinds,
   noteStatsFor,
   parseStatNote,
   resolveName,
@@ -72,6 +74,10 @@ const IDS = {
   sf: '00000000-0000-4000-8000-00000000a928',
   fremont: '00000000-0000-4000-8000-00000000a930',
   cupertino: '00000000-0000-4000-8000-00000000a105',
+  /** The padding final with MaxPreps' four goals on it. */
+  lynbrook: '00000000-0000-4000-8000-00000000a904',
+  /** The final other tests add a note to. */
+  later: '00000000-0000-4000-8000-00000000a003',
 };
 
 /** Homestead's three noted games as MaxPreps published them, plus a goal-less final. */
@@ -112,7 +118,10 @@ function statLine(name: string, id: string, goals: number, gp: number): PlayerSt
   };
 }
 
-/** Homestead's MaxPreps stats as they stood from Sep 28 to Oct 5: four one-goal scorers, no goalkeeping. */
+/**
+ * Homestead's MaxPreps stats as they stood from Sep 28 to Oct 5: four one-goal scorers, no
+ * goalkeeping, and nothing entered for the three noted games (its real per-game totals).
+ */
 function homesteadStats(): TeamPlayerStats {
   const team = getTeamBySlug('homestead')!;
   return {
@@ -131,6 +140,12 @@ function homesteadStats(): TeamPlayerStats {
       statLine('Olivia Leyton Bravo', 'leyton', 1, 10),
       statLine('Gabrielle Moll', 'moll', 1, 9),
     ],
+    gameTotals: [IDS.sf, IDS.fremont, IDS.cupertino, IDS.lynbrook, IDS.later].map((contestId) => ({
+      contestId,
+      goals: contestId === IDS.lynbrook ? 4 : 0,
+      assists: 0,
+      saves: 0,
+    })),
     warnings: [],
     fetchedAt: '2026-10-05T21:23:12.682Z',
     error: null,
@@ -351,7 +366,7 @@ describe('noteStatsFor', () => {
 
 /** Goal-scoring finals with no note, so the goals-scored cap is not what a test is about. */
 function padding(goals: number): Game[] {
-  return [noted(game({ home: 'homestead', away: 'lynbrook', hs: goals, as: 0, date: '2026-09-04' }), null)];
+  return [noted(game({ home: 'homestead', away: 'lynbrook', hs: goals, as: 0, date: '2026-09-04', contestId: IDS.lynbrook }), null)];
 }
 
 describe('withNoteStats', () => {
@@ -385,7 +400,7 @@ describe('withNoteStats', () => {
   });
 
   it('adds assists at 1 point each, and tracks them when the coach does not', () => {
-    const games = [...padding(8), noted(game({ home: 'homestead', away: 'fremont', hs: 1, as: 0, date: '2026-10-03' }), 'Goals: Moll from Anton')];
+    const games = [...padding(8), noted(game({ home: 'homestead', away: 'fremont', hs: 1, as: 0, date: '2026-10-03', contestId: IDS.later }), 'Goals: Moll from Anton')];
     const merged = withNoteStats(homesteadStats(), noteStatsFor('homestead', sources(games)));
     expect(merged.players.find((p) => p.fullName === 'Sarah Anton')!.field).toMatchObject({ goals: 1, assists: 1, points: 3 });
     expect(merged.players.find((p) => p.fullName === 'Gabrielle Moll')!.field).toMatchObject({ goals: 2, assists: null, points: 4 });
@@ -408,6 +423,26 @@ describe('withNoteStats', () => {
       "2026-09-28 vs Saint Francis: MaxPreps has 5 saves entered for the game, so the note's are not added",
       "2026-09-30 vs Fremont: MaxPreps has 2 goals entered for the game, so the note's are not added",
     ]);
+  });
+
+  it('adds nothing for a noted game whose MaxPreps entries cannot be checked', () => {
+    // The per-game read failed: no totals at all.
+    const unread = homesteadStats();
+    delete unread.gameTotals;
+    const merged = withNoteStats(unread, noteStatsFor('homestead', sources([...homesteadGames(), ...padding(8)])));
+    expect(merged.noteCredits).toEqual([]);
+    expect(merged.players.find((p) => p.fullName === 'Gabrielle Moll')!.field!.goals).toBe(1);
+    expect(merged.tracked).toEqual(unread.tracked);
+    expect(merged.warnings).toEqual([
+      "2026-09-28 vs Saint Francis: what MaxPreps has entered for the game could not be read, so the note's stats are not added",
+      "2026-09-30 vs Fremont: what MaxPreps has entered for the game could not be read, so the note's stats are not added",
+      "2026-10-05 vs Cupertino: what MaxPreps has entered for the game could not be read, so the note's stats are not added",
+    ]);
+    // Read, but without the noted game: that game alone is withheld.
+    const partial = homesteadStats();
+    partial.gameTotals = partial.gameTotals!.filter((r) => r.contestId !== IDS.cupertino);
+    const some = withNoteStats(partial, noteStatsFor('homestead', sources([...homesteadGames(), ...padding(8)])));
+    expect(some.noteCredits.map((c) => c.dateKey)).toEqual(['2026-09-28', '2026-09-30', '2026-09-30']);
   });
 
   it('counts every note of a team with no MaxPreps stats at all: it entered nothing anywhere', () => {
@@ -511,10 +546,50 @@ describe('the team page view', () => {
   });
 
   it('words assists alongside goals', () => {
-    const games = [...padding(8), noted(game({ home: 'homestead', away: 'fremont', hs: 2, as: 0, date: '2026-10-03' }), 'Goals: Moll (2) from Anton')];
+    const games = [...padding(8), noted(game({ home: 'homestead', away: 'fremont', hs: 2, as: 0, date: '2026-10-03', contestId: IDS.later }), 'Goals: Moll (2) from Anton')];
     const view = buildPlayerStatsView('homestead', [], withNoteStats(homesteadStats(), noteStatsFor('homestead', sources(games))))!;
     expect(view.notedGames.map((g) => g.added)).toEqual(['two goals for Gabrielle Moll and an assist for Sarah Anton']);
     expect(view.scoring!.rows.filter((r) => r.noted).map((r) => r.name)).toEqual(['Gabrielle Moll', 'Sarah Anton']);
+  });
+
+  it('works out no Save % and no shots-on-goal check from saves that include a note', () => {
+    // A coach who enters goalkeeping, for games other than the noted one: 10 saves, 2 against, 12
+    // opponent shots on goal, all true together. The note's 7 saves are from a game not in them.
+    const team = homesteadStats();
+    team.tracked.goalkeeping = ['gamesPlayed', 'opponentShotsOnGoal', 'saves', 'goalsAgainst'];
+    team.totals.goalkeeping = { gamesPlayed: 3, opponentShotsOnGoal: 12, saves: 10, goalsAgainst: 2 };
+    team.players.push({
+      ...statLine('Lacey Sebastian Carattini', 'lacey', 0, 3),
+      field: null,
+      goalkeeping: { ...Object.fromEntries(GOALIE_STAT_KEYS.map((k) => [k, null])), gamesPlayed: 3, opponentShotsOnGoal: 12, saves: 10, goalsAgainst: 2 } as PlayerStatLine['goalkeeping'],
+    });
+    const before = buildPlayerStatsView('homestead', [], team)!.goalies[0];
+    expect(before.stats.map((x) => x.label)).toContain('Save %');
+
+    const merged = withNoteStats(team, noteStatsFor('homestead', sources([...homesteadGames(), ...padding(8)])));
+    const lacey = merged.players.find((p) => p.fullName === 'Lacey Sebastian Carattini')!;
+    expect(lacey.goalkeeping!.saves).toBe(17);
+    expect([...notedKinds(merged, lacey)]).toEqual(['saves']);
+    const [card] = buildPlayerStatsView('homestead', [], merged)!.goalies;
+    expect(card.stats.map((x) => [x.label, x.text])).toEqual([
+      ['Games', '3'],
+      ['Opp. shots on goal', '12'],
+      ['Saves', '17'],
+      ['Goals against', '2'],
+    ]);
+    expect(card.flag).toBe(
+      'No save % is worked out: some of these saves come from a game note, and the goals against do not cover the same games.',
+    );
+
+    // The /leaders saves board: the same keeper, no Sv%.
+    const snapshot = getSnapshot();
+    const svPct = (stats: TeamPlayerStats) => {
+      const v = buildLeadersView({ teams: snapshot.teams, standings: snapshot.standings, games: snapshot.games, prior: null, stats: [stats] });
+      const board = v.regions.flatMap((r) => r.players).find((b) => b.id === 'most-saves')!;
+      return board.rows.find((r) => r.name === 'Lacey Sebastian Carattini')!.cells.at(-1)!.text;
+    };
+    expect(svPct(team)).toBe('83.3%');
+    expect(svPct(merged)).toBeNull();
   });
 
   it('marks nothing for a team the notes add nothing to', () => {

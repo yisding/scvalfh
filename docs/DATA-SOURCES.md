@@ -1133,13 +1133,24 @@ Gotchas, all **[V]**:
     `gameTotals`) for each team a note credits — one call on 2026-10-06 — and a noted game whose
     goals, assists or saves the coach also entered adds none of that stat. A note never credits more
     goals or assists in a game than the team scored, and no noted goal is added where MaxPreps' goals
-    plus the noted ones would pass the team's goals scored (the only check left when the per-game
-    call fails). A team with no MaxPreps stats at all (status `none`) entered nothing, so its notes
-    all count.
-  - The team page marks each changed row and card and lists every noted game with its note.
-  - Not read: the Oct 5 note's "in OT" (the snapshot has `otPeriods` 0 and `decider` REG; a tie
-    scores the same 1 point either way, Article IV), and who played the last quarter in goal on
-    Sep 28, which the note's cut-off leaves without a number.
+    plus the noted ones would pass the team's goals scored. A noted game whose entries cannot be
+    checked (the per-game call failed, or does not list the game) adds nothing until a read
+    succeeds; the previous run's totals are not carried forward for it, since the coach may have
+    entered the game since. A team with no MaxPreps stats at all (status `none`) entered nothing,
+    so its notes all count.
+  - The team page marks each changed row and card and lists every noted game with its note. A
+    keeper whose saves include a note's gets no Save % (team page or /leaders) and no
+    shots-on-goal check: the note's game is not in the goals against and shots the coach entered.
+  - **Overtime.** A final MaxPreps records with 0 overtime periods counts as one period of
+    overtime (two for "double OT" / "2OT") when its note says so: "OT" in capitals as a word of
+    its own, or "overtime", never after "no" (`overtimeFromNote` in `lib/normalize.ts`, the same
+    place the "reschedul…" note already marks a postponement). Only a level score or a one-goal
+    margin can come out of sudden victory, so a note on any other score is reported, not read. The
+    game keeps the note in `provenance.overtimeNote`, and its page says the OT is the note's.
+    Homestead–Cupertino, Oct 5, 1-1: MaxPreps 0 periods, the note "tied in OT 1:1", so decider
+    OT (a tie scores 1 point either way, Article IV: no table moves).
+  - Not read: who played the last quarter in goal on Sep 28, which the note's cut-off leaves
+    without a number.
 - Coverage on 2026-10-04 with the six EAL teams (`fetchedAt` 2026-10-04T13:04:10.832Z): 33 of the
   49 teams, 404 players, 63 goalkeepers. EAL: Pleasant Valley 21 players, Chico 19, Davis 19, Bella
   Vista 19, Lassen 10; Corning answered HTTP 400 "No data was found" (status `none`, the same

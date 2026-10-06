@@ -240,6 +240,7 @@ export const GameSchema = z
       dateCorrection: z
         .object({ maxprepsDateLocal: z.string().min(10), maxprepsTimeTba: z.boolean(), source: z.string().min(1) })
         .optional(),
+      overtimeNote: z.string().min(1).optional(),
     }),
   })
   // 1. A final game must have two numbers.

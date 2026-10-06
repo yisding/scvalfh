@@ -244,7 +244,10 @@ export function goalieFiguresDisagree(g: NonNullable<PlayerStatLine['goalkeeping
 function goalieCard(team: TeamPlayerStats, p: PlayerStatLine, i: number, noted: Set<string>): GoalieCard {
   const tracked = new Set<string>(team.tracked.goalkeeping);
   const g = p.goalkeeping!;
-  const disagree = goalieFiguresDisagree(g);
+  // Saves that include a game note's cover games the entered goals against and shots on goal do
+  // not: nothing is worked out from the two together.
+  const mixed = isNoted(noted, p);
+  const disagree = !mixed && goalieFiguresDisagree(g);
   const stats: GoalieCard['stats'] = [];
   let flag: string | null = null;
   for (const s of GOALIE) {
@@ -254,8 +257,11 @@ function goalieCard(team: TeamPlayerStats, p: PlayerStatLine, i: number, noted: 
     // never beside figures that contradict each other.
     if (s.key === 'goalsAgainst' && tracked.has('saves') && g.saves !== null && g.goalsAgainst !== null) {
       const pct = savePercent(g.saves, g.goalsAgainst);
-      if (pct && !disagree) stats.push({ label: 'Save %', text: pct });
+      if (pct && !disagree && !mixed) stats.push({ label: 'Save %', text: pct });
     }
+  }
+  if (mixed && g.saves !== null && g.goalsAgainst !== null && tracked.has('goalsAgainst')) {
+    flag = 'No save % is worked out: some of these saves come from a game note, and the goals against do not cover the same games.';
   }
   if (disagree) {
     const accounted =

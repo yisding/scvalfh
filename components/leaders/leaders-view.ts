@@ -61,6 +61,7 @@ import {
   regionOf,
   type RegionConfig,
 } from '../../lib/leagues';
+import { notedKinds } from '../../lib/note-stats';
 import { getAllPlayerStatsWithNotes } from '../../lib/player-stats';
 import { getPriorSeason } from '../../lib/prior-season';
 import { getAllEnrichedRosters, type MergedPlayer } from '../../lib/rosters';
@@ -475,8 +476,10 @@ const PLAYER_BOARDS: PlayerBoardSpec[] = [
         cell: (e) => {
           const g = e.player.goalkeeping;
           const both = tracks(e.stats, { block: 'goalkeeping', key: 'goalsAgainst' });
+          // Saves that include a game note's cover other games than the goals against: no Sv%.
+          const mixed = notedKinds(e.stats, e.player).has('saves');
           return {
-            text: both && g && g.saves !== null && g.goalsAgainst !== null ? savePercent(g.saves, g.goalsAgainst) : null,
+            text: both && !mixed && g && g.saves !== null && g.goalsAgainst !== null ? savePercent(g.saves, g.goalsAgainst) : null,
           };
         },
       },
