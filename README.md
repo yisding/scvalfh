@@ -997,25 +997,28 @@ Regional, Oct 30-31 (top six EAL/SRL schools, format and site not published, no 
 ### Sunset
 
 The Sunset (the site calls it the Sunset field hockey league; MaxPreps and si.com call it "Sunset") is
-a field-hockey-only grouping of ten Southern Section schools
-(Bonita, Chaminade, Chaparral, Edison, Fountain Valley, Great Oak, Huntington Beach, Marina, Newport
-Harbor and Temecula Valley; exactly MaxPreps' 2024-25 and 2025-26 Sunset tables), not the all-sports
-Sunset League, which has different members. No Sunset website, schedule, standings or rules document
-exists that we could find. **Which games count:** a game between two of the ten that MaxPreps marks as
-a league game (classification `contest-type`, as for SCVAL and the EAL), Aug 18 to Oct 31, the
-Section's last allowable contest. There is no round robin (of the 45 pairs, 9 meet twice, 30 once and
-6 never), so `gamesPerTeam` is null: GP is shown without "of N", there is no games-left or
-maximum-points column, and when teams' counts differ by two or more the table says points favour
-teams that have played more. **Points:** no league rule is published, so this site applies its own
-3-1-0. **A level game** stays level: the Southern Section's Blue Book adopts the NFHS rules and says
-nothing on overtime. Games between Sunset teams have ended level (Bonita 1-1 Marina, Aug 18; Fountain
-Valley 1-1 Marina, Sep 11; MaxPreps marks neither as a league game) and a Sunset league game has been
+a field-hockey-only grouping of eight Southern Section schools
+(Chaparral, Edison, Fountain Valley, Great Oak, Huntington Beach, Marina, Newport Harbor and Temecula
+Valley), not the all-sports Sunset League, which has different members. MaxPreps' 2024-25 and 2025-26
+Sunset tables list these eight and two more, Bonita and Chaminade, which the site lists with the
+Southern Section independents (owner decision, 2026-10-06, below). No Sunset website, schedule,
+standings or rules document exists that we could find. **Which games count:** a game between two of the
+eight that MaxPreps marks as a league game (classification `contest-type`, as for SCVAL and the EAL),
+Aug 25 to Oct 31, the Section's last allowable contest. There is no round robin (of the 28 pairs, 7
+meet twice and 21 once outside tournaments), so `gamesPerTeam` is null: GP is shown without "of N",
+there is no games-left or maximum-points column, and when teams' counts differ by two or more the
+table says points favour teams that have played more. **Points:** no league rule is published, so this
+site applies its own 3-1-0. **A level game** stays level: the Southern Section's Blue Book adopts the
+NFHS rules and says nothing on overtime. A game between Sunset teams has ended level (Fountain Valley
+1-1 Marina, Sep 11; MaxPreps does not mark it as a league game) and a Sunset league game has been
 decided in overtime (Great Oak 2-1 Temecula Valley, Oct 2), so each game is recorded as reported. **Tiebreaks:** none is published, so teams level on points share a place; teams
 level at the top read "Sunset co-leaders" once league play is over. **Postseason:** none. The Southern
 Section holds no field hockey playoffs (Blue Book 2026-27 Bylaws 2011.1 and 3500.2) and CIF holds no
 regional or state championship, so a Sunset team's season ends with its last game. MaxPreps' 2026-27
-Sunset table lists five of the ten, ordered by winning percentage, and si.com's lists eight plus two
-0-0 rows; both are shown as informational only.
+Sunset table lists three of the eight with Bonita and Chaminade, ordered by winning percentage, and
+si.com's lists six of the eight with Bonita, Chaminade and two 0-0 rows; both are shown as informational
+only, and Great Oak's Aug 27 win over Bonita, which MaxPreps marks as a league game, is not counted
+here.
 
 ### Southern Section independents
 
@@ -1245,8 +1248,8 @@ at once, at every build, starting from last season's:
   (not just a trailing window) specifically so corrections and backfills are never missed.
 - **SBLive's league buckets are wrong for SCVAL and the Sunset.** Its "De Anza" and "El Camino" pages
   misfile several SCVAL schools between divisions and omit Santa Clara entirely; its Sunset table
-  lists eight of the ten plus two 0-0 rows and files Chaparral and Temecula Valley under
-  "Southwestern". Statewide name collisions are common (University, Los Altos, Santa Clara, Davis,
+  lists six of the eight, Bonita and Chaminade (the independents here) and two 0-0 rows, and files
+  Chaparral and Temecula Valley under "Southwestern". Statewide name collisions are common (University, Los Altos, Santa Clara, Davis,
   Westview, Del Norte, Marina, San Marcos, Mission Vista, Granite Hills and Southwest), and si.com
   sometimes puts one of our teams' games on a namesake's page (Westview v Sage Creek on West Los
   Angeles' Westview; Del Norte's Oct 16 games on Crescent City's), where they do not join.

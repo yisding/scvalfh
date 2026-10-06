@@ -80,7 +80,7 @@ export function coveredLeagueWords(): string {
  * (NCS) and EAL (Northern Section)`). From SECTIONS and LEAGUES_PROPER, so a league added or dropped
  * in the config changes every description that names them. The independent groups follow the leagues as
  * one item each (`independentsWords`), so a sentence about every covered team stays true: `… City, North
- * and Metro (San Diego Section) and three Southern Section independents`. `region` limits it to that
+ * and Metro (San Diego Section) and five Southern Section independents`. `region` limits it to that
  * region's sections (`'socal'`, short: `Sunset (Southern Section), City, North and Metro (San Diego Section)
  * and five Southern Section independents`); omitted, it names all nine leagues in config order, NorCal
  * first, then the independents.
