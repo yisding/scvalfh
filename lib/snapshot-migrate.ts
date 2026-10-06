@@ -58,8 +58,8 @@ function upgradeSide(side: GameSide): GameSide {
 
 /**
  * The health reason of a league a snapshot predates: 'No Sunset data in this snapshot yet: it was written
- * before Sunset was added.' A group of independents (the Southern Section independents, DESIGN §24.9) is named
- * in full, since its short name ('Independent') is an adjective.
+ * before Sunset was added.' A group of independents (the LA independents, DESIGN §24.9) is named
+ * in full, since its short name ('LA') alone names a place.
  */
 function addedLeagueReason(league: (typeof LEAGUES)[number]): string {
   if (league.independents) {

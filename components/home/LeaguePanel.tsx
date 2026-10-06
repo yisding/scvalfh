@@ -36,7 +36,7 @@ export function LeaguePanel({ panel }: LeaguePanelProps) {
   const { latest, unreported, slate } = panel;
   const multi = panel.divisions.length > 1;
   const lastDivision = panel.divisions.length - 1;
-  // A group of independents (the Southern Section independents, DESIGN §24.9): its short name is an
+  // A group of independents (the LA independents, DESIGN §24.9): its short name is an
   // adjective, so the empty states name the teams instead of "the first Independent games".
   const independent = isIndependentLeague(panel.id);
 

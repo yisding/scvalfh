@@ -69,7 +69,7 @@ import type { LeagueId, PlayoffProjection as Projection } from '../../lib/types'
  * places teams. One card per conference (`#city`, `#north-county`, `#metro`) gives each division's table
  * leaders and each team's playoff division (I or II, the Section's 2026 Divisions sheet). Then the
  * Sunset's card (`#sunset`): the Southern Section holds no field hockey playoffs (Blue Book 2011.1,
- * 3500.2), with its source; and the Southern Section independents' card (`#independents`, DESIGN §24.9):
+ * 3500.2), with its source; and the LA independents' card (`#independents`, DESIGN §24.9):
  * the three play as independents (the group's note) and the Section holds no playoffs. No SoCal sentence
  * says "at-large", "automatic qualifier" or "seed".
  *
@@ -183,7 +183,7 @@ function leagueBlock(summary: LeagueSummary): LeagueBlock {
  * Where each league's season leads, from config, in config order: 'the CCS championships (SCVAL, BVAL
  * and PCAL), the MCAL tournament, the EAL’s Super Regional, no playoffs for the Sunset or the Southern
  * Section independents and the San Diego Section playoffs (City, North and Metro)'. A group with no table
- * is named in full (its short name, 'Independent', is an adjective).
+ * is named in full (its short name, 'LA', alone names a place).
  */
 function postseasonWords(): string {
   const parts: Array<{ key: string; words: (shorts: string[]) => string; shorts: string[] }> = [];
@@ -612,7 +612,7 @@ function SectionPlayoffsLeagueCard({ summary }: { summary: LeagueSummary }) {
 
 /**
  * A league with no postseason (the Sunset, `id=<league>`): the config's note and its source, nothing to
- * project. The Southern Section independents' card (`#independents`) is headed by the group's name and
+ * project. The LA independents' card (`#independents`) is headed by the group's name and
  * opens with the group's own note (schools in no league, whose table is their games against each other),
  * then the Section's.
  */

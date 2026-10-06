@@ -109,7 +109,7 @@ describe('vnn: opponent naming differs per school', () => {
   });
 
   // La Jolla was the outsider here until the San Diego Section joined the registry, and Harvard-Westlake
-  // until the Southern Section independents did (DESIGN §24.9): both resolve now, and a school outside the
+  // until the LA independents did (DESIGN §24.9): both resolve now, and a school outside the
   // registry (Notre Dame Academy, a Los Angeles school si.com lists with no field hockey games) stays a bare name.
   it('resolves a San Diego Section opponent and keeps a non-registry opponent as a name with no slug', () => {
     const ics = (summary: string) =>

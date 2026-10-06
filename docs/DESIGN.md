@@ -4024,3 +4024,40 @@ and Bonita–Chaminade twice). `data/history-2025-26.json` regenerated offline. 
 (rosters, player stats, JV, enrichment) were reordered to the registry's new order with the two teams'
 `division` rewritten, their contents unchanged.
 
+### 24.11 The Sunset counts every game between its eight teams, and the independents are "LA" (2026-10-06, later still)
+
+Owner decisions, 2026-10-06: "count all matches between the 8 Sunset schools" (option 2 of the Great Oak
+analysis) and "rename Independents to LA".
+
+**Why the Sunset moved to membership.** Great Oak's league record was 3-1 on MaxPreps' Sunset table, 2-2 on
+si.com's and 2-1 on this site's flag-based table, and the difference was only which games MaxPreps'
+scorekeepers had labelled "League": Great Oak's two games with Temecula Valley are flagged non-league
+(Sep 4) and league (Oct 2); Temecula Valley's games against the five Orange County schools are all flagged,
+Great Oak's and Chaparral's mostly not; the Orange County schools' games against each other are flagged
+only when Edison enters them. MaxPreps also lists the Sep 24 Great Oak–Edison loss twice (its overall record
+6-10-2 against our 6-9-2; the pipeline drops the duplicate). The three Temecula schools play a full
+home-and-away round robin among themselves (si.com files two of them under "Southwestern"), and each plays
+each Orange County school about once, so the "league" is two clusters with crossover games and the flag
+decided, game by game, which crossovers counted. Counting every game between the eight (classification
+`'membership'`, the San Diego divisions' and the LA independents' rule) removes the flag from the table
+without inventing a structure the schedules do not show. `leaguePlay` stays Aug 25 (Chaparral–Temecula
+Valley, now counted) to Oct 31; `gamesPerTeam` stays null (the pairs meet once or twice). The Notes source
+line reads "League games are every game between two division members on MaxPreps’ schedules (the Sunset
+publishes no schedule)"; the uneven-games footnote for a membership division with no fixed schedule reads
+"Teams have played between N and M games against other Sunset teams"; the knownCause says MaxPreps counts
+only its flagged games. Great Oak is 4-2 with every game counted; the table counts 35 games (15 under the
+flag) on the 2026-10-06 snapshot.
+
+**"LA".** The group's name is "LA independents" and its short name "LA" (the five are Los Angeles-area
+schools: La Verne, West Hills, Glendora and Studio City in Los Angeles County, Thousand Oaks in Ventura
+County). The division label is "LA", the standalone name "the LA independents" ("Show the LA independents
+here"; "LA" alone names a place), the co-leaders label "LA co-leaders", links read "LA standings", the
+schedule page "LA teams: schedule and results". The id, the URL (`/standings/independents`) and the
+`independents: true` flag are unchanged, as are the "nine leagues and five independents" counts and the
+"five Southern Section independents" clause built from the section's label. `standingsLabel` no longer
+special-cases the group.
+
+**Data (2026-10-06, 12:5xZ).** `pnpm fetch-data`: 102 teams, 879 games (544 league, up from 524), 542 finals,
+9 pending; `data/history-2025-26.json` regenerated (the group's name); the per-team files' `source` strings
+renamed.
+

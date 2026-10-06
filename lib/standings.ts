@@ -1026,7 +1026,11 @@ export function unevenGamesSentence(
     return `Teams have played between ${spread.min} and ${spread.max} of ${spread.scheduled} league games, so points favour teams that have played more.`;
   }
   const league = getLeague(leagueId);
-  return `Teams have played between ${spread.min} and ${spread.max} of the games MaxPreps marks as ${league.shortName} league games, and there is no fixed league schedule, so points favour teams that have played more.`;
+  // 'membership' with no fixed schedule (the Sunset, the LA independents): every game between two members counts,
+  // so the gap is in games played against each other; 'contest-type' with none (no league today): MaxPreps' flag.
+  return league.rules.classification === 'membership'
+    ? `Teams have played between ${spread.min} and ${spread.max} games against other ${league.shortName} teams, and there is no fixed league schedule, so points favour teams that have played more.`
+    : `Teams have played between ${spread.min} and ${spread.max} of the games MaxPreps marks as ${league.shortName} league games, and there is no fixed league schedule, so points favour teams that have played more.`;
 }
 
 // ---------------------------------------------------------------- missing official results

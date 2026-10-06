@@ -321,7 +321,7 @@ describe('prepareRun and the outputs', () => {
     expect(meta.fetchedAt).toBe('2026-10-02T15:00:00.000Z');
     expect(meta.today).toBe('2026-10-02');
     expect(meta.commitSummary).toMatch(
-      /^SCVAL \+\d+ finals · BVAL \+\d+ · PCAL \+\d+ · MCAL \+\d+ · EAL frozen \(not fetched\) · Sunset frozen \(not fetched\) · City frozen \(not fetched\) · North frozen \(not fetched\) · Metro frozen \(not fetched\) · Independent frozen \(not fetched\)$/,
+      /^SCVAL \+\d+ finals · BVAL \+\d+ · PCAL \+\d+ · MCAL \+\d+ · EAL frozen \(not fetched\) · Sunset frozen \(not fetched\) · City frozen \(not fetched\) · North frozen \(not fetched\) · Metro frozen \(not fetched\) · LA frozen \(not fetched\)$/,
     );
     expect(meta.leagues.map((l) => [l.id, l.state])).toEqual([
       ['scval', 'fresh'],

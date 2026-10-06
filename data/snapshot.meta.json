@@ -1,6 +1,6 @@
 {
-  "commitSummary": "SCVAL +0 finals · BVAL +0 · PCAL +0 · MCAL +0 · EAL +0 · Sunset +0 · City +0 · North +0 · Metro +0 · Independent +0",
-  "contentHash": "71d5ecad438211f8dd0737a03a10c7bcffb40457d460038f2f5dce0bbd956f3c",
+  "commitSummary": "SCVAL +50 finals · BVAL +13 · PCAL +23 · MCAL +49 · EAL +16 · Sunset +22 · City +15 · North +30 · Metro +5 · LA +13",
+  "contentHash": "2004ae8c209a3111e64ec21272b18669e89e9298b8da00b766de3098eda5c273",
   "counts": {
     "byLeague": {
       "bval": {
@@ -70,14 +70,14 @@
         "backfilled": 0,
         "finals": 83,
         "games": 99,
-        "leagueGames": 15,
+        "leagueGames": 35,
         "teams": 8
       }
     },
     "finals": 542,
     "games": 879,
-    "leagueGames": 524,
-    "mismatches": 17,
+    "leagueGames": 544,
+    "mismatches": 19,
     "pending": 9,
     "teams": 102
   },
@@ -88,12 +88,12 @@
     "conflicts": 7,
     "sbliveOnlyScored": 7
   },
-  "fetchedAt": "2026-10-06T12:22:17.520Z",
+  "fetchedAt": "2026-10-06T13:24:22.733Z",
   "leagues": [
     {
       "backfilled": 0,
       "countedFinals": 50,
-      "finalsDelta": 0,
+      "finalsDelta": 50,
       "id": "scval",
       "missingPast": 2,
       "reasons": [],
@@ -102,7 +102,7 @@
     {
       "backfilled": 0,
       "countedFinals": 13,
-      "finalsDelta": 0,
+      "finalsDelta": 13,
       "id": "bval",
       "missingPast": 1,
       "reasons": [],
@@ -111,7 +111,7 @@
     {
       "backfilled": 3,
       "countedFinals": 23,
-      "finalsDelta": 0,
+      "finalsDelta": 23,
       "id": "pcal",
       "missingPast": 0,
       "reasons": [],
@@ -120,7 +120,7 @@
     {
       "backfilled": 0,
       "countedFinals": 49,
-      "finalsDelta": 0,
+      "finalsDelta": 49,
       "id": "mcal",
       "missingPast": 2,
       "reasons": [],
@@ -129,7 +129,7 @@
     {
       "backfilled": 0,
       "countedFinals": 16,
-      "finalsDelta": 0,
+      "finalsDelta": 16,
       "id": "eal",
       "missingPast": 3,
       "reasons": [],
@@ -137,17 +137,17 @@
     },
     {
       "backfilled": 0,
-      "countedFinals": 9,
-      "finalsDelta": 0,
+      "countedFinals": 22,
+      "finalsDelta": 22,
       "id": "sunset",
-      "missingPast": 0,
+      "missingPast": 1,
       "reasons": [],
       "state": "fresh"
     },
     {
       "backfilled": 0,
       "countedFinals": 15,
-      "finalsDelta": 0,
+      "finalsDelta": 15,
       "id": "city",
       "missingPast": 0,
       "reasons": [],
@@ -156,7 +156,7 @@
     {
       "backfilled": 0,
       "countedFinals": 30,
-      "finalsDelta": 0,
+      "finalsDelta": 30,
       "id": "north-county",
       "missingPast": 1,
       "reasons": [],
@@ -165,7 +165,7 @@
     {
       "backfilled": 0,
       "countedFinals": 5,
-      "finalsDelta": 0,
+      "finalsDelta": 5,
       "id": "metro",
       "missingPast": 0,
       "reasons": [],
@@ -174,7 +174,7 @@
     {
       "backfilled": 0,
       "countedFinals": 13,
-      "finalsDelta": 0,
+      "finalsDelta": 13,
       "id": "independents",
       "missingPast": 0,
       "reasons": [],

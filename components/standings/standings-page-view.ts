@@ -184,7 +184,7 @@ export interface StandingsOverviewView {
   /** NorCal, then SoCal: the same sections, split by region for the page's region wrappers. */
   regions: StandingsOverviewRegion[];
   /**
-   * Per league, each table's leaders (OG card, metadata); the Southern Section independents' table included.
+   * Per league, each table's leaders (OG card, metadata); the LA independents' table included.
    */
   leaders: Array<{ league: LeagueSummary; lines: LeaderLine[] }>;
   throughDate: string | null;

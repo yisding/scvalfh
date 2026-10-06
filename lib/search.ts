@@ -33,8 +33,8 @@ export interface GroupSearchEntry {
   href: string;               // '/standings/bval#santa-teresa' | '/standings/mcal'
   keys: string[];             // normalized: label, searchAliases, league full name
   /**
-   * A group of independents whose short name does not read as a name in a list (the Southern Section independents:
-   * 'Independent' is an adjective) carries the words a list uses instead: 'the Southern Section independents'.
+   * A group of independents whose short name does not read as a name in a list (the LA independents:
+   * 'LA' alone names a place) carries the words a list uses instead: 'the LA independents'.
    * Absent for every other group (the finder lists `label`), so the shipped index grows by one field.
    */
   listName?: string;

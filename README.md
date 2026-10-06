@@ -30,15 +30,15 @@ Association, MaxPreps or Sports Illustrated. See "Attribution and legal posture"
 | City — City Conference | SoCal | SDS | City Western (6), City Eastern (6) | 12 |
 | North — North County Conference | SoCal | SDS | Avocado (6), Palomar (7), Valley (6) | 19 |
 | Metro — Metro Conference | SoCal | SDS | Metro Mesa (5), Metro South Bay (4) | 9 |
-| Independent — Southern Section independents | SoCal | SS | one table (5): Bonita, Chaminade, Glendora, Harvard-Westlake, Thousand Oaks | 5 |
+| LA — LA independents | SoCal | SS | one table (5): Bonita, Chaminade, Glendora, Harvard-Westlake, Thousand Oaks | 5 |
 
 102 teams in all, 49 in Northern California and 53 in Southern California, in nine leagues and one
 group of independents. The North County Conference's short name is "North" (owner decision,
 2026-10-06: "North County" made its chip too wide); where the short name would stand alone as a
 control's target or a sentence's subject it reads "North County" (`standaloneName`), so it never reads
-as a direction ("Jump to North County ↓"). The Southern Section independents are not a league: five
-Southern Section schools in no field hockey league, grouped by this site (short name "Independent",
-`independents: true` in `lib/leagues.ts`). Glendora, Harvard-Westlake and Thousand Oaks are each the
+as a direction ("Jump to North County ↓"). The LA independents are not a league: five
+Los Angeles-area Southern Section schools in no field hockey league, grouped by this site (short name "LA",
+`independents: true` in `lib/leagues.ts`; the id and URL stay `independents`). Glendora, Harvard-Westlake and Thousand Oaks are each the
 only field hockey team in their all-sports league on MaxPreps (the Palomares League, League B and the
 Marmonte League); Bonita and Chaminade sit in MaxPreps' and si.com's Sunset tables, but MaxPreps marks
 none of their games against the five Orange County Sunset teams as a league game and both play every
@@ -116,7 +116,7 @@ Per-league pages show their own region's league chips.
 | `/standings/[league]` | One league's full standings page (10 pages: `scval`, `bval`, `pcal`, `mcal`, `eal`, `sunset`, `city`, `north-county`, `metro`, `independents`), with PTS, W-L-T, GF/GA/GD, GP, games left and the most points still reachable (the Sunset, with no fixed schedule, shows GP alone); a pill links its JV tables on `/jv`. `/standings/independents` has no table: it says why ("No league table"), links the three team pages and gives the no-postseason card |
 | `/jv` | JV standings: every league's JV tables (`#scval`, …; `#de-anza`, … in a multi-division league), computed and unofficial, each shown once enough of its JV league games have a score |
 | `/schedule` | A light index: league cards, recent and next game days per region, and one "every game day" list (its game rows region-scoped) whose `#YYYY-MM-DD` rows keep old date links working |
-| `/schedule/[league]` | One league's whole season, filterable client-side (10 pages; `/schedule/independents` is "Independent teams: schedule and results", every contest involving the independents, all of them non-league games) |
+| `/schedule/[league]` | One league's whole season, filterable client-side (10 pages; `/schedule/independents` is "LA teams: schedule and results", every contest involving the independents, all of them non-league games) |
 | `/scores/[date]` | One day's scoreboard (one static page per date with a game; OG card per date), the regions kept apart: `#norcal` ("Northern California": its leagues in config order, then its Non-league games), then, on a day that has one, `#between-regions` ("NorCal vs SoCal", shown in both views), then `#socal` (its repeated ids suffixed, `#non-league-socal`); a region with no game says so in one sentence. Then the day's JV games, one block per region (`#jv`, `#jv-socal`), kept apart from the varsity counts. The header counts each region when both have a game ("NorCal: 6 games" … "SoCal: 9 games") |
 | `/game/[id]` | One game's detail page (one static page per game; OG card per game). A game whose score came from si.com has an id like `sblive-123`; one that MaxPreps later published is a stub that links to it |
 | `/teams` | Teams and standings: all 102 teams, a search box, and each division's compact standings table (the independents: their group's note and team links, no table) (place, team, GP, W-L-T, PTS, the ladder line, a link to the full league table), grouped region → section → league → division. The search filters the tables' rows in place and searches both regions |
@@ -1001,11 +1001,15 @@ a field-hockey-only grouping of eight Southern Section schools
 (Chaparral, Edison, Fountain Valley, Great Oak, Huntington Beach, Marina, Newport Harbor and Temecula
 Valley), not the all-sports Sunset League, which has different members. MaxPreps' 2024-25 and 2025-26
 Sunset tables list these eight and two more, Bonita and Chaminade, which the site lists with the
-Southern Section independents (owner decision, 2026-10-06, below). No Sunset website, schedule,
-standings or rules document exists that we could find. **Which games count:** a game between two of the
-eight that MaxPreps marks as a league game (classification `contest-type`, as for SCVAL and the EAL),
-Aug 25 to Oct 31, the Section's last allowable contest. There is no round robin (of the 28 pairs, 7
-meet twice and 21 once outside tournaments), so `gamesPerTeam` is null: GP is shown without "of N",
+LA independents (owner decision, 2026-10-06, below). No Sunset website, schedule,
+standings or rules document exists that we could find. **Which games count:** every game between two of
+the eight, Aug 25 to Oct 31 (the Section's last allowable contest), outside tournaments, whether or not
+MaxPreps marks it a league game (classification `membership`, as for the San Diego divisions; owner
+decision, 2026-10-06). MaxPreps' flag follows whichever scorekeeper entered the game (it marks one of Great
+Oak's two games with Temecula Valley, and none of the Orange County schools' games against each other
+except Edison's), so MaxPreps' table, si.com's and a flag-based table disagreed on Great Oak's record (3-1,
+2-2 and 2-1); every game counted, Great Oak is 4-2. There is no round robin (of the 28 pairs, 7 meet
+twice and 21 once outside tournaments), so `gamesPerTeam` is null: GP is shown without "of N",
 there is no games-left or maximum-points column, and when teams' counts differ by two or more the
 table says points favour teams that have played more. **Points:** no league rule is published, so this
 site applies its own 3-1-0. **A level game** stays level: the Southern Section's Blue Book adopts the
@@ -1020,10 +1024,11 @@ si.com's lists six of the eight with Bonita, Chaminade and two 0-0 rows; both ar
 only, and Great Oak's Aug 27 win over Bonita, which MaxPreps marks as a league game, is not counted
 here.
 
-### Southern Section independents
+### LA independents
 
-Five Southern Section schools in no field hockey league, grouped by this site as "Southern Section
-independents" (short name "Independent", `independents: true` in `lib/leagues.ts`). Glendora,
+Five Los Angeles-area Southern Section schools in no field hockey league, grouped by this site as "LA
+independents" (short name "LA", `independents: true` in `lib/leagues.ts`; the id and URL stay
+`independents`). Glendora,
 Harvard-Westlake and Thousand Oaks are the only field hockey teams in their all-sports leagues (the
 Palomares League, League B and the Marmonte League on MaxPreps' 2026-27 team pages; MaxPreps' 2025-26
 tables for those three leagues each list one field hockey team too). Bonita and Chaminade sit in
@@ -1036,7 +1041,7 @@ Oct 31 (`classification: 'membership'`, as the San Diego divisions). Nine of the
 away and Chaminade–Thousand Oaks three times, so `gamesPerTeam` is null and GP is shown without "of N".
 The one game MaxPreps flags between an independent and a Sunset team, Bonita at Great Oak on Aug 27,
 counts for neither table. **Points, ties:** no league exists to publish a rule, so the table is this
-site's own 3-1-0 and teams level on points share a place ("Independent co-leaders" at the top once the
+site's own 3-1-0 and teams level on points share a place ("LA co-leaders" at the top once the
 season is over). Every page that shows the table says it is this site's count of the five's games
 against each other (the division's note). **Postseason:** none, for the Sunset's reason (Blue Book
 2026-27 Bylaws 2011.1 and 3500.2), so each independent's season ends with its last game, Oct 31 at the

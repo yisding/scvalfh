@@ -101,7 +101,7 @@ describe('the two-region leaders card (components/layout/og-region-card.tsx)', (
       ['sunset', 'city', 'north-county', 'metro', 'independents'],
     ]);
     // The group's row is labelled by its division, not its adjective short name.
-    expect(columns[1].rows.map((r) => r.shortName)).toEqual(['Sunset', 'City', 'North', 'Metro', 'Independents']);
+    expect(columns[1].rows.map((r) => r.shortName)).toEqual(['Sunset', 'City', 'North', 'Metro', 'LA']);
   });
 
   it('titles the cards from SITE_WORDMARK and counts leagues and teams in the footer', async () => {

@@ -90,7 +90,7 @@ describe('the league list in the site descriptions (components/layout/site.ts le
     expect(leaguesBySectionWords('short', 'socal')).toBe(
       'Sunset (Southern Section), City, North and Metro (San Diego Section) and five Southern Section independents',
     );
-    expect(coveredLeagueWords()).toBe('SCVAL, BVAL, PCAL, MCAL, EAL, Sunset, City, North, Metro and the Southern Section independents');
+    expect(coveredLeagueWords()).toBe('SCVAL, BVAL, PCAL, MCAL, EAL, Sunset, City, North, Metro and the LA independents');
   });
 
   it('SITE_DESCRIPTION (NorCal first, per region) and the scope note name the nine leagues, the independents and five sections from config', async () => {

@@ -33,7 +33,7 @@ export interface NextSlateProps {
   /** Where the empty state points once the schedule is used up (the league's postseason page). */
   after: { href: string; label: string };
   /** What the schedule belongs to, in the empty state: 'this league', or 'these teams' for a group
-      with no league (the Southern Section independents, DESIGN §24.9). */
+      with no league (the LA independents, DESIGN §24.9). */
   scopeNoun?: string;
   className?: string;
 }

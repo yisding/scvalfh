@@ -37,12 +37,12 @@ import { CORPUS_ROOT, SOCAL_CORPUS, corpusSnapshotPath, runFixtureCli, stubCorpu
 
 /**
  * The freeze reason of a league not in this run (lib/pipeline/steps/guards.ts notInRunReason): '<SHORT> was
- * not fetched in this run.', and for the Southern Section independents, whose short name is an adjective,
+ * not fetched in this run.', and for the LA independents, whose short name is an adjective,
  * the group by name with a plural verb (DESIGN §24.9).
  */
 function notFetchedReason(id: Parameters<typeof getLeague>[0]): string {
   return id === 'independents'
-    ? 'The Southern Section independents were not fetched in this run.'
+    ? 'The LA independents were not fetched in this run.'
     : `${getLeague(id).shortName} was not fetched in this run.`;
 }
 
@@ -127,7 +127,7 @@ describeIfCaptured('the SoCal corpus run', () => {
 
   it('publishes the four SoCal leagues fresh with every feed read, the five NorCal leagues and the independents frozen', () => {
     expect(snapshot.teams, 'lib/pipeline/steps/assemble.ts').toHaveLength(TEAMS.length);
-    // The corpus was captured before the Southern Section independents joined the registry (DESIGN §24.9): it
+    // The corpus was captured before the LA independents joined the registry (DESIGN §24.9): it
     // has no feed of theirs, so the group is "not fetched in this run" here.
     expect(snapshot.leagueHealth.map((h) => `${h.leagueId}:${h.state}`), 'lib/pipeline/steps/standings.ts').toEqual([
       ...NORCAL.map((id) => `${id}:frozen`),
@@ -170,7 +170,7 @@ describeIfCaptured('the SoCal corpus run', () => {
       pcal: { teams: 7, games: 0, leagueGames: 0, finals: 0, backfilled: 0 },
       mcal: { teams: 9, games: 4, leagueGames: 0, finals: 2, backfilled: 0 },
       eal: { teams: 6, games: 1, leagueGames: 0, finals: 0, backfilled: 0 },
-      sunset: { teams: 8, games: 99, leagueGames: 15, finals: 83, backfilled: 0 },
+      sunset: { teams: 8, games: 99, leagueGames: 35, finals: 83, backfilled: 0 },
       city: { teams: 12, games: 164, leagueGames: 60, finals: 111, backfilled: 0 },
       'north-county': { teams: 19, games: 244, leagueGames: 102, finals: 159, backfilled: 0 },
       metro: { teams: 9, games: 93, leagueGames: 31, finals: 59, backfilled: 0 },
@@ -222,19 +222,20 @@ describeIfCaptured('the San Diego Valley division: MaxPreps publishes no table',
 });
 
 describeIfCaptured('the membership classification (the San Diego divisions)', () => {
-  // The Southern Section independents are a membership division too (DESIGN §24.10), but not in this run.
+  // The LA independents are a membership division too (DESIGN §24.10), but not in this run.
   const SDS_DIVISIONS = LEAGUES.filter((l) => l.rules.classification === 'membership' && (SOCAL as readonly string[]).includes(l.id)).flatMap(
     (l) => l.divisions,
   );
 
-  it('reports membership for every San Diego division and contest-type for the Sunset', () => {
+  it('reports membership for every San Diego division and for the Sunset (DESIGN §24.11)', () => {
     for (const h of snapshot.leagueHealth.filter((x) => (SOCAL as readonly string[]).includes(x.leagueId))) {
       for (const d of h.divisions) {
-        expect(d.classification, `lib/pipeline/steps/guards.ts: ${d.divisionId}`).toBe(h.leagueId === 'sunset' ? 'contest-type' : 'membership');
+        expect(d.classification, `lib/pipeline/steps/guards.ts: ${d.divisionId}`).toBe('membership');
         expect(d.official, d.divisionId).toBeNull();
       }
     }
     expect(SDS_DIVISIONS.map((d) => d.id)).toEqual([
+      'sunset',
       'city-western',
       'city-eastern',
       'avocado',
@@ -246,11 +247,13 @@ describeIfCaptured('the membership classification (the San Diego divisions)', ()
   });
 
   it('counts exactly the games between two members inside leaguePlay, whatever MaxPreps’ league flag says', () => {
+    // Rows the pipeline drops are not games: the duplicate scheduled rows config excludes (Fallbrook–Poway c7dbdbcc,
+    // Fallbrook–Mission Vista 9c027452) and the phantom duplicates it detects (Great Oak–Edison, listed twice on Sep 24).
+    const dropped = new Set(snapshot.dropped.map((x) => x.contestId));
     for (const d of SDS_DIVISIONS) {
       const expected = membershipRows(d.id)
         .map((r) => r.contest.contestId)
-        // The duplicate scheduled rows config excludes (Fallbrook–Poway c7dbdbcc, Fallbrook–Mission Vista 9c027452).
-        .filter((id) => !Object.hasOwn(DATA_QUALITY.excludedContestIds, id))
+        .filter((id) => !Object.hasOwn(DATA_QUALITY.excludedContestIds, id) && !dropped.has(id))
         .sort();
       const counted = snapshot.games
         .filter((g) => g.countsFor === d.id)
@@ -261,7 +264,8 @@ describeIfCaptured('the membership classification (the San Diego divisions)', ()
   });
 
   it('is a double round robin on MaxPreps’ schedules, except Metro Mesa’s one Bonita Vista–Helix game', () => {
-    const shape = SDS_DIVISIONS.map((d) => {
+    // The San Diego divisions only: the Sunset has no fixed schedule (gamesPerTeam null; DESIGN §24.11).
+    const shape = SDS_DIVISIONS.filter((d) => d.gamesPerTeam !== null).map((d) => {
       const n = teamsInDivision(d.id).length;
       return `${d.id}:${snapshot.games.filter((g) => g.countsFor === d.id).length}/${n * (n - 1)}`;
     });

@@ -1,6 +1,6 @@
 {
   "generatedOn": "2026-10-06",
-  "scope": "SS (CIF Southern Section) Sunset field hockey league (8) and the Southern Section independents (Bonita, Chaminade, Glendora, Harvard-Westlake, Thousand Oaks), girls varsity 26-27",
+  "scope": "SS (CIF Southern Section) Sunset field hockey league (8) and the LA independents (Bonita, Chaminade, Glendora, Harvard-Westlake, Thousand Oaks), girls varsity 26-27",
   "verified": {
     "date": "2026-10-06",
     "by": "offline build from the 2026-10-06 MaxPreps + si.com harvest (scratchpad/inventory), cross-checked field by field",
@@ -57,7 +57,7 @@
       "section": "ss",
       "label": "Sunset League",
       "shortLabel": "Sunset",
-      "note": "A field-hockey-only grouping (not the all-sports Sunset League). Membership: MaxPreps 24-25 and 25-26 Sunset tables (10 schools) less Bonita and Chaminade, listed with the independents (owner decision 2026-10-06: MaxPreps marks none of their 26-27 games against the five Orange County schools as league games, and both play every other independent home and away); 26-27 league-flagged games. MaxPreps 26-27 table holds Chaparral, Great Oak, Temecula Valley and the two independents; the five Orange County schools have a zero-GUID league. No league bylaws, schedule or standings document exists; no CIF-SS playoffs.",
+      "note": "A field-hockey-only grouping (not the all-sports Sunset League). Membership: MaxPreps 24-25 and 25-26 Sunset tables (10 schools) less Bonita and Chaminade, listed with the independents (owner decision 2026-10-06: MaxPreps marks none of their 26-27 games against the five Orange County schools as league games, and both play every other independent home and away); 26-27 league-flagged games. MaxPreps 26-27 table holds Chaparral, Great Oak, Temecula Valley and the two independents; the five Orange County schools have a zero-GUID league. No league bylaws, schedule or standings document exists; no CIF-SS playoffs. Classification membership (owner decision 2026-10-06): every game between two of the eight counts, whatever MaxPreps' league flag says.",
       "divisions": [
         {
           "id": "sunset",
@@ -75,8 +75,8 @@
             "newport-harbor"
           ],
           "maxprepsExtraRows": {
-            "4c2dd7e8-2f3e-43aa-891b-9218932cdf9d": "Bonita (listed with the Southern Section independents here)",
-            "742a32d0-2dc9-4aa8-ad92-8c4576f73a12": "Chaminade (listed with the Southern Section independents here)"
+            "4c2dd7e8-2f3e-43aa-891b-9218932cdf9d": "Bonita (listed with the LA independents here)",
+            "742a32d0-2dc9-4aa8-ad92-8c4576f73a12": "Chaminade (listed with the LA independents here)"
           },
           "members": [
             "chaparral",
@@ -104,13 +104,13 @@
     {
       "id": "independents",
       "section": "ss",
-      "label": "Southern Section independents",
-      "shortLabel": "Independent",
-      "note": "Not a league: five Southern Section schools in no field hockey league, grouped by this site. Glendora, Harvard-Westlake and Thousand Oaks are each the only field hockey team in their all-sports MaxPreps league (Palomares, League B, Marmonte) in 2026-27 and in 2025-26. Bonita and Chaminade are in MaxPreps' and si.com's 26-27 Sunset tables, but MaxPreps marks none of their games against the five Orange County Sunset teams as league games and both play every other independent home and away (owner decision 2026-10-06). The table counts games between the five (classification membership). No MaxPreps table, no schedule document, no CIF-SS playoffs. Added 2026-10-06 (owner decision: every California team with a 2026 varsity game is covered).",
+      "label": "LA independents",
+      "shortLabel": "LA",
+      "note": "Not a league (\"LA independents\", short name \"LA\", owner decision 2026-10-06): five Los Angeles-area Southern Section schools in no field hockey league, grouped by this site. Glendora, Harvard-Westlake and Thousand Oaks are each the only field hockey team in their all-sports MaxPreps league (Palomares, League B, Marmonte) in 2026-27 and in 2025-26. Bonita and Chaminade are in MaxPreps' and si.com's 26-27 Sunset tables, but MaxPreps marks none of their games against the five Orange County Sunset teams as league games and both play every other independent home and away (owner decision 2026-10-06). The table counts games between the five (classification membership). No MaxPreps table, no schedule document, no CIF-SS playoffs. Added 2026-10-06 (owner decision: every California team with a 2026 varsity game is covered).",
       "divisions": [
         {
           "id": "independents",
-          "label": "Independents",
+          "label": "LA",
           "maxprepsLeagueId": null,
           "maxprepsName": null,
           "canonicalUrl": null,

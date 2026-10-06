@@ -699,13 +699,13 @@ describe('history: the league-aware read API', () => {
       expect(h.hasHistory(id)).toBe(false);
       expect(h.getHistoryChampions(id)).toEqual([]);
     }
-    // The Southern Section independents (DESIGN §24.9, §24.10): this site's grouping, so no 2025-26 table of it was
+    // The LA independents (DESIGN §24.9, §24.10): this site's grouping, so no 2025-26 table of it was
     // published. MaxPreps' 2025-26 Palomares, League B and Marmonte tables each list only that school, and its
     // 2025-26 Sunset table lists Bonita and Chaminade (standings API, 2026-10-06).
     const independents = h.getHistoryLeagues().find((l) => l.id === 'independents')!.entry;
     if (independents.status !== 'unavailable') throw new Error('independents should be unavailable');
     expect(independents.reason).toBe(
-      'The Southern Section independents are this site’s grouping, so no 2025-26 table of them was published: Glendora, Harvard-Westlake and Thousand Oaks had no league table, and MaxPreps listed Bonita and Chaminade in its Sunset table.',
+      'The LA independents are this site’s grouping, so no 2025-26 table of them was published: Glendora, Harvard-Westlake and Thousand Oaks had no league table, and MaxPreps listed Bonita and Chaminade in its Sunset table.',
     );
     expect(independents.checkedOn).toBe('2026-10-06');
     expect(independents.checked.map((c) => c.split(' ')[0])).toEqual([

@@ -53,7 +53,7 @@ const AVAILABLE = getAvailableHistoryLeagues();
 const UNAVAILABLE = getUnavailableHistoryLeagues();
 const short = (id: LeagueId) => getLeague(id).shortName;
 /**
- * The unavailable leagues, and the groups of independents (the Southern Section independents, DESIGN §24.9,
+ * The unavailable leagues, and the groups of independents (the LA independents, DESIGN §24.9,
  * §24.10): "we found no official final standings" is said of the first only, since the group is this site's
  * grouping and nobody published a table of it.
  */
@@ -63,7 +63,7 @@ const UNAVAILABLE_GROUPS = UNAVAILABLE.filter((l) => isIndependentLeague(l.id));
 const UNAVAILABLE_SUBJECT = UNAVAILABLE_LEAGUES.length
   ? `${listWords(UNAVAILABLE_LEAGUES.map((l) => short(l.id)))} ${UNAVAILABLE_LEAGUES.length === 1 ? 'is' : 'are'}`
   : null;
-/** "The Southern Section independents are this site’s grouping, so no table of them was published.", or null with no such group. */
+/** "The LA independents are this site’s grouping, so no table of them was published.", or null with no such group. */
 const GROUPS_SENTENCE = UNAVAILABLE_GROUPS.length
   ? `${listWords(UNAVAILABLE_GROUPS.map((l) => `the ${getLeague(l.id).name}`)).replace(/^t/, 'T')} are this site’s grouping, so no table of them was published.`
   : null;

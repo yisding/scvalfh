@@ -675,7 +675,7 @@ describe('data: Southern California tables with results', () => {
       game({ home: 'temecula-valley', away: 'marina', hs: 9, as: 0, date: '2026-09-28' }),
       game({ home: 'edison', away: 'temecula-valley', hs: 0, as: 2, date: '2026-10-01' }),
       game({ home: 'temecula-valley', away: 'chaparral', hs: 7, as: 0, date: '2026-10-05' }),
-      // The Southern Section independents (DESIGN §24.10): a game between two of the five counts for the group's
+      // The LA independents (DESIGN §24.10): a game between two of the five counts for the group's
       // table whatever MaxPreps' flag says; a flagged game against a Sunset team counts for neither.
       game({ home: 'harvard-westlake', away: 'glendora', hs: 5, as: 0, date: '2026-09-08', league: false }),
       game({ home: 'great-oak', away: 'bonita', hs: 1, as: 0, date: '2026-08-27' }),

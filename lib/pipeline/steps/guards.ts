@@ -43,7 +43,7 @@ export const SYSTEMIC_FAILED_FEEDS_SHARE = 0.6;
 /** §7.5 trigger d. */
 export function notInRunReason(previous: PipelineContext['previous'], leagueId: LeagueId): string {
   const league = getLeague(leagueId);
-  // A group of independents is not a league, and its short name ('Independent') is an adjective: the
+  // A group of independents is not a league, and its short name ('LA') alone names a place: the
   // sentence names the group and takes a plural verb (DESIGN §24.9). Every league's sentence is unchanged.
   const [subject, verb] = league.independents ? [`The ${league.name}`, 'were'] : [league.shortName, 'was'];
   const stamp = lastFreshStamp(previous, leagueId);

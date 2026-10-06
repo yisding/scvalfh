@@ -79,7 +79,7 @@ describe('buildSearchIndex', () => {
       label: 'North', detail: 'North County Conference · SDS · 19 teams', href: '/standings/north-county',
     });
     expect(INDEX.groups.find((g) => g.kind === 'league' && g.id === 'independents')).toMatchObject({
-      label: 'Independent', detail: 'Southern Section independents · SS · 5 teams', href: '/standings/independents',
+      label: 'LA', detail: 'LA independents · SS · 5 teams', href: '/standings/independents',
     });
     expect(INDEX.groups.find((g) => g.kind === 'league' && g.id === 'metro')).toMatchObject({
       label: 'Metro', detail: 'Metro Conference · SDS · 9 teams', href: '/standings/metro',
@@ -254,7 +254,7 @@ describe('searchTeams — §9.2 regression cases', () => {
 });
 
 describe('searchTeams — the Southern California amendment', () => {
-  it('"Harvard-Westlake", "Thousand Oaks", "Glendora" → their team pages: the Southern Section independents (DESIGN §24.9)', () => {
+  it('"Harvard-Westlake", "Thousand Oaks", "Glendora" → their team pages: the LA independents (DESIGN §24.9)', () => {
     for (const [q, slug] of [
       ['Harvard-Westlake', 'harvard-westlake'], ['harvard westlake', 'harvard-westlake'], ['Harvard', 'harvard-westlake'],
       ['Thousand Oaks', 'thousand-oaks'], ['Thousand Oaks Lancers', 'thousand-oaks'],
@@ -262,11 +262,11 @@ describe('searchTeams — the Southern California amendment', () => {
     ] as const) {
       const r = searchTeams(INDEX, q);
       expect(r.teams[0]?.entry.slug, q).toBe(slug);
-      expect(r.teams[0]?.entry.leagueShort, q).toBe('Independent');
+      expect(r.teams[0]?.entry.leagueShort, q).toBe('LA');
       expect(r.notCovered, q).toEqual([]);
     }
     // The group finds its block by its name and by "independent(s)".
-    for (const q of ['independent', 'Independents', 'Southern Section independents']) {
+    for (const q of ['independent', 'Independents', 'LA independents']) {
       expect(searchTeams(INDEX, q).groups.map((g) => `${g.kind}:${g.id}`), q).toEqual(['league:independents']);
     }
   });

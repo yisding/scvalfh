@@ -68,9 +68,9 @@ describe('migrateV1ToV2 on the committed v1 golden', () => {
       expect(s.computed.gp, s.slug).toBe(0);
       expect(s.reported).toBeNull();
       // NorCal rows say 'results reported'; a 'site'-ordered SoCal row says 'games counted' (lib/standings.ts
-      // tiebreakNote: SoCal copy avoids the word 'results'); an independent's says there is no table at all.
+      // tiebreakNote: SoCal copy avoids the word 'results').
       expect(s.tiebreak.note, s.slug).toMatch(
-        /^(No (division|league) (results reported|games counted) for |Independent: no league games, so no table$)/,
+        /^No (division|league) (results reported|games counted) for /,
       );
     }
     const leigh = migrated.standings.find((s) => s.slug === 'leigh')!;
@@ -175,7 +175,7 @@ describe('migrateV1ToV2 on the committed v1 golden', () => {
       expect(h.lastFreshAt).toBeNull();
       expect(h.reasons).toEqual([
         h.leagueId === 'independents'
-          ? 'No data for the Southern Section independents in this snapshot yet: it was written before they were added.'
+          ? 'No data for the LA independents in this snapshot yet: it was written before they were added.'
           : `No ${short} data in this snapshot yet: it was written before ${short} was added.`,
       ]);
       for (const d of h.divisions) {
@@ -353,14 +353,14 @@ describe('the "league added" upgrade for the four Southern California leagues an
     expect(stableStringify(upgraded.standings.slice(0, 49))).toBe(stableStringify(norcal.standings));
     expect(stableStringify(upgraded.leagueHealth.slice(0, 5))).toBe(stableStringify(norcal.leagueHealth));
     expect(upgraded.leagueHealth.slice(5).map((h) => [h.leagueId, h.state, h.reasons, h.divisions.map((d) => [d.divisionId, d.classification])])).toEqual([
-      ['sunset', 'degraded', ['No Sunset data in this snapshot yet: it was written before Sunset was added.'], [['sunset', 'contest-type']]],
+      ['sunset', 'degraded', ['No Sunset data in this snapshot yet: it was written before Sunset was added.'], [['sunset', 'membership']]],
       ['city', 'degraded', ['No City data in this snapshot yet: it was written before City was added.'],
         [['city-western', 'membership'], ['city-eastern', 'membership']]],
       ['north-county', 'degraded', ['No North data in this snapshot yet: it was written before North was added.'],
         [['avocado', 'membership'], ['palomar', 'membership'], ['valley', 'membership']]],
       ['metro', 'degraded', ['No Metro data in this snapshot yet: it was written before Metro was added.'],
         [['metro-mesa', 'membership'], ['metro-south-bay', 'membership']]],
-      ['independents', 'degraded', ['No data for the Southern Section independents in this snapshot yet: it was written before they were added.'],
+      ['independents', 'degraded', ['No data for the LA independents in this snapshot yet: it was written before they were added.'],
         [['independents', 'membership']]],
     ]);
     // The new rows carry no results; the Sunset's single rung still gives each a status.

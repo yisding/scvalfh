@@ -7,7 +7,7 @@ decides a level varsity game with 1 v 1s. The four Southern California leagues (
 Diego Section's City, North County and Metro conferences) publish no points rule, no standings and no
 schedule at all: this site orders their tables by its own 3-1-0 points and says so on every page
 (`orderScope: 'site'`). The Southern Section's three independents (Glendora, Harvard-Westlake and
-Thousand Oaks) are not a league and have no table at all: see "Southern Section independents" below.
+Thousand Oaks) are not a league and have no table at all: see "LA independents" below.
 The leagues differ in the tiebreak chain, in how a tie among three or more teams is worked through, in how a division champion is
 named and in what the postseason looks like. Every rule below is data in `lib/leagues.ts` with the
 by-law citation beside it; one engine (`lib/standings.ts`) runs them, and `/about#rules-<league>`
@@ -360,7 +360,7 @@ del Mar among them) [U: from a search snippet, not a league document]; the site 
 hockey league", in lower case because no source gives the grouping a title (MaxPreps and si.com say
 "Sunset"), and its copy never writes "Sunset League" except beside "all-sports". MaxPreps' 2024-25
 (`c538c7d2-…`) and 2025-26 (`1ab67ce6-…`) Sunset tables list these eight and two more, Bonita (La Verne)
-and Chaminade (West Hills) [V]; the site lists those two with the Southern Section independents (owner
+and Chaminade (West Hills) [V]; the site lists those two with the LA independents (owner
 decision, 2026-10-06; the section below says why). No Sunset website, bylaws, schedule or standings
 document exists that we could find [U: not found, not proven absent]. For 2026-27, MaxPreps' Sunset
 table (`aa46adc4-…`) lists five rows (Great Oak, Temecula Valley, Chaparral, Bonita, Chaminade) ordered by
@@ -369,17 +369,21 @@ si.com's table, which the Section's own scores site (scores.cifss.org) shows, li
 Bonita and Chaminade, and two 0-0 rows (Westlake, Los Alamitos), and files Chaparral and Temecula Valley
 under "Southwestern" [V].
 
-**Which games count.** A game between two of the eight that MaxPreps marks as a league game (contestType 0
-on either row), leaving out tournament (2) and postseason (4) rows: classification `contest-type`, as
-for SCVAL and the EAL. League play runs Aug 25 (Chaparral v Temecula Valley, the first game between two
-of the eight) to Oct 31, the Section's last allowable contest [V: 2026-27 Sports Calendar; Blue Book
-Bylaw 2006]. There is **no round robin** [V: snapshot 2026-10-06, the 28 pairs meet 2 or 1 times outside
-tournaments: 7 and 21 pairs], so `gamesPerTeam` is null: the site prints games played without "of N" and
-shows no games-left or maximum-points column, and when teams' counts differ by two or more the standings
-say that points favour teams that have played more. MaxPreps flags 2 to 7 games a team [V]; si.com marks
-more games as league games than MaxPreps does [V], so its Sunset records differ from ours. MaxPreps also
-flags Great Oak's Aug 27 home win over Bonita; Bonita is an independent here, so it counts for neither
-table [V].
+**Which games count.** Every game between two of the eight dated Aug 25 (Chaparral v Temecula Valley, the
+first game between two of the eight) to Oct 31 (the Section's last allowable contest [V: 2026-27 Sports
+Calendar; Blue Book Bylaw 2006]), leaving out tournament (2) and postseason (4) rows, whether or not
+MaxPreps marks it as a league game: classification `membership`, as for the San Diego divisions (owner
+decision, 2026-10-06; DESIGN §24.11). Until then the site counted only the games MaxPreps flagged, as for
+the EAL, and the flag turned out to follow whichever scorekeeper entered the game [V: snapshot 2026-10-06]:
+Great Oak's two games with Temecula Valley are flagged non-league (Sep 4) and league (Oct 2); Temecula
+Valley's games against the five Orange County schools are all flagged, Great Oak's and Chaparral's mostly
+not; the Orange County schools' games against each other are flagged only when Edison enters them. So
+MaxPreps' table (Great Oak 3-1), si.com's (2-2) and the flag-based table (2-1) disagreed on one team's
+record; every game counted, Great Oak is 4-2. There is **no round robin** [V: snapshot 2026-10-06, the 28
+pairs meet 2 or 1 times outside tournaments: 7 and 21 pairs], so `gamesPerTeam` is null: the site prints
+games played without "of N" and shows no games-left or maximum-points column, and when teams' counts differ
+by two or more the standings say that points favour teams that have played more. MaxPreps also flags Great
+Oak's Aug 27 home win over Bonita; Bonita is an independent here, so it counts for neither table [V].
 
 **Points and order.** No league document awards points or orders the table, so the order is this site's
 own 3-1-0 points (`orderScope: 'site'`), and every page says so instead of citing a league rule.
@@ -415,7 +419,7 @@ Huntington Beach, Marina, Newport Harbor, Temecula Valley and Thousand Oaks; it 
 Chaminade and Harvard-Westlake, which do field teams [V]. Harvard-Westlake, Thousand Oaks and Glendora are
 each the only field hockey team in their all-sports MaxPreps league (League B, Marmonte, Palomares) with no
 league-flagged game [V], and Bonita and Chaminade play them and each other, so the site covers the five as
-a group ("Southern Section independents" below), never as Sunset teams. Mayfair has a 2026-27 MaxPreps
+a group ("LA independents" below), never as Sunset teams. Mayfair has a 2026-27 MaxPreps
 team but no game and is not on the participating list [V].
 
 **Known data gaps.** MaxPreps' Sunset table holds three of the eight (with Bonita and Chaminade) and orders
@@ -541,11 +545,11 @@ power rankings [V]; search names each.
 
 ---
 
-## Southern Section independents (CIF Southern Section)
+## LA independents (CIF Southern Section)
 
 **Who.** Bonita (La Verne), Chaminade (West Hills), Glendora, Harvard-Westlake (Studio City) and Thousand
-Oaks: five Southern Section schools in no field hockey league, grouped by this site as "Southern Section
-independents" (short name "Independent"). Glendora, Harvard-Westlake and Thousand Oaks are each the only
+Oaks: five Los Angeles-area Southern Section schools in no field hockey league, grouped by this site as "LA
+independents" (short name "LA"; the id and URL stay `independents`). Glendora, Harvard-Westlake and Thousand Oaks are each the only
 field hockey team in their all-sports league on MaxPreps for 2026-27: the Palomares League (Glendora),
 League B (Harvard-Westlake) and the Marmonte League (Thousand Oaks) [V: each team's MaxPreps team page,
 2026-10-06]; MaxPreps' 2025-26 tables for the same three leagues list one field hockey team each [V:
@@ -585,7 +589,7 @@ been decided in overtime (Glendora 2-1 Chaminade, Sep 24) [V].
 | 1 | no rule: no league exists (not computable; the teams share a place) | — |
 
 **Co-champions.** No league names a champion; teams level on points at the top are shown level, labelled
-"Independent co-leaders" once the season is over.
+"LA co-leaders" once the season is over.
 
 **Postseason.** None, for the Sunset's reason: the CIF Southern Section holds no field hockey playoffs
 (Blue Book 2026-27 Bylaws 2011.1 and 3500.2) and CIF holds no regional or state championship [V], so each

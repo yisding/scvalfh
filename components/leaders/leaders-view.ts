@@ -308,7 +308,7 @@ interface BoardScope {
 }
 
 /**
- * A region's leagues proper, and its independents' team count (the Southern Section independents are SoCal's:
+ * A region's leagues proper, and its independents' team count (the LA independents are SoCal's:
  * no league, so not counted as one, DESIGN §24.9).
  */
 function regionCounts(region: RegionId): { leagues: number; independents: number } {

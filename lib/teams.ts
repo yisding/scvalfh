@@ -367,7 +367,7 @@ function assertRegistry(): void {
       }
       // A known non-member row is never a member of this division: a school outside the registry (EAL: Red
       // Bluff), or a registry team of another division (Sunset: Bonita and Chaminade, MaxPreps' Sunset rows
-      // this site lists with the Southern Section independents, DESIGN §24.10).
+      // this site lists with the LA independents, DESIGN §24.10).
       for (const id of Object.keys(d.maxprepsExtraRows)) {
         const team = BY_ID.get(id);
         if (team && team.division === d.id) fail(`${d.id}.maxprepsExtraRows: ${id} is a member (${team.slug})`);
