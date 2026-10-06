@@ -352,6 +352,8 @@ async function main(argv: readonly string[]): Promise<number> {
         // Any row that was actually read (ok, none, or itself carried forward) is still true: a
         // team with no stats stays "coach entered none", not "could not be read".
         if (prior && prior.status !== 'error' && prior.status !== 'pending') {
+          // The prior row's gameTotals stay with its players: both are one earlier read, so a game
+          // the coach entered since is in neither, and a note's stats for it are counted once.
           return { ...prior, ...base, status: 'carried-forward', error };
         }
         return {

@@ -201,15 +201,23 @@ export function splitLocation(raw: string | null | undefined): {
  */
 export function overtimeFromNote(text: string | null | undefined): 0 | 1 | 2 {
   if (!text) return 0;
-  const overtime = /(?<![\p{L}])OT(?![\p{L}])|\bover[\s-]?times?\b/u;
-  const ot = new RegExp(overtime.source, 'giu');
-  const mentions = [...text.matchAll(ot)].filter((m) => {
+  const ot = /(?<![\p{L}])OT(?![\p{L}])|\bover[\s-]?times?\b/giu;
+  let periods: 0 | 1 | 2 = 0;
+  for (const m of text.matchAll(ot)) {
     // "OT" only in capitals; "overtime" in any case.
-    if (/^ot$/i.test(m[0]) && m[0] !== 'OT') return false;
-    return !/\bno\s*$/i.test(text.slice(0, m.index));
-  });
-  if (mentions.length === 0) return 0;
-  return /\b(?:double|two|2)[\s-]?(?:OT|over[\s-]?times?)\b|\b2OT\b|\bOT\s?2\b|\b2\s?overtimes\b/i.test(text) ? 2 : 1;
+    if (/^ot$/i.test(m[0]) && m[0] !== 'OT') continue;
+    const before = text.slice(0, m.index);
+    const after = text.slice(m.index + m[0].length);
+    // What makes THIS mention a second period: "double OT", "two overtimes", "2OT", "2 overtimes",
+    // "OT2". A "2" that is part of a score ("3-2 OT", "OT 2-1") does not.
+    const counted = /\b(?:double|two)[\s-]?$/i.exec(before) ?? /(?:^|[\s(])2[\s-]?$/.exec(before);
+    const doubled = counted !== null || /^2(?![\d:\-–])/.test(after);
+    // "no OT", "no double OT": negated whatever counts it.
+    const stem = counted ? before.slice(0, before.length - counted[0].length) : before;
+    if (/\bno\s*$/i.test(stem)) continue;
+    periods = doubled ? 2 : periods === 2 ? 2 : 1;
+  }
+  return periods;
 }
 
 export function cleanRecap(description: string | null | undefined): string | null {
