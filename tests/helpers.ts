@@ -20,10 +20,18 @@ export const FIXTURE_DIR = path.join(REPO, 'tests', 'fixtures', 'maxpreps');
 export const CORPUS_ROOT = path.join(REPO, 'tests', 'fixtures', 'corpus');
 export const VARIANTS_DIR = path.join(CORPUS_ROOT, 'variants');
 
-export type CorpusName = 'scval' | 'all-2026-10-02' | 'eal-2026-10-04';
+export type CorpusName = 'scval' | 'all-2026-10-02' | 'eal-2026-10-04' | 'socal-2026-10-06';
 
 /** The EAL-only live capture (2026-10-04): the Eastern Athletic League's schedules, standings and si.com scoreboards. */
 export const EAL_CORPUS: CorpusName = 'eal-2026-10-04';
+
+/**
+ * The Southern California live capture (2026-10-06T02:33Z, the evening of Oct 5 Pacific): the Sunset
+ * and the San Diego Section's City, North County and Metro conferences, read with `--leagues
+ * sunset,city,north-county,metro`, so the five NorCal leagues are "not fetched in this run"
+ * (tests/pipeline/socal.test.ts).
+ */
+export const SOCAL_CORPUS: CorpusName = 'socal-2026-10-06';
 
 /** The directory of a named corpus (SPEC §7.3, §12.1). */
 export function corpusDir(corpus: CorpusName): string {

@@ -3,13 +3,13 @@
  * California amendment, DESIGN-socal §2.4). All 99 pinned-card views ship in the page (the pin, and so
  * the league, is known only in the browser), so a view that grows a field grows every phone's download.
  *
- * The budget, measured 2026-10-06 (DESIGN-socal §2.4: measured × 1.12): before the amendment the 49
- * views were 50,569 bytes on data/snapshot.json against 60 KB. No snapshot with both regions' live
- * data existed when this was set, so the measurement is the sum of two halves, each from the snapshot
- * that has it: the NorCal 49 on data/snapshot.json (50,569 bytes; its SoCal teams have no games) and
- * the SoCal 50 on the pipeline's SoCal-only live run of 2026-10-06 (54,473 bytes), 105,042 in all.
- * × 1.12 = 117,647, rounded up to whole KiB: 115 KiB = 117,760. The corpus snapshot (NorCal games
- * only) measures 65,819. Re-measure on the first full live snapshot and record it here.
+ * The budget, measured 2026-10-06 (DESIGN §24.6: measured × 1.12, rounded up to whole KiB): on the
+ * committed live snapshot (data/snapshot.json, fetched 2026-10-06T03:19Z, both regions' games) the 99
+ * views serialize to 107,545 bytes — 52,868 for the 49 NorCal teams and 54,577 for the 50 SoCal
+ * teams. × 1.12 = 120,450, so the budget is 118 KiB = 120,832 (89 % used). Before the amendment the
+ * 49 views were 50,569 bytes against 60 KB; an interim 115 KiB, set from two half-snapshots before
+ * the full live fetch existed, would have been 93 % used. The corpus snapshot (all-2026-10-02,
+ * NorCal games only) measures 65,819 (54 %).
  *
  * The HARD budget is checked on the offline corpus snapshot (deterministic): a page-weight
  * regression in code fails here, in every run. The bundled data/snapshot.json (whatever the last
@@ -24,7 +24,7 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { corpusSnapshotPath } from '../helpers';
 
-const BUDGET = 115 * 1024;
+const BUDGET = 118 * 1024;
 const WARN_AT = 0.9;
 
 /** ci.yml sets CI_GATE on its test step; update-data.yml (which also sets CI) does not. */
@@ -42,13 +42,13 @@ async function teamViewBytes(snapshotPath: string | undefined): Promise<{ bytes:
 }
 
 describe('home team views weight (components/home/home-view.ts)', () => {
-  it('stays ≤ 115 KiB on the corpus snapshot', async () => {
+  it('stays ≤ 118 KiB on the corpus snapshot', async () => {
     const { bytes, count } = await teamViewBytes(corpusSnapshotPath('all-2026-10-02'));
     expect(count, 'components/home/home-view.ts: one view per team').toBe(99);
     expect(bytes, `components/home/home-view.ts: serialized teamViews are ${bytes} bytes`).toBeLessThanOrEqual(BUDGET);
   }, 600_000);
 
-  it('stays ≤ 115 KiB on the bundled snapshot (fails only under CI_GATE; warns past 90 %)', async () => {
+  it('stays ≤ 118 KiB on the bundled snapshot (fails only under CI_GATE; warns past 90 %)', async () => {
     const { bytes, count } = await teamViewBytes(undefined);
     expect(count, 'components/home/home-view.ts: one view per team').toBe(99);
     const message = `components/home/home-view.ts: serialized teamViews are ${bytes} bytes on the bundled snapshot (budget ${BUDGET})`;

@@ -33,15 +33,10 @@ import { parseScoresPage, parseTeamGamesPage } from '../../lib/sources/sblive';
 import { divisionGames } from '../../lib/standings';
 import { TEAMS, getTeamBySlug, teamsInDivision, teamsInLeague } from '../../lib/teams';
 import type { Game, Snapshot } from '../../lib/types';
-import { CORPUS_ROOT, corpusSnapshotPath, runFixtureCli, stubCorpusSnapshot, type CorpusName } from '../helpers';
+import { CORPUS_ROOT, SOCAL_CORPUS, corpusSnapshotPath, runFixtureCli, stubCorpusSnapshot } from '../helpers';
 
 type DataModule = typeof import('../../lib/data');
 
-/**
- * Not yet in tests/helpers.ts's CorpusName union (that file belongs to another package of this change):
- * corpusDir() joins any name but 'scval' under tests/fixtures/corpus, so the cast is safe at run time.
- */
-const SOCAL_CORPUS = 'socal-2026-10-06' as CorpusName;
 const SOCAL = ['sunset', 'city', 'north-county', 'metro'] as const;
 const NORCAL = ['scval', 'bval', 'pcal', 'mcal', 'eal'] as const;
 

@@ -60,11 +60,11 @@ const metroSlug = TEAMS.find((t) => t.league === 'metro')!.slug;
 describe('buildPrefsScript', () => {
   // The line was 2,048 B for 49 teams and 5 leagues (1,317 B measured). With 99 teams, the
   // league→region map and the region precedence it measured 2,454 B on 2026-10-06 (the design
-  // estimated 2.2–2.4 KB), so the line is 3,072 B: 80% used, room for a few more teams, not for
-  // another map.
-  it('stays within 3 KB including the 99-entry slug map', () => {
+  // estimated 2.2–2.4 KB and proposed a 3,072 B line). The line is the measurement × 1.12 rounded
+  // up to 256 B: 2,748 → 2,816 B, 87 % used — room for a few more teams, not for another map.
+  it('stays within 2,816 B including the 99-entry slug map', () => {
     expect(TEAMS.length).toBe(99);
-    expect(Buffer.byteLength(SCRIPT, 'utf8')).toBeLessThanOrEqual(3072);
+    expect(Buffer.byteLength(SCRIPT, 'utf8')).toBeLessThanOrEqual(2816);
   });
 
   it('ships the region map once, non-default regions only: R={"socal":"sunset city north-county metro"}', () => {

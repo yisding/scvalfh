@@ -3,6 +3,7 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
+import { sideOutcome } from '../lib/format';
 import { DATA_QUALITY, type DataQualityConfig } from '../lib/leagues';
 import {
   applyExclusions,
@@ -693,6 +694,34 @@ describe('normalize: a level final in a 1 v 1 league (EAL)', () => {
     // Within one conference too (Mt. Carmel–Poway, Sep 11: Avocado v Palomar of North County).
     const [nc] = one([pairRow(id, ['mt-carmel', 0, 'W'], ['poway', 0, 'L'])]).games;
     expect(nc.decider).toBe('SO');
+  });
+
+  // A JV game is never a shootout win (NormalizeOptions.level): the San Diego procedure ends a level JV
+  // game at the end of regulation ("JV—No overtime"), and §VII.E.4 is a varsity rule.
+  it('never reads a level JV final flagged W/L as a shootout win, in either section with a shootout rule', () => {
+    const jv = (rows: ScheduleRow[]) => normalizeGames(rows, { fetchedAt: FETCHED_AT, level: 'jv' });
+    const id = 'eeeeeeee-0000-4000-8000-0000000000a9';
+    const res = jv([pairRow(id, ['clairemont', 0, 'L'], ['eastlake', 0, 'W'])]);
+    const [g] = res.games;
+    expect(g.decider, 'lib/normalize.ts level jv').toBe('REG');
+    expect(g.provenance.resultConflict).toBe('MaxPreps marks Clairemont L and Eastlake W on a 0-0 score.');
+    expect(sideOutcome(g, 'home'), 'a JV tie stands').toBe('T');
+    expect(res.warnings.filter((w) => w.startsWith(`contest ${id}`))).toEqual([
+      `contest ${id}: MaxPreps marks Clairemont L and Eastlake W on a 0-0 score.`,
+      `contest ${id}: a level JV final marked W/L between two San Diego Section teams; the Section's shootout rule is a varsity rule, so the flags are left as a contradiction and the game counts as a tie`,
+    ]);
+    // The EAL: the same, in the Northern Section's words.
+    const ns = jv([pairRow(id, ['chico', 1, 'W'], ['davis', 1, 'L'])]);
+    expect(ns.games[0].decider).toBe('REG');
+    expect(ns.warnings).toContain(
+      `contest ${id}: a level JV final marked W/L between two Northern Section teams; the Section's 1 v 1 rule is a varsity rule, so the flags are left as a contradiction and the game counts as a tie`,
+    );
+    // A level JV final with no winner flagged is an ordinary JV tie: no warning at all.
+    const tie = jv([pairRow(id, ['escondido', 1, 'T'], ['el-capitan', 1, 'T'])]);
+    expect(tie.games[0].decider).toBe('REG');
+    expect(tie.warnings.filter((w) => w.startsWith(`contest ${id}`))).toEqual([]);
+    // The varsity default is unchanged.
+    expect(one([pairRow(id, ['clairemont', 0, 'L'], ['eastlake', 0, 'W'])]).games[0].decider).toBe('SO');
   });
 
   it('logs a level San Diego final with no shootout winner by the section when the sides span two conferences', () => {

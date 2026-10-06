@@ -43,6 +43,21 @@ export interface NormalizeOptions {
   fetchedAt: string;
   scores?: SourceId;
   schedule?: SourceId;
+  /**
+   * Which team's games these rows are. Default 'varsity'. 'jv' (scripts/fetch-jv.ts, MaxPreps' JV
+   * schedule feed) turns off the shootout inference below: every section shootout rule this site
+   * reads is a VARSITY rule. The San Diego Field Hockey Officials Association's game format says of
+   * JV and frosh games "Teams tied at the end of regulation, game over" (and its 2026 Mercy & Overtime
+   * Procedures: "JV—No overtime"), so a level San Diego JV final is a tie however MaxPreps flags it;
+   * the Northern Section Guidelines' §VII.E.4 (one sudden-victory period, then 1 v 1s) governs a
+   * varsity game and says nothing that would decide a level JV game either. Before the rule was keyed
+   * on the section, the EAL's JV rows went through the same inference as its varsity rows (no EAL JV
+   * final has ever been level with W/L flags, so no stored JV game changes); a JV game now never gets
+   * decider 'SO', a level JV final flagged W/L keeps the flags as a contradiction
+   * (`provenance.resultConflict`) and counts as the tie its score says, and a level JV final with no
+   * winner flagged is not worth a warning.
+   */
+  level?: 'varsity' | 'jv';
 }
 
 export interface NormalizeResult {
@@ -404,10 +419,13 @@ function toGame(
   // Clairemont–Eastlake and Escondido–El Capitan (both Sep 1) are between two conferences. A Sunset pair
   // (Southern Section, no shootout rule) and a Sunset–San Diego pair (two sections) never qualify, so their
   // level finals stay ties or contradictions. lib/snapshot-schema.ts checks the same rule.
-  const shootoutSection: SectionConfig | null =
+  // A JV row never qualifies (NormalizeOptions.level): the sections' shootout rules are varsity rules.
+  const pairSection: SectionConfig | null =
     homeTeam && awayTeam && homeTeam.section === awayTeam.section && getSection(homeTeam.section).shootout !== null
       ? getSection(homeTeam.section)
       : null;
+  const isJv = opts.level === 'jv';
+  const shootoutSection: SectionConfig | null = isJv ? null : pairSection;
 
   const isForfeit = c.teams.some((t) => t.isForfeit);
 
@@ -418,6 +436,14 @@ function toGame(
       ? resultConflictOf(home, away, copies, { shootoutSection: shootoutSection !== null && !isForfeit })
       : undefined;
   if (resultConflict) warnings.push(`contest ${c.contestId}: ${resultConflict}`);
+  if (status === 'final' && isJv && pairSection !== null && !isForfeit && isLevelWithWinner(home, away)) {
+    // The varsity pipeline would read this shape as a shootout win; say why the JV pipeline does not.
+    warnings.push(
+      `contest ${c.contestId}: a level JV final marked W/L between two ${pairSection.name} teams; ` +
+        `the Section's ${shootoutPhrases(pairSection.shootout?.words ?? '').noun} rule is a varsity rule, ` +
+        'so the flags are left as a contradiction and the game counts as a tie',
+    );
+  }
 
   const otPeriods = cf.overtimePeriodsPlayed ?? 0;
   const forfeitBy: Game['forfeitBy'] = !isForfeit

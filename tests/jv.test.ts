@@ -358,6 +358,48 @@ describe('scripts/fetch-jv.ts, offline over the PCAL captures', () => {
     expect(ids(file)).toEqual(ids(before));
   });
 
+  // The whole-file schema wants one row per registry team, in registry order, so it fails whenever the
+  // registry grows. A `--leagues` run must still carry every team outside it from that file, row by
+  // row (lib/fetch-scope.ts readPreviousFile), as fetch-rosters and fetch-player-stats do; it once
+  // dropped every such team to 'pending' with no games.
+  it('salvages a previous file that fails the whole-file schema row by row, carrying the teams outside the run', () => {
+    const dir = mkdtempSync(path.join(tmpdir(), 'scvalfh-jv-'));
+    const out = path.join(dir, 'jv.json');
+    expect(run(out).status).toBe(0);
+    const before = JvFileSchema.parse(JSON.parse(readFileSync(out, 'utf8')));
+    // A file written before Southwest (the last registry team) was in the registry, and with one bad
+    // PCAL row (a teamId that is not the registry's): two different reasons it is not whole.
+    const older = structuredClone(before);
+    older.teams = older.teams.filter((t) => t.slug !== 'southwest');
+    older.teams.find((t) => t.slug === 'stevenson')!.teamId = 'not-a-maxpreps-id';
+    older.counts = countJv(older.teams, older.games, older.sblive);
+    expect(JvFileSchema.safeParse(older).success).toBe(false);
+    writeFileSync(out, JSON.stringify(older));
+
+    // A Metro-only run over an empty capture directory: the Metro feeds fail (exit 1 on its own), and
+    // PCAL is outside the run.
+    const empty = mkdtempSync(path.join(tmpdir(), 'scvalfh-jv-fx-'));
+    const r = runScript('scripts/fetch-jv.ts', [
+      '--fixtures', empty, '--leagues', 'metro', '--out', out, '--fetched-at', '2026-10-06T05:00:00.000Z',
+    ]);
+    expect(r.status, r.output).toBe(1);
+    expect(r.output).toMatch(/WARN previous .*jv\.json: 1 row\(s\) do not validate/);
+    const file = JvFileSchema.parse(JSON.parse(readFileSync(out, 'utf8')));
+    const team = (f: JvFile, slug: string) => f.teams.find((t) => t.slug === slug)!;
+    const ids = (f: JvFile, slug: string) =>
+      f.games.filter((g) => g.home.slug === slug || g.away.slug === slug).map((g) => g.contestId).sort();
+    for (const slug of PCAL.filter((p) => p !== 'stevenson')) {
+      // Kept exactly as the previous file had it: status, stamp, games and si.com rows.
+      expect(team(file, slug), slug).toEqual(team(before, slug));
+      expect(ids(file, slug), slug).toEqual(ids(before, slug));
+      expect(file.sblive.filter((row) => row.pages.includes(slug))).toEqual(before.sblive.filter((row) => row.pages.includes(slug)));
+    }
+    expect(ids(file, 'carmel').length).toBeGreaterThan(0);
+    // Stevenson's own row was dropped: pending now, and named in the log.
+    expect(team(file, 'stevenson').maxpreps.status).toBe('pending');
+    expect(r.stdout).toContain('PCAL   7 teams · not in this run · 6 kept as they were · 1 pending, previous row dropped (stevenson)');
+  });
+
   it('fetches and writes nothing out of season unless forced', () => {
     const out = path.join(mkdtempSync(path.join(tmpdir(), 'scvalfh-jv-')), 'jv.json');
     const r = runScript('scripts/fetch-jv.ts', ['--fixtures', FIXTURES, '--leagues', 'pcal', '--out', out, '--fetched-at', '2026-07-01T19:00:00.000Z']);

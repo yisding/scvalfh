@@ -20,9 +20,12 @@
  *   4. and a game between two schools of one division with no varsity counterpart is left
  *      uncounted and named on the standings page, never guessed into a table.
  *
- * How a JV table is ordered. By the league's own points (3 a win, 1 a tie in all five), which is
- * also how SCVAL ordered its published 2025-26 JV tables. No league publishes a JV tiebreak, so
- * teams level on points share a place. A school is in its division's JV table when it has at least
+ * How a JV table is ordered. By 3 points a win and 1 a tie in all nine leagues. For the five NorCal
+ * leagues that is the league's own points rule (SCVAL also ordered its published 2025-26 JV tables
+ * that way); the Sunset and the San Diego Section's City, North County and Metro conferences publish
+ * no points rule, varsity or JV, so this site applies its own 3-1-0, as it does to their varsity
+ * tables (LeagueRules.orderScope 'site', DESIGN-socal §2.1.7). No league publishes a JV tiebreak,
+ * so teams level on points share a place. A school is in its division's JV table when it has at least
  * one JV league game (played or not); a school with none is named under the table instead.
  *
  * When a JV table is shown. Coaches enter JV scores far less often than varsity ones, and a table

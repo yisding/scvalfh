@@ -271,8 +271,10 @@ const CARD_LEAGUE_IDS: readonly LeagueId[] = [
 ];
 let cardLeaguePages = 0;
 for (const id of CARD_LEAGUE_IDS) {
-  const card = elementById(playoffsMain, id, 'div');
-  if (!card) fail('playoffs.html', `no <div id="${id}"> card (the /playoffs#${id} chip and jump link resolve to it)`);
+  // A card is a <div> (the EAL's, the three San Diego sub-cards) or its own <section> (the Sunset's,
+  // which has nothing above it to sit inside): either carries the league id.
+  const card = elementById(playoffsMain, id, 'div') || elementById(playoffsMain, id, 'section');
+  if (!card) fail('playoffs.html', `no <div id="${id}"> or <section id="${id}"> card (the /playoffs#${id} chip and jump link resolve to it)`);
   forbidCcs('playoffs.html', card, `the #${id} card`);
   forbid('playoffs.html', readableText(card), SEED_CLAIM, `the #${id} card prints a seed word`);
   for (const file of leaguePages(id)) {
@@ -290,7 +292,7 @@ for (const id of CARD_LEAGUE_IDS) {
 const siteOrderedLeagues = LEAGUES.filter((l) => l.rules.orderScope === 'site');
 let siteOrderedPages = 0;
 for (const league of siteOrderedLeagues) {
-  const card = elementById(playoffsMain, league.id, 'div');
+  const card = elementById(playoffsMain, league.id, 'div') || elementById(playoffsMain, league.id, 'section');
   if (card) forbid('playoffs.html', readableText(card), RULES_REQUIRE_CLAIM, `the #${league.id} card says "rules require" (no ${league.shortName} rule orders the table)`);
   for (const file of leaguePages(league.id)) {
     const p = path.join(APP, file);

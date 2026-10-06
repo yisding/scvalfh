@@ -296,7 +296,8 @@ counts the flags: that game is a win for Chico, a loss for Davis, and its goals 
 without those flags stays a tie. MaxPreps' record of the 2026-09-02 Pleasant Valley at Chico game
 (1-0, three overtime periods) cannot be a real overtime count under §VII.E.4 and may be a 1 v 1 win
 entered as a goal, so the game page shows the score as MaxPreps has it, with a note, and no overtime
-mark.
+mark. §VII.E.4 governs a varsity game, so the JV pipeline (`pnpm fetch-jv`) never reads a level EAL JV
+final as a 1 v 1 win: a level JV score stays a tie, and W/L flags on one are kept as a contradiction.
 
 **Chain** (multi-team procedure: `partition-restart`; no stage separates a bucket, so it is never used):
 
@@ -432,9 +433,13 @@ power rankings [V]. The site's league is the conference (City, North County, Met
 the Section's leagues; the division names are ours [U: the sheet labels them WESTERN, EASTERN, NC
 AVOCADO, NC PALOMAR, NC VALLEY, MESA and SOUTH BAY].
 
-**Which games count.** Every pair of division-mates meets exactly twice on MaxPreps' schedules (leaving
-out contestType 2 and 4) [V: inventory 2026-10-06], a double round robin of (teams − 1) × 2 games: 10,
-10, 10, 12, 10, 8 and 6. MaxPreps' league flag misses many of them (Patrick Henry 0 of 10 flagged, San
+**Which games count.** The divisions play a double round robin: every pair of division-mates is
+scheduled to meet twice on MaxPreps' schedules (leaving out contestType 2 and 4) [V: inventory
+2026-10-06], (teams − 1) × 2 games a team: 10, 10, 10, 12, 10, 8 and 6. One pair is short of that:
+on 2026-10-06 MaxPreps shows Metro Mesa with 19 of its 20 meetings, Bonita Vista and Helix meeting once
+(Oct 23, `b9d43b5d-5000-4bdc-a50e-00c22f1544c4`) [V: the 2026-10-06 SoCal corpus], so unless a second
+meeting is added, Bonita Vista and Helix play 7 league games, not 8. No league schedule exists to say
+whether the second meeting is missing from MaxPreps or was never scheduled [U]. MaxPreps' league flag misses many of them (Patrick Henry 0 of 10 flagged, San
 Pasqual 3, Vista 4, Mt. Carmel 4, Escondido 5, Southwest 2 of 6) [V], so these divisions use
 classification `membership`: a game counts for a division when both sides are its members, neither row is
 contestType 2 or 4, and it is dated inside league play, whatever MaxPreps' flag says. A game MaxPreps flags
@@ -464,7 +469,10 @@ Dieguito Sep 14, Canyon Crest–Cathedral Sep 22, University City–Rancho Berna
 Pasqual Oct 2) [V]; the Section's own power-rankings site is inconsistent ("W (0-0)" and "W (2-0)") [V].
 The site counts the flags as a win and marks the game "SO", for any two San Diego teams: the rule is the
 Section's (`SectionConfig.shootout`), not a conference's. How each source encodes a shootout in general
-is [U].
+is [U]. The rule is a varsity rule: the same procedures say "JV—No overtime", and the officials'
+association's game format says of JV and frosh games "Teams tied at the end of regulation, game over"
+[V], so a level JV final stays a tie, and the JV pipeline (`pnpm fetch-jv`, `level: 'jv'` in
+`lib/normalize.ts`) never reads one as a shootout win, whatever MaxPreps flags.
 
 **Chain** (multi-team procedure: `partition-restart`):
 
