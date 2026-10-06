@@ -1109,10 +1109,12 @@ each matching what it read against all 842 rows by full name with nickname varia
   Harvard-Westlake Chronicle, the Bishop's Tower and Cathedral Catholic's athletics news.
 - **Player by player.** A SportsRecruits profile-address probe in every sport: 9,558 addresses for the
   700 juniors, seniors and ungraded rows (947 live, 308 rows), and 2,514 more over all 842 in the field
-  hockey sweep. Two web searches for every row: the first pass reached 612 of the 700 before the search
-  tool's budget ran out; a second pass, at the owner's request, covered the 88 ungraded rows it had not
-  reached and all 142 freshmen and sophomores (228 rows, 456 searches; two known commits were skipped),
-  and found no commitment.
+  hockey sweep. Web searches reached 840 of the 842 rows. The first pass planned two searches for each
+  of the 203 seniors and one for each junior and ungraded row (903), and reached 612 of the 700 rows (all
+  seniors and juniors, 238 of the 326 ungraded rows) before the search tool's budget ran out; a second
+  pass, at the owner's request, ran two searches for each of the 142 freshmen and sophomores and 86 of
+  the 88 ungraded rows the first had not reached (228 rows, 456 searches), and found no commitment. The two rows never searched are Samantha Ippolito and Ella Rennie (Scripps Ranch and San
+  Dieguito Academy, both ungraded), whose commitments the list sweeps had already found.
 They converged on eleven commitments, each found by at least two sweeps: nine in field hockey and two
 in lacrosse (the table above). A checker re-opened every source (rendering each SportsRecruits profile
 for its TEAMS block), kept only quotes it found verbatim, rewrote each `basis` and read each college's
@@ -1228,8 +1230,10 @@ Gotchas, found in the research:
 
 *Recall is partial.* On 2026-10-06, 28 of the 1,653 varsity rows have a commitment, at 16 of the 102
 schools: Southern California's 12 at 7 (Torrey Pines 2, Canyon Hills 4, Bishop's 2, Harvard-Westlake,
-Scripps Ranch, San Dieguito Academy and Cathedral Catholic 1 each), whose rows each had two web
-searches and a SportsRecruits probe in every sport, but no SportsRecruits athlete search. On 2026-10-04, 16 of the 811 varsity rows had a commitment, at 9 of the 49
+Scripps Ranch, San Dieguito Academy and Cathedral Catholic 1 each). Every one of the 842 rows had a
+SportsRecruits probe in every sport, and 840 at least one web search (the two others are already
+committed players); juniors and ungraded rows of the first pass got one search, the rest two; no row
+had a SportsRecruits athlete search. On 2026-10-04, 16 of the 811 varsity rows had a commitment, at 9 of the 49
 schools: SCVAL 9 at 4 (St. Ignatius 6, Los Altos, Saint Francis and Saratoga 1 each), BVAL 2 at
 Christopher, PCAL 1 at Stevenson, MCAL 4 at 3 (Redwood 2, Berkeley and Marin Catholic 1 each), and EAL
 none. Seven are in field hockey, seven in lacrosse, one in soccer and one in basketball. The six EAL
@@ -1269,8 +1273,10 @@ as `<dir>/stats-<slug>.json`, so a drifted or non-JSON answer is captured too an
 page makes from the browser (page `/team/stats`, function `eM` in that build); the page itself
 server-renders only a top-3 `playerStatLeadersData` card, and the legacy print view
 (`/print/team_stats.aspx?schoolid=&ssid=`) has the full table but **no career links**. Siblings in
-the same chunk, not used: `team-season-stats/rollup/v1`, `team-season-game-stats/rollup/v1`,
-`team-leaderboard-leaders/v2`; a `leagueId=` parameter limits the rollup to league games.
+the same chunk: `team-season-game-stats/rollup/v1` (the team's stats game by game, read only for a
+team a game note credits; see "Stats in the game note" below), and, not used,
+`team-season-stats/rollup/v1` and `team-leaderboard-leaders/v2`; a `leagueId=` parameter limits the
+rollup to league games.
 `lib/sources/maxpreps-player-stats.ts`, written by `scripts/fetch-player-stats.ts` to
 `data/player-stats.json`.
 
@@ -1329,6 +1335,51 @@ Gotchas, all **[V]**:
   goal, then decisions, saves and goals against, and games last.
 - Not found anywhere else: the Home Campus school sites (Saratoga, Lynbrook) have no stats pages,
   Los Gatos' VNN site has no stats tab, and si.com's team stats page carries no player stats.
+- **Stats in the game note.** Some coaches type stats into the contest's 50-character `location`
+  note (§1.1, `splitLocation`) instead of the stats sheet. On 2026-10-06 that is Homestead alone,
+  out of 46 notes in the snapshot (and every note in its git history and the corpus captures):
+  "Lacey played 3Q had 7 saves. Noa played last…" (Sep 28 at Saint Francis; MaxPreps cut it at 50
+  characters), "goals scored Gabby Molly, Emry Borges" (Sep 30 vs Fremont) and "tied in OT 1:1  goal
+  scored by Emery Borges" (Oct 5 vs Cupertino). `lib/note-stats.ts` reads such notes on **every**
+  team's finals and adds what they credit to the MaxPreps numbers the team page and /leaders read:
+  - **What it reads:** goals, assists and saves, in the forms coaches write them: a list after a
+    lead-in ("goals scored (by) A, B", "goals: A (2), B", "scorers: …", "assists: …", a goal with its
+    assist as "A from B" or "A (assist B)"), a statement per comma-separated piece ("A scored twice",
+    "A 2 goals", "A had an assist", "A hat trick", "hat trick for A"), and saves ("Lacey … 7 saves",
+    "7 saves by Lacey"). A piece that mentions goals, assists, saves or scoring but fits none of
+    these is reported in the team's warnings, never guessed at.
+  - **Names:** credited only when the name fits exactly one player on exactly one of the two
+    rosters: the full name; a curated alias (`lib/name-aliases.ts`: Emery Borges = Emry Borges,
+    confirmed by the site owner); a full name whose first name is a common nickname of the roster's
+    (Gabby = Gabrielle), or whose first or last name is one letter off (Emery/Emry, Molly/Moll; 4+
+    letters only), or whose last name is part of a longer one (Lacey Carattini = Lacey Sebastian
+    Carattini); or a lone first or last name only one roster player has (Lacey).
+  - **Not counting twice:** MaxPreps' game pages carry no box score, but the sibling
+    `team-season-game-stats/rollup/v1` (same parameters) gives the TEAM's stats game by game **[V]**
+    2026-10-06: Homestead's four sheet goals are entered on Lynbrook (3) and Los Altos (1, in a game
+    Homestead lost 0-1), and Sep 28, Sep 30 and Oct 5 have 0 goals and 0 saves.
+    `scripts/fetch-player-stats.ts` reads it (`lib/sources/maxpreps-game-stats.ts`, into the team's
+    `gameTotals`) for each team a note credits — one call on 2026-10-06 — and a noted game whose
+    goals, assists or saves the coach also entered adds none of that stat. A note never credits more
+    goals or assists in a game than the team scored, and no noted goal is added where MaxPreps' goals
+    plus the noted ones would pass the team's goals scored. A noted game whose entries cannot be
+    checked (the per-game call failed, or does not list the game) adds nothing until a read
+    succeeds; the previous run's totals are not carried forward for it, since the coach may have
+    entered the game since. A team with no MaxPreps stats at all (status `none`) entered nothing,
+    so its notes all count.
+  - The team page marks each changed row and card and lists every noted game with its note. A
+    keeper whose saves include a note's gets no Save % (team page or /leaders) and no
+    shots-on-goal check: the note's game is not in the goals against and shots the coach entered.
+  - **Overtime.** A final MaxPreps records with 0 overtime periods counts as one period of
+    overtime (two for "double OT" / "2OT") when its note says so: "OT" in capitals as a word of
+    its own, or "overtime", never right after "no", "not", "without" or "never" (`overtimeFromNote` in `lib/normalize.ts`, the same
+    place the "reschedul…" note already marks a postponement). Only a level score or a one-goal
+    margin can come out of sudden victory, so a note on any other score is reported, not read. The
+    game keeps the note in `provenance.overtimeNote`, and its page says the OT is the note's.
+    Homestead–Cupertino, Oct 5, 1-1: MaxPreps 0 periods, the note "tied in OT 1:1", so decider
+    OT (a tie scores 1 point either way, Article IV: no table moves).
+  - Not read: who played the last quarter in goal on Sep 28, which the note's cut-off leaves
+    without a number.
 - Coverage on 2026-10-04 with the six EAL teams (`fetchedAt` 2026-10-04T13:04:10.832Z): 33 of the
   49 teams, 404 players, 63 goalkeepers. EAL: Pleasant Valley 21 players, Chico 19, Davis 19, Bella
   Vista 19, Lassen 10; Corning answered HTTP 400 "No data was found" (status `none`, the same
@@ -1338,6 +1389,7 @@ Gotchas, all **[V]**:
   `.github/workflows/update-data.yml` runs `pnpm fetch-player-stats` right after the core sweep
   (non-fatal) and commits `data/player-stats.json` with the snapshot when its content changed; the
   script leaves the file untouched when only its `fetchedAt` stamps would move.
+  Each team a game note credits costs one more call, the per-game totals (above): one on 2026-10-06.
 
 **(l) Last season's results** (the Elo rating's starting point, DESIGN §20.1) — `data/prior-season.json`
 (`lib/prior-season-schema.ts`, loaded by `lib/prior-season.ts`), built once a season by
@@ -2153,9 +2205,9 @@ classification evidence says it is a league game. This is decided once, in the p
 |---|---|---|
 | SCVAL, EAL | MaxPreps `contestType === 0` (SCVAL: corroborated against the live PDF grid, any disagreement is logged; EAL: no official document exists to check against, and the umpire grid of §1.3a equalled it on 2026-10-04) | SCVAL: CCS section games only (postseason tag `ccs`). EAL: `contestType` 2, 4 and 5, and every game between two EAL teams on or after 2026-10-30 (postseason tag `league-postseason`, the Super Regional) |
 | BVAL, PCAL, MCAL | the game matches a fixture on the league's **official schedule** for that division | `contestType` 2 and 4 (tournament / neutral), and every postseason game |
-| Sunset | MaxPreps `contestType === 0` (`contest-type`: no Sunset document exists to check against) | `contestType` 2 and 4 |
+| Sunset | **membership** (`classification: 'membership'`, DESIGN §24.11): both sides are two of the eight Sunset teams and the game is dated Aug 25 to Oct 31, whatever MaxPreps' league flag says (the flag follows whichever scorekeeper entered the game) | `contestType` 2 and 4 on either row, and every game against a team outside the eight (Bonita at Great Oak, Aug 27, which MaxPreps flags) |
 | City, North County, Metro | **membership** (`classification: 'membership'`): both sides are members of the division (the CIF-SDS 2026-27 League Alignment) and the game is dated inside its league play, whatever MaxPreps' league flag says | `contestType` 2 and 4 on either row, every San Diego Section playoff game (on or after Nov 2, or `contestType` 4), and every game outside the division's league-play dates |
-| Southern Section independents | **membership** (`classification: 'membership'`): both sides are two of the five independents (Bonita, Chaminade, Glendora, Harvard-Westlake, Thousand Oaks; this site's grouping, DESIGN §24.10) and the game is dated Sep 8 to Oct 31, whatever MaxPreps' league flag says (it flags only Bonita–Chaminade) | `contestType` 2 and 4 on either row, and every game against a team outside the five (Bonita's Aug 27 game at Great Oak, which MaxPreps flags as a league game, counts for neither table) |
+| LA independents | **membership** (`classification: 'membership'`): both sides are two of the five independents (Bonita, Chaminade, Glendora, Harvard-Westlake, Thousand Oaks; this site's grouping, DESIGN §24.10) and the game is dated Sep 8 to Oct 31, whatever MaxPreps' league flag says (it flags only Bonita–Chaminade) | `contestType` 2 and 4 on either row, and every game against a team outside the five (Bonita's Aug 27 game at Great Oak, which MaxPreps flags as a league game, counts for neither table) |
 
 - The official-schedule matcher for BVAL, PCAL and MCAL runs three passes: same date and
   home/away order; same date, either order (records a host conflict); then **rescheduled** games
@@ -2209,8 +2261,10 @@ classification evidence says it is a league game. This is decided once, in the p
 
 The normalized TypeScript model (`Team`, `Game`, `Standing`, `Snapshot`, `LeagueHealth`,
 `SourceId` etc.) lives in `lib/types.ts`; the snapshot is Zod-validated in
-`lib/snapshot-schema.ts` (schema version 2; a version-1 single-league file migrates in memory, and
-a version-2 file written before a configured league existed gains that league on load, DESIGN §22.7).
+`lib/snapshot-schema.ts` (schema version 2; a version-1 single-league file migrates in memory, a
+version-2 file written before a configured league existed gains that league on load, DESIGN §22.7, and a
+version-2 file whose games no longer classify under the current rules or registry is reclassified on load,
+DESIGN §24.11).
 Load-bearing rules baked into it:
 
 - `Game.home`/`.away` carry `teamId: null` + a bare `name` for non-member opponents — every

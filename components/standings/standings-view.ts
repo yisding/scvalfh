@@ -310,7 +310,7 @@ function orderLegendText(league: LeagueConfig): string {
  * The Notes source line: `Scheduled per <SHORT>`, or where a league with no document's games come from:
  * MaxPreps' league flag (the EAL, the Sunset: 'contest-type'), or every game between two division members
  * on MaxPreps' schedules (the San Diego leagues: 'membership', whose flag misses many league games). A group
- * of independents (the Southern Section independents, DESIGN §24.10) is in no league, so its line is the
+ * of independents (the LA independents, DESIGN §24.10) is in no league, so its line is the
  * division's own note: why the five are grouped and what the table counts.
  */
 function scheduledPerText(league: LeagueConfig, official: DivisionConfig['official']): string {
@@ -549,7 +549,7 @@ export function buildDivisionView(input: DivisionViewInput): DivisionView {
   // BVAL's Mt. Hamilton). The San Diego Section's alignment calls City Western or Palomar a league
   // inside a conference, and its own "Division I" / "Division II" are playoff tiers, so a SoCal
   // caption reads "Palomar league standings" (review 2026-10-06).
-  // A group of independents is named in full: 'Southern Section independents standings', never 'Independent
+  // A group of independents is named in full: 'LA independents standings', never 'Independent
   // league standings' (DESIGN §24.10).
   const tableWords = heading
     ? regionOf(league.id) === 'socal'
@@ -844,7 +844,7 @@ export function overviewOutline(
     }
     group.leagues.push({
       id,
-      // A group of independents is not a league: its heading is its name alone ('Southern Section independents').
+      // A group of independents is not a league: its heading is its name alone ('LA independents').
       title: league.independents ? league.name : `${league.shortName} — ${league.name}`,
       shortName: league.shortName,
       membershipNote: league.membershipNote,

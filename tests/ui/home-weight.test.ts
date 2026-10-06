@@ -11,7 +11,7 @@
  * the full live fetch existed, would have been 93 % used. The corpus snapshot (all-2026-10-02,
  * NorCal games only) measures 65,819 (54 %).
  *
- * Re-measured when the Southern Section independents joined (DESIGN §24.9, 2026-10-06, the snapshot fetched
+ * Re-measured when the LA independents joined (DESIGN §24.9, 2026-10-06, the snapshot fetched
  * 2026-10-06T05:58Z): the 102 views serialize to 110,556 bytes (the three independents' 2,916; NorCal's 49
  * 52,910). That is 91.5 % of 118 KiB, past the warning line, so by the same rule the budget is
  * 110,556 × 1.12 = 123,823 → 121 KiB = 123,904 (89 % used). The corpus measures 66,560 (the three add 875

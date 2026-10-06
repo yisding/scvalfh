@@ -2891,7 +2891,7 @@ empty state says what was and was not found (§8).
 
 - **`/clubs`.** A lede that answers the question in one sentence (players, schools, clubs, and the
   two clubs with the most ties), then one section per region in a fixed order (San Francisco, the
-  Peninsula, the South Bay, the East Bay, Marin, the Central Coast, then the rest; §24.11 adds the
+  Peninsula, the South Bay, the East Bay, Marin, the Central Coast, then the rest; §24.12 adds the
   Southern California areas before the rest, and scopes each section to its half of the site), then "How
   players are matched" (`#how-matched`): who is listed, the linking rule, the two-pass check and
   its date, what "current", "earlier" and "listed by" mean, and that recall is partial. Each club row: the
@@ -3877,9 +3877,9 @@ addition there will cross it.
   the dates and each team's playoff division. The Section seeds at its Oct 31 meeting.
 - **No club or commitment sweep for Southern California.** The 50 teams' rosters have no club or
   commitment lines, and `/clubs` and `/commits` cover the 49 NorCal teams' schools. (Built later, for
-  all 53 SoCal teams: §24.11.)
+  all 53 SoCal teams: §24.12.)
 - **No rosters-enrichment sweep for Southern California.** Its entries are stubs. (The recruiting-page
-  part was built later: §24.11. The school-athletics sweep was not.)
+  part was built later: §24.12. The school-athletics sweep was not.)
 - **No header-level region toggle.** The switcher sits in each page's content.
 - **No 1 v 1 tallies**, as in §22.8. That covers the San Diego shootouts too.
 - **The si.com statewide scoreboard is read only as far as its first page.** It server-renders the
@@ -4027,7 +4027,61 @@ and Bonita–Chaminade twice). `data/history-2025-26.json` regenerated offline. 
 (rosters, player stats, JV, enrichment) were reordered to the registry's new order with the two teams'
 `division` rewritten, their contents unchanged.
 
-### 24.11 Recruiting profiles, clubs and commitments for Southern California (2026-10-06, last)
+### 24.11 The Sunset counts every game between its eight teams, and the independents are "LA" (2026-10-06, later still)
+
+Owner decisions, 2026-10-06: "count all matches between the 8 Sunset schools" (option 2 of the Great Oak
+analysis) and "rename Independents to LA".
+
+**Why the Sunset moved to membership.** Great Oak's league record was 3-1 on MaxPreps' Sunset table, 2-2 on
+si.com's and 2-1 on this site's flag-based table, and the difference was only which games MaxPreps'
+scorekeepers had labelled "League": Great Oak's two games with Temecula Valley are flagged non-league
+(Sep 4) and league (Oct 2); Temecula Valley's games against the five Orange County schools are all flagged,
+Great Oak's and Chaparral's mostly not; the Orange County schools' games against each other are flagged
+only when Edison enters them. MaxPreps also lists the Sep 24 Great Oak–Edison loss twice (its overall record
+6-10-2 against our 6-9-2; the pipeline drops the duplicate). The three Temecula schools play a full
+home-and-away round robin among themselves (si.com files two of them under "Southwestern"), and each plays
+each Orange County school about once, so the "league" is two clusters with crossover games and the flag
+decided, game by game, which crossovers counted. Counting every game between the eight (classification
+`'membership'`, the San Diego divisions' and the LA independents' rule) removes the flag from the table
+without inventing a structure the schedules do not show. `leaguePlay` stays Aug 25 (Chaparral–Temecula
+Valley, now counted) to Oct 31; `gamesPerTeam` stays null (the pairs meet once or twice). The Notes source
+line reads "League games are every game between two division members on MaxPreps’ schedules (the Sunset
+publishes no schedule)"; the uneven-games footnote for a membership division with no fixed schedule reads
+"Teams have played between N and M games against other Sunset teams"; the knownCause says MaxPreps counts
+only its flagged games. Great Oak is 4-2 with every game counted; the table counts 35 games (15 under the
+flag) on the 2026-10-06 snapshot.
+
+**"LA".** The group's name is "LA independents" and its short name "LA" (the five are Los Angeles-area
+schools: La Verne, West Hills, Glendora and Studio City in Los Angeles County, Thousand Oaks in Ventura
+County). The division label is "LA", the standalone name "the LA independents" ("Show the LA independents
+here"; "LA" alone names a place), the co-leaders label "LA co-leaders", links read "LA standings", the
+schedule page "LA teams: schedule and results". The id, the URL (`/standings/independents`) and the
+`independents: true` flag are unchanged, as are the "nine leagues and five independents" counts and the
+"five Southern Section independents" clause built from the section's label. `standingsLabel` no longer
+special-cases the group.
+
+**Snapshot compatibility: the "rules changed" upgrade.** The schema checks every game's `countsFor` against
+`classifyGame` under the current rules, so the first `pnpm fetch-data` after this change could not load the
+committed flag-based snapshot: `readPrevious` caught the validation error and ran with no previous snapshot
+(no carry-forward for a league whose feeds fail, no finals regression guard, and a meta file reporting every
+existing final as newly added: "SCVAL +50 finals"). The regenerated file was complete, so nothing was lost,
+but a transient feed failure during such a run would have dropped a league's published data. `loadSnapshot`
+now has a third upgrade beside v1 → v2 and "league added" (`needsReclassification` / `reclassify`,
+lib/snapshot-migrate.ts): when a v2 file's games no longer classify as written (a rule changed, or a team moved
+between divisions, as Bonita and Chaminade did in §24.10), every game is re-resolved and reclassified under the
+current config and the affected divisions' standings rows, cross-check rows, health counts, season windows and
+counts are recomputed by the pipeline's own engine; the other divisions' rows stay byte-identical, and the
+counts that need a clock or a feed (`previousCountedFinals`, `missingLeaguePast`, the feed and table states)
+stay as written. The tests load the committed file rewritten under the flag rule, and with Bonita–Chaminade
+filed as a Sunset game, and get the committed file back byte for byte. Rule changes still want a regenerated
+snapshot in the same PR (the site builds from the committed file and should not depend on the upgrade), but
+the pipeline no longer starts from nothing when one lands.
+
+**Data (2026-10-06).** `pnpm fetch-data`, started from the flag-based snapshot through the upgrade above: 102
+teams, 879 games (544 league, up from 524), 542 finals, 9 pending; `data/history-2025-26.json` regenerated
+(the group's name); the per-team files' `source` strings renamed.
+
+### 24.12 Recruiting profiles, clubs and commitments for Southern California (2026-10-06, latest)
 
 The NorCal research of §17, §21 and the overlay's recruiting pages, repeated for the 53 Southern
 California teams' schools (842 varsity rows, eight teams with none) under the same rules, with a

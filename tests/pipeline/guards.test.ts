@@ -69,8 +69,8 @@ describe('trigger d: the league is not in args.leagues', () => {
       ['city', 'City'],
       ['north-county', 'North'],
       ['metro', 'Metro'],
-      // A group of independents is named whole, with a plural verb: 'Independent' is an adjective.
-      ['independents', 'The Southern Section independents'],
+      // A group of independents is named whole, with a plural verb: 'LA' alone names a place.
+      ['independents', 'The LA independents'],
     ] as const) {
       const h = health(snapshot, id);
       expect(h?.state, id).toBe('frozen');
@@ -278,7 +278,7 @@ describe('frozen-league re-classification', () => {
     // The San Diego divisions count every game between two members (DESIGN-socal §2.1.7): 'membership',
     // never 'official-fixtures' (they have no document) and never a fallback.
     expect(divisionClassification(getLeague('north-county'), 'valley', new Set(['valley']))).toBe('membership');
-    expect(divisionClassification(getLeague('sunset'), 'sunset', degraded)).toBe('contest-type');
+    expect(divisionClassification(getLeague('sunset'), 'sunset', degraded)).toBe('membership');
   });
 });
 

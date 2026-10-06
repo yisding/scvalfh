@@ -12,7 +12,7 @@
  *
  * Players (data/player-stats.json): most points, assists, saves and clean sheets. A player's
  * numbers are exactly what the team page shows: season totals as the coach entered them on
- * MaxPreps. Their grade and position are the team page's roster row's (lib/rosters.ts, joined on
+ * MaxPreps, plus the goals and saves the coach wrote in game notes instead (lib/note-stats.ts). Their grade and position are the team page's roster row's (lib/rosters.ts, joined on
  * the stat line's athleteId), in the roster's words; a player the join misses shows neither. Only teams whose coach tracks a stat can appear on its board, so every board says how
  * many teams it covers and names the ones it leaves out, and the section says whose totals are
  * behind the scores. A 0 never leads a board, and an untracked stat is never read as a 0.
@@ -61,7 +61,8 @@ import {
   regionOf,
   type RegionConfig,
 } from '../../lib/leagues';
-import { getPlayerStats } from '../../lib/player-stats';
+import { notedKinds } from '../../lib/note-stats';
+import { getAllPlayerStatsWithNotes } from '../../lib/player-stats';
 import { getPriorSeason } from '../../lib/prior-season';
 import { getAllEnrichedRosters, type MergedPlayer } from '../../lib/rosters';
 import type { PriorSeason } from '../../lib/prior-season-schema';
@@ -285,7 +286,7 @@ function defaultSources(): LeaderSources {
   const snapshot = getSnapshot();
   return {
     teams: snapshot.teams,
-    stats: getPlayerStats().teams,
+    stats: getAllPlayerStatsWithNotes(),
     standings: snapshot.standings,
     games: snapshot.games,
     prior: getPriorSeason(),
@@ -308,7 +309,7 @@ interface BoardScope {
 }
 
 /**
- * A region's leagues proper, and its independents' team count (the Southern Section independents are SoCal's:
+ * A region's leagues proper, and its independents' team count (the LA independents are SoCal's:
  * no league, so not counted as one, DESIGN §24.9).
  */
 function regionCounts(region: RegionId): { leagues: number; independents: number } {
@@ -475,8 +476,10 @@ const PLAYER_BOARDS: PlayerBoardSpec[] = [
         cell: (e) => {
           const g = e.player.goalkeeping;
           const both = tracks(e.stats, { block: 'goalkeeping', key: 'goalsAgainst' });
+          // Saves that include a game note's cover other games than the goals against: no Sv%.
+          const mixed = notedKinds(e.stats, e.player).has('saves');
           return {
-            text: both && g && g.saves !== null && g.goalsAgainst !== null ? savePercent(g.saves, g.goalsAgainst) : null,
+            text: both && !mixed && g && g.saves !== null && g.goalsAgainst !== null ? savePercent(g.saves, g.goalsAgainst) : null,
           };
         },
       },

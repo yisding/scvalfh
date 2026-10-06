@@ -260,7 +260,7 @@ describe('sblive: team /games page', () => {
   });
 
   // Scripps Ranch was the non-member here until the San Diego Section joined the registry, and Thousand
-  // Oaks until the Southern Section independents did (DESIGN §24.9). Oaks Christian (si.com 458114, a row of
+  // Oaks until the LA independents did (DESIGN §24.9). Oaks Christian (si.com 458114, a row of
   // si.com's Marmonte page with no games, read 2026-10-06) is no registry team: the opponent is synthetic.
   it('leaves a non-member opponent as a name with no slug', () => {
     const node = teamNode({

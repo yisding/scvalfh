@@ -18,7 +18,7 @@ export const metadata: Metadata = {
  * 'the nine leagues', from the config (never a literal count). It named every league ('SCVAL, BVAL, PCAL,
  * MCAL and EAL') while there were five; with nine across two regions the list outgrew a one-line card
  * description, so the count stands in for it (the Teams page itself lists them, region by region). It counts
- * the leagues with a table: the Southern Section independents have none (DESIGN §24.9), so "every table in
+ * the leagues with a table: the LA independents have none (DESIGN §24.9), so "every table in
  * the nine leagues" stays exact.
  */
 const LEAGUE_COUNT = `the ${numberWord(LEAGUES_PROPER.length)} leagues`;

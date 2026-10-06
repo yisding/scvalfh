@@ -94,14 +94,14 @@ describe('team-view.ts over every division (ALL_DIVISIONS)', () => {
         if (!v) continue;
         seen += 1;
         // A Southern Section independent (DESIGN §24.10): a league team's view, with the group's table (no fixed
-        // schedule, so no scheduled count) and its standings link labelled 'Independents standings'.
+        // schedule, so no scheduled count) and its standings link labelled 'LA standings'.
         if (leagues.isIndependentDivision(division.id)) {
-          expect(v.scopeLabel, `components/teams/team-view.ts ${team.slug} scope`).toBe('Independent');
+          expect(v.scopeLabel, `components/teams/team-view.ts ${team.slug} scope`).toBe('LA');
           expect(v.divisionSize, `components/teams/team-view.ts ${team.slug} divisionSize`).toBe(division.expectedTeams);
           expect(v.standingsHref, `components/teams/team-view.ts ${team.slug} standingsHref`).toBe(
             `/standings/${division.leagueId}#${division.id}`,
           );
-          expect(v.standingsLabel, `components/teams/team-view.ts ${team.slug} standingsLabel`).toBe('Independents standings');
+          expect(v.standingsLabel, `components/teams/team-view.ts ${team.slug} standingsLabel`).toBe('LA standings');
           expect(v.leagueScheduled, `components/teams/team-view.ts ${team.slug} scheduled`).toBeNull();
           continue;
         }
@@ -349,11 +349,10 @@ describe('/teams/[slug] pages (app/teams/[slug]/page.tsx)', () => {
       const text = textOf(html);
       expect(text, `components/teams/TeamIdentity.tsx ${team.slug}`).toContain(v.identityLine);
       expect(html, `app/teams/[slug]/page.tsx ${team.slug} standings`).toContain(`href="${v.standingsHref}"`);
-      // A Southern Section independent (DESIGN §24.10): the standings link reads 'Independents standings' (its short
-      // name is an adjective), and its GP tile prints the bare count, as the Sunset's does (no fixed schedule).
+      // An LA independent (DESIGN §24.10, §24.11): the standings link reads 'LA standings', and its GP tile prints
+      // the bare count, as the Sunset's does (no fixed schedule).
       if (leagues.isIndependentLeague(team.league)) {
-        expect(text, `app/teams/[slug]/page.tsx ${team.slug} group link`).toContain('Independents standings →');
-        expect(text, `app/teams/[slug]/page.tsx ${team.slug} no adjective label`).not.toContain('Independent standings');
+        expect(text, `app/teams/[slug]/page.tsx ${team.slug} group link`).toContain('LA standings →');
         expect(v.context!.scheduled, `components/teams/team-view.ts ${team.slug} scheduled`).toBeNull();
         expect(text, `components/teams/TeamStatTiles.tsx ${team.slug} GP`).toMatch(new RegExp(`GP\\s*${v.context!.counted}\\b`));
         expect(html, `app/teams/[slug]/page.tsx ${team.slug}`).not.toContain('Gabilan');
@@ -474,7 +473,7 @@ describe('/teams (app/teams/page.tsx)', () => {
     expect(html, 'app/teams/page.tsx NCS h2').toMatch(/<h2[^>]*>North Coast Section<\/h2>/);
     expect(html, 'app/teams/page.tsx NS h2').toMatch(/<h2[^>]*>Northern Section<\/h2>/);
     expect(html, 'app/teams/page.tsx section labelling').toContain('<section aria-labelledby="ccs"');
-    // Nine leagues and the Southern Section independents (one table, so no h4: DESIGN §24.10).
+    // Nine leagues and the LA independents (one table, so no h4: DESIGN §24.10).
     expect((html.match(/<h3[^>]*>/g) ?? []).length, 'app/teams/page.tsx league h3s').toBe(10);
     const h4s = [...html.matchAll(/<h4 class="m-0 mb-3 text-lead text-ink">([^<]+)<\/h4>/g)].map((m) => m[1]);
     expect(h4s, 'app/teams/page.tsx division h4s').toEqual([
@@ -528,7 +527,7 @@ describe('/teams (app/teams/page.tsx)', () => {
     expect(html, 'app/teams/page.tsx switcher').toMatch(/<div id="team-league-switcher"[^>]*>\s*<nav/);
     const text = textOf(html);
     expect(text, 'app/teams/page.tsx description').toContain(
-      'each in its division’s standings table. League and division alignment comes from each league’s official schedule; the EAL publishes none, so its six teams are the ones MaxPreps lists in its EAL table, less Red Bluff, which is not fielding a varsity team in 2026. In Southern California it comes from MaxPreps’ 2024-25 and 2025-26 Sunset tables for the Sunset, from the CIF-SDS 2026-27 League Alignment for City, North and Metro and from MaxPreps’ 2026-27 team pages and schedules (five Southern Section schools in no field hockey league, which play each other) for the Southern Section independents.',
+      'each in its division’s standings table. League and division alignment comes from each league’s official schedule; the EAL publishes none, so its six teams are the ones MaxPreps lists in its EAL table, less Red Bluff, which is not fielding a varsity team in 2026. In Southern California it comes from MaxPreps’ 2024-25 and 2025-26 Sunset tables for the Sunset, from the CIF-SDS 2026-27 League Alignment for City, North and Metro and from MaxPreps’ 2026-27 team pages and schedules (five Southern Section schools in no field hockey league, which play each other) for the LA independents.',
     );
     expect(text, 'app/teams/page.tsx description').toContain('All 102 girls varsity teams in ');
     expect(html, 'app/teams/page.tsx').not.toContain('Gabilan');
@@ -892,7 +891,7 @@ describe('opponentRecordLine (components/teams/team-view.ts)', () => {
       if (line === 'no league results yet') continue;
       // An independent has no place: its overall record and the group's short name (DESIGN §24.9).
       if (leagues.isIndependentLeague(team.league)) {
-        expect(line, `components/teams/team-view.ts ${team.slug}`).toMatch(/^(\d+-\d+-\d+ overall \u00b7 Independent|no results yet)$/);
+        expect(line, `components/teams/team-view.ts ${team.slug}`).toMatch(/^(\d+-\d+-\d+ overall \u00b7 LA|no results yet)$/);
         continue;
       }
       const scope = leagues.divisionHeading(team.division) ?? leagues.getLeague(team.league).shortName;

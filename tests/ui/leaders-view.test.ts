@@ -40,7 +40,7 @@ import { positionWords } from '../../components/ui/position-words';
 import { getGames, getStandingFor, getTeams } from '../../lib/data';
 import { gradeWord, recordString } from '../../lib/format';
 import { regionOf } from '../../lib/leagues';
-import { getPlayerStats } from '../../lib/player-stats';
+import { getAllPlayerStatsWithNotes } from '../../lib/player-stats';
 import { getPriorSeason } from '../../lib/prior-season';
 import { getEnrichedTeamRoster } from '../../lib/rosters';
 import { computeRatings, getRatings } from '../../lib/ratings';
@@ -99,7 +99,8 @@ function expectRanked(board: LeaderBoard): void {
 
 describe('buildLeadersView — rules, over the committed data', () => {
   const view = buildLeadersView();
-  const stats = getPlayerStats().teams;
+  // What the boards read: MaxPreps' numbers with the coaches' game notes added (lib/note-stats.ts).
+  const stats = getAllPlayerStatsWithNotes();
   /** A board's id without its region suffix: the same board in either region. */
   const unsuffixed = (id: string) => id.replace(/-socal$/, '');
   const teamsOf = (region: string) => getTeams().filter((t) => regionOf(t.league) === region);
@@ -128,7 +129,7 @@ describe('buildLeadersView — rules, over the committed data', () => {
       for (const board of [...r.players, ...r.schools]) {
         expectRanked(board);
         expect(board.columns[board.rankedBy], board.id).toBeDefined();
-        // SoCal's boards also take the Southern Section independents (DESIGN §24.9), named after the leagues,
+        // SoCal's boards also take the LA independents (DESIGN §24.9), named after the leagues,
         // except the league-record board: a team that plays no league games has no league record to rank.
         const leagueOnly = board.id.startsWith('best-league-record');
         const independents = r.independentCount > 0 && !leagueOnly ? ' and five independents' : '';

@@ -51,7 +51,7 @@ export function generateMetadata(): Metadata {
 
 /**
  * 'Sunset, City, North, Metro and the independents': the leagues whose table order is this site's own points,
- * the Southern Section independents' table among them (named by its standaloneName: 'Independent' is an adjective).
+ * the LA independents' table among them (named by its standaloneName: 'LA' alone names a place).
  */
 function siteOrderedLeagues(leagues: readonly { id: LeagueId; shortName: string }[]): string[] {
   return leagues

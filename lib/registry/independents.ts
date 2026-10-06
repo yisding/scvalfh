@@ -1,5 +1,5 @@
 /**
- * The 5 Southern Section independents (Bonita, Chaminade, Glendora, Harvard-Westlake, Thousand Oaks),
+ * The 5 LA independents (Bonita, Chaminade, Glendora, Harvard-Westlake, Thousand Oaks),
  * transcribed by script from tests/fixtures/seeds/registry-seed-ss.json (verified 2026-10-06; checked field
  * by field by tests/registry-seeds.test.ts). Seed order is alphabetical.
  *
@@ -24,7 +24,7 @@
 import type { Seed } from './seed';
 
 export const INDEPENDENTS_SEEDS: readonly Seed[] = [
-  // ----- Southern Section independents (5; no MaxPreps table groups them: all five are maxprepsMissing) -----
+  // ----- LA independents (5; no MaxPreps table groups them: all five are maxprepsMissing) -----
   {
     id: '4c2dd7e8-2f3e-43aa-891b-9218932cdf9d',
     slug: 'bonita',

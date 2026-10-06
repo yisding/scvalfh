@@ -54,7 +54,7 @@ const PAGE_TITLE = 'Teams and standings';
  * in the nav. They sit outside `#team-list`, so the finder never hides them, and add no heading
  * and no group wrapper.
  */
-/** Where the teams are listed: each in its division's table, the Southern Section independents' included (DESIGN §24.10). */
+/** Where the teams are listed: each in its division's table, the LA independents' included (DESIGN §24.10). */
 const WHERE_LISTED = 'each in its division’s standings table';
 
 export const metadata: Metadata = {

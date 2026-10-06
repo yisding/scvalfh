@@ -32,7 +32,14 @@ import {
   statusesOf,
 } from './leagues';
 import { dateKey, formatIssues, httpUrl, slugId } from './schema-primitives';
-import { addConfiguredLeagues, isSnapshotV1, lacksConfiguredLeagues, migrateV1ToV2 } from './snapshot-migrate';
+import {
+  addConfiguredLeagues,
+  isSnapshotV1,
+  lacksConfiguredLeagues,
+  migrateV1ToV2,
+  needsReclassification,
+  reclassify,
+} from './snapshot-migrate';
 import { stableStringify } from './stable-json';
 import { TEAMS, getTeamBySlug } from './teams';
 import { OFFICIAL_SOURCE_IDS, type DivisionId, type Snapshot, type TiebreakStage } from './types';
@@ -233,6 +240,7 @@ export const GameSchema = z
       dateCorrection: z
         .object({ maxprepsDateLocal: z.string().min(10), maxprepsTimeTba: z.boolean(), source: z.string().min(1) })
         .optional(),
+      overtimeNote: z.string().min(1).optional(),
     }),
   })
   // 1. A final game must have two numbers.
@@ -886,11 +894,13 @@ export function parseSnapshot(raw: unknown): Snapshot {
 
 /**
  * v1 (no schemaVersion) → migrateV1ToV2; a v2 written before a configured league existed →
- * addConfiguredLeagues; then parseSnapshot. Used by lib/data.ts and the pipeline's readPrevious.
+ * addConfiguredLeagues; a v2 whose games no longer classify under the current rules or registry →
+ * reclassify; then parseSnapshot. Used by lib/data.ts and the pipeline's readPrevious.
  */
 export function loadSnapshot(raw: unknown): Snapshot {
   const v2 = isSnapshotV1(raw) ? migrateV1ToV2(raw) : raw;
-  return parseSnapshot(lacksConfiguredLeagues(v2) ? addConfiguredLeagues(v2) : v2);
+  const complete = lacksConfiguredLeagues(v2) ? addConfiguredLeagues(v2) : v2;
+  return parseSnapshot(needsReclassification(complete) ? reclassify(complete) : complete);
 }
 
 // ---------------------------------------------------------------- canonical form

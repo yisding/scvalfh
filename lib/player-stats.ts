@@ -15,14 +15,18 @@
 import { readFileSync } from 'node:fs';
 
 import bundled from '../data/player-stats.json';
+import { getSnapshot } from './data';
+import { noteStatsFor, withNoteStats, type NoteSources, type NotedTeamPlayerStats } from './note-stats';
 import {
   PlayerStatsFileSchema,
   type PlayerStatsFile,
   type TeamPlayerStats,
 } from './player-stats-schema';
+import { getTeamRoster } from './rosters';
 import { failValidation } from './schema-primitives';
 import type { TeamSlug } from './types';
 
+export type { NotedTeamPlayerStats } from './note-stats';
 export type {
   FieldStatKey,
   FieldStats,
@@ -59,4 +63,24 @@ export function getPlayerStats(): PlayerStatsFile {
 
 export function getTeamPlayerStats(slug: TeamSlug): TeamPlayerStats | undefined {
   return BY_SLUG.get(slug);
+}
+
+/** The committed snapshot's games and rosters, for lib/note-stats.ts. */
+function noteSources(): NoteSources {
+  return { games: getSnapshot().games, roster: (slug) => getTeamRoster(slug)?.players };
+}
+
+/**
+ * `slug`'s MaxPreps stats with the goals, assists and saves its coach wrote in game notes added
+ * (lib/note-stats.ts): what the team page shows. undefined for a slug that is no team.
+ */
+export function getTeamPlayerStatsWithNotes(slug: TeamSlug): NotedTeamPlayerStats | undefined {
+  const team = BY_SLUG.get(slug);
+  return team ? withNoteStats(team, noteStatsFor(slug, noteSources())) : undefined;
+}
+
+/** Every team's stats with its game notes added, in the file's order: what /leaders ranks. */
+export function getAllPlayerStatsWithNotes(): NotedTeamPlayerStats[] {
+  const sources = noteSources();
+  return file.teams.map((t) => withNoteStats(t, noteStatsFor(t.slug, sources)));
 }

@@ -29,7 +29,7 @@ const SCVAL_FROZEN: ReadonlyArray<[slug: string, abbr: string, id: string, name:
   ['monta-vista', 'MV', '405614ad-a015-4270-b527-18e899c90824', 'Monta Vista', 'el-camino'],
 ];
 
-describe('teams: the registry is the nine leagues and the Southern Section independents', () => {
+describe('teams: the registry is the nine leagues and the LA independents', () => {
   it('holds 102 teams, with per-division counts from the config', () => {
     expect(TEAMS).toHaveLength(102);
     expect(FETCHABLE_TEAMS).toHaveLength(TEAMS.length);
@@ -324,7 +324,7 @@ describe('teams: the registry is the nine leagues and the Southern Section indep
     ]) {
       expect(resolveTeam(name), name).toBeUndefined();
     }
-    // The Southern Section independents are covered (DESIGN §24.9): their names and aliases resolve, and so do
+    // The LA independents are covered (DESIGN §24.9): their names and aliases resolve, and so do
     // HWHS and TOHS, which name one school each. GHS does not: Gilroy, Greenfield and Glendora share it.
     for (const [name, slug] of [
       ['Glendora', 'glendora'], ['Glendora High School', 'glendora'], ['Glendora Tartans', 'glendora'],

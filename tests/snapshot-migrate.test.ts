@@ -10,12 +10,20 @@ import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 import { LEAGUES, leaguesInRegion } from '../lib/leagues';
-import { addConfiguredLeagues, isSnapshotV1, lacksConfiguredLeagues, migrateV1ToV2 } from '../lib/snapshot-migrate';
+import {
+  addConfiguredLeagues,
+  countsOf,
+  isSnapshotV1,
+  lacksConfiguredLeagues,
+  migrateV1ToV2,
+  needsReclassification,
+  reclassify,
+} from '../lib/snapshot-migrate';
 import { loadSnapshot, parseSnapshot } from '../lib/snapshot-schema';
 import { stableStringify } from '../lib/stable-json';
-import { divisionGames } from '../lib/standings';
+import { buildCrossCheck, computeStandings, divisionGames } from '../lib/standings';
 import { TEAMS, teamsInLeague } from '../lib/teams';
-import type { Game, Snapshot } from '../lib/types';
+import type { Game, ReportedRecord, Snapshot, TeamId } from '../lib/types';
 import { VARIANTS_DIR } from './helpers';
 
 const GOLDEN = path.join(import.meta.dirname, 'golden');
@@ -68,9 +76,9 @@ describe('migrateV1ToV2 on the committed v1 golden', () => {
       expect(s.computed.gp, s.slug).toBe(0);
       expect(s.reported).toBeNull();
       // NorCal rows say 'results reported'; a 'site'-ordered SoCal row says 'games counted' (lib/standings.ts
-      // tiebreakNote: SoCal copy avoids the word 'results'); an independent's says there is no table at all.
+      // tiebreakNote: SoCal copy avoids the word 'results').
       expect(s.tiebreak.note, s.slug).toMatch(
-        /^(No (division|league) (results reported|games counted) for |Independent: no league games, so no table$)/,
+        /^No (division|league) (results reported|games counted) for /,
       );
     }
     const leigh = migrated.standings.find((s) => s.slug === 'leigh')!;
@@ -175,7 +183,7 @@ describe('migrateV1ToV2 on the committed v1 golden', () => {
       expect(h.lastFreshAt).toBeNull();
       expect(h.reasons).toEqual([
         h.leagueId === 'independents'
-          ? 'No data for the Southern Section independents in this snapshot yet: it was written before they were added.'
+          ? 'No data for the LA independents in this snapshot yet: it was written before they were added.'
           : `No ${short} data in this snapshot yet: it was written before ${short} was added.`,
       ]);
       for (const d of h.divisions) {
@@ -353,14 +361,14 @@ describe('the "league added" upgrade for the four Southern California leagues an
     expect(stableStringify(upgraded.standings.slice(0, 49))).toBe(stableStringify(norcal.standings));
     expect(stableStringify(upgraded.leagueHealth.slice(0, 5))).toBe(stableStringify(norcal.leagueHealth));
     expect(upgraded.leagueHealth.slice(5).map((h) => [h.leagueId, h.state, h.reasons, h.divisions.map((d) => [d.divisionId, d.classification])])).toEqual([
-      ['sunset', 'degraded', ['No Sunset data in this snapshot yet: it was written before Sunset was added.'], [['sunset', 'contest-type']]],
+      ['sunset', 'degraded', ['No Sunset data in this snapshot yet: it was written before Sunset was added.'], [['sunset', 'membership']]],
       ['city', 'degraded', ['No City data in this snapshot yet: it was written before City was added.'],
         [['city-western', 'membership'], ['city-eastern', 'membership']]],
       ['north-county', 'degraded', ['No North data in this snapshot yet: it was written before North was added.'],
         [['avocado', 'membership'], ['palomar', 'membership'], ['valley', 'membership']]],
       ['metro', 'degraded', ['No Metro data in this snapshot yet: it was written before Metro was added.'],
         [['metro-mesa', 'membership'], ['metro-south-bay', 'membership']]],
-      ['independents', 'degraded', ['No data for the Southern Section independents in this snapshot yet: it was written before they were added.'],
+      ['independents', 'degraded', ['No data for the LA independents in this snapshot yet: it was written before they were added.'],
         [['independents', 'membership']]],
     ]);
     // The new rows carry no results; the Sunset's single rung still gives each a status.
@@ -402,5 +410,90 @@ describe('the "league added" upgrade for the four Southern California leagues an
       || (g.away.slug ?? null) !== (committed.games[i].away.slug ?? null));
     expect(gained.length).toBeGreaterThan(0);
     for (const g of gained) expect([g.home.slug, g.away.slug].some((x) => x !== null && SOCAL_SLUGS.has(x)), g.contestId).toBe(true);
+  });
+});
+
+// ---------------------------------------------------------------- "rules changed" (DESIGN §24.11)
+
+const COMMITTED = JSON.parse(readFileSync(path.join(import.meta.dirname, '..', 'data', 'snapshot.json'), 'utf8')) as Snapshot;
+
+function reportedOf(s: Snapshot): Map<TeamId, ReportedRecord> {
+  return new Map(s.standings.flatMap((r) => (r.reported ? [[r.teamId, r.reported] as const] : [])));
+}
+
+/** `full` with `games` and the rows of `divisions` recomputed from them: a file the pipeline would have written over those games. */
+function rewritten(full: Snapshot, games: Game[], divisions: ReadonlySet<string>, classification: 'contest-type' | 'membership'): Snapshot {
+  const fresh = computeStandings(games, { reported: reportedOf(full) });
+  const standings = full.standings.map((r) => (divisions.has(r.division) ? fresh.find((x) => x.teamId === r.teamId && x.division === r.division)! : r));
+  const leagueHealth = full.leagueHealth.map((h) => ({
+    ...h,
+    divisions: h.divisions.map((d) => (divisions.has(d.divisionId)
+      ? { ...d, classification, countedFinals: divisionGames(games, d.divisionId).length }
+      : d)),
+  }));
+  return { ...full, games, standings, crossCheck: buildCrossCheck(standings), leagueHealth, counts: countsOf(games, standings) };
+}
+
+/** The committed file as the flag-based Sunset (before §24.11) wrote it: only MaxPreps-flagged games count. */
+function underSunsetFlag(full: Snapshot): Snapshot {
+  const games = full.games.map((g): Game => (g.leagueDivision === 'sunset'
+    ? { ...g, countsFor: g.isLeague && g.postseason === null ? 'sunset' : null }
+    : g));
+  return rewritten(full, games, new Set(['sunset']), 'contest-type');
+}
+
+describe('the "rules changed" upgrade (a v2 file written under the flag-based Sunset)', () => {
+  const flagged = underSunsetFlag(COMMITTED);
+
+  it('is a different file that the schema rejects on countsFor', () => {
+    const sunset = (s: Snapshot) => s.games.filter((g) => g.countsFor === 'sunset').length;
+    expect(sunset(flagged)).toBeLessThan(sunset(COMMITTED));
+    expect(() => parseSnapshot(flagged)).toThrow(/countsFor null != classifyGame sunset/);
+  });
+
+  it('recognises a file whose games no longer classify as written, and nothing else', () => {
+    expect(needsReclassification(flagged)).toBe(true);
+    expect(needsReclassification(COMMITTED)).toBe(false);
+    expect(needsReclassification(readV1())).toBe(false);
+    expect(needsReclassification(null)).toBe(false);
+    expect(needsReclassification({ ...COMMITTED, games: 'nope' })).toBe(false);
+    expect(() => reclassify(COMMITTED)).toThrow(/need reclassifying/);
+  });
+
+  it('loads it as the file the pipeline writes today: a round trip to the same snapshot', () => {
+    expect(stableStringify(loadSnapshot(flagged))).toBe(stableStringify(loadSnapshot(COMMITTED)));
+  });
+
+  it('recomputes only the divisions whose games changed and does not mutate its input', () => {
+    const before = JSON.stringify(flagged);
+    const upgraded = reclassify(flagged) as Snapshot;
+    expect(JSON.stringify(flagged)).toBe(before);
+    const others = (s: Snapshot) => s.standings.filter((r) => r.division !== 'sunset');
+    expect(stableStringify(others(upgraded))).toBe(stableStringify(others(flagged)));
+    expect(stableStringify(upgraded.leagueHealth.filter((h) => h.leagueId !== 'sunset'))).toBe(
+      stableStringify(flagged.leagueHealth.filter((h) => h.leagueId !== 'sunset')),
+    );
+    expect(upgraded.season.leagues.filter((l) => l.id !== 'sunset')).toEqual(flagged.season.leagues.filter((l) => l.id !== 'sunset'));
+    expect(upgraded.games.map((g) => g.contestId)).toEqual(flagged.games.map((g) => g.contestId));
+    const health = upgraded.leagueHealth.find((h) => h.leagueId === 'sunset')!.divisions[0];
+    expect(health.classification).toBe('membership');
+    expect(health.countedFinals).toBe(divisionGames(upgraded.games, 'sunset').length);
+    // Kept as written: the counts that need a clock or a feed.
+    const was = flagged.leagueHealth.find((h) => h.leagueId === 'sunset')!.divisions[0];
+    expect([health.previousCountedFinals, health.missingLeaguePast, health.meta, health.reportedRows]).toEqual(
+      [was.previousCountedFinals, was.missingLeaguePast, was.meta, was.reportedRows],
+    );
+  });
+
+  it('moves a game whose teams changed division (Bonita and Chaminade, Sunset → the LA independents)', () => {
+    // Before DESIGN §24.10 the file held Bonita–Chaminade as a Sunset game.
+    const games = COMMITTED.games.map((g): Game => (g.leagueDivision === 'independents' && g.postseason === null
+      ? { ...g, leagueDivision: 'sunset', countsFor: 'sunset' }
+      : g));
+    expect(games.filter((g) => g.leagueDivision === 'sunset').length).toBeGreaterThan(COMMITTED.games.filter((g) => g.leagueDivision === 'sunset').length);
+    const stale = { ...COMMITTED, games };
+    expect(() => parseSnapshot(stale)).toThrow(/leagueDivision sunset but a side is not a member/);
+    expect(needsReclassification(stale)).toBe(true);
+    expect(stableStringify(loadSnapshot(stale))).toBe(stableStringify(loadSnapshot(COMMITTED)));
   });
 });

@@ -916,7 +916,7 @@ describe('Southern California: ladders, the cross-check skip, uneven games (DESI
       'Teams have played between 9 and 12 of 16 league games, so points favour teams that have played more.',
     );
     expect(unevenGamesSentence('sunset', { min: 2, max: 7, scheduled: null })).toBe(
-      'Teams have played between 2 and 7 of the games MaxPreps marks as Sunset league games, and there is no fixed league schedule, so points favour teams that have played more.',
+      'Teams have played between 2 and 7 games against other Sunset teams, and there is no fixed league schedule, so points favour teams that have played more.',
     );
     expect(unevenGamesSentence('sunset', { min: 2, max: 3, scheduled: null })).toBeNull();
     expect(unevenGamesSentence('palomar', { min: 4, max: 5, scheduled: 12 })).toBeNull();

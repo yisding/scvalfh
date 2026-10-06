@@ -357,7 +357,7 @@ describe('sblive identity: the captured si.com pages', () => {
       ['westview', 'school-id', null],
       [null, null, 'ambiguous-name'],
     ]);
-    // The Southern Section independents are registry teams now (DESIGN §24.9), resolved by their si.com ids too.
+    // The LA independents are registry teams now (DESIGN §24.9), resolved by their si.com ids too.
     for (const [name, slug] of [['Harvard-Westlake', 'harvard-westlake'], ['Thousand Oaks', 'thousand-oaks'], ['Glendora', 'glendora']]) {
       const found = sides.filter((x) => x.name === name);
       expect(found.length, name).toBeGreaterThan(0);

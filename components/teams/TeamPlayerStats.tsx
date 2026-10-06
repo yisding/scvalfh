@@ -16,7 +16,22 @@ import { statText } from './player-stats-view';
  *
  * Column heads are abbreviations a reader may not know (GWG, SOG), so each head carries its full
  * name for a screen reader and the legend under the tables spells every one out.
+ *
+ * Goals, assists and saves a coach wrote in a game note instead (lib/note-stats.ts) are added in, and every
+ * row or card holding one carries a mark that the list of noted games under the tables explains.
  */
+
+/** The mark on a row or card whose numbers include a game note; a screen reader hears why. */
+function NotedMark() {
+  return (
+    <>
+      <sup aria-hidden="true" className="ml-0.5 text-ink-3">
+        *
+      </sup>
+      <span className="sr-only"> (includes a game note)</span>
+    </>
+  );
+}
 
 function StatsTable({ table, caption }: { table: StatTable; caption: string }) {
   return (
@@ -54,6 +69,7 @@ function StatsTable({ table, caption }: { table: StatTable; caption: string }) {
                     </span>
                   ) : null}
                   {row.name}
+                  {row.noted ? <NotedMark /> : null}
                 </span>
               </th>
               {row.values.map((v, i) => (
@@ -85,6 +101,7 @@ function Goalie({ card }: { card: GoalieCard }) {
           </span>
         ) : null}
         {card.name}
+        {card.noted ? <NotedMark /> : null}
       </h4>
       <dl className="m-0 mt-3 grid grid-cols-3 gap-x-3 gap-y-3 sm:grid-cols-4">
         {card.stats.map((s) => (
@@ -174,7 +191,7 @@ export function TeamPlayerStats({ view }: TeamPlayerStatsProps) {
           MaxPreps{view.updated ? `, last updated ${view.updated}` : ''}.
           {view.more ? ' Shooting and more lists only players with at least one of those stats.' : ''}
         </p>
-        {view.goalies.length > 0 ? (
+        {view.goalkeepingEntered ? (
           <p className="mt-1 mb-0">
             Goalkeeping is as entered too, including opponent shots on goal, which can disagree with the
             saves beside it.
@@ -188,6 +205,20 @@ export function TeamPlayerStats({ view }: TeamPlayerStatsProps) {
             {teamName} has played {plural(view.gamesSince, 'game')} since
             then, so these totals are behind.
           </p>
+        ) : null}
+        {view.notedGames.length > 0 ? (
+          <div className="mt-1">
+            <p className="m-0 text-ink-2">
+              * Also counts what the coach wrote in MaxPreps&rsquo; game notes but did not enter as stats:
+            </p>
+            <ul className="m-0 mt-1 list-disc pl-5">
+              {view.notedGames.map((g) => (
+                <li key={g.key}>
+                  {g.game}: {g.added} (&ldquo;{g.note}&rdquo;).
+                </li>
+              ))}
+            </ul>
+          </div>
         ) : null}
         {legend.length > 0 ? <p className="mt-1 mb-0">{legend.join(' · ')}.</p> : null}
         {view.status === 'carried-forward' ? (

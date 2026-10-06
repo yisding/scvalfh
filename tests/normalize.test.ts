@@ -14,6 +14,7 @@ import {
   normalizeGames,
   pacificMidnightUtc,
   seasonWindowOf,
+  overtimeFromNote,
   splitLocation,
   toUtcIso,
 } from '../lib/normalize';
@@ -908,5 +909,87 @@ describe('normalize: a sourced per-contest date correction (DATA_QUALITY.contest
     expect(pacificMidnightUtc('2026-09-29')).toBe('2026-09-29T07:00:00Z');
     expect(pacificMidnightUtc('2026-11-02')).toBe('2026-11-02T08:00:00Z');
     expect(pacificMidnightUtc('2026-11-01')).toBe('2026-11-01T07:00:00Z');
+  });
+});
+
+describe('normalize: overtime a game note states (Homestead, Oct 5)', () => {
+  it('reads OT and overtime from a note, and only those', () => {
+    expect(overtimeFromNote('tied in OT 1:1  goal scored by Emery Borges')).toBe(1);
+    expect(overtimeFromNote('Won in overtime, goal by Smith')).toBe(1);
+    expect(overtimeFromNote('OT winner from Jones')).toBe(1);
+    expect(overtimeFromNote('Won in double OT')).toBe(2);
+    expect(overtimeFromNote('2OT thriller')).toBe(2);
+    expect(overtimeFromNote('OT2 winner')).toBe(2);
+    expect(overtimeFromNote('went to 2 overtimes')).toBe(2);
+    expect(overtimeFromNote('two overtimes')).toBe(2);
+    // The count is the accepted mention's, never another, negated one's or a score's.
+    expect(overtimeFromNote('won in overtime, no double OT')).toBe(1);
+    expect(overtimeFromNote('won in OT 2-1')).toBe(1);
+    expect(overtimeFromNote('won 3-2 OT')).toBe(1);
+    expect(overtimeFromNote('1:2 OT')).toBe(1);
+    // A negation only counts right before the mention.
+    expect(overtimeFromNote('no goals in OT, tied 1-1')).toBe(1);
+    expect(overtimeFromNote('not a league game, won in overtime')).toBe(1);
+    for (const note of [
+      'Senior Night',
+      'no OT, tie stands',
+      'No overtime played',
+      'No double OT, tie stands',
+      'not OT, ended level',
+      'Finished without overtime',
+      'never OT in this league',
+      'Not double OT',
+      'OTHS gym',
+      'Hot day, lots of water',
+      'Not a league game',
+      'ot',
+      null,
+      '',
+    ]) {
+      expect(overtimeFromNote(note), String(note)).toBe(0);
+    }
+  });
+
+  // The Homestead–Cupertino row as MaxPreps serves it: a 1-1 final with 0 overtime periods.
+  const template = allScheduleRows().find(
+    (r) =>
+      r.calculatedFields.contestState === 4 &&
+      r.contest.teams.length === 2 &&
+      r.contest.teams.some((t) => t.homeAwayType === 0) &&
+      r.contest.teams.some((t) => t.homeAwayType === 1) &&
+      r.contest.teams.every((t) => !t.isForfeit),
+  )!;
+  function finalRow(home: number, away: number, location: string | null, ot = 0): ScheduleRow {
+    const row = editTeams(template, (t) => {
+      const team = getTeamBySlug(t.homeAwayType === 0 ? 'homestead' : 'cupertino')!;
+      const score = t.homeAwayType === 0 ? home : away;
+      const result = home === away ? 'T' : (t.homeAwayType === 0) === home > away ? 'W' : 'L';
+      return { teamId: team.id, name: team.name, score, result, contestType: 0 };
+    });
+    return {
+      ...row,
+      contest: { ...row.contest, contestId: 'fd403fcf-68d7-4105-b68e-cc19df94e580', location },
+      calculatedFields: { ...row.calculatedFields, overtimePeriodsPlayed: ot },
+    };
+  }
+  const one = (row: ScheduleRow) => normalizeGames([row], { fetchedAt: '2026-10-06T12:00:00.000Z' });
+
+  it('marks a final OT when MaxPreps records none and the note says so, and says where it came from', () => {
+    const note = 'tied in OT 1:1  goal scored by Emery Borges';
+    const [g] = one(finalRow(1, 1, note)).games;
+    expect([g.otPeriods, g.isOt, g.decider]).toEqual([1, true, 'OT']);
+    expect(g.provenance.overtimeNote).toBe(note);
+    const [won] = one(finalRow(2, 1, 'won in overtime')).games;
+    expect([won.otPeriods, won.decider]).toEqual([1, 'OT']);
+  });
+
+  it("keeps MaxPreps' own count, and believes no overtime a sudden-victory period could not produce", () => {
+    const [counted] = one(finalRow(1, 1, 'tied in OT', 2)).games;
+    expect([counted.otPeriods, counted.decider, counted.provenance.overtimeNote]).toEqual([2, '2OT', undefined]);
+    const res = one(finalRow(3, 1, 'great comeback in OT'));
+    expect([res.games[0].otPeriods, res.games[0].decider]).toEqual([0, 'REG']);
+    expect(res.warnings.join('\n')).toMatch(/3-1 cannot come out of sudden victory/);
+    const [plain] = one(finalRow(1, 1, 'Senior Night')).games;
+    expect([plain.otPeriods, plain.decider, plain.provenance.overtimeNote]).toEqual([0, 'REG', undefined]);
   });
 });

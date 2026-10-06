@@ -43,7 +43,7 @@ export const metadata: Metadata = {
 };
 
 /**
- * 'SCVAL, BVAL, PCAL, MCAL, EAL, Sunset, City, North, Metro and the Southern Section independents', from the
+ * 'SCVAL, BVAL, PCAL, MCAL, EAL, Sunset, City, North, Metro and the LA independents', from the
  * config (never a literal list): the leagues, then each group with no table by its name (DESIGN §24.9).
  */
 const LEAGUE_LIST = listWords([

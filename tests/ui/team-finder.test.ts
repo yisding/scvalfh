@@ -129,7 +129,7 @@ describe('TeamFinder wiring to lib/search.ts', () => {
 
   it('says what search covers when nothing matches, and the not-covered reason when that matches', () => {
     expect(finderView(index, 'xyz', 'pin').message).toBe(
-      'No team matches "xyz". Search covers the 102 teams in SCVAL, BVAL, PCAL, MCAL, EAL, Sunset, City, North, Metro and the Southern Section independents.',
+      'No team matches "xyz". Search covers the 102 teams in SCVAL, BVAL, PCAL, MCAL, EAL, Sunset, City, North, Metro and the LA independents.',
     );
     const york = finderView(index, 'york', 'filter');
     expect(york.notCovered).toHaveLength(1);
@@ -198,7 +198,7 @@ describe('pin-mode result buttons', () => {
     expect(resultDetail(edison)).toBe('Sunset · Southern Section');
     // A Southern Section independent: the group's short name, as a league's (DESIGN §24.10).
     const bonita = index.teams.find((t) => t.slug === 'bonita')!;
-    expect(resultDetail(bonita)).toBe('Independent · Southern Section');
+    expect(resultDetail(bonita)).toBe('LA · Southern Section');
   });
 });
 

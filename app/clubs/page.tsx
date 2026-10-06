@@ -17,7 +17,7 @@ const PAGE_TITLE = 'Club teams';
  * The youth field hockey clubs of data/clubs.json — the clubs around the Bay Area and Central Coast
  * schools, three clubs met near the EAL teams' schools (D-City and Roseville FHC in the Sacramento
  * area, Chico Hotshots in the North State: areas not searched for every club, DESIGN §22.9), the
- * clubs around the Southern Section and San Diego Section schools (DESIGN §24.11), plus any other
+ * clubs around the Southern Section and San Diego Section schools (DESIGN §24.12), plus any other
  * club a tracked player is tied to — and, for each, how many
  * players on the tracked varsity rosters a public page ties to it, current and earlier stated
  * apart, and from which schools. The lede answers the page's question in one paragraph; there is
@@ -31,7 +31,7 @@ const PAGE_TITLE = 'Club teams';
  * players come first (DESIGN §17.5, lib/clubs.ts), so a reader meets the clubs that answer the
  * question before the ones that do not.
  *
- * Regions (DESIGN §24.11): each region's section carries its half of the site's `data-region-scope`
+ * Regions (DESIGN §24.12): each region's section carries its half of the site's `data-region-scope`
  * (lib/clubs-schema.ts CLUB_REGION_SITE_REGION), under the RegionSwitcher, so a reader sees the clubs
  * of their own half; `elsewhere` shows under both, and without JavaScript every section renders,
  * NorCal's first. The first section of each half gets the first section's top margin.

@@ -2,14 +2,14 @@
  * End to end: the real cron script (`scripts/fetch-data.ts --fixtures …`, with the real official
  * and si.com steps) over the two committed corpora (SPEC §7.3, §12.2):
  *   - the SCVAL corpus (2026-09-29): 102 teams in the snapshot, the other nine leagues (the EAL, the
- *     four SoCal leagues and the Southern Section independents among them) frozen
+ *     four SoCal leagues and the LA independents among them) frozen
  *     "not fetched in this run" — never an abort;
  *   - the all-2026-10-02 corpus: per-league counts, LeagueHealth, the §7.9 PCAL and MCAL tables,
  *     the 56 MaxPreps resources in live-shaped order (and never the Mission league), the summary line.
  *     Its manifest names four leagues: the EAL and the four Southern California leagues (added later)
  *     are frozen "not fetched in this run" there, so the run asks for its four leagues' 6 metas, 6
  *     tables and 43 schedules (the live sweep is 131: 1 + 2 × 14 division tables + 102 schedules; the
- *     San Diego Valley division and the Southern Section independents have no MaxPreps table and are
+ *     San Diego Valley division and the LA independents have no MaxPreps table and are
  *     never requested).
  * Plus the CLI behaviours kept from today's script: stable output, --dry-run, unknown flags, the
  * season-window guard, the empty-feed guard, never-0-0.
@@ -32,12 +32,12 @@ import { writeTempVariant } from './pipeline/support/run-corpus';
 
 /**
  * The freeze reason of a league not in this run (lib/pipeline/steps/guards.ts notInRunReason): '<SHORT> was
- * not fetched in this run.', and for the Southern Section independents, whose short name is an adjective,
+ * not fetched in this run.', and for the LA independents, whose short name is an adjective,
  * the group by name with a plural verb (DESIGN §24.9).
  */
 function notFetchedReason(id: Parameters<typeof getLeague>[0]): string {
   return id === 'independents'
-    ? 'The Southern Section independents were not fetched in this run.'
+    ? 'The LA independents were not fetched in this run.'
     : `${getLeague(id).shortName} was not fetched in this run.`;
 }
 

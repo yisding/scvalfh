@@ -366,6 +366,11 @@ export interface Game {
      * corrected, from what, and on whose word.
      */
     dateCorrection?: { maxprepsDateLocal: string; maxprepsTimeTba: boolean; source: string };
+    /**
+     * NEW. Set when MaxPreps records no overtime but the coach's game note says the game went to it
+     * (lib/normalize.ts overtimeFromNote): the note, so the game page can say where the OT came from.
+     */
+    overtimeNote?: string;
   };
 }
 
@@ -662,7 +667,7 @@ export interface DivisionHealth {
   reportedTable: 'ok' | 'carried' | 'missing' | 'skipped';
   reportedRows: number | null;
   /**
-   * The division's LeagueRules.classification ('membership' = the San Diego divisions and the Southern Section
+   * The division's LeagueRules.classification ('membership' = Sunset, the San Diego divisions and the LA
    * independents: both sides members, whatever MaxPreps' league flag says), or 'fallback-contest-type' when an
    * official-fixtures division fell back to MaxPreps' flag this run.
    */

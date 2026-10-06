@@ -23,7 +23,7 @@ import { LEAGUES, LEAGUES_PROPER, leaguesInRegion, regionOf } from '../../lib/le
  * enough of its games have a score), which this page states once at the top. Each league standings
  * page links here (`/jv#<league>`), and a team page's JV header links its division (`/jv#<division>`).
  *
- * The Southern Section independents (DESIGN §24.10) get a JV section like a league's: a JV game between two
+ * The LA independents (DESIGN §24.10) get a JV section like a league's: a JV game between two
  * of them whose varsity counterpart counts for the group's table is a JV league game here.
  *
  * One static page, no params, nothing derived from `Date.now()`.

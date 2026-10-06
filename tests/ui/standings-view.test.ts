@@ -330,7 +330,7 @@ describe('the /standings overview', () => {
       'h2 Southern Section',
       'h3 Sunset — Sunset field hockey league',
       // No table, so no h4: the group's note and its three teams (DESIGN §24.9).
-      'h3 Southern Section independents',
+      'h3 LA independents',
       'h2 San Diego Section',
       'h3 City — City Conference',
       'h4 City Western',
@@ -362,7 +362,7 @@ describe('the /standings overview', () => {
     );
     expect(html, 'app/standings/page.tsx region control').toContain('data-region-option="socal"');
     // The points sentence names the 'site' leagues and never says their rules require anything.
-    expect(textOf(html)).toContain('(Sunset, City, North, Metro and the independents publish no points rule, so there the order is this site’s own points)');
+    expect(textOf(html)).toContain('(Sunset, City, North, Metro and the LA independents publish no points rule, so there the order is this site’s own points)');
     const ids = [...html.matchAll(/\sid="([^"]+)"/g)].map((m) => m[1]);
     expect(ids.filter((id, i) => ids.indexOf(id) !== i), 'app/standings/page.tsx duplicate ids').toEqual([]);
   });
@@ -462,7 +462,7 @@ describe('the preseason notice (standings-page-view.ts buildNotice, DESIGN §8)'
     const empty = ['eal', 'sunset', 'city', 'north-county', 'metro', 'independents'];
     // The independents' notice names the group, not "Independent league play" (DESIGN §24.10).
     expect(sd.buildStandingsPageView('independents').notice?.heading, `${SPV}: independents`).toBe(
-      'The first game between two of the independents is Tue Sep 8.',
+      'The first game between two of the LA independents is Tue Sep 8.',
     );
     for (const id of data.getLeagueIds().filter((l) => !empty.includes(l))) {
       expect(sd.buildStandingsPageView(id).notice, `${SPV}: ${id}`).toBeNull();
@@ -530,7 +530,7 @@ describe('Southern California tables (standings-view.ts, DESIGN-socal §2.1.7)',
     expect(sunset.statusIntro).toBeNull();
     const uneven = view.unevenGpFootnote('sunset', { min: 2, max: 7, scheduled: null });
     expect(uneven, `${SV} unevenGpFootnote sunset`).toBe(
-      'Teams have played between 2 and 7 of the games MaxPreps marks as Sunset league games, and there is no fixed league schedule, so points favour teams that have played more. The order is this site’s 3-1-0 points; no Sunset rule orders the table.',
+      'Teams have played between 2 and 7 games against other Sunset teams, and there is no fixed league schedule, so points favour teams that have played more. The order is this site’s 3-1-0 points; no Sunset rule orders the table.',
     );
     const html = await renderLeague('sunset');
     expect(html, 'components/standings/DivisionStandings.tsx Sunset: no Left/Max').not.toMatch(/>Left<\/th>|>Max<\/th>/);

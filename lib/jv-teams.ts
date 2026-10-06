@@ -125,7 +125,7 @@ export const JV_SBLIVE_PATHS: Readonly<Record<TeamSlug, string | null>> = {
   'granite-hills': '458712-granite-hills-eagles-jv',
   hilltop: '459132-hilltop-lancers-jv',
   southwest: '459139-southwest-sd-raiders-jv',
-  // The Southern Section independents, read from each school's si.com games page (`otherTeams`) on 2026-10-06.
+  // The LA independents, read from each school's si.com games page (`otherTeams`) on 2026-10-06.
   glendora: '481707-glendora-tartans-jv',
   'harvard-westlake': '482355-harvardwestlake-wolverines-jv',
   'thousand-oaks': '482332-thousand-oaks-lancers-jv',

@@ -6,7 +6,7 @@
  * leagues in its manifest: the EAL (added later) is not in its runs and is frozen "not fetched".
  */
 
-import { existsSync, mkdtempSync, readFileSync } from 'node:fs';
+import { existsSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 
@@ -16,7 +16,7 @@ import { ALL_DIVISIONS, DATA_QUALITY, LEAGUES, getDivision } from '../../lib/lea
 import { RunAbort, resourcePath, type SnapshotMeta, type Transport } from '../../lib/pipeline/contract';
 import { loadCorpus } from '../../lib/pipeline/corpus';
 import { SILENT_SINK, emptyRunState } from '../../lib/pipeline/ledger';
-import { createPipelineContext, metaPathOf, parseRunArgs, prepareRun, runPipeline, writeOutputs } from '../../lib/pipeline/run';
+import { createPipelineContext, metaPathOf, parseRunArgs, prepareRun, readPrevious, runPipeline, writeOutputs } from '../../lib/pipeline/run';
 import { stepStandings } from '../../lib/pipeline/steps/standings';
 import { FixtureTransport } from '../../lib/pipeline/transport';
 import { ALL_SEASON_ID, SPORT_SEASON_ID } from '../../lib/season';
@@ -321,7 +321,7 @@ describe('prepareRun and the outputs', () => {
     expect(meta.fetchedAt).toBe('2026-10-02T15:00:00.000Z');
     expect(meta.today).toBe('2026-10-02');
     expect(meta.commitSummary).toMatch(
-      /^SCVAL \+\d+ finals · BVAL \+\d+ · PCAL \+\d+ · MCAL \+\d+ · EAL frozen \(not fetched\) · Sunset frozen \(not fetched\) · City frozen \(not fetched\) · North frozen \(not fetched\) · Metro frozen \(not fetched\) · Independent frozen \(not fetched\)$/,
+      /^SCVAL \+\d+ finals · BVAL \+\d+ · PCAL \+\d+ · MCAL \+\d+ · EAL frozen \(not fetched\) · Sunset frozen \(not fetched\) · City frozen \(not fetched\) · North frozen \(not fetched\) · Metro frozen \(not fetched\) · LA frozen \(not fetched\)$/,
     );
     expect(meta.leagues.map((l) => [l.id, l.state])).toEqual([
       ['scval', 'fresh'],
@@ -378,5 +378,31 @@ describe('steps 07-08 never abort the run', () => {
     expect(run.result?.meta.commitSummary).toMatch(/PCAL degraded \(official schedule not applied\)/);
     expect(snapshot.leagueHealth.find((h) => h.leagueId === 'pcal')?.divisions[0].classification).toBe('fallback-contest-type');
     expect(snapshot.counts.byLeague.pcal.leagueGames).toBeGreaterThan(0);
+  });
+});
+
+describe('readPrevious', () => {
+  const committed = () => JSON.parse(readFileSync(path.join(REPO, 'data', 'snapshot.json'), 'utf8')) as Snapshot;
+
+  it('carries a snapshot written under an earlier classification rule instead of starting from nothing (DESIGN §24.11)', () => {
+    // The committed file as the flag-based Sunset wrote it: its countsFor no longer match the rule.
+    const stale = committed();
+    stale.games = stale.games.map((g) => (g.leagueDivision === 'sunset' ? { ...g, countsFor: g.isLeague ? 'sunset' : null } : g));
+    const file = tmpOut();
+    writeFileSync(file, JSON.stringify(stale), 'utf8');
+    const warns: string[] = [];
+    const previous = readPrevious(file, { log: () => {}, warn: (line) => warns.push(line) });
+    expect(warns).toEqual([]);
+    expect(previous).not.toBeNull();
+    expect(previous!.games.filter((g) => g.countsFor === 'sunset')).toHaveLength(committed().games.filter((g) => g.countsFor === 'sunset').length);
+  });
+
+  it('warns and returns null for a file no upgrade can load', () => {
+    const file = tmpOut();
+    writeFileSync(file, JSON.stringify({ ...committed(), teams: [] }), 'utf8');
+    const warns: string[] = [];
+    expect(readPrevious(file, { log: () => {}, warn: (line) => warns.push(line) })).toBeNull();
+    expect(warns).toHaveLength(1);
+    expect(warns[0]).toMatch(/^WARN previous snapshot .* could not be loaded, so nothing is carried: /);
   });
 });
