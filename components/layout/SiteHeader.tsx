@@ -93,20 +93,28 @@ export function SiteHeader({ snapshotAt, now, slugLeague }: SiteHeaderProps) {
             </span>
           </Link>
           <TopNav className="ml-4 hidden md:block lg:ml-6" slugLeague={slugLeague} />
-          <span className="ml-auto flex shrink-0 items-center gap-2">
+          <span className="ml-auto flex min-w-0 items-center gap-2">
             {/* From 360px on a phone (below that the footer stamp is still there); hidden 768–895
                 where the seven nav links need the room; back from 896 (56rem, ≈ 33px to spare at the
                 widest stamp with "NorCal"). The breakpoints are in rem, not px: Tailwind orders
                 min-width variants by value only within one unit, and every px one sorts BEFORE
                 `md:hidden` (48rem) and loses to it. rem also moves them with the reader's default
                 font size, as `md` and `lg` do: at a 24px default the phone stamp starts at 540px,
-                so a 390px screen drops it rather than scrolling sideways. */}
+                so a 390px screen drops it rather than scrolling sideways. Chrome on Android's text
+                scaling is the case rem cannot see: it enlarges the text but not the 16px rem that
+                media queries read, so the stamp can still be too wide for the row. It is the one
+                part of the row that may give way (`min-w-0 truncate` here, `min-w-0` on this
+                cluster): it ends in an ellipsis instead of pushing the theme toggle off the screen
+                and the whole page sideways. `relative` makes it the containing block of its
+                `sr-only` "Pacific time": an absolutely positioned box ignores the `overflow: hidden`
+                of an ancestor that is not its containing block, and that 1px span was left past
+                the right edge, widening the page by itself. */}
             <LastUpdated
               at={snapshotAt}
               now={now}
               seasonComplete={seasonComplete}
               variant="compact"
-              className="hidden min-[22.5rem]:inline md:hidden min-[56rem]:inline"
+              className="relative hidden min-w-0 truncate min-[22.5rem]:inline md:hidden min-[56rem]:inline"
             />
             {/* The corrections thread, from 1120px (70rem). Measured in Chromium with the widest
                 stamp: the pill is 141px, and with it the nav clears the stamp by 30px at 1120 and

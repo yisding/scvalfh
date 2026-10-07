@@ -48,7 +48,7 @@ export interface DivisionTabsProps {
 }
 
 const VARIANT = {
-  bar: 'sx-chrome-top sticky top-topbar z-10 -mx-gutter flex h-divbar items-center gap-2 overflow-x-auto bg-bg px-gutter shadow-[0_1px_0_var(--sx-border)] [scrollbar-width:none] md:hidden',
+  bar: 'sx-chrome-top sticky top-topbar z-10 -mx-gutter flex h-divbar items-center gap-2 overflow-x-auto overflow-y-hidden bg-bg px-gutter shadow-[0_1px_0_var(--sx-border)] [scrollbar-width:none] md:hidden',
   inline: 'hidden md:flex items-center gap-2',
 } as const;
 

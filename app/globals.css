@@ -289,6 +289,17 @@
 }
 
 @layer base {
+  /* No sideways page scroll, ever. Nothing on the site is meant to be wider than the screen (the
+     wide things — the date rail, the division bar — scroll inside their own box), but a box that
+     is wider by a pixel or two still gave Chrome on Android a page that shifted sideways and a
+     scrollbar for a few pixels: a row that cannot shrink once Android's text scaling enlarges its
+     text, a fractional device-pixel ratio rounding a full-width box up, a visually hidden label
+     (`sr-only` is a 1px absolute box) parked at the right edge. `clip`, NOT `hidden`: `hidden`
+     on <body> makes it a scroll container, and every `position: sticky` on the site (the top
+     bar, the division bar, the table heads) would stick to <body> instead of the viewport and
+     stop sticking. `clip` only clips. On <html> the value goes to the viewport. */
+  html, body { overflow-x: clip; }
+
   html {
     -webkit-text-size-adjust: 100%;
     scroll-behavior: smooth;
