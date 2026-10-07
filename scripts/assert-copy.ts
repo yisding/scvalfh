@@ -82,7 +82,8 @@ import { buildLeadersView } from '../components/leaders/leaders-view';
 import { getClubsFile } from '../lib/clubs';
 import { getCommitsFile } from '../lib/commits';
 import { getSnapshot } from '../lib/data';
-import { getHistoryLeagues } from '../lib/history';
+import { gameSentence } from '../components/history/bracket-view';
+import { getHistoryBrackets, getHistoryLeagues } from '../lib/history';
 import { getPlayerStats } from '../lib/player-stats';
 import {
   LEAGUES,
@@ -318,6 +319,22 @@ if (!existsSync(historyPath)) {
   forbid(historyFile, main, /SCVAL[- ]only/i, 'says the archive is SCVAL-only');
   forbid(historyFile, main, /Only SCVAL/i, 'says only SCVAL has an archive');
   for (const msg of historyPageProblems(main, getHistoryLeagues())) fail(historyFile, msg);
+  // Each 2025 section bracket is its own section, and every game of it reads on the page.
+  for (const { id, bracket } of getHistoryBrackets()) {
+    const section = sectionById(main, id);
+    if (!section) {
+      fail(historyFile, `no <section id="${id}"> for the ${id} bracket`);
+      continue;
+    }
+    const text = visibleText(section);
+    for (const d of bracket.divisions) {
+      if (!section.includes(`id="${id}-${d.id}"`)) fail(historyFile, `${id}: no id="${id}-${d.id}" division anchor`);
+      for (const game of d.rounds.flatMap((r) => r.games)) {
+        const sentence = gameSentence(game);
+        if (!text.includes(sentence)) fail(historyFile, `${id}/${d.id}: “${sentence}” is not on the page`);
+      }
+    }
+  }
 }
 
 // ---------------------------------------------------------------- /leaders

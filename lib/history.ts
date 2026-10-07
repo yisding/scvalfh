@@ -15,7 +15,16 @@
 
 import { readFileSync } from 'node:fs';
 
+import bundledBrackets from '../data/history-brackets-2025-26.json';
 import bundledHistory from '../data/history-2025-26.json';
+import {
+  BRACKET_SECTION_IDS,
+  HistoryBracketsSchema,
+  type BracketSectionId,
+  type HistoryBracketGame,
+  type HistoryBracketSide,
+  type SectionBracket,
+} from './history-brackets-schema';
 import {
   HistorySchema,
   type AvailableLeagueHistory,
@@ -27,10 +36,10 @@ import {
   type LeagueHistory,
   type UnavailableLeagueHistory,
 } from './history-schema';
-import { LEAGUE_IDS } from './leagues';
+import { LEAGUE_IDS, getLeague, getSection } from './leagues';
 import { failValidation } from './schema-primitives';
 import { getTeamBySlug } from './teams';
-import type { DivisionId, LeagueId, TeamSlug } from './types';
+import type { DivisionId, LeagueId, SectionId, TeamSlug } from './types';
 
 export type {
   AvailableLeagueHistory,
@@ -43,6 +52,14 @@ export type {
   LeagueHistory,
   UnavailableLeagueHistory,
 } from './history-schema';
+export type {
+  BracketSectionId,
+  HistoryBracketDivision,
+  HistoryBracketGame,
+  HistoryBracketRound,
+  HistoryBracketSide,
+  SectionBracket,
+} from './history-brackets-schema';
 
 /**
  * data/history-2025-26.json is imported, so the build bundles it, for the reason given in
@@ -188,4 +205,47 @@ export function getHistoryUnpublishedTies(leagueId: LeagueId): HistoryRow[] {
   const entry = history.leagues[leagueId];
   if (entry?.status !== 'available') return [];
   return entry.divisions.flatMap((d) => d.standings.varsity.filter((r) => r.t === null));
+}
+
+// ---------------------------------------------------------------- section playoff brackets
+
+/**
+ * data/history-brackets-2025-26.json: the 2025 CCS and San Diego Section brackets, transcribed by
+ * hand from each section's own documents (lib/history-brackets-schema.ts). Bundled and validated at
+ * module scope, like the standings above.
+ */
+function loadBrackets() {
+  const parsed = HistoryBracketsSchema.safeParse(bundledBrackets);
+  if (!parsed.success) failValidation('history brackets', parsed.error.issues);
+  return parsed.data;
+}
+
+const brackets = loadBrackets();
+
+/**
+ * Each section with a 2025 bracket, with the league its block follows on /history/2025-26: the
+ * section's last league in lib/leagues.ts order (PCAL for the CCS, Metro for the San Diego Section),
+ * so the bracket sits after the leagues that fed it and inside their region.
+ */
+export function getHistoryBrackets(): Array<{ id: BracketSectionId; bracket: SectionBracket; afterLeague: LeagueId }> {
+  return BRACKET_SECTION_IDS.map((id) => {
+    const leagues = LEAGUE_IDS.filter((l) => getLeague(l).sectionId === id);
+    return { id, bracket: brackets.sections[id], afterLeague: leagues[leagues.length - 1] };
+  });
+}
+
+/** The section bracket of a league's section, or null when its section held none (NCS, NS, SS). */
+export function getHistoryBracketFor(leagueId: LeagueId): { id: BracketSectionId; bracket: SectionBracket } | null {
+  const sectionId: SectionId = getLeague(leagueId).sectionId;
+  return getHistoryBrackets().find((b) => b.id === sectionId) ?? null;
+}
+
+/** The section's name for a bracket block ("Central Coast Section"). */
+export function bracketSectionName(id: BracketSectionId): string {
+  return getSection(id).name;
+}
+
+/** A game's winning and losing sides. */
+export function bracketSides(game: HistoryBracketGame): { winner: HistoryBracketSide; loser: HistoryBracketSide } {
+  return game.winner === 'top' ? { winner: game.top, loser: game.bottom } : { winner: game.bottom, loser: game.top };
 }

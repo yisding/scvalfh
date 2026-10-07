@@ -69,7 +69,11 @@ could find, and the San Diego Section's power rankings are not league standings)
 third-party is shown in their place; the independents' card says they played as independents in
 2025-26 too (MaxPreps' 2025-26 Palomares, League B and Marmonte tables each list one field hockey
 team), so there was no table to publish. MCAL's card links the league's
-official 2025 all-league team without reproducing it. Rosters and player stats cover all 102 teams.
+official 2025 all-league team without reproducing it. The page also shows the 2025 section playoff brackets with
+every result: the CCS's two divisions (from the CCS's own bracket pages and its field hockey history)
+after PCAL, and the San Diego Section's Open, Division I and Division II (from the Section's bracket
+sheet and Record Book) after Metro, so the SoCal half has last season's results even though no SoCal
+league published standings. Rosters and player stats cover all 102 teams.
 
 The EAL has no schedule or standings document of its own: its rules come from the CIF Northern
 Section's Field Hockey Guidelines 2026-28, its league games are the games MaxPreps marks as league
@@ -805,13 +809,14 @@ pnpm gate:d              # the full gate: Next, vinext and Cloudflare builds, sm
 ```
 
 `pnpm build` and `next dev` both read the snapshot already checked into `data/`, so you can
-develop and build without ever calling a live upstream API. Every build bundles nine data files
+develop and build without ever calling a live upstream API. Every build bundles ten data files
 into its server code, each imported by its read module, so no server reads `data/` at run time:
 
 | File | Read by |
 |---|---|
 | `data/snapshot.json` | `lib/data.ts` |
 | `data/history-2025-26.json` | `lib/history.ts` |
+| `data/history-brackets-2025-26.json` | `lib/history.ts` |
 | `data/prior-season.json` | `lib/prior-season.ts` |
 | `data/player-stats.json` | `lib/player-stats.ts` |
 | `data/jv.json` | `lib/jv.ts` |

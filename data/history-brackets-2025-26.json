@@ -1,0 +1,1046 @@
+{
+  "season": "2025-26",
+  "sport": "Girls Field Hockey",
+  "sections": {
+    "ccs": {
+      "section": "ccs",
+      "title": "2025 CCS Field Hockey Championship",
+      "retrievedOn": "2026-10-07",
+      "sources": [
+        {
+          "label": "Division 1 bracket",
+          "url": "https://www.cifccs.org/sports/fh/2025-26/2025_Field_Hockey_Division_1_Bracket"
+        },
+        {
+          "label": "Division 2 bracket",
+          "url": "https://www.cifccs.org/sports/fh/2025-26/2025_Field_Hockey_Division_2_Bracket"
+        },
+        {
+          "label": "CCS Field Hockey History (PDF)",
+          "url": "https://www.cifccs.org/ccs_sports/sport_history/CCS_Field_Hockey_History.pdf"
+        }
+      ],
+      "notes": [
+        "Transcribed by hand from the two official bracket pages on cifccs.org (linked from https://www.cifccs.org/sports/fh/index, \"Brackets & Results\"). The pages draw a MaxPreps bracket widget client-side (tournament 864e7271-f44e-4a88-acdb-11af2b2f0a37; Division 1 bracket ba9db9fb-2047-42c2-af2d-373b1b738900, Division 2 bracket 24e37e34-2a6a-4c71-96cf-651be5cd0d65), read in headless Chromium on 2026-10-07. Seeds, names and goals are the widget's.",
+        "Round dates: the Division 1 widget heads its rounds Nov 5, Nov 8 and Nov 12; the Division 2 widget prints only Nov 12 over its final, and its game links are dated 11-5-2025, 11-8-2025 and 11-12-2025, the same three days.",
+        "Both finals match the CCS Field Hockey History PDF (2025: I Los Gatos 3-0 St. Francis at Los Altos HS; II Valley Christian 1-0 Willow Glen at Gilroy HS), which gives the final sites stored here, and the CCS Field Hockey Committee report of 2025-11-20, which congratulates the same two champions.",
+        "Willow Glen v Stevenson (Division 2 semifinal) is 1-1 in the bracket, which marks Willow Glen \"(W)\". The game's box score, the bracket's own link (maxpreps.com, game 4e75d107-dbf4-43f9-8f3a-c764da70b9ef), gives the shootout as Willow Glen 2, Stevenson 1."
+      ],
+      "divisions": [
+        {
+          "id": "division-1",
+          "label": "Division 1",
+          "rounds": [
+            {
+              "name": "Quarterfinals",
+              "date": "2025-11-05",
+              "games": [
+                {
+                  "top": {
+                    "seed": 6,
+                    "name": "Archbishop Mitty",
+                    "slug": "mitty"
+                  },
+                  "bottom": {
+                    "seed": 3,
+                    "name": "Leigh",
+                    "slug": "leigh"
+                  },
+                  "winner": "top",
+                  "score": [
+                    1,
+                    0
+                  ],
+                  "decidedBy": null,
+                  "shootout": null
+                },
+                {
+                  "top": {
+                    "seed": 7,
+                    "name": "Christopher",
+                    "slug": "christopher"
+                  },
+                  "bottom": {
+                    "seed": 2,
+                    "name": "Los Gatos",
+                    "slug": "los-gatos"
+                  },
+                  "winner": "bottom",
+                  "score": [
+                    0,
+                    2
+                  ],
+                  "decidedBy": null,
+                  "shootout": null
+                },
+                {
+                  "top": {
+                    "seed": 5,
+                    "name": "Gilroy",
+                    "slug": "gilroy"
+                  },
+                  "bottom": {
+                    "seed": 4,
+                    "name": "Saint Francis",
+                    "slug": "saint-francis"
+                  },
+                  "winner": "bottom",
+                  "score": [
+                    0,
+                    1
+                  ],
+                  "decidedBy": null,
+                  "shootout": null
+                },
+                {
+                  "top": {
+                    "seed": 8,
+                    "name": "Palo Alto",
+                    "slug": "palo-alto"
+                  },
+                  "bottom": {
+                    "seed": 1,
+                    "name": "St. Ignatius College Preparatory",
+                    "slug": "st-ignatius"
+                  },
+                  "winner": "bottom",
+                  "score": [
+                    1,
+                    8
+                  ],
+                  "decidedBy": null,
+                  "shootout": null
+                }
+              ]
+            },
+            {
+              "name": "Semifinals",
+              "date": "2025-11-08",
+              "games": [
+                {
+                  "top": {
+                    "seed": 6,
+                    "name": "Archbishop Mitty",
+                    "slug": "mitty"
+                  },
+                  "bottom": {
+                    "seed": 2,
+                    "name": "Los Gatos",
+                    "slug": "los-gatos"
+                  },
+                  "winner": "bottom",
+                  "score": [
+                    0,
+                    2
+                  ],
+                  "decidedBy": null,
+                  "shootout": null
+                },
+                {
+                  "top": {
+                    "seed": 4,
+                    "name": "Saint Francis",
+                    "slug": "saint-francis"
+                  },
+                  "bottom": {
+                    "seed": 1,
+                    "name": "St. Ignatius College Preparatory",
+                    "slug": "st-ignatius"
+                  },
+                  "winner": "top",
+                  "score": [
+                    1,
+                    0
+                  ],
+                  "decidedBy": null,
+                  "shootout": null
+                }
+              ]
+            },
+            {
+              "name": "Final",
+              "date": "2025-11-12",
+              "games": [
+                {
+                  "top": {
+                    "seed": 2,
+                    "name": "Los Gatos",
+                    "slug": "los-gatos"
+                  },
+                  "bottom": {
+                    "seed": 4,
+                    "name": "Saint Francis",
+                    "slug": "saint-francis"
+                  },
+                  "winner": "top",
+                  "score": [
+                    3,
+                    0
+                  ],
+                  "decidedBy": null,
+                  "shootout": null,
+                  "site": "Los Altos HS"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "division-2",
+          "label": "Division 2",
+          "rounds": [
+            {
+              "name": "Quarterfinals",
+              "date": "2025-11-05",
+              "games": [
+                {
+                  "top": {
+                    "seed": 6,
+                    "name": "Carmel",
+                    "slug": "carmel"
+                  },
+                  "bottom": {
+                    "seed": 3,
+                    "name": "Willow Glen",
+                    "slug": "willow-glen"
+                  },
+                  "winner": "bottom",
+                  "score": [
+                    0,
+                    2
+                  ],
+                  "decidedBy": null,
+                  "shootout": null
+                },
+                {
+                  "top": {
+                    "seed": 7,
+                    "name": "Presentation",
+                    "slug": "presentation"
+                  },
+                  "bottom": {
+                    "seed": 2,
+                    "name": "Stevenson",
+                    "slug": "stevenson"
+                  },
+                  "winner": "bottom",
+                  "score": [
+                    0,
+                    3
+                  ],
+                  "decidedBy": null,
+                  "shootout": null
+                },
+                {
+                  "top": {
+                    "seed": 5,
+                    "name": "Saratoga",
+                    "slug": "saratoga"
+                  },
+                  "bottom": {
+                    "seed": 4,
+                    "name": "Valley Christian",
+                    "slug": "valley-christian"
+                  },
+                  "winner": "bottom",
+                  "score": [
+                    0,
+                    2
+                  ],
+                  "decidedBy": null,
+                  "shootout": null
+                },
+                {
+                  "top": {
+                    "seed": 8,
+                    "name": "Monterey",
+                    "slug": "monterey"
+                  },
+                  "bottom": {
+                    "seed": 1,
+                    "name": "Los Altos",
+                    "slug": "los-altos"
+                  },
+                  "winner": "bottom",
+                  "score": [
+                    1,
+                    5
+                  ],
+                  "decidedBy": null,
+                  "shootout": null
+                }
+              ]
+            },
+            {
+              "name": "Semifinals",
+              "date": "2025-11-08",
+              "games": [
+                {
+                  "top": {
+                    "seed": 3,
+                    "name": "Willow Glen",
+                    "slug": "willow-glen"
+                  },
+                  "bottom": {
+                    "seed": 2,
+                    "name": "Stevenson",
+                    "slug": "stevenson"
+                  },
+                  "winner": "top",
+                  "score": [
+                    1,
+                    1
+                  ],
+                  "decidedBy": "shootout",
+                  "shootout": [
+                    2,
+                    1
+                  ]
+                },
+                {
+                  "top": {
+                    "seed": 4,
+                    "name": "Valley Christian",
+                    "slug": "valley-christian"
+                  },
+                  "bottom": {
+                    "seed": 1,
+                    "name": "Los Altos",
+                    "slug": "los-altos"
+                  },
+                  "winner": "top",
+                  "score": [
+                    2,
+                    1
+                  ],
+                  "decidedBy": null,
+                  "shootout": null
+                }
+              ]
+            },
+            {
+              "name": "Final",
+              "date": "2025-11-12",
+              "games": [
+                {
+                  "top": {
+                    "seed": 3,
+                    "name": "Willow Glen",
+                    "slug": "willow-glen"
+                  },
+                  "bottom": {
+                    "seed": 4,
+                    "name": "Valley Christian",
+                    "slug": "valley-christian"
+                  },
+                  "winner": "bottom",
+                  "score": [
+                    0,
+                    1
+                  ],
+                  "decidedBy": null,
+                  "shootout": null,
+                  "site": "Gilroy HS"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "sds": {
+      "section": "sds",
+      "title": "2025 CIFSDS Field Hockey Championships",
+      "retrievedOn": "2026-10-07",
+      "sources": [
+        {
+          "label": "2025 Championship Brackets (Google Sheet)",
+          "url": "https://docs.google.com/spreadsheets/d/1P9J_VFYljarF0IxnE4SP8zHey9T6y97IHz6NZZbaBWg/edit?usp=sharing"
+        },
+        {
+          "label": "CIFSDS Record Book (Google Doc)",
+          "url": "https://docs.google.com/document/d/17DdRO3Mp4RNVK69JY0ckjkVAAHMr92FHMibp_VKZLtI/edit?usp=sharing"
+        }
+      ],
+      "notes": [
+        "Transcribed by hand from the San Diego Section's \"2025 Championship Brackets\" Google Sheet, linked from https://www.cifsds.org/sports/fh/index (the Open Division, Division I and Division II tabs and their seeding lists), read on 2026-10-07. School names are the sheet's. The sheet writes each score winner first; it is stored here per side.",
+        "Two scores in the sheet were turned into dates by the spreadsheet (Canyon Hills v La Jolla, 4/1/2025; Helix Charter v Granite Hills, 2/1/2025); the sheet's CSV export shows them as 4-1 and 2-1, as stored.",
+        "Division I and Division II seeds 1-4 had first-round byes. Division II's 11th seed was a play-in, Helix Charter v Granite Hills on Nov 3 (the seeding list's \"Helix Charter HS / Granite Hills HS\").",
+        "The Division I quarterfinal Clairemont v Rancho Bernardo was played Thursday, Nov 6 (the sheet: \"Game moved to Thursday, November 6th\").",
+        "The sheet names each champion but posts no score for the three finals (each final's score cell holds \"Purchase Tickets\"). The Open and Division I final scores are the Section's Record Book (Field Hockey: Bishop's 3-0 Canyon Hills; Mt. Carmel 2-2, 3-2 in the shootout, over La Costa Canyon, both 11/15/25). Its Division II table stops at 2024, so the Division II final has no score."
+      ],
+      "divisions": [
+        {
+          "id": "open",
+          "label": "Open Division",
+          "rounds": [
+            {
+              "name": "Quarterfinals",
+              "date": "2025-11-06",
+              "games": [
+                {
+                  "top": {
+                    "seed": 1,
+                    "name": "Torrey Pines HS",
+                    "slug": "torrey-pines"
+                  },
+                  "bottom": {
+                    "seed": 8,
+                    "name": "Canyon Crest Academy",
+                    "slug": "canyon-crest-academy"
+                  },
+                  "winner": "bottom",
+                  "score": [
+                    1,
+                    1
+                  ],
+                  "decidedBy": "shootout",
+                  "shootout": [
+                    1,
+                    2
+                  ]
+                },
+                {
+                  "top": {
+                    "seed": 4,
+                    "name": "Canyon Hills HS",
+                    "slug": "canyon-hills"
+                  },
+                  "bottom": {
+                    "seed": 5,
+                    "name": "La Jolla HS",
+                    "slug": "la-jolla"
+                  },
+                  "winner": "top",
+                  "score": [
+                    4,
+                    1
+                  ],
+                  "decidedBy": null,
+                  "shootout": null
+                },
+                {
+                  "top": {
+                    "seed": 6,
+                    "name": "San Marcos HS",
+                    "slug": "san-marcos"
+                  },
+                  "bottom": {
+                    "seed": 3,
+                    "name": "Scripps Ranch HS",
+                    "slug": "scripps-ranch"
+                  },
+                  "winner": "bottom",
+                  "score": [
+                    0,
+                    1
+                  ],
+                  "decidedBy": null,
+                  "shootout": null
+                },
+                {
+                  "top": {
+                    "seed": 7,
+                    "name": "Mission Bay HS",
+                    "slug": "mission-bay"
+                  },
+                  "bottom": {
+                    "seed": 2,
+                    "name": "The Bishop's School",
+                    "slug": "bishops"
+                  },
+                  "winner": "bottom",
+                  "score": [
+                    1,
+                    4
+                  ],
+                  "decidedBy": null,
+                  "shootout": null
+                }
+              ]
+            },
+            {
+              "name": "Semifinals",
+              "date": "2025-11-11",
+              "games": [
+                {
+                  "top": {
+                    "seed": 8,
+                    "name": "Canyon Crest Academy",
+                    "slug": "canyon-crest-academy"
+                  },
+                  "bottom": {
+                    "seed": 4,
+                    "name": "Canyon Hills HS",
+                    "slug": "canyon-hills"
+                  },
+                  "winner": "bottom",
+                  "score": [
+                    1,
+                    2
+                  ],
+                  "decidedBy": null,
+                  "shootout": null
+                },
+                {
+                  "top": {
+                    "seed": 3,
+                    "name": "Scripps Ranch HS",
+                    "slug": "scripps-ranch"
+                  },
+                  "bottom": {
+                    "seed": 2,
+                    "name": "The Bishop's School",
+                    "slug": "bishops"
+                  },
+                  "winner": "bottom",
+                  "score": [
+                    0,
+                    4
+                  ],
+                  "decidedBy": null,
+                  "shootout": null
+                }
+              ]
+            },
+            {
+              "name": "Final",
+              "date": "2025-11-15",
+              "games": [
+                {
+                  "top": {
+                    "seed": 4,
+                    "name": "Canyon Hills HS",
+                    "slug": "canyon-hills"
+                  },
+                  "bottom": {
+                    "seed": 2,
+                    "name": "The Bishop's School",
+                    "slug": "bishops"
+                  },
+                  "winner": "bottom",
+                  "score": [
+                    0,
+                    3
+                  ],
+                  "decidedBy": null,
+                  "shootout": null,
+                  "site": "La Jolla HS",
+                  "scoreSource": "record-book"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "division-1",
+          "label": "Division I",
+          "rounds": [
+            {
+              "name": "First round",
+              "date": "2025-11-04",
+              "games": [
+                {
+                  "top": {
+                    "seed": 8,
+                    "name": "Poway HS",
+                    "slug": "poway"
+                  },
+                  "bottom": {
+                    "seed": 9,
+                    "name": "University City HS",
+                    "slug": "university-city"
+                  },
+                  "winner": "bottom",
+                  "score": [
+                    0,
+                    1
+                  ],
+                  "decidedBy": null,
+                  "shootout": null
+                },
+                {
+                  "top": {
+                    "seed": 5,
+                    "name": "Fallbrook HS",
+                    "slug": "fallbrook"
+                  },
+                  "bottom": {
+                    "seed": 12,
+                    "name": "Valley Center HS",
+                    "slug": "valley-center"
+                  },
+                  "winner": "top",
+                  "score": [
+                    5,
+                    2
+                  ],
+                  "decidedBy": null,
+                  "shootout": null
+                },
+                {
+                  "top": {
+                    "seed": 6,
+                    "name": "La Costa Canyon HS",
+                    "slug": "la-costa-canyon"
+                  },
+                  "bottom": {
+                    "seed": 11,
+                    "name": "Mission Vista HS",
+                    "slug": "mission-vista"
+                  },
+                  "winner": "top",
+                  "score": [
+                    7,
+                    0
+                  ],
+                  "decidedBy": null,
+                  "shootout": null
+                },
+                {
+                  "top": {
+                    "seed": 10,
+                    "name": "La Jolla Country Day",
+                    "slug": "la-jolla-country-day"
+                  },
+                  "bottom": {
+                    "seed": 7,
+                    "name": "Clairemont HS",
+                    "slug": "clairemont"
+                  },
+                  "winner": "bottom",
+                  "score": [
+                    0,
+                    1
+                  ],
+                  "decidedBy": "overtime",
+                  "shootout": null
+                }
+              ]
+            },
+            {
+              "name": "Quarterfinals",
+              "date": "2025-11-07",
+              "games": [
+                {
+                  "top": {
+                    "seed": 1,
+                    "name": "Mt. Carmel HS",
+                    "slug": "mt-carmel"
+                  },
+                  "bottom": {
+                    "seed": 9,
+                    "name": "University City HS",
+                    "slug": "university-city"
+                  },
+                  "winner": "top",
+                  "score": [
+                    2,
+                    0
+                  ],
+                  "decidedBy": null,
+                  "shootout": null
+                },
+                {
+                  "top": {
+                    "seed": 5,
+                    "name": "Fallbrook HS",
+                    "slug": "fallbrook"
+                  },
+                  "bottom": {
+                    "seed": 4,
+                    "name": "Cathedral Catholic HS",
+                    "slug": "cathedral-catholic"
+                  },
+                  "winner": "top",
+                  "score": [
+                    1,
+                    0
+                  ],
+                  "decidedBy": null,
+                  "shootout": null
+                },
+                {
+                  "top": {
+                    "seed": 6,
+                    "name": "La Costa Canyon HS",
+                    "slug": "la-costa-canyon"
+                  },
+                  "bottom": {
+                    "seed": 3,
+                    "name": "San Dieguito Academy",
+                    "slug": "san-dieguito-academy"
+                  },
+                  "winner": "top",
+                  "score": [
+                    2,
+                    1
+                  ],
+                  "decidedBy": null,
+                  "shootout": null
+                },
+                {
+                  "top": {
+                    "seed": 7,
+                    "name": "Clairemont HS",
+                    "slug": "clairemont"
+                  },
+                  "bottom": {
+                    "seed": 2,
+                    "name": "Rancho Bernardo HS",
+                    "slug": "rancho-bernardo"
+                  },
+                  "winner": "bottom",
+                  "score": [
+                    0,
+                    2
+                  ],
+                  "decidedBy": null,
+                  "shootout": null,
+                  "date": "2025-11-06"
+                }
+              ]
+            },
+            {
+              "name": "Semifinals",
+              "date": "2025-11-11",
+              "games": [
+                {
+                  "top": {
+                    "seed": 1,
+                    "name": "Mt. Carmel HS",
+                    "slug": "mt-carmel"
+                  },
+                  "bottom": {
+                    "seed": 5,
+                    "name": "Fallbrook HS",
+                    "slug": "fallbrook"
+                  },
+                  "winner": "top",
+                  "score": [
+                    2,
+                    1
+                  ],
+                  "decidedBy": "overtime",
+                  "shootout": null
+                },
+                {
+                  "top": {
+                    "seed": 6,
+                    "name": "La Costa Canyon HS",
+                    "slug": "la-costa-canyon"
+                  },
+                  "bottom": {
+                    "seed": 2,
+                    "name": "Rancho Bernardo HS",
+                    "slug": "rancho-bernardo"
+                  },
+                  "winner": "top",
+                  "score": [
+                    4,
+                    2
+                  ],
+                  "decidedBy": "overtime",
+                  "shootout": null
+                }
+              ]
+            },
+            {
+              "name": "Final",
+              "date": "2025-11-15",
+              "games": [
+                {
+                  "top": {
+                    "seed": 1,
+                    "name": "Mt. Carmel HS",
+                    "slug": "mt-carmel"
+                  },
+                  "bottom": {
+                    "seed": 6,
+                    "name": "La Costa Canyon HS",
+                    "slug": "la-costa-canyon"
+                  },
+                  "winner": "top",
+                  "score": [
+                    2,
+                    2
+                  ],
+                  "decidedBy": "shootout",
+                  "shootout": [
+                    3,
+                    2
+                  ],
+                  "site": "La Jolla HS",
+                  "scoreSource": "record-book"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "division-2",
+          "label": "Division II",
+          "rounds": [
+            {
+              "name": "Play-in",
+              "playIn": true,
+              "date": "2025-11-03",
+              "games": [
+                {
+                  "top": {
+                    "seed": 11,
+                    "name": "Helix Charter HS",
+                    "slug": "helix"
+                  },
+                  "bottom": {
+                    "seed": 11,
+                    "name": "Granite Hills HS",
+                    "slug": "granite-hills"
+                  },
+                  "winner": "top",
+                  "score": [
+                    2,
+                    1
+                  ],
+                  "decidedBy": null,
+                  "shootout": null
+                }
+              ]
+            },
+            {
+              "name": "First round",
+              "date": "2025-11-05",
+              "games": [
+                {
+                  "top": {
+                    "seed": 8,
+                    "name": "Bonita Vista HS",
+                    "slug": "bonita-vista"
+                  },
+                  "bottom": {
+                    "seed": 9,
+                    "name": "Westview HS",
+                    "slug": "westview"
+                  },
+                  "winner": "top",
+                  "score": [
+                    1,
+                    0
+                  ],
+                  "decidedBy": null,
+                  "shootout": null
+                },
+                {
+                  "top": {
+                    "seed": 5,
+                    "name": "Mira Mesa HS",
+                    "slug": "mira-mesa"
+                  },
+                  "bottom": {
+                    "seed": 12,
+                    "name": "Mission Hills",
+                    "slug": "mission-hills"
+                  },
+                  "winner": "top",
+                  "score": [
+                    1,
+                    0
+                  ],
+                  "decidedBy": null,
+                  "shootout": null
+                },
+                {
+                  "top": {
+                    "seed": 6,
+                    "name": "Rancho Buena Vista HS",
+                    "slug": "rancho-buena-vista"
+                  },
+                  "bottom": {
+                    "seed": 11,
+                    "name": "Helix Charter HS",
+                    "slug": "helix"
+                  },
+                  "winner": "top",
+                  "score": [
+                    2,
+                    0
+                  ],
+                  "decidedBy": null,
+                  "shootout": null
+                },
+                {
+                  "top": {
+                    "seed": 10,
+                    "name": "Otay Ranch HS",
+                    "slug": "otay-ranch"
+                  },
+                  "bottom": {
+                    "seed": 7,
+                    "name": "Point Loma HS",
+                    "slug": "point-loma"
+                  },
+                  "winner": "bottom",
+                  "score": [
+                    0,
+                    7
+                  ],
+                  "decidedBy": null,
+                  "shootout": null
+                }
+              ]
+            },
+            {
+              "name": "Quarterfinals",
+              "date": "2025-11-08",
+              "games": [
+                {
+                  "top": {
+                    "seed": 1,
+                    "name": "Del Norte HS",
+                    "slug": "del-norte"
+                  },
+                  "bottom": {
+                    "seed": 8,
+                    "name": "Bonita Vista HS",
+                    "slug": "bonita-vista"
+                  },
+                  "winner": "top",
+                  "score": [
+                    2,
+                    0
+                  ],
+                  "decidedBy": null,
+                  "shootout": null
+                },
+                {
+                  "top": {
+                    "seed": 5,
+                    "name": "Mira Mesa HS",
+                    "slug": "mira-mesa"
+                  },
+                  "bottom": {
+                    "seed": 4,
+                    "name": "San Pasqual HS",
+                    "slug": "san-pasqual"
+                  },
+                  "winner": "top",
+                  "score": [
+                    1,
+                    0
+                  ],
+                  "decidedBy": "overtime",
+                  "shootout": null
+                },
+                {
+                  "top": {
+                    "seed": 6,
+                    "name": "Rancho Buena Vista HS",
+                    "slug": "rancho-buena-vista"
+                  },
+                  "bottom": {
+                    "seed": 3,
+                    "name": "Olympian HS",
+                    "slug": "olympian"
+                  },
+                  "winner": "top",
+                  "score": [
+                    1,
+                    0
+                  ],
+                  "decidedBy": "double-overtime",
+                  "shootout": null
+                },
+                {
+                  "top": {
+                    "seed": 7,
+                    "name": "Point Loma HS",
+                    "slug": "point-loma"
+                  },
+                  "bottom": {
+                    "seed": 2,
+                    "name": "Eastlake HS",
+                    "slug": "eastlake"
+                  },
+                  "winner": "bottom",
+                  "score": [
+                    0,
+                    3
+                  ],
+                  "decidedBy": null,
+                  "shootout": null
+                }
+              ]
+            },
+            {
+              "name": "Semifinals",
+              "date": "2025-11-12",
+              "games": [
+                {
+                  "top": {
+                    "seed": 1,
+                    "name": "Del Norte HS",
+                    "slug": "del-norte"
+                  },
+                  "bottom": {
+                    "seed": 5,
+                    "name": "Mira Mesa HS",
+                    "slug": "mira-mesa"
+                  },
+                  "winner": "top",
+                  "score": [
+                    1,
+                    0
+                  ],
+                  "decidedBy": "overtime",
+                  "shootout": null
+                },
+                {
+                  "top": {
+                    "seed": 6,
+                    "name": "Rancho Buena Vista HS",
+                    "slug": "rancho-buena-vista"
+                  },
+                  "bottom": {
+                    "seed": 2,
+                    "name": "Eastlake HS",
+                    "slug": "eastlake"
+                  },
+                  "winner": "bottom",
+                  "score": [
+                    0,
+                    2
+                  ],
+                  "decidedBy": null,
+                  "shootout": null
+                }
+              ]
+            },
+            {
+              "name": "Final",
+              "date": "2025-11-15",
+              "games": [
+                {
+                  "top": {
+                    "seed": 1,
+                    "name": "Del Norte HS",
+                    "slug": "del-norte"
+                  },
+                  "bottom": {
+                    "seed": 2,
+                    "name": "Eastlake HS",
+                    "slug": "eastlake"
+                  },
+                  "winner": "bottom",
+                  "score": null,
+                  "decidedBy": null,
+                  "shootout": null,
+                  "site": "La Jolla HS"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
