@@ -1,5 +1,5 @@
 /**
- * lib/person-name.ts: an all-caps name is recased, everything a school already cased is kept, and
+ * lib/person-name.ts: an all-caps or all-lowercase name is recased, everything a school already cased is kept, and
  * no committed roster or stats sheet still carries a shouted name.
  */
 
@@ -21,11 +21,14 @@ describe('recaseName', () => {
     ["D'ANGELO", "D'Angelo"],
     ['JOSÉ ÑUÑEZ', 'José Ñuñez'],
     ['JOHN SMITH III', 'John Smith III'],
+    ['addie dawson', 'Addie Dawson'],
+    ['A. dawson', 'A. Dawson'],
+    ["mary o'brien-mcdonald", "Mary O'Brien-McDonald"],
   ])('%s → %s', (name, cased) => {
     expect(recaseName(name)).toBe(cased);
   });
 
-  it.each(['AJ Smith', 'TJ', 'Olivia Van De Braak', "Valentina D'angelo", 'McKenna Lee', 'addie dawson'])(
+  it.each(['AJ Smith', 'TJ', 'Olivia Van De Braak', "Valentina D'angelo", 'McKenna Lee', 'Anna van der Berg', 'A.', 'Q'])(
     'keeps %s',
     (name) => {
       expect(recaseName(name)).toBe(name);
@@ -34,7 +37,7 @@ describe('recaseName', () => {
 });
 
 describe('committed names', () => {
-  it.each(['rosters.json', 'player-stats.json', 'rosters-enrichment.json'])('%s has no all-caps name', (file) => {
+  it.each(['rosters.json', 'player-stats.json', 'rosters-enrichment.json'])('%s has no all-caps or all-lowercase name', (file) => {
     const raw = JSON.parse(readFileSync(path.join(REPO, 'data', file), 'utf8')) as {
       teams: { slug: string; players: Record<string, unknown>[] }[];
     };
