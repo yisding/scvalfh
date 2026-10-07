@@ -1,6 +1,6 @@
 {
-  "commitSummary": "SCVAL +4 finals · BVAL +6 · PCAL +0 · MCAL +3 · EAL +0 · Sunset +0 · City +4 · North +4 · Metro +0 · LA +1",
-  "contentHash": "420d4b6921cd70eae99277adfdc0e34ad8f70e823eb69022a27f6155d1e04b46",
+  "commitSummary": "SCVAL +0 finals · BVAL +0 · PCAL +0 · MCAL +0 · EAL +0 · Sunset +1 · City +0 · North +1 · Metro +0 · LA +0",
+  "contentHash": "92a93b400b0c0a3e7418f9d876549467947f24f50d9555dd0d174c336698b5ea",
   "counts": {
     "byLeague": {
       "bval": {
@@ -27,7 +27,7 @@
       "independents": {
         "backfilled": 0,
         "finals": 47,
-        "games": 56,
+        "games": 55,
         "leagueGames": 21,
         "teams": 5
       },
@@ -47,7 +47,7 @@
       },
       "north-county": {
         "backfilled": 0,
-        "finals": 165,
+        "finals": 166,
         "games": 244,
         "leagueGames": 102,
         "teams": 19
@@ -68,32 +68,32 @@
       },
       "sunset": {
         "backfilled": 0,
-        "finals": 83,
-        "games": 99,
+        "finals": 84,
+        "games": 98,
         "leagueGames": 35,
         "teams": 8
       }
     },
-    "finals": 566,
-    "games": 880,
+    "finals": 568,
+    "games": 879,
     "leagueGames": 544,
-    "mismatches": 20,
-    "pending": 12,
+    "mismatches": 21,
+    "pending": 9,
     "teams": 102
   },
   "crossCheck": {
-    "agreements": 166,
+    "agreements": 168,
     "backfilled": 2,
-    "compared": 239,
-    "conflicts": 7,
+    "compared": 238,
+    "conflicts": 8,
     "sbliveOnlyScored": 3
   },
-  "fetchedAt": "2026-10-07T11:26:37.388Z",
+  "fetchedAt": "2026-10-07T19:44:08.743Z",
   "leagues": [
     {
       "backfilled": 0,
       "countedFinals": 54,
-      "finalsDelta": 4,
+      "finalsDelta": 0,
       "id": "scval",
       "missingPast": 2,
       "reasons": [],
@@ -102,7 +102,7 @@
     {
       "backfilled": 0,
       "countedFinals": 19,
-      "finalsDelta": 6,
+      "finalsDelta": 0,
       "id": "bval",
       "missingPast": 1,
       "reasons": [],
@@ -120,7 +120,7 @@
     {
       "backfilled": 0,
       "countedFinals": 52,
-      "finalsDelta": 3,
+      "finalsDelta": 0,
       "id": "mcal",
       "missingPast": 1,
       "reasons": [],
@@ -137,17 +137,17 @@
     },
     {
       "backfilled": 0,
-      "countedFinals": 22,
-      "finalsDelta": 0,
+      "countedFinals": 23,
+      "finalsDelta": 1,
       "id": "sunset",
-      "missingPast": 1,
+      "missingPast": 0,
       "reasons": [],
       "state": "fresh"
     },
     {
       "backfilled": 0,
       "countedFinals": 19,
-      "finalsDelta": 4,
+      "finalsDelta": 0,
       "id": "city",
       "missingPast": 1,
       "reasons": [],
@@ -155,10 +155,10 @@
     },
     {
       "backfilled": 0,
-      "countedFinals": 34,
-      "finalsDelta": 4,
+      "countedFinals": 35,
+      "finalsDelta": 1,
       "id": "north-county",
-      "missingPast": 3,
+      "missingPast": 2,
       "reasons": [],
       "state": "fresh"
     },
@@ -174,7 +174,7 @@
     {
       "backfilled": 0,
       "countedFinals": 14,
-      "finalsDelta": 1,
+      "finalsDelta": 0,
       "id": "independents",
       "missingPast": 0,
       "reasons": [],
@@ -906,7 +906,7 @@
     },
     {
       "label": "sblive scoreboard 2026-09-23",
-      "rowCount": 15,
+      "rowCount": 16,
       "status": "ok"
     },
     {
@@ -1031,7 +1031,7 @@
     }
   ],
   "today": "2026-10-07",
-  "warnings": 46,
+  "warnings": 48,
   "window": {
     "firstGame": "2026-08-12T17:15:00",
     "lastGame": "2026-10-30T19:00:00",
