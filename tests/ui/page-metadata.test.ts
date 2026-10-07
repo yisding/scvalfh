@@ -46,6 +46,7 @@ beforeAll(async () => {
     page('app/clubs/page.tsx', () => import('../../app/clubs/page')),
     page('app/clubs/[slug]/page.tsx', () => import('../../app/clubs/[slug]/page'), { slug: getClubSlugs()[0] }),
     page('app/commits/page.tsx', () => import('../../app/commits/page')),
+    page('app/recruiting/page.tsx', () => import('../../app/recruiting/page')),
     page('app/game/[id]/page.tsx', () => import('../../app/game/[id]/page'), gameStaticParams()[0]),
     page('app/history/2025-26/page.tsx', () => import('../../app/history/2025-26/page')),
     page('app/jv/page.tsx', () => import('../../app/jv/page')),
