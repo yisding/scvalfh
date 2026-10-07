@@ -84,7 +84,7 @@ export function LastUpdated({
           href="/about#updates"
           prefetch={false}
           className={withClass(
-            'sx-action min-h-6 whitespace-nowrap rounded-full bg-accent-wash px-2 py-0.5 text-cell font-medium text-accent-ink tabular-nums no-underline',
+            'sx-action min-h-6 whitespace-nowrap rounded-chip bg-accent-wash px-2 py-0.5 text-cell font-medium text-accent-ink tabular-nums no-underline',
           )}
         >
           Updated {daysAgo(ageHours)}

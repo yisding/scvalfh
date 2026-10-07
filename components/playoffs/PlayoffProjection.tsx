@@ -128,7 +128,7 @@ export function ProjectionKey({
           children's `m-0` would win and the paragraphs would touch. */}
       <div className="flex max-w-prose flex-col gap-3 text-meta text-ink-2">
         <p className="m-0">
-          {showLine ? 'The labelled 2px rule marks the end of the division’s automatic or play-in places. ' : ''}
+          {showLine ? 'The labelled line marks the end of the division’s automatic or play-in places. ' : ''}
           {qualification}
         </p>
         {/* True while no model feeds this page (DESIGN §19.2): a change that adds one rewrites it. */}

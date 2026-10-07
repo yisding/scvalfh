@@ -568,7 +568,7 @@ export function buildDivisionView(input: DivisionViewInput): DivisionView {
     legendNotes.push(`${citation}.`);
   } else if (berthRuleAfter) {
     legendNotes.push(
-      `The 2px rule after ${ordinal(berthRuleAfter)} place is the ${line.label} — ${citation}.`,
+      `The labelled line after ${ordinal(berthRuleAfter)} place is the ${line.label} — ${citation}.`,
     );
   } else {
     legendNotes.push(`${line.label}: ${citation}.`);

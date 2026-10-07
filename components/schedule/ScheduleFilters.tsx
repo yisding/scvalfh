@@ -187,7 +187,7 @@ function Chevron() {
 // A disabled select (the static fallback, which is all a reader without JavaScript ever sees)
 // LOOKS disabled: dead controls that look live are worse than none.
 const SELECT =
-  'h-11 w-full appearance-none rounded-full border border-hairline bg-surface pl-4 pr-9 text-base text-ink disabled:cursor-not-allowed disabled:text-ink-3';
+  'h-11 w-full appearance-none rounded-chip border border-hairline bg-surface pl-4 pr-9 text-base text-ink disabled:cursor-not-allowed disabled:text-ink-3';
 
 function PillGroup<T extends string>({
   legend,
@@ -221,7 +221,7 @@ function PillGroup<T extends string>({
               // utility background): an unpressed pill steps one plane up from its rest fill
               // (surface → surface-2 on a phone, surface-2 → surface-3 from 768px); the pressed
               // one keeps its wash and thickens its accent ring to 2px.
-              className={`sx-tap inline-flex h-11 min-w-11 items-center justify-center rounded-full px-4 text-meta disabled:cursor-not-allowed forced-colors:border forced-colors:border-[ButtonBorder] ${
+              className={`sx-tap inline-flex h-11 min-w-11 items-center justify-center rounded-control px-4 text-meta disabled:cursor-not-allowed forced-colors:border forced-colors:border-[ButtonBorder] ${
                 active
                   ? 'bg-accent-wash font-semibold text-accent-ink shadow-[inset_0_0_0_1px_var(--sx-accent)] active:shadow-[inset_0_0_0_2px_var(--sx-accent)] forced-colors:outline-2 forced-colors:outline-offset-1 forced-colors:outline-[Highlight]'
                   : 'bg-surface font-medium text-ink-2 shadow-[var(--sx-ring)] hover:bg-surface-3 active:bg-surface-2 disabled:text-ink-3 disabled:hover:bg-surface md:bg-surface-2 md:shadow-none md:active:bg-surface-3 md:disabled:hover:bg-surface-2'
@@ -506,7 +506,7 @@ export function ScheduleFilters({ teams, divisions, counts, listId, className }:
           <button
             type="button"
             onClick={() => update(DEFAULT_FILTERS)}
-            className="inline-flex min-h-11 items-center rounded-full px-3 text-meta font-medium text-accent hover:bg-surface-2"
+            className="inline-flex min-h-11 items-center rounded-chip px-3 text-meta font-medium text-accent hover:bg-surface-2"
           >
             Clear all
           </button>

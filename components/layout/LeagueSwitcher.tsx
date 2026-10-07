@@ -289,7 +289,7 @@ export function RegionSwitcher({ className, label = 'Region', separated = false 
         .filter(Boolean)
         .join(' ')}
     >
-      <span className="inline-flex items-center gap-0.5 rounded-full bg-surface-2 p-0.5">
+      <span className="inline-flex items-center gap-0.5 rounded-[12px] bg-surface-2 p-0.5">
         {REGION_ORDER.map((id) => (
           <button
             key={id}

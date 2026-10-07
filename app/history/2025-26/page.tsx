@@ -222,8 +222,8 @@ function AvailableLeague({ leagueId, entry }: { leagueId: LeagueId; entry: Avail
           <p className="m-0">
             Source: scval.com &mdash;{' '}
             <ExternalLink href={p.standingsPdf}>{SEASON} final standings (PDF)</ExternalLink> and{' '}
-            <ExternalLink href={p.allLeaguePdf}>{SEASON} all-league awards (PDF)</ExternalLink>. This page is built
-            once from those PDFs, not from the live MaxPreps snapshot the rest of the site uses &mdash;
+            <ExternalLink href={p.allLeaguePdf}>{SEASON} all-league awards (PDF)</ExternalLink>. This page comes
+            from those PDFs, not from the MaxPreps data the rest of the site uses &mdash;
             MaxPreps only ever serves the current season. {league.shortName}&rsquo;s final PDFs list league
             records only; their overall-record column was empty for this season.
           </p>
@@ -243,8 +243,8 @@ function AvailableLeague({ leagueId, entry }: { leagueId: LeagueId; entry: Avail
                 </span>
               ) : null,
             )}
-            . Read on {p.retrievedOn}. These are {league.shortName}&rsquo;s own documents, not the live MaxPreps
-            snapshot the rest of the site uses &mdash; MaxPreps only ever serves the current season. Records are
+            . Read on {p.retrievedOn}. These are {league.shortName}&rsquo;s own documents, not the MaxPreps data
+            the rest of the site uses &mdash; MaxPreps only ever serves the current season. Records are
             the sheet&rsquo;s league and overall records, written without the spaces it puts around each
             hyphen (its &ldquo;8 - 1 - 1&rdquo; is 8-1-1 here); a record it prints without a ties field stays
             W-L. It carries no points or goals, so none are shown or computed. JV is not shown: the sheet

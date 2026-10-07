@@ -55,9 +55,12 @@ const ID = /^[a-z0-9-]+$/;
 const SOCAL = 'socal';
 const NORCAL = 'norcal';
 
-/** The selected chip: accent-wash fill, accent ink, weight 600, a 1.5 px ink ring. */
-const SELECTED =
-  'background:var(--sx-accent-wash);color:var(--sx-accent-ink);font-weight:600;box-shadow:inset 0 0 0 1.5px var(--sx-text)';
+/**
+ * The selected chip: inverse ink (the text/surface pair swapped), weight 600 — the same look
+ * globals.css gives `.sx-league-chip[aria-pressed="true"]`, so the pre-paint state and the
+ * hydrated one match.
+ */
+const SELECTED = 'background:var(--sx-text);color:var(--sx-surface);font-weight:600';
 
 export function buildLeagueScopeCss(leagueIds: readonly string[]): string {
   for (const id of leagueIds) {

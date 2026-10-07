@@ -67,7 +67,7 @@ export function DivisionTabs({
           data-region-scope={tab.region}
           className="group sx-navtop inline-flex h-11 shrink-0 items-center no-underline"
         >
-          <span className="sx-indicator inline-flex h-9 items-center rounded-full bg-surface px-4 text-body font-medium text-ink shadow-[var(--sx-ring)] hover:bg-surface-2 group-active:bg-surface-3 forced-colors:border">
+          <span className="sx-indicator inline-flex h-9 items-center rounded-control bg-surface px-4 text-body font-medium text-ink shadow-[var(--sx-ring)] hover:bg-surface-2 group-active:bg-surface-3 forced-colors:border">
             {tab.label}
             {tab.srSuffix ? <span className="sr-only">{tab.srSuffix}</span> : null}
           </span>

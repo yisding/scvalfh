@@ -473,7 +473,7 @@ export default function PlayoffsPage() {
                 {pending.length > 0 ? (
                   <p className="m-0">
                     {listWords(pending.map((r) => `${r.name} (${r.dateLabel})`))}{' '}
-                    {pending.length === 1 ? 'has' : 'have'} no games in the snapshot yet. Pairings appear here as
+                    {pending.length === 1 ? 'has' : 'have'} no games posted yet. Pairings appear here as
                     CCS posts them.
                   </p>
                 ) : null}

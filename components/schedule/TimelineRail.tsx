@@ -201,7 +201,7 @@ export function TimelineRail({ dates, today, leagueId, className }: TimelineRail
               // `forced-colors:border`: the ring is a box-shadow, which forced colours drop. The
               // press state (`active:`) is for touch, where there is no hover to show the tap
               // landed; the current chip keeps its wash.
-              className={`relative inline-flex h-9 items-center gap-1.5 rounded-full px-3.5 text-cell font-medium no-underline shadow-[var(--sx-ring)] forced-colors:border forced-colors:border-[CanvasText] ${
+              className={`relative inline-flex h-9 items-center gap-1.5 rounded-control px-3.5 text-cell font-medium no-underline shadow-[var(--sx-ring)] forced-colors:border forced-colors:border-[CanvasText] ${
                 marker.current
                   ? 'bg-accent-wash text-accent-ink'
                   : 'bg-surface text-ink-2 hover:bg-surface-2 hover:text-ink active:bg-surface-2'
@@ -222,7 +222,7 @@ export function TimelineRail({ dates, today, leagueId, className }: TimelineRail
             <Link
               href={chip.href}
               prefetch={false}
-              className="relative inline-flex h-9 items-center gap-1.5 rounded-full bg-surface px-3.5 text-cell font-medium text-ink-2 no-underline shadow-[var(--sx-ring)] hover:bg-surface-2 hover:text-ink active:bg-surface-2 forced-colors:border forced-colors:border-[CanvasText]"
+              className="relative inline-flex h-9 items-center gap-1.5 rounded-control bg-surface px-3.5 text-cell font-medium text-ink-2 no-underline shadow-[var(--sx-ring)] hover:bg-surface-2 hover:text-ink active:bg-surface-2 forced-colors:border forced-colors:border-[CanvasText]"
             >
               <span aria-hidden="true">{chip.label}</span>
               <Arrow />

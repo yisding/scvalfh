@@ -164,17 +164,17 @@ function TopFace({
 }) {
   const { pending } = useLinkStatus();
   const lit = active || pending;
-  // The 44px link box is the target; the 36px capsule inside it is the visible state. The lit
-  // capsule is accent-wash with accent-ink (6.5 / 7.55), never accent on the wash. The press grey
-  // sits on the capsule rather than the link box, so it is the same shape as the wash that
-  // follows it. 10px of side padding below 1024px, 12px from there (components/layout/
-  // SiteHeader.tsx has the measurements for the seven links).
+  // The 44px link box is the target; the 36px box inside it is the visible state. The lit link is
+  // ink, semibold, with a 2px ink underline drawn inside the box's bottom edge: the section you
+  // are in reads like a ruled tab, not a tinted capsule. The press grey sits on the same box.
+  // 10px of side padding below 1024px, 12px from there (components/layout/SiteHeader.tsx has the
+  // measurements for the seven links).
   return (
     <span
       data-pending={pending && !active ? '' : undefined}
-      className={`sx-indicator inline-flex h-9 items-center rounded-full px-2.5 text-meta transition-colors duration-[var(--sx-dur-tap)] lg:px-3 ${
+      className={`sx-indicator inline-flex h-9 items-center rounded-chip px-2.5 text-meta transition-colors duration-[var(--sx-dur-tap)] lg:px-3 ${
         lit
-          ? 'bg-accent-wash font-semibold text-accent-ink'
+          ? 'rounded-b-none font-semibold text-ink shadow-[inset_0_-2px_0_var(--sx-text)]'
           : 'font-medium group-hover:bg-surface-2 group-hover:text-ink group-active:bg-surface-2'
       }`}
     >
@@ -207,7 +207,7 @@ function TabFace({
         aria-hidden="true"
         data-pending={pending && !active ? '' : undefined}
         className={[
-          'sx-indicator flex h-7 w-14 max-w-full items-center justify-center rounded-full',
+          'sx-indicator flex h-7 w-14 max-w-full items-center justify-center rounded-chip',
           lit ? 'bg-accent-wash text-accent-ink' : null,
         ]
           .filter(Boolean)

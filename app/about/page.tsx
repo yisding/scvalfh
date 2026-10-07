@@ -429,7 +429,7 @@ function QuotedRules({ league }: { league: LeagueConfig }) {
         <li>Least goals given up between the head-to-head tied teams ({stages['h2h-goals-against']}).</li>
         <li>Goal differential between the head-to-head tied teams ({stages['h2h-goal-diff']}).</li>
         <li>
-          A coin flip. This site cannot compute a coin flip, so teams that reach this step render as{' '}
+          A coin flip. This site cannot know how a coin flip fell, so teams that reach this step show as{' '}
           <b className="font-semibold text-ink">tied at the same place</b> (a shared &ldquo;T6&rdquo;
           instead of a 6th and a 7th), with a footnote citing this rule. ({stages['coin-flip']})
         </li>
@@ -448,9 +448,8 @@ function QuotedRules({ league }: { league: LeagueConfig }) {
       </blockquote>
       <p>
         An overtime win counts as a full win, shown with an OT tag. Because league play never has a
-        shootout, the shootout state our code supports never actually occurs in {league.shortName}{' '}
-        league play &mdash; it exists so the rendering code has somewhere correct to send a shootout if
-        one is ever reported.
+        shootout, you will not see a shootout result in {league.shortName} league play; if one is ever
+        reported, it is shown with an SO tag.
       </p>
 
       <h4 className={H4}>CCS qualification</h4>
@@ -720,7 +719,7 @@ export default function AboutPage() {
         <section id="sources">
           <SectionHeader size="lg" kicker="Data sources" />
           <p className="sx-prose">
-            {SITE_SCOPE_NOTE} This snapshot covers all {counts.teams} teams and {counts.games} games (
+            {SITE_SCOPE_NOTE} The latest update covers all {counts.teams} teams and {counts.games} games (
             {counts.leagueGames} of them league games): {counts.finals} final, {counts.pending} not yet
             reported.
           </p>
@@ -1082,8 +1081,8 @@ export default function AboutPage() {
         <section id="health" className="mt-16">
           <SectionHeader size="lg" kicker="Data health, by league" />
           <p className="sx-prose">
-            Each league is fetched and checked on its own, so a problem in one never holds the others
-            back. This is how the most recent run went for each.
+            Each league is read and checked on its own, so a problem in one never holds the others
+            back. This is how the most recent update went for each.
           </p>
           <div className="mt-stack grid gap-4 md:grid-cols-2">
             {perLeague.map((l) => (
@@ -1108,9 +1107,8 @@ export default function AboutPage() {
             <p>
               One rule governs every score on this site: a game that has not been decided never shows
               as <span className="sx-num">0&ndash;0</span>. A real final score of 0 prints as{' '}
-              <span className="sx-num">0</span> in full-strength ink; a game with nothing reported yet
-              prints an em dash in muted ink, with a screen-reader label saying so. The two are never
-              visually or semantically confused.
+              <span className="sx-num">0</span>; a game with nothing reported yet shows a dash in lighter
+              gray, and screen readers say &ldquo;not reported&rdquo;. The two are never confused.
             </p>
             <ul className="list-disc">
               <li>A completed game shows <b className="font-semibold text-ink">FINAL</b> and the score; an overtime win adds an OT tag.</li>
@@ -1302,10 +1300,10 @@ export default function AboutPage() {
         <section id="dropped" className="mt-16">
           <SectionHeader size="lg" kicker="Dropped contests" meta={plural(dropped.length, 'contest', 'contests')} />
           <p className="sx-prose">
-            Contests the pipeline removed on purpose this run, published so nothing disappears silently.
+            Games we left out on purpose in the most recent update, listed so nothing disappears silently.
           </p>
           {dropped.length === 0 ? (
-            <p className="mt-stack max-w-prose text-body text-ink-2">Nothing was dropped in the most recent run.</p>
+            <p className="mt-stack max-w-prose text-body text-ink-2">Nothing was left out in the most recent update.</p>
           ) : (
             <ul className="sx-list mt-stack max-w-prose">
               {dropped.map((d) => (
@@ -1334,9 +1332,9 @@ export default function AboutPage() {
           <SectionHeader size="lg" kicker="How often this updates" />
           <div className="sx-prose">
             <p>
-              This whole site is static: nothing here queries a live API when you load a page. Instead,
-              an automated job re-fetches MaxPreps (and, on most runs, si.com, the league documents and
-              the CCS calendar) and rebuilds the site from scratch, roughly twice a day during the
+              Pages do not load live data. Instead, an automatic update re-reads MaxPreps (and, most
+              times, si.com, the league documents and the CCS calendar) and republishes the whole
+              site, roughly twice a day during the
               season &mdash; once in the late evening (about 10 PM) and once in the early morning
               (about 7 AM), Pacific time &mdash; between August and November. A game that finishes at
               7 PM Thursday appears that night if its score is entered by about 10 PM, otherwise Friday
@@ -1349,7 +1347,7 @@ export default function AboutPage() {
               site has no mechanism that watches a game while it is being played.
             </p>
             <p>
-              The snapshot this page was built from was fetched {formatStamp(getFetchedAt())}. If a page
+              The data on this page was last updated {formatStamp(getFetchedAt())}. If a page
               anywhere on the site shows a &ldquo;last updated&rdquo; stamp more than 36 hours old, that
               is this site telling you its own update may be failing &mdash; not a claim that nothing
               happened in the leagues since then. Per-league detail is under{' '}
@@ -1486,18 +1484,18 @@ export default function AboutPage() {
             <p>
               This site stores exactly four things, all only in your browser: a theme choice, a pinned
               team, the league you chose to see on the home page, and the region you chose (Northern or
-              Southern California). All four live in{' '}
-              <code>localStorage</code> and none is ever sent anywhere &mdash; there are no accounts, no
-              analytics, no tracking cookies and no third-party requests of any kind on any page. School
-              colors come from data already in the snapshot, never a hotlinked image, and fonts are
-              bundled with the site rather than loaded from a font host at view time.
+              Southern California). None of it is ever sent anywhere &mdash; there are no accounts, no
+              analytics, no tracking cookies and no requests to other sites from any page. School
+              colors come from MaxPreps&rsquo; data, never an image copied from another site, and the
+              fonts ship with the site.
             </p>
             <p>
               Accessibility is a floor, not an aspiration: every win/loss/tie is a letter and a written
               word, never color alone; every score and result has a full sentence for screen readers;
-              contrast is measured against WCAG AA on every ink/surface pair the site actually uses, and
-              a token edit that breaks that floor fails this repository&rsquo;s own tests before it can
-              ship.
+              the site&rsquo;s own text and background colors meet the WCAG AA contrast standard, and a
+              change to them that would fall below it is caught before it is published. Team badges are
+              the exception: they use school colors from MaxPreps, with the letters in whichever of black
+              or white stands out more, and are not part of that check.
             </p>
           </div>
         </section>

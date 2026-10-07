@@ -86,7 +86,7 @@ export function SectionHeader({
         <Link
           href={action.href}
           prefetch={false}
-          className="-my-2 -mr-3 inline-flex min-h-11 shrink-0 items-center gap-1 whitespace-nowrap rounded-full px-3 font-medium text-accent no-underline hover:bg-surface-2 md:min-h-8"
+          className="-my-2 -mr-3 inline-flex min-h-11 shrink-0 items-center gap-1 whitespace-nowrap rounded-chip px-3 font-medium text-accent no-underline hover:bg-surface-2 md:min-h-8"
         >
           {action.label}
           <svg
