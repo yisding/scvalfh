@@ -25,12 +25,15 @@ describe('/commits with nothing found', () => {
   const html = renderToStaticMarkup(createElement(CommitsPage));
   const text = textOf(html);
 
-  it('says so in the lede and in one empty state, and leaves the colleges out', () => {
-    expect(buildCommitsView().classes).toEqual([]);
+  it('says so in the lede and in one empty state, and leaves the regions and colleges out', () => {
+    expect(buildCommitsView().regions.flatMap((r) => [...r.classes, ...r.colleges])).toEqual([]);
     expect(text).toContain('No public page we found shows a commitment by a player here yet.');
     expect(text).toContain('No commitment found yet.');
-    expect(html).not.toContain('id="colleges"');
-    expect(html).not.toMatch(/id="class-\d{4}"/);
+    expect(html).not.toMatch(/id="(norcal|socal)-colleges"/);
+    expect(html).not.toMatch(/id="(norcal|socal)-class-/);
+    // No region to switch between: the switcher and the region blocks are left out.
+    expect(html).not.toContain('data-region-scope');
+    expect(html).not.toContain('aria-label="Region"');
   });
 
   it('keeps one h1, then the how-matched h2, with no level skipped', () => {

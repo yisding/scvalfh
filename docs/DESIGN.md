@@ -3142,7 +3142,8 @@ NCAA Division III programs. By sport, 5 in field hockey, 1 in lacrosse and 1 in 
 sport, the sport goes in the level words instead: "all NCAA Division I field hockey programs"), then
 one section
 per class year (`#class-2027`, `#class-2028`; the earliest class first, `#class-unknown` last for a
-player no source or roster gives a class year), then "Colleges" (`#colleges`), then "How
+player no source or roster gives a class year), then "Colleges" (`#colleges`; both now per region
+with a region prefix, §21.8), then "How
 commitments are matched" (`#how-matched`): who is listed, the linking rule, that social media is
 never used (so a commitment announced only there is not listed), the two-pass check and its date,
 what "Committed", "Signed" and the "as of" date mean, and that recall is partial.
@@ -3153,7 +3154,7 @@ what "Committed", "Signed" and the "as of" date mean, and that recall is partial
   sport, in words); the status (§21.3); and the
   source links, labelled by kind and host. Within a class, rows run by school, then by the roster's
   name order.
-- **A college row** (`#college-<slug>`): the display name, the official name, the place
+- **A college row** (`#college-<slug>`, now `#<region>-college-<slug>`, §21.8): the display name, the official name, the place
   ("Stanford, CA"), then one line per program a player here committed to (the sport, its division
   and its conference when it has one: "Field hockey · NCAA Division I · ACC"), how many players here
   committed there and from which schools, and each program's page on the college's own athletics
@@ -3255,6 +3256,28 @@ same linking rule (the page must name the sport) and the same privacy posture.
   hold a championship or an emerging-sport program in, plus squash and sailing, each with its words
   in `SPORT_WORDS` ("acrobatics and tumbling", "flag football"); the type checker keeps the two lists
   together, so a sport colleges add later is added to both.
+
+### 21.8 NorCal and SoCal (2026-10-07)
+
+With the Southern California commitments in (§24.12), one list by class year mixed two halves of the
+state a reader rarely wants together. `/commits` now takes the `/recruiting` pattern (§25.1):
+
+- **The `RegionSwitcher`** (the §24.3 pattern) sits under the page header, and each region's
+  commitments sit in one `<div id="norcal|socal" data-region-scope>`, so a reader sees their own half;
+  without JavaScript both render, NorCal first. A commitment's region is its school's league's
+  (`commitRegion`, `components/commits/commit-view.ts`).
+- **Each block** opens with the region's count sentence, the lede's counts for that half ("Southern
+  California: 12 players from 7 schools have committed to 10 colleges. Of them, …"; with none, "no
+  public page we found shows a commitment by a player here yet", and nothing else), then one h2 per
+  class year (`#norcal-class-2027`, `#socal-class-unknown`), then that region's "Colleges"
+  (`#norcal-colleges`).
+- **A college row is per region** (`#norcal-college-<slug>`, `#socal-college-<slug>`): a college players
+  from both halves committed to has a row in each, with only that region's programs, players and
+  schools, and colleges sort by the region's own counts (then level, then name, as §21.1).
+- **Unchanged:** the lede and `#how-matched` stay site-wide, and a player's row keeps its id
+  (`#<team slug>-<athleteId>`), so a team page's commitment line still lands on it; a row in the hidden
+  region opens its block (`:has(:target)`). With no commitment in the file the one empty state stands
+  alone, with no switcher.
 
 ## 22. Eastern Athletic League amendment (2026-10)
 
@@ -4112,8 +4135,8 @@ checker and, separately, by a refuter, and only what both kept is in the files.
 - **Commitments** (`data/commits.json`): twelve, ten in field hockey and two in lacrosse, at seven
   schools, to eight new colleges (Richmond, Johns Hopkins, Michigan, Michigan State, Muhlenberg,
   Harvard, Oregon, Columbia) and a new field hockey program at Cal. Sami Lee's (Columbia) is on the
-  revised nickname rule. `/commits` is not region-scoped: one list by
-  class year, each row naming the school, as before.
+  revised nickname rule. `/commits` was not region-scoped then: one list by
+  class year, each row naming the school. It is now (§21.8).
 - **Copy.** The rule sentence on `/clubs` and `/commits` (`#how-matched`) no longer says "a Northern
   California location": it reads "a location in the school’s half of the state, Northern or Southern
   California". It also says when a nickname counts (owner decision, 2026-10-06): when the page

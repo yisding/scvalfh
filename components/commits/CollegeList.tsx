@@ -8,9 +8,9 @@ import type { CollegeRow } from './commit-view';
  * many players here committed to it and from which schools, and each team's page.
  *
  * A list, not a table (DESIGN §10.8), in the same card and grid as the commitment rows. The row's id
- * is collegeAnchor(), so `/commits#college-<slug>` lands on it. A program link is the college's own
- * site, so it is an off-site link with the arrow, standing alone on its line with the `sx-action`
- * box; its label names the college and the sport ("Stanford field hockey", "St. Lawrence soccer"),
+ * is collegeAnchor(), so `/commits#norcal-college-<slug>` lands on it: a college has a row in each
+ * region it has players from. A program link is the college's own site, so it is an off-site link
+ * with the arrow, standing alone on its line with the `sx-action` box; its label names the college and the sport ("Stanford field hockey", "St. Lawrence soccer"),
  * so links in a screen reader's list tell themselves apart. Nothing long is `nowrap`: official names
  * and the schools line reflow at 320px.
  */
