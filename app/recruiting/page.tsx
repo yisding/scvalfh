@@ -8,7 +8,6 @@ import { OG_BASE, ROOT_OG_IMAGE } from '../../components/layout/site';
 import RecruitingList from '../../components/recruiting/RecruitingList';
 import { buildRecruitingView } from '../../components/recruiting/recruiting-view';
 import SectionHeader from '../../components/ui/SectionHeader';
-import { listWords } from '../../lib/format';
 import { getRosters } from '../../lib/rosters';
 
 /** The page's title, and its og:title too: og:title never carries the site-name suffix (OG_BASE). */
@@ -30,8 +29,9 @@ const PAGE_TITLE = 'Recruiting';
  *
  * Heading outline: the h1, then one h2 per league (`id=<league>`, as on /teams), one h3 per school
  * with a listed player (`id=<team slug>`, its action the school's roster), then the h2 "How this
- * page is built" (`#how-matched`). A school with nothing listed is named in one line under its
- * league, so no school drops out silently.
+ * page is built" (`#how-matched`). A school with nobody listed is not named or counted, and a league
+ * with no listed school has no section and no chip: recall is partial, so an absence says nothing
+ * about a school or its players.
  *
  * Lists, not tables (DESIGN §10.8). Not in the nav: /teams, the team rosters, /clubs and /commits
  * link it. It takes the root OG card. Neither the title nor the description names a player.
@@ -45,6 +45,7 @@ export const metadata: Metadata = {
 
 export default function RecruitingPage() {
   const view = buildRecruitingView();
+  const shown = new Set(view.regions.flatMap((r) => r.leagues.map((l) => l.id)));
 
   return (
     <div className="pb-section-lg">
@@ -53,7 +54,12 @@ export default function RecruitingPage() {
       <RegionSwitcher className="mt-4" />
 
       <div className="mt-4">
-        <LeagueSwitcher mode="anchor" label="Leagues" leagues={leagueChips()} hrefs={leagueHrefs(null)} />
+        <LeagueSwitcher
+          mode="anchor"
+          label="Leagues"
+          leagues={leagueChips().filter((c) => shown.has(c.id))}
+          hrefs={leagueHrefs(null)}
+        />
       </div>
 
       {view.regions.map((region) => (
@@ -66,10 +72,6 @@ export default function RecruitingPage() {
               className={i === 0 ? 'mt-8 md:mt-10' : 'mt-section md:mt-section-lg'}
             >
               <SectionHeader id={league.id} kicker={league.title} meta={league.meta} />
-              {/* Only where a league's schools are not all in the section it sits under (EAL). */}
-              {league.membershipNote ? (
-                <p className="m-0 mt-2 max-w-prose text-meta text-ink-3">{league.membershipNote}</p>
-              ) : null}
               {league.schools.map((school) => (
                 <section key={school.slug} aria-labelledby={school.id} className="mt-6">
                   <SectionHeader
@@ -82,17 +84,6 @@ export default function RecruitingPage() {
                   <RecruitingList rows={school.rows} />
                 </section>
               ))}
-              {league.nothingFound.length > 0 ? (
-                <p className="mt-4 mb-0 max-w-prose text-meta text-ink-3">
-                  No recruiting profile, club or commitment found yet for{' '}
-                  {listWords(league.nothingFound.map((s) => s.name))}.
-                </p>
-              ) : null}
-              {league.noRoster.length > 0 ? (
-                <p className="mt-2 mb-0 max-w-prose text-meta text-ink-3">
-                  No varsity roster to match players against for {listWords(league.noRoster.map((s) => s.name))}.
-                </p>
-              ) : null}
             </section>
           ))}
         </div>

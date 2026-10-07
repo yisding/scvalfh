@@ -13,8 +13,13 @@
  *     components/teams/roster-view.ts buildRosterView (varsity only, the roster's own spelling and
  *     order), so its commitment line, club line and profile links are the ones the school's page
  *     shows, with nothing the data files keep but never render (a quote, a basis, a confidence);
- *   - a player is listed only when one of the three exists for them; a school with none says so,
- *     and so does a school with no roster to match against, so no school silently drops out;
+ *   - a player is listed only when one of the three exists for them, and a school or league only
+ *     when it has a listed player. A school with none is not named or counted anywhere on the page
+ *     (no "nothing found" line, no "of 15 schools"): the page is about who is listed, and recall is
+ *     partial, so an absence says nothing about a school or its players. For the same reason no
+ *     league's membership note is printed: each names or counts all of its league's schools ("Chico,
+ *     Corning, …", "eight Southern Section schools"), and this page has no section heading for one
+ *     to qualify (DESIGN §22.5 asks for it under a section or league heading listing all six EAL teams);
  *   - no value here is marked †: a row carries its facts as plain text, and the team page, which
  *     each school's heading links, says where each came from.
  */
@@ -52,16 +57,10 @@ export interface RecruitingLeague {
   id: string;
   /** "SCVAL — Santa Clara Valley Athletic League"; a group of independents by its name. */
   title: string;
-  /** "12 players at 5 of 15 schools" */
+  /** "12 players at 5 schools" */
   meta: string;
-  /** `LeagueConfig.membershipNote`: printed under the heading when its schools are not all in its section (EAL). */
-  membershipNote: string | null;
-  /** The schools with a listed player, by name. */
+  /** The schools with a listed player, by name; never empty (a league with none is left out). */
   schools: RecruitingSchool[];
-  /** Schools with roster rows, none of them listed here, by name. */
-  nothingFound: Array<{ slug: TeamSlug; name: string; href: string }>;
-  /** Schools with no varsity roster rows to match against (MaxPreps lists none, or none was read yet), by name. */
-  noRoster: Array<{ slug: TeamSlug; name: string; href: string }>;
 }
 
 export interface RecruitingRegion {
@@ -70,6 +69,7 @@ export interface RecruitingRegion {
   name: string;
   /** The region's one-sentence count, at the top of its block. */
   summary: string;
+  /** The leagues with a listed player, in /teams' order. */
   leagues: RecruitingLeague[];
 }
 
@@ -147,12 +147,12 @@ function breakdownWords(c: Pick<RecruitingCounts, 'committed' | 'withClub' | 'wi
 }
 
 /**
- * A region's sentence: "Northern California: 130 players at 30 of the 49 schools. Of them, 16 have
- * committed to a college, …". With nobody listed, it says so.
+ * A region's sentence: "Northern California: 130 players at 30 schools. Of them, 16 have committed
+ * to a college, …". It never counts the schools with nobody listed.
  */
-export function regionSummary(name: string, c: RecruitingCounts, schoolsInRegion: number): string {
-  if (c.players === 0) return `${name}: no player on these ${schoolsInRegion} schools’ rosters is listed yet.`;
-  return `${name}: ${plural(c.players, 'player')} at ${c.schools} of the ${plural(schoolsInRegion, 'school')}. Of them, ${breakdownWords(c)}.`;
+export function regionSummary(name: string, c: RecruitingCounts): string {
+  if (c.players === 0) return `${name}: no player is listed yet.`;
+  return `${name}: ${plural(c.players, 'player')} at ${plural(c.schools, 'school')}. Of them, ${breakdownWords(c)}.`;
 }
 
 /** The page's one-paragraph answer: what it gathers, then how many, and of what kind. */
@@ -171,50 +171,37 @@ export function buildRecruitingView(): RecruitingView {
   const regions: RecruitingRegion[] = REGIONS.map((region) => {
     const regionRows: RecruitingRow[] = [];
     let regionSchools = 0;
-    let regionTeams = 0;
     const leagues: RecruitingLeague[] = getTeamsGrouped(region.id).flatMap(({ leagues: ls }) =>
-      ls.map(({ league, divisions }) => {
+      ls.flatMap(({ league, divisions }): RecruitingLeague[] => {
         const teams = divisions
           .flatMap((d) => d.teams)
           .slice()
           .sort((a, b) => a.name.localeCompare(b.name));
-        regionTeams += teams.length;
         const schools: RecruitingSchool[] = [];
-        const nothingFound: RecruitingLeague['nothingFound'] = [];
-        const noRoster: RecruitingLeague['noRoster'] = [];
         for (const team of teams) {
-          const roster = buildRosterView(team.slug);
+          const rows = (buildRosterView(team.slug)?.rows ?? []).filter(hasAny).map(recruitingRow);
+          if (rows.length === 0) continue;
           const href = `/teams/${team.slug}#roster`;
-          const rows = (roster?.rows ?? []).filter(hasAny).map(recruitingRow);
-          if (rows.length > 0) {
-            schools.push({ slug: team.slug, id: team.slug, name: team.name, href, meta: schoolMeta(rows), rows });
-            schoolsWithRows.add(team.slug);
-            regionRows.push(...rows);
-            all.push(...rows);
-          } else if (roster === null || roster.rows.length === 0) {
-            noRoster.push({ slug: team.slug, name: team.name, href });
-          } else {
-            nothingFound.push({ slug: team.slug, name: team.name, href });
-          }
+          schools.push({ slug: team.slug, id: team.slug, name: team.name, href, meta: schoolMeta(rows), rows });
+          schoolsWithRows.add(team.slug);
+          regionRows.push(...rows);
+          all.push(...rows);
         }
+        if (schools.length === 0) return [];
         regionSchools += schools.length;
         const players = schools.reduce((n, s) => n + s.rows.length, 0);
-        return {
-          id: league.id,
-          title: leagueTitle(league),
-          meta:
-            players === 0
-              ? plural(teams.length, 'school')
-              : `${plural(players, 'player')} at ${schools.length} of ${plural(teams.length, 'school')}`,
-          membershipNote: getLeague(league.id).membershipNote,
-          schools,
-          nothingFound,
-          noRoster,
-        };
+        return [
+          {
+            id: league.id,
+            title: leagueTitle(league),
+            meta: `${plural(players, 'player')} at ${plural(schools.length, 'school')}`,
+            schools,
+          },
+        ];
       }),
     );
     const counts = { ...countRows(regionRows), schools: regionSchools };
-    return { id: region.id, name: region.name, summary: regionSummary(region.name, counts, regionTeams), leagues };
+    return { id: region.id, name: region.name, summary: regionSummary(region.name, counts), leagues };
   });
 
   const counts: RecruitingCounts = { ...countRows(all), schools: schoolsWithRows.size };

@@ -5,8 +5,8 @@
  * The page makes promises a test can hold it to:
  *   - the same rows as the team pages: every listed player is a row of that school's roster view
  *     with at least one of the three lines, and every such row is listed, under its own school;
- *   - no school drops out: each registry team is listed, or named as having nothing found, or as
- *     having no roster to match against, exactly once;
+ *   - only schools with a listed player appear: a school with nobody listed is not named, linked
+ *     or counted anywhere on the page, and a league with no listed school has no section or chip;
  *   - regions: each region's leagues sit in that region's `data-region-scope` block, under the switcher;
  *   - privacy: nothing data/clubs.json or data/commits.json keeps but never renders reaches the
  *     page, and the metadata names no player;
@@ -28,6 +28,7 @@ import { buildRosterView } from '../../components/teams/roster-view';
 import { getClubsFile } from '../../lib/clubs';
 import { getCommitsFile } from '../../lib/commits';
 import { getTeamsGrouped } from '../../lib/data';
+import { getLeague } from '../../lib/leagues';
 import { TEAMS } from '../../lib/teams';
 import { affiliationLeaks, commitmentLeaks } from '../../scripts/copy-rules';
 import { PUBLIC_TERMS } from '../../scripts/public-terms';
@@ -66,18 +67,20 @@ describe('buildRecruitingView', () => {
     }
   });
 
-  it('accounts for every registry team exactly once, in its own region and league', () => {
-    const seen = leagues.flatMap((l) => [...l.schools, ...l.nothingFound, ...l.noRoster].map((s) => s.slug));
-    expect([...seen].sort()).toEqual(TEAMS.map((t) => t.slug).sort());
+  it('lists exactly the schools with a listed player, each once, in its own region and league', () => {
+    const want = TEAMS.filter((t) => (buildRosterView(t.slug)?.rows ?? []).some(listed)).map((t) => t.slug);
+    expect(schools.map((s) => s.slug).sort()).toEqual([...want].sort());
     for (const region of view.regions) {
       // Section by section, as /teams groups them (the Southern Section's independents before the San Diego Section).
+      const grouped = getTeamsGrouped(region.id).flatMap((g) => g.leagues);
       expect(region.leagues.map((l) => l.id)).toEqual(
-        getTeamsGrouped(region.id).flatMap((g) => g.leagues.map((l) => l.league.id)),
+        grouped.filter((g) => region.leagues.some((l) => l.id === g.league.id)).map((g) => g.league.id),
       );
-    }
-    for (const l of leagues) {
-      for (const s of l.nothingFound) expect(buildRosterView(s.slug)!.rows.length, s.slug).toBeGreaterThan(0);
-      for (const s of l.noRoster) expect(buildRosterView(s.slug)!.rows.length, s.slug).toBe(0);
+      for (const l of region.leagues) {
+        expect(l.schools.length, l.id).toBeGreaterThan(0);
+        const inLeague = new Set(grouped.find((g) => g.league.id === l.id)!.divisions.flatMap((d) => d.teams.map((t) => t.slug)));
+        for (const s of l.schools) expect(inLeague.has(s.slug), `${l.id} / ${s.slug}`).toBe(true);
+      }
     }
   });
 
@@ -100,9 +103,10 @@ describe('buildRecruitingView', () => {
     expect(ledeWords(3, { players: 1, schools: 1, committed: 1, withClub: 0, withProfile: 1 })).toBe(
       'Every player on this site’s 3 varsity rosters with a recruiting profile, a youth club or a college commitment that a public page shows, school by school. 1 player from 1 school is listed: 1 has committed to a college and 1 has a recruiting profile.',
     );
-    expect(regionSummary('Northern California', { players: 5, schools: 2, committed: 0, withClub: 2, withProfile: 4 }, 49)).toBe(
-      'Northern California: 5 players at 2 of the 49 schools. Of them, 2 are tied to a club and 4 have a recruiting profile.',
+    expect(regionSummary('Northern California', { players: 5, schools: 2, committed: 0, withClub: 2, withProfile: 4 })).toBe(
+      'Northern California: 5 players at 2 schools. Of them, 2 are tied to a club and 4 have a recruiting profile.',
     );
+    for (const l of view.regions.flatMap((r) => r.leagues)) expect(l.meta, l.id).not.toMatch(/ of /);
   });
 });
 
@@ -143,6 +147,28 @@ describe('/recruiting, rendered', () => {
     expect(commitmentLeaks(html, getCommitsFile(), { publicTerms: PUBLIC_TERMS })).toEqual([]);
   });
 
+  it('never names, links or anchors a school with nobody listed', () => {
+    const listedSlugs = new Set(view.regions.flatMap((r) => r.leagues).flatMap((l) => l.schools.map((s) => s.slug)));
+    const unlisted = TEAMS.filter((t) => !listedSlugs.has(t.slug));
+    expect(unlisted.length).toBeGreaterThan(0);
+    for (const t of unlisted) {
+      expect(html, t.slug).not.toContain(`id="${t.slug}"`);
+      expect(html, t.slug).not.toContain(`/teams/${t.slug}"`);
+      expect(html, t.slug).not.toContain(`/teams/${t.slug}#`);
+    }
+    expect(textOf(html)).not.toMatch(/nothing found|no recruiting profile, club or commitment found|no varsity roster/i);
+    // Nor by name: never a text of its own (a heading, a list), and no league membership note, each of
+    // which names or counts all its league's schools. Matched as whole text, since a school's name can
+    // be a player's first name (Marina), and skipped inside a listed school's (Carmel in Mt. Carmel).
+    const listedNames = TEAMS.filter((t) => listedSlugs.has(t.slug)).map((t) => t.name);
+    for (const t of unlisted.filter((u) => !listedNames.some((n) => n.includes(u.name))))
+      expect(html, t.name).not.toMatch(new RegExp(`>[^<]*\\b${t.name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b(?! [A-Z])[^<]*<`));
+    for (const l of view.regions.flatMap((r) => r.leagues)) {
+      const note = getLeague(l.id as never).membershipNote;
+      if (note) expect(textOf(html), l.id).not.toContain(note);
+    }
+  });
+
   it('names no player in its metadata', () => {
     const meta = `${String(metadata.title)} ${String(metadata.description)}`;
     expect(meta).toContain('Unofficial and incomplete.');
@@ -157,7 +183,8 @@ describe('the pages that link /recruiting', () => {
     const schools = view.regions.flatMap((r) => r.leagues).flatMap((l) => l.schools);
     const withRows = schools[0];
     expect(await renderTeam(withRows.slug)).toContain(`href="/recruiting#${withRows.slug}"`);
-    const without = view.regions.flatMap((r) => r.leagues).flatMap((l) => [...l.nothingFound, ...l.noRoster])[0];
+    const listedSlugs = new Set(schools.map((s) => s.slug));
+    const without = TEAMS.find((t) => !listedSlugs.has(t.slug))!;
     expect(await renderTeam(without.slug)).not.toContain('href="/recruiting');
   });
 

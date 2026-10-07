@@ -4141,14 +4141,22 @@ Static, one page. A lede that answers the question in one paragraph (how many pl
 schools are listed, then how many have committed, are tied to a club and have a recruiting profile),
 the `RegionSwitcher` (the §24.3 pattern), the anchor-mode league chips, then one
 `<div id="norcal|socal" data-region-scope>` per region: the region's count sentence, then one h2 per
-league (`#<league>`, as on `/teams`, its membership note under it where it has one) and one h3 per
+league (`#<league>`, as on `/teams`) and one h3 per
 school with a listed player (`#<team slug>`, its action "Full roster" to `/teams/<slug>#roster`, its
 meta the school's counts: "7 players · 1 committed · 5 with a club · 6 with a profile"). Schools run
-by name within a league. Under each league, one line names its schools with nothing found and, apart,
-those with no varsity roster to match against, so no school drops out silently. Last, "How this page
+by name within a league. Last, "How this page
 is built" (`#how-matched`): who is listed, the profile rule, links to the clubs' and the commitments'
 `#how-matched`, the research dates, that none of it is part of the twice-daily update, and that recall
 is partial.
+
+**Only schools with a listed player appear** (owner decision, 2026-10-07). A school with nobody
+listed is not named, linked or counted anywhere on the page: no "nothing found" line under its league,
+and no "14 of 15 schools" in a league's or a region's count ("61 players at 14 schools"). A league
+with no listed school has no section and no chip. Recall is partial, so an absence says nothing about a
+school or its players, and naming the schools with none would read as if it did. So no league's
+membership note is printed here either: each names or counts all of the league's schools ("Chico,
+Corning, …", "eight Southern Section schools"), and the page has no section heading for it to qualify
+(§22.5 asks for the EAL note where all six teams' schools are listed under a section or league heading).
 
 ### 25.2 The same rows as the team pages
 
