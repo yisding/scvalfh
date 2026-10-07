@@ -167,7 +167,7 @@ from_build /sitemap.xml
 locs=$(grep -oE '<loc>[^<]+</loc>' "$tmp/b" | sed -E 's#</?loc>##g' || true)
 paths=$(grep -F "$origin/" <<< "$locs" | sed "s#^$origin##" || true)
 [ "$(grep -c . <<< "$locs")" = "$(grep -c . <<< "$paths")" ] || fail /sitemap.xml "a <loc> is not on $origin"
-for path in / /about /standings /schedule /playoffs /teams /leaders /history/2025-26 /clubs /commits \
+for path in / /about /standings /schedule /playoffs /teams /leaders /history/2025-26 /clubs /commits /recruiting \
   /standings/bval /standings/mcal /standings/eal /schedule/scval /schedule/mcal /schedule/eal /playoffs/mcal \
   /standings/sunset /standings/city /standings/north-county /standings/metro /standings/independents \
   /schedule/sunset /schedule/city /schedule/north-county /schedule/metro /schedule/independents; do

@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 
 import ClubList from '../../components/clubs/ClubList';
 import { RegionSwitcher } from '../../components/layout/LeagueSwitcher';
@@ -110,7 +111,11 @@ export default function ClubsPage() {
             Recall is partial. A player with no public page that meets the rule is not listed,
             whatever club they play for, so a school with no one here may still have plenty of club
             players.{view.regionsWithoutClubsSentence ? ` ${view.regionsWithoutClubsSentence}` : ''}
-            {view.regionsNotSearchedSentence ? ` ${view.regionsNotSearchedSentence}` : ''}
+            {view.regionsNotSearchedSentence ? ` ${view.regionsNotSearchedSentence}` : ''} The{' '}
+            <Link href="/recruiting" prefetch={false} className="text-accent hover:underline">
+              recruiting
+            </Link>{' '}
+            page gathers every school&rsquo;s clubs, commitments and recruiting profiles.
           </p>
         </div>
       </section>

@@ -194,6 +194,11 @@ export interface RosterView {
    * other "as of" is MaxPreps' twice-daily read and a commitment line is not refreshed with it.
    */
   commitsCheckedOn: string;
+  /**
+   * `/recruiting#<slug>`: this school's block on the page that gathers every school's profiles, clubs
+   * and commitments; null when no listed row has any of them (the school is not listed there).
+   */
+  recruitingHref: string | null;
   coaches: Array<{ key: string; name: string; role: string | null }>;
   conflicts: RosterConflictLine[];
   /** MaxPreps' roster page first, then one link per other site a shown value came from. */
@@ -485,6 +490,9 @@ export function buildRosterView(slug: TeamSlug): RosterView | null {
     hasListedClub: rows.some((r) => r.clubs.some((g) => g.status === 'unknown')),
     hasCommitments: rows.some((r) => r.commitment !== null),
     commitsCheckedOn: dateWithYear(getCommitsFile().capturedAt),
+    recruitingHref: rows.some((r) => r.commitment !== null || r.clubs.length > 0 || r.profiles.length > 0)
+      ? `/recruiting#${slug}`
+      : null,
     coaches: team.coaches.map((c, i) => ({ key: `${c.name}-${i}`, name: c.name, role: c.role })),
     conflicts,
     sources: sourceLinks(team, players),

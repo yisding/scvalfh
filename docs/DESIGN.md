@@ -4123,3 +4123,64 @@ checker and, separately, by a refuter, and only what both kept is in the files.
 Not built: the school-athletics roster sweep for the 53 teams (grades, heights, numbers, positions,
 coaches), SportsRecruits' athlete search for their rows, and a club record for Poway Mystix, whose site
 could not be reached.
+
+## 25. Recruiting amendment (2026-10)
+
+The site's recruiting data lived in three places: each team page's roster (a player's recruiting
+profile links, club line and commitment line), `/clubs` and `/commits`. A reader asking "who in my
+league is being looked at, and where do they play?" had to open every school's page. `/recruiting`
+gathers it on one page; the team rosters keep showing the same lines for their own players.
+
+### 25.1 The page and what it answers
+
+| URL | Answers | Pages |
+|---|---|---|
+| `/recruiting` | "Who here has a recruiting profile, a club or a college commitment?" | 1 |
+
+Static, one page. A lede that answers the question in one paragraph (how many players from how many
+schools are listed, then how many have committed, are tied to a club and have a recruiting profile),
+the `RegionSwitcher` (the §24.3 pattern), the anchor-mode league chips, then one
+`<div id="norcal|socal" data-region-scope>` per region: the region's count sentence, then one h2 per
+league (`#<league>`, as on `/teams`) and one h3 per
+school with a listed player (`#<team slug>`, its action "Full roster" to `/teams/<slug>#roster`, its
+meta the school's counts: "7 players · 1 committed · 5 with a club · 6 with a profile"). Schools run
+by name within a league. Last, "How this page
+is built" (`#how-matched`): who is listed, the profile rule, links to the clubs' and the commitments'
+`#how-matched`, the research dates, that none of it is part of the twice-daily update, and that recall
+is partial.
+
+**Only schools with a listed player appear** (owner decision, 2026-10-07). A school with nobody
+listed is not named, linked or counted anywhere on the page: no "nothing found" line under its league,
+and no "14 of 15 schools" in a league's or a region's count ("61 players at 14 schools"). A league
+with no listed school has no section and no chip. Recall is partial, so an absence says nothing about a
+school or its players, and naming the schools with none would read as if it did. So no league's
+membership note is printed here either: each names or counts all of the league's schools ("Chico,
+Corning, …", "eight Southern Section schools"), and the page has no section heading for it to qualify
+(§22.5 asks for the EAL note where all six teams' schools are listed under a section or league heading).
+
+### 25.2 The same rows as the team pages
+
+A player row is a row of `buildRosterView` (varsity only, the roster's spelling and order) with at
+least one of a commitment, a club or a profile, and its three lines are drawn by the roster's own
+components (`Commitment`, `Clubs`, `Profiles`, exported from `components/teams/TeamRoster.tsx`), so the
+two pages can never word a player apart. The facts (grade, position, height) are plain text: the †
+for a value from another source is explained on the team page, which each school's heading links.
+The privacy posture of §17.2 and §21.2 holds unchanged: nothing a data file keeps but never renders
+reaches a view type, `assert:copy` counts `/recruiting` among the pages built from both files, and the
+metadata names no player.
+
+### 25.3 Links in, not nav
+
+The tab bar and the desktop nav are unchanged. `/recruiting` is linked from `/teams` (a third quiet
+line, after the clubs and commitments ones), from `/clubs` and `/commits` (`#how-matched`), and from
+every team roster with a listed player, whose footnote links its own school's block
+(`/recruiting#<slug>`; a block in the hidden region opens it, `:has(:target)`). The sitemap dates it by
+the latest of the clubs file, the commitments file and the roster overlay.
+
+### 25.4 Not built
+
+- **No filters** (committed only, by class year, by club): the page is static and adds no client
+  module; the league chips and each school's counts carry the scanning.
+- **No OG card**: the page takes the root card, as `/clubs` and `/commits` do.
+- **No budget**, for §17.6's reason. **Gates**: `assert:prerender`, `assert-vinext-prerender.ts` and
+  `smoke-server.sh` expect `/recruiting` among the fixed pages; `a11y-axe.mjs` checks it.

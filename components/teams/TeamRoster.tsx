@@ -52,6 +52,9 @@ import type { RosterFact, RosterRow, RosterView } from './roster-view';
  * links the player's row on /commits, which cites the sources. The words are components/commits/commit-view.ts'. A footnote explains it, links
  * /commits and says recall is partial, wherever one appears.
  *
+ * Wherever a row has a profile, a club or a commitment line, one more footnote links this school's
+ * block on /recruiting, which gathers the same lines for every school.
+ *
  * A team with no list still shows the coaches and sources the enrichment file found for it, under
  * the empty state, and the empty state says only what the file records about other sources.
  */
@@ -86,7 +89,13 @@ function Facts({ facts }: { facts: RosterFact[] }) {
   );
 }
 
-function Profiles({ row }: { row: RosterRow }) {
+/**
+ * The three recruiting lines of a row: shared with /recruiting (components/recruiting/RecruitingList.tsx),
+ * which shows the same rows of every school's roster, so the two pages say the same thing.
+ */
+export type RecruitingLineRow = Pick<RosterRow, 'name' | 'commitment' | 'clubs' | 'profiles'>;
+
+export function Profiles({ row }: { row: RecruitingLineRow }) {
   return (
     <span className="block text-meta text-ink-2">
       {row.profiles.map((profile, i) => (
@@ -106,7 +115,7 @@ function Profiles({ row }: { row: RosterRow }) {
   );
 }
 
-function Clubs({ row }: { row: RosterRow }) {
+export function Clubs({ row }: { row: RecruitingLineRow }) {
   return (
     <span className="block text-meta text-ink-2">
       {row.clubs.map((group, i) => (
@@ -143,7 +152,7 @@ function Clubs({ row }: { row: RosterRow }) {
   );
 }
 
-function Commitment({ row }: { row: RosterRow }) {
+export function Commitment({ row }: { row: RecruitingLineRow }) {
   const line = row.commitment!;
   return (
     <span className="block text-meta text-ink-2">
@@ -357,6 +366,15 @@ export function TeamRoster({ view }: TeamRosterProps) {
               ? ' A “listed club” is one a source names without saying whether the player is still with it.'
               : ''}{' '}
             Recall is partial: a player with no club line may still play for a club.
+          </p>
+        ) : null}
+        {view.recruitingHref ? (
+          <p className="mt-1 mb-0">
+            Every school&rsquo;s recruiting profiles, clubs and commitments are gathered on the{' '}
+            <Link href={view.recruitingHref} prefetch={false} className="text-accent hover:underline">
+              recruiting
+            </Link>{' '}
+            page.
           </p>
         ) : null}
         {view.jvLeftOut > 0 ? (

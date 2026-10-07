@@ -118,7 +118,11 @@ export default function CommitsPage() {
             <Link href="/clubs" prefetch={false} className="text-accent hover:underline">
               club teams
             </Link>{' '}
-            page uses the same matching rule.
+            page uses the same matching rule, and the{' '}
+            <Link href="/recruiting" prefetch={false} className="text-accent hover:underline">
+              recruiting
+            </Link>{' '}
+            page gathers every school&rsquo;s commitments, clubs and recruiting profiles.
           </p>
         </div>
       </section>

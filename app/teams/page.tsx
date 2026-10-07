@@ -50,8 +50,8 @@ const PAGE_TITLE = 'Teams and standings';
  * `#de-anza`, `#mt-hamilton` and `#marin-county` resolve and every id on the page is unique
  * (SPEC §8.1).
  *
- * Two quiet lines under the tables link /clubs (DESIGN §17.1) and /commits (DESIGN §21.4), neither
- * in the nav. They sit outside `#team-list`, so the finder never hides them, and add no heading
+ * Three quiet lines under the tables link /clubs (DESIGN §17.1), /commits (DESIGN §21.4) and
+ * /recruiting (DESIGN §25), none in the nav. They sit outside `#team-list`, so the finder never hides them, and add no heading
  * and no group wrapper.
  */
 /** Where the teams are listed: each in its division's table, the LA independents' included (DESIGN §24.10). */
@@ -162,6 +162,13 @@ export default function TeamsPage() {
         </Link>{' '}
         page lists the players here a public page says have committed to play in college, in field
         hockey or another sport.
+      </p>
+      <p className="mt-2 mb-0 max-w-prose text-meta text-ink-3">
+        Recruiting: the{' '}
+        <Link href="/recruiting" prefetch={false} className="text-accent hover:underline">
+          recruiting
+        </Link>{' '}
+        page gathers every school&rsquo;s recruiting profiles, clubs and commitments in one place.
       </p>
     </div>
   );

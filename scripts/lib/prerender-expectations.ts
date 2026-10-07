@@ -33,6 +33,7 @@ export const FIXED_PAGES = [
   'history/2025-26',
   'clubs',
   'commits',
+  'recruiting',
   'jv',
 ] as const;
 
