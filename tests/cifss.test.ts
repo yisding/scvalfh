@@ -57,6 +57,7 @@ describe('parseCifssPage', () => {
   it('reads every row but the TBA one, with scores, dates, notes and the last page', () => {
     const page = parseCifssPage(fixture('ccs-1.html'), 'ccs');
     expect(page.lastPage).toBe(6);
+    expect(page.listed).toBe(5); // the TBA row is listed, not parsed
     expect(page.rows.map((r) => [r.cifssId, r.dateKey, r.home.slug, r.home.score, r.away.slug, r.away.score, r.gameType])).toEqual([
       ['3916574', '2026-08-24', 'homestead', 4, 'santa-clara', 0, 'Non-League'],
       ['4962723', '2026-08-25', 'valley-christian', 0, 'christopher', 4, 'Non-League'],
@@ -66,6 +67,13 @@ describe('parseCifssPage', () => {
     // "N/A" is no note; a real note is kept.
     expect(page.rows[1].note).toBeNull();
     expect(page.rows[2].note).toBe('Pre-season/out of League');
+  });
+
+  it('throws on a page with no listing table (a challenge or error page served with HTTP 200)', () => {
+    expect(() => parseCifssPage('<html><body>Checking your browser…</body></html>', 'ccs')).toThrow(/not a cifsshome.org listing/);
+    // A real listing with no games keeps its column heads, and parses as empty.
+    const heads = fixture('ncs-1.html').replace(/<tr id="[\s\S]*<\/tbody>/, '</tbody>');
+    expect(parseCifssPage(heads, 'ncs')).toEqual({ rows: [], listed: 0, lastPage: 1 });
   });
 
   it('resolves a suffixed school to its own Section, and an MCAL school by its widget name', () => {
@@ -167,6 +175,12 @@ describe('compareCifss', () => {
     expect(deleted.nonGameMatches).toBe(1);
   });
 
+  it('never lists a game against an opponent outside the registry as missing from MaxPreps', () => {
+    // MaxPreps and the widget often spell such an opponent differently, so finding no game proves nothing.
+    const { report } = compareCifss(games, [row(['Universal Sports Institute at PYLUSD', 1], ['Homestead', 0], { dateKey: '2026-08-21' })], opts);
+    expect(report.notOnMaxPreps).toEqual([]);
+  });
+
   it('ignores unscored rows, rows with none of our teams, and rows noted as scrimmages', () => {
     const { report } = compareCifss(
       games,
@@ -208,6 +222,20 @@ describe('carryCifssCrossCheck', () => {
     const vc = game({ home: 'Valley Christian', away: 'Christopher', hs: 0, as: 4, date: '2026-08-26', league: false });
     expect(gamePairKey(vc)).toBe(prior.notOnMaxPreps[0].pairKey);
     const carried = carryCifssCrossCheck(prior, [corrected, scored, vc]);
-    expect(carried).toMatchObject({ compared: prior.compared, agreements: prior.agreements, conflicts: [], cifssOnlyScored: [], notOnMaxPreps: [] });
+    // Fremont now shows the widget's 3-1 and Leland's 2-2 matches it: both become agreements.
+    expect(carried).toMatchObject({ compared: prior.agreements + 2, agreements: prior.agreements + 2, conflicts: [], cifssOnlyScored: [], notOnMaxPreps: [] });
+  });
+
+  it('keeps a conflict whose MaxPreps score changed but still differs, showing the current score', () => {
+    const fremont = game({ home: 'Fremont', away: 'Cupertino', hs: 2, as: 1 });
+    const prior = compareCifss([fremont], [row(['Fremont', 3], ['Cupertino', 1])], opts).report;
+    const changed = { ...fremont, home: { ...fremont.home, score: 4 } };
+    const carried = carryCifssCrossCheck(prior, [changed]);
+    expect(carried.conflicts).toEqual([
+      expect.objectContaining({ maxpreps: { home: 4, away: 1 }, cifss: { home: 3, away: 1 }, note: expect.stringContaining("MaxPreps' 1-4") }),
+    ]);
+    expect(carried.compared).toBe(carried.agreements + carried.conflicts.length);
+    // The game gone from MaxPreps: the row and its count go with it.
+    expect(carryCifssCrossCheck(prior, [])).toMatchObject({ compared: 0, agreements: 0, conflicts: [] });
   });
 });

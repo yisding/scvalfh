@@ -786,6 +786,8 @@ export interface CifssConflictRow {
   maxpreps: { home: number; away: number };
   /** Aligned to MaxPreps' home and away teams. */
   cifss: { home: number; away: number };
+  /** The widget's date for the game (MaxPreps' `dateKey` can be up to three days away). */
+  cifssDateKey: string;
   maxprepsUrl: string | null;
   /** The widget listing of that Section on that date. */
   cifssUrl: string;
@@ -805,6 +807,8 @@ export interface CifssOnlyRow {
   cifss: { home: number; away: number };
   /** The two sides' lib/teams.ts sideJoinKey, `a~b` sorted: how a later run tells whether MaxPreps has the game yet. */
   pairKey: string;
+  /** The widget's date for the game. */
+  cifssDateKey: string;
   maxprepsUrl: string | null;
   cifssUrl: string;
   note: string;

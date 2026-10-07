@@ -47,6 +47,8 @@ async function readSection(ctx: PipelineContext, section: CifssSectionKey): Prom
     try {
       const res = await ctx.transport.get({ kind: 'cifss-scores', section, page, through: ctx.today });
       const parsed = parseCifssPage(res.body, section, (m) => ctx.log(`  cifss ${section}: ${m}`));
+      // A page the pagination named but that lists nothing is a truncated read, not the end of the listing.
+      if (page > 1 && parsed.listed === 0) throw new Error('a listed page has no rows');
       rows.push(...parsed.rows);
       httpStatus = res.httpStatus;
       if (page === 1) {

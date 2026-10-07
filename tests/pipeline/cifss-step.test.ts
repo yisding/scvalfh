@@ -20,19 +20,24 @@ import { resolveTeam } from '../../lib/teams';
 import type { CifssCrossCheck, Game, Snapshot } from '../../lib/types';
 import { REPO, game } from '../helpers';
 
-const EMPTY = '<html><body><table class="table"><tr class="text-left"><th>Sport</th></tr></table></body></html>';
+/** A real listing with no games: its column heads and an empty body. */
+const EMPTY = '<html><body><table class="table"><thead><tr><th>Home Score</th><th>Away Score</th></tr></thead><tbody></tbody></table></body></html>';
 const page = (name: string) => readFileSync(path.join(REPO, 'tests/fixtures/cifss', name), 'utf8');
 
 /** Serves ccs-1.html for every CCS page and ncs-1.html for NCS page 1, an empty listing elsewhere. */
 class FakeTransport implements Transport {
   readonly mode = 'fixture' as const;
   readonly requested: string[] = [];
-  constructor(private readonly failing: Set<string> = new Set()) {}
+  constructor(
+    private readonly failing: Set<string> = new Set(),
+    private readonly challenged: Set<string> = new Set(),
+  ) {}
   async get(key: ResourceKey): Promise<RawResponse> {
     if (key.kind !== 'cifss-scores') throw new Error(`unexpected ${key.kind}`);
     const url = resourceUrl(key);
     this.requested.push(`${key.section}/${key.page}`);
     if (this.failing.has(key.section)) throw new TransportError('HTTP 503', url, 503);
+    if (this.challenged.has(key.section)) return { url, httpStatus: 200, body: '<html><body>Just a moment…</body></html>' };
     const body = key.section === 'ccs' ? page('ccs-1.html') : key.section === 'ncs' ? page('ncs-1.html') : EMPTY;
     return { url, httpStatus: 200, body };
   }
@@ -101,10 +106,23 @@ describe('stepCifss', () => {
     next.games = fixed;
     const ctx = contextOf(new FakeTransport(new Set(['sds'])), previous);
     const carried = await stepCifss(ctx, next);
-    expect(carried).toMatchObject({ cifssFetchedAt: prior.cifssFetchedAt, compared: prior.compared, conflicts: [] });
+    // Its widget score (1-2) now matches MaxPreps: the carried report counts it an agreement.
+    expect(carried).toMatchObject({ cifssFetchedAt: prior.cifssFetchedAt, compared: prior.compared, agreements: prior.agreements + 1, conflicts: [] });
     expect(carried?.notOnMaxPreps).toEqual(prior.notOnMaxPreps);
     const sds = ctx.sources.ordered().find((r) => r.id === 'cifss' && r.label.includes('San Diego'));
     expect(sds).toMatchObject({ status: 'stale', httpStatus: 503 });
+  });
+
+  it('treats an HTTP-200 page with no listing table as a failed read, never an empty Section', async () => {
+    const state = emptyRunState();
+    state.games = GAMES;
+    const prior = (await stepCifss(contextOf(new FakeTransport()), state)) as CifssCrossCheck;
+    const previous = { fetchedAt: '2026-10-06T15:00:00.000Z', sources: [], cifssCrossCheck: prior } as unknown as Snapshot;
+    const ctx = contextOf(new FakeTransport(new Set(), new Set(['ss'])), previous);
+    const carried = await stepCifss(ctx, state);
+    expect(carried).toEqual(prior);
+    const ss = ctx.sources.ordered().find((r) => r.id === 'cifss' && r.label.includes('Southern'));
+    expect(ss).toMatchObject({ status: 'stale', error: expect.stringContaining('not a cifsshome.org listing') });
   });
 
   it('reads nothing with --no-cifss, and carries nothing when there is nothing to carry', async () => {

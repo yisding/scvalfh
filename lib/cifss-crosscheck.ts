@@ -8,7 +8,8 @@
  *   - both sources score the game: an agreement, or a conflict row (MaxPreps' score stands);
  *   - MaxPreps lists the game without a score: a `cifssOnlyScored` row;
  *   - MaxPreps has no contest for the pair within three days of the date: a `notOnMaxPreps` row,
- *     unless MaxPreps marks a contest of the pair near that date Deleted (a scrimmage, a
+ *     only when both sides are our teams (an opponent's name on the widget and on MaxPreps often
+ *     differ, so a name-only side that finds no game proves nothing), and unless MaxPreps marks a contest of the pair near that date Deleted (a scrimmage, a
  *     reschedule or a cancellation: a school's own widget row is often left behind) or the pipeline
  *     dropped one on purpose (`Snapshot.dropped`), or the row's note says it was a scrimmage.
  *
@@ -112,6 +113,31 @@ export function cifssGames(rows: readonly CifssRow[]): WidgetGame[] {
     .sort((a, b) => a.variants[0].dateKey.localeCompare(b.variants[0].dateKey) || a.variants[0].cifssId.localeCompare(b.variants[0].cifssId));
 }
 
+/** A disagreement row for a scored MaxPreps game and the widget's (aligned) score. */
+function conflictRow(
+  game: Game,
+  maxpreps: { home: number; away: number },
+  cifss: { home: number; away: number },
+  cifssDateKey: string,
+  cifssUrl: string,
+): CifssConflictRow {
+  // Away first, as the row's label and the si.com conflict rows read.
+  const moved = cifssDateKey === game.dateKey ? '' : ` cifsshome.org dates it ${cifssDateKey}.`;
+  return {
+    contestId: game.contestId,
+    dateKey: game.dateKey,
+    label: `${game.away.name} at ${game.home.name}`,
+    maxpreps,
+    cifss,
+    cifssDateKey,
+    maxprepsUrl: game.urls.maxpreps,
+    cifssUrl,
+    note:
+      `Sources disagree: we show MaxPreps' ${maxpreps.away}-${maxpreps.home} (${game.away.name}–${game.home.name}); ` +
+      `cifsshome.org reports ${cifss.away}-${cifss.home}.${moved} MaxPreps’ score stands.`,
+  };
+}
+
 export function compareCifss(
   games: readonly Game[],
   rows: readonly CifssRow[],
@@ -179,12 +205,14 @@ export function compareCifss(
         setAside(r);
         continue;
       }
+      if (r.home.slug === null || r.away.slug === null) continue;
       notOnMaxPreps.push({
         contestId: `cifss:${r.cifssId}`,
         dateKey: r.dateKey,
         label: `${displayName(r.away)} at ${displayName(r.home)}`,
         cifss: { home: r.home.score as number, away: r.away.score as number },
         pairKey: pair,
+        cifssDateKey: r.dateKey,
         maxprepsUrl: null,
         cifssUrl: rowUrl(r),
         note: CIFSS_NOTES.notOnMaxPreps,
@@ -215,6 +243,7 @@ export function compareCifss(
         label,
         cifss,
         pairKey: gamePairKey(game),
+        cifssDateKey: r.dateKey,
         maxprepsUrl: game.urls.maxpreps,
         cifssUrl: rowUrl(r),
         note: game.status === 'postponed' ? CIFSS_NOTES.postponed : CIFSS_NOTES.pending,
@@ -225,20 +254,7 @@ export function compareCifss(
       agreements += 1;
       continue;
     }
-    // Away first, as the row's label and the si.com conflict rows read.
-    const moved = r.dateKey === game.dateKey ? '' : ` cifsshome.org dates it ${r.dateKey}.`;
-    conflicts.push({
-      contestId: game.contestId,
-      dateKey: game.dateKey,
-      label,
-      maxpreps: { home, away },
-      cifss,
-      maxprepsUrl: game.urls.maxpreps,
-      cifssUrl: rowUrl(r),
-      note:
-        `Sources disagree: we show MaxPreps' ${away}-${home} (${game.away.name}–${game.home.name}); ` +
-        `cifsshome.org reports ${cifss.away}-${cifss.home}.${moved} MaxPreps’ score stands.`,
-    });
+    conflicts.push(conflictRow(game, { home, away }, cifss, r.dateKey, rowUrl(r)));
   }
 
   return {
@@ -256,12 +272,14 @@ export function compareCifss(
 }
 
 /**
- * A previous run's report carried into a run that read no widget data. Only rows still true of this
- * run's games survive, so the report never contradicts the scores beside it:
- *  - a conflict row while its game still shows exactly the MaxPreps score the row reports;
- *  - a MaxPreps-unscored row while its game is still listed without a score;
- *  - a not-on-MaxPreps row while MaxPreps still has no game of the pair near its date.
- * `compared` and `agreements` are kept, so `compared >= agreements + conflicts` still holds.
+ * A previous run's report carried into a run that read no widget data. Each widget score it kept is
+ * judged again against this run's games, so the report never contradicts the scores beside it:
+ *  - a conflict or MaxPreps-unscored row whose game now carries the widget's score becomes an
+ *    agreement; one whose game still differs is a conflict showing MaxPreps' current score; one whose
+ *    game is gone (or unscored again, for a conflict) is dropped;
+ *  - a not-on-MaxPreps row stays while MaxPreps still has no game of the pair near its date.
+ * Agreements are not stored game by game, so earlier ones are kept as they were; `compared` is
+ * recounted as `agreements + conflicts.length`.
  */
 export function carryCifssCrossCheck(prior: CifssCrossCheck, games: readonly Game[]): CifssCrossCheck {
   const byId = new Map(games.map((g) => [g.contestId, g]));
@@ -272,18 +290,24 @@ export function carryCifssCrossCheck(prior: CifssCrossCheck, games: readonly Gam
     if (list) list.push(g.dateKey);
     else pairs.set(k, [g.dateKey]);
   }
+  let agreements = prior.agreements;
+  const conflicts: CifssConflictRow[] = [];
+  const cifssOnlyScored: CifssOnlyRow[] = [];
+  const judge = (r: { contestId: string; cifss: { home: number; away: number }; cifssDateKey: string; cifssUrl: string }, unscored: () => void) => {
+    const g = byId.get(r.contestId);
+    if (!g || g.status === 'live') return;
+    if (g.home.score === null || g.away.score === null) return unscored();
+    if (g.home.score === r.cifss.home && g.away.score === r.cifss.away) agreements += 1;
+    else conflicts.push(conflictRow(g, { home: g.home.score, away: g.away.score }, r.cifss, r.cifssDateKey, r.cifssUrl));
+  };
+  for (const r of prior.conflicts) judge(r, () => {});
+  for (const r of prior.cifssOnlyScored) judge(r, () => cifssOnlyScored.push(r));
   return {
-    ...prior,
-    conflicts: prior.conflicts.filter((r) => {
-      const g = byId.get(r.contestId);
-      return g !== undefined && g.home.score === r.maxpreps.home && g.away.score === r.maxpreps.away;
-    }),
-    cifssOnlyScored: prior.cifssOnlyScored.filter((r) => {
-      const g = byId.get(r.contestId);
-      return g !== undefined && (g.home.score === null || g.away.score === null);
-    }),
-    notOnMaxPreps: prior.notOnMaxPreps.filter((r) => {
-      return !(pairs.get(r.pairKey) ?? []).some((d) => near(d, r.dateKey));
-    }),
+    cifssFetchedAt: prior.cifssFetchedAt,
+    compared: agreements + conflicts.length,
+    agreements,
+    conflicts: conflicts.sort(byDateKey),
+    cifssOnlyScored: cifssOnlyScored.sort(byDateKey),
+    notOnMaxPreps: prior.notOnMaxPreps.filter((r) => !(pairs.get(r.pairKey) ?? []).some((d) => near(d, r.dateKey))),
   };
 }

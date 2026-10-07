@@ -113,6 +113,8 @@ export interface CifssRow {
 
 export interface CifssPage {
   rows: CifssRow[];
+  /** Every game row the page lists, the skipped ones (a TBA opponent) included. */
+  listed: number;
   /** The highest page number the pagination links name (1 when there is one page). */
   lastPage: number;
 }
@@ -163,11 +165,18 @@ function dateKeyOfCell(cell: string): string | null {
 
 /**
  * One listing page → its rows and the last page number. A row with an unnamed side ("TBA") or no
- * readable date is skipped; `onSkip` hears why.
+ * readable date is skipped; `onSkip` hears why. Throws when the page carries no listing table (its
+ * "Home Score" and "Away Score" column heads): a challenge or error page served with HTTP 200 is a
+ * failed read, never an empty listing. A listing with no games still carries the heads.
  */
 export function parseCifssPage(html: string, section: CifssSectionKey, onSkip?: (message: string) => void): CifssPage {
+  if (!/<th\b[^>]*>\s*Home Score\s*<\/th>/i.test(html) || !/<th\b[^>]*>\s*Away Score\s*<\/th>/i.test(html)) {
+    throw new Error('not a cifsshome.org listing: no Home Score / Away Score table heads');
+  }
   const rows: CifssRow[] = [];
+  let listed = 0;
   for (const m of html.matchAll(/<tr id="(\d+)">([\s\S]*?)<\/tr>/g)) {
+    listed += 1;
     const id = m[1];
     const body = m[2];
     const modal = /class="modal-body[^"]*"[^>]*>([\s\S]*?)<\/div>/.exec(body);
@@ -198,5 +207,5 @@ export function parseCifssPage(html: string, section: CifssSectionKey, onSkip?: 
     });
   }
   const pages = [...html.matchAll(/[?&](?:amp;)?page=(\d+)/g)].map((p) => Number(p[1]));
-  return { rows, lastPage: Math.max(1, ...pages) };
+  return { rows, listed, lastPage: Math.max(1, ...pages) };
 }

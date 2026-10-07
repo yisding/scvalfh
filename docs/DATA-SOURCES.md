@@ -1567,14 +1567,19 @@ compares only the widget's SCORED rows with at least one of our teams:
 - the join is `(date, unordered pair)` as for si.com, then the pair's nearest unmatched game within
   three days;
 - both scored: an agreement or a conflict row (MaxPreps' score stands); MaxPreps unscored: a
-  `cifssOnlyScored` row; no MaxPreps contest within three days: a `notOnMaxPreps` row, unless MaxPreps
-  reported a contest of the pair Deleted this run, the pipeline dropped one (`Snapshot.dropped`), or the
+  `cifssOnlyScored` row; no MaxPreps contest within three days: a `notOnMaxPreps` row, only when both
+  sides are our teams (an outside opponent's name often differs between the two sites, so a name-only
+  side that finds no game proves nothing), and unless MaxPreps reported a contest of the pair Deleted this run, the pipeline dropped one (`Snapshot.dropped`), or the
   row's note says scrimmage;
 - a game two schools entered differently agrees when either entry matches MaxPreps and is set aside
   (logged, not compared) otherwise.
 
 The report is all or nothing: unless all six Sections were read in full, the previous report is
-carried with only its rows still true of this run's games, and a failed Section's row is `stale`.
+carried, each kept widget score judged again against this run's games (now matching: an agreement;
+still different: a conflict showing MaxPreps' current score; game gone: dropped), and a failed
+Section's row is `stale`. A page with no "Home Score"/"Away Score" column heads (a challenge or error
+page served with HTTP 200) is a failed read, as is a page the pagination named that lists no rows; a
+real listing with no games keeps its heads.
 `--no-cifss` skips it. About 45 requests a run in early October (SDS 23 pages, SS 8, CCS 6, NCS 6, NS 1,
 SJS 1), counted under `other` (not in the summary line's `maxpreps/sblive/official` counts).
 
