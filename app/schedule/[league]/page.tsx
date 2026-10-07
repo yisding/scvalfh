@@ -164,12 +164,12 @@ export default async function LeagueSchedulePage({ params }: PageProps<'/schedul
         <ul className="m-0 mt-2 list-disc space-y-2 pl-5">
           <li>
             Standings count league games only. A league game carries its league&rsquo;s tag; a
-            non-league game carries the <code>NL</code> tag and, on phone rows, a 2px left rule — it
-            counts in a team&rsquo;s overall record and nowhere else.
+            non-league game carries the <code>NL</code> tag and, on phones, a gray line down its left
+            edge &mdash; it counts in a team&rsquo;s overall record and nowhere else.
           </li>
           <li>
-            A real <span className="sx-num">0</span> shows as <span className="sx-num">0</span> in
-            full-strength ink. A score we do not have shows as a dash &mdash; never{' '}
+            A real <span className="sx-num">0</span> shows as <span className="sx-num">0</span>. A
+            score we do not have shows as a dash &mdash; never{' '}
             <span className="sx-num">0-0</span>.
           </li>
           <li>
@@ -186,14 +186,14 @@ export default async function LeagueSchedulePage({ params }: PageProps<'/schedul
             have it.
           </li>
           <li>
-            Every date and time is Pacific, formatted when the site was built. Tap a game to expand
+            Every date and time is Pacific. Tap a game to expand
             its venue, stream, ticket and box-score links; tap a date&rsquo;s Day page link to open
             that day on its own page.
           </li>
         </ul>
         <p className="mt-3 mb-0">
           <Link href="/about#conventions" prefetch={false} className="sx-action font-medium text-accent">
-            Every rendering convention, in one table
+            How every score is shown
           </Link>
         </p>
       </details>

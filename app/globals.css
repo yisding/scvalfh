@@ -63,18 +63,23 @@
   --sx-focus:         #1558b0;
   --sx-select:        #cbdaf0;
 
-  /* radii */
-  --sx-r-tag: 6px;
+  /* radii. Few and moderate: softly rounded controls, crisper cards. Full pills (999px) are kept
+     only where the shape is the meaning (the empty "pending" chip). `control` is the selectors
+     (league, region and filter chips): rounder than a button, well short of a capsule. */
+  --sx-r-tag: 4px;
   --sx-r-chip: 8px;
-  --sx-r-card: 12px;
-  --sx-r-card-lg: 16px;
+  --sx-r-control: 10px;
+  --sx-r-card: 8px;
+  --sx-r-card-lg: 10px;
 
-  /* Elevation. A card is a 1px ring plus a soft shadow (light) or the ring alone (dark).
-     None of these is a colour token: they are alpha on the ink, so the contrast test is untouched. */
+  /* Elevation. Flat in both modes: a card is a 1px ring and nothing else, the way dark mode
+     always was. Hover darkens the ring instead of floating the card on a blurred shadow.
+     None of these is a colour token: they are alpha on the ink, so the contrast test is untouched.
+     `raised` stays a transparent zero layer, never `none`: it sits inside shadow LISTS. */
   --sx-shadow-sticky: 0 1px 0 var(--sx-border);
-  --sx-shadow-raised: 0 1px 2px rgb(14 17 22 / 0.04), 0 4px 16px -4px rgb(14 17 22 / 0.08);
-  --sx-shadow-lift:   0 2px 4px rgb(14 17 22 / 0.05), 0 12px 28px -8px rgb(14 17 22 / 0.16);
-  --sx-ring:          0 0 0 1px rgb(14 17 22 / 0.08);
+  --sx-shadow-raised: 0 0 0 0 transparent;
+  --sx-shadow-lift:   0 0 0 1px rgb(14 17 22 / 0.28);
+  --sx-ring:          0 0 0 1px rgb(14 17 22 / 0.11);
   /* in-card row lines: lighter than a container edge, so space (not lines) groups sections */
   --sx-divider:       color-mix(in srgb, var(--sx-border) 60%, transparent);
 
@@ -271,6 +276,7 @@
 
   --radius-tag:     var(--sx-r-tag);
   --radius-chip:    var(--sx-r-chip);
+  --radius-control: var(--sx-r-control);
   --radius-card:    var(--sx-r-card);
   --radius-card-lg: var(--sx-r-card-lg);
 
@@ -366,8 +372,14 @@
     margin-bottom: var(--spacing-head);
     min-height: 2rem;
   }
+  /* The rule (DESIGN §7.2, R-9, restored): a section h2 sits under a 2px ink rule, an h3 under
+     a hairline. It is what tells a section from the card under it without one more box, and it
+     gives stacked headings ("Central Coast Section" / "SCVAL" / "De Anza") a visible rank. */
+  .sx-kicker:has(> div > h2) { border-top: 2px solid var(--sx-text); padding-top: 0.625rem; }
+  .sx-kicker:has(> div > h3) { border-top: 1px solid var(--sx-border-strong); padding-top: 0.5rem; }
   /* In-card label variant (Last / Next / Splits …): 12px sans, ink-3, tight to its content. */
   .sx-kicker.sx-kicker-label {
+    border-top: 0; padding-top: 0;
     font-size: var(--text-micro); line-height: 1rem; letter-spacing: 0;
     color: var(--sx-text-3); min-height: 1.25rem; margin-bottom: 0.5rem;
   }
@@ -469,7 +481,7 @@
   .sx-pill {
     display: inline-flex; align-items: center; gap: 0.375rem;
     min-height: 2.5rem; padding-inline: 1rem;
-    border-radius: 999px;
+    border-radius: var(--sx-r-chip);
     background: var(--sx-surface-2); color: var(--sx-text);
     font-size: var(--text-meta); line-height: 1.25rem; font-weight: 500;
     text-decoration: none;
@@ -501,7 +513,7 @@
   /* A small static fact pill: "as of Wed Sep 30", "3 final", a count beside a date. */
   .sx-badge {
     display: inline-flex; align-items: center; gap: 0.25rem;
-    height: 1.75rem; padding-inline: 0.75rem; border-radius: 999px;
+    height: 1.75rem; padding-inline: 0.75rem; border-radius: var(--sx-r-tag);
     background: var(--sx-surface-2); color: var(--sx-text-2);
     font-size: var(--text-micro); line-height: 1rem; font-weight: 500;
     white-space: nowrap;
@@ -629,8 +641,8 @@
         aria-current do. ── */
   .sx-league-chip {
     display: inline-flex; align-items: center; justify-content: center; gap: 0.25rem;
-    min-height: 2.75rem; min-width: 2.75rem; padding-inline: 0.5rem;
-    border-radius: 999px;
+    min-height: 2.75rem; min-width: 2.75rem; padding-inline: 0.625rem;
+    border-radius: var(--sx-r-control);
     background: var(--sx-surface-2); color: var(--sx-text-2);
     font-size: var(--text-micro); line-height: 1rem; font-weight: 600;
     text-decoration: none; white-space: nowrap;
@@ -639,9 +651,10 @@
   @media (hover: hover) {
     .sx-league-chip:not(:disabled):hover { background: var(--sx-surface-3); color: var(--sx-text); }
   }
+  /* Selected: inverse ink, the text/surface pair (18.91 / 16.43) swapped, so it needs no new
+     measurement. The check glyph stays as the non-luminance cue. */
   .sx-league-chip:is([aria-pressed="true"], [aria-current="page"]) {
-    background: var(--sx-accent-wash); color: var(--sx-accent-ink);
-    box-shadow: inset 0 0 0 1.5px var(--sx-text);
+    background: var(--sx-text); color: var(--sx-surface);
   }
   .sx-chip-check { display: none; }
   .sx-league-chip:is([aria-pressed="true"], [aria-current="page"]) > .sx-chip-check { display: inline; }
@@ -805,9 +818,9 @@
       capsule `data-pending` (useLinkStatus) the moment it is tapped, but `aria-current` only moves
       when the route commits, so for the length of the fetch two capsules were lit. While anything
       in the same <nav> is pending, the current item that is not itself the pending one drops to
-      the resting look. It has to beat the active capsule's `bg-accent-wash` / `text-accent-ink`
-      utilities, and a rule in @layer base never can, so it sits outside every layer like the
-      score rule above. The ink is the resting nav ink (`text-ink-2`), set on the link for the tab
+      the resting look. It has to beat the active item's utilities (the top bar's ink underline,
+      the tab bar's `bg-accent-wash` / `text-accent-ink`), and a rule in @layer base never can,
+      so it sits outside every layer like the score rule above. The ink is the resting nav ink (`text-ink-2`), set on the link for the tab
       variant (whose label and glyph inherit it) and on the capsule for the top variant. Nothing
       matches when nothing is pending, and forced colours keep the Highlight outline on
       `aria-current` until the route actually changes. ── */
@@ -817,4 +830,5 @@ nav:has([data-pending]) [aria-current]:not([aria-current="false"]):not(:has([dat
 }
 nav:has([data-pending]) [aria-current]:not([aria-current="false"]):not(:has([data-pending])) .sx-indicator {
   background: transparent;
+  box-shadow: none;
 }

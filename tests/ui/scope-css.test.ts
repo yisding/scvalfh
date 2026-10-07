@@ -81,16 +81,15 @@ describe('buildLeagueScopeCss', () => {
     for (const i of hides) expect(lift).toBeGreaterThan(i);
   });
 
-  it('draws the selected chip with the accent wash, accent ink, 600 and a 1.5px ink ring — no league hue', () => {
+  it('draws the selected chip in inverse ink at 600 — no league hue', () => {
     const selected = rules.filter(
       (r) => (r.includes('[data-league-option=') || r.includes('[data-region-option=')) && !r.includes('.sx-chip-check'),
     );
     expect(selected).toHaveLength(LEAGUE_IDS.length + 1 + 2);
     for (const r of selected) {
-      expect(r).toContain('background:var(--sx-accent-wash)');
-      expect(r).toContain('color:var(--sx-accent-ink)');
+      expect(r).toContain('background:var(--sx-text)');
+      expect(r).toContain('color:var(--sx-surface)');
       expect(r).toContain('font-weight:600');
-      expect(r).toContain('1.5px var(--sx-text)');
     }
     // Only the shared tokens: no literal colour anywhere.
     expect(css).not.toMatch(/#[0-9a-f]{3,8}\b|rgb\(|hsl\(|oklch\(/i);

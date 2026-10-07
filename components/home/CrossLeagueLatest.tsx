@@ -35,29 +35,32 @@ export function CrossLeagueLatest({ view, region, className }: CrossLeagueLatest
         action={view ? { href: `/scores/${view.date}`, label: `All ${view.total}` } : undefined}
       />
       {view && view.groups.length > 0 ? (
-        view.groups.map((group, i) => (
-          <div key={group.leagueId} className={i === 0 ? 'mt-0' : 'mt-5'}>
-            <h3 className="m-0 mb-2 text-lead text-ink">{group.shortName}</h3>
-            <div className="sx-card sx-flush sx-bleed">
-              <ol className="sx-list">
-                {group.games.map((game) => (
-                  <li key={game.contestId}>
-                    <ResultRow game={game} />
-                  </li>
-                ))}
-              </ol>
+        // Two-up from 768px: a full-width row put each score a thousand pixels from its team name.
+        <div className="md:grid md:grid-cols-2 md:items-start md:gap-x-6 md:gap-y-6">
+          {view.groups.map((group, i) => (
+            <div key={group.leagueId} className={i === 0 ? 'mt-0' : 'mt-5 md:mt-0'}>
+              <h3 className="m-0 mb-2 text-lead text-ink">{group.shortName}</h3>
+              <div className="sx-card sx-flush sx-bleed">
+                <ol className="sx-list">
+                  {group.games.map((game) => (
+                    <li key={game.contestId}>
+                      <ResultRow game={game} />
+                    </li>
+                  ))}
+                </ol>
+              </div>
+              {group.total > group.games.length ? (
+                <p className="mt-2 mb-0 text-meta">
+                  <Link href={`/scores/${view.date}`} prefetch={false} className="sx-action text-accent hover:underline">
+                    {group.total - group.games.length} more {group.shortName}{' '}
+                    {group.total - group.games.length === 1 ? 'game' : 'games'} that day{' '}
+                    <Arrow />
+                  </Link>
+                </p>
+              ) : null}
             </div>
-            {group.total > group.games.length ? (
-              <p className="mt-2 mb-0 text-meta">
-                <Link href={`/scores/${view.date}`} prefetch={false} className="sx-action text-accent hover:underline">
-                  {group.total - group.games.length} more {group.shortName}{' '}
-                  {group.total - group.games.length === 1 ? 'game' : 'games'} that day{' '}
-                  <Arrow />
-                </Link>
-              </p>
-            ) : null}
-          </div>
-        ))
+          ))}
+        </div>
       ) : (
         // The composition each league panel uses for the same state (LeaguePanel), pointed at the
         // cross-league schedule index rather than one league's.

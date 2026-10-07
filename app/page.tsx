@@ -20,7 +20,7 @@ import { TEAMS } from '../lib/teams';
  * Every league's panel is in the static HTML. The remembered league (`localStorage`, stamped on
  * `<html data-league>` by the prefs script before first paint) and the scope stylesheet decide
  * which `data-scope` blocks show: `all` always, `none` only when no league is effective (the
- * first-visit view: Find your team + the latest from every league), `<id>` only for that league.
+ * first-visit view: the latest from every league, then Find your team), `<id>` only for that league.
  * The remembered region (`<html data-region>`, DESIGN-socal §2.4) decides, independently, which
  * `data-region-scope` blocks show: each region's panels, its card grid, its latest-results block and
  * its status line. The finder stays outside them and searches all 99 teams.
@@ -96,8 +96,21 @@ export default function HomePage() {
         <LeagueSwitcher mode="scope" includeAll label="Your league" leagues={data.leagueChips} />
       </div>
 
+      {/* First visit: the latest results come BEFORE the finder and the league directory. "What
+          just happened?" is the question this page answers first (SPEC §10.1), and the league cards
+          below are a directory, not news; with the finder first, a phone's first screen held no
+          score at all. */}
+      {data.regions.map((region) => (
+        <CrossLeagueLatest
+          key={region.id}
+          view={region.latest}
+          region={{ id: region.id, shortName: region.shortName, idSuffix: region.idSuffix }}
+          className="mt-8 md:mt-10"
+        />
+      ))}
+
       {/* ONE finder over all 99 teams, outside the region blocks; only the card grids are scoped. */}
-      <FindYourTeam index={data.searchIndex} className="mt-8 md:mt-10">
+      <FindYourTeam index={data.searchIndex} className="mt-section md:mt-section-lg">
         {data.regions.map((region) => (
           <Fragment key={region.id}>
             <h3 data-region-scope={region.id} className="m-0 mt-6 text-lead text-ink">
@@ -133,14 +146,6 @@ export default function HomePage() {
         </div>
       ))}
 
-      {data.regions.map((region) => (
-        <CrossLeagueLatest
-          key={region.id}
-          view={region.latest}
-          region={{ id: region.id, shortName: region.shortName, idSuffix: region.idSuffix }}
-          className="mt-section md:mt-section-lg"
-        />
-      ))}
     </div>
   );
 }

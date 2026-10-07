@@ -6,11 +6,10 @@ import MissingValue from './MissingValue';
  * never reflows.
  *
  * The team page's eight stat tiles (components/teams/TeamStatTiles.tsx), a `<dl>` of label/value
- * groups, 2-up below 768px and 4-up above. Each tile is its own `.sx-card`, label over value over
- * sub, and the DOM is in that same order ("Place, 4th, of 8 in De Anza"). It used to pull the
+ * groups, 2-up below 768px and 4-up above. Each tile is unboxed: a hairline rule over label over
+ * value over sub, a box-score line rather than eight floating cards, and the DOM is in that same order ("Place, 4th, of 8 in De Anza"). It used to pull the
  * label up with `order-first`, which brief §1 vetoes: the reading and caret order must match what
- * is on screen. Below 768px the card is compact (12px padding, a 24px value, a 12px sub, no 96px
- * floor).
+ * is on screen. Below 768px it is compact (a 24px value, a 12px sub).
  *
  * A screen reader announces "list, 8 items" and pairs each label with its number instead of
  * reading 24 loose lines. The card's wrapper div is the `<dl>`'s group div, with `<dt>` (the
@@ -63,7 +62,7 @@ export function StatTile({ label, value, sub, emphasis = 'default', srLabel, srV
   // lost its min-height in the built CSS (DESIGN §7.7). Hence the array join (`m-0` cancels the
   // UA's 40px dd indent).
   return (
-    <div className={['sx-card flex flex-col p-3 md:min-h-[6rem] md:p-4', className].filter(Boolean).join(' ')}>
+    <div className={['flex flex-col border-t border-rule pt-2 md:pt-3', className].filter(Boolean).join(' ')}>
       <dt className="mb-0.5 block text-meta font-medium text-ink-3 md:mb-1">{labelText}</dt>
       <dd className={['m-0 sx-figure block font-semibold text-ink', valueClass].join(' ')}>{valueText}</dd>
       {sub ? (

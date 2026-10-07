@@ -53,7 +53,7 @@ export function TeamStatTiles({ view, className }: TeamStatTilesProps) {
 
   return (
     <div className={className}>
-      <dl className="m-0 grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
+      <dl className="m-0 grid grid-cols-2 gap-x-4 gap-y-5 md:grid-cols-4 md:gap-x-6 md:gap-y-6">
         <StatTile
           label="Place"
           value={league ? placeMark(league.place, sharedPlace, 'pill') : null}

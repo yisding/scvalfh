@@ -208,7 +208,7 @@ export default async function ScoresByDatePage({ params }: PageProps<'/scores/[d
       {seasonLeagues.length <= 1 ? (
         <a
           href={seasonLeagues[0] ? `/schedule/${seasonLeagues[0].id}#${date}` : `/schedule#${date}`}
-          className="sx-action min-h-11 rounded-full px-3 text-meta font-medium text-accent no-underline hover:bg-surface-2"
+          className="sx-action min-h-11 rounded-chip px-3 text-meta font-medium text-accent no-underline hover:bg-surface-2"
         >
           Full season
           {seasonLeagues[0] ? (
@@ -229,7 +229,7 @@ export default async function ScoresByDatePage({ params }: PageProps<'/scores/[d
                 key={league.id}
                 data-region-scope={twoRegions ? regionOf(league.id) : undefined}
                 href={`/schedule/${league.id}#${date}`}
-                className="sx-action min-h-11 rounded-full px-1.5 text-meta font-medium text-accent no-underline hover:bg-surface-2"
+                className="sx-action min-h-11 rounded-chip px-1.5 text-meta font-medium text-accent no-underline hover:bg-surface-2"
               >
                 {league.shortName}
                 <span className="sr-only">{` full season, at ${shortDate(date)}`}</span>

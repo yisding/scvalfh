@@ -73,13 +73,13 @@ export interface LeagueHealthCardProps {
 const STATE_WORDS: Readonly<Record<LeagueRunState, string>> = {
   fresh: 'Current',
   partial: 'Current, with gaps',
-  frozen: 'Carried from an earlier run',
-  degraded: 'Partly carried from an earlier run',
+  frozen: 'Carried from an earlier update',
+  degraded: 'Partly carried from an earlier update',
 };
 
 const TABLE_WORDS = {
-  ok: 'read this run',
-  carried: 'carried from an earlier run',
+  ok: 'read in this update',
+  carried: 'carried from an earlier update',
   missing: 'could not be read',
   skipped: 'not requested',
 } as const;
@@ -113,11 +113,11 @@ function OfficialLine({
             ? 'read live each run'
             : official.revisedUpstream
               ? `upstream revised${doc.revisedOn ? ` since our copy (${doc.revisedOn})` : ''}`
-              : 'upstream unchanged'}
-          {official.carried ? ' · carried from an earlier run' : ''}
+              : 'unchanged at the source'}
+          {official.carried ? ' · carried from an earlier update' : ''}
         </>
       ) : (
-        ' · not read this run'
+        ' · not read in this update'
       )}
     </p>
   );

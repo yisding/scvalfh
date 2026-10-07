@@ -4207,3 +4207,55 @@ the latest of the clubs file, the commitments file and the roster overlay.
 - **No OG card**: the page takes the root card, as `/clubs` and `/commits` do.
 - **No budget**, for §17.6's reason. **Gates**: `assert:prerender`, `assert-vinext-prerender.ts` and
   `smoke-server.sh` expect `/recruiting` among the fixed pages; `a11y-axe.mjs` checks it.
+
+## 26. Visual refresh amendment (2026-10)
+
+A pass to take the site off the generic template look (Geist on pale gray, every block a
+soft-shadowed rounded card, every control a capsule, a tinted pill for the current page) and back
+toward this spec's own idea of a ruled scoreboard. It wins over §4.4 and §7.2 where they disagree.
+
+### 26.1 Decisions this reverses
+
+- **The section rule is back (§7.2, R-9).** A page-level h2 sits under a 2px ink rule, an h3 under
+  a 1px `--sx-border-strong` hairline; in-card labels (`size="label"`) stay bare. Kickers remain
+  sentence case (§15.8). Stacked headings on `/standings` now have a visible rank.
+- **Flat surfaces.** `--sx-shadow-raised` is a transparent zero layer in light mode too, so a card is
+  its 1px ring and nothing else, as dark mode always was; hover (`.sx-lift`) darkens the ring rather
+  than floating the card.
+- **Radii.** tag 4 · chip 8 · control 10 · card 8 · card-lg 10. `control` (new) is the selectors:
+  league, region and filter chips, division tabs and the date rail. Buttons and link pills use
+  `chip`. A full pill survives only where the shape is the meaning (the dashed "pending" chip) and
+  for the round theme toggle.
+- **Selected selector = inverse ink** (`--sx-text` fill, `--sx-surface` text: the measured
+  18.91 / 16.43 pair swapped), not accent wash plus an ink ring. The check glyph stays. The pre-paint
+  scope stylesheet draws the same state.
+- **Top-bar current page = ink, semibold, 2px ink underline**, not an accent-wash capsule. The phone
+  tab bar keeps its wash capsule.
+- **Team stat tiles are unboxed**: a hairline over label, value, sub; a box-score line rather than
+  eight floating cards.
+
+### 26.2 Home: the latest results first
+
+On a first visit (no remembered league) the cross-league "Latest from every … league" block now comes
+before "Find your team" and the league cards. With the finder first, a 390 x 844 phone's first screen
+held no score at all; the league cards are a directory, not news. DOM order is still reading order.
+From 768px the latest block's league groups run two-up, so a score sits next to its team names
+instead of across a 1,100px row. §15.6's composition is otherwise unchanged.
+
+### 26.3 Copy: no implementation words
+
+Reader-facing text does not describe how the page is drawn or built: no pixel sizes ("2px rule" is
+"the labelled line"), no "ink", "rendering", "pipeline", "snapshot", "run", "static", "API" or
+`localStorage`. The About page says "update" for a data refresh. Comments and pipeline logs are
+unaffected.
+
+### 26.4 Not changed, and recommended next
+
+- **Typeface.** Geist is the create-next-app default and reads as such. A face with more character
+  (a variable grotesque with a width axis, condensed for headings and figures) would do the most
+  for the site's identity, but `tests/ui/text-metrics.ts` is calibrated to Geist's advances and the
+  tab-label and pin-label tests depend on it, so a swap must re-measure those tables.
+- **The phone "See something missing?" bar** takes 44px of every page's fold (§1.3 budgets the
+  chrome at 100px) and repeats the header's and footer's report links.
+- **Long intros.** `/leaders` and `/playoffs` open with five to nine lines of method before any
+  data; the caveats could move into a disclosure under a one-line lead.

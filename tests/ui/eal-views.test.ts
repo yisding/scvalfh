@@ -314,7 +314,7 @@ describe('/about, the EAL parts', () => {
     const members = data.getStandings(LEAGUE).filter((s) => s.reported !== null).length;
     expect(health.reportedTable, 'lib/pipeline/steps/reported.ts').toBe('ok');
     expect(health.reportedRows, 'lib/pipeline/steps/reported.ts: the members the table resolved to').toBe(members);
-    expect(textOf(card), 'components/about/LeagueHealthCard.tsx').toContain(`read this run (${members} member rows).`);
+    expect(textOf(card), 'components/about/LeagueHealthCard.tsx').toContain(`read in this update (${members} member rows).`);
   });
 
   it('counts member rows from the standings, so an older snapshot’s stored count cannot print a wrong one', async () => {

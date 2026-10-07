@@ -113,7 +113,7 @@ export function PlayoffStatusBand({
                   key={team.slug}
                   href={`/teams/${team.slug}`}
                   prefetch={false}
-                  className="inline-flex h-8 items-center gap-1.5 rounded-full bg-surface-2 px-3 text-meta text-ink no-underline hover:bg-surface-3 forced-colors:border"
+                  className="inline-flex h-8 items-center gap-1.5 rounded-chip bg-surface-2 px-3 text-meta text-ink no-underline hover:bg-surface-3 forced-colors:border"
                 >
                   {team.name}
                   {/* The same `T` marker the table uses for a level place ("T7" there, "T-7th"
