@@ -369,8 +369,8 @@ still show below.
 
 The same overlay links players' own recruiting pages — NCSA, SportsRecruits, Hudl and FieldLevel
 profiles (`profiles` on each record; 401 for 316 players as of 2026-10-07). NorCal: 134 for 114 (SCVAL 70
-for 56, BVAL 14 for 14, two of them Westmont's Kaylee and Lexi True, from the 2026-10-07 sweep of the rows MaxPreps added, PCAL 3 for 3, MCAL 14 for 12, EAL 33 for 29: Chico 16 for 13, Pleasant Valley 11
-for 11, Davis 5 for 4, Lassen 1 for 1, none for Bella Vista or Corning; 23 NCSA, 58 SportsRecruits, 51
+for 56, BVAL 14 for 14 (two of them Westmont's Kaylee and Lexi True, from the 2026-10-07 sweep of the rows MaxPreps added), PCAL 3 for 3, MCAL 14 for 12, EAL 33 for 29: Chico 16 for 13, Pleasant Valley 11
+for 11, Davis 5 for 4, Lassen 1 for 1, none for Bella Vista or Corning; 25 NCSA, 58 SportsRecruits, 51
 Hudl). Southern California, swept 2026-10-06: 267 for 202 (134 Hudl, 64 NCSA, 55 SportsRecruits, 14
 FieldLevel), the most at Bishop's (37 for all 24 rows), Harvard-Westlake (25 for 22), Torrey Pines (24
 for 13), San Dieguito Academy (18 for 16) and University City (16 for 13); 17 of the 53 teams have none,
