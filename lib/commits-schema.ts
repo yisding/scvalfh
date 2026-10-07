@@ -186,7 +186,7 @@ export const CollegeProgramSchema = z.object({
 });
 
 export const CollegeSchema = z.object({
-  /** Ours, kebab-case: the `#college-<slug>` anchor on /commits. */
+  /** Ours, kebab-case: the `#<region>-college-<slug>` anchor on /commits. */
   slug: slugId,
   /** The official name: "Stanford University". */
   name: text,

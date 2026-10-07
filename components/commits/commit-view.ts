@@ -25,7 +25,6 @@ import {
   collegeDisplayName,
   commitClassOf,
   commitProgram,
-  getCollegeCommitments,
   getColleges,
   getCommitments,
   getCommitsFile,
@@ -42,8 +41,10 @@ import {
 import { clubSiteKey } from '../../lib/clubs-schema';
 import { COLLEGE_DIVISIONS, COMMIT_SPORTS } from '../../lib/commits-schema';
 import { dateWithYear, gradeWord, listWords, partialDate } from '../../lib/format';
+import { REGIONS, regionOf } from '../../lib/leagues';
 import { getRosters } from '../../lib/rosters';
-import type { TeamSlug } from '../../lib/types';
+import { getTeamBySlug } from '../../lib/teams';
+import type { RegionId, TeamSlug } from '../../lib/types';
 import { plural } from '../ui/plural';
 import { OUTLETS, hostOf, numbered, pathOf, schoolName } from '../ui/source-hosts';
 
@@ -184,9 +185,19 @@ export function commitAnchor(c: Pick<Commitment, 'teamSlug' | 'athleteId'>): str
   return `${c.teamSlug}-${c.athleteId}`;
 }
 
-/** The id of a college's row on /commits. */
-export function collegeAnchor(slug: string): string {
-  return `college-${slug}`;
+/**
+ * The id of a college's row on /commits, in one region's block: a college players from both halves
+ * committed to has a row in each, so the region keeps the two ids apart.
+ */
+export function collegeAnchor(region: RegionId, slug: string): string {
+  return `${region}-college-${slug}`;
+}
+
+/** The half of the state a commitment's school plays in: its league's region. */
+export function commitRegion(c: Pick<Commitment, 'teamSlug'>): RegionId {
+  const team = getTeamBySlug(c.teamSlug);
+  if (!team) throw new Error(`components/commits/commit-view.ts: no team ${c.teamSlug}`);
+  return regionOf(team.league);
 }
 
 // ---------------------------------------------------------------- the team roster's line
@@ -260,7 +271,7 @@ export interface CommitRow {
 }
 
 export interface CommitClassGroup {
-  /** `class-2027`; `class-unknown` for players whose class year nobody published. */
+  /** `norcal-class-2027`; `socal-class-unknown` for players whose class year nobody published. */
   id: string;
   /** "Class of 2027", "Class year not listed". */
   heading: string;
@@ -288,20 +299,36 @@ export interface CollegeRow {
   fullName: string | null;
   /** "Stanford, CA" */
   place: string;
-  /** The teams players here committed to, in the file's order (field hockey first). */
+  /** The teams the region's players committed to, in the file's order (field hockey first). */
   programs: CollegeProgramRow[];
-  /** "2 players", "1 player". */
+  /** "2 players", "1 player": the region's players only. */
   countLine: string;
-  /** The committed players' schools, by registry name, distinct and alphabetical. */
+  /** The region's committed players' schools, by registry name, distinct and alphabetical. */
   schools: string[];
+}
+
+/**
+ * One half of the state on /commits (DESIGN §21.8): its commitments by class and the colleges its
+ * players committed to, in one `data-region-scope` block under the RegionSwitcher.
+ */
+export interface CommitRegionView {
+  id: RegionId;
+  /** "Northern California" */
+  name: string;
+  /** regionSummary(): "Northern California: 25 players from 14 schools have committed to …". */
+  summary: string;
+  /** The earliest class first; [] when no player of the region has a commitment. */
+  classes: CommitClassGroup[];
+  /** The colleges section's id: `norcal-colleges`. */
+  collegesId: string;
+  /** The most of the region's players first, then the highest level, then name; [] with no commitment. */
+  colleges: CollegeRow[];
 }
 
 export interface CommitsView {
   lede: string;
-  /** The earliest class first; [] when no commitment is in the file. */
-  classes: CommitClassGroup[];
-  /** lib/commits.ts getColleges() order: the most players first. */
-  colleges: CollegeRow[];
+  /** REGIONS' order, NorCal first; both even when one, or both, has no commitment. */
+  regions: CommitRegionView[];
   /** The tracked rosters: rosters.json's teams, 49 today. */
   trackedTeams: number;
   playerCount: number;
@@ -344,16 +371,22 @@ function programLink(college: College, program: CollegeProgram): CommitSourceLin
     : { label: `${collegeDisplayName(college)} ${SPORT_WORDS[program.sport]}`, url: program.url };
 }
 
-/** `/commits`: every commitment by class, then every college with how many players committed there. */
-export function buildCommitsView(): CommitsView {
-  const file = getCommitsFile();
-  const commitments = getCommitments();
-  const trackedTeams = getRosters().teams.length;
+/** A commitment as the count words read it: its school, college, sport and that team's level. */
+type CommitPick = { teamSlug: string; college: string; sport: CommitSport; division: CollegeDivision };
 
+const pick = (c: Commitment): CommitPick => ({
+  teamSlug: c.teamSlug,
+  college: c.college,
+  sport: c.sport,
+  division: commitProgram(c).program.division,
+});
+
+/** One region's commitments by class, earliest first (getCommitments() order within a class). */
+function classGroups(region: RegionId, commitments: readonly Commitment[]): CommitClassGroup[] {
   const classes: CommitClassGroup[] = [];
   for (const c of commitments) {
     const cls = commitClassOf(c);
-    const id = cls === null ? 'class-unknown' : `class-${cls}`;
+    const id = `${region}-class-${cls ?? 'unknown'}`;
     let group = classes.find((g) => g.id === id);
     if (!group) {
       group = { id, heading: cls === null ? 'Class year not listed' : `Class of ${cls}`, meta: '', rows: [] };
@@ -362,43 +395,73 @@ export function buildCommitsView(): CommitsView {
     group.rows.push(commitRow(c));
   }
   for (const g of classes) g.meta = plural(g.rows.length, 'player');
+  return classes;
+}
 
-  const colleges: CollegeRow[] = getColleges().map((college) => {
-    const ties = getCollegeCommitments(college.slug);
-    return {
+/**
+ * The colleges one region's players committed to, each with only the programs, players and schools
+ * of that region: the most players first, then the highest level of those programs (Division I
+ * first), then display name — lib/commits.ts getColleges()' order, counted within the region.
+ */
+function collegeRows(region: RegionId, commitments: readonly Commitment[]): CollegeRow[] {
+  return getColleges()
+    .flatMap((college) => {
+      const ties = commitments.filter((c) => c.college === college.slug);
+      if (ties.length === 0) return [];
+      const programs = college.programs.filter((p) => ties.some((c) => c.sport === p.sport));
+      const level = Math.min(...programs.map((p) => COLLEGE_DIVISIONS.indexOf(p.division)));
+      return [{ college, ties, programs, level }];
+    })
+    .sort(
+      (a, b) =>
+        b.ties.length - a.ties.length ||
+        a.level - b.level ||
+        collegeDisplayName(a.college).localeCompare(collegeDisplayName(b.college)),
+    )
+    .map(({ college, ties, programs }) => ({
       slug: college.slug,
-      anchor: collegeAnchor(college.slug),
+      anchor: collegeAnchor(region, college.slug),
       name: collegeDisplayName(college),
       fullName: college.shortName !== null ? college.name : null,
       place: placeWords(college),
-      programs: college.programs.map((p) => ({
+      programs: programs.map((p) => ({
         sport: p.sport,
         facts: [sportLabel(p.sport), DIVISION_WORDS[p.division], p.conference].filter((f): f is string => f !== null),
         link: programLink(college, p),
       })),
       countLine: plural(ties.length, 'player'),
       schools: [...new Set(ties.map((c) => schoolName(c.teamSlug)))].sort((a, b) => a.localeCompare(b)),
+    }));
+}
+
+/**
+ * `/commits`: per region, NorCal first, every commitment by class, then every college with how many
+ * of the region's players committed there.
+ */
+export function buildCommitsView(): CommitsView {
+  const file = getCommitsFile();
+  const commitments = getCommitments();
+  const trackedTeams = getRosters().teams.length;
+
+  const regions: CommitRegionView[] = REGIONS.map((region) => {
+    const here = commitments.filter((c) => commitRegion(c) === region.id);
+    return {
+      id: region.id,
+      name: region.name,
+      summary: regionSummary(region.name, here.map(pick)),
+      classes: classGroups(region.id, here),
+      collegesId: `${region.id}-colleges`,
+      colleges: collegeRows(region.id, here),
     };
   });
 
-  const playerCount = commitments.length;
-  const schoolCount = new Set(commitments.map((c) => c.teamSlug)).size;
   return {
-    lede: ledeWords(
-      trackedTeams,
-      commitments.map((c) => ({
-        teamSlug: c.teamSlug,
-        college: c.college,
-        sport: c.sport,
-        division: commitProgram(c).program.division,
-      })),
-    ),
-    classes,
-    colleges,
+    lede: ledeWords(trackedTeams, commitments.map(pick)),
+    regions,
     trackedTeams,
-    playerCount,
-    schoolCount,
-    collegeCount: colleges.length,
+    playerCount: commitments.length,
+    schoolCount: new Set(commitments.map((c) => c.teamSlug)).size,
+    collegeCount: new Set(commitments.map((c) => c.college)).size,
     capturedOn: dateWithYear(file.capturedAt),
   };
 }
@@ -415,12 +478,24 @@ export function buildCommitsView(): CommitsView {
  *   several sports            the levels without the sport, then "By sport, 7 in field hockey, 2 in
  *                             lacrosse and 1 in soccer." (the most players first)
  */
-export function ledeWords(
-  trackedTeams: number,
-  commitments: ReadonlyArray<{ teamSlug: string; college: string; sport: CommitSport; division: CollegeDivision }>,
-): string {
+export function ledeWords(trackedTeams: number, commitments: readonly CommitPick[]): string {
   const opening = `Which players on this site’s ${trackedTeams} varsity rosters have committed to play a sport in college, field hockey or any other, according to public pages that name the player, the college and the sport.`;
   if (commitments.length === 0) return `${opening} No public page we found shows a commitment by a player here yet.`;
+  return `${opening} ${countWords(commitments)}`;
+}
+
+/**
+ * A region's sentence, over its own commitments: "Southern California: 12 players from 7 schools
+ * have committed to 9 colleges. Of them, …" (countWords), or, with none, "Southern California: no
+ * public page we found shows a commitment by a player here yet."
+ */
+export function regionSummary(name: string, commitments: readonly CommitPick[]): string {
+  if (commitments.length === 0) return `${name}: no public page we found shows a commitment by a player here yet.`;
+  return `${name}: ${countWords(commitments)}`;
+}
+
+/** The lede's counts after its opening: players, schools, colleges, then levels and sports. Never empty input. */
+function countWords(commitments: readonly CommitPick[]): string {
   const players = commitments.length;
   const schools = new Set(commitments.map((c) => c.teamSlug)).size;
   const colleges = new Set(commitments.map((c) => c.college)).size;
@@ -443,8 +518,8 @@ export function ledeWords(
     sports.length > 1 ? ` By sport, ${listWords(sports.map(({ sport, n }) => `${n} in ${SPORT_WORDS[sport]}`))}.` : '';
   if (byDivision.length === 1) {
     const only = byDivision[0];
-    return `${opening} ${who}, ${only.programs === 1 ? programWords(1, only.words) : `all ${programWords(only.programs, only.words)}`}.${bySport}`;
+    return `${who}, ${only.programs === 1 ? programWords(1, only.words) : `all ${programWords(only.programs, only.words)}`}.${bySport}`;
   }
   const parts = byDivision.map(({ n, programs, words }, i) => `${n} ${i === 0 ? 'committed ' : ''}to ${programWords(programs, words)}`);
-  return `${opening} ${who}. Of them, ${listWords(parts)}.${bySport}`;
+  return `${who}. Of them, ${listWords(parts)}.${bySport}`;
 }

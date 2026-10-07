@@ -10,7 +10,9 @@
  *     the build; no title or description names a player;
  *   - honesty: "Signed" only where the file says signed, a date only "as of", and every row links
  *     the pages it rests on, labelled by kind and host, never by path;
- *   - order: classes earliest first, then school and name; colleges with the most players first.
+ *   - order: classes earliest first, then school and name; colleges with the most players first;
+ *   - regions: each commitment sits in its school's half of the state, in that region's
+ *     `data-region-scope` block under the switcher, NorCal first.
  *
  * The data is hand research that changes only with a new sweep (tests/commits-file.test.ts): the
  * per-row checks below run over whatever the file holds, and the pinned words sit in their own block.
@@ -31,6 +33,8 @@ import {
   ledeWords,
   collegeAnchor,
   commitAnchor,
+  commitRegion,
+  regionSummary,
   playerCommitLine,
   sourceLabel,
   sportLabel,
@@ -49,14 +53,17 @@ import {
   getCommittedPlayer,
   type College,
 } from '../../lib/commits';
+import { REGIONS, regionOf } from '../../lib/leagues';
 import { getRosters } from '../../lib/rosters';
-import { TEAMS } from '../../lib/teams';
+import { TEAMS, getTeamBySlug } from '../../lib/teams';
 import { commitmentLeaks } from '../../scripts/copy-rules';
 import { PUBLIC_TERMS } from '../../scripts/public-terms';
 import { textOf } from './html-text';
 
 const file = getCommitsFile();
 const view = buildCommitsView();
+const allClasses = view.regions.flatMap((r) => r.classes);
+const allRows = allClasses.flatMap((g) => g.rows);
 const renderIndex = () => renderToStaticMarkup(createElement(CommitsPage));
 async function renderTeam(slug: string): Promise<string> {
   return renderToStaticMarkup(await TeamPage({ params: Promise.resolve({ slug }) } as never));
@@ -194,6 +201,15 @@ describe('the lede counts players, schools, colleges, programs per level and spo
       '2 players from 2 schools have committed to 1 college, all NCAA Division I programs. By sport, 1 in field hockey and 1 in lacrosse.',
     );
   });
+
+  it('a region’s sentence leads with its name, and says when the region has none', () => {
+    expect(regionSummary('Southern California', [])).toBe(
+      'Southern California: no public page we found shows a commitment by a player here yet.',
+    );
+    expect(regionSummary('Northern California', [at('a', 'x', 'ncaa-d1'), at('b', 'y', 'ncaa-d3')])).toBe(
+      'Northern California: 2 players from 2 schools have committed to 2 colleges. Of them, 1 committed to an NCAA Division I field hockey program and 1 to an NCAA Division III field hockey program.',
+    );
+  });
 });
 
 describe('sport words', () => {
@@ -218,25 +234,39 @@ describe('buildCommitsView (/commits)', () => {
     expect(view.lede).toContain(`this site’s ${getRosters().teams.length} varsity rosters`);
     if (file.commitments.length === 0) {
       expect(view.lede).toContain('No public page we found shows a commitment by a player here yet.');
-      expect(view.classes).toEqual([]);
-      expect(view.colleges).toEqual([]);
+      expect(allClasses).toEqual([]);
+      expect(view.regions.flatMap((r) => r.colleges)).toEqual([]);
     } else {
       expect(view.lede).toMatch(/committed to \d+ colleges?/);
     }
   });
 
-  it('groups every commitment by class, earliest first, each row once', () => {
-    const rows = view.classes.flatMap((g) => g.rows);
-    expect(rows).toHaveLength(file.commitments.length);
-    expect(new Set(rows.map((r) => r.anchor)).size).toBe(rows.length);
-    const years = view.classes.map((g) => (g.id === 'class-unknown' ? Infinity : Number(g.id.slice(6))));
-    expect(years).toEqual([...years].sort((a, b) => a - b));
-    for (const g of view.classes) expect(g.meta).toMatch(/^\d+ players?$/);
+  it('has both regions, NorCal first, each holding exactly its own schools’ commitments', () => {
+    expect(view.regions.map((r) => r.id)).toEqual(REGIONS.map((r) => r.id));
+    for (const region of view.regions) {
+      const mine = getCommitments().filter((c) => regionOf(getTeamBySlug(c.teamSlug)!.league) === region.id);
+      expect(region.classes.flatMap((g) => g.rows).map((r) => r.anchor)).toEqual(mine.map(commitAnchor));
+      expect(region.summary.startsWith(`${region.name}: `)).toBe(true);
+      expect(region.collegesId).toBe(`${region.id}-colleges`);
+      for (const c of mine) expect(commitRegion(c)).toBe(region.id);
+    }
+  });
+
+  it('groups every commitment by class within its region, earliest first, each row once', () => {
+    expect(allRows).toHaveLength(file.commitments.length);
+    expect(new Set(allRows.map((r) => r.anchor)).size).toBe(allRows.length);
+    for (const region of view.regions) {
+      const prefix = `${region.id}-class-`;
+      for (const g of region.classes) expect(g.id.startsWith(prefix)).toBe(true);
+      const years = region.classes.map((g) => (g.id === `${prefix}unknown` ? Infinity : Number(g.id.slice(prefix.length))));
+      expect(years).toEqual([...years].sort((a, b) => a - b));
+      for (const g of region.classes) expect(g.meta).toMatch(/^\d+ players?$/);
+    }
   });
 
   it('shows each player under the roster’s spelling, with the college, the status and every source once', () => {
     for (const c of getCommitments()) {
-      const row = view.classes.flatMap((g) => g.rows).find((r) => r.anchor === commitAnchor(c))!;
+      const row = allRows.find((r) => r.anchor === commitAnchor(c))!;
       const { college, program } = commitProgram(c);
       expect(row.name).toBe(getCommittedPlayer(c).fullName);
       expect(row.school.href).toBe(`/teams/${c.teamSlug}#roster`);
@@ -248,24 +278,37 @@ describe('buildCommitsView (/commits)', () => {
       expect(row.sources.map((s) => s.url)).toEqual([...new Set(c.sources.map((s) => s.url))]);
       expect(new Set(row.sources.map((s) => s.label)).size).toBe(row.sources.length);
       const cls = commitClassOf(c);
-      expect(view.classes.find((g) => g.rows.includes(row))!.heading).toBe(cls === null ? 'Class year not listed' : `Class of ${cls}`);
+      expect(allClasses.find((g) => g.rows.includes(row))!.heading).toBe(cls === null ? 'Class year not listed' : `Class of ${cls}`);
     }
   });
 
-  it('lists every college once, the most players first, with each program’s sport and level, and its schools', () => {
-    expect(view.colleges.map((c) => c.slug)).toEqual(getColleges().map((c) => c.slug));
-    for (const row of view.colleges) {
-      const college = getCollege(row.slug)!;
-      expect(row.anchor).toBe(collegeAnchor(row.slug));
-      expect(row.place).toBe(`${college.city}, ${college.state}`);
-      expect(row.programs.map((p) => p.sport)).toEqual(college.programs.map((p) => p.sport));
-      row.programs.forEach((p, i) => {
-        expect(p.facts.slice(0, 2)).toEqual([sportLabel(p.sport), DIVISION_WORDS[college.programs[i].division]]);
-        expect(p.link?.url ?? null).toBe(college.programs[i].url);
-        if (p.link) expect(p.link.label).toBe(`${collegeDisplayName(college)} ${SPORT_WORDS[p.sport]}`);
-      });
-      expect(row.schools.length).toBeGreaterThan(0);
+  it('lists each college once per region it has players from, the most of the region’s players first', () => {
+    for (const region of view.regions) {
+      const mine = getCommitments().filter((c) => commitRegion(c) === region.id);
+      const count = (slug: string) => mine.filter((c) => c.college === slug).length;
+      const slugs = region.colleges.map((c) => c.slug);
+      expect(new Set(slugs)).toEqual(new Set(mine.map((c) => c.college)));
+      expect(new Set(slugs).size).toBe(slugs.length);
+      const counts = slugs.map(count);
+      expect(counts).toEqual([...counts].sort((a, b) => b - a));
+      for (const row of region.colleges) {
+        const college = getCollege(row.slug)!;
+        const sports = new Set(mine.filter((c) => c.college === row.slug).map((c) => c.sport));
+        const programs = college.programs.filter((p) => sports.has(p.sport));
+        expect(row.anchor).toBe(collegeAnchor(region.id, row.slug));
+        expect(row.place).toBe(`${college.city}, ${college.state}`);
+        expect(row.countLine).toBe(count(row.slug) === 1 ? '1 player' : `${count(row.slug)} players`);
+        expect(row.programs.map((p) => p.sport)).toEqual(programs.map((p) => p.sport));
+        row.programs.forEach((p, i) => {
+          expect(p.facts.slice(0, 2)).toEqual([sportLabel(p.sport), DIVISION_WORDS[programs[i].division]]);
+          expect(p.link?.url ?? null).toBe(programs[i].url);
+          if (p.link) expect(p.link.label).toBe(`${collegeDisplayName(college)} ${SPORT_WORDS[p.sport]}`);
+        });
+        expect(row.schools.length).toBeGreaterThan(0);
+      }
     }
+    // Every college in the file has a row in at least one region.
+    expect(new Set(view.regions.flatMap((r) => r.colleges.map((c) => c.slug)))).toEqual(new Set(getColleges().map((c) => c.slug)));
   });
 
   it('carries nothing the data file keeps but never renders', () => {
@@ -322,13 +365,28 @@ describe('/commits, rendered', () => {
     expect(html.lastIndexOf('<section')).toBe(html.indexOf('<section aria-labelledby="how-matched"'));
   });
 
-  it('gives every commitment and every college its anchor, and an empty state when there are none', () => {
+  it('gives every commitment and every region’s colleges their anchors, each id once', () => {
     for (const c of file.commitments) expect(html).toContain(`id="${commitAnchor(c)}"`);
-    for (const c of file.colleges) expect(html).toContain(`id="${collegeAnchor(c.slug)}"`);
-    if (file.commitments.length === 0) {
-      expect(textOf(html)).toContain('No commitment found yet.');
-      expect(html).not.toContain('id="colleges"');
+    for (const region of view.regions) {
+      for (const c of region.colleges) expect(html).toContain(`id="${collegeAnchor(region.id, c.slug)}"`);
     }
+    const ids = [...html.matchAll(/ id="([^"]+)"/g)].map((m) => m[1]);
+    expect(ids.length).toBe(new Set(ids).size);
+  });
+
+  it('puts each region’s commitments in its own scope block, under the switcher, NorCal first', () => {
+    if (file.commitments.length === 0) return;
+    const starts = view.regions.map((r) => html.indexOf(`<div id="${r.id}" data-region-scope="${r.id}">`));
+    for (const at of starts) expect(at).toBeGreaterThan(-1);
+    expect(starts).toEqual([...starts].sort((a, b) => a - b));
+    expect(html.indexOf('aria-label="Region"')).toBeGreaterThan(-1);
+    expect(html.indexOf('aria-label="Region"')).toBeLessThan(starts[0]);
+    view.regions.forEach((region, i) => {
+      const block = html.slice(starts[i], starts[i + 1] ?? html.indexOf('<section aria-labelledby="how-matched"'));
+      expect(textOf(block)).toContain(region.summary);
+      for (const row of region.classes.flatMap((g) => g.rows)) expect(block).toContain(`id="${row.anchor}"`);
+      for (const c of region.colleges) expect(block).toContain(`id="${collegeAnchor(region.id, c.slug)}"`);
+    });
   });
 
   it('shows no quote and no basis', () => {
