@@ -9,7 +9,8 @@
     "notFinal": 26,
     "outsideRegistry": 16,
     "forfeit": 1,
-    "unscored": 0
+    "unscored": 0,
+    "excludedByConfig": 1
   },
   "games": [
     {"contestId":"4ce631f7-6f96-4d01-b9f6-54acdea5d484","date":"2025-08-14","homeId":"e71f479e-b2c8-48da-a8b4-4f270c3afb92","homeSlug":"patrick-henry","awayId":"15d5e874-4af2-4d24-8e6b-be895937cb8c","awaySlug":"el-capitan","homeScore":6,"awayScore":0,"site":"home"},
@@ -732,7 +733,6 @@
     {"contestId":"3969af44-7ecb-4152-99f7-60c668e2f24c","date":"2025-10-17","homeId":"186dcece-fefd-4b67-b4c7-877b3e12beb2","homeSlug":"helix","awayId":"15d5e874-4af2-4d24-8e6b-be895937cb8c","awaySlug":"el-capitan","homeScore":5,"awayScore":0,"site":"home"},
     {"contestId":"3a50c9cd-72d7-4a64-ad54-cc44f5879671","date":"2025-10-17","homeId":"475c3bcb-9d28-457f-87b8-d979f9ff070f","homeSlug":"sage-creek","awayId":"9ef67997-7f5d-4899-b500-2d0b5c758105","awaySlug":"westview","homeScore":0,"awayScore":2,"site":"home"},
     {"contestId":"49e7f9fd-e415-4076-ad8c-00612c5a8040","date":"2025-10-17","homeId":"e1db3a4f-3bcf-4281-a574-d313212296a1","homeSlug":"presentation","awayId":"8a8c04d2-5606-44cf-9993-34db55474240","awaySlug":"valley-christian","homeScore":1,"awayScore":4,"site":"home"},
-    {"contestId":"553a83bc-936f-4613-83ad-ddf008222f1f","date":"2025-10-17","homeId":"186dcece-fefd-4b67-b4c7-877b3e12beb2","homeSlug":"helix","awayId":"e71f479e-b2c8-48da-a8b4-4f270c3afb92","awaySlug":"patrick-henry","homeScore":3,"awayScore":0,"site":"home"},
     {"contestId":"6ebb3af7-606b-4378-a5f8-3a04e822d181","date":"2025-10-17","homeId":"e71f479e-b2c8-48da-a8b4-4f270c3afb92","homeSlug":"patrick-henry","awayId":"f2ec9dd0-0f24-4161-a2c3-2a9df393f220","awaySlug":"mission-bay","homeScore":0,"awayScore":7,"site":"home"},
     {"contestId":"713f563b-866d-4bf8-b4fb-0ca998ff4f69","date":"2025-10-17","homeId":"1f152b3b-38dc-4d34-b260-9663dc3006a4","homeSlug":"salinas","awayId":"3f8f38fb-88f9-44ee-9af1-c1203fce437b","awaySlug":"hollister","homeScore":1,"awayScore":6,"site":"home"},
     {"contestId":"8e630d3c-f1c7-4d52-9538-316998a41790","date":"2025-10-17","homeId":"32f08693-bcfd-4a62-a463-77b91360f53b","homeSlug":"university-city","awayId":"15c34e49-1a29-4298-8a84-00a2ec6ae36b","awaySlug":"cathedral-catholic","homeScore":0,"awayScore":2,"site":"home"},

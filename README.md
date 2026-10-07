@@ -1204,9 +1204,10 @@ at once, at every build, starting from last season's:
   and a team's rating can move on a day it did not play, when an opponent's later results show it
   was stronger or weaker than it looked.
 - **The start.** Each team starts the season from its rating over last season's finals
-  (`data/prior-season.json`: every 2025-26 final between two of the 102 teams, 936 of them, from
-  MaxPreps: 412 between NorCal teams, 513 between Southern California teams and 11 between the
-  regions; 40 involve an independent), carried over in full. That start counts for one game: it decides the first weeks and
+  (`data/prior-season.json`: every 2025-26 final between two of the 102 teams, 935 of them, from
+  MaxPreps: 412 between NorCal teams, 512 between Southern California teams and 11 between the
+  regions; 40 involve an independent. One MaxPreps row, a no-time duplicate of Helix's Oct 18 win
+  over Patrick Henry, is left out by name: `PRIOR_EXCLUDED_CONTEST_IDS`), carried over in full. That start counts for one game: it decides the first weeks and
   fades as the season's own results come in. A team with no result yet this season is shown at its
   start, as "preseason".
 - **How well it predicts.** (Measured over the 43 teams of the four leagues covered on 2026-10-02,

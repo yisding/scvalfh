@@ -1426,6 +1426,18 @@ Gotchas, all **[V]**:
   Corning and Lassen have none). Red Bluff's 2025-26 games are outside the registry and left out. The
   EAL's 2025-11-01 tournament games carried `contestType` 5 on both rows, with the round in
   `contest.location`.
+- **Duplicates named by hand** (`PRIOR_EXCLUDED_CONTEST_IDS` in `lib/prior-season-schema.ts`, counted
+  under `excluded.excludedByConfig`): a row is listed only when another source shows it repeats a game
+  the feeds already carry. One so far, checked 2026-10-07: at Helix's one-day tournament on Sat
+  2025-10-18, Patrick Henry played Helix twice. Patrick Henry's own 2025-26 schedule
+  (`phpatriots.net/varsity/field-hockey/schedule-results`) lists 11:20 AM, L 0-3, and 4:10 PM, L 0-1,
+  plus a home game against Mission Bay on Oct 17. MaxPreps holds both as `1bd0e53f` (3-0, entered with
+  the 4:10 time) and `bb3d5c20` (1-0), each with a different save count for Patrick Henry's keeper (9
+  and 3), and also a third row, `553a83bc` (3-0, Oct 17, no time, scored by the Section office's
+  account), which matches Helix's site listing the event as "OCT 17 TBA". That third row is the
+  duplicate. Fountain Valley's and El Capitan's games at the same event exist only as such Oct 17 rows,
+  so they are kept under that date. No newspaper or tournament page reported any of these scores, and
+  si.com repeats MaxPreps.
 - Cost: one `team-context/v1` read (about 0.55 MB) and 102 schedule reads (about 150 KB each; 99 before the independents joined, 43 when
   measured), through the primary client's budget, once a season. The 2024-25 season (`c388901e-…`, 354
   games) was read the same way to test the starting point and is not kept.

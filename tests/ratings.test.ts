@@ -151,7 +151,7 @@ function priorOf(games: PriorGame[]): PriorSeason {
     sportSeasonId: 'x',
     source: 'maxpreps-api',
     fetchedAt: '2025-12-01T00:00:00.000Z',
-    excluded: { deleted: 0, notFinal: 0, outsideRegistry: 0, forfeit: 0, unscored: 0 },
+    excluded: { deleted: 0, notFinal: 0, outsideRegistry: 0, forfeit: 0, unscored: 0, excludedByConfig: 0 },
     games,
   };
 }
