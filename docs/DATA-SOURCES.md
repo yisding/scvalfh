@@ -157,6 +157,19 @@ fetched, nothing claimed). `pending` is the honest placeholder the file was seed
 PCAL and MCAL (and what `--leagues` leaves for a team the file has no row for) until a run read
 them; the team page says "has not been collected yet" for it.
 
+`pnpm fetch-rosters --leagues bval,mcal` was run again on 2026-10-07 (21 teams, 0 failed): Marin
+Academy, empty on 2026-10-03, now lists 18 players with grades (they agree with the school's own
+first-name-and-initial list; the overlay note says how); Westmont added Kaylee True, Lexi True and
+Savannah Murdoch; Tamalpais dropped Layla Goldstein, renamed Margaret "maggie" Maher to Maggie Maher
+and swapped Tashi Perkins' and Lauren Townsend's numbers (11 and 20). Nothing else changed in either
+league. The 21 added rows were swept the same day for school sources, recruiting profiles, clubs and
+commitments (see the overlay's, `data/clubs.json`'s and `data/commits.json`'s notes): two NCSA profiles
+(Kaylee and Lexi True), one club tie (Kaylee True to Fly FHC), no commitment, and a grade conflict for
+Julia Foulke, whom MaxPreps' 2026-27 roster calls a senior while the school's list and MaxPreps' own
+earlier rosters put her in the class of 2028 (MaxPreps kept, as the overlay rule says). A read of the
+other leagues the same day (not written) found no player added, removed or changed. The file holds 1,702 players on
+88 of the 102 teams.
+
 The previous file is salvaged row by row (`readPreviousFile` in `lib/fetch-scope.ts`): each row is
 held to the team schema on its own, and a row that no longer validates (a slug gone from the
 registry, a changed id or division, a broken status, or two rows claiming one team) is dropped and
@@ -299,7 +312,7 @@ below). Fills and links by team, measured from the file; "MP rows" is MaxPreps' 
 | University | 18 | 0 | 0 | 5 (4 SR, 1 NCSA) | 0 | School athletics site returned HTTP 500 |
 | Marin Catholic | 20 | 10 | 0 | 0 | 0 | `marincatholic.org` team page (graduating year → grade) |
 | Convent | 18 | 0 | 0 | 1 SR | 0 | MaxPreps already complete |
-| Marin Academy | 0 | 0 | 0 | 0 | 0 | School list (18 players) is first name, last initial and class year only; MaxPreps has no rows to join |
+| Marin Academy | 0 | 0 | 0 | 0 | 0 | School list (18 players) is first name, last initial and class year only; MaxPreps had no rows to join (its 18, which agree with the school list but for Julia Foulke's class year, appeared on 2026-10-07 and were swept that day: nothing found) |
 
 Where nothing could be filled, the entry still records the coaches found and a note saying what
 was looked at. Grades that two sources disagree on are left blank rather than guessed (Leland 2,
@@ -372,7 +385,12 @@ when both kept it; the NCSA pages (WebFetch or curl) were opened rather than mat
 result.
 On 2026-10-06 the same rules found 267 for 202 of the 842 Southern California rows: 134 Hudl, 64 NCSA,
 55 SportsRecruits and 14 FieldLevel. **All six sweeps: 399 profiles for 314 players, 185 Hudl, 113
-SportsRecruits, 87 NCSA and 14 FieldLevel.** Four sweeps ran in parallel (Sunset and the independents;
+SportsRecruits, 87 NCSA and 14 FieldLevel.** On 2026-10-07 the 21 rows MaxPreps had added since (Marin
+Academy's 18; Westmont's Kaylee True, Lexi True and Savannah Murdoch) were swept by the same rule: Kaylee's
+and Lexi's NCSA field hockey pages name Westmont and the class of 2028 and are linked (401 for 316); no
+field hockey page was found for the others (neither school has a Hudl field hockey team, NCSA lists no
+Marin Academy athletes, and about 870 SportsRecruits and NCSA addresses were probed); both links were
+re-read by an independent refuter. Four sweeps ran in parallel (Sunset and the independents;
 City; North County; Metro), and every linked page was then re-read by two independent verifiers working
 apart, a checker applying the rule and a refuter trying to break it; a page was kept only when both kept
 it (269 candidates, 267 kept). By team (players linked of the team's rows, then pages):
@@ -538,7 +556,7 @@ an NCSA slug with an unguessed nickname stays unfound.
 `lib/clubs.ts`; shown on `/clubs`, `/clubs/[slug]` and in a club line on each team page's roster,
 DESIGN §17). Research on 2026-10-03, with an EAL sweep on 2026-10-04 and a re-read of the linked
 recruiting profiles on 2026-10-05, and a Southern California sweep on 2026-10-06, not a script: nothing fetches or refreshes it. It holds 28 youth field hockey clubs (13 from 2026-10-03, 3 from
-2026-10-04, 12 from 2026-10-06) and 170 affiliations (72 from 2026-10-03, 8 from 2026-10-04, 14 from 2026-10-05, 76 from 2026-10-06), each a tie between a player on the 102 tracked varsity rosters and a club, joined to `data/rosters.json` on team slug + MaxPreps athleteId as the overlay
+2026-10-04, 12 from 2026-10-06) and 171 affiliations (72 from 2026-10-03, 8 from 2026-10-04, 14 from 2026-10-05, 76 from 2026-10-06, 1 from 2026-10-07), each a tie between a player on the 102 tracked varsity rosters and a club, joined to `data/rosters.json` on team slug + MaxPreps athleteId as the overlay
 is. A club record has the club's name and display name, city, region, website, founding year, one
 factual sentence, its teams and programs (each with a short detail and the page it was read from;
 the detail says so when the club has posted nothing newer: "Winter 2025-26, the latest posted",
@@ -768,7 +786,7 @@ sites. It added 8 ties for five players.
 
 The file then held 94 affiliations for 80 players at 25 schools; thirteen players were tied to more
 than one club (with the Southern California sweep: 170 for 148 players at 48 schools, twenty players
-tied to more than one club). The sweep met three clubs near the EAL teams' schools, and all three were added on
+tied to more than one club; 171 for 149 with the 2026-10-07 tie of Westmont's Kaylee True to Fly FHC). The sweep met three clubs near the EAL teams' schools, and all three were added on
 2026-10-04: D-City FHC (Davis) and Roseville FHC, in the region `sacramento` (shown as the
 Sacramento area), and Chico Hotshots, in the new region `north-state` (the North State). Neither
 area was searched for every club, so `SEARCHED_REGIONS` is unchanged and `/clubs` says so.
@@ -789,8 +807,8 @@ area was searched for every club, so `SEARCHED_REGIONS` is unchanged and `/clubs
 None at 21 schools: SCVAL's Valley Christian, Santa Clara and Saratoga; BVAL's Branham, Del Mar,
 Live Oak, Prospect, Silver Creek and Sobrato; all seven PCAL schools; and MCAL's Archie Williams,
 Redwood, Berkeley, Marin Catholic and Marin Academy. Six of these (Del Mar, Silver Creek, Sobrato,
-Monterey, Santa Catalina, Marin Academy) list no players on MaxPreps, so there is no row to tie
-anyone to. In the EAL, none at Bella Vista, Corning and Lassen (Corning lists no players on
+Monterey, Santa Catalina, Marin Academy) listed no players on MaxPreps, so there was no row to tie
+anyone to (Marin Academy's 18 appeared on 2026-10-07, after the sweep). In the EAL, none at Bella Vista, Corning and Lassen (Corning lists no players on
 MaxPreps). By club (2026-10-03; NorCal Impact is 22, all current, with the three Davis ties): SF Hawks 31 (all current), NorCal Impact 19 (all current), Fly FHC 10 (2
 current, 4 past, 4 unknown), Infinity 8 (1, 6, 1), Lightning 3 (1, 1, 1) and HTC 1 (current); with the
 2026-10-04 ties, D-City 3 (0 current, 1 past, 2 unknown) and Chico Hotshots 2 (both current). With
@@ -1228,7 +1246,7 @@ Gotchas, found in the research:
   working path is `womens-field-hockey`. A profile address that does not exist answers HTTP 200 with
   a "Page Not Found" title, so a probe must read the title, not the status.
 
-*Recall is partial.* On 2026-10-06, 28 of the 1,653 varsity rows have a commitment, at 16 of the 102
+*Recall is partial.* On 2026-10-07, 28 of the 1,673 varsity rows have a commitment, at 16 of the 102
 schools: Southern California's 12 at 7 (Torrey Pines 2, Canyon Hills 4, Bishop's 2, Harvard-Westlake,
 Scripps Ranch, San Dieguito Academy and Cathedral Catholic 1 each). Every one of the 842 rows had a
 SportsRecruits probe in every sport, and 840 at least one web search (the two others are already
@@ -1417,6 +1435,18 @@ Gotchas, all **[V]**:
   Corning and Lassen have none). Red Bluff's 2025-26 games are outside the registry and left out. The
   EAL's 2025-11-01 tournament games carried `contestType` 5 on both rows, with the round in
   `contest.location`.
+- **Duplicates named by hand** (`PRIOR_EXCLUDED_CONTEST_IDS` in `lib/prior-season-schema.ts`, counted
+  under `excluded.excludedByConfig`): a row is listed only when another source shows it repeats a game
+  the feeds already carry. One so far, checked 2026-10-07: at Helix's one-day tournament on Sat
+  2025-10-18, Patrick Henry played Helix twice. Patrick Henry's own 2025-26 schedule
+  (`phpatriots.net/varsity/field-hockey/schedule-results`) lists 11:20 AM, L 0-3, and 4:10 PM, L 0-1,
+  plus a home game against Mission Bay on Oct 17. MaxPreps holds both as `1bd0e53f` (3-0, entered with
+  the 4:10 time) and `bb3d5c20` (1-0), each with a different save count for Patrick Henry's keeper (9
+  and 3), and also a third row, `553a83bc` (3-0, Oct 17, no time, scored by the Section office's
+  account), which matches Helix's site listing the event as "OCT 17 TBA". That third row is the
+  duplicate. Fountain Valley's and El Capitan's games at the same event exist only as such Oct 17 rows,
+  so they are kept under that date. No newspaper or tournament page reported any of these scores, and
+  si.com repeats MaxPreps.
 - Cost: one `team-context/v1` read (about 0.55 MB) and 102 schedule reads (about 150 KB each; 99 before the independents joined, 43 when
   measured), through the primary client's budget, once a season. The 2024-25 season (`c388901e-…`, 354
   games) was read the same way to test the starting point and is not kept.
@@ -2713,23 +2743,25 @@ rules clause.)
   has covered is `pending`. No current-season public source lists positions for most programs, no
   BVAL, PCAL or MCAL roster source (school site, paper, MaxPreps JV or earlier-season page)
   publishes a height or a 2026-27 number MaxPreps lacks (some players' NCSA recruiting profiles do
-  list a height, but a profile is only linked from the row and never fills a field), and 6 teams (Del
-  Mar, Silver Creek, Sobrato, Monterey, Santa Catalina, Marin Academy) have no MaxPreps players at all.
+  list a height, but a profile is only linked from the row and never fills a field), and 5 teams (Del
+  Mar, Silver Creek, Sobrato, Monterey, Santa Catalina) have no MaxPreps players at all (Marin Academy
+  had none until 2026-10-07).
   How much a coach enters varies by program in every league.
 - College commitments (§1.1j3), in any sport, were researched on 2026-10-03 and 2026-10-04 (the six
   EAL teams' schools on 2026-10-04, for field hockey and then every sport, with none found, though
   without SportsRecruits' athlete search or web searches for freshmen and sophomores) and, for the 53
   Southern California teams' schools, on 2026-10-06 (twelve found, one under the revised nickname rule;
   web searches for 840 of the 842 rows, no SportsRecruits athlete search), and nothing refreshes them:
-  recall is partial (28 of the 1,653 varsity rows, at 16 of the 102 schools, on 2026-10-06; social
+  recall is partial (28 of the 1,673 varsity rows, at 16 of the 102 schools, on 2026-10-07; social
   media, where most are announced, never counts), a signing or decommitment after that date is not
   shown, and a roster refetch that drops or respells a committed row fails the build until it is
   re-checked by hand.
 - Club ties (§1.1j2) were researched on 2026-10-03 (the six EAL teams' schools on 2026-10-04, adding
   eight ties for five players at Davis and Pleasant Valley, and three club records), re-read from the
   linked recruiting profiles on 2026-10-05 (14 more ties), and swept for the 53 Southern California
-  teams' schools on 2026-10-06 (twelve club records and 76 ties), and nothing refreshes them: recall is
-  partial (on 2026-10-06, 148 of the 1,653 varsity rows, at 48 of the 102 schools; the Los Angeles,
+  teams' schools on 2026-10-06 (twelve club records and 76 ties), with one more tie from the 2026-10-07
+  sweep of the rows MaxPreps added, and nothing refreshes them: recall is
+  partial (on 2026-10-07, 149 of the 1,673 varsity rows, at 48 of the 102 schools; the Los Angeles,
   Orange County and Ventura clubs publish no rosters), a `current` tie ages, and a roster refetch that
   drops or respells a tied row fails the build until the tie is re-checked by hand.
 - Prior-season (2025-26) final standings exist in the repo for SCVAL and BVAL only (see §2 "2025-26

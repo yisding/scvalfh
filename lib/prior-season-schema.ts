@@ -14,7 +14,8 @@
  * rows: one game per contest id from all 102 teams' feeds, finals only, both sides registry teams,
  * no forfeit (a forfeit has no goals, as in the standings), and the site from MaxPreps'
  * homeAwayType (2 on either side is neutral). A contest whose two feeds disagree on the score or
- * the host is reported, never guessed.
+ * the host is reported, never guessed. A contest named in `PRIOR_EXCLUDED_CONTEST_IDS` (a MaxPreps
+ * duplicate of another game the feeds already carry) is left out and counted, with its reason there.
  */
 
 import { z } from 'zod';
@@ -44,6 +45,8 @@ export const PriorSeasonSchema = z
       forfeit: z.number().int().min(0),
       /** Finals with a missing score. */
       unscored: z.number().int().min(0),
+      /** Finals named in PRIOR_EXCLUDED_CONTEST_IDS: duplicates of a game the file already holds. */
+      excludedByConfig: z.number().int().min(0),
     }),
     games: z.array(
       z.object({
@@ -109,6 +112,22 @@ export function seasonWindow(season: string): { from: string; to: string } {
   return { from: `${start}-07-01`, to: `${start + 1}-01-31` };
 }
 
+/**
+ * Last-season contests left out by hand, each with why. Only a row shown to repeat a game the feeds
+ * already carry belongs here; a doubtful score is never fixed by dropping a row.
+ */
+export const PRIOR_EXCLUDED_CONTEST_IDS: Readonly<Record<string, string>> = {
+  // Helix hosted a one-day tournament on Sat 2025-10-18. Patrick Henry's own schedule
+  // (phpatriots.net, 2025-26) lists two games at Helix that day, 11:20 AM (L 0-3) and 4:10 PM (L 0-1),
+  // and a home game against Mission Bay on Oct 17. MaxPreps carries those two as 1bd0e53f (3-0, entered
+  // with the 4:10 time) and bb3d5c20 (1-0), each with Patrick Henry's keeper's saves (9 and 3), plus
+  // this third row, a no-time Oct 17 placeholder the Section office scored 3-0 (Helix's own site lists
+  // the event as "OCT 17 TBA"). Fountain Valley's and El Capitan's Helix games appear only as such
+  // Oct 17 rows, so those are kept.
+  '553a83bc-936f-4613-83ad-ddf008222f1f':
+    'Helix 3-0 Patrick Henry, Oct 17 with no time: a duplicate of the Oct 18 11:20 AM game (1bd0e53f)',
+};
+
 export interface PriorNormalized {
   games: PriorGame[];
   excluded: PriorExcluded;
@@ -120,9 +139,17 @@ export interface PriorNormalized {
 export function priorGamesFromFeeds(
   feeds: ReadonlyMap<TeamSlug, readonly ScheduleRow[]>,
   teams: readonly Team[] = TEAMS,
+  excludedIds: Readonly<Record<string, string>> = PRIOR_EXCLUDED_CONTEST_IDS,
 ): PriorNormalized {
   const byId = new Map(teams.map((t) => [t.id, t]));
-  const excluded: PriorExcluded = { deleted: 0, notFinal: 0, outsideRegistry: 0, forfeit: 0, unscored: 0 };
+  const excluded: PriorExcluded = {
+    deleted: 0,
+    notFinal: 0,
+    outsideRegistry: 0,
+    forfeit: 0,
+    unscored: 0,
+    excludedByConfig: 0,
+  };
   const games = new Map<string, PriorGame>();
   const conflicted = new Set<string>();
   const counted = new Set<string>();
@@ -158,6 +185,10 @@ export function priorGamesFromFeeds(
       }
       if (a.score === null || b.score === null) {
         count(c.contestId, 'unscored');
+        continue;
+      }
+      if (Object.hasOwn(excludedIds, c.contestId)) {
+        count(c.contestId, 'excludedByConfig');
         continue;
       }
       const neutral = a.homeAwayType === 2 || b.homeAwayType === 2;

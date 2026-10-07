@@ -347,9 +347,10 @@ gathered by hand and joined on the MaxPreps athlete id. It has one entry per tea
 swept on 2026-10-02 and BVAL, PCAL and MCAL on 2026-10-03; the six EAL entries (2026-10-04) hold
 recruiting profiles only, with no coaches or sources, until someone sweeps the schools' athletics
 sites; so do the 53 Southern California entries (2026-10-06), so those teams' pages say we have not
-checked other public sources. On 2026-10-06 `data/rosters.json`
-holds 1,682 players, on 87 of the 102 teams (the three independents' were read that day: Glendora 19,
-Harvard-Westlake 25, Thousand Oaks 21). Every entry lists
+checked other public sources. On 2026-10-07 `data/rosters.json`
+holds 1,702 players, on 88 of the 102 teams (BVAL and MCAL were re-read that day: Marin Academy's 18
+players now appear on MaxPreps, Westmont gained 3 and Tamalpais lost one; 1,682 on 87 teams on
+2026-10-06, when the three independents' were read: Glendora 19, Harvard-Westlake 25, Thousand Oaks 21). Every entry lists
 what was looked at. What a team with no MaxPreps players may say about other sources is recorded
 per team (`otherRosters`: `none`, or `partial` with what the source lists and a link, as for Marin
 Academy's first-name-and-initial list); a team without it says "we have not checked other public
@@ -367,9 +368,9 @@ with nothing to fall back on, or no update has covered the team yet; its coaches
 still show below.
 
 The same overlay links players' own recruiting pages — NCSA, SportsRecruits, Hudl and FieldLevel
-profiles (`profiles` on each record; 399 for 314 players as of 2026-10-06). NorCal: 132 for 112 (SCVAL 70
-for 56, BVAL 12 for 12, PCAL 3 for 3, MCAL 14 for 12, EAL 33 for 29: Chico 16 for 13, Pleasant Valley 11
-for 11, Davis 5 for 4, Lassen 1 for 1, none for Bella Vista or Corning; 23 NCSA, 58 SportsRecruits, 51
+profiles (`profiles` on each record; 401 for 316 players as of 2026-10-07). NorCal: 134 for 114 (SCVAL 70
+for 56, BVAL 14 for 14 (two of them Westmont's Kaylee and Lexi True, from the 2026-10-07 sweep of the rows MaxPreps added), PCAL 3 for 3, MCAL 14 for 12, EAL 33 for 29: Chico 16 for 13, Pleasant Valley 11
+for 11, Davis 5 for 4, Lassen 1 for 1, none for Bella Vista or Corning; 25 NCSA, 58 SportsRecruits, 51
 Hudl). Southern California, swept 2026-10-06: 267 for 202 (134 Hudl, 64 NCSA, 55 SportsRecruits, 14
 FieldLevel), the most at Bishop's (37 for all 24 rows), Harvard-Westlake (25 for 22), Torrey Pines (24
 for 13), San Dieguito Academy (18 for 16) and University City (16 for 13); 17 of the 53 teams have none,
@@ -577,12 +578,13 @@ the file's `season` is `data/rosters.json`'s; every affiliation joins a row of t
 row's own `fullName`, and the row is not JV; every stated class year agrees with the row's grade
 (MaxPreps', else the overlay's; a row with no grade has nothing to check).
 
-Coverage, counted from the file: **28 clubs** and **170 affiliations for 148 of the 1,653 varsity rows, at
-48 of the 102 schools**. NorCal: 16 clubs (San Francisco 2, South Bay 7, East Bay 2, Marin 1, the
+Coverage, counted from the file: **28 clubs** and **171 affiliations for 149 of the 1,673 varsity rows, at
+48 of the 102 schools** (2026-10-07). NorCal: 16 clubs (San Francisco 2, South Bay 7, East Bay 2, Marin 1, the
 Sacramento area 2, the North State 1, and HTC, now filed under San Diego, where its California program
 trains; none on the Peninsula or the Central Coast, both searched; the Sacramento area and the North
 State were not searched for every club) and 94 affiliations for 80 of the 811 varsity rows, at 25 of the
-49 NorCal schools. Southern California (2026-10-06): 12 more clubs (San Diego: RUSH, Coastal Clash, Myto
+49 NorCal schools, as swept; the 2026-10-07 sweep of the 21 rows MaxPreps added since (Marin Academy's 18,
+three at Westmont) found one more, Kaylee True to Fly FHC. Southern California (2026-10-06): 12 more clubs (San Diego: RUSH, Coastal Clash, Myto
 and the San Marcos Knights; Ventura County: the Ventura County Red Devils and Bulldogs; Los Angeles: West
 Coast Riptide and the LA Tigers; Orange County: the Royals, the Huntington Beach Surfers, the SoCal
 Strikers and the Orange County Field Hockey Club; none found in the Inland Empire, all five areas
@@ -613,7 +615,7 @@ page under two name slugs. By kind, entries then URLs: SportsRecruits 67 on 43, 
 news 34 on 6, event lists 31 on 3 (the NFHCA's 2025 and 2026 high school watchlists, and one MAX Field
 Hockey invitational), NCSA 29 on 25, other 19 on 9 (mostly MAX Field Hockey's club and school pages),
 MaxPreps career pages 19 on 19, school sites 2 on 2, and one Hudl profile. Nine clubs have tied
-players: SF Hawks 32 (all current), NorCal Impact 25 (all current), Fly FHC 13, Infinity 9, Chico
+players: SF Hawks 32 (all current), NorCal Impact 25 (all current), Fly FHC 14, Infinity 9, Chico
 Hotshots 5 (4 current), D-City 4 (none current), Lightning 3, HTC 2 (both current) and Golden Gate
 Rippers 1 (past). The other seven (Pac Heights, Performance Field Hockey, San Jose Khalsa, Stryker,
 Hayward Hawks, Lions and Roseville FHC) have a page with an empty state.
@@ -1203,9 +1205,10 @@ at once, at every build, starting from last season's:
   and a team's rating can move on a day it did not play, when an opponent's later results show it
   was stronger or weaker than it looked.
 - **The start.** Each team starts the season from its rating over last season's finals
-  (`data/prior-season.json`: every 2025-26 final between two of the 102 teams, 936 of them, from
-  MaxPreps: 412 between NorCal teams, 513 between Southern California teams and 11 between the
-  regions; 40 involve an independent), carried over in full. That start counts for one game: it decides the first weeks and
+  (`data/prior-season.json`: every 2025-26 final between two of the 102 teams, 935 of them, from
+  MaxPreps: 412 between NorCal teams, 512 between Southern California teams and 11 between the
+  regions; 40 involve an independent. One MaxPreps row, a no-time duplicate of Helix's Oct 18 win
+  over Patrick Henry, is left out by name: `PRIOR_EXCLUDED_CONTEST_IDS`), carried over in full. That start counts for one game: it decides the first weeks and
   fades as the season's own results come in. A team with no result yet this season is shown at its
   start, as "preseason".
 - **How well it predicts.** (Measured over the 43 teams of the four leagues covered on 2026-10-02,
@@ -1344,16 +1347,17 @@ at once, at every build, starting from last season's:
   except one whose single page contradicts itself. **Positions are the
   real gap**: no current-season public source lists them for most programs in any league. A
   position MaxPreps lists only for the 2025-26 roster is deliberately not filled, since positions
-  change between seasons. Del Mar, Silver Creek, Sobrato, Monterey, Santa Catalina, Marin Academy
-  and Corning have no players on MaxPreps, so there is nothing to join to (Marin Academy's own list of 18 is
-  first names, last initials and class years). Los Altos and Homestead publish no roster anywhere, and
+  change between seasons. Del Mar, Silver Creek, Sobrato, Monterey, Santa Catalina and Corning have
+  no players on MaxPreps, so there is nothing to join to. Marin Academy had none either until its 18
+  appeared on 2026-10-07; they agree with the school's own list (first names, last initials and class
+  years) and were swept on 2026-10-07 (no profile, club or commitment found for any of them). Los Altos and Homestead publish no roster anywhere, and
   si.com's rosters were rejected as a source (names only, and often a different list of names).
 - **Player stats exist only where a coach enters them.** Rosters and stats cover all 102 teams. The
   53 Southern California teams were read live on 2026-10-06 (with them, 1,682 players on 87 of the 102
-  teams, and stats for 63); their overlay entries hold recruiting profiles only (swept 2026-10-06), so
+  teams, and stats for 63; 1,702 on 88 after the 2026-10-07 BVAL and MCAL re-read); their overlay entries hold recruiting profiles only (swept 2026-10-06), so
   their pages say we have not checked other public sources. For the NorCal teams, the
   43 teams of the four earlier leagues were read live on 2026-10-03 (all 43 pages parse; SCVAL's rows
-  matched the 2026-10-02 captures exactly; 6 BVAL/PCAL/MCAL teams have an empty roster on MaxPreps and
+  matched the 2026-10-02 captures exactly; 6 BVAL/PCAL/MCAL teams had an empty roster on MaxPreps, 5 since Marin Academy's appeared on 2026-10-07, and
   10 of the 28 have no stats) and the six EAL teams on 2026-10-04 (Corning has no roster and no stats
   on MaxPreps), and the school-site and recruiting-page overlay covers the four earlier leagues
   (SCVAL swept 2026-10-02, the others 2026-10-03; recall is partial in each, and a team's page names
@@ -1364,16 +1368,17 @@ at once, at every build, starting from last season's:
   (Presentation's last update was Sep 10). The team page says so rather than showing a short table
   as if it were complete.
 - **Club recall is partial.** A player is tied to a club only when a public page meets the linking
-  rule, so on 2026-10-06 148 of the 1,653 varsity rows have a club line, and 54 of the 102 schools have
-  none (15 of them list no players on MaxPreps at all). The Los Angeles, Orange County and Ventura clubs
+  rule, so on 2026-10-07 149 of the 1,673 varsity rows have a club line, and 54 of the 102 schools have
+  none (14 of them list no players on MaxPreps at all). The Los Angeles, Orange County and Ventura clubs
   publish no player rosters, so schools there are nearly blank. A player with no club line may still play for a club. The ties
   were researched once, on 2026-10-03 (the six EAL teams' schools on 2026-10-04, which added eight ties for five players at Davis and
   Pleasant Valley, and three club records; on 2026-10-05 a re-read of the linked recruiting profiles
   added 14 ties for 13 players; the 53 Southern California teams' schools on 2026-10-06, 76 ties for 68
-  players), and nothing refreshes them. See `docs/DATA-SOURCES.md` §1.1j2.
+  players; the 21 rows MaxPreps added to Marin Academy and Westmont on 2026-10-07, one tie), and nothing
+  refreshes them. See `docs/DATA-SOURCES.md` §1.1j2.
 - **Commitment recall is partial, and the list does not update itself.** A commitment is listed
-  only when a public page meets the linking rule, and social media never counts, so on 2026-10-06 28 of
-  the 1,653 varsity rows have a commitment line (in any sport) and 86 of the 102 schools have none; a player with no
+  only when a public page meets the linking rule, and social media never counts, so on 2026-10-07 28 of
+  the 1,673 varsity rows have a commitment line (in any sport) and 86 of the 102 schools have none; a player with no
   line may still have committed. It was researched on 2026-10-03 and 2026-10-04 (the six EAL teams'
   schools on 2026-10-04, for field hockey and then every sport, with none found, though without
   SportsRecruits' athlete search or web searches for freshmen and sophomores): a later signing,

@@ -6138,8 +6138,9 @@
       ],
       "notes": [
         "The official athletics site (westmontathletics.com, VNN) has an empty 2026-27 roster and an empty 2025-26 one; only 2024-25 is populated. MaxPreps' staff list names Gordon Pound as Head Coach alongside Trish Casillas; the school page names Casillas, so Pound's entry is as MaxPreps lists it.",
-        "Positions are blank on MaxPreps for all 17 rows. MaxPreps' 2025-26 roster (same career ids) lists a position for 9 returning players, but it is a different season and positions change between seasons, so none was filled.",
-        "Teya Halali's SportsRecruits page (class of 2029, Midfield/Defense, Campbell, CA) is linked: a 2026-27 sophomore is class of 2029, so it agrees with the roster. NCSA direct lookups found only other sports or other people (Eleanor Graham, Natalie Flores, Charlotte Hannagan, Alyssa Sanchez)."
+        "Positions are blank on MaxPreps for all 20 rows (17 when swept on 2026-10-03; Kaylee True, Lexi True and Savannah Murdoch were added by 2026-10-07). MaxPreps' 2025-26 roster (same career ids) lists a position for 9 returning players, but it is a different season and positions change between seasons, so none was filled.",
+        "Teya Halali's SportsRecruits page (class of 2029, Midfield/Defense, Campbell, CA) is linked: a 2026-27 sophomore is class of 2029, so it agrees with the roster. NCSA direct lookups found only other sports or other people (Eleanor Graham, Natalie Flores, Charlotte Hannagan, Alyssa Sanchez).",
+        "The three rows MaxPreps added by 2026-10-07 were swept that day. The school site's only populated roster, 2024-25 JV (westmontathletics.com, VNN team 135114), lists Kaylee True, Lexi True and Savannah Murdock (sic) as freshmen, class of 2028, which agrees with grade 11; its 2025-26 and 2026-27 rosters are still empty. Kaylee True's and Lexi True's NCSA field hockey pages name Westmont and the class of 2028 and are linked; their heights and positions are not filled (a profile never fills a field), and Lexi's 2024 jersey there (#20) is not MaxPreps' current #22. Savannah Murdoch: none found on SportsRecruits, NCSA, FieldLevel or Hudl (Westmont has no Hudl field hockey team), and a re-read by an independent refuter kept both links."
       ],
       "players": [
         {
@@ -6159,6 +6160,48 @@
               "note": "SportsRecruits field hockey profile (nfhca.sportsrecruits.com): class of 2029, which agrees with the roster's sophomore (So.) in 2026-27; Midfield, Defense; hometown given as Campbell, CA. It names no school.",
               "platform": "sportsrecruits",
               "url": "https://nfhca.sportsrecruits.com/athlete/teya_halali"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "59cb47b9-86b2-4b59-9ade-7dc19c465f85",
+          "conflicts": [],
+          "fullName": "Kaylee True",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "NCSA field hockey recruiting profile naming Westmont High School, Campbell, CA; class of 2028, which agrees with the roster's junior (Jr.) in 2026-27. Read in headless Chromium on 2026-10-07 (curl gets a Cloudflare 403). Lists Defenders, 5'8\", club San Jose Fly (2025, U16), and a 2024 freshman team with jersey #18. The page is not in NCSA's Westmont school list and was found by its address.",
+              "platform": "ncsa",
+              "url": "https://www.ncsasports.org/field-hockey-recruiting/california/campbell/westmont-high-school/kaylee-true"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "13081026-9f6d-40f6-85ed-aa33fd042c06",
+          "conflicts": [],
+          "fullName": "Lexi True",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "NCSA field hockey recruiting profile of Alexis “Lexi” True, naming Westmont High School, Campbell, CA; class of 2028, which agrees with the roster's junior (Jr.) in 2026-27. Read in headless Chromium on 2026-10-07. Lists Midfielders, 5'8\" and a 2024 freshman team with jersey #20 (MaxPreps has #22 for 2026-27). The address without the trailing 1 (alexis-true) redirects to a Kentucky women's basketball player.",
+              "platform": "ncsa",
+              "url": "https://www.ncsasports.org/field-hockey-recruiting/california/campbell/westmont-high-school/alexis-true1"
             }
           ],
           "sourceName": null
@@ -7599,7 +7642,7 @@
         }
       ],
       "notes": [
-        "MaxPreps already shows grade for all 21 rows and number for 19; position is blank for 19 (only the two goalkeepers have G). No public 2026-27 source lists positions: the school page has no roster and its team Google Site did not load.",
+        "MaxPreps already shows grade for all 20 rows and number for 18; position is blank for 18 (only the two goalkeepers have G). (21 rows when swept on 2026-10-03; MaxPreps dropped Layla Goldstein by 2026-10-07.) No public 2026-27 source lists positions: the school page has no roster and its team Google Site did not load.",
         "MaxPreps' 2025-26 varsity and JV rosters carry positions and numbers for most of these players; they are not season-dated for 2026-27 and are not used.",
         "Hudl: the Tamalpais field hockey team import (profile ids 18517700-18517876) holds only players who have graduated; none of the 2026-27 roster."
       ],
@@ -8667,7 +8710,10 @@
         }
       ],
       "notes": [
-        "MaxPreps lists no 2026-27 roster for Marin Academy (0 rows) although the team has played MCAL games, so there is no MaxPreps row to join to and nothing is filled. The school page shows 18 players only as first name + last initial + class year; MaxPreps' 2025-26 roster (20 names) belongs to another season. Names are not added."
+        "MaxPreps listed no 2026-27 roster for Marin Academy when the team was swept (2026-10-03, 0 rows). On 2026-10-07 MaxPreps lists 18 players, all with a grade, none with a number or position. They agree with the school page's 18 entries (first name, last initial and class year): 15 exactly, Josie Marvel as 'Jocelyn M.' (2029) and Val Saeltzer as 'Valentina S.' (2028) by nickname, and Julia Foulke, grade 12 on MaxPreps, as 'Julia F.' with class of 2028; MaxPreps' grade stands. The school page adds nothing MaxPreps lacks, so nothing is filled.",
+        "Swept 2026-10-07 for recruiting profiles and school sources: none linked. Marin Academy has no Hudl field hockey team and NCSA's school page lists no field hockey athletes; about 720 SportsRecruits and 150 NCSA addresses and guessed FieldLevel addresses found no field hockey page for any of the 18. Not linked (other sports): SportsRecruits lacrosse pages for Tessa Urban (her bio calls her a starter on Marin Academy's varsity field hockey team), Camilla Olbres, Josie Marvel (as Jocelyn), Hailey Rabb, Paige Fredrickson and Heidi Strack; Hudl basketball pages for Grace Kawaja, Penelope Lee, Val Saeltzer and Kaia Cestar, whose class years agree with the roster.",
+        "No 2026-27 source gives a number, position or height for these players. MaxPreps' 2026-27 JV page lists all 37 of the program (these 18 and the school's 19 JV players), and every career page names the JV team, so the JV page is the whole program; the school's varsity page lists exactly these 18, so none is marked JV. Prior-season numbers (2025-26 varsity) are not used.",
+        "Julia Foulke's grade: MaxPreps' 2026-27 roster says Sr.; the school's list and MaxPreps' own 2024-25 and 2025-26 rosters put her in the class of 2028. MaxPreps is kept and both disagreements are under her conflicts. An independent refuter re-read every source on 2026-10-07 and kept the finding."
       ],
       "otherRosters": {
         "checkedOn": "2026-10-03",
@@ -8675,7 +8721,39 @@
         "status": "partial",
         "summary": "The school's team page lists 18 current players, but only by first name, last initial and class year, so they cannot be matched to MaxPreps and are not listed here."
       },
-      "players": [],
+      "players": [
+        {
+          "athleteId": "1016286c-b02f-41e3-8137-c2b408b8bd88",
+          "conflicts": [
+            {
+              "field": "grade",
+              "kept": "12",
+              "kind": "school-site",
+              "note": "The school's 2026 varsity page lists 'Julia F.', class of 2028 (grade 11), the only Julia F. on its varsity or JV lists; MaxPreps' 2026-27 roster says Sr. (12). MaxPreps is kept and the other value recorded.",
+              "other": "11",
+              "source": "https://www.ma.org/athletics/athletic-teams/team-details/~athletics-team-id/175"
+            },
+            {
+              "field": "grade",
+              "kept": "12",
+              "kind": "maxpreps-career",
+              "note": "MaxPreps' 2025-26 varsity roster lists '26 | Julia Foulke | So.' under the same career id (j4onffc1utvg0), and its 2024-25 JV roster '26 | Julia Foulke | Fr.', so grade 11 in 2026-27; her career history runs Freshman 2024, Sophomore 2025, Senior 2026, with no junior year, and a duplicate career record (4hti3mer8s788) says Junior, class of 2028. MaxPreps' current Sr. is kept and the other value recorded.",
+              "other": "11",
+              "source": "https://www.maxpreps.com/ca/san-rafael/marin-academy-wildcats/field-hockey/25-26/roster/"
+            }
+          ],
+          "fullName": "Julia Foulke",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        }
+      ],
       "slug": "marin-academy",
       "sources": [
         {

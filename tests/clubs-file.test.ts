@@ -174,13 +174,34 @@ describe('data/clubs.json', () => {
     for (const a of raw.affiliations) expect(a.basis, `${a.fullName} (${a.club})`).toMatch(/[.!?]['"’”)]?$/);
   });
 
+  // The 21 rows MaxPreps added to Marin Academy (18) and Westmont (3) after the sweeps, swept 2026-10-07.
+  const OCT_7_ROWS = new Set(
+    ['marin-academy', 'westmont'].flatMap((slug) =>
+      teams
+        .find((t) => t.slug === slug)!
+        .players.filter((p) => slug === 'marin-academy' || ['Kaylee True', 'Lexi True', 'Savannah Murdoch'].includes(p.fullName))
+        .map((p) => p.athleteId),
+    ),
+  );
+
+  it('ties one of the 21 rows swept on 2026-10-07: Kaylee True to Fly FHC, from her own NCSA profile', () => {
+    expect(OCT_7_ROWS.size).toBe(21);
+    const found = raw.affiliations.filter((a) => OCT_7_ROWS.has(a.athleteId));
+    expect(found.map((a) => [a.teamSlug, a.fullName, a.club, a.clubTeam, a.status, a.asOf, a.confidence])).toEqual([
+      ['westmont', 'Kaylee True', 'fly-fhc', 'U16', 'unknown', '2025', 'high'],
+    ]);
+    expect(found[0].sources.map((s) => [s.kind, s.statedSchool, s.statedClassYear])).toEqual([['ncsa', 'Westmont High School', 2028]]);
+    expect(raw.jvAffiliations.filter((a) => OCT_7_ROWS.has(a.athleteId))).toEqual([]);
+  });
+
   describe('NorCal, as researched 2026-10-03, 2026-10-04 and 2026-10-05 (changes only with a new sweep)', () => {
     // These sweeps covered the 49 NorCal schools (SCVAL, BVAL, PCAL, MCAL, EAL), and the counts here are
     // over them: their ties, and the 16 clubs they found (HTC among them, whose record the 2026-10-06
     // Southern California sweep re-read and moved to San Diego). The SoCal sweep's are pinned below.
     const SWEPT = new Set(['scval', 'bval', 'pcal', 'mcal', 'eal']);
     const swept = teams.filter((t) => SWEPT.has(getTeamBySlug(t.slug)!.league));
-    const norcal = raw.affiliations.filter((a) => SWEPT.has(getTeamBySlug(a.teamSlug)!.league));
+    // Ties from the 2026-10-07 sweep of the rows MaxPreps added later are pinned in their own test below.
+    const norcal = raw.affiliations.filter((a) => SWEPT.has(getTeamBySlug(a.teamSlug)!.league) && !OCT_7_ROWS.has(a.athleteId));
     const norcalClubs = raw.clubs.filter((c) => !SOCAL_CLUBS.has(c.slug));
     const players = new Set(norcal.map((a) => `${a.teamSlug} ${a.athleteId}`));
     const schools = new Set(norcal.map((a) => a.teamSlug));
@@ -191,7 +212,9 @@ describe('data/clubs.json', () => {
       expect(players.size).toBe(80);
       expect(schools.size).toBe(25);
       const rows = swept.flatMap((t) => t.players.map((p) => ({ team: t.slug, level: p.level })));
-      expect(rows).toHaveLength(840);
+      // 840 rows when swept; the 2026-10-07 BVAL and MCAL roster refresh added 20 no sweep has covered
+      // (Marin Academy's 18 and Westmont's 3, less one Tamalpais row MaxPreps dropped).
+      expect(rows).toHaveLength(860);
       expect(rows.filter((r) => r.level === 'jv')).toHaveLength(29);
       expect(new Set(rows.filter((r) => r.level === 'jv').map((r) => r.team))).toEqual(new Set(['los-gatos']));
       expect(swept).toHaveLength(49);
@@ -362,7 +385,8 @@ describe('data/clubs.json', () => {
       );
       expect(byLeague).toEqual({
         scval: [36, 12],
-        bval: [18, 6],
+        // 18 at 6 schools as swept; Westmont's Kaylee True (2026-10-07) is the 19th.
+        bval: [19, 6],
         pcal: [0, 0],
         mcal: [17, 4],
         eal: [9, 3],
@@ -383,11 +407,12 @@ describe('data/clubs.json', () => {
       expect(raw.clubs.filter((c) => SOCAL_CLUBS.has(c.slug))).toHaveLength(12);
       expect(raw.clubs).toHaveLength(28);
       expect(socal).toHaveLength(76);
-      expect(raw.affiliations).toHaveLength(170);
+      // 170, and the one 2026-10-07 tie (above).
+      expect(raw.affiliations).toHaveLength(171);
       expect(new Set(socal.map((a) => `${a.teamSlug} ${a.athleteId}`)).size).toBe(68);
       expect(new Set(socal.map((a) => a.teamSlug)).size).toBe(23);
       // Nothing from the SoCal sweep is on a NorCal row, and nothing from the NorCal sweeps on a SoCal one.
-      expect(raw.affiliations.length - socal.length).toBe(94);
+      expect(raw.affiliations.length - socal.length).toBe(95);
     });
 
     it('counts 61 current, 6 past and 9 unknown; 63 high and 13 medium', () => {

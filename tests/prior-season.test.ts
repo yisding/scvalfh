@@ -8,6 +8,7 @@ import { describe, expect, it } from 'vitest';
 
 import { getPriorSeason } from '../lib/prior-season';
 import {
+  PRIOR_EXCLUDED_CONTEST_IDS,
   PriorSeasonSchema,
   previousMaxprepsYear,
   priorGamesFromFeeds,
@@ -53,8 +54,11 @@ describe('data/prior-season.json', () => {
    * finals are unchanged, and the three add 40 SoCal–SoCal finals (513), every one against a Southern
    * California team or each other. outsideRegistry falls from 51 to 16 (their games were rows outside the
    * registry before), and one more row is not final (26).
+   *
+   * 2026-10-07: Helix vs Patrick Henry's no-time Oct 17 row (553a83bc) is a duplicate of their Oct 18
+   * 11:20 AM game and is left out by PRIOR_EXCLUDED_CONTEST_IDS: 935 finals, 512 SoCal–SoCal.
    */
-  it('holds the 2026-10-06 fetch over all 102 teams: 936 finals, 513 SoCal–SoCal, 11 NorCal–SoCal', () => {
+  it('holds the 2026-10-06 fetch over all 102 teams, less one duplicate: 935 finals, 512 SoCal–SoCal, 11 NorCal–SoCal', () => {
     const SOCAL = new Set(['sunset', 'city', 'north-county', 'metro', 'independents']);
     const socal = (slug: string) => SOCAL.has(getTeamBySlug(slug)!.league);
     const pairs = { norcal: 0, socal: 0, cross: 0 };
@@ -64,11 +68,15 @@ describe('data/prior-season.json', () => {
       else if (h || a) pairs.cross += 1;
       else pairs.norcal += 1;
     }
-    expect(file.games).toHaveLength(936);
-    expect(pairs).toEqual({ norcal: 412, socal: 513, cross: 11 });
+    expect(file.games).toHaveLength(935);
+    expect(pairs).toEqual({ norcal: 412, socal: 512, cross: 11 });
     const INDEPENDENTS = new Set(['glendora', 'harvard-westlake', 'thousand-oaks']);
     expect(file.games.filter((g) => INDEPENDENTS.has(g.homeSlug) || INDEPENDENTS.has(g.awaySlug))).toHaveLength(40);
-    expect(file.excluded).toEqual({ deleted: 113, notFinal: 26, outsideRegistry: 16, forfeit: 1, unscored: 0 });
+    expect(file.excluded).toEqual({ deleted: 113, notFinal: 26, outsideRegistry: 16, forfeit: 1, unscored: 0, excludedByConfig: 1 });
+    // Every hand exclusion names a contest the file does not hold.
+    const ids = new Set(file.games.map((g) => g.contestId));
+    for (const id of Object.keys(PRIOR_EXCLUDED_CONTEST_IDS)) expect(ids.has(id), id).toBe(false);
+    expect(Object.keys(PRIOR_EXCLUDED_CONTEST_IDS)).toHaveLength(file.excluded.excludedByConfig);
     expect(file.sportSeasonId).toBe('8ae4cbab-caa1-4889-87a8-547fdaca9516');
     // Every registry team has at least one final, so every one of the 102 starts from a prior rating.
     const played = new Set(file.games.flatMap((g) => [g.homeSlug, g.awaySlug]));
@@ -85,7 +93,7 @@ describe('PriorSeasonSchema', () => {
     sportSeasonId: 'x',
     source: 'maxpreps-api',
     fetchedAt: '2025-12-01T00:00:00.000Z',
-    excluded: { deleted: 0, notFinal: 0, outsideRegistry: 0, forfeit: 0, unscored: 0 },
+    excluded: { deleted: 0, notFinal: 0, outsideRegistry: 0, forfeit: 0, unscored: 0, excludedByConfig: 0 },
     games: [
       {
         contestId: 'c1',
@@ -232,7 +240,15 @@ describe('priorGamesFromFeeds', () => {
     ]);
     const r = priorGamesFromFeeds(feeds);
     expect(r.games).toEqual([]);
-    expect(r.excluded).toEqual({ deleted: 1, notFinal: 1, outsideRegistry: 1, forfeit: 1, unscored: 1 });
+    expect(r.excluded).toEqual({ deleted: 1, notFinal: 1, outsideRegistry: 1, forfeit: 1, unscored: 1, excludedByConfig: 0 });
+  });
+
+  it('leaves out a contest named as a duplicate, counting it once across both feeds', () => {
+    const dup = row('x', [{ slug: 'fremont', score: 3, at: 0 }, { slug: 'saratoga', score: 0, at: 1 }]);
+    const kept = row('k', [{ slug: 'fremont', score: 3, at: 0 }, { slug: 'saratoga', score: 0, at: 1 }]);
+    const r = priorGamesFromFeeds(new Map([['fremont', [dup, kept]], ['saratoga', [dup]]]), undefined, { x: 'a duplicate of k' });
+    expect(r.games.map((g) => g.contestId)).toEqual(['k']);
+    expect(r.excluded.excludedByConfig).toBe(1);
   });
 
   it('reports a contest whose two feeds disagree, and leaves it out', () => {

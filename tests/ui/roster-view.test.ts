@@ -280,7 +280,7 @@ describe('buildRosterView: club lines (DESIGN §17.4)', () => {
       // A club page is not a source of a listed value: it never joins the Sources row.
       for (const s of view.sources) expect(s.url, slug).not.toMatch(/^\/clubs/);
     }
-    expect(tied).toBe(148);
+    expect(tied).toBe(149);
   });
 
   it('words the pinned rows', () => {
@@ -384,7 +384,6 @@ describe('TeamRoster', () => {
       ['sobrato', 'none'],
       ['monterey', 'none'],
       ['santa-catalina', 'none'],
-      ['marin-academy', 'partial'],
       // An EAL team with no MaxPreps players: no school-athletics sweep has been done, and the card says so.
       ['corning', 'not-checked'],
     ]);
@@ -393,8 +392,13 @@ describe('TeamRoster', () => {
       expect(html.includes('No other public source we checked'), slug).toBe(view.otherRosters.status === 'none');
     }
     // Marin Academy's school page lists 18 current players as first name + last initial: not "none".
+    // MaxPreps has listed Marin Academy's 18 since 2026-10-07, so its page no longer shows this; the
+    // file's record is still the one `partial` case, rendered here as an empty roster would show it.
     const ma = views.find((v) => v.slug === 'marin-academy')!.view;
-    const maHtml = renderToStaticMarkup(createElement(TeamRoster, { view: ma })).replace(/<!-- -->/g, '');
+    expect(ma.otherRosters.status).toBe('partial');
+    const maHtml = renderToStaticMarkup(
+      createElement(TeamRoster, { view: { ...ma, status: 'empty', rows: [], conflicts: [] } }),
+    ).replace(/<!-- -->/g, '');
     expect(maHtml).toContain('lists 18 current players');
     expect(maHtml).toContain('href="https://www.ma.org/athletics/athletic-teams/team-details/~athletics-team-id/175"');
 
@@ -409,7 +413,7 @@ describe('TeamRoster', () => {
   });
 
   it('shows the coaches and their sources for a team with no list', () => {
-    for (const slug of ['del-mar', 'marin-academy', 'silver-creek', 'sobrato']) {
+    for (const slug of ['del-mar', 'silver-creek', 'sobrato']) {
       const view = views.find((v) => v.slug === slug)!.view;
       expect(view.rows, slug).toEqual([]);
       expect(view.coaches.length, slug).toBeGreaterThan(0);
