@@ -48,6 +48,7 @@ export const SOURCE_LINKS = {
   sblive: 'https://www.si.com/high-school/stats/california/field-hockey',
   ccs: 'https://cifccs.org/sports/fh/index',
   ccsCalendar: 'https://cifccs.org/calendar/Field_Hockey?print=ical',
+  cifss: 'https://www.cifsshome.org/widget/schedule-score',
 } as const;
 
 /** The IANA zone every date on the site is formatted in. */

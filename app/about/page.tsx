@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { RegionSwitcher } from '../../components/layout/LeagueSwitcher';
 import PageHeader from '../../components/layout/PageHeader';
 import BackfillTable from '../../components/about/BackfillTable';
+import CifssCrossCheckSummary from '../../components/about/CifssCrossCheckSummary';
 import CrossCheckTable, { type CrossCheckGroup } from '../../components/about/CrossCheckTable';
 import LeagueHealthCard, { officialSourceLabel, type HealthDivision } from '../../components/about/LeagueHealthCard';
 import SbliveCrossCheckSummary from '../../components/about/SbliveCrossCheckSummary';
@@ -19,6 +20,7 @@ import {
   getAllStandings,
   getCcsCalendar,
   getCcsField,
+  getCifssCrossCheck,
   getCounts,
   getCrossCheck,
   getDropped,
@@ -508,6 +510,7 @@ export default function AboutPage() {
   const allStandings = Object.values(standingsByDivision).flat();
 
   const sbliveCross = getSbliveCrossCheck();
+  const cifssCross = getCifssCrossCheck();
   const backfilled = sbliveCross?.backfilled ?? [];
   const dropped = getDropped();
   const officialFixtures = getOfficialFixtures();
@@ -770,6 +773,28 @@ export default function AboutPage() {
                 <span className="mt-auto flex flex-wrap gap-2 pt-3">
                   <ExternalLink href={SOURCE_LINKS.sblive} className="sx-pill">
                     si.com field hockey
+                  </ExternalLink>
+                </span>
+              </dd>
+            </div>
+            <div className="sx-card flex flex-col p-5">
+              <dt>
+                <span className="block text-lead text-ink">cifsshome.org</span>
+                <span className="mt-0.5 block text-meta text-ink-3">Cross-check only</span>
+              </dt>
+              <dd className="m-0 mt-2 flex flex-1 flex-col text-body text-ink-2">
+                <span className="block">
+                  The CIF Southern Section&rsquo;s schedule-and-score site, where schools from several
+                  Sections, ours among them, enter their own schedules and scores. We compare its scores with
+                  MaxPreps&rsquo; and list every difference in the{' '}
+                  <a href="#cross-check" className="text-accent hover:underline">
+                    cross-check log
+                  </a>
+                  . Nothing from it is published as a score, record or standing.
+                </span>
+                <span className="mt-auto flex flex-wrap gap-2 pt-3">
+                  <ExternalLink href={SOURCE_LINKS.cifss} className="sx-pill">
+                    cifsshome.org scores
                   </ExternalLink>
                 </span>
               </dd>
@@ -1196,6 +1221,16 @@ export default function AboutPage() {
             <EmptyState heading="No si.com comparison in the most recent run.">
               This step is optional and failure-tolerant; when it runs, every disagreement and every
               si.com-only score appears here.
+            </EmptyState>
+          )}
+
+          <h3 className="mt-section mb-3 text-lead text-ink">vs. cifsshome.org scores</h3>
+          {cifssCross ? (
+            <CifssCrossCheckSummary cross={cifssCross} />
+          ) : (
+            <EmptyState heading="No cifsshome.org comparison yet.">
+              This step is optional and failure-tolerant; when it runs, every disagreement and every
+              score MaxPreps lacks appears here.
             </EmptyState>
           )}
         </section>

@@ -66,6 +66,7 @@ const sourceId = z.enum([
   'ccs-pdf',
   'ccs-ical',
   'vnn-ics',
+  'cifss',
   'derived',
 ]);
 const gameStatus = z.enum(['scheduled', 'live', 'final', 'score-pending', 'postponed']);
@@ -435,6 +436,7 @@ export const SourceStatusSchema = z.object({
       'ccs-calendar',
       'ccs-bracket',
       'school-calendar',
+      'cifss-scores',
     ])
     .optional(),
   scope: z
@@ -560,6 +562,37 @@ export const SbliveCrossCheckSchema = z.object({
   ),
 });
 
+const cifssOnlyRow = z.object({
+  contestId: z.string().min(1),
+  dateKey: dateOnly,
+  label: z.string().min(1),
+  cifss: scorePair,
+  pairKey: z.string().min(1),
+  maxprepsUrl: httpUrl.nullable(),
+  cifssUrl: httpUrl,
+  note: z.string().min(1),
+});
+
+export const CifssCrossCheckSchema = z.object({
+  cifssFetchedAt: z.string(),
+  compared: z.number().int().min(0),
+  agreements: z.number().int().min(0),
+  conflicts: z.array(
+    z.object({
+      contestId,
+      dateKey: dateOnly,
+      label: z.string().min(1),
+      maxpreps: scorePair,
+      cifss: scorePair,
+      maxprepsUrl: httpUrl.nullable(),
+      cifssUrl: httpUrl,
+      note: z.string().min(1),
+    }),
+  ),
+  cifssOnlyScored: z.array(cifssOnlyRow),
+  notOnMaxPreps: z.array(cifssOnlyRow),
+});
+
 const crossCheckRow = z.object({
   slug: id,
   field: z.string(),
@@ -592,6 +625,7 @@ const SnapshotObject = z.object({
   dropped: z.array(DroppedContestSchema),
   crossCheck: z.array(crossCheckRow),
   sbliveCrossCheck: SbliveCrossCheckSchema.optional(),
+  cifssCrossCheck: CifssCrossCheckSchema.optional(),
   officialFixtures: z.array(OfficialFixtureSchema).optional(),
   supersededGames: z.record(z.string(), z.string()),
   officialStandingsPdfUrl: httpUrl.nullable().optional(),

@@ -139,6 +139,7 @@ export function stepAssemble(
     dropped: ctx.dropped.all(),
     crossCheck: table.crossCheck,
     ...(state.sbliveCrossCheck ? { sbliveCrossCheck: state.sbliveCrossCheck } : {}),
+    ...(state.cifssCrossCheck ? { cifssCrossCheck: state.cifssCrossCheck } : {}),
     ...(anyOfficial ? { officialFixtures: fixtures } : {}),
     supersededGames: supersededGamesOf(games, ctx.previous),
     ...(officialStandingsPdfUrl === undefined ? {} : { officialStandingsPdfUrl }),
@@ -178,6 +179,13 @@ export function stepAssemble(
         `sblive-only scored ${x.sbliveOnlyScored.length} · backfilled ${x.backfilled.length}`,
     );
   }
+  if (snapshot.cifssCrossCheck) {
+    const x = snapshot.cifssCrossCheck;
+    ctx.log(
+      `cifss cross-check: compared ${x.compared} · agreements ${x.agreements} · conflicts ${x.conflicts.length} · ` +
+        `MaxPreps unscored ${x.cifssOnlyScored.length} · not on MaxPreps ${x.notOnMaxPreps.length}`,
+    );
+  }
   if (snapshot.officialFixtures) {
     ctx.log(`official: ${snapshot.officialFixtures.length} official ${snapshot.officialFixtures.length === 1 ? 'fixture' : 'fixtures'} with no reported contest`);
   }
@@ -199,6 +207,15 @@ export function stepAssemble(
           conflicts: snapshot.sbliveCrossCheck.conflicts.length,
           sbliveOnlyScored: snapshot.sbliveCrossCheck.sbliveOnlyScored.length,
           backfilled: snapshot.sbliveCrossCheck.backfilled.length,
+        }
+      : null,
+    cifssCrossCheck: snapshot.cifssCrossCheck
+      ? {
+          compared: snapshot.cifssCrossCheck.compared,
+          agreements: snapshot.cifssCrossCheck.agreements,
+          conflicts: snapshot.cifssCrossCheck.conflicts.length,
+          cifssOnlyScored: snapshot.cifssCrossCheck.cifssOnlyScored.length,
+          notOnMaxPreps: snapshot.cifssCrossCheck.notOnMaxPreps.length,
         }
       : null,
     officialFixturesUnmatched: snapshot.officialFixtures?.length ?? null,

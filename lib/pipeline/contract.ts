@@ -4,6 +4,7 @@
  * error classes; no I/O.
  */
 
+import type { CifssSectionKey } from '../sources/cifss';
 import type {
   CcsCalendarEvent, DivisionId, DroppedContest, Game, LeagueId, LeagueRunState, OfficialFixture,
   SbliveCrossCheck, SeasonWindow, Snapshot, SourceStatus, TeamSlug,
@@ -23,13 +24,15 @@ export type ResourceKey =
   | { kind: 'sblive-team-games'; team: TeamSlug }
   | { kind: 'vnn-ics'; team: TeamSlug }
   | { kind: 'ccs-ical' }
-  | { kind: 'ccs-bracket' };
+  | { kind: 'ccs-bracket' }
+  /** One page of a Section's cifsshome.org listing, season start through `through` (YYYY-MM-DD). */
+  | { kind: 'cifss-scores'; section: CifssSectionKey; page: number; through: string };
 
 /**
  * 'maxpreps/bootstrap', 'maxpreps/league-meta/<division>', 'maxpreps/standings/<division>',
  * 'maxpreps/schedule/<slug>', 'scval/pdf-text/<division>', 'scval/standings-index',
  * 'official/revision/<division>', 'official/changes/<league>', 'sblive/scores/<date>', 'sblive/team-games/<slug>',
- * 'vnn/<slug>', 'ccs/ical', 'ccs/bracket'
+ * 'vnn/<slug>', 'ccs/ical', 'ccs/bracket', 'cifss/<section>/<page>'
  */
 export function resourcePath(key: ResourceKey): string {
   switch (key.kind) {
@@ -59,6 +62,8 @@ export function resourcePath(key: ResourceKey): string {
       return 'ccs/ical';
     case 'ccs-bracket':
       return 'ccs/bracket';
+    case 'cifss-scores':
+      return `cifss/${key.section}/${key.page}`;
   }
 }
 
@@ -107,6 +112,7 @@ export interface RunArgs {
   official: boolean;
   ccs: boolean;
   vnn: boolean;
+  cifss: boolean;
 }
 
 export interface RunLog {
@@ -186,6 +192,14 @@ export interface SnapshotMeta {
     conflicts: number;
     sbliveOnlyScored: number;
     backfilled: number;
+  } | null;
+  /** The cifsshome.org cross-check in numbers; null when there is none. */
+  cifssCrossCheck: {
+    compared: number;
+    agreements: number;
+    conflicts: number;
+    cifssOnlyScored: number;
+    notOnMaxPreps: number;
   } | null;
   officialFixturesUnmatched: number | null;
   officialStandingsPdfUrl: string | null;

@@ -117,6 +117,26 @@ describeIfPresent('the committed snapshot', () => {
   });
 });
 
+describeIfPresent('the committed snapshot: cifsshome.org score cross-check', () => {
+  it('reports without changing a score: every conflict shows the published MaxPreps score', () => {
+    const x = snapshot.cifssCrossCheck;
+    if (!x) return;
+    expect(x.compared).toBe(x.agreements + x.conflicts.length);
+    for (const row of x.conflicts) {
+      const game = snapshot.games.find((g) => g.contestId === row.contestId);
+      expect(game, row.contestId).toBeDefined();
+      expect({ home: game?.home.score, away: game?.away.score }).toEqual(row.maxpreps);
+      expect(row.maxpreps).not.toEqual(row.cifss);
+    }
+    for (const row of x.cifssOnlyScored) {
+      const game = snapshot.games.find((g) => g.contestId === row.contestId);
+      expect(game, row.contestId).toBeDefined();
+      expect(game?.home.score ?? game?.away.score ?? null, row.contestId).toBeNull();
+    }
+    for (const row of x.notOnMaxPreps) expect(row.contestId).toMatch(/^cifss:\d+$/);
+  });
+});
+
 describeIfPresent('the committed snapshot: si.com score cross-check (owner decision D2)', () => {
   it('never lets a plain disagreement overwrite MaxPreps (rule 5)', () => {
     const x = snapshot.sbliveCrossCheck;

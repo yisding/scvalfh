@@ -20,6 +20,7 @@ import { createPipelineContext, metaPathOf, parseRunArgs, prepareRun, readPrevio
 import { stepStandings } from '../../lib/pipeline/steps/standings';
 import { FixtureTransport } from '../../lib/pipeline/transport';
 import { ALL_SEASON_ID, SPORT_SEASON_ID } from '../../lib/season';
+import { CIFSS_SECTIONS } from '../../lib/sources/cifss';
 import { loadSnapshot } from '../../lib/snapshot-schema';
 import { stableStringify } from '../../lib/stable-json';
 import { FETCHABLE_TEAMS, TEAMS } from '../../lib/teams';
@@ -46,7 +47,7 @@ describe('parseRunArgs (§7.12 flags)', () => {
       [
         '--fixtures', 'tests/fixtures/maxpreps', '--variant', 'v1', '--variant', 'v2', '--out', 'x/s.json', '--dry-run',
         '--fetched-at', '2026-10-02T15:00:00.000Z', '--force', '--leagues', 'bval,scval', '--accept-regression', 'bval',
-        '--accept-regression', 'pcal,mcal', '--no-sblive', '--sblive-full', '--no-scval', '--no-ccs', '--no-vnn',
+        '--accept-regression', 'pcal,mcal', '--no-sblive', '--sblive-full', '--no-scval', '--no-ccs', '--no-vnn', '--no-cifss',
       ],
       opts,
     );
@@ -64,6 +65,7 @@ describe('parseRunArgs (§7.12 flags)', () => {
       official: false,
       ccs: false,
       vnn: false,
+      cifss: false,
       capture: null,
     });
     expect(parseRunArgs(['--no-official'], opts).official).toBe(false);
@@ -143,12 +145,13 @@ describe('a full corpus run', () => {
       for (const d of league.divisions) expected.push(`${d.id} reported standings`);
       for (const t of FETCHABLE_TEAMS.filter((x) => x.league === league.id)) expected.push(`${t.slug} schedule`);
     }
-    // VNN calendars in registry order, then CCS (the corpus has neither: skipped rows).
+    // VNN calendars in registry order, cifsshome.org by Section, then CCS (the corpus has none: skipped rows).
     expected.push(...TEAMS.filter((t) => t.slug === 'palo-alto' || t.slug === 'los-gatos').map((t) => `${t.slug} school calendar`));
+    expected.push(...CIFSS_SECTIONS.map((s) => `cifsshome.org ${s.name} field hockey`));
     expected.push('ccs calendar', 'ccs bracket');
     expect(labels).toEqual(expected);
     const teamsInRun = FETCHABLE_TEAMS.filter((t) => inRun.includes(t.league));
-    expect(expected.length).toBe(1 + ALL_DIVISIONS.filter((d) => inRun.includes(d.leagueId)).length * 2 + teamsInRun.length + 4);
+    expect(expected.length).toBe(1 + ALL_DIVISIONS.filter((d) => inRun.includes(d.leagueId)).length * 2 + teamsInRun.length + 4 + CIFSS_SECTIONS.length);
     expect(snapshot.sources.filter((s) => s.kind === 'team-schedule').map((s) => s.scope?.team)).toEqual(teamsInRun.map((t) => t.slug));
   });
 
