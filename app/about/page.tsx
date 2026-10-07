@@ -1492,8 +1492,10 @@ export default function AboutPage() {
             <p>
               Accessibility is a floor, not an aspiration: every win/loss/tie is a letter and a written
               word, never color alone; every score and result has a full sentence for screen readers;
-              every text and background color pairing meets the WCAG AA contrast standard, and a color
-              change that would break it is caught before it is published.
+              the site&rsquo;s own text and background colors meet the WCAG AA contrast standard, and a
+              change to them that would fall below it is caught before it is published. Team badges are
+              the exception: they use school colors from MaxPreps, with the letters in whichever of black
+              or white stands out more, and are not part of that check.
             </p>
           </div>
         </section>
