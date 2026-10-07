@@ -191,7 +191,7 @@ export function TimelineRail({ dates, today, leagueId, className }: TimelineRail
           so a tabbed-to chip is never left half under the faded edge — which a 2.5rem
           `scroll-padding` only half fixed, since Chrome scrolls a focused chip into view only
           when it is wholly outside the scrollport. */}
-      <ol className="sx-fade-x m-0 flex list-none items-center gap-2 overflow-x-auto px-gutter py-1 md:px-1">
+      <ol className="sx-fade-x m-0 flex list-none items-center gap-2 overflow-x-auto overflow-y-hidden px-gutter py-1 md:px-1">
         {markers.map((marker) => (
           <li key={marker.date} className="flex h-11 shrink-0 items-center">
             <a
