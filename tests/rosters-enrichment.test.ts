@@ -385,14 +385,40 @@ describe('recruiting profiles', () => {
       }
     }
     const profiles = others.flatMap((t) => t.players.flatMap((p) => p.profiles));
-    expect(profiles.length).toBe(29);
-    expect(others.flatMap((t) => t.players).filter((p) => p.profiles.length > 0).length).toBe(27);
+    // 29 for 27 on 2026-10-03, and Kaylee and Lexi True's NCSA pages from the 2026-10-07 sweep (below).
+    expect(profiles.length).toBe(31);
+    expect(others.flatMap((t) => t.players).filter((p) => p.profiles.length > 0).length).toBe(29);
     // Westmont's Teya Halali: SportsRecruits says class of 2029, which a 2026-27 sophomore is.
     const teya = raw.teams.find((t) => t.slug === 'westmont')!.players.find((p) => p.fullName === 'Teya Halali')!;
     expect(teya.profiles).toEqual([
       expect.objectContaining({ platform: 'sportsrecruits', url: 'https://nfhca.sportsrecruits.com/athlete/teya_halali', classOf: 2029 }),
     ]);
     expect(base.teams.find((t) => t.slug === 'westmont')!.players.find((p) => p.fullName === 'Teya Halali')!.grade).toBe(10);
+  });
+
+  it('what was found on 2026-10-07 for the 21 rows MaxPreps added to Marin Academy and Westmont', () => {
+    const rowsOf = (slug: string) => base.teams.find((t) => t.slug === slug)!.players;
+    const overlay = (slug: string) => raw.teams.find((t) => t.slug === slug)!.players;
+    expect(rowsOf('marin-academy')).toHaveLength(18);
+    // Marin Academy: no profile for any of the 18; Julia Foulke's grade is a conflict, MaxPreps' Sr. kept.
+    expect(overlay('marin-academy').map((p) => p.fullName)).toEqual(['Julia Foulke']);
+    const julia = overlay('marin-academy')[0];
+    expect(julia.profiles).toEqual([]);
+    expect(julia.grade).toBeNull();
+    expect(julia.conflicts.map((c) => [c.field, c.kept, c.other, c.kind])).toEqual([
+      ['grade', '12', '11', 'school-site'],
+      ['grade', '12', '11', 'maxpreps-career'],
+    ]);
+    // Westmont: Kaylee and Lexi True on NCSA (class of 2028, grade 11); Savannah Murdoch none.
+    const westmont = Object.fromEntries(overlay('westmont').map((p) => [p.fullName, p.profiles.map((x) => [x.platform, x.classOf])]));
+    expect(westmont).toEqual({
+      'Kaylee True': [['ncsa', 2028]],
+      'Lexi True': [['ncsa', 2028]],
+      'Teya Halali': [['sportsrecruits', 2029]],
+    });
+    for (const name of ['Kaylee True', 'Lexi True']) {
+      expect(rowsOf('westmont').find((p) => p.fullName === name)!.grade, name).toBe(11);
+    }
   });
 
   it('what was found for the EAL, as captured on 2026-10-04: recruiting pages only, no school-site sweep', () => {
@@ -431,12 +457,13 @@ describe('recruiting profiles', () => {
     const profiles = eal.flatMap((t) => t.players.flatMap((p) => p.profiles));
     expect(profiles.length).toBe(33);
     expect(eal.flatMap((t) => t.players).length).toBe(29);
-    // The other four NorCal leagues' counts are untouched: 99 profiles for 83 players.
+    // The other four NorCal leagues' counts are untouched: 99 profiles for 83 players (101 for 85 with
+    // the two Westmont pages of the 2026-10-07 sweep).
     const earlier = raw.teams
       .filter((t) => SCVAL_SLUGS.has(t.slug) || SWEPT_OTHER_SLUGS.has(t.slug))
       .flatMap((t) => t.players.filter((p) => p.profiles.length > 0));
-    expect(earlier.flatMap((p) => p.profiles).length).toBe(99);
-    expect(earlier.length).toBe(83);
+    expect(earlier.flatMap((p) => p.profiles).length).toBe(101);
+    expect(earlier.length).toBe(85);
     // NCSA first on a row that has more than one platform.
     const kate = eal.find((t) => t.slug === 'davis')!.players.find((p) => p.fullName === 'Kate Loscutoff')!;
     expect(kate.profiles.map((p) => p.platform)).toEqual(['ncsa', 'sportsrecruits']);
