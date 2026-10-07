@@ -4,6 +4,7 @@ import Link from 'next/link';
 import CollegeList from '../../components/commits/CollegeList';
 import CommitList from '../../components/commits/CommitList';
 import { buildCommitsView } from '../../components/commits/commit-view';
+import { RegionSwitcher } from '../../components/layout/LeagueSwitcher';
 import PageHeader from '../../components/layout/PageHeader';
 import { OG_BASE, ROOT_OG_IMAGE } from '../../components/layout/site';
 import EmptyState from '../../components/ui/EmptyState';
@@ -21,12 +22,18 @@ const PAGE_TITLE = 'College commitments';
  * says have committed to (or signed with) a college team, in field hockey or any other sport. The
  * lede answers the page's question in one paragraph; there is no second line of bare counts.
  *
- * Heading outline: the h1, then one h2 per class year (`#class-2027`, the earliest class first),
- * then the h2 "Colleges" (`#colleges`, one row per college, `#college-<slug>`), then the h2 "How
- * commitments are matched" (`#how-matched`). A team page's commitment line links the player's row
- * (`#<team slug>-<athleteId>`, components/commits/commit-view.ts commitAnchor). With no commitment
- * in the file, one empty state stands where the classes would be and the colleges section is
- * left out.
+ * Regions (DESIGN §21.8): the RegionSwitcher sits under the header, and each region's commitments
+ * sit in one `<div id="norcal|socal" data-region-scope>`, so a reader sees their own half; without
+ * JavaScript both render, NorCal first. Each block opens with the region's count sentence; the lede
+ * and `#how-matched` stay site-wide.
+ *
+ * Heading outline: the h1, then, in each region's block, one h2 per class year
+ * (`#norcal-class-2027`, the earliest class first) and the h2 "Colleges" (`#norcal-colleges`, one row
+ * per college, `#norcal-college-<slug>`), then the h2 "How commitments are matched" (`#how-matched`).
+ * A team page's commitment line links the player's row (`#<team slug>-<athleteId>`,
+ * components/commits/commit-view.ts commitAnchor), which opens its block when that region is hidden
+ * (`:has(:target)`). A region with no commitment shows only its sentence. With no commitment in the
+ * file, one empty state stands where the regions would be, with no switcher.
  *
  * Lists, not tables (DESIGN §10.8). The page is not in the nav (DESIGN §21.4): /teams, every team
  * page's roster footnote where a player has a commitment, and /about link it. It takes the root OG
@@ -46,7 +53,7 @@ export default function CommitsPage() {
     <div className="pb-section-lg">
       <PageHeader title="College commitments" description={view.lede} />
 
-      {view.classes.length === 0 ? (
+      {view.playerCount === 0 ? (
         <div className="mt-8 md:mt-10">
           <EmptyState heading="No commitment found yet.">
             No public page we found on {view.capturedOn} says a player on these rosters has committed
@@ -54,24 +61,36 @@ export default function CommitsPage() {
           </EmptyState>
         </div>
       ) : (
-        view.classes.map((group, i) => (
-          <section
-            key={group.id}
-            aria-labelledby={group.id}
-            className={i === 0 ? 'mt-8 md:mt-10' : 'mt-section md:mt-section-lg'}
-          >
-            <SectionHeader id={group.id} kicker={group.heading} meta={group.meta} />
-            <CommitList rows={group.rows} />
-          </section>
-        ))
-      )}
+        <>
+          <RegionSwitcher className="mt-4" />
 
-      {view.colleges.length > 0 ? (
-        <section aria-labelledby="colleges" className="mt-section md:mt-section-lg">
-          <SectionHeader id="colleges" kicker="Colleges" meta={plural(view.collegeCount, 'college')} />
-          <CollegeList colleges={view.colleges} />
-        </section>
-      ) : null}
+          {view.regions.map((region) => (
+            <div key={region.id} id={region.id} data-region-scope={region.id}>
+              <p className="mt-6 mb-0 max-w-prose text-meta text-ink-2">{region.summary}</p>
+              {region.classes.map((group, i) => (
+                <section
+                  key={group.id}
+                  aria-labelledby={group.id}
+                  className={i === 0 ? 'mt-8 md:mt-10' : 'mt-section md:mt-section-lg'}
+                >
+                  <SectionHeader id={group.id} kicker={group.heading} meta={group.meta} />
+                  <CommitList rows={group.rows} />
+                </section>
+              ))}
+              {region.colleges.length > 0 ? (
+                <section aria-labelledby={region.collegesId} className="mt-section md:mt-section-lg">
+                  <SectionHeader
+                    id={region.collegesId}
+                    kicker="Colleges"
+                    meta={plural(region.colleges.length, 'college')}
+                  />
+                  <CollegeList colleges={region.colleges} />
+                </section>
+              ) : null}
+            </div>
+          ))}
+        </>
+      )}
 
       <section aria-labelledby="how-matched" className="mt-section md:mt-section-lg">
         <SectionHeader id="how-matched" kicker="How commitments are matched" />
