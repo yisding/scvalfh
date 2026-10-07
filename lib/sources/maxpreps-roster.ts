@@ -26,7 +26,7 @@ import { z } from 'zod';
 
 import { htmlUnescape } from './http';
 import { MaxPrepsError, NEXT_DATA_RE } from './maxpreps';
-import { recaseName, recaseNullableName } from '../person-name';
+import { recaseNameParts } from '../person-name';
 import { SPORT_SEASON_ID } from '../season';
 import { GRADE_CLASSES, type RosterPlayer, type TeamRoster } from '../rosters-schema';
 import type { Team } from '../types';
@@ -410,12 +410,7 @@ export function parseRosterPage(html: string, opts: ParseRosterOptions = {}): Ro
     athleteCount: countData.athleteCount,
     staffCount: countData.staffCount,
     // Recased only now: the cross-check above holds MaxPreps' own spelling against its own table.
-    players: players.map((p) => ({
-      ...p,
-      firstName: recaseNullableName(p.firstName),
-      lastName: recaseNullableName(p.lastName),
-      fullName: recaseName(p.fullName),
-    })),
+    players: players.map(recaseNameParts),
     deletedRows,
     warnings,
   };

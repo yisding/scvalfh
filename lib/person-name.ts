@@ -31,16 +31,38 @@ function recaseShouted(word: string): string {
   return m[1] ? `Mc${cased}` : cased;
 }
 
+/** No capital anywhere outside a lone initial: "addie dawson", "A. dawson". */
+function isUncased(name: string): boolean {
+  return !name
+    .split(/\s+/)
+    .filter((w) => !INITIAL.test(w))
+    .some((w) => /\p{Lu}/u.test(w));
+}
+
+function recaseAs(name: string, uncased: boolean): string {
+  return name.replace(/\S+/g, uncased ? capitalize : recaseShouted);
+}
+
 /**
  * "PAIGE PIERSON" → "Paige Pierson", "McKAELA" → "McKaela", "O'BRIEN-SMITH" → "O'Brien-Smith",
  * "addie dawson" → "Addie Dawson", "A. dawson" → "A. Dawson".
  */
 export function recaseName(name: string): string {
-  const words = name.split(/\s+/).filter((w) => !INITIAL.test(w));
-  if (!words.some((w) => /\p{Lu}/u.test(w))) return name.replace(/\S+/g, capitalize);
-  return name.replace(/\S+/g, recaseShouted);
+  return recaseAs(name, isUncased(name));
 }
 
-export function recaseNullableName(name: string | null): string | null {
-  return name === null ? null : recaseName(name);
+/**
+ * A roster row's three name fields, recased on one decision taken from the full name: judged
+ * alone, the "de la cruz" of "Anna de la cruz" would look uncased and come back "De La Cruz".
+ */
+export function recaseNameParts<P extends { firstName: string | null; lastName: string | null; fullName: string }>(
+  p: P,
+): P {
+  const uncased = isUncased(p.fullName);
+  return {
+    ...p,
+    firstName: p.firstName === null ? null : recaseAs(p.firstName, uncased),
+    lastName: p.lastName === null ? null : recaseAs(p.lastName, uncased),
+    fullName: recaseAs(p.fullName, uncased),
+  };
 }
