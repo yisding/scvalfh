@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 
 import ClubList from '../../components/clubs/ClubList';
+import { RegionSwitcher } from '../../components/layout/LeagueSwitcher';
 import { buildClubsIndexView } from '../../components/clubs/club-view';
 import PageHeader from '../../components/layout/PageHeader';
 import { OG_BASE, ROOT_OG_IMAGE } from '../../components/layout/site';
@@ -15,18 +16,25 @@ const PAGE_TITLE = 'Club teams';
  *
  * The youth field hockey clubs of data/clubs.json — the clubs around the Bay Area and Central Coast
  * schools, three clubs met near the EAL teams' schools (D-City and Roseville FHC in the Sacramento
- * area, Chico Hotshots in the North State: areas not searched for every club, DESIGN §22.9), plus
- * any other club a tracked player is tied to (HTC trains in La Jolla) — and, for each, how many
+ * area, Chico Hotshots in the North State: areas not searched for every club, DESIGN §22.9), the
+ * clubs around the Southern Section and San Diego Section schools (DESIGN §24.12), plus any other
+ * club a tracked player is tied to — and, for each, how many
  * players on the tracked varsity rosters a public page ties to it, current and earlier stated
  * apart, and from which schools. The lede answers the page's question in one paragraph; there is
  * no second line of bare counts.
  *
  * Heading outline: the h1, then one h2 per region that has a club (San Francisco, the Peninsula,
- * the South Bay, the East Bay, Marin, the Central Coast, the Sacramento area, the North State, then
- * the rest: lib/clubs-schema.ts CLUB_REGIONS), then the h2 "How players are matched"
+ * the South Bay, the East Bay, Marin, the Central Coast, the Sacramento area, the North State,
+ * Ventura County, Los Angeles, Orange County, the Inland Empire, San Diego, then the rest:
+ * lib/clubs-schema.ts CLUB_REGIONS), then the h2 "How players are matched"
  * (`#how-matched`, which every club page links). Within a region, the clubs with the most tied
  * players come first (DESIGN §17.5, lib/clubs.ts), so a reader meets the clubs that answer the
  * question before the ones that do not.
+ *
+ * Regions (DESIGN §24.12): each region's section carries its half of the site's `data-region-scope`
+ * (lib/clubs-schema.ts CLUB_REGION_SITE_REGION), under the RegionSwitcher, so a reader sees the clubs
+ * of their own half; `elsewhere` shows under both, and without JavaScript every section renders,
+ * NorCal's first. The first section of each half gets the first section's top margin.
  *
  * A list, not a table (DESIGN §10.8): components/clubs/ClubList.tsx. The page is not in the nav
  * (the spec keeps the navigation unchanged); /teams, every team page's roster and /about link it.
@@ -46,11 +54,18 @@ export default function ClubsPage() {
     <div className="pb-section-lg">
       <PageHeader title="Club teams" description={view.lede} />
 
+      <RegionSwitcher className="mt-4" />
+
       {view.regions.map((region, i) => (
         <section
           key={region.id}
           aria-labelledby={region.id}
-          className={i === 0 ? 'mt-8 md:mt-10' : 'mt-section md:mt-section-lg'}
+          data-region-scope={region.siteRegion ?? undefined}
+          className={
+            view.regions.findIndex((r) => r.siteRegion === region.siteRegion) === i
+              ? 'mt-8 md:mt-10'
+              : 'mt-section md:mt-section-lg'
+          }
         >
           <SectionHeader id={region.id} kicker={region.heading} meta={region.meta} />
           <ClubList clubs={region.clubs} />
@@ -68,8 +83,11 @@ export default function ClubsPage() {
           <p className="mt-2 mb-0">
             A player is tied to a club only when a public page names the player and a field hockey
             club, and also either names the player&rsquo;s high school, or gives a class year that
-            matches the player&rsquo;s grade along with a Northern California location. A name alone
-            never counts, and a class year that disagrees with the roster rules a match out.
+            matches the player&rsquo;s grade along with a location in the school&rsquo;s half of
+            the state, Northern or Southern California. A name alone
+            never counts, and a class year that disagrees with the roster rules a match out. A
+            nickname (Abby for Abigail) counts when the page otherwise meets that rule and a second
+            page, or the player&rsquo;s own, backs the match.
             Social-media posts, and lacrosse, soccer and ice hockey clubs, do not count.
           </p>
           <p className="mt-2 mb-0">

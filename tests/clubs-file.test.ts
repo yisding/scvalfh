@@ -45,6 +45,11 @@ import { getTeamBySlug } from '../lib/teams';
 import { REPO } from './helpers';
 
 const raw = JSON.parse(readFileSync(path.join(REPO, 'data', 'clubs.json'), 'utf8')) as ClubsFile;
+/** The twelve club records the 2026-10-06 Southern California sweep added. */
+const SOCAL_CLUBS: ReadonlySet<string> = new Set([
+  'rush', 'coastal-clash', 'myto', 'knights-fhc', 'vcrd', 'bulldogs',
+  'wc-riptide', 'la-tigers', 'sc-royals', 'hb-surfers', 'socal-strikers', 'oc-field-hockey-club',
+]);
 const teams = getAllEnrichedRosters();
 const season = getRosters().season;
 
@@ -169,20 +174,20 @@ describe('data/clubs.json', () => {
     for (const a of raw.affiliations) expect(a.basis, `${a.fullName} (${a.club})`).toMatch(/[.!?]['"’”)]?$/);
   });
 
-  describe('as researched 2026-10-03, 2026-10-04 and 2026-10-05 (changes only with a new sweep)', () => {
-    const players = new Set(raw.affiliations.map((a) => `${a.teamSlug} ${a.athleteId}`));
-    const schools = new Set(raw.affiliations.map((a) => a.teamSlug));
-
-    // The sweep covered the 49 NorCal schools (SCVAL, BVAL, PCAL, MCAL, EAL). The 53 Southern California
-    // teams joined the registry on 2026-10-06 with no club sweep (DESIGN-socal §3, §24.9): their 842 roster
-    // rows (data/rosters.json, read 2026-10-06: the 50 league teams' 777 and the three independents' 65) carry
-    // no affiliation, and these counts are over the swept 49.
+  describe('NorCal, as researched 2026-10-03, 2026-10-04 and 2026-10-05 (changes only with a new sweep)', () => {
+    // These sweeps covered the 49 NorCal schools (SCVAL, BVAL, PCAL, MCAL, EAL), and the counts here are
+    // over them: their ties, and the 16 clubs they found (HTC among them, whose record the 2026-10-06
+    // Southern California sweep re-read and moved to San Diego). The SoCal sweep's are pinned below.
     const SWEPT = new Set(['scval', 'bval', 'pcal', 'mcal', 'eal']);
     const swept = teams.filter((t) => SWEPT.has(getTeamBySlug(t.slug)!.league));
+    const norcal = raw.affiliations.filter((a) => SWEPT.has(getTeamBySlug(a.teamSlug)!.league));
+    const norcalClubs = raw.clubs.filter((c) => !SOCAL_CLUBS.has(c.slug));
+    const players = new Set(norcal.map((a) => `${a.teamSlug} ${a.athleteId}`));
+    const schools = new Set(norcal.map((a) => a.teamSlug));
 
     it('holds 16 clubs and 94 affiliations: 80 of the 811 varsity rows, at 25 of the 49 swept schools', () => {
-      expect(raw.clubs).toHaveLength(16);
-      expect(raw.affiliations).toHaveLength(94);
+      expect(norcalClubs).toHaveLength(16);
+      expect(norcal).toHaveLength(94);
       expect(players.size).toBe(80);
       expect(schools.size).toBe(25);
       const rows = swept.flatMap((t) => t.players.map((p) => ({ team: t.slug, level: p.level })));
@@ -195,9 +200,9 @@ describe('data/clubs.json', () => {
     });
 
     it('counts 71 current, 13 past and 10 unknown; 79 high and 15 medium', () => {
-      expect(countBy(raw.affiliations, (a) => a.status)).toEqual({ current: 71, past: 13, unknown: 10 });
-      expect(countBy(raw.affiliations, (a) => a.confidence)).toEqual({ high: 79, medium: 15 });
-      expect(raw.affiliations.filter((a) => a.status === 'unknown').map((a) => a.fullName).sort()).toEqual([
+      expect(countBy(norcal, (a) => a.status)).toEqual({ current: 71, past: 13, unknown: 10 });
+      expect(countBy(norcal, (a) => a.confidence)).toEqual({ high: 79, medium: 15 });
+      expect(norcal.filter((a) => a.status === 'unknown').map((a) => a.fullName).sort()).toEqual([
         'Amelia Zedonis',
         'Brooklyn Barnard',
         'Colette Boyd',
@@ -214,7 +219,7 @@ describe('data/clubs.json', () => {
     it('rests on 251 source entries on 118 distinct URLs, by kind', () => {
       // An entry is one page backing one tie: a club roster or a news story naming several players
       // is one page and several entries, so README §Clubs and DATA-SOURCES §1.1j2 give both counts.
-      const sources = raw.affiliations.flatMap((a) => a.sources);
+      const sources = norcal.flatMap((a) => a.sources);
       expect(sources).toHaveLength(251);
       expect(new Set(sources.map((s) => s.url)).size).toBe(118);
       // URLs, not pages: two pages are cited under two URLs each (Stick Together's 2025 all-league
@@ -250,14 +255,15 @@ describe('data/clubs.json', () => {
       const urls = [...new Set(sources.map((s) => s.url))];
       const kindsAt = (url: string) => new Set(sources.filter((s) => s.url === url).map((s) => s.kind));
       expect(urls.filter((url) => kindsAt(url).size > 1)).toEqual(['https://www.sticktogetherfh.com/all-league-2025/']);
-      expect(new Set(raw.clubs.flatMap((c) => c.sources.map((s) => s.url))).size).toBe(86);
-      expect(raw.clubs.flatMap((c) => c.sources)).toHaveLength(91);
+      // HTC's sources as the first sweep recorded them; the 2026-10-06 re-read changed its region and wording, not its sources.
+      expect(new Set(norcalClubs.flatMap((c) => c.sources.map((s) => s.url))).size).toBe(86);
+      expect(norcalClubs.flatMap((c) => c.sources)).toHaveLength(91);
     });
 
     it('ties players to nine clubs, and none to the other seven', () => {
       const byClub = Object.fromEntries(
-        raw.clubs
-          .map((c) => [c.slug, raw.affiliations.filter((a) => a.club === c.slug)] as const)
+        norcalClubs
+          .map((c) => [c.slug, norcal.filter((a) => a.club === c.slug)] as const)
           .filter(([, list]) => list.length > 0)
           .map(([slug, list]) => [slug, { ...{ current: 0, past: 0, unknown: 0 }, ...countBy(list, (a) => a.status) }]),
       );
@@ -272,7 +278,7 @@ describe('data/clubs.json', () => {
         'chico-hotshots': { current: 4, past: 0, unknown: 1 },
         htc: { current: 2, past: 0, unknown: 0 },
       });
-      expect(raw.clubs.filter((c) => !byClub[c.slug]).map((c) => c.slug).sort()).toEqual([
+      expect(norcalClubs.filter((c) => !byClub[c.slug]).map((c) => c.slug).sort()).toEqual([
         'hayward-hawks',
         'lions',
         'pac-heights',
@@ -307,27 +313,29 @@ describe('data/clubs.json', () => {
       expect(teams.find((t) => t.slug === 'davis')!.players.some((p) => p.fullName === 'Margaret Loscutoff')).toBe(true);
     });
 
-    it('places the clubs by region, with none on the Peninsula, the Central Coast or in Sacramento', () => {
-      expect(countBy(raw.clubs, (c) => c.region)).toEqual({
+    it('places the clubs by region, with none on the Peninsula or the Central Coast', () => {
+      expect(countBy(norcalClubs, (c) => c.region)).toEqual({
         'san-francisco': 2,
         'south-bay': 7,
         'east-bay': 2,
         marin: 1,
         sacramento: 2,
         'north-state': 1,
-        elsewhere: 1,
+        'san-diego': 1,
       });
     });
 
     it('ties 13 players to more than one club', () => {
-      const n = Object.values(countBy(raw.affiliations, (a) => `${a.teamSlug} ${a.athleteId}`)).filter((k) => k > 1).length;
+      const n = Object.values(countBy(norcal, (a) => `${a.teamSlug} ${a.athleteId}`)).filter((k) => k > 1).length;
       expect(n).toBe(13);
     });
 
-    it('dates each club record: the first sweep’s on capturedAt, the three EAL-area clubs a day later', () => {
+    it('dates each club record: the first sweep’s on capturedAt, the three EAL-area clubs a day later, the SoCal ones and HTC on 2026-10-06', () => {
       expect(raw.capturedAt).toBe('2026-10-03');
-      for (const c of raw.clubs) expect(c.checkedOn, c.slug).toBe(['d-city', 'roseville-fhc', 'chico-hotshots'].includes(c.slug) ? '2026-10-04' : '2026-10-03');
-      expect(getClubsLastChecked()).toBe('2026-10-04');
+      const day = (slug: string) =>
+        SOCAL_CLUBS.has(slug) || slug === 'htc' ? '2026-10-06' : ['d-city', 'roseville-fhc', 'chico-hotshots'].includes(slug) ? '2026-10-04' : '2026-10-03';
+      for (const c of raw.clubs) expect(c.checkedOn, c.slug).toBe(day(c.slug));
+      expect(getClubsLastChecked()).toBe('2026-10-06');
     });
 
     it('ties two Pleasant Valley players to Chico Hotshots from their own MaxPreps career pages', () => {
@@ -342,7 +350,7 @@ describe('data/clubs.json', () => {
       }
     });
 
-    it('finds players in four of the five swept leagues, and none in the four unswept SoCal leagues or the independents', () => {
+    it('finds players in four of the five NorCal leagues and in every Southern California group', () => {
       const byLeague = Object.fromEntries(
         LEAGUES.map((l) => {
           const inLeague = raw.affiliations.filter((a) => getTeamBySlug(a.teamSlug)!.league === l.id);
@@ -358,14 +366,99 @@ describe('data/clubs.json', () => {
         pcal: [0, 0],
         mcal: [17, 4],
         eal: [9, 3],
-        sunset: [0, 0],
-        city: [0, 0],
-        'north-county': [0, 0],
-        metro: [0, 0],
-        independents: [0, 0],
+        sunset: [7, 3],
+        city: [33, 9],
+        'north-county': [20, 8],
+        metro: [4, 2],
+        independents: [4, 1],
       });
     });
   });
+
+  describe('Southern California, as researched 2026-10-06 (changes only with a new sweep)', () => {
+    const SOCAL_LEAGUES = new Set(['sunset', 'city', 'north-county', 'metro', 'independents']);
+    const socal = raw.affiliations.filter((a) => SOCAL_LEAGUES.has(getTeamBySlug(a.teamSlug)!.league));
+
+    it('adds 12 clubs and 76 ties: 68 of the 842 varsity rows, at 23 of the 53 schools', () => {
+      expect(raw.clubs.filter((c) => SOCAL_CLUBS.has(c.slug))).toHaveLength(12);
+      expect(raw.clubs).toHaveLength(28);
+      expect(socal).toHaveLength(76);
+      expect(raw.affiliations).toHaveLength(170);
+      expect(new Set(socal.map((a) => `${a.teamSlug} ${a.athleteId}`)).size).toBe(68);
+      expect(new Set(socal.map((a) => a.teamSlug)).size).toBe(23);
+      // Nothing from the SoCal sweep is on a NorCal row, and nothing from the NorCal sweeps on a SoCal one.
+      expect(raw.affiliations.length - socal.length).toBe(94);
+    });
+
+    it('counts 61 current, 6 past and 9 unknown; 63 high and 13 medium', () => {
+      expect(countBy(socal, (a) => a.status)).toEqual({ current: 61, past: 6, unknown: 9 });
+      expect(countBy(socal, (a) => a.confidence)).toEqual({ high: 63, medium: 13 });
+      // The one tie on the revised nickname rule (2026-10-06): pages say "Abby", the roster Abigail.
+      const abby = socal.find((a) => a.fullName === 'Abigail Karlander')!;
+      expect([abby.club, abby.confidence, abby.sources.map((s) => s.statedSchool)]).toEqual(['rush', 'medium', [null, null]]);
+    });
+
+    it('rests on 173 source entries on 117 distinct URLs, by kind', () => {
+      const sources = socal.flatMap((a) => a.sources);
+      expect(sources).toHaveLength(173);
+      expect(new Set(sources.map((s) => s.url)).size).toBe(117);
+      expect(countBy(sources, (s) => s.kind)).toEqual({
+        sportsrecruits: 80,
+        other: 34,
+        event: 20,
+        'maxpreps-career': 15,
+        'club-site': 13,
+        ncsa: 8,
+        fieldlevel: 3,
+      });
+    });
+
+    it('ties players to seven clubs: HTC (now in San Diego) and six of the twelve new ones', () => {
+      const byClub: Record<string, Record<string, number>> = {};
+      for (const a of socal) {
+        byClub[a.club] ??= { current: 0, past: 0, unknown: 0 };
+        byClub[a.club][a.status]++;
+      }
+      expect(byClub).toEqual({
+        htc: { current: 24, past: 0, unknown: 4 },
+        rush: { current: 14, past: 1, unknown: 1 },
+        myto: { current: 13, past: 1, unknown: 1 },
+        vcrd: { current: 6, past: 0, unknown: 0 },
+        'wc-riptide': { current: 0, past: 0, unknown: 1 },
+        'coastal-clash': { current: 2, past: 4, unknown: 1 },
+        'knights-fhc': { current: 2, past: 0, unknown: 1 },
+      });
+      expect([...SOCAL_CLUBS].filter((slug) => !byClub[slug]).sort()).toEqual([
+        'bulldogs',
+        'hb-surfers',
+        'la-tigers',
+        'oc-field-hockey-club',
+        'sc-royals',
+        'socal-strikers',
+      ]);
+    });
+
+    it('places the twelve new clubs in four Southern California areas, none in the Inland Empire, and HTC in San Diego', () => {
+      expect(countBy(raw.clubs.filter((c) => SOCAL_CLUBS.has(c.slug) || c.slug === 'htc'), (c) => c.region)).toEqual({
+        'san-diego': 5,
+        ventura: 2,
+        'los-angeles': 2,
+        'orange-county': 4,
+      });
+      expect(raw.clubs.some((c) => c.region === 'inland-empire' || c.region === 'elsewhere')).toBe(false);
+    });
+
+    it('ties 7 players to more than one club, and never credits a bare "Rush Devils" to one', () => {
+      const n = Object.values(countBy(socal, (a) => `${a.teamSlug} ${a.athleteId}`)).filter((k) => k > 1).length;
+      expect(n).toBe(7);
+      // "Rush Devils" is a joint RUSH and VCRD squad: a RUSH or VCRD tie needs a page that names the club.
+      for (const a of socal.filter((x) => x.club === 'rush' || x.club === 'vcrd')) {
+        const names = a.club === 'rush' ? /\bRUSH\b(?! ?Devils)|Rush Field Hockey|Rush FH|rushfieldhockey|"RUSH"|Rush:/i : /VCRD|Ventura County Red Devils/;
+        expect(a.sources.some((s) => names.test(s.quote) || names.test(s.url)), `${a.fullName} (${a.club})`).toBe(true);
+      }
+    });
+  });
+
 });
 
 describe('data/clubs.json: jvAffiliations', () => {
@@ -424,7 +517,19 @@ describe('lib/clubs.ts', () => {
       'd-city',
       'roseville-fhc',
       'chico-hotshots',
+      'vcrd',
+      'bulldogs',
+      'wc-riptide',
+      'la-tigers',
+      'oc-field-hockey-club',
+      'sc-royals',
+      'socal-strikers',
+      'hb-surfers',
       'htc',
+      'rush',
+      'myto',
+      'coastal-clash',
+      'knights-fhc',
     ]);
     expect(getClubs().map((c) => c.slug)).toEqual(getClubSlugs());
     // The rule, not just today's result: regions in CLUB_REGIONS order, counts never rising within one.
@@ -491,8 +596,11 @@ describe('lib/clubs.ts', () => {
     expect(() => getAffiliatedPlayer({ teamSlug: 'st-ignatius', athleteId: 'nope' })).toThrow(/no roster row/);
   });
 
-  it('names the six areas notes[] says were searched', () => {
-    expect(SEARCHED_REGIONS).toEqual(['san-francisco', 'peninsula', 'south-bay', 'east-bay', 'marin', 'central-coast']);
+  it('names the eleven areas notes[] says were searched: six in NorCal, five in SoCal', () => {
+    expect(SEARCHED_REGIONS).toEqual([
+      'san-francisco', 'peninsula', 'south-bay', 'east-bay', 'marin', 'central-coast',
+      'ventura', 'los-angeles', 'orange-county', 'inland-empire', 'san-diego',
+    ]);
     for (const r of SEARCHED_REGIONS) expect(CLUB_REGIONS).toContain(r);
     expect(SEARCHED_REGIONS).not.toContain('sacramento');
     expect(SEARCHED_REGIONS).not.toContain('north-state');
@@ -731,7 +839,7 @@ describe('a bad file is refused at load', () => {
       ['affiliations.0.status', (f) => ((f.affiliations[0] as { status: string }).status = 'former')],
       ['affiliations.0.sources.0.kind', (f) => ((f.affiliations[0].sources[0] as { kind: string }).kind = 'instagram')],
       ['affiliations.0.confidence', (f) => ((f.affiliations[0] as { confidence: string }).confidence = 'low')],
-      ['clubs.0.region', (f) => ((f.clubs[0] as { region: string }).region = 'los-angeles')],
+      ['clubs.0.region', (f) => ((f.clubs[0] as { region: string }).region = 'las-vegas')],
       ['affiliations.0.teamSlug', (f) => (f.affiliations[0].teamSlug = 'not-a-school')],
     ];
     for (const [where, edit] of cases) {

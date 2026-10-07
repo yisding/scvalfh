@@ -280,7 +280,7 @@ describe('buildRosterView: club lines (DESIGN §17.4)', () => {
       // A club page is not a source of a listed value: it never joins the Sources row.
       for (const s of view.sources) expect(s.url, slug).not.toMatch(/^\/clubs/);
     }
-    expect(tied).toBe(80);
+    expect(tied).toBe(148);
   });
 
   it('words the pinned rows', () => {

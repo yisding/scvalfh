@@ -34,9 +34,9 @@ import {
   type ClubAffiliation,
   type ClubRegion,
 } from '../../lib/clubs';
-import { CLUB_REGIONS, clubSiteKey } from '../../lib/clubs-schema';
+import { CLUB_REGIONS, CLUB_REGION_SITE_REGION, clubSiteKey } from '../../lib/clubs-schema';
 import { getRosters } from '../../lib/rosters';
-import type { TeamSlug } from '../../lib/types';
+import type { RegionId, TeamSlug } from '../../lib/types';
 import { plural } from '../ui/plural';
 import { OUTLETS, hostOf, numbered, pathOf, schoolName } from '../ui/source-hosts';
 
@@ -58,7 +58,13 @@ export const REGION_WORDS: Record<ClubRegion, { label: string; prep: 'in' | 'on'
   sacramento: { label: 'Sacramento area', prep: 'in', place: 'the Sacramento area' },
   // Not searched (SEARCHED_REGIONS): Chico Hotshots, met near the EAL teams' schools.
   'north-state': { label: 'North State', prep: 'in', place: 'the North State' },
-  // Never searched (SEARCHED_REGIONS), so never in a "no club based …" sentence: HTC is here.
+  // The Southern California areas of the 2026-10-06 sweep, each searched (SEARCHED_REGIONS).
+  ventura: { label: 'Ventura County', prep: 'in', place: 'Ventura County' },
+  'los-angeles': { label: 'Los Angeles', prep: 'in', place: 'Los Angeles' },
+  'orange-county': { label: 'Orange County', prep: 'in', place: 'Orange County' },
+  'inland-empire': { label: 'Inland Empire', prep: 'in', place: 'the Inland Empire' },
+  'san-diego': { label: 'San Diego', prep: 'in', place: 'San Diego' },
+  // Never searched (SEARCHED_REGIONS), so never in a "no club based …" sentence.
   elsewhere: { label: 'Elsewhere', prep: 'in', place: 'other places' },
 };
 
@@ -280,6 +286,8 @@ export interface ClubIndexRow {
 
 export interface ClubRegionGroup {
   id: ClubRegion;
+  /** The site region its section is scoped to (data-region-scope), or null for `elsewhere`, shown under both. */
+  siteRegion: RegionId | null;
   heading: string;
   /** "7 clubs" */
   meta: string;
@@ -359,7 +367,15 @@ export function buildClubsIndexView(): ClubsIndexView {
     const inRegion = rows.filter((r) => r.club.region === id).map((r) => r.row);
     return inRegion.length === 0
       ? []
-      : [{ id, heading: REGION_WORDS[id].label, meta: plural(inRegion.length, 'club'), clubs: inRegion }];
+      : [
+          {
+            id,
+            siteRegion: CLUB_REGION_SITE_REGION[id],
+            heading: REGION_WORDS[id].label,
+            meta: plural(inRegion.length, 'club'),
+            clubs: inRegion,
+          },
+        ];
   });
   const empty = SEARCHED_REGIONS.filter((r) => !clubs.some((c) => c.region === r));
   const notSearched = CLUB_REGIONS.filter(

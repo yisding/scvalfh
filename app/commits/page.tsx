@@ -86,10 +86,13 @@ export default function CommitsPage() {
             A commitment is listed only when a public page says the player has committed to, or
             signed with, a college to play a sport on one of its teams, and the page also either
             names the player&rsquo;s high school, or gives a class year that matches the
-            player&rsquo;s grade along with a Northern California location. Field hockey is this
+            player&rsquo;s grade along with a location in the school&rsquo;s half of the state,
+            Northern or Southern California. Field hockey is this
             site&rsquo;s sport, but many players here also play another, and a commitment in any
             sport counts: each row names the sport. A name alone never counts, and a class year that
-            disagrees with the roster rules a match out. A college a player is only interested in,
+            disagrees with the roster rules a match out. A nickname or a given name (Samantha for
+            Sami) counts when the page otherwise meets that rule and a second page, or the
+            player&rsquo;s own, backs the match. A college a player is only interested in,
             has an offer from or has visited is not a commitment, and neither is a place on a
             college&rsquo;s club team.
           </p>
