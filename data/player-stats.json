@@ -5829,11 +5829,11 @@
             "shotsOnGoal": null,
             "steals": null
           },
-          "fullName": "PAIGE PIERSON",
+          "fullName": "Paige Pierson",
           "goalkeeping": null,
           "jersey": "1",
           "onRoster": true,
-          "shortName": "P. PIERSON"
+          "shortName": "P. Pierson"
         },
         {
           "athleteId": "973a1df3-5def-40a2-8b8a-df0718b52929",
@@ -5850,11 +5850,11 @@
             "shotsOnGoal": null,
             "steals": null
           },
-          "fullName": "ISABELLA GUZMAN",
+          "fullName": "Isabella Guzman",
           "goalkeeping": null,
           "jersey": "9",
           "onRoster": true,
-          "shortName": "I. GUZMAN"
+          "shortName": "I. Guzman"
         },
         {
           "athleteId": "71a46c50-9527-4b54-8757-c319fde2a5fb",
@@ -5871,7 +5871,7 @@
             "shotsOnGoal": null,
             "steals": null
           },
-          "fullName": "CARLEE MAYO",
+          "fullName": "Carlee Mayo",
           "goalkeeping": {
             "gamesPlayed": 4,
             "goalsAgainst": null,
@@ -5886,7 +5886,7 @@
           },
           "jersey": "59",
           "onRoster": true,
-          "shortName": "C. MAYO"
+          "shortName": "C. Mayo"
         },
         {
           "athleteId": "2033489a-836a-4f4e-bc87-f2826b458265",
@@ -5903,11 +5903,11 @@
             "shotsOnGoal": null,
             "steals": null
           },
-          "fullName": "ALEXIA MANZO",
+          "fullName": "Alexia Manzo",
           "goalkeeping": null,
           "jersey": "6",
           "onRoster": true,
-          "shortName": "A. MANZO"
+          "shortName": "A. Manzo"
         },
         {
           "athleteId": "e431f264-387e-4356-b572-aaa95ca4116e",
@@ -5924,11 +5924,11 @@
             "shotsOnGoal": null,
             "steals": null
           },
-          "fullName": "KAYLA REAMES",
+          "fullName": "Kayla Reames",
           "goalkeeping": null,
           "jersey": "36",
           "onRoster": true,
-          "shortName": "K. REAMES"
+          "shortName": "K. Reames"
         },
         {
           "athleteId": "96ba0fe8-f5d2-4e2f-ad3e-63d6eabacf2e",
@@ -5945,11 +5945,11 @@
             "shotsOnGoal": null,
             "steals": null
           },
-          "fullName": "GABBY SANCHEZ",
+          "fullName": "Gabby Sanchez",
           "goalkeeping": null,
           "jersey": "24",
           "onRoster": true,
-          "shortName": "G. SANCHEZ"
+          "shortName": "G. Sanchez"
         },
         {
           "athleteId": "ccaa8205-5687-42fc-9957-c0a181bf8590",
@@ -5966,11 +5966,11 @@
             "shotsOnGoal": null,
             "steals": null
           },
-          "fullName": "AVERI MENDONSA",
+          "fullName": "Averi Mendonsa",
           "goalkeeping": null,
           "jersey": "22",
           "onRoster": true,
-          "shortName": "A. MENDONSA"
+          "shortName": "A. Mendonsa"
         }
       ],
       "slug": "hollister",

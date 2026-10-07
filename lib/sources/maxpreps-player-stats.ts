@@ -39,6 +39,7 @@ import { z } from 'zod';
 
 import { MaxPrepsError, type MaxPrepsClient } from './maxpreps';
 import { careerIdFromUrl } from './maxpreps-roster';
+import { recaseName } from '../person-name';
 import {
   FIELD_STAT_KEYS,
   GOALIE_STAT_KEYS,
@@ -315,7 +316,7 @@ export function parsePlayerStats(
           fail(`${where}: a row has ${row.columns.length} cells for ${cols.length} columns`, url);
         }
         const nameCell = row.columns[nameAt];
-        const shortName = nameCell.value?.trim() ?? '';
+        const shortName = recaseName(nameCell.value?.trim() ?? '');
         if (!shortName) fail(`${where}: a row has no player name`, url);
         const careerUrl = nameCell.href?.trim() || null;
         const careerId = careerIdFromUrl(careerUrl);
