@@ -347,9 +347,10 @@ gathered by hand and joined on the MaxPreps athlete id. It has one entry per tea
 swept on 2026-10-02 and BVAL, PCAL and MCAL on 2026-10-03; the six EAL entries (2026-10-04) hold
 recruiting profiles only, with no coaches or sources, until someone sweeps the schools' athletics
 sites; so do the 53 Southern California entries (2026-10-06), so those teams' pages say we have not
-checked other public sources. On 2026-10-06 `data/rosters.json`
-holds 1,682 players, on 87 of the 102 teams (the three independents' were read that day: Glendora 19,
-Harvard-Westlake 25, Thousand Oaks 21). Every entry lists
+checked other public sources. On 2026-10-07 `data/rosters.json`
+holds 1,702 players, on 88 of the 102 teams (BVAL and MCAL were re-read that day: Marin Academy's 18
+players now appear on MaxPreps, Westmont gained 3 and Tamalpais lost one; 1,682 on 87 teams on
+2026-10-06, when the three independents' were read: Glendora 19, Harvard-Westlake 25, Thousand Oaks 21). Every entry lists
 what was looked at. What a team with no MaxPreps players may say about other sources is recorded
 per team (`otherRosters`: `none`, or `partial` with what the source lists and a link, as for Marin
 Academy's first-name-and-initial list); a team without it says "we have not checked other public
@@ -1344,16 +1345,17 @@ at once, at every build, starting from last season's:
   except one whose single page contradicts itself. **Positions are the
   real gap**: no current-season public source lists them for most programs in any league. A
   position MaxPreps lists only for the 2025-26 roster is deliberately not filled, since positions
-  change between seasons. Del Mar, Silver Creek, Sobrato, Monterey, Santa Catalina, Marin Academy
-  and Corning have no players on MaxPreps, so there is nothing to join to (Marin Academy's own list of 18 is
-  first names, last initials and class years). Los Altos and Homestead publish no roster anywhere, and
+  change between seasons. Del Mar, Silver Creek, Sobrato, Monterey, Santa Catalina and Corning have
+  no players on MaxPreps, so there is nothing to join to. Marin Academy had none either until its 18
+  appeared on 2026-10-07; they agree with the school's own list (first names, last initials and class
+  years) and have not been swept. Los Altos and Homestead publish no roster anywhere, and
   si.com's rosters were rejected as a source (names only, and often a different list of names).
 - **Player stats exist only where a coach enters them.** Rosters and stats cover all 102 teams. The
   53 Southern California teams were read live on 2026-10-06 (with them, 1,682 players on 87 of the 102
-  teams, and stats for 63); their overlay entries hold recruiting profiles only (swept 2026-10-06), so
+  teams, and stats for 63; 1,702 on 88 after the 2026-10-07 BVAL and MCAL re-read); their overlay entries hold recruiting profiles only (swept 2026-10-06), so
   their pages say we have not checked other public sources. For the NorCal teams, the
   43 teams of the four earlier leagues were read live on 2026-10-03 (all 43 pages parse; SCVAL's rows
-  matched the 2026-10-02 captures exactly; 6 BVAL/PCAL/MCAL teams have an empty roster on MaxPreps and
+  matched the 2026-10-02 captures exactly; 6 BVAL/PCAL/MCAL teams had an empty roster on MaxPreps, 5 since Marin Academy's appeared on 2026-10-07, and
   10 of the 28 have no stats) and the six EAL teams on 2026-10-04 (Corning has no roster and no stats
   on MaxPreps), and the school-site and recruiting-page overlay covers the four earlier leagues
   (SCVAL swept 2026-10-02, the others 2026-10-03; recall is partial in each, and a team's page names

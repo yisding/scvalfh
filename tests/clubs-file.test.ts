@@ -191,7 +191,9 @@ describe('data/clubs.json', () => {
       expect(players.size).toBe(80);
       expect(schools.size).toBe(25);
       const rows = swept.flatMap((t) => t.players.map((p) => ({ team: t.slug, level: p.level })));
-      expect(rows).toHaveLength(840);
+      // 840 rows when swept; the 2026-10-07 BVAL and MCAL roster refresh added 20 no sweep has covered
+      // (Marin Academy's 18 and Westmont's 3, less one Tamalpais row MaxPreps dropped).
+      expect(rows).toHaveLength(860);
       expect(rows.filter((r) => r.level === 'jv')).toHaveLength(29);
       expect(new Set(rows.filter((r) => r.level === 'jv').map((r) => r.team))).toEqual(new Set(['los-gatos']));
       expect(swept).toHaveLength(49);

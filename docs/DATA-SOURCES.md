@@ -157,6 +157,15 @@ fetched, nothing claimed). `pending` is the honest placeholder the file was seed
 PCAL and MCAL (and what `--leagues` leaves for a team the file has no row for) until a run read
 them; the team page says "has not been collected yet" for it.
 
+`pnpm fetch-rosters --leagues bval,mcal` was run again on 2026-10-07 (21 teams, 0 failed): Marin
+Academy, empty on 2026-10-03, now lists 18 players with grades (they agree with the school's own
+first-name-and-initial list; the overlay note says how); Westmont added Kaylee True, Lexi True and
+Savannah Murdoch; Tamalpais dropped Layla Goldstein, renamed Margaret "maggie" Maher to Maggie Maher
+and swapped Tashi Perkins' and Lauren Townsend's numbers (11 and 20). Nothing else changed in either
+league, and none of these rows has been through the overlay or recruiting sweeps. A read of the
+other leagues the same day (not written) found no player added, removed or changed. The file holds 1,702 players on
+88 of the 102 teams.
+
 The previous file is salvaged row by row (`readPreviousFile` in `lib/fetch-scope.ts`): each row is
 held to the team schema on its own, and a row that no longer validates (a slug gone from the
 registry, a changed id or division, a broken status, or two rows claiming one team) is dropped and
@@ -299,7 +308,7 @@ below). Fills and links by team, measured from the file; "MP rows" is MaxPreps' 
 | University | 18 | 0 | 0 | 5 (4 SR, 1 NCSA) | 0 | School athletics site returned HTTP 500 |
 | Marin Catholic | 20 | 10 | 0 | 0 | 0 | `marincatholic.org` team page (graduating year → grade) |
 | Convent | 18 | 0 | 0 | 1 SR | 0 | MaxPreps already complete |
-| Marin Academy | 0 | 0 | 0 | 0 | 0 | School list (18 players) is first name, last initial and class year only; MaxPreps has no rows to join |
+| Marin Academy | 0 | 0 | 0 | 0 | 0 | School list (18 players) is first name, last initial and class year only; MaxPreps had no rows to join (its 18, which agree with the school list, appeared on 2026-10-07 and have not been swept) |
 
 Where nothing could be filled, the entry still records the coaches found and a note saying what
 was looked at. Grades that two sources disagree on are left blank rather than guessed (Leland 2,
@@ -789,8 +798,8 @@ area was searched for every club, so `SEARCHED_REGIONS` is unchanged and `/clubs
 None at 21 schools: SCVAL's Valley Christian, Santa Clara and Saratoga; BVAL's Branham, Del Mar,
 Live Oak, Prospect, Silver Creek and Sobrato; all seven PCAL schools; and MCAL's Archie Williams,
 Redwood, Berkeley, Marin Catholic and Marin Academy. Six of these (Del Mar, Silver Creek, Sobrato,
-Monterey, Santa Catalina, Marin Academy) list no players on MaxPreps, so there is no row to tie
-anyone to. In the EAL, none at Bella Vista, Corning and Lassen (Corning lists no players on
+Monterey, Santa Catalina, Marin Academy) listed no players on MaxPreps, so there was no row to tie
+anyone to (Marin Academy's 18 appeared on 2026-10-07, after the sweep). In the EAL, none at Bella Vista, Corning and Lassen (Corning lists no players on
 MaxPreps). By club (2026-10-03; NorCal Impact is 22, all current, with the three Davis ties): SF Hawks 31 (all current), NorCal Impact 19 (all current), Fly FHC 10 (2
 current, 4 past, 4 unknown), Infinity 8 (1, 6, 1), Lightning 3 (1, 1, 1) and HTC 1 (current); with the
 2026-10-04 ties, D-City 3 (0 current, 1 past, 2 unknown) and Chico Hotshots 2 (both current). With
@@ -2713,8 +2722,9 @@ rules clause.)
   has covered is `pending`. No current-season public source lists positions for most programs, no
   BVAL, PCAL or MCAL roster source (school site, paper, MaxPreps JV or earlier-season page)
   publishes a height or a 2026-27 number MaxPreps lacks (some players' NCSA recruiting profiles do
-  list a height, but a profile is only linked from the row and never fills a field), and 6 teams (Del
-  Mar, Silver Creek, Sobrato, Monterey, Santa Catalina, Marin Academy) have no MaxPreps players at all.
+  list a height, but a profile is only linked from the row and never fills a field), and 5 teams (Del
+  Mar, Silver Creek, Sobrato, Monterey, Santa Catalina) have no MaxPreps players at all (Marin Academy
+  had none until 2026-10-07).
   How much a coach enters varies by program in every league.
 - College commitments (§1.1j3), in any sport, were researched on 2026-10-03 and 2026-10-04 (the six
   EAL teams' schools on 2026-10-04, for field hockey and then every sport, with none found, though

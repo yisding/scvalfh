@@ -6138,7 +6138,7 @@
       ],
       "notes": [
         "The official athletics site (westmontathletics.com, VNN) has an empty 2026-27 roster and an empty 2025-26 one; only 2024-25 is populated. MaxPreps' staff list names Gordon Pound as Head Coach alongside Trish Casillas; the school page names Casillas, so Pound's entry is as MaxPreps lists it.",
-        "Positions are blank on MaxPreps for all 17 rows. MaxPreps' 2025-26 roster (same career ids) lists a position for 9 returning players, but it is a different season and positions change between seasons, so none was filled.",
+        "Positions are blank on MaxPreps for all 20 rows (17 when swept; Kaylee True, Lexi True and Savannah Murdoch were added by 2026-10-07 and have not been swept). MaxPreps' 2025-26 roster (same career ids) lists a position for 9 returning players, but it is a different season and positions change between seasons, so none was filled.",
         "Teya Halali's SportsRecruits page (class of 2029, Midfield/Defense, Campbell, CA) is linked: a 2026-27 sophomore is class of 2029, so it agrees with the roster. NCSA direct lookups found only other sports or other people (Eleanor Graham, Natalie Flores, Charlotte Hannagan, Alyssa Sanchez)."
       ],
       "players": [
@@ -7599,7 +7599,7 @@
         }
       ],
       "notes": [
-        "MaxPreps already shows grade for all 21 rows and number for 19; position is blank for 19 (only the two goalkeepers have G). No public 2026-27 source lists positions: the school page has no roster and its team Google Site did not load.",
+        "MaxPreps already shows grade for all 20 rows and number for 18; position is blank for 18 (only the two goalkeepers have G). (21 rows when swept on 2026-10-03; MaxPreps dropped Layla Goldstein by 2026-10-07.) No public 2026-27 source lists positions: the school page has no roster and its team Google Site did not load.",
         "MaxPreps' 2025-26 varsity and JV rosters carry positions and numbers for most of these players; they are not season-dated for 2026-27 and are not used.",
         "Hudl: the Tamalpais field hockey team import (profile ids 18517700-18517876) holds only players who have graduated; none of the 2026-27 roster."
       ],
@@ -8667,7 +8667,7 @@
         }
       ],
       "notes": [
-        "MaxPreps lists no 2026-27 roster for Marin Academy (0 rows) although the team has played MCAL games, so there is no MaxPreps row to join to and nothing is filled. The school page shows 18 players only as first name + last initial + class year; MaxPreps' 2025-26 roster (20 names) belongs to another season. Names are not added."
+        "MaxPreps listed no 2026-27 roster for Marin Academy when the team was swept (2026-10-03, 0 rows). On 2026-10-07 MaxPreps lists 18 players, all with a grade, none with a number or position. They agree with the school page's 18 entries (first name, last initial and class year): 15 exactly, Josie Marvel as 'Jocelyn M.' (2029) and Val Saeltzer as 'Valentina S.' (2028) by nickname, and Julia Foulke, grade 12 on MaxPreps, as 'Julia F.' with class of 2028; MaxPreps' grade stands. The school page adds nothing MaxPreps lacks, so nothing is filled. The recruiting-profile sweep has not been run over these rows."
       ],
       "otherRosters": {
         "checkedOn": "2026-10-03",
