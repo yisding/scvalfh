@@ -1,13 +1,13 @@
 {
   "cifssCrossCheck": {
-    "agreements": 462,
+    "agreements": 464,
     "cifssOnlyScored": 0,
-    "compared": 470,
+    "compared": 472,
     "conflicts": 8,
     "notOnMaxPreps": 0
   },
-  "commitSummary": "SCVAL +2 finals · BVAL +1 · PCAL +0 · MCAL +1 · EAL +1 · Sunset +0 · City +1 · North +3 · Metro +1 · LA +0",
-  "contentHash": "4568baaacac8b4dd8103d2b4270c4d0e3e61bbfc6898a3085765cf9c1c5cc45a",
+  "commitSummary": "SCVAL +1 finals · BVAL +0 · PCAL +0 · MCAL +0 · EAL +0 · Sunset +0 · City +0 · North +1 · Metro +0 · LA +0",
+  "contentHash": "38191f71cb738a32348170da99e5120298c9f06b68eb58155b41ddf180e8882a",
   "counts": {
     "byLeague": {
       "bval": {
@@ -54,7 +54,7 @@
       },
       "north-county": {
         "backfilled": 0,
-        "finals": 169,
+        "finals": 170,
         "games": 244,
         "leagueGames": 102,
         "teams": 19
@@ -68,7 +68,7 @@
       },
       "scval": {
         "backfilled": 0,
-        "finals": 109,
+        "finals": 110,
         "games": 160,
         "leagueGames": 97,
         "teams": 15
@@ -81,35 +81,35 @@
         "teams": 8
       }
     },
-    "finals": 579,
+    "finals": 581,
     "games": 879,
     "leagueGames": 544,
     "mismatches": 21,
-    "pending": 9,
+    "pending": 7,
     "teams": 102
   },
   "crossCheck": {
-    "agreements": 165,
+    "agreements": 167,
     "backfilled": 1,
-    "compared": 252,
+    "compared": 253,
     "conflicts": 9,
-    "sbliveOnlyScored": 4
+    "sbliveOnlyScored": 5
   },
-  "fetchedAt": "2026-10-08T11:42:05.154Z",
+  "fetchedAt": "2026-10-08T19:40:24.820Z",
   "leagues": [
     {
       "backfilled": 0,
-      "countedFinals": 56,
-      "finalsDelta": 2,
+      "countedFinals": 57,
+      "finalsDelta": 1,
       "id": "scval",
-      "missingPast": 3,
+      "missingPast": 2,
       "reasons": [],
       "state": "fresh"
     },
     {
       "backfilled": 0,
       "countedFinals": 20,
-      "finalsDelta": 1,
+      "finalsDelta": 0,
       "id": "bval",
       "missingPast": 0,
       "reasons": [],
@@ -127,7 +127,7 @@
     {
       "backfilled": 0,
       "countedFinals": 53,
-      "finalsDelta": 1,
+      "finalsDelta": 0,
       "id": "mcal",
       "missingPast": 2,
       "reasons": [],
@@ -136,7 +136,7 @@
     {
       "backfilled": 0,
       "countedFinals": 17,
-      "finalsDelta": 1,
+      "finalsDelta": 0,
       "id": "eal",
       "missingPast": 4,
       "reasons": [],
@@ -154,7 +154,7 @@
     {
       "backfilled": 0,
       "countedFinals": 20,
-      "finalsDelta": 1,
+      "finalsDelta": 0,
       "id": "city",
       "missingPast": 0,
       "reasons": [],
@@ -162,17 +162,17 @@
     },
     {
       "backfilled": 0,
-      "countedFinals": 38,
-      "finalsDelta": 3,
+      "countedFinals": 39,
+      "finalsDelta": 1,
       "id": "north-county",
-      "missingPast": 2,
+      "missingPast": 1,
       "reasons": [],
       "state": "fresh"
     },
     {
       "backfilled": 0,
       "countedFinals": 6,
-      "finalsDelta": 1,
+      "finalsDelta": 0,
       "id": "metro",
       "missingPast": 0,
       "reasons": [],
@@ -464,7 +464,7 @@
     {
       "label": "PCAL official schedule revision check",
       "rowCount": null,
-      "status": "ok"
+      "status": "error"
     },
     {
       "label": "marin-county league metadata",
@@ -938,7 +938,7 @@
     },
     {
       "label": "sblive scoreboard 2026-09-30",
-      "rowCount": 13,
+      "rowCount": 14,
       "status": "ok"
     },
     {
@@ -958,7 +958,7 @@
     },
     {
       "label": "sblive scoreboard 2026-10-05",
-      "rowCount": 14,
+      "rowCount": 15,
       "status": "ok"
     },
     {
@@ -1053,7 +1053,7 @@
     },
     {
       "label": "cifsshome.org San Diego Section field hockey",
-      "rowCount": 463,
+      "rowCount": 468,
       "status": "ok"
     },
     {
@@ -1068,7 +1068,7 @@
     }
   ],
   "today": "2026-10-08",
-  "warnings": 50,
+  "warnings": 51,
   "window": {
     "firstGame": "2026-08-12T17:15:00",
     "lastGame": "2026-10-30T19:00:00",
