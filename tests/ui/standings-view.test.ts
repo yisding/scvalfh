@@ -264,10 +264,10 @@ describe('GP, LEFT and MAX', () => {
     const pcal = sd.buildStandingsPageView('pcal').views[0];
     expect(pcal.backfilledGames, 'components/standings/standings-page-view.ts backfilledGames').toBe(3);
     expect(pcal.backfillFootnote).toBe(
-      '† Includes 3 results from High School on SI (si.com) that MaxPreps does not have, counted under the site’s rules for filling in missing scores (About → Sources).',
+      '† Includes 3 results from High School on SI (si.com) that MaxPreps does not have, counted under the site’s rules for missing or wrong scores (About → Sources).',
     );
     expect(view.backfillFootnoteText(1)).toBe(
-      '† Includes 1 result from High School on SI (si.com) that MaxPreps does not have, counted under the site’s rules for filling in missing scores (About → Sources).',
+      '† Includes 1 result from High School on SI (si.com) that MaxPreps does not have, counted under the site’s rules for missing or wrong scores (About → Sources).',
     );
     const html = await renderLeague('pcal');
     expect(html, 'components/ui/StandingsTable.tsx †').toContain('score via si.com');

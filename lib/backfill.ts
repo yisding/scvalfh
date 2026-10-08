@@ -344,7 +344,7 @@ function offScheduleDate(g: Game): string | null {
 function phantomTieNote(short: string, noPublishedRules: boolean): string {
   return noPublishedRules
     ? `MaxPreps shows a 0-0 tie, but si.com has a final score with a winner the same day and no published ${short} rule says a game ends level, so si.com’s score is published.`
-    : `MaxPreps shows a 0-0 tie, but ${short} league games have no overtime and si.com has a final score with a winner, so si.com’s score is published.`;
+    : `MaxPreps shows a 0-0 tie, but ${short} league games have no overtime and si.com has a final score with a winner the same day, so si.com’s score is published.`;
 }
 
 /**

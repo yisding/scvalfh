@@ -182,8 +182,8 @@ export default async function LeagueSchedulePage({ params }: PageProps<'/schedul
           <li>
             A <span aria-hidden="true">&dagger;</span>
             <span className="sr-only">dagger</span> beside a score means it was published from High
-            School on SI (si.com) under the site&rsquo;s rules for filling in missing scores, because MaxPreps does not
-            have it.
+            School on SI (si.com) under the site&rsquo;s rules for missing or wrong scores, because MaxPreps
+            does not have it or has it wrong.
           </li>
           <li>
             Every date and time is Pacific. Tap a game to expand

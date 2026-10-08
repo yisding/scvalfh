@@ -72,7 +72,7 @@ export default function LeadersPage() {
         description={
           <>
             The top schools and players across {SHORT_NAMES}, ranked within each region. School
-            records and Elo ratings are computed from every final score on this site; player numbers are
+            records and Elo ratings are computed from the scores on this site; player numbers are
             what each coach enters on MaxPreps. {view.crossRegion.sentence}
           </>
         }

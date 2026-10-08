@@ -354,7 +354,7 @@ export default async function ScoresByDatePage({ params }: PageProps<'/scores/[d
       <p className="mt-stack mb-0 max-w-prose text-meta text-ink-3">
         All times Pacific. A dash means no score has been reported;{' '}
         <span className="sx-num">0</span> is a real zero; a &dagger; marks a score published from
-        si.com under the site&rsquo;s rules for filling in missing scores.{' '}
+        si.com under the site&rsquo;s rules for missing or wrong scores.{' '}
         <Link href="/about#conventions" prefetch={false} className="text-accent">
           How every state is shown
         </Link>
