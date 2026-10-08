@@ -20,6 +20,7 @@ import {
 import { positionFromText } from '../../components/ui/position-words';
 import { getAvailableHistoryLeagues, type HistoryAwards } from '../../lib/history';
 import { getTeamBySlug } from '../../lib/teams';
+import { sectionById } from '../../scripts/copy-rules';
 import { textOf } from './html-text';
 
 const blocks: Array<{ leagueId: string; division: string; awards: HistoryAwards }> = getAvailableHistoryLeagues()
@@ -190,7 +191,9 @@ describe('/history/2025-26 by region (app/history/2025-26/page.tsx, DESIGN-socal
     expect(text).toContain('Official, from the San Diego Section: 2025 CIFSDS playoff brackets (Google Sheet)');
     expect(text).toContain('year_id=175');
     // An unavailable SoCal card never claims a champion, a place or a record from the documents it links.
-    const socal = html.slice(html.indexOf('<section id="sunset"'));
-    expect(textOf(socal)).not.toMatch(/champion|all-league|\d+-\d+-\d+ league record/i);
+    // The San Diego Section's bracket is its own section (#sds), not part of any league's card.
+    for (const id of ['sunset', 'city', 'north-county', 'metro', 'independents']) {
+      expect(textOf(sectionById(html, id)), `#${id}`).not.toMatch(/champion|all-league|\d+-\d+-\d+ league record/i);
+    }
   });
 });

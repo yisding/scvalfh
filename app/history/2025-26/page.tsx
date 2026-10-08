@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 import AwardsBlock from '../../../components/history/AwardsBlock';
+import { divisionChampion, finalLine, sideName } from '../../../components/history/bracket-view';
+import HistoryBracket from '../../../components/history/HistoryBracket';
 import HistoryStandingsTable from '../../../components/history/HistoryStandingsTable';
 import ExternalLink from '../../../components/ui/ExternalLink';
 import { RegionSwitcher } from '../../../components/layout/LeagueSwitcher';
@@ -12,7 +14,10 @@ import SectionHeader from '../../../components/ui/SectionHeader';
 import { OG_BASE, ROOT_OG_IMAGE } from '../../../components/layout/site';
 import { getTeamBySlug } from '../../../lib/data';
 import {
+  bracketSectionName,
   getAvailableHistoryLeagues,
+  getHistoryBracketFor,
+  getHistoryBrackets,
   getHistoryChampions,
   getHistoryDivisionChanges,
   getHistoryLeagues,
@@ -21,9 +26,11 @@ import {
   getUnavailableHistoryLeagues,
   historySchoolName,
   type AvailableLeagueHistory,
+  type BracketSectionId,
+  type SectionBracket,
   type UnavailableLeagueHistory,
 } from '../../../lib/history';
-import { listWords } from '../../../lib/format';
+import { dateWithYear, listWords } from '../../../lib/format';
 import { getDivision, getLeague, getSection, isIndependentLeague, regionOf } from '../../../lib/leagues';
 import type { LeagueId } from '../../../lib/types';
 
@@ -37,7 +44,10 @@ import type { LeagueId } from '../../../lib/types';
  * record-only tables and the all-league awards; a league we found no official 2025-26 final
  * standings for (PCAL, MCAL, EAL) says so, with the reason, links any official document it did publish
  * (MCAL's all-league team), and shows no table in its place. Everything is
- * built once by `scripts/build-history.ts`. MaxPreps cannot serve a prior season at all — the year
+ * built once by `scripts/build-history.ts`. After each section's last league comes that section's
+ * 2025 playoff bracket (`#ccs` after PCAL, `#sds` after Metro: data/history-brackets-2025-26.json,
+ * transcribed from the sections' own pages), so SoCal, where no league published standings, still
+ * has last season's results; the unavailable cards of those leagues point to it. MaxPreps cannot serve a prior season at all — the year
  * segment of its league URL is cosmetic and always returns the CURRENT table (SPEC §1.1h) — so this
  * page is the only place last season's numbers live, and it is not part of the snapshot the
  * scheduled update rebuilds.
@@ -49,6 +59,9 @@ import type { LeagueId } from '../../../lib/types';
  */
 const SEASON = getHistorySeason();
 const HISTORY_LEAGUES = getHistoryLeagues();
+const BRACKETS = getHistoryBrackets();
+/** "the CCS and San Diego Section": the sections whose brackets the page shows. */
+const BRACKET_SECTIONS = listWords(BRACKETS.map((b) => getSection(b.id).briefLabel));
 const AVAILABLE = getAvailableHistoryLeagues();
 const UNAVAILABLE = getUnavailableHistoryLeagues();
 const short = (id: LeagueId) => getLeague(id).shortName;
@@ -75,7 +88,8 @@ export const metadata: Metadata = {
   title: PAGE_TITLE,
   description:
     `Final ${listWords(AVAILABLE.map((l) => short(l.id)))} girls field hockey standings` +
-    ` and all-league awards from the ${SEASON} season, from each league’s own documents.` +
+    ` and all-league awards from the ${SEASON} season, from each league’s own documents, and the` +
+    ` ${BRACKET_SECTIONS} playoff brackets.` +
     (UNAVAILABLE_SUBJECT
       ? ` ${UNAVAILABLE_SUBJECT} marked unavailable: we found no official ${SEASON} final standings.`
       : '') +
@@ -269,6 +283,77 @@ function AvailableLeague({ leagueId, entry }: { leagueId: LeagueId; entry: Avail
   );
 }
 
+/** The source line of a section's bracket block, in that section's words. */
+function BracketSources({ id, bracket }: { id: BracketSectionId; bracket: SectionBracket }) {
+  const links = bracket.sources.map((doc, i) => (
+    <span key={doc.url}>
+      {i > 0 ? ' · ' : ''}
+      <ExternalLink href={doc.url}>{doc.label}</ExternalLink>
+    </span>
+  ));
+  const read = `Read on ${dateWithYear(bracket.retrievedOn)}.`;
+  return id === 'ccs' ? (
+    <p className="m-0">
+      Source: the CCS&rsquo;s own pages &mdash; {links}. {read} The bracket pages draw their scores from
+      MaxPreps; both finals match the CCS&rsquo;s field hockey history, which names each final&rsquo;s site.
+      The Willow Glen&ndash;Stevenson shootout score is the game&rsquo;s box score, which the bracket links.
+    </p>
+  ) : (
+    <p className="m-0">
+      Source: the San Diego Section&rsquo;s own documents &mdash; {links}. {read} The bracket sheet names
+      each champion but leaves the finals&rsquo; scores blank; the Open and Division I final scores are the
+      Record Book&rsquo;s, which does not list the 2025 Division II final yet, so that score is not shown.
+    </p>
+  );
+}
+
+function SectionBracketBlock({ id, bracket }: { id: BracketSectionId; bracket: SectionBracket }) {
+  const section = getSection(id);
+  const name = bracketSectionName(id);
+  return (
+    <section id={id} data-region-scope={section.region} aria-label={`${name} playoffs`} className="min-w-0 scroll-mt-24">
+      <SectionHeader
+        size="lg"
+        kicker={`${section.shortName} playoffs · ${name}`}
+        meta={<span className="whitespace-nowrap">{SEASON}</span>}
+      />
+      <div className={`mt-4 grid gap-3 sm:grid-cols-2 sm:gap-4 ${bracket.divisions.length > 2 ? 'lg:grid-cols-3' : ''}`}>
+        {bracket.divisions.map((d) => {
+          const { champion, final } = divisionChampion(d);
+          const team = getTeamBySlug(champion.slug);
+          return (
+            <div key={d.id} className="sx-card grid grid-cols-[auto_minmax(0,1fr)] items-center gap-x-3 p-4 sm:p-5">
+              {team ? <TeamMonogram team={team} size={40} /> : null}
+              <div className="col-start-2 min-w-0">
+                <p className="m-0 text-micro font-medium text-ink-3">{d.label} champion</p>
+                <p className="m-0 mt-0.5 text-lead text-ink sm:text-title">{sideName(champion)}</p>
+                <p className="m-0 mt-0.5 text-meta text-ink-2">{finalLine(final)}</p>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {bracket.divisions.map((d) => (
+        <section key={d.id} id={`${id}-${d.id}`} aria-label={`${section.shortName} ${d.label}`} className="mt-section min-w-0 md:mt-section-lg">
+          <SectionHeader
+            as="h3"
+            size="section"
+            kicker={`${d.label} · bracket`}
+            meta={<span className="whitespace-nowrap">{SEASON}</span>}
+            className="mb-4"
+          />
+          <HistoryBracket division={d} label={`${name} ${d.label} bracket, ${SEASON}`} />
+        </section>
+      ))}
+
+      <div className="mt-section max-w-prose space-y-3 text-meta text-ink-3 md:mt-section-lg">
+        <BracketSources id={id} bracket={bracket} />
+      </div>
+    </section>
+  );
+}
+
 function UnavailableLeague({ leagueId, entry }: { leagueId: LeagueId; entry: UnavailableLeagueHistory }) {
   const league = getLeague(leagueId);
   // A league with no website of its own (EAL) links its section's field hockey page instead.
@@ -276,6 +361,8 @@ function UnavailableLeague({ leagueId, entry }: { leagueId: LeagueId; entry: Una
   // A document a league with no site of its own links is its section's (the San Diego Section's 2025
   // bracket sheet for its three conferences), so the card names the section as its publisher.
   const publisher = ownSite ? league.shortName : `the ${getSection(league.sectionId).name}`;
+  // The CCS and San Diego Section brackets are on this page: the card says where.
+  const bracket = isIndependentLeague(leagueId) ? null : getHistoryBracketFor(leagueId);
   return (
     <section
       id={leagueId}
@@ -300,6 +387,15 @@ function UnavailableLeague({ leagueId, entry }: { leagueId: LeagueId; entry: Una
                 <ExternalLink href={doc.url}>{doc.label}</ExternalLink>
               </span>
             ))}
+            .
+          </p>
+        ) : null}
+        {bracket ? (
+          <p className="m-0 mt-3 max-w-prose text-body text-ink-2">
+            The {bracketSectionName(bracket.id)}&rsquo;s 2025 playoff results are on this page:{' '}
+            <a href={`#${bracket.id}`} className="text-accent hover:underline">
+              {getSection(bracket.id).briefLabel} playoffs
+            </a>
             .
           </p>
         ) : null}
@@ -333,7 +429,15 @@ function UnavailableLeague({ leagueId, entry }: { leagueId: LeagueId; entry: Una
 
 export default function HistoryPage() {
   // Each pill is region-scoped (DESIGN-socal §2.4): the reader's region's leagues only.
-  const tabs = HISTORY_LEAGUES.map(({ id }) => ({ href: `#${id}`, label: short(id), region: regionOf(id) }));
+  // A section's bracket pill follows its last league's, as the block does.
+  const tabs = HISTORY_LEAGUES.flatMap(({ id }) => [
+    { href: `#${id}`, label: short(id), region: regionOf(id) },
+    ...BRACKETS.filter((b) => b.afterLeague === id).map((b) => ({
+      href: `#${b.id}`,
+      label: `${getSection(b.id).shortName} playoffs`,
+      region: getSection(b.id).region,
+    })),
+  ]);
   const available = listWords(AVAILABLE.map((l) => short(l.id)));
 
   return (
@@ -345,7 +449,8 @@ export default function HistoryPage() {
         title={`${SEASON} final standings`}
         description={
           <>
-            Final standings and all-league awards for {available}, from each league&rsquo;s own documents.{' '}
+            Final standings and all-league awards for {available}, from each league&rsquo;s own documents,
+            and the {BRACKET_SECTIONS} playoff brackets.{' '}
             {UNAVAILABLE_SUBJECT ? (
               <>
                 {UNAVAILABLE_SUBJECT} unavailable: we found no official {SEASON} final standings.{' '}
@@ -367,13 +472,16 @@ export default function HistoryPage() {
       <DivisionTabs variant="bar" tabs={tabs} label="Jump to a league" className="mt-4" />
 
       <div className="mt-8 grid gap-y-section md:mt-10 md:gap-y-section-lg">
-        {HISTORY_LEAGUES.map(({ id, entry }) =>
+        {HISTORY_LEAGUES.flatMap(({ id, entry }) => [
           entry.status === 'available' ? (
             <AvailableLeague key={id} leagueId={id} entry={entry} />
           ) : (
             <UnavailableLeague key={id} leagueId={id} entry={entry} />
           ),
-        )}
+          ...BRACKETS.filter((b) => b.afterLeague === id).map((b) => (
+            <SectionBracketBlock key={b.id} id={b.id} bracket={b.bracket} />
+          )),
+        ])}
       </div>
 
       <p className="mt-section max-w-prose text-meta text-ink-3 md:mt-section-lg">

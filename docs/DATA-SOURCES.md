@@ -1607,6 +1607,28 @@ redirects.
   - To change an `unavailable` entry to `available`: add a source reader like `lib/sources/bval-sheet.ts`,
     extend `scripts/build-history.ts`, and the schema (`lib/history-schema.ts`) already validates it against
     the league's own registry slugs and divisions (PCAL, MCAL and EAL are single-division).
+- **2025 section playoff brackets** (`data/history-brackets-2025-26.json`, validated by
+  `lib/history-brackets-schema.ts`, read by `lib/history.ts`, shown on /history/2025-26 as `#ccs` after
+  PCAL and `#sds` after Metro). Transcribed by hand on 2026-10-07; nothing refreshes it. Each section's
+  `notes` say exactly what was read:
+  - **CCS** — the two official bracket pages linked from `https://www.cifccs.org/sports/fh/index`
+    ("Brackets & Results"): `…/sports/fh/2025-26/2025_Field_Hockey_Division_{1,2}_Bracket`. They are
+    PrestoSports shells that draw a MaxPreps bracket widget client-side (tournament
+    `864e7271-f44e-4a88-acdb-11af2b2f0a37`), so they were read in headless Chromium. Both finals (Los
+    Gatos 3-0 Saint Francis at Los Altos HS; Valley Christian 1-0 Willow Glen at Gilroy HS) match the
+    CCS Field Hockey History PDF (`/ccs_sports/sport_history/CCS_Field_Hockey_History.pdf`, CloudFront
+    indirection as §1.4), which gives the sites. Willow Glen v Stevenson (D2 semifinal) is 1-1 with a
+    "(W)" for Willow Glen; the shootout, 2-1, is the box score the bracket links.
+  - **San Diego Section** — the Section's "2025 Championship Brackets" Google Sheet (the same sheet the
+    City, North County and Metro cards link): Open Division (8), Division I (12, seeds 1-4 with byes)
+    and Division II (12, an 11th-seed play-in, Helix Charter 2-1 Granite Hills). Read through the xlsx
+    export; two scores the spreadsheet turned into dates (4/1/2025, 2/1/2025) read 4-1 and 2-1 in the
+    CSV export. The sheet names champions but posts no final scores; the Open (Bishop's 3-0 Canyon
+    Hills) and Division I (Mt. Carmel 2-2 La Costa Canyon, 3-2 shootout) finals come from the
+    Section's Record Book (Google Doc, linked from the same page). Its Division II table stops at
+    2024, so Eastlake's final win over Del Norte has no score.
+  - The NCS, the Northern Section and the Southern Section held no 2025 field hockey playoffs, so
+    MCAL, the EAL, the Sunset and the LA independents have no bracket block.
 - **No 2026-27 standings PDF exists yet** — poll the index for `/2026-27.*field hockey.*standings/i`
   rather than hardcoding a URL.
 
@@ -2766,7 +2788,8 @@ rules clause.)
   drops or respells a tied row fails the build until the tie is re-checked by hand.
 - Prior-season (2025-26) final standings exist in the repo for SCVAL and BVAL only (see §2 "2025-26
   history, by league"); PCAL, MCAL, the EAL and the four SoCal leagues are marked `unavailable` in
-  `data/history-2025-26.json`,
+  `data/history-2025-26.json` (the CCS and San Diego Section 2025 playoff brackets are in
+  `data/history-brackets-2025-26.json`),
   since a MaxPreps league URL's year segment is cosmetic. Last season's *games* are on MaxPreps for
   all nine leagues (§1.1 (l)) and seed the Elo rating, but they are coaches' entries like this
   season's, and nothing on the site prints them as a record or a standings table.
