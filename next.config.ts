@@ -47,20 +47,35 @@ const nextConfig: NextConfig = {
   cacheMaxMemorySize: 768 * 1024 * 1024,
 
   /**
-   * DESIGN §13: HTML is `s-maxage=300, stale-while-revalidate=86400`.
+   * HTML (and every other route below) is `public, max-age=0, must-revalidate`: any cache may store
+   * it, and none may use it again without asking the server first. The ETag every page carries makes
+   * that question cheap (a 304 with no body when nothing changed), and the answer is the new
+   * snapshot from the first request after a deploy.
    *
    * Next's default for a fully prerendered page is `s-maxage=31536000` with NO revalidation
    * directive, which is the wrong contract for this site: the whole premise is a snapshot commit
-   * once or twice a day, so a shared cache that does not purge on deploy would serve one afternoon's
-   * scoreboard for the rest of the season. Five minutes of shared cache with a day of
-   * stale-while-revalidate keeps the CDN doing its job while guaranteeing it comes back to ask.
+   * once or twice a day. DESIGN §13 first answered that with `s-maxage=300,
+   * stale-while-revalidate=86400`, which was wrong for browsers: Vercel forwards a next.config
+   * Cache-Control on a prerendered page as is (checked on the production deploy on 2026-10-08), and
+   * `stale-while-revalidate` is not a shared-cache-only directive, so it let a browser show a page up
+   * to a day old while it revalidated in the background. Opening the site after the evening refresh
+   * showed the morning's scores until a manual reload, which always revalidates. Nothing here needs
+   * a shared-cache lifetime to stay fast: Vercel serves the prerender from its own per-deployment
+   * cache, and the Worker and `vinext start` serve it from the build.
+   *
+   * This is also Next's and Vercel's own default for a page that must revalidate, and vinext does not
+   * read it as non-cacheable (no `no-store`, `no-cache` or `private`), so its prerendered pages are
+   * still served from the build (`x-nextjs-cache: HIT`, scripts/smoke-server.sh).
+   *
+   * The open-tab half of freshness is not this header's: the client router reuses a prefetched
+   * static page for `x-nextjs-stale-time` (five minutes) without a request.
    *
    * The other half of §13 — "immutable hashed assets" — is the reason this is not a bare `/:path*`.
    * The headers doc says Next's `public, max-age=31536000, immutable` on immutable assets "cannot be
    * overridden" (node_modules/next/dist/docs/01-app/03-api-reference/05-config/01-next-config-js/
    * headers.md), but it says that about static image imports, and a bare `/:path*` DOES override it
    * on the build's own hashed chunks: `curl -D- /_next/static/chunks/<hash>.css` came back with
-   * `s-maxage=300` on a filename that can never change its bytes, i.e. five-minute revalidation on
+   * the page rule on a filename that can never change its bytes, i.e. revalidation on every use of
    * the one class of file that should be cached for a year. Hence the negative lookahead, which is
    * the WHOLE fix: excluded from this rule, `/_next/static/**` falls through to Next's own
    * `public, max-age=31536000, immutable` (verified on a chunk, a stylesheet and a woff2).
@@ -79,7 +94,7 @@ const nextConfig: NextConfig = {
       {
         source: '/:path((?!_next/static/).*)',
         headers: [
-          { key: 'Cache-Control', value: 'public, s-maxage=300, stale-while-revalidate=86400' },
+          { key: 'Cache-Control', value: 'public, max-age=0, must-revalidate' },
         ],
       },
     ];
