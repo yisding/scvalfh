@@ -94,18 +94,13 @@ export function countGames(games: readonly Game[]): ScheduleCounts {
 
 /**
  * The unfiltered count line, shared by the server-rendered fallback and the client component so
- * the two can never disagree: `158 contests · 86 final scores · 71 to come · 1 not reported`.
+ * the two can never disagree: `158 games · 86 final scores · 71 to come · 1 not reported`.
  */
 export function unfilteredCountLine(counts: ScheduleCounts): string {
   return [
-    `${counts.total} ${contestWord(counts.total)}`,
+    plural(counts.total, 'game'),
     plural(counts.final, 'final score'),
     `${counts.upcoming} to come`,
     ...(counts.pending > 0 ? [`${counts.pending} not reported`] : []),
   ].join(' · ');
-}
-
-/** 'contest' / 'contests' — the word the count line uses, so it is never "1 contests". */
-export function contestWord(n: number): string {
-  return n === 1 ? 'contest' : 'contests';
 }

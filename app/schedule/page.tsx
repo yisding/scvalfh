@@ -39,7 +39,7 @@ function indexData() {
 export function generateMetadata(): Metadata {
   const counts = countGames(getGames());
   const list = coveredLeagueWords();
-  const description = `${counts.total} girls varsity field hockey contests in ${list} for ${SEASON_DISPLAY}: ${plural(counts.final, 'final score')}, ${counts.upcoming} still to come. Each league's full schedule, plus every game day.`;
+  const description = `${counts.total} girls varsity field hockey games in ${list} for ${SEASON_DISPLAY}: ${plural(counts.final, 'final score')}, ${counts.upcoming} still to come. Each league's full schedule, plus every game day.`;
   return {
     title: 'Schedule & results',
     description,

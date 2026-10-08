@@ -478,8 +478,8 @@ export default function PlayoffsPage() {
                   </p>
                 ) : null}
                 <p className="m-0">
-                  The CCS field is two eight-team divisions, {listWords(ccsDivisionLabels(playoffs))}. The snapshot
-                  does not label which division a game belongs to, so the games above are grouped by round and, where
+                  The CCS field is two eight-team divisions, {listWords(ccsDivisionLabels(playoffs))}. Our data
+                  does not say which division a game belongs to, so the games above are grouped by round and, where
                   the bracket splits into independent paths, by path.{' '}
                   <ExternalLink href={bracketUrl}>Official CCS bracket</ExternalLink>
                 </p>

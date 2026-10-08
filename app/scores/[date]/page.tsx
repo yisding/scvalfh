@@ -319,7 +319,7 @@ export default async function ScoresByDatePage({ params }: PageProps<'/scores/[d
         </>
       ) : (
         <div className="mt-8 md:mt-10">
-          <EmptyState heading="No contests on this date." />
+          <EmptyState heading="No games on this date." />
         </div>
       )}
 

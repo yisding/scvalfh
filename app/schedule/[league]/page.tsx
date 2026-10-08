@@ -71,7 +71,7 @@ export async function generateMetadata({ params }: PageProps<'/schedule/[league]
   const title = scheduleTitle(summary);
   // 'involving SCVAL teams'; the LA independents are named by their standaloneName: 'involving the LA independents'.
   const involving = isIndependentLeague(summary.id) ? standaloneName(summary.id) : `${summary.shortName} teams`;
-  const description = `All ${plural(counts.total, 'contest')} involving ${involving} for ${SEASON_DISPLAY}, grouped by date: ${plural(counts.final, 'final score')}, ${counts.upcoming} still to come. Filter by team, game type or status.`;
+  const description = `All ${plural(counts.total, 'game')} involving ${involving} for ${SEASON_DISPLAY}, grouped by date: ${plural(counts.final, 'final score')}, ${counts.upcoming} still to come. Filter by team, game type or status.`;
   return {
     title,
     description,
@@ -105,7 +105,7 @@ export default async function LeagueSchedulePage({ params }: PageProps<'/schedul
         description={
           span ? (
             <>
-              {summary.name} &middot; {span} &middot; every contest involving {involving},{' '}
+              {summary.name} &middot; {span} &middot; every game involving {involving},{' '}
               league and non-league, oldest
               first &middot; all times Pacific
             </>
