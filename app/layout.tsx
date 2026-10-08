@@ -12,6 +12,7 @@ import { OG_BASE, SITE_DESCRIPTION, SITE_NAME, SITE_URL } from '../components/la
 import { PINNED_TEAM_SCRIPT } from '../components/layout/pinned-team-script';
 import { THEME_SCRIPT } from '../components/layout/theme-script';
 import PinnedTeamMarks from '../components/ui/PinnedTeamMarks';
+import TwinMarks from '../components/ui/TwinMarks';
 import { getFetchedAt, getTeams } from '../lib/data';
 import { DEFAULT_REGION, LEAGUE_IDS, regionOf } from '../lib/leagues';
 
@@ -128,6 +129,7 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
           Skip to content
         </a>
         <PinnedTeamMarks />
+        <TwinMarks />
         <SiteHeader snapshotAt={snapshotAt} now={BUILD_INSTANT} slugLeague={SLUG_LEAGUE} />
         {/* `tabIndex={-1}` is what makes the skip link actually MOVE focus. Without it only
             browsers that implement the sequential-focus-navigation starting point continue from

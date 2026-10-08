@@ -215,7 +215,7 @@ export function PlayoffProjection({
               <th scope="col" className="pr-gutter md:pr-0">Team</th>
               {/* 13rem only from lg: from md two divisions may sit side by side, and a fixed
                   13rem status column in a ~350px half would truncate the team names. */}
-              <th scope="col" className="hidden pr-4 md:table-cell lg:w-52">
+              <th data-twin scope="col" className="hidden pr-4 md:table-cell lg:w-52">
                 Status
               </th>
             </tr>
@@ -291,7 +291,7 @@ export function PlayoffProjection({
                                   ];
                             })}
                         </span>
-                        <span className="contents md:hidden">
+                        <span data-twin className="contents md:hidden">
                           <StatusBadge row={row} />
                         </span>
                       </span>
@@ -303,7 +303,7 @@ export function PlayoffProjection({
                     the record in the team cell (above), where it has the card's width; this
                     column only exists from md. `display: none` keeps it out of the a11y tree, so
                     exactly one copy is ever read. */}
-                <td className="hidden pr-3 pl-3 align-middle sm:pr-4 md:table-cell">
+                <td data-twin className="hidden pr-3 pl-3 align-middle sm:pr-4 md:table-cell">
                   <StatusBadge row={row} />
                 </td>
               </tr>

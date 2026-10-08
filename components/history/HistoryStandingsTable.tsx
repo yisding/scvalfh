@@ -88,7 +88,7 @@ export function HistoryStandingsTable({ rows, caption, emptyLabel }: HistoryStan
               League
             </th>
             {hasOverall ? (
-              <th scope="col" className="hidden pl-2 pr-4 text-right sm:pl-3 min-[23.4375rem]:table-cell">
+              <th data-twin scope="col" className="hidden pl-2 pr-4 text-right sm:pl-3 min-[23.4375rem]:table-cell">
                 Overall
               </th>
             ) : null}
@@ -138,7 +138,7 @@ export function HistoryStandingsTable({ rows, caption, emptyLabel }: HistoryStan
                       24px monogram and its gap. Outside the link, so the link's name stays the
                       school's. The digits never wrap; the word may. */}
                   {hasOverall ? (
-                    <span className="block pl-[calc(24px+0.5rem)] text-cell text-ink-3 min-[23.4375rem]:hidden">
+                    <span data-twin className="block pl-[calc(24px+0.5rem)] text-cell text-ink-3 min-[23.4375rem]:hidden">
                       {overall} overall
                     </span>
                   ) : null}
@@ -151,7 +151,7 @@ export function HistoryStandingsTable({ rows, caption, emptyLabel }: HistoryStan
                   {row.leagueRecord}
                 </td>
                 {hasOverall ? (
-                  <td className="hidden pl-2 pr-4 text-right text-cell sm:pl-3 min-[23.4375rem]:table-cell">
+                  <td data-twin className="hidden pl-2 pr-4 text-right text-cell sm:pl-3 min-[23.4375rem]:table-cell">
                     {overall}
                   </td>
                 ) : null}

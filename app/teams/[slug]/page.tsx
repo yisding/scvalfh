@@ -284,10 +284,10 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
           />
           {last ? (
             <>
-              <div className="sx-card sx-flush sx-bleed md:hidden">
+              <div data-twin className="sx-card sx-flush sx-bleed md:hidden">
                 <GameRow game={last} perspective={team.slug} defaultExpanded showTime={false} />
               </div>
-              <div className="hidden md:flex md:flex-1 md:flex-col">
+              <div data-twin className="hidden md:flex md:flex-1 md:flex-col">
                 <GameCard game={last} perspective={team.slug} showStream className="flex-1" />
               </div>
             </>
@@ -360,20 +360,22 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
                   schedule or the league's games per team). A league with no fixed schedule (the
                   Sunset) has no slate to draw ahead, so its axis is the games it has: no `?` slots. */}
               <div className="sx-card p-4 md:p-5">
-                <MarginStrip
-                  entries={marginEntries}
-                  teamName={team.name}
-                  slots={leagueScheduled ?? marginEntries.length}
-                  className="hidden md:block"
-                  height={200}
-                />
-                <MarginStrip
-                  entries={marginEntries}
-                  teamName={team.name}
-                  slots={leagueScheduled ?? marginEntries.length}
-                  className="md:hidden"
-                  height={160}
-                />
+                <div data-twin className="hidden md:block">
+                  <MarginStrip
+                    entries={marginEntries}
+                    teamName={team.name}
+                    slots={leagueScheduled ?? marginEntries.length}
+                    height={200}
+                  />
+                </div>
+                <div data-twin className="md:hidden">
+                  <MarginStrip
+                    entries={marginEntries}
+                    teamName={team.name}
+                    slots={leagueScheduled ?? marginEntries.length}
+                    height={160}
+                  />
+                </div>
               </div>
             </section>
           </>

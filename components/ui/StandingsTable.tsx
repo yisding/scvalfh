@@ -680,10 +680,10 @@ export function StandingsTable(props: StandingsTableProps) {
                            is ever displayed. The rank cell and the row link already say "not
                            ranked" / "no results reported yet" to a screen reader. */
                         <>
-                          <td colSpan={3} className="pt-3 pr-gutter text-right align-top text-meta text-ink-3 md:hidden">
+                          <td data-twin colSpan={3} className="pt-3 pr-gutter text-right align-top text-meta text-ink-3 md:hidden">
                             No results yet
                           </td>
-                          <td colSpan={7} className="hidden pt-3 pr-gutter text-right align-top text-meta text-ink-3 md:table-cell">
+                          <td data-twin colSpan={7} className="hidden pt-3 pr-gutter text-right align-top text-meta text-ink-3 md:table-cell">
                             No results yet
                           </td>
                         </>
