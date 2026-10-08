@@ -62,7 +62,7 @@ if [ $# -ne 2 ] || [[ ! "$2" =~ ^(next|node|workers)$ ]]; then
 fi
 base=${1%/} target=$2
 
-public='public, s-maxage=300, stale-while-revalidate=86400'
+public='public, max-age=0, must-revalidate'
 nostore='private, no-cache, no-store, max-age=0, must-revalidate'
 immutable='public, max-age=31536000, immutable'
 failed=0

@@ -2598,7 +2598,9 @@ critical path; `content-visibility` on `/schedule`'s date groups; the snapshot s
 `/` never ships 174 venue addresses. Targets: **LCP < 1.2s** on 4G / mid-tier Android (the LCP
 element on `/` is text), **TBT < 100ms**, **CLS < 0.02**, `/` under **120 KB** gzipped
 including fonts. Caching: immutable hashed assets, HTML
-`s-maxage=300, stale-while-revalidate=86400`.
+`s-maxage=300, stale-while-revalidate=86400`. *(Superseded 2026-10-08: HTML is now
+`public, max-age=0, must-revalidate` with an ETag, because browsers honored the
+`stale-while-revalidate` and showed day-old scores; see `next.config.ts`.)*
 
 ---
 

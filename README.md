@@ -1520,7 +1520,8 @@ request (see above).
 
 The response-header contract is the same on all three servers — `next start`, `vinext start` and
 the Worker: every page, metadata route and OG image carries the `next.config.ts` `headers()` rule,
-`public, s-maxage=300, stale-while-revalidate=86400`; hashed `/_next/static/**` assets keep
+`public, max-age=0, must-revalidate` (every cache asks again on every use, and the ETag makes an
+unchanged page a 304; see `next.config.ts`); hashed `/_next/static/**` assets keep
 `public, max-age=31536000, immutable` (served from build-time gzip/brotli/zstd files under
 `vinext start`, `precompress: true` in `vite.config.ts`, because it does not compress them on the
 fly); 404 pages are `private, no-cache, no-store, max-age=0, must-revalidate`, so no shared cache
