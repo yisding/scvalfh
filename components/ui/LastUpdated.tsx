@@ -101,8 +101,12 @@ export function LastUpdated({
               beside the seven nav links. "Wed Nov 30" does not fit in either next to the time.
               `hidden` removes a span from the accessibility tree too, so exactly one date is ever
               announced. */}
-          <span className="sm:hidden md:inline lg:hidden">{monthDay(local)}</span>
-          <span className="hidden sm:inline md:hidden lg:inline">{shortDate(local)}</span>{' '}
+          <span data-twin className="sm:hidden md:inline lg:hidden">
+            {monthDay(local)}
+          </span>
+          <span data-twin className="hidden sm:inline md:hidden lg:inline">
+            {shortDate(local)}
+          </span>{' '}
           {timeOfDay(local)}
           <span className="sr-only"> Pacific time</span>
         </time>

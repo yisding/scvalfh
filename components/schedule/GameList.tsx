@@ -71,8 +71,10 @@ export function GameList({
         // No display utility on the <li>: the filter toggles `hidden` on it, and a `display`
         // class would beat the attribute and leave a hole in the grid.
         <li key={game.contestId} {...gameFilterAttrs(game)} className="md:border-b-0">
-          <GameRow game={game} scopeLeague={scopeLeague} showRecords className="md:hidden" />
-          <div className="hidden h-full md:block">
+          <div data-twin className="md:hidden">
+            <GameRow game={game} scopeLeague={scopeLeague} showRecords />
+          </div>
+          <div data-twin className="hidden h-full md:block">
             <GameCard game={game} scopeLeague={scopeLeague} showRecords className="h-full" />
           </div>
         </li>

@@ -75,8 +75,12 @@ function TeamName({ name, shortName }: { name: string; shortName: string }) {
   if (name === shortName) return <>{name}</>;
   return (
     <>
-      <span className="sm:hidden">{shortName}</span>
-      <span className="hidden sm:inline">{name}</span>
+      <span data-twin className="sm:hidden">
+        {shortName}
+      </span>
+      <span data-twin className="hidden sm:inline">
+        {name}
+      </span>
     </>
   );
 }

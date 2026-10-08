@@ -121,7 +121,7 @@ export function PlayoffBracket({
   return (
     <div className={className}>
       {/* Phone: rounds stacked, the same GameRow as every other list. */}
-      <ol className="m-0 list-none space-y-6 p-0 md:hidden">
+      <ol data-twin className="m-0 list-none space-y-6 p-0 md:hidden">
         {rounds.map((round) => (
           <li key={round.dateKey}>
             <RoundHeading className="m-0 mb-3 flex flex-wrap items-baseline gap-x-3 text-lead text-ink">
@@ -145,6 +145,7 @@ export function PlayoffBracket({
 
       {/* Desktop: one column per round. Nested <ol>s, so it reads as rounds in order (§10.4). */}
       <ol
+        data-twin
         className="m-0 hidden list-none gap-0 p-0 md:grid"
         style={{ gridTemplateColumns: `repeat(${rounds.length}, minmax(0, 1fr))` }}
       >

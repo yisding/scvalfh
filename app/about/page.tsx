@@ -679,7 +679,7 @@ export default function AboutPage() {
         description={`${DESCRIPTION} This is an unofficial, fan-built scoreboard for the ${counts.teams} girls varsity field hockey teams in ${leagueWords}. Every number on it is either read from a public source and shown as-is, or computed from public game results by rules published below. Nothing is guessed, and every disagreement we find with a source is published rather than quietly resolved.`}
       />
 
-      <details className="sx-inset sx-disclosure mt-8 lg:hidden">
+      <details data-twin className="sx-inset sx-disclosure mt-8 lg:hidden">
         <summary>On this page</summary>
         <nav aria-label="On this page">
           <ul className="m-0 list-none p-0">
@@ -695,6 +695,7 @@ export default function AboutPage() {
       </details>
 
       <nav
+        data-twin
         aria-label="Sections on this page"
         className="hidden lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:mt-10 lg:block lg:sticky lg:top-[5rem]"
       >

@@ -263,7 +263,7 @@ export function MarginStrip({
                       inward anchoring of the first and last seven marks, which keeps an edge
                       tooltip inside the viewport, lives in globals.css (.sx-tip:nth-child /
                       :nth-last-child). */}
-                  <span className="sx-tip-body" role="presentation">
+                  <span className="sx-tip-body" aria-hidden="true">
                     {monthDay(entry.date)} &middot; {opponentPhrase(entry)}
                     {entry.margin !== null
                       ? ` · ${signedMargin(entry.margin)}`

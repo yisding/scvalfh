@@ -77,8 +77,12 @@ export function DivisionStandings({
       <SectionHeader id={`${view.division}-heading`} kicker={view.kicker} meta={`${view.meta} · unofficial`} />
       {showHealth ? <LeagueHealthNote leagueId={view.leagueId} className="mb-4" /> : null}
       <MissingResultsBanner text={view.missingBanner} targetId={view.missingId} className="mb-3" />
-      <StandingsTable {...table} variant="phone" className="lg:hidden" />
-      <StandingsTable {...table} variant="desktop" className="hidden lg:block" />
+      <div data-twin className="lg:hidden">
+        <StandingsTable {...table} variant="phone" />
+      </div>
+      <div data-twin className="hidden lg:block">
+        <StandingsTable {...table} variant="desktop" />
+      </div>
       {/* Plain words: "|GD| max 36" was notation a parent at a game had to decode. */}
       <p className="mt-3 mb-0 text-meta text-ink-3">
         PTS: {points}. GD bars are per division
