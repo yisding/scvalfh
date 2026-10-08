@@ -614,7 +614,7 @@ describe('backfill: the Southern California leagues (DESIGN-socal §2.1.3)', () 
     const g = res.games[0];
     expect(g.provenance.backfill?.rule).toBe('phantom-tie');
     expect(g.provenance.backfill?.note).toBe(
-      'MaxPreps shows a 0-0 tie, but si.com has a decided final the same day and no published Sunset rule says a game ends level, so si.com’s score is published.',
+      'MaxPreps shows a 0-0 tie, but si.com has a final score with a winner the same day and no published Sunset rule says a game ends level, so si.com’s score is published.',
     );
     expect(g.provenance.backfill?.note).not.toMatch(/no overtime/);
   });

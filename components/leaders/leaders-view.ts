@@ -736,7 +736,7 @@ export function crossRegionFinals(
     lastSeason,
     sentence:
       `The ratings are on one scale across all ${LEAGUE_COUNT} leagues${AND_INDEPENDENTS}; comparisons between NorCal and SoCal rest on ` +
-      `${plural(thisSeason, 'final')} between the regions this season and ${lastSeason} last season, so treat them as rough.`,
+      `${plural(thisSeason, 'game')} between the regions this season and ${lastSeason} last season, so treat them as rough.`,
   };
 }
 
@@ -766,7 +766,7 @@ export function buildEloBoard(
   // the note never claims a start a team did not have.
   const unseeded = lines.some((l) => !l.rating.seeded);
   const seeded = table.seededFrom
-    ? `Each team started the season from its ${table.seededFrom} rating (the same fit over last season’s ${plural(table.priorGames, 'final')})${unseeded ? `, or from average if it had no counted ${table.seededFrom} final` : ''}; that start counts for one game and fades as this season’s results come in. `
+    ? `Each team started the season from its ${table.seededFrom} rating (worked out the same way from last season’s ${plural(table.priorGames, 'game')})${unseeded ? `, or from average if it had no counted ${table.seededFrom} game` : ''}; that start counts for one game and fades as this season’s results come in. `
     : '';
   const sorted = lines
     .filter((l) => l.rating.games >= minimum.min)
@@ -790,12 +790,12 @@ export function buildEloBoard(
       rankedBy: 1,
       anchor: '#elo',
       note:
-        `Every final between two of the ${plural(fitTeams, 'team')}, league or not, fitted at once: the ratings that best explain each game’s goal margin, counted up to ${MARGIN_CAP} goals${homeEdge}. ` +
+        `Every completed game between two of the ${plural(fitTeams, 'team')}, league or not, rated together: the ratings that best explain each game’s goal margin, counted up to ${MARGIN_CAP} goals${homeEdge}. ` +
         seeded +
         `${ELO_SCALE}, so a team rated 400 points higher is about a 10-to-1 favorite.${across} Forfeits and games against schools outside the ${LEAGUE_COUNT} leagues${AND_INDEPENDENTS} are left out.`,
       empty: lines.some((l) => l.rating.games > 0)
         ? `No team has played ${plural(minimum.min, 'game')} yet.`
-        : `No final between two of the ${plural(fitTeams, 'team')} yet this season.`,
+        : `No completed game between two of the ${plural(fitTeams, 'team')} yet this season.`,
     },
   );
   return {
@@ -955,7 +955,7 @@ function buildRegion(input: RegionInput): RegionLeadersView {
       (l) => l.overall,
       overallMin.min,
       'game',
-      'Every final, league and non-league, postseason included: the overall record on each team’s page. A tie counts as half a win; equal percentages are split by more wins, then goal difference.',
+      'Every completed game, league and non-league, postseason included: the overall record on each team’s page. A tie counts as half a win; equal percentages are split by more wins, then goal difference.',
       scope,
     ),
     recordBoard(
@@ -991,7 +991,7 @@ function buildRegion(input: RegionInput): RegionLeadersView {
           { key: 'perGame', label: 'Avg', title: 'Goals for per game', cell: (l) => ({ text: rateText(l.gf, l.goalGames) }) },
         ],
         rankedBy: 2,
-        note: 'Goals scored in every final, divided by the games played. Equal rates are split by more games played. Forfeits count in records but not in goals, so a forfeit is left out of both numbers here.',
+        note: 'Goals scored in every completed game, divided by the games played. Equal rates are split by more games played. Forfeits count in records but not in goals, so a forfeit is left out of both numbers here.',
         empty: lines.some((l) => l.goalGames >= overallMin.min)
           ? `None of the teams with at least ${plural(overallMin.min, 'game')} has scored yet.`
           : `No team has played ${plural(overallMin.min, 'game')} yet.`,
@@ -1018,7 +1018,7 @@ function buildRegion(input: RegionInput): RegionLeadersView {
           { key: 'perGame', label: 'Avg', title: 'Goals against per game', cell: (l) => ({ text: rateText(l.ga, l.goalGames) }) },
         ],
         rankedBy: 2,
-        note: 'Goals conceded in every final, divided by the games played. Equal rates are split by more games played.',
+        note: 'Goals conceded in every completed game, divided by the games played. Equal rates are split by more games played.',
         empty: `No team has played ${plural(overallMin.min, 'game')} yet.`,
       },
     ),
@@ -1037,7 +1037,7 @@ function buildRegion(input: RegionInput): RegionLeadersView {
           { key: 'cleanSheets', label: 'CS', title: 'Clean sheets', cell: (l) => num(l.cleanSheets) },
         ],
         rankedBy: 1,
-        note: 'Finals in which the team did not concede, counted from every score on this site, so every team counts. The goalkeepers’ board counts only what coaches enter.',
+        note: 'Games in which the team did not concede, counted from every score on this site, so every team counts. The goalkeepers’ board counts only what coaches enter.',
         empty: 'No team has kept a clean sheet yet.',
       },
     ),

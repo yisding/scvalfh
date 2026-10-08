@@ -519,7 +519,7 @@ PHONE 390px  —  /schedule
 │ ← Schedule           Sun 5:04 AM          [◐] │ 44
 ├────────────────────────────────────────────────┤
 │ [ All teams ▾ ][ Both divisions ▾ ][ League ⃞ ]│ 48 sticky ScheduleFilters
-│ 174 contests · 96 final · 76 to come · 2 canc. │ 24 aria-live="polite"
+│ 174 games · 96 final scores · 76 to come       │ 24 aria-live="polite"
 ├────────────────────────────────────────────────┤
 │ ↑ Aug 21  ● Sep 28  Oct 28  ⑃ Nov 7–14 ↓      │ 36 TimelineRail (anchor links)
 ├────────────────────────────────────────────────┤
@@ -577,7 +577,7 @@ DESKTOP 1280px  —  /schedule
 │  Schedule & results                                                                                  │
 │  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐  │
 │  │ Team [All ▾]  Division [Both ▾]  Type [All ▾]  State [All ▾]   HOMESTEAD ✕  LEAGUE ✕   clear   │  │
-│  │ 174 contests · 96 final · 76 to come · 2 cancelled                                             │  │
+│  │ 174 games · 96 final scores · 76 to come · 2 cancelled                                         │  │
 │  └────────────────────────────────────────────────────────────────────────────────────────────────┘  │
 │  Aug ─────────── Sep ──────────●── Oct ─────────── │ Nov  CCS                                        │ 40
 │  ─── THU SEP 24 · 12 GAMES ──────────────────────────────────────────────── share this day →         │
@@ -3874,7 +3874,7 @@ addition there will cross it.
   - **Within Southern California: 38 finals** between Sunset and San Diego teams this season.
 
   The `/leaders` Elo notes print the counts from the data at build time: "on one scale across all nine
-  leagues; comparisons between NorCal and SoCal rest on 7 finals between the regions this season and
+  leagues; comparisons between NorCal and SoCal rest on 7 games between the regions this season and
   11 last season, so treat them as rough". Each region has its own boards and qualifying minimum. A
   team page names its place on its own region's board.
 - **Prior season.** `data/prior-season.json` was refetched over all 99 teams. It holds 896 finals:

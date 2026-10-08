@@ -18,7 +18,7 @@ import { countGames } from '../../../components/schedule/filter-data';
 import { buildDayJvView } from '../../../components/teams/jv-view';
 import EmptyState from '../../../components/ui/EmptyState';
 import SectionHeader from '../../../components/ui/SectionHeader';
-import { gameWord } from '../../../components/ui/plural';
+import { gameWord, plural } from '../../../components/ui/plural';
 import { RegionSwitcher } from '../../../components/layout/LeagueSwitcher';
 import PageHeader from '../../../components/layout/PageHeader';
 import { OG_BASE } from '../../../components/layout/site';
@@ -137,11 +137,11 @@ export default async function ScoresByDatePage({ params }: PageProps<'/scores/[d
   const nothingReportedYet = date <= today && summary.total > 0 && summary.final === 0;
 
   /* One run of badges for the day, or, when both regions have a game, one per region, each scoped
-     to its region and led by its name ("NorCal: 6 games", "4 final" … "SoCal: 9 games" …). Without
+     to its region and led by its name ("NorCal: 6 games", "4 final scores" … "SoCal: 9 games" …). Without
      JS both runs show, NorCal first. "Today" is the day's, unscoped. */
   const countBadges = (counts: ReturnType<typeof countGames>, lead: string): string[] => {
     const out = [`${lead}${counts.total} ${gameWord(counts.total)}`];
-    if (counts.final > 0) out.push(`${counts.final} final`);
+    if (counts.final > 0) out.push(plural(counts.final, 'final score'));
     if (counts.upcoming > 0) out.push(`${counts.upcoming} to come`);
     if (counts.pending > 0) out.push(`${counts.pending} not reported`);
     return out;
@@ -259,7 +259,7 @@ export default async function ScoresByDatePage({ params }: PageProps<'/scores/[d
             </span>
           </time>
         }
-        // Sans with tabular figures, not `.sx-num` mono: these are short phrases ("3 final"),
+        // Sans with tabular figures, not `.sx-num` mono: these are short phrases ("3 final scores"),
         // not a column of digits (DESIGN §4.3).
         meta={badges.map((badge) => (
           <span key={badge.key} data-region-scope={badge.region} className="sx-badge tabular-nums">
@@ -319,7 +319,7 @@ export default async function ScoresByDatePage({ params }: PageProps<'/scores/[d
         </>
       ) : (
         <div className="mt-8 md:mt-10">
-          <EmptyState heading="No contests on this date." />
+          <EmptyState heading="No games on this date." />
         </div>
       )}
 
@@ -354,7 +354,7 @@ export default async function ScoresByDatePage({ params }: PageProps<'/scores/[d
       <p className="mt-stack mb-0 max-w-prose text-meta text-ink-3">
         All times Pacific. A dash means no score has been reported;{' '}
         <span className="sx-num">0</span> is a real zero; a &dagger; marks a score published from
-        si.com under the site&rsquo;s backfill rule.{' '}
+        si.com under the site&rsquo;s rules for missing or wrong scores.{' '}
         <Link href="/about#conventions" prefetch={false} className="text-accent">
           How every state is shown
         </Link>

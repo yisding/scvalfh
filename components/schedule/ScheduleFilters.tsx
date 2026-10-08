@@ -7,7 +7,6 @@ import { gameWord } from '../ui/plural';
 
 import {
   DEFAULT_FILTERS,
-  contestWord,
   isDefaultFilters,
   unfilteredCountLine,
   type FilterState,
@@ -404,7 +403,7 @@ export function ScheduleFiltersFallback({
       <noscript>
         <p className="mt-3 mb-0 text-meta text-ink-3">
           Filtering needs JavaScript. The complete season — all {counts.total}{' '}
-          {contestWord(counts.total)}, oldest first — is listed below either way.
+          {gameWord(counts.total)}, oldest first — is listed below either way.
         </p>
       </noscript>
     </div>
@@ -452,7 +451,7 @@ export function ScheduleFilters({ teams, divisions, counts, listId, className }:
     (filters.type !== 'all' ? 1 : 0) + (filters.state !== 'all' ? 1 : 0);
 
   const countLine = filtered
-    ? `${visible} of ${counts.total} ${contestWord(counts.total)} shown`
+    ? `${visible} of ${counts.total} ${gameWord(counts.total)} shown`
     : unfilteredCountLine(counts);
 
   return (
@@ -473,7 +472,7 @@ export function ScheduleFilters({ teams, divisions, counts, listId, className }:
       <noscript>
         <p className="mt-3 mb-0 text-meta text-ink-3">
           Filtering needs JavaScript. The complete season — all {counts.total}{' '}
-          {contestWord(counts.total)}, oldest first — is listed below either way.
+          {gameWord(counts.total)}, oldest first — is listed below either way.
         </p>
       </noscript>
 
@@ -514,7 +513,7 @@ export function ScheduleFilters({ teams, divisions, counts, listId, className }:
       ) : null}
 
       {filtered && visible === 0 ? (
-        <EmptyState heading="No contests match these filters." className="mt-4">
+        <EmptyState heading="No games match these filters." className="mt-4">
           Remove one of the filters above — they are all still listed, and still removable — or
           clear them all to see the whole season again.
         </EmptyState>

@@ -746,7 +746,7 @@ describe('a team with no results (corpus copy, one MCAL team zeroed)', () => {
     const fresh = textOf(renderToStaticMarkup(createElement(TeamElo, { elo: { ...played, seeded: false } })));
     // "Counted": last season's forfeits, unscored finals and games against outside schools are not
     // in the file, so a team can have played and still have no start.
-    expect(fresh, 'components/teams/TeamElo.tsx unseeded').toContain('It had no counted 2025-26 final against the nine leagues’ teams and the Southern Section’s five independents, so it started from an average rating.');
+    expect(fresh, 'components/teams/TeamElo.tsx unseeded').toContain('It had no counted 2025-26 game against the nine leagues’ teams and the Southern Section’s five independents, so it started from an average rating.');
     expect(fresh, 'components/teams/TeamElo.tsx unseeded').not.toContain('from its 2025-26 rating');
   });
 
@@ -756,7 +756,7 @@ describe('a team with no results (corpus copy, one MCAL team zeroed)', () => {
     const unrated = { ...view, elo: null, preseason: false, provisional: false, boardPlace: null };
     const text = textOf(renderToStaticMarkup(createElement(TeamElo, { elo: unrated })));
     expect(text, 'components/teams/TeamElo.tsx unrated').toContain('Elo rating Not rated · no counted results yet');
-    expect(text, 'components/teams/TeamElo.tsx unrated').toContain('A rating needs at least one final');
+    expect(text, 'components/teams/TeamElo.tsx unrated').toContain('A rating needs at least one completed game');
     expect(text, 'components/teams/TeamElo.tsx unrated').not.toContain('1500 is an average team');
   });
 

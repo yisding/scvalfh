@@ -1258,7 +1258,7 @@ at once, at every build, starting from last season's:
   and the San Diego Section are linked by 38 finals this season. So a NorCal rating and a SoCal
   rating are on one scale, but how far apart the regions sit rests on a handful of games and can move
   with each new one; `/leaders` prints those two counts from the data at every
-  build ("comparisons between NorCal and SoCal rest on 7 finals between the regions this season and
+  build ("comparisons between NorCal and SoCal rest on 7 games between the regions this season and
   11 last season, so treat them as rough").
 
 ## Known limitations

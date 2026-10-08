@@ -100,7 +100,7 @@ describe('league scoping (/schedule/<league>)', () => {
     const scval = await renderLeague('scval');
     expect(scval, 'components/schedule/TimelineRail.tsx scval chip').toContain('href="/playoffs#scval"');
     // No article before the initialism ('a MCAL team' is wrong; 'an SCVAL team' reads oddly too).
-    expect(textOf(mcal), 'app/schedule/[league]/page.tsx header').toContain('every contest involving MCAL teams');
+    expect(textOf(mcal), 'app/schedule/[league]/page.tsx header').toContain('every game involving MCAL teams');
     expect(textOf(mcal)).not.toMatch(/\ba (MCAL|SCVAL|BVAL|PCAL|EAL)\b/);
     // The EAL's Super Regional publishes no bracket: the chip goes to its card on /playoffs.
     const eal = await renderLeague('eal');

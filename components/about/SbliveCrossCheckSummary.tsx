@@ -28,7 +28,7 @@ export function SbliveCrossCheckSummary({ cross }: SbliveCrossCheckSummaryProps)
         MaxPreps is our primary source. When MaxPreps has no result for an official league game, or
         its row is clearly wrong, we publish High School on SI&rsquo;s score and mark it (see{' '}
         <a href="#backfills" className="text-accent hover:underline">
-          Backfills
+          Scores taken from si.com
         </a>
         ). As of the {formatStamp(sbliveFetchedAt)} run, {compared} MaxPreps game
         {compared === 1 ? '' : 's'} matched a si.com row by date and teams. {scored} of{' '}
@@ -92,8 +92,8 @@ export function SbliveCrossCheckSummary({ cross }: SbliveCrossCheckSummaryProps)
         <div className="mt-stack">
           <p className="max-w-prose text-body text-ink-2">
             si.com has a score for {sbliveOnlyScored.length} game
-            {sbliveOnlyScored.length === 1 ? '' : 's'} that MaxPreps has not, and that our backfill
-            rules did not publish. Each stays unreported here, with the reason:
+            {sbliveOnlyScored.length === 1 ? '' : 's'} that MaxPreps has not, and that our rules for missing or
+            wrong scores did not publish. Each stays unreported here, with the reason:
           </p>
           <ul className="sx-list mt-2 max-w-prose">
             {sbliveOnlyScored.map((row) => (

@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation';
 import { ImageResponse } from 'next/og';
 
 import { dayCardTitle, dayLines, headlineGame, orderedForPreview } from '../../../components/schedule/day-summary';
-import { gameWord } from '../../../components/ui/plural';
+import { gameWord, plural } from '../../../components/ui/plural';
 import { OG, OG_SIZE } from '../../../components/layout/og-theme';
 import { SITE_NAME } from '../../../components/layout/site';
 import { getGameDates, getGames } from '../../../lib/data';
@@ -156,7 +156,7 @@ export default async function Image({ params }: PageProps<'/scores/[date]'>) {
             color: OG.TEXT_3,
           }}
         >
-          {games.length} {gameWord(games.length)} &middot; {finals} final &middot; unofficial
+          {games.length} {gameWord(games.length)} &middot; {plural(finals, 'final score')} &middot; unofficial
           &middot; data from MaxPreps and si.com
         </div>
       </div>
