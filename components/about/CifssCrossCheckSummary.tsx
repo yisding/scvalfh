@@ -79,7 +79,13 @@ export function CifssCrossCheckSummary({ cross }: CifssCrossCheckSummaryProps) {
                     {row.label}
                     <span className="block text-ink-3">
                       {row.dateKey} &middot; {row.note}{' '}
-                      <ExternalLink href={row.cifssUrl} arrow={false}>
+                      {/* Inside a run of text in a <td>, which the base `p a, li a` underline does
+                          not reach: underlined here so it never differs by colour alone (1.4.1). */}
+                      <ExternalLink
+                        href={row.cifssUrl}
+                        arrow={false}
+                        className="underline decoration-from-font underline-offset-[0.2em]"
+                      >
                         cifsshome.org
                       </ExternalLink>
                     </span>
