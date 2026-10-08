@@ -1,25 +1,32 @@
 {
-  "commitSummary": "SCVAL +0 finals · BVAL +0 · PCAL +0 · MCAL +0 · EAL +0 · Sunset +1 · City +0 · North +1 · Metro +0 · LA +0",
-  "contentHash": "92a93b400b0c0a3e7418f9d876549467947f24f50d9555dd0d174c336698b5ea",
+  "cifssCrossCheck": {
+    "agreements": 462,
+    "cifssOnlyScored": 0,
+    "compared": 470,
+    "conflicts": 8,
+    "notOnMaxPreps": 0
+  },
+  "commitSummary": "SCVAL +2 finals · BVAL +1 · PCAL +0 · MCAL +1 · EAL +1 · Sunset +0 · City +1 · North +3 · Metro +1 · LA +0",
+  "contentHash": "4568baaacac8b4dd8103d2b4270c4d0e3e61bbfc6898a3085765cf9c1c5cc45a",
   "counts": {
     "byLeague": {
       "bval": {
         "backfilled": 0,
-        "finals": 75,
+        "finals": 76,
         "games": 118,
         "leagueGames": 60,
         "teams": 12
       },
       "city": {
         "backfilled": 0,
-        "finals": 116,
+        "finals": 117,
         "games": 164,
         "leagueGames": 60,
         "teams": 12
       },
       "eal": {
         "backfilled": 0,
-        "finals": 23,
+        "finals": 24,
         "games": 41,
         "leagueGames": 30,
         "teams": 6
@@ -33,27 +40,27 @@
       },
       "mcal": {
         "backfilled": 0,
-        "finals": 63,
+        "finals": 64,
         "games": 87,
         "leagueGames": 72,
         "teams": 9
       },
       "metro": {
         "backfilled": 0,
-        "finals": 61,
+        "finals": 63,
         "games": 93,
         "leagueGames": 31,
         "teams": 9
       },
       "north-county": {
         "backfilled": 0,
-        "finals": 166,
+        "finals": 169,
         "games": 244,
         "leagueGames": 102,
         "teams": 19
       },
       "pcal": {
-        "backfilled": 2,
+        "backfilled": 1,
         "finals": 43,
         "games": 57,
         "leagueGames": 36,
@@ -61,7 +68,7 @@
       },
       "scval": {
         "backfilled": 0,
-        "finals": 107,
+        "finals": 109,
         "games": 160,
         "leagueGames": 97,
         "teams": 15
@@ -74,7 +81,7 @@
         "teams": 8
       }
     },
-    "finals": 568,
+    "finals": 579,
     "games": 879,
     "leagueGames": 544,
     "mismatches": 21,
@@ -82,54 +89,54 @@
     "teams": 102
   },
   "crossCheck": {
-    "agreements": 168,
-    "backfilled": 2,
-    "compared": 238,
-    "conflicts": 8,
-    "sbliveOnlyScored": 3
+    "agreements": 165,
+    "backfilled": 1,
+    "compared": 252,
+    "conflicts": 9,
+    "sbliveOnlyScored": 4
   },
-  "fetchedAt": "2026-10-07T19:44:08.743Z",
+  "fetchedAt": "2026-10-08T11:42:05.154Z",
   "leagues": [
     {
       "backfilled": 0,
-      "countedFinals": 54,
-      "finalsDelta": 0,
+      "countedFinals": 56,
+      "finalsDelta": 2,
       "id": "scval",
+      "missingPast": 3,
+      "reasons": [],
+      "state": "fresh"
+    },
+    {
+      "backfilled": 0,
+      "countedFinals": 20,
+      "finalsDelta": 1,
+      "id": "bval",
+      "missingPast": 0,
+      "reasons": [],
+      "state": "fresh"
+    },
+    {
+      "backfilled": 1,
+      "countedFinals": 23,
+      "finalsDelta": 0,
+      "id": "pcal",
       "missingPast": 2,
       "reasons": [],
       "state": "fresh"
     },
     {
       "backfilled": 0,
-      "countedFinals": 19,
-      "finalsDelta": 0,
-      "id": "bval",
-      "missingPast": 1,
-      "reasons": [],
-      "state": "fresh"
-    },
-    {
-      "backfilled": 2,
-      "countedFinals": 23,
-      "finalsDelta": 0,
-      "id": "pcal",
-      "missingPast": 1,
-      "reasons": [],
-      "state": "fresh"
-    },
-    {
-      "backfilled": 0,
-      "countedFinals": 52,
-      "finalsDelta": 0,
+      "countedFinals": 53,
+      "finalsDelta": 1,
       "id": "mcal",
-      "missingPast": 1,
+      "missingPast": 2,
       "reasons": [],
       "state": "fresh"
     },
     {
       "backfilled": 0,
-      "countedFinals": 16,
-      "finalsDelta": 0,
+      "countedFinals": 17,
+      "finalsDelta": 1,
       "id": "eal",
       "missingPast": 4,
       "reasons": [],
@@ -138,7 +145,7 @@
     {
       "backfilled": 0,
       "countedFinals": 23,
-      "finalsDelta": 1,
+      "finalsDelta": 0,
       "id": "sunset",
       "missingPast": 0,
       "reasons": [],
@@ -146,17 +153,17 @@
     },
     {
       "backfilled": 0,
-      "countedFinals": 19,
-      "finalsDelta": 0,
+      "countedFinals": 20,
+      "finalsDelta": 1,
       "id": "city",
-      "missingPast": 1,
+      "missingPast": 0,
       "reasons": [],
       "state": "fresh"
     },
     {
       "backfilled": 0,
-      "countedFinals": 35,
-      "finalsDelta": 1,
+      "countedFinals": 38,
+      "finalsDelta": 3,
       "id": "north-county",
       "missingPast": 2,
       "reasons": [],
@@ -164,8 +171,8 @@
     },
     {
       "backfilled": 0,
-      "countedFinals": 5,
-      "finalsDelta": 0,
+      "countedFinals": 6,
+      "finalsDelta": 1,
       "id": "metro",
       "missingPast": 0,
       "reasons": [],
@@ -421,12 +428,12 @@
     },
     {
       "label": "greenfield schedule",
-      "rowCount": 7,
+      "rowCount": 8,
       "status": "ok"
     },
     {
       "label": "hollister schedule",
-      "rowCount": 11,
+      "rowCount": 12,
       "status": "ok"
     },
     {
@@ -556,7 +563,7 @@
     },
     {
       "label": "davis schedule",
-      "rowCount": 19,
+      "rowCount": 20,
       "status": "ok"
     },
     {
@@ -905,11 +912,6 @@
       "status": "ok"
     },
     {
-      "label": "sblive scoreboard 2026-09-23",
-      "rowCount": 16,
-      "status": "ok"
-    },
-    {
       "label": "sblive scoreboard 2026-09-24",
       "rowCount": 16,
       "status": "ok"
@@ -931,7 +933,7 @@
     },
     {
       "label": "sblive scoreboard 2026-09-29",
-      "rowCount": 22,
+      "rowCount": 23,
       "status": "ok"
     },
     {
@@ -970,6 +972,11 @@
       "status": "ok"
     },
     {
+      "label": "sblive scoreboard 2026-10-08",
+      "rowCount": 24,
+      "status": "ok"
+    },
+    {
       "label": "sblive berkeley games",
       "rowCount": 17,
       "status": "ok"
@@ -982,11 +989,6 @@
     {
       "label": "sblive chico games",
       "rowCount": 13,
-      "status": "ok"
-    },
-    {
-      "label": "sblive clairemont games",
-      "rowCount": 20,
       "status": "ok"
     },
     {
@@ -1005,6 +1007,11 @@
       "status": "ok"
     },
     {
+      "label": "sblive fallbrook games",
+      "rowCount": 24,
+      "status": "ok"
+    },
+    {
       "label": "sblive greenfield games",
       "rowCount": 13,
       "status": "ok"
@@ -1020,6 +1027,36 @@
       "status": "ok"
     },
     {
+      "label": "cifsshome.org Central Coast Section field hockey",
+      "rowCount": 129,
+      "status": "ok"
+    },
+    {
+      "label": "cifsshome.org North Coast Section field hockey",
+      "rowCount": 110,
+      "status": "ok"
+    },
+    {
+      "label": "cifsshome.org Northern Section field hockey",
+      "rowCount": 14,
+      "status": "ok"
+    },
+    {
+      "label": "cifsshome.org SAC-Joaquin Section field hockey",
+      "rowCount": 8,
+      "status": "ok"
+    },
+    {
+      "label": "cifsshome.org Southern Section field hockey",
+      "rowCount": 162,
+      "status": "ok"
+    },
+    {
+      "label": "cifsshome.org San Diego Section field hockey",
+      "rowCount": 463,
+      "status": "ok"
+    },
+    {
       "label": "ccs calendar",
       "rowCount": null,
       "status": "skipped"
@@ -1030,8 +1067,8 @@
       "status": "skipped"
     }
   ],
-  "today": "2026-10-07",
-  "warnings": 48,
+  "today": "2026-10-08",
+  "warnings": 50,
   "window": {
     "firstGame": "2026-08-12T17:15:00",
     "lastGame": "2026-10-30T19:00:00",
