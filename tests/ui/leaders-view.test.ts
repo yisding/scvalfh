@@ -263,7 +263,7 @@ describe('buildLeadersView — rules, over the committed data', () => {
     const lastSeason = getPriorSeason()!.games.filter((g) => across(g.homeId, g.awayId)).length;
     expect([view.crossRegion.thisSeason, view.crossRegion.lastSeason]).toEqual([thisSeason, lastSeason]);
     expect(view.crossRegion.sentence).toBe(
-      `The ratings are on one scale across all nine leagues and the Southern Section’s five independents; comparisons between NorCal and SoCal rest on ${thisSeason} final${thisSeason === 1 ? '' : 's'} between the regions this season and ${lastSeason} last season, so treat them as rough.`,
+      `The ratings are on one scale across all nine leagues and the Southern Section’s five independents; comparisons between NorCal and SoCal rest on ${thisSeason} game${thisSeason === 1 ? '' : 's'} between the regions this season and ${lastSeason} last season, so treat them as rough.`,
     );
   });
 
@@ -464,7 +464,7 @@ describe('buildLeadersView — schools, over synthetic games', () => {
       ],
     };
     const note = nc(buildLeadersView({ ...sources(base), prior })).schools.find((b) => b.id === 'elo-rating')!.note;
-    expect(note).toContain('rating (the same fit over last season’s 1 final), or from average if it had no counted 2025-26 final;');
+    expect(note).toContain('rating (worked out the same way from last season’s 1 game), or from average if it had no counted 2025-26 game;');
     // The committed season seeds every rated team, so its note makes no such claim.
     expect(nc(buildLeadersView()).schools.find((b) => b.id === 'elo-rating')!.note).not.toContain('or from average');
   });
@@ -980,9 +980,9 @@ describe('buildLeadersView — each region its own boards, one Elo scale', () =>
         expect(regionOf(getTeamBySlug(row.team.slug)!.league)).toBe(r.region);
       }
       expect(board.note).toContain(
-        'The ratings are on one scale across all nine leagues and the Southern Section’s five independents; comparisons between NorCal and SoCal rest on 1 final between the regions this season and 0 last season, so treat them as rough.',
+        'The ratings are on one scale across all nine leagues and the Southern Section’s five independents; comparisons between NorCal and SoCal rest on 1 game between the regions this season and 0 last season, so treat them as rough.',
       );
-      expect(board.note).toContain('Every final between two of the 102 teams, league or not, fitted at once');
+      expect(board.note).toContain('Every completed game between two of the 102 teams, league or not, rated together');
     }
     expect(view.crossRegion).toMatchObject({ thisSeason: 1, lastSeason: 0 });
     // The rating La Jolla's board prints is the one the unified table gives it, not a SoCal-only refit.

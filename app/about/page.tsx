@@ -142,7 +142,7 @@ function toc(leagues: readonly LeagueSummary[]): Array<{ id: string; label: stri
     { id: 'health', label: 'Data health, by league' },
     { id: 'conventions', label: 'How a score is shown' },
     { id: 'cross-check', label: 'Cross-check log' },
-    { id: 'backfills', label: 'si.com backfills' },
+    { id: 'backfills', label: 'Scores filled in from si.com' },
     { id: 'jv', label: 'JV games' },
     { id: 'dropped', label: 'Dropped contests' },
     { id: 'freshness', label: 'How often this updates' },
@@ -723,7 +723,7 @@ export default function AboutPage() {
           <SectionHeader size="lg" kicker="Data sources" />
           <p className="sx-prose">
             {SITE_SCOPE_NOTE} The latest update covers all {counts.teams} teams and {counts.games} games (
-            {counts.leagueGames} of them league games): {counts.finals} final, {counts.pending} not yet
+            {counts.leagueGames} of them league games): {plural(counts.finals, 'final score')}, {counts.pending} not yet
             reported.
           </p>
           <dl className="m-0 mt-stack grid gap-4 md:grid-cols-2">
@@ -757,15 +757,15 @@ export default function AboutPage() {
             <div className="sx-card flex flex-col p-5">
               <dt>
                 <span className="block text-lead text-ink">High School on SI (si.com)</span>
-                <span className="mt-0.5 block text-meta text-ink-3">Secondary &middot; cross-check and backfill</span>
+                <span className="mt-0.5 block text-meta text-ink-3">Secondary &middot; cross-check and missing scores</span>
               </dt>
               <dd className="m-0 mt-2 flex flex-1 flex-col text-body text-ink-2">
                 <span className="block">
                   Sports Illustrated&rsquo;s high-school stats site (formerly SBLive) publishes its own
                   scoreboard. We compare every final score with it, and publish its score only under
-                  the mechanical rules in{' '}
+                  the fixed rules listed under{' '}
                   <a href="#backfills" className="text-accent hover:underline">
-                    si.com backfills
+                    Scores filled in from si.com
                   </a>
                   . It is never used for league membership, records or the standings order.
                 </span>
@@ -1237,7 +1237,7 @@ export default function AboutPage() {
         <section id="backfills" className="mt-16">
           <SectionHeader
             size="lg"
-            kicker="si.com backfills"
+            kicker="Scores filled in from si.com"
             meta={plural(backfilled.length, 'score', 'scores')}
           />
           <div className="sx-prose">
@@ -1270,7 +1270,7 @@ export default function AboutPage() {
                 </span>
               ))}
               Any other disagreement keeps MaxPreps&rsquo; score and is listed in the cross-check log.
-              A backfilled score counts in the standings like any other final. si.com never decides
+              A score filled in from si.com counts in the standings like any other final score. si.com never decides
               league membership, league records or the standings order.
             </p>
           </div>

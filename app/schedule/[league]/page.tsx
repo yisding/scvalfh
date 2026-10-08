@@ -71,7 +71,7 @@ export async function generateMetadata({ params }: PageProps<'/schedule/[league]
   const title = scheduleTitle(summary);
   // 'involving SCVAL teams'; the LA independents are named by their standaloneName: 'involving the LA independents'.
   const involving = isIndependentLeague(summary.id) ? standaloneName(summary.id) : `${summary.shortName} teams`;
-  const description = `All ${plural(counts.total, 'contest')} involving ${involving} for ${SEASON_DISPLAY}, grouped by date: ${counts.final} final, ${counts.upcoming} still to come. Filter by team, game type or status.`;
+  const description = `All ${plural(counts.total, 'contest')} involving ${involving} for ${SEASON_DISPLAY}, grouped by date: ${plural(counts.final, 'final score')}, ${counts.upcoming} still to come. Filter by team, game type or status.`;
   return {
     title,
     description,
@@ -182,7 +182,7 @@ export default async function LeagueSchedulePage({ params }: PageProps<'/schedul
           <li>
             A <span aria-hidden="true">&dagger;</span>
             <span className="sr-only">dagger</span> beside a score means it was published from High
-            School on SI (si.com) under the site&rsquo;s backfill rule, because MaxPreps does not
+            School on SI (si.com) under the site&rsquo;s rules for filling in missing scores, because MaxPreps does not
             have it.
           </li>
           <li>

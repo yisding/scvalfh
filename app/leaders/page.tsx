@@ -72,7 +72,7 @@ export default function LeadersPage() {
         description={
           <>
             The top schools and players across {SHORT_NAMES}, ranked within each region. School
-            records and Elo ratings are computed from every final on this site; player numbers are
+            records and Elo ratings are computed from every final score on this site; player numbers are
             what each coach enters on MaxPreps. {view.crossRegion.sentence}
           </>
         }
@@ -97,7 +97,7 @@ export default function LeadersPage() {
               size="lg"
               kicker="Schools"
               meta={`${regionLeagues(region)} · ${
-                region.resultsThrough ? `Every final through ${region.resultsThrough}` : 'No finals yet'
+                region.resultsThrough ? `Every final score through ${region.resultsThrough}` : 'No final scores yet'
               }`}
             />
             <div className="mt-4 grid gap-y-section lg:grid-cols-2 lg:gap-x-10">

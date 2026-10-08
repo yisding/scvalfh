@@ -92,8 +92,8 @@ export function SbliveCrossCheckSummary({ cross }: SbliveCrossCheckSummaryProps)
         <div className="mt-stack">
           <p className="max-w-prose text-body text-ink-2">
             si.com has a score for {sbliveOnlyScored.length} game
-            {sbliveOnlyScored.length === 1 ? '' : 's'} that MaxPreps has not, and that our backfill
-            rules did not publish. Each stays unreported here, with the reason:
+            {sbliveOnlyScored.length === 1 ? '' : 's'} that MaxPreps has not, and that our rules for filling in
+            missing scores did not publish. Each stays unreported here, with the reason:
           </p>
           <ul className="sx-list mt-2 max-w-prose">
             {sbliveOnlyScored.map((row) => (

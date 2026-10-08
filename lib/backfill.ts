@@ -338,13 +338,13 @@ function offScheduleDate(g: Game): string | null {
  * Rule 4c's published note. PCAL and MCAL have a written rule (no regular-season overtime), so their note says
  * the league's games have none. The Sunset keeps rule 4c (`leagueOvertime` 'none': a level game is recorded
  * as reported) but publishes no rule at all, and its games HAVE been decided in overtime (Great Oak 2-1
- * Temecula Valley, Oct 2), so its note claims no rule: only that si.com has a decided final the same day. A
+ * Temecula Valley, Oct 2), so its note claims no rule: only that si.com has a final score with a winner the same day. A
  * 'site' league (orderScope, lib/leagues.ts) is exactly one that publishes no rules.
  */
 function phantomTieNote(short: string, noPublishedRules: boolean): string {
   return noPublishedRules
-    ? `MaxPreps shows a 0-0 tie, but si.com has a decided final the same day and no published ${short} rule says a game ends level, so si.com’s score is published.`
-    : `MaxPreps shows a 0-0 tie, but ${short} league games have no overtime and si.com has a decided final, so si.com’s score is published.`;
+    ? `MaxPreps shows a 0-0 tie, but si.com has a final score with a winner the same day and no published ${short} rule says a game ends level, so si.com’s score is published.`
+    : `MaxPreps shows a 0-0 tie, but ${short} league games have no overtime and si.com has a final score with a winner, so si.com’s score is published.`;
 }
 
 /**
@@ -715,7 +715,7 @@ export function applyBackfill(input: BackfillInput): BackfillResult {
         );
         if (otherFinal) {
           skipped.push(
-            skippedRow(g.contestId, g.dateKey, label, s, pick.row.url, g.urls.maxpreps, g.status, `MaxPreps already has a final for this pair within a day (${otherFinal.contestId}).`),
+            skippedRow(g.contestId, g.dateKey, label, s, pick.row.url, g.urls.maxpreps, g.status, `MaxPreps already has a final score for this pair within a day (${otherFinal.contestId}).`),
           );
           return g;
         }

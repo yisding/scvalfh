@@ -8,6 +8,7 @@ import ScheduleIndex from '../../components/schedule/ScheduleIndex';
 import { countGames } from '../../components/schedule/filter-data';
 import { buildScheduleIndex } from '../../components/schedule/schedule-view';
 import { getGames, getLeagueSummaries, getTeamBySlug, getToday } from '../../lib/data';
+import { plural } from '../../lib/format';
 import { SEASON_DISPLAY } from '../../lib/season';
 
 /**
@@ -38,7 +39,7 @@ function indexData() {
 export function generateMetadata(): Metadata {
   const counts = countGames(getGames());
   const list = coveredLeagueWords();
-  const description = `${counts.total} girls varsity field hockey contests in ${list} for ${SEASON_DISPLAY}: ${counts.final} final, ${counts.upcoming} still to come. Each league's full schedule, plus every game day.`;
+  const description = `${counts.total} girls varsity field hockey contests in ${list} for ${SEASON_DISPLAY}: ${plural(counts.final, 'final score')}, ${counts.upcoming} still to come. Each league's full schedule, plus every game day.`;
   return {
     title: 'Schedule & results',
     description,

@@ -42,14 +42,14 @@ export function TeamElo({ elo, className }: TeamEloProps) {
   const scale = `${ELO_SCALE}. `;
   const about =
     elo.elo === null
-      ? `A rating needs at least one final against another of the ${LEAGUE_COUNT} leagues’ teams${AND_INDEPENDENTS}. `
+      ? `A rating needs at least one completed game against another of the ${LEAGUE_COUNT} leagues’ teams${AND_INDEPENDENTS}. `
       : elo.preseason
-        ? `No counted result this season yet, so this is where it starts: its ${elo.seededFrom} rating, fitted to last season’s finals. ${scale}`
-        : `Fitted to every final between two of the ${LEAGUE_COUNT} leagues’ teams${AND_INDEPENDENTS} this season, on one scale with every covered team (${elo.fitTeams} teams), so each opponent’s strength counts as well as each goal margin.${
+        ? `No counted result this season yet, so this is where it starts: its ${elo.seededFrom} rating, worked out from last season’s games. ${scale}`
+        : `Worked out from every completed game between two of the ${LEAGUE_COUNT} leagues’ teams${AND_INDEPENDENTS} this season, on one scale with every covered team (${elo.fitTeams} teams), so each opponent’s strength counts as well as each goal margin.${
             elo.seeded
               ? ` It started the season from its ${elo.seededFrom} rating, which counts for one game.`
               : elo.seededFrom
-                ? ` It had no counted ${elo.seededFrom} final against the ${LEAGUE_COUNT} leagues’ teams${AND_INDEPENDENTS}, so it started from an average rating.`
+                ? ` It had no counted ${elo.seededFrom} game against the ${LEAGUE_COUNT} leagues’ teams${AND_INDEPENDENTS}, so it started from an average rating.`
                 : ''
           } ${scale}`;
 

@@ -16,6 +16,7 @@
  * (`gameDivisions`, `gameFilterAttrs`) live in `filter-data-server.ts`.
  */
 
+import { plural } from '../../lib/format';
 import type { Game } from '../../lib/types';
 
 /** What the `state` filter groups games into. */
@@ -93,12 +94,12 @@ export function countGames(games: readonly Game[]): ScheduleCounts {
 
 /**
  * The unfiltered count line, shared by the server-rendered fallback and the client component so
- * the two can never disagree: `158 contests · 86 final · 71 to come · 1 not reported`.
+ * the two can never disagree: `158 contests · 86 final scores · 71 to come · 1 not reported`.
  */
 export function unfilteredCountLine(counts: ScheduleCounts): string {
   return [
     `${counts.total} ${contestWord(counts.total)}`,
-    `${counts.final} final`,
+    plural(counts.final, 'final score'),
     `${counts.upcoming} to come`,
     ...(counts.pending > 0 ? [`${counts.pending} not reported`] : []),
   ].join(' · ');

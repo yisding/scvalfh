@@ -348,8 +348,8 @@ export function missingBannerText(n: number, opts: { official?: boolean } = {}):
 /** The si.com backfill footnote under a table with a † (singular / plural, verbatim). */
 export function backfillFootnoteText(n: number): string {
   return n === 1
-    ? '† Includes 1 result from High School on SI (si.com) that MaxPreps does not have, counted under the site’s si.com backfill rule (About → Sources).'
-    : `† Includes ${n} results from High School on SI (si.com) that MaxPreps does not have, counted under the site’s si.com backfill rule (About → Sources).`;
+    ? '† Includes 1 result from High School on SI (si.com) that MaxPreps does not have, counted under the site’s rules for filling in missing scores (About → Sources).'
+    : `† Includes ${n} results from High School on SI (si.com) that MaxPreps does not have, counted under the site’s rules for filling in missing scores (About → Sources).`;
 }
 
 /**
