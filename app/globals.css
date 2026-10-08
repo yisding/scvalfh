@@ -600,10 +600,12 @@
   .sx-card[data-team-slug][data-pinned] {
     box-shadow: inset 3px 0 0 var(--sx-accent), var(--sx-ring), var(--sx-shadow-raised);
   }
-  /* The rule's non-colour channel: a visually hidden word only the pinned row announces. */
-  .sx-pin-note { display: none; }
+  /* The rule's non-colour channel: a visually hidden word only the pinned row announces. Every
+     note ships with the `hidden` attribute, so anything that drops this stylesheet (reader modes,
+     a failed CSS load) keeps it silent instead of saying "Your team." on every row. The reveal
+     needs `!important` to beat Tailwind preflight's `[hidden] { display: none !important }`. */
   .sx-pinned .sx-pin-note,
-  [data-team-slug][data-pinned] .sx-pin-note { display: inline; }
+  [data-team-slug][data-pinned] .sx-pin-note { display: inline !important; }
   .sx-nonleague { box-shadow: inset 2px 0 0 var(--sx-border-strong); }
 
   /* Hover elevation for card-sized links only (TeamTile, GameCard). Shadow only — no translate. */

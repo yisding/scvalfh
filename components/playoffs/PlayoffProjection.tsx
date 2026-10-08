@@ -241,7 +241,7 @@ export function PlayoffProjection({
                     <span className="sr-only">
                       {/* Only the pinned row's copy is displayed (app/globals.css), so the
                           accent rule is never the only thing saying "this is your team". */}
-                      <span className="sx-pin-note">Your team. </span>
+                      <span className="sx-pin-note" hidden>Your team. </span>
                       {projectionRowLabel(row, divisionLabel)}
                     </span>
                   </Link>
