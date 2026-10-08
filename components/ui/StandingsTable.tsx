@@ -218,7 +218,7 @@ function RowLink({ href, label, className }: { href: string; label: string; clas
       <span className="sr-only">
         {/* Only the pinned row's copy is displayed (app/globals.css), so the accent rule beside
             it is never the only thing saying "this is your team". */}
-        <span className="sx-pin-note">Your team. </span>
+        <span className="sx-pin-note" hidden>Your team. </span>
         {label}
       </span>
     </Link>

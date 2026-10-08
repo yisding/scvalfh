@@ -207,7 +207,7 @@ function MiniRowView({
               viewport entry otherwise). Only the pinned row's sr-only note is displayed. */}
           <Link href={`/teams/${row.slug}`} prefetch={false} className="absolute inset-0">
             <span className="sr-only">
-              <span className="sx-pin-note">Your team. </span>
+              <span className="sx-pin-note" hidden>Your team. </span>
               {rowLabel(row, where)}
             </span>
           </Link>

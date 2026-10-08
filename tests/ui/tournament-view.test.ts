@@ -278,7 +278,7 @@ describe('/playoffs/mcal (rendered on the corpus snapshot)', () => {
     for (const [, slug, href, inner] of rows) {
       expect(href, 'components/playoffs/LeagueTournament.tsx row link').toBe(slug);
       expect(inner, 'components/playoffs/LeagueTournament.tsx pin note').toContain(
-        '<span class="sr-only"><span class="sx-pin-note">Your team. </span>',
+        '<span class="sr-only"><span class="sx-pin-note" hidden="">Your team. </span>',
       );
     }
   });

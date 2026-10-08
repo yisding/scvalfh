@@ -877,7 +877,7 @@ describe('LeaderBoardTable and the /leaders page', () => {
     expect(html).toContain('<caption class="sr-only">Most points, players in all five NorCal leagues, this season</caption>');
     expect(html).toContain('<span aria-hidden="true">T1</span><span class="sr-only">tied for 1st</span>');
     expect(html).toContain('data-team-slug="leigh"');
-    expect(html).toContain('<span class="sx-pin-note">Your team’s player. </span>');
+    expect(html).toContain('<span class="sx-pin-note" hidden="">Your team’s player. </span>');
     // Dee Dunn's assists are not tracked: a dash with words, not a 0.
     expect(html).toContain('<span aria-hidden="true">—</span><span class="sr-only">not recorded</span>');
     expect(html).toContain('href="/teams/leigh#player-stats"');

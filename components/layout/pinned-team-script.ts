@@ -23,7 +23,8 @@
  * literal `.sx-pinned`. app/globals.css styles `.sx-pinned` and `[data-pinned]` identically.
  *
  * The same rule reveals a visually hidden "your team" note (`.sx-pin-note`), so the marker is never
- * carried by colour alone (DESIGN §6.5).
+ * carried by colour alone (DESIGN §6.5). The note ships with the `hidden` attribute and only that
+ * rule overrides it, so without the stylesheet (reader modes) no row claims to be "your team".
  *
  * Reading storage can throw in a private window or with site data blocked, so the whole body is
  * in a try/catch and the page is simply unmarked when it does — exactly like the theme stamp.

@@ -96,7 +96,7 @@ function SeedsTable({ view, leagueShort }: { view: TournamentView; leagueShort: 
                     <span className="sr-only">
                       {/* Marked like every other team list: only the pinned row's note is
                           displayed (app/globals.css), so the accent rule never speaks alone. */}
-                      <span className="sx-pin-note">Your team. </span>
+                      <span className="sx-pin-note" hidden>Your team. </span>
                       {rowSentence(row, leagueShort)}
                     </span>
                   </Link>

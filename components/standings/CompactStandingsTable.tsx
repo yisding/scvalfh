@@ -94,7 +94,7 @@ export function CompactStandingsTable({
                         `data-team-slug` gets `data-pinned`), so the accent rule is never the only
                         thing saying "this is your team"; it is the link's name, before the school. */}
                     <span className="sr-only">
-                      <span className="sx-pin-note">Your team. </span>
+                      <span className="sx-pin-note" hidden>Your team. </span>
                     </span>
                     <TeamMonogram team={row.team} size={24} />
                     <span className="min-w-0 truncate text-body">{row.team.shortName}</span>

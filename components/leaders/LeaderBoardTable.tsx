@@ -197,7 +197,7 @@ function BoardTable({
                 {/* Only the pinned team's rows display this (app/globals.css), so the accent
                     rule is never the only thing saying "your team". */}
                 <span className="sr-only">
-                  <span className="sx-pin-note">
+                  <span className="sx-pin-note" hidden>
                     {board.kind === 'player' ? 'Your team’s player. ' : 'Your team. '}
                   </span>
                 </span>

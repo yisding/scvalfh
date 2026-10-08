@@ -508,7 +508,7 @@ describe('/teams (app/teams/page.tsx)', () => {
     expect(links.length, 'components/standings/CompactStandingsTable.tsx row links').toBe(102);
     for (const [, inner] of links) {
       expect(inner, 'components/standings/CompactStandingsTable.tsx pin note').toContain(
-        '<span class="sr-only"><span class="sx-pin-note">Your team. </span></span>',
+        '<span class="sr-only"><span class="sx-pin-note" hidden="">Your team. </span></span>',
       );
     }
     // Sixteen tables, one per division, each in a group wrapper the finder can hide (5 sections, 9
