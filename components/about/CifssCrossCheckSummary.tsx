@@ -79,7 +79,7 @@ export function CifssCrossCheckSummary({ cross }: CifssCrossCheckSummaryProps) {
                     {row.label}
                     <span className="block text-ink-3">
                       {row.dateKey} &middot; {row.note}{' '}
-                      <ExternalLink href={row.cifssUrl} arrow={false}>
+                      <ExternalLink href={row.cifssUrl} arrow={false} className="underline">
                         cifsshome.org
                       </ExternalLink>
                     </span>
