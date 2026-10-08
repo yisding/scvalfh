@@ -18,13 +18,19 @@ import { useEffect } from 'react';
  * change. A copy it marks is already `display: none`, so nothing moves (CLS 0) and the
  * accessibility tree is unchanged; a copy about to show is unmarked in the same frame, inside the
  * `resize` event, before paint. Printing lays the page out at another width, so `beforeprint`
- * clears every mark and lets the print media queries choose. Without JS nothing is stamped and
- * the stylesheet alone decides, exactly as before.
+ * clears every mark and lets the print media queries choose, and nothing re-stamps until
+ * `afterprint` (a pending frame or a print-layout `resize` would otherwise put the screen's marks
+ * back). Class and style changes are watched as well as inserted nodes, since either can change
+ * which copy shows; the observer never sees its own writes, which are only ever `hidden`. Without
+ * JS nothing is stamped and the stylesheet alone decides, exactly as before.
  *
  * Only `data-twin` elements are touched: the schedule filter (components/schedule/GameList.tsx)
  * owns `hidden` on its own `<li>`s.
  */
 export const TWIN_ATTR = 'data-twin';
+
+/** Between `beforeprint` and `afterprint`: the print media queries choose, so nothing re-stamps. */
+let printing = false;
 
 function twins(): HTMLElement[] {
   return [...document.querySelectorAll<HTMLElement>(`[${TWIN_ATTR}]`)];
@@ -36,6 +42,7 @@ function clear(): void {
 
 /** Unmark every twin, then read every display in one style pass, then mark the hidden ones. */
 function sync(): void {
+  if (printing) return;
   const all = twins();
   for (const el of all) el.removeAttribute('hidden');
   const off = all.filter((el) => getComputedStyle(el).display === 'none');
@@ -52,17 +59,31 @@ export function TwinMarks() {
       cancelAnimationFrame(frame);
       frame = requestAnimationFrame(sync);
     };
+    const beforePrint = () => {
+      printing = true;
+      cancelAnimationFrame(frame);
+      clear();
+    };
+    const afterPrint = () => {
+      printing = false;
+      sync();
+    };
     const observer = new MutationObserver(later);
-    observer.observe(document.body, { childList: true, subtree: true });
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      attributeFilter: ['class', 'style'],
+    });
     window.addEventListener('resize', sync);
-    window.addEventListener('beforeprint', clear);
-    window.addEventListener('afterprint', sync);
+    window.addEventListener('beforeprint', beforePrint);
+    window.addEventListener('afterprint', afterPrint);
     return () => {
       cancelAnimationFrame(frame);
       observer.disconnect();
       window.removeEventListener('resize', sync);
-      window.removeEventListener('beforeprint', clear);
-      window.removeEventListener('afterprint', sync);
+      window.removeEventListener('beforeprint', beforePrint);
+      window.removeEventListener('afterprint', afterPrint);
     };
   }, [pathname]);
 
