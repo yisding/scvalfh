@@ -58,7 +58,7 @@ export type OfficialSourceId = (typeof OFFICIAL_SOURCE_IDS)[number];
 
 export type SourceId =
   | 'maxpreps-api' | 'maxpreps-html' | 'sblive' | OfficialSourceId
-  | 'ccs-pdf' | 'ccs-ical' | 'vnn-ics' | 'derived';
+  | 'ccs-pdf' | 'ccs-ical' | 'vnn-ics' | 'cifss' | 'derived';
 
 // ---------- season ----------
 
@@ -639,7 +639,7 @@ export type SourceKind =
   | 'bootstrap' | 'league-meta' | 'reported-standings' | 'team-schedule'
   | 'official-schedule' | 'official-revision-check' | 'standings-index'
   | 'sblive-scoreboard' | 'sblive-team-games'
-  | 'ccs-calendar' | 'ccs-bracket' | 'school-calendar';
+  | 'ccs-calendar' | 'ccs-bracket' | 'school-calendar' | 'cifss-scores';
 
 export interface SourceStatus {
   id: SourceId;
@@ -777,6 +777,60 @@ export interface SbliveCrossCheck {
   backfilled: BackfillRow[];
 }
 
+/** A game cifsshome.org and MaxPreps both score, with different numbers. MaxPreps' score stands. */
+export interface CifssConflictRow {
+  contestId: ContestId;
+  dateKey: string;
+  /** "Away at Home", our display names. */
+  label: string;
+  maxpreps: { home: number; away: number };
+  /** Aligned to MaxPreps' home and away teams. */
+  cifss: { home: number; away: number };
+  /** The widget's date for the game (MaxPreps' `dateKey` can be up to three days away). */
+  cifssDateKey: string;
+  maxprepsUrl: string | null;
+  /** The widget listing of that Section on that date. */
+  cifssUrl: string;
+  note: string;
+}
+
+/**
+ * A cifsshome.org score MaxPreps does not have: either MaxPreps lists the game with no score
+ * (`contestId` is its contest), or MaxPreps has no contest for the pair within three days of the date
+ * (`contestId` is `cifss:<row id>`). Never published as a result.
+ */
+export interface CifssOnlyRow {
+  contestId: string;
+  dateKey: string;
+  label: string;
+  /** Aligned to MaxPreps' home and away when MaxPreps lists the game; the widget's own otherwise. */
+  cifss: { home: number; away: number };
+  /** The two sides' lib/teams.ts sideJoinKey, `a~b` sorted: how a later run tells whether MaxPreps has the game yet. */
+  pairKey: string;
+  /** The widget's date for the game. */
+  cifssDateKey: string;
+  maxprepsUrl: string | null;
+  cifssUrl: string;
+  note: string;
+}
+
+/**
+ * The cifsshome.org score cross-check: every scored widget row with one of our teams, season to
+ * date, joined to MaxPreps on (date, unordered pair), or the pair's nearest game within three days.
+ */
+export interface CifssCrossCheck {
+  /** The run that read the widget (season start through that run's local date). */
+  cifssFetchedAt: string;
+  /** Games both sources score: `agreements + conflicts.length`. */
+  compared: number;
+  agreements: number;
+  conflicts: CifssConflictRow[];
+  /** Games MaxPreps lists with no score yet. */
+  cifssOnlyScored: CifssOnlyRow[];
+  /** Games MaxPreps has no contest for (nor a deleted or dropped one). */
+  notOnMaxPreps: CifssOnlyRow[];
+}
+
 export type SeasonPhase =
   | 'preseason'
   | 'regular'
@@ -810,6 +864,8 @@ export interface Snapshot {
   dropped: DroppedContest[];
   crossCheck: CrossCheckRow[];
   sbliveCrossCheck?: SbliveCrossCheck;
+  /** NEW. The cifsshome.org score cross-check (never changes a published score). */
+  cifssCrossCheck?: CifssCrossCheck;
   /** Official fixtures, ALL leagues, that matched no published game. */
   officialFixtures?: OfficialFixture[];
   /**

@@ -61,6 +61,7 @@ import { getTeamById, getTeamBySlug, teamOfSide } from './teams';
 import type {
   CcsCalendarEvent,
   CcsPlayoffs,
+  CifssCrossCheck,
   ContestId,
   CrossCheckRow,
   DivisionId,
@@ -175,6 +176,15 @@ export function getCrossCheck(filter: { league?: LeagueId } = {}): readonly Cros
  */
 export function getSbliveCrossCheck(): SbliveCrossCheck | undefined {
   return snapshot.sbliveCrossCheck;
+}
+
+/**
+ * The cifsshome.org SCORE cross-check (lib/cifss-crosscheck.ts). Undefined until a run has read it.
+ * It never changes a published score: `conflicts` keep MaxPreps' score, and the other two lists are
+ * widget scores MaxPreps lacks, none of them published as results.
+ */
+export function getCifssCrossCheck(): CifssCrossCheck | undefined {
+  return snapshot.cifssCrossCheck;
 }
 
 /** null until SCVAL publishes a 2026-27 field hockey standings PDF; undefined if never polled. */

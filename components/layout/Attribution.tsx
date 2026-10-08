@@ -126,6 +126,10 @@ export function Attribution({ snapshotAt, now, className }: AttributionProps) {
             <ExternalLink href={SOURCE_LINKS.sblive} arrow={false}>
               High School on SI (si.com)
             </ExternalLink>
+            ; scores cross-checked against{' '}
+            <ExternalLink href={SOURCE_LINKS.cifss} arrow={false}>
+              cifsshome.org
+            </ExternalLink>
             . League alignment and rules from{' '}
             {joined(
               LEAGUES_PROPER.filter((l) => !hasNoDocument(l)).map((l) => (

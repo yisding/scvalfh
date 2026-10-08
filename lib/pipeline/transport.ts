@@ -17,6 +17,7 @@
  *   sblive-*              sbliveScoresUrl(date) / the registry's si.com team page → HttpClient(SBLIVE_HTTP_OPTIONS)
  *   vnn-ics               vnnIcsUrl(VNN_SITE_IDS[team].siteId) → HttpClient.text
  *   ccs-ical, ccs-bracket CCS_ICAL_URL, CCS.bracketUrl → HttpClient.text
+ *   cifss-scores          cifssListingUrl(section, season start → through, page) → HttpClient.text
  */
 
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
@@ -26,6 +27,7 @@ import { CCS, getDivision, getLeague } from '../leagues';
 import { officialChangesCellText, sha256Hex } from '../official/validate';
 import { BOOTSTRAP_URL } from '../season';
 import { CCS_ICAL_URL } from '../sources/ccs';
+import { CIFSS_SEASON_FROM, cifssListingUrl } from '../sources/cifss';
 import { HttpClient, HttpError, type HttpClientOptions } from '../sources/http';
 import { MaxPrepsClient, MaxPrepsError } from '../sources/maxpreps';
 import { SBLIVE_HTTP_OPTIONS, sbliveScoresUrl } from '../sources/sblive';
@@ -139,6 +141,8 @@ export function resourceUrl(key: ResourceKey): string {
       return CCS_ICAL_URL;
     case 'ccs-bracket':
       return CCS.bracketUrl;
+    case 'cifss-scores':
+      return cifssListingUrl(key.section, { from: CIFSS_SEASON_FROM, to: key.through, page: key.page });
   }
 }
 
@@ -163,7 +167,7 @@ type TextClient = Pick<HttpClient, 'text' | 'bytes'>;
 export interface LiveTransportOptions {
   /** MaxPreps reads (default: a MaxPrepsClient, ≤3 concurrent, ≥500 ms spacing). */
   maxpreps?: Pick<MaxPrepsClient, 'raw'>;
-  /** scval.com, Drive, pcalathletics.org, mcalsports.org, VNN, cifccs.org. */
+  /** scval.com, Drive, pcalathletics.org, mcalsports.org, VNN, cifccs.org, cifsshome.org. */
   http?: TextClient;
   /** si.com (Chrome UA and its own spacing: SBLIVE_HTTP_OPTIONS). */
   sblive?: TextClient;
@@ -238,7 +242,8 @@ export class LiveTransport implements Transport {
           return { url: res.url, httpStatus: res.httpStatus, body: res.body };
         }
         case 'scval-standings-index':
-        case 'ccs-bracket': {
+        case 'ccs-bracket':
+        case 'cifss-scores': {
           const res = await this.http.text(url);
           return { url: res.url, httpStatus: res.httpStatus, body: res.body };
         }
@@ -294,6 +299,7 @@ export function recordedExtension(key: ResourceKey): string {
     case 'sblive-scores':
     case 'sblive-team-games':
     case 'ccs-bracket':
+    case 'cifss-scores':
       return '.html';
     case 'vnn-ics':
     case 'ccs-ical':

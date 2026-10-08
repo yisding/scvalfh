@@ -15,6 +15,7 @@
  *   09 secondary   VNN, CCS
  *   10 classify    classifyGames with the official step's degraded divisions
  *   11 guards      finals regression (c), frozen-league substitution, systemic RUN ABORT
+ *   11b cifss      the cifsshome.org score cross-check (report only; never changes a game)
  *   12 standings   tables, cross-check, LeagueHealth
  *   13 assemble    parseSnapshot (failure → RUN ABORT), budgets, meta, summary
  */
@@ -42,6 +43,7 @@ import { loadCorpus, type Corpus } from './corpus';
 import { CONSOLE_SINK, PipelineContext, emptyRunState, type LogSink } from './ledger';
 import { stepAssemble } from './steps/assemble';
 import { stepBootstrap } from './steps/bootstrap';
+import { stepCifss } from './steps/cifss';
 import { stepClassify } from './steps/classify';
 import { markLeaguesNotInRun, stepGuards } from './steps/guards';
 import { stepLeagueMeta } from './steps/league-meta';
@@ -167,6 +169,9 @@ export async function runPipeline(ctx: PipelineContext, steps: PipelineSteps): P
   // 11 guards (may throw RunAbort)
   stepGuards(ctx, state);
 
+  // 11b cifsshome.org cross-check (over the games the snapshot will publish)
+  state.cifssCrossCheck = await stepCifss(ctx, state);
+
   // 12 standings + health
   const table = stepStandings(ctx, state);
 
@@ -192,7 +197,8 @@ export const USAGE = `Usage: pnpm fetch-data [flags]
   --sblive-full                also read every si.com team page (manual, never the cron default)
   --no-official                skip the official schedule sources (alias: --no-scval)
   --no-ccs                     skip the CCS calendar and bracket poll
-  --no-vnn                     skip the VNN school calendars`;
+  --no-vnn                     skip the VNN school calendars
+  --no-cifss                   skip the cifsshome.org score cross-check`;
 
 export interface ParseOptions {
   cwd: string;
@@ -220,6 +226,7 @@ export function parseRunArgs(argv: readonly string[], opts: ParseOptions): RunAr
     official: true,
     ccs: true,
     vnn: true,
+    cifss: true,
     help: false,
   };
   for (let i = 0; i < argv.length; i += 1) {
@@ -246,6 +253,7 @@ export function parseRunArgs(argv: readonly string[], opts: ParseOptions): RunAr
       case '--no-scval': args.official = false; break;
       case '--no-ccs': args.ccs = false; break;
       case '--no-vnn': args.vnn = false; break;
+      case '--no-cifss': args.cifss = false; break;
       case '--help':
       case '-h': args.help = true; break;
       default: throw new Error(`unknown flag: ${arg}`);

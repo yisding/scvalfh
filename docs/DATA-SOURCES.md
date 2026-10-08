@@ -1527,6 +1527,62 @@ three mechanically detected wrong finals — a **backfill**: its score may be pu
 has no game, no score, or a plainly wrong row. MaxPreps remains the primary source. A team on si.com
 is identified **by id** (§5.3), never by bare name.
 
+### 1.2a CROSS-CHECK ONLY — cifsshome.org schedule-and-score widget
+
+`https://www.cifsshome.org/widget/schedule-score?section_id=<n>&year=2026&sport_id=30&date_from=MM/DD/YYYY&date_to=MM/DD/YYYY&page=<n>`
+is the CIF Southern Section's HomeCampus schedule-and-score widget, and it carries the other Sections'
+games too. Server-rendered HTML, no login, `robots.txt` is `Disallow:` (empty) **[V]** 2026-10-07; the
+polite User-Agent is accepted. Field hockey is `sport_id=30`; the school year is its fall calendar year.
+Section ids: CCS 4, NCS 7, Northern 8, Sac-Joaquin 5 (Davis, Bella Vista), Southern 1, San Diego 3 **[V]**.
+20 rows a page; the pagination links name the last page. `date_from`/`date_to` filter the rows
+(MM/DD/YYYY, as the widget's own date pickers write them) **[V]**.
+
+Each `<tr id="<row id>">` is one game: Sport, Home, Facility, Home Division, Home Score, Away, Away
+Division, Away Score, Date, Time, Game Type (League, Non-League, Tournament, Playoffs, State/Regional,
+Wildcard), Notes (an Event Notes modal; "N/A" when empty). A school from another Section carries
+its Section in parentheses (`Christopher  (Central Coast Section)`), a school in none `(No Section)`;
+a city after a slash disambiguates a few (`Edison/HB`, `San Marcos/San Marcos`, `El Capitan/Lakeside`).
+Widget names that differ from MaxPreps' resolve through the registry aliases (`Convent and Stuart
+Hall`, `Davis Sr`, `Stevenson School`, `Sobrato`).
+
+**What it is, measured 2026-10-07:** schools enter their own schedules and scores, so coverage is
+school by school. Of the 252 NorCal finals in that morning's snapshot, the widget scored 144 (SCVAL
+62/92, MCAL 46/61, BVAL 23/46, EAL 8/21, PCAL 5/32); most of the gap is games with no row at all, and
+some schools enter games without scores. Every one of the 141 NorCal games both sources scored agreed,
+and the widget never had a NorCal score before MaxPreps. A game two schools both entered can carry two
+different scores (15 such games season to date, 14 of them with one entry matching MaxPreps). A row
+can outlive a reschedule (it stays on the first date) or a scrimmage: Valley Christian–Christopher,
+Aug 25, is a 0-4 Non-League row there and a Deleted scrimmage on MaxPreps (§1.1, contestState 1). San
+Diego Section rows record some level shootout games with the shootout goal added, as si.com does.
+
+**Role in this project:** a score **cross-check only** (`lib/sources/cifss.ts`,
+`lib/cifss-crosscheck.ts`, pipeline step 11b `lib/pipeline/steps/cifss.ts`, `/about#cross-check`).
+Nothing it says reaches a published score, record, classification or standings order. Each run reads
+every page of the six Sections' listings, season start (Aug 1) through the run's date, and
+compares only the widget's SCORED rows with at least one of our teams:
+
+- identity is Section-scoped: a bare name resolves only to one of our teams in the listing's Section, a
+  suffixed one only within the suffix's Section, a `(No Section)` one only through
+  `CIFSS_NO_SECTION_TEAMS` (Stevenson), so the North Coast Section's own Del Norte is never San Diego's;
+- the join is `(date, unordered pair)` as for si.com, then the pair's nearest unmatched game within
+  three days;
+- both scored: an agreement or a conflict row (MaxPreps' score stands); MaxPreps unscored: a
+  `cifssOnlyScored` row; no MaxPreps contest within three days: a `notOnMaxPreps` row, only when both
+  sides are our teams (an outside opponent's name often differs between the two sites, so a name-only
+  side that finds no game proves nothing), and unless MaxPreps reported a contest of the pair Deleted this run, the pipeline dropped one (`Snapshot.dropped`), or the
+  row's note says scrimmage;
+- a game two schools entered differently agrees when either entry matches MaxPreps and is set aside
+  (logged, not compared) otherwise.
+
+The report is all or nothing: unless all six Sections were read in full, the previous report is
+carried, each kept widget score judged again against this run's games (now matching: an agreement;
+still different: a conflict showing MaxPreps' current score; game gone: dropped), and a failed
+Section's row is `stale`. A page with no "Home Score"/"Away Score" column heads (a challenge or error
+page served with HTTP 200) is a failed read, as is a page the pagination named that lists no rows; a
+real listing with no games keeps its heads.
+`--no-cifss` skips it. About 45 requests a run in early October (SDS 23 pages, SS 8, CCS 6, NCS 6, NS 1,
+SJS 1), counted under `other` (not in the summary line's `maxpreps/sblive/official` counts).
+
 ### 1.3 OFFICIAL — SCVAL schedule PDFs (read live)
 
 Domain is **scval.com** (`.org` does not resolve). `http://` 302s to `https://` — follow
@@ -2377,6 +2433,7 @@ and shares no abort scope with the pipeline.
 | si.com | up to 15 + up to 8 | scoreboards for dates in the trailing 14 days that have a game; targeted team-games pages only for backfill candidates (§5.2 rule 8) |
 | VNN | 2 | the Palo Alto and Los Gatos calendars |
 | cifccs.org + MaxPreps HTML | 2 | only from `CCS.pollFrom` (Oct 25) |
+| cifsshome.org | ~45, growing through the season | every page of six Section listings, Aug 1 through the run's date (§1.2a); 1-2 runs a day, ≥500 ms spacing |
 
 `--sblive-full` (all 102 si.com team pages) is a manual flag, never the cron default. The final
 log line prints the counts per host, e.g. `requests maxpreps:131 sblive:… official:…`. The live run of
@@ -2391,7 +2448,7 @@ sources, skipped before Oct 25).
 
 Steps run in this order: window guard → bootstrap → league metadata ×14 → reported tables ×14 (the 15th
 division, Valley, has no MaxPreps table and makes neither request, nor does the independents' group) → schedules ×102 → normalize → official schedules → si.com → secondary (VNN, CCS) → classify →
-guards → standings → assemble. Failure has three scopes, so **one league never blocks the others**:
+guards → cifsshome.org cross-check (report only) → standings → assemble. Failure has three scopes, so **one league never blocks the others**:
 
 | Scope | Effect | Triggers |
 |---|---|---|
@@ -2664,7 +2721,8 @@ not in the Googlebot sport-exclusion list. No `Crawl-delay` is published anywher
 ≤3-concurrency / 500ms / once-or-twice-daily budget is entirely self-imposed. scval.com,
 cifccs.org, si.com, mmboltapi, pcalathletics.org, mcalsports.org, cifns.org, fieldhockeyumpires.org
 and the Google Drive download endpoint robots policies were not independently re-verified before
-this build — check before a first production run. (The Section's Guidelines are read by hand, not
+this build — check before a first production run. cifsshome.org's `robots.txt` was read on
+2026-10-07: it disallows nothing. (The Section's Guidelines are read by hand, not
 by the cron; the umpires' grid was read once, on 2026-10-04, as a cross-check, and nothing fetches
 it.)
 
@@ -2680,7 +2738,8 @@ pairings and times), not copies of the documents.
 **Attribution text**, rendered in the site footer (`components/layout/Attribution.tsx`) on every
 page:
 
-> Data from **MaxPreps** and **High School on SI (si.com)**. League alignment and rules from
+> Data from **MaxPreps** and **High School on SI (si.com)**; scores cross-checked against
+> **cifsshome.org**. League alignment and rules from
 > SCVAL, BVAL, PCAL and MCAL; EAL rules from the CIF Northern Section; Sunset: we found no published
 > league rules; Southern Section rules from the CIF Southern Section; City, North and Metro: we
 > found no published league rules; San Diego Section rules from the CIF San Diego Section.

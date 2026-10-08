@@ -134,7 +134,7 @@ Per-league pages show their own region's league chips.
 | `/playoffs/[league]` | League tournaments: `/playoffs/mcal` is the MCAL six-team tournament (the only league that has a bracket; `/playoffs/eal`, `/playoffs/sunset`, `/playoffs/city` and `/playoffs/independents` are 404s) |
 | `/leaders` | Season leaders per region (`#schools`, `#players` for NorCal; `#schools-socal`, `#players-socal` for SoCal; and one anchor per board, suffixed the same way): the schools with the best overall and league records, the most goals and fewest allowed per game, the most clean sheets and, last, the highest Elo rating (top 10, `#elo-rating` / `#elo-rating-socal`; one rating scale across all nine leagues and the three independents, who are on every SoCal board except league record), from every final in the snapshot; then the players with the most points, assists, saves and clean sheets, from the coaches' MaxPreps stats (top 10, opening to 25) |
 | `/history/2025-26` | Prior-season final standings by league (`#scval #bval #pcal #mcal #eal #sunset #city #north-county #metro #independents`): SCVAL (official PDFs, 15 teams) and BVAL (official sheet, 12 teams) as record-only tables plus all-league awards; the other seven leagues shown as unavailable, with the reason, and the independents' card saying they had no league table in 2025-26 either |
-| `/about` | Per-league rules (`#rules-scval`, … `#rules-metro`), per-league health (`#health`), sources, the cross-check, every si.com backfill (`#backfills`), how JV games are sourced and shown (`#jv`) and every dropped contest (`#dropped`) |
+| `/about` | Per-league rules (`#rules-scval`, … `#rules-metro`), per-league health (`#health`), sources, the cross-checks (MaxPreps' tables, si.com scores and cifsshome.org scores, `#cross-check`), every si.com backfill (`#backfills`), how JV games are sourced and shown (`#jv`) and every dropped contest (`#dropped`) |
 
 Every prerendered game, date, team and league page also has a generated `opengraph-image` route
 (the clubs pages take the site's root card), and the site publishes `sitemap.xml`, `robots.txt` and
@@ -155,7 +155,8 @@ MaxPreps ghost API    ──┐
 si.com (SBLive)       ──┤
 scval.com PDFs (live) ──┼──► scripts/fetch-data.ts ──► data/snapshot.json ──► next build ──► static site
 data/official/*.json  ──┤     (lib/pipeline/*)         data/snapshot.meta.json   or vite build (vinext)
-cifccs.org / VNN .ics ──┘
+cifccs.org / VNN .ics ──┤
+cifsshome.org         ──┘  (cross-check only)
 ```
 
 1. **`scripts/fetch-data.ts`** is the cron entry point, a thin CLI over `lib/pipeline/` (see
@@ -189,7 +190,12 @@ cifccs.org / VNN .ics ──┘
    is one between two members of the division (the Section's 2026-27 League Alignment), whatever
    MaxPreps' flag says. No game counts for the independents (`classification: 'independent'`): every game
    they play is non-league. Secondary sources (si.com, the two VNN
-   `.ics` feeds, the CCS calendar and bracket poll) are optional and failure-tolerant.
+   `.ics` feeds, the CCS calendar and bracket poll) are optional and failure-tolerant. So is the
+   third score cross-check, cifsshome.org (the CIF Southern Section's schedule-and-score widget, which
+   carries every Section our teams play in): schools enter their own rows there, so it never
+   changes a score; each run compares its scored rows with MaxPreps and lists every disagreement, every
+   score MaxPreps lacks and every scored game MaxPreps has no contest for on `/about#cross-check`
+   (`docs/DATA-SOURCES.md` §1.2a; `--no-cifss` skips it).
 2. It writes **`data/snapshot.json`** (the full normalized `Team[]`/`Game[]`/`Standing[]`/
    per-league health/dropped contests/`SourceStatus[]`) and **`data/snapshot.meta.json`**
    (counts, timestamps, a per-league summary: what the update-data workflow uses for its commit

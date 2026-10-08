@@ -12,9 +12,11 @@
 
 import { localDateKey, shortDate, timeOfDay, toLocalTimestamp } from '../format';
 import { LEAGUES, findDivision } from '../leagues';
+import { CIFSS_SECTIONS } from '../sources/cifss';
 import type { ScheduleRow } from '../sources/maxpreps';
 import { TEAMS, getTeamBySlug } from '../teams';
 import type {
+  CifssCrossCheck,
   DivisionHealth,
   DivisionId,
   DroppedContest,
@@ -79,9 +81,17 @@ function sortKey(row: SourceStatus, seq: number): SortKey {
   if (kind === 'sblive-scoreboard') return [2, 0, 0, 0, row.url, seq];
   if (kind === 'sblive-team-games') return [2, 1, 0, 0, row.scope?.team ?? row.url, seq];
   if (kind === 'school-calendar') return [3, 0, TEAM_INDEX.get(row.scope?.team ?? '') ?? TEAMS.length, 0, '', seq];
+  if (kind === 'cifss-scores') return [3, 1, cifssSectionIndex(row.url), 0, '', seq];
   if (kind === 'ccs-calendar') return [4, 0, 0, 0, '', seq];
   if (kind === 'ccs-bracket') return [4, 1, 0, 0, '', seq];
   return [5, 0, 0, 0, '', seq];
+}
+
+/** A cifsshome.org row's Section in CIFSS_SECTIONS order, read from its listing URL's section_id. */
+function cifssSectionIndex(url: string): number {
+  const id = /[?&]section_id=(\d+)/.exec(url)?.[1];
+  const i = CIFSS_SECTIONS.findIndex((s) => String(s.sectionId) === id);
+  return i === -1 ? CIFSS_SECTIONS.length : i;
 }
 
 function compareKeys(a: SortKey, b: SortKey): number {
@@ -124,7 +134,7 @@ export class SourceLedger {
     return this.rows.map((r) => r.row);
   }
 
-  /** SPEC §7.11 order: bootstrap; per league in config order its metas, reported tables, team schedules (registry order), official rows; si.com scoreboards by date, si.com team pages by slug; VNN; CCS. */
+  /** SPEC §7.11 order: bootstrap; per league in config order its metas, reported tables, team schedules (registry order), official rows; si.com scoreboards by date, si.com team pages by slug; VNN; cifsshome.org by Section; CCS. */
   ordered(): SourceStatus[] {
     return this.rows
       .map((r) => ({ r, k: sortKey(r.row, r.seq) }))
@@ -387,6 +397,8 @@ export interface RunState {
   /** The official step's flags and sets; its games and fixtures moved into `games` / `unmatched`. */
   official: Omit<OfficialStepResult, 'games' | 'unmatched'>;
   sbliveCrossCheck: SbliveCrossCheck | undefined;
+  /** Step 11b's cifsshome.org report (undefined: none this run and none to carry). */
+  cifssCrossCheck: CifssCrossCheck | undefined;
   /** The secondary step's CCS state; its games moved into `games`. */
   secondary: Omit<SecondaryStepResult, 'games'>;
   /** Leagues whose intra-league games and fixtures were substituted from the previous snapshot. */
@@ -410,6 +422,7 @@ export function emptyRunState(): RunState {
       carriedDivisions: new Set(),
     },
     sbliveCrossCheck: undefined,
+    cifssCrossCheck: undefined,
     secondary: { bracketPublished: false },
     frozenFromPrevious: new Set(),
     classification: new Map(),
