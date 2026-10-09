@@ -1,18 +1,18 @@
 {
   "cifssCrossCheck": {
-    "agreements": 480,
+    "agreements": 484,
     "cifssOnlyScored": 0,
-    "compared": 488,
+    "compared": 492,
     "conflicts": 8,
     "notOnMaxPreps": 0
   },
-  "commitSummary": "SCVAL +3 finals · BVAL +3 · PCAL +0 · MCAL +3 · EAL +0 · Sunset +0 · City +5 · North +4 · Metro +0 · LA +1",
-  "contentHash": "5795e2a8fee7e966cc6eb01cece409497950c908aa14ba27bc058cdbabb3fea6",
+  "commitSummary": "SCVAL +0 finals · BVAL +1 · PCAL +0 · MCAL +0 · EAL +0 · Sunset +2 · City +0 · North +1 · Metro +0 · LA +0",
+  "contentHash": "0cd74ca5b90cccfe0e622dccebf24cedf88ab7b8f6df644c5f579907c00a9b94",
   "counts": {
     "byLeague": {
       "bval": {
         "backfilled": 0,
-        "finals": 79,
+        "finals": 80,
         "games": 118,
         "leagueGames": 60,
         "teams": 12
@@ -20,7 +20,7 @@
       "city": {
         "backfilled": 0,
         "finals": 122,
-        "games": 164,
+        "games": 165,
         "leagueGames": 60,
         "teams": 12
       },
@@ -48,14 +48,14 @@
       "metro": {
         "backfilled": 0,
         "finals": 63,
-        "games": 93,
+        "games": 96,
         "leagueGames": 31,
         "teams": 9
       },
       "north-county": {
         "backfilled": 0,
-        "finals": 174,
-        "games": 244,
+        "finals": 175,
+        "games": 245,
         "leagueGames": 102,
         "teams": 19
       },
@@ -75,32 +75,32 @@
       },
       "sunset": {
         "backfilled": 0,
-        "finals": 84,
+        "finals": 86,
         "games": 98,
         "leagueGames": 35,
         "teams": 8
       }
     },
-    "finals": 600,
-    "games": 879,
+    "finals": 604,
+    "games": 882,
     "leagueGames": 544,
-    "mismatches": 21,
-    "pending": 15,
+    "mismatches": 23,
+    "pending": 11,
     "teams": 102
   },
   "crossCheck": {
-    "agreements": 174,
+    "agreements": 177,
     "backfilled": 1,
     "compared": 244,
-    "conflicts": 8,
-    "sbliveOnlyScored": 5
+    "conflicts": 9,
+    "sbliveOnlyScored": 4
   },
-  "fetchedAt": "2026-10-09T11:35:38.675Z",
+  "fetchedAt": "2026-10-09T19:15:56.167Z",
   "leagues": [
     {
       "backfilled": 0,
       "countedFinals": 60,
-      "finalsDelta": 3,
+      "finalsDelta": 0,
       "id": "scval",
       "missingPast": 3,
       "reasons": [],
@@ -108,10 +108,10 @@
     },
     {
       "backfilled": 0,
-      "countedFinals": 23,
-      "finalsDelta": 3,
+      "countedFinals": 24,
+      "finalsDelta": 1,
       "id": "bval",
-      "missingPast": 2,
+      "missingPast": 1,
       "reasons": [],
       "state": "fresh"
     },
@@ -127,7 +127,7 @@
     {
       "backfilled": 0,
       "countedFinals": 56,
-      "finalsDelta": 3,
+      "finalsDelta": 0,
       "id": "mcal",
       "missingPast": 1,
       "reasons": [],
@@ -144,17 +144,17 @@
     },
     {
       "backfilled": 0,
-      "countedFinals": 23,
-      "finalsDelta": 0,
+      "countedFinals": 25,
+      "finalsDelta": 2,
       "id": "sunset",
-      "missingPast": 2,
+      "missingPast": 0,
       "reasons": [],
       "state": "fresh"
     },
     {
       "backfilled": 0,
       "countedFinals": 25,
-      "finalsDelta": 5,
+      "finalsDelta": 0,
       "id": "city",
       "missingPast": 1,
       "reasons": [],
@@ -162,10 +162,10 @@
     },
     {
       "backfilled": 0,
-      "countedFinals": 43,
-      "finalsDelta": 4,
+      "countedFinals": 44,
+      "finalsDelta": 1,
       "id": "north-county",
-      "missingPast": 2,
+      "missingPast": 1,
       "reasons": [],
       "state": "fresh"
     },
@@ -181,7 +181,7 @@
     {
       "backfilled": 0,
       "countedFinals": 15,
-      "finalsDelta": 1,
+      "finalsDelta": 0,
       "id": "independents",
       "missingPast": 1,
       "reasons": [],
@@ -688,7 +688,7 @@
     },
     {
       "label": "mira-mesa schedule",
-      "rowCount": 17,
+      "rowCount": 18,
       "status": "ok"
     },
     {
@@ -768,7 +768,7 @@
     },
     {
       "label": "mission-vista schedule",
-      "rowCount": 20,
+      "rowCount": 21,
       "status": "ok"
     },
     {
@@ -843,7 +843,7 @@
     },
     {
       "label": "bonita-vista schedule",
-      "rowCount": 17,
+      "rowCount": 18,
       "status": "ok"
     },
     {
@@ -858,7 +858,7 @@
     },
     {
       "label": "olympian schedule",
-      "rowCount": 16,
+      "rowCount": 18,
       "status": "ok"
     },
     {
@@ -1068,7 +1068,7 @@
     }
   ],
   "today": "2026-10-09",
-  "warnings": 49,
+  "warnings": 50,
   "window": {
     "firstGame": "2026-08-12T17:15:00",
     "lastGame": "2026-10-30T19:00:00",
