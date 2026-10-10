@@ -6,8 +6,8 @@
     "conflicts": 8,
     "notOnMaxPreps": 0
   },
-  "commitSummary": "SCVAL +0 finals · BVAL +0 · PCAL +1 · MCAL +2 · EAL +1 · Sunset +0 · City +0 · North +3 · Metro +2 · LA +0",
-  "contentHash": "62ae03b6b0bbb3d1a19676640b278ad3e158a2898f44896975d98938a0b40c1b",
+  "commitSummary": "SCVAL +0 finals · BVAL +0 · PCAL +0 · MCAL +0 · EAL +0 · Sunset +0 · City +0 · North +0 · Metro +0 · LA +0",
+  "contentHash": "5a030d3be2d461331e06cc52941c31a2b67eeeee1b56f783f24a357f24a93773",
   "counts": {
     "byLeague": {
       "bval": {
@@ -27,7 +27,7 @@
       "eal": {
         "backfilled": 0,
         "finals": 25,
-        "games": 41,
+        "games": 42,
         "leagueGames": 30,
         "teams": 6
       },
@@ -39,9 +39,9 @@
         "teams": 5
       },
       "mcal": {
-        "backfilled": 1,
+        "backfilled": 0,
         "finals": 69,
-        "games": 87,
+        "games": 88,
         "leagueGames": 72,
         "teams": 9
       },
@@ -82,20 +82,20 @@
       }
     },
     "finals": 613,
-    "games": 885,
+    "games": 886,
     "leagueGames": 547,
-    "mismatches": 23,
+    "mismatches": 21,
     "pending": 14,
     "teams": 102
   },
   "crossCheck": {
-    "agreements": 171,
-    "backfilled": 2,
-    "compared": 233,
+    "agreements": 172,
+    "backfilled": 1,
+    "compared": 234,
     "conflicts": 9,
     "sbliveOnlyScored": 3
   },
-  "fetchedAt": "2026-10-10T10:53:22.345Z",
+  "fetchedAt": "2026-10-10T18:13:28.901Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -118,16 +118,16 @@
     {
       "backfilled": 1,
       "countedFinals": 24,
-      "finalsDelta": 1,
+      "finalsDelta": 0,
       "id": "pcal",
       "missingPast": 3,
       "reasons": [],
       "state": "fresh"
     },
     {
-      "backfilled": 1,
+      "backfilled": 0,
       "countedFinals": 58,
-      "finalsDelta": 2,
+      "finalsDelta": 0,
       "id": "mcal",
       "missingPast": 1,
       "reasons": [],
@@ -136,7 +136,7 @@
     {
       "backfilled": 0,
       "countedFinals": 18,
-      "finalsDelta": 1,
+      "finalsDelta": 0,
       "id": "eal",
       "missingPast": 4,
       "reasons": [],
@@ -163,7 +163,7 @@
     {
       "backfilled": 0,
       "countedFinals": 47,
-      "finalsDelta": 3,
+      "finalsDelta": 0,
       "id": "north-county",
       "missingPast": 1,
       "reasons": [],
@@ -172,7 +172,7 @@
     {
       "backfilled": 0,
       "countedFinals": 8,
-      "finalsDelta": 2,
+      "finalsDelta": 0,
       "id": "metro",
       "missingPast": 0,
       "reasons": [],
@@ -513,7 +513,7 @@
     },
     {
       "label": "convent-sacred-heart schedule",
-      "rowCount": 18,
+      "rowCount": 19,
       "status": "ok"
     },
     {
@@ -553,7 +553,7 @@
     },
     {
       "label": "chico schedule",
-      "rowCount": 14,
+      "rowCount": 15,
       "status": "ok"
     },
     {
@@ -1053,7 +1053,7 @@
     },
     {
       "label": "cifsshome.org San Diego Section field hockey",
-      "rowCount": 476,
+      "rowCount": 477,
       "status": "ok"
     },
     {
