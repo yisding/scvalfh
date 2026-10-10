@@ -1,13 +1,13 @@
 {
   "cifssCrossCheck": {
-    "agreements": 484,
+    "agreements": 490,
     "cifssOnlyScored": 0,
-    "compared": 492,
+    "compared": 498,
     "conflicts": 8,
     "notOnMaxPreps": 0
   },
-  "commitSummary": "SCVAL +0 finals · BVAL +1 · PCAL +0 · MCAL +0 · EAL +0 · Sunset +2 · City +0 · North +1 · Metro +0 · LA +0",
-  "contentHash": "0cd74ca5b90cccfe0e622dccebf24cedf88ab7b8f6df644c5f579907c00a9b94",
+  "commitSummary": "SCVAL +0 finals · BVAL +0 · PCAL +1 · MCAL +2 · EAL +1 · Sunset +0 · City +0 · North +3 · Metro +2 · LA +0",
+  "contentHash": "62ae03b6b0bbb3d1a19676640b278ad3e158a2898f44896975d98938a0b40c1b",
   "counts": {
     "byLeague": {
       "bval": {
@@ -26,7 +26,7 @@
       },
       "eal": {
         "backfilled": 0,
-        "finals": 24,
+        "finals": 25,
         "games": 41,
         "leagueGames": 30,
         "teams": 6
@@ -39,31 +39,31 @@
         "teams": 5
       },
       "mcal": {
-        "backfilled": 0,
-        "finals": 67,
+        "backfilled": 1,
+        "finals": 69,
         "games": 87,
         "leagueGames": 72,
         "teams": 9
       },
       "metro": {
         "backfilled": 0,
-        "finals": 63,
+        "finals": 65,
         "games": 96,
         "leagueGames": 31,
         "teams": 9
       },
       "north-county": {
         "backfilled": 0,
-        "finals": 175,
+        "finals": 178,
         "games": 245,
         "leagueGames": 102,
         "teams": 19
       },
       "pcal": {
         "backfilled": 1,
-        "finals": 43,
-        "games": 57,
-        "leagueGames": 36,
+        "finals": 44,
+        "games": 60,
+        "leagueGames": 39,
         "teams": 7
       },
       "scval": {
@@ -81,21 +81,21 @@
         "teams": 8
       }
     },
-    "finals": 604,
-    "games": 882,
-    "leagueGames": 544,
+    "finals": 613,
+    "games": 885,
+    "leagueGames": 547,
     "mismatches": 23,
-    "pending": 11,
+    "pending": 14,
     "teams": 102
   },
   "crossCheck": {
-    "agreements": 177,
-    "backfilled": 1,
-    "compared": 244,
+    "agreements": 171,
+    "backfilled": 2,
+    "compared": 233,
     "conflicts": 9,
-    "sbliveOnlyScored": 4
+    "sbliveOnlyScored": 3
   },
-  "fetchedAt": "2026-10-09T19:15:56.167Z",
+  "fetchedAt": "2026-10-10T10:53:22.345Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -109,7 +109,7 @@
     {
       "backfilled": 0,
       "countedFinals": 24,
-      "finalsDelta": 1,
+      "finalsDelta": 0,
       "id": "bval",
       "missingPast": 1,
       "reasons": [],
@@ -117,17 +117,17 @@
     },
     {
       "backfilled": 1,
-      "countedFinals": 23,
-      "finalsDelta": 0,
+      "countedFinals": 24,
+      "finalsDelta": 1,
       "id": "pcal",
-      "missingPast": 2,
+      "missingPast": 3,
       "reasons": [],
       "state": "fresh"
     },
     {
-      "backfilled": 0,
-      "countedFinals": 56,
-      "finalsDelta": 0,
+      "backfilled": 1,
+      "countedFinals": 58,
+      "finalsDelta": 2,
       "id": "mcal",
       "missingPast": 1,
       "reasons": [],
@@ -135,8 +135,8 @@
     },
     {
       "backfilled": 0,
-      "countedFinals": 17,
-      "finalsDelta": 0,
+      "countedFinals": 18,
+      "finalsDelta": 1,
       "id": "eal",
       "missingPast": 4,
       "reasons": [],
@@ -145,9 +145,9 @@
     {
       "backfilled": 0,
       "countedFinals": 25,
-      "finalsDelta": 2,
+      "finalsDelta": 0,
       "id": "sunset",
-      "missingPast": 0,
+      "missingPast": 2,
       "reasons": [],
       "state": "fresh"
     },
@@ -162,8 +162,8 @@
     },
     {
       "backfilled": 0,
-      "countedFinals": 44,
-      "finalsDelta": 1,
+      "countedFinals": 47,
+      "finalsDelta": 3,
       "id": "north-county",
       "missingPast": 1,
       "reasons": [],
@@ -171,8 +171,8 @@
     },
     {
       "backfilled": 0,
-      "countedFinals": 6,
-      "finalsDelta": 0,
+      "countedFinals": 8,
+      "finalsDelta": 2,
       "id": "metro",
       "missingPast": 0,
       "reasons": [],
@@ -188,7 +188,7 @@
       "state": "fresh"
     }
   ],
-  "officialFixturesUnmatched": 7,
+  "officialFixturesUnmatched": 4,
   "officialStandingsPdfUrl": null,
   "requests": {
     "maxpreps": 131,
@@ -428,17 +428,17 @@
     },
     {
       "label": "greenfield schedule",
-      "rowCount": 8,
+      "rowCount": 9,
       "status": "ok"
     },
     {
       "label": "hollister schedule",
-      "rowCount": 12,
+      "rowCount": 15,
       "status": "ok"
     },
     {
       "label": "monterey schedule",
-      "rowCount": 9,
+      "rowCount": 10,
       "status": "ok"
     },
     {
@@ -448,7 +448,7 @@
     },
     {
       "label": "santa-catalina schedule",
-      "rowCount": 8,
+      "rowCount": 9,
       "status": "ok"
     },
     {
@@ -912,11 +912,6 @@
       "status": "ok"
     },
     {
-      "label": "sblive scoreboard 2026-09-25",
-      "rowCount": 15,
-      "status": "ok"
-    },
-    {
       "label": "sblive scoreboard 2026-09-26",
       "rowCount": 1,
       "status": "ok"
@@ -958,7 +953,7 @@
     },
     {
       "label": "sblive scoreboard 2026-10-06",
-      "rowCount": 24,
+      "rowCount": 20,
       "status": "ok"
     },
     {
@@ -977,13 +972,18 @@
       "status": "ok"
     },
     {
+      "label": "sblive scoreboard 2026-10-10",
+      "rowCount": 2,
+      "status": "ok"
+    },
+    {
       "label": "sblive berkeley games",
       "rowCount": 17,
       "status": "ok"
     },
     {
       "label": "sblive carmel games",
-      "rowCount": 17,
+      "rowCount": 18,
       "status": "ok"
     },
     {
@@ -1013,7 +1013,7 @@
     },
     {
       "label": "sblive greenfield games",
-      "rowCount": 13,
+      "rowCount": 14,
       "status": "ok"
     },
     {
@@ -1048,7 +1048,7 @@
     },
     {
       "label": "cifsshome.org Southern Section field hockey",
-      "rowCount": 165,
+      "rowCount": 166,
       "status": "ok"
     },
     {
@@ -1067,8 +1067,8 @@
       "status": "skipped"
     }
   ],
-  "today": "2026-10-09",
-  "warnings": 50,
+  "today": "2026-10-10",
+  "warnings": 49,
   "window": {
     "firstGame": "2026-08-12T17:15:00",
     "lastGame": "2026-10-30T19:00:00",
