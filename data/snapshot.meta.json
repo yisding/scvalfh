@@ -1,13 +1,13 @@
 {
   "cifssCrossCheck": {
-    "agreements": 490,
+    "agreements": 491,
     "cifssOnlyScored": 0,
-    "compared": 498,
+    "compared": 499,
     "conflicts": 8,
     "notOnMaxPreps": 0
   },
   "commitSummary": "SCVAL +0 finals · BVAL +0 · PCAL +0 · MCAL +0 · EAL +0 · Sunset +0 · City +0 · North +0 · Metro +0 · LA +0",
-  "contentHash": "5a030d3be2d461331e06cc52941c31a2b67eeeee1b56f783f24a357f24a93773",
+  "contentHash": "28fc3860c2a0749077452e4ea3d7cf3ae94b43ca77ce98cc71bab0310b7c8f39",
   "counts": {
     "byLeague": {
       "bval": {
@@ -20,27 +20,27 @@
       "city": {
         "backfilled": 0,
         "finals": 122,
-        "games": 165,
+        "games": 170,
         "leagueGames": 60,
         "teams": 12
       },
       "eal": {
         "backfilled": 0,
-        "finals": 25,
+        "finals": 26,
         "games": 42,
         "leagueGames": 30,
         "teams": 6
       },
       "independents": {
         "backfilled": 0,
-        "finals": 48,
+        "finals": 49,
         "games": 55,
         "leagueGames": 21,
         "teams": 5
       },
       "mcal": {
         "backfilled": 0,
-        "finals": 69,
+        "finals": 70,
         "games": 88,
         "leagueGames": 72,
         "teams": 9
@@ -48,14 +48,14 @@
       "metro": {
         "backfilled": 0,
         "finals": 65,
-        "games": 96,
+        "games": 99,
         "leagueGames": 31,
         "teams": 9
       },
       "north-county": {
         "backfilled": 0,
-        "finals": 178,
-        "games": 245,
+        "finals": 179,
+        "games": 247,
         "leagueGames": 102,
         "teams": 19
       },
@@ -81,21 +81,21 @@
         "teams": 8
       }
     },
-    "finals": 613,
-    "games": 886,
+    "finals": 615,
+    "games": 891,
     "leagueGames": 547,
     "mismatches": 21,
-    "pending": 14,
+    "pending": 15,
     "teams": 102
   },
   "crossCheck": {
-    "agreements": 172,
+    "agreements": 173,
     "backfilled": 1,
     "compared": 234,
     "conflicts": 9,
     "sbliveOnlyScored": 3
   },
-  "fetchedAt": "2026-10-10T18:13:28.901Z",
+  "fetchedAt": "2026-10-11T11:06:54.262Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -193,7 +193,7 @@
   "requests": {
     "maxpreps": 131,
     "official": 8,
-    "sblive": 21
+    "sblive": 20
   },
   "sources": [
     {
@@ -688,12 +688,12 @@
     },
     {
       "label": "mira-mesa schedule",
-      "rowCount": 18,
+      "rowCount": 20,
       "status": "ok"
     },
     {
       "label": "patrick-henry schedule",
-      "rowCount": 19,
+      "rowCount": 22,
       "status": "ok"
     },
     {
@@ -768,7 +768,7 @@
     },
     {
       "label": "mission-vista schedule",
-      "rowCount": 21,
+      "rowCount": 22,
       "status": "ok"
     },
     {
@@ -803,7 +803,7 @@
     },
     {
       "label": "sage-creek schedule",
-      "rowCount": 22,
+      "rowCount": 23,
       "status": "ok"
     },
     {
@@ -843,7 +843,7 @@
     },
     {
       "label": "bonita-vista schedule",
-      "rowCount": 18,
+      "rowCount": 19,
       "status": "ok"
     },
     {
@@ -853,7 +853,7 @@
     },
     {
       "label": "helix schedule",
-      "rowCount": 25,
+      "rowCount": 26,
       "status": "ok"
     },
     {
@@ -873,7 +873,7 @@
     },
     {
       "label": "granite-hills schedule",
-      "rowCount": 15,
+      "rowCount": 16,
       "status": "ok"
     },
     {
@@ -909,11 +909,6 @@
     {
       "label": "thousand-oaks schedule",
       "rowCount": 14,
-      "status": "ok"
-    },
-    {
-      "label": "sblive scoreboard 2026-09-26",
-      "rowCount": 1,
       "status": "ok"
     },
     {
@@ -958,7 +953,7 @@
     },
     {
       "label": "sblive scoreboard 2026-10-07",
-      "rowCount": 14,
+      "rowCount": 12,
       "status": "ok"
     },
     {
@@ -1067,7 +1062,7 @@
       "status": "skipped"
     }
   ],
-  "today": "2026-10-10",
+  "today": "2026-10-11",
   "warnings": 49,
   "window": {
     "firstGame": "2026-08-12T17:15:00",
