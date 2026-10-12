@@ -387,9 +387,9 @@ for 13), San Dieguito Academy (18 for 16) and University City (16 for 13); 17 of
 eight of them because MaxPreps lists no players. Each SoCal page was re-read by a checker and,
 separately, by a refuter, and kept only when both kept it. Since 2026-10-12 a profile in any sport is
 linked, naming its sport ("SportsRecruits lacrosse profile"): that day's SportsRecruits address probe
-in every sport, over 1,355 of the 1,673 rows (a time limit stopped it before the other 318), added 110
-pages for 108 players (52 NorCal, 58 SoCal): 87 lacrosse, 11 softball, 6 field hockey, 5 soccer and 1 track
-and field, so the file holds 511 for 405 players. A page is linked only when it names the player and a
+in every sport, over all 1,673 rows, added 119
+pages for 117 players (52 NorCal, 67 SoCal): 91 lacrosse, 16 softball, 6 field hockey, 5 soccer and 1 track
+and field, so the file holds 520 for 411 players. A page is linked only when it names the player and a
 sport and either names the school or shows the class year the roster shows plus a California hometown
 (for the 2026-10-12 pages, a hometown in the school's own area), and a stated class year must
 agree with the row's grade (checked at load). The roster shows them as a line of links under the

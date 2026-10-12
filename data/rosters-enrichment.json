@@ -10,7 +10,7 @@
     "A team's otherRosters says what other public sources showed for its CURRENT roster, which is what its page may claim when MaxPreps lists no players: none (looked, nothing current), partial (a source lists current players in a form that cannot be joined, with what it lists and a link) or, when absent, not checked.",
     "EAL (2026-10-04): recruiting pages only (profiles[]), swept by the same rule. The school-athletics roster sweep (grade, height, number, position, coaches) has still not been done, so the six EAL entries have no coaches or sources and fill no MaxPreps field.",
     "Southern California (2026-10-06): recruiting pages only (profiles[]), swept by the same rule for the 53 teams (the Sunset, City, North and Metro teams and the five Southern Section independents): 267 pages for 202 players. Each page was re-read by two independent verifiers, one checking it against the rule and one trying to refute it, and kept only when both kept it. The school-athletics roster sweep (grade, height, number, position, coaches) has not been done for them, so their entries have no coaches or sources and fill no MaxPreps field.",
-    "2026-10-12: profiles in any sport. Until then only field hockey profiles were linked; since 2026-10-12 a profile in another sport is linked too and names its sport (a field hockey profile names none), at most one per platform in each sport. A SportsRecruits profile-address probe ran in every sport (the first_last slug and its numbered variants) for 1,355 of the 1,673 varsity rows; the environment's two-hour limit stopped it before the other 318. A page was kept when its title names the player, its class year agrees with the roster (2027-2030 for a row with no grade), and it names the school's own team or gives a hometown in the school's own area (San Diego County, Greater Los Angeles, the Bay Area and Central Coast, or the Sacramento Valley and north state). A player whose matching pages disagree on the hometown kept only the pages in the school's own city, and a known namesake (the other class-of-2027 Phoebe Miller, in San Francisco) was left out. Soccer and track pages were kept only where the club named is a girls' club. 110 pages for 108 players were kept, each re-read: 87 lacrosse, 11 softball, 6 field hockey, 5 soccer, 1 track and field. NCSA, Hudl and FieldLevel were not probed in other sports: their addresses cannot be guessed.",
+    "2026-10-12: profiles in any sport. Until then only field hockey profiles were linked; since 2026-10-12 a profile in another sport is linked too and names its sport (a field hockey profile names none), at most one per platform in each sport. A SportsRecruits profile-address probe ran in every sport (the first_last slug and its numbered variants) for all 1,673 varsity rows (1,355 at first, the other 318 later the same day, after the environment's two-hour limit stopped the first run). A page was kept when its title names the player, its class year agrees with the roster (2027-2030 for a row with no grade), and it names the school's own team or gives a hometown in the school's own area (San Diego County, Greater Los Angeles, the Bay Area and Central Coast, or the Sacramento Valley and north state). A player whose matching pages disagree on the hometown kept only the pages in the school's own city, and a known namesake (the other class-of-2027 Phoebe Miller, in San Francisco) was left out. Soccer, track and volleyball pages were kept only where the club named is a girls' club (one volleyball page, from Santa Maria for a La Verne school, was left out). 119 pages for 117 players were kept, each re-read: 91 lacrosse, 16 softball, 6 field hockey, 5 soccer, 1 track and field. NCSA, Hudl and FieldLevel were not probed in other sports: their addresses cannot be guessed.",
     "2026-10-12: grades from MaxPreps' own pages for the 413 varsity rows MaxPreps' 2026-27 roster leaves ungraded and nothing had filled. Each row's MaxPreps career page (graduatingClass, and the grade of every team it lists for a dated season, in any sport) and the team's 2025-26 and 2024-25 MaxPreps field hockey rosters (matched on careerId, or on the name where the page has one row of it) were read; the grade is that season's plus the seasons since. 137 rows got a grade where every such page agreed (kind maxpreps-career, derived, medium; each note ends 'Added 2026-10-12.'). Two rows whose pages disagree are left blank with both recorded under conflicts (Izabel Gaytan, Ellie Kay); three whose 2025-26 or 2024-25 roster would make them 13th-graders are left blank (Emma Steingraber, Brooke Flesuras, Sarah Anton); seven rows that already carried grade conflicts were left as they were; and Michelle MacOubray's grade stays blank because her career page and her SportsRecruits page disagree."
   ],
   "season": "26-27",
@@ -16560,6 +16560,13 @@
               "note": "Hudl profile on San Dieguito Academy High School - Varsity Field Hockey (Hudl team 911424), Encinitas, CA; page gives no class year but the name carries grade 10; roster has no grade, so the page is accepted on school plus sport.",
               "platform": "hudl",
               "url": "https://www.hudl.com/profile/31200128/Maya-Rennie-10"
+            },
+            {
+              "classOf": 2029,
+              "note": "SportsRecruits lacrosse profile: class of 2029, Encinitas, CA. Its summary line names no school, so it is linked on the class year plus a hometown in the school's own area. The roster row has no grade, so the class year is accepted as any of 2027-2030. Found by the 2026-10-12 address probe and re-read.",
+              "platform": "sportsrecruits",
+              "sport": "lacrosse",
+              "url": "https://iwlca.sportsrecruits.com/athlete/maya_rennie"
             }
           ],
           "sourceName": "Maya Rennie 10"
@@ -17092,6 +17099,50 @@
             }
           ],
           "sourceName": null
+        },
+        {
+          "athleteId": "8315f33c-c246-4e96-bdfd-98a65408428c",
+          "conflicts": [],
+          "fullName": "Alondra Oregon",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "SportsRecruits lacrosse profile: class of 2027, San Marcos, CA. Its summary line names no school, so it is linked on the class year plus a hometown in the school's own area. Found by the 2026-10-12 address probe and re-read.",
+              "platform": "sportsrecruits",
+              "sport": "lacrosse",
+              "url": "https://iwlca.sportsrecruits.com/athlete/alondra_oregon"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "26b0f4fc-9f48-47b0-8fd6-15b170a6050e",
+          "conflicts": [],
+          "fullName": "Melody Capezzone",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2029,
+              "note": "SportsRecruits lacrosse profile: class of 2029, San Marcos, CA. Its summary line names no school, so it is linked on the class year plus a hometown in the school's own area. Found by the 2026-10-12 address probe and re-read.",
+              "platform": "sportsrecruits",
+              "sport": "lacrosse",
+              "url": "https://iwlca.sportsrecruits.com/athlete/melody_capezzone"
+            }
+          ],
+          "sourceName": null
         }
       ],
       "slug": "mission-hills",
@@ -17478,6 +17529,13 @@
               "note": "Page says class of 2028, women's field hockey, hometown La Mesa, CA, and its TEAMS block lists Helix Charter High School, La Mesa, CA; roster has no grade (2028 accepted).",
               "platform": "sportsrecruits",
               "url": "https://nfhca.sportsrecruits.com/athlete/ella_aguayo3"
+            },
+            {
+              "classOf": 2028,
+              "note": "SportsRecruits softball profile: class of 2028, La Mesa, CA, Team San Diego. Its summary line names no school, so it is linked on the class year plus a hometown in the school's own area. The roster row has no grade, so the class year is accepted as any of 2027-2030. Found by the 2026-10-12 address probe and re-read.",
+              "platform": "sportsrecruits",
+              "sport": "softball",
+              "url": "https://sportsrecruits.com/athlete/ella_aguayo2"
             }
           ],
           "sourceName": null
@@ -17523,6 +17581,28 @@
           "positions": null,
           "profiles": [],
           "sourceName": null
+        },
+        {
+          "athleteId": "c1a9b098-0e7b-49ce-999b-d2e1a1765eac",
+          "conflicts": [],
+          "fullName": "Milani Morga",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2029,
+              "note": "SportsRecruits lacrosse profile: class of 2029, Santee, CA. Its summary line names no school, so it is linked on the class year plus a hometown in the school's own area. The roster row has no grade, so the class year is accepted as any of 2027-2030. Found by the 2026-10-12 address probe and re-read.",
+              "platform": "sportsrecruits",
+              "sport": "lacrosse",
+              "url": "https://iwlca.sportsrecruits.com/athlete/milani_morga3"
+            }
+          ],
+          "sourceName": null
         }
       ],
       "slug": "helix",
@@ -17557,6 +17637,28 @@
             }
           ],
           "sourceName": null
+        },
+        {
+          "athleteId": "39ca93ac-fe8a-4b02-8dc6-3c0146d4c0ab",
+          "conflicts": [],
+          "fullName": "Alexandra Perez",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "SportsRecruits softball profile: class of 2027, Chula Vista, CA. Its summary line names no school, so it is linked on the class year plus a hometown in the school's own area. Found by the 2026-10-12 address probe and re-read.",
+              "platform": "sportsrecruits",
+              "sport": "softball",
+              "url": "https://sportsrecruits.com/athlete/alexandra_perez7"
+            }
+          ],
+          "sourceName": null
         }
       ],
       "slug": "olympian",
@@ -17569,7 +17671,30 @@
         "none found. Gwendolyn Lee's SportsRecruits field hockey page (gwen_lee) is a New Hampshire player (Auburn, NH; Pinkerton Academy) and was rejected; Hudl pages for Sasha Manuel, Mia Rosete, Danika Rivera, Gwendolyn Lee, Leana Coreas and Olivia Casarez are Otay Ranch lacrosse; Sophia Borja's SportsRecruits page is softball. The school's Hudl field hockey team (776359) has an empty roster.",
         "The school-athletics roster sweep (grade, height, number, position, coaches) has not been done, so nothing else is filled."
       ],
-      "players": [],
+      "players": [
+        {
+          "athleteId": "39030c1e-e465-4133-89b2-5d744444516c",
+          "conflicts": [],
+          "fullName": "Sophia Borja",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "SportsRecruits softball profile: class of 2027, Chula Vista, CA. Its summary line names no school, so it is linked on the class year plus a hometown in the school's own area. Found by the 2026-10-12 address probe and re-read.",
+              "platform": "sportsrecruits",
+              "sport": "softball",
+              "url": "https://sportsrecruits.com/athlete/sophia_borja"
+            }
+          ],
+          "sourceName": null
+        }
+      ],
       "slug": "otay-ranch",
       "sources": []
     },
@@ -17957,6 +18082,13 @@
               "note": "Hudl page: Bonita High School - Womens Varsity FieldHockey (team 603971, 2025), class of 2028, La Verne, CA. Roster row has no grade, so a 2027-2030 class year is accepted. Jersey #17.",
               "platform": "hudl",
               "url": "https://www.hudl.com/profile/27313063/Maya-Aguayo"
+            },
+            {
+              "classOf": 2028,
+              "note": "SportsRecruits softball profile: class of 2028, La Verne, CA, Firecrackers Brashear Snyder/Benitez. Its summary line names no school, so it is linked on the class year plus a hometown in the school's own area. The roster row has no grade, so the class year is accepted as any of 2027-2030. Found by the 2026-10-12 address probe and re-read.",
+              "platform": "sportsrecruits",
+              "sport": "softball",
+              "url": "https://sportsrecruits.com/athlete/maya_aguayo"
             }
           ],
           "sourceName": null
@@ -19053,6 +19185,28 @@
           "note": null,
           "positions": null,
           "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "b1e09fb2-5ed5-4b6c-955f-a2b3927ae94a",
+          "conflicts": [],
+          "fullName": "Grace Martinez",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2029,
+              "note": "SportsRecruits softball profile: class of 2029, Newbury Park, CA. Its summary line names no school, so it is linked on the class year plus a hometown in the school's own area. The roster row has no grade, so the class year is accepted as any of 2027-2030. Found by the 2026-10-12 address probe and re-read.",
+              "platform": "sportsrecruits",
+              "sport": "softball",
+              "url": "https://sportsrecruits.com/athlete/grace_martinez2"
+            }
+          ],
           "sourceName": null
         }
       ],

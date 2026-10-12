@@ -649,10 +649,10 @@ describe('recruiting profiles', () => {
   it('what the 2026-10-12 SportsRecruits probe found, in every sport', () => {
     const records = raw.teams.flatMap((t) => t.players.map((p) => ({ t, p })));
     const probe = records.flatMap(({ t, p }) => p.profiles.filter(fromProbe1012).map((x) => ({ slug: t.slug, name: p.fullName, x })));
-    expect(probe).toHaveLength(110);
-    expect(new Set(probe.map((r) => `${r.slug} ${r.name}`)).size).toBe(108);
+    expect(probe).toHaveLength(119);
+    expect(new Set(probe.map((r) => `${r.slug} ${r.name}`)).size).toBe(117);
     const bySport = (s: string | undefined) => probe.filter((r) => r.x.sport === s).length;
-    expect([bySport('lacrosse'), bySport('softball'), bySport(undefined), bySport('soccer'), bySport('track-and-field')]).toEqual([87, 11, 6, 5, 1]);
+    expect([bySport('lacrosse'), bySport('softball'), bySport(undefined), bySport('soccer'), bySport('track-and-field')]).toEqual([91, 16, 6, 5, 1]);
     for (const r of probe) {
       expect(r.x.platform, r.name).toBe('sportsrecruits');
       expect(r.x.classOf, r.name).not.toBeNull();

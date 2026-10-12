@@ -463,19 +463,20 @@ profile has none), and the roster names that sport in the link ("SportsRecruits 
 profile"). A player has at most one profile per platform in each sport.
 
 *The 2026-10-12 probe, in every sport.* A SportsRecruits profile-address probe (the `first_last` slug
-and its numbered variants, following redirects to each association's subdomain) ran for 1,355 of the
-1,673 varsity rows before the research environment's two-hour limit stopped it; the other 318 were not
-probed. SportsRecruits answers bursts with HTTP 429, so the probe ran four requests at a time with a
+and its numbered variants, following redirects to each association's subdomain) ran for all 1,673
+varsity rows: 1,355 at first, and the other 318 later the same day, after the research environment's
+two-hour limit stopped the first run. SportsRecruits answers bursts with HTTP 429, so the probe ran four requests at a time with a
 back-off. A page was kept when its title names the player, its class year agrees with the roster (any
 of 2027-2030 for a row with no grade), and it names the school's own team or gives a hometown in the
 school's own area: San Diego County (with Temecula and Murrieta), Greater Los Angeles, the Bay Area
 and Central Coast, or the Sacramento Valley and north state. "Same half of the state" was too loose:
 it let through a volleyball page from Agoura Hills and a soccer page from Rowland Heights for San
 Diego schools. Where a player's matching pages disagree on the hometown, only those in the school's
-own city were kept; the other class-of-2027 Phoebe Miller (San Francisco) was left out; and soccer and
-track pages were kept only where the club named is a girls' club. Each kept page was then re-read.
-110 pages for 108 players: 87 lacrosse (all on iwlca.sportsrecruits.com, the women's lacrosse site),
-11 softball, 6 field hockey that the earlier sweeps had missed, 5 soccer and 1 track and field. One
+own city were kept; the other class-of-2027 Phoebe Miller (San Francisco) was left out; and soccer,
+track and volleyball pages were kept only where the club named is a girls' club (a Santa Maria
+volleyball page for a La Verne school was left out). Each kept page was then re-read.
+119 pages for 117 players: 91 lacrosse (all on iwlca.sportsrecruits.com, the women's lacrosse site),
+16 softball, 6 field hockey that the earlier sweeps had missed, 5 soccer and 1 track and field. One
 shows a commitment not yet in `data/commits.json`: Campbell Trocha's, to Florida Tech, now added
 (§1.1j3). NCSA, Hudl and FieldLevel were not probed in other sports, because their profile addresses
 carry numbers that cannot be guessed (NCSA loads in a headless browser, but its school pages list
