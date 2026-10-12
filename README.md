@@ -1366,6 +1366,11 @@ at once, at every build, starting from last season's:
   On 2026-10-04 the EAL's 95 players (MaxPreps alone; there is no overlay for them yet) have 95
   grades, 56 positions, 7 heights and 95 numbers.
 
+  On 2026-10-12 MaxPreps' own career pages and its 2025-26 and 2024-25 field hockey rosters filled
+  137 more grades (128 of them for Southern California teams, whose MaxPreps rosters mostly carry
+  none); two rows whose pages disagree stay blank with both recorded, and three whose earlier roster
+  would make them 13th-graders stay blank too.
+
   The overlay filled 215 grades, 14 positions and 23 heights (all heights are SCVAL's: no BVAL, PCAL
   or MCAL roster source publishes one, and the NCSA profiles that list a height are only linked,
   never used to fill a field; the overlay filled no jersey number in any league). Grades whose

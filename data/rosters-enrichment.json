@@ -10,7 +10,8 @@
     "A team's otherRosters says what other public sources showed for its CURRENT roster, which is what its page may claim when MaxPreps lists no players: none (looked, nothing current), partial (a source lists current players in a form that cannot be joined, with what it lists and a link) or, when absent, not checked.",
     "EAL (2026-10-04): recruiting pages only (profiles[]), swept by the same rule. The school-athletics roster sweep (grade, height, number, position, coaches) has still not been done, so the six EAL entries have no coaches or sources and fill no MaxPreps field.",
     "Southern California (2026-10-06): recruiting pages only (profiles[]), swept by the same rule for the 53 teams (the Sunset, City, North and Metro teams and the five Southern Section independents): 267 pages for 202 players. Each page was re-read by two independent verifiers, one checking it against the rule and one trying to refute it, and kept only when both kept it. The school-athletics roster sweep (grade, height, number, position, coaches) has not been done for them, so their entries have no coaches or sources and fill no MaxPreps field.",
-    "2026-10-12: profiles in any sport. Until then only field hockey profiles were linked; since 2026-10-12 a profile in another sport is linked too and names its sport (a field hockey profile names none), at most one per platform in each sport. A SportsRecruits profile-address probe ran in every sport (the first_last slug and its numbered variants) for 1,355 of the 1,673 varsity rows; the environment's two-hour limit stopped it before the other 318. A page was kept when its title names the player, its class year agrees with the roster (2027-2030 for a row with no grade), and it names the school's own team or gives a hometown in the school's own area (San Diego County, Greater Los Angeles, the Bay Area and Central Coast, or the Sacramento Valley and north state). A player whose matching pages disagree on the hometown kept only the pages in the school's own city, and a known namesake (the other class-of-2027 Phoebe Miller, in San Francisco) was left out. Soccer and track pages were kept only where the club named is a girls' club. 110 pages for 108 players were kept, each re-read: 87 lacrosse, 11 softball, 6 field hockey, 5 soccer, 1 track and field. NCSA, Hudl and FieldLevel were not probed in other sports: their addresses cannot be guessed."
+    "2026-10-12: profiles in any sport. Until then only field hockey profiles were linked; since 2026-10-12 a profile in another sport is linked too and names its sport (a field hockey profile names none), at most one per platform in each sport. A SportsRecruits profile-address probe ran in every sport (the first_last slug and its numbered variants) for 1,355 of the 1,673 varsity rows; the environment's two-hour limit stopped it before the other 318. A page was kept when its title names the player, its class year agrees with the roster (2027-2030 for a row with no grade), and it names the school's own team or gives a hometown in the school's own area (San Diego County, Greater Los Angeles, the Bay Area and Central Coast, or the Sacramento Valley and north state). A player whose matching pages disagree on the hometown kept only the pages in the school's own city, and a known namesake (the other class-of-2027 Phoebe Miller, in San Francisco) was left out. Soccer and track pages were kept only where the club named is a girls' club. 110 pages for 108 players were kept, each re-read: 87 lacrosse, 11 softball, 6 field hockey, 5 soccer, 1 track and field. NCSA, Hudl and FieldLevel were not probed in other sports: their addresses cannot be guessed.",
+    "2026-10-12: grades from MaxPreps' own pages for the 413 varsity rows MaxPreps' 2026-27 roster leaves ungraded and nothing had filled. Each row's MaxPreps career page (graduatingClass, and the grade of every team it lists for a dated season, in any sport) and the team's 2025-26 and 2024-25 MaxPreps field hockey rosters (matched on careerId, or on the name where the page has one row of it) were read; the grade is that season's plus the seasons since. 137 rows got a grade where every such page agreed (kind maxpreps-career, derived, medium; each note ends 'Added 2026-10-12.'). Two rows whose pages disagree are left blank with both recorded under conflicts (Izabel Gaytan, Ellie Kay); three whose 2025-26 or 2024-25 roster would make them 13th-graders are left blank (Emma Steingraber, Brooke Flesuras, Sarah Anton); seven rows that already carried grade conflicts were left as they were; and Michelle MacOubray's grade stays blank because her career page and her SportsRecruits page disagree."
   ],
   "season": "26-27",
   "teams": [
@@ -1880,7 +1881,14 @@
           "athleteId": "d1ed916b-9d92-4a2d-b32e-b0e5cbe8fafa",
           "conflicts": [],
           "fullName": "Gabrielle Moll",
-          "grade": null,
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps career page (graduatingClass null): JV soccer 23-24 as Freshman (/ca/cupertino/homestead-mustangs/soccer/girls/jv/winter/23-24/schedule/) -> grade 12 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/cupertino/homestead-mustangs/athletes/gabrielle-moll/?careerid=elteingmoskcc",
+            "value": 12
+          },
           "height": null,
           "jersey": null,
           "level": null,
@@ -1901,6 +1909,132 @@
               "url": "https://nfhca.sportsrecruits.com/athlete/gabrielle_moll"
             }
           ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "5325d74f-4f8d-4282-8081-4bc1003ba717",
+          "conflicts": [],
+          "fullName": "Lacey Sebastian Carattini",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps career page (graduatingClass null): JV soccer 24-25 as Freshman (/ca/cupertino/homestead-mustangs/soccer/girls/jv/winter/24-25/schedule/) -> grade 11 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/cupertino/homestead-mustangs/athletes/lacey-sebastian-carattini/?careerid=1l9t5pmokgtff",
+            "value": 11
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "ddb6ce00-8ea6-4873-ae56-31f908a248fa",
+          "conflicts": [],
+          "fullName": "Kaylee Ouyang",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps career page (graduatingClass null): Varsity soccer 25-26 as Sophomore (/ca/cupertino/homestead-mustangs/soccer/girls/winter/25-26/schedule/) -> grade 11 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/cupertino/homestead-mustangs/athletes/kaylee-ouyang/?careerid=l93skqlifqo77",
+            "value": 11
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "3a058d82-b995-413c-93e3-b08309c2e03f",
+          "conflicts": [],
+          "fullName": "Hailey Cutler",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps career page (graduatingClass null): JV soccer 24-25 as Freshman (/ca/cupertino/homestead-mustangs/soccer/girls/jv/winter/24-25/schedule/) -> grade 11 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/cupertino/homestead-mustangs/athletes/hailey-cutler/?careerid=pu6kmccd73j00",
+            "value": 11
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "5da324ee-bbd6-40d2-8c8f-4d90920d432a",
+          "conflicts": [],
+          "fullName": "Kaia McNeill",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps career page (graduatingClass null): JV basketball 25-26 as Freshman (/ca/cupertino/homestead-mustangs/basketball/girls/jv/25-26/schedule/) -> grade 10 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/cupertino/homestead-mustangs/athletes/kaia-mcneill/?careerid=135jglqahq0g0",
+            "value": 10
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "215533a5-62dd-4e72-82a5-2c8121fc4a45",
+          "conflicts": [],
+          "fullName": "Aalya Jain",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps career page (graduatingClass null): Varsity softball 25-26 as Freshman (/ca/cupertino/homestead-mustangs/softball/25-26/schedule/) -> grade 10 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/cupertino/homestead-mustangs/athletes/aalya-jain/?careerid=sbgeshbk1q788",
+            "value": 10
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "0d676076-b344-415f-b7f7-cb4e9116276a",
+          "conflicts": [],
+          "fullName": "Sonja Arneborn",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps 2024-25 field hockey roster: Sonja Arneborn as So. -> grade 12 in 2026-27 (matched by name; the 2025-26 roster and her career page give no grade). Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/cupertino/homestead-mustangs/field-hockey/24-25/roster/",
+            "value": 12
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
           "sourceName": null
         }
       ],
@@ -3393,6 +3527,27 @@
           "jersey": null,
           "level": "jv",
           "levelSource": "https://www.losgatosathletics.org/sport/RefreshRosterAthleteStyle2ViewComponent/139303?schoolYear=2026-2027",
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "5129aa91-9486-4519-9a74-31d50a1c8101",
+          "conflicts": [],
+          "fullName": "Halle Vivoli",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps career page (graduatingClass null): JV soccer 25-26 as Freshman (/ca/los-gatos/los-gatos-wildcats/soccer/girls/jv/winter/25-26/schedule/) -> grade 10 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/los-gatos/los-gatos-wildcats/athletes/halle-vivoli/?careerid=ojbjt1qh9uvn7",
+            "value": 10
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
           "note": null,
           "positions": null,
           "profiles": [],
@@ -6629,7 +6784,29 @@
         "No public source beyond MaxPreps: greenfieldhs.org lists Field Hockey - Girls' on its Teams page with no staff and no roster, the Arbiter schedule page lists only Girls Varsity and JV teams, and no school paper, roster PDF or recruiting profile was found. MaxPreps' 12 names have a number for 6 players and no grade or position.",
         "MaxPreps' team page names the coaches only by initial and surname (E. Martinez, J. Sanchez); no full names were found, so no coaches are recorded."
       ],
-      "players": [],
+      "players": [
+        {
+          "athleteId": "43ad6bd2-26d8-47fc-a492-186d02cfab83",
+          "conflicts": [],
+          "fullName": "Lexy Tamayo",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps career page (graduatingClass null): Varsity softball 25-26 as Junior (/ca/greenfield/greenfield-bruins/softball/25-26/schedule/) -> grade 12 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/greenfield/greenfield-bruins/athletes/lexy-tamayo/?careerid=bht9khvgsiaqa",
+            "value": 12
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        }
+      ],
       "slug": "greenfield",
       "sources": []
     },
@@ -10595,7 +10772,14 @@
           "athleteId": "8dc52a5a-6629-4d6d-a40d-63ac736d3795",
           "conflicts": [],
           "fullName": "Whitley Paine",
-          "grade": null,
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps 2025-26 field hockey roster: Whitley Paine as So. -> grade 11 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/temecula/great-oak-wolfpack/field-hockey/25-26/roster/",
+            "value": 11
+          },
           "height": null,
           "jersey": null,
           "level": null,
@@ -10616,7 +10800,14 @@
           "athleteId": "b26c1656-7097-4a4c-a21b-f0a39f2b0a6b",
           "conflicts": [],
           "fullName": "Isabel Laureles",
-          "grade": null,
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps 2025-26 field hockey roster: Isabel Laureles as So. -> grade 11 in 2026-27 (also: MaxPreps career page: graduatingClass 2028 -> grade 11 in 2026-27) Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/temecula/great-oak-wolfpack/field-hockey/25-26/roster/",
+            "value": 11
+          },
           "height": null,
           "jersey": null,
           "level": null,
@@ -10637,7 +10828,14 @@
           "athleteId": "f3bba43c-d023-4bd8-b7c1-e91796d5565c",
           "conflicts": [],
           "fullName": "Emma Keith",
-          "grade": null,
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps 2025-26 field hockey roster: Emma Keith as So. -> grade 11 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/temecula/great-oak-wolfpack/field-hockey/25-26/roster/",
+            "value": 11
+          },
           "height": null,
           "jersey": null,
           "level": null,
@@ -10658,7 +10856,14 @@
           "athleteId": "2e7f7546-8ddc-422f-b197-bf93a471dd7c",
           "conflicts": [],
           "fullName": "Linnea Gustaveson",
-          "grade": null,
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps 2025-26 field hockey roster: Linnea Gustaveson as So. -> grade 11 in 2026-27 (also: MaxPreps career page (graduatingClass null): JV lacrosse 25-26 as Sophomore (/ca/temecula/great-oak-wolfpack/lacrosse/girls/jv/25-26/schedule/) -> grade 11 in 2026-27) Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/temecula/great-oak-wolfpack/field-hockey/25-26/roster/",
+            "value": 11
+          },
           "height": null,
           "jersey": null,
           "level": null,
@@ -10679,6 +10884,153 @@
               "url": "https://nfhca.sportsrecruits.com/athlete/linnea_gustaveson"
             }
           ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "f598416b-4133-42b4-8cce-85b1777b95a6",
+          "conflicts": [],
+          "fullName": "Audrey Lopez",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps 2025-26 field hockey roster: Audrey Lopez as Jr. -> grade 12 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/temecula/great-oak-wolfpack/field-hockey/25-26/roster/",
+            "value": 12
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "3d4080c5-20ba-43a5-bc0c-3a6ec714563c",
+          "conflicts": [],
+          "fullName": "Brielle Press",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps 2025-26 field hockey roster: Brielle Press as So. -> grade 11 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/temecula/great-oak-wolfpack/field-hockey/25-26/roster/",
+            "value": 11
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "7f4f3234-a85b-489e-9801-aec594d1aa09",
+          "conflicts": [],
+          "fullName": "Eden Pearcy",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps 2025-26 field hockey roster: Eden Pearcy as Fr. -> grade 10 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/temecula/great-oak-wolfpack/field-hockey/25-26/roster/",
+            "value": 10
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "b9ed2f9d-515e-433f-9c0d-55dafa094504",
+          "conflicts": [],
+          "fullName": "Tatiana Orozco",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps 2025-26 field hockey roster: Tatiana Orozco as So. -> grade 11 in 2026-27 (also: MaxPreps career page (graduatingClass null): JV lacrosse 25-26 as Sophomore (/ca/temecula/great-oak-wolfpack/lacrosse/girls/jv/25-26/schedule/) -> grade 11 in 2026-27) Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/temecula/great-oak-wolfpack/field-hockey/25-26/roster/",
+            "value": 11
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "7c2853b7-cba4-4ed8-b6c1-188b426f1589",
+          "conflicts": [],
+          "fullName": "Elena Martinez",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps 2025-26 field hockey roster: Elena Martinez as Fr. -> grade 10 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/temecula/great-oak-wolfpack/field-hockey/25-26/roster/",
+            "value": 10
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "fd338f91-679a-4bf0-8277-50f2801756a7",
+          "conflicts": [],
+          "fullName": "Jordyn Hart",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps 2025-26 field hockey roster: Jordyn Hart as Jr. -> grade 12 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/temecula/great-oak-wolfpack/field-hockey/25-26/roster/",
+            "value": 12
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "d5741a48-3ec8-4915-acc3-91bd71911591",
+          "conflicts": [],
+          "fullName": "Elyssa Dierken",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps 2025-26 field hockey roster: Elyssa Dierken as So. -> grade 11 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/temecula/great-oak-wolfpack/field-hockey/25-26/roster/",
+            "value": 11
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
           "sourceName": null
         }
       ],
@@ -10766,6 +11118,27 @@
               "url": "https://www.fieldlevel.com/app/profile/sarah.moniak/fieldhockeywomen"
             }
           ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "4635b28e-d7bf-4b93-ade9-60234eff4981",
+          "conflicts": [],
+          "fullName": "Valentina D'angelo",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps 2025-26 field hockey roster: Valentina D'Angelo as Jr. -> grade 12 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/huntington-beach/huntington-beach-oilers/field-hockey/25-26/roster/",
+            "value": 12
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
           "sourceName": null
         }
       ],
@@ -11657,7 +12030,14 @@
           "athleteId": "b3690c95-bb1d-4a7b-a163-16e0f4e89f1d",
           "conflicts": [],
           "fullName": "Lilly Morton",
-          "grade": null,
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps 2025-26 field hockey roster: Lilly Morton as So. -> grade 11 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/san-diego/cathedral-catholic-dons/field-hockey/25-26/roster/",
+            "value": 11
+          },
           "height": null,
           "jersey": null,
           "level": null,
@@ -11691,7 +12071,14 @@
           "athleteId": "31b6ec61-58d6-4bd8-8908-6aca69a8e814",
           "conflicts": [],
           "fullName": "Emma Forster",
-          "grade": null,
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps 2025-26 field hockey roster: Emma Forster as Jr. -> grade 12 in 2026-27 (also: MaxPreps career page: graduatingClass 2027 -> grade 12 in 2026-27) Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/san-diego/cathedral-catholic-dons/field-hockey/25-26/roster/",
+            "value": 12
+          },
           "height": null,
           "jersey": null,
           "level": null,
@@ -11796,7 +12183,14 @@
           "athleteId": "94e31cdc-e0a6-440b-8e7d-aa3b3deb16eb",
           "conflicts": [],
           "fullName": "Roma Schwarz",
-          "grade": null,
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps career page (graduatingClass null): Varsity softball 25-26 as Sophomore (/ca/san-diego/cathedral-catholic-dons/softball/25-26/schedule/) -> grade 11 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/san-diego/cathedral-catholic-dons/athletes/roma-schwarz/?careerid=is6sn2i7c0ttd",
+            "value": 11
+          },
           "height": null,
           "jersey": null,
           "level": null,
@@ -11818,7 +12212,14 @@
           "athleteId": "c4d205cd-2507-4e17-9daa-d19741a2f2f9",
           "conflicts": [],
           "fullName": "Mileva Sesepasara",
-          "grade": null,
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps 2025-26 field hockey roster: Mileva Sesepasara as So. -> grade 11 in 2026-27 (also: MaxPreps career page (graduatingClass null): Varsity softball 25-26 as Sophomore (/ca/san-diego/cathedral-catholic-dons/softball/25-26/schedule/) -> grade 11 in 2026-27) Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/san-diego/cathedral-catholic-dons/field-hockey/25-26/roster/",
+            "value": 11
+          },
           "height": null,
           "jersey": null,
           "level": null,
@@ -11834,6 +12235,174 @@
               "url": "https://sportsrecruits.com/athlete/mileva_sesepasara2"
             }
           ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "05ef1a6d-0426-41a5-aefa-0b9a016a31a5",
+          "conflicts": [],
+          "fullName": "Bella Campos",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps 2025-26 field hockey roster: Bella Campos as Jr. -> grade 12 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/san-diego/cathedral-catholic-dons/field-hockey/25-26/roster/",
+            "value": 12
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "4c4894dd-8126-433d-ac02-e1789d5c4d5e",
+          "conflicts": [],
+          "fullName": "Emily Zettle",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps 2025-26 field hockey roster: Emily Zettle as Jr. -> grade 12 in 2026-27 (also: MaxPreps career page: graduatingClass 2027 -> grade 12 in 2026-27; MaxPreps career page (graduatingClass 2027): JV basketball 23-24 as Freshman (/ca/san-diego/cathedral-catholic-dons/basketball/girls/jv/23-24/schedule/) -> grade 12 in 2026-27) Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/san-diego/cathedral-catholic-dons/field-hockey/25-26/roster/",
+            "value": 12
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "1c08e363-5c11-467a-bb4c-7064eda074fd",
+          "conflicts": [],
+          "fullName": "Annika Mara",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps 2025-26 field hockey roster: Annika Mara as Jr. -> grade 12 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/san-diego/cathedral-catholic-dons/field-hockey/25-26/roster/",
+            "value": 12
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "4f679db2-61d8-42fd-9309-403500e1425f",
+          "conflicts": [],
+          "fullName": "Emily MacDonald",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps 2025-26 field hockey roster: Emily MacDonald as So. -> grade 11 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/san-diego/cathedral-catholic-dons/field-hockey/25-26/roster/",
+            "value": 11
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "46e80b40-f632-4130-94b9-2b42641bc0bd",
+          "conflicts": [],
+          "fullName": "Sophia Adajar",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps 2025-26 field hockey roster: Sophia Adajar as So. -> grade 11 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/san-diego/cathedral-catholic-dons/field-hockey/25-26/roster/",
+            "value": 11
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "28a38f32-3f0e-41b3-8c23-56cc47a0ffcf",
+          "conflicts": [],
+          "fullName": "Annemarie Derheimer",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps 2025-26 field hockey roster: Annemarie Derheimer as Jr. -> grade 12 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/san-diego/cathedral-catholic-dons/field-hockey/25-26/roster/",
+            "value": 12
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "af4f6c84-2188-44bb-a4c1-5530f93a83a7",
+          "conflicts": [],
+          "fullName": "Sophie Schliff",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps 2025-26 field hockey roster: Sophie Schliff as So. -> grade 11 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/san-diego/cathedral-catholic-dons/field-hockey/25-26/roster/",
+            "value": 11
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "6e96fd19-afb7-468c-bc74-79c4461277be",
+          "conflicts": [],
+          "fullName": "Kate Friedman",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps 2025-26 field hockey roster: Kate Friedman as So. -> grade 11 in 2026-27 (also: MaxPreps career page (graduatingClass null): Varsity basketball 25-26 as Sophomore (/ca/san-diego/cathedral-catholic-dons/basketball/girls/25-26/schedule/) -> grade 11 in 2026-27; MaxPreps career page (graduatingClass null): JV soccer 24-25 as Freshman (/ca/san-diego/cathedral-catholic-dons/soccer/girls/jv/winter/24-25/schedule/) -> grade 11 in 2026-27) Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/san-diego/cathedral-catholic-dons/field-hockey/25-26/roster/",
+            "value": 11
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
           "sourceName": null
         }
       ],
@@ -11958,7 +12527,14 @@
           "athleteId": "e9e4f9ae-c85f-4f11-b5f9-75315930ab0c",
           "conflicts": [],
           "fullName": "Rosalie Orozco",
-          "grade": null,
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps career page (graduatingClass null): JV softball 25-26 as Sophomore (/ca/san-diego/mission-bay-buccaneers/softball/jv/25-26/schedule/) -> grade 11 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/san-diego/mission-bay-buccaneers/athletes/rosalie-orozco/?careerid=no81pdurejfi2",
+            "value": 11
+          },
           "height": null,
           "jersey": null,
           "level": null,
@@ -12012,7 +12588,14 @@
           "athleteId": "98093dfc-9a03-42f4-9504-481be9fbcedd",
           "conflicts": [],
           "fullName": "Vivienne Harper",
-          "grade": null,
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps career page (graduatingClass null): Varsity lacrosse 25-26 as Junior (/ca/san-diego/mission-bay-buccaneers/lacrosse/girls/25-26/schedule/) -> grade 12 in 2026-27 (also: MaxPreps career page (graduatingClass null): Varsity soccer 25-26 as Junior (/ca/san-diego/mission-bay-buccaneers/soccer/girls/winter/25-26/schedule/) -> grade 12 in 2026-27) Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/san-diego/mission-bay-buccaneers/athletes/vivienne-harper/?careerid=v8ig0bt88g5bb",
+            "value": 12
+          },
           "height": null,
           "jersey": null,
           "level": null,
@@ -12034,7 +12617,14 @@
           "athleteId": "00a464c2-6bd9-45b7-ba23-11b633b7958e",
           "conflicts": [],
           "fullName": "Cali Christ",
-          "grade": null,
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps career page (graduatingClass null): Varsity lacrosse 25-26 as Junior (/ca/san-diego/mission-bay-buccaneers/lacrosse/girls/25-26/schedule/) -> grade 12 in 2026-27 (also: MaxPreps career page (graduatingClass null): JV soccer 23-24 as Freshman (/ca/san-diego/mission-bay-buccaneers/soccer/girls/jv/winter/23-24/schedule/) -> grade 12 in 2026-27) Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/san-diego/mission-bay-buccaneers/athletes/cali-christ/?careerid=sh30hd3h7s0o8",
+            "value": 12
+          },
           "height": null,
           "jersey": null,
           "level": null,
@@ -12056,7 +12646,14 @@
           "athleteId": "9760056a-7b37-44f4-b7f3-e2200cdbd36a",
           "conflicts": [],
           "fullName": "Sorelle Muto",
-          "grade": null,
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps career page (graduatingClass null): Varsity lacrosse 25-26 as Junior (/ca/san-diego/mission-bay-buccaneers/lacrosse/girls/25-26/schedule/) -> grade 12 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/san-diego/mission-bay-buccaneers/athletes/sorelle-muto/?careerid=a1qkspfj3lam6",
+            "value": 12
+          },
           "height": null,
           "jersey": null,
           "level": null,
@@ -12094,6 +12691,90 @@
               "url": "https://sportsrecruits.com/athlete/olivia_lynch9"
             }
           ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "a2ea513b-4092-4e17-8e5d-2eb3077f3a0c",
+          "conflicts": [],
+          "fullName": "Lillian Polonsky",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps career page (graduatingClass null): Varsity basketball 25-26 as Sophomore (/ca/san-diego/mission-bay-buccaneers/basketball/girls/25-26/schedule/) -> grade 11 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/san-diego/mission-bay-buccaneers/athletes/lillian-polonsky/?careerid=92tui9eo15k55",
+            "value": 11
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "3d1cd99f-689c-40f2-a252-77f4b238fe7f",
+          "conflicts": [],
+          "fullName": "Abigale Stiska",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps career page (graduatingClass null): Varsity lacrosse 24-25 as Freshman (/ca/san-diego/mission-bay-buccaneers/lacrosse/girls/24-25/schedule/) -> grade 11 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/san-diego/mission-bay-buccaneers/athletes/abigale-stiska/?careerid=75k5fsfe0pcff",
+            "value": 11
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "704ad2f2-9f54-48d4-b371-1b08919faad9",
+          "conflicts": [],
+          "fullName": "Kailyn Engbrecht",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps career page (graduatingClass null): JV basketball 25-26 as Sophomore (/ca/san-diego/mission-bay-buccaneers/basketball/girls/jv/25-26/schedule/) -> grade 11 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/san-diego/mission-bay-buccaneers/athletes/kailyn-engbrecht/?careerid=r5lrmctn604n7",
+            "value": 11
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "4d044b16-39fa-4361-9545-ce980a5b8c76",
+          "conflicts": [],
+          "fullName": "Mia Menolez",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps career page (graduatingClass null): Varsity lacrosse 25-26 as Sophomore (/ca/san-diego/mission-bay-buccaneers/lacrosse/girls/25-26/schedule/) -> grade 11 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/san-diego/mission-bay-buccaneers/athletes/mia-menolez/?careerid=g45msp5372bp9",
+            "value": 11
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
           "sourceName": null
         }
       ],
@@ -12134,7 +12815,14 @@
           "athleteId": "6b4dbd37-656d-4983-9650-be13b4cfe874",
           "conflicts": [],
           "fullName": "Vivian Preclaro",
-          "grade": null,
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps 2025-26 field hockey roster: Vivian Preclaro as Jr. -> grade 12 in 2026-27 (also: MaxPreps career page (graduatingClass null): JV lacrosse 24-25 as Sophomore (/ca/san-diego/scripps-ranch-falcons/lacrosse/girls/jv/24-25/schedule/) -> grade 12 in 2026-27; MaxPreps career page (graduatingClass null): JV softball 23-24 as Freshman (/ca/san-diego/scripps-ranch-falcons/softball/jv/23-24/schedule/) -> grade 12 in 2026-27) Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/san-diego/scripps-ranch-falcons/field-hockey/25-26/roster/",
+            "value": 12
+          },
           "height": null,
           "jersey": null,
           "level": null,
@@ -12161,7 +12849,14 @@
           "athleteId": "dac8c08b-6ac2-48aa-a969-60eaa45a99d9",
           "conflicts": [],
           "fullName": "Lily Cumba",
-          "grade": null,
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps 2025-26 field hockey roster: Lily Cumba as So. -> grade 11 in 2026-27 (also: MaxPreps career page: graduatingClass 2028 -> grade 11 in 2026-27) Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/san-diego/scripps-ranch-falcons/field-hockey/25-26/roster/",
+            "value": 11
+          },
           "height": null,
           "jersey": null,
           "level": null,
@@ -12188,7 +12883,14 @@
           "athleteId": "5e74e89c-b100-4015-854a-af26dea0de99",
           "conflicts": [],
           "fullName": "Simran Wimmer",
-          "grade": null,
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps 2025-26 field hockey roster: Simi Wimmer as So. -> grade 11 in 2026-27 (also: MaxPreps career page: graduatingClass 2028 -> grade 11 in 2026-27; MaxPreps career page (graduatingClass 2028): Varsity lacrosse 25-26 as Sophomore (/ca/san-diego/scripps-ranch-falcons/lacrosse/girls/25-26/schedule/) -> grade 11 in 2026-27; MaxPreps career page (graduatingClass 2028): Varsity soccer 25-26 as Sophomore (/ca/san-diego/scripps-ranch-falcons/soccer/girls/winter/25-26/schedule/) -> grade 11 in 2026-27) Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/san-diego/scripps-ranch-falcons/field-hockey/25-26/roster/",
+            "value": 11
+          },
           "height": null,
           "jersey": null,
           "level": null,
@@ -12217,7 +12919,14 @@
           "athleteId": "f1c3accb-0357-4d1c-a9e2-3907282bb581",
           "conflicts": [],
           "fullName": "Ava Pavlik",
-          "grade": null,
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps 2025-26 field hockey roster: Ava Pavlik as So. -> grade 11 in 2026-27 (also: MaxPreps career page (graduatingClass null): Varsity lacrosse 25-26 as Sophomore (/ca/san-diego/scripps-ranch-falcons/lacrosse/girls/25-26/schedule/) -> grade 11 in 2026-27; MaxPreps career page (graduatingClass null): JV soccer 24-25 as Freshman (/ca/san-diego/scripps-ranch-falcons/soccer/girls/jv/winter/24-25/schedule/) -> grade 11 in 2026-27) Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/san-diego/scripps-ranch-falcons/field-hockey/25-26/roster/",
+            "value": 11
+          },
           "height": null,
           "jersey": null,
           "level": null,
@@ -12239,7 +12948,14 @@
           "athleteId": "6d48eea3-c765-4170-9f92-f7bc8f131e5c",
           "conflicts": [],
           "fullName": "Avery Archer",
-          "grade": null,
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps 2025-26 field hockey roster: Avery Archer as So. -> grade 11 in 2026-27 (also: MaxPreps career page: graduatingClass 2028 -> grade 11 in 2026-27; MaxPreps career page (graduatingClass 2028): Varsity softball 25-26 as Sophomore (/ca/san-diego/scripps-ranch-falcons/softball/25-26/schedule/) -> grade 11 in 2026-27) Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/san-diego/scripps-ranch-falcons/field-hockey/25-26/roster/",
+            "value": 11
+          },
           "height": null,
           "jersey": null,
           "level": null,
@@ -12255,6 +12971,153 @@
               "url": "https://sportsrecruits.com/athlete/avery_archer4"
             }
           ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "dc6f503b-eda9-4658-803e-21ed7c7dc855",
+          "conflicts": [],
+          "fullName": "Kayla Dinh",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps 2025-26 field hockey roster: Kayla Dinh as Jr. -> grade 12 in 2026-27 (also: MaxPreps career page (graduatingClass null): Varsity lacrosse 25-26 as Junior (/ca/san-diego/scripps-ranch-falcons/lacrosse/girls/25-26/schedule/) -> grade 12 in 2026-27; MaxPreps career page (graduatingClass null): Varsity soccer 25-26 as Junior (/ca/san-diego/scripps-ranch-falcons/soccer/girls/winter/25-26/schedule/) -> grade 12 in 2026-27) Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/san-diego/scripps-ranch-falcons/field-hockey/25-26/roster/",
+            "value": 12
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "b3441df6-e2bf-4190-bce0-36b679da9e20",
+          "conflicts": [],
+          "fullName": "Lucy Miller",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps 2025-26 field hockey roster: Lucy Miller as Fr. -> grade 10 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/san-diego/scripps-ranch-falcons/field-hockey/25-26/roster/",
+            "value": 10
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "e3548296-e046-490e-a434-5d5737d70aa8",
+          "conflicts": [],
+          "fullName": "Camryn Lathrop",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps career page: graduatingClass 2029 -> grade 10 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/san-diego/scripps-ranch-falcons/athletes/camryn-lathrop/?careerid=kjajlfckpmgue",
+            "value": 10
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "1362caa8-54e0-4483-b9fa-030acf04a4b1",
+          "conflicts": [],
+          "fullName": "Nora Kelly",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps career page: graduatingClass 2029 -> grade 10 in 2026-27 (also: MaxPreps career page (graduatingClass 2029): JV soccer 25-26 as Freshman (/ca/san-diego/scripps-ranch-falcons/soccer/girls/jv/winter/25-26/schedule/) -> grade 10 in 2026-27) Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/san-diego/scripps-ranch-falcons/athletes/nora-kelly/?careerid=holphc3lp8jtd",
+            "value": 10
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "811060b3-e14d-42b0-bc9c-6879d7b04d8e",
+          "conflicts": [],
+          "fullName": "Elenna Eiler",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps 2025-26 field hockey roster: Elenna Eiler as Jr. -> grade 12 in 2026-27 (also: MaxPreps career page: graduatingClass 2027 -> grade 12 in 2026-27) Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/san-diego/scripps-ranch-falcons/field-hockey/25-26/roster/",
+            "value": 12
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "fe4b1c07-2df0-4a7e-a322-54f7102c2e50",
+          "conflicts": [],
+          "fullName": "Abigail Martin",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps career page (graduatingClass null): Varsity soccer 25-26 as Junior (/ca/san-diego/scripps-ranch-falcons/soccer/girls/winter/25-26/schedule/) -> grade 12 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/san-diego/scripps-ranch-falcons/athletes/abigail-martin/?careerid=ugpq9l5gjrp99",
+            "value": 12
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "12ac7782-fad0-457f-afc5-04902ad12041",
+          "conflicts": [],
+          "fullName": "Tatum Fields",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps 2025-26 field hockey roster: Tatum Fields as So. -> grade 11 in 2026-27 (also: MaxPreps career page (graduatingClass null): JV basketball 25-26 as Sophomore (/ca/san-diego/scripps-ranch-falcons/basketball/girls/jv/25-26/schedule/) -> grade 11 in 2026-27) Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/san-diego/scripps-ranch-falcons/field-hockey/25-26/roster/",
+            "value": 11
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
           "sourceName": null
         }
       ],
@@ -12274,7 +13137,14 @@
           "athleteId": "67a2f916-cbee-42d4-915c-4691db8f4bfe",
           "conflicts": [],
           "fullName": "Ellie Deleon",
-          "grade": null,
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps career page (graduatingClass null): Varsity beach volleyball 25-26 as Junior (/ca/san-diego/clairemont-captains/beach-volleyball/25-26/schedule/) -> grade 12 in 2026-27 (also: MaxPreps career page (graduatingClass null): Varsity soccer 25-26 as Junior (/ca/san-diego/clairemont-captains/soccer/girls/winter/25-26/schedule/) -> grade 12 in 2026-27) Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/san-diego/clairemont-captains/athletes/ellie-deleon/?careerid=t6tthseg7po77",
+            "value": 12
+          },
           "height": null,
           "jersey": null,
           "level": null,
@@ -12302,7 +13172,14 @@
           "athleteId": "f395df6a-4ed9-4aeb-ae2f-ca6140f18f7a",
           "conflicts": [],
           "fullName": "Kylie Lail",
-          "grade": null,
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps career page: graduatingClass 2029 -> grade 10 in 2026-27 (also: MaxPreps career page (graduatingClass 2029): Varsity soccer 25-26 as Freshman (/ca/san-diego/clairemont-captains/soccer/girls/winter/25-26/schedule/) -> grade 10 in 2026-27) Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/san-diego/clairemont-captains/athletes/kylie-lail/?careerid=hk3t50jp69855",
+            "value": 10
+          },
           "height": null,
           "jersey": null,
           "level": null,
@@ -12345,6 +13222,195 @@
             }
           ],
           "sourceName": "Olivia Seamane"
+        },
+        {
+          "athleteId": "3a14eb9b-38a1-4918-b79a-15b0ca5bf1b9",
+          "conflicts": [],
+          "fullName": "Larsyn Violante",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps career page (graduatingClass null): Varsity softball 25-26 as Sophomore (/ca/san-diego/clairemont-captains/softball/25-26/schedule/) -> grade 11 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/san-diego/clairemont-captains/athletes/larsyn-violante/?careerid=6qgfsc6igl688",
+            "value": 11
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "310b2d75-02f5-46db-a3c3-959d13ee5615",
+          "conflicts": [],
+          "fullName": "Isabel Johnston",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps career page (graduatingClass null): JV softball 25-26 as Freshman (/ca/san-diego/clairemont-captains/softball/jv/25-26/schedule/) -> grade 10 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/san-diego/clairemont-captains/athletes/isabel-johnston/?careerid=33kjk9ntnqmff",
+            "value": 10
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "0d3c1133-5dc2-4eb9-96b2-7ec1766462c3",
+          "conflicts": [],
+          "fullName": "Kenzi Malloy",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps career page: graduatingClass 2029 -> grade 10 in 2026-27 (also: MaxPreps career page (graduatingClass 2029): Varsity soccer 25-26 as Freshman (/ca/san-diego/clairemont-captains/soccer/girls/winter/25-26/schedule/) -> grade 10 in 2026-27) Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/san-diego/clairemont-captains/athletes/kenzi-malloy/?careerid=aoigubq8blarb",
+            "value": 10
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "4ad85b83-3519-474b-b75c-909560adadc6",
+          "conflicts": [],
+          "fullName": "Samantha Le Fevre",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps career page (graduatingClass null): Varsity soccer 25-26 as Sophomore (/ca/san-diego/clairemont-captains/soccer/girls/winter/25-26/schedule/) -> grade 11 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/san-diego/clairemont-captains/athletes/samantha-le-fevre/?careerid=l82a3tb2atccc",
+            "value": 11
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "ef63df9d-9e53-4b46-9f2f-99a708bdf983",
+          "conflicts": [],
+          "fullName": "Makenzie Owen",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps career page (graduatingClass null): Varsity soccer 25-26 as Freshman (/ca/san-diego/clairemont-captains/soccer/girls/winter/25-26/schedule/) -> grade 10 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/san-diego/clairemont-captains/athletes/makenzie-owen/?careerid=0meponhdiquj3",
+            "value": 10
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "a301f010-e920-4162-abc2-6d9dc0b75ffc",
+          "conflicts": [],
+          "fullName": "Brooke Prince",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps career page (graduatingClass null): Varsity soccer 25-26 as Freshman (/ca/san-diego/clairemont-captains/soccer/girls/winter/25-26/schedule/) -> grade 10 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/san-diego/clairemont-captains/athletes/brooke-prince/?careerid=9kdk8sds41h55",
+            "value": 10
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "b7386767-ddf7-4cf5-83e9-d43320b963c3",
+          "conflicts": [],
+          "fullName": "Olivia Sanchez",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps career page (graduatingClass null): Varsity soccer 25-26 as Junior (/ca/san-diego/clairemont-captains/soccer/girls/winter/25-26/schedule/) -> grade 12 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/san-diego/clairemont-captains/athletes/olivia-sanchez/?careerid=n954j1pd06a44",
+            "value": 12
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "06665c09-bf86-4062-a6b8-302c62091a2f",
+          "conflicts": [],
+          "fullName": "Addison Allen",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps career page: graduatingClass 2028 -> grade 11 in 2026-27 (also: MaxPreps career page (graduatingClass 2028): Varsity soccer 25-26 as Sophomore (/ca/san-diego/clairemont-captains/soccer/girls/winter/25-26/schedule/) -> grade 11 in 2026-27) Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/san-diego/clairemont-captains/athletes/addison-allen/?careerid=8101fn6prerue",
+            "value": 11
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "e2994d8c-a323-4d42-8906-b3e10c90fff4",
+          "conflicts": [],
+          "fullName": "Amara Taylor",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps career page: graduatingClass 2027 -> grade 12 in 2026-27 (also: MaxPreps career page (graduatingClass 2027): Varsity lacrosse 24-25 as Sophomore (/ca/san-diego/clairemont-captains/lacrosse/girls/24-25/schedule/) -> grade 12 in 2026-27; MaxPreps career page (graduatingClass 2027): Varsity flag football 23-24 as Freshman (/ca/san-diego/clairemont-captains/flag-football/girls/fall/23-24/schedule/) -> grade 12 in 2026-27) Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/san-diego/clairemont-captains/athletes/amara-taylor/?careerid=a3t84d9ouspue",
+            "value": 12
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
         }
       ],
       "slug": "clairemont",
@@ -12621,6 +13687,27 @@
             }
           ],
           "sourceName": null
+        },
+        {
+          "athleteId": "f54ec066-fa6b-4718-8039-d0c64e8b3795",
+          "conflicts": [],
+          "fullName": "Arianna Gonzalez",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps career page (graduatingClass null): JV flag football 25-26 as Freshman (/ca/san-diego/mira-mesa-marauders/flag-football/girls/jv/fall/25-26/schedule/) -> grade 10 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/san-diego/mira-mesa-marauders/athletes/arianna-gonzalez/?careerid=jvf5r4suvar11",
+            "value": 10
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
         }
       ],
       "slug": "mira-mesa",
@@ -12736,7 +13823,14 @@
           "athleteId": "369425d6-b735-4aec-a80f-485d97f01027",
           "conflicts": [],
           "fullName": "Lilyana McCollum",
-          "grade": null,
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps career page (graduatingClass null): Varsity lacrosse 25-26 as Sophomore (/ca/san-diego/point-loma-fighting-pointers/lacrosse/girls/25-26/schedule/) -> grade 11 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/san-diego/point-loma-fighting-pointers/athletes/lilyana-mccollum/?careerid=1h43i711hnd55",
+            "value": 11
+          },
           "height": null,
           "jersey": null,
           "level": null,
@@ -12763,7 +13857,7 @@
           "jersey": null,
           "level": null,
           "levelSource": null,
-          "note": null,
+          "note": "Grade left blank: her MaxPreps career page has her on Point Loma's JV softball team in 2025-26 as a Freshman (grade 10 in 2026-27), but her SportsRecruits softball page says class of 2028; the two disagree, so nothing is guessed (2026-10-12).",
           "positions": null,
           "profiles": [
             {
@@ -12774,6 +13868,184 @@
               "url": "https://sportsrecruits.com/athlete/michelle_macoubray"
             }
           ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "a3b8f98c-fe9f-4c34-82ce-5bd80e206952",
+          "conflicts": [],
+          "fullName": "Macie Pavao",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps career page (graduatingClass null): Varsity lacrosse 23-24 as Freshman (/ca/san-diego/point-loma-fighting-pointers/lacrosse/girls/23-24/schedule/) -> grade 12 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/san-diego/point-loma-fighting-pointers/athletes/macie-pavao/?careerid=sa9tt96vkval5",
+            "value": 12
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "b807c672-f11c-41b7-b574-65e0e7a256d0",
+          "conflicts": [],
+          "fullName": "Molly Curran",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps career page (graduatingClass null): Varsity soccer 25-26 as Junior (/ca/san-diego/point-loma-fighting-pointers/soccer/girls/winter/25-26/schedule/) -> grade 12 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/san-diego/point-loma-fighting-pointers/athletes/molly-curran/?careerid=4149jo4cloqn7",
+            "value": 12
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "5eb1818a-1378-4500-9752-16abab062ed5",
+          "conflicts": [
+            {
+              "field": "grade",
+              "kept": null,
+              "kind": "maxpreps-career",
+              "note": "MaxPreps career page: graduatingClass 2028 -> grade 11 in 2026-27 Added 2026-10-12.",
+              "other": "11",
+              "source": "https://www.maxpreps.com/ca/san-diego/point-loma-fighting-pointers/athletes/ellie-kay/?careerid=1kjfkc9ilf4n7"
+            },
+            {
+              "field": "grade",
+              "kept": null,
+              "kind": "maxpreps-career",
+              "note": "MaxPreps career page (graduatingClass 2028): JV softball 25-26 as Freshman (/ca/san-diego/point-loma-fighting-pointers/softball/jv/25-26/schedule/) -> grade 10 in 2026-27 Added 2026-10-12.",
+              "other": "10",
+              "source": "https://www.maxpreps.com/ca/san-diego/point-loma-fighting-pointers/athletes/ellie-kay/?careerid=1kjfkc9ilf4n7"
+            }
+          ],
+          "fullName": "Ellie Kay",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "5e475eda-3ca6-4592-8526-bf0ad96f5418",
+          "conflicts": [],
+          "fullName": "Abigail Smith",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps career page (graduatingClass null): JV softball 25-26 as Freshman (/ca/san-diego/point-loma-fighting-pointers/softball/jv/25-26/schedule/) -> grade 10 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/san-diego/point-loma-fighting-pointers/athletes/abigail-smith/?careerid=edjrq9upu77ee",
+            "value": 10
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "e2eeaaf3-c765-4db5-8206-c643260a8aa5",
+          "conflicts": [],
+          "fullName": "Nicole Bettencourt",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps career page (graduatingClass null): Varsity lacrosse 25-26 as Junior (/ca/san-diego/point-loma-fighting-pointers/lacrosse/girls/25-26/schedule/) -> grade 12 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/san-diego/point-loma-fighting-pointers/athletes/nicole-bettencourt/?careerid=tlf9frk043sj3",
+            "value": 12
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "ba33a7b8-d6fd-4f84-b80d-f3cdc1c82db5",
+          "conflicts": [],
+          "fullName": "Ana Rogers",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps career page (graduatingClass null): Varsity lacrosse 25-26 as Junior (/ca/san-diego/point-loma-fighting-pointers/lacrosse/girls/25-26/schedule/) -> grade 12 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/san-diego/point-loma-fighting-pointers/athletes/ana-rogers/?careerid=q8j7fqhe3jg99",
+            "value": 12
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "1d653f29-006b-4aa1-9415-7c50fc16041f",
+          "conflicts": [],
+          "fullName": "Elizabeth (zibby) Baker",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps career page: graduatingClass 2028 -> grade 11 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/san-diego/point-loma-fighting-pointers/athletes/elizabeth-zibby-baker/?careerid=mf6ggnjmhc4cc",
+            "value": 11
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "7a77b817-0d95-4c95-896c-57aee2c1a97e",
+          "conflicts": [],
+          "fullName": "Sylvia Kuzmich",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps career page (graduatingClass null): Varsity lacrosse 25-26 as Freshman (/ca/san-diego/point-loma-fighting-pointers/lacrosse/girls/25-26/schedule/) -> grade 10 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/san-diego/point-loma-fighting-pointers/athletes/sylvia-kuzmich/?careerid=aufiudcb9mc99",
+            "value": 10
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
           "sourceName": null
         }
       ],
@@ -13008,7 +14280,14 @@
           "athleteId": "b24a9ea6-a5e5-48ca-9677-887c932d97a5",
           "conflicts": [],
           "fullName": "Lauren Coetzee",
-          "grade": null,
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps career page: graduatingClass 2030 -> grade 9 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/san-diego/university-city-centurions/athletes/lauren-coetzee/?careerid=dj738hgsdliue",
+            "value": 9
+          },
           "height": null,
           "jersey": null,
           "level": null,
@@ -13029,7 +14308,14 @@
           "athleteId": "8010ef35-f843-4391-91dc-3b79611664e4",
           "conflicts": [],
           "fullName": "Cameron Pearce",
-          "grade": null,
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps career page (graduatingClass null): JV lacrosse 25-26 as Freshman (/ca/san-diego/university-city-centurions/lacrosse/girls/jv/25-26/schedule/) -> grade 10 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/san-diego/university-city-centurions/athletes/cameron-pearce/?careerid=45lpiuetnkg55",
+            "value": 10
+          },
           "height": null,
           "jersey": null,
           "level": null,
@@ -13050,7 +14336,14 @@
           "athleteId": "839b2e4c-26b6-42aa-bbb1-921b731691c8",
           "conflicts": [],
           "fullName": "Laura Pellegrino",
-          "grade": null,
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps career page: graduatingClass 2030 -> grade 9 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/san-diego/university-city-centurions/athletes/laura-pellegrino/?careerid=n7k6dtv3oo0g0",
+            "value": 9
+          },
           "height": null,
           "jersey": null,
           "level": null,
@@ -13077,7 +14370,14 @@
           "athleteId": "9a586a53-8552-4429-8471-013860fd4414",
           "conflicts": [],
           "fullName": "Izabella Gere",
-          "grade": null,
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps career page: graduatingClass 2028 -> grade 11 in 2026-27 (also: MaxPreps career page (graduatingClass 2028): JV softball 24-25 as Freshman (/ca/san-diego/university-city-centurions/softball/jv/24-25/schedule/) -> grade 11 in 2026-27) Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/san-diego/university-city-centurions/athletes/izabella-gere/?careerid=h2l1s9p68kpdd",
+            "value": 11
+          },
           "height": null,
           "jersey": null,
           "level": null,
@@ -13115,6 +14415,48 @@
             }
           ],
           "sourceName": null
+        },
+        {
+          "athleteId": "a2261a42-1edf-40e8-a391-405acff232c3",
+          "conflicts": [],
+          "fullName": "Paula Neira Munoz",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps career page (graduatingClass null): JV lacrosse 25-26 as Sophomore (/ca/san-diego/university-city-centurions/lacrosse/girls/jv/25-26/schedule/) -> grade 11 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/san-diego/university-city-centurions/athletes/paula-neira-munoz/?careerid=uld6vgnosne22",
+            "value": 11
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "acde6c96-9ab7-4527-a88a-a8048df82194",
+          "conflicts": [],
+          "fullName": "Eliz Dincer",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps career page: graduatingClass 2028 -> grade 11 in 2026-27 (also: MaxPreps career page (graduatingClass 2028): JV lacrosse 25-26 as Sophomore (/ca/san-diego/university-city-centurions/lacrosse/girls/jv/25-26/schedule/) -> grade 11 in 2026-27) Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/san-diego/university-city-centurions/athletes/eliz-dincer/?careerid=17831bsojg7p9",
+            "value": 11
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
         }
       ],
       "slug": "university-city",
@@ -13128,7 +14470,218 @@
         "Not linked: SportsRecruits abby_hill3 (Abby Hill, 2029) and autumn_empey (2029) are bare pages with no school or hometown, julia_wagner4 is class of 2026 from Oley, PA, and NCSA abigail-hill10 is a Yarmouth, ME player.",
         "The school-athletics roster sweep (grade, height, number, position, coaches) has not been done, so nothing else is filled."
       ],
-      "players": [],
+      "players": [
+        {
+          "athleteId": "e4c9bd01-f973-4967-8d8d-b3855d3ddc61",
+          "conflicts": [],
+          "fullName": "Aarohi Sathe",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps 2025-26 field hockey roster: Aarohi Sathe as Fr. -> grade 10 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/san-diego/canyon-crest-academy-ravens/field-hockey/25-26/roster/",
+            "value": 10
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "6da82857-ec7a-40ea-804c-a96a887d4371",
+          "conflicts": [],
+          "fullName": "Marissa Weinstein",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps 2025-26 field hockey roster: Marissa Weinstein as So. -> grade 11 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/san-diego/canyon-crest-academy-ravens/field-hockey/25-26/roster/",
+            "value": 11
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "9d04c3cf-231d-47e2-a182-4d5a73599c1a",
+          "conflicts": [],
+          "fullName": "Audrey Young",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps 2025-26 field hockey roster: Audrey Young as So. -> grade 11 in 2026-27 (also: MaxPreps career page (graduatingClass null): JV soccer 25-26 as Sophomore (/ca/san-diego/canyon-crest-academy-ravens/soccer/girls/jv/winter/25-26/schedule/) -> grade 11 in 2026-27) Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/san-diego/canyon-crest-academy-ravens/field-hockey/25-26/roster/",
+            "value": 11
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "f41f527e-18e5-453a-9054-a905245ca374",
+          "conflicts": [],
+          "fullName": "Cambria Giangiulio",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps 2025-26 field hockey roster: Cambria Giangiulio as Jr. -> grade 12 in 2026-27 (also: MaxPreps career page (graduatingClass null): Varsity softball 25-26 as Junior (/ca/san-diego/canyon-crest-academy-ravens/softball/25-26/schedule/) -> grade 12 in 2026-27) Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/san-diego/canyon-crest-academy-ravens/field-hockey/25-26/roster/",
+            "value": 12
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "925799c1-dfd7-4cc7-b753-949d643fc131",
+          "conflicts": [],
+          "fullName": "Julia Wagner",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps 2025-26 field hockey roster: Julia Wagner as So. -> grade 11 in 2026-27 (also: MaxPreps career page (graduatingClass null): Varsity softball 25-26 as Sophomore (/ca/san-diego/canyon-crest-academy-ravens/softball/25-26/schedule/) -> grade 11 in 2026-27) Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/san-diego/canyon-crest-academy-ravens/field-hockey/25-26/roster/",
+            "value": 11
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "9513acb8-92d6-4255-a8cb-524e13ffad74",
+          "conflicts": [],
+          "fullName": "Amaya Lustig",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps 2025-26 field hockey roster: Amaya Lustig as Jr. -> grade 12 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/san-diego/canyon-crest-academy-ravens/field-hockey/25-26/roster/",
+            "value": 12
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "67dd5406-0a96-4475-b7c3-a412d2b414dd",
+          "conflicts": [],
+          "fullName": "Abigail Hazelton",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps 2025-26 field hockey roster: Abigail Hazelton as Jr. -> grade 12 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/san-diego/canyon-crest-academy-ravens/field-hockey/25-26/roster/",
+            "value": 12
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "7137971d-3950-467a-a9b9-e253103e86a5",
+          "conflicts": [],
+          "fullName": "Siri Tipirneni",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps 2025-26 field hockey roster: Siri Tipirneni as So. -> grade 11 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/san-diego/canyon-crest-academy-ravens/field-hockey/25-26/roster/",
+            "value": 11
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "e68f4aec-aa0e-4304-a697-2e20c65e3e7c",
+          "conflicts": [],
+          "fullName": "Reagan Hecht",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps 2025-26 field hockey roster: Reagan Hecht as So. -> grade 11 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/san-diego/canyon-crest-academy-ravens/field-hockey/25-26/roster/",
+            "value": 11
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "c8b1378a-b0e0-4ba5-a012-1fbcf31fc493",
+          "conflicts": [],
+          "fullName": "Autumn Empey",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps 2025-26 field hockey roster: Autumn Empey as Fr. -> grade 10 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/san-diego/canyon-crest-academy-ravens/field-hockey/25-26/roster/",
+            "value": 10
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        }
+      ],
       "slug": "canyon-crest-academy",
       "sources": []
     },
@@ -13305,7 +14858,14 @@
           "athleteId": "4bab17e0-1751-476c-a40f-f5ae2674161b",
           "conflicts": [],
           "fullName": "Adalyn Robbins",
-          "grade": null,
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps 2025-26 field hockey roster: Adalyn Robbins as So. -> grade 11 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/san-diego/mt-carmel-sundevils/field-hockey/25-26/roster/",
+            "value": 11
+          },
           "height": null,
           "jersey": null,
           "level": null,
@@ -13326,7 +14886,14 @@
           "athleteId": "c504d11d-dbaf-4559-ab7c-184b70ecab57",
           "conflicts": [],
           "fullName": "Lizbeth Araujo Duran",
-          "grade": null,
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps 2025-26 field hockey roster: Lizbeth Araujo Duran as Jr. -> grade 12 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/san-diego/mt-carmel-sundevils/field-hockey/25-26/roster/",
+            "value": 12
+          },
           "height": null,
           "jersey": null,
           "level": null,
@@ -13341,6 +14908,174 @@
               "url": "https://www.ncsasports.org/field-hockey-recruiting/california/san-diego/mt-carmel-high-school/lizbeth-araujo-duran"
             }
           ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "d55dcfb9-1b29-47c8-8bc5-a1609e5ca117",
+          "conflicts": [],
+          "fullName": "Isabella Vallejo",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps 2025-26 field hockey roster: Isabella Vallejo as Jr. -> grade 12 in 2026-27 (also: MaxPreps career page (graduatingClass null): JV lacrosse 24-25 as Sophomore (/ca/san-diego/mt-carmel-sundevils/lacrosse/girls/jv/24-25/schedule/) -> grade 12 in 2026-27) Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/san-diego/mt-carmel-sundevils/field-hockey/25-26/roster/",
+            "value": 12
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "a5a4f6d5-86be-4b06-84d1-c574d46fc4ba",
+          "conflicts": [],
+          "fullName": "Charlotte Caulfield",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps 2025-26 field hockey roster: Charlotte Caulfield as Jr. -> grade 12 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/san-diego/mt-carmel-sundevils/field-hockey/25-26/roster/",
+            "value": 12
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "acd6ced2-fe12-4431-b7d3-7ab1a7b31405",
+          "conflicts": [],
+          "fullName": "Leila Stingo",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps career page (graduatingClass null): JV softball 24-25 as Freshman (/ca/san-diego/mt-carmel-sundevils/softball/jv/24-25/schedule/) -> grade 11 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/san-diego/mt-carmel-sundevils/athletes/leila-stingo/?careerid=o8cstq44ar866",
+            "value": 11
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "4d1e5c99-8ebe-499e-ae5f-5bb7e36421fd",
+          "conflicts": [],
+          "fullName": "Naiya Abalos",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps 2025-26 field hockey roster: Naiya Abalos as So. -> grade 11 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/san-diego/mt-carmel-sundevils/field-hockey/25-26/roster/",
+            "value": 11
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "2aae0a02-073e-4c53-ba33-56968d940e79",
+          "conflicts": [],
+          "fullName": "Karessa Reyes",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps 2025-26 field hockey roster: Karessa Reyes as Jr. -> grade 12 in 2026-27 (also: MaxPreps career page (graduatingClass null): Varsity lacrosse 24-25 as Sophomore (/ca/san-diego/mt-carmel-sundevils/lacrosse/girls/24-25/schedule/) -> grade 12 in 2026-27) Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/san-diego/mt-carmel-sundevils/field-hockey/25-26/roster/",
+            "value": 12
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "fee21aa5-ea34-4dfa-bd96-a72a71d3b0a6",
+          "conflicts": [],
+          "fullName": "Mollie Brennan",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps 2025-26 field hockey roster: Mollie Brennan as Jr. -> grade 12 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/san-diego/mt-carmel-sundevils/field-hockey/25-26/roster/",
+            "value": 12
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "5c5282dd-ae24-4f00-8eeb-df4a6b9a1851",
+          "conflicts": [],
+          "fullName": "Amaya Zurita",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps 2025-26 field hockey roster: Amaya Zurita as Jr. -> grade 12 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/san-diego/mt-carmel-sundevils/field-hockey/25-26/roster/",
+            "value": 12
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "90d68adc-7d2f-4e61-9723-147c0cd1fd55",
+          "conflicts": [],
+          "fullName": "Sarah Pozniak",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps 2025-26 field hockey roster: Sarah Pozniak as So. -> grade 11 in 2026-27 (also: MaxPreps career page (graduatingClass null): JV softball 25-26 as Sophomore (/ca/san-diego/mt-carmel-sundevils/softball/jv/25-26/schedule/) -> grade 11 in 2026-27) Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/san-diego/mt-carmel-sundevils/field-hockey/25-26/roster/",
+            "value": 11
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
           "sourceName": null
         }
       ],
@@ -13381,7 +15116,14 @@
           "athleteId": "f0ded703-42a2-419b-91eb-d69706e478a6",
           "conflicts": [],
           "fullName": "Chase Hatcher",
-          "grade": null,
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps career page (graduatingClass null): Varsity lacrosse 25-26 as Junior (/ca/san-diego/rancho-bernardo-broncos/lacrosse/girls/25-26/schedule/) -> grade 12 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/san-diego/rancho-bernardo-broncos/athletes/chase-hatcher/?careerid=vhl8cavfm6oue",
+            "value": 12
+          },
           "height": null,
           "jersey": null,
           "level": null,
@@ -13403,7 +15145,14 @@
           "athleteId": "63e1590c-c973-476a-8c3d-69f54be2c451",
           "conflicts": [],
           "fullName": "MacKenzie Doran",
-          "grade": null,
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps career page: graduatingClass 2027 -> grade 12 in 2026-27 (also: MaxPreps career page (graduatingClass 2027): Varsity softball 25-26 as Junior (/ca/san-diego/rancho-bernardo-broncos/softball/25-26/schedule/) -> grade 12 in 2026-27) Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/san-diego/rancho-bernardo-broncos/athletes/mackenzie-doran/?careerid=bqpcqck5nvq44",
+            "value": 12
+          },
           "height": null,
           "jersey": null,
           "level": null,
@@ -13419,6 +15168,48 @@
               "url": "https://sportsrecruits.com/athlete/mackenzie_doran5"
             }
           ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "f2ac5cc4-5e3e-453a-aed5-cc5ca5daa021",
+          "conflicts": [],
+          "fullName": "Riyaa Giridhar",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps career page (graduatingClass null): Varsity lacrosse 25-26 as Junior (/ca/san-diego/rancho-bernardo-broncos/lacrosse/girls/25-26/schedule/) -> grade 12 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/san-diego/rancho-bernardo-broncos/athletes/riyaa-giridhar/?careerid=1peba43oequ66",
+            "value": 12
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "e5913873-606e-4f10-b706-820fe1c76db2",
+          "conflicts": [],
+          "fullName": "Riley Blankenbeckler",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps career page (graduatingClass null): Varsity lacrosse 25-26 as Junior (/ca/san-diego/rancho-bernardo-broncos/lacrosse/girls/25-26/schedule/) -> grade 12 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/san-diego/rancho-bernardo-broncos/athletes/riley-blankenbeckler/?careerid=iq4lio0ne0fqa",
+            "value": 12
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
           "sourceName": null
         }
       ],
@@ -14147,7 +15938,32 @@
       "players": [
         {
           "athleteId": "0fc5f8c0-a995-42f3-8ed8-32aea6db2f3e",
-          "conflicts": [],
+          "conflicts": [
+            {
+              "field": "grade",
+              "kept": null,
+              "kind": "maxpreps-career",
+              "note": "MaxPreps 2025-26 field hockey roster: Izabel Gaytan as Jr. -> grade 12 in 2026-27 Added 2026-10-12.",
+              "other": "12",
+              "source": "https://www.maxpreps.com/ca/oceanside/mission-vista/field-hockey/25-26/roster/"
+            },
+            {
+              "field": "grade",
+              "kept": null,
+              "kind": "maxpreps-career",
+              "note": "MaxPreps career page: graduatingClass 2027 -> grade 12 in 2026-27 Added 2026-10-12.",
+              "other": "12",
+              "source": "https://www.maxpreps.com/ca/oceanside/mission-vista/athletes/izabel-gaytan/?careerid=4oaj7krccfe11"
+            },
+            {
+              "field": "grade",
+              "kept": null,
+              "kind": "maxpreps-career",
+              "note": "MaxPreps career page (graduatingClass 2027): JV lacrosse 24-25 as Freshman (/ca/oceanside/mission-vista/lacrosse/girls/jv/24-25/schedule/) -> grade 11 in 2026-27 Added 2026-10-12.",
+              "other": "11",
+              "source": "https://www.maxpreps.com/ca/oceanside/mission-vista/athletes/izabel-gaytan/?careerid=4oaj7krccfe11"
+            }
+          ],
           "fullName": "Izabel Gaytan",
           "grade": null,
           "height": null,
@@ -14170,7 +15986,14 @@
           "athleteId": "49b1f5e3-256d-490c-b698-04aba285a2fa",
           "conflicts": [],
           "fullName": "Echo Howard",
-          "grade": null,
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps 2025-26 field hockey roster: Echo Howard as So. -> grade 11 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/oceanside/mission-vista/field-hockey/25-26/roster/",
+            "value": 11
+          },
           "height": null,
           "jersey": null,
           "level": null,
@@ -14191,7 +16014,14 @@
           "athleteId": "dd089f0d-9060-45ca-9d78-fbe6428902bc",
           "conflicts": [],
           "fullName": "Makenna Pittman",
-          "grade": null,
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps 2025-26 field hockey roster: Makenna Pittman as Jr. -> grade 12 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/oceanside/mission-vista/field-hockey/25-26/roster/",
+            "value": 12
+          },
           "height": null,
           "jersey": null,
           "level": null,
@@ -14212,7 +16042,14 @@
           "athleteId": "0a11b8a8-b90e-43c5-b35f-296df4a8d0b7",
           "conflicts": [],
           "fullName": "Thyme Stavis",
-          "grade": null,
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps 2025-26 field hockey roster: Thyme Stavis as So. -> grade 11 in 2026-27 (also: MaxPreps career page (graduatingClass null): Varsity lacrosse 25-26 as Sophomore (/ca/oceanside/mission-vista/lacrosse/girls/25-26/schedule/) -> grade 11 in 2026-27) Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/oceanside/mission-vista/field-hockey/25-26/roster/",
+            "value": 11
+          },
           "height": null,
           "jersey": null,
           "level": null,
@@ -14233,7 +16070,14 @@
           "athleteId": "a696b2b7-0a07-4ebe-a507-bbea3f186d7e",
           "conflicts": [],
           "fullName": "Lauren Bailey",
-          "grade": null,
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps 2025-26 field hockey roster: Lauren Bailey as So. -> grade 11 in 2026-27 (also: MaxPreps career page (graduatingClass null): Varsity lacrosse 25-26 as Sophomore (/ca/oceanside/mission-vista/lacrosse/girls/25-26/schedule/) -> grade 11 in 2026-27) Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/oceanside/mission-vista/field-hockey/25-26/roster/",
+            "value": 11
+          },
           "height": null,
           "jersey": null,
           "level": null,
@@ -14255,7 +16099,14 @@
           "athleteId": "f3070c0b-0176-4280-900b-fad1e540c33f",
           "conflicts": [],
           "fullName": "Kennedy Balch",
-          "grade": null,
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps career page (graduatingClass null): Varsity lacrosse 25-26 as Freshman (/ca/oceanside/mission-vista/lacrosse/girls/25-26/schedule/) -> grade 10 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/oceanside/mission-vista/athletes/kennedy-balch/?careerid=ip422a2brid55",
+            "value": 10
+          },
           "height": null,
           "jersey": null,
           "level": null,
@@ -14271,6 +16122,111 @@
               "url": "https://iwlca.sportsrecruits.com/athlete/kennedy_balch"
             }
           ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "f017b120-50fa-4193-874c-e44cd99d65b3",
+          "conflicts": [],
+          "fullName": "Alessandra Carreno",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps career page (graduatingClass null): JV lacrosse 24-25 as Freshman (/ca/oceanside/mission-vista/lacrosse/girls/jv/24-25/schedule/) -> grade 11 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/oceanside/mission-vista/athletes/alessandra-carreno/?careerid=g8aq5rq9vn6ue",
+            "value": 11
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "4f2bb261-7070-4ee1-86dc-b7e32c2bc264",
+          "conflicts": [],
+          "fullName": "Emma Senvisky",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps 2025-26 field hockey roster: Emma Senvisky as Jr. -> grade 12 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/oceanside/mission-vista/field-hockey/25-26/roster/",
+            "value": 12
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "3282a1f8-0e94-4f75-9b9d-8307c221df05",
+          "conflicts": [],
+          "fullName": "Bellarose Bravo",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps career page (graduatingClass null): Varsity lacrosse 25-26 as Freshman (/ca/oceanside/mission-vista/lacrosse/girls/25-26/schedule/) -> grade 10 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/oceanside/mission-vista/athletes/bellarose-bravo/?careerid=qhu8hb25u1677",
+            "value": 10
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "55895cf5-86a2-412d-a696-8542fbcd646f",
+          "conflicts": [],
+          "fullName": "Evangeleen Lopez",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps 2025-26 field hockey roster: Evangeleen Lopez as Jr. -> grade 12 in 2026-27 (also: MaxPreps career page: graduatingClass 2027 -> grade 12 in 2026-27) Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/oceanside/mission-vista/field-hockey/25-26/roster/",
+            "value": 12
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "fce4acd1-5b14-438f-9151-ab8cf105b9cb",
+          "conflicts": [],
+          "fullName": "Natasha Kyle",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps 2025-26 field hockey roster: Natasha Kyle as Jr. -> grade 12 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/oceanside/mission-vista/field-hockey/25-26/roster/",
+            "value": 12
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
           "sourceName": null
         }
       ],
@@ -14733,6 +16689,27 @@
             }
           ],
           "sourceName": "Kate Kennan 12"
+        },
+        {
+          "athleteId": "72ac9567-7165-457b-8776-a768c3ca87c8",
+          "conflicts": [],
+          "fullName": "Katrina Bornholdt",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps career page (graduatingClass null): Varsity softball 24-25 as Sophomore (/ca/encinitas/san-dieguito-academy-mustangs/softball/24-25/schedule/) -> grade 12 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/encinitas/san-dieguito-academy-mustangs/athletes/katrina-bornholdt/?careerid=90uf504m4d3bb",
+            "value": 12
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
         }
       ],
       "slug": "san-dieguito-academy",
@@ -14953,7 +16930,14 @@
           "athleteId": "53724304-76ed-463a-a1fe-3291c76b5773",
           "conflicts": [],
           "fullName": "Kaylee Hardacker",
-          "grade": null,
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps career page: graduatingClass 2028 -> grade 11 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/escondido/escondido-cougars/athletes/kaylee-hardacker/?careerid=4miht3qg12k66",
+            "value": 11
+          },
           "height": null,
           "jersey": null,
           "level": null,
@@ -15474,7 +17458,14 @@
           "athleteId": "73d35610-2d5b-41ae-a5fc-0c30d4a1f083",
           "conflicts": [],
           "fullName": "Ella Aguayo",
-          "grade": null,
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps career page (graduatingClass null): Varsity softball 25-26 as Sophomore (/ca/la-mesa/helix-scotties/softball/25-26/schedule/) -> grade 11 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/la-mesa/helix-scotties/athletes/ella-aguayo/?careerid=1h8ibpat06do8",
+            "value": 11
+          },
           "height": null,
           "jersey": null,
           "level": null,
@@ -15511,6 +17502,27 @@
             }
           ],
           "sourceName": "Zuri St.Clair"
+        },
+        {
+          "athleteId": "150ec04d-58bb-4960-8102-4bcb16e7f25f",
+          "conflicts": [],
+          "fullName": "Aylen Acevedo",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps career page (graduatingClass null): Varsity beach volleyball 25-26 as Junior (/ca/la-mesa/helix-scotties/beach-volleyball/25-26/schedule/) -> grade 12 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/la-mesa/helix-scotties/athletes/aylen-acevedo/?careerid=lltea9f04ls66",
+            "value": 12
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
         }
       ],
       "slug": "helix",
@@ -15586,7 +17598,14 @@
           "athleteId": "766fe633-7b70-4592-b8bc-a258dfce74c0",
           "conflicts": [],
           "fullName": "Sahara Molina",
-          "grade": null,
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps 2025-26 field hockey roster: Sahara Molina as Jr. -> grade 12 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/el-cajon/granite-hills-eagles/field-hockey/25-26/roster/",
+            "value": 12
+          },
           "height": null,
           "jersey": null,
           "level": null,
@@ -15607,7 +17626,14 @@
           "athleteId": "2aab08a8-8c77-4fb4-8e63-061f11bb2384",
           "conflicts": [],
           "fullName": "Gisele Stonier",
-          "grade": null,
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps 2025-26 field hockey roster: Gisele Stonier as Fr. -> grade 10 in 2026-27 (also: MaxPreps career page: graduatingClass 2029 -> grade 10 in 2026-27) Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/el-cajon/granite-hills-eagles/field-hockey/25-26/roster/",
+            "value": 10
+          },
           "height": null,
           "jersey": null,
           "level": null,
@@ -15628,7 +17654,14 @@
           "athleteId": "8a18c457-0bd6-4be2-b50e-22c16100b1a6",
           "conflicts": [],
           "fullName": "Sofia Dulaney",
-          "grade": null,
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps career page (graduatingClass null): Freshman basketball 24-25 as Freshman (/ca/el-cajon/granite-hills-eagles/basketball/girls/freshman/24-25/schedule/) -> grade 11 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/el-cajon/granite-hills-eagles/athletes/sofia-dulaney/?careerid=6bu3qgamb5sj3",
+            "value": 11
+          },
           "height": null,
           "jersey": null,
           "level": null,
@@ -15644,6 +17677,132 @@
               "url": "https://iwlca.sportsrecruits.com/athlete/sofia_dulaney"
             }
           ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "69efdc19-cc8f-4f1e-a439-155ee9c302c4",
+          "conflicts": [],
+          "fullName": "Coda Harper",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps career page: graduatingClass 2030 -> grade 9 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/el-cajon/granite-hills-eagles/athletes/coda-harper/?careerid=a29b00g40n2j3",
+            "value": 9
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "e105dff5-ed6f-464a-ba42-a78a9a5c48f4",
+          "conflicts": [],
+          "fullName": "Kendall Ehlers",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps 2025-26 field hockey roster: Kendall Ehlers as Jr. -> grade 12 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/el-cajon/granite-hills-eagles/field-hockey/25-26/roster/",
+            "value": 12
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "9ab7e6b0-6ffb-4d84-9974-63e1ac938dc6",
+          "conflicts": [],
+          "fullName": "Emily Cortez",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps 2025-26 field hockey roster: Emily Cortez as Jr. -> grade 12 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/el-cajon/granite-hills-eagles/field-hockey/25-26/roster/",
+            "value": 12
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "bb250985-898c-4170-88d0-7727fbaed77f",
+          "conflicts": [],
+          "fullName": "April Bivian",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps career page (graduatingClass null): Freshman basketball 24-25 as Freshman (/ca/el-cajon/granite-hills-eagles/basketball/girls/freshman/24-25/schedule/) -> grade 11 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/el-cajon/granite-hills-eagles/athletes/april-bivian/?careerid=6l6oihmoju333",
+            "value": 11
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "31a8a0fd-50da-4ded-96cb-b4119e385cef",
+          "conflicts": [],
+          "fullName": "Brynn Shippam",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps career page (graduatingClass null): JV soccer 25-26 as Freshman (/ca/el-cajon/granite-hills-eagles/soccer/girls/jv/winter/25-26/schedule/) -> grade 10 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/el-cajon/granite-hills-eagles/athletes/brynn-shippam/?careerid=ut3qib70s7r55",
+            "value": 10
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "a85719ac-02b5-498e-a411-d8e92cfff076",
+          "conflicts": [],
+          "fullName": "Alicia Laning",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps career page (graduatingClass null): JV soccer 25-26 as Freshman (/ca/el-cajon/granite-hills-eagles/soccer/girls/jv/winter/25-26/schedule/) -> grade 10 in 2026-27 (also: MaxPreps career page (graduatingClass null): Freshman volleyball 25-26 as Freshman (/ca/el-cajon/granite-hills-eagles/volleyball/freshman/25-26/schedule/) -> grade 10 in 2026-27) Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/el-cajon/granite-hills-eagles/athletes/alicia-laning/?careerid=g34sapq7nton7",
+            "value": 10
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
           "sourceName": null
         }
       ],
@@ -15750,7 +17909,14 @@
           "athleteId": "75df3708-8ae5-4c6d-a6c8-6a29ee8e48d5",
           "conflicts": [],
           "fullName": "Brooklynn Gray",
-          "grade": null,
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps 2025-26 field hockey roster: Brooklynn Gray as Jr. -> grade 12 in 2026-27 (also: MaxPreps career page (graduatingClass null): JV softball 23-24 as Freshman (/ca/la-verne/bonita-bearcats/softball/jv/23-24/schedule/) -> grade 12 in 2026-27) Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/la-verne/bonita-bearcats/field-hockey/25-26/roster/",
+            "value": 12
+          },
           "height": null,
           "jersey": null,
           "level": null,
@@ -15771,7 +17937,14 @@
           "athleteId": "7f8ee655-3870-4542-af98-b45cae1bb50e",
           "conflicts": [],
           "fullName": "Maya Aguayo",
-          "grade": null,
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps career page (graduatingClass null): Varsity softball 25-26 as Sophomore (/ca/la-verne/bonita-bearcats/softball/25-26/schedule/) -> grade 11 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/la-verne/bonita-bearcats/athletes/maya-aguayo/?careerid=joa9eot2c4f77",
+            "value": 11
+          },
           "height": null,
           "jersey": null,
           "level": null,
@@ -15792,7 +17965,14 @@
           "athleteId": "2c68f132-8ca1-4037-b65d-e4584770384a",
           "conflicts": [],
           "fullName": "Ava Martinez",
-          "grade": null,
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps 2025-26 field hockey roster: Ava Martinez as Jr. -> grade 12 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/la-verne/bonita-bearcats/field-hockey/25-26/roster/",
+            "value": 12
+          },
           "height": null,
           "jersey": null,
           "level": null,
@@ -15855,7 +18035,14 @@
           "athleteId": "49ca52af-9f27-4a61-910b-9e1775b7bec8",
           "conflicts": [],
           "fullName": "Lillian Gruter",
-          "grade": null,
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps career page: graduatingClass 2027 -> grade 12 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/la-verne/bonita-bearcats/athletes/lillian-gruter/?careerid=0rfe41o2no855",
+            "value": 12
+          },
           "height": null,
           "jersey": null,
           "level": null,
@@ -15912,6 +18099,90 @@
               "url": "https://www.ncsasports.org/field-hockey-recruiting/california/la-verne/bonita-high-school/madison-dolter"
             }
           ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "013f0627-5c35-4e7d-92cd-83a696fe5e22",
+          "conflicts": [],
+          "fullName": "Ariana Valdivia",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps career page: graduatingClass 2027 -> grade 12 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/la-verne/bonita-bearcats/athletes/ariana-valdivia/?careerid=e9k3jgh8mso44",
+            "value": 12
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "64b24cb2-12ef-46d6-b5db-3c47664bffad",
+          "conflicts": [],
+          "fullName": "Isabella De Haro",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps career page (graduatingClass null): Freshman soccer 24-25 as Freshman (/ca/la-verne/bonita-bearcats/soccer/girls/freshman/winter/24-25/schedule/) -> grade 11 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/la-verne/bonita-bearcats/athletes/isabella-de-haro/?careerid=070q119o2hph1",
+            "value": 11
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "d97cca3f-16b0-4b98-9d48-58ccd28e1c44",
+          "conflicts": [],
+          "fullName": "Brooke Reedy",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps 2025-26 field hockey roster: Brooke Reedy as So. -> grade 11 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/la-verne/bonita-bearcats/field-hockey/25-26/roster/",
+            "value": 11
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "5284deb0-f657-4c8c-9a21-c1f8c6191ec1",
+          "conflicts": [],
+          "fullName": "Melony Hoffman",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps 2025-26 field hockey roster: Melony Hoffman as So. -> grade 11 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/la-verne/bonita-bearcats/field-hockey/25-26/roster/",
+            "value": 11
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
           "sourceName": null
         }
       ],
@@ -16195,7 +18466,50 @@
         "None linked. Selah Gonzales' SportsRecruits page (selah_gonzales, 2028, hometown 'CA' only, no school) is a near miss; no Hudl field hockey team exists for Glendora High School and no NCSA or FieldLevel page matched a Glendora player.",
         "The school-athletics roster sweep (grade, height, number, position, coaches) has not been done, so nothing else is filled."
       ],
-      "players": [],
+      "players": [
+        {
+          "athleteId": "07c510c7-d6b3-457c-9add-d129d645b5ae",
+          "conflicts": [],
+          "fullName": "Sophia Juarez",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps career page (graduatingClass null): JV softball 25-26 as Sophomore (/ca/glendora/glendora-tartans/softball/jv/25-26/schedule/) -> grade 11 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/glendora/glendora-tartans/athletes/sophia-juarez/?careerid=f68veeuntbmqa",
+            "value": 11
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "9f0cfcce-015c-4b93-80e2-eb687018a26d",
+          "conflicts": [],
+          "fullName": "Ava Menchaca",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps career page (graduatingClass null): JV softball 24-25 as Sophomore (/ca/glendora/glendora-tartans/softball/jv/24-25/schedule/) -> grade 12 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/glendora/glendora-tartans/athletes/ava-menchaca/?careerid=bf1ivn0qdtt33",
+            "value": 12
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        }
+      ],
       "slug": "glendora",
       "sources": []
     },
@@ -16718,6 +19032,27 @@
               "url": "https://www.ncsasports.org/field-hockey-recruiting/california/thousand-oaks/thousand-oaks-high-school/emma-corrales-molina"
             }
           ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "52601bb5-8326-4725-b0c2-231080bfbf98",
+          "conflicts": [],
+          "fullName": "Autumn Santana",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps career page (graduatingClass null): Freshman softball 24-25 as Freshman (/ca/thousand-oaks/thousand-oaks-lancers/softball/freshman/24-25/schedule/) -> grade 11 in 2026-27 Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/thousand-oaks/thousand-oaks-lancers/athletes/autumn-santana/?careerid=m3uu0rlp9mhcc",
+            "value": 11
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
           "sourceName": null
         }
       ],

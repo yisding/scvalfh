@@ -52,19 +52,31 @@ const raw = JSON.parse(
 
 /** A profile the 2026-10-12 SportsRecruits address probe added: its note says so. */
 const fromProbe1012 = (x: { note: string | null }) => x.note?.includes('Found by the 2026-10-12 address probe') ?? false;
+/** A grade, a conflict or a record note added on 2026-10-12 from MaxPreps' career and 2025-26 pages: its note says so. */
+const from1012 = (note: string | null | undefined) => (note ?? '').includes('Added 2026-10-12') || (note ?? '').endsWith('(2026-10-12).');
 
 /**
- * The file as the captures before 2026-10-12 left it: without the probe's profiles, and without the
- * records that hold nothing else. The tests that pin what each earlier capture found read this.
+ * The file as the captures before 2026-10-12 left it: without that day's profiles, grades,
+ * conflicts and notes, and without the records that hold nothing else. The tests that pin what each
+ * earlier capture found read this.
  */
 const pre: RosterEnrichment = {
   ...raw,
   teams: raw.teams.map((t) => ({
     ...t,
     players: t.players
-      .filter((p) => !(p.profiles.length > 0 && p.profiles.every(fromProbe1012) && p.grade === null && p.positions === null &&
-        p.jersey === null && p.height === null && p.level === null && p.conflicts.length === 0 && p.sourceName === null))
-      .map((p) => ({ ...p, profiles: p.profiles.filter((x) => !fromProbe1012(x)) })),
+      .map((p) => ({
+        ...p,
+        grade: p.grade && from1012(p.grade.note) ? null : p.grade,
+        conflicts: p.conflicts.filter((c) => !from1012(c.note)),
+        note: from1012(p.note) ? null : p.note,
+        profiles: p.profiles.filter((x) => !fromProbe1012(x)),
+      }))
+      .filter(
+        (p) =>
+          p.sourceName !== null || p.level !== null || p.grade !== null || p.positions !== null || p.jersey !== null ||
+          p.height !== null || p.conflicts.length > 0 || p.profiles.length > 0 || p.note !== null,
+      ),
   })),
 };
 
@@ -197,6 +209,9 @@ describe('data/rosters-enrichment.json', () => {
       'berkeley/Anisa Alejandrino',
       'leland/Anna Lychagina',
       'leland/Michaela Reichmuth',
+      // MaxPreps' 2025-26 roster and career page disagree (2026-10-12).
+      'mission-vista/Izabel Gaytan',
+      'point-loma/Ellie Kay',
       'redwood/Audrey Dickerman',
       'redwood/Eloise Tonderys',
       'salinas/Ana Garcia',
@@ -257,7 +272,7 @@ describe('data/rosters-enrichment.json', () => {
   });
 
   it('what it adds for SCVAL, as captured on 2026-10-02', () => {
-    const scval = raw.teams.filter((t) => SCVAL_SLUGS.has(t.slug));
+    const scval = pre.teams.filter((t) => SCVAL_SLUGS.has(t.slug));
     const all = scval.flatMap((t) => t.players);
     const n = (k: 'grade' | 'positions' | 'jersey' | 'height') => all.filter((p) => p[k] !== null).length;
     expect(n('grade')).toBe(133);
@@ -267,7 +282,7 @@ describe('data/rosters-enrichment.json', () => {
     expect(all.filter((p) => p.level !== null).length).toBe(56);
     // The level split only exists for Los Gatos, whose MaxPreps list is the whole program.
     expect(scval.filter((t) => t.players.some((p) => p.level !== null)).map((t) => t.slug)).toEqual(['los-gatos']);
-    const lg = raw.teams.find((t) => t.slug === 'los-gatos')!;
+    const lg = pre.teams.find((t) => t.slug === 'los-gatos')!;
     expect(lg.players.filter((p) => p.level === 'varsity').length).toBe(27);
     expect(lg.players.filter((p) => p.level === 'jv').length).toBe(29);
   });
@@ -616,6 +631,21 @@ describe('recruiting profiles', () => {
     expect(profiles.map((p) => p.url)).not.toContain('https://nfhca.sportsrecruits.com/athlete/alexis_andersen');
   });
 
+  it('what MaxPreps\' career and earlier-season pages added on 2026-10-12: grades MaxPreps\' own roster leaves blank', () => {
+    const records = raw.teams.flatMap((t) => t.players.map((p) => ({ slug: t.slug, p })));
+    const added = records.filter(({ p }) => p.grade !== null && from1012(p.grade.note));
+    expect(added).toHaveLength(137);
+    for (const { slug, p } of added) {
+      expect([p.grade!.kind, p.grade!.derived, p.grade!.confidence], `${slug} / ${p.fullName}`).toEqual(['maxpreps-career', true, 'medium']);
+      expect(p.grade!.source, `${slug} / ${p.fullName}`).toMatch(/^https:\/\/www\.maxpreps\.com\//);
+    }
+    const SOCAL = new Set(['sunset', 'city', 'north-county', 'metro', 'independents']);
+    expect(added.filter(({ slug }) => SOCAL.has(getTeamBySlug(slug)!.league))).toHaveLength(128);
+    // Where those pages disagree the grade stays blank and both are conflicts.
+    const blanked = records.filter(({ p }) => p.conflicts.some((c) => from1012(c.note))).map(({ slug, p }) => `${slug}/${p.fullName}`);
+    expect(blanked.sort()).toEqual(['mission-vista/Izabel Gaytan', 'point-loma/Ellie Kay']);
+  });
+
   it('what the 2026-10-12 SportsRecruits probe found, in every sport', () => {
     const records = raw.teams.flatMap((t) => t.players.map((p) => ({ t, p })));
     const probe = records.flatMap(({ t, p }) => p.profiles.filter(fromProbe1012).map((x) => ({ slug: t.slug, name: p.fullName, x })));
@@ -747,7 +777,8 @@ describe('lib/rosters.ts merged view', () => {
     expect(all.length).toBe(scvalBase.length);
     const n = (ps: ReadonlyArray<{ grade: number | null; position: string | null; height: string | null }>, k: 'grade' | 'position' | 'height') =>
       ps.filter((p) => p[k] !== null).length;
-    expect(n(all, 'grade')).toBe(n(scvalBase, 'grade') + 133);
+    // 133 from the 2026-10-02 research, and 8 more from MaxPreps' career and earlier-season pages on 2026-10-12.
+    expect(n(all, 'grade')).toBe(n(scvalBase, 'grade') + 141);
     expect(n(all, 'position')).toBe(n(scvalBase, 'position') + 9);
     expect(n(all, 'height')).toBe(n(scvalBase, 'height') + 23);
     expect(getRosterEnrichment().teams.length).toBe(TEAMS.length);
