@@ -13,7 +13,7 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 
 import TeamRoster from '../../components/teams/TeamRoster';
-import { buildRosterView, seasonPage } from '../../components/teams/roster-view';
+import { buildRosterView, profileLabel, seasonPage } from '../../components/teams/roster-view';
 import { getPlayerClubs } from '../../lib/clubs';
 import { LEAGUE_IDS } from '../../lib/leagues';
 import { getEnrichedTeamRoster } from '../../lib/rosters';
@@ -568,5 +568,15 @@ describe('TeamRoster: club lines', () => {
     // The comma sits after the closing tag of the club before it, so it cannot start a line.
     expect(html).toContain('Fly FHC</span></a></span><span>, <a');
     expect(html).toMatch(/\u00a0· <span aria-hidden="true" class="text-ink-3">Earlier clubs:<\/span>\u00a0/);
+  });
+});
+
+describe('profile link text', () => {
+  it('names the platform, and the sport when it is not field hockey', () => {
+    expect(profileLabel({ platform: 'ncsa' })).toBe('NCSA profile');
+    expect(profileLabel({ platform: 'sportsrecruits', sport: 'lacrosse' })).toBe('SportsRecruits lacrosse profile');
+    expect(profileLabel({ platform: 'hudl', sport: 'softball' })).toBe('Hudl softball profile');
+    expect(profileLabel({ platform: 'personal' })).toBe('Recruiting site');
+    expect(profileLabel({ platform: 'personal', sport: 'water-polo' })).toBe('Water polo recruiting site');
   });
 });

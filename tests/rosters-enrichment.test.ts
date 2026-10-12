@@ -285,7 +285,11 @@ describe('recruiting profiles', () => {
     for (const p of profiles) {
       expect(p.url).toMatch(/^https:\/\//);
       if (p.platform === 'ncsa') {
-        expect(p.url).toMatch(/^https:\/\/www\.ncsasports\.org\/field-hockey-recruiting\/california\//);
+        expect(p.url).toMatch(
+          p.sport === undefined
+            ? /^https:\/\/www\.ncsasports\.org\/field-hockey-recruiting\/california\//
+            : /^https:\/\/www\.ncsasports\.org\/[a-z-]+-recruiting\/california\//,
+        );
       }
     }
   });
@@ -336,6 +340,32 @@ describe('recruiting profiles', () => {
       ncsa('https://www.ncsasports.org/same', null),
     ];
     expect(RosterEnrichmentSchema.safeParse(shared).success).toBe(false);
+  });
+
+  it('takes one profile per platform in each sport, and never a field hockey profile that says so', () => {
+    const sportsrecruits = (url: string, sport?: 'lacrosse' | 'softball') =>
+      ({ platform: 'sportsrecruits', url, classOf: null, note: null, ...(sport ? { sport } : {}) }) as const;
+    const two = structuredClone(raw);
+    recordFor(two, 'st-ignatius', storey.athleteId!, storey.fullName).profiles = [
+      sportsrecruits('https://nfhca.sportsrecruits.com/athlete/a'),
+      sportsrecruits('https://iwlca.sportsrecruits.com/athlete/a', 'lacrosse'),
+      sportsrecruits('https://sportsrecruits.com/athlete/a', 'softball'),
+    ];
+    expect(RosterEnrichmentSchema.safeParse(two).success).toBe(true);
+
+    const twiceInOneSport = structuredClone(raw);
+    recordFor(twiceInOneSport, 'st-ignatius', storey.athleteId!, storey.fullName).profiles = [
+      sportsrecruits('https://iwlca.sportsrecruits.com/athlete/a', 'lacrosse'),
+      sportsrecruits('https://iwlca.sportsrecruits.com/athlete/b', 'lacrosse'),
+    ];
+    expect(RosterEnrichmentSchema.safeParse(twiceInOneSport).success).toBe(false);
+
+    // Field hockey is the default, never written out, so a profile's sport is never redundant.
+    const explicit = structuredClone(raw);
+    recordFor(explicit, 'st-ignatius', storey.athleteId!, storey.fullName).profiles = [
+      { ...sportsrecruits('https://nfhca.sportsrecruits.com/athlete/a'), sport: 'field-hockey' } as never,
+    ];
+    expect(RosterEnrichmentSchema.safeParse(explicit).success).toBe(false);
   });
 
   it('refuses, at load, a profile whose class year disagrees with the roster', () => {

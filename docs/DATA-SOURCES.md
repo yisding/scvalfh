@@ -454,11 +454,13 @@ Southern California differences, all **[V]** on 2026-10-06:
 | EAL: Bella Vista, Corning | none found | Bella Vista's only near matches are another class year (Rosy Johnson) and lacrosse pages. |
 
 The rule: a page is linked only when it names the player (or the school's spelling, `sourceName`)
-and field hockey, and either names this school or shows the class year the roster shows plus a
-California hometown. A stated class year must agree with the row's grade; `lib/rosters.ts` refuses
-the file at load otherwise. Social media, news stories and profiles for other sports are not
-linked; several rostered players have lacrosse or softball profiles on SportsRecruits, instead
-of or beside a field hockey one.
+and a sport, and either names this school or shows the class year the roster shows plus a
+California hometown (for a profile in another sport, a hometown in the school's half of the state).
+A stated class year must agree with the row's grade; `lib/rosters.ts` refuses the file at load
+otherwise. Social media and news stories are not linked. Until 2026-10-12 only field hockey profiles
+were; since then a profile in any other sport is linked too, with its `sport` (a field hockey
+profile has none), and the roster names that sport in the link ("SportsRecruits lacrosse
+profile"). A player has at most one profile per platform in each sport.
 
 Gotchas, all **[V]**:
 - **NCSA** (`ncsasports.org/field-hockey-recruiting/california/<city>/<school>/<first-last[N]>`)
