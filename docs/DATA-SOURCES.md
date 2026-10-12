@@ -1289,7 +1289,8 @@ ran in parallel; the web-search tool's per-turn budget (1,000 searches, shared) 
 the player-by-player sweeps finished 431 rows (nearly every class-of-2027 row), and a second pass
 ran one search for each of the other 917 class-of-2027, class-of-2028 and ungraded rows and one
 for each of the 55 official X accounts on the schools' sites. 1,336 rows got a name search; the 309
-sophomores and freshmen got none (NCAA contact rules mostly keep them from committing yet), and X's
+sophomores and freshmen got none (NCAA contact rules mostly keep them from committing yet), nor did
+the 28 rows already in the file, and X's
 search results never surfaced a post. Two commitments were found and re-read: Shyla
 Paredes (Cal Nuggets' commitment list and 18U Woods roster, tied by her MaxPreps page naming the
 club; medium) and Molly Waltz, Archbishop Mitty, to UC Davis lacrosse (ADVNC's commits page, with her
