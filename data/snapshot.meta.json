@@ -1,13 +1,13 @@
 {
   "cifssCrossCheck": {
-    "agreements": 491,
+    "agreements": 493,
     "cifssOnlyScored": 0,
-    "compared": 499,
+    "compared": 501,
     "conflicts": 8,
     "notOnMaxPreps": 0
   },
-  "commitSummary": "SCVAL +0 finals · BVAL +1 · PCAL +0 · MCAL +0 · EAL +0 · Sunset +0 · City +0 · North +0 · Metro +0 · LA +0",
-  "contentHash": "784b470850622ff419da213c27614002f70ab9cd50a3d72a7757f641cc7b95bd",
+  "commitSummary": "SCVAL +0 finals · BVAL +0 · PCAL +0 · MCAL +0 · EAL +0 · Sunset +1 · City +0 · North +1 · Metro +0 · LA +1",
+  "contentHash": "4193b4760fa4c528371576442dda1deb530403e8a9d099321d6a5a6c3d5f6c61",
   "counts": {
     "byLeague": {
       "bval": {
@@ -27,13 +27,13 @@
       "eal": {
         "backfilled": 0,
         "finals": 27,
-        "games": 42,
+        "games": 41,
         "leagueGames": 30,
         "teams": 6
       },
       "independents": {
         "backfilled": 0,
-        "finals": 49,
+        "finals": 50,
         "games": 55,
         "leagueGames": 21,
         "teams": 5
@@ -54,8 +54,8 @@
       },
       "north-county": {
         "backfilled": 0,
-        "finals": 179,
-        "games": 247,
+        "finals": 180,
+        "games": 246,
         "leagueGames": 102,
         "teams": 19
       },
@@ -75,27 +75,27 @@
       },
       "sunset": {
         "backfilled": 0,
-        "finals": 86,
+        "finals": 87,
         "games": 98,
         "leagueGames": 35,
         "teams": 8
       }
     },
-    "finals": 617,
-    "games": 891,
+    "finals": 620,
+    "games": 890,
     "leagueGames": 547,
     "mismatches": 20,
-    "pending": 13,
+    "pending": 10,
     "teams": 102
   },
   "crossCheck": {
     "agreements": 175,
     "backfilled": 1,
-    "compared": 239,
-    "conflicts": 10,
-    "sbliveOnlyScored": 1
+    "compared": 243,
+    "conflicts": 9,
+    "sbliveOnlyScored": 2
   },
-  "fetchedAt": "2026-10-12T12:38:33.499Z",
+  "fetchedAt": "2026-10-12T21:58:22.542Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -109,7 +109,7 @@
     {
       "backfilled": 0,
       "countedFinals": 25,
-      "finalsDelta": 1,
+      "finalsDelta": 0,
       "id": "bval",
       "missingPast": 0,
       "reasons": [],
@@ -144,10 +144,10 @@
     },
     {
       "backfilled": 0,
-      "countedFinals": 25,
-      "finalsDelta": 0,
+      "countedFinals": 26,
+      "finalsDelta": 1,
       "id": "sunset",
-      "missingPast": 2,
+      "missingPast": 1,
       "reasons": [],
       "state": "fresh"
     },
@@ -162,10 +162,10 @@
     },
     {
       "backfilled": 0,
-      "countedFinals": 47,
-      "finalsDelta": 0,
+      "countedFinals": 48,
+      "finalsDelta": 1,
       "id": "north-county",
-      "missingPast": 1,
+      "missingPast": 0,
       "reasons": [],
       "state": "fresh"
     },
@@ -180,10 +180,10 @@
     },
     {
       "backfilled": 0,
-      "countedFinals": 15,
-      "finalsDelta": 0,
+      "countedFinals": 16,
+      "finalsDelta": 1,
       "id": "independents",
-      "missingPast": 1,
+      "missingPast": 0,
       "reasons": [],
       "state": "fresh"
     }
@@ -958,7 +958,7 @@
     },
     {
       "label": "sblive scoreboard 2026-10-08",
-      "rowCount": 21,
+      "rowCount": 22,
       "status": "ok"
     },
     {
@@ -987,11 +987,6 @@
       "status": "ok"
     },
     {
-      "label": "sblive chaminade games",
-      "rowCount": 14,
-      "status": "ok"
-    },
-    {
       "label": "sblive chico games",
       "rowCount": 13,
       "status": "ok"
@@ -1009,6 +1004,11 @@
     {
       "label": "sblive corning games",
       "rowCount": 8,
+      "status": "ok"
+    },
+    {
+      "label": "sblive cupertino games",
+      "rowCount": 20,
       "status": "ok"
     },
     {
@@ -1053,7 +1053,7 @@
     },
     {
       "label": "cifsshome.org San Diego Section field hockey",
-      "rowCount": 481,
+      "rowCount": 480,
       "status": "ok"
     },
     {
@@ -1068,7 +1068,7 @@
     }
   ],
   "today": "2026-10-12",
-  "warnings": 47,
+  "warnings": 46,
   "window": {
     "firstGame": "2026-08-12T17:15:00",
     "lastGame": "2026-10-30T19:00:00",
