@@ -21,6 +21,7 @@ import {
   COMMIT_SPORTS,
   CommitsFileSchema,
   isCommitDate,
+  isPostBy,
   type College,
   type Commitment,
   type CommitsFile,
@@ -121,15 +122,24 @@ describe('the committed data/commits.json', () => {
     expect(raw.season).toBe(season);
   });
 
-  it('cites only https pages, none of them social media', () => {
+  it('cites only https pages, social media only as an official account\'s post', () => {
+    const social = (url: string) => BANNED_HOSTS.some((h) => new URL(url).hostname === h || new URL(url).hostname.endsWith(`.${h}`));
+    const sources = raw.commitments.flatMap((c) => c.sources);
     const urls = [
       ...raw.colleges.flatMap((c) => [...c.programs.map((p) => p.url), ...c.sources.map((s) => s.url)]),
-      ...raw.commitments.flatMap((c) => c.sources.map((s) => s.url)),
+      ...sources.map((s) => s.url),
+      ...sources.flatMap((s) => (s.account ? [s.account.proof] : [])),
     ].filter((u): u is string => u !== null);
-    for (const url of urls) {
-      expect(new URL(url).protocol, url).toBe('https:');
-      const host = new URL(url).hostname;
-      expect(BANNED_HOSTS.some((h) => host === h || host.endsWith(`.${h}`)), url).toBe(false);
+    for (const url of urls) expect(new URL(url).protocol, url).toBe('https:');
+    for (const c of raw.colleges) {
+      for (const url of [...c.programs.map((p) => p.url), ...c.sources.map((s) => s.url)]) if (url) expect(social(url), url).toBe(false);
+    }
+    for (const s of sources) {
+      expect(social(s.url), s.url).toBe(s.kind === 'official-social');
+      if (s.account) {
+        expect(isPostBy(s.url, s.account.platform, s.account.handle), s.url).toBe(true);
+        expect(social(s.account.proof), s.account.proof).toBe(false);
+      }
     }
   });
 
@@ -171,27 +181,39 @@ describe('the committed data/commits.json', () => {
   });
 });
 
-describe('the research of 2026-10-03, 2026-10-04 and 2026-10-06 (the EAL sweeps found no row; the Southern California round twelve), as counted in README "College commitments" and DATA-SOURCES §1.1j3', () => {
+describe('the research of 2026-10-03, 2026-10-04, 2026-10-06 and 2026-10-12 (the EAL sweeps found no row; the Southern California round twelve; the 2026-10-12 round two), as counted in README "College commitments" and DATA-SOURCES §1.1j3', () => {
   // Pinned: change these only with a new sweep, together with those two documents.
   const SOCAL = new Set(['sunset', 'city', 'north-county', 'metro', 'independents']);
   const socal = raw.commitments.filter((c) => SOCAL.has(getTeamBySlug(c.teamSlug)!.league));
   const norcal = raw.commitments.filter((c) => !SOCAL.has(getTeamBySlug(c.teamSlug)!.league));
 
-  it('holds 28 commitments from 16 schools to 22 colleges (25 programs), all "committed", 24 high and 4 medium', () => {
-    expect(raw.capturedAt).toBe('2026-10-06');
-    expect(raw.commitments).toHaveLength(28);
-    expect(raw.colleges).toHaveLength(22);
-    expect(raw.colleges.flatMap((c) => c.programs)).toHaveLength(25);
+  it('holds 30 commitments from 18 schools to 23 colleges (26 programs), all "committed", 25 high and 5 medium', () => {
+    expect(raw.capturedAt).toBe('2026-10-12');
+    expect(raw.commitments).toHaveLength(30);
+    expect(raw.colleges).toHaveLength(23);
+    expect(raw.colleges.flatMap((c) => c.programs)).toHaveLength(26);
     expect(new Set(norcal.map((c) => c.teamSlug))).toEqual(
-      new Set(['berkeley', 'christopher', 'los-altos', 'marin-catholic', 'redwood', 'saint-francis', 'saratoga', 'st-ignatius', 'stevenson']),
+      new Set([
+        'berkeley',
+        'christopher',
+        'los-altos',
+        'marin-catholic',
+        'mitty',
+        'redwood',
+        'saint-francis',
+        'saratoga',
+        'st-ignatius',
+        'stevenson',
+        'valley-christian',
+      ]),
     );
-    expect(norcal).toHaveLength(16);
+    expect(norcal).toHaveLength(18);
     expect(new Set(socal.map((c) => c.teamSlug))).toEqual(
       new Set(['bishops', 'canyon-hills', 'cathedral-catholic', 'harvard-westlake', 'san-dieguito-academy', 'scripps-ranch', 'torrey-pines']),
     );
     expect(socal).toHaveLength(12);
     expect(raw.commitments.every((c) => c.status === 'committed')).toBe(true);
-    expect(raw.commitments.filter((c) => c.confidence === 'medium').map((c) => c.fullName)).toEqual(['Rylie Storm', 'Reese Roldan', 'Sami Lee', 'Ryan Hemeon']);
+    expect(raw.commitments.filter((c) => c.confidence === 'medium').map((c) => c.fullName)).toEqual(['Rylie Storm', 'Reese Roldan', 'Sami Lee', 'Ryan Hemeon', 'Shyla Paredes']);
     // Sami Lee's rests on the revised nickname rule (2026-10-06): the pages say Samantha; her own MaxPreps page backs the club.
     const lee = socal.find((c) => c.fullName === 'Sami Lee')!;
     expect([lee.college, lee.sport, lee.sources.map((s) => s.kind)]).toEqual(['columbia', 'field-hockey', ['event', 'club-site', 'maxpreps']]);
@@ -205,9 +227,9 @@ describe('the research of 2026-10-03, 2026-10-04 and 2026-10-06 (the EAL sweeps 
     expect(raw.commitments.filter((c) => ealSlugs.has(c.teamSlug))).toEqual([]);
   });
 
-  it('by sport: 17 field hockey, 9 lacrosse, 1 soccer, 1 basketball (SoCal: 10 field hockey, 2 lacrosse)', () => {
+  it('by sport: 17 field hockey, 10 lacrosse, 1 soccer, 1 basketball, 1 softball (SoCal: 10 field hockey, 2 lacrosse)', () => {
     const sport = (s: string, list = raw.commitments) => list.filter((c) => c.sport === s).length;
-    expect([sport('field-hockey'), sport('lacrosse'), sport('soccer'), sport('basketball')]).toEqual([17, 9, 1, 1]);
+    expect([sport('field-hockey'), sport('lacrosse'), sport('soccer'), sport('basketball'), sport('softball')]).toEqual([17, 10, 1, 1, 1]);
     expect([sport('field-hockey', socal), sport('lacrosse', socal)]).toEqual([10, 2]);
     // Three colleges hold two programs: UC Davis (field hockey in the MPSF, lacrosse in the Big 12),
     // Cal (field hockey and lacrosse, both ACC) and Harvard (both Ivy League).
@@ -225,18 +247,18 @@ describe('the research of 2026-10-03, 2026-10-04 and 2026-10-06 (the EAL sweeps 
     ]);
   });
 
-  it('by class: 20 from 2027 and 8 from 2028; by level: 19 Division I, 1 Division II, 8 Division III', () => {
+  it('by class: 20 from 2027 and 10 from 2028; by level: 21 Division I, 1 Division II, 8 Division III', () => {
     const classes = getCommitments().map((c) => commitClassOf(c));
     expect(classes.filter((y) => y === 2027)).toHaveLength(20);
-    expect(classes.filter((y) => y === 2028)).toHaveLength(8);
+    expect(classes.filter((y) => y === 2028)).toHaveLength(10);
     const level = (d: string) => raw.commitments.filter((c) => commitProgram(c).program.division === d).length;
-    expect([level('ncaa-d1'), level('ncaa-d2'), level('ncaa-d3'), level('naia')]).toEqual([19, 1, 8, 0]);
+    expect([level('ncaa-d1'), level('ncaa-d2'), level('ncaa-d3'), level('naia')]).toEqual([21, 1, 8, 0]);
   });
 
-  it('rests on 81 source entries on 65 distinct URLs (SoCal: 38 on 31), and 11 commitments carry a date', () => {
+  it('rests on 85 source entries on 68 distinct URLs (SoCal: 38 on 31), and 11 commitments carry a date', () => {
     const entries = raw.commitments.flatMap((c) => c.sources);
-    expect(entries).toHaveLength(81);
-    expect(new Set(entries.map((s) => s.url)).size).toBe(65);
+    expect(entries).toHaveLength(85);
+    expect(new Set(entries.map((s) => s.url)).size).toBe(68);
     const socalEntries = socal.flatMap((c) => c.sources);
     expect(socalEntries).toHaveLength(38);
     expect(new Set(socalEntries.map((s) => s.url)).size).toBe(31);
@@ -277,6 +299,7 @@ describe('the research of 2026-10-03, 2026-10-04 and 2026-10-06 (the EAL sweeps 
       'Zola Ducker',
       'Ava Hauer',
       'Dylan Rietti',
+      'Molly Waltz',
       'Lola Conway',
       'Emerson Davis',
       'Eva Allen',
@@ -285,12 +308,14 @@ describe('the research of 2026-10-03, 2026-10-04 and 2026-10-06 (the EAL sweeps 
       'Ryan Hemeon',
       'Gianna Rinaldi',
       'Olivia Van De Braak',
+      'Shyla Paredes',
     ]);
     expect(getColleges().map((c) => c.slug)).toEqual([
       'uc-davis',
       'harvard',
       'cal',
       'bucknell',
+      'cal-baptist',
       'colgate',
       'columbia',
       'iowa',
@@ -344,8 +369,8 @@ describe('lib/commits.ts read API', () => {
     const latest = [raw.capturedAt, ...raw.colleges.map((c) => c.checkedOn)].sort().at(-1);
     expect(getCommitsLastChecked()).toBe(latest);
     expect(getCommitsLastChecked() >= raw.capturedAt).toBe(true);
-    // The Southern California round, 2026-10-06, re-checked the file and added its eleven.
-    expect(getCommitsLastChecked()).toBe('2026-10-06');
+    // The 2026-10-12 round re-opened every source and added two commitments and Cal Baptist.
+    expect(getCommitsLastChecked()).toBe('2026-10-12');
   });
 
   it('displays a college by its short name when it has one', () => {
@@ -449,6 +474,47 @@ describe('the schema refuses a bad file, naming the path', () => {
     expect(issues.some((i) => i.startsWith('commitments.0.sources.2.quote'))).toBe(true);
     expect(issues).toContain('commitments.0.sources.3.url: social media is not a source');
     expect(issues).toContain('commitments.0.sources.4.url: social media is not a source');
+  });
+
+  it('a social-media post is a source only from the official account it names', () => {
+    const c = commitmentFor(senior);
+    const account = {
+      platform: 'x',
+      handle: 'ExampleHS',
+      owner: 'school',
+      ownerName: 'Example High athletics',
+      proof: 'https://examplehs.org/athletics',
+    } as const;
+    const post = { ...c.sources[0], kind: 'official-social', url: 'https://x.com/ExampleHS/status/123', account } as const;
+    expect(schemaIssues(fileWith([{ ...c, sources: [post] }]))).toEqual([]);
+    // The handle is matched case-insensitively, on either of X's hosts.
+    expect(schemaIssues(fileWith([{ ...c, sources: [{ ...post, url: 'https://twitter.com/examplehs/status/123' }] }]))).toEqual([]);
+    const instagram = { ...account, platform: 'instagram', handle: 'examplehs_softball' } as const;
+    const igPost = { ...post, url: 'https://www.instagram.com/examplehs_softball/p/AbC123/', account: instagram };
+    expect(schemaIssues(fileWith([{ ...c, sources: [igPost] }]))).toEqual([]);
+    const bad = fileWith([
+      {
+        ...c,
+        sources: [
+          { ...post, account: undefined },
+          { ...post, url: 'https://x.com/SomePlayer/status/123' },
+          { ...post, url: 'https://www.instagram.com/p/AbC123/', account: instagram },
+          { ...post, url: 'https://x.com/ExampleHS' },
+          { ...post, account: { ...account, proof: 'https://www.instagram.com/examplehs/' } },
+          { ...c.sources[0], account },
+          { ...post, kind: 'news' },
+        ],
+      },
+    ]);
+    const issues = schemaIssues(bad);
+    expect(issues).toContain('commitments.0.sources.0.account: an official-social source names the account');
+    expect(issues).toContain('commitments.0.sources.1.url: not a post by ExampleHS on x');
+    expect(issues).toContain('commitments.0.sources.2.url: not a post by examplehs_softball on instagram');
+    expect(issues).toContain('commitments.0.sources.3.url: not a post by ExampleHS on x');
+    expect(issues).toContain('commitments.0.sources.4.account.proof: social media is not a source');
+    expect(issues).toContain('commitments.0.sources.5.account: only an official-social source names an account');
+    expect(issues).toContain('commitments.0.sources.6.url: social media is not a source');
+    expect(issues).toContain('commitments.0.sources.6.account: only an official-social source names an account');
   });
 
   it('a date after the research was done', () => {

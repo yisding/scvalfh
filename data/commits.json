@@ -1,11 +1,11 @@
 {
-  "builtBy": "research in two rounds, written by hand from what survived. 2026-10-03, field hockey: four source-family sweeps (commitment lists, NorCal clubs and media, school and local news for each league) and a player-by-player sweep of every junior, senior and ungraded varsity row on the 37 teams with roster rows; every candidate re-opened by a checker and, independently, by a refuter trying to break it; a completeness critic's follow-ups; a final audit that re-opened every source. 2026-10-04, every sport and more field hockey recall: sweeps of SportsRecruits' college pages for field hockey (290), women's lacrosse (643) and women's soccer (1,670) with their committed profiles, a SportsRecruits profile-address probe for all 716 varsity players, FH College Path's six class lists, Stick Together's whole archive, MAX Field Hockey, club commitment lists, lacrosse and soccer commitment databases, other-sport databases, every 2025-26 story of 18 student papers and 8 local papers, and the club-tied players one by one; every candidate again re-opened by a checker and an independent refuter, and the final file's sources re-opened once more. 2026-10-04, the six Eastern Athletic League teams' schools: a field hockey sweep, then the every-sport round over their 95 varsity rows with the same rule and source families (SportsRecruits' college pages for field hockey, women's lacrosse and women's soccer, FH College Path, Stick Together, MAX Field Hockey and the other field hockey lists, TopDrawerSoccer, SoccerWire, ClubLax and the NorCal lacrosse, soccer, volleyball, softball and basketball club lists, MileSplit, the local and student papers that cover these schools, the schools' sites, and two web searches for each junior and senior), with the same day's recruiting-profiles research supplying a SportsRecruits profile-address probe for all 95 in every sport and NCSA and FieldLevel probes for field hockey; it found no commitment, and SportsRecruits' athlete search was not run for those rows. 2026-10-06, the 53 Southern California teams' schools: the same every-sport round over their 842 varsity rows (field hockey and other-sport lists read whole, local and school news, a SportsRecruits profile-address probe in every sport for every row, and web searches for 840 of the 842 rows), every candidate re-opened by a checker and an independent refuter",
-  "capturedAt": "2026-10-06",
+  "builtBy": "research in two rounds, written by hand from what survived. 2026-10-03, field hockey: four source-family sweeps (commitment lists, NorCal clubs and media, school and local news for each league) and a player-by-player sweep of every junior, senior and ungraded varsity row on the 37 teams with roster rows; every candidate re-opened by a checker and, independently, by a refuter trying to break it; a completeness critic's follow-ups; a final audit that re-opened every source. 2026-10-04, every sport and more field hockey recall: sweeps of SportsRecruits' college pages for field hockey (290), women's lacrosse (643) and women's soccer (1,670) with their committed profiles, a SportsRecruits profile-address probe for all 716 varsity players, FH College Path's six class lists, Stick Together's whole archive, MAX Field Hockey, club commitment lists, lacrosse and soccer commitment databases, other-sport databases, every 2025-26 story of 18 student papers and 8 local papers, and the club-tied players one by one; every candidate again re-opened by a checker and an independent refuter, and the final file's sources re-opened once more. 2026-10-04, the six Eastern Athletic League teams' schools: a field hockey sweep, then the every-sport round over their 95 varsity rows with the same rule and source families (SportsRecruits' college pages for field hockey, women's lacrosse and women's soccer, FH College Path, Stick Together, MAX Field Hockey and the other field hockey lists, TopDrawerSoccer, SoccerWire, ClubLax and the NorCal lacrosse, soccer, volleyball, softball and basketball club lists, MileSplit, the local and student papers that cover these schools, the schools' sites, and two web searches for each junior and senior), with the same day's recruiting-profiles research supplying a SportsRecruits profile-address probe for all 95 in every sport and NCSA and FieldLevel probes for field hockey; it found no commitment, and SportsRecruits' athlete search was not run for those rows. 2026-10-06, the 53 Southern California teams' schools: the same every-sport round over their 842 varsity rows (field hockey and other-sport lists read whole, local and school news, a SportsRecruits profile-address probe in every sport for every row, and web searches for 840 of the 842 rows), every candidate re-opened by a checker and an independent refuter. 2026-10-12, at the owner's request after Shyla Paredes' softball commitment was missing, a round over all 1,673 varsity rows with each player's other sports read from her MaxPreps career page (508 rows play another: 183 lacrosse, 115 soccer, 106 softball, 68 basketball, 21 water polo and fewer in other sports), the rule revised to cite official accounts' social-media posts, and every source in the file re-opened",
+  "capturedAt": "2026-10-12",
   "season": "26-27",
   "notes": [
     "Which players on the tracked varsity rosters (the 43 teams of the four leagues swept on 2026-10-03 and 2026-10-04, the six Eastern Athletic League teams swept on 2026-10-04, and the 53 Southern California teams swept on 2026-10-06) a public page says have committed to play a sport in college, joined to data/rosters.json on team slug + MaxPreps athleteId. Field hockey is the site's sport, but a commitment in any sport counts (since 2026-10-04): many players here also play lacrosse, soccer or basketball, and commit there. Only players on those rosters are named (varsity rows; rows the overlay marks JV, graduates, and players at schools with no MaxPreps rows are out of scope: six of the 43, Corning, one of the six EAL teams' schools, and eight of the 53 Southern California teams), each under the roster's own spelling.",
     "The linking rule is the one data/clubs.json uses: a public page must name the player and the college in the context of one sport, and either name the player's high school, or give a class year that agrees with the roster grade together with a location in the school's half of the state, Northern or Southern California (the player's hometown, or a club or team based there; \"CA\" alone is not enough). A nickname or a given name (Samantha for Sami) counts when the page otherwise meets the rule and something beyond the name backs it (a second page, the player's own page naming the same club, or a club she is already tied to in data/clubs.json); such a match is medium unless a page names the school (revised 2026-10-06). A name alone never makes a match, and a class year that disagrees with the roster grade rules one out; two same-name players in one region (two class-of-2027 Phoebe Millers, in Larkspur and San Francisco) are told apart by a page that names the school. College interests, offers, visits, camps, watchlists, a plan to play somewhere ('planning to continue her career at …'), and a place on a college's club team are not commitments.",
-    "Social media is never a source (lib/clubs-schema.ts BANNED_HOSTS). Many commitments are announced only there, so a commitment with no other public page is not in this file. Every source names the player or is the player's own recruiting profile; quotes and bases are kept for maintainers and never rendered. A page that draws its list only once a script runs (SportsRecruits' /committed/<club> pages, MAX Field Hockey's search) is not cited, so every quote can be checked against the page's own HTML; STEPS California's page answers plain requests with a bot challenge but serves its table as HTML, which WebFetch reads.",
+    "Social media is a source only as a post by an official account (since 2026-10-12): a college's athletics or team account, the player's high school's, or a club's, cited as an 'official-social' source that names the account and a page that is not social media proving it is the owner's (lib/commits-schema.ts). A player's own post, or any other person's, is never a source (lib/clubs-schema.ts BANNED_HOSTS), only a lead; many commitments are announced only there, so a commitment with no other public page is not in this file. X posts can be read without a login; Instagram, Facebook and TikTok cannot be read from the research environment. Every source names the player or is the player's own recruiting profile; quotes and bases are kept for maintainers and never rendered. A page that draws its list only once a script runs (SportsRecruits' /committed/<club> pages, MAX Field Hockey's search) is not cited, so every quote can be checked against the page's own HTML; STEPS California's page answers plain requests with a bot challenge but serves its table as HTML, which WebFetch reads.",
     "status: 'signed' only where a source says signed; otherwise 'committed'. No source found by 2026-10-06 said any player had signed. asOf: the earliest date a kept source gives for the commitment (a dated story's own date, or the month a story says the player committed), or null. Every kept source was confirmed by two independent reads. A date that only one read saw is not used: MAX Field Hockey's hidden table dates, and the 'Committed to … on M/D/YYYY' tooltip SportsRecruits draws on a profile with a script.",
     "confidence: high = one first-hand page names the player, the college and the school, or it is the player's own recruiting profile showing the commitment; medium = the match rests on one line of a compiled list plus class year and a club in the school's half of the state.",
     "The schools of the six Eastern Athletic League teams (Bella Vista, Chico, Corning, Davis, Lassen, Pleasant Valley) were swept twice on 2026-10-04. The first sweep looked for field hockey commitments only (the NFHCA 2026 high school watchlist, the NCFHA youth directory, SportsRecruits profile slugs, fhcollegepath.com classes 2026-2028 and MAX Field Hockey) and found none; the day's every-sport round (see builtBy) had then covered only the 43 teams tracked before. The every-sport round was then extended to their 95 varsity rows (Bella Vista 19, Chico 20, Davis 19, Lassen 15, Pleasant Valley 22; Corning has no roster rows) under the same rule: SportsRecruits' college pages for field hockey (290), women's lacrosse (643) and women's soccer (1,652); FH College Path's class lists; Stick Together's whole archive; HTC's alumnae list; Play College Field Hockey's sheet; the NFHCA watchlist; MAX Field Hockey's table (986 rows, not cited); TopDrawerSoccer's and SoccerWire's California girls' lists for 2027 to 2030; ClubLax's commitments database; NorCal lacrosse, soccer, volleyball, softball and basketball club lists; MileSplit's California signings; a search of each of the 95 names, since January 2025, on the sites of the Chico Enterprise-Record, Red Bluff Daily News, Davis Enterprise, Daily Democrat and Paradise Post (the first 20 results on each of the four WordPress papers), full crawls since January 2025 of the Enterprise-Record's high school section (340 posts) and Red Bluff's high school and local sports sections, and Davis High's and Pleasant Valley's student papers; the schools' sites; and two web searches for each of the 78 juniors and seniors. The same day's recruiting-profiles research ran SportsRecruits' profile-address probe for all 95 rows (1,242 addresses in every sport, 88 live profiles, nine showing a commitment, each another player by class year or state) and NCSA and FieldLevel probes, for field hockey only. It found no commitment in any sport, so the EAL still adds no row. Not run for these rows: SportsRecruits' athlete search, which turned up every commitment in the file that rests on a SportsRecruits profile; the 17 freshmen and sophomores got no web searches; Lassen County's local news sites refused requests. EAL recall is therefore lower than the other leagues', and the absence of a commitment is not proof that none exists.",
@@ -13,7 +13,8 @@
     "The schools of the 53 Southern California teams (the Sunset, City, North and Metro teams and the five Southern Section independents: 842 varsity rows, eight teams with none) were swept on 2026-10-06 in every sport by the same rule, a Southern California location standing for a Northern California one. Field hockey lists, read whole and matched against all 842 rows: SportsRecruits' 290 field hockey college pages and the commits API behind their \"See More Commits\" button (35,060 records over 285 programs, 2,900 in field hockey), with every class-of-2027-or-later profile opened; FH College Path's class lists; MAX Field Hockey (leads only, not cited); Play College Field Hockey's sheet; RUSH's player directory and alumni pages, HTC, Coastal Clash, Myto, VCRD, the Surfers, the Royals and the SoCal Field Hockey Federation; the NFHCA 2026 watchlist. Other sports: SportsRecruits' women's lacrosse, soccer, volleyball, basketball, water polo and softball college pages, ten SoCal lacrosse clubs' commitment pages, TopDrawerSoccer, SoccerWire, Prep Soccer, ClubLax, Lacrosse Masters, Prep Girls Lacrosse and other lacrosse lists, MileSplit, Prep Dig, Prep Softball and Prep Hoops. News: the San Diego Union-Tribune, the OC Register and the other Southern California News Group papers, the Coronado Times, Scripps Ranch News, and the student papers and athletics sites that answered (the Falconer, the Harvard-Westlake Chronicle, Bishop's and Cathedral Catholic). Player by player: a SportsRecruits profile-address probe in every sport for all 842 rows (9,558 addresses for the 700 juniors, seniors and ungraded rows, and 2,514 more for all rows), and web searches for 840 of the 842 rows (a first pass of one search for each junior and ungraded row and two for each senior, which reached all seniors and juniors and 238 of the 326 ungraded rows before the search tool's budget ran out; then a second pass, at the owner's request, of two searches for each of the 50 freshmen, the 92 sophomores and 86 of the 88 ungraded rows it had not reached, 456 searches in all). The two rows never searched are Samantha Ippolito and Ella Rennie, whose commitments the list sweeps had already found. It found eleven commitments under the rule as it then stood, and a twelfth under the revised nickname rule (notes[1]): nine in field hockey (Rietti to Richmond, Hauer to Johns Hopkins, Conway to Michigan, Schlumberger to Harvard, Ippolito to Michigan State, Eva Allen to Cal, Storm to Harvard, Roldan to UC Davis and Rennie to Muhlenberg) and two in lacrosse (Emerson Davis to Harvard and Palecek to Oregon); the twelfth is Sami Lee (Canyon Hills) to Columbia in field hockey, from FH College Path's class of 2027 line \"Samantha Lee … Rush FH … Columbia\" and RUSH's page for her, backed by her own MaxPreps page naming the same club (medium). Each was re-opened by a checker and, separately, by a refuter told to break it; both kept all eleven, and a fresh checker and refuter both kept the twelfth. SportsRecruits' athlete search was not run for these rows.",
     "Southern California near misses, none a commitment: a Torrey Pines senior whom only Play College Field Hockey's sheet (name and college) lists, with no page tying that line to her school or a Southern California location; a soccer commit with a Southwest player's name whose profiles give another school and city; a swim commit with a Rancho Bernardo player's name whose post gives no school and a graduating class that disagrees; a Cathedral Catholic player's older sister (class of 2026, graduated); and SportsRecruits profiles under rostered names that show a commitment but another class year or state (62 in all).",
     "Recall is partial: a commitment announced only on social media, on a page the sweeps could not read, or not yet published anywhere is not here. Re-running this is research, not a script; the class of 2027's signing period (November 2026) and the class of 2028's commitments are when it would change most.",
-    "On 2026-10-07 the 21 rows MaxPreps had added since the sweeps (Marin Academy's 18, now that MaxPreps lists them; Westmont's Kaylee True, Lexi True and Savannah Murdoch) were swept in every sport by the same rule: their MaxPreps career pages, SportsRecruits addresses in every sport and their rendered pages, NCSA, FH College Path's class lists for 2026 to 2030, STEPS California's and ADVNC's commitment pages, Lacrosse Masters, MAX Field Hockey, the NFHCA watchlists, the Marin IJ, Stick Together, and a web search for every junior and senior. None was found. Not run for these rows: SportsRecruits' college commit pages and athlete search, TopDrawerSoccer and SoccerWire (none of the 21 plays soccer on MaxPreps), and ClubLax (unreachable). A different Paige Fredrickson, class of 2028, plays water polo for Archie Williams."
+    "On 2026-10-07 the 21 rows MaxPreps had added since the sweeps (Marin Academy's 18, now that MaxPreps lists them; Westmont's Kaylee True, Lexi True and Savannah Murdoch) were swept in every sport by the same rule: their MaxPreps career pages, SportsRecruits addresses in every sport and their rendered pages, NCSA, FH College Path's class lists for 2026 to 2030, STEPS California's and ADVNC's commitment pages, Lacrosse Masters, MAX Field Hockey, the NFHCA watchlists, the Marin IJ, Stick Together, and a web search for every junior and senior. None was found. Not run for these rows: SportsRecruits' college commit pages and athlete search, TopDrawerSoccer and SoccerWire (none of the 21 plays soccer on MaxPreps), and ClubLax (unreachable). A different Paige Fredrickson, class of 2028, plays water polo for Archie Williams.",
+    "On 2026-10-12 the owner reported that Shyla Paredes (Valley Christian) had committed to Cal Baptist in softball, an Instagram commitment the file lacked, and the rule was revised so that an official account's post (a college's, the player's high school's, a club's) can be cited; a player's own post still cannot. The round that followed read every varsity row's MaxPreps career page for the sports she plays (508 of the 1,673 rows play another sport besides field hockey) and ran eight player-by-player sweeps, a softball-list sweep, an other-sports-list sweep (basketball, volleyball, water polo, lacrosse and soccer club commit pages) and a school-pages and official-accounts sweep. The web-search tool's per-turn budget (1,000 searches shared by every sweep) ran out early, so the player-by-player sweeps finished 431 rows (nearly every class-of-2027 row and a few class-of-2028 rows, counting the rows already in the file) and the other 1,242 got only their known recruiting profiles re-opened; the class-of-2028, ungraded and younger rows are the ones still to search. It found two commitments: Shyla Paredes to Cal Baptist in softball, on her travel club Cal Nuggets' commitment list and 18U Woods roster, tied to her by her own MaxPreps page naming that club (medium), and Molly Waltz (Archbishop Mitty, class of 2028) to UC Davis in lacrosse, on ADVNC Lacrosse's commits page, which names her school, and her own SportsRecruits lacrosse profile (high). Both were re-opened by a second read. Every source already in the file was re-opened the same day; one, SportsRecruits' Colgate field hockey page, no longer listed Storey Lewis and was dropped, her own profile still showing the commitment. No source said any player had signed."
   ],
   "colleges": [
     {
@@ -741,6 +742,32 @@
         }
       ],
       "checkedOn": "2026-10-04"
+    },
+    {
+      "slug": "cal-baptist",
+      "name": "California Baptist University",
+      "shortName": "Cal Baptist",
+      "city": "Riverside",
+      "state": "CA",
+      "programs": [
+        {
+          "sport": "softball",
+          "division": "ncaa-d1",
+          "conference": "Big West",
+          "url": "https://cbulancers.com/sports/softball"
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://bigwest.org/news/2025/3/19/california-baptist-university-joins-the-big-west.aspx",
+          "what": "The Big West's story of Mar 19, 2025, 'California Baptist University Joins The Big West': CBU, 'Located in Riverside, California', joins 'beginning July 1, 2026' (the 2026-27 academic year), softball among the sports it plays in The Big West; 'CBU sponsors 19 NCAA Division I sports.' Read via WebFetch."
+        },
+        {
+          "url": "https://cbulancers.com/sports/softball/schedule",
+          "what": "CBU athletics' softball schedule page, titled '2027 Softball Schedule - CBU Athletics'. The site answers curl with HTTP 403; the title was read through WebFetch, which returned no conference tags."
+        }
+      ],
+      "checkedOn": "2026-10-12"
     }
   ],
   "commitments": [
@@ -1530,17 +1557,9 @@
           "statedSchool": null,
           "statedClassYear": 2027,
           "sourceDate": null
-        },
-        {
-          "url": "https://sportsrecruits.com/athletic-scholarships/womens-field-hockey/new-york/colgate_university",
-          "kind": "sportsrecruits",
-          "quote": "Committed Athletes … Storey Lewis, 2027",
-          "statedSchool": null,
-          "statedClassYear": 2027,
-          "sourceDate": null
         }
       ],
-      "basis": "Her own SportsRecruits profile names St. Ignatius, class of 2027 and Colgate University; Stick Together's Aug 6, 2026 season preview calls her a St. Ignatius senior who recently committed to Colgate (asOf is that date); the SF Hawks committed-players table and FH College Path's class of 2027 list agree. MAX Field Hockey's commitments table also lists her, but neither pass could re-read it, so it is not cited. SportsRecruits' Colgate page (added 2026-10-04) repeats her profile."
+      "basis": "Her own SportsRecruits profile names St. Ignatius, class of 2027 and Colgate University; Stick Together's Aug 6, 2026 season preview calls her a St. Ignatius senior who recently committed to Colgate (asOf is that date); the SF Hawks committed-players table and FH College Path's class of 2027 list agree. MAX Field Hockey's commitments table also lists her, but neither pass could re-read it, so it is not cited. SportsRecruits' Colgate page (added 2026-10-04) repeats her profile. On 2026-10-12 SportsRecruits' Colgate field hockey page no longer listed her among its committed athletes (it shows a rotating handful), so it was dropped as a source; her own profile still says committed to Colgate."
     },
     {
       "teamSlug": "st-ignatius",
@@ -1755,6 +1774,72 @@
         }
       ],
       "basis": "Her own SportsRecruits field hockey profile (class of 2027, HTC Field Hockey Club, Del Mar, CA) shows 'Committed to Johns Hopkins University'; its bio says she is 'a varsity player on the Torrey Pines High School team' and its TEAMS block lists Torrey Pines High School, San Diego, CA. The Falconer (Torrey Pines High School's student paper), Sep 16, 2026, says Hauer (12) 'also committed for DIII field hockey to Johns Hopkins University' (asOf is that date, the earliest dated page; it gives no commitment day). SportsRecruits' Johns Hopkins page lists her (repeats the profile, not independent). The profile's script-drawn commitment tooltip reads 'on 7/1/2026'; not used (profile date, undocumented). She is not on FH College Path's lists (Division I only). MAX Field Hockey also lists her but is not cited. Roster row grade 12 = 2027, which agrees. No signing wording."
+    },
+    {
+      "teamSlug": "valley-christian",
+      "athleteId": "4d1747da-41c6-49c2-bbc2-b98a277436b5",
+      "fullName": "Shyla Paredes",
+      "college": "cal-baptist",
+      "sport": "softball",
+      "status": "committed",
+      "asOf": null,
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://calnuggets.com/project/18u-woods/",
+          "kind": "club-site",
+          "quote": "2026 Fall Roster # Player Class Signed/Verbal … 21 Shyla Paredes 2028 Cal Baptist University",
+          "statedSchool": null,
+          "statedClassYear": 2028,
+          "sourceDate": null
+        },
+        {
+          "url": "https://calnuggets.com/commitment-list/",
+          "kind": "club-site",
+          "quote": "Commitment List 2028 Shyla Paredes – Cal Baptist University",
+          "statedSchool": null,
+          "statedClassYear": 2028,
+          "sourceDate": null
+        },
+        {
+          "url": "https://www.maxpreps.com/ca/san-jose/valley-christian-warriors/athletes/shyla-paredes/bio/?careerid=8fqbtmj74a244",
+          "kind": "maxpreps",
+          "quote": "\"organizationTeamName\":\"Cal Nuggets\",\"clubOrganizationName\":\"Cal Nuggets - Woods 18U\",\"clubOrganizationCity\":\"Belmont\",\"clubOrganizationStateCode\":\"CA\",\"sport\":\"Softball\"",
+          "statedSchool": "Valley Christian",
+          "statedClassYear": null,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Cal Nuggets, a Bay Area travel softball organization (its site's title reads 'Cal Nuggets Softball | Northern California Fastpitch Organization'), lists 'Shyla Paredes' in its class of 2028 on its Commitment List with Cal Baptist University, and its 18U Woods 2026 fall roster has '#21 Shyla Paredes, 2028', Cal Baptist University under 'Signed/Verbal'. Neither club page names a high school, so the match rests on the class year (2028, the roster's grade 11; her MaxPreps career page also reads 'Junior • 2028') plus a Northern California club; her own MaxPreps bio page (careerid 8fqbtmj74a244, the roster row's; Valley Christian, softball #16, 3B/1B) lists her club team as Cal Nuggets - Woods 18U, Belmont, CA, which ties the club line to her. The owner reported the commitment on 2026-10-12, seen on her personal Instagram (a lead only, never cited). 'Signed/Verbal' does not say which, so 'committed'. The club pages' WordPress modified date (2026-09-30) is an edit date, not shown on the page, so not used. No other Shyla Paredes appears on either club page or in the search results."
+    },
+    {
+      "teamSlug": "mitty",
+      "athleteId": "3afa21b5-fef1-4cbd-8d11-9e249a6aa635",
+      "fullName": "Molly Waltz",
+      "college": "uc-davis",
+      "sport": "lacrosse",
+      "status": "committed",
+      "asOf": null,
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://iwlca.sportsrecruits.com/athlete/molly_waltz",
+          "kind": "sportsrecruits",
+          "quote": "Watch Molly's recruiting video • 2028 • Midfield • West Coast Starz Girls • Los Gatos, CA • Committed to University of California - Davis",
+          "statedSchool": null,
+          "statedClassYear": 2028,
+          "sourceDate": null
+        },
+        {
+          "url": "https://www.advnclacrosse.com/alumnicommits",
+          "kind": "club-site",
+          "quote": "2028 Class … Molly Waltz - Archbishop Mitty - UC Davis",
+          "statedSchool": "Archbishop Mitty",
+          "statedClassYear": 2028,
+          "sourceDate": null
+        }
+      ],
+      "basis": "ADVNC Lacrosse (a Bay Area girls' club) lists 'Molly Waltz - Archbishop Mitty - UC Davis' under its '2028 Class' heading on its alumni and commits page: the player, her school and the college, and the class agrees with the roster's grade 11. The page is a lacrosse club's, and UC Davis plays women's lacrosse (Big 12), so the sport is lacrosse. No date. Her own SportsRecruits lacrosse profile (class of 2028, midfield, West Coast Starz Girls, Los Gatos, CA) says committed to University of California - Davis, which backs it by class year and a Bay Area hometown."
     }
   ]
 }

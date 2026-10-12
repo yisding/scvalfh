@@ -918,9 +918,10 @@ so other JV players may have club ties no page here records.
 `lib/commits.ts`; shown on `/commits` and in a commitment line on each committed player's team page
 roster, DESIGN §21). Research on 2026-10-03 (field hockey) and 2026-10-04 (every sport, and a second
 field hockey pass; and, for the six EAL teams' schools, a field hockey sweep and then the every-sport
-round; and, on 2026-10-06, the every-sport round for the 53 Southern California teams' schools), not
-a script: nothing fetches or refreshes it. It holds 28 commitments (17 in field hockey, 9 in lacrosse,
-1 in soccer, 1 in basketball) and the 22 colleges they are to, with 25 programs (UC Davis, Cal and
+round; and, on 2026-10-06, the every-sport round for the 53 Southern California teams' schools; and, on
+2026-10-12, a round over every row with each player's other sports, partial: see below), not
+a script: nothing fetches or refreshes it. It holds 30 commitments (17 in field hockey, 10 in lacrosse,
+1 in soccer, 1 in basketball, 1 in softball) and the 23 colleges they are to, with 26 programs (UC Davis, Cal and
 Harvard hold two each: field hockey and lacrosse), each commitment a player on the tracked varsity
 rosters (43 teams in both NorCal rounds; 49 with the EAL; 102 with Southern California), joined to `data/rosters.json` on team slug + MaxPreps
 athleteId as the clubs are. A commitment has the college, the `sport` (field hockey, or any other:
@@ -992,9 +993,18 @@ otherwise (for a row with no grade, the stated class years must agree with each 
 a high school roster of the season can hold). Not a commitment: MaxPreps' "College Interests"
 (`careerCollegeInterestsData` on a career `/bio/` page, which was empty for every in-scope player
 anyway), offers, visits, camps, watchlists, all-league lists, and a place on a college's club team
-(club lacrosse, for one). No
-social media, as source or link: `BANNED_HOSTS` (shared with §1.1j2) refuses Instagram, Facebook,
-TikTok, X, Threads, YouTube, Snapchat, LinkedIn and their short links.
+(club lacrosse, for one). Social media only from an official account (since 2026-10-12):
+`BANNED_HOSTS` (shared with §1.1j2) refuses Instagram, Facebook, TikTok, X, Threads, YouTube,
+Snapchat, LinkedIn and their short links everywhere in the file except as an `official-social`
+source, a post by the `account` it names: a college's athletics or team account, the player's high
+school's (its athletics department's or a team's), or a club's, never a person's. The account
+records its platform, handle, owner (`college`, `school` or `club`), the owner's name (the link
+label: "Valley Christian athletics on X") and `proof`, a page that is not social media showing the
+account is the owner's (its website linking it, most often); the schema checks the URL is a post by
+that handle (`isPostBy`; an Instagram post is cited at its `/<handle>/p/<code>/` address). A
+player's own post is a lead, never a source. X posts can be read without a login
+(`publish.twitter.com/oembed`); Instagram, Facebook and TikTok cannot be read from the research
+environment, so a post there is checked by hand before it is cited.
 
 *How it was done, 2026-10-03 (field hockey).* Fourteen sweeps, run in parallel: four by source family (commitment lists and
 recruiting aggregators; NorCal clubs and field hockey media; school and local news for SCVAL and
@@ -1246,8 +1256,25 @@ Gotchas, found in the research:
   working path is `womens-field-hockey`. A profile address that does not exist answers HTTP 200 with
   a "Page Not Found" title, so a probe must read the title, not the status.
 
-*Recall is partial.* On 2026-10-07, 28 of the 1,673 varsity rows have a commitment, at 16 of the 102
-schools: Southern California's 12 at 7 (Torrey Pines 2, Canyon Hills 4, Bishop's 2, Harvard-Westlake,
+*The 2026-10-12 round.* The owner reported Shyla Paredes' softball commitment to Cal Baptist, which
+she had announced on her own Instagram, and the rule was revised to cite official accounts' posts
+(above). Every varsity row's MaxPreps career page was read for the sports the player plays: 508 of
+the 1,673 play another besides field hockey (183 lacrosse, 115 soccer, 106 softball, 68 basketball,
+21 water polo, and volleyball, beach volleyball, flag football, cross country and tennis). Eight
+player-by-player sweeps, a softball-list sweep (travel-club commit pages, softball commitment
+news), an other-sports-list sweep (basketball, volleyball and water polo club commit pages, and
+lacrosse and soccer pages updated since 2026-10-06) and a school-pages and official-accounts sweep
+ran in parallel; the web-search tool's per-turn budget (1,000 searches, shared) ran out early, so
+the player-by-player sweeps finished 431 rows (nearly every class-of-2027 row) and only re-opened
+the known recruiting profiles of the other 1,242. Two commitments were found and re-read: Shyla
+Paredes (Cal Nuggets' commitment list and 18U Woods roster, tied by her MaxPreps page naming the
+club; medium) and Molly Waltz, Archbishop Mitty, to UC Davis lacrosse (ADVNC's commits page, with her
+school, and her own SportsRecruits profile; high). Every source in the file was re-opened; SportsRecruits' Colgate page no longer listed
+Storey Lewis and was dropped. Still to run: web searches for the class-of-2028, ungraded and younger
+rows, and Instagram posts by official accounts, which cannot be read from the research environment.
+
+*Recall is partial.* On 2026-10-12, 30 of the 1,673 varsity rows have a commitment, at 18 of the 102
+schools (Valley Christian and Archbishop Mitty added on 2026-10-12): Southern California's 12 at 7 (Torrey Pines 2, Canyon Hills 4, Bishop's 2, Harvard-Westlake,
 Scripps Ranch, San Dieguito Academy and Cathedral Catholic 1 each). Every one of the 842 rows had a
 SportsRecruits probe in every sport, and 840 at least one web search (the two others are already
 committed players); juniors and ungraded rows of the first pass got one search, the rest two; no row
@@ -1260,7 +1287,7 @@ over their 95 rows (with the same day's SportsRecruits profile-address probe in 
 and FieldLevel probes for field hockey), and neither found one; but SportsRecruits' athlete search
 was not run for those rows and their 17 freshmen and sophomores got no web searches, so EAL recall
 is lower than the other leagues'. The absence of a commitment is not proof that none exists, and
-Corning has no roster rows to join to. A commitment announced only on social media, posted on a page
+Corning has no roster rows to join to. A commitment announced only on a personal social-media account, posted on a page
 the sweeps could not read, or not yet public is not listed, and colleges may not publicize an
 unsigned recruit, so a college's own site rarely shows a class of 2027 or 2028 commitment before the
 November signing period. No source found said any player had signed. The class of 2027's signings
@@ -2833,8 +2860,8 @@ rules clause.)
   without SportsRecruits' athlete search or web searches for freshmen and sophomores) and, for the 53
   Southern California teams' schools, on 2026-10-06 (twelve found, one under the revised nickname rule;
   web searches for 840 of the 842 rows, no SportsRecruits athlete search), and nothing refreshes them:
-  recall is partial (28 of the 1,673 varsity rows, at 16 of the 102 schools, on 2026-10-07; social
-  media, where most are announced, never counts), a signing or decommitment after that date is not
+  recall is partial (30 of the 1,673 varsity rows, at 18 of the 102 schools, on 2026-10-12; social
+  media, where most are announced, counts only from an official account), a signing or decommitment after that date is not
   shown, and a roster refetch that drops or respells a committed row fails the build until it is
   re-checked by hand.
 - Club ties (§1.1j2) were researched on 2026-10-03 (the six EAL teams' schools on 2026-10-04, adding

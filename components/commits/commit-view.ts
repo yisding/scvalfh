@@ -39,7 +39,7 @@ import {
   type Commitment,
 } from '../../lib/commits';
 import { clubSiteKey } from '../../lib/clubs-schema';
-import { COLLEGE_DIVISIONS, COMMIT_SPORTS } from '../../lib/commits-schema';
+import { COLLEGE_DIVISIONS, COMMIT_SPORTS, type SocialPlatform } from '../../lib/commits-schema';
 import { dateWithYear, gradeWord, listWords, partialDate } from '../../lib/format';
 import { REGIONS, regionOf } from '../../lib/leagues';
 import { getRosters } from '../../lib/rosters';
@@ -120,6 +120,15 @@ const PLATFORM_LABELS = {
   fieldlevel: 'FieldLevel profile',
 } as const;
 
+/** A social platform's name in a link: "Valley Christian athletics on X". */
+const PLATFORM_NAMES: Record<SocialPlatform, string> = {
+  x: 'X',
+  instagram: 'Instagram',
+  facebook: 'Facebook',
+  tiktok: 'TikTok',
+  threads: 'Threads',
+};
+
 /** Which club's own site a URL is on: every club of data/clubs.json with a website, by clubSiteKey (a host, or a site on a shared host). */
 const CLUB_BY_SITE: ReadonlyMap<string, string> = new Map(
   getClubs().flatMap((c) => (c.website ? [[clubSiteKey(c.website), clubDisplayName(c)] as const] : [])),
@@ -127,10 +136,10 @@ const CLUB_BY_SITE: ReadonlyMap<string, string> = new Map(
 
 /**
  * A source's link text: "SportsRecruits profile", "SportsRecruits college page", "NCSA profile",
- * "MaxPreps profile", "Stanford athletics", "SF Hawks site", "Stick Together", "The Talon", or the
- * bare host when nothing better is known.
+ * "MaxPreps profile", "Stanford athletics", "SF Hawks site", "Stick Together", "The Talon", an
+ * official account's "Valley Christian athletics on X", or the bare host when nothing better is known.
  */
-export function sourceLabel(src: Pick<CommitSource, 'url' | 'kind'>, college: College): string {
+export function sourceLabel(src: Pick<CommitSource, 'url' | 'kind' | 'account'>, college: College): string {
   const host = hostOf(src.url);
   switch (src.kind) {
     case 'sportsrecruits': {
@@ -149,6 +158,9 @@ export function sourceLabel(src: Pick<CommitSource, 'url' | 'kind'>, college: Co
       return college.programs.some((p) => p.url !== null && hostOf(p.url) === host)
         ? `${collegeDisplayName(college)} athletics`
         : host;
+    case 'official-social':
+      // The schema holds every official-social source to an account; the host is a fallback only.
+      return src.account ? `${src.account.ownerName} on ${PLATFORM_NAMES[src.account.platform]}` : host;
     case 'club-site': {
       const club = CLUB_BY_SITE.get(clubSiteKey(src.url)) ?? OTHER_CLUBS[host];
       return club ? `${club} site` : host;

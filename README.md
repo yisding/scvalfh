@@ -677,8 +677,12 @@ The rules are the clubs' (see "Clubs"): the same linking rule (the page names th
 college in the context of one sport, and either the high school, or a class year that agrees with the
 roster grade plus a location in the school's half of the state), the same privacy posture (only tracked varsity
 rows, by the roster's spelling; quotes and bases kept, never rendered, and `pnpm assert:copy` fails
-on a leak through `commitmentLeaks` in `scripts/copy-rules.ts`), and no social media, which costs
-more here: many commitments are announced only on Instagram, and those are not listed. College
+on a leak through `commitmentLeaks` in `scripts/copy-rules.ts`). Unlike the clubs, a social-media
+post counts when an official account posted it (since 2026-10-12): a college's athletics or team
+account, the player's high school's, or a club's, cited as an `official-social` source naming that
+account and a non-social page proving it is the owner's. A player's own post never counts, which
+costs recall: many commitments are announced only on a player's own Instagram, and those are not
+listed. College
 interests, offers, visits, camps and watchlists are not commitments, and neither is a place on a
 college's club team. A commitment in another sport counts (since 2026-10-04): the site is about
 field hockey, but its players commit to lacrosse, soccer and other college teams too, and every
@@ -686,13 +690,17 @@ page names the sport.
 
 Checked at load (`lib/commits-schema.ts`, then the join in `lib/commits.ts`): college slugs are
 unique, every commitment names a college that has a program in its sport, every college and every
-program has a commitment, a college has one program per sport, one commitment per player; https only, never social media; a source for every college and commitment; the file's
+program has a commitment, a college has one program per sport, one commitment per player; https only, never social media except an `official-social` source that is a post by the account it names; a source for every college and commitment; the file's
 `season` is `data/rosters.json`'s; every commitment joins a non-JV row of that team under its own
 `fullName`; every stated class year agrees with the row's grade, or, for a row with no grade, the
 sources agree with each other on a class a high school roster of the season can hold.
 
-Coverage on 2026-10-06, counted from the file: **28 commitments, 28 players at 16 of the 102 schools, to
-22 colleges (25 programs).** Southern California's twelve, from the 2026-10-06 round over its 842 rows,
+Coverage on 2026-10-12, counted from the file: **30 commitments, 30 players at 18 of the 102 schools, to
+23 colleges (26 programs).** The 2026-10-12 round (see below) added two from Northern California:
+Shyla Paredes, Valley Christian, to Cal Baptist in softball (medium: her travel club Cal Nuggets'
+commitment list and roster, tied to her by her own MaxPreps page naming the club), and Molly Waltz,
+Archbishop Mitty, to UC Davis in lacrosse (high: ADVNC Lacrosse's commits page names her school, and
+her own SportsRecruits profile shows the commitment). Southern California's twelve, from the 2026-10-06 round over its 842 rows,
 are ten in field hockey (Sami Lee, Canyon Hills, to Columbia; Dylan Rietti, Torrey Pines, to Richmond; Ava Hauer, Torrey Pines, to Johns
 Hopkins; Lola Conway, Bishop's, to Michigan; Margaux Schlumberger, Harvard-Westlake, to Harvard;
 Samantha Ippolito, Scripps Ranch, to Michigan State; Eva Allen, Canyon Hills, to Cal; Rylie Storm,
@@ -1388,8 +1396,8 @@ at once, at every build, starting from last season's:
   players; the 21 rows MaxPreps added to Marin Academy and Westmont on 2026-10-07, one tie), and nothing
   refreshes them. See `docs/DATA-SOURCES.md` §1.1j2.
 - **Commitment recall is partial, and the list does not update itself.** A commitment is listed
-  only when a public page meets the linking rule, and social media never counts, so on 2026-10-07 28 of
-  the 1,673 varsity rows have a commitment line (in any sport) and 86 of the 102 schools have none; a player with no
+  only when a public page meets the linking rule, and social media counts only from an official account, so on 2026-10-12 30 of
+  the 1,673 varsity rows have a commitment line (in any sport) and 84 of the 102 schools have none; a player with no
   line may still have committed. It was researched on 2026-10-03 and 2026-10-04 (the six EAL teams'
   schools on 2026-10-04, for field hockey and then every sport, with none found, though without
   SportsRecruits' athlete search or web searches for freshmen and sophomores): a later signing,

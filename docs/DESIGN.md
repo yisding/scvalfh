@@ -3147,7 +3147,7 @@ per class year (`#class-2027`, `#class-2028`; the earliest class first, `#class-
 player no source or roster gives a class year), then "Colleges" (`#colleges`; both now per region
 with a region prefix, §21.8), then "How
 commitments are matched" (`#how-matched`): who is listed, the linking rule, that social media is
-never used (so a commitment announced only there is not listed), the two-pass check and its date,
+used only from official accounts (so a commitment announced only on a player's own is not listed), the two-pass check and its date,
 what "Committed", "Signed" and the "as of" date mean, and that recall is partial.
 
 - **A commitment row** (`#<team slug>-<MaxPreps athleteId>`, never a name): the name; the school
@@ -3180,8 +3180,11 @@ what "Committed", "Signed" and the "as of" date mean, and that recall is partial
   excuse), also run by `tests/ui/commit-view.test.ts` over /commits, the team pages and /about.
 - **Metadata names no player**, and **link labels are never read from a URL path** beyond the
   page-type tests (`/athlete/`, `/athletes/`, `/athletic-scholarships/`).
-- **No social media**, as source or link. This costs recall more than it did for clubs: many
-  commitments are announced only on Instagram. The how-matched section says so.
+- **Social media only from an official account** (revised 2026-10-12): a post by a college's
+  athletics or team account, the player's high school's, or a club's is a source and a link,
+  labelled by its owner and platform ("Valley Christian athletics on X"), never by its handle. A
+  player's own post, or any other person's, is never a source or a link. This still costs recall:
+  many commitments are announced only on a player's own Instagram. The how-matched section says so.
 
 ### 21.3 Status words
 

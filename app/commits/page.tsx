@@ -116,10 +116,12 @@ export default function CommitsPage() {
             college&rsquo;s club team.
           </p>
           <p className="mt-2 mb-0">
-            Commitments are often announced only on social media. Social-media posts are never used
-            here, so a commitment with no other public page is not listed. The pages used are
-            players&rsquo; own recruiting profiles (SportsRecruits, NCSA and the like), commitment
-            lists, club and school sites, and local news. Each commitment links the pages it rests
+            Commitments are often announced only on social media. A social-media post is used only
+            when an official account posted it: a college&rsquo;s athletics or team account, the
+            player&rsquo;s high school&rsquo;s, or a club&rsquo;s. A player&rsquo;s own post, or any
+            other person&rsquo;s, is never used, so a commitment announced only there is not
+            listed. The other pages used are players&rsquo; own recruiting profiles (SportsRecruits,
+            NCSA and the like), commitment lists, club and school sites, and local news. Each commitment links the pages it rests
             on, and each was checked twice when it was found: once by re-opening every source, then
             by a separate pass that tried to break it. Every source was last re-opened on{' '}
             {view.capturedOn}.
