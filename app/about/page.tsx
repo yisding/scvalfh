@@ -1035,8 +1035,9 @@ export default function AboutPage() {
             {commitCount > 0 ? ` (${commitCount} found)` : ''}, from
             players&rsquo; recruiting profiles, commitment lists, club and school sites, and local
             news. It was researched by hand with the club pages&rsquo; matching rule, each commitment
-            checked twice when it was added, and is not part of the twice-daily update. Social media is never used, so a commitment announced only there is
-            not listed, and recall is partial.
+            checked twice when it was added, and is not part of the twice-daily update. A social-media post
+            counts only from an official college, school or club account, so a commitment announced
+            only on a player&rsquo;s own account is not listed, and recall is partial.
           </p>
         </section>
 

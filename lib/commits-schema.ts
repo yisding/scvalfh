@@ -19,10 +19,13 @@
  *   4. every college, and every program of it, has at least one commitment: the file holds no
  *      college or program nobody committed to, and no `asOf` is after `capturedAt` (it is the
  *      earliest date a source gave by then)
- *   5. every URL is https and none is on a social-media host (lib/clubs-schema.ts BANNED_HOSTS, a
- *      backstop rather than a complete list): a program page and every source. Commitments are often
- *      announced only on social media; such a post is never a source, so a commitment with no other
- *      public page is not in the file
+ *   5. every URL is https, and none is on a social-media host (lib/clubs-schema.ts BANNED_HOSTS, a
+ *      backstop rather than a complete list) except an official account's post: a college page, a
+ *      program page and an account's proof are never social media, and a commitment's source is
+ *      social media only as an `official-social` source, a post by the `account` it names (a college,
+ *      a high school or a club, never a person; revised 2026-10-12). A player's own post, or any
+ *      other personal account's, is never a source, so a commitment announced only there is not in
+ *      the file
  *   6. every college and every commitment has at least one source
  *   7. a quote is 1-300 characters (kept for maintainers, never rendered)
  *   8. `asOf` is a day, a month or a year (isCommitDate): a commitment happens on a date, never
@@ -125,6 +128,12 @@ export const COMMIT_SOURCE_KINDS = [
   'school-site',
   /** the college's own site */
   'college',
+  /**
+   * a post by an official social-media account: a college's athletics or team account, the
+   * player's high school's (its athletics department's or a team's), or a club's. The source's
+   * `account` names it; never a player's own account or any other person's.
+   */
+  'official-social',
   /** a commitment list, watchlist, all-star or showcase list */
   'event',
   'other',
@@ -158,6 +167,42 @@ const httpsUrl = z
   .string()
   .refine(isHttpsUrl, 'expected an https URL')
   .refine((v) => !isBannedHost(v), 'social media is not a source');
+
+/**
+ * The social platforms an official account can post on, and the hosts each one's posts live at
+ * (every one in BANNED_HOSTS, so a post on any other is refused as social media).
+ */
+export const SOCIAL_PLATFORMS = {
+  x: ['x.com', 'twitter.com'],
+  instagram: ['instagram.com'],
+  facebook: ['facebook.com'],
+  tiktok: ['tiktok.com'],
+  threads: ['threads.net', 'threads.com'],
+} as const;
+export type SocialPlatform = keyof typeof SOCIAL_PLATFORMS;
+
+/** Who an official account belongs to: never a person. */
+export const ACCOUNT_OWNERS = ['college', 'school', 'club'] as const;
+export type AccountOwner = (typeof ACCOUNT_OWNERS)[number];
+
+/**
+ * Whether `url` is a post on `platform` by `handle`: on one of the platform's hosts, with the
+ * handle as the path's first segment (`@handle` on TikTok and Threads), case-insensitively. An
+ * Instagram post is cited at its `/<handle>/p/<code>/` address for this reason: the bare `/p/<code>/`
+ * one does not say whose post it is.
+ */
+export function isPostBy(url: string, platform: SocialPlatform, handle: string): boolean {
+  let u: URL;
+  try {
+    u = new URL(url);
+  } catch {
+    return false;
+  }
+  const host = u.hostname.toLowerCase();
+  if (!SOCIAL_PLATFORMS[platform].some((h) => host === h || host.endsWith(`.${h}`))) return false;
+  const [first, ...rest] = u.pathname.split('/').filter(Boolean);
+  return (first ?? '').replace(/^@/, '').toLowerCase() === handle.toLowerCase() && rest.length > 0;
+}
 
 const text = z.string().min(1);
 
@@ -204,8 +249,40 @@ export const CollegeSchema = z.object({
 
 // ---------------------------------------------------------------- commitments
 
+/**
+ * The official account an `official-social` source is a post by. `proof` is a page that is not
+ * social media and shows the account is the owner's own: the owner's website linking it, most often.
+ */
+export const OfficialAccountSchema = z.object({
+  platform: z.enum(Object.keys(SOCIAL_PLATFORMS) as [SocialPlatform, ...SocialPlatform[]]),
+  /** As the platform shows it, without the @: "VCHSAthletics". */
+  handle: z.string().regex(/^[A-Za-z0-9_.]{1,64}$/, 'expected a handle without the @'),
+  owner: z.enum(ACCOUNT_OWNERS),
+  /** The account's owner as the site names it: "Valley Christian athletics", "CBU softball". Rendered. */
+  ownerName: text,
+  proof: httpsUrl,
+});
+
+/**
+ * A source's URL may be on a social-media host only as an official account's post (invariant 5):
+ * kind `official-social`, an `account`, and a URL that is a post by that account. Every other
+ * source has no `account` and is never on a social-media host.
+ */
+function checkSource(s: { url: string; kind: CommitSourceKind; account?: z.infer<typeof OfficialAccountSchema> }, ctx: Ctx): void {
+  if (!isHttpsUrl(s.url)) return issue(ctx, ['url'], 'expected an https URL');
+  if (s.kind !== 'official-social') {
+    if (s.account !== undefined) issue(ctx, ['account'], 'only an official-social source names an account');
+    if (isBannedHost(s.url)) issue(ctx, ['url'], 'social media is not a source');
+    return;
+  }
+  if (s.account === undefined) return issue(ctx, ['account'], 'an official-social source names the account');
+  if (!isPostBy(s.url, s.account.platform, s.account.handle)) {
+    issue(ctx, ['url'], `not a post by ${s.account.handle} on ${s.account.platform}`);
+  }
+}
+
 export const CommitSourceSchema = z.object({
-  url: httpsUrl,
+  url: z.string(),
   kind: z.enum(COMMIT_SOURCE_KINDS),
   /** Verbatim from the page. Kept in the file so a maintainer can re-check it; never rendered. */
   quote: text.max(300),
@@ -215,7 +292,9 @@ export const CommitSourceSchema = z.object({
   statedClassYear: z.number().int().min(2020).max(2040).nullable(),
   /** The page's own date, as it gives it: free text ("Jun 15, 2026", "Summer 2026"). */
   sourceDate: text.nullable(),
-});
+  /** The account that posted it: an `official-social` source's, and only its. */
+  account: OfficialAccountSchema.optional(),
+}).superRefine(checkSource);
 
 export const CommitmentSchema = z.object({
   teamSlug,

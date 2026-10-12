@@ -127,7 +127,8 @@ export default function RecruitingPage() {
           </p>
           <p className="mt-2 mb-0">
             None of this is part of the twice-daily update: it is research done by hand, and social
-            media is never used. Recall is partial, so a player who is not listed here may still have
+            media is never used, apart from commitment posts by official college, school and club
+            accounts. Recall is partial, so a player who is not listed here may still have
             a profile, play for a club or have committed.
           </p>
         </div>

@@ -227,6 +227,14 @@ describe('sport words', () => {
       'Example athletics',
     );
   });
+
+  it('names an official account by its owner and platform, never its handle', () => {
+    const account = { platform: 'x', handle: 'ExampleHS', owner: 'school', ownerName: 'Example High athletics', proof: 'https://examplehs.org/' } as const;
+    expect(sourceLabel({ url: 'https://x.com/ExampleHS/status/1', kind: 'official-social', account }, COLLEGE)).toBe('Example High athletics on X');
+    expect(
+      sourceLabel({ url: 'https://www.instagram.com/examplehs/p/AbC/', kind: 'official-social', account: { ...account, platform: 'instagram' } }, COLLEGE),
+    ).toBe('Example High athletics on Instagram');
+  });
 });
 
 describe('buildCommitsView (/commits)', () => {
