@@ -1269,7 +1269,7 @@ the player-by-player sweeps finished 431 rows (nearly every class-of-2027 row) a
 the known recruiting profiles of the other 1,242. Two commitments were found and re-read: Shyla
 Paredes (Cal Nuggets' commitment list and 18U Woods roster, tied by her MaxPreps page naming the
 club; medium) and Molly Waltz, Archbishop Mitty, to UC Davis lacrosse (ADVNC's commits page, with her
-school; high). Every source in the file was re-opened; SportsRecruits' Colgate page no longer listed
+school, and her own SportsRecruits profile; high). Every source in the file was re-opened; SportsRecruits' Colgate page no longer listed
 Storey Lewis and was dropped. Still to run: web searches for the class-of-2028, ungraded and younger
 rows, and Instagram posts by official accounts, which cannot be read from the research environment.
 

@@ -699,7 +699,8 @@ Coverage on 2026-10-12, counted from the file: **30 commitments, 30 players at 1
 23 colleges (26 programs).** The 2026-10-12 round (see below) added two from Northern California:
 Shyla Paredes, Valley Christian, to Cal Baptist in softball (medium: her travel club Cal Nuggets'
 commitment list and roster, tied to her by her own MaxPreps page naming the club), and Molly Waltz,
-Archbishop Mitty, to UC Davis in lacrosse (high: ADVNC Lacrosse's commits page names her school). Southern California's twelve, from the 2026-10-06 round over its 842 rows,
+Archbishop Mitty, to UC Davis in lacrosse (high: ADVNC Lacrosse's commits page names her school, and
+her own SportsRecruits profile shows the commitment). Southern California's twelve, from the 2026-10-06 round over its 842 rows,
 are ten in field hockey (Sami Lee, Canyon Hills, to Columbia; Dylan Rietti, Torrey Pines, to Richmond; Ava Hauer, Torrey Pines, to Johns
 Hopkins; Lola Conway, Bishop's, to Michigan; Margaux Schlumberger, Harvard-Westlake, to Harvard;
 Samantha Ippolito, Scripps Ranch, to Michigan State; Eva Allen, Canyon Hills, to Cal; Rylie Storm,

@@ -255,10 +255,10 @@ describe('the research of 2026-10-03, 2026-10-04, 2026-10-06 and 2026-10-12 (the
     expect([level('ncaa-d1'), level('ncaa-d2'), level('ncaa-d3'), level('naia')]).toEqual([21, 1, 8, 0]);
   });
 
-  it('rests on 84 source entries on 67 distinct URLs (SoCal: 38 on 31), and 11 commitments carry a date', () => {
+  it('rests on 85 source entries on 68 distinct URLs (SoCal: 38 on 31), and 11 commitments carry a date', () => {
     const entries = raw.commitments.flatMap((c) => c.sources);
-    expect(entries).toHaveLength(84);
-    expect(new Set(entries.map((s) => s.url)).size).toBe(67);
+    expect(entries).toHaveLength(85);
+    expect(new Set(entries.map((s) => s.url)).size).toBe(68);
     const socalEntries = socal.flatMap((c) => c.sources);
     expect(socalEntries).toHaveLength(38);
     expect(new Set(socalEntries.map((s) => s.url)).size).toBe(31);
