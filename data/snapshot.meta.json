@@ -6,13 +6,13 @@
     "conflicts": 8,
     "notOnMaxPreps": 0
   },
-  "commitSummary": "SCVAL +0 finals · BVAL +0 · PCAL +0 · MCAL +0 · EAL +0 · Sunset +0 · City +0 · North +0 · Metro +0 · LA +0",
-  "contentHash": "28fc3860c2a0749077452e4ea3d7cf3ae94b43ca77ce98cc71bab0310b7c8f39",
+  "commitSummary": "SCVAL +0 finals · BVAL +1 · PCAL +0 · MCAL +0 · EAL +0 · Sunset +0 · City +0 · North +0 · Metro +0 · LA +0",
+  "contentHash": "784b470850622ff419da213c27614002f70ab9cd50a3d72a7757f641cc7b95bd",
   "counts": {
     "byLeague": {
       "bval": {
         "backfilled": 0,
-        "finals": 80,
+        "finals": 81,
         "games": 118,
         "leagueGames": 60,
         "teams": 12
@@ -26,7 +26,7 @@
       },
       "eal": {
         "backfilled": 0,
-        "finals": 26,
+        "finals": 27,
         "games": 42,
         "leagueGames": 30,
         "teams": 6
@@ -40,7 +40,7 @@
       },
       "mcal": {
         "backfilled": 0,
-        "finals": 70,
+        "finals": 71,
         "games": 88,
         "leagueGames": 72,
         "teams": 9
@@ -81,21 +81,21 @@
         "teams": 8
       }
     },
-    "finals": 615,
+    "finals": 617,
     "games": 891,
     "leagueGames": 547,
-    "mismatches": 21,
-    "pending": 15,
+    "mismatches": 20,
+    "pending": 13,
     "teams": 102
   },
   "crossCheck": {
-    "agreements": 173,
+    "agreements": 175,
     "backfilled": 1,
-    "compared": 234,
-    "conflicts": 9,
-    "sbliveOnlyScored": 3
+    "compared": 239,
+    "conflicts": 10,
+    "sbliveOnlyScored": 1
   },
-  "fetchedAt": "2026-10-11T11:06:54.262Z",
+  "fetchedAt": "2026-10-12T12:38:33.499Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -108,10 +108,10 @@
     },
     {
       "backfilled": 0,
-      "countedFinals": 24,
-      "finalsDelta": 0,
+      "countedFinals": 25,
+      "finalsDelta": 1,
       "id": "bval",
-      "missingPast": 1,
+      "missingPast": 0,
       "reasons": [],
       "state": "fresh"
     },
@@ -193,7 +193,7 @@
   "requests": {
     "maxpreps": 131,
     "official": 8,
-    "sblive": 20
+    "sblive": 21
   },
   "sources": [
     {
@@ -923,7 +923,7 @@
     },
     {
       "label": "sblive scoreboard 2026-09-30",
-      "rowCount": 14,
+      "rowCount": 13,
       "status": "ok"
     },
     {
@@ -958,7 +958,7 @@
     },
     {
       "label": "sblive scoreboard 2026-10-08",
-      "rowCount": 24,
+      "rowCount": 21,
       "status": "ok"
     },
     {
@@ -972,6 +972,11 @@
       "status": "ok"
     },
     {
+      "label": "sblive scoreboard 2026-10-12",
+      "rowCount": 12,
+      "status": "ok"
+    },
+    {
       "label": "sblive berkeley games",
       "rowCount": 17,
       "status": "ok"
@@ -979,6 +984,11 @@
     {
       "label": "sblive carmel games",
       "rowCount": 18,
+      "status": "ok"
+    },
+    {
+      "label": "sblive chaminade games",
+      "rowCount": 14,
       "status": "ok"
     },
     {
@@ -1002,11 +1012,6 @@
       "status": "ok"
     },
     {
-      "label": "sblive cupertino games",
-      "rowCount": 20,
-      "status": "ok"
-    },
-    {
       "label": "sblive greenfield games",
       "rowCount": 14,
       "status": "ok"
@@ -1023,7 +1028,7 @@
     },
     {
       "label": "cifsshome.org Central Coast Section field hockey",
-      "rowCount": 129,
+      "rowCount": 132,
       "status": "ok"
     },
     {
@@ -1038,17 +1043,17 @@
     },
     {
       "label": "cifsshome.org SAC-Joaquin Section field hockey",
-      "rowCount": 9,
+      "rowCount": 10,
       "status": "ok"
     },
     {
       "label": "cifsshome.org Southern Section field hockey",
-      "rowCount": 166,
+      "rowCount": 169,
       "status": "ok"
     },
     {
       "label": "cifsshome.org San Diego Section field hockey",
-      "rowCount": 477,
+      "rowCount": 481,
       "status": "ok"
     },
     {
@@ -1062,8 +1067,8 @@
       "status": "skipped"
     }
   ],
-  "today": "2026-10-11",
-  "warnings": 49,
+  "today": "2026-10-12",
+  "warnings": 47,
   "window": {
     "firstGame": "2026-08-12T17:15:00",
     "lastGame": "2026-10-30T19:00:00",

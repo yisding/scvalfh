@@ -1,12 +1,12 @@
 {
   "counts": {
     "errors": 0,
-    "goalkeepers": 106,
-    "players": 797,
+    "goalkeepers": 108,
+    "players": 804,
     "teams": 102,
-    "teamsWithStats": 64
+    "teamsWithStats": 65
   },
-  "fetchedAt": "2026-10-11T11:09:04.131Z",
+  "fetchedAt": "2026-10-12T12:40:42.142Z",
   "season": "26-27",
   "source": {
     "builtBy": "scripts/fetch-player-stats.ts",
@@ -23,7 +23,7 @@
   "teams": [
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": "2026-10-05T23:04:30",
       "maxprepsTeamId": "1dc4836b-4daf-4573-b525-27b474bd5366",
       "name": "St. Ignatius",
@@ -454,7 +454,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": "2026-10-05T19:59:38",
       "maxprepsTeamId": "de6d3780-e8f6-4a2a-93f2-b5d89499f9b0",
       "name": "Saint Francis",
@@ -895,7 +895,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": null,
       "maxprepsTeamId": "0279f2de-d5ce-484d-b210-2286ded42058",
       "name": "Los Altos",
@@ -916,7 +916,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": "2026-10-08T12:15:36",
       "maxprepsTeamId": "8a8c04d2-5606-44cf-9993-34db55474240",
       "name": "Valley Christian",
@@ -1287,7 +1287,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": "2026-10-07T21:40:14",
       "maxprepsTeamId": "a97c219c-2fbe-4fa4-9a0c-cc18502a8d24",
       "name": "Fremont",
@@ -1531,7 +1531,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": null,
       "maxprepsTeamId": "97ffffbe-54ba-4c25-86bb-41332627f64e",
       "name": "Cupertino",
@@ -1552,7 +1552,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "gameTotals": [
         {
           "assists": 0,
@@ -1784,7 +1784,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": "2026-10-02T09:25:09",
       "maxprepsTeamId": "0f63870a-34f3-4d5b-9dbf-653c8410f969",
       "name": "Archbishop Mitty",
@@ -2163,7 +2163,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": null,
       "maxprepsTeamId": "bdb0b593-ef7f-4c69-8c2a-e0a48c934ca7",
       "name": "Los Gatos",
@@ -2184,7 +2184,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": "2026-10-08T20:09:12",
       "maxprepsTeamId": "a38a628c-c65f-487f-a65e-7264b6804ce0",
       "name": "Palo Alto",
@@ -2594,7 +2594,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": "2026-10-06T19:58:08",
       "maxprepsTeamId": "e1db3a4f-3bcf-4281-a574-d313212296a1",
       "name": "Presentation",
@@ -2718,7 +2718,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": "2026-10-06T22:09:17",
       "maxprepsTeamId": "17fad4fb-c82b-4b5a-8a31-3ce13c0ede13",
       "name": "Santa Clara",
@@ -3072,7 +3072,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": null,
       "maxprepsTeamId": "12a470ab-e17d-4e5a-b74b-055d1f46d46b",
       "name": "Saratoga",
@@ -3093,7 +3093,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": null,
       "maxprepsTeamId": "d7c7f7a1-06be-44fb-a4a2-64599519aa4c",
       "name": "Lynbrook",
@@ -3114,7 +3114,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": "2026-10-03T15:07:19",
       "maxprepsTeamId": "405614ad-a015-4270-b527-18e899c90824",
       "name": "Monta Vista",
@@ -3503,7 +3503,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": "2026-10-08T13:50:15",
       "maxprepsTeamId": "c81780c9-d396-45a1-a7f9-0aae05905a97",
       "name": "Branham",
@@ -3747,7 +3747,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": "2026-10-08T21:07:57",
       "maxprepsTeamId": "773e862d-e186-44aa-b268-461b4064ce52",
       "name": "Christopher",
@@ -3993,7 +3993,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": "2026-10-08T21:43:41",
       "maxprepsTeamId": "fa72c6cc-34dc-4bb4-a184-9c4efaa643d3",
       "name": "Gilroy",
@@ -4405,7 +4405,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": "2026-10-08T10:50:44",
       "maxprepsTeamId": "bd6662e8-a2ee-45ca-b0e8-dd03dec005c9",
       "name": "Leigh",
@@ -4704,7 +4704,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": "2026-10-09T09:19:32",
       "maxprepsTeamId": "cb6e2cbf-71b1-4ef0-9c63-feef33010bf2",
       "name": "Leland",
@@ -4875,7 +4875,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": "2026-10-09T09:04:30",
       "maxprepsTeamId": "e0d5f596-a80c-4142-9c2a-e2bee576fdc9",
       "name": "Willow Glen",
@@ -5095,7 +5095,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": null,
       "maxprepsTeamId": "8c56113f-9229-43a2-a56e-4f8443494857",
       "name": "Del Mar",
@@ -5116,7 +5116,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": "2026-10-06T22:21:06",
       "maxprepsTeamId": "a52c60ac-fbe9-438f-b052-c1eba43afacd",
       "name": "Live Oak",
@@ -5169,7 +5169,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": "2026-10-05T09:56:55",
       "maxprepsTeamId": "24d74484-a18f-450e-9f4a-ccbd5299bf1f",
       "name": "Prospect",
@@ -5520,7 +5520,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": null,
       "maxprepsTeamId": "30d65e43-1478-45b5-90de-fd69689344f8",
       "name": "Silver Creek",
@@ -5541,28 +5541,195 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
-      "lastUpdated": null,
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
+      "lastUpdated": "2026-10-11T22:02:13",
       "maxprepsTeamId": "01bf9fda-9b10-4f04-9eef-3195d7d501dc",
       "name": "Ann Sobrato",
-      "players": [],
+      "players": [
+        {
+          "athleteId": null,
+          "careerId": "jpnc7lkim1ng0",
+          "careerUrl": "https://www.maxpreps.com/ca/morgan-hill/ann-sobrato-bulldogs/athletes/madison-duley/?careerid=jpnc7lkim1ng0",
+          "field": {
+            "assists": 1,
+            "gameWinningGoals": null,
+            "gamesPlayed": 2,
+            "goals": 3,
+            "minutes": null,
+            "points": 7,
+            "shots": null,
+            "shotsOnGoal": null,
+            "steals": null
+          },
+          "fullName": "M. Duley",
+          "goalkeeping": null,
+          "jersey": "4",
+          "onRoster": false,
+          "shortName": "M. Duley"
+        },
+        {
+          "athleteId": null,
+          "careerId": "e05opstje05h1",
+          "careerUrl": "https://www.maxpreps.com/ca/morgan-hill/ann-sobrato-bulldogs/athletes/kaia-sanchez/?careerid=e05opstje05h1",
+          "field": {
+            "assists": 1,
+            "gameWinningGoals": null,
+            "gamesPlayed": 2,
+            "goals": 1,
+            "minutes": null,
+            "points": 3,
+            "shots": null,
+            "shotsOnGoal": null,
+            "steals": null
+          },
+          "fullName": "K. Sanchez",
+          "goalkeeping": null,
+          "jersey": "1",
+          "onRoster": false,
+          "shortName": "K. Sanchez"
+        },
+        {
+          "athleteId": null,
+          "careerId": "osl6dnkve9in7",
+          "careerUrl": "https://www.maxpreps.com/ca/morgan-hill/ann-sobrato-bulldogs/athletes/elena-estrella/?careerid=osl6dnkve9in7",
+          "field": {
+            "assists": 0,
+            "gameWinningGoals": null,
+            "gamesPlayed": 1,
+            "goals": 1,
+            "minutes": null,
+            "points": 2,
+            "shots": null,
+            "shotsOnGoal": null,
+            "steals": null
+          },
+          "fullName": "E. Estrella",
+          "goalkeeping": null,
+          "jersey": "7",
+          "onRoster": false,
+          "shortName": "E. Estrella"
+        },
+        {
+          "athleteId": null,
+          "careerId": "vspg1iel50vdd",
+          "careerUrl": "https://www.maxpreps.com/ca/morgan-hill/ann-sobrato-bulldogs/athletes/leila-cardoso/?careerid=vspg1iel50vdd",
+          "field": {
+            "assists": 0,
+            "gameWinningGoals": null,
+            "gamesPlayed": 1,
+            "goals": 1,
+            "minutes": null,
+            "points": 2,
+            "shots": null,
+            "shotsOnGoal": null,
+            "steals": null
+          },
+          "fullName": "L. Cardoso",
+          "goalkeeping": null,
+          "jersey": "5",
+          "onRoster": false,
+          "shortName": "L. Cardoso"
+        },
+        {
+          "athleteId": null,
+          "careerId": "0ab31kkjo99j3",
+          "careerUrl": "https://www.maxpreps.com/ca/morgan-hill/ann-sobrato-bulldogs/athletes/isabel-reichert/?careerid=0ab31kkjo99j3",
+          "field": {
+            "assists": 1,
+            "gameWinningGoals": null,
+            "gamesPlayed": 1,
+            "goals": 1,
+            "minutes": null,
+            "points": 3,
+            "shots": null,
+            "shotsOnGoal": null,
+            "steals": null
+          },
+          "fullName": "I. Reichert",
+          "goalkeeping": null,
+          "jersey": "3",
+          "onRoster": false,
+          "shortName": "I. Reichert"
+        },
+        {
+          "athleteId": null,
+          "careerId": "a1fk457v411bb",
+          "careerUrl": "https://www.maxpreps.com/ca/morgan-hill/ann-sobrato-bulldogs/athletes/emma-duley/?careerid=a1fk457v411bb",
+          "field": {
+            "assists": 1,
+            "gameWinningGoals": null,
+            "gamesPlayed": 1,
+            "goals": 4,
+            "minutes": null,
+            "points": 9,
+            "shots": null,
+            "shotsOnGoal": null,
+            "steals": null
+          },
+          "fullName": "E. Duley",
+          "goalkeeping": null,
+          "jersey": "21",
+          "onRoster": false,
+          "shortName": "E. Duley"
+        },
+        {
+          "athleteId": null,
+          "careerId": "ka4mc2mrnhd55",
+          "careerUrl": "https://www.maxpreps.com/ca/morgan-hill/ann-sobrato-bulldogs/athletes/mia-tatom/?careerid=ka4mc2mrnhd55",
+          "field": {
+            "assists": 1,
+            "gameWinningGoals": null,
+            "gamesPlayed": 1,
+            "goals": 2,
+            "minutes": null,
+            "points": 5,
+            "shots": null,
+            "shotsOnGoal": null,
+            "steals": null
+          },
+          "fullName": "M. Tatom",
+          "goalkeeping": null,
+          "jersey": "2",
+          "onRoster": false,
+          "shortName": "M. Tatom"
+        }
+      ],
       "slug": "sobrato",
       "statsUrl": "https://www.maxpreps.com/ca/morgan-hill/ann-sobrato-bulldogs/field-hockey/stats/",
-      "status": "none",
+      "status": "ok",
       "teamId": "01bf9fda-9b10-4f04-9eef-3195d7d501dc",
       "totals": {
-        "field": {},
+        "field": {
+          "assists": 5,
+          "gamesPlayed": 6,
+          "goals": 13,
+          "points": 31
+        },
         "goalkeeping": {}
       },
       "tracked": {
-        "field": [],
+        "field": [
+          "gamesPlayed",
+          "goals",
+          "assists",
+          "points"
+        ],
         "goalkeeping": []
       },
-      "warnings": []
+      "warnings": [
+        "goalkeeping gamesPlayed: team total is 6 but no player has any; not shown rather than as zeros",
+        "M. Duley has stats but is not on the MaxPreps roster",
+        "K. Sanchez has stats but is not on the MaxPreps roster",
+        "E. Estrella has stats but is not on the MaxPreps roster",
+        "L. Cardoso has stats but is not on the MaxPreps roster",
+        "I. Reichert has stats but is not on the MaxPreps roster",
+        "E. Duley has stats but is not on the MaxPreps roster",
+        "M. Tatom has stats but is not on the MaxPreps roster"
+      ]
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": "2026-10-08T21:51:30",
       "maxprepsTeamId": "1959d651-408f-4764-94a5-144cea89c499",
       "name": "Westmont",
@@ -5834,7 +6001,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": "2026-09-27T09:37:17",
       "maxprepsTeamId": "91994f1e-57af-4fda-9fe0-45c923078af6",
       "name": "Carmel",
@@ -6111,7 +6278,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": null,
       "maxprepsTeamId": "0bb5dbd8-6792-415b-8118-196ee0132b56",
       "name": "Greenfield",
@@ -6132,7 +6299,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": "2026-10-09T11:20:25",
       "maxprepsTeamId": "3f8f38fb-88f9-44ee-9af1-c1203fce437b",
       "name": "Hollister",
@@ -6353,7 +6520,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": null,
       "maxprepsTeamId": "1ddbdf6d-84fd-4dfa-942f-f833193e2626",
       "name": "Monterey",
@@ -6374,7 +6541,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": null,
       "maxprepsTeamId": "1f152b3b-38dc-4d34-b260-9663dc3006a4",
       "name": "Salinas",
@@ -6395,7 +6562,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": null,
       "maxprepsTeamId": "c3f83b47-6bab-4e25-ba49-9c3ffda74be8",
       "name": "Santa Catalina",
@@ -6416,7 +6583,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": "2026-10-06T11:17:18",
       "maxprepsTeamId": "e9a4a782-76c5-4b15-8dd6-f03b87464aa4",
       "name": "Stevenson",
@@ -6704,7 +6871,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": "2026-09-28T07:01:19",
       "maxprepsTeamId": "5cbb07ea-6b9c-4286-81f6-2708253e1add",
       "name": "Archie Williams",
@@ -6801,7 +6968,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": "2026-10-09T19:43:09",
       "maxprepsTeamId": "12616b84-157c-48d3-b353-434576d9df8d",
       "name": "Redwood",
@@ -7159,7 +7326,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": "2026-10-08T21:14:39",
       "maxprepsTeamId": "7298608f-2310-4399-aa07-d6bc50df3f4e",
       "name": "Tamalpais",
@@ -7616,7 +7783,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": null,
       "maxprepsTeamId": "6c68b5d2-1cab-449d-9140-bd7c8adb2791",
       "name": "Berkeley",
@@ -7637,94 +7804,52 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
-      "lastUpdated": "2026-10-08T21:27:46",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
+      "lastUpdated": "2026-10-12T02:45:23",
       "maxprepsTeamId": "527c7df0-94c7-4aa2-991c-ef86f4235d4e",
       "name": "Lick-Wilmerding",
       "players": [
         {
-          "athleteId": "70d55f1a-1a68-4292-9dc3-275b000b8ad5",
-          "careerId": "hg4je939ouej3",
-          "careerUrl": "https://www.maxpreps.com/ca/san-francisco/lick-wilmerding-tigers/athletes/tessa-mocci/?careerid=hg4je939ouej3",
+          "athleteId": "07fba30d-f16a-4166-98bf-8e4b6ac32506",
+          "careerId": "61qhtakp70mee",
+          "careerUrl": "https://www.maxpreps.com/ca/san-francisco/lick-wilmerding-tigers/athletes/coco-mallegni/?careerid=61qhtakp70mee",
           "field": {
             "assists": 0,
             "gameWinningGoals": null,
-            "gamesPlayed": 9,
+            "gamesPlayed": 11,
             "goals": 0,
-            "minutes": 70,
+            "minutes": 660,
             "points": 0,
             "shots": null,
             "shotsOnGoal": null,
             "steals": 0
           },
-          "fullName": "Tessa Mocci",
+          "fullName": "Coco Mallegni",
           "goalkeeping": null,
-          "jersey": null,
+          "jersey": "99",
           "onRoster": true,
-          "shortName": "T. Mocci"
+          "shortName": "C. Mallegni"
         },
         {
-          "athleteId": "fa7c79ea-a1d5-443d-a93b-768c1be3337e",
-          "careerId": "8jbmumjeh3pue",
-          "careerUrl": "https://www.maxpreps.com/ca/san-francisco/lick-wilmerding-tigers/athletes/eleanor-greene/?careerid=8jbmumjeh3pue",
+          "athleteId": "5a80124a-f659-4fd9-8d86-3d118d733f53",
+          "careerId": "bs228ms4oh099",
+          "careerUrl": "https://www.maxpreps.com/ca/san-francisco/lick-wilmerding-tigers/athletes/amelia-bagen/?careerid=bs228ms4oh099",
           "field": {
             "assists": 0,
             "gameWinningGoals": null,
-            "gamesPlayed": 9,
+            "gamesPlayed": 12,
             "goals": 0,
-            "minutes": 155,
+            "minutes": 570,
             "points": 0,
             "shots": null,
             "shotsOnGoal": null,
-            "steals": 1
+            "steals": 6
           },
-          "fullName": "Eleanor Greene",
+          "fullName": "Amelia Bagen",
           "goalkeeping": null,
           "jersey": null,
           "onRoster": true,
-          "shortName": "E. Greene"
-        },
-        {
-          "athleteId": "4e7f88a3-7867-41d3-8a33-50b10cd41b0f",
-          "careerId": "5gqr8d5mnm7m6",
-          "careerUrl": "https://www.maxpreps.com/ca/san-francisco/lick-wilmerding-tigers/athletes/aanya-chandarana/?careerid=5gqr8d5mnm7m6",
-          "field": {
-            "assists": 1,
-            "gameWinningGoals": null,
-            "gamesPlayed": 7,
-            "goals": 0,
-            "minutes": 240,
-            "points": 1,
-            "shots": 2,
-            "shotsOnGoal": 1,
-            "steals": 2
-          },
-          "fullName": "Aanya Chandarana",
-          "goalkeeping": null,
-          "jersey": null,
-          "onRoster": true,
-          "shortName": "A. Chandarana"
-        },
-        {
-          "athleteId": "e9f68633-1fcd-43cc-a40b-ef9a4ecedd42",
-          "careerId": "c9o77hslvm3dd",
-          "careerUrl": "https://www.maxpreps.com/ca/san-francisco/lick-wilmerding-tigers/athletes/gloria-cebrian/?careerid=c9o77hslvm3dd",
-          "field": {
-            "assists": 0,
-            "gameWinningGoals": null,
-            "gamesPlayed": 8,
-            "goals": 0,
-            "minutes": 435,
-            "points": 0,
-            "shots": null,
-            "shotsOnGoal": null,
-            "steals": 13
-          },
-          "fullName": "Gloria Cebrian",
-          "goalkeeping": null,
-          "jersey": null,
-          "onRoster": true,
-          "shortName": "G. Cebrian"
+          "shortName": "A. Bagen"
         },
         {
           "athleteId": "94dd4a11-4c8e-4fa7-9780-0473f70ebc5f",
@@ -7733,9 +7858,9 @@
           "field": {
             "assists": 0,
             "gameWinningGoals": null,
-            "gamesPlayed": 9,
+            "gamesPlayed": 12,
             "goals": 0,
-            "minutes": 463,
+            "minutes": 558,
             "points": 0,
             "shots": null,
             "shotsOnGoal": null,
@@ -7754,9 +7879,9 @@
           "field": {
             "assists": 0,
             "gameWinningGoals": null,
-            "gamesPlayed": 9,
+            "gamesPlayed": 12,
             "goals": 0,
-            "minutes": 220,
+            "minutes": 300,
             "points": 0,
             "shots": null,
             "shotsOnGoal": null,
@@ -7769,19 +7894,145 @@
           "shortName": "M. Wong"
         },
         {
+          "athleteId": "3ac2c753-2b31-4c5e-8c38-58d98ccdfcc0",
+          "careerId": "ie0ju456fvvvf",
+          "careerUrl": "https://www.maxpreps.com/ca/san-francisco/lick-wilmerding-tigers/athletes/hannah-weinberg/?careerid=ie0ju456fvvvf",
+          "field": {
+            "assists": 0,
+            "gameWinningGoals": null,
+            "gamesPlayed": 12,
+            "goals": 0,
+            "minutes": 220,
+            "points": 0,
+            "shots": null,
+            "shotsOnGoal": null,
+            "steals": 1
+          },
+          "fullName": "Hannah Weinberg",
+          "goalkeeping": null,
+          "jersey": null,
+          "onRoster": true,
+          "shortName": "H. Weinberg"
+        },
+        {
+          "athleteId": "70d55f1a-1a68-4292-9dc3-275b000b8ad5",
+          "careerId": "hg4je939ouej3",
+          "careerUrl": "https://www.maxpreps.com/ca/san-francisco/lick-wilmerding-tigers/athletes/tessa-mocci/?careerid=hg4je939ouej3",
+          "field": {
+            "assists": 0,
+            "gameWinningGoals": null,
+            "gamesPlayed": 12,
+            "goals": 0,
+            "minutes": 80,
+            "points": 0,
+            "shots": null,
+            "shotsOnGoal": null,
+            "steals": 0
+          },
+          "fullName": "Tessa Mocci",
+          "goalkeeping": null,
+          "jersey": null,
+          "onRoster": true,
+          "shortName": "T. Mocci"
+        },
+        {
+          "athleteId": "79bbf730-eff3-4b0b-bec2-ea81a87cc2ab",
+          "careerId": "lu3cdefl2ldcc",
+          "careerUrl": "https://www.maxpreps.com/ca/san-francisco/lick-wilmerding-tigers/athletes/amelie-nesmith/?careerid=lu3cdefl2ldcc",
+          "field": {
+            "assists": 0,
+            "gameWinningGoals": null,
+            "gamesPlayed": 10,
+            "goals": 0,
+            "minutes": 485,
+            "points": 0,
+            "shots": null,
+            "shotsOnGoal": null,
+            "steals": 7
+          },
+          "fullName": "Amelie Nesmith",
+          "goalkeeping": null,
+          "jersey": null,
+          "onRoster": true,
+          "shortName": "A. Nesmith"
+        },
+        {
+          "athleteId": "7d482889-52db-4d43-9853-23bce95ce9f7",
+          "careerId": "bdvdg0sf9h188",
+          "careerUrl": "https://www.maxpreps.com/ca/san-francisco/lick-wilmerding-tigers/athletes/lila-edwards/?careerid=bdvdg0sf9h188",
+          "field": {
+            "assists": 0,
+            "gameWinningGoals": null,
+            "gamesPlayed": 12,
+            "goals": 4,
+            "minutes": 677,
+            "points": 8,
+            "shots": 9,
+            "shotsOnGoal": 11,
+            "steals": 1
+          },
+          "fullName": "Lila Edwards",
+          "goalkeeping": null,
+          "jersey": null,
+          "onRoster": true,
+          "shortName": "L. Edwards"
+        },
+        {
+          "athleteId": "fa7c79ea-a1d5-443d-a93b-768c1be3337e",
+          "careerId": "8jbmumjeh3pue",
+          "careerUrl": "https://www.maxpreps.com/ca/san-francisco/lick-wilmerding-tigers/athletes/eleanor-greene/?careerid=8jbmumjeh3pue",
+          "field": {
+            "assists": 0,
+            "gameWinningGoals": null,
+            "gamesPlayed": 12,
+            "goals": 0,
+            "minutes": 200,
+            "points": 0,
+            "shots": null,
+            "shotsOnGoal": null,
+            "steals": 1
+          },
+          "fullName": "Eleanor Greene",
+          "goalkeeping": null,
+          "jersey": null,
+          "onRoster": true,
+          "shortName": "E. Greene"
+        },
+        {
+          "athleteId": "5e4b4906-f8aa-41c2-b622-f3e9948587b7",
+          "careerId": "m28ucou3o1fp9",
+          "careerUrl": "https://www.maxpreps.com/ca/san-francisco/lick-wilmerding-tigers/athletes/olivia-clem/?careerid=m28ucou3o1fp9",
+          "field": {
+            "assists": 0,
+            "gameWinningGoals": null,
+            "gamesPlayed": 9,
+            "goals": 0,
+            "minutes": 260,
+            "points": 0,
+            "shots": null,
+            "shotsOnGoal": null,
+            "steals": 5
+          },
+          "fullName": "Olivia Clem",
+          "goalkeeping": null,
+          "jersey": null,
+          "onRoster": true,
+          "shortName": "O. Clem"
+        },
+        {
           "athleteId": "5930e3d6-9b1b-4c28-a98e-c232c3be8beb",
           "careerId": "s75a1tinvafj3",
           "careerUrl": "https://www.maxpreps.com/ca/san-francisco/lick-wilmerding-tigers/athletes/frankie-lemieux/?careerid=s75a1tinvafj3",
           "field": {
-            "assists": 2,
+            "assists": 3,
             "gameWinningGoals": null,
-            "gamesPlayed": 9,
-            "goals": 11,
-            "minutes": 493,
-            "points": 24,
-            "shots": 30,
-            "shotsOnGoal": 31,
-            "steals": 27
+            "gamesPlayed": 12,
+            "goals": 15,
+            "minutes": 668,
+            "points": 33,
+            "shots": 46,
+            "shotsOnGoal": 38,
+            "steals": 36
           },
           "fullName": "Frankie Lemieux",
           "goalkeeping": null,
@@ -7796,9 +8047,9 @@
           "field": {
             "assists": 0,
             "gameWinningGoals": null,
-            "gamesPlayed": 6,
+            "gamesPlayed": 9,
             "goals": 0,
-            "minutes": 100,
+            "minutes": 160,
             "points": 0,
             "shots": null,
             "shotsOnGoal": null,
@@ -7811,15 +8062,36 @@
           "shortName": "O. Freidman"
         },
         {
+          "athleteId": "f2cd2531-bbfd-41cd-a8e7-b3454d333d1d",
+          "careerId": "gjnfrqsqk0sue",
+          "careerUrl": "https://www.maxpreps.com/ca/san-francisco/lick-wilmerding-tigers/athletes/lila-hershenson/?careerid=gjnfrqsqk0sue",
+          "field": {
+            "assists": 0,
+            "gameWinningGoals": null,
+            "gamesPlayed": 12,
+            "goals": 0,
+            "minutes": 595,
+            "points": 0,
+            "shots": null,
+            "shotsOnGoal": null,
+            "steals": 10
+          },
+          "fullName": "Lila Hershenson",
+          "goalkeeping": null,
+          "jersey": null,
+          "onRoster": true,
+          "shortName": "L. Hershenson"
+        },
+        {
           "athleteId": "89e22b61-07ad-4496-857c-236ebda9aa1c",
           "careerId": "hce0i12i3q7i2",
           "careerUrl": "https://www.maxpreps.com/ca/san-francisco/lick-wilmerding-tigers/athletes/sadie-baker/?careerid=hce0i12i3q7i2",
           "field": {
             "assists": 1,
             "gameWinningGoals": null,
-            "gamesPlayed": 9,
+            "gamesPlayed": 12,
             "goals": 0,
-            "minutes": 505,
+            "minutes": 680,
             "points": 1,
             "shots": 9,
             "shotsOnGoal": 8,
@@ -7832,78 +8104,15 @@
           "shortName": "S. Baker"
         },
         {
-          "athleteId": "79bbf730-eff3-4b0b-bec2-ea81a87cc2ab",
-          "careerId": "lu3cdefl2ldcc",
-          "careerUrl": "https://www.maxpreps.com/ca/san-francisco/lick-wilmerding-tigers/athletes/amelie-nesmith/?careerid=lu3cdefl2ldcc",
-          "field": {
-            "assists": 0,
-            "gameWinningGoals": null,
-            "gamesPlayed": 8,
-            "goals": 0,
-            "minutes": 395,
-            "points": 0,
-            "shots": null,
-            "shotsOnGoal": null,
-            "steals": 7
-          },
-          "fullName": "Amelie Nesmith",
-          "goalkeeping": null,
-          "jersey": null,
-          "onRoster": true,
-          "shortName": "A. Nesmith"
-        },
-        {
-          "athleteId": "5a80124a-f659-4fd9-8d86-3d118d733f53",
-          "careerId": "bs228ms4oh099",
-          "careerUrl": "https://www.maxpreps.com/ca/san-francisco/lick-wilmerding-tigers/athletes/amelia-bagen/?careerid=bs228ms4oh099",
-          "field": {
-            "assists": 0,
-            "gameWinningGoals": null,
-            "gamesPlayed": 9,
-            "goals": 0,
-            "minutes": 435,
-            "points": 0,
-            "shots": null,
-            "shotsOnGoal": null,
-            "steals": 6
-          },
-          "fullName": "Amelia Bagen",
-          "goalkeeping": null,
-          "jersey": null,
-          "onRoster": true,
-          "shortName": "A. Bagen"
-        },
-        {
-          "athleteId": "5e4b4906-f8aa-41c2-b622-f3e9948587b7",
-          "careerId": "m28ucou3o1fp9",
-          "careerUrl": "https://www.maxpreps.com/ca/san-francisco/lick-wilmerding-tigers/athletes/olivia-clem/?careerid=m28ucou3o1fp9",
-          "field": {
-            "assists": 0,
-            "gameWinningGoals": null,
-            "gamesPlayed": 6,
-            "goals": 0,
-            "minutes": 195,
-            "points": 0,
-            "shots": null,
-            "shotsOnGoal": null,
-            "steals": 5
-          },
-          "fullName": "Olivia Clem",
-          "goalkeeping": null,
-          "jersey": null,
-          "onRoster": true,
-          "shortName": "O. Clem"
-        },
-        {
           "athleteId": "a75926a1-3d8e-4764-b313-1bca2bd4027c",
           "careerId": "e9bghhohhfv33",
           "careerUrl": "https://www.maxpreps.com/ca/san-francisco/lick-wilmerding-tigers/athletes/violet-wolfe/?careerid=e9bghhohhfv33",
           "field": {
             "assists": 0,
             "gameWinningGoals": null,
-            "gamesPlayed": 7,
+            "gamesPlayed": 10,
             "goals": 0,
-            "minutes": 135,
+            "minutes": 175,
             "points": 0,
             "shots": null,
             "shotsOnGoal": null,
@@ -7916,82 +8125,19 @@
           "shortName": "V. Wolfe"
         },
         {
-          "athleteId": "07fba30d-f16a-4166-98bf-8e4b6ac32506",
-          "careerId": "61qhtakp70mee",
-          "careerUrl": "https://www.maxpreps.com/ca/san-francisco/lick-wilmerding-tigers/athletes/coco-mallegni/?careerid=61qhtakp70mee",
-          "field": {
-            "assists": 0,
-            "gameWinningGoals": null,
-            "gamesPlayed": 8,
-            "goals": 0,
-            "minutes": 480,
-            "points": 0,
-            "shots": null,
-            "shotsOnGoal": null,
-            "steals": 0
-          },
-          "fullName": "Coco Mallegni",
-          "goalkeeping": null,
-          "jersey": "99",
-          "onRoster": true,
-          "shortName": "C. Mallegni"
-        },
-        {
-          "athleteId": "3ac2c753-2b31-4c5e-8c38-58d98ccdfcc0",
-          "careerId": "ie0ju456fvvvf",
-          "careerUrl": "https://www.maxpreps.com/ca/san-francisco/lick-wilmerding-tigers/athletes/hannah-weinberg/?careerid=ie0ju456fvvvf",
-          "field": {
-            "assists": 0,
-            "gameWinningGoals": null,
-            "gamesPlayed": 9,
-            "goals": 0,
-            "minutes": 175,
-            "points": 0,
-            "shots": null,
-            "shotsOnGoal": null,
-            "steals": 1
-          },
-          "fullName": "Hannah Weinberg",
-          "goalkeeping": null,
-          "jersey": null,
-          "onRoster": true,
-          "shortName": "H. Weinberg"
-        },
-        {
-          "athleteId": "7d482889-52db-4d43-9853-23bce95ce9f7",
-          "careerId": "bdvdg0sf9h188",
-          "careerUrl": "https://www.maxpreps.com/ca/san-francisco/lick-wilmerding-tigers/athletes/lila-edwards/?careerid=bdvdg0sf9h188",
-          "field": {
-            "assists": 0,
-            "gameWinningGoals": null,
-            "gamesPlayed": 9,
-            "goals": 3,
-            "minutes": 507,
-            "points": 6,
-            "shots": 7,
-            "shotsOnGoal": 10,
-            "steals": 1
-          },
-          "fullName": "Lila Edwards",
-          "goalkeeping": null,
-          "jersey": null,
-          "onRoster": true,
-          "shortName": "L. Edwards"
-        },
-        {
           "athleteId": "c95652a1-f07e-4504-ab9c-b29a1f235644",
           "careerId": "jl938s65odfn7",
           "careerUrl": "https://www.maxpreps.com/ca/san-francisco/lick-wilmerding-tigers/athletes/anaya-mehta-vasisht/?careerid=jl938s65odfn7",
           "field": {
             "assists": 0,
             "gameWinningGoals": null,
-            "gamesPlayed": 9,
+            "gamesPlayed": 12,
             "goals": 0,
-            "minutes": 502,
+            "minutes": 672,
             "points": 0,
             "shots": 0,
             "shotsOnGoal": 2,
-            "steals": 37
+            "steals": 53
           },
           "fullName": "Anaya Mehta-Vasisht",
           "goalkeeping": null,
@@ -8000,25 +8146,46 @@
           "shortName": "A. Mehta-Vasisht"
         },
         {
-          "athleteId": "f2cd2531-bbfd-41cd-a8e7-b3454d333d1d",
-          "careerId": "gjnfrqsqk0sue",
-          "careerUrl": "https://www.maxpreps.com/ca/san-francisco/lick-wilmerding-tigers/athletes/lila-hershenson/?careerid=gjnfrqsqk0sue",
+          "athleteId": "4e7f88a3-7867-41d3-8a33-50b10cd41b0f",
+          "careerId": "5gqr8d5mnm7m6",
+          "careerUrl": "https://www.maxpreps.com/ca/san-francisco/lick-wilmerding-tigers/athletes/aanya-chandarana/?careerid=5gqr8d5mnm7m6",
           "field": {
-            "assists": 0,
+            "assists": 1,
             "gameWinningGoals": null,
-            "gamesPlayed": 9,
-            "goals": 0,
-            "minutes": 435,
-            "points": 0,
-            "shots": null,
-            "shotsOnGoal": null,
-            "steals": 10
+            "gamesPlayed": 10,
+            "goals": 1,
+            "minutes": 345,
+            "points": 3,
+            "shots": 2,
+            "shotsOnGoal": 1,
+            "steals": 2
           },
-          "fullName": "Lila Hershenson",
+          "fullName": "Aanya Chandarana",
           "goalkeeping": null,
           "jersey": null,
           "onRoster": true,
-          "shortName": "L. Hershenson"
+          "shortName": "A. Chandarana"
+        },
+        {
+          "athleteId": "e9f68633-1fcd-43cc-a40b-ef9a4ecedd42",
+          "careerId": "c9o77hslvm3dd",
+          "careerUrl": "https://www.maxpreps.com/ca/san-francisco/lick-wilmerding-tigers/athletes/gloria-cebrian/?careerid=c9o77hslvm3dd",
+          "field": {
+            "assists": 0,
+            "gameWinningGoals": null,
+            "gamesPlayed": 11,
+            "goals": 0,
+            "minutes": 615,
+            "points": 0,
+            "shots": null,
+            "shotsOnGoal": null,
+            "steals": 13
+          },
+          "fullName": "Gloria Cebrian",
+          "goalkeeping": null,
+          "jersey": null,
+          "onRoster": true,
+          "shortName": "G. Cebrian"
         }
       ],
       "slug": "lick-wilmerding",
@@ -8027,14 +8194,14 @@
       "teamId": "527c7df0-94c7-4aa2-991c-ef86f4235d4e",
       "totals": {
         "field": {
-          "assists": 4,
+          "assists": 5,
           "gamesPlayed": 12,
-          "goals": 14,
-          "minutes": 5940,
-          "points": 32,
-          "shots": 48,
-          "shotsOnGoal": 52,
-          "steals": 125
+          "goals": 20,
+          "minutes": 7920,
+          "points": 45,
+          "shots": 66,
+          "shotsOnGoal": 60,
+          "steals": 150
         },
         "goalkeeping": {}
       },
@@ -8057,7 +8224,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": "2026-10-06T20:29:34",
       "maxprepsTeamId": "7ad2b4f5-955e-4a92-ac1f-a1acced4df4b",
       "name": "San Francisco University",
@@ -8393,7 +8560,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": "2026-10-07T12:53:21",
       "maxprepsTeamId": "69e24861-fa93-42a2-acb5-be60e01ee555",
       "name": "Marin Catholic",
@@ -8627,8 +8794,8 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
-      "lastUpdated": "2026-10-10T08:38:13",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
+      "lastUpdated": "2026-10-11T07:46:30",
       "maxprepsTeamId": "d15d09d0-f8a6-463e-86d4-d998dbee7751",
       "name": "Convent of the Sacred Heart",
       "players": [
@@ -8660,16 +8827,27 @@
           "field": {
             "assists": 0,
             "gameWinningGoals": 1,
-            "gamesPlayed": 13,
+            "gamesPlayed": 15,
             "goals": 1,
             "minutes": null,
             "points": 2,
-            "shots": 3,
+            "shots": 4,
             "shotsOnGoal": 1,
             "steals": null
           },
           "fullName": "Cece Aliabadi",
-          "goalkeeping": null,
+          "goalkeeping": {
+            "gamesPlayed": 15,
+            "goalsAgainst": 0,
+            "losses": null,
+            "minutes": null,
+            "opponentShotsOnGoal": 0,
+            "overtimeMinutes": null,
+            "saves": 1,
+            "shutouts": null,
+            "ties": null,
+            "wins": null
+          },
           "jersey": "23",
           "onRoster": true,
           "shortName": "C. Aliabadi"
@@ -8681,7 +8859,7 @@
           "field": {
             "assists": 0,
             "gameWinningGoals": 0,
-            "gamesPlayed": 14,
+            "gamesPlayed": 16,
             "goals": 1,
             "minutes": null,
             "points": 2,
@@ -8691,7 +8869,7 @@
           },
           "fullName": "Claire Woodard",
           "goalkeeping": {
-            "gamesPlayed": 14,
+            "gamesPlayed": 16,
             "goalsAgainst": 0,
             "losses": null,
             "minutes": null,
@@ -8734,7 +8912,7 @@
           "field": {
             "assists": 0,
             "gameWinningGoals": 0,
-            "gamesPlayed": 13,
+            "gamesPlayed": 15,
             "goals": 2,
             "minutes": null,
             "points": 4,
@@ -8755,7 +8933,7 @@
           "field": {
             "assists": 1,
             "gameWinningGoals": 0,
-            "gamesPlayed": 14,
+            "gamesPlayed": 16,
             "goals": 0,
             "minutes": null,
             "points": 1,
@@ -8797,16 +8975,27 @@
           "field": {
             "assists": 0,
             "gameWinningGoals": 0,
-            "gamesPlayed": 14,
+            "gamesPlayed": 16,
             "goals": 1,
             "minutes": null,
             "points": 2,
-            "shots": 11,
+            "shots": 15,
             "shotsOnGoal": 0,
             "steals": null
           },
           "fullName": "Ava Long",
-          "goalkeeping": null,
+          "goalkeeping": {
+            "gamesPlayed": 16,
+            "goalsAgainst": 0,
+            "losses": null,
+            "minutes": null,
+            "opponentShotsOnGoal": 0,
+            "overtimeMinutes": null,
+            "saves": 1,
+            "shutouts": null,
+            "ties": null,
+            "wins": null
+          },
           "jersey": "24",
           "onRoster": true,
           "shortName": "A. Long"
@@ -8818,7 +9007,7 @@
           "field": {
             "assists": 1,
             "gameWinningGoals": 0,
-            "gamesPlayed": 7,
+            "gamesPlayed": 9,
             "goals": 0,
             "minutes": null,
             "points": 1,
@@ -8839,7 +9028,7 @@
           "field": {
             "assists": 1,
             "gameWinningGoals": 1,
-            "gamesPlayed": 14,
+            "gamesPlayed": 16,
             "goals": 2,
             "minutes": null,
             "points": 5,
@@ -8860,11 +9049,11 @@
           "field": {
             "assists": 1,
             "gameWinningGoals": 0,
-            "gamesPlayed": 14,
+            "gamesPlayed": 16,
             "goals": 0,
             "minutes": null,
             "points": 1,
-            "shots": 1,
+            "shots": 2,
             "shotsOnGoal": 0,
             "steals": null
           },
@@ -8902,7 +9091,7 @@
           "field": null,
           "fullName": "Koko Foust",
           "goalkeeping": {
-            "gamesPlayed": 14,
+            "gamesPlayed": 16,
             "goalsAgainst": 0,
             "losses": null,
             "minutes": null,
@@ -8924,7 +9113,7 @@
           "field": null,
           "fullName": "Julia Ahlstrand",
           "goalkeeping": {
-            "gamesPlayed": 14,
+            "gamesPlayed": 16,
             "goalsAgainst": 0,
             "losses": null,
             "minutes": null,
@@ -8946,15 +9135,15 @@
           "field": null,
           "fullName": "Olivia Lieberman",
           "goalkeeping": {
-            "gamesPlayed": 14,
-            "goalsAgainst": 20,
-            "losses": 7,
+            "gamesPlayed": 16,
+            "goalsAgainst": 21,
+            "losses": 8,
             "minutes": null,
             "opponentShotsOnGoal": 5,
             "overtimeMinutes": null,
-            "saves": 76,
-            "shutouts": 5,
-            "ties": 3,
+            "saves": 82,
+            "shutouts": 6,
+            "ties": 4,
             "wins": 4
           },
           "jersey": "50",
@@ -8992,20 +9181,20 @@
         "field": {
           "assists": 8,
           "gameWinningGoals": 4,
-          "gamesPlayed": 14,
+          "gamesPlayed": 16,
           "goals": 11,
           "points": 30,
-          "shots": 80,
+          "shots": 86,
           "shotsOnGoal": 2
         },
         "goalkeeping": {
-          "gamesPlayed": 14,
-          "goalsAgainst": 20,
-          "losses": 7,
+          "gamesPlayed": 16,
+          "goalsAgainst": 21,
+          "losses": 8,
           "opponentShotsOnGoal": 5,
-          "saves": 98,
-          "shutouts": 5,
-          "ties": 3,
+          "saves": 106,
+          "shutouts": 6,
+          "ties": 4,
           "wins": 4
         }
       },
@@ -9034,7 +9223,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": null,
       "maxprepsTeamId": "9f489fa8-a23a-4924-a2a0-5c5cff3c0fdc",
       "name": "Marin Academy",
@@ -9055,7 +9244,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": "2026-09-29T21:49:40",
       "maxprepsTeamId": "204d6632-16ce-41fc-a733-dd11ec3af582",
       "name": "Bella Vista",
@@ -9534,7 +9723,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": "2026-09-29T11:41:21",
       "maxprepsTeamId": "041ef7b7-089b-4e7d-9c9c-9ff1f833f829",
       "name": "Chico",
@@ -10081,7 +10270,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": null,
       "maxprepsTeamId": "8f1a8024-2d40-4cab-bcba-3b9b367c6873",
       "name": "Corning",
@@ -10102,7 +10291,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": "2026-10-11T01:18:30",
       "maxprepsTeamId": "288ca10d-8448-41e9-b26e-463df226b8c8",
       "name": "Davis",
@@ -10571,7 +10760,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": "2026-10-05T13:47:04",
       "maxprepsTeamId": "b4268b1c-b3df-4dd5-b52c-5355d8a48e42",
       "name": "Lassen",
@@ -10912,7 +11101,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": "2026-09-24T10:40:34",
       "maxprepsTeamId": "8e01c2fa-4888-483f-8d26-6a45518c1bd8",
       "name": "Pleasant Valley",
@@ -11401,7 +11590,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": null,
       "maxprepsTeamId": "d9fa2972-0bc2-4d7b-baa4-aaa7d69c119e",
       "name": "Chaparral",
@@ -11422,7 +11611,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": "2026-09-06T20:15:34",
       "maxprepsTeamId": "c5a36b71-74a5-431f-94a3-8337d66dfbbb",
       "name": "Edison",
@@ -11782,7 +11971,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": null,
       "maxprepsTeamId": "79582922-a3b0-44a5-b210-8e51f3cfb731",
       "name": "Fountain Valley",
@@ -11803,7 +11992,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": "2026-09-08T08:25:44",
       "maxprepsTeamId": "a36c1c30-9183-4514-8cd6-26824a6d7c50",
       "name": "Great Oak",
@@ -11900,7 +12089,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": "2026-10-01T11:22:57",
       "maxprepsTeamId": "f60cf593-eddc-4900-b1c9-b6362f852856",
       "name": "Huntington Beach",
@@ -12248,7 +12437,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": null,
       "maxprepsTeamId": "96f0228e-b1db-4993-ad1e-5427b5592bcf",
       "name": "Marina",
@@ -12269,7 +12458,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": null,
       "maxprepsTeamId": "86009247-6ae1-40e1-acfa-58c200528743",
       "name": "Newport Harbor",
@@ -12290,7 +12479,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": "2026-10-05T19:22:11",
       "maxprepsTeamId": "8f350275-199e-4549-b574-2257e718069f",
       "name": "Temecula Valley",
@@ -12666,7 +12855,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": "2026-10-08T20:09:12",
       "maxprepsTeamId": "9d14d198-9976-4ed2-872d-047b9f317035",
       "name": "Bishop's",
@@ -12995,7 +13184,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": "2026-10-08T10:27:52",
       "maxprepsTeamId": "5bcd4caa-2727-404f-8ea0-627dc9d0b1b1",
       "name": "Canyon Hills",
@@ -13341,7 +13530,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": "2026-10-08T21:08:29",
       "maxprepsTeamId": "15c34e49-1a29-4298-8a84-00a2ec6ae36b",
       "name": "Cathedral Catholic",
@@ -13799,7 +13988,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": "2026-10-08T21:55:51",
       "maxprepsTeamId": "582fa2b1-19ed-467d-85af-fc6971dd5a71",
       "name": "La Jolla",
@@ -14244,7 +14433,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": null,
       "maxprepsTeamId": "f2ec9dd0-0f24-4161-a2c3-2a9df393f220",
       "name": "Mission Bay",
@@ -14265,7 +14454,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": "2026-10-09T09:34:45",
       "maxprepsTeamId": "7a80ea9f-8ed1-4b25-99cf-ad1b0fcd41a5",
       "name": "Scripps Ranch",
@@ -14606,7 +14795,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": null,
       "maxprepsTeamId": "50ebec25-d857-4178-9f5a-1a6241c43b85",
       "name": "Clairemont",
@@ -14627,7 +14816,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": "2026-08-30T18:53:17",
       "maxprepsTeamId": "c24601db-aee8-4989-ba5d-bfbf0a91b927",
       "name": "La Jolla Country Day",
@@ -14729,7 +14918,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": null,
       "maxprepsTeamId": "e551f0f0-28a3-4c13-8ade-1b9909ffa28c",
       "name": "Mira Mesa",
@@ -14750,7 +14939,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": "2026-10-06T15:13:43",
       "maxprepsTeamId": "e71f479e-b2c8-48da-a8b4-4f270c3afb92",
       "name": "Patrick Henry",
@@ -15043,7 +15232,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": null,
       "maxprepsTeamId": "91a74b43-700f-4e74-819e-d62b6dba12f7",
       "name": "Point Loma",
@@ -15064,7 +15253,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": "2026-10-01T18:45:55",
       "maxprepsTeamId": "32f08693-bcfd-4a62-a463-77b91360f53b",
       "name": "University City",
@@ -15368,7 +15557,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": null,
       "maxprepsTeamId": "91a207da-721f-4acf-a69c-cd7fa50a1f7a",
       "name": "Canyon Crest Academy",
@@ -15389,7 +15578,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": "2026-10-05T10:42:16",
       "maxprepsTeamId": "78ad824a-61a0-462b-aa6f-1d5f6fb1bd5f",
       "name": "La Costa Canyon",
@@ -15637,7 +15826,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": null,
       "maxprepsTeamId": "688ec7f8-2985-4e7e-900a-4d78f845b197",
       "name": "Mt. Carmel",
@@ -15658,7 +15847,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": null,
       "maxprepsTeamId": "132d806e-7fa4-4bce-b92a-9db38786cf7b",
       "name": "Rancho Bernardo",
@@ -15679,7 +15868,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": "2026-10-09T06:29:53",
       "maxprepsTeamId": "ff3dcd2f-cdea-46e6-accf-fd929c0a4374",
       "name": "San Marcos",
@@ -16040,7 +16229,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": "2026-10-07T08:50:39",
       "maxprepsTeamId": "ad43e80f-2296-4b96-a0a9-44e6a8ea76f2",
       "name": "Torrey Pines",
@@ -16485,7 +16674,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": "2026-10-06T21:21:27",
       "maxprepsTeamId": "ddf384b8-3189-4276-8703-71106d47a4d5",
       "name": "Del Norte",
@@ -16834,7 +17023,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": null,
       "maxprepsTeamId": "7453dc74-befb-4c36-92ec-35bf99c3c718",
       "name": "Fallbrook",
@@ -16855,7 +17044,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": "2026-10-08T21:46:10",
       "maxprepsTeamId": "e9446588-3714-4a57-905e-cd9a097a48b0",
       "name": "Mission Vista",
@@ -17076,7 +17265,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": "2026-09-29T12:08:55",
       "maxprepsTeamId": "9adef103-5c38-4dc2-a6c4-b36ea4f5400c",
       "name": "Poway",
@@ -17291,7 +17480,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": null,
       "maxprepsTeamId": "f1f0e644-5c98-4d70-bd3c-ae7fb8992410",
       "name": "Rancho Buena Vista",
@@ -17312,7 +17501,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": null,
       "maxprepsTeamId": "a7064567-f2fe-442d-8200-34a28326d1b9",
       "name": "San Dieguito Academy",
@@ -17333,7 +17522,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": "2026-10-08T20:05:51",
       "maxprepsTeamId": "673c037d-ae98-4fa1-a388-b127758ac382",
       "name": "Valley Center",
@@ -17660,7 +17849,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": "2026-09-02T08:11:32",
       "maxprepsTeamId": "226ea389-d063-46bb-8ccb-ede6f10c2ca6",
       "name": "Escondido",
@@ -17749,8 +17938,8 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
-      "lastUpdated": "2026-10-09T21:45:07",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
+      "lastUpdated": "2026-10-11T20:46:54",
       "maxprepsTeamId": "643a8f19-47aa-42a2-b5a4-0f52421f80b9",
       "name": "Mission Hills",
       "players": [
@@ -17761,7 +17950,7 @@
           "field": {
             "assists": 0,
             "gameWinningGoals": 0,
-            "gamesPlayed": 11,
+            "gamesPlayed": 12,
             "goals": 1,
             "minutes": null,
             "points": 2,
@@ -17782,7 +17971,7 @@
           "field": {
             "assists": 0,
             "gameWinningGoals": 0,
-            "gamesPlayed": 11,
+            "gamesPlayed": 12,
             "goals": 2,
             "minutes": null,
             "points": 4,
@@ -17803,7 +17992,7 @@
           "field": {
             "assists": 0,
             "gameWinningGoals": 0,
-            "gamesPlayed": 11,
+            "gamesPlayed": 12,
             "goals": 2,
             "minutes": null,
             "points": 4,
@@ -17824,7 +18013,7 @@
           "field": {
             "assists": 2,
             "gameWinningGoals": 0,
-            "gamesPlayed": 11,
+            "gamesPlayed": 12,
             "goals": 5,
             "minutes": null,
             "points": 12,
@@ -17845,7 +18034,7 @@
           "field": {
             "assists": 3,
             "gameWinningGoals": 0,
-            "gamesPlayed": 11,
+            "gamesPlayed": 12,
             "goals": 3,
             "minutes": null,
             "points": 9,
@@ -17866,7 +18055,7 @@
           "field": {
             "assists": 4,
             "gameWinningGoals": 1,
-            "gamesPlayed": 11,
+            "gamesPlayed": 12,
             "goals": 3,
             "minutes": null,
             "points": 10,
@@ -17887,7 +18076,7 @@
           "field": {
             "assists": 1,
             "gameWinningGoals": 0,
-            "gamesPlayed": 11,
+            "gamesPlayed": 12,
             "goals": 3,
             "minutes": null,
             "points": 7,
@@ -17908,7 +18097,7 @@
           "field": {
             "assists": 6,
             "gameWinningGoals": 0,
-            "gamesPlayed": 11,
+            "gamesPlayed": 12,
             "goals": 6,
             "minutes": null,
             "points": 18,
@@ -17929,7 +18118,7 @@
           "field": {
             "assists": 2,
             "gameWinningGoals": 0,
-            "gamesPlayed": 10,
+            "gamesPlayed": 11,
             "goals": 2,
             "minutes": null,
             "points": 6,
@@ -17950,7 +18139,7 @@
           "field": {
             "assists": 0,
             "gameWinningGoals": 0,
-            "gamesPlayed": 10,
+            "gamesPlayed": 11,
             "goals": 3,
             "minutes": null,
             "points": 6,
@@ -17971,7 +18160,7 @@
           "field": {
             "assists": 0,
             "gameWinningGoals": 0,
-            "gamesPlayed": 11,
+            "gamesPlayed": 12,
             "goals": 4,
             "minutes": null,
             "points": 8,
@@ -17992,7 +18181,7 @@
           "field": {
             "assists": 2,
             "gameWinningGoals": 0,
-            "gamesPlayed": 11,
+            "gamesPlayed": 12,
             "goals": 3,
             "minutes": null,
             "points": 8,
@@ -18013,7 +18202,7 @@
           "field": {
             "assists": 0,
             "gameWinningGoals": 0,
-            "gamesPlayed": 11,
+            "gamesPlayed": 12,
             "goals": 1,
             "minutes": null,
             "points": 2,
@@ -18055,13 +18244,13 @@
           "field": null,
           "fullName": "Sofia Chabrow",
           "goalkeeping": {
-            "gamesPlayed": 11,
+            "gamesPlayed": 12,
             "goalsAgainst": null,
             "losses": null,
             "minutes": null,
             "opponentShotsOnGoal": null,
             "overtimeMinutes": null,
-            "saves": 36,
+            "saves": 54,
             "shutouts": 2,
             "ties": null,
             "wins": 2
@@ -18079,15 +18268,15 @@
         "field": {
           "assists": 20,
           "gameWinningGoals": 1,
-          "gamesPlayed": 11,
+          "gamesPlayed": 12,
           "goals": 38,
           "points": 96,
           "shots": 80,
           "shotsOnGoal": 3
         },
         "goalkeeping": {
-          "gamesPlayed": 11,
-          "saves": 43,
+          "gamesPlayed": 12,
+          "saves": 61,
           "shutouts": 3,
           "wins": 3
         }
@@ -18113,7 +18302,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": "2026-09-25T09:51:27",
       "maxprepsTeamId": "475c3bcb-9d28-457f-87b8-d979f9ff070f",
       "name": "Sage Creek",
@@ -18372,7 +18561,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": null,
       "maxprepsTeamId": "a1109c06-7436-4b72-a30e-459eb6d00925",
       "name": "San Pasqual",
@@ -18393,7 +18582,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": "2026-10-06T15:25:25",
       "maxprepsTeamId": "1f57d89b-3a6d-444a-9de1-2fba3f0017b6",
       "name": "Vista",
@@ -18742,7 +18931,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": "2026-10-08T22:11:29",
       "maxprepsTeamId": "9ef67997-7f5d-4899-b500-2d0b5c758105",
       "name": "Westview",
@@ -19035,7 +19224,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": null,
       "maxprepsTeamId": "7f4d50f0-8690-493c-b4bc-262b512e8851",
       "name": "Bonita Vista",
@@ -19056,7 +19245,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": "2026-10-09T22:49:18",
       "maxprepsTeamId": "6aa8e46b-7aa9-4df3-9512-89a9d4827f7f",
       "name": "Eastlake",
@@ -19454,7 +19643,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": null,
       "maxprepsTeamId": "186dcece-fefd-4b67-b4c7-877b3e12beb2",
       "name": "Helix",
@@ -19475,7 +19664,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": "2026-10-09T08:48:07",
       "maxprepsTeamId": "0465e8ea-3eb0-4619-a74a-183e70c697e2",
       "name": "Olympian",
@@ -19759,7 +19948,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": "2026-10-02T20:18:41",
       "maxprepsTeamId": "77e5b6a4-a166-4a88-b114-a38a9b28ccc4",
       "name": "Otay Ranch",
@@ -20029,7 +20218,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": null,
       "maxprepsTeamId": "15d5e874-4af2-4d24-8e6b-be895937cb8c",
       "name": "El Capitan",
@@ -20050,7 +20239,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": null,
       "maxprepsTeamId": "aa2f89a2-0150-4223-89b4-ac73cbf343e9",
       "name": "Granite Hills",
@@ -20071,7 +20260,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": "2026-10-07T22:08:58",
       "maxprepsTeamId": "ec21ffde-b216-47cc-9923-6308e239e9e0",
       "name": "Hilltop",
@@ -20273,7 +20462,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": null,
       "maxprepsTeamId": "19409229-6768-4537-b8d7-4a7d2814aaad",
       "name": "Southwest",
@@ -20294,7 +20483,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": null,
       "maxprepsTeamId": "4c2dd7e8-2f3e-43aa-891b-9218932cdf9d",
       "name": "Bonita",
@@ -20315,7 +20504,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": "2026-10-07T12:17:29",
       "maxprepsTeamId": "742a32d0-2dc9-4aa8-ad92-8c4576f73a12",
       "name": "Chaminade",
@@ -20464,7 +20653,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": null,
       "maxprepsTeamId": "1228375e-e4c0-453e-aed4-d0b0693b3c52",
       "name": "Glendora",
@@ -20485,7 +20674,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": "2026-10-11T00:07:30",
       "maxprepsTeamId": "9dc04c54-8c9d-4b30-a1d2-fcc167363342",
       "name": "Harvard-Westlake",
@@ -20917,7 +21106,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-10-11T11:09:04.131Z",
+      "fetchedAt": "2026-10-12T12:40:42.142Z",
       "lastUpdated": null,
       "maxprepsTeamId": "70a363e2-26b8-4ef5-8ad0-20979f66399a",
       "name": "Thousand Oaks",
