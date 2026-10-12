@@ -218,13 +218,15 @@ describe('buildRosterView', () => {
     const platforms = (slug: string) => views.find((v) => v.slug === slug)!.view.profilePlatforms;
     expect(platforms('los-gatos')).toEqual(['NCSA', 'SportsRecruits']);
     expect(platforms('saratoga')).toEqual(['Hudl']);
-    expect(platforms('valley-christian')).toEqual([]);
+    // Valley Christian had none until the 2026-10-12 probe found its softball players' SportsRecruits pages.
+    expect(platforms('valley-christian')).toEqual(['SportsRecruits']);
     // The EAL (recruiting pages swept 2026-10-04): footnote platforms in NCSA, SportsRecruits, Hudl order.
     expect(platforms('chico')).toEqual(['NCSA', 'SportsRecruits', 'Hudl']);
     expect(platforms('davis')).toEqual(['NCSA', 'SportsRecruits']);
     expect(platforms('lassen')).toEqual(['NCSA']);
     expect(platforms('pleasant-valley')).toEqual(['NCSA', 'Hudl']);
-    expect(platforms('bella-vista')).toEqual([]);
+    // Bella Vista had none until the 2026-10-12 probe found Rylee Tabor's lacrosse page.
+    expect(platforms('bella-vista')).toEqual(['SportsRecruits']);
     expect(platforms('corning')).toEqual([]);
     const eal = (slug: string) => views.find((v) => v.slug === slug)!.view.rows;
     expect(eal('chico').filter((r) => r.profiles.length > 0).length).toBe(13);
@@ -234,6 +236,8 @@ describe('buildRosterView', () => {
     expect(eal('chico').find((r) => r.name === 'Olivia Council')!.profiles.map((x) => x.label)).toEqual([
       'NCSA profile',
       'SportsRecruits profile',
+      // Her track and field page, from the 2026-10-12 probe, sits beside the field hockey one.
+      'SportsRecruits track and field profile',
       'Hudl profile',
     ]);
     // NCSA first on a row that has both.

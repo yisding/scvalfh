@@ -385,8 +385,13 @@ Hudl). Southern California, swept 2026-10-06: 267 for 202 (134 Hudl, 64 NCSA, 55
 FieldLevel), the most at Bishop's (37 for all 24 rows), Harvard-Westlake (25 for 22), Torrey Pines (24
 for 13), San Dieguito Academy (18 for 16) and University City (16 for 13); 17 of the 53 teams have none,
 eight of them because MaxPreps lists no players. Each SoCal page was re-read by a checker and,
-separately, by a refuter, and kept only when both kept it. A page is linked only when it names the player and field hockey and either names the school
-or shows the class year the roster shows plus a California hometown, and a stated class year must
+separately, by a refuter, and kept only when both kept it. Since 2026-10-12 a profile in any sport is
+linked, naming its sport ("SportsRecruits lacrosse profile"): that day's SportsRecruits address probe
+in every sport, over 1,355 of the 1,673 rows (a time limit stopped it before the other 318), added 110
+pages for 108 players (52 NorCal, 58 SoCal): 87 lacrosse, 11 softball, 6 field hockey, 5 soccer and 1 track
+and field, so the file holds 511 for 405 players. A page is linked only when it names the player and a
+sport and either names the school or shows the class year the roster shows plus a California hometown
+(for the 2026-10-12 pages, a hometown in the school's own area), and a stated class year must
 agree with the row's grade (checked at load). The roster shows them as a line of links under the
 player's facts. Recall is partial: see `docs/DATA-SOURCES.md` §1.1j, which also has the column map,
 the per-school sources and the overlay's rules.
@@ -695,12 +700,14 @@ program has a commitment, a college has one program per sport, one commitment pe
 `fullName`; every stated class year agrees with the row's grade, or, for a row with no grade, the
 sources agree with each other on a class a high school roster of the season can hold.
 
-Coverage on 2026-10-12, counted from the file: **30 commitments, 30 players at 18 of the 102 schools, to
-23 colleges (26 programs).** The 2026-10-12 round (see below) added two from Northern California:
+Coverage on 2026-10-12, counted from the file: **31 commitments, 31 players at 18 of the 102 schools, to
+24 colleges (27 programs).** The 2026-10-12 round (see below) added three. Two are from Northern California:
 Shyla Paredes, Valley Christian, to Cal Baptist in softball (medium: her travel club Cal Nuggets'
 commitment list and roster, tied to her by her own MaxPreps page naming the club), and Molly Waltz,
 Archbishop Mitty, to UC Davis in lacrosse (high: ADVNC Lacrosse's commits page names her school, and
-her own SportsRecruits profile shows the commitment). Southern California's twelve, from the 2026-10-06 round over its 842 rows,
+her own SportsRecruits profile shows the commitment). The third, from that day's SportsRecruits
+probe in every sport, is Campbell Trocha, Cathedral Catholic, to Florida Tech (NCAA Division II) in
+lacrosse (high: her own profile, with her NCSA field hockey page naming the school). Southern California's twelve, from the 2026-10-06 round over its 842 rows,
 are ten in field hockey (Sami Lee, Canyon Hills, to Columbia; Dylan Rietti, Torrey Pines, to Richmond; Ava Hauer, Torrey Pines, to Johns
 Hopkins; Lola Conway, Bishop's, to Michigan; Margaux Schlumberger, Harvard-Westlake, to Harvard;
 Samantha Ippolito, Scripps Ranch, to Michigan State; Eva Allen, Canyon Hills, to Cal; Rylie Storm,
@@ -1396,7 +1403,7 @@ at once, at every build, starting from last season's:
   players; the 21 rows MaxPreps added to Marin Academy and Westmont on 2026-10-07, one tie), and nothing
   refreshes them. See `docs/DATA-SOURCES.md` §1.1j2.
 - **Commitment recall is partial, and the list does not update itself.** A commitment is listed
-  only when a public page meets the linking rule, and social media counts only from an official account, so on 2026-10-12 30 of
+  only when a public page meets the linking rule, and social media counts only from an official account, so on 2026-10-12 31 of
   the 1,673 varsity rows have a commitment line (in any sport) and 84 of the 102 schools have none; a player with no
   line may still have committed. It was researched on 2026-10-03 and 2026-10-04 (the six EAL teams'
   schools on 2026-10-04, for field hockey and then every sport, with none found, though without

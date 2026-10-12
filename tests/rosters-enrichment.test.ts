@@ -50,6 +50,24 @@ const raw = JSON.parse(
   readFileSync(path.join(REPO, 'data', 'rosters-enrichment.json'), 'utf8'),
 ) as RosterEnrichment;
 
+/** A profile the 2026-10-12 SportsRecruits address probe added: its note says so. */
+const fromProbe1012 = (x: { note: string | null }) => x.note?.includes('Found by the 2026-10-12 address probe') ?? false;
+
+/**
+ * The file as the captures before 2026-10-12 left it: without the probe's profiles, and without the
+ * records that hold nothing else. The tests that pin what each earlier capture found read this.
+ */
+const pre: RosterEnrichment = {
+  ...raw,
+  teams: raw.teams.map((t) => ({
+    ...t,
+    players: t.players
+      .filter((p) => !(p.profiles.length > 0 && p.profiles.every(fromProbe1012) && p.grade === null && p.positions === null &&
+        p.jersey === null && p.height === null && p.level === null && p.conflicts.length === 0 && p.sourceName === null))
+      .map((p) => ({ ...p, profiles: p.profiles.filter((x) => !fromProbe1012(x)) })),
+  })),
+};
+
 /**
  * Load lib/rosters.ts in a child process with `enrichment` swapped in, and return what it printed
  * to stderr ('' when it loaded). The load-time checks need both files, so only a real load shows them.
@@ -110,9 +128,12 @@ describe('data/rosters-enrichment.json', () => {
       expect(RosterEnrichmentSchema.safeParse(withRecord).success, slug).toBe(true);
     }
     expect(raw.season).toBe(base.season);
-    // The overlay is stamped 2026-10-06 (SCVAL was researched 2026-10-02, BVAL, PCAL and MCAL
-    // 2026-10-03, the EAL's recruiting pages 2026-10-04, Southern California's 2026-10-06); the roster file may be re-read later (see the athleteId join below), never earlier.
-    expect(raw.capturedAt <= base.fetchedAt.slice(0, 10)).toBe(true);
+    // The overlay is stamped 2026-10-12 (SCVAL was researched 2026-10-02, BVAL, PCAL and MCAL
+    // 2026-10-03, the EAL's recruiting pages 2026-10-04, Southern California's 2026-10-06, and the
+    // SportsRecruits probe in every sport 2026-10-12, against the roster file read 2026-10-07). The
+    // athleteId join below is what keeps the two files in step.
+    expect(raw.capturedAt).toBe('2026-10-12');
+    expect(base.fetchedAt.slice(0, 10) <= raw.capturedAt).toBe(true);
   });
 
   it('joins every record onto a MaxPreps row of the same team, by athleteId', () => {
@@ -380,7 +401,7 @@ describe('recruiting profiles', () => {
   });
 
   it('what was found for SCVAL, as captured on 2026-10-02', () => {
-    const players = raw.teams
+    const players = pre.teams
       .filter((t) => SCVAL_SLUGS.has(t.slug))
       .flatMap((t) => t.players.filter((p) => p.profiles.length > 0));
     const profiles = players.flatMap((p) => p.profiles);
@@ -389,15 +410,15 @@ describe('recruiting profiles', () => {
     const count = (platform: string) => profiles.filter((p) => p.platform === platform).length;
     expect([count('ncsa'), count('sportsrecruits'), count('hudl')]).toEqual([6, 37, 27]);
     // St. Ignatius' SportsRecruits team page links a profile for every rostered player.
-    const si = raw.teams.find((t) => t.slug === 'st-ignatius')!;
+    const si = pre.teams.find((t) => t.slug === 'st-ignatius')!;
     expect(si.players.filter((p) => p.profiles.length > 0).length).toBe(base.teams.find((t) => t.slug === 'st-ignatius')!.players.length);
     // Lizzie Moorehouse's NCSA profile is under the legal name, the SportsRecruits one under the nickname.
-    const lizzie = raw.teams.find((t) => t.slug === 'los-gatos')!.players.find((p) => p.fullName === 'Lizzie Moorehouse')!;
+    const lizzie = pre.teams.find((t) => t.slug === 'los-gatos')!.players.find((p) => p.fullName === 'Lizzie Moorehouse')!;
     expect(lizzie.profiles.map((p) => p.platform)).toEqual(['ncsa', 'sportsrecruits']);
   });
 
   it('what was found for BVAL, PCAL and MCAL, as captured on 2026-10-03', () => {
-    const others = raw.teams.filter((t) => SWEPT_OTHER_SLUGS.has(t.slug));
+    const others = pre.teams.filter((t) => SWEPT_OTHER_SLUGS.has(t.slug));
     expect(others.length).toBe(28);
     // Every team of the three leagues was looked at: each lists a source or a note.
     for (const t of others) expect(t.sources.length + t.notes.length, t.slug).toBeGreaterThan(0);
@@ -419,7 +440,7 @@ describe('recruiting profiles', () => {
     expect(profiles.length).toBe(31);
     expect(others.flatMap((t) => t.players).filter((p) => p.profiles.length > 0).length).toBe(29);
     // Westmont's Teya Halali: SportsRecruits says class of 2029, which a 2026-27 sophomore is.
-    const teya = raw.teams.find((t) => t.slug === 'westmont')!.players.find((p) => p.fullName === 'Teya Halali')!;
+    const teya = pre.teams.find((t) => t.slug === 'westmont')!.players.find((p) => p.fullName === 'Teya Halali')!;
     expect(teya.profiles).toEqual([
       expect.objectContaining({ platform: 'sportsrecruits', url: 'https://nfhca.sportsrecruits.com/athlete/teya_halali', classOf: 2029 }),
     ]);
@@ -428,7 +449,7 @@ describe('recruiting profiles', () => {
 
   it('what was found on 2026-10-07 for the 21 rows MaxPreps added to Marin Academy and Westmont', () => {
     const rowsOf = (slug: string) => base.teams.find((t) => t.slug === slug)!.players;
-    const overlay = (slug: string) => raw.teams.find((t) => t.slug === slug)!.players;
+    const overlay = (slug: string) => pre.teams.find((t) => t.slug === slug)!.players;
     expect(rowsOf('marin-academy')).toHaveLength(18);
     // Marin Academy: no profile for any of the 18; Julia Foulke's grade is a conflict, MaxPreps' Sr. kept.
     expect(overlay('marin-academy').map((p) => p.fullName)).toEqual(['Julia Foulke']);
@@ -452,10 +473,8 @@ describe('recruiting profiles', () => {
   });
 
   it('what was found for the EAL, as captured on 2026-10-04: recruiting pages only, no school-site sweep', () => {
-    const eal = raw.teams.filter((t) => EAL_SLUGS.has(t.slug));
+    const eal = pre.teams.filter((t) => EAL_SLUGS.has(t.slug));
     expect(eal.map((t) => t.slug)).toEqual(teamsInLeague('eal').map((t) => t.slug));
-    // The file's stamp moved to 2026-10-06 with the Southern California sweep (the next test).
-    expect(raw.capturedAt).toBe('2026-10-06');
     // No coaches or sources, and no MaxPreps field filled: the school-athletics sweep has not been done.
     for (const t of eal) {
       expect([t.coaches, t.sources], t.slug).toEqual([[], []]);
@@ -489,7 +508,7 @@ describe('recruiting profiles', () => {
     expect(eal.flatMap((t) => t.players).length).toBe(29);
     // The other four NorCal leagues' counts are untouched: 99 profiles for 83 players (101 for 85 with
     // the two Westmont pages of the 2026-10-07 sweep).
-    const earlier = raw.teams
+    const earlier = pre.teams
       .filter((t) => SCVAL_SLUGS.has(t.slug) || SWEPT_OTHER_SLUGS.has(t.slug))
       .flatMap((t) => t.players.filter((p) => p.profiles.length > 0));
     expect(earlier.flatMap((p) => p.profiles).length).toBe(101);
@@ -508,7 +527,7 @@ describe('recruiting profiles', () => {
 
   it('what was found for Southern California, as captured on 2026-10-06: recruiting pages only, no school-site sweep', () => {
     const SOCAL = new Set(['sunset', 'city', 'north-county', 'metro', 'independents']);
-    const socal = raw.teams.filter((t) => SOCAL.has(getTeamBySlug(t.slug)!.league));
+    const socal = pre.teams.filter((t) => SOCAL.has(getTeamBySlug(t.slug)!.league));
     expect(socal).toHaveLength(53);
     for (const t of socal) {
       expect([t.coaches, t.sources], t.slug).toEqual([[], []]);
@@ -595,6 +614,24 @@ describe('recruiting profiles', () => {
     expect(hw.players.map((p) => p.fullName)).not.toContain('Tea Hunnius');
     // A hometown with no state is not California: Alexis Andersen's page ("Thousand Oaks", no school) is not linked.
     expect(profiles.map((p) => p.url)).not.toContain('https://nfhca.sportsrecruits.com/athlete/alexis_andersen');
+  });
+
+  it('what the 2026-10-12 SportsRecruits probe found, in every sport', () => {
+    const records = raw.teams.flatMap((t) => t.players.map((p) => ({ t, p })));
+    const probe = records.flatMap(({ t, p }) => p.profiles.filter(fromProbe1012).map((x) => ({ slug: t.slug, name: p.fullName, x })));
+    expect(probe).toHaveLength(110);
+    expect(new Set(probe.map((r) => `${r.slug} ${r.name}`)).size).toBe(108);
+    const bySport = (s: string | undefined) => probe.filter((r) => r.x.sport === s).length;
+    expect([bySport('lacrosse'), bySport('softball'), bySport(undefined), bySport('soccer'), bySport('track-and-field')]).toEqual([87, 11, 6, 5, 1]);
+    for (const r of probe) {
+      expect(r.x.platform, r.name).toBe('sportsrecruits');
+      expect(r.x.classOf, r.name).not.toBeNull();
+    }
+    // The other class-of-2027 Phoebe Miller, in San Francisco, is a namesake: her soccer page is not linked.
+    expect(probe.map((r) => r.x.url)).not.toContain('https://sportsrecruits.com/athlete/phoebe_miller4');
+    // A lacrosse page beside a field hockey one on the same platform, as Sofie Stiefel's is.
+    const sofie = raw.teams.find((t) => t.slug === 'st-ignatius')!.players.find((p) => p.fullName === 'Sofie Stiefel')!;
+    expect(sofie.profiles.filter((x) => x.platform === 'sportsrecruits').map((x) => x.sport)).toEqual([undefined, 'lacrosse']);
   });
 
   it('reaches the merged view', () => {
