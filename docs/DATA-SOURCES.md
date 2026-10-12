@@ -1265,13 +1265,17 @@ player-by-player sweeps, a softball-list sweep (travel-club commit pages, softba
 news), an other-sports-list sweep (basketball, volleyball and water polo club commit pages, and
 lacrosse and soccer pages updated since 2026-10-06) and a school-pages and official-accounts sweep
 ran in parallel; the web-search tool's per-turn budget (1,000 searches, shared) ran out early, so
-the player-by-player sweeps finished 431 rows (nearly every class-of-2027 row) and only re-opened
-the known recruiting profiles of the other 1,242. Two commitments were found and re-read: Shyla
+the player-by-player sweeps finished 431 rows (nearly every class-of-2027 row), and a second pass
+ran one search for each of the other 917 class-of-2027, class-of-2028 and ungraded rows and one
+for each of the 55 official X accounts on the schools' sites. 1,336 rows got a name search; the 309
+sophomores and freshmen got none (NCAA contact rules mostly keep them from committing yet), and X's
+search results never surfaced a post. Two commitments were found and re-read: Shyla
 Paredes (Cal Nuggets' commitment list and 18U Woods roster, tied by her MaxPreps page naming the
 club; medium) and Molly Waltz, Archbishop Mitty, to UC Davis lacrosse (ADVNC's commits page, with her
 school, and her own SportsRecruits profile; high). Every source in the file was re-opened; SportsRecruits' Colgate page no longer listed
-Storey Lewis and was dropped. Still to run: web searches for the class-of-2028, ungraded and younger
-rows, and Instagram posts by official accounts, which cannot be read from the research environment.
+Storey Lewis and was dropped. Still to run: web searches for the 309 sophomores and freshmen, and the
+official accounts' posts themselves (X lists none without a login; Instagram cannot be read from the
+research environment).
 
 *Recall is partial.* On 2026-10-12, 30 of the 1,673 varsity rows have a commitment, at 18 of the 102
 schools (Valley Christian and Archbishop Mitty added on 2026-10-12): Southern California's 12 at 7 (Torrey Pines 2, Canyon Hills 4, Bishop's 2, Harvard-Westlake,
