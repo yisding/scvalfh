@@ -14,7 +14,7 @@
     "Southern California near misses, none a commitment: a Torrey Pines senior whom only Play College Field Hockey's sheet (name and college) lists, with no page tying that line to her school or a Southern California location; a soccer commit with a Southwest player's name whose profiles give another school and city; a swim commit with a Rancho Bernardo player's name whose post gives no school and a graduating class that disagrees; a Cathedral Catholic player's older sister (class of 2026, graduated); and SportsRecruits profiles under rostered names that show a commitment but another class year or state (62 in all).",
     "Recall is partial: a commitment announced only on social media, on a page the sweeps could not read, or not yet published anywhere is not here. Re-running this is research, not a script; the class of 2027's signing period (November 2026) and the class of 2028's commitments are when it would change most.",
     "On 2026-10-07 the 21 rows MaxPreps had added since the sweeps (Marin Academy's 18, now that MaxPreps lists them; Westmont's Kaylee True, Lexi True and Savannah Murdoch) were swept in every sport by the same rule: their MaxPreps career pages, SportsRecruits addresses in every sport and their rendered pages, NCSA, FH College Path's class lists for 2026 to 2030, STEPS California's and ADVNC's commitment pages, Lacrosse Masters, MAX Field Hockey, the NFHCA watchlists, the Marin IJ, Stick Together, and a web search for every junior and senior. None was found. Not run for these rows: SportsRecruits' college commit pages and athlete search, TopDrawerSoccer and SoccerWire (none of the 21 plays soccer on MaxPreps), and ClubLax (unreachable). A different Paige Fredrickson, class of 2028, plays water polo for Archie Williams.",
-    "On 2026-10-12 the owner reported that Shyla Paredes (Valley Christian) had committed to Cal Baptist in softball, an Instagram commitment the file lacked, and the rule was revised so that an official account's post (a college's, the player's high school's, a club's) can be cited; a player's own post still cannot. The round that followed read every varsity row's MaxPreps career page for the sports she plays (508 of the 1,673 rows play another sport besides field hockey) and ran eight player-by-player sweeps, a softball-list sweep, an other-sports-list sweep (basketball, volleyball, water polo, lacrosse and soccer club commit pages) and a school-pages and official-accounts sweep. The web-search tool's per-turn budget (1,000 searches shared by every sweep) ran out early, so the player-by-player sweeps finished 431 rows (nearly every class-of-2027 row and a few class-of-2028 rows, counting the rows already in the file) and the other 1,242 got only their known recruiting profiles re-opened; the class-of-2028, ungraded and younger rows are the ones still to search. It found two commitments: Shyla Paredes to Cal Baptist in softball, on her travel club Cal Nuggets' commitment list and 18U Woods roster, tied to her by her own MaxPreps page naming that club (medium), and Molly Waltz (Archbishop Mitty, class of 2028) to UC Davis in lacrosse, on ADVNC Lacrosse's commits page, which names her school, and her own SportsRecruits lacrosse profile (high). Both were re-opened by a second read. Every source already in the file was re-opened the same day; one, SportsRecruits' Colgate field hockey page, no longer listed Storey Lewis and was dropped, her own profile still showing the commitment. No source said any player had signed."
+    "On 2026-10-12 the owner reported that Shyla Paredes (Valley Christian) had committed to Cal Baptist in softball, an Instagram commitment the file lacked, and the rule was revised so that an official account's post (a college's, the player's high school's, a club's) can be cited; a player's own post still cannot. The round that followed read every varsity row's MaxPreps career page for the sports she plays (508 of the 1,673 rows play another sport besides field hockey) and ran eight player-by-player sweeps, a softball-list sweep, an other-sports-list sweep (basketball, volleyball, water polo, lacrosse and soccer club commit pages) and a school-pages and official-accounts sweep. The web-search tool's per-turn budget (1,000 searches shared by every sweep) ran out early, so a second pass the same day, at the owner's request, ran one web search for each of the 917 class-of-2027, class-of-2028 and ungraded rows the first had not reached (\"<name>\" <school> <city> committed, with her other sport), and one search for each of the 55 official X accounts the school sweep found on the schools' own sites (X's search results never surfaced a post). In all, 1,336 rows got a name search; the 309 sophomores and freshmen (classes 2029 and 2030), whom NCAA contact rules mostly keep from committing yet, got none, nor did the 28 rows already in the file (1,336 + 309 + 28 = 1,673), and for about fifteen rows the search tool rewrote or dropped the query. The second pass found no new commitment; it found Molly Waltz again, through her own profile. It found two commitments: Shyla Paredes to Cal Baptist in softball, on her travel club Cal Nuggets' commitment list and 18U Woods roster, tied to her by her own MaxPreps page naming that club (medium), and Molly Waltz (Archbishop Mitty, class of 2028) to UC Davis in lacrosse, on ADVNC Lacrosse's commits page, which names her school, and her own SportsRecruits lacrosse profile (high). Both were re-opened by a second read. Every source already in the file was re-opened the same day; one, SportsRecruits' Colgate field hockey page, no longer listed Storey Lewis and was dropped, her own profile still showing the commitment. No source said any player had signed. Later that day the SportsRecruits address probe in every sport (see data/rosters-enrichment.json) found a third: Campbell Trocha (Cathedral Catholic, class of 2028) to Florida Tech in lacrosse, on her own profile (high)."
   ],
   "colleges": [
     {
@@ -765,6 +765,36 @@
         {
           "url": "https://cbulancers.com/sports/softball/schedule",
           "what": "CBU athletics' softball schedule page, titled '2027 Softball Schedule - CBU Athletics'. The site answers curl with HTTP 403; the title was read through WebFetch, which returned no conference tags."
+        }
+      ],
+      "checkedOn": "2026-10-12"
+    },
+    {
+      "slug": "florida-tech",
+      "name": "Florida Institute of Technology",
+      "shortName": "Florida Tech",
+      "city": "Melbourne",
+      "state": "FL",
+      "programs": [
+        {
+          "sport": "lacrosse",
+          "division": "ncaa-d2",
+          "conference": "Sunshine State Conference",
+          "url": "https://floridatechsports.com/sports/womens-lacrosse"
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://floridatechsports.com/news/2024/3/4/womens-lacrosse-womens-lacrosse-cracks-top-25-in-iwlca-national-poll.aspx",
+          "what": "Florida Tech athletics story of Mar 4, 2024 (dateline 'MELBOURNE, Fla.'): the women's lacrosse team entered the 'Intercollegiate Women's Lacrosse Coaches Association (IWLCA) Division II National Ranking' at No. 25, and 'The Panthers are one of six Sunshine State Conference schools to be ranked'. Read via WebFetch."
+        },
+        {
+          "url": "https://floridatechsports.com/news/2025/11/7/womens-lacrosse-releases-2026-schedule-featuring-six-matchups-against-2025-ncaa-tournament-opponents.aspx",
+          "what": "Florida Tech athletics story of Nov 7, 2025 (dateline 'MELBOURNE, Fla.'): the 2026 women's lacrosse schedule has 'seven Sunshine State Conference opponents', and the team 'will open SSC play against Palm Beach Atlantic'. Read via WebFetch."
+        },
+        {
+          "url": "https://floridatechsports.com/sports/womens-lacrosse",
+          "what": "Florida Tech's women's lacrosse page (HTTP 200); its navigation and footer link the Sunshine State Conference."
         }
       ],
       "checkedOn": "2026-10-12"
@@ -1840,6 +1870,27 @@
         }
       ],
       "basis": "ADVNC Lacrosse (a Bay Area girls' club) lists 'Molly Waltz - Archbishop Mitty - UC Davis' under its '2028 Class' heading on its alumni and commits page: the player, her school and the college, and the class agrees with the roster's grade 11. The page is a lacrosse club's, and UC Davis plays women's lacrosse (Big 12), so the sport is lacrosse. No date. Her own SportsRecruits lacrosse profile (class of 2028, midfield, West Coast Starz Girls, Los Gatos, CA) says committed to University of California - Davis, which backs it by class year and a Bay Area hometown."
+    },
+    {
+      "teamSlug": "cathedral-catholic",
+      "athleteId": "3be2d89e-2190-49e7-b936-db2a67693e70",
+      "fullName": "Campbell Trocha",
+      "college": "florida-tech",
+      "sport": "lacrosse",
+      "status": "committed",
+      "asOf": null,
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://iwlca.sportsrecruits.com/athlete/campbell_trocha",
+          "kind": "sportsrecruits",
+          "quote": "Watch Campbell's recruiting video • 2028 • Goalie • STEPS California • San Diego, CA • Committed to Florida Institute of Technology",
+          "statedSchool": null,
+          "statedClassYear": 2028,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Her own SportsRecruits lacrosse profile (a goalie, class of 2028, San Diego, CA, STEPS California) says committed to Florida Institute of Technology; its bio says she grew up in San Diego and has played field hockey among other sports. The profile names no school, so the match rests on the class year plus a San Diego hometown; her NCSA field hockey profile, already linked on the roster, names Cathedral Catholic High School, class of 2028, San Diego, CA, which backs it. The roster row has no grade; 2028 is a class a 2026-27 roster can hold. Found by the 2026-10-12 SportsRecruits address probe and re-read; the 2026-10-06 sweep did not see it. No date."
     }
   ]
 }

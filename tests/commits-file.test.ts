@@ -181,17 +181,17 @@ describe('the committed data/commits.json', () => {
   });
 });
 
-describe('the research of 2026-10-03, 2026-10-04, 2026-10-06 and 2026-10-12 (the EAL sweeps found no row; the Southern California round twelve; the 2026-10-12 round two), as counted in README "College commitments" and DATA-SOURCES §1.1j3', () => {
+describe('the research of 2026-10-03, 2026-10-04, 2026-10-06 and 2026-10-12 (the EAL sweeps found no row; the Southern California round twelve; the 2026-10-12 round three), as counted in README "College commitments" and DATA-SOURCES §1.1j3', () => {
   // Pinned: change these only with a new sweep, together with those two documents.
   const SOCAL = new Set(['sunset', 'city', 'north-county', 'metro', 'independents']);
   const socal = raw.commitments.filter((c) => SOCAL.has(getTeamBySlug(c.teamSlug)!.league));
   const norcal = raw.commitments.filter((c) => !SOCAL.has(getTeamBySlug(c.teamSlug)!.league));
 
-  it('holds 30 commitments from 18 schools to 23 colleges (26 programs), all "committed", 25 high and 5 medium', () => {
+  it('holds 31 commitments from 18 schools to 24 colleges (27 programs), all "committed", 26 high and 5 medium', () => {
     expect(raw.capturedAt).toBe('2026-10-12');
-    expect(raw.commitments).toHaveLength(30);
-    expect(raw.colleges).toHaveLength(23);
-    expect(raw.colleges.flatMap((c) => c.programs)).toHaveLength(26);
+    expect(raw.commitments).toHaveLength(31);
+    expect(raw.colleges).toHaveLength(24);
+    expect(raw.colleges.flatMap((c) => c.programs)).toHaveLength(27);
     expect(new Set(norcal.map((c) => c.teamSlug))).toEqual(
       new Set([
         'berkeley',
@@ -211,7 +211,7 @@ describe('the research of 2026-10-03, 2026-10-04, 2026-10-06 and 2026-10-12 (the
     expect(new Set(socal.map((c) => c.teamSlug))).toEqual(
       new Set(['bishops', 'canyon-hills', 'cathedral-catholic', 'harvard-westlake', 'san-dieguito-academy', 'scripps-ranch', 'torrey-pines']),
     );
-    expect(socal).toHaveLength(12);
+    expect(socal).toHaveLength(13);
     expect(raw.commitments.every((c) => c.status === 'committed')).toBe(true);
     expect(raw.commitments.filter((c) => c.confidence === 'medium').map((c) => c.fullName)).toEqual(['Rylie Storm', 'Reese Roldan', 'Sami Lee', 'Ryan Hemeon', 'Shyla Paredes']);
     // Sami Lee's rests on the revised nickname rule (2026-10-06): the pages say Samantha; her own MaxPreps page backs the club.
@@ -227,10 +227,10 @@ describe('the research of 2026-10-03, 2026-10-04, 2026-10-06 and 2026-10-12 (the
     expect(raw.commitments.filter((c) => ealSlugs.has(c.teamSlug))).toEqual([]);
   });
 
-  it('by sport: 17 field hockey, 10 lacrosse, 1 soccer, 1 basketball, 1 softball (SoCal: 10 field hockey, 2 lacrosse)', () => {
+  it('by sport: 17 field hockey, 11 lacrosse, 1 soccer, 1 basketball, 1 softball (SoCal: 10 field hockey, 3 lacrosse)', () => {
     const sport = (s: string, list = raw.commitments) => list.filter((c) => c.sport === s).length;
-    expect([sport('field-hockey'), sport('lacrosse'), sport('soccer'), sport('basketball'), sport('softball')]).toEqual([17, 10, 1, 1, 1]);
-    expect([sport('field-hockey', socal), sport('lacrosse', socal)]).toEqual([10, 2]);
+    expect([sport('field-hockey'), sport('lacrosse'), sport('soccer'), sport('basketball'), sport('softball')]).toEqual([17, 11, 1, 1, 1]);
+    expect([sport('field-hockey', socal), sport('lacrosse', socal)]).toEqual([10, 3]);
     // Three colleges hold two programs: UC Davis (field hockey in the MPSF, lacrosse in the Big 12),
     // Cal (field hockey and lacrosse, both ACC) and Harvard (both Ivy League).
     expect(getCollege('uc-davis')!.programs.map((p) => [p.sport, p.conference])).toEqual([
@@ -247,21 +247,21 @@ describe('the research of 2026-10-03, 2026-10-04, 2026-10-06 and 2026-10-12 (the
     ]);
   });
 
-  it('by class: 20 from 2027 and 10 from 2028; by level: 21 Division I, 1 Division II, 8 Division III', () => {
+  it('by class: 20 from 2027 and 11 from 2028; by level: 21 Division I, 2 Division II, 8 Division III', () => {
     const classes = getCommitments().map((c) => commitClassOf(c));
     expect(classes.filter((y) => y === 2027)).toHaveLength(20);
-    expect(classes.filter((y) => y === 2028)).toHaveLength(10);
+    expect(classes.filter((y) => y === 2028)).toHaveLength(11);
     const level = (d: string) => raw.commitments.filter((c) => commitProgram(c).program.division === d).length;
-    expect([level('ncaa-d1'), level('ncaa-d2'), level('ncaa-d3'), level('naia')]).toEqual([21, 1, 8, 0]);
+    expect([level('ncaa-d1'), level('ncaa-d2'), level('ncaa-d3'), level('naia')]).toEqual([21, 2, 8, 0]);
   });
 
-  it('rests on 85 source entries on 68 distinct URLs (SoCal: 38 on 31), and 11 commitments carry a date', () => {
+  it('rests on 86 source entries on 69 distinct URLs (SoCal: 39 on 32), and 11 commitments carry a date', () => {
     const entries = raw.commitments.flatMap((c) => c.sources);
-    expect(entries).toHaveLength(85);
-    expect(new Set(entries.map((s) => s.url)).size).toBe(68);
+    expect(entries).toHaveLength(86);
+    expect(new Set(entries.map((s) => s.url)).size).toBe(69);
     const socalEntries = socal.flatMap((c) => c.sources);
-    expect(socalEntries).toHaveLength(38);
-    expect(new Set(socalEntries.map((s) => s.url)).size).toBe(31);
+    expect(socalEntries).toHaveLength(39);
+    expect(new Set(socalEntries.map((s) => s.url)).size).toBe(32);
     expect(raw.commitments.filter((c) => c.asOf !== null).map((c) => c.asOf).sort()).toEqual([
       '2025-09-22',
       '2026-02',
@@ -305,6 +305,7 @@ describe('the research of 2026-10-03, 2026-10-04, 2026-10-06 and 2026-10-12 (the
       'Eva Allen',
       'Rylie Storm',
       'Lia Palecek',
+      'Campbell Trocha',
       'Ryan Hemeon',
       'Gianna Rinaldi',
       'Olivia Van De Braak',
@@ -325,6 +326,7 @@ describe('the research of 2026-10-03, 2026-10-04, 2026-10-06 and 2026-10-12 (the
       'oregon',
       'richmond',
       'san-diego-state',
+      'florida-tech',
       'maryville',
       'bates',
       'bryn-mawr',

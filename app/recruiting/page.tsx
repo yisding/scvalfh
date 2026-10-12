@@ -101,10 +101,11 @@ export default function RecruitingPage() {
           </p>
           <p className="mt-2 mb-0">
             <strong className="font-semibold text-ink">Recruiting profiles</strong> are
-            players&rsquo; own pages on NCSA, SportsRecruits, Hudl, FieldLevel and the like. A profile
-            is linked only when it names the player and field hockey, and either names the school or
-            shows the class year the roster shows along with a California hometown. They were last
-            gathered on {view.profilesCheckedOn}.
+            players&rsquo; own pages on NCSA, SportsRecruits, Hudl, FieldLevel and the like, in field
+            hockey or any other sport (a profile in another sport says which). A profile is linked
+            only when it names the player and a sport, and either names the school or shows the class
+            year the roster shows along with a California hometown. They were last gathered on{' '}
+            {view.profilesCheckedOn}.
           </p>
           <p className="mt-2 mb-0">
             <strong className="font-semibold text-ink">Club lines</strong> link the club&rsquo;s page

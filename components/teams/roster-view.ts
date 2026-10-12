@@ -32,12 +32,13 @@ import {
   type MergedPlayer,
   type MergedTeamRoster,
   type OtherRosters,
+  type PlayerProfile,
   type ProfilePlatform,
   type RosterConflict,
 } from '../../lib/rosters';
 import type { TeamSlug } from '../../lib/types';
 import { playerClubGroups, type RosterClubGroup } from '../clubs/club-view';
-import { playerCommitLine, type RosterCommitLine } from '../commits/commit-view';
+import { SPORT_WORDS, playerCommitLine, sportLabel, type RosterCommitLine } from '../commits/commit-view';
 import { positionWords } from '../ui/position-words';
 
 /**
@@ -97,6 +98,17 @@ const PROFILE_WORDS: Record<ProfilePlatform, { link: string; footnote: string }>
 };
 const PROFILE_ORDER = Object.keys(PROFILE_WORDS) as ProfilePlatform[];
 
+/**
+ * A profile link's text: "NCSA profile" for field hockey, the site's own sport; a profile in another
+ * sport names it, "SportsRecruits lacrosse profile", "Hudl softball profile", "Lacrosse recruiting site".
+ */
+export function profileLabel(x: Pick<PlayerProfile, 'platform' | 'sport'>): string {
+  const link = PROFILE_WORDS[x.platform].link;
+  if (x.sport === undefined) return link;
+  if (x.platform === 'personal') return `${sportLabel(x.sport)} recruiting site`;
+  return link.replace(/ profile$/, ` ${SPORT_WORDS[x.sport]} profile`);
+}
+
 const FIELD_WORDS: Record<RosterConflict['field'], string> = {
   jersey: 'number',
   grade: 'grade',
@@ -123,7 +135,7 @@ export interface RosterRow {
   captain: boolean;
   /** Grade, position(s), height — only the ones somebody published, in that order. */
   facts: RosterFact[];
-  /** The player's own recruiting pages, one per platform, NCSA first. */
+  /** The player's own recruiting pages, one per platform in each sport, NCSA first, field hockey first. */
   profiles: RosterProfileLink[];
   /**
    * The clubs a public page ties the player to, grouped current, listed, earlier; [] for most rows.
@@ -290,8 +302,12 @@ function rowFor(team: TeamSlug, p: MergedPlayer, index: number): RosterRow {
     captain: p.isCaptain,
     facts,
     profiles: [...p.profiles]
-      .sort((a, b) => PROFILE_ORDER.indexOf(a.platform) - PROFILE_ORDER.indexOf(b.platform))
-      .map((x) => ({ label: PROFILE_WORDS[x.platform].link, url: x.url })),
+      .sort(
+        (a, b) =>
+          PROFILE_ORDER.indexOf(a.platform) - PROFILE_ORDER.indexOf(b.platform) ||
+          (a.sport ?? '').localeCompare(b.sport ?? ''),
+      )
+      .map((x) => ({ label: profileLabel(x), url: x.url })),
     clubs: playerClubGroups(team, p.athleteId),
     commitment: playerCommitLine(team, p.athleteId),
   };

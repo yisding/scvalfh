@@ -357,7 +357,9 @@ gathered by hand and joined on the MaxPreps athlete id. It has one entry per tea
 swept on 2026-10-02 and BVAL, PCAL and MCAL on 2026-10-03; the six EAL entries (2026-10-04) hold
 recruiting profiles only, with no coaches or sources, until someone sweeps the schools' athletics
 sites; so do the 53 Southern California entries (2026-10-06), so those teams' pages say we have not
-checked other public sources. On 2026-10-07 `data/rosters.json`
+checked other public sources. On 2026-10-12 the schools with ungraded rows were swept for grades
+alone (MaxPreps' career and earlier-season pages, then school athletics sites, papers and news);
+heights, numbers, positions and coaches are still not swept there. On 2026-10-07 `data/rosters.json`
 holds 1,702 players, on 88 of the 102 teams (BVAL and MCAL were re-read that day: Marin Academy's 18
 players now appear on MaxPreps, Westmont gained 3 and Tamalpais lost one; 1,682 on 87 teams on
 2026-10-06, when the three independents' were read: Glendora 19, Harvard-Westlake 25, Thousand Oaks 21). Every entry lists
@@ -385,8 +387,13 @@ Hudl). Southern California, swept 2026-10-06: 267 for 202 (134 Hudl, 64 NCSA, 55
 FieldLevel), the most at Bishop's (37 for all 24 rows), Harvard-Westlake (25 for 22), Torrey Pines (24
 for 13), San Dieguito Academy (18 for 16) and University City (16 for 13); 17 of the 53 teams have none,
 eight of them because MaxPreps lists no players. Each SoCal page was re-read by a checker and,
-separately, by a refuter, and kept only when both kept it. A page is linked only when it names the player and field hockey and either names the school
-or shows the class year the roster shows plus a California hometown, and a stated class year must
+separately, by a refuter, and kept only when both kept it. Since 2026-10-12 a profile in any sport is
+linked, naming its sport ("SportsRecruits lacrosse profile"): that day's SportsRecruits address probe
+in every sport, over all 1,673 rows, added 118
+pages for 116 players (52 NorCal, 67 SoCal): 91 lacrosse, 15 softball, 6 field hockey, 5 soccer and 1 track
+and field, so the file holds 519 for 410 players. A page is linked only when it names the player and a
+sport and either names the school or shows the class year the roster shows plus a California hometown
+(for the 2026-10-12 pages, a hometown in the school's own area), and a stated class year must
 agree with the row's grade (checked at load). The roster shows them as a line of links under the
 player's facts. Recall is partial: see `docs/DATA-SOURCES.md` §1.1j, which also has the column map,
 the per-school sources and the overlay's rules.
@@ -695,12 +702,14 @@ program has a commitment, a college has one program per sport, one commitment pe
 `fullName`; every stated class year agrees with the row's grade, or, for a row with no grade, the
 sources agree with each other on a class a high school roster of the season can hold.
 
-Coverage on 2026-10-12, counted from the file: **30 commitments, 30 players at 18 of the 102 schools, to
-23 colleges (26 programs).** The 2026-10-12 round (see below) added two from Northern California:
+Coverage on 2026-10-12, counted from the file: **31 commitments, 31 players at 18 of the 102 schools, to
+24 colleges (27 programs).** The 2026-10-12 round (see below) added three. Two are from Northern California:
 Shyla Paredes, Valley Christian, to Cal Baptist in softball (medium: her travel club Cal Nuggets'
 commitment list and roster, tied to her by her own MaxPreps page naming the club), and Molly Waltz,
 Archbishop Mitty, to UC Davis in lacrosse (high: ADVNC Lacrosse's commits page names her school, and
-her own SportsRecruits profile shows the commitment). Southern California's twelve, from the 2026-10-06 round over its 842 rows,
+her own SportsRecruits profile shows the commitment). The third, from that day's SportsRecruits
+probe in every sport, is Campbell Trocha, Cathedral Catholic, to Florida Tech (NCAA Division II) in
+lacrosse (high: her own profile, with her NCSA field hockey page naming the school). Southern California's twelve, from the 2026-10-06 round over its 842 rows,
 are ten in field hockey (Sami Lee, Canyon Hills, to Columbia; Dylan Rietti, Torrey Pines, to Richmond; Ava Hauer, Torrey Pines, to Johns
 Hopkins; Lola Conway, Bishop's, to Michigan; Margaux Schlumberger, Harvard-Westlake, to Harvard;
 Samantha Ippolito, Scripps Ranch, to Michigan State; Eva Allen, Canyon Hills, to Cal; Rylie Storm,
@@ -1359,6 +1368,13 @@ at once, at every build, starting from last season's:
   On 2026-10-04 the EAL's 95 players (MaxPreps alone; there is no overlay for them yet) have 95
   grades, 56 positions, 7 heights and 95 numbers.
 
+  On 2026-10-12 MaxPreps' own career pages and its 2025-26 and 2024-25 field hockey rosters filled
+  136 more grades (127 of them for Southern California teams, whose MaxPreps rosters mostly carry
+  none), and a second pass over the schools' own athletics sites, school papers and local news filled
+  113 (95 from school sites, 18 from papers; 100 in Southern California). Where sources disagree the
+  grade stays blank with each one recorded (six rows that day), and 164 varsity rows still have no
+  grade from any source.
+
   The overlay filled 215 grades, 14 positions and 23 heights (all heights are SCVAL's: no BVAL, PCAL
   or MCAL roster source publishes one, and the NCSA profiles that list a height are only linked,
   never used to fill a field; the overlay filled no jersey number in any league). Grades whose
@@ -1396,7 +1412,7 @@ at once, at every build, starting from last season's:
   players; the 21 rows MaxPreps added to Marin Academy and Westmont on 2026-10-07, one tie), and nothing
   refreshes them. See `docs/DATA-SOURCES.md` §1.1j2.
 - **Commitment recall is partial, and the list does not update itself.** A commitment is listed
-  only when a public page meets the linking rule, and social media counts only from an official account, so on 2026-10-12 30 of
+  only when a public page meets the linking rule, and social media counts only from an official account, so on 2026-10-12 31 of
   the 1,673 varsity rows have a commitment line (in any sport) and 84 of the 102 schools have none; a player with no
   line may still have committed. It was researched on 2026-10-03 and 2026-10-04 (the six EAL teams'
   schools on 2026-10-04, for field hockey and then every sport, with none found, though without

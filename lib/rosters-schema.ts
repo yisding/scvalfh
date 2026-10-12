@@ -19,6 +19,7 @@
 
 import { z } from 'zod';
 
+import { COMMIT_SPORTS } from './commits-schema';
 import { ALL_DIVISIONS } from './leagues';
 import { dateKey, httpUrl, httpsUrl, slugId } from './schema-primitives';
 import { contentKey } from './stable-json';
@@ -271,8 +272,13 @@ export const EnrichedHeightSchema = z
  * Social media, news stories and team rosters are not profiles.
  *
  * Linked only when the page (or, for NCSA, whose pages are behind a bot wall, the search result
- * for it) names this player, field hockey and this school. A stated graduation year must agree
- * with the grade the roster shows: lib/rosters.ts checks that at load time.
+ * for it) names this player and a sport, and either this school, or a class year that agrees with
+ * the roster grade together with a hometown in the school's half of California. A stated graduation
+ * year must agree with the grade the roster shows: lib/rosters.ts checks that at load time.
+ *
+ * Field hockey profiles came first and carry no `sport`; since 2026-10-12 a profile in any other
+ * sport is linked too (a lacrosse or softball profile is often the one a player keeps up), and
+ * names its sport. A player has at most one profile per platform in each sport.
  */
 export const PROFILE_PLATFORMS = [
   'ncsa',
@@ -309,6 +315,8 @@ export const PlayerProfileSchema = z
     /** The graduation year the profile states, when it states one. */
     classOf: z.number().int().min(2020).max(2040).nullable(),
     note: z.string().min(1).nullable(),
+    /** The profile's sport when it is not field hockey; a field hockey profile has none. */
+    sport: z.enum(COMMIT_SPORTS).exclude(['field-hockey']).optional(),
   })
   .refine((p) => {
     const host = hostOf(p.url);
@@ -344,7 +352,7 @@ export const EnrichedPlayerSchema = z
     jersey: EnrichedJerseySchema.nullable(),
     height: EnrichedHeightSchema.nullable(),
     conflicts: z.array(RosterConflictSchema),
-    /** The player's own recruiting pages, at most one per platform. */
+    /** The player's own recruiting pages, at most one per platform in each sport. */
     profiles: z.array(PlayerProfileSchema),
     note: z.string().min(1).nullable(),
   })
@@ -356,8 +364,8 @@ export const EnrichedPlayerSchema = z
   )
   .refine((p) => (p.level === null) === (p.levelSource === null), 'level and levelSource go together')
   .refine(
-    (p) => new Set(p.profiles.map((x) => x.platform)).size === p.profiles.length,
-    'one profile per platform',
+    (p) => new Set(p.profiles.map((x) => `${x.platform} ${x.sport ?? 'field-hockey'}`)).size === p.profiles.length,
+    'one profile per platform in each sport',
   );
 
 export const RosterCoachSchema = z.object({

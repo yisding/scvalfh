@@ -351,7 +351,8 @@ describe('buildClubPageView (/clubs/[slug])', () => {
 
   it('prints only the facts that exist, and links each source once under a distinct label', () => {
     const riya = viewOf('fly-fhc').groups.flatMap((g) => g.rows).find((r) => r.name === 'Riya Mehrotra')!;
-    expect(riya.facts).toEqual(['Black - Advanced']); // no grade anywhere, so none is printed
+    // Her grade comes from the overlay (the Talon, 2026-10-12): the club page prints it before the team.
+    expect(riya.facts).toEqual(['Senior', 'Black - Advanced']);
     const storey = viewOf('sf-hawks').groups[0].rows.find((r) => r.name === 'Storey Lewis')!;
     expect(storey.facts).toEqual(['Senior', 'U19 Hawks Blue']);
     expect(storey.sources.map((s) => s.label)).toEqual(['SportsRecruits profile', 'NFHCA', 'SportsRecruits team page', 'NCSA profile', 'club roster']);
