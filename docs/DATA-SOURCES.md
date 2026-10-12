@@ -462,6 +462,24 @@ were; since then a profile in any other sport is linked too, with its `sport` (a
 profile has none), and the roster names that sport in the link ("SportsRecruits lacrosse
 profile"). A player has at most one profile per platform in each sport.
 
+*Grades, 2026-10-12.* MaxPreps leaves the grade blank on 413 varsity rows that nothing had filled,
+326 of them Southern California's. Two passes filled 249. First, MaxPreps' own pages: each row's
+career page (its `graduatingClass`, and the grade of every team it lists for a dated season, in any
+sport: a past season's team link carries the season, `/24-25/`) and the team's 2025-26 and 2024-25
+field hockey rosters (read with `parseRosterPage` after swapping the season id it checks, matched on
+`careerId`, or on the name where the page has one row of it). A grade is filled only where every such
+page agrees: 136 rows (`maxpreps-career`, derived, medium). Second, the 266 still blank were looked
+up on the schools' own athletics sites (a 2026-27 roster first, then a 2025-26 one carried forward),
+in school papers and in local news: 113 rows, 95 from school sites and 18 from papers (Home Campus
+and SportsEngine athletics sites render with JavaScript; Home Campus player pages give "Grade N").
+Medium where the page is not the school's own current roster, high where it is. A story that is not
+about field hockey was used only for an exact name at the same school. Where sources disagree the
+grade stays blank and each is recorded under `conflicts`; a source that would make a player a
+13th-grader counts as a disagreement. Every grade note ends "Added 2026-10-12." and each page is in
+its team's `sources`. 164 rows still have no grade, mostly at schools whose sites list names without
+grades (Mira Mesa, Mission Bay, Point Loma, Clairemont, Scripps Ranch, Greenfield) or post no roster
+(San Dieguito Academy, Canyon Crest, Mission Vista, Escondido, Mt. Carmel, Live Oak).
+
 *The 2026-10-12 probe, in every sport.* A SportsRecruits profile-address probe (the `first_last` slug
 and its numbered variants, following redirects to each association's subdomain) ran for all 1,673
 varsity rows: 1,355 at first, and the other 318 later the same day, after the research environment's
@@ -475,8 +493,8 @@ Diego schools. Where a player's matching pages disagree on the hometown, only th
 own city were kept; the other class-of-2027 Phoebe Miller (San Francisco) was left out; and soccer,
 track and volleyball pages were kept only where the club named is a girls' club (a Santa Maria
 volleyball page for a La Verne school was left out). Each kept page was then re-read.
-119 pages for 117 players: 91 lacrosse (all on iwlca.sportsrecruits.com, the women's lacrosse site),
-16 softball, 6 field hockey that the earlier sweeps had missed, 5 soccer and 1 track and field. One
+118 pages for 116 players: 91 lacrosse (all on iwlca.sportsrecruits.com, the women's lacrosse site),
+15 softball, 6 field hockey that the earlier sweeps had missed, 5 soccer and 1 track and field. One
 shows a commitment not yet in `data/commits.json`: Campbell Trocha's, to Florida Tech, now added
 (§1.1j3). NCSA, Hudl and FieldLevel were not probed in other sports, because their profile addresses
 carry numbers that cannot be guessed (NCSA loads in a headless browser, but its school pages list

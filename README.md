@@ -357,7 +357,9 @@ gathered by hand and joined on the MaxPreps athlete id. It has one entry per tea
 swept on 2026-10-02 and BVAL, PCAL and MCAL on 2026-10-03; the six EAL entries (2026-10-04) hold
 recruiting profiles only, with no coaches or sources, until someone sweeps the schools' athletics
 sites; so do the 53 Southern California entries (2026-10-06), so those teams' pages say we have not
-checked other public sources. On 2026-10-07 `data/rosters.json`
+checked other public sources. On 2026-10-12 the schools with ungraded rows were swept for grades
+alone (MaxPreps' career and earlier-season pages, then school athletics sites, papers and news);
+heights, numbers, positions and coaches are still not swept there. On 2026-10-07 `data/rosters.json`
 holds 1,702 players, on 88 of the 102 teams (BVAL and MCAL were re-read that day: Marin Academy's 18
 players now appear on MaxPreps, Westmont gained 3 and Tamalpais lost one; 1,682 on 87 teams on
 2026-10-06, when the three independents' were read: Glendora 19, Harvard-Westlake 25, Thousand Oaks 21). Every entry lists
@@ -387,9 +389,9 @@ for 13), San Dieguito Academy (18 for 16) and University City (16 for 13); 17 of
 eight of them because MaxPreps lists no players. Each SoCal page was re-read by a checker and,
 separately, by a refuter, and kept only when both kept it. Since 2026-10-12 a profile in any sport is
 linked, naming its sport ("SportsRecruits lacrosse profile"): that day's SportsRecruits address probe
-in every sport, over all 1,673 rows, added 119
-pages for 117 players (52 NorCal, 67 SoCal): 91 lacrosse, 16 softball, 6 field hockey, 5 soccer and 1 track
-and field, so the file holds 520 for 411 players. A page is linked only when it names the player and a
+in every sport, over all 1,673 rows, added 118
+pages for 116 players (52 NorCal, 67 SoCal): 91 lacrosse, 15 softball, 6 field hockey, 5 soccer and 1 track
+and field, so the file holds 519 for 410 players. A page is linked only when it names the player and a
 sport and either names the school or shows the class year the roster shows plus a California hometown
 (for the 2026-10-12 pages, a hometown in the school's own area), and a stated class year must
 agree with the row's grade (checked at load). The roster shows them as a line of links under the
@@ -1367,9 +1369,11 @@ at once, at every build, starting from last season's:
   grades, 56 positions, 7 heights and 95 numbers.
 
   On 2026-10-12 MaxPreps' own career pages and its 2025-26 and 2024-25 field hockey rosters filled
-  137 more grades (128 of them for Southern California teams, whose MaxPreps rosters mostly carry
-  none); two rows whose pages disagree stay blank with both recorded, and three whose earlier roster
-  would make them 13th-graders stay blank too.
+  136 more grades (127 of them for Southern California teams, whose MaxPreps rosters mostly carry
+  none), and a second pass over the schools' own athletics sites, school papers and local news filled
+  113 (95 from school sites, 18 from papers; 100 in Southern California). Where sources disagree the
+  grade stays blank with each one recorded (six rows that day), and 164 varsity rows still have no
+  grade from any source.
 
   The overlay filled 215 grades, 14 positions and 23 heights (all heights are SCVAL's: no BVAL, PCAL
   or MCAL roster source publishes one, and the NCSA profiles that list a height are only linked,

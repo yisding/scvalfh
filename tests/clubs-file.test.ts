@@ -616,8 +616,9 @@ describe('lib/clubs.ts', () => {
   });
 
   it('serves the roster row each affiliation joined to, and refuses a pair no affiliation names', () => {
-    const riya = raw.affiliations[at('Riya Mehrotra')];
-    expect(getAffiliatedPlayer(riya).grade).toBeNull();
+    // Ella Rennie's San Dieguito Academy row has no grade from any source.
+    const ella = raw.affiliations[at('Ella Rennie')];
+    expect(getAffiliatedPlayer(ella).grade).toBeNull();
     expect(() => getAffiliatedPlayer({ teamSlug: 'st-ignatius', athleteId: 'nope' })).toThrow(/no roster row/);
   });
 
@@ -712,7 +713,7 @@ describe('a bad file is refused at load', () => {
 
   it('lets any class year stand for a player with no grade anywhere', () => {
     const ok = structuredClone(raw);
-    const a = ok.affiliations[at('Riya Mehrotra')];
+    const a = ok.affiliations[at('Ella Rennie')];
     expect(rowOf(a)!.grade).toBeNull();
     for (const s of a.sources) s.statedClassYear = 2035;
     expect(loadError(ok)).toBe('');

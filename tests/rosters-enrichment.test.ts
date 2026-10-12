@@ -43,6 +43,14 @@ const EAL_SLUGS: ReadonlySet<string> = new Set(teamsInLeague('eal').map((t) => t
 const DERIVED_FROM_OTHER: Record<string, readonly string[]> = {
   berkeley: ['maxpreps-jv'],
   'archie-williams': ['news'],
+  // 2026-10-12: an earlier season's school paper or school roster, carried forward.
+  'los-altos': ['news'],
+  homestead: ['news'],
+  redwood: ['news'],
+  'point-loma': ['news'],
+  'rancho-bernardo': ['news'],
+  clairemont: ['school-site'],
+  'thousand-oaks': ['school-site'],
 };
 
 const base = JSON.parse(readFileSync(path.join(REPO, 'data', 'rosters.json'), 'utf8')) as Rosters;
@@ -64,6 +72,7 @@ const pre: RosterEnrichment = {
   ...raw,
   teams: raw.teams.map((t) => ({
     ...t,
+    sources: t.sources.filter((x) => x.capturedAt !== '2026-10-12'),
     players: t.players
       .map((p) => ({
         ...p,
@@ -207,6 +216,11 @@ describe('data/rosters-enrichment.json', () => {
     }
     expect(blanked.sort()).toEqual([
       'berkeley/Anisa Alejandrino',
+      // 2026-10-12: a profile page that contradicts itself (Glendora), a school site against MaxPreps'
+      // 2025-26 roster (Granite Hills), and two school-site profiles of one player (Salinas).
+      'glendora/Paula Mata',
+      'granite-hills/Brooke Flesuras',
+      'granite-hills/Emma Steingraber',
       'leland/Anna Lychagina',
       'leland/Michaela Reichmuth',
       // MaxPreps' 2025-26 roster and career page disagree (2026-10-12).
@@ -217,6 +231,7 @@ describe('data/rosters-enrichment.json', () => {
       'salinas/Ana Garcia',
       'salinas/Kaylah Arriola',
       'salinas/Mireille Gonzalez-morales',
+      'salinas/Teagan Dickison Elias',
     ]);
   });
 
@@ -633,26 +648,48 @@ describe('recruiting profiles', () => {
 
   it('what MaxPreps\' career and earlier-season pages added on 2026-10-12: grades MaxPreps\' own roster leaves blank', () => {
     const records = raw.teams.flatMap((t) => t.players.map((p) => ({ slug: t.slug, p })));
-    const added = records.filter(({ p }) => p.grade !== null && from1012(p.grade.note));
-    expect(added).toHaveLength(137);
+    const added = records.filter(({ p }) => p.grade !== null && p.grade.kind === 'maxpreps-career' && from1012(p.grade.note));
+    expect(added).toHaveLength(136);
     for (const { slug, p } of added) {
       expect([p.grade!.kind, p.grade!.derived, p.grade!.confidence], `${slug} / ${p.fullName}`).toEqual(['maxpreps-career', true, 'medium']);
       expect(p.grade!.source, `${slug} / ${p.fullName}`).toMatch(/^https:\/\/www\.maxpreps\.com\//);
     }
     const SOCAL = new Set(['sunset', 'city', 'north-county', 'metro', 'independents']);
-    expect(added.filter(({ slug }) => SOCAL.has(getTeamBySlug(slug)!.league))).toHaveLength(128);
+    expect(added.filter(({ slug }) => SOCAL.has(getTeamBySlug(slug)!.league))).toHaveLength(127);
     // Where those pages disagree the grade stays blank and both are conflicts.
-    const blanked = records.filter(({ p }) => p.conflicts.some((c) => from1012(c.note))).map(({ slug, p }) => `${slug}/${p.fullName}`);
-    expect(blanked.sort()).toEqual(['mission-vista/Izabel Gaytan', 'point-loma/Ellie Kay']);
+    const blanked = records
+      .filter(({ p }) => p.conflicts.some((c) => from1012(c.note) && c.kind === 'maxpreps-career'))
+      .map(({ slug, p }) => `${slug}/${p.fullName}`);
+    // Gaytan's and Kay's MaxPreps pages disagree; Steingraber's and Flesuras' disagree with their school's site.
+    expect(blanked.sort()).toEqual([
+      'granite-hills/Brooke Flesuras',
+      'granite-hills/Emma Steingraber',
+      'mission-vista/Izabel Gaytan',
+      'point-loma/Ellie Kay',
+    ]);
+  });
+
+  it('what school sites and papers added on 2026-10-12 for the rows still ungraded', () => {
+    const added = raw.teams.flatMap((t) =>
+      t.players.filter((p) => p.grade !== null && p.grade.kind !== 'maxpreps-career' && from1012(p.grade.note)).map((p) => ({ t, p })),
+    );
+    expect(added).toHaveLength(113);
+    const n = (k: string) => added.filter(({ p }) => p.grade!.kind === k).length;
+    expect([n('school-site'), n('news')]).toEqual([95, 18]);
+    // Every page a grade rests on is listed among its team's sources, as of the same day.
+    for (const { t, p } of added) {
+      const listed = t.sources.some((s) => s.url === p.grade!.source) || t.sources.some((s) => s.capturedAt === '2026-10-12' && s.kind === p.grade!.kind);
+      expect(listed, `${t.slug} / ${p.fullName}`).toBe(true);
+    }
   });
 
   it('what the 2026-10-12 SportsRecruits probe found, in every sport', () => {
     const records = raw.teams.flatMap((t) => t.players.map((p) => ({ t, p })));
     const probe = records.flatMap(({ t, p }) => p.profiles.filter(fromProbe1012).map((x) => ({ slug: t.slug, name: p.fullName, x })));
-    expect(probe).toHaveLength(119);
-    expect(new Set(probe.map((r) => `${r.slug} ${r.name}`)).size).toBe(117);
+    expect(probe).toHaveLength(118);
+    expect(new Set(probe.map((r) => `${r.slug} ${r.name}`)).size).toBe(116);
     const bySport = (s: string | undefined) => probe.filter((r) => r.x.sport === s).length;
-    expect([bySport('lacrosse'), bySport('softball'), bySport(undefined), bySport('soccer'), bySport('track-and-field')]).toEqual([91, 16, 6, 5, 1]);
+    expect([bySport('lacrosse'), bySport('softball'), bySport(undefined), bySport('soccer'), bySport('track-and-field')]).toEqual([91, 15, 6, 5, 1]);
     for (const r of probe) {
       expect(r.x.platform, r.name).toBe('sportsrecruits');
       expect(r.x.classOf, r.name).not.toBeNull();
@@ -777,8 +814,9 @@ describe('lib/rosters.ts merged view', () => {
     expect(all.length).toBe(scvalBase.length);
     const n = (ps: ReadonlyArray<{ grade: number | null; position: string | null; height: string | null }>, k: 'grade' | 'position' | 'height') =>
       ps.filter((p) => p[k] !== null).length;
-    // 133 from the 2026-10-02 research, and 8 more from MaxPreps' career and earlier-season pages on 2026-10-12.
-    expect(n(all, 'grade')).toBe(n(scvalBase, 'grade') + 141);
+    // 133 from the 2026-10-02 research; on 2026-10-12, 8 more from MaxPreps' career and earlier-season pages
+    // and 7 from school papers and Saratoga's athletics site.
+    expect(n(all, 'grade')).toBe(n(scvalBase, 'grade') + 148);
     expect(n(all, 'position')).toBe(n(scvalBase, 'position') + 9);
     expect(n(all, 'height')).toBe(n(scvalBase, 'height') + 23);
     expect(getRosterEnrichment().teams.length).toBe(TEAMS.length);
