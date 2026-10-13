@@ -390,7 +390,7 @@ eight of them because MaxPreps lists no players. Each SoCal page was re-read by 
 separately, by a refuter, and kept only when both kept it. Since 2026-10-12 a profile in any sport is
 linked, naming its sport ("SportsRecruits lacrosse profile"): that day's SportsRecruits address probe
 in every sport, over all 1,673 rows, added 118
-pages for 116 players (52 NorCal, 67 SoCal): 91 lacrosse, 15 softball, 6 field hockey, 5 soccer and 1 track
+pages for 116 players (52 NorCal, 66 SoCal): 91 lacrosse, 15 softball, 6 field hockey, 5 soccer and 1 track
 and field, so the file holds 519 for 410 players. A page is linked only when it names the player and a
 sport and either names the school or shows the class year the roster shows plus a California hometown
 (for the 2026-10-12 pages, a hometown in the school's own area), and a stated class year must
@@ -1373,7 +1373,7 @@ at once, at every build, starting from last season's:
   none), and a second pass over the schools' own athletics sites, school papers and local news filled
   113 (95 from school sites, 18 from papers; 100 in Southern California). Where sources disagree the
   grade stays blank with each one recorded (six rows that day), and 164 varsity rows still have no
-  grade from any source.
+  established grade.
 
   The overlay filled 215 grades, 14 positions and 23 heights (all heights are SCVAL's: no BVAL, PCAL
   or MCAL roster source publishes one, and the NCSA profiles that list a height are only linked,
