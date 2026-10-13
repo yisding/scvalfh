@@ -80,7 +80,7 @@ import {
 import { pickerName, pinLabel } from '../../lib/pin-label';
 import type { SearchIndex } from '../../lib/search';
 import { teamOfSide } from '../../lib/teams';
-import type { DivisionId, Game, LeagueId, RegionId, SeasonPhase, Team, TeamColors } from '../../lib/types';
+import type { DivisionId, Game, LeagueId, RegionId, SeasonPhase, Team } from '../../lib/types';
 import type { LeagueChip } from '../layout/LeagueSwitcher';
 import { leagueChips } from '../layout/league-chips';
 import { fixtureOpponent, nextOfficialFixture } from '../teams/team-view';
@@ -88,7 +88,6 @@ import { describeGame, gameKind, postseasonTagOf, type GameDisplay, type SideVie
 import { plural } from '../ui/plural';
 
 import type {
-  HomeColors,
   HomeLastDisplay,
   HomeLastGame,
   HomeNextGame,
@@ -104,11 +103,6 @@ import { POSTSEASON_LEAD, rungCardText } from './home-types';
 /** Kickoff order, then away name, so a slate is stable between builds. */
 function byKickoff(a: Game, b: Game): number {
   return a.dateLocal.localeCompare(b.dateLocal) || a.away.name.localeCompare(b.away.name);
-}
-
-function colorsOf(team: Team): HomeColors {
-  const { primary, onPrimary } = team.colors;
-  return { primary, onPrimary };
 }
 
 function shortNameOf(side: Game['home']): string {
@@ -370,8 +364,6 @@ export interface MiniRow {
   slug: string;
   name: string;
   shortName: string;
-  abbr: string;
-  colors: TeamColors;
   place: number;
   shared: boolean;
   hasResults: boolean;
@@ -405,8 +397,6 @@ function miniDivision(league: LeagueConfig, division: DivisionConfig): MiniDivis
       slug: s.slug,
       name: team?.name ?? s.slug,
       shortName: team?.shortName ?? s.slug,
-      abbr: team?.abbr ?? '',
-      colors: team?.colors ?? { primary: '000000', secondary: '000000', onPrimary: '#ffffff', source: 'placeholder' },
       place: s.computed.place,
       shared: s.tiebreak.shared,
       hasResults: s.hasReportedResults,
@@ -631,8 +621,6 @@ function pinTileView(team: Team, leagueShort: string, heading: string | null): P
     slug: team.slug,
     leagueId: team.league,
     name: team.name,
-    abbr: team.abbr,
-    colors: colorsOf(team),
     pickerName: pickerName(team),
     pinLabel: pinLabel({ name: team.name, shortName: team.shortName, divisionHeading: heading, leagueShort }),
   };

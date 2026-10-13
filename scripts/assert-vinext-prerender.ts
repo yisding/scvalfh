@@ -42,8 +42,10 @@
  * rule giving it the immutable Cache-Control (no Node server sets it on Workers); no .br/.gz/.zst
  * copy may ship, since precompress is the Node target's option and those files would be public
  * assets with no Content-Type; and nothing else may sit at the top level of the upload, where
- * Static Assets serves it before the Worker runs: only `_headers`, `_next/` and `_vinext/`, plus
- * what `.assetsignore` keeps out (vinext lists `.vite` and its client-entry manifest there).
+ * Static Assets serves it before the Worker runs: only `_headers`, `_next/`, `_vinext/` and
+ * `mascots/` (Vite's copy of public/mascots/, the self-hosted mascot tiles, DESIGN §12.4: exactly
+ * the repo's .webp files and nothing else), plus what `.assetsignore` keeps out (vinext lists
+ * `.vite` and its client-entry manifest there).
  */
 
 import fs from 'node:fs';
@@ -181,7 +183,15 @@ function checkCloudflare(): void {
   const ignorePath = path.join(assets, '.assetsignore');
   const ignored = new Set(['.assetsignore', ...(fs.existsSync(ignorePath) ? fs.readFileSync(ignorePath, 'utf8').split(/\r?\n/) : [])
     .map((l) => l.trim()).filter((l) => l && !l.startsWith('#')).map((l) => l.replace(/^\/|\/$/g, ''))]);
-  const shipped = fs.readdirSync(assets).filter((f) => !ignored.has(f) && !['_headers', '_next', '_vinext'].includes(f));
+  const shipped = fs.readdirSync(assets).filter((f) => !ignored.has(f) && !['_headers', '_next', '_vinext', 'mascots'].includes(f));
   if (shipped.length) fail(`would be served publicly from the top level of ${assets}: ${shipped.join(', ')}`);
+  // mascots/ is public/mascots/ copied as is: the same .webp tiles, no subfolder, nothing extra.
+  const mascotsOut = path.join(assets, 'mascots');
+  const mascotsSrc = (fs.readdirSync('public/mascots') as string[]).filter((f) => f.endsWith('.webp')).sort();
+  const mascotsShipped = fs.existsSync(mascotsOut) ? (fs.readdirSync(mascotsOut) as string[]).sort() : [];
+  const mascotsExtra = mascotsShipped.filter((f) => !mascotsSrc.includes(f));
+  const mascotsMissing = mascotsSrc.filter((f) => !mascotsShipped.includes(f));
+  if (mascotsExtra.length) fail(`${mascotsOut} holds files that are not mascot tiles in public/mascots: ${mascotsExtra.slice(0, 5).join(', ')}`);
+  if (mascotsMissing.length) fail(`${mascotsMissing.length} mascot tiles are missing from ${mascotsOut}: ${mascotsMissing.slice(0, 5).join(', ')}`);
   console.log(`assets: top level ${fs.readdirSync(assets).filter((f) => !ignored.has(f)).join(', ')}; kept out by .assetsignore: ${[...ignored].join(', ')}`);
 }

@@ -12,7 +12,6 @@
 
 import { plural } from './format';
 import type { SectionConfig } from './leagues';
-import type { TeamColors } from './types';
 
 export interface TeamSearchEntry {
   kind: 'team';
@@ -21,7 +20,6 @@ export interface TeamSearchEntry {
   leagueId: string; leagueShort: string; sectionShort: SectionConfig['shortName'];
   /** null for single-division leagues. */
   divisionLabel: string | null;
-  colors: Pick<TeamColors, 'primary' | 'onPrimary'>;
   /** Normalized keys. NEVER league or division labels. No acronyms, no grid codes. */
   keys: { whole: string[]; nameTokens: string[]; cityTokens: string[]; mascotTokens: string[] };
 }
@@ -45,7 +43,6 @@ export interface SearchIndex { teams: TeamSearchEntry[]; groups: GroupSearchEntr
 export interface SearchInputTeam {
   slug: string; name: string; shortName: string; abbr: string; city: string; mascot: string;
   aliases: string[]; leagueId: string; division: string;
-  colors: Pick<TeamColors, 'primary' | 'onPrimary'>;
 }
 
 export interface SearchResult {
@@ -106,7 +103,6 @@ export function buildSearchIndex(
         city: t.city, mascot: t.mascot,
         leagueId: league.id, leagueShort: league.shortName, sectionShort: league.sectionShort,
         divisionLabel: division?.heading ?? null,
-        colors: { primary: t.colors.primary, onPrimary: t.colors.onPrimary },
         keys: {
           whole: unique(spellings.map(compactOf)),
           nameTokens: unique(spellings.flatMap(tokensOf)),

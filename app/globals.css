@@ -477,9 +477,9 @@
   .sx-inset.sx-disclosure { padding-block: 0.25rem; }
   .sx-inset.sx-disclosure[open] { padding-bottom: 1rem; }
 
-  /* The school color square (components/ui/TeamMonogram.tsx). One rule instead of eight utility
-     classes on every tile: the home page alone renders about a hundred of them, and the repeated
-     class string cost it ~1.1 KB gzip. Size, radius and colors stay inline per school. Callers'
+  /* The school tile: TeamMonogram's mascot image and GhostMonogram's letters
+     (components/ui/). One rule instead of eight utility classes on every tile: the home page alone
+     renders about a hundred of them, and the repeated class string cost it ~1.1 KB gzip. Callers'
      className utilities still win (utilities layer). */
   .sx-monogram {
     display: inline-flex; flex-shrink: 0; align-items: center; justify-content: center;
@@ -487,6 +487,9 @@
     font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
     font-weight: 600; line-height: 1;
   }
+  /* The mascot tile is a white logo square, so the white shows while it loads too. The corner is a
+     quarter of the side, the same as the ghost's inline monogramRadius, without an inline style. */
+  img.sx-monogram { border-radius: 25%; background: #fff; object-fit: contain; }
 
   /* Pills: footer actions, link rows, filter chips. 40px tall (44 where it is primary). */
   .sx-pill {
