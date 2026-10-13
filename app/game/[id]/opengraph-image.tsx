@@ -30,7 +30,8 @@ import { dateWithYear, timeOfDayPT } from '../../../lib/format';
  *
  * The record under each name is `GameSideModel.sub` from the same model, so it is the league
  * record AS OF this game (`recordAsOf`, G-1) — a card shared weeks later still shows the record
- * that went with that score, exactly as the page does.
+ * that went with that score, exactly as the page does. A regular-season non-league game shows each
+ * side's current league record instead.
  */
 
 export const alt = `${SITE_NAME} — game score card`;
