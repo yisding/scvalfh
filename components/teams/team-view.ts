@@ -475,12 +475,15 @@ function buildUnbeaten(team: Team, leagueLog: Game[], today: string): UnbeatenOp
       };
     })
     .filter((o) => o.record.w === 0)
-    // Soonest meeting first — "who is left" is a calendar question. Opponents with nothing left
-    // to play sort after the ones we can still beat, then alphabetically.
+    // Soonest meeting first — "who is left" is a calendar question. The date is the one the row
+    // shows: the next published meeting, else the next official-only fixture. Opponents with
+    // nothing left to play sort after the ones we can still beat, then alphabetically.
     .sort((a, b) => {
-      if (a.nextDate && b.nextDate) return a.nextDate.localeCompare(b.nextDate);
-      if (a.nextDate) return -1;
-      if (b.nextDate) return 1;
+      const aNext = a.nextDate ?? a.nextFixtureDate;
+      const bNext = b.nextDate ?? b.nextFixtureDate;
+      if (aNext && bNext) return aNext.localeCompare(bNext);
+      if (aNext) return -1;
+      if (bNext) return 1;
       return a.shortName.localeCompare(b.shortName);
     });
 }

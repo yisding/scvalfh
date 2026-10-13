@@ -937,6 +937,17 @@ describe('"Who we haven’t beaten" official-only fixtures (components/teams/tea
     }
   });
 
+  it('orders rows by the date each one shows, official-only fixtures included', () => {
+    for (const team of data.getTeams()) {
+      const v = view.buildTeamPageView(team.slug);
+      if (!v) continue;
+      const shown = v.unbeaten.map((o) => o.nextDate ?? o.nextFixtureDate);
+      const dated = shown.filter((d): d is string => d !== null);
+      expect(dated, `components/teams/team-view.ts ${team.slug}`).toEqual([...dated].sort());
+      expect(shown.slice(0, dated.length), `components/teams/team-view.ts ${team.slug}`).toEqual(dated);
+    }
+  });
+
   it('says "next <date>" for a future fixture and "N unreported" only for a past one', async () => {
     const { TeamUnbeaten } = await import('../../components/teams/TeamUnbeaten');
     const base = view.buildTeamPageView('carmel')!;
