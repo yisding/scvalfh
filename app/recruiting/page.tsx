@@ -104,7 +104,9 @@ export default function RecruitingPage() {
             players&rsquo; own pages on NCSA, SportsRecruits, Hudl, FieldLevel and the like, in field
             hockey or any other sport (a profile in another sport says which). A profile is linked
             only when it names the player and a sport, and either names the school or shows the class
-            year the roster shows along with a California hometown. They were last gathered on{' '}
+            year the roster shows along with a California hometown. A MaxPreps profile is the
+            player&rsquo;s own page on MaxPreps, where the rosters come from, linked only where the
+            player or a parent has claimed it. They were last gathered on{' '}
             {view.profilesCheckedOn}.
           </p>
           <p className="mt-2 mb-0">

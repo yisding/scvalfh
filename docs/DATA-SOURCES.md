@@ -500,6 +500,34 @@ shows a commitment not yet in `data/commits.json`: Campbell Trocha's, to Florida
 carry numbers that cannot be guessed (NCSA loads in a headless browser, but its school pages list
 only a few recent athletes).
 
+*Claimed MaxPreps pages, 2026-10-13.* MaxPreps keeps a career page for every rostered player
+(`careerUrl`), and a player or a parent can claim it. The roster page's `linkedAthlete`,
+`linkedParents` and `accountInformation` columns are null on every row of every capture (they fill
+only for a signed-in viewer), so the claim is read from the career page itself: its RSC payload's
+`careerPlayerData.isClaimed` **[V]**. A claimed page also renders MaxPreps' Claimed badge beside the
+name (`CareerHeaderTextBlock__StyledClaimedBadgeIcon`) and carries `career-claimed` in its ad
+targeting; an unclaimed one has neither. All 1,702 rows' career pages were read (three at a time,
+500 ms apart, about 15 minutes): 260 claimed on 73 teams, 1,441 not, and one, Marin Catholic's
+Alexandra Schmidt, answered 403 with a redirect to a MaxPreps support article, so is not linked. The
+260 are linked as `platform: "maxpreps"` profiles at the row's own `careerUrl`, with no `sport` (one
+page covers every sport) and `classOf` from the page's `graduatingClass` where it has one (221). They
+are the page the row comes from, so they need no name, school or class-year match to tie them to the
+player; `lib/rosters.ts` instead refuses one whose URL is not its row's `careerUrl`. A `classOf` they
+state is still checked like any profile's: it must agree with the grade the row shows, or the file
+does not load (none of the 221 disagreed; a page whose `graduatingClass` did would be linked with
+`classOf: null`). 159 of the 260 players had no other
+profile, so the file now holds 779 profiles for 569 players. The roster shows "MaxPreps profile"
+after the recruiting sites' links, and its footnote says these are claimed pages rather than matched
+ones. The claim is not refreshed by `pnpm fetch-rosters`: the flag lives only on the career page, one
+600 KB page per player, so re-reading it is a re-run of this sweep, not part of the roster read. (One career page, Leigh's Adriana Yam's, shows another
+player's name, Ayva Garcia; it is unclaimed, so nothing is linked.) The same day each claimed page's
+`/bio/` page, where the athlete's own entries live, was read too. It shows **no college commitment**
+for any of the 260: `careerCollegeInterestsData` (15 players) is a list of colleges with no status,
+and the 11 of the 260 already in `data/commits.json` show nothing there. Its club-teams block lists 33
+clubs for 32 players: the 22 field hockey ties were all in `data/clubs.json` already, and one source was
+added (Eleanor Levy's VCRD entry, made after the 2026-10-06 sweep); the 11 clubs in other sports are not
+linked, as that file holds field hockey clubs only.
+
 Gotchas, all **[V]**:
 - **NCSA** (`ncsasports.org/field-hockey-recruiting/california/<city>/<school>/<first-last[N]>`)
   answers curl and WebFetch with a Cloudflare challenge (403, "Just a moment..."). Its six

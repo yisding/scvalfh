@@ -402,6 +402,20 @@ describe('data/clubs.json', () => {
   describe('Southern California, as researched 2026-10-06 (changes only with a new sweep)', () => {
     const SOCAL_LEAGUES = new Set(['sunset', 'city', 'north-county', 'metro', 'independents']);
     const socal = raw.affiliations.filter((a) => SOCAL_LEAGUES.has(getTeamBySlug(a.teamSlug)!.league));
+    const LEVY_MAXPREPS =
+      'https://www.maxpreps.com/ca/studio-city/harvard-westlake-wolverines/athletes/eleanor-levy/bio/?careerid=nrdsamg37e6p9';
+
+    it("adds, on 2026-10-13, Eleanor Levy's MaxPreps club entry as a second source on her VCRD tie, which it dates", () => {
+      const levy = socal.find((a) => a.fullName === 'Eleanor Levy')!;
+      expect([levy.club, levy.status, levy.confidence, levy.asOf]).toEqual(['vcrd', 'current', 'high', '2026-10-09']);
+      expect(levy.sources.map((s) => [s.kind, s.statedSchool, s.statedClassYear, s.sourceDate])).toEqual([
+        ['sportsrecruits', 'Harvard-Westlake', 2030, null],
+        ['maxpreps-career', 'Harvard-Westlake', 2030, '2026-10-09'],
+      ]);
+      expect(levy.sources[1].url).toBe(LEVY_MAXPREPS);
+      // The only source on any tie from that read: every other club it found was already linked, or not field hockey.
+      expect(raw.affiliations.flatMap((a) => a.sources).filter((s) => s.url.includes('/bio/?careerid=') && s.sourceDate === '2026-10-09')).toHaveLength(1);
+    });
 
     it('adds 12 clubs and 76 ties: 68 of the 842 varsity rows, at 23 of the 53 schools', () => {
       expect(raw.clubs.filter((c) => SOCAL_CLUBS.has(c.slug))).toHaveLength(12);
@@ -424,7 +438,8 @@ describe('data/clubs.json', () => {
     });
 
     it('rests on 173 source entries on 117 distinct URLs, by kind', () => {
-      const sources = socal.flatMap((a) => a.sources);
+      // Not counted: the one source added since, from the 2026-10-13 read of claimed MaxPreps pages.
+      const sources = socal.flatMap((a) => a.sources).filter((s) => s.url !== LEVY_MAXPREPS);
       expect(sources).toHaveLength(173);
       expect(new Set(sources.map((s) => s.url)).size).toBe(117);
       expect(countBy(sources, (s) => s.kind)).toEqual({
