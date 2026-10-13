@@ -279,6 +279,12 @@ export const EnrichedHeightSchema = z
  * Field hockey profiles came first and carry no `sport`; since 2026-10-12 a profile in any other
  * sport is linked too (a lacrosse or softball profile is often the one a player keeps up), and
  * names its sport. A player has at most one profile per platform in each sport.
+ *
+ * `maxpreps` (since 2026-10-13) is the row's own MaxPreps career page, linked only where the player
+ * or a parent has claimed it (the page's `isClaimed`): an unclaimed one is just the roster MaxPreps
+ * keeps for every player. It needs no name match, being the page the row comes from, so
+ * lib/rosters.ts checks at load that its URL is the row's `careerUrl`. One page covers every sport,
+ * so it carries no `sport`.
  */
 export const PROFILE_PLATFORMS = [
   'ncsa',
@@ -286,6 +292,8 @@ export const PROFILE_PLATFORMS = [
   'fieldlevel',
   'hudl',
   'captainu',
+  /** the row's own MaxPreps career page, once the player or a parent has claimed it */
+  'maxpreps',
   /** a site built for this one athlete, on any host */
   'personal',
 ] as const;
@@ -298,6 +306,7 @@ export const PROFILE_HOSTS: Record<Exclude<ProfilePlatform, 'personal'>, string>
   fieldlevel: 'fieldlevel.com',
   hudl: 'hudl.com',
   captainu: 'captainu.com',
+  maxpreps: 'maxpreps.com',
 };
 
 function hostOf(url: string): string | null {
@@ -324,7 +333,8 @@ export const PlayerProfileSchema = z
     if (p.platform === 'personal') return true;
     const want = PROFILE_HOSTS[p.platform];
     return host === want || host.endsWith(`.${want}`);
-  }, 'url is not a valid URL on the platform it names');
+  }, 'url is not a valid URL on the platform it names')
+  .refine((p) => p.platform !== 'maxpreps' || p.sport === undefined, 'a maxpreps profile covers every sport and names none');
 
 /** A source that disagrees with MaxPreps. `kept` is what the merged roster shows. */
 export const RosterConflictSchema = z.object({

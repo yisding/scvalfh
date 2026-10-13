@@ -27,9 +27,10 @@ import type { RosterFact, RosterRow, RosterView } from './roster-view';
  * footnote explains and the Sources row links; where a source disagrees with what is shown, the
  * disagreement is listed with a link to it.
  *
- * A player with a recruiting page of their own (NCSA and the like) gets a line of links under the
- * facts — its own line, so a link never dangles off the end of a wrapped fact line. Alone on its
- * line, a link is not inline text, so it carries the 24px `sx-action` box (WCAG 2.5.8). Each link's
+ * A player with a recruiting page of their own (NCSA and the like, or a MaxPreps page they have
+ * claimed) gets a line of links under the facts — its own line, so a link never dangles off the end
+ * of a wrapped fact line. Alone on its line, a link is not inline text, so it carries the 24px
+ * `sx-action` box (WCAG 2.5.8). Each link's
  * accessible name leads with the player's name, so a screen reader's links list tells them apart.
  *
  * A player a public page ties to a youth club gets a club line (DESIGN §17.4) between the facts and
@@ -356,6 +357,12 @@ export function TeamRoster({ view }: TeamRosterProps) {
             Profile links go to players&rsquo; own recruiting pages on{' '}
             {listWords(view.profilePlatforms)}, each matched to a player here by name, sport, and
             school or class year.
+          </p>
+        ) : null}
+        {view.hasClaimedMaxPreps ? (
+          <p className="mt-1 mb-0">
+            A MaxPreps profile link is the player&rsquo;s own page on MaxPreps, the one this roster
+            comes from, shown only where the player or a parent has claimed it there.
           </p>
         ) : null}
         {view.hasCommitments ? (

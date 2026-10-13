@@ -148,8 +148,6 @@ export interface LeaderTeamRef {
   leagueShort: string;
   /** The team page, at its player stats for a player row. */
   href: string;
-  /** For the monogram. */
-  team: Pick<Team, 'abbr' | 'name' | 'colors'>;
 }
 
 export interface LeaderRow {
@@ -390,7 +388,6 @@ function teamRef(team: Team, anchor = ''): LeaderTeamRef {
     shortName: team.shortName,
     leagueShort: getLeague(team.league).shortName,
     href: `/teams/${team.slug}${anchor}`,
-    team: { abbr: team.abbr, name: team.name, colors: team.colors },
   };
 }
 

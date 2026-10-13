@@ -58,6 +58,8 @@ const raw = JSON.parse(
   readFileSync(path.join(REPO, 'data', 'rosters-enrichment.json'), 'utf8'),
 ) as RosterEnrichment;
 
+/** A claimed MaxPreps career page, linked by the 2026-10-13 sweep: the only profiles on that platform. */
+const claimed1013 = (x: { platform: string }) => x.platform === 'maxpreps';
 /** A profile the 2026-10-12 SportsRecruits address probe added: its note says so. */
 const fromProbe1012 = (x: { note: string | null }) => x.note?.includes('Found by the 2026-10-12 address probe') ?? false;
 /** A grade, a conflict or a record note added on 2026-10-12 from MaxPreps' career and 2025-26 pages: its note says so. */
@@ -65,7 +67,8 @@ const from1012 = (note: string | null | undefined) => (note ?? '').includes('Add
 
 /**
  * The file as the captures before 2026-10-12 left it: without that day's profiles, grades,
- * conflicts and notes, and without the records that hold nothing else. The tests that pin what each
+ * conflicts and notes, without the claimed MaxPreps pages linked on 2026-10-13, and without the
+ * records that hold nothing else. The tests that pin what each
  * earlier capture found read this.
  */
 const pre: RosterEnrichment = {
@@ -79,7 +82,7 @@ const pre: RosterEnrichment = {
         grade: p.grade && from1012(p.grade.note) ? null : p.grade,
         conflicts: p.conflicts.filter((c) => !from1012(c.note)),
         note: from1012(p.note) ? null : p.note,
-        profiles: p.profiles.filter((x) => !fromProbe1012(x)),
+        profiles: p.profiles.filter((x) => !fromProbe1012(x) && !claimed1013(x)),
       }))
       .filter(
         (p) =>
@@ -149,11 +152,12 @@ describe('data/rosters-enrichment.json', () => {
       expect(RosterEnrichmentSchema.safeParse(withRecord).success, slug).toBe(true);
     }
     expect(raw.season).toBe(base.season);
-    // The overlay is stamped 2026-10-12 (SCVAL was researched 2026-10-02, BVAL, PCAL and MCAL
-    // 2026-10-03, the EAL's recruiting pages 2026-10-04, Southern California's 2026-10-06, and the
-    // SportsRecruits probe in every sport 2026-10-12, against the roster file read 2026-10-07). The
-    // athleteId join below is what keeps the two files in step.
-    expect(raw.capturedAt).toBe('2026-10-12');
+    // The overlay is stamped 2026-10-13 (SCVAL was researched 2026-10-02, BVAL, PCAL and MCAL
+    // 2026-10-03, the EAL's recruiting pages 2026-10-04, Southern California's 2026-10-06, the
+    // SportsRecruits probe in every sport 2026-10-12, and the claimed MaxPreps pages 2026-10-13,
+    // against the roster file read 2026-10-07). The athleteId join below is what keeps the two
+    // files in step.
+    expect(raw.capturedAt).toBe('2026-10-13');
     expect(base.fetchedAt.slice(0, 10) <= raw.capturedAt).toBe(true);
   });
 
@@ -706,6 +710,54 @@ describe('recruiting profiles', () => {
     // A lacrosse page beside a field hockey one on the same platform, as Sofie Stiefel's is.
     const sofie = raw.teams.find((t) => t.slug === 'st-ignatius')!.players.find((p) => p.fullName === 'Sofie Stiefel')!;
     expect(sofie.profiles.filter((x) => x.platform === 'sportsrecruits').map((x) => x.sport)).toEqual([undefined, 'lacrosse']);
+  });
+
+  it('what the 2026-10-13 read of every MaxPreps career page found: the claimed ones', () => {
+    const rows = new Map(base.teams.flatMap((t) => t.players.map((p) => [`${t.slug} ${p.athleteId}`, p])));
+    const claimed = raw.teams.flatMap((t) =>
+      t.players.flatMap((p) => p.profiles.filter(claimed1013).map((x) => ({ slug: t.slug, p, x }))),
+    );
+    // 260 of the 1,702 rows (one, Marin Catholic's Alexandra Schmidt, answered 403 and is not linked).
+    expect(claimed).toHaveLength(260);
+    expect(new Set(claimed.map((r) => `${r.slug} ${r.p.athleteId}`)).size).toBe(260);
+    expect(new Set(claimed.map((r) => r.slug)).size).toBe(73);
+    // 159 players have no other profile.
+    expect(claimed.filter((r) => r.p.profiles.length === 1)).toHaveLength(159);
+    for (const { slug, p, x } of claimed) {
+      // The row's own career page, never a namesake's: it needs no name match.
+      expect(x.url, `${slug} / ${p.fullName}`).toBe(rows.get(`${slug} ${p.athleteId}`)!.careerUrl);
+      expect(x.sport, p.fullName).toBeUndefined();
+      expect(x.note, p.fullName).toMatch(/MaxPreps marks claimed \(isClaimed\) by the player or a parent; read 2026-10-13\.$/);
+    }
+    // The page's graduatingClass, where it gives one: 221 of the 260.
+    expect(claimed.filter((r) => r.x.classOf !== null)).toHaveLength(221);
+    const names = (slug: string) => claimed.filter((r) => r.slug === slug).map((r) => r.p.fullName).sort();
+    expect(names('st-ignatius')).toEqual(['Samantha Brunsell', 'Stella Kwok', 'Stella Strain']);
+    expect(names('marin-catholic')).not.toContain('Alexandra Schmidt');
+  });
+
+  it("refuses a MaxPreps profile that is not the row's own career page, or that names a sport", () => {
+    const [mine, other] = base.teams.find((t) => t.slug === 'st-ignatius')!.players;
+    const maxpreps = (url: string) => ({ platform: 'maxpreps', url, classOf: null, note: null }) as const;
+
+    const ok = structuredClone(raw);
+    recordFor(ok, 'st-ignatius', mine.athleteId!, mine.fullName).profiles = [maxpreps(mine.careerUrl!)];
+    expect(loadError(ok)).toBe('');
+
+    const namesake = structuredClone(raw);
+    recordFor(namesake, 'st-ignatius', mine.athleteId!, mine.fullName).profiles = [maxpreps(other.careerUrl!)];
+    expect(RosterEnrichmentSchema.safeParse(namesake).success).toBe(true);
+    expect(loadError(namesake)).toMatch(/maxpreps profile .* is not this row's career page/);
+
+    const withSport = structuredClone(raw);
+    recordFor(withSport, 'st-ignatius', mine.athleteId!, mine.fullName).profiles = [
+      { ...maxpreps(mine.careerUrl!), sport: 'lacrosse' },
+    ];
+    expect(RosterEnrichmentSchema.safeParse(withSport).success).toBe(false);
+
+    const offHost = structuredClone(raw);
+    recordFor(offHost, 'st-ignatius', mine.athleteId!, mine.fullName).profiles = [maxpreps('https://www.ncsasports.org/x')];
+    expect(RosterEnrichmentSchema.safeParse(offHost).success).toBe(false);
   });
 
   it('reaches the merged view', () => {

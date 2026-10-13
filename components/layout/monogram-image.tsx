@@ -7,7 +7,7 @@ import { ImageResponse } from 'next/og';
  * One renderer for every icon route, because there are four of them at four sizes and they have to
  * be the same mark: app/icon.tsx (32px favicon), app/apple-icon.tsx (180px iOS tile) and the
  * installable manifest icons, app/icon-192/route.tsx and app/icon-512/route.tsx. Generated at build
- * from type — no bitmap asset in the repo and no third-party image request anywhere on the site.
+ * from type — no bitmap icon asset in the repo and no third-party image request anywhere on the site.
  */
 export function monogramImage(size: number): ImageResponse {
   return new ImageResponse(

@@ -139,7 +139,7 @@ function NameCell({ board, row }: { board: LeaderBoard; row: LeaderRow }) {
     <span className="flex items-center gap-2">
       {/* The monogram waits for 640px: below it the cell is too narrow to spare 32px. */}
       <span className="hidden shrink-0 sm:inline-flex">
-        <TeamMonogram team={team.team} size={24} />
+        <TeamMonogram team={team} size={24} />
       </span>
       <span className="min-w-0">
         {/* The ring goes on the stretched `::after`, so a keyboard reader sees the whole row that a

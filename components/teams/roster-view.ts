@@ -11,7 +11,8 @@
  *     and explains under the list, with a link to every page those values came from;
  *   - where a source disagrees with the value shown, the disagreement is published (DESIGN §9's
  *     posture: trust comes from showing the disagreement, not from silently picking a side);
- *   - a player's own recruiting pages (NCSA and the like) are linked from that player's row;
+ *   - a player's own recruiting pages (NCSA and the like, and a MaxPreps page the player or a parent
+ *     has claimed) are linked from that player's row;
  *   - a player a public page ties to a club gets a club line linking that club's page on this site
  *     (DESIGN §17.4), current clubs first; a club a source only lists, with no date that makes it
  *     current, is never worded as current. The words are components/clubs/club-view.ts'
@@ -94,6 +95,7 @@ const PROFILE_WORDS: Record<ProfilePlatform, { link: string; footnote: string }>
   fieldlevel: { link: 'FieldLevel profile', footnote: 'FieldLevel' },
   hudl: { link: 'Hudl profile', footnote: 'Hudl' },
   captainu: { link: 'Captain U profile', footnote: 'Captain U' },
+  maxpreps: { link: 'MaxPreps profile', footnote: 'MaxPreps' },
   personal: { link: 'Recruiting site', footnote: 'personal sites' },
 };
 const PROFILE_ORDER = Object.keys(PROFILE_WORDS) as ProfilePlatform[];
@@ -193,8 +195,13 @@ export interface RosterView {
   hasElsewhere: boolean;
   /** Some grade is worked out from a class year on another season (Los Altos, Saratoga). */
   hasDerivedGrade: boolean;
-  /** The platforms the listed rows link to, as the footnote names them ("NCSA", "SportsRecruits"). */
+  /**
+   * The platforms the listed rows link to, as the footnote names them ("NCSA", "SportsRecruits"),
+   * matched by name; claimed MaxPreps profiles are not matched, so they have their own flag.
+   */
   profilePlatforms: string[];
+  /** Some listed row links its own MaxPreps career page, which the player or a parent has claimed. */
+  hasClaimedMaxPreps: boolean;
   /** Some listed row has a club line: the footnote explains them. */
   hasClubs: boolean;
   /** Some club line is a "Listed club" (status unknown): the footnote says what that means. */
@@ -499,9 +506,10 @@ export function buildRosterView(slug: TeamSlug): RosterView | null {
       const g = elsewhereSource(p.provenance.grade);
       return g !== null && 'derived' in g && g.derived;
     }),
-    profilePlatforms: PROFILE_ORDER.filter((k) =>
-      players.some((p) => p.profiles.some((x) => x.platform === k)),
+    profilePlatforms: PROFILE_ORDER.filter(
+      (k) => k !== 'maxpreps' && players.some((p) => p.profiles.some((x) => x.platform === k)),
     ).map((k) => PROFILE_WORDS[k].footnote),
+    hasClaimedMaxPreps: players.some((p) => p.profiles.some((x) => x.platform === 'maxpreps')),
     hasClubs: rows.some((r) => r.clubs.length > 0),
     hasListedClub: rows.some((r) => r.clubs.some((g) => g.status === 'unknown')),
     hasCommitments: rows.some((r) => r.commitment !== null),

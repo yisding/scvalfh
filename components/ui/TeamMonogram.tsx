@@ -1,34 +1,33 @@
-import type { Team, TeamColors } from '../../lib/types';
+import { mascotFile, type MascotTileSize } from '../../lib/mascots';
+import type { Team } from '../../lib/types';
 
 /**
- * A school's color square (DESIGN §7.1, §12.4).
+ * A school's mascot tile (DESIGN §7.1, §12.4).
  *
- * School colors are decoration with a guardrail, never a data encoding: one uncontrolled brand
- * hue per registry school blows past every categorical ceiling, so they appear ONLY here. The
- * letters use `colors.onPrimary`, which the cron computed by measured WCAG contrast on
- * `colors.primary` — never picked by eye. No third-party image request is ever made: the source's mascot URL is
- * read and discarded (see /about#sources).
+ * The mascot is MaxPreps' own school logo, downloaded once by `pnpm fetch-mascots` into
+ * public/mascots/ and served from this site, so no page makes a third-party image request and
+ * none depends on MaxPreps being up. Every registry team has a file for every tile size at 1× and
+ * 2× (lib/mascots.ts, tests/mascots.test.ts), so the browser never resamples one: `src` is the 1×
+ * file and `srcSet` the 2× one. Each is an opaque logo on white with the art inset clear of the
+ * rounded corners, so it reads the same on the light and the dark theme; the hairline is
+ * `img.sx-monogram`'s inset outline, which unlike a border leaves the image its full size.
+ *
+ * School colors are no longer drawn here: they stay in the data (DESIGN §7.1) but a tile is now the
+ * logo itself. A school this site does not track keeps GhostMonogram's letters.
  */
 export interface TeamMonogramProps {
-  /**
-   * The fill and its ink are required; the second school color is drawn only from 40px, so a
-   * caller that renders only small tiles may leave it out (the home page's 49 pinned-card views and
-   * its team tiles ship without it). The provenance field is never read.
-   */
-  team: Pick<Team, 'abbr' | 'name'> & {
-    colors: Pick<TeamColors, 'primary' | 'onPrimary'> & Partial<Pick<TeamColors, 'secondary'>>;
-  };
-  /** 20/24 = rows, 28/32 = compact cards, 40/48 = tiles, 56/64 = heroes. */
-  size?: 20 | 24 | 28 | 32 | 40 | 48 | 56 | 64;
-  /** Default true → aria-hidden, because the school name is adjacent. */
+  /** `slug` names the files; `name` is the accessible name when the tile is not decorative. */
+  team: Pick<Team, 'slug' | 'name'>;
+  /** 20/24 = rows, 28/32 = compact cards, 40/48 = tiles, 56/64 = heroes (MASCOT_TILE_SIZES). */
+  size?: MascotTileSize;
+  /** Default true → an empty alt, because the school name is adjacent. */
   decorative?: boolean;
   className?: string;
 }
 
 /**
- * Initials are decorative and aria-hidden beside the name, so they are exempt from the 12px floor.
- * Exported with the radius below so GhostMonogram (a school we do not track) is the same tile at
- * every size without restating either number.
+ * GhostMonogram's letter size per tile size (a school we do not track keeps two letters). Initials
+ * are decorative and aria-hidden beside the name, so they are exempt from the 12px floor.
  */
 export const LETTER_SIZE: Record<NonNullable<TeamMonogramProps['size']>, number> = {
   20: 10,
@@ -41,7 +40,10 @@ export const LETTER_SIZE: Record<NonNullable<TeamMonogramProps['size']>, number>
   64: 22,
 };
 
-/** The tile's corner: a quarter of its side, so a 24px row tile is 6px and a 56px hero is 14px. */
+/**
+ * The tile's corner: a quarter of its side, so a 24px row tile is 6px and a 56px hero is 14px. The
+ * mascot tile gets the same corner from `.sx-monogram`'s `border-radius: 25%` in app/globals.css.
+ */
 export function monogramRadius(size: number): number {
   return Math.round(size / 4);
 }
@@ -52,26 +54,19 @@ export function TeamMonogram({
   decorative = true,
   className,
 }: TeamMonogramProps) {
-  const { primary, secondary, onPrimary } = team.colors;
   return (
-    <span
+    // A static, pre-sized square from public/: next/image would add a loader and markup for nothing.
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
       className={['sx-monogram', className].filter(Boolean).join(' ')}
-      style={{
-        width: size,
-        height: size,
-        borderRadius: monogramRadius(size),
-        background: `#${primary}`,
-        color: onPrimary,
-        fontSize: LETTER_SIZE[size],
-        // The second school color gets a place to live without touching legibility.
-        boxShadow: size >= 40 && secondary ? `inset 0 0 0 2px #${secondary}` : undefined,
-      }}
-      aria-hidden={decorative ? 'true' : undefined}
-      role={decorative ? undefined : 'img'}
-      aria-label={decorative ? undefined : team.name}
-    >
-      {team.abbr}
-    </span>
+      src={mascotFile(team.slug, size)}
+      srcSet={`${mascotFile(team.slug, size * 2)} 2x`}
+      width={size}
+      height={size}
+      alt={decorative ? '' : team.name}
+      // Heroes are above the fold on every page that has one; row tiles may be far below it.
+      loading={size >= 56 ? undefined : 'lazy'}
+    />
   );
 }
 

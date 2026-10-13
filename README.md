@@ -394,7 +394,11 @@ pages for 116 players (52 NorCal, 66 SoCal): 91 lacrosse, 15 softball, 6 field h
 and field, so the file holds 519 for 410 players. A page is linked only when it names the player and a
 sport and either names the school or shows the class year the roster shows plus a California hometown
 (for the 2026-10-12 pages, a hometown in the school's own area), and a stated class year must
-agree with the row's grade (checked at load). The roster shows them as a line of links under the
+agree with the row's grade (checked at load). On 2026-10-13 every row's MaxPreps career page was
+read for MaxPreps' own claimed flag (`isClaimed`, a page the player or a parent has claimed): the 260
+claimed pages, on 73 teams, are linked as "MaxPreps profile" (`platform: "maxpreps"`, always the row's
+own `careerUrl`, checked at load), 159 of them for players with no other profile, so the file holds
+779 profiles for 569 players. The roster shows them as a line of links under the
 player's facts. Recall is partial: see `docs/DATA-SOURCES.md` §1.1j, which also has the column map,
 the per-school sources and the overlay's rules.
 
@@ -974,6 +978,25 @@ It writes every final between two registry teams, nothing else, and writes nothi
 feed fails, a live row is dated outside the season, or two teams' feeds disagree on a game (a
 deleted row dated outside the season is listed and counted as deleted instead). Behind a
 proxy that Node's fetch does not read, run it with `NODE_USE_ENV_PROXY=1`.
+
+### School mascots
+
+Every team's tile is its MaxPreps mascot, self-hosted in `public/mascots/` (a square WebP per
+school for every tile size at 1× and 2×, 20–128px, so none is resampled by the browser; DESIGN §12.4),
+so no page loads an image from another site. Where MaxPreps'
+mascot is too small or distorted to draw well, `SOURCE_OVERRIDES` in scripts/fetch-mascots.ts takes
+the same mark from a better source instead: the school's own site for Monta Vista (whose MaxPreps
+mascot is a 68px gif), Lassen, Mira Mesa, Redwood and Saratoga, plus Patrick Henry's crest (the
+emblem the school uses on its site and social media), and SBLive/SI for Rancho Bernardo, La Costa
+Canyon, Marina, Live Oak and Huntington Beach.
+The files are committed, not refreshed by the cron. Run `pnpm fetch-mascots` when a team joins the
+registry (`tests/mascots.test.ts` fails until its tiles exist) or a school changes its logo:
+
+```bash
+pnpm fetch-mascots                       # all 102 teams
+pnpm fetch-mascots --only los-altos      # one team (repeatable)
+pnpm fetch-mascots --dry-run             # fetch and process, write nothing
+```
 
 ## How standings are computed
 
