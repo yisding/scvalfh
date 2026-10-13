@@ -40,7 +40,7 @@ export function PinTile({ tile }: PinTileProps) {
   const face = (
     <>
       <span className="hidden shrink-0 min-[30rem]:inline-flex">
-        <TeamMonogram team={{ abbr: tile.abbr, name: tile.name, colors: tile.colors }} size={20} />
+        <TeamMonogram team={tile} size={20} />
       </span>
       <span className={TILE_NAME}>{tile.pickerName}</span>
     </>

@@ -840,8 +840,8 @@ Phone: one column of rule-and-kicker sections. Desktop: 3fr prose / 1fr sticky T
 Sections, in order, each with a stable anchor:
 
 `#sources` — "Data from MaxPreps and SBLive/SI" with both deep links; the one sentence about
-mascot images ("the source carries a mascot image URL; we read it and discard it — each
-school is shown as a color monogram instead").
+mascot images (amended 2026-10-13, §12.4: "each school is shown with its MaxPreps mascot, copied
+to this site rather than hotlinked").
 `#updates` — "Rebuilt twice daily by cron, about 10 PM and 7 AM Pacific
 (.github/workflows/update-data.yml). A game that finished at 7pm Thursday appears that night if
 its score is entered by about 10 PM, otherwise Friday morning. **Live scores are not
@@ -917,8 +917,9 @@ test rather than left to reviewer memory):
 | `cancelled` | `--sx-text-3` | neutral `⊘` chip | `CANCELLED` | the *time* gets `line-through`; names never do |
 | `postponed` | `--sx-text-3` | neutral `↻` chip | `POSTPONED` | `→ new date` when known, else `→ TBD` |
 
-**School colors are never a data encoding.** They appear only inside `TeamMonogram`, which
-enforces letter contrast at build time (§7.1). Sixteen uncontrolled brand hues blow past both
+**School colors are never a data encoding.** They appeared only inside `TeamMonogram`, which
+enforced letter contrast at build time (§7.1); since 2026-10-13 the tile is the school's mascot
+(§12.4) and no school color is drawn anywhere. Sixteen uncontrolled brand hues blow past both
 the 8-slot categorical ceiling and the all-pairs cap of three, so they are decoration with a
 guardrail. **Divisions get no hue either** (§6.4).
 
@@ -1859,6 +1860,13 @@ client modules in the whole app, counted honestly: `ThemeToggle`, `PinControl`, 
 
 ### 7.1 `TeamMonogram`
 
+> **Amended 2026-10-13 (§12.4).** The tile is now the school's MaxPreps mascot, self-hosted: a
+> 64px and a 128px square WebP per registry team in `public/mascots/`, written by
+> `pnpm fetch-mascots` (scripts/fetch-mascots.ts) and drawn as an `<img>` with an empty alt, the
+> same rounded square (`border-radius: 25%`) and 1px `--sx-border` ring. The props are
+> `team: Pick<Team, 'slug' | 'name'>`, `size`, `decorative`, `className`. A school we do not track
+> keeps `GhostMonogram`'s letters. The letter-and-color tile below is the original design.
+
 ```ts
 interface TeamMonogramProps {
   team: Pick<Team, 'abbr' | 'name' | 'colors'>;
@@ -2392,6 +2400,18 @@ this league and a generic ±3 range would be wrong. "Blowout is normal" is also 
 mark at all: Los Altos and Valley Christian are both 2-1-1, separated by 9 goals.
 
 ### 12.4 The source carries a mascot image URL. We read it and discard it
+
+> **Amended 2026-10-13: the mascots are now shown, self-hosted.** The tile in every row, card and
+> hero is the school's MaxPreps logo. `pnpm fetch-mascots` reads each registry team's
+> `image.maxpreps.io/school-mascot/{a}/{b}/{c}/{id}.gif` (the address the feeds publish as
+> `schoolMascotUrl`, derived from the team's MaxPreps id), trims the white margin, insets the art
+> clear of the rounded corners (a full-bleed logo is drawn to the edge), and commits two square
+> WebP tiles per school to `public/mascots/`. That answers each objection below: nothing is
+> hotlinked and no page makes a third-party request; every tile is the same size and inset; the
+> requests are same-origin, 1–5 KB each and lazy below the fold; and each logo sits on its own
+> white square with the hairline ring, which reads on the dark theme too. `Team.mascotUrl` stays
+> null in the snapshot. tests/mascots.test.ts fails for a registry team without its tiles.
+> The original reasoning follows.
 
 `schoolMascotUrl` is right there in `tableData`. The constraint forbids hotlinking and the
 design doesn't want it: third-party asset, inconsistent size and background, 16 network requests

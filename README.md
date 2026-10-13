@@ -975,6 +975,19 @@ feed fails, a live row is dated outside the season, or two teams' feeds disagree
 deleted row dated outside the season is listed and counted as deleted instead). Behind a
 proxy that Node's fetch does not read, run it with `NODE_USE_ENV_PROXY=1`.
 
+### School mascots
+
+Every team's tile is its MaxPreps mascot, self-hosted in `public/mascots/` (a 64px and a 128px
+square WebP per school; DESIGN §12.4), so no page loads an image from another site. The files are
+committed, not refreshed by the cron. Run `pnpm fetch-mascots` when a team joins the registry
+(`tests/mascots.test.ts` fails until its tiles exist) or a school changes its logo:
+
+```bash
+pnpm fetch-mascots                       # all 102 teams
+pnpm fetch-mascots --only los-altos      # one team (repeatable)
+pnpm fetch-mascots --dry-run             # fetch and process, write nothing
+```
+
 ## How standings are computed
 
 Every table is ordered by 3 points for a win, 1 for a tie and 0 for a loss. The five NorCal leagues

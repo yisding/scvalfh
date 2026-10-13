@@ -212,11 +212,7 @@ function MiniRowView({
             </span>
           </Link>
           <span className="flex items-center gap-2">
-            <TeamMonogram
-              team={{ abbr: row.abbr, name: row.name, colors: row.colors }}
-              size={24}
-              className="@max-[18rem]:hidden"
-            />
+            <TeamMonogram team={row} size={24} className="@max-[18rem]:hidden" />
             {/* Up to two lines, broken between words only: a name never loses its second word
                 to an ellipsis and never breaks per letter; a single word too long for the cell
                 ends in an ellipsis. */}

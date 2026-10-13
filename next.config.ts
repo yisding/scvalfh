@@ -13,8 +13,9 @@ import type { NextConfig } from 'next';
  *  - `cacheComponents` stays OFF. Every page is prerendered from the snapshot at build time, so
  *    there is no request-time cache to tune, and turning it on would change the rendering model
  *    for zero benefit here.
- *  - No `images` config: the site makes no image requests at all (school identity is a color
- *    monogram, not a hotlinked mascot — DESIGN §12.4), so next/image never appears.
+ *  - No `images` config: the only images are the mascot tiles, small pre-sized WebP squares
+ *    served from public/mascots/ (self-hosted, never hotlinked — DESIGN §12.4), so next/image
+ *    never appears.
  */
 const nextConfig: NextConfig = {
   reactStrictMode: true,

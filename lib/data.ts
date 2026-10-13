@@ -377,7 +377,6 @@ export function getTeamSearchIndex(): SearchIndex {
     aliases: [...t.aliases],
     leagueId: t.league,
     division: t.division,
-    colors: { primary: t.colors.primary, onPrimary: t.colors.onPrimary },
   }));
   const leagues = LEAGUES.map((l) => ({
     id: l.id,
