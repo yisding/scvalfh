@@ -8,34 +8,39 @@ import path from 'node:path';
 import sharp from 'sharp';
 import { describe, expect, it } from 'vitest';
 
-import { mascotSrc } from '../components/ui/TeamMonogram';
+import { MASCOT_FILE_SIZES, MASCOT_TILE_SIZES, mascotFile } from '../lib/mascots';
 import { TEAMS } from '../lib/teams';
 
 const PUBLIC = path.resolve(import.meta.dirname, '..', 'public');
 const DIR = path.join(PUBLIC, 'mascots');
 
 describe('mascot tiles', () => {
-  it('every registry team has a 64px and a 128px square WebP', async () => {
+  it('has a file for every tile size at 1× and 2×', () => {
+    for (const size of MASCOT_TILE_SIZES) {
+      expect(MASCOT_FILE_SIZES).toContain(size);
+      expect(MASCOT_FILE_SIZES).toContain(size * 2);
+    }
+    expect(MASCOT_FILE_SIZES).toEqual([20, 24, 28, 32, 40, 48, 56, 64, 80, 96, 112, 128]);
+  });
+
+  it('every registry team has every file, a square WebP of exactly its size', async () => {
     for (const team of TEAMS) {
-      for (const size of [64, 128]) {
-        const file = path.join(DIR, `${team.slug}-${size}.webp`);
+      for (const px of MASCOT_FILE_SIZES) {
+        const file = path.join(PUBLIC, mascotFile(team.slug, px));
         expect(existsSync(file), `${file} missing — run \`pnpm fetch-mascots --only ${team.slug}\``).toBe(true);
         const meta = await sharp(file).metadata();
-        expect([meta.format, meta.width, meta.height], file).toEqual(['webp', size, size]);
+        expect([meta.format, meta.width, meta.height], file).toEqual(['webp', px, px]);
       }
     }
   });
 
-  it('holds no tile for a team the registry no longer has', () => {
-    const expected = new Set(TEAMS.flatMap((t) => [`${t.slug}-64.webp`, `${t.slug}-128.webp`]));
+  it('holds no file for a team the registry no longer has, or a size no tile draws', () => {
+    const expected = new Set(TEAMS.flatMap((t) => MASCOT_FILE_SIZES.map((px) => `${t.slug}-${px}.webp`)));
     expect(readdirSync(DIR).filter((f) => !expected.has(f))).toEqual([]);
   });
 
-  it('a tile up to 32px reads the 64px file; a larger one the 128px file', () => {
-    expect(mascotSrc('los-altos', 20)).toBe('/mascots/los-altos-64.webp');
-    expect(mascotSrc('los-altos', 32)).toBe('/mascots/los-altos-64.webp');
-    expect(mascotSrc('los-altos', 40)).toBe('/mascots/los-altos-128.webp');
-    expect(mascotSrc('los-altos', 64)).toBe('/mascots/los-altos-128.webp');
-    for (const t of TEAMS) expect(existsSync(path.join(PUBLIC, mascotSrc(t.slug, 24)))).toBe(true);
+  it('names a file by slug and pixel size', () => {
+    expect(mascotFile('los-altos', 24)).toBe('/mascots/los-altos-24.webp');
+    expect(mascotFile('los-altos', 128)).toBe('/mascots/los-altos-128.webp');
   });
 });

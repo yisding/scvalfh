@@ -737,7 +737,8 @@ export default function AboutPage() {
                 <span className="block">
                   Team schedules, scores, league standings tables and school colors come from
                   MaxPreps&rsquo; own public data feed, the same one that powers its team and league
-                  pages. We read it and never write to it. Each school&rsquo;s mascot comes from MaxPreps too,
+                  pages. We read it and never write to it. Each school&rsquo;s mascot comes from MaxPreps too
+                  (or, where that image is too small to show well, from SBLive/SI or the school&rsquo;s own website),
                   copied to this site rather than hotlinked, so pages never load images from elsewhere. Each team page&rsquo;s roster and season player stats come from MaxPreps
                   too, for all {counts.teams} teams in all {numberWord(tabled.length)} leagues{independentGroups.length > 0
                     ? ` and the ${listWords(independentGroups.map((g) => independentsWords(getLeague(g.id))))}`

@@ -1860,10 +1860,13 @@ client modules in the whole app, counted honestly: `ThemeToggle`, `PinControl`, 
 
 ### 7.1 `TeamMonogram`
 
-> **Amended 2026-10-13 (§12.4).** The tile is now the school's MaxPreps mascot, self-hosted: a
-> 64px and a 128px square WebP per registry team in `public/mascots/`, written by
-> `pnpm fetch-mascots` (scripts/fetch-mascots.ts) and drawn as an `<img>` with an empty alt, the
-> same rounded square (`border-radius: 25%`) and 1px `--sx-border` ring. The props are
+> **Amended 2026-10-13 (§12.4).** The tile is now the school's MaxPreps mascot, self-hosted as
+> square WebPs in `public/mascots/`, written by `pnpm fetch-mascots` (scripts/fetch-mascots.ts):
+> one file per tile size at 1× and at 2× (lib/mascots.ts, 20–128px), each resized from the full
+> source and lightly sharpened, so the browser draws it pixel for pixel (`src` 1×, `srcset` 2×)
+> instead of resampling a larger file into a blurred 24px row tile. It is an `<img>` with an empty
+> alt, the same rounded square (`border-radius: 25%`) and a 1px `--sx-border` ring drawn as an
+> inset outline (a border would shrink the image to 22px and resample it again). The props are
 > `team: Pick<Team, 'slug' | 'name'>`, `size`, `decorative`, `className`. A school we do not track
 > keeps `GhostMonogram`'s letters. The letter-and-color tile below is the original design.
 
@@ -2404,14 +2407,21 @@ mark at all: Los Altos and Valley Christian are both 2-1-1, separated by 9 goals
 > **Amended 2026-10-13: the mascots are now shown, self-hosted.** The tile in every row, card and
 > hero is the school's MaxPreps logo. `pnpm fetch-mascots` reads each registry team's
 > `image.maxpreps.io/school-mascot/{a}/{b}/{c}/{id}.gif` (the address the feeds publish as
-> `schoolMascotUrl`, derived from the team's MaxPreps id), trims the white margin, insets the art
-> clear of the rounded corners (a full-bleed logo is drawn to the edge), and commits two square
-> WebP tiles per school to `public/mascots/`. That answers each objection below: nothing is
+> `schoolMascotUrl`, derived from the team's MaxPreps id, fetched at native size: with a size query
+> MaxPreps crops a non-square logo to fill the square), trims the white margin, insets the art
+> clear of the rounded corners (a full-bleed logo is drawn to the edge, and one on a solid colour
+> block fills the tile with that colour), and commits a square WebP per school for every tile
+> size at 1× and 2× to `public/mascots/` (§7.1). That answers each objection below: nothing is
 > hotlinked and no page makes a third-party request; every tile is the same size and inset; the
-> requests are same-origin, 1–5 KB each and lazy below the fold; and each logo sits on its own
+> requests are same-origin, under 1 KB on average for a row tile and lazy below the fold; and each logo sits on its own
 > white square with the hairline ring, which reads on the dark theme too. `Team.mascotUrl` stays
 > null in the snapshot. tests/mascots.test.ts fails for a registry team without its tiles.
-> The original reasoning follows.
+> A school whose MaxPreps mascot does not hold up as a tile (too small, or squeezed out of
+> proportion) takes the same mark from a better source instead (`SOURCE_OVERRIDES` in the script):
+> the school's own site for Monta Vista (a 68×68 MaxPreps gif), Lassen, Mira Mesa, Redwood and
+> Saratoga, plus Patrick Henry's crest (the emblem the school uses on its site and social media, by
+> the owner's choice), and SBLive/SI for Rancho Bernardo, La Costa Canyon, Marina, Live Oak and Huntington
+> Beach. A different design is never swapped in. The original reasoning follows.
 
 `schoolMascotUrl` is right there in `tableData`. The constraint forbids hotlinking and the
 design doesn't want it: third-party asset, inconsistent size and background, 16 network requests
