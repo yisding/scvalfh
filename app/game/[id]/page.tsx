@@ -151,7 +151,7 @@ export default async function GamePage({ params }: PageProps<'/game/[id]'>) {
           href={`/scores/${game.dateKey}`}
           className="sx-action -ml-3 min-h-11 rounded-chip px-3 text-meta font-medium text-accent no-underline hover:bg-surface-2"
         >
-          <Arrow dir="left" className="mr-1.5" />
+          <Arrow dir="left" />
           {dayLabel} games
         </Link>
         {teamLinks.length > 0 ? (

@@ -126,7 +126,7 @@ describe('crosscheck: disagreement', () => {
     expect(row.note).toMatch(/MaxPreps’ score stands/);
     // AWAY first, the same orientation the row's own cells use ("<away> at <home>"), so one
     // result is never printed as both "0-7" and "7–0" inside a single row.
-    expect(row.note).toContain("we show MaxPreps' 7-0 (Saint Francis–Homestead)");
+    expect(row.note).toContain("we show MaxPreps’ 7-0 (Saint Francis–Homestead)");
     expect(row.note).toContain('si.com reports 7-1');
     // 2. A plain disagreement never overwrites MaxPreps (D2 rule 5).
     expect(res.games[0].home.score).toBe(0);

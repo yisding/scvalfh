@@ -540,7 +540,8 @@ describe('the clubs routes, rendered', () => {
     for (const { slug, view } of views) {
       if (view.groups.length === 0) continue;
       const players = sectionOf(await renderClub(slug), 'players');
-      const items = [...players.matchAll(/<li\b[^>]*>([\s\S]*?)<\/li>/g)].map((m) => m[1]);
+      // The aria-hidden cells that finish a short last row (components/ui/GridRowFiller.tsx) are not rows.
+      const items = [...players.matchAll(/<li\b(?![^>]*aria-hidden)[^>]*>([\s\S]*?)<\/li>/g)].map((m) => m[1]);
       const rows = view.groups.flatMap((g) => g.rows);
       expect(items, slug).toHaveLength(rows.length);
       rows.forEach((row, i) => {
@@ -569,7 +570,7 @@ describe('the clubs routes, rendered', () => {
       if (view.programs.length === 0) continue;
       const html = await renderClub(slug);
       const programs = sectionOf(html, 'programs');
-      const items = [...programs.matchAll(/<li\b[^>]*>([\s\S]*?)<\/li>/g)].map((m) => m[1]);
+      const items = [...programs.matchAll(/<li\b(?![^>]*aria-hidden)[^>]*>([\s\S]*?)<\/li>/g)].map((m) => m[1]);
       expect(items, slug).toHaveLength(view.programs.length);
       view.programs.forEach((p, i) => {
         expect((items[i].match(/<a /g) ?? []).length, `${slug} / ${p.name}`).toBe(p.source ? 1 : 0);

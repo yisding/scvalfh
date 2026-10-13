@@ -40,8 +40,8 @@ export function PostseasonCard({ view, className }: PostseasonCardProps) {
     return (
       <section className={className}>
         <SectionHeader as="h3" kicker="Postseason" />
-        <div className="sx-card sx-bleed p-5 md:p-6">
-          <p className="m-0 text-body text-ink">{view.line}</p>
+        <div className="sx-card sx-bleed px-gutter py-5 md:p-6">
+          <p className="m-0 max-w-prose text-body text-ink">{view.line}</p>
           {view.note ? <p className="mt-3 mb-0 max-w-prose text-meta text-ink-2">{view.note}</p> : null}
           <p className="mt-4 mb-0 text-meta">
             {/* Standalone action link: its own 24px box (`sx-action`, WCAG 2.5.8). */}
@@ -57,8 +57,8 @@ export function PostseasonCard({ view, className }: PostseasonCardProps) {
   return (
     <section className={className}>
       <SectionHeader as="h3" kicker="CCS playoffs" />
-      <div className="sx-card sx-bleed p-5 md:p-6">
-        <p className="m-0 text-meta text-ink-2">{view.intro}</p>
+      <div className="sx-card sx-bleed px-gutter py-5 md:p-6">
+        <p className="m-0 max-w-prose text-meta text-ink-2">{view.intro}</p>
         <BerthMeter className="mt-4" claimed={view.meter.claimed} total={view.meter.total} label={view.meter.label} />
         <dl className="mt-5 mb-0 grid grid-cols-3 gap-3">
           {view.dates.map(({ term, date }) => (

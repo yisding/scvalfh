@@ -87,10 +87,10 @@ export default async function LeagueStandingsPage({ params }: PageProps<'/standi
   // list: its `gdDomain` is the bar floor of 1, not a goal difference (StandingsTable biggestGoalDiff).
   const scaled = data.views.filter((v) => biggestGoalDiff(v.rows.map((r) => r.standing.computed.gd)) > 0);
   const gdScale = multi
-    ? `Bars are scaled to each division's own biggest goal difference${
-        scaled.length > 0 ? ` (${scaled.map((v) => `${v.label}'s is ${v.gdDomain}`).join(', ')})` : ''
+    ? `Bars are scaled to each division’s own biggest goal difference${
+        scaled.length > 0 ? ` (${scaled.map((v) => `${v.label}’s is ${v.gdDomain}`).join(', ')})` : ''
       }, so bars in different divisions are not comparable.`
-    : `Bars are scaled to the league's biggest goal difference${
+    : `Bars are scaled to the league’s biggest goal difference${
         scaled.length > 0 ? ` (${scaled[0]!.gdDomain})` : ''
       }.`;
   const legend = [

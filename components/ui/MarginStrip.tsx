@@ -300,7 +300,9 @@ export function MarginStrip({
 
       <details className="sx-disclosure mt-2">
         <summary>Show as table</summary>
-        <table className="sx-table mt-2 text-meta">
+        {/* `overflow-wrap: anywhere` lowers each cell's min-content width, so at large text sizes
+            on a 320px phone the table wraps inside its column instead of running off the page. */}
+        <table className="sx-table mt-2 text-meta [overflow-wrap:anywhere]">
           <caption className="sr-only">{teamName} league goal margin by game</caption>
           <thead>
             <tr>

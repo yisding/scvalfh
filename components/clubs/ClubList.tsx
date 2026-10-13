@@ -1,6 +1,7 @@
 import Link from 'next/link';
 
 import { listWords } from '../../lib/format';
+import GridRowFiller from '../ui/GridRowFiller';
 import type { ClubIndexRow } from './club-view';
 
 /**
@@ -25,7 +26,7 @@ export interface ClubListProps {
 
 export function ClubList({ clubs }: ClubListProps) {
   return (
-    <ul className="sx-card sx-flush sx-bleed m-0 grid list-none p-0 sm:grid-cols-2 lg:grid-cols-3">
+    <ul className="sx-card sx-flush sx-bleed my-0 grid list-none p-0 sm:grid-cols-2 lg:grid-cols-3">
       {clubs.map((club) => (
         <li
           key={club.slug}
@@ -41,13 +42,17 @@ export function ClubList({ clubs }: ClubListProps) {
               {club.name}
             </Link>
           </span>
-          {club.subline ? <span className="block text-meta text-ink-2">{club.subline}</span> : null}
+          {/* A no-break space before each dot, so a wrapped subline never starts with one. */}
+          {club.subline ? (
+            <span className="block text-meta text-ink-2">{club.subline.replaceAll(' · ', '\u00a0· ')}</span>
+          ) : null}
           <span className="block text-meta text-ink-2">{club.countLine}</span>
           {club.schools.length > 0 ? (
             <span className="block text-meta text-ink-3">Schools: {listWords(club.schools)}</span>
           ) : null}
         </li>
       ))}
+      <GridRowFiller count={clubs.length} columns={{ sm: 2, lg: 3 }} />
     </ul>
   );
 }

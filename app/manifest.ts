@@ -1,13 +1,15 @@
 import type { MetadataRoute } from 'next';
 
 import { SITE_DESCRIPTION, SITE_NAME, SITE_SHORT_NAME } from '../components/layout/site';
+import { THEME_COLOR } from '../components/layout/theme-script';
 import { SEASON_CALENDAR_YEAR } from '../lib/season';
 
 /**
  * /manifest.webmanifest (DESIGN §1.1). Installable, standalone, and themed to `--sx-bg` so the
  * splash matches the page in either mode. Every icon is the generated `FH` monogram — there are no
  * bitmap assets in this repo (the Create-Next-App favicon.ico was deleted at integration) and no
- * third-party image requests anywhere on the site.
+ * third-party image requests anywhere on the site. No `orientation` member: locking the installed
+ * app to portrait would fail WCAG 1.3.4 (Orientation), and every page works in landscape.
  */
 export default function manifest(): MetadataRoute.Manifest {
   return {
@@ -17,9 +19,9 @@ export default function manifest(): MetadataRoute.Manifest {
     start_url: '/',
     scope: '/',
     display: 'standalone',
-    orientation: 'portrait',
-    background_color: '#f6f7f8',
-    theme_color: '#f6f7f8',
+    // The one theme constant the layout and the head scripts read too (DESIGN §7.14).
+    background_color: THEME_COLOR.light,
+    theme_color: THEME_COLOR.light,
     categories: ['sports'],
     // `display: 'standalone'` is only honoured if the manifest is installable, and that needs a
     // LARGE icon: /icon is the 32px favicon and /apple-icon is iOS's 180px tile, so on their own

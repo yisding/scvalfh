@@ -165,7 +165,7 @@ export default async function ScoresByDatePage({ params }: PageProps<'/scores/[d
      with " of the season" for screen readers only — so the steppers stay one line at 390. On a
      day with several leagues the "Full season" group wraps under them as one unit. */
   const dayNav = (
-    <nav aria-label="Other days" className="flex flex-wrap items-center gap-2">
+    <nav aria-label="Other days" className="sx-print-hide flex flex-wrap items-center gap-2">
       {previous ? (
         <Link
           href={`/scores/${previous}`}
@@ -464,7 +464,7 @@ function RegionBlock({
       {region.groups.length >= 2 ? (
         <nav
           aria-label={region.idSuffix === '' ? 'Leagues on this day' : `${region.name} leagues on this day`}
-          className="mt-4 flex flex-wrap gap-2"
+          className="sx-print-hide mt-4 flex flex-wrap gap-2"
         >
           {region.groups.map((group) => (
             <a key={group.id} href={`#${group.id}`} className="sx-pill sx-pill-ring min-h-11">

@@ -120,6 +120,8 @@ export default function TeamsPage() {
                       kicker={group.title}
                       meta={group.meta}
                       action={{ href: group.standingsHref, label: group.standingsLabel }}
+                      // Capped like the compact tables below (48rem from lg), so the action sits over them.
+                      className="lg:max-w-3xl"
                     />
                     {/* Only where a league's schools are not all in the section it sits under (EAL). */}
                     {group.membershipNote ? (

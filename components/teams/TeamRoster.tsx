@@ -2,6 +2,7 @@ import Link from 'next/link';
 
 import { listWords } from '../../lib/format';
 import EmptyState from '../ui/EmptyState';
+import GridRowFiller from '../ui/GridRowFiller';
 import ExternalLink from '../ui/ExternalLink';
 import SectionHeader from '../ui/SectionHeader';
 import Tag from '../ui/Tag';
@@ -100,15 +101,20 @@ export function Profiles({ row }: { row: RecruitingLineRow }) {
     <span className="block text-meta text-ink-2">
       {row.profiles.map((profile, i) => (
         <span key={profile.url}>
-          {i > 0 ? <>&nbsp;&middot; </> : null}
-          <ExternalLink href={profile.url} className="sx-action gap-1 whitespace-nowrap">
-            {/* Wrapped: `.sx-action` is inline-flex, which would trim the space after the sr-only
-                name if it and the label were separate flex items ("Storey Lewis'sNCSA profile"). */}
-            <span>
-              <span className="sr-only">{row.name}&rsquo;s </span>
-              {profile.label}
-            </span>
-          </ExternalLink>
+          {i > 0 ? ' ' : null}
+          {/* The dot inside the link's nowrap span: the link is inline-flex, an atomic inline, so a
+              no-break space after it would still let a line start with the dot. */}
+          <span className="whitespace-nowrap">
+            <ExternalLink href={profile.url} className="sx-action gap-1 whitespace-nowrap">
+              {/* Wrapped: `.sx-action` is inline-flex, which would trim the space after the sr-only
+                  name if it and the label were separate flex items ("Storey Lewis'sNCSA profile"). */}
+              <span>
+                <span className="sr-only">{row.name}&rsquo;s </span>
+                {profile.label}
+              </span>
+            </ExternalLink>
+            {i < row.profiles.length - 1 ? <>&nbsp;&middot;</> : null}
+          </span>
         </span>
       ))}
     </span>
@@ -120,7 +126,7 @@ export function Clubs({ row }: { row: RecruitingLineRow }) {
     <span className="block text-meta text-ink-2">
       {row.clubs.map((group, i) => (
         <span key={group.status}>
-          {i > 0 ? <>&nbsp;&middot; </> : null}
+          {i > 0 ? ' ' : null}
           {/* Hidden from assistive technology: each link below says it in its own name. The no-break
               space keeps the label with its first club. */}
           <span aria-hidden="true" className="text-ink-3">
@@ -129,21 +135,26 @@ export function Clubs({ row }: { row: RecruitingLineRow }) {
           &nbsp;
           {group.clubs.map((club, j) => (
             <span key={club.slug}>
-              {j > 0 ? ', ' : null}
-              {/* `prefetch={false}`: a link per row, to a static page (tests/ui/prefetch-policy). */}
-              <Link
-                href={club.href}
-                prefetch={false}
-                className="sx-action whitespace-nowrap text-accent hover:underline"
-              >
-                {/* One span, so inline-flex cannot trim the space after the sr-only name. */}
-                <span>
-                  <span className="sr-only">
-                    {row.name}&rsquo;s {group.srLabel}:{' '}
+              {j > 0 ? ' ' : null}
+              {/* The comma, or the dot before the next group, inside the link's nowrap span: the
+                  link is inline-flex, an atomic inline, so a line could otherwise start with it. */}
+              <span className="whitespace-nowrap">
+                {/* `prefetch={false}`: a link per row, to a static page (tests/ui/prefetch-policy). */}
+                <Link
+                  href={club.href}
+                  prefetch={false}
+                  className="sx-action whitespace-nowrap text-accent hover:underline"
+                >
+                  {/* One span, so inline-flex cannot trim the space after the sr-only name. */}
+                  <span>
+                    <span className="sr-only">
+                      {row.name}&rsquo;s {group.srLabel}:{' '}
+                    </span>
+                    {club.name}
                   </span>
-                  {club.name}
-                </span>
-              </Link>
+                </Link>
+                {j < group.clubs.length - 1 ? ',' : i < row.clubs.length - 1 ? <>&nbsp;&middot;</> : null}
+              </span>
             </span>
           ))}
         </span>
@@ -272,7 +283,7 @@ export function TeamRoster({ view }: TeamRosterProps) {
 
   return (
     <div>
-      <ul className="sx-card sx-flush sx-bleed m-0 grid list-none p-0 sm:grid-cols-2 lg:grid-cols-3">
+      <ul className="sx-card sx-flush sx-bleed my-0 grid list-none p-0 sm:grid-cols-2 lg:grid-cols-3">
         {rows.map((row) => (
           <li
             key={row.key}
@@ -315,6 +326,7 @@ export function TeamRoster({ view }: TeamRosterProps) {
             </span>
           </li>
         ))}
+        <GridRowFiller count={rows.length} columns={{ sm: 2, lg: 3 }} />
       </ul>
 
       <div className="mt-3 max-w-prose text-meta text-ink-3">

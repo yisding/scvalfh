@@ -4,7 +4,7 @@ import { useSyncExternalStore } from 'react';
 
 import { useIsHydrated, useStoredValue, writeStored } from '../ui/local-store';
 
-import { THEME_STORAGE_KEY } from './theme-script';
+import { THEME_META_ID, THEME_STORAGE_KEY, themeMetaColor } from './theme-script';
 
 /**
  * System / Light / Dark, cycled by one 44×44 button (DESIGN §7.14).
@@ -21,7 +21,12 @@ import { THEME_STORAGE_KEY } from './theme-script';
  * "System" is stored as the ABSENCE of the attribute, so `prefers-color-scheme` stays in charge,
  * and `color-scheme` on `:root` (set by the CSS tokens) keeps form controls and scrollbars in step.
  * The pre-paint script in layout.tsx has already stamped the attribute, so there is no flash: this
- * component renders the neutral glyph on the server and the real one after hydration.
+ * component renders the neutral glyph on the server and the real one after hydration. The browser
+ * chrome's `theme-color` follows the choice through one media-less meta that an explicit theme
+ * prepends and System removes (components/layout/theme-script.ts says why it is not the layout's).
+ *
+ * Without JS the button would look live and do nothing, so it is `sx-js-only`: the OS scheme still
+ * applies, and the bar keeps its 48px height from its own `h-topbar`, not from this button.
  *
  * The cycle depends on the OS scheme, so that the FIRST tap always changes the page. A fixed
  * System → Light → Dark cycle spent its first tap on a no-op for every reader whose phone was
@@ -93,8 +98,20 @@ const WORD: Record<Theme, string> = {
 
 function applyTheme(theme: Theme) {
   const root = document.documentElement;
-  if (theme === 'system') root.removeAttribute('data-theme');
-  else root.setAttribute('data-theme', theme);
+  let meta = document.getElementById(THEME_META_ID) as HTMLMetaElement | null;
+  if (theme === 'system') {
+    root.removeAttribute('data-theme');
+    meta?.remove();
+  } else {
+    root.setAttribute('data-theme', theme);
+    if (!meta) {
+      meta = document.createElement('meta');
+      meta.name = 'theme-color';
+      meta.id = THEME_META_ID;
+      document.head.prepend(meta);
+    }
+    meta.content = themeMetaColor(theme);
+  }
   writeStored(THEME_STORAGE_KEY, theme === 'system' ? null : theme);
 }
 
@@ -117,7 +134,7 @@ export function ThemeToggle({ className }: ThemeToggleProps) {
       type="button"
       onClick={() => applyTheme(next)}
       className={[
-        'sx-tap relative inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-ink-2 hover:bg-surface-2 hover:text-ink focus-visible:-outline-offset-2',
+        'sx-js-only sx-tap relative inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-ink-2 hover:bg-surface-2 hover:text-ink focus-visible:-outline-offset-2',
         className,
       ]
         .filter(Boolean)

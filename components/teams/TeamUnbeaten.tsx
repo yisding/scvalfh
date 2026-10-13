@@ -16,8 +16,10 @@ import type { TeamPageView, UnbeatenOpponent } from './team-view';
  * its teams meet 0, 1 or 2 times, and a meeting is a league game only when MaxPreps marks it, so an
  * opponent with nothing listed reads "no league game listed", never "no games left".
  *
- * An opponent whose remaining games exist ONLY in the league's official schedule is labelled
- * "unreported", never counted as a scheduled game we have a date and time for. The copy's noun is
+ * An opponent whose remaining games exist ONLY in the league's official schedule is never counted
+ * as a scheduled game we have a time and a page for. A fixture dated today or later reads "next
+ * <date>", as the official-only fixture list marks it Upcoming; only one whose day has passed with
+ * no result is labelled "unreported" (and explained under the list). The copy's noun is
  * the league's `gamesWord`: `division opponent` in a two-division league and `league opponent` in a
  * single-division one.
  */
@@ -26,10 +28,21 @@ function nothingLeft(fixed: boolean): string {
   return fixed ? 'no games left' : 'no league game listed';
 }
 
+/** The row's status reads "N unreported": nothing ahead of it, and a past fixture with no result. */
+function readsUnreported(opponent: UnbeatenOpponent): boolean {
+  return (
+    opponent.nextDate === null &&
+    opponent.remaining === 0 &&
+    opponent.nextFixtureDate === null &&
+    opponent.unreportedFixtures > 0
+  );
+}
+
 function statusOf(opponent: UnbeatenOpponent, fixed: boolean): string {
   if (opponent.nextDate !== null) return `next ${monthDay(opponent.nextDate)}`;
   if (opponent.remaining > 0) return `${opponent.remaining} to play`;
-  if (opponent.unreportedFixtures > 0) return `${opponent.unreportedFixtures} unreported`;
+  if (opponent.nextFixtureDate !== null) return `next ${monthDay(opponent.nextFixtureDate)}`;
+  if (readsUnreported(opponent)) return `${opponent.unreportedFixtures} unreported`;
   return nothingLeft(fixed);
 }
 
@@ -43,9 +56,11 @@ function sentenceFor(opponent: UnbeatenOpponent, leagueShort: string, fixed: boo
       ? `next meeting ${monthDay(opponent.nextDate)}`
       : opponent.remaining > 0
         ? `${opponent.remaining} still to play`
-        : opponent.unreportedFixtures > 0
-          ? `${opponent.unreportedFixtures} scheduled per ${leagueShort} with no result reported`
-          : nothingLeft(fixed);
+        : opponent.nextFixtureDate !== null
+          ? `next meeting ${monthDay(opponent.nextFixtureDate)} on ${leagueShort}’s schedule`
+          : opponent.unreportedFixtures > 0
+            ? `${opponent.unreportedFixtures} scheduled per ${leagueShort} with no result reported`
+            : nothingLeft(fixed);
   return `${opponent.name}: ${played}, ${ahead}`;
 }
 
@@ -120,7 +135,8 @@ export function TeamUnbeaten({ view }: TeamUnbeatenProps) {
         {fixed
           ? `${noun === 'league' ? 'League' : 'Division'} opponents play each other twice, home and away, so a name can be here with two meetings left, one, or none. `
           : `${short} teams do not all play each other: a meeting is a league game when MaxPreps marks it as one, so a name can be here with no meeting at all. `}
-        {view.unbeaten.some((o) => o.unreportedFixtures > 0)
+        {/* Only when a row actually says "unreported". */}
+        {view.unbeaten.some(readsUnreported)
           ? `An “unreported” meeting is scheduled per ${short} with no result reported.`
           : null}
       </p>

@@ -2,11 +2,12 @@
  * Where each timeline-rail chip points while the schedule is filtered (F-21).
  *
  * The rail (TimelineRail.tsx) is server-rendered for the WHOLE season: `↑ Aug 24` is the first
- * contest, `Sep` the first day of September, `● Today` the snapshot's day, `↓ Oct 28` the last
- * contest. Once a filter hides date groups those anchors can point at a hidden section, and a jump
- * to a `hidden` element goes nowhere. ScheduleFilters therefore re-aims each chip at a group that
- * is still shown, using the pure mapping below, and restores the server's hrefs and text once
- * every group is shown again. Without JavaScript none of this runs and the rail is unchanged.
+ * contest, `Sep` the first day of September, `● Today` the snapshot's day (`● Next` when that day
+ * has no game), `↓ Oct 28` the last contest. Once a filter hides date groups those anchors can
+ * point at a hidden section, and a jump to a `hidden` element goes nowhere. ScheduleFilters
+ * therefore re-aims each chip at a group that is still shown, using the pure mapping below, and
+ * restores the server's hrefs and text once every group is shown again. Without JavaScript none
+ * of this runs and the rail is unchanged.
  *
  * Pure and dependency-free on purpose: it is bundled into `/schedule/<league>`'s one client module,
  * whose first-load JS is held to a budget (scripts/assert-budgets.ts). Turbopack tree-shakes

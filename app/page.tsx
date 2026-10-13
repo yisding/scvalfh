@@ -67,11 +67,11 @@ export default function HomePage() {
             /* One line at 390: the league list wrapped onto a second line there, and the leagues
                are named by the switcher chips right below. From 640px it fits and comes back; the
                text stays in the DOM either way. One line per region (DESIGN-socal §2.4): the scope
-               stylesheet shows the reader's, and without JS both read in turn, NorCal first. */
+               stylesheet shows the reader's, and without JS both read in turn, NorCal first — each
+               a block, so the two lines never run together. */
             <p className="m-0 text-meta text-ink-2">
-              {data.regions.map((region, i) => (
-                <span key={region.id} data-region-scope={region.id}>
-                  {i > 0 ? <span className="sr-only"> </span> : null}
+              {data.regions.map((region) => (
+                <span key={region.id} data-region-scope={region.id} className="block">
                   {region.status.resultsThrough
                     ? `Results through ${shortDate(region.status.resultsThrough)}`
                     : 'No results yet'}{' '}

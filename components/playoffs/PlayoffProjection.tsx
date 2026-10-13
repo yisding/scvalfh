@@ -215,7 +215,7 @@ export function PlayoffProjection({
               <th scope="col" className="pr-gutter md:pr-0">Team</th>
               {/* 13rem only from lg: from md two divisions may sit side by side, and a fixed
                   13rem status column in a ~350px half would truncate the team names. */}
-              <th data-twin scope="col" className="hidden pr-4 md:table-cell lg:w-52">
+              <th data-twin scope="col" className="hidden pl-3 pr-4 md:table-cell lg:w-52">
                 Status
               </th>
             </tr>

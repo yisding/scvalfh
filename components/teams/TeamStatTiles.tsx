@@ -53,7 +53,7 @@ export function TeamStatTiles({ view, className }: TeamStatTilesProps) {
 
   return (
     <div className={className}>
-      <dl className="m-0 grid grid-cols-2 gap-x-4 gap-y-5 md:grid-cols-4 md:gap-x-6 md:gap-y-6">
+      <dl className="m-0 grid grid-cols-2 gap-x-4 gap-y-5 md:grid-cols-4 md:gap-x-6 md:gap-y-6 lg:gap-x-10">
         <StatTile
           label="Place"
           value={league ? placeMark(league.place, sharedPlace, 'pill') : null}
@@ -64,7 +64,7 @@ export function TeamStatTiles({ view, className }: TeamStatTilesProps) {
         <StatTile
           label="League"
           value={league ? recordString(league) : null}
-          sub={league ? `${league.pts} pts · ${league.gp} played` : 'league games only'}
+          sub={league ? `${plural(league.pts, 'pt', 'pts')} · ${league.gp} played` : 'league games only'}
         />
         {/* A league with no fixed schedule (the Sunset, gamesPerTeam null) has no "of N": GP is the
             bare count, and MAX, a ceiling over the games left, has nothing to count (DESIGN-socal §2.1.7). */}

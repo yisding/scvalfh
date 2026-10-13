@@ -19,6 +19,11 @@ import { ladderLineAfter, ladderRow } from './standings-view';
  * `ladderLine` draws no rule and no label: the EAL, whose Super Regional takes the top six of its
  * six teams, has no line to draw.
  *
+ * The whole row is the team link: the link's `::after` stretches over the `relative` row (no cell
+ * is `relative`, so the hit area is exactly the row), and a tap on the place, the record or the
+ * points opens the team page too, as on the full standings tables (StandingsTable's RowLink).
+ * From lg the card is capped at 48rem, left-aligned, so the numbers stay within reach of the name.
+ *
  * No sticky head (a short table on a long page), no GD bars, no form strips, no disclosures.
  * A team with no results gets an em-dash place and em dashes for W-L-T and PTS — never 0-0-0.
  *
@@ -50,7 +55,7 @@ export function CompactStandingsTable({
   const lineAfter = ladderLineAfter(rows.map(ladderRow), ladderLine?.after);
 
   return (
-    <div className={['sx-card sx-flush sx-bleed', className].filter(Boolean).join(' ')}>
+    <div className={['sx-card sx-flush sx-bleed lg:max-w-3xl', className].filter(Boolean).join(' ')}>
       <table className="sx-table text-cell">
         <caption className="sr-only">{caption}</caption>
         <thead className="[&_th]:static">
@@ -88,7 +93,7 @@ export function CompactStandingsTable({
                   <Link
                     href={`/teams/${row.team.slug}`}
                     prefetch={false}
-                    className="flex min-h-11 items-center gap-2 text-ink no-underline hover:underline"
+                    className="flex min-h-11 items-center gap-2 text-ink no-underline hover:underline after:absolute after:inset-0 after:content-['']"
                   >
                     {/* Only the pinned team's row displays this (app/globals.css: the row's
                         `data-team-slug` gets `data-pinned`), so the accent rule is never the only
@@ -97,7 +102,10 @@ export function CompactStandingsTable({
                       <span className="sx-pin-note" hidden>Your team. </span>
                     </span>
                     <TeamMonogram team={row.team} size={24} />
-                    <span className="min-w-0 truncate text-body">{row.team.shortName}</span>
+                    {/* Up to two lines, broken between words only: a name never loses its second word
+                        to an ellipsis and never breaks per letter; a single word too long for the
+                        cell ends in an ellipsis. */}
+                    <span className="min-w-0 line-clamp-2 text-ellipsis text-body">{row.team.shortName}</span>
                   </Link>
                 </th>
                 <td className="sx-num w-10 text-right text-ink-2">{s.computed.gp}</td>

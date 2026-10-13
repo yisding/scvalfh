@@ -20,7 +20,10 @@ import type { RailKind } from './rail-targets';
  * the whole point of rendering the complete list server-side.
  *
  * "Today" is derived from `snapshot.fetchedAt` in Pacific, never from `Date.now()`, so the rail is
- * part of the reproducible build rather than something that drifts between build and view.
+ * part of the reproducible build rather than something that drifts between build and view. On a
+ * day with no game the chip reads `● Next` and jumps to the next game day; it is left out only once
+ * the season has no game day left. Its `data-rail-date` stays today either way (the href carries
+ * the target), which is what rail-targets.ts's `today` rule measures from under a filter.
  *
  * Under a filter: each date chip carries `data-rail-date` and `data-rail-kind`, its date label
  * `data-rail-label` and its screen-reader name `data-rail-sr`, so ScheduleFilters can re-aim it at
@@ -47,11 +50,14 @@ export interface TimelineRailProps {
 }
 
 interface Marker {
+  /** The chip's `data-rail-date`: for the today chip, today itself, even with no game on it. */
   date: string;
+  /** Where the chip jumps when it is not `date`: the today chip's next game day. */
+  target?: string;
   /** What the chip means, so a filter can re-aim it (rail-targets.ts). */
   kind: RailKind;
   label: string;
-  /** A leading glyph: `↑` for the season's first day, `↓` for its last, `●` for today. */
+  /** A leading glyph: `↑` for the season's first day, `↓` for its last, `●` for today or next. */
   glyph?: string;
   /** The whole accessible name, because `Sep` alone is not a date. */
   sr: string;
@@ -68,8 +74,11 @@ function buildMarkers(dates: readonly string[], today: string): Marker[] {
   const last = dates[dates.length - 1];
   const candidates: Marker[] = [];
 
-  // Today first, so that when it coincides with another marker it is the one that survives.
-  if (dates.includes(today)) {
+  // Today first, so that when it coincides with another marker it is the one that survives. With
+  // no game today the chip is `● Next` and aims at the next game day; it stays out of the dedupe
+  // below, so it sits beside an `↑` or month chip on that day rather than swallowing it.
+  const next = dates.find((date) => date >= today);
+  if (next === today) {
     candidates.push({
       date: today,
       kind: 'today',
@@ -77,6 +86,15 @@ function buildMarkers(dates: readonly string[], today: string): Marker[] {
       glyph: '●',
       sr: `Today, ${longDate(today)}`,
       current: true,
+    });
+  } else if (next) {
+    candidates.push({
+      date: today,
+      target: next,
+      kind: 'today',
+      label: 'Next',
+      glyph: '●',
+      sr: `Next game day, ${longDate(next)}`,
     });
   }
   candidates.push({
@@ -110,10 +128,26 @@ function buildMarkers(dates: readonly string[], today: string): Marker[] {
   }
 
   const byDate = new Map<string, Marker>();
+  const extra: Marker[] = [];
   for (const marker of candidates) {
-    if (!byDate.has(marker.date)) byDate.set(marker.date, marker);
+    if (marker.target) extra.push(marker);
+    else if (!byDate.has(marker.date)) byDate.set(marker.date, marker);
   }
-  return [...byDate.values()].sort((a, b) => a.date.localeCompare(b.date));
+  // In order of the day each chip jumps to; on a shared day `● Next` follows `↑` or a month and
+  // precedes `↓`.
+  return [...byDate.values(), ...extra].sort(
+    (a, b) => hrefDate(a).localeCompare(hrefDate(b)) || sameDayRank(a) - sameDayRank(b),
+  );
+}
+
+function sameDayRank(marker: Marker): number {
+  if (marker.kind === 'down') return 2;
+  return marker.target ? 1 : 0;
+}
+
+/** The day a chip jumps to. */
+function hrefDate(marker: Marker): string {
+  return marker.target ?? marker.date;
 }
 
 /** `Nov 7–14` / `Oct 26–30` (one month), `Oct 30–Nov 14` across months. */
@@ -179,7 +213,7 @@ export function TimelineRail({ dates, today, leagueId, className }: TimelineRail
   const markers = buildMarkers(dates, today);
   if (markers.length === 0) return null;
   return (
-    <nav aria-label="Jump to a date" className={className}>
+    <nav aria-label="Jump to a date" className={['sx-print-hide', className].filter(Boolean).join(' ')}>
       {/* `relative` on every chip, so the `sr-only` label inside it has a positioned ancestor
           INSIDE this scroller. Tailwind's `sr-only` is `position: absolute` with no offsets, and
           with nothing positioned between it and <html> its containing block was the page: the rail
@@ -195,7 +229,7 @@ export function TimelineRail({ dates, today, leagueId, className }: TimelineRail
         {markers.map((marker) => (
           <li key={marker.date} className="flex h-11 shrink-0 items-center">
             <a
-              href={`#${marker.date}`}
+              href={`#${hrefDate(marker)}`}
               data-rail-date={marker.date}
               data-rail-kind={marker.kind}
               // `forced-colors:border`: the ring is a box-shadow, which forced colours drop. The

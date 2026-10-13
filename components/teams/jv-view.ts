@@ -39,6 +39,11 @@ export interface TeamJvView extends JvListSummary {
   played: number;
   /** Not final, dated today or later. */
   toCome: number;
+  /**
+   * Not final, dated before today: the day has passed with no score reported. With `played` and
+   * `toCome` it accounts for every row, so the section header's counts add up to the list.
+   */
+  noScore: number;
   /** The MaxPreps source's status for this school in the latest run. */
   status: 'ok' | 'carried-forward' | 'error' | 'pending';
   maxprepsUrl: string | null;
@@ -100,6 +105,7 @@ export function buildTeamJvView(slug: TeamSlug): TeamJvView | null {
     rows: rowsOf(games),
     played: games.filter((g) => g.status === 'final').length,
     toCome: games.filter((g) => g.status !== 'final' && g.dateKey >= today).length,
+    noScore: games.filter((g) => g.status !== 'final' && g.dateKey < today).length,
     status,
     maxprepsUrl: entry.maxprepsScheduleUrl,
     sbliveUrl: entry.sbliveUrl,

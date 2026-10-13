@@ -292,6 +292,10 @@ export function rankRuleText(league: LeagueConfig): string {
 /** The legend's sentence on whose order the table is (by `rules.orderScope`). */
 function orderLegendText(league: LeagueConfig): string {
   const short = league.shortName;
+  // Where the league is the subject it is its `standaloneName` ('North publishes no standings' reads
+  // as a direction; 'North County publishes…' cannot). A group of independents is plural.
+  const subject = standaloneName(league.id);
+  const publishes = league.independents ? 'publish' : 'publishes';
   switch (league.rules.orderScope) {
     case 'table': {
       const chain = league.rules.tiebreaks.default;
@@ -300,9 +304,9 @@ function orderLegendText(league: LeagueConfig): string {
         : `This order is our computation from published results, not a league ruling: the official tiebreak belongs to ${short}.`;
     }
     case 'title':
-      return `This order is our computation from published results, not a league ruling: ${short} publishes no standings.`;
+      return `This order is our computation from published results, not a league ruling: ${subject} ${publishes} no standings.`;
     case 'site':
-      return `This order is our computation from published results, not a league ruling: ${short} publishes no standings and no points rule, so the order is this site’s ${pointsWords(league)} points.`;
+      return `This order is our computation from published results, not a league ruling: ${subject} ${publishes} no standings and no points rule, so the order is this site’s ${pointsWords(league)} points.`;
   }
 }
 
@@ -581,8 +585,8 @@ export function buildDivisionView(input: DivisionViewInput): DivisionView {
     // is the whole claim and every reader can check it.
     footnotes.push(
       input.pendingLeagueGames === 1
-        ? "1 league game was played but has no score yet, so it isn't counted anywhere above."
-        : `${input.pendingLeagueGames} league games were played but have no score yet, so they aren't counted anywhere above.`,
+        ? '1 league game was played but has no score yet, so it isn’t counted anywhere above.'
+        : `${input.pendingLeagueGames} league games were played but have no score yet, so they aren’t counted anywhere above.`,
     );
   }
   if (input.leagueFinals === 0) {

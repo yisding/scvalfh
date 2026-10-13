@@ -22,7 +22,8 @@ import { placeScope } from './team-view';
  * `data-team-slug` lets the pinned-team marker (PinnedTeamMarks and the head script) stamp
  * `data-pinned` on this card when it is the pinned team, so the hero gets the same 3px accent rule
  * as the pinned tile on /teams — the pin is in localStorage, so the server cannot draw it. The
- * card holds no `.sx-pin-note`: the pressed Pin button already says "Pinned" in words.
+ * card holds no `.sx-pin-note`: on the pinned team's page the button already says "Unpin this team"
+ * in words.
  *
  * Phone padding is 16px and the row gap 12px (20 / 16 from 768px) to keep the Last result and the
  * Next game's date and opponent on the first phone screen.

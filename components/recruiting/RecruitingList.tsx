@@ -1,4 +1,5 @@
 import { Clubs, Commitment, Profiles } from '../teams/TeamRoster';
+import GridRowFiller from '../ui/GridRowFiller';
 import type { RecruitingRow } from './recruiting-view';
 
 /**
@@ -16,7 +17,7 @@ export interface RecruitingListProps {
 
 export function RecruitingList({ rows }: RecruitingListProps) {
   return (
-    <ul className="sx-card sx-flush sx-bleed m-0 grid list-none p-0 sm:grid-cols-2 lg:grid-cols-3">
+    <ul className="sx-card sx-flush sx-bleed my-0 grid list-none p-0 sm:grid-cols-2 lg:grid-cols-3">
       {rows.map((row) => (
         <li
           key={row.key}
@@ -28,9 +29,13 @@ export function RecruitingList({ rows }: RecruitingListProps) {
             <span className="block text-meta text-ink-2">
               {row.facts.map((fact, i) => (
                 <span key={i}>
-                  {/* A no-break space BEFORE each dot, so a line never starts with one (TeamRoster's rule). */}
-                  {i > 0 ? <>&nbsp;&middot; </> : null}
-                  <span className="whitespace-nowrap">{fact}</span>
+                  {/* Each dot inside the nowrap span of the fact before it, so a line never starts
+                      with one (TeamRoster's rule). */}
+                  {i > 0 ? ' ' : null}
+                  <span className="whitespace-nowrap">
+                    {fact}
+                    {i < row.facts.length - 1 ? <>&nbsp;&middot;</> : null}
+                  </span>
                 </span>
               ))}
             </span>
@@ -40,6 +45,7 @@ export function RecruitingList({ rows }: RecruitingListProps) {
           {row.profiles.length > 0 ? <Profiles row={row} /> : null}
         </li>
       ))}
+      <GridRowFiller count={rows.length} columns={{ sm: 2, lg: 3 }} />
     </ul>
   );
 }

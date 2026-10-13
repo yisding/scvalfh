@@ -32,7 +32,9 @@ import {
   ordinal,
   ordinalWord,
   placeWords,
+  plural,
   recordString,
+  recordWords,
   shortDate,
   timeOfDayPT,
 } from '../../lib/format';
@@ -384,9 +386,11 @@ export function projectionRowLabel(row: ProjectionRow, divisionLabel: string): s
     return `${team.name}: no results reported, not ranked in ${divisionLabel}`;
   }
   const place = placeWords(standing.computed.place, row.shared);
-  return `${team.name}, ${place} in ${divisionLabel}, ${recordString(standing.computed)}, ${
-    standing.computed.pts
-  } points`;
+  // The record in words, as on the standings table: "4-1-0" read aloud is a subtraction or a date.
+  return `${team.name}, ${place} in ${divisionLabel}, ${recordWords(standing.computed)}, ${plural(
+    standing.computed.pts,
+    'point',
+  )}`;
 }
 
 // ---------------------------------------------------------------- league pairings (SCVAL crossover, BVAL play-in)
@@ -430,7 +434,7 @@ export interface PairingView {
 export function buildPairingView(
   pairing: LeaguePairing,
   resolve: (teamId: string) => { team: Team; standing: Standing | undefined } | undefined,
-  opts: { hostTieNote?: string | null; unsettledNote?: string | null } = {},
+  opts: { hostTieNote?: string | null; unsettledNote?: string | null; unsettledHostNote?: string | null } = {},
 ): PairingView {
   const seat = (i: 0 | 1): SeatView => ({
     label: pairing.seatLabels[i],
@@ -443,10 +447,14 @@ export function buildPairingView(
   const seats: [SeatView, SeatView] = [seat(0), seat(1)];
   const unsettled = seats.some((s) => s.contenders.length > 1);
   const notes: string[] = [];
-  if (pairing.host !== null && seats[pairing.host].contenders.length > 1 && opts.hostTieNote) {
-    notes.push(opts.hostTieNote);
-  }
-  if (unsettled && opts.unsettledNote) notes.push(opts.unsettledNote);
+  const hostTieNote =
+    pairing.host !== null && seats[pairing.host].contenders.length > 1 ? (opts.hostTieNote ?? null) : null;
+  if (hostTieNote) notes.push(hostTieNote);
+  // When only the host seat is level, the host note already names the by-laws that settle it, so
+  // the unsettled note does not state the rule a second time.
+  const onlyHostTied = hostTieNote !== null && seats[pairing.host === 0 ? 1 : 0].contenders.length <= 1;
+  const unsettledNote = onlyHostTied && opts.unsettledHostNote ? opts.unsettledHostNote : opts.unsettledNote;
+  if (unsettled && unsettledNote) notes.push(unsettledNote);
   const seedMatch = /#(\d+)\b/.exec(pairing.seatLabels[0]);
   const seedA = seedMatch ? seedMatch[1] : null;
   const seedB = /#(\d+)\b/.exec(pairing.seatLabels[1])?.[1] ?? null;
@@ -485,13 +493,18 @@ function chainSpan(league: LeagueConfig): string | null {
  * co-champions, which by-laws decide who hosts (BVAL: `Santa Teresa co-champions: BVAL By-Laws §6b-f
  * decide who hosts.`); and, for any seat with more than one contender, why it is not settled.
  */
-export function pairingNotesFor(pairing: LeaguePairing): { hostTieNote: string | null; unsettledNote: string } {
+export function pairingNotesFor(pairing: LeaguePairing): {
+  hostTieNote: string | null;
+  unsettledNote: string;
+  unsettledHostNote: string | null;
+} {
   const league = getLeague(pairing.leagueId);
   const suffix = league.rules.unresolvedSuffix.replace(/^—\s*/, '');
   const unsettledNote = `Not settled yet: teams are level across a seat${suffix ? `, and ${suffix}` : ''}. The pairing follows the table, so it moves with every result.`;
-  if (pairing.host === null || league.postseason.kind !== 'ccs-ladder') return { hostTieNote: null, unsettledNote };
+  const none = { hostTieNote: null, unsettledNote, unsettledHostNote: null };
+  if (pairing.host === null || league.postseason.kind !== 'ccs-ladder') return none;
   const seat = league.postseason.pairings.find((p) => p.id === pairing.id)?.seats[pairing.host];
-  if (!seat) return { hostTieNote: null, unsettledNote };
+  if (!seat) return none;
   const heading = divisionHeading(seat.division) ?? league.shortName;
   const span = chainSpan(league);
   return {
@@ -499,6 +512,8 @@ export function pairingNotesFor(pairing: LeaguePairing): { hostTieNote: string |
       ? `${heading} co-champions: ${league.shortName} By-Laws ${span} decide who hosts.`
       : `${heading} co-champions: the ${league.shortName} tiebreakers decide who hosts.`,
     unsettledNote,
+    // Only the host seat level: the host note above already names the by-laws.
+    unsettledHostNote: 'Not settled yet: the pairing follows the table, so it moves with every result.',
   };
 }
 

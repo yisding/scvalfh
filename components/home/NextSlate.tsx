@@ -88,9 +88,11 @@ export function NextSlate({
         kicker={kicker ?? (isToday ? 'Still to play today' : 'Next up')}
         meta={has ? (isToday && !kicker ? counts : `${shortDate(date)} · ${counts}`) : undefined}
         action={has ? { href: `/scores/${date}`, label: `All ${total} on ${shortDate(date)}` } : undefined}
+        // Capped like the card below (DESIGN §26.5 "Measures"), so the action sits over the list.
+        className="md:max-w-3xl"
       />
       {has ? (
-        <div className="sx-card sx-flush sx-bleed">
+        <div className="sx-card sx-flush sx-bleed md:max-w-3xl">
           <ol className="sx-list">
             {shown.map((game) => (
               <li key={game.contestId}>

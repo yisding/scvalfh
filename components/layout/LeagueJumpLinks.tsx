@@ -18,6 +18,7 @@ import type { LeagueId } from '../../lib/types';
  * (`sx-pill-ring`) at the 44px primary height. The arrow says where the target is (down the page
  * by default) and is aria-hidden like every link arrow (components/ui/Arrow.tsx). The pill names the
  * league by `standaloneName` ('Jump to North County ↓', never 'Jump to North ↓', which reads as a direction).
+ * The row is screen-only: `sx-print-hide` drops it from a printout (app/globals.css, @media print).
  */
 export interface LeagueJumpLinksProps {
   /** Config order. */
@@ -30,7 +31,7 @@ export interface LeagueJumpLinksProps {
 
 export function LeagueJumpLinks({ leagues, hrefs, arrow }: LeagueJumpLinksProps) {
   return (
-    <p className="m-0 mt-4 flex flex-wrap gap-2">
+    <p className="sx-print-hide m-0 mt-4 flex flex-wrap gap-2">
       {leagues.map((league) => {
         const href = hrefs?.[league.id] ?? `#${league.id}`;
         const className = `sx-jump sx-jump-${league.id} sx-pill sx-pill-ring min-h-11`;

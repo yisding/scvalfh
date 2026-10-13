@@ -175,6 +175,11 @@ describe('home panels (components/home/home-view.ts → LeaguePanel)', () => {
           expect(html, `components/home/MiniStandings.tsx: ${division.id} no line`).not.toContain('border-t-2');
         }
         expect(html, `components/home/MiniStandings.tsx: ${division.id} GP column`).toContain('>GP</th>');
+        // The row link reads the record in words and counts points ("1 point", never "1 points").
+        for (const row of division.rows.filter((r) => r.hasResults)) {
+          expect(row.recordWords, `${HV}: ${row.slug} record words`).toMatch(/^\d+ wins?, \d+ loss(es)?, \d+ ties?$/);
+        }
+        expect(html, `components/home/MiniStandings.tsx: ${division.id} row label`).not.toMatch(/\b1 points\b|, \d+-\d+-\d+, /);
         expect(division.href, `${HV}: ${division.id} href`).toBe(`/standings/${panel.id}#${division.id}`);
         // "Division" only for NorCal: San Diego's "Division I/II" are playoff tiers (review 2026-10-06).
         if (division.heading !== null) {

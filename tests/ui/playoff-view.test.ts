@@ -308,6 +308,23 @@ describe('buildPairingView — the BVAL play-in card', () => {
     );
   });
 
+  it('states the by-law once when only the host seat is level (F95)', () => {
+    const [pairing] = data.getLeaguePairings('bval');
+    // Willow Glen unresolved: Mt. Hamilton #4 is Branham alone, so only the host seat is level.
+    const v = view.buildPairingView(
+      pairing,
+      (id) => {
+        const team = data.getTeamById(id);
+        return team && team.slug !== 'willow-glen' ? { team, standing: data.getStandingFor(id) } : undefined;
+      },
+      view.pairingNotesFor(pairing),
+    );
+    expect(v.notes, VIEW).toEqual([
+      'Santa Teresa co-champions: BVAL By-Laws §6b-f decide who hosts.',
+      'Not settled yet: the pairing follows the table, so it moves with every result.',
+    ]);
+  });
+
   it('SCVAL crossover: seat labels from config, no host, the play-in last', () => {
     const views = data.getLeaguePairings('scval').map((p) =>
       view.buildPairingView(p, (id) => {
@@ -363,6 +380,19 @@ describe('row copy', () => {
     const unreported = { ...fremont!, hasReportedResults: false };
     expect(view.recordLine(unreported), VIEW).toBe('—');
     expect(view.recordLine(unreported), VIEW).not.toContain('0-0-0');
+  });
+
+  it('reads the row link’s record in words and never says "1 points"', () => {
+    const standing = data.getStandingFor('fremont')!;
+    const team = data.getTeamById(standing.teamId)!;
+    const row = {
+      team,
+      standing: { ...standing, hasReportedResults: true, computed: { ...standing.computed, w: 0, l: 6, t: 1, pts: 1 } },
+      shared: false,
+    } as unknown as ProjectionRow;
+    const label = view.projectionRowLabel(row, 'De Anza');
+    expect(label, VIEW).toContain('0 wins, 6 losses, 1 tie, 1 point');
+    expect(label, VIEW).not.toMatch(/\b1 points\b|\d-\d-\d/);
   });
 });
 

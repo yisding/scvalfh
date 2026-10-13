@@ -124,7 +124,7 @@ export function SiteHeader({ snapshotAt, now, slugLeague }: SiteHeaderProps) {
                 which is the lit nav capsule's fill. */}
             <ExternalLink
               href={DATA_CORRECTIONS_URL}
-              className="sx-pill sx-pill-ring hidden min-h-9 px-3 min-[70rem]:inline-flex"
+              className="sx-pill sx-pill-ring hidden min-h-9 px-3 py-0 min-[70rem]:inline-flex"
             >
               Report an error
             </ExternalLink>
@@ -137,10 +137,10 @@ export function SiteHeader({ snapshotAt, now, slugLeague }: SiteHeaderProps) {
           stack every offset is measured against (--sx-sticky-top, html's scroll-padding-top, the
           division and date bars) stays the 48/64px bar, and the reader gets the height back once
           they start reading. An <aside> with a label, so it sits in a landmark of its own: outside
-          every landmark, axe reports the line under `region`. */}
+          every landmark, axe reports the line under `region`. Not printed (`sx-print-hide`). */}
       <aside
         aria-label="Data corrections"
-        className="border-b border-hairline bg-surface min-[70rem]:hidden"
+        className="sx-print-hide border-b border-hairline bg-surface min-[70rem]:hidden"
       >
         <ExternalLink
           href={DATA_CORRECTIONS_URL}

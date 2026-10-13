@@ -26,8 +26,8 @@ export interface PlayInSide {
 }
 
 export interface PlayInCardProps {
-  /** 'Play-in' / 'Crossover · #1 v #1' */
-  title: string;
+  /** 'Play-in' / 'Crossover · #1 v #1'; null when the section header already names the card. */
+  title: string | null;
   /** 'Fri Oct 30' and, when the league states one, '11 AM PT'. */
   when?: { dateKey: string; dateLabel: string; timeLabel: string | null } | null;
   /** Reading order: the visitor first when `connector` is 'at'. */
@@ -131,7 +131,7 @@ export function PlayInCard({
       {/* A paragraph, not a heading: the card's sentence above is what a screen reader hears, and
           the page owns the outline. */}
       <p className="m-0 mb-3 flex flex-wrap items-baseline gap-x-2 text-meta font-semibold text-ink" aria-hidden="true">
-        <span>{title}</span>
+        {title ? <span>{title}</span> : null}
         {when ? (
           <span className="font-normal text-ink-2">
             <time dateTime={when.dateKey}>{when.dateLabel}</time>

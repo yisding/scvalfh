@@ -176,12 +176,15 @@ export function TeamNextGame({ card, teamName, league }: TeamNextGameProps) {
             prefetch={false}
             className="sx-pill sx-pill-accent min-h-11"
           >
-            {/* The Last card's pill has the same visible words, so the opponent is added for a
-                screen reader's links list and for voice control. */}
+            {/* The Last card's pill (GameCard `linkStyle="pills"` from 768px, GameRow's panel
+                below it) has the same visible words, so the opponent is added for a screen
+                reader's links list and for voice control. */}
             Full game page<span className="sr-only">: {card.versus} {card.opponent?.name ?? card.opponentName}</span>
           </Link>
+          {/* 44px like the game-page pill beside it: the bare pill was 40px, so one row of
+              targets stood at two heights. */}
           {card.chips.map((chip) => (
-            <ExternalLink key={chip.href} href={chip.href} className="sx-pill">
+            <ExternalLink key={chip.href} href={chip.href} className="sx-pill min-h-11">
               {chip.label}
             </ExternalLink>
           ))}

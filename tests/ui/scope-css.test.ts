@@ -36,7 +36,7 @@ describe('buildLeagueScopeCss', () => {
       expect(rules.filter((r) => r === `html[data-league="${id}"] .sx-jump-${id}{display:inline-flex}`)).toHaveLength(1);
       expect(rules.filter((r) => r.startsWith(`html[data-league="${id}"] [data-league-option="${id}"]{`))).toHaveLength(1);
       expect(
-        rules.filter((r) => r === `html[data-league="${id}"] [data-league-option="${id}"] .sx-chip-check{display:inline}`),
+        rules.filter((r) => r === `html[data-league="${id}"] [data-league-option="${id}"] .sx-chip-check{visibility:visible}`),
       ).toHaveLength(1);
     });
   }
@@ -47,7 +47,7 @@ describe('buildLeagueScopeCss', () => {
     expect(count(/^html\[data-league="[a-z0-9-]+"\] \.sx-jump-/)).toBe(n);
     expect(count(/^html\[data-league="[a-z0-9-]+"\] \[data-league-option="[a-z0-9-]+"\]\{/)).toBe(n);
     // n leagues + the All chip + the two region options.
-    expect(count(/\.sx-chip-check\{display:inline\}$/)).toBe(n + 3);
+    expect(count(/\.sx-chip-check\{visibility:visible\}$/)).toBe(n + 3);
   });
 
   it('has the fixed rules: jump base, js-only, my-team slot, the All chip', () => {
@@ -55,7 +55,7 @@ describe('buildLeagueScopeCss', () => {
     expect(rules).toContain('html:not([data-js]) .sx-js-only{display:none !important}');
     expect(rules).toContain('html:not([data-pin]):not([data-league]):not([data-pin-stale]) .sx-myteam-slot{display:none}');
     expect(rules.some((r) => r.startsWith('html:not([data-league]) [data-league-option="all"]{'))).toBe(true);
-    expect(rules).toContain('html:not([data-league]) [data-league-option="all"] .sx-chip-check{display:inline}');
+    expect(rules).toContain('html:not([data-league]) [data-league-option="all"] .sx-chip-check{visibility:visible}');
   });
 
   it('has the region rules verbatim (DESIGN-socal §2.4)', () => {
@@ -64,8 +64,8 @@ describe('buildLeagueScopeCss', () => {
     expect(rules).toContain('html[data-region="socal"] [data-region-scope="norcal"]{display:none}');
     expect(rules.filter((r) => r.startsWith('html:not([data-region="socal"]) [data-region-option="norcal"]{'))).toHaveLength(1);
     expect(rules.filter((r) => r.startsWith('html[data-region="socal"] [data-region-option="socal"]{'))).toHaveLength(1);
-    expect(rules).toContain('html:not([data-region="socal"]) [data-region-option="norcal"] .sx-chip-check{display:inline}');
-    expect(rules).toContain('html[data-region="socal"] [data-region-option="socal"] .sx-chip-check{display:inline}');
+    expect(rules).toContain('html:not([data-region="socal"]) [data-region-option="norcal"] .sx-chip-check{visibility:visible}');
+    expect(rules).toContain('html[data-region="socal"] [data-region-option="socal"] .sx-chip-check{visibility:visible}');
     // A deep link opens its region: the block holding the target, and the block that is the target.
     expect(rules).toContain('[data-region-scope]:has(:target){display:block!important}');
     expect(rules).toContain('[data-region-scope]:target{display:block!important}');

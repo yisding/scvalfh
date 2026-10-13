@@ -283,6 +283,55 @@ describe('the /schedule index', () => {
   });
 });
 
+describe('the timeline rail’s today chip (components/schedule/TimelineRail.tsx)', () => {
+  type Chip = { date: string; kind: string; href: string; label: string; sr: string; current: boolean };
+  const chips = async (dates: string[], today: string): Promise<Chip[]> => {
+    const { TimelineRail } = await import('../../components/schedule/TimelineRail');
+    const html = renderToStaticMarkup(createElement(TimelineRail, { dates, today, leagueId: 'scval' }));
+    return [...html.matchAll(/<a href="#([^"]+)" data-rail-date="([^"]+)" data-rail-kind="([^"]+)" class="([^"]*)">([\s\S]*?)<\/a>/g)].map(
+      (m) => ({
+        href: m[1],
+        date: m[2],
+        kind: m[3],
+        current: m[4].includes('bg-accent-wash'),
+        label: textOf(m[5].match(/data-rail-label="[^"]*">([^<]*)</)![1]),
+        sr: textOf(m[5].match(/data-rail-sr="[^"]*">([^<]*)</)![1]),
+      }),
+    );
+  };
+
+  it('reads Today, with the wash, on a game day', async () => {
+    const rail = await chips(['2026-09-01', '2026-10-06', '2026-10-30'], '2026-10-06');
+    const today = rail.find((c) => c.kind === 'today')!;
+    expect(today).toMatchObject({ date: '2026-10-06', href: '2026-10-06', label: 'Today', current: true });
+    expect(today.sr).toBe('Today, Tuesday, October 6');
+  });
+
+  it('reads Next on a day with no game, aimed at the next game day, and keeps the month chip', async () => {
+    const rail = await chips(['2026-09-01', '2026-10-01', '2026-10-13', '2026-10-30'], '2026-10-12');
+    const next = rail.find((c) => c.kind === 'today')!;
+    // `data-rail-date` stays today, so rail-targets.ts's `today` rule still measures from today.
+    expect(next).toMatchObject({ date: '2026-10-12', href: '2026-10-13', label: 'Next', current: false });
+    expect(next.sr).toBe('Next game day, Tuesday, October 13');
+    expect(rail.map((c) => c.kind)).toEqual(['up', 'month', 'today', 'down']);
+    // A Next chip on the month's first game day sits beside it rather than swallowing it.
+    const onMonth = await chips(['2026-09-01', '2026-10-01', '2026-10-30'], '2026-09-30');
+    expect(onMonth.map((c) => [c.kind, c.href])).toEqual([
+      ['up', '2026-09-01'], ['month', '2026-10-01'], ['today', '2026-10-01'], ['down', '2026-10-30'],
+    ]);
+  });
+
+  it('keeps the ↑ chip when the next game day is the first, and drops the chip once none is left', async () => {
+    const dates = ['2026-09-01', '2026-10-01', '2026-10-30'];
+    const pre = await chips(dates, '2026-08-20');
+    expect(pre.map((c) => [c.kind, c.href, c.label])).toEqual([
+      ['up', '2026-09-01', 'Sep 1'], ['today', '2026-09-01', 'Next'], ['month', '2026-10-01', 'Oct'], ['down', '2026-10-30', 'Oct 30'],
+    ]);
+    const post = await chips(dates, '2026-11-02');
+    expect(post.map((c) => c.kind)).toEqual(['up', 'month', 'down']);
+  });
+});
+
 describe('Southern California schedule pages (DESIGN-socal §2.4)', () => {
   it('the rail’s postseason chip: the Section’s playoffs for a San Diego league, none for the Sunset', async () => {
     // The rail itself, over two game days (it draws nothing for a league with no dates yet).

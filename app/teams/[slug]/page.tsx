@@ -56,9 +56,9 @@ import type { DivisionId, LeagueId } from '../../../lib/types';
  * grid whose children stay in that DOM order. One column on a phone. From 768px Last and Next pair
  * up (both cards stretch to the row, so the pair ends level) and every section after them takes
  * both columns until 1024px. Rows are separated by space, never by a rule. From 768px the Last
- * card is the `GameCard` (time, both teams, recap, Game page / Box score / NFHS stream links)
- * instead of the phone's expanded `GameRow`, so it fills its half of the row like the Next card
- * does.
+ * card is the `GameCard` (time, both teams, recap, and the Next card's own 44px pills: Full game
+ * page / MaxPreps box score / NFHS stream) instead of the phone's expanded `GameRow`, so it fills
+ * its half of the row like the Next card does and both cards word and style their links alike.
  *
  * At 1024px+ a strict pairing left 250–350px holes beside every tall section (Form beside Margin,
  * Who we haven't beaten beside the League game log). So the two tallest sections SPAN two rows
@@ -137,7 +137,7 @@ export async function generateMetadata({ params }: PageProps<'/teams/[slug]'>): 
   const { team, standing, hasResults } = view;
   const record =
     hasResults && standing
-      ? `${recordString(standing.computed)} in ${view.scopeLabel} (${standing.computed.pts} pts)`
+      ? `${recordString(standing.computed)} in ${view.scopeLabel} (${plural(standing.computed.pts, 'pt', 'pts')})`
       : `${view.scopeLabel} — no results reported`;
   const extras = rosterExtras(
     buildPlayerStatsView(team.slug, [...view.leagueLog, ...view.nonLeagueLog]),
@@ -288,7 +288,7 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
                 <GameRow game={last} perspective={team.slug} defaultExpanded showTime={false} />
               </div>
               <div data-twin className="hidden md:flex md:flex-1 md:flex-col">
-                <GameCard game={last} perspective={team.slug} showStream className="flex-1" />
+                <GameCard game={last} perspective={team.slug} showStream linkStyle="pills" className="flex-1" />
               </div>
             </>
           ) : (
@@ -338,6 +338,7 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
               <div className="sx-card p-4 md:p-5">
                 <div className="flex min-h-11 items-center">
                   <FormStrip
+                    className="-ml-2"
                     entries={formEntries}
                     size={24}
                     label={formStripName(team.name, formEntries.length)}
@@ -416,7 +417,7 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
 
         <section className="min-w-0 md:max-lg:col-span-2">
           <SectionHeader
-            kicker="Who we haven't beaten"
+            kicker="Who we haven’t beaten"
             meta={`${view.scopeLabel} only`}
           />
           <TeamUnbeaten view={view} />
@@ -546,13 +547,15 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
             {history ? (
               <p className="mt-3 mb-0 max-w-prose text-meta text-ink-2">
                 Last season ({getHistorySeason()}): {ordinal(history.row.place)} of {historySize} in{' '}
-                {historyScope}, {history.row.leagueRecord} &mdash;{' '}
+                {historyScope}, <span className="whitespace-nowrap">{history.row.leagueRecord}.</span>{' '}
+                {/* A sentence break, not a dash: a wrapped dash dangled at the end of line 1 at
+                    phone widths (or opened line 2 when kept with the link). */}
                 <Link
                   href={`/history/2025-26#${history.division}`}
                   prefetch={false}
                   className="whitespace-nowrap"
                 >
-                  full {getHistorySeason()} standings
+                  Full {getHistorySeason()} standings
                 </Link>
               </p>
             ) : null}
@@ -570,7 +573,13 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
               meta={
                 jvStanding?.line ??
                 (jv.rows.length > 0
-                  ? `${jv.played} played${jv.toCome > 0 ? ` · ${jv.toCome} to come` : ''}`
+                  ? [
+                      `${jv.played} played`,
+                      jv.toCome > 0 ? `${jv.toCome} to come` : null,
+                      jv.noScore > 0 ? `${jv.noScore} no score` : null,
+                    ]
+                      .filter((part) => part !== null)
+                      .join(' · ')
                   : undefined)
               }
               action={jvStanding ? { href: jvStanding.href, label: 'JV standings' } : undefined}

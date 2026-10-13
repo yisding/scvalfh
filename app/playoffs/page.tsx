@@ -392,10 +392,16 @@ export default function PlayoffsPage() {
         </section>
 
         {/* 5. Key dates. */}
-        <section id="key-dates" className="mt-section md:mt-section-lg max-w-3xl">
+        {/* The section rule spans the column like its siblings; only the list is capped. */}
+        <section id="key-dates" className="mt-section md:mt-section-lg">
           <span id="dates" className="block" />
           <SectionHeader kicker="Key dates" meta="all times PT" />
-          <KeyDates keyDates={keyDates} leagueDates={leagueDates} confirmed={areKeyDatesConfirmed()} />
+          <KeyDates
+            keyDates={keyDates}
+            leagueDates={leagueDates}
+            confirmed={areKeyDatesConfirmed()}
+            className="max-w-3xl"
+          />
         </section>
 
         {/* 6. One section per CCS league, config order. */}
@@ -437,9 +443,12 @@ export default function PlayoffsPage() {
                     meta={pairingDate ? shortDate(pairingDate) : undefined}
                   />
                   <LeaguePairings pairings={pairings} />
-                  <p className="mt-4 mb-0 max-w-prose text-meta text-ink-2">
-                    Pairings follow the current league tables, so they move with every result.
-                  </p>
+                  {/* An unsettled card already says it moves with the table; say it once. */}
+                  {pairings.some((p) => p.unsettled) ? null : (
+                    <p className="mt-4 mb-0 max-w-prose text-meta text-ink-2">
+                      Pairings follow the current league tables, so they move with every result.
+                    </p>
+                  )}
                 </div>
               ) : null}
               <ProjectionKey

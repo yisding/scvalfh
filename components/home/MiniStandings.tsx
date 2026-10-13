@@ -5,7 +5,7 @@ import PlaceMark from '../ui/PlaceMark';
 import SectionHeader from '../ui/SectionHeader';
 import { NoGoalDiff, biggestGoalDiff } from '../ui/StandingsTable';
 import TeamMonogram from '../ui/TeamMonogram';
-import { EM_DASH, monthDay, placeWords } from '../../lib/format';
+import { EM_DASH, monthDay, placeWords, plural } from '../../lib/format';
 import { getDivision, getLeague, regionOf } from '../../lib/leagues';
 import { ladderLineAfter } from '../standings/standings-view';
 
@@ -53,7 +53,8 @@ export interface MiniStandingsProps {
 
 function rowLabel(row: MiniRow, where: string): string {
   if (!row.hasResults) return `${row.name}: no results reported yet`;
-  return `${row.name}, ${placeWords(row.place, row.shared)} in ${where}, ${row.record}, ${row.pts} points`;
+  // The record in words, as on the standings table: "4-1-0" read aloud is a subtraction or a date.
+  return `${row.name}, ${placeWords(row.place, row.shared)} in ${where}, ${row.recordWords}, ${plural(row.pts, 'point')}`;
 }
 
 const COLS = 6;

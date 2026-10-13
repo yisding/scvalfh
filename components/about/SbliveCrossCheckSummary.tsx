@@ -1,4 +1,4 @@
-import { formatStamp } from '../../lib/format';
+import { formatStamp, shortDate } from '../../lib/format';
 import type { SbliveCrossCheck } from '../../lib/types';
 
 import ExternalLink from '../ui/ExternalLink';
@@ -73,7 +73,7 @@ export function SbliveCrossCheckSummary({ cross }: SbliveCrossCheckSummaryProps)
                   <td className="py-3 pl-4">
                     {row.label}
                     <span className="block text-ink-3">
-                      {row.dateKey} &middot; {row.note}
+                      <time dateTime={row.dateKey}>{shortDate(row.dateKey)}</time> &middot; {row.note}
                     </span>
                   </td>
                   <td className="sx-num whitespace-nowrap px-3 py-3 text-right text-cell font-semibold text-ink">
@@ -102,7 +102,7 @@ export function SbliveCrossCheckSummary({ cross }: SbliveCrossCheckSummaryProps)
                 className="flex flex-wrap items-center justify-between gap-2 py-2 text-meta"
               >
                 <span>
-                  {row.label} <span className="text-ink-3">&middot; {row.dateKey}</span>
+                  {row.label} <span className="text-ink-3">&middot; <time dateTime={row.dateKey}>{shortDate(row.dateKey)}</time></span>
                   {row.note ? <span className="block text-ink-3">{row.note}</span> : null}
                 </span>
                 {row.sbliveUrl ? (

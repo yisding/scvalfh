@@ -14,7 +14,9 @@ import { navLeagueHrefs } from './nav-targets';
  * 44×44 minimum) and the fifth tab is never pushed off-screen. The labels are ≤ 8 characters,
  * measured: at 12px/500 Geist the widest, "Playoffs" (renamed from "CCS", which was false for
  * MCAL), is ≈ 49.5px against the 64px tab (tests/ui/text-metrics.ts), and tests/ui/tab-labels.test.ts
- * fails any label over 56px, so none truncates at any supported width.
+ * fails any label over 56px, so none truncates at any supported width. With a large text setting
+ * the label stops growing at 18px (1.5×, NavLink.tsx), where the widest still fits a 390px phone's
+ * 78px tab instead of running into its neighbour.
  *
  * After hydration Scores, Teams and Playoffs follow the page's league, else the remembered one
  * (`/schedule/<id>#<date>`, `/teams#<id>`, `/playoffs#<id>` or `/playoffs/mcal`; SPEC §8.3); the

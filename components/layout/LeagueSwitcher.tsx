@@ -29,8 +29,9 @@ import { ALL_LEAGUES } from './prefs-script';
  * zoom wraps rather than clipping). No visible section captions: the league chips sit in one list
  * per section, labelled `Central Coast Section` / `North Coast Section` / `Northern Section` /
  * `Southern Section` / `San Diego Section`, split by hairlines; the `All` chip precedes them all.
- * The current chip is the accent wash, accent ink, a 1.5px ink ring AND an aria-hidden ✓
- * (`.sx-chip-check`) — never colour alone. No league hue anywhere.
+ * The current chip is inverse ink (DESIGN §26.1) AND an aria-hidden ✓ (`.sx-chip-check`) — never
+ * colour alone. No league hue anywhere. `link` and `anchor` rows are screen-only (`sx-print-hide`);
+ * the `scope` row is `sx-js-only`, which print hides too.
  *
  * Regions (DESIGN-socal §2.4). In `scope` and `anchor` mode each section list carries
  * `data-region-scope="<its region>"`, so the scope stylesheet shows only the effective region's
@@ -235,7 +236,7 @@ function LinkSwitcher({ mode, leagues, current, hrefs = {}, label, includeAll, c
   };
 
   return (
-    <nav aria-label={label} className={['flex flex-wrap items-center gap-1.5', className].filter(Boolean).join(' ')}>
+    <nav aria-label={label} className={['sx-print-hide flex flex-wrap items-center gap-1.5', className].filter(Boolean).join(' ')}>
       {includeAll && mode === 'link' ? chip(ALL_LEAGUES, 'All') : null}
       <SectionLists leagues={leagues} regionScoped={mode === 'anchor'} chip={(l) => chip(l.id, l.shortName)} />
     </nav>
@@ -259,8 +260,8 @@ export interface RegionSwitcherProps {
  * `<button aria-pressed data-region-option>`, styled as a SEGMENTED control — the two segments share
  * one rounded `surface-2` track — rather than as two more league chips, so 'NorCal ✓' never reads
  * as a peer of 'All ✓'. Each segment is the chip token (44px target, `min-h-11 min-w-11`) and the
- * selected one is the same accent wash, accent ink, 1.5px ink ring and aria-hidden ✓ as a chip: never
- * colour alone, no new colour. Before hydration the scope stylesheet draws the selected segment from
+ * selected one is the same inverse ink and aria-hidden ✓ as a chip: never colour alone, no new
+ * colour. Before hydration the scope stylesheet draws the selected segment from
  * `html[data-region]` (`[data-region-option]`, components/layout/league-scope-css.ts); after, aria-pressed
  * does. Hidden without JS (`sx-js-only`: both regions are on the page then, NorCal first) and
  * `disabled` until hydrated. A polite live region says what a tap did ("Showing Southern California.").

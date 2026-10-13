@@ -2,6 +2,7 @@ import Link from 'next/link';
 
 import EmptyState from '../ui/EmptyState';
 import ExternalLink from '../ui/ExternalLink';
+import GridRowFiller from '../ui/GridRowFiller';
 import SectionHeader from '../ui/SectionHeader';
 import type { ClubPageView, ClubPlayerRow } from './club-view';
 
@@ -39,15 +40,24 @@ function PlayerRow({ row }: { row: ClubPlayerRow }) {
       <span className="block text-body text-ink">{row.name}</span>
       <span className="block text-meta text-ink-2">
         {/* `prefetch={false}`: one link per row, to a static team page (tests/ui/prefetch-policy). */}
-        <Link href={row.school.href} prefetch={false} className="sx-action text-accent hover:underline">
-          <span>
-            {row.school.name}
-            <span className="sr-only"> roster</span>
-          </span>
-        </Link>
+        {/* Each dot sits inside the nowrap span of the item before it: the link is inline-flex, an
+            atomic inline, so a no-break space after it would still let a line start with the dot. */}
+        <span className="whitespace-nowrap">
+          <Link href={row.school.href} prefetch={false} className="sx-action text-accent hover:underline">
+            <span>
+              {row.school.name}
+              <span className="sr-only"> roster</span>
+            </span>
+          </Link>
+          {row.facts.length > 0 ? <>&nbsp;&middot;</> : null}
+        </span>
         {row.facts.map((fact, i) => (
           <span key={i}>
-            &nbsp;&middot; <span className="whitespace-nowrap">{fact}</span>
+            {' '}
+            <span className="whitespace-nowrap">
+              {fact}
+              {i < row.facts.length - 1 ? <>&nbsp;&middot;</> : null}
+            </span>
           </span>
         ))}
       </span>
@@ -56,13 +66,16 @@ function PlayerRow({ row }: { row: ClubPlayerRow }) {
         <span className="text-ink-3">Sources:</span>&nbsp;
         {row.sources.map((source, i) => (
           <span key={source.url}>
-            {i > 0 ? <>&nbsp;&middot; </> : null}
-            <ExternalLink href={source.url} className="sx-action gap-1 whitespace-nowrap">
-              <span>
-                <span className="sr-only">{row.name}: </span>
-                {source.label}
-              </span>
-            </ExternalLink>
+            {i > 0 ? ' ' : null}
+            <span className="whitespace-nowrap">
+              <ExternalLink href={source.url} className="sx-action gap-1 whitespace-nowrap">
+                <span>
+                  <span className="sr-only">{row.name}: </span>
+                  {source.label}
+                </span>
+              </ExternalLink>
+              {i < row.sources.length - 1 ? <>&nbsp;&middot;</> : null}
+            </span>
           </span>
         ))}
       </span>
@@ -94,10 +107,11 @@ export function ClubPlayers({ view }: ClubPlayersProps) {
       {view.groups.map((group, i) => (
         <div key={group.id} className={i > 0 ? 'mt-6' : undefined}>
           {labelled ? <SectionHeader as="h3" size="label" kicker={group.heading} /> : null}
-          <ul className="sx-card sx-flush sx-bleed m-0 grid list-none p-0 sm:grid-cols-2 lg:grid-cols-3">
+          <ul className="sx-card sx-flush sx-bleed my-0 grid list-none p-0 sm:grid-cols-2 lg:grid-cols-3">
             {group.rows.map((row) => (
               <PlayerRow key={row.key} row={row} />
             ))}
+            <GridRowFiller count={group.rows.length} columns={{ sm: 2, lg: 3 }} />
           </ul>
         </div>
       ))}

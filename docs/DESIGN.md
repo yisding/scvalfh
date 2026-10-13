@@ -621,7 +621,7 @@ PHONE 390px  —  /game/2026-09-24-homestead-saint-francis
 │ Thu Sep 24, 2026 · 5:30 PM PT                  │
 │ Homestead HS, 21370 Homestead Rd, Cupertino    │ 128
 │ [ Directions ↗ ] [ NFHS stream ↗ ]             │
-│ [ Tickets ↗ ]    [ MaxPreps box score ↗ ]      │
+│ [ Tickets ↗ ]    [ MaxPreps box score ↗ ]      │ "MaxPreps game ↗" if not final
 ├────────────────────────────────────────────────┤
 │ ──── FORM GOING IN ──────────────────────────  │
 │ Saint Francis  (W)(W)(L)(W)  → then W          │ 84
@@ -1189,7 +1189,7 @@ guardrail. **Divisions get no hue either** (§6.4).
 
   ::selection { background: var(--sx-select); }
 
-  :where(a, button, select, summary, [role="tab"], [tabindex]):focus-visible {
+  :where(a, button, input, select, summary, [role="tab"], [tabindex]):focus-visible {
     outline: 2px solid var(--sx-focus);
     outline-offset: 2px;
     border-radius: var(--sx-r-tag);
@@ -1268,11 +1268,18 @@ display face anywhere.
   swap and `<details>` disclosure, 1.6s LIVE pulse. Nothing else animates. No page
   transitions; no skeleton flash — a re-filter holds the previous render at `opacity: .6`.
   All of it collapses under `prefers-reduced-motion: reduce`.
-- **Focus:** `:focus-visible` only — 2px `--sx-focus`, 2px offset, 4px radius; inside a
-  `.sx-flush` card (`overflow: clip`) the ring is drawn inset (`outline-offset: -2px`) so the
+- **Focus:** `:focus-visible` only — 2px `--sx-focus`, 2px offset, 4px radius, on links,
+  buttons, inputs (the team finder's search field), selects, summaries, tabs and `[tabindex]`;
+  inside a `.sx-flush` card (`overflow: clip`) the ring is drawn inset (`outline-offset: -2px`) so the
   clip cannot eat it (globals.css). No table header cell is focusable, so the `editorial` inset
   ring on sticky heads was dropped with the unused `.sx-sticky-head` hook. Accent-vs-surface is
   6.87 light / 5.88 dark, far past 3:1.
+- **Print:** one unlayered `@media print` block at the end of globals.css. Paper is always light
+  (the light token values, copied, for `:root` and `:root[data-theme="dark"]`; a white body), so a
+  dark-theme reader never prints pale ink on white. The chrome (`.sx-chrome-top`,
+  `.sx-chrome-bottom`), every `.sx-js-only` control, the league chip rows, the report line and the
+  jump pills (`.sx-print-hide`, `.sx-jump`) are hidden; nothing is sticky; rows, small cards and
+  insets avoid a page break inside.
 
 ---
 
@@ -1961,7 +1968,8 @@ the list; the winner's number is 600 weight in `--sx-text` and the loser's 400 i
 
 The row is a `<details>` / `<summary>` pair, so **expand works with zero JavaScript**. Venue
 address, stream, tickets, box score and the `/game/[id]` link live in the panel, so 174 venue
-addresses never enter the initial payload of any list page. On desktop the same data renders
+addresses never enter the initial payload of any list page. The MaxPreps link reads "MaxPreps box
+score" only for a final and "MaxPreps game" otherwise, since there is no box score to promise. On desktop the same data renders
 as a `GameCard` in a 3-up grid (2-up at 768px, `GameRow` below) with the recap and venue always
 visible and nothing to expand.
 
@@ -2021,7 +2029,8 @@ interface StatTileProps {
 }
 ```
 
-Each tile is an `.sx-card` holding one `<dl>` group: the `<dt>` label in `text-meta`
+Each tile is unboxed (§26.1): a hairline over it (`border-t border-rule pt-2 md:pt-3`), not an
+`.sx-card`, and it holds one `<dl>` group: the `<dt>` label in `text-meta`
 `--sx-text-3`, then the `<dd>` value in `.sx-figure` (Sans, **proportional** figures), then an
 optional `<dd>` `sub` in `text-meta` `--sx-text-2` (a step smaller below 768px). The row is
 2-up below 768px and 4-up above. **No sparkline** (§6.2). `null` renders `—` and the
@@ -2118,6 +2127,19 @@ longer in the data."*). **No layout shift:** the card's height is reserved serve
 (88px for `PinPrompt`) and content swaps after mount. The UI states plainly that the pin lives
 in this browser only.
 
+`PinControl` is an action button, not a toggle: no `aria-pressed`. Its visible label says what a
+tap does, "Pin this team" or "Unpin this team" (the same verb as the home card's "Unpin"), followed
+by an sr-only "— <team>, saved/pinned in this browser only". The star fills and the pill takes the
+accent wash while the team is pinned (keyed on `data-pinned`, never colour alone: the words change
+too). `md:min-w-40` (160 px) holds both labels, so the button's left edge never moves. It is
+`invisible` until the stored pin has been read: the footprint stays and no state is guessed.
+Without JS the whole control is `sx-js-only`, so there is neither a dead button nor an empty band
+where it would sit. When a different team is pinned, a one-line `text-meta` note says "This
+replaces your pinned team." (there is one pin): under the button on a phone, and from 768px
+positioned under its right edge, out of the row's flow (the hero's bottom padding holds it), so
+showing or hiding the note never moves the button or squeezes the title. The stale-pin sentence
+stays in the row's flow.
+
 ### 7.13 `ScheduleFilters` — **`'use client'`**
 
 ```ts
@@ -2140,7 +2162,8 @@ Reads `useSearchParams()` and writes with `router.replace(href, { scroll: false 
 "During production builds, a static page that calls `useSearchParams` from a Client Component
 **must be wrapped in a `Suspense` boundary**, otherwise the build fails." One filter row above
 everything it scopes. `team` is a native `<select>` (16 options; a custom listbox is worse on
-every phone); the rest are pill groups. Live count via `aria-live="polite"`. Active filters
+every phone); the rest are pill groups, whose selected pill is inverse ink with a ✓, the league
+chip's selected state (§15.4), never the accent wash. Live count via `aria-live="polite"`. Active filters
 echo as removable mono chips. Zero results is a designed state (§8).
 
 ### 7.14 `ThemeToggle` — **`'use client'`**
@@ -2151,12 +2174,22 @@ interface ThemeToggleProps {
 }
 ```
 
-Three states — **System / Light / Dark** — cycled by one 44×44 button whose `aria-label` names
-*the next* state and whose visible glyph plus a visually-hidden word names the *current* one.
-Writes `data-theme` on `<html>` and mirrors to `localStorage['scvalfh.theme']`, both in
-`try/catch`. A ~380-byte blocking inline script in `layout.tsx` stamps the attribute before
-first paint, so there is no flash and no CLS; `color-scheme` on `:root` keeps form controls and
-scrollbars in step.
+Three states — **System / Light / Dark** — cycled by one 44×44 button whose glyph shows the
+*current* state and whose visually hidden sentence (its whole accessible name, no `aria-label`)
+names both: "Light theme is on. Switch to dark theme." Writes `data-theme` on `<html>` and mirrors
+to `localStorage['scvalfh.theme']`, both in `try/catch`. A ~300-byte blocking inline script in
+`layout.tsx` stamps the attribute before first paint, so there is no flash and no CLS;
+`color-scheme` on `:root` keeps form controls and scrollbars in step. The button is `sx-js-only`:
+without JS it could not do anything, and the OS scheme still applies.
+
+The browser chrome follows an explicit choice too. The layout's two `theme-color` metas follow
+the OS (`media`), so for Light or Dark the script, and `applyTheme` on a tap, prepend one
+media-less `<meta id="sx-theme-color">` with that theme's `--sx-bg` (the first matching meta wins);
+System removes it. The two hex values are one exported constant (`THEME_COLOR` in
+components/layout/theme-script.ts) that the layout and both scripts read; the added meta writes
+them in upper case, because React 19 adopts an existing meta with the same name and content (it
+ignores `media`) and then drops it on the next client-side navigation. Rewriting the layout's own
+metas does not hold either: Next re-creates them on every client-side navigation.
 
 ### 7.15 `Attribution`
 
@@ -2280,7 +2313,9 @@ Every line is a gate, not an aspiration; §10.9 lists which ones CI enforces.
    `scope="row"`. Game lists are `<ol>` of `<details>`. `DivisionTabs` are **anchors, not ARIA
    tabs** — no keyboard trap to get wrong. The bracket is nested `<ol>`s that read as rounds in
    order. The bottom bar is a `<nav aria-label="Sections">` with `aria-current="page"`.
-5. **Keyboard.** `:focus-visible` only, one visible style, 2px ring at 2px offset;
+5. **Keyboard.** `:focus-visible` only, one visible style, 2px ring at 2px offset, on
+   `a, button, input, select, summary, [role="tab"], [tabindex]` (an input never falls back to
+   the browser's own ring);
    inset (`-2px`) inside `.sx-flush` clipped cards so the clip can't eat it; no `<th>` is
    focusable. A skip link to
    `#main`. **DOM order matches visual order at both breakpoints** — the desktop 2-column grids
@@ -2679,12 +2714,17 @@ hydrated, with a polite live region), `link` (`/standings/[league]`, `/schedule/
 links that never write) and `anchor` (`/standings`, `/teams`, `/playoffs`: `#id` links, plus a
 route link where a league has its own page, as /playoffs' tournament leagues do; a `#id` chip is a
 plain `<a>`, a route chip a `<Link prefetch={false}>`). The chip is `text-micro` weight 600,
-`min-h-11 min-w-11 px-2`, a 6 px gap and `flex-wrap`, so 200% text zoom wraps instead of clipping. Measured at 320 px the five-chip row (All, SCVAL, BVAL, PCAL, MCAL) is
+`min-h-11 min-w-11 px-2` (`.sx-league-chip`, `padding-inline: 0.5rem`), a 6 px gap and `flex-wrap`, so 200% text zoom wraps instead of clipping. Measured at 320 px the five-chip row (All, SCVAL, BVAL, PCAL, MCAL) is
 about **273 px**, inside the 288 px content width. There are no visible section captions: the chips
 sit in two lists labelled for assistive technology ("Central Coast Section" and "North Coast
-Section") separated by a hairline. The selected chip is an accent-wash fill, accent ink, weight 600,
-a 1.5 px ink ring and a ✓ (`aria-hidden`), never color alone, so it survives the §10.9b grayscale
-gate.
+Section") separated by a hairline. The selected chip is inverse ink (`--sx-text` fill,
+`--sx-surface` text, §26.1), weight 600, and a ✓ (`aria-hidden`), never color alone, so it
+survives the §10.9b grayscale gate. It keeps that fill under the pointer: the hover plane applies
+only to unselected chips. The ✓ is in the flow, so selecting a chip widens it by the glyph and its 4 px gap.
+Measured on the home scope row (2026-10-13), the row holds one line whichever chip is selected from
+390 px (NorCal) and 375 px (SoCal); at 375 px NorCal and 360 px SoCal some selections still push the
+last chip onto a second line, and at 320–360 px NorCal it wraps anyway. The schedule filter pills
+(§7.13) draw their selected state the same way: inverse ink and a ✓, not the accent wash.
 
 ### 15.5 Leagues get no hue
 
@@ -4264,3 +4304,53 @@ unaffected.
   chrome at 100px) and repeats the header's and footer's report links.
 - **Long intros.** `/leaders` and `/playoffs` open with five to nine lines of method before any
   data; the caveats could move into a disclosure under a one-line lead.
+
+### 26.5 Consistency pass (2026-10-13)
+
+Rules this pass set, so later work keeps them:
+
+- **Measures.** From 768px a game list (Home's latest and next slates, `/schedule` day blocks, JV
+  day games) is capped at 48rem, left-aligned; from 1024px so are the compact standings tables
+  (`/standings`, `/teams`), the `/jv` tables and the tournament seeds table. Home's My-team card and
+  its header stop at 36rem (576px, still wider than a 390 phone card, so its 24.5rem floor holds);
+  Home's "Other leagues" list keeps the 46rem measure, each row's arrow right after its text. A section header with an action over one of
+  these (Home's slates, a `/schedule` day row, `/playoffs` seeds, `/jv` and `/teams` league
+  headers) takes the same cap, so the action sits over the list it opens. Below those widths every
+  one still bleeds or fills the column.
+- **Pills.** `.sx-pill` has 10px of block padding: a one-line pill keeps its 40/44px, and a
+  label that wraps (the `/about` PDF pills, Home's 2-up "Show <LEAGUE> here" buttons at 390) is
+  60px, with even space above and below, rather than text touching its edges.
+- **PageHeader.** From 768px the title block keeps at least 28rem; an aside too wide to sit beside
+  it wraps under the title, right-aligned, with a 16px row gap. The `/history` league jump pills
+  show from 768px at every width.
+- **Jump targets** rely on `html`'s `scroll-padding-top` (6.5rem on a phone, 7.5rem from 768px)
+  alone; no section adds its own `scroll-mt-*`.
+- **Whole-row links.** Compact standings, `/jv`, `/history` standings and `/leaders` school-board
+  rows are one link each: the name link's `::after` stretches over a `relative` row. A `/leaders`
+  player-board row is about the player, so its school stays an inline link in the meta line. The JV table carries the
+  team monogram and the pinned row's "Your team." note like the compact table, and its names wrap
+  to two lines rather than truncating.
+- **Grid lists (§10.8).** A short last row is finished by aria-hidden filler cells
+  (`components/ui/GridRowFiller.tsx`) with the same `border-t border-divider` hairline, shown only
+  where the count leaves the row short. No container gap rules, no new elevation, no hue.
+- **Separators.** In a dotted or comma list the dot or comma sits inside the nowrap span of the
+  item before it, then a plain space, so no line starts with one. A no-break space after an
+  inline-flex `.sx-action` link does not do this: the link is an atomic inline.
+- **Schedule filters.** The More-filters tray floats over the list from 1024px (Escape and a press
+  outside close it); below that it is an in-flow inset tray. Removing a filter chip moves focus to
+  the chip now in its place, or to the count line when none is left. The timeline rail's `● Today`
+  chip reads `● Next` on a day with no game and jumps to the next game day.
+- **Team page.** From 768px the Last card uses the Next card's 44px pills ("Full game page",
+  "MaxPreps box score" or "MaxPreps game", "NFHS stream"). In "Who we haven't beaten" an
+  official-only fixture dated today or later reads "next <date>"; "unreported" is for past-dated
+  ones only. A game-log row whose content box is under 16.75rem (large text) moves the opponent and
+  status to a second line.
+- **Pin focus.** After an unpin the team's tile takes focus only when it is on screen; otherwise
+  the My-team finder does, with `preventScroll`.
+- **Playoffs.** In Key dates the league label follows the title. A lone pairing card under a
+  "Play-in" header shows only its date and time, and "they move with every result" is said once:
+  on the unsettled card, or in the footer when every pairing is settled.
+- **Copy.** The standings legend's subject is the league's `standaloneName` ("North County
+  publishes no standings…"; "the LA independents publish…"). Spoken row labels give the record in
+  words with real plurals ("1 point"). `/about` cross-check rows print dates with `shortDate` in a
+  `<time>`.

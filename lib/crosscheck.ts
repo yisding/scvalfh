@@ -196,7 +196,7 @@ export function reconcile(
     // "<away> at <home>", and printing the same MaxPreps result as "0-3" here and "3–0" there put
     // one score in two opposite orientations inside one row.
     const note =
-      `Sources disagree: we show MaxPreps' ${scorePair(ourAway, ourHome)}` +
+      `Sources disagree: we show MaxPreps’ ${scorePair(ourAway, ourHome)}` +
       ` (${game.away.name}–${game.home.name}); si.com reports ${scorePair(sbAway, sbHome)}.` +
       ' MaxPreps’ score stands.';
     conflicts.push({

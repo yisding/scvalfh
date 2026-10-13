@@ -133,7 +133,7 @@ function conflictRow(
     maxprepsUrl: game.urls.maxpreps,
     cifssUrl,
     note:
-      `Sources disagree: we show MaxPreps' ${maxpreps.away}-${maxpreps.home} (${game.away.name}–${game.home.name}); ` +
+      `Sources disagree: we show MaxPreps’ ${maxpreps.away}-${maxpreps.home} (${game.away.name}–${game.home.name}); ` +
       `cifsshome.org reports ${cifss.away}-${cifss.home}.${moved} MaxPreps’ score stands.`,
   };
 }

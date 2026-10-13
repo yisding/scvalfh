@@ -313,10 +313,10 @@ async function main(argv: readonly string[]): Promise<number> {
     status: 'unavailable',
     league: getLeague('mcal').name,
     reason:
-      'MCAL published no 2025-26 final standings of its own. Its field hockey page links "League Standings" to MaxPreps\' current-season table, and it posts no 2025 play-off sheet. The league\'s official 2025 All-MCAL team is posted on the same page and is linked here, not reproduced: this archive shows a league\'s awards only beside its official final standings. We do not show standings from newspapers or third-party sites.',
+      'MCAL published no 2025-26 final standings of its own. Its field hockey page links "League Standings" to MaxPreps’ current-season table, and it posts no 2025 play-off sheet. The league’s official 2025 All-MCAL team is posted on the same page and is linked here, not reproduced: this archive shows a league’s awards only beside its official final standings. We do not show standings from newspapers or third-party sites.',
     checkedOn: '2026-10-03',
     checked: [
-      'https://www.mcalsports.org/FieldHockey.htm (loads; its "League Standings" link is MaxPreps\' 2026-27 table, and no 2025 standings are posted)',
+      'https://www.mcalsports.org/FieldHockey.htm (loads; its "League Standings" link is MaxPreps’ 2026-27 table, and no 2025 standings are posted)',
       'https://www.mcalsports.org/ (no standings or results archive)',
       'https://www.mcalsports.org/Playoffs/FieldHockeyPlayoffs_25.pdf (404; the name follows the 2026 sheet, FieldHockeyPlayoffs_26.pdf, and the singular FieldHockeyPlayoff_25.pdf is a 404 too)',
     ],

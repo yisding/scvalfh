@@ -297,6 +297,27 @@ describe('goalkeeping — entered figures, a computed save %, and the keeper fir
     expect(law.flag).toBe('As entered, these cannot all be right: 10 opponent shots on goal, but 18 saves.');
   });
 
+  it('writes a count of 1 in the singular in the flag ("1 save", never "1 saves")', () => {
+    const saves = team(['gamesPlayed', 'opponentShotsOnGoal', 'saves'], [
+      line('Corina Law', goalie({ gamesPlayed: 1, opponentShotsOnGoal: 0, saves: 1 })),
+    ]);
+    expect(buildPlayerStatsView('valley-christian', [], saves)!.goalies[0].flag).toBe(
+      'As entered, these cannot all be right: 0 opponent shots on goal, but 1 save.',
+    );
+    const against = team(['gamesPlayed', 'opponentShotsOnGoal', 'goalsAgainst'], [
+      line('Corina Law', goalie({ gamesPlayed: 1, opponentShotsOnGoal: 0, goalsAgainst: 1 })),
+    ]);
+    expect(buildPlayerStatsView('valley-christian', [], against)!.goalies[0].flag).toBe(
+      'As entered, these cannot all be right: 0 opponent shots on goal, but 1 goal against.',
+    );
+    const both = team(['gamesPlayed', 'opponentShotsOnGoal', 'saves', 'goalsAgainst'], [
+      line('Corina Law', goalie({ gamesPlayed: 1, opponentShotsOnGoal: 1, saves: 2, goalsAgainst: 0 })),
+    ]);
+    expect(buildPlayerStatsView('valley-christian', [], both)!.goalies[0].flag).toBe(
+      'As entered, these cannot all be right: 1 opponent shot on goal, but 2 saves plus goals against. No save % is worked out.',
+    );
+  });
+
   it('puts the keeper first, not a field player MaxPreps lists in the goalie group with the full game count', () => {
     // University: a forward (12 goals, 2 saves, 16 games) sorted ahead of the keeper by name.
     const data = team(['gamesPlayed', 'opponentShotsOnGoal', 'saves', 'shutouts', 'wins', 'losses', 'ties'], [

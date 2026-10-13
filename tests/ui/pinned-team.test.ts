@@ -6,6 +6,7 @@
  *   and returns false, so the finder never leaves an empty My-team box with no Unpin.
  * - After an unpin with "All" remembered, the My-team slot hides; focus goes to the first-visit
  *   finder (or its heading), never `<body>`.
+ * - A tile far off screen is skipped for the finder, so an unpin never jumps the page to it.
  */
 import { afterEach, describe, expect, it } from 'vitest';
 
@@ -52,7 +53,7 @@ function install(opts: {
     },
   };
   const g = globalThis as Record<string, unknown>;
-  g.window = { localStorage, dispatchEvent: () => true };
+  g.window = { localStorage, dispatchEvent: () => true, innerHeight: 800 };
   g.document = {
     documentElement: html,
     querySelectorAll: (sel: string) => opts.bySelector?.[sel] ?? [],
@@ -113,6 +114,26 @@ describe('focus after an unpin', () => {
     });
     expect(unpinFocusTarget('leigh')).toBe(tile);
     expect(unpinFocusTarget(null)).toBe(slotField);
+  });
+
+  it('a tile far below the viewport is skipped for the slot finder (no long scroll jump)', () => {
+    const farTile = Object.assign(fakeElement(true), {
+      getBoundingClientRect: () => ({ top: 1800, bottom: 1860 }),
+    });
+    const nearTile = Object.assign(fakeElement(true), {
+      getBoundingClientRect: () => ({ top: 400, bottom: 460 }),
+    });
+    const slotField = fakeElement(true);
+    install({
+      storage: 'ok',
+      bySelector: {
+        '[data-pin-tile="leigh"]': [farTile],
+        '[data-pin-tile="cupertino"]': [nearTile],
+        '.sx-myteam-slot input[type="search"]': [slotField],
+      },
+    });
+    expect(unpinFocusTarget('leigh')).toBe(slotField);
+    expect(unpinFocusTarget('cupertino')).toBe(nearTile);
   });
 
   it('no finder rendered (no JS styles yet): the first-visit heading, made focusable', () => {

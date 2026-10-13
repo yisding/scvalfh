@@ -26,6 +26,9 @@ export interface CrossLeagueLatestProps {
 
 export function CrossLeagueLatest({ view, region, className }: CrossLeagueLatestProps) {
   const headingId = `latest-every-league${region.idSuffix}`;
+  // One league that day: no two-up grid, and the header and list share the 48rem game-list measure
+  // (DESIGN §26.5), so "All N" sits over the list instead of over an empty right column.
+  const single = view?.groups.length === 1;
   return (
     <section data-scope="none" data-region-scope={region.id} aria-labelledby={headingId} className={className}>
       <SectionHeader
@@ -33,10 +36,11 @@ export function CrossLeagueLatest({ view, region, className }: CrossLeagueLatest
         kicker={`Latest from every ${region.shortName} league`}
         meta={view ? shortDate(view.date) : undefined}
         action={view ? { href: `/scores/${view.date}`, label: `All ${view.total}` } : undefined}
+        className={single ? 'md:max-w-3xl' : undefined}
       />
       {view && view.groups.length > 0 ? (
         // Two-up from 768px: a full-width row put each score a thousand pixels from its team name.
-        <div className="md:grid md:grid-cols-2 md:items-start md:gap-x-6 md:gap-y-6">
+        <div className={single ? 'md:max-w-3xl' : 'md:grid md:grid-cols-2 md:items-start md:gap-x-6 md:gap-y-6'}>
           {view.groups.map((group, i) => (
             <div key={group.leagueId} className={i === 0 ? 'mt-0' : 'mt-5 md:mt-0'}>
               <h3 className="m-0 mb-2 text-lead text-ink">{group.shortName}</h3>

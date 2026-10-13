@@ -77,7 +77,11 @@ export function HistoryBracket({ division, label }: HistoryBracketProps) {
         const byes = roundByes(division, roundIndex);
         return (
           <li key={round.name} className="flex min-w-0 flex-col">
-            <h4 className="m-0 mb-3 text-meta font-semibold text-ink md:pl-4">
+            <h4
+              className={['m-0 mb-3 text-meta font-semibold text-ink', roundIndex > 0 ? 'md:pl-4' : null]
+                .filter(Boolean)
+                .join(' ')}
+            >
               {round.name} <span className="font-normal text-ink-2">&middot; {roundDate(round)}</span>
             </h4>
             <ol

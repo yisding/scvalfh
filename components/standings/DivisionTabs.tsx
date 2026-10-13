@@ -59,7 +59,8 @@ export function DivisionTabs({
   className,
 }: DivisionTabsProps) {
   return (
-    <nav aria-label={label} className={`${VARIANT[variant]}${className ? ` ${className}` : ''}`}>
+    // Screen-only (`sx-print-hide`): a jump nav is no use on paper.
+    <nav aria-label={label} className={`sx-print-hide ${VARIANT[variant]}${className ? ` ${className}` : ''}`}>
       {tabs.map((tab) => (
         <a
           key={tab.href}

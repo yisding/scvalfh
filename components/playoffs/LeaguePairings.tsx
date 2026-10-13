@@ -24,11 +24,19 @@ function toSide(seat: SeatView): PlayInSide {
   };
 }
 
-/** The pairing's purpose from its config label: the words after ' — ', sentence case. */
-function purposeOf(label: string): string | null {
+/**
+ * The pairing's purpose from its config label: the words after ' — ', sentence case, without a
+ * leading word that repeats the card's title ('play-in for BVAL’s 4th automatic CCS berth' under
+ * 'Play-in' reads 'For BVAL’s 4th automatic CCS berth.'; 'crossover (helps CCS ordering)' under
+ * 'Crossover · #1 v #1' reads 'Helps CCS ordering.').
+ */
+function purposeOf(label: string, title: string): string | null {
   const at = label.indexOf(' — ');
   if (at < 0) return null;
-  const tail = label.slice(at + 3).trim();
+  let tail = label.slice(at + 3).trim();
+  const titleWord = title.split(/\s/)[0].toLowerCase();
+  const [first, ...rest] = tail.split(' ');
+  if (rest.length > 0 && first.toLowerCase() === titleWord) tail = rest.join(' ').replace(/^\((.*)\)$/, '$1');
   return tail ? `${tail[0].toUpperCase()}${tail.slice(1)}.` : null;
 }
 
@@ -52,13 +60,17 @@ export function LeaguePairings({ pairings, className }: LeaguePairingsProps) {
           p.connector === 'at' && a.host ? [toSide(b), toSide(a)] : [toSide(a), toSide(b)];
         return (
           <li key={p.id} className={single ? 'max-w-3xl' : undefined}>
+            {/* A lone play-in sits under a section header that already names it ('Play-in'), so
+                it shows only its date and time. A lone crossover sits under 'Crossover and
+                play-in', which does not, so it keeps its title (and its seeds); a set keeps every
+                title to tell the games apart. */}
             <PlayInCard
-              title={p.title}
+              title={single && p.isPlayIn ? null : p.title}
               when={{ dateKey: p.dateKey, dateLabel: p.dateLabel, timeLabel: p.timeLabel }}
               sides={sides}
               connector={p.connector}
               sentence={pairingSentence(p)}
-              purpose={purposeOf(p.label)}
+              purpose={purposeOf(p.label, p.title)}
               notes={p.notes}
               game={p.game}
               emphasis={p.isPlayIn && !single}

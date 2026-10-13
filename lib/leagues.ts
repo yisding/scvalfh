@@ -1112,7 +1112,7 @@ const EAL: LeagueConfig = {
       // No league or Section schedule exists. The umpires' grid is NOT official and is never linked or bundled.
       official: {
         mode: 'none',
-        note: 'The EAL publishes no schedule or standings document of its own. Its league games are the games MaxPreps marks as league games; on 2026-10-04 all 30 of them matched, by date and home side, the 2026 league grid posted on the EAL/SRL umpires’ site (fieldhockeyumpires.org).',
+        note: 'The EAL publishes no schedule or standings document of its own. Its league games are the games MaxPreps marks as league games; on Oct 4 all 30 of them matched, by date and home side, the 2026 league grid posted on the EAL/SRL umpires’ site (fieldhockeyumpires.org).',
       },
       // MaxPreps lists 7 rows: the six members plus Red Bluff (7 + 0 − 1 = 6).
       maxprepsTeamCount: 7, maxprepsMissing: [],
