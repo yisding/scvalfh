@@ -678,11 +678,14 @@ describe('recruiting profiles', () => {
     expect([n('school-site'), n('news')]).toEqual([95, 18]);
     // Every page a grade rests on is among its team's sources: the page itself, or, for a school site's
     // player pages (Glendora, Granite Hills, Southwest), that site's roster page, which the team page
-    // links in their place (same host, same kind).
+    // links in their place. Only school sites fold that way; a story must be listed itself, since a
+    // paper's other stories on the same host say nothing about it.
     const host = (url: string) => new URL(url).hostname;
     for (const { t, p } of added) {
       const g = p.grade!;
-      const listed = t.sources.some((s) => s.url === g.source || (s.kind === g.kind && host(s.url) === host(g.source)));
+      const listed = t.sources.some(
+        (s) => s.url === g.source || (g.kind === 'school-site' && s.kind === 'school-site' && host(s.url) === host(g.source)),
+      );
       expect(listed, `${t.slug} / ${p.fullName}`).toBe(true);
     }
   });
