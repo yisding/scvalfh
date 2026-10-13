@@ -61,7 +61,7 @@ const SBLIVE = 'https://assets.scorebooklive.com/uploads/production';
  * school goes by is not this script's call. Nor is a sharper copy whose art is wider (Sage Creek,
  * Patrick Henry): it draws smaller in a 24px row tile, which is where most tiles are. Some MaxPreps
  * uploads are distorted (squeezed into a square, or narrowed): where SBLive has the same mark at its
- * true proportions it is used (Huntington Beach, Redwood); Lassen, Mira Mesa and Saratoga use the
+ * true proportions it is used (Huntington Beach); Lassen, Mira Mesa, Redwood and Saratoga use the
  * school's own site, as Monta Vista does.
  */
 const SOURCE_OVERRIDES: Readonly<Record<string, { url: string; why: string }>> = {
@@ -97,8 +97,9 @@ const SOURCE_OVERRIDES: Readonly<Record<string, { url: string; why: string }>> =
     why: "MaxPreps' M and wordmark are squeezed horizontally (about 0.8× the school site's width at the same height)",
   },
   redwood: {
-    url: `${SBLIVE}/school/13442/image/Redwood__CA__Giants_Logo.png`,
-    why: "MaxPreps' block R is squeezed horizontally (about 0.8× SBLive's width at the same height)",
+    // The Tamalpais district's own Redwood logo (125×140; f_auto serves a PNG for this Accept).
+    url: 'https://resources.finalsite.net/images/f_auto,q_auto/v1697390927/tamdistrictorg/qpfipyp1egiheycbyy2p/RedwoodLogo.png',
+    why: "the school district's official copy of the R and redwood, cleaner than MaxPreps' gif",
   },
   lassen: {
     // The school's own "We Are Lassen" bear (1200×1200), the same design MaxPreps carries squeezed.
