@@ -61,7 +61,8 @@ const SBLIVE = 'https://assets.scorebooklive.com/uploads/production';
  * school goes by is not this script's call. Nor is a sharper copy whose art is wider (Sage Creek,
  * Patrick Henry): it draws smaller in a 24px row tile, which is where most tiles are. Some MaxPreps
  * uploads are distorted (squeezed into a square, or narrowed): where SBLive has the same mark at its
- * true proportions it is used (Huntington Beach, Mira Mesa, Redwood).
+ * true proportions it is used (Huntington Beach, Redwood); Lassen, Mira Mesa and Saratoga use the
+ * school's own site, as Monta Vista does.
  */
 const SOURCE_OVERRIDES: Readonly<Record<string, { url: string; why: string }>> = {
   'monta-vista': {
@@ -78,8 +79,9 @@ const SOURCE_OVERRIDES: Readonly<Record<string, { url: string; why: string }>> =
     why: "MaxPreps' is a dithered 136×131 gif; SBLive's is the same mark at 1240px",
   },
   saratoga: {
-    url: `${SBLIVE}/school/11858/image/logo-wide-aspect-ratio_copy.png`,
-    why: "MaxPreps' is 196×161 on a textured navy square; SBLive's is the same falcon at 772×1024",
+    // The school site's footer logo (300×300 PNG, transparent).
+    url: 'https://wordpress-multisite-production-public.s3.amazonaws.com/wp-content/uploads/sites/269/2025/04/FOOTER-LOGO.png',
+    why: "MaxPreps' is 196×161 on a textured navy square; the school site has the same falcon on its own",
   },
   marina: {
     url: `${SBLIVE}/school/11317/image/marina__ca__vikings_logo_720.png`,
@@ -90,12 +92,18 @@ const SOURCE_OVERRIDES: Readonly<Record<string, { url: string; why: string }>> =
     why: "MaxPreps' derrick is squashed into a 387×382 square with a blurred halo; SBLive's keeps its proportions",
   },
   'mira-mesa': {
-    url: `${SBLIVE}/school/12918/image/Mira_Mesa__CA__Marauders_Logo.png`,
-    why: "MaxPreps' M and wordmark are squeezed horizontally (about 0.8× SBLive's width at the same height)",
+    // The school site's footer logo (300×300 PNG, transparent).
+    url: 'https://wordpress-multisite-production-public.s3.amazonaws.com/wp-content/uploads/sites/383/2025/07/FOOTER-LOGO-24.png',
+    why: "MaxPreps' M and wordmark are squeezed horizontally (about 0.8× the school site's width at the same height)",
   },
   redwood: {
     url: `${SBLIVE}/school/13442/image/Redwood__CA__Giants_Logo.png`,
     why: "MaxPreps' block R is squeezed horizontally (about 0.8× SBLive's width at the same height)",
+  },
+  lassen: {
+    // The school's own "We Are Lassen" bear (1200×1200), the same design MaxPreps carries squeezed.
+    url: 'https://cmsv2-assets.apptegy.net/uploads/24330/logo/27143/We_are_Lassen-web.png',
+    why: "MaxPreps' copy of the bear is squeezed to about 0.85× its width; the school site's is not",
   },
   'live-oak': {
     url: `${SBLIVE}/school/12140/image/acorn.png`,
