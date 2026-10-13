@@ -19,8 +19,11 @@
  * `id` is the registry's MaxPreps GUID and `a b c` are its first three characters — the exact
  * address the standings and schedule feeds publish as `schoolMascotUrl` / `mascotUrl`. A school
  * MaxPreps has no mascot for answers 404, which fails the run rather than writing a placeholder.
+ * A school whose MaxPreps mascot is too small or blurred to draw well takes its logo from
+ * SOURCE_OVERRIDES instead, each entry naming where the file comes from and why.
  *
- * Every source gif is an opaque logo on white. The tile keeps the white (a logo drawn for a white
+ * Every MaxPreps gif is an opaque logo on white (an override with transparency is flattened onto
+ * white the same way). The tile keeps the white (a logo drawn for a white
  * page loses its outline on a dark one), trims the white margin MaxPreps leaves around it, and
  * re-centres it with an even inset so the tile's rounded corners never clip the art. A full-bleed
  * logo (a dark square edge to edge: Bishop's, Canyon Crest, Westmont) is drawn to the edge instead,
@@ -49,8 +52,22 @@ const WHITE = { r: 255, g: 255, b: 255, alpha: 1 };
 /** The art's inset on each side, as a fraction of the tile: clears a quarter-side corner radius. */
 const INSET = 0.08;
 
-function mascotUrl(teamId: string): string {
-  const id = teamId.toLowerCase();
+/**
+ * Schools drawn from another source than MaxPreps, by slug. Only for a MaxPreps mascot that does
+ * not hold up as a tile; prefer the school's own official logo.
+ */
+const SOURCE_OVERRIDES: Readonly<Record<string, { url: string; why: string }>> = {
+  'monta-vista': {
+    // The school's own site footer logo (1788×1371 PNG, the matador with "MV").
+    url: 'https://mvhs.fuhsd.org/uploaded/themes/default_17/images/monta_vista_footer.png',
+    why: "MaxPreps' mascot is a 68×68 gif on a purple gradient, blurred at every tile size",
+  },
+};
+
+function mascotUrl(team: Pick<Team, 'id' | 'slug'>): string {
+  const override = SOURCE_OVERRIDES[team.slug];
+  if (override) return override.url;
+  const id = team.id.toLowerCase();
   return `https://image.maxpreps.io/school-mascot/${id[0]}/${id[1]}/${id[2]}/${id}.gif?width=512&height=512`;
 }
 
@@ -95,10 +112,11 @@ async function isFullBleed(img: Sharp): Promise<boolean> {
   return white / edge < 0.2;
 }
 
-/** One gif → the square WebP tiles, in MASCOT_SIZES order. */
-async function mascotTiles(gif: Uint8Array): Promise<Buffer[]> {
-  // First frame only, flattened onto white (a few gifs carry a transparent index), white margin cut.
-  const flat = await sharp(gif, { animated: false })
+/** One source image (a MaxPreps gif or an override) → the square WebP tiles, in MASCOT_SIZES order. */
+async function mascotTiles(source: Uint8Array): Promise<Buffer[]> {
+  // First frame only, flattened onto white (a few gifs carry a transparent index, an override PNG
+  // may be transparent throughout), white margin cut.
+  const flat = await sharp(source, { animated: false })
     .flatten({ background: WHITE })
     .trim({ background: '#ffffff', threshold: 24 })
     .toBuffer();
@@ -123,14 +141,14 @@ async function main(argv: readonly string[]): Promise<number> {
     console.log(USAGE);
     return 0;
   }
-  const unknown = args.only.filter((s) => !TEAMS.some((t) => t.slug === s));
+  const unknown = [...args.only, ...Object.keys(SOURCE_OVERRIDES)].filter((s) => !TEAMS.some((t) => t.slug === s));
   if (unknown.length > 0) throw new Error(`not a registry slug: ${unknown.join(', ')}`);
   const teams: readonly Team[] = args.only.length > 0 ? TEAMS.filter((t) => args.only.includes(t.slug)) : TEAMS;
 
   const http = new HttpClient({ onLog: (line) => console.log(`  ${line}`) });
   const results = await Promise.all(
     teams.map(async (team) => {
-      const res = await http.bytes(mascotUrl(team.id), 'image/gif,image/*');
+      const res = await http.bytes(mascotUrl(team), 'image/gif,image/png,image/*');
       if (!res.contentType?.startsWith('image/')) {
         throw new Error(`${team.slug}: ${res.url} answered ${res.contentType ?? 'no content type'}`);
       }
@@ -145,7 +163,10 @@ async function main(argv: readonly string[]): Promise<number> {
       bytes += tile.length;
       if (!args.dryRun) writeFileSync(path.join(MASCOT_DIR, `${team.slug}-${MASCOT_SIZES[i]}.webp`), tile);
     });
-    console.log(`${team.slug.padEnd(24)} ${tiles.map((t) => `${t.length} B`).join(' · ')}`);
+    const override = SOURCE_OVERRIDES[team.slug];
+    console.log(
+      `${team.slug.padEnd(24)} ${tiles.map((t) => `${t.length} B`).join(' · ')}${override ? `  (override: ${override.why})` : ''}`,
+    );
   }
   console.log(
     `${args.dryRun ? 'would write' : 'wrote'} ${results.length * MASCOT_SIZES.length} tiles for ${results.length} teams (${bytes} bytes)`,
