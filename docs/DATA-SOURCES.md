@@ -500,6 +500,25 @@ shows a commitment not yet in `data/commits.json`: Campbell Trocha's, to Florida
 carry numbers that cannot be guessed (NCSA loads in a headless browser, but its school pages list
 only a few recent athletes).
 
+*Claimed MaxPreps pages, 2026-10-13.* MaxPreps keeps a career page for every rostered player
+(`careerUrl`), and a player or a parent can claim it. The roster page's `linkedAthlete`,
+`linkedParents` and `accountInformation` columns are null on every row of every capture (they fill
+only for a signed-in viewer), so the claim is read from the career page itself: its RSC payload's
+`careerPlayerData.isClaimed` **[V]**. A claimed page also renders MaxPreps' Claimed badge beside the
+name (`CareerHeaderTextBlock__StyledClaimedBadgeIcon`) and carries `career-claimed` in its ad
+targeting; an unclaimed one has neither. All 1,702 rows' career pages were read (three at a time,
+500 ms apart, about 15 minutes): 260 claimed on 73 teams, 1,441 not, and one, Marin Catholic's
+Alexandra Schmidt, answered 403 with a redirect to a MaxPreps support article, so is not linked. The
+260 are linked as `platform: "maxpreps"` profiles at the row's own `careerUrl`, with no `sport` (one
+page covers every sport) and `classOf` from the page's `graduatingClass` where it has one (221). They
+are the page the row comes from, so they need no name, school or class-year match; `lib/rosters.ts`
+instead refuses one whose URL is not its row's `careerUrl`. 159 of the 260 players had no other
+profile, so the file now holds 779 profiles for 569 players. The roster shows "MaxPreps profile"
+after the recruiting sites' links, and its footnote says these are claimed pages rather than matched
+ones. The claim is not refreshed by `pnpm fetch-rosters`: the flag lives only on the career page, one
+600 KB page per player, so re-reading it is a re-run of this sweep, not part of the roster read. (One career page, Leigh's Adriana Yam's, shows another
+player's name, Ayva Garcia; it is unclaimed, so nothing is linked.)
+
 Gotchas, all **[V]**:
 - **NCSA** (`ncsasports.org/field-hockey-recruiting/california/<city>/<school>/<first-last[N]>`)
   answers curl and WebFetch with a Cloudflare challenge (403, "Just a moment..."). Its six

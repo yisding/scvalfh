@@ -394,7 +394,11 @@ pages for 116 players (52 NorCal, 66 SoCal): 91 lacrosse, 15 softball, 6 field h
 and field, so the file holds 519 for 410 players. A page is linked only when it names the player and a
 sport and either names the school or shows the class year the roster shows plus a California hometown
 (for the 2026-10-12 pages, a hometown in the school's own area), and a stated class year must
-agree with the row's grade (checked at load). The roster shows them as a line of links under the
+agree with the row's grade (checked at load). On 2026-10-13 every row's MaxPreps career page was
+read for MaxPreps' own claimed flag (`isClaimed`, a page the player or a parent has claimed): the 260
+claimed pages, on 73 teams, are linked as "MaxPreps profile" (`platform: "maxpreps"`, always the row's
+own `careerUrl`, checked at load), 159 of them for players with no other profile, so the file holds
+779 profiles for 569 players. The roster shows them as a line of links under the
 player's facts. Recall is partial: see `docs/DATA-SOURCES.md` §1.1j, which also has the column map,
 the per-school sources and the overlay's rules.
 

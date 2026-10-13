@@ -9,7 +9,7 @@
  *     school roster PDF, school and local papers, MaxPreps career, JV and earlier-season pages — joined on team slug +
  *     MaxPreps athleteId. It only ever fills a blank; where a source disagrees with MaxPreps,
  *     MaxPreps stays and the disagreement is recorded. It also links players' own recruiting
- *     profiles (NCSA and the like). `getEnrichedTeamRoster` merges the two and says, per field,
+ *     profiles (NCSA and the like, and MaxPreps career pages the player has claimed). `getEnrichedTeamRoster` merges the two and says, per field,
  *     where each value came from. Both files hold one entry per registry team (102); a team no run
  *     has covered yet is status 'pending', and a team nothing was found for has an empty overlay.
  *     A team's entry may also say what other public sources showed for its current roster
@@ -119,8 +119,9 @@ function loadRosters(): Rosters {
 /**
  * The overlay's rules, asserted against the base at load time (the schema alone cannot see both
  * files): every record joins to a MaxPreps row of the same team, a filled field was null on
- * MaxPreps, a recorded conflict's `kept` value is MaxPreps' own, and a recruiting profile that
- * states a class year agrees with the grade the row shows.
+ * MaxPreps, a recorded conflict's `kept` value is MaxPreps' own, a recruiting profile that
+ * states a class year agrees with the grade the row shows, and a claimed MaxPreps profile is the
+ * row's own career page.
  */
 function loadEnrichment(base: Rosters): RosterEnrichment {
   const parsed = RosterEnrichmentSchema.safeParse(
@@ -158,6 +159,9 @@ function loadEnrichment(base: Rosters): RosterEnrichment {
       }
       const grade = p!.grade ?? e.grade?.value ?? null;
       for (const x of e.profiles) {
+        if (x.platform === 'maxpreps' && x.url !== p!.careerUrl) {
+          fail(team.slug, e.fullName, `maxpreps profile ${x.url} is not this row's career page (${p!.careerUrl})`);
+        }
         if (x.classOf !== null && grade !== null && x.classOf !== classOf(base.season, grade)) {
           fail(team.slug, e.fullName, `${x.platform} profile says class of ${x.classOf}, the roster shows grade ${grade}`);
         }
