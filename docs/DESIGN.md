@@ -2415,8 +2415,9 @@ mark at all: Los Altos and Valley Christian are both 2-1-1, separated by 9 goals
 > null in the snapshot. tests/mascots.test.ts fails for a registry team without its tiles.
 > A school whose MaxPreps mascot does not hold up as a tile takes the same mark from a sharper
 > source instead (`SOURCE_OVERRIDES` in the script): SBLive/SI for Rancho Bernardo, La Costa Canyon,
-> Saratoga, Marina and Live Oak, and the school's own site for Monta Vista, whose MaxPreps mascot is
-> a 68×68 gif on a purple gradient. A different design is never swapped in. The original reasoning follows.
+> Saratoga, Marina and Live Oak, SBLive/SI for Huntington Beach, Mira Mesa and Redwood (MaxPreps'
+> copies are squeezed out of proportion), and the school's own site for Monta Vista, whose MaxPreps
+> mascot is a 68×68 gif on a purple gradient. A different design is never swapped in. The original reasoning follows.
 
 `schoolMascotUrl` is right there in `tableData`. The constraint forbids hotlinking and the
 design doesn't want it: third-party asset, inconsistent size and background, 16 network requests

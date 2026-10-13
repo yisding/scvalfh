@@ -59,7 +59,9 @@ const SBLIVE = 'https://assets.scorebooklive.com/uploads/production';
  * (already a data source, DESIGN §12.8) has many schools' logos at 750–1536px, or the school's own
  * site. Where SBLive's logo is a different design from MaxPreps', it is not used here: which mark a
  * school goes by is not this script's call. Nor is a sharper copy whose art is wider (Sage Creek,
- * Patrick Henry): it draws smaller in a 24px row tile, which is where most tiles are.
+ * Patrick Henry): it draws smaller in a 24px row tile, which is where most tiles are. Some MaxPreps
+ * uploads are distorted (squeezed into a square, or narrowed): where SBLive has the same mark at its
+ * true proportions it is used (Huntington Beach, Mira Mesa, Redwood).
  */
 const SOURCE_OVERRIDES: Readonly<Record<string, { url: string; why: string }>> = {
   'monta-vista': {
@@ -82,6 +84,18 @@ const SOURCE_OVERRIDES: Readonly<Record<string, { url: string; why: string }>> =
   marina: {
     url: `${SBLIVE}/school/11317/image/marina__ca__vikings_logo_720.png`,
     why: "MaxPreps' is a 413×212 wide lockup with a grey border line; SBLive's stacks the same viking and wordmark square at 720px",
+  },
+  'huntington-beach': {
+    url: `${SBLIVE}/school/11316/image/Huntington_Beach__CA__Oilers_Logo.png`,
+    why: "MaxPreps' derrick is squashed into a 387×382 square with a blurred halo; SBLive's keeps its proportions",
+  },
+  'mira-mesa': {
+    url: `${SBLIVE}/school/12918/image/Mira_Mesa__CA__Marauders_Logo.png`,
+    why: "MaxPreps' M and wordmark are squeezed horizontally (about 0.8× SBLive's width at the same height)",
+  },
+  redwood: {
+    url: `${SBLIVE}/school/13442/image/Redwood__CA__Giants_Logo.png`,
+    why: "MaxPreps' block R is squeezed horizontally (about 0.8× SBLive's width at the same height)",
   },
   'live-oak': {
     url: `${SBLIVE}/school/12140/image/acorn.png`,

@@ -979,11 +979,12 @@ proxy that Node's fetch does not read, run it with `NODE_USE_ENV_PROXY=1`.
 
 Every team's tile is its MaxPreps mascot, self-hosted in `public/mascots/` (a 64px and a 128px
 square WebP per school; DESIGN §12.4), so no page loads an image from another site. Where MaxPreps'
-mascot is too small to draw well, `SOURCE_OVERRIDES` in scripts/fetch-mascots.ts takes the same mark
-from a sharper source instead: SBLive/SI for Rancho Bernardo, La Costa Canyon, Saratoga, Marina and
-Live Oak, and the school's own site for Monta Vista (whose MaxPreps mascot is a 68px gif). The files
-are committed, not refreshed by the cron. Run `pnpm fetch-mascots` when a team joins the registry
-(`tests/mascots.test.ts` fails until its tiles exist) or a school changes its logo:
+mascot is too small or distorted to draw well, `SOURCE_OVERRIDES` in scripts/fetch-mascots.ts takes the same mark
+from a better source instead: SBLive/SI for Rancho Bernardo, La Costa Canyon, Saratoga, Marina and
+Live Oak (sharper), and for Huntington Beach, Mira Mesa and Redwood (MaxPreps' copies are squeezed
+out of proportion), and the school's own site for Monta Vista (whose MaxPreps mascot is a 68px gif).
+The files are committed, not refreshed by the cron. Run `pnpm fetch-mascots` when a team joins the
+registry (`tests/mascots.test.ts` fails until its tiles exist) or a school changes its logo:
 
 ```bash
 pnpm fetch-mascots                       # all 102 teams
