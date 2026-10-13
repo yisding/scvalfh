@@ -2404,16 +2404,19 @@ mark at all: Los Altos and Valley Christian are both 2-1-1, separated by 9 goals
 > **Amended 2026-10-13: the mascots are now shown, self-hosted.** The tile in every row, card and
 > hero is the school's MaxPreps logo. `pnpm fetch-mascots` reads each registry team's
 > `image.maxpreps.io/school-mascot/{a}/{b}/{c}/{id}.gif` (the address the feeds publish as
-> `schoolMascotUrl`, derived from the team's MaxPreps id), trims the white margin, insets the art
-> clear of the rounded corners (a full-bleed logo is drawn to the edge), and commits two square
+> `schoolMascotUrl`, derived from the team's MaxPreps id, fetched at native size: with a size query
+> MaxPreps crops a non-square logo to fill the square), trims the white margin, insets the art
+> clear of the rounded corners (a full-bleed logo is drawn to the edge, and one on a solid colour
+> block fills the tile with that colour), and commits two square
 > WebP tiles per school to `public/mascots/`. That answers each objection below: nothing is
 > hotlinked and no page makes a third-party request; every tile is the same size and inset; the
 > requests are same-origin, 1–5 KB each and lazy below the fold; and each logo sits on its own
 > white square with the hairline ring, which reads on the dark theme too. `Team.mascotUrl` stays
 > null in the snapshot. tests/mascots.test.ts fails for a registry team without its tiles.
-> A school whose MaxPreps mascot does not hold up as a tile takes the school's own official logo
-> instead (`SOURCE_OVERRIDES` in the script; so far only Monta Vista, whose MaxPreps mascot is a
-> 68×68 gif on a purple gradient). The original reasoning follows.
+> A school whose MaxPreps mascot does not hold up as a tile takes the same mark from a sharper
+> source instead (`SOURCE_OVERRIDES` in the script): SBLive/SI for Rancho Bernardo, La Costa Canyon,
+> Saratoga, Marina and Live Oak, and the school's own site for Monta Vista, whose MaxPreps mascot is
+> a 68×68 gif on a purple gradient. A different design is never swapped in. The original reasoning follows.
 
 `schoolMascotUrl` is right there in `tableData`. The constraint forbids hotlinking and the
 design doesn't want it: third-party asset, inconsistent size and background, 16 network requests

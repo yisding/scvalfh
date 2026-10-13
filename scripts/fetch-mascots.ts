@@ -17,17 +17,16 @@
  *
  * The source URL is MaxPreps' own: `image.maxpreps.io/school-mascot/{a}/{b}/{c}/{id}.gif`, where
  * `id` is the registry's MaxPreps GUID and `a b c` are its first three characters — the exact
- * address the standings and schedule feeds publish as `schoolMascotUrl` / `mascotUrl`. A school
- * MaxPreps has no mascot for answers 404, which fails the run rather than writing a placeholder.
- * A school whose MaxPreps mascot is too small or blurred to draw well takes its logo from
- * SOURCE_OVERRIDES instead, each entry naming where the file comes from and why.
+ * address the standings and schedule feeds publish as `schoolMascotUrl` / `mascotUrl`, without its
+ * size query (see `mascotUrl`). A school MaxPreps has no mascot for answers 404, which fails the run
+ * rather than writing a placeholder. A school whose MaxPreps mascot is too small or blurred to draw
+ * well takes the same mark from SOURCE_OVERRIDES instead, each entry naming its source and why.
  *
  * Every MaxPreps gif is an opaque logo on white (an override with transparency is flattened onto
- * white the same way). The tile keeps the white (a logo drawn for a white
- * page loses its outline on a dark one), trims the white margin MaxPreps leaves around it, and
- * re-centres it with an even inset so the tile's rounded corners never clip the art. A full-bleed
- * logo (a dark square edge to edge: Bishop's, Canyon Crest, Westmont) is drawn to the edge instead,
- * because a white frame around a dark square reads as a second border.
+ * white the same way). The tile keeps the white (a logo drawn for a white page loses its outline on
+ * a dark one), trims the white margin around the art, and re-centres it with an even inset so the
+ * tile's rounded corners never clip it. A logo on a solid colour block (Leigh, Del Mar, Westview)
+ * or a full-bleed square (Bishop's, Canyon Crest) is drawn to the edge instead; see `framing`.
  *
  * Node's built-in fetch ignores HTTPS_PROXY; behind a proxy run it with NODE_USE_ENV_PROXY=1.
  */
@@ -37,7 +36,7 @@ import path from 'node:path';
 
 import sharp, { type Sharp } from 'sharp';
 
-import { HttpClient } from '../lib/sources/http';
+import { CHROME_USER_AGENT, HttpClient } from '../lib/sources/http';
 import { TEAMS } from '../lib/teams';
 import type { Team } from '../lib/types';
 import { runCli } from './cli';
@@ -52,9 +51,15 @@ const WHITE = { r: 255, g: 255, b: 255, alpha: 1 };
 /** The art's inset on each side, as a fraction of the tile: clears a quarter-side corner radius. */
 const INSET = 0.08;
 
+const SBLIVE = 'https://assets.scorebooklive.com/uploads/production';
+
 /**
  * Schools drawn from another source than MaxPreps, by slug. Only for a MaxPreps mascot that does
- * not hold up as a tile; prefer the school's own official logo.
+ * not hold up as a 128px tile, and only from a source carrying the SAME mark: SBLive / si.com
+ * (already a data source, DESIGN §12.8) has many schools' logos at 750–1536px, or the school's own
+ * site. Where SBLive's logo is a different design from MaxPreps', it is not used here: which mark a
+ * school goes by is not this script's call. Nor is a sharper copy whose art is wider (Sage Creek,
+ * Patrick Henry): it draws smaller in a 24px row tile, which is where most tiles are.
  */
 const SOURCE_OVERRIDES: Readonly<Record<string, { url: string; why: string }>> = {
   'monta-vista': {
@@ -62,13 +67,36 @@ const SOURCE_OVERRIDES: Readonly<Record<string, { url: string; why: string }>> =
     url: 'https://mvhs.fuhsd.org/uploaded/themes/default_17/images/monta_vista_footer.png',
     why: "MaxPreps' mascot is a 68×68 gif on a purple gradient, blurred at every tile size",
   },
+  'rancho-bernardo': {
+    url: `${SBLIVE}/team/458945-v3/image/Rancho_Bernardo__CA__Broncos_Logo.png`,
+    why: "MaxPreps' bronco is 146×133 with a blurred gradient; SBLive's is the same bronco at 800px",
+  },
+  'la-costa-canyon': {
+    url: `${SBLIVE}/team/459043-v3/image/La_Costa_Canyon__CA__Mavericks_Logo.png`,
+    why: "MaxPreps' is a dithered 136×131 gif; SBLive's is the same mark at 1240px",
+  },
+  saratoga: {
+    url: `${SBLIVE}/school/11858/image/logo-wide-aspect-ratio_copy.png`,
+    why: "MaxPreps' is 196×161 on a textured navy square; SBLive's is the same falcon at 772×1024",
+  },
+  marina: {
+    url: `${SBLIVE}/school/11317/image/marina__ca__vikings_logo_720.png`,
+    why: "MaxPreps' is a 413×212 wide lockup with a grey border line; SBLive's stacks the same viking and wordmark square at 720px",
+  },
+  'live-oak': {
+    url: `${SBLIVE}/school/12140/image/acorn.png`,
+    why: "MaxPreps' is 150×122; SBLive's is the same acorn at 245×208",
+  },
 };
 
 function mascotUrl(team: Pick<Team, 'id' | 'slug'>): string {
   const override = SOURCE_OVERRIDES[team.slug];
   if (override) return override.url;
   const id = team.id.toLowerCase();
-  return `https://image.maxpreps.io/school-mascot/${id[0]}/${id[1]}/${id[2]}/${id}.gif?width=512&height=512`;
+  // No width/height query: with both, MaxPreps crops a non-square logo to fill the square (cover,
+  // not contain), which cut the sides off Cupertino's 1012×903 logo and pushed the art off centre.
+  // The bare URL serves the file at its native size and sharp does the resizing.
+  return `https://image.maxpreps.io/school-mascot/${id[0]}/${id[1]}/${id[2]}/${id}.gif`;
 }
 
 interface Args {
@@ -89,27 +117,47 @@ function parseArgs(argv: readonly string[]): Args {
   return args;
 }
 
+interface Framing {
+  /** Inset the art by INSET (false: draw it to the tile's edge). */
+  pad: boolean;
+  /** What fills the tile around the art. */
+  background: { r: number; g: number; b: number; alpha: number };
+}
+
 /**
- * True when the art runs to the edge of its own box: under a fifth of the trimmed image's border
- * pixels are near-white. Only then is the logo drawn without an inset.
+ * How a trimmed logo sits in its square tile, from the pixels on its border:
+ *
+ *  - A logo printed on a solid colour block (Leigh's green, Del Mar's and Westview's black) has a
+ *    near-uniform, non-white border. It is drawn to the edge and its own border colour fills the
+ *    letterbox, so a wide block reads as a full tile rather than a band across a white one.
+ *  - Art that otherwise runs to the edge of a near-square box (under a fifth of the border
+ *    near-white: a multi-coloured full-bleed square) is drawn to the edge on white.
+ *  - Everything else is inset on white, clear of the rounded corners.
  */
-async function isFullBleed(img: Sharp): Promise<boolean> {
+async function framing(img: Sharp): Promise<Framing> {
   const { data, info } = await img.clone().raw().toBuffer({ resolveWithObject: true });
   const { width, height, channels } = info;
-  if (width === 0 || height === 0) return false;
-  const ratio = width / height;
-  if (ratio < 0.85 || ratio > 1.18) return false;
-  let edge = 0;
-  let white = 0;
+  const inset: Framing = { pad: true, background: WHITE };
+  if (width === 0 || height === 0) return inset;
+  const edge: Array<[number, number, number]> = [];
   for (let y = 0; y < height; y += 1) {
     for (let x = 0; x < width; x += 1) {
       if (x !== 0 && y !== 0 && x !== width - 1 && y !== height - 1) continue;
       const o = (y * width + x) * channels;
-      edge += 1;
-      if (data[o] > 235 && data[o + 1] > 235 && data[o + 2] > 235) white += 1;
+      edge.push([data[o], data[o + 1], data[o + 2]]);
     }
   }
-  return white / edge < 0.2;
+  const median = (c: 0 | 1 | 2) => edge.map((p) => p[c]).sort((a, b) => a - b)[edge.length >> 1];
+  const [r, g, b] = [median(0), median(1), median(2)];
+  const nearMedian = edge.filter((p) => Math.abs(p[0] - r) + Math.abs(p[1] - g) + Math.abs(p[2] - b) <= 60);
+  const medianIsWhite = r > 235 && g > 235 && b > 235;
+  if (!medianIsWhite && nearMedian.length / edge.length >= 0.85) {
+    return { pad: false, background: { r, g, b, alpha: 1 } };
+  }
+  const white = edge.filter((p) => p[0] > 235 && p[1] > 235 && p[2] > 235).length;
+  const ratio = width / height;
+  if (ratio >= 0.85 && ratio <= 1.18 && white / edge.length < 0.2) return { pad: false, background: WHITE };
+  return inset;
 }
 
 /** One source image (a MaxPreps gif or an override) → the square WebP tiles, in MASCOT_SIZES order. */
@@ -120,15 +168,14 @@ async function mascotTiles(source: Uint8Array): Promise<Buffer[]> {
     .flatten({ background: WHITE })
     .trim({ background: '#ffffff', threshold: 24 })
     .toBuffer();
-  const art = sharp(flat);
-  const fullBleed = await isFullBleed(art);
+  const frame = await framing(sharp(flat));
   return Promise.all(
     MASCOT_SIZES.map((size) => {
-      const pad = fullBleed ? 0 : Math.round(size * INSET);
+      const pad = frame.pad ? Math.round(size * INSET) : 0;
       const inner = size - 2 * pad;
       return sharp(flat)
-        .resize(inner, inner, { fit: 'contain', background: WHITE, kernel: 'lanczos3' })
-        .extend({ top: pad, bottom: pad, left: pad, right: pad, background: WHITE })
+        .resize(inner, inner, { fit: 'contain', background: frame.background, kernel: 'lanczos3' })
+        .extend({ top: pad, bottom: pad, left: pad, right: pad, background: frame.background })
         .webp({ quality: 88, effort: 6 })
         .toBuffer();
     }),
@@ -145,10 +192,14 @@ async function main(argv: readonly string[]): Promise<number> {
   if (unknown.length > 0) throw new Error(`not a registry slug: ${unknown.join(', ')}`);
   const teams: readonly Team[] = args.only.length > 0 ? TEAMS.filter((t) => args.only.includes(t.slug)) : TEAMS;
 
-  const http = new HttpClient({ onLog: (line) => console.log(`  ${line}`) });
+  const onLog = (line: string) => console.log(`  ${line}`);
+  const http = new HttpClient({ onLog });
+  // SBLive's asset CDN 403s a non-browser User-Agent, like si.com itself (lib/sources/sblive.ts).
+  const sblive = new HttpClient({ onLog, userAgent: CHROME_USER_AGENT });
   const results = await Promise.all(
     teams.map(async (team) => {
-      const res = await http.bytes(mascotUrl(team), 'image/gif,image/png,image/*');
+      const url = mascotUrl(team);
+      const res = await (url.startsWith(SBLIVE) ? sblive : http).bytes(url, 'image/gif,image/png,image/*');
       if (!res.contentType?.startsWith('image/')) {
         throw new Error(`${team.slug}: ${res.url} answered ${res.contentType ?? 'no content type'}`);
       }
