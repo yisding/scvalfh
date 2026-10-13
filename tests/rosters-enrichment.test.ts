@@ -676,9 +676,13 @@ describe('recruiting profiles', () => {
     expect(added).toHaveLength(113);
     const n = (k: string) => added.filter(({ p }) => p.grade!.kind === k).length;
     expect([n('school-site'), n('news')]).toEqual([95, 18]);
-    // Every page a grade rests on is listed among its team's sources, as of the same day.
+    // Every page a grade rests on is among its team's sources: the page itself, or, for a school site's
+    // player pages (Glendora, Granite Hills, Southwest), that site's roster page, which the team page
+    // links in their place (same host, same kind).
+    const host = (url: string) => new URL(url).hostname;
     for (const { t, p } of added) {
-      const listed = t.sources.some((s) => s.url === p.grade!.source) || t.sources.some((s) => s.capturedAt === '2026-10-12' && s.kind === p.grade!.kind);
+      const g = p.grade!;
+      const listed = t.sources.some((s) => s.url === g.source || (s.kind === g.kind && host(s.url) === host(g.source)));
       expect(listed, `${t.slug} / ${p.fullName}`).toBe(true);
     }
   });
