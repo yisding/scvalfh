@@ -1,13 +1,13 @@
 {
   "cifssCrossCheck": {
-    "agreements": 500,
+    "agreements": 506,
     "cifssOnlyScored": 0,
-    "compared": 508,
-    "conflicts": 8,
+    "compared": 513,
+    "conflicts": 7,
     "notOnMaxPreps": 0
   },
-  "commitSummary": "SCVAL +2 finals · BVAL +0 · PCAL +2 · MCAL +0 · EAL +2 · Sunset +0 · City +0 · North +2 · Metro +1 · LA +0",
-  "contentHash": "e851a1f3fff5b0c638b47087a012b6a546cb73b287974f798e7b2119215c1c3a",
+  "commitSummary": "SCVAL +0 finals · BVAL +0 · PCAL +0 · MCAL +0 · EAL +0 · Sunset +0 · City +1 · North +0 · Metro +0 · LA +0",
+  "contentHash": "6f5c8ea415c5a10bf49340b03d191e2b10a5a680488291dd34b8961c578facb6",
   "counts": {
     "byLeague": {
       "bval": {
@@ -19,7 +19,7 @@
       },
       "city": {
         "backfilled": 0,
-        "finals": 122,
+        "finals": 123,
         "games": 170,
         "leagueGames": 60,
         "teams": 12
@@ -48,14 +48,14 @@
       "metro": {
         "backfilled": 0,
         "finals": 66,
-        "games": 100,
+        "games": 102,
         "leagueGames": 31,
         "teams": 9
       },
       "north-county": {
         "backfilled": 0,
         "finals": 183,
-        "games": 248,
+        "games": 250,
         "leagueGames": 103,
         "teams": 19
       },
@@ -81,26 +81,26 @@
         "teams": 8
       }
     },
-    "finals": 630,
-    "games": 892,
+    "finals": 631,
+    "games": 894,
     "leagueGames": 548,
     "mismatches": 20,
-    "pending": 10,
+    "pending": 9,
     "teams": 102
   },
   "crossCheck": {
-    "agreements": 171,
+    "agreements": 174,
     "backfilled": 1,
     "compared": 250,
     "conflicts": 9,
     "sbliveOnlyScored": 2
   },
-  "fetchedAt": "2026-10-13T12:21:47.401Z",
+  "fetchedAt": "2026-10-13T20:05:27.460Z",
   "leagues": [
     {
       "backfilled": 0,
       "countedFinals": 62,
-      "finalsDelta": 2,
+      "finalsDelta": 0,
       "id": "scval",
       "missingPast": 4,
       "reasons": [],
@@ -118,7 +118,7 @@
     {
       "backfilled": 1,
       "countedFinals": 26,
-      "finalsDelta": 2,
+      "finalsDelta": 0,
       "id": "pcal",
       "missingPast": 2,
       "reasons": [],
@@ -136,7 +136,7 @@
     {
       "backfilled": 0,
       "countedFinals": 20,
-      "finalsDelta": 2,
+      "finalsDelta": 0,
       "id": "eal",
       "missingPast": 3,
       "reasons": [],
@@ -153,17 +153,17 @@
     },
     {
       "backfilled": 0,
-      "countedFinals": 25,
-      "finalsDelta": 0,
+      "countedFinals": 26,
+      "finalsDelta": 1,
       "id": "city",
-      "missingPast": 1,
+      "missingPast": 0,
       "reasons": [],
       "state": "fresh"
     },
     {
       "backfilled": 0,
       "countedFinals": 50,
-      "finalsDelta": 2,
+      "finalsDelta": 0,
       "id": "north-county",
       "missingPast": 0,
       "reasons": [],
@@ -172,7 +172,7 @@
     {
       "backfilled": 0,
       "countedFinals": 9,
-      "finalsDelta": 1,
+      "finalsDelta": 0,
       "id": "metro",
       "missingPast": 1,
       "reasons": [],
@@ -798,7 +798,7 @@
     },
     {
       "label": "mission-hills schedule",
-      "rowCount": 23,
+      "rowCount": 24,
       "status": "ok"
     },
     {
@@ -818,7 +818,7 @@
     },
     {
       "label": "westview schedule",
-      "rowCount": 25,
+      "rowCount": 26,
       "status": "ok"
     },
     {
@@ -848,7 +848,7 @@
     },
     {
       "label": "eastlake schedule",
-      "rowCount": 15,
+      "rowCount": 17,
       "status": "ok"
     },
     {
@@ -953,7 +953,7 @@
     },
     {
       "label": "sblive scoreboard 2026-10-08",
-      "rowCount": 22,
+      "rowCount": 23,
       "status": "ok"
     },
     {
@@ -992,11 +992,6 @@
       "status": "ok"
     },
     {
-      "label": "sblive clairemont games",
-      "rowCount": 20,
-      "status": "ok"
-    },
-    {
       "label": "sblive convent-sacred-heart games",
       "rowCount": 16,
       "status": "ok"
@@ -1009,6 +1004,11 @@
     {
       "label": "sblive cupertino games",
       "rowCount": 20,
+      "status": "ok"
+    },
+    {
+      "label": "sblive edison games",
+      "rowCount": 18,
       "status": "ok"
     },
     {
@@ -1053,7 +1053,7 @@
     },
     {
       "label": "cifsshome.org San Diego Section field hockey",
-      "rowCount": 507,
+      "rowCount": 514,
       "status": "ok"
     },
     {
