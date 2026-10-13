@@ -4,6 +4,7 @@ import { getTeamBySlug } from '../../lib/data';
 import { gradeWord } from '../../lib/format';
 import type { HistoryAwards, HistoryPlayer } from '../../lib/history';
 import { leagueOfDivision } from '../../lib/leagues';
+import GridRowFiller from '../ui/GridRowFiller';
 import { awardLine, overallAwards, type AwardLine } from './history-view';
 
 /**
@@ -74,9 +75,10 @@ function PlayerList({
       {/* The roster is data, so it sits in a card (the plane rule) with divider rows. Two
           columns are a row-major grid with no gap: a grid row's two cells share one height and
           the dividers run straight across, like a two-column table. Reading order is the DOM
-          order (left, then right, then down). */}
+          order (left, then right, then down). `sx-flush` clips the cells, and a short last row's
+          square GridRowFiller with them, to the card's rounded corners. */}
       <dd
-        className={`sx-card m-0 mt-2 grid ${
+        className={`sx-card sx-flush m-0 mt-2 grid ${
           columns === 'sm' ? 'sm:grid-cols-2' : 'lg:grid-cols-2'
         }`}
       >
@@ -96,6 +98,7 @@ function PlayerList({
             </div>
           );
         })}
+        <GridRowFiller as="div" count={players.length} columns={columns === 'sm' ? { sm: 2 } : { lg: 2 }} />
       </dd>
     </div>
   );

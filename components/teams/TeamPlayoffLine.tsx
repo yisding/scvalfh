@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { CCS } from '../../lib/leagues';
 import { splitStatusLabel } from '../playoffs/playoff-view';
 import Arrow from '../ui/Arrow';
+import EmptyState from '../ui/EmptyState';
 import ExternalLink from '../ui/ExternalLink';
 import StatusChip from '../ui/StatusChip';
 import type { TeamPageView } from './team-view';
@@ -57,13 +58,9 @@ export function TeamPlayoffLine({ view }: TeamPlayoffLineProps) {
   const { postseasonLine: line, standing, league } = view;
   if (!line) {
     return (
-      <div className="sx-card p-5 text-meta">
-        <p className="m-0 text-body text-ink">No results reported yet.</p>
-        <p className="mt-2 mb-0 text-ink-2">
-          {view.team.name} has no counted {league.shortName} result, so it has no computed place
-          in the {postseasonPhrase(league)} picture.
-        </p>
-      </div>
+      <EmptyState heading="No results reported yet.">
+        {`${view.team.name} has no counted ${league.shortName} result, so it has no computed place in the ${postseasonPhrase(league)} picture.`}
+      </EmptyState>
     );
   }
   // The chip is the label's head; a level place's " — <rule> decides it" tail is the tiebreak

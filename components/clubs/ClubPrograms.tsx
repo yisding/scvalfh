@@ -1,4 +1,5 @@
 import ExternalLink from '../ui/ExternalLink';
+import GridRowFiller from '../ui/GridRowFiller';
 import type { ClubProgramRow, ClubProgramsSource } from './club-view';
 
 /**
@@ -24,7 +25,7 @@ export interface ClubProgramsProps {
 export function ClubPrograms({ programs, shared }: ClubProgramsProps) {
   return (
     <div>
-      <ul className="sx-card sx-flush sx-bleed m-0 grid list-none p-0 sm:grid-cols-2 lg:grid-cols-3">
+      <ul className="sx-card sx-flush sx-bleed my-0 grid list-none p-0 sm:grid-cols-2 lg:grid-cols-3">
         {programs.map((p) => (
           <li
             key={p.key}
@@ -44,6 +45,7 @@ export function ClubPrograms({ programs, shared }: ClubProgramsProps) {
             ) : null}
           </li>
         ))}
+        <GridRowFiller count={programs.length} columns={{ sm: 2, lg: 3 }} />
       </ul>
       {shared ? (
         <p className="mt-3 mb-0 max-w-prose text-meta text-ink-2">

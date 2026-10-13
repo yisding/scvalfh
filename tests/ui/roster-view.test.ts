@@ -13,6 +13,7 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 
 import TeamRoster from '../../components/teams/TeamRoster';
+import GridRowFiller, { fillerClasses } from '../../components/ui/GridRowFiller';
 import { buildRosterView, profileLabel, seasonPage, type RosterRow } from '../../components/teams/roster-view';
 import { getPlayerClubs } from '../../lib/clubs';
 import { LEAGUE_IDS } from '../../lib/leagues';
@@ -147,13 +148,13 @@ describe('buildRosterView', () => {
     const tonderys = redwood.filter((c) => c.name === 'Eloise Tonderys');
     expect(tonderys.map((c) => [c.shown, c.other, c.now, c.sourceLabel])).toEqual([
       [null, 'junior', null, 'a news story'],
-      [null, 'freshman', 'sophomore', "MaxPreps' 2025-26 roster"],
+      [null, 'freshman', 'sophomore', 'MaxPreps’ 2025-26 roster'],
     ]);
     const leland = views.find((v) => v.slug === 'leland')!.view.conflicts;
     expect(leland.find((c) => c.name === 'Michaela Reichmuth' && c.now)).toMatchObject({
       other: 'sophomore',
       now: 'junior',
-      sourceLabel: "MaxPreps' 2025-26 JV roster",
+      sourceLabel: 'MaxPreps’ 2025-26 JV roster',
     });
     // A career page shows a class year, not this grade: the line says the grade was worked out.
     const alejandrino = views.find((v) => v.slug === 'berkeley')!.view.conflicts.find((c) => c.derived)!;
@@ -603,9 +604,10 @@ describe('TeamRoster: club lines', () => {
     expect(text).toContain(
       'Club: Melanie Henderson’s club: NorCal Impact · Earlier clubs: Melanie Henderson’s earlier clubs: Fly FHC, Melanie Henderson’s earlier clubs: Lightning'.replace(/\s+/g, ''),
     );
-    // The comma sits after the closing tag of the club before it, so it cannot start a line.
-    expect(html).toContain('Fly FHC</span></a></span><span>, <a');
-    expect(html).toMatch(/\u00a0· <span aria-hidden="true" class="text-ink-3">Earlier clubs:<\/span>\u00a0/);
+    // The comma, and the dot before the next group, sit inside the nowrap span of the club link
+    // before them: the link is an atomic inline, so a line could otherwise start with either.
+    expect(html).toContain('Fly FHC</span></a>,</span></span><span> <span class="whitespace-nowrap"><a');
+    expect(html).toMatch(/NorCal Impact<\/span><\/a>\u00a0·<\/span><\/span><\/span><span> <span aria-hidden="true" class="text-ink-3">Earlier clubs:<\/span>\u00a0/);
   });
 });
 
@@ -616,5 +618,34 @@ describe('profile link text', () => {
     expect(profileLabel({ platform: 'hudl', sport: 'softball' })).toBe('Hudl softball profile');
     expect(profileLabel({ platform: 'personal' })).toBe('Recruiting site');
     expect(profileLabel({ platform: 'personal', sport: 'water-polo' })).toBe('Water polo recruiting site');
+  });
+});
+
+describe('GridRowFiller (the cells that finish a short last row of a grid list)', () => {
+  const grid = { sm: 2, lg: 3 } as const;
+  const shown = (count: number) => [1, 2].map((k) => fillerClasses(count, grid, k));
+
+  it('shows a filler only at the breakpoints where the last row is short', () => {
+    // 7 rows: one short of 2 columns, two short of 3.
+    expect(shown(7)).toEqual(['hidden sm:block', 'hidden lg:block']);
+    // 6 fill both; 5 is one short at 2 columns and at 3.
+    expect(shown(6)).toEqual([null, null]);
+    expect(shown(5)).toEqual(['hidden sm:block', null]);
+    // 4 fill 2 columns and are two short of 3.
+    expect(shown(4)).toEqual(['hidden lg:block', 'hidden lg:block']);
+    // 3 fit one row at 3 columns, which has no rule to finish.
+    expect(shown(3)).toEqual(['hidden sm:block lg:hidden', null]);
+    expect(shown(1)).toEqual([null, null]);
+    // AwardsBlock's First/Second team lists go to two columns only from lg.
+    expect(fillerClasses(5, { lg: 2 }, 1)).toBe('hidden lg:block');
+  });
+
+  it('renders aria-hidden, empty cells with the rows’ hairline and nothing else', () => {
+    const html = renderToStaticMarkup(createElement(GridRowFiller, { count: 7, columns: grid }));
+    expect(html).toBe(
+      '<li aria-hidden="true" class="hidden sm:block border-t border-divider bg-surface"></li>' +
+        '<li aria-hidden="true" class="hidden lg:block border-t border-divider bg-surface"></li>',
+    );
+    expect(renderToStaticMarkup(createElement(GridRowFiller, { count: 6, columns: grid }))).toBe('');
   });
 });

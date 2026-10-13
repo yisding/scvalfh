@@ -18,7 +18,7 @@
  *                          with Tailwind arbitrary variants (SPEC §10.1).
  * - `[data-league-option="<id>"]`  the scope chips: the effective league's chip (or `all` when
  *                          there is none) is drawn selected, with its aria-hidden ✓ shown, before
- *                          hydration. Never colour alone: fill + ring + the ✓.
+ *                          hydration. Never colour alone: inverse ink + weight + the ✓.
  *
  * The region half (DESIGN-socal §2.4), keyed off `data-region` (stamped `"socal"` only; absent =
  * NorCal):
@@ -28,7 +28,7 @@
  *                          DOM order is the reading order and every link works (CLS 0).
  * - `[data-region-scope="norcal"]` hidden when the region is SoCal (only JS can stamp that).
  * - `[data-region-option="<region>"]` the region switcher's two buttons: the effective region's is
- *                          drawn selected (the same accent wash, ink ring and ✓ as a chip) before
+ *                          drawn selected (the same inverse ink and ✓ as a chip) before
  *                          hydration.
  * - a deep link opens its region: a region block that IS the `:target` (`/standings#socal`) or holds
  *                          it (`/leaders#elo-rating-socal`) is shown whatever the stamp says.
@@ -41,7 +41,7 @@
  *                          which also sets `data-searching`, lifts nothing. Placed after the hide rules
  *                          and more specific than both (an id), so it needs no `!important`.
  *
- * No league hue anywhere (DESIGN §6.4): every selected state is the one accent wash.
+ * No league hue anywhere (DESIGN §6.4): every selected state is the one inverse ink plus ✓.
  * `display: none` also removes a hidden panel from the accessibility tree; DOM order stays the
  * visual order (WCAG 1.3.2 / 2.4.3).
  */
@@ -83,17 +83,17 @@ export function buildLeagueScopeCss(leagueIds: readonly string[]): string {
   rules.push('html:not([data-pin]):not([data-league]):not([data-pin-stale]) .sx-myteam-slot{display:none}');
   for (const id of leagueIds) {
     rules.push(`html[data-league="${id}"] [data-league-option="${id}"]{${SELECTED}}`);
-    rules.push(`html[data-league="${id}"] [data-league-option="${id}"] .sx-chip-check{display:inline}`);
+    rules.push(`html[data-league="${id}"] [data-league-option="${id}"] .sx-chip-check{visibility:visible}`);
   }
   rules.push(`html:not([data-league]) [data-league-option="all"]{${SELECTED}}`);
-  rules.push('html:not([data-league]) [data-league-option="all"] .sx-chip-check{display:inline}');
+  rules.push('html:not([data-league]) [data-league-option="all"] .sx-chip-check{visibility:visible}');
   // The region half (DESIGN-socal §2.4), verbatim from the design.
   rules.push(`html[data-js]:not([data-region="${SOCAL}"]) [data-region-scope="${SOCAL}"]{display:none}`);
   rules.push(`html[data-region="${SOCAL}"] [data-region-scope="${NORCAL}"]{display:none}`);
   rules.push(`html:not([data-region="${SOCAL}"]) [data-region-option="${NORCAL}"]{${SELECTED}}`);
-  rules.push(`html:not([data-region="${SOCAL}"]) [data-region-option="${NORCAL}"] .sx-chip-check{display:inline}`);
+  rules.push(`html:not([data-region="${SOCAL}"]) [data-region-option="${NORCAL}"] .sx-chip-check{visibility:visible}`);
   rules.push(`html[data-region="${SOCAL}"] [data-region-option="${SOCAL}"]{${SELECTED}}`);
-  rules.push(`html[data-region="${SOCAL}"] [data-region-option="${SOCAL}"] .sx-chip-check{display:inline}`);
+  rules.push(`html[data-region="${SOCAL}"] [data-region-option="${SOCAL}"] .sx-chip-check{visibility:visible}`);
   rules.push('[data-region-scope]:has(:target){display:block!important}');
   // Not in the design's list: `:has()` never matches the element itself, so a link to the region
   // wrapper's own id (`/standings#socal`, the jump links) needs its own rule to open that region.

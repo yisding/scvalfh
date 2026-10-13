@@ -12,7 +12,7 @@ import StatusLabel from '../ui/StatusLabel';
 import TeamMonogram from '../ui/TeamMonogram';
 import type { GameDisplay } from '../ui/describe-game';
 import { formStripName } from '../ui/plural';
-import { unpinFallbackTarget, usePinnedTeam } from '../ui/use-pinned-team';
+import { isNearViewport, unpinFallbackTarget, usePinnedTeam } from '../ui/use-pinned-team';
 import type { SearchIndex } from '../../lib/search';
 
 import {
@@ -53,11 +53,12 @@ import {
  * postseason rows — measured at most 370px below 390 (the stacked records row plus a wrapped
  * "Next" date line for a long time label) and at most 334px from 390 (250–290px for a team with no
  * results). The two new 24px rows put the longest real content at ≈ 418px below 390 (320, 360) and
- * ≈ 382px from 390 (390, 768; at 768 the card is wider and nothing wraps). Floor: 26.5rem (424px)
- * below 390 and 24.5rem (392px) from 390 — never DESIGN §3.1's 240px. The compact prompt is 12 + 20
- * (label) + 4 + 48 (field) + 8 + 40 (its one sentence, which needs two lines below 768 and is
- * clamped to them) + 12 = 144px → 9rem (SPEC's ≈ 8rem estimate assumed one 20px line; the
- * sentence is ≈ 430px at 14px, wider than a phone card); while a query is typed the finder
+ * ≈ 382px from 390 (390, 768; from 768 the card is capped at `md:max-w-xl`, 576px, still wider
+ * than a 390 phone's, so nothing new wraps). Floor: 26.5rem (424px) below 390 and 24.5rem
+ * (392px) from 390 — never DESIGN §3.1's 240px. The compact prompt is 12 + 20 (label) + 4 + 48
+ * (field) + 8 + 40 (its one sentence, which needs two lines below 768 and is clamped to them)
+ * + 12 = 144px → 9rem (SPEC's ≈ 8rem estimate assumed one 20px line; the sentence is ≈ 430px at
+ * 14px, wider than a phone card); while a query is typed the finder
  * carries `data-searching` and the box drops its fixed height (min-height stays 9rem), so up to
  * eight results and "Search all 49 on Teams →" show unclipped — a user-initiated
  * shift, excluded from CLS. (Arithmetic from the fixed row heights; re-measure with Playwright in
@@ -65,7 +66,8 @@ import {
  */
 const BOX = [
   // `*:flex-1`: the state inside stretches to the box, so the pinned card fills its floor.
-  'sx-card sx-flush sx-bleed flex flex-col *:flex-1',
+  // `md:max-w-xl`: the card's own measure on desktop, so score, date and record sit by the names.
+  'sx-card sx-flush sx-bleed flex flex-col *:flex-1 md:max-w-xl',
   // pinned: a floor, not a fixed height (see above)
   '[html[data-pin]_&]:min-h-[26.5rem] min-[24.375rem]:[html[data-pin]_&]:min-h-[24.5rem]',
   // compact prompt (no pin, a league is effective): fixed height unless a query is typed
@@ -375,14 +377,17 @@ export function focusUnpin(): void {
 }
 
 /**
- * Focus target after an unpin: the team's own tile when rendered, else `unpinFallbackTarget()` —
+ * Focus target after an unpin: the team's own tile when rendered and on screen (`isNearViewport` —
+ * a tile far below the card is skipped, so the page does not jump), else `unpinFallbackTarget()` —
  * the slot's finder field, or, when the whole slot hides (a pin with "All" remembered), the
  * first-visit finder or its heading. Never `<body>` (WCAG 2.4.3).
  */
 export function unpinFocusTarget(slug: string | null): HTMLElement | null {
   const rendered = (el: Element) => el.getClientRects().length > 0;
   if (slug && /^[a-z0-9-]+$/.test(slug)) {
-    const tile = [...document.querySelectorAll<HTMLElement>(`[data-pin-tile="${slug}"]`)].find(rendered);
+    const tile = [...document.querySelectorAll<HTMLElement>(`[data-pin-tile="${slug}"]`)].find(
+      (el) => rendered(el) && isNearViewport(el),
+    );
     if (tile) return tile;
   }
   return unpinFallbackTarget();
@@ -417,8 +422,15 @@ export function MyTeamCard({ views, index }: MyTeamCardProps) {
 
   return (
     <>
-      {/* "All teams" opens /teams in every state; a pin is changed with Unpin and the finder. */}
-      <SectionHeader id="my-team-heading" kicker="My team" action={{ href: '/teams', label: 'All teams' }} />
+      {/* "All teams" opens /teams in every state; a pin is changed with Unpin and the finder. The
+          header takes the card's `md:max-w-xl` measure, so its rule and "All teams" end at the
+          card's edge. */}
+      <SectionHeader
+        id="my-team-heading"
+        kicker="My team"
+        action={{ href: '/teams', label: 'All teams' }}
+        className="md:max-w-xl"
+      />
       <div className={BOX}>{content}</div>
     </>
   );

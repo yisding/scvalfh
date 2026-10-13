@@ -61,10 +61,15 @@ export function StatTile({ label, value, sub, emphasis = 'default', srLabel, srV
   // candidate that runs straight into an interpolation, so written that way this tile silently
   // lost its min-height in the built CSS (DESIGN §7.7). Hence the array join (`m-0` cancels the
   // UA's 40px dd indent).
+  // From 768px every value box shares the hero's height as a floor (`--text-figure` at
+  // `leading-none`: 38px at 768, 44px from 1280) with the figure on its bottom edge, so the
+  // sub-lines across a row sit on one line instead of the hero's dropping 6–12px below its
+  // row-mates'. A floor, not a fixed height, so a wrapped value can still grow. An `srValue`'s
+  // sr-only span is absolutely positioned, so as a flex item it takes no space.
   return (
     <div className={['flex flex-col border-t border-rule pt-2 md:pt-3', className].filter(Boolean).join(' ')}>
       <dt className="mb-0.5 block text-meta font-medium text-ink-3 md:mb-1">{labelText}</dt>
-      <dd className={['m-0 sx-figure block font-semibold text-ink', valueClass].join(' ')}>{valueText}</dd>
+      <dd className={['m-0 sx-figure block font-semibold text-ink md:flex md:min-h-[var(--text-figure)] md:items-end', valueClass].join(' ')}>{valueText}</dd>
       {sub ? (
         <dd className="m-0 mt-0.5 block text-micro font-normal text-ink-2 text-balance md:mt-1 md:text-meta">{sub}</dd>
       ) : null}

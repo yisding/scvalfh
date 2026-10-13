@@ -78,11 +78,24 @@ export function Attribution({ snapshotAt, now, className }: AttributionProps) {
   const seasonComplete = getSitePhase() === 'complete';
   // The leagues only: the LA independents are three schools in no league, not an organization
   // (DESIGN §24.9); their alignment and rules sentences are the scope note's and the Section's.
-  const notAffiliated = [
+  // Each `CIF-XX` code is one nowrap span, so a phone never breaks it at its hyphen ("CIF-" / "NS");
+  // the hyphen stays plain ASCII so copy and search still find "CIF-NCS". The line can still wrap
+  // at every ", " between names.
+  const notAffiliatedNames: React.ReactNode[] = [
     ...LEAGUES_PROPER.map((l) => l.shortName),
-    ...SECTIONS.map((s) => `CIF-${s.shortName}`),
+    ...SECTIONS.map((s) => (
+      <span key={s.id} className="whitespace-nowrap">
+        {`CIF-${s.shortName}`}
+      </span>
+    )),
     'MaxPreps',
-  ].join(', ');
+  ];
+  const notAffiliated = notAffiliatedNames.map((name, i) => (
+    <Fragment key={i}>
+      {i === 0 ? null : ', '}
+      {name}
+    </Fragment>
+  ));
   return (
     // No top margin on phone: every page wrapper already ends with `pb-section-lg` (56px), and a
     // second 56px here left a 112px blank band that read like the page had stopped loading.

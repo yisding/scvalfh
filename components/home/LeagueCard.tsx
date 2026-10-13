@@ -61,7 +61,7 @@ export function LeagueCard({ card, className, wide }: LeagueCardProps) {
         <Link
           href={card.standingsHref}
           prefetch={false}
-          className="inline-flex min-h-11 items-center text-meta font-medium text-accent no-underline hover:underline"
+          className="inline-flex min-h-11 items-center gap-1 text-meta font-medium text-accent no-underline hover:underline"
         >
           {card.standingsLabel} <Arrow />
         </Link>

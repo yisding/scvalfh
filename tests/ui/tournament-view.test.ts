@@ -280,7 +280,11 @@ describe('/playoffs/mcal (rendered on the corpus snapshot)', () => {
       expect(inner, 'components/playoffs/LeagueTournament.tsx pin note').toContain(
         '<span class="sr-only"><span class="sx-pin-note" hidden="">Your team. </span>',
       );
+      // The row sentence counts points in words: "1 point", never "1 points".
+      expect(inner, 'components/playoffs/LeagueTournament.tsx row sentence').not.toMatch(/\b1 points\b/);
     }
+    // From sm the PTS and GP headers name the unit, so the seed cells print bare numbers.
+    expect(html, 'components/playoffs/LeagueTournament.tsx seed units').toContain('<span class="sm:hidden"> pts</span>');
   });
 
   it('carries no CCS concept inside the page except the link to the CCS page', () => {

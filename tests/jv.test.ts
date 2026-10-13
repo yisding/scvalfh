@@ -288,6 +288,12 @@ describe('the JV views', () => {
     const view = buildTeamJvView(slug!)!;
     expect(view.rows.map((r) => r.game.dateLocal)).toEqual([...view.rows.map((r) => r.game.dateLocal)].sort());
     expect(view.played).toBe(view.rows.filter((r) => r.game.status === 'final').length);
+    // The header's counts (played · to come · no score) add up to the rows listed under it.
+    for (const t of TEAMS) {
+      const v = buildTeamJvView(t.slug);
+      if (!v) continue;
+      expect(v.played + v.toCome + v.noScore, `components/teams/jv-view.ts ${t.slug}`).toBe(v.rows.length);
+    }
     expect(view.sbliveScores).toBe(view.rows.filter((r) => r.game.provenance.scores === 'sblive').length);
     expect(buildTeamJvView('not-a-school')).toBeNull();
   });

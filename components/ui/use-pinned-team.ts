@@ -112,6 +112,21 @@ function isRendered(el: Element): boolean {
 }
 
 /**
+ * Whether an unpinned team's tile is close enough to take focus: at least partly inside the current
+ * viewport, which holds the My-team card the reader just used. A tile further away (Home's league
+ * panel sits ~1,300–1,800px below the My-team card) would drag the page there, so the caller takes
+ * `unpinFallbackTarget()` instead — the finder right under the heading the reader just used.
+ * Unmeasurable (no `getBoundingClientRect`) counts as near, the old behaviour.
+ */
+export function isNearViewport(el: Element): boolean {
+  if (typeof el.getBoundingClientRect !== 'function') return true;
+  const vh = typeof window !== 'undefined' ? window.innerHeight : undefined;
+  if (!vh) return true;
+  const rect = el.getBoundingClientRect();
+  return rect.top < vh && rect.bottom > 0;
+}
+
+/**
  * Where focus goes after an unpin when the team's own tile is not rendered (SPEC §8.2, WCAG 2.4.3):
  * the My-team slot's finder field; else — the slot is hidden, e.g. a pin with "All" remembered,
  * where unpinning leaves no slot at all — the first-visit block's finder (`[data-scope="none"]`,
@@ -150,7 +165,7 @@ function focusAfterUnpin(slug: string | null, focus: UnpinOptions['focus']): voi
           const control = el.matches('a[href], button')
             ? el
             : el.querySelector<HTMLElement>('a[href], button');
-          if (control && isRendered(control)) {
+          if (control && isRendered(control) && isNearViewport(control)) {
             target = control;
             break;
           }
@@ -158,7 +173,10 @@ function focusAfterUnpin(slug: string | null, focus: UnpinOptions['focus']): voi
       }
       if (!target) target = unpinFallbackTarget();
     }
-    target?.focus();
+    // No scroll on focus: the target is on screen (a near tile) or the finder; bring a finder that
+    // sits just off screen into view by the shortest move, never a long jump.
+    target?.focus({ preventScroll: true });
+    if (target && !isNearViewport(target)) target.scrollIntoView?.({ block: 'nearest' });
   };
   if (typeof requestAnimationFrame === 'function') requestAnimationFrame(run);
   else run();

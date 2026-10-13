@@ -459,7 +459,12 @@ function hasResultConflict(g: Game): boolean {
  */
 function resultConflictNoteFor(game: Game): string | null {
   if (!hasResultConflict(game)) return null;
-  const note = (game.provenance.resultConflict as string).trim().replace(/[.\s]+$/, '');
+  // The stored note (lib/crosscheck.ts, lib/cifss-crosscheck.ts) spells "MaxPreps' " with a straight
+  // apostrophe; the page's copy is curly, notes already in the snapshot included.
+  const note = (game.provenance.resultConflict as string)
+    .trim()
+    .replace(/[.\s]+$/, '')
+    .replaceAll("MaxPreps' ", 'MaxPreps’ ');
   // A shootout win is level on goals and a win here: `scoreNote` says so, so no tie sentence.
   if (game.decider === 'SO') return `${note}.`;
   const level = game.home.score !== null && game.home.score === game.away.score;

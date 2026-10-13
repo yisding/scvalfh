@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import EmptyState from '../ui/EmptyState';
 import { gameWord } from '../ui/plural';
@@ -214,18 +214,25 @@ function PillGroup<T extends string>({
               aria-pressed={active}
               disabled={disabled}
               onClick={() => onPick(option.value)}
-              // box-shadow is dropped in forced colours, so each pill gets a real border there and
-              // the pressed one a Highlight ring: the state is never reduced to font weight.
+              // The pressed pill is inverse ink plus an aria-hidden ✓, exactly like the selected
+              // `.sx-league-chip` above it (DESIGN §26.1): one selected look on the page, never
+              // colour alone. box-shadow is dropped in forced colours, so each pill gets a real
+              // border there and the pressed one a Highlight ring as well as its check.
               // Press state, for touch as much as the mouse (`.sx-tap:active` alone loses to the
               // utility background): an unpressed pill steps one plane up from its rest fill
-              // (surface → surface-2 on a phone, surface-2 → surface-3 from 768px); the pressed
-              // one keeps its wash and thickens its accent ring to 2px.
-              className={`sx-tap inline-flex h-11 min-w-11 items-center justify-center rounded-control px-4 text-meta disabled:cursor-not-allowed forced-colors:border forced-colors:border-[ButtonBorder] ${
+              // (surface → surface-2 in the in-flow tray below 1024px, surface-2 → surface-3 in the
+              // floating one from there); the pressed one keeps its ink.
+              className={`sx-tap inline-flex h-11 min-w-11 items-center justify-center gap-1 rounded-control px-4 text-meta disabled:cursor-not-allowed forced-colors:border forced-colors:border-[ButtonBorder] ${
                 active
-                  ? 'bg-accent-wash font-semibold text-accent-ink shadow-[inset_0_0_0_1px_var(--sx-accent)] active:shadow-[inset_0_0_0_2px_var(--sx-accent)] forced-colors:outline-2 forced-colors:outline-offset-1 forced-colors:outline-[Highlight]'
-                  : 'bg-surface font-medium text-ink-2 shadow-[var(--sx-ring)] hover:bg-surface-3 active:bg-surface-2 disabled:text-ink-3 disabled:hover:bg-surface md:bg-surface-2 md:shadow-none md:active:bg-surface-3 md:disabled:hover:bg-surface-2'
+                  ? 'bg-ink font-semibold text-surface forced-colors:outline-2 forced-colors:outline-offset-1 forced-colors:outline-[Highlight]'
+                  : 'bg-surface font-medium text-ink-2 shadow-[var(--sx-ring)] hover:bg-surface-3 active:bg-surface-2 disabled:text-ink-3 disabled:hover:bg-surface lg:bg-surface-2 lg:shadow-none lg:active:bg-surface-3 lg:disabled:hover:bg-surface-2'
               }`}
             >
+              {/* Always laid out, shown only when pressed: a selection never changes a pill's
+                  width, so its neighbours and the wrapped rows stay put. */}
+              <span aria-hidden="true" className={active ? undefined : 'invisible'}>
+                ✓
+              </span>
               {option.label}
             </button>
           );
@@ -243,6 +250,8 @@ interface PanelProps {
   moreActive: number;
   /** Absent in the Suspense fallback: the same shell, inert, at the same height. */
   update?: (patch: Partial<FilterState>) => void;
+  /** The count line, where focus lands once the last filter chip is removed. */
+  countRef?: React.Ref<HTMLParagraphElement>;
   className?: string;
 }
 
@@ -254,17 +263,57 @@ function byName<T extends { name: string }>(rows: readonly T[]): T[] {
   return rows.slice().sort((a, b) => a.name.localeCompare(b.name));
 }
 
-function FiltersPanel({ teams, divisions, filters, countLine, moreActive, update, className }: PanelProps) {
+function FiltersPanel({
+  teams,
+  divisions,
+  filters,
+  countLine,
+  moreActive,
+  update,
+  countRef,
+  className,
+}: PanelProps) {
   const inert = !update;
+  const detailsRef = useRef<HTMLDetailsElement>(null);
+  const summaryRef = useRef<HTMLElement>(null);
+  const [moreOpen, setMoreOpen] = useState(false);
+
+  // From 1024px the open tray floats over the list, so it dismisses like a popover: Escape closes
+  // it (and returns focus to "More filters" when focus was in it), and so does a press anywhere
+  // outside the disclosure. Below 1024px it is an in-flow part of the panel and stays a plain
+  // `<details>`. Never in the inert fallback.
+  useEffect(() => {
+    const details = detailsRef.current;
+    if (inert || !moreOpen || !details) return;
+    const wide = window.matchMedia('(min-width: 1024px)');
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.key !== 'Escape' || event.defaultPrevented || !wide.matches || !details) return;
+      const hadFocus = details.contains(document.activeElement);
+      details.open = false;
+      if (hadFocus) summaryRef.current?.focus();
+    }
+    function onPointerDown(event: PointerEvent) {
+      if (!wide.matches || !details || details.contains(event.target as Node)) return;
+      details.open = false;
+    }
+    document.addEventListener('keydown', onKeyDown);
+    document.addEventListener('pointerdown', onPointerDown);
+    return () => {
+      document.removeEventListener('keydown', onKeyDown);
+      document.removeEventListener('pointerdown', onPointerDown);
+    };
+  }, [inert, moreOpen]);
+
   return (
-    // One wrapping row of items. On a 390 phone that is the two selects, then "More filters" with
-    // the count beside it (right-aligned, at most two lines) — a ~120px closed panel instead of
-    // four stacked rows. Below 390 the space beside the pill is too narrow (124px at 320 wrapped
-    // the count into four ragged lines), so the count takes its own left-aligned row under it.
-    // From 768px everything sits on one line with the count pushed right.
+    // One wrapping row of items. On a 390 phone that is the two selects, then "More filters", then
+    // the count on its own left-aligned row: beside the pill it needs three ragged lines at 390
+    // (and four at 320), so below 400px it always takes the row under it. From 400px the count
+    // sits beside the pill (right-aligned, at most two lines, as at 414). From 768px everything
+    // sits on one line with the count pushed right.
     <div
       className={[
-        'sx-card flex flex-wrap items-center gap-2 p-3 md:gap-3 md:p-4',
+        // Screen-only: on paper the list is what is printed, not the controls that filter it.
+        'sx-print-hide sx-card flex flex-wrap items-center gap-2 p-3 md:gap-3 md:p-4',
         className,
       ]
         .filter(Boolean)
@@ -317,10 +366,21 @@ function FiltersPanel({ teams, divisions, filters, countLine, moreActive, update
           <Chevron />
         </label>
       ) : null}
-      {/* A real `<details>`, so the panel opens with JavaScript off too. Open on a phone, it
-          takes the whole row so its tray is full width, and the count drops below it. */}
-      <details className="peer relative max-md:open:basis-full">
-        <summary className="sx-pill min-h-11 cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+      {/* A real `<details>`. Open below 1024px, it takes the whole row so its tray is full width,
+          and the count drops below it. In the inert fallback it is `sx-js-only`: without
+          JavaScript that fallback is all a reader gets, and a tray of dead pills that look live is
+          worse than none (with JavaScript it is painted as usual, so nothing shifts on hydrate). */}
+      <details
+        ref={detailsRef}
+        onToggle={(event) => setMoreOpen(event.currentTarget.open)}
+        className={['peer relative max-lg:open:basis-full', inert ? 'sx-js-only' : null]
+          .filter(Boolean)
+          .join(' ')}
+      >
+        <summary
+          ref={summaryRef}
+          className="sx-pill min-h-11 cursor-pointer list-none [&::-webkit-details-marker]:hidden"
+        >
           More filters
           {moreActive > 0 ? (
             <span className="sx-badge sx-num h-6 bg-surface px-2 text-ink">
@@ -343,8 +403,9 @@ function FiltersPanel({ teams, divisions, filters, countLine, moreActive, update
             <path d="m4 6 4 4 4-4" />
           </svg>
         </summary>
-        {/* Phone: an inset tray inside the panel. From 768px: a floating card over the list. */}
-        <div className="sx-card mt-2 flex flex-col gap-4 p-4 max-md:rounded-card max-md:bg-surface-2 max-md:shadow-none md:absolute md:left-0 md:z-20 md:w-max md:shadow-[var(--sx-ring),var(--sx-shadow-lift)]">
+        {/* Below 1024px: an inset tray inside the panel, in flow (a floating `w-max` card ran past
+            a 768px viewport and covered the count). From 1024px: a floating card over the list. */}
+        <div className="sx-card mt-2 flex flex-col gap-4 p-4 max-lg:rounded-card max-lg:bg-surface-2 max-lg:shadow-none lg:absolute lg:left-0 lg:z-20 lg:w-max lg:shadow-[var(--sx-ring),var(--sx-shadow-lift)]">
           <PillGroup
             legend="Game type"
             value={filters.type}
@@ -361,9 +422,12 @@ function FiltersPanel({ teams, divisions, filters, countLine, moreActive, update
           />
         </div>
       </details>
+      {/* `tabIndex={-1}`: where focus goes when the last filter chip is removed (ScheduleFilters). */}
       <p
+        ref={countRef}
+        tabIndex={-1}
         aria-live="polite"
-        className="m-0 min-w-[8rem] flex-1 px-1 text-right text-meta tabular-nums text-ink-2 max-md:peer-open:text-left max-[389px]:basis-full max-[389px]:text-left md:flex-none md:ml-auto"
+        className="m-0 min-w-[8rem] flex-1 px-1 text-right text-meta tabular-nums text-ink-2 max-lg:peer-open:ml-0 max-lg:peer-open:text-left max-[399px]:basis-full max-[399px]:text-left md:flex-none md:ml-auto"
       >
         {/* Each "N word" part stays on one line WITH the dot that follows it, so a phone wrap
             never strands "3" from "not reported" or opens a line on "·". The text content is
@@ -413,6 +477,12 @@ export function ScheduleFiltersFallback({
 export function ScheduleFilters({ teams, divisions, counts, listId, className }: ScheduleFiltersProps) {
   const [filters, setFilters] = useState<FilterState>(DEFAULT_FILTERS);
   const [visible, setVisible] = useState<number>(counts.total);
+  // A removed chip's button unmounts under the keyboard, which would drop focus to <body>. The
+  // click records which chip went (-1 for "Clear all"); the effect below moves focus once the
+  // chips have re-rendered, and only after such a click — never on mount or another filter change.
+  const chipsRef = useRef<HTMLParagraphElement>(null);
+  const countRef = useRef<HTMLParagraphElement>(null);
+  const removedChip = useRef<number | null>(null);
 
   function update(patch: Partial<FilterState>) {
     const next: FilterState = { ...filters, ...patch };
@@ -454,6 +524,17 @@ export function ScheduleFilters({ teams, divisions, counts, listId, className }:
     ? `${visible} of ${counts.total} ${gameWord(counts.total)} shown`
     : unfilteredCountLine(counts);
 
+  // The chip now at the removed one's place (the new last one if it was last); with none left, or
+  // after "Clear all", the count line, which announces the result anyway.
+  useEffect(() => {
+    const index = removedChip.current;
+    if (index === null) return;
+    removedChip.current = null;
+    const buttons = chipsRef.current?.querySelectorAll<HTMLButtonElement>('button[data-chip]') ?? [];
+    if (index >= 0 && buttons.length > 0) buttons[Math.min(index, buttons.length - 1)].focus();
+    else countRef.current?.focus();
+  }, [chips.length]);
+
   return (
     <div className={className}>
       {/* ONE card of controls. Team and division stay in the row, exactly as DESIGN §3.3 draws
@@ -467,6 +548,7 @@ export function ScheduleFilters({ teams, divisions, counts, listId, className }:
         countLine={countLine}
         moreActive={moreActive}
         update={update}
+        countRef={countRef}
       />
 
       <noscript>
@@ -477,12 +559,16 @@ export function ScheduleFilters({ teams, divisions, counts, listId, className }:
       </noscript>
 
       {chips.length > 0 ? (
-        <p className="mt-3 mb-0 flex flex-wrap items-center gap-2">
-          {chips.map((chip) => (
+        <p ref={chipsRef} className="mt-3 mb-0 flex flex-wrap items-center gap-2">
+          {chips.map((chip, index) => (
             <button
               key={chip.key}
               type="button"
-              onClick={() => update(chip.clear)}
+              data-chip
+              onClick={() => {
+                removedChip.current = index;
+                update(chip.clear);
+              }}
               className="sx-pill min-h-11"
             >
               {chip.label}
@@ -504,7 +590,10 @@ export function ScheduleFilters({ teams, divisions, counts, listId, className }:
           ))}
           <button
             type="button"
-            onClick={() => update(DEFAULT_FILTERS)}
+            onClick={() => {
+              removedChip.current = -1;
+              update(DEFAULT_FILTERS);
+            }}
             className="inline-flex min-h-11 items-center rounded-chip px-3 text-meta font-medium text-accent hover:bg-surface-2"
           >
             Clear all

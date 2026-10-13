@@ -920,3 +920,76 @@ describe('earlierMeeting (components/teams/team-view.ts)', () => {
     }
   });
 });
+
+describe('"Who we haven’t beaten" official-only fixtures (components/teams/team-view.ts buildUnbeaten)', () => {
+  it('counts only past-dated fixtures as unreported, and carries the next future one as a date', () => {
+    for (const team of data.getTeams()) {
+      const v = view.buildTeamPageView(team.slug);
+      if (!v) continue;
+      const fixtures = data.getOfficialFixtures({ slug: team.slug });
+      for (const o of v.unbeaten) {
+        const theirs = fixtures.filter((f) => f.awaySlug === o.slug || f.homeSlug === o.slug);
+        const past = theirs.filter((f) => f.dateKey < v.today);
+        const ahead = theirs.filter((f) => f.dateKey >= v.today).map((f) => f.dateKey).sort();
+        expect(o.unreportedFixtures, `components/teams/team-view.ts ${team.slug} v ${o.slug}`).toBe(past.length);
+        expect(o.nextFixtureDate, `components/teams/team-view.ts ${team.slug} v ${o.slug}`).toBe(ahead[0] ?? null);
+      }
+    }
+  });
+
+  it('orders rows by the date each one shows, official-only fixtures included', () => {
+    for (const team of data.getTeams()) {
+      const v = view.buildTeamPageView(team.slug);
+      if (!v) continue;
+      const shown = v.unbeaten.map((o) => o.nextDate ?? o.nextFixtureDate);
+      const dated = shown.filter((d): d is string => d !== null);
+      expect(dated, `components/teams/team-view.ts ${team.slug}`).toEqual([...dated].sort());
+      expect(shown.slice(0, dated.length), `components/teams/team-view.ts ${team.slug}`).toEqual(dated);
+    }
+  });
+
+  it('says "next <date>" for a future fixture and "N unreported" only for a past one', async () => {
+    const { TeamUnbeaten } = await import('../../components/teams/TeamUnbeaten');
+    const base = view.buildTeamPageView('carmel')!;
+    const opponent = (slug: string, extra: Partial<import('../../components/teams/team-view').UnbeatenOpponent>) => {
+      const t = data.getTeamBySlug(slug)!;
+      return {
+        slug: t.slug,
+        name: t.name,
+        shortName: t.shortName,
+        record: { w: 0, l: 1, t: 0 },
+        played: 1,
+        remaining: 0,
+        nextDate: null,
+        unreportedFixtures: 0,
+        nextFixtureDate: null,
+        ...extra,
+      };
+    };
+    const short = base.league.shortName;
+    const render = (unbeaten: ReturnType<typeof opponent>[]) =>
+      renderToStaticMarkup(createElement(TeamUnbeaten, { view: { ...base, unbeaten } }));
+    const others = data.getTeams(base.team.division).filter((t) => t.slug !== base.team.slug);
+
+    // Future only: the date, never "unreported", and no footnote about unreported meetings.
+    const future = render([opponent(others[0].slug, { nextFixtureDate: '2026-10-14' })]);
+    expect(textOf(future), 'components/teams/TeamUnbeaten.tsx future').toContain('next Oct 14');
+    expect(future, 'components/teams/TeamUnbeaten.tsx future').not.toContain('unreported');
+    expect(future, 'components/teams/TeamUnbeaten.tsx future sentence').toContain(
+      `next meeting Oct 14 on ${short}’s schedule`,
+    );
+
+    // One past and one future: the future date leads, and since no row then reads "unreported",
+    // there is no footnote explaining the word.
+    const mixed = render([opponent(others[0].slug, { nextFixtureDate: '2026-10-14', unreportedFixtures: 1 })]);
+    expect(textOf(mixed), 'components/teams/TeamUnbeaten.tsx mixed').toContain('next Oct 14');
+    expect(mixed, 'components/teams/TeamUnbeaten.tsx mixed footnote').not.toContain('An “unreported” meeting');
+
+    // Past only: "N unreported" and the footnote.
+    const past = render([opponent(others[0].slug, { unreportedFixtures: 2 })]);
+    expect(textOf(past), 'components/teams/TeamUnbeaten.tsx past').toContain('2 unreported');
+    expect(past, 'components/teams/TeamUnbeaten.tsx past sentence').toContain(
+      `2 scheduled per ${short} with no result reported`,
+    );
+  });
+});

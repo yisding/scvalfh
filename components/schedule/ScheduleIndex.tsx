@@ -13,7 +13,7 @@ import type { IndexDay, LeagueCardData, ScheduleIndexView } from './schedule-vie
  * The light `/schedule` index (SPEC §8.1, §10.4): the whole season no longer fits one fast page,
  * so this page is cards and an index, and each league's full season is `/schedule/<league>`.
  *
- *  - League cards: `<SHORT> · <n> games · <m> results · next <date> →` → `/schedule/<league>`
+ *  - League cards: `<n> games · <m> results · next <date> →` → `/schedule/<league>`
  *    (each card carries `id=<league>`, the jump links' target).
  *  - `Recent` (the last three game days up to today) and `Next` (the next three): each day grouped
  *    by league, at most three rows per league and `+<n> more →` the day's page. A cross-league game
@@ -41,14 +41,19 @@ export interface ScheduleIndexProps extends ScheduleIndexView {
   perLeague?: number;
 }
 
-function cardLine(card: LeagueCardData): string {
-  const parts = [
-    card.shortName,
-    plural(card.games, 'game'),
-    plural(card.results, 'result'),
-  ];
-  parts.push(card.next ? `next ${shortDate(card.next)}` : 'no games to come');
-  return parts.join(' · ');
+/**
+ * A card's stat line, under its league title (so no short name again). The `next <date> →` tail is
+ * one nowrap run, arrow included, so a narrow card breaks before `next` and never inside the date.
+ */
+function CardLine({ card }: { card: LeagueCardData }) {
+  return (
+    <>
+      {plural(card.games, 'game')} · {plural(card.results, 'result')} ·{' '}
+      <span className="whitespace-nowrap">
+        {card.next ? `next ${shortDate(card.next)}` : 'no games to come'} <Arrow />
+      </span>
+    </>
+  );
 }
 
 /**
@@ -80,14 +85,15 @@ function DayBlock({
       aria-label={label}
       className="mt-6 first:mt-4"
     >
-      <div className="flex min-h-12 items-center gap-2">
+      {/* Capped like the day's lists below, so "Day page" sits over them. */}
+      <div className="flex min-h-12 items-center gap-2 md:max-w-3xl">
         <h3 id={headingId} className="m-0 text-body font-semibold text-ink">
           <time dateTime={day.date}>
             <span aria-hidden="true">{shortDate(day.date)}</span>
             <span className="sr-only">{longDate(day.date)}</span>
           </time>
         </h3>
-        <span className="sx-badge sx-num shrink-0">
+        <span className="sx-badge shrink-0 tabular-nums">
           {day.total} {gameWord(day.total)}
         </span>
         <Link
@@ -95,7 +101,7 @@ function DayBlock({
           prefetch={false}
           className="sx-action ml-auto shrink-0 text-meta font-medium text-accent no-underline hover:underline"
         >
-          The day<span className="sr-only">, {longDate(day.date)}</span> <Arrow />
+          Day page<span className="sr-only"> for {longDate(day.date)}</span>
         </Link>
       </div>
       {day.leagues.map((league) => {
@@ -103,7 +109,7 @@ function DayBlock({
         return (
           <div key={league.id} className="mt-2">
             <h4 className="m-0 mb-1 text-micro font-semibold text-ink-3">{league.shortName}</h4>
-            <ol className="sx-list sx-bleed bg-surface shadow-[0_-1px_0_var(--sx-border),0_1px_0_var(--sx-border)]">
+            <ol className="sx-list sx-bleed bg-surface md:max-w-3xl shadow-[0_-1px_0_var(--sx-border),0_1px_0_var(--sx-border)]">
               {league.games.slice(0, perLeague).map((game) => (
                 <li key={game.contestId}>
                   <GameRow game={game} scopeLeague={league.id} showRecap={false} />
@@ -144,7 +150,7 @@ export function ScheduleIndex({ cards, regions, days, perLeague = 3 }: ScheduleI
                   <span className="text-lead font-semibold text-ink">{card.shortName}</span>
                   <span className="text-meta text-ink-3">{card.name}</span>
                   <span className="text-body text-ink-2">
-                    {cardLine(card)} <Arrow />
+                    <CardLine card={card} />
                   </span>
                 </Link>
               </li>
@@ -210,9 +216,11 @@ export function ScheduleIndex({ cards, regions, days, perLeague = 3 }: ScheduleI
                       unlabelled second count was ambiguous (review 2026-10-06). */}
                   {day.byRegion.map((r) => (
                     <span key={r.region} data-region-scope={r.region} className="text-ink-2">
+                      {/* A no-break space BEFORE each dot (DESIGN §26.5 "Separators"): the only
+                          break is after it, so no line starts with "·". */}
                       {r.total === 0
-                        ? ` · no ${regionShort(r.region)} games`
-                        : `${` · ${regionShort(r.region)}: ${plural(r.total, 'game')}`}${r.byLeague.map((l) => ` · ${l.shortName} ${l.games}`).join('')}`}
+                        ? `\u00a0· no ${regionShort(r.region)} games`
+                        : `${`\u00a0· ${regionShort(r.region)}: ${plural(r.total, 'game')}`}${r.byLeague.map((l) => `\u00a0· ${l.shortName}\u00a0${l.games}`).join('')}`}
                     </span>
                   ))}
                 </span>

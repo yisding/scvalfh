@@ -2,6 +2,7 @@ import { dateTimeAttr, longDate, monthDay, parseLocal, timeOfDayPT } from '../..
 import { findDivision, findLeague } from '../../lib/leagues';
 import ExternalLink from '../ui/ExternalLink';
 import SectionHeader from '../ui/SectionHeader';
+import { maxPrepsLabel } from '../ui/maxpreps-label';
 
 import type { GameModel } from './game-view';
 
@@ -69,7 +70,7 @@ export function GameDetails({ model, className }: GameDetailsProps) {
   if (address) links.push({ href: mapsHref(address), label: 'Directions' });
   if (game.urls.nfhsStream) links.push({ href: game.urls.nfhsStream, label: 'NFHS stream' });
   if (game.urls.goFan) links.push({ href: game.urls.goFan, label: 'Tickets' });
-  if (game.urls.maxpreps) links.push({ href: game.urls.maxpreps, label: 'MaxPreps box score' });
+  if (game.urls.maxpreps) links.push({ href: game.urls.maxpreps, label: maxPrepsLabel(game.status) });
   if (game.urls.sblive) links.push({ href: game.urls.sblive, label: 'si.com game' });
   const ownLinks = links.filter((link) => !elsewhere.has(link.href));
 

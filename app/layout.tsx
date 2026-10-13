@@ -10,7 +10,7 @@ import { buildLeagueScopeCss } from '../components/layout/league-scope-css';
 import { buildPrefsScript } from '../components/layout/prefs-script';
 import { OG_BASE, SITE_DESCRIPTION, SITE_NAME, SITE_URL } from '../components/layout/site';
 import { PINNED_TEAM_SCRIPT } from '../components/layout/pinned-team-script';
-import { THEME_SCRIPT } from '../components/layout/theme-script';
+import { THEME_COLOR, THEME_SCRIPT } from '../components/layout/theme-script';
 import PinnedTeamMarks from '../components/ui/PinnedTeamMarks';
 import TwinMarks from '../components/ui/TwinMarks';
 import { getFetchedAt, getTeams } from '../lib/data';
@@ -70,10 +70,12 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
-  // Matches --sx-bg in each mode, so the browser chrome never flashes the other theme.
+  // Matches --sx-bg in each mode, so the browser chrome never flashes the other theme. These follow
+  // the OS; an explicit Light/Dark choice prepends a media-less meta that outranks them
+  // (components/layout/theme-script.ts), from the same THEME_COLOR pair.
   themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#f6f7f8' },
-    { media: '(prefers-color-scheme: dark)', color: '#0b0d10' },
+    { media: '(prefers-color-scheme: light)', color: THEME_COLOR.light },
+    { media: '(prefers-color-scheme: dark)', color: THEME_COLOR.dark },
   ],
 };
 
@@ -100,8 +102,9 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`} suppressHydrationWarning>
       <head>
-        {/* ~200 bytes, blocking, before first paint: stamps data-theme so an explicit
-            Light/Dark choice never flashes the other theme (DESIGN §7.14). */}
+        {/* ~300 bytes, blocking, before first paint: stamps data-theme so an explicit
+            Light/Dark choice never flashes the other theme, and gives the browser chrome the
+            chosen theme-color (DESIGN §7.14). */}
         <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
         {/* Marks the pinned team's row on /standings and its tile on /teams before the first
             paint, once the DOM is parsed. `DOMContentLoaded` fires once per document, so

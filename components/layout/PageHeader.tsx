@@ -5,7 +5,10 @@
  *
  * Phone: eyebrow, h1 (28px), description, meta row, then the aside stacked underneath.
  * From 768px: the aside (steppers, inline DivisionTabs) moves to the right of the title block and
- * aligns to its bottom edge; the h1 grows to 36px.
+ * aligns to its bottom edge; the h1 grows to 36px. The title block keeps at least 28rem: an aside
+ * too wide to sit beside that wraps under the title, still right-aligned, rather than squeezing
+ * the h1 into a column a word wide (at 20rem, /history's description ran to eight lines at 1024px
+ * beside its jump pills).
  *
  * The first block after a PageHeader takes `mt-8 md:mt-10`; later sections take
  * `mt-section md:mt-section-lg`.
@@ -43,11 +46,11 @@ export function PageHeader({
 }: PageHeaderProps) {
   return (
     <header
-      className={['pt-6 md:flex md:items-end md:justify-between md:gap-8 md:pt-10', className]
+      className={['pt-6 md:flex md:flex-wrap md:items-end md:justify-between md:gap-x-8 md:gap-y-4 md:pt-10', className]
         .filter(Boolean)
         .join(' ')}
     >
-      <div className="min-w-0">
+      <div className="min-w-0 md:min-w-[28rem] md:flex-1">
         {eyebrow ? <p className="m-0 mb-1 text-meta font-medium text-ink-3">{eyebrow}</p> : null}
         <h1 className="m-0 text-h1 text-ink">
           {title}
@@ -59,7 +62,7 @@ export function PageHeader({
         {meta ? <div className="mt-3 flex flex-wrap items-center gap-2">{meta}</div> : null}
       </div>
       {aside ? (
-        <div className={['mt-4 shrink-0 md:mt-0', asideClassName].filter(Boolean).join(' ')}>
+        <div className={['mt-4 shrink-0 md:mt-0 md:ml-auto', asideClassName].filter(Boolean).join(' ')}>
           {aside}
         </div>
       ) : null}

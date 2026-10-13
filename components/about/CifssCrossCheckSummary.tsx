@@ -1,5 +1,5 @@
 import { CIFSS_NOTES } from '../../lib/cifss-crosscheck';
-import { formatStamp } from '../../lib/format';
+import { formatStamp, shortDate } from '../../lib/format';
 import type { CifssCrossCheck, CifssOnlyRow } from '../../lib/types';
 
 import ExternalLink from '../ui/ExternalLink';
@@ -23,7 +23,7 @@ function OnlyList({ rows, intro, sharedNote }: { rows: readonly CifssOnlyRow[]; 
         {rows.map((row) => (
           <li key={row.contestId} className="flex flex-wrap items-center justify-between gap-2 py-2 text-meta">
             <span>
-              {row.label} <span className="text-ink-3">&middot; {row.dateKey}</span>{' '}
+              {row.label} <span className="text-ink-3">&middot; <time dateTime={row.dateKey}>{shortDate(row.dateKey)}</time></span>{' '}
               <span className="sx-num text-ink-2">
                 {row.cifss.away}&ndash;{row.cifss.home}
               </span>
@@ -78,7 +78,7 @@ export function CifssCrossCheckSummary({ cross }: CifssCrossCheckSummaryProps) {
                   <td className="py-3 pl-4">
                     {row.label}
                     <span className="block text-ink-3">
-                      {row.dateKey} &middot; {row.note}{' '}
+                      <time dateTime={row.dateKey}>{shortDate(row.dateKey)}</time> &middot; {row.note}{' '}
                       <ExternalLink href={row.cifssUrl} arrow={false} className="underline">
                         cifsshome.org
                       </ExternalLink>

@@ -1,6 +1,7 @@
 import Link from 'next/link';
 
 import ExternalLink from '../ui/ExternalLink';
+import GridRowFiller from '../ui/GridRowFiller';
 import type { CommitRow } from './commit-view';
 
 /**
@@ -36,36 +37,49 @@ function Row({ row }: { row: CommitRow }) {
       <span className="block text-body text-ink">{row.name}</span>
       <span className="block text-meta text-ink-2">
         {/* `prefetch={false}`: one link per row, to a static team page (tests/ui/prefetch-policy). */}
-        <Link href={row.school.href} prefetch={false} className="sx-action text-accent hover:underline">
-          <span>
-            {row.school.name}
-            <span className="sr-only"> roster</span>
-          </span>
-        </Link>
+        {/* Each dot sits inside the nowrap span of the item before it: the link is inline-flex, an
+            atomic inline, so a no-break space after it would still let a line start with the dot. */}
+        <span className="whitespace-nowrap">
+          <Link href={row.school.href} prefetch={false} className="sx-action text-accent hover:underline">
+            <span>
+              {row.school.name}
+              <span className="sr-only"> roster</span>
+            </span>
+          </Link>
+          {row.facts.length > 0 ? <>&nbsp;&middot;</> : null}
+        </span>
         {row.facts.map((fact, i) => (
           <span key={i}>
-            &nbsp;&middot; <span className="whitespace-nowrap">{fact}</span>
+            {' '}
+            <span className="whitespace-nowrap">
+              {fact}
+              {i < row.facts.length - 1 ? <>&nbsp;&middot;</> : null}
+            </span>
           </span>
         ))}
       </span>
       <span className="block text-meta text-ink-2">
-        <span className="font-semibold text-ink">{row.college.name}</span>
-        {row.college.fullName ? <>&nbsp;&middot; {row.college.fullName}</> : null}
-        &nbsp;&middot; <span className="whitespace-nowrap">{row.college.sport}</span>
-        &nbsp;&middot; <span className="whitespace-nowrap">{row.college.division}</span>
+        {/* Each dot glued to the item before it, so a wrapped line never starts with one. */}
+        <span className="font-semibold text-ink">{row.college.name}</span>&nbsp;&middot;{' '}
+        {row.college.fullName ? <>{row.college.fullName}&nbsp;&middot;{' '}</> : null}
+        <span className="whitespace-nowrap">{row.college.sport}&nbsp;&middot;</span>{' '}
+        <span className="whitespace-nowrap">{row.college.division}</span>
       </span>
       <span className="block text-meta text-ink-2">{row.status}</span>
       <span className="block text-meta text-ink-2">
         <span className="text-ink-3">Sources:</span>&nbsp;
         {row.sources.map((source, i) => (
           <span key={source.url}>
-            {i > 0 ? <>&nbsp;&middot; </> : null}
-            <ExternalLink href={source.url} className="sx-action gap-1 whitespace-nowrap">
-              <span>
-                <span className="sr-only">{row.name}: </span>
-                {source.label}
-              </span>
-            </ExternalLink>
+            {i > 0 ? ' ' : null}
+            <span className="whitespace-nowrap">
+              <ExternalLink href={source.url} className="sx-action gap-1 whitespace-nowrap">
+                <span>
+                  <span className="sr-only">{row.name}: </span>
+                  {source.label}
+                </span>
+              </ExternalLink>
+              {i < row.sources.length - 1 ? <>&nbsp;&middot;</> : null}
+            </span>
           </span>
         ))}
       </span>
@@ -79,10 +93,11 @@ export interface CommitListProps {
 
 export function CommitList({ rows }: CommitListProps) {
   return (
-    <ul className="sx-card sx-flush sx-bleed m-0 grid list-none p-0 sm:grid-cols-2 lg:grid-cols-3">
+    <ul className="sx-card sx-flush sx-bleed my-0 grid list-none p-0 sm:grid-cols-2 lg:grid-cols-3">
       {rows.map((row) => (
         <Row key={row.key} row={row} />
       ))}
+      <GridRowFiller count={rows.length} columns={{ sm: 2, lg: 3 }} />
     </ul>
   );
 }

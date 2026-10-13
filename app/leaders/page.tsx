@@ -91,7 +91,7 @@ export default function LeadersPage() {
             id={region.schoolsId}
             data-region-scope={region.region}
             aria-label={`School leaders, ${region.name}`}
-            className={`${i === 0 ? 'mt-8 md:mt-10' : 'mt-section md:mt-section-lg'} min-w-0 scroll-mt-24`}
+            className={`${i === 0 ? 'mt-8 md:mt-10' : 'mt-section md:mt-section-lg'} min-w-0`}
           >
             <SectionHeader
               size="lg"
@@ -120,7 +120,7 @@ export default function LeadersPage() {
             id={region.playersId}
             data-region-scope={region.region}
             aria-label={`Player leaders, ${region.name}`}
-            className="mt-section min-w-0 scroll-mt-24 md:mt-section-lg"
+            className="mt-section min-w-0 md:mt-section-lg"
           >
             <SectionHeader
               size="lg"

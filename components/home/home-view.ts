@@ -54,6 +54,7 @@ import {
   ordinal,
   ordinalWord,
   recordString,
+  recordWords,
   shortDate,
   timeOfDayPT,
 } from '../../lib/format';
@@ -369,6 +370,8 @@ export interface MiniRow {
   hasResults: boolean;
   gp: number;
   record: string;
+  /** '7 wins, 1 loss, 0 ties' — the record for the row link's accessible name. */
+  recordWords: string;
   pts: number;
   gd: number;
 }
@@ -402,6 +405,7 @@ function miniDivision(league: LeagueConfig, division: DivisionConfig): MiniDivis
       hasResults: s.hasReportedResults,
       gp: s.computed.gp,
       record: recordString(s.computed),
+      recordWords: recordWords(s.computed),
       pts: s.computed.pts,
       gd: s.computed.gd,
     };

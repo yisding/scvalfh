@@ -555,7 +555,7 @@ describe('history: PCAL and MCAL are explicitly unavailable', () => {
   it('says MCAL posts no standings of its own, not that its site is unreachable', () => {
     const mcal = file.leagues.mcal;
     expect(mcal.reason).toMatch(/^MCAL published no 2025-26 final standings of its own\./);
-    expect(mcal.reason).toMatch(/MaxPreps' current-season table/);
+    expect(mcal.reason).toMatch(/MaxPreps’ current-season table/);
     expect(JSON.stringify(mcal)).not.toMatch(/bot (check|challenge)|cannot pass/i);
     // The playoff sheet that was looked for is named the way the league names its 2026 one.
     expect(mcal.checked.join(' ')).toContain('Playoffs/FieldHockeyPlayoffs_25.pdf (404');

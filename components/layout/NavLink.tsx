@@ -201,6 +201,11 @@ function TabFace({
   // The ink lives on the two spans, not on the link, so the globals.css pending rule's
   // `color: inherit` returns the old tab's glyph to the link's ink-2. The old tab's LABEL is
   // returned here, by the `nav:has([data-pending])` variant, which only the active label carries.
+  // The label scales with the reader's text size up to 15px (1.25× the 12px micro size) and
+  // stops there: a px cap, because a rem cap would scale with it. At 200% text the 24px "Leaders"
+  // and "Playoffs" were wider than a 72-78px tab and ran together; at 18px they still overflowed a
+  // 320px phone's 64px tab by 4-5px. At 15px they fit the 64px tab with room to spare
+  // (tests/ui/tab-labels.test.ts, whose width table runs a little wide). Nothing truncates.
   return (
     <>
       <span
@@ -216,7 +221,7 @@ function TabFace({
         {glyph}
       </span>
       <span
-        className={`text-micro leading-none ${
+        className={`text-[length:min(var(--text-micro),15px)] leading-none ${
           active
             ? 'font-semibold text-accent-ink [nav:has([data-pending])_&]:font-medium [nav:has([data-pending])_&]:text-ink-2'
             : pending

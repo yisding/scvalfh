@@ -29,7 +29,10 @@ import type { LeaderBoard, LeaderCell, LeaderRow } from './leaders-view';
  * "Convent of the Sacred Heart" would take three lines), and the full name from there. A player's
  * grade and position follow the school and league, as the roster prints them ("Junior ·
  * Midfield"): on the same line from 640px, on a line of their own below it. The row header has no
- * `aria-label`: its content is what is read, so the pinned row's note is too.
+ * `aria-label`: its content is what is read, so the pinned row's note is too. On a school board the
+ * row is one link: the school link's `::after` stretches over the `relative` row, as on the compact
+ * standings table, and carries the focus ring. A player board's row is about the player, so there
+ * the school stays a plain inline link in the meta line.
  */
 
 /** Column widths, by the widest value each column holds in 13px mono plus its gutter. */
@@ -139,7 +142,13 @@ function NameCell({ board, row }: { board: LeaderBoard; row: LeaderRow }) {
         <TeamMonogram team={team} size={24} />
       </span>
       <span className="min-w-0">
-        <Link href={team.href} prefetch={false} className="block text-body text-ink no-underline hover:underline">
+        {/* The ring goes on the stretched `::after`, so a keyboard reader sees the whole row that a
+            tap opens, not just the name. */}
+        <Link
+          href={team.href}
+          prefetch={false}
+          className="block text-body text-ink no-underline hover:underline after:absolute after:inset-0 after:content-[''] focus-visible:outline-none focus-visible:after:outline-solid focus-visible:after:outline-2 focus-visible:after:-outline-offset-2 focus-visible:after:outline-[var(--sx-focus)]"
+        >
           <TeamName name={team.name} shortName={team.shortName} />
         </Link>
         <span className="block text-meta text-ink-3">{team.leagueShort}</span>
@@ -193,7 +202,7 @@ function BoardTable({
         </thead>
         <tbody>
           {rows.map((row) => (
-            <tr key={row.key} data-team-slug={row.team.slug} className="h-14">
+            <tr key={row.key} data-team-slug={row.team.slug} className="relative h-14">
               <td className="pl-4 pr-2 text-cell text-ink-3">
                 <Place row={row} />
               </td>
@@ -232,7 +241,7 @@ export interface LeaderBoardTableProps {
 export function LeaderBoardTable({ board }: LeaderBoardTableProps) {
   const { extra } = board;
   return (
-    <section id={board.id} className="min-w-0 scroll-mt-24">
+    <section id={board.id} className="min-w-0">
       <SectionHeader as="h3" kicker={board.title} meta={board.meta} />
       {board.rows.length === 0 ? (
         // No row listed: nobody qualifies yet.

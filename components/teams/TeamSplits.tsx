@@ -4,9 +4,9 @@ import { MissingValue } from '../ui/MissingValue';
 import type { TeamPageView } from './team-view';
 
 /**
- * Home / away / neutral league splits (DESIGN §3.7, §12.5): three mini cards, label over value,
- * in the stat tiles' card recipe (StatTile: 12px padding on a phone, 16px from
- * 768px, the label over a bold value) so the team page has one tile look.
+ * Home / away / neutral league splits (DESIGN §3.7, §12.5): three unboxed tiles, label over value,
+ * in the stat tiles' hairline recipe (StatTile: a rule over the label over a bold value, 8px under
+ * the rule on a phone, 12px from 768px) so the team page has one tile look.
  *
  * The value is set exactly like a StatTile value: `sx-figure`, Sans with proportional figures,
  * 28px from 768px. DESIGN §4.3 reserves Mono + tabular for digits that STACK in a column (scores
@@ -14,7 +14,7 @@ import type { TeamPageView } from './team-view';
  * nothing, so they are "large standalone numbers", which §4.3 sets in Sans. In mono they read as a
  * second, unrelated tile style beside the League tile showing the same kind of record. Below 768px
  * the value stays `text-lead` (18px) and `whitespace-nowrap`, so "0-0-0" never breaks inside a
- * 3-up card at 320px.
+ * 3-up tile at 320px (which is why this is not the StatTile component, whose phone value is 24px).
  *
  * The NEUTRAL split ships even while no team has played a league game at a neutral site: CCS
  * games and some non-league tournaments are at neutral sites, and a split that materialises in
@@ -52,7 +52,7 @@ export function TeamSplits({ view }: TeamSplitsProps) {
     <div>
       <dl className="m-0 grid grid-cols-3 gap-3">
         {cells.map((cell) => (
-          <div key={cell.label} className="sx-card p-3 md:p-4">
+          <div key={cell.label} className="border-t border-rule pt-2 md:pt-3">
             <dt className="mb-0.5 text-meta font-medium text-ink-3 md:mb-1">{cell.label}</dt>
             <dd className="sx-figure m-0 text-lead leading-7 font-semibold whitespace-nowrap text-ink md:text-[1.75rem] md:leading-8 md:tracking-[-0.02em]">
               {cell.value ?? <MissingValue words={league ? noGames[cell.label] : 'not reported'} />}

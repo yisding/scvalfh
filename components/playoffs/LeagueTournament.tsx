@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { Fragment } from 'react';
 
-import { placeWords, scoreSentence } from '../../lib/format';
+import { placeWords, plural, scoreSentence } from '../../lib/format';
 import { gameHref } from '../../lib/game-id';
 import PlaceMark from '../ui/PlaceMark';
 import SectionHeader from '../ui/SectionHeader';
@@ -54,30 +54,48 @@ function rowSentence(row: SeedRowView, leagueShort: string): string {
   const { team, standing } = row;
   if (!standing.hasReportedResults) return `${team.name}: no results reported, not ranked in ${leagueShort}`;
   const place = placeWords(standing.computed.place, row.shared);
-  return `${team.name}, ${place} in ${leagueShort}, ${standing.computed.pts} points, ${row.gpText.replace('GP', 'league games counted')}`;
+  return `${team.name}, ${place} in ${leagueShort}, ${plural(standing.computed.pts, 'point')}, ${row.gpText.replace('GP', 'league games counted')}`;
+}
+
+/**
+ * '37 pts' / '14/16 GP' with the unit dropped from sm, where the PTS and GP column headers name it
+ * (the standings table prints bare numbers too). Below sm the PTS cell keeps it; '—' passes through.
+ */
+function BareFromSm({ text, unit }: { text: string; unit: string }) {
+  const suffix = ` ${unit}`;
+  if (!text.endsWith(suffix)) return <>{text}</>;
+  return (
+    <>
+      {text.slice(0, -suffix.length)}
+      <span className="sm:hidden">{suffix}</span>
+    </>
+  );
 }
 
 function SeedsTable({ view, leagueShort }: { view: TournamentView; leagueShort: string }) {
   const { seedRows, lineAfter, lineLabel } = view;
+  // A full-bleed band on a phone like the CCS projection tables (`sx-bleed`): the first and last
+  // visible cells take the 16px gutter (PTS below sm, GP from sm, Status's own padding from md).
+  // Capped at 48rem from lg, which still holds the 13rem Status column.
   return (
-    <div className="sx-card sx-flush">
+    <div className="sx-card sx-flush sx-bleed lg:max-w-3xl">
       <table className="sx-table text-meta">
         <caption className="sr-only">
           {leagueShort} tournament seeds from the league table, ordered by points. Unofficial.
         </caption>
         <thead>
           <tr>
-            <th scope="col" className="w-8 pr-1 pl-3 sm:w-10 sm:pr-2 sm:pl-4">
+            <th scope="col" className="w-8 pr-1 pl-gutter sm:w-10 sm:pr-2">
               #
             </th>
             <th scope="col">Team</th>
-            <th scope="col" className="w-px px-2 text-right tracking-normal">
+            <th scope="col" className="w-px pr-gutter pl-2 text-right tracking-normal sm:pr-2">
               PTS
             </th>
-            <th scope="col" className="hidden w-px px-2 text-right tracking-normal sm:table-cell">
+            <th scope="col" className="hidden w-px pr-gutter pl-2 text-right tracking-normal sm:table-cell md:pr-2">
               GP
             </th>
-            <th scope="col" className="hidden pr-4 md:table-cell md:w-52">
+            <th scope="col" className="hidden pr-4 pl-3 md:table-cell md:w-52">
               Status
             </th>
           </tr>
@@ -86,7 +104,7 @@ function SeedsTable({ view, leagueShort }: { view: TournamentView; leagueShort: 
           {seedRows.map((row, index) => (
             <Fragment key={row.team.slug}>
               <tr data-team-slug={row.team.slug} className="relative" style={{ height: 56 }}>
-                <td className="w-8 pr-1 pl-3 align-middle sm:w-10 sm:pr-2 sm:pl-4">
+                <td className="w-8 pr-1 pl-gutter align-middle sm:w-10 sm:pr-2">
                   <PlaceCell row={row} />
                 </td>
                 <th scope="row" className="pr-3 font-normal sm:pr-4 md:pr-0">
@@ -113,17 +131,20 @@ function SeedsTable({ view, leagueShort }: { view: TournamentView; leagueShort: 
                     </span>
                   </span>
                 </th>
-                <td className="sx-num whitespace-nowrap px-2 text-right align-middle text-cell text-ink" aria-hidden="true">
-                  {row.ptsText}
+                <td
+                  className="sx-num whitespace-nowrap pr-gutter pl-2 text-right align-middle text-cell text-ink sm:pr-2"
+                  aria-hidden="true"
+                >
+                  <BareFromSm text={row.ptsText} unit="pts" />
                 </td>
-                <td className="sx-num hidden whitespace-nowrap px-2 text-right align-middle text-cell text-ink-2 sm:table-cell">
-                  {row.gpText}
+                <td className="sx-num hidden whitespace-nowrap pr-gutter pl-2 text-right align-middle text-cell text-ink-2 sm:table-cell md:pr-2">
+                  <BareFromSm text={row.gpText} unit="GP" />
                 </td>
                 <td className="hidden pr-3 pl-3 align-middle text-micro text-ink-2 sm:pr-4 md:table-cell">{row.label}</td>
               </tr>
               {lineLabel && index + 1 === lineAfter && index + 1 < seedRows.length ? (
                 <tr>
-                  <td colSpan={5} className="border-t-2 border-rule py-1 pl-3 text-micro text-ink-3 sm:pl-4">
+                  <td colSpan={5} className="border-t-2 border-rule py-1 pl-gutter text-micro text-ink-3">
                     {lineLabel}
                   </td>
                 </tr>
@@ -187,6 +208,8 @@ export function LeagueTournament({ view, leagueShort, standingsHref, beforeSeeds
           kicker="Seeds"
           meta={view.seedsMeta ?? undefined}
           action={{ href: standingsHref, label: 'Full table' }}
+          // Capped like the seeds table below, so "Full table" sits over it.
+          className="lg:max-w-3xl"
         />
         {beforeSeeds}
         <SeedsTable view={view} leagueShort={leagueShort} />
@@ -201,7 +224,7 @@ export function LeagueTournament({ view, leagueShort, standingsHref, beforeSeeds
       </section>
 
       {view.playIn ? (
-        <section id="play-in" className="mt-section md:mt-section-lg max-w-3xl">
+        <section id="play-in" className="mt-section md:mt-section-lg">
           <SectionHeader kicker="Play-in" meta={view.playIn.dateLabel} />
           <PlayInCard
             title={`For seed ${view.playIn.home.seed ?? ''}`.trim()}
@@ -212,17 +235,21 @@ export function LeagueTournament({ view, leagueShort, standingsHref, beforeSeeds
             purpose={playInRule}
             notes={view.playIn.note ? [view.playIn.note] : []}
             game={view.playIn.game}
+            className="max-w-3xl"
           />
         </section>
       ) : null}
 
       <section id="bracket" className="mt-section md:mt-section-lg">
         <SectionHeader kicker="Bracket" />
-        <ol className="m-0 list-none space-y-6 p-0">
+        {/* A bracket line is ~220px of text: from md the rounds stop at 48rem rather than run the
+            full column. */}
+        <ol className="m-0 list-none space-y-6 p-0 md:max-w-3xl">
           {view.rounds.map((round) => (
             <li key={round.round}>
               <SectionHeader as="h3" kicker={round.title} meta={round.meta} />
-              <ol className="sx-list sx-card sx-flush m-0 list-none p-0">
+              {/* `my-0`, not `m-0`: a margin shorthand would cancel `sx-bleed`'s negative inline margin. */}
+              <ol className="sx-list sx-card sx-flush sx-bleed my-0 list-none p-0">
                 {round.games.map((game) => (
                   <li key={game.id}>
                     <BracketGame game={game} />

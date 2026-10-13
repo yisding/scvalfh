@@ -6,7 +6,8 @@
  *
  * Rendered only when the division has at least one row of kind `'missing'`; a postponed fixture
  * is never counted as missing. The ⚑ is decorative next to the words, so it is aria-hidden: the
- * text alone says it.
+ * text alone says it. `.sx-action`'s column gap is the space after it (a flex row drops the literal
+ * one); `items-start` keeps it on the first line when the words wrap at 320px.
  */
 export interface MissingResultsBannerProps {
   /** `missingBannerText(n, { official })` from standings-view, or null for nothing. */
@@ -21,8 +22,11 @@ export function MissingResultsBanner({ text, targetId, className }: MissingResul
   const words = text.replace(/^⚑\s*/, '');
   return (
     <p className={['m-0 text-meta text-ink-2', className].filter(Boolean).join(' ')}>
-      <a href={`#${targetId}`} className="sx-action font-medium text-ink no-underline hover:underline">
-        <span aria-hidden="true">&#9873;</span> {words}
+      <a href={`#${targetId}`} className="sx-action items-start font-medium text-ink no-underline hover:underline">
+        <span aria-hidden="true" className="shrink-0">
+          &#9873;
+        </span>{' '}
+        {words}
       </a>
     </p>
   );

@@ -74,6 +74,7 @@ import { getEloBoardForTeam } from '../leaders/leaders-view';
 import { buildOverviewDivision, type OverviewDivision } from '../standings/standings-view';
 import type { FormEntry } from '../ui/FormStrip';
 import { describeGame, shootoutSectionOf } from '../ui/describe-game';
+import { maxPrepsLabel } from '../ui/maxpreps-label';
 
 /** One opponent in this team's table that it has not beaten yet (DESIGN §3.7). */
 export interface UnbeatenOpponent {
@@ -88,8 +89,17 @@ export interface UnbeatenOpponent {
   remaining: number;
   /** The next meeting's date key, when one is scheduled. */
   nextDate: string | null;
-  /** Official fixtures against them with no published contest (never a result). */
+  /**
+   * Official fixtures against them with no published contest, dated BEFORE today: the meeting's day
+   * has passed and no source has its result. Never a result itself.
+   */
   unreportedFixtures: number;
+  /**
+   * The earliest official fixture against them with no published contest dated today or later
+   * (YYYY-MM-DD), or null. Not "unreported": its day has not come, and the fixture list marks it
+   * Upcoming.
+   */
+  nextFixtureDate: string | null;
 }
 
 /**
@@ -286,7 +296,7 @@ export type NextCard =
       /** Venue name, 'Neutral site' or '<City>, CA' — or null when we cannot say honestly. */
       place: string | null;
       earlier: EarlierMeeting | null;
-      /** Directions, NFHS stream, Tickets, MaxPreps box score: only links that exist. */
+      /** Directions, NFHS stream, Tickets, MaxPreps game (box score once final): only links that exist. */
       chips: NextChip[];
       /**
        * A fixture from the league's official schedule dated BEFORE this game, which no source has
@@ -446,6 +456,12 @@ function buildUnbeaten(team: Team, leagueLog: Game[], today: string): UnbeatenOp
           }
         }
       }
+      // Its official-only fixtures, split by the day: a past one is unreported, a future one is
+      // just not published as a contest yet.
+      const officialOnly = fixtures.filter(
+        (f) => f.awaySlug === opponent.slug || f.homeSlug === opponent.slug,
+      );
+      const nextFixture = nextOfficialFixture(officialOnly, today);
       return {
         slug: opponent.slug,
         name: opponent.name,
@@ -454,18 +470,20 @@ function buildUnbeaten(team: Team, leagueLog: Game[], today: string): UnbeatenOp
         played,
         remaining,
         nextDate,
-        unreportedFixtures: fixtures.filter(
-          (f) => f.awaySlug === opponent.slug || f.homeSlug === opponent.slug,
-        ).length,
+        unreportedFixtures: officialOnly.filter((f) => f.dateKey < today).length,
+        nextFixtureDate: nextFixture ? nextFixture.dateKey : null,
       };
     })
     .filter((o) => o.record.w === 0)
-    // Soonest meeting first — "who is left" is a calendar question. Opponents with nothing left
-    // to play sort after the ones we can still beat, then alphabetically.
+    // Soonest meeting first — "who is left" is a calendar question. The date is the one the row
+    // shows: the next published meeting, else the next official-only fixture. Opponents with
+    // nothing left to play sort after the ones we can still beat, then alphabetically.
     .sort((a, b) => {
-      if (a.nextDate && b.nextDate) return a.nextDate.localeCompare(b.nextDate);
-      if (a.nextDate) return -1;
-      if (b.nextDate) return 1;
+      const aNext = a.nextDate ?? a.nextFixtureDate;
+      const bNext = b.nextDate ?? b.nextFixtureDate;
+      if (aNext && bNext) return aNext.localeCompare(bNext);
+      if (aNext) return -1;
+      if (bNext) return 1;
       return a.shortName.localeCompare(b.shortName);
     });
 }
@@ -597,7 +615,7 @@ function nextChips(game: Game): NextChip[] {
   // Named for what is behind them: 'Stream' and 'MaxPreps' did not say which stream or which page.
   if (game.urls.nfhsStream) chips.push({ href: game.urls.nfhsStream, label: 'NFHS stream' });
   if (game.urls.goFan) chips.push({ href: game.urls.goFan, label: 'Tickets' });
-  if (game.urls.maxpreps) chips.push({ href: game.urls.maxpreps, label: 'MaxPreps box score' });
+  if (game.urls.maxpreps) chips.push({ href: game.urls.maxpreps, label: maxPrepsLabel(game.status) });
   return chips;
 }
 

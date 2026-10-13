@@ -1,5 +1,6 @@
 import { listWords } from '../../lib/format';
 import ExternalLink from '../ui/ExternalLink';
+import GridRowFiller from '../ui/GridRowFiller';
 import type { CollegeRow } from './commit-view';
 
 /**
@@ -20,7 +21,7 @@ export interface CollegeListProps {
 
 export function CollegeList({ colleges }: CollegeListProps) {
   return (
-    <ul className="sx-card sx-flush sx-bleed m-0 grid list-none p-0 sm:grid-cols-2 lg:grid-cols-3">
+    <ul className="sx-card sx-flush sx-bleed my-0 grid list-none p-0 sm:grid-cols-2 lg:grid-cols-3">
       {colleges.map((college) => (
         <li
           key={college.slug}
@@ -49,6 +50,7 @@ export function CollegeList({ colleges }: CollegeListProps) {
           )}
         </li>
       ))}
+      <GridRowFiller count={colleges.length} columns={{ sm: 2, lg: 3 }} />
     </ul>
   );
 }

@@ -5,7 +5,9 @@
  * De Anza table", never "Full De Anza table right arrow" (DESIGN §10 item 6, "screen-reader
  * sentences, not glyph soup"). So the glyph lives here and nowhere else, never baked into a data
  * string (lib/data.ts' `linkText`) or written bare in JSX text. The caller supplies the space
- * before it (`{label} <Arrow />`); the markup is `<span aria-hidden="true">→</span>`.
+ * before it (`{label} <Arrow />`); the markup is `<span aria-hidden="true">→</span>`. A flex row
+ * drops that space (a whitespace-only text node is not a flex item), so a flex link carries a gap
+ * instead: `.sx-action` has `column-gap: 0.25em` built in, any other flex anchor adds `gap-1`.
  *
  * Other link glyphs keep their own homes: ExternalLink's `↗`, the game page's `›` team pills and
  * SectionHeader's SVG chevron.

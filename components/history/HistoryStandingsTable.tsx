@@ -16,7 +16,8 @@ import TeamMonogram from '../ui/TeamMonogram';
  * all: a column of nothing but em dashes told the reader nothing and cost every table a fourth
  * column of width. A league whose source publishes it (BVAL's sheet) gets a fourth column, Overall,
  * and a row that has none still shows an em dash there. `place` is the source's own finish order,
- * not a value recomputed by this site.
+ * not a value recomputed by this site. A team row is one link: the name link's `::after` stretches
+ * over the `relative` row, as on the compact standings table.
  *
  * Below 23.4375rem (375px at a 16px browser font, 562px at 24px: the threshold StandingsTable uses)
  * a four-column table leaves the team name no room: at 320px the two 80px record columns and the
@@ -104,7 +105,7 @@ export function HistoryStandingsTable({ rows, caption, emptyLabel }: HistoryStan
               <NotPublished />
             );
             return (
-              <tr key={`${row.place}-${row.slug ?? row.name}`} className="h-12">
+              <tr key={`${row.place}-${row.slug ?? row.name}`} className="relative h-12">
                 <td className="sx-num pl-4 pr-2 text-cell">{ordinal(row.place)}</td>
                 <th scope="row" className="text-left font-normal">
                   {/* `prefetch={false}` for the reason the nav and the standings rows carry it
@@ -117,7 +118,7 @@ export function HistoryStandingsTable({ rows, caption, emptyLabel }: HistoryStan
                     <Link
                       href={`/teams/${team.slug}`}
                       prefetch={false}
-                      className="flex items-center gap-2 no-underline hover:underline"
+                      className="flex items-center gap-2 no-underline hover:underline after:absolute after:inset-0 after:content-['']"
                     >
                       <TeamMonogram team={team} size={24} />
                       {/* Wraps rather than truncating: at 320px a nowrap name once set the

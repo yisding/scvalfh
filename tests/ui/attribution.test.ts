@@ -13,7 +13,8 @@ import { getFetchedAt } from '../../lib/data';
 import { textOf } from './html-text';
 
 describe('the footer attribution', () => {
-  const text = textOf(renderToStaticMarkup(createElement(Attribution, { snapshotAt: getFetchedAt() })))
+  const html = renderToStaticMarkup(createElement(Attribution, { snapshotAt: getFetchedAt() }));
+  const text = textOf(html)
     // ExternalLink's sr-only "(opens in a new tab)" is not part of the sentence a sighted reader sees.
     .replace(/ \(opens in a new tab\)/g, '')
     .replace(/\s+/g, ' ')
@@ -26,6 +27,16 @@ describe('the footer attribution', () => {
         'City, North and Metro: we found no published league rules; San Diego Section rules from the CIF San Diego Section.',
     );
     expect(text).not.toContain('no league rules are published');
+  });
+
+  it('names every league and section in the disclaimer, each CIF code unbreakable at its plain hyphen', () => {
+    expect(text).toContain(
+      'Unofficial; not affiliated with SCVAL, BVAL, PCAL, MCAL, EAL, Sunset, City, North, Metro, ' +
+        'CIF-CCS, CIF-NCS, CIF-NS, CIF-SS, CIF-SDS, MaxPreps or SI.',
+    );
+    for (const code of ['CIF-CCS', 'CIF-NCS', 'CIF-NS', 'CIF-SS', 'CIF-SDS']) {
+      expect(html).toContain(`<span class="whitespace-nowrap">${code}</span>`);
+    }
   });
 
   it('carries the scope note', () => {

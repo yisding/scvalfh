@@ -34,7 +34,7 @@ const PAGE_TITLE = 'JV standings';
 
 export const metadata: Metadata = {
   title: PAGE_TITLE,
-  description: `Girls junior varsity field hockey standings for ${SHORT_NAMES}, unofficial: computed from MaxPreps' JV results (si.com filling gaps), shown for each division once enough of its JV league games have a score.`,
+  description: `Girls junior varsity field hockey standings for ${SHORT_NAMES}, unofficial: computed from MaxPreps’ JV results (si.com filling gaps), shown for each division once enough of its JV league games have a score.`,
   alternates: { canonical: '/jv' },
   openGraph: { ...OG_BASE, ...ROOT_OG_IMAGE, title: PAGE_TITLE, url: '/jv' },
 };
@@ -44,7 +44,7 @@ export default function JvStandingsPage() {
     <div className="pb-section-lg">
       <PageHeader
         title={PAGE_TITLE}
-        description="Junior varsity league games only · computed from published results · unofficial"
+        description="Junior varsity league games only · computed from published results&nbsp;· unofficial"
       />
       {/* The region control, its own row (DESIGN-socal §2.4); each league's section is region-scoped. */}
       <RegionSwitcher className="mt-4" />
@@ -67,14 +67,16 @@ export default function JvStandingsPage() {
           // The first league of each region takes the smaller gap: the other region's may be hidden.
           className={
             leaguesInRegion(regionOf(league.id))[0]?.id === league.id
-              ? 'mt-8 scroll-mt-24 md:mt-10'
-              : 'mt-section scroll-mt-24 md:mt-section-lg'
+              ? 'mt-8 md:mt-10'
+              : 'mt-section md:mt-section-lg'
           }
         >
             <SectionHeader
               id={`${league.id}-heading`}
               kicker={`${league.shortName} JV`}
               action={{ href: `/standings/${league.id}`, label: 'Varsity table' }}
+              // Capped like the tables below (48rem from lg), so the action sits over them.
+              className="lg:max-w-3xl"
             />
             <JvStandings views={buildJvTablesView(league.id)} multi={league.divisions.length > 1} />
         </section>

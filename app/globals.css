@@ -398,9 +398,13 @@
   .sx-kicker > .sx-kicker-rule { flex: 1 1 0; min-width: 0; height: 0; background: transparent; }
   /* A STANDALONE action link is not covered by WCAG 2.5.8's inline exception, so it carries its
      own box: 24px is the floor; 44px where it is a primary way through the site on a phone. */
+  /* `column-gap`: a flex row drops the whitespace-only text node in `{label} <Arrow />`, so
+     without it the glyph sat flush against the word ("table→", "⚑4 missing"). 0.25em is about a
+     word space. A `gap-*` utility on the caller still wins (utilities layer). */
   .sx-action {
     display: inline-flex;
     align-items: center;
+    column-gap: 0.25em;
     min-height: 1.5rem;
   }
   .sx-kicker > a {
@@ -440,7 +444,7 @@
      `hidden` makes a scroll container and a sticky <thead> inside would stop sticking. Focus
      rings inside are drawn inset so the clip cannot eat them. */
   .sx-flush { padding: 0; overflow: clip; }
-  .sx-flush :where(a, button, summary, [tabindex]):focus-visible { outline-offset: -2px; }
+  .sx-flush :where(a, button, input, summary, [tabindex]):focus-visible { outline-offset: -2px; }
 
   .sx-inset {
     background: var(--sx-surface-2);
@@ -496,10 +500,13 @@
     border-radius: 25%; background: #fff; object-fit: contain;
   }
 
-  /* Pills: footer actions, link rows, filter chips. 40px tall (44 where it is primary). */
+  /* Pills: footer actions, link rows, filter chips. 40px tall (44 where it is primary).
+     `padding-block` is 10px around the 20px line, so a one-line pill is still exactly 40px and a
+     label that wraps grows evenly instead of touching its edges: the EAL PDF pill on /about, and
+     Home's 2-up "Show <LEAGUE> here" buttons at 390, which are 60px rather than 44px. */
   .sx-pill {
     display: inline-flex; align-items: center; gap: 0.375rem;
-    min-height: 2.5rem; padding-inline: 1rem;
+    min-height: 2.5rem; padding-block: 0.625rem; padding-inline: 1rem;
     border-radius: var(--sx-r-chip);
     background: var(--sx-surface-2); color: var(--sx-text);
     font-size: var(--text-meta); line-height: 1.25rem; font-weight: 500;
@@ -518,9 +525,9 @@
   /* Press state, for touch (no hover) as much as for the mouse: a plain pill steps to the
      surface-3 chrome plane (its hover plane, already measured above), the canvas pill to its own
      surface-2 hover plane, and the accent pill, which keeps its wash, draws a 1px accent ring
-     inside its edge. A pill with a utility background (`bg-surface`,
-     `aria-pressed:bg-accent-wash`) carries its own `active:` utility instead — utilities outrank
-     this layer. */
+     inside its edge. A pill with a utility background (`bg-surface`, PinControl's
+     `data-[pinned=true]:bg-accent-wash`) carries its own `active:` utility instead — utilities
+     outrank this layer. */
   .sx-pill:not(.sx-pill-accent):active { background: var(--sx-surface-3); }
   .sx-pill.sx-pill-ring:active { background: var(--sx-surface-2); }
   .sx-pill.sx-pill-accent:active { box-shadow: inset 0 0 0 1px var(--sx-accent); }
@@ -614,6 +621,11 @@
      needs `!important` to beat Tailwind preflight's `[hidden] { display: none !important }`. */
   .sx-pinned .sx-pin-note,
   [data-team-slug][data-pinned] .sx-pin-note { display: inline !important; }
+  /* PinControl's "This replaces your pinned team." before hydration: another team is pinned
+     (`html[data-pin]`, stamped pre-paint) and the head script did not mark THIS hero as the pinned
+     one. It ships `hidden`, so a failed stylesheet keeps it silent; after hydration React drops
+     `data-pending` and owns `hidden` itself. */
+  html[data-pin] [data-team-slug]:not([data-pinned]) .sx-pin-other[data-pending] { display: inline !important; }
   .sx-nonleague { box-shadow: inset 2px 0 0 var(--sx-border-strong); }
 
   /* Hover elevation for card-sized links only (TeamTile, GameCard). Shadow only — no translate. */
@@ -655,30 +667,35 @@
   .sx-list > li:last-child { border-bottom: 0; }
 
   /* ── League chips (components/layout/LeagueSwitcher.tsx, SPEC §8.3). text-micro at weight 600,
-        a 44px target, 8px of side padding. The current chip is the accent wash + accent ink + a
-        1.5px ink ring + the aria-hidden ✓ — never colour alone, and no league hue anywhere
-        (DESIGN §6.4). Before hydration the scope stylesheet (components/layout/league-scope-css.ts,
-        unlayered) draws the same state from html[data-league]; after it, aria-pressed /
-        aria-current do. ── */
+        a 44px target, 8px of side padding. The current chip is inverse ink + the aria-hidden ✓ —
+        never colour alone, and no league hue anywhere (DESIGN §6.4, §26.1). Before hydration the
+        scope stylesheet (components/layout/league-scope-css.ts, unlayered) draws the same state
+        from html[data-league]; after it, aria-pressed / aria-current do. ── */
   .sx-league-chip {
     display: inline-flex; align-items: center; justify-content: center; gap: 0.25rem;
-    min-height: 2.75rem; min-width: 2.75rem; padding-inline: 0.625rem;
+    min-height: 2.75rem; min-width: 2.75rem; padding-inline: 0.5rem;
     border-radius: var(--sx-r-control);
     background: var(--sx-surface-2); color: var(--sx-text-2);
     font-size: var(--text-micro); line-height: 1rem; font-weight: 600;
     text-decoration: none; white-space: nowrap;
   }
   .sx-league-chip:disabled { cursor: default; }
+  /* The selected chip keeps its inverse ink under the pointer: this rule is (0,3,0) and would
+     otherwise outrank the (0,2,0) selected rule below. */
   @media (hover: hover) {
-    .sx-league-chip:not(:disabled):hover { background: var(--sx-surface-3); color: var(--sx-text); }
+    .sx-league-chip:not(:disabled, [aria-pressed="true"], [aria-current="page"]):hover {
+      background: var(--sx-surface-3); color: var(--sx-text);
+    }
   }
   /* Selected: inverse ink, the text/surface pair (18.91 / 16.43) swapped, so it needs no new
      measurement. The check glyph stays as the non-luminance cue. */
   .sx-league-chip:is([aria-pressed="true"], [aria-current="page"]) {
     background: var(--sx-text); color: var(--sx-surface);
   }
-  .sx-chip-check { display: none; }
-  .sx-league-chip:is([aria-pressed="true"], [aria-current="page"]) > .sx-chip-check { display: inline; }
+  /* The ✓ is always laid out and only shown when selected, so every chip keeps one width and a
+     selection never reflows a wrapped row. */
+  .sx-chip-check { visibility: hidden; }
+  .sx-league-chip:is([aria-pressed="true"], [aria-current="page"]) > .sx-chip-check { visibility: visible; }
 
   /* "Jump to <SHORT> ↓" (SPEC §8.3): the look only. Whether it shows is the scope stylesheet's
      call (`.sx-jump` hidden, `.sx-jump-<id>` shown for the effective league), unlayered. */
@@ -758,14 +775,14 @@
 
   ::selection { background: var(--sx-select); }
 
-  :where(a, button, select, summary, [role="tab"], [tabindex]):focus-visible {
+  :where(a, button, input, select, summary, [role="tab"], [tabindex]):focus-visible {
     outline: 2px solid var(--sx-focus);
     outline-offset: 2px;
   }
   /* The ring's 6px corner is a DEFAULT for elements that have no shape of their own (inline links,
      bare buttons), so it carries zero specificity: a pill (999px), a badge or a card (16px) keeps
      its own radius on focus and the ring follows it instead of squaring it off. */
-  :where(a, button, select, summary, [role="tab"], [tabindex]):where(:focus-visible) {
+  :where(a, button, input, select, summary, [role="tab"], [tabindex]):where(:focus-visible) {
     border-radius: var(--sx-r-tag);
   }
   /* TopNav: the 44px link is the target, the 36px capsule inside it is what you see, so the ring
@@ -852,4 +869,53 @@ nav:has([data-pending]) [aria-current]:not([aria-current="false"]):not(:has([dat
 nav:has([data-pending]) [aria-current]:not([aria-current="false"]):not(:has([data-pending])) .sx-indicator {
   background: transparent;
   box-shadow: none;
+}
+
+/* ── Print (unlayered, after the token blocks, so it outranks the dark blocks, every layer and the
+      unlayered scope stylesheet). Paper is always light: a dark-theme reader's page printed
+      near-white ink on white paper, since browsers drop background colours by default. The light
+      token values are copied from the `:root` block above; keep the two in step. The chrome, the
+      client-only controls, the league/region rows, the report line and the jump pills are for a
+      screen, not for paper (`.sx-print-hide` marks the server-rendered ones). Nothing sticks. ── */
+@media print {
+  :root,
+  :root[data-theme="dark"] {
+    color-scheme: light;
+    --sx-bg:            #f6f7f8;
+    --sx-surface:       #ffffff;
+    --sx-surface-2:     #f2f4f6;
+    --sx-surface-3:     #e6e9ec;
+    --sx-border:        #d9dde2;
+    --sx-border-strong: #b9c0c8;
+    --sx-text:          #0e1116;
+    --sx-text-2:        #4a5461;
+    --sx-text-3:        #5d6874;
+    --sx-accent:        #1558b0;
+    --sx-accent-ink:    #0f4a96;
+    --sx-accent-wash:   #d4e1f3;
+    --sx-win:           #036a34;
+    --sx-win-ink:       #03562a;
+    --sx-win-wash:      #d5e3d8;
+    --sx-loss:          #df6860;
+    --sx-loss-ink:      #a32f28;
+    --sx-loss-wash:     #fde4e1;
+    --sx-tie:           #55606d;
+    --sx-tie-ink:       #414b56;
+    --sx-tie-wash:      #dee0e3;
+    --sx-bar:           #4a5461;
+    --sx-zero:          #b9c0c8;
+    --sx-focus:         #1558b0;
+    --sx-select:        #cbdaf0;
+    --sx-shadow-raised: 0 0 0 0 transparent;
+    --sx-shadow-lift:   0 0 0 1px rgb(14 17 22 / 0.28);
+    --sx-ring:          0 0 0 1px rgb(14 17 22 / 0.11);
+  }
+  body { background: #fff; color: #000; padding-bottom: 0; }
+
+  .sx-chrome-top, .sx-chrome-bottom, .sx-js-only, .sx-print-hide, .sx-jump { display: none !important; }
+
+  .sticky, [class*=":sticky"], .sx-table thead th { position: static !important; }
+  .sx-dategroup { content-visibility: visible; }
+  tr, .sx-list > li, .sx-card:not(.sx-flush), .sx-inset { break-inside: avoid; }
+  h2, h3 { break-after: avoid; }
 }

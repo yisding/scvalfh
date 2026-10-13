@@ -25,7 +25,7 @@
  * game with the note as written, so a reader can tell the two sources apart.
  */
 
-import { listWords, numberWord, shortDate } from '../../lib/format';
+import { listWords, numberWord, plural, shortDate } from '../../lib/format';
 import type { NoteCredit, NoteStatKind } from '../../lib/note-stats';
 import { getTeamPlayerStatsWithNotes } from '../../lib/player-stats';
 import type {
@@ -263,16 +263,18 @@ function goalieCard(team: TeamPlayerStats, p: PlayerStatLine, i: number, noted: 
   if (mixed && g.saves !== null && g.goalsAgainst !== null && tracked.has('goalsAgainst')) {
     flag = 'No save % is worked out: some of these saves come from a game note, and the goals against do not cover the same games.';
   }
-  if (disagree) {
+  if (disagree && g.opponentShotsOnGoal !== null) {
+    // Whole counts with real plurals ("1 save", never "1 saves"), rounded as `statText` rounds.
+    const count = (n: number, one: string, many: string) => plural(Math.round(n), one, many);
     const accounted =
       g.saves !== null && g.goalsAgainst !== null
-        ? `${statText(g.saves + g.goalsAgainst)} saves plus goals against`
+        ? count(g.saves + g.goalsAgainst, 'save or goal against', 'saves plus goals against')
         : g.saves !== null
-          ? `${statText(g.saves)} saves`
-          : `${statText(g.goalsAgainst)} goals against`;
+          ? count(g.saves, 'save', 'saves')
+          : count(g.goalsAgainst ?? 0, 'goal against', 'goals against');
     const hidesPercent = g.saves !== null && g.goalsAgainst !== null && savePercent(g.saves, g.goalsAgainst) !== null;
     flag =
-      `As entered, these cannot all be right: ${statText(g.opponentShotsOnGoal)} opponent shots on goal, ` +
+      `As entered, these cannot all be right: ${count(g.opponentShotsOnGoal, 'opponent shot on goal', 'opponent shots on goal')}, ` +
       `but ${accounted}.${hidesPercent ? ' No save % is worked out.' : ''}`;
   }
   return {

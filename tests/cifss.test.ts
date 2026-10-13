@@ -146,7 +146,7 @@ describe('compareCifss', () => {
     expect(report.conflicts).toHaveLength(1);
     const c = report.conflicts[0];
     expect(c).toMatchObject({ label: 'Cupertino at Fremont', maxpreps: { home: 2, away: 1 }, cifss: { home: 3, away: 1 } });
-    expect(c.note).toBe("Sources disagree: we show MaxPreps' 1-2 (Cupertino–Fremont); cifsshome.org reports 1-3. MaxPreps’ score stands.");
+    expect(c.note).toBe("Sources disagree: we show MaxPreps’ 1-2 (Cupertino–Fremont); cifsshome.org reports 1-3. MaxPreps’ score stands.");
     expect(c.cifssUrl).toContain('date_from=09%2F09%2F2026&date_to=09%2F09%2F2026');
   });
 
@@ -232,7 +232,7 @@ describe('carryCifssCrossCheck', () => {
     const changed = { ...fremont, home: { ...fremont.home, score: 4 } };
     const carried = carryCifssCrossCheck(prior, [changed]);
     expect(carried.conflicts).toEqual([
-      expect.objectContaining({ maxpreps: { home: 4, away: 1 }, cifss: { home: 3, away: 1 }, note: expect.stringContaining("MaxPreps' 1-4") }),
+      expect.objectContaining({ maxpreps: { home: 4, away: 1 }, cifss: { home: 3, away: 1 }, note: expect.stringContaining("MaxPreps’ 1-4") }),
     ]);
     expect(carried.compared).toBe(carried.agreements + carried.conflicts.length);
     // The game gone from MaxPreps: the row and its count go with it.

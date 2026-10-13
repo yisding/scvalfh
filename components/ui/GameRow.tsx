@@ -8,6 +8,7 @@ import type { Game, LeagueId, Record3, TeamSlug } from '../../lib/types';
 
 import ExternalLink from './ExternalLink';
 import GhostMonogram from './GhostMonogram';
+import { maxPrepsLabel } from './maxpreps-label';
 import ResultChip from './ResultChip';
 import { ScoreGlyph, nameClass } from './ScoreGlyph';
 import StatusLabel, { GameChips } from './StatusLabel';
@@ -81,6 +82,13 @@ export interface GameViewProps {
    * panel offers the stream, and a replay is what a parent wants from a game just played.
    */
   showStream?: boolean;
+  /**
+   * GameCard only: `'pills'` prints its links as the team page's Next card does — the accent
+   * "Full game page" pill (still the stretched link) and 44px "MaxPreps box score" / "NFHS stream"
+   * pills — so the Last and Next cards side by side word and size the same actions alike. Only that
+   * Last card passes it; every other card keeps the compact `'text'` links.
+   */
+  linkStyle?: 'text' | 'pills';
   defaultExpanded?: boolean;
   className?: string;
 }
@@ -237,7 +245,7 @@ function GameLinks({ game }: { game: Game }) {
   if (directions) links.push({ href: directions, label: 'Directions' });
   if (game.urls.nfhsStream) links.push({ href: game.urls.nfhsStream, label: 'NFHS stream' });
   if (game.urls.goFan) links.push({ href: game.urls.goFan, label: 'Tickets' });
-  if (game.urls.maxpreps) links.push({ href: game.urls.maxpreps, label: 'MaxPreps box score' });
+  if (game.urls.maxpreps) links.push({ href: game.urls.maxpreps, label: maxPrepsLabel(game.status) });
   return (
     <p className="m-0 flex flex-wrap gap-2">
       {/* The way on to the whole contest comes first, as the one accent pill. */}
@@ -418,10 +426,12 @@ export function GameCard({
   scopeLeague = null,
   showRecords = false,
   showStream = false,
+  linkStyle = 'text',
   className,
 }: GameViewProps) {
   const display = describeGame(game, perspective);
   const withRecords = recordsApply(game, display, showRecords);
+  const pills = linkStyle === 'pills';
   // The links' names end in the matchup, so a links list (VoiceOver rotor, NVDA Insert+F7)
   // reads "Game page: Carmel at Fremont" rather than nine identical "Game page"s. Full names, as
   // the card's sr-only sentence speaks them: this tail is sr-only, so it need not match the
@@ -488,15 +498,27 @@ export function GameCard({
         <p className="m-0 text-meta text-ink-2">{game.recap}</p>
       ) : null}
       {display.note ? <p className="m-0 text-meta text-ink-3">{display.note}</p> : null}
-      <div className="mt-auto flex flex-wrap items-center gap-x-4 gap-y-1 text-meta">
+      <div
+        className={
+          pills
+            ? 'mt-auto flex flex-wrap gap-2 pt-1'
+            : 'mt-auto flex flex-wrap items-center gap-x-4 gap-y-1 text-meta'
+        }
+      >
         <Link
           href={gameHref(game.contestId)}
           prefetch={false}
           data-stretched=""
           aria-describedby={sentenceId}
-          className="sx-action font-medium text-accent no-underline hover:underline after:absolute after:inset-0 after:rounded-[var(--sx-r-card-lg)] focus-visible:outline-none"
+          className={[
+            pills
+              ? 'sx-pill sx-pill-accent min-h-11'
+              : 'sx-action font-medium text-accent no-underline hover:underline',
+            'after:absolute after:inset-0 after:rounded-[var(--sx-r-card-lg)] focus-visible:outline-none',
+          ].join(' ')}
         >
-          Game page<span className="sr-only">: {matchup}</span>
+          {pills ? 'Full game page' : 'Game page'}
+          <span className="sr-only">: {matchup}</span>
         </Link>
         {/* The same face as its neighbour: sentence case, 500 weight, underline on hover only.
             The matchup goes inside the children so ExternalLink's "(opens in a new tab)" stays
@@ -504,15 +526,16 @@ export function GameCard({
         {game.urls.maxpreps ? (
           <ExternalLink
             href={game.urls.maxpreps}
-            className="sx-action relative z-10 gap-1 font-medium no-underline hover:underline"
+            className={pills ? 'sx-pill relative z-10 min-h-11' : textLinkClass}
           >
-            Box score<span className="sr-only">: {matchup}</span>
+            {pills ? maxPrepsLabel(game.status) : 'Box score'}
+            <span className="sr-only">: {matchup}</span>
           </ExternalLink>
         ) : null}
         {showStream && game.urls.nfhsStream ? (
           <ExternalLink
             href={game.urls.nfhsStream}
-            className="sx-action relative z-10 gap-1 font-medium no-underline hover:underline"
+            className={pills ? 'sx-pill relative z-10 min-h-11' : textLinkClass}
           >
             NFHS stream<span className="sr-only">: {matchup}</span>
           </ExternalLink>
@@ -521,6 +544,9 @@ export function GameCard({
     </div>
   );
 }
+
+/** GameCard's compact Box score / NFHS stream text links, above the stretched link. */
+const textLinkClass = 'sx-action relative z-10 gap-1 font-medium no-underline hover:underline';
 
 /**
  * The compact "Next up" form: `5:30 PM  Homestead at Los Altos`. Normally one line; a matchup
@@ -581,10 +607,19 @@ export function GameLine({ game, perspective, showChips = true, className }: Gam
  * goals right-aligned against the dash, so a 10 and a 3 line up on their last digit and the
  * dashes stack. The last column wraps the status under the opponent rather than truncating the
  * opponent: the opponent is the thing the row exists to say.
+ *
+ * At large text sizes (150–175%) the three fixed columns and their gaps grow with the type and
+ * leave the last one too narrow for a name: at 24px on a 390px phone it was 96px, and its 6.5rem
+ * minimum pushed "vs Saint Francis" out of the clipped card. So the row is its own query
+ * container (rem-based, so it follows the reader's text size): when its content box is narrower
+ * than 16.75rem — the fixed tracks, their gaps and 6.5rem for the name — the opponent and status
+ * drop to a second line under the chip, across columns 2–4. At 16px every phone row (288px of
+ * content at 320) is wider than that, so the one-line row is unchanged. The fixed tracks are
+ * `minmax(0, …)` so they give way before the row overflows.
  */
 /** The log row's four-column grid, shared with the team page's JV list (components/teams/TeamJvGames.tsx). */
 export const GAME_LOG_ROW_GRID =
-  'relative grid min-h-row-1 grid-cols-[3.5rem_1.25rem_3.25rem_minmax(0,1fr)] items-center gap-x-3 px-gutter py-2 text-meta';
+  'relative @container grid min-h-row-1 grid-cols-[minmax(0,3.5rem)_minmax(0,1.25rem)_minmax(0,3.25rem)_minmax(0,1fr)] items-center gap-x-3 px-gutter py-2 text-meta';
 
 export function gameLogRowClass(game: Game, className?: string): string {
   // The non-league rule is `display.isNonLeague` (SPEC §10.4): neither counted for a league table
@@ -649,10 +684,13 @@ export function GameLogRowBody({
         )}
       </span>
       <span
-        className="flex min-w-0 flex-wrap items-center justify-between gap-x-3 gap-y-0.5"
+        className="flex min-w-0 flex-wrap items-center justify-between gap-x-3 gap-y-0.5 @max-[16.75rem]:col-span-3 @max-[16.75rem]:col-start-2 @max-[16.75rem]:mt-1"
         aria-hidden="true"
       >
-        <span className="line-clamp-2 min-w-[6.5rem] flex-1 text-ink">
+        {/* `min(6.5rem, 100%)`: the minimum still wraps the status under a short name, but never
+            outgrows its column; `break-words` breaks a long single word inside it. Reflowed under the
+            chip (large text), it may take three lines: "vs University Prep Academy" needs them. */}
+        <span className="line-clamp-2 min-w-[min(6.5rem,100%)] flex-1 break-words text-ink @max-[16.75rem]:line-clamp-3">
           {/* The short name, as every game row prints it: a long full name ("Convent of the
               Sacred Heart") was clamped mid-name in a 320px log. The sr-only sentence keeps the
               full name. */}

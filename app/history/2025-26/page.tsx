@@ -116,7 +116,7 @@ function Champions({ leagueId }: { leagueId: LeagueId }) {
   const champions = getHistoryChampions(leagueId);
   if (champions.length === 0) return null;
   return (
-    <div className="mt-4 grid gap-3 sm:grid-cols-2 sm:gap-4">
+    <div className="mt-4 grid gap-3 sm:grid-cols-2 sm:gap-4 lg:gap-x-10">
       {champions.map(({ division, row }) => {
         const team = row.slug ? getTeamBySlug(row.slug) : undefined;
         return (
@@ -157,7 +157,7 @@ function AvailableLeague({ leagueId, entry }: { leagueId: LeagueId; entry: Avail
   const p = entry.provenance;
 
   return (
-    <section id={leagueId} data-region-scope={regionOf(leagueId)} aria-label={league.name} className="min-w-0 scroll-mt-24">
+    <section id={leagueId} data-region-scope={regionOf(leagueId)} aria-label={league.name} className="min-w-0">
       <SectionHeader
         size="lg"
         kicker={`${league.shortName} · ${league.name}`}
@@ -183,14 +183,7 @@ function AvailableLeague({ leagueId, entry }: { leagueId: LeagueId; entry: Avail
               id={d.division === leagueId ? undefined : d.division}
               aria-label={`${league.shortName} ${label}`}
             >
-              {/* `nowrap` on the season: a season identifier is one token, and as a shrinkable
-                  flex child it broke at its own hyphen into "2025-" / "26" at 320px. */}
-              <SectionHeader
-                as="h3"
-                size="section"
-                kicker={`${label} · varsity final standings`}
-                meta={<span className="whitespace-nowrap">{SEASON}</span>}
-              />
+              <SectionHeader as="h3" size="section" kicker={`${label} · varsity final standings`} />
               <HistoryStandingsTable
                 rows={d.standings.varsity}
                 caption={`${league.shortName} ${label} varsity final standings, ${SEASON}`}
@@ -311,7 +304,7 @@ function SectionBracketBlock({ id, bracket }: { id: BracketSectionId; bracket: S
   const section = getSection(id);
   const name = bracketSectionName(id);
   return (
-    <section id={id} data-region-scope={section.region} aria-label={`${name} playoffs`} className="min-w-0 scroll-mt-24">
+    <section id={id} data-region-scope={section.region} aria-label={`${name} playoffs`} className="min-w-0">
       <SectionHeader
         size="lg"
         kicker={`${section.shortName} playoffs · ${name}`}
@@ -368,7 +361,7 @@ function UnavailableLeague({ leagueId, entry }: { leagueId: LeagueId; entry: Una
       id={leagueId}
       data-region-scope={regionOf(leagueId)}
       aria-label={league.name}
-      className="min-w-0 scroll-mt-24"
+      className="min-w-0"
     >
       <SectionHeader
         size="lg"
@@ -442,7 +435,7 @@ export default function HistoryPage() {
 
   return (
     // The sticky table heads park under the 48px top bar plus the 48px jump bar on a phone
-    // (6rem); from md the pills sit in the title row and do not stick.
+    // (6rem); from md the pills sit in the title row (or wrap under the title) and do not stick.
     <div className="pb-section-lg [--sx-sticky-top:6rem] md:[--sx-sticky-top:var(--spacing-topbar-lg)]">
       <PageHeader
         eyebrow="Archive"
@@ -461,14 +454,15 @@ export default function HistoryPage() {
           </>
         }
         aside={<DivisionTabs variant="inline" tabs={tabs} label="Jump to a league" />}
-        asideClassName="hidden md:block lg:hidden"
+        asideClassName="hidden md:block"
       />
 
       {/* The region control, its own row above the sticky jump bar (DESIGN-socal §2.4). */}
       <RegionSwitcher className="mt-4" />
 
       {/* Jump bar: a long page with a section per league to reach. Sticky under the top bar below
-          md; at md the pills sit in the title row; from lg they are not shown. */}
+          md; from md the pills sit in the title row, or under the title when they do not fit
+          beside it. */}
       <DivisionTabs variant="bar" tabs={tabs} label="Jump to a league" className="mt-4" />
 
       <div className="mt-8 grid gap-y-section md:mt-10 md:gap-y-section-lg">

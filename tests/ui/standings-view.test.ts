@@ -14,6 +14,8 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
 import type { MissingOfficialResult } from '../../lib/data';
+import { standaloneName } from '../../lib/leagues';
+import type { LeagueId } from '../../lib/types';
 import { corpusSnapshotPath } from '../helpers';
 // textOf: visible text, tags dropped and entities decoded.
 import { textOf } from './html-text';
@@ -510,7 +512,7 @@ describe('Southern California tables (standings-view.ts, DESIGN-socal §2.1.7)',
           `The order is this site’s 3-1-0 points; no ${league.shortName} rule orders the table.`,
         );
         expect(v.legendNotes.join(' '), `${SV} orderLegendText ${id}`).toContain(
-          `${league.shortName} publishes no standings and no points rule, so the order is this site’s 3-1-0 points.`,
+          `${standaloneName(id as LeagueId)} publishes no standings and no points rule, so the order is this site’s 3-1-0 points.`,
         );
       }
     }
@@ -608,7 +610,7 @@ describe('Southern California tables (standings-view.ts, DESIGN-socal §2.1.7)',
     const text = textOf(await renderLeague('metro'));
     expect(text).not.toMatch(/biggest goal difference \(|’s is 1\b|'s is 1\b/);
     expect(text).toContain(
-      "Bars are scaled to each division's own biggest goal difference, so bars in different divisions are not comparable.",
+      'Bars are scaled to each division’s own biggest goal difference, so bars in different divisions are not comparable.',
     );
     expect(text).not.toContain('GD bars are per division, scaled');
     // A division with results keeps the figure.

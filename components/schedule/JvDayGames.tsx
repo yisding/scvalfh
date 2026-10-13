@@ -16,7 +16,7 @@ import StatusLabel, { GameChips } from '../ui/StatusLabel';
 export function JvDayGames({ view }: { view: JvListSummary & { rows: JvRowView[] } }) {
   return (
     <>
-      <div className="sx-card sx-flush sx-bleed">
+      <div className="sx-card sx-flush sx-bleed md:max-w-3xl">
         <ol className="sx-list">
           {view.rows.map(({ game, differsNote, chips, nonLeague }) => {
             const display = describeGame(game);

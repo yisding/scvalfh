@@ -22,7 +22,9 @@ export function OtherLeaguesStrip({ lines, className }: OtherLeaguesStripProps) 
   return (
     <section className={className}>
       <SectionHeader as="h3" kicker="Other leagues" />
-      <ul className="m-0 list-none p-0">
+      {/* The 46rem measure (as on the team page). Each row's arrow follows its text rather than
+          sitting at the row's far edge, so a short row's arrow is never hundreds of px away. */}
+      <ul className="m-0 max-w-[46rem] list-none p-0">
         {lines.map((line) => (
           <li key={line.id}>
             <Link
@@ -33,7 +35,7 @@ export function OtherLeaguesStrip({ lines, className }: OtherLeaguesStripProps) 
               <span className="min-w-0">
                 <span className="font-semibold text-ink">{line.shortName}:</span> {line.text}
               </span>
-              <Arrow className="ml-auto shrink-0 text-accent" />
+              <Arrow className="shrink-0 text-accent" />
             </Link>
           </li>
         ))}

@@ -51,21 +51,21 @@ import { positionWords } from '../ui/position-words';
  */
 const KIND_WORDS: Record<EnrichmentSource['kind'], string> = {
   'school-site': 'the school site',
-  'school-pdf': "the school's roster PDF",
+  'school-pdf': 'the school’s roster PDF',
   news: 'a news story',
-  'maxpreps-jv': "MaxPreps' JV roster",
+  'maxpreps-jv': 'MaxPreps’ JV roster',
   'maxpreps-career': 'a MaxPreps career page',
-  'maxpreps-team': "MaxPreps' team page",
+  'maxpreps-team': 'MaxPreps’ team page',
 };
 
 /** How the † footnote names each kind of source a shown value came from. */
 const FOOTNOTE_WORDS: Record<EnrichmentSource['kind'], [one: string, many: string]> = {
-  'school-site': ["the school's athletics site", "the school's athletics site"],
-  'school-pdf': ["the school's roster PDF", "the school's roster PDF"],
+  'school-site': ['the school’s athletics site', 'the school’s athletics site'],
+  'school-pdf': ['the school’s roster PDF', 'the school’s roster PDF'],
   news: ['a news story', 'news stories'],
-  'maxpreps-jv': ["MaxPreps' JV roster", "MaxPreps' JV rosters"],
+  'maxpreps-jv': ['MaxPreps’ JV roster', 'MaxPreps’ JV rosters'],
   'maxpreps-career': ['a MaxPreps career page', 'MaxPreps career pages'],
-  'maxpreps-team': ["MaxPreps' team page", "MaxPreps' team page"],
+  'maxpreps-team': ['MaxPreps’ team page', 'MaxPreps’ team page'],
 };
 
 /**
@@ -257,7 +257,7 @@ function conflictLine(p: MergedPlayer, c: RosterConflict, i: number): RosterConf
     sourceUrl: c.source,
   };
   if (page) {
-    const sourceLabel = `MaxPreps' ${page.label}`;
+    const sourceLabel = `MaxPreps’ ${page.label}`;
     const since = seasonsSince(page.season);
     const then = Number(c.other) - since;
     if (c.field === 'grade' && /^\d+$/.test(c.other) && since > 0 && then >= 9) {
@@ -467,7 +467,7 @@ function elsewhereSources(players: MergedPlayer[]): string[] {
       const source = elsewhereSource(tag);
       if (!source) continue;
       const page = source.kind.startsWith('maxpreps-') ? seasonPage(source.source) : null;
-      const key = page ? `MaxPreps' ${page.label}` : source.kind;
+      const key = page ? `MaxPreps’ ${page.label}` : source.kind;
       urls.set(key, (urls.get(key) ?? new Set()).add(source.source));
     }
   }
