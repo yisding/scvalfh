@@ -517,7 +517,13 @@ profile, so the file now holds 779 profiles for 569 players. The roster shows "M
 after the recruiting sites' links, and its footnote says these are claimed pages rather than matched
 ones. The claim is not refreshed by `pnpm fetch-rosters`: the flag lives only on the career page, one
 600 KB page per player, so re-reading it is a re-run of this sweep, not part of the roster read. (One career page, Leigh's Adriana Yam's, shows another
-player's name, Ayva Garcia; it is unclaimed, so nothing is linked.)
+player's name, Ayva Garcia; it is unclaimed, so nothing is linked.) The same day each claimed page's
+`/bio/` page, where the athlete's own entries live, was read too. It shows **no college commitment**
+for any of the 260: `careerCollegeInterestsData` (15 players) is a list of colleges with no status,
+and the 11 of the 260 already in `data/commits.json` show nothing there. Its club-teams block lists 33
+clubs for 32 players: the 22 field hockey ties were all in `data/clubs.json` already, and one source was
+added (Eleanor Levy's VCRD entry, made after the 2026-10-06 sweep); the 11 clubs in other sports are not
+linked, as that file holds field hockey clubs only.
 
 Gotchas, all **[V]**:
 - **NCSA** (`ncsasports.org/field-hockey-recruiting/california/<city>/<school>/<first-last[N]>`)
