@@ -1,10 +1,10 @@
 #!/usr/bin/env tsx
 /**
- * Download every registry school's MaxPreps mascot and write it to public/mascots/ as the two
- * square WebP tiles `TeamMonogram` draws (DESIGN §12.4):
- *
- *   public/mascots/<slug>-64.webp    for tiles up to 32px (2× density)
- *   public/mascots/<slug>-128.webp   for tiles from 40px (cards and heroes)
+ * Download every registry school's MaxPreps mascot and write it to public/mascots/ as the square
+ * WebP tiles `TeamMonogram` draws (DESIGN §12.4): `<slug>-<px>.webp` for every px in
+ * lib/mascots.ts' MASCOT_FILE_SIZES, i.e. each tile size (20–64px) at 1× and 2×, so the browser
+ * shows each file pixel for pixel. Each size is resized from the full source, then lightly
+ * sharpened, since a downscale to 20–48px softens every edge.
  *
  *   pnpm fetch-mascots                 every team
  *   pnpm fetch-mascots --only <slug>   one team (repeatable)
@@ -36,6 +36,7 @@ import path from 'node:path';
 
 import sharp, { type Sharp } from 'sharp';
 
+import { MASCOT_FILE_SIZES } from '../lib/mascots';
 import { CHROME_USER_AGENT, HttpClient } from '../lib/sources/http';
 import { TEAMS } from '../lib/teams';
 import type { Team } from '../lib/types';
@@ -44,8 +45,6 @@ import { runCli } from './cli';
 const USAGE = 'Usage: pnpm fetch-mascots [--only <slug>]... [--dry-run]';
 
 const MASCOT_DIR = path.resolve(import.meta.dirname, '..', 'public', 'mascots');
-/** The two tile sizes, in pixels. Must match `mascotSrc` in components/ui/TeamMonogram.tsx. */
-const MASCOT_SIZES = [64, 128] as const;
 
 const WHITE = { r: 255, g: 255, b: 255, alpha: 1 };
 /** The art's inset on each side, as a fraction of the tile: clears a quarter-side corner radius. */
@@ -58,8 +57,9 @@ const SBLIVE = 'https://assets.scorebooklive.com/uploads/production';
  * not hold up as a 128px tile, and only from a source carrying the SAME mark: SBLive / si.com
  * (already a data source, DESIGN §12.8) has many schools' logos at 750–1536px, or the school's own
  * site. Where SBLive's logo is a different design from MaxPreps', it is not used here: which mark a
- * school goes by is not this script's call. Nor is a sharper copy whose art is wider (Sage Creek,
- * Patrick Henry): it draws smaller in a 24px row tile, which is where most tiles are. Some MaxPreps
+ * school goes by is not this script's call (Lassen and Patrick Henry are the owner's choices). Nor is
+ * a sharper copy whose art is wider (Sage Creek): it draws smaller in a 24px row tile, where most
+ * tiles are. Some MaxPreps
  * uploads are distorted (squeezed into a square, or narrowed): where SBLive has the same mark at its
  * true proportions it is used (Huntington Beach); Lassen, Mira Mesa, Redwood and Saratoga use the
  * school's own site, as Monta Vista does.
@@ -105,6 +105,12 @@ const SOURCE_OVERRIDES: Readonly<Record<string, { url: string; why: string }>> =
     // The school's own "We Are Lassen" bear (1200×1200), the same design MaxPreps carries squeezed.
     url: 'https://cmsv2-assets.apptegy.net/uploads/24330/logo/27143/We_are_Lassen-web.png',
     why: "MaxPreps' copy of the bear is squeezed to about 0.85× its width; the school site's is not",
+  },
+  'patrick-henry': {
+    // The school site's footer emblem (300×300 PNG, transparent): the crest it uses on its site and
+    // social media, chosen by the site owner. MaxPreps' patriot head is squeezed out of proportion.
+    url: 'https://wordpress-multisite-production-public.s3.amazonaws.com/wp-content/uploads/sites/364/2025/07/FOOTER-LOGO-2.png',
+    why: "MaxPreps' patriot head is squeezed; the school uses this crest on its site and social media",
   },
   'live-oak': {
     url: `${SBLIVE}/school/12140/image/acorn.png`,
@@ -183,7 +189,7 @@ async function framing(img: Sharp): Promise<Framing> {
   return inset;
 }
 
-/** One source image (a MaxPreps gif or an override) → the square WebP tiles, in MASCOT_SIZES order. */
+/** One source image (a MaxPreps gif or an override) → the square WebP tiles, in MASCOT_FILE_SIZES order. */
 async function mascotTiles(source: Uint8Array): Promise<Buffer[]> {
   // First frame only, flattened onto white (a few gifs carry a transparent index, an override PNG
   // may be transparent throughout), white margin cut.
@@ -193,14 +199,18 @@ async function mascotTiles(source: Uint8Array): Promise<Buffer[]> {
     .toBuffer();
   const frame = await framing(sharp(flat));
   return Promise.all(
-    MASCOT_SIZES.map((size) => {
+    MASCOT_FILE_SIZES.map((size) => {
       const pad = frame.pad ? Math.round(size * INSET) : 0;
       const inner = size - 2 * pad;
       return sharp(flat)
         .resize(inner, inner, { fit: 'contain', background: frame.background, kernel: 'lanczos3' })
         .extend({ top: pad, bottom: pad, left: pad, right: pad, background: frame.background })
-        .webp({ quality: 88, effort: 6 })
-        .toBuffer();
+        .toBuffer()
+        // Sharpened after the resize, as its own pass: chained onto it, sharp would sharpen first.
+        // `smartSubsample` keeps thin coloured strokes from bleeding at 20–48px.
+        .then((tile) =>
+          sharp(tile).sharpen({ sigma: 0.5, m1: 0.5, m2: 1.5 }).webp({ quality: 90, effort: 6, smartSubsample: true }).toBuffer(),
+        );
     }),
   );
 }
@@ -235,15 +245,15 @@ async function main(argv: readonly string[]): Promise<number> {
   for (const { team, tiles } of results) {
     tiles.forEach((tile, i) => {
       bytes += tile.length;
-      if (!args.dryRun) writeFileSync(path.join(MASCOT_DIR, `${team.slug}-${MASCOT_SIZES[i]}.webp`), tile);
+      if (!args.dryRun) writeFileSync(path.join(MASCOT_DIR, `${team.slug}-${MASCOT_FILE_SIZES[i]}.webp`), tile);
     });
     const override = SOURCE_OVERRIDES[team.slug];
     console.log(
-      `${team.slug.padEnd(24)} ${tiles.map((t) => `${t.length} B`).join(' · ')}${override ? `  (override: ${override.why})` : ''}`,
+      `${team.slug.padEnd(24)} ${tiles.length} tiles, ${tiles.reduce((n, t) => n + t.length, 0)} B${override ? `  (override: ${override.why})` : ''}`,
     );
   }
   console.log(
-    `${args.dryRun ? 'would write' : 'wrote'} ${results.length * MASCOT_SIZES.length} tiles for ${results.length} teams (${bytes} bytes)`,
+    `${args.dryRun ? 'would write' : 'wrote'} ${results.length * MASCOT_FILE_SIZES.length} tiles for ${results.length} teams (${bytes} bytes)`,
   );
   return 0;
 }

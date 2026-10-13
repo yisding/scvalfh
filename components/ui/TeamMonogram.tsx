@@ -1,3 +1,4 @@
+import { mascotFile, type MascotTileSize } from '../../lib/mascots';
 import type { Team } from '../../lib/types';
 
 /**
@@ -5,9 +6,11 @@ import type { Team } from '../../lib/types';
  *
  * The mascot is MaxPreps' own school logo, downloaded once by `pnpm fetch-mascots` into
  * public/mascots/ and served from this site, so no page makes a third-party image request and
- * none depends on MaxPreps being up. Every registry team has both tiles (tests/mascots.test.ts).
- * Each is an opaque logo on white with the art inset clear of the rounded corners, so it reads the
- * same on the light and the dark theme; the hairline comes from `.sx-monogram`.
+ * none depends on MaxPreps being up. Every registry team has a file for every tile size at 1× and
+ * 2× (lib/mascots.ts, tests/mascots.test.ts), so the browser never resamples one: `src` is the 1×
+ * file and `srcSet` the 2× one. Each is an opaque logo on white with the art inset clear of the
+ * rounded corners, so it reads the same on the light and the dark theme; the hairline is
+ * `img.sx-monogram`'s inset outline, which unlike a border leaves the image its full size.
  *
  * School colors are no longer drawn here: they stay in the data (DESIGN §7.1) but a tile is now the
  * logo itself. A school this site does not track keeps GhostMonogram's letters.
@@ -15,19 +18,11 @@ import type { Team } from '../../lib/types';
 export interface TeamMonogramProps {
   /** `slug` names the files; `name` is the accessible name when the tile is not decorative. */
   team: Pick<Team, 'slug' | 'name'>;
-  /** 20/24 = rows, 28/32 = compact cards, 40/48 = tiles, 56/64 = heroes. */
-  size?: 20 | 24 | 28 | 32 | 40 | 48 | 56 | 64;
+  /** 20/24 = rows, 28/32 = compact cards, 40/48 = tiles, 56/64 = heroes (MASCOT_TILE_SIZES). */
+  size?: MascotTileSize;
   /** Default true → an empty alt, because the school name is adjacent. */
   decorative?: boolean;
   className?: string;
-}
-
-/**
- * The tile's file: the 64px WebP up to a 32px tile (2× density), the 128px one above that. The two
- * sizes are scripts/fetch-mascots.ts' MASCOT_SIZES.
- */
-export function mascotSrc(slug: string, size: number): string {
-  return `/mascots/${slug}-${size > 32 ? 128 : 64}.webp`;
 }
 
 /**
@@ -64,7 +59,8 @@ export function TeamMonogram({
     // eslint-disable-next-line @next/next/no-img-element
     <img
       className={['sx-monogram', className].filter(Boolean).join(' ')}
-      src={mascotSrc(team.slug, size)}
+      src={mascotFile(team.slug, size)}
+      srcSet={`${mascotFile(team.slug, size * 2)} 2x`}
       width={size}
       height={size}
       alt={decorative ? '' : team.name}
