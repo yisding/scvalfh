@@ -511,8 +511,11 @@ targeting; an unclaimed one has neither. All 1,702 rows' career pages were read 
 Alexandra Schmidt, answered 403 with a redirect to a MaxPreps support article, so is not linked. The
 260 are linked as `platform: "maxpreps"` profiles at the row's own `careerUrl`, with no `sport` (one
 page covers every sport) and `classOf` from the page's `graduatingClass` where it has one (221). They
-are the page the row comes from, so they need no name, school or class-year match; `lib/rosters.ts`
-instead refuses one whose URL is not its row's `careerUrl`. 159 of the 260 players had no other
+are the page the row comes from, so they need no name, school or class-year match to tie them to the
+player; `lib/rosters.ts` instead refuses one whose URL is not its row's `careerUrl`. A `classOf` they
+state is still checked like any profile's: it must agree with the grade the row shows, or the file
+does not load (none of the 221 disagreed; a page whose `graduatingClass` did would be linked with
+`classOf: null`). 159 of the 260 players had no other
 profile, so the file now holds 779 profiles for 569 players. The roster shows "MaxPreps profile"
 after the recruiting sites' links, and its footnote says these are claimed pages rather than matched
 ones. The claim is not refreshed by `pnpm fetch-rosters`: the flag lives only on the career page, one
