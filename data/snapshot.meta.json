@@ -1,25 +1,25 @@
 {
   "cifssCrossCheck": {
-    "agreements": 524,
-    "cifssOnlyScored": 0,
-    "compared": 531,
+    "agreements": 527,
+    "cifssOnlyScored": 1,
+    "compared": 534,
     "conflicts": 7,
     "notOnMaxPreps": 0
   },
-  "commitSummary": "SCVAL +3 finals · BVAL +4 · PCAL +2 · MCAL +1 · EAL +0 · Sunset +0 · City +4 · North +6 · Metro +0 · LA +2",
-  "contentHash": "1954db4c6c078b8cd8bb29e3478752381a352655a37a25eaa9df870a530bcb8a",
+  "commitSummary": "SCVAL +1 finals · BVAL +1 · PCAL +0 · MCAL +0 · EAL +0 · Sunset +0 · City +1 · North +0 · Metro +0 · LA +0",
+  "contentHash": "7c0ec3ea7673007929b35cac11baaf8ce2a6283a339ff4c5a7b6a929f535b79b",
   "counts": {
     "byLeague": {
       "bval": {
-        "backfilled": 1,
-        "finals": 85,
+        "backfilled": 0,
+        "finals": 86,
         "games": 118,
         "leagueGames": 60,
         "teams": 12
       },
       "city": {
         "backfilled": 0,
-        "finals": 127,
+        "finals": 128,
         "games": 170,
         "leagueGames": 60,
         "teams": 12
@@ -68,7 +68,7 @@
       },
       "scval": {
         "backfilled": 0,
-        "finals": 118,
+        "finals": 119,
         "games": 160,
         "leagueGames": 97,
         "teams": 15
@@ -81,44 +81,44 @@
         "teams": 8
       }
     },
-    "finals": 653,
+    "finals": 656,
     "games": 895,
     "leagueGames": 548,
     "mismatches": 23,
-    "pending": 14,
+    "pending": 11,
     "teams": 102
   },
   "crossCheck": {
-    "agreements": 143,
-    "backfilled": 2,
-    "compared": 203,
-    "conflicts": 6,
-    "sbliveOnlyScored": 7
+    "agreements": 176,
+    "backfilled": 1,
+    "compared": 238,
+    "conflicts": 8,
+    "sbliveOnlyScored": 3
   },
-  "fetchedAt": "2026-10-14T09:51:19.117Z",
+  "fetchedAt": "2026-10-14T18:18:31.892Z",
   "leagues": [
     {
       "backfilled": 0,
-      "countedFinals": 65,
-      "finalsDelta": 3,
+      "countedFinals": 66,
+      "finalsDelta": 1,
       "id": "scval",
-      "missingPast": 5,
+      "missingPast": 4,
       "reasons": [],
       "state": "fresh"
     },
     {
-      "backfilled": 1,
-      "countedFinals": 29,
-      "finalsDelta": 4,
+      "backfilled": 0,
+      "countedFinals": 30,
+      "finalsDelta": 1,
       "id": "bval",
-      "missingPast": 2,
+      "missingPast": 1,
       "reasons": [],
       "state": "fresh"
     },
     {
       "backfilled": 1,
       "countedFinals": 28,
-      "finalsDelta": 2,
+      "finalsDelta": 0,
       "id": "pcal",
       "missingPast": 1,
       "reasons": [],
@@ -127,7 +127,7 @@
     {
       "backfilled": 0,
       "countedFinals": 59,
-      "finalsDelta": 1,
+      "finalsDelta": 0,
       "id": "mcal",
       "missingPast": 0,
       "reasons": [],
@@ -153,17 +153,17 @@
     },
     {
       "backfilled": 0,
-      "countedFinals": 30,
-      "finalsDelta": 4,
+      "countedFinals": 31,
+      "finalsDelta": 1,
       "id": "city",
-      "missingPast": 2,
+      "missingPast": 1,
       "reasons": [],
       "state": "fresh"
     },
     {
       "backfilled": 0,
       "countedFinals": 56,
-      "finalsDelta": 6,
+      "finalsDelta": 0,
       "id": "north-county",
       "missingPast": 0,
       "reasons": [],
@@ -181,7 +181,7 @@
     {
       "backfilled": 0,
       "countedFinals": 18,
-      "finalsDelta": 2,
+      "finalsDelta": 0,
       "id": "independents",
       "missingPast": 0,
       "reasons": [],
@@ -913,8 +913,8 @@
     },
     {
       "label": "sblive scoreboard 2026-09-30",
-      "rowCount": null,
-      "status": "error"
+      "rowCount": 13,
+      "status": "ok"
     },
     {
       "label": "sblive scoreboard 2026-10-01",
@@ -948,8 +948,8 @@
     },
     {
       "label": "sblive scoreboard 2026-10-08",
-      "rowCount": null,
-      "status": "error"
+      "rowCount": 24,
+      "status": "ok"
     },
     {
       "label": "sblive scoreboard 2026-10-09",
@@ -977,8 +977,8 @@
       "status": "ok"
     },
     {
-      "label": "sblive bishops games",
-      "rowCount": 24,
+      "label": "sblive berkeley games",
+      "rowCount": 17,
       "status": "ok"
     },
     {
@@ -1002,18 +1002,18 @@
       "status": "ok"
     },
     {
-      "label": "sblive gilroy games",
-      "rowCount": 17,
+      "label": "sblive cupertino games",
+      "rowCount": 20,
+      "status": "ok"
+    },
+    {
+      "label": "sblive edison games",
+      "rowCount": 18,
       "status": "ok"
     },
     {
       "label": "sblive greenfield games",
       "rowCount": 14,
-      "status": "ok"
-    },
-    {
-      "label": "sblive marin-catholic games",
-      "rowCount": 17,
       "status": "ok"
     },
     {
@@ -1068,7 +1068,7 @@
     }
   ],
   "today": "2026-10-14",
-  "warnings": 45,
+  "warnings": 44,
   "window": {
     "firstGame": "2026-08-12T17:15:00",
     "lastGame": "2026-10-30T19:00:00",
