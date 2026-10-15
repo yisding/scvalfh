@@ -4384,3 +4384,34 @@ Rules this pass set, so later work keeps them:
   publishes no standings…"; "the LA independents publish…"). Spoken row labels give the record in
   words with real plurals ("1 point"). `/about` cross-check rows print dates with `shortDate` in a
   `<time>`.
+
+## 27. Elo-adjusted scoring amendment (2026-10)
+
+The owner asked for two more rankings: Elo-adjusted points for players and Elo-adjusted goals for
+teams. This section wins where §16, §20 and §23 disagree. Everything else stands: the boards are
+tables ranked 1, 2, 2, 4, once per region with suffixed ids (§24), and the page ships no client
+component. Like the Elo rating (§19.2, §20), both are estimates from a documented model
+(`lib/adjusted-scoring.ts`; README "Elo-adjusted goals and points"), never a status.
+
+- **The model.** A team scores about a tenth as many goals against an opponent rated 1000 points
+  higher (`GOALS_TENFOLD`: a Poisson fit of goals for on the opponent's Elo gave 1,075 this season
+  and 995 in 2025-26). Each counted game is worth `10^((1500 − opponent Elo) / 1000)` games against
+  an average team; a team's adjusted goals per game is its goals over those weighted games, and its
+  schedule factor is its games over them.
+- **Most Elo-adjusted goals per game** (`#adjusted-goals`), the school board after "Most goals per
+  game": GP (games counted), Avg (raw goals per game over the same games) and Adj (two places,
+  ranked on as printed; equal rates split by more games, as the raw board does). It counts the Elo
+  fit's games and has the Elo board's minimum, so the section's Elo note now reads "The
+  Elo-adjusted goals and Elo boards need at least …". A team that has not scored is never listed.
+- **Most Elo-adjusted points** (`#adjusted-points`), the player board after "Most points": Pts,
+  × (the team's schedule factor, two places; "Schedule factor" to a screen reader) and Adj (points × factor, one place, ranked on as
+  printed). Season totals have no per-game split, so this is the only adjustment the data allows.
+  Only a player whose team is past the Elo board's minimum is ranked; the note names any team that
+  enters points but has no factor yet. Like every player board, it lists to 10th and opens to 25th.
+- **Order.** Schools: best record, best league record, most goals per game, most Elo-adjusted goals
+  per game, fewest goals allowed per game, most clean sheets, highest Elo rating (still last).
+  Players: most points, most Elo-adjusted points, most assists, most saves, most clean sheets.
+- **Budget.** On the 2026-10-15 data the two boards in each region took `/leaders` from 69,683 to
+  78,599 bytes of HTML gzip, over the 2.3 × `standings` line (76,194). By §24.6's rule (measured
+  × 1.12 / baseline, rounded up to one decimal) the line moved to 2.7 × (89,446): 88%. First-load
+  JS is unchanged.

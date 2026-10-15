@@ -132,7 +132,7 @@ Per-league pages show their own region's league chips.
 | `/recruiting` | "Who here has a recruiting profile, a club or a college commitment?" Every school's recruiting data on one page, under the NorCal/SoCal switcher: region → league (`#scval`, …) → school (`#<team slug>`), each listed player with the commitment line, club line and recruiting-profile links their team page's roster shows (the same rows and words), then how the page is built (`#how-matched`). Only schools with a listed player appear: a school with none is not named or counted. Every team roster with a listed player links its school's block |
 | `/playoffs` | "Playoffs", one block per region. `#norcal`: the CCS picture (the 16-team field by league, `#scval #bval #pcal`, the SCVAL crossover and BVAL play-in, and the bracket once CCS publishes one), the MCAL pointer and a card for the EAL's Super Regional (`#eal`: dates, the top-six rule and the Guidelines, no bracket). `#socal`: the San Diego Section playoffs (the qualification rule, round dates and links to the Green Book and the power rankings; no bracket and no seed until the Section publishes them after its Oct 31 seeding meeting), with `#city`, `#north-county` and `#metro` cards giving each team's playoff division (I or II), and a `#sunset` card and an `#independents` card saying the Southern Section holds no field hockey playoffs |
 | `/playoffs/[league]` | League tournaments: `/playoffs/mcal` is the MCAL six-team tournament (the only league that has a bracket; `/playoffs/eal`, `/playoffs/sunset`, `/playoffs/city` and `/playoffs/independents` are 404s) |
-| `/leaders` | Season leaders per region (`#schools`, `#players` for NorCal; `#schools-socal`, `#players-socal` for SoCal; and one anchor per board, suffixed the same way): the schools with the best overall and league records, the most goals and fewest allowed per game, the most clean sheets and, last, the highest Elo rating (top 10, `#elo-rating` / `#elo-rating-socal`; one rating scale across all nine leagues and the three independents, who are on every SoCal board except league record), from every final in the snapshot; then the players with the most points, assists, saves and clean sheets, from the coaches' MaxPreps stats (top 10, opening to 25) |
+| `/leaders` | Season leaders per region (`#schools`, `#players` for NorCal; `#schools-socal`, `#players-socal` for SoCal; and one anchor per board, suffixed the same way): the schools with the best overall and league records, the most goals per game (raw and Elo-adjusted, `#adjusted-goals`) and fewest allowed, the most clean sheets and, last, the highest Elo rating (top 10, `#elo-rating` / `#elo-rating-socal`; one rating scale across all nine leagues and the three independents, who are on every SoCal board except league record), from every final in the snapshot; then the players with the most points (raw and Elo-adjusted, `#adjusted-points`), assists, saves and clean sheets, from the coaches' MaxPreps stats (top 10, opening to 25) |
 | `/history/2025-26` | Prior-season final standings by league (`#scval #bval #pcal #mcal #eal #sunset #city #north-county #metro #independents`): SCVAL (official PDFs, 15 teams) and BVAL (official sheet, 12 teams) as record-only tables plus all-league awards; the other seven leagues shown as unavailable, with the reason, and the independents' card saying they had no league table in 2025-26 either |
 | `/about` | Per-league rules (`#rules-scval`, … `#rules-metro`), per-league health (`#health`), sources, the cross-checks (MaxPreps' tables, si.com scores and cifsshome.org scores, `#cross-check`), every si.com backfill (`#backfills`), how JV games are sourced and shown (`#jv`) and every dropped contest (`#dropped`) |
 
@@ -432,8 +432,8 @@ renders it in a Player stats section (`components/teams/TeamPlayerStats.tsx`, bu
 the team has played since. See `docs/DATA-SOURCES.md` §1.1k.
 
 The same file feeds the player boards on `/leaders` (`components/leaders/leaders-view.ts`): most
-points, assists, saves and clean sheets (MaxPreps' goalkeeper "shutouts"), one set of boards per
-region.
+points, Elo-adjusted points (see "Elo-adjusted goals and points"), assists, saves and clean sheets
+(MaxPreps' goalkeeper "shutouts"), one set of boards per region.
 A player can only appear where the coach tracks that stat, so each board says how many teams it
 covers and names the ones it leaves out, a 0 never makes a board, and the page names every team
 with no stats and every team whose totals are behind its finals (the team page's "games since"
@@ -1300,6 +1300,35 @@ at once, at every build, starting from last season's:
   with each new one; `/leaders` prints those two counts from the data at every
   build ("comparisons between NorCal and SoCal rest on 7 games between the regions this season and
   11 last season, so treat them as rough").
+
+## Elo-adjusted goals and points
+
+Two `/leaders` boards per region weigh scoring by the strength of the opponents it came against,
+read off the same one Elo table (`lib/adjusted-scoring.ts`, DESIGN §27):
+
+- **Most Elo-adjusted goals per game** (`#adjusted-goals`, `#adjusted-goals-socal`), after the raw
+  goals board. A team scores fewer goals against a stronger opponent, by a steady ratio: about a
+  tenth as many against a team rated 1000 points higher (`GOALS_TENFOLD`). So each game counts as
+  `10^((1500 − opponent's Elo) / 1000)` games against an average team (a game against a 2000 team is
+  about a third of one, against a 1000 team about three), and the adjusted rate is the team's goals
+  over those weighted games: the goals it would score per game against an average team. That is the
+  maximum-likelihood rate when each game's goals are Poisson with that mean, so a scoreless game
+  against a strong team still counts. It counts the games the Elo fit counts and has the Elo board's
+  minimum; the board prints the raw rate over the same games beside it (Avg).
+- **Most Elo-adjusted points** (`#adjusted-points`, `#adjusted-points-socal`), after the raw points
+  board. Player stats are season totals with no game-by-game split, so a player's points are
+  multiplied by the team's schedule factor (the × column): its counted games over its weighted games, above
+  1 for a harder schedule than average. Only a player whose team is past the Elo board's minimum is
+  ranked, and the board names any team that enters points but is not there yet.
+- **How 1000 was chosen.** Each team's goals for, fitted with one rate per team and one slope on the
+  opponent's Elo (Poisson, by maximum likelihood): this season's 658 counted finals on 2026-10-15
+  gave a tenfold fall every 1,075 points, and 2025-26's 935 finals, with that season's own ratings,
+  every 995.
+- **What it does not know.** The opponent's rating is today's, which the game itself is part of. A
+  player's points are assumed to be spread over the team's games like its goals, so a forward who
+  scored only in the easy games is credited with the team's schedule; and the few games against
+  schools outside the covered leagues have no rating, so they are left out of the team's rate and
+  its factor (a player's points from them are still multiplied by it).
 
 ## Known limitations
 
