@@ -4393,11 +4393,16 @@ tables ranked 1, 2, 2, 4, once per region with suffixed ids (§24), and the page
 component. Like the Elo rating (§19.2, §20), both are estimates from a documented model
 (`lib/adjusted-scoring.ts`; README "Elo-adjusted goals and points"), never a status.
 
-- **The model.** A team scores about a tenth as many goals against an opponent rated 1000 points
-  higher (`GOALS_TENFOLD`: a Poisson fit of goals for on the opponent's Elo gave 1,075 this season
-  and 995 in 2025-26). Each counted game is worth `10^((1500 − opponent Elo) / 1000)` games against
-  an average team; a team's adjusted goals per game is its goals over those weighted games, and its
-  schedule factor is its games over them.
+- **The model.** A Poisson attack-defence model anchored on Elo (Maher 1982; Dixon-Coles 1997;
+  shrinkage as Baio-Blangiardo 2010): log expected goals = μ + h·host + a·s_team + u_team −
+  (d·s_opp + v_opp), with `s` the Elo strength in goals and the corrections u, v pulled toward 0
+  (standard deviation 0.3, `RIDGE_SIGMA`). A game counts as exp(−defence + h·host) games against an
+  average defence; a team's adjusted rate is its goals over its weighted games with half a game at the
+  season's average added (`SHRINK_GAMES`), and its schedule factor is its games over its weighted
+  games. Chosen by a day-by-day replay of both seasons scored on Poisson log-likelihood, against no
+  adjustment, the opponent's Elo alone (the first version of these boards: a tenfold fall in goals
+  per 1000 points) and an attack-defence model with no Elo; the README's "Elo-adjusted goals and
+  points" has the table.
 - **Most Elo-adjusted goals per game** (`#adjusted-goals`), the school board after "Most goals per
   game": GP (games counted), Avg (raw goals per game over the same games) and Adj (two places,
   ranked on as printed; equal rates split by more games, as the raw board does). It counts the Elo
@@ -4405,13 +4410,14 @@ component. Like the Elo rating (§19.2, §20), both are estimates from a documen
   Elo-adjusted goals and Elo boards need at least …". A team that has not scored is never listed.
 - **Most Elo-adjusted points** (`#adjusted-points`), the player board after "Most points": Pts,
   × (the team's schedule factor, two places; "Schedule factor" to a screen reader) and Adj (points × factor, one place, ranked on as
-  printed). Season totals have no per-game split, so this is the only adjustment the data allows.
+  printed). Season totals have no per-game split, so this is the only adjustment the data in hand
+  allows; MaxPreps' per-game box scores would allow a game-by-game one, with a new fetch.
   Only a player whose team is past the Elo board's minimum is ranked; the note names any team that
   enters points but has no factor yet. Like every player board, it lists to 10th and opens to 25th.
 - **Order.** Schools: best record, best league record, most goals per game, most Elo-adjusted goals
   per game, fewest goals allowed per game, most clean sheets, highest Elo rating (still last).
   Players: most points, most Elo-adjusted points, most assists, most saves, most clean sheets.
 - **Budget.** On the 2026-10-15 data the two boards in each region took `/leaders` from 69,683 to
-  78,599 bytes of HTML gzip, over the 2.3 × `standings` line (76,194). By §24.6's rule (measured
+  78,940 bytes of HTML gzip, over the 2.3 × `standings` line (76,194). By §24.6's rule (measured
   × 1.12 / baseline, rounded up to one decimal) the line moved to 2.7 × (89,446): 88%. First-load
   JS is unchanged.

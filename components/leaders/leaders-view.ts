@@ -35,8 +35,8 @@
  * the two regions is the finals between them, few so far, so every Elo note says how many (this season's
  * from the snapshot, last season's from data/prior-season.json, both counted at build time, never typed in).
  *
- * The two Elo-adjusted boards (lib/adjusted-scoring.ts) weigh each game by the opponent's rating in the
- * same one table. A school's adjusted goals per game counts the games its Elo rating counts, past the Elo
+ * The two Elo-adjusted boards (lib/adjusted-scoring.ts) weigh each game by the opponent's defence: its
+ * rating in the same one table, corrected by the goals it has allowed. A school's adjusted goals per game counts the games its Elo rating counts, past the Elo
  * board's minimum. A player's adjusted points are their points times their team's schedule factor, so
  * only a player whose team is past that minimum is ranked: a factor from two games is mostly noise.
  *
@@ -47,7 +47,6 @@
  */
 
 import {
-  GOALS_TENFOLD,
   computeAdjustedScoring,
   getAdjustedScoring,
   type AdjustedScoring,
@@ -507,8 +506,8 @@ const PLAYER_BOARDS: PlayerBoardSpec[] = [
     ],
     rankedBy: 2,
     lead:
-      'Points times the team’s schedule factor (×), from its opponents’ Elo ratings: above 1 for a schedule harder than average. ' +
-      'Season totals have no game-by-game split, so a player’s points are weighed like the team’s goals (see Most Elo-adjusted goals per game).',
+      'Points times the team’s schedule factor (×): how much harder the defences it met were than average, from their Elo ratings and the goals they have allowed, above 1 for a harder schedule. ' +
+      'Season totals have no game-by-game split, so a player’s points are weighed like the team’s goals.',
     value: adjustedPoints,
   },
   {
@@ -918,7 +917,7 @@ function adjustedGoalsBoard(
       ],
       rankedBy: 2,
       note:
-        `Goals per game against an average team: each game is weighed by the opponent’s Elo rating, since a team scores about a tenth as many goals against one rated ${GOALS_TENFOLD} points higher. ` +
+        'Goals per game against an average defence: each game is weighed by the opponent’s defence (its Elo rating, corrected by the goals it has allowed) and by who was at home, and half a game at the season’s average rate is added so a short record cannot run to an extreme. ' +
         'Avg is the raw rate over the same games, the ones the Elo board counts. Equal rates are split by more games played.',
       empty: lines.some((l) => l.a.games >= min)
         ? `None of the teams with at least ${plural(min, 'game')} has scored yet.`

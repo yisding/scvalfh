@@ -40,7 +40,7 @@ import { positionWords } from '../../components/ui/position-words';
 import { getGames, getStandingFor, getTeams } from '../../lib/data';
 import { gradeWord, recordString } from '../../lib/format';
 import { regionOf } from '../../lib/leagues';
-import { getAdjustedScoring } from '../../lib/adjusted-scoring';
+import { computeAdjustedScoring, getAdjustedScoring } from '../../lib/adjusted-scoring';
 import { getAllPlayerStatsWithNotes } from '../../lib/player-stats';
 import { getPriorSeason } from '../../lib/prior-season';
 import { getEnrichedTeamRoster } from '../../lib/rosters';
@@ -562,7 +562,8 @@ describe('buildLeadersView — schools, over synthetic games', () => {
     expect(Number(at('stevenson').cells[2].text)).toBeGreaterThan(Number(at('tamalpais').cells[2].text));
     // Leigh's Del Mar game counts: 7 games, as on the Elo board.
     expect(at('leigh').cells[0].text).toBe('7');
-    expect(adjusted.note).toContain('a tenth as many goals against one rated 1000 points higher');
+    expect(adjusted.note).toContain('Goals per game against an average defence');
+    expect(adjusted.note).toContain('half a game at the season’s average rate');
   });
 
   it('shares a place between equal rates and lists them by name', () => {
@@ -642,14 +643,14 @@ describe('buildLeadersView — players, over synthetic stats', () => {
     // One game, Mitty 2-1 over Leigh: the minimum is 1 game, so both have a factor; Saint Francis has
     // played none.
     const adjusted = board('adjusted-points');
-    const ratings = computeRatings(TEAMS, games);
-    const elo = (slug: string) => ratings.ratings.find((r) => r.slug === slug)!.elo;
-    // Each played the other once: the factor is 1 over the share of an average game that opponent is worth.
-    const factor = (opponent: string) => 1 / 10 ** ((1500 - elo(opponent)) / 1000);
+    const scoring = computeAdjustedScoring(TEAMS, games, computeRatings(TEAMS, games));
+    const factor = (slug: string) => scoring.get(getTeamBySlug(slug)!.id)!.factor;
+    // Mitty beat Leigh at home: Leigh's trip to the better defence is the harder game.
+    expect(factor('leigh')).toBeGreaterThan(factor('mitty'));
     const expected = [
-      ['Dee Dunn', 14, factor('mitty')],
-      ['Ana Ames', 12, factor('leigh')],
-      ['Bea Bell', 12, factor('leigh')],
+      ['Dee Dunn', 14, factor('leigh')],
+      ['Ana Ames', 12, factor('mitty')],
+      ['Bea Bell', 12, factor('mitty')],
     ] as const;
     expect(adjusted.rows.map((r) => [r.name, ...r.cells.map((c) => c.text)])).toEqual(
       expected.map(([name, pts, f]) => [name, String(pts), f.toFixed(2), (Math.round(pts * f * 10) / 10).toFixed(1)]),
