@@ -132,7 +132,7 @@ Per-league pages show their own region's league chips.
 | `/recruiting` | "Who here has a recruiting profile, a club or a college commitment?" Every school's recruiting data on one page, under the NorCal/SoCal switcher: region → league (`#scval`, …) → school (`#<team slug>`), each listed player with the commitment line, club line and recruiting-profile links their team page's roster shows (the same rows and words), then how the page is built (`#how-matched`). Only schools with a listed player appear: a school with none is not named or counted. Every team roster with a listed player links its school's block |
 | `/playoffs` | "Playoffs", one block per region. `#norcal`: the CCS picture (the 16-team field by league, `#scval #bval #pcal`, the SCVAL crossover and BVAL play-in, and the bracket once CCS publishes one), the MCAL pointer and a card for the EAL's Super Regional (`#eal`: dates, the top-six rule and the Guidelines, no bracket). `#socal`: the San Diego Section playoffs (the qualification rule, round dates and links to the Green Book and the power rankings; no bracket and no seed until the Section publishes them after its Oct 31 seeding meeting), with `#city`, `#north-county` and `#metro` cards giving each team's playoff division (I or II), and a `#sunset` card and an `#independents` card saying the Southern Section holds no field hockey playoffs |
 | `/playoffs/[league]` | League tournaments: `/playoffs/mcal` is the MCAL six-team tournament (the only league that has a bracket; `/playoffs/eal`, `/playoffs/sunset`, `/playoffs/city` and `/playoffs/independents` are 404s) |
-| `/leaders` | Season leaders per region (`#schools`, `#players` for NorCal; `#schools-socal`, `#players-socal` for SoCal; and one anchor per board, suffixed the same way): the schools with the best overall and league records, the most goals per game (raw and Elo-adjusted, `#adjusted-goals`) and fewest allowed, the most clean sheets and, last, the highest Elo rating (top 10, `#elo-rating` / `#elo-rating-socal`; one rating scale across all nine leagues and the three independents, who are on every SoCal board except league record), from every final in the snapshot; then the players with the most points (raw and Elo-adjusted, `#adjusted-points`), assists, saves and clean sheets, from the coaches' MaxPreps stats (top 10, opening to 25) |
+| `/leaders` | Season leaders per region (`#schools`, `#players` for NorCal; `#schools-socal`, `#players-socal` for SoCal; and one anchor per board, suffixed the same way): the schools with the best overall and league records, the most goals per game (raw and Elo-adjusted, `#adjusted-goals`) and fewest allowed, the most clean sheets and, last, the highest Elo rating (top 10, `#elo-rating` / `#elo-rating-socal`; one rating scale across all nine leagues and the five independents, who are on every SoCal board except league record), from every final in the snapshot; then the players with the most points (raw and Elo-adjusted, `#adjusted-points`), assists, saves and clean sheets, from the coaches' MaxPreps stats (top 10, opening to 25) |
 | `/history/2025-26` | Prior-season final standings by league (`#scval #bval #pcal #mcal #eal #sunset #city #north-county #metro #independents`): SCVAL (official PDFs, 15 teams) and BVAL (official sheet, 12 teams) as record-only tables plus all-league awards; the other seven leagues shown as unavailable, with the reason, and the independents' card saying they had no league table in 2025-26 either |
 | `/about` | Per-league rules (`#rules-scval`, … `#rules-metro`), per-league health (`#health`), sources, the cross-checks (MaxPreps' tables, si.com scores and cifsshome.org scores, `#cross-check`), every si.com backfill (`#backfills`), how JV games are sourced and shown (`#jv`) and every dropped contest (`#dropped`) |
 
@@ -1303,57 +1303,73 @@ at once, at every build, starting from last season's:
 
 ## Elo-adjusted goals and points
 
-Two `/leaders` boards per region weigh scoring by the defences it came against
+Two `/leaders` boards per region weigh scoring by the defenses it came against
 (`lib/adjusted-scoring.ts`, DESIGN §27), with the one Elo table at the core:
 
-- **The defences.** A Poisson goal model over every counted final: a side's expected goals are
+- **The defenses.** A Poisson goal model over every counted final: a side's expected goals are
   `exp(μ + h·host + a·s_team + u_team − (d·s_opp + v_opp))`, where `s` is a team's Elo strength in
   goals ((Elo − 1500) / 175) and `host` is +1 at home, −1 away, 0 at a neutral site. So a team's
-  defence is what its Elo rating says plus a correction `v` for the goals it has actually allowed
+  defense is what its Elo rating says plus a correction `v` for the goals it has actually allowed
   (its attack likewise, with `u`); the corrections are pulled toward 0 (a normal prior, standard
   deviation 0.3 in log goals: `RIDGE_SIGMA`), so Elo decides for a team with few games. This is the
-  Maher (1982) / Dixon-Coles attack-defence model with Baio-Blangiardo-style shrinkage, anchored on
-  Elo instead of shrunk toward zero. One Newton solve at every build, in slug order.
+  Maher (1982) / Dixon-Coles (1997) attack-defense model with Baio-Blangiardo-style (2010)
+  shrinkage, anchored on Elo instead of shrunk toward zero. The two slopes have a weak prior too
+  (`SLOPE_SIGMA`), so a season of a handful of games stays near no adjustment. One penalized Newton
+  solve at every build, in slug order, about 0.2 s; if it ever failed to converge, nothing would be
+  adjusted.
 - **Most Elo-adjusted goals per game** (`#adjusted-goals`, `#adjusted-goals-socal`), after the raw
-  goals board. Each game counts as `exp(−defence of the opponent + h·host)` games against an average
-  defence at a neutral site, and a team's adjusted rate is its goals over those weighted games, with
-  half a game at the season's average rate added to both (`SHRINK_GAMES`) so a short record cannot
-  run to an extreme. Without that half game it is KenPom's multiplicative adjustment: goals over the
-  goals an average team would expect against the same defences. It counts the games the Elo fit counts
-  and has the Elo board's minimum; the board prints the raw rate over the same games beside it (Avg).
+  goals board. Each game counts as `exp(−defense of the opponent + h·host)` games against an average
+  defense at a neutral site, and a team's adjusted rate is its goals over those weighted games, with
+  one game against an average defense added to both (`SHRINK_GAMES`), at the season's rate against
+  one (its goals over its weighted games, about 1.5), so a short record cannot run to an extreme.
+  Without that game it is the Poisson maximum-likelihood attack given the defenses: goals over the
+  goals an average team would expect against the same opponents. It counts the games the Elo fit
+  counts and has the Elo board's minimum; the board prints the raw rate over the same games beside it
+  (Avg).
 - **Most Elo-adjusted points** (`#adjusted-points`, `#adjusted-points-socal`), after the raw points
   board. Player stats are season totals with no game-by-game split, so a player's points are
   multiplied by the team's schedule factor (the × column): its counted games over its weighted games,
-  above 1 for a harder schedule than average. Only a player whose team is past the Elo board's
-  minimum is ranked, and the board names any team that enters points but is not there yet.
+  with the same one game added to both, above 1 for a harder schedule than average. Adj is Pts times
+  the × as printed. Only a player whose team is past the Elo board's minimum is ranked, and the board
+  names any team that enters points but is not there yet.
 - **How it was chosen.** Each candidate was replayed day by day, every day's goals predicted from
   only the games before it, over this season from Sep 20 (Elo seeded from 2025-26) and over 2025-26
   from Sep 25 (unseeded). Each side of a game was scored, when its team had at least 6 earlier
   games, by Poisson log-likelihood (mean per side, higher is better) and root-mean-square error in
-  goals. Every candidate weighs a team's games by its opponents and shrinks its rate by half a game
-  at the average, so the rows differ only in how an opponent is rated:
+  goals. Unless a row says otherwise, every candidate weighs a team's games by its opponents, with a
+  home edge, and adds one game at the average:
 
   | Opponent rated by | 2026 log-lik. | 2026 RMSE | 2025-26 log-lik. | 2025-26 RMSE |
   |---|---|---|---|---|
   | Nothing (own raw rate, no shrinkage) | −2.526 | 2.96 | −2.128 | 2.36 |
-  | Its Elo alone, goals tenfold per 1000 points (the first version) | −1.624 | 2.37 | −1.459 | 1.66 |
-  | Its Elo alone, tenfold per 1200 points | −1.612 | 2.09 | −1.472 | 1.57 |
-  | An attack-defence model with no Elo | −1.608 | 2.08 | −1.434 | 1.52 |
-  | **This model** | **−1.574** | 2.21 | **−1.430** | 1.61 |
-  | This model without the shrinkage | −1.614 | 2.27 | −1.463 | 1.64 |
+  | Its Elo alone, goals tenfold per 1000 points (an earlier draft of these boards) | −1.609 | 2.26 | −1.449 | 1.61 |
+  | Its Elo alone, tenfold per 1200 points | −1.599 | 2.05 | −1.461 | 1.54 |
+  | An attack-defense model with no Elo (seeded from 2025-26 in 2026) | −1.584 | 2.08 | −1.432 | 1.50 |
+  | **This model** | **−1.577** | 2.17 | **−1.427** | 1.58 |
+  | This model without the shrinkage | −1.620 | 2.28 | −1.463 | 1.64 |
 
-  This model has the best likelihood in both seasons, with or without the 6-game filter; the
-  attack-defence model with no Elo has the lowest RMSE in 2025-26, and is a close second on
-  likelihood there but well behind in 2026, when the season was thinner. Standard deviations of
-  0.25-0.4 and shrinkage of half a game to one scored within 0.01 of the chosen pair.
-- **What it does not know.** Ratings and defences are today's, from every counted game, the one being
-  weighed included. A player's points are assumed to be spread over the team's games like its goals,
-  so a forward who scored only in the easy games is credited with the team's schedule. MaxPreps does
-  publish per-game player box scores for teams whose coaches enter them (an undocumented
-  `team-contest-player-stats` endpoint, one request per team per game), which would let each
-  player's goals be weighed game by game; that needs a new fetch and is not built. Games against
-  schools outside the covered leagues have no rating, so they are left out of the team's rate and
-  its factor (a player's points from them are still multiplied by it).
+  This model has the best likelihood in both seasons on the board's teams (6 or more games). Scored
+  on every side, the no-Elo attack-defense model is ahead in 2026 (−1.579 to −1.584) and behind in
+  2025-26 (−1.440 to −1.427), and on RMSE it is ahead in both seasons, as is the Elo alone at 1200
+  points: so the two attack-defense models are about level, and this one is used because it builds
+  on the one Elo table the site already shows, which links the leagues' few cross-league games and
+  carries last season over. Standard deviations of 0.25-0.4 and 0.5-2 games of shrinkage scored
+  within 0.01 of the chosen pair; capping each game's weight at 3, 5 or 8 games scored worse. The
+  Elo constants (`lib/ratings.ts`) were tuned on these same two seasons, which flatters every Elo
+  row a little.
+- **What it does not know.** Ratings and defenses are today's, from every counted game, the one
+  being weighed included (taking each top-15 team's own games out of both fits moves no team in the
+  top 8). At the extremes it extrapolates: a game against the strongest defense counts as less than a
+  tenth of an average one and against the weakest as more than fifteen, schedule factors run from
+  about 0.2 to 3, and the multiplicative form over-predicts lopsided games, so a team that played only
+  very weak or very strong opponents is the least certain number on the board. A player's points are
+  assumed to be spread over the team's games like its goals, so a forward who scored only in the easy
+  games is credited with the team's schedule; the factor covers every counted game even where a
+  coach's totals lag behind them; and points from games against schools outside the covered leagues
+  (no rating, so left out of the factor) are multiplied by it too. MaxPreps does publish per-game
+  player box scores for teams whose coaches enter them (an undocumented `team-contest-player-stats`
+  endpoint, one request per team per game), which would let each player's goals be weighed game by
+  game; that needs a new fetch and is not built.
 
 ## Known limitations
 

@@ -46,7 +46,7 @@ const PAGE_TITLE = 'Season leaders';
 
 export const metadata: Metadata = {
   title: PAGE_TITLE,
-  description: `Girls varsity field hockey leaders across ${SHORT_NAMES}, unofficial: the schools with the best records, most goals and highest Elo ratings, and the players with the most points, raw and Elo-adjusted, assists, saves and clean sheets.`,
+  description: `Girls varsity field hockey leaders across ${SHORT_NAMES}, unofficial: the schools with the best records, the most goals per game (raw and Elo-adjusted) and the highest Elo ratings, and the players with the most points (raw and Elo-adjusted), assists, saves and clean sheets.`,
   alternates: { canonical: '/leaders' },
   openGraph: { ...OG_BASE, ...ROOT_OG_IMAGE, title: PAGE_TITLE, url: '/leaders' },
 };
@@ -73,7 +73,8 @@ export default function LeadersPage() {
           <>
             The top schools and players across {SHORT_NAMES}, ranked within each region. School
             records and Elo ratings are computed from the scores on this site; player numbers are
-            what each coach enters on MaxPreps. {view.crossRegion.sentence}
+            what each coach enters on MaxPreps, which the Elo-adjusted points weigh by the team’s
+            schedule. {view.crossRegion.sentence}
           </>
         }
         aside={<DivisionTabs variant="inline" tabs={tabs} label="Jump to a leaderboard" />}

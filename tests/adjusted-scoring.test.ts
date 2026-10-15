@@ -13,7 +13,7 @@ import {
   getAdjustedScoring,
 } from '../lib/adjusted-scoring';
 import { getSnapshot } from '../lib/data';
-import { getRatings, ratingGames, type RatingTable } from '../lib/ratings';
+import { computeRatings, getRatings, ratingGames, type RatingTable } from '../lib/ratings';
 import { TEAMS, getTeamBySlug } from '../lib/teams';
 import type { Game } from '../lib/types';
 import { game, type GameSpec } from './game-builder';
@@ -61,16 +61,16 @@ describe('fitGoalModel', () => {
     expect(m.mu).toBeCloseTo(Math.log(2), 6);
     expect(m.home).toBeCloseTo(0, 9);
     for (const slug of FOUR) {
-      expect(m.defence.get(id(slug))!, slug).toBeCloseTo(0, 6);
+      expect(m.defense.get(id(slug))!, slug).toBeCloseTo(0, 6);
       expect(m.attack.get(id(slug))!, slug).toBeCloseTo(0, 6);
     }
   });
 
-  it('rates a team that concedes less as the better defence, even at an equal Elo', () => {
+  it('rates a team that concedes less as the better defense, even at an equal Elo', () => {
     // Leigh concedes 1 a game, Tamalpais 4, everyone else 2; the Elo table says nothing.
     const conceded: Record<string, number> = { mitty: 2, leigh: 1, stevenson: 2, tamalpais: 4 };
     const m = fitGoalModel(TEAMS, roundRobin(FOUR, (h, a) => [conceded[a], conceded[h]]), AVERAGE);
-    const d = (slug: string) => m.defence.get(id(slug))!;
+    const d = (slug: string) => m.defense.get(id(slug))!;
     expect(d('leigh')).toBeGreaterThan(d('mitty'));
     expect(d('tamalpais')).toBeLessThan(d('mitty'));
     // The corrections are shrunk: the fitted gap is smaller than the raw log ratio.
@@ -80,9 +80,9 @@ describe('fitGoalModel', () => {
 
   it('learns no Elo slope from games with no goal difference', () => {
     const games = [neutral({ home: 'mitty', away: 'leigh', hs: 1, as: 1 }), neutral({ home: 'stevenson', away: 'tamalpais', hs: 1, as: 1 })];
-    // No goal difference anywhere: the slopes cannot be learnt, so every defence stays level.
+    // No goal difference anywhere: the slopes cannot be learnt, so every defense stays level.
     const flat = fitGoalModel(TEAMS, games, table({ mitty: 2000, leigh: 2000, stevenson: 1000, tamalpais: 1000 }));
-    expect(flat.defenceSlope).toBeCloseTo(0, 3);
+    expect(flat.defenseSlope).toBeCloseTo(0, 3);
   });
 
   it('fits a home edge from hosted games only', () => {
@@ -103,7 +103,7 @@ describe('fitGoalModel', () => {
 });
 
 describe('computeAdjustedScoring', () => {
-  it('is the raw rate, with a factor of 1, when every defence is average', () => {
+  it('is the raw rate, with a factor of 1, when every defense is average', () => {
     const adjusted = computeAdjustedScoring(TEAMS, roundRobin(FOUR, () => [2, 2]), AVERAGE);
     for (const slug of FOUR) {
       const a = adjusted.get(id(slug))!;
@@ -114,7 +114,7 @@ describe('computeAdjustedScoring', () => {
     }
   });
 
-  it('credits the same goals more against better defences', () => {
+  it('credits the same goals more against better defenses', () => {
     // Mitty and Stevenson each score 2 a game; Mitty plays the stingy Leigh twice, Stevenson the leaky Tamalpais.
     const conceded: Record<string, number> = { mitty: 2, leigh: 1, stevenson: 2, tamalpais: 4 };
     const base = roundRobin(FOUR, (h, a) => [conceded[a], conceded[h]]);
@@ -131,7 +131,7 @@ describe('computeAdjustedScoring', () => {
     expect(m.perGame).toBeGreaterThan(s.perGame);
   });
 
-  it(`adds ${SHRINK_GAMES} of a game at the season’s average rate, and weighs each game by the defence and the venue`, () => {
+  it('weighs each game by the defense and the venue, and adds one game at the season’s rate against an average defense', () => {
     const games = [
       game({ home: 'mitty', away: 'leigh', hs: 5, as: 0, date: '2026-09-01' }),
       game({ home: 'leigh', away: 'stevenson', hs: 1, as: 2, date: '2026-09-02' }),
@@ -140,16 +140,40 @@ describe('computeAdjustedScoring', () => {
     const elo = table({ mitty: 1800, leigh: 1300, stevenson: 1500 });
     const model = fitGoalModel(TEAMS, games, elo);
     const adjusted = computeAdjustedScoring(TEAMS, games, elo);
-    const average = 11 / 6;
-    const weight = (opponent: string, host: number) => Math.exp(-model.defence.get(id(opponent))! + model.home * host);
+    const weight = (opponent: string, host: number) => Math.exp(-model.defense.get(id(opponent))! + model.home * host);
     const mitty = adjusted.get(id('mitty'))!;
     const weighted = weight('leigh', 1) + weight('stevenson', 0);
     expect(mitty).toMatchObject({ games: 2, goals: 8 });
     expect(mitty.averageGames).toBeCloseTo(weighted, 12);
-    expect(mitty.factor).toBeCloseTo(2 / weighted, 12);
+    expect(mitty.factor).toBeCloseTo((2 + SHRINK_GAMES) / (weighted + SHRINK_GAMES), 12);
+    // The shrinkage target is the season's rate against an average defense: all goals over all weighted games.
+    // Leigh: away at Mitty, home to Stevenson. Stevenson: away at Leigh, Mitty at a neutral site.
+    const allWeighted =
+      weighted + weight('mitty', -1) + weight('stevenson', 1) + weight('leigh', -1) + weight('mitty', 0);
+    const average = 11 / allWeighted;
     expect(mitty.perGame).toBeCloseTo((8 + SHRINK_GAMES * average) / (weighted + SHRINK_GAMES), 12);
     // A team that has not scored still has a rate above 0, from the shrinkage.
     expect(adjusted.get(id('leigh'))!.perGame).toBeGreaterThan(0);
+  });
+
+  it('stays near no adjustment on a season of a few games, which a steep Elo slope would explain perfectly', () => {
+    // Without the slopes' prior, one 1-0 game sent both slopes to 24 and Leigh's factor to 433.
+    for (const games of [
+      [game({ home: 'mitty', away: 'leigh', hs: 1, as: 0 })],
+      [1, 2, 3].map((d) => game({ home: 'mitty', away: 'leigh', hs: 6, as: 0, date: `2026-09-0${d}` })),
+      [1, 2, 3].map((d) => game({ home: 'mitty', away: 'leigh', hs: 0, as: 0, date: `2026-09-0${d}` })),
+    ]) {
+      const ratings = computeRatings(TEAMS, games);
+      const model = fitGoalModel(TEAMS, games, ratings);
+      expect(model.converged).toBe(true);
+      for (const a of computeAdjustedScoring(TEAMS, games, ratings).values()) {
+        expect(a.factor, a.slug).toBeGreaterThan(0.25);
+        expect(a.factor, a.slug).toBeLessThan(4);
+        expect(Number.isFinite(a.perGame), a.slug).toBe(true);
+        // A team that scored is never printed as having scored nothing.
+        if (a.goals > 0) expect(a.perGame, a.slug).toBeGreaterThan(0.5);
+      }
+    }
   });
 
   it('counts only the finals the Elo fit counts: no forfeit, no unscored game', () => {
@@ -179,32 +203,36 @@ describe('getAdjustedScoring, over the bundled data', () => {
     expect([...all.values()].reduce((n, a) => n + a.goals, 0)).toBe(goals);
   });
 
-  it('converges: the model expects as many goals as were scored, and the defences are centred', () => {
+  it('converges: the model expects as many goals as were scored, and the defenses are centred', () => {
     const m = fitGoalModel(snapshot.teams, snapshot.games, ratings);
+    expect(m.converged).toBe(true);
     let expected = 0;
     let scored = 0;
     for (const g of counted) {
       const host = g.site === 'home' ? 1 : 0;
       const h = g.home.teamId!;
       const a = g.away.teamId!;
-      expected += Math.exp(m.mu + m.home * host + m.attack.get(h)! - m.defence.get(a)!);
-      expected += Math.exp(m.mu - m.home * host + m.attack.get(a)! - m.defence.get(h)!);
+      expected += Math.exp(m.mu + m.home * host + m.attack.get(h)! - m.defense.get(a)!);
+      expected += Math.exp(m.mu - m.home * host + m.attack.get(a)! - m.defense.get(h)!);
       scored += g.home.score! + g.away.score!;
     }
-    expect(expected / scored).toBeCloseTo(1, 6);
-    const defences = [...m.defence.values()];
-    expect(defences.reduce((t, d) => t + d, 0) / defences.length).toBeCloseTo(0, 9);
-    // A better Elo means a better defence, on the whole.
-    expect(m.defenceSlope).toBeGreaterThan(0);
+    // Within the pull of μ's unit prior toward its start.
+    expect(Math.abs(expected / scored - 1)).toBeLessThan(0.001);
+    const defenses = [...m.defense.values()];
+    expect(defenses.reduce((t, d) => t + d, 0) / defenses.length).toBeCloseTo(0, 9);
+    // A better Elo means a better defense, on the whole.
+    expect(m.defenseSlope).toBeGreaterThan(0);
     expect(m.attackSlope).toBeGreaterThan(0);
   });
 
   it('keeps its own arithmetic: the factor is games over weighted games, the rate shrunk toward the average', () => {
-    const sides = counted.length * 2;
-    const average = counted.reduce((n, g) => n + g.home.score! + g.away.score!, 0) / sides;
+    const values = [...all.values()];
+    const average = values.reduce((n, a) => n + a.goals, 0) / values.reduce((n, a) => n + a.averageGames, 0);
+    // On the board's scale: below the raw goals per side, since the counted defenses are not all average.
+    expect(average).toBeGreaterThan(0.5);
     for (const a of all.values()) {
       expect(a.averageGames, a.slug).toBeGreaterThan(0);
-      expect(a.factor, a.slug).toBeCloseTo(a.games / a.averageGames, 9);
+      expect(a.factor, a.slug).toBeCloseTo((a.games + SHRINK_GAMES) / (a.averageGames + SHRINK_GAMES), 9);
       expect(a.perGame, a.slug).toBeCloseTo((a.goals + SHRINK_GAMES * average) / (a.averageGames + SHRINK_GAMES), 9);
     }
   });

@@ -35,7 +35,7 @@
  * the two regions is the finals between them, few so far, so every Elo note says how many (this season's
  * from the snapshot, last season's from data/prior-season.json, both counted at build time, never typed in).
  *
- * The two Elo-adjusted boards (lib/adjusted-scoring.ts) weigh each game by the opponent's defence: its
+ * The two Elo-adjusted boards (lib/adjusted-scoring.ts) weigh each game by the opponent's defense: its
  * rating in the same one table, corrected by the goals it has allowed. A school's adjusted goals per game counts the games its Elo rating counts, past the Elo
  * board's minimum. A player's adjusted points are their points times their team's schedule factor, so
  * only a player whose team is past that minimum is ranked: a factor from two games is mostly noise.
@@ -458,9 +458,15 @@ const num = (v: number | null): LeaderCell => ({ text: statText(v) });
 /** `v` to one decimal place: an adjusted number is ranked, and ties are shared, as printed. */
 const tenths = (v: number) => Math.round(v * 10) / 10;
 /** A player's Elo-adjusted points: their points times the team's schedule factor, as printed. */
+/** The schedule factor as the × column prints it (two places). */
+const printedFactor = (factor: number) => Math.round(factor * 100) / 100;
+/**
+ * A player's Elo-adjusted points: their points times the team's schedule factor AS PRINTED, so a reader
+ * multiplying the row's Pts by its × gets its Adj.
+ */
 const adjustedPoints = (e: PlayerEntry): number | null => {
   const points = e.player.field?.points ?? null;
-  return points === null || e.factor === null ? null : tenths(points * e.factor);
+  return points === null || e.factor === null ? null : tenths(points * printedFactor(e.factor));
 };
 const field = (key: FieldStatKey) => (e: PlayerEntry) => num(e.player.field?.[key] ?? null);
 const keeper = (key: GoalieStatKey) => (e: PlayerEntry) => num(e.player.goalkeeping?.[key] ?? null);
@@ -492,7 +498,7 @@ const PLAYER_BOARDS: PlayerBoardSpec[] = [
         key: 'factor',
         label: '×',
         title: 'Schedule factor',
-        cell: (e) => ({ text: e.factor === null ? null : e.factor.toFixed(2) }),
+        cell: (e) => ({ text: e.factor === null ? null : printedFactor(e.factor).toFixed(2) }),
       },
       {
         key: 'adjustedPoints',
@@ -506,8 +512,8 @@ const PLAYER_BOARDS: PlayerBoardSpec[] = [
     ],
     rankedBy: 2,
     lead:
-      'Points times the team’s schedule factor (×): how much harder the defences it met were than average, from their Elo ratings and the goals they have allowed, above 1 for a harder schedule. ' +
-      'Season totals have no game-by-game split, so a player’s points are weighed like the team’s goals.',
+      'Points times the team’s schedule factor (the × column): how much harder the defenses it met, and where, were than average, from their Elo ratings and the goals they have allowed; above 1 is a harder schedule. ' +
+      'Season totals have no game-by-game split, so a player’s points are weighed like the team’s goals, and the factor covers all its games even where its totals lag.',
     value: adjustedPoints,
   },
   {
@@ -630,7 +636,8 @@ function playerBoard(
     id: `${spec.id}${scope.suffix}`,
     kind: 'player',
     title: spec.title,
-    meta: `From ${plural(tracking.length, 'team')}`,
+    // An adjusted board ranks only the teams with a schedule factor, so it counts those.
+    meta: `From ${plural(tracking.length - unfactored.length, 'team')}`,
     caption,
     columns: spec.columns.map(({ key, label, title }) => ({ key, label, title })),
     rankedBy: spec.rankedBy,
@@ -646,7 +653,9 @@ function playerBoard(
     empty:
       tracking.length === 0
         ? `No team enters ${spec.statWord} on MaxPreps yet.`
-        : `No ${spec.who[0]} has any ${spec.statWord} entered yet.`,
+        : unfactored.length === tracking.length
+          ? `No team that enters ${spec.statWord} has played enough counted games for a schedule factor yet.`
+          : `No ${spec.who[0]} has any ${spec.statWord} entered yet.`,
   };
 }
 
@@ -917,8 +926,8 @@ function adjustedGoalsBoard(
       ],
       rankedBy: 2,
       note:
-        'Goals per game against an average defence: each game is weighed by the opponent’s defence (its Elo rating, corrected by the goals it has allowed) and by who was at home, and half a game at the season’s average rate is added so a short record cannot run to an extreme. ' +
-        'Avg is the raw rate over the same games, the ones the Elo board counts. Equal rates are split by more games played.',
+        'Goals per game against an average defense: each game is weighed by the opponent’s defense (its Elo rating, corrected by the goals it has allowed) and by who was at home, and one game against an average defense is added so a short record cannot run to an extreme. ' +
+        'Ratings are today’s, from every counted game, and a schedule of only very weak or very strong opponents is the least certain. Avg is the raw rate over the same games, the ones the Elo board counts. Equal rates are split by more games played.',
       empty: lines.some((l) => l.a.games >= min)
         ? `None of the teams with at least ${plural(min, 'game')} has scored yet.`
         : `No team has played ${plural(min, 'game')} yet.`,
@@ -1199,7 +1208,7 @@ function buildRegion(input: RegionInput): RegionLeadersView {
   }
   if (elo.minimum.median > 0) {
     schoolNotes.push(
-      `The Elo-adjusted goals and Elo boards need at least ${plural(elo.minimum.min, 'game')} against the ${LEAGUE_COUNT} leagues’ teams${AND_INDEPENDENTS}, half the median of ${elo.minimum.median}${notYet(elo.below)}`,
+      `The Elo-adjusted goals board and the Elo board need at least ${plural(elo.minimum.min, 'game')} against the ${LEAGUE_COUNT} leagues’ teams${AND_INDEPENDENTS}, half the median of ${elo.minimum.median}${notYet(elo.below)}`,
     );
   }
 

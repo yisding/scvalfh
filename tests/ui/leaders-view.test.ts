@@ -200,7 +200,8 @@ describe('buildLeadersView — rules, over the committed data', () => {
         expect(row.cells.map((c) => c.text), row.name).toEqual([
           statText(points),
           a.factor.toFixed(2),
-          (Math.round(points * a.factor * 10) / 10).toFixed(1),
+          // Adj is Pts times the × as printed, so the row's own arithmetic checks out.
+          (Math.round(points * Number(a.factor.toFixed(2)) * 10) / 10).toFixed(1),
         ]);
         expect(Number(row.cells[2].text), row.name).toBeGreaterThan(0);
       }
@@ -300,7 +301,7 @@ describe('buildLeadersView — rules, over the committed data', () => {
       // Every rated team of the region under the minimum is named in the region's notes, with its games.
       const slugs = new Set(teamsOf(r.region).map((t) => t.slug));
       const below = getRatings().ratings.filter((x) => slugs.has(x.slug) && x.games > 0 && x.games < min);
-      const note = r.schoolNotes.find((n) => n.startsWith('The Elo-adjusted goals and Elo boards need'));
+      const note = r.schoolNotes.find((n) => n.startsWith('The Elo-adjusted goals board and the Elo board need'));
       for (const x of below) expect(note, x.slug).toContain(`${getTeamBySlug(x.slug)!.name} (${x.games})`);
       // The bundled board each team page reads its place from is this one.
       expect(getEloBoard(r.region).board).toEqual(board);
@@ -490,8 +491,8 @@ describe('buildLeadersView — schools, over synthetic games', () => {
     expect(elo.meta).toBe('At least 3 games');
     expect(elo.rows.map((r) => r.team.slug)).toEqual(['mitty', 'stevenson', 'tamalpais', 'leigh']);
     expect(elo.rows.map((r) => r.cells[0].text)).toEqual(['6', '6', '6', '7']);
-    expect(nc(view).schoolNotes.find((n) => n.startsWith('The Elo-adjusted goals and Elo boards need'))).toBe(
-      'The Elo-adjusted goals and Elo boards need at least 3 games against the nine leagues’ teams and the Southern Section’s five independents, half the median of 6; not there yet: Del Mar (1).',
+    expect(nc(view).schoolNotes.find((n) => n.startsWith('The Elo-adjusted goals board and the Elo board need'))).toBe(
+      'The Elo-adjusted goals board and the Elo board need at least 3 games against the nine leagues’ teams and the Southern Section’s five independents, half the median of 6; not there yet: Del Mar (1).',
     );
     expect(elo.note).toContain('1500 is an average team');
     // No prior season in these sources: every team starts at average, and the note says nothing of one.
@@ -562,8 +563,8 @@ describe('buildLeadersView — schools, over synthetic games', () => {
     expect(Number(at('stevenson').cells[2].text)).toBeGreaterThan(Number(at('tamalpais').cells[2].text));
     // Leigh's Del Mar game counts: 7 games, as on the Elo board.
     expect(at('leigh').cells[0].text).toBe('7');
-    expect(adjusted.note).toContain('Goals per game against an average defence');
-    expect(adjusted.note).toContain('half a game at the season’s average rate');
+    expect(adjusted.note).toContain('Goals per game against an average defense');
+    expect(adjusted.note).toContain('one game against an average defense is added');
   });
 
   it('shares a place between equal rates and lists them by name', () => {
@@ -645,7 +646,7 @@ describe('buildLeadersView — players, over synthetic stats', () => {
     const adjusted = board('adjusted-points');
     const scoring = computeAdjustedScoring(TEAMS, games, computeRatings(TEAMS, games));
     const factor = (slug: string) => scoring.get(getTeamBySlug(slug)!.id)!.factor;
-    // Mitty beat Leigh at home: Leigh's trip to the better defence is the harder game.
+    // Mitty beat Leigh at home: Leigh's trip to the better defense is the harder game.
     expect(factor('leigh')).toBeGreaterThan(factor('mitty'));
     const expected = [
       ['Dee Dunn', 14, factor('leigh')],
@@ -653,7 +654,7 @@ describe('buildLeadersView — players, over synthetic stats', () => {
       ['Bea Bell', 12, factor('mitty')],
     ] as const;
     expect(adjusted.rows.map((r) => [r.name, ...r.cells.map((c) => c.text)])).toEqual(
-      expected.map(([name, pts, f]) => [name, String(pts), f.toFixed(2), (Math.round(pts * f * 10) / 10).toFixed(1)]),
+      expected.map(([name, pts, f]) => [name, String(pts), f.toFixed(2), (Math.round(pts * Number(f.toFixed(2)) * 10) / 10).toFixed(1)]),
     );
     // Mitty's two share a place, as printed; the 0-point player never shows.
     expect(adjusted.rows.map((r) => [r.rank, r.tied])).toEqual([
@@ -661,8 +662,29 @@ describe('buildLeadersView — players, over synthetic stats', () => {
       [2, true],
       [2, true],
     ]);
-    expect(adjusted.meta).toBe('From 3 teams');
+    // Saint Francis enters points but has no factor: it is named, and not counted in the meta.
+    expect(adjusted.meta).toBe('From 2 teams');
     expect(adjusted.note).toContain('Saint Francis has not played enough counted games for a schedule factor yet.');
+  });
+
+  it('leaves off a team that has played but is under the Elo minimum, and says why a board with no factor is empty', () => {
+    // Mitty plays four times, Leigh three, Saint Francis once: the median is 3, the minimum 2.
+    const more = [
+      game({ home: 'mitty', away: 'leigh', hs: 2, as: 1, league: false, date: '2026-09-20' }),
+      game({ home: 'leigh', away: 'mitty', hs: 1, as: 1, league: false, date: '2026-09-22' }),
+      game({ home: 'mitty', away: 'saint-francis', hs: 0, as: 3, league: false, date: '2026-09-24' }),
+    ];
+    const v = buildLeadersView(sources([...games, ...more], stats));
+    const adjusted = nc(v).players.find((b) => b.id === 'adjusted-points')!;
+    expect(nc(v).schools.find((b) => b.id === 'elo-rating')!.meta).toBe('At least 2 games');
+    expect(adjusted.rows.map((r) => r.name)).not.toContain('Eve Eck');
+    expect(adjusted.rows.map((r) => r.name)).toContain('Dee Dunn');
+    expect(adjusted.note).toContain('Saint Francis has not played enough counted games for a schedule factor yet.');
+    // Stats but no counted game anywhere: nobody has a factor, and the board says so.
+    const none = nc(buildLeadersView(sources([], stats))).players.find((b) => b.id === 'adjusted-points')!;
+    expect(none.rows).toEqual([]);
+    expect(none.meta).toBe('From 0 teams');
+    expect(none.empty).toBe('No team that enters points has played enough counted games for a schedule factor yet.');
   });
 
   it('leaves a team that does not enter a stat off its board, and says so', () => {

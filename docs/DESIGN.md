@@ -4393,31 +4393,37 @@ tables ranked 1, 2, 2, 4, once per region with suffixed ids (§24), and the page
 component. Like the Elo rating (§19.2, §20), both are estimates from a documented model
 (`lib/adjusted-scoring.ts`; README "Elo-adjusted goals and points"), never a status.
 
-- **The model.** A Poisson attack-defence model anchored on Elo (Maher 1982; Dixon-Coles 1997;
+- **The model.** A Poisson attack-defense model anchored on Elo (Maher 1982; Dixon-Coles 1997;
   shrinkage as Baio-Blangiardo 2010): log expected goals = μ + h·host + a·s_team + u_team −
   (d·s_opp + v_opp), with `s` the Elo strength in goals and the corrections u, v pulled toward 0
-  (standard deviation 0.3, `RIDGE_SIGMA`). A game counts as exp(−defence + h·host) games against an
-  average defence; a team's adjusted rate is its goals over its weighted games with half a game at the
-  season's average added (`SHRINK_GAMES`), and its schedule factor is its games over its weighted
-  games. Chosen by a day-by-day replay of both seasons scored on Poisson log-likelihood, against no
-  adjustment, the opponent's Elo alone (the first version of these boards: a tenfold fall in goals
-  per 1000 points) and an attack-defence model with no Elo; the README's "Elo-adjusted goals and
-  points" has the table.
+  (standard deviation 0.3, `RIDGE_SIGMA`; the slopes a, d have a weak prior, `SLOPE_SIGMA`, so a
+  season of a few games cannot run them off). A game counts as exp(−defense + h·host) games against
+  an average defense; a team's adjusted rate is its goals over its weighted games with one game
+  against an average defense added (`SHRINK_GAMES`), and its schedule factor is its games over its
+  weighted games with the same game added. Chosen by a day-by-day replay of both seasons scored on
+  Poisson log-likelihood, against no adjustment, the opponent's Elo alone (an earlier draft of these
+  boards: a tenfold fall in goals per 1000 points) and an attack-defense model with no Elo. It has the
+  best likelihood on the board's teams; the no-Elo model is about level overall and better on RMSE, so
+  the deciding reason is that this one builds on the site's one Elo table. The README's "Elo-adjusted
+  goals and points" has the table and the caveats (extrapolation at the extremes, ratings that include
+  the game weighed, lagging player totals).
 - **Most Elo-adjusted goals per game** (`#adjusted-goals`), the school board after "Most goals per
   game": GP (games counted), Avg (raw goals per game over the same games) and Adj (two places,
   ranked on as printed; equal rates split by more games, as the raw board does). It counts the Elo
   fit's games and has the Elo board's minimum, so the section's Elo note now reads "The
-  Elo-adjusted goals and Elo boards need at least …". A team that has not scored is never listed.
+  Elo-adjusted goals board and the Elo board need at least …". A team that has not scored is never
+  listed.
 - **Most Elo-adjusted points** (`#adjusted-points`), the player board after "Most points": Pts,
-  × (the team's schedule factor, two places; "Schedule factor" to a screen reader) and Adj (points × factor, one place, ranked on as
-  printed). Season totals have no per-game split, so this is the only adjustment the data in hand
-  allows; MaxPreps' per-game box scores would allow a game-by-game one, with a new fetch.
-  Only a player whose team is past the Elo board's minimum is ranked; the note names any team that
-  enters points but has no factor yet. Like every player board, it lists to 10th and opens to 25th.
+  × (the team's schedule factor, two places; "Schedule factor" to a screen reader) and Adj (Pts
+  times the × as printed, one place, ranked on as printed). Season totals have no per-game split,
+  so this is the only adjustment the data in hand allows; MaxPreps' per-game box scores would allow
+  a game-by-game one, with a new fetch. Only a player whose team is past the Elo board's minimum is
+  ranked; the note names any team that enters points but has no factor yet, and its "From N teams"
+  counts only the teams with one. Like every player board, it lists to 10th and opens to 25th.
 - **Order.** Schools: best record, best league record, most goals per game, most Elo-adjusted goals
   per game, fewest goals allowed per game, most clean sheets, highest Elo rating (still last).
   Players: most points, most Elo-adjusted points, most assists, most saves, most clean sheets.
 - **Budget.** On the 2026-10-15 data the two boards in each region took `/leaders` from 69,683 to
-  78,940 bytes of HTML gzip, over the 2.3 × `standings` line (76,194). By §24.6's rule (measured
-  × 1.12 / baseline, rounded up to one decimal) the line moved to 2.7 × (89,446): 88%. First-load
+  79,342 bytes of HTML gzip, over the 2.3 × `standings` line (76,194). By §24.6's rule (measured
+  × 1.12 / baseline, rounded up to one decimal) the line moved to 2.7 × (89,446): 89%. First-load
   JS is unchanged.
