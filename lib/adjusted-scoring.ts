@@ -363,10 +363,10 @@ export function computeAdjustedScoring(
   );
 }
 
-let bundled: Map<TeamId, AdjustedScoring> | null = null;
+let bundled: ReadonlyMap<TeamId, AdjustedScoring> | null = null;
 
-/** The adjusted scoring over the bundled snapshot and Elo table, computed once per process. */
-export function getAdjustedScoring(): Map<TeamId, AdjustedScoring> {
+/** The adjusted scoring over the bundled snapshot and Elo table, computed once per process; read-only, as it is shared. */
+export function getAdjustedScoring(): ReadonlyMap<TeamId, AdjustedScoring> {
   if (!bundled) {
     const snapshot = getSnapshot();
     bundled = computeAdjustedScoring(snapshot.teams, snapshot.games, getRatings());

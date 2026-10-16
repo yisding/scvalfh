@@ -781,6 +781,42 @@ describe('buildLeadersView — players, over synthetic stats', () => {
   });
 });
 
+describe('buildLeadersView — the adjusted boards rank on the adjusted value, not the raw one', () => {
+  // Leigh is the stingy defense and Tamalpais the leaky one. Stevenson scores the most, 4 a game on
+  // Tamalpais; Tamalpais scores least, but against Leigh's defense and Stevenson's.
+  const games: Game[] = [];
+  let day = 1;
+  const add = (home: string, away: string, hs: number, as: number) =>
+    games.push(game({ home, away, hs, as, league: false, date: `2026-09-${String(day++).padStart(2, '0')}` }));
+  for (let i = 0; i < 3; i++) {
+    add('mitty', 'leigh', 1, 0);
+    add('stevenson', 'tamalpais', 4, 2);
+    add('leigh', 'tamalpais', 3, 0);
+    add('mitty', 'stevenson', 1, 1);
+  }
+  const stats = [
+    teamStats('stevenson', { field: ['points'], players: [{ name: 'Sal Sims', field: { points: 20 } }] }),
+    teamStats('tamalpais', { field: ['points'], players: [{ name: 'Tia Toms', field: { points: 10 } }] }),
+  ];
+  const view = nc(buildLeadersView(sources(games, stats)));
+  const school = (id: string) => view.schools.find((b) => b.id === id)!;
+  const player = (id: string) => view.players.find((b) => b.id === id)!;
+
+  it('orders the adjusted goals board unlike the raw one', () => {
+    expect(school('most-goals').rows.map((r) => r.team.slug)[0]).toBe('stevenson');
+    // Tamalpais is last on raw goals (tied with Mitty) and first adjusted.
+    expect(school('adjusted-goals').rows.map((r) => r.team.slug)).toEqual(['tamalpais', 'stevenson', 'leigh', 'mitty']);
+  });
+
+  it('orders the adjusted points board unlike the raw one', () => {
+    expect(player('most-points').rows.map((r) => r.name)).toEqual(['Sal Sims', 'Tia Toms']);
+    expect(player('adjusted-points').rows.map((r) => r.name)).toEqual(['Tia Toms', 'Sal Sims']);
+    const [tia, sal] = player('adjusted-points').rows;
+    expect(Number(tia.cells[1].text)).toBeGreaterThan(1);
+    expect(Number(sal.cells[1].text)).toBeLessThan(1);
+  });
+});
+
 // ---------------------------------------------------------------- review findings (PR #16)
 
 describe('buildLeadersView — ties, minimums and empty boards at the edges', () => {
