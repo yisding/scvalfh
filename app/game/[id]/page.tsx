@@ -28,7 +28,7 @@ import ScoreBoard from '../../../components/ui/ScoreBoard';
  *
  * A final score is the object people actually send to each other, and a `<details>` row inside a
  * date page has no URL, no OG card and nothing to land on. So every contest gets a page: both
- * monograms and their league records as of that game, the line score with its decider, the cleaned
+ * monograms and their league records as of that game (to date on a non-league game), the line score with its decider, the cleaned
  * recap with the result links under it, the venue, the real off-site links, routes to both team
  * pages, both sides' form going in, the season series between these two schools, and the source
  * deep links — plus a text-only OG card so a link pasted into a group text previews the score

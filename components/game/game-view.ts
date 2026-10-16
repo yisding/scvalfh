@@ -190,7 +190,8 @@ export interface GameModel {
    * The caption under the scoreboard that says WHEN the two `sub` records are from, because on an
    * old game they are not today's: "League records after this game" (a league final), "League
    * records as of Thu Sep 24" (any other final), "League records going in" (anything not yet
-   * decided) or "League records to date" (postponed — no date to measure from). Singular when only
+   * decided) or "League records to date" (postponed — no date to measure from — and any
+   * regular-season non-league game, which is in neither table). Singular when only
    * one side is one of the teams this site follows; `null` when neither is, since then there is no
    * record to explain.
    */
@@ -286,6 +287,12 @@ export interface RecordAsOf {
  * falls back to the league games dated strictly before it. A postponed game has no date to measure
  * from and keeps the current standing.
  *
+ * A regular-season NON-LEAGUE contest keeps the current standing too. It is not in either side's
+ * table, so there is no point in the league season it belongs to, and most of them are played
+ * before league play opens: measured by date, both sides read "No league results yet" on nearly
+ * every one. What a reader wants beside a non-league score is how each team is doing in its own
+ * league, so the caption says "to date" (`recordsCaptionFor`).
+ *
  * Only results with an outcome count (a played game with no published score is neither a W nor an
  * L) — the rule `lib/standings.ts` tallies `computed` by — so for a team's latest league final this
  * equals `standing.computed` (tests/ui/game-view-asof.test.ts holds that).
@@ -294,7 +301,7 @@ export interface RecordAsOf {
  */
 export function recordAsOf(game: Game, side: GameSide): RecordAsOf | undefined {
   if (!side.slug) return undefined;
-  if (game.status === 'postponed') {
+  if (game.status === 'postponed' || isRegularNonLeague(game)) {
     const computed = getStandingFor(side.slug)?.computed;
     return computed ? { gp: computed.gp, w: computed.w, l: computed.l, t: computed.t } : undefined;
   }
@@ -316,6 +323,11 @@ export function recordAsOf(game: Game, side: GameSide): RecordAsOf | undefined {
   return record;
 }
 
+/** Not in any league table and not postseason: its scoreboard records are today's (`recordAsOf`). */
+function isRegularNonLeague(game: Game): boolean {
+  return game.countsFor === null && game.postseason === null;
+}
+
 function subFor(
   record: RecordAsOf | undefined,
   team: Team | undefined,
@@ -329,9 +341,8 @@ function subFor(
   const unbroken = scope.replace(/ /g, '\u00a0');
   // DESIGN §8's missing-data line is for a team the sources have NOTHING for. Never 0-0-0.
   if (!standing?.hasReportedResults) return `No league results reported · ${unbroken}`;
-  // Results exist, just none by this date — an early-season non-league final, or a first league
-  // game still to play. Saying "not reported" here read as missing data about a team that went on
-  // to post a record; FormGoingIn words the same case as "no league result before this date".
+  // Results exist, just none by this date — a first league game still to play. Saying "not
+  // reported" here read as missing data about a team that went on to post a record; FormGoingIn words the same case as "no league result before this date".
   if (!record || record.gp === 0) return `No league results yet · ${unbroken}`;
   return `${recordString(record)} ${scope}`;
 }
@@ -346,10 +357,10 @@ function recordsCaptionFor(
   const members = [away, home].filter((side) => side.team).length;
   if (members === 0) return null;
   const subject = members === 1 ? 'League record' : 'League records';
-  if (game.status === 'postponed') return `${subject} to date`;
+  if (game.status === 'postponed' || isRegularNonLeague(game)) return `${subject} to date`;
   if (display.kind === 'final') {
-    // A counted final is in each side's league list, so its record includes it; anything else
-    // (non-league, postseason) is measured by date.
+    // A counted final is in each side's league list, so its record includes it; a postseason
+    // final is measured by date.
     return game.countsFor !== null
       ? `${subject} after this game`
       : `${subject} as of ${shortDate(game.dateLocal)}`;

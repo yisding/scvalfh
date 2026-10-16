@@ -98,20 +98,38 @@ describe('recordAsOf', () => {
     }
   });
 
-  it("keeps 'not reported' for teams with no results — before a team's first league game it says 'yet'", () => {
-    let yet = 0;
+  it("keeps 'not reported' for teams with no results — a team with results never reads as a gap", () => {
+    let checked = 0;
     for (const game of d.getGames()) {
       const model = m.buildGameView(ids.gameIdToParam(game.contestId));
       for (const side of model ? [model.away, model.home] : []) {
-        if (side.sub === null) continue;
-        if (side.standing?.hasReportedResults) {
-          // DESIGN §8's missing-data line on a team that later posted a record read as a site gap.
-          expect(side.sub.startsWith('No league results reported'), game.contestId).toBe(false);
-        }
-        if (side.sub.startsWith('No league results yet')) yet += 1;
+        if (side.sub === null || !side.standing?.hasReportedResults) continue;
+        // DESIGN §8's missing-data line on a team that later posted a record read as a site gap.
+        expect(side.sub.startsWith('No league results reported'), game.contestId).toBe(false);
+        checked += 1;
       }
     }
-    // Early-season non-league finals exist in the corpus; a vacuous pass is a failure.
-    expect(yet).toBeGreaterThan(0);
+    expect(checked, 'a vacuous pass is a failure').toBeGreaterThan(d.getTeams().length);
+  });
+
+  it('shows the current league record on a regular-season non-league game, captioned "to date"', () => {
+    let checked = 0;
+    for (const game of d.getGames()) {
+      if (game.countsFor !== null || game.postseason !== null) continue;
+      const model = m.buildGameView(ids.gameIdToParam(game.contestId));
+      expect(model, game.contestId).toBeDefined();
+      if (!model) continue;
+      for (const side of [model.away, model.home]) {
+        const computed = side.standing?.computed;
+        if (!side.team || !computed || computed.gp === 0) continue;
+        const scope =
+          leagues.divisionHeading(side.team.division) ?? leagues.leagueOfDivision(side.team.division).shortName;
+        // An August non-league final once read "No league results yet" on both sides.
+        expect(side.sub, game.contestId).toBe(`${fmt.recordString(computed)} ${scope}`);
+        checked += 1;
+      }
+      expect(model.recordsCaption?.endsWith(' to date'), game.contestId).toBe(true);
+    }
+    expect(checked, 'a vacuous pass is a failure').toBeGreaterThan(d.getTeams().length);
   });
 });
