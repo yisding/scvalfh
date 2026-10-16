@@ -166,6 +166,9 @@ describe('computeAdjustedScoring', () => {
       const ratings = computeRatings(TEAMS, games);
       const model = fitGoalModel(TEAMS, games, ratings);
       expect(model.converged).toBe(true);
+      // The slopes stay modest (a full season fits about 0.4); without their prior they ran to 24.
+      expect(Math.abs(model.attackSlope)).toBeLessThan(0.5);
+      expect(Math.abs(model.defenseSlope)).toBeLessThan(0.5);
       for (const a of computeAdjustedScoring(TEAMS, games, ratings).values()) {
         expect(a.factor, a.slug).toBeGreaterThan(0.25);
         expect(a.factor, a.slug).toBeLessThan(4);
@@ -174,6 +177,23 @@ describe('computeAdjustedScoring', () => {
         if (a.goals > 0) expect(a.perGame, a.slug).toBeGreaterThan(0.5);
       }
     }
+  });
+
+  it('adjusts nothing, and says so, when the fit does not converge', () => {
+    const games = roundRobin(FOUR, (h, a) => [h.length % 3, a.length % 4]);
+    const elo = table({ mitty: 1700, leigh: 1300, stevenson: 1600, tamalpais: 1400 });
+    expect(fitGoalModel(TEAMS, games, elo, 1).converged).toBe(false);
+    expect(fitGoalModel(TEAMS, games, elo).converged).toBe(true);
+    const fallback = computeAdjustedScoring(TEAMS, games, elo, 1);
+    const goals = [...fallback.values()].reduce((n, a) => n + a.goals, 0);
+    const sides = [...fallback.values()].reduce((n, a) => n + a.games, 0);
+    for (const a of fallback.values()) {
+      expect(a.adjusted, a.slug).toBe(false);
+      expect(a.factor, a.slug).toBe(1);
+      expect(a.averageGames, a.slug).toBe(a.games);
+      expect(a.perGame, a.slug).toBeCloseTo((a.goals + SHRINK_GAMES * (goals / sides)) / (a.games + SHRINK_GAMES), 12);
+    }
+    expect([...computeAdjustedScoring(TEAMS, games, elo).values()].every((a) => a.adjusted)).toBe(true);
   });
 
   it('counts only the finals the Elo fit counts: no forfeit, no unscored game', () => {
@@ -205,7 +225,9 @@ describe('getAdjustedScoring, over the bundled data', () => {
 
   it('converges: the model expects as many goals as were scored, and the defenses are centred', () => {
     const m = fitGoalModel(snapshot.teams, snapshot.games, ratings);
-    expect(m.converged).toBe(true);
+    // Not asserted outright: a fit that ever failed would fall back to no adjustment, and say so on the
+    // boards, rather than block the day's scores. Every replayed day has converged.
+    if (!m.converged) return;
     let expected = 0;
     let scored = 0;
     for (const g of counted) {

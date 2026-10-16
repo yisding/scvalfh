@@ -1316,7 +1316,7 @@ Two `/leaders` boards per region weigh scoring by the defenses it came against
   shrinkage, anchored on Elo instead of shrunk toward zero. The two slopes have a weak prior too
   (`SLOPE_SIGMA`), so a season of a handful of games stays near no adjustment. One penalized Newton
   solve at every build, in slug order, about 0.2 s; if it ever failed to converge, nothing would be
-  adjusted.
+  adjusted and both boards' notes would say so.
 - **Most Elo-adjusted goals per game** (`#adjusted-goals`, `#adjusted-goals-socal`), after the raw
   goals board. Each game counts as `exp(−defense of the opponent + h·host)` games against an average
   defense at a neutral site, and a team's adjusted rate is its goals over those weighted games, with
@@ -1353,13 +1353,13 @@ Two `/leaders` boards per region weigh scoring by the defenses it came against
   2025-26 (−1.440 to −1.427), and on RMSE it is ahead in both seasons, as is the Elo alone at 1200
   points: so the two attack-defense models are about level, and this one is used because it builds
   on the one Elo table the site already shows, which links the leagues' few cross-league games and
-  carries last season over. Standard deviations of 0.25-0.4 and 0.5-2 games of shrinkage scored
-  within 0.01 of the chosen pair; capping each game's weight at 3, 5 or 8 games scored worse. The
+  carries last season over. On the board's teams, standard deviations of 0.25-0.4 and 0.5-2 games
+  of shrinkage scored within 0.01 of the chosen pair; capping each game's weight at 3, 5 or 8 games scored worse. The
   Elo constants (`lib/ratings.ts`) were tuned on these same two seasons, which flatters every Elo
   row a little.
 - **What it does not know.** Ratings and defenses are today's, from every counted game, the one
-  being weighed included (taking each top-15 team's own games out of both fits moves no team in the
-  top 8). At the extremes it extrapolates: a game against the strongest defense counts as less than a
+  being weighed included: taking each top team's own games out of both fits keeps every board's top
+  two, and can reorder teams close behind (on 2026-10-15 it swapped NorCal's 3rd and 5th, 0.06 apart). At the extremes it extrapolates: a game against the strongest defense counts as less than a
   tenth of an average one and against the weakest as more than fifteen, schedule factors run from
   about 0.2 to 3, and the multiplicative form over-predicts lopsided games, so a team that played only
   very weak or very strong opponents is the least certain number on the board. A player's points are

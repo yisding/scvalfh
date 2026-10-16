@@ -168,7 +168,7 @@ if (!workerOnly) {
   // against 38,549 B for the five-league tree on its own snapshot (97 % of the old line already),
   // 87 % of 76,194 B. Ties still grow it.
   // 2.7 × since 2026-10-15 (it was 2.3 ×): the Elo-adjusted goals and points boards in each region
-  // (DESIGN §27), 79,342 B against 69,683 B without them on the same snapshot, over the old line; by
+  // (DESIGN §27), 79,350 B against 69,683 B without them on the same snapshot, over the old line; by
   // §24.6's rule (measured × 1.12 / baseline, rounded up) 89 % of 89,446 B.
   check('/leaders HTML gzip', gz(file('leaders.html')), 2.7 * baseline.standings.htmlGzip, '2.7 × standings');
   // Every team page, all 49: the largest was ~39 KB gzip on 2026-10-03 (Tamalpais, 40,208 B: about

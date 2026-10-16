@@ -14,8 +14,9 @@
  * allowed, and its attack likewise; the corrections are pulled toward 0 with a normal prior of standard
  * deviation RIDGE_SIGMA (penalized maximum likelihood), so Elo decides for a team with few games and its
  * own goals count more as they come in. One Newton solve over every counted final, in slug order, so a
- * snapshot always builds the same numbers. The two slopes and μ have weak priors too (SLOPE_SIGMA), so a
- * season of a few games, which a steep enough slope would explain perfectly, stays near no adjustment.
+ * snapshot always builds the same numbers. The two slopes have a weak prior too (SLOPE_SIGMA), so a
+ * season of a few games, which a steep enough slope would explain perfectly, stays near no adjustment,
+ * and μ a unit prior about the log of the raw goals per side, so a season of 0-0s stays finite.
  *
  * The adjustment. A game against opponent o counts as `exp(−(D_o − mean D) + h·host)` games against an
  * average defense at a neutral site: a game away at a strong defense is worth less than one, a home game
@@ -55,12 +56,14 @@
  * behind in 2025-26 (−1.440 to −1.427); on root-mean-square error it is ahead in both. So the two
  * attack-defense models are about level, and this one is used because it builds on the one Elo table the
  * site already shows, which links the leagues' few cross-league games and carries last season over.
- * Standard deviations 0.25-0.4 and 0.5-2 games of shrinkage scored within 0.01. The Elo constants
+ * On the board's teams, standard deviations 0.25-0.4 and 0.5-2 games of shrinkage scored within 0.01
+ * of the chosen pair (on every side in 2026, two games scored 0.014 worse). The Elo constants
  * themselves (lib/ratings.ts) were tuned on these same two seasons, which flatters every Elo row a little.
  *
  * Counted: the finals the Elo fit counts (lib/ratings.ts ratingGames: between two registry teams, with
  * a score, no forfeit). Ratings and defenses are today's, from every counted game, the one being
- * weighed included (taking each top team's own games out of both fits moves no team in the top 8).
+ * weighed included: taking each top team's own games out of both fits keeps every board's top two,
+ * and can reorder teams close behind (on 2026-10-15 it swapped NorCal's 3rd and 5th, 0.06 apart).
  * A game against a school outside the nine leagues and the five independents has no rating and is left
  * out.
  *
@@ -91,6 +94,11 @@ export const SLOPE_SIGMA = 0.5;
  * iterations, then stall near 2e-8, the solve's floating-point floor.
  */
 const CONVERGED = 1e-6;
+/**
+ * A step this small that no halving can improve on has reached the floating-point floor of the
+ * penalized likelihood: converged too (fifty times the floor seen on the bundled season).
+ */
+const FLOOR = 1e-4;
 
 /** The fitted goal model (see the header). */
 export interface GoalModel {
@@ -105,8 +113,9 @@ export interface GoalModel {
   /** Each counted team's defense D, centred on the mean of the counted teams (0: average). */
   defense: Map<TeamId, number>;
   /**
-   * Whether the Newton solve converged. It always has on the seasons replayed; if it ever did not,
-   * `computeAdjustedScoring` adjusts nothing rather than print a number from a half-finished fit.
+   * Whether the Newton solve converged. It has on every day of both seasons replayed and on 400 fuzzed
+   * small seasons; if it ever did not, `computeAdjustedScoring` adjusts nothing (and says so through
+   * `adjusted`) rather than print a number from a half-finished fit.
    */
   converged: boolean;
   /**
@@ -127,6 +136,8 @@ export interface AdjustedScoring {
   averageGames: number;
   /** The Elo-adjusted goals per game (with SHRINK_GAMES at the season's average). */
   perGame: number;
+  /** false when the goal model did not converge: every game then counts as one, and nothing is adjusted. */
+  adjusted: boolean;
   /**
    * What the schedule multiplies a raw number by (above 1: a hard schedule): games over weighted
    * games, with the same SHRINK_GAMES of an average game added to both.
@@ -194,7 +205,12 @@ function sidesOf(teams: readonly Team[], games: readonly Game[]): { ids: TeamId[
  * The goal model over `games`' counted finals, with each team's Elo strength from `table`. Penalized
  * Newton–Raphson from a neutral start, each step halved until the penalized likelihood rises.
  */
-export function fitGoalModel(teams: readonly Team[], games: readonly Game[], table: RatingTable): GoalModel {
+export function fitGoalModel(
+  teams: readonly Team[],
+  games: readonly Game[],
+  table: RatingTable,
+  maxIterations = 100,
+): GoalModel {
   const { ids, sides } = sidesOf(teams, games);
   const n = ids.length;
   if (n === 0) {
@@ -248,7 +264,7 @@ export function fitGoalModel(teams: readonly Team[], games: readonly Game[], tab
 
   let current = penalized(x);
   let converged = false;
-  for (let iteration = 0; iteration < 100 && !converged; iteration++) {
+  for (let iteration = 0; iteration < maxIterations && !converged; iteration++) {
     const hess = Array.from({ length: size }, () => new Array<number>(size).fill(0));
     const grad = new Array<number>(size).fill(0);
     for (const side of sides) {
@@ -282,7 +298,10 @@ export function fitGoalModel(teams: readonly Team[], games: readonly Game[], tab
         break;
       }
     }
-    if (!taken) break;
+    if (!taken) {
+      converged = Math.max(...step.map(Math.abs)) < FLOOR;
+      break;
+    }
   }
 
   const raw = ids.map((_, i) => x[D] * s[i] + x[n + i]);
@@ -306,10 +325,11 @@ export function computeAdjustedScoring(
   teams: readonly Team[],
   games: readonly Game[],
   table: RatingTable,
+  maxIterations?: number,
 ): Map<TeamId, AdjustedScoring> {
   const { ids, sides } = sidesOf(teams, games);
   if (sides.length === 0) return new Map();
-  const model = fitGoalModel(teams, games, table);
+  const model = fitGoalModel(teams, games, table, maxIterations);
   const slugOf = new Map(teams.map((t) => [t.id, t.slug]));
   const tally = ids.map(() => ({ games: 0, goals: 0, averageGames: 0 }));
   // A fit that did not converge weighs every game as one: no adjustment, never a half-finished one.
@@ -334,6 +354,7 @@ export function computeAdjustedScoring(
           teamId,
           slug: slugOf.get(teamId)!,
           ...t,
+          adjusted: model.converged,
           perGame: (t.goals + SHRINK_GAMES * average) / (t.averageGames + SHRINK_GAMES),
           factor: (t.games + SHRINK_GAMES) / (t.averageGames + SHRINK_GAMES),
         },

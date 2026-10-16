@@ -687,6 +687,22 @@ describe('buildLeadersView — players, over synthetic stats', () => {
     expect(none.empty).toBe('No team that enters points has played enough counted games for a schedule factor yet.');
   });
 
+  it('says on both adjusted boards when the goal model adjusted nothing', () => {
+    const settled = nc(buildLeadersView(sources(games, stats)));
+    const unsettled = nc(buildLeadersView({ ...sources(games, stats), goalModelIterations: 0 }));
+    for (const v of [settled, unsettled]) {
+      const notes = [
+        v.players.find((b) => b.id === 'adjusted-points')!.note,
+        v.schools.find((b) => b.id === 'adjusted-goals')!.note,
+      ];
+      for (const note of notes) expect(note.includes('did not settle'), note).toBe(v === unsettled);
+    }
+    // Unadjusted, every factor prints as 1.00, and no other board's note changes.
+    const points = unsettled.players.find((b) => b.id === 'adjusted-points')!;
+    expect(points.rows.every((r) => r.cells[1].text === '1.00')).toBe(true);
+    expect(unsettled.players.find((b) => b.id === 'most-points')!.note).toBe(settled.players.find((b) => b.id === 'most-points')!.note);
+  });
+
   it('leaves a team that does not enter a stat off its board, and says so', () => {
     const assists = board('most-assists');
     expect(assists.rows.map((r) => r.name)).toEqual(['Bea Bell', 'Ana Ames', 'Eve Eck']);

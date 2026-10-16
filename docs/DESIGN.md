@@ -4424,6 +4424,6 @@ component. Like the Elo rating (§19.2, §20), both are estimates from a documen
   per game, fewest goals allowed per game, most clean sheets, highest Elo rating (still last).
   Players: most points, most Elo-adjusted points, most assists, most saves, most clean sheets.
 - **Budget.** On the 2026-10-15 data the two boards in each region took `/leaders` from 69,683 to
-  79,342 bytes of HTML gzip, over the 2.3 × `standings` line (76,194). By §24.6's rule (measured
+  79,350 bytes of HTML gzip, over the 2.3 × `standings` line (76,194). By §24.6's rule (measured
   × 1.12 / baseline, rounded up to one decimal) the line moved to 2.7 × (89,446): 89%. First-load
   JS is unchanged.

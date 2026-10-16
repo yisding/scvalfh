@@ -283,6 +283,8 @@ export interface LeaderSources {
    * team page shows; left out, no row has either.
    */
   rosters?: readonly RosterSource[];
+  /** The goal model's Newton iterations (lib/adjusted-scoring.ts), 100 if left out: a test caps it to see the fallback. */
+  goalModelIterations?: number;
 }
 
 /** A team's roster rows, as far as a leaderboard reads them. */
@@ -457,7 +459,6 @@ const num = (v: number | null): LeaderCell => ({ text: statText(v) });
 
 /** `v` to one decimal place: an adjusted number is ranked, and ties are shared, as printed. */
 const tenths = (v: number) => Math.round(v * 10) / 10;
-/** A player's Elo-adjusted points: their points times the team's schedule factor, as printed. */
 /** The schedule factor as the × column prints it (two places). */
 const printedFactor = (factor: number) => Math.round(factor * 100) / 100;
 /**
@@ -513,7 +514,7 @@ const PLAYER_BOARDS: PlayerBoardSpec[] = [
     rankedBy: 2,
     lead:
       'Points times the team’s schedule factor (the × column): how much harder the defenses it met, and where, were than average, from their Elo ratings and the goals they have allowed; above 1 is a harder schedule. ' +
-      'Season totals have no game-by-game split, so a player’s points are weighed like the team’s goals, and the factor covers all its games even where its totals lag.',
+      'Season totals have no game-by-game split, so a player’s points are weighed like the team’s goals, and the factor covers all its counted games even where its totals lag.',
     value: adjustedPoints,
   },
   {
@@ -582,11 +583,20 @@ function playerFacts(p: RosterSource['players'][number]): string[] {
 /** School names, registry order: prose spells them out (shortName is for a narrow cell). */
 const names = (teams: readonly Team[]) => teams.map((t) => t.name);
 
+/**
+ * Said on both adjusted boards when lib/adjusted-scoring.ts's goal model did not converge and so adjusted
+ * nothing (it has converged on every day replayed): a board titled "Elo-adjusted" must not then read as if
+ * it had been.
+ */
+const UNADJUSTED_NOTE =
+  ' The goal model did not settle on this build’s data, so no game is weighed here: every schedule factor is 1.00.';
+
 function playerBoard(
   spec: PlayerBoardSpec,
   entries: readonly PlayerEntry[],
   withStats: readonly StatTeam[],
   scope: BoardScope,
+  unadjusted = false,
 ): LeaderBoard {
   const tracking = withStats.filter((t) => tracks(t.stats, spec.stat));
   const notTracking = withStats.filter((t) => !tracks(t.stats, spec.stat));
@@ -649,13 +659,15 @@ function playerBoard(
           rows: extra,
         }
       : null,
-    note: `${spec.lead} ${coverage}${unfactoredNote}`,
+    note: `${spec.lead} ${coverage}${unfactoredNote}${spec.value && unadjusted ? UNADJUSTED_NOTE : ''}`,
     empty:
       tracking.length === 0
         ? `No team enters ${spec.statWord} on MaxPreps yet.`
         : unfactored.length === tracking.length
           ? `No team that enters ${spec.statWord} has played enough counted games for a schedule factor yet.`
-          : `No ${spec.who[0]} has any ${spec.statWord} entered yet.`,
+          : unfactored.length > 0
+            ? `No ${spec.who[0]} on a team with a schedule factor has any ${spec.statWord} entered yet.`
+            : `No ${spec.who[0]} has any ${spec.statWord} entered yet.`,
   };
 }
 
@@ -901,6 +913,7 @@ function adjustedGoalsBoard(
   adjusted: ReadonlyMap<TeamId, AdjustedScoring>,
   min: number,
   scope: BoardScope,
+  unadjusted = false,
 ): LeaderBoard {
   const hundredths = (v: number) => Math.round(v * 100) / 100;
   const lines = teams.flatMap((team) => {
@@ -927,7 +940,8 @@ function adjustedGoalsBoard(
       rankedBy: 2,
       note:
         'Goals per game against an average defense: each game is weighed by the opponent’s defense (its Elo rating, corrected by the goals it has allowed) and by who was at home, and one game against an average defense is added so a short record cannot run to an extreme. ' +
-        'Ratings are today’s, from every counted game, and a schedule of only very weak or very strong opponents is the least certain. Avg is the raw rate over the same games, the ones the Elo board counts. Equal rates are split by more games played.',
+        'Ratings are today’s, from every counted game, and a schedule of only very weak or very strong opponents is the least certain. Avg is the raw rate over the same games, the ones the Elo board counts. Equal rates are split by more games played.' +
+        (unadjusted ? UNADJUSTED_NOTE : ''),
       empty: lines.some((l) => l.a.games >= min)
         ? `None of the teams with at least ${plural(min, 'game')} has scored yet.`
         : `No team has played ${plural(min, 'game')} yet.`,
@@ -1040,7 +1054,8 @@ function buildRegion(input: RegionInput): RegionLeadersView {
       factor,
     })),
   );
-  const players = PLAYER_BOARDS.map((spec) => playerBoard(spec, entries, withStats, scope));
+  const unadjusted = [...adjusted.values()].some((a) => !a.adjusted);
+  const players = PLAYER_BOARDS.map((spec) => playerBoard(spec, entries, withStats, scope, unadjusted));
 
   const statSlugs = new Set(withStats.map((t) => t.team.slug));
   const noStats = teams.filter((t) => !statSlugs.has(t.slug));
@@ -1134,7 +1149,7 @@ function buildRegion(input: RegionInput): RegionLeadersView {
           : `No team has played ${plural(overallMin.min, 'game')} yet.`,
       },
     ),
-    adjustedGoalsBoard(teams, adjusted, elo.minimum.min, scope),
+    adjustedGoalsBoard(teams, adjusted, elo.minimum.min, scope, unadjusted),
     schoolBoard(
       'fewest-goals-allowed',
       'Fewest goals allowed per game',
@@ -1249,7 +1264,7 @@ export function buildLeadersView(sources?: LeaderSources): LeadersView {
   const prior = sources ? (sources.prior ?? null) : getPriorSeason();
   const table = sources ? computeRatings(teams, games, prior) : getRatings();
   const crossRegion = sources ? crossRegionFinals(teams, games, prior) : getCrossRegionFinals();
-  const adjusted = sources ? computeAdjustedScoring(teams, games, table) : getAdjustedScoring();
+  const adjusted = sources ? computeAdjustedScoring(teams, games, table, sources.goalModelIterations) : getAdjustedScoring();
   const regions = REGIONS.flatMap((config) => {
     const regionTeams = teams.filter((t) => regionOf(t.league) === config.id);
     if (regionTeams.length === 0) return [];
