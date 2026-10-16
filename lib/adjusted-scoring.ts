@@ -36,7 +36,11 @@
  * team faced the same defenses, and the factor reads a player's points as spread over the team's games
  * like its goals. A player who sat out the hard (or the easy) games is credited with the team's
  * schedule; the factor covers every counted game even where a coach's totals lag behind them; and points
- * from games against schools outside the covered leagues are multiplied by it too.
+ * from games against schools outside the covered leagues are multiplied by it too. MaxPreps' per-game
+ * box scores were read and tried instead (2026-10-15, all 518): weighing each game's points by its own
+ * opponent predicted a player's later points worse than this (log-likelihood −1.003 to −0.964 per
+ * player-game), and counting only the games a coach has entered was no better, so they are not used
+ * (README "Elo-adjusted goals and points").
  *
  * At the extremes it extrapolates. Ratings run from about 200 to 2600, so a game against the strongest
  * defense counts as less than a tenth of a game against an average one and a game against the weakest

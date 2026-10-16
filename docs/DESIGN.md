@@ -4416,8 +4416,10 @@ component. Like the Elo rating (§19.2, §20), both are estimates from a documen
 - **Most Elo-adjusted points** (`#adjusted-points`), the player board after "Most points": Pts,
   × (the team's schedule factor, two places; "Schedule factor" to a screen reader) and Adj (Pts
   times the × as printed, one place, ranked on as printed). Season totals have no per-game split,
-  so this is the only adjustment the data in hand allows; MaxPreps' per-game box scores would allow
-  a game-by-game one, with a new fetch. Only a player whose team is past the Elo board's minimum is
+  so this is the only adjustment the data in hand allows. MaxPreps' per-game box scores were read
+  and tested (README "Elo-adjusted goals and points"): weighing each game's points by its own
+  opponent predicted a player's later points worse than the team's schedule, so they are not
+  fetched. Only a player whose team is past the Elo board's minimum is
   ranked; the note names any team that enters points but has no factor yet, and its "From N teams"
   counts only the teams with one. Like every player board, it lists to 10th and opens to 25th.
 - **Order.** Schools: best record, best league record, most goals per game, most Elo-adjusted goals

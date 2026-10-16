@@ -1366,10 +1366,31 @@ Two `/leaders` boards per region weigh scoring by the defenses it came against
   assumed to be spread over the team's games like its goals, so a forward who scored only in the easy
   games is credited with the team's schedule; the factor covers every counted game even where a
   coach's totals lag behind them; and points from games against schools outside the covered leagues
-  (no rating, so left out of the factor) are multiplied by it too. MaxPreps does publish per-game
-  player box scores for teams whose coaches enter them (an undocumented `team-contest-player-stats`
-  endpoint, one request per team per game), which would let each player's goals be weighed game by
-  game; that needs a new fetch and is not built.
+  (no rating, so left out of the factor) are multiplied by it too.
+- **Per-game box scores were tested, and are not used.** MaxPreps publishes each team's box score
+  for each game whose stats a coach entered (an undocumented `team-contest-player-stats` endpoint,
+  `?teamId=&contestId=`, the season rollup's shape, listing only players who recorded a stat). On
+  2026-10-15 all 518 of them were read (63 teams, 1,846 scoring lines; 481 add up to their game's
+  goals, 35 list no scorer at all), and each player's points in each game were predicted from their
+  points in the team's earlier games, under the same defenses (mean Poisson log-likelihood per
+  player-game, 4,743 predictions with at least 3 earlier games; 4,044 with at least 5):
+
+  | A player's points weighed by | 3+ earlier games | 5+ earlier games |
+  |---|---|---|
+  | Nothing (raw points) | −1.181 | −1.132 |
+  | Each game's own opponent (points ÷ that game's weight) | −1.003 | −0.971 |
+  | The team's schedule, over the games with stats entered | −0.968 | −0.929 |
+  | **The team's schedule, over every counted game (this board)** | **−0.964** | **−0.924** |
+
+  Weighing each game by its own opponent is the worst of the three weightings (a single goal against
+  the strongest defense counts about twelve times). Blends of the two, and a softened per-game
+  weight, came within 0.002 of the schedule over entered games and never beat this board, and
+  counting only the games a coach has entered did not help either (the same order holds with the 35
+  scorer-less box scores left out). So players' scoring is not measurably concentrated against easy
+  or hard opponents beyond what their team's schedule says, and the board keeps the team's schedule
+  factor: the box scores would cost about 100 more MaxPreps calls a run and 0.5 MB of data for no
+  better number. The endpoint is recorded here in case they are wanted for something else, such as
+  player game logs.
 
 ## Known limitations
 
