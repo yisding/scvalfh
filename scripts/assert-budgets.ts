@@ -19,7 +19,7 @@
  * | `/teams` HTML gzip                                             | ≤ 5.2 × baseline `teams`           |
  * | `/playoffs` HTML gzip                                          | ≤ 2.3 × baseline `playoffs`        |
  * | each `/teams/<slug>` HTML gzip (Roster + Player stats sections)  | ≤ 6.0 × baseline `teams`           |
- * | `/leaders` HTML gzip                                           | ≤ 2.3 × baseline `standings`       |
+ * | `/leaders` HTML gzip                                           | ≤ 2.7 × baseline `standings`       |
  * | Worker gzip (`build:cloudflare`)                               | ≤ baseline + 1000 KB               |
  *
  * THE SOUTHERN CALIFORNIA AMENDMENT (DESIGN §24), measured 2026-10-06. The 99-team, nine-league
@@ -159,7 +159,7 @@ if (!workerOnly) {
   // and Metro cards (each team's playoff division) and the Sunset card, 37,375 B (29,970 before),
   // 99.4 % of the old line and 86 % of 43,224 B.
   check('/playoffs HTML gzip', gz(file('playoffs.html')), 2.3 * baseline.playoffs.htmlGzip, '2.3 × playoffs');
-  // Six school boards of 10 places and four player boards of 25, 15 of them behind "Show N more"
+  // Six school boards of 10 places and four player boards of 25 (seven and five since DESIGN §27), 15 of them behind "Show N more"
   // (components/leaders/leaders-view.ts): ~28 KB on 2026-10-03. The player boards' places to 25th
   // (DESIGN §23) took it from 29,328 to 34,664 B on 2026-10-04 (51 more rows), over the 1.0 × line,
   // which moved to 1.2 ×; listing every tied row (no cap since §23) took it to 35,499 B the same day.
@@ -167,7 +167,10 @@ if (!workerOnly) {
   // 2.3 × since 2026-10-06 (it was 1.2 ×): every board twice, once per region (DESIGN §24), 66,035 B
   // against 38,549 B for the five-league tree on its own snapshot (97 % of the old line already),
   // 87 % of 76,194 B. Ties still grow it.
-  check('/leaders HTML gzip', gz(file('leaders.html')), 2.3 * baseline.standings.htmlGzip, '2.3 × standings');
+  // 2.7 × since 2026-10-15 (it was 2.3 ×): the Elo-adjusted goals and points boards in each region
+  // (DESIGN §27), 79,350 B against 69,683 B without them on the same snapshot, over the old line; by
+  // §24.6's rule (measured × 1.12 / baseline, rounded up) 89 % of 89,446 B.
+  check('/leaders HTML gzip', gz(file('leaders.html')), 2.7 * baseline.standings.htmlGzip, '2.7 × standings');
   // Every team page, all 49: the largest was ~39 KB gzip on 2026-10-03 (Tamalpais, 40,208 B: about
   // 4.2 × the 9,681 B baseline) with both the Roster and the Player stats section; 6.0 × leaves room
   // for a busy week of games, not for a table per player. On 2026-10-04 Tamalpais was still the

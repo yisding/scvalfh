@@ -10,15 +10,16 @@
  * leagues' calendars and numbers of games differ too much for one minimum: San Diego's divisions play 6 to
  * 12 league games, the Sunset has no fixed schedule, and Metro South Bay's first league game is Oct 7.
  *
- * Players (data/player-stats.json): most points, assists, saves and clean sheets. A player's
+ * Players (data/player-stats.json): most points, Elo-adjusted points, assists, saves and clean sheets. A player's
  * numbers are exactly what the team page shows: season totals as the coach entered them on
  * MaxPreps, plus the goals and saves the coach wrote in game notes instead (lib/note-stats.ts). Their grade and position are the team page's roster row's (lib/rosters.ts, joined on
  * the stat line's athleteId), in the roster's words; a player the join misses shows neither. Only teams whose coach tracks a stat can appear on its board, so every board says how
  * many teams it covers and names the ones it leaves out, and the section says whose totals are
  * behind the scores. A 0 never leads a board, and an untracked stat is never read as a 0.
  *
- * Schools (data/snapshot.json): best record, best league record, goals scored and allowed per game,
- * clean sheets, and last the highest Elo rating (lib/ratings.ts, DESIGN §20). Records are the
+ * Schools (data/snapshot.json): best record, best league record, goals scored per game raw and
+ * Elo-adjusted, goals allowed per game, clean sheets, and last the highest Elo rating (lib/ratings.ts,
+ * DESIGN §20). Records are the
  * `Standing` rows the standings and team pages print (`overall` is every final, `computed` the
  * league games the table counts), so a team's record here is its record everywhere. Clean sheets
  * and the per-game rates come from the same finals, with forfeits left out of goals as
@@ -34,12 +35,22 @@
  * the two regions is the finals between them, few so far, so every Elo note says how many (this season's
  * from the snapshot, last season's from data/prior-season.json, both counted at build time, never typed in).
  *
+ * The two Elo-adjusted boards (lib/adjusted-scoring.ts) weigh each game by the opponent's defense: its
+ * rating in the same one table, corrected by the goals it has allowed. A school's adjusted goals per game counts the games its Elo rating counts, past the Elo
+ * board's minimum. A player's adjusted points are their points times their team's schedule factor, so
+ * only a player whose team is past that minimum is ranked: a factor from two games is mostly noise.
+ *
  * Every board ranks with standard competition ranking (1, 2, 2, 4): equal values share a place
  * and tied rows are listed by name. A board shows the places up to 10th, and every player or school
  * tied for the last of them, however many; a player board goes on to 25th the same way, behind a
  * "Show N more" disclosure.
  */
 
+import {
+  computeAdjustedScoring,
+  getAdjustedScoring,
+  type AdjustedScoring,
+} from '../../lib/adjusted-scoring';
 import { getSnapshot } from '../../lib/data';
 import {
   gradeWord,
@@ -82,7 +93,7 @@ import type {
   PlayerStatLine,
   TeamPlayerStats,
 } from '../../lib/player-stats-schema';
-import type { ComputedRecord, Game, RegionId, Standing, Team, TeamSlug } from '../../lib/types';
+import type { ComputedRecord, Game, RegionId, Standing, Team, TeamId, TeamSlug } from '../../lib/types';
 import { gamesSinceUpdate, savePercent, statText } from '../teams/player-stats-view';
 import { plural } from '../ui/plural';
 import { positionWords } from '../ui/position-words';
@@ -272,6 +283,8 @@ export interface LeaderSources {
    * team page shows; left out, no row has either.
    */
   rosters?: readonly RosterSource[];
+  /** The goal model's Newton iterations (lib/adjusted-scoring.ts), 100 if left out: a test caps it to see the fallback. */
+  goalModelIterations?: number;
 }
 
 /** A team's roster rows, as far as a leaderboard reads them. */
@@ -401,6 +414,18 @@ interface PlayerEntry {
   team: Team;
   /** LeaderRow.facts: the grade and position on the player's roster row. */
   facts: string[];
+  /**
+   * The team's schedule factor (lib/adjusted-scoring.ts), or null when the team is under the Elo
+   * board's minimum: too few games for one.
+   */
+  factor: number | null;
+}
+
+/** A team with player stats, and its schedule factor as PlayerEntry has it. */
+interface StatTeam {
+  stats: TeamPlayerStats;
+  team: Team;
+  factor: number | null;
 }
 
 interface PlayerBoardSpec {
@@ -415,6 +440,11 @@ interface PlayerBoardSpec {
   rankedBy: number;
   /** Said under the board before the coverage sentence. */
   lead: string;
+  /**
+   * What the board ranks on, when it is not `stat` itself; null leaves the player off. A board with
+   * one ranks only players whose team has a schedule factor, and names the teams without one.
+   */
+  value?: (e: PlayerEntry) => number | null;
 }
 
 const statOf = (p: PlayerStatLine, ref: StatRef): number | null =>
@@ -426,6 +456,19 @@ const tracks = (t: TeamPlayerStats, ref: StatRef): boolean =>
     : t.tracked.goalkeeping.includes(ref.key);
 
 const num = (v: number | null): LeaderCell => ({ text: statText(v) });
+
+/** `v` to one decimal place: an adjusted number is ranked, and ties are shared, as printed. */
+const tenths = (v: number) => Math.round(v * 10) / 10;
+/** The schedule factor as the × column prints it (two places). */
+const printedFactor = (factor: number) => Math.round(factor * 100) / 100;
+/**
+ * A player's Elo-adjusted points: their points times the team's schedule factor AS PRINTED, so a reader
+ * multiplying the row's Pts by its × gets its Adj.
+ */
+const adjustedPoints = (e: PlayerEntry): number | null => {
+  const points = e.player.field?.points ?? null;
+  return points === null || e.factor === null ? null : tenths(points * printedFactor(e.factor));
+};
 const field = (key: FieldStatKey) => (e: PlayerEntry) => num(e.player.field?.[key] ?? null);
 const keeper = (key: GoalieStatKey) => (e: PlayerEntry) => num(e.player.goalkeeping?.[key] ?? null);
 
@@ -443,6 +486,36 @@ const PLAYER_BOARDS: PlayerBoardSpec[] = [
     ],
     rankedBy: 2,
     lead: 'Points are MaxPreps’: 2 per goal, 1 per assist.',
+  },
+  {
+    id: 'adjusted-points',
+    title: 'Most Elo-adjusted points',
+    statWord: 'points',
+    who: ['player', 'players'],
+    stat: { block: 'field', key: 'points' },
+    columns: [
+      { key: 'points', label: 'Pts', title: 'Points', cell: field('points') },
+      {
+        key: 'factor',
+        label: '×',
+        title: 'Schedule factor',
+        cell: (e) => ({ text: e.factor === null ? null : printedFactor(e.factor).toFixed(2) }),
+      },
+      {
+        key: 'adjustedPoints',
+        label: 'Adj',
+        title: 'Elo-adjusted points',
+        cell: (e) => {
+          const v = adjustedPoints(e);
+          return { text: v === null ? null : v.toFixed(1) };
+        },
+      },
+    ],
+    rankedBy: 2,
+    lead:
+      'Points times the team’s schedule factor (the × column): how much harder the defenses it met, and where, were than average, from their Elo ratings and the goals they have allowed; above 1 is a harder schedule. ' +
+      'Season totals have no game-by-game split, so a player’s points are weighed like the team’s goals, and the factor covers all its counted games even where its totals lag.',
+    value: adjustedPoints,
   },
   {
     id: 'most-assists',
@@ -510,15 +583,24 @@ function playerFacts(p: RosterSource['players'][number]): string[] {
 /** School names, registry order: prose spells them out (shortName is for a narrow cell). */
 const names = (teams: readonly Team[]) => teams.map((t) => t.name);
 
+/**
+ * Said on both adjusted boards when lib/adjusted-scoring.ts's goal model did not converge and so adjusted
+ * nothing (it has converged on every day replayed): a board titled "Elo-adjusted" must not then read as if
+ * it had been.
+ */
+const UNADJUSTED_NOTE =
+  ' The goal model did not settle on this build’s data, so no game is weighed here: every schedule factor is 1.00.';
+
 function playerBoard(
   spec: PlayerBoardSpec,
   entries: readonly PlayerEntry[],
-  withStats: readonly { stats: TeamPlayerStats; team: Team }[],
+  withStats: readonly StatTeam[],
   scope: BoardScope,
+  unadjusted = false,
 ): LeaderBoard {
   const tracking = withStats.filter((t) => tracks(t.stats, spec.stat));
   const notTracking = withStats.filter((t) => !tracks(t.stats, spec.stat));
-  const value = (e: PlayerEntry) => statOf(e.player, spec.stat) ?? 0;
+  const value = (e: PlayerEntry) => (spec.value ? spec.value(e) : statOf(e.player, spec.stat)) ?? 0;
   const sorted = entries
     .filter((e) => tracks(e.stats, spec.stat) && value(e) > 0)
     .sort(
@@ -554,11 +636,18 @@ function playerBoard(
           ? `Only ${plural(tracking.length, 'team enters', 'teams enter')} ${spec.statWord}: ${listWords(names(tracking.map((t) => t.team)))}.`
           : `Of the ${plural(withStats.length, 'team')} with player stats, ${listWords(names(notTracking.map((t) => t.team)))} ${notTracking.length === 1 ? 'does' : 'do'} not enter ${spec.statWord}.`;
 
+  // An adjusted board names the teams that enter the stat but have no schedule factor yet.
+  const unfactored = spec.value ? tracking.filter((t) => t.factor === null).map((t) => t.team) : [];
+  const unfactoredNote = unfactored.length
+    ? ` ${listWords(names(unfactored))} ${unfactored.length === 1 ? 'has' : 'have'} not played enough counted games for a schedule factor yet.`
+    : '';
+
   return {
     id: `${spec.id}${scope.suffix}`,
     kind: 'player',
     title: spec.title,
-    meta: `From ${plural(tracking.length, 'team')}`,
+    // An adjusted board ranks only the teams with a schedule factor, so it counts those.
+    meta: `From ${plural(tracking.length - unfactored.length, 'team')}`,
     caption,
     columns: spec.columns.map(({ key, label, title }) => ({ key, label, title })),
     rankedBy: spec.rankedBy,
@@ -570,11 +659,15 @@ function playerBoard(
           rows: extra,
         }
       : null,
-    note: `${spec.lead} ${coverage}`,
+    note: `${spec.lead} ${coverage}${unfactoredNote}${spec.value && unadjusted ? UNADJUSTED_NOTE : ''}`,
     empty:
       tracking.length === 0
         ? `No team enters ${spec.statWord} on MaxPreps yet.`
-        : `No ${spec.who[0]} has any ${spec.statWord} entered yet.`,
+        : unfactored.length === tracking.length
+          ? `No team that enters ${spec.statWord} has played enough counted games for a schedule factor yet.`
+          : unfactored.length > 0
+            ? `No ${spec.who[0]} on a team with a schedule factor has any ${spec.statWord} entered yet.`
+            : `No ${spec.who[0]} has any ${spec.statWord} entered yet.`,
   };
 }
 
@@ -807,6 +900,55 @@ export function buildEloBoard(
   };
 }
 
+// ---------------------------------------------------------------- Elo-adjusted goals
+
+/**
+ * The `#adjusted-goals` board: goals per game against an average team (lib/adjusted-scoring.ts), over the
+ * games the Elo board counts and past its minimum `min`, with the raw rate over the same games beside it.
+ * Ranked on the adjusted rate as printed (two places), then more games, as the raw goals board splits
+ * equal rates; a school that has not scored is never listed.
+ */
+function adjustedGoalsBoard(
+  teams: readonly Team[],
+  adjusted: ReadonlyMap<TeamId, AdjustedScoring>,
+  min: number,
+  scope: BoardScope,
+  unadjusted = false,
+): LeaderBoard {
+  const hundredths = (v: number) => Math.round(v * 100) / 100;
+  const lines = teams.flatMap((team) => {
+    const a = adjusted.get(team.id);
+    return a ? [{ team, a, rate: hundredths(a.perGame) }] : [];
+  });
+  type Line = (typeof lines)[number];
+  const sorted = lines
+    .filter((l) => l.a.games >= min && l.a.goals > 0)
+    .sort((x, y) => y.rate - x.rate || y.a.games - x.a.games || byName(x.team.name, y.team.name));
+  return schoolBoard<Line>(
+    'adjusted-goals',
+    'Most Elo-adjusted goals per game',
+    `At least ${plural(min, 'game')}`,
+    sorted,
+    (x, y) => x.rate === y.rate && x.a.games === y.a.games,
+    scope,
+    {
+      columns: [
+        { key: 'gp', label: 'GP', title: 'Games counted', cell: (l) => num(l.a.games) },
+        { key: 'perGame', label: 'Avg', title: 'Goals for per game', cell: (l) => ({ text: rateText(l.a.goals, l.a.games) }) },
+        { key: 'adjusted', label: 'Adj', title: 'Elo-adjusted goals for per game', cell: (l) => ({ text: l.rate.toFixed(2) }) },
+      ],
+      rankedBy: 2,
+      note:
+        'Goals per game against an average defense: each game is weighed by the opponent’s defense (its Elo rating, corrected by the goals it has allowed) and by who was at home, and one game against an average defense is added so a short record cannot run to an extreme. ' +
+        'Ratings are today’s, from every counted game, and a schedule of only very weak or very strong opponents is the least certain. Avg is the raw rate over the same games, the ones the Elo board counts. Equal rates are split by more games played.' +
+        (unadjusted ? UNADJUSTED_NOTE : ''),
+      empty: lines.some((l) => l.a.games >= min)
+        ? `None of the teams with at least ${plural(min, 'game')} has scored yet.`
+        : `No team has played ${plural(min, 'game')} yet.`,
+    },
+  );
+}
+
 /**
  * "Del Mar (1), Live Oak (2)": the teams that have played (`played`, the board's own count unless
  * given), but fewer than `min` of the games this board counts.
@@ -873,11 +1015,13 @@ interface RegionInput {
   games: readonly Game[];
   rosters: readonly RosterSource[];
   elo: EloBoardView;
+  /** lib/adjusted-scoring.ts over the same one Elo table, by team id. */
+  adjusted: ReadonlyMap<TeamId, AdjustedScoring>;
 }
 
 /** One region's boards and notes: the /leaders page as it was, over the region's teams only. */
 function buildRegion(input: RegionInput): RegionLeadersView {
-  const { region, teams, stats, standings, games, rosters, elo } = input;
+  const { region, teams, stats, standings, games, rosters, elo, adjusted } = input;
   const config = REGIONS.find((r) => r.id === region)!;
   const scope = boardScope(region);
   const teamBySlug = new Map(teams.map((t) => [t.slug, t]));
@@ -888,19 +1032,30 @@ function buildRegion(input: RegionInput): RegionLeadersView {
     ),
   );
 
+  // The schedule factor of a team past the Elo board's minimum (the games both count are the same).
+  const factorOf = (team: Team): number | null => {
+    const a = adjusted.get(team.id);
+    return a && a.games >= elo.minimum.min ? a.factor : null;
+  };
+
   // ---- players
-  const withStats = stats
+  const withStats: StatTeam[] = stats
     .filter((s) => s.players.length > 0 && teamBySlug.has(s.slug))
-    .map((s) => ({ stats: s, team: teamBySlug.get(s.slug)! }));
-  const entries: PlayerEntry[] = withStats.flatMap(({ stats: s, team }) =>
+    .map((s) => {
+      const team = teamBySlug.get(s.slug)!;
+      return { stats: s, team, factor: factorOf(team) };
+    });
+  const entries: PlayerEntry[] = withStats.flatMap(({ stats: s, team, factor }) =>
     s.players.map((player) => ({
       player,
       stats: s,
       team,
       facts: (player.athleteId === null ? undefined : factsByPlayer.get(`${s.slug}:${player.athleteId}`)) ?? [],
+      factor,
     })),
   );
-  const players = PLAYER_BOARDS.map((spec) => playerBoard(spec, entries, withStats, scope));
+  const unadjusted = [...adjusted.values()].some((a) => !a.adjusted);
+  const players = PLAYER_BOARDS.map((spec) => playerBoard(spec, entries, withStats, scope, unadjusted));
 
   const statSlugs = new Set(withStats.map((t) => t.team.slug));
   const noStats = teams.filter((t) => !statSlugs.has(t.slug));
@@ -994,6 +1149,7 @@ function buildRegion(input: RegionInput): RegionLeadersView {
           : `No team has played ${plural(overallMin.min, 'game')} yet.`,
       },
     ),
+    adjustedGoalsBoard(teams, adjusted, elo.minimum.min, scope, unadjusted),
     schoolBoard(
       'fewest-goals-allowed',
       'Fewest goals allowed per game',
@@ -1067,7 +1223,7 @@ function buildRegion(input: RegionInput): RegionLeadersView {
   }
   if (elo.minimum.median > 0) {
     schoolNotes.push(
-      `The Elo board needs at least ${plural(elo.minimum.min, 'game')} against the ${LEAGUE_COUNT} leagues’ teams${AND_INDEPENDENTS}, half the median of ${elo.minimum.median}${notYet(elo.below)}`,
+      `The Elo-adjusted goals board and the Elo board need at least ${plural(elo.minimum.min, 'game')} against the ${LEAGUE_COUNT} leagues’ teams${AND_INDEPENDENTS}, half the median of ${elo.minimum.median}${notYet(elo.below)}`,
     );
   }
 
@@ -1108,6 +1264,7 @@ export function buildLeadersView(sources?: LeaderSources): LeadersView {
   const prior = sources ? (sources.prior ?? null) : getPriorSeason();
   const table = sources ? computeRatings(teams, games, prior) : getRatings();
   const crossRegion = sources ? crossRegionFinals(teams, games, prior) : getCrossRegionFinals();
+  const adjusted = sources ? computeAdjustedScoring(teams, games, table, sources.goalModelIterations) : getAdjustedScoring();
   const regions = REGIONS.flatMap((config) => {
     const regionTeams = teams.filter((t) => regionOf(t.league) === config.id);
     if (regionTeams.length === 0) return [];
@@ -1118,7 +1275,7 @@ export function buildLeadersView(sources?: LeaderSources): LeadersView {
       ? buildEloBoard(regionTeams, table, { region: config.id, crossRegion: both ? crossRegion : null, fitTeams: teams.length })
       : getEloBoard(config.id);
     return [
-      buildRegion({ region: config.id, teams: regionTeams, stats, standings, games, rosters, elo }),
+      buildRegion({ region: config.id, teams: regionTeams, stats, standings, games, rosters, elo, adjusted }),
     ];
   });
   const finals = games.filter((g) => g.status === 'final').map((g) => g.dateKey).sort();

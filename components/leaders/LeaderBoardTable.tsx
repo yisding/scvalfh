@@ -48,6 +48,8 @@ const LAST_WIDTH: Readonly<Record<string, string>> = {
   pct: 'w-16',
   savePct: 'w-[4.5rem]',
   perGame: 'w-16',
+  adjusted: 'w-16', // "17.76"
+  adjustedPoints: 'w-16', // "228.5"
 };
 
 /**

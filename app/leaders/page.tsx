@@ -18,9 +18,9 @@ import { numberWord } from '../../lib/format';
 
 /**
  * `/leaders` (DESIGN §16) — "Who leads the whole site?" Leaderboards across all nine leagues and the five independents: the
- * schools with the best records, the most goals per game, the fewest allowed, the most clean
- * sheets and the highest Elo rating (lib/ratings.ts, DESIGN §20), and the players with the most
- * points, assists, saves and clean sheets.
+ * schools with the best records, the most goals per game (raw and Elo-adjusted), the fewest allowed,
+ * the most clean sheets and the highest Elo rating (lib/ratings.ts, DESIGN §20), and the players with
+ * the most points (raw and Elo-adjusted: lib/adjusted-scoring.ts), assists, saves and clean sheets.
  *
  * One static page, built by components/leaders/leaders-view.ts from the two files every other page
  * reads (data/player-stats.json and data/snapshot.json), so a player's line is the one on their
@@ -46,7 +46,7 @@ const PAGE_TITLE = 'Season leaders';
 
 export const metadata: Metadata = {
   title: PAGE_TITLE,
-  description: `Girls varsity field hockey leaders across ${SHORT_NAMES}, unofficial: the schools with the best records and highest Elo ratings, and the players with the most points, assists, saves and clean sheets.`,
+  description: `Girls varsity field hockey leaders across ${SHORT_NAMES}, unofficial: the schools with the best records, the most goals per game (raw and Elo-adjusted) and the highest Elo ratings, and the players with the most points (raw and Elo-adjusted), assists, saves and clean sheets.`,
   alternates: { canonical: '/leaders' },
   openGraph: { ...OG_BASE, ...ROOT_OG_IMAGE, title: PAGE_TITLE, url: '/leaders' },
 };
@@ -73,7 +73,8 @@ export default function LeadersPage() {
           <>
             The top schools and players across {SHORT_NAMES}, ranked within each region. School
             records and Elo ratings are computed from the scores on this site; player numbers are
-            what each coach enters on MaxPreps. {view.crossRegion.sentence}
+            what each coach enters on MaxPreps, which the Elo-adjusted points weigh by the team’s
+            schedule. {view.crossRegion.sentence}
           </>
         }
         aside={<DivisionTabs variant="inline" tabs={tabs} label="Jump to a leaderboard" />}

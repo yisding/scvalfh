@@ -40,6 +40,7 @@ import { positionWords } from '../../components/ui/position-words';
 import { getGames, getStandingFor, getTeams } from '../../lib/data';
 import { gradeWord, recordString } from '../../lib/format';
 import { regionOf } from '../../lib/leagues';
+import { computeAdjustedScoring, getAdjustedScoring } from '../../lib/adjusted-scoring';
 import { getAllPlayerStatsWithNotes } from '../../lib/player-stats';
 import { getPriorSeason } from '../../lib/prior-season';
 import { getEnrichedTeamRoster } from '../../lib/rosters';
@@ -59,8 +60,16 @@ import type { Game } from '../../lib/types';
 import { game } from '../helpers';
 import { textOf } from './html-text';
 
-const PLAYER_IDS = ['most-points', 'most-assists', 'most-saves', 'most-clean-sheets'];
-const SCHOOL_IDS = ['best-record', 'best-league-record', 'most-goals', 'fewest-goals-allowed', 'school-clean-sheets', 'elo-rating'];
+const PLAYER_IDS = ['most-points', 'adjusted-points', 'most-assists', 'most-saves', 'most-clean-sheets'];
+const SCHOOL_IDS = [
+  'best-record',
+  'best-league-record',
+  'most-goals',
+  'adjusted-goals',
+  'fewest-goals-allowed',
+  'school-clean-sheets',
+  'elo-rating',
+];
 
 /** A view's NorCal half: the synthetic seasons below are NorCal teams' (SoCal's boards are empty there). */
 const nc = (v: LeadersView): RegionLeadersView => v.regions.find((r) => r.region === 'norcal')!;
@@ -105,7 +114,7 @@ describe('buildLeadersView — rules, over the committed data', () => {
   const unsuffixed = (id: string) => id.replace(/-socal$/, '');
   const teamsOf = (region: string) => getTeams().filter((t) => regionOf(t.league) === region);
 
-  it('builds one half per region, NorCal first, each with four player boards and six school boards, the Elo board last', () => {
+  it('builds one half per region, NorCal first, each with five player boards and seven school boards, the Elo board last', () => {
     expect(view.regions.map((r) => [r.region, r.shortName, r.idSuffix, r.schoolsId, r.playersId, r.leagueCount])).toEqual([
       ['norcal', 'NorCal', '', 'schools', 'players', 5],
       ['socal', 'SoCal', '-socal', 'schools-socal', 'players-socal', 4],
@@ -153,7 +162,8 @@ describe('buildLeadersView — rules, over the committed data', () => {
     };
     for (const r of view.regions) {
       const regionSlugs = new Set(teamsOf(r.region).map((t) => t.slug));
-      for (const board of r.players) {
+      // The adjusted board ranks on points times a factor: its own test below.
+      for (const board of r.players.filter((b) => unsuffixed(b.id) !== 'adjusted-points')) {
         const { block, key } = stat[unsuffixed(board.id)];
         const tracking = stats.filter(
           (t) => regionSlugs.has(t.slug) && t.players.length > 0 && (t.tracked[block] as string[]).includes(key),
@@ -169,6 +179,52 @@ describe('buildLeadersView — rules, over the committed data', () => {
           expect(row.cells[board.rankedBy].text, `${board.id}: ${row.name}`).toBe(statText(value));
           expect(row.team.href, row.name).toBe(`/teams/${row.team.slug}#player-stats`);
         });
+      }
+    }
+  });
+
+  it("prints each player's Elo-adjusted points as their points times their team's schedule factor, only past the Elo minimum", () => {
+    const adjusted = getAdjustedScoring();
+    for (const r of view.regions) {
+      const board = r.players.find((b) => unsuffixed(b.id) === 'adjusted-points')!;
+      const min = Number(/At least (\d+)/.exec(r.schools.find((b) => unsuffixed(b.id) === 'elo-rating')!.meta)![1]);
+      expect(board.columns.map((c) => c.label)).toEqual(['Pts', '×', 'Adj']);
+      const rows = [...board.rows, ...(board.extra?.rows ?? [])];
+      expect(rows.length, r.region).toBeGreaterThan(0);
+      for (const row of rows) {
+        const team = stats.find((t) => t.slug === row.team.slug)!;
+        const player = team.players.find((p) => p.fullName === row.name)!;
+        const a = adjusted.get(team.teamId)!;
+        expect(a.games, row.team.slug).toBeGreaterThanOrEqual(min);
+        const points = player.field!.points!;
+        expect(row.cells.map((c) => c.text), row.name).toEqual([
+          statText(points),
+          a.factor.toFixed(2),
+          // Adj is Pts times the × as printed, so the row's own arithmetic checks out.
+          (Math.round(points * Number(a.factor.toFixed(2)) * 10) / 10).toFixed(1),
+        ]);
+        expect(Number(row.cells[2].text), row.name).toBeGreaterThan(0);
+      }
+    }
+  });
+
+  it("prints each school's Elo-adjusted goals per game over the games its Elo rating counts, past that board's minimum", () => {
+    const adjusted = getAdjustedScoring();
+    for (const r of view.regions) {
+      const board = r.schools.find((b) => unsuffixed(b.id) === 'adjusted-goals')!;
+      const elo = r.schools.find((b) => unsuffixed(b.id) === 'elo-rating')!;
+      expect(board.meta).toBe(elo.meta);
+      const min = Number(/At least (\d+)/.exec(board.meta)![1]);
+      expect(board.columns.map((c) => c.label)).toEqual(['GP', 'Avg', 'Adj']);
+      expect(board.rows.length, r.region).toBeGreaterThan(0);
+      for (const row of board.rows) {
+        const a = adjusted.get(getTeamBySlug(row.team.slug)!.id)!;
+        expect(a.games, row.team.slug).toBeGreaterThanOrEqual(min);
+        expect(row.cells.map((c) => c.text), row.team.slug).toEqual([
+          String(a.games),
+          (a.goals / a.games).toFixed(2),
+          (Math.round(a.perGame * 100) / 100).toFixed(2),
+        ]);
       }
     }
   });
@@ -245,7 +301,7 @@ describe('buildLeadersView — rules, over the committed data', () => {
       // Every rated team of the region under the minimum is named in the region's notes, with its games.
       const slugs = new Set(teamsOf(r.region).map((t) => t.slug));
       const below = getRatings().ratings.filter((x) => slugs.has(x.slug) && x.games > 0 && x.games < min);
-      const note = r.schoolNotes.find((n) => n.startsWith('The Elo board needs'));
+      const note = r.schoolNotes.find((n) => n.startsWith('The Elo-adjusted goals board and the Elo board need'));
       for (const x of below) expect(note, x.slug).toContain(`${getTeamBySlug(x.slug)!.name} (${x.games})`);
       // The bundled board each team page reads its place from is this one.
       expect(getEloBoard(r.region).board).toEqual(board);
@@ -435,8 +491,8 @@ describe('buildLeadersView — schools, over synthetic games', () => {
     expect(elo.meta).toBe('At least 3 games');
     expect(elo.rows.map((r) => r.team.slug)).toEqual(['mitty', 'stevenson', 'tamalpais', 'leigh']);
     expect(elo.rows.map((r) => r.cells[0].text)).toEqual(['6', '6', '6', '7']);
-    expect(nc(view).schoolNotes.find((n) => n.startsWith('The Elo board needs'))).toBe(
-      'The Elo board needs at least 3 games against the nine leagues’ teams and the Southern Section’s five independents, half the median of 6; not there yet: Del Mar (1).',
+    expect(nc(view).schoolNotes.find((n) => n.startsWith('The Elo-adjusted goals board and the Elo board need'))).toBe(
+      'The Elo-adjusted goals board and the Elo board need at least 3 games against the nine leagues’ teams and the Southern Section’s five independents, half the median of 6; not there yet: Del Mar (1).',
     );
     expect(elo.note).toContain('1500 is an average team');
     // No prior season in these sources: every team starts at average, and the note says nothing of one.
@@ -496,6 +552,21 @@ describe('buildLeadersView — schools, over synthetic games', () => {
     expect(stevenson.cells.map((c) => c.text)).toEqual(['6', '18', '3.00']);
   });
 
+  it('ranks Elo-adjusted goals over the Elo board’s games, without the forfeit or the one-game school', () => {
+    const adjusted = board('adjusted-goals');
+    expect(adjusted.meta).toBe(board('elo-rating').meta);
+    expect(adjusted.rows.map((r) => r.team.slug)).not.toContain('del-mar');
+    // Stevenson outscores Tamalpais over 6 games each, against schedules that differ only in each other,
+    // so it stays ahead once the schedules are weighed.
+    const at = (slug: string) => adjusted.rows.find((r) => r.team.slug === slug)!;
+    expect(at('stevenson').cells.map((c) => c.text).slice(0, 2)).toEqual(['6', '3.00']);
+    expect(Number(at('stevenson').cells[2].text)).toBeGreaterThan(Number(at('tamalpais').cells[2].text));
+    // Leigh's Del Mar game counts: 7 games, as on the Elo board.
+    expect(at('leigh').cells[0].text).toBe('7');
+    expect(adjusted.note).toContain('Goals per game against an average defense');
+    expect(adjusted.note).toContain('one game against an average defense is added');
+  });
+
   it('shares a place between equal rates and lists them by name', () => {
     // Every team concedes 2 a game when every score is 2-2.
     const even = roundRobin(four, () => [2, 2]);
@@ -508,6 +579,14 @@ describe('buildLeadersView — schools, over synthetic games', () => {
       [1, true],
     ]);
     expect(allowed.rows.map((r) => r.name)).toEqual([...allowed.rows.map((r) => r.name)].sort((a, b) => a.localeCompare(b)));
+    // Every rating is 1500, so Elo-adjusted goals are the raw ones, and shared the same way.
+    const adjusted = nc(v).schools.find((b) => b.id === 'adjusted-goals')!;
+    expect(adjusted.rows.map((r) => [r.rank, r.tied, r.cells[2].text])).toEqual([
+      [1, true, '2.00'],
+      [1, true, '2.00'],
+      [1, true, '2.00'],
+      [1, true, '2.00'],
+    ]);
     // A season of draws keeps no clean sheet at all: the board says so instead of an empty table.
     const cs = nc(v).schools.find((b) => b.id === 'school-clean-sheets')!;
     expect(cs.rows).toEqual([]);
@@ -559,6 +638,69 @@ describe('buildLeadersView — players, over synthetic stats', () => {
     expect(points.note).toContain('Every team with player stats enters points.');
     // Leigh does not track assists: a dash, never a 0.
     expect(points.rows[0].cells[1]).toEqual({ text: null });
+  });
+
+  it('ranks Elo-adjusted points on points times the team’s schedule factor, and names a team without one', () => {
+    // One game, Mitty 2-1 over Leigh: the minimum is 1 game, so both have a factor; Saint Francis has
+    // played none.
+    const adjusted = board('adjusted-points');
+    const scoring = computeAdjustedScoring(TEAMS, games, computeRatings(TEAMS, games));
+    const factor = (slug: string) => scoring.get(getTeamBySlug(slug)!.id)!.factor;
+    // Mitty beat Leigh at home: Leigh's trip to the better defense is the harder game.
+    expect(factor('leigh')).toBeGreaterThan(factor('mitty'));
+    const expected = [
+      ['Dee Dunn', 14, factor('leigh')],
+      ['Ana Ames', 12, factor('mitty')],
+      ['Bea Bell', 12, factor('mitty')],
+    ] as const;
+    expect(adjusted.rows.map((r) => [r.name, ...r.cells.map((c) => c.text)])).toEqual(
+      expected.map(([name, pts, f]) => [name, String(pts), f.toFixed(2), (Math.round(pts * Number(f.toFixed(2)) * 10) / 10).toFixed(1)]),
+    );
+    // Mitty's two share a place, as printed; the 0-point player never shows.
+    expect(adjusted.rows.map((r) => [r.rank, r.tied])).toEqual([
+      [1, false],
+      [2, true],
+      [2, true],
+    ]);
+    // Saint Francis enters points but has no factor: it is named, and not counted in the meta.
+    expect(adjusted.meta).toBe('From 2 teams');
+    expect(adjusted.note).toContain('Saint Francis has not played enough counted games for a schedule factor yet.');
+  });
+
+  it('leaves off a team that has played but is under the Elo minimum, and says why a board with no factor is empty', () => {
+    // Mitty plays four times, Leigh three, Saint Francis once: the median is 3, the minimum 2.
+    const more = [
+      game({ home: 'mitty', away: 'leigh', hs: 2, as: 1, league: false, date: '2026-09-20' }),
+      game({ home: 'leigh', away: 'mitty', hs: 1, as: 1, league: false, date: '2026-09-22' }),
+      game({ home: 'mitty', away: 'saint-francis', hs: 0, as: 3, league: false, date: '2026-09-24' }),
+    ];
+    const v = buildLeadersView(sources([...games, ...more], stats));
+    const adjusted = nc(v).players.find((b) => b.id === 'adjusted-points')!;
+    expect(nc(v).schools.find((b) => b.id === 'elo-rating')!.meta).toBe('At least 2 games');
+    expect(adjusted.rows.map((r) => r.name)).not.toContain('Eve Eck');
+    expect(adjusted.rows.map((r) => r.name)).toContain('Dee Dunn');
+    expect(adjusted.note).toContain('Saint Francis has not played enough counted games for a schedule factor yet.');
+    // Stats but no counted game anywhere: nobody has a factor, and the board says so.
+    const none = nc(buildLeadersView(sources([], stats))).players.find((b) => b.id === 'adjusted-points')!;
+    expect(none.rows).toEqual([]);
+    expect(none.meta).toBe('From 0 teams');
+    expect(none.empty).toBe('No team that enters points has played enough counted games for a schedule factor yet.');
+  });
+
+  it('says on both adjusted boards when the goal model adjusted nothing', () => {
+    const settled = nc(buildLeadersView(sources(games, stats)));
+    const unsettled = nc(buildLeadersView({ ...sources(games, stats), goalModelIterations: 0 }));
+    for (const v of [settled, unsettled]) {
+      const notes = [
+        v.players.find((b) => b.id === 'adjusted-points')!.note,
+        v.schools.find((b) => b.id === 'adjusted-goals')!.note,
+      ];
+      for (const note of notes) expect(note.includes('did not settle'), note).toBe(v === unsettled);
+    }
+    // Unadjusted, every factor prints as 1.00, and no other board's note changes.
+    const points = unsettled.players.find((b) => b.id === 'adjusted-points')!;
+    expect(points.rows.every((r) => r.cells[1].text === '1.00')).toBe(true);
+    expect(unsettled.players.find((b) => b.id === 'most-points')!.note).toBe(settled.players.find((b) => b.id === 'most-points')!.note);
   });
 
   it('leaves a team that does not enter a stat off its board, and says so', () => {
@@ -636,6 +778,42 @@ describe('buildLeadersView — players, over synthetic stats', () => {
     }
     expect(nc(v).schoolNotes).toEqual([]);
     expect(nc(v).resultsThrough).toBeNull();
+  });
+});
+
+describe('buildLeadersView — the adjusted boards rank on the adjusted value, not the raw one', () => {
+  // Leigh is the stingy defense and Tamalpais the leaky one. Stevenson scores the most, 4 a game on
+  // Tamalpais; Tamalpais scores least, but against Leigh's defense and Stevenson's.
+  const games: Game[] = [];
+  let day = 1;
+  const add = (home: string, away: string, hs: number, as: number) =>
+    games.push(game({ home, away, hs, as, league: false, date: `2026-09-${String(day++).padStart(2, '0')}` }));
+  for (let i = 0; i < 3; i++) {
+    add('mitty', 'leigh', 1, 0);
+    add('stevenson', 'tamalpais', 4, 2);
+    add('leigh', 'tamalpais', 3, 0);
+    add('mitty', 'stevenson', 1, 1);
+  }
+  const stats = [
+    teamStats('stevenson', { field: ['points'], players: [{ name: 'Sal Sims', field: { points: 20 } }] }),
+    teamStats('tamalpais', { field: ['points'], players: [{ name: 'Tia Toms', field: { points: 10 } }] }),
+  ];
+  const view = nc(buildLeadersView(sources(games, stats)));
+  const school = (id: string) => view.schools.find((b) => b.id === id)!;
+  const player = (id: string) => view.players.find((b) => b.id === id)!;
+
+  it('orders the adjusted goals board unlike the raw one', () => {
+    expect(school('most-goals').rows.map((r) => r.team.slug)[0]).toBe('stevenson');
+    // Tamalpais is last on raw goals (tied with Mitty) and first adjusted.
+    expect(school('adjusted-goals').rows.map((r) => r.team.slug)).toEqual(['tamalpais', 'stevenson', 'leigh', 'mitty']);
+  });
+
+  it('orders the adjusted points board unlike the raw one', () => {
+    expect(player('most-points').rows.map((r) => r.name)).toEqual(['Sal Sims', 'Tia Toms']);
+    expect(player('adjusted-points').rows.map((r) => r.name)).toEqual(['Tia Toms', 'Sal Sims']);
+    const [tia, sal] = player('adjusted-points').rows;
+    expect(Number(tia.cells[1].text)).toBeGreaterThan(1);
+    expect(Number(sal.cells[1].text)).toBeLessThan(1);
   });
 });
 
