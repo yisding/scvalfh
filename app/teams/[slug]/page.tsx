@@ -22,7 +22,7 @@ import { teamJvStanding } from '../../../components/standings/jv-standings-view'
 import { buildTeamJvView } from '../../../components/teams/jv-view';
 import { buildRosterView, type RosterView } from '../../../components/teams/roster-view';
 import { buildTeamPageView, type TeamPageView } from '../../../components/teams/team-view';
-import { regionIdSuffix } from '../../../components/leaders/leaders-view';
+import { regionIdSuffix } from '../../../components/leaders/scope';
 import Arrow from '../../../components/ui/Arrow';
 import EmptyState from '../../../components/ui/EmptyState';
 import ExternalLink from '../../../components/ui/ExternalLink';

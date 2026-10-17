@@ -4429,3 +4429,40 @@ component. Like the Elo rating (§19.2, §20), both are estimates from a documen
   79,350 bytes of HTML gzip, over the 2.3 × `standings` line (76,194). By §24.6's rule (measured
   × 1.12 / baseline, rounded up to one decimal) the line moved to 2.7 × (89,446): 89%. First-load
   JS is unchanged.
+
+## 28. Leaders reading amendment (2026-10)
+
+A review of `/leaders` found it hard to read rather than wrong: on a phone the 12-line intro came
+before any data, a region's twelve boards ran about 14,000px with only "Schools" and "Players" to
+jump to, and the Elo, adjusted-goals and adjusted-points notes ran to eight to twelve lines each
+under their tables. This section wins where §16, §23 and §27 disagree. Everything else stands: the
+boards, their order, ids, ranking and minimums, the per-region halves (§24), and no client
+component (every change below is zero-JavaScript HTML).
+
+- **A shorter intro.** Two sentences: what is ranked and where the numbers come from. The
+  cross-region sentence ("comparisons between NorCal and SoCal rest on N games …") is the Elo
+  board's to say and was said twice; it now lives only there.
+- **A board index per section.** Under each section heading, one canvas pill per board, in board
+  order, linking to its anchor ("Record", "League record", "Goals", "Adjusted goals", "Goals
+  allowed", "Clean sheets", "Elo rating"; "Points", "Adjusted points", "Assists", "Saves", "Keeper
+  clean sheets"). The labels are `LeaderBoard.navLabel`, unique within a section. Screen-only
+  (`sx-print-hide`), a `<nav>` named for its section.
+- **Note, then method.** A board's `note` is what it counts and what it leaves out, always shown.
+  A board that derives a number (the Elo rating, Elo-adjusted goals, Elo-adjusted points) also
+  carries a `method`, behind a closed "How it’s worked out" disclosure under the note: how the
+  fit works, how the ratings start, the shrinkage, and the cross-region caveat. Whatever a reader
+  needs to read a row (the Elo scale, what × is, the coverage sentence, the unsettled-model
+  warning) stays in the note.
+- **The section notes are the grid's last cell.** "Who qualifies" (schools) and "Whose stats are
+  here" (players), each an h3 like a board's, sit after the last board in the same grid, so from
+  1024px they fill the cell beside the odd board out instead of starting below a hole. The teams
+  with no stats are still named in `#players`, as `assert-copy` checks.
+- **The lag list is closed.** Whose totals lag the scores ran to twenty teams in one sentence by
+  midseason. It is now a closed disclosure, "19 teams’ totals lag the scores", over a list ("Archie
+  Williams: 5 games since Mon Sep 28"), most games behind first. The teams with no stats and the
+  carried-forward note stay open.
+- **Code.** `components/leaders/leaders-view.ts` only assembles a region now. The boards live in
+  `school-boards.ts`, `player-boards.ts` and `elo-board.ts` (which the team pages read their place
+  from), the shared ranking in `ranking.ts`, the region words and id suffix in `scope.ts`, the view
+  types in `types.ts`, and a section's markup in `LeaderSection.tsx`. A column key is the closed
+  union `LeaderColumnKey`, so `LeaderBoardTable`'s width maps cannot miss a renamed column.

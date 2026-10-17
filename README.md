@@ -431,7 +431,7 @@ renders it in a Player stats section (`components/teams/TeamPlayerStats.tsx`, bu
 `components/teams/player-stats-view.ts`), which says when MaxPreps last updated and how many games
 the team has played since. See `docs/DATA-SOURCES.md` §1.1k.
 
-The same file feeds the player boards on `/leaders` (`components/leaders/leaders-view.ts`): most
+The same file feeds the player boards on `/leaders` (`components/leaders/player-boards.ts`): most
 points, Elo-adjusted points (see "Elo-adjusted goals and points"), assists, saves and clean sheets
 (MaxPreps' goalkeeper "shutouts"), one set of boards per region.
 A player can only appear where the coach tracks that stat, so each board says how many teams it

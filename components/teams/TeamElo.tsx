@@ -1,7 +1,8 @@
 import Link from 'next/link';
 
 import { placeWords } from '../../lib/format';
-import { AND_INDEPENDENTS, ELO_SCALE, LEAGUE_COUNT } from '../leaders/leaders-view';
+import { ELO_SCALE } from '../leaders/elo-board';
+import { AND_INDEPENDENTS, LEAGUE_COUNT } from '../leaders/scope';
 import { plural } from '../ui/plural';
 import type { TeamEloView } from './team-view';
 

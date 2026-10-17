@@ -20,21 +20,10 @@ import { describe, expect, it } from 'vitest';
 
 import LeadersPage from '../../app/leaders/page';
 import LeaderBoardTable from '../../components/leaders/LeaderBoardTable';
-import {
-  BOARD_PLACES,
-  EXPANDED_PLACES,
-  buildEloBoard,
-  buildLeadersView,
-  crossRegionFinals,
-  getEloBoard,
-  getEloBoardForTeam,
-  qualifyingMinimum,
-  rankBoard,
-  type LeaderBoard,
-  type LeaderSources,
-  type LeadersView,
-  type RegionLeadersView,
-} from '../../components/leaders/leaders-view';
+import { buildEloBoard, crossRegionFinals, getEloBoard, getEloBoardForTeam } from '../../components/leaders/elo-board';
+import { buildLeadersView } from '../../components/leaders/leaders-view';
+import { BOARD_PLACES, EXPANDED_PLACES, qualifyingMinimum, rankBoard } from '../../components/leaders/ranking';
+import type { LeaderBoard, LeaderSources, LeadersView, RegionLeadersView } from '../../components/leaders/types';
 import { statText } from '../../components/teams/player-stats-view';
 import { positionWords } from '../../components/ui/position-words';
 import { getGames, getStandingFor, getTeams } from '../../lib/data';
@@ -75,6 +64,9 @@ const SCHOOL_IDS = [
 const nc = (v: LeadersView): RegionLeadersView => v.regions.find((r) => r.region === 'norcal')!;
 /** A view's SoCal half. */
 const sc = (v: LeadersView): RegionLeadersView => v.regions.find((r) => r.region === 'socal')!;
+
+/** Everything a board says under its table: the note, and the method behind "How it’s worked out". */
+const said = (board: LeaderBoard) => `${board.note} ${board.method ?? ''}`;
 
 /** The board's ranked cell, as printed. */
 const ranked = (board: LeaderBoard, i: number) => board.rows[i].cells[board.rankedBy].text;
@@ -305,7 +297,7 @@ describe('buildLeadersView — rules, over the committed data', () => {
       for (const x of below) expect(note, x.slug).toContain(`${getTeamBySlug(x.slug)!.name} (${x.games})`);
       // The bundled board each team page reads its place from is this one.
       expect(getEloBoard(r.region).board).toEqual(board);
-      expect(board.note, r.region).toContain(view.crossRegion.sentence);
+      expect(said(board), r.region).toContain(view.crossRegion.sentence);
     }
   });
 
@@ -495,8 +487,8 @@ describe('buildLeadersView — schools, over synthetic games', () => {
       'The Elo-adjusted goals board and the Elo board need at least 3 games against the nine leagues’ teams and the Southern Section’s five independents, half the median of 6; not there yet: Del Mar (1).',
     );
     expect(elo.note).toContain('1500 is an average team');
-    // No prior season in these sources: every team starts at average, and the note says nothing of one.
-    expect(elo.note).not.toContain('started the season');
+    // No prior season in these sources: every team starts at average, and the board says nothing of one.
+    expect(said(elo)).not.toContain('started the season');
   });
 
   it('says a team with no game last season started from average, only when one did', () => {
@@ -519,15 +511,15 @@ describe('buildLeadersView — schools, over synthetic games', () => {
         },
       ],
     };
-    const note = nc(buildLeadersView({ ...sources(base), prior })).schools.find((b) => b.id === 'elo-rating')!.note;
+    const note = said(nc(buildLeadersView({ ...sources(base), prior })).schools.find((b) => b.id === 'elo-rating')!);
     expect(note).toContain('rating (worked out the same way from last season’s 1 game), or from average if it had no counted 2025-26 game;');
     // The committed season seeds every rated team, so its note makes no such claim.
-    expect(nc(buildLeadersView()).schools.find((b) => b.id === 'elo-rating')!.note).not.toContain('or from average');
+    expect(said(nc(buildLeadersView()).schools.find((b) => b.id === 'elo-rating')!)).not.toContain('or from average');
   });
 
   it('starts the committed board from last season, and says so', () => {
     const board = nc(buildLeadersView()).schools.find((b) => b.id === 'elo-rating')!;
-    expect(board.note).toContain(`started the season from its ${getPriorSeason().season} rating`);
+    expect(said(board)).toContain(`started the season from its ${getPriorSeason().season} rating`);
   });
 
   it('shares an Elo place between equal ratings', () => {
@@ -564,7 +556,7 @@ describe('buildLeadersView — schools, over synthetic games', () => {
     // Leigh's Del Mar game counts: 7 games, as on the Elo board.
     expect(at('leigh').cells[0].text).toBe('7');
     expect(adjusted.note).toContain('Goals per game against an average defense');
-    expect(adjusted.note).toContain('one game against an average defense is added');
+    expect(adjusted.method).toContain('One game against an average defense is added');
   });
 
   it('shares a place between equal rates and lists them by name', () => {
@@ -727,9 +719,10 @@ describe('buildLeadersView — players, over synthetic stats', () => {
     expect(nc(view).playerNotes[0]).toContain('3 of the 49 teams have entered some.');
     expect(nc(view).playerNotes[0]).toContain('Los Gatos');
     expect(nc(view).playerNotes[0]).not.toContain('Saint Francis');
-    expect(nc(view).playerNotes[1]).toBe(
-      'Totals lag the scores where a coach has not entered the latest games: Archbishop Mitty (1 game since Sat Sep 19).',
-    );
+    expect(nc(view).lagging).toEqual({
+      summary: '1 team’s totals lag the scores',
+      items: ['Archbishop Mitty: 1 game since Sat Sep 19'],
+    });
   });
 
   it("prints a player's grade and position as the roster has them, and only the ones it has", () => {
@@ -1091,6 +1084,48 @@ describe('LeaderBoardTable and the /leaders page', () => {
     }
   });
 
+  it('opens each section with an index of its boards and closes it with its notes', () => {
+    // DESIGN §28: a pill per board, in board order, before the first table; the notes after the last.
+    const html = renderToStaticMarkup(LeadersPage());
+    const view = buildLeadersView();
+    for (const r of view.regions) {
+      for (const [id, boards, notesTitle] of [
+        [r.schoolsId, r.schools, 'Who qualifies'],
+        [r.playersId, r.players, 'Whose stats are here'],
+      ] as const) {
+        const start = html.indexOf(`<section id="${id}"`);
+        const navEnd = html.indexOf('</nav>', start);
+        const nav = html.slice(html.indexOf('<nav', start), navEnd);
+        expect([...nav.matchAll(/href="#([^"]+)"/g)].map((m) => m[1]), id).toEqual(boards.map((b) => b.id));
+        for (const b of boards) expect(nav, b.id).toContain(`>${b.navLabel}</a>`);
+        expect(new Set(boards.map((b) => b.navLabel)).size, id).toBe(boards.length);
+        expect(navEnd, id).toBeLessThan(html.indexOf('<table', start));
+        expect(html.indexOf(`>${notesTitle}<`, start), id).toBeGreaterThan(html.indexOf(`<section id="${boards[boards.length - 1].id}"`));
+      }
+    }
+    // The lag list waits behind a closed disclosure that counts it; the boards' methods likewise.
+    expect(html).not.toContain('<details open');
+    for (const r of view.regions) {
+      if (r.lagging) expect(html).toContain(`<summary>${r.lagging.summary}</summary>`);
+    }
+  });
+
+  it('keeps the long method behind "How it’s worked out", only on the boards that derive a number', () => {
+    const view = buildLeadersView();
+    for (const r of view.regions) {
+      const withMethod = [...r.schools, ...r.players].filter((b) => b.method !== null).map((b) => b.id);
+      expect(withMethod.sort(), r.region).toEqual(
+        ['adjusted-goals', 'adjusted-points', 'elo-rating'].map((id) => `${id}${r.idSuffix}`).sort(),
+      );
+      const elo = r.schools.find((b) => b.id === `elo-rating${r.idSuffix}`)!;
+      const html = renderToStaticMarkup(createElement(LeaderBoardTable, { board: elo }));
+      expect(html).toContain(`<summary>How it’s worked out</summary><p class="m-0 mt-1 text-ink-3">${elo.method!.replace(/&/g, '&amp;')}</p>`);
+      // The note says what the number means; the method how it is fitted.
+      expect(elo.note).toContain('1500 is an average team');
+      expect(elo.method).toContain('best explain each game’s goal margin');
+    }
+  });
+
   it('counts the leagues from config: nine and the independents on one Elo scale, five NorCal and four SoCal (and five independents) on the boards', () => {
     const text = textOf(renderToStaticMarkup(LeadersPage()));
     expect(text, 'components/leaders/leaders-view.ts captions').toMatch(/players in all five NorCal leagues, this season/);
@@ -1157,7 +1192,7 @@ describe('buildLeadersView — each region its own boards, one Elo scale', () =>
         expect(row.cells[1].text, row.team.slug).toBe(String(bySlug.get(row.team.slug)!.elo));
         expect(regionOf(getTeamBySlug(row.team.slug)!.league)).toBe(r.region);
       }
-      expect(board.note).toContain(
+      expect(said(board)).toContain(
         'The ratings are on one scale across all nine leagues and the Southern Section’s five independents; comparisons between NorCal and SoCal rest on 1 game between the regions this season and 0 last season, so treat them as rough.',
       );
       expect(board.note).toContain('Every completed game between two of the 102 teams, league or not, rated together');
@@ -1187,10 +1222,10 @@ describe('buildLeadersView — each region its own boards, one Elo scale', () =>
     const nor = TEAMS.filter((t) => regionOf(t.league) === 'norcal');
     const v = buildLeadersView({ ...sources(norcal), teams: nor, stats: [] });
     expect(v.regions.map((r) => r.region)).toEqual(['norcal']);
-    expect(nc(v).schools.find((b) => b.id === 'elo-rating')!.note).not.toContain('NorCal and SoCal');
+    expect(said(nc(v).schools.find((b) => b.id === 'elo-rating')!)).not.toContain('NorCal and SoCal');
     const elo = buildEloBoard(nor, computeRatings(nor, norcal, null));
     expect(elo.board.id).toBe('elo-rating');
-    expect(elo.board.note).not.toContain('NorCal and SoCal');
+    expect(said(elo.board)).not.toContain('NorCal and SoCal');
   });
 
   it('gives a team page its own region’s bundled board', () => {
