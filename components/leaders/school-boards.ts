@@ -3,7 +3,9 @@
  * raw and Elo-adjusted, goals allowed per game, clean sheets, and last the highest Elo rating (elo-board.ts,
  * DESIGN §23), plus the notes under them. Records are the `Standing` rows the standings and team pages
  * print (`overall` is every final, `computed` the league games the table counts), so a team's record here
- * is its record everywhere. Clean sheets and the per-game rates come from the same finals, with forfeits
+ * is its record everywhere. The independents' table is their league (DESIGN §29): their games against
+ * each other are their league record, so they rank on the league-record board like any league's teams.
+ * Clean sheets and the per-game rates come from the same finals, with forfeits
  * left out of goals as lib/standings.ts leaves them out (DESIGN §11.6). Records and rates need a minimum
  * number of results (ranking.ts qualifyingMinimum); the teams below it are named in the notes.
  *
@@ -260,10 +262,12 @@ export function buildSchoolBoards(input: SchoolBoardsInput): { boards: LeaderBoa
         record: (l) => l.league,
         min: leagueMin.min,
         unitWord: 'league game',
-        note: 'League games only, as the standings count them. Leagues play different numbers of league games, so this compares percentages, not points.',
+        note:
+          `League games only, as the standings count them${scope.independents > 0 ? '; the independents’ table counts their games against each other' : ''}. ` +
+          'Leagues play different numbers of league games, so this compares percentages, not points.',
       },
       lines,
-      { ...scope, leagues: scope.leaguesOnly },
+      scope,
     ),
     rateBoard(
       {

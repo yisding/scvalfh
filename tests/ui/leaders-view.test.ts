@@ -132,8 +132,8 @@ describe('buildLeadersView — rules, over the committed data', () => {
         expect(board.columns[board.rankedBy], board.id).toBeDefined();
         // SoCal's boards also take the LA independents (DESIGN §24.9), named after the leagues,
         // except the league-record board: a team that plays no league games has no league record to rank.
-        const leagueOnly = board.id.startsWith('best-league-record');
-        const independents = r.independentCount > 0 && !leagueOnly ? ' and five independents' : '';
+        // Every board, the league record included: the independents' table is their league (DESIGN §29).
+        const independents = r.independentCount > 0 ? ' and five independents' : '';
         expect(board.caption, board.id).toContain(
           `in all ${r.leagueCount === 5 ? 'five' : 'four'} ${r.shortName} leagues${independents}, this season`,
         );
@@ -1157,13 +1157,28 @@ describe('buildLeadersView — each region its own boards, one Elo scale', () =>
   const games = [...norcal, ...socal, bridge];
   const view = buildLeadersView(sources(games));
 
+  it('ranks the independents on the league-record board, their table counting as their league', () => {
+    // DESIGN §29: Harvard-Westlake and Glendora meet twice inside the independents' window (Sep 8 to
+    // Oct 31), so each has a league record, and the board ranks it beside the leagues' teams.
+    const independents = [
+      game({ home: 'harvard-westlake', away: 'glendora', hs: 3, as: 0, league: false, date: '2026-09-15' }),
+      game({ home: 'glendora', away: 'harvard-westlake', hs: 1, as: 2, league: false, date: '2026-09-22' }),
+    ];
+    const v = sc(buildLeadersView(sources([...socal, ...independents])));
+    const league = v.schools.find((b) => b.id === 'best-league-record-socal')!;
+    expect(league.rows.map((r) => [r.team.slug, r.cells[0].text])).toContainEqual(['harvard-westlake', '2-0-0']);
+    expect(league.note).toContain('the independents’ table counts their games against each other');
+    // NorCal has no independents: its note says nothing of them.
+    expect(nc(view).schools.find((b) => b.id === 'best-league-record')!.note).not.toContain('independents');
+  });
+
   it('ranks each region’s schools on its own boards, with suffixed ids and its own captions', () => {
     const north = nc(view);
     const south = sc(view);
     const record = south.schools.find((b) => b.id === 'best-record-socal')!;
     expect(record.caption).toBe('Best record, schools in all four SoCal leagues and five independents, this season');
     expect(south.schools.find((b) => b.id === 'best-league-record-socal')!.caption).toBe(
-      'Best league record, schools in all four SoCal leagues, this season',
+      'Best league record, schools in all four SoCal leagues and five independents, this season',
     );
     expect(record.rows.map((r) => r.team.slug).sort()).toEqual(['bonita', 'la-jolla', 'marina', 'torrey-pines']);
     expect(north.schools.find((b) => b.id === 'best-record')!.rows.map((r) => r.team.slug).sort()).toEqual(['leigh', 'mitty', 'stevenson']);

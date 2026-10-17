@@ -41,14 +41,14 @@ export function regionIdSuffix(region: RegionId): '' | '-socal' {
 export interface BoardScope {
   /** '' | '-socal' */
   suffix: '' | '-socal';
-  /** 'all five NorCal leagues', 'all four SoCal leagues and five independents': the captions' scope. */
-  leagues: string;
   /**
-   * The same without the independents ('all four SoCal leagues'): the league-record board's scope. The
-   * independents' table counts their games against each other, not league games, so that board leaves them
-   * out (DESIGN §24.10).
+   * 'all five NorCal leagues', 'all four SoCal leagues and five independents': every board's caption scope.
+   * The independents rank on every board, the league record included: their table is their league
+   * (DESIGN §29).
    */
-  leaguesOnly: string;
+  leagues: string;
+  /** The region's independents (0 NorCal): the league-record note says what their table counts. */
+  independents: number;
 }
 
 /** A region's config row, its leagues proper and its independents' team count. */
@@ -68,12 +68,15 @@ export function regionScope(region: RegionId): RegionScope {
   const leagues = all.filter((l) => !l.independents).length;
   const independents = all.filter((l) => l.independents).reduce((n, l) => n + independentTeams(l), 0);
   const andIndependents = independents > 0 ? ` and ${numberWord(independents)} independents` : '';
-  const leaguesOnly = `all ${numberWord(leagues)} ${config.shortName} leagues`;
   return {
     config,
     leagues,
     independents,
-    board: { suffix: regionIdSuffix(region), leagues: `${leaguesOnly}${andIndependents}`, leaguesOnly },
+    board: {
+      suffix: regionIdSuffix(region),
+      leagues: `all ${numberWord(leagues)} ${config.shortName} leagues${andIndependents}`,
+      independents,
+    },
     sectionWords: `${config.shortName}’s ${numberWord(leagues)} leagues${andIndependents}`,
   };
 }
