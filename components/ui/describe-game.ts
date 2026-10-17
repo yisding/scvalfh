@@ -7,7 +7,8 @@
  * `renderScore()` in lib/format.ts (directly, or through `describeGame()`), and every glyph from
  * `scoreGlyph()`. The raw reads that remain are null-guarded comparisons and arithmetic that
  * print no score: the level check in game-view's `resultConflictNoteFor` and its
- * `isOneGoalFinal`, day-summary's headline-game margin and leaders-view's goal totals.
+ * `isOneGoalFinal`, day-summary's headline-game margin and the /leaders school boards' goal
+ * totals (components/leaders/school-boards.ts).
  *
  * Deviation from DESIGN §5.2 worth knowing: the data model has no `cancelled` status, because
  * MaxPreps contestState 1 (Deleted) rows are dropped rather than stored (SPEC §5.5.2). The

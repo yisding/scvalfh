@@ -431,14 +431,14 @@ renders it in a Player stats section (`components/teams/TeamPlayerStats.tsx`, bu
 `components/teams/player-stats-view.ts`), which says when MaxPreps last updated and how many games
 the team has played since. See `docs/DATA-SOURCES.md` §1.1k.
 
-The same file feeds the player boards on `/leaders` (`components/leaders/leaders-view.ts`): most
+The same file feeds the player boards on `/leaders` (`components/leaders/player-boards.ts`): most
 points, Elo-adjusted points (see "Elo-adjusted goals and points"), assists, saves and clean sheets
 (MaxPreps' goalkeeper "shutouts"), one set of boards per region.
 A player can only appear where the coach tracks that stat, so each board says how many teams it
 covers and names the ones it leaves out, a 0 never makes a board, and the page names every team
 with no stats and every team whose totals are behind its finals (the team page's "games since"
 rule, shared through `gamesSinceUpdate`). The school boards on the same page come from the snapshot
-instead and cover all 102 teams, again per region (the independents are on every SoCal school board but the league-record one): overall and league records are the `Standing` rows the standings
+instead and cover all 102 teams, again per region (the independents are on every SoCal school board, the league record included: their table is their league): overall and league records are the `Standing` rows the standings
 print, clean sheets and goals per game are counted from the finals with forfeits left out, and a
 record or a rate needs at least half the median team's number of results (the teams below that
 are named). Boards rank 1, 2, 2, 4 and list up to 10th place with every row tied for it; a player
@@ -1149,7 +1149,7 @@ against each other (the division's note). **Postseason:** none, for the Sunset's
 2026-27 Bylaws 2011.1 and 3500.2), so each independent's season ends with its last game, Oct 31 at the
 latest. No MaxPreps or si.com table groups the five; the site reads their team schedules, and si.com's
 Sunset page and one-school league pages for backfill only. Their games count in the Elo fit and on the
-SoCal school boards; the league-record board leaves them out, since their table is not a league record.
+SoCal school boards, the league-record board included: their table's games are their league record.
 
 ### San Diego Section: City, North County and Metro
 

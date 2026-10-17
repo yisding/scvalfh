@@ -4035,7 +4035,7 @@ ladder line, caption or legend.
 | Team page | Identity "Tartans · Independent · Glendora". The tiles are Place ("Independent", "no league table"), Overall (all opponents), Streak (all games), Goals and Goal diff, with a sentence that there is no place, league record, GP or MAX and that every figure counts all games. Form ("All games, oldest to newest"), the margin strip ("All games · N played") and the splits count every game; there is no "Who we haven't beaten"; the League games section says every game is in the list of all games. The standings link is "Southern Section independents →". The OG card uses the overall record. |
 | Game page | Each independent side reads "No league games · Independent"; "Form going in" says "Plays no league games" (both sides: "Neither side plays league games."). An opponent's line on another team's page reads "10-3-1 overall · Independent" (or "no results yet"). |
 | `/playoffs` | The header adds "no playoffs for the Sunset or the Southern Section independents"; the `#independents` card has the group's no-postseason note. The top nav's Playoffs goes to `/playoffs#independents`. |
-| `/leaders` | On every SoCal board ("schools in all four SoCal leagues and three independents"), except Best league record ("all four SoCal leagues"): they have no league record. The Elo notes say "across all nine leagues and the Southern Section’s three independents". |
+| `/leaders` | On every SoCal board ("schools in all four SoCal leagues and three independents"), except Best league record ("all four SoCal leagues"): they have no league record (superseded by §24.10's table and §29: they are on that board too). The Elo notes say "across all nine leagues and the Southern Section’s three independents". |
 | `/jv` | "Southern Section independents JV": "Glendora, Harvard-Westlake and Thousand Oaks play no league games, so their JV teams have no league table either. Their JV games are on their team pages: …", each name linking the team's `#jv`; a JV game between two of them is non-league (reason `independent`). |
 | `/history/2025-26` | `unavailable`: "Glendora, Harvard-Westlake and Thousand Oaks played as independents in 2025-26 too: there was no league table to publish.", checked 2026-10-06 against MaxPreps' 2025-26 Palomares, League B and Marmonte tables. The header says "… are unavailable: we found no official 2025-26 final standings. The Southern Section independents had no league table to publish." |
 | `/about` | A rules card ("No league · SS") with the group's note and Article 200, a source card, no cross-check, the roster line "for all 102 teams in all nine leagues and the three Southern Section independents". |
@@ -4115,7 +4115,7 @@ Bonita's two games with Chaminade), and orders them by this site's 3-1-0 points.
 | Independents: three, `classification: 'independent'`, no table | Five, `independents: true`, `classification: 'membership'`, `leaguePlay` Sep 8 to Oct 31, `expectedTeams` 5, `maxprepsMissing` all five, `miniRows` 5, cities "Glendora, La Verne, Studio City, Thousand Oaks and West Hills", a `membershipNote` under the heading. |
 | Copy: "play no league games", "no league table", "<SHORT> games" links to the schedule | The scope note: "plus the Southern Section’s five independents (Bonita, Chaminade, Glendora, Harvard-Westlake and Thousand Oaks), schools in no field hockey league". Standings links read "Independents standings" (`standingsLabel` in `lib/leagues.ts`: "Independent standings" would read as "unofficial standings"); the overview and /teams count the independents' table ("Every division in SCVAL, …, Metro and the independents"); the preseason notice for the group reads "The first game between two of the independents is …". |
 | Standings notes: "League games are every game between two division members on MaxPreps’ schedules (<league> publishes no schedule)" | For the group, the Notes source line is the division's own note (why the five are grouped, what the table counts); captions read "Southern Section independents standings", never "Independent league standings"; the home mini table's kicker is "Table", not "League table"; the standings page's title is "Independents standings". |
-| Leaders: the league-record board left the independents out because they had no league record | Still left out: their table is not a league record (the board's scope stays "all four SoCal leagues"); every other SoCal board says "and five independents". |
+| Leaders: the league-record board left the independents out because they had no league record | Still left out: their table is not a league record (the board's scope stays "all four SoCal leagues"); every other SoCal board says "and five independents". (Superseded by §29: the code never left them out, and the owner wants them on the board.) |
 | The region OG cards listed no independents row; `/history/2025-26` said "had no league table to publish" | The SoCal column of the root and `/standings` OG cards gets an "Independents" row (its division label: the short name is an adjective) with the table's leader clause; the history page and `/about` say "The Southern Section independents are this site’s grouping, so no table of them was published." |
 | `/history/2025-26`: "played as independents in 2025-26 too" | "The Southern Section independents are this site’s grouping, so no 2025-26 table of them was published: Glendora, Harvard-Westlake and Thousand Oaks had no league table, and MaxPreps listed Bonita and Chaminade in its Sunset table.", with MaxPreps' 2025-26 Sunset table added to what was checked. |
 
@@ -4429,3 +4429,59 @@ component. Like the Elo rating (§19.2, §20), both are estimates from a documen
   79,350 bytes of HTML gzip, over the 2.3 × `standings` line (76,194). By §24.6's rule (measured
   × 1.12 / baseline, rounded up to one decimal) the line moved to 2.7 × (89,446): 89%. First-load
   JS is unchanged.
+
+## 28. Leaders reading amendment (2026-10)
+
+A review of `/leaders` found it hard to read rather than wrong: on a phone the 12-line intro came
+before any data, a region's twelve boards ran about 14,000px with only "Schools" and "Players" to
+jump to, and the Elo, adjusted-goals and adjusted-points notes ran to eight to twelve lines each
+under their tables. This section wins where §16, §23 and §27 disagree. Everything else stands: the
+boards, their order, ids, ranking and minimums, the per-region halves (§24), and no client
+component (every change below is zero-JavaScript HTML).
+
+- **A shorter intro.** Two sentences: what is ranked and where the numbers come from. The
+  cross-region sentence ("comparisons between NorCal and SoCal rest on N games …") is the Elo
+  board's to say and was said twice; it now lives only there.
+- **A board index per section.** Under each section heading, one canvas pill per board, in board
+  order, linking to its anchor ("Record", "League record", "Goals", "Adjusted goals", "Goals
+  allowed", "Clean sheets", "Elo rating"; "Points", "Adjusted points", "Assists", "Saves", "Keeper
+  clean sheets"). The labels are `LeaderBoard.navLabel`, unique within a section. Screen-only
+  (`sx-print-hide`), a `<nav>` named for its section.
+- **Note, then method.** A board's `note` is what it counts and what it leaves out, always shown.
+  A board that derives a number (the Elo rating, Elo-adjusted goals, Elo-adjusted points) also
+  carries a `method`, behind a closed "How it’s worked out" disclosure under the note: how the
+  fit works, how the ratings start, the shrinkage, and the cross-region caveat. Whatever a reader
+  needs to read a row (the Elo scale, what × is, the coverage sentence, the unsettled-model
+  warning) stays in the note.
+- **The section notes are the grid's last cell.** "Who qualifies" (schools) and "Whose stats are
+  here" (players), each an h3 like a board's, sit after the last board in the same grid, so from
+  1024px they fill the cell beside the odd board out instead of starting below a hole. The teams
+  with no stats are still named in `#players`, as `assert-copy` checks.
+- **The lag list is closed.** Whose totals lag the scores ran to twenty teams in one sentence by
+  midseason. It is now a closed disclosure, "19 teams’ totals lag the scores", over a list ("Archie
+  Williams: 5 games since Mon Sep 28"), most games behind first. The teams with no stats and the
+  carried-forward note stay open.
+- **Code.** `components/leaders/leaders-view.ts` only assembles a region now. The boards live in
+  `school-boards.ts`, `player-boards.ts` and `elo-board.ts` (which the team pages read their place
+  from), the shared ranking in `ranking.ts`, the region words and id suffix in `scope.ts`, the view
+  types in `types.ts`, and a section's markup in `LeaderSection.tsx`. A column key is the closed
+  union `LeaderColumnKey`, so `LeaderBoardTable`'s width maps cannot miss a renamed column.
+
+## 29. The independents' table is their league on /leaders (2026-10)
+
+A review of §28 found the SoCal "Best league record" board ranking independents (Harvard-Westlake
+2nd, 7-0-0, on the 2026-10-17 data) under a caption that said "all four SoCal leagues", as §24.10
+required. The board had never filtered them: §24.10 changed only the caption, while the board read
+every team's `computed` record, and since §24.10 the independents have one (their table's games).
+Owner decision, 2026-10-17: the independents are treated as a league here. This section wins where
+§24.9 and §24.10 disagree. The count words stand: "nine leagues and five independents", never "ten
+leagues" (§24.9).
+
+- **The board.** Best league record ranks the independents beside the four leagues' teams, by
+  their table's record, and they count toward its minimum and its "not there yet" list. Its caption
+  says what every other SoCal board says: "schools in all four SoCal leagues and five independents".
+- **The note.** Where a region has independents, the board's note says what their record is:
+  "League games only, as the standings count them; the independents’ table counts their games
+  against each other." NorCal's note is unchanged.
+- **Code.** `BoardScope.leaguesOnly`, which existed only for that caption, is gone; `BoardScope`
+  carries the region's independents count for the note instead (`components/leaders/scope.ts`).

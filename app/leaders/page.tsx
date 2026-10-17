@@ -2,41 +2,33 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Fragment } from 'react';
 
-import LeaderBoardTable from '../../components/leaders/LeaderBoardTable';
-import {
-  AND_INDEPENDENTS_SHORT,
-  LEAGUE_COUNT,
-  buildLeadersView,
-  type RegionLeadersView,
-} from '../../components/leaders/leaders-view';
+import LeaderSection from '../../components/leaders/LeaderSection';
+import { buildLeadersView } from '../../components/leaders/leaders-view';
+import { AND_INDEPENDENTS_SHORT, LEAGUE_COUNT } from '../../components/leaders/scope';
+import type { RegionLeadersView } from '../../components/leaders/types';
 import { RegionSwitcher } from '../../components/layout/LeagueSwitcher';
 import PageHeader from '../../components/layout/PageHeader';
 import { OG_BASE, ROOT_OG_IMAGE, coveredLeagueWords } from '../../components/layout/site';
 import DivisionTabs from '../../components/standings/DivisionTabs';
-import SectionHeader from '../../components/ui/SectionHeader';
-import { numberWord } from '../../lib/format';
 
 /**
- * `/leaders` (DESIGN §16) — "Who leads the whole site?" Leaderboards across all nine leagues and the five independents: the
- * schools with the best records, the most goals per game (raw and Elo-adjusted), the fewest allowed,
- * the most clean sheets and the highest Elo rating (lib/ratings.ts, DESIGN §20), and the players with
- * the most points (raw and Elo-adjusted: lib/adjusted-scoring.ts), assists, saves and clean sheets.
+ * `/leaders` (DESIGN §16, §23, §28) — "Who leads the whole site?" Leaderboards across every covered
+ * league and the independents: the schools with the best records, the most goals per game (raw and
+ * Elo-adjusted), the fewest allowed, the most clean sheets and the highest Elo rating (lib/ratings.ts,
+ * DESIGN §20), and the players with the most points (raw and Elo-adjusted: lib/adjusted-scoring.ts),
+ * assists, saves and clean sheets.
  *
  * One static page, built by components/leaders/leaders-view.ts from the two files every other page
  * reads (data/player-stats.json and data/snapshot.json), so a player's line is the one on their
  * team page and a school's record is the one in its standings row. Per region (DESIGN-socal §2.3,
- * §2.4: components/leaders/leaders-view.ts builds each region's boards over its own teams), two
- * sections, `#schools` and then `#players` (DESIGN §23; SoCal's `#schools-socal`, `#players-socal`,
- * every board id suffixed too, so both regions render on one page without a duplicate id), each
- * carrying `data-region-scope` so the reader's region shows. The Elo numbers are one fit over every
- * team; the description says how few finals link the two regions (counted at build time). Each
- * section is a grid of boards that is one column on a phone and two from 1024px; every board has its
- * own anchor (`#most-points`, `#best-record`, …). A player board shows its top 10 and opens to 25
- * under the table.
+ * §2.4), two sections, `#schools` and then `#players` (DESIGN §23; SoCal's `#schools-socal`,
+ * `#players-socal`, every board id suffixed too, so both regions render on one page without a
+ * duplicate id), each carrying `data-region-scope` so the reader's region shows. Each section
+ * (components/leaders/LeaderSection.tsx) opens with an index of its boards and closes with its notes.
  *
- * The player boards can only rank what coaches enter, so the page says so up front, every board
- * says how many teams it covers and which it leaves out, and the notes under the section name the
- * teams whose totals are behind the scores. The school boards cover every team.
+ * The player boards can only rank what coaches enter, so every board says how many teams it covers
+ * and which it leaves out, and the Players notes name the teams with no stats and the teams whose
+ * totals are behind the scores. The school boards cover every team.
  */
 
 const SHORT_NAMES = coveredLeagueWords();
@@ -68,13 +60,14 @@ export default function LeadersPage() {
     <div className="pb-section-lg [--sx-sticky-top:6rem] md:[--sx-sticky-top:var(--spacing-topbar-lg)]">
       <PageHeader
         eyebrow={`All ${LEAGUE_COUNT} leagues${AND_INDEPENDENTS_SHORT}`}
-        title="Season leaders"
+        title={PAGE_TITLE}
         description={
+          // Two sentences before the first table (DESIGN §28): what is ranked and where the numbers
+          // come from. How the Elo scale links the regions is the Elo board's to say.
           <>
             The top schools and players across {SHORT_NAMES}, ranked within each region. School
-            records and Elo ratings are computed from the scores on this site; player numbers are
-            what each coach enters on MaxPreps, which the Elo-adjusted points weigh by the team’s
-            schedule. {view.crossRegion.sentence}
+            records and ratings are computed from the scores on this site; player numbers are what
+            each coach enters on MaxPreps.
           </>
         }
         aside={<DivisionTabs variant="inline" tabs={tabs} label="Jump to a leaderboard" />}
@@ -88,59 +81,30 @@ export default function LeadersPage() {
 
       {view.regions.map((region, i) => (
         <Fragment key={region.region}>
-          <section
+          <LeaderSection
             id={region.schoolsId}
-            data-region-scope={region.region}
-            aria-label={`School leaders, ${region.name}`}
-            className={`${i === 0 ? 'mt-8 md:mt-10' : 'mt-section md:mt-section-lg'} min-w-0`}
-          >
-            <SectionHeader
-              size="lg"
-              kicker="Schools"
-              meta={`${regionLeagues(region)} · ${
-                region.resultsThrough ? `Every final score through ${region.resultsThrough}` : 'No final scores yet'
-              }`}
-            />
-            <div className="mt-4 grid gap-y-section lg:grid-cols-2 lg:gap-x-10">
-              {region.schools.map((board) => (
-                <LeaderBoardTable key={board.id} board={board} />
-              ))}
-            </div>
-            {region.schoolNotes.length > 0 ? (
-              <div className="mt-section max-w-prose space-y-2 text-meta text-ink-3">
-                {region.schoolNotes.map((note) => (
-                  <p key={note} className="m-0">
-                    {note}
-                  </p>
-                ))}
-              </div>
-            ) : null}
-          </section>
-
-          <section
+            region={region.region}
+            title="Schools"
+            label={`School leaders, ${region.name}`}
+            meta={`${region.scopeWords} · ${
+              region.resultsThrough ? `Every final score through ${region.resultsThrough}` : 'No final scores yet'
+            }`}
+            boards={region.schools}
+            notesTitle="Who qualifies"
+            notes={region.schoolNotes.length > 0 ? <Notes notes={region.schoolNotes} /> : null}
+            className={i === 0 ? 'mt-8 md:mt-10' : 'mt-section md:mt-section-lg'}
+          />
+          <LeaderSection
             id={region.playersId}
-            data-region-scope={region.region}
-            aria-label={`Player leaders, ${region.name}`}
-            className="mt-section min-w-0 md:mt-section-lg"
-          >
-            <SectionHeader
-              size="lg"
-              kicker="Players"
-              meta={`${regionLeagues(region)} · ${region.statTeams} of ${region.teamCount} teams enter player stats`}
-            />
-            <div className="mt-4 grid gap-y-section lg:grid-cols-2 lg:gap-x-10">
-              {region.players.map((board) => (
-                <LeaderBoardTable key={board.id} board={board} />
-              ))}
-            </div>
-            <div className="mt-section max-w-prose space-y-2 text-meta text-ink-3">
-              {region.playerNotes.map((note) => (
-                <p key={note} className="m-0">
-                  {note}
-                </p>
-              ))}
-            </div>
-          </section>
+            region={region.region}
+            title="Players"
+            label={`Player leaders, ${region.name}`}
+            meta={`${region.scopeWords} · ${region.statTeams} of ${region.teamCount} teams enter player stats`}
+            boards={region.players}
+            notesTitle="Whose stats are here"
+            notes={<PlayerNotes region={region} />}
+            className="mt-section md:mt-section-lg"
+          />
         </Fragment>
       ))}
 
@@ -155,8 +119,33 @@ export default function LeadersPage() {
   );
 }
 
-/** "NorCal’s five leagues" | "SoCal’s four leagues and five independents": a region section's scope, from config. */
-function regionLeagues(region: RegionLeadersView): string {
-  const independents = region.independentCount > 0 ? ` and ${numberWord(region.independentCount)} independents` : '';
-  return `${region.shortName}’s ${numberWord(region.leagueCount)} leagues${independents}`;
+function Notes({ notes }: { notes: readonly string[] }) {
+  return notes.map((note) => (
+    <p key={note} className="m-0">
+      {note}
+    </p>
+  ));
+}
+
+/**
+ * Which teams have no stats and whose are carried forward, always shown; whose totals lag the scores,
+ * a list that runs to twenty teams by midseason, behind a closed disclosure whose summary counts them.
+ */
+function PlayerNotes({ region }: { region: RegionLeadersView }) {
+  const { lagging } = region;
+  return (
+    <>
+      <Notes notes={region.playerNotes} />
+      {lagging ? (
+        <details className="sx-disclosure">
+          <summary>{lagging.summary}</summary>
+          <ul className="m-0 mt-1 list-none space-y-1 p-0">
+            {lagging.items.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
+        </details>
+      ) : null}
+    </>
+  );
 }

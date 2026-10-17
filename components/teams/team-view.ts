@@ -70,7 +70,7 @@ import type {
   Team,
   TeamSlug,
 } from '../../lib/types';
-import { getEloBoardForTeam } from '../leaders/leaders-view';
+import { getEloBoardForTeam } from '../leaders/elo-board';
 import { buildOverviewDivision, type OverviewDivision } from '../standings/standings-view';
 import type { FormEntry } from '../ui/FormStrip';
 import { describeGame, shootoutSectionOf } from '../ui/describe-game';

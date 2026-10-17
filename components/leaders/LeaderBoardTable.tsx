@@ -5,10 +5,11 @@ import MissingValue from '../ui/MissingValue';
 import PlaceMark from '../ui/PlaceMark';
 import SectionHeader from '../ui/SectionHeader';
 import TeamMonogram from '../ui/TeamMonogram';
-import type { LeaderBoard, LeaderCell, LeaderRow } from './leaders-view';
+import type { LeaderBoard, LeaderCell, LeaderColumnKey, LeaderRow } from './types';
 
 /**
- * One /leaders board (DESIGN §16): an h3, a ranked table, and the line that says what it counts.
+ * One /leaders board (DESIGN §16): an h3, a ranked table, and the line that says what it counts,
+ * with a closed "How it’s worked out" under it where a derived number needs more (DESIGN §28).
  * A player board's places from 11th to 25th wait in a closed `<details>` under the table ("Show 15
  * more players", DESIGN §23), so the board reads as a top 10 and opens with zero JavaScript. Every
  * player or school tied for a board's last place is listed, however many. They
@@ -35,15 +36,22 @@ import type { LeaderBoard, LeaderCell, LeaderRow } from './leaders-view';
  * the school stays a plain inline link in the meta line.
  */
 
-/** Column widths, by the widest value each column holds in 13px mono plus its gutter. */
-const WIDTH: Readonly<Record<string, string>> = {
+/**
+ * Column widths, by the widest value each column holds in 13px mono plus its gutter; a key left out
+ * takes the default (DEFAULT_WIDTH, DEFAULT_LAST_WIDTH). Keyed by LeaderColumnKey, so a column the
+ * view model renames cannot silently fall back to the default.
+ */
+type Widths = Readonly<Partial<Record<LeaderColumnKey, string>>>;
+const DEFAULT_WIDTH = 'w-11';
+const DEFAULT_LAST_WIDTH = 'w-[3.75rem]';
+const WIDTH: Widths = {
   record: 'w-16', // "12-1-3"
   pct: 'w-[3.25rem] sm:w-[3.75rem]', // "1.000", after the wider gutter below
   savePct: 'w-14', // "85.9%"
   perGame: 'w-12', // "7.17"
 };
 /** The last column also carries the card's 16px inner edge. */
-const LAST_WIDTH: Readonly<Record<string, string>> = {
+const LAST_WIDTH: Widths = {
   record: 'w-20',
   pct: 'w-16',
   savePct: 'w-[4.5rem]',
@@ -56,7 +64,7 @@ const LAST_WIDTH: Readonly<Record<string, string>> = {
  * The gutter before a column: 8px, except before Pct, which follows the record. Both are
  * dash-separated mono numbers, and at 8px "10-0-0 1.000" read as one string.
  */
-const GUTTER: Readonly<Record<string, string>> = {
+const GUTTER: Widths = {
   pct: 'pl-3 sm:pl-5',
 };
 
@@ -69,10 +77,6 @@ function Cell({ cell }: { cell: LeaderCell }) {
       <span className="sr-only">{cell.sr}</span>
     </>
   );
-}
-
-function Place({ row }: { row: LeaderRow }) {
-  return <PlaceMark place={row.rank} shared={row.tied} className="sx-num" />;
 }
 
 /** Short name below 640px, the full name from there. */
@@ -183,7 +187,7 @@ function BoardTable({
           {board.columns.map((c, i) => (
             <col
               key={c.key}
-              className={i === last ? (LAST_WIDTH[c.key] ?? 'w-[3.75rem]') : (WIDTH[c.key] ?? 'w-11')}
+              className={i === last ? (LAST_WIDTH[c.key] ?? DEFAULT_LAST_WIDTH) : (WIDTH[c.key] ?? DEFAULT_WIDTH)}
             />
           ))}
         </colgroup>
@@ -206,7 +210,7 @@ function BoardTable({
           {rows.map((row) => (
             <tr key={row.key} data-team-slug={row.team.slug} className="relative h-14">
               <td className="pl-4 pr-2 text-cell text-ink-3">
-                <Place row={row} />
+                <PlaceMark place={row.rank} shared={row.tied} className="sx-num" />
               </td>
               <th scope="row" className="py-2 text-left font-normal">
                 {/* Only the pinned team's rows display this (app/globals.css), so the accent
@@ -260,6 +264,12 @@ export function LeaderBoardTable({ board }: LeaderBoardTableProps) {
         </details>
       ) : null}
       <p className="mt-2 mb-0 max-w-prose text-meta text-ink-3">{board.note}</p>
+      {board.method ? (
+        <details className="sx-disclosure mt-1 max-w-prose text-meta">
+          <summary>How it’s worked out</summary>
+          <p className="m-0 mt-1 text-ink-3">{board.method}</p>
+        </details>
+      ) : null}
     </section>
   );
 }
