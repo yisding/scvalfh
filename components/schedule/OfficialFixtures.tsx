@@ -83,32 +83,41 @@ function FixtureRows({
         const past = fixture.dateKey < today;
         const heading = divisionHeading(fixture.division);
         return (
+          // Two fixed tracks, as a game row's: a 5.25rem lead (the date, then the status under
+          // it) and the matchup (its division a line under it). As one wrapping flex line —
+          // date · matchup · division · status flush right — whether "No result" fitted beside
+          // the matchup depended on the matchup's and the division's length, so phone rows were
+          // 52, 58 or 63px and the label hopped between the end of line 1 and line 2. A third
+          // fixed track for the status at the row's end held it still but cost the matchup
+          // 88px, which then wrapped on a phone instead.
           <li
             key={`${fixture.dateKey}-${fixture.awayName}-${fixture.homeName}`}
-            className="flex min-h-row-1 flex-wrap items-center gap-x-3 gap-y-0.5 px-gutter py-2"
+            className="grid min-h-row-1 grid-cols-[5.25rem_minmax(0,1fr)] items-center gap-x-3 px-gutter py-2"
           >
-            {showDate ? (
-              <time
-                dateTime={fixture.dateKey}
-                className="sx-num w-[5.25rem] shrink-0 text-cell text-ink-2"
+            <span className="flex flex-col">
+              {showDate ? (
+                <time dateTime={fixture.dateKey} className="sx-num text-cell text-ink-2">
+                  {shortDate(fixture.dateKey)}
+                </time>
+              ) : null}
+              {/* The status reads as a label, never a score slot. Visible as one word; the
+                  sr-only line says whose schedule it is on, the same words as the team page.
+                  "No result" and "Upcoming" are both 69.6px, inside the 84px lead. */}
+              <span
+                className="whitespace-nowrap text-micro font-semibold uppercase tracking-[0.04em] text-ink-3"
+                aria-hidden="true"
               >
-                {shortDate(fixture.dateKey)}
-              </time>
-            ) : null}
-            {/* The division follows the matchup instead of sitting flush right, where it was
-                ~800px from it on a 1280 row. */}
-            <span className="min-w-0 text-body text-ink">
-              {name(fixture.awaySlug, fixture.awayName)} at{' '}
-              {name(fixture.homeSlug, fixture.homeName)}
+                {past ? 'No result' : 'Upcoming'}
+              </span>
             </span>
-            {heading ? <span className="shrink-0 text-meta text-ink-3">{heading}</span> : null}
-            {/* The status reads as a label, never a score slot. Visible as one word; the
-                sr-only line says whose schedule it is on, the same words as the team page. */}
-            <span
-              className="ml-auto text-right text-micro font-semibold uppercase tracking-[0.04em] text-ink-3"
-              aria-hidden="true"
-            >
-              {past ? 'No result' : 'Upcoming'}
+            {/* The division is a line of its own under the matchup: beside it, it decided where
+                the row wrapped; flush right it was ~800px from it on a 1280 row. */}
+            <span className="min-w-0">
+              <span className="block text-body text-ink">
+                {name(fixture.awaySlug, fixture.awayName)} at{' '}
+                {name(fixture.homeSlug, fixture.homeName)}
+              </span>
+              {heading ? <span className="block text-meta text-ink-3">{heading}</span> : null}
             </span>
             <span className="sr-only">
               {`On ${short}’s schedule only, ${past ? 'no result' : 'not played yet'}`}

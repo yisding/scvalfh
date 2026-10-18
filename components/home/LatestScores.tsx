@@ -1,11 +1,9 @@
 import Link from 'next/link';
 
-import ResultChip from '../ui/ResultChip';
-import { ScoreGlyph, nameClass } from '../ui/ScoreGlyph';
+import { SummaryLead, SummaryTeams } from '../ui/GameRow';
 import SectionHeader from '../ui/SectionHeader';
-import StatusLabel from '../ui/StatusLabel';
-import { describeGame, otherLeagueSuffix, type SideView } from '../ui/describe-game';
-import { shortDate, timeOfDay } from '../../lib/format';
+import { describeGame } from '../ui/describe-game';
+import { shortDate } from '../../lib/format';
 import { gameHref } from '../../lib/game-id';
 import type { Game, LeagueId } from '../../lib/types';
 
@@ -17,9 +15,11 @@ import type { Game, LeagueId } from '../../lib/types';
  * that actually has results. Each league panel names its own day: the leagues do not play on the
  * same days.
  *
- * Each game is ONE link row (`ResultRow`): the clock and status label (with the game's league /
- * postseason chips and the † of a si.com score) in the lead column, then both sides — result chip,
- * short name, score. It is the `GameRow` face without its `<details>` body (venue, links, recap) and
+ * Each game is ONE link row (`ResultRow`): the clock, status label (and the † of a si.com score)
+ * and the game's league / postseason chips in the lead column, then both sides — result chip, short
+ * name, score. It is the `GameRow` face, built from GameRow's own `SummaryLead` and `SummaryTeams`
+ * so the same game is the same 76px row on / and on /scores — without the mascot tiles, without
+ * its `<details>` body (venue, links, recap) and
  * without a second `GameCard` grid for ≥768px: the home page carries all five leagues' panels in
  * its static HTML, and those two renderings of every game were the heaviest markup on the page
  * against the `/` budget (SPEC §12.4: HTML and RSC gzip ≤ 2 × the Stage-0 baseline). The details
@@ -84,26 +84,17 @@ export function LatestScores({
   );
 }
 
-/** `Saint Francis · SCVAL` inside another league's panel; '' for a side of the panel's league. */
-function SideLine({ side, showScore, suffix }: { side: SideView; showScore: boolean; suffix: string }) {
-  return (
-    <span className="flex min-h-6 items-center gap-2">
-      <ResultChip kind={side.chip} size={20} />
-      {/* The game rows' three-way name weight: a level side (a tie, an unreported score) stays in
-          full ink, because neither side lost; a cancelled or postponed side recedes. */}
-      <span className={`min-w-0 flex-1 truncate text-body ${nameClass(side)}`}>
-        {side.shortName}
-        {suffix ? <span className="text-ink-3">{suffix}</span> : null}
-      </span>
-      {showScore ? <ScoreGlyph side={side} size="score" /> : null}
-    </span>
-  );
-}
-
 /**
- * One game as one link: `[time / status + chips] [chip name score] [chip name score]`, away first.
+ * One game as one link: `[time / status / chips] [chip name score] [chip name score]`, away first.
  * The screen-reader sentence (`describeGame().sentence`) is the link's text; the visual lines are
  * aria-hidden. A missing score is the en dash with "score not reported" (ScoreGlyph), never 0.
+ *
+ * GameRow's summary grid — the 80px lead, `min-h-gamerow`, the same `py-3` and 8px gap — less its
+ * chevron column, with GameRow's own lead and team lines: the score in its 24px box, names that
+ * wrap to a second line rather than truncate, `Saint Francis · SCVAL` in another league's panel.
+ * Its own lead had stacked the clock over a wrapping status-and-chips line (84 or 98px rows) and
+ * its 22px scores set 28px team lines, so one game was 84px here and 76px on /scores, and Home's
+ * two-up "Latest from every league" lists drifted apart row by row.
  */
 export function ResultRow({ game, scopeLeague = null }: { game: Game; scopeLeague?: LeagueId | null }) {
   const display = describeGame(game);
@@ -114,20 +105,8 @@ export function ResultRow({ game, scopeLeague = null }: { game: Game; scopeLeagu
       className="sx-tap grid min-h-gamerow grid-cols-[5rem_minmax(0,1fr)] items-center gap-x-2 px-gutter py-3 no-underline focus-visible:-outline-offset-2"
     >
       <span className="sr-only">{display.sentence}</span>
-      <span className="flex min-w-0 flex-col gap-1 self-start" aria-hidden="true">
-        <span
-          className={['sx-num text-cell text-ink-2', display.strikeTime ? 'line-through' : null]
-            .filter(Boolean)
-            .join(' ')}
-        >
-          {game.isTimeTba ? 'TBA' : timeOfDay(game.dateLocal)}
-        </span>
-        <StatusLabel display={display} className="[&>span:first-child]:leading-[0.875rem]" />
-      </span>
-      <span className="min-w-0 space-y-1" aria-hidden="true">
-        <SideLine side={display.away} showScore={display.showScores} suffix={otherLeagueSuffix(display.away.slug, scopeLeague)} />
-        <SideLine side={display.home} showScore={display.showScores} suffix={otherLeagueSuffix(display.home.slug, scopeLeague)} />
-      </span>
+      <SummaryLead game={game} display={display} />
+      <SummaryTeams display={display} scopeLeague={scopeLeague} monogram={false} />
     </Link>
   );
 }

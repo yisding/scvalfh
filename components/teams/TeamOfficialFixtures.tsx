@@ -2,6 +2,8 @@ import { monthDay } from '../../lib/format';
 import { getDivision, leagueOfDivision } from '../../lib/leagues';
 import type { DivisionId, OfficialFixture, TeamSlug } from '../../lib/types';
 import ExternalLink from '../ui/ExternalLink';
+import { NON_MEMBER_NOTE } from '../ui/GameRow';
+import GhostMonogram from '../ui/GhostMonogram';
 import TeamMonogram from '../ui/TeamMonogram';
 import { fixtureOpponent } from './team-view';
 
@@ -61,17 +63,25 @@ export function TeamOfficialFixtures({
                 <span className="sx-num w-14 shrink-0 text-cell text-ink-2" aria-hidden="true">
                   {monthDay(fixture.dateKey)}
                 </span>
-                {opponent ? <TeamMonogram team={opponent} size={24} /> : null}
-                {/* Two lines rather than an ellipsis: at 320px the name had ~90px and "vs
-                    Homestead" was cut. No `break-words`: a school name breaks between words.
-                    Below 360px the two-word status stacks (`w-min` on it) so a short name like
-                    "vs Homestead" keeps one line instead of leaving "vs" alone on the first. */}
+                {/* A school outside the registry gets GameRow's ghost tile, so every name starts
+                    at one x; with no tile its name started 36px left of the others. */}
+                {opponent ? (
+                  <TeamMonogram team={opponent} size={24} />
+                ) : (
+                  <GhostMonogram name={opponentName} size={24} title={NON_MEMBER_NOTE} />
+                )}
+                {/* Two lines rather than an ellipsis: at 320px the name has ~96px and "vs
+                    Homestead" was cut. No `break-words`: a school name breaks between words. */}
                 <span className="line-clamp-2 min-w-0 flex-1 text-body text-ink" aria-hidden="true">
                   <span className="text-ink-2">{versus} </span>
                   {opponentName}
                 </span>
+                {/* A fixed 4.75rem, one line ("No result" and "Upcoming" are both 69.6px), so the
+                    name's width no longer depends on which word it is. Below 360px "No result"
+                    used to stack into two lines and "Upcoming" could not, so the name beside them
+                    had two different widths. */}
                 <span
-                  className="text-right text-micro font-semibold uppercase tracking-[0.04em] text-ink-3 max-[359px]:w-min"
+                  className="w-[4.75rem] shrink-0 whitespace-nowrap text-right text-micro font-semibold uppercase tracking-[0.04em] text-ink-3"
                   aria-hidden="true"
                 >
                   {past ? 'No result' : 'Upcoming'}
