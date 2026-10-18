@@ -20,9 +20,11 @@ import path from 'node:path';
 
 import { beforeAll, describe, expect, it } from 'vitest';
 
+import { ConfigInvariantError, failInvariant } from '../lib/config/invariant';
 import { ALL_DIVISIONS, LEAGUES, getLeague } from '../lib/leagues';
-import type { SnapshotMeta } from '../lib/pipeline/contract';
+import { RunAbort, type SnapshotMeta } from '../lib/pipeline/contract';
 import { readManifest } from '../lib/pipeline/corpus';
+import { describeRunFailure } from '../lib/pipeline/run-failure';
 import { SPORT_SEASON_ID } from '../lib/season';
 import { loadSnapshot, parseSnapshot } from '../lib/snapshot-schema';
 import { FETCHABLE_TEAMS, TEAMS } from '../lib/teams';
@@ -468,5 +470,45 @@ describe('fetch-data: the previous snapshot', () => {
     expect(res.output).toMatch(/finals regression de-anza: /);
     expect(res.status).toBe(1);
     expect(res.output).toMatch(/ABORT \(previous snapshot kept\): systemic outage: every league in this run is frozen/);
+  });
+});
+
+describe('describeRunFailure: how the entry point reports a throw (SPEC §7.5)', () => {
+  it('reports a RunAbort as an abort that keeps the previous snapshot', () => {
+    expect(describeRunFailure(new RunAbort('systemic outage: every league in this run is frozen'))).toEqual({
+      abort: true,
+      line: 'ABORT (previous snapshot kept): systemic outage: every league in this run is frozen',
+    });
+  });
+
+  it('reports a ConfigInvariantError as an abort, keeping the module prefix of its message', () => {
+    let thrown: unknown;
+    try {
+      failInvariant('lib/leagues.ts', 'unknown league "nope"');
+    } catch (err) {
+      thrown = err;
+    }
+    expect(thrown).toBeInstanceOf(ConfigInvariantError);
+    expect(describeRunFailure(thrown)).toEqual({
+      abort: true,
+      line: 'ABORT (previous snapshot kept): lib/leagues.ts: unknown league "nope"',
+    });
+  });
+
+  it('recognises an invariant error from a second module instance by its name', () => {
+    const foreign = new Error('lib/teams.ts: expected 102 teams, got 101');
+    foreign.name = 'ConfigInvariantError';
+    expect(describeRunFailure(foreign)).toEqual({
+      abort: true,
+      line: 'ABORT (previous snapshot kept): lib/teams.ts: expected 102 teams, got 101',
+    });
+  });
+
+  it('reports any other error, and a non-error throw, as a plain failure', () => {
+    expect(describeRunFailure(new Error('lib/leagues.ts: looks like an invariant but is not'))).toEqual({
+      abort: false,
+      line: 'FAILED: lib/leagues.ts: looks like an invariant but is not',
+    });
+    expect(describeRunFailure('boom')).toEqual({ abort: false, line: 'FAILED: boom' });
   });
 });

@@ -18,13 +18,14 @@
  *   pnpm fetch-data --no-sblive · --sblive-full · --no-official (alias --no-scval) · --no-ccs · --no-vnn
  *
  * Modules load inside main() so that a config or registry invariant failing at import
- * (assertLeagues / assertRegistry, §7.5 run-abort trigger 2) is reported as an abort, not a crash.
+ * (assertLeagues / assertRegistry, §7.5 run-abort trigger 2) is reported as an abort, not a crash:
+ * lib/pipeline/run-failure.ts classifies the throw (a RunAbort or a ConfigInvariantError, lib/config/invariant.ts).
  */
 
 import { runCli } from './cli';
 
 async function main(argv: readonly string[]): Promise<number> {
-  const { RunAbort } = await import('../lib/pipeline/contract');
+  const { describeRunFailure } = await import('../lib/pipeline/run-failure');
   try {
     const run = await import('../lib/pipeline/run');
     const args = run.parseRunArgs(argv, { cwd: process.cwd(), now: new Date().toISOString() });
@@ -46,12 +47,7 @@ async function main(argv: readonly string[]): Promise<number> {
     ctx.log(`wrote ${rel(resolved.out)} and ${rel(metaPath)}`);
     return 0;
   } catch (err) {
-    const message = err instanceof Error ? err.message : String(err);
-    if (err instanceof RunAbort || /^lib\/(leagues|teams)\.ts: /.test(message)) {
-      console.error(`ABORT (previous snapshot kept): ${message}`);
-    } else {
-      console.error(`FAILED: ${message}`);
-    }
+    console.error(describeRunFailure(err).line);
     return 1;
   }
 }

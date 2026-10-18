@@ -12,8 +12,10 @@ import type {
   CcsAutoQualifiers, CcsDivisionName, CcsKeyDates, ContestId, DivisionId, LeagueId, OfficialSourceId,
   PlayoffStatus, RegionId, SeasonPhase, SectionId, TeamId, TeamSlug, TiebreakStage, TournamentGame,
 } from './types';
-// The runtime imports are two leaves: lib/season.ts (dependency-free constants) and
-// lib/schema-primitives.ts, for its date-key RegExp (that module imports nothing of ours, only zod).
+// The runtime imports are three leaves: lib/config/invariant.ts (the typed invariant failure),
+// lib/season.ts (dependency-free constants) and lib/schema-primitives.ts, for its date-key RegExp
+// (that module imports nothing of ours, only zod).
+import { failInvariant } from './config/invariant';
 import { DATE_PATTERN, SLUG_PATTERN } from './schema-primitives';
 import { CCS_BRACKET_URL, SEASON_YEAR } from './season';
 
@@ -1954,7 +1956,7 @@ const DIVISION_BY_ID = new Map<string, DivisionConfig>(ALL_DIVISIONS.map((d) => 
 /** Throws on an unknown id. */
 export function getRegion(id: RegionId): RegionConfig {
   const r = REGION_BY_ID.get(id);
-  if (!r) throw new Error(`lib/leagues.ts: unknown region "${id}"`);
+  if (!r) failInvariant('lib/leagues.ts', `unknown region "${id}"`);
   return r;
 }
 
@@ -1976,7 +1978,7 @@ export function leaguesInRegion(region: RegionId): readonly LeagueConfig[] {
 /** Throws on an unknown id. */
 export function getSection(id: SectionId): SectionConfig {
   const s = SECTION_BY_ID.get(id);
-  if (!s) throw new Error(`lib/leagues.ts: unknown section "${id}"`);
+  if (!s) failInvariant('lib/leagues.ts', `unknown section "${id}"`);
   return s;
 }
 
@@ -1987,7 +1989,7 @@ export function sectionOf(leagueId: LeagueId): SectionConfig {
 /** Throws on an unknown id (a build-time bug). */
 export function getLeague(id: LeagueId): LeagueConfig {
   const l = LEAGUE_BY_ID.get(id);
-  if (!l) throw new Error(`lib/leagues.ts: unknown league "${id}"`);
+  if (!l) failInvariant('lib/leagues.ts', `unknown league "${id}"`);
   return l;
 }
 
@@ -2002,7 +2004,7 @@ export function isLeagueId(id: string): boolean {
 /** Throws on an unknown id. */
 export function getDivision(id: DivisionId): DivisionConfig {
   const d = DIVISION_BY_ID.get(id);
-  if (!d) throw new Error(`lib/leagues.ts: unknown division "${id}"`);
+  if (!d) failInvariant('lib/leagues.ts', `unknown division "${id}"`);
   return d;
 }
 
@@ -2063,7 +2065,7 @@ export function ladderFor(id: DivisionId): readonly LadderRung[] {
 export function ladderRung(id: DivisionId, place: number): LadderRung {
   const p = Math.min(Math.max(place, 1), 99);
   const rung = ladderFor(id).find((r) => r.places[0] <= p && p <= r.places[1]);
-  if (!rung) throw new Error(`lib/leagues.ts: no ladder rung for ${id} place ${place}`);
+  if (!rung) failInvariant('lib/leagues.ts', `no ladder rung for ${id} place ${place}`);
   return rung;
 }
 
@@ -2080,7 +2082,7 @@ export function tiebreakChainFor(id: DivisionId, bucketStartPlace: number): read
  */
 export function drawNumberOf(rules: LeagueRules, slug: TeamSlug): number {
   const n = rules.drawNumbers?.[slug];
-  if (n === undefined) throw new Error(`lib/leagues.ts: no draw number for ${slug}`);
+  if (n === undefined) failInvariant('lib/leagues.ts', `no draw number for ${slug}`);
   return n;
 }
 
@@ -2158,9 +2160,7 @@ function chainsOf(league: LeagueConfig): Array<{ start: number | null; chain: re
 
 /** Runs at import. Throws `lib/leagues.ts: <message>` on the first violated invariant. */
 export function assertLeagues(): void {
-  const fail = (m: string): never => {
-    throw new Error(`lib/leagues.ts: ${m}`);
-  };
+  const fail = (m: string): never => failInvariant('lib/leagues.ts', m);
   const dupes = (values: readonly string[]): string[] => [
     ...new Set(values.filter((v, i) => values.indexOf(v) !== i)),
   ];

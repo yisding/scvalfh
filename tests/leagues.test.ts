@@ -7,6 +7,7 @@
 
 import { describe, expect, it } from 'vitest';
 
+import { ConfigInvariantError } from '../lib/config/invariant';
 import {
   ALL_DIVISIONS, CCS, CCS_LEAGUE_IDS, DATA_QUALITY, DEFAULT_REGION, INDEPENDENT_LEAGUES, LEAGUES, LEAGUES_PROPER,
   LEAGUE_IDS, NO_POSTSEASON_LEAGUE_IDS,
@@ -85,6 +86,7 @@ function expectViolation(mutate: () => () => void, message: RegExp): void {
   const restore = mutate();
   try {
     expect(() => assertLeagues()).toThrow(message);
+    expect(() => assertLeagues()).toThrow(ConfigInvariantError);
   } finally {
     restore();
   }
@@ -126,6 +128,7 @@ describe('leagues: ids and helpers (SPEC §2.3)', () => {
     expect(DEFAULT_REGION).toBe('norcal');
     expect(getRegion('socal').name).toBe('Southern California');
     expect(() => getRegion('midcal' as RegionId)).toThrow(/lib\/leagues\.ts: unknown region/);
+    expect(() => getRegion('midcal' as RegionId)).toThrow(ConfigInvariantError);
     expect(SECTIONS.map((s) => [s.id, s.region])).toEqual([
       ['ccs', 'norcal'], ['ncs', 'norcal'], ['ns', 'norcal'], ['ss', 'socal'], ['sds', 'socal'],
     ]);
@@ -238,6 +241,9 @@ describe('leagues: ids and helpers (SPEC §2.3)', () => {
     expect(() => getLeague('nope')).toThrow(/lib\/leagues\.ts/);
     expect(() => getDivision('nope')).toThrow(/lib\/leagues\.ts/);
     expect(() => getSection('xyz' as 'ccs')).toThrow(/lib\/leagues\.ts/);
+    expect(() => getLeague('nope')).toThrow(ConfigInvariantError);
+    expect(() => getDivision('nope')).toThrow(ConfigInvariantError);
+    expect(() => getSection('xyz' as 'ccs')).toThrow(ConfigInvariantError);
   });
 
   it('builds no MaxPreps URL for a division MaxPreps has no table for, and keeps MaxPreps’ own table names', () => {

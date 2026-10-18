@@ -14,6 +14,7 @@
  * munging. `assertRegistry()` runs at module load and throws `lib/teams.ts: …` on any violation.
  */
 
+import { failInvariant } from './config/invariant';
 import { LEAGUES, findLeague, getLeague } from './leagues';
 import { BVAL_SEEDS } from './registry/bval';
 import { CITY_SEEDS } from './registry/city';
@@ -177,8 +178,9 @@ for (const t of TEAMS) {
     if (!key) continue;
     const prior = BY_KEY.get(key);
     if (prior && prior.id !== t.id) {
-      throw new Error(
-        `lib/teams.ts: alias "${raw}" (${key}) maps to both ${prior.slug} and ${t.slug}`,
+      failInvariant(
+        'lib/teams.ts',
+        `alias "${raw}" (${key}) maps to both ${prior.slug} and ${t.slug}`,
       );
     }
     BY_KEY.set(key, t);
@@ -292,9 +294,7 @@ const EXPECTED_ACRONYM_COLLISIONS = [
 ];
 
 function assertRegistry(): void {
-  const fail = (m: string): never => {
-    throw new Error(`lib/teams.ts: ${m}`);
-  };
+  const fail = (m: string): never => failInvariant('lib/teams.ts', m);
 
   // 1. unique ids, slugs, abbrs; slug shape
   const columns: Array<[string, string[]]> = [

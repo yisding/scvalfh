@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { ALL_DIVISIONS, LEAGUES } from '../lib/leagues';
 import {
@@ -412,5 +412,29 @@ describe('teams: the registry team on one side of a game', () => {
     expect(teamOfSide({ teamId: a.id, slug: b.slug })).toBe(a);
     expect(teamOfSide({ teamId: '00000000-0000-0000-0000-000000000000', slug: b.slug })).toBe(b);
     expect(teamOfSide({ teamId: null, slug: null })).toBeUndefined();
+  });
+});
+
+describe('teams: a violated registry invariant is a ConfigInvariantError', () => {
+  afterEach(() => {
+    vi.doUnmock('../lib/registry/scval');
+    vi.resetModules();
+  });
+
+  it('throws one at import, naming lib/teams.ts, when two seeds share an alias', async () => {
+    vi.resetModules();
+    vi.doMock('../lib/registry/scval', async (importOriginal) => {
+      const original = await importOriginal<typeof import('../lib/registry/scval')>();
+      const [first] = original.SCVAL_SEEDS;
+      return { ...original, SCVAL_SEEDS: [...original.SCVAL_SEEDS, { ...first, id: 'not-the-same-id' }] };
+    });
+    // The fresh module graph holds its own class, so compare through the freshly imported one.
+    const { ConfigInvariantError } = await import('../lib/config/invariant');
+    const failure = await import('../lib/teams').then(
+      () => null,
+      (err: unknown) => err,
+    );
+    expect(failure).toBeInstanceOf(ConfigInvariantError);
+    expect((failure as Error).message).toMatch(/^lib\/teams\.ts: alias ".*" \(.*\) maps to both st-ignatius and st-ignatius$/);
   });
 });
