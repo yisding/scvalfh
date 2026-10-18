@@ -111,7 +111,6 @@ function fullDisplay(d: HomeLastDisplay): GameDisplay {
     isForfeit: false,
     showScores: true,
     strikeTime: m.strikeTime === true,
-    liveDot: m.liveDot === true,
     home: side(d.home),
     away: side(d.away),
     versus: null,

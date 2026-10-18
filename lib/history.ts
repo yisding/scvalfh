@@ -116,6 +116,25 @@ export function hasHistory(leagueId: LeagueId): boolean {
   return history.leagues[leagueId]?.status === 'available';
 }
 
+/**
+ * The last day any of the archive's sources was read or checked (YYYY-MM-DD): the latest
+ * `retrievedOn` of a league's sources or a section's bracket, or `checkedOn` of an unavailable
+ * league. It is the /history/2025-26 sitemap `lastmod` (app/sitemap.ts): the archive is a finished
+ * season, so it changes only when a maintainer rebuilds it, never with the twice-daily snapshot.
+ */
+export function getHistoryLastChecked(): string {
+  const leagueDays = getHistoryLeagues().flatMap(({ entry }) =>
+    entry.status === 'unavailable'
+      ? [entry.checkedOn]
+      : 'retrievedOn' in entry.provenance
+        ? [entry.provenance.retrievedOn]
+        : [],
+  );
+  const bracketDays = getHistoryBrackets().map((b) => b.bracket.retrievedOn);
+  // Every section bracket has a `retrievedOn` (the schema requires one), so the list is never empty.
+  return [...leagueDays, ...bracketDays].sort().at(-1)!;
+}
+
 /** The source credit of an available league (SCVAL's two PDFs, BVAL's sheet and documents). */
 export function getHistoryProvenance(leagueId: LeagueId): AvailableLeagueHistory['provenance'] | null {
   const entry = history.leagues[leagueId];

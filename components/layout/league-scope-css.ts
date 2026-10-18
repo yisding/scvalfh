@@ -34,6 +34,8 @@
  *                          it (`/leaders#elo-rating-socal`) is shown whatever the stamp says.
  *                          `display:block`, so it is meant for block wrappers: a region-scoped flex or
  *                          grid list must not hold an anchor target (wrap it in a div that does).
+ *                          Off while `html[data-region-picked]` (prefs-script.ts REGION_PICKED): once
+ *                          the reader picks a region, the stamp alone decides, until the next jump.
  * - the /teams lift: while the finder on /teams is searching (`search[data-searching]`, a sibling of
  *                          `#team-list`, components/search/TeamFinder.tsx), both regions' team lists
  *                          show, so a match the live region announces is never a hidden tile
@@ -45,6 +47,8 @@
  * `display: none` also removes a hidden panel from the accessibility tree; DOM order stays the
  * visual order (WCAG 1.3.2 / 2.4.3).
  */
+
+import { REGION_PICKED } from './prefs-script';
 
 const ID = /^[a-z0-9-]+$/;
 
@@ -94,10 +98,14 @@ export function buildLeagueScopeCss(leagueIds: readonly string[]): string {
   rules.push(`html:not([data-region="${SOCAL}"]) [data-region-option="${NORCAL}"] .sx-chip-check{visibility:visible}`);
   rules.push(`html[data-region="${SOCAL}"] [data-region-option="${SOCAL}"]{${SELECTED}}`);
   rules.push(`html[data-region="${SOCAL}"] [data-region-option="${SOCAL}"] .sx-chip-check{visibility:visible}`);
-  rules.push('[data-region-scope]:has(:target){display:block!important}');
+  // Both deep-link rules stand down once the reader picks a region on this page view
+  // (REGION_PICKED): tap `#elo-rating` on /leaders, then SoCal, and the NorCal block that holds the
+  // `:target` would otherwise stay open above SoCal's, since dropping the fragment with
+  // `history.replaceState` does not clear `:target`.
+  rules.push(`html:not([${REGION_PICKED}]) [data-region-scope]:has(:target){display:block!important}`);
   // Not in the design's list: `:has()` never matches the element itself, so a link to the region
   // wrapper's own id (`/standings#socal`, the jump links) needs its own rule to open that region.
-  rules.push('[data-region-scope]:target{display:block!important}');
+  rules.push(`html:not([${REGION_PICKED}]) [data-region-scope]:target{display:block!important}`);
   rules.push('[data-teams-page]:has(search[data-searching]) #team-list [data-region-scope]{display:block}');
   return rules.join('\n');
 }

@@ -42,6 +42,19 @@
  * from a client module (components/ui/use-league.ts reads `LEAGUE_KEY`, `REGION_KEY`,
  * `PREFS_RESTAMP` and `REGION_OF`) and from the root layout alike.
  *
+ * The region pick (`data-region-picked`, REGION_PICKED). A jump link leaves a `:target` in the URL
+ * (`/leaders#elo-rating`), and the scope stylesheet's deep-link rule holds the block around it open
+ * whatever the region stamp says; `history.replaceState` does not clear `:target`. So the script
+ * listens for a tap on a region switcher button (`[data-region-option]`, once it is enabled, i.e.
+ * hydrated) and stamps `data-region-picked`, which turns the rule off for this page view: tap
+ * `#elo-rating`, then SoCal, and the NorCal boards close like the rest of NorCal. A fragment whose
+ * target sits in a block of the other region is also dropped from the URL, so a reload or a shared
+ * link opens the region the reader chose. The next fragment navigation (a jump link, back, forward)
+ * is a new deep link and removes the attribute (`hashchange`, and `popstate` for Back or Forward
+ * across paths, which restores a `:target` without a hashchange). It lives here, not in the switcher's client module,
+ * because /teams has no first-load JS to spare (scripts/assert-budgets.ts) and every page already
+ * runs this script.
+ *
  * The stamp function is also kept on `window[PREFS_RESTAMP]`, so a `storage` event from another tab
  * can re-run EXACTLY this validation (ids, slug map, stale pin, region precedence) instead of a
  * second copy of it. React drops an inline <script> rendered inside <body>, so app/layout.tsx renders
@@ -74,6 +87,14 @@ export const STAMPLESS_REGION = 'norcal';
 
 /** The global `(leagueId) => regionId | null` the script leaves behind for `setLeague`. */
 export const REGION_OF = '__sxRegionOf';
+
+/**
+ * `<html data-region-picked>`: the reader tapped a region switcher button on THIS page view. Never
+ * stored; set by the script's click listener and cleared by its `hashchange` and `popstate`
+ * listeners (see the header). While it is set the scope stylesheet's deep-link rule is off
+ * (components/layout/league-scope-css.ts).
+ */
+export const REGION_PICKED = 'data-region-picked';
 
 const ID = /^[a-z0-9-]+$/;
 
@@ -145,6 +166,17 @@ export function buildPrefsScript({ leagueIds, slugLeague, leagueRegion, defaultR
     `else if(v){g=Y(M[v]);if(!a)e=M[v]}` +
     `if(e)d.setAttribute('data-league',e);else d.removeAttribute('data-league');` +
     `if(g!==D)d.setAttribute('data-region',g);else d.removeAttribute('data-region')}catch(x){}}` +
-    `try{window.${PREFS_RESTAMP}=f;window.${REGION_OF}=function(l){return L.indexOf(l)>=0?Y(l):null}}catch(x){}f()})();`
+    `try{window.${PREFS_RESTAMP}=f;window.${REGION_OF}=function(l){return L.indexOf(l)>=0?Y(l):null}}catch(x){}f();` +
+    // The region pick (REGION_PICKED): b the tapped switcher button, k the fragment's target and then
+    // the region block holding it. Every fragment target on the site is a plain [a-z0-9-] id, so the
+    // hash is not decoded (decodeURIComponent throws on a stray %).
+    `try{var P='${REGION_PICKED}';document.addEventListener('click',function(e){var b=e.target,k;` +
+    `b=b&&b.closest&&b.closest('[data-region-option]');if(!b||b.disabled)return;d.setAttribute(P,'');` +
+    `k=document.getElementById(location.hash.slice(1));k=k&&k.closest('[data-region-scope]');` +
+    `if(k&&k.dataset.regionScope!==b.dataset.regionOption)` +
+    `history.replaceState(history.state,'',location.pathname+location.search)});` +
+    // Back or Forward across App Router paths restores a `:target` with no hashchange (that fires
+    // only when the URLs differ by the fragment alone), so popstate clears the pick too.
+    `function c(){d.removeAttribute(P)}addEventListener('hashchange',c);addEventListener('popstate',c)}catch(x){}})();`
   );
 }

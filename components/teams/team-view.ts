@@ -329,10 +329,16 @@ export function placeSub(view: TeamPageView): string {
   return placeScope(view.divisionSize, view.scopeLabel);
 }
 
-/** `<mascot> · <division heading> · <league short> · <city>`; single-division leagues drop the heading. */
+/**
+ * `<mascot> girls varsity field hockey · <division heading> · <league short> · <city>`; single-division
+ * leagues drop the heading. The sport is named here, under the h1 (the school's name alone), because
+ * nothing else in the page's opening text said which sport this school page is about.
+ */
 export function identityLine(team: Pick<Team, 'mascot' | 'city' | 'division'>, leagueShort: string): string {
   const heading = divisionHeading(team.division);
-  return [team.mascot, heading, leagueShort, team.city].filter((p): p is string => !!p).join(' · ');
+  return [`${team.mascot} girls varsity field hockey`, heading, leagueShort, team.city]
+    .filter((p): p is string => !!p)
+    .join(' · ');
 }
 
 /** The league copy for a team page, from config only. */

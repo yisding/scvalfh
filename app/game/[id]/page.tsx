@@ -18,7 +18,9 @@ import {
   gameStaticParams,
   gameTitle,
 } from '../../../components/game/game-view';
+import JsonLd from '../../../components/layout/JsonLd';
 import { OG_BASE } from '../../../components/layout/site';
+import { gameJsonLd } from '../../../components/layout/structured-data';
 import Arrow from '../../../components/ui/Arrow';
 import ExternalLink from '../../../components/ui/ExternalLink';
 import ScoreBoard from '../../../components/ui/ScoreBoard';
@@ -28,8 +30,8 @@ import ScoreBoard from '../../../components/ui/ScoreBoard';
  *
  * A final score is the object people actually send to each other, and a `<details>` row inside a
  * date page has no URL, no OG card and nothing to land on. So every contest gets a page: both
- * monograms and their league records as of that game (to date on a non-league game), the line score with its decider, the cleaned
- * recap with the result links under it, the venue, the real off-site links, routes to both team
+ * monograms and their league records as of that game (to date on a non-league game), the line score with its decider, the
+ * result links, the venue, the real off-site links, routes to both team
  * pages, both sides' form going in, the season series between these two schools, and the source
  * deep links — plus a text-only OG card so a link pasted into a group text previews the score
  * itself.
@@ -60,12 +62,16 @@ export async function generateMetadata({ params }: PageProps<'/game/[id]'>): Pro
     if (stub) {
       const title = stub.targetModel ? gameTitle(stub.targetModel) : 'Game moved to MaxPreps';
       return {
-        title,
+        // Absolute when it is the target game's title, which names the sport (as on the game page below).
+        title: stub.targetModel ? { absolute: title } : title,
         description: stub.sentence,
+        // The canonical alone says "index the MaxPreps game instead". It used to come with
+        // `noindex, follow`, and the two contradict each other: Google's duplicate-URL guidance is
+        // not to noindex a page whose canonical points elsewhere, since the noindex can be carried
+        // over to the target. The stub stays out of the sitemap (app/sitemap.ts).
         alternates: { canonical: stub.targetHref },
         // The title stated, not inherited with the site-name suffix (components/layout/site.ts OG_BASE).
         openGraph: { ...OG_BASE, title },
-        robots: { index: false, follow: true },
       };
     }
     return { title: 'Game not found', robots: { index: false, follow: false } };
@@ -73,7 +79,10 @@ export async function generateMetadata({ params }: PageProps<'/game/[id]'>): Pro
   const title = gameTitle(model);
   const description = gameDescription(model);
   return {
-    title,
+    // Absolute: the title already names the sport (gameTitle), and the layout's "— NorCal HS Field
+    // Hockey" would repeat it and push a matchup's title to ~80 characters; og:site_name and the
+    // WebSite markup on / carry the brand.
+    title: { absolute: title },
     description,
     alternates: { canonical: model.canonical },
     openGraph: {
@@ -119,13 +128,14 @@ export default async function GamePage({ params }: PageProps<'/game/[id]'>) {
   // Away first, like the scoreboard; an opponent outside the registry has no page here to link to
   // (DESIGN §8).
   const teamLinks = [away, home].flatMap((side) => (side.team ? [side.team] : []));
-  // Does the main column's row 2 (recap · result links · source line · postseason notes · source
+  // Does the main column's row 2 (result links · source line · postseason notes · source
   // disagreement · result-flag conflict) render anything? The DETAILS rail starts in that row, so
-  // it takes the recap's 24px top margin when the row is there and the section margin when it is
-  // not: either way its top lines up with the first thing in the left column — the recap, or the
-  // FORM GOING IN heading (F-27c).
+  // it takes the result links' 24px top margin when the row is there and the section margin when
+  // it is not: either way its top lines up with the first thing in the left column — the result
+  // links, or the FORM GOING IN heading (F-27c). MaxPreps' recap sentence ("X won their away
+  // conference game against Y by a score of 4-0.") is not printed: it only restates the
+  // scoreboard above it.
   const leadRow =
-    Boolean(game.recap) ||
     resultLinks.length > 0 ||
     Boolean(model.source) ||
     model.postseasonNotes.length > 0 ||
@@ -135,6 +145,7 @@ export default async function GamePage({ params }: PageProps<'/game/[id]'>) {
 
   return (
     <div className="pb-section-lg">
+      <JsonLd data={gameJsonLd(model)} />
       {/* Routes out of the page (F-31): back to the day, then each registry side's team page, away
           first. Every one is a standalone 44px target (WCAG 2.5.8). Only the first is pulled left
           by its own padding so its arrow lines up with the gutter; the team pills have a visible
@@ -174,7 +185,7 @@ export default async function GamePage({ params }: PageProps<'/game/[id]'>) {
 
       {/*
         From 1024px the DETAILS card sits in a right rail beside the main column, and the DOM keeps
-        the PHONE order — scoreboard, recap, details, form, series, sources (DESIGN §10.5). Explicit
+        the PHONE order — scoreboard, result links, details, form, series, sources (DESIGN §10.5). Explicit
         row placement, not two wrapper columns, is what makes those two facts compatible: a section
         that renders nothing collapses its row to zero height, and vertical rhythm comes from
         margins rather than a row gap so a collapsed row leaves no ghost space.
@@ -199,16 +210,13 @@ export default async function GamePage({ params }: PageProps<'/game/[id]'>) {
         </div>
 
         <div className="lg:col-start-1 lg:row-start-2">
-          {game.recap ? (
-            <p className="mt-6 mb-0 max-w-prose text-body text-ink-2">{game.recap}</p>
-          ) : null}
-          {/* A final's result links live HERE, directly under the recap (F-73/F-85): on a phone they
+          {/* A final's result links live HERE, directly under the scoreboard (F-73/F-85): on a phone they
               are above the tab bar rather than at the foot of the DETAILS card, and they appear
               once on the page (GameDetails and GameElsewhere leave them out; only the
               disagreement notes below cite a source page again). The accent pill is the source
               the score came from. */}
           {resultLinks.length > 0 ? (
-            <p className={game.recap ? 'mt-4 mb-0 flex flex-wrap gap-2' : 'mt-6 mb-0 flex flex-wrap gap-2'}>
+            <p className="mt-6 mb-0 flex flex-wrap gap-2">
               {resultLinks.map((link) => (
                 <ExternalLink
                   key={link.href}

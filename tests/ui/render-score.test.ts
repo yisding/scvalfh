@@ -342,16 +342,15 @@ describe('§5.2 row 6b — scheduled with no time', () => {
 });
 
 describe('§5.2 row 7 — in progress', () => {
-  const d = describeGame(game({ status: 'live' }));
-  it('shows no score at all and discloses that LIVE is a scheduled window', () => {
-    expect(d.kind).toBe('live');
-    expect(d.statusLabel).toBe('LIVE');
-    expect(d.showScores).toBe(false);
-    expect(d.liveDot).toBe(true);
-    expect(d.note).toMatch(/scheduled window/i);
-  });
-  it('uses the accent, not a third status hue', () => {
-    expect(d.statusTone).toBe('accent');
+  it('renders exactly like a scheduled game: a static page cannot know the game is still on', () => {
+    const live = describeGame(game({ status: 'live' }));
+    const scheduled = describeGame(game({ status: 'scheduled' }));
+    expect(live.kind).toBe('scheduled');
+    expect(live.statusLabel).toBe(scheduled.statusLabel);
+    expect(live.statusTone).toBe(scheduled.statusTone);
+    expect(live.note).toBeNull();
+    expect(live.showScores).toBe(false);
+    expect(live.sentence).toBe(scheduled.sentence);
   });
 });
 

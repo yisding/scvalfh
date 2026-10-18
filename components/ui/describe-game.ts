@@ -24,7 +24,7 @@ import type { Game, LeagueId, Outcome, PostseasonTag, ScoreView, TeamSlug } from
 /** The chip a side or a row carries. `none` = no chip at all (a scheduled game). */
 export type ChipKind = Outcome | 'pending' | 'cancelled' | 'postponed' | 'none';
 
-export type StatusTone = 'ink' | 'ink-2' | 'ink-3' | 'accent';
+export type StatusTone = 'ink' | 'ink-2' | 'ink-3';
 
 export interface SideView {
   name: string;
@@ -49,7 +49,7 @@ export interface SideView {
 
 export interface GameDisplay {
   kind: ScoreView['kind'] | 'cancelled';
-  /** FINAL · LIVE · SCORE NOT REPORTED · POSTPONED · CANCELLED · '5:30 PM' · TIME TBA */
+  /** FINAL · SCORE NOT REPORTED · POSTPONED · CANCELLED · '5:30 PM' · TIME TBA */
   statusLabel: string;
   statusTone: StatusTone;
   /** The body sentence under a row that needs one, e.g. the unreported promise. */
@@ -93,8 +93,6 @@ export interface GameDisplay {
   showScores: boolean;
   /** Only the TIME is struck through on a cancelled game; names never are. */
   strikeTime: boolean;
-  /** LIVE gets an 8px accent dot, a pulse, and the words "scheduled window". */
-  liveDot: boolean;
   home: SideView;
   away: SideView;
   /** 'vs' | 'at' from `perspective`'s point of view; null when there is no perspective. */
@@ -220,7 +218,6 @@ function chipsFor(game: Game): Pick<GameDisplay, 'isNonLeague' | 'leagueTag' | '
     sourceMark: game.provenance.scores === 'sblive' ? 'si.com' : null,
   };
 }
-const LIVE_NOTE = 'A scheduled window, not a running score — we do not collect live scores.';
 
 /**
  * The section both sides are teams of when it ends a level varsity game with a shootout
@@ -355,7 +352,6 @@ export function describeGame(game: Game, perspective?: TeamSlug | null): GameDis
     ...chipsFor(game),
     isForfeit,
     strikeTime: false,
-    liveDot: false,
     versus,
     sentence: scoreSentence(game, {
       quietOvertime: overtimeInDoubt(game),
@@ -420,19 +416,6 @@ export function describeGame(game: Game, perspective?: TeamSlug | null): GameDis
         away: sideView(game.away.name, game.away.slug, null, 'level', 'pending'),
         perspectiveOutcome: null,
       };
-    case 'live':
-      return {
-        ...base,
-        kind: 'live',
-        statusLabel: 'LIVE',
-        statusTone: 'accent',
-        note: LIVE_NOTE,
-        liveDot: true,
-        showScores: false,
-        home: sideView(game.home.name, game.home.slug, null, 'level', 'none'),
-        away: sideView(game.away.name, game.away.slug, null, 'level', 'none'),
-        perspectiveOutcome: null,
-      };
     case 'postponed':
       return {
         ...base,
@@ -479,7 +462,6 @@ export function describeCancelled(game: Game, note: string | null = null): GameD
     isForfeit: false,
     showScores: false,
     strikeTime: true,
-    liveDot: false,
     home: sideView(game.home.name, game.home.slug, null, 'level', 'cancelled'),
     away: sideView(game.away.name, game.away.slug, null, 'level', 'cancelled'),
     versus: game.site === 'neutral' ? 'vs' : null,

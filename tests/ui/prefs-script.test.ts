@@ -12,6 +12,7 @@ import {
   PREFS_RESTAMP,
   REGION_KEY,
   REGION_OF,
+  REGION_PICKED,
   buildPrefsScript,
 } from '../../components/layout/prefs-script';
 import { PINNED_TEAM_KEY, PINNED_TEAM_SCRIPT } from '../../components/layout/pinned-team-script';
@@ -63,7 +64,10 @@ describe('buildPrefsScript', () => {
   // estimated 2.2–2.4 KB and proposed a 3,072 B line), and the line became the measurement × 1.12
   // rounded up to 256 B: 2,748 → 2,816 B. The LA independents (DESIGN §24.9: three
   // slugs and one more league id, in L, G and R) took it to 2,537 B the same day; by the same rule
-  // 2,537 × 1.12 = 2,842 → 3,072 B, 83 % used.
+  // 2,537 × 1.12 = 2,842 → 3,072 B, 83 % used. The region pick's two listeners (a jump link's
+  // `:target` no longer holds the other region open) took it to 3,018 B on 2026-10-18, 98 % used:
+  // they live here because /teams had no first-load JS left for them (scripts/assert-budgets.ts).
+  // Clearing it on popstate as well took it to 3,052 B, 99 % used.
   it('stays within 3,072 B including the 102-entry slug map', () => {
     expect(TEAMS.length).toBe(102);
     expect(Buffer.byteLength(SCRIPT, 'utf8')).toBeLessThanOrEqual(3072);
@@ -293,4 +297,75 @@ describe('PINNED_TEAM_SCRIPT', () => {
     expect(PINNED_TEAM_SCRIPT).not.toContain('data-has-pin');
     expect(PINNED_TEAM_SCRIPT).not.toContain('documentElement');
   });
+});
+
+describe('the region pick (data-region-picked)', () => {
+  /**
+   * A page at `/leaders<hash>` whose fragment target sits in a `data-region-scope` block of
+   * `targetRegion`, with the click and hashchange listeners the script registers captured.
+   */
+  function page(hash: string, targetRegion: string) {
+    const html = new FakeHtml();
+    const on: Record<string, (e?: unknown) => void> = {};
+    const replaced: string[] = [];
+    const block = { dataset: { regionScope: targetRegion } };
+    const context: Record<string, unknown> = {
+      document: {
+        documentElement: html,
+        addEventListener: (type: string, fn: (e?: unknown) => void) => void (on[`document:${type}`] = fn),
+        getElementById: (id: string) => (id !== '' && id === hash.slice(1) ? { closest: () => block } : null),
+      },
+      localStorage: { getItem: () => null },
+      location: { pathname: '/leaders', search: '', hash },
+      history: { state: { tree: 1 }, replaceState: (_s: unknown, _t: string, url: string) => void replaced.push(url) },
+      addEventListener: (type: string, fn: () => void) => void (on[`window:${type}`] = fn),
+    };
+    context.window = context;
+    vm.runInNewContext(SCRIPT, context);
+    /** A tap on a region switcher button (or, with `option` null, on anything else). */
+    const tap = (option: string | null, disabled = false) => {
+      const button = { disabled, dataset: { regionOption: option } };
+      on['document:click']!({ target: { closest: (sel: string) => (option !== null && sel === '[data-region-option]' ? button : null) } });
+    };
+    return { html, on, replaced, tap };
+  }
+
+  it('/leaders#elo-rating, then SoCal: marks the pick and drops the NorCal fragment', () => {
+    const p = page('#elo-rating', 'norcal');
+    expect(p.html.getAttribute(REGION_PICKED)).toBeNull();
+    p.tap('socal');
+    expect(p.html.getAttribute(REGION_PICKED)).toBe('');
+    expect(p.replaced).toEqual(['/leaders']);
+  });
+
+  // popstate: load /playoffs#sunset, go to /about, tap NorCal, press Back. The traversal restores
+  // the :target across App Router paths, and no hashchange fires for it.
+  for (const event of ['hashchange', 'popstate']) {
+    it(`the next fragment navigation is a new deep link: ${event} clears the pick`, () => {
+      const p = page('#elo-rating', 'norcal');
+      p.tap('socal');
+      p.on[`window:${event}`]!();
+      expect(p.html.getAttribute(REGION_PICKED)).toBeNull();
+    });
+  }
+
+  it('a fragment in the chosen region, or none, stays as it is', () => {
+    const inRegion = page('#elo-rating-socal', 'socal');
+    inRegion.tap('socal');
+    expect(inRegion.html.getAttribute(REGION_PICKED)).toBe('');
+    expect(inRegion.replaced).toEqual([]);
+    const none = page('', 'norcal');
+    none.tap('socal');
+    expect(none.html.getAttribute(REGION_PICKED)).toBe('');
+    expect(none.replaced).toEqual([]);
+  });
+
+  it('ignores other clicks and a disabled (unhydrated) button', () => {
+    const p = page('#elo-rating', 'norcal');
+    p.tap(null);
+    p.tap('socal', true);
+    expect(p.html.getAttribute(REGION_PICKED)).toBeNull();
+    expect(p.replaced).toEqual([]);
+  });
+
 });

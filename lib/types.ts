@@ -203,7 +203,10 @@ export interface Team {
 export type GameStatus =
   /** contestState 2 */
   | 'scheduled'
-  /** contestState 3 — never observed; rendered as a scheduled window (DESIGN §5.2) */
+  /**
+   * contestState 3 — never observed. Rendered exactly like 'scheduled': the pages are static and
+   * refreshed once or twice a day, so a LIVE label would be stale by the time anyone read it.
+   */
   | 'live'
   /** contestState 4 */
   | 'final'
@@ -354,6 +357,14 @@ export interface Game {
     backfill?: BackfillProvenance;
     fetchedAt: string;
     maxprepsModifiedOn?: string;
+    /**
+     * When the pipeline last saw this game's published content change (ISO UTC, a run's `fetchedAt`):
+     * set by lib/pipeline/steps/assemble.ts against the previous snapshot's copy of the game, every
+     * field compared but the fetch stamps and MaxPreps' own `maxprepsModifiedOn` (lib/content-dates.ts
+     * stampContentChanges). Absent on a game unchanged since the stamp was introduced. Read by the
+     * sitemap's `lastmod`, never shown.
+     */
+    contentChangedAt?: string;
     leagueFlagConflict?: string;
     hostConflict?: string;
     /** NEW. D2 rule 4a evidence: result flags contradict the score, or the two rows disagree. */
@@ -842,6 +853,17 @@ export type SeasonPhase =
 
 // ---------- snapshot ----------
 
+/** One contest leaving one date (Snapshot.contentRemovals). */
+export interface ContentRemoval {
+  contestId: ContestId;
+  /** The date it left (YYYY-MM-DD, Pacific). */
+  dateKey: string;
+  /** Its registry sides, whose team and game pages showed it. */
+  slugs: TeamSlug[];
+  /** The run that saw it gone (that run's `fetchedAt`). */
+  removedAt: string;
+}
+
 export interface Snapshot {
   /** NEW. v1 files (no field) are upgraded in memory by lib/snapshot-migrate.ts. */
   schemaVersion: 2;
@@ -874,6 +896,12 @@ export interface Snapshot {
    * stub page (canonical → the MaxPreps game). Empty object when none.
    */
   supersededGames: Record<ContestId, ContestId>;
+  /**
+   * Contests that left a date: deleted, superseded, or moved to another day (lib/content-dates.ts
+   * contentRemovalsOf). The pages that showed one still changed when it went, though no game left on
+   * them did, so the sitemap's `lastmod` counts these too. Carried for the season; never shown.
+   */
+  contentRemovals?: ContentRemoval[];
   /** SCVAL-only (scval.com standings PDF poll). */
   officialStandingsPdfUrl?: string | null;
   counts: {
@@ -902,6 +930,5 @@ export type ScoreView =
       shootout: { home: number; away: number } | null;
     }
   | { kind: 'scheduled'; time: string | null }
-  | { kind: 'live' }
   | { kind: 'unreported' }
   | { kind: 'postponed'; newDate: string | null };

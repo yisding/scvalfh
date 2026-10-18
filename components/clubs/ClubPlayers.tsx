@@ -40,7 +40,7 @@ import type { ClubPageView, ClubPlayerRow } from './club-view';
 
 function PlayerRow({ row }: { row: ClubPlayerRow }) {
   return (
-    <li className="min-w-0 border-t border-divider px-gutter py-2.5 first:border-t-0 sm:row-span-4 sm:grid sm:grid-cols-[minmax(0,1fr)] sm:grid-rows-subgrid sm:px-4 sm:[&:nth-child(2)]:border-t-0 lg:[&:nth-child(3)]:border-t-0">
+    <li className="sx-gridcell sm:row-span-4 sm:grid sm:grid-cols-[minmax(0,1fr)] sm:grid-rows-subgrid">
       <span className="block text-body text-ink">{row.name}</span>
       <span className="block text-meta text-ink-2">
         {/* `prefetch={false}`: one link per row, to a static team page (tests/ui/prefetch-policy). */}

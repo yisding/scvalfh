@@ -42,7 +42,6 @@ export interface HomeLastDisplay {
   statusTone: GameDisplay['statusTone'];
   /** The flags and chips that are set; an absent key is false/null. */
   marks?: Partial<{
-    liveDot: true;
     strikeTime: true;
     isNonLeague: true;
     deciderTag: string;

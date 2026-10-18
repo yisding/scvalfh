@@ -194,18 +194,17 @@ function TeamLine({
     // The name takes `nameClass`: a winner 600/ink, a loser 400/ink-2, and a LEVEL side —
     // a tie and every game not yet decided — 400 in full ink, so an upcoming slate is not
     // printed in the loser's grey.
-    <span className="flex min-h-6 items-center gap-2">
+    // `.sx-teamline`, `.sx-teamname`, `.sx-teamrecord` and `.sx-teamscore` (app/globals.css,
+    // "Game rows and cards") are those measurements as classes: every list page repeats this line
+    // twice per game, and /schedule/<league> twice again (GameRow and GameCard).
+    <span className="sx-teamline">
       {chipSlot ? <ResultChip kind={side.chip} size={20} /> : null}
       {!monogram ? null : team ? (
         <TeamMonogram team={team} size={24} />
       ) : (
         <GhostMonogram name={side.name} size={24} title={NON_MEMBER_NOTE} />
       )}
-      <span
-        className={`line-clamp-2 min-w-0 flex-1 break-words text-body max-[22.4375rem]:text-[0.9375rem] max-[22.4375rem]:leading-5 ${nameClass(
-          side,
-        )}`}
-      >
+      <span className={`sx-teamname ${nameClass(side)}`}>
         {/* The dense row renders the SHORT name (DESIGN §3.3's wireframe writes "Mitty", not
             "Archbishop Mitty High School"). `display.sentence` keeps the full name for a screen
             reader. */}
@@ -221,10 +220,7 @@ function TeamLine({
             Below 359px it is dropped rather than allowed to wrap the name. The row's sr-only
             sentence carries it in words. */}
         {record ? (
-          <span
-            className="sx-num ml-2 whitespace-nowrap text-micro text-ink-3 max-[22.4375rem]:hidden"
-            aria-hidden="true"
-          >
+          <span className="sx-num sx-teamrecord" aria-hidden="true">
             {record}
           </span>
         ) : null}
@@ -232,7 +228,7 @@ function TeamLine({
       {/* The 22px glyph's 28px line box is centred in the 24px line, so two team lines are
           52px and the row keeps its 76px height. */}
       {showScore ? (
-        <span className="flex h-6 shrink-0 items-center justify-end">
+        <span className="sx-teamscore">
           <ScoreGlyph side={side} size="score" />
         </span>
       ) : null}
@@ -296,7 +292,8 @@ export function SummaryLead({
         // `display.sentence` carries PT.
         <span
           className={[
-            'sx-num h-4 whitespace-nowrap text-cell leading-4 text-ink-2',
+            // `.sx-lead-clock` (app/globals.css): the 16px nowrap line of 13px mono ink-2.
+            'sx-num sx-lead-clock',
             display.strikeTime ? 'line-through' : null,
           ]
             .filter(Boolean)
@@ -307,11 +304,13 @@ export function SummaryLead({
       ) : null}
       {/* StatusLabel's own gap (6px), tracking (0.04em) and line (16px) are tightened from here,
           by child rules that outrank its classes: 4px, normal tracking, 12px lines (all caps, so
-          two lines of SCORE NOT REPORTED are 24px), and a 16px decider tag. */}
-      <span className="flex min-h-4 items-center [&>span]:gap-x-1 [&>span]:leading-3 [&>span]:tracking-normal [&_.rounded-tag]:h-4">
+          two lines of SCORE NOT REPORTED are 24px), and a 16px decider tag. Those rules are
+          `.sx-lead-status` (app/globals.css): (0,1,1) and (0,2,0) against `.sx-status` and
+          `.sx-tag`, which are (0,1,0) in the same layer, so they still win. */}
+      <span className="sx-lead-status">
         {statusIsTime && showTime ? null : <StatusLabel display={display} showChips={false} />}
       </span>
-      <span className="flex min-h-5 items-center">
+      <span className="sx-lead-chips">
         {showChips ? <GameChips display={display} /> : null}
       </span>
     </span>
@@ -383,7 +382,7 @@ function GameLinks({ game }: { game: Game }) {
         <ExternalLink
           key={l.href}
           href={l.href}
-          className="sx-pill bg-surface hover:bg-surface-3 active:bg-surface-3"
+          className="sx-pill sx-pill-card"
         >
           {l.label}
         </ExternalLink>
@@ -400,7 +399,9 @@ function GameDetailBody({ game, showRecap }: { game: Game; showRecap: boolean })
     // the panel starts at the gutter there.
     // A flex column, not `space-y-3`: v4's space-y is a zero-specificity child rule, so each
     // child's `m-0` cancelled it and the recap sat on the pill row.
-    <div className="flex flex-col gap-3 border-t border-divider bg-surface-2 px-gutter pb-4 pt-3 text-meta md:pl-[calc(var(--spacing-gutter)+5.5rem)]">
+    // `.sx-gamedetail` (app/globals.css) is that panel: surface-2 under a divider, 12px between
+    // its lines, the md indent.
+    <div className="sx-gamedetail">
       {showRecap && game.recap ? <p className="m-0 text-ink-2">{game.recap}</p> : null}
       {game.venue.name ? <p className="m-0 text-ink-2">{game.venue.name}</p> : null}
       {/* `contest.location` is a NOTE field, not a venue field — live values include
@@ -443,7 +444,9 @@ export function GameRow({
           90px; the 10px comes back from the score column, which is sized to its glyph. */}
       {/* The ring is inset: the row is an edge-to-edge band, and an outset ring would be clipped
           by the screen edge (or by a /schedule date group's paint containment). */}
-      <summary className="sx-tap relative grid min-h-gamerow cursor-pointer list-none grid-cols-[5rem_minmax(0,1fr)_1rem] items-center gap-x-2 px-gutter py-3 focus-visible:-outline-offset-2 [&::-webkit-details-marker]:hidden">
+      {/* `.sx-gamerow` (app/globals.css) is the grid, the 76px floor, the padding, the inset ring
+          and the hidden marker: one class instead of twelve utilities on every row. */}
+      <summary className="sx-tap sx-gamerow">
         {/* The chips are aria-hidden in the lead column, so the sentence says them in words — the
             same gate as the chips, so a bracket (showChips false) does not repeat them. */}
         <span className="sr-only">
@@ -517,12 +520,8 @@ export function GameCard({
       // The stretched "Game page" link covers the card, so its focus ring is drawn on the card:
       // a keyboard user sees the same target a pointer gets. Inset, because a /schedule date
       // group is `content-visibility: auto` (paint containment) and clips anything outside it.
-      className={[
-        'sx-card sx-lift relative flex flex-col gap-3 p-4 md:p-5 has-[>div>a[data-stretched]:focus-visible]:outline-2 has-[>div>a[data-stretched]:focus-visible]:-outline-offset-2 has-[>div>a[data-stretched]:focus-visible]:outline-[var(--sx-focus)]',
-        className,
-      ]
-        .filter(Boolean)
-        .join(' ')}
+      // `.sx-gamecard` (app/globals.css) carries the column, the padding and that ring.
+      className={['sx-card sx-lift sx-gamecard', className].filter(Boolean).join(' ')}
     >
       <span id={sentenceId} className="sr-only">
         {display.sentence}
@@ -569,22 +568,20 @@ export function GameCard({
       ) : null}
       {display.note ? <p className="m-0 text-meta text-ink-3">{display.note}</p> : null}
       <div
-        className={
-          pills
-            ? 'mt-auto flex flex-wrap gap-2 pt-1'
-            : 'mt-auto flex flex-wrap items-center gap-x-4 gap-y-1 text-meta'
-        }
+        className={pills ? 'mt-auto flex flex-wrap gap-2 pt-1' : 'sx-gamecard-links'}
       >
         <Link
           href={gameHref(game.contestId)}
           prefetch={false}
           data-stretched=""
           aria-describedby={sentenceId}
+          // `.sx-stretch` (app/globals.css): the ::after that covers the card, and no ring of its
+          // own (the card draws it).
           className={[
             pills
               ? 'sx-pill sx-pill-accent min-h-11'
               : 'sx-action font-medium text-accent no-underline hover:underline',
-            'after:absolute after:inset-0 after:rounded-[var(--sx-r-card-lg)] focus-visible:outline-none',
+            'sx-stretch',
           ].join(' ')}
         >
           {pills ? 'Full game page' : 'Game page'}
@@ -615,8 +612,12 @@ export function GameCard({
   );
 }
 
-/** GameCard's compact Box score / NFHS stream text links, above the stretched link. */
-const textLinkClass = 'sx-action relative z-10 gap-1 font-medium no-underline hover:underline';
+/**
+ * GameCard's compact Box score / NFHS stream text links, above the stretched link
+ * (`.sx-gamecard-extlink`: relative, z-10, a 4px gap, weight 500). ExternalLink already adds
+ * `hover:underline`.
+ */
+const textLinkClass = 'sx-action sx-gamecard-extlink no-underline';
 
 /**
  * The compact "Next up" form: `5:30 PM  Homestead at Los Altos`. Normally one line; a matchup

@@ -1910,6 +1910,16 @@ export function isIndependentLeague(id: LeagueId): boolean {
   return LEAGUE_BY_ID.get(id)?.independents === true;
 }
 
+/**
+ * The league's name with the sport, for copy that says what a page covers: 'Santa Clara Valley Athletic
+ * League girls varsity field hockey', but 'Sunset field hockey league, girls varsity', whose own name
+ * already says the sport (never "… field hockey league girls varsity field hockey").
+ */
+export function leagueSportWords(id: LeagueId): string {
+  const { name } = getLeague(id);
+  return /field hockey/i.test(name) ? `${name}, girls varsity` : `${name} girls varsity field hockey`;
+}
+
 /** '<SHORT> standings' as a link's or a title's words ('LA standings' for the LA independents). */
 export function standingsLabel(id: LeagueId): string {
   return `${getLeague(id).shortName} standings`;

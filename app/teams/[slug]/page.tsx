@@ -33,11 +33,13 @@ import LeagueHealthNote from '../../../components/ui/LeagueHealthNote';
 import MarginStrip from '../../../components/ui/MarginStrip';
 import { formStripName, plural } from '../../../components/ui/plural';
 import SectionHeader from '../../../components/ui/SectionHeader';
+import JsonLd from '../../../components/layout/JsonLd';
 import { DATA_CORRECTIONS_URL, OG_BASE } from '../../../components/layout/site';
+import { teamJsonLd } from '../../../components/layout/structured-data';
 import { getTeamSlugs, getToday } from '../../../lib/data';
 import { ordinal, recordString, shortDate } from '../../../lib/format';
 import { getHistoryFor, getHistorySeason, getHistoryStandings } from '../../../lib/history';
-import { divisionHeading, leagueOfDivision, regionOf } from '../../../lib/leagues';
+import { divisionHeading, getLeague, leagueOfDivision, regionOf } from '../../../lib/leagues';
 import type { DivisionId, LeagueId } from '../../../lib/types';
 
 /**
@@ -144,7 +146,9 @@ export async function generateMetadata({ params }: PageProps<'/teams/[slug]'>): 
     buildRosterView(team.slug),
   );
   return {
-    title: `${team.name} field hockey`,
+    // With the mascot, as the school's teams are known and searched ("Fremont Firebirds"): the bare
+    // name is ambiguous for a school named for its city (Fremont, Christopher, Prospect).
+    title: `${team.name} ${team.mascot} field hockey`,
     description: `${team.name} ${team.mascot} girls varsity field hockey (${view.league.shortName}), unofficial: ${record}. Schedule, results, ${extras}goal margins and ${postseasonDescription(view)}.`,
     alternates: { canonical: `/teams/${team.slug}` },
     openGraph: {
@@ -265,6 +269,7 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
 
   return (
     <div className="pb-section-lg">
+      <JsonLd data={teamJsonLd(team, getLeague(team.league))} />
       <TeamIdentity view={view} knownSlugs={getTeamSlugs()} />
 
       <LeagueHealthNote leagueId={team.league} className="mt-4" />

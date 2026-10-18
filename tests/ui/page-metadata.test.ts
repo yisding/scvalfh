@@ -20,6 +20,7 @@ interface PageModule {
 }
 
 let SITE_NAME = '';
+let SITE_WORDMARK = '';
 let pages: Array<{ path: string; load: () => Promise<Metadata> }> = [];
 
 function read(mod: PageModule, params: Record<string, string> = {}): Promise<Metadata> {
@@ -31,7 +32,7 @@ function read(mod: PageModule, params: Record<string, string> = {}): Promise<Met
 stubCorpusSnapshot('all-2026-10-02');
 
 beforeAll(async () => {
-  ({ SITE_NAME } = await import('../../components/layout/site'));
+  ({ SITE_NAME, SITE_WORDMARK } = await import('../../components/layout/site'));
   const data = await import('../../lib/data');
   const { getClubSlugs } = await import('../../lib/clubs');
   const { gameStaticParams } = await import('../../components/game/game-view');
@@ -72,7 +73,28 @@ describe('og:title (components/layout/site.ts OG_BASE)', () => {
       expect(typeof og?.title, `${path}: openGraph.title is a stated string`).toBe('string');
       expect(og?.title, `${path}: og:title`).not.toBe('');
       expect(og?.title, `${path}: og:title carries no site-name suffix`).not.toMatch(new RegExp(` — ${SITE_NAME}$`));
+      expect(og?.title, `${path}: og:title carries no title-template suffix`).not.toMatch(new RegExp(` — ${SITE_WORDMARK}$`));
       expect(og && 'siteName' in og ? og.siteName : undefined, `${path}: og:site_name`).toBe(SITE_NAME);
+    }
+  });
+});
+
+describe('<title> (search results show about 60 characters of it)', () => {
+  // The pages whose own words used to leave the sport to the site-name suffix, which a result cuts.
+  const SPORT_PAGES = [
+    'app/page.tsx',
+    'app/game/[id]/page.tsx',
+    'app/schedule/[league]/page.tsx',
+    'app/scores/[date]/page.tsx',
+    'app/standings/[league]/page.tsx',
+    'app/teams/[slug]/page.tsx',
+  ];
+
+  it('names the sport in the page’s own part of the title', async () => {
+    for (const { path, load } of pages.filter((p) => SPORT_PAGES.includes(p.path))) {
+      const { title } = await load();
+      const text = typeof title === 'string' ? title : title && 'absolute' in title ? title.absolute : '';
+      expect(text, `${path}: title`).toMatch(/field hockey/i);
     }
   });
 });

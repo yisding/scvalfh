@@ -8,7 +8,7 @@ import { BUILD_INSTANT } from '../components/layout/build-instant';
 import { DISCLOSURE_SCRIPT } from '../components/layout/disclosure-script';
 import { buildLeagueScopeCss } from '../components/layout/league-scope-css';
 import { buildPrefsScript } from '../components/layout/prefs-script';
-import { OG_BASE, SITE_DESCRIPTION, SITE_NAME, SITE_URL } from '../components/layout/site';
+import { OG_BASE, SITE_DESCRIPTION, SITE_NAME, SITE_URL, SITE_WORDMARK } from '../components/layout/site';
 import { PINNED_TEAM_SCRIPT } from '../components/layout/pinned-team-script';
 import { THEME_COLOR, THEME_SCRIPT } from '../components/layout/theme-script';
 import PinnedTeamMarks from '../components/ui/PinnedTeamMarks';
@@ -84,9 +84,13 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
+  // The suffix is the WORDMARK, the header's own "NorCal HS Field Hockey", not SITE_NAME: search
+  // results cut a title at about 60 characters, and the 33-character "— NorCal High School Field
+  // Hockey" pushed most team, league and date titles past it, so the page's own words (which now
+  // carry "field hockey" themselves) were what got cut. og:site_name still states SITE_NAME.
   title: {
     default: SITE_NAME,
-    template: `%s — ${SITE_NAME}`,
+    template: `%s — ${SITE_WORDMARK}`,
   },
   description: SITE_DESCRIPTION,
   applicationName: SITE_NAME,
