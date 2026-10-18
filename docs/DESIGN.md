@@ -4514,9 +4514,9 @@ neighbouring label is longer.
   lines without the mascot tiles. JV day rows: a 24px status or clock slot over a 20px chips slot,
   every row 60px. A postseason chip is a phrase, not a code: a wrapping capsule, never a Tag in a
   fixed tag track; in "Next up" (whose tag track is a fixed 4rem) it takes its own line.
-- **Game log.** Under 30rem of row width the opponent ends line 1 and the status is always line 2,
-  under the result chip; from 30rem the status has its own track (10rem, 14rem from 40rem),
-  left-aligned, so FINAL starts at one x down a log. §26.5's large-text rule stands.
+- **Game log.** Under 25rem of row width the opponent ends line 1 and the status is always line 2,
+  under the result chip; from 25rem the status has its own track (7.5rem, 10rem from 30rem, 14rem
+  from 40rem), left-aligned, so FINAL starts at one x down a log. §26.5's large-text rule stands.
 - **Form going in, official fixtures.** Below 768px the form strip always sits under the name. A
   league's official fixtures put the status under the date in a 5.25rem lead and the division under
   the matchup; on a team page the status is a fixed 4.75rem and a team outside the registry gets the

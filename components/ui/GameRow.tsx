@@ -690,13 +690,15 @@ export function GameLine({ game, perspective, showChips = true, className }: Gam
  * Where the status goes is fixed by the row's width, never by its labels. The row is its own
  * query container (rem-based, so it follows the reader's text size):
  *
- * - Under 30rem of content (every phone) the opponent ends line 1 and the status — FINAL and its
+ * - Under 25rem of content (every phone) the opponent ends line 1 and the status — FINAL and its
  *   tags, or the clock — is ALWAYS line 2, left-aligned under the chip across columns 2–4: 220px
  *   at 320, room for SCORE NOT REPORTED and its code (201px), which the opponent's column alone
  *   (124px at 320, 194 at 390) is not. Every phone row is 58px unless the opponent wraps.
- * - From 30rem the last column is `[1fr | 10rem]` (14rem from 40rem, so SCORE NOT REPORTED and
- *   its code keep one line in a full-width log), the status left-aligned in its track, so FINAL
- *   starts at one x down the log.
+ * - From 25rem the last column is `[1fr | 7.5rem]`, 10rem from 30rem and 14rem from 40rem (so
+ *   SCORE NOT REPORTED and its code keep one line in a full-width log), the status left-aligned in
+ *   its track, so FINAL starts at one x down the log. The 7.5rem step is the team page's half-width
+ *   log at 1024 (about 420px of content): FINAL and a league code (94px) fit it, and a 10rem track
+ *   there left the opponent 84px, so every row went to two lines where one had room.
  *
  * It used to be one wrapping flex line with the status flush right: whether the status fitted
  * beside the opponent depended on the name and the tag (SCVAL is 24px wider than NL), so at 390 it
@@ -777,13 +779,13 @@ export function GameLogRowBody({
           <span className="col-start-2 text-center text-ink-3">{EM_DASH}</span>
         )}
       </span>
-      {/* From 30rem: a nested `[1fr | status track]` grid in the fourth column. Below it the
+      {/* From 25rem: a nested `[1fr | status track]` grid in the fourth column. Below it the
           wrapper is `display: contents`, so the opponent and status are the ROW's grid items:
           the opponent takes the fourth column of line 1 and the status a line 2 of its own
           across columns 2–4. The children repeat `aria-hidden` rather than lean on a
           `contents` box to pass it down. */}
       <span
-        className="grid min-w-0 grid-cols-[minmax(0,1fr)_10rem] items-center gap-x-3 @max-[30rem]:contents @min-[40rem]:grid-cols-[minmax(0,1fr)_14rem]"
+        className="grid min-w-0 grid-cols-[minmax(0,1fr)_7.5rem] items-center gap-x-3 @max-[25rem]:contents @min-[30rem]:grid-cols-[minmax(0,1fr)_10rem] @min-[40rem]:grid-cols-[minmax(0,1fr)_14rem]"
         aria-hidden="true"
       >
         {/* `break-words` breaks a long single word inside the column. Reflowed under the chip
@@ -799,9 +801,10 @@ export function GameLogRowBody({
         </span>
         {/* Left-aligned, so FINAL starts at one x down the log; the tags never wrap inside
             themselves (Tag), and what is wider than its space (a `this game` tag beside FINAL
-            and its code, a postseason chip) wraps there, growing that row alone. */}
+            and its code, a postseason chip, and in the 7.5rem track SCORE NOT REPORTED or
+            FINAL 2 OT with a code) wraps there, growing that row alone. */}
         <span
-          className="flex min-h-5 min-w-0 flex-wrap items-center gap-x-2 gap-y-0.5 @max-[30rem]:col-span-3 @max-[30rem]:col-start-2 @max-[30rem]:mt-0.5"
+          className="flex min-h-5 min-w-0 flex-wrap items-center gap-x-2 gap-y-0.5 @max-[25rem]:col-span-3 @max-[25rem]:col-start-2 @max-[25rem]:mt-0.5"
           aria-hidden="true"
         >
           {isThisGame ? <Tag label="the game on this page">this game</Tag> : null}
