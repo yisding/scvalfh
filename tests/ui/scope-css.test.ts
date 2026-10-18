@@ -66,9 +66,11 @@ describe('buildLeagueScopeCss', () => {
     expect(rules.filter((r) => r.startsWith('html[data-region="socal"] [data-region-option="socal"]{'))).toHaveLength(1);
     expect(rules).toContain('html:not([data-region="socal"]) [data-region-option="norcal"] .sx-chip-check{visibility:visible}');
     expect(rules).toContain('html[data-region="socal"] [data-region-option="socal"] .sx-chip-check{visibility:visible}');
-    // A deep link opens its region: the block holding the target, and the block that is the target.
-    expect(rules).toContain('[data-region-scope]:has(:target){display:block!important}');
-    expect(rules).toContain('[data-region-scope]:target{display:block!important}');
+    // A deep link opens its region: the block holding the target, and the block that is the target,
+    // until the reader picks a region on that page view (/leaders#elo-rating, then SoCal).
+    expect(rules).toContain('html:not([data-region-picked]) [data-region-scope]:has(:target){display:block!important}');
+    expect(rules).toContain('html:not([data-region-picked]) [data-region-scope]:target{display:block!important}');
+    expect(rules.filter((r) => r.includes(':target'))).toHaveLength(2);
     // The /teams lift, scoped to the /teams root so the home finder lifts nothing.
     expect(rules).toContain('[data-teams-page]:has(search[data-searching]) #team-list [data-region-scope]{display:block}');
     expect(css).not.toMatch(/(?:^|[\s,])\[data-searching\]/m);
