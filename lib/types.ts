@@ -340,7 +340,6 @@ export interface Game {
   timeConfirmed?: boolean;
   /** WIDENED: any league's official schedule. */
   official?: OfficialStamp;
-  recap: string | null;
   urls: {
     maxpreps: string | null;
     sblive?: string;

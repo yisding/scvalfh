@@ -215,7 +215,6 @@ export const GameSchema = z
     }),
     timeConfirmed: z.boolean().optional(),
     official: OfficialStampSchema.optional(),
-    recap: z.string().nullable(),
     urls: z.object({
       maxpreps: httpUrl.nullable(),
       sblive: httpUrl.optional(),

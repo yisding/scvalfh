@@ -8,7 +8,7 @@
  * DESIGN §22.5) apply to it as much as to the prose. So:
  *
  * - No score property. schema.org has none for a SportsEvent, and an invented `homeScore` would be
- *   noise; the score is already in the event's `name` (gameTitle).
+ *   noise; the score is already in the event's `name` (gameTitle) and `description`.
  * - `location` is only what the DETAILS card prints (components/game/GameDetails.tsx): the venue's
  *   name and street address when the school's calendar gave one; otherwise the host school, with
  *   its city when it is a registry team ("Hosted by Fremont, Sunnyvale, CA"); nothing on a neutral
@@ -28,7 +28,7 @@
  * team's `@id` is the same IRI on its own page and in every game that names it.
  */
 import type { GameModel } from '../game/game-view';
-import { gameFactsDescription, gameTitle } from '../game/game-view';
+import { gameDescription, gameTitle } from '../game/game-view';
 import { dateTimeAttr } from '../../lib/format';
 import { isIndependentLeague, type LeagueConfig } from '../../lib/leagues';
 import type { Team } from '../../lib/types';
@@ -155,8 +155,7 @@ export function gameJsonLd(model: GameModel): JsonLdNode {
     '@context': CONTEXT,
     '@type': 'SportsEvent',
     name: gameTitle(model),
-    // Not gameDescription: its recap sentence is no longer printed on the page.
-    description: gameFactsDescription(model),
+    description: gameDescription(model),
     url: absolute(model.canonical),
     sport: SPORT,
     // The <time datetime> the page prints: the UTC instant, or the date alone when the time is TBA.

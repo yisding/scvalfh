@@ -64,7 +64,6 @@ function game(overrides: Partial<Game> = {}): Game {
     decider: null,
     shootout: null,
     venue: { text: null },
-    recap: null,
     urls: { maxpreps: null, nfhsStream: null, goFan: null },
     provenance: { scores: 'maxpreps-api', schedule: 'maxpreps-api', fetchedAt: '2026-09-29T23:26:02.770Z' },
   };

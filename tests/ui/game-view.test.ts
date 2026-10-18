@@ -159,13 +159,13 @@ describe('sub-lines, kicker and context (components/game/game-view.ts)', () => {
   it('the meta description names the league; the head-to-head note cites its own league', () => {
     const mcal = L.m.buildGameView(counted('mcal').contestId)!;
     expect(L.m.gameDescription(mcal), 'components/game/game-view.ts MCAL description').toContain(
-      'in Marin County Athletic League girls varsity field hockey, Fall 2026',
+      'Marin County Athletic League girls varsity field hockey, Fall 2026',
     );
     expect(mcal.series.tiebreakNote, 'components/game/game-view.ts MCAL h2h').toContain('MCAL Tie-Breaking Criteria (rev. 3/26) step 1');
     const scval = L.m.buildGameView(counted('scval').contestId)!;
     expect(scval.series.tiebreakNote, 'components/game/game-view.ts SCVAL h2h').toContain('Article VI §3');
     expect(L.m.gameDescription(scval), 'components/game/game-view.ts SCVAL description').toContain(
-      'in Santa Clara Valley Athletic League girls varsity field hockey, Fall 2026',
+      'Santa Clara Valley Athletic League girls varsity field hockey, Fall 2026',
     );
   });
 });
@@ -185,7 +185,7 @@ describe('si.com source line and the conflict block (components/game/GameSources
     expect(text, 'components/ui/ScoreBoard.tsx † mark').toContain('† Score via si.com');
     expect(html, 'app/game/[id]/page.tsx').not.toContain('sblive:');
     expect(L.m.gameDescription(model), 'components/game/game-view.ts PCAL description').toContain(
-      'in Pacific Coast Athletic League girls varsity field hockey, Fall 2026',
+      'Pacific Coast Athletic League girls varsity field hockey, Fall 2026',
     );
   });
 
@@ -481,7 +481,7 @@ describe('Southern California games (corpus copy with synthetic SoCal games, DES
     expect(model.countsAs.detail).toBe(
       'Counts toward the City Western standings — this site’s 3-1-0 points (the league publishes no points rule).',
     );
-    expect(C.m.gameDescription(model)).toMatch(/City Western league game in City Conference girls varsity field hockey/);
+    expect(C.m.gameDescription(model)).toMatch(/ City Western league game against .+\. City Conference girls varsity field hockey/);
     expect(C.m.gameDescription(model)).not.toMatch(/City Western Division/);
   });
 });

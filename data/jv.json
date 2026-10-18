@@ -51,7 +51,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -106,7 +105,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -161,7 +159,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The University City JV field hockey team tied their away non-conference game against Mt. Carmel by a score of 0-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -216,7 +213,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Harvard-Westlake JV field hockey team won their away non-conference game against Great Oak by a score of 9-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -271,7 +267,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Marina JV field hockey team tied their away non-conference game against Bonita by a score of 0-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -326,7 +321,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -381,7 +375,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Archie Williams JV field hockey team tied their away non-conference game against Marin Academy by a score of 0-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -436,7 +429,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Bonita Vista JV field hockey team lost their away non-conference game against Clairemont by a score of 8-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -491,7 +483,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Canyon Hills JV field hockey team won their away non-conference game against San Marcos by a score of 2-1.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -546,7 +537,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The La Jolla JV field hockey team won their away non-conference game against Rancho Bernardo by a score of 7-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -601,7 +591,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Mission Hills JV field hockey team tied their away non-conference game against Mission Vista by a score of 0-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -656,7 +645,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Bishop's JV field hockey team won their away non-conference game against University City by a score of 4-1.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -711,7 +699,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Cathedral Catholic JV field hockey team won their away non-conference game against Clairemont by a score of 2-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -766,7 +753,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -821,7 +807,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Del Norte JV field hockey team won their away non-conference game against La Jolla Country Day by a score of 5-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -876,7 +861,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Mission Vista JV field hockey team tied their away non-conference game against Point Loma by a score of 0-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -931,7 +915,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -986,7 +969,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Marin Academy JV field hockey team tied their away conference game against Convent of the Sacred Heart by a score of 1-1.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -1041,7 +1023,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -1096,7 +1077,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Santa Clara JV field hockey team lost their away non-conference game against Homestead by a score of 4-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -1151,7 +1131,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Marin Catholic JV field hockey team won their away conference game against University by a score of 1-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -1206,7 +1185,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Bonita JV field hockey team lost their away non-conference game against Huntington Beach by a score of 2-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -1261,7 +1239,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Fallbrook JV field hockey team won their away non-conference game against Great Oak by a score of 1-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -1316,7 +1293,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Harvard-Westlake JV field hockey team won their away non-conference game against Newport Harbor by a score of 1-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -1371,7 +1347,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Rancho Bernardo JV field hockey team lost their away non-conference game against Cathedral Catholic by a score of 4-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -1427,7 +1402,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Lick-Wilmerding JV field hockey team lost by forfeit in their away non-conference game against Berkeley.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -1482,7 +1456,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Redwood JV field hockey team won their away conference game against Archie Williams by a score of 4-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -1537,7 +1510,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The San Marcos JV field hockey team won their away non-conference game against Rancho Bernardo by a score of 8-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -1592,7 +1564,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Temecula Valley JV field hockey team tied their away non-conference game against Chaparral by a score of 0-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -1647,7 +1618,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Bella Vista JV field hockey team lost their away conference game against Lassen by a score of 8-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -1702,7 +1672,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Newport Harbor JV field hockey team lost their away non-conference game against Edison by a score of 4-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -1757,7 +1726,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Tamalpais JV field hockey team won their away conference game against Convent of the Sacred Heart by a score of 1-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -1812,7 +1780,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The La Costa Canyon JV field hockey team won their away non-conference game against Canyon Hills by a score of 6-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -1867,7 +1834,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Marin Catholic JV field hockey team lost their away non-conference game against Redwood by a score of 1-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -1922,7 +1888,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The San Pasqual JV field hockey team won their away non-conference game against Del Norte by a score of 3-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -1977,7 +1942,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Sage Creek JV field hockey team lost their away non-conference game against Clairemont by a score of 4-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -2032,7 +1996,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Palo Alto JV field hockey team lost their away non-conference game against Homestead by a score of 2-1.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -2087,7 +2050,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Harvard-Westlake JV field hockey team won their away non-conference game against Marina by a score of 1-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -2142,7 +2104,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The University City JV field hockey team won their away non-conference game against Mission Bay by a score of 1-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -2197,7 +2158,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Santa Clara JV field hockey team lost their away non-conference game against Fremont by a score of 4-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -2252,7 +2212,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Tamalpais JV field hockey team won their away conference game against Archie Williams by a score of 2-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -2307,7 +2266,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -2362,7 +2320,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The University JV field hockey team tied their away conference game against Marin Academy by a score of 1-1.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -2417,7 +2374,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Torrey Pines JV field hockey team lost their away non-conference game against Cathedral Catholic by a score of 1-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -2472,7 +2428,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Bonita JV field hockey team lost their away non-conference game against Great Oak by a score of 2-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -2527,7 +2482,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -2582,7 +2536,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Marin Catholic JV field hockey team won their away conference game against Convent of the Sacred Heart by a score of 2-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -2637,7 +2590,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -2692,7 +2644,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -2747,7 +2698,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Lynbrook JV field hockey team tied their away non-conference game against Prospect by a score of 0-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -2802,7 +2752,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -2857,7 +2806,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Fallbrook JV field hockey team lost their away non-conference game against San Marcos by a score of 3-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -2912,7 +2860,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The La Jolla JV field hockey team won their away non-conference game against Huntington Beach by a score of 3-1.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -2967,7 +2914,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Corning JV field hockey team lost their away conference game against Bella Vista by a score of 3-1.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -3022,7 +2968,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Saint Francis JV field hockey team lost their away non-conference game against Homestead by a score of 1-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -3077,7 +3022,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Berkeley JV field hockey team tied their away conference game against University by a score of 0-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -3132,7 +3076,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Tamalpais JV field hockey team lost their away non-conference game against St. Ignatius College Preparatory by a score of 2-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -3187,7 +3130,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Fountain Valley JV field hockey team lost their away non-conference game against Glendora by a score of 1-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -3242,7 +3184,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Mission Bay JV field hockey team won their away non-conference game against Bonita Vista by a score of 7-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -3297,7 +3238,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -3352,7 +3292,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -3407,7 +3346,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Eastlake JV field hockey team lost their away non-conference game against Clairemont by a score of 3-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -3462,7 +3400,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Cathedral Catholic JV field hockey team won their away non-conference game against La Jolla Country Day by a score of 4-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -3517,7 +3454,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The San Marcos JV field hockey team lost their away non-conference game against University City by a score of 2-1.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -3572,7 +3508,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Mt. Carmel JV field hockey team lost their away non-conference game against Mission Vista by a score of 1-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -3627,7 +3562,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Bonita JV field hockey team lost their away non-conference game against Newport Harbor by a score of 1-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -3682,7 +3616,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Monta Vista JV field hockey team lost their away non-conference game against Fremont by a score of 4-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -3737,7 +3670,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -3792,7 +3724,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Marin Catholic JV field hockey team won their away non-conference game against Marin Academy by a score of 3-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -3847,7 +3778,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The La Jolla JV field hockey team won their away conference game against Scripps Ranch by a score of 2-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -3902,7 +3832,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -3957,7 +3886,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -4012,7 +3940,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Convent of the Sacred Heart JV field hockey team lost their away conference game against University by a score of 2-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -4067,7 +3994,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Santa Clara JV field hockey team lost their away non-conference game against Cupertino by a score of 2-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -4122,7 +4048,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Rancho Bernardo JV field hockey team lost their away non-conference game against Westview by a score of 3-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -4177,7 +4102,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -4232,7 +4156,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Los Gatos JV field hockey team won their away non-conference game against Homestead by a score of 3-2.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -4287,7 +4210,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Point Loma JV field hockey team lost their away non-conference game against Mission Bay by a score of 4-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -4342,7 +4264,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Davis Sr. JV field hockey team won their away conference game against Bella Vista by a score of 2-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -4397,7 +4318,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -4452,7 +4372,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Del Norte JV field hockey team tied their away non-conference game against Canyon Crest Academy by a score of 0-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -4507,7 +4426,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -4562,7 +4480,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Fallbrook JV field hockey team tied their away non-conference game against Temecula Valley by a score of 0-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -4617,7 +4534,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Berkeley JV field hockey team lost their away conference game against Redwood by a score of 2-1.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -4672,7 +4588,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Marin Academy JV field hockey team won their away non-conference game against Archie Williams by a score of 1-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -4727,7 +4642,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Great Oak JV field hockey team lost their away non-conference game against Canyon Hills by a score of 9-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -4782,7 +4696,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Chaparral JV field hockey team lost their away non-conference game against Mission Hills by a score of 2-1.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -4837,7 +4750,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -4892,7 +4804,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The San Marcos JV field hockey team lost their away non-conference game against La Jolla by a score of 1-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -4947,7 +4858,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Harvard-Westlake JV field hockey team lost their away non-conference game against Edison by a score of 1-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -5002,7 +4912,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Marina JV field hockey team lost their away non-conference game against Edison by a score of 1-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -5057,7 +4966,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Los Altos JV field hockey team won their away non-conference game against Palo Alto by a score of 5-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -5112,7 +5020,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Lynbrook JV field hockey team lost their away non-conference game against Westmont by a score of 3-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -5167,7 +5074,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The University City JV field hockey team lost their away non-conference game against Cathedral Catholic by a score of 3-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -5222,7 +5128,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -5277,7 +5182,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -5332,7 +5236,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Marin Catholic JV field hockey team won their away conference game against Berkeley by a score of 3-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -5387,7 +5290,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -5442,7 +5344,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -5497,7 +5398,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Tamalpais JV field hockey team tied their away conference game against University by a score of 0-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -5552,7 +5452,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Fallbrook JV field hockey team lost their away non-conference game against Westview by a score of 1-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -5607,7 +5506,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Lynbrook JV field hockey team lost their away non-conference game against Homestead by a score of 2-1.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -5662,7 +5560,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Great Oak JV field hockey team won their away non-conference game against Temecula Valley by a score of 3-1.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -5717,7 +5614,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The San Pasqual JV field hockey team tied their away non-conference game against Canyon Crest Academy by a score of 1-1.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -5772,7 +5668,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Mt. Carmel JV field hockey team lost their away non-conference game against Scripps Ranch by a score of 3-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -5827,7 +5722,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Redwood JV field hockey team tied their away conference game against Convent of the Sacred Heart by a score of 0-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -5882,7 +5776,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Cupertino JV field hockey team won their away non-conference game against Monta Vista by a score of 1-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -5937,7 +5830,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Poway JV field hockey team lost their away tournament game against Canyon Hills by a score of 8-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -5992,7 +5884,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Westview JV field hockey team lost their away tournament game against Canyon Hills by a score of 1-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -6047,7 +5938,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Bonita Vista JV field hockey team lost their away tournament game against Canyon Hills by a score of 2-1.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -6102,7 +5992,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Canyon Hills JV field hockey team won their away tournament game against Canyon Crest Academy by a score of 4-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -6157,7 +6046,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Scripps Ranch JV field hockey team won their away tournament game against Canyon Hills by a score of 1-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -6212,7 +6100,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Lassen JV field hockey team lost their away conference game against Davis Sr. by a score of 3-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -6267,7 +6154,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -6322,7 +6208,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Canyon Hills JV field hockey team won their away non-conference game against Canyon Crest Academy by a score of 1-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -6377,7 +6262,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Lick-Wilmerding JV field hockey team lost their away non-conference game against Marin Academy by a score of 2-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -6432,7 +6316,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -6487,7 +6370,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Monta Vista JV field hockey team lost their away non-conference game against Prospect by a score of 3-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -6542,7 +6424,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Redwood JV field hockey team lost their away conference game against Tamalpais by a score of 2-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -6597,7 +6478,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -6652,7 +6532,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -6707,7 +6586,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Chico JV field hockey team won their away conference game against Bella Vista by a score of 6-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -6762,7 +6640,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -6817,7 +6694,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The La Jolla JV field hockey team won their away conference game against Mission Bay by a score of 4-2.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -6872,7 +6748,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Berkeley JV field hockey team lost their away conference game against Convent of the Sacred Heart by a score of 3-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -6927,7 +6802,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -6982,7 +6856,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -7037,7 +6910,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Homestead JV field hockey team lost their away conference game against Cupertino by a score of 2-1.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -7092,7 +6964,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Rancho Buena Vista JV field hockey team lost their away non-conference game against Del Norte by a score of 9-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -7147,7 +7018,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Lassen JV field hockey team won their away conference game against Corning by a score of 3-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -7202,7 +7072,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Westview JV field hockey team lost their away non-conference game against Rancho Buena Vista by a score of 2-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -7257,7 +7126,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Bonita JV field hockey team lost their away non-conference game against Edison by a score of 5-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -7312,7 +7180,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Harvard-Westlake JV field hockey team won their away non-conference game against Glendora by a score of 4-1.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -7367,7 +7234,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -7422,7 +7288,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Archie Williams JV field hockey team lost their away conference game against University by a score of 3-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -7477,7 +7342,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -7532,7 +7396,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Santa Clara JV field hockey team lost their away conference game against Monta Vista by a score of 3-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -7587,7 +7450,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Tamalpais JV field hockey team won their away non-conference game against Lick-Wilmerding by a score of 1-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -7642,7 +7504,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Huntington Beach JV field hockey team lost their away non-conference game against Canyon Crest Academy by a score of 1-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -7697,7 +7558,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Helix JV field hockey team lost their away non-conference game against University City by a score of 3-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -7752,7 +7612,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Scripps Ranch JV field hockey team tied their away non-conference game against San Marcos by a score of 0-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -7807,7 +7666,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -7862,7 +7720,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Rancho Bernardo JV field hockey team lost their away non-conference game against Del Norte by a score of 2-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -7917,7 +7774,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -7972,7 +7828,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Fremont JV field hockey team won their away non-conference game against Lynbrook by a score of 4-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -8027,7 +7882,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Chaparral JV field hockey team lost their away non-conference game against Great Oak by a score of 5-2.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -8082,7 +7936,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -8137,7 +7990,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Temecula Valley JV field hockey team won their away non-conference game against Sage Creek by a score of 1-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -8192,7 +8044,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -8247,7 +8098,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -8302,7 +8152,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Pleasant Valley JV field hockey team won their away conference game against Bella Vista by a score of 2-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -8357,7 +8206,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -8412,7 +8260,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Scripps Ranch JV field hockey team tied their away non-conference game against La Costa Canyon by a score of 1-1.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -8467,7 +8314,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -8522,7 +8368,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -8577,7 +8422,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Stuart Hall JV field hockey team tied their away non-conference game against Archie Williams by a score of 0-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -8632,7 +8476,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Convent of the Sacred Heart JV field hockey team tied their away conference game against Archie Williams by a score of 0-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -8687,7 +8530,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Los Altos JV field hockey team won their away conference game against Homestead by a score of 3-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -8742,7 +8584,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Tamalpais JV field hockey team won their away conference game against Berkeley by a score of 5-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -8797,7 +8638,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -8852,7 +8692,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Del Norte JV field hockey team tied their away non-conference game against Mission Hills by a score of 1-1.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -8907,7 +8746,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Davis Sr. JV field hockey team won their away conference game against Corning by a score of 6-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -8962,7 +8800,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Poway JV field hockey team tied their away non-conference game against Fallbrook by a score of 1-1.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -9017,7 +8854,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Bishop's JV field hockey team won their away non-conference game against Canyon Crest Academy by a score of 1-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -9072,7 +8908,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Chaparral JV field hockey team lost their away non-conference game against Edison by a score of 8-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -9127,7 +8962,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -9182,7 +9016,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Scripps Ranch JV field hockey team lost their away non-conference game against Torrey Pines by a score of 1-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -9237,7 +9070,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The San Marcos JV field hockey team lost their away non-conference game against Cathedral Catholic by a score of 2-1.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -9292,7 +9124,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Clairemont JV field hockey team lost their away non-conference game against Mission Bay by a score of 3-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -9347,7 +9178,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -9402,7 +9232,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -9457,7 +9286,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Los Gatos JV field hockey team won their away non-conference game against Santa Clara by a score of 7-2.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -9512,7 +9340,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Marin Catholic JV field hockey team tied their away conference game against Tamalpais by a score of 2-2.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -9567,7 +9394,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Lynbrook JV field hockey team tied their away conference game against Monta Vista by a score of 1-1.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -9623,7 +9449,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The University JV field hockey team won by forfeit in their away conference game against Lick-Wilmerding.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -9678,7 +9503,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -9733,7 +9557,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The La Jolla JV field hockey team tied their away non-conference game against La Costa Canyon by a score of 0-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -9788,7 +9611,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Lassen JV field hockey team lost their away non-conference game against Pleasant Valley by a score of 7-1.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -9843,7 +9665,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Fountain Valley JV field hockey team lost their away non-conference game against Edison by a score of 10-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -9898,7 +9719,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -9953,7 +9773,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Poway JV field hockey team lost their away non-conference game against Canyon Hills by a score of 6-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -10008,7 +9827,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Marin Catholic JV field hockey team won their away non-conference game against Archie Williams by a score of 2-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -10063,7 +9881,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Berkeley JV field hockey team lost their away non-conference game against Marin Academy by a score of 2-1.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -10118,7 +9935,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Saint Francis JV field hockey team won their away non-conference game against Los Altos by a score of 2-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -10173,7 +9989,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Point Loma JV field hockey team lost their away non-conference game against Eastlake by a score of 3-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -10228,7 +10043,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -10283,7 +10097,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -10338,7 +10151,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Newport Harbor JV field hockey team won their away non-conference game against Glendora by a score of 2-1.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -10393,7 +10205,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Saint Francis JV field hockey team tied their away non-conference game against Lynbrook by a score of 0-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -10448,7 +10259,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Cathedral Catholic JV field hockey team lost their away non-conference game against Clairemont by a score of 3-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -10503,7 +10313,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Bonita JV field hockey team lost their away non-conference game against Harvard-Westlake by a score of 4-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -10558,7 +10367,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Monta Vista JV field hockey team lost their away conference game against Los Gatos by a score of 4-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -10613,7 +10421,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Santa Clara JV field hockey team lost their away non-conference game against Archbishop Mitty by a score of 7-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -10668,7 +10475,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -10723,7 +10529,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -10777,7 +10582,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Non JV Opponent JV field hockey team lost their away non-conference game against University City by a score of 2-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -10832,7 +10636,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Cathedral Catholic JV field hockey team lost their away non-conference game against San Dieguito Academy by a score of 3-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -10887,7 +10690,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -10942,7 +10744,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -10997,7 +10798,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Mission Bay JV field hockey team won their away non-conference game against Olympian by a score of 6-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -11052,7 +10852,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Temecula Valley JV field hockey team lost their away non-conference game against Mt. Carmel by a score of 3-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -11107,7 +10906,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Chaparral JV field hockey team lost their away non-conference game against Fountain Valley by a score of 4-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -11161,7 +10959,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Non JV Opponent JV field hockey team lost their away non-conference game against La Jolla by a score of 9-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -11216,7 +11013,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -11271,7 +11067,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Redwood JV field hockey team won their away conference game against Marin Catholic by a score of 2-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -11326,7 +11121,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Homestead JV field hockey team lost their away non-conference game against Fremont by a score of 3-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -11381,7 +11175,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -11436,7 +11229,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Stevenson JV field hockey team lost their away non-conference game against Los Altos by a score of 3-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -11491,7 +11283,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -11546,7 +11337,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Marin Academy JV field hockey team lost their away conference game against Tamalpais by a score of 2-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -11601,7 +11391,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -11656,7 +11445,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Huntington Beach JV field hockey team won their away conference game against Temecula Valley by a score of 4-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -11711,7 +11499,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -11766,7 +11553,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Los Altos JV field hockey team won their away non-conference game against Fremont by a score of 2-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -11821,7 +11607,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The St. Ignatius College Preparatory JV field hockey team won their away conference game against Homestead by a score of 5-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -11876,7 +11661,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The San Marcos JV field hockey team lost their away non-conference game against Cathedral Catholic by a score of 4-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -11931,7 +11715,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -11986,7 +11769,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Chico JV field hockey team won their away conference game against Lassen by a score of 3-1.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -12041,7 +11823,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Pleasant Valley JV field hockey team lost their away conference game against Davis Sr. by a score of 1-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -12096,7 +11877,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -12151,7 +11931,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -12206,7 +11985,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Clairemont JV field hockey team lost their away non-conference game against La Costa Canyon by a score of 6-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -12261,7 +12039,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Cathedral Catholic JV field hockey team won their away non-conference game against Canyon Crest Academy by a score of 4-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -12316,7 +12093,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Great Oak JV field hockey team lost their away non-conference game against Newport Harbor by a score of 8-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -12371,7 +12147,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Rancho Bernardo JV field hockey team lost their away non-conference game against University City by a score of 2-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -12426,7 +12201,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Archbishop Mitty JV field hockey team won their away conference game against Monta Vista by a score of 3-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -12481,7 +12255,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Berkeley JV field hockey team tied their away non-conference game against Archie Williams by a score of 0-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -12536,7 +12309,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -12591,7 +12363,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Marin Academy JV field hockey team lost their away conference game against Redwood by a score of 2-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -12646,7 +12417,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Lynbrook JV field hockey team lost their away non-conference game against Los Gatos by a score of 6-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -12701,7 +12471,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Canyon Hills JV field hockey team lost their away non-conference game against Torrey Pines by a score of 5-3.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -12756,7 +12525,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -12811,7 +12579,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -12866,7 +12633,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -12921,7 +12687,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -12976,7 +12741,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -13031,7 +12795,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -13086,7 +12849,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The University JV field hockey team won their away conference game against Marin Catholic by a score of 3-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -13141,7 +12903,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -13196,7 +12957,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -13251,7 +13011,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Convent of the Sacred Heart JV field hockey team lost their away conference game against Tamalpais by a score of 1-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -13306,7 +13065,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Cupertino JV field hockey team tied their away non-conference game against Los Altos by a score of 0-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -13361,7 +13119,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Stuart Hall JV field hockey team lost their away conference game against Tamalpais by a score of 1-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -13416,7 +13173,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Chaparral JV field hockey team won their away non-conference game against Sage Creek by a score of 2-1.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -13471,7 +13227,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Clairemont JV field hockey team lost their away non-conference game against Mt. Carmel by a score of 2-1.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -13526,7 +13281,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Newport Harbor JV field hockey team tied their away non-conference game against Edison by a score of 0-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -13581,7 +13335,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Edison JV field hockey team won their away non-conference game against Great Oak by a score of 7-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -13636,7 +13389,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Fremont JV field hockey team won their away non-conference game against Bella Vista by a score of 3-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -13691,7 +13443,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -13746,7 +13497,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Christopher JV field hockey team lost their away non-conference game against Los Altos by a score of 1-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -13801,7 +13551,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Marin Catholic JV field hockey team won their away conference game against Convent of the Sacred Heart by a score of 2-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -13856,7 +13605,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Scripps Ranch JV field hockey team tied their away conference game against La Jolla by a score of 0-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -13911,7 +13659,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The San Marcos JV field hockey team tied their away non-conference game against Canyon Hills by a score of 1-1.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -13966,7 +13713,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -14021,7 +13767,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Palo Alto JV field hockey team tied their away non-conference game against Lynbrook by a score of 0-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -14076,7 +13821,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Tamalpais JV field hockey team won their away conference game against Marin Academy by a score of 2-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -14131,7 +13875,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -14186,7 +13929,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -14241,7 +13983,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Monta Vista JV field hockey team lost their away non-conference game against Homestead by a score of 3-1.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -14296,7 +14037,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Temecula Valley JV field hockey team tied their away conference game against Fountain Valley by a score of 0-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -14351,7 +14091,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -14406,7 +14145,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Archie Williams JV field hockey team tied their away conference game against Redwood by a score of 0-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -14461,7 +14199,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Branham JV field hockey team tied their away non-conference game against Lynbrook by a score of 1-1.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -14516,7 +14253,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Rancho Buena Vista JV field hockey team lost their away non-conference game against Fallbrook by a score of 3-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -14571,7 +14307,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -14626,7 +14361,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Del Norte JV field hockey team won their away non-conference game against Westview by a score of 2-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -14681,7 +14415,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Lassen JV field hockey team lost their away conference game against Bella Vista by a score of 5-1.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -14736,7 +14469,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Davis Sr. JV field hockey team lost their away conference game against Chico by a score of 4-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -14791,7 +14523,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Chaparral JV field hockey team lost their away non-conference game against Huntington Beach by a score of 8-1.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -14846,7 +14577,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Edison JV field hockey team won their away non-conference game against Temecula Valley by a score of 2-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -14901,7 +14631,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -14956,7 +14685,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Marin Catholic JV field hockey team won their away non-conference game against Berkeley by a score of 5-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -15011,7 +14739,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Homestead JV field hockey team lost their away conference game against Saint Francis by a score of 10-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -15066,7 +14793,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -15121,7 +14847,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Archie Williams JV field hockey team lost their away conference game against Tamalpais by a score of 3-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -15176,7 +14901,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Helix JV field hockey team lost their away non-conference game against Eastlake by a score of 1-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -15231,7 +14955,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -15286,7 +15009,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -15341,7 +15063,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -15396,7 +15117,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -15451,7 +15171,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -15506,7 +15225,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Great Oak JV field hockey team lost their away non-conference game against Fountain Valley by a score of 2-1.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -15561,7 +15279,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The San Marcos JV field hockey team won their away non-conference game against Canyon Crest Academy by a score of 2-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -15616,7 +15333,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Canyon Hills JV field hockey team tied their away non-conference game against Bishop's by a score of 1-1.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -15672,7 +15388,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Berkeley JV field hockey team won by forfeit in their away non-conference game against Lick-Wilmerding.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -15727,7 +15442,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Redwood JV field hockey team lost their away conference game against University by a score of 1-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -15782,7 +15496,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Mission Bay JV field hockey team tied their away conference game against La Jolla by a score of 0-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -15837,7 +15550,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -15892,7 +15604,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Scripps Ranch JV field hockey team won their away non-conference game against Cathedral Catholic by a score of 1-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -15947,7 +15658,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Saint Francis JV field hockey team won their away non-conference game against Monta Vista by a score of 6-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -16002,7 +15712,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Convent of the Sacred Heart JV field hockey team lost their away conference game against Marin Academy by a score of 3-1.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -16057,7 +15766,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Palo Alto JV field hockey team tied their away non-conference game against Santa Clara by a score of 2-2.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -16112,7 +15820,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Lynbrook JV field hockey team lost their away non-conference game against Archbishop Mitty by a score of 3-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -16167,7 +15874,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -16222,7 +15928,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The University City JV field hockey team won their away non-conference game against Cathedral Catholic by a score of 3-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -16277,7 +15982,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -16332,7 +16036,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Huntington Beach JV field hockey team won their away non-conference game against Newport Harbor by a score of 3-1.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -16387,7 +16090,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -16442,7 +16144,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -16497,7 +16198,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Archie Williams JV field hockey team lost their away non-conference game against Marin Catholic by a score of 5-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -16552,7 +16252,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Fremont JV field hockey team won their away conference game against Homestead by a score of 2-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -16607,7 +16306,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Lick-Wilmerding JV field hockey team won their away non-conference game against Tamalpais by a score of 2-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -16662,7 +16360,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Westview JV field hockey team won their away conference game against Sage Creek by a score of 1-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -16717,7 +16414,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Canyon Crest Academy JV field hockey team lost their away non-conference game against La Costa Canyon by a score of 5-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -16772,7 +16468,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Glendora JV field hockey team tied their away non-conference game against Bonita by a score of 0-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -16827,7 +16522,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -16882,7 +16576,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -16937,7 +16630,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Berkeley JV field hockey team lost their away conference game against Convent of the Sacred Heart by a score of 3-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -16992,7 +16684,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Palo Alto JV field hockey team tied their away conference game against Monta Vista by a score of 0-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -17047,7 +16738,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -17102,7 +16792,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -17157,7 +16846,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Cathedral Catholic JV field hockey team won their away non-conference game against Canyon Hills by a score of 1-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -17212,7 +16900,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Clairemont JV field hockey team tied their away non-conference game against Point Loma by a score of 1-1.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -17267,7 +16954,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Lynbrook JV field hockey team won their away non-conference game against Santa Clara by a score of 1-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -17322,7 +17008,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Edison JV field hockey team won their away non-conference game against Harvard-Westlake by a score of 4-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -17377,7 +17062,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -17432,7 +17116,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -17487,7 +17170,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Harvard-Westlake JV field hockey team won their away non-conference game against Fountain Valley by a score of 3-1.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -17542,7 +17224,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Temecula Valley JV field hockey team tied their away conference game against Great Oak by a score of 1-1.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -17597,7 +17278,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -17652,7 +17332,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Tamalpais JV field hockey team won their away non-conference game against Davis Sr. by a score of 3-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -17707,7 +17386,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Marin Academy JV field hockey team lost their away conference game against University by a score of 4-1.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -17762,7 +17440,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Pleasant Valley JV field hockey team lost their away non-conference game against Redwood by a score of 2-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -17817,7 +17494,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Poway JV field hockey team lost their away non-conference game against Del Norte by a score of 2-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -17872,7 +17548,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Westview JV field hockey team lost their away conference game against San Pasqual by a score of 5-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -17927,7 +17602,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Pleasant Valley JV field hockey team lost their away non-conference game against University by a score of 4-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -17982,7 +17656,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "neutral",
       "status": "score-pending",
@@ -18037,7 +17710,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -18092,7 +17764,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Bella Vista JV field hockey team won their away conference game against Corning by a score of 2-1.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -18147,7 +17818,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Redwood JV field hockey team won their away conference game against Berkeley by a score of 3-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -18202,7 +17872,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Homestead JV field hockey team won their away conference game against Cupertino by a score of 1-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -18257,7 +17926,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -18312,7 +17980,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Los Altos JV field hockey team lost their away non-conference game against St. Ignatius College Preparatory by a score of 5-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -18367,7 +18034,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -18422,7 +18088,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -18477,7 +18142,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Westview JV field hockey team lost their away conference game against Mission Hills by a score of 2-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -18532,7 +18196,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -18587,7 +18250,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -18642,7 +18304,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Rancho Bernardo JV field hockey team won their away non-conference game against Canyon Crest Academy by a score of 1-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -18697,7 +18358,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Canyon Hills JV field hockey team lost their away conference game against La Jolla by a score of 4-1.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -18752,7 +18412,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Marin Catholic JV field hockey team lost their away non-conference game against Marin Academy by a score of 5-2.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -18807,7 +18466,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Scripps Ranch JV field hockey team tied their away non-conference game against Mission Bay by a score of 0-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -18862,7 +18520,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -18917,7 +18574,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -18972,7 +18628,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The University JV field hockey team won their away conference game against Convent of the Sacred Heart by a score of 3-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -19027,7 +18682,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -19082,7 +18736,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Monta Vista JV field hockey team won their away non-conference game against Santa Clara by a score of 1-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -19137,7 +18790,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Mt. Carmel JV field hockey team lost their away non-conference game against San Marcos by a score of 2-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -19192,7 +18844,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Mission Vista JV field hockey team lost their away non-conference game against Del Norte by a score of 2-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -19247,7 +18898,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Christopher JV field hockey team won their away non-conference game against Leland by a score of 1-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -19302,7 +18952,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -19357,7 +19006,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Newport Harbor JV field hockey team tied their away non-conference game against Edison by a score of 2-2.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -19412,7 +19060,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Harvard-Westlake JV field hockey team won their away non-conference game against Bonita by a score of 4-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -19467,7 +19114,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -19522,7 +19168,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Bella Vista JV field hockey team lost their away conference game against Davis Sr. by a score of 2-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -19577,7 +19222,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Lynbrook JV field hockey team tied their away non-conference game against Saint Francis by a score of 0-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -19632,7 +19276,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -19687,7 +19330,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Archie Williams JV field hockey team won their away non-conference game against Lick-Wilmerding by a score of 1-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -19742,7 +19384,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -19797,7 +19438,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Tamalpais JV field hockey team won their away conference game against Redwood by a score of 2-1.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -19852,7 +19492,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -19907,7 +19546,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Westview JV field hockey team lost their away conference game against San Pasqual by a score of 5-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -19962,7 +19600,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The San Marcos JV field hockey team lost their away non-conference game against La Costa Canyon by a score of 5-1.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -20017,7 +19654,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Del Norte JV field hockey team won their away non-conference game against Poway by a score of 1-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -20072,7 +19708,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Newport Harbor JV field hockey team won their away non-conference game against Chaparral by a score of 1-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -20127,7 +19762,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Mt. Carmel JV field hockey team lost their away non-conference game against Canyon Crest Academy by a score of 1-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -20182,7 +19816,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The University City JV field hockey team lost their away non-conference game against Clairemont by a score of 1-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -20237,7 +19870,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Mission Bay JV field hockey team tied their away non-conference game against Canyon Hills by a score of 0-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -20292,7 +19924,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Scripps Ranch JV field hockey team tied their away non-conference game against Bishop's by a score of 1-1.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -20347,7 +19978,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Cathedral Catholic JV field hockey team lost their away conference game against La Jolla by a score of 2-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -20403,7 +20033,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Marin Academy JV field hockey team won by forfeit in their away non-conference game against Berkeley.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -20458,7 +20087,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -20513,7 +20141,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The University JV field hockey team tied their away conference game against Tamalpais by a score of 0-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -20568,7 +20195,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Monta Vista JV field hockey team lost their away non-conference game against Lynbrook by a score of 4-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -20623,7 +20249,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -20678,7 +20303,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Leigh JV field hockey team won their away non-conference game against Leland by a score of 3-2.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -20733,7 +20357,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -20788,7 +20411,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -20843,7 +20465,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -20899,7 +20520,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Chico JV field hockey team won their away conference game against Davis Sr..",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -20954,7 +20574,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -21009,7 +20628,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -21064,7 +20682,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Marin Catholic JV field hockey team lost their away conference game against Redwood by a score of 2-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -21119,7 +20736,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Archie Williams JV field hockey team lost their away conference game against Convent of the Sacred Heart by a score of 1-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -21174,7 +20790,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -21229,7 +20844,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -21284,7 +20898,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -21339,7 +20952,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -21394,7 +21006,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Mission Hills JV field hockey team tied their away non-conference game against Harvard-Westlake by a score of 1-1.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -21449,7 +21060,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Davis Sr. JV field hockey team won their away conference game against Lassen by a score of 1-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -21504,7 +21114,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -21559,7 +21168,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -21614,7 +21222,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -21669,7 +21276,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Homestead JV field hockey team won their away non-conference game against Cupertino by a score of 1-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -21724,7 +21330,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Del Norte JV field hockey team won their away non-conference game against Rancho Buena Vista by a score of 4-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -21779,7 +21384,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -21834,7 +21438,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -21889,7 +21492,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -21944,7 +21546,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -21999,7 +21600,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Edison JV field hockey team won their away non-conference game against Newport Harbor by a score of 3-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -22054,7 +21654,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -22109,7 +21708,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -22164,7 +21762,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -22219,7 +21816,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Canyon Hills JV field hockey team won their away non-conference game against Scripps Ranch by a score of 1-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -22274,7 +21870,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -22329,7 +21924,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The La Jolla JV field hockey team tied their away conference game against Bishop's by a score of 0-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -22384,7 +21978,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -22439,7 +22032,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The San Marcos JV field hockey team won their away non-conference game against Rancho Bernardo by a score of 4-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -22494,7 +22086,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -22549,7 +22140,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -22604,7 +22194,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -22659,7 +22248,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -22714,7 +22302,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Marin Academy JV field hockey team lost their away non-conference game against Redwood by a score of 3-1.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -22769,7 +22356,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -22824,7 +22410,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Homestead JV field hockey team lost their away conference game against St. Ignatius College Preparatory by a score of 8-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -22879,7 +22464,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Olympian JV field hockey team lost their away non-conference game against Eastlake by a score of 4-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -22934,7 +22518,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The University JV field hockey team won their away conference game against Berkeley by a score of 3-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -22989,7 +22572,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Temecula Valley JV field hockey team lost their away conference game against Edison by a score of 8-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -23044,7 +22626,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -23099,7 +22680,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -23154,7 +22734,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Bonita JV field hockey team won their away non-conference game against Glendora by a score of 1-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -23209,7 +22788,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -23264,7 +22842,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Newport Harbor JV field hockey team lost their away non-conference game against Huntington Beach by a score of 2-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -23319,7 +22896,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -23374,7 +22950,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -23429,7 +23004,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Archie Williams JV field hockey team lost their away conference game against Marin Academy by a score of 2-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -23484,7 +23058,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -23539,7 +23112,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -23594,7 +23166,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Bishop's JV field hockey team lost their away non-conference game against Canyon Hills by a score of 1-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -23649,7 +23220,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Berkeley JV field hockey team lost their away non-conference game against Tamalpais by a score of 1-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -23704,7 +23274,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -23759,7 +23328,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The San Marcos JV field hockey team won their away non-conference game against Canyon Crest Academy by a score of 2-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -23814,7 +23382,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -23869,7 +23436,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -23924,7 +23490,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Great Oak JV field hockey team won their away non-conference game against Chaparral by a score of 2-1.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -23979,7 +23544,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Cathedral Catholic JV field hockey team won their away non-conference game against Scripps Ranch by a score of 2-0.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -24034,7 +23598,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -24089,7 +23652,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": "The Convent of the Sacred Heart JV field hockey team lost their away conference game against Redwood by a score of 3-1.",
       "shootout": null,
       "site": "home",
       "status": "final",
@@ -24144,7 +23706,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -24199,7 +23760,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -24254,7 +23814,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "score-pending",
@@ -24309,7 +23868,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -24364,7 +23922,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -24419,7 +23976,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -24474,7 +24030,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -24529,7 +24084,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -24584,7 +24138,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -24639,7 +24192,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -24694,7 +24246,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -24749,7 +24300,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -24804,7 +24354,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -24859,7 +24408,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -24914,7 +24462,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -24969,7 +24516,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -25024,7 +24570,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -25079,7 +24624,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -25134,7 +24678,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -25189,7 +24732,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -25244,7 +24786,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -25299,7 +24840,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -25354,7 +24894,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -25409,7 +24948,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -25464,7 +25002,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -25519,7 +25056,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -25574,7 +25110,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -25629,7 +25164,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -25684,7 +25218,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -25739,7 +25272,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -25794,7 +25326,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -25849,7 +25380,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -25904,7 +25434,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -25959,7 +25488,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -26014,7 +25542,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -26069,7 +25596,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -26124,7 +25650,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -26179,7 +25704,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -26234,7 +25758,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -26289,7 +25812,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -26344,7 +25866,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -26399,7 +25920,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -26454,7 +25974,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "neutral",
       "status": "scheduled",
@@ -26509,7 +26028,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -26564,7 +26082,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -26619,7 +26136,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -26674,7 +26190,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -26729,7 +26244,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -26784,7 +26298,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -26839,7 +26352,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -26894,7 +26406,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -26949,7 +26460,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -27004,7 +26514,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -27059,7 +26568,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -27114,7 +26622,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -27169,7 +26676,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -27224,7 +26730,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -27279,7 +26784,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -27334,7 +26838,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -27389,7 +26892,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -27444,7 +26946,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -27499,7 +27000,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -27554,7 +27054,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -27609,7 +27108,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -27664,7 +27162,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -27719,7 +27216,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -27774,7 +27270,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -27829,7 +27324,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -27884,7 +27378,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -27939,7 +27432,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -27994,7 +27486,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -28049,7 +27540,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -28104,7 +27594,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -28159,7 +27648,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -28214,7 +27702,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -28269,7 +27756,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -28324,7 +27810,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -28379,7 +27864,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -28434,7 +27918,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -28489,7 +27972,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -28544,7 +28026,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -28599,7 +28080,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -28654,7 +28134,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -28709,7 +28188,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -28764,7 +28242,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -28819,7 +28296,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -28874,7 +28350,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -28929,7 +28404,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -28984,7 +28458,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -29039,7 +28512,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -29094,7 +28566,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -29149,7 +28620,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -29204,7 +28674,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -29259,7 +28728,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -29314,7 +28782,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -29369,7 +28836,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -29424,7 +28890,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -29479,7 +28944,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -29534,7 +28998,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",
@@ -29589,7 +29052,6 @@
         "schedule": "maxpreps-api",
         "scores": "maxpreps-api"
       },
-      "recap": null,
       "shootout": null,
       "site": "home",
       "status": "scheduled",

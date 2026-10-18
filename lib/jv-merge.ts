@@ -156,7 +156,6 @@ function sbliveOnlyGame(row: JvSbliveRow, fetchedAt: string): Game | null {
     decider: 'REG',
     shootout: null,
     venue: { text: null },
-    recap: null,
     urls: { maxpreps: null, ...(row.url ? { sblive: row.url } : {}), nfhsStream: null, goFan: null },
     provenance: {
       scores: 'sblive',

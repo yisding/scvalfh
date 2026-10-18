@@ -24,10 +24,10 @@ import type { GameModel } from './game-view';
  * `GameElsewhere` is the per-page half of the attribution posture: the layout's footer credits the
  * sources site-wide, and this block carries the deep links for these two schools (DESIGN §7.15).
  * The links for THIS contest are not repeated here (F-71c): a final's result links sit under the
- * scoreboard (`GameModel.resultLinks`), and every other per-game link is in DETAILS and the source
+ * recap (`GameModel.resultLinks`), and every other per-game link is in DETAILS and the source
  * line. Each link has one home, except in this file's two disagreement notes: SourceDisagreement
  * cites both sources' pages and ResultFlagConflict MaxPreps' page beside their sentences, even
- * when that page is also a result pill under the scoreboard.
+ * when that page is also a result pill under the recap.
  *
  * The cross-check sentence follows the game's league config: a game counted in a division with no
  * official schedule (`official.mode` 'none', spec D23), or a league-postseason game or a game between

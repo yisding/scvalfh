@@ -62,7 +62,7 @@ function game(home: string, away: string, hs: number | null, as: number | null, 
     countsFor: opts.postseason ? null : DIV,
     postseason: opts.postseason ? { kind: 'mcal-tournament', leagueId: 'mcal', via: 'league-postseason-window' } : null,
     otPeriods: 0, isOt: false, isForfeit: false, forfeitBy: null, decider: played ? 'REG' : null, shootout: null,
-    venue: { text: null }, recap: null, urls: { maxpreps: null, nfhsStream: null, goFan: null },
+    venue: { text: null }, urls: { maxpreps: null, nfhsStream: null, goFan: null },
     provenance: { scores: 'maxpreps-api', schedule: 'maxpreps-api', fetchedAt: '2026-10-02T15:00:00Z' },
   };
 }
