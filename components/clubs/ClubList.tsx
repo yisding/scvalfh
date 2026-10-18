@@ -31,7 +31,7 @@ export function ClubList({ clubs }: ClubListProps) {
         <li
           key={club.slug}
           // A rule on top of every row except the first in each column (TeamRoster's rule).
-          className="min-w-0 border-t border-divider px-gutter py-2.5 first:border-t-0 sm:px-4 sm:[&:nth-child(2)]:border-t-0 lg:[&:nth-child(3)]:border-t-0"
+          className="sx-gridcell"
         >
           <span className="block">
             <Link

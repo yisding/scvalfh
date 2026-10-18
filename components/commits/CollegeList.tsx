@@ -26,7 +26,7 @@ export function CollegeList({ colleges }: CollegeListProps) {
         <li
           key={college.slug}
           id={college.anchor}
-          className="min-w-0 border-t border-divider px-gutter py-2.5 first:border-t-0 sm:px-4 sm:[&:nth-child(2)]:border-t-0 lg:[&:nth-child(3)]:border-t-0"
+          className="sx-gridcell"
         >
           <span className="block text-body font-semibold text-ink">{college.name}</span>
           {college.fullName ? <span className="block text-meta text-ink-2">{college.fullName}</span> : null}

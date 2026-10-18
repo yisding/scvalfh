@@ -22,12 +22,12 @@ export interface TagProps {
 export function Tag({ children, label, className }: TagProps) {
   return (
     <span
-      className={[
-        'inline-flex shrink-0 items-center whitespace-nowrap rounded-tag font-mono text-kicker uppercase h-5 px-1.5 bg-surface-3 text-ink-2',
-        className,
-      ]
-        .filter(Boolean)
-        .join(' ')}
+      // `.sx-tag` (app/globals.css) is the look, one class instead of eleven utilities: a game
+      // row carries two to four tags, and /schedule/<league> renders every row twice. The corner
+      // stays the `rounded-tag` utility because it is also the HOOK GameRow's SummaryLead
+      // tightens tags by (`[&_.rounded-tag]:px-1`, `[&_.rounded-tag]:h-4`), as it does the
+      // postseason capsule's.
+      className={['sx-tag rounded-tag', className].filter(Boolean).join(' ')}
     >
       <span aria-hidden={label ? 'true' : undefined}>{children}</span>
       {label ? <span className="sr-only">{label}</span> : null}

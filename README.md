@@ -885,11 +885,12 @@ dynamic rendering — `generateStaticParams` covers every `/game/[id]`, `/scores
 `/playoffs/[league]` pages, and `/clubs/[slug]`, with exact counts read from the snapshot, the
 league config and `data/clubs.json`), then
 checks the page-weight and first-load JS budgets and a copy-honesty scan of the built HTML. A second
-job starts `next start` on that build, holds it to the response contract with
-`scripts/smoke-server.sh` (see "vinext" under "Deploy notes") and runs `axe-core` against it
-(`scripts/a11y-axe.mjs`) across every route family, both themes, both a phone and a desktop
-viewport, failing on any serious/critical accessibility violation. Two more jobs, one per vinext
-target, run beside them (not after `gates`, so a vinext regression shows even when Next is red).
+job, beside it, makes the same pinned build, starts `next start` on it, holds it to the response
+contract with `scripts/smoke-server.sh` (see "vinext" under "Deploy notes") and runs `axe-core`
+against it (`scripts/a11y-axe.mjs`, one page per core at a time) across every route family, both
+themes, both a phone and a desktop viewport, failing on any serious/critical accessibility
+violation. Two more jobs, one per vinext target, run beside them (not after `gates`, so a vinext
+regression shows even when Next is red).
 `vinext` builds with `pnpm build:vinext`; `cloudflare` first validates the deploy setup with
 `vinext-cloudflare deploy --env cloudflare --dry-run`, which needs no credentials, then builds with
 `pnpm build:cloudflare` and a non-localhost `SITE_URL`. Each asserts with
