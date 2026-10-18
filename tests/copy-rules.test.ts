@@ -8,9 +8,6 @@
  * it cuts a page into one element per id and drops the one link a page may name CCS in.
  */
 
-import { readFileSync, readdirSync } from 'node:fs';
-import path from 'node:path';
-
 import { describe, expect, it } from 'vitest';
 
 import { postseasonSourceLink } from '@/components/layout/source-labels';
@@ -42,7 +39,6 @@ import {
   visibleText,
   withoutLink,
 } from '@/scripts/copy-rules';
-import { REPO } from './support/repo';
 
 describe('SCVAL_ONLY_CLAIM', () => {
   it.each([
@@ -951,26 +947,5 @@ describe('postseasonSourceLink (components/layout/source-labels.ts): the source 
 
   it('is null for the leagues whose pages word their own links', () => {
     for (const id of ['scval', 'bval', 'pcal', 'mcal']) expect(postseasonSourceLink(id), id).toBeNull();
-  });
-});
-
-describe('sx-bleed: nothing cancels the phone bleed', () => {
-  // `.sx-bleed` pulls a card out to the screen edges with `margin-inline: -16px`; an `m-0` in the
-  // utilities layer wins over it, and the card floats inside the gutters with no side edges. A
-  // bleeding list zeroes only its block margins (`my-0`, as components/playoffs/KeyDates.tsx does).
-  const root = REPO;
-  const sources = (dir: string): string[] =>
-    readdirSync(path.join(root, dir), { recursive: true, encoding: 'utf8' })
-      .filter((f) => f.endsWith('.tsx'))
-      .map((f) => path.join(dir, f));
-
-  it('no className pairs sx-bleed with m-0', () => {
-    const offenders = [...sources('components'), ...sources('app')].flatMap((file) =>
-      [...readFileSync(path.join(root, file), 'utf8').matchAll(/className=\{?(["'`])([^"'`]*)/g)]
-        .map((m) => m[2].split(/\s+/))
-        .filter((classes) => classes.includes('sx-bleed') && classes.includes('m-0'))
-        .map(() => file),
-    );
-    expect(offenders).toEqual([]);
   });
 });

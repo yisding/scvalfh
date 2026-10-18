@@ -1774,7 +1774,7 @@ pushes its snapshot commit with `GITHUB_TOKEN`, and a push made with `GITHUB_TOK
 but the snapshot, its meta file, `data/player-stats.json` and `data/jv.json`, tested by that job
 before it pushed) to the commit whose
 code ships, and deploys only if that commit has a successful `ci` run on `main` and nothing but the
-data changed above it. `tests/workflows.test.ts` holds the two workflows to the same messages and
+data changed above it. `tests/arch/workflows.test.ts` holds the two workflows to the same messages and
 files.
 Otherwise it skips, and that commit's own `ci` run deploys once it passes; a red one never
 ships, even when a data refresh is rebased on top of it. Each successful deploy is recorded as a

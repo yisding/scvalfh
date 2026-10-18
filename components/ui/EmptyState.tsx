@@ -48,7 +48,7 @@ export function EmptyState({
           ) : (
             // `prefetch={false}`: LeaguePanel renders one of these per league inside app/page.tsx's
             // panels.map(), each pointing at a different /schedule/<league> page
-            // (tests/ui/prefetch-policy.test.ts).
+            // (tests/arch/prefetch-policy.test.ts).
             <Link href={action.href} prefetch={false} className="sx-pill min-h-11">
               {action.label}
             </Link>

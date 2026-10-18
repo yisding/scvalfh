@@ -147,7 +147,7 @@ jobs:
           # (update-data.yml "Commit the data that changed": by the bot, one parent, one of those
           # three messages). Its code is the code that ships; the data commits above it only replace
           # the data, which update-data ran the suite on before it pushed (ci never runs on them:
-          # they are pushed with GITHUB_TOKEN). tests/workflows.test.ts holds the messages and the
+          # they are pushed with GITHUB_TOKEN). tests/arch/workflows.test.ts holds the messages and the
           # file list below to what update-data.yml commits.
           base=''
           for page in 1 2 3 4 5; do

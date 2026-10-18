@@ -20,7 +20,6 @@ const SPAWN = [
   'tests/rosters-enrichment.test.ts',
   'tests/rosters-file.test.ts',
   'tests/ui/player-stats-view.test.ts',
-  'tests/workflows.test.ts',
 ];
 
 export default defineConfig({
@@ -34,7 +33,7 @@ export default defineConfig({
     // Builds the corpus snapshots once per run and provides their paths to every test file.
     globalSetup: ['tests/support/global-setup.ts'],
     projects: [
-      // The architecture rules: source-tree scans, no spawned scripts.
+      // The architecture rules: source-tree scans and the workflow-file checks (the latter spawns two CI scripts).
       { extends: true, test: { name: 'arch', include: ['tests/arch/**/*.test.ts'] } },
       { extends: true, test: { name: 'spawn', include: SPAWN } },
       // Everything else.

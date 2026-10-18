@@ -30,7 +30,7 @@
  * map the client needs. `setLeague` (components/ui/use-league.ts) calls it to stamp `data-region` in
  * the same tick as `data-league`, so pinning a team of the other region never leaves the page with a
  * league panel inside a hidden region; and no client bundle carries the map or imports lib/leagues
- * (tests/ui/client-boundary.test.ts). The map ships as `R={"socal":"sunset city north-county
+ * (tests/arch/client-boundary.test.ts). The map ships as `R={"socal":"sunset city north-county
  * metro"}`: only the non-default regions, their leagues space-joined.
  *
  * The generated stylesheet (components/layout/league-scope-css.ts) keys off those attributes, so the

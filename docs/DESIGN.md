@@ -69,7 +69,7 @@
 > One count in it is **out of date**: §7's and §13's "**four** client modules in the whole app"
 > (`ThemeToggle`, `PinControl`, `MyTeamCard`, `ScheduleFilters`). The count has grown with the
 > multi-league work, so no number is kept here: `git grep -l "^'use client'" app components` and
-> tests/ui/client-boundary.test.ts, which finds every client module itself, are the live
+> tests/arch/client-boundary.test.ts, which finds every client module itself, are the live
 > inventory. The number mattered beyond bookkeeping — "without a fifth client module" was once
 > written down as the reason the pinned-team highlight had to be an inline script rather than a
 > component, a constraint that had already been spent. What the §13

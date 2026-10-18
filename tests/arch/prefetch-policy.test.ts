@@ -27,58 +27,9 @@
  * most here opt out.
  */
 
-import { readFileSync, readdirSync, statSync } from 'node:fs';
-import path from 'node:path';
-
 import { describe, expect, it } from 'vitest';
 
-import { REPO as ROOT } from '@/tests/support/repo';
-
-function sources(dir: string): string[] {
-  const out: string[] = [];
-  for (const entry of readdirSync(dir)) {
-    const full = path.join(dir, entry);
-    if (statSync(full).isDirectory()) out.push(...sources(full));
-    else if (/\.tsx$/.test(entry)) out.push(full);
-  }
-  return out;
-}
-
-/**
- * The source with every comment and string literal replaced by spaces of the same length.
- *
- * Positions are preserved, so a span computed here indexes the ORIGINAL text. Blanking is what
- * makes the paren matching below safe — and it is also why the prose of a comment explaining
- * `prefetch={false}` can never be mistaken for the prop itself.
- */
-function blanked(src: string): string {
-  const out = src.split('');
-  const blank = (from: number, to: number) => {
-    for (let i = from; i < to && i < out.length; i += 1) if (out[i] !== '\n') out[i] = ' ';
-  };
-  let i = 0;
-  while (i < src.length) {
-    const two = src.slice(i, i + 2);
-    if (two === '//') {
-      const end = src.indexOf('\n', i);
-      blank(i, end === -1 ? src.length : end);
-      i = end === -1 ? src.length : end;
-    } else if (two === '/*') {
-      const end = src.indexOf('*/', i + 2);
-      blank(i, end === -1 ? src.length : end + 2);
-      i = end === -1 ? src.length : end + 2;
-    } else if (src[i] === "'" || src[i] === '"' || src[i] === '`') {
-      const quote = src[i];
-      let j = i + 1;
-      while (j < src.length && src[j] !== quote) j += src[j] === '\\' ? 2 : 1;
-      blank(i + 1, j);
-      i = j + 1;
-    } else {
-      i += 1;
-    }
-  }
-  return out.join('');
-}
+import { PAGE_CODE_ROOTS, blank, expectAtLeast, readSource, sourceFiles } from '@/tests/support/source-tree';
 
 /** `[start, end)` of every `.map(` callback, by paren balance over the blanked source. */
 function mapSpans(flat: string): [number, number][] {
@@ -122,33 +73,33 @@ function linkTags(src: string, flat: string): { line: number; start: number; tex
   return tags;
 }
 
-const FILES = [...sources(path.join(ROOT, 'components')), ...sources(path.join(ROOT, 'app'))];
+const FILES = sourceFiles({ roots: PAGE_CODE_ROOTS, ext: ['.tsx'] });
 
 describe('prefetch policy: a link that repeats per row never prefetches', () => {
   it('finds the Links to check at all', () => {
-    expect(FILES.length).toBeGreaterThan(40);
+    expectAtLeast(41, FILES, 'page-code .tsx files');
     const total = FILES.reduce((n, f) => {
-      const src = readFileSync(f, 'utf8');
-      return n + linkTags(src, blanked(src)).length;
+      const src = readSource(f);
+      return n + linkTags(src, blank(src)).length;
     }, 0);
     // Guards the scanner itself: a regex that silently stopped matching would make every
     // assertion below vacuous.
-    expect(total).toBeGreaterThan(40);
+    expectAtLeast(41, total, '<Link> tags');
   });
 
   it('puts prefetch={false} on every <Link> rendered inside a .map() callback', () => {
     const offenders: string[] = [];
     let checked = 0;
     for (const file of FILES) {
-      const src = readFileSync(file, 'utf8');
-      const flat = blanked(src);
+      const src = readSource(file);
+      const flat = blank(src);
       const spans = mapSpans(flat);
       for (const tag of linkTags(src, flat)) {
         const inList = spans.some(([from, to]) => tag.start > from && tag.start < to);
         if (!inList) continue;
         checked += 1;
         if (!/prefetch=\{false\}/.test(tag.text)) {
-          offenders.push(`${path.relative(ROOT, file)}:${tag.line}`);
+          offenders.push(`${file}:${tag.line}`);
         }
       }
     }
@@ -156,14 +107,14 @@ describe('prefetch policy: a link that repeats per row never prefetches', () => 
     // in its own component — `RowLink`, `GameLogRow`, `SectionHeader`, `DateHeader` —
     // is a row link all the same, and the `WANT` table below is what holds those. The floor is a
     // scanner guard, not a target.
-    expect(checked).toBeGreaterThanOrEqual(11);
+    expectAtLeast(11, checked, '<Link> tags inside a .map() callback');
     expect(offenders).toEqual([]);
   });
 
   it('keeps the prop on the call sites a measurement named, by href', () => {
     // A string matches as a substring of the tag; a RegExp with `.test()`. The two game links take
     // either form because their owners switch them to `gameHref` only in Stage C (SPEC §10.2), and
-    // this test has to pass before that; tests/legacy-imports.test.ts then bans the raw
+    // this test has to pass before that; tests/arch/page-code-literals.test.ts then bans the raw
     // `/game/${…}` template in app/ and components/, so the old form cannot come back.
     const GAME_LINK = /gameHref\(game\.contestId\)|\/game\/\$\{game\.contestId\}/;
     const WANT: [string, string | RegExp][] = [
@@ -206,9 +157,9 @@ describe('prefetch policy: a link that repeats per row never prefetches', () => 
       ['components/ui/LastUpdated.tsx', '/about#updates'],
     ];
     for (const [rel, href] of WANT) {
-      const src = readFileSync(path.join(ROOT, rel), 'utf8');
+      const src = readSource(rel);
       const matches = (text: string) => (typeof href === 'string' ? text.includes(href) : href.test(text));
-      const tags = linkTags(src, blanked(src)).filter((t) => matches(t.text));
+      const tags = linkTags(src, blank(src)).filter((t) => matches(t.text));
       expect(tags.length, `${rel} ${String(href)}`).toBeGreaterThan(0);
       for (const tag of tags) {
         expect(/prefetch=\{false\}/.test(tag.text), `${rel}:${tag.line} ${String(href)}`).toBe(true);

@@ -140,7 +140,7 @@ export function Clubs({ row }: { row: RecruitingLineRow }) {
               {/* The comma, or the dot before the next group, inside the link's nowrap span: the
                   link is inline-flex, an atomic inline, so a line could otherwise start with it. */}
               <span className="whitespace-nowrap">
-                {/* `prefetch={false}`: a link per row, to a static page (tests/ui/prefetch-policy). */}
+                {/* `prefetch={false}`: a link per row, to a static page (tests/arch/prefetch-policy). */}
                 <Link
                   href={club.href}
                   prefetch={false}
@@ -174,7 +174,7 @@ export function Commitment({ row }: { row: RecruitingLineRow }) {
         {line.label}:
       </span>
       &nbsp;
-      {/* `prefetch={false}`: a link per row, to a static page (tests/ui/prefetch-policy). */}
+      {/* `prefetch={false}`: a link per row, to a static page (tests/arch/prefetch-policy). */}
       {/* Not nowrap, unlike a club name: a college without a short name shows its official one
           ("University of North Carolina at Chapel Hill"), which must wrap at 320px. */}
       <Link href={line.college.href} prefetch={false} className="sx-action text-accent hover:underline">

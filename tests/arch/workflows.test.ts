@@ -18,8 +18,8 @@ import { getClubSlugs } from '@/lib/clubs';
 import { gameIdToParam } from '@/lib/game-id';
 import { LEAGUE_IDS, TOURNAMENT_LEAGUE_IDS } from '@/lib/leagues';
 import { loadSnapshot } from '@/lib/snapshot-schema';
-import { expectOk, runRepoScript } from './support/cli';
-import { REPO, tempDir } from './support/repo';
+import { expectOk, runRepoScript } from '@/tests/support/cli';
+import { REPO, tempDir } from '@/tests/support/repo';
 
 const read = (name: string) => readFileSync(path.join(REPO, '.github', 'workflows', name), 'utf8');
 const update = read('update-data.yml');

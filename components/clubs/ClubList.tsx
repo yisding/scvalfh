@@ -16,7 +16,7 @@ import type { ClubIndexRow } from './club-view';
  *
  * The name link is the main way into every club page from a phone, so it is 44px tall there and
  * 32px from 768px (the SectionHeader action's size), at the 600 weight of a TeamTile name. It
- * carries `prefetch={false}` for the reason every per-row link does (tests/ui/prefetch-policy):
+ * carries `prefetch={false}` for the reason every per-row link does (tests/arch/prefetch-policy):
  * Next 16 would otherwise download each club page as the list scrolls into view. Nothing here
  * wraps without a break: the full names, HTC's long city and the school list must reflow.
  */

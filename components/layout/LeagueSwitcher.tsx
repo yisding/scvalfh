@@ -237,7 +237,7 @@ function LinkSwitcher({ mode, leagues, current, hrefs = {}, label, includeAll, c
     );
     // A `#id` chip stays on the page: a plain fragment link. Any other href is a route, in either
     // mode (/playoffs' tournament leagues are route chips in an anchor row): a `<Link>` with no
-    // prefetch, because a chip row is a per-league list (tests/ui/prefetch-policy.test.ts).
+    // prefetch, because a chip row is a per-league list (tests/arch/prefetch-policy.test.ts).
     return href.startsWith('#') ? (
       <a href={href} className={CHIP}>
         {body}

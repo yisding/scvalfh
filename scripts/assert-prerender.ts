@@ -23,7 +23,7 @@
  *    slugs must equal TEAMS, in order);
  *  - `clubs/*.html` = the slugs of data/clubs.json, by name (DESIGN §17, SPEC §1.1j2). They come
  *    from `getClubSlugs()`, which reads the file through the bundled import lib/clubs.ts validates
- *    at load, not from the working directory: tests/workflows.test.ts runs this script with its cwd
+ *    at load, not from the working directory: tests/arch/workflows.test.ts runs this script with its cwd
  *    in a temporary tree. A club with no tied player still has a page, so every slug counts. There
  *    is no clubs OG card (the pages take the root one), so no parity check either;
  *  - every `teams/<slug>.html` carries both a Roster (`id="roster"`) and a Player stats

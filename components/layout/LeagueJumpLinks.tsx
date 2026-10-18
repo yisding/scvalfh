@@ -14,7 +14,7 @@ import type { LeagueId } from '@/lib/types';
  * A `#<id>` pill is a plain `<a>` (a fragment stays on the page); a route pill (/playoffs sends a
  * tournament league to its own page) is a `<Link prefetch={false}>`, the same rule as the league
  * chips (LeagueSwitcher.tsx, DESIGN §15.4), and the row is a per-league list
- * (tests/ui/prefetch-policy.test.ts). They sit on the canvas, so they are canvas pills
+ * (tests/arch/prefetch-policy.test.ts). They sit on the canvas, so they are canvas pills
  * (`sx-pill-ring`) at the 44px primary height. The arrow says where the target is (down the page
  * by default) and is aria-hidden like every link arrow (components/ui/Arrow.tsx). The pill names the
  * league by `standaloneName` ('Jump to North County ↓', never 'Jump to North ↓', which reads as a direction).

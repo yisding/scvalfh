@@ -1,6 +1,6 @@
 /**
  * The nav's per-league targets, shared by TopNav and BottomTabBar. A server-side module: it reads
- * lib/leagues, which tests/ui/client-boundary.test.ts keeps out of client modules, so it cannot
+ * lib/leagues, which tests/arch/client-boundary.test.ts keeps out of client modules, so it cannot
  * live in the client NavLink.tsx beside the nav logic that consumes its output.
  */
 import {

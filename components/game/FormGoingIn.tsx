@@ -37,7 +37,7 @@ function FormRow({ side, memberCount }: { side: GameSideModel; memberCount: numb
         // `max-w-full` + `min-w-0` (not `shrink-0`): in this wrapping row a name wider than the
         // card truncates inside the link instead of pushing the page sideways at 320.
         // `prefetch={false}`: one link per form row, the policy for every per-row link
-        // (tests/ui/prefetch-policy.test.ts).
+        // (tests/arch/prefetch-policy.test.ts).
         <span className="flex min-w-0 max-w-full items-center gap-2.5">
           <TeamMonogram team={side.team} size={24} />
           <Link

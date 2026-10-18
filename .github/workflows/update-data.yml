@@ -32,7 +32,7 @@
 # same way, so JV never costs the day's scores or stats.
 # deploy-cloudflare.yml ships these commits
 # without a ci run of its own only because it recognises them; the commit step below says how, and
-# tests/workflows.test.ts holds the two files to it.
+# tests/arch/workflows.test.ts holds the two files to it.
 #
 # The push deliberately does NOT carry [skip ci]: the commit is what triggers the hosting
 # provider's rebuild, which is the entire point of the job.
@@ -326,7 +326,7 @@ jobs:
           # recognisably this one: author github-actions[bot], one parent, a message starting
           # "data: refresh snapshot", "data: refresh player stats" or "data: refresh JV games",
           # nothing but data/snapshot.json, data/snapshot.meta.json, data/player-stats.json and
-          # data/jv.json. Keep them in step (tests/workflows.test.ts checks the messages and files
+          # data/jv.json. Keep them in step (tests/arch/workflows.test.ts checks the messages and files
           # against the gate).
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"

@@ -40,7 +40,7 @@ function Row({ row }: { row: CommitRow }) {
     >
       <span className="block text-body text-ink">{row.name}</span>
       <span className="block text-meta text-ink-2">
-        {/* `prefetch={false}`: one link per row, to a static team page (tests/ui/prefetch-policy). */}
+        {/* `prefetch={false}`: one link per row, to a static team page (tests/arch/prefetch-policy). */}
         {/* Each dot sits inside the nowrap span of the item before it: the link is inline-flex, an
             atomic inline, so a no-break space after it would still let a line start with the dot. */}
         <span className="whitespace-nowrap">

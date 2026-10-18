@@ -12,25 +12,12 @@
  * plain CSS hook written by components/layout/league-scope-css.ts, not a Tailwind utility, so
  * there is no candidate to lose.
  *
- * Modelled on tests/ui/prefetch-policy.test.ts: a source scan over app/ and components/.
+ * Modelled on tests/arch/prefetch-policy.test.ts: a source scan over app/ and components/.
  */
-
-import { readFileSync, readdirSync, statSync } from 'node:fs';
-import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { REPO as ROOT } from '@/tests/support/repo';
-
-function sources(dir: string): string[] {
-  const out: string[] = [];
-  for (const entry of readdirSync(dir)) {
-    const full = path.join(dir, entry);
-    if (statSync(full).isDirectory()) out.push(...sources(full));
-    else if (/\.tsx$/.test(entry)) out.push(full);
-  }
-  return out;
-}
+import { PAGE_CODE_ROOTS, expectAtLeast, readSource, sourceFiles } from '@/tests/support/source-tree';
 
 /** A class that runs into `${`, and the one allowed form of it. */
 const GLUED = /[\w\])-]$/;
@@ -111,7 +98,7 @@ function gluedClassNames(src: string, file: string): string[] {
   return out;
 }
 
-const FILES = [...sources(path.join(ROOT, 'components')), ...sources(path.join(ROOT, 'app'))];
+const FILES = sourceFiles({ roots: PAGE_CODE_ROOTS, ext: ['.tsx'] });
 
 describe('class strings: no class runs into a template interpolation', () => {
   it('flags the glued shapes and lets the joined ones through', () => {
@@ -126,10 +113,8 @@ describe('class strings: no class runs into a template interpolation', () => {
   });
 
   it('builds every className in app/ and components/ without gluing a class to ${', () => {
-    expect(FILES.length).toBeGreaterThan(40);
-    const offenders = FILES.flatMap((file) =>
-      gluedClassNames(readFileSync(file, 'utf8'), path.relative(ROOT, file)),
-    );
+    expectAtLeast(41, FILES, 'page-code .tsx files');
+    const offenders = FILES.flatMap((file) => gluedClassNames(readSource(file), file));
     expect(offenders).toEqual([]);
   });
 });

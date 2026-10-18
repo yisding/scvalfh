@@ -11,7 +11,7 @@ import type { LeagueId, TeamSlug } from '@/lib/types';
  * active ink need the current path (DESIGN §1.3, §3.1), the league-aware target needs the
  * remembered league, and the pending wash needs the link's own navigation status. ONE module
  * serves both the desktop TopNav and the phone BottomTabBar, rather than one per bar
- * (tests/ui/client-boundary.test.ts enumerates every client module).
+ * (tests/arch/client-boundary.test.ts enumerates every client module).
  *
  * `prefetch={false}` on every nav link, deliberately. Every route on this site is STATIC, and
  * Next 16's default `auto` prefetches a static route in full — data included — the moment the link
