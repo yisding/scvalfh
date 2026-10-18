@@ -45,6 +45,9 @@ import {
  *    record. Without it the line has ~272px and every single-status row, in every league, is one
  *    line at 320. A tied coin-flip row still wraps by design; when anything wraps, it wraps under
  *    the record as one taller capsule (`StatusBadge`), never a pill per line.
+ *  - **Fixed columns from md**, where Status gets its own column: `table-fixed` with Status at 55%
+ *    (13rem from lg), so two divisions side by side split their width identically instead of each
+ *    by its own longest name and capsule. The monogram is hidden from md to lg for the room.
  *  - **A team with nothing reported is never 0-0-0**: place `—`, record `—`, and the
  *    written status "No results reported". It is still a link to its team page.
  *  - The whole row is one block link whose hit area is exactly the row (WCAG 2.5.8), the same
@@ -202,7 +205,12 @@ export function PlayoffProjection({
         />
       ) : null}
       <div className="sx-card sx-flush sx-bleed">
-        <table className="sx-table text-meta">
+        {/* `table-fixed` from md, where Status has its own column: with auto layout each table
+            split its width by its own content, so two divisions side by side at 768 put the
+            Team/Status line at different x (De Anza 153/155, El Camino 136/172: 17.7px apart).
+            Fixed, every table is 40/117/191 at 768 and 40/224/208 at 1024. Below md the Status
+            column is not drawn and Team simply takes what the place column leaves. */}
+        <table className="sx-table text-meta md:table-fixed">
           <caption className="sr-only">
             {divisionLabel} projected CCS qualification, from league points {asOfLabel}.
             Unofficial.
@@ -213,9 +221,12 @@ export function PlayoffProjection({
                 #
               </th>
               <th scope="col" className="pr-gutter md:pr-0">Team</th>
-              {/* 13rem only from lg: from md two divisions may sit side by side, and a fixed
-                  13rem status column in a ~350px half would truncate the team names. */}
-              <th data-twin scope="col" className="hidden pl-3 pr-4 md:table-cell lg:w-52">
+              {/* 55% from md to lg, 13rem from lg. From md two divisions may sit side by side,
+                  and a fixed 13rem status column in a ~350px half would truncate the team names;
+                  55% (191px of a 348px table at 768) holds the widest capsule, "No
+                  automatic-berth route", on one line and leaves Team 117px, which is why the
+                  monogram is not drawn from md to lg (below). */}
+              <th data-twin scope="col" className="hidden pl-3 pr-4 md:table-cell md:w-[55%] lg:w-52">
                 Status
               </th>
             </tr>
@@ -245,8 +256,12 @@ export function PlayoffProjection({
                       {projectionRowLabel(row, divisionLabel)}
                     </span>
                   </Link>
+                  {/* The monogram shows from sm, except md-lg: there the fixed Team column is
+                      117px at 768, and the 28px monogram and its 12px gap left a name 77px, so
+                      eleven names truncated ("Saint Francis" needs 95, "Valley Christian" 113).
+                      Without it the longest takes the whole 117. From lg the column is 224px. */}
                   <span className="flex items-center gap-3">
-                    <span className="hidden shrink-0 sm:flex">
+                    <span className="hidden shrink-0 sm:flex md:hidden lg:flex">
                       <TeamMonogram team={row.team} size={28} />
                     </span>
                     <span className="min-w-0 flex-1">

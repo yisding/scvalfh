@@ -116,10 +116,14 @@ export function AwardsBlock({ awards, levelLabel }: AwardsBlockProps) {
   return (
     <div className="flex flex-col gap-8">
       {overall.length > 0 ? (
-        // A two-column grid, so every winner starts at the same x: the label column is as wide as
-        // the longest title. On a phone each pair stacks (small title over the winner) so a long
-        // line never wraps flush-left under its title. The title sits on the name's line.
-        <dl className="m-0 grid gap-y-4 sm:grid-cols-[auto_minmax(0,1fr)] sm:gap-x-6 sm:gap-y-3">
+        // A two-column grid, so every winner starts at the same x. The label column is a fixed
+        // 12rem, not `auto`: sized by its own longest title it was 184px for SCVAL ("Offensive
+        // Player of the Year") and 150 for BVAL ("Co-Senior of the Year"), so the two leagues'
+        // winners started 34px apart down the page. 12rem holds the longest title on one line
+        // with 8px to spare; a longer one would wrap inside the column. On a phone each pair
+        // stacks (small title over the winner) so a long line never wraps flush-left under its
+        // title. The title sits on the name's line.
+        <dl className="m-0 grid gap-y-4 sm:grid-cols-[12rem_minmax(0,1fr)] sm:gap-x-6 sm:gap-y-3">
           {overall.map((o, i) => (
             <div key={i} className="sm:contents">
               <dt className="text-micro text-ink-3 sm:pt-0.5 sm:text-meta sm:text-ink-2">{o.award}</dt>

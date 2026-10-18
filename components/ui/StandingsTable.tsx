@@ -101,12 +101,23 @@ export interface StandingsTableProps {
   columns?: ReadonlyArray<StandingsColumn>;
 }
 
-/** The † after W-L-T: this team's record includes a score published from si.com (SPEC §7.9). */
-function BackfillMark({ context }: { context: StandingContext | undefined }) {
-  if (!context || context.backfilled === 0) return null;
+/**
+ * The league W-L-T, with a † after it when this team's record includes a score published from
+ * si.com (SPEC §7.9). The † hangs: it is placed just past the record's last digit and takes no
+ * width, so it sits in the cell's right padding (8px on a phone, 6/10px on desktop; the glyph is
+ * about 8px of 13px mono) and a marked record's digits right-align with every other row's. As an
+ * inline glyph it pushed them 7.8px left (8.4 from 1280) of the unmarked rows on /standings/pcal.
+ */
+function LeagueRecord({ record, context }: { record: string; context: StandingContext | undefined }) {
+  if (!context || context.backfilled === 0) return <>{record}</>;
   return (
     <>
-      <span aria-hidden="true">&dagger;</span>
+      <span className="relative">
+        {record}
+        <span aria-hidden="true" className="absolute left-full">
+          &dagger;
+        </span>
+      </span>
       <span className="sr-only">
         {context.backfilled === 1
           ? ', includes 1 score via si.com'
@@ -353,7 +364,7 @@ const COL = {
   pts: 'w-[3rem] xl:w-[3.5rem]', // PTS
   left: 'w-[3rem] xl:w-[3.5rem]', // LEFT
   max: 'w-[3rem] xl:w-[3.5rem]', // MAX
-  league: 'w-[3.75rem] xl:w-[4.5rem]', // League (+ 7px for a †)
+  league: 'w-[3.75rem] xl:w-[4.5rem]', // League (a † hangs in the right padding: LeagueRecord)
   pct: 'w-[3.25rem] xl:w-[4rem]', // Pct
   overall: 'w-[4.25rem] xl:w-[5rem]', // Overall
   gf: 'w-[2.5rem] xl:w-[3rem]', // GF
@@ -496,10 +507,16 @@ export function StandingsTable(props: StandingsTableProps) {
                       the numerals carry 8px of right padding so they never run into the GD track
                       (or, below 375, into the GD numeral). From 390 there is room for the head to
                       take the same 8px; below it the head keeps the cell edge and drops its
-                      letter-spacing, so it still clears "PTS" by about 7px. */}
+                      letter-spacing, so it still clears "PTS" by about 7px.
+                      Below 390 the column is 59px, not 56: a six-character record ("10-1-0", 46.8px
+                      of 13px mono) plus 4 + 8 of padding is 58.8, so under auto layout a 56px
+                      column grew to 58.8 in any table holding one (El Camino, MCAL, PCAL) and
+                      not in the others, and every column right of Team moved 2.8px between the
+                      tables of one page. 59, not a rounder 60: at 375 Team then keeps 152px,
+                      exactly what "Valley Christian" needs (24 + 8 + 120). */}
                   <th
                     scope="col"
-                    className="w-[56px] pl-1 text-right max-[389px]:tracking-normal min-[390px]:w-[68px] min-[390px]:px-2"
+                    className="w-[59px] pl-1 text-right max-[389px]:tracking-normal min-[390px]:w-[68px] min-[390px]:px-2"
                   >
                     League
                   </th>
@@ -522,8 +539,10 @@ export function StandingsTable(props: StandingsTableProps) {
                       gutter). The track was 56 until the longest short names ("Lick-Wilmerding"
                       125px of 16px semibold, "Valley Christian" 120, "Marin Academy" 119) needed
                       the 12px it gave up: at 56 they truncated at 390 to "Lick-Wilmerd…". Below
-                      390 League gives up 12px of head padding, and below 375 GD keeps only its
-                      numeral, so a flagged "Monta Vista" stays whole at 320 and at 375.
+                      390 League is 59 (4 + 47 + 8: it gives up 9px of head padding), and below
+                      375 GD keeps only its numeral, so a flagged "Monta Vista" stays whole at 320
+                      and at 375: 44 + 141 (Team) + 32 + 59 + 44 at 320, and 44 + 152 + 32 + 59
+                      + 88 at 375.
                       The GD plot is the one thing that can afford to go. Below 375px the fixed
                       columns starved the team cell and long school names truncated to fragments,
                       against DESIGN §10.8's "reflow at 320px with no loss of content". The plot is
@@ -614,17 +633,33 @@ export function StandingsTable(props: StandingsTableProps) {
                                 label={formLabel(row)}
                               />
                             </span>
-                            {/* GP leads the overall record. Budget at 16px: 44 + 116 + 8 + ~56
-                                ("6/12 GP") + 8 + ~95 ("10-1-0 overall") + 16 right gutter = 343,
-                                past a 320 row, inside a 375 one. Everything but the 116px strip
-                                is in rem and grows with the browser text size (at 24px the same
-                                line is ~470), so the threshold is in rem too: 23.4375rem is 375px
-                                at 16px, 469 at 20px and 562 at 24px — the unit the GD container
-                                query uses. Below it the record gives way rather than run past
-                                the card edge and be clipped mid-word ("9-1-0 over"); the team
-                                page still carries it. */}
+                            {/* GP leads the overall record. Both numbers sit in fixed, right-aligned
+                                boxes in `ch` (one 13px mono digit, 7.8px): the GP count in 5ch
+                                ("10/12") where the schedule is fixed and 2ch where it is a bare
+                                count (the Sunset's "9"), the record in 6ch ("10-1-0"). Sized by
+                                their text, "10/12 GP" pushed its row's record 7px right of a
+                                "9/12 GP" row's and a bare "9 GP" sat 24px left of both, so the
+                                record started at a different x in each row and table; now every
+                                row of a fixed-schedule table puts "overall" at one x, and every
+                                such table on a page at the same one.
+                                Budget at 16px: 44 + 116 + 8 + 62 ("10/12 GP", eight mono glyphs)
+                                + 8 + ~90 (6ch + " overall") + 16 right gutter = 344 (measured:
+                                "overall" ends at 328), past a 320 row, inside a 375 one.
+                                Everything but the 116px strip is in rem and grows with the
+                                browser text size (at 24px the same line is ~460), so the
+                                threshold is in rem too: 23.4375rem is 375px at 16px, 469 at 20px
+                                and 562 at 24px — the unit the GD container query uses. Below it
+                                the record gives way rather than run past the card edge and be
+                                clipped mid-word ("9-1-0 over"); the team page still carries it. */}
                             {showGp ? (
-                              <span className="sx-num shrink-0 text-cell text-ink-3">{gpText(ctx(row))} GP</span>
+                              <span className="sx-num shrink-0 whitespace-nowrap text-cell text-ink-3">
+                                <span
+                                  className={`inline-block text-right ${fixedSchedule ? 'min-w-[5ch]' : 'min-w-[2ch]'}`}
+                                >
+                                  {gpText(ctx(row))}
+                                </span>{' '}
+                                GP
+                              </span>
                             ) : null}
                             {/* Mono for the digits only (they stack down the rows); the word is
                                 prose and stays sans. */}
@@ -636,7 +671,7 @@ export function StandingsTable(props: StandingsTableProps) {
                                 .filter(Boolean)
                                 .join(' ')}
                             >
-                              <span className="sx-num">{recordString(s.overall)}</span> overall
+                              <span className="sx-num inline-block min-w-[6ch] text-right">{recordString(s.overall)}</span> overall
                             </span>
                           </span>
                         ) : null}
@@ -646,9 +681,8 @@ export function StandingsTable(props: StandingsTableProps) {
                           <td className="sx-num w-8 pt-2.5 text-right align-top text-body font-bold text-ink">
                             {s.computed.pts}
                           </td>
-                          <td className="sx-num w-[56px] whitespace-nowrap pt-3 pl-1 pr-2 text-right align-top font-medium text-ink min-[390px]:w-[68px] min-[390px]:pl-2">
-                            {recordString(s.computed)}
-                            <BackfillMark context={ctx(row)} />
+                          <td className="sx-num w-[59px] whitespace-nowrap pt-3 pl-1 pr-2 text-right align-top font-medium text-ink min-[390px]:w-[68px] min-[390px]:pl-2">
+                            <LeagueRecord record={recordString(s.computed)} context={ctx(row)} />
                           </td>
                           <td className="sx-num hidden w-16 pt-3 pr-2 text-right align-top font-medium text-ink md:table-cell">
                             {winPct(s.computed.winPct)}
@@ -750,8 +784,7 @@ export function StandingsTable(props: StandingsTableProps) {
                       case 'league':
                         return (
                           <td key={col} className="sx-num text-right font-medium text-ink">
-                            {recordString(s.computed)}
-                            <BackfillMark context={c} />
+                            <LeagueRecord record={recordString(s.computed)} context={c} />
                           </td>
                         );
                       case 'pct':
@@ -926,8 +959,7 @@ export function StandingsTable(props: StandingsTableProps) {
                         {has ? s.computed.pts : EM_DASH}
                       </td>
                       <td className="sx-num w-[68px] px-2 text-right font-medium text-ink">
-                        {has ? recordString(s.computed) : EM_DASH}
-                        {has ? <BackfillMark context={ctx(row)} /> : null}
+                        {has ? <LeagueRecord record={recordString(s.computed)} context={ctx(row)} /> : EM_DASH}
                       </td>
                       <td className="w-[44px] pr-gutter text-right @min-[23.4375rem]:w-[100px]">
                         {has ? (
