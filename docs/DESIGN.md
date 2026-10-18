@@ -267,7 +267,7 @@ nothing else.** **[R-6]**
    2-4-0. It is published in-page, not resolved silently. §9.
 
 **Recap shape** (§5.8): the site writes its own sentence, winner first: *"Santa Clara won
-their away De Anza Division league game against Saratoga 3–2."* MaxPreps' own sentence (*"On
+their away El Camino Division league game against Saratoga 3–2."* MaxPreps' own sentence (*"On
 9/24, the Saratoga varsity field hockey team lost their home conference game against Santa
 Clara (CA) by a score of 3-2."*) is no longer stored or printed.
 
