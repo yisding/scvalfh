@@ -48,7 +48,9 @@ describe('fonts (app/layout.tsx, app/globals.css)', () => {
 describe('weight without width', () => {
   it('the top-bar label and the filter pills hold their semibold width', () => {
     expect(read('app/globals.css')).toMatch(/\.sx-weight-hold::after \{\s*content: attr\(data-label\);[\s\S]*?font-weight: 600;/);
-    expect(read('components/layout/NavLink.tsx')).toContain('<span className="sx-weight-hold" data-label={label}>');
+    const nav = read('components/layout/NavLink.tsx');
+    expect(nav).toContain('data-label={label}');
+    expect(nav).toMatch(/className=\{`sx-indicator sx-weight-hold /);
     expect(read('components/schedule/ScheduleFilters.tsx')).toContain('<span className="sx-weight-hold" data-label={option.label}>');
   });
 });

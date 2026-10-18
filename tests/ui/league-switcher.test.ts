@@ -172,7 +172,7 @@ describe('RegionSwitcher', () => {
  * (globals.css shows only the current one's), so a per-league page's row is the same row on every
  * league page; before, link mode rendered it on the current chip alone, which widened that chip by
  * 14.6px and wrapped the row on some league pages and not others. The check is drawn
- * (components/ui/CheckMark.tsx), never the U+2713 glyph, which Geist's served subset lacks.
+ * (`.sx-check`, globals.css), never the U+2713 glyph, which Geist's served subset lacks.
  */
 describe('the chip check', () => {
   const chipsOf = (html: string) =>
@@ -189,7 +189,7 @@ describe('the chip check', () => {
     const chips = chipsOf(html);
     expect(chips).toHaveLength(CHIPS.length + 1);
     for (const chip of chips) {
-      expect(chip, 'components/layout/LeagueSwitcher.tsx').toMatch(/^<svg aria-hidden="true"[^>]*class="shrink-0 sx-chip-check"/);
+      expect(chip, 'components/layout/LeagueSwitcher.tsx').toMatch(/^<span aria-hidden="true" class="sx-check sx-chip-check"><\/span>/);
     }
     expect(html.match(/aria-current="page"/g)).toHaveLength(1);
   });

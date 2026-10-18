@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from 'react';
 
-import CheckMark from '../ui/CheckMark';
 import EmptyState from '../ui/EmptyState';
 import { gameWord } from '../ui/plural';
 
@@ -233,7 +232,7 @@ function PillGroup<T extends string>({
                   at either weight (`.sx-weight-hold`, globals.css): a selection never changes a
                   pill's width, so its neighbours and the wrapped rows stay put. Before the hold
                   the pressed pill was 0.6–1.4px wider than at rest ("All" 66.1 against 65.5). */}
-              <CheckMark className={active ? undefined : 'invisible'} />
+              <span aria-hidden="true" className={active ? 'sx-check' : 'sx-check invisible'} />
               <span className="sx-weight-hold" data-label={option.label}>
                 {option.label}
               </span>

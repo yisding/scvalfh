@@ -749,7 +749,7 @@
         a 44px target, 6px of side padding and 3px between the check and the word (8px until a
         per-league row had to fit one line at 390 with every chip carrying its check; the drawn
         check's own 1px side bearing makes the visible gap 4px). The current chip is inverse ink +
-        the aria-hidden check (components/ui/CheckMark.tsx) —
+        the aria-hidden check (`.sx-check`) —
         never colour alone, and no league hue anywhere (DESIGN §6.4, §26.1). Before hydration the
         scope stylesheet (components/layout/league-scope-css.ts, unlayered) draws the same state
         from html[data-league]; after it, aria-pressed / aria-current do. ── */
@@ -777,6 +777,20 @@
   /* The check is always laid out and only shown when selected, so every chip keeps one width and
      a selection (or a different current league) never reflows a wrapped row. Scope chips and link
      chips both render it; anchor chips, which are never current, do not. */
+  /* The drawn check of a selector chip or pill (the league and region chips, the schedule filter
+     pills; DESIGN §15.4: inverse ink AND a check, never colour alone). U+2713 is not in the latin
+     subset of Geist that next/font serves, so a typed ✓ took its advance from a system font and
+     varied by OS. This is a fixed 0.6667em box (8px in a 12px chip, 9.3px in a 14px pill) that
+     scales with text zoom, the stroke a mask over the chip's own ink. Forced colours repaint
+     backgrounds, so there it is painted in the text colour the mode gives the chip. */
+  .sx-check {
+    display: inline-block; flex-shrink: 0; width: 0.6667em; height: 0.6667em;
+    background-color: currentColor;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3E%3Cpath d='M1 4.3 3.1 6.4 7 1.6' fill='none' stroke='%23000' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
+  }
+  @media (forced-colors: active) {
+    .sx-check { forced-colors-adjust: none; background-color: CanvasText; }
+  }
   .sx-chip-check { visibility: hidden; }
   .sx-league-chip:is([aria-pressed="true"], [aria-current="page"]) > .sx-chip-check { visibility: visible; }
 

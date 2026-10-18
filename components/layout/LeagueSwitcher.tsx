@@ -3,7 +3,6 @@
 import Link from 'next/link';
 import { useState } from 'react';
 
-import CheckMark from '../ui/CheckMark';
 import { setLeague, setRegion, useEffectiveLeague, useEffectiveRegion } from '../ui/use-league';
 import type { SectionConfig } from '../../lib/leagues';
 import type { LeagueId, RegionId } from '../../lib/types';
@@ -30,8 +29,8 @@ import { ALL_LEAGUES } from './prefs-script';
  * (200% text zoom wraps rather than clipping). No visible section captions: the league chips sit in one list
  * per section, labelled `Central Coast Section` / `North Coast Section` / `Northern Section` /
  * `Southern Section` / `San Diego Section`, split by hairlines; the `All` chip precedes them all.
- * The current chip is inverse ink (DESIGN §26.1) AND an aria-hidden check (`.sx-chip-check`,
- * components/ui/CheckMark.tsx) — never colour alone. Every scope and link chip lays the check out
+ * The current chip is inverse ink (DESIGN §26.1) AND an aria-hidden check (`.sx-chip-check`, drawn
+ * by `.sx-check`) — never colour alone. Every scope and link chip lays the check out
  * and only the selected one shows it (globals.css), so a chip has one width on every page. No league hue anywhere. `link` and `anchor` rows are screen-only (`sx-print-hide`);
  * the `scope` row is `sx-js-only`, which print hides too.
  *
@@ -113,8 +112,14 @@ function bySection(leagues: readonly LeagueChip[]): SectionGroup[] {
   return groups;
 }
 
+/**
+ * The drawn check (`.sx-check`, globals.css): a fixed 0.6667em box, never the U+2713 glyph, which
+ * the latin subset of Geist that next/font serves lacks, so its width came from a system font and
+ * varied by OS (10.6px at 12px in DejaVu Sans). Plain markup, not an inline <svg> or a shared
+ * component: this is a client module, and either put `/teams` past its first-load JS budget.
+ */
 function Check() {
-  return <CheckMark className="sx-chip-check" />;
+  return <span aria-hidden="true" className="sx-check sx-chip-check" />;
 }
 
 /**

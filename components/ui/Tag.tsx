@@ -1,6 +1,7 @@
 /**
- * The mono micro-tag: `NL`, `OT`, `2 OT`, `SO`, `F`, a league code (`SCVAL`), a postseason code
- * (`CCS`), `this game` (DESIGN §7.16).
+ * The mono micro-tag: `NL`, `OT`, `2 OT`, `SO`, `F`, a league code (`SCVAL`), `this game`
+ * (DESIGN §7.16). A game's postseason chip is a phrase ("San Diego Section playoffs") that no fixed
+ * track holds, so GameRow's GameChips draws it as a wrapping capsule, not a Tag.
  * A tag is a 1–2 word code — never a hue on its own. It is the one place mono caps survive:
  * 12px, weight 600, 0.06em (all from `text-kicker`), and it never wraps: 20px tall, ink-2 on
  * surface-3.
