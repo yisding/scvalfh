@@ -444,7 +444,6 @@ export function sideOutcome(
 export function renderScore(g: Game): ScoreView {
   if (g.status === 'postponed') return { kind: 'postponed', newDate: null };
   if (g.status === 'score-pending') return { kind: 'unreported' };
-  if (g.status === 'live') return { kind: 'live' };
   const outcome = sideOutcome(g, 'home');
   if (outcome === null || g.home.score === null || g.away.score === null) {
     return { kind: 'scheduled', time: g.isTimeTba ? null : timeOfDay(g.dateLocal) };
@@ -582,8 +581,6 @@ export function scoreSentence(
     }
     case 'unreported':
       return `${g.away.name} at ${g.home.name}: score not reported.`;
-    case 'live':
-      return `${g.away.name} at ${g.home.name}: in progress.`;
     case 'postponed':
       return `${g.away.name} at ${g.home.name}: postponed.`;
     case 'scheduled':

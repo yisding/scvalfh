@@ -106,7 +106,7 @@ export function TeamNextGame({ card, teamName, league }: TeamNextGameProps) {
   const display = describeGame(game);
   // The start time is always shown when the date is known (struck through when the game is
   // postponed or cancelled, as everywhere else). A scheduled game's status label IS that time, so
-  // it adds nothing; anything else (LIVE, POSTPONED, CANCELLED, SCORE NOT REPORTED) follows the
+  // it adds nothing; anything else (POSTPONED, CANCELLED, SCORE NOT REPORTED) follows the
   // time as the written status, so neither the word nor the time is dropped (DESIGN §5.2). The
   // time is sans with tabular figures, not mono: it sits on the 18px date's baseline, alone, and
   // stacks with nothing.

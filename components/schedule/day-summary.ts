@@ -26,7 +26,7 @@ export interface DayLine {
   homeGlyph: string;
   awayWinner: boolean;
   homeWinner: boolean;
-  /** FINAL · SCORE NOT REPORTED · LIVE · 4:00 PM · TIME TBA */
+  /** FINAL · SCORE NOT REPORTED · 4:00 PM · TIME TBA */
   statusLabel: string;
   showScores: boolean;
   isNonLeague: boolean;

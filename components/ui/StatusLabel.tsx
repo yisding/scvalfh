@@ -2,7 +2,7 @@ import Tag from './Tag';
 import type { GameDisplay, StatusTone } from './describe-game';
 
 /**
- * The written label beside every score: FINAL · LIVE · SCORE NOT REPORTED · POSTPONED ·
+ * The written label beside every score: FINAL · SCORE NOT REPORTED · POSTPONED ·
  * CANCELLED · the time · TIME TBA (DESIGN §5.2, §6.5 channel 2), plus the game's chips
  * (SPEC §10.4): the league chip (`SCVAL`, `BVAL`, …) of a counted game or `NL` for a non-league
  * game (both from `countsFor`), the postseason chip (`SCVAL crossover`, `BVAL play-in`,
@@ -12,8 +12,7 @@ import type { GameDisplay, StatusTone } from './describe-game';
  * describeGame (GameDisplay.shootoutLabel: 'decided on 1 v 1s' for an EAL 1 v 1 win, 'decided by a
  * shootout' for a San Diego Section game); else 'after overtime'.
  *
- * Channel 2 is never abbreviated to a dot, and LIVE always carries the word as well as the
- * accent dot, so the pulse is never load-bearing. Set in 12px sans semibold caps; the strings are
+ * Channel 2 is never abbreviated to a dot. Set in 12px sans semibold caps; the strings are
  * already uppercase, so `uppercase` changes nothing a reader hears.
  *
  * Client-safe: it imports only TYPES from describe-game (the home My-team card renders it).
@@ -33,7 +32,6 @@ const TONE: Record<StatusTone, string> = {
   ink: 'text-ink',
   'ink-2': 'text-ink-2',
   'ink-3': 'text-ink-3',
-  accent: 'text-accent-ink',
 };
 
 /**
@@ -89,7 +87,6 @@ export function StatusLabel({ display, showChips = true, className }: StatusLabe
         TONE[display.statusTone]
       }${className ? ` ${className}` : ''}`}
     >
-      {display.liveDot ? <span className="sx-live-dot" aria-hidden="true" /> : null}
       <span className={display.strikeTime ? 'line-through' : undefined}>{display.statusLabel}</span>
       {display.deciderTag ? (
         <Tag label={deciderLabel(display)}>{display.deciderTag}</Tag>

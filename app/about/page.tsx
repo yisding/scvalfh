@@ -1171,13 +1171,6 @@ export default function AboutPage() {
                 with a dagger everywhere a total would otherwise be misleading.
               </li>
               <li>A game with no score posted yet shows <b className="font-semibold text-ink">SCORE NOT REPORTED</b> with an empty outline chip, never a blank or a zero.</li>
-              <li>
-                A game MaxPreps marks as in progress shows <b className="font-semibold text-ink">LIVE</b>, but this is a scheduled-window label, not a running score &mdash; see{' '}
-                <a href="#freshness" className="text-accent hover:underline">
-                  how often this updates
-                </a>
-                .
-              </li>
               <li>A postponed game shows <b className="font-semibold text-ink">POSTPONED</b> with the new date when one is known, or &ldquo;TBD&rdquo; when it is not.</li>
               <li>A non-league game carries a small NL tag everywhere; it counts in a team&rsquo;s overall record and nowhere in the league standings.</li>
               <li>A score published from si.com carries a marker and a &ldquo;score via si.com&rdquo; line on its game page.</li>
@@ -1379,9 +1372,8 @@ export default function AboutPage() {
             </p>
             <p>
               <b className="font-semibold text-ink">Live scores are not collected.</b> A game MaxPreps
-              marks as in progress is shown as a scheduled window with a{' '}
-              <b className="font-semibold text-ink">LIVE</b> label, never a running score, because this
-              site has no mechanism that watches a game while it is being played.
+              marks as in progress is shown as scheduled, with no score and no &ldquo;live&rdquo; label,
+              because a page published hours earlier cannot know whether the game is still being played.
             </p>
             <p>
               The data on this page was last updated {formatStamp(getFetchedAt())}. If a page
