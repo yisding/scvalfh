@@ -18,7 +18,9 @@ import {
   gameStaticParams,
   gameTitle,
 } from '../../../components/game/game-view';
+import JsonLd from '../../../components/layout/JsonLd';
 import { OG_BASE } from '../../../components/layout/site';
+import { gameJsonLd } from '../../../components/layout/structured-data';
 import Arrow from '../../../components/ui/Arrow';
 import ExternalLink from '../../../components/ui/ExternalLink';
 import ScoreBoard from '../../../components/ui/ScoreBoard';
@@ -60,12 +62,16 @@ export async function generateMetadata({ params }: PageProps<'/game/[id]'>): Pro
     if (stub) {
       const title = stub.targetModel ? gameTitle(stub.targetModel) : 'Game moved to MaxPreps';
       return {
-        title,
+        // Absolute when it is the target game's title, which names the sport (as on the game page below).
+        title: stub.targetModel ? { absolute: title } : title,
         description: stub.sentence,
+        // The canonical alone says "index the MaxPreps game instead". It used to come with
+        // `noindex, follow`, and the two contradict each other: Google's duplicate-URL guidance is
+        // not to noindex a page whose canonical points elsewhere, since the noindex can be carried
+        // over to the target. The stub stays out of the sitemap (app/sitemap.ts).
         alternates: { canonical: stub.targetHref },
         // The title stated, not inherited with the site-name suffix (components/layout/site.ts OG_BASE).
         openGraph: { ...OG_BASE, title },
-        robots: { index: false, follow: true },
       };
     }
     return { title: 'Game not found', robots: { index: false, follow: false } };
@@ -73,7 +79,10 @@ export async function generateMetadata({ params }: PageProps<'/game/[id]'>): Pro
   const title = gameTitle(model);
   const description = gameDescription(model);
   return {
-    title,
+    // Absolute: the title already names the sport (gameTitle), and the layout's "— NorCal HS Field
+    // Hockey" would repeat it and push a matchup's title to ~80 characters; og:site_name and the
+    // WebSite markup on / carry the brand.
+    title: { absolute: title },
     description,
     alternates: { canonical: model.canonical },
     openGraph: {
@@ -135,6 +144,7 @@ export default async function GamePage({ params }: PageProps<'/game/[id]'>) {
 
   return (
     <div className="pb-section-lg">
+      <JsonLd data={gameJsonLd(model)} />
       {/* Routes out of the page (F-31): back to the day, then each registry side's team page, away
           first. Every one is a standalone 44px target (WCAG 2.5.8). Only the first is pulled left
           by its own padding so its arrow lines up with the gutter; the team pills have a visible

@@ -9,7 +9,9 @@ import MyTeamCard from '../components/home/MyTeamCard';
 import { buildHomeView } from '../components/home/home-view';
 import LeagueSwitcher, { RegionSwitcher } from '../components/layout/LeagueSwitcher';
 import PageHeader from '../components/layout/PageHeader';
+import JsonLd from '../components/layout/JsonLd';
 import { OG_BASE, SITE_NAME, leaguesBySectionWords } from '../components/layout/site';
+import { websiteJsonLd } from '../components/layout/structured-data';
 import { listWords, shortDate } from '../lib/format';
 import { INDEPENDENT_LEAGUES, LEAGUES_PROPER } from '../lib/leagues';
 import { TEAMS } from '../lib/teams';
@@ -37,6 +39,9 @@ import { TEAMS } from '../lib/teams';
  * there is no `searchParams` in this signature, which is what keeps the route static.
  */
 export const metadata: Metadata = {
+  // Absolute, so the layout's suffix does not repeat the brand; the brand alone ("NorCal High School
+  // Field Hockey", the layout's default) said nothing about what the page has.
+  title: { absolute: `${SITE_NAME} Scores & Standings` },
   description: `Scores, standings and playoff pictures for the ${TEAMS.length} girls varsity field hockey teams in ${leaguesBySectionWords('name')}. Unofficial, updated twice daily.`,
   alternates: { canonical: '/' },
   openGraph: { ...OG_BASE, title: SITE_NAME, url: '/' },
@@ -59,6 +64,7 @@ export default function HomePage() {
 
   return (
     <div className="pb-section-lg">
+      <JsonLd data={websiteJsonLd()} />
       <div data-scope="all">
         <PageHeader
           title="NorCal High School Field Hockey Teams"

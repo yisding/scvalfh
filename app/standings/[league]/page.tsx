@@ -16,7 +16,7 @@ import { biggestGoalDiff } from '../../../components/ui/StandingsTable';
 import { getLeagueIds, getLeagueSummary } from '../../../lib/data';
 import { shortDate } from '../../../lib/format';
 import { hasHistory } from '../../../lib/history';
-import { getLeague, standingsLabel } from '../../../lib/leagues';
+import { getLeague, leagueSportWords, standingsLabel } from '../../../lib/leagues';
 
 /**
  * /standings/<league> — "Where do WE stand?" (SPEC §8.1, §10.3): one league's full tables.
@@ -58,10 +58,12 @@ export async function generateMetadata({ params }: PageProps<'/standings/[league
     .filter((d): d is string => d !== null)
     .sort()
     .at(-1);
-  const title = standingsLabel(summary.id);
+  // The <title> names the sport, the page's h1 (standingsLabel) does not need to: a search result
+  // has only the title to say this is field hockey, and "SCVAL standings" alone could be any sport.
+  const title = `${summary.shortName} field hockey standings`;
   // A 'site' league publishes no points rule (the Sunset, the San Diego leagues): the points are this site's.
   const site = getLeague(summary.id).rules.orderScope === 'site';
-  const description = `${summary.name}, ordered on ${site ? 'this site’s ' : ''}points (3 a win, 1 a tie). ${leaderClause(leaders)}.${
+  const description = `${leagueSportWords(summary.id)} standings, ordered on ${site ? 'this site’s ' : ''}points (3 a win, 1 a tie). ${leaderClause(leaders)}.${
     through ? ` League games through ${shortDate(through)}.` : ''
   } Computed from published results; unofficial.`;
   return {
@@ -115,7 +117,8 @@ export default async function LeagueStandingsPage({ params }: PageProps<'/standi
     >
       <PageHeader
         title={standingsLabel(summary.id)}
-        description={`${summary.name} · ${summary.section.name} · league games only`}
+        // The sport is named in the lede: the h1 ("SCVAL standings") is the league's short name only.
+        description={`${leagueSportWords(summary.id)} · ${summary.section.name} · league games only`}
         aside={multi ? <DivisionTabs variant="inline" tabs={tabs} /> : undefined}
         asideClassName={multi ? 'hidden md:block' : undefined}
       />

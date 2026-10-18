@@ -51,6 +51,7 @@ import {
   findLeague,
   getLeague,
   leagueOfDivision,
+  leagueSportWords,
   type LeagueConfig,
 } from '../../lib/leagues';
 import { SHOOTOUT_NOTE } from '../../lib/postseason';
@@ -958,6 +959,11 @@ export function buildSupersededStub(param: string): SupersededStub | undefined {
  * A final names the WINNER first, because that is the headline a reader pastes into a group chat;
  * every other state keeps the site's away-then-home order. The numbers are `SideView.glyph`, so an
  * unreported game reads `—` and never `0`.
+ *
+ * It names the sport, once, inside the first ~60 characters a search result shows: "Canyon Hills 3,
+ * Bishop's 2 — field hockey, Sep 29, 2026", "Helix vs Sage Creek field hockey — Oct 17, 2026, 4:00 PM
+ * PT". People search a matchup as "<school> <school> field hockey", and the site-name suffix that
+ * used to be the only "field hockey" in the title was the part a result cut off.
  */
 export function gameTitle(model: GameModel): string {
   const { display, game, away, home } = model;
@@ -966,7 +972,7 @@ export function gameTitle(model: GameModel): string {
     // Winner first on a decided game; a draw keeps the site's away-then-home order.
     const [first, second] = home.view.weight === 'winner' ? [home, away] : [away, home];
     const decider = display.deciderTag ? ` (${display.deciderTag})` : '';
-    return `${first.label} ${first.view.glyph}, ${second.label} ${second.view.glyph}${decider} — ${date}`;
+    return `${first.label} ${first.view.glyph}, ${second.label} ${second.view.glyph}${decider} — field hockey, ${date}`;
   }
   const joiner = matchupJoiner(game);
   const suffix =
@@ -975,13 +981,15 @@ export function gameTitle(model: GameModel): string {
         ? 'time TBA'
         : timeOfDayPT(game.dateLocal)
       : display.statusLabel.toLowerCase();
-  return `${away.label} ${joiner} ${home.label} — ${date}, ${suffix}`;
+  return `${away.label} ${joiner} ${home.label} field hockey — ${date}, ${suffix}`;
 }
 
 /** `De Anza Division league game` | `MCAL league game` | `MCAL semifinal` | `non-league game`. */
 function contextNoun(model: GameModel): string {
   if (model.game.postseason) {
-    return model.contextLabel === 'CCS' ? 'CCS playoff game' : `${model.contextLabel} game`;
+    // 'Postseason' is the label of an independents' postseason game, a common noun mid-sentence.
+    const label = model.contextLabel === 'Postseason' ? 'postseason' : model.contextLabel;
+    return label === 'CCS' ? 'CCS playoff game' : `${label} game`;
   }
   if (model.division) {
     const noun = divisionNoun(model.division);
@@ -994,10 +1002,12 @@ function contextNoun(model: GameModel): string {
 export function gameDescription(model: GameModel): string {
   const { game, display, away, home, league } = model;
   const context = contextNoun(model);
-  const where = `${league ? `${league.name} ` : ''}girls varsity field hockey, ${SEASON_DISPLAY}`;
+  const where = `${league ? leagueSportWords(league.id) : 'girls varsity field hockey'}, ${SEASON_DISPLAY}`;
   if (game.recap) {
     const lead = article(context) === 'an' ? 'An' : 'A';
-    return `${game.recap} ${lead} ${context} in ${where} — unofficial, rebuilt twice daily from MaxPreps.`;
+    // Dated: MaxPreps' recap sentence carries no date, so a rematch with the same score had the
+    // same description as the first meeting.
+    return `${dateWithYear(game.dateLocal)}: ${game.recap} ${lead} ${context} in ${where} — unofficial, rebuilt twice daily from MaxPreps.`;
   }
   const joiner = matchupJoiner(game);
   return `${away.name} ${joiner} ${home.name}, ${model.whenLabel} — ${article(

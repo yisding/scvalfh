@@ -1,5 +1,7 @@
+import Link from 'next/link';
+
 import { dateTimeAttr, longDate, monthDay, parseLocal, timeOfDayPT } from '../../lib/format';
-import { findDivision, findLeague } from '../../lib/leagues';
+import { findDivision, findLeague, standingsLabel } from '../../lib/leagues';
 import ExternalLink from '../ui/ExternalLink';
 import SectionHeader from '../ui/SectionHeader';
 import { maxPrepsLabel } from '../ui/maxpreps-label';
@@ -149,7 +151,25 @@ export function GameDetails({ model, className }: GameDetailsProps) {
         <div className="py-3 first:pt-0 last:pb-0 md:max-lg:py-0">
           <dt className="text-micro font-medium text-ink-3">Counts as</dt>
           <dd className="mt-1 mb-0 ml-0 text-body text-ink">
-            <span className="block">{countsAs.label}</span>
+            {/* A counted league game links the table it counts in, at its division's section: the
+                one step up from a game page that was missing (the routes row goes to the day and the
+                two teams). Its name says where it goes, "League game · Santa Teresa, BVAL
+                standings", rather than a generic "standings". */}
+            {model.division && model.league ? (
+              <Link
+                href={`/standings/${model.league.id}#${model.division}`}
+                prefetch={false}
+                className="sx-action gap-1 text-accent no-underline hover:underline"
+              >
+                {countsAs.label}
+                <span className="sr-only">, {standingsLabel(model.league.id)}</span>
+                <span aria-hidden="true" className="text-micro">
+                  &rsaquo;
+                </span>
+              </Link>
+            ) : (
+              <span className="block">{countsAs.label}</span>
+            )}
             <span className="mt-1 block text-meta text-ink-3">{countsAs.detail}</span>
             {countsAs.classificationNote ? (
               <span className="mt-1 block text-meta text-ink-3">{countsAs.classificationNote}</span>
