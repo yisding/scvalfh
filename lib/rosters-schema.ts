@@ -20,7 +20,7 @@
 import { z } from 'zod';
 
 import { COMMIT_SPORTS } from './commits-schema';
-import { ALL_DIVISIONS } from './leagues';
+import { ALL_DIVISIONS } from './config/leagues';
 import { dateKey, httpUrl, httpsUrl, slugId } from './schema-primitives';
 import { contentKey } from './shared/stable-json';
 import { TEAMS, getTeamBySlug } from './teams';

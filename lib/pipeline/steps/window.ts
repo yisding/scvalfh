@@ -5,8 +5,8 @@
  * localDateKey(fetchedAt), never the wall clock.
  */
 
+import { seasonWindowBounds } from '@/lib/config/leagues';
 import { monthDay } from '@/lib/format/dates';
-import { seasonWindowBounds } from '@/lib/leagues';
 import type { RunContext } from '@/lib/pipeline/contract';
 
 export function inSeasonWindow(today: string, bounds = seasonWindowBounds()): boolean {

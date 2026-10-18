@@ -12,9 +12,9 @@ import PageHeader from '@/components/layout/PageHeader';
 import JsonLd from '@/components/layout/JsonLd';
 import { OG_BASE, SITE_NAME, leaguesBySectionWords } from '@/components/layout/site';
 import { websiteJsonLd } from '@/components/layout/structured-data';
+import { INDEPENDENT_LEAGUES, LEAGUES_PROPER } from '@/lib/config/leagues';
 import { shortDate } from '@/lib/format/dates';
 import { listWords } from '@/lib/format/words';
-import { INDEPENDENT_LEAGUES, LEAGUES_PROPER } from '@/lib/leagues';
 import { TEAMS } from '@/lib/teams';
 
 /**
@@ -33,7 +33,7 @@ import { TEAMS } from '@/lib/teams';
  *
  * The page body is read through `components/home/home-view.ts` (which reads only `lib/data.ts`) and
  * formatted in America/Los_Angeles from `snapshot.fetchedAt`; only the metadata description and
- * the sr-only league list read config (`lib/teams`, `lib/leagues`) directly. No page calls `Date.now()`, and
+ * the sr-only league list read config (`lib/teams`, `lib/config/leagues`) directly. No page calls `Date.now()`, and
  * there is no `searchParams` in this signature, which is what keeps the route static.
  */
 export const metadata: Metadata = {

@@ -24,7 +24,7 @@
 
 import { z } from 'zod';
 
-import { DATA_QUALITY, LEAGUES } from '@/lib/leagues';
+import { DATA_QUALITY, LEAGUES } from '@/lib/config/leagues';
 import type { TeamSlug } from '@/lib/model/ids';
 import type { Team } from '@/lib/model/team';
 import { localDateKey } from '@/lib/shared/dates';

@@ -7,7 +7,7 @@
 
 import { createHash } from 'node:crypto';
 
-import { getDivision } from '@/lib/leagues';
+import { getDivision } from '@/lib/config/leagues';
 import type { OfficialFixture } from '@/lib/model/fixture';
 import type { DivisionId } from '@/lib/model/ids';
 import { teamsInDivision } from '@/lib/teams';

@@ -14,7 +14,7 @@ import type { ReactElement } from 'react';
 import { beforeAll, describe, expect, it } from 'vitest';
 
 import { buildTournamentView, type TournamentView } from '@/components/playoffs/playoff-view';
-import { getDivision, getLeague } from '@/lib/leagues';
+import { getDivision, getLeague } from '@/lib/config/leagues';
 import type { Game, PostseasonTag } from '@/lib/model/game';
 import type { LeagueTournamentProjection } from '@/lib/model/postseason';
 import type { SeasonPhase } from '@/lib/model/season';

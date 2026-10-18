@@ -23,10 +23,10 @@
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 
-import { CCS, getDivision, getLeague } from '@/lib/leagues';
+import { CCS, getDivision, getLeague } from '@/lib/config/leagues';
+import { BOOTSTRAP_URL } from '@/lib/config/season';
 import type { DivisionId, TeamSlug } from '@/lib/model/ids';
 import { officialChangesCellText, sha256Hex } from '@/lib/official/validate';
-import { BOOTSTRAP_URL } from '@/lib/season';
 import { CCS_ICAL_URL } from '@/lib/sources/ccs';
 import { CIFSS_SEASON_FROM, cifssListingUrl } from '@/lib/sources/cifss';
 import { HttpClient, HttpError, type HttpClientOptions } from '@/lib/sources/http';
@@ -81,7 +81,7 @@ function teamOrThrow(slug: TeamSlug) {
 
 /**
  * A division's MaxPreps league id, or a throw for a division MaxPreps publishes no table for (the
- * San Diego Section's Valley division: lib/leagues.ts sets maxprepsLeagueId null, DESIGN-socal §2.1.7).
+ * San Diego Section's Valley division: lib/config/leagues.ts sets maxprepsLeagueId null, DESIGN-socal §2.1.7).
  * Steps 03 and 04 never build a key for such a division (league-meta.ts and reported.ts skip it with
  * no request), so reaching this throw is a pipeline bug, and it surfaces before any request instead
  * of as a GET of `/leagues/null/v1`.

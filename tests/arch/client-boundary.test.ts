@@ -37,7 +37,7 @@ import {
  * Repo-relative module paths (no extension, no trailing /index) a client module may import from
  * outside components/ and app/. An entry ending in '/' is a prefix: it admits everything under it.
  */
-const CLIENT_SAFE: readonly string[] = ['lib/model/', 'lib/shared/', 'lib/format/', 'lib/season', 'lib/mascots'];
+const CLIENT_SAFE: readonly string[] = ['lib/model/', 'lib/shared/', 'lib/format/', 'lib/config/season', 'lib/config/mascots'];
 
 const NODE_BUILTINS = new Set(builtinModules);
 
@@ -96,7 +96,7 @@ describe('client boundary: no "use client" module reaches a server-only module',
         [
           "import type { A } from '../../lib/data';",
           "import { type B, type C } from '../../lib/teams';",
-          "export type { D } from '../../lib/leagues';",
+          "export type { D } from '../../lib/config/leagues';",
           "import { x, type Y } from './keep';",
           "import './side-effect';",
           "export { z } from '@/lib/format/words';",
@@ -131,7 +131,7 @@ describe('client boundary: no "use client" module reaches a server-only module',
     const from = PROBE;
     // A module nobody listed is banned, wherever it lives: this is what makes the list an allowlist.
     // (lib/format.ts, beside the client-safe lib/format/ directory, serves only the metadata image routes.)
-    for (const spec of ['@/lib/leagues/rules', '@/lib/leagues', '@/lib/format', '@/lib/brand-new-module', '@/scripts/cli']) {
+    for (const spec of ['@/lib/config/leagues/labels', '@/lib/config/leagues', '@/lib/format', '@/lib/brand-new-module', '@/scripts/cli']) {
       expect(classify(spec, from), spec).toEqual({ kind: 'banned', name: spec.slice(2) });
     }
     // A listed one passes (and is walked), a trailing /index is the same module, and the client's own tree is free.

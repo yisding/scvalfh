@@ -24,7 +24,7 @@
  * teamId is checked against it); its rows are then all "not on the roster".
  *
  * Two guards keep the scheduled run from churning the repository. Outside the season window
- * (the pipeline's own guard, lib/pipeline/steps/window.ts over lib/leagues.ts' section windows,
+ * (the pipeline's own guard, lib/pipeline/steps/window.ts over lib/config/leagues.ts' section windows,
  * Aug 1 – Nov 30 Pacific, on the date of `--fetched-at`) it fetches and writes nothing. And when the
  * new file differs from the previous one only in its `fetchedAt` stamps, the previous file is left
  * exactly as it was (`playerStatsContentKey`), so there is nothing to commit.
@@ -56,6 +56,8 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 
+import { INDEPENDENT_LEAGUES, LEAGUES_PROPER, seasonWindowBounds } from '@/lib/config/leagues';
+import { SEASON_YEAR } from '@/lib/config/season';
 import { monthDay } from '@/lib/format/dates';
 import {
   describePrevious,
@@ -69,7 +71,6 @@ import {
   teamsInScope,
   type PreviousFile,
 } from '@/lib/fetch-scope';
-import { INDEPENDENT_LEAGUES, LEAGUES_PROPER, seasonWindowBounds } from '@/lib/leagues';
 import type { LeagueId } from '@/lib/model/ids';
 import { teamsCreditedByNotes } from '@/lib/note-stats';
 import { inSeasonWindow } from '@/lib/pipeline/steps/window';
@@ -98,7 +99,6 @@ import {
   type PlayerStatsPage,
 } from '@/lib/sources/maxpreps-player-stats';
 import { formatIssues } from '@/lib/schema-primitives';
-import { SEASON_YEAR } from '@/lib/season';
 import { loadSnapshot } from '@/lib/snapshot-schema';
 import { TEAMS } from '@/lib/teams';
 import { runCli } from './cli';

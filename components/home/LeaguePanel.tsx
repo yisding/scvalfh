@@ -10,8 +10,8 @@ import NextSlate from './NextSlate';
 import OtherLeaguesStrip from './OtherLeaguesStrip';
 import PhaseLead from './PhaseLead';
 import PostseasonCard from './PostseasonCard';
+import { isIndependentLeague } from '@/lib/config/leagues';
 import { longDate } from '@/lib/format/dates';
-import { isIndependentLeague } from '@/lib/leagues';
 
 /**
  * One league's home panel (SPEC §10.1). Every league's panel is in the static HTML; the scope

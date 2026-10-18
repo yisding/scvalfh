@@ -12,6 +12,7 @@ import DivisionTabs from '@/components/standings/DivisionTabs';
 import TeamMonogram from '@/components/ui/TeamMonogram';
 import SectionHeader from '@/components/ui/SectionHeader';
 import { OG_BASE, ROOT_OG_IMAGE } from '@/components/layout/site';
+import { getDivision, getLeague, getSection, isIndependentLeague, regionOf } from '@/lib/config/leagues';
 import { getTeamBySlug } from '@/lib/data';
 import { dateWithYear } from '@/lib/format/dates';
 import { listWords } from '@/lib/format/words';
@@ -32,7 +33,6 @@ import {
   type SectionBracket,
   type UnavailableLeagueHistory,
 } from '@/lib/history';
-import { getDivision, getLeague, getSection, isIndependentLeague, regionOf } from '@/lib/leagues';
 import type { LeagueId } from '@/lib/model/ids';
 
 /**
@@ -53,7 +53,7 @@ import type { LeagueId } from '@/lib/model/ids';
  * page is the only place last season's numbers live, and it is not part of the snapshot the
  * scheduled update rebuilds.
  *
- * The leagues, divisions and notes all come from `data/history-2025-26.json` and lib/leagues.ts,
+ * The leagues, divisions and notes all come from `data/history-2025-26.json` and lib/config/leagues.ts,
  * never from a literal list, so a league cannot be dropped or invented here. The header says only
  * what a reader needs before the tables in a short lede; provenance detail sits in each league's
  * source note. A long lede here pushed the first standings row under the phone tab bar.

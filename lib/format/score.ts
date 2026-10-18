@@ -56,7 +56,7 @@ export function renderScore(g: Game): ScoreView {
 
 /**
  * The phrases copy builds around a section's shootout words (SectionConfig.shootout.words in
- * lib/leagues.ts, which this client-safe module cannot import, so callers pass the words in):
+ * lib/config/leagues.ts, which this client-safe module cannot import, so callers pass the words in):
  *
  *   words        noun        onPhrase          wonOn               decidedOn               decidedIt               win               tally
  *   '1 v 1s'     '1 v 1'     'on 1 v 1s'       'won on 1 v 1s'     'decided on 1 v 1s'     '1 v 1s decided it'     'a 1 v 1 win'     'the 1 v 1 tally'

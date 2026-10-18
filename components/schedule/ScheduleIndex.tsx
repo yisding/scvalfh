@@ -1,8 +1,8 @@
 import Link from 'next/link';
 
+import { REGIONS } from '@/lib/config/leagues';
 import { longDate, shortDate } from '@/lib/format/dates';
 import { gameWord, plural } from '@/lib/format/words';
-import { REGIONS } from '@/lib/leagues';
 import Arrow from '@/components/ui/Arrow';
 import { GameRow } from '@/components/ui/GameRow';
 import SectionHeader from '@/components/ui/SectionHeader';

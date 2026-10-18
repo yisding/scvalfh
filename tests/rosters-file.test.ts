@@ -9,7 +9,7 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { LEAGUES } from '@/lib/leagues';
+import { LEAGUES } from '@/lib/config/leagues';
 import {
   ROSTER_TEAM_COUNT,
   RostersPartialSchema,

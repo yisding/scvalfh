@@ -13,6 +13,7 @@ import path from 'node:path';
 
 import { describe, expect, it, vi } from 'vitest';
 
+import { SPORT_SEASON_ID } from '@/lib/config/season';
 import { getRosters } from '@/lib/rosters';
 import { MaxPrepsClient, NEXT_DATA_RE } from '@/lib/sources/maxpreps';
 import {
@@ -31,7 +32,6 @@ import {
   type FieldStatKey,
   type GoalieStatKey,
 } from '@/lib/player-stats-schema';
-import { SPORT_SEASON_ID } from '@/lib/season';
 import { TEAMS as REGISTRY, teamsInLeague } from '@/lib/teams';
 import { FIXTURE_DIR } from './support/corpus';
 

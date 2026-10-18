@@ -9,9 +9,9 @@ import TeamFinder from '@/components/search/TeamFinder';
 import OverviewDivisionBlock from '@/components/standings/OverviewDivisionBlock';
 import { alignmentSentence, buildTeamsByRegion } from '@/components/teams/team-view';
 import SectionHeader from '@/components/ui/SectionHeader';
+import { LEAGUES_PROPER } from '@/lib/config/leagues';
 import { getCounts, getTeamSearchIndex } from '@/lib/data';
 import { listWords } from '@/lib/format/words';
-import { LEAGUES_PROPER } from '@/lib/leagues';
 
 /** The page's title, and its og:title too: og:title never carries the site-name suffix (OG_BASE). */
 const PAGE_TITLE = 'Teams and standings';

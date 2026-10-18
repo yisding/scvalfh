@@ -26,10 +26,10 @@ import { BOARD_PLACES, EXPANDED_PLACES, qualifyingMinimum, rankBoard } from '@/c
 import type { LeaderBoard, LeaderSources, LeadersView, RegionLeadersView } from '@/components/leaders/types';
 import { statText } from '@/components/teams/player-stats-view';
 import { positionWords } from '@/components/ui/position-words';
+import { regionOf } from '@/lib/config/leagues';
 import { getGames, getStandingFor, getTeams } from '@/lib/data';
 import { recordString } from '@/lib/format/numbers';
 import { gradeWord } from '@/lib/format/words';
-import { regionOf } from '@/lib/leagues';
 import { computeAdjustedScoring, getAdjustedScoring } from '@/lib/adjusted-scoring';
 import type { Game } from '@/lib/model/game';
 import { getAllPlayerStatsWithNotes } from '@/lib/player-stats';

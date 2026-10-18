@@ -2,7 +2,7 @@ import type { MetadataRoute } from 'next';
 
 import { SITE_DESCRIPTION, SITE_NAME, SITE_SHORT_NAME } from '@/components/layout/site';
 import { THEME_COLOR } from '@/components/layout/theme-script';
-import { SEASON_CALENDAR_YEAR } from '@/lib/season';
+import { SEASON_CALENDAR_YEAR } from '@/lib/config/season';
 
 /**
  * /manifest.webmanifest (DESIGN §1.1). Installable, standalone, and themed to `--sx-bg` so the

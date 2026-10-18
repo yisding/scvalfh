@@ -22,8 +22,8 @@ import {
   supersededGamesOf,
   type BackfillInput,
 } from '@/lib/backfill';
+import { getDivision } from '@/lib/config/leagues';
 import { scoreSentence } from '@/lib/format/score';
-import { getDivision } from '@/lib/leagues';
 import type { OfficialFixture } from '@/lib/model/fixture';
 import type { Game } from '@/lib/model/game';
 import type { SourceStatus } from '@/lib/model/health';

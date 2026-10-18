@@ -13,8 +13,8 @@ import { PINNED_TEAM_SCRIPT } from '@/components/layout/pinned-team-script';
 import { THEME_COLOR, THEME_SCRIPT } from '@/components/layout/theme-script';
 import PinnedTeamMarks from '@/components/ui/PinnedTeamMarks';
 import TwinMarks from '@/components/ui/TwinMarks';
+import { DEFAULT_REGION, LEAGUE_IDS, regionOf } from '@/lib/config/leagues';
 import { getFetchedAt, getTeams } from '@/lib/data';
-import { DEFAULT_REGION, LEAGUE_IDS, regionOf } from '@/lib/leagues';
 
 import './globals.css';
 
@@ -127,7 +127,7 @@ export const viewport: Viewport = {
 const SLUG_LEAGUE: Readonly<Record<string, string>> = Object.fromEntries(
   getTeams().map((t) => [t.slug, t.league]),
 );
-/** `{ league: region }`, from the config (lib/leagues.ts regionOf): the prefs script ships the non-default part. */
+/** `{ league: region }`, from the config (lib/config/leagues.ts regionOf): the prefs script ships the non-default part. */
 const LEAGUE_REGION: Readonly<Record<string, string>> = Object.fromEntries(LEAGUE_IDS.map((id) => [id, regionOf(id)]));
 const PREFS_SCRIPT = buildPrefsScript({
   leagueIds: LEAGUE_IDS,

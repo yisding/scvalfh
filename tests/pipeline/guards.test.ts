@@ -11,7 +11,7 @@ import path from 'node:path';
 import { beforeAll, describe, expect, it } from 'vitest';
 
 import { classifyGame } from '@/lib/classify';
-import { divisionsOf, getLeague } from '@/lib/leagues';
+import { divisionsOf, getLeague } from '@/lib/config/leagues';
 import type { Game } from '@/lib/model/game';
 import type { LeagueId } from '@/lib/model/ids';
 import type { Snapshot } from '@/lib/model/snapshot';

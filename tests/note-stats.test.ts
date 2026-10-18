@@ -1,6 +1,6 @@
 /**
  * lib/note-stats.ts — goals, assists and saves a coach wrote in MaxPreps' game note, added to the
- * MaxPreps numbers for any team — lib/name-aliases.ts, and the per-game totals that keep a noted
+ * MaxPreps numbers for any team — lib/config/name-aliases.ts, and the per-game totals that keep a noted
  * stat from counting twice (lib/sources/maxpreps-game-stats.ts).
  *
  * The rules are asserted on synthetic games, Homestead's real notes among them (Sep 28 – Oct 5),
@@ -15,10 +15,10 @@ import { describe, expect, it } from 'vitest';
 
 import { buildLeadersView } from '@/components/leaders/leaders-view';
 import { buildPlayerStatsView } from '@/components/teams/player-stats-view';
+import { NAME_ALIASES } from '@/lib/config/name-aliases';
 import { getSnapshot } from '@/lib/data';
 import type { Game } from '@/lib/model/game';
 import type { TeamSlug } from '@/lib/model/ids';
-import { NAME_ALIASES } from '@/lib/name-aliases';
 import {
   notedKinds,
   noteStatsFor,

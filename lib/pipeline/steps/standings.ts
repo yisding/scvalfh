@@ -9,7 +9,7 @@
  * from the same function, as `missingLeaguePast`; no other division has that field.
  */
 
-import { LEAGUES } from '@/lib/leagues';
+import { LEAGUES } from '@/lib/config/leagues';
 import type { CrossCheckRow } from '@/lib/model/crosscheck';
 import type { DivisionHealth, LeagueHealth } from '@/lib/model/health';
 import type { LeagueConfig } from '@/lib/model/league-config';

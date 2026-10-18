@@ -38,7 +38,7 @@ group of independents. The North County Conference's short name is "North" (owne
 control's target or a sentence's subject it reads "North County" (`standaloneName`), so it never reads
 as a direction ("Jump to North County ↓"). The LA independents are not a league: five
 Los Angeles-area Southern Section schools in no field hockey league, grouped by this site (short name "LA",
-`independents: true` in `lib/leagues.ts`; the id and URL stay `independents`). Glendora, Harvard-Westlake and Thousand Oaks are each the
+`independents: true` in `lib/config/leagues.ts`; the id and URL stay `independents`). Glendora, Harvard-Westlake and Thousand Oaks are each the
 only field hockey team in their all-sports league on MaxPreps (the Palomares League, League B and the
 Marmonte League); Bonita and Chaminade sit in MaxPreps' and si.com's Sunset tables, but MaxPreps marks
 none of their games against the five Orange County Sunset teams as a league game and both play every
@@ -50,7 +50,7 @@ Sunset are single-division leagues, so the site shows no division picker and no 
 them. A San Diego conference is a league here and the Section's leagues are its divisions (the
 Section's 2026-27 League Alignment; the division names are ours). Every league fact (ids, MaxPreps
 ids, rules, tiebreak chains with their citations, postseason ladders, official sources,
-data-quality lists) lives in `lib/leagues.ts`, along with the regions (`REGIONS`, `regionOf`); the
+data-quality lists) lives in `lib/config/leagues.ts`, along with the regions (`REGIONS`, `regionOf`); the
 teams live in `lib/registry/{scval,bval,pcal,mcal,eal,sunset,city,north-county,metro,independents}.ts`, assembled
 by `lib/teams.ts`. The CCS holds a 16-team championship fed by SCVAL (7 berths), BVAL (4), PCAL (2)
 and three at-large berths; the NCS holds no field hockey championship, so MCAL's own six-team
@@ -219,7 +219,7 @@ restricted to Aug-Dec so it rarely fires out of season; the cron's months are UT
 is there only for the Nov 30 10:00 PM Pacific run, which is already December 1 in UTC). The
 season itself is bounded by the scripts' own Aug 1 - Nov 30 Pacific window guard
 (`inSeasonWindow` in `lib/pipeline/steps/window.ts`, over the sections' season windows in
-`lib/leagues.ts`; `fetch-player-stats` imports the same function): a run outside it exits without
+`lib/config/leagues.ts`; `fetch-player-stats` imports the same function): a run outside it exits without
 writing anything. Right after `fetch-data` it runs `pnpm fetch-player-stats` (all 102 teams; see
 "Player stats" below) and then `pnpm fetch-jv` (see "JV games" below), each allowed to fail without
 stopping the run. It runs the test suite against what it just wrote; if the suite fails, it tests
@@ -508,7 +508,7 @@ budget and the JV tables are a different kind of claim, stated once at the top o
 each said:
 
 - **MaxPreps** (`games`): the same `schedule-calculated` call as the varsity feed, with the JV
-  season id (`JV_SPORT_SEASON_ID` in `lib/season.ts`, read from `maxpreps.com/ca/field-hockey/jv/`)
+  season id (`JV_SPORT_SEASON_ID` in `lib/config/season.ts`, read from `maxpreps.com/ca/field-hockey/jv/`)
   and the school's own registry id; each row becomes a `Game` through `lib/normalize.ts`, exactly
   as a varsity row does, except that a level JV final is never read as a shootout win (the San
   Diego shootout procedure is varsity only). On 2026-10-05: 260 games for 45 of the 49 schools, 91
@@ -874,7 +874,7 @@ by the dynamic pages, their OG images and `app/layout.tsx` are generated into
 overwrites with its own declarations; Next stays the type authority.
 
 Imports use the `@/` alias that `tsconfig.json` declares for any import that leaves the file's
-directory (`import { LEAGUES } from '@/lib/leagues'`), and `./` for same-directory and child
+directory (`import { LEAGUES } from '@/lib/config/leagues'`), and `./` for same-directory and child
 modules; a `../` specifier is never written (ESLint's `no-restricted-imports` rejects it). The
 metadata image files (`opengraph-image.tsx`, `app/icon.tsx`, `app/apple-icon.tsx`) are the one
 exception and keep relative imports: Next prints a hash of each one's own source in the image URL
@@ -945,7 +945,7 @@ snapshot file the test writes itself, and the `with…` forms load a second grap
 ## Next-season bootstrap
 
 MaxPreps' season ids are **never hardcoded into more than one place** — they live in
-`lib/season.ts`, and the MaxPreps league ids (and every other league fact) in `lib/leagues.ts`; both
+`lib/config/season.ts`, and the MaxPreps league ids (and every other league fact) in `lib/config/leagues.ts`; both
 are re-asserted on every `fetch-data` run. The season ids are global, but **MaxPreps' league ids change
 every season**: the nine leagues have 15 divisions and 14 MaxPreps league ids, because the San Diego
 Section's Valley division has no MaxPreps table (`maxprepsLeagueId: null`); the independents' group
@@ -963,9 +963,9 @@ pnpm discover-season --help                   # usage; makes no request
 independents (each sits alone in its own all-sports league, so the script lists their leagues and asks
 for a check by hand that each is still its league's only field hockey team), asserts they agree with
 `leagues/{id}/v1`, reports whether a member of a null-table division (Valley) now carries a league,
-and prints a diff against `lib/season.ts` and `lib/leagues.ts` plus a
+and prints a diff against `lib/config/season.ts` and `lib/config/leagues.ts` plus a
 ready-to-paste constants block. **It never writes a file** — a human reviews the diff and edits
-`lib/season.ts` and `lib/leagues.ts`, because a wrong season id would silently publish last
+`lib/config/season.ts` and `lib/config/leagues.ts`, because a wrong season id would silently publish last
 year's table under this year's URL. The official schedules, by-laws and fixture files are
 re-transcribed by hand each season (see `docs/DATA-SOURCES.md`).
 
@@ -985,12 +985,12 @@ to the repo, not regenerated by the cron.
 
 Last season's results seed the Elo rating (see "How Elo ratings are computed"), and unlike its
 standings they are on MaxPreps: the schedule read takes a season id, and each team's
-`team-context/v1` lists every season it has played. Once the new season is in `lib/season.ts`, run
+`team-context/v1` lists every season it has played. Once the new season is in `lib/config/season.ts`, run
 `pnpm fetch-prior-season` once to replace `data/prior-season.json` with the season just finished
-(a test fails until the file is the season before `lib/season.ts`'):
+(a test fails until the file is the season before `lib/config/season.ts`'):
 
 ```bash
-pnpm fetch-prior-season                  # the season before lib/season.ts': 1 season lookup + 102 schedules
+pnpm fetch-prior-season                  # the season before lib/config/season.ts': 1 season lookup + 102 schedules
 pnpm fetch-prior-season --year 24-25     # another season
 pnpm fetch-prior-season --dry-run        # fetch and report, write nothing
 ```
@@ -1028,7 +1028,7 @@ points rule, no standings and no table order that we could find, so the order is
 3-1-0 points and every page says so (`orderScope: 'site'`). SCVAL, BVAL, PCAL, MCAL and the Sunset
 can end a league game in a tie; the EAL and the San Diego Section decide a level varsity game by
 1 v 1s or a shootout. They differ in the tiebreak chain, in how a tie among three or more
-teams is worked through and in the postseason, so every rule is data in `lib/leagues.ts` (with the
+teams is worked through and in the postseason, so every rule is data in `lib/config/leagues.ts` (with the
 by-law citation next to it) and one engine in `lib/standings.ts` runs them. Only games that count
 toward a division table count: a team's non-league and postseason games never do. The full rules,
 with citations, are in `docs/LEAGUE-RULES.md`; the site prints them on `/about#rules-<league>`.
@@ -1150,7 +1150,7 @@ here.
 ### LA independents
 
 Five Los Angeles-area Southern Section schools in no field hockey league, grouped by this site as "LA
-independents" (short name "LA", `independents: true` in `lib/leagues.ts`; the id and URL stay
+independents" (short name "LA", `independents: true` in `lib/config/leagues.ts`; the id and URL stay
 `independents`). Glendora,
 Harvard-Westlake and Thousand Oaks are the only field hockey teams in their all-sports leagues (the
 Palomares League, League B and the Marmonte League on MaxPreps' 2026-27 team pages; MaxPreps' 2025-26
@@ -1419,7 +1419,7 @@ Two `/leaders` boards per region weigh scoring by the defenses it came against
   De Anza grid still lists it, but it is not in the team registry, its 14 grid fixtures are
   dropped when the PDF is parsed, and De Anza is shown as 7 teams. York plays JV field hockey only
   (PCAL's grid slot `CAT/YOR` is Santa Catalina), so it has no varsity results. Both are in the
-  `withdrawnNames` of their league in `lib/leagues.ts`, and the team search says so. Red Bluff is not
+  `withdrawnNames` of their league in `lib/config/leagues.ts`, and the team search says so. Red Bluff is not
   fielding a varsity team in 2026 either (MaxPreps' EAL table still lists it as a 0-0-0 row; a JV
   game of its own exists, so the site says only "not fielding a varsity team in 2026").
   In Southern California, Madison, Santana, Castle Park, Chula Vista, Montgomery and Sweetwater have a
@@ -1461,7 +1461,7 @@ Two `/leaders` boards per region weigh scoring by the defenses it came against
 - **The San Diego playoff divisions can go stale.** Each team's Division I or II on `/playoffs` and its
   team page comes from the Section's 2026 Divisions sheet (dated 2025-12-23), kept in config; nothing
   re-checks it, so a re-sheet before the Oct 31 seeding meeting would not show until someone edits
-  `lib/leagues.ts`. The San Diego brackets are not drawn here at all.
+  `lib/config/leagues.ts`. The San Diego brackets are not drawn here at all.
 - **MaxPreps' manual entry lags.** Coaches enter scores by hand; at times only a fraction of
   played games carry a score days after the fact, and MaxPreps occasionally corrects a
   previously-entered result. The fetch script re-ingests every team's entire season on every run

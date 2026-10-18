@@ -16,7 +16,7 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { DATA_QUALITY } from '@/lib/leagues';
+import { DATA_QUALITY } from '@/lib/config/leagues';
 import {
   STATEWIDE_AMBIGUOUS,
   extractReactProps,

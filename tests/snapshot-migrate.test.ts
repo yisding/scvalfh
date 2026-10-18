@@ -9,7 +9,7 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { LEAGUES, leaguesInRegion } from '@/lib/leagues';
+import { LEAGUES, leaguesInRegion } from '@/lib/config/leagues';
 import type { Game } from '@/lib/model/game';
 import type { TeamId } from '@/lib/model/ids';
 import type { Snapshot } from '@/lib/model/snapshot';

@@ -29,7 +29,7 @@
  * The script also leaves `window.__sxRegionOf(leagueId)` behind: the ONE copy of the league→region
  * map the client needs. `setLeague` (components/ui/use-league.ts) calls it to stamp `data-region` in
  * the same tick as `data-league`, so pinning a team of the other region never leaves the page with a
- * league panel inside a hidden region; and no client bundle carries the map or imports lib/leagues
+ * league panel inside a hidden region; and no client bundle carries the map or imports lib/config/leagues
  * (tests/arch/client-boundary.test.ts). The map ships as `R={"socal":"sunset city north-county
  * metro"}`: only the non-default regions, their leagues space-joined.
  *
@@ -80,7 +80,7 @@ export const REGION_KEY = 'scvalfh.region';
 
 /**
  * The region an absent `data-region` means: NorCal, the first-visit view and the JS-free reading
- * order (lib/leagues.ts DEFAULT_REGION, which this client-safe module cannot import; the root layout
+ * order (lib/config/leagues.ts DEFAULT_REGION, which this client-safe module cannot import; the root layout
  * passes that constant as `defaultRegion` and the script throws at build time if they differ).
  */
 export const STAMPLESS_REGION = 'norcal';
@@ -103,7 +103,7 @@ export interface PrefsScriptInput {
   leagueIds: readonly string[];
   /** `{ slug: leagueId }` for every registry team. */
   slugLeague: Readonly<Record<string, string>>;
-  /** `{ leagueId: regionId }` for every configured league (lib/leagues.ts regionOf). */
+  /** `{ leagueId: regionId }` for every configured league (lib/config/leagues.ts regionOf). */
   leagueRegion: Readonly<Record<string, string>>;
   /** The region an absent `data-region` means: must be STAMPLESS_REGION. */
   defaultRegion: string;

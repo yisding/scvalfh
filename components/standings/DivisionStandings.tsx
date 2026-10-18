@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
+import { leagueOfDivision } from '@/lib/config/leagues';
 import { ordinal } from '@/lib/format/numbers';
-import { leagueOfDivision } from '@/lib/leagues';
 import ExternalLink from '@/components/ui/ExternalLink';
 import LeagueHealthNote from '@/components/ui/LeagueHealthNote';
 import SectionHeader from '@/components/ui/SectionHeader';

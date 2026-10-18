@@ -8,7 +8,7 @@ import path from 'node:path';
 import sharp from 'sharp';
 import { describe, expect, it } from 'vitest';
 
-import { MASCOT_FILE_SIZES, MASCOT_TILE_SIZES, mascotFile } from '@/lib/mascots';
+import { MASCOT_FILE_SIZES, MASCOT_TILE_SIZES, mascotFile } from '@/lib/config/mascots';
 import { TEAMS } from '@/lib/teams';
 import { REPO } from './support/repo';
 

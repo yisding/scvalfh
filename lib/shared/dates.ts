@@ -8,10 +8,10 @@
  * `timeZone: 'America/Los_Angeles'` is used for the one thing that genuinely is an instant —
  * converting `snapshot.fetchedAt` (ISO UTC) into a local date — via `zonedParts`.
  *
- * Client-safe: its one runtime import is the season's TIME_ZONE (lib/season.ts).
+ * Client-safe: its one runtime import is the season's TIME_ZONE (lib/config/season.ts).
  */
 
-import { TIME_ZONE } from '@/lib/season';
+import { TIME_ZONE } from '@/lib/config/season';
 
 export const WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] as const;
 export const WEEKDAYS_LONG = [

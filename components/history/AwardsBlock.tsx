@@ -1,9 +1,9 @@
 import Link from 'next/link';
 
+import { leagueOfDivision } from '@/lib/config/leagues';
 import { getTeamBySlug } from '@/lib/data';
 import { gradeWord } from '@/lib/format/words';
 import type { HistoryAwards, HistoryPlayer } from '@/lib/history';
-import { leagueOfDivision } from '@/lib/leagues';
 import GridRowFiller from '@/components/ui/GridRowFiller';
 import { awardLine, overallAwards, type AwardLine } from './history-view';
 

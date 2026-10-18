@@ -10,6 +10,10 @@
  */
 
 import {
+  REGIONS, getDivision, getLeague, getRegion, leaguePlayEnds, leaguesInRegion, regionOf,
+} from '@/lib/config/leagues';
+import { divisionHeading, standingsLabel } from '@/lib/config/leagues/labels';
+import {
   getGames,
   getHeadToHead,
   getLastLeagueResultDate,
@@ -32,17 +36,6 @@ import { dateSpan, gameWhen, monthDay, shortDate, timeOfDayPT } from '@/lib/form
 import { ordinal, recordString } from '@/lib/format/numbers';
 import { renderScore, shootoutPhrases } from '@/lib/format/score';
 import { listWords, plural } from '@/lib/format/words';
-import {
-  divisionHeading,
-  getDivision,
-  getLeague,
-  REGIONS,
-  getRegion,
-  leaguePlayEnds,
-  leaguesInRegion,
-  regionOf,
-  standingsLabel,
-} from '@/lib/leagues';
 import type { OfficialFixture } from '@/lib/model/fixture';
 import type { Game, Outcome, Record3 } from '@/lib/model/game';
 import type { DivisionId, LeagueId, RegionId, SectionId, TeamSlug } from '@/lib/model/ids';
@@ -147,7 +140,7 @@ function teamElo(team: Team): TeamEloView {
   };
 }
 
-/** The league facts a team page writes into its copy, all from config (lib/leagues.ts). */
+/** The league facts a team page writes into its copy, all from config (lib/config/leagues.ts). */
 export interface TeamLeagueCopy {
   id: LeagueId;
   /** 'SCVAL' */

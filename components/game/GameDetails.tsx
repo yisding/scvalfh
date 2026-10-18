@@ -1,7 +1,8 @@
 import Link from 'next/link';
 
+import { findDivision, findLeague } from '@/lib/config/leagues';
+import { standingsLabel } from '@/lib/config/leagues/labels';
 import { dateTimeAttr, longDate, monthDay, timeOfDayPT } from '@/lib/format/dates';
-import { findDivision, findLeague, standingsLabel } from '@/lib/leagues';
 import ExternalLink from '@/components/ui/ExternalLink';
 import SectionHeader from '@/components/ui/SectionHeader';
 import { maxPrepsLabel } from '@/components/ui/maxpreps-label';

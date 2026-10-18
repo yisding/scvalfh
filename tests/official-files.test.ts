@@ -10,13 +10,13 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { getLeague } from '@/lib/leagues';
+import { getLeague } from '@/lib/config/leagues';
+import { officialDocumentOf } from '@/lib/config/leagues/official';
 import type { OfficialFixture } from '@/lib/model/fixture';
 import {
   OfficialBundleSchema,
   bundleToFixtures,
   loadBundledFixtures,
-  officialDocumentOf,
   officialFixtureId,
   parseOfficialBundle,
   readOfficialBundle,

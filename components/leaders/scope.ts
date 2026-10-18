@@ -1,11 +1,13 @@
 /**
  * The words and ids that say which teams a /leaders board covers (DESIGN-socal §2.3, §2.4), from
- * lib/leagues.ts config, never typed in. The team pages read these too (the Elo disclosure, the
+ * lib/config/leagues.ts config, never typed in. The team pages read these too (the Elo disclosure, the
  * board link's id suffix), so they live apart from the page's assembly.
  */
 
+import {
+  INDEPENDENT_LEAGUES, LEAGUES_PROPER, REGIONS, getSection, leaguesInRegion,
+} from '@/lib/config/leagues';
 import { numberWord } from '@/lib/format/words';
-import { INDEPENDENT_LEAGUES, LEAGUES_PROPER, REGIONS, getSection, leaguesInRegion } from '@/lib/leagues';
 import type { RegionId } from '@/lib/model/ids';
 
 /**

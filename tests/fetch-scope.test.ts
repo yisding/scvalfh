@@ -5,6 +5,7 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
+import { SEASON_YEAR } from '@/lib/config/season';
 import {
   describePrevious,
   formatLeagueSummary,
@@ -22,7 +23,6 @@ import {
   countRosters,
   type Rosters,
 } from '@/lib/rosters-schema';
-import { SEASON_YEAR } from '@/lib/season';
 import { stableStringify } from '@/lib/shared/stable-json';
 import { TEAMS, teamsInLeague } from '@/lib/teams';
 import { runRepoScript, type ScriptName } from './support/cli';

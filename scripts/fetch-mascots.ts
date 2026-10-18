@@ -2,7 +2,7 @@
 /**
  * Download every registry school's MaxPreps mascot and write it to public/mascots/ as the square
  * WebP tiles `TeamMonogram` draws (DESIGN §12.4): `<slug>-<px>.webp` for every px in
- * lib/mascots.ts' MASCOT_FILE_SIZES, i.e. each tile size (20–64px) at 1× and 2×, so the browser
+ * lib/config/mascots.ts' MASCOT_FILE_SIZES, i.e. each tile size (20–64px) at 1× and 2×, so the browser
  * shows each file pixel for pixel. Each size is resized from the full source, then lightly
  * sharpened, since a downscale to 20–48px softens every edge.
  *
@@ -36,7 +36,7 @@ import path from 'node:path';
 
 import sharp, { type Sharp } from 'sharp';
 
-import { MASCOT_FILE_SIZES } from '@/lib/mascots';
+import { MASCOT_FILE_SIZES } from '@/lib/config/mascots';
 import type { Team } from '@/lib/model/team';
 import { CHROME_USER_AGENT, HttpClient } from '@/lib/sources/http';
 import { TEAMS } from '@/lib/teams';

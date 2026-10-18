@@ -11,6 +11,7 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
+import { CCS } from '@/lib/config/leagues';
 import {
   CCS_POLL_FROM,
   ccsPollingOpen,
@@ -20,7 +21,6 @@ import {
   parseCcsIcal,
   readBracketPublished,
 } from '@/lib/sources/ccs';
-import { CCS } from '@/lib/leagues';
 import { CcsCalendarEventSchema } from '@/lib/snapshot-schema';
 import { REPO } from './support/repo';
 

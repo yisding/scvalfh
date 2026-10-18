@@ -16,6 +16,10 @@ import { DATA_CORRECTIONS_URL, OG_BASE, ROOT_OG_IMAGE, SITE_SCOPE_NOTE, independ
 import { getClubs } from '@/lib/clubs';
 import { getCommitsFile } from '@/lib/commits';
 import {
+  CCS, UNBRACKETED_LEAGUE_IDS, getLeague, getSection, isIndependentLeague, leagueStandingsUrl, regionOf,
+} from '@/lib/config/leagues';
+import { SOURCE_LINKS } from '@/lib/config/source-urls';
+import {
   areKeyDatesConfirmed,
   getAllStandings,
   getCcsCalendar,
@@ -45,20 +49,10 @@ import { getAvailableHistoryLeagues, getHistorySeason, getUnavailableHistoryLeag
 import { jvTableTitle } from '@/components/standings/jv-standings-view';
 import { getJvFile, getJvMerge, getJvTables } from '@/lib/jv';
 import { JV_STANDINGS_MIN_REPORTED_SHARE } from '@/lib/jv-standings';
-import {
-  CCS,
-  UNBRACKETED_LEAGUE_IDS,
-  getLeague,
-  getSection,
-  isIndependentLeague,
-  leagueStandingsUrl,
-  regionOf,
-} from '@/lib/leagues';
 import type { CrossCheckRow } from '@/lib/model/crosscheck';
 import type { DroppedContest, SourceStatus } from '@/lib/model/health';
 import type { LeagueConfig, SectionConfig } from '@/lib/model/league-config';
 import type { TiebreakStage } from '@/lib/model/standings';
-import { SOURCE_LINKS } from '@/lib/season';
 import { crossCheckSkipReason, statusLegend } from '@/lib/standings';
 
 /**

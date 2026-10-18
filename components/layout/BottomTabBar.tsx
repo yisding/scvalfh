@@ -1,5 +1,5 @@
+import { LEAGUE_IDS } from '@/lib/config/leagues';
 import { getScoresLandingDate } from '@/lib/data';
-import { LEAGUE_IDS } from '@/lib/leagues';
 import type { LeagueId, TeamSlug } from '@/lib/model/ids';
 
 import NavLink from './NavLink';

@@ -39,6 +39,8 @@ import { z } from 'zod';
 
 import { MaxPrepsError, type MaxPrepsClient } from './maxpreps';
 import { careerIdFromUrl } from './maxpreps-roster';
+import { SPORT_SEASON_ID } from '@/lib/config/season';
+import { MAXPREPS_API } from '@/lib/config/source-urls';
 import type { Team } from '@/lib/model/team';
 import { recaseName } from '@/lib/person-name';
 import {
@@ -50,7 +52,6 @@ import {
   type GoalieStats,
   type TeamPlayerStats,
 } from '@/lib/player-stats-schema';
-import { MAXPREPS_API, SPORT_SEASON_ID } from '@/lib/season';
 
 // ---------------------------------------------------------------- the columns we keep
 

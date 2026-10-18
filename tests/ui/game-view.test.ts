@@ -376,7 +376,7 @@ describe('Southern California games (corpus copy with synthetic SoCal games, DES
     const { loadSnapshot } = await import('@/lib/snapshot-schema');
     const { computeStandings } = await import('@/lib/standings');
     const { countsOf } = await import('@/lib/snapshot-migrate');
-    const { getLeague } = await import('@/lib/leagues');
+    const { getLeague } = await import('@/lib/config/leagues');
     const base = loadSnapshot(JSON.parse(readFileSync(corpusPath, 'utf8')) as unknown);
     // Clairemont (City Eastern) 0, Eastlake (Metro Mesa) 0, flagged W/L, Sep 1: a San Diego shootout win
     // between two conferences, so no table counts it.

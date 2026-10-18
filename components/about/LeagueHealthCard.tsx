@@ -27,7 +27,7 @@ export interface HealthDivision {
   heading: string | null;
   /**
    * MaxPreps league standings page, or null where MaxPreps publishes no table for the division (the San
-   * Diego Section's Valley: lib/leagues.ts leagueStandingsUrl). The card then says so, and that the
+   * Diego Section's Valley: lib/config/leagues.ts leagueStandingsUrl). The card then says so, and that the
    * cross-check is skipped, instead of linking anything.
    */
   maxprepsUrl: string | null;

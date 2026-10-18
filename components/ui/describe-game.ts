@@ -16,17 +16,11 @@
  * kept so the §5.2 table stays implemented end to end.
  */
 
+import { LEAGUES, findDivision, findLeague, getSection, leagueOfDivision } from '@/lib/config/leagues';
+import { divisionHeading } from '@/lib/config/leagues/labels';
 import { timeOfDay } from '@/lib/format/dates';
 import { renderScore, scoreGlyph, scoreSentence, shootoutPhrases, type ScoreView } from '@/lib/format/score';
 import { EN_DASH, MINUS } from '@/lib/format/words';
-import {
-  LEAGUES,
-  divisionHeading,
-  findDivision,
-  findLeague,
-  getSection,
-  leagueOfDivision,
-} from '@/lib/leagues';
 import type { Game, Outcome, PostseasonTag } from '@/lib/model/game';
 import type { LeagueId, TeamSlug } from '@/lib/model/ids';
 import { type SectionConfig, type ShootoutInference } from '@/lib/model/league-config';

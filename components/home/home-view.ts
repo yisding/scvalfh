@@ -2,7 +2,7 @@
  * Everything `/` renders, assembled once on the server (SPEC §10.1, DESIGN §3.1).
  *
  * This is the only module the home page reads data through, and it reads the snapshot ONLY through
- * `lib/data.ts` (plus the pure config helpers of `lib/leagues.ts` and `lib/shared/pin-label.ts`). "Today"
+ * `lib/data.ts` (plus the pure config helpers of `lib/config/leagues.ts` and `lib/shared/pin-label.ts`). "Today"
  * is always `getToday()` — derived from `snapshot.fetchedAt` in America/Los_Angeles, never
  * `Date.now()` — so the build is reproducible and the "as of" stamp in the header is honest.
  *
@@ -19,6 +19,10 @@
  * need the San Diego leaders under its league, and the region toggle is how a reader crosses over.
  */
 
+import {
+  CCS, REGIONS, getDivision, getLeague, isIndependentLeague, isSingleDivision, leaguePlayStarts, sectionOf,
+} from '@/lib/config/leagues';
+import { divisionHeading, standaloneName, standingsLabel } from '@/lib/config/leagues/labels';
 import {
   getGameDates,
   getGames,
@@ -58,19 +62,6 @@ import { gameHref } from '@/lib/shared/game-id';
 import { pickerName, pinLabel } from '@/lib/shared/pin-label';
 import type { SearchIndex } from '@/lib/shared/search';
 import { outcomesFor, playoffOutcomeLabel, statusBadge } from '@/lib/standings';
-import {
-  CCS,
-  REGIONS,
-  divisionHeading,
-  getDivision,
-  getLeague,
-  isIndependentLeague,
-  standingsLabel,
-  isSingleDivision,
-  leaguePlayStarts,
-  sectionOf,
-  standaloneName,
-} from '@/lib/leagues';
 import { teamOfSide } from '@/lib/teams';
 import type { LeagueChip } from '@/components/layout/LeagueSwitcher';
 import { leagueChips } from '@/components/layout/league-chips';

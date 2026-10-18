@@ -11,7 +11,7 @@ import path from 'node:path';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 import { classifyGames } from '@/lib/classify';
-import { divisionsOf } from '@/lib/leagues';
+import { divisionsOf } from '@/lib/config/leagues';
 import type { Game, GameStatus } from '@/lib/model/game';
 import type { Snapshot } from '@/lib/model/snapshot';
 import type { PlayoffStatus, ReportedRecord, Standing } from '@/lib/model/standings';

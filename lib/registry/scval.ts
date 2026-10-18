@@ -8,7 +8,7 @@
  *   El Camino: https://scval.com/fallSports/26-27%20SCVAL%20FH%20EC%20Final.pdf
  *
  * The De Anza grid still lists Wilcox, but Wilcox is not fielding a team this season, so it is
- * not a member here: see LEAGUES scval.withdrawnNames in lib/leagues.ts.
+ * not a member here: see LEAGUES scval.withdrawnNames in lib/config/leagues.ts.
  *
  * Aliases cover: MaxPreps `schoolName`, the SCVAL PDF grid UPPERCASE forms, the SCVAL prose /
  * standings PDF forms, SBLive / si.com names, and the VNN ICS "X High School" forms.

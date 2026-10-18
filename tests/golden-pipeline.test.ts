@@ -15,7 +15,7 @@ import path from 'node:path';
 
 import { beforeAll, describe, expect, it } from 'vitest';
 
-import { divisionsOf } from '@/lib/leagues';
+import { divisionsOf } from '@/lib/config/leagues';
 import type { DivisionId } from '@/lib/model/ids';
 import type { Snapshot } from '@/lib/model/snapshot';
 import type { Standing } from '@/lib/model/standings';

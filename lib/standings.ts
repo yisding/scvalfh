@@ -1,5 +1,5 @@
 /**
- * Standings computed from game rows: a stage interpreter driven by lib/leagues.ts (SPEC §5.2-§5.8).
+ * Standings computed from game rows: a stage interpreter driven by lib/config/leagues.ts (SPEC §5.2-§5.8).
  *
  * SCVAL (SCVAL Field Hockey By-Laws 2026-27) is the reference and is golden-gated byte for byte:
  * Article VI §1: the divisions play a double round robin; DIVISION GAMES ONLY count to the
@@ -26,20 +26,13 @@
  * which is exactly why we compute and publish the disagreement instead of trusting it.
  */
 
+import {
+  LEAGUES, drawNumberOf, getDivision, getLeague, ladderFor, ladderRung, leagueOfDivision, leagueStandingsUrl,
+  tiebreakChainFor,
+} from './config/leagues';
+import { divisionLabel } from './config/leagues/labels';
 import { shortDate } from './format/dates';
 import { recordString } from './format/numbers';
-import {
-  LEAGUES,
-  divisionLabel,
-  drawNumberOf,
-  getDivision,
-  getLeague,
-  ladderFor,
-  ladderRung,
-  leagueOfDivision,
-  leagueStandingsUrl,
-  tiebreakChainFor,
-} from './leagues';
 import type { CrossCheckRow } from './model/crosscheck';
 import type { OfficialFixture } from './model/fixture';
 import type { Game, Outcome, Record3 } from './model/game';

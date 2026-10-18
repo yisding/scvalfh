@@ -18,7 +18,8 @@
  * `partial` with a reason sentence.
  */
 
-import { divisionLabel, getLeague } from '@/lib/leagues';
+import { getLeague } from '@/lib/config/leagues';
+import { divisionLabel } from '@/lib/config/leagues/labels';
 import type { SourceStatus } from '@/lib/model/health';
 import type { LeagueId } from '@/lib/model/ids';
 import type { DivisionConfig } from '@/lib/model/league-config';

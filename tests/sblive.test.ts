@@ -11,7 +11,7 @@
 
 import { describe, expect, it } from 'vitest';
 
-import { LEAGUES } from '@/lib/leagues';
+import { LEAGUES } from '@/lib/config/leagues';
 import * as sblive from '@/lib/sources/sblive';
 import {
   SBLIVE_HTTP_OPTIONS,

@@ -89,7 +89,7 @@ const LEAGUES = snapshot
 /**
  * The SoCal leagues (DESIGN-socal §2.1.5), for the expected `data-region` stamp. Spelled out: this
  * script runs on plain node and reads no TypeScript config; tests/ui/prefs-script.test.ts holds the
- * prefs script's own map to lib/leagues.ts.
+ * prefs script's own map to lib/config/leagues.ts.
  */
 const SOCAL_LEAGUES = new Set(['sunset', 'city', 'north-county', 'metro', 'independents']);
 /** The region a stored league stamps: 'socal', or null (no data-region: NorCal). */

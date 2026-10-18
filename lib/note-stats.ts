@@ -19,7 +19,7 @@
  *
  * Names (resolveName). A name is credited only when it resolves to exactly one player on exactly
  * one of the game's two rosters (data/rosters.json): the full name; a curated alias
- * (lib/name-aliases.ts); a full name whose first name is a common nickname of the roster's
+ * (lib/config/name-aliases.ts); a full name whose first name is a common nickname of the roster's
  * ("Gabby" for Gabrielle), or either half one letter off ("Emery" for Emry, "Molly" for Moll), or
  * whose last name is the last word of a longer one; or a lone first or last name only one roster
  * player has. Anything else is left out and reported.
@@ -43,9 +43,9 @@
  * loading the files it is about to write. lib/player-stats.ts wires it to the committed data.
  */
 
+import { NAME_ALIASES, type NameAlias } from './config/name-aliases';
 import type { Game } from './model/game';
 import type { TeamSlug } from './model/ids';
-import { NAME_ALIASES, type NameAlias } from './name-aliases';
 import {
   FIELD_STAT_KEYS,
   GOALIE_STAT_KEYS,

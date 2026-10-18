@@ -16,8 +16,8 @@
  *   - Santa Teresa writes the year as a word ("Senior", "Sophmore" sic); Mt. Hamilton as a number.
  */
 
+import { divisionsOf } from '@/lib/config/leagues';
 import { BASIC_NAMED, decodeEntities } from '@/lib/html-entities';
-import { divisionsOf } from '@/lib/leagues';
 import type { DivisionId, TeamSlug } from '@/lib/model/ids';
 import { resolveOfficialName, teamsInLeague } from '@/lib/teams';
 

@@ -9,12 +9,12 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { LEAGUE_IDS, divisionsOf } from '@/lib/leagues';
-import { officialDocumentOf } from '@/lib/official/schema';
+import { LEAGUE_IDS, divisionsOf } from '@/lib/config/leagues';
+import { officialDocumentOf } from '@/lib/config/leagues/official';
+import { SPORT_SEASON_ID } from '@/lib/config/season';
 import { TransportError } from '@/lib/pipeline/contract';
 import { loadCorpus } from '@/lib/pipeline/corpus';
 import { FixtureTransport } from '@/lib/pipeline/transport';
-import { SPORT_SEASON_ID } from '@/lib/season';
 import { loadSnapshot } from '@/lib/snapshot-schema';
 import { ScheduleResponseSchema } from '@/lib/sources/maxpreps';
 import { corpusDir, variantDir } from '@/tests/support/corpus';

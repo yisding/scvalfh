@@ -1,6 +1,6 @@
 /**
  * The Zod contract for data/history-2025-26.json — the prior-season archive (DESIGN §3.9): every
- * league of lib/leagues.ts with its final standings and awards from an official source, or the
+ * league of lib/config/leagues.ts with its final standings and awards from an official source, or the
  * reason it has none.
  *
  * Separate from lib/history.ts (the read API, which imports and validates the file at module
@@ -10,13 +10,13 @@
 
 import { z } from 'zod';
 
-import { LEAGUE_IDS, divisionsOf, getLeague } from './leagues';
+import { LEAGUE_IDS, divisionsOf, getLeague } from './config/leagues';
 import type { LeagueId } from './model/ids';
 import { dateKey, slugId } from './schema-primitives';
 import { teamsInLeague } from './teams';
 
 /**
- * The archive is league-aware: every league of lib/leagues.ts has an entry, and each entry is
+ * The archive is league-aware: every league of lib/config/leagues.ts has an entry, and each entry is
  * validated against ITS league's registry (slugs) and divisions. A league either has final
  * standings from an official source ('available') or says, with the reason, that it has none
  * ('unavailable'). There is no third state: a league missing from the file fails validation, so a

@@ -13,8 +13,8 @@ import { createElement, type ReactElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 
+import { standaloneName } from '@/lib/config/leagues/labels';
 import type { MissingOfficialResult } from '@/lib/data';
-import { standaloneName } from '@/lib/leagues';
 import type { LeagueId } from '@/lib/model/ids';
 import { useCorpusModules } from '@/tests/support/corpus-modules';
 // textOf: visible text, tags dropped and entities decoded.

@@ -11,7 +11,8 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { ALL_DIVISIONS, DATA_QUALITY, LEAGUES, getDivision } from '@/lib/leagues';
+import { ALL_DIVISIONS, DATA_QUALITY, LEAGUES, getDivision } from '@/lib/config/leagues';
+import { ALL_SEASON_ID, SPORT_SEASON_ID } from '@/lib/config/season';
 import type { Snapshot } from '@/lib/model/snapshot';
 import { RunAbort, resourcePath, type SnapshotMeta, type Transport } from '@/lib/pipeline/contract';
 import { loadCorpus } from '@/lib/pipeline/corpus';
@@ -19,7 +20,6 @@ import { SILENT_SINK, emptyRunState } from '@/lib/pipeline/ledger';
 import { createPipelineContext, metaPathOf, parseRunArgs, prepareRun, readPrevious, runPipeline, writeOutputs } from '@/lib/pipeline/run';
 import { stepStandings } from '@/lib/pipeline/steps/standings';
 import { FixtureTransport } from '@/lib/pipeline/transport';
-import { ALL_SEASON_ID, SPORT_SEASON_ID } from '@/lib/season';
 import { stableStringify } from '@/lib/shared/stable-json';
 import { CIFSS_SECTIONS } from '@/lib/sources/cifss';
 import { loadSnapshot } from '@/lib/snapshot-schema';

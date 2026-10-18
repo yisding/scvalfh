@@ -15,6 +15,9 @@ import { countGames } from '@/components/schedule/filter-data';
 import { scheduleFilterProps } from '@/components/schedule/filter-data-server';
 import LeagueHealthNote from '@/components/ui/LeagueHealthNote';
 import SectionHeader from '@/components/ui/SectionHeader';
+import { isIndependentLeague } from '@/lib/config/leagues';
+import { leagueSportWords, standaloneName } from '@/lib/config/leagues/labels';
+import { SEASON_DISPLAY } from '@/lib/config/season';
 import {
   getGamesByDate,
   getLeagueIds,
@@ -25,8 +28,6 @@ import {
 } from '@/lib/data';
 import { monthDay } from '@/lib/format/dates';
 import { plural } from '@/lib/format/words';
-import { isIndependentLeague, leagueSportWords, standaloneName } from '@/lib/leagues';
-import { SEASON_DISPLAY } from '@/lib/season';
 
 
 /**

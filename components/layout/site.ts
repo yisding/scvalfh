@@ -7,19 +7,13 @@
  */
 import type { Metadata } from 'next';
 
-import { listWords, numberWord } from '@/lib/format/words';
 import {
-  INDEPENDENT_LEAGUES,
-  LEAGUES_PROPER,
-  REGIONS,
-  SECTIONS,
-  getSection,
-  regionOf,
-  sectionsInRegion,
-} from '@/lib/leagues';
+  INDEPENDENT_LEAGUES, LEAGUES_PROPER, REGIONS, SECTIONS, getSection, regionOf, sectionsInRegion,
+} from '@/lib/config/leagues';
+import { SEASON_CALENDAR_YEAR } from '@/lib/config/season';
+import { listWords, numberWord } from '@/lib/format/words';
 import type { RegionId } from '@/lib/model/ids';
 import { type LeagueConfig, type SectionConfig } from '@/lib/model/league-config';
-import { SEASON_CALENDAR_YEAR } from '@/lib/season';
 import { TEAMS } from '@/lib/teams';
 
 import { OG_SIZE } from './og-theme';

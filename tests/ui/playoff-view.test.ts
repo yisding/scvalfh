@@ -28,7 +28,8 @@ const PAGE = 'app/playoffs/page.tsx';
 const m = useCorpusModules('all-2026-10-02', {
   data: () => import('@/lib/data'),
   view: () => import('@/components/playoffs/playoff-view'),
-  leagues: () => import('@/lib/leagues'),
+  leagues: () => import('@/lib/config/leagues'),
+  labels: () => import('@/lib/config/leagues/labels'),
   page: () => import('@/app/playoffs/page'),
 });
 let html = '';
@@ -66,7 +67,7 @@ function withOutcomes(division: string, outcomes: PlayoffStatus[][]): Projection
 }
 
 function build(division: string, rows: ProjectionRow[]) {
-  return m.view.buildDivisionProjection(division, m.leagues.divisionLabel(division), rows, m.view.ladderFactsFor(division));
+  return m.view.buildDivisionProjection(division, m.labels.divisionLabel(division), rows, m.view.ladderFactsFor(division));
 }
 
 describe('ladderFactsFor (config → the ladder facts the notes use)', () => {

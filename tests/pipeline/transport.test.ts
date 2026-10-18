@@ -9,7 +9,9 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { DATA_QUALITY, LEAGUES, getDivision, getLeague } from '@/lib/leagues';
+import { ALL_DIVISIONS, DATA_QUALITY, LEAGUES, getDivision, getLeague } from '@/lib/config/leagues';
+import { officialDocumentOf } from '@/lib/config/leagues/official';
+import { BOOTSTRAP_URL } from '@/lib/config/season';
 import {
   FixtureMissing,
   TransportError,
@@ -28,12 +30,9 @@ import {
   recordedExtension,
   resourceUrl,
 } from '@/lib/pipeline/transport';
-import { officialDocumentOf } from '@/lib/official/schema';
 import { officialChangesCellText, sha256Hex, tdCellBodies } from '@/lib/official/validate';
-import { BOOTSTRAP_URL } from '@/lib/season';
 import { HttpError, type HttpResponse } from '@/lib/sources/http';
 import { MaxPrepsError } from '@/lib/sources/maxpreps';
-import { ALL_DIVISIONS } from '@/lib/leagues';
 import { TEAMS, getTeamBySlug } from '@/lib/teams';
 import { corpusDir, variantDir } from '@/tests/support/corpus';
 import { REPO, tempDir } from '@/tests/support/repo';

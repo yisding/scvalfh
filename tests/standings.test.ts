@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { classifyGames } from '@/lib/classify';
-import { ALL_DIVISIONS, divisionsOf } from '@/lib/leagues';
+import { ALL_DIVISIONS, divisionsOf } from '@/lib/config/leagues';
 import type { Game } from '@/lib/model/game';
 import type { Standing } from '@/lib/model/standings';
 import { normalizeGames } from '@/lib/normalize';

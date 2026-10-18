@@ -22,15 +22,8 @@ import { z } from 'zod';
 
 import { classifyGame } from './classify';
 import {
-  CCS,
-  CCS_LEAGUE_IDS,
-  LEAGUES,
-  SECTIONS,
-  findDivision,
-  findLeague,
-  getSection,
-  statusesOf,
-} from './leagues';
+  CCS, CCS_LEAGUE_IDS, LEAGUES, SECTIONS, findDivision, findLeague, getSection, statusesOf,
+} from './config/leagues';
 import { type DivisionId, OFFICIAL_SOURCE_IDS } from './model/ids';
 import { type Snapshot } from './model/snapshot';
 import { type TiebreakStage } from './model/standings';

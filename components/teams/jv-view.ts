@@ -9,8 +9,8 @@
  * SERVER-ONLY: reads lib/jv, which imports data/jv.json.
  */
 
+import { regionOf } from '@/lib/config/leagues';
 import { getJvClassification, getJvFetchedAt, getJvGamesForTeam, getJvGamesOn, getJvTeam } from '@/lib/jv';
-import { regionOf } from '@/lib/leagues';
 import type { Game, GameSide } from '@/lib/model/game';
 import type { RegionId, TeamSlug } from '@/lib/model/ids';
 import { localDateKey } from '@/lib/shared/dates';

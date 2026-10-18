@@ -1,9 +1,10 @@
 import Link from 'next/link';
 
+import { leagueOfDivision } from '@/lib/config/leagues';
+import { divisionHeading } from '@/lib/config/leagues/labels';
 import type { StandingContext } from '@/lib/data';
 import { placeWords, recordString, recordWords, streakString, winPct } from '@/lib/format/numbers';
 import { EM_DASH, formStripName, plural } from '@/lib/format/words';
-import { divisionHeading, leagueOfDivision } from '@/lib/leagues';
 import type { DivisionId, TeamId, TeamSlug } from '@/lib/model/ids';
 import type { Standing } from '@/lib/model/standings';
 import type { Team } from '@/lib/model/team';

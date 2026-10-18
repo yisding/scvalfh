@@ -19,9 +19,9 @@
  */
 
 import { computeAdjustedScoring, getAdjustedScoring, type AdjustedScoring } from '@/lib/adjusted-scoring';
+import { REGIONS, regionOf } from '@/lib/config/leagues';
 import { getSnapshot } from '@/lib/data';
 import { shortDate } from '@/lib/format/dates';
-import { REGIONS, regionOf } from '@/lib/leagues';
 import type { Game } from '@/lib/model/game';
 import type { RegionId, TeamId } from '@/lib/model/ids';
 import type { Standing } from '@/lib/model/standings';

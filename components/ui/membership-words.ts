@@ -1,4 +1,4 @@
-import { getDivision, leagueOfDivision } from '@/lib/leagues';
+import { getDivision, leagueOfDivision } from '@/lib/config/leagues';
 import type { DivisionId, TeamSlug } from '@/lib/model/ids';
 
 /**

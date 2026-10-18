@@ -12,7 +12,7 @@
 
 import { z } from 'zod';
 
-import { LEAGUE_IDS, getLeague } from './leagues';
+import { LEAGUE_IDS, getLeague } from './config/leagues';
 import type { SectionId } from './model/ids';
 import { dateKey, slugId } from './schema-primitives';
 import { teamsInLeague } from './teams';

@@ -14,7 +14,7 @@
  * pages (rendered client-side; no bracket content in the server HTML at all).
  */
 
-import { CCS } from '@/lib/leagues';
+import { CCS } from '@/lib/config/leagues';
 import type { CcsCalendarEvent, CcsEventKind } from '@/lib/model/postseason';
 import { icsLine, unfoldIcs } from './http';
 
@@ -23,7 +23,7 @@ export const CCS_ICAL_URL = 'https://cifccs.org/calendar/Field_Hockey?print=ical
 /**
  * Both CCS reads are gated to the run-up to the playoffs: nothing changes before the league season
  * ends, and the bylaws-derived dates already render the section (SPEC §5.9). The date lives in
- * `CCS.pollFrom` (lib/leagues.ts): it opens before the last league games (BVAL Oct 30), the BVAL
+ * `CCS.pollFrom` (lib/config/leagues.ts): it opens before the last league games (BVAL Oct 30), the BVAL
  * play-in (Oct 31) and CCS entries (Nov 2).
  */
 export const CCS_POLL_FROM: string = CCS.pollFrom;

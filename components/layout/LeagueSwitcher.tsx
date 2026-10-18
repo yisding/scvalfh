@@ -83,7 +83,7 @@ const SECTION_NAMES: Readonly<Record<SectionConfig['shortName'], string>> = {
 };
 
 /**
- * The two regions' words, spelled out for the same reason (lib/leagues.ts REGIONS: `shortName` on the
+ * The two regions' words, spelled out for the same reason (lib/config/leagues.ts REGIONS: `shortName` on the
  * buttons, `name` in the live-region sentence). `Record<RegionId, …>` makes a new region a compile
  * error here. NorCal first: the default view and the JS-free reading order.
  */

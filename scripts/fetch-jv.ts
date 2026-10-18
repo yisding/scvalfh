@@ -50,6 +50,8 @@ import path from 'node:path';
 
 import type { ZodType } from 'zod';
 
+import { INDEPENDENT_LEAGUES, LEAGUES_PROPER, seasonWindowBounds } from '@/lib/config/leagues';
+import { JV_SPORT_SEASON_ID, SEASON_YEAR } from '@/lib/config/season';
 import {
   describePrevious,
   formatLeagueSummary,
@@ -77,14 +79,12 @@ import {
   type JvTeam,
 } from '@/lib/jv-schema';
 import { jvMaxprepsScheduleUrl, jvSbliveGamesUrl, jvSbliveTeamId } from '@/lib/jv-teams';
-import { INDEPENDENT_LEAGUES, LEAGUES_PROPER, seasonWindowBounds } from '@/lib/leagues';
 import type { Game } from '@/lib/model/game';
 import type { LeagueId } from '@/lib/model/ids';
 import type { Team } from '@/lib/model/team';
 import { normalizeGames } from '@/lib/normalize';
 import { inSeasonWindow } from '@/lib/pipeline/steps/window';
 import { formatIssues } from '@/lib/schema-primitives';
-import { JV_SPORT_SEASON_ID, SEASON_YEAR } from '@/lib/season';
 import { localDateKey } from '@/lib/shared/dates';
 import { byDateThenId } from '@/lib/shared/game';
 import { stableStringify } from '@/lib/shared/stable-json';

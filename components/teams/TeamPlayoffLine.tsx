@@ -1,11 +1,11 @@
 import Link from 'next/link';
 
-import { CCS } from '@/lib/leagues';
 import { splitStatusLabel } from '@/components/playoffs/playoff-view';
 import Arrow from '@/components/ui/Arrow';
 import EmptyState from '@/components/ui/EmptyState';
 import ExternalLink from '@/components/ui/ExternalLink';
 import StatusChip from '@/components/ui/StatusChip';
+import { CCS } from '@/lib/config/leagues';
 import type { TeamPageView } from './team-view';
 
 /**

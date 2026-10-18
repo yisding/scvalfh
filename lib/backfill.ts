@@ -28,9 +28,9 @@
  * Final, integer scores, and a non-junk row. Pure: no I/O, no clock — `today` is an input.
  */
 
+import { LEAGUES, getLeague, getSection, leagueOfDivision } from './config/leagues';
 import { monthDay } from './format/dates';
 import { shootoutPhrases } from './format/score';
-import { LEAGUES, getLeague, getSection, leagueOfDivision } from './leagues';
 import type { BackfillRow, SbliveOnlyRow } from './model/crosscheck';
 import type { OfficialFixture } from './model/fixture';
 import type { BackfillProvenance, Decider, Game, GameSide, Outcome } from './model/game';
@@ -331,7 +331,7 @@ function offScheduleDate(g: Game): string | null {
  * the league's games have none. The Sunset keeps rule 4c (`leagueOvertime` 'none': a level game is recorded
  * as reported) but publishes no rule at all, and its games HAVE been decided in overtime (Great Oak 2-1
  * Temecula Valley, Oct 2), so its note claims no rule: only that si.com has a final score with a winner the same day. A
- * 'site' league (orderScope, lib/leagues.ts) is exactly one that publishes no rules.
+ * 'site' league (orderScope, lib/config/leagues.ts) is exactly one that publishes no rules.
  */
 function phantomTieNote(short: string, noPublishedRules: boolean): string {
   return noPublishedRules

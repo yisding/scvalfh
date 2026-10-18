@@ -18,7 +18,8 @@ import { width } from '@/tests/support/text-metrics';
 
 const m = useCorpusModules('all-2026-10-02', {
   home: () => import('@/components/home/home-view'),
-  leagues: () => import('@/lib/leagues'),
+  leagues: () => import('@/lib/config/leagues'),
+  labels: () => import('@/lib/config/leagues/labels'),
   homePage: () => import('@/app/page'),
   leaguePanel: () => import('@/components/home/LeaguePanel'),
 });
@@ -254,7 +255,7 @@ describe('home panels (components/home/home-view.ts → LeaguePanel)', () => {
       link: { href: '/schedule/independents', label: 'Full schedule' },
     });
     expect(lead('independents', 'regular', '2026-09-08'), `${HV}: independents in season`).toBeNull();
-    // Before the first league date (config's, lib/leagues leaguePlayStarts), counting the
+    // Before the first league date (config's, lib/config/leagues leaguePlayStarts), counting the
     // non-league finals played by that day only (lib/data getNonLeagueFinalsPlayed).
     expect(lead('scval', 'regular', '2026-09-01'), `${HV}: SCVAL before league play`).toEqual({
       lead: 'SCVAL league play starts Wed Sep 9.',
@@ -375,9 +376,9 @@ describe('first visit (components/home/FindYourTeam.tsx, LeagueCard.tsx)', () =>
     for (const card of data.leagueCards) {
       const html = renderToStaticMarkup(createElement(LeagueCard, { card }));
       // The button names the league by its standalone name: 'Show North County here', 'Show the independents here'.
-      expect(textOf(html), `components/home/LeagueCard.tsx: ${card.id}`).toContain(`Show ${m.leagues.standaloneName(card.id)} here`);
+      expect(textOf(html), `components/home/LeagueCard.tsx: ${card.id}`).toContain(`Show ${m.labels.standaloneName(card.id)} here`);
       expect(html, `components/home/LeagueCard.tsx: ${card.id} link`).toContain(`href="/standings/${card.id}"`);
-      expect(textOf(html), `components/home/LeagueCard.tsx: ${card.id} link words`).toContain(m.leagues.standingsLabel(card.id));
+      expect(textOf(html), `components/home/LeagueCard.tsx: ${card.id} link words`).toContain(m.labels.standingsLabel(card.id));
       expect(html, 'components/home/SetLeagueButton.tsx: js-only, disabled before hydration').toMatch(
         /<button[^>]*disabled=""[^>]*class="sx-js-only/,
       );

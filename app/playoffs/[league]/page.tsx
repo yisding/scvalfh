@@ -15,6 +15,7 @@ import Arrow from '@/components/ui/Arrow';
 import ExternalLink from '@/components/ui/ExternalLink';
 import LeagueHealthNote from '@/components/ui/LeagueHealthNote';
 import SectionHeader from '@/components/ui/SectionHeader';
+import { getDivision } from '@/lib/config/leagues';
 import {
   getCcsField,
   getLeagueTournament,
@@ -26,7 +27,6 @@ import {
 } from '@/lib/data';
 import type { LeagueSummary } from '@/lib/data';
 import { shortDate } from '@/lib/format/dates';
-import { getDivision } from '@/lib/leagues';
 import type { Team } from '@/lib/model/team';
 import { outcomesFor, playoffOutcomeLabel } from '@/lib/standings';
 

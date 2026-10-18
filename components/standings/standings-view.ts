@@ -5,7 +5,7 @@
  * PURE with respect to the snapshot: it takes records in (standings, teams, cross-check rows,
  * per-row context, missing official results) and returns strings and arrays, so it never touches
  * `fs` or lib/data and can be exercised from a test over any snapshot. League FACTS — headings,
- * ladders, citations, official sources, the cross-check trust — come from config (lib/leagues),
+ * ladders, citations, official sources, the cross-check trust — come from config (lib/config/leagues),
  * and the ladder's badges and legends from lib/standings, never from a map keyed by division id.
  *
  * Everything it decides is a by-law, not a preference:
@@ -37,21 +37,14 @@
  *    string here.
  */
 
+import {
+  getDivision, getLeague, ladderFor, leagueStandingsUrl, regionOf, sectionOf, statusesOf,
+} from '@/lib/config/leagues';
+import { divisionHeading, standaloneName } from '@/lib/config/leagues/labels';
 import type { MissingOfficialResult, StandingContext } from '@/lib/data';
 import { monthDay, shortDate } from '@/lib/format/dates';
 import { ordinal } from '@/lib/format/numbers';
 import { officialSourceFormat } from '@/lib/format/words';
-import {
-  divisionHeading,
-  getDivision,
-  getLeague,
-  ladderFor,
-  leagueStandingsUrl,
-  regionOf,
-  sectionOf,
-  standaloneName,
-  statusesOf,
-} from '@/lib/leagues';
 import type { CrossCheckRow } from '@/lib/model/crosscheck';
 import type { DivisionId, LeagueId, OfficialSourceId, TeamId, TeamSlug } from '@/lib/model/ids';
 import { type DivisionConfig, type LeagueConfig } from '@/lib/model/league-config';
@@ -515,7 +508,7 @@ export function buildDivisionView(input: DivisionViewInput): DivisionView {
 
   // "MaxPreps’ table leaves out X" only where MaxPreps HAS a table for the division. The San Diego
   // Section's Valley has none (`crossCheckSkipReason`), yet all six of its teams sit in
-  // maxprepsMissing, which the count invariant in lib/leagues.ts needs (maxprepsTeamCount 0 + 6 = 6);
+  // maxprepsMissing, which the count invariant in lib/config/leagues.ts needs (maxprepsTeamCount 0 + 6 = 6);
   // six "leaves out" lines followed by "MaxPreps publishes no table" contradicted each other (review
   // 2026-10-06). The no-table sentence alone says it.
   const leftOut =

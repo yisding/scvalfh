@@ -27,8 +27,8 @@ import { buildRecruitingView, ledeWords, regionSummary, schoolMeta } from '@/com
 import { buildRosterView } from '@/components/teams/roster-view';
 import { getClubsFile } from '@/lib/clubs';
 import { getCommitsFile } from '@/lib/commits';
+import { getLeague } from '@/lib/config/leagues';
 import { getTeamsGrouped } from '@/lib/data';
-import { getLeague } from '@/lib/leagues';
 import { TEAMS } from '@/lib/teams';
 import { affiliationLeaks, commitmentLeaks } from '@/scripts/copy-rules';
 import { PUBLIC_TERMS } from '@/scripts/public-terms';

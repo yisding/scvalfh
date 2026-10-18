@@ -3,9 +3,9 @@ import Link from 'next/link';
 
 import PageHeader from '@/components/layout/PageHeader';
 import { OG_BASE } from '@/components/layout/site';
+import { LEAGUES_PROPER, getLeague } from '@/lib/config/leagues';
 import { listWords, numberWord } from '@/lib/format/words';
 import { getAvailableHistoryLeagues } from '@/lib/history';
-import { LEAGUES_PROPER, getLeague } from '@/lib/leagues';
 
 export const metadata: Metadata = {
   title: 'Page not found',

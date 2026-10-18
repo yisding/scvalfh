@@ -14,8 +14,8 @@ captured/verified 2026-09-28 to 2026-10-04; the EAL's captures, and every EAL li
 
 See also `docs/LEAGUE-RULES.md` (each league's points, tiebreak chain, postseason and the by-law
 citations), `docs/BYLAWS-2026-27.md` (the verified SCVAL by-laws, which override anything below
-that touches SCVAL ordering) and `lib/leagues.ts` (every league constant as shipped; the season
-ids are in `lib/season.ts`).
+that touches SCVAL ordering) and `lib/config/leagues.ts` (every league constant as shipped; the season
+ids are in `lib/config/season.ts`).
 
 
 ## 1. Sources, ranked
@@ -1470,7 +1470,7 @@ Gotchas, all **[V]**:
     "7 saves by Lacey"). A piece that mentions goals, assists, saves or scoring but fits none of
     these is reported in the team's warnings, never guessed at.
   - **Names:** credited only when the name fits exactly one player on exactly one of the two
-    rosters: the full name; a curated alias (`lib/name-aliases.ts`: Emery Borges = Emry Borges,
+    rosters: the full name; a curated alias (`lib/config/name-aliases.ts`: Emery Borges = Emry Borges,
     confirmed by the site owner); a full name whose first name is a common nickname of the roster's
     (Gabby = Gabrielle), or whose first or last name is one letter off (Emery/Emry, Molly/Moll; 4+
     letters only), or whose last name is part of a longer one (Lacey Carattini = Lacey Sebastian
@@ -1842,7 +1842,7 @@ never applied automatically. A failed fetch is an `error` row and nothing else.
    validates each division as a double round robin before writing anything.
 4. **Review the diff** of `data/official/*.json` (`git diff`): only the fixtures that really moved
    may change.
-5. Update `bundledSha256` and `revisedOn` for that division in `lib/leagues.ts` (the sha256 of the
+5. Update `bundledSha256` and `revisedOn` for that division in `lib/config/leagues.ts` (the sha256 of the
    new document's bytes: `sha256sum <file>`); for MCAL's changes cell update
    `officialChanges.sha256` to the hash of the cell text. Update the matching
    `official/revision/<division>.txt` (or `official/changes/mcal.txt`) in the test corpus so the
@@ -1970,7 +1970,7 @@ tables of their own are computed (`lib/jv-standings.ts`, last bullet). Read 2026
 - **MaxPreps.** The JV season has its own id: `__NEXT_DATA__.query` of
   `https://www.maxpreps.com/ca/field-hockey/jv/` gives `ssid` `fae4fc22-6de6-47ae-972d-e290b0ec31ef`,
   `teamLevel` `JV`, `teamlevel` `c083cdee-7526-423c-a9c8-4e6da6d6f4e2`, `allSeasonId`
-  `d5b0e954-d53f-40cc-a3aa-c45b3a536618` (`JV_SPORT_SEASON_ID` in `lib/season.ts`). The team id is
+  `d5b0e954-d53f-40cc-a3aa-c45b3a536618` (`JV_SPORT_SEASON_ID` in `lib/config/season.ts`). The team id is
   the school's own, so `schedule-calculated/v1?teamId=<registry id>&sportSeasonId=<JV ssid>` (§1.1b)
   is a school's JV schedule, same shape, each contest's `sportSeasonId` the JV one and its
   `teamCanonicalUrl` ending `/field-hockey/jv/`. All 49 answered 200: 260 non-deleted contests between
@@ -2072,8 +2072,8 @@ GENDER_SPORT       = "girls,fieldhockey"
 TEAM_LEVEL         = "Varsity"
 ```
 
-Shipped verbatim in `lib/season.ts`, re-asserted on every fetch run (§5), never hardcoded
-elsewhere. Everything that differs by league lives in `lib/leagues.ts`.
+Shipped verbatim in `lib/config/season.ts`, re-asserted on every fetch run (§5), never hardcoded
+elsewhere. Everything that differs by league lives in `lib/config/leagues.ts`.
 
 **Sections** (MaxPreps section ids, asserted against every league's metadata):
 
@@ -2722,7 +2722,7 @@ team/{id}-v…/` image path. League slugs used to harvest team pages are never u
 
 ### 5.4 What is dropped on purpose
 
-All three lists are config (`DATA_QUALITY` in `lib/leagues.ts` and each league's `withdrawnNames`)
+All three lists are config (`DATA_QUALITY` in `lib/config/leagues.ts` and each league's `withdrawnNames`)
 and everything dropped is published in the snapshot's `dropped` list and on `/about#dropped`.
 
 - **Ghost teams** (`ghostTeamIds`): a MaxPreps team that is not a real team. Del Norte (Crescent
@@ -2792,7 +2792,7 @@ never touches the network.
 Two fixture directories are provenance, not test input. `tests/fixtures/maxpreps/ghosts/` holds
 the two MaxPreps schedule captures (Del Norte of Crescent City and Del Norte of San Diego) behind the
 Del Norte (Crescent City) entries in `DATA_QUALITY.ghostTeamIds` and `excludedContestIds`
-(`lib/leagues.ts`): the ghost's one contest, `5b9ff911`, duplicates Tamalpais vs Del Norte (San
+(`lib/config/leagues.ts`): the ghost's one contest, `5b9ff911`, duplicates Tamalpais vs Del Norte (San
 Diego), `a05bedf5`. `tests/fixtures/sblive/pcal-1002/` is the research record for the PCAL si.com
 fills of 2026-10-02: `fill-candidates.json` (how the pages were captured, the si.com team ids, the
 fills, the rows dropped and the cross-check against MaxPreps) and `games-verified.json` (what each

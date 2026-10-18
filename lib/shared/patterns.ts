@@ -1,7 +1,7 @@
 /**
  * The plain string checks the data contracts and the config asserts share: a lower-case id, a
  * YYYY-MM-DD date key, the strict calendar-day check and the https check. RegExps and functions
- * only, no zod: SLUG_PATTERN and DATE_PATTERN are what the config and registry asserts (lib/leagues.ts,
+ * only, no zod: SLUG_PATTERN and DATE_PATTERN are what the config and registry asserts (lib/config/leagues.ts,
  * lib/teams.ts) test with, and lib/schema-primitives.ts builds its zod schemas (slugId, dateKey) and
  * the contracts their refinements on the same declarations, so a check never depends on which side
  * of the zod line it runs on.

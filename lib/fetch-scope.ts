@@ -21,7 +21,7 @@
 
 import type { ZodType } from 'zod';
 
-import { LEAGUES, LEAGUE_IDS, getLeague, isLeagueId } from './leagues';
+import { LEAGUES, LEAGUE_IDS, getLeague, isLeagueId } from './config/leagues';
 import type { LeagueId } from './model/ids';
 import type { Team } from './model/team';
 import { TEAMS, getTeamBySlug } from './teams';

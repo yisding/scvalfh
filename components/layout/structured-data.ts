@@ -29,8 +29,8 @@
  */
 import type { GameModel } from '@/components/game/game-view';
 import { gameDescription, gameTitle } from '@/components/game/game-view';
+import { isIndependentLeague } from '@/lib/config/leagues';
 import { dateTimeAttr } from '@/lib/format/dates';
-import { isIndependentLeague } from '@/lib/leagues';
 import { type LeagueConfig } from '@/lib/model/league-config';
 import type { Team } from '@/lib/model/team';
 

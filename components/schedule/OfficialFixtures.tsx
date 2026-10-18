@@ -1,6 +1,7 @@
+import { getLeague } from '@/lib/config/leagues';
+import { divisionHeading } from '@/lib/config/leagues/labels';
 import { shortDate } from '@/lib/format/dates';
 import { plural } from '@/lib/format/words';
-import { divisionHeading, getLeague } from '@/lib/leagues';
 import type { OfficialFixture } from '@/lib/model/fixture';
 import type { LeagueId } from '@/lib/model/ids';
 import { getTeamBySlug } from '@/lib/teams';

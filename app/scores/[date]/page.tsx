@@ -21,6 +21,7 @@ import SectionHeader from '@/components/ui/SectionHeader';
 import { RegionSwitcher } from '@/components/layout/LeagueSwitcher';
 import PageHeader from '@/components/layout/PageHeader';
 import { OG_BASE } from '@/components/layout/site';
+import { REGIONS, regionOf } from '@/lib/config/leagues';
 import {
   getGameDates,
   getGames,
@@ -31,7 +32,6 @@ import {
 } from '@/lib/data';
 import { longDate, monthDay, shortDate } from '@/lib/format/dates';
 import { gameWord, plural } from '@/lib/format/words';
-import { REGIONS, regionOf } from '@/lib/leagues';
 import type { Game } from '@/lib/model/game';
 import type { RegionId } from '@/lib/model/ids';
 import { parseLocal } from '@/lib/shared/dates';

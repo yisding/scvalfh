@@ -53,7 +53,7 @@ import {
   getCommittedPlayer,
   type College,
 } from '@/lib/commits';
-import { REGIONS, regionOf } from '@/lib/leagues';
+import { REGIONS, regionOf } from '@/lib/config/leagues';
 import { getRosters } from '@/lib/rosters';
 import { TEAMS, getTeamBySlug } from '@/lib/teams';
 import { commitmentLeaks } from '@/scripts/copy-rules';

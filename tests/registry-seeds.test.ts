@@ -18,7 +18,7 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { getLeague } from '@/lib/leagues';
+import { getLeague } from '@/lib/config/leagues';
 import { BVAL_SEEDS } from '@/lib/registry/bval';
 import { CITY_SEEDS } from '@/lib/registry/city';
 import { EAL_SEEDS } from '@/lib/registry/eal';

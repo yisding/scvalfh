@@ -78,7 +78,7 @@ export function pinResultDetail(entry: TeamSearchEntry): string {
 }
 
 /**
- * The Southern California sections, spelled out (this is a client module: lib/leagues stays out of the
+ * The Southern California sections, spelled out (this is a client module: lib/config/leagues stays out of the
  * bundle). A SoCal league's short name ('City', 'Metro', 'Valley') reads like a place, not a league, to a
  * NorCal reader searching all 102 teams, so its result line names the section too (DESIGN-socal §2.4).
  * NorCal results keep today's line.

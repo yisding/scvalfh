@@ -35,6 +35,7 @@
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 
+import { divisionsOf, getLeague } from '@/lib/config/leagues';
 import { isCalendarDate } from '@/lib/shared/patterns';
 import { stableStringify } from '@/lib/shared/stable-json';
 import {
@@ -57,7 +58,6 @@ import {
 } from '@/lib/sources/bval-sheet';
 import { HttpClient } from '@/lib/sources/http';
 import { HistorySchema } from '@/lib/history-schema';
-import { divisionsOf, getLeague } from '@/lib/leagues';
 import { runCli } from './cli';
 
 interface Args {
@@ -383,7 +383,7 @@ async function main(argv: readonly string[]): Promise<number> {
   // season (leagues/{id}/standings/v1?sportseasonid=8ae4cbab-…): Glendora's, Harvard-Westlake's and Thousand
   // Oaks' all-sports league tables for that season (the league ids are those in each team's MaxPreps
   // team-context lastYearStandingsData) list that school and no other field hockey team, and MaxPreps' 2025-26
-  // Sunset table lists Bonita and Chaminade with the eight Sunset teams (lib/leagues.ts SUNSET). The links are
+  // Sunset table lists Bonita and Chaminade with the eight Sunset teams (lib/config/leagues/sunset.ts). The links are
   // MaxPreps' public pages for those tables (the canonical URLs team-context gives).
   const independents = {
     status: 'unavailable',

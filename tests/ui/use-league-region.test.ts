@@ -15,7 +15,7 @@ import { afterEach, describe, expect, it } from 'vitest';
 import { LEAGUE_KEY, REGION_KEY, buildPrefsScript } from '@/components/layout/prefs-script';
 import { PINNED_TEAM_KEY } from '@/components/layout/pinned-team-script';
 import { setRegion } from '@/components/ui/use-league';
-import { DEFAULT_REGION, LEAGUE_IDS, regionOf } from '@/lib/leagues';
+import { DEFAULT_REGION, LEAGUE_IDS, regionOf } from '@/lib/config/leagues';
 import { TEAMS } from '@/lib/teams';
 
 const SCRIPT = buildPrefsScript({

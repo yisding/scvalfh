@@ -1,5 +1,5 @@
+import { getDivision, leagueOfDivision } from '@/lib/config/leagues';
 import { monthDay } from '@/lib/format/dates';
-import { getDivision, leagueOfDivision } from '@/lib/leagues';
 import ExternalLink from '@/components/ui/ExternalLink';
 import { NON_MEMBER_NOTE } from '@/components/ui/GameRow';
 import GhostMonogram from '@/components/ui/GhostMonogram';
@@ -14,7 +14,7 @@ import { fixtureOpponent } from './team-view';
  * This is how the site tells the truth about a hole instead of hiding it: a fixture MaxPreps never
  * published (and si.com could not fill under owner decision D2) lives here, rendered from the
  * data, never hard-coded. The schedule link and the `scheduled per <SHORT>` copy come from config
- * (lib/leagues.ts), never from a division id in this file.
+ * (lib/config/leagues.ts), never from a division id in this file.
  *
  * These rows are NOT games: they have no contest, no score slot and no game page, they are
  * excluded from every record, and they are deliberately outside the game log so nothing here can

@@ -1,16 +1,12 @@
 /**
  * The nav's per-league targets, shared by TopNav and BottomTabBar. A server-side module: it reads
- * lib/leagues, which tests/arch/client-boundary.test.ts keeps out of client modules, so it cannot
+ * lib/config/leagues, which tests/arch/client-boundary.test.ts keeps out of client modules, so it cannot
  * live in the client NavLink.tsx beside the nav logic that consumes its output.
  */
 import {
-  CCS_LEAGUE_IDS,
-  LEAGUE_IDS,
-  NO_POSTSEASON_LEAGUE_IDS,
-  SECTION_PLAYOFFS_LEAGUE_IDS,
-  TOURNAMENT_LEAGUE_IDS,
+  CCS_LEAGUE_IDS, LEAGUE_IDS, NO_POSTSEASON_LEAGUE_IDS, SECTION_PLAYOFFS_LEAGUE_IDS, TOURNAMENT_LEAGUE_IDS,
   UNBRACKETED_LEAGUE_IDS,
-} from '@/lib/leagues';
+} from '@/lib/config/leagues';
 import type { LeagueId } from '@/lib/model/ids';
 
 /**

@@ -26,6 +26,10 @@ import LeagueHealthNote from '@/components/ui/LeagueHealthNote';
 import SectionHeader from '@/components/ui/SectionHeader';
 import { leaderLine } from '@/components/standings/standings-page-view';
 import {
+  NO_POSTSEASON_LEAGUE_IDS, SECTION_PLAYOFFS_LEAGUE_IDS, UNBRACKETED_LEAGUE_IDS, getLeague,
+  isIndependentLeague,
+} from '@/lib/config/leagues';
+import {
   areKeyDatesConfirmed,
   getCcsField,
   getLastLeagueResultDate,
@@ -41,13 +45,6 @@ import {
 import type { LeagueSummary } from '@/lib/data';
 import { dateSpan, monthDay, shortDate } from '@/lib/format/dates';
 import { listWords } from '@/lib/format/words';
-import {
-  NO_POSTSEASON_LEAGUE_IDS,
-  SECTION_PLAYOFFS_LEAGUE_IDS,
-  UNBRACKETED_LEAGUE_IDS,
-  getLeague,
-  isIndependentLeague,
-} from '@/lib/leagues';
 import type { LeagueId } from '@/lib/model/ids';
 import type { LeagueConfig } from '@/lib/model/league-config';
 import type { PlayoffProjection as Projection } from '@/lib/model/postseason';

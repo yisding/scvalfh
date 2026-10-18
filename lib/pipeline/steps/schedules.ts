@@ -13,7 +13,7 @@
  * ≥50% of a league's feeds failing is §7.5 trigger b (frozen with previous data, else degraded).
  */
 
-import { getLeague } from '@/lib/leagues';
+import { getLeague } from '@/lib/config/leagues';
 import type { SourceStatus } from '@/lib/model/health';
 import type { LeagueId } from '@/lib/model/ids';
 import type { Team } from '@/lib/model/team';

@@ -12,9 +12,9 @@
  * average.
  */
 
+import { regionOf } from '@/lib/config/leagues';
 import { getSnapshot } from '@/lib/data';
 import { plural } from '@/lib/format/words';
-import { regionOf } from '@/lib/leagues';
 import type { Game } from '@/lib/model/game';
 import type { RegionId, TeamSlug } from '@/lib/model/ids';
 import type { Team } from '@/lib/model/team';

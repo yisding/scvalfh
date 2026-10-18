@@ -14,6 +14,7 @@ import {
   teamJvStanding,
 } from '@/components/standings/jv-standings-view';
 import { buildTeamJvView } from '@/components/teams/jv-view';
+import { LEAGUES } from '@/lib/config/leagues';
 import { getSnapshot } from '@/lib/data';
 import { getJvClassification, getJvGamesForTeam, getJvMerge, getJvTables } from '@/lib/jv';
 import {
@@ -23,7 +24,6 @@ import {
   computeJvStandings,
   withJvClassification,
 } from '@/lib/jv-standings';
-import { LEAGUES } from '@/lib/leagues';
 import type { OfficialFixture } from '@/lib/model/fixture';
 import type { Game } from '@/lib/model/game';
 import { TEAMS, teamsInDivision } from '@/lib/teams';

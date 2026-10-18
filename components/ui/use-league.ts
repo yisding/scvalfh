@@ -142,7 +142,7 @@ function stampRegion(region: RegionId): void {
 
 /**
  * A league's region, from the prefs script's `window.__sxRegionOf` (the one copy of the map; no
- * client module imports lib/leagues). null for `'all'`, an unknown id, or when the script never ran.
+ * client module imports lib/config/leagues). null for `'all'`, an unknown id, or when the script never ran.
  */
 function regionOfLeague(id: LeagueId | typeof ALL_LEAGUES | null): RegionId | null {
   if (id === null || id === ALL_LEAGUES) return null;

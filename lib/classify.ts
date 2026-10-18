@@ -27,7 +27,7 @@
  *    sides share a conference.
  */
 
-import { CCS, LEAGUES } from './leagues';
+import { CCS, LEAGUES } from './config/leagues';
 import type { Game, PostseasonTag } from './model/game';
 import type { DivisionId, LeagueId } from './model/ids';
 import type { LeagueConfig } from './model/league-config';

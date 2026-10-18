@@ -37,6 +37,8 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 
+import { INDEPENDENT_LEAGUES, LEAGUES_PROPER } from '@/lib/config/leagues';
+import { SEASON_YEAR } from '@/lib/config/season';
 import {
   describePrevious,
   formatLeagueSummary,
@@ -62,9 +64,7 @@ import {
   type Rosters,
   type TeamRoster,
 } from '@/lib/rosters-schema';
-import { INDEPENDENT_LEAGUES, LEAGUES_PROPER } from '@/lib/leagues';
 import { formatIssues } from '@/lib/schema-primitives';
-import { SEASON_YEAR } from '@/lib/season';
 import { TEAMS } from '@/lib/teams';
 import { runCli } from './cli';
 

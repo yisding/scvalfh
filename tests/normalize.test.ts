@@ -3,7 +3,7 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { DATA_QUALITY } from '@/lib/leagues';
+import { DATA_QUALITY } from '@/lib/config/leagues';
 import type { Game } from '@/lib/model/game';
 import { type DataQualityConfig } from '@/lib/model/league-config';
 import {
@@ -285,7 +285,7 @@ const corpusById = new Map(corpus.games.map((g) => [g.contestId, g]));
 
 /**
  * DATA_QUALITY.excludedContestIds' two duplicate Palomar rows (Poway vs Fallbrook Oct 9, Mission Vista vs
- * Fallbrook Oct 30: lib/leagues.ts), in config order. Neither is in the 2026-10-02 NorCal corpus, so
+ * Fallbrook Oct 30: lib/config/leagues.ts), in config order. Neither is in the 2026-10-02 NorCal corpus, so
  * applyExclusions reports both as unused there.
  */
 const SDS_DUPLICATE_ROWS = ['c7dbdbcc-5f41-4192-b8b2-eb79cca2523a', '9c027452-e21e-4e47-9eac-d2e800bfb42c'];

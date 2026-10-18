@@ -21,6 +21,9 @@
  * stay free of it.
  */
 
+import { findDivision, findLeague, getLeague, leagueOfDivision } from '@/lib/config/leagues';
+import { divisionDisplay, divisionHeading, leagueSportWords } from '@/lib/config/leagues/labels';
+import { SEASON_DISPLAY } from '@/lib/config/season';
 import {
   getGameById,
   getGames,
@@ -35,15 +38,6 @@ import {
 import { dateWithYear, monthDay, shortDate, timeOfDayPT } from '@/lib/format/dates';
 import { recordString } from '@/lib/format/numbers';
 import { matchupJoiner, renderScore, shootoutPhrases } from '@/lib/format/score';
-import {
-  divisionDisplay,
-  divisionHeading,
-  findDivision,
-  findLeague,
-  getLeague,
-  leagueOfDivision,
-  leagueSportWords,
-} from '@/lib/leagues';
 import type { ScoreConflictRow } from '@/lib/model/crosscheck';
 import type { BackfillProvenance, Game, GameSide, Outcome } from '@/lib/model/game';
 import type { DivisionId } from '@/lib/model/ids';
@@ -52,7 +46,6 @@ import type { TournamentGame } from '@/lib/model/postseason';
 import type { Standing, TiebreakStage } from '@/lib/model/standings';
 import type { Team } from '@/lib/model/team';
 import { SHOOTOUT_NOTE } from '@/lib/postseason';
-import { SEASON_DISPLAY } from '@/lib/season';
 import type { FormEntry } from '@/components/ui/FormStrip';
 import {
   describeGame,

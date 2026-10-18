@@ -4,11 +4,11 @@ import { Fragment } from 'react';
 
 import ExternalLink from '@/components/ui/ExternalLink';
 import LastUpdated from '@/components/ui/LastUpdated';
+import { LEAGUES_PROPER, SECTIONS, getSection } from '@/lib/config/leagues';
+import { SOURCE_LINKS } from '@/lib/config/source-urls';
 import { getSitePhase } from '@/lib/data';
 import { listWords } from '@/lib/format/words';
-import { LEAGUES_PROPER, SECTIONS, getSection } from '@/lib/leagues';
 import type { LeagueConfig } from '@/lib/model/league-config';
-import { SOURCE_LINKS } from '@/lib/season';
 
 import { DATA_CORRECTIONS_URL, SITE_SCOPE_NOTE } from './site';
 
@@ -21,7 +21,7 @@ import { DATA_CORRECTIONS_URL, SITE_SCOPE_NOTE } from './site';
  * linked to its official site), the scope note naming exactly what is covered (SPEC §11), the
  * snapshot timestamp in Pacific, a link to /about and one to last season's archive (2025-26 final
  * standings, by league), and the not-affiliated line. The league and section lists are built from
- * lib/leagues.ts in config order, so they read exactly "SCVAL, BVAL, PCAL and MCAL; EAL rules from
+ * lib/config/leagues.ts in config order, so they read exactly "SCVAL, BVAL, PCAL and MCAL; EAL rules from
  * the CIF Northern Section" and can never drift from the config. A league with no document of its
  * own (every division `official.mode === 'none'`: the EAL) takes its rules from its section's
  * guidelines, so it is named in the second clause, linked to its `officialUrl`, not credited with

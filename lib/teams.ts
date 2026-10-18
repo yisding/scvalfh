@@ -7,7 +7,7 @@
  * THIS is the set of leagues, not the feed: every table is built from this constant and
  * left-joined against the feed. Seeds live in
  * lib/registry/{scval,bval,pcal,mcal,eal,sunset,city,north-county,metro,independents}.ts; TEAMS is
- * assembled here in LEAGUES order (lib/leagues.ts), so the 49 NorCal teams keep their places, the SoCal
+ * assembled here in LEAGUES order (lib/config/leagues.ts), so the 49 NorCal teams keep their places, the SoCal
  * 48 follow the EAL, and the five independents come last.
  *
  * ids are MaxPreps GUIDs. Slugs and 2-letter abbrs are OURS and are never derived by string
@@ -15,7 +15,7 @@
  */
 
 import { failInvariant } from './config/invariant';
-import { LEAGUES, findLeague, getLeague } from './leagues';
+import { LEAGUES, findLeague, getLeague } from './config/leagues';
 import type { GameSide } from './model/game';
 import type { DivisionId, LeagueId, TeamId } from './model/ids';
 import type { Team } from './model/team';
@@ -347,7 +347,7 @@ function assertRegistry(): void {
     fail(`expected ${TEAMS.length} fetchable teams, got ${FETCHABLE_TEAMS.length}`);
   }
 
-  // 4. config values that name slugs (lib/leagues.ts invariants 5 and 7, checked here to avoid a cycle)
+  // 4. config values that name slugs (lib/config/leagues.ts invariants 5 and 7, checked here to avoid a cycle)
   for (const l of LEAGUES) {
     const slugs = new Set(teamsInLeague(l.id).map((t) => t.slug));
     for (const [field, map] of [['officialCodes', l.officialCodes], ['officialNames', l.officialNames]] as const) {

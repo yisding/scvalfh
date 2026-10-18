@@ -5,6 +5,7 @@ import path from 'node:path';
 
 import { describe, expect, it, vi } from 'vitest';
 
+import { BOOTSTRAP_URL, SPORT_SEASON_ID } from '@/lib/config/season';
 import type { RawResponse } from '@/lib/pipeline/contract';
 import {
   DEFAULT_USER_AGENT,
@@ -19,7 +20,6 @@ import {
   type ScheduleRow,
 } from '@/lib/sources/maxpreps';
 import { MAX_RETRY_AFTER_MS, POLITE_USER_AGENT } from '@/lib/sources/http';
-import { BOOTSTRAP_URL, SPORT_SEASON_ID } from '@/lib/season';
 import { getTeamBySlug } from '@/lib/teams';
 import { allScheduleRows, corpusDir, standingsFixture } from './support/corpus';
 import { REPO } from './support/repo';

@@ -2,7 +2,7 @@
 
 import { describe, expect, it } from 'vitest';
 
-import { getLeague } from '@/lib/leagues';
+import { getLeague } from '@/lib/config/leagues';
 import type { Game } from '@/lib/model/game';
 import type { Standing, TiebreakStage } from '@/lib/model/standings';
 import {

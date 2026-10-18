@@ -16,7 +16,8 @@ import { useCorpusModules } from '@/tests/support/corpus-modules';
 const L = useCorpusModules('all-2026-10-02', {
   d: () => import('@/lib/data'),
   m: () => import('@/components/game/game-view'),
-  leagues: () => import('@/lib/leagues'),
+  leagues: () => import('@/lib/config/leagues'),
+  labels: () => import('@/lib/config/leagues/labels'),
   fmt: () => import('@/lib/format/numbers'),
   ids: () => import('@/lib/shared/game-id'),
 });
@@ -35,7 +36,7 @@ describe('recordAsOf', () => {
       const side = model.home.team?.slug === team.slug ? model.home : model.away;
       expect(side.team?.slug, team.slug).toBe(team.slug);
       const scope =
-        L.leagues.divisionHeading(team.division) ?? L.leagues.leagueOfDivision(team.division).shortName;
+        L.labels.divisionHeading(team.division) ?? L.leagues.leagueOfDivision(team.division).shortName;
       expect(side.sub, team.slug).toBe(`${L.fmt.recordString(standing.computed)} ${scope}`);
       checked += 1;
     }
@@ -102,7 +103,7 @@ describe('recordAsOf', () => {
         const computed = side.standing?.computed;
         if (!side.team || !computed || computed.gp === 0) continue;
         const scope =
-          L.leagues.divisionHeading(side.team.division) ?? L.leagues.leagueOfDivision(side.team.division).shortName;
+          L.labels.divisionHeading(side.team.division) ?? L.leagues.leagueOfDivision(side.team.division).shortName;
         // An August non-league final once read "No league results yet" on both sides.
         expect(side.sub, game.contestId).toBe(`${L.fmt.recordString(computed)} ${scope}`);
         checked += 1;

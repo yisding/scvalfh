@@ -38,7 +38,7 @@ import {
   getTeamClubAffiliations,
   loadClubs,
 } from '@/lib/clubs';
-import { LEAGUES } from '@/lib/leagues';
+import { LEAGUES } from '@/lib/config/leagues';
 import { classOf, getAllEnrichedRosters, getRosters } from '@/lib/rosters';
 import { isHttpsUrl } from '@/lib/shared/patterns';
 import { getTeamBySlug } from '@/lib/teams';

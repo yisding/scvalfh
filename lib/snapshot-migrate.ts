@@ -26,7 +26,7 @@
  */
 
 import { classifyGame, classifyGames } from './classify';
-import { CCS, LEAGUES, LEAGUE_IDS, findDivision, leagueOfDivision } from './leagues';
+import { CCS, LEAGUES, LEAGUE_IDS, findDivision, leagueOfDivision } from './config/leagues';
 import type { OfficialFixture } from './model/fixture';
 import type { Game, GameSide, OfficialStamp } from './model/game';
 import type { DivisionHealth, LeagueHealth } from './model/health';

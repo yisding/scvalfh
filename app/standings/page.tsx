@@ -10,9 +10,10 @@ import OverviewDivisionBlock from '@/components/standings/OverviewDivisionBlock'
 import { buildStandingsOverviewView } from '@/components/standings/standings-page-view';
 import { leaderClause } from '@/components/standings/standings-view';
 import SectionHeader from '@/components/ui/SectionHeader';
+import { getLeague, isIndependentLeague } from '@/lib/config/leagues';
+import { standaloneName } from '@/lib/config/leagues/labels';
 import { shortDate } from '@/lib/format/dates';
 import { listWords } from '@/lib/format/words';
-import { getLeague, isIndependentLeague, standaloneName } from '@/lib/leagues';
 import type { LeagueId } from '@/lib/model/ids';
 
 /**

@@ -21,13 +21,13 @@ import path from 'node:path';
 import { beforeAll, describe, expect, it } from 'vitest';
 
 import { ConfigInvariantError, failInvariant } from '@/lib/config/invariant';
-import { ALL_DIVISIONS, LEAGUES, getLeague } from '@/lib/leagues';
+import { ALL_DIVISIONS, LEAGUES, getLeague } from '@/lib/config/leagues';
+import { SPORT_SEASON_ID } from '@/lib/config/season';
 import type { Snapshot } from '@/lib/model/snapshot';
 import type { Standing } from '@/lib/model/standings';
 import { RunAbort, type SnapshotMeta } from '@/lib/pipeline/contract';
 import { readManifest } from '@/lib/pipeline/corpus';
 import { describeRunFailure } from '@/lib/pipeline/run-failure';
-import { SPORT_SEASON_ID } from '@/lib/season';
 import { loadSnapshot, parseSnapshot } from '@/lib/snapshot-schema';
 import { FETCHABLE_TEAMS, TEAMS } from '@/lib/teams';
 import { corpusSnapshotPath } from './support/corpus-snapshot';
@@ -488,14 +488,14 @@ describe('describeRunFailure: how the entry point reports a throw (SPEC §7.5)',
   it('reports a ConfigInvariantError as an abort, keeping the module prefix of its message', () => {
     let thrown: unknown;
     try {
-      failInvariant('lib/leagues.ts', 'unknown league "nope"');
+      failInvariant('lib/config/leagues.ts', 'unknown league "nope"');
     } catch (err) {
       thrown = err;
     }
     expect(thrown).toBeInstanceOf(ConfigInvariantError);
     expect(describeRunFailure(thrown)).toEqual({
       abort: true,
-      line: 'ABORT (previous snapshot kept): lib/leagues.ts: unknown league "nope"',
+      line: 'ABORT (previous snapshot kept): lib/config/leagues.ts: unknown league "nope"',
     });
   });
 
@@ -509,9 +509,9 @@ describe('describeRunFailure: how the entry point reports a throw (SPEC §7.5)',
   });
 
   it('reports any other error, and a non-error throw, as a plain failure', () => {
-    expect(describeRunFailure(new Error('lib/leagues.ts: looks like an invariant but is not'))).toEqual({
+    expect(describeRunFailure(new Error('lib/config/leagues.ts: looks like an invariant but is not'))).toEqual({
       abort: false,
-      line: 'FAILED: lib/leagues.ts: looks like an invariant but is not',
+      line: 'FAILED: lib/config/leagues.ts: looks like an invariant but is not',
     });
     expect(describeRunFailure('boom')).toEqual({ abort: false, line: 'FAILED: boom' });
   });

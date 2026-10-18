@@ -10,8 +10,8 @@
  * No clock: `today` is localDateKey(fetchedAt), never Date.now().
  */
 
+import { LEAGUES, findDivision } from '@/lib/config/leagues';
 import { shortDate, timeOfDay } from '@/lib/format/dates';
-import { LEAGUES, findDivision } from '@/lib/leagues';
 import type { CifssCrossCheck, SbliveCrossCheck } from '@/lib/model/crosscheck';
 import type { OfficialFixture } from '@/lib/model/fixture';
 import type { Game } from '@/lib/model/game';

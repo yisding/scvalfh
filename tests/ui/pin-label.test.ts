@@ -8,7 +8,8 @@
 
 import { describe, expect, it } from 'vitest';
 
-import { divisionHeading, getLeague } from '@/lib/leagues';
+import { getLeague } from '@/lib/config/leagues';
+import { divisionHeading } from '@/lib/config/leagues/labels';
 import { PICKER_BREAKS, pickerName, pinLabel } from '@/lib/shared/pin-label';
 import { TEAMS } from '@/lib/teams';
 import { width } from '@/tests/support/text-metrics';

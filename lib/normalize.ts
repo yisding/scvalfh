@@ -22,8 +22,8 @@
  *   4. `dedupePhantomPairs` — same-division phantom duplicates only
  */
 
+import { DATA_QUALITY, getLeague, getSection } from './config/leagues';
 import { shootoutPhrases } from './format/score';
-import { DATA_QUALITY, getLeague, getSection } from './leagues';
 import type { Decider, Game, GameSide, GameStatus, Outcome } from './model/game';
 import type { DroppedContest } from './model/health';
 import type { ContestId, DivisionId, SourceId } from './model/ids';

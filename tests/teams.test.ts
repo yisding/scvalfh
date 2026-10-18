@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { ALL_DIVISIONS, LEAGUES } from '@/lib/leagues';
+import { ALL_DIVISIONS, LEAGUES } from '@/lib/config/leagues';
 import {
   ACRONYM_COLLISIONS, FETCHABLE_TEAMS, TEAMS, getTeamById, getTeamBySlug, isRegistryTeamId,
   isWithdrawnSchool, normalizeTeamKey, onPrimaryInk, resolveOfficialName, resolveTeam,

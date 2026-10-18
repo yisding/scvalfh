@@ -39,7 +39,7 @@ const BANNED = /\bCCS\b|at-large|automatic qualifier|\b(\d+(st|nd|rd|th)|No\. ?\
 
 const loaders = {
   d: () => import('@/lib/data'),
-  l: () => import('@/lib/leagues'),
+  l: () => import('@/lib/config/leagues'),
   v: () => import('@/components/teams/team-view'),
   gm: () => import('@/components/game/game-view'),
   teamPage: () => import('@/app/teams/[slug]/page'),
@@ -124,7 +124,7 @@ describe('an EAL team page (/teams/davis)', () => {
   it('reads Super Regional picture, states the Super Regional line, and carries no CCS concept or seed word', async () => {
     const league = eal.l.getLeague('eal');
     const ps = league.postseason;
-    if (ps.kind !== 'unbracketed-tournament') throw new Error('lib/leagues.ts: the EAL postseason is unbracketed');
+    if (ps.kind !== 'unbracketed-tournament') throw new Error('lib/config/leagues.ts: the EAL postseason is unbracketed');
     const html = await eal.renderTeam('davis');
     const text = textOf(html);
     expect(text, 'app/teams/[slug]/page.tsx kicker').toContain(`${ps.name} picture`);
@@ -282,9 +282,9 @@ describe('the cross-check paragraph under Elsewhere (components/game/GameSources
   it('on a counted EAL final: "a league game", never "official", plus the 1 v 1 exception', async () => {
     const game = gameOn(eal, 'chico', 'davis', '2026-09-28');
     expect(game.countsFor, 'lib/classify.ts: the game counts').not.toBeNull();
-    expect(eal.l.getDivision(game.countsFor!).official.mode, 'lib/leagues.ts official.mode').toBe('none');
+    expect(eal.l.getDivision(game.countsFor!).official.mode, 'lib/config/leagues.ts official.mode').toBe('none');
     const league = eal.l.leagueOfDivision(game.countsFor!);
-    expect(league.rules.leagueOvertime, 'lib/leagues.ts leagueOvertime').toBe('shootout');
+    expect(league.rules.leagueOvertime, 'lib/config/leagues.ts leagueOvertime').toBe('shootout');
     const text = elsewhereText(await eal.renderGame(game.contestId));
     expect(text, 'components/game/GameSources.tsx').toContain(
       'When MaxPreps has no result for a league game, or its row is clearly wrong, we publish si.com’s score and mark it;',
@@ -316,8 +316,8 @@ describe('the cross-check paragraph under Elsewhere (components/game/GameSources
     expect(taggedFinal.postseason?.kind, 'the hand-tagged corpus copy').toBe('league-postseason');
     expect(taggedFinal.countsFor, 'the hand-tagged corpus copy').toBeNull();
     const league = withTag.l.getLeague(taggedFinal.postseason!.leagueId!);
-    expect(league.divisions.every((d) => d.official.mode === 'none'), 'lib/leagues.ts official.mode').toBe(true);
-    expect(league.rules.leagueOvertime, 'lib/leagues.ts leagueOvertime').toBe('shootout');
+    expect(league.divisions.every((d) => d.official.mode === 'none'), 'lib/config/leagues.ts official.mode').toBe(true);
+    expect(league.rules.leagueOvertime, 'lib/config/leagues.ts leagueOvertime').toBe('shootout');
     const text = elsewhereText(await withTag.renderGame(taggedFinal.contestId));
     expect(text, 'components/game/GameSources.tsx').toContain('When MaxPreps has no result for a league game,');
     expect(text, 'components/game/GameSources.tsx: no official schedule (D23)').not.toMatch(/\bofficial\b/i);

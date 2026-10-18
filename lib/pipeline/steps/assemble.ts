@@ -5,8 +5,8 @@
  * line.
  */
 
+import { CCS, getLeague } from '@/lib/config/leagues';
 import { contentRemovalsOf, stampContentChanges } from '@/lib/content-dates';
-import { CCS, getLeague } from '@/lib/leagues';
 import type { OfficialFixture } from '@/lib/model/fixture';
 import type { Game } from '@/lib/model/game';
 import type { LeagueHealth } from '@/lib/model/health';

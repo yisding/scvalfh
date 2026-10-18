@@ -16,10 +16,10 @@ import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 
+import { TIME_ZONE } from '@/lib/config/season';
 import { plural } from '@/lib/format/words';
 import type { Snapshot } from '@/lib/model/snapshot';
 import type { SnapshotMeta } from '@/lib/pipeline/contract';
-import { TIME_ZONE } from '@/lib/season';
 import { loadSnapshot } from '@/lib/snapshot-schema';
 import { runCli } from './cli';
 

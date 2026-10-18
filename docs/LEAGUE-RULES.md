@@ -9,7 +9,7 @@ schedule at all: this site orders their tables by its own 3-1-0 points and says 
 (`orderScope: 'site'`). The Southern Section's three independents (Glendora, Harvard-Westlake and
 Thousand Oaks) are not a league and have no table at all: see "LA independents" below.
 The leagues differ in the tiebreak chain, in how a tie among three or more teams is worked through, in how a division champion is
-named and in what the postseason looks like. Every rule below is data in `lib/leagues.ts` with the
+named and in what the postseason looks like. Every rule below is data in `lib/config/leagues.ts` with the
 by-law citation beside it; one engine (`lib/standings.ts`) runs them, and `/about#rules-<league>`
 prints them on the site. Where the documents say something this site cannot compute (a coin flip,
 a blind draw, a play-in game), the teams **share a place** and the page says which rule decides it.

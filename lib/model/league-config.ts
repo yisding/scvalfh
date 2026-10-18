@@ -1,6 +1,6 @@
 /**
  * The shape of the league configuration (SPEC §2.1): regions, sections, leagues, divisions, rules, ladders,
- * pairings, postseasons, phases, data quality and the CCS block. The values are lib/leagues.ts, which
+ * pairings, postseasons, phases, data quality and the CCS block. The values are lib/config/leagues.ts, which
  * asserts them (SPEC §2.4). Types plus one `as const` table; imports nothing but model types.
  */
 

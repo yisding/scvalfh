@@ -4,7 +4,7 @@
  * copy).
  *
  * The bracket is unpublished until the CCS seeding meeting, so these cases build it from the CCS
- * section block (`CCS` in lib/leagues — the key dates and the two CCS divisions) plus synthetic
+ * section block (`CCS` in lib/config/leagues — the key dates and the two CCS divisions) plus synthetic
  * games. Nothing here reads the bundled snapshot, so live fetches cannot break it.
  */
 
@@ -17,7 +17,7 @@ import {
   pendingRounds,
   roundKeyFor,
 } from '@/components/playoffs/bracket-model';
-import { CCS } from '@/lib/leagues';
+import { CCS } from '@/lib/config/leagues';
 import type { Game } from '@/lib/model/game';
 import type { CcsPlayoffs } from '@/lib/model/postseason';
 import { resolveTeam } from '@/lib/teams';

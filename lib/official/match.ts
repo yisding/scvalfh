@@ -16,8 +16,9 @@
  */
 
 import { postseasonTag } from '@/lib/classify';
+import { getDivision, leagueOfDivision } from '@/lib/config/leagues';
+import { divisionLabel } from '@/lib/config/leagues/labels';
 import { monthDay, shortDate } from '@/lib/format/dates';
-import { divisionLabel, getDivision, leagueOfDivision } from '@/lib/leagues';
 import type { OfficialFixture } from '@/lib/model/fixture';
 import type { Game, GameSide, OfficialStamp } from '@/lib/model/game';
 import type { DivisionId, TeamSlug } from '@/lib/model/ids';

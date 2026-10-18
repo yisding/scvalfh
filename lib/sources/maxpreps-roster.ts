@@ -26,9 +26,9 @@ import { z } from 'zod';
 
 import { htmlUnescape } from './http';
 import { MaxPrepsError, NEXT_DATA_RE } from './maxpreps';
+import { SPORT_SEASON_ID } from '@/lib/config/season';
 import type { Team } from '@/lib/model/team';
 import { recaseNameParts } from '@/lib/person-name';
-import { SPORT_SEASON_ID } from '@/lib/season';
 import { GRADE_CLASSES, type RosterPlayer, type TeamRoster } from '@/lib/rosters-schema';
 
 // ---------------------------------------------------------------- the positional map
@@ -66,7 +66,7 @@ export const ROSTER_KEYS = [
   'hasPhoto', // 24
   'rosterId', // 25  per-season roster-membership GUID
   'schoolId', // 26  == countData.teamId (MaxPreps keys a team by its school GUID)
-  'sportSeasonId', // 27  == lib/season SPORT_SEASON_ID
+  'sportSeasonId', // 27  == lib/config/season SPORT_SEASON_ID
   'sportSeasonName', // 28
   'careerProfileId', // 29  the STABLE person id; `?careerid=` in the URL is its short form
   'createdOn', // 30  when the roster row was created (naive local time) — not a modified stamp

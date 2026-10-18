@@ -35,12 +35,13 @@ import SectionHeader from '@/components/ui/SectionHeader';
 import JsonLd from '@/components/layout/JsonLd';
 import { DATA_CORRECTIONS_URL, OG_BASE } from '@/components/layout/site';
 import { teamJsonLd } from '@/components/layout/structured-data';
+import { getLeague, leagueOfDivision, regionOf } from '@/lib/config/leagues';
+import { divisionHeading } from '@/lib/config/leagues/labels';
 import { getTeamSlugs, getToday } from '@/lib/data';
 import { shortDate } from '@/lib/format/dates';
 import { ordinal, recordString } from '@/lib/format/numbers';
 import { formStripName, plural } from '@/lib/format/words';
 import { getHistoryFor, getHistorySeason, getHistoryStandings } from '@/lib/history';
-import { divisionHeading, getLeague, leagueOfDivision, regionOf } from '@/lib/leagues';
 import type { DivisionId, LeagueId } from '@/lib/model/ids';
 
 /**

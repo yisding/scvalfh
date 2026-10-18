@@ -27,7 +27,7 @@ export const NOOP_STEPS: PipelineSteps = { official: noopOfficial, sblive: noopS
  * tests fast and independent of the real matcher (lib/official/match.ts). Test support only.
  */
 export const naiveBvalOfficial: OfficialStep = async (_ctx, games) => {
-  const { divisionsOf } = await import('@/lib/leagues');
+  const { divisionsOf } = await import('@/lib/config/leagues');
   const bval = new Set(divisionsOf('bval').map((d) => d.id));
   return {
     games: games.map((g) => {

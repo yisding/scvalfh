@@ -1,6 +1,6 @@
 /**
  * The normalized domain model (lib/model/): sections → leagues → divisions → teams, games, standings.
- * League facts (rules, chains, ladders, dates) are NOT here; they are config in lib/leagues.ts, whose
+ * League facts (rules, chains, ladders, dates) are NOT here; they are config in lib/config/leagues.ts, whose
  * shapes are lib/model/league-config.ts. Everything is exported; nothing here is a class and nothing here
  * has behaviour. Model files import nothing but types from each other.
  *

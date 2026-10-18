@@ -1,17 +1,17 @@
 /**
  * The Season record written into every snapshot (SPEC §5.9). Server-only: it reads the league
- * config, the registry and lib/normalize, so it is NOT part of lib/season.ts, which stays a
- * dependency-free constants leaf that client modules reach through lib/shared/dates.ts.
+ * config, the registry and lib/normalize, so it is NOT part of lib/config/season.ts, which stays a
+ * constants leaf (importing only the base-URL leaf) that client modules reach through lib/shared/dates.ts.
  */
 
-import { LEAGUES, SECTIONS } from './leagues';
+import { LEAGUES, SECTIONS } from './config/leagues';
+import {
+  ALL_SEASON_ID, GENDER_SPORT, SEASON_LABEL, SEASON_YEAR, SPORT_SEASON_ID, TEAM_LEVEL,
+} from './config/season';
 import type { Game, GameSide } from './model/game';
 import type { LeagueId } from './model/ids';
 import type { Season, SeasonLeague, SeasonWindow } from './model/season';
 import { seasonWindowOf } from './normalize';
-import {
-  ALL_SEASON_ID, GENDER_SPORT, SEASON_LABEL, SEASON_YEAR, SPORT_SEASON_ID, TEAM_LEVEL,
-} from './season';
 import { teamOfSide } from './teams';
 
 /** The registry league of one side, by MaxPreps GUID first, then by slug; null for a non-member. */

@@ -4,7 +4,7 @@
  * registry teams, from each team's MaxPreps schedule for that season. The Elo rating starts each
  * team from the rating these games give it (lib/ratings.ts); nothing else reads them.
  *
- *   pnpm fetch-prior-season                    the season before lib/season.ts' (26-27 → 25-26)
+ *   pnpm fetch-prior-season                    the season before lib/config/season.ts' (26-27 → 25-26)
  *   pnpm fetch-prior-season --year 24-25       another MaxPreps season year
  *   pnpm fetch-prior-season --ssid <id>        skip the season-id lookup (with --year)
  *   pnpm fetch-prior-season --out <path>       write somewhere else
@@ -33,6 +33,7 @@ import path from 'node:path';
 
 import { z } from 'zod';
 
+import { SEASON_YEAR, SPORT_SEASON_ID } from '@/lib/config/season';
 import type { TeamSlug } from '@/lib/model/ids';
 import {
   previousMaxprepsYear,
@@ -42,7 +43,6 @@ import {
   seasonWindow,
   type PriorSeason,
 } from '@/lib/prior-season-schema';
-import { SEASON_YEAR, SPORT_SEASON_ID } from '@/lib/season';
 import { MaxPrepsClient, type ScheduleRow } from '@/lib/sources/maxpreps';
 import { TEAMS } from '@/lib/teams';
 import { runCli } from './cli';
@@ -58,7 +58,7 @@ interface Args {
   help: boolean;
 }
 
-/** The command line (see USAGE); the season defaults to the one before lib/season.ts'. */
+/** The command line (see USAGE); the season defaults to the one before lib/config/season.ts'. */
 function parseArgs(argv: readonly string[]): Args {
   const args: Args = {
     year: previousMaxprepsYear(SEASON_YEAR),

@@ -58,7 +58,7 @@
  * /teams/<slug> (the commitment line) and /about.
  * `history/2025-26.html` (the archive covers SCVAL and BVAL, and marks PCAL, MCAL and EAL unavailable):
  *  - never says the archive is SCVAL-only (it was, once);
- *  - has one section per league of lib/leagues.ts (`id="scval"` ... `id="eal"`), the division
+ *  - has one section per league of lib/config/leagues.ts (`id="scval"` ... `id="eal"`), the division
  *    anchors of every available league, and a "Unavailable" card, with the reason, in the section of
  *    every league the data marks unavailable;
  *  - an unavailable league's section has no table and names no champion, winner or award, so
@@ -72,7 +72,7 @@
  * And: each `playoffs/<league>.html` names its league's section (`playoffs/mcal.html`: "North Coast
  * Section"); `standings.html` keeps the old anchors `id="de-anza"` and `id="el-camino"`.
  *
- * League, division and team ids come from lib/leagues.ts and the snapshot, never from the build.
+ * League, division and team ids come from lib/config/leagues.ts and the snapshot, never from the build.
  */
 
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
@@ -81,22 +81,16 @@ import path from 'node:path';
 import { buildLeadersView } from '@/components/leaders/leaders-view';
 import { getClubsFile } from '@/lib/clubs';
 import { getCommitsFile } from '@/lib/commits';
+import {
+  LEAGUES, NO_POSTSEASON_LEAGUE_IDS, SECTION_PLAYOFFS_LEAGUE_IDS, TOURNAMENT_LEAGUE_IDS,
+  UNBRACKETED_LEAGUE_IDS, getSection, isSingleDivision, regionOf,
+} from '@/lib/config/leagues';
+import { divisionLabel } from '@/lib/config/leagues/labels';
 import { getSnapshot } from '@/lib/data';
 import { gameSentence } from '@/components/history/bracket-view';
 import { getHistoryBrackets, getHistoryLeagues } from '@/lib/history';
 import type { LeagueId } from '@/lib/model/ids';
 import { getPlayerStats } from '@/lib/player-stats';
-import {
-  LEAGUES,
-  NO_POSTSEASON_LEAGUE_IDS,
-  SECTION_PLAYOFFS_LEAGUE_IDS,
-  TOURNAMENT_LEAGUE_IDS,
-  UNBRACKETED_LEAGUE_IDS,
-  divisionLabel,
-  getSection,
-  isSingleDivision,
-  regionOf,
-} from '@/lib/leagues';
 import {
   EAL_SCHOOL_CLAIM,
   RED_BLUFF_STATUS_CLAIM,

@@ -26,7 +26,8 @@ import { tempDir } from '@/tests/support/repo';
 
 const loaders = {
   data: () => import('@/lib/data'),
-  leagues: () => import('@/lib/leagues'),
+  leagues: () => import('@/lib/config/leagues'),
+  labels: () => import('@/lib/config/leagues/labels'),
   view: () => import('@/components/teams/team-view'),
   teamPage: () => import('@/app/teams/[slug]/page'),
   indexPage: () => import('@/app/teams/page'),
@@ -59,7 +60,7 @@ describe('team-view.ts over every division (ALL_DIVISIONS)', () => {
   it('builds a view for every registry team, with the division size and "of N in …"', () => {
     let seen = 0;
     for (const division of m.leagues.ALL_DIVISIONS) {
-      const scope = m.leagues.divisionHeading(division.id) ?? m.leagues.getLeague(division.leagueId).shortName;
+      const scope = m.labels.divisionHeading(division.id) ?? m.leagues.getLeague(division.leagueId).shortName;
       const teams = m.data.getTeams(division.id);
       expect(teams.length, `lib/data.ts getTeams(${division.id})`).toBe(division.expectedTeams);
       for (const team of teams) {
@@ -157,7 +158,7 @@ describe('league copy (components/teams/team-view.ts leagueCopy)', () => {
 
   it('an unbracketed league (the Super Regional) states its dates and promises no bracket', () => {
     const unbracketed = m.leagues.LEAGUES.filter((l) => l.postseason.kind === 'unbracketed-tournament');
-    expect(unbracketed.length, 'lib/leagues.ts: one league has an unbracketed postseason').toBe(1);
+    expect(unbracketed.length, 'lib/config/leagues.ts: one league has an unbracketed postseason').toBe(1);
     for (const league of unbracketed) {
       if (league.postseason.kind !== 'unbracketed-tournament') continue;
       const copy = m.view.leagueCopy(league.id);
@@ -551,7 +552,7 @@ describe('the NEXT card and the identity place line (UI pass, league-aware)', ()
       m.data.getTeams({ league }).find((t) => m.data.getStandingFor(t.slug)?.hasReportedResults)!;
     const scval = ranked('scval');
     const mcal = ranked('mcal');
-    const heading = m.leagues.divisionHeading(scval.division)!;
+    const heading = m.labels.divisionHeading(scval.division)!;
     expect(m.view.opponentRecordLine(scval, 'scval'), 'components/teams/team-view.ts same league').toMatch(
       new RegExp(` in ${heading}$`),
     );
@@ -872,7 +873,7 @@ describe('opponentRecordLine (components/teams/team-view.ts)', () => {
         expect(line, `components/teams/team-view.ts ${team.slug}`).toMatch(/^(\d+-\d+-\d+ overall \u00b7 LA|no results yet)$/);
         continue;
       }
-      const scope = m.leagues.divisionHeading(team.division) ?? m.leagues.getLeague(team.league).shortName;
+      const scope = m.labels.divisionHeading(team.division) ?? m.leagues.getLeague(team.league).shortName;
       const match = /^\d+-\d+-\d+ \u00b7 (tied )?\d+(?:st|nd|rd|th) in (.+)$/.exec(line ?? '');
       expect(match, `components/teams/team-view.ts ${team.slug}: ${line}`).not.toBeNull();
       if (!match) continue;

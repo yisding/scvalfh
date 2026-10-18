@@ -12,7 +12,7 @@
  * dated notes (`Entries Due`), and the footer revision date (`9/20/26`).
  */
 
-import { getDivision } from '@/lib/leagues';
+import { getDivision } from '@/lib/config/leagues';
 import type { DivisionId, TeamSlug } from '@/lib/model/ids';
 import { resolveOfficialName } from '@/lib/teams';
 import { officialFixtureId, type BundleEvent, type BundleFixture } from './schema';

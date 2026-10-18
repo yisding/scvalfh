@@ -10,7 +10,7 @@
  * lib/official/schema.ts all import from here. A schema that deliberately differs keeps its own
  * declaration (commits' and clubs' calendar-strict `asOf` shapes, their https-without-social-media
  * URLs). The plain RegExps and checks under them (SLUG_PATTERN, DATE_PATTERN, isCalendarDate,
- * isHttpsUrl) live in lib/shared/patterns.ts, where the config and registry asserts (lib/leagues.ts,
+ * isHttpsUrl) live in lib/shared/patterns.ts, where the config and registry asserts (lib/config/leagues.ts,
  * lib/teams.ts), which use no zod schema, take them without loading zod.
  *
  * zod and those patterns are the only runtime imports, so any contract can take these without a

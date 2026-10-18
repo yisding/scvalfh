@@ -26,10 +26,10 @@
 
 import { getClubsFile } from '@/lib/clubs';
 import { getCommitsFile } from '@/lib/commits';
+import { REGIONS, getLeague } from '@/lib/config/leagues';
 import { getTeamsGrouped, type LeagueSummary } from '@/lib/data';
 import { dateWithYear } from '@/lib/format/dates';
 import { listWords, plural } from '@/lib/format/words';
-import { REGIONS, getLeague } from '@/lib/leagues';
 import type { RegionId, TeamSlug } from '@/lib/model/ids';
 import { getRosterEnrichment, getRosters } from '@/lib/rosters';
 import { buildRosterView, type RosterRow } from '@/components/teams/roster-view';

@@ -18,7 +18,8 @@ import path from 'node:path';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { classifyGames, postseasonTag } from '@/lib/classify';
-import { DATA_QUALITY, LEAGUES, getLeague } from '@/lib/leagues';
+import { DATA_QUALITY, LEAGUES, getLeague } from '@/lib/config/leagues';
+import { officialDocumentOf } from '@/lib/config/leagues/official';
 import type { OfficialFixture } from '@/lib/model/fixture';
 import type { Game } from '@/lib/model/game';
 import type { LeagueRunState, SourceStatus } from '@/lib/model/health';
@@ -26,7 +27,7 @@ import type { LeagueId } from '@/lib/model/ids';
 import type { Snapshot } from '@/lib/model/snapshot';
 import { applyExclusions, normalizeGames } from '@/lib/normalize';
 import { matchOfficialFixtures, type MatchOptions, type MatchResult } from '@/lib/official/match';
-import { loadBundledFixtures, officialDocumentOf } from '@/lib/official/schema';
+import { loadBundledFixtures } from '@/lib/official/schema';
 import { officialChangesCellText, officialChangesHash, sha256Hex } from '@/lib/official/validate';
 import {
   FixtureMissing,

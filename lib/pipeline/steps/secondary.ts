@@ -17,7 +17,7 @@
  * corpus'), which is how an offline run skips these steps.
  */
 
-import { CCS, getLeague } from '@/lib/leagues';
+import { CCS, getLeague } from '@/lib/config/leagues';
 import type { Game } from '@/lib/model/game';
 import { CCS_ICAL_URL, ccsPollingOpen, confirmKeyDates, parseCcsIcal, readBracketPublished } from '@/lib/sources/ccs';
 import { VNN_SITE_IDS, applyVnnEvents, carryVnnForward, parseVnnIcs, type VnnEvent } from '@/lib/sources/vnn-ics';

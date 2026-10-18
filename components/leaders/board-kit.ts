@@ -5,7 +5,7 @@
  */
 
 import { statText } from '@/components/teams/player-stats-view';
-import { getLeague } from '@/lib/leagues';
+import { getLeague } from '@/lib/config/leagues';
 import type { Team } from '@/lib/model/team';
 import { rankBoard } from './ranking';
 import type { BoardScope } from './scope';

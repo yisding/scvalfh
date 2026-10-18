@@ -68,7 +68,8 @@ import { CORPUS_HOOK_TIMEOUT, useCorpusModules, withCorpusModules } from '@/test
 /** The modules every collection reads, in the order the file imported them. */
 const COLLECTED = {
   data: () => import('@/lib/data'),
-  leagues: () => import('@/lib/leagues'),
+  leagues: () => import('@/lib/config/leagues'),
+  labels: () => import('@/lib/config/leagues/labels'),
   home: () => import('@/components/home/home-view'),
   standings: () => import('@/components/standings/standings-page-view'),
   teamView: () => import('@/components/teams/team-view'),
@@ -246,7 +247,7 @@ async function collectEal(): Promise<EalCorpus> {
 // ---------------------------------------------------------------- string walking
 
 /**
- * Every object reachable from the league config (lib/leagues.ts). A view model that embeds a
+ * Every object reachable from the league config (lib/config/leagues.ts). A view model that embeds a
  * config object BY REFERENCE (e.g. `model.league.rules`) carries config, not copy the builder
  * wrote; config strings are tests/leagues.test.ts's business, so the walk skips them.
  */
@@ -303,7 +304,7 @@ function expectNone(subject: Subject, rule: string, test: (s: string) => boolean
 }
 
 /**
- * The league rules' and postseason citations that mention co-champions (lib/leagues.ts
+ * The league rules' and postseason citations that mention co-champions (lib/config/leagues.ts
  * `rules.citations`, e.g. the EAL's "a tie for first means co-champions (§VII.C)", and
  * `postseason.citations`, e.g. the San Diego Section's "not co-champions or tri-champions"). A builder that quotes one in a footnote
  * states the rule; the co-champion rule is about declaring them, so these are taken out of a value
@@ -350,7 +351,7 @@ describe('copy honesty over every league’s view models (SPEC §10.9)', () => {
 
   it('collects the EAL views on the EAL corpus, where the EAL has data', () => {
     const ids = eal.leagues.UNBRACKETED_LEAGUE_IDS;
-    expect(ids.length, 'lib/leagues.ts: unbracketed leagues').toBeGreaterThan(0);
+    expect(ids.length, 'lib/config/leagues.ts: unbracketed leagues').toBeGreaterThan(0);
     for (const id of ids) {
       for (const producer of [HV, SPV, TV, SP, PP, TP]) {
         expect(eal.subjects.some((s) => s.producer === producer && s.league === id), `${producer}: no ${id} view on the EAL corpus`).toBe(true);
@@ -368,7 +369,7 @@ describe('copy honesty over every league’s view models (SPEC §10.9)', () => {
     // 1 v 1 note, the missing banner and the membership note.
     const text = eal.subjects.flatMap((s) => strings(s.value).map(([, v]) => v)).join('\n');
     const ps = eal.leagues.getLeague(ids[0]).postseason;
-    expect(ps.kind, 'lib/leagues.ts: postseason kind').toBe('unbracketed-tournament');
+    expect(ps.kind, 'lib/config/leagues.ts: postseason kind').toBe('unbracketed-tournament');
     if (ps.kind === 'unbracketed-tournament') expect(text, `${TP}: "${ps.name} picture" kicker`).toContain(`${ps.name} picture`);
     expect(text, `${GV}: the 1 v 1 note`).toMatch(/1 v 1s decided it/);
     expect(text, `${SPV}: the missing banner`).toMatch(/league results? missing/);
@@ -414,9 +415,9 @@ describe('copy honesty over every league’s view models (SPEC §10.9)', () => {
     const banned: string[] = [];
     for (const l of leagues.LEAGUES) {
       if (!leagues.isSingleDivision(l.id)) continue;
-      banned.push(`${l.shortName} Division`, ...l.divisions.map((d) => `${leagues.divisionLabel(d.id)} Division`));
+      banned.push(`${l.shortName} Division`, ...l.divisions.map((d) => `${corpus.labels.divisionLabel(d.id)} Division`));
     }
-    expect(banned, 'lib/leagues.ts: single-division leagues').toEqual(
+    expect(banned, 'lib/config/leagues.ts: single-division leagues').toEqual(
       expect.arrayContaining(['PCAL Division', 'MCAL Division', 'EAL Division']),
     );
     for (const s of all()) {
@@ -426,7 +427,7 @@ describe('copy honesty over every league’s view models (SPEC §10.9)', () => {
 
   it('"co-champions" appears only after the league’s regular phase', () => {
     const quoted = coChampionConfigText(leagues, eal.leagues);
-    expect(quoted.length, 'lib/leagues.ts: co-champion rules').toBeGreaterThan(0);
+    expect(quoted.length, 'lib/config/leagues.ts: co-champion rules').toBeGreaterThan(0);
     const unquoted = (v: string) => quoted.reduce((rest, q) => rest.split(q).join(' '), v);
     for (const [corpus, d] of [[subjects, data], [eal.subjects, eal.data]] as const) {
       for (const id of d.getLeagueIds()) {
@@ -457,7 +458,7 @@ describe('copy honesty over every league’s view models (SPEC §10.9)', () => {
 
   it('no seed word in a SoCal league’s views (San Diego seeding is the Section’s, never applied; the Sunset has no playoffs)', () => {
     const ids = new Set([...leagues.SECTION_PLAYOFFS_LEAGUE_IDS, ...leagues.NO_POSTSEASON_LEAGUE_IDS]);
-    expect([...ids].sort(), 'lib/leagues.ts: section-playoffs and no-postseason leagues').toEqual(['city', 'independents', 'metro', 'north-county', 'sunset']);
+    expect([...ids].sort(), 'lib/config/leagues.ts: section-playoffs and no-postseason leagues').toEqual(['city', 'independents', 'metro', 'north-county', 'sunset']);
     for (const s of all().filter((x) => x.league && ids.has(x.league))) {
       expectNone(s, 'prints a seed word', (v) => !isUrl(v) && SEED_CLAIM.test(v));
     }
@@ -472,7 +473,7 @@ describe('copy honesty over every league’s view models (SPEC §10.9)', () => {
 
   it('never "rules require" in the views of a league whose table order is this site’s own (orderScope "site")', () => {
     const ids = new Set(leagues.LEAGUES.filter((l) => l.rules.orderScope === 'site').map((l) => l.id));
-    expect([...ids].sort(), 'lib/leagues.ts: orderScope "site" leagues').toEqual(['city', 'independents', 'metro', 'north-county', 'sunset']);
+    expect([...ids].sort(), 'lib/config/leagues.ts: orderScope "site" leagues').toEqual(['city', 'independents', 'metro', 'north-county', 'sunset']);
     for (const s of all().filter((x) => x.league && ids.has(x.league))) {
       expectNone(s, 'says "rules require" (no league rule orders this table)', (v) => !isUrl(v) && RULES_REQUIRE_CLAIM.test(v));
     }

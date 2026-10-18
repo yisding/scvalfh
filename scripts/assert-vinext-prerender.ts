@@ -19,7 +19,7 @@
  * The page families are EXACT, derived from the build's input, never from its output (the built
  * sitemap would make the check circular), by scripts/lib/prerender-expectations.ts, which
  * scripts/assert-prerender.ts uses too: the snapshot as lib/data.ts loads it (data/snapshot.json or
- * SCVAL_SNAPSHOT), cross-checked against lib/leagues.ts and the team registry, gives
+ * SCVAL_SNAPSHOT), cross-checked against lib/config/leagues.ts and the team registry, gives
  * `standings/<id>` and `schedule/<id>` for each league, `playoffs/<id>` for each league
  * tournament, `game/<param>` for every game plus one stub per `supersededGames` key (param =
  * lib/shared/game-id.ts gameIdToParam: `sblive:N` → `sblive-N`), `scores/<date>` for every distinct game

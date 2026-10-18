@@ -7,9 +7,9 @@ import { OG_BASE, ROOT_OG_IMAGE, coveredLeagueWords } from '@/components/layout/
 import ScheduleIndex from '@/components/schedule/ScheduleIndex';
 import { countGames } from '@/components/schedule/filter-data';
 import { buildScheduleIndex } from '@/components/schedule/schedule-view';
+import { SEASON_DISPLAY } from '@/lib/config/season';
 import { getGames, getLeagueSummaries, getTeamBySlug, getToday } from '@/lib/data';
 import { plural } from '@/lib/format/words';
-import { SEASON_DISPLAY } from '@/lib/season';
 
 /**
  * `/schedule` — "What's on across the leagues?" (SPEC §8.1, §10.4): a LIGHT index. One page of

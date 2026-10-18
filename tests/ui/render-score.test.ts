@@ -23,9 +23,9 @@ import {
   overtimeInDoubt,
   signedMargin,
 } from '@/components/ui/describe-game';
+import { findDivision, findLeague } from '@/lib/config/leagues';
 import { getGames, getLeagueSummaries } from '@/lib/data';
 import { EN_DASH } from '@/lib/format/words';
-import { findDivision, findLeague } from '@/lib/leagues';
 import type { Game, GameStatus } from '@/lib/model/game';
 
 function game(overrides: Partial<Game> = {}): Game {

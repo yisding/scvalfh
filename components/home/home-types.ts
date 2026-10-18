@@ -2,7 +2,7 @@
  * The serializable view models the home page hands to its client components (SPEC §10.1).
  *
  * `MyTeamCard`, `PinTile`, `FindYourTeam` and `SetLeagueButton` are `'use client'`, so they cannot
- * read `lib/data` (an `fs` read at import), `lib/teams` or `lib/leagues` (SPEC §0.4 client
+ * read `lib/data` (an `fs` read at import), `lib/teams` or `lib/config/leagues` (SPEC §0.4 client
  * boundary). Everything they need is computed on the server (`home-view.ts`) and passed as plain
  * data: the §5.2 render decision for the last game arrives as a `GameDisplay`, already resolved by
  * `describeGame()`, so no score is ever re-derived on the client and the never-0-0 rule stays in its
@@ -173,7 +173,7 @@ export interface LeagueCardView {
   /** The plain link's words: '<SHORT> standings' (home-view.ts standingsLabel: 'Independents standings' for the group). */
   standingsLabel: string;
   /**
-   * The words in the card's `Show <…> here` button: the league's `standaloneName` (lib/leagues.ts), its
+   * The words in the card's `Show <…> here` button: the league's `standaloneName` (lib/config/leagues/labels.ts), its
    * short name except where that alone would read as something else ('North County', 'the independents').
    */
   showName: string;

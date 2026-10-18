@@ -9,7 +9,7 @@
 
 import { beforeAll, describe, expect, it } from 'vitest';
 
-import { DATA_QUALITY, LEAGUES } from '@/lib/leagues';
+import { DATA_QUALITY, LEAGUES } from '@/lib/config/leagues';
 import type { Snapshot } from '@/lib/model/snapshot';
 import { localDateKey } from '@/lib/shared/dates';
 import { sideOutcome } from '@/lib/shared/game';
@@ -177,7 +177,7 @@ describe('the EAL games', () => {
 
   it('never resolves a si.com side to Red Bluff or its placeholder', () => {
     for (const id of IGNORED_SBLIVE_IDS) {
-      expect(DATA_QUALITY.sbliveIgnoredTeamIds, `lib/leagues.ts: ${id}`).toHaveProperty(id);
+      expect(DATA_QUALITY.sbliveIgnoredTeamIds, `lib/config/leagues.ts: ${id}`).toHaveProperty(id);
       expect(
         TEAMS.some((t) => t.external.sbliveTeamId === id),
         `lib/teams.ts: ${id} is not a registry team`,

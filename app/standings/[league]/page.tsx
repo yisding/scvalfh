@@ -13,10 +13,11 @@ import { leaderClause } from '@/components/standings/standings-view';
 import Arrow from '@/components/ui/Arrow';
 import ExternalLink from '@/components/ui/ExternalLink';
 import { biggestGoalDiff } from '@/components/ui/StandingsTable';
+import { getLeague } from '@/lib/config/leagues';
+import { leagueSportWords, standingsLabel } from '@/lib/config/leagues/labels';
 import { getLeagueIds, getLeagueSummary } from '@/lib/data';
 import { shortDate } from '@/lib/format/dates';
 import { hasHistory } from '@/lib/history';
-import { getLeague, leagueSportWords, standingsLabel } from '@/lib/leagues';
 
 /**
  * /standings/<league> — "Where do WE stand?" (SPEC §8.1, §10.3): one league's full tables.

@@ -19,7 +19,7 @@
  */
 
 import { classifyGames } from '@/lib/classify';
-import { LEAGUES, getLeague } from '@/lib/leagues';
+import { LEAGUES, getLeague } from '@/lib/config/leagues';
 import type { Game } from '@/lib/model/game';
 import type { DivisionHealth } from '@/lib/model/health';
 import type { DivisionId, LeagueId } from '@/lib/model/ids';

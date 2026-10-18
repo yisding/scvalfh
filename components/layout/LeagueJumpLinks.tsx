@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
 import Arrow, { type ArrowProps } from '@/components/ui/Arrow';
-import { standaloneName } from '@/lib/leagues';
+import { standaloneName } from '@/lib/config/leagues/labels';
 import type { LeagueId } from '@/lib/model/ids';
 
 /**

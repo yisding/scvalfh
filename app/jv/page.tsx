@@ -8,8 +8,8 @@ import JvStandings from '@/components/standings/JvStandings';
 import { buildJvTablesView } from '@/components/standings/jv-standings-view';
 import Arrow from '@/components/ui/Arrow';
 import SectionHeader from '@/components/ui/SectionHeader';
+import { LEAGUES, LEAGUES_PROPER, leaguesInRegion, regionOf } from '@/lib/config/leagues';
 import { listWords } from '@/lib/format/words';
-import { LEAGUES, LEAGUES_PROPER, leaguesInRegion, regionOf } from '@/lib/leagues';
 
 /**
  * `/jv` — "Where does our JV stand?" Every league's JV tables, computed (lib/jv-standings.ts) and

@@ -19,8 +19,8 @@ import { goldenPath, readJson } from './support/repo';
 const { OVERRIDE_ID } = vi.hoisted(() => ({ OVERRIDE_ID: '00000000-0000-4000-8000-0000000c0de1' }));
 
 // Adds one leagueGameOverrides entry to MCAL; every other value is the real config.
-vi.mock('@/lib/leagues', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('@/lib/leagues')>();
+vi.mock('@/lib/config/leagues', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@/lib/config/leagues')>();
   return {
     ...actual,
     LEAGUES: actual.LEAGUES.map((l) =>

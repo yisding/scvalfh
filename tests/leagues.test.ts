@@ -1,5 +1,5 @@
 /**
- * lib/leagues.ts: the SPEC §2.4 invariants (also enforced by assertLeagues() at import), the §2.3
+ * lib/config/leagues.ts: the SPEC §2.4 invariants (also enforced by assertLeagues() at import), the §2.3
  * helpers, the SCVAL strings that must stay byte-identical to today's, and the Southern California
  * amendment's regions, sections and four leagues (DESIGN-socal §2.1), their copy held to the site's
  * honesty rules.
@@ -9,58 +9,21 @@ import { describe, expect, it } from 'vitest';
 
 import { ConfigInvariantError } from '@/lib/config/invariant';
 import {
-  ALL_DIVISIONS,
-  CCS,
-  CCS_LEAGUE_IDS,
-  DATA_QUALITY,
-  DEFAULT_REGION,
-  INDEPENDENT_LEAGUES,
-  LEAGUES,
-  LEAGUES_PROPER,
-  LEAGUE_IDS,
-  NO_POSTSEASON_LEAGUE_IDS,
-  REGIONS,
-  RESERVED_SEGMENTS,
-  SECTIONS,
-  SECTION_PLAYOFFS_LEAGUE_IDS,
-  TOURNAMENT_LEAGUE_IDS,
-  UNBRACKETED_LEAGUE_IDS,
-  assertLeagues,
-  divisionDisplay,
-  divisionHeading,
-  divisionLabel,
-  divisionsOf,
-  drawNumberOf,
-  findDivision,
-  findLeague,
-  getDivision,
-  getLeague,
-  getRegion,
-  getSection,
-  isIndependentDivision,
-  isIndependentLeague,
-  isLeagueId,
-  isSingleDivision,
-  ladderFor,
-  ladderRung,
-  leagueOfDivision,
-  leaguePlayEnds,
-  leaguePlayStarts,
-  leagueStandingsUrl,
-  leaguesInRegion,
-  regionOf,
-  seasonWindowBounds,
-  sectionOf,
-  sectionsInRegion,
-  standingsLabel,
-  statusesOf,
+  ALL_DIVISIONS, CCS, CCS_LEAGUE_IDS, DATA_QUALITY, DEFAULT_REGION, INDEPENDENT_LEAGUES, LEAGUES,
+  LEAGUES_PROPER, LEAGUE_IDS, NO_POSTSEASON_LEAGUE_IDS, REGIONS, SECTIONS, SECTION_PLAYOFFS_LEAGUE_IDS,
+  TOURNAMENT_LEAGUE_IDS, UNBRACKETED_LEAGUE_IDS, assertLeagues, divisionsOf, drawNumberOf, findDivision,
+  findLeague, getDivision, getLeague, getRegion, getSection, isIndependentDivision, isIndependentLeague,
+  isLeagueId, isSingleDivision, ladderFor, ladderRung, leagueOfDivision, leaguePlayEnds, leaguePlayStarts,
+  leagueStandingsUrl, leaguesInRegion, regionOf, seasonWindowBounds, sectionOf, sectionsInRegion, statusesOf,
   tiebreakChainFor,
-} from '@/lib/leagues';
+} from '@/lib/config/leagues';
+import { divisionDisplay, divisionHeading, divisionLabel, standingsLabel } from '@/lib/config/leagues/labels';
+import { RESERVED_SEGMENTS } from '@/lib/config/routes';
+import { CCS_BRACKET_URL } from '@/lib/config/season';
 import type { RegionId } from '@/lib/model/ids';
 import { type LeagueConfig, type SectionConfig } from '@/lib/model/league-config';
 import type { PlayoffStatus, TiebreakStage } from '@/lib/model/standings';
 import { getTeamById } from '@/lib/teams';
-import { CCS_BRACKET_URL } from '@/lib/season';
 import { SEED_CLAIM, umpireOfficialClaims } from '@/scripts/copy-rules';
 
 const UNCOMPUTABLE: readonly TiebreakStage[] = ['coin-flip', 'ccs-points', 'no-rule'];
@@ -166,7 +129,7 @@ describe('leagues: ids and helpers (SPEC §2.3)', () => {
     ]);
     expect(DEFAULT_REGION).toBe('norcal');
     expect(getRegion('socal').name).toBe('Southern California');
-    expect(() => getRegion('midcal' as RegionId)).toThrow(/lib\/leagues\.ts: unknown region/);
+    expect(() => getRegion('midcal' as RegionId)).toThrow(/lib\/config\/leagues\.ts: unknown region/);
     expect(() => getRegion('midcal' as RegionId)).toThrow(ConfigInvariantError);
     expect(SECTIONS.map((s) => [s.id, s.region])).toEqual([
       ['ccs', 'norcal'], ['ncs', 'norcal'], ['ns', 'norcal'], ['ss', 'socal'], ['sds', 'socal'],
@@ -277,9 +240,9 @@ describe('leagues: ids and helpers (SPEC §2.3)', () => {
       officialUrl: 'https://www.cifns.org/sports/fh/index', noChampionshipNote: null,
     });
     expect(getDivision('eal').leagueId).toBe('eal');
-    expect(() => getLeague('nope')).toThrow(/lib\/leagues\.ts/);
-    expect(() => getDivision('nope')).toThrow(/lib\/leagues\.ts/);
-    expect(() => getSection('xyz' as 'ccs')).toThrow(/lib\/leagues\.ts/);
+    expect(() => getLeague('nope')).toThrow(/lib\/config\/leagues\.ts/);
+    expect(() => getDivision('nope')).toThrow(/lib\/config\/leagues\.ts/);
+    expect(() => getSection('xyz' as 'ccs')).toThrow(/lib\/config\/leagues\.ts/);
     expect(() => getLeague('nope')).toThrow(ConfigInvariantError);
     expect(() => getDivision('nope')).toThrow(ConfigInvariantError);
     expect(() => getSection('xyz' as 'ccs')).toThrow(ConfigInvariantError);

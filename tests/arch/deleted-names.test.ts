@@ -25,7 +25,7 @@ import { SOURCE_ROOTS, expectAtLeast, importsOf, parseText, resolveModule, sourc
 
 /** §0.4 "No shims": the old module (repo-relative, no extension) → the names deleted from it. */
 const DELETED: Readonly<Record<string, readonly string[]>> = {
-  'lib/season': [
+  'lib/config/season': [
     'SECTION_ID',
     'SECTION_NAME',
     'DIVISIONS',
@@ -84,27 +84,27 @@ describe('deleted names stay deleted (SPEC §0.4)', () => {
   });
 
   it('the scanner itself catches each banned form (synthetic sources)', () => {
-    expect(resolveModule('app/teams/page.tsx', '../../lib/season')).toBe('lib/season');
+    expect(resolveModule('app/teams/page.tsx', '../../lib/config/season')).toBe('lib/config/season');
     expect(resolveModule('components/home/x.ts', '@/lib/teams')).toBe('lib/teams');
     expect(resolveModule('tests/ui/a.test.ts', '../../lib/model/ids.ts')).toBe('lib/model/ids');
     expect(resolveModule('app/x.tsx', 'next/link')).toBeNull();
     const bad = [
-      "import { DIVISIONS } from '../lib/season';",
+      "import { DIVISIONS } from '../lib/config/season';",
       "import { playoffStatus as ps } from '@/lib/standings';",
       "export { isScvalTeamId } from '../lib/teams';",
       "import type { Division } from '../lib/model/ids';",
       "type P = import('@/lib/model/postseason').Playoffs;",
       // A key matches the module AND anything under it (the module became a directory).
-      "import { buildSeason } from '@/lib/season/build';",
+      "import { buildSeason } from '@/lib/config/season/build';",
     ].join('\n');
     expect(scanText('components/probe.tsx', bad).map((f) => f.line)).toEqual([1, 2, 3, 4, 5, 6]);
     // Allowed: the new homes of moved names, a name that was never deleted, ids in comments, a sibling key.
     const good = [
-      "import { LEAGUE_IDS, leagueStandingsUrl } from '../lib/leagues';",
+      "import { LEAGUE_IDS, leagueStandingsUrl } from '../lib/config/leagues';",
       "import { playoffStatusFor } from '../lib/standings';",
-      "// import { DIVISIONS } from '../lib/season';",
+      "// import { DIVISIONS } from '../lib/config/season';",
       "import { gameHref } from '../lib/shared/game-id';",
-      "import { SEASON } from '../lib/season';",
+      "import { SEASON } from '../lib/config/season';",
       "import { DIVISIONS } from '../lib/seasons';",
     ].join('\n');
     expect(scanText('components/probe.tsx', good)).toEqual([]);

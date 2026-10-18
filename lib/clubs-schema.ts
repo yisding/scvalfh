@@ -67,7 +67,7 @@ export const CLUB_REGIONS = [
 export type ClubRegion = (typeof CLUB_REGIONS)[number];
 
 /**
- * The half of the site (the NorCal/SoCal toggle, lib/leagues.ts REGIONS) a club region sits in, which
+ * The half of the site (the NorCal/SoCal toggle, lib/config/leagues.ts REGIONS) a club region sits in, which
  * /clubs scopes its region sections by. `elsewhere` is in neither, so it shows under both.
  */
 export const CLUB_REGION_SITE_REGION: Record<ClubRegion, RegionId | null> = {

@@ -16,7 +16,7 @@ import TeamRoster from '@/components/teams/TeamRoster';
 import GridRowFiller, { fillerClasses } from '@/components/ui/GridRowFiller';
 import { buildRosterView, profileLabel, seasonPage, type RosterRow } from '@/components/teams/roster-view';
 import { getPlayerClubs } from '@/lib/clubs';
-import { LEAGUE_IDS } from '@/lib/leagues';
+import { LEAGUE_IDS } from '@/lib/config/leagues';
 import { getEnrichedTeamRoster } from '@/lib/rosters';
 import { TEAMS, teamsInLeague } from '@/lib/teams';
 import { textOf } from '@/tests/support/html-text';

@@ -36,7 +36,7 @@
  * Pure: no I/O, no clock — `today` is an input.
  */
 
-import { LEAGUES, getLeague } from './leagues';
+import { LEAGUES, getLeague } from './config/leagues';
 import type { OfficialFixture } from './model/fixture';
 import type { Game } from './model/game';
 import type { ContestId, DivisionId, LeagueId, TeamSlug } from './model/ids';

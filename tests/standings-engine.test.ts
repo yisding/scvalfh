@@ -6,7 +6,7 @@
 
 import { describe, expect, it } from 'vitest';
 
-import { getLeague } from '@/lib/leagues';
+import { getLeague } from '@/lib/config/leagues';
 import type { OfficialFixture } from '@/lib/model/fixture';
 import type { Game } from '@/lib/model/game';
 import type { ReportedRecord, Standing } from '@/lib/model/standings';

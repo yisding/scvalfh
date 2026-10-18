@@ -16,7 +16,7 @@
  *    keeping this run's row (a contest MaxPreps re-keyed since the last run).
  */
 
-import { DATA_QUALITY } from '@/lib/leagues';
+import { DATA_QUALITY } from '@/lib/config/leagues';
 import type { Game } from '@/lib/model/game';
 import { applyExclusions, dedupePhantomPairs, normalizeGames } from '@/lib/normalize';
 import type { PipelineContext, RunState } from '@/lib/pipeline/ledger';

@@ -2,7 +2,7 @@
  * The pure view models behind /playoffs (CCS) and /playoffs/<league> (league tournaments). No `fs`
  * and no `lib/data`: the pages read the snapshot and hand plain records down, so every builder here
  * is testable and safe anywhere. The only runtime imports are `lib/format/`, the pure config in
- * `lib/leagues` (for `ladderFactsFor`) and the standings view's `ladderLineAfter` (the seeds'
+ * `lib/config/leagues` (for `ladderFactsFor`) and the standings view's `ladderLineAfter` (the seeds'
  * tournament line). Server-only: no client component imports this module.
  *
  * CCS (SPEC §6.1, §10.7): the field is 16 teams, numbers only. Every CCS league qualifies by its own
@@ -23,10 +23,11 @@
  * rule), never blank.
  */
 
+import { getDivision, getLeague, ladderFor, leagueOfDivision } from '@/lib/config/leagues';
+import { divisionHeading } from '@/lib/config/leagues/labels';
 import { leagueClockPT, monthDay, shortDate, timeOfDayPT } from '@/lib/format/dates';
 import { ordinal, ordinalWord, placeWords, recordString, recordWords } from '@/lib/format/numbers';
 import { EM_DASH, listWords, numberWord, plural } from '@/lib/format/words';
-import { divisionHeading, getDivision, getLeague, ladderFor, leagueOfDivision } from '@/lib/leagues';
 
 import { ladderLineAfter, ladderRow } from '@/components/standings/standings-view';
 import { membershipSource } from '@/components/ui/membership-words';

@@ -6,6 +6,7 @@
 
 import { describe, expect, it } from 'vitest';
 
+import { SEASON_YEAR } from '@/lib/config/season';
 import { getPriorSeason } from '@/lib/prior-season';
 import {
   PRIOR_EXCLUDED_CONTEST_IDS,
@@ -16,7 +17,6 @@ import {
   seasonWindow,
   type PriorSeason,
 } from '@/lib/prior-season-schema';
-import { SEASON_YEAR } from '@/lib/season';
 import { ScheduleRowSchema, type ScheduleRow } from '@/lib/sources/maxpreps';
 import { TEAMS, getTeamBySlug } from '@/lib/teams';
 

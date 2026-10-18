@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
+import { CCS, getLeague } from '@/lib/config/leagues';
 import { dateSpan, longDate, monthDay } from '@/lib/format/dates';
-import { CCS, getLeague } from '@/lib/leagues';
 
 import Arrow from '@/components/ui/Arrow';
 import type { LeagueId } from '@/lib/model/ids';

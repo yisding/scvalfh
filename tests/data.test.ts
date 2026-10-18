@@ -10,7 +10,7 @@ import { writeFileSync } from 'node:fs';
 
 import { beforeAll, describe, expect, it } from 'vitest';
 
-import { getLeague } from '@/lib/leagues';
+import { getLeague } from '@/lib/config/leagues';
 import type { Game } from '@/lib/model/game';
 import type { Snapshot } from '@/lib/model/snapshot';
 import { buildSeason } from '@/lib/season-build';

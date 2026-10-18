@@ -1,15 +1,14 @@
 /**
- * Verified season constants: a dependency-free constants leaf (no imports), because client
- * modules reach it through lib/shared/dates.ts. League, division and CCS facts live in lib/leagues.ts; the
- * Season record is built by lib/season-build.ts (SPEC §13.3).
+ * Verified season constants: a constants leaf whose one import is the import-free base-URL leaf
+ * lib/config/source-urls.ts, because client modules reach it through lib/shared/dates.ts. League, division
+ * and CCS facts live in lib/config/leagues.ts; the Season record is built by lib/season-build.ts (SPEC §13.3).
  *
  * Every value below was read from a live response or an official PDF and carries its citation.
  * The bootstrap step in scripts/fetch-data.ts re-reads the season ids on every run and ABORTS
  * rather than publishing a half-migrated season if they ever change (SPEC §1.1h, §5.2).
  */
 
-export const MAXPREPS_API = 'https://production.api.maxpreps.com';
-export const MAXPREPS_WEB = 'https://www.maxpreps.com';
+import { MAXPREPS_WEB } from './source-urls';
 
 /** The bootstrap page whose __NEXT_DATA__ carries ssid + allSeasonId (SPEC §1.1h, verdict 5). */
 export const BOOTSTRAP_URL = `${MAXPREPS_WEB}/ca/field-hockey/`;
@@ -41,15 +40,6 @@ export const JV_SPORT_SEASON_ID = 'fae4fc22-6de6-47ae-972d-e290b0ec31ef';
 export const CCS_BRACKET_URL =
   `${MAXPREPS_WEB}/tournament/3jB4uWWtwk20vrdggAkzMA/field-hockey-26/` +
   '2026-central-coast-section-field-hockey-championship.htm';
-
-/** Section-wide deep links rendered by the Attribution component. League links live in lib/leagues.ts. */
-export const SOURCE_LINKS = {
-  maxpreps: `${MAXPREPS_WEB}/ca/field-hockey/`,
-  sblive: 'https://www.si.com/high-school/stats/california/field-hockey',
-  ccs: 'https://cifccs.org/sports/fh/index',
-  ccsCalendar: 'https://cifccs.org/calendar/Field_Hockey?print=ical',
-  cifss: 'https://www.cifsshome.org/widget/schedule-score',
-} as const;
 
 /** The IANA zone every date on the site is formatted in. */
 export const TIME_ZONE = 'America/Los_Angeles';

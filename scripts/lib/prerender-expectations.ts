@@ -5,7 +5,7 @@
  * fixed pages, the families' expected params and the per-family check live here once.
  *
  * The expectations come from the build's INPUT, never from its output: the snapshot (as lib/data.ts
- * loads it), the league config (`lib/leagues.ts`), the team registry (`lib/teams.ts`) and the clubs
+ * loads it), the league config (`lib/config/leagues.ts`), the team registry (`lib/teams.ts`) and the clubs
  * file (through lib/clubs.ts). Games take `gameIdToParam` (`sblive:N` → `sblive-N`), which
  * tests/game-id.test.ts holds and both gates' ':' check backs up.
  *
@@ -16,7 +16,7 @@
  */
 
 import { getClubSlugs } from '@/lib/clubs';
-import { LEAGUE_IDS, TOURNAMENT_LEAGUE_IDS } from '@/lib/leagues';
+import { LEAGUE_IDS, TOURNAMENT_LEAGUE_IDS } from '@/lib/config/leagues';
 import type { Snapshot } from '@/lib/model/snapshot';
 import { gameIdToParam } from '@/lib/shared/game-id';
 import { TEAMS } from '@/lib/teams';
@@ -70,7 +70,7 @@ export function sample(list: readonly string[]): string {
 export function expectedFamilies(snapshot: Snapshot, fail: (msg: string) => void): ExpectedFamilies {
   const snapshotLeagues = snapshot.season.leagues.map((l) => l.id);
   if (JSON.stringify(snapshotLeagues) !== JSON.stringify([...LEAGUE_IDS])) {
-    fail(`snapshot season.leagues [${snapshotLeagues.join(', ')}] ≠ lib/leagues.ts LEAGUE_IDS [${LEAGUE_IDS.join(', ')}]`);
+    fail(`snapshot season.leagues [${snapshotLeagues.join(', ')}] ≠ lib/config/leagues.ts LEAGUE_IDS [${LEAGUE_IDS.join(', ')}]`);
   }
 
   const gameParams = snapshot.games.map((g) => gameIdToParam(g.contestId));

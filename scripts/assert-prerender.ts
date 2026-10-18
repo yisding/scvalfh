@@ -6,7 +6,7 @@
  * The expected set is derived from the inputs of the build, never from its output: the snapshot
  * (`data/snapshot.json`, or `SCVAL_SNAPSHOT`, read through lib/data.ts' getSnapshot as the build
  * reads it, so a file written before a league was added is checked as the build rendered it,
- * upgraded), the league config (`lib/leagues.ts`) and the clubs file (`data/clubs.json`, through
+ * upgraded), the league config (`lib/config/leagues.ts`) and the clubs file (`data/clubs.json`, through
  * lib/clubs.ts). So a family that came back short, or long, or a page that lost its
  * generateStaticParams (it would render on demand instead), fails here by name:
  *

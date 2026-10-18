@@ -17,6 +17,7 @@ import { readFileSync } from 'node:fs';
 
 import bundledBrackets from '@/data/history-brackets-2025-26.json';
 import bundledHistory from '@/data/history-2025-26.json';
+import { LEAGUE_IDS, getLeague, getSection } from './config/leagues';
 import {
   BRACKET_SECTION_IDS,
   HistoryBracketsSchema,
@@ -36,7 +37,6 @@ import {
   type LeagueHistory,
   type UnavailableLeagueHistory,
 } from './history-schema';
-import { LEAGUE_IDS, getLeague, getSection } from './leagues';
 import type { DivisionId, LeagueId, SectionId, TeamSlug } from './model/ids';
 import { failValidation } from './schema-primitives';
 import { getTeamBySlug } from './teams';
@@ -93,7 +93,7 @@ export function getHistorySeason(): string {
   return history.season;
 }
 
-/** Every league's entry, in lib/leagues.ts order (SCVAL, BVAL, PCAL, MCAL, EAL). */
+/** Every league's entry, in lib/config/leagues.ts order (SCVAL, BVAL, PCAL, MCAL, EAL). */
 export function getHistoryLeagues(): Array<{ id: LeagueId; entry: LeagueHistory }> {
   return LEAGUE_IDS.map((leagueId) => ({ id: leagueId, entry: history.leagues[leagueId] }));
 }
@@ -243,7 +243,7 @@ const brackets = loadBrackets();
 
 /**
  * Each section with a 2025 bracket, with the league its block follows on /history/2025-26: the
- * section's last league in lib/leagues.ts order (PCAL for the CCS, Metro for the San Diego Section),
+ * section's last league in lib/config/leagues.ts order (PCAL for the CCS, Metro for the San Diego Section),
  * so the bracket sits after the leagues that fed it and inside their region.
  */
 export function getHistoryBrackets(): Array<{ id: BracketSectionId; bracket: SectionBracket; afterLeague: LeagueId }> {

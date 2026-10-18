@@ -9,6 +9,8 @@
  * SERVER-ONLY: reads lib/jv, which imports data/jv.json and the snapshot.
  */
 
+import { getDivision, getLeague, isSingleDivision } from '@/lib/config/leagues';
+import { divisionHeading } from '@/lib/config/leagues/labels';
 import { monthDay } from '@/lib/format/dates';
 import { ordinal, recordString } from '@/lib/format/numbers';
 import { listWords, plural } from '@/lib/format/words';
@@ -19,7 +21,6 @@ import {
   type JvDivisionTable,
   type JvStandingRow,
 } from '@/lib/jv-standings';
-import { divisionHeading, getDivision, getLeague, isSingleDivision } from '@/lib/leagues';
 import type { DivisionId, LeagueId, TeamSlug } from '@/lib/model/ids';
 import type { Team } from '@/lib/model/team';
 import { getTeamBySlug } from '@/lib/teams';

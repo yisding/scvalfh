@@ -67,7 +67,7 @@ import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import path from 'node:path';
 import { gzipSync } from 'node:zlib';
 
-import { LEAGUE_IDS } from '@/lib/leagues';
+import { LEAGUE_IDS } from '@/lib/config/leagues';
 import { SNAPSHOT_MAX_BYTES, SNAPSHOT_WARN_BYTES, budgetLabel } from '@/lib/pipeline/steps/assemble';
 
 const APP = '.next/server/app';

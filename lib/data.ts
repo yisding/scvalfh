@@ -14,27 +14,14 @@ import { readFileSync } from 'node:fs';
 
 import bundledSnapshot from '@/data/snapshot.json';
 
+import {
+  ALL_DIVISIONS, CCS, CCS_LEAGUE_IDS, DATA_QUALITY, LEAGUES, REGIONS, SECTIONS, TOURNAMENT_LEAGUE_IDS,
+  findDivision, findLeague, getDivision, getLeague, leagueOfDivision, leaguePlayEnds, leaguesInRegion,
+} from './config/leagues';
+import { divisionHeading } from './config/leagues/labels';
 import { dateSpan, leagueClock, shortDate } from './format/dates';
 import { ordinalWord, recordString } from './format/numbers';
 import { numberWord } from './format/words';
-import {
-  ALL_DIVISIONS,
-  CCS,
-  CCS_LEAGUE_IDS,
-  DATA_QUALITY,
-  LEAGUES,
-  REGIONS,
-  SECTIONS,
-  TOURNAMENT_LEAGUE_IDS,
-  divisionHeading,
-  findDivision,
-  findLeague,
-  getDivision,
-  getLeague,
-  leagueOfDivision,
-  leaguePlayEnds,
-  leaguesInRegion,
-} from './leagues';
 import type { CifssCrossCheck, CrossCheckRow, SbliveCrossCheck } from './model/crosscheck';
 import type { OfficialFixture } from './model/fixture';
 import type { Game, GameStatus, Outcome, Record3 } from './model/game';
@@ -261,7 +248,7 @@ export interface RegionSummary {
 /**
  * Regions → sections → leagues, config order (NorCal, then SoCal): what a page that renders each region in
  * its own wrapper (the region switcher's two halves) iterates. Every region has a section and every section a
- * league (lib/leagues.ts asserts both), so nothing here is empty.
+ * league (lib/config/leagues.ts asserts both), so nothing here is empty.
  */
 export function getRegionSummaries(): RegionSummary[] {
   return REGIONS.map((region) => {

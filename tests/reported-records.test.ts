@@ -13,7 +13,7 @@ import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 import { classifyGames } from '@/lib/classify';
-import { ALL_DIVISIONS, getDivision } from '@/lib/leagues';
+import { ALL_DIVISIONS, getDivision } from '@/lib/config/leagues';
 import type { TeamId } from '@/lib/model/ids';
 import type { ReportedRecord } from '@/lib/model/standings';
 import { normalizeGames } from '@/lib/normalize';

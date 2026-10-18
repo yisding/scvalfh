@@ -19,9 +19,9 @@
  * teams in that Section, so the North Coast Section's own Del Norte is never read as San Diego's.
  */
 
+import { SEASON_CALENDAR_YEAR } from '@/lib/config/season';
 import type { TeamSlug } from '@/lib/model/ids';
 import type { Team } from '@/lib/model/team';
-import { SEASON_CALENDAR_YEAR } from '@/lib/season';
 import { getTeamBySlug, normalizeTeamKey, resolveTeam } from '@/lib/teams';
 import { htmlUnescape } from './http';
 

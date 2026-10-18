@@ -22,7 +22,7 @@ import { textOf } from '@/tests/support/html-text';
 const LEAGUE = 'eal';
 const m = useCorpusModules(EAL_CORPUS, {
   data: () => import('@/lib/data'),
-  leagues: () => import('@/lib/leagues'),
+  leagues: () => import('@/lib/config/leagues'),
   sd: () => import('@/components/standings/standings-page-view'),
   view: () => import('@/components/standings/standings-view'),
   leagueStandings: () => import('@/app/standings/[league]/page'),
@@ -106,7 +106,7 @@ describe('/standings/eal', () => {
     // lib/standings.ts crossCheckSkipReason's words; that sentence is about Valley, not the EAL.
     expect(textOf(aboutHtml).replaceAll('MaxPreps publishes no table for this division', ''), 'app/about/page.tsx').not.toMatch(claims);
     const order = m.leagues.getLeague(LEAGUE).rules.citations.order;
-    expect(order, 'lib/leagues.ts EAL citations.order').toContain('§III.E.1 Super Regional seeding criteria are not applied here');
+    expect(order, 'lib/config/leagues/eal.ts EAL citations.order').toContain('§III.E.1 Super Regional seeding criteria are not applied here');
     expect(textOf(aboutHtml), 'app/about/page.tsx rules').toContain(`${order}.`);
     const alone = m.data.getStandings(LEAGUE).filter((r) => r.hasReportedResults && !r.tiebreak.shared);
     expect(alone.length, 'the EAL corpus has teams placed on points alone').toBeGreaterThan(0);
@@ -227,7 +227,7 @@ describe('/about, the EAL parts', () => {
   });
 
   it('prints no multi-team tie procedure for the EAL, whose chain has no step that separates teams', () => {
-    expect(m.leagues.getLeague(LEAGUE).rules.tiebreaks.default, 'lib/leagues.ts EAL chain').toEqual(['no-rule']);
+    expect(m.leagues.getLeague(LEAGUE).rules.tiebreaks.default, 'lib/config/leagues/eal.ts EAL chain').toEqual(['no-rule']);
     expect(textOf(rules()), 'app/about/page.tsx EAL rules').not.toContain('three or more teams are level');
     // Every other league with generated rules (SCVAL's by-laws are quoted) keeps the paragraph exactly when
     // its chain has a separating step: the Southern California leagues' lone 'no-rule' has none, like the EAL's.

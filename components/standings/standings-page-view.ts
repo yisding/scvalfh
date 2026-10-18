@@ -12,6 +12,10 @@
  */
 
 import {
+  REGIONS, getLeague, isIndependentLeague, leagueOfDivision, leaguePlayStarts,
+} from '@/lib/config/leagues';
+import { standaloneName } from '@/lib/config/leagues/labels';
+import {
   getCoLeaders,
   getCrossCheck,
   getFetchedAt,
@@ -31,7 +35,6 @@ import {
 import { shortDate } from '@/lib/format/dates';
 import { recordString } from '@/lib/format/numbers';
 import { plural } from '@/lib/format/words';
-import { REGIONS, getLeague, isIndependentLeague, leagueOfDivision, leaguePlayStarts, standaloneName } from '@/lib/leagues';
 import type { Game } from '@/lib/model/game';
 import type { DivisionId, LeagueId, RegionId } from '@/lib/model/ids';
 import { type RegionConfig } from '@/lib/model/league-config';
@@ -151,7 +154,7 @@ export function buildStandingsPageView(leagueId: LeagueId): StandingsPageView {
 export function buildNotice(leagueId: LeagueId, views: DivisionView[]): StandingsPageView['notice'] {
   if (views.some((v) => v.leagueFinals > 0)) return null;
   // The start date is config's (validated, so always set) and the count is games played so far,
-  // the same two facts the home PhaseLead reads (lib/leagues leaguePlayStarts, lib/data
+  // the same two facts the home PhaseLead reads (lib/config/leagues leaguePlayStarts, lib/data
   // getNonLeagueFinalsPlayed), so the two notices cannot disagree.
   const nonLeagueFinals = getNonLeagueFinalsPlayed(leagueId);
   return {

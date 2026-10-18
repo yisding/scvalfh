@@ -5,7 +5,7 @@
 
 import { describe, expect, it } from 'vitest';
 
-import { LEAGUES } from '@/lib/leagues';
+import { LEAGUES } from '@/lib/config/leagues';
 import type { SourceStatus } from '@/lib/model/health';
 import type { Snapshot } from '@/lib/model/snapshot';
 import {

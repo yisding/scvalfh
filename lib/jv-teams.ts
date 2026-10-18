@@ -2,7 +2,7 @@
  * Where each registry school's JV team lives on the two sources scripts/fetch-jv.ts reads.
  *
  * MaxPreps needs nothing new: a school's JV games come from the same schedule-calculated call as
- * its varsity games, with JV_SPORT_SEASON_ID (lib/season.ts) and the school's own id, which is the
+ * its varsity games, with JV_SPORT_SEASON_ID (lib/config/season.ts) and the school's own id, which is the
  * registry id. Its human-facing JV pages sit under the varsity team URL, at `jv/schedule/`.
  *
  * si.com gives each JV team its own team id and web path, distinct from the varsity one in the

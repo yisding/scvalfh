@@ -14,9 +14,9 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { LEAGUES } from '@/lib/leagues';
+import { LEAGUES } from '@/lib/config/leagues';
+import { officialDocumentOf } from '@/lib/config/leagues/official';
 import type { Snapshot } from '@/lib/model/snapshot';
-import { officialDocumentOf } from '@/lib/official/schema';
 import { SNAPSHOT_MAX_BYTES, SNAPSHOT_WARN_BYTES, SOURCES_MAX, budgetLabel } from '@/lib/pipeline/steps/assemble';
 import { loadSnapshot, snapshotContentHash } from '@/lib/snapshot-schema';
 import { TEAMS, getTeamBySlug } from '@/lib/teams';
