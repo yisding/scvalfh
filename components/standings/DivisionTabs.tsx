@@ -17,7 +17,8 @@
  *    scrollbar drawn; the cut-off pill is the cue, and tabbing to it scrolls it into view) instead
  *    of widening the page. The 44px anchors sit inside the 48px bar, so the focus ring is not
  *    clipped by the scroll box.
- *  - `inline` (≥768px): static, right-aligned in the page title row via PageHeader's `aside`.
+ *  - `inline` (≥768px): static, in PageHeader's `aside`: under the title below 1024px, beside it
+ *    from 1024px.
  *
  * Each pill is a 36px capsule inside a 44px anchor, so the target is the full 44px (DESIGN §10.9).
  * The capsule is drawn like the page's other link pills — the surface with a 1px ring — because

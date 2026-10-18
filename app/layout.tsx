@@ -34,6 +34,31 @@ import './globals.css';
  * The budget is restated against the framework floor instead — see the note at the top of
  * docs/DESIGN.md.
  */
+/*
+ * The fallbacks are what the text is set in until the faces land (and for good if they never do),
+ * so they are chosen for WIDTH, not just for being present. Each list is written inline, not as a
+ * shared const: vinext's font plugin reads these options from the source and only self-hosts a
+ * call whose object is all literals (node_modules/vinext/dist/plugins/fonts.js).
+ *
+ * Sans keeps next/font's metric-adjusted "Geist Fallback" (Arial at size-adjust 104.76%) and
+ * takes NO `fallback` list: under Turbopack a `fallback` REPLACES the adjusted face rather than
+ * following it (the built CSS lost "Geist Fallback" altogether; webpack and vinext keep both).
+ * The generic tail (`ui-sans-serif, system-ui, sans-serif`) is appended where the variable is
+ * used instead, by `--font-sans` in app/globals.css' @theme and by `body`, so a reader without
+ * Arial (Android, most Linux) still gets a sans. The bold twin of "Geist Fallback" (600–900) is
+ * app/globals.css' own @font-face.
+ *
+ * Mono drops the adjusted fallback (`adjustFontFallback: false`). next/font only knows Arial's and
+ * Times' metrics, so its "Geist Mono Fallback" was Arial at size-adjust 134.59%: a proportional
+ * face blown up until its AVERAGE advance matched, which set tags 27–29% and `.sx-num` figures
+ * 6–21% wider than Geist Mono until it loaded (measured on /, /schedule/scval and
+ * /teams/cupertino, Arial simulated), and not monospaced at all. A system monospace has Geist
+ * Mono's 0.6em advance, so the fallback is one: app/globals.css declares "Geist Mono Fallback"
+ * (SF Mono, Menlo, Liberation Mono, DejaVu Sans Mono … with Geist Mono's line metrics) and
+ * "Geist Mono Fallback Narrow" (Consolas, size-adjusted from 0.55em), then the named families and
+ * the generic follow for a reader with neither. Measured with the faces blocked: 0.0% width change
+ * on the swap.
+ */
 const geistSans = Geist({
   variable: '--font-geist-sans',
   subsets: ['latin'],
@@ -44,6 +69,17 @@ const geistMono = Geist_Mono({
   variable: '--font-geist-mono',
   subsets: ['latin'],
   display: 'swap',
+  adjustFontFallback: false,
+  fallback: [
+    'Geist Mono Fallback',
+    'Geist Mono Fallback Narrow',
+    'ui-monospace',
+    'SFMono-Regular',
+    'Menlo',
+    'Consolas',
+    'Liberation Mono',
+    'monospace',
+  ],
 });
 
 export const metadata: Metadata = {

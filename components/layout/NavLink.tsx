@@ -168,11 +168,16 @@ function TopFace({
   // ink, semibold, with a 2px ink underline drawn inside the box's bottom edge: the section you
   // are in reads like a ruled tab, not a tinted capsule. The press grey sits on the same box.
   // 10px of side padding below 1024px, 12px from there (components/layout/SiteHeader.tsx has the
-  // measurements for the seven links).
+  // measurements for the seven links). The box holds its label's semibold width lit or not
+  // (`.sx-weight-hold`, globals.css: a column whose hidden zero-height last item is the label in
+  // semibold; the sr-only suffix is out of flow), so the current item, or the pending one, never
+  // pushes the items after it sideways. The box itself, not a span inside it: this is a client
+  // module, and the extra element put `/teams` past its first-load JS budget.
   return (
     <span
       data-pending={pending && !active ? '' : undefined}
-      className={`sx-indicator inline-flex h-9 items-center rounded-chip px-2.5 text-meta transition-colors duration-[var(--sx-dur-tap)] lg:px-3 ${
+      data-label={label}
+      className={`sx-indicator sx-weight-hold h-9 justify-center rounded-chip px-2.5 text-meta transition-colors duration-[var(--sx-dur-tap)] lg:px-3 ${
         lit
           ? 'rounded-b-none font-semibold text-ink shadow-[inset_0_-2px_0_var(--sx-text)]'
           : 'font-medium group-hover:bg-surface-2 group-hover:text-ink group-active:bg-surface-2'

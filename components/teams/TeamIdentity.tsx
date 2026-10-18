@@ -30,9 +30,26 @@ import { placeScope } from './team-view';
  *
  * Pinning here also remembers the team's league (`PinControl`'s `leagueId`, SPEC §8.2).
  *
+ * The hero's first child is a one-rule `<style>` for its own slug (`pinSelfCss`): when the pinned
+ * team is THIS team (`html[data-pin]`, stamped pre-paint by the prefs script), it switches off
+ * PinControl's pre-hydration "This replaces your pinned team." note before it can paint. Without it
+ * the note showed on the pinned team's own page until DOMContentLoaded, when the head script marks
+ * the hero `[data-pinned]`, and on a phone the page then jumped up 28px (app/globals.css,
+ * `.sx-pin-other`). A `<style>` is `display: none`, so it is no flex item in the hero.
+ *
  * The tile is the school's mascot, self-hosted from public/mascots/ (DESIGN §7.1, §12.4): no
  * image is ever requested from a third party.
  */
+/**
+ * The rule for one slug, or null for anything that is not a registry slug. Slugs are
+ * `[a-z0-9-]+` (the prefs script holds `data-pin` to the same pattern), so the value needs no CSS
+ * escaping and can never close the attribute selector or the `<style>`.
+ */
+export function pinSelfCss(slug: string): string | null {
+  if (!/^[a-z0-9-]+$/.test(slug)) return null;
+  return `html[data-pin="${slug}"] [data-team-slug="${slug}"]{--sx-pin-other:none}`;
+}
+
 export interface TeamIdentityProps {
   view: TeamPageView;
   knownSlugs: readonly string[];
@@ -42,12 +59,14 @@ export function TeamIdentity({ view, knownSlugs }: TeamIdentityProps) {
   const { team, standing, hasResults } = view;
   const place = hasResults && standing ? standing.computed.place : null;
   const shared = place !== null && (standing?.tiebreak.shared ?? false);
+  const pinSelf = pinSelfCss(team.slug);
 
   return (
     <header
       data-team-slug={team.slug}
       className="sx-card mt-6 flex flex-wrap items-center gap-x-4 gap-y-3 p-4 md:gap-5 md:p-6"
     >
+      {pinSelf ? <style dangerouslySetInnerHTML={{ __html: pinSelf }} /> : null}
       {/* Two decorative monograms, one per breakpoint. Each sits in its own wrapper because the
           monogram's own `inline-flex` would otherwise compete with `hidden` in the cascade. */}
       <span className="flex shrink-0 md:hidden">

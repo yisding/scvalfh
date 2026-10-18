@@ -166,3 +166,49 @@ describe('RegionSwitcher', () => {
     expect(html).not.toContain('data-region-scope');
   });
 });
+
+/**
+ * One chip width on every page. A chip's check is laid out whether or not the chip is current
+ * (globals.css shows only the current one's), so a per-league page's row is the same row on every
+ * league page; before, link mode rendered it on the current chip alone, which widened that chip by
+ * 14.6px and wrapped the row on some league pages and not others. The check is drawn
+ * (`.sx-check`, globals.css), never the U+2713 glyph, which Geist's served subset lacks.
+ */
+describe('the chip check', () => {
+  const chipsOf = (html: string) =>
+    [...html.matchAll(/<(a|button)\b[^>]*class="sx-league-chip[^"]*"[^>]*>([\s\S]*?)<\/\1>/g)].map((m) => m[2]);
+  const link = (current?: string) =>
+    renderToStaticMarkup(
+      createElement(LeagueSwitcher, { mode: 'link', includeAll: true, label: 'Leagues', leagues: CHIPS, hrefs: HREFS, current }),
+    );
+  const scope = () =>
+    renderToStaticMarkup(createElement(LeagueSwitcher, { mode: 'scope', includeAll: true, label: 'Your league', leagues: CHIPS }));
+
+  it.each(['scval', 'eal', undefined])('link mode lays the check out on every chip (current: %s)', (current) => {
+    const html = link(current);
+    const chips = chipsOf(html);
+    expect(chips).toHaveLength(CHIPS.length + 1);
+    for (const chip of chips) {
+      expect(chip, 'components/layout/LeagueSwitcher.tsx').toMatch(/^<span aria-hidden="true" class="sx-check sx-chip-check"><\/span>/);
+    }
+    expect(html.match(/aria-current="page"/g)).toHaveLength(1);
+  });
+
+  it('scope chips and region segments carry the same drawn check; anchor chips carry none', () => {
+    const scopeChips = chipsOf(scope());
+    const regionChips = chipsOf(renderToStaticMarkup(createElement(RegionSwitcher, {})));
+    expect(scopeChips).toHaveLength(CHIPS.length + 1);
+    expect(regionChips).toHaveLength(2);
+    for (const chip of [...scopeChips, ...regionChips]) expect(chip).toContain('sx-chip-check');
+    const anchor = renderToStaticMarkup(
+      createElement(LeagueSwitcher, { mode: 'anchor', label: 'Leagues', leagues: CHIPS, hrefs: ANCHOR_HREFS }),
+    );
+    expect(anchor).not.toContain('sx-chip-check');
+  });
+
+  it('never types the glyph', () => {
+    for (const html of [link('bval'), scope(), renderToStaticMarkup(createElement(RegionSwitcher, {}))]) {
+      expect(html).not.toContain('✓');
+    }
+  });
+});

@@ -28,9 +28,11 @@ import TopNav from './TopNav';
  * DESIGN §18 and the widest stamp, "Updated Wed Nov 30 12:48 PM", forced in): the short wordmark's
  * link ("NorCal HS FH", 4px apart) is 115px wide with its padding, the full one (8px apart) 193px;
  * the gap from the wordmark to the stamp is ≈ 12px at 360, of which 8px is the row's own gap, so
- * 4px is spare; the nav clears the toggle by ≈ 63px at 768; the stamp leaves ≈ 28px at 896 (56rem),
- * ≈ 90px at 1024 with its weekday and ≈ 172px at 1280 beside the full wordmark. The full wordmark
- * at 1024 would leave ≈ 12px, which is why it still waits for 1280. The 4px between "NorCal HS" and
+ * 4px is spare; the nav clears the toggle by ≈ 55px at 768; the stamp leaves ≈ 21px at 896 (56rem),
+ * ≈ 83px at 1024 with its weekday and ≈ 165px at 1280 beside the full wordmark. The full wordmark
+ * at 1024 would leave ≈ 5px, which is why it still waits for 1280. (Each nav figure is 7.3px less
+ * than when first measured, 63 / 28 / 90 / 172 / 12: since 2026-10-18 every link holds its
+ * semibold width at rest, NavLink.tsx, so the current page no longer moves the links after it.) The 4px between "NorCal HS" and
  * "FH" is what fits 360: at 8px the widest stamp had 0.1px to spare. The stale pill ("Updated 12
  * days ago") is narrower than the widest stamp. (Eight links, DESIGN §16, needed tighter capsules
  * and a later stamp; §18's merge of Standings into Teams gave the room back.)

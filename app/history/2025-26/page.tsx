@@ -4,7 +4,7 @@ import Link from 'next/link';
 import AwardsBlock from '../../../components/history/AwardsBlock';
 import { divisionChampion, finalLine, sideName } from '../../../components/history/bracket-view';
 import HistoryBracket from '../../../components/history/HistoryBracket';
-import HistoryStandingsTable from '../../../components/history/HistoryStandingsTable';
+import HistoryStandingsTable, { leagueHasOverall } from '../../../components/history/HistoryStandingsTable';
 import ExternalLink from '../../../components/ui/ExternalLink';
 import { RegionSwitcher } from '../../../components/layout/LeagueSwitcher';
 import PageHeader from '../../../components/layout/PageHeader';
@@ -150,6 +150,9 @@ function AvailableLeague({ leagueId, entry }: { leagueId: LeagueId; entry: Avail
   const hasJv = divisions.some((d) => d.standings.jv.length > 0);
   const hasVarsityAwards = divisions.some((d) => d.awards.varsity !== null);
   const hasJvAwards = divisions.some((d) => d.awards.jv !== null);
+  // The Overall column too: every standings table of a league draws it or none does, so the
+  // League and Overall columns sit at one x down the league's section and across its divisions.
+  const hasOverall = leagueHasOverall(divisions.flatMap((d) => [d.standings.varsity, d.standings.jv]));
   const blocks = 1 + (hasJv ? 1 : 0) + (hasVarsityAwards ? 1 : 0) + (hasJvAwards ? 1 : 0);
   const rows = blocks * 2;
   const changes = getHistoryDivisionChanges(leagueId);
@@ -188,6 +191,7 @@ function AvailableLeague({ leagueId, entry }: { leagueId: LeagueId; entry: Avail
                 rows={d.standings.varsity}
                 caption={`${league.shortName} ${label} varsity final standings, ${SEASON}`}
                 emptyLabel="No varsity standings were published for this division."
+                hasOverall={hasOverall}
               />
 
               {hasJv ? (
@@ -197,6 +201,7 @@ function AvailableLeague({ leagueId, entry }: { leagueId: LeagueId; entry: Avail
                     rows={d.standings.jv}
                     caption={`${league.shortName} ${label} JV final standings, ${SEASON}`}
                     emptyLabel="No JV standings were published for this division."
+                    hasOverall={hasOverall}
                   />
                 </>
               ) : null}

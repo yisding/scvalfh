@@ -60,24 +60,49 @@ function SourceMark({ display }: { display: Pick<GameDisplay, 'sourceMark'> }) {
 }
 
 /**
+ * The postseason chip. A league or NL chip is a code of at most six letters (SUNSET, 59.5px), but
+ * a postseason chip is a phrase — `SCVAL crossover` is 131px, `San Diego Section playoffs` 218px —
+ * wider than a row's 80px lead column or a fixed tag track. As a nowrap `Tag` it ran out of its
+ * column over the team lines beside it, so it is Tag's face (mono caps on surface-3, 20px for one
+ * line) on an `inline-block` capsule, as StatusChip is: a phrase too wide for its column grows into
+ * ONE taller capsule, and `break-words` breaks a single word wider than the column (`TOURNAMENT`,
+ * 91px) rather than letting it overflow.
+ */
+function PostseasonChip({ tag }: { tag: string }) {
+  return (
+    <span className="inline-block min-w-0 max-w-full break-words rounded-tag bg-surface-3 px-1.5 py-0.5 font-mono text-kicker uppercase text-ink-2">
+      <span aria-hidden="true">{tag}</span>
+      <span className="sr-only">{tag}</span>
+    </span>
+  );
+}
+
+/**
  * The league / NL and postseason chips alone, for a row that prints them apart from its status
  * label (GameRow's lead column, a scheduled GameCard whose label is its own clock time). Renders
  * nothing when the game has none. The † travels with the score, in StatusLabel.
+ *
+ * `part` splits them for a host with a fixed-width tag track (GameLine): `'codes'` is the league /
+ * NL code alone, `'phrase'` the postseason chip alone, which that host prints on its own line.
  */
 export function GameChips({
   display,
   className,
+  part = 'all',
 }: {
   display: Pick<GameDisplay, 'leagueTag' | 'postseasonTag' | 'isNonLeague'>;
   className?: string;
+  part?: 'all' | 'codes' | 'phrase';
 }) {
-  const { leagueTag, postseasonTag, isNonLeague } = display;
+  const leagueTag = part === 'phrase' ? null : display.leagueTag;
+  const isNonLeague = part === 'phrase' ? false : display.isNonLeague;
+  const postseasonTag = part === 'codes' ? null : display.postseasonTag;
   if (!leagueTag && !postseasonTag && !isNonLeague) return null;
   return (
-    <span className={['inline-flex flex-wrap items-center gap-1', className].filter(Boolean).join(' ')}>
+    <span className={['inline-flex max-w-full flex-wrap items-center gap-1', className].filter(Boolean).join(' ')}>
       {leagueTag ? <Tag label={`${leagueTag} league game`}>{leagueTag}</Tag> : null}
       {isNonLeague ? <Tag label="non-league">NL</Tag> : null}
-      {postseasonTag ? <Tag label={postseasonTag}>{postseasonTag}</Tag> : null}
+      {postseasonTag ? <PostseasonChip tag={postseasonTag} /> : null}
     </span>
   );
 }

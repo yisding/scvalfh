@@ -89,10 +89,19 @@ function SeedsTable({ view, leagueShort }: { view: TournamentView; leagueShort: 
               #
             </th>
             <th scope="col">Team</th>
-            <th scope="col" className="w-px pr-gutter pl-2 text-right tracking-normal sm:pr-2">
+            {/* PTS and GP are fixed widths, not shrink-wrapped (`w-px`): sized by their text, a
+                "9 pts" table and a "37 pts" one, or "9/16" and "14/16", put Team's edge and every
+                column after it somewhere else. Each is its longest value in 13px mono (7.8px a
+                glyph) plus its padding. PTS: "37 pts" (6ch) + 8 + 16 = 71 below sm, where it
+                carries the unit and the gutter; "37" or the 12px head "PTS" + 8 + 8 = 39 from sm.
+                GP: "14/16" (5ch) + 8 + 16 = 63 at sm, + 8 + 8 = 55 from md. */}
+            <th scope="col" className="w-[4.5rem] pr-gutter pl-2 text-right tracking-normal sm:w-10 sm:pr-2">
               PTS
             </th>
-            <th scope="col" className="hidden w-px pr-gutter pl-2 text-right tracking-normal sm:table-cell md:pr-2">
+            <th
+              scope="col"
+              className="hidden w-16 pr-gutter pl-2 text-right tracking-normal sm:table-cell md:w-14 md:pr-2"
+            >
               GP
             </th>
             <th scope="col" className="hidden pr-4 pl-3 md:table-cell md:w-52">
@@ -166,17 +175,31 @@ function SlotText({ slot }: { slot: TournamentSlotView }) {
   );
 }
 
-/** One bracket game: 'away at home' (or 'vs' at a fixed site), the result link once it exists. */
+/**
+ * One bracket game: 'away at home' (or 'vs' at a fixed site), the result link once it exists.
+ *
+ * From md the line is three columns, like the play-in card's pairing (PlayInCard): the first side,
+ * a 2rem connector column, the second side. As a wrapped sentence the connector sat wherever the
+ * first name ended (x = 123, 180, 181, 274 and 326 across MCAL's five games at 768), so no two
+ * games' second sides lined up. Below md the sentence still wraps, but the connector travels with
+ * the second side as one unit (a hanging indent under "at" when that side itself wraps), so a line
+ * never ends on "at": at 390 two games did.
+ */
 function BracketGame({ game }: { game: TournamentGameView }) {
   const first = game.connector === 'vs' ? game.home : game.away;
   const second = game.connector === 'vs' ? game.away : game.home;
   return (
     <div className="px-4 py-3">
       <span className="sr-only">{game.line}.</span>
-      <p className="m-0 flex flex-wrap items-baseline gap-x-2 text-body" aria-hidden="true">
+      <p
+        className="m-0 flex flex-wrap items-baseline gap-x-2 text-body md:grid md:grid-cols-[minmax(0,1fr)_2rem_minmax(0,1fr)]"
+        aria-hidden="true"
+      >
         <SlotText slot={first} />
-        <span className="text-meta text-ink-3">{game.connector}</span>
-        <SlotText slot={second} />
+        <span className="flex min-w-0 items-baseline gap-x-2 md:contents">
+          <span className="shrink-0 text-meta text-ink-3 md:text-center">{game.connector}</span>
+          <SlotText slot={second} />
+        </span>
       </p>
       {game.game ? (
         <p className="mt-1 mb-0 text-meta">

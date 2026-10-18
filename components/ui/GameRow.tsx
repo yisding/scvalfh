@@ -26,8 +26,9 @@ import {
 /**
  * GameRow / GameCard / GameLine / GameLogRow (DESIGN §7.4, modernization brief §4.15).
  *
- * A row is a three-column grid: a lead column (date · time · the written status label), the two
- * team lines — AWAY on top, HOME below, each `[chip] [monogram] [name] [score]` — and a chevron.
+ * A row is a three-column grid: a lead column (clock · the written status label · the chips, in
+ * three fixed slots: SummaryLead), the two team lines — AWAY on top, HOME below, each `[chip]
+ * [monogram] [name] [score]` — and a chevron.
  * The score column is mono/tabular so scores align down a list, and the winner's number is 600
  * weight in `--sx-text` against the loser's 400 in `--sx-text-2` (the fourth redundant channel,
  * R-19). Exactly two ScoreGlyphs per row, away then home.
@@ -162,6 +163,7 @@ function TeamLine({
   side,
   showScore,
   chipSlot = true,
+  monogram = true,
   showRecord = false,
   scopeLeague,
 }: {
@@ -169,6 +171,11 @@ function TeamLine({
   showScore: boolean;
   /** false drops the chip column entirely (a GameCard where neither side has a chip). */
   chipSlot?: boolean;
+  /**
+   * false drops the mascot tile: Home's ResultRow, whose page carries every league's panel in its
+   * static HTML and is held to a markup budget (SPEC §12.4).
+   */
+  monogram?: boolean;
   /** Print the side's league record after its name (`showRecords`, already gated by the row). */
   showRecord?: boolean;
   scopeLeague?: LeagueId | null;
@@ -189,7 +196,7 @@ function TeamLine({
     // printed in the loser's grey.
     <span className="flex min-h-6 items-center gap-2">
       {chipSlot ? <ResultChip kind={side.chip} size={20} /> : null}
-      {team ? (
+      {!monogram ? null : team ? (
         <TeamMonogram team={team} size={24} />
       ) : (
         <GhostMonogram name={side.name} size={24} title={NON_MEMBER_NOTE} />
@@ -229,6 +236,119 @@ function TeamLine({
           <ScoreGlyph side={side} size="score" />
         </span>
       ) : null}
+    </span>
+  );
+}
+
+/**
+ * The lead column of a game summary row — GameRow's `<summary>` and Home's ResultRow
+ * (components/home/LatestScores.tsx), which renders this same component so the two faces of one
+ * game cannot drift apart. Three FIXED slots, top to bottom:
+ *
+ *   clock   16px  `4:00 PM`, mono 13px; struck through for a postponed game.
+ *   status  16px  the status word and its decider tag (`FINAL`, `FINAL 2 OT`, `POSTPONED`), and
+ *                 the † of a si.com score. Empty for a scheduled game: its status IS the clock.
+ *   chips   20px  the league / NL code (`SCVAL`, `NL`), or the postseason chip. Reserved when the
+ *                 game has none, so a row with chips and a row without are one height.
+ *
+ * 52px in all — the two 24px team lines and their 4px gap — so the row is its 76px
+ * `min-h-gamerow` whatever its labels say, and the team block never re-centres. Before, the
+ * status word and the chips shared one wrapping line: FINAL + NL (64px) fitted the 80px column
+ * but FINAL + SCVAL (90px) did not, so the code dropped to a third line and one /schedule list
+ * mixed 76, 86, 92 and 100px rows, its names shifting a few px each time.
+ *
+ * Widths at 12px: FINAL is 34.5px at normal tracking and a decider tag, 4px later and with the
+ * lead's 4px tag padding, at most 39.7px (`2 OT`), so `FINAL 2 OT` is 78px of the 80; the decider
+ * tag is 16px tall here so it fits the 16px slot. The widest league code, SUNSET, is 55.5px. What
+ * cannot fit one 80px line wraps INSIDE its slot and that row grows: SCORE NOT REPORTED (135px;
+ * two 12px caps lines, an 84px row), a shootout tally, a `2 OT` tag with the † beside it, and a
+ * postseason phrase, which grows into one taller capsule (GameChips).
+ */
+export function SummaryLead({
+  game,
+  display,
+  showDate = false,
+  showTime = true,
+  showChips = true,
+}: {
+  game: Game;
+  display: GameDisplay;
+  /** No caller passes it today: it adds a fourth slot above the clock, and the row grows. */
+  showDate?: boolean;
+  /** false drops the clock slot (the team page's expanded Last row, under its own date header). */
+  showTime?: boolean;
+  showChips?: boolean;
+}) {
+  // A scheduled game's status label IS its time ("4:00 PM", "TIME TBA"), so under the clock line
+  // it would only repeat it: the status slot stays empty (GameCard does the same).
+  const statusIsTime = statusLabelIsTime(game, display.statusLabel);
+  return (
+    // `[&_.rounded-tag]:px-1`: every tag in the lead (decider, codes, postseason capsule) takes
+    // 4px of padding instead of 6, the 4px that lets `FINAL 2 OT` keep one line. A descendant
+    // rule, so it outranks Tag's own `px-1.5` without depending on stylesheet order.
+    <span className="flex min-w-0 flex-col [&_.rounded-tag]:px-1" aria-hidden="true">
+      {showDate ? (
+        <span className="sx-num text-cell leading-4 text-ink-2">{monthDay(game.dateLocal)}</span>
+      ) : null}
+      {showTime ? (
+        // ONE clock line in ONE face for every state, as GameCard prints it ("4:00 PM", mono): a
+        // final and the upcoming game under it no longer switch faces. "12:00 PM" is 62px.
+        // `display.sentence` carries PT.
+        <span
+          className={[
+            'sx-num h-4 whitespace-nowrap text-cell leading-4 text-ink-2',
+            display.strikeTime ? 'line-through' : null,
+          ]
+            .filter(Boolean)
+            .join(' ')}
+        >
+          {game.isTimeTba ? 'TBA' : timeOfDay(game.dateLocal)}
+        </span>
+      ) : null}
+      {/* StatusLabel's own gap (6px), tracking (0.04em) and line (16px) are tightened from here,
+          by child rules that outrank its classes: 4px, normal tracking, 12px lines (all caps, so
+          two lines of SCORE NOT REPORTED are 24px), and a 16px decider tag. */}
+      <span className="flex min-h-4 items-center [&>span]:gap-x-1 [&>span]:leading-3 [&>span]:tracking-normal [&_.rounded-tag]:h-4">
+        {statusIsTime && showTime ? null : <StatusLabel display={display} showChips={false} />}
+      </span>
+      <span className="flex min-h-5 items-center">
+        {showChips ? <GameChips display={display} /> : null}
+      </span>
+    </span>
+  );
+}
+
+/**
+ * The two team lines of a summary row, away over home (GameRow, Home's ResultRow). 24px each,
+ * 4px apart: the 52px block SummaryLead's slots are measured against.
+ */
+export function SummaryTeams({
+  display,
+  showRecords = false,
+  scopeLeague = null,
+  monogram = true,
+}: {
+  display: GameDisplay;
+  showRecords?: boolean;
+  scopeLeague?: LeagueId | null;
+  monogram?: boolean;
+}) {
+  return (
+    <span className="min-w-0 space-y-1" aria-hidden="true">
+      <TeamLine
+        side={display.away}
+        showScore={display.showScores}
+        monogram={monogram}
+        showRecord={showRecords}
+        scopeLeague={scopeLeague}
+      />
+      <TeamLine
+        side={display.home}
+        showScore={display.showScores}
+        monogram={monogram}
+        showRecord={showRecords}
+        scopeLeague={scopeLeague}
+      />
     </span>
   );
 }
@@ -305,17 +425,6 @@ export function GameRow({
 }: GameViewProps) {
   const display = describeGame(game, perspective);
   const withRecords = recordsApply(game, display, showRecords);
-  // ONE clock line in ONE face for every state, as GameCard prints it ("4:00 PM", mono): a final
-  // and the upcoming game under it no longer switch between `4:00` and a sans-caps `4:00 PM`.
-  // "12:00 PM" is 63px at 13px mono, inside the 80px lead column. `display.sentence` carries PT.
-  const when = game.isTimeTba ? 'TBA' : timeOfDay(game.dateLocal);
-  // A scheduled game's status label IS its time ("4:00 PM", "TIME TBA"), so under the clock line
-  // it would only repeat it: only the NL tag is left to say there (GameCard does the same).
-  const statusIsTime = statusLabelIsTime(game, display.statusLabel);
-  const timeLine = showTime;
-  // The league / NL / postseason chips (SPEC §10.4), printed here so the status word above keeps
-  // its own line; the † for a si.com score stays with the status label.
-  const chips = showChips ? <GameChips display={display} /> : null;
   return (
     <details
       open={defaultExpanded || undefined}
@@ -327,12 +436,11 @@ export function GameRow({
         .filter(Boolean)
         .join(' ')}
     >
-      {/* Three columns — lead (date · time · status), the two team lines, the chevron — so the
-          status word never pushes a team line onto a third row. The lead column is 80px at every
-          phone width: "SCORE NOT REPORTED" breaks into two 14px lines ("SCORE NOT" is 73px) and
-          POSTPONED (78px) fits, so the lead stack is no taller than the 52px team block. At 320 a
-          70px column broke it into three lines and grew the row to 90px; the 10px comes back
-          from the score column, which is now sized to its glyph. */}
+      {/* Three columns — lead (clock · status · chips, SummaryLead), the two team lines, the
+          chevron — so the status word never pushes a team line onto a third row. The lead column
+          is 80px at every phone width and its three slots are fixed, so the row is 76px whatever
+          its labels say. At 320 a 70px column broke a label into three lines and grew the row to
+          90px; the 10px comes back from the score column, which is sized to its glyph. */}
       {/* The ring is inset: the row is an edge-to-edge band, and an outset ring would be clipped
           by the screen edge (or by a /schedule date group's paint containment). */}
       <summary className="sx-tap relative grid min-h-gamerow cursor-pointer list-none grid-cols-[5rem_minmax(0,1fr)_1rem] items-center gap-x-2 px-gutter py-3 focus-visible:-outline-offset-2 [&::-webkit-details-marker]:hidden">
@@ -343,54 +451,16 @@ export function GameRow({
           {chipsSentence(display, showChips)}
           {withRecords ? recordsSentence(display) : ''}
         </span>
-        {/* The lead column stretches to the team block and spreads its two lines to its ends, so
-            the clock sits on the AWAY name's line and the status on the HOME name's: each is a
-            24px line (`leading-6` / `min-h-6`) to match a 24px team line. With `self-start` and a
-            4px gap they floated between the two names instead. If `showDate` is ever passed (no
-            caller does today) it makes three lines, and this column needs `gap-1` back without
-            `justify-between`. */}
-        <span className="flex min-w-0 flex-col justify-between self-stretch" aria-hidden="true">
-          {showDate ? (
-            <span className="sx-num text-cell text-ink-2">{monthDay(game.dateLocal)}</span>
-          ) : null}
-          {timeLine ? (
-            <span
-              className={[
-                'sx-num text-cell leading-6 text-ink-2',
-                display.strikeTime ? 'line-through' : null,
-              ]
-                .filter(Boolean)
-                .join(' ')}
-            >
-              {when}
-            </span>
-          ) : null}
-          {statusIsTime && timeLine ? (
-            chips ? <span className="flex min-h-6 items-center">{chips}</span> : null
-          ) : (
-            // The status word and the NL tag share one wrapping line, 4px apart: FINAL (38px) +
-            // NL (26px) fits 80px, so a final non-league row is two lines, not three. Tracking is
-            // normal and the line 14px here only, so a long label takes two tight lines.
-            <span className="flex min-h-6 flex-wrap items-center gap-1 [&>span:first-child]:leading-[0.875rem] [&>span:first-child]:tracking-normal">
-              <StatusLabel display={display} showChips={false} />
-              {chips}
-            </span>
-          )}
-        </span>
-        <span className="min-w-0 space-y-1" aria-hidden="true">
-          <TeamLine
-            side={display.away}
-            showScore={display.showScores}
-            showRecord={withRecords}
-            scopeLeague={scopeLeague}
-          />
-          <TeamLine
-            side={display.home}
-            showScore={display.showScores}
-            showRecord={withRecords}
-            scopeLeague={scopeLeague}
-          />
-        </span>
+        {/* The lead is 52px and centred on the 52px team block (the grid's `items-center`); a
+            name that genuinely wraps grows the block, and the lead stays centred on it. */}
+        <SummaryLead
+          game={game}
+          display={display}
+          showDate={showDate}
+          showTime={showTime}
+          showChips={showChips}
+        />
+        <SummaryTeams display={display} showRecords={withRecords} scopeLeague={scopeLeague} />
         <svg
           className="sx-chevron text-ink-3"
           width="16"
@@ -554,6 +624,14 @@ const textLinkClass = 'sx-action relative z-10 gap-1 font-medium no-underline ho
  * clamped at two, rather than losing its home team to an ellipsis. The time and the trailing
  * tag stay centred on the pair (`items-center`).
  *
+ * The trailing tag track is a FIXED 4rem, end-aligned, sized for the widest league code (SUNSET,
+ * 59.5px). It was `auto`, so its width was the tag's own — NL 27.8px, SCVAL 51.6px — and the
+ * matchup's width with it: "Valley Christian at Homestead" kept one line beside an NL row's tag
+ * and wrapped beside a SCVAL row's. A postseason chip is a phrase no fixed track holds (`SCVAL
+ * crossover` is 131px), so it goes on its own line under the matchup instead (GameChips `part`).
+ * The final branch (FINAL and the code, wrapping inside the track) is not reached from NextSlate,
+ * whose slate holds only games still to play.
+ *
  * The time is NOT aria-hidden: it is the link's only statement of when, so the name reads
  * "5:30 PM Homestead at Los Altos SCVAL league game" (the chips' Tag labels carry the words).
  */
@@ -566,7 +644,7 @@ export function GameLine({ game, perspective, showChips = true, className }: Gam
       href={gameHref(game.contestId)}
       prefetch={false}
       className={[
-        'sx-tap relative grid min-h-row-1 grid-cols-[4.5rem_minmax(0,1fr)_auto] items-center gap-x-3 px-gutter py-2 text-body no-underline',
+        'sx-tap relative grid min-h-row-1 grid-cols-[4.5rem_minmax(0,1fr)_4rem] items-center gap-x-3 px-gutter py-2 text-body no-underline',
         className,
       ]
         .filter(Boolean)
@@ -575,16 +653,18 @@ export function GameLine({ game, perspective, showChips = true, className }: Gam
       <span className="sx-num text-cell text-ink-2">
         {game.isTimeTba ? 'TBA' : timeOfDay(game.dateLocal)}
       </span>
-      <span className="line-clamp-2 min-w-0 break-words text-ink">
-        {awayTeam ? awayTeam.shortName : game.away.name}
-        {game.site === 'neutral' ? ' vs ' : ' at '}
-        {homeTeam ? homeTeam.shortName : game.home.name}
+      <span className="min-w-0">
+        <span className="line-clamp-2 break-words text-ink">
+          {awayTeam ? awayTeam.shortName : game.away.name}
+          {game.site === 'neutral' ? ' vs ' : ' at '}
+          {homeTeam ? homeTeam.shortName : game.home.name}
+        </span>
+        {showChips ? <GameChips display={display} part="phrase" className="mt-1" /> : null}
       </span>
-      {display.kind === 'final' ? (
-        <StatusLabel display={display} showChips={showChips} className="shrink-0" />
-      ) : showChips ? (
-        <GameChips display={display} className="shrink-0" />
-      ) : null}
+      <span className="flex min-w-0 flex-wrap items-center justify-end gap-1">
+        {display.kind === 'final' ? <StatusLabel display={display} showChips={false} /> : null}
+        {showChips ? <GameChips display={display} part="codes" /> : null}
+      </span>
     </Link>
   );
 }
@@ -605,17 +685,33 @@ export function GameLine({ game, perspective, showChips = true, className }: Gam
  * Four fixed columns (date · chip · score · the rest) so the dates, chips and scores line up
  * down the log. The score column is itself a three-track grid — mine · dash · theirs — with MY
  * goals right-aligned against the dash, so a 10 and a 3 line up on their last digit and the
- * dashes stack. The last column wraps the status under the opponent rather than truncating the
- * opponent: the opponent is the thing the row exists to say.
+ * dashes stack. The opponent is never truncated: it is the thing the row exists to say.
+ *
+ * Where the status goes is fixed by the row's width, never by its labels. The row is its own
+ * query container (rem-based, so it follows the reader's text size):
+ *
+ * - Under 25rem of content (every phone) the opponent ends line 1 and the status — FINAL and its
+ *   tags, or the clock — is ALWAYS line 2, left-aligned under the chip across columns 2–4: 220px
+ *   at 320, room for SCORE NOT REPORTED and its code (201px), which the opponent's column alone
+ *   (124px at 320, 194 at 390) is not. Every phone row is 58px unless the opponent wraps.
+ * - From 25rem the last column is `[1fr | 7.5rem]`, 10rem from 30rem and 14rem from 40rem (so
+ *   SCORE NOT REPORTED and its code keep one line in a full-width log), the status left-aligned in
+ *   its track, so FINAL starts at one x down the log. The 7.5rem step is the team page's half-width
+ *   log at 1024 (about 420px of content): FINAL and a league code (94px) fit it, and a 10rem track
+ *   there left the opponent 84px, so every row went to two lines where one had room.
+ *
+ * It used to be one wrapping flex line with the status flush right: whether the status fitted
+ * beside the opponent depended on the name and the tag (SCVAL is 24px wider than NL), so at 390 it
+ * jumped between the end of line 1 and the start of line 2 (rows 52, 56, 58 and 76px), and at 1280
+ * FINAL started wherever the tag's width put it.
  *
  * At large text sizes (150–175%) the three fixed columns and their gaps grow with the type and
- * leave the last one too narrow for a name: at 24px on a 390px phone it was 96px, and its 6.5rem
- * minimum pushed "vs Saint Francis" out of the clipped card. So the row is its own query
- * container (rem-based, so it follows the reader's text size): when its content box is narrower
- * than 16.75rem — the fixed tracks, their gaps and 6.5rem for the name — the opponent and status
- * drop to a second line under the chip, across columns 2–4. At 16px every phone row (288px of
- * content at 320) is wider than that, so the one-line row is unchanged. The fixed tracks are
- * `minmax(0, …)` so they give way before the row overflows.
+ * leave the last one too narrow for a name: at 24px on a 390px phone it was 96px, and a 6.5rem
+ * minimum pushed "vs Saint Francis" out of the clipped card. So when the content box is narrower
+ * than 16.75rem — the fixed tracks, their gaps and 6.5rem for the name — the opponent too drops to
+ * a line of its own under the chip, across columns 2–4, and the status follows it. At 16px every
+ * phone row (288px of content at 320) is wider than that. The fixed tracks are `minmax(0, …)` so
+ * they give way before the row overflows.
  */
 /** The log row's four-column grid, shared with the team page's JV list (components/teams/TeamJvGames.tsx). */
 export const GAME_LOG_ROW_GRID =
@@ -683,20 +779,34 @@ export function GameLogRowBody({
           <span className="col-start-2 text-center text-ink-3">{EM_DASH}</span>
         )}
       </span>
+      {/* From 25rem: a nested `[1fr | status track]` grid in the fourth column. Below it the
+          wrapper is `display: contents`, so the opponent and status are the ROW's grid items:
+          the opponent takes the fourth column of line 1 and the status a line 2 of its own
+          across columns 2–4. The children repeat `aria-hidden` rather than lean on a
+          `contents` box to pass it down. */}
       <span
-        className="flex min-w-0 flex-wrap items-center justify-between gap-x-3 gap-y-0.5 @max-[16.75rem]:col-span-3 @max-[16.75rem]:col-start-2 @max-[16.75rem]:mt-1"
+        className="grid min-w-0 grid-cols-[minmax(0,1fr)_7.5rem] items-center gap-x-3 @max-[25rem]:contents @min-[30rem]:grid-cols-[minmax(0,1fr)_10rem] @min-[40rem]:grid-cols-[minmax(0,1fr)_14rem]"
         aria-hidden="true"
       >
-        {/* `min(6.5rem, 100%)`: the minimum still wraps the status under a short name, but never
-            outgrows its column; `break-words` breaks a long single word inside it. Reflowed under the
-            chip (large text), it may take three lines: "vs University Prep Academy" needs them. */}
-        <span className="line-clamp-2 min-w-[min(6.5rem,100%)] flex-1 break-words text-ink @max-[16.75rem]:line-clamp-3">
+        {/* `break-words` breaks a long single word inside the column. Reflowed under the chip
+            (large text), it may take three lines: "vs University Prep Academy" needs them. */}
+        <span
+          className="line-clamp-2 min-w-0 break-words text-ink @max-[16.75rem]:col-span-3 @max-[16.75rem]:col-start-2 @max-[16.75rem]:mt-1 @max-[16.75rem]:line-clamp-3"
+          aria-hidden="true"
+        >
           {/* The short name, as every game row prints it: a long full name ("Convent of the
               Sacred Heart") was clamped mid-name in a 320px log. The sr-only sentence keeps the
               full name. */}
           {display.versus ?? 'vs'} {opponentTeam ? opponentTeam.shortName : opponent.name}
         </span>
-        <span className="flex max-w-full flex-wrap items-center gap-2">
+        {/* Left-aligned, so FINAL starts at one x down the log; the tags never wrap inside
+            themselves (Tag), and what is wider than its space (a `this game` tag beside FINAL
+            and its code, a postseason chip, and in the 7.5rem track SCORE NOT REPORTED or
+            FINAL 2 OT with a code) wraps there, growing that row alone. */}
+        <span
+          className="flex min-h-5 min-w-0 flex-wrap items-center gap-x-2 gap-y-0.5 @max-[25rem]:col-span-3 @max-[25rem]:col-start-2 @max-[25rem]:mt-0.5"
+          aria-hidden="true"
+        >
           {isThisGame ? <Tag label="the game on this page">this game</Tag> : null}
           {statusLabelIsTime(game, display.statusLabel) ? (
             // An upcoming game's status IS its time: printed as the clock it is — mono 13px

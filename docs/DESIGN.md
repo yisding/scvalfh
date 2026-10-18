@@ -2744,17 +2744,19 @@ hydrated, with a polite live region), `link` (`/standings/[league]`, `/schedule/
 links that never write) and `anchor` (`/standings`, `/teams`, `/playoffs`: `#id` links, plus a
 route link where a league has its own page, as /playoffs' tournament leagues do; a `#id` chip is a
 plain `<a>`, a route chip a `<Link prefetch={false}>`). The chip is `text-micro` weight 600,
-`min-h-11 min-w-11 px-2` (`.sx-league-chip`, `padding-inline: 0.5rem`), a 6 px gap and `flex-wrap`, so 200% text zoom wraps instead of clipping. Measured at 320 px the five-chip row (All, SCVAL, BVAL, PCAL, MCAL) is
+`min-h-11 min-w-11` with 6 px of side padding (`.sx-league-chip`, `padding-inline: 0.375rem`; 0.5rem until §30), 3 px between the check and the word, a 4 px gap between chips and `flex-wrap`, so 200% text zoom wraps instead of clipping. Measured at 320 px the five-chip row (All, SCVAL, BVAL, PCAL, MCAL) is
 about **273 px**, inside the 288 px content width. There are no visible section captions: the chips
 sit in two lists labelled for assistive technology ("Central Coast Section" and "North Coast
 Section") separated by a hairline. The selected chip is inverse ink (`--sx-text` fill,
-`--sx-surface` text, §26.1), weight 600, and a ✓ (`aria-hidden`), never color alone, so it
-survives the §10.9b grayscale gate. It keeps that fill under the pointer: the hover plane applies
-only to unselected chips. The ✓ is in the flow, so selecting a chip widens it by the glyph and its 4 px gap.
-Measured on the home scope row (2026-10-13), the row holds one line whichever chip is selected from
-390 px (NorCal) and 375 px (SoCal); at 375 px NorCal and 360 px SoCal some selections still push the
-last chip onto a second line, and at 320–360 px NorCal it wraps anyway. The schedule filter pills
-(§7.13) draw their selected state the same way: inverse ink and a ✓, not the accent wash.
+`--sx-surface` text, §26.1), weight 600, and a drawn check (`.sx-check`, `aria-hidden`), never
+color alone, so it survives the §10.9b grayscale gate. It keeps that fill under the pointer: the
+hover plane applies only to unselected chips. Scope and link chips always lay the check out and show
+it only on the selected chip, so a chip has one width in every state and on every league page; the
+check is a 0.6667em box drawn by a CSS mask, never the ✓ glyph, which the served Geist subset lacks
+(its width came from a system font). Measured 2026-10-18: a per-league row (All and five NorCal
+chips) is 347 px, one line from 390 px on every league page; SoCal's is 335 px, one line from
+375 px; at 375 px NorCal is two lines on every league page. The schedule filter pills (§7.13) draw
+their selected state the same way: inverse ink and the drawn check, not the accent wash.
 
 ### 15.5 Leagues get no hue
 
@@ -4350,9 +4352,12 @@ Rules this pass set, so later work keeps them:
 - **Pills.** `.sx-pill` has 10px of block padding: a one-line pill keeps its 40/44px, and a
   label that wraps (the `/about` PDF pills, Home's 2-up "Show <LEAGUE> here" buttons at 390) is
   60px, with even space above and below, rather than text touching its edges.
-- **PageHeader.** From 768px the title block keeps at least 28rem; an aside too wide to sit beside
-  it wraps under the title, right-aligned, with a 16px row gap. The `/history` league jump pills
-  show from 768px at every width.
+- **PageHeader.** Below 1024px the aside stacks under the title block, 16px down and left-aligned,
+  on every page. From 1024px it sits beside the title and the title block keeps at least 28rem; an
+  aside too wide for that wraps under the title, right-aligned, with a 16px row gap (no current
+  aside does). Amended by §30: from 768px the aside sat beside the title or under it by its own
+  width, so one route's header changed height by league. The `/history` league jump pills show from
+  768px at every width.
 - **Jump targets** rely on `html`'s `scroll-padding-top` (6.5rem on a phone, 7.5rem from 768px)
   alone; no section adds its own `scroll-mt-*`.
 - **Whole-row links.** Compact standings, `/jv`, `/history` standings and `/leaders` school-board
@@ -4485,3 +4490,82 @@ leagues" (§24.9).
   against each other." NorCal's note is unchanged.
 - **Code.** `BoardScope.leaguesOnly`, which existed only for that caption, is gone; `BoardScope`
   carries the region's independents count for the note instead (`components/leaders/scope.ts`).
+
+## 30. Text-width amendment (2026-10)
+
+The owner reported that layouts differed because text widths differed. An audit measured every
+route at 320–1440px (Playwright, `getBoundingClientRect`) and found the same component laid out
+differently by the length of its words: a status that fit beside a name in one row and wrapped under
+it in the next, a column sized by the longest label in one table and not its neighbour, a chip a
+check wider on its own league's page, and fallback fonts that were not the width of Geist. This
+section wins where earlier sections disagree.
+
+**The rule.** Geometry comes from the layout, never from the text. A column, slot or track that
+repeats down a list, across sibling tables or cards, or across a league's pages has a fixed width,
+or one taken from a shared grid; text that does not fit wraps or ellipsizes inside it. A row grows
+only when its content genuinely cannot fit (a name that wraps, SCORE NOT REPORTED), never because a
+neighbouring label is longer.
+
+- **Game summary rows** (GameRow, Home's latest rows; the shared `SummaryLead`). The 80px lead holds
+  three fixed slots: clock 16px, status and decider tag 16px on one line, chips 20px, reserved when
+  empty. That is 52px, the two team lines' height, so every row is 76px whatever its labels say.
+  SCORE NOT REPORTED (two caps lines, 84px), a shootout tally, a 2 OT tag with the †, a postseason
+  chip or a wrapped team name still grow their row. Home's latest rows are GameRow's lead and team
+  lines without the mascot tiles. JV day rows: a 24px status or clock slot over a 20px chips slot,
+  every row 60px. A postseason chip is a phrase, not a code: a wrapping capsule, never a Tag in a
+  fixed tag track; in "Next up" (whose tag track is a fixed 4rem) it takes its own line.
+- **Game log.** Under 25rem of row width the opponent ends line 1 and the status is always line 2,
+  under the result chip; from 25rem the status has its own track (7.5rem, 10rem from 30rem, 14rem
+  from 40rem), left-aligned, so FINAL starts at one x down a log. §26.5's large-text rule stands.
+- **Form going in, official fixtures.** Below 768px the form strip always sits under the name. A
+  league's official fixtures put the status under the date in a 5.25rem lead and the division under
+  the matchup; on a team page the status is a fixed 4.75rem and a team outside the registry gets the
+  ghost monogram.
+- **Tables.** Tables that repeat on a page, side by side or stacked, take their column widths from
+  `table-fixed`, a `<colgroup>` or explicit widths no shorter than their longest value; content-sized
+  `w-px` columns are for one-off tables only. The /playoffs projection is `table-fixed` from 768px
+  (Status 55%, 13rem from 1024px; the monogram hides at 768–1023), `/history` decides its Overall
+  column once per league, and the /about cross-check, MCAL seeds and awards columns are fixed.
+- **Numbers that stack** sit in a right-aligned `inline-block` of `min-w-[Nch]` sized to the longest
+  value (the phone standings' "10/12 GP" and "10-1-0 overall"), so the words after them start at one
+  x. A mark after a value (the backfill †) hangs into the cell's padding and never moves the digits.
+  Below 390px the phone standings' League column is 56px with 1px of left padding (PTS takes 4px of
+  right padding instead), so a six-character record fits without the column growing in some tables.
+- **Connectors.** "at" or "vs" between two names never ends a line: on a phone it wraps with the
+  second name; from 768px a pairing is three columns (side, connector, side).
+- **Cells side by side line up line for line.** Where grid cells with a fixed number of lines sit
+  side by side (Home's league cards, `/commits` and club player cells, bracket rounds), each cell is
+  a subgrid of the parent's rows (`grid-rows-subgrid row-span-N`; `GridRowFiller` spans N too), with
+  `gap-y-0` because a subgrid inherits the parent's row gap. Lists whose cells vary in line count
+  (`/recruiting`, `/clubs`) are exempt. A league card's "Show <LEAGUE> here" button is one size per
+  breakpoint: full width and 60px tall two-up below 640px, 200px wide from 640px.
+- **Brackets.** Every card in a bracket is one height: when any game has a note, every card keeps a
+  one-line note row, ellipsized, with the whole note in the card's screen-reader sentence. Round
+  headings and the byes row share subgrid rows across rounds. Round columns start at 768px for up to
+  three rounds and at 1024px for four or five.
+- **Leading slots and status columns belong to the table.** If any row has a jersey number, every
+  row keeps the box (a dash, "No number listed" to a screen reader). "Who we haven't beaten" keeps a
+  92px status column; where the league has no fixed schedule it widens to 148px from 640px, and below
+  that "no league game listed" wraps inside it.
+- **State never changes width.** A selected chip, pill or nav item holds its semibold width at rest
+  (`.sx-weight-hold`: a hidden zero-height semibold copy of the label), so the current or pending item
+  never moves the others. Chips always lay out their check (§15.4). The schedule filter selects are
+  fixed from 768px (team 13rem, division 12rem), so "More filters" sits at one x per league shape.
+  PageHeader stacks below 1024px (§26.5).
+- **Fonts.** Fallbacks are metric-matched, so the swap to Geist moves nothing. Sans keeps next/font's
+  "Geist Fallback" (Arial at 104.76%) plus a bold face (Arial Bold at 99.3%, weights 600–900; the
+  body sets `font-synthesis-weight: none`). Geist Mono's fallback is a system monospace with its line
+  metrics ("Geist Mono Fallback"; Consolas, 0.55em wide, size-adjusted to 109.13%), never Arial,
+  which next/font picked at 134.59% and which made mono text 25–32% wider until Geist Mono loaded.
+  The theme's font stacks end in a generic family, so a machine without Arial no longer falls to
+  serif. A pinned team's own page hides "This replaces your pinned team." before first paint (a
+  server-rendered style keyed to its slug), instead of showing it and shifting the page by 28px.
+- **League share card.** Place and stats are fixed tracks and the name takes the rest on one line;
+  a card with three or more division columns puts the stats under the name rather than ellipsize it.
+
+**Not changed (owner calls).** League games still carry their league chip in a league context
+(§5.4 says they carry none; the README says JV rows carry it), and the decider tag stays in the
+status line rather than after the score (§7.4). Home's mini standings keep their GD bars on phones,
+where about a third of the names wrap; `/leaders` player rows keep their full school · league ·
+grade · position line, which wraps on some rows. The arrows →, ← and ↗ are still glyphs from a
+system font (the served Geist subset lacks them); tests pin them as text.
