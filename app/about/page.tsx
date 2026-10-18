@@ -52,10 +52,12 @@ import {
   leagueStandingsUrl,
   regionOf,
 } from '@/lib/leagues';
-import type { LeagueConfig, SectionConfig } from '@/lib/leagues';
+import type { CrossCheckRow } from '@/lib/model/crosscheck';
+import type { DroppedContest, SourceStatus } from '@/lib/model/health';
+import type { LeagueConfig, SectionConfig } from '@/lib/model/league-config';
+import type { TiebreakStage } from '@/lib/model/standings';
 import { SOURCE_LINKS } from '@/lib/season';
 import { crossCheckSkipReason, statusLegend } from '@/lib/standings';
-import type { CrossCheckRow, DroppedContest, SourceStatus, TiebreakStage } from '@/lib/types';
 
 /**
  * `/about` (DESIGN §3.10, SPEC §10.8) — where the data comes from for every league, how each

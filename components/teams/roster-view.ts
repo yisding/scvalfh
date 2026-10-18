@@ -25,6 +25,7 @@
 
 import { getCommitsFile } from '@/lib/commits';
 import { dateWithYear, gradeWord, shortDate, toLocalTimestamp } from '@/lib/format';
+import type { TeamSlug } from '@/lib/model/ids';
 import {
   getEnrichedTeamRoster,
   getRosters,
@@ -37,7 +38,6 @@ import {
   type ProfilePlatform,
   type RosterConflict,
 } from '@/lib/rosters';
-import type { TeamSlug } from '@/lib/types';
 import { playerClubGroups, type RosterClubGroup } from '@/components/clubs/club-view';
 import { SPORT_WORDS, playerCommitLine, sportLabel, type RosterCommitLine } from '@/components/commits/commit-view';
 import { positionWords } from '@/components/ui/position-words';

@@ -6,6 +6,8 @@
 import { describe, expect, it } from 'vitest';
 
 import { LEAGUES } from '@/lib/leagues';
+import type { SourceStatus } from '@/lib/model/health';
+import type { Snapshot } from '@/lib/model/snapshot';
 import {
   DroppedLedger,
   LeagueLedger,
@@ -17,7 +19,6 @@ import {
   lastFreshStamp,
 } from '@/lib/pipeline/ledger';
 import { TEAMS } from '@/lib/teams';
-import type { Snapshot, SourceStatus } from '@/lib/types';
 import { testRunArgs } from '@/tests/support/pipeline/run-args';
 
 const AT = '2026-10-02T15:00:00.000Z';

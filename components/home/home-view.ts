@@ -60,6 +60,13 @@ import {
 } from '@/lib/format';
 import { gameHref } from '@/lib/game-id';
 import { hasHistory } from '@/lib/history';
+import type { Game } from '@/lib/model/game';
+import type { DivisionId, LeagueId, RegionId } from '@/lib/model/ids';
+import {
+  type DivisionConfig, type LeagueConfig, type PostseasonConfig, type RegionConfig,
+} from '@/lib/model/league-config';
+import type { SeasonPhase } from '@/lib/model/season';
+import type { Team } from '@/lib/model/team';
 import { outcomesFor, playoffOutcomeLabel, statusBadge } from '@/lib/standings';
 import {
   CCS,
@@ -73,15 +80,10 @@ import {
   leaguePlayStarts,
   sectionOf,
   standaloneName,
-  type DivisionConfig,
-  type LeagueConfig,
-  type PostseasonConfig,
-  type RegionConfig,
 } from '@/lib/leagues';
 import { pickerName, pinLabel } from '@/lib/pin-label';
 import type { SearchIndex } from '@/lib/search';
 import { teamOfSide } from '@/lib/teams';
-import type { DivisionId, Game, LeagueId, RegionId, SeasonPhase, Team } from '@/lib/types';
 import type { LeagueChip } from '@/components/layout/LeagueSwitcher';
 import { leagueChips } from '@/components/layout/league-chips';
 import { fixtureOpponent, nextOfficialFixture } from '@/components/teams/team-view';

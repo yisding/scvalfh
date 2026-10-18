@@ -10,7 +10,10 @@
  */
 
 import { LEAGUES } from '@/lib/leagues';
-import type { LeagueConfig } from '@/lib/leagues';
+import type { CrossCheckRow } from '@/lib/model/crosscheck';
+import type { DivisionHealth, LeagueHealth } from '@/lib/model/health';
+import type { LeagueConfig } from '@/lib/model/league-config';
+import type { Standing } from '@/lib/model/standings';
 import {
   assertFullTable,
   buildCrossCheck,
@@ -19,7 +22,6 @@ import {
   missingOfficialResults,
 } from '@/lib/standings';
 import { teamsInLeague } from '@/lib/teams';
-import type { CrossCheckRow, DivisionHealth, LeagueHealth, Standing } from '@/lib/types';
 import { previousDivisionHealth, previousLeagueHealth, type PipelineContext, type RunState } from '@/lib/pipeline/ledger';
 import { divisionClassification } from './guards';
 

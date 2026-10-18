@@ -1280,8 +1280,9 @@ display face anywhere.
 
 ### 5.1 Shared types — the contract the whole UI is written against
 
-`lib/types.ts`. These are also the Zod schema's output types, so the cron fails loudly rather
-than shipping a fake scoreline (`data-dense`'s best structural idea).
+`lib/model/` (one module per seam; the league config's shapes are `lib/model/league-config.ts`).
+These are also the Zod schema's output types, so the cron fails loudly rather than shipping a fake
+scoreline (`data-dense`'s best structural idea).
 
 ```ts
 export type Division = 'de-anza' | 'el-camino';

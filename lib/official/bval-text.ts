@@ -13,8 +13,8 @@
  */
 
 import { getDivision } from '@/lib/leagues';
+import type { DivisionId, TeamSlug } from '@/lib/model/ids';
 import { resolveOfficialName } from '@/lib/teams';
-import type { DivisionId, TeamSlug } from '@/lib/types';
 import { officialFixtureId, type BundleEvent, type BundleFixture } from './schema';
 
 /** The default varsity start ("GAME TIMES: VARSITY – 5:00pm"). */

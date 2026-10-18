@@ -4,8 +4,8 @@ import Link from 'next/link';
 import { useState } from 'react';
 
 import { setLeague, setRegion, useEffectiveLeague, useEffectiveRegion } from '@/components/ui/use-league';
-import type { SectionConfig } from '@/lib/leagues';
-import type { LeagueId, RegionId } from '@/lib/types';
+import type { LeagueId, RegionId } from '@/lib/model/ids';
+import type { SectionConfig } from '@/lib/model/league-config';
 
 import { ALL_LEAGUES } from './prefs-script';
 

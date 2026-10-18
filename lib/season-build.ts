@@ -5,12 +5,14 @@
  */
 
 import { LEAGUES, SECTIONS } from './leagues';
+import type { Game, GameSide } from './model/game';
+import type { LeagueId } from './model/ids';
+import type { Season, SeasonLeague, SeasonWindow } from './model/season';
 import { seasonWindowOf } from './normalize';
 import {
   ALL_SEASON_ID, GENDER_SPORT, SEASON_LABEL, SEASON_YEAR, SPORT_SEASON_ID, TEAM_LEVEL,
 } from './season';
 import { teamOfSide } from './teams';
-import type { Game, GameSide, LeagueId, Season, SeasonLeague, SeasonWindow } from './types';
 
 /** The registry league of one side, by MaxPreps GUID first, then by slug; null for a non-member. */
 function leagueOfSide(side: GameSide): LeagueId | null {

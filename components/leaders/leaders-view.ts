@@ -22,12 +22,15 @@ import { computeAdjustedScoring, getAdjustedScoring, type AdjustedScoring } from
 import { getSnapshot } from '@/lib/data';
 import { shortDate } from '@/lib/format';
 import { REGIONS, regionOf } from '@/lib/leagues';
+import type { Game } from '@/lib/model/game';
+import type { RegionId, TeamId } from '@/lib/model/ids';
+import type { Standing } from '@/lib/model/standings';
+import type { Team } from '@/lib/model/team';
 import { getAllPlayerStatsWithNotes } from '@/lib/player-stats';
 import { getPriorSeason } from '@/lib/prior-season';
 import { getAllEnrichedRosters } from '@/lib/rosters';
 import { computeRatings, getRatings } from '@/lib/ratings';
 import type { TeamPlayerStats } from '@/lib/player-stats-schema';
-import type { Game, RegionId, Standing, Team, TeamId } from '@/lib/types';
 import { buildEloBoard, crossRegionFinals, getCrossRegionFinals, getEloBoard, type EloBoardView } from './elo-board';
 import { buildPlayerBoards } from './player-boards';
 import { buildSchoolBoards } from './school-boards';

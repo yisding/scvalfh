@@ -29,7 +29,14 @@
  */
 
 import { dayDiff, monthDay, shiftDateKey, shootoutPhrases, toLocalTimestamp } from './format';
-import { LEAGUES, getLeague, getSection, leagueOfDivision, type SectionConfig } from './leagues';
+import { LEAGUES, getLeague, getSection, leagueOfDivision } from './leagues';
+import type { BackfillRow, SbliveOnlyRow } from './model/crosscheck';
+import type { OfficialFixture } from './model/fixture';
+import type { BackfillProvenance, Decider, Game, GameSide, Outcome } from './model/game';
+import type { ContestId, TeamSlug } from './model/ids';
+import { type SectionConfig } from './model/league-config';
+import type { Snapshot } from './model/snapshot';
+import type { Team } from './model/team';
 import {
   isCaliforniaGameRow,
   isIgnoredSbliveSide,
@@ -38,20 +45,6 @@ import {
   type SbliveSide,
 } from './sources/sblive';
 import { getTeamBySlug, unorderedPairKey } from './teams';
-import type {
-  BackfillProvenance,
-  BackfillRow,
-  ContestId,
-  Decider,
-  Game,
-  GameSide,
-  OfficialFixture,
-  Outcome,
-  SbliveOnlyRow,
-  Snapshot,
-  Team,
-  TeamSlug,
-} from './types';
 
 // ---------------------------------------------------------------- constants
 

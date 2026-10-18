@@ -12,8 +12,8 @@ import path from 'node:path';
 
 import { afterAll } from 'vitest';
 
+import type { Snapshot } from '@/lib/model/snapshot';
 import { loadSnapshot } from '@/lib/snapshot-schema';
-import type { Snapshot } from '@/lib/types';
 
 /** The repository root: tests/support/ is two levels below it. */
 export const REPO = path.resolve(import.meta.dirname, '..', '..');

@@ -2,6 +2,8 @@ import { describe, expect, it } from 'vitest';
 
 import { classifyGames } from '@/lib/classify';
 import { ALL_DIVISIONS, divisionsOf } from '@/lib/leagues';
+import type { Game } from '@/lib/model/game';
+import type { Standing } from '@/lib/model/standings';
 import { normalizeGames } from '@/lib/normalize';
 import {
   computeStandings,
@@ -14,7 +16,6 @@ import {
   playoffStatusFor,
 } from '@/lib/standings';
 import { TEAMS, resolveTeam, teamsInLeague } from '@/lib/teams';
-import type { Game, Standing } from '@/lib/types';
 import { game } from './support/game-builder';
 import { allScheduleRows } from './support/corpus';
 

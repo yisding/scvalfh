@@ -18,6 +18,11 @@
 
 import { applyBackfill, cleanSbliveRows, planBackfill, scoreboardCoverage, shiftDateKey } from '@/lib/backfill';
 import { carryCrossCheck, emptyCrossCheck, reconcile, withBackfill } from '@/lib/crosscheck';
+import type { SbliveCrossCheck } from '@/lib/model/crosscheck';
+import type { OfficialFixture } from '@/lib/model/fixture';
+import type { Game } from '@/lib/model/game';
+import type { SourceStatus } from '@/lib/model/health';
+import type { TeamSlug } from '@/lib/model/ids';
 import {
   dedupeSbliveGames,
   parseScoresPage,
@@ -26,7 +31,6 @@ import {
   type SbliveGame,
 } from '@/lib/sources/sblive';
 import { getTeamBySlug, teamsInLeague } from '@/lib/teams';
-import type { Game, OfficialFixture, SbliveCrossCheck, SourceStatus, TeamSlug } from '@/lib/types';
 import {
   type ResourceKey,
   type RunContext,

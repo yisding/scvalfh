@@ -25,6 +25,7 @@ import {
   type PlayerStatsView,
 } from '@/components/teams/player-stats-view';
 import { buildTeamPageView } from '@/components/teams/team-view';
+import type { Game } from '@/lib/model/game';
 import { getAllPlayerStatsWithNotes } from '@/lib/player-stats';
 import { LEAGUE_IDS } from '@/lib/leagues';
 import type {
@@ -33,7 +34,6 @@ import type {
   TeamPlayerStats as TeamStats,
 } from '@/lib/player-stats-schema';
 import { TEAMS, teamsInLeague } from '@/lib/teams';
-import type { Game } from '@/lib/types';
 import { buildFixturePlayerStats } from '@/tests/support/cli';
 
 interface Case {

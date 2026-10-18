@@ -24,7 +24,8 @@
  */
 
 import { isoDateKey, shortDate } from '@/lib/format';
-import type { CcsPlayoffs, Game, GameSide } from '@/lib/types';
+import type { Game, GameSide } from '@/lib/model/game';
+import type { CcsPlayoffs } from '@/lib/model/postseason';
 
 export type RoundKey = 'quarterfinals' | 'semifinals' | 'finals' | 'other';
 

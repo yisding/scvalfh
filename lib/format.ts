@@ -9,10 +9,11 @@
  * converting `snapshot.fetchedAt` (ISO UTC) into a local date — via `zonedParts`.
  */
 
-import { TIME_ZONE } from './season';
+import type { Game, Outcome, Record3, ScoreView } from './model/game';
+import type { OfficialSourceId } from './model/ids';
 // Type-only: erased at build, so this module stays client-safe (it never loads the league config).
-import type { ShootoutInference } from './leagues';
-import type { Game, OfficialSourceId, Outcome, Record3, ScoreView } from './types';
+import type { ShootoutInference } from './model/league-config';
+import { TIME_ZONE } from './season';
 
 const WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] as const;
 const WEEKDAYS_LONG = [

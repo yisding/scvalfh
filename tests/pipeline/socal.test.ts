@@ -22,12 +22,13 @@ import { beforeAll, describe, expect, it } from 'vitest';
 
 import { localDateKey, sideOutcome } from '@/lib/format';
 import { DATA_QUALITY, LEAGUES, getDivision, getLeague, getSection } from '@/lib/leagues';
+import type { Game } from '@/lib/model/game';
+import type { Snapshot } from '@/lib/model/snapshot';
 import { NO_MAXPREPS_TABLE_REASON } from '@/lib/pipeline/steps/league-meta';
 import type { ScheduleRow } from '@/lib/sources/maxpreps';
 import { parseScoresPage, parseTeamGamesPage } from '@/lib/sources/sblive';
 import { divisionGames } from '@/lib/standings';
 import { TEAMS, getTeamBySlug, teamsInDivision, teamsInLeague } from '@/lib/teams';
-import type { Game, Snapshot } from '@/lib/types';
 import { useCorpusModules } from '@/tests/support/corpus-modules';
 import { corpusSnapshotPath } from '@/tests/support/corpus-snapshot';
 import { CorpusReader, SOCAL_CORPUS, gameOf } from '@/tests/support/corpus';

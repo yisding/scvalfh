@@ -1,5 +1,5 @@
 import { getDivision, leagueOfDivision } from '@/lib/leagues';
-import type { DivisionId, TeamSlug } from '@/lib/types';
+import type { DivisionId, TeamSlug } from '@/lib/model/ids';
 
 /**
  * Where a division's membership comes from, in the words the no-results notes print (the standings

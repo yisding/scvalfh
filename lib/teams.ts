@@ -16,6 +16,9 @@
 
 import { failInvariant } from './config/invariant';
 import { LEAGUES, findLeague, getLeague } from './leagues';
+import type { GameSide } from './model/game';
+import type { DivisionId, LeagueId, TeamId } from './model/ids';
+import type { Team } from './model/team';
 import { BVAL_SEEDS } from './registry/bval';
 import { CITY_SEEDS } from './registry/city';
 import { EAL_SEEDS } from './registry/eal';
@@ -28,7 +31,6 @@ import { SCVAL_SEEDS } from './registry/scval';
 import type { Seed } from './registry/seed';
 import { SUNSET_SEEDS } from './registry/sunset';
 import { SLUG_PATTERN } from './schema-primitives';
-import type { DivisionId, GameSide, LeagueId, Team, TeamId } from './types';
 
 const MP = 'https://www.maxpreps.com';
 const SI = 'https://www.si.com/high-school/stats/california/field-hockey';

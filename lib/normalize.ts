@@ -23,20 +23,13 @@
  */
 
 import { byDateThenId, shootoutPhrases, toLocalTimestamp } from './format';
-import { DATA_QUALITY, getLeague, getSection, type DataQualityConfig, type SectionConfig } from './leagues';
+import { DATA_QUALITY, getLeague, getSection } from './leagues';
+import type { Decider, Game, GameSide, GameStatus, Outcome } from './model/game';
+import type { DroppedContest } from './model/health';
+import type { ContestId, DivisionId, SourceId } from './model/ids';
+import { type DataQualityConfig, type SectionConfig } from './model/league-config';
+import type { SeasonWindow } from './model/season';
 import { getTeamById, resolveTeam } from './teams';
-import type {
-  ContestId,
-  Decider,
-  DivisionId,
-  DroppedContest,
-  Game,
-  GameSide,
-  GameStatus,
-  Outcome,
-  SeasonWindow,
-  SourceId,
-} from './types';
 import { splitTbaRows, type ContestTeam, type ScheduleRow } from './sources/maxpreps';
 
 export interface NormalizeOptions {

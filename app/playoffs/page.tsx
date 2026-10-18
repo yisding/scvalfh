@@ -47,8 +47,9 @@ import {
   getLeague,
   isIndependentLeague,
 } from '@/lib/leagues';
-import type { LeagueConfig } from '@/lib/leagues';
-import type { LeagueId, PlayoffProjection as Projection } from '@/lib/types';
+import type { LeagueId } from '@/lib/model/ids';
+import type { LeagueConfig } from '@/lib/model/league-config';
+import type { PlayoffProjection as Projection } from '@/lib/model/postseason';
 
 /**
  * /playoffs — "Are we in, and who do we play?" (SPEC §6.3, §10.7; DESIGN-socal §2.4): every league's

@@ -21,9 +21,10 @@
 
 import { gamePairKey } from './crosscheck';
 import { dayNumber } from './format';
+import type { CifssConflictRow, CifssCrossCheck, CifssOnlyRow } from './model/crosscheck';
+import type { Game } from './model/game';
 import { cifssListingUrl, type CifssRow, type CifssSide } from './sources/cifss';
 import { getTeamBySlug, sideJoinKey, unorderedPairKey } from './teams';
-import type { CifssConflictRow, CifssCrossCheck, CifssOnlyRow, Game } from './types';
 
 /** How far apart the widget's date and MaxPreps' may be and still be one game. */
 export const CIFSS_DATE_TOLERANCE_DAYS = 3;

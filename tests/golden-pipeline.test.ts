@@ -16,10 +16,12 @@ import path from 'node:path';
 import { beforeAll, describe, expect, it } from 'vitest';
 
 import { divisionsOf } from '@/lib/leagues';
+import type { DivisionId } from '@/lib/model/ids';
+import type { Snapshot } from '@/lib/model/snapshot';
+import type { Standing } from '@/lib/model/standings';
 import { buildCrossCheck, divisionGames } from '@/lib/standings';
 import { loadSnapshot } from '@/lib/snapshot-schema';
 import { stableStringify } from '@/lib/stable-json';
-import type { DivisionId, Snapshot, Standing } from '@/lib/types';
 import { corpusSnapshotPath } from './support/corpus-snapshot';
 import { REPO } from './support/repo';
 

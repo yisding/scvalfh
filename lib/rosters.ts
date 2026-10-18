@@ -27,6 +27,7 @@ import { readFileSync } from 'node:fs';
 import { z } from 'zod';
 import bundledEnrichment from '@/data/rosters-enrichment.json';
 import bundledRosters from '@/data/rosters.json';
+import type { TeamSlug } from './model/ids';
 import {
   RosterEnrichmentSchema,
   RostersSchema,
@@ -46,7 +47,6 @@ import {
   type TeamRoster,
 } from './rosters-schema';
 import { dateKey, failValidation, httpsUrl } from './schema-primitives';
-import type { TeamSlug } from './types';
 
 export type {
   EnrichedGrade,

@@ -26,7 +26,7 @@ import {
 import { getGames, getLeagueSummaries } from '@/lib/data';
 import { EN_DASH } from '@/lib/format';
 import { findDivision, findLeague } from '@/lib/leagues';
-import type { Game, GameStatus } from '@/lib/types';
+import type { Game, GameStatus } from '@/lib/model/game';
 
 function game(overrides: Partial<Game> = {}): Game {
   const base: Game = {

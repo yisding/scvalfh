@@ -18,10 +18,10 @@
  */
 
 import { CCS, getLeague } from '@/lib/leagues';
+import type { Game } from '@/lib/model/game';
 import { CCS_ICAL_URL, ccsPollingOpen, confirmKeyDates, parseCcsIcal, readBracketPublished } from '@/lib/sources/ccs';
 import { VNN_SITE_IDS, applyVnnEvents, carryVnnForward, parseVnnIcs, type VnnEvent } from '@/lib/sources/vnn-ics';
 import { getTeamBySlug } from '@/lib/teams';
-import type { Game } from '@/lib/types';
 import type { SecondaryStepResult } from '@/lib/pipeline/contract';
 import { carriedFromOf, type PipelineContext } from '@/lib/pipeline/ledger';
 import { classifyFetchError } from '@/lib/pipeline/read';

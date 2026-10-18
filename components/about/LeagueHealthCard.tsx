@@ -1,7 +1,8 @@
 import { formatStamp, officialSourceFormat } from '@/lib/format';
-import type { LeagueHealth, LeagueRunState, OfficialSourceId } from '@/lib/types';
 import ExternalLink from '@/components/ui/ExternalLink';
 import { plural } from '@/components/ui/plural';
+import type { LeagueHealth, LeagueRunState } from '@/lib/model/health';
+import type { OfficialSourceId } from '@/lib/model/ids';
 
 /**
  * One league's data health on /about#health (SPEC §10.8): how the last run went for THIS league,

@@ -1,9 +1,9 @@
 import Link from 'next/link';
 
-import type { TeamSlug } from '@/lib/types';
 import EmptyState from '@/components/ui/EmptyState';
 import ExternalLink from '@/components/ui/ExternalLink';
 import { GAME_LOG_ROW_GRID, GameLogRowBody } from '@/components/ui/GameRow';
+import type { TeamSlug } from '@/lib/model/ids';
 import type { JvListSummary, TeamJvView } from './jv-view';
 
 /**

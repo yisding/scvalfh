@@ -4,8 +4,9 @@
  * from `filter-data.ts`, so the client module never reaches lib/teams (SPEC §0.4 client boundary).
  */
 
+import type { Game } from '@/lib/model/game';
+import type { DivisionId, TeamSlug } from '@/lib/model/ids';
 import { getTeamBySlug } from '@/lib/teams';
-import type { DivisionId, Game, TeamSlug } from '@/lib/types';
 
 import { scheduleState, type GameFilterAttrs } from './filter-data';
 

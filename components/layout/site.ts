@@ -16,10 +16,9 @@ import {
   getSection,
   regionOf,
   sectionsInRegion,
-  type LeagueConfig,
-  type SectionConfig,
 } from '@/lib/leagues';
-import type { RegionId } from '@/lib/types';
+import type { RegionId } from '@/lib/model/ids';
+import { type LeagueConfig, type SectionConfig } from '@/lib/model/league-config';
 import { SEASON_CALENDAR_YEAR } from '@/lib/season';
 import { TEAMS } from '@/lib/teams';
 

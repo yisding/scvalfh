@@ -18,8 +18,8 @@
 
 import { byDateThenId } from '@/lib/format';
 import { DATA_QUALITY } from '@/lib/leagues';
+import type { Game } from '@/lib/model/game';
 import { applyExclusions, dedupePhantomPairs, normalizeGames } from '@/lib/normalize';
-import type { Game } from '@/lib/types';
 import type { PipelineContext, RunState } from '@/lib/pipeline/ledger';
 
 /** A carried game with the earlier run's classification cleared, so this run decides it again. */

@@ -39,28 +39,17 @@ import {
   leagueStandingsUrl,
   tiebreakChainFor,
 } from './leagues';
-import type { LadderRung, LeagueConfig, LeagueRules } from './leagues';
-import { TEAMS, getTeamById, teamsInDivision } from './teams';
+import type { CrossCheckRow } from './model/crosscheck';
+import type { OfficialFixture } from './model/fixture';
+import type { Game, Outcome, Record3 } from './model/game';
+import type { DivisionId, LeagueId, TeamId, TeamSlug } from './model/ids';
+import type { LadderRung, LeagueConfig, LeagueRules } from './model/league-config';
+import type { CrossoverSeat, LeaguePairing } from './model/postseason';
 import type {
-  ComputedRecord,
-  CrossCheckRow,
-  CrossoverSeat,
-  DivisionId,
-  Game,
-  LeagueId,
-  LeaguePairing,
-  OfficialFixture,
-  Outcome,
-  PlayoffStatus,
-  Record3,
-  ReportedRecord,
-  Standing,
-  Team,
-  TeamId,
-  TeamSlug,
-  TiebreakInfo,
-  TiebreakStage,
-} from './types';
+  ComputedRecord, PlayoffStatus, ReportedRecord, Standing, TiebreakInfo, TiebreakStage,
+} from './model/standings';
+import type { Team } from './model/team';
+import { TEAMS, getTeamById, teamsInDivision } from './teams';
 
 // ---------------------------------------------------------------- accumulation
 

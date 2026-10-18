@@ -30,7 +30,7 @@ import { describe, expect, it } from 'vitest';
 import { buildGameView, gameDescription, gameKicker, gameTitle } from '@/components/game/game-view';
 import { GameCard, GameLine, GameLogRow, GameRow } from '@/components/ui/GameRow';
 import { getGames, getLeagueSummaries, getTeamBySlug } from '@/lib/data';
-import type { Game } from '@/lib/types';
+import type { Game } from '@/lib/model/game';
 import { useCorpusModules } from '@/tests/support/corpus-modules';
 import { EAL_CORPUS, type CorpusName } from '@/tests/support/corpus';
 import { textFoldingDashes } from '@/tests/support/html-text';

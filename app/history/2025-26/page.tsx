@@ -32,7 +32,7 @@ import {
 } from '@/lib/history';
 import { dateWithYear, listWords } from '@/lib/format';
 import { getDivision, getLeague, getSection, isIndependentLeague, regionOf } from '@/lib/leagues';
-import type { LeagueId } from '@/lib/types';
+import type { LeagueId } from '@/lib/model/ids';
 
 /**
  * `/history/2025-26` (DESIGN §1.1, §3.9; SPEC §10.8) — last season's final standings, one section

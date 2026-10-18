@@ -7,6 +7,9 @@
 import { describe, expect, it } from 'vitest';
 
 import { getLeague } from '@/lib/leagues';
+import type { OfficialFixture } from '@/lib/model/fixture';
+import type { Game } from '@/lib/model/game';
+import type { ReportedRecord, Standing } from '@/lib/model/standings';
 import { sixthPlaceRule } from '@/lib/postseason';
 import {
   buildCrossCheck,
@@ -22,7 +25,6 @@ import {
   statusBadge,
   statusLegend,
 } from '@/lib/standings';
-import type { Game, OfficialFixture, ReportedRecord, Standing } from '@/lib/types';
 import { game } from './support/game-builder';
 
 type Spec = [home: string, away: string, hs: number, as: number];

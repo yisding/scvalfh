@@ -1,4 +1,4 @@
-import type { GameStatus } from '@/lib/types';
+import type { GameStatus } from '@/lib/model/game';
 
 /**
  * The words on a link to a game's MaxPreps contest page. Only a final has a box score behind it;

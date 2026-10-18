@@ -43,6 +43,8 @@
  * loading the files it is about to write. lib/player-stats.ts wires it to the committed data.
  */
 
+import type { Game } from './model/game';
+import type { TeamSlug } from './model/ids';
 import { NAME_ALIASES, type NameAlias } from './name-aliases';
 import {
   FIELD_STAT_KEYS,
@@ -52,7 +54,6 @@ import {
   type PlayerStatLine,
   type TeamPlayerStats,
 } from './player-stats-schema';
-import type { Game, TeamSlug } from './types';
 
 // ---------------------------------------------------------------- parsing
 

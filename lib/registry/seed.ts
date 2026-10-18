@@ -8,7 +8,8 @@
  * munging; ids are MaxPreps GUIDs.
  */
 
-import type { DivisionId, LeagueId, SectionId, Team, TeamId, TeamSlug } from '@/lib/types';
+import type { DivisionId, LeagueId, SectionId, TeamId, TeamSlug } from '@/lib/model/ids';
+import type { Team } from '@/lib/model/team';
 
 export interface Seed {
   id: TeamId;

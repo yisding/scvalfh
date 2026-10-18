@@ -8,8 +8,9 @@
 import { createHash } from 'node:crypto';
 
 import { getDivision } from '@/lib/leagues';
+import type { OfficialFixture } from '@/lib/model/fixture';
+import type { DivisionId } from '@/lib/model/ids';
 import { teamsInDivision } from '@/lib/teams';
-import type { DivisionId, OfficialFixture } from '@/lib/types';
 
 export class OfficialValidationError extends Error {
   constructor(

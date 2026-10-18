@@ -3,8 +3,8 @@ import { leaderClause, type LeaderLine } from '@/components/standings/standings-
 import { getLatestResultsDate, getLeagueSummaries, getTeams } from '@/lib/data';
 import { shortDate } from '@/lib/format';
 import { INDEPENDENT_LEAGUES, LEAGUES_PROPER, REGIONS, isIndependentLeague } from '@/lib/leagues';
+import type { LeagueId, RegionId } from '@/lib/model/ids';
 import { SEASON_CALENDAR_YEAR } from '@/lib/season';
-import type { LeagueId, RegionId } from '@/lib/types';
 
 import { OG, OG_SIZE } from './og-theme';
 import { SITE_WORDMARK } from './site';

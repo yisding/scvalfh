@@ -27,23 +27,16 @@
 
 import { classifyGame, classifyGames } from './classify';
 import { CCS, LEAGUES, LEAGUE_IDS, findDivision, leagueOfDivision } from './leagues';
+import type { OfficialFixture } from './model/fixture';
+import type { Game, GameSide, OfficialStamp } from './model/game';
+import type { DivisionHealth, LeagueHealth } from './model/health';
+import type { DivisionId, TeamId } from './model/ids';
+import type { Snapshot } from './model/snapshot';
+import type { ReportedRecord, Standing } from './model/standings';
+import type { Team } from './model/team';
 import { buildSeason, leagueWindowOf } from './season-build';
 import { assertFullTable, buildCrossCheck, computeStandings, divisionGames } from './standings';
 import { TEAMS, getTeamById, getTeamBySlug, teamOfSide, teamsInLeague } from './teams';
-import type {
-  DivisionHealth,
-  DivisionId,
-  Game,
-  GameSide,
-  LeagueHealth,
-  OfficialFixture,
-  OfficialStamp,
-  ReportedRecord,
-  Snapshot,
-  Standing,
-  Team,
-  TeamId,
-} from './types';
 
 type Json = Record<string, unknown>;
 

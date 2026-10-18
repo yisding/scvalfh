@@ -11,7 +11,7 @@ import {
   leaguesOf,
   postseasonTag,
 } from '@/lib/classify';
-import type { Game } from '@/lib/types';
+import type { Game } from '@/lib/model/game';
 import { game } from './support/game-builder';
 import { goldenPath, readJson } from './support/repo';
 

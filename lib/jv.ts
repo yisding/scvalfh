@@ -30,8 +30,9 @@ import {
   type JvClassification,
   type JvDivisionTable,
 } from './jv-standings';
+import type { Game } from './model/game';
+import type { ContestId, DivisionId, LeagueId, TeamSlug } from './model/ids';
 import { failValidation } from './schema-primitives';
-import type { ContestId, DivisionId, Game, LeagueId, TeamSlug } from './types';
 
 export type { JvFile, JvTeam } from './jv-schema';
 

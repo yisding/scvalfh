@@ -39,25 +39,17 @@ import {
   timeOfDayPT,
 } from '@/lib/format';
 import { divisionHeading, getDivision, getLeague, ladderFor, leagueOfDivision } from '@/lib/leagues';
-import type { LeagueConfig } from '@/lib/leagues';
-import type {
-  CcsKeyDates,
-  CrossoverSeat,
-  DivisionId,
-  Game,
-  LeaguePairing,
-  LeagueTournamentProjection,
-  PlayoffStatus,
-  Standing,
-  Team,
-  TeamSlug,
-  TiebreakStage,
-  TournamentGame,
-  TournamentSlot,
-} from '@/lib/types';
 
 import { ladderLineAfter, ladderRow } from '@/components/standings/standings-view';
 import { membershipSource } from '@/components/ui/membership-words';
+import type { Game } from '@/lib/model/game';
+import type { DivisionId, TeamSlug } from '@/lib/model/ids';
+import type { LeagueConfig } from '@/lib/model/league-config';
+import type {
+  CcsKeyDates, CrossoverSeat, LeaguePairing, LeagueTournamentProjection, TournamentGame, TournamentSlot,
+} from '@/lib/model/postseason';
+import type { PlayoffStatus, Standing, TiebreakStage } from '@/lib/model/standings';
+import type { Team } from '@/lib/model/team';
 
 // ---------------------------------------------------------------- small helpers
 

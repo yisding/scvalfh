@@ -2471,7 +2471,9 @@ classification evidence says it is a league game. This is decided once, in the p
 ## 4. Data model
 
 The normalized TypeScript model (`Team`, `Game`, `Standing`, `Snapshot`, `LeagueHealth`,
-`SourceId` etc.) lives in `lib/types.ts`; the snapshot is Zod-validated in
+`SourceId` etc.) lives in `lib/model/`, one module per seam (`ids.ts`, `season.ts`, `team.ts`, `game.ts`,
+`standings.ts`, `postseason.ts`, `fixture.ts`, `health.ts`, `crosscheck.ts`, `snapshot.ts`, and the league
+config's shapes in `league-config.ts`); the snapshot is Zod-validated in
 `lib/snapshot-schema.ts` (schema version 2; a version-1 single-league file migrates in memory, a
 version-2 file written before a configured league existed gains that league on load, DESIGN §22.7, and a
 version-2 file whose games no longer classify under the current rules or registry is reclassified on load,

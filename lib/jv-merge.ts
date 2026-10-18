@@ -26,8 +26,10 @@
 import { datesOf } from './backfill';
 import { byDateThenId, dayDiff } from './format';
 import type { JvSbliveRow } from './jv-schema';
+import type { BackfillProvenance, Game, GameSide, Outcome } from './model/game';
+import type { ContestId, TeamSlug } from './model/ids';
+import type { Team } from './model/team';
 import { getTeamBySlug } from './teams';
-import type { BackfillProvenance, ContestId, Game, GameSide, Outcome, Team, TeamSlug } from './types';
 
 /** Rules 1-2: a si.com final within ±1 day of the MaxPreps date. */
 export const JV_SBLIVE_DATE_TOLERANCE_DAYS = 1;

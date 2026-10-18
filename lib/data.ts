@@ -43,7 +43,21 @@ import {
   leaguePlayEnds,
   leaguesInRegion,
 } from './leagues';
-import type { LeagueConfig, PairingConfig, PostseasonConfig, RegionConfig, SectionConfig } from './leagues';
+import type { CifssCrossCheck, CrossCheckRow, SbliveCrossCheck } from './model/crosscheck';
+import type { OfficialFixture } from './model/fixture';
+import type { Game, GameStatus, Outcome, Record3 } from './model/game';
+import type { DroppedContest, LeagueHealth, SourceKind, SourceStatus } from './model/health';
+import type { ContestId, DivisionId, LeagueId, RegionId, SectionId, TeamId, TeamSlug } from './model/ids';
+import type {
+  LeagueConfig, PairingConfig, PostseasonConfig, RegionConfig, SectionConfig,
+} from './model/league-config';
+import type {
+  CcsCalendarEvent, CcsPlayoffs, LadderRow, LeaguePairing, LeagueTournamentProjection, PlayoffProjection,
+} from './model/postseason';
+import type { SeasonPhase } from './model/season';
+import type { ContentRemoval, Snapshot } from './model/snapshot';
+import type { Standing } from './model/standings';
+import type { Team } from './model/team';
 import { buildLeagueTournament } from './postseason';
 import { buildSearchIndex } from './search';
 import type { SearchIndex } from './search';
@@ -58,38 +72,6 @@ import {
 } from './standings';
 import type { MissingOfficialRow } from './standings';
 import { getTeamById, getTeamBySlug, teamOfSide } from './teams';
-import type {
-  CcsCalendarEvent,
-  CcsPlayoffs,
-  CifssCrossCheck,
-  ContentRemoval,
-  ContestId,
-  CrossCheckRow,
-  DivisionId,
-  DroppedContest,
-  Game,
-  GameStatus,
-  LadderRow,
-  LeagueHealth,
-  LeagueId,
-  LeaguePairing,
-  LeagueTournamentProjection,
-  OfficialFixture,
-  Outcome,
-  PlayoffProjection,
-  Record3,
-  RegionId,
-  SbliveCrossCheck,
-  SeasonPhase,
-  SectionId,
-  Snapshot,
-  SourceKind,
-  SourceStatus,
-  Standing,
-  Team,
-  TeamId,
-  TeamSlug,
-} from './types';
 
 /**
  * data/snapshot.json is IMPORTED, so every toolchain bundles it into the server code at build time:

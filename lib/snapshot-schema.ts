@@ -31,6 +31,9 @@ import {
   getSection,
   statusesOf,
 } from './leagues';
+import { type DivisionId, OFFICIAL_SOURCE_IDS } from './model/ids';
+import { type Snapshot } from './model/snapshot';
+import { type TiebreakStage } from './model/standings';
 import { dateKey, formatIssues, httpUrl, slugId } from './schema-primitives';
 import {
   addConfiguredLeagues,
@@ -42,7 +45,6 @@ import {
 } from './snapshot-migrate';
 import { stableStringify } from './stable-json';
 import { TEAMS, getTeamBySlug } from './teams';
-import { OFFICIAL_SOURCE_IDS, type DivisionId, type Snapshot, type TiebreakStage } from './types';
 
 // ---------------------------------------------------------------- primitives
 
@@ -55,7 +57,7 @@ const contestId = z
   .string()
   .refine((v) => GUID_RE.test(v) || SBLIVE_ID_RE.test(v), 'expected a contest GUID or sblive:<digits>');
 const outcome = z.enum(['W', 'L', 'T']);
-// SectionId (lib/types.ts); the compile-time proof at the end of this file fails if the two lists drift.
+// SectionId (lib/model/ids.ts); the compile-time proof at the end of this file fails if the two lists drift.
 const sectionId = z.enum(['ccs', 'ncs', 'ns', 'ss', 'sds']);
 const officialSourceId = z.enum(OFFICIAL_SOURCE_IDS);
 const sourceId = z.enum([

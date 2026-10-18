@@ -40,10 +40,10 @@ import {
   type ClubRegion,
   type ClubsFile,
 } from './clubs-schema';
+import type { TeamSlug } from './model/ids';
 import { joinToRoster, playerKey } from './roster-join';
 import { getAllEnrichedRosters, getRosters, type MergedPlayer, type MergedTeamRoster } from './rosters';
 import { failValidation } from './schema-primitives';
-import type { TeamSlug } from './types';
 
 export type {
   AffiliationConfidence,

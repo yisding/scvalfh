@@ -78,6 +78,9 @@ import {
 } from '@/lib/jv-schema';
 import { jvMaxprepsScheduleUrl, jvSbliveGamesUrl, jvSbliveTeamId } from '@/lib/jv-teams';
 import { INDEPENDENT_LEAGUES, LEAGUES_PROPER, seasonWindowBounds } from '@/lib/leagues';
+import type { Game } from '@/lib/model/game';
+import type { LeagueId } from '@/lib/model/ids';
+import type { Team } from '@/lib/model/team';
 import { normalizeGames } from '@/lib/normalize';
 import { inSeasonWindow } from '@/lib/pipeline/steps/window';
 import { formatIssues } from '@/lib/schema-primitives';
@@ -88,7 +91,6 @@ import { SBLIVE_HTTP_OPTIONS } from '@/lib/sources/sblive';
 import { combineJvCopies, parseJvTeamGamesPage, type JvSbliveCopy } from '@/lib/sources/sblive-jv';
 import { stableStringify } from '@/lib/stable-json';
 import { TEAMS } from '@/lib/teams';
-import type { Game, LeagueId, Team } from '@/lib/types';
 import { runCli } from './cli';
 
 interface Args {

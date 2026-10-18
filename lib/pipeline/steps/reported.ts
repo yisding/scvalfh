@@ -19,11 +19,12 @@
  */
 
 import { divisionLabel, getLeague } from '@/lib/leagues';
+import type { SourceStatus } from '@/lib/model/health';
+import type { LeagueId } from '@/lib/model/ids';
+import type { DivisionConfig } from '@/lib/model/league-config';
 import { StandingsResponseSchema, type StandingsRow } from '@/lib/sources/maxpreps';
 import { toReportedRecord } from '@/lib/standings';
 import { resolveTeam, teamsInDivision } from '@/lib/teams';
-import type { DivisionConfig } from '@/lib/leagues';
-import type { LeagueId, SourceStatus } from '@/lib/types';
 import { asOfDay, carriedFromOf, type PipelineContext, type RunState } from '@/lib/pipeline/ledger';
 import { classifyFetchError, parseJsonBody } from '@/lib/pipeline/read';
 import { resourceUrl } from '@/lib/pipeline/transport';

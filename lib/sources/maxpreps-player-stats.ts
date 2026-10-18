@@ -39,6 +39,7 @@ import { z } from 'zod';
 
 import { MaxPrepsError, type MaxPrepsClient } from './maxpreps';
 import { careerIdFromUrl } from './maxpreps-roster';
+import type { Team } from '@/lib/model/team';
 import { recaseName } from '@/lib/person-name';
 import {
   FIELD_STAT_KEYS,
@@ -49,7 +50,6 @@ import {
   type GoalieStats,
   type TeamPlayerStats,
 } from '@/lib/player-stats-schema';
-import type { Team } from '@/lib/types';
 import { MAXPREPS_API, SPORT_SEASON_ID } from '@/lib/season';
 
 // ---------------------------------------------------------------- the columns we keep

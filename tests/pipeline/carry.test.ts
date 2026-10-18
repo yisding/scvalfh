@@ -12,11 +12,11 @@ import path from 'node:path';
 
 import { beforeAll, describe, expect, it } from 'vitest';
 
+import type { Snapshot } from '@/lib/model/snapshot';
 import { stepOfficial } from '@/lib/pipeline/steps/official';
 import { stepSblive } from '@/lib/pipeline/steps/sblive';
 import { loadSnapshot, parseSnapshot } from '@/lib/snapshot-schema';
 import type { PipelineSteps } from '@/lib/pipeline/contract';
-import type { Snapshot } from '@/lib/types';
 import { corpusSnapshotPath } from '@/tests/support/corpus-snapshot';
 import { corpusDir } from '@/tests/support/corpus';
 import { REPO } from '@/tests/support/repo';

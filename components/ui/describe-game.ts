@@ -24,11 +24,11 @@ import {
   findLeague,
   getSection,
   leagueOfDivision,
-  type SectionConfig,
-  type ShootoutInference,
 } from '@/lib/leagues';
+import type { Game, Outcome, PostseasonTag, ScoreView } from '@/lib/model/game';
+import type { LeagueId, TeamSlug } from '@/lib/model/ids';
+import { type SectionConfig, type ShootoutInference } from '@/lib/model/league-config';
 import { getTeamBySlug } from '@/lib/teams';
-import type { Game, LeagueId, Outcome, PostseasonTag, ScoreView, TeamSlug } from '@/lib/types';
 
 /** The chip a side or a row carries. `none` = no chip at all (a scheduled game). */
 export type ChipKind = Outcome | 'pending' | 'cancelled' | 'postponed' | 'none';

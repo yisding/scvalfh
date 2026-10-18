@@ -11,7 +11,7 @@ import {
   TOURNAMENT_LEAGUE_IDS,
   UNBRACKETED_LEAGUE_IDS,
 } from '@/lib/leagues';
-import type { LeagueId } from '@/lib/types';
+import type { LeagueId } from '@/lib/model/ids';
 
 /**
  * The league-aware targets of the three nav entries that have a per-league place (SPEC §8.3),

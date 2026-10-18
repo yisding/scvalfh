@@ -6,7 +6,7 @@
 
 import { INDEPENDENT_LEAGUES, LEAGUES_PROPER, REGIONS, getSection, leaguesInRegion } from '@/lib/leagues';
 import { numberWord } from '@/lib/format';
-import type { RegionId } from '@/lib/types';
+import type { RegionId } from '@/lib/model/ids';
 
 /**
  * 'nine': the number of configured leagues proper, in words. The Elo fit spans all of them and the

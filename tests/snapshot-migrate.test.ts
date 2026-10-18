@@ -10,6 +10,10 @@ import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 import { LEAGUES, leaguesInRegion } from '@/lib/leagues';
+import type { Game } from '@/lib/model/game';
+import type { TeamId } from '@/lib/model/ids';
+import type { Snapshot } from '@/lib/model/snapshot';
+import type { ReportedRecord } from '@/lib/model/standings';
 import {
   addConfiguredLeagues,
   countsOf,
@@ -23,7 +27,6 @@ import { loadSnapshot, parseSnapshot } from '@/lib/snapshot-schema';
 import { stableStringify } from '@/lib/stable-json';
 import { buildCrossCheck, computeStandings, divisionGames } from '@/lib/standings';
 import { TEAMS, teamsInLeague } from '@/lib/teams';
-import type { Game, ReportedRecord, Snapshot, TeamId } from '@/lib/types';
 import { VARIANTS_DIR } from './support/corpus';
 import { REPO, goldenPath, readJson } from './support/repo';
 

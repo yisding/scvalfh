@@ -49,6 +49,7 @@ import {
   teamsInScope,
   type PreviousFile,
 } from '@/lib/fetch-scope';
+import type { LeagueId } from '@/lib/model/ids';
 import { MaxPrepsClient } from '@/lib/sources/maxpreps';
 import { parseRosterPage, pendingRoster, rosterUrl } from '@/lib/sources/maxpreps-roster';
 import {
@@ -65,7 +66,6 @@ import { formatIssues } from '@/lib/schema-primitives';
 import { SEASON_YEAR } from '@/lib/season';
 import { stableStringify } from '@/lib/stable-json';
 import { TEAMS } from '@/lib/teams';
-import type { LeagueId } from '@/lib/types';
 import { runCli } from './cli';
 
 interface Args {

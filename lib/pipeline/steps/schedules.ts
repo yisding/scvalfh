@@ -14,9 +14,11 @@
  */
 
 import { getLeague } from '@/lib/leagues';
+import type { SourceStatus } from '@/lib/model/health';
+import type { LeagueId } from '@/lib/model/ids';
+import type { Team } from '@/lib/model/team';
 import { ScheduleResponseSchema, splitTbaRows, type ScheduleRow } from '@/lib/sources/maxpreps';
 import { FETCHABLE_TEAMS, TEAMS } from '@/lib/teams';
-import type { LeagueId, SourceStatus, Team } from '@/lib/types';
 import {
   asOfStamp,
   carriedFromOf,

@@ -1,10 +1,11 @@
 import { monthDay } from '@/lib/format';
 import { getDivision, leagueOfDivision } from '@/lib/leagues';
-import type { DivisionId, OfficialFixture, TeamSlug } from '@/lib/types';
 import ExternalLink from '@/components/ui/ExternalLink';
 import { NON_MEMBER_NOTE } from '@/components/ui/GameRow';
 import GhostMonogram from '@/components/ui/GhostMonogram';
 import TeamMonogram from '@/components/ui/TeamMonogram';
+import type { OfficialFixture } from '@/lib/model/fixture';
+import type { DivisionId, TeamSlug } from '@/lib/model/ids';
 import { fixtureOpponent } from './team-view';
 
 /**

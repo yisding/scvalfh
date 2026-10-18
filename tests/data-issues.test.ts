@@ -10,9 +10,9 @@ import path from 'node:path';
 
 import { afterAll, describe, expect, it } from 'vitest';
 
+import type { Snapshot } from '@/lib/model/snapshot';
 import { buildDataIssues, readPreviousMeta, type PreviousMeta } from '@/scripts/data-issues';
 import { loadSnapshot } from '@/lib/snapshot-schema';
-import type { Snapshot } from '@/lib/types';
 import { VARIANTS_DIR } from './support/corpus';
 import { tempDir } from './support/repo';
 

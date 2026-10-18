@@ -49,9 +49,12 @@ import {
   sectionOf,
   standaloneName,
   statusesOf,
-  type DivisionConfig,
-  type LeagueConfig,
 } from '@/lib/leagues';
+import type { CrossCheckRow } from '@/lib/model/crosscheck';
+import type { DivisionId, LeagueId, OfficialSourceId, TeamId, TeamSlug } from '@/lib/model/ids';
+import { type DivisionConfig, type LeagueConfig } from '@/lib/model/league-config';
+import type { PlayoffStatus, Standing, TiebreakStage } from '@/lib/model/standings';
+import type { Team } from '@/lib/model/team';
 import {
   crossCheckSkipReason,
   outcomesFor,
@@ -60,18 +63,6 @@ import {
   statusLegend,
   unevenGamesSentence,
 } from '@/lib/standings';
-import type {
-  CrossCheckRow,
-  DivisionId,
-  LeagueId,
-  OfficialSourceId,
-  PlayoffStatus,
-  Standing,
-  Team,
-  TeamId,
-  TeamSlug,
-  TiebreakStage,
-} from '@/lib/types';
 import type { StandingsRowData } from '@/components/ui/StandingsTable';
 
 // ---------------------------------------------------------------- shared shapes

@@ -13,6 +13,8 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
+import type { OfficialFixture } from '@/lib/model/fixture';
+import type { Game, OfficialStamp } from '@/lib/model/game';
 import { matchOfficialFixtures } from '@/lib/official/match';
 import {
   carryOfficialForward,
@@ -24,7 +26,6 @@ import {
   scvalScheduleUrl,
 } from '@/lib/sources/scval-pdf';
 import { teamsInDivision } from '@/lib/teams';
-import type { Game, OfficialFixture, OfficialStamp } from '@/lib/types';
 import { game } from './support/game-builder';
 import { REPO } from './support/repo';
 

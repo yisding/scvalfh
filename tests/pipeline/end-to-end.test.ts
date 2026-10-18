@@ -15,8 +15,11 @@ import path from 'node:path';
 
 import { beforeAll, describe, expect, it } from 'vitest';
 
+import type { Game } from '@/lib/model/game';
+import type { LeagueHealth } from '@/lib/model/health';
+import type { LeagueId } from '@/lib/model/ids';
+import type { Snapshot } from '@/lib/model/snapshot';
 import { loadSnapshot, parseSnapshot } from '@/lib/snapshot-schema';
-import type { Game, LeagueHealth, LeagueId, Snapshot } from '@/lib/types';
 import { corpusSnapshotPath } from '@/tests/support/corpus-snapshot';
 import { runFixtureCli, type BuildOptions, type CliRun } from '@/tests/support/cli';
 import { REGRESSED_FINALS } from '@/tests/support/pipeline/finals-regression';

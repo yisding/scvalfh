@@ -19,6 +19,11 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { classifyGames, postseasonTag } from '@/lib/classify';
 import { DATA_QUALITY, LEAGUES, getLeague } from '@/lib/leagues';
+import type { OfficialFixture } from '@/lib/model/fixture';
+import type { Game } from '@/lib/model/game';
+import type { LeagueRunState, SourceStatus } from '@/lib/model/health';
+import type { LeagueId } from '@/lib/model/ids';
+import type { Snapshot } from '@/lib/model/snapshot';
 import { applyExclusions, normalizeGames } from '@/lib/normalize';
 import { matchOfficialFixtures, type MatchOptions, type MatchResult } from '@/lib/official/match';
 import { loadBundledFixtures, officialDocumentOf } from '@/lib/official/schema';
@@ -34,7 +39,6 @@ import {
 import { isExcludedFor, stepOfficial } from '@/lib/pipeline/steps/official';
 import { ScheduleResponseSchema } from '@/lib/sources/maxpreps';
 import { parseSchedulePdfText } from '@/lib/sources/scval-pdf';
-import type { Game, LeagueId, LeagueRunState, OfficialFixture, Snapshot, SourceStatus } from '@/lib/types';
 import { game } from './support/game-builder';
 import { allScheduleRows, corpusDir } from './support/corpus';
 import { REPO } from './support/repo';

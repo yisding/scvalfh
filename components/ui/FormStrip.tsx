@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 import { OUTCOME_WORDS } from '@/lib/format';
 import { gameHref } from '@/lib/game-id';
-import type { Outcome } from '@/lib/types';
+import type { Outcome } from '@/lib/model/game';
 
 import ResultChip, { CHIP_LABEL } from './ResultChip';
 

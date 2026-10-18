@@ -1,7 +1,7 @@
 import { formatStamp, shortDate } from '@/lib/format';
-import type { SbliveCrossCheck } from '@/lib/types';
 
 import ExternalLink from '@/components/ui/ExternalLink';
+import type { SbliveCrossCheck } from '@/lib/model/crosscheck';
 
 /**
  * The si.com (High School on SI, formerly SBLive) score cross-check (SPEC §10.8, DESIGN §9,

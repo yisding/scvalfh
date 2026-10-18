@@ -31,13 +31,17 @@
  */
 
 import { byDateThenId, sideOutcome } from './format';
-import { drawNumberOf, type LeagueConfig } from './leagues';
+import { drawNumberOf } from './leagues';
+import type { Game } from './model/game';
+import type { TeamId, TeamSlug } from './model/ids';
+import { type LeagueConfig } from './model/league-config';
+import type {
+  CrossoverSeat, LeagueTournamentProjection, TournamentGame, TournamentSlot,
+} from './model/postseason';
+import type { SeasonPhase } from './model/season';
+import type { Standing } from './model/standings';
 import { lastSpotOutcome } from './standings';
 import { getTeamById, getTeamBySlug } from './teams';
-import type {
-  CrossoverSeat, Game, LeagueTournamentProjection, SeasonPhase, Standing, TeamId, TeamSlug, TournamentGame,
-  TournamentSlot,
-} from './types';
 
 export interface SixthPlaceDecision {
   playInNeeded: 'no' | 'yes' | 'possible';

@@ -11,6 +11,8 @@
  */
 
 import { carryCifssCrossCheck, compareCifss, type NonGame } from '@/lib/cifss-crosscheck';
+import type { CifssCrossCheck } from '@/lib/model/crosscheck';
+import type { SourceStatus } from '@/lib/model/health';
 import { dateKeyOf } from '@/lib/normalize';
 import {
   CIFSS_SECTIONS,
@@ -21,7 +23,6 @@ import {
   type CifssSectionKey,
 } from '@/lib/sources/cifss';
 import { getTeamById, resolveTeam, sideJoinKey, unorderedPairKey } from '@/lib/teams';
-import type { CifssCrossCheck, SourceStatus } from '@/lib/types';
 import { carriedFromOf, type PipelineContext, type RunState } from '@/lib/pipeline/ledger';
 import { classifyFetchError } from '@/lib/pipeline/read';
 

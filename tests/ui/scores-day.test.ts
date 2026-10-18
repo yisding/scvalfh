@@ -20,7 +20,7 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { beforeAll, describe, expect, it } from 'vitest';
 
 import { longDate, parseLocal } from '@/lib/format';
-import type { Game } from '@/lib/types';
+import type { Game } from '@/lib/model/game';
 import { textOf } from '@/tests/support/html-text';
 
 type Data = typeof import('@/lib/data');

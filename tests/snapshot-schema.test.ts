@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
+import type { Game } from '@/lib/model/game';
+import type { Snapshot } from '@/lib/model/snapshot';
 import {
   GameSchema,
   LeagueHealthSchema,
@@ -12,7 +14,6 @@ import {
   snapshotContentHash,
 } from '@/lib/snapshot-schema';
 import { TEAMS } from '@/lib/teams';
-import type { Game, Snapshot } from '@/lib/types';
 import { game } from './support/game-builder';
 import { goldenPath, readJson } from './support/repo';
 

@@ -29,8 +29,8 @@ import { getCommitsFile } from '@/lib/commits';
 import { getTeamsGrouped, type LeagueSummary } from '@/lib/data';
 import { dateWithYear, listWords } from '@/lib/format';
 import { REGIONS, getLeague } from '@/lib/leagues';
+import type { RegionId, TeamSlug } from '@/lib/model/ids';
 import { getRosterEnrichment, getRosters } from '@/lib/rosters';
-import type { RegionId, TeamSlug } from '@/lib/types';
 import { buildRosterView, type RosterRow } from '@/components/teams/roster-view';
 import { plural } from '@/components/ui/plural';
 

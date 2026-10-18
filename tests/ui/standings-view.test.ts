@@ -15,7 +15,7 @@ import { describe, expect, it } from 'vitest';
 
 import type { MissingOfficialResult } from '@/lib/data';
 import { standaloneName } from '@/lib/leagues';
-import type { LeagueId } from '@/lib/types';
+import type { LeagueId } from '@/lib/model/ids';
 import { useCorpusModules } from '@/tests/support/corpus-modules';
 // textOf: visible text, tags dropped and entities decoded.
 import { textOf } from '@/tests/support/html-text';

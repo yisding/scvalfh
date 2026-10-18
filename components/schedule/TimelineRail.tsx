@@ -2,9 +2,9 @@ import Link from 'next/link';
 
 import { dateSpan, longDate, monthDay, parseLocal } from '@/lib/format';
 import { CCS, getLeague } from '@/lib/leagues';
-import type { LeagueId } from '@/lib/types';
 
 import Arrow from '@/components/ui/Arrow';
+import type { LeagueId } from '@/lib/model/ids';
 import type { RailKind } from './rail-targets';
 
 /**

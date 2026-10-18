@@ -17,7 +17,7 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 import { ordinal } from '@/lib/format';
-import type { Snapshot } from '@/lib/types';
+import type { Snapshot } from '@/lib/model/snapshot';
 import { CORPUS_HOOK_TIMEOUT, useCorpusModules, withSnapshotModules, type CorpusModules } from '@/tests/support/corpus-modules';
 import { corpusSnapshotPath } from '@/tests/support/corpus-snapshot';
 // textOf: the `<main>`-equivalent text of a page (the page component renders no layout).

@@ -70,6 +70,7 @@ import {
   type PreviousFile,
 } from '@/lib/fetch-scope';
 import { INDEPENDENT_LEAGUES, LEAGUES_PROPER, seasonWindowBounds } from '@/lib/leagues';
+import type { LeagueId } from '@/lib/model/ids';
 import { teamsCreditedByNotes } from '@/lib/note-stats';
 import { inSeasonWindow } from '@/lib/pipeline/steps/window';
 import {
@@ -99,7 +100,6 @@ import { SEASON_YEAR } from '@/lib/season';
 import { loadSnapshot } from '@/lib/snapshot-schema';
 import { stableStringify } from '@/lib/stable-json';
 import { TEAMS } from '@/lib/teams';
-import type { LeagueId } from '@/lib/types';
 import { runCli } from './cli';
 
 interface Args {

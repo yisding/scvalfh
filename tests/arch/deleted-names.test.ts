@@ -9,7 +9,9 @@
  *
  * The ledger is keyed by module path PREFIX: a key matches a specifier that resolves to the key
  * itself or to anything under `key/`, so the key moves with the module when it becomes a directory
- * (a refactor that moves a keyed module edits its key in the same commit).
+ * (a refactor that moves a keyed module edits its key in the same commit). The ledger therefore
+ * guards the SUCCESSOR modules too: the old types module was split into the files of lib/model/,
+ * so the key 'lib/model' bans its deleted names from every one of them.
  *
  * The page-code rules (league ids as string literals, hand-built /game/ URLs, SOURCE_LINKS.scval*)
  * are tests/arch/page-code-literals.test.ts. Each failure names the file and line, so it routes to
@@ -38,7 +40,7 @@ const DELETED: Readonly<Record<string, readonly string[]>> = {
   ],
   'lib/standings': ['crossoverPairings', 'playoffStatus', 'PLAYOFF_STATUS_LABELS'],
   'lib/teams': ['isScvalTeamId', 'WITHDRAWN_SCHOOL_NAMES'],
-  'lib/types': ['CrossoverPairing', 'Division', 'PlayoffKeyDates', 'Playoffs'],
+  'lib/model': ['CrossoverPairing', 'Division', 'PlayoffKeyDates', 'Playoffs'],
 };
 
 /** The names the ledger deletes from `module`: its own key, or the key of a directory above it. */
@@ -84,14 +86,14 @@ describe('deleted names stay deleted (SPEC §0.4)', () => {
   it('the scanner itself catches each banned form (synthetic sources)', () => {
     expect(resolveModule('app/teams/page.tsx', '../../lib/season')).toBe('lib/season');
     expect(resolveModule('components/home/x.ts', '@/lib/teams')).toBe('lib/teams');
-    expect(resolveModule('tests/ui/a.test.ts', '../../lib/types.ts')).toBe('lib/types');
+    expect(resolveModule('tests/ui/a.test.ts', '../../lib/model/ids.ts')).toBe('lib/model/ids');
     expect(resolveModule('app/x.tsx', 'next/link')).toBeNull();
     const bad = [
       "import { DIVISIONS } from '../lib/season';",
       "import { playoffStatus as ps } from '@/lib/standings';",
       "export { isScvalTeamId } from '../lib/teams';",
-      "import type { Division } from '../lib/types';",
-      "type P = import('../lib/types').Playoffs;",
+      "import type { Division } from '../lib/model/ids';",
+      "type P = import('@/lib/model/postseason').Playoffs;",
       // A key matches the module AND anything under it (the module became a directory).
       "import { buildSeason } from '@/lib/season/build';",
     ].join('\n');

@@ -30,6 +30,7 @@ import { getGames, getStandingFor, getTeams } from '@/lib/data';
 import { gradeWord, recordString } from '@/lib/format';
 import { regionOf } from '@/lib/leagues';
 import { computeAdjustedScoring, getAdjustedScoring } from '@/lib/adjusted-scoring';
+import type { Game } from '@/lib/model/game';
 import { getAllPlayerStatsWithNotes } from '@/lib/player-stats';
 import { getPriorSeason } from '@/lib/prior-season';
 import { getEnrichedTeamRoster } from '@/lib/rosters';
@@ -45,7 +46,6 @@ import {
 } from '@/lib/player-stats-schema';
 import { computeStandings } from '@/lib/standings';
 import { TEAMS, getTeamBySlug } from '@/lib/teams';
-import type { Game } from '@/lib/types';
 import { game } from '@/tests/support/game-builder';
 import { textOf } from '@/tests/support/html-text';
 

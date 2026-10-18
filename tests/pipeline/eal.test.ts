@@ -11,11 +11,11 @@ import { beforeAll, describe, expect, it } from 'vitest';
 
 import { localDateKey, sideOutcome } from '@/lib/format';
 import { DATA_QUALITY, LEAGUES } from '@/lib/leagues';
+import type { Snapshot } from '@/lib/model/snapshot';
 import type { ScheduleRow } from '@/lib/sources/maxpreps';
 import { parseScoresPage, parseTeamGamesPage, type SbliveGame } from '@/lib/sources/sblive';
 import { divisionGames } from '@/lib/standings';
 import { TEAMS, teamsInLeague } from '@/lib/teams';
-import type { Snapshot } from '@/lib/types';
 import { CorpusReader, EAL_CORPUS, gameOf } from '@/tests/support/corpus';
 import { useCorpusModules } from '@/tests/support/corpus-modules';
 import { corpusSnapshotPath } from '@/tests/support/corpus-snapshot';

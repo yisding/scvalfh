@@ -17,7 +17,7 @@
  */
 
 import { plural } from '@/lib/format';
-import type { Game } from '@/lib/types';
+import type { Game } from '@/lib/model/game';
 
 /** What the `state` filter groups games into. */
 export type ScheduleState = 'final' | 'upcoming' | 'pending';

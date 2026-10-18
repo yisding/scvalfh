@@ -16,6 +16,8 @@ import { describe, expect, it } from 'vitest';
 import { buildLeadersView } from '@/components/leaders/leaders-view';
 import { buildPlayerStatsView } from '@/components/teams/player-stats-view';
 import { getSnapshot } from '@/lib/data';
+import type { Game } from '@/lib/model/game';
+import type { TeamSlug } from '@/lib/model/ids';
 import { NAME_ALIASES } from '@/lib/name-aliases';
 import {
   notedKinds,
@@ -33,7 +35,6 @@ import { FIELD_STAT_KEYS, GOALIE_STAT_KEYS, type PlayerStatLine, type TeamPlayer
 import { getTeamRoster } from '@/lib/rosters';
 import { contestIdFromUrl, parseGameStats } from '@/lib/sources/maxpreps-game-stats';
 import { getTeamBySlug } from '@/lib/teams';
-import type { Game, TeamSlug } from '@/lib/types';
 import { game } from './support/game-builder';
 import { FIXTURE_DIR } from './support/corpus';
 import { buildFixturePlayerStats } from './support/cli';

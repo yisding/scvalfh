@@ -14,9 +14,10 @@ import { describe, expect, it } from 'vitest';
 
 import { applyBackfill } from '@/lib/backfill';
 import { NOT_PUBLISHED, carryCrossCheck, emptyCrossCheck, gameJoinKey, gamePairKey, reconcile, withBackfill } from '@/lib/crosscheck';
+import type { BackfillRow, SbliveCrossCheck, SbliveOnlyRow } from '@/lib/model/crosscheck';
+import type { Game } from '@/lib/model/game';
 import type { SbliveGame, SbliveSide } from '@/lib/sources/sblive';
 import { resolveTeam } from '@/lib/teams';
-import type { BackfillRow, Game, SbliveCrossCheck, SbliveOnlyRow } from '@/lib/types';
 import { game } from './support/game-builder';
 
 function side(ref: string, score: number | null, via: SbliveSide['via'] = 'team-id'): SbliveSide {

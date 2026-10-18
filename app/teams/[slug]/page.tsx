@@ -40,7 +40,7 @@ import { getTeamSlugs, getToday } from '@/lib/data';
 import { ordinal, recordString, shortDate } from '@/lib/format';
 import { getHistoryFor, getHistorySeason, getHistoryStandings } from '@/lib/history';
 import { divisionHeading, getLeague, leagueOfDivision, regionOf } from '@/lib/leagues';
-import type { DivisionId, LeagueId } from '@/lib/types';
+import type { DivisionId, LeagueId } from '@/lib/model/ids';
 
 /**
  * /teams/[slug] — "How is MY team doing?" (DESIGN §3.7).

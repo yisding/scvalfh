@@ -19,7 +19,7 @@
  *   word those links themselves).
  */
 import { getLeague, getSection } from '@/lib/leagues';
-import type { LeagueId } from '@/lib/types';
+import type { LeagueId } from '@/lib/model/ids';
 
 export interface SourceLink {
   href: string;

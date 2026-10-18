@@ -28,9 +28,11 @@
  */
 
 import { CCS, LEAGUES } from './leagues';
-import type { LeagueConfig } from './leagues';
+import type { Game, PostseasonTag } from './model/game';
+import type { DivisionId, LeagueId } from './model/ids';
+import type { LeagueConfig } from './model/league-config';
+import type { Team } from './model/team';
 import { teamOfSide } from './teams';
-import type { DivisionId, Game, LeagueId, PostseasonTag, Team } from './types';
 
 export interface ClassifyOptions {
   /** Divisions whose official fixture file is missing/invalid this run: classified by contest-type, never by membership alone. */

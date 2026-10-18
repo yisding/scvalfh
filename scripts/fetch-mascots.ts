@@ -37,9 +37,9 @@ import path from 'node:path';
 import sharp, { type Sharp } from 'sharp';
 
 import { MASCOT_FILE_SIZES } from '@/lib/mascots';
+import type { Team } from '@/lib/model/team';
 import { CHROME_USER_AGENT, HttpClient } from '@/lib/sources/http';
 import { TEAMS } from '@/lib/teams';
-import type { Team } from '@/lib/types';
 import { runCli } from './cli';
 
 const USAGE = 'Usage: pnpm fetch-mascots [--only <slug>]... [--dry-run]';

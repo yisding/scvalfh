@@ -21,7 +21,12 @@
  */
 
 import { postseasonTag } from '@/lib/classify';
-import { LEAGUES, divisionDisplay, divisionHeading, type DivisionConfig, type LeagueConfig } from '@/lib/leagues';
+import { LEAGUES, divisionDisplay, divisionHeading } from '@/lib/leagues';
+import type { OfficialFixture } from '@/lib/model/fixture';
+import type { Game } from '@/lib/model/game';
+import type { SourceStatus } from '@/lib/model/health';
+import type { DivisionId, LeagueId } from '@/lib/model/ids';
+import { type DivisionConfig, type LeagueConfig } from '@/lib/model/league-config';
 import { matchOfficialFixtures } from '@/lib/official/match';
 import { hasOfficialDocument, loadBundledFixtures, type DocumentDivision } from '@/lib/official/schema';
 import { assertDoubleRoundRobin } from '@/lib/official/validate';
@@ -34,7 +39,6 @@ import {
   listFieldHockeyLinks,
   parseSchedulePdfText,
 } from '@/lib/sources/scval-pdf';
-import type { DivisionId, Game, LeagueId, OfficialFixture, SourceStatus } from '@/lib/types';
 import {
   type OfficialStep,
   type OfficialStepResult,

@@ -15,10 +15,14 @@ import { beforeAll, describe, expect, it } from 'vitest';
 
 import { buildTournamentView, type TournamentView } from '@/components/playoffs/playoff-view';
 import { getDivision, getLeague } from '@/lib/leagues';
+import type { Game, PostseasonTag } from '@/lib/model/game';
+import type { LeagueTournamentProjection } from '@/lib/model/postseason';
+import type { SeasonPhase } from '@/lib/model/season';
+import type { Standing } from '@/lib/model/standings';
+import type { Team } from '@/lib/model/team';
 import { buildLeagueTournament, SHOOTOUT_NOTE } from '@/lib/postseason';
 import { computeStandings, outcomesFor, playoffOutcomeLabel } from '@/lib/standings';
 import { getTeamBySlug } from '@/lib/teams';
-import type { Game, LeagueTournamentProjection, PostseasonTag, SeasonPhase, Standing, Team } from '@/lib/types';
 import { game } from '@/tests/support/game-builder';
 import { useCorpusModules } from '@/tests/support/corpus-modules';
 import { textOf } from '@/tests/support/html-text';

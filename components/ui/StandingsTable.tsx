@@ -3,7 +3,9 @@ import Link from 'next/link';
 import type { StandingContext } from '@/lib/data';
 import { EM_DASH, placeWords, recordString, recordWords, streakString, winPct } from '@/lib/format';
 import { divisionHeading, leagueOfDivision } from '@/lib/leagues';
-import type { DivisionId, Standing, Team, TeamId, TeamSlug } from '@/lib/types';
+import type { DivisionId, TeamId, TeamSlug } from '@/lib/model/ids';
+import type { Standing } from '@/lib/model/standings';
+import type { Team } from '@/lib/model/team';
 
 import ExternalLink from './ExternalLink';
 import FormStrip, { toFormEntries } from './FormStrip';

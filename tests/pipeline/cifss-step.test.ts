@@ -9,6 +9,9 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
+import type { CifssCrossCheck } from '@/lib/model/crosscheck';
+import type { Game } from '@/lib/model/game';
+import type { Snapshot } from '@/lib/model/snapshot';
 import { TransportError, type RawResponse, type ResourceKey, type Transport } from '@/lib/pipeline/contract';
 import { SILENT_SINK, emptyRunState } from '@/lib/pipeline/ledger';
 import { createPipelineContext, parseRunArgs } from '@/lib/pipeline/run';
@@ -17,7 +20,6 @@ import { resourceUrl } from '@/lib/pipeline/transport';
 import { CIFSS_SECTIONS } from '@/lib/sources/cifss';
 import type { ScheduleRow } from '@/lib/sources/maxpreps';
 import { resolveTeam } from '@/lib/teams';
-import type { CifssCrossCheck, Game, Snapshot } from '@/lib/types';
 import { game } from '@/tests/support/game-builder';
 import { REPO } from '@/tests/support/repo';
 

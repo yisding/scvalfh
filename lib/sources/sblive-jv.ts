@@ -16,7 +16,7 @@
 import { localDateKey } from '@/lib/format';
 import { JV_SLUG_BY_SBLIVE_ID } from '@/lib/jv-teams';
 import type { JvSbliveRow } from '@/lib/jv-schema';
-import type { TeamSlug } from '@/lib/types';
+import type { TeamSlug } from '@/lib/model/ids';
 import {
   SbliveError,
   TeamGamesPropsSchema,

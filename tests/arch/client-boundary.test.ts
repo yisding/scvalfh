@@ -38,7 +38,7 @@ import {
  * outside components/ and app/. An entry ending in '/' is a prefix: it admits everything under it.
  */
 const CLIENT_SAFE: readonly string[] = [
-  'lib/types',
+  'lib/model/',
   'lib/season',
   'lib/format',
   'lib/game-id',

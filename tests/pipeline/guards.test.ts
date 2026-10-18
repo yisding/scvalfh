@@ -12,6 +12,9 @@ import { beforeAll, describe, expect, it } from 'vitest';
 
 import { classifyGame } from '@/lib/classify';
 import { divisionsOf, getLeague } from '@/lib/leagues';
+import type { Game } from '@/lib/model/game';
+import type { LeagueId } from '@/lib/model/ids';
+import type { Snapshot } from '@/lib/model/snapshot';
 import { RunAbort, type OfficialStep } from '@/lib/pipeline/contract';
 import { PipelineContext, SILENT_SINK, emptyRunState, type RunState, type TeamFeedInfo } from '@/lib/pipeline/ledger';
 import {
@@ -25,7 +28,6 @@ import {
 import { loadSnapshot } from '@/lib/snapshot-schema';
 import { divisionGames } from '@/lib/standings';
 import { teamsInLeague } from '@/lib/teams';
-import type { Game, LeagueId, Snapshot } from '@/lib/types';
 import { variantDir } from '@/tests/support/corpus';
 import { REGRESSED_FINALS } from '@/tests/support/pipeline/finals-regression';
 import { naiveBvalOfficial, noopSblive } from '@/tests/support/pipeline/noop-steps';

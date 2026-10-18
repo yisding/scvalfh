@@ -84,6 +84,7 @@ import { getCommitsFile } from '@/lib/commits';
 import { getSnapshot } from '@/lib/data';
 import { gameSentence } from '@/components/history/bracket-view';
 import { getHistoryBrackets, getHistoryLeagues } from '@/lib/history';
+import type { LeagueId } from '@/lib/model/ids';
 import { getPlayerStats } from '@/lib/player-stats';
 import {
   LEAGUES,
@@ -96,7 +97,6 @@ import {
   isSingleDivision,
   regionOf,
 } from '@/lib/leagues';
-import type { LeagueId } from '@/lib/types';
 import {
   EAL_SCHOOL_CLAIM,
   RED_BLUFF_STATUS_CLAIM,

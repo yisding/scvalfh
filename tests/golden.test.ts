@@ -12,6 +12,9 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 import { classifyGames } from '@/lib/classify';
 import { divisionsOf } from '@/lib/leagues';
+import type { Game, GameStatus } from '@/lib/model/game';
+import type { Snapshot } from '@/lib/model/snapshot';
+import type { PlayoffStatus, ReportedRecord, Standing } from '@/lib/model/standings';
 import { buildSeason } from '@/lib/season-build';
 import {
   buildCrossCheck,
@@ -24,14 +27,6 @@ import {
 import { countsOf, migrateV1ToV2 } from '@/lib/snapshot-migrate';
 import { parseSnapshot } from '@/lib/snapshot-schema';
 import { stableStringify } from '@/lib/stable-json';
-import type {
-  Game,
-  GameStatus,
-  PlayoffStatus,
-  ReportedRecord,
-  Snapshot,
-  Standing,
-} from '@/lib/types';
 import { teamsInLeague } from '@/lib/teams';
 import { withSnapshotModules } from './support/corpus-modules';
 import { game } from './support/game-builder';

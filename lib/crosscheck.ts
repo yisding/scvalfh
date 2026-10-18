@@ -26,9 +26,10 @@
  */
 
 import { dayNumber } from './format';
+import type { BackfillRow, SbliveCrossCheck, SbliveOnlyRow, ScoreConflictRow } from './model/crosscheck';
+import type { Game } from './model/game';
 import { sblivePairKey, type SbliveGame, type SbliveSide } from './sources/sblive';
 import { getTeamBySlug, sideJoinKey, unorderedPairKey } from './teams';
-import type { BackfillRow, Game, SbliveCrossCheck, ScoreConflictRow, SbliveOnlyRow } from './types';
 
 /** The same key `sblivePairKey` gives (lib/teams.ts sideJoinKey), so the two halves of the join agree exactly. */
 export function gamePairKey(game: Pick<Game, 'home' | 'away'>): string {

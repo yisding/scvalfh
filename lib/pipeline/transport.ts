@@ -24,6 +24,7 @@ import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 
 import { CCS, getDivision, getLeague } from '@/lib/leagues';
+import type { DivisionId, TeamSlug } from '@/lib/model/ids';
 import { officialChangesCellText, sha256Hex } from '@/lib/official/validate';
 import { BOOTSTRAP_URL } from '@/lib/season';
 import { CCS_ICAL_URL } from '@/lib/sources/ccs';
@@ -34,7 +35,6 @@ import { SBLIVE_HTTP_OPTIONS, sbliveScoresUrl } from '@/lib/sources/sblive';
 import { SCVAL_STANDINGS_INDEX, pdfToText, scvalScheduleUrl } from '@/lib/sources/scval-pdf';
 import { VNN_SITE_IDS, vnnIcsUrl } from '@/lib/sources/vnn-ics';
 import { getTeamBySlug } from '@/lib/teams';
-import type { DivisionId, TeamSlug } from '@/lib/types';
 import {
   FixtureMissing,
   TransportError,

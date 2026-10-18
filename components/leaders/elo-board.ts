@@ -14,6 +14,9 @@
 
 import { getSnapshot } from '@/lib/data';
 import { regionOf } from '@/lib/leagues';
+import type { Game } from '@/lib/model/game';
+import type { RegionId, TeamSlug } from '@/lib/model/ids';
+import type { Team } from '@/lib/model/team';
 import { getPriorSeason } from '@/lib/prior-season';
 import type { PriorSeason } from '@/lib/prior-season-schema';
 import {
@@ -25,7 +28,6 @@ import {
   type RatingTable,
   type TeamRating,
 } from '@/lib/ratings';
-import type { Game, RegionId, Team, TeamSlug } from '@/lib/types';
 import { plural } from '@/components/ui/plural';
 import { num, schoolBoard } from './board-kit';
 import { byName, qualifyingMinimum } from './ranking';

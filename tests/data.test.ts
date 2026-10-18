@@ -11,11 +11,12 @@ import { writeFileSync } from 'node:fs';
 import { beforeAll, describe, expect, it } from 'vitest';
 
 import { getLeague } from '@/lib/leagues';
+import type { Game } from '@/lib/model/game';
+import type { Snapshot } from '@/lib/model/snapshot';
 import { buildSeason } from '@/lib/season-build';
 import { countsOf } from '@/lib/snapshot-migrate';
 import { loadSnapshot } from '@/lib/snapshot-schema';
 import { computeStandings } from '@/lib/standings';
-import type { Game, Snapshot } from '@/lib/types';
 import { useSnapshotModules, withSnapshotModules } from './support/corpus-modules';
 import { game } from './support/game-builder';
 import { tempFile, goldenPath, readJson } from './support/repo';

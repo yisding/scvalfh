@@ -18,8 +18,8 @@
 
 import { BASIC_NAMED, decodeEntities } from '@/lib/html-entities';
 import { divisionsOf } from '@/lib/leagues';
+import type { DivisionId, TeamSlug } from '@/lib/model/ids';
 import { resolveOfficialName, teamsInLeague } from '@/lib/teams';
-import type { DivisionId, TeamSlug } from '@/lib/types';
 
 export const BVAL_HISTORY_SOURCES = {
   standingsIndex: 'https://bval.org/standings/',

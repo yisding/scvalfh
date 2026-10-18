@@ -37,9 +37,9 @@ import {
   type UnavailableLeagueHistory,
 } from './history-schema';
 import { LEAGUE_IDS, getLeague, getSection } from './leagues';
+import type { DivisionId, LeagueId, SectionId, TeamSlug } from './model/ids';
 import { failValidation } from './schema-primitives';
 import { getTeamBySlug } from './teams';
-import type { DivisionId, LeagueId, SectionId, TeamSlug } from './types';
 
 export type {
   AvailableLeagueHistory,

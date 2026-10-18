@@ -11,6 +11,7 @@ import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 import { getLeague } from '@/lib/leagues';
+import type { OfficialFixture } from '@/lib/model/fixture';
 import {
   OfficialBundleSchema,
   bundleToFixtures,
@@ -23,7 +24,6 @@ import {
 } from '@/lib/official/schema';
 import { OfficialValidationError, assertDoubleRoundRobin } from '@/lib/official/validate';
 import { isWithdrawnSchool, resolveOfficialName, resolveTeam, teamsInDivision } from '@/lib/teams';
-import type { OfficialFixture } from '@/lib/types';
 import { BUNDLED_LEAGUES, buildBundles, outputFileOf } from '@/scripts/build-official-fixtures';
 import { runRepoScript } from './support/cli';
 import { REPO, tempDir } from './support/repo';
@@ -177,7 +177,7 @@ describe('official bundles: load-time rejection', () => {
     expect(() => parseOfficialBundle({ ...bad, extra: 1 }, 'pcal')).toThrow(/schema/);
   });
 
-  it('builds OfficialFixture ids by the lib/types.ts rule', () => {
+  it('builds OfficialFixture ids by the lib/model/fixture.ts rule', () => {
     expect(officialFixtureId('pcal', '2026-09-02', { slug: 'stevenson', name: 'Stevenson' }, { slug: null, name: 'Nowhere' }))
       .toBe('pcal:2026-09-02:stevenson@Nowhere');
     expect(bundleToFixtures(pcal())[0]).toEqual({

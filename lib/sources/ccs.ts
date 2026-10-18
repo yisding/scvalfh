@@ -15,7 +15,7 @@
  */
 
 import { CCS } from '@/lib/leagues';
-import type { CcsCalendarEvent, CcsEventKind } from '@/lib/types';
+import type { CcsCalendarEvent, CcsEventKind } from '@/lib/model/postseason';
 import { icsLine, unfoldIcs } from './http';
 
 export const CCS_ICAL_URL = 'https://cifccs.org/calendar/Field_Hockey?print=ical';

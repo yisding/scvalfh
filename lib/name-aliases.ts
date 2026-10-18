@@ -12,7 +12,7 @@
  * rather than a credit to nobody.
  */
 
-import type { TeamSlug } from './types';
+import type { TeamSlug } from './model/ids';
 
 export interface NameAlias {
   team: TeamSlug;

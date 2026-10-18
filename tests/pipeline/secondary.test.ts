@@ -8,10 +8,12 @@
 
 import { describe, expect, it } from 'vitest';
 
+import type { Game } from '@/lib/model/game';
+import type { SourceStatus } from '@/lib/model/health';
+import type { Snapshot } from '@/lib/model/snapshot';
 import { TransportError, resourcePath, type ResourceKey, type Transport } from '@/lib/pipeline/contract';
 import { PipelineContext, SILENT_SINK } from '@/lib/pipeline/ledger';
 import { stepSecondary } from '@/lib/pipeline/steps/secondary';
-import type { Game, Snapshot, SourceStatus } from '@/lib/types';
 import { game } from '@/tests/support/game-builder';
 import { testRunArgs } from '@/tests/support/pipeline/run-args';
 

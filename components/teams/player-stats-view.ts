@@ -26,6 +26,8 @@
  */
 
 import { listWords, numberWord, plural, shortDate } from '@/lib/format';
+import type { Game } from '@/lib/model/game';
+import type { TeamSlug } from '@/lib/model/ids';
 import type { NoteCredit, NoteStatKind } from '@/lib/note-stats';
 import { getTeamPlayerStatsWithNotes } from '@/lib/player-stats';
 import type {
@@ -34,7 +36,6 @@ import type {
   PlayerStatLine,
   TeamPlayerStats,
 } from '@/lib/player-stats-schema';
-import type { Game, TeamSlug } from '@/lib/types';
 
 export interface StatColumn {
   key: string;

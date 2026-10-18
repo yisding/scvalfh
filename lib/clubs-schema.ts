@@ -35,9 +35,9 @@
 
 import { z } from 'zod';
 
+import type { RegionId } from './model/ids';
 import { isCalendarDate, isHttpsUrl, slugId } from './schema-primitives';
 import { TEAMS } from './teams';
-import type { RegionId } from './types';
 
 /**
  * Where a club is based. Also the display order of /clubs' regions: Northern California's (DESIGN

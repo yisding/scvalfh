@@ -76,8 +76,10 @@
  */
 
 import { getSnapshot } from './data';
+import type { Game } from './model/game';
+import type { TeamId, TeamSlug } from './model/ids';
+import type { Team } from './model/team';
 import { ELO_BASE, ELO_PER_GOAL, getRatings, ratingGames, type RatingTable } from './ratings';
-import type { Game, Team, TeamId, TeamSlug } from './types';
 
 /** The prior standard deviation of a team's attack and defense corrections to its Elo, in log goals. */
 export const RIDGE_SIGMA = 0.3;

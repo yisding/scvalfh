@@ -7,6 +7,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { getSnapshot } from '@/lib/data';
+import type { Game } from '@/lib/model/game';
 import { getPriorSeason } from '@/lib/prior-season';
 import type { PriorGame, PriorSeason } from '@/lib/prior-season-schema';
 import {
@@ -19,7 +20,6 @@ import {
   type RatingTable,
 } from '@/lib/ratings';
 import { TEAMS, getTeamBySlug } from '@/lib/teams';
-import type { Game } from '@/lib/types';
 import { game, type GameSpec } from './support/game-builder';
 
 const neutral = (spec: GameSpec): Game => ({ ...game(spec), site: 'neutral' });

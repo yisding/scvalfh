@@ -9,19 +9,58 @@ import { describe, expect, it } from 'vitest';
 
 import { ConfigInvariantError } from '@/lib/config/invariant';
 import {
-  ALL_DIVISIONS, CCS, CCS_LEAGUE_IDS, DATA_QUALITY, DEFAULT_REGION, INDEPENDENT_LEAGUES, LEAGUES, LEAGUES_PROPER,
-  LEAGUE_IDS, NO_POSTSEASON_LEAGUE_IDS,
-  REGIONS, RESERVED_SEGMENTS, SECTIONS, SECTION_PLAYOFFS_LEAGUE_IDS, TOURNAMENT_LEAGUE_IDS, UNBRACKETED_LEAGUE_IDS,
-  assertLeagues, divisionDisplay, divisionHeading, divisionLabel, divisionsOf, drawNumberOf, findDivision, findLeague,
-  getDivision, getLeague, getRegion, getSection, isIndependentDivision, isIndependentLeague, isLeagueId, isSingleDivision,
-  ladderFor, ladderRung,
-  leagueOfDivision, leaguePlayEnds, leaguePlayStarts, leagueStandingsUrl, leaguesInRegion, regionOf,
-  seasonWindowBounds, sectionOf, sectionsInRegion, standingsLabel, statusesOf, tiebreakChainFor,
-  type LeagueConfig, type SectionConfig,
+  ALL_DIVISIONS,
+  CCS,
+  CCS_LEAGUE_IDS,
+  DATA_QUALITY,
+  DEFAULT_REGION,
+  INDEPENDENT_LEAGUES,
+  LEAGUES,
+  LEAGUES_PROPER,
+  LEAGUE_IDS,
+  NO_POSTSEASON_LEAGUE_IDS,
+  REGIONS,
+  RESERVED_SEGMENTS,
+  SECTIONS,
+  SECTION_PLAYOFFS_LEAGUE_IDS,
+  TOURNAMENT_LEAGUE_IDS,
+  UNBRACKETED_LEAGUE_IDS,
+  assertLeagues,
+  divisionDisplay,
+  divisionHeading,
+  divisionLabel,
+  divisionsOf,
+  drawNumberOf,
+  findDivision,
+  findLeague,
+  getDivision,
+  getLeague,
+  getRegion,
+  getSection,
+  isIndependentDivision,
+  isIndependentLeague,
+  isLeagueId,
+  isSingleDivision,
+  ladderFor,
+  ladderRung,
+  leagueOfDivision,
+  leaguePlayEnds,
+  leaguePlayStarts,
+  leagueStandingsUrl,
+  leaguesInRegion,
+  regionOf,
+  seasonWindowBounds,
+  sectionOf,
+  sectionsInRegion,
+  standingsLabel,
+  statusesOf,
+  tiebreakChainFor,
 } from '@/lib/leagues';
+import type { RegionId } from '@/lib/model/ids';
+import { type LeagueConfig, type SectionConfig } from '@/lib/model/league-config';
+import type { PlayoffStatus, TiebreakStage } from '@/lib/model/standings';
 import { getTeamById } from '@/lib/teams';
 import { CCS_BRACKET_URL } from '@/lib/season';
-import type { PlayoffStatus, RegionId, TiebreakStage } from '@/lib/types';
 import { SEED_CLAIM, umpireOfficialClaims } from '@/scripts/copy-rules';
 
 const UNCOMPUTABLE: readonly TiebreakStage[] = ['coin-flip', 'ccs-points', 'no-rule'];

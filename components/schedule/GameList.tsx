@@ -1,5 +1,6 @@
 import { GameCard, GameRow } from '@/components/ui/GameRow';
-import type { Game, LeagueId } from '@/lib/types';
+import type { Game } from '@/lib/model/game';
+import type { LeagueId } from '@/lib/model/ids';
 
 import { gameFilterAttrs } from './filter-data-server';
 

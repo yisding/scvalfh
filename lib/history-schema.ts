@@ -11,9 +11,9 @@
 import { z } from 'zod';
 
 import { LEAGUE_IDS, divisionsOf, getLeague } from './leagues';
+import type { LeagueId } from './model/ids';
 import { dateKey, slugId } from './schema-primitives';
 import { teamsInLeague } from './teams';
-import type { LeagueId } from './types';
 
 /**
  * The archive is league-aware: every league of lib/leagues.ts has an entry, and each entry is

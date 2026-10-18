@@ -15,6 +15,9 @@
 
 import type { AdjustedScoring } from '@/lib/adjusted-scoring';
 import { gradeWord, listWords, shortDate } from '@/lib/format';
+import type { Game } from '@/lib/model/game';
+import type { TeamId } from '@/lib/model/ids';
+import type { Team } from '@/lib/model/team';
 import { notedKinds } from '@/lib/note-stats';
 import type {
   FieldStatKey,
@@ -22,7 +25,6 @@ import type {
   PlayerStatLine,
   TeamPlayerStats,
 } from '@/lib/player-stats-schema';
-import type { Game, Team, TeamId } from '@/lib/types';
 import { gamesSinceUpdate, savePercent } from '@/components/teams/player-stats-view';
 import { plural } from '@/components/ui/plural';
 import { positionWords } from '@/components/ui/position-words';

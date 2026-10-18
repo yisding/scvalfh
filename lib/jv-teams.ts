@@ -15,9 +15,10 @@
  * Pure config: no I/O.
  */
 
+import type { TeamSlug } from './model/ids';
+import type { Team } from './model/team';
 import { SBLIVE_WEB } from './sources/sblive';
 import { TEAMS } from './teams';
-import type { Team, TeamSlug } from './types';
 
 /** Registry slug → the JV team's si.com web path segment (`<id>-<slug>-jv`), or null when si.com has none. */
 export const JV_SBLIVE_PATHS: Readonly<Record<TeamSlug, string | null>> = {

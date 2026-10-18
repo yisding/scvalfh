@@ -30,9 +30,11 @@ import { tmpdir } from 'node:os';
 import path from 'node:path';
 
 import { ALL_DIVISIONS, getDivision, leagueOfDivision } from '@/lib/leagues';
+import type { OfficialFixture } from '@/lib/model/fixture';
+import type { Game } from '@/lib/model/game';
+import type { DivisionId, TeamSlug } from '@/lib/model/ids';
 import { officialDocumentOf, officialFixtureId } from '@/lib/official/schema';
 import { isWithdrawnSchool, resolveOfficialName, resolveTeam, teamsInDivision } from '@/lib/teams';
-import type { DivisionId, Game, OfficialFixture, TeamSlug } from '@/lib/types';
 import { HttpClient, type HttpClientOptions } from './http';
 
 /**

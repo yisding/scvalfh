@@ -18,8 +18,10 @@
 import { postseasonTag } from '@/lib/classify';
 import { divisionLabel, getDivision, leagueOfDivision } from '@/lib/leagues';
 import { dayDiff, monthDay, shiftDateKey, shortDate } from '@/lib/format';
+import type { OfficialFixture } from '@/lib/model/fixture';
+import type { Game, GameSide, OfficialStamp } from '@/lib/model/game';
+import type { DivisionId, TeamSlug } from '@/lib/model/ids';
 import { getTeamBySlug, resolveTeam, sideJoinKey, teamOfSide, unorderedPairKey } from '@/lib/teams';
-import type { DivisionId, Game, GameSide, OfficialFixture, OfficialStamp, TeamSlug } from '@/lib/types';
 
 export interface MatchOptions {
   matcher: 'legacy' | 'two-phase';

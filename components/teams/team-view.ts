@@ -51,25 +51,16 @@ import {
   leaguePlayEnds,
   leaguesInRegion,
   regionOf,
-  type LeagueRules,
-  type PostseasonConfig,
   standingsLabel,
 } from '@/lib/leagues';
+import type { OfficialFixture } from '@/lib/model/fixture';
+import type { Game, Outcome, Record3 } from '@/lib/model/game';
+import type { DivisionId, LeagueId, RegionId, SectionId, TeamSlug } from '@/lib/model/ids';
+import { type LeagueRules, type PostseasonConfig } from '@/lib/model/league-config';
+import type { Standing } from '@/lib/model/standings';
+import type { Team } from '@/lib/model/team';
 import { pinLabel } from '@/lib/pin-label';
 import { outcomesFor } from '@/lib/standings';
-import type {
-  DivisionId,
-  Game,
-  LeagueId,
-  OfficialFixture,
-  Outcome,
-  Record3,
-  RegionId,
-  SectionId,
-  Standing,
-  Team,
-  TeamSlug,
-} from '@/lib/types';
 import { getEloBoardForTeam } from '@/components/leaders/elo-board';
 import { buildOverviewDivision, type OverviewDivision } from '@/components/standings/standings-view';
 import type { FormEntry } from '@/components/ui/FormStrip';

@@ -4,11 +4,15 @@
  * error classes; no I/O.
  */
 
+import type { SbliveCrossCheck } from '@/lib/model/crosscheck';
+import type { OfficialFixture } from '@/lib/model/fixture';
+import type { Game } from '@/lib/model/game';
+import type { DroppedContest, LeagueRunState, SourceStatus } from '@/lib/model/health';
+import type { DivisionId, LeagueId, TeamSlug } from '@/lib/model/ids';
+import type { CcsCalendarEvent } from '@/lib/model/postseason';
+import type { SeasonWindow } from '@/lib/model/season';
+import type { Snapshot } from '@/lib/model/snapshot';
 import type { CifssSectionKey } from '@/lib/sources/cifss';
-import type {
-  CcsCalendarEvent, DivisionId, DroppedContest, Game, LeagueId, LeagueRunState, OfficialFixture,
-  SbliveCrossCheck, SeasonWindow, Snapshot, SourceStatus, TeamSlug,
-} from '@/lib/types';
 
 /** One upstream resource. `resourcePath(key)` is its manifest key and its corpus file stem. */
 export type ResourceKey =

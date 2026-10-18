@@ -18,8 +18,9 @@ import {
   roundKeyFor,
 } from '@/components/playoffs/bracket-model';
 import { CCS } from '@/lib/leagues';
+import type { Game } from '@/lib/model/game';
+import type { CcsPlayoffs } from '@/lib/model/postseason';
 import { resolveTeam } from '@/lib/teams';
-import type { CcsPlayoffs, Game } from '@/lib/types';
 import { game } from '@/tests/support/game-builder';
 
 const MODEL = 'components/playoffs/bracket-model.ts';

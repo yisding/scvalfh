@@ -1,7 +1,8 @@
 import { shortDate } from '@/lib/format';
 import { divisionHeading, getLeague } from '@/lib/leagues';
+import type { OfficialFixture } from '@/lib/model/fixture';
+import type { LeagueId } from '@/lib/model/ids';
 import { getTeamBySlug } from '@/lib/teams';
-import type { LeagueId, OfficialFixture } from '@/lib/types';
 import ExternalLink from '@/components/ui/ExternalLink';
 import { plural } from '@/components/ui/plural';
 import { officialScheduleLabel } from '@/components/standings/standings-view';

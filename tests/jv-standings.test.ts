@@ -24,8 +24,9 @@ import {
   withJvClassification,
 } from '@/lib/jv-standings';
 import { LEAGUES } from '@/lib/leagues';
+import type { OfficialFixture } from '@/lib/model/fixture';
+import type { Game } from '@/lib/model/game';
 import { TEAMS, teamsInDivision } from '@/lib/teams';
-import type { Game, OfficialFixture } from '@/lib/types';
 import { game } from './support/game-builder';
 
 /** A JV game as lib/jv.ts receives it from the merge: unclassified. */

@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 import Arrow, { type ArrowProps } from '@/components/ui/Arrow';
 import { standaloneName } from '@/lib/leagues';
-import type { LeagueId } from '@/lib/types';
+import type { LeagueId } from '@/lib/model/ids';
 
 /**
  * The "Jump to <league>" pills on the three league index pages (/standings, /schedule,

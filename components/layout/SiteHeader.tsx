@@ -3,7 +3,7 @@ import Link from 'next/link';
 import ExternalLink from '@/components/ui/ExternalLink';
 import LastUpdated from '@/components/ui/LastUpdated';
 import { getSitePhase } from '@/lib/data';
-import type { LeagueId, TeamSlug } from '@/lib/types';
+import type { LeagueId, TeamSlug } from '@/lib/model/ids';
 
 import { DATA_CORRECTIONS_URL, SITE_WORDMARK } from './site';
 import ThemeToggle from './ThemeToggle';

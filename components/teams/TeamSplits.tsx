@@ -1,6 +1,6 @@
 import { recordString } from '@/lib/format';
-import type { Record3 } from '@/lib/types';
 import { MissingValue } from '@/components/ui/MissingValue';
+import type { Record3 } from '@/lib/model/game';
 import type { TeamPageView } from './team-view';
 
 /**

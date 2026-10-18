@@ -15,8 +15,10 @@ import { readFileSync } from 'node:fs';
 
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
+import type { DivisionId, LeagueId } from '@/lib/model/ids';
+import type { Snapshot } from '@/lib/model/snapshot';
+import type { Standing } from '@/lib/model/standings';
 import { loadSnapshot } from '@/lib/snapshot-schema';
-import type { DivisionId, LeagueId, Snapshot, Standing } from '@/lib/types';
 import { withSnapshotModules } from './support/corpus-modules';
 import { corpusSnapshotPath } from './support/corpus-snapshot';
 

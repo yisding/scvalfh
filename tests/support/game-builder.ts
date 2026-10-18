@@ -20,8 +20,9 @@
 
 import { classifyGame, crossDivisionNote, postseasonTag } from '@/lib/classify';
 import { getDivision, getSection, leagueOfDivision } from '@/lib/leagues';
+import type { Decider, Game, GameStatus, OfficialStamp, Outcome, PostseasonTag } from '@/lib/model/game';
+import type { DivisionId } from '@/lib/model/ids';
 import { resolveTeam } from '@/lib/teams';
-import type { Decider, DivisionId, Game, GameStatus, OfficialStamp, Outcome, PostseasonTag } from '@/lib/types';
 
 let seq = 0;
 

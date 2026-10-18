@@ -18,8 +18,9 @@ import {
   type JvStandingRow,
 } from '@/lib/jv-standings';
 import { divisionHeading, getDivision, getLeague, isSingleDivision } from '@/lib/leagues';
+import type { DivisionId, LeagueId, TeamSlug } from '@/lib/model/ids';
+import type { Team } from '@/lib/model/team';
 import { getTeamBySlug } from '@/lib/teams';
-import type { DivisionId, LeagueId, Team, TeamSlug } from '@/lib/types';
 
 export interface JvTableView {
   division: DivisionId;

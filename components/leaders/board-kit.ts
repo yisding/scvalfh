@@ -6,7 +6,7 @@
 
 import { statText } from '@/components/teams/player-stats-view';
 import { getLeague } from '@/lib/leagues';
-import type { Team } from '@/lib/types';
+import type { Team } from '@/lib/model/team';
 import { rankBoard } from './ranking';
 import type { BoardScope } from './scope';
 import type { LeaderBoard, LeaderCell, LeaderColumnSpec, LeaderTeamRef } from './types';

@@ -15,7 +15,7 @@
  * index is where the other region is one tap away.
  */
 import { getLeagueSummaries, type LeagueSummary } from '@/lib/data';
-import type { LeagueId, RegionId } from '@/lib/types';
+import type { LeagueId, RegionId } from '@/lib/model/ids';
 
 import type { LeagueChip } from './LeagueSwitcher';
 

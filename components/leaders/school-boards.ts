@@ -16,8 +16,11 @@
 
 import type { AdjustedScoring } from '@/lib/adjusted-scoring';
 import { listWords, recordString, recordWords, signedGd, winPct } from '@/lib/format';
-import type { ComputedRecord, Game, Standing, Team, TeamId } from '@/lib/types';
 import { plural } from '@/components/ui/plural';
+import type { Game } from '@/lib/model/game';
+import type { TeamId } from '@/lib/model/ids';
+import type { ComputedRecord, Standing } from '@/lib/model/standings';
+import type { Team } from '@/lib/model/team';
 import { UNADJUSTED_NOTE, num, schoolBoard } from './board-kit';
 import type { EloBoardView } from './elo-board';
 import { byName, qualifyingMinimum } from './ranking';

@@ -11,7 +11,7 @@
  */
 
 import { plural } from './format';
-import type { SectionConfig } from './leagues';
+import type { SectionConfig } from './model/league-config';
 
 export interface TeamSearchEntry {
   kind: 'team';

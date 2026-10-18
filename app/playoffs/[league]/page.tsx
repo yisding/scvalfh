@@ -27,8 +27,8 @@ import {
 import type { LeagueSummary } from '@/lib/data';
 import { shortDate } from '@/lib/format';
 import { getDivision } from '@/lib/leagues';
+import type { Team } from '@/lib/model/team';
 import { outcomesFor, playoffOutcomeLabel } from '@/lib/standings';
-import type { Team } from '@/lib/types';
 
 /**
  * /playoffs/<league> — a league's own tournament (SPEC §6.2, §6.3, §10.7): "MCAL tournament — who

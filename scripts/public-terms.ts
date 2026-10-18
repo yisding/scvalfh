@@ -19,10 +19,10 @@ import { getClubs } from '@/lib/clubs';
 import { getColleges } from '@/lib/commits';
 import { getAvailableHistoryLeagues } from '@/lib/history';
 import { gradeWord } from '@/lib/format';
+import type { TeamSlug } from '@/lib/model/ids';
 import { getAllEnrichedRosters } from '@/lib/rosters';
 import { TEAMS, getTeamBySlug } from '@/lib/teams';
 import type { ArchiveLine } from './copy-rules';
-import type { TeamSlug } from '@/lib/types';
 
 const terms = new Set<string>(['Field Hockey', ...Object.values(SPORT_WORDS)]);
 const add = (...values: Array<string | null | undefined>) => {

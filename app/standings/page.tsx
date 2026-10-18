@@ -12,7 +12,7 @@ import { leaderClause } from '@/components/standings/standings-view';
 import SectionHeader from '@/components/ui/SectionHeader';
 import { listWords, shortDate } from '@/lib/format';
 import { getLeague, isIndependentLeague, standaloneName } from '@/lib/leagues';
-import type { LeagueId } from '@/lib/types';
+import type { LeagueId } from '@/lib/model/ids';
 
 /**
  * /standings — "Where does everyone stand?" (SPEC §8.1, §10.3): every division of every league as

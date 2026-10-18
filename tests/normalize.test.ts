@@ -4,7 +4,9 @@ import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 import { sideOutcome } from '@/lib/format';
-import { DATA_QUALITY, type DataQualityConfig } from '@/lib/leagues';
+import { DATA_QUALITY } from '@/lib/leagues';
+import type { Game } from '@/lib/model/game';
+import { type DataQualityConfig } from '@/lib/model/league-config';
 import {
   applyDateOverride,
   applyExclusions,
@@ -19,7 +21,6 @@ import {
 } from '@/lib/normalize';
 import { ScheduleResponseSchema, splitTbaRows, type ScheduleRow } from '@/lib/sources/maxpreps';
 import { getTeamBySlug, resolveTeam } from '@/lib/teams';
-import type { Game } from '@/lib/types';
 import { allScheduleRows, corpusDir } from './support/corpus';
 
 const rows = allScheduleRows();

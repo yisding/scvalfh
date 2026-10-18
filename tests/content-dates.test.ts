@@ -16,7 +16,7 @@ import {
   scoreDayInputs,
   stampContentChanges,
 } from '@/lib/content-dates';
-import type { Game } from '@/lib/types';
+import type { Game } from '@/lib/model/game';
 import { game } from './support/game-builder';
 
 const FETCHED = '2026-09-29T15:00:00.000Z';

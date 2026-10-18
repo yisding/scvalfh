@@ -32,7 +32,8 @@ import {
 } from '@/lib/data';
 import { longDate, monthDay, parseLocal, shortDate } from '@/lib/format';
 import { REGIONS, regionOf } from '@/lib/leagues';
-import type { Game, RegionId } from '@/lib/types';
+import type { Game } from '@/lib/model/game';
+import type { RegionId } from '@/lib/model/ids';
 
 /**
  * `/scores/[date]` — one day's slate (DESIGN §1.1, §3.4).

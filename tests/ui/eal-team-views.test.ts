@@ -21,7 +21,8 @@ import { createElement, type ReactElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { beforeAll, describe, expect, it } from 'vitest';
 
-import type { Game, Snapshot } from '@/lib/types';
+import type { Game } from '@/lib/model/game';
+import type { Snapshot } from '@/lib/model/snapshot';
 import { EAL_CORPUS } from '@/tests/support/corpus';
 import { CORPUS_HOOK_TIMEOUT, useCorpusModules, withSnapshotModules, type CorpusModules } from '@/tests/support/corpus-modules';
 import { corpusSnapshotPath } from '@/tests/support/corpus-snapshot';

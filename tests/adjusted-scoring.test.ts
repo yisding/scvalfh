@@ -13,9 +13,9 @@ import {
   getAdjustedScoring,
 } from '@/lib/adjusted-scoring';
 import { getSnapshot } from '@/lib/data';
+import type { Game } from '@/lib/model/game';
 import { computeRatings, getRatings, ratingGames, type RatingTable } from '@/lib/ratings';
 import { TEAMS, getTeamBySlug } from '@/lib/teams';
-import type { Game } from '@/lib/types';
 import { game, type GameSpec } from './support/game-builder';
 
 /** A rating table that rates each slug as given. */

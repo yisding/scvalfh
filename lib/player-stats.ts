@@ -16,6 +16,7 @@ import { readFileSync } from 'node:fs';
 
 import bundled from '@/data/player-stats.json';
 import { getSnapshot } from './data';
+import type { TeamSlug } from './model/ids';
 import { noteStatsFor, withNoteStats, type NoteSources, type NotedTeamPlayerStats } from './note-stats';
 import {
   PlayerStatsFileSchema,
@@ -24,7 +25,6 @@ import {
 } from './player-stats-schema';
 import { getTeamRoster } from './rosters';
 import { failValidation } from './schema-primitives';
-import type { TeamSlug } from './types';
 
 export type { NotedTeamPlayerStats } from './note-stats';
 export type {

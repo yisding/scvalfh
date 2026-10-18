@@ -29,6 +29,7 @@
  * check that the school is still that league's only field hockey team; it is never counted as a change.
  */
 
+import type { Team } from '@/lib/model/team';
 import { MaxPrepsClient, MaxPrepsError } from '@/lib/sources/maxpreps';
 import { ALL_DIVISIONS, isIndependentDivision } from '@/lib/leagues';
 import {
@@ -41,7 +42,6 @@ import {
   TEAM_LEVEL,
 } from '@/lib/season';
 import { TEAMS, teamsInDivision } from '@/lib/teams';
-import type { Team } from '@/lib/types';
 import { runCli } from './cli';
 
 const USAGE = `Usage: pnpm discover-season [--ssid <sportSeasonId>] [--teams <slug,slug,...>] [--help]

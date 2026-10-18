@@ -20,10 +20,11 @@
 
 import { z } from 'zod';
 
+import type { TeamSlug } from './model/ids';
+import type { Team } from './model/team';
 import { dateKey } from './schema-primitives';
 import type { ScheduleRow } from './sources/maxpreps';
 import { TEAMS } from './teams';
-import type { Team, TeamSlug } from './types';
 
 export const PriorSeasonSchema = z
   .object({

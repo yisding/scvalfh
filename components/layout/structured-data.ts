@@ -15,7 +15,7 @@
  *   site, whose venue is not published. `venue.text` is MaxPreps' NOTE field ("Senior Night"), never
  *   a place.
  * - `eventStatus` is never EventCancelled: the data has no cancelled state (a deleted MaxPreps row is
- *   dropped, lib/types.ts GameStatus). A game the official schedule has on another day is
+ *   dropped, lib/model/game.ts GameStatus). A game the official schedule has on another day is
  *   EventRescheduled with that day as `previousStartDate`, the "Moved —" line the page prints.
  * - No roster `athlete` entries: the players are minors, and the visible roster is enough.
  * - A group of independents is not a league (DESIGN §24.9), so its teams carry no `memberOf`.
@@ -30,8 +30,9 @@
 import type { GameModel } from '@/components/game/game-view';
 import { gameDescription, gameTitle } from '@/components/game/game-view';
 import { dateTimeAttr } from '@/lib/format';
-import { isIndependentLeague, type LeagueConfig } from '@/lib/leagues';
-import type { Team } from '@/lib/types';
+import { isIndependentLeague } from '@/lib/leagues';
+import { type LeagueConfig } from '@/lib/model/league-config';
+import type { Team } from '@/lib/model/team';
 
 import { SITE_DESCRIPTION, SITE_NAME, SITE_SHORT_NAME, SITE_URL, SITE_WORDMARK } from './site';
 

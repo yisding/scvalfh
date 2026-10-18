@@ -14,12 +14,13 @@ import { describe, expect, it } from 'vitest';
 
 import { classifyGames } from '@/lib/classify';
 import { ALL_DIVISIONS, getDivision } from '@/lib/leagues';
+import type { TeamId } from '@/lib/model/ids';
+import type { ReportedRecord } from '@/lib/model/standings';
 import { normalizeGames } from '@/lib/normalize';
 import { readManifest } from '@/lib/pipeline/corpus';
 import { StandingsResponseSchema } from '@/lib/sources/maxpreps';
 import { buildCrossCheck, computeStandings, toReportedRecord } from '@/lib/standings';
 import { getTeamById, resolveTeam, teamsInDivision } from '@/lib/teams';
-import type { ReportedRecord, TeamId } from '@/lib/types';
 import { allScheduleRows, corpusDir, standingsFixture } from './support/corpus';
 import { REPO } from './support/repo';
 import { runCorpus, writeTempVariant } from './support/pipeline/run-corpus';

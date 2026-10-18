@@ -52,22 +52,16 @@ import {
   getLeague,
   leagueOfDivision,
   leagueSportWords,
-  type LeagueConfig,
 } from '@/lib/leagues';
+import type { ScoreConflictRow } from '@/lib/model/crosscheck';
+import type { BackfillProvenance, Game, GameSide, Outcome } from '@/lib/model/game';
+import type { DivisionId } from '@/lib/model/ids';
+import { type LeagueConfig } from '@/lib/model/league-config';
+import type { TournamentGame } from '@/lib/model/postseason';
+import type { Standing, TiebreakStage } from '@/lib/model/standings';
+import type { Team } from '@/lib/model/team';
 import { SHOOTOUT_NOTE } from '@/lib/postseason';
 import { SEASON_DISPLAY } from '@/lib/season';
-import type {
-  BackfillProvenance,
-  DivisionId,
-  Game,
-  GameSide,
-  Outcome,
-  ScoreConflictRow,
-  Standing,
-  Team,
-  TiebreakStage,
-  TournamentGame,
-} from '@/lib/types';
 import type { FormEntry } from '@/components/ui/FormStrip';
 import {
   describeGame,

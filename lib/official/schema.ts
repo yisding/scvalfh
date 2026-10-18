@@ -18,17 +18,14 @@ import path from 'node:path';
 
 import { z } from 'zod';
 
-import { getDivision, getLeague, leagueOfDivision, type DivisionConfig } from '@/lib/leagues';
+import { getDivision, getLeague, leagueOfDivision } from '@/lib/leagues';
+import { type OfficialFixture } from '@/lib/model/fixture';
+import {
+  type DivisionId, type LeagueId, OFFICIAL_SOURCE_IDS, type OfficialSourceId, type TeamSlug,
+} from '@/lib/model/ids';
+import { type DivisionConfig } from '@/lib/model/league-config';
 import { dateKey } from '@/lib/schema-primitives';
 import { resolveOfficialName } from '@/lib/teams';
-import {
-  OFFICIAL_SOURCE_IDS,
-  type DivisionId,
-  type LeagueId,
-  type OfficialFixture,
-  type OfficialSourceId,
-  type TeamSlug,
-} from '@/lib/types';
 
 export const OFFICIAL_BUNDLE_SCHEMA = 'scvalfh-official-fixtures/1';
 
@@ -82,7 +79,7 @@ export type BundleFixture = z.infer<typeof BundleFixtureSchema>;
 export type BundleEvent = z.infer<typeof BundleEventSchema>;
 export type OfficialBundle = z.infer<typeof OfficialBundleSchema>;
 
-/** THE OfficialFixture id rule (lib/types.ts): `${division}:${dateKey}:${awaySlug ?? awayName}@${homeSlug ?? homeName}`. */
+/** THE OfficialFixture id rule (lib/model/fixture.ts): `${division}:${dateKey}:${awaySlug ?? awayName}@${homeSlug ?? homeName}`. */
 export function officialFixtureId(
   division: DivisionId,
   dateKey: string,

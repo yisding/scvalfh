@@ -12,26 +12,18 @@
 
 import { localDateKey, shortDate, timeOfDay, toLocalTimestamp } from '@/lib/format';
 import { LEAGUES, findDivision } from '@/lib/leagues';
+import type { CifssCrossCheck, SbliveCrossCheck } from '@/lib/model/crosscheck';
+import type { OfficialFixture } from '@/lib/model/fixture';
+import type { Game } from '@/lib/model/game';
+import type {
+  DivisionHealth, DroppedContest, LeagueHealth, LeagueRunState, SourceStatus,
+} from '@/lib/model/health';
+import type { DivisionId, LeagueId, TeamId, TeamSlug } from '@/lib/model/ids';
+import type { Snapshot } from '@/lib/model/snapshot';
+import type { ReportedRecord } from '@/lib/model/standings';
 import { CIFSS_SECTIONS } from '@/lib/sources/cifss';
 import type { ScheduleRow } from '@/lib/sources/maxpreps';
 import { TEAMS, getTeamBySlug } from '@/lib/teams';
-import type {
-  CifssCrossCheck,
-  DivisionHealth,
-  DivisionId,
-  DroppedContest,
-  Game,
-  LeagueHealth,
-  LeagueId,
-  LeagueRunState,
-  OfficialFixture,
-  ReportedRecord,
-  SbliveCrossCheck,
-  Snapshot,
-  SourceStatus,
-  TeamId,
-  TeamSlug,
-} from '@/lib/types';
 import type { OfficialStepResult, RunArgs, RunContext, SecondaryStepResult, Transport } from './contract';
 
 // ---------------------------------------------------------------- sources

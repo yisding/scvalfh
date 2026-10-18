@@ -10,8 +10,9 @@
 
 import { matchupJoiner } from '@/lib/format';
 import { DEFAULT_REGION, LEAGUES, REGIONS, findDivision, regionOf } from '@/lib/leagues';
+import type { Game } from '@/lib/model/game';
+import type { LeagueId, RegionId } from '@/lib/model/ids';
 import { getTeamBySlug } from '@/lib/teams';
-import type { Game, LeagueId, RegionId } from '@/lib/types';
 import { describeGame } from '@/components/ui/describe-game';
 import { gameWord, plural } from '@/components/ui/plural';
 

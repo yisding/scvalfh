@@ -5,7 +5,8 @@
  */
 
 import { classifyGames } from '@/lib/classify';
-import type { DivisionId, Game } from '@/lib/types';
+import type { Game } from '@/lib/model/game';
+import type { DivisionId } from '@/lib/model/ids';
 import type { RunContext } from '@/lib/pipeline/contract';
 
 export function stepClassify(ctx: RunContext, games: readonly Game[], degradedDivisions: ReadonlySet<DivisionId>): Game[] {

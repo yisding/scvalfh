@@ -26,10 +26,10 @@ import { z } from 'zod';
 
 import { htmlUnescape } from './http';
 import { MaxPrepsError, NEXT_DATA_RE } from './maxpreps';
+import type { Team } from '@/lib/model/team';
 import { recaseNameParts } from '@/lib/person-name';
 import { SPORT_SEASON_ID } from '@/lib/season';
 import { GRADE_CLASSES, type RosterPlayer, type TeamRoster } from '@/lib/rosters-schema';
-import type { Team } from '@/lib/types';
 
 // ---------------------------------------------------------------- the positional map
 

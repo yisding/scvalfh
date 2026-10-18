@@ -10,9 +10,9 @@
 import { z } from 'zod';
 
 import { divisionLabel, divisionsOf, getLeague, leagueOfDivision, sectionOf } from '@/lib/leagues';
+import type { DivisionId, LeagueId } from '@/lib/model/ids';
 import { SEASON_YEAR, SPORT_SEASON_ID } from '@/lib/season';
 import { LeagueMetaSchema } from '@/lib/sources/maxpreps';
-import type { DivisionId, LeagueId } from '@/lib/types';
 import { lastFreshStamp, type PipelineContext, type RunState } from '@/lib/pipeline/ledger';
 import { classifyFetchError, parseJsonBody } from '@/lib/pipeline/read';
 import { resourceUrl } from '@/lib/pipeline/transport';
