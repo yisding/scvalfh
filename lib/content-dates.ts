@@ -38,23 +38,47 @@ export function latestContentDate(games: readonly Game[], fallback: string): Dat
   return new Date(Math.max(...games.map(gameContentStamp)));
 }
 
+/** Whether `g` has a registry side among `slugs`. */
+function involvesAny(g: Game, slugs: readonly string[]): boolean {
+  return [g.home.slug, g.away.slug].some((s) => s !== null && slugs.includes(s));
+}
+
+/** A game's registry sides' slugs. */
+function sideSlugs(game: Game): string[] {
+  return [game.home.slug, game.away.slug].filter((s): s is string => s !== null);
+}
+
 /**
- * The games a `/game/[id]` page is built from: the game itself; both registry sides' earlier games,
- * which make the records "as of this game" and the form going in (an upcoming game's records are
- * today's, so every final before it); and every meeting of the two schools this season (the season
- * series, later legs included). A superset is harmless here — at worst a page reads as changed a
+ * The games a `/game/[id]` page is built from: the game itself; both registry sides' games that
+ * make the records on its scoreboard and the form going in; and every meeting of the two schools
+ * this season (the season series, later legs included). The records are "as of this game" — so
+ * the sides' games up to its date — except on a postponed game or a regular-season non-league one,
+ * whose records are TODAY'S (components/game/game-view.ts recordAsOf, "League records to date"),
+ * so every game of both sides. A superset is harmless here — at worst a page reads as changed a
  * little more often than it did — while a missing game would make the date too early.
  */
 export function gamePageInputs(game: Game, all: readonly Game[]): Game[] {
-  const sides = [game.home.slug, game.away.slug].filter((s): s is string => s !== null);
+  const sides = sideSlugs(game);
+  const recordsToDate = game.status === 'postponed' || (game.countsFor === null && game.postseason === null);
   // components/game/game-view.ts seriesGames' key: the slug, else the name, trimmed and lower-cased.
   const key = (side: Game['home']) => side.slug ?? `name:${side.name.trim().toLowerCase()}`;
   const pair = [key(game.home), key(game.away)];
   return all.filter((g) => {
     if (g === game) return true;
-    const slugs = [g.home.slug, g.away.slug];
-    if (g.dateLocal <= game.dateLocal && slugs.some((s) => s !== null && sides.includes(s))) return true;
+    if ((recordsToDate || g.dateLocal <= game.dateLocal) && involvesAny(g, sides)) return true;
     const keys = [key(g.home), key(g.away)];
     return pair.every((k) => keys.includes(k));
   });
+}
+
+/**
+ * The games a `/scores/[date]` page is built from: that day's games, and for a league game with no
+ * score on the board yet, every game of both its sides, because its row prints their CURRENT league
+ * records (components/ui/GameRow.tsx `showRecords`, which GameList sets). A final's row prints no
+ * record. The day's JV games are the caller's to add.
+ */
+export function scoreDayInputs(day: readonly Game[], all: readonly Game[]): Game[] {
+  const sides = day.filter((g) => g.countsFor !== null && g.status !== 'final').flatMap(sideSlugs);
+  if (sides.length === 0) return [...day];
+  return all.filter((g) => day.includes(g) || involvesAny(g, sides));
 }

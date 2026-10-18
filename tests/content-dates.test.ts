@@ -1,11 +1,11 @@
 /**
  * lib/content-dates.ts — the sitemap's per-page `lastmod` (app/sitemap.ts): MaxPreps' contest stamp
  * read as UTC and clamped to the fetch, the snapshot stamp where the page's version of the game is
- * not MaxPreps', and the set of games a game page is built from.
+ * not MaxPreps', and the sets of games a game page and a score-day page are built from.
  */
 import { describe, expect, it } from 'vitest';
 
-import { gameContentStamp, gamePageInputs, latestContentDate } from '../lib/content-dates';
+import { gameContentStamp, gamePageInputs, latestContentDate, scoreDayInputs } from '../lib/content-dates';
 import type { Game } from '../lib/types';
 import { game } from './game-builder';
 
@@ -57,5 +57,48 @@ describe('gamePageInputs', () => {
 
   it('takes the game, both sides’ earlier games and every meeting of the two, nothing else', () => {
     expect(gamePageInputs(self, all)).toEqual([early, self, laterLeg]);
+  });
+
+  it('takes every game of both sides when the scoreboard shows today’s records (non-league, postponed)', () => {
+    const nonLeague = game({
+      home: 'fremont',
+      away: 'cupertino',
+      hs: 2,
+      as: 1,
+      date: '2026-09-09',
+      league: false,
+      division: null,
+      official: null,
+    });
+    expect(nonLeague.countsFor, 'tests/game-builder.ts: a non-league game').toBeNull();
+    const withNonLeague = [early, nonLeague, laterLeg, laterOther, unrelated];
+    expect(gamePageInputs(nonLeague, withNonLeague)).toEqual([early, nonLeague, laterLeg, laterOther]);
+    const postponed = { ...self, status: 'postponed' as const };
+    expect(gamePageInputs(postponed, [early, postponed, laterLeg, laterOther, unrelated])).toEqual([
+      early,
+      postponed,
+      laterLeg,
+      laterOther,
+    ]);
+  });
+});
+
+describe('scoreDayInputs', () => {
+  const final = game({ home: 'cupertino', away: 'los-altos', hs: 1, as: 0, date: '2026-10-07' });
+  const upcoming = game({ home: 'fremont', away: 'cupertino', date: '2026-10-07' });
+  const fremontEarlier = game({ home: 'fremont', away: 'los-altos', hs: 1, as: 1, date: '2026-09-02' });
+  const unrelated = game({ home: 'carmel', away: 'salinas', hs: 2, as: 1, date: '2026-09-02' });
+
+  it('is the day’s games when every row is a final (a final prints no record)', () => {
+    expect(scoreDayInputs([final], [fremontEarlier, final, unrelated])).toEqual([final]);
+  });
+
+  it('adds every game of an upcoming league row’s sides, whose current records the row prints', () => {
+    expect(upcoming.countsFor, 'tests/game-builder.ts: a counted league game').not.toBeNull();
+    expect(scoreDayInputs([final, upcoming], [fremontEarlier, final, upcoming, unrelated])).toEqual([
+      fremontEarlier,
+      final,
+      upcoming,
+    ]);
   });
 });
