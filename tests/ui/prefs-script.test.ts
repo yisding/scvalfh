@@ -67,6 +67,7 @@ describe('buildPrefsScript', () => {
   // 2,537 × 1.12 = 2,842 → 3,072 B, 83 % used. The region pick's two listeners (a jump link's
   // `:target` no longer holds the other region open) took it to 3,018 B on 2026-10-18, 98 % used:
   // they live here because /teams had no first-load JS left for them (scripts/assert-budgets.ts).
+  // Clearing it on popstate as well took it to 3,052 B, 99 % used.
   it('stays within 3,072 B including the 102-entry slug map', () => {
     expect(TEAMS.length).toBe(102);
     expect(Buffer.byteLength(SCRIPT, 'utf8')).toBeLessThanOrEqual(3072);
@@ -337,12 +338,16 @@ describe('the region pick (data-region-picked)', () => {
     expect(p.replaced).toEqual(['/leaders']);
   });
 
-  it('the next fragment navigation is a new deep link: it clears the pick', () => {
-    const p = page('#elo-rating', 'norcal');
-    p.tap('socal');
-    p.on['window:hashchange']!();
-    expect(p.html.getAttribute(REGION_PICKED)).toBeNull();
-  });
+  // popstate: load /playoffs#sunset, go to /about, tap NorCal, press Back. The traversal restores
+  // the :target across App Router paths, and no hashchange fires for it.
+  for (const event of ['hashchange', 'popstate']) {
+    it(`the next fragment navigation is a new deep link: ${event} clears the pick`, () => {
+      const p = page('#elo-rating', 'norcal');
+      p.tap('socal');
+      p.on[`window:${event}`]!();
+      expect(p.html.getAttribute(REGION_PICKED)).toBeNull();
+    });
+  }
 
   it('a fragment in the chosen region, or none, stays as it is', () => {
     const inRegion = page('#elo-rating-socal', 'socal');

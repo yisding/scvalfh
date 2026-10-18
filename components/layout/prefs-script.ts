@@ -50,7 +50,8 @@
  * `#elo-rating`, then SoCal, and the NorCal boards close like the rest of NorCal. A fragment whose
  * target sits in a block of the other region is also dropped from the URL, so a reload or a shared
  * link opens the region the reader chose. The next fragment navigation (a jump link, back, forward)
- * is a new deep link and removes the attribute. It lives here, not in the switcher's client module,
+ * is a new deep link and removes the attribute (`hashchange`, and `popstate` for Back or Forward
+ * across paths, which restores a `:target` without a hashchange). It lives here, not in the switcher's client module,
  * because /teams has no first-load JS to spare (scripts/assert-budgets.ts) and every page already
  * runs this script.
  *
@@ -89,8 +90,8 @@ export const REGION_OF = '__sxRegionOf';
 
 /**
  * `<html data-region-picked>`: the reader tapped a region switcher button on THIS page view. Never
- * stored; set by the script's click listener and cleared by its `hashchange` listener (see the
- * header). While it is set the scope stylesheet's deep-link rule is off
+ * stored; set by the script's click listener and cleared by its `hashchange` and `popstate`
+ * listeners (see the header). While it is set the scope stylesheet's deep-link rule is off
  * (components/layout/league-scope-css.ts).
  */
 export const REGION_PICKED = 'data-region-picked';
@@ -174,6 +175,8 @@ export function buildPrefsScript({ leagueIds, slugLeague, leagueRegion, defaultR
     `k=document.getElementById(location.hash.slice(1));k=k&&k.closest('[data-region-scope]');` +
     `if(k&&k.dataset.regionScope!==b.dataset.regionOption)` +
     `history.replaceState(history.state,'',location.pathname+location.search)});` +
-    `addEventListener('hashchange',function(){d.removeAttribute(P)})}catch(x){}})();`
+    // Back or Forward across App Router paths restores a `:target` with no hashchange (that fires
+    // only when the URLs differ by the fragment alone), so popstate clears the pick too.
+    `function c(){d.removeAttribute(P)}addEventListener('hashchange',c);addEventListener('popstate',c)}catch(x){}})();`
   );
 }
