@@ -74,7 +74,8 @@ export function GameChips({
   const { leagueTag, postseasonTag, isNonLeague } = display;
   if (!leagueTag && !postseasonTag && !isNonLeague) return null;
   return (
-    <span className={['inline-flex flex-wrap items-center gap-1', className].filter(Boolean).join(' ')}>
+    // `.sx-chips` (app/globals.css): a wrapping row of tags, 4px apart.
+    <span className={['sx-chips', className].filter(Boolean).join(' ')}>
       {leagueTag ? <Tag label={`${leagueTag} league game`}>{leagueTag}</Tag> : null}
       {isNonLeague ? <Tag label="non-league">NL</Tag> : null}
       {postseasonTag ? <Tag label={postseasonTag}>{postseasonTag}</Tag> : null}
@@ -84,11 +85,9 @@ export function GameChips({
 
 export function StatusLabel({ display, showChips = true, className }: StatusLabelProps) {
   return (
-    <span
-      className={`inline-flex flex-wrap items-center gap-x-1.5 gap-y-0.5 font-sans text-micro font-semibold uppercase tracking-[0.04em] ${
-        TONE[display.statusTone]
-      }${className ? ` ${className}` : ''}`}
-    >
+    // `.sx-status` (app/globals.css) is the 12px sans semibold caps face and its wrapping row;
+    // only the tone is a utility.
+    <span className={['sx-status', TONE[display.statusTone], className].filter(Boolean).join(' ')}>
       {display.liveDot ? <span className="sx-live-dot" aria-hidden="true" /> : null}
       <span className={display.strikeTime ? 'line-through' : undefined}>{display.statusLabel}</span>
       {display.deciderTag ? (

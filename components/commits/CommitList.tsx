@@ -32,7 +32,7 @@ function Row({ row }: { row: CommitRow }) {
   return (
     <li
       id={row.anchor}
-      className="min-w-0 border-t border-divider px-gutter py-2.5 first:border-t-0 sm:px-4 sm:[&:nth-child(2)]:border-t-0 lg:[&:nth-child(3)]:border-t-0"
+      className="sx-gridcell"
     >
       <span className="block text-body text-ink">{row.name}</span>
       <span className="block text-meta text-ink-2">

@@ -21,12 +21,9 @@ export interface TagProps {
 export function Tag({ children, label, className }: TagProps) {
   return (
     <span
-      className={[
-        'inline-flex shrink-0 items-center whitespace-nowrap rounded-tag font-mono text-kicker uppercase h-5 px-1.5 bg-surface-3 text-ink-2',
-        className,
-      ]
-        .filter(Boolean)
-        .join(' ')}
+      // `.sx-tag` (app/globals.css) is the whole look, one class instead of eleven utilities:
+      // a game row carries two to four tags, and /schedule/<league> renders every row twice.
+      className={['sx-tag', className].filter(Boolean).join(' ')}
     >
       <span aria-hidden={label ? 'true' : undefined}>{children}</span>
       {label ? <span className="sr-only">{label}</span> : null}
