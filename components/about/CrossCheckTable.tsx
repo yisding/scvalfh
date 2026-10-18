@@ -1,8 +1,8 @@
 import Link from 'next/link';
 
-import ExternalLink from '../ui/ExternalLink';
-import TeamMonogram from '../ui/TeamMonogram';
-import type { CrossCheckRow, Team } from '../../lib/types';
+import ExternalLink from '@/components/ui/ExternalLink';
+import TeamMonogram from '@/components/ui/TeamMonogram';
+import type { CrossCheckRow, Team } from '@/lib/types';
 
 /**
  * The published MaxPreps STANDINGS cross-check (DESIGN §9, /about#cross-check), for one scope —

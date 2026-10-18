@@ -6,9 +6,9 @@
 
 import { describe, expect, it } from 'vitest';
 
-import { getSnapshot } from '../lib/data';
-import { getPriorSeason } from '../lib/prior-season';
-import type { PriorGame, PriorSeason } from '../lib/prior-season-schema';
+import { getSnapshot } from '@/lib/data';
+import { getPriorSeason } from '@/lib/prior-season';
+import type { PriorGame, PriorSeason } from '@/lib/prior-season-schema';
 import {
   ELO_BASE,
   ELO_PER_GOAL,
@@ -17,9 +17,9 @@ import {
   getRatings,
   ratingGames,
   type RatingTable,
-} from '../lib/ratings';
-import { TEAMS, getTeamBySlug } from '../lib/teams';
-import type { Game } from '../lib/types';
+} from '@/lib/ratings';
+import { TEAMS, getTeamBySlug } from '@/lib/teams';
+import type { Game } from '@/lib/types';
 import { game, type GameSpec } from './game-builder';
 
 const neutral = (spec: GameSpec): Game => ({ ...game(spec), site: 'neutral' });

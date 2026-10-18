@@ -1,9 +1,9 @@
 import Link from 'next/link';
 
-import { placeWords } from '../../lib/format';
-import { ELO_SCALE } from '../leaders/elo-board';
-import { AND_INDEPENDENTS, LEAGUE_COUNT } from '../leaders/scope';
-import { plural } from '../ui/plural';
+import { placeWords } from '@/lib/format';
+import { ELO_SCALE } from '@/components/leaders/elo-board';
+import { AND_INDEPENDENTS, LEAGUE_COUNT } from '@/components/leaders/scope';
+import { plural } from '@/components/ui/plural';
 import type { TeamEloView } from './team-view';
 
 /**

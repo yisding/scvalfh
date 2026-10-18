@@ -32,11 +32,11 @@ import {
   historySchoolName,
   type HistoryAwards,
   type HistoryPlayer,
-} from '../../lib/history';
-import { getEnrichedTeamRoster, getRosters } from '../../lib/rosters';
-import { teamsInLeague } from '../../lib/teams';
-import type { LeagueId, TeamSlug } from '../../lib/types';
-import { positionFromText } from '../ui/position-words';
+} from '@/lib/history';
+import { getEnrichedTeamRoster, getRosters } from '@/lib/rosters';
+import { teamsInLeague } from '@/lib/teams';
+import type { LeagueId, TeamSlug } from '@/lib/types';
+import { positionFromText } from '@/components/ui/position-words';
 
 /** One award winner or team-list player, as the page prints them. */
 export interface AwardLine {

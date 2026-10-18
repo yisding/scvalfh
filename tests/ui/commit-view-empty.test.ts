@@ -10,13 +10,13 @@ import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it, vi } from 'vitest';
 
-import CommitsPage from '../../app/commits/page';
-import { buildCommitsView } from '../../components/commits/commit-view';
-import { buildRosterView } from '../../components/teams/roster-view';
-import { TEAMS } from '../../lib/teams';
+import CommitsPage from '@/app/commits/page';
+import { buildCommitsView } from '@/components/commits/commit-view';
+import { buildRosterView } from '@/components/teams/roster-view';
+import { TEAMS } from '@/lib/teams';
 import { textOf } from './html-text';
 
-vi.mock('../../data/commits.json', async (importOriginal) => {
+vi.mock('@/data/commits.json', async (importOriginal) => {
   const real = (await importOriginal()) as { default: Record<string, unknown> };
   return { default: { ...real.default, colleges: [], commitments: [] } };
 });

@@ -6,8 +6,8 @@
 
 import { describe, expect, it } from 'vitest';
 
-import { getLeague } from '../lib/leagues';
-import { sixthPlaceRule } from '../lib/postseason';
+import { getLeague } from '@/lib/leagues';
+import { sixthPlaceRule } from '@/lib/postseason';
 import {
   buildCrossCheck,
   computeStandings,
@@ -21,8 +21,8 @@ import {
   playoffStatusFor,
   statusBadge,
   statusLegend,
-} from '../lib/standings';
-import type { Game, OfficialFixture, ReportedRecord, Standing } from '../lib/types';
+} from '@/lib/standings';
+import type { Game, OfficialFixture, ReportedRecord, Standing } from '@/lib/types';
 import { game } from './game-builder';
 
 type Spec = [home: string, away: string, hs: number, as: number];

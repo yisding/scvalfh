@@ -12,17 +12,17 @@
  * and by the tests that run the leak rules over rendered pages.
  */
 
-import { SPORT_WORDS } from '../components/commits/commit-view';
-import { overallAwards, splitOverallValue } from '../components/history/history-view';
-import { positionFromText } from '../components/ui/position-words';
-import { getClubs } from '../lib/clubs';
-import { getColleges } from '../lib/commits';
-import { getAvailableHistoryLeagues } from '../lib/history';
-import { gradeWord } from '../lib/format';
-import { getAllEnrichedRosters } from '../lib/rosters';
-import { TEAMS, getTeamBySlug } from '../lib/teams';
+import { SPORT_WORDS } from '@/components/commits/commit-view';
+import { overallAwards, splitOverallValue } from '@/components/history/history-view';
+import { positionFromText } from '@/components/ui/position-words';
+import { getClubs } from '@/lib/clubs';
+import { getColleges } from '@/lib/commits';
+import { getAvailableHistoryLeagues } from '@/lib/history';
+import { gradeWord } from '@/lib/format';
+import { getAllEnrichedRosters } from '@/lib/rosters';
+import { TEAMS, getTeamBySlug } from '@/lib/teams';
 import type { ArchiveLine } from './copy-rules';
-import type { TeamSlug } from '../lib/types';
+import type { TeamSlug } from '@/lib/types';
 
 const terms = new Set<string>(['Field Hockey', ...Object.values(SPORT_WORDS)]);
 const add = (...values: Array<string | null | undefined>) => {

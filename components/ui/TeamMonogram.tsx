@@ -1,5 +1,5 @@
-import { mascotFile, type MascotTileSize } from '../../lib/mascots';
-import type { Team } from '../../lib/types';
+import { mascotFile, type MascotTileSize } from '@/lib/mascots';
+import type { Team } from '@/lib/types';
 
 /**
  * A school's mascot tile (DESIGN §7.1, §12.4).

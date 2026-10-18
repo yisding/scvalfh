@@ -5,7 +5,7 @@ import path from 'node:path';
 
 import { describe, expect, it, vi } from 'vitest';
 
-import { postseasonTagOf } from '../components/ui/describe-game';
+import { postseasonTagOf } from '@/components/ui/describe-game';
 import {
   classifyGame,
   classifyGames,
@@ -13,16 +13,16 @@ import {
   isLeagueGame,
   leaguesOf,
   postseasonTag,
-} from '../lib/classify';
-import type { Game } from '../lib/types';
+} from '@/lib/classify';
+import type { Game } from '@/lib/types';
 import { game } from './game-builder';
 
 /** A contest MCAL has declared a league game despite its Oct 23 postseason window. */
 const { OVERRIDE_ID } = vi.hoisted(() => ({ OVERRIDE_ID: '00000000-0000-4000-8000-0000000c0de1' }));
 
 // Adds one leagueGameOverrides entry to MCAL; every other value is the real config.
-vi.mock('../lib/leagues', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('../lib/leagues')>();
+vi.mock('@/lib/leagues', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@/lib/leagues')>();
   return {
     ...actual,
     LEAGUES: actual.LEAGUES.map((l) =>

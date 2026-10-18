@@ -1,9 +1,9 @@
 import Link from 'next/link';
 
-import Arrow from '../ui/Arrow';
-import EmptyState from '../ui/EmptyState';
-import SectionHeader from '../ui/SectionHeader';
-import { shortDate } from '../../lib/format';
+import Arrow from '@/components/ui/Arrow';
+import EmptyState from '@/components/ui/EmptyState';
+import SectionHeader from '@/components/ui/SectionHeader';
+import { shortDate } from '@/lib/format';
 
 import type { CrossLeagueLatest as CrossLeagueLatestView } from './home-view';
 import { ResultRow } from './LatestScores';

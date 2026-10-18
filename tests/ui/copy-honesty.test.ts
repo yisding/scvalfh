@@ -61,15 +61,15 @@ import {
   sunsetLeagueClaims,
   umpireOfficialClaims,
   visibleText,
-} from '../../scripts/copy-rules';
-import { EAL_CORPUS, corpusSnapshotPath } from '../helpers';
+} from '@/scripts/copy-rules';
+import { EAL_CORPUS, corpusSnapshotPath } from '@/tests/helpers';
 
-type Data = typeof import('../../lib/data');
-type Leagues = typeof import('../../lib/leagues');
-type Home = typeof import('../../components/home/home-view');
-type Standings = typeof import('../../components/standings/standings-page-view');
-type TeamView = typeof import('../../components/teams/team-view');
-type GameView = typeof import('../../components/game/game-view');
+type Data = typeof import('@/lib/data');
+type Leagues = typeof import('@/lib/leagues');
+type Home = typeof import('@/components/home/home-view');
+type Standings = typeof import('@/components/standings/standings-page-view');
+type TeamView = typeof import('@/components/teams/team-view');
+type GameView = typeof import('@/components/game/game-view');
 
 const HV = 'components/home/home-view.ts';
 const SPV = 'components/standings/standings-page-view.ts (via components/standings/standings-view.ts)';
@@ -108,12 +108,12 @@ let eal: EalCorpus;
 
 beforeAll(async () => {
   process.env.SCVAL_SNAPSHOT = corpusSnapshotPath('all-2026-10-02');
-  data = await import('../../lib/data');
-  leagues = await import('../../lib/leagues');
-  const h = await import('../../components/home/home-view');
-  standings = await import('../../components/standings/standings-page-view');
-  teamView = await import('../../components/teams/team-view');
-  gameView = await import('../../components/game/game-view');
+  data = await import('@/lib/data');
+  leagues = await import('@/lib/leagues');
+  const h = await import('@/components/home/home-view');
+  standings = await import('@/components/standings/standings-page-view');
+  teamView = await import('@/components/teams/team-view');
+  gameView = await import('@/components/game/game-view');
   home = h.buildHomeView();
   markConfig(leagues.LEAGUES);
   markConfig(leagues.SECTIONS);
@@ -176,15 +176,15 @@ beforeAll(async () => {
 async function collectEal(): Promise<EalCorpus> {
   process.env.SCVAL_SNAPSHOT = corpusSnapshotPath(EAL_CORPUS);
   vi.resetModules();
-  const d: Data = await import('../../lib/data');
-  const l: Leagues = await import('../../lib/leagues');
-  const h = (await import('../../components/home/home-view')).buildHomeView();
-  const sd: Standings = await import('../../components/standings/standings-page-view');
-  const tv: TeamView = await import('../../components/teams/team-view');
-  const gm: GameView = await import('../../components/game/game-view');
-  const schedulePage = (await import('../../app/schedule/[league]/page')).default;
-  const playoffsPage = (await import('../../app/playoffs/page')).default;
-  const teamPage = (await import('../../app/teams/[slug]/page')).default;
+  const d: Data = await import('@/lib/data');
+  const l: Leagues = await import('@/lib/leagues');
+  const h = (await import('@/components/home/home-view')).buildHomeView();
+  const sd: Standings = await import('@/components/standings/standings-page-view');
+  const tv: TeamView = await import('@/components/teams/team-view');
+  const gm: GameView = await import('@/components/game/game-view');
+  const schedulePage = (await import('@/app/schedule/[league]/page')).default;
+  const playoffsPage = (await import('@/app/playoffs/page')).default;
+  const teamPage = (await import('@/app/teams/[slug]/page')).default;
   markConfig(l.LEAGUES);
   markConfig(l.SECTIONS);
   markConfig(l.CCS);

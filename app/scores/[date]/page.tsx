@@ -3,25 +3,25 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Fragment } from 'react';
 
-import GameList from '../../../components/schedule/GameList';
-import JvDayGames from '../../../components/schedule/JvDayGames';
-import OfficialFixtures from '../../../components/schedule/OfficialFixtures';
-import SeasonCalendar from '../../../components/schedule/SeasonCalendar';
+import GameList from '@/components/schedule/GameList';
+import JvDayGames from '@/components/schedule/JvDayGames';
+import OfficialFixtures from '@/components/schedule/OfficialFixtures';
+import SeasonCalendar from '@/components/schedule/SeasonCalendar';
 import {
   dayDescription,
   dayRegions,
   daySummary,
   leaguesInvolved,
   type DayRegion,
-} from '../../../components/schedule/day-summary';
-import { countGames } from '../../../components/schedule/filter-data';
-import { buildDayJvView } from '../../../components/teams/jv-view';
-import EmptyState from '../../../components/ui/EmptyState';
-import SectionHeader from '../../../components/ui/SectionHeader';
-import { gameWord, plural } from '../../../components/ui/plural';
-import { RegionSwitcher } from '../../../components/layout/LeagueSwitcher';
-import PageHeader from '../../../components/layout/PageHeader';
-import { OG_BASE } from '../../../components/layout/site';
+} from '@/components/schedule/day-summary';
+import { countGames } from '@/components/schedule/filter-data';
+import { buildDayJvView } from '@/components/teams/jv-view';
+import EmptyState from '@/components/ui/EmptyState';
+import SectionHeader from '@/components/ui/SectionHeader';
+import { gameWord, plural } from '@/components/ui/plural';
+import { RegionSwitcher } from '@/components/layout/LeagueSwitcher';
+import PageHeader from '@/components/layout/PageHeader';
+import { OG_BASE } from '@/components/layout/site';
 import {
   getGameDates,
   getGames,
@@ -29,10 +29,10 @@ import {
   getOfficialFixtures,
   getTeamBySlug,
   getToday,
-} from '../../../lib/data';
-import { longDate, monthDay, parseLocal, shortDate } from '../../../lib/format';
-import { REGIONS, regionOf } from '../../../lib/leagues';
-import type { Game, RegionId } from '../../../lib/types';
+} from '@/lib/data';
+import { longDate, monthDay, parseLocal, shortDate } from '@/lib/format';
+import { REGIONS, regionOf } from '@/lib/leagues';
+import type { Game, RegionId } from '@/lib/types';
 
 /**
  * `/scores/[date]` — one day's slate (DESIGN §1.1, §3.4).

@@ -2,16 +2,16 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
-import ClubPlayers from '../../../components/clubs/ClubPlayers';
-import ClubPrograms from '../../../components/clubs/ClubPrograms';
-import ClubSources from '../../../components/clubs/ClubSources';
-import { buildClubPageView } from '../../../components/clubs/club-view';
-import PageHeader from '../../../components/layout/PageHeader';
-import { OG_BASE, ROOT_OG_IMAGE } from '../../../components/layout/site';
-import ExternalLink from '../../../components/ui/ExternalLink';
-import { plural } from '../../../components/ui/plural';
-import SectionHeader from '../../../components/ui/SectionHeader';
-import { clubDisplayName, getClub, getClubAffiliations, getClubSlugs } from '../../../lib/clubs';
+import ClubPlayers from '@/components/clubs/ClubPlayers';
+import ClubPrograms from '@/components/clubs/ClubPrograms';
+import ClubSources from '@/components/clubs/ClubSources';
+import { buildClubPageView } from '@/components/clubs/club-view';
+import PageHeader from '@/components/layout/PageHeader';
+import { OG_BASE, ROOT_OG_IMAGE } from '@/components/layout/site';
+import ExternalLink from '@/components/ui/ExternalLink';
+import { plural } from '@/components/ui/plural';
+import SectionHeader from '@/components/ui/SectionHeader';
+import { clubDisplayName, getClub, getClubAffiliations, getClubSlugs } from '@/lib/clubs';
 
 /**
  * /clubs/[slug] — "Who here plays for this club, and how do we know?" (DESIGN §17.1, SPEC §1.1j2).

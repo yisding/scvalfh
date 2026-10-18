@@ -23,8 +23,8 @@
  *     components/commits/commit-view.ts' (`playerCommitLine`), shared with /commits.
  */
 
-import { getCommitsFile } from '../../lib/commits';
-import { dateWithYear, gradeWord, shortDate, toLocalTimestamp } from '../../lib/format';
+import { getCommitsFile } from '@/lib/commits';
+import { dateWithYear, gradeWord, shortDate, toLocalTimestamp } from '@/lib/format';
 import {
   getEnrichedTeamRoster,
   getRosters,
@@ -36,11 +36,11 @@ import {
   type PlayerProfile,
   type ProfilePlatform,
   type RosterConflict,
-} from '../../lib/rosters';
-import type { TeamSlug } from '../../lib/types';
-import { playerClubGroups, type RosterClubGroup } from '../clubs/club-view';
-import { SPORT_WORDS, playerCommitLine, sportLabel, type RosterCommitLine } from '../commits/commit-view';
-import { positionWords } from '../ui/position-words';
+} from '@/lib/rosters';
+import type { TeamSlug } from '@/lib/types';
+import { playerClubGroups, type RosterClubGroup } from '@/components/clubs/club-view';
+import { SPORT_WORDS, playerCommitLine, sportLabel, type RosterCommitLine } from '@/components/commits/commit-view';
+import { positionWords } from '@/components/ui/position-words';
 
 /**
  * How a conflict sentence names the source that disagrees. A MaxPreps roster page of an earlier

@@ -14,8 +14,8 @@
  * pages (rendered client-side; no bracket content in the server HTML at all).
  */
 
-import { CCS } from '../leagues';
-import type { CcsCalendarEvent, CcsEventKind } from '../types';
+import { CCS } from '@/lib/leagues';
+import type { CcsCalendarEvent, CcsEventKind } from '@/lib/types';
 import { icsLine, unfoldIcs } from './http';
 
 export const CCS_ICAL_URL = 'https://cifccs.org/calendar/Field_Hockey?print=ical';

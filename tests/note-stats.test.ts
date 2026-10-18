@@ -13,10 +13,10 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { buildLeadersView } from '../components/leaders/leaders-view';
-import { buildPlayerStatsView } from '../components/teams/player-stats-view';
-import { getSnapshot } from '../lib/data';
-import { NAME_ALIASES } from '../lib/name-aliases';
+import { buildLeadersView } from '@/components/leaders/leaders-view';
+import { buildPlayerStatsView } from '@/components/teams/player-stats-view';
+import { getSnapshot } from '@/lib/data';
+import { NAME_ALIASES } from '@/lib/name-aliases';
 import {
   notedKinds,
   noteStatsFor,
@@ -27,13 +27,13 @@ import {
   type NoteRosterPlayer,
   type NoteSources,
   type ParsedNote,
-} from '../lib/note-stats';
-import { getAllPlayerStatsWithNotes, getPlayerStats } from '../lib/player-stats';
-import { FIELD_STAT_KEYS, GOALIE_STAT_KEYS, type PlayerStatLine, type TeamPlayerStats } from '../lib/player-stats-schema';
-import { getTeamRoster } from '../lib/rosters';
-import { contestIdFromUrl, parseGameStats } from '../lib/sources/maxpreps-game-stats';
-import { getTeamBySlug } from '../lib/teams';
-import type { Game, TeamSlug } from '../lib/types';
+} from '@/lib/note-stats';
+import { getAllPlayerStatsWithNotes, getPlayerStats } from '@/lib/player-stats';
+import { FIELD_STAT_KEYS, GOALIE_STAT_KEYS, type PlayerStatLine, type TeamPlayerStats } from '@/lib/player-stats-schema';
+import { getTeamRoster } from '@/lib/rosters';
+import { contestIdFromUrl, parseGameStats } from '@/lib/sources/maxpreps-game-stats';
+import { getTeamBySlug } from '@/lib/teams';
+import type { Game, TeamSlug } from '@/lib/types';
 import { game } from './game-builder';
 import { FIXTURE_DIR, buildFixturePlayerStats } from './helpers';
 

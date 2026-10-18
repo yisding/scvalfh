@@ -1,15 +1,15 @@
 import type { Metadata } from 'next';
 
-import LeagueJumpLinks from '../../components/layout/LeagueJumpLinks';
-import { RegionSwitcher } from '../../components/layout/LeagueSwitcher';
-import PageHeader from '../../components/layout/PageHeader';
-import { OG_BASE, ROOT_OG_IMAGE, coveredLeagueWords } from '../../components/layout/site';
-import ScheduleIndex from '../../components/schedule/ScheduleIndex';
-import { countGames } from '../../components/schedule/filter-data';
-import { buildScheduleIndex } from '../../components/schedule/schedule-view';
-import { getGames, getLeagueSummaries, getTeamBySlug, getToday } from '../../lib/data';
-import { plural } from '../../lib/format';
-import { SEASON_DISPLAY } from '../../lib/season';
+import LeagueJumpLinks from '@/components/layout/LeagueJumpLinks';
+import { RegionSwitcher } from '@/components/layout/LeagueSwitcher';
+import PageHeader from '@/components/layout/PageHeader';
+import { OG_BASE, ROOT_OG_IMAGE, coveredLeagueWords } from '@/components/layout/site';
+import ScheduleIndex from '@/components/schedule/ScheduleIndex';
+import { countGames } from '@/components/schedule/filter-data';
+import { buildScheduleIndex } from '@/components/schedule/schedule-view';
+import { getGames, getLeagueSummaries, getTeamBySlug, getToday } from '@/lib/data';
+import { plural } from '@/lib/format';
+import { SEASON_DISPLAY } from '@/lib/season';
 
 /**
  * `/schedule` — "What's on across the leagues?" (SPEC §8.1, §10.4): a LIGHT index. One page of

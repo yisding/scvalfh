@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
-import { longDate, shortDate } from '../../lib/format';
-import { gameWord } from '../ui/plural';
+import { longDate, shortDate } from '@/lib/format';
+import { gameWord } from '@/components/ui/plural';
 
 /**
  * The date-group header (DESIGN §3.3, §7.16): `Thu Sep 24  (12 games)  ········  Day page`.

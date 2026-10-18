@@ -17,7 +17,7 @@ import { textOf } from './html-text';
 let text: string;
 
 beforeAll(async () => {
-  const about = (await import('../../app/about/page')).default;
+  const about = (await import('@/app/about/page')).default;
   text = textOf(renderToStaticMarkup(createElement(about))).replace(/\s+/g, ' ');
 }, 600_000);
 

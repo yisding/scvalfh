@@ -4,8 +4,8 @@
  */
 import { describe, expect, it } from 'vitest';
 
-import { buildLeagueScopeCss } from '../../components/layout/league-scope-css';
-import { LEAGUE_IDS } from '../../lib/leagues';
+import { buildLeagueScopeCss } from '@/components/layout/league-scope-css';
+import { LEAGUE_IDS } from '@/lib/leagues';
 
 const css = buildLeagueScopeCss(LEAGUE_IDS);
 const rules = css.split('\n');

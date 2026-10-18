@@ -1,12 +1,12 @@
 import Link from 'next/link';
 
-import { longDate, plural, shortDate } from '../../lib/format';
-import { REGIONS } from '../../lib/leagues';
-import type { RegionId } from '../../lib/types';
-import Arrow from '../ui/Arrow';
-import { GameRow } from '../ui/GameRow';
-import SectionHeader from '../ui/SectionHeader';
-import { gameWord } from '../ui/plural';
+import { longDate, plural, shortDate } from '@/lib/format';
+import { REGIONS } from '@/lib/leagues';
+import type { RegionId } from '@/lib/types';
+import Arrow from '@/components/ui/Arrow';
+import { GameRow } from '@/components/ui/GameRow';
+import SectionHeader from '@/components/ui/SectionHeader';
+import { gameWord } from '@/components/ui/plural';
 import type { IndexDay, LeagueCardData, ScheduleIndexView } from './schedule-view';
 
 /**

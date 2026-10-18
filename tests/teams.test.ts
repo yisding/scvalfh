@@ -1,11 +1,11 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { ALL_DIVISIONS, LEAGUES } from '../lib/leagues';
+import { ALL_DIVISIONS, LEAGUES } from '@/lib/leagues';
 import {
   ACRONYM_COLLISIONS, FETCHABLE_TEAMS, TEAMS, getTeamById, getTeamBySlug, isRegistryTeamId,
   isWithdrawnSchool, normalizeTeamKey, onPrimaryInk, resolveOfficialName, resolveTeam,
   sideJoinKey, teamOfSide, teamsInDivision, teamsInLeague, unorderedPairKey,
-} from '../lib/teams';
+} from '@/lib/teams';
 
 /**
  * FROZEN (SPEC §0.3): the 15 SCVAL slugs, abbrs, MaxPreps ids, names and division memberships.
@@ -417,20 +417,20 @@ describe('teams: the registry team on one side of a game', () => {
 
 describe('teams: a violated registry invariant is a ConfigInvariantError', () => {
   afterEach(() => {
-    vi.doUnmock('../lib/registry/scval');
+    vi.doUnmock('@/lib/registry/scval');
     vi.resetModules();
   });
 
   it('throws one at import, naming lib/teams.ts, when two seeds share an alias', async () => {
     vi.resetModules();
-    vi.doMock('../lib/registry/scval', async (importOriginal) => {
-      const original = await importOriginal<typeof import('../lib/registry/scval')>();
+    vi.doMock('@/lib/registry/scval', async (importOriginal) => {
+      const original = await importOriginal<typeof import('@/lib/registry/scval')>();
       const [first] = original.SCVAL_SEEDS;
       return { ...original, SCVAL_SEEDS: [...original.SCVAL_SEEDS, { ...first, id: 'not-the-same-id' }] };
     });
     // The fresh module graph holds its own class, so compare through the freshly imported one.
-    const { ConfigInvariantError } = await import('../lib/config/invariant');
-    const failure = await import('../lib/teams').then(
+    const { ConfigInvariantError } = await import('@/lib/config/invariant');
+    const failure = await import('@/lib/teams').then(
       () => null,
       (err: unknown) => err,
     );

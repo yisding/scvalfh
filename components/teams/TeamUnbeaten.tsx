@@ -1,9 +1,9 @@
 import Link from 'next/link';
 
-import { monthDay, plural, recordString } from '../../lib/format';
-import { getTeamBySlug } from '../../lib/teams';
-import EmptyState from '../ui/EmptyState';
-import TeamMonogram from '../ui/TeamMonogram';
+import { monthDay, plural, recordString } from '@/lib/format';
+import { getTeamBySlug } from '@/lib/teams';
+import EmptyState from '@/components/ui/EmptyState';
+import TeamMonogram from '@/components/ui/TeamMonogram';
 import type { TeamPageView, UnbeatenOpponent } from './team-view';
 
 /**

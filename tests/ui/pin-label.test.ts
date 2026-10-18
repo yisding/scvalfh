@@ -8,9 +8,9 @@
 
 import { describe, expect, it } from 'vitest';
 
-import { divisionHeading, getLeague } from '../../lib/leagues';
-import { PICKER_BREAKS, pickerName, pinLabel } from '../../lib/pin-label';
-import { TEAMS } from '../../lib/teams';
+import { divisionHeading, getLeague } from '@/lib/leagues';
+import { PICKER_BREAKS, pickerName, pinLabel } from '@/lib/pin-label';
+import { TEAMS } from '@/lib/teams';
 import { width } from './text-metrics';
 
 const SHY = '­';

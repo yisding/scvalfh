@@ -10,10 +10,10 @@ import path from 'node:path';
 
 import { beforeAll, describe, expect, it } from 'vitest';
 
-import { classifyGame } from '../../lib/classify';
-import { divisionsOf, getLeague } from '../../lib/leagues';
-import { RunAbort, type OfficialStep } from '../../lib/pipeline/contract';
-import { PipelineContext, SILENT_SINK, emptyRunState, type RunState, type TeamFeedInfo } from '../../lib/pipeline/ledger';
+import { classifyGame } from '@/lib/classify';
+import { divisionsOf, getLeague } from '@/lib/leagues';
+import { RunAbort, type OfficialStep } from '@/lib/pipeline/contract';
+import { PipelineContext, SILENT_SINK, emptyRunState, type RunState, type TeamFeedInfo } from '@/lib/pipeline/ledger';
 import {
   FINALS_REGRESSION_FREEZE,
   SYSTEMIC_FAILED_FEEDS_SHARE,
@@ -21,12 +21,12 @@ import {
   checkSystemic,
   divisionClassification,
   finalsMissingReason,
-} from '../../lib/pipeline/steps/guards';
-import { loadSnapshot } from '../../lib/snapshot-schema';
-import { divisionGames } from '../../lib/standings';
-import { teamsInLeague } from '../../lib/teams';
-import type { Game, LeagueId, Snapshot } from '../../lib/types';
-import { variantDir } from '../helpers';
+} from '@/lib/pipeline/steps/guards';
+import { loadSnapshot } from '@/lib/snapshot-schema';
+import { divisionGames } from '@/lib/standings';
+import { teamsInLeague } from '@/lib/teams';
+import type { Game, LeagueId, Snapshot } from '@/lib/types';
+import { variantDir } from '@/tests/helpers';
 import { REGRESSED_FINALS } from './support/finals-regression';
 import { naiveBvalOfficial, noopSblive } from './support/noop-steps';
 import { testRunArgs } from './support/run-args';

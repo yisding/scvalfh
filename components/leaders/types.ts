@@ -4,11 +4,11 @@
  * them without importing the page's assembly.
  */
 
-import type { PriorSeason } from '../../lib/prior-season-schema';
-import type { MergedPlayer } from '../../lib/rosters';
-import type { TeamPlayerStats } from '../../lib/player-stats-schema';
-import type { Game, RegionId, Standing, Team } from '../../lib/types';
-import type { RegionConfig } from '../../lib/leagues';
+import type { PriorSeason } from '@/lib/prior-season-schema';
+import type { MergedPlayer } from '@/lib/rosters';
+import type { TeamPlayerStats } from '@/lib/player-stats-schema';
+import type { Game, RegionId, Standing, Team } from '@/lib/types';
+import type { RegionConfig } from '@/lib/leagues';
 
 /**
  * Every column a board can print. LeaderBoardTable sizes its `<colgroup>` by key, so a key is a

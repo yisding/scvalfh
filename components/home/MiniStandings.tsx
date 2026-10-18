@@ -1,13 +1,13 @@
 import Link from 'next/link';
 
-import { GoalDiffCell } from '../ui/GoalDiffBar';
-import PlaceMark from '../ui/PlaceMark';
-import SectionHeader from '../ui/SectionHeader';
-import { NoGoalDiff, biggestGoalDiff } from '../ui/StandingsTable';
-import TeamMonogram from '../ui/TeamMonogram';
-import { EM_DASH, monthDay, placeWords, plural } from '../../lib/format';
-import { getDivision, getLeague, regionOf } from '../../lib/leagues';
-import { ladderLineAfter } from '../standings/standings-view';
+import { GoalDiffCell } from '@/components/ui/GoalDiffBar';
+import PlaceMark from '@/components/ui/PlaceMark';
+import SectionHeader from '@/components/ui/SectionHeader';
+import { NoGoalDiff, biggestGoalDiff } from '@/components/ui/StandingsTable';
+import TeamMonogram from '@/components/ui/TeamMonogram';
+import { EM_DASH, monthDay, placeWords, plural } from '@/lib/format';
+import { getDivision, getLeague, regionOf } from '@/lib/leagues';
+import { ladderLineAfter } from '@/components/standings/standings-view';
 
 import type { MiniDivisionView, MiniRow } from './home-view';
 

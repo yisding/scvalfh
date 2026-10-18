@@ -2,13 +2,13 @@
 
 import { describe, expect, it } from 'vitest';
 
-import { getLeague } from '../lib/leagues';
+import { getLeague } from '@/lib/leagues';
 import {
   EARLIER_MEETING_NOTE, SHOOTOUT_NOTE, buildLeagueTournament, finalGame, matchTournamentGames, quarterfinals,
   seedsFromStandings, semifinals, sixthPlaceRule,
-} from '../lib/postseason';
-import { getTeamBySlug } from '../lib/teams';
-import type { Game, Standing, TiebreakStage } from '../lib/types';
+} from '@/lib/postseason';
+import { getTeamBySlug } from '@/lib/teams';
+import type { Game, Standing, TiebreakStage } from '@/lib/types';
 
 const MCAL = getLeague('mcal');
 const DIV = 'marin-county';

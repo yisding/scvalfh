@@ -9,18 +9,18 @@
  * from the same function, as `missingLeaguePast`; no other division has that field.
  */
 
-import { LEAGUES } from '../../leagues';
-import type { LeagueConfig } from '../../leagues';
+import { LEAGUES } from '@/lib/leagues';
+import type { LeagueConfig } from '@/lib/leagues';
 import {
   assertFullTable,
   buildCrossCheck,
   computeStandings,
   divisionGames,
   missingOfficialResults,
-} from '../../standings';
-import { teamsInLeague } from '../../teams';
-import type { CrossCheckRow, DivisionHealth, LeagueHealth, Standing } from '../../types';
-import { previousDivisionHealth, previousLeagueHealth, type PipelineContext, type RunState } from '../ledger';
+} from '@/lib/standings';
+import { teamsInLeague } from '@/lib/teams';
+import type { CrossCheckRow, DivisionHealth, LeagueHealth, Standing } from '@/lib/types';
+import { previousDivisionHealth, previousLeagueHealth, type PipelineContext, type RunState } from '@/lib/pipeline/ledger';
 import { divisionClassification } from './guards';
 
 export interface StandingsStepResult {

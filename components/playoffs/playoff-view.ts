@@ -37,9 +37,9 @@ import {
   recordWords,
   shortDate,
   timeOfDayPT,
-} from '../../lib/format';
-import { divisionHeading, getDivision, getLeague, ladderFor, leagueOfDivision } from '../../lib/leagues';
-import type { LeagueConfig } from '../../lib/leagues';
+} from '@/lib/format';
+import { divisionHeading, getDivision, getLeague, ladderFor, leagueOfDivision } from '@/lib/leagues';
+import type { LeagueConfig } from '@/lib/leagues';
 import type {
   CcsKeyDates,
   CrossoverSeat,
@@ -54,10 +54,10 @@ import type {
   TiebreakStage,
   TournamentGame,
   TournamentSlot,
-} from '../../lib/types';
+} from '@/lib/types';
 
-import { ladderLineAfter, ladderRow } from '../standings/standings-view';
-import { membershipSource } from '../ui/membership-words';
+import { ladderLineAfter, ladderRow } from '@/components/standings/standings-view';
+import { membershipSource } from '@/components/ui/membership-words';
 
 // ---------------------------------------------------------------- small helpers
 

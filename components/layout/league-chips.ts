@@ -14,8 +14,8 @@
  * index: the page is about one league, its neighbours are the leagues of the same region, and the
  * index is where the other region is one tap away.
  */
-import { getLeagueSummaries, type LeagueSummary } from '../../lib/data';
-import type { LeagueId, RegionId } from '../../lib/types';
+import { getLeagueSummaries, type LeagueSummary } from '@/lib/data';
+import type { LeagueId, RegionId } from '@/lib/types';
 
 import type { LeagueChip } from './LeagueSwitcher';
 

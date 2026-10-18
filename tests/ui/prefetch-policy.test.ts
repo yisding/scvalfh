@@ -32,7 +32,7 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { REPO as ROOT } from '../helpers';
+import { REPO as ROOT } from '@/tests/helpers';
 
 function sources(dir: string): string[] {
   const out: string[] = [];

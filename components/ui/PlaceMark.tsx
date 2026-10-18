@@ -1,4 +1,4 @@
-import { ordinal } from '../../lib/format';
+import { ordinal } from '@/lib/format';
 
 import MissingValue from './MissingValue';
 

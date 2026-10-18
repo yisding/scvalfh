@@ -12,13 +12,13 @@ import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 
-import TeamRoster from '../../components/teams/TeamRoster';
-import GridRowFiller, { fillerClasses } from '../../components/ui/GridRowFiller';
-import { buildRosterView, profileLabel, seasonPage, type RosterRow } from '../../components/teams/roster-view';
-import { getPlayerClubs } from '../../lib/clubs';
-import { LEAGUE_IDS } from '../../lib/leagues';
-import { getEnrichedTeamRoster } from '../../lib/rosters';
-import { TEAMS, teamsInLeague } from '../../lib/teams';
+import TeamRoster from '@/components/teams/TeamRoster';
+import GridRowFiller, { fillerClasses } from '@/components/ui/GridRowFiller';
+import { buildRosterView, profileLabel, seasonPage, type RosterRow } from '@/components/teams/roster-view';
+import { getPlayerClubs } from '@/lib/clubs';
+import { LEAGUE_IDS } from '@/lib/leagues';
+import { getEnrichedTeamRoster } from '@/lib/rosters';
+import { TEAMS, teamsInLeague } from '@/lib/teams';
 import { textOf } from './html-text';
 
 /** Rosters cover every registry team, all five leagues: 49 views. */

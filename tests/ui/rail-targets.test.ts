@@ -15,9 +15,9 @@ import {
   railSr,
   railTargets,
   type RailMarker,
-} from '../../components/schedule/rail-targets';
-import { getGameDates } from '../../lib/data';
-import { monthDay, shortDate } from '../../lib/format';
+} from '@/components/schedule/rail-targets';
+import { getGameDates } from '@/lib/data';
+import { monthDay, shortDate } from '@/lib/format';
 
 const MARKERS: RailMarker[] = [
   { date: '2026-08-24', kind: 'up' },

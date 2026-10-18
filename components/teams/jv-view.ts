@@ -9,11 +9,11 @@
  * SERVER-ONLY: reads lib/jv, which imports data/jv.json.
  */
 
-import { localDateKey } from '../../lib/format';
-import { getJvClassification, getJvFetchedAt, getJvGamesForTeam, getJvGamesOn, getJvTeam } from '../../lib/jv';
-import { regionOf } from '../../lib/leagues';
-import { getTeamBySlug } from '../../lib/teams';
-import type { Game, GameSide, RegionId, TeamSlug } from '../../lib/types';
+import { localDateKey } from '@/lib/format';
+import { getJvClassification, getJvFetchedAt, getJvGamesForTeam, getJvGamesOn, getJvTeam } from '@/lib/jv';
+import { regionOf } from '@/lib/leagues';
+import { getTeamBySlug } from '@/lib/teams';
+import type { Game, GameSide, RegionId, TeamSlug } from '@/lib/types';
 
 export interface JvRowView {
   game: Game;

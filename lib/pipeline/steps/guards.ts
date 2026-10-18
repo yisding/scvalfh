@@ -18,20 +18,20 @@
  * OR ≥60% of the feeds attempted this run failed, OR every league in the run ended frozen.
  */
 
-import { classifyGames } from '../../classify';
-import { byDateThenId } from '../../format';
-import { LEAGUES, getLeague, type LeagueConfig } from '../../leagues';
-import { divisionGames } from '../../standings';
-import { teamsInLeague } from '../../teams';
-import type { DivisionHealth, DivisionId, Game, LeagueId } from '../../types';
-import { RunAbort } from '../contract';
+import { classifyGames } from '@/lib/classify';
+import { byDateThenId } from '@/lib/format';
+import { LEAGUES, getLeague, type LeagueConfig } from '@/lib/leagues';
+import { divisionGames } from '@/lib/standings';
+import { teamsInLeague } from '@/lib/teams';
+import type { DivisionHealth, DivisionId, Game, LeagueId } from '@/lib/types';
+import { RunAbort } from '@/lib/pipeline/contract';
 import {
   hasPreviousData,
   lastFreshStamp,
   previousDivisionHealth,
   type PipelineContext,
   type RunState,
-} from '../ledger';
+} from '@/lib/pipeline/ledger';
 
 /** §7.5 (c): a division whose counted finals dropped by this many freezes its league. */
 export const FINALS_REGRESSION_FREEZE = 3;

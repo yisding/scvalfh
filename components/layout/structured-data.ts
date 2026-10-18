@@ -27,11 +27,11 @@
  * `metadataBase` does not reach inside JSON-LD, so every URL is built absolute from SITE_URL, and a
  * team's `@id` is the same IRI on its own page and in every game that names it.
  */
-import type { GameModel } from '../game/game-view';
-import { gameDescription, gameTitle } from '../game/game-view';
-import { dateTimeAttr } from '../../lib/format';
-import { isIndependentLeague, type LeagueConfig } from '../../lib/leagues';
-import type { Team } from '../../lib/types';
+import type { GameModel } from '@/components/game/game-view';
+import { gameDescription, gameTitle } from '@/components/game/game-view';
+import { dateTimeAttr } from '@/lib/format';
+import { isIndependentLeague, type LeagueConfig } from '@/lib/leagues';
+import type { Team } from '@/lib/types';
 
 import { SITE_DESCRIPTION, SITE_NAME, SITE_SHORT_NAME, SITE_URL, SITE_WORDMARK } from './site';
 

@@ -2,19 +2,19 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
-import PageHeader from '../../../components/layout/PageHeader';
-import { OG_BASE } from '../../../components/layout/site';
-import LeagueTournament from '../../../components/playoffs/LeagueTournament';
-import { buildTournamentView, type TournamentView } from '../../../components/playoffs/playoff-view';
+import PageHeader from '@/components/layout/PageHeader';
+import { OG_BASE } from '@/components/layout/site';
+import LeagueTournament from '@/components/playoffs/LeagueTournament';
+import { buildTournamentView, type TournamentView } from '@/components/playoffs/playoff-view';
 import {
   tournamentLeague,
   tournamentStaticParams,
   type TournamentConfig,
-} from '../../../components/playoffs/tournament-league';
-import Arrow from '../../../components/ui/Arrow';
-import ExternalLink from '../../../components/ui/ExternalLink';
-import LeagueHealthNote from '../../../components/ui/LeagueHealthNote';
-import SectionHeader from '../../../components/ui/SectionHeader';
+} from '@/components/playoffs/tournament-league';
+import Arrow from '@/components/ui/Arrow';
+import ExternalLink from '@/components/ui/ExternalLink';
+import LeagueHealthNote from '@/components/ui/LeagueHealthNote';
+import SectionHeader from '@/components/ui/SectionHeader';
 import {
   getCcsField,
   getLeagueTournament,
@@ -23,12 +23,12 @@ import {
   getStandings,
   getTeamById,
   getTeamBySlug,
-} from '../../../lib/data';
-import type { LeagueSummary } from '../../../lib/data';
-import { shortDate } from '../../../lib/format';
-import { getDivision } from '../../../lib/leagues';
-import { outcomesFor, playoffOutcomeLabel } from '../../../lib/standings';
-import type { Team } from '../../../lib/types';
+} from '@/lib/data';
+import type { LeagueSummary } from '@/lib/data';
+import { shortDate } from '@/lib/format';
+import { getDivision } from '@/lib/leagues';
+import { outcomesFor, playoffOutcomeLabel } from '@/lib/standings';
+import type { Team } from '@/lib/types';
 
 /**
  * /playoffs/<league> — a league's own tournament (SPEC §6.2, §6.3, §10.7): "MCAL tournament — who

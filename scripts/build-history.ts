@@ -43,7 +43,7 @@ import {
   parseStandingsPdfText,
   type AllLeagueBlock,
   type HistoryStandingsBlock,
-} from '../lib/sources/scval-pdf';
+} from '@/lib/sources/scval-pdf';
 import {
   BVAL_HISTORY_SOURCES,
   bvalDocExportUrl,
@@ -52,12 +52,12 @@ import {
   parseStandingsCsv,
   type BvalAllLeagueBlock,
   type BvalStandingsBlock,
-} from '../lib/sources/bval-sheet';
-import { HttpClient } from '../lib/sources/http';
-import { HistorySchema } from '../lib/history-schema';
-import { divisionsOf, getLeague } from '../lib/leagues';
-import { isCalendarDate } from '../lib/schema-primitives';
-import { stableStringify } from '../lib/stable-json';
+} from '@/lib/sources/bval-sheet';
+import { HttpClient } from '@/lib/sources/http';
+import { HistorySchema } from '@/lib/history-schema';
+import { divisionsOf, getLeague } from '@/lib/leagues';
+import { isCalendarDate } from '@/lib/schema-primitives';
+import { stableStringify } from '@/lib/stable-json';
 import { runCli } from './cli';
 
 interface Args {

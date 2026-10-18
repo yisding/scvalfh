@@ -16,7 +16,7 @@ import { readFileSync } from 'node:fs';
 
 import { describe, expect, it } from 'vitest';
 
-import { TABS } from '../../components/layout/BottomTabBar';
+import { TABS } from '@/components/layout/BottomTabBar';
 
 import { width } from './text-metrics';
 

@@ -16,8 +16,8 @@
  * (`gameDivisions`, `gameFilterAttrs`) live in `filter-data-server.ts`.
  */
 
-import { plural } from '../../lib/format';
-import type { Game } from '../../lib/types';
+import { plural } from '@/lib/format';
+import type { Game } from '@/lib/types';
 
 /** What the `state` filter groups games into. */
 export type ScheduleState = 'final' | 'upcoming' | 'pending';

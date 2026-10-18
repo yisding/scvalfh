@@ -11,7 +11,7 @@
  * carries one count line per region (`byRegion`), which the page scopes.
  */
 
-import type { Game, LeagueId, RegionId } from '../../lib/types';
+import type { Game, LeagueId, RegionId } from '@/lib/types';
 
 export interface LeagueCardData {
   id: LeagueId;

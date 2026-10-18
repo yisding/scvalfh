@@ -17,8 +17,8 @@
 import { z } from 'zod';
 
 import { MaxPrepsError, type MaxPrepsClient } from './maxpreps';
-import type { GameTotal } from '../player-stats-schema';
-import { MAXPREPS_API, SPORT_SEASON_ID } from '../season';
+import type { GameTotal } from '@/lib/player-stats-schema';
+import { MAXPREPS_API, SPORT_SEASON_ID } from '@/lib/season';
 
 export function gameStatsUrl(teamId: string, sportSeasonId = SPORT_SEASON_ID): string {
   return `${MAXPREPS_API}/gatewayweb/react/team-season-game-stats/rollup/v1?teamId=${teamId}&sportSeasonId=${sportSeasonId}`;

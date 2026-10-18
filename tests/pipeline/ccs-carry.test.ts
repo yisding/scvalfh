@@ -14,9 +14,9 @@ import path from 'node:path';
 
 import { beforeAll, describe, expect, it } from 'vitest';
 
-import { SnapshotSchema } from '../../lib/snapshot-schema';
-import type { CcsCalendarEvent, Snapshot } from '../../lib/types';
-import { REPO } from '../helpers';
+import { SnapshotSchema } from '@/lib/snapshot-schema';
+import type { CcsCalendarEvent, Snapshot } from '@/lib/types';
+import { REPO } from '@/tests/helpers';
 import { snapshotOf, writeTempVariant } from './support/run-corpus';
 
 const STEP = 'lib/pipeline/steps/secondary.ts';

@@ -29,10 +29,10 @@ import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 
-import { ALL_DIVISIONS, getDivision, leagueOfDivision } from '../leagues';
-import { officialDocumentOf, officialFixtureId } from '../official/schema';
-import { isWithdrawnSchool, resolveOfficialName, resolveTeam, teamsInDivision } from '../teams';
-import type { DivisionId, Game, OfficialFixture, TeamSlug } from '../types';
+import { ALL_DIVISIONS, getDivision, leagueOfDivision } from '@/lib/leagues';
+import { officialDocumentOf, officialFixtureId } from '@/lib/official/schema';
+import { isWithdrawnSchool, resolveOfficialName, resolveTeam, teamsInDivision } from '@/lib/teams';
+import type { DivisionId, Game, OfficialFixture, TeamSlug } from '@/lib/types';
 import { HttpClient, type HttpClientOptions } from './http';
 
 /**

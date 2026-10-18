@@ -15,8 +15,8 @@ import {
   removalsOnDay,
   scoreDayInputs,
   stampContentChanges,
-} from '../lib/content-dates';
-import type { Game } from '../lib/types';
+} from '@/lib/content-dates';
+import type { Game } from '@/lib/types';
 import { game } from './game-builder';
 
 const FETCHED = '2026-09-29T15:00:00.000Z';

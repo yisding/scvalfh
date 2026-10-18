@@ -1,5 +1,5 @@
-import { Clubs, Commitment, Profiles } from '../teams/TeamRoster';
-import GridRowFiller from '../ui/GridRowFiller';
+import { Clubs, Commitment, Profiles } from '@/components/teams/TeamRoster';
+import GridRowFiller from '@/components/ui/GridRowFiller';
 import type { RecruitingRow } from './recruiting-view';
 
 /**

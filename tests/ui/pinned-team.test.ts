@@ -10,8 +10,8 @@
  */
 import { afterEach, describe, expect, it } from 'vitest';
 
-import { unpinFocusTarget } from '../../components/home/MyTeamCard';
-import { pinTeam, unpinFallbackTarget } from '../../components/ui/use-pinned-team';
+import { unpinFocusTarget } from '@/components/home/MyTeamCard';
+import { pinTeam, unpinFallbackTarget } from '@/components/ui/use-pinned-team';
 
 type Attrs = Map<string, string>;
 

@@ -8,12 +8,12 @@
  * code path that could render `0-0` for a game that was never played.
  */
 
-import { matchupJoiner } from '../../lib/format';
-import { DEFAULT_REGION, LEAGUES, REGIONS, findDivision, regionOf } from '../../lib/leagues';
-import { getTeamBySlug } from '../../lib/teams';
-import type { Game, LeagueId, RegionId } from '../../lib/types';
-import { describeGame } from '../ui/describe-game';
-import { gameWord, plural } from '../ui/plural';
+import { matchupJoiner } from '@/lib/format';
+import { DEFAULT_REGION, LEAGUES, REGIONS, findDivision, regionOf } from '@/lib/leagues';
+import { getTeamBySlug } from '@/lib/teams';
+import type { Game, LeagueId, RegionId } from '@/lib/types';
+import { describeGame } from '@/components/ui/describe-game';
+import { gameWord, plural } from '@/components/ui/plural';
 
 import { countGames, type ScheduleCounts } from './filter-data';
 

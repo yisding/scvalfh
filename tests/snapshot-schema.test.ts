@@ -13,9 +13,9 @@ import {
   loadSnapshot,
   parseSnapshot,
   snapshotContentHash,
-} from '../lib/snapshot-schema';
-import { TEAMS } from '../lib/teams';
-import type { Game, Snapshot } from '../lib/types';
+} from '@/lib/snapshot-schema';
+import { TEAMS } from '@/lib/teams';
+import type { Game, Snapshot } from '@/lib/types';
 import { game } from './game-builder';
 
 const V1_PATH = path.join(import.meta.dirname, 'golden', 'snapshot-2026-10-02.v1.json');

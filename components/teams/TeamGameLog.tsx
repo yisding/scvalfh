@@ -1,6 +1,6 @@
-import type { Game, TeamSlug } from '../../lib/types';
-import EmptyState from '../ui/EmptyState';
-import { GameLogRow } from '../ui/GameRow';
+import type { Game, TeamSlug } from '@/lib/types';
+import EmptyState from '@/components/ui/EmptyState';
+import { GameLogRow } from '@/components/ui/GameRow';
 
 /**
  * A dense game log (DESIGN §3.7): `Sep 24 (L) 0–7 vs Saint Francis FINAL`, 52px a row, the whole

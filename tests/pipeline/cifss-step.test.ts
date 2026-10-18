@@ -9,16 +9,16 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { TransportError, type RawResponse, type ResourceKey, type Transport } from '../../lib/pipeline/contract';
-import { SILENT_SINK, emptyRunState } from '../../lib/pipeline/ledger';
-import { createPipelineContext, parseRunArgs } from '../../lib/pipeline/run';
-import { stepCifss } from '../../lib/pipeline/steps/cifss';
-import { resourceUrl } from '../../lib/pipeline/transport';
-import { CIFSS_SECTIONS } from '../../lib/sources/cifss';
-import type { ScheduleRow } from '../../lib/sources/maxpreps';
-import { resolveTeam } from '../../lib/teams';
-import type { CifssCrossCheck, Game, Snapshot } from '../../lib/types';
-import { REPO, game } from '../helpers';
+import { TransportError, type RawResponse, type ResourceKey, type Transport } from '@/lib/pipeline/contract';
+import { SILENT_SINK, emptyRunState } from '@/lib/pipeline/ledger';
+import { createPipelineContext, parseRunArgs } from '@/lib/pipeline/run';
+import { stepCifss } from '@/lib/pipeline/steps/cifss';
+import { resourceUrl } from '@/lib/pipeline/transport';
+import { CIFSS_SECTIONS } from '@/lib/sources/cifss';
+import type { ScheduleRow } from '@/lib/sources/maxpreps';
+import { resolveTeam } from '@/lib/teams';
+import type { CifssCrossCheck, Game, Snapshot } from '@/lib/types';
+import { REPO, game } from '@/tests/helpers';
 
 /** A real listing with no games: its column heads and an empty body. */
 const EMPTY = '<html><body><table class="table"><thead><tr><th>Home Score</th><th>Away Score</th></tr></thead><tbody></tbody></table></body></html>';

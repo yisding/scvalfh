@@ -1,9 +1,9 @@
 import Link from 'next/link';
 
-import EmptyState from '../ui/EmptyState';
-import ExternalLink from '../ui/ExternalLink';
-import GridRowFiller from '../ui/GridRowFiller';
-import SectionHeader from '../ui/SectionHeader';
+import EmptyState from '@/components/ui/EmptyState';
+import ExternalLink from '@/components/ui/ExternalLink';
+import GridRowFiller from '@/components/ui/GridRowFiller';
+import SectionHeader from '@/components/ui/SectionHeader';
 import type { ClubPageView, ClubPlayerRow } from './club-view';
 
 /**

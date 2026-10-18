@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
-import ExternalLink from '../ui/ExternalLink';
-import SectionHeader from '../ui/SectionHeader';
+import ExternalLink from '@/components/ui/ExternalLink';
+import SectionHeader from '@/components/ui/SectionHeader';
 import type { ClubHostLink, ClubPageView } from './club-view';
 
 /**

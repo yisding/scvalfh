@@ -3,8 +3,8 @@
 import Link, { useLinkStatus } from 'next/link';
 import { usePathname } from 'next/navigation';
 
-import { useEffectiveLeague } from '../ui/use-league';
-import type { LeagueId, TeamSlug } from '../../lib/types';
+import { useEffectiveLeague } from '@/components/ui/use-league';
+import type { LeagueId, TeamSlug } from '@/lib/types';
 
 /**
  * The only reason any navigation on this site is a client component: `aria-current` and the

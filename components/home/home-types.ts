@@ -11,10 +11,10 @@
  * This file imports TYPES ONLY, so it is safe on both sides of the boundary.
  */
 
-import type { SectionConfig } from '../../lib/leagues';
-import type { TeamSearchEntry } from '../../lib/search';
-import type { LeagueId, Outcome, RegionId } from '../../lib/types';
-import type { GameDisplay, SideView } from '../ui/describe-game';
+import type { SectionConfig } from '@/lib/leagues';
+import type { TeamSearchEntry } from '@/lib/search';
+import type { LeagueId, Outcome, RegionId } from '@/lib/types';
+import type { GameDisplay, SideView } from '@/components/ui/describe-game';
 
 /**
  * The identity fields the pinned card renders. They come from the 99-team search index the card

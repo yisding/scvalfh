@@ -23,8 +23,8 @@
  * shows no skeleton bracket before seeding.
  */
 
-import { isoDateKey, shortDate } from '../../lib/format';
-import type { CcsPlayoffs, Game, GameSide } from '../../lib/types';
+import { isoDateKey, shortDate } from '@/lib/format';
+import type { CcsPlayoffs, Game, GameSide } from '@/lib/types';
 
 export type RoundKey = 'quarterfinals' | 'semifinals' | 'finals' | 'other';
 

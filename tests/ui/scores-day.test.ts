@@ -19,24 +19,24 @@ import type { ReactElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { beforeAll, describe, expect, it } from 'vitest';
 
-import { longDate, parseLocal } from '../../lib/format';
-import type { Game } from '../../lib/types';
+import { longDate, parseLocal } from '@/lib/format';
+import type { Game } from '@/lib/types';
 import { textOf } from './html-text';
 
-type Data = typeof import('../../lib/data');
-type Day = typeof import('../../components/schedule/day-summary');
+type Data = typeof import('@/lib/data');
+type Day = typeof import('@/components/schedule/day-summary');
 
 let data: Data;
 let day: Day;
-let jvView: typeof import('../../components/teams/jv-view');
+let jvView: typeof import('@/components/teams/jv-view');
 let renderDay: (date: string) => Promise<string>;
 let describeDay: (date: string) => Promise<string>;
 
 beforeAll(async () => {
-  data = await import('../../lib/data');
-  day = await import('../../components/schedule/day-summary');
-  jvView = await import('../../components/teams/jv-view');
-  const page = await import('../../app/scores/[date]/page');
+  data = await import('@/lib/data');
+  day = await import('@/components/schedule/day-summary');
+  jvView = await import('@/components/teams/jv-view');
+  const page = await import('@/app/scores/[date]/page');
   renderDay = async (date) =>
     renderToStaticMarkup((await page.default({ params: Promise.resolve({ date }) } as never)) as ReactElement);
   describeDay = async (date) => {

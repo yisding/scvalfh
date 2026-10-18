@@ -20,15 +20,15 @@ import path from 'node:path';
 
 import { beforeAll, describe, expect, it } from 'vitest';
 
-import { ConfigInvariantError, failInvariant } from '../lib/config/invariant';
-import { ALL_DIVISIONS, LEAGUES, getLeague } from '../lib/leagues';
-import { RunAbort, type SnapshotMeta } from '../lib/pipeline/contract';
-import { readManifest } from '../lib/pipeline/corpus';
-import { describeRunFailure } from '../lib/pipeline/run-failure';
-import { SPORT_SEASON_ID } from '../lib/season';
-import { loadSnapshot, parseSnapshot } from '../lib/snapshot-schema';
-import { FETCHABLE_TEAMS, TEAMS } from '../lib/teams';
-import type { Snapshot, Standing } from '../lib/types';
+import { ConfigInvariantError, failInvariant } from '@/lib/config/invariant';
+import { ALL_DIVISIONS, LEAGUES, getLeague } from '@/lib/leagues';
+import { RunAbort, type SnapshotMeta } from '@/lib/pipeline/contract';
+import { readManifest } from '@/lib/pipeline/corpus';
+import { describeRunFailure } from '@/lib/pipeline/run-failure';
+import { SPORT_SEASON_ID } from '@/lib/season';
+import { loadSnapshot, parseSnapshot } from '@/lib/snapshot-schema';
+import { FETCHABLE_TEAMS, TEAMS } from '@/lib/teams';
+import type { Snapshot, Standing } from '@/lib/types';
 import { REPO, corpusDir, corpusSnapshotPath, runFixtureCli, type CliRun } from './helpers';
 import { writeTempVariant } from './pipeline/support/run-corpus';
 

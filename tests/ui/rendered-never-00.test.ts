@@ -27,11 +27,11 @@ import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
-import { buildGameView, gameDescription, gameKicker, gameTitle } from '../../components/game/game-view';
-import { GameCard, GameLine, GameLogRow, GameRow } from '../../components/ui/GameRow';
-import { getGames, getLeagueSummaries, getTeamBySlug } from '../../lib/data';
-import type { Game } from '../../lib/types';
-import { corpusSnapshotPath, EAL_CORPUS, type CorpusName } from '../helpers';
+import { buildGameView, gameDescription, gameKicker, gameTitle } from '@/components/game/game-view';
+import { GameCard, GameLine, GameLogRow, GameRow } from '@/components/ui/GameRow';
+import { getGames, getLeagueSummaries, getTeamBySlug } from '@/lib/data';
+import type { Game } from '@/lib/types';
+import { corpusSnapshotPath, EAL_CORPUS, type CorpusName } from '@/tests/helpers';
 
 interface Rendered {
   games: Game[];
@@ -197,9 +197,9 @@ function defineCorpus(title: string, corpusName: CorpusName, proof: boolean) {
     beforeAll(async () => {
       process.env.SCVAL_SNAPSHOT = corpusSnapshotPath(corpusName);
       vi.resetModules();
-      const data = await import('../../lib/data');
-      const model = await import('../../components/game/game-view');
-      const row = await import('../../components/ui/GameRow');
+      const data = await import('@/lib/data');
+      const model = await import('@/components/game/game-view');
+      const row = await import('@/components/ui/GameRow');
       corpus = {
         games: data.getGames(),
         buildGameView: model.buildGameView,

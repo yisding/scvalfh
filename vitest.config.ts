@@ -1,6 +1,8 @@
 import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
+  // '@/' imports: Vite 8's native tsconfig.json `paths` resolver (README, "Local development").
+  resolve: { tsconfigPaths: true },
   test: {
     environment: 'node',
     include: ['tests/**/*.test.ts'],

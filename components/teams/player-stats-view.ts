@@ -25,16 +25,16 @@
  * game with the note as written, so a reader can tell the two sources apart.
  */
 
-import { listWords, numberWord, plural, shortDate } from '../../lib/format';
-import type { NoteCredit, NoteStatKind } from '../../lib/note-stats';
-import { getTeamPlayerStatsWithNotes } from '../../lib/player-stats';
+import { listWords, numberWord, plural, shortDate } from '@/lib/format';
+import type { NoteCredit, NoteStatKind } from '@/lib/note-stats';
+import { getTeamPlayerStatsWithNotes } from '@/lib/player-stats';
 import type {
   FieldStatKey,
   GoalieStatKey,
   PlayerStatLine,
   TeamPlayerStats,
-} from '../../lib/player-stats-schema';
-import type { Game, TeamSlug } from '../../lib/types';
+} from '@/lib/player-stats-schema';
+import type { Game, TeamSlug } from '@/lib/types';
 
 export interface StatColumn {
   key: string;

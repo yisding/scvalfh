@@ -27,10 +27,10 @@ import {
   getStandings,
   getTeams,
   type LeagueSummary,
-} from '../../lib/data';
-import { plural, recordString, shortDate } from '../../lib/format';
-import { REGIONS, getLeague, isIndependentLeague, leagueOfDivision, leaguePlayStarts, standaloneName, type RegionConfig } from '../../lib/leagues';
-import type { DivisionId, Game, LeagueId, RegionId } from '../../lib/types';
+} from '@/lib/data';
+import { plural, recordString, shortDate } from '@/lib/format';
+import { REGIONS, getLeague, isIndependentLeague, leagueOfDivision, leaguePlayStarts, standaloneName, type RegionConfig } from '@/lib/leagues';
+import type { DivisionId, Game, LeagueId, RegionId } from '@/lib/types';
 import {
   buildDivisionView,
   buildOverviewDivision,

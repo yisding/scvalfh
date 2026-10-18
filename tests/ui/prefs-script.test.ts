@@ -14,10 +14,10 @@ import {
   REGION_OF,
   REGION_PICKED,
   buildPrefsScript,
-} from '../../components/layout/prefs-script';
-import { PINNED_TEAM_KEY, PINNED_TEAM_SCRIPT } from '../../components/layout/pinned-team-script';
-import { TEAMS } from '../../lib/teams';
-import { DEFAULT_REGION, LEAGUE_IDS, regionOf } from '../../lib/leagues';
+} from '@/components/layout/prefs-script';
+import { PINNED_TEAM_KEY, PINNED_TEAM_SCRIPT } from '@/components/layout/pinned-team-script';
+import { TEAMS } from '@/lib/teams';
+import { DEFAULT_REGION, LEAGUE_IDS, regionOf } from '@/lib/leagues';
 
 const SLUG_LEAGUE = Object.fromEntries(TEAMS.map((t) => [t.slug, t.league]));
 const LEAGUE_REGION = Object.fromEntries(LEAGUE_IDS.map((id) => [id, regionOf(id)]));

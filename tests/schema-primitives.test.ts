@@ -17,7 +17,7 @@ import {
   isCalendarDate,
   isHttpsUrl,
   slugId,
-} from '../lib/schema-primitives';
+} from '@/lib/schema-primitives';
 
 const messageOf = (schema: { safeParse: (v: unknown) => { success: boolean; error?: { issues: { message: string }[] } } }, v: unknown) =>
   schema.safeParse(v).error?.issues[0]?.message ?? null;

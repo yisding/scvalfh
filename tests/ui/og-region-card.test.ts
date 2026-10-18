@@ -16,7 +16,7 @@ import type { ReactElement } from 'react';
 import { createElement } from 'react';
 import { describe, expect, it } from 'vitest';
 
-import { stubCorpusSnapshot } from '../helpers';
+import { stubCorpusSnapshot } from '@/tests/helpers';
 
 stubCorpusSnapshot('all-2026-10-02');
 
@@ -93,7 +93,7 @@ async function renderPng(element: ReactElement, height: number): Promise<ReturnT
 
 describe('the two-region leaders card (components/layout/og-region-card.tsx)', () => {
   it('lays the nine leagues and the independents’ table out in two region columns, NorCal first (DESIGN §24.10)', async () => {
-    const { regionCardColumns } = await import('../../components/layout/og-region-card');
+    const { regionCardColumns } = await import('@/components/layout/og-region-card');
     const columns = regionCardColumns();
     expect(columns.map((c) => c.heading)).toEqual(['Northern California', 'Southern California']);
     expect(columns.map((c) => c.rows.map((r) => r.id))).toEqual([
@@ -105,7 +105,7 @@ describe('the two-region leaders card (components/layout/og-region-card.tsx)', (
   });
 
   it('titles the cards from SITE_WORDMARK and counts leagues and teams in the footer', async () => {
-    const { rootCardProps, standingsCardProps } = await import('../../components/layout/og-region-card');
+    const { rootCardProps, standingsCardProps } = await import('@/components/layout/og-region-card');
     const root = rootCardProps();
     expect(root.title).toBe('NorCal HS Field Hockey · 2026');
     expect(root.footer).toMatch(/^9 leagues, 5 independents · 102 teams · (results through \S.*|no results yet) · unofficial$/);
@@ -116,8 +116,8 @@ describe('the two-region leaders card (components/layout/og-region-card.tsx)', (
   });
 
   it('both cards fit 1200×630 with every leader line forced to its longest, and render as PNG', async () => {
-    const card = await import('../../components/layout/og-region-card');
-    const { getLeagueSummaries, getTeams } = await import('../../lib/data');
+    const card = await import('@/components/layout/og-region-card');
+    const { getLeagueSummaries, getTeams } = await import('@/lib/data');
     const teams = getTeams();
     // Per division: the two longest short names as co-leaders of a three-way tie ("A & B +1 99 pts").
     const longest = card.regionCardColumns((leagueId) => {
@@ -163,8 +163,8 @@ describe('the two-region leaders card (components/layout/og-region-card.tsx)', (
   }, 120_000);
 
   it('the routes render with the snapshot’s own leaders', async () => {
-    const root = await import('../../app/opengraph-image');
-    const standings = await import('../../app/standings/opengraph-image');
+    const root = await import('@/app/opengraph-image');
+    const standings = await import('@/app/standings/opengraph-image');
     for (const [name, mod] of [
       ['app/opengraph-image.tsx', root],
       ['app/standings/opengraph-image.tsx', standings],

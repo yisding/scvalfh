@@ -872,11 +872,16 @@ by the dynamic pages, their OG images and `app/layout.tsx` are generated into
 `.next/types/routes.d.ts`, which a clean checkout does not have and which vinext's Vite plugin
 overwrites with its own declarations; Next stays the type authority.
 
-Imports are relative everywhere (`app/`, `components/`, `lib/`, `scripts/`, `tests/`), never the
-`@/` alias that `tsconfig.json` declares: Vitest has no path alias (`vitest.config.mts`), and the
-tests import pages, view builders and route modules directly (tests/ui/home-view.test.ts renders
-`app/page.tsx` with `react-dom/server`), so a module that resolves only through `@/` fails the
-moment a test reaches it.
+Imports use the `@/` alias that `tsconfig.json` declares for any import that leaves the file's
+directory (`import { LEAGUES } from '@/lib/leagues'`), and `./` for same-directory and child
+modules; a `../` specifier is never written (ESLint's `no-restricted-imports` rejects it). The
+metadata image files (`opengraph-image.tsx`, `app/icon.tsx`, `app/apple-icon.tsx`) are the one
+exception and keep relative imports: Next prints a hash of each one's own source in the image URL
+(`/icon?<hash>`), so rewriting their specifiers alone would change every page. Every
+tool resolves the alias from `tsconfig.json`: Next and vinext natively, Vitest through
+`resolve.tsconfigPaths` (`vitest.config.ts`), and tsx from the tsconfig in its cwd, so a script run
+from anywhere but the repo root needs `--tsconfig <repo>/tsconfig.json` (the tests' `runScript`
+passes it).
 
 `.github/workflows/ci.yml` runs on every push to `main` and every PR: typecheck, lint, test, build,
 and an assertion that every route family actually prerendered (no route should ever fall back to

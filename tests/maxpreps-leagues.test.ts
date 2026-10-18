@@ -28,11 +28,11 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { PlayerStatsFileSchema, type PlayerStatsFile } from '../lib/player-stats-schema';
-import { RostersSchema, type Rosters } from '../lib/rosters-schema';
-import { parsePlayerStats, joinToRoster } from '../lib/sources/maxpreps-player-stats';
-import { parseRosterPage, parseRosterTable } from '../lib/sources/maxpreps-roster';
-import { TEAMS, getTeamBySlug } from '../lib/teams';
+import { PlayerStatsFileSchema, type PlayerStatsFile } from '@/lib/player-stats-schema';
+import { RostersSchema, type Rosters } from '@/lib/rosters-schema';
+import { parsePlayerStats, joinToRoster } from '@/lib/sources/maxpreps-player-stats';
+import { parseRosterPage, parseRosterTable } from '@/lib/sources/maxpreps-roster';
+import { TEAMS, getTeamBySlug } from '@/lib/teams';
 import { FIXTURE_DIR, REPO, runScript } from './helpers';
 
 const ROSTER_SAMPLE = ['leigh', 'greenfield', 'del-mar', 'stevenson', 'monterey', 'university-sf', 'marin-catholic'];

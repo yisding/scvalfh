@@ -1,12 +1,12 @@
-import { getTeamBySlug } from '../../lib/data';
+import { getTeamBySlug } from '@/lib/data';
 import type {
   HistoryBracketDivision,
   HistoryBracketGame,
   HistoryBracketRound,
   HistoryBracketSide,
-} from '../../lib/history';
-import MissingValue from '../ui/MissingValue';
-import TeamMonogram from '../ui/TeamMonogram';
+} from '@/lib/history';
+import MissingValue from '@/components/ui/MissingValue';
+import TeamMonogram from '@/components/ui/TeamMonogram';
 
 import { gameNote, gameSentence, gameSentenceTail, roundByes, roundDate, sideName } from './bracket-view';
 

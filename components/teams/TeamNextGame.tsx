@@ -1,14 +1,14 @@
 import Link from 'next/link';
 
-import { dateTimeAttr, timeOfDayPT } from '../../lib/format';
-import { gameHref } from '../../lib/game-id';
-import EmptyState from '../ui/EmptyState';
-import ExternalLink from '../ui/ExternalLink';
-import ResultChip from '../ui/ResultChip';
-import SectionHeader from '../ui/SectionHeader';
-import StatusLabel from '../ui/StatusLabel';
-import TeamMonogram from '../ui/TeamMonogram';
-import { describeGame, gameKindLabel } from '../ui/describe-game';
+import { dateTimeAttr, timeOfDayPT } from '@/lib/format';
+import { gameHref } from '@/lib/game-id';
+import EmptyState from '@/components/ui/EmptyState';
+import ExternalLink from '@/components/ui/ExternalLink';
+import ResultChip from '@/components/ui/ResultChip';
+import SectionHeader from '@/components/ui/SectionHeader';
+import StatusLabel from '@/components/ui/StatusLabel';
+import TeamMonogram from '@/components/ui/TeamMonogram';
+import { describeGame, gameKindLabel } from '@/components/ui/describe-game';
 import type { NextCard, TeamLeagueCopy } from './team-view';
 
 /**

@@ -1,11 +1,11 @@
 import Link from 'next/link';
 
-import Arrow from '../ui/Arrow';
-import FormStrip from '../ui/FormStrip';
-import GhostMonogram from '../ui/GhostMonogram';
-import ResultChip, { CHIP_LABEL } from '../ui/ResultChip';
-import SectionHeader from '../ui/SectionHeader';
-import TeamMonogram from '../ui/TeamMonogram';
+import Arrow from '@/components/ui/Arrow';
+import FormStrip from '@/components/ui/FormStrip';
+import GhostMonogram from '@/components/ui/GhostMonogram';
+import ResultChip, { CHIP_LABEL } from '@/components/ui/ResultChip';
+import SectionHeader from '@/components/ui/SectionHeader';
+import TeamMonogram from '@/components/ui/TeamMonogram';
 
 import type { GameModel, GameSideModel } from './game-view';
 

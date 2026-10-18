@@ -18,8 +18,8 @@
  * - every other kind: null (a CCS league links the CCS bylaws, MCAL its own tournament sheet; their pages
  *   word those links themselves).
  */
-import { getLeague, getSection } from '../../lib/leagues';
-import type { LeagueId } from '../../lib/types';
+import { getLeague, getSection } from '@/lib/leagues';
+import type { LeagueId } from '@/lib/types';
 
 export interface SourceLink {
   href: string;

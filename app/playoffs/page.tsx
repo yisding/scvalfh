@@ -1,16 +1,16 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
-import LeagueJumpLinks from '../../components/layout/LeagueJumpLinks';
-import LeagueSwitcher, { RegionSwitcher } from '../../components/layout/LeagueSwitcher';
-import PageHeader from '../../components/layout/PageHeader';
-import { leagueChips } from '../../components/layout/league-chips';
-import { OG_BASE, ROOT_OG_IMAGE } from '../../components/layout/site';
-import KeyDates from '../../components/playoffs/KeyDates';
-import LeaguePairings from '../../components/playoffs/LeaguePairings';
-import PlayoffBracket from '../../components/playoffs/PlayoffBracket';
-import PlayoffProjection, { ProjectionKey } from '../../components/playoffs/PlayoffProjection';
-import { buildBrackets, ccsDivisionLabels, pendingRounds } from '../../components/playoffs/bracket-model';
+import LeagueJumpLinks from '@/components/layout/LeagueJumpLinks';
+import LeagueSwitcher, { RegionSwitcher } from '@/components/layout/LeagueSwitcher';
+import PageHeader from '@/components/layout/PageHeader';
+import { leagueChips } from '@/components/layout/league-chips';
+import { OG_BASE, ROOT_OG_IMAGE } from '@/components/layout/site';
+import KeyDates from '@/components/playoffs/KeyDates';
+import LeaguePairings from '@/components/playoffs/LeaguePairings';
+import PlayoffBracket from '@/components/playoffs/PlayoffBracket';
+import PlayoffProjection, { ProjectionKey } from '@/components/playoffs/PlayoffProjection';
+import { buildBrackets, ccsDivisionLabels, pendingRounds } from '@/components/playoffs/bracket-model';
 import {
   buildDivisionProjection,
   buildPairingView,
@@ -18,13 +18,13 @@ import {
   pairingNotesFor,
   type LeagueKeyDate,
   type ProjectionRow,
-} from '../../components/playoffs/playoff-view';
-import Arrow from '../../components/ui/Arrow';
-import BerthMeter from '../../components/ui/BerthMeter';
-import ExternalLink from '../../components/ui/ExternalLink';
-import LeagueHealthNote from '../../components/ui/LeagueHealthNote';
-import SectionHeader from '../../components/ui/SectionHeader';
-import { leaderLine } from '../../components/standings/standings-page-view';
+} from '@/components/playoffs/playoff-view';
+import Arrow from '@/components/ui/Arrow';
+import BerthMeter from '@/components/ui/BerthMeter';
+import ExternalLink from '@/components/ui/ExternalLink';
+import LeagueHealthNote from '@/components/ui/LeagueHealthNote';
+import SectionHeader from '@/components/ui/SectionHeader';
+import { leaderLine } from '@/components/standings/standings-page-view';
 import {
   areKeyDatesConfirmed,
   getCcsField,
@@ -37,18 +37,18 @@ import {
   getTeamById,
   getTeams,
   getTournamentLeagueIds,
-} from '../../lib/data';
-import type { LeagueSummary } from '../../lib/data';
-import { dateSpan, listWords, monthDay, shortDate } from '../../lib/format';
+} from '@/lib/data';
+import type { LeagueSummary } from '@/lib/data';
+import { dateSpan, listWords, monthDay, shortDate } from '@/lib/format';
 import {
   NO_POSTSEASON_LEAGUE_IDS,
   SECTION_PLAYOFFS_LEAGUE_IDS,
   UNBRACKETED_LEAGUE_IDS,
   getLeague,
   isIndependentLeague,
-} from '../../lib/leagues';
-import type { LeagueConfig } from '../../lib/leagues';
-import type { LeagueId, PlayoffProjection as Projection } from '../../lib/types';
+} from '@/lib/leagues';
+import type { LeagueConfig } from '@/lib/leagues';
+import type { LeagueId, PlayoffProjection as Projection } from '@/lib/types';
 
 /**
  * /playoffs — "Are we in, and who do we play?" (SPEC §6.3, §10.7; DESIGN-socal §2.4): every league's

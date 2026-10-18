@@ -1,10 +1,10 @@
 import Link from 'next/link';
 
-import { getTeamBySlug } from '../../lib/data';
-import { ordinal } from '../../lib/format';
-import { historySchoolName, type HistoryRow } from '../../lib/history';
-import MissingValue from '../ui/MissingValue';
-import TeamMonogram from '../ui/TeamMonogram';
+import { getTeamBySlug } from '@/lib/data';
+import { ordinal } from '@/lib/format';
+import { historySchoolName, type HistoryRow } from '@/lib/history';
+import MissingValue from '@/components/ui/MissingValue';
+import TeamMonogram from '@/components/ui/TeamMonogram';
 
 /**
  * The 2025-26 archive standings table (DESIGN §3.9) — final records only, no GD bar, no form

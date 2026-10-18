@@ -5,7 +5,7 @@
 
 import { describe, expect, it } from 'vitest';
 
-import { contentKey, normalizeKeys, stableStringify } from '../lib/stable-json';
+import { contentKey, normalizeKeys, stableStringify } from '@/lib/stable-json';
 
 describe('stable JSON', () => {
   it('contentKey sorts keys and drops ignored keys at every level, compactly', () => {

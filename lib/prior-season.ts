@@ -7,7 +7,7 @@
  * lib/rosters.ts.
  */
 
-import bundled from '../data/prior-season.json';
+import bundled from '@/data/prior-season.json';
 import { PriorSeasonSchema, type PriorSeason } from './prior-season-schema';
 import { failValidation } from './schema-primitives';
 

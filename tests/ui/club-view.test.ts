@@ -21,10 +21,10 @@ import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 
-import AboutPage from '../../app/about/page';
-import ClubPage, { generateMetadata, generateStaticParams } from '../../app/clubs/[slug]/page';
-import ClubsPage, { metadata as clubsMetadata } from '../../app/clubs/page';
-import TeamPage from '../../app/teams/[slug]/page';
+import AboutPage from '@/app/about/page';
+import ClubPage, { generateMetadata, generateStaticParams } from '@/app/clubs/[slug]/page';
+import ClubsPage, { metadata as clubsMetadata } from '@/app/clubs/page';
+import TeamPage from '@/app/teams/[slug]/page';
 import {
   REGION_WORDS,
   buildClubPageView,
@@ -34,7 +34,7 @@ import {
   sourceName,
   statusWords,
   type ClubPageView,
-} from '../../components/clubs/club-view';
+} from '@/components/clubs/club-view';
 import {
   clubDisplayName,
   getClub,
@@ -44,11 +44,11 @@ import {
   getClubsFile,
   type Club,
   type ClubAffiliation,
-} from '../../lib/clubs';
-import { getEnrichedTeamRoster, getRosters } from '../../lib/rosters';
-import { getTeamBySlug } from '../../lib/teams';
-import { affiliationLeaks } from '../../scripts/copy-rules';
-import { PUBLIC_TERMS } from '../../scripts/public-terms';
+} from '@/lib/clubs';
+import { getEnrichedTeamRoster, getRosters } from '@/lib/rosters';
+import { getTeamBySlug } from '@/lib/teams';
+import { affiliationLeaks } from '@/scripts/copy-rules';
+import { PUBLIC_TERMS } from '@/scripts/public-terms';
 import { textOf } from './html-text';
 
 const file = getClubsFile();

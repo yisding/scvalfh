@@ -8,11 +8,11 @@ import path from 'node:path';
 
 import { afterAll, beforeAll, vi } from 'vitest';
 
-import { readManifest } from '../lib/pipeline/corpus';
-import { PlayerStatsFileSchema, type PlayerStatsFile } from '../lib/player-stats-schema';
-import { ScheduleResponseSchema, type ScheduleRow } from '../lib/sources/maxpreps';
-import { TEAMS } from '../lib/teams';
-import type { DivisionId, LeagueId } from '../lib/types';
+import { readManifest } from '@/lib/pipeline/corpus';
+import { PlayerStatsFileSchema, type PlayerStatsFile } from '@/lib/player-stats-schema';
+import { ScheduleResponseSchema, type ScheduleRow } from '@/lib/sources/maxpreps';
+import { TEAMS } from '@/lib/teams';
+import type { DivisionId, LeagueId } from '@/lib/types';
 
 export const REPO = path.resolve(import.meta.dirname, '..');
 /** The original SCVAL capture directory (2026-09-29), now also the `scval` corpus (its manifest.json). */
@@ -117,7 +117,9 @@ export function runScript(
   args: readonly string[],
   opts: { cwd?: string; env?: NodeJS.ProcessEnv } = {},
 ): Omit<CliRun, 'out'> {
-  const res = spawnSync(TSX, [path.resolve(REPO, script), ...args], {
+  // tsx reads tsconfig.json (and with it the `@/` paths every repo module imports through) from the
+  // cwd, and these tests spawn scripts from temp directories: name the repo's tsconfig explicitly.
+  const res = spawnSync(TSX, ['--tsconfig', path.join(REPO, 'tsconfig.json'), path.resolve(REPO, script), ...args], {
     cwd: opts.cwd ?? REPO,
     env: opts.env,
     encoding: 'utf8',

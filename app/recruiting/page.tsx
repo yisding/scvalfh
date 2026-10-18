@@ -1,14 +1,14 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
-import LeagueSwitcher, { RegionSwitcher } from '../../components/layout/LeagueSwitcher';
-import PageHeader from '../../components/layout/PageHeader';
-import { leagueChips, leagueHrefs } from '../../components/layout/league-chips';
-import { OG_BASE, ROOT_OG_IMAGE } from '../../components/layout/site';
-import RecruitingList from '../../components/recruiting/RecruitingList';
-import { buildRecruitingView } from '../../components/recruiting/recruiting-view';
-import SectionHeader from '../../components/ui/SectionHeader';
-import { getRosters } from '../../lib/rosters';
+import LeagueSwitcher, { RegionSwitcher } from '@/components/layout/LeagueSwitcher';
+import PageHeader from '@/components/layout/PageHeader';
+import { leagueChips, leagueHrefs } from '@/components/layout/league-chips';
+import { OG_BASE, ROOT_OG_IMAGE } from '@/components/layout/site';
+import RecruitingList from '@/components/recruiting/RecruitingList';
+import { buildRecruitingView } from '@/components/recruiting/recruiting-view';
+import SectionHeader from '@/components/ui/SectionHeader';
+import { getRosters } from '@/lib/rosters';
 
 /** The page's title, and its og:title too: og:title never carries the site-name suffix (OG_BASE). */
 const PAGE_TITLE = 'Recruiting';

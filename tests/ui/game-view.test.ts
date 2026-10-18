@@ -18,13 +18,13 @@ import { createElement, type ReactElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
-import type { Game, Snapshot } from '../../lib/types';
-import { corpusSnapshotPath } from '../helpers';
+import type { Game, Snapshot } from '@/lib/types';
+import { corpusSnapshotPath } from '@/tests/helpers';
 import { textOf } from './html-text';
 
-type Data = typeof import('../../lib/data');
-type Model = typeof import('../../components/game/game-view');
-type GameIds = typeof import('../../lib/game-id');
+type Data = typeof import('@/lib/data');
+type Model = typeof import('@/components/game/game-view');
+type GameIds = typeof import('@/lib/game-id');
 
 interface Loaded {
   d: Data;
@@ -42,11 +42,11 @@ let L: Loaded;
 
 async function loadModules(): Promise<Loaded> {
   vi.resetModules();
-  const d = await import('../../lib/data');
-  const m = await import('../../components/game/game-view');
-  const ids = await import('../../lib/game-id');
-  const page = await import('../../app/game/[id]/page');
-  const og = await import('../../app/game/[id]/opengraph-image');
+  const d = await import('@/lib/data');
+  const m = await import('@/components/game/game-view');
+  const ids = await import('@/lib/game-id');
+  const page = await import('@/app/game/[id]/page');
+  const og = await import('@/app/game/[id]/opengraph-image');
   return {
     d,
     m,
@@ -230,7 +230,7 @@ describe('the cross-check paragraph under Elsewhere (components/game/GameSources
 
   it('renders, with the fixture-backed wording, when a league-postseason tag names a league no longer configured', async () => {
     // The snapshot schema checks a tag's league id only for shape, so the lookup must not throw.
-    const { GameElsewhere } = await import('../../components/game/GameSources');
+    const { GameElsewhere } = await import('@/components/game/GameSources');
     const nonLeague = L.d.getGames({ status: 'final' }).find((g) => g.countsFor === null && g.postseason === null)!;
     const model = L.m.buildGameView(L.ids.gameIdToParam(nonLeague.contestId))!;
     const tagged = {
@@ -311,7 +311,7 @@ describe('MCAL postseason note and superseded stubs (corpus copy)', () => {
   it('FormGoingIn names the 102 teams this site follows for a side outside them (components/game/FormGoingIn.tsx)', async () => {
     const g = S.d.getGames().find((x) => (x.home.slug === null) !== (x.away.slug === null))!;
     expect(g, 'tests: the corpus copy has a game against a non-member').toBeDefined();
-    const { FormGoingIn } = await import('../../components/game/FormGoingIn');
+    const { FormGoingIn } = await import('@/components/game/FormGoingIn');
     const html = renderToStaticMarkup(createElement(FormGoingIn, { model: S.m.buildGameView(g.contestId)! }));
     expect(textOf(html), 'components/game/FormGoingIn.tsx').toContain(
       'Not one of the 102 teams this site follows — no record is kept here.',
@@ -320,7 +320,7 @@ describe('MCAL postseason note and superseded stubs (corpus copy)', () => {
 
   it('an MCAL tournament game: the not-counted sentence and the shootout caveat', async () => {
     const model = S.m.buildGameView(tournament.contestId)!;
-    const { SHOOTOUT_NOTE } = await import('../../lib/postseason');
+    const { SHOOTOUT_NOTE } = await import('@/lib/postseason');
     expect(model.postseasonNotes, 'components/game/game-view.ts MCAL postseason notes').toEqual([
       'MCAL tournament game — it does not count in the league table.',
       SHOOTOUT_NOTE,
@@ -374,11 +374,11 @@ describe('Southern California games (corpus copy with synthetic SoCal games, DES
   let sunsetTie: Game;
 
   beforeAll(async () => {
-    const { game } = await import('../game-builder');
-    const { loadSnapshot } = await import('../../lib/snapshot-schema');
-    const { computeStandings } = await import('../../lib/standings');
-    const { countsOf } = await import('../../lib/snapshot-migrate');
-    const { getLeague } = await import('../../lib/leagues');
+    const { game } = await import('@/tests/game-builder');
+    const { loadSnapshot } = await import('@/lib/snapshot-schema');
+    const { computeStandings } = await import('@/lib/standings');
+    const { countsOf } = await import('@/lib/snapshot-migrate');
+    const { getLeague } = await import('@/lib/leagues');
     const base = loadSnapshot(JSON.parse(readFileSync(corpusPath, 'utf8')) as unknown);
     // Clairemont (City Eastern) 0, Eastlake (Metro Mesa) 0, flagged W/L, Sep 1: a San Diego shootout win
     // between two conferences, so no table counts it.
@@ -421,7 +421,7 @@ describe('Southern California games (corpus copy with synthetic SoCal games, DES
   });
 
   it('the D24 sentence names the San Diego Section and its shootout (components/game/GameSources.tsx)', async () => {
-    const { GameElsewhere } = await import('../../components/game/GameSources');
+    const { GameElsewhere } = await import('@/components/game/GameSources');
     const html = renderToStaticMarkup(createElement(GameElsewhere, { model: C.m.buildGameView(shootoutWin.contestId)! }));
     expect(textOf(html)).toContain(
       'A level si.com score between two San Diego Section teams is never used: a varsity game there outside a tournament is decided by a shootout, and si.com does not say who won it.',
@@ -433,7 +433,7 @@ describe('Southern California games (corpus copy with synthetic SoCal games, DES
   });
 
   it('says under When that a date was corrected, from what, and on whose word (components/game/GameDetails.tsx)', async () => {
-    const { GameDetails } = await import('../../components/game/GameDetails');
+    const { GameDetails } = await import('@/components/game/GameDetails');
     const model = C.m.buildGameView(counted.contestId)!;
     const plain = textOf(renderToStaticMarkup(createElement(GameDetails, { model })));
     expect(plain).not.toContain('Date corrected');

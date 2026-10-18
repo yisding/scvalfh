@@ -61,9 +61,9 @@ import {
   summarizeByLeague,
   teamsInScope,
   type PreviousRows,
-} from '../lib/fetch-scope';
-import { byDateThenId, localDateKey, monthDay } from '../lib/format';
-import { mergeJv } from '../lib/jv-merge';
+} from '@/lib/fetch-scope';
+import { byDateThenId, localDateKey, monthDay } from '@/lib/format';
+import { mergeJv } from '@/lib/jv-merge';
 import {
   JvFileSchema,
   JvGameSchema,
@@ -75,20 +75,20 @@ import {
   type JvSbliveRow,
   type JvSourceState,
   type JvTeam,
-} from '../lib/jv-schema';
-import { jvMaxprepsScheduleUrl, jvSbliveGamesUrl, jvSbliveTeamId } from '../lib/jv-teams';
-import { INDEPENDENT_LEAGUES, LEAGUES_PROPER, seasonWindowBounds } from '../lib/leagues';
-import { normalizeGames } from '../lib/normalize';
-import { inSeasonWindow } from '../lib/pipeline/steps/window';
-import { formatIssues } from '../lib/schema-primitives';
-import { JV_SPORT_SEASON_ID, SEASON_YEAR } from '../lib/season';
-import { HttpClient } from '../lib/sources/http';
-import { MaxPrepsClient, ScheduleResponseSchema, splitTbaRows, type ScheduleRow } from '../lib/sources/maxpreps';
-import { SBLIVE_HTTP_OPTIONS } from '../lib/sources/sblive';
-import { combineJvCopies, parseJvTeamGamesPage, type JvSbliveCopy } from '../lib/sources/sblive-jv';
-import { stableStringify } from '../lib/stable-json';
-import { TEAMS } from '../lib/teams';
-import type { Game, LeagueId, Team } from '../lib/types';
+} from '@/lib/jv-schema';
+import { jvMaxprepsScheduleUrl, jvSbliveGamesUrl, jvSbliveTeamId } from '@/lib/jv-teams';
+import { INDEPENDENT_LEAGUES, LEAGUES_PROPER, seasonWindowBounds } from '@/lib/leagues';
+import { normalizeGames } from '@/lib/normalize';
+import { inSeasonWindow } from '@/lib/pipeline/steps/window';
+import { formatIssues } from '@/lib/schema-primitives';
+import { JV_SPORT_SEASON_ID, SEASON_YEAR } from '@/lib/season';
+import { HttpClient } from '@/lib/sources/http';
+import { MaxPrepsClient, ScheduleResponseSchema, splitTbaRows, type ScheduleRow } from '@/lib/sources/maxpreps';
+import { SBLIVE_HTTP_OPTIONS } from '@/lib/sources/sblive';
+import { combineJvCopies, parseJvTeamGamesPage, type JvSbliveCopy } from '@/lib/sources/sblive-jv';
+import { stableStringify } from '@/lib/stable-json';
+import { TEAMS } from '@/lib/teams';
+import type { Game, LeagueId, Team } from '@/lib/types';
 import { runCli } from './cli';
 
 interface Args {

@@ -23,18 +23,18 @@
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 
-import { CCS, getDivision, getLeague } from '../leagues';
-import { officialChangesCellText, sha256Hex } from '../official/validate';
-import { BOOTSTRAP_URL } from '../season';
-import { CCS_ICAL_URL } from '../sources/ccs';
-import { CIFSS_SEASON_FROM, cifssListingUrl } from '../sources/cifss';
-import { HttpClient, HttpError, type HttpClientOptions } from '../sources/http';
-import { MaxPrepsClient, MaxPrepsError } from '../sources/maxpreps';
-import { SBLIVE_HTTP_OPTIONS, sbliveScoresUrl } from '../sources/sblive';
-import { SCVAL_STANDINGS_INDEX, pdfToText, scvalScheduleUrl } from '../sources/scval-pdf';
-import { VNN_SITE_IDS, vnnIcsUrl } from '../sources/vnn-ics';
-import { getTeamBySlug } from '../teams';
-import type { DivisionId, TeamSlug } from '../types';
+import { CCS, getDivision, getLeague } from '@/lib/leagues';
+import { officialChangesCellText, sha256Hex } from '@/lib/official/validate';
+import { BOOTSTRAP_URL } from '@/lib/season';
+import { CCS_ICAL_URL } from '@/lib/sources/ccs';
+import { CIFSS_SEASON_FROM, cifssListingUrl } from '@/lib/sources/cifss';
+import { HttpClient, HttpError, type HttpClientOptions } from '@/lib/sources/http';
+import { MaxPrepsClient, MaxPrepsError } from '@/lib/sources/maxpreps';
+import { SBLIVE_HTTP_OPTIONS, sbliveScoresUrl } from '@/lib/sources/sblive';
+import { SCVAL_STANDINGS_INDEX, pdfToText, scvalScheduleUrl } from '@/lib/sources/scval-pdf';
+import { VNN_SITE_IDS, vnnIcsUrl } from '@/lib/sources/vnn-ics';
+import { getTeamBySlug } from '@/lib/teams';
+import type { DivisionId, TeamSlug } from '@/lib/types';
 import {
   FixtureMissing,
   TransportError,

@@ -25,16 +25,16 @@
 import { runCli } from './cli';
 
 async function main(argv: readonly string[]): Promise<number> {
-  const { describeRunFailure } = await import('../lib/pipeline/run-failure');
+  const { describeRunFailure } = await import('@/lib/pipeline/run-failure');
   try {
-    const run = await import('../lib/pipeline/run');
+    const run = await import('@/lib/pipeline/run');
     const args = run.parseRunArgs(argv, { cwd: process.cwd(), now: new Date().toISOString() });
     if (args.help) {
       console.log(run.USAGE);
       return 0;
     }
-    const { stepOfficial } = await import('../lib/pipeline/steps/official');
-    const { stepSblive } = await import('../lib/pipeline/steps/sblive');
+    const { stepOfficial } = await import('@/lib/pipeline/steps/official');
+    const { stepSblive } = await import('@/lib/pipeline/steps/sblive');
     const { args: resolved, ctx } = run.prepareRun(args);
     const result = await run.runPipeline(ctx, { official: stepOfficial, sblive: stepSblive });
     if (result === null) return 0; // out of season: nothing fetched, nothing written

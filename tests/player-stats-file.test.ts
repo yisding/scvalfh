@@ -17,7 +17,7 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { getPlayerStats, getTeamPlayerStats } from '../lib/player-stats';
+import { getPlayerStats, getTeamPlayerStats } from '@/lib/player-stats';
 import {
   FIELD_STAT_KEYS,
   PLAYER_STATS_TEAM_COUNT,
@@ -26,12 +26,12 @@ import {
   countPlayerStats,
   playerStatsContentKey,
   type PlayerStatsFile,
-} from '../lib/player-stats-schema';
-import { getRosters } from '../lib/rosters';
-import { RostersSchema, countRosters, type Rosters } from '../lib/rosters-schema';
-import { pendingRoster } from '../lib/sources/maxpreps-roster';
-import { pendingPlayerStats } from '../lib/sources/maxpreps-player-stats';
-import { TEAMS, teamsInLeague } from '../lib/teams';
+} from '@/lib/player-stats-schema';
+import { getRosters } from '@/lib/rosters';
+import { RostersSchema, countRosters, type Rosters } from '@/lib/rosters-schema';
+import { pendingRoster } from '@/lib/sources/maxpreps-roster';
+import { pendingPlayerStats } from '@/lib/sources/maxpreps-player-stats';
+import { TEAMS, teamsInLeague } from '@/lib/teams';
 import { FIXTURE_DIR, REPO, runScript } from './helpers';
 
 const raw = JSON.parse(readFileSync(path.join(REPO, 'data', 'player-stats.json'), 'utf8')) as PlayerStatsFile;

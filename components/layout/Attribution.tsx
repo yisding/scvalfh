@@ -2,13 +2,13 @@ import Link from 'next/link';
 
 import { Fragment } from 'react';
 
-import ExternalLink from '../ui/ExternalLink';
-import LastUpdated from '../ui/LastUpdated';
-import { getSitePhase } from '../../lib/data';
-import { listWords } from '../../lib/format';
-import { LEAGUES_PROPER, SECTIONS, getSection } from '../../lib/leagues';
-import type { LeagueConfig } from '../../lib/leagues';
-import { SOURCE_LINKS } from '../../lib/season';
+import ExternalLink from '@/components/ui/ExternalLink';
+import LastUpdated from '@/components/ui/LastUpdated';
+import { getSitePhase } from '@/lib/data';
+import { listWords } from '@/lib/format';
+import { LEAGUES_PROPER, SECTIONS, getSection } from '@/lib/leagues';
+import type { LeagueConfig } from '@/lib/leagues';
+import { SOURCE_LINKS } from '@/lib/season';
 
 import { DATA_CORRECTIONS_URL, SITE_SCOPE_NOTE } from './site';
 

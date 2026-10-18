@@ -10,12 +10,12 @@
 import { describe, expect, it } from 'vitest';
 
 import bracket2025 from './fixtures/mcal/bracket-2025.json';
-import { getLeague, type LeagueConfig } from '../lib/leagues';
+import { getLeague, type LeagueConfig } from '@/lib/leagues';
 import {
   SHOOTOUT_NOTE, buildLeagueTournament, finalGame, quarterfinals, seedsFromStandings, semifinals,
-} from '../lib/postseason';
-import { getTeamById } from '../lib/teams';
-import type { Game, Standing, TournamentSlot } from '../lib/types';
+} from '@/lib/postseason';
+import { getTeamById } from '@/lib/teams';
+import type { Game, Standing, TournamentSlot } from '@/lib/types';
 
 const MCAL = getLeague('mcal');
 const DIV = 'marin-county';

@@ -18,12 +18,12 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { HistorySchema } from '../lib/history-schema';
+import { HistorySchema } from '@/lib/history-schema';
 import {
   parseAllLeaguePdfText,
   parseStandingsPdfText,
   SCVAL_HISTORY_PDFS,
-} from '../lib/sources/scval-pdf';
+} from '@/lib/sources/scval-pdf';
 import {
   BVAL_HISTORY_SOURCES,
   bvalDocExportUrl,
@@ -32,8 +32,8 @@ import {
   parseCsv,
   parseGradeYear,
   parseStandingsCsv,
-} from '../lib/sources/bval-sheet';
-import { getTeamBySlug, teamsInLeague } from '../lib/teams';
+} from '@/lib/sources/bval-sheet';
+import { getTeamBySlug, teamsInLeague } from '@/lib/teams';
 import { REPO, runScript } from './helpers';
 
 const FIX = path.join(REPO, 'tests', 'fixtures', 'scval');
@@ -346,7 +346,7 @@ describe('history: the SCVAL entry is scoped to SCVAL (SPEC §0.2 #12, §4.2)', 
 
 describe('history: the read API', () => {
   it('validates the file at import time and exposes both divisions', async () => {
-    const h = await import('../lib/history');
+    const h = await import('@/lib/history');
     expect(h.getHistorySeason()).toBe('2025-26');
     expect(h.getHistoryStandings('de-anza')).toHaveLength(7);
     expect(h.getHistoryStandings('el-camino')).toHaveLength(8);
@@ -355,7 +355,7 @@ describe('history: the read API', () => {
   });
 
   it('names the champions', async () => {
-    const h = await import('../lib/history');
+    const h = await import('@/lib/history');
     expect(h.getHistoryChampions('scval').map((c) => [c.division, c.row.slug, c.row.leagueRecord])).toEqual([
       ['de-anza', 'st-ignatius', '11-0-1'],
       ['el-camino', 'los-gatos', '14-0'],
@@ -363,7 +363,7 @@ describe('history: the read API', () => {
   });
 
   it('finds every 2025-26 row for one school, across levels', async () => {
-    const h = await import('../lib/history');
+    const h = await import('@/lib/history');
     const si = h.getHistoryFor('st-ignatius');
     expect(si.map((x) => [x.level, x.row.place])).toEqual([
       ['varsity', 1],
@@ -374,7 +374,7 @@ describe('history: the read API', () => {
   });
 
   it('exposes the awards and the two source PDFs for the page credit', async () => {
-    const h = await import('../lib/history');
+    const h = await import('@/lib/history');
     expect(h.getHistoryAwards('de-anza')?.overall).toHaveLength(7);
     expect(h.getHistoryAwards('el-camino', 'jv')?.overall).toEqual([]);
     const sources = h.getHistoryProvenance('scval');
@@ -640,7 +640,7 @@ describe('history: the league-aware schema', () => {
 
 describe('history: the league-aware read API', () => {
   it('lists every league in config order, and splits available from unavailable', async () => {
-    const h = await import('../lib/history');
+    const h = await import('@/lib/history');
     expect(h.getHistoryLeagues().map((l) => [l.id, l.entry.status])).toEqual([
       ['scval', 'available'],
       ['bval', 'available'],
@@ -667,7 +667,7 @@ describe('history: the league-aware read API', () => {
   });
 
   it('says why each Southern California league has no 2025-26 table, and what was checked (DESIGN-socal §2.2)', async () => {
-    const h = await import('../lib/history');
+    const h = await import('@/lib/history');
     const sunset = h.getHistoryLeagues().find((l) => l.id === 'sunset')!.entry;
     if (sunset.status !== 'unavailable') throw new Error('sunset should be unavailable');
     // The design's reason, verbatim: no league document, no playoffs, and the scores site's table is SBLive's.
@@ -720,7 +720,7 @@ describe('history: the league-aware read API', () => {
   });
 
   it('serves BVAL tables and champions by division', async () => {
-    const h = await import('../lib/history');
+    const h = await import('@/lib/history');
     expect(h.getHistoryStandings('mt-hamilton')).toHaveLength(6);
     expect(h.getHistoryStandings('santa-teresa', 'jv')).toEqual([]);
     expect(h.getHistoryChampions('bval').map((c) => [c.division, c.row.slug, c.row.leagueRecord])).toEqual([
@@ -735,7 +735,7 @@ describe('history: the league-aware read API', () => {
   });
 
   it('flags Leland and Prospect as moved and Sobrato as having unpublished ties, and nothing else', async () => {
-    const h = await import('../lib/history');
+    const h = await import('@/lib/history');
     // Two teams swapped divisions between the 2025-26 sheet and the registry's 2026-27 alignment.
     expect(h.getHistoryDivisionChanges('bval')).toEqual([
       { slug: 'prospect', name: 'Prospect', historyDivision: 'mt-hamilton', registryDivision: 'santa-teresa' },
@@ -748,7 +748,7 @@ describe('history: the league-aware read API', () => {
   });
 
   it('names every school by its registry name, whatever the source wrote', async () => {
-    const h = await import('../lib/history');
+    const h = await import('@/lib/history');
     expect(h.historySchoolName('mitty', 'MItty')).toBe('Archbishop Mitty');
     expect(h.historySchoolName('presentation', 'Presentation HS')).toBe('Presentation');
     expect(h.historySchoolName('saint-francis', 'St. Francis')).toBe('Saint Francis');

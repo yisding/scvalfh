@@ -10,7 +10,7 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { DATA_QUALITY, LEAGUES, getDivision, getLeague } from '../../lib/leagues';
+import { DATA_QUALITY, LEAGUES, getDivision, getLeague } from '@/lib/leagues';
 import {
   FixtureMissing,
   TransportError,
@@ -18,8 +18,8 @@ import {
   type RawResponse,
   type ResourceKey,
   type Transport,
-} from '../../lib/pipeline/contract';
-import { loadCorpus, readManifest } from '../../lib/pipeline/corpus';
+} from '@/lib/pipeline/contract';
+import { loadCorpus, readManifest } from '@/lib/pipeline/corpus';
 import {
   FixtureTransport,
   LiveTransport,
@@ -28,15 +28,15 @@ import {
   hostOf,
   recordedExtension,
   resourceUrl,
-} from '../../lib/pipeline/transport';
-import { officialDocumentOf } from '../../lib/official/schema';
-import { officialChangesCellText, sha256Hex, tdCellBodies } from '../../lib/official/validate';
-import { BOOTSTRAP_URL } from '../../lib/season';
-import { HttpError, type HttpResponse } from '../../lib/sources/http';
-import { MaxPrepsError } from '../../lib/sources/maxpreps';
-import { ALL_DIVISIONS } from '../../lib/leagues';
-import { TEAMS, getTeamBySlug } from '../../lib/teams';
-import { REPO, corpusDir, variantDir } from '../helpers';
+} from '@/lib/pipeline/transport';
+import { officialDocumentOf } from '@/lib/official/schema';
+import { officialChangesCellText, sha256Hex, tdCellBodies } from '@/lib/official/validate';
+import { BOOTSTRAP_URL } from '@/lib/season';
+import { HttpError, type HttpResponse } from '@/lib/sources/http';
+import { MaxPrepsError } from '@/lib/sources/maxpreps';
+import { ALL_DIVISIONS } from '@/lib/leagues';
+import { TEAMS, getTeamBySlug } from '@/lib/teams';
+import { REPO, corpusDir, variantDir } from '@/tests/helpers';
 
 const ALL = corpusDir('all-2026-10-02');
 const SCVAL = corpusDir('scval');

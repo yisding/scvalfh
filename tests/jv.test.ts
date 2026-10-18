@@ -14,14 +14,14 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { buildDayJvView, buildTeamJvView, jvDiffersNote } from '../components/teams/jv-view';
-import { getJvFile, getJvGamesForTeam, getJvMerge, getJvTeam } from '../lib/jv';
-import { JV_FILL_NOTE, mergeJv } from '../lib/jv-merge';
-import { JV_TEAM_COUNT, JvFileSchema, countJv, jvContentKey, type JvFile, type JvSbliveRow } from '../lib/jv-schema';
-import { JV_SBLIVE_PATHS, JV_SLUG_BY_SBLIVE_ID, jvMaxprepsScheduleUrl, jvSbliveGamesUrl, jvSbliveTeamId } from '../lib/jv-teams';
-import { combineJvCopies, parseJvTeamGamesPage, type JvSbliveCopy } from '../lib/sources/sblive-jv';
-import { TEAMS, getTeamBySlug } from '../lib/teams';
-import type { Game } from '../lib/types';
+import { buildDayJvView, buildTeamJvView, jvDiffersNote } from '@/components/teams/jv-view';
+import { getJvFile, getJvGamesForTeam, getJvMerge, getJvTeam } from '@/lib/jv';
+import { JV_FILL_NOTE, mergeJv } from '@/lib/jv-merge';
+import { JV_TEAM_COUNT, JvFileSchema, countJv, jvContentKey, type JvFile, type JvSbliveRow } from '@/lib/jv-schema';
+import { JV_SBLIVE_PATHS, JV_SLUG_BY_SBLIVE_ID, jvMaxprepsScheduleUrl, jvSbliveGamesUrl, jvSbliveTeamId } from '@/lib/jv-teams';
+import { combineJvCopies, parseJvTeamGamesPage, type JvSbliveCopy } from '@/lib/sources/sblive-jv';
+import { TEAMS, getTeamBySlug } from '@/lib/teams';
+import type { Game } from '@/lib/types';
 import { game } from './game-builder';
 import { REPO, runScript } from './helpers';
 

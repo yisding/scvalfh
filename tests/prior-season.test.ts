@@ -6,7 +6,7 @@
 
 import { describe, expect, it } from 'vitest';
 
-import { getPriorSeason } from '../lib/prior-season';
+import { getPriorSeason } from '@/lib/prior-season';
 import {
   PRIOR_EXCLUDED_CONTEST_IDS,
   PriorSeasonSchema,
@@ -15,10 +15,10 @@ import {
   seasonLabel,
   seasonWindow,
   type PriorSeason,
-} from '../lib/prior-season-schema';
-import { SEASON_YEAR } from '../lib/season';
-import { ScheduleRowSchema, type ScheduleRow } from '../lib/sources/maxpreps';
-import { TEAMS, getTeamBySlug } from '../lib/teams';
+} from '@/lib/prior-season-schema';
+import { SEASON_YEAR } from '@/lib/season';
+import { ScheduleRowSchema, type ScheduleRow } from '@/lib/sources/maxpreps';
+import { TEAMS, getTeamBySlug } from '@/lib/teams';
 
 describe('data/prior-season.json', () => {
   const file = getPriorSeason();

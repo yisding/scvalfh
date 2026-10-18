@@ -3,8 +3,8 @@
 import { describe, expect, it } from 'vitest';
 import { z } from 'zod';
 
-import { FixtureMissing, TransportError } from '../../lib/pipeline/contract';
-import { classifyFetchError, parseJsonBody } from '../../lib/pipeline/read';
+import { FixtureMissing, TransportError } from '@/lib/pipeline/contract';
+import { classifyFetchError, parseJsonBody } from '@/lib/pipeline/read';
 
 describe('classifyFetchError', () => {
   it('a resource the corpus lacks is skipped, not in corpus', () => {

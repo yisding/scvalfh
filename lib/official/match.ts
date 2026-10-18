@@ -15,11 +15,11 @@
  * Pure: no I/O, no clock (`today` is an option).
  */
 
-import { postseasonTag } from '../classify';
-import { divisionLabel, getDivision, leagueOfDivision } from '../leagues';
-import { dayDiff, monthDay, shiftDateKey, shortDate } from '../format';
-import { getTeamBySlug, resolveTeam, sideJoinKey, teamOfSide, unorderedPairKey } from '../teams';
-import type { DivisionId, Game, GameSide, OfficialFixture, OfficialStamp, TeamSlug } from '../types';
+import { postseasonTag } from '@/lib/classify';
+import { divisionLabel, getDivision, leagueOfDivision } from '@/lib/leagues';
+import { dayDiff, monthDay, shiftDateKey, shortDate } from '@/lib/format';
+import { getTeamBySlug, resolveTeam, sideJoinKey, teamOfSide, unorderedPairKey } from '@/lib/teams';
+import type { DivisionId, Game, GameSide, OfficialFixture, OfficialStamp, TeamSlug } from '@/lib/types';
 
 export interface MatchOptions {
   matcher: 'legacy' | 'two-phase';

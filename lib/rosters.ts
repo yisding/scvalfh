@@ -25,8 +25,8 @@
 import { readFileSync } from 'node:fs';
 
 import { z } from 'zod';
-import bundledEnrichment from '../data/rosters-enrichment.json';
-import bundledRosters from '../data/rosters.json';
+import bundledEnrichment from '@/data/rosters-enrichment.json';
+import bundledRosters from '@/data/rosters.json';
 import {
   RosterEnrichmentSchema,
   RostersSchema,

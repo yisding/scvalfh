@@ -1,11 +1,11 @@
 import Link from 'next/link';
 
-import { SummaryLead, SummaryTeams } from '../ui/GameRow';
-import SectionHeader from '../ui/SectionHeader';
-import { describeGame } from '../ui/describe-game';
-import { shortDate } from '../../lib/format';
-import { gameHref } from '../../lib/game-id';
-import type { Game, LeagueId } from '../../lib/types';
+import { SummaryLead, SummaryTeams } from '@/components/ui/GameRow';
+import SectionHeader from '@/components/ui/SectionHeader';
+import { describeGame } from '@/components/ui/describe-game';
+import { shortDate } from '@/lib/format';
+import { gameHref } from '@/lib/game-id';
+import type { Game, LeagueId } from '@/lib/types';
 
 /**
  * A league's latest results day (SPEC §10.1, DESIGN §3.1, §8).

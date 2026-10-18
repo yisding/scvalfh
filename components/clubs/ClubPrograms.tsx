@@ -1,5 +1,5 @@
-import ExternalLink from '../ui/ExternalLink';
-import GridRowFiller from '../ui/GridRowFiller';
+import ExternalLink from '@/components/ui/ExternalLink';
+import GridRowFiller from '@/components/ui/GridRowFiller';
 import type { ClubProgramRow, ClubProgramsSource } from './club-view';
 
 /**

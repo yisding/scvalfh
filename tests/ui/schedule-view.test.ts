@@ -15,20 +15,20 @@ import { createElement, type ReactElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
-import { REPO, corpusSnapshotPath } from '../helpers';
+import { REPO, corpusSnapshotPath } from '@/tests/helpers';
 import { textOf } from './html-text';
 
-type Data = typeof import('../../lib/data');
-type Server = typeof import('../../components/schedule/filter-data-server');
-type Index = typeof import('../../components/schedule/schedule-view');
-type Day = typeof import('../../components/schedule/day-summary');
+type Data = typeof import('@/lib/data');
+type Server = typeof import('@/components/schedule/filter-data-server');
+type Index = typeof import('@/components/schedule/schedule-view');
+type Day = typeof import('@/components/schedule/day-summary');
 
 const priorEnv = process.env.SCVAL_SNAPSHOT;
 let data: Data;
 let server: Server;
 let index: Index;
 let day: Day;
-let Filters: typeof import('../../components/schedule/ScheduleFilters').ScheduleFilters;
+let Filters: typeof import('@/components/schedule/ScheduleFilters').ScheduleFilters;
 let renderLeague: (league: string) => Promise<string>;
 let renderIndex: () => string;
 let renderDay: (date: string) => Promise<string>;
@@ -36,14 +36,14 @@ let renderDay: (date: string) => Promise<string>;
 beforeAll(async () => {
   process.env.SCVAL_SNAPSHOT = corpusSnapshotPath('all-2026-10-02');
   vi.resetModules();
-  data = await import('../../lib/data');
-  server = await import('../../components/schedule/filter-data-server');
-  index = await import('../../components/schedule/schedule-view');
-  day = await import('../../components/schedule/day-summary');
-  Filters = (await import('../../components/schedule/ScheduleFilters')).ScheduleFilters;
-  const leaguePage = (await import('../../app/schedule/[league]/page')).default;
-  const indexPage = (await import('../../app/schedule/page')).default;
-  const dayPage = (await import('../../app/scores/[date]/page')).default;
+  data = await import('@/lib/data');
+  server = await import('@/components/schedule/filter-data-server');
+  index = await import('@/components/schedule/schedule-view');
+  day = await import('@/components/schedule/day-summary');
+  Filters = (await import('@/components/schedule/ScheduleFilters')).ScheduleFilters;
+  const leaguePage = (await import('@/app/schedule/[league]/page')).default;
+  const indexPage = (await import('@/app/schedule/page')).default;
+  const dayPage = (await import('@/app/scores/[date]/page')).default;
   renderLeague = async (league) =>
     renderToStaticMarkup((await leaguePage({ params: Promise.resolve({ league }) } as never)) as ReactElement);
   renderIndex = () => renderToStaticMarkup(createElement(indexPage));
@@ -195,7 +195,7 @@ describe('the /schedule index', () => {
     for (const label of labels) expect(label, 'components/schedule/ScheduleIndex.tsx').toMatch(/, Southern California$/);
     expect(new Set(labels).size, 'components/schedule/ScheduleIndex.tsx unique').toBe(labels.length);
     // The corpus has no SoCal game day, so the SoCal copies are rendered here from a hand-built view.
-    const { ScheduleIndex } = await import('../../components/schedule/ScheduleIndex');
+    const { ScheduleIndex } = await import('@/components/schedule/ScheduleIndex');
     const day = (date: string) => ({ date, total: 0, leagues: [] });
     const both = renderToStaticMarkup(
       createElement(ScheduleIndex, {
@@ -286,7 +286,7 @@ describe('the /schedule index', () => {
 describe('the timeline rail’s today chip (components/schedule/TimelineRail.tsx)', () => {
   type Chip = { date: string; kind: string; href: string; label: string; sr: string; current: boolean };
   const chips = async (dates: string[], today: string): Promise<Chip[]> => {
-    const { TimelineRail } = await import('../../components/schedule/TimelineRail');
+    const { TimelineRail } = await import('@/components/schedule/TimelineRail');
     const html = renderToStaticMarkup(createElement(TimelineRail, { dates, today, leagueId: 'scval' }));
     return [...html.matchAll(/<a href="#([^"]+)" data-rail-date="([^"]+)" data-rail-kind="([^"]+)" class="([^"]*)">([\s\S]*?)<\/a>/g)].map(
       (m) => ({
@@ -335,7 +335,7 @@ describe('the timeline rail’s today chip (components/schedule/TimelineRail.tsx
 describe('Southern California schedule pages (DESIGN-socal §2.4)', () => {
   it('the rail’s postseason chip: the Section’s playoffs for a San Diego league, none for the Sunset', async () => {
     // The rail itself, over two game days (it draws nothing for a league with no dates yet).
-    const { TimelineRail } = await import('../../components/schedule/TimelineRail');
+    const { TimelineRail } = await import('@/components/schedule/TimelineRail');
     const rail = (leagueId: string) =>
       renderToStaticMarkup(createElement(TimelineRail, { dates: ['2026-09-01', '2026-10-30'], today: '2026-10-06', leagueId }));
     const city = rail('city');
@@ -401,7 +401,7 @@ describe('/scores/[date]', () => {
 
 describe('fixture status and slate records (UI pass, league-aware)', () => {
   it('an official fixture reads "Upcoming" on or after today and "No result" before it', async () => {
-    const { OfficialFixtures } = await import('../../components/schedule/OfficialFixtures');
+    const { OfficialFixtures } = await import('@/components/schedule/OfficialFixtures');
     const team = data.getTeams({ league: 'bval' })[0];
     const today = data.getToday();
     const fixture = (dateKey: string) => ({
@@ -435,8 +435,8 @@ describe('fixture status and slate records (UI pass, league-aware)', () => {
   });
 
   it('an upcoming league game on a slate names both sides’ league records in words, never 0-0-0', async () => {
-    const { GameRow } = await import('../../components/ui/GameRow');
-    const { recordWords } = await import('../../lib/format');
+    const { GameRow } = await import('@/components/ui/GameRow');
+    const { recordWords } = await import('@/lib/format');
     const today = data.getToday();
     const upcoming = data
       .getGames()

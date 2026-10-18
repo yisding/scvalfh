@@ -13,10 +13,10 @@
  * Pure: no I/O.
  */
 
-import { localDateKey } from '../format';
-import { JV_SLUG_BY_SBLIVE_ID } from '../jv-teams';
-import type { JvSbliveRow } from '../jv-schema';
-import type { TeamSlug } from '../types';
+import { localDateKey } from '@/lib/format';
+import { JV_SLUG_BY_SBLIVE_ID } from '@/lib/jv-teams';
+import type { JvSbliveRow } from '@/lib/jv-schema';
+import type { TeamSlug } from '@/lib/types';
 import {
   SbliveError,
   TeamGamesPropsSchema,

@@ -17,9 +17,9 @@
  *     Los Gatos writes bare "Santa Clara". Both go through the registry alias table.
  */
 
-import { localDateKey, toLocalTimestamp } from '../format';
-import { resolveTeam, sideJoinKey, unorderedPairKey } from '../teams';
-import type { Game, TeamSlug } from '../types';
+import { localDateKey, toLocalTimestamp } from '@/lib/format';
+import { resolveTeam, sideJoinKey, unorderedPairKey } from '@/lib/teams';
+import type { Game, TeamSlug } from '@/lib/types';
 import { icsLine, unfoldIcs } from './http';
 
 /** [V] the only two verified siteIds (SPEC §1.5). */

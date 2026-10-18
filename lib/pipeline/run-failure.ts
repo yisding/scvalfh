@@ -3,7 +3,7 @@
  * (SPEC §7.5) writes nothing, so the previous snapshot stays; a plain failure is just a failure.
  */
 
-import { ConfigInvariantError } from '../config/invariant';
+import { ConfigInvariantError } from '@/lib/config/invariant';
 import { RunAbort } from './contract';
 
 /**

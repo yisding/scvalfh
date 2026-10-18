@@ -15,11 +15,11 @@ import { readFileSync } from 'node:fs';
 
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
-import { loadSnapshot } from '../lib/snapshot-schema';
-import type { DivisionId, LeagueId, Snapshot, Standing } from '../lib/types';
+import { loadSnapshot } from '@/lib/snapshot-schema';
+import type { DivisionId, LeagueId, Snapshot, Standing } from '@/lib/types';
 import { corpusSnapshotPath } from './helpers';
 
-type DataModule = typeof import('../lib/data');
+type DataModule = typeof import('@/lib/data');
 
 interface Variant {
   name: 'si.com' | '--no-sblive';
@@ -34,7 +34,7 @@ const variants: Variant[] = [];
 async function load(name: Variant['name'], file: string): Promise<Variant> {
   process.env.SCVAL_SNAPSHOT = file;
   vi.resetModules();
-  const data = (await import('../lib/data')) as DataModule;
+  const data = (await import('@/lib/data')) as DataModule;
   const snapshot = loadSnapshot(JSON.parse(readFileSync(file, 'utf8')) as unknown);
   return { name, file, snapshot, data };
 }

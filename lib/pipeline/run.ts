@@ -23,13 +23,13 @@
 import { copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 
-import { carryCrossCheck } from '../crosscheck';
-import { parseFetchedAtFlag, parseLeaguesFlag } from '../fetch-scope';
-import { localDateKey } from '../format';
-import { ALL_DIVISIONS, LEAGUES, LEAGUE_IDS, isLeagueId } from '../leagues';
-import { loadSnapshot } from '../snapshot-schema';
-import { stableStringify } from '../stable-json';
-import type { Game, OfficialFixture, Snapshot } from '../types';
+import { carryCrossCheck } from '@/lib/crosscheck';
+import { parseFetchedAtFlag, parseLeaguesFlag } from '@/lib/fetch-scope';
+import { localDateKey } from '@/lib/format';
+import { ALL_DIVISIONS, LEAGUES, LEAGUE_IDS, isLeagueId } from '@/lib/leagues';
+import { loadSnapshot } from '@/lib/snapshot-schema';
+import { stableStringify } from '@/lib/stable-json';
+import type { Game, OfficialFixture, Snapshot } from '@/lib/types';
 import {
   RunAbort,
   type OfficialStepResult,

@@ -24,15 +24,15 @@
  *     each school's heading links, says where each came from.
  */
 
-import { getClubsFile } from '../../lib/clubs';
-import { getCommitsFile } from '../../lib/commits';
-import { getTeamsGrouped, type LeagueSummary } from '../../lib/data';
-import { dateWithYear, listWords } from '../../lib/format';
-import { REGIONS, getLeague } from '../../lib/leagues';
-import { getRosterEnrichment, getRosters } from '../../lib/rosters';
-import type { RegionId, TeamSlug } from '../../lib/types';
-import { buildRosterView, type RosterRow } from '../teams/roster-view';
-import { plural } from '../ui/plural';
+import { getClubsFile } from '@/lib/clubs';
+import { getCommitsFile } from '@/lib/commits';
+import { getTeamsGrouped, type LeagueSummary } from '@/lib/data';
+import { dateWithYear, listWords } from '@/lib/format';
+import { REGIONS, getLeague } from '@/lib/leagues';
+import { getRosterEnrichment, getRosters } from '@/lib/rosters';
+import type { RegionId, TeamSlug } from '@/lib/types';
+import { buildRosterView, type RosterRow } from '@/components/teams/roster-view';
+import { plural } from '@/components/ui/plural';
 
 /** A roster row with something to show here: its commitment, clubs and profiles, as the team page has them. */
 export interface RecruitingRow extends Pick<RosterRow, 'key' | 'name' | 'commitment' | 'clubs' | 'profiles'> {

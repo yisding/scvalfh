@@ -56,7 +56,7 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 
-import { localDateKey, monthDay } from '../lib/format';
+import { localDateKey, monthDay } from '@/lib/format';
 import {
   describePrevious,
   formatLeagueSummary,
@@ -68,10 +68,10 @@ import {
   summarizeByLeague,
   teamsInScope,
   type PreviousFile,
-} from '../lib/fetch-scope';
-import { INDEPENDENT_LEAGUES, LEAGUES_PROPER, seasonWindowBounds } from '../lib/leagues';
-import { teamsCreditedByNotes } from '../lib/note-stats';
-import { inSeasonWindow } from '../lib/pipeline/steps/window';
+} from '@/lib/fetch-scope';
+import { INDEPENDENT_LEAGUES, LEAGUES_PROPER, seasonWindowBounds } from '@/lib/leagues';
+import { teamsCreditedByNotes } from '@/lib/note-stats';
+import { inSeasonWindow } from '@/lib/pipeline/steps/window';
 import {
   PlayerStatsFileSchema,
   PlayerStatsPartialSchema,
@@ -81,10 +81,10 @@ import {
   type GameTotal,
   type PlayerStatsFile,
   type TeamPlayerStats,
-} from '../lib/player-stats-schema';
-import { RostersSchema } from '../lib/rosters-schema';
-import { MaxPrepsClient } from '../lib/sources/maxpreps';
-import { fetchGameStats, gameStatsUrl, parseGameStats } from '../lib/sources/maxpreps-game-stats';
+} from '@/lib/player-stats-schema';
+import { RostersSchema } from '@/lib/rosters-schema';
+import { MaxPrepsClient } from '@/lib/sources/maxpreps';
+import { fetchGameStats, gameStatsUrl, parseGameStats } from '@/lib/sources/maxpreps-game-stats';
 import {
   fetchPlayerStats,
   joinToRoster,
@@ -93,13 +93,13 @@ import {
   playerStatsUrl,
   teamStatsPageUrl,
   type PlayerStatsPage,
-} from '../lib/sources/maxpreps-player-stats';
-import { formatIssues } from '../lib/schema-primitives';
-import { SEASON_YEAR } from '../lib/season';
-import { loadSnapshot } from '../lib/snapshot-schema';
-import { stableStringify } from '../lib/stable-json';
-import { TEAMS } from '../lib/teams';
-import type { LeagueId } from '../lib/types';
+} from '@/lib/sources/maxpreps-player-stats';
+import { formatIssues } from '@/lib/schema-primitives';
+import { SEASON_YEAR } from '@/lib/season';
+import { loadSnapshot } from '@/lib/snapshot-schema';
+import { stableStringify } from '@/lib/stable-json';
+import { TEAMS } from '@/lib/teams';
+import type { LeagueId } from '@/lib/types';
 import { runCli } from './cli';
 
 interface Args {

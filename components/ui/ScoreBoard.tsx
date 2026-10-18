@@ -1,6 +1,6 @@
-import { shortDate, timeOfDayPT } from '../../lib/format';
-import { getTeamBySlug } from '../../lib/teams';
-import type { Game } from '../../lib/types';
+import { shortDate, timeOfDayPT } from '@/lib/format';
+import { getTeamBySlug } from '@/lib/teams';
+import type { Game } from '@/lib/types';
 
 import { NON_MEMBER_NOTE } from './GameRow';
 import GhostMonogram from './GhostMonogram';

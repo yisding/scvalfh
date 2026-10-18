@@ -1,18 +1,18 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
-import LeagueJumpLinks from '../../components/layout/LeagueJumpLinks';
-import LeagueSwitcher, { RegionSwitcher } from '../../components/layout/LeagueSwitcher';
-import PageHeader from '../../components/layout/PageHeader';
-import { leagueChips, leagueHrefs } from '../../components/layout/league-chips';
-import { OG_BASE } from '../../components/layout/site';
-import OverviewDivisionBlock from '../../components/standings/OverviewDivisionBlock';
-import { buildStandingsOverviewView } from '../../components/standings/standings-page-view';
-import { leaderClause } from '../../components/standings/standings-view';
-import SectionHeader from '../../components/ui/SectionHeader';
-import { listWords, shortDate } from '../../lib/format';
-import { getLeague, isIndependentLeague, standaloneName } from '../../lib/leagues';
-import type { LeagueId } from '../../lib/types';
+import LeagueJumpLinks from '@/components/layout/LeagueJumpLinks';
+import LeagueSwitcher, { RegionSwitcher } from '@/components/layout/LeagueSwitcher';
+import PageHeader from '@/components/layout/PageHeader';
+import { leagueChips, leagueHrefs } from '@/components/layout/league-chips';
+import { OG_BASE } from '@/components/layout/site';
+import OverviewDivisionBlock from '@/components/standings/OverviewDivisionBlock';
+import { buildStandingsOverviewView } from '@/components/standings/standings-page-view';
+import { leaderClause } from '@/components/standings/standings-view';
+import SectionHeader from '@/components/ui/SectionHeader';
+import { listWords, shortDate } from '@/lib/format';
+import { getLeague, isIndependentLeague, standaloneName } from '@/lib/leagues';
+import type { LeagueId } from '@/lib/types';
 
 /**
  * /standings — "Where does everyone stand?" (SPEC §8.1, §10.3): every division of every league as

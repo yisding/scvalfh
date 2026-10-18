@@ -3,11 +3,11 @@
 import Link from 'next/link';
 import { Fragment, useEffect, useId, useMemo, useState } from 'react';
 
-import Arrow from '../ui/Arrow';
-import { plural } from '../ui/plural';
-import { usePinnedTeam } from '../ui/use-pinned-team';
-import { listWords } from '../../lib/format';
-import { pinLabel } from '../../lib/pin-label';
+import Arrow from '@/components/ui/Arrow';
+import { plural } from '@/components/ui/plural';
+import { usePinnedTeam } from '@/components/ui/use-pinned-team';
+import { listWords } from '@/lib/format';
+import { pinLabel } from '@/lib/pin-label';
 import {
   normalizeQuery,
   searchTeams,
@@ -15,7 +15,7 @@ import {
   type NotCoveredEntry,
   type SearchIndex,
   type TeamSearchEntry,
-} from '../../lib/search';
+} from '@/lib/search';
 
 /**
  * Find a team (SPEC §9.3): a pure, zero-network matcher (lib/search.ts) over the pre-serialized

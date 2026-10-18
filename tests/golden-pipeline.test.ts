@@ -15,11 +15,11 @@ import path from 'node:path';
 
 import { beforeAll, describe, expect, it } from 'vitest';
 
-import { divisionsOf } from '../lib/leagues';
-import { buildCrossCheck, divisionGames } from '../lib/standings';
-import { loadSnapshot } from '../lib/snapshot-schema';
-import { stableStringify } from '../lib/stable-json';
-import type { DivisionId, Snapshot, Standing } from '../lib/types';
+import { divisionsOf } from '@/lib/leagues';
+import { buildCrossCheck, divisionGames } from '@/lib/standings';
+import { loadSnapshot } from '@/lib/snapshot-schema';
+import { stableStringify } from '@/lib/stable-json';
+import type { DivisionId, Snapshot, Standing } from '@/lib/types';
 import { REPO, corpusSnapshotPath } from './helpers';
 
 interface GoldenCorpus {

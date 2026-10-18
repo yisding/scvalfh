@@ -12,12 +12,12 @@ import path from 'node:path';
 
 import { beforeAll, describe, expect, it } from 'vitest';
 
-import { stepOfficial } from '../../lib/pipeline/steps/official';
-import { stepSblive } from '../../lib/pipeline/steps/sblive';
-import { loadSnapshot, parseSnapshot } from '../../lib/snapshot-schema';
-import type { PipelineSteps } from '../../lib/pipeline/contract';
-import type { Snapshot } from '../../lib/types';
-import { REPO, corpusDir, corpusSnapshotPath } from '../helpers';
+import { stepOfficial } from '@/lib/pipeline/steps/official';
+import { stepSblive } from '@/lib/pipeline/steps/sblive';
+import { loadSnapshot, parseSnapshot } from '@/lib/snapshot-schema';
+import type { PipelineSteps } from '@/lib/pipeline/contract';
+import type { Snapshot } from '@/lib/types';
+import { REPO, corpusDir, corpusSnapshotPath } from '@/tests/helpers';
 import { snapshotOf, writeTempVariant } from './support/run-corpus';
 
 const STEPS: PipelineSteps = { official: stepOfficial, sblive: stepSblive };

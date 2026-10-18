@@ -12,9 +12,9 @@
 import { z } from 'zod';
 
 import { MAX_RETRY_AFTER_MS, POLITE_USER_AGENT } from './http';
-import type { RawResponse } from '../pipeline/contract';
-import { BOOTSTRAP_URL, MAXPREPS_API, SPORT_SEASON_ID } from '../season';
-import type { DroppedContest } from '../types';
+import type { RawResponse } from '@/lib/pipeline/contract';
+import { BOOTSTRAP_URL, MAXPREPS_API, SPORT_SEASON_ID } from '@/lib/season';
+import type { DroppedContest } from '@/lib/types';
 
 // ---------------------------------------------------------------- schemas
 

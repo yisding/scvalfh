@@ -4,9 +4,9 @@
  * degraded divisions (classified by contest-type, never by membership alone).
  */
 
-import { classifyGames } from '../../classify';
-import type { DivisionId, Game } from '../../types';
-import type { RunContext } from '../contract';
+import { classifyGames } from '@/lib/classify';
+import type { DivisionId, Game } from '@/lib/types';
+import type { RunContext } from '@/lib/pipeline/contract';
 
 export function stepClassify(ctx: RunContext, games: readonly Game[], degradedDivisions: ReadonlySet<DivisionId>): Game[] {
   const out = classifyGames(games, { degradedDivisions });

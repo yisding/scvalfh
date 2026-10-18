@@ -1,12 +1,12 @@
 import Link from 'next/link';
 
-import { getTeamBySlug } from '../../lib/data';
-import { gameHref } from '../../lib/game-id';
-import { GameRow } from '../ui/GameRow';
-import { ScoreGlyph, nameClass } from '../ui/ScoreGlyph';
-import StatusLabel from '../ui/StatusLabel';
-import TeamMonogram from '../ui/TeamMonogram';
-import { describeGame, type SideView } from '../ui/describe-game';
+import { getTeamBySlug } from '@/lib/data';
+import { gameHref } from '@/lib/game-id';
+import { GameRow } from '@/components/ui/GameRow';
+import { ScoreGlyph, nameClass } from '@/components/ui/ScoreGlyph';
+import StatusLabel from '@/components/ui/StatusLabel';
+import TeamMonogram from '@/components/ui/TeamMonogram';
+import { describeGame, type SideView } from '@/components/ui/describe-game';
 
 import { isNamedSide, type BracketGame, type BracketPath } from './bracket-model';
 

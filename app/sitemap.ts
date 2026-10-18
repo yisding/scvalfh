@@ -1,16 +1,16 @@
 import type { MetadataRoute } from 'next';
 
-import { SITE_URL } from '../components/layout/site';
-import { getClubSlugs, getClubsLastChecked } from '../lib/clubs';
-import { getCommitsLastChecked } from '../lib/commits';
+import { SITE_URL } from '@/components/layout/site';
+import { getClubSlugs, getClubsLastChecked } from '@/lib/clubs';
+import { getCommitsLastChecked } from '@/lib/commits';
 import {
   gamePageInputs,
   latestContentDate,
   removalsForGame,
   removalsOnDay,
   scoreDayInputs,
-} from '../lib/content-dates';
-import { getRosterEnrichment } from '../lib/rosters';
+} from '@/lib/content-dates';
+import { getRosterEnrichment } from '@/lib/rosters';
 import {
   getContentRemovals,
   getFetchedAt,
@@ -20,10 +20,10 @@ import {
   getOfficialFixtures,
   getTeams,
   getTournamentLeagueIds,
-} from '../lib/data';
-import { gameHref } from '../lib/game-id';
-import { getHistoryLastChecked } from '../lib/history';
-import { getJvFetchedAt, getJvGamesOn } from '../lib/jv';
+} from '@/lib/data';
+import { gameHref } from '@/lib/game-id';
+import { getHistoryLastChecked } from '@/lib/history';
+import { getJvFetchedAt, getJvGamesOn } from '@/lib/jv';
 
 /**
  * /sitemap.xml — every route family (SPEC §8.1): the fixed pages, `/standings/<id>` and

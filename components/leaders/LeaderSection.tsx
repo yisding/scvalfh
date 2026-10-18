@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 
-import type { RegionId } from '../../lib/types';
-import SectionHeader from '../ui/SectionHeader';
+import type { RegionId } from '@/lib/types';
+import SectionHeader from '@/components/ui/SectionHeader';
 import LeaderBoardTable from './LeaderBoardTable';
 import type { LeaderBoard } from './types';
 

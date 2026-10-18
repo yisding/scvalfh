@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
-import ExternalLink from '../ui/ExternalLink';
-import GridRowFiller from '../ui/GridRowFiller';
+import ExternalLink from '@/components/ui/ExternalLink';
+import GridRowFiller from '@/components/ui/GridRowFiller';
 import type { CommitRow } from './commit-view';
 
 /**

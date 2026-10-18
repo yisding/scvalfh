@@ -37,8 +37,8 @@
  *    string here.
  */
 
-import type { MissingOfficialResult, StandingContext } from '../../lib/data';
-import { monthDay, officialSourceFormat, ordinal, shortDate } from '../../lib/format';
+import type { MissingOfficialResult, StandingContext } from '@/lib/data';
+import { monthDay, officialSourceFormat, ordinal, shortDate } from '@/lib/format';
 import {
   divisionHeading,
   getDivision,
@@ -51,7 +51,7 @@ import {
   statusesOf,
   type DivisionConfig,
   type LeagueConfig,
-} from '../../lib/leagues';
+} from '@/lib/leagues';
 import {
   crossCheckSkipReason,
   outcomesFor,
@@ -59,7 +59,7 @@ import {
   statusBadge,
   statusLegend,
   unevenGamesSentence,
-} from '../../lib/standings';
+} from '@/lib/standings';
 import type {
   CrossCheckRow,
   DivisionId,
@@ -71,8 +71,8 @@ import type {
   TeamId,
   TeamSlug,
   TiebreakStage,
-} from '../../lib/types';
-import type { StandingsRowData } from '../ui/StandingsTable';
+} from '@/lib/types';
+import type { StandingsRowData } from '@/components/ui/StandingsTable';
 
 // ---------------------------------------------------------------- shared shapes
 

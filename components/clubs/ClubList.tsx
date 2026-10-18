@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
-import { listWords } from '../../lib/format';
-import GridRowFiller from '../ui/GridRowFiller';
+import { listWords } from '@/lib/format';
+import GridRowFiller from '@/components/ui/GridRowFiller';
 import type { ClubIndexRow } from './club-view';
 
 /**

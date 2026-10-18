@@ -2,15 +2,15 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
-import FormGoingIn from '../../../components/game/FormGoingIn';
-import GameDetails from '../../../components/game/GameDetails';
+import FormGoingIn from '@/components/game/FormGoingIn';
+import GameDetails from '@/components/game/GameDetails';
 import {
   GameElsewhere,
   GameSourceLine,
   ResultFlagConflict,
   SourceDisagreement,
-} from '../../../components/game/GameSources';
-import SeasonSeries from '../../../components/game/SeasonSeries';
+} from '@/components/game/GameSources';
+import SeasonSeries from '@/components/game/SeasonSeries';
 import {
   buildGameView,
   buildSupersededStub,
@@ -18,13 +18,13 @@ import {
   gameRecap,
   gameStaticParams,
   gameTitle,
-} from '../../../components/game/game-view';
-import JsonLd from '../../../components/layout/JsonLd';
-import { OG_BASE } from '../../../components/layout/site';
-import { gameJsonLd } from '../../../components/layout/structured-data';
-import Arrow from '../../../components/ui/Arrow';
-import ExternalLink from '../../../components/ui/ExternalLink';
-import ScoreBoard from '../../../components/ui/ScoreBoard';
+} from '@/components/game/game-view';
+import JsonLd from '@/components/layout/JsonLd';
+import { OG_BASE } from '@/components/layout/site';
+import { gameJsonLd } from '@/components/layout/structured-data';
+import Arrow from '@/components/ui/Arrow';
+import ExternalLink from '@/components/ui/ExternalLink';
+import ScoreBoard from '@/components/ui/ScoreBoard';
 
 /**
  * `/game/[id]` — the shareable scoreboard (DESIGN §1.1, §3.5, R-4).

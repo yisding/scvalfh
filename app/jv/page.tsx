@@ -1,15 +1,15 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
-import { RegionSwitcher } from '../../components/layout/LeagueSwitcher';
-import PageHeader from '../../components/layout/PageHeader';
-import { OG_BASE, ROOT_OG_IMAGE } from '../../components/layout/site';
-import JvStandings from '../../components/standings/JvStandings';
-import { buildJvTablesView } from '../../components/standings/jv-standings-view';
-import Arrow from '../../components/ui/Arrow';
-import SectionHeader from '../../components/ui/SectionHeader';
-import { listWords } from '../../lib/format';
-import { LEAGUES, LEAGUES_PROPER, leaguesInRegion, regionOf } from '../../lib/leagues';
+import { RegionSwitcher } from '@/components/layout/LeagueSwitcher';
+import PageHeader from '@/components/layout/PageHeader';
+import { OG_BASE, ROOT_OG_IMAGE } from '@/components/layout/site';
+import JvStandings from '@/components/standings/JvStandings';
+import { buildJvTablesView } from '@/components/standings/jv-standings-view';
+import Arrow from '@/components/ui/Arrow';
+import SectionHeader from '@/components/ui/SectionHeader';
+import { listWords } from '@/lib/format';
+import { LEAGUES, LEAGUES_PROPER, leaguesInRegion, regionOf } from '@/lib/leagues';
 
 /**
  * `/jv` — "Where does our JV stand?" Every league's JV tables, computed (lib/jv-standings.ts) and

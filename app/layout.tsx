@@ -1,20 +1,20 @@
 import type { Metadata, Viewport } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 
-import Attribution from '../components/layout/Attribution';
-import BottomTabBar from '../components/layout/BottomTabBar';
-import SiteHeader from '../components/layout/SiteHeader';
-import { BUILD_INSTANT } from '../components/layout/build-instant';
-import { DISCLOSURE_SCRIPT } from '../components/layout/disclosure-script';
-import { buildLeagueScopeCss } from '../components/layout/league-scope-css';
-import { buildPrefsScript } from '../components/layout/prefs-script';
-import { OG_BASE, SITE_DESCRIPTION, SITE_NAME, SITE_URL, SITE_WORDMARK } from '../components/layout/site';
-import { PINNED_TEAM_SCRIPT } from '../components/layout/pinned-team-script';
-import { THEME_COLOR, THEME_SCRIPT } from '../components/layout/theme-script';
-import PinnedTeamMarks from '../components/ui/PinnedTeamMarks';
-import TwinMarks from '../components/ui/TwinMarks';
-import { getFetchedAt, getTeams } from '../lib/data';
-import { DEFAULT_REGION, LEAGUE_IDS, regionOf } from '../lib/leagues';
+import Attribution from '@/components/layout/Attribution';
+import BottomTabBar from '@/components/layout/BottomTabBar';
+import SiteHeader from '@/components/layout/SiteHeader';
+import { BUILD_INSTANT } from '@/components/layout/build-instant';
+import { DISCLOSURE_SCRIPT } from '@/components/layout/disclosure-script';
+import { buildLeagueScopeCss } from '@/components/layout/league-scope-css';
+import { buildPrefsScript } from '@/components/layout/prefs-script';
+import { OG_BASE, SITE_DESCRIPTION, SITE_NAME, SITE_URL, SITE_WORDMARK } from '@/components/layout/site';
+import { PINNED_TEAM_SCRIPT } from '@/components/layout/pinned-team-script';
+import { THEME_COLOR, THEME_SCRIPT } from '@/components/layout/theme-script';
+import PinnedTeamMarks from '@/components/ui/PinnedTeamMarks';
+import TwinMarks from '@/components/ui/TwinMarks';
+import { getFetchedAt, getTeams } from '@/lib/data';
+import { DEFAULT_REGION, LEAGUE_IDS, regionOf } from '@/lib/leagues';
 
 import './globals.css';
 

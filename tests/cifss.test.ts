@@ -13,8 +13,8 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { CIFSS_NOTES, carryCifssCrossCheck, compareCifss } from '../lib/cifss-crosscheck';
-import { gamePairKey } from '../lib/crosscheck';
+import { CIFSS_NOTES, carryCifssCrossCheck, compareCifss } from '@/lib/cifss-crosscheck';
+import { gamePairKey } from '@/lib/crosscheck';
 import {
   CIFSS_NO_SECTION_TEAMS,
   CIFSS_SECTION_OVERRIDES,
@@ -23,9 +23,9 @@ import {
   resolveCifssName,
   type CifssRow,
   type CifssSectionKey,
-} from '../lib/sources/cifss';
-import { getTeamBySlug } from '../lib/teams';
-import type { Game } from '../lib/types';
+} from '@/lib/sources/cifss';
+import { getTeamBySlug } from '@/lib/teams';
+import type { Game } from '@/lib/types';
 import { REPO, game } from './helpers';
 
 const fixture = (name: string) => readFileSync(path.join(REPO, 'tests/fixtures/cifss', name), 'utf8');

@@ -1,4 +1,4 @@
-import type { LeagueId, TeamSlug } from '../../lib/types';
+import type { LeagueId, TeamSlug } from '@/lib/types';
 
 import NavLink from './NavLink';
 import { navLeagueHrefs } from './nav-targets';

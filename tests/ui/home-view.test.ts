@@ -9,18 +9,18 @@ import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { beforeAll, describe, expect, it } from 'vitest';
 
-import { corpusSnapshotPath } from '../helpers';
+import { corpusSnapshotPath } from '@/tests/helpers';
 
-import { POSTSEASON_LEAD, postseasonCardLine, rungCardText } from '../../components/home/home-types';
+import { POSTSEASON_LEAD, postseasonCardLine, rungCardText } from '@/components/home/home-types';
 
 import { textOf } from './html-text';
 import { width } from './text-metrics';
 
-type HomeView = typeof import('../../components/home/home-view');
+type HomeView = typeof import('@/components/home/home-view');
 
 let home: HomeView;
 let data: ReturnType<HomeView['buildHomeView']>;
-let leagues: typeof import('../../lib/leagues');
+let leagues: typeof import('@/lib/leagues');
 let pageHtml = '';
 const panelHtml = new Map<string, string>();
 let renderPanel: (id: string) => string;
@@ -29,10 +29,10 @@ const HV = 'components/home/home-view.ts';
 
 beforeAll(async () => {
   process.env.SCVAL_SNAPSHOT = corpusSnapshotPath('all-2026-10-02');
-  home = await import('../../components/home/home-view');
-  leagues = await import('../../lib/leagues');
-  const { default: HomePage } = await import('../../app/page');
-  const { LeaguePanel } = await import('../../components/home/LeaguePanel');
+  home = await import('@/components/home/home-view');
+  leagues = await import('@/lib/leagues');
+  const { default: HomePage } = await import('@/app/page');
+  const { LeaguePanel } = await import('@/components/home/LeaguePanel');
   data = home.buildHomeView();
   pageHtml = renderToStaticMarkup(createElement(HomePage));
   renderPanel = (id: string) => {
@@ -137,7 +137,7 @@ describe('home panels (components/home/home-view.ts → LeaguePanel)', () => {
   });
 
   it('the division `home` config drives each mini table', async () => {
-    const { MiniStandings, miniShownCount } = await import('../../components/home/MiniStandings');
+    const { MiniStandings, miniShownCount } = await import('@/components/home/MiniStandings');
     const expected: Record<string, { rows: number; line: string | null }> = {
       'de-anza': { rows: 4, line: null },
       'el-camino': { rows: 4, line: null },
@@ -209,7 +209,7 @@ describe('home panels (components/home/home-view.ts → LeaguePanel)', () => {
   });
 
   it('a place shared at the row cutoff is shown whole (Mt. Hamilton 4= pair), and nothing else stretches it', async () => {
-    const { miniShownCount } = await import('../../components/home/MiniStandings');
+    const { miniShownCount } = await import('@/components/home/MiniStandings');
     const row = (place: number, shared: boolean, hasResults = true) => ({ place, shared, hasResults });
     // 1, 2, 3, 4=, 4=, 6: four rows asked, both 4= teams shown.
     const tied = [row(1, false), row(2, false), row(3, false), row(4, true), row(4, true), row(6, false)];
@@ -341,7 +341,7 @@ describe('home panels (components/home/home-view.ts → LeaguePanel)', () => {
 
 describe('first visit (components/home/FindYourTeam.tsx, LeagueCard.tsx)', () => {
   it('has a card per league with its facts and both ways on', async () => {
-    const { LeagueCard } = await import('../../components/home/LeagueCard');
+    const { LeagueCard } = await import('@/components/home/LeagueCard');
     expect(data.leagueCards.map((c) => c.id), `${HV}: cards`).toEqual([
       'scval', 'bval', 'pcal', 'mcal', 'eal', 'sunset', 'city', 'north-county', 'metro', 'independents',
     ]);
@@ -480,7 +480,7 @@ describe('the pinned card (components/home/MyTeamCard.tsx ← home-view.ts team 
   });
 
   it('has a view for all 102 teams with the meta, played and postseason lines', async () => {
-    const { PinnedCard } = await import('../../components/home/MyTeamCard');
+    const { PinnedCard } = await import('@/components/home/MyTeamCard');
     expect(data.teamViews, `${HV}: team views`).toHaveLength(102);
     const leigh = data.teamViews.find((v) => v.slug === 'leigh')!;
     expect(leigh.meta, `${HV}: meta`).toBe('3rd · Mt. Hamilton · BVAL');
@@ -506,10 +506,10 @@ describe('the pinned card (components/home/MyTeamCard.tsx ← home-view.ts team 
   });
 
   it('"Last" is the newest PLAYED game: a score-pending one shows as unreported, never as a final', async () => {
-    const d = await import('../../lib/data');
-    const { describeGame } = await import('../../components/ui/describe-game');
-    const { gameHref } = await import('../../lib/game-id');
-    const { PinnedCard } = await import('../../components/home/MyTeamCard');
+    const d = await import('@/lib/data');
+    const { describeGame } = await import('@/components/ui/describe-game');
+    const { gameHref } = await import('@/lib/game-id');
+    const { PinnedCard } = await import('@/components/home/MyTeamCard');
     let pending = 0;
     for (const v of data.teamViews) {
       const team = d.getTeamBySlug(v.slug)!;

@@ -1,10 +1,10 @@
 import Link from 'next/link';
 
-import { dateTimeAttr, longDate, monthDay, parseLocal, timeOfDayPT } from '../../lib/format';
-import { findDivision, findLeague, standingsLabel } from '../../lib/leagues';
-import ExternalLink from '../ui/ExternalLink';
-import SectionHeader from '../ui/SectionHeader';
-import { maxPrepsLabel } from '../ui/maxpreps-label';
+import { dateTimeAttr, longDate, monthDay, parseLocal, timeOfDayPT } from '@/lib/format';
+import { findDivision, findLeague, standingsLabel } from '@/lib/leagues';
+import ExternalLink from '@/components/ui/ExternalLink';
+import SectionHeader from '@/components/ui/SectionHeader';
+import { maxPrepsLabel } from '@/components/ui/maxpreps-label';
 
 import type { GameModel } from './game-view';
 

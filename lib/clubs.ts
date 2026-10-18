@@ -31,7 +31,7 @@
  * then edit or drop it by hand. Never prune it automatically.
  */
 
-import bundled from '../data/clubs.json';
+import bundled from '@/data/clubs.json';
 import {
   CLUB_REGIONS,
   ClubsFileSchema,

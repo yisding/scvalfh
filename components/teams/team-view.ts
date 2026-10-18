@@ -27,7 +27,7 @@ import {
   type LeagueSummary,
   type StandingContext,
   type TeamPostseasonLine,
-} from '../../lib/data';
+} from '@/lib/data';
 import {
   dateSpan,
   gameWhen,
@@ -41,7 +41,7 @@ import {
   shootoutPhrases,
   sideOutcome,
   timeOfDayPT,
-} from '../../lib/format';
+} from '@/lib/format';
 import {
   divisionHeading,
   getDivision,
@@ -54,9 +54,9 @@ import {
   type LeagueRules,
   type PostseasonConfig,
   standingsLabel,
-} from '../../lib/leagues';
-import { pinLabel } from '../../lib/pin-label';
-import { outcomesFor } from '../../lib/standings';
+} from '@/lib/leagues';
+import { pinLabel } from '@/lib/pin-label';
+import { outcomesFor } from '@/lib/standings';
 import type {
   DivisionId,
   Game,
@@ -69,12 +69,12 @@ import type {
   Standing,
   Team,
   TeamSlug,
-} from '../../lib/types';
-import { getEloBoardForTeam } from '../leaders/elo-board';
-import { buildOverviewDivision, type OverviewDivision } from '../standings/standings-view';
-import type { FormEntry } from '../ui/FormStrip';
-import { describeGame, shootoutSectionOf } from '../ui/describe-game';
-import { maxPrepsLabel } from '../ui/maxpreps-label';
+} from '@/lib/types';
+import { getEloBoardForTeam } from '@/components/leaders/elo-board';
+import { buildOverviewDivision, type OverviewDivision } from '@/components/standings/standings-view';
+import type { FormEntry } from '@/components/ui/FormStrip';
+import { describeGame, shootoutSectionOf } from '@/components/ui/describe-game';
+import { maxPrepsLabel } from '@/components/ui/maxpreps-label';
 
 /** One opponent in this team's table that it has not beaten yet (DESIGN §3.7). */
 export interface UnbeatenOpponent {

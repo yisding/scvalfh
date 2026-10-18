@@ -5,18 +5,18 @@
  * line.
  */
 
-import { contentRemovalsOf, stampContentChanges } from '../../content-dates';
-import { byDateThenId } from '../../format';
-import { CCS, getLeague } from '../../leagues';
-import { buildSeason } from '../../season-build';
-import { countsOf } from '../../snapshot-migrate';
-import { parseSnapshot, snapshotContentHash } from '../../snapshot-schema';
-import { stableStringify } from '../../stable-json';
-import { TEAMS } from '../../teams';
-import type { ContestId, Game, LeagueHealth, OfficialFixture, Snapshot } from '../../types';
-import { RunAbort, type SnapshotMeta } from '../contract';
-import type { PipelineContext, RunState } from '../ledger';
-import type { RequestCounts } from '../transport';
+import { contentRemovalsOf, stampContentChanges } from '@/lib/content-dates';
+import { byDateThenId } from '@/lib/format';
+import { CCS, getLeague } from '@/lib/leagues';
+import { buildSeason } from '@/lib/season-build';
+import { countsOf } from '@/lib/snapshot-migrate';
+import { parseSnapshot, snapshotContentHash } from '@/lib/snapshot-schema';
+import { stableStringify } from '@/lib/stable-json';
+import { TEAMS } from '@/lib/teams';
+import type { ContestId, Game, LeagueHealth, OfficialFixture, Snapshot } from '@/lib/types';
+import { RunAbort, type SnapshotMeta } from '@/lib/pipeline/contract';
+import type { PipelineContext, RunState } from '@/lib/pipeline/ledger';
+import type { RequestCounts } from '@/lib/pipeline/transport';
 import type { StandingsStepResult } from './standings';
 
 /**

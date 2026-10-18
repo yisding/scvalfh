@@ -5,10 +5,10 @@
  * error only warns, and a corpus without the page records the row as skipped.
  */
 
-import { ALL_SEASON_ID, BOOTSTRAP_URL, SPORT_SEASON_ID } from '../../season';
-import { parseBootstrap } from '../../sources/maxpreps';
-import { RunAbort, type RunContext } from '../contract';
-import { classifyFetchError } from '../read';
+import { ALL_SEASON_ID, BOOTSTRAP_URL, SPORT_SEASON_ID } from '@/lib/season';
+import { parseBootstrap } from '@/lib/sources/maxpreps';
+import { RunAbort, type RunContext } from '@/lib/pipeline/contract';
+import { classifyFetchError } from '@/lib/pipeline/read';
 
 export async function stepBootstrap(ctx: RunContext): Promise<void> {
   const base = {

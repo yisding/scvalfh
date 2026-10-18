@@ -34,7 +34,7 @@
 
 import { describe, expect, it, vi } from 'vitest';
 
-import { corpusSnapshotPath } from '../helpers';
+import { corpusSnapshotPath } from '@/tests/helpers';
 
 const BUDGET = 121 * 1024;
 /** all-2026-10-02 measured 65,819 B on 2026-10-06; × 1.12 = 73,717, so 73 KiB = 74,752. */
@@ -50,7 +50,7 @@ async function teamViewBytes(snapshotPath: string | undefined): Promise<{ bytes:
   vi.resetModules();
   if (snapshotPath) process.env.SCVAL_SNAPSHOT = snapshotPath;
   else delete process.env.SCVAL_SNAPSHOT;
-  const { buildTeamViews } = await import('../../components/home/home-view');
+  const { buildTeamViews } = await import('@/components/home/home-view');
   const views = buildTeamViews();
   return { bytes: Buffer.byteLength(JSON.stringify(views), 'utf8'), count: views.length };
 }

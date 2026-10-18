@@ -16,24 +16,24 @@
  * still true of this run's games (lib/crosscheck.ts `carryCrossCheck`).
  */
 
-import { applyBackfill, cleanSbliveRows, planBackfill, scoreboardCoverage, shiftDateKey } from '../../backfill';
-import { carryCrossCheck, emptyCrossCheck, reconcile, withBackfill } from '../../crosscheck';
+import { applyBackfill, cleanSbliveRows, planBackfill, scoreboardCoverage, shiftDateKey } from '@/lib/backfill';
+import { carryCrossCheck, emptyCrossCheck, reconcile, withBackfill } from '@/lib/crosscheck';
 import {
   dedupeSbliveGames,
   parseScoresPage,
   parseTeamGamesPage,
   sbliveScoresUrl,
   type SbliveGame,
-} from '../../sources/sblive';
-import { getTeamBySlug, teamsInLeague } from '../../teams';
-import type { Game, OfficialFixture, SbliveCrossCheck, SourceStatus, TeamSlug } from '../../types';
+} from '@/lib/sources/sblive';
+import { getTeamBySlug, teamsInLeague } from '@/lib/teams';
+import type { Game, OfficialFixture, SbliveCrossCheck, SourceStatus, TeamSlug } from '@/lib/types';
 import {
   type ResourceKey,
   type RunContext,
   type SbliveStep,
   type SbliveStepResult,
-} from '../contract';
-import { classifyFetchError } from '../read';
+} from '@/lib/pipeline/contract';
+import { classifyFetchError } from '@/lib/pipeline/read';
 
 /** The scoreboard window (SPEC §7.7: ≤ 15 scoreboards). */
 export const SBLIVE_SCOREBOARD_DAYS = 14;

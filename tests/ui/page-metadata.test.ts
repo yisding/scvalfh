@@ -11,7 +11,7 @@
 import type { Metadata } from 'next';
 import { beforeAll, describe, expect, it } from 'vitest';
 
-import { stubCorpusSnapshot } from '../helpers';
+import { stubCorpusSnapshot } from '@/tests/helpers';
 
 interface PageModule {
   metadata?: Metadata;
@@ -32,35 +32,35 @@ function read(mod: PageModule, params: Record<string, string> = {}): Promise<Met
 stubCorpusSnapshot('all-2026-10-02');
 
 beforeAll(async () => {
-  ({ SITE_NAME, SITE_WORDMARK } = await import('../../components/layout/site'));
-  const data = await import('../../lib/data');
-  const { getClubSlugs } = await import('../../lib/clubs');
-  const { gameStaticParams } = await import('../../components/game/game-view');
+  ({ SITE_NAME, SITE_WORDMARK } = await import('@/components/layout/site'));
+  const data = await import('@/lib/data');
+  const { getClubSlugs } = await import('@/lib/clubs');
+  const { gameStaticParams } = await import('@/components/game/game-view');
   const page = (path: string, mod: () => Promise<PageModule>, params?: Record<string, string>) => ({
     path,
     load: async () => read(await mod(), params),
   });
   pages = [
-    page('app/page.tsx', () => import('../../app/page')),
-    page('app/not-found.tsx', () => import('../../app/not-found')),
-    page('app/about/page.tsx', () => import('../../app/about/page')),
-    page('app/clubs/page.tsx', () => import('../../app/clubs/page')),
-    page('app/clubs/[slug]/page.tsx', () => import('../../app/clubs/[slug]/page'), { slug: getClubSlugs()[0] }),
-    page('app/commits/page.tsx', () => import('../../app/commits/page')),
-    page('app/recruiting/page.tsx', () => import('../../app/recruiting/page')),
-    page('app/game/[id]/page.tsx', () => import('../../app/game/[id]/page'), gameStaticParams()[0]),
-    page('app/history/2025-26/page.tsx', () => import('../../app/history/2025-26/page')),
-    page('app/jv/page.tsx', () => import('../../app/jv/page')),
-    page('app/leaders/page.tsx', () => import('../../app/leaders/page')),
-    page('app/playoffs/page.tsx', () => import('../../app/playoffs/page')),
-    page('app/playoffs/[league]/page.tsx', () => import('../../app/playoffs/[league]/page'), { league: 'mcal' }),
-    page('app/schedule/page.tsx', () => import('../../app/schedule/page')),
-    page('app/schedule/[league]/page.tsx', () => import('../../app/schedule/[league]/page'), { league: 'scval' }),
-    page('app/scores/[date]/page.tsx', () => import('../../app/scores/[date]/page'), { date: data.getGameDates()[0] }),
-    page('app/standings/page.tsx', () => import('../../app/standings/page')),
-    page('app/standings/[league]/page.tsx', () => import('../../app/standings/[league]/page'), { league: 'scval' }),
-    page('app/teams/page.tsx', () => import('../../app/teams/page')),
-    page('app/teams/[slug]/page.tsx', () => import('../../app/teams/[slug]/page'), { slug: data.getTeams()[0].slug }),
+    page('app/page.tsx', () => import('@/app/page')),
+    page('app/not-found.tsx', () => import('@/app/not-found')),
+    page('app/about/page.tsx', () => import('@/app/about/page')),
+    page('app/clubs/page.tsx', () => import('@/app/clubs/page')),
+    page('app/clubs/[slug]/page.tsx', () => import('@/app/clubs/[slug]/page'), { slug: getClubSlugs()[0] }),
+    page('app/commits/page.tsx', () => import('@/app/commits/page')),
+    page('app/recruiting/page.tsx', () => import('@/app/recruiting/page')),
+    page('app/game/[id]/page.tsx', () => import('@/app/game/[id]/page'), gameStaticParams()[0]),
+    page('app/history/2025-26/page.tsx', () => import('@/app/history/2025-26/page')),
+    page('app/jv/page.tsx', () => import('@/app/jv/page')),
+    page('app/leaders/page.tsx', () => import('@/app/leaders/page')),
+    page('app/playoffs/page.tsx', () => import('@/app/playoffs/page')),
+    page('app/playoffs/[league]/page.tsx', () => import('@/app/playoffs/[league]/page'), { league: 'mcal' }),
+    page('app/schedule/page.tsx', () => import('@/app/schedule/page')),
+    page('app/schedule/[league]/page.tsx', () => import('@/app/schedule/[league]/page'), { league: 'scval' }),
+    page('app/scores/[date]/page.tsx', () => import('@/app/scores/[date]/page'), { date: data.getGameDates()[0] }),
+    page('app/standings/page.tsx', () => import('@/app/standings/page')),
+    page('app/standings/[league]/page.tsx', () => import('@/app/standings/[league]/page'), { league: 'scval' }),
+    page('app/teams/page.tsx', () => import('@/app/teams/page')),
+    page('app/teams/[slug]/page.tsx', () => import('@/app/teams/[slug]/page'), { slug: data.getTeams()[0].slug }),
   ];
 }, 600_000);
 
@@ -101,7 +101,7 @@ describe('<title> (search results show about 60 characters of it)', () => {
 
 describe('the league list in the site descriptions (components/layout/site.ts leaguesBySectionWords)', () => {
   it('builds both styles from SECTIONS and LEAGUES, in config order, the independents named after the leagues', async () => {
-    const { coveredLeagueWords, leaguesBySectionWords } = await import('../../components/layout/site');
+    const { coveredLeagueWords, leaguesBySectionWords } = await import('@/components/layout/site');
     expect(leaguesBySectionWords('name')).toBe(
       'SCVAL, BVAL and PCAL (Central Coast Section), MCAL (North Coast Section), EAL (Northern Section), Sunset (Southern Section), City, North and Metro (San Diego Section) and five Southern Section independents',
     );
@@ -117,7 +117,7 @@ describe('the league list in the site descriptions (components/layout/site.ts le
   });
 
   it('SITE_DESCRIPTION (NorCal first, per region) and the scope note name the nine leagues, the independents and five sections from config', async () => {
-    const { SITE_DESCRIPTION, SITE_SCOPE_NOTE } = await import('../../components/layout/site');
+    const { SITE_DESCRIPTION, SITE_SCOPE_NOTE } = await import('@/components/layout/site');
     expect(SITE_DESCRIPTION, 'components/layout/site.ts SITE_DESCRIPTION').toBe(
       'Scores, standings, schedules and playoff pictures for the 49 NorCal girls varsity field hockey teams in SCVAL, BVAL and PCAL (CCS), MCAL (NCS) and EAL (Northern Section), and for the 53 Southern California teams in Sunset (Southern Section), City, North and Metro (San Diego Section) and five Southern Section independents. Rebuilt twice daily from MaxPreps; unofficial.',
     );
@@ -130,7 +130,7 @@ describe('the league list in the site descriptions (components/layout/site.ts le
   });
 
   it('the brand stays NorCal (owner decision, 2026-10-06): the name, the wordmark and the short name', async () => {
-    const { SITE_NAME, SITE_SHORT_NAME, SITE_WORDMARK } = await import('../../components/layout/site');
+    const { SITE_NAME, SITE_SHORT_NAME, SITE_WORDMARK } = await import('@/components/layout/site');
     expect(SITE_NAME).toBe('NorCal High School Field Hockey');
     expect(SITE_WORDMARK).toBe('NorCal HS Field Hockey');
     expect(SITE_SHORT_NAME).toBe('NorCal FH');
@@ -141,9 +141,9 @@ describe('the league list in the site descriptions (components/layout/site.ts le
   // take from config: the registry count (home: TEAMS.length; /teams counts the snapshot it is
   // handed, the 49-team corpus here) and the league list.
   it('the home and /teams descriptions carry the league list from config', async () => {
-    const { leaguesBySectionWords } = await import('../../components/layout/site');
-    const home = (await import('../../app/page')).metadata;
-    const teams = (await import('../../app/teams/page')).metadata;
+    const { leaguesBySectionWords } = await import('@/components/layout/site');
+    const home = (await import('@/app/page')).metadata;
+    const teams = (await import('@/app/teams/page')).metadata;
     expect(home.description, 'app/page.tsx description').toContain('102 girls varsity field hockey teams');
     for (const [path, d] of [
       ['app/page.tsx', home.description],

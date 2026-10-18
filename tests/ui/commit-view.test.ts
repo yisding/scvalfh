@@ -22,10 +22,10 @@ import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 
-import AboutPage from '../../app/about/page';
-import CommitsPage, { metadata as commitsMetadata } from '../../app/commits/page';
-import TeamPage from '../../app/teams/[slug]/page';
-import TeamsPage from '../../app/teams/page';
+import AboutPage from '@/app/about/page';
+import CommitsPage, { metadata as commitsMetadata } from '@/app/commits/page';
+import TeamPage from '@/app/teams/[slug]/page';
+import TeamsPage from '@/app/teams/page';
 import {
   DIVISION_WORDS,
   SPORT_WORDS,
@@ -39,9 +39,9 @@ import {
   sourceLabel,
   sportLabel,
   statusWords,
-} from '../../components/commits/commit-view';
-import { buildRosterView } from '../../components/teams/roster-view';
-import { COLLEGE_DIVISIONS, COMMIT_SPORTS } from '../../lib/commits-schema';
+} from '@/components/commits/commit-view';
+import { buildRosterView } from '@/components/teams/roster-view';
+import { COLLEGE_DIVISIONS, COMMIT_SPORTS } from '@/lib/commits-schema';
 import {
   collegeDisplayName,
   commitClassOf,
@@ -52,12 +52,12 @@ import {
   getCommitsFile,
   getCommittedPlayer,
   type College,
-} from '../../lib/commits';
-import { REGIONS, regionOf } from '../../lib/leagues';
-import { getRosters } from '../../lib/rosters';
-import { TEAMS, getTeamBySlug } from '../../lib/teams';
-import { commitmentLeaks } from '../../scripts/copy-rules';
-import { PUBLIC_TERMS } from '../../scripts/public-terms';
+} from '@/lib/commits';
+import { REGIONS, regionOf } from '@/lib/leagues';
+import { getRosters } from '@/lib/rosters';
+import { TEAMS, getTeamBySlug } from '@/lib/teams';
+import { commitmentLeaks } from '@/scripts/copy-rules';
+import { PUBLIC_TERMS } from '@/scripts/public-terms';
 import { textOf } from './html-text';
 
 const file = getCommitsFile();

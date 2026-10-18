@@ -25,9 +25,9 @@ import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 
-import { plural } from '../lib/format';
-import { getDivision, getLeague } from '../lib/leagues';
-import { parseBvalScheduleText } from '../lib/official/bval-text';
+import { plural } from '@/lib/format';
+import { getDivision, getLeague } from '@/lib/leagues';
+import { parseBvalScheduleText } from '@/lib/official/bval-text';
 import {
   OFFICIAL_BUNDLE_SCHEMA,
   bundleToFixtures,
@@ -40,10 +40,10 @@ import {
   type BundleEvent,
   type BundleFixture,
   type OfficialBundle,
-} from '../lib/official/schema';
-import { assertDoubleRoundRobin } from '../lib/official/validate';
-import { resolveOfficialName } from '../lib/teams';
-import type { LeagueId } from '../lib/types';
+} from '@/lib/official/schema';
+import { assertDoubleRoundRobin } from '@/lib/official/validate';
+import { resolveOfficialName } from '@/lib/teams';
+import type { LeagueId } from '@/lib/types';
 import { runCli } from './cli';
 
 const REPO = path.resolve(import.meta.dirname, '..');

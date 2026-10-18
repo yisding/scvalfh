@@ -16,11 +16,11 @@ import {
   isNamedSide,
   pendingRounds,
   roundKeyFor,
-} from '../../components/playoffs/bracket-model';
-import { CCS } from '../../lib/leagues';
-import { resolveTeam } from '../../lib/teams';
-import type { CcsPlayoffs, Game } from '../../lib/types';
-import { game } from '../game-builder';
+} from '@/components/playoffs/bracket-model';
+import { CCS } from '@/lib/leagues';
+import { resolveTeam } from '@/lib/teams';
+import type { CcsPlayoffs, Game } from '@/lib/types';
+import { game } from '@/tests/game-builder';
 
 const MODEL = 'components/playoffs/bracket-model.ts';
 

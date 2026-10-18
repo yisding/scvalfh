@@ -14,11 +14,11 @@ import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 
-import type { OfficialStep, SbliveStep } from '../../../lib/pipeline/contract';
-import { SILENT_SINK } from '../../../lib/pipeline/ledger';
-import { parseRunArgs, prepareRun, runPipeline } from '../../../lib/pipeline/run';
-import { stableStringify } from '../../../lib/stable-json';
-import { REPO, VARIANTS_DIR, corpusDir } from '../../helpers';
+import type { OfficialStep, SbliveStep } from '@/lib/pipeline/contract';
+import { SILENT_SINK } from '@/lib/pipeline/ledger';
+import { parseRunArgs, prepareRun, runPipeline } from '@/lib/pipeline/run';
+import { stableStringify } from '@/lib/stable-json';
+import { REPO, VARIANTS_DIR, corpusDir } from '@/tests/helpers';
 
 const CORPUS_ALL = corpusDir('all-2026-10-02');
 export const FINALS_REGRESSION_DIR = path.join(VARIANTS_DIR, 'finals-regression');

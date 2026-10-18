@@ -5,7 +5,7 @@
 
 import { describe, expect, it } from 'vitest';
 
-import { LEAGUES } from '../../lib/leagues';
+import { LEAGUES } from '@/lib/leagues';
 import {
   DroppedLedger,
   LeagueLedger,
@@ -15,9 +15,9 @@ import {
   asOfStamp,
   hasPreviousData,
   lastFreshStamp,
-} from '../../lib/pipeline/ledger';
-import { TEAMS } from '../../lib/teams';
-import type { Snapshot, SourceStatus } from '../../lib/types';
+} from '@/lib/pipeline/ledger';
+import { TEAMS } from '@/lib/teams';
+import type { Snapshot, SourceStatus } from '@/lib/types';
 import { testRunArgs } from './support/run-args';
 
 const AT = '2026-10-02T15:00:00.000Z';

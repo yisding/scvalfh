@@ -2,8 +2,8 @@
 
 import Link from 'next/link';
 
-import TeamMonogram from '../ui/TeamMonogram';
-import { usePinnedTeam } from '../ui/use-pinned-team';
+import TeamMonogram from '@/components/ui/TeamMonogram';
+import { usePinnedTeam } from '@/components/ui/use-pinned-team';
 
 import type { PinTileView } from './home-types';
 

@@ -9,7 +9,7 @@ import {
   shortDate,
   timeOfDay,
   toLocalTimestamp,
-} from '../../lib/format';
+} from '@/lib/format';
 
 /**
  * The freshness stamp (DESIGN §1.3, §7.15). Formatted server-side in America/Los_Angeles so it

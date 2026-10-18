@@ -51,7 +51,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-import { getSnapshot } from '../lib/data';
+import { getSnapshot } from '@/lib/data';
 import { FIXED_PAGES, expectedFamilies, makeFamilyChecker, sample } from './lib/prerender-expectations';
 
 interface PrerenderRoute {

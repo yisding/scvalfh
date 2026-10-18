@@ -1,11 +1,11 @@
 import Link from 'next/link';
 
-import { ordinal } from '../../lib/format';
-import { leagueOfDivision } from '../../lib/leagues';
-import ExternalLink from '../ui/ExternalLink';
-import LeagueHealthNote from '../ui/LeagueHealthNote';
-import SectionHeader from '../ui/SectionHeader';
-import StandingsTable, { biggestGoalDiff, collectStandingsNotes, type StandingsTableProps } from '../ui/StandingsTable';
+import { ordinal } from '@/lib/format';
+import { leagueOfDivision } from '@/lib/leagues';
+import ExternalLink from '@/components/ui/ExternalLink';
+import LeagueHealthNote from '@/components/ui/LeagueHealthNote';
+import SectionHeader from '@/components/ui/SectionHeader';
+import StandingsTable, { biggestGoalDiff, collectStandingsNotes, type StandingsTableProps } from '@/components/ui/StandingsTable';
 
 import MissingResultsBanner from './MissingResultsBanner';
 import PlayoffStatusBand from './PlayoffStatusBand';

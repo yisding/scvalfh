@@ -2,8 +2,8 @@
 
 import { useCallback, useEffect, useSyncExternalStore } from 'react';
 
-import { PINNED_TEAM_KEY } from '../layout/pinned-team-script';
-import type { LeagueId } from '../../lib/types';
+import { PINNED_TEAM_KEY } from '@/components/layout/pinned-team-script';
+import type { LeagueId } from '@/lib/types';
 
 import {
   UNAVAILABLE,

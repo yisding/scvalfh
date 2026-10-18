@@ -11,7 +11,7 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { getLeague } from '../lib/leagues';
+import { getLeague } from '@/lib/leagues';
 import {
   OfficialBundleSchema,
   bundleToFixtures,
@@ -21,11 +21,11 @@ import {
   parseOfficialBundle,
   readOfficialBundle,
   serializeBundle,
-} from '../lib/official/schema';
-import { OfficialValidationError, assertDoubleRoundRobin } from '../lib/official/validate';
-import { isWithdrawnSchool, resolveOfficialName, resolveTeam, teamsInDivision } from '../lib/teams';
-import type { OfficialFixture } from '../lib/types';
-import { BUNDLED_LEAGUES, buildBundles, outputFileOf } from '../scripts/build-official-fixtures';
+} from '@/lib/official/schema';
+import { OfficialValidationError, assertDoubleRoundRobin } from '@/lib/official/validate';
+import { isWithdrawnSchool, resolveOfficialName, resolveTeam, teamsInDivision } from '@/lib/teams';
+import type { OfficialFixture } from '@/lib/types';
+import { BUNDLED_LEAGUES, buildBundles, outputFileOf } from '@/scripts/build-official-fixtures';
 import { REPO, runScript } from './helpers';
 
 const raw = (league: string): unknown =>

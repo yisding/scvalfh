@@ -8,7 +8,7 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { recaseName, recaseNameParts } from '../lib/person-name';
+import { recaseName, recaseNameParts } from '@/lib/person-name';
 import { REPO } from './helpers';
 
 describe('recaseName', () => {

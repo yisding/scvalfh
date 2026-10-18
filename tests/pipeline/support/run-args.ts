@@ -4,9 +4,9 @@
  * field gets its default here from the parser, not from a hand-written literal per test.
  */
 
-import type { RunArgs } from '../../../lib/pipeline/contract';
-import { parseRunArgs } from '../../../lib/pipeline/run';
-import { REPO } from '../../helpers';
+import type { RunArgs } from '@/lib/pipeline/contract';
+import { parseRunArgs } from '@/lib/pipeline/run';
+import { REPO } from '@/tests/helpers';
 
 /** The pinned clock: a live run's default `fetchedAt` (2026-10-02, 8 AM Pacific). */
 const TEST_RUN_AT = '2026-10-02T15:00:00.000Z';

@@ -12,7 +12,7 @@
 
 import { readFileSync } from 'node:fs';
 
-import bundledSnapshot from '../data/snapshot.json';
+import bundledSnapshot from '@/data/snapshot.json';
 
 import {
   dateSpan,

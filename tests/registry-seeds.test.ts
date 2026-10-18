@@ -18,19 +18,19 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { getLeague } from '../lib/leagues';
-import { BVAL_SEEDS } from '../lib/registry/bval';
-import { CITY_SEEDS } from '../lib/registry/city';
-import { EAL_SEEDS } from '../lib/registry/eal';
-import { INDEPENDENTS_SEEDS } from '../lib/registry/independents';
-import { MCAL_SEEDS } from '../lib/registry/mcal';
-import { METRO_SEEDS } from '../lib/registry/metro';
-import { NORTH_COUNTY_SEEDS } from '../lib/registry/north-county';
-import { PCAL_SEEDS } from '../lib/registry/pcal';
-import { SCVAL_SEEDS } from '../lib/registry/scval';
-import type { Seed } from '../lib/registry/seed';
-import { SUNSET_SEEDS } from '../lib/registry/sunset';
-import { TEAMS, getTeamBySlug } from '../lib/teams';
+import { getLeague } from '@/lib/leagues';
+import { BVAL_SEEDS } from '@/lib/registry/bval';
+import { CITY_SEEDS } from '@/lib/registry/city';
+import { EAL_SEEDS } from '@/lib/registry/eal';
+import { INDEPENDENTS_SEEDS } from '@/lib/registry/independents';
+import { MCAL_SEEDS } from '@/lib/registry/mcal';
+import { METRO_SEEDS } from '@/lib/registry/metro';
+import { NORTH_COUNTY_SEEDS } from '@/lib/registry/north-county';
+import { PCAL_SEEDS } from '@/lib/registry/pcal';
+import { SCVAL_SEEDS } from '@/lib/registry/scval';
+import type { Seed } from '@/lib/registry/seed';
+import { SUNSET_SEEDS } from '@/lib/registry/sunset';
+import { TEAMS, getTeamBySlug } from '@/lib/teams';
 import { REPO } from './helpers';
 
 interface JsonSeed {

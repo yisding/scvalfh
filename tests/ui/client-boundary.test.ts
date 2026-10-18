@@ -19,7 +19,7 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { REPO as ROOT } from '../helpers';
+import { REPO as ROOT } from '@/tests/helpers';
 
 /** Repo-relative module paths (no extension) that a client module must never reach. */
 const BANNED_LIB: RegExp[] = [

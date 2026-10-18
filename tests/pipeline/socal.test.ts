@@ -23,17 +23,17 @@ import path from 'node:path';
 
 import { beforeAll, describe, expect, it } from 'vitest';
 
-import { localDateKey, sideOutcome } from '../../lib/format';
-import { DATA_QUALITY, LEAGUES, getDivision, getLeague, getSection } from '../../lib/leagues';
-import { readManifest } from '../../lib/pipeline/corpus';
-import { NO_MAXPREPS_TABLE_REASON } from '../../lib/pipeline/steps/league-meta';
-import { loadSnapshot } from '../../lib/snapshot-schema';
-import { ScheduleResponseSchema, type ScheduleRow } from '../../lib/sources/maxpreps';
-import { parseScoresPage, parseTeamGamesPage } from '../../lib/sources/sblive';
-import { divisionGames } from '../../lib/standings';
-import { TEAMS, getTeamBySlug, teamsInDivision, teamsInLeague } from '../../lib/teams';
-import type { Game, Snapshot } from '../../lib/types';
-import { CORPUS_ROOT, SOCAL_CORPUS, corpusSnapshotPath, runFixtureCli, stubCorpusSnapshot } from '../helpers';
+import { localDateKey, sideOutcome } from '@/lib/format';
+import { DATA_QUALITY, LEAGUES, getDivision, getLeague, getSection } from '@/lib/leagues';
+import { readManifest } from '@/lib/pipeline/corpus';
+import { NO_MAXPREPS_TABLE_REASON } from '@/lib/pipeline/steps/league-meta';
+import { loadSnapshot } from '@/lib/snapshot-schema';
+import { ScheduleResponseSchema, type ScheduleRow } from '@/lib/sources/maxpreps';
+import { parseScoresPage, parseTeamGamesPage } from '@/lib/sources/sblive';
+import { divisionGames } from '@/lib/standings';
+import { TEAMS, getTeamBySlug, teamsInDivision, teamsInLeague } from '@/lib/teams';
+import type { Game, Snapshot } from '@/lib/types';
+import { CORPUS_ROOT, SOCAL_CORPUS, corpusSnapshotPath, runFixtureCli, stubCorpusSnapshot } from '@/tests/helpers';
 
 /**
  * The freeze reason of a league not in this run (lib/pipeline/steps/guards.ts notInRunReason): '<SHORT> was
@@ -46,7 +46,7 @@ function notFetchedReason(id: Parameters<typeof getLeague>[0]): string {
     : `${getLeague(id).shortName} was not fetched in this run.`;
 }
 
-type DataModule = typeof import('../../lib/data');
+type DataModule = typeof import('@/lib/data');
 
 const SOCAL = ['sunset', 'city', 'north-county', 'metro'] as const;
 const NORCAL = ['scval', 'bval', 'pcal', 'mcal', 'eal'] as const;
@@ -98,7 +98,7 @@ stubCorpusSnapshot(SOCAL_CORPUS);
 
 beforeAll(async () => {
   snapshot = loadSnapshot(JSON.parse(readFileSync(corpusSnapshotPath(SOCAL_CORPUS), 'utf8')) as unknown);
-  data = (await import('../../lib/data')) as DataModule;
+  data = (await import('@/lib/data')) as DataModule;
 }, 600_000);
 
 function gameOf(prefix: string): Game | undefined {

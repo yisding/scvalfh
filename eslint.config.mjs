@@ -5,6 +5,35 @@ import nextTs from "eslint-config-next/typescript";
 const eslintConfig = defineConfig([
   ...nextVitals,
   ...nextTs,
+  // Repo code is imported as '@/<path>' whenever the import leaves the file's directory, and as
+  // './<path>' for same-directory and child modules; a '../' specifier is never needed (README,
+  // "Local development"). tsconfig.json's `paths` maps '@/'; vitest, Next, vinext and tsx all read it.
+  {
+    files: ["**/*.{ts,tsx,mts}"],
+    ignores: [
+      "tests/fixtures/**",
+      // Next puts a content hash of each metadata image file's own source into the URL it prints
+      // (`og:image` …/opengraph-image?<hash>, `<link rel="icon" href="/icon?<hash>">`), so rewriting
+      // these files' specifiers alone would change every page's HTML. They keep their relative
+      // imports until a change that is meant to alter them anyway.
+      "app/**/opengraph-image.tsx",
+      "app/icon.tsx",
+      "app/apple-icon.tsx",
+    ],
+    rules: {
+      "no-restricted-imports": [
+        "error",
+        {
+          patterns: [
+            {
+              regex: "^\\.\\./",
+              message: "Import repo code as '@/<path>' (README, \"Local development\").",
+            },
+          ],
+        },
+      ],
+    },
+  },
   // Override default ignores of eslint-config-next.
   globalIgnores([
     // Default ignores of eslint-config-next:

@@ -11,8 +11,8 @@
 
 import { describe, expect, it } from 'vitest';
 
-import { LEAGUES } from '../lib/leagues';
-import * as sblive from '../lib/sources/sblive';
+import { LEAGUES } from '@/lib/leagues';
+import * as sblive from '@/lib/sources/sblive';
 import {
   SBLIVE_HTTP_OPTIONS,
   SBLIVE_LEAGUE_SLUGS,
@@ -28,8 +28,8 @@ import {
   sbliveIdFromWebPath,
   sbliveScoresUrl,
   sbliveTeamGamesUrl,
-} from '../lib/sources/sblive';
-import { CHROME_USER_AGENT, htmlUnescape } from '../lib/sources/http';
+} from '@/lib/sources/sblive';
+import { CHROME_USER_AGENT, htmlUnescape } from '@/lib/sources/http';
 
 /** The escaping si.com actually applies to the attribute value. */
 function escapeAttr(json: string): string {

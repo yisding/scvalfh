@@ -1,10 +1,10 @@
 import Link from 'next/link';
 
-import { getStandingFor } from '../../lib/data';
-import { EM_DASH, matchupJoiner, monthDay, recordString, recordWords, shortDate, timeOfDay } from '../../lib/format';
-import { gameHref } from '../../lib/game-id';
-import { TEAMS, getTeamBySlug } from '../../lib/teams';
-import type { Game, LeagueId, Record3, TeamSlug } from '../../lib/types';
+import { getStandingFor } from '@/lib/data';
+import { EM_DASH, matchupJoiner, monthDay, recordString, recordWords, shortDate, timeOfDay } from '@/lib/format';
+import { gameHref } from '@/lib/game-id';
+import { TEAMS, getTeamBySlug } from '@/lib/teams';
+import type { Game, LeagueId, Record3, TeamSlug } from '@/lib/types';
 
 import ExternalLink from './ExternalLink';
 import GhostMonogram from './GhostMonogram';

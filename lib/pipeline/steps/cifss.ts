@@ -10,8 +10,8 @@
  * is marked stale. A Section the corpus lacks is 'skipped', which is how an offline run skips it.
  */
 
-import { carryCifssCrossCheck, compareCifss, type NonGame } from '../../cifss-crosscheck';
-import { dateKeyOf } from '../../normalize';
+import { carryCifssCrossCheck, compareCifss, type NonGame } from '@/lib/cifss-crosscheck';
+import { dateKeyOf } from '@/lib/normalize';
 import {
   CIFSS_SECTIONS,
   CIFSS_SEASON_FROM,
@@ -19,11 +19,11 @@ import {
   parseCifssPage,
   type CifssRow,
   type CifssSectionKey,
-} from '../../sources/cifss';
-import { getTeamById, resolveTeam, sideJoinKey, unorderedPairKey } from '../../teams';
-import type { CifssCrossCheck, SourceStatus } from '../../types';
-import { carriedFromOf, type PipelineContext, type RunState } from '../ledger';
-import { classifyFetchError } from '../read';
+} from '@/lib/sources/cifss';
+import { getTeamById, resolveTeam, sideJoinKey, unorderedPairKey } from '@/lib/teams';
+import type { CifssCrossCheck, SourceStatus } from '@/lib/types';
+import { carriedFromOf, type PipelineContext, type RunState } from '@/lib/pipeline/ledger';
+import { classifyFetchError } from '@/lib/pipeline/read';
 
 /** A Section listing longer than this many pages is read no further (and warned about). */
 export const CIFSS_MAX_PAGES = 60;

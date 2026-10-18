@@ -3,18 +3,18 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
 
-import LeagueSwitcher from '../../../components/layout/LeagueSwitcher';
-import PageHeader from '../../../components/layout/PageHeader';
-import { leagueChips, leagueHrefs } from '../../../components/layout/league-chips';
-import { OG_BASE } from '../../../components/layout/site';
-import OfficialFixtures from '../../../components/schedule/OfficialFixtures';
-import ScheduleFilters, { ScheduleFiltersFallback } from '../../../components/schedule/ScheduleFilters';
-import ScheduleList from '../../../components/schedule/ScheduleList';
-import TimelineRail from '../../../components/schedule/TimelineRail';
-import { countGames } from '../../../components/schedule/filter-data';
-import { scheduleFilterProps } from '../../../components/schedule/filter-data-server';
-import LeagueHealthNote from '../../../components/ui/LeagueHealthNote';
-import SectionHeader from '../../../components/ui/SectionHeader';
+import LeagueSwitcher from '@/components/layout/LeagueSwitcher';
+import PageHeader from '@/components/layout/PageHeader';
+import { leagueChips, leagueHrefs } from '@/components/layout/league-chips';
+import { OG_BASE } from '@/components/layout/site';
+import OfficialFixtures from '@/components/schedule/OfficialFixtures';
+import ScheduleFilters, { ScheduleFiltersFallback } from '@/components/schedule/ScheduleFilters';
+import ScheduleList from '@/components/schedule/ScheduleList';
+import TimelineRail from '@/components/schedule/TimelineRail';
+import { countGames } from '@/components/schedule/filter-data';
+import { scheduleFilterProps } from '@/components/schedule/filter-data-server';
+import LeagueHealthNote from '@/components/ui/LeagueHealthNote';
+import SectionHeader from '@/components/ui/SectionHeader';
 import {
   getGamesByDate,
   getLeagueIds,
@@ -22,10 +22,10 @@ import {
   getOfficialFixtures,
   getTeams,
   getToday,
-} from '../../../lib/data';
-import { monthDay, plural } from '../../../lib/format';
-import { isIndependentLeague, leagueSportWords, standaloneName } from '../../../lib/leagues';
-import { SEASON_DISPLAY } from '../../../lib/season';
+} from '@/lib/data';
+import { monthDay, plural } from '@/lib/format';
+import { isIndependentLeague, leagueSportWords, standaloneName } from '@/lib/leagues';
+import { SEASON_DISPLAY } from '@/lib/season';
 
 
 /**

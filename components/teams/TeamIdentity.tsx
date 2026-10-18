@@ -1,6 +1,6 @@
-import PinControl from '../ui/PinControl';
-import PlaceMark from '../ui/PlaceMark';
-import TeamMonogram from '../ui/TeamMonogram';
+import PinControl from '@/components/ui/PinControl';
+import PlaceMark from '@/components/ui/PlaceMark';
+import TeamMonogram from '@/components/ui/TeamMonogram';
 import type { TeamPageView } from './team-view';
 import { placeScope } from './team-view';
 

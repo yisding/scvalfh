@@ -22,11 +22,11 @@ import {
   otherLeagueSuffix,
   overtimeInDoubt,
   signedMargin,
-} from '../../components/ui/describe-game';
-import { getGames, getLeagueSummaries } from '../../lib/data';
-import { EN_DASH } from '../../lib/format';
-import { findDivision, findLeague } from '../../lib/leagues';
-import type { Game, GameStatus } from '../../lib/types';
+} from '@/components/ui/describe-game';
+import { getGames, getLeagueSummaries } from '@/lib/data';
+import { EN_DASH } from '@/lib/format';
+import { findDivision, findLeague } from '@/lib/leagues';
+import type { Game, GameStatus } from '@/lib/types';
 
 function game(overrides: Partial<Game> = {}): Game {
   const base: Game = {
@@ -172,7 +172,7 @@ describe('§5.2 row 4b — an EAL 1 v 1 win (decider SO, no tally stored)', () =
   });
 
   it('says what SO means to a screen reader (StatusLabel)', async () => {
-    const { StatusLabel } = await import('../../components/ui/StatusLabel');
+    const { StatusLabel } = await import('@/components/ui/StatusLabel');
     const html = renderToStaticMarkup(createElement(StatusLabel, { display: describeGame(eal('W')) }));
     expect(html, 'components/ui/StatusLabel.tsx SO label').toContain('<span class="sr-only">decided on 1 v 1s</span>');
     const ot = renderToStaticMarkup(
@@ -207,7 +207,7 @@ describe('§5.2 row 4b — an EAL 1 v 1 win (decider SO, no tally stored)', () =
     expect(describeGame(eal('W')).deciderTag, 'the EAL tag, unchanged').toBe('SO');
     expect(describeGame(eal('W')).shootoutLabel, 'the EAL string, unchanged').toBe('decided on 1 v 1s');
     expect(describeGame(final(3, 2, { decider: 'OT', isOt: true, otPeriods: 1 })).shootoutLabel).toBeNull();
-    const { StatusLabel } = await import('../../components/ui/StatusLabel');
+    const { StatusLabel } = await import('@/components/ui/StatusLabel');
     const html = renderToStaticMarkup(createElement(StatusLabel, { display: d }));
     expect(html).not.toContain('shootout');
     expect(html).not.toContain('>SO<');
@@ -459,9 +459,9 @@ describe('rendered rows and the scoreboard (GameRow, ScoreBoard: UI pass, league
     });
 
   it('a side outside the registry carries NON_MEMBER_NOTE on the scoreboard, counted from the registry', async () => {
-    const { ScoreBoard } = await import('../../components/ui/ScoreBoard');
-    const { NON_MEMBER_NOTE } = await import('../../components/ui/GameRow');
-    const { TEAMS } = await import('../../lib/teams');
+    const { ScoreBoard } = await import('@/components/ui/ScoreBoard');
+    const { NON_MEMBER_NOTE } = await import('@/components/ui/GameRow');
+    const { TEAMS } = await import('@/lib/teams');
     expect(NON_MEMBER_NOTE, 'components/ui/GameRow.tsx NON_MEMBER_NOTE').toBe(
       `Not one of the ${TEAMS.length} teams this site follows`,
     );
@@ -471,7 +471,7 @@ describe('rendered rows and the scoreboard (GameRow, ScoreBoard: UI pass, league
   });
 
   it('the game-log rule follows display.isNonLeague: a postseason game takes no NL rule', async () => {
-    const { gameLogRowClass } = await import('../../components/ui/GameRow');
+    const { gameLogRowClass } = await import('@/components/ui/GameRow');
     expect(gameLogRowClass(final(2, 1)), 'components/ui/GameRow.tsx league').not.toContain('sx-nonleague');
     expect(gameLogRowClass(nonMember())).toContain('sx-nonleague');
     // MaxPreps' own league flag is evidence, never the classification (SPEC §10.4).
@@ -485,7 +485,7 @@ describe('rendered rows and the scoreboard (GameRow, ScoreBoard: UI pass, league
   });
 
   it('the row’s sentence says the chips in words, and every link is gameHref', async () => {
-    const { GameRow } = await import('../../components/ui/GameRow');
+    const { GameRow } = await import('@/components/ui/GameRow');
     const sb = final(3, 1, {
       contestId: 'sblive:6541425',
       provenance: { scores: 'sblive', schedule: 'pcal-pdf', fetchedAt: '2026-10-02T15:00:00.000Z' },

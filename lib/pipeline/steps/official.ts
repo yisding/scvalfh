@@ -20,11 +20,11 @@
  * (they are local and classification depends on them), SCVAL is carried from the previous run.
  */
 
-import { postseasonTag } from '../../classify';
-import { LEAGUES, divisionDisplay, divisionHeading, type DivisionConfig, type LeagueConfig } from '../../leagues';
-import { matchOfficialFixtures } from '../../official/match';
-import { hasOfficialDocument, loadBundledFixtures, type DocumentDivision } from '../../official/schema';
-import { assertDoubleRoundRobin } from '../../official/validate';
+import { postseasonTag } from '@/lib/classify';
+import { LEAGUES, divisionDisplay, divisionHeading, type DivisionConfig, type LeagueConfig } from '@/lib/leagues';
+import { matchOfficialFixtures } from '@/lib/official/match';
+import { hasOfficialDocument, loadBundledFixtures, type DocumentDivision } from '@/lib/official/schema';
+import { assertDoubleRoundRobin } from '@/lib/official/validate';
 import {
   PdftotextMissingError,
   SCVAL_STANDINGS_INDEX,
@@ -33,17 +33,17 @@ import {
   findStandingsPdfLink,
   listFieldHockeyLinks,
   parseSchedulePdfText,
-} from '../../sources/scval-pdf';
-import type { DivisionId, Game, LeagueId, OfficialFixture, SourceStatus } from '../../types';
+} from '@/lib/sources/scval-pdf';
+import type { DivisionId, Game, LeagueId, OfficialFixture, SourceStatus } from '@/lib/types';
 import {
   type OfficialStep,
   type OfficialStepResult,
   type RawResponse,
   type ResourceKey,
   type RunContext,
-} from '../contract';
-import { carriedFromOf } from '../ledger';
-import { classifyFetchError, type FetchFailure } from '../read';
+} from '@/lib/pipeline/contract';
+import { carriedFromOf } from '@/lib/pipeline/ledger';
+import { classifyFetchError, type FetchFailure } from '@/lib/pipeline/read';
 
 const RESCHEDULE_WINDOW_DAYS = 14;
 

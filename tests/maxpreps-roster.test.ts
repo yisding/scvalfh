@@ -8,7 +8,7 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { MaxPrepsError } from '../lib/sources/maxpreps';
+import { MaxPrepsError } from '@/lib/sources/maxpreps';
 import {
   COL,
   GRADE_LABELS,
@@ -19,10 +19,10 @@ import {
   pendingRoster,
   parseRosterTable,
   rosterUrl,
-} from '../lib/sources/maxpreps-roster';
-import { RostersSchema, countRosters } from '../lib/rosters-schema';
-import { SPORT_SEASON_ID } from '../lib/season';
-import { TEAMS, getTeamBySlug, teamsInLeague } from '../lib/teams';
+} from '@/lib/sources/maxpreps-roster';
+import { RostersSchema, countRosters } from '@/lib/rosters-schema';
+import { SPORT_SEASON_ID } from '@/lib/season';
+import { TEAMS, getTeamBySlug, teamsInLeague } from '@/lib/teams';
 import { FIXTURE_DIR } from './helpers';
 
 const fixture = (slug: string) => readFileSync(path.join(FIXTURE_DIR, `roster-${slug}.html`), 'utf8');

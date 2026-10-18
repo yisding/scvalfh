@@ -16,7 +16,7 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { DATA_QUALITY } from '../lib/leagues';
+import { DATA_QUALITY } from '@/lib/leagues';
 import {
   STATEWIDE_AMBIGUOUS,
   extractReactProps,
@@ -26,8 +26,8 @@ import {
   parseTeamGamesPage,
   resolveSbliveSide,
   sbliveIdsFrom,
-} from '../lib/sources/sblive';
-import { TEAMS, getTeamBySlug, normalizeTeamKey } from '../lib/teams';
+} from '@/lib/sources/sblive';
+import { TEAMS, getTeamBySlug, normalizeTeamKey } from '@/lib/teams';
 import { REPO } from './helpers';
 
 const DIR = path.join(REPO, 'tests', 'fixtures', 'sblive', 'identity');

@@ -9,7 +9,7 @@
  *     another entity (`&amp;quot;` is the text `&quot;`, never `"`).
  */
 
-import { BASIC_NAMED, decodeEntities as decodeWith } from '../../lib/html-entities';
+import { BASIC_NAMED, decodeEntities as decodeWith } from '@/lib/html-entities';
 
 /**
  * `html` with every tag replaced by `replacement`. A tag is a `<`, at least one character, and the

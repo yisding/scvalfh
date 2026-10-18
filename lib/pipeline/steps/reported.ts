@@ -18,15 +18,15 @@
  * `partial` with a reason sentence.
  */
 
-import { divisionLabel, getLeague } from '../../leagues';
-import { StandingsResponseSchema, type StandingsRow } from '../../sources/maxpreps';
-import { toReportedRecord } from '../../standings';
-import { resolveTeam, teamsInDivision } from '../../teams';
-import type { DivisionConfig } from '../../leagues';
-import type { LeagueId, SourceStatus } from '../../types';
-import { asOfDay, carriedFromOf, type PipelineContext, type RunState } from '../ledger';
-import { classifyFetchError, parseJsonBody } from '../read';
-import { resourceUrl } from '../transport';
+import { divisionLabel, getLeague } from '@/lib/leagues';
+import { StandingsResponseSchema, type StandingsRow } from '@/lib/sources/maxpreps';
+import { toReportedRecord } from '@/lib/standings';
+import { resolveTeam, teamsInDivision } from '@/lib/teams';
+import type { DivisionConfig } from '@/lib/leagues';
+import type { LeagueId, SourceStatus } from '@/lib/types';
+import { asOfDay, carriedFromOf, type PipelineContext, type RunState } from '@/lib/pipeline/ledger';
+import { classifyFetchError, parseJsonBody } from '@/lib/pipeline/read';
+import { resourceUrl } from '@/lib/pipeline/transport';
 import { NO_MAXPREPS_TABLE_REASON } from './league-meta';
 
 function readFailedReason(division: DivisionConfig, carriedFrom: string | null): string {

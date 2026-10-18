@@ -18,7 +18,7 @@
 
 import { readFileSync } from 'node:fs';
 
-import bundled from '../data/jv.json';
+import bundled from '@/data/jv.json';
 import { getOfficialFixtures, getSnapshot } from './data';
 import { byDateThenId, localDateKey } from './format';
 import { mergeJv, type JvMergeResult } from './jv-merge';

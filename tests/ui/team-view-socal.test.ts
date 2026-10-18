@@ -14,22 +14,22 @@ import { type ReactElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { beforeAll, describe, expect, it } from 'vitest';
 
-import { SOCAL_CORPUS, stubCorpusSnapshot } from '../helpers';
+import { SOCAL_CORPUS, stubCorpusSnapshot } from '@/tests/helpers';
 import { textOf } from './html-text';
 
 stubCorpusSnapshot(SOCAL_CORPUS);
 
-type Data = typeof import('../../lib/data');
-type View = typeof import('../../components/teams/team-view');
+type Data = typeof import('@/lib/data');
+type View = typeof import('@/components/teams/team-view');
 
 let data: Data;
 let view: View;
 let renderTeam: (slug: string) => Promise<string>;
 
 beforeAll(async () => {
-  data = await import('../../lib/data');
-  view = await import('../../components/teams/team-view');
-  const teamPage = await import('../../app/teams/[slug]/page');
+  data = await import('@/lib/data');
+  view = await import('@/components/teams/team-view');
+  const teamPage = await import('@/app/teams/[slug]/page');
   renderTeam = async (slug: string) => {
     const el = await teamPage.default({ params: Promise.resolve({ slug }) } as never);
     return renderToStaticMarkup(el as ReactElement);

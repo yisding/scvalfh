@@ -17,15 +17,15 @@
  * corpus'), which is how an offline run skips these steps.
  */
 
-import { CCS, getLeague } from '../../leagues';
-import { CCS_ICAL_URL, ccsPollingOpen, confirmKeyDates, parseCcsIcal, readBracketPublished } from '../../sources/ccs';
-import { VNN_SITE_IDS, applyVnnEvents, carryVnnForward, parseVnnIcs, type VnnEvent } from '../../sources/vnn-ics';
-import { getTeamBySlug } from '../../teams';
-import type { Game } from '../../types';
-import type { SecondaryStepResult } from '../contract';
-import { carriedFromOf, type PipelineContext } from '../ledger';
-import { classifyFetchError } from '../read';
-import { resourceUrl } from '../transport';
+import { CCS, getLeague } from '@/lib/leagues';
+import { CCS_ICAL_URL, ccsPollingOpen, confirmKeyDates, parseCcsIcal, readBracketPublished } from '@/lib/sources/ccs';
+import { VNN_SITE_IDS, applyVnnEvents, carryVnnForward, parseVnnIcs, type VnnEvent } from '@/lib/sources/vnn-ics';
+import { getTeamBySlug } from '@/lib/teams';
+import type { Game } from '@/lib/types';
+import type { SecondaryStepResult } from '@/lib/pipeline/contract';
+import { carriedFromOf, type PipelineContext } from '@/lib/pipeline/ledger';
+import { classifyFetchError } from '@/lib/pipeline/read';
+import { resourceUrl } from '@/lib/pipeline/transport';
 
 async function stepVnn(ctx: PipelineContext, input: readonly Game[]): Promise<Game[]> {
   let games = [...input];

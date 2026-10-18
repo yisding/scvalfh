@@ -1,18 +1,18 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
-import AwardsBlock from '../../../components/history/AwardsBlock';
-import { divisionChampion, finalLine, sideName } from '../../../components/history/bracket-view';
-import HistoryBracket from '../../../components/history/HistoryBracket';
-import HistoryStandingsTable, { leagueHasOverall } from '../../../components/history/HistoryStandingsTable';
-import ExternalLink from '../../../components/ui/ExternalLink';
-import { RegionSwitcher } from '../../../components/layout/LeagueSwitcher';
-import PageHeader from '../../../components/layout/PageHeader';
-import DivisionTabs from '../../../components/standings/DivisionTabs';
-import TeamMonogram from '../../../components/ui/TeamMonogram';
-import SectionHeader from '../../../components/ui/SectionHeader';
-import { OG_BASE, ROOT_OG_IMAGE } from '../../../components/layout/site';
-import { getTeamBySlug } from '../../../lib/data';
+import AwardsBlock from '@/components/history/AwardsBlock';
+import { divisionChampion, finalLine, sideName } from '@/components/history/bracket-view';
+import HistoryBracket from '@/components/history/HistoryBracket';
+import HistoryStandingsTable, { leagueHasOverall } from '@/components/history/HistoryStandingsTable';
+import ExternalLink from '@/components/ui/ExternalLink';
+import { RegionSwitcher } from '@/components/layout/LeagueSwitcher';
+import PageHeader from '@/components/layout/PageHeader';
+import DivisionTabs from '@/components/standings/DivisionTabs';
+import TeamMonogram from '@/components/ui/TeamMonogram';
+import SectionHeader from '@/components/ui/SectionHeader';
+import { OG_BASE, ROOT_OG_IMAGE } from '@/components/layout/site';
+import { getTeamBySlug } from '@/lib/data';
 import {
   bracketSectionName,
   getAvailableHistoryLeagues,
@@ -29,10 +29,10 @@ import {
   type BracketSectionId,
   type SectionBracket,
   type UnavailableLeagueHistory,
-} from '../../../lib/history';
-import { dateWithYear, listWords } from '../../../lib/format';
-import { getDivision, getLeague, getSection, isIndependentLeague, regionOf } from '../../../lib/leagues';
-import type { LeagueId } from '../../../lib/types';
+} from '@/lib/history';
+import { dateWithYear, listWords } from '@/lib/format';
+import { getDivision, getLeague, getSection, isIndependentLeague, regionOf } from '@/lib/leagues';
+import type { LeagueId } from '@/lib/types';
 
 /**
  * `/history/2025-26` (DESIGN §1.1, §3.9; SPEC §10.8) — last season's final standings, one section

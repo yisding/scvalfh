@@ -11,7 +11,7 @@ import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 
-import LeagueSwitcher, { RegionSwitcher, type LeagueChip } from '../../components/layout/LeagueSwitcher';
+import LeagueSwitcher, { RegionSwitcher, type LeagueChip } from '@/components/layout/LeagueSwitcher';
 
 const CHIPS: LeagueChip[] = [
   { id: 'scval', shortName: 'SCVAL', sectionShort: 'CCS', region: 'norcal' },

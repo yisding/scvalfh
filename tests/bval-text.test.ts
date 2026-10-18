@@ -10,9 +10,9 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { BVAL_DEFAULT_VARSITY, BVAL_TIME_OVERRIDES, parseBvalScheduleText } from '../lib/official/bval-text';
-import { compareBundleFixtures, readOfficialBundle, serializeBundle } from '../lib/official/schema';
-import { buildBval, buildBvalFromText } from '../scripts/build-official-fixtures';
+import { BVAL_DEFAULT_VARSITY, BVAL_TIME_OVERRIDES, parseBvalScheduleText } from '@/lib/official/bval-text';
+import { compareBundleFixtures, readOfficialBundle, serializeBundle } from '@/lib/official/schema';
+import { buildBval, buildBvalFromText } from '@/scripts/build-official-fixtures';
 import { REPO } from './helpers';
 
 const FIX = path.join(REPO, 'tests', 'fixtures', 'official');

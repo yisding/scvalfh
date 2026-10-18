@@ -8,8 +8,8 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { formStripName, gameWord, plural } from '../../components/ui/plural';
-import { REPO as ROOT } from '../helpers';
+import { formStripName, gameWord, plural } from '@/components/ui/plural';
+import { REPO as ROOT } from '@/tests/helpers';
 
 function walk(dir: string): string[] {
   const out: string[] = [];

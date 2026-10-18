@@ -16,7 +16,7 @@
  * kept so the §5.2 table stays implemented end to end.
  */
 
-import { EN_DASH, MINUS, renderScore, scoreGlyph, scoreSentence, shootoutPhrases, timeOfDay } from '../../lib/format';
+import { EN_DASH, MINUS, renderScore, scoreGlyph, scoreSentence, shootoutPhrases, timeOfDay } from '@/lib/format';
 import {
   LEAGUES,
   divisionHeading,
@@ -26,9 +26,9 @@ import {
   leagueOfDivision,
   type SectionConfig,
   type ShootoutInference,
-} from '../../lib/leagues';
-import { getTeamBySlug } from '../../lib/teams';
-import type { Game, LeagueId, Outcome, PostseasonTag, ScoreView, TeamSlug } from '../../lib/types';
+} from '@/lib/leagues';
+import { getTeamBySlug } from '@/lib/teams';
+import type { Game, LeagueId, Outcome, PostseasonTag, ScoreView, TeamSlug } from '@/lib/types';
 
 /** The chip a side or a row carries. `none` = no chip at all (a scheduled game). */
 export type ChipKind = Outcome | 'pending' | 'cancelled' | 'postponed' | 'none';

@@ -10,11 +10,11 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { stepOfficial } from '../../lib/pipeline/steps/official';
-import { stepSblive } from '../../lib/pipeline/steps/sblive';
-import { parseSnapshot } from '../../lib/snapshot-schema';
-import { stableStringify } from '../../lib/stable-json';
-import { corpusDir } from '../helpers';
+import { stepOfficial } from '@/lib/pipeline/steps/official';
+import { stepSblive } from '@/lib/pipeline/steps/sblive';
+import { parseSnapshot } from '@/lib/snapshot-schema';
+import { stableStringify } from '@/lib/stable-json';
+import { corpusDir } from '@/tests/helpers';
 import { snapshotOf, writeTempVariant } from './support/run-corpus';
 
 const STEPS = { official: stepOfficial, sblive: stepSblive };

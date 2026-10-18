@@ -11,9 +11,9 @@ import path from 'node:path';
 
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
-import { classifyGames } from '../lib/classify';
-import { divisionsOf } from '../lib/leagues';
-import { buildSeason } from '../lib/season-build';
+import { classifyGames } from '@/lib/classify';
+import { divisionsOf } from '@/lib/leagues';
+import { buildSeason } from '@/lib/season-build';
 import {
   buildCrossCheck,
   computeStandings,
@@ -21,10 +21,10 @@ import {
   playoffOutcomeLabel,
   statusBadge,
   statusLegend,
-} from '../lib/standings';
-import { countsOf, migrateV1ToV2 } from '../lib/snapshot-migrate';
-import { parseSnapshot } from '../lib/snapshot-schema';
-import { stableStringify } from '../lib/stable-json';
+} from '@/lib/standings';
+import { countsOf, migrateV1ToV2 } from '@/lib/snapshot-migrate';
+import { parseSnapshot } from '@/lib/snapshot-schema';
+import { stableStringify } from '@/lib/stable-json';
 import type {
   Game,
   GameStatus,
@@ -32,12 +32,12 @@ import type {
   ReportedRecord,
   Snapshot,
   Standing,
-} from '../lib/types';
-import { teamsInLeague } from '../lib/teams';
+} from '@/lib/types';
+import { teamsInLeague } from '@/lib/teams';
 import { game } from './game-builder';
 import { REPO } from './helpers';
 
-type DataModule = typeof import('../lib/data');
+type DataModule = typeof import('@/lib/data');
 
 const readJson = (p: string): unknown => JSON.parse(readFileSync(path.join(REPO, p), 'utf8'));
 
@@ -85,7 +85,7 @@ function writeSnapshot(name: string, s: Snapshot): string {
 async function loadData(file: string): Promise<DataModule> {
   vi.resetModules();
   process.env.SCVAL_SNAPSHOT = file;
-  return import('../lib/data');
+  return import('@/lib/data');
 }
 
 const priorEnv = process.env.SCVAL_SNAPSHOT;

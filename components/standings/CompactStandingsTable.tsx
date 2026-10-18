@@ -1,9 +1,9 @@
 import Link from 'next/link';
 
-import { EM_DASH, recordString } from '../../lib/format';
-import PlaceMark from '../ui/PlaceMark';
-import TeamMonogram from '../ui/TeamMonogram';
-import type { StandingsRowData } from '../ui/StandingsTable';
+import { EM_DASH, recordString } from '@/lib/format';
+import PlaceMark from '@/components/ui/PlaceMark';
+import TeamMonogram from '@/components/ui/TeamMonogram';
+import type { StandingsRowData } from '@/components/ui/StandingsTable';
 
 import { ladderLineAfter, ladderRow } from './standings-view';
 

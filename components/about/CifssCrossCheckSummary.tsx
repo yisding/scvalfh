@@ -1,8 +1,8 @@
-import { CIFSS_NOTES } from '../../lib/cifss-crosscheck';
-import { formatStamp, shortDate } from '../../lib/format';
-import type { CifssCrossCheck, CifssOnlyRow } from '../../lib/types';
+import { CIFSS_NOTES } from '@/lib/cifss-crosscheck';
+import { formatStamp, shortDate } from '@/lib/format';
+import type { CifssCrossCheck, CifssOnlyRow } from '@/lib/types';
 
-import ExternalLink from '../ui/ExternalLink';
+import ExternalLink from '@/components/ui/ExternalLink';
 
 /**
  * The cifsshome.org score cross-check (/about#cross-check, lib/cifss-crosscheck.ts). Report only:

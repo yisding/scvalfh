@@ -2,14 +2,14 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Fragment } from 'react';
 
-import LeaderSection from '../../components/leaders/LeaderSection';
-import { buildLeadersView } from '../../components/leaders/leaders-view';
-import { AND_INDEPENDENTS_SHORT, LEAGUE_COUNT } from '../../components/leaders/scope';
-import type { RegionLeadersView } from '../../components/leaders/types';
-import { RegionSwitcher } from '../../components/layout/LeagueSwitcher';
-import PageHeader from '../../components/layout/PageHeader';
-import { OG_BASE, ROOT_OG_IMAGE, coveredLeagueWords } from '../../components/layout/site';
-import DivisionTabs from '../../components/standings/DivisionTabs';
+import LeaderSection from '@/components/leaders/LeaderSection';
+import { buildLeadersView } from '@/components/leaders/leaders-view';
+import { AND_INDEPENDENTS_SHORT, LEAGUE_COUNT } from '@/components/leaders/scope';
+import type { RegionLeadersView } from '@/components/leaders/types';
+import { RegionSwitcher } from '@/components/layout/LeagueSwitcher';
+import PageHeader from '@/components/layout/PageHeader';
+import { OG_BASE, ROOT_OG_IMAGE, coveredLeagueWords } from '@/components/layout/site';
+import DivisionTabs from '@/components/standings/DivisionTabs';
 
 /**
  * `/leaders` (DESIGN §16, §23, §28) — "Who leads the whole site?" Leaderboards across every covered

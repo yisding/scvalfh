@@ -18,22 +18,22 @@ import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 
-import LeadersPage from '../../app/leaders/page';
-import LeaderBoardTable from '../../components/leaders/LeaderBoardTable';
-import { buildEloBoard, crossRegionFinals, getEloBoard, getEloBoardForTeam } from '../../components/leaders/elo-board';
-import { buildLeadersView } from '../../components/leaders/leaders-view';
-import { BOARD_PLACES, EXPANDED_PLACES, qualifyingMinimum, rankBoard } from '../../components/leaders/ranking';
-import type { LeaderBoard, LeaderSources, LeadersView, RegionLeadersView } from '../../components/leaders/types';
-import { statText } from '../../components/teams/player-stats-view';
-import { positionWords } from '../../components/ui/position-words';
-import { getGames, getStandingFor, getTeams } from '../../lib/data';
-import { gradeWord, recordString } from '../../lib/format';
-import { regionOf } from '../../lib/leagues';
-import { computeAdjustedScoring, getAdjustedScoring } from '../../lib/adjusted-scoring';
-import { getAllPlayerStatsWithNotes } from '../../lib/player-stats';
-import { getPriorSeason } from '../../lib/prior-season';
-import { getEnrichedTeamRoster } from '../../lib/rosters';
-import { computeRatings, getRatings } from '../../lib/ratings';
+import LeadersPage from '@/app/leaders/page';
+import LeaderBoardTable from '@/components/leaders/LeaderBoardTable';
+import { buildEloBoard, crossRegionFinals, getEloBoard, getEloBoardForTeam } from '@/components/leaders/elo-board';
+import { buildLeadersView } from '@/components/leaders/leaders-view';
+import { BOARD_PLACES, EXPANDED_PLACES, qualifyingMinimum, rankBoard } from '@/components/leaders/ranking';
+import type { LeaderBoard, LeaderSources, LeadersView, RegionLeadersView } from '@/components/leaders/types';
+import { statText } from '@/components/teams/player-stats-view';
+import { positionWords } from '@/components/ui/position-words';
+import { getGames, getStandingFor, getTeams } from '@/lib/data';
+import { gradeWord, recordString } from '@/lib/format';
+import { regionOf } from '@/lib/leagues';
+import { computeAdjustedScoring, getAdjustedScoring } from '@/lib/adjusted-scoring';
+import { getAllPlayerStatsWithNotes } from '@/lib/player-stats';
+import { getPriorSeason } from '@/lib/prior-season';
+import { getEnrichedTeamRoster } from '@/lib/rosters';
+import { computeRatings, getRatings } from '@/lib/ratings';
 import {
   FIELD_STAT_KEYS,
   GOALIE_STAT_KEYS,
@@ -42,11 +42,11 @@ import {
   type GoalieStatKey,
   type GoalieStats,
   type TeamPlayerStats,
-} from '../../lib/player-stats-schema';
-import { computeStandings } from '../../lib/standings';
-import { TEAMS, getTeamBySlug } from '../../lib/teams';
-import type { Game } from '../../lib/types';
-import { game } from '../helpers';
+} from '@/lib/player-stats-schema';
+import { computeStandings } from '@/lib/standings';
+import { TEAMS, getTeamBySlug } from '@/lib/teams';
+import type { Game } from '@/lib/types';
+import { game } from '@/tests/helpers';
 import { textOf } from './html-text';
 
 const PLAYER_IDS = ['most-points', 'adjusted-points', 'most-assists', 'most-saves', 'most-clean-sheets'];

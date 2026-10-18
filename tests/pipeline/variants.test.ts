@@ -9,15 +9,15 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { LEAGUE_IDS, divisionsOf } from '../../lib/leagues';
-import { officialDocumentOf } from '../../lib/official/schema';
-import { TransportError } from '../../lib/pipeline/contract';
-import { loadCorpus } from '../../lib/pipeline/corpus';
-import { FixtureTransport } from '../../lib/pipeline/transport';
-import { SPORT_SEASON_ID } from '../../lib/season';
-import { loadSnapshot } from '../../lib/snapshot-schema';
-import { ScheduleResponseSchema } from '../../lib/sources/maxpreps';
-import { corpusDir, variantDir } from '../helpers';
+import { LEAGUE_IDS, divisionsOf } from '@/lib/leagues';
+import { officialDocumentOf } from '@/lib/official/schema';
+import { TransportError } from '@/lib/pipeline/contract';
+import { loadCorpus } from '@/lib/pipeline/corpus';
+import { FixtureTransport } from '@/lib/pipeline/transport';
+import { SPORT_SEASON_ID } from '@/lib/season';
+import { loadSnapshot } from '@/lib/snapshot-schema';
+import { ScheduleResponseSchema } from '@/lib/sources/maxpreps';
+import { corpusDir, variantDir } from '@/tests/helpers';
 import {
   FINALS_REGRESSION_DIR,
   FINALS_REGRESSION_PREVIOUS_AT,
@@ -34,8 +34,8 @@ describe('variants', () => {
     // Built with the real official (steps/official.ts) and si.com (steps/sblive.ts) steps. The
     // committed file is frozen as a four-league v2 snapshot (written before the EAL was added): it exercises loadSnapshot's
     // league-added upgrade, so it is not rebuilt for later config changes.
-    const { stepOfficial } = await import('../../lib/pipeline/steps/official');
-    const { stepSblive } = await import('../../lib/pipeline/steps/sblive');
+    const { stepOfficial } = await import('@/lib/pipeline/steps/official');
+    const { stepSblive } = await import('@/lib/pipeline/steps/sblive');
     await writeFinalsRegressionVariant(stepOfficial, stepSblive);
   });
 

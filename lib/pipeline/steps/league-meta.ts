@@ -9,13 +9,13 @@
 
 import { z } from 'zod';
 
-import { divisionLabel, divisionsOf, getLeague, leagueOfDivision, sectionOf } from '../../leagues';
-import { SEASON_YEAR, SPORT_SEASON_ID } from '../../season';
-import { LeagueMetaSchema } from '../../sources/maxpreps';
-import type { DivisionId, LeagueId } from '../../types';
-import { lastFreshStamp, type PipelineContext, type RunState } from '../ledger';
-import { classifyFetchError, parseJsonBody } from '../read';
-import { resourceUrl } from '../transport';
+import { divisionLabel, divisionsOf, getLeague, leagueOfDivision, sectionOf } from '@/lib/leagues';
+import { SEASON_YEAR, SPORT_SEASON_ID } from '@/lib/season';
+import { LeagueMetaSchema } from '@/lib/sources/maxpreps';
+import type { DivisionId, LeagueId } from '@/lib/types';
+import { lastFreshStamp, type PipelineContext, type RunState } from '@/lib/pipeline/ledger';
+import { classifyFetchError, parseJsonBody } from '@/lib/pipeline/read';
+import { resourceUrl } from '@/lib/pipeline/transport';
 
 const MetaEnvelope = z.looseObject({ data: LeagueMetaSchema });
 

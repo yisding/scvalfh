@@ -12,15 +12,15 @@ import path from 'node:path';
 
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
-import { getLeague } from '../lib/leagues';
-import { buildSeason } from '../lib/season-build';
-import { countsOf } from '../lib/snapshot-migrate';
-import { loadSnapshot } from '../lib/snapshot-schema';
-import { computeStandings } from '../lib/standings';
-import type { Game, Snapshot } from '../lib/types';
+import { getLeague } from '@/lib/leagues';
+import { buildSeason } from '@/lib/season-build';
+import { countsOf } from '@/lib/snapshot-migrate';
+import { loadSnapshot } from '@/lib/snapshot-schema';
+import { computeStandings } from '@/lib/standings';
+import type { Game, Snapshot } from '@/lib/types';
 import { game } from './game-builder';
 
-type DataModule = typeof import('../lib/data');
+type DataModule = typeof import('@/lib/data');
 let data: DataModule;
 
 const priorEnv = process.env.SCVAL_SNAPSHOT;
@@ -32,7 +32,7 @@ beforeAll(async () => {
   const file = path.join(mkdtempSync(path.join(tmpdir(), 'scvalfh-data-')), 'snapshot.json');
   writeFileSync(file, JSON.stringify(loadSnapshot(raw)));
   process.env.SCVAL_SNAPSHOT = file;
-  data = await import('../lib/data');
+  data = await import('@/lib/data');
 });
 
 afterAll(() => {
@@ -584,7 +584,7 @@ describe('data: an EAL table with results', () => {
     writeFileSync(file, JSON.stringify(loadSnapshot(next)));
     process.env.SCVAL_SNAPSHOT = file;
     vi.resetModules();
-    eal = await import('../lib/data');
+    eal = await import('@/lib/data');
   });
 
   it('counts the 1 v 1 win for Chico in the table and in both forms', () => {
@@ -707,7 +707,7 @@ describe('data: Southern California tables with results', () => {
     writeFileSync(file, JSON.stringify(loadSnapshot(next)));
     process.env.SCVAL_SNAPSHOT = file;
     vi.resetModules();
-    socal = await import('../lib/data');
+    socal = await import('@/lib/data');
   });
 
   it('counts both City Western games, flagged or not, and the shootout win as a win', () => {

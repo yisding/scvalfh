@@ -16,10 +16,10 @@
  *   - Santa Teresa writes the year as a word ("Senior", "Sophmore" sic); Mt. Hamilton as a number.
  */
 
-import { BASIC_NAMED, decodeEntities } from '../html-entities';
-import { divisionsOf } from '../leagues';
-import { resolveOfficialName, teamsInLeague } from '../teams';
-import type { DivisionId, TeamSlug } from '../types';
+import { BASIC_NAMED, decodeEntities } from '@/lib/html-entities';
+import { divisionsOf } from '@/lib/leagues';
+import { resolveOfficialName, teamsInLeague } from '@/lib/teams';
+import type { DivisionId, TeamSlug } from '@/lib/types';
 
 export const BVAL_HISTORY_SOURCES = {
   standingsIndex: 'https://bval.org/standings/',

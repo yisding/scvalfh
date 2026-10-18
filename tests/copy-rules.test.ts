@@ -13,10 +13,10 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { postseasonSourceLink } from '../components/layout/source-labels';
-import { SITE_SCOPE_NOTE } from '../components/layout/site';
-import { getHistoryLeagues } from '../lib/history';
-import { LEAGUES, getLeague } from '../lib/leagues';
+import { postseasonSourceLink } from '@/components/layout/source-labels';
+import { SITE_SCOPE_NOTE } from '@/components/layout/site';
+import { getHistoryLeagues } from '@/lib/history';
+import { LEAGUES, getLeague } from '@/lib/leagues';
 import {
   EAL_SCHOOL_CLAIM,
   LEAK_MIN_FRAGMENT,
@@ -41,7 +41,7 @@ import {
   umpireOfficialClaims,
   visibleText,
   withoutLink,
-} from '../scripts/copy-rules';
+} from '@/scripts/copy-rules';
 
 describe('SCVAL_ONLY_CLAIM', () => {
   it.each([

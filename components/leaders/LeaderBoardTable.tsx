@@ -1,10 +1,10 @@
 import Link from 'next/link';
 import { Fragment } from 'react';
 
-import MissingValue from '../ui/MissingValue';
-import PlaceMark from '../ui/PlaceMark';
-import SectionHeader from '../ui/SectionHeader';
-import TeamMonogram from '../ui/TeamMonogram';
+import MissingValue from '@/components/ui/MissingValue';
+import PlaceMark from '@/components/ui/PlaceMark';
+import SectionHeader from '@/components/ui/SectionHeader';
+import TeamMonogram from '@/components/ui/TeamMonogram';
 import type { LeaderBoard, LeaderCell, LeaderColumnKey, LeaderRow } from './types';
 
 /**

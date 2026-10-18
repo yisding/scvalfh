@@ -1,9 +1,9 @@
 import Link from 'next/link';
 
-import type { StandingContext } from '../../lib/data';
-import { EM_DASH, placeWords, recordString, recordWords, streakString, winPct } from '../../lib/format';
-import { divisionHeading, leagueOfDivision } from '../../lib/leagues';
-import type { DivisionId, Standing, Team, TeamId, TeamSlug } from '../../lib/types';
+import type { StandingContext } from '@/lib/data';
+import { EM_DASH, placeWords, recordString, recordWords, streakString, winPct } from '@/lib/format';
+import { divisionHeading, leagueOfDivision } from '@/lib/leagues';
+import type { DivisionId, Standing, Team, TeamId, TeamSlug } from '@/lib/types';
 
 import ExternalLink from './ExternalLink';
 import FormStrip, { toFormEntries } from './FormStrip';

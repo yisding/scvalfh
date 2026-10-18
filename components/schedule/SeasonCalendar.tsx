@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-import { longDate, parseLocal, weekdayIndex } from '../../lib/format';
+import { longDate, parseLocal, weekdayIndex } from '@/lib/format';
 
 /**
  * "Pick a date" on a day page (F-34): the season as month grids, every day with a contest a link

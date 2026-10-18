@@ -1,9 +1,9 @@
 import Link from 'next/link';
 
-import { EN_DASH, monthDay } from '../../lib/format';
-import { gameHref } from '../../lib/game-id';
-import type { FormGame } from '../../lib/data';
-import { getTeamBySlug } from '../../lib/teams';
+import { EN_DASH, monthDay } from '@/lib/format';
+import { gameHref } from '@/lib/game-id';
+import type { FormGame } from '@/lib/data';
+import { getTeamBySlug } from '@/lib/teams';
 
 import EmptyState from './EmptyState';
 import { signedMargin } from './describe-game';

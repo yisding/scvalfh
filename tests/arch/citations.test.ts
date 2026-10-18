@@ -275,6 +275,8 @@ describe('citation integrity', () => {
         const target = m[1].startsWith('README') ? 'README.md' : m[1];
         // A heading cited across a wrapped comment line: "College\n * commitments".
         const heading = m[2].replace(/\s*\n\s*(?:\*|\/\/|#)?\s*/g, ' ');
+        // `README "<Heading>"` is the citation form spelled out in prose (this file's header), not a citation.
+        if (/^<[^>]*>$/.test(heading)) continue;
         checked += 1;
         if (!existsSync(path.join(REPO, target))) {
           missing.push(`${file}:${lineOf(text, m.index)} cites ${target} (missing)`);

@@ -15,11 +15,11 @@
  * contract read by plain bash against any of the three servers.
  */
 
-import { getClubSlugs } from '../../lib/clubs';
-import { gameIdToParam } from '../../lib/game-id';
-import { LEAGUE_IDS, TOURNAMENT_LEAGUE_IDS } from '../../lib/leagues';
-import { TEAMS } from '../../lib/teams';
-import type { Snapshot } from '../../lib/types';
+import { getClubSlugs } from '@/lib/clubs';
+import { gameIdToParam } from '@/lib/game-id';
+import { LEAGUE_IDS, TOURNAMENT_LEAGUE_IDS } from '@/lib/leagues';
+import { TEAMS } from '@/lib/teams';
+import type { Snapshot } from '@/lib/types';
 
 /** The pages with no params (`index` is `/`), by their prerendered file name without `.html`. */
 export const FIXED_PAGES = [

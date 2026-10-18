@@ -10,7 +10,7 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { LEAGUES } from '../lib/leagues';
+import { LEAGUES } from '@/lib/leagues';
 import {
   ROSTER_TEAM_COUNT,
   RostersPartialSchema,
@@ -18,10 +18,10 @@ import {
   countRosters,
   rostersContentKey,
   type Rosters,
-} from '../lib/rosters-schema';
-import { getRosters, getTeamRoster, sortedPlayers } from '../lib/rosters';
-import { pendingRoster } from '../lib/sources/maxpreps-roster';
-import { TEAMS, teamsInLeague } from '../lib/teams';
+} from '@/lib/rosters-schema';
+import { getRosters, getTeamRoster, sortedPlayers } from '@/lib/rosters';
+import { pendingRoster } from '@/lib/sources/maxpreps-roster';
+import { TEAMS, teamsInLeague } from '@/lib/teams';
 import { FIXTURE_DIR, REPO, runScript } from './helpers';
 
 const FILE = path.join(REPO, 'data', 'rosters.json');

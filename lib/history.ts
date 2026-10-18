@@ -15,8 +15,8 @@
 
 import { readFileSync } from 'node:fs';
 
-import bundledBrackets from '../data/history-brackets-2025-26.json';
-import bundledHistory from '../data/history-2025-26.json';
+import bundledBrackets from '@/data/history-brackets-2025-26.json';
+import bundledHistory from '@/data/history-2025-26.json';
 import {
   BRACKET_SECTION_IDS,
   HistoryBracketsSchema,

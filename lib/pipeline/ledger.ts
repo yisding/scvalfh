@@ -10,11 +10,11 @@
  * No clock: `today` is localDateKey(fetchedAt), never Date.now().
  */
 
-import { localDateKey, shortDate, timeOfDay, toLocalTimestamp } from '../format';
-import { LEAGUES, findDivision } from '../leagues';
-import { CIFSS_SECTIONS } from '../sources/cifss';
-import type { ScheduleRow } from '../sources/maxpreps';
-import { TEAMS, getTeamBySlug } from '../teams';
+import { localDateKey, shortDate, timeOfDay, toLocalTimestamp } from '@/lib/format';
+import { LEAGUES, findDivision } from '@/lib/leagues';
+import { CIFSS_SECTIONS } from '@/lib/sources/cifss';
+import type { ScheduleRow } from '@/lib/sources/maxpreps';
+import { TEAMS, getTeamBySlug } from '@/lib/teams';
 import type {
   CifssCrossCheck,
   DivisionHealth,
@@ -31,7 +31,7 @@ import type {
   SourceStatus,
   TeamId,
   TeamSlug,
-} from '../types';
+} from '@/lib/types';
 import type { OfficialStepResult, RunArgs, RunContext, SecondaryStepResult, Transport } from './contract';
 
 // ---------------------------------------------------------------- sources

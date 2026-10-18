@@ -16,11 +16,11 @@
  *    keeping this run's row (a contest MaxPreps re-keyed since the last run).
  */
 
-import { byDateThenId } from '../../format';
-import { DATA_QUALITY } from '../../leagues';
-import { applyExclusions, dedupePhantomPairs, normalizeGames } from '../../normalize';
-import type { Game } from '../../types';
-import type { PipelineContext, RunState } from '../ledger';
+import { byDateThenId } from '@/lib/format';
+import { DATA_QUALITY } from '@/lib/leagues';
+import { applyExclusions, dedupePhantomPairs, normalizeGames } from '@/lib/normalize';
+import type { Game } from '@/lib/types';
+import type { PipelineContext, RunState } from '@/lib/pipeline/ledger';
 
 /** A carried game with the earlier run's classification cleared, so this run decides it again. */
 function unclassified(g: Game): Game {

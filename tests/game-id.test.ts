@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { gameHref, gameIdToParam, paramToGameId } from '../lib/game-id';
+import { gameHref, gameIdToParam, paramToGameId } from '@/lib/game-id';
 
 const GUID = '30e15701-fddc-4695-9f1c-148e19f58ca5';
 

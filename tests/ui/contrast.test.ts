@@ -19,7 +19,7 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { REPO } from '../helpers';
+import { REPO } from '@/tests/helpers';
 
 const CSS = readFileSync(path.join(REPO, 'app', 'globals.css'), 'utf8');
 

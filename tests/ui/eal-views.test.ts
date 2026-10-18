@@ -15,13 +15,13 @@ import { createElement, type ReactElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
-import { EAL_CORPUS, corpusSnapshotPath } from '../helpers';
+import { EAL_CORPUS, corpusSnapshotPath } from '@/tests/helpers';
 import { textOf } from './html-text';
 
-type Data = typeof import('../../lib/data');
-type Leagues = typeof import('../../lib/leagues');
-type StandingsPageView = typeof import('../../components/standings/standings-page-view');
-type View = typeof import('../../components/standings/standings-view');
+type Data = typeof import('@/lib/data');
+type Leagues = typeof import('@/lib/leagues');
+type StandingsPageView = typeof import('@/components/standings/standings-page-view');
+type View = typeof import('@/components/standings/standings-view');
 
 const LEAGUE = 'eal';
 const priorEnv = process.env.SCVAL_SNAPSHOT;
@@ -62,15 +62,15 @@ function sectionLabelledBy(html: string, id: string): string {
 beforeAll(async () => {
   process.env.SCVAL_SNAPSHOT = corpusSnapshotPath(EAL_CORPUS);
   vi.resetModules();
-  data = await import('../../lib/data');
-  leagues = await import('../../lib/leagues');
-  sd = await import('../../components/standings/standings-page-view');
-  view = await import('../../components/standings/standings-view');
-  const leagueStandings = (await import('../../app/standings/[league]/page')).default;
-  const overview = (await import('../../app/standings/page')).default;
-  const leagueSchedule = (await import('../../app/schedule/[league]/page')).default;
-  const about = (await import('../../app/about/page')).default;
-  const history = (await import('../../app/history/2025-26/page')).default;
+  data = await import('@/lib/data');
+  leagues = await import('@/lib/leagues');
+  sd = await import('@/components/standings/standings-page-view');
+  view = await import('@/components/standings/standings-view');
+  const leagueStandings = (await import('@/app/standings/[league]/page')).default;
+  const overview = (await import('@/app/standings/page')).default;
+  const leagueSchedule = (await import('@/app/schedule/[league]/page')).default;
+  const about = (await import('@/app/about/page')).default;
+  const history = (await import('@/app/history/2025-26/page')).default;
   const params = { params: Promise.resolve({ league: LEAGUE }) } as never;
   standingsHtml = renderToStaticMarkup((await leagueStandings(params)) as ReactElement);
   overviewHtml = renderToStaticMarkup(createElement(overview));
@@ -320,7 +320,7 @@ describe('/about, the EAL parts', () => {
   it('counts member rows from the standings, so an older snapshot’s stored count cannot print a wrong one', async () => {
     // A snapshot written before reported.ts stopped counting MaxPreps' extra row stored one more
     // than the members (7 for the six EAL teams); the card must still print the member count.
-    const { LeagueHealthCard } = await import('../../components/about/LeagueHealthCard');
+    const { LeagueHealthCard } = await import('@/components/about/LeagueHealthCard');
     const health = data.getLeagueHealth(LEAGUE);
     const stale = { ...health, divisions: health.divisions.map((d) => ({ ...d, reportedRows: (d.reportedRows ?? 0) + 1 })) };
     const division = leagues.getLeague(LEAGUE).divisions[0];
@@ -344,7 +344,7 @@ describe('/about, the EAL parts', () => {
 
 describe('/history/2025-26#eal', () => {
   it('renders the EAL as unavailable, with its reason and no claim of a league site', async () => {
-    const { getHistorySeason } = await import('../../lib/history');
+    const { getHistorySeason } = await import('@/lib/history');
     expect(getHistorySeason()).toBe('2025-26');
     const section = byId(historyHtml, LEAGUE);
     const text = textOf(section);

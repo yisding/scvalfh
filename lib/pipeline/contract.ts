@@ -4,11 +4,11 @@
  * error classes; no I/O.
  */
 
-import type { CifssSectionKey } from '../sources/cifss';
+import type { CifssSectionKey } from '@/lib/sources/cifss';
 import type {
   CcsCalendarEvent, DivisionId, DroppedContest, Game, LeagueId, LeagueRunState, OfficialFixture,
   SbliveCrossCheck, SeasonWindow, Snapshot, SourceStatus, TeamSlug,
-} from '../types';
+} from '@/lib/types';
 
 /** One upstream resource. `resourcePath(key)` is its manifest key and its corpus file stem. */
 export type ResourceKey =

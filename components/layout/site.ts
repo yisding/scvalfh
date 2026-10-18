@@ -7,7 +7,7 @@
  */
 import type { Metadata } from 'next';
 
-import { listWords, numberWord } from '../../lib/format';
+import { listWords, numberWord } from '@/lib/format';
 import {
   INDEPENDENT_LEAGUES,
   LEAGUES_PROPER,
@@ -18,10 +18,10 @@ import {
   sectionsInRegion,
   type LeagueConfig,
   type SectionConfig,
-} from '../../lib/leagues';
-import type { RegionId } from '../../lib/types';
-import { SEASON_CALENDAR_YEAR } from '../../lib/season';
-import { TEAMS } from '../../lib/teams';
+} from '@/lib/leagues';
+import type { RegionId } from '@/lib/types';
+import { SEASON_CALENDAR_YEAR } from '@/lib/season';
+import { TEAMS } from '@/lib/teams';
 
 import { OG_SIZE } from './og-theme';
 

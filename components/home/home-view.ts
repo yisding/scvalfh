@@ -42,7 +42,7 @@ import {
   getUpcoming,
   playInClause,
   type LeagueSummary,
-} from '../../lib/data';
+} from '@/lib/data';
 import {
   EM_DASH,
   dateSpan,
@@ -57,10 +57,10 @@ import {
   recordWords,
   shortDate,
   timeOfDayPT,
-} from '../../lib/format';
-import { gameHref } from '../../lib/game-id';
-import { hasHistory } from '../../lib/history';
-import { outcomesFor, playoffOutcomeLabel, statusBadge } from '../../lib/standings';
+} from '@/lib/format';
+import { gameHref } from '@/lib/game-id';
+import { hasHistory } from '@/lib/history';
+import { outcomesFor, playoffOutcomeLabel, statusBadge } from '@/lib/standings';
 import {
   CCS,
   REGIONS,
@@ -77,16 +77,16 @@ import {
   type LeagueConfig,
   type PostseasonConfig,
   type RegionConfig,
-} from '../../lib/leagues';
-import { pickerName, pinLabel } from '../../lib/pin-label';
-import type { SearchIndex } from '../../lib/search';
-import { teamOfSide } from '../../lib/teams';
-import type { DivisionId, Game, LeagueId, RegionId, SeasonPhase, Team } from '../../lib/types';
-import type { LeagueChip } from '../layout/LeagueSwitcher';
-import { leagueChips } from '../layout/league-chips';
-import { fixtureOpponent, nextOfficialFixture } from '../teams/team-view';
-import { describeGame, gameKind, postseasonTagOf, type GameDisplay, type SideView } from '../ui/describe-game';
-import { plural } from '../ui/plural';
+} from '@/lib/leagues';
+import { pickerName, pinLabel } from '@/lib/pin-label';
+import type { SearchIndex } from '@/lib/search';
+import { teamOfSide } from '@/lib/teams';
+import type { DivisionId, Game, LeagueId, RegionId, SeasonPhase, Team } from '@/lib/types';
+import type { LeagueChip } from '@/components/layout/LeagueSwitcher';
+import { leagueChips } from '@/components/layout/league-chips';
+import { fixtureOpponent, nextOfficialFixture } from '@/components/teams/team-view';
+import { describeGame, gameKind, postseasonTagOf, type GameDisplay, type SideView } from '@/components/ui/describe-game';
+import { plural } from '@/components/ui/plural';
 
 import type {
   HomeLastDisplay,

@@ -3,8 +3,8 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { sideOutcome } from '../lib/format';
-import { DATA_QUALITY, type DataQualityConfig } from '../lib/leagues';
+import { sideOutcome } from '@/lib/format';
+import { DATA_QUALITY, type DataQualityConfig } from '@/lib/leagues';
 import {
   applyDateOverride,
   applyExclusions,
@@ -16,10 +16,10 @@ import {
   overtimeFromNote,
   splitLocation,
   toUtcIso,
-} from '../lib/normalize';
-import { ScheduleResponseSchema, splitTbaRows, type ScheduleRow } from '../lib/sources/maxpreps';
-import { getTeamBySlug, resolveTeam } from '../lib/teams';
-import type { Game } from '../lib/types';
+} from '@/lib/normalize';
+import { ScheduleResponseSchema, splitTbaRows, type ScheduleRow } from '@/lib/sources/maxpreps';
+import { getTeamBySlug, resolveTeam } from '@/lib/teams';
+import type { Game } from '@/lib/types';
 import { allScheduleRows, corpusDir } from './helpers';
 
 const rows = allScheduleRows();

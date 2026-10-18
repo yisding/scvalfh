@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 
-import { classifyGames } from '../lib/classify';
-import { ALL_DIVISIONS, divisionsOf } from '../lib/leagues';
-import { normalizeGames } from '../lib/normalize';
+import { classifyGames } from '@/lib/classify';
+import { ALL_DIVISIONS, divisionsOf } from '@/lib/leagues';
+import { normalizeGames } from '@/lib/normalize';
 import {
   computeStandings,
   divisionGames,
@@ -12,9 +12,9 @@ import {
   playoffOutcomeLabel,
   playoffOutcomes,
   playoffStatusFor,
-} from '../lib/standings';
-import { TEAMS, resolveTeam, teamsInLeague } from '../lib/teams';
-import type { Game, Standing } from '../lib/types';
+} from '@/lib/standings';
+import { TEAMS, resolveTeam, teamsInLeague } from '@/lib/teams';
+import type { Game, Standing } from '@/lib/types';
 import { game } from './game-builder';
 import { allScheduleRows } from './helpers';
 

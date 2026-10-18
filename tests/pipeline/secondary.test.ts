@@ -8,11 +8,11 @@
 
 import { describe, expect, it } from 'vitest';
 
-import { TransportError, resourcePath, type ResourceKey, type Transport } from '../../lib/pipeline/contract';
-import { PipelineContext, SILENT_SINK } from '../../lib/pipeline/ledger';
-import { stepSecondary } from '../../lib/pipeline/steps/secondary';
-import type { Game, Snapshot, SourceStatus } from '../../lib/types';
-import { game } from '../helpers';
+import { TransportError, resourcePath, type ResourceKey, type Transport } from '@/lib/pipeline/contract';
+import { PipelineContext, SILENT_SINK } from '@/lib/pipeline/ledger';
+import { stepSecondary } from '@/lib/pipeline/steps/secondary';
+import type { Game, Snapshot, SourceStatus } from '@/lib/types';
+import { game } from '@/tests/helpers';
 import { testRunArgs } from './support/run-args';
 
 const PREVIOUS_AT = '2026-10-01T14:00:00.000Z';

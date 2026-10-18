@@ -1,4 +1,4 @@
-import { signedGd } from '../../lib/format';
+import { signedGd } from '@/lib/format';
 
 /**
  * Goal differential as a HUELESS ink bar (DESIGN §5.6, §7.8, R-1).

@@ -1,6 +1,6 @@
-import { getScoresLandingDate } from '../../lib/data';
-import { LEAGUE_IDS } from '../../lib/leagues';
-import type { LeagueId, TeamSlug } from '../../lib/types';
+import { getScoresLandingDate } from '@/lib/data';
+import { LEAGUE_IDS } from '@/lib/leagues';
+import type { LeagueId, TeamSlug } from '@/lib/types';
 
 import NavLink from './NavLink';
 import { navLeagueHrefs } from './nav-targets';

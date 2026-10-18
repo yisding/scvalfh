@@ -8,7 +8,7 @@ import { readFileSync } from 'node:fs';
 
 import { describe, expect, it } from 'vitest';
 
-import { pinSelfCss } from '../../components/teams/TeamIdentity';
+import { pinSelfCss } from '@/components/teams/TeamIdentity';
 
 const read = (rel: string) => readFileSync(new URL(`../../${rel}`, import.meta.url), 'utf8');
 

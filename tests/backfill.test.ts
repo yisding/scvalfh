@@ -23,15 +23,15 @@ import {
   shiftDateKey,
   supersededGamesOf,
   type BackfillInput,
-} from '../lib/backfill';
-import { scoreSentence } from '../lib/format';
-import { getDivision } from '../lib/leagues';
-import { FixtureMissing, TransportError, resourcePath, type ResourceKey, type RunContext } from '../lib/pipeline/contract';
-import { scoreboardDates, stepSblive } from '../lib/pipeline/steps/sblive';
-import { parseScoresPage, parseTeamGamesPage, type SbliveGame, type SbliveSide } from '../lib/sources/sblive';
-import { loadSnapshot, parseSnapshot } from '../lib/snapshot-schema';
-import { getTeamBySlug } from '../lib/teams';
-import type { DivisionId, Game, OfficialFixture, Snapshot, SourceStatus } from '../lib/types';
+} from '@/lib/backfill';
+import { scoreSentence } from '@/lib/format';
+import { getDivision } from '@/lib/leagues';
+import { FixtureMissing, TransportError, resourcePath, type ResourceKey, type RunContext } from '@/lib/pipeline/contract';
+import { scoreboardDates, stepSblive } from '@/lib/pipeline/steps/sblive';
+import { parseScoresPage, parseTeamGamesPage, type SbliveGame, type SbliveSide } from '@/lib/sources/sblive';
+import { loadSnapshot, parseSnapshot } from '@/lib/snapshot-schema';
+import { getTeamBySlug } from '@/lib/teams';
+import type { DivisionId, Game, OfficialFixture, Snapshot, SourceStatus } from '@/lib/types';
 import { game } from './game-builder';
 import { REPO, corpusDir } from './helpers';
 import { testRunArgs } from './pipeline/support/run-args';

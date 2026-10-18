@@ -19,7 +19,7 @@ import {
   icsInstant,
   parseVnnIcs,
   vnnIcsUrl,
-} from '../lib/sources/vnn-ics';
+} from '@/lib/sources/vnn-ics';
 import { REPO, game } from './helpers';
 
 const paly = readFileSync(path.join(REPO, 'tests', 'fixtures', 'vnn', 'palo-alto-excerpt.ics'), 'utf8');

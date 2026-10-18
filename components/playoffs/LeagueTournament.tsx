@@ -1,11 +1,11 @@
 import Link from 'next/link';
 import { Fragment } from 'react';
 
-import { placeWords, plural, scoreSentence } from '../../lib/format';
-import { gameHref } from '../../lib/game-id';
-import PlaceMark from '../ui/PlaceMark';
-import SectionHeader from '../ui/SectionHeader';
-import TeamMonogram from '../ui/TeamMonogram';
+import { placeWords, plural, scoreSentence } from '@/lib/format';
+import { gameHref } from '@/lib/game-id';
+import PlaceMark from '@/components/ui/PlaceMark';
+import SectionHeader from '@/components/ui/SectionHeader';
+import TeamMonogram from '@/components/ui/TeamMonogram';
 
 import PlayInCard, { type PlayInSide } from './PlayInCard';
 import type {

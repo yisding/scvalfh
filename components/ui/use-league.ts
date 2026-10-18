@@ -2,9 +2,9 @@
 
 import { useSyncExternalStore } from 'react';
 
-import { ALL_LEAGUES, LEAGUE_KEY, PREFS_RESTAMP, REGION_KEY, REGION_OF, STAMPLESS_REGION } from '../layout/prefs-script';
-import { PINNED_TEAM_KEY } from '../layout/pinned-team-script';
-import type { LeagueId, RegionId } from '../../lib/types';
+import { ALL_LEAGUES, LEAGUE_KEY, PREFS_RESTAMP, REGION_KEY, REGION_OF, STAMPLESS_REGION } from '@/components/layout/prefs-script';
+import { PINNED_TEAM_KEY } from '@/components/layout/pinned-team-script';
+import type { LeagueId, RegionId } from '@/lib/types';
 
 import { UNAVAILABLE, notifyStore, subscribeStore, useIsHydrated, useStoredValue, writeStored } from './local-store';
 

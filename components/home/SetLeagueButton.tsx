@@ -1,7 +1,7 @@
 'use client';
 
-import { setLeague, useEffectiveLeague } from '../ui/use-league';
-import type { LeagueId } from '../../lib/types';
+import { setLeague, useEffectiveLeague } from '@/components/ui/use-league';
+import type { LeagueId } from '@/lib/types';
 
 /**
  * `Show <SHORT> here` on a league card (SPEC §8.2 write 2, §10.1).

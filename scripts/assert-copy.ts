@@ -78,13 +78,13 @@
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import path from 'node:path';
 
-import { buildLeadersView } from '../components/leaders/leaders-view';
-import { getClubsFile } from '../lib/clubs';
-import { getCommitsFile } from '../lib/commits';
-import { getSnapshot } from '../lib/data';
-import { gameSentence } from '../components/history/bracket-view';
-import { getHistoryBrackets, getHistoryLeagues } from '../lib/history';
-import { getPlayerStats } from '../lib/player-stats';
+import { buildLeadersView } from '@/components/leaders/leaders-view';
+import { getClubsFile } from '@/lib/clubs';
+import { getCommitsFile } from '@/lib/commits';
+import { getSnapshot } from '@/lib/data';
+import { gameSentence } from '@/components/history/bracket-view';
+import { getHistoryBrackets, getHistoryLeagues } from '@/lib/history';
+import { getPlayerStats } from '@/lib/player-stats';
 import {
   LEAGUES,
   NO_POSTSEASON_LEAGUE_IDS,
@@ -95,8 +95,8 @@ import {
   getSection,
   isSingleDivision,
   regionOf,
-} from '../lib/leagues';
-import type { LeagueId } from '../lib/types';
+} from '@/lib/leagues';
+import type { LeagueId } from '@/lib/types';
 import {
   EAL_SCHOOL_CLAIM,
   RED_BLUFF_STATUS_CLAIM,

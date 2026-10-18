@@ -1,6 +1,6 @@
-import { listWords } from '../../lib/format';
-import ExternalLink from '../ui/ExternalLink';
-import GridRowFiller from '../ui/GridRowFiller';
+import { listWords } from '@/lib/format';
+import ExternalLink from '@/components/ui/ExternalLink';
+import GridRowFiller from '@/components/ui/GridRowFiller';
 import type { CollegeRow } from './commit-view';
 
 /**

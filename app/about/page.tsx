@@ -1,20 +1,20 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
-import { RegionSwitcher } from '../../components/layout/LeagueSwitcher';
-import PageHeader from '../../components/layout/PageHeader';
-import BackfillTable from '../../components/about/BackfillTable';
-import CifssCrossCheckSummary from '../../components/about/CifssCrossCheckSummary';
-import CrossCheckTable, { type CrossCheckGroup } from '../../components/about/CrossCheckTable';
-import LeagueHealthCard, { officialSourceLabel, type HealthDivision } from '../../components/about/LeagueHealthCard';
-import SbliveCrossCheckSummary from '../../components/about/SbliveCrossCheckSummary';
-import Arrow from '../../components/ui/Arrow';
-import EmptyState from '../../components/ui/EmptyState';
-import ExternalLink from '../../components/ui/ExternalLink';
-import SectionHeader from '../../components/ui/SectionHeader';
-import { DATA_CORRECTIONS_URL, OG_BASE, ROOT_OG_IMAGE, SITE_SCOPE_NOTE, independentsWords } from '../../components/layout/site';
-import { getClubs } from '../../lib/clubs';
-import { getCommitsFile } from '../../lib/commits';
+import { RegionSwitcher } from '@/components/layout/LeagueSwitcher';
+import PageHeader from '@/components/layout/PageHeader';
+import BackfillTable from '@/components/about/BackfillTable';
+import CifssCrossCheckSummary from '@/components/about/CifssCrossCheckSummary';
+import CrossCheckTable, { type CrossCheckGroup } from '@/components/about/CrossCheckTable';
+import LeagueHealthCard, { officialSourceLabel, type HealthDivision } from '@/components/about/LeagueHealthCard';
+import SbliveCrossCheckSummary from '@/components/about/SbliveCrossCheckSummary';
+import Arrow from '@/components/ui/Arrow';
+import EmptyState from '@/components/ui/EmptyState';
+import ExternalLink from '@/components/ui/ExternalLink';
+import SectionHeader from '@/components/ui/SectionHeader';
+import { DATA_CORRECTIONS_URL, OG_BASE, ROOT_OG_IMAGE, SITE_SCOPE_NOTE, independentsWords } from '@/components/layout/site';
+import { getClubs } from '@/lib/clubs';
+import { getCommitsFile } from '@/lib/commits';
 import {
   areKeyDatesConfirmed,
   getAllStandings,
@@ -36,13 +36,13 @@ import {
   getTeamBySlug,
   getTeams,
   getTournamentLeagueIds,
-} from '../../lib/data';
-import type { LeagueSummary } from '../../lib/data';
-import { dateWithYear, formatStamp, listWords, numberWord, ordinal, plural, shortDate, timeOfDayPT } from '../../lib/format';
-import { getAvailableHistoryLeagues, getHistorySeason, getUnavailableHistoryLeagues } from '../../lib/history';
-import { jvTableTitle } from '../../components/standings/jv-standings-view';
-import { getJvFile, getJvMerge, getJvTables } from '../../lib/jv';
-import { JV_STANDINGS_MIN_REPORTED_SHARE } from '../../lib/jv-standings';
+} from '@/lib/data';
+import type { LeagueSummary } from '@/lib/data';
+import { dateWithYear, formatStamp, listWords, numberWord, ordinal, plural, shortDate, timeOfDayPT } from '@/lib/format';
+import { getAvailableHistoryLeagues, getHistorySeason, getUnavailableHistoryLeagues } from '@/lib/history';
+import { jvTableTitle } from '@/components/standings/jv-standings-view';
+import { getJvFile, getJvMerge, getJvTables } from '@/lib/jv';
+import { JV_STANDINGS_MIN_REPORTED_SHARE } from '@/lib/jv-standings';
 import {
   CCS,
   UNBRACKETED_LEAGUE_IDS,
@@ -51,11 +51,11 @@ import {
   isIndependentLeague,
   leagueStandingsUrl,
   regionOf,
-} from '../../lib/leagues';
-import type { LeagueConfig, SectionConfig } from '../../lib/leagues';
-import { SOURCE_LINKS } from '../../lib/season';
-import { crossCheckSkipReason, statusLegend } from '../../lib/standings';
-import type { CrossCheckRow, DroppedContest, SourceStatus, TiebreakStage } from '../../lib/types';
+} from '@/lib/leagues';
+import type { LeagueConfig, SectionConfig } from '@/lib/leagues';
+import { SOURCE_LINKS } from '@/lib/season';
+import { crossCheckSkipReason, statusLegend } from '@/lib/standings';
+import type { CrossCheckRow, DroppedContest, SourceStatus, TiebreakStage } from '@/lib/types';
 
 /**
  * `/about` (DESIGN §3.10, SPEC §10.8) — where the data comes from for every league, how each

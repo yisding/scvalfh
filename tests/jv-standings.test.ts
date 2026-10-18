@@ -12,20 +12,20 @@ import {
   buildJvTablesView,
   jvTableTitle,
   teamJvStanding,
-} from '../components/standings/jv-standings-view';
-import { buildTeamJvView } from '../components/teams/jv-view';
-import { getSnapshot } from '../lib/data';
-import { getJvClassification, getJvGamesForTeam, getJvMerge, getJvTables } from '../lib/jv';
+} from '@/components/standings/jv-standings-view';
+import { buildTeamJvView } from '@/components/teams/jv-view';
+import { getSnapshot } from '@/lib/data';
+import { getJvClassification, getJvGamesForTeam, getJvMerge, getJvTables } from '@/lib/jv';
 import {
   JV_COUNTERPART_WINDOW_DAYS,
   JV_STANDINGS_MIN_REPORTED_SHARE,
   classifyJvGames,
   computeJvStandings,
   withJvClassification,
-} from '../lib/jv-standings';
-import { LEAGUES } from '../lib/leagues';
-import { TEAMS, teamsInDivision } from '../lib/teams';
-import type { Game, OfficialFixture } from '../lib/types';
+} from '@/lib/jv-standings';
+import { LEAGUES } from '@/lib/leagues';
+import { TEAMS, teamsInDivision } from '@/lib/teams';
+import type { Game, OfficialFixture } from '@/lib/types';
 import { game } from './game-builder';
 
 /** A JV game as lib/jv.ts receives it from the merge: unclassified. */

@@ -12,18 +12,18 @@ import path from 'node:path';
 
 import { beforeAll, describe, expect, it } from 'vitest';
 
-import { localDateKey, sideOutcome } from '../../lib/format';
-import { DATA_QUALITY, LEAGUES } from '../../lib/leagues';
-import { readManifest } from '../../lib/pipeline/corpus';
-import { loadSnapshot } from '../../lib/snapshot-schema';
-import type { ScheduleRow } from '../../lib/sources/maxpreps';
-import { parseScoresPage, parseTeamGamesPage, type SbliveGame } from '../../lib/sources/sblive';
-import { divisionGames } from '../../lib/standings';
-import { TEAMS, teamsInLeague } from '../../lib/teams';
-import type { Game, Snapshot } from '../../lib/types';
-import { EAL_CORPUS, corpusDir, corpusRows, corpusSnapshotPath, runFixtureCli, stubCorpusSnapshot } from '../helpers';
+import { localDateKey, sideOutcome } from '@/lib/format';
+import { DATA_QUALITY, LEAGUES } from '@/lib/leagues';
+import { readManifest } from '@/lib/pipeline/corpus';
+import { loadSnapshot } from '@/lib/snapshot-schema';
+import type { ScheduleRow } from '@/lib/sources/maxpreps';
+import { parseScoresPage, parseTeamGamesPage, type SbliveGame } from '@/lib/sources/sblive';
+import { divisionGames } from '@/lib/standings';
+import { TEAMS, teamsInLeague } from '@/lib/teams';
+import type { Game, Snapshot } from '@/lib/types';
+import { EAL_CORPUS, corpusDir, corpusRows, corpusSnapshotPath, runFixtureCli, stubCorpusSnapshot } from '@/tests/helpers';
 
-type DataModule = typeof import('../../lib/data');
+type DataModule = typeof import('@/lib/data');
 
 const LEAGUE = 'eal';
 const DIVISION = 'eal';
@@ -49,7 +49,7 @@ let data: DataModule;
 beforeAll(async () => {
   file = corpusSnapshotPath(EAL_CORPUS);
   snapshot = loadSnapshot(JSON.parse(readFileSync(file, 'utf8')) as unknown);
-  data = (await import('../../lib/data')) as DataModule;
+  data = (await import('@/lib/data')) as DataModule;
 });
 
 /** The corpus's schedule rows, one per contest (every game is in both teams' feeds). */

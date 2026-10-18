@@ -17,15 +17,15 @@ import { createElement, type ReactElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
-import { ordinal } from '../../lib/format';
-import type { Snapshot } from '../../lib/types';
-import { corpusSnapshotPath } from '../helpers';
+import { ordinal } from '@/lib/format';
+import type { Snapshot } from '@/lib/types';
+import { corpusSnapshotPath } from '@/tests/helpers';
 // textOf: the `<main>`-equivalent text of a page (the page component renders no layout).
 import { textOf } from './html-text';
 
-type Data = typeof import('../../lib/data');
-type Leagues = typeof import('../../lib/leagues');
-type View = typeof import('../../components/teams/team-view');
+type Data = typeof import('@/lib/data');
+type Leagues = typeof import('@/lib/leagues');
+type View = typeof import('@/components/teams/team-view');
 
 const priorEnv = process.env.SCVAL_SNAPSHOT;
 let corpusPath: string;
@@ -38,11 +38,11 @@ let describeTeam: (slug: string) => Promise<string | undefined>;
 
 async function loadModules() {
   vi.resetModules();
-  const d = await import('../../lib/data');
-  const l = await import('../../lib/leagues');
-  const v = await import('../../components/teams/team-view');
-  const teamPage = await import('../../app/teams/[slug]/page');
-  const indexPage = (await import('../../app/teams/page')).default;
+  const d = await import('@/lib/data');
+  const l = await import('@/lib/leagues');
+  const v = await import('@/components/teams/team-view');
+  const teamPage = await import('@/app/teams/[slug]/page');
+  const indexPage = (await import('@/app/teams/page')).default;
   return {
     d,
     l,
@@ -241,7 +241,7 @@ describe('postseason lines per kind (lib/data.ts getTeamPostseasonLine via team-
   });
 
   it('TeamPlayoffLine renders the line and no CCS bracket link for MCAL', async () => {
-    const { TeamPlayoffLine } = await import('../../components/teams/TeamPlayoffLine');
+    const { TeamPlayoffLine } = await import('@/components/teams/TeamPlayoffLine');
     const mcal = renderToStaticMarkup(createElement(TeamPlayoffLine, { view: view.buildTeamPageView('tamalpais')! }));
     // The arrow is drawn, not spoken (components/ui/Arrow.tsx): the link's name is the words alone.
     expect(mcal, 'components/teams/TeamPlayoffLine.tsx MCAL').toContain('MCAL tournament <span aria-hidden="true">→</span>');
@@ -295,7 +295,7 @@ describe('Southern California team pages (DESIGN-socal §2.4)', () => {
 
 describe('TeamPlayoffLine without a result (the EAL in the all-2026-10-02 corpus)', () => {
   it('names the Super Regional picture, not a playoff or a CCS one', async () => {
-    const { TeamPlayoffLine } = await import('../../components/teams/TeamPlayoffLine');
+    const { TeamPlayoffLine } = await import('@/components/teams/TeamPlayoffLine');
     const lassen = view.buildTeamPageView('lassen')!;
     expect(lassen.hasResults, 'the all corpus holds no EAL league result').toBe(false);
     const text = textOf(renderToStaticMarkup(createElement(TeamPlayoffLine, { view: lassen })));
@@ -399,7 +399,7 @@ describe('/teams/[slug] pages (app/teams/[slug]/page.tsx)', () => {
   });
 
   it('every page: the Elo card is the /leaders board’s rating and place, and names no place below its top 10', async () => {
-    const { buildLeadersView } = await import('../../components/leaders/leaders-view');
+    const { buildLeadersView } = await import('@/components/leaders/leaders-view');
     // One Elo board per region (DESIGN-socal §2.3): a team's place is on its own region's board, whose id
     // is `elo-rating` (NorCal) or `elo-rating-socal` (SoCal), and the card links that board.
     const regions = buildLeadersView().regions;
@@ -617,8 +617,8 @@ describe('the NEXT card and the identity place line (UI pass, league-aware)', ()
   });
 
   it('the identity card states the place on its own line, T-prefixed when level', async () => {
-    const { TeamIdentity } = await import('../../components/teams/TeamIdentity');
-    const { ordinal } = await import('../../lib/format');
+    const { TeamIdentity } = await import('@/components/teams/TeamIdentity');
+    const { ordinal } = await import('@/lib/format');
     let checked = 0;
     for (const team of data.getTeams()) {
       const v = view.buildTeamPageView(team.slug)!;
@@ -640,8 +640,8 @@ describe('the NEXT card and the identity place line (UI pass, league-aware)', ()
   });
 
   it('the Place tile writes a level place the same way: T-prefixed value, "tied for" spoken', async () => {
-    const { TeamStatTiles } = await import('../../components/teams/TeamStatTiles');
-    const { ordinal } = await import('../../lib/format');
+    const { TeamStatTiles } = await import('@/components/teams/TeamStatTiles');
+    const { ordinal } = await import('@/lib/format');
     let checked = 0;
     for (const team of data.getTeams()) {
       const v = view.buildTeamPageView(team.slug)!;
@@ -661,7 +661,7 @@ describe('the NEXT card and the identity place line (UI pass, league-aware)', ()
   });
 
   it('the Splits card never prints 0-0-0 for a venue with no league games', async () => {
-    const { TeamSplits } = await import('../../components/teams/TeamSplits');
+    const { TeamSplits } = await import('@/components/teams/TeamSplits');
     let empty = 0;
     for (const team of data.getTeams()) {
       const v = view.buildTeamPageView(team.slug)!;
@@ -737,7 +737,7 @@ describe('a team with no results (corpus copy, one MCAL team zeroed)', () => {
   });
 
   it('the Elo card says where THIS team started: its own rating from last season, or average', async () => {
-    const { TeamElo } = await import('../../components/teams/TeamElo');
+    const { TeamElo } = await import('@/components/teams/TeamElo');
     const view = zeroed.v.buildTeamPageView(slug)!.elo;
     const played = { ...view, elo: 1600, games: 8, preseason: false, provisional: false, boardPlace: null };
     const seeded = textOf(renderToStaticMarkup(createElement(TeamElo, { elo: { ...played, seeded: true } })));
@@ -751,7 +751,7 @@ describe('a team with no results (corpus copy, one MCAL team zeroed)', () => {
   });
 
   it('the Elo card says a team with no rating at all is not rated, never a 1500 it has not earned', async () => {
-    const { TeamElo } = await import('../../components/teams/TeamElo');
+    const { TeamElo } = await import('@/components/teams/TeamElo');
     const view = zeroed.v.buildTeamPageView(slug)!.elo;
     const unrated = { ...view, elo: null, preseason: false, provisional: false, boardPlace: null };
     const text = textOf(renderToStaticMarkup(createElement(TeamElo, { elo: unrated })));
@@ -761,7 +761,7 @@ describe('a team with no results (corpus copy, one MCAL team zeroed)', () => {
   });
 
   it('the identity card prints no place line at all (never an em dash in a sentence)', async () => {
-    const { TeamIdentity } = await import('../../components/teams/TeamIdentity');
+    const { TeamIdentity } = await import('@/components/teams/TeamIdentity');
     const v = zeroed.v.buildTeamPageView(slug)!;
     const text = textOf(renderToStaticMarkup(createElement(TeamIdentity, { view: v, knownSlugs: [] })));
     expect(text, 'components/teams/TeamIdentity.tsx gp 0').toContain(v.identityLine);
@@ -949,9 +949,9 @@ describe('"Who we haven’t beaten" official-only fixtures (components/teams/tea
   });
 
   it('says "next <date>" for a future fixture and "N unreported" only for a past one', async () => {
-    const { TeamUnbeaten } = await import('../../components/teams/TeamUnbeaten');
+    const { TeamUnbeaten } = await import('@/components/teams/TeamUnbeaten');
     const base = view.buildTeamPageView('carmel')!;
-    const opponent = (slug: string, extra: Partial<import('../../components/teams/team-view').UnbeatenOpponent>) => {
+    const opponent = (slug: string, extra: Partial<import('@/components/teams/team-view').UnbeatenOpponent>) => {
       const t = data.getTeamBySlug(slug)!;
       return {
         slug: t.slug,

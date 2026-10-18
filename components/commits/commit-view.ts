@@ -20,7 +20,7 @@
  *   - every row links the pages it rests on, each URL once.
  */
 
-import { clubDisplayName, getClubs } from '../../lib/clubs';
+import { clubDisplayName, getClubs } from '@/lib/clubs';
 import {
   collegeDisplayName,
   commitClassOf,
@@ -37,16 +37,16 @@ import {
   type CommitSport,
   type CommitStatus,
   type Commitment,
-} from '../../lib/commits';
-import { clubSiteKey } from '../../lib/clubs-schema';
-import { COLLEGE_DIVISIONS, COMMIT_SPORTS, type SocialPlatform } from '../../lib/commits-schema';
-import { dateWithYear, gradeWord, listWords, partialDate } from '../../lib/format';
-import { REGIONS, regionOf } from '../../lib/leagues';
-import { getRosters } from '../../lib/rosters';
-import { getTeamBySlug } from '../../lib/teams';
-import type { RegionId, TeamSlug } from '../../lib/types';
-import { plural } from '../ui/plural';
-import { OUTLETS, hostOf, numbered, pathOf, schoolName } from '../ui/source-hosts';
+} from '@/lib/commits';
+import { clubSiteKey } from '@/lib/clubs-schema';
+import { COLLEGE_DIVISIONS, COMMIT_SPORTS, type SocialPlatform } from '@/lib/commits-schema';
+import { dateWithYear, gradeWord, listWords, partialDate } from '@/lib/format';
+import { REGIONS, regionOf } from '@/lib/leagues';
+import { getRosters } from '@/lib/rosters';
+import { getTeamBySlug } from '@/lib/teams';
+import type { RegionId, TeamSlug } from '@/lib/types';
+import { plural } from '@/components/ui/plural';
+import { OUTLETS, hostOf, numbered, pathOf, schoolName } from '@/components/ui/source-hosts';
 
 // ---------------------------------------------------------------- wording tables
 

@@ -9,17 +9,17 @@
  * SERVER-ONLY: reads lib/jv, which imports data/jv.json and the snapshot.
  */
 
-import { listWords, monthDay, ordinal, plural, recordString } from '../../lib/format';
-import { getJvClassification, getJvTable, getJvTables } from '../../lib/jv';
+import { listWords, monthDay, ordinal, plural, recordString } from '@/lib/format';
+import { getJvClassification, getJvTable, getJvTables } from '@/lib/jv';
 import {
   JV_STANDINGS_MIN_REPORTED_SHARE,
   type JvClassification,
   type JvDivisionTable,
   type JvStandingRow,
-} from '../../lib/jv-standings';
-import { divisionHeading, getDivision, getLeague, isSingleDivision } from '../../lib/leagues';
-import { getTeamBySlug } from '../../lib/teams';
-import type { DivisionId, LeagueId, Team, TeamSlug } from '../../lib/types';
+} from '@/lib/jv-standings';
+import { divisionHeading, getDivision, getLeague, isSingleDivision } from '@/lib/leagues';
+import { getTeamBySlug } from '@/lib/teams';
+import type { DivisionId, LeagueId, Team, TeamSlug } from '@/lib/types';
 
 export interface JvTableView {
   division: DivisionId;

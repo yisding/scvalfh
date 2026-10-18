@@ -1,12 +1,12 @@
 import Link from 'next/link';
 
-import { listWords } from '../../lib/format';
-import EmptyState from '../ui/EmptyState';
-import GridRowFiller from '../ui/GridRowFiller';
-import ExternalLink from '../ui/ExternalLink';
-import SectionHeader from '../ui/SectionHeader';
-import Tag from '../ui/Tag';
-import { MissingValue } from '../ui/MissingValue';
+import { listWords } from '@/lib/format';
+import EmptyState from '@/components/ui/EmptyState';
+import GridRowFiller from '@/components/ui/GridRowFiller';
+import ExternalLink from '@/components/ui/ExternalLink';
+import SectionHeader from '@/components/ui/SectionHeader';
+import Tag from '@/components/ui/Tag';
+import { MissingValue } from '@/components/ui/MissingValue';
 import type { RosterFact, RosterRow, RosterView } from './roster-view';
 
 /**

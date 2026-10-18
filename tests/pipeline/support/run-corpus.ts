@@ -8,13 +8,13 @@ import { mkdirSync, mkdtempSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 
-import type { PipelineResult, PipelineSteps, RunArgs, Transport } from '../../../lib/pipeline/contract';
-import { loadCorpus } from '../../../lib/pipeline/corpus';
-import { SILENT_SINK, type PipelineContext } from '../../../lib/pipeline/ledger';
-import { createPipelineContext, parseRunArgs, runPipeline } from '../../../lib/pipeline/run';
-import { FixtureTransport } from '../../../lib/pipeline/transport';
-import type { Snapshot } from '../../../lib/types';
-import { REPO, corpusDir, variantDir, type CorpusName } from '../../helpers';
+import type { PipelineResult, PipelineSteps, RunArgs, Transport } from '@/lib/pipeline/contract';
+import { loadCorpus } from '@/lib/pipeline/corpus';
+import { SILENT_SINK, type PipelineContext } from '@/lib/pipeline/ledger';
+import { createPipelineContext, parseRunArgs, runPipeline } from '@/lib/pipeline/run';
+import { FixtureTransport } from '@/lib/pipeline/transport';
+import type { Snapshot } from '@/lib/types';
+import { REPO, corpusDir, variantDir, type CorpusName } from '@/tests/helpers';
 import { NOOP_STEPS } from './noop-steps';
 
 export interface RunCorpusOptions {

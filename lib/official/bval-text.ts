@@ -12,9 +12,9 @@
  * dated notes (`Entries Due`), and the footer revision date (`9/20/26`).
  */
 
-import { getDivision } from '../leagues';
-import { resolveOfficialName } from '../teams';
-import type { DivisionId, TeamSlug } from '../types';
+import { getDivision } from '@/lib/leagues';
+import { resolveOfficialName } from '@/lib/teams';
+import type { DivisionId, TeamSlug } from '@/lib/types';
 import { officialFixtureId, type BundleEvent, type BundleFixture } from './schema';
 
 /** The default varsity start ("GAME TIMES: VARSITY – 5:00pm"). */

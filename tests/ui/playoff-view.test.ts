@@ -16,15 +16,15 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import type { ReactElement } from 'react';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
-import type { ProjectionRow } from '../../components/playoffs/playoff-view';
-import { listWords } from '../../lib/format';
-import type { PlayoffStatus } from '../../lib/types';
-import { corpusSnapshotPath } from '../helpers';
+import type { ProjectionRow } from '@/components/playoffs/playoff-view';
+import { listWords } from '@/lib/format';
+import type { PlayoffStatus } from '@/lib/types';
+import { corpusSnapshotPath } from '@/tests/helpers';
 import { textOf } from './html-text';
 
-type Data = typeof import('../../lib/data');
-type View = typeof import('../../components/playoffs/playoff-view');
-type Leagues = typeof import('../../lib/leagues');
+type Data = typeof import('@/lib/data');
+type View = typeof import('@/components/playoffs/playoff-view');
+type Leagues = typeof import('@/lib/leagues');
 
 const VIEW = 'components/playoffs/playoff-view.ts';
 const PAGE = 'app/playoffs/page.tsx';
@@ -38,10 +38,10 @@ let html = '';
 beforeAll(async () => {
   process.env.SCVAL_SNAPSHOT = corpusSnapshotPath('all-2026-10-02');
   vi.resetModules();
-  data = await import('../../lib/data');
-  view = await import('../../components/playoffs/playoff-view');
-  leagues = await import('../../lib/leagues');
-  const Page = (await import('../../app/playoffs/page')).default;
+  data = await import('@/lib/data');
+  view = await import('@/components/playoffs/playoff-view');
+  leagues = await import('@/lib/leagues');
+  const Page = (await import('@/app/playoffs/page')).default;
   html = renderToStaticMarkup(Page() as ReactElement);
 }, 600_000);
 
@@ -187,7 +187,7 @@ describe('buildDivisionProjection — SCVAL', () => {
 
     // One team with results: the per-set footnote of the rendered table.
     const partial = rows.map((r, i) => (i === 0 ? { ...r, standing: { ...r.standing, hasReportedResults: true } } : r));
-    const { PlayoffProjection } = await import('../../components/playoffs/PlayoffProjection');
+    const { PlayoffProjection } = await import('@/components/playoffs/PlayoffProjection');
     const text = textOf(
       renderToStaticMarkup(
         PlayoffProjection({
@@ -225,7 +225,7 @@ describe('buildDivisionProjection — SCVAL', () => {
     const partial = sunsetRows.map((r) =>
       r.team.slug === 'great-oak' ? { ...r, standing: { ...r.standing, hasReportedResults: true } } : r,
     );
-    const { PlayoffProjection } = await import('../../components/playoffs/PlayoffProjection');
+    const { PlayoffProjection } = await import('@/components/playoffs/PlayoffProjection');
     const text = textOf(
       renderToStaticMarkup(
         PlayoffProjection({

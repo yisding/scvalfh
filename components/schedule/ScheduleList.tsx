@@ -1,6 +1,6 @@
-import { getScoresLandingDate } from '../../lib/data';
-import { dayNumber } from '../../lib/format';
-import type { Game, LeagueId } from '../../lib/types';
+import { getScoresLandingDate } from '@/lib/data';
+import { dayNumber } from '@/lib/format';
+import type { Game, LeagueId } from '@/lib/types';
 
 import DateHeader from './DateHeader';
 import GameList from './GameList';

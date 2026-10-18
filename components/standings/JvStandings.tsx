@@ -1,10 +1,10 @@
 import Link from 'next/link';
 
-import { EM_DASH, recordString } from '../../lib/format';
-import EmptyState from '../ui/EmptyState';
-import PlaceMark from '../ui/PlaceMark';
-import SectionHeader from '../ui/SectionHeader';
-import TeamMonogram from '../ui/TeamMonogram';
+import { EM_DASH, recordString } from '@/lib/format';
+import EmptyState from '@/components/ui/EmptyState';
+import PlaceMark from '@/components/ui/PlaceMark';
+import SectionHeader from '@/components/ui/SectionHeader';
+import TeamMonogram from '@/components/ui/TeamMonogram';
 import type { JvTableView } from './jv-standings-view';
 
 /**

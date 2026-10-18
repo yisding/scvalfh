@@ -2,18 +2,18 @@
 
 import Link from 'next/link';
 
-import TeamFinder from '../search/TeamFinder';
-import ExternalLink from '../ui/ExternalLink';
-import FormStrip from '../ui/FormStrip';
-import ResultChip from '../ui/ResultChip';
-import { ScoreGlyph, nameClass } from '../ui/ScoreGlyph';
-import SectionHeader from '../ui/SectionHeader';
-import StatusLabel from '../ui/StatusLabel';
-import TeamMonogram from '../ui/TeamMonogram';
-import type { GameDisplay } from '../ui/describe-game';
-import { formStripName } from '../ui/plural';
-import { isNearViewport, unpinFallbackTarget, usePinnedTeam } from '../ui/use-pinned-team';
-import type { SearchIndex } from '../../lib/search';
+import TeamFinder from '@/components/search/TeamFinder';
+import ExternalLink from '@/components/ui/ExternalLink';
+import FormStrip from '@/components/ui/FormStrip';
+import ResultChip from '@/components/ui/ResultChip';
+import { ScoreGlyph, nameClass } from '@/components/ui/ScoreGlyph';
+import SectionHeader from '@/components/ui/SectionHeader';
+import StatusLabel from '@/components/ui/StatusLabel';
+import TeamMonogram from '@/components/ui/TeamMonogram';
+import type { GameDisplay } from '@/components/ui/describe-game';
+import { formStripName } from '@/components/ui/plural';
+import { isNearViewport, unpinFallbackTarget, usePinnedTeam } from '@/components/ui/use-pinned-team';
+import type { SearchIndex } from '@/lib/search';
 
 import {
   postseasonCardLine,

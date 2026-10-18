@@ -1,10 +1,10 @@
 import Link from 'next/link';
 
-import { getTeamBySlug } from '../../lib/data';
-import { gradeWord } from '../../lib/format';
-import type { HistoryAwards, HistoryPlayer } from '../../lib/history';
-import { leagueOfDivision } from '../../lib/leagues';
-import GridRowFiller from '../ui/GridRowFiller';
+import { getTeamBySlug } from '@/lib/data';
+import { gradeWord } from '@/lib/format';
+import type { HistoryAwards, HistoryPlayer } from '@/lib/history';
+import { leagueOfDivision } from '@/lib/leagues';
+import GridRowFiller from '@/components/ui/GridRowFiller';
 import { awardLine, overallAwards, type AwardLine } from './history-view';
 
 /**

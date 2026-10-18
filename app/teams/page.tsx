@@ -1,17 +1,17 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
-import LeagueSwitcher, { RegionSwitcher } from '../../components/layout/LeagueSwitcher';
-import PageHeader from '../../components/layout/PageHeader';
-import { leagueChips, leagueHrefs } from '../../components/layout/league-chips';
-import { OG_BASE, ROOT_OG_IMAGE, leaguesBySectionWords } from '../../components/layout/site';
-import TeamFinder from '../../components/search/TeamFinder';
-import OverviewDivisionBlock from '../../components/standings/OverviewDivisionBlock';
-import { alignmentSentence, buildTeamsByRegion } from '../../components/teams/team-view';
-import SectionHeader from '../../components/ui/SectionHeader';
-import { getCounts, getTeamSearchIndex } from '../../lib/data';
-import { listWords } from '../../lib/format';
-import { LEAGUES_PROPER } from '../../lib/leagues';
+import LeagueSwitcher, { RegionSwitcher } from '@/components/layout/LeagueSwitcher';
+import PageHeader from '@/components/layout/PageHeader';
+import { leagueChips, leagueHrefs } from '@/components/layout/league-chips';
+import { OG_BASE, ROOT_OG_IMAGE, leaguesBySectionWords } from '@/components/layout/site';
+import TeamFinder from '@/components/search/TeamFinder';
+import OverviewDivisionBlock from '@/components/standings/OverviewDivisionBlock';
+import { alignmentSentence, buildTeamsByRegion } from '@/components/teams/team-view';
+import SectionHeader from '@/components/ui/SectionHeader';
+import { getCounts, getTeamSearchIndex } from '@/lib/data';
+import { listWords } from '@/lib/format';
+import { LEAGUES_PROPER } from '@/lib/leagues';
 
 /** The page's title, and its og:title too: og:title never carries the site-name suffix (OG_BASE). */
 const PAGE_TITLE = 'Teams and standings';

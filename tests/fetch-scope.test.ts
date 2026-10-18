@@ -15,16 +15,16 @@ import {
   runExitCode,
   summarizeByLeague,
   teamsInScope,
-} from '../lib/fetch-scope';
+} from '@/lib/fetch-scope';
 import {
   RostersPartialSchema,
   TeamRosterSchema,
   countRosters,
   type Rosters,
-} from '../lib/rosters-schema';
-import { SEASON_YEAR } from '../lib/season';
-import { stableStringify } from '../lib/stable-json';
-import { TEAMS, teamsInLeague } from '../lib/teams';
+} from '@/lib/rosters-schema';
+import { SEASON_YEAR } from '@/lib/season';
+import { stableStringify } from '@/lib/stable-json';
+import { TEAMS, teamsInLeague } from '@/lib/teams';
 import { REPO, runScript } from './helpers';
 
 describe('parseLeaguesFlag', () => {

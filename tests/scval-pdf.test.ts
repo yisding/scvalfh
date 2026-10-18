@@ -13,7 +13,7 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { matchOfficialFixtures } from '../lib/official/match';
+import { matchOfficialFixtures } from '@/lib/official/match';
 import {
   carryOfficialForward,
   diffMembership,
@@ -22,9 +22,9 @@ import {
   parseSchedulePdfText,
   scvalPdfDivisions,
   scvalScheduleUrl,
-} from '../lib/sources/scval-pdf';
-import { teamsInDivision } from '../lib/teams';
-import type { Game, OfficialFixture, OfficialStamp } from '../lib/types';
+} from '@/lib/sources/scval-pdf';
+import { teamsInDivision } from '@/lib/teams';
+import type { Game, OfficialFixture, OfficialStamp } from '@/lib/types';
 import { REPO, game } from './helpers';
 
 /** The SCVAL matcher (moved from scval-pdf.ts to lib/official/match.ts as the 'legacy' matcher). */

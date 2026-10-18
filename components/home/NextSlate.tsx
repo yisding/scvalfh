@@ -1,12 +1,12 @@
 import Link from 'next/link';
 
-import EmptyState from '../ui/EmptyState';
-import { GameLine } from '../ui/GameRow';
-import SectionHeader from '../ui/SectionHeader';
-import { plural } from '../ui/plural';
-import { gameKind } from '../ui/describe-game';
-import { shortDate } from '../../lib/format';
-import type { Game } from '../../lib/types';
+import EmptyState from '@/components/ui/EmptyState';
+import { GameLine } from '@/components/ui/GameRow';
+import SectionHeader from '@/components/ui/SectionHeader';
+import { plural } from '@/components/ui/plural';
+import { gameKind } from '@/components/ui/describe-game';
+import { shortDate } from '@/lib/format';
+import type { Game } from '@/lib/types';
 import type { NextLeagueDay } from './home-view';
 
 /**

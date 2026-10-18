@@ -5,8 +5,8 @@
 
 import { describe, expect, it } from 'vitest';
 
-import { resultSentence } from '../../components/ui/describe-game';
-import { game } from '../game-builder';
+import { resultSentence } from '@/components/ui/describe-game';
+import { game } from '@/tests/game-builder';
 
 const LEAGUE_DAY = '2026-09-16';
 

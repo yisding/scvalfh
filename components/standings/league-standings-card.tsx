@@ -1,9 +1,9 @@
 import { ImageResponse } from 'next/og';
 
-import { OG, OG_SIZE } from '../layout/og-theme';
-import { SITE_WORDMARK } from '../layout/site';
-import { getFetchedAt, getLastLeagueResultDate, getLeagueSummary, getStandings, getTeams } from '../../lib/data';
-import { formatStamp, placeMark, recordString, shortDate } from '../../lib/format';
+import { OG, OG_SIZE } from '@/components/layout/og-theme';
+import { SITE_WORDMARK } from '@/components/layout/site';
+import { getFetchedAt, getLastLeagueResultDate, getLeagueSummary, getStandings, getTeams } from '@/lib/data';
+import { formatStamp, placeMark, recordString, shortDate } from '@/lib/format';
 
 /**
  * The alt both routes that render this card export (`export const alt = LEAGUE_STANDINGS_CARD_ALT`):

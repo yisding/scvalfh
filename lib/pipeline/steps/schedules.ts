@@ -13,10 +13,10 @@
  * ≥50% of a league's feeds failing is §7.5 trigger b (frozen with previous data, else degraded).
  */
 
-import { getLeague } from '../../leagues';
-import { ScheduleResponseSchema, splitTbaRows, type ScheduleRow } from '../../sources/maxpreps';
-import { FETCHABLE_TEAMS, TEAMS } from '../../teams';
-import type { LeagueId, SourceStatus, Team } from '../../types';
+import { getLeague } from '@/lib/leagues';
+import { ScheduleResponseSchema, splitTbaRows, type ScheduleRow } from '@/lib/sources/maxpreps';
+import { FETCHABLE_TEAMS, TEAMS } from '@/lib/teams';
+import type { LeagueId, SourceStatus, Team } from '@/lib/types';
 import {
   asOfStamp,
   carriedFromOf,
@@ -24,9 +24,9 @@ import {
   lastFreshStamp,
   type PipelineContext,
   type RunState,
-} from '../ledger';
-import { classifyFetchError, parseJsonBody } from '../read';
-import { resourceUrl } from '../transport';
+} from '@/lib/pipeline/ledger';
+import { classifyFetchError, parseJsonBody } from '@/lib/pipeline/read';
+import { resourceUrl } from '@/lib/pipeline/transport';
 
 /** §7.5 trigger b: this share (or more) of a league's attempted feeds failed. */
 export const LEAGUE_FEED_FREEZE_SHARE = 0.5;

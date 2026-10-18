@@ -1,10 +1,10 @@
-import { shortDate } from '../../lib/format';
-import { divisionHeading, getLeague } from '../../lib/leagues';
-import { getTeamBySlug } from '../../lib/teams';
-import type { LeagueId, OfficialFixture } from '../../lib/types';
-import ExternalLink from '../ui/ExternalLink';
-import { plural } from '../ui/plural';
-import { officialScheduleLabel } from '../standings/standings-view';
+import { shortDate } from '@/lib/format';
+import { divisionHeading, getLeague } from '@/lib/leagues';
+import { getTeamBySlug } from '@/lib/teams';
+import type { LeagueId, OfficialFixture } from '@/lib/types';
+import ExternalLink from '@/components/ui/ExternalLink';
+import { plural } from '@/components/ui/plural';
+import { officialScheduleLabel } from '@/components/standings/standings-view';
 
 /**
  * Fixtures a league's official schedule publishes and no source has a contest for

@@ -44,7 +44,7 @@ import {
   weekdayName,
   winPct,
   shootoutPhrases,
-} from '../lib/format';
+} from '@/lib/format';
 import { game } from './helpers';
 
 describe('format: dates and times are America/Los_Angeles', () => {

@@ -13,14 +13,14 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import type { ReactElement } from 'react';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
-import { buildTournamentView, type TournamentView } from '../../components/playoffs/playoff-view';
-import { getDivision, getLeague } from '../../lib/leagues';
-import { buildLeagueTournament, SHOOTOUT_NOTE } from '../../lib/postseason';
-import { computeStandings, outcomesFor, playoffOutcomeLabel } from '../../lib/standings';
-import { getTeamBySlug } from '../../lib/teams';
-import type { Game, LeagueTournamentProjection, PostseasonTag, SeasonPhase, Standing, Team } from '../../lib/types';
-import { game } from '../game-builder';
-import { corpusSnapshotPath } from '../helpers';
+import { buildTournamentView, type TournamentView } from '@/components/playoffs/playoff-view';
+import { getDivision, getLeague } from '@/lib/leagues';
+import { buildLeagueTournament, SHOOTOUT_NOTE } from '@/lib/postseason';
+import { computeStandings, outcomesFor, playoffOutcomeLabel } from '@/lib/standings';
+import { getTeamBySlug } from '@/lib/teams';
+import type { Game, LeagueTournamentProjection, PostseasonTag, SeasonPhase, Standing, Team } from '@/lib/types';
+import { game } from '@/tests/game-builder';
+import { corpusSnapshotPath } from '@/tests/helpers';
 import { textOf } from './html-text';
 
 const VIEW = 'components/playoffs/playoff-view.ts';
@@ -213,16 +213,16 @@ describe('buildTournamentView — results re-seed the semifinals; the final is a
 describe('/playoffs/mcal (rendered on the corpus snapshot)', () => {
   const priorEnv = process.env.SCVAL_SNAPSHOT;
   let html = '';
-  let page: typeof import('../../app/playoffs/[league]/page');
-  let og: typeof import('../../app/playoffs/[league]/opengraph-image');
-  let data: typeof import('../../components/playoffs/tournament-league');
+  let page: typeof import('@/app/playoffs/[league]/page');
+  let og: typeof import('@/app/playoffs/[league]/opengraph-image');
+  let data: typeof import('@/components/playoffs/tournament-league');
 
   beforeAll(async () => {
     process.env.SCVAL_SNAPSHOT = corpusSnapshotPath('all-2026-10-02');
     vi.resetModules();
-    page = await import('../../app/playoffs/[league]/page');
-    og = await import('../../app/playoffs/[league]/opengraph-image');
-    data = await import('../../components/playoffs/tournament-league');
+    page = await import('@/app/playoffs/[league]/page');
+    og = await import('@/app/playoffs/[league]/opengraph-image');
+    data = await import('@/components/playoffs/tournament-league');
     const el = await page.default({ params: Promise.resolve({ league: 'mcal' }) } as never);
     html = renderToStaticMarkup(el as ReactElement);
   }, 600_000);

@@ -1,5 +1,5 @@
-import { GameCard, GameRow } from '../ui/GameRow';
-import type { Game, LeagueId } from '../../lib/types';
+import { GameCard, GameRow } from '@/components/ui/GameRow';
+import type { Game, LeagueId } from '@/lib/types';
 
 import { gameFilterAttrs } from './filter-data-server';
 

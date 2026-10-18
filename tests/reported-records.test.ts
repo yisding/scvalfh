@@ -12,14 +12,14 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { classifyGames } from '../lib/classify';
-import { ALL_DIVISIONS, getDivision } from '../lib/leagues';
-import { normalizeGames } from '../lib/normalize';
-import { readManifest } from '../lib/pipeline/corpus';
-import { StandingsResponseSchema } from '../lib/sources/maxpreps';
-import { buildCrossCheck, computeStandings, toReportedRecord } from '../lib/standings';
-import { getTeamById, resolveTeam, teamsInDivision } from '../lib/teams';
-import type { ReportedRecord, TeamId } from '../lib/types';
+import { classifyGames } from '@/lib/classify';
+import { ALL_DIVISIONS, getDivision } from '@/lib/leagues';
+import { normalizeGames } from '@/lib/normalize';
+import { readManifest } from '@/lib/pipeline/corpus';
+import { StandingsResponseSchema } from '@/lib/sources/maxpreps';
+import { buildCrossCheck, computeStandings, toReportedRecord } from '@/lib/standings';
+import { getTeamById, resolveTeam, teamsInDivision } from '@/lib/teams';
+import type { ReportedRecord, TeamId } from '@/lib/types';
 import { REPO, allScheduleRows, corpusDir, standingsFixture } from './helpers';
 import { runCorpus, writeTempVariant } from './pipeline/support/run-corpus';
 

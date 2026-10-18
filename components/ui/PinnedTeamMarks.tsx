@@ -3,7 +3,7 @@
 import { usePathname } from 'next/navigation';
 import { useEffect } from 'react';
 
-import { PINNED_TEAM_ATTR } from '../layout/pinned-team-script';
+import { PINNED_TEAM_ATTR } from '@/components/layout/pinned-team-script';
 
 import { usePinnedTeam } from './use-pinned-team';
 

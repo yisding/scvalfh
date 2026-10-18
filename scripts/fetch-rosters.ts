@@ -48,9 +48,9 @@ import {
   summarizeByLeague,
   teamsInScope,
   type PreviousFile,
-} from '../lib/fetch-scope';
-import { MaxPrepsClient } from '../lib/sources/maxpreps';
-import { parseRosterPage, pendingRoster, rosterUrl } from '../lib/sources/maxpreps-roster';
+} from '@/lib/fetch-scope';
+import { MaxPrepsClient } from '@/lib/sources/maxpreps';
+import { parseRosterPage, pendingRoster, rosterUrl } from '@/lib/sources/maxpreps-roster';
 import {
   RostersPartialSchema,
   RostersSchema,
@@ -59,13 +59,13 @@ import {
   rostersContentKey,
   type Rosters,
   type TeamRoster,
-} from '../lib/rosters-schema';
-import { INDEPENDENT_LEAGUES, LEAGUES_PROPER } from '../lib/leagues';
-import { formatIssues } from '../lib/schema-primitives';
-import { SEASON_YEAR } from '../lib/season';
-import { stableStringify } from '../lib/stable-json';
-import { TEAMS } from '../lib/teams';
-import type { LeagueId } from '../lib/types';
+} from '@/lib/rosters-schema';
+import { INDEPENDENT_LEAGUES, LEAGUES_PROPER } from '@/lib/leagues';
+import { formatIssues } from '@/lib/schema-primitives';
+import { SEASON_YEAR } from '@/lib/season';
+import { stableStringify } from '@/lib/stable-json';
+import { TEAMS } from '@/lib/teams';
+import type { LeagueId } from '@/lib/types';
 import { runCli } from './cli';
 
 interface Args {

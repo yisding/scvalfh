@@ -21,9 +21,9 @@ import {
   gameSentenceTail,
   roundByes,
   sideName,
-} from '../components/history/bracket-view';
-import { HistoryBracketsSchema, type HistoryBrackets } from '../lib/history-brackets-schema';
-import { getHistoryBracketFor, getHistoryBrackets } from '../lib/history';
+} from '@/components/history/bracket-view';
+import { HistoryBracketsSchema, type HistoryBrackets } from '@/lib/history-brackets-schema';
+import { getHistoryBracketFor, getHistoryBrackets } from '@/lib/history';
 import { REPO } from './helpers';
 
 const raw = JSON.parse(readFileSync(path.join(REPO, 'data', 'history-brackets-2025-26.json'), 'utf8')) as HistoryBrackets;

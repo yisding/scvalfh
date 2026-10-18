@@ -9,18 +9,18 @@ import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 
-import AwardsBlock from '../../components/history/AwardsBlock';
+import AwardsBlock from '@/components/history/AwardsBlock';
 import {
   awardLine,
   awardTitle,
   overallAwards,
   rosterYear,
   splitOverallValue,
-} from '../../components/history/history-view';
-import { positionFromText } from '../../components/ui/position-words';
-import { getAvailableHistoryLeagues, type HistoryAwards } from '../../lib/history';
-import { getTeamBySlug } from '../../lib/teams';
-import { sectionById } from '../../scripts/copy-rules';
+} from '@/components/history/history-view';
+import { positionFromText } from '@/components/ui/position-words';
+import { getAvailableHistoryLeagues, type HistoryAwards } from '@/lib/history';
+import { getTeamBySlug } from '@/lib/teams';
+import { sectionById } from '@/scripts/copy-rules';
 import { textOf } from './html-text';
 
 const blocks: Array<{ leagueId: string; division: string; awards: HistoryAwards }> = getAvailableHistoryLeagues()
@@ -177,7 +177,7 @@ describe('AwardsBlock', () => {
 
 describe('/history/2025-26 by region (app/history/2025-26/page.tsx, DESIGN-socal §2.4)', () => {
   it('scopes each league section and pill by region, and names the Section as the SoCal documents’ publisher', async () => {
-    const { default: HistoryPage } = await import('../../app/history/2025-26/page');
+    const { default: HistoryPage } = await import('@/app/history/2025-26/page');
     const html = renderToStaticMarkup(createElement(HistoryPage));
     for (const id of ['scval', 'bval', 'pcal', 'mcal', 'eal']) {
       expect(html, `#${id}`).toMatch(new RegExp(`<section id="${id}" data-region-scope="norcal"`));

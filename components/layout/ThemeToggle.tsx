@@ -2,7 +2,7 @@
 
 import { useSyncExternalStore } from 'react';
 
-import { useIsHydrated, useStoredValue, writeStored } from '../ui/local-store';
+import { useIsHydrated, useStoredValue, writeStored } from '@/components/ui/local-store';
 
 import { THEME_META_ID, THEME_STORAGE_KEY, themeMetaColor } from './theme-script';
 

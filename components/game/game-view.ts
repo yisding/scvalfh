@@ -31,7 +31,7 @@ import {
   getTeamBySlug,
   getTeamForm,
   getTeams,
-} from '../../lib/data';
+} from '@/lib/data';
 import {
   dateWithYear,
   matchupJoiner,
@@ -42,8 +42,8 @@ import {
   shortDate,
   sideOutcome,
   timeOfDayPT,
-} from '../../lib/format';
-import { gameHref, gameIdToParam, paramToGameId } from '../../lib/game-id';
+} from '@/lib/format';
+import { gameHref, gameIdToParam, paramToGameId } from '@/lib/game-id';
 import {
   divisionDisplay,
   divisionHeading,
@@ -53,9 +53,9 @@ import {
   leagueOfDivision,
   leagueSportWords,
   type LeagueConfig,
-} from '../../lib/leagues';
-import { SHOOTOUT_NOTE } from '../../lib/postseason';
-import { SEASON_DISPLAY } from '../../lib/season';
+} from '@/lib/leagues';
+import { SHOOTOUT_NOTE } from '@/lib/postseason';
+import { SEASON_DISPLAY } from '@/lib/season';
 import type {
   BackfillProvenance,
   DivisionId,
@@ -67,8 +67,8 @@ import type {
   Team,
   TiebreakStage,
   TournamentGame,
-} from '../../lib/types';
-import type { FormEntry } from '../ui/FormStrip';
+} from '@/lib/types';
+import type { FormEntry } from '@/components/ui/FormStrip';
 import {
   describeGame,
   gameContextNoun,
@@ -80,7 +80,7 @@ import {
   shootoutSectionOf,
   type GameDisplay,
   type SideView,
-} from '../ui/describe-game';
+} from '@/components/ui/describe-game';
 
 // ---------------------------------------------------------------- types
 

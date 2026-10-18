@@ -13,19 +13,19 @@
  * is mostly noise.
  */
 
-import type { AdjustedScoring } from '../../lib/adjusted-scoring';
-import { gradeWord, listWords, shortDate } from '../../lib/format';
-import { notedKinds } from '../../lib/note-stats';
+import type { AdjustedScoring } from '@/lib/adjusted-scoring';
+import { gradeWord, listWords, shortDate } from '@/lib/format';
+import { notedKinds } from '@/lib/note-stats';
 import type {
   FieldStatKey,
   GoalieStatKey,
   PlayerStatLine,
   TeamPlayerStats,
-} from '../../lib/player-stats-schema';
-import type { Game, Team, TeamId } from '../../lib/types';
-import { gamesSinceUpdate, savePercent } from '../teams/player-stats-view';
-import { plural } from '../ui/plural';
-import { positionWords } from '../ui/position-words';
+} from '@/lib/player-stats-schema';
+import type { Game, Team, TeamId } from '@/lib/types';
+import { gamesSinceUpdate, savePercent } from '@/components/teams/player-stats-view';
+import { plural } from '@/components/ui/plural';
+import { positionWords } from '@/components/ui/position-words';
 import { UNADJUSTED_NOTE, names, num, teamRef } from './board-kit';
 import { BOARD_PLACES, EXPANDED_PLACES, byName, rankBoard } from './ranking';
 import type { BoardScope } from './scope';

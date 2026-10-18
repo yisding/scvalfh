@@ -22,7 +22,7 @@ import {
   isBannedHost,
   clubSiteKey,
   type ClubsFile,
-} from '../lib/clubs-schema';
+} from '@/lib/clubs-schema';
 import {
   SEARCHED_REGIONS,
   clubDisplayName,
@@ -37,11 +37,11 @@ import {
   getPlayerClubs,
   getTeamClubAffiliations,
   loadClubs,
-} from '../lib/clubs';
-import { LEAGUES } from '../lib/leagues';
-import { classOf, getAllEnrichedRosters, getRosters } from '../lib/rosters';
-import { isHttpsUrl } from '../lib/schema-primitives';
-import { getTeamBySlug } from '../lib/teams';
+} from '@/lib/clubs';
+import { LEAGUES } from '@/lib/leagues';
+import { classOf, getAllEnrichedRosters, getRosters } from '@/lib/rosters';
+import { isHttpsUrl } from '@/lib/schema-primitives';
+import { getTeamBySlug } from '@/lib/teams';
 import { REPO } from './helpers';
 
 const raw = JSON.parse(readFileSync(path.join(REPO, 'data', 'clubs.json'), 'utf8')) as ClubsFile;

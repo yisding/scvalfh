@@ -15,7 +15,7 @@ import {
   countRosters,
   type RosterEnrichment,
   type Rosters,
-} from '../lib/rosters-schema';
+} from '@/lib/rosters-schema';
 import {
   classOf,
   getAllEnrichedRosters,
@@ -23,8 +23,8 @@ import {
   getRosterEnrichment,
   getRosters,
   getTeamRoster,
-} from '../lib/rosters';
-import { TEAMS, getTeamBySlug, teamsInLeague } from '../lib/teams';
+} from '@/lib/rosters';
+import { TEAMS, getTeamBySlug, teamsInLeague } from '@/lib/teams';
 import { REPO, runScript } from './helpers';
 
 /**

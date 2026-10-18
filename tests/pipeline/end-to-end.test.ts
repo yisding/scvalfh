@@ -16,9 +16,9 @@ import path from 'node:path';
 
 import { beforeAll, describe, expect, it } from 'vitest';
 
-import { loadSnapshot, parseSnapshot } from '../../lib/snapshot-schema';
-import type { Game, LeagueHealth, LeagueId, Snapshot } from '../../lib/types';
-import { corpusSnapshotPath, runFixtureCli, type BuildOptions, type CliRun } from '../helpers';
+import { loadSnapshot, parseSnapshot } from '@/lib/snapshot-schema';
+import type { Game, LeagueHealth, LeagueId, Snapshot } from '@/lib/types';
+import { corpusSnapshotPath, runFixtureCli, type BuildOptions, type CliRun } from '@/tests/helpers';
 import { REGRESSED_FINALS } from './support/finals-regression';
 
 const CORPUS = 'all-2026-10-02' as const;

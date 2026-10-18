@@ -1,13 +1,13 @@
 import Link from 'next/link';
 import { Fragment } from 'react';
 
-import { listWords } from '../../lib/format';
-import BerthMeter from '../ui/BerthMeter';
-import { articleFor, membershipSource } from '../ui/membership-words';
-import PlaceMark from '../ui/PlaceMark';
-import SectionHeader from '../ui/SectionHeader';
-import StatusChip from '../ui/StatusChip';
-import TeamMonogram from '../ui/TeamMonogram';
+import { listWords } from '@/lib/format';
+import BerthMeter from '@/components/ui/BerthMeter';
+import { articleFor, membershipSource } from '@/components/ui/membership-words';
+import PlaceMark from '@/components/ui/PlaceMark';
+import SectionHeader from '@/components/ui/SectionHeader';
+import StatusChip from '@/components/ui/StatusChip';
+import TeamMonogram from '@/components/ui/TeamMonogram';
 
 import {
   projectionRowLabel,

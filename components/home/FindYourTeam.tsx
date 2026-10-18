@@ -1,8 +1,8 @@
 'use client';
 
-import TeamFinder from '../search/TeamFinder';
-import SectionHeader from '../ui/SectionHeader';
-import type { SearchIndex } from '../../lib/search';
+import TeamFinder from '@/components/search/TeamFinder';
+import SectionHeader from '@/components/ui/SectionHeader';
+import type { SearchIndex } from '@/lib/search';
 
 import { focusUnpin } from './MyTeamCard';
 

@@ -1,4 +1,4 @@
-import { EM_DASH } from '../../lib/format';
+import { EM_DASH } from '@/lib/format';
 
 /**
  * A value that is not there: a dash for the eye and words for a screen reader (DESIGN §5.3, §8).

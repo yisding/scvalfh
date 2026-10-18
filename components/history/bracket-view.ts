@@ -1,4 +1,4 @@
-import { monthDay } from '../../lib/format';
+import { monthDay } from '@/lib/format';
 import {
   bracketSides,
   historySchoolName,
@@ -6,7 +6,7 @@ import {
   type HistoryBracketGame,
   type HistoryBracketRound,
   type HistoryBracketSide,
-} from '../../lib/history';
+} from '@/lib/history';
 
 /**
  * The words of a 2025 section bracket on /history/2025-26 (components/history/HistoryBracket.tsx):

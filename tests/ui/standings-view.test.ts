@@ -13,16 +13,16 @@ import { createElement, type ReactElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
-import type { MissingOfficialResult } from '../../lib/data';
-import { standaloneName } from '../../lib/leagues';
-import type { LeagueId } from '../../lib/types';
-import { corpusSnapshotPath } from '../helpers';
+import type { MissingOfficialResult } from '@/lib/data';
+import { standaloneName } from '@/lib/leagues';
+import type { LeagueId } from '@/lib/types';
+import { corpusSnapshotPath } from '@/tests/helpers';
 // textOf: visible text, tags dropped and entities decoded.
 import { textOf } from './html-text';
 
-type Data = typeof import('../../lib/data');
-type StandingsPageView = typeof import('../../components/standings/standings-page-view');
-type View = typeof import('../../components/standings/standings-view');
+type Data = typeof import('@/lib/data');
+type StandingsPageView = typeof import('@/components/standings/standings-page-view');
+type View = typeof import('@/components/standings/standings-view');
 
 const priorEnv = process.env.SCVAL_SNAPSHOT;
 let data: Data;
@@ -34,11 +34,11 @@ let renderOverview: () => string;
 beforeAll(async () => {
   process.env.SCVAL_SNAPSHOT = corpusSnapshotPath('all-2026-10-02');
   vi.resetModules();
-  data = await import('../../lib/data');
-  sd = await import('../../components/standings/standings-page-view');
-  view = await import('../../components/standings/standings-view');
-  const leaguePage = (await import('../../app/standings/[league]/page')).default;
-  const overviewPage = (await import('../../app/standings/page')).default;
+  data = await import('@/lib/data');
+  sd = await import('@/components/standings/standings-page-view');
+  view = await import('@/components/standings/standings-view');
+  const leaguePage = (await import('@/app/standings/[league]/page')).default;
+  const overviewPage = (await import('@/app/standings/page')).default;
   renderLeague = async (league) => {
     const el = await leaguePage({ params: Promise.resolve({ league }) } as never);
     return renderToStaticMarkup(el as ReactElement);
@@ -159,7 +159,7 @@ describe('single-division leagues have no division label', () => {
     expect(textOf(renderOverview()), 'app/standings/page.tsx').not.toMatch(/\bofficial EAL/i);
 
     // A league with a schedule document keeps its wording.
-    const { collectStandingsNotes } = await import('../../components/ui/StandingsTable');
+    const { collectStandingsNotes } = await import('@/components/ui/StandingsTable');
     const [first] = data.getStandings('pcal');
     const team = data.getTeamById(first.teamId)!;
     const { specific } = collectStandingsNotes({

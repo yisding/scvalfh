@@ -18,7 +18,7 @@
  *   - every player row links the pages it rests on, each URL once.
  */
 
-import { dateWithYear, gradeWord, listWords, partialDate, partialDateKind } from '../../lib/format';
+import { dateWithYear, gradeWord, listWords, partialDate, partialDateKind } from '@/lib/format';
 import {
   SEARCHED_REGIONS,
   clubDisplayName,
@@ -33,12 +33,12 @@ import {
   type Club,
   type ClubAffiliation,
   type ClubRegion,
-} from '../../lib/clubs';
-import { CLUB_REGIONS, CLUB_REGION_SITE_REGION, clubSiteKey } from '../../lib/clubs-schema';
-import { getRosters } from '../../lib/rosters';
-import type { RegionId, TeamSlug } from '../../lib/types';
-import { plural } from '../ui/plural';
-import { OUTLETS, hostOf, numbered, pathOf, schoolName } from '../ui/source-hosts';
+} from '@/lib/clubs';
+import { CLUB_REGIONS, CLUB_REGION_SITE_REGION, clubSiteKey } from '@/lib/clubs-schema';
+import { getRosters } from '@/lib/rosters';
+import type { RegionId, TeamSlug } from '@/lib/types';
+import { plural } from '@/components/ui/plural';
+import { OUTLETS, hostOf, numbered, pathOf, schoolName } from '@/components/ui/source-hosts';
 
 // ---------------------------------------------------------------- wording tables
 

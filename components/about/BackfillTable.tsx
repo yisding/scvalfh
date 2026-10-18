@@ -1,9 +1,9 @@
 import Link from 'next/link';
 
-import { shortDate } from '../../lib/format';
-import { gameHref } from '../../lib/game-id';
-import type { BackfillRow } from '../../lib/types';
-import ExternalLink from '../ui/ExternalLink';
+import { shortDate } from '@/lib/format';
+import { gameHref } from '@/lib/game-id';
+import type { BackfillRow } from '@/lib/types';
+import ExternalLink from '@/components/ui/ExternalLink';
 
 /**
  * Every si.com score this site published (owner decision D2, SPEC §7.9; /about#backfills): the

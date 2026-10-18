@@ -7,7 +7,7 @@
 
 import { describe, expect, it } from 'vitest';
 
-import { ConfigInvariantError } from '../lib/config/invariant';
+import { ConfigInvariantError } from '@/lib/config/invariant';
 import {
   ALL_DIVISIONS, CCS, CCS_LEAGUE_IDS, DATA_QUALITY, DEFAULT_REGION, INDEPENDENT_LEAGUES, LEAGUES, LEAGUES_PROPER,
   LEAGUE_IDS, NO_POSTSEASON_LEAGUE_IDS,
@@ -18,11 +18,11 @@ import {
   leagueOfDivision, leaguePlayEnds, leaguePlayStarts, leagueStandingsUrl, leaguesInRegion, regionOf,
   seasonWindowBounds, sectionOf, sectionsInRegion, standingsLabel, statusesOf, tiebreakChainFor,
   type LeagueConfig, type SectionConfig,
-} from '../lib/leagues';
-import { getTeamById } from '../lib/teams';
-import { CCS_BRACKET_URL } from '../lib/season';
-import type { PlayoffStatus, RegionId, TiebreakStage } from '../lib/types';
-import { SEED_CLAIM, umpireOfficialClaims } from '../scripts/copy-rules';
+} from '@/lib/leagues';
+import { getTeamById } from '@/lib/teams';
+import { CCS_BRACKET_URL } from '@/lib/season';
+import type { PlayoffStatus, RegionId, TiebreakStage } from '@/lib/types';
+import { SEED_CLAIM, umpireOfficialClaims } from '@/scripts/copy-rules';
 
 const UNCOMPUTABLE: readonly TiebreakStage[] = ['coin-flip', 'ccs-points', 'no-rule'];
 

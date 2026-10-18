@@ -14,12 +14,12 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { LEAGUES } from '../lib/leagues';
-import { officialDocumentOf } from '../lib/official/schema';
-import { SNAPSHOT_MAX_BYTES, SNAPSHOT_WARN_BYTES, SOURCES_MAX, budgetLabel } from '../lib/pipeline/steps/assemble';
-import { loadSnapshot, snapshotContentHash } from '../lib/snapshot-schema';
-import { TEAMS, getTeamBySlug } from '../lib/teams';
-import type { Snapshot } from '../lib/types';
+import { LEAGUES } from '@/lib/leagues';
+import { officialDocumentOf } from '@/lib/official/schema';
+import { SNAPSHOT_MAX_BYTES, SNAPSHOT_WARN_BYTES, SOURCES_MAX, budgetLabel } from '@/lib/pipeline/steps/assemble';
+import { loadSnapshot, snapshotContentHash } from '@/lib/snapshot-schema';
+import { TEAMS, getTeamBySlug } from '@/lib/teams';
+import type { Snapshot } from '@/lib/types';
 import { REPO } from './helpers';
 
 const SNAPSHOT_PATH = path.join(REPO, 'data', 'snapshot.json');

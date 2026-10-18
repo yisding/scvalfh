@@ -5,7 +5,7 @@ import path from 'node:path';
 
 import { describe, expect, it, vi } from 'vitest';
 
-import type { RawResponse } from '../lib/pipeline/contract';
+import type { RawResponse } from '@/lib/pipeline/contract';
 import {
   DEFAULT_USER_AGENT,
   MaxPrepsClient,
@@ -17,10 +17,10 @@ import {
   parseBootstrap,
   splitTbaRows,
   type ScheduleRow,
-} from '../lib/sources/maxpreps';
-import { MAX_RETRY_AFTER_MS, POLITE_USER_AGENT } from '../lib/sources/http';
-import { BOOTSTRAP_URL, SPORT_SEASON_ID } from '../lib/season';
-import { getTeamBySlug } from '../lib/teams';
+} from '@/lib/sources/maxpreps';
+import { MAX_RETRY_AFTER_MS, POLITE_USER_AGENT } from '@/lib/sources/http';
+import { BOOTSTRAP_URL, SPORT_SEASON_ID } from '@/lib/season';
+import { getTeamBySlug } from '@/lib/teams';
 import { REPO, allScheduleRows, corpusDir, standingsFixture } from './helpers';
 
 const CORPUS_SCHEDULES = path.join(corpusDir('all-2026-10-02'), 'maxpreps', 'schedule');

@@ -9,7 +9,7 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { LEAGUES, leaguesInRegion } from '../lib/leagues';
+import { LEAGUES, leaguesInRegion } from '@/lib/leagues';
 import {
   addConfiguredLeagues,
   countsOf,
@@ -18,12 +18,12 @@ import {
   migrateV1ToV2,
   needsReclassification,
   reclassify,
-} from '../lib/snapshot-migrate';
-import { loadSnapshot, parseSnapshot } from '../lib/snapshot-schema';
-import { stableStringify } from '../lib/stable-json';
-import { buildCrossCheck, computeStandings, divisionGames } from '../lib/standings';
-import { TEAMS, teamsInLeague } from '../lib/teams';
-import type { Game, ReportedRecord, Snapshot, TeamId } from '../lib/types';
+} from '@/lib/snapshot-migrate';
+import { loadSnapshot, parseSnapshot } from '@/lib/snapshot-schema';
+import { stableStringify } from '@/lib/stable-json';
+import { buildCrossCheck, computeStandings, divisionGames } from '@/lib/standings';
+import { TEAMS, teamsInLeague } from '@/lib/teams';
+import type { Game, ReportedRecord, Snapshot, TeamId } from '@/lib/types';
 import { VARIANTS_DIR } from './helpers';
 
 const GOLDEN = path.join(import.meta.dirname, 'golden');

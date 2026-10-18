@@ -22,14 +22,14 @@ import { createElement, type ReactElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
-import type { Game, Snapshot } from '../../lib/types';
-import { EAL_CORPUS, corpusSnapshotPath } from '../helpers';
+import type { Game, Snapshot } from '@/lib/types';
+import { EAL_CORPUS, corpusSnapshotPath } from '@/tests/helpers';
 import { textOf } from './html-text';
 
-type Data = typeof import('../../lib/data');
-type Leagues = typeof import('../../lib/leagues');
-type View = typeof import('../../components/teams/team-view');
-type GameViewModule = typeof import('../../components/game/game-view');
+type Data = typeof import('@/lib/data');
+type Leagues = typeof import('@/lib/leagues');
+type View = typeof import('@/components/teams/team-view');
+type GameViewModule = typeof import('@/components/game/game-view');
 
 interface Loaded {
   d: Data;
@@ -54,13 +54,13 @@ const BANNED = /\bCCS\b|at-large|automatic qualifier|\b(\d+(st|nd|rd|th)|No\. ?\
 async function load(snapshotPath: string): Promise<Loaded> {
   process.env.SCVAL_SNAPSHOT = snapshotPath;
   vi.resetModules();
-  const d = await import('../../lib/data');
-  const l = await import('../../lib/leagues');
-  const v = await import('../../components/teams/team-view');
-  const gm = await import('../../components/game/game-view');
-  const teamPage = await import('../../app/teams/[slug]/page');
-  const gamePage = await import('../../app/game/[id]/page');
-  const indexPage = (await import('../../app/teams/page')).default;
+  const d = await import('@/lib/data');
+  const l = await import('@/lib/leagues');
+  const v = await import('@/components/teams/team-view');
+  const gm = await import('@/components/game/game-view');
+  const teamPage = await import('@/app/teams/[slug]/page');
+  const gamePage = await import('@/app/game/[id]/page');
+  const indexPage = (await import('@/app/teams/page')).default;
   return {
     d,
     l,

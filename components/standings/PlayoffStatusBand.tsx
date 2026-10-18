@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
-import PlaceMark from '../ui/PlaceMark';
-import StatusChip from '../ui/StatusChip';
+import PlaceMark from '@/components/ui/PlaceMark';
+import StatusChip from '@/components/ui/StatusChip';
 
 import type { StatusGroup } from './standings-view';
 

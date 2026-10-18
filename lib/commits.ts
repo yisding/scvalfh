@@ -30,7 +30,7 @@
  * season, not carried.)
  */
 
-import bundled from '../data/commits.json';
+import bundled from '@/data/commits.json';
 import {
   COLLEGE_DIVISIONS,
   CommitsFileSchema,

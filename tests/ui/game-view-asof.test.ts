@@ -11,13 +11,13 @@
 
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
-import { corpusSnapshotPath } from '../helpers';
+import { corpusSnapshotPath } from '@/tests/helpers';
 
-type Data = typeof import('../../lib/data');
-type Model = typeof import('../../components/game/game-view');
-type Leagues = typeof import('../../lib/leagues');
-type Format = typeof import('../../lib/format');
-type GameIds = typeof import('../../lib/game-id');
+type Data = typeof import('@/lib/data');
+type Model = typeof import('@/components/game/game-view');
+type Leagues = typeof import('@/lib/leagues');
+type Format = typeof import('@/lib/format');
+type GameIds = typeof import('@/lib/game-id');
 
 const priorEnv = process.env.SCVAL_SNAPSHOT;
 let d: Data;
@@ -29,11 +29,11 @@ let ids: GameIds;
 beforeAll(async () => {
   process.env.SCVAL_SNAPSHOT = corpusSnapshotPath('all-2026-10-02');
   vi.resetModules();
-  d = await import('../../lib/data');
-  m = await import('../../components/game/game-view');
-  leagues = await import('../../lib/leagues');
-  fmt = await import('../../lib/format');
-  ids = await import('../../lib/game-id');
+  d = await import('@/lib/data');
+  m = await import('@/components/game/game-view');
+  leagues = await import('@/lib/leagues');
+  fmt = await import('@/lib/format');
+  ids = await import('@/lib/game-id');
 }, 600_000);
 
 afterAll(() => {

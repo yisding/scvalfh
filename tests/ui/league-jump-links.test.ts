@@ -9,7 +9,7 @@ import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 
-import LeagueJumpLinks from '../../components/layout/LeagueJumpLinks';
+import LeagueJumpLinks from '@/components/layout/LeagueJumpLinks';
 
 describe('LeagueJumpLinks', () => {
   it('keeps the scope hook on both a fragment pill and a route pill', () => {

@@ -17,12 +17,12 @@ import path from 'node:path';
 
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { classifyGames, postseasonTag } from '../lib/classify';
-import { DATA_QUALITY, LEAGUES, getLeague } from '../lib/leagues';
-import { applyExclusions, normalizeGames } from '../lib/normalize';
-import { matchOfficialFixtures, type MatchOptions, type MatchResult } from '../lib/official/match';
-import { loadBundledFixtures, officialDocumentOf } from '../lib/official/schema';
-import { officialChangesCellText, officialChangesHash, sha256Hex } from '../lib/official/validate';
+import { classifyGames, postseasonTag } from '@/lib/classify';
+import { DATA_QUALITY, LEAGUES, getLeague } from '@/lib/leagues';
+import { applyExclusions, normalizeGames } from '@/lib/normalize';
+import { matchOfficialFixtures, type MatchOptions, type MatchResult } from '@/lib/official/match';
+import { loadBundledFixtures, officialDocumentOf } from '@/lib/official/schema';
+import { officialChangesCellText, officialChangesHash, sha256Hex } from '@/lib/official/validate';
 import {
   FixtureMissing,
   TransportError,
@@ -30,18 +30,18 @@ import {
   type ResourceKey,
   type RunContext,
   type Transport,
-} from '../lib/pipeline/contract';
-import { isExcludedFor, stepOfficial } from '../lib/pipeline/steps/official';
-import { ScheduleResponseSchema } from '../lib/sources/maxpreps';
-import { parseSchedulePdfText } from '../lib/sources/scval-pdf';
-import type { Game, LeagueId, LeagueRunState, OfficialFixture, Snapshot, SourceStatus } from '../lib/types';
+} from '@/lib/pipeline/contract';
+import { isExcludedFor, stepOfficial } from '@/lib/pipeline/steps/official';
+import { ScheduleResponseSchema } from '@/lib/sources/maxpreps';
+import { parseSchedulePdfText } from '@/lib/sources/scval-pdf';
+import type { Game, LeagueId, LeagueRunState, OfficialFixture, Snapshot, SourceStatus } from '@/lib/types';
 import { REPO, allScheduleRows, corpusDir, game } from './helpers';
 import { testRunArgs } from './pipeline/support/run-args';
 
 /** Lets one test break a bundle at load (the step's validation-failure path). */
 const breakBundle = vi.hoisted(() => ({ league: null as string | null }));
-vi.mock('../lib/official/schema', async (importOriginal) => {
-  const mod = await importOriginal<typeof import('../lib/official/schema')>();
+vi.mock('@/lib/official/schema', async (importOriginal) => {
+  const mod = await importOriginal<typeof import('@/lib/official/schema')>();
   return {
     ...mod,
     loadBundledFixtures: (league: string, root?: string) => {

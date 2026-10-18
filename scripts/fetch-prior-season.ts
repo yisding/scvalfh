@@ -40,11 +40,11 @@ import {
   seasonLabel,
   seasonWindow,
   type PriorSeason,
-} from '../lib/prior-season-schema';
-import { SEASON_YEAR, SPORT_SEASON_ID } from '../lib/season';
-import { MaxPrepsClient, type ScheduleRow } from '../lib/sources/maxpreps';
-import { TEAMS } from '../lib/teams';
-import type { TeamSlug } from '../lib/types';
+} from '@/lib/prior-season-schema';
+import { SEASON_YEAR, SPORT_SEASON_ID } from '@/lib/season';
+import { MaxPrepsClient, type ScheduleRow } from '@/lib/sources/maxpreps';
+import { TEAMS } from '@/lib/teams';
+import type { TeamSlug } from '@/lib/types';
 import { runCli } from './cli';
 
 const USAGE =

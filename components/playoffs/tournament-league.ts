@@ -9,8 +9,8 @@
  * names.
  */
 
-import { getLeagueSummary, getTournamentLeagueIds, type LeagueSummary } from '../../lib/data';
-import { getLeague, type LeagueConfig } from '../../lib/leagues';
+import { getLeagueSummary, getTournamentLeagueIds, type LeagueSummary } from '@/lib/data';
+import { getLeague, type LeagueConfig } from '@/lib/leagues';
 
 /** A league-tournament league's postseason config (MCAL's). */
 export type TournamentConfig = Extract<LeagueConfig['postseason'], { kind: 'league-tournament' }>;

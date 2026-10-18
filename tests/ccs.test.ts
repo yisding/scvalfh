@@ -19,9 +19,9 @@ import {
   confirmKeyDates,
   parseCcsIcal,
   readBracketPublished,
-} from '../lib/sources/ccs';
-import { CCS } from '../lib/leagues';
-import { CcsCalendarEventSchema } from '../lib/snapshot-schema';
+} from '@/lib/sources/ccs';
+import { CCS } from '@/lib/leagues';
+import { CcsCalendarEventSchema } from '@/lib/snapshot-schema';
 import { REPO } from './helpers';
 
 const ics = readFileSync(path.join(REPO, 'tests', 'fixtures', 'ccs', 'field-hockey.ics'), 'utf8');

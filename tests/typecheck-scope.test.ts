@@ -5,7 +5,7 @@
 
 import { describe, expect, it } from 'vitest';
 
-import { globToRegExp, parseDiagnostics } from '../scripts/typecheck-scope.mjs';
+import { globToRegExp, parseDiagnostics } from '@/scripts/typecheck-scope.mjs';
 
 describe('globToRegExp', () => {
   it('reads ** as any number of segments, none included', () => {

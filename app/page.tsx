@@ -1,20 +1,20 @@
 import type { Metadata } from 'next';
 import { Fragment } from 'react';
 
-import CrossLeagueLatest from '../components/home/CrossLeagueLatest';
-import FindYourTeam from '../components/home/FindYourTeam';
-import LeagueCard from '../components/home/LeagueCard';
-import LeaguePanel from '../components/home/LeaguePanel';
-import MyTeamCard from '../components/home/MyTeamCard';
-import { buildHomeView } from '../components/home/home-view';
-import LeagueSwitcher, { RegionSwitcher } from '../components/layout/LeagueSwitcher';
-import PageHeader from '../components/layout/PageHeader';
-import JsonLd from '../components/layout/JsonLd';
-import { OG_BASE, SITE_NAME, leaguesBySectionWords } from '../components/layout/site';
-import { websiteJsonLd } from '../components/layout/structured-data';
-import { listWords, shortDate } from '../lib/format';
-import { INDEPENDENT_LEAGUES, LEAGUES_PROPER } from '../lib/leagues';
-import { TEAMS } from '../lib/teams';
+import CrossLeagueLatest from '@/components/home/CrossLeagueLatest';
+import FindYourTeam from '@/components/home/FindYourTeam';
+import LeagueCard from '@/components/home/LeagueCard';
+import LeaguePanel from '@/components/home/LeaguePanel';
+import MyTeamCard from '@/components/home/MyTeamCard';
+import { buildHomeView } from '@/components/home/home-view';
+import LeagueSwitcher, { RegionSwitcher } from '@/components/layout/LeagueSwitcher';
+import PageHeader from '@/components/layout/PageHeader';
+import JsonLd from '@/components/layout/JsonLd';
+import { OG_BASE, SITE_NAME, leaguesBySectionWords } from '@/components/layout/site';
+import { websiteJsonLd } from '@/components/layout/structured-data';
+import { listWords, shortDate } from '@/lib/format';
+import { INDEPENDENT_LEAGUES, LEAGUES_PROPER } from '@/lib/leagues';
+import { TEAMS } from '@/lib/teams';
 
 /**
  * `/` — "What just happened in MY league, and when's my team's next game?" (SPEC §10.1, §8.2)
@@ -29,9 +29,6 @@ import { TEAMS } from '../lib/teams';
  * No CSS reordering anywhere: DOM order is the reading order (WCAG 1.3.2 / 2.4.3), and a hidden
  * block is `display: none`, out of the accessibility tree. JS off or storage blocked → no stamp →
  * the first-visit view with every link working.
- *
- * Imports are relative, never `@/` (README, "Local development"): tests/ui/home-view.test.ts renders
- * this page with `react-dom/server` under Vitest, which has no path alias.
  *
  * The page body is read through `components/home/home-view.ts` (which reads only `lib/data.ts`) and
  * formatted in America/Los_Angeles from `snapshot.fetchedAt`; only the metadata description and

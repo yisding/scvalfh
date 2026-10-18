@@ -1,16 +1,16 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
-import CollegeList from '../../components/commits/CollegeList';
-import CommitList from '../../components/commits/CommitList';
-import { buildCommitsView } from '../../components/commits/commit-view';
-import { RegionSwitcher } from '../../components/layout/LeagueSwitcher';
-import PageHeader from '../../components/layout/PageHeader';
-import { OG_BASE, ROOT_OG_IMAGE } from '../../components/layout/site';
-import EmptyState from '../../components/ui/EmptyState';
-import { plural } from '../../components/ui/plural';
-import SectionHeader from '../../components/ui/SectionHeader';
-import { getRosters } from '../../lib/rosters';
+import CollegeList from '@/components/commits/CollegeList';
+import CommitList from '@/components/commits/CommitList';
+import { buildCommitsView } from '@/components/commits/commit-view';
+import { RegionSwitcher } from '@/components/layout/LeagueSwitcher';
+import PageHeader from '@/components/layout/PageHeader';
+import { OG_BASE, ROOT_OG_IMAGE } from '@/components/layout/site';
+import EmptyState from '@/components/ui/EmptyState';
+import { plural } from '@/components/ui/plural';
+import SectionHeader from '@/components/ui/SectionHeader';
+import { getRosters } from '@/lib/rosters';
 
 /** The page's title, and its og:title too: og:title never carries the site-name suffix (OG_BASE). */
 const PAGE_TITLE = 'College commitments';

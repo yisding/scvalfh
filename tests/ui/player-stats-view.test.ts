@@ -16,25 +16,25 @@ import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 
-import TeamPlayerStats from '../../components/teams/TeamPlayerStats';
+import TeamPlayerStats from '@/components/teams/TeamPlayerStats';
 import {
   buildPlayerStatsView,
   goalieFiguresDisagree,
   savePercent,
   statText,
   type PlayerStatsView,
-} from '../../components/teams/player-stats-view';
-import { buildTeamPageView } from '../../components/teams/team-view';
-import { getAllPlayerStatsWithNotes } from '../../lib/player-stats';
-import { LEAGUE_IDS } from '../../lib/leagues';
+} from '@/components/teams/player-stats-view';
+import { buildTeamPageView } from '@/components/teams/team-view';
+import { getAllPlayerStatsWithNotes } from '@/lib/player-stats';
+import { LEAGUE_IDS } from '@/lib/leagues';
 import type {
   GoalieStatKey,
   PlayerStatLine,
   TeamPlayerStats as TeamStats,
-} from '../../lib/player-stats-schema';
-import { TEAMS, teamsInLeague } from '../../lib/teams';
-import type { Game } from '../../lib/types';
-import { buildFixturePlayerStats } from '../helpers';
+} from '@/lib/player-stats-schema';
+import { TEAMS, teamsInLeague } from '@/lib/teams';
+import type { Game } from '@/lib/types';
+import { buildFixturePlayerStats } from '@/tests/helpers';
 
 interface Case {
   slug: string;

@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
-import Arrow from '../ui/Arrow';
-import SectionHeader from '../ui/SectionHeader';
+import Arrow from '@/components/ui/Arrow';
+import SectionHeader from '@/components/ui/SectionHeader';
 
 import type { OtherLeagueLine } from './home-view';
 

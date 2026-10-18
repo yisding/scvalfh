@@ -12,10 +12,10 @@
  * average.
  */
 
-import { getSnapshot } from '../../lib/data';
-import { regionOf } from '../../lib/leagues';
-import { getPriorSeason } from '../../lib/prior-season';
-import type { PriorSeason } from '../../lib/prior-season-schema';
+import { getSnapshot } from '@/lib/data';
+import { regionOf } from '@/lib/leagues';
+import { getPriorSeason } from '@/lib/prior-season';
+import type { PriorSeason } from '@/lib/prior-season-schema';
 import {
   ELO_BASE,
   ELO_PER_GOAL,
@@ -24,9 +24,9 @@ import {
   ratingGames,
   type RatingTable,
   type TeamRating,
-} from '../../lib/ratings';
-import type { Game, RegionId, Team, TeamSlug } from '../../lib/types';
-import { plural } from '../ui/plural';
+} from '@/lib/ratings';
+import type { Game, RegionId, Team, TeamSlug } from '@/lib/types';
+import { plural } from '@/components/ui/plural';
 import { num, schoolBoard } from './board-kit';
 import { byName, qualifyingMinimum } from './ranking';
 import { AND_INDEPENDENTS, LEAGUE_COUNT, regionScope } from './scope';

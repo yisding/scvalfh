@@ -1,10 +1,10 @@
-import { buildStandingsOverviewView, leaderLine } from '../standings/standings-page-view';
-import { leaderClause, type LeaderLine } from '../standings/standings-view';
-import { getLatestResultsDate, getLeagueSummaries, getTeams } from '../../lib/data';
-import { shortDate } from '../../lib/format';
-import { INDEPENDENT_LEAGUES, LEAGUES_PROPER, REGIONS, isIndependentLeague } from '../../lib/leagues';
-import { SEASON_CALENDAR_YEAR } from '../../lib/season';
-import type { LeagueId, RegionId } from '../../lib/types';
+import { buildStandingsOverviewView, leaderLine } from '@/components/standings/standings-page-view';
+import { leaderClause, type LeaderLine } from '@/components/standings/standings-view';
+import { getLatestResultsDate, getLeagueSummaries, getTeams } from '@/lib/data';
+import { shortDate } from '@/lib/format';
+import { INDEPENDENT_LEAGUES, LEAGUES_PROPER, REGIONS, isIndependentLeague } from '@/lib/leagues';
+import { SEASON_CALENDAR_YEAR } from '@/lib/season';
+import type { LeagueId, RegionId } from '@/lib/types';
 
 import { OG, OG_SIZE } from './og-theme';
 import { SITE_WORDMARK } from './site';

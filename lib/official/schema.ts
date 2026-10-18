@@ -18,9 +18,9 @@ import path from 'node:path';
 
 import { z } from 'zod';
 
-import { getDivision, getLeague, leagueOfDivision, type DivisionConfig } from '../leagues';
-import { dateKey } from '../schema-primitives';
-import { resolveOfficialName } from '../teams';
+import { getDivision, getLeague, leagueOfDivision, type DivisionConfig } from '@/lib/leagues';
+import { dateKey } from '@/lib/schema-primitives';
+import { resolveOfficialName } from '@/lib/teams';
 import {
   OFFICIAL_SOURCE_IDS,
   type DivisionId,
@@ -28,7 +28,7 @@ import {
   type OfficialFixture,
   type OfficialSourceId,
   type TeamSlug,
-} from '../types';
+} from '@/lib/types';
 
 export const OFFICIAL_BUNDLE_SCHEMA = 'scvalfh-official-fixtures/1';
 

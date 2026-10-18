@@ -18,10 +18,10 @@
  * divisions of one such league carries lib/classify.ts's cross-division note, as classifyGames sets it.
  */
 
-import { classifyGame, crossDivisionNote, postseasonTag } from '../lib/classify';
-import { getDivision, getSection, leagueOfDivision } from '../lib/leagues';
-import { resolveTeam } from '../lib/teams';
-import type { Decider, DivisionId, Game, GameStatus, OfficialStamp, Outcome, PostseasonTag } from '../lib/types';
+import { classifyGame, crossDivisionNote, postseasonTag } from '@/lib/classify';
+import { getDivision, getSection, leagueOfDivision } from '@/lib/leagues';
+import { resolveTeam } from '@/lib/teams';
+import type { Decider, DivisionId, Game, GameStatus, OfficialStamp, Outcome, PostseasonTag } from '@/lib/types';
 
 let seq = 0;
 

@@ -14,7 +14,7 @@
 
 import { readFileSync } from 'node:fs';
 
-import bundled from '../data/player-stats.json';
+import bundled from '@/data/player-stats.json';
 import { getSnapshot } from './data';
 import { noteStatsFor, withNoteStats, type NoteSources, type NotedTeamPlayerStats } from './note-stats';
 import {

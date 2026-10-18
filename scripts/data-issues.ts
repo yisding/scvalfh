@@ -16,11 +16,11 @@ import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 
-import { plural } from '../lib/format';
-import type { SnapshotMeta } from '../lib/pipeline/contract';
-import { TIME_ZONE } from '../lib/season';
-import { loadSnapshot } from '../lib/snapshot-schema';
-import type { Snapshot } from '../lib/types';
+import { plural } from '@/lib/format';
+import type { SnapshotMeta } from '@/lib/pipeline/contract';
+import { TIME_ZONE } from '@/lib/season';
+import { loadSnapshot } from '@/lib/snapshot-schema';
+import type { Snapshot } from '@/lib/types';
 import { runCli } from './cli';
 
 const REPO = path.resolve(import.meta.dirname, '..');

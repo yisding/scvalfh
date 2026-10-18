@@ -2,21 +2,21 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
-import LeagueSwitcher from '../../../components/layout/LeagueSwitcher';
-import PageHeader from '../../../components/layout/PageHeader';
-import { leagueChips, leagueHrefs } from '../../../components/layout/league-chips';
-import { OG_BASE } from '../../../components/layout/site';
-import DivisionStandings from '../../../components/standings/DivisionStandings';
-import DivisionTabs from '../../../components/standings/DivisionTabs';
-import { buildStandingsPageView } from '../../../components/standings/standings-page-view';
-import { leaderClause } from '../../../components/standings/standings-view';
-import Arrow from '../../../components/ui/Arrow';
-import ExternalLink from '../../../components/ui/ExternalLink';
-import { biggestGoalDiff } from '../../../components/ui/StandingsTable';
-import { getLeagueIds, getLeagueSummary } from '../../../lib/data';
-import { shortDate } from '../../../lib/format';
-import { hasHistory } from '../../../lib/history';
-import { getLeague, leagueSportWords, standingsLabel } from '../../../lib/leagues';
+import LeagueSwitcher from '@/components/layout/LeagueSwitcher';
+import PageHeader from '@/components/layout/PageHeader';
+import { leagueChips, leagueHrefs } from '@/components/layout/league-chips';
+import { OG_BASE } from '@/components/layout/site';
+import DivisionStandings from '@/components/standings/DivisionStandings';
+import DivisionTabs from '@/components/standings/DivisionTabs';
+import { buildStandingsPageView } from '@/components/standings/standings-page-view';
+import { leaderClause } from '@/components/standings/standings-view';
+import Arrow from '@/components/ui/Arrow';
+import ExternalLink from '@/components/ui/ExternalLink';
+import { biggestGoalDiff } from '@/components/ui/StandingsTable';
+import { getLeagueIds, getLeagueSummary } from '@/lib/data';
+import { shortDate } from '@/lib/format';
+import { hasHistory } from '@/lib/history';
+import { getLeague, leagueSportWords, standingsLabel } from '@/lib/leagues';
 
 /**
  * /standings/<league> — "Where do WE stand?" (SPEC §8.1, §10.3): one league's full tables.
