@@ -6,8 +6,8 @@
     "conflicts": 7,
     "notOnMaxPreps": 1
   },
-  "commitSummary": "SCVAL +0 finals · BVAL +0 · PCAL +1 · MCAL +0 · EAL +0 · Sunset +1 · City +1 · North +0 · Metro +0 · LA +0",
-  "contentHash": "27be935cefa44970b42324219f09dfda770ccbc5ea07db1568cd9e4bf1c5abc5",
+  "commitSummary": "SCVAL +0 finals · BVAL +0 · PCAL +0 · MCAL +0 · EAL +0 · Sunset +0 · City +0 · North +0 · Metro +0 · LA +0",
+  "contentHash": "c64e0c504bcd0833cd4e1a25b22375566604471030715c14ce7f3b4b78a01fa6",
   "counts": {
     "byLeague": {
       "bval": {
@@ -95,7 +95,7 @@
     "conflicts": 6,
     "sbliveOnlyScored": 4
   },
-  "fetchedAt": "2026-10-18T09:14:55.864Z",
+  "fetchedAt": "2026-10-18T17:04:32.937Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -118,7 +118,7 @@
     {
       "backfilled": 2,
       "countedFinals": 30,
-      "finalsDelta": 1,
+      "finalsDelta": 0,
       "id": "pcal",
       "missingPast": 2,
       "reasons": [],
@@ -145,7 +145,7 @@
     {
       "backfilled": 0,
       "countedFinals": 32,
-      "finalsDelta": 1,
+      "finalsDelta": 0,
       "id": "sunset",
       "missingPast": 1,
       "reasons": [],
@@ -154,7 +154,7 @@
     {
       "backfilled": 0,
       "countedFinals": 37,
-      "finalsDelta": 1,
+      "finalsDelta": 0,
       "id": "city",
       "missingPast": 0,
       "reasons": [],
