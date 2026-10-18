@@ -8,6 +8,9 @@
 # The a11y job runs axe-core against the real production build over one page of every route
 # family (and the per-league pages), in both themes, and fails on a serious or critical violation. It is the automatable
 # part of §10.9; the grayscale and forced-colors comparisons in (b) and (c) are still done by eye.
+# It makes its own `next build` rather than waiting for gates' (about 4½ minutes): the same commit,
+# snapshot and SCVAL_BUILD_AT pin render the same pages gates asserts on, and the axe pass, the
+# longest step of the workflow, runs beside gates instead of after them.
 #
 # The vinext job builds the same app with vinext (Vite) instead of Next and serves it with
 # `vinext start`, the second toolchain package.json carries alongside Next. It proves what the
@@ -125,16 +128,7 @@ jobs:
       - name: Assert copy honesty in the built pages
         run: pnpm assert:copy
 
-      - name: Upload the build
-        uses: actions/upload-artifact@v4
-        with:
-          name: next-build
-          path: .next
-          retention-days: 3
-          include-hidden-files: true
-
   a11y:
-    needs: gates
     runs-on: ubuntu-latest
     timeout-minutes: 20
 
@@ -158,11 +152,11 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Download the build
-        uses: actions/download-artifact@v4
-        with:
-          name: next-build
-          path: .next
+      # The build gates asserts on, made again here (pinned the same way) so this job need not wait.
+      - name: Build
+        run: pnpm build
+        env:
+          SCVAL_BUILD_AT: ${{ github.event.repository.updated_at }}
 
       # Not repo dependencies: axe and a browser are needed by CI, not by the site, and the
       # BUILD-BRIEF's no-new-dependency rule is about what ships. The action installs them in a
