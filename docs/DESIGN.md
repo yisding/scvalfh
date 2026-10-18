@@ -1380,7 +1380,6 @@ export type ScoreView =
   | { kind: 'final'; home: number; away: number; outcome: Outcome;   // outcome vs `home`
       decider: Decider; shootout: { home: number; away: number } | null }
   | { kind: 'scheduled'; time: string | null }     // time === null ⇒ TIME TBA
-  | { kind: 'live' }                               // scheduled window, not a running score
   | { kind: 'unreported' }
   | { kind: 'cancelled'; note: string | null }
   | { kind: 'postponed'; newDate: string | null };
@@ -1389,7 +1388,7 @@ export function renderScore(g: Game): ScoreView {
   if (g.status === 'cancelled')  return { kind: 'cancelled', note: g.note };
   if (g.status === 'postponed')  return { kind: 'postponed', newDate: null };
   if (g.status === 'unreported') return { kind: 'unreported' };
-  if (g.status === 'in_progress') return { kind: 'live' };
+  // in_progress falls through: a once- or twice-daily snapshot cannot keep a LIVE label true
   if (g.status !== 'final' || g.homeScore === null || g.awayScore === null)
     return { kind: 'scheduled', time: g.time };
   const outcome: Outcome =
