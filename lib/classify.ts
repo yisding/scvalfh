@@ -19,15 +19,12 @@
  *    between two of them inside the group's leaguePlay counts for its table, though MaxPreps flags only
  *    Bonita's two games with Chaminade.
  *
- * Three San Diego additions sit beside the rule (all pure, all in `classifyGames`):
+ * Two San Diego additions sit beside the rule (both pure, both in `classifyGames`):
  *  - a game MaxPreps flags as a league game between two DIVISIONS of one league whose divisions publish
  *    no schedule (Mission Bay's five games against City Eastern teams) counts in neither table and says
  *    why in `provenance.classificationNote`;
  *  - the Section's own playoffs (Nov 2-14) get one tag, 'section-playoffs', whether or not the two
- *    sides share a conference;
- *  - a game counted by membership whose MaxPreps recap calls it a "non-conference" or "non-league" game
- *    loses the recap (`contradictedRecap`): the page would otherwise print MaxPreps' words, unattributed,
- *    beside "League game · Valley".
+ *    sides share a conference.
  */
 
 import { CCS, LEAGUES } from './leagues';
@@ -247,42 +244,17 @@ export function crossDivisionNote(game: Game): string | null {
   return `MaxPreps marks this as a league game; it is between two divisions of the ${league.name}, so it counts in neither table.`;
 }
 
-/** MaxPreps' recap words that say a game is not a league game ("…won their away non-conference game…"). */
-const NON_LEAGUE_RECAP = /\bnon-(conference|league)\b/i;
-
-/**
- * Whether a game's MaxPreps recap contradicts the site's own classification of it: the game counts for a
- * division classified by 'membership' (the San Diego divisions) and the recap calls it a non-conference or
- * non-league game. MaxPreps writes the recap from its own league flag, which the membership rule overrides
- * on purpose (it flags as few as 0 of Patrick Henry's 10 division games), so the recap is wrong by the
- * Section's alignment: "San Pasqual won their away non-conference game against Westview." on a Valley game
- * (fb944ba7, Sep 2026), printed as the game page's body and meta description beside "League game · Valley".
- *
- * Such a recap is dropped, never rewritten: it is MaxPreps' sentence, and editing a word out would publish a
- * claim MaxPreps never made (the site only turns it winner first, lib/recap.ts, which says the same result
- * from the other side). With recap null the game page, its meta description and the game rows fall back to the
- * forms they use for every game MaxPreps wrote no recap for. Only 'membership' divisions: a fixture-backed
- * or contest-type league's recap is left as it is (BVAL's Prospect at Live Oak, 258b9301, says
- * "non-conference" because MaxPreps counts four of Prospect's official league games as non-league, which
- * that division's knownCause says; it keeps its recap).
- */
-export function contradictedRecap(game: Pick<Game, 'countsFor' | 'recap'>): boolean {
-  if (game.countsFor === null || game.recap === null || !NON_LEAGUE_RECAP.test(game.recap)) return false;
-  return leagueOfDivisionId(game.countsFor)?.rules.classification === 'membership';
-}
-
 /**
  * Sets postseason (if not already set), then countsFor, on a copy of every game; a game that `crossDivisionNote`
  * explains also gets that note as `provenance.classificationNote`, unless a note is already there (the official
- * match's own); a game whose recap `contradictedRecap` gets recap null.
+ * match's own).
  */
 export function classifyGames(games: readonly Game[], opts: ClassifyOptions = {}): Game[] {
   return games.map((g) => {
     const tagged: Game = { ...g, postseason: g.postseason ?? postseasonTag(g) };
     const counted: Game = { ...tagged, countsFor: classifyGame(tagged, opts) };
-    const classified: Game = contradictedRecap(counted) ? { ...counted, recap: null } : counted;
-    const note = classified.provenance.classificationNote ? null : crossDivisionNote(classified);
-    return note ? { ...classified, provenance: { ...classified.provenance, classificationNote: note } } : classified;
+    const note = counted.provenance.classificationNote ? null : crossDivisionNote(counted);
+    return note ? { ...counted, provenance: { ...counted.provenance, classificationNote: note } } : counted;
   });
 }
 

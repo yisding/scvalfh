@@ -559,7 +559,6 @@ function absentFixtureGame(
       fixtureId: f.id,
       pass: dates.dateKey === f.dateKey ? 'same-date' : 'rescheduled',
     },
-    recap: null,
     urls: { maxpreps: null, sblive: row.url ?? undefined, nfhsStream: null, goFan: null },
     provenance: { scores: 'sblive', schedule: 'sblive', backfill, fetchedAt },
   };

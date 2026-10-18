@@ -71,8 +71,10 @@ import type {
 import type { FormEntry } from '../ui/FormStrip';
 import {
   describeGame,
+  gameContextNoun,
   overtimeInDoubt,
   postseasonTagOf,
+  resultSentence,
   shootoutCitationParts,
   shootoutGroupName,
   shootoutSectionOf,
@@ -986,16 +988,17 @@ export function gameTitle(model: GameModel): string {
 
 /** `De Anza Division league game` | `MCAL league game` | `MCAL semifinal` | `non-league game`. */
 function contextNoun(model: GameModel): string {
-  if (model.game.postseason) {
-    // 'Postseason' is the label of an independents' postseason game, a common noun mid-sentence.
-    const label = model.contextLabel === 'Postseason' ? 'postseason' : model.contextLabel;
-    return label === 'CCS' ? 'CCS playoff game' : `${label} game`;
-  }
-  if (model.division) {
-    const noun = divisionNoun(model.division);
-    return noun ? `${noun} league game` : `${scopeOf(model.division)} league game`;
-  }
-  return 'non-league game';
+  // The postseason's round label ('MCAL semifinal'); 'Postseason' is the label of an independents'
+  // postseason game, a common noun mid-sentence.
+  return gameContextNoun(model.game, model.contextLabel === 'Postseason' ? 'postseason' : model.contextLabel);
+}
+
+/**
+ * The page's result sentence, winner first ('Point Loma won their home non-league game against Helix
+ * 7–1.'), with the page's own context noun (`resultSentence`); null for anything but a final.
+ */
+export function gameRecap(model: GameModel): string | null {
+  return resultSentence(model.game, contextNoun(model));
 }
 
 /** The `<meta name="description">` and the OG description: `… in <League name> girls varsity field hockey, Fall 2026` (SEASON_DISPLAY). */
@@ -1003,11 +1006,13 @@ export function gameDescription(model: GameModel): string {
   const { game, display, away, home, league } = model;
   const context = contextNoun(model);
   const where = `${league ? leagueSportWords(league.id) : 'girls varsity field hockey'}, ${SEASON_DISPLAY}`;
-  if (game.recap) {
-    const lead = article(context) === 'an' ? 'An' : 'A';
-    // Dated: MaxPreps' recap sentence carries no date, so a rematch with the same score had the
-    // same description as the first meeting.
-    return `${dateWithYear(game.dateLocal)}: ${game.recap} ${lead} ${context} in ${where} — unofficial, rebuilt twice daily from MaxPreps.`;
+  const recap = gameRecap(model);
+  if (recap) {
+    // Dated: the sentence carries no date, so a rematch with the same score would have the same
+    // description as the first meeting. It already names the context, so the tail names the league.
+    return `${dateWithYear(game.dateLocal)}: ${recap} ${where.charAt(0).toUpperCase()}${where.slice(1)} — ${
+      model.source ? 'score via High School on SI (si.com); unofficial.' : 'unofficial, rebuilt twice daily from MaxPreps.'
+    }`;
   }
   const joiner = matchupJoiner(game);
   return `${away.name} ${joiner} ${home.name}, ${model.whenLabel} — ${article(

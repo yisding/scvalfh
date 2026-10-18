@@ -18,6 +18,7 @@ import {
   describeGame,
   gameKind,
   otherLeagueSuffix,
+  resultSentence,
   statusLabelIsTime,
   type GameDisplay,
   type SideView,
@@ -393,6 +394,7 @@ function GameLinks({ game }: { game: Game }) {
 }
 
 function GameDetailBody({ game, showRecap }: { game: Game; showRecap: boolean }) {
+  const recap = showRecap ? resultSentence(game) : null;
   return (
     // From 768px (the team page's Last card) the panel is indented to the team column — gutter +
     // the 80px lead column + its 8px gap — so it reads as belonging to the two names above it.
@@ -401,7 +403,7 @@ function GameDetailBody({ game, showRecap }: { game: Game; showRecap: boolean })
     // A flex column, not `space-y-3`: v4's space-y is a zero-specificity child rule, so each
     // child's `m-0` cancelled it and the recap sat on the pill row.
     <div className="flex flex-col gap-3 border-t border-divider bg-surface-2 px-gutter pb-4 pt-3 text-meta md:pl-[calc(var(--spacing-gutter)+5.5rem)]">
-      {showRecap && game.recap ? <p className="m-0 text-ink-2">{game.recap}</p> : null}
+      {recap ? <p className="m-0 text-ink-2">{recap}</p> : null}
       {game.venue.name ? <p className="m-0 text-ink-2">{game.venue.name}</p> : null}
       {/* `contest.location` is a NOTE field, not a venue field — live values include
           "Senior Night" and a coach's scoring note — so it is never labelled "Venue". */}
@@ -512,6 +514,7 @@ export function GameCard({
   // lines right of the time above them. Rows keep the slot (cross-row alignment), cards drop it.
   const chipSlot = display.away.chip !== 'none' || display.home.chip !== 'none';
   const sentenceId = `game-card-${game.contestId}`;
+  const recap = showRecap ? resultSentence(game) : null;
   return (
     <div
       // The stretched "Game page" link covers the card, so its focus ring is drawn on the card:
@@ -561,11 +564,11 @@ export function GameCard({
           scopeLeague={scopeLeague}
         />
       </div>
-      {showRecap && game.recap ? (
-        // Not clamped: in a 17rem card the generated recap needs 3–4 lines, and a two-line clamp
+      {recap ? (
+        // Not clamped: in a 17rem card the result sentence needs 3–4 lines, and a two-line clamp
         // cut every one mid-name ("…against Palo Alt…"). The grid row is `items-stretch`, so the
         // cards in a row still share one height.
-        <p className="m-0 text-meta text-ink-2">{game.recap}</p>
+        <p className="m-0 text-meta text-ink-2">{recap}</p>
       ) : null}
       {display.note ? <p className="m-0 text-meta text-ink-3">{display.note}</p> : null}
       <div

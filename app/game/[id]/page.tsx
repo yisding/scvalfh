@@ -15,6 +15,7 @@ import {
   buildGameView,
   buildSupersededStub,
   gameDescription,
+  gameRecap,
   gameStaticParams,
   gameTitle,
 } from '../../../components/game/game-view';
@@ -30,8 +31,8 @@ import ScoreBoard from '../../../components/ui/ScoreBoard';
  *
  * A final score is the object people actually send to each other, and a `<details>` row inside a
  * date page has no URL, no OG card and nothing to land on. So every contest gets a page: both
- * monograms and their league records as of that game (to date on a non-league game), the line score with its decider, the cleaned
- * recap with the result links under it, the venue, the real off-site links, routes to both team
+ * monograms and their league records as of that game (to date on a non-league game), the line score with its decider, the
+ * result sentence (`gameRecap`) with the result links under it, the venue, the real off-site links, routes to both team
  * pages, both sides' form going in, the season series between these two schools, and the source
  * deep links — plus a text-only OG card so a link pasted into a group text previews the score
  * itself.
@@ -128,13 +129,14 @@ export default async function GamePage({ params }: PageProps<'/game/[id]'>) {
   // Away first, like the scoreboard; an opponent outside the registry has no page here to link to
   // (DESIGN §8).
   const teamLinks = [away, home].flatMap((side) => (side.team ? [side.team] : []));
+  const recap = gameRecap(model);
   // Does the main column's row 2 (recap · result links · source line · postseason notes · source
   // disagreement · result-flag conflict) render anything? The DETAILS rail starts in that row, so
   // it takes the recap's 24px top margin when the row is there and the section margin when it is
   // not: either way its top lines up with the first thing in the left column — the recap, or the
   // FORM GOING IN heading (F-27c).
   const leadRow =
-    Boolean(game.recap) ||
+    Boolean(recap) ||
     resultLinks.length > 0 ||
     Boolean(model.source) ||
     model.postseasonNotes.length > 0 ||
@@ -209,16 +211,14 @@ export default async function GamePage({ params }: PageProps<'/game/[id]'>) {
         </div>
 
         <div className="lg:col-start-1 lg:row-start-2">
-          {game.recap ? (
-            <p className="mt-6 mb-0 max-w-prose text-body text-ink-2">{game.recap}</p>
-          ) : null}
+          {recap ? <p className="mt-6 mb-0 max-w-prose text-body text-ink-2">{recap}</p> : null}
           {/* A final's result links live HERE, directly under the recap (F-73/F-85): on a phone they
               are above the tab bar rather than at the foot of the DETAILS card, and they appear
               once on the page (GameDetails and GameElsewhere leave them out; only the
               disagreement notes below cite a source page again). The accent pill is the source
               the score came from. */}
           {resultLinks.length > 0 ? (
-            <p className={game.recap ? 'mt-4 mb-0 flex flex-wrap gap-2' : 'mt-6 mb-0 flex flex-wrap gap-2'}>
+            <p className={recap ? 'mt-4 mb-0 flex flex-wrap gap-2' : 'mt-6 mb-0 flex flex-wrap gap-2'}>
               {resultLinks.map((link) => (
                 <ExternalLink
                   key={link.href}

@@ -167,7 +167,7 @@ Machine routes: `/sitemap.xml` (`app/sitemap.ts`), `/robots.txt` (`app/robots.ts
 the object people actually share, and a `<details>` row inside a date page has no URL, no OG
 card, and nothing to land on. The page is not "one paragraph": it is the shareable
 scoreboard — both teams' monograms and records, the line score with its decider, the
-cleaned recap, venue with a directions link, stream and ticket links, both teams' form
+result sentence, venue with a directions link, stream and ticket links, both teams' form
 strips going into the game, the head-to-head history between these two schools this season,
 and the MaxPreps box-score deep link. 174 pages of that is ~180 KB of extra HTML across the
 whole build and it prerenders in the same pass. **[R-4]**
@@ -266,10 +266,10 @@ nothing else.** **[R-6]**
 7. **The example MaxPreps disagreement is Fremont**: we compute 1-4-0, MaxPreps publishes
    2-4-0. It is published in-page, not resolved silently. §9.
 
-**Verified recap shape** (MaxPreps `SportsEvent` JSON-LD): *"On 9/24, the Saratoga varsity
-field hockey team lost their home conference game against Santa Clara (CA) by a score of
-3-2."* After the build-time cleanup in §5.8: *"Saratoga lost their home conference game
-against Santa Clara by a score of 3-2."*
+**Recap shape** (§5.8): the site writes its own sentence, winner first: *"Santa Clara won
+their away De Anza Division league game against Saratoga 3–2."* MaxPreps' own sentence (*"On
+9/24, the Saratoga varsity field hockey team lost their home conference game against Santa
+Clara (CA) by a score of 3-2."*) is no longer stored or printed.
 
 ---
 
@@ -1335,7 +1335,6 @@ export interface Game {
   shootout: { home: number; away: number } | null;
   forfeitBy: 'home' | 'away' | null;
   isLeague: boolean;
-  recap: string | null;          // one cleaned English sentence (§5.8)
   venue: { name: string; address?: string } | null;   // address lazy
   streamUrl: string | null; ticketUrl: string | null; boxScoreUrl: string | null;
   note: string | null;           // "Cancelled — poor air quality"
@@ -1527,23 +1526,23 @@ container never gets a nested scrollbar. Desktop: 24px columns, 4px gaps, 200px 
 - Ties render as a 2px tick on the zero rule. **Forfeits are excluded entirely** (they have
   no goal margin), and the caption says so.
 
-### 5.8 Build-time recap cleanup
+### 5.8 The result sentence
 
 The recap is auto-generated, not editorial, so it gets no prominence: 13px `--sx-text-2`,
 clamped to 2 lines, below the hairline, and suppressed entirely in dense team-page tables.
-Three deterministic strips at build (`data-dense`):
 
-1. Leading `"On 9/24, "` — the date is already the group header, and it costs one of the two
-   lines a phone has.
-2. `"(CA)"`.
-3. `"the <School> varsity field hockey team"` → `"<School>"`.
+It is the site's own sentence (`resultSentence`, components/ui/describe-game.ts), written from
+the score, the venue and the site's own classification, never MaxPreps' recap, which the
+pipeline no longer stores. MaxPreps wrote from the away side, so half its sentences opened on
+the loser, and its "conference" / "non-conference" was its own league flag, which the
+membership rule overrides. The sentence is always winner first:
 
-Then, when the snapshot loads (`lib/recap.ts`, so a snapshot written before the rule reads the
-same), the sentence is turned **winner first**. MaxPreps writes it from the away or neutral-site
-side, so half of all recaps opened on the loser: *"Saratoga lost their home conference game
-against Santa Clara by a score of 3-2."* reads *"Santa Clara won their away conference game
-against Saratoga by a score of 3-2."* A tie leads with the home team; a neutral-site tie, which has
-none, stays as written. The score is already winner first.
+- `<winner> won their home|away|neutral-site <context> against <loser> 3–1.`, the context
+  being the site's own (`De Anza Division league game`, `MCAL semifinal game`, `CCS playoff
+  game`, `non-league game`), plus ` in overtime` or ` by forfeit` where they apply;
+- a tie leads with the home team: `<home> tied their home <context> against <away> 1–1.`;
+- a shootout win with no tally says so in the section's words (`on 1 v 1s after a 1–1 tie`);
+  where the section's shootouts are unverified it says only that MaxPreps credits the win.
 
 Because the sentence restates the score, the recap is never the only place a score appears,
 and its absence is never an empty state.
@@ -2478,8 +2477,9 @@ Francis (4-1-0, .800), so the league sorts on win percentage.
 ### 12.7 Recaps are one auto-generated sentence, always the same shape
 
 Verified: *"On 9/24, the Saratoga varsity field hockey team lost their home conference game
-against Santa Clara (CA) by a score of 3-2."* **Resolution:** §5.8 — three deterministic strips
-at build, 13px `--sx-text-2`, 2-line clamp, never prominent, never an empty state.
+against Santa Clara (CA) by a score of 3-2."* **Resolution:** §5.8 — the site writes its own
+sentence from the score instead, winner first, 13px `--sx-text-2`, 2-line clamp, never
+prominent, never an empty state.
 **This is also why there is no live clock and no named-player lede anywhere in this spec**: the
 payload contains neither, and inventing them in the most valuable rectangle on the site was
 `editorial`'s one disqualifying move. **[R-12]**
@@ -2490,7 +2490,7 @@ payload contains neither, and inventing them in the most valuable rectangle on t
 |---|---|---|
 | Division standings + colors + acronym + splits + streak | `maxpreps.com/ca/field-hockey/26-27/league/santa-clara-valley--{de-anza,el-camino}/?leagueid=…` | `<script id="__NEXT_DATA__" …>` → `props.pageProps.layoutProps.tableData[]`. **Match with `<script id="__NEXT_DATA__"[^>]*>`** — a `crossorigin` attribute sits between `id` and `type` |
 | Contest IDs by date | same league scoreboard payload | `contestIdsByDate[]` |
-| Per-game score, venue, recap | `maxpreps.com/ca/field-hockey/game/…` | the `ld+json` block whose `@type === "SportsEvent"` (two blocks exist; the other is `BreadcrumbList`); it also exposes full `homeTeam` / `awayTeam` objects |
+| Per-game score, venue | `maxpreps.com/ca/field-hockey/game/…` | the `ld+json` block whose `@type === "SportsEvent"` (two blocks exist; the other is `BreadcrumbList`); it also exposes full `homeTeam` / `awayTeam` objects |
 | Official CCS bracket | `maxpreps.com/tournament/…/2026-central-coast-section-field-hockey-championship.htm` | currently `<div class="not-published">This tournament bracket will go live when published.</div>` — which is exactly the §8 not-seeded state, and the authoritative link to put beside our projection |
 | CCS dates & format | `2026-27_CCS_Playoff_Dates.pdf`, `field_hockey_bylaws_2026-27.pdf` | `pdftotext -layout`; fixed-width columns where date/day cells are **blank on continuation rows** — carry the last non-blank date forward |
 | Prior-season final standings | `scval.com/standings/2025-26 Field Hockey standings.pdf` | `pdftotext -layout`; four stacked blocks in order DeAnza V, El Camino V, DeAnza JV, El Camino JV — **take blocks 1 and 2 only** |

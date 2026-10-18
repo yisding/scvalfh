@@ -61,7 +61,7 @@ function rowEstimate(games: readonly Game[]): string {
   return games.some((g) => g.status !== 'final' && g.status !== 'scheduled') ? '5.75rem' : '5rem';
 }
 function cardEstimate(games: readonly Game[]): string {
-  return games.some((g) => g.status === 'final' || g.recap) ? '15rem' : '11rem';
+  return games.some((g) => g.status === 'final') ? '15rem' : '11rem';
 }
 
 export function ScheduleList({ groups, scopeLeague = null, className, id }: ScheduleListProps) {

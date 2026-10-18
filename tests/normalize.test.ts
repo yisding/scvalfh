@@ -8,7 +8,6 @@ import { DATA_QUALITY, type DataQualityConfig } from '../lib/leagues';
 import {
   applyDateOverride,
   applyExclusions,
-  cleanRecap,
   dateKeyOf,
   dedupePhantomPairs,
   normalizeGames,
@@ -215,20 +214,6 @@ describe('normalize: details', () => {
     expect(res.games[0].urls.goFan).toBeNull();
     expect(res.warnings.some((w) => /canonicalUrl is not an http\(s\) URL/.test(w))).toBe(true);
     expect(res.warnings.some((w) => /goFanUrl is not an http\(s\) URL/.test(w))).toBe(true);
-  });
-
-  it('cleans the recap sentence (DESIGN §5.8)', () => {
-    expect(
-      cleanRecap(
-        'On 9/24, the Saratoga varsity field hockey team lost their home conference game against Santa Clara (CA) by a score of 3-2.',
-      ),
-    ).toBe('Saratoga lost their home conference game against Santa Clara by a score of 3-2.');
-    expect(cleanRecap('')).toBeNull();
-    expect(cleanRecap(null)).toBeNull();
-  });
-
-  it('only keeps a recap on a final', () => {
-    for (const g of games) if (g.status !== 'final') expect(g.recap).toBeNull();
   });
 
   it('computes the season window from the games, not a constant', () => {

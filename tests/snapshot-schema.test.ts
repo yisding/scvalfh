@@ -554,7 +554,7 @@ describe('snapshotContentHash', () => {
     const [first, ...rest] = a.games;
     const b: Snapshot = {
       ...a,
-      games: [{ ...first, recap: `${first.recap ?? ''} (edited)` }, ...rest],
+      games: [{ ...first, home: { ...first.home, score: (first.home.score ?? 0) + 1 } }, ...rest],
     };
     expect(snapshotContentHash(a)).not.toBe(snapshotContentHash(b));
   });

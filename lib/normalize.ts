@@ -156,10 +156,6 @@ export function toUtcIso(gmt: string): string {
 }
 
 /**
- * Build-time recap cleanup (DESIGN §5.8): drop the leading "On 9/24, ", drop "(City, CA)", and
- * shorten "the <School> varsity field hockey team" to "<School>".
- */
-/**
  * MaxPreps' `contest.location` is a 50-character field, and it is free text: real values in this
  * season include "Senior Night", "Scrimmage", "Too be rescheduled", a coach's scoring note and a
  * genuine venue. Two consequences, both handled here.
@@ -220,18 +216,6 @@ export function overtimeFromNote(text: string | null | undefined): 0 | 1 | 2 {
     periods = doubled ? 2 : periods === 2 ? 2 : 1;
   }
   return periods;
-}
-
-export function cleanRecap(description: string | null | undefined): string | null {
-  if (!description) return null;
-  let s = description.trim();
-  if (!s) return null;
-  s = s.replace(/^On \d{1,2}\/\d{1,2}(\/\d{2,4})?,\s*/, '');
-  s = s.replace(/\s*\([^()]*\bCA\)/g, '');
-  s = s.replace(/\bthe\s+(.+?)\s+varsity field hockey team\b/gi, '$1');
-  s = s.replace(/\s{2,}/g, ' ').trim();
-  if (!s) return null;
-  return s.charAt(0).toUpperCase() + s.slice(1);
 }
 
 function sideOf(team: ContestTeam, name: string, score: number | null): GameSide {
@@ -598,7 +582,6 @@ function toGame(
     decider,
     shootout: null,
     venue: { text: location.text, ...(location.name ? { name: location.name } : {}) },
-    recap: status === 'final' ? cleanRecap(cf.description) : null,
     urls: {
       maxpreps: httpUrlOrNull(cf.canonicalUrl, c.contestId, 'canonicalUrl', warnings),
       nfhsStream: httpUrlOrNull(row.nfhsStreamUrl, c.contestId, 'nfhsStreamUrl', warnings),
