@@ -20,7 +20,7 @@ import type { Game, LeagueId } from '../../lib/types';
  * name, score. It is the `GameRow` face, built from GameRow's own `SummaryLead` and `SummaryTeams`
  * so the same game is the same 76px row on / and on /scores — without the mascot tiles, without
  * its `<details>` body (venue, links, recap) and
- * without a second `GameCard` grid for ≥768px: the home page carries all five leagues' panels in
+ * without a second `GameCard` grid for ≥768px: the home page carries every league's panel in
  * its static HTML, and those two renderings of every game were the heaviest markup on the page
  * against the `/` budget (SPEC §12.4: HTML and RSC gzip ≤ 2 × the Stage-0 baseline). The details
  * are one tap away on the game page, which the whole row links to.

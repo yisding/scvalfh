@@ -25,7 +25,7 @@ import { TEAMS } from '../lib/teams';
  * first-visit view: the latest from every league, then Find your team), `<id>` only for that league.
  * The remembered region (`<html data-region>`, DESIGN-socal §2.4) decides, independently, which
  * `data-region-scope` blocks show: each region's panels, its card grid, its latest-results block and
- * its status line. The finder stays outside them and searches all 99 teams.
+ * its status line. The finder stays outside them and searches every team.
  * No CSS reordering anywhere: DOM order is the reading order (WCAG 1.3.2 / 2.4.3), and a hidden
  * block is `display: none`, out of the accessibility tree. JS off or storage blocked → no stamp →
  * the first-visit view with every link working.
@@ -115,7 +115,7 @@ export default function HomePage() {
         />
       ))}
 
-      {/* ONE finder over all 99 teams, outside the region blocks; only the card grids are scoped. */}
+      {/* ONE finder over every registry team, outside the region blocks; only the card grids are scoped. */}
       <FindYourTeam index={data.searchIndex} className="mt-section md:mt-section-lg">
         {data.regions.map((region) => (
           <Fragment key={region.id}>

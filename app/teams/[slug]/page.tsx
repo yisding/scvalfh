@@ -45,7 +45,7 @@ import type { DivisionId, LeagueId } from '../../../lib/types';
 /**
  * /teams/[slug] — "How is MY team doing?" (DESIGN §3.7).
  *
- * 49 static pages, one per member of each league's official alignment. There is ONE source order
+ * One static page per registry team (each league's official alignment). There is ONE source order
  * at every width, so the DOM order matches the visual order at every breakpoint (DESIGN §10.5):
  * identity (whose second meta line states the place: "where do we stand") → Last ("what just
  * happened") → Next ("when is the next one") → the stat tiles and their disclosure, the Elo rating
@@ -100,7 +100,7 @@ import type { DivisionId, LeagueId } from '../../../lib/types';
  * The player stats and the roster come after every game section: they answer "who is on this
  * team, and who is scoring?", which is not one of the parent's three questions, and at up to 30
  * rows each they would push those below the fold. Stats lead, since they change after every game.
- * Both sections appear on every team page, in all five leagues: `buildPlayerStatsView` /
+ * Both sections appear on every team page, in every league: `buildPlayerStatsView` /
  * `buildRosterView` return null only for a slug the data files do not hold, which a registry team
  * never is. The empty states are honest about why: MaxPreps lists no players, the coach entered no
  * stats, the last update failed with nothing to fall back on, or no update has covered the team
@@ -125,7 +125,7 @@ import type { DivisionId, LeagueId } from '../../../lib/types';
  * group's (its games against the other four), so "League" here means those games, as the standings page says.
  */
 
-/** All 99 prerendered; anything else is a 404 rather than a runtime render. */
+/** Every registry team prerendered; anything else is a 404 rather than a runtime render. */
 export const dynamicParams = false;
 
 export function generateStaticParams() {

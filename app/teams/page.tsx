@@ -20,7 +20,7 @@ const PAGE_TITLE = 'Teams and standings';
  * /teams — "Find my school, and where does it stand?" (DESIGN §3.6, §18; SPEC §10.5, §9.3).
  *
  * The phone's Teams tab, and the desktop nav's Teams link: the team list and the standings in one
- * page (DESIGN §18 merged the Table tab into it). All 99 teams, grouped section → league →
+ * page (DESIGN §18 merged the Table tab into it). Every registry team, grouped section → league →
  * division, and each division is its COMPACT standings table (place, team, GP, W-L-T, PTS, the
  * league's ladder line), the same table the /standings overview draws, built by the same view
  * (`buildOverviewDivision`), so the two pages never disagree about a place. **Every team**: league
@@ -37,7 +37,7 @@ const PAGE_TITLE = 'Teams and standings';
  *
  * Regions (DESIGN-socal §2.4): the sections sit in one `<div id="norcal|socal" data-region-scope>` per
  * region inside `#team-list`, and the scope stylesheet shows the reader's region; the finder stays
- * outside them and searches all 99, and while it is searching both regions' lists show, so a match it
+ * outside them and searches every team, and while it is searching both regions' lists show, so a match it
  * announces is never a hidden row. The anchor chips' section lists are region-scoped by the switcher.
  *
  * Heading outline (SPEC §10.0): each section is a `<section aria-labelledby>` with an h2
@@ -78,7 +78,7 @@ export default function TeamsPage() {
       />
 
       {/* The region control, its own row under the header (DESIGN-socal §2.4). The finder below stays
-          outside the region blocks and searches all 99 teams; while it is searching, both regions'
+          outside the region blocks and searches every team; while it is searching, both regions'
           lists show (the /teams lift, components/layout/league-scope-css.ts). */}
       <RegionSwitcher className="mt-4" />
 

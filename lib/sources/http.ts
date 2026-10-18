@@ -1,5 +1,6 @@
 /**
- * Minimal HTTP transport shared by the SECONDARY sources (si.com, scval.com, cifccs.org, VNN).
+ * Minimal HTTP transport for every polite non-MaxPreps-API read: the SECONDARY sources (si.com,
+ * scval.com, cifccs.org, VNN) and the history, JV and mascot scripts.
  *
  * `lib/sources/maxpreps.ts` keeps its own copy of this logic on purpose: the primary client is
  * JSON-and-zod-only, carries the descriptive User-Agent, and its retry semantics are pinned by

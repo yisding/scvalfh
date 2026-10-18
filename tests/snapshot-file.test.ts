@@ -24,17 +24,9 @@ import { REPO } from './helpers';
 
 const SNAPSHOT_PATH = path.join(REPO, 'data', 'snapshot.json');
 const META_PATH = path.join(REPO, 'data', 'snapshot.meta.json');
-const present = existsSync(SNAPSHOT_PATH);
 
-// A fresh clone before the first `pnpm fetch-data` has no snapshot; that is not a failure.
-const describeIfPresent = present ? describe : describe.skip;
-
-let raw: unknown;
-let snapshot: Snapshot;
-if (present) {
-  raw = JSON.parse(readFileSync(SNAPSHOT_PATH, 'utf8')) as unknown;
-  snapshot = loadSnapshot(raw);
-}
+const raw: unknown = JSON.parse(readFileSync(SNAPSHOT_PATH, 'utf8')) as unknown;
+const snapshot: Snapshot = loadSnapshot(raw);
 
 // The budgets were raised deliberately for the Southern California amendment (DESIGN-socal §2.2): a
 // change to them is a decision, so it is pinned here, with the labels printed from the constants.
@@ -49,7 +41,7 @@ describe('the snapshot budgets', () => {
   });
 });
 
-describeIfPresent('the committed snapshot', () => {
+describe('the committed snapshot', () => {
   it('loads through loadSnapshot as schema version 2 with the whole registry', () => {
     expect(snapshot.schemaVersion).toBe(2);
     expect(snapshot.fetchedAt).toMatch(/^\d{4}-\d{2}-\d{2}T/);
@@ -117,7 +109,7 @@ describeIfPresent('the committed snapshot', () => {
   });
 });
 
-describeIfPresent('the committed snapshot: cifsshome.org score cross-check', () => {
+describe('the committed snapshot: cifsshome.org score cross-check', () => {
   it('reports without changing a score: every conflict shows the published MaxPreps score', () => {
     const x = snapshot.cifssCrossCheck;
     if (!x) return;
@@ -137,7 +129,7 @@ describeIfPresent('the committed snapshot: cifsshome.org score cross-check', () 
   });
 });
 
-describeIfPresent('the committed snapshot: si.com score cross-check (owner decision D2)', () => {
+describe('the committed snapshot: si.com score cross-check (owner decision D2)', () => {
   it('never lets a plain disagreement overwrite MaxPreps (rule 5)', () => {
     const x = snapshot.sbliveCrossCheck;
     if (!x) return;
@@ -197,7 +189,7 @@ describeIfPresent('the committed snapshot: si.com score cross-check (owner decis
   });
 });
 
-describeIfPresent('the committed snapshot: official fixtures', () => {
+describe('the committed snapshot: official fixtures', () => {
   it('names real teams of the fixture’s division and real dates', () => {
     for (const f of snapshot.officialFixtures ?? []) {
       expect(f.source).toBe(officialDocumentOf(f.division).source);
@@ -253,7 +245,7 @@ describeIfPresent('the committed snapshot: official fixtures', () => {
   });
 });
 
-describeIfPresent('the committed snapshot: CCS playoffs', () => {
+describe('the committed snapshot: CCS playoffs', () => {
   it('keeps the CCS dates and does not claim a published bracket without evidence', () => {
     expect(snapshot.playoffs.keyDates.quarterfinals).toBe('2026-11-07');
     expect(snapshot.playoffs.keyDates.endOfLeagueSeason).toBe('2026-10-31');

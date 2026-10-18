@@ -1896,10 +1896,6 @@ export const NO_POSTSEASON_LEAGUE_IDS: readonly LeagueId[] = LEAGUES.filter(
 ).map((l) => l.id);
 
 /**
- * Whether the league is a group of independents (LeagueConfig.independents: the Southern Section
- * independents). Every reader that names the group, or counts "leagues", branches on this, never on the id.
- */
-/**
  * A league's words where its short name would stand alone as a control's target ('Jump to … ↓',
  * 'Show … here'): `LeagueConfig.standaloneName`, else the short name.
  */
@@ -1908,6 +1904,10 @@ export function standaloneName(id: LeagueId): string {
   return league.standaloneName ?? league.shortName;
 }
 
+/**
+ * Whether the league is a group of independents (LeagueConfig.independents: the Southern Section
+ * independents). Every reader that names the group, or counts "leagues", branches on this, never on the id.
+ */
 export function isIndependentLeague(id: LeagueId): boolean {
   return LEAGUE_BY_ID.get(id)?.independents === true;
 }

@@ -1,4 +1,4 @@
-/** lib/fetch-scope.ts — which teams a rosters / player-stats run covers, and how it reports them. */
+/** lib/fetch-scope.ts — which teams a rosters / player-stats / JV run covers, and how it reports them. */
 
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
@@ -71,7 +71,7 @@ describe('the fetch-scope CLIs read flags by fetch-data\'s rules', () => {
 });
 
 describe('scope', () => {
-  it('covers all 99 teams, in registry order, by default', () => {
+  it('covers every registry team, in registry order, by default', () => {
     expect(teamsInScope(null)).toEqual(TEAMS);
     expect(TEAMS.every((t) => inScope(t, null))).toBe(true);
   });

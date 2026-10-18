@@ -1,10 +1,10 @@
 /**
- * What scripts/fetch-rosters.ts and scripts/fetch-player-stats.ts share: which registry teams a
- * run covers, and how a run reports its teams league by league. The flag parsers for `--leagues`
- * and `--fetched-at` are shared with fetch-data too (lib/pipeline/run.ts parseRunArgs), so the
- * three CLIs read those flags by one rule.
+ * What scripts/fetch-rosters.ts, scripts/fetch-player-stats.ts and scripts/fetch-jv.ts share:
+ * which registry teams a run covers, and how a run reports its teams league by league. The flag
+ * parsers for `--leagues` and `--fetched-at` are shared with fetch-data too (lib/pipeline/run.ts
+ * parseRunArgs), so all four CLIs read those flags by one rule.
  *
- * Both scripts walk the whole 102-team registry. `--leagues scval,bval` narrows a run to those
+ * Each script walks the whole registry. `--leagues scval,bval` narrows a run to those
  * leagues, exactly as `fetch-data --leagues` does: a team of any other league is not fetched and
  * keeps whatever the previous file held for it (or 'pending' when it held nothing valid). Failures are
  * scoped the same way — each team is its own unit, so one team, or one whole league, failing never

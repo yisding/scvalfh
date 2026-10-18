@@ -18,7 +18,7 @@
  * Assertion messages name the module that produces the value, so a failure is routed to its owner.
  */
 
-import { existsSync, readFileSync } from 'node:fs';
+import { readFileSync } from 'node:fs';
 import path from 'node:path';
 
 import { beforeAll, describe, expect, it } from 'vitest';
@@ -52,12 +52,11 @@ const SOCAL = ['sunset', 'city', 'north-county', 'metro'] as const;
 const NORCAL = ['scval', 'bval', 'pcal', 'mcal', 'eal'] as const;
 
 const dir = path.join(CORPUS_ROOT, SOCAL_CORPUS);
-const present = existsSync(path.join(dir, 'manifest.json'));
-const manifest = present ? readManifest(dir) : null;
+const manifest = readManifest(dir);
 
 /** The path of a corpus resource (every entry of this corpus is a file, not an HTTP status). */
 function fileOf(key: string): string {
-  const entry = manifest?.files[key];
+  const entry = manifest.files[key];
   if (typeof entry !== 'string') throw new Error(`tests/fixtures/corpus/socal-*/manifest.json: ${key} is not a file`);
   return path.resolve(dir, entry);
 }
@@ -65,7 +64,7 @@ function fileOf(key: string): string {
 /** Every schedule row of the corpus, one per contest (a game between two of ours is in both feeds). */
 function contests(): ScheduleRow[] {
   const byId = new Map<string, ScheduleRow>();
-  for (const key of Object.keys(manifest?.files ?? {})) {
+  for (const key of Object.keys(manifest.files)) {
     if (!key.startsWith('maxpreps/schedule/')) continue;
     const rows = ScheduleResponseSchema.parse(JSON.parse(readFileSync(fileOf(key), 'utf8')) as unknown).data;
     for (const row of rows) byId.set(row.contest.contestId, row);
@@ -95,12 +94,9 @@ function membershipRows(division: string): ScheduleRow[] {
 let snapshot: Snapshot;
 let data: DataModule;
 
-const describeIfCaptured = present ? describe : describe.skip;
-
-if (present) stubCorpusSnapshot(SOCAL_CORPUS);
+stubCorpusSnapshot(SOCAL_CORPUS);
 
 beforeAll(async () => {
-  if (!present) return;
   snapshot = loadSnapshot(JSON.parse(readFileSync(corpusSnapshotPath(SOCAL_CORPUS), 'utf8')) as unknown);
   data = (await import('../../lib/data')) as DataModule;
 }, 600_000);
@@ -109,10 +105,10 @@ function gameOf(prefix: string): Game | undefined {
   return snapshot.games.find((g) => g.contestId.startsWith(prefix));
 }
 
-describeIfCaptured('the SoCal corpus run', () => {
+describe('the SoCal corpus run', () => {
   it('names the four Southern California leagues in its manifest, and holds no Valley table', () => {
-    expect(manifest?.leagues, 'tests/fixtures/corpus/socal-*/manifest.json').toEqual([...SOCAL]);
-    const keys = Object.keys(manifest?.files ?? {});
+    expect(manifest.leagues, 'tests/fixtures/corpus/socal-*/manifest.json').toEqual([...SOCAL]);
+    const keys = Object.keys(manifest.files);
     expect(keys.filter((k) => k.startsWith('maxpreps/league-meta/')).sort()).toEqual(
       LEAGUES.filter((l) => (SOCAL as readonly string[]).includes(l.id))
         .flatMap((l) => l.divisions)
@@ -182,7 +178,7 @@ describeIfCaptured('the SoCal corpus run', () => {
   });
 });
 
-describeIfCaptured('the San Diego Valley division: MaxPreps publishes no table', () => {
+describe('the San Diego Valley division: MaxPreps publishes no table', () => {
   it('has meta and reported table skipped, no reported rows, and no MaxPreps source row', () => {
     expect(getDivision('valley').maxprepsLeagueId, 'lib/leagues.ts').toBeNull();
     const valley = snapshot.leagueHealth.flatMap((h) => h.divisions).find((d) => d.divisionId === 'valley');
@@ -221,7 +217,7 @@ describeIfCaptured('the San Diego Valley division: MaxPreps publishes no table',
   });
 });
 
-describeIfCaptured('the membership classification (the San Diego divisions)', () => {
+describe('the membership classification (the San Diego divisions)', () => {
   // The LA independents are a membership division too (DESIGN §24.10), but not in this run.
   const SDS_DIVISIONS = LEAGUES.filter((l) => l.rules.classification === 'membership' && (SOCAL as readonly string[]).includes(l.id)).flatMap(
     (l) => l.divisions,
@@ -315,7 +311,7 @@ describeIfCaptured('the membership classification (the San Diego divisions)', ()
   });
 });
 
-describeIfCaptured('the section shootout and level games', () => {
+describe('the section shootout and level games', () => {
   /** Finals between two San Diego Section teams with a level score that MaxPreps marks W and L. */
   function levelWithResult(): Game[] {
     return snapshot.games.filter((g) => {
@@ -366,9 +362,9 @@ describeIfCaptured('the section shootout and level games', () => {
   });
 });
 
-describeIfCaptured('missing league results and the si.com sides', () => {
+describe('missing league results and the si.com sides', () => {
   it('lists exactly the league games dated before the run’s day with no result, per division', () => {
-    const today = localDateKey(manifest!.fetchedAt);
+    const today = localDateKey(manifest.fetchedAt);
     for (const l of LEAGUES.filter((x) => (SOCAL as readonly string[]).includes(x.id))) {
       for (const d of l.divisions) {
         const rows =
@@ -400,7 +396,7 @@ describeIfCaptured('missing league results and the si.com sides', () => {
 
   it('resolves no si.com side to a school outside the registry; the unresolved ones are the independents', () => {
     const unresolved = new Set<string>();
-    for (const key of Object.keys(manifest!.files)) {
+    for (const key of Object.keys(manifest.files)) {
       if (!key.startsWith('sblive/')) continue;
       const html = readFileSync(fileOf(key), 'utf8');
       const rows = key.startsWith('sblive/scores/') ? parseScoresPage(html) : parseTeamGamesPage(html);

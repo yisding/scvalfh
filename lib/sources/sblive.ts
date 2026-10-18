@@ -61,14 +61,9 @@ export function sbliveGameIdOf(id: unknown): string | null {
 /** Called once per payload row a parser had to drop (a non-numeric game id). */
 export type SbliveParseWarn = (message: string) => void;
 
-/** A si.com league standings page: the page `parseStandingsTeamRefs` harvests team web paths from. */
-export function sbliveLeagueStandingsUrl(leagueSlug: string): string {
-  return `${SBLIVE_WEB}/leagues/${leagueSlug}/standings`;
-}
-
 /**
  * si.com league standings slugs, from config (`LEAGUES[].sblive.leagueSlugs`) — used ONLY to harvest
- * team web paths, never for membership. The harvest (`sbliveLeagueStandingsUrl`, then
+ * team web paths, never for membership. The harvest (`SBLIVE_LEAGUE_SLUGS`, then
  * `parseStandingsTeamRefs` and `harvestTeamWebPaths`) is a manual research path for recovering
  * registry team ids: the cron never runs it (DATA-SOURCES §5.3).
  */
