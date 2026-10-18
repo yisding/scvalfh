@@ -289,8 +289,9 @@ export function TeamRoster({ view }: TeamRosterProps) {
           <li
             key={row.key}
             // A rule on top of every row except the first in each column: one row in a single
-            // column, the first two from 640px, the first three from 1024px.
-            className="flex min-w-0 items-baseline gap-3 border-t border-divider px-gutter py-2.5 first:border-t-0 sm:px-4 sm:[&:nth-child(2)]:border-t-0 lg:[&:nth-child(3)]:border-t-0"
+            // column, the first two from 640px, the first three from 1024px. `.sx-gridcell`
+            // (app/globals.css) is that rule and the cell's padding, shared by every grid list.
+            className="sx-gridcell flex items-baseline gap-3"
           >
             {showNumbers ? (
               // Two digits (and a †) fit 2rem; Valley Christian's "21/88" needs the wider column.
