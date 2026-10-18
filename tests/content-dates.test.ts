@@ -7,9 +7,12 @@
 import { describe, expect, it } from 'vitest';
 
 import {
+  contentRemovalsOf,
   gameContentStamp,
   gamePageInputs,
   latestContentDate,
+  removalsForGame,
+  removalsOnDay,
   scoreDayInputs,
   stampContentChanges,
 } from '../lib/content-dates';
@@ -79,6 +82,46 @@ describe('stampContentChanges (lib/pipeline/steps/assemble.ts)', () => {
     const fresh = game({ home: 'fremont', away: 'los-altos', date: '2026-10-21' });
     const out = stampContentChanges([moved, noted, fresh], [a, b], RUN);
     expect(out.map((g) => g.provenance.contentChangedAt)).toEqual([RUN, RUN, RUN]);
+  });
+});
+
+describe('contentRemovalsOf (lib/pipeline/steps/assemble.ts) and the pages a removal touched', () => {
+  const RUN = '2026-10-05T12:00:00.000Z';
+  const kept = game({ home: 'cupertino', away: 'fremont', hs: 2, as: 1, date: '2026-09-09' });
+  const deleted = game({ home: 'cupertino', away: 'los-altos', date: '2026-09-16' });
+  const before = game({ home: 'fremont', away: 'los-altos', date: '2026-09-23' });
+  const moved = { ...before, dateKey: '2026-09-30', dateLocal: '2026-09-30T16:00:00', dateUtc: '2026-09-30T23:00:00Z' };
+
+  it('records nothing without a previous snapshot, or when every contest stayed on its date', () => {
+    expect(contentRemovalsOf([kept], null, RUN)).toEqual([]);
+    expect(contentRemovalsOf([kept, deleted], { games: [kept, deleted] }, RUN)).toEqual([]);
+  });
+
+  it('records a contest gone from the snapshot, and one that left its old date', () => {
+    expect(contentRemovalsOf([kept, moved], { games: [kept, deleted, before] }, RUN)).toEqual([
+      { contestId: deleted.contestId, dateKey: '2026-09-16', slugs: ['cupertino', 'los-altos'], removedAt: RUN },
+      { contestId: before.contestId, dateKey: '2026-09-23', slugs: ['fremont', 'los-altos'], removedAt: RUN },
+    ]);
+  });
+
+  it('carries the season’s earlier removals and keeps the later stamp of a repeat', () => {
+    const earlier = { contestId: deleted.contestId, dateKey: '2026-09-16', slugs: ['cupertino', 'los-altos'], removedAt: '2026-09-20T00:00:00.000Z' };
+    const old = { contestId: 'x', dateKey: '2026-08-30', slugs: ['carmel'], removedAt: '2026-09-01T00:00:00.000Z' };
+    const out = contentRemovalsOf([kept], { games: [kept, deleted], contentRemovals: [earlier, old] }, RUN);
+    expect(out.map((r) => [r.contestId, r.removedAt])).toEqual([
+      ['x', '2026-09-01T00:00:00.000Z'],
+      [deleted.contestId, RUN],
+    ]);
+  });
+
+  it('dates the day the contest left and the game pages of its sides, not other days or teams', () => {
+    const removals = contentRemovalsOf([kept, moved], { games: [kept, deleted, before] }, RUN);
+    expect(removalsOnDay(removals, '2026-09-16').map((r) => r.contestId)).toEqual([deleted.contestId]);
+    expect(removalsOnDay(removals, '2026-09-30')).toEqual([]);
+    const other = game({ home: 'carmel', away: 'salinas', hs: 2, as: 1, date: '2026-09-02' });
+    expect(removalsForGame(removals, kept)).toHaveLength(2);
+    expect(removalsForGame(removals, other)).toEqual([]);
+    expect(latestContentDate([stamped(other, '2026-09-03T00:00:00')], RUN, removalsOnDay(removals, '2026-09-16')).toISOString()).toBe(RUN);
   });
 });
 

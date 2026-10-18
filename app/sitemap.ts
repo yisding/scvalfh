@@ -3,9 +3,16 @@ import type { MetadataRoute } from 'next';
 import { SITE_URL } from '../components/layout/site';
 import { getClubSlugs, getClubsLastChecked } from '../lib/clubs';
 import { getCommitsLastChecked } from '../lib/commits';
-import { gamePageInputs, latestContentDate, scoreDayInputs } from '../lib/content-dates';
+import {
+  gamePageInputs,
+  latestContentDate,
+  removalsForGame,
+  removalsOnDay,
+  scoreDayInputs,
+} from '../lib/content-dates';
 import { getRosterEnrichment } from '../lib/rosters';
 import {
+  getContentRemovals,
   getFetchedAt,
   getGameDates,
   getGames,
@@ -33,7 +40,8 @@ import { getJvFetchedAt, getJvGamesOn } from '../lib/jv';
  * entry's date, and it is as close to when THAT page's content changed as the data can say, because
  * Google trusts `lastmod` only from a sitemap where it is consistently right. A game page and a
  * date page take the latest content stamp of the games they are built from (lib/content-dates.ts):
- * the pipeline's own `contentChangedAt` where it is set, else MaxPreps' stamp. A game page is built
+ * the pipeline's own `contentChangedAt` where it is set, else MaxPreps' stamp, and of the contests
+ * that left them (`contentRemovals`: a deleted or moved game changes the pages it leaves). A game page is built
  * from the game, the sides' games behind the records it prints and the season series; a date page
  * from the day's varsity and JV games and the games behind an upcoming row's records, and a day
  * with an unmatched official fixture takes the snapshot stamp. So a September final stops
@@ -112,6 +120,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   }));
 
   const games = getGames();
+  const removals = getContentRemovals();
   // A day page also lists that day's official fixtures no game matched (OfficialFixtures). They
   // carry no stamp of their own, and the official sources are read on every run, so such a day
   // takes the snapshot's: it can change with any fetch.
@@ -120,14 +129,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
     url: url(`/scores/${date}`),
     lastModified: fixtureDays.has(date)
       ? lastModified
-      : latestContentDate([...scoreDayInputs(getGames({ date }), games), ...getJvGamesOn(date)], getFetchedAt()),
+      : latestContentDate(
+          [...scoreDayInputs(getGames({ date }), games), ...getJvGamesOn(date)],
+          getFetchedAt(),
+          removalsOnDay(removals, date),
+        ),
     changeFrequency: 'weekly',
     priority: 0.5,
   }));
 
   const gameRoutes: MetadataRoute.Sitemap = games.map((game) => ({
     url: url(gameHref(game.contestId)),
-    lastModified: latestContentDate(gamePageInputs(game, games), getFetchedAt()),
+    lastModified: latestContentDate(gamePageInputs(game, games), getFetchedAt(), removalsForGame(removals, game)),
     changeFrequency: 'weekly',
     priority: 0.4,
   }));

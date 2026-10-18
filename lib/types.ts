@@ -853,6 +853,17 @@ export type SeasonPhase =
 
 // ---------- snapshot ----------
 
+/** One contest leaving one date (Snapshot.contentRemovals). */
+export interface ContentRemoval {
+  contestId: ContestId;
+  /** The date it left (YYYY-MM-DD, Pacific). */
+  dateKey: string;
+  /** Its registry sides, whose team and game pages showed it. */
+  slugs: TeamSlug[];
+  /** The run that saw it gone (that run's `fetchedAt`). */
+  removedAt: string;
+}
+
 export interface Snapshot {
   /** NEW. v1 files (no field) are upgraded in memory by lib/snapshot-migrate.ts. */
   schemaVersion: 2;
@@ -885,6 +896,12 @@ export interface Snapshot {
    * stub page (canonical → the MaxPreps game). Empty object when none.
    */
   supersededGames: Record<ContestId, ContestId>;
+  /**
+   * Contests that left a date: deleted, superseded, or moved to another day (lib/content-dates.ts
+   * contentRemovalsOf). The pages that showed one still changed when it went, though no game left on
+   * them did, so the sitemap's `lastmod` counts these too. Carried for the season; never shown.
+   */
+  contentRemovals?: ContentRemoval[];
   /** SCVAL-only (scval.com standings PDF poll). */
   officialStandingsPdfUrl?: string | null;
   counts: {

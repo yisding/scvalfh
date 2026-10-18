@@ -23,7 +23,7 @@
  * introduced has none, and falls back to the rules above.
  */
 import { contentKey } from './stable-json';
-import type { Game } from './types';
+import type { ContentRemoval, Game } from './types';
 
 /** `2026-09-10T19:51:44` (MaxPreps, no offset, UTC) as an ISO instant; null when it does not parse. */
 function maxprepsInstant(modifiedOn: string): number | null {
@@ -69,10 +69,64 @@ export function stampContentChanges(games: readonly Game[], previous: readonly G
   });
 }
 
-/** The latest content stamp of `games` as a Date, or `fallback` when there are none. */
-export function latestContentDate(games: readonly Game[], fallback: string): Date {
-  if (games.length === 0) return new Date(fallback);
-  return new Date(Math.max(...games.map(gameContentStamp)));
+/**
+ * The season's contest removals (Snapshot.contentRemovals), with this run's added: a contest in the
+ * previous snapshot that is gone from `games` (deleted on MaxPreps, or a si.com game a MaxPreps one
+ * superseded) left its date, and one whose `dateKey` changed left its old date. Nothing that stays
+ * on such a date, or on its sides' pages, changes when it goes, so without these the pages that
+ * showed it would keep their old `lastmod`. The previous removals carry forward; a repeat of the
+ * same contest leaving the same date keeps the later stamp. Sorted, so a run with no new removal
+ * writes the same bytes.
+ */
+export function contentRemovalsOf(
+  games: readonly Game[],
+  previous: { games: readonly Game[]; contentRemovals?: readonly ContentRemoval[] } | null,
+  fetchedAt: string,
+): ContentRemoval[] {
+  if (previous === null) return [];
+  const now = new Map(games.map((g) => [g.contestId, g]));
+  const fresh: ContentRemoval[] = previous.games.flatMap((prior) => {
+    const current = now.get(prior.contestId);
+    if (current !== undefined && current.dateKey === prior.dateKey) return [];
+    return [{ contestId: prior.contestId, dateKey: prior.dateKey, slugs: sideSlugs(prior), removedAt: fetchedAt }];
+  });
+  const byKey = new Map<string, ContentRemoval>();
+  for (const r of [...(previous.contentRemovals ?? []), ...fresh]) {
+    const key = `${r.contestId}@${r.dateKey}`;
+    const seen = byKey.get(key);
+    if (!seen || seen.removedAt < r.removedAt) byKey.set(key, r);
+  }
+  return [...byKey.values()].sort(
+    (a, b) => a.dateKey.localeCompare(b.dateKey) || a.contestId.localeCompare(b.contestId),
+  );
+}
+
+/** The removals a `/scores/[date]` page showed: the contests that left that date. */
+export function removalsOnDay(removals: readonly ContentRemoval[], dateKey: string): ContentRemoval[] {
+  return removals.filter((r) => r.dateKey === dateKey);
+}
+
+/**
+ * The removals a `/game/[id]` page could have shown: a contest of either registry side, which fed
+ * its records, its form or its season series. A superset, like gamePageInputs.
+ */
+export function removalsForGame(removals: readonly ContentRemoval[], game: Game): ContentRemoval[] {
+  const sides = sideSlugs(game);
+  return removals.filter((r) => r.slugs.some((s) => sides.includes(s)));
+}
+
+/**
+ * The latest content stamp of `games` and `removals` as a Date, or `fallback` when there are
+ * neither.
+ */
+export function latestContentDate(
+  games: readonly Game[],
+  fallback: string,
+  removals: readonly ContentRemoval[] = [],
+): Date {
+  const stamps = [...games.map(gameContentStamp), ...removals.map((r) => Date.parse(r.removedAt))];
+  if (stamps.length === 0) return new Date(fallback);
+  return new Date(Math.max(...stamps));
 }
 
 /** Whether `g` has a registry side among `slugs`. */

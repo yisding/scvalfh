@@ -5,7 +5,7 @@
  * line.
  */
 
-import { stampContentChanges } from '../../content-dates';
+import { contentRemovalsOf, stampContentChanges } from '../../content-dates';
 import { byDateThenId } from '../../format';
 import { CCS, getLeague } from '../../leagues';
 import { buildSeason } from '../../season-build';
@@ -106,6 +106,8 @@ export function stepAssemble(
 ): { snapshot: Snapshot; meta: SnapshotMeta } {
   // Each game's contentChangedAt, against the previous snapshot's copy (lib/content-dates.ts).
   const games = stampContentChanges([...state.games].sort(byDateThenId), ctx.previous?.games ?? null, ctx.fetchedAt);
+  // …and the contests that left a date since, which no game left on it records (lib/content-dates.ts).
+  const contentRemovals = contentRemovalsOf(games, ctx.previous, ctx.fetchedAt);
   const sources = ctx.sources.ordered();
   const official = state.official;
   // The SCVAL standings-PDF poll keeps its last known answer when this run could not ask.
@@ -144,6 +146,7 @@ export function stepAssemble(
     ...(state.cifssCrossCheck ? { cifssCrossCheck: state.cifssCrossCheck } : {}),
     ...(anyOfficial ? { officialFixtures: fixtures } : {}),
     supersededGames: supersededGamesOf(games, ctx.previous),
+    ...(contentRemovals.length > 0 ? { contentRemovals } : {}),
     ...(officialStandingsPdfUrl === undefined ? {} : { officialStandingsPdfUrl }),
     counts: countsOf(games, table.standings),
   };
