@@ -140,23 +140,23 @@ describe('team-view.ts over every division (ALL_DIVISIONS)', () => {
 });
 
 describe('identity lines (components/teams/team-view.ts identityLine)', () => {
-  it('a multi-division team: mascot · division · league · city', () => {
+  it('a multi-division team: mascot and sport · division · league · city', () => {
     const leigh = view.buildTeamPageView('leigh')!;
     expect(leigh.identityLine, 'components/teams/team-view.ts leigh').toBe(
-      `${leigh.team.mascot} · Mt. Hamilton · BVAL · ${leigh.team.city}`,
+      `${leigh.team.mascot} girls varsity field hockey · Mt. Hamilton · BVAL · ${leigh.team.city}`,
     );
     const si = view.buildTeamPageView('st-ignatius')!;
     expect(si.identityLine, 'components/teams/team-view.ts st-ignatius').toBe(
-      `${si.team.mascot} · De Anza · SCVAL · ${si.team.city}`,
+      `${si.team.mascot} girls varsity field hockey · De Anza · SCVAL · ${si.team.city}`,
     );
   });
 
   it('a single-division team has no division label (SPEC §10.5 example)', () => {
     expect(view.buildTeamPageView('tamalpais')!.identityLine, 'components/teams/team-view.ts tamalpais').toBe(
-      'Red-Tailed Hawks · MCAL · Mill Valley',
+      'Red-Tailed Hawks girls varsity field hockey · MCAL · Mill Valley',
     );
     const carmel = view.buildTeamPageView('carmel')!;
-    expect(carmel.identityLine, 'components/teams/team-view.ts carmel').toBe(`${carmel.team.mascot} · PCAL · ${carmel.team.city}`);
+    expect(carmel.identityLine, 'components/teams/team-view.ts carmel').toBe(`${carmel.team.mascot} girls varsity field hockey · PCAL · ${carmel.team.city}`);
   });
 
   it('the pin label names the team and its league', () => {

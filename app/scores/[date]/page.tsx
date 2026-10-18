@@ -91,7 +91,8 @@ export async function generateMetadata({
   const games = getGames({ date });
   const year = parseLocal(date).year;
   const description = dayDescription(games, `${longDate(date)}, ${year}`);
-  const title = `Scores for ${shortDate(date)}, ${year}`;
+  // The sport first: "Scores for Thu Sep 24" alone could be any sport's scores page.
+  const title = `Field hockey scores — ${shortDate(date)}, ${year}`;
   return {
     title,
     description,
@@ -249,10 +250,16 @@ export default async function ScoresByDatePage({ params }: PageProps<'/scores/[d
   return (
     <div className="pb-section-lg">
       <PageHeader
+        // What the page is, above the date the h1 names: the h1 alone ("Thursday, September 24,
+        // 2026") never said which sport's scores these are.
+        eyebrow="Girls varsity field hockey scores"
         title={
           <time dateTime={date}>
+            {/* The trailing space keeps the h1's text content "Thursday, Sep 24 Thursday, September
+                24, 2026" rather than one run-on string for a reader of the raw text (a crawler); it
+                collapses at the end of the line on screen. */}
             <span aria-hidden="true" className="md:hidden">
-              {shortTitle}
+              {shortTitle}{' '}
             </span>
             <span className="sr-only md:not-sr-only">
               {longDate(date)}, {year}
