@@ -1351,7 +1351,7 @@ export interface Snapshot {
 }
 ```
 
-**Zod invariants that fail the cron rather than the reader** (`lib/snapshot.ts`):
+**Zod invariants that fail the cron rather than the reader** (`lib/snapshot-schema.ts`):
 
 ```ts
 // 1. A final game must have two numbers.
@@ -2593,7 +2593,7 @@ Nothing in a later step can be correct before the step above it. Each step ends 
 verifiable.
 
 **1 — Data contract.** `lib/teams.ts` (the 16-team membership constant + slug/abbr map, with
-the build-time uniqueness assert) and `lib/snapshot.ts` (the Zod schema and all five
+the build-time uniqueness assert) and `lib/snapshot-schema.ts` (the Zod schema and all five
 invariants of §5.1, the left-join against the feed, the cross-check step, and the recap
 cleanup of §5.8). *Done when:* the schema **rejects** a final game with a null score, a
 non-final carrying a score, and a feed that yields fewer than 16 teams — and the cross-check
@@ -4020,7 +4020,7 @@ lists the same 1,093 URLs. The MaxPreps sweep is 1 + 2 × 14 + 102 = **131 reque
 the three, so only their schedules are read.
 
 **Where a table would be** (`IndependentGroupView` from `independentGroupView` in
-`components/standings/standings-view.ts`, drawn by `components/standings/IndependentGroup.tsx`): the
+`components/standings/standings-view.ts`, drawn by `components/standings/DivisionStandings.tsx`): the
 group's note, the official note of its division, and its three team links, each `[data-team-slug]` with
 the hidden "Your team." note and, on `/teams`, the finder's `data-team-tile` hook. No place, PTS, GP,
 ladder line, caption or legend.
