@@ -14,7 +14,15 @@
  * is not MaxPreps' — a si.com score (`provenance.backfill`) or a disagreement this site prints
  * (`scoreConflict`) — or MaxPreps published no stamp, nothing says when it changed, so the stamp is
  * the snapshot's `fetchedAt`: possibly later than the truth, never earlier.
+ *
+ * Both of those are fallbacks now. The pipeline records `provenance.contentChangedAt` itself
+ * (stampContentChanges, called from lib/pipeline/steps/assemble.ts): the run at which the game's
+ * published content last differed from the previous snapshot's copy. That covers what MaxPreps'
+ * stamp cannot — an official schedule revision that moves or reclassifies a game, a host conflict,
+ * a si.com score — and is the stamp whenever it is set. A game unchanged since the field was
+ * introduced has none, and falls back to the rules above.
  */
+import { contentKey } from './stable-json';
 import type { Game } from './types';
 
 /** `2026-09-10T19:51:44` (MaxPreps, no offset, UTC) as an ISO instant; null when it does not parse. */
@@ -25,11 +33,40 @@ function maxprepsInstant(modifiedOn: string): number | null {
 
 /** The instant (ms) this game's published content last changed, by the rules above. */
 export function gameContentStamp(game: Game): number {
+  const changed = game.provenance.contentChangedAt;
+  if (changed !== undefined && !Number.isNaN(Date.parse(changed))) return Date.parse(changed);
   const fetched = Date.parse(game.provenance.fetchedAt);
   const modifiedOn = game.provenance.maxprepsModifiedOn;
   if (!modifiedOn || game.provenance.backfill || game.provenance.scoreConflict) return fetched;
   const modified = maxprepsInstant(modifiedOn);
   return modified === null ? fetched : Math.min(modified, fetched);
+}
+
+/**
+ * What a reader can see of a game: every field but the stamps that move without the game changing —
+ * when it was read (`fetchedAt`), MaxPreps' own edit stamp (a re-save that changes nothing a page
+ * prints), and `contentChangedAt` itself.
+ */
+const UNSEEN = ['fetchedAt', 'maxprepsModifiedOn', 'contentChangedAt'] as const;
+
+/**
+ * `games` with `provenance.contentChangedAt` set against the previous snapshot (SPEC §7.4 step 13):
+ * a game whose content (UNSEEN aside) equals the previous copy of the same contest keeps that copy's
+ * stamp, or none if it had none (the field's first run: nothing says when it last changed, so
+ * gameContentStamp falls back to MaxPreps' stamp); a game that differs, or that the previous
+ * snapshot did not have, takes this run's `fetchedAt`. With no previous snapshot nothing is
+ * stamped, since nothing can be compared.
+ */
+export function stampContentChanges(games: readonly Game[], previous: readonly Game[] | null, fetchedAt: string): Game[] {
+  if (previous === null) return [...games];
+  const before = new Map(previous.map((g) => [g.contestId, g]));
+  return games.map((game) => {
+    const prior = before.get(game.contestId);
+    const same = prior !== undefined && contentKey(prior, UNSEEN) === contentKey(game, UNSEEN);
+    const stamp = same ? prior.provenance.contentChangedAt : fetchedAt;
+    // A stamp of `undefined` leaves no key in the written file (lib/stable-json.ts normalizeKeys).
+    return { ...game, provenance: { ...game.provenance, contentChangedAt: stamp } };
+  });
 }
 
 /** The latest content stamp of `games` as a Date, or `fallback` when there are none. */

@@ -32,14 +32,16 @@ import { getJvFetchedAt, getJvGamesOn } from '../lib/jv';
  * `lastModified` is never `Date.now()`, so a rebuild with unchanged data does not churn every
  * entry's date, and it is as close to when THAT page's content changed as the data can say, because
  * Google trusts `lastmod` only from a sitemap where it is consistently right. A game page and a
- * date page take the latest MaxPreps stamp of the games they are built from (lib/content-dates.ts:
- * the game, the sides' games behind the records it prints and the season series; the day's varsity
- * and JV games and those behind an upcoming row's records; a day with an unmatched official fixture
- * takes the snapshot stamp), so a
- * September final stops "changing" twice a day. The hubs, the league pages and the team pages
- * (whose standings and Elo rating move with any game in the league) take the snapshot stamp. /jv
- * takes the later of data/jv.json's `fetchedAt` and the snapshot's, and /history/2025-26 the last day its sources were read
- * (`getHistoryLastChecked`): a finished season does not change with the snapshot. The clubs pages take the last day data/clubs.json was checked
+ * date page take the latest content stamp of the games they are built from (lib/content-dates.ts):
+ * the pipeline's own `contentChangedAt` where it is set, else MaxPreps' stamp. A game page is built
+ * from the game, the sides' games behind the records it prints and the season series; a date page
+ * from the day's varsity and JV games and the games behind an upcoming row's records, and a day
+ * with an unmatched official fixture takes the snapshot stamp. So a September final stops
+ * "changing" twice a day. The hubs, the league pages and the team pages (whose standings and Elo
+ * rating move with any game in the league) take the snapshot stamp. /jv takes the later of
+ * data/jv.json's `fetchedAt` and the snapshot's, and /history/2025-26 the last day its sources were
+ * read (`getHistoryLastChecked`): a finished season does not change with the snapshot. The clubs
+ * pages take the last day data/clubs.json was checked
  * instead (`getClubsLastChecked`: its `capturedAt`, or a later club `checkedOn`), as /commits does:
  * they are hand research, not part of the twice-daily snapshot, and change only with a new sweep.
  * /commits takes the last day data/commits.json was checked (`getCommitsLastChecked`: its

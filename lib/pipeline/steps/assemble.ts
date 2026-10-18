@@ -5,6 +5,7 @@
  * line.
  */
 
+import { stampContentChanges } from '../../content-dates';
 import { byDateThenId } from '../../format';
 import { CCS, getLeague } from '../../leagues';
 import { buildSeason } from '../../season-build';
@@ -103,7 +104,8 @@ export function stepAssemble(
   ctx: PipelineContext,
   { state, table, requests }: AssembleInput,
 ): { snapshot: Snapshot; meta: SnapshotMeta } {
-  const games = [...state.games].sort(byDateThenId);
+  // Each game's contentChangedAt, against the previous snapshot's copy (lib/content-dates.ts).
+  const games = stampContentChanges([...state.games].sort(byDateThenId), ctx.previous?.games ?? null, ctx.fetchedAt);
   const sources = ctx.sources.ordered();
   const official = state.official;
   // The SCVAL standings-PDF poll keeps its last known answer when this run could not ask.

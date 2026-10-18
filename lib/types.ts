@@ -357,6 +357,14 @@ export interface Game {
     backfill?: BackfillProvenance;
     fetchedAt: string;
     maxprepsModifiedOn?: string;
+    /**
+     * When the pipeline last saw this game's published content change (ISO UTC, a run's `fetchedAt`):
+     * set by lib/pipeline/steps/assemble.ts against the previous snapshot's copy of the game, every
+     * field compared but the fetch stamps and MaxPreps' own `maxprepsModifiedOn` (lib/content-dates.ts
+     * stampContentChanges). Absent on a game unchanged since the stamp was introduced. Read by the
+     * sitemap's `lastmod`, never shown.
+     */
+    contentChangedAt?: string;
     leagueFlagConflict?: string;
     hostConflict?: string;
     /** NEW. D2 rule 4a evidence: result flags contradict the score, or the two rows disagree. */

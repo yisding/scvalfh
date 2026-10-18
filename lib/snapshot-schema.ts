@@ -234,6 +234,7 @@ export const GameSchema = z
       backfill: backfillProvenance.optional(),
       fetchedAt: z.string(),
       maxprepsModifiedOn: z.string().optional(),
+      contentChangedAt: z.string().min(20).optional(),
       leagueFlagConflict: z.string().optional(),
       hostConflict: z.string().optional(),
       resultConflict: z.string().optional(),
