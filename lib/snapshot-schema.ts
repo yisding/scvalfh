@@ -234,6 +234,7 @@ export const GameSchema = z
       backfill: backfillProvenance.optional(),
       fetchedAt: z.string(),
       maxprepsModifiedOn: z.string().optional(),
+      contentChangedAt: z.string().min(20).optional(),
       leagueFlagConflict: z.string().optional(),
       hostConflict: z.string().optional(),
       resultConflict: z.string().optional(),
@@ -630,6 +631,16 @@ const SnapshotObject = z.object({
   cifssCrossCheck: CifssCrossCheckSchema.optional(),
   officialFixtures: z.array(OfficialFixtureSchema).optional(),
   supersededGames: z.record(z.string(), z.string()),
+  contentRemovals: z
+    .array(
+      z.object({
+        contestId: z.string().min(1),
+        dateKey: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+        slugs: z.array(z.string().min(1)),
+        removedAt: z.string().min(20),
+      }),
+    )
+    .optional(),
   officialStandingsPdfUrl: httpUrl.nullable().optional(),
   counts: z.object({
     teams: z.number().int(),
