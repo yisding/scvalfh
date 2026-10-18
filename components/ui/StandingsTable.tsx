@@ -500,7 +500,7 @@ export function StandingsTable(props: StandingsTableProps) {
                     {tableName(props.division)}
                     <span className="sr-only"> team</span>
                   </th>
-                  <th scope="col" className="w-8 text-right">
+                  <th scope="col" className="w-8 text-right max-[389px]:pr-1">
                     <Abbr short="Pts" long="Points" />
                   </th>
                   {/* The League head (52px of 12px caps) is wider than its numerals (40px), and
@@ -508,15 +508,17 @@ export function StandingsTable(props: StandingsTableProps) {
                       (or, below 375, into the GD numeral). From 390 there is room for the head to
                       take the same 8px; below it the head keeps the cell edge and drops its
                       letter-spacing, so it still clears "PTS" by about 7px.
-                      Below 390 the column is 59px, not 56: a six-character record ("10-1-0", 46.8px
-                      of 13px mono) plus 4 + 8 of padding is 58.8, so under auto layout a 56px
-                      column grew to 58.8 in any table holding one (El Camino, MCAL, PCAL) and
-                      not in the others, and every column right of Team moved 2.8px between the
-                      tables of one page. 59, not a rounder 60: at 375 Team then keeps 152px,
-                      exactly what "Valley Christian" needs (24 + 8 + 120). */}
+                      Below 390 the column is 56 with 1px of left padding, and PTS gives its
+                      numerals 4px of right padding instead: a six-character record ("10-1-0",
+                      46.8px of 13px mono) plus 4 + 8 of padding was 58.8, so under auto layout the
+                      56px column grew to 58.8 in any table holding one (El Camino, MCAL, PCAL)
+                      and not in the others, and every column right of Team moved 2.8px between
+                      the tables of one page. Widening the column to fit instead cost Team the
+                      3px that "Mission Bay" and "Newport Harbor" need at 375. Now 1 + 46.8 + 8
+                      fits, and the record still clears the points by 5px. */}
                   <th
                     scope="col"
-                    className="w-[59px] pl-1 text-right max-[389px]:tracking-normal min-[390px]:w-[68px] min-[390px]:px-2"
+                    className="w-[56px] pl-px text-right max-[389px]:tracking-normal min-[390px]:w-[68px] min-[390px]:px-2"
                   >
                     League
                   </th>
@@ -539,9 +541,9 @@ export function StandingsTable(props: StandingsTableProps) {
                       gutter). The track was 56 until the longest short names ("Lick-Wilmerding"
                       125px of 16px semibold, "Valley Christian" 120, "Marin Academy" 119) needed
                       the 12px it gave up: at 56 they truncated at 390 to "Lick-Wilmerd…". Below
-                      390 League is 59 (4 + 47 + 8: it gives up 9px of head padding), and below
+                      390 League is 56 (1 + 47 + 8: it gives up 12px of head padding), and below
                       375 GD keeps only its numeral, so a flagged "Monta Vista" stays whole at 320
-                      and at 375: 44 + 141 (Team) + 32 + 59 + 44 at 320, and 44 + 152 + 32 + 59
+                      and at 375: 44 + 144 (Team) + 32 + 56 + 44 at 320, and 44 + 155 + 32 + 56
                       + 88 at 375.
                       The GD plot is the one thing that can afford to go. Below 375px the fixed
                       columns starved the team cell and long school names truncated to fragments,
@@ -678,10 +680,10 @@ export function StandingsTable(props: StandingsTableProps) {
                       </th>
                       {has ? (
                         <>
-                          <td className="sx-num w-8 pt-2.5 text-right align-top text-body font-bold text-ink">
+                          <td className="sx-num w-8 pt-2.5 text-right align-top text-body font-bold text-ink max-[389px]:pr-1">
                             {s.computed.pts}
                           </td>
-                          <td className="sx-num w-[59px] whitespace-nowrap pt-3 pl-1 pr-2 text-right align-top font-medium text-ink min-[390px]:w-[68px] min-[390px]:pl-2">
+                          <td className="sx-num w-[56px] whitespace-nowrap pt-3 pl-px pr-2 text-right align-top font-medium text-ink min-[390px]:w-[68px] min-[390px]:pl-2">
                             <LeagueRecord record={recordString(s.computed)} context={ctx(row)} />
                           </td>
                           <td className="sx-num hidden w-16 pt-3 pr-2 text-right align-top font-medium text-ink md:table-cell">
