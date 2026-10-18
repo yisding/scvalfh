@@ -172,7 +172,7 @@ export interface GameModel {
   canonical: string;
   display: GameDisplay;
   /**
-   * A FINAL's result links, which the page prints directly under the recap, the first place a
+   * A FINAL's result links, which the page prints directly under the scoreboard, the first place a
    * reader looks for them after the score (F-73/F-85). The accent pill is the source the score
    * came from (owner decision D2): the MaxPreps box score, or — on a si.com-scored final — the
    * si.com game page, with MaxPreps' contest page beside it as a plain pill. Then the NFHS stream.
