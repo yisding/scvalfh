@@ -258,8 +258,9 @@ const NON_LEAGUE_RECAP = /\bnon-(conference|league)\b/i;
  * Section's alignment: "San Pasqual won their away non-conference game against Westview." on a Valley game
  * (fb944ba7, Sep 2026), printed as the game page's body and meta description beside "League game · Valley".
  *
- * Such a recap is dropped, never rewritten: it is MaxPreps' sentence, and editing a word out would publish an
- * altered quote. With recap null the game page, its meta description and the game rows fall back to the
+ * Such a recap is dropped, never rewritten: it is MaxPreps' sentence, and editing a word out would publish a
+ * claim MaxPreps never made (the site only turns it winner first, lib/recap.ts, which says the same result
+ * from the other side). With recap null the game page, its meta description and the game rows fall back to the
  * forms they use for every game MaxPreps wrote no recap for. Only 'membership' divisions: a fixture-backed
  * or contest-type league's recap is left as it is (BVAL's Prospect at Live Oak, 258b9301, says
  * "non-conference" because MaxPreps counts four of Prospect's official league games as non-league, which

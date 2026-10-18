@@ -45,6 +45,7 @@ import {
 } from './leagues';
 import type { LeagueConfig, PairingConfig, PostseasonConfig, RegionConfig, SectionConfig } from './leagues';
 import { buildLeagueTournament } from './postseason';
+import { winnerFirstRecap } from './recap';
 import { buildSearchIndex } from './search';
 import type { SearchIndex } from './search';
 import { loadSnapshot } from './snapshot-schema';
@@ -118,7 +119,15 @@ function load(): Snapshot {
   return loadSnapshot(JSON.parse(raw) as unknown);
 }
 
-const snapshot = load();
+/** Every recap reads winner first (lib/recap.ts), whatever snapshot it was written into. */
+function withWinnerFirstRecaps(loaded: Snapshot): Snapshot {
+  return {
+    ...loaded,
+    games: loaded.games.map((g) => (g.recap ? { ...g, recap: winnerFirstRecap(g.recap) } : g)),
+  };
+}
+
+const snapshot = withWinnerFirstRecaps(load());
 
 // ---------------------------------------------------------------- basics
 

@@ -1538,6 +1538,13 @@ Three deterministic strips at build (`data-dense`):
 2. `"(CA)"`.
 3. `"the <School> varsity field hockey team"` → `"<School>"`.
 
+Then, when the snapshot loads (`lib/recap.ts`, so a snapshot written before the rule reads the
+same), the sentence is turned **winner first**. MaxPreps writes it from the away or neutral-site
+side, so half of all recaps opened on the loser: *"Saratoga lost their home conference game
+against Santa Clara by a score of 3-2."* reads *"Santa Clara won their away conference game
+against Saratoga by a score of 3-2."* A tie leads with the home team; a neutral-site tie, which has
+none, stays as written. The score is already winner first.
+
 Because the sentence restates the score, the recap is never the only place a score appears,
 and its absence is never an empty state.
 
