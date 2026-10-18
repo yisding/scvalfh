@@ -887,15 +887,6 @@
   .sx-navtop:focus-visible { outline: none; }
   .sx-navtop:focus-visible > .sx-indicator { outline: 2px solid var(--sx-focus); outline-offset: 2px; }
 
-  /* LIVE is a word and an accent dot. The pulse is the third, optional cue.
-     Declared inside @layer base so the reduced-motion block below actually
-     wins the cascade against it. */
-  .sx-live-dot {
-    display: inline-block; width: 8px; height: 8px; border-radius: 999px;
-    background: var(--sx-accent);
-    animation: sx-pulse 1.6s var(--sx-ease) infinite;
-  }
-
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
     *, *::before, *::after {
@@ -903,8 +894,6 @@
       animation-iteration-count: 1 !important;
       transition-duration: 0.01ms !important;
     }
-    /* the LIVE dot becomes a static ring instead of a pulse */
-    .sx-live-dot { animation: none; box-shadow: 0 0 0 3px var(--sx-accent-wash); }
   }
 
   @media (forced-colors: active) {
@@ -930,11 +919,6 @@
     .sx-chrome-top { border-bottom: 1px solid CanvasText; }
     .sx-chrome-bottom { border-top: 1px solid CanvasText; }
   }
-}
-
-@keyframes sx-pulse {
-  0%, 100% { box-shadow: 0 0 0 0 var(--sx-accent-wash); }
-  50%      { box-shadow: 0 0 0 4px var(--sx-accent-wash); }
 }
 
 /* ── Unlayered on purpose: the game-page hero score must beat ScoreGlyph's `text-[2rem]` utility

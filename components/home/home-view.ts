@@ -741,7 +741,6 @@ function homeSide(side: SideView): HomeLastDisplay['home'] {
 /** `describeGame()`'s decision, slimmed to what the card draws (the team-views budget, tests/ui/home-weight.test.ts). */
 function slimDisplay(display: GameDisplay): HomeLastDisplay {
   const marks: NonNullable<HomeLastDisplay['marks']> = {};
-  if (display.liveDot) marks.liveDot = true;
   if (display.strikeTime) marks.strikeTime = true;
   if (display.isNonLeague) marks.isNonLeague = true;
   if (display.deciderTag) marks.deciderTag = display.deciderTag;

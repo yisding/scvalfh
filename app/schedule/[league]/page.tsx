@@ -44,8 +44,8 @@ import { SEASON_DISPLAY } from '../../../lib/season';
  *     they never touch search params — which is what keeps this page static (DESIGN decision 7).
  *     A single-division league gets no division select.
  *
- * `LIVE` is never a running score anywhere on this site: the snapshot is a once- or twice-daily
- * cron, and `/about#updates` says so in plain words.
+ * Nothing on this site is marked LIVE: the snapshot is a once- or twice-daily cron, so a game
+ * MaxPreps marks in progress renders as scheduled, and `/about#updates` says so in plain words.
  *
  * The LA independents (DESIGN §24.9, §24.11) get the same page; its title is "LA teams: schedule and results"
  * and its header says "the LA independents" (standaloneName).

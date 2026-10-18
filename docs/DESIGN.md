@@ -112,7 +112,7 @@ equivalent moment; this is it. **[R-9]**
 ### The eight decisions everything else follows from
 
 1. **Two data hues, and nothing else.** Only *win* and *loss* get a reserved hue. Tie is
-   hueless. LIVE is the interaction accent + a pulse + the word. **Divisions have no hue at
+   hueless. Nothing is marked LIVE (see R-12). **Divisions have no hue at
    all** — they live in separate tables and are named in text, which deletes the cross-role
    collision that failed in both rival specs (§6.4, runs R-C/R-D). **[R-15]**
 2. **The goal-differential bar carries no hue.** Polarity is carried by which side of a
@@ -186,8 +186,9 @@ whole build and it prerenders in the same pass. **[R-4]**
   as `data-dense`'s audience drift and they are not imported. **[R-11]**
 - **No live clock, no named-player lede, no `cacheLife('minutes')`, no `LiveRefresh`.**
   The snapshot is a once-daily cron of auto-generated one-sentence recaps with no player
-  names and no game clock. `/about` says so in plain words, and every `LIVE` marker is
-  labelled as a scheduled window rather than a running score. **[R-12]**
+  names and no game clock. `/about` says so in plain words, and a game MaxPreps marks in
+  progress renders exactly like a scheduled one: a static page published hours earlier cannot
+  know whether the game is still on, so a `LIVE` marker would go stale. **[R-12]**
 
 ### 1.3 Global chrome — measured
 
@@ -845,7 +846,7 @@ to this site rather than hotlinked").
 `#updates` — "Rebuilt twice daily by cron, about 10 PM and 7 AM Pacific
 (.github/workflows/update-data.yml). A game that finished at 7pm Thursday appears that night if
 its score is entered by about 10 PM, otherwise Friday morning. **Live scores are not
-collected** — anything marked LIVE is a scheduled window, not a running score."
+collected** — a game MaxPreps marks as in progress is shown as scheduled, with no score and no “live” label."
 `#standings` — §11's eight rules, verbatim. Linked from every standings table footnote.
 `#conventions` — the nine-row result-rendering table from §5.2, verbatim.
 `#cross-check` — the published MaxPreps comparison log (§9), every mismatch with a deep link.
@@ -906,12 +907,11 @@ test rather than left to reviewer memory):
    the whole system is `--sx-text-3` on `--sx-surface-3` at **4.66 light / 5.11 dark** — both
    clear 4.5:1, so there is no "decorative gray" on this site that quietly fails.
 
-**Game states are not hues.** They are ink + a written label + (for LIVE) motion:
+**Game states are not hues.** They are ink + a written label:
 
 | State | Ink | Chip | Written label | Extra |
 |---|---|---|---|---|
 | `final` | `--sx-text` score, `--sx-text-3` label | `W`/`L`/`T` | `FINAL` | winner 600 / loser 400 |
-| `in_progress` | `--sx-accent-ink` | accent-wash pill | `LIVE` | 8px accent dot, 1.6s pulse, + "scheduled window" note |
 | `scheduled` | `--sx-text-2` | none | the time, or `TIME TBA` | — |
 | `unreported` | `--sx-text-3` | empty **outlined** chip | `SCORE NOT REPORTED` | "We'll update when MaxPreps posts it." |
 | `cancelled` | `--sx-text-3` | neutral `⊘` chip | `CANCELLED` | the *time* gets `line-through`; names never do |
@@ -1203,8 +1203,6 @@ guardrail. **Divisions get no hue either** (§6.4).
       animation-iteration-count: 1 !important;
       transition-duration: 0.01ms !important;
     }
-    /* the LIVE dot becomes a static ring instead of a pulse */
-    .sx-live-dot { animation: none; box-shadow: 0 0 0 3px var(--sx-accent-wash); }
   }
 
   @media (forced-colors: active) {
@@ -1216,12 +1214,6 @@ guardrail. **Divisions get no hue either** (§6.4).
     .sx-zero { forced-color-adjust: none; background: CanvasText; }
   }
 }
-
-@keyframes sx-pulse {
-  0%, 100% { box-shadow: 0 0 0 0 var(--sx-accent-wash); }
-  50%      { box-shadow: 0 0 0 4px var(--sx-accent-wash); }
-}
-.sx-live-dot { animation: sx-pulse 1.6s var(--sx-ease) infinite; }
 ```
 
 ### 4.3 Type scale in practice
@@ -1266,7 +1258,7 @@ display face anywhere.
   `--sx-shadow-raised: none` and leans on the border. **Neither token is self-referential**
   — each is a literal value in `:root`, aliased once into `@theme inline`. **[R-17]**
 - **Motion:** 120ms tap feedback (`background-color` → `--sx-surface-2`), 200ms for the theme
-  swap and `<details>` disclosure, 1.6s LIVE pulse. Nothing else animates. No page
+  swap and `<details>` disclosure. Nothing else animates. No page
   transitions; no skeleton flash — a re-filter holds the previous render at `opacity: .6`.
   All of it collapses under `prefers-reduced-motion: reduce`.
 - **Focus:** `:focus-visible` only — 2px `--sx-focus`, 2px offset, 4px radius, on links,
@@ -1388,7 +1380,6 @@ export type ScoreView =
   | { kind: 'final'; home: number; away: number; outcome: Outcome;   // outcome vs `home`
       decider: Decider; shootout: { home: number; away: number } | null }
   | { kind: 'scheduled'; time: string | null }     // time === null ⇒ TIME TBA
-  | { kind: 'live' }                               // scheduled window, not a running score
   | { kind: 'unreported' }
   | { kind: 'cancelled'; note: string | null }
   | { kind: 'postponed'; newDate: string | null };
@@ -1397,7 +1388,7 @@ export function renderScore(g: Game): ScoreView {
   if (g.status === 'cancelled')  return { kind: 'cancelled', note: g.note };
   if (g.status === 'postponed')  return { kind: 'postponed', newDate: null };
   if (g.status === 'unreported') return { kind: 'unreported' };
-  if (g.status === 'in_progress') return { kind: 'live' };
+  // in_progress falls through: a once- or twice-daily snapshot cannot keep a LIVE label true
   if (g.status !== 'final' || g.homeScore === null || g.awayScore === null)
     return { kind: 'scheduled', time: g.time };
   const outcome: Outcome =
@@ -1419,7 +1410,7 @@ export function renderScore(g: Game): ScoreView {
 | **Final, shootout** | `1 – 1` then `(4–3 SO)` in `--sx-text-3` mono | `FINAL` + `SO` | `W`/`L` **from the shootout** | — | yes, as a win; the *goal* score stays 1-1 so GF/GA stay right |
 | **Forfeit** | `1 – 0` then an `F` tag and a `†` | `FINAL` + `FORFEIT` | `W`/`L` | recap names the forfeiting side | **W-L-T yes; GF/GA/GD no**, and excluded from `MarginStrip`; `†` footnote under every total that excludes it |
 | **Scheduled** | **no score cells at all** — the time takes the column in `--sx-text-2`, or `TIME TBA` | the time / `TIME TBA` | none | `vs`/`at` + venue; stream and ticket chips when present | no |
-| **In progress** | **no score** — `—` | `LIVE` + 8px pulsing accent dot + the words "scheduled window" on hover/`/about` | none | accent-wash 2px left rule; link out to MaxPreps for a live score | no |
+| **In progress** | rendered exactly as **Scheduled** — no `LIVE` label, which a once- or twice-daily snapshot cannot keep true | the time / `TIME TBA` | none | as Scheduled | no |
 | **Score not reported** | `—` / `—` (em dash, `--sx-text-3`, `aria-label="score not reported"`) | `SCORE NOT REPORTED` | **empty outlined** chip — never a `T` | body line "We'll update when MaxPreps posts it." | **no**, and excluded from GF/GA/GD/streak/form/MarginStrip |
 | **Cancelled** | no score cells; the two teams joined by `vs` | `CANCELLED` | neutral `⊘` | the **time** gets `line-through`; the names stay `--sx-text-2` and are never faded below contrast; `note` shown if present | no; removed from "games remaining" too |
 | **Postponed** | no score cells | `POSTPONED` + `→ NOV 2` if known, else `→ TBD` | neutral `↻` | links to the new date when it exists | no |
@@ -1667,7 +1658,7 @@ Every result carries **four** redundant encodings, in this priority order:
 
 1. **A letter** — `W`, `L`, `T` inside the chip. The primary channel. It survives grayscale,
    CVD, `forced-colors`, and a screenshot pasted into a group text.
-2. **A written label** — `FINAL`, `SCORE NOT REPORTED`, `CANCELLED`, `LIVE`, spelled out in
+2. **A written label** — `FINAL`, `SCORE NOT REPORTED`, `CANCELLED`, `POSTPONED`, spelled out in
    `text-kicker`, never abbreviated to a dot.
 3. **Weight and lightness on the number itself** — the winner's score is 600 weight in
    `--sx-text`, the loser's 400 in `--sx-text-2`. Who won survives *total* desaturation with
@@ -2352,9 +2343,8 @@ Every line is a gate, not an aspiration; §10.9 lists which ones CI enforces.
    breaks AA fails `pnpm test`. (e) A test asserting **no route renders `0-0` or `0 – 0` for a
    game whose status is not `final`**. (f) A test asserting `snapshot.teams.length === 16` and
    `abbr` uniqueness.
-10. **Motion.** `prefers-reduced-motion: reduce` kills the LIVE pulse (it becomes a static
-    ring), smooth scrolling, and every transition. **Nothing on the site conveys meaning
-    through motion alone** — `LIVE` is also a word.
+10. **Motion.** `prefers-reduced-motion: reduce` kills smooth scrolling and every
+    transition. **Nothing on the site conveys meaning through motion.**
 11. **Language & units.** `lang="en"`, `<time datetime>` on every date, every time labelled
     `PT`, all formatting done server-side in `America/Los_Angeles` so no client reformats a date.
 12. **Privacy, stated on `/about#a11y`.** The site stores exactly three things, all in this
@@ -2557,7 +2547,7 @@ Every weakness either judge named against the winner, and every graft they asked
 | R-9 | Least distinctive of the three; 11 type steps, three inside 2px | **Rule-and-kicker** as the signature move; type scale cut to **8 steps with 2 clamps** | 4.2, 4.3, 7.2 |
 | R-10 | 44px targets overflowing 40px rows (data-dense) | Standings row is a **60px block-level `<a>`**; hit area is exactly the row | 3.2, 10.7 |
 | R-11 | Audience drift: WHO'S HOT, schedule strength, PTS, 8×8 matrix | **All cut**, named as cut | 1.2, 6.2 |
-| R-12 | Live clock and named-player lede that the data cannot produce | **Deleted**; no `cacheLife('minutes')`, no `LiveRefresh`; LIVE disclosed as a scheduled window on every page and on `/about#updates` | 1.2, 5.2, 12.7 |
+| R-12 | Live clock and named-player lede that the data cannot produce | **Deleted**; no `cacheLife('minutes')`, no `LiveRefresh`, no `LIVE` label (an in-progress game renders as scheduled); `/about#updates` says live scores are not collected | 1.2, 5.2, 12.7 |
 | R-13 | Sparkline in a stat tile after arguing against it | **No sparkline anywhere** | 6.2, 7.7 |
 | R-14 | Non-league as a second hue / lighter step | **Outline column** (shape) in `MarginStrip`; `NL` word + 2px rule in lists; `?` tick for unplayed games and the `H/A/N` glyph row adopted | 5.4, 5.7 |
 | R-15 | Untested cross-role collision between division hues and status hues | **Divisions have no hue.** The collision is shown failing at ΔE 4.0–5.0 and the channel is deleted | 6.4 |

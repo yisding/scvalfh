@@ -203,7 +203,10 @@ export interface Team {
 export type GameStatus =
   /** contestState 2 */
   | 'scheduled'
-  /** contestState 3 — never observed; rendered as a scheduled window (DESIGN §5.2) */
+  /**
+   * contestState 3 — never observed. Rendered exactly like 'scheduled': the pages are static and
+   * refreshed once or twice a day, so a LIVE label would be stale by the time anyone read it.
+   */
   | 'live'
   /** contestState 4 */
   | 'final'
@@ -902,6 +905,5 @@ export type ScoreView =
       shootout: { home: number; away: number } | null;
     }
   | { kind: 'scheduled'; time: string | null }
-  | { kind: 'live' }
   | { kind: 'unreported' }
   | { kind: 'postponed'; newDate: string | null };

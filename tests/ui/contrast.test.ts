@@ -218,12 +218,6 @@ describe('structure the design depends on', () => {
     expect(CSS).toContain('prefers-reduced-motion: reduce');
     expect(CSS).toContain('forced-colors: active');
     expect(CSS).toContain(':focus-visible');
-    // The LIVE pulse must be declared in the same layer as the reduced-motion override, or the
-    // override loses the cascade to an unlayered rule.
-    const live = CSS.indexOf('.sx-live-dot {');
-    const reduced = CSS.indexOf('prefers-reduced-motion');
-    expect(live).toBeGreaterThan(0);
-    expect(live).toBeLessThan(reduced);
   });
 
   it('keeps the rule-and-kicker signature and the table / full-bleed utilities', () => {
