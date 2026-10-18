@@ -29,7 +29,7 @@ export function ClubPrograms({ programs, shared }: ClubProgramsProps) {
         {programs.map((p) => (
           <li
             key={p.key}
-            className="min-w-0 border-t border-divider px-gutter py-2.5 first:border-t-0 sm:px-4 sm:[&:nth-child(2)]:border-t-0 lg:[&:nth-child(3)]:border-t-0"
+            className="sx-gridcell"
           >
             <span className="block text-body text-ink">{p.name}</span>
             {p.detail ? <span className="block text-meta text-ink-2">{p.detail}</span> : null}
