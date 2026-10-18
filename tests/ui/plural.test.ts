@@ -1,10 +1,10 @@
 /**
- * Real plurals in count copy (SPEC §0.4): components/ui/plural.ts. (The source guard against the
+ * Real plurals in count copy (SPEC §0.4): lib/format/words.ts. (The source guard against the
  * '1 league games' / '1 games' templates it replaced is tests/arch/plural-counts.test.ts.)
  */
 import { describe, expect, it } from 'vitest';
 
-import { formStripName, gameWord, plural } from '@/components/ui/plural';
+import { formStripName, gameWord, plural } from '@/lib/format/words';
 
 describe('plural()', () => {
   it('says 1 game and 0 / 2 games', () => {

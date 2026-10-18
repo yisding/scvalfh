@@ -15,8 +15,8 @@ import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 import { getClubSlugs } from '@/lib/clubs';
-import { gameIdToParam } from '@/lib/game-id';
 import { LEAGUE_IDS, TOURNAMENT_LEAGUE_IDS } from '@/lib/leagues';
+import { gameIdToParam } from '@/lib/shared/game-id';
 import { loadSnapshot } from '@/lib/snapshot-schema';
 import { expectOk, runRepoScript } from '@/tests/support/cli';
 import { REPO, tempDir } from '@/tests/support/repo';

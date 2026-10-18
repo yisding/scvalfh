@@ -23,7 +23,7 @@
 import { z } from 'zod';
 
 import { httpUrl, slugId } from './schema-primitives';
-import { contentKey } from './stable-json';
+import { contentKey } from './shared/stable-json';
 import { TEAMS, getTeamBySlug } from './teams';
 
 /** Player stats cover every registry team, all nine leagues and the five independents: one entry per team of TEAMS. */

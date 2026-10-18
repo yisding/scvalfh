@@ -56,7 +56,7 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 
-import { localDateKey, monthDay } from '@/lib/format';
+import { monthDay } from '@/lib/format/dates';
 import {
   describePrevious,
   formatLeagueSummary,
@@ -84,6 +84,8 @@ import {
   type TeamPlayerStats,
 } from '@/lib/player-stats-schema';
 import { RostersSchema } from '@/lib/rosters-schema';
+import { localDateKey } from '@/lib/shared/dates';
+import { stableStringify } from '@/lib/shared/stable-json';
 import { MaxPrepsClient } from '@/lib/sources/maxpreps';
 import { fetchGameStats, gameStatsUrl, parseGameStats } from '@/lib/sources/maxpreps-game-stats';
 import {
@@ -98,7 +100,6 @@ import {
 import { formatIssues } from '@/lib/schema-primitives';
 import { SEASON_YEAR } from '@/lib/season';
 import { loadSnapshot } from '@/lib/snapshot-schema';
-import { stableStringify } from '@/lib/stable-json';
 import { TEAMS } from '@/lib/teams';
 import { runCli } from './cli';
 

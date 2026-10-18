@@ -4,7 +4,7 @@ import Arrow from '@/components/ui/Arrow';
 import BerthMeter from '@/components/ui/BerthMeter';
 import ExternalLink from '@/components/ui/ExternalLink';
 import SectionHeader from '@/components/ui/SectionHeader';
-import { monthDay, shortDate } from '@/lib/format';
+import { monthDay, shortDate } from '@/lib/format/dates';
 
 import type { PostseasonView } from './home-view';
 

@@ -24,10 +24,10 @@
 
 import { z } from 'zod';
 
-import { localDateKey } from '@/lib/format';
 import { DATA_QUALITY, LEAGUES } from '@/lib/leagues';
 import type { TeamSlug } from '@/lib/model/ids';
 import type { Team } from '@/lib/model/team';
+import { localDateKey } from '@/lib/shared/dates';
 import { TEAMS, isWithdrawnSchool, normalizeTeamKey, resolveTeam, sideJoinKey } from '@/lib/teams';
 import { CHROME_USER_AGENT, type HttpClientOptions, htmlUnescape } from './http';
 

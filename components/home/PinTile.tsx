@@ -12,7 +12,7 @@ import type { PinTileView } from './home-types';
  *
  * Before hydration — and with JavaScript off, or storage blocked — it is a LINK to the team page,
  * never a dead button. After hydration it is a pin button whose accessible name is `pinLabel`
- * (`Pin Leigh, Mt. Hamilton · BVAL`, lib/pin-label.ts), which contains the visible short name
+ * (`Pin Leigh, Mt. Hamilton · BVAL`, lib/shared/pin-label.ts), which contains the visible short name
  * (WCAG 2.5.3). Pinning also remembers the team's league and moves focus to the My-team heading
  * (`focus: 'card'`), because this grid hides the moment a team is pinned.
  *

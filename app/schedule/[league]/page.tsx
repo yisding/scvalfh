@@ -23,7 +23,8 @@ import {
   getTeams,
   getToday,
 } from '@/lib/data';
-import { monthDay, plural } from '@/lib/format';
+import { monthDay } from '@/lib/format/dates';
+import { plural } from '@/lib/format/words';
 import { isIndependentLeague, leagueSportWords, standaloneName } from '@/lib/leagues';
 import { SEASON_DISPLAY } from '@/lib/season';
 

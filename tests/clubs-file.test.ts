@@ -40,7 +40,7 @@ import {
 } from '@/lib/clubs';
 import { LEAGUES } from '@/lib/leagues';
 import { classOf, getAllEnrichedRosters, getRosters } from '@/lib/rosters';
-import { isHttpsUrl } from '@/lib/schema-primitives';
+import { isHttpsUrl } from '@/lib/shared/patterns';
 import { getTeamBySlug } from '@/lib/teams';
 import { REPO } from './support/repo';
 

@@ -9,9 +9,9 @@ import { buildClubPageView } from '@/components/clubs/club-view';
 import PageHeader from '@/components/layout/PageHeader';
 import { OG_BASE, ROOT_OG_IMAGE } from '@/components/layout/site';
 import ExternalLink from '@/components/ui/ExternalLink';
-import { plural } from '@/components/ui/plural';
 import SectionHeader from '@/components/ui/SectionHeader';
 import { clubDisplayName, getClub, getClubAffiliations, getClubSlugs } from '@/lib/clubs';
+import { plural } from '@/lib/format/words';
 
 /**
  * /clubs/[slug] — "Who here plays for this club, and how do we know?" (DESIGN §17.1, SPEC §1.1j2).

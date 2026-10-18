@@ -28,7 +28,8 @@
  * Final, integer scores, and a non-junk row. Pure: no I/O, no clock — `today` is an input.
  */
 
-import { dayDiff, monthDay, shiftDateKey, shootoutPhrases, toLocalTimestamp } from './format';
+import { monthDay } from './format/dates';
+import { shootoutPhrases } from './format/score';
 import { LEAGUES, getLeague, getSection, leagueOfDivision } from './leagues';
 import type { BackfillRow, SbliveOnlyRow } from './model/crosscheck';
 import type { OfficialFixture } from './model/fixture';
@@ -37,6 +38,7 @@ import type { ContestId, TeamSlug } from './model/ids';
 import { type SectionConfig } from './model/league-config';
 import type { Snapshot } from './model/snapshot';
 import type { Team } from './model/team';
+import { dayDiff, toLocalTimestamp } from './shared/dates';
 import {
   isCaliforniaGameRow,
   isIgnoredSbliveSide,
@@ -116,9 +118,6 @@ export interface BackfillResult {
 }
 
 // ---------------------------------------------------------------- dates and keys
-
-// dayDiff and shiftDateKey live in lib/format; re-exported for lib/pipeline/steps/sblive.ts.
-export { dayDiff, shiftDateKey };
 
 function within(a: string, b: string, days: number): boolean {
   return Math.abs(dayDiff(a, b)) <= days;

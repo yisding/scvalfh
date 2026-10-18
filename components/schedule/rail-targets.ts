@@ -11,10 +11,10 @@
  *
  * Pure and dependency-free on purpose: it is bundled into `/schedule/<league>`'s one client module,
  * whose first-load JS is held to a budget (scripts/assert-budgets.ts). Turbopack tree-shakes
- * `lib/format` per export (ScheduleFilters already pulls its `plural` in through components/ui/plural),
+ * `lib/format/` per export (ScheduleFilters already pulls its `gameWord` in from lib/format/words.ts),
  * so this module formats its own two date strings to keep `monthDay`/`shortDate`, `parseLocal`,
  * `weekdayIndex` and the name tables out of that chunk, and it never reads a clock.
- * tests/ui/rail-targets.test.ts holds the formatting to `lib/format`'s output for every date in the
+ * tests/ui/rail-targets.test.ts holds the formatting to `lib/format/dates.ts`'s output for every date in the
  * snapshot.
  */
 
@@ -77,13 +77,13 @@ function parts(date: string): { year: number; month: number; day: number } {
   };
 }
 
-/** 'Oct 7' — what `lib/format`'s `monthDay` prints. */
+/** 'Oct 7' — what `lib/format/dates.ts`'s `monthDay` prints. */
 export function railMonthDay(date: string): string {
   const { month, day } = parts(date);
   return `${MONTHS[month - 1]} ${day}`;
 }
 
-/** 'Wed Oct 7' — what `lib/format`'s `shortDate` prints. */
+/** 'Wed Oct 7' — what `lib/format/dates.ts`'s `shortDate` prints. */
 export function railShortDate(date: string): string {
   const { year, month, day } = parts(date);
   const y = month < 3 ? year - 1 : year;

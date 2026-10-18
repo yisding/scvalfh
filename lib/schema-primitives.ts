@@ -9,19 +9,17 @@
  * lib/clubs-schema.ts, lib/commits-schema.ts, lib/history-schema.ts, lib/prior-season-schema.ts and
  * lib/official/schema.ts all import from here. A schema that deliberately differs keeps its own
  * declaration (commits' and clubs' calendar-strict `asOf` shapes, their https-without-social-media
- * URLs). SLUG_PATTERN and DATE_PATTERN are plain RegExps for the config and registry asserts
- * (lib/leagues.ts, lib/teams.ts), which use no zod schema.
+ * URLs). The plain RegExps and checks under them (SLUG_PATTERN, DATE_PATTERN, isCalendarDate,
+ * isHttpsUrl) live in lib/shared/patterns.ts, where the config and registry asserts (lib/leagues.ts,
+ * lib/teams.ts), which use no zod schema, take them without loading zod.
  *
- * zod is the only runtime import, so any contract can take these without a dependency cycle.
+ * zod and those patterns are the only runtime imports, so any contract can take these without a
+ * dependency cycle.
  */
 
 import { z } from 'zod';
 
-/** A lower-case id: words of a-z and 0-9 joined by single hyphens (`los-altos`, `scval-de-anza`). */
-export const SLUG_PATTERN = /^[a-z0-9]+(-[a-z0-9]+)*$/;
-
-/** A date key written YYYY-MM-DD. The shape only: "2026-02-30" passes (isCalendarDate refuses it). */
-export const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
+import { DATE_PATTERN, SLUG_PATTERN } from '@/lib/shared/patterns';
 
 /** League, division, slug and other ids: validated strings; membership is checked by each contract. */
 export const slugId = z.string().regex(SLUG_PATTERN, 'expected a lower-case id');
@@ -46,24 +44,6 @@ export const httpUrl = z
 
 /** An http(s) URL (httpUrl) whose scheme is https. */
 export const httpsUrl = httpUrl.refine((v) => v.startsWith('https://'), 'expected an https URL');
-
-/** Parses as a URL, and the scheme is https: these end up in an href. */
-export function isHttpsUrl(url: string): boolean {
-  try {
-    return new URL(url).protocol === 'https:';
-  } catch {
-    return false;
-  }
-}
-
-/** A real calendar day, YYYY-MM-DD (no 2026-02-30). */
-export function isCalendarDate(v: string): boolean {
-  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(v);
-  if (!m) return false;
-  const [y, mo, d] = [Number(m[1]), Number(m[2]), Number(m[3])];
-  const date = new Date(Date.UTC(y, mo - 1, d));
-  return date.getUTCFullYear() === y && date.getUTCMonth() === mo - 1 && date.getUTCDate() === d;
-}
 
 /** A schema failure's first ten issues, one `  path: message` line each (`(root)` for an empty path). */
 export function formatIssues(issues: ReadonlyArray<{ path: readonly PropertyKey[]; message: string }>): string {

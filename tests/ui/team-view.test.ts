@@ -16,7 +16,7 @@ import { createElement, type ReactElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
-import { ordinal } from '@/lib/format';
+import { ordinal } from '@/lib/format/numbers';
 import type { Snapshot } from '@/lib/model/snapshot';
 import { CORPUS_HOOK_TIMEOUT, useCorpusModules, withSnapshotModules, type CorpusModules } from '@/tests/support/corpus-modules';
 import { corpusSnapshotPath } from '@/tests/support/corpus-snapshot';
@@ -592,7 +592,7 @@ describe('the NEXT card and the identity place line (UI pass, league-aware)', ()
 
   it('the identity card states the place on its own line, T-prefixed when level', async () => {
     const { TeamIdentity } = await import('@/components/teams/TeamIdentity');
-    const { ordinal } = await import('@/lib/format');
+    const { ordinal } = await import('@/lib/format/numbers');
     let checked = 0;
     for (const team of m.data.getTeams()) {
       const v = m.view.buildTeamPageView(team.slug)!;
@@ -615,7 +615,7 @@ describe('the NEXT card and the identity place line (UI pass, league-aware)', ()
 
   it('the Place tile writes a level place the same way: T-prefixed value, "tied for" spoken', async () => {
     const { TeamStatTiles } = await import('@/components/teams/TeamStatTiles');
-    const { ordinal } = await import('@/lib/format');
+    const { ordinal } = await import('@/lib/format/numbers');
     let checked = 0;
     for (const team of m.data.getTeams()) {
       const v = m.view.buildTeamPageView(team.slug)!;

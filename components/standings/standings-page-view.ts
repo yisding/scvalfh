@@ -28,7 +28,9 @@ import {
   getTeams,
   type LeagueSummary,
 } from '@/lib/data';
-import { plural, recordString, shortDate } from '@/lib/format';
+import { shortDate } from '@/lib/format/dates';
+import { recordString } from '@/lib/format/numbers';
+import { plural } from '@/lib/format/words';
 import { REGIONS, getLeague, isIndependentLeague, leagueOfDivision, leaguePlayStarts, standaloneName } from '@/lib/leagues';
 import type { Game } from '@/lib/model/game';
 import type { DivisionId, LeagueId, RegionId } from '@/lib/model/ids';

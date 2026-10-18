@@ -1,4 +1,4 @@
-import { shootoutPhrases } from '@/lib/format';
+import { shootoutPhrases } from '@/lib/format/score';
 import { findDivision, findLeague } from '@/lib/leagues';
 import { shootoutGroupName, shootoutSectionOf } from '@/components/ui/describe-game';
 import ExternalLink from '@/components/ui/ExternalLink';

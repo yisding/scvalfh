@@ -25,7 +25,8 @@
  * game with the note as written, so a reader can tell the two sources apart.
  */
 
-import { listWords, numberWord, plural, shortDate } from '@/lib/format';
+import { shortDate } from '@/lib/format/dates';
+import { listWords, numberWord, plural } from '@/lib/format/words';
 import type { Game } from '@/lib/model/game';
 import type { TeamSlug } from '@/lib/model/ids';
 import type { NoteCredit, NoteStatKind } from '@/lib/note-stats';

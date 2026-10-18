@@ -1,8 +1,9 @@
 import Link from 'next/link';
 
-import { EN_DASH, monthDay } from '@/lib/format';
-import { gameHref } from '@/lib/game-id';
+import { monthDay } from '@/lib/format/dates';
+import { EN_DASH } from '@/lib/format/words';
 import type { FormGame } from '@/lib/data';
+import { gameHref } from '@/lib/shared/game-id';
 import { getTeamBySlug } from '@/lib/teams';
 
 import EmptyState from './EmptyState';

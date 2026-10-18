@@ -3,10 +3,10 @@ import Link from 'next/link';
 import { SummaryLead, SummaryTeams } from '@/components/ui/GameRow';
 import SectionHeader from '@/components/ui/SectionHeader';
 import { describeGame } from '@/components/ui/describe-game';
-import { shortDate } from '@/lib/format';
-import { gameHref } from '@/lib/game-id';
+import { shortDate } from '@/lib/format/dates';
 import type { Game } from '@/lib/model/game';
 import type { LeagueId } from '@/lib/model/ids';
+import { gameHref } from '@/lib/shared/game-id';
 
 /**
  * A league's latest results day (SPEC §10.1, DESIGN §3.1, §8).

@@ -3,9 +3,9 @@ import Link from 'next/link';
 import EmptyState from '@/components/ui/EmptyState';
 import { GameLine } from '@/components/ui/GameRow';
 import SectionHeader from '@/components/ui/SectionHeader';
-import { plural } from '@/components/ui/plural';
 import { gameKind } from '@/components/ui/describe-game';
-import { shortDate } from '@/lib/format';
+import { shortDate } from '@/lib/format/dates';
+import { plural } from '@/lib/format/words';
 import type { Game } from '@/lib/model/game';
 import type { NextLeagueDay } from './home-view';
 

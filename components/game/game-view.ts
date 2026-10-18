@@ -32,18 +32,9 @@ import {
   getTeamForm,
   getTeams,
 } from '@/lib/data';
-import {
-  dateWithYear,
-  matchupJoiner,
-  monthDay,
-  recordString,
-  renderScore,
-  shootoutPhrases,
-  shortDate,
-  sideOutcome,
-  timeOfDayPT,
-} from '@/lib/format';
-import { gameHref, gameIdToParam, paramToGameId } from '@/lib/game-id';
+import { dateWithYear, monthDay, shortDate, timeOfDayPT } from '@/lib/format/dates';
+import { recordString } from '@/lib/format/numbers';
+import { matchupJoiner, renderScore, shootoutPhrases } from '@/lib/format/score';
 import {
   divisionDisplay,
   divisionHeading,
@@ -75,6 +66,8 @@ import {
   type GameDisplay,
   type SideView,
 } from '@/components/ui/describe-game';
+import { sideOutcome } from '@/lib/shared/game';
+import { gameHref, gameIdToParam, paramToGameId } from '@/lib/shared/game-id';
 
 // ---------------------------------------------------------------- types
 

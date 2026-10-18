@@ -1,11 +1,11 @@
 /**
- * lib/stable-json.ts: the one sorted-key walk behind every committed data file (stableStringify)
+ * lib/shared/stable-json.ts: the one sorted-key walk behind every committed data file (stableStringify)
  * and the fetch scripts' no-op check (contentKey).
  */
 
 import { describe, expect, it } from 'vitest';
 
-import { contentKey, normalizeKeys, stableStringify } from '@/lib/stable-json';
+import { contentKey, normalizeKeys, stableStringify } from '@/lib/shared/stable-json';
 
 describe('stable JSON', () => {
   it('contentKey sorts keys and drops ignored keys at every level, compactly', () => {

@@ -1,6 +1,6 @@
-import { formatStamp, shortDate } from '@/lib/format';
 
 import ExternalLink from '@/components/ui/ExternalLink';
+import { formatStamp, shortDate } from '@/lib/format/dates';
 import type { SbliveCrossCheck } from '@/lib/model/crosscheck';
 
 /**

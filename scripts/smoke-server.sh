@@ -145,7 +145,7 @@ stale=$(grep -c 'so newer scores may be missing' "$tmp/b" || true)
 # built from), never from the server: games (the superseded-game stubs are prerendered but kept
 # out of the sitemap), distinct game dates, teams, leagues, league-tournament leagues, the clubs
 # of data/clubs.json (every club has a page, one with no tied player included), and each stub as
-# `<param> <canonical param>` (lib/game-id.ts gameIdToParam: sblive:N → sblive-N).
+# `<param> <canonical param>` (lib/shared/game-id.ts gameIdToParam: sblive:N → sblive-N).
 facts=$(node -e '
   const fs = require("fs");
   const s = JSON.parse(fs.readFileSync(process.env.SCVAL_SNAPSHOT || "data/snapshot.json", "utf8"));

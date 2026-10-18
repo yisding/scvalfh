@@ -4,14 +4,14 @@
  * school). Its "not covered" entries come from DATA_QUALITY.notCovered (lib/leagues.ts), whole sentences
  * printed verbatim.
  *
- * Client-safe: its one runtime import is lib/format's `plural`, itself client-safe. Result order is
+ * Client-safe: its one runtime import is lib/format/words.ts's `plural`, itself client-safe. Result order is
  * the index order (`LEAGUES` order, then registry order, as `getTeamSearchIndex()` builds it) within
  * a score. A league or division label NEVER
  * matches a team: those are separate group entries ("Divisions and leagues").
  */
 
-import { plural } from './format';
-import type { SectionConfig } from './model/league-config';
+import { plural } from '@/lib/format/words';
+import type { SectionConfig } from '@/lib/model/league-config';
 
 export interface TeamSearchEntry {
   kind: 'team';
@@ -113,7 +113,7 @@ export function buildSearchIndex(
     }
   }
   for (const t of teams) {
-    if (!leagueById.has(t.leagueId)) throw new Error(`lib/search.ts: team ${t.slug} has unknown league ${t.leagueId}`);
+    if (!leagueById.has(t.leagueId)) throw new Error(`lib/shared/search.ts: team ${t.slug} has unknown league ${t.leagueId}`);
   }
 
   const groups: GroupSearchEntry[] = [];

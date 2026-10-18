@@ -16,13 +16,14 @@
  * still true of this run's games (lib/crosscheck.ts `carryCrossCheck`).
  */
 
-import { applyBackfill, cleanSbliveRows, planBackfill, scoreboardCoverage, shiftDateKey } from '@/lib/backfill';
+import { applyBackfill, cleanSbliveRows, planBackfill, scoreboardCoverage } from '@/lib/backfill';
 import { carryCrossCheck, emptyCrossCheck, reconcile, withBackfill } from '@/lib/crosscheck';
 import type { SbliveCrossCheck } from '@/lib/model/crosscheck';
 import type { OfficialFixture } from '@/lib/model/fixture';
 import type { Game } from '@/lib/model/game';
 import type { SourceStatus } from '@/lib/model/health';
 import type { TeamSlug } from '@/lib/model/ids';
+import { shiftDateKey } from '@/lib/shared/dates';
 import {
   dedupeSbliveGames,
   parseScoresPage,

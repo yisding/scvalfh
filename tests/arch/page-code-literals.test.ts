@@ -77,7 +77,7 @@ function scan(file: string, sf: ts.SourceFile = parse(file)): Finding[] {
         }
       }
       if (ts.isTemplateExpression(node) && /\/game\/\$\{/.test(node.getText(sf))) {
-        at(node, 'builds a `/game/${…}` URL by hand (use gameHref from lib/game-id.ts)');
+        at(node, 'builds a `/game/${…}` URL by hand (use gameHref from lib/shared/game-id.ts)');
       }
     }
     ts.forEachChild(node, visit);
@@ -108,7 +108,7 @@ describe('page code reads ids from config (SPEC §12.2)', () => {
     // Allowed: ids in comments, a literal type, an unrelated template; a non-page directory's literals.
     const good = [
       "// 'scval' in a comment, and `/game/${id}` too",
-      "import { gameHref } from '../lib/game-id';",
+      "import { gameHref } from '../lib/shared/game-id';",
       "type Where = Pick<Team, 'city' | 'division'>;",
       'const t = `/teams/${slug}`;',
     ].join('\n');

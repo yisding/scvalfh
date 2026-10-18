@@ -3,7 +3,7 @@ import Link from 'next/link';
 import Arrow from '@/components/ui/Arrow';
 import EmptyState from '@/components/ui/EmptyState';
 import SectionHeader from '@/components/ui/SectionHeader';
-import { shortDate } from '@/lib/format';
+import { shortDate } from '@/lib/format/dates';
 
 import type { CrossLeagueLatest as CrossLeagueLatestView } from './home-view';
 import { ResultRow } from './LatestScores';

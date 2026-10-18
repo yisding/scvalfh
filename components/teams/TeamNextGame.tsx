@@ -1,7 +1,6 @@
 import Link from 'next/link';
 
-import { dateTimeAttr, timeOfDayPT } from '@/lib/format';
-import { gameHref } from '@/lib/game-id';
+import { dateTimeAttr, timeOfDayPT } from '@/lib/format/dates';
 import EmptyState from '@/components/ui/EmptyState';
 import ExternalLink from '@/components/ui/ExternalLink';
 import ResultChip from '@/components/ui/ResultChip';
@@ -9,6 +8,7 @@ import SectionHeader from '@/components/ui/SectionHeader';
 import StatusLabel from '@/components/ui/StatusLabel';
 import TeamMonogram from '@/components/ui/TeamMonogram';
 import { describeGame, gameKindLabel } from '@/components/ui/describe-game';
+import { gameHref } from '@/lib/shared/game-id';
 import type { NextCard, TeamLeagueCopy } from './team-view';
 
 /**

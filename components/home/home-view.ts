@@ -2,7 +2,7 @@
  * Everything `/` renders, assembled once on the server (SPEC §10.1, DESIGN §3.1).
  *
  * This is the only module the home page reads data through, and it reads the snapshot ONLY through
- * `lib/data.ts` (plus the pure config helpers of `lib/leagues.ts` and `lib/pin-label.ts`). "Today"
+ * `lib/data.ts` (plus the pure config helpers of `lib/leagues.ts` and `lib/shared/pin-label.ts`). "Today"
  * is always `getToday()` — derived from `snapshot.fetchedAt` in America/Los_Angeles, never
  * `Date.now()` — so the build is reproducible and the "as of" stamp in the header is honest.
  *
@@ -43,22 +43,9 @@ import {
   playInClause,
   type LeagueSummary,
 } from '@/lib/data';
-import {
-  EM_DASH,
-  dateSpan,
-  dateTimeAttr,
-  leagueClock,
-  listWords,
-  monthDay,
-  numberWord,
-  ordinal,
-  ordinalWord,
-  recordString,
-  recordWords,
-  shortDate,
-  timeOfDayPT,
-} from '@/lib/format';
-import { gameHref } from '@/lib/game-id';
+import { dateSpan, dateTimeAttr, leagueClock, monthDay, shortDate, timeOfDayPT } from '@/lib/format/dates';
+import { ordinal, ordinalWord, recordString, recordWords } from '@/lib/format/numbers';
+import { EM_DASH, listWords, numberWord, plural } from '@/lib/format/words';
 import { hasHistory } from '@/lib/history';
 import type { Game } from '@/lib/model/game';
 import type { DivisionId, LeagueId, RegionId } from '@/lib/model/ids';
@@ -67,6 +54,9 @@ import {
 } from '@/lib/model/league-config';
 import type { SeasonPhase } from '@/lib/model/season';
 import type { Team } from '@/lib/model/team';
+import { gameHref } from '@/lib/shared/game-id';
+import { pickerName, pinLabel } from '@/lib/shared/pin-label';
+import type { SearchIndex } from '@/lib/shared/search';
 import { outcomesFor, playoffOutcomeLabel, statusBadge } from '@/lib/standings';
 import {
   CCS,
@@ -81,14 +71,11 @@ import {
   sectionOf,
   standaloneName,
 } from '@/lib/leagues';
-import { pickerName, pinLabel } from '@/lib/pin-label';
-import type { SearchIndex } from '@/lib/search';
 import { teamOfSide } from '@/lib/teams';
 import type { LeagueChip } from '@/components/layout/LeagueSwitcher';
 import { leagueChips } from '@/components/layout/league-chips';
 import { fixtureOpponent, nextOfficialFixture } from '@/components/teams/team-view';
 import { describeGame, gameKind, postseasonTagOf, type GameDisplay, type SideView } from '@/components/ui/describe-game';
-import { plural } from '@/components/ui/plural';
 
 import type {
   HomeLastDisplay,

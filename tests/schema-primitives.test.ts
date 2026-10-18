@@ -7,17 +7,14 @@
 import { describe, expect, it } from 'vitest';
 
 import {
-  DATE_PATTERN,
-  SLUG_PATTERN,
   dateKey,
   failValidation,
   formatIssues,
   httpUrl,
   httpsUrl,
-  isCalendarDate,
-  isHttpsUrl,
   slugId,
 } from '@/lib/schema-primitives';
+import { DATE_PATTERN, SLUG_PATTERN, isCalendarDate, isHttpsUrl } from '@/lib/shared/patterns';
 
 const messageOf = (schema: { safeParse: (v: unknown) => { success: boolean; error?: { issues: { message: string }[] } } }, v: unknown) =>
   schema.safeParse(v).error?.issues[0]?.message ?? null;

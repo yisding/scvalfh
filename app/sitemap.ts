@@ -21,9 +21,9 @@ import {
   getTeams,
   getTournamentLeagueIds,
 } from '@/lib/data';
-import { gameHref } from '@/lib/game-id';
 import { getHistoryLastChecked } from '@/lib/history';
 import { getJvFetchedAt, getJvGamesOn } from '@/lib/jv';
+import { gameHref } from '@/lib/shared/game-id';
 
 /**
  * /sitemap.xml — every route family (SPEC §8.1): the fixed pages, `/standings/<id>` and

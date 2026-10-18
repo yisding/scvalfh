@@ -10,7 +10,7 @@
  * No clock: `today` is localDateKey(fetchedAt), never Date.now().
  */
 
-import { localDateKey, shortDate, timeOfDay, toLocalTimestamp } from '@/lib/format';
+import { shortDate, timeOfDay } from '@/lib/format/dates';
 import { LEAGUES, findDivision } from '@/lib/leagues';
 import type { CifssCrossCheck, SbliveCrossCheck } from '@/lib/model/crosscheck';
 import type { OfficialFixture } from '@/lib/model/fixture';
@@ -21,6 +21,7 @@ import type {
 import type { DivisionId, LeagueId, TeamId, TeamSlug } from '@/lib/model/ids';
 import type { Snapshot } from '@/lib/model/snapshot';
 import type { ReportedRecord } from '@/lib/model/standings';
+import { localDateKey, toLocalTimestamp } from '@/lib/shared/dates';
 import { CIFSS_SECTIONS } from '@/lib/sources/cifss';
 import type { ScheduleRow } from '@/lib/sources/maxpreps';
 import { TEAMS, getTeamBySlug } from '@/lib/teams';

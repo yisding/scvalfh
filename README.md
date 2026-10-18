@@ -1573,7 +1573,7 @@ Two `/leaders` boards per region weigh scoring by the defenses it came against
 - **axe-core is pinned to the 4.13 line in CI.** axe-core 4.14.0 (published 2026-10-05) widened its
   `label-content-name-mismatch` rule: it now compares the visible text of `aria-hidden` descendants
   and keeps the soft hyphens of the team-picker tiles, so it flags three patterns that predate this
-  change and whose accessible names are deliberate sentences: the home pin tiles (`lib/pin-label.ts`),
+  change and whose accessible names are deliberate sentences: the home pin tiles (`lib/shared/pin-label.ts`),
   the "Who we haven't beaten" rows and the pinned card's last-game link. With 4.13 the pass is clean
   (176 page loads, 0 serious or critical). Reworking those three names for 4.14 is a follow-up.
 - MaxPreps' season-year URL segment is cosmetic (it always serves the current

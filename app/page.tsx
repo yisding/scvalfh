@@ -12,7 +12,8 @@ import PageHeader from '@/components/layout/PageHeader';
 import JsonLd from '@/components/layout/JsonLd';
 import { OG_BASE, SITE_NAME, leaguesBySectionWords } from '@/components/layout/site';
 import { websiteJsonLd } from '@/components/layout/structured-data';
-import { listWords, shortDate } from '@/lib/format';
+import { shortDate } from '@/lib/format/dates';
+import { listWords } from '@/lib/format/words';
 import { INDEPENDENT_LEAGUES, LEAGUES_PROPER } from '@/lib/leagues';
 import { TEAMS } from '@/lib/teams';
 

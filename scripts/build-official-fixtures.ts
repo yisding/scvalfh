@@ -25,7 +25,7 @@ import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 
-import { plural } from '@/lib/format';
+import { plural } from '@/lib/format/words';
 import { getDivision, getLeague } from '@/lib/leagues';
 import type { LeagueId } from '@/lib/model/ids';
 import { parseBvalScheduleText } from '@/lib/official/bval-text';

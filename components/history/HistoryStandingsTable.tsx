@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
 import { getTeamBySlug } from '@/lib/data';
-import { ordinal } from '@/lib/format';
+import { ordinal } from '@/lib/format/numbers';
 import { historySchoolName, type HistoryRow } from '@/lib/history';
 import MissingValue from '@/components/ui/MissingValue';
 import TeamMonogram from '@/components/ui/TeamMonogram';

@@ -1,8 +1,8 @@
 import Link from 'next/link';
 
-import { ordinal } from '@/lib/format';
 import ExternalLink from '@/components/ui/ExternalLink';
 import type { StandingsRowData } from '@/components/ui/StandingsTable';
+import { ordinal } from '@/lib/format/numbers';
 import type { Standing } from '@/lib/model/standings';
 
 import type { ComparisonView, MismatchNote, MissingRowView } from './standings-view';

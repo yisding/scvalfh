@@ -103,7 +103,7 @@ describe('deleted names stay deleted (SPEC §0.4)', () => {
       "import { LEAGUE_IDS, leagueStandingsUrl } from '../lib/leagues';",
       "import { playoffStatusFor } from '../lib/standings';",
       "// import { DIVISIONS } from '../lib/season';",
-      "import { gameHref } from '../lib/game-id';",
+      "import { gameHref } from '../lib/shared/game-id';",
       "import { SEASON } from '../lib/season';",
       "import { DIVISIONS } from '../lib/seasons';",
     ].join('\n');

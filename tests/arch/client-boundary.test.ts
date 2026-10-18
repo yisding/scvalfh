@@ -37,15 +37,7 @@ import {
  * Repo-relative module paths (no extension, no trailing /index) a client module may import from
  * outside components/ and app/. An entry ending in '/' is a prefix: it admits everything under it.
  */
-const CLIENT_SAFE: readonly string[] = [
-  'lib/model/',
-  'lib/season',
-  'lib/format',
-  'lib/game-id',
-  'lib/search',
-  'lib/pin-label',
-  'lib/mascots',
-];
+const CLIENT_SAFE: readonly string[] = ['lib/model/', 'lib/shared/', 'lib/format/', 'lib/season', 'lib/mascots'];
 
 const NODE_BUILTINS = new Set(builtinModules);
 
@@ -107,12 +99,12 @@ describe('client boundary: no "use client" module reaches a server-only module',
           "export type { D } from '../../lib/leagues';",
           "import { x, type Y } from './keep';",
           "import './side-effect';",
-          "export { z } from '@/lib/format';",
+          "export { z } from '@/lib/format/words';",
           "import W, { type V } from './default-rides-along';",
           "type T = import('../../lib/data').Snapshot;",
         ].join('\n'),
       ),
-    ).toEqual(['./keep', './side-effect', '@/lib/format', './default-rides-along']);
+    ).toEqual(['./keep', './side-effect', '@/lib/format/words', './default-rides-along']);
   });
 
   it('the import scanner collects dynamic import() and require() specifiers', () => {
@@ -138,12 +130,13 @@ describe('client boundary: no "use client" module reaches a server-only module',
   it('only CLIENT_SAFE modules are reachable from outside components/ and app/ (allowlist)', () => {
     const from = PROBE;
     // A module nobody listed is banned, wherever it lives: this is what makes the list an allowlist.
-    for (const spec of ['@/lib/leagues/rules', '@/lib/leagues', '@/lib/brand-new-module', '@/scripts/cli']) {
+    // (lib/format.ts, beside the client-safe lib/format/ directory, serves only the metadata image routes.)
+    for (const spec of ['@/lib/leagues/rules', '@/lib/leagues', '@/lib/format', '@/lib/brand-new-module', '@/scripts/cli']) {
       expect(classify(spec, from), spec).toEqual({ kind: 'banned', name: spec.slice(2) });
     }
     // A listed one passes (and is walked), a trailing /index is the same module, and the client's own tree is free.
-    expect(classify('@/lib/format', from).kind).toBe('file');
-    expect(classify('@/lib/format/index', from).kind).toBe('file');
+    expect(classify('@/lib/format/words', from).kind).toBe('file');
+    expect(classify('@/lib/format/words/index', from).kind).toBe('file');
     expect(classify('@/components/ui/local-store', from).kind).toBe('file');
     expect(classify('react', from)).toEqual({ kind: 'external' });
     // zod and the Node built-ins stay banned.

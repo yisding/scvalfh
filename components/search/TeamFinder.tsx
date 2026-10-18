@@ -4,21 +4,16 @@ import Link from 'next/link';
 import { Fragment, useEffect, useId, useMemo, useState } from 'react';
 
 import Arrow from '@/components/ui/Arrow';
-import { plural } from '@/components/ui/plural';
 import { usePinnedTeam } from '@/components/ui/use-pinned-team';
-import { listWords } from '@/lib/format';
-import { pinLabel } from '@/lib/pin-label';
+import { listWords, plural } from '@/lib/format/words';
+import { pinLabel } from '@/lib/shared/pin-label';
 import {
-  normalizeQuery,
+  type GroupSearchEntry, type NotCoveredEntry, type SearchIndex, type TeamSearchEntry, normalizeQuery,
   searchTeams,
-  type GroupSearchEntry,
-  type NotCoveredEntry,
-  type SearchIndex,
-  type TeamSearchEntry,
-} from '@/lib/search';
+} from '@/lib/shared/search';
 
 /**
- * Find a team (SPEC §9.3): a pure, zero-network matcher (lib/search.ts) over the pre-serialized
+ * Find a team (SPEC §9.3): a pure, zero-network matcher (lib/shared/search.ts) over the pre-serialized
  * 102-team index the page passes in. Two modes:
  *
  * - `filter` (/teams): the page's own server-rendered, grouped list IS the result list. This
@@ -31,7 +26,7 @@ import {
  * - `pin` (home): renders its own results — up to `limit` teams in relevance order, then
  *   `Search all 102 on Teams →` when more match. Each result is a `<button>` with NO aria-label:
  *   the visible short name and `<division heading> · <league short>` line sit inside a name that
- *   reads exactly like the pin tiles' (`pinLabel`, lib/pin-label.ts: `Pin Leigh, Mt. Hamilton ·
+ *   reads exactly like the pin tiles' (`pinLabel`, lib/shared/pin-label.ts: `Pin Leigh, Mt. Hamilton ·
  *   BVAL`), the extra words being sr-only, so the accessible name contains the visible text in
  *   order (WCAG 2.5.3). A tap pins the team (which remembers its league) and calls `onPin`; the
  *   caller moves focus. When this browser stores nothing (`localStorage` throws), each result is

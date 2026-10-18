@@ -17,7 +17,7 @@ import type { ReactElement } from 'react';
 import { beforeAll, describe, expect, it } from 'vitest';
 
 import type { ProjectionRow } from '@/components/playoffs/playoff-view';
-import { listWords } from '@/lib/format';
+import { listWords } from '@/lib/format/words';
 import type { PlayoffStatus } from '@/lib/model/standings';
 import { useCorpusModules } from '@/tests/support/corpus-modules';
 import { textOf } from '@/tests/support/html-text';

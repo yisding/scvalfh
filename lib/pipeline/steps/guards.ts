@@ -19,12 +19,12 @@
  */
 
 import { classifyGames } from '@/lib/classify';
-import { byDateThenId } from '@/lib/format';
 import { LEAGUES, getLeague } from '@/lib/leagues';
 import type { Game } from '@/lib/model/game';
 import type { DivisionHealth } from '@/lib/model/health';
 import type { DivisionId, LeagueId } from '@/lib/model/ids';
 import { type LeagueConfig } from '@/lib/model/league-config';
+import { byDateThenId } from '@/lib/shared/game';
 import { divisionGames } from '@/lib/standings';
 import { teamsInLeague } from '@/lib/teams';
 import { RunAbort } from '@/lib/pipeline/contract';

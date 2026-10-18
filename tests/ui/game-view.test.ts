@@ -27,7 +27,7 @@ import { tempDir, tempFile } from '@/tests/support/repo';
 const loaders = {
   d: () => import('@/lib/data'),
   m: () => import('@/components/game/game-view'),
-  ids: () => import('@/lib/game-id'),
+  ids: () => import('@/lib/shared/game-id'),
   page: () => import('@/app/game/[id]/page'),
   og: () => import('@/app/game/[id]/opengraph-image'),
 };
@@ -93,7 +93,7 @@ describe('params (app/game/[id]/page.tsx and opengraph-image.tsx via game-view.t
     for (const { id } of page) {
       expect(id, 'components/game/game-view.ts param').not.toContain(':');
       const contestId = L.ids.paramToGameId(id);
-      expect(L.ids.gameIdToParam(contestId), `lib/game-id.ts round trip ${id}`).toBe(id);
+      expect(L.ids.gameIdToParam(contestId), `lib/shared/game-id.ts round trip ${id}`).toBe(id);
       expect(
         !!L.d.getGameById(contestId) || superseded.includes(contestId),
         `components/game/game-view.ts ${id} resolves`,

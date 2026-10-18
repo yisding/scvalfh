@@ -1,6 +1,6 @@
-import { EM_DASH, perGame, placeMark, placeWords, recordString, signedGd, streakString } from '@/lib/format';
-import { plural } from '@/components/ui/plural';
 import StatTile from '@/components/ui/StatTile';
+import { perGame, placeMark, placeWords, recordString, signedGd, streakString } from '@/lib/format/numbers';
+import { EM_DASH, plural } from '@/lib/format/words';
 import type { TeamPageView } from './team-view';
 import { placeSub } from './team-view';
 

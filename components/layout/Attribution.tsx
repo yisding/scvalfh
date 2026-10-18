@@ -5,7 +5,7 @@ import { Fragment } from 'react';
 import ExternalLink from '@/components/ui/ExternalLink';
 import LastUpdated from '@/components/ui/LastUpdated';
 import { getSitePhase } from '@/lib/data';
-import { listWords } from '@/lib/format';
+import { listWords } from '@/lib/format/words';
 import { LEAGUES_PROPER, SECTIONS, getSection } from '@/lib/leagues';
 import type { LeagueConfig } from '@/lib/model/league-config';
 import { SOURCE_LINKS } from '@/lib/season';

@@ -40,7 +40,8 @@
 import { z } from 'zod';
 
 import { isBannedHost } from './clubs-schema';
-import { isCalendarDate, isHttpsUrl, slugId } from './schema-primitives';
+import { slugId } from './schema-primitives';
+import { isCalendarDate, isHttpsUrl } from './shared/patterns';
 import { TEAMS } from './teams';
 
 /**

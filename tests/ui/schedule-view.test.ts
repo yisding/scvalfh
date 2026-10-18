@@ -421,7 +421,7 @@ describe('fixture status and slate records (UI pass, league-aware)', () => {
 
   it('an upcoming league game on a slate names both sides’ league records in words, never 0-0-0', async () => {
     const { GameRow } = await import('@/components/ui/GameRow');
-    const { recordWords } = await import('@/lib/format');
+    const { recordWords } = await import('@/lib/format/numbers');
     const today = m.data.getToday();
     const upcoming = m.data
       .getGames()

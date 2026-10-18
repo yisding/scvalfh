@@ -27,7 +27,8 @@ import type { LeaderBoard, LeaderSources, LeadersView, RegionLeadersView } from 
 import { statText } from '@/components/teams/player-stats-view';
 import { positionWords } from '@/components/ui/position-words';
 import { getGames, getStandingFor, getTeams } from '@/lib/data';
-import { gradeWord, recordString } from '@/lib/format';
+import { recordString } from '@/lib/format/numbers';
+import { gradeWord } from '@/lib/format/words';
 import { regionOf } from '@/lib/leagues';
 import { computeAdjustedScoring, getAdjustedScoring } from '@/lib/adjusted-scoring';
 import type { Game } from '@/lib/model/game';

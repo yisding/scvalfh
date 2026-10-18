@@ -36,12 +36,13 @@
  * Pure: no I/O, no clock — `today` is an input.
  */
 
-import { byDateThenId, dayDiff } from './format';
 import { LEAGUES, getLeague } from './leagues';
 import type { OfficialFixture } from './model/fixture';
 import type { Game } from './model/game';
 import type { ContestId, DivisionId, LeagueId, TeamSlug } from './model/ids';
 import type { ComputedRecord } from './model/standings';
+import { dayDiff } from './shared/dates';
+import { byDateThenId } from './shared/game';
 import { recordOver } from './standings';
 import { getTeamBySlug, teamsInDivision } from './teams';
 

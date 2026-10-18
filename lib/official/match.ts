@@ -16,11 +16,12 @@
  */
 
 import { postseasonTag } from '@/lib/classify';
+import { monthDay, shortDate } from '@/lib/format/dates';
 import { divisionLabel, getDivision, leagueOfDivision } from '@/lib/leagues';
-import { dayDiff, monthDay, shiftDateKey, shortDate } from '@/lib/format';
 import type { OfficialFixture } from '@/lib/model/fixture';
 import type { Game, GameSide, OfficialStamp } from '@/lib/model/game';
 import type { DivisionId, TeamSlug } from '@/lib/model/ids';
+import { dayDiff, shiftDateKey } from '@/lib/shared/dates';
 import { getTeamBySlug, resolveTeam, sideJoinKey, teamOfSide, unorderedPairKey } from '@/lib/teams';
 
 export interface MatchOptions {

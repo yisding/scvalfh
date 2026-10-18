@@ -71,7 +71,7 @@ describe('teamJsonLd', () => {
 
 describe('gameJsonLd', () => {
   it('describes every corpus game as the page does: title, start, status, sides and only a published place', async () => {
-    const { dateTimeAttr } = await import('@/lib/format');
+    const { dateTimeAttr } = await import('@/lib/format/dates');
     for (const { id } of m.gv.gameStaticParams()) {
       const model = m.gv.buildGameView(id);
       if (!model) continue; // a superseded stub: no event of its own

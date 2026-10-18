@@ -10,7 +10,7 @@ import OverviewDivisionBlock from '@/components/standings/OverviewDivisionBlock'
 import { alignmentSentence, buildTeamsByRegion } from '@/components/teams/team-view';
 import SectionHeader from '@/components/ui/SectionHeader';
 import { getCounts, getTeamSearchIndex } from '@/lib/data';
-import { listWords } from '@/lib/format';
+import { listWords } from '@/lib/format/words';
 import { LEAGUES_PROPER } from '@/lib/leagues';
 
 /** The page's title, and its og:title too: og:title never carries the site-name suffix (OG_BASE). */

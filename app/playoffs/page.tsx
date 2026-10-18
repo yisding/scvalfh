@@ -39,7 +39,8 @@ import {
   getTournamentLeagueIds,
 } from '@/lib/data';
 import type { LeagueSummary } from '@/lib/data';
-import { dateSpan, listWords, monthDay, shortDate } from '@/lib/format';
+import { dateSpan, monthDay, shortDate } from '@/lib/format/dates';
+import { listWords } from '@/lib/format/words';
 import {
   NO_POSTSEASON_LEAGUE_IDS,
   SECTION_PLAYOFFS_LEAGUE_IDS,

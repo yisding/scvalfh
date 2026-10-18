@@ -24,7 +24,7 @@
  */
 import type { Game } from './model/game';
 import type { ContentRemoval } from './model/snapshot';
-import { contentKey } from './stable-json';
+import { contentKey } from './shared/stable-json';
 
 /** `2026-09-10T19:51:44` (MaxPreps, no offset, UTC) as an ISO instant; null when it does not parse. */
 function maxprepsInstant(modifiedOn: string): number | null {
@@ -65,7 +65,7 @@ export function stampContentChanges(games: readonly Game[], previous: readonly G
     const prior = before.get(game.contestId);
     const same = prior !== undefined && contentKey(prior, UNSEEN) === contentKey(game, UNSEEN);
     const stamp = same ? prior.provenance.contentChangedAt : fetchedAt;
-    // A stamp of `undefined` leaves no key in the written file (lib/stable-json.ts normalizeKeys).
+    // A stamp of `undefined` leaves no key in the written file (lib/shared/stable-json.ts normalizeKeys).
     return { ...game, provenance: { ...game.provenance, contentChangedAt: stamp } };
   });
 }

@@ -1,18 +1,11 @@
 /**
- * Count copy with real plurals (SPEC §0.4): `plural(1, 'game')` → '1 game', `plural(3, 'game')` →
- * '3 games'. `plural` itself lives in lib/format (so lib/ and scripts/ share it) and is re-exported
- * here beside the form strip's name. lib/format is client-safe, so a 'use client' card can use both.
+ * NOT a module to import: `plural`, `gameWord` and `formStripName` live in lib/format/words.ts. This
+ * file re-exports only the two names app/scores/[date]/opengraph-image.tsx still imports through its
+ * relative `../../../components/ui/plural` specifier: Next prints a content hash of each metadata
+ * image file's OWN source into the URL every page carries (`og:image` …/opengraph-image?<hash>), so
+ * repointing that import would change the HTML of every /scores page. The route keeps its bytes, and
+ * this module keeps its specifier resolving, until the change that rewrites the route anyway deletes
+ * it. eslint.config.mjs refuses any other import of it.
  */
-import { plural } from '@/lib/format';
 
-export { plural };
-
-/** 'game' / 'games' for a count printed separately (`{n} {gameWord(n)}`), never "1 games". */
-export function gameWord(n: number): string {
-  return n === 1 ? 'game' : 'games';
-}
-
-/** The accessible name of a team's form strip: 'Del Mar last 1 league game' / '… last 5 league games'. */
-export function formStripName(teamName: string, count: number): string {
-  return `${teamName} last ${plural(count, 'league game')}`;
-}
+export { gameWord, plural } from '@/lib/format/words';

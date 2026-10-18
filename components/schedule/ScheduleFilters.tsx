@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 
 import EmptyState from '@/components/ui/EmptyState';
-import { gameWord } from '@/components/ui/plural';
+import { gameWord } from '@/lib/format/words';
 
 import {
   DEFAULT_FILTERS,

@@ -50,6 +50,7 @@ import {
   type PreviousFile,
 } from '@/lib/fetch-scope';
 import type { LeagueId } from '@/lib/model/ids';
+import { stableStringify } from '@/lib/shared/stable-json';
 import { MaxPrepsClient } from '@/lib/sources/maxpreps';
 import { parseRosterPage, pendingRoster, rosterUrl } from '@/lib/sources/maxpreps-roster';
 import {
@@ -64,7 +65,6 @@ import {
 import { INDEPENDENT_LEAGUES, LEAGUES_PROPER } from '@/lib/leagues';
 import { formatIssues } from '@/lib/schema-primitives';
 import { SEASON_YEAR } from '@/lib/season';
-import { stableStringify } from '@/lib/stable-json';
 import { TEAMS } from '@/lib/teams';
 import { runCli } from './cli';
 

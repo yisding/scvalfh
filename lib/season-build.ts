@@ -1,7 +1,7 @@
 /**
  * The Season record written into every snapshot (SPEC §5.9). Server-only: it reads the league
  * config, the registry and lib/normalize, so it is NOT part of lib/season.ts, which stays a
- * dependency-free constants leaf that client modules reach through lib/format.
+ * dependency-free constants leaf that client modules reach through lib/shared/dates.ts.
  */
 
 import { LEAGUES, SECTIONS } from './leagues';

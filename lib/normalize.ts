@@ -22,13 +22,15 @@
  *   4. `dedupePhantomPairs` — same-division phantom duplicates only
  */
 
-import { byDateThenId, shootoutPhrases, toLocalTimestamp } from './format';
+import { shootoutPhrases } from './format/score';
 import { DATA_QUALITY, getLeague, getSection } from './leagues';
 import type { Decider, Game, GameSide, GameStatus, Outcome } from './model/game';
 import type { DroppedContest } from './model/health';
 import type { ContestId, DivisionId, SourceId } from './model/ids';
 import { type DataQualityConfig, type SectionConfig } from './model/league-config';
 import type { SeasonWindow } from './model/season';
+import { toLocalTimestamp } from './shared/dates';
+import { byDateThenId } from './shared/game';
 import { getTeamById, resolveTeam } from './teams';
 import { splitTbaRows, type ContestTeam, type ScheduleRow } from './sources/maxpreps';
 

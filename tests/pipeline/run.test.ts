@@ -20,9 +20,9 @@ import { createPipelineContext, metaPathOf, parseRunArgs, prepareRun, readPrevio
 import { stepStandings } from '@/lib/pipeline/steps/standings';
 import { FixtureTransport } from '@/lib/pipeline/transport';
 import { ALL_SEASON_ID, SPORT_SEASON_ID } from '@/lib/season';
+import { stableStringify } from '@/lib/shared/stable-json';
 import { CIFSS_SECTIONS } from '@/lib/sources/cifss';
 import { loadSnapshot } from '@/lib/snapshot-schema';
-import { stableStringify } from '@/lib/stable-json';
 import { FETCHABLE_TEAMS, TEAMS } from '@/lib/teams';
 import { game } from '@/tests/support/game-builder';
 import { corpusDir, variantDir } from '@/tests/support/corpus';

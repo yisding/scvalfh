@@ -17,8 +17,8 @@ import { overallAwards, splitOverallValue } from '@/components/history/history-v
 import { positionFromText } from '@/components/ui/position-words';
 import { getClubs } from '@/lib/clubs';
 import { getColleges } from '@/lib/commits';
+import { gradeWord } from '@/lib/format/words';
 import { getAvailableHistoryLeagues } from '@/lib/history';
-import { gradeWord } from '@/lib/format';
 import type { TeamSlug } from '@/lib/model/ids';
 import { getAllEnrichedRosters } from '@/lib/rosters';
 import { TEAMS, getTeamBySlug } from '@/lib/teams';

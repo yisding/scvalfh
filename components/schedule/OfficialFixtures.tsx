@@ -1,10 +1,10 @@
-import { shortDate } from '@/lib/format';
+import { shortDate } from '@/lib/format/dates';
+import { plural } from '@/lib/format/words';
 import { divisionHeading, getLeague } from '@/lib/leagues';
 import type { OfficialFixture } from '@/lib/model/fixture';
 import type { LeagueId } from '@/lib/model/ids';
 import { getTeamBySlug } from '@/lib/teams';
 import ExternalLink from '@/components/ui/ExternalLink';
-import { plural } from '@/components/ui/plural';
 import { officialScheduleLabel } from '@/components/standings/standings-view';
 
 /**

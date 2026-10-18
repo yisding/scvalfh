@@ -1,7 +1,6 @@
 import EmptyState from '@/components/ui/EmptyState';
 import LeagueHealthNote from '@/components/ui/LeagueHealthNote';
 import SectionHeader from '@/components/ui/SectionHeader';
-import { longDate } from '@/lib/format';
 
 import type { HomeLeaguePanel } from './home-view';
 import LatestScores from './LatestScores';
@@ -11,6 +10,7 @@ import NextSlate from './NextSlate';
 import OtherLeaguesStrip from './OtherLeaguesStrip';
 import PhaseLead from './PhaseLead';
 import PostseasonCard from './PostseasonCard';
+import { longDate } from '@/lib/format/dates';
 import { isIndependentLeague } from '@/lib/leagues';
 
 /**

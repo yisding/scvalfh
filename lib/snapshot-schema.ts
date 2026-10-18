@@ -35,6 +35,7 @@ import { type DivisionId, OFFICIAL_SOURCE_IDS } from './model/ids';
 import { type Snapshot } from './model/snapshot';
 import { type TiebreakStage } from './model/standings';
 import { dateKey, formatIssues, httpUrl, slugId } from './schema-primitives';
+import { stableStringify } from './shared/stable-json';
 import {
   addConfiguredLeagues,
   isSnapshotV1,
@@ -43,7 +44,6 @@ import {
   needsReclassification,
   reclassify,
 } from './snapshot-migrate';
-import { stableStringify } from './stable-json';
 import { TEAMS, getTeamBySlug } from './teams';
 
 // ---------------------------------------------------------------- primitives

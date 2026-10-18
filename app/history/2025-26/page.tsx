@@ -13,6 +13,8 @@ import TeamMonogram from '@/components/ui/TeamMonogram';
 import SectionHeader from '@/components/ui/SectionHeader';
 import { OG_BASE, ROOT_OG_IMAGE } from '@/components/layout/site';
 import { getTeamBySlug } from '@/lib/data';
+import { dateWithYear } from '@/lib/format/dates';
+import { listWords } from '@/lib/format/words';
 import {
   bracketSectionName,
   getAvailableHistoryLeagues,
@@ -30,7 +32,6 @@ import {
   type SectionBracket,
   type UnavailableLeagueHistory,
 } from '@/lib/history';
-import { dateWithYear, listWords } from '@/lib/format';
 import { getDivision, getLeague, getSection, isIndependentLeague, regionOf } from '@/lib/leagues';
 import type { LeagueId } from '@/lib/model/ids';
 

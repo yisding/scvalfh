@@ -35,6 +35,8 @@
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 
+import { isCalendarDate } from '@/lib/shared/patterns';
+import { stableStringify } from '@/lib/shared/stable-json';
 import {
   SCVAL_HISTORY_PDFS,
   ScvalClient,
@@ -56,8 +58,6 @@ import {
 import { HttpClient } from '@/lib/sources/http';
 import { HistorySchema } from '@/lib/history-schema';
 import { divisionsOf, getLeague } from '@/lib/leagues';
-import { isCalendarDate } from '@/lib/schema-primitives';
-import { stableStringify } from '@/lib/stable-json';
 import { runCli } from './cli';
 
 interface Args {

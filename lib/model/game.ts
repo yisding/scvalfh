@@ -1,7 +1,5 @@
 /**
  * The normalized domain model (lib/model/): games, their sides, tags and provenance.
- *
- * ScoreView (render support) is parked here until it moves to the copy layer with the formatters.
  */
 
 import type { ContestId, DivisionId, LeagueId, OfficialSourceId, SourceId, TeamId, TeamSlug } from './ids';
@@ -191,19 +189,3 @@ export interface Game {
     overtimeNote?: string;
   };
 }
-
-// ---------- render support (DESIGN §5.2) ----------
-
-export type ScoreView =
-  | {
-      kind: 'final';
-      home: number;
-      away: number;
-      /** Outcome relative to the HOME side. */
-      outcome: Outcome;
-      decider: Decider;
-      shootout: { home: number; away: number } | null;
-    }
-  | { kind: 'scheduled'; time: string | null }
-  | { kind: 'unreported' }
-  | { kind: 'postponed'; newDate: string | null };

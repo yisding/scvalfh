@@ -9,9 +9,10 @@
 
 import { beforeAll, describe, expect, it } from 'vitest';
 
-import { localDateKey, sideOutcome } from '@/lib/format';
 import { DATA_QUALITY, LEAGUES } from '@/lib/leagues';
 import type { Snapshot } from '@/lib/model/snapshot';
+import { localDateKey } from '@/lib/shared/dates';
+import { sideOutcome } from '@/lib/shared/game';
 import type { ScheduleRow } from '@/lib/sources/maxpreps';
 import { parseScoresPage, parseTeamGamesPage, type SbliveGame } from '@/lib/sources/sblive';
 import { divisionGames } from '@/lib/standings';
@@ -152,7 +153,7 @@ describe('the EAL games', () => {
     expect(divisionGames(snapshot.games, DIVISION).map((x) => x.contestId)).toContain(g!.contestId);
     const chico = g!.home.slug === 'chico' ? 'home' : 'away';
     expect(g![chico].slug).toBe('chico');
-    expect(sideOutcome(g!, chico), 'lib/format.ts sideOutcome').toBe('W');
+    expect(sideOutcome(g!, chico), 'lib/shared/game.ts sideOutcome').toBe('W');
     expect(g!.home.score, 'level on goals').toBe(g!.away.score);
   });
 

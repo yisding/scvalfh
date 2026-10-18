@@ -20,9 +20,9 @@
  */
 
 import { gamePairKey } from './crosscheck';
-import { dayNumber } from './format';
 import type { CifssConflictRow, CifssCrossCheck, CifssOnlyRow } from './model/crosscheck';
 import type { Game } from './model/game';
+import { dayNumber } from './shared/dates';
 import { cifssListingUrl, type CifssRow, type CifssSide } from './sources/cifss';
 import { getTeamBySlug, sideJoinKey, unorderedPairKey } from './teams';
 

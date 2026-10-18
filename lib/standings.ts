@@ -26,7 +26,8 @@
  * which is exactly why we compute and publish the disagreement instead of trusting it.
  */
 
-import { byDateThenId, recordString, shortDate, sideOutcome } from './format';
+import { shortDate } from './format/dates';
+import { recordString } from './format/numbers';
 import {
   LEAGUES,
   divisionLabel,
@@ -49,6 +50,7 @@ import type {
   ComputedRecord, PlayoffStatus, ReportedRecord, Standing, TiebreakInfo, TiebreakStage,
 } from './model/standings';
 import type { Team } from './model/team';
+import { byDateThenId, sideOutcome } from './shared/game';
 import { TEAMS, getTeamById, teamsInDivision } from './teams';
 
 // ---------------------------------------------------------------- accumulation
@@ -93,7 +95,7 @@ const winPct = (r: { w: number; t: number; gp: number }): number => (r.gp > 0 ? 
 
 /**
  * A completed game as seen from one team. Returns null when the team is not in it. The outcome is
- * `sideOutcome`'s (lib/format.ts), so a shootout win (decider 'SO', level on goals: an EAL 1 v 1 win, a San
+ * `sideOutcome`'s (lib/shared/game.ts), so a shootout win (decider 'SO', level on goals: an EAL 1 v 1 win, a San
  * Diego Section shootout MaxPreps records as a level score marked W and L) counts as the
  * flagged side's win while its goals stay as recorded.
  */

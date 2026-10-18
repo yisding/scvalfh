@@ -505,7 +505,7 @@ describe('the pinned card (components/home/MyTeamCard.tsx ← home-view.ts team 
   it('"Last" is the newest PLAYED game: a score-pending one shows as unreported, never as a final', async () => {
     const d = await import('@/lib/data');
     const { describeGame } = await import('@/components/ui/describe-game');
-    const { gameHref } = await import('@/lib/game-id');
+    const { gameHref } = await import('@/lib/shared/game-id');
     const { PinnedCard } = await import('@/components/home/MyTeamCard');
     let pending = 0;
     for (const v of data.teamViews) {

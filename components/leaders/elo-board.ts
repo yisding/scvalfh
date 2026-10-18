@@ -13,6 +13,7 @@
  */
 
 import { getSnapshot } from '@/lib/data';
+import { plural } from '@/lib/format/words';
 import { regionOf } from '@/lib/leagues';
 import type { Game } from '@/lib/model/game';
 import type { RegionId, TeamSlug } from '@/lib/model/ids';
@@ -28,7 +29,6 @@ import {
   type RatingTable,
   type TeamRating,
 } from '@/lib/ratings';
-import { plural } from '@/components/ui/plural';
 import { num, schoolBoard } from './board-kit';
 import { byName, qualifyingMinimum } from './ranking';
 import { AND_INDEPENDENTS, LEAGUE_COUNT, regionScope } from './scope';

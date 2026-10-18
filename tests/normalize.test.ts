@@ -3,7 +3,6 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { sideOutcome } from '@/lib/format';
 import { DATA_QUALITY } from '@/lib/leagues';
 import type { Game } from '@/lib/model/game';
 import { type DataQualityConfig } from '@/lib/model/league-config';
@@ -19,6 +18,7 @@ import {
   splitLocation,
   toUtcIso,
 } from '@/lib/normalize';
+import { sideOutcome } from '@/lib/shared/game';
 import { ScheduleResponseSchema, splitTbaRows, type ScheduleRow } from '@/lib/sources/maxpreps';
 import { getTeamBySlug, resolveTeam } from '@/lib/teams';
 import { allScheduleRows, corpusDir } from './support/corpus';

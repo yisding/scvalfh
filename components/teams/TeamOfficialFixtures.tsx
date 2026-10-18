@@ -1,4 +1,4 @@
-import { monthDay } from '@/lib/format';
+import { monthDay } from '@/lib/format/dates';
 import { getDivision, leagueOfDivision } from '@/lib/leagues';
 import ExternalLink from '@/components/ui/ExternalLink';
 import { NON_MEMBER_NOTE } from '@/components/ui/GameRow';

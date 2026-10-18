@@ -6,7 +6,6 @@
  */
 
 import { contentRemovalsOf, stampContentChanges } from '@/lib/content-dates';
-import { byDateThenId } from '@/lib/format';
 import { CCS, getLeague } from '@/lib/leagues';
 import type { OfficialFixture } from '@/lib/model/fixture';
 import type { Game } from '@/lib/model/game';
@@ -14,9 +13,10 @@ import type { LeagueHealth } from '@/lib/model/health';
 import type { ContestId } from '@/lib/model/ids';
 import type { Snapshot } from '@/lib/model/snapshot';
 import { buildSeason } from '@/lib/season-build';
+import { byDateThenId } from '@/lib/shared/game';
+import { stableStringify } from '@/lib/shared/stable-json';
 import { countsOf } from '@/lib/snapshot-migrate';
 import { parseSnapshot, snapshotContentHash } from '@/lib/snapshot-schema';
-import { stableStringify } from '@/lib/stable-json';
 import { TEAMS } from '@/lib/teams';
 import { RunAbort, type SnapshotMeta } from '@/lib/pipeline/contract';
 import type { PipelineContext, RunState } from '@/lib/pipeline/ledger';

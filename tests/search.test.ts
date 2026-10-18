@@ -1,9 +1,9 @@
-/** lib/search.ts over the real registry and config (SPEC §9.1-§9.2 regression cases). */
+/** lib/shared/search.ts over the real registry and config (SPEC §9.1-§9.2 regression cases). */
 
 import { describe, expect, it } from 'vitest';
 
 import { DATA_QUALITY, LEAGUES, SECTIONS } from '@/lib/leagues';
-import { buildSearchIndex, normalizeQuery, searchTeams } from '@/lib/search';
+import { buildSearchIndex, normalizeQuery, searchTeams } from '@/lib/shared/search';
 import { TEAMS } from '@/lib/teams';
 
 const INDEX = buildSearchIndex(

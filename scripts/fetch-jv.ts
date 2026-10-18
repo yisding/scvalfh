@@ -62,7 +62,7 @@ import {
   teamsInScope,
   type PreviousRows,
 } from '@/lib/fetch-scope';
-import { byDateThenId, localDateKey, monthDay } from '@/lib/format';
+import { monthDay } from '@/lib/format/dates';
 import { mergeJv } from '@/lib/jv-merge';
 import {
   JvFileSchema,
@@ -85,11 +85,13 @@ import { normalizeGames } from '@/lib/normalize';
 import { inSeasonWindow } from '@/lib/pipeline/steps/window';
 import { formatIssues } from '@/lib/schema-primitives';
 import { JV_SPORT_SEASON_ID, SEASON_YEAR } from '@/lib/season';
+import { localDateKey } from '@/lib/shared/dates';
+import { byDateThenId } from '@/lib/shared/game';
+import { stableStringify } from '@/lib/shared/stable-json';
 import { HttpClient } from '@/lib/sources/http';
 import { MaxPrepsClient, ScheduleResponseSchema, splitTbaRows, type ScheduleRow } from '@/lib/sources/maxpreps';
 import { SBLIVE_HTTP_OPTIONS } from '@/lib/sources/sblive';
 import { combineJvCopies, parseJvTeamGamesPage, type JvSbliveCopy } from '@/lib/sources/sblive-jv';
-import { stableStringify } from '@/lib/stable-json';
 import { TEAMS } from '@/lib/teams';
 import { runCli } from './cli';
 

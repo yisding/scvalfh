@@ -25,13 +25,13 @@ import path from 'node:path';
 
 import { carryCrossCheck } from '@/lib/crosscheck';
 import { parseFetchedAtFlag, parseLeaguesFlag } from '@/lib/fetch-scope';
-import { localDateKey } from '@/lib/format';
 import { ALL_DIVISIONS, LEAGUES, LEAGUE_IDS, isLeagueId } from '@/lib/leagues';
 import type { OfficialFixture } from '@/lib/model/fixture';
 import type { Game } from '@/lib/model/game';
 import type { Snapshot } from '@/lib/model/snapshot';
+import { localDateKey } from '@/lib/shared/dates';
+import { stableStringify } from '@/lib/shared/stable-json';
 import { loadSnapshot } from '@/lib/snapshot-schema';
-import { stableStringify } from '@/lib/stable-json';
 import {
   RunAbort,
   type OfficialStepResult,

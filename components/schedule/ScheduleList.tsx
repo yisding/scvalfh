@@ -1,7 +1,7 @@
 import { getScoresLandingDate } from '@/lib/data';
-import { dayNumber } from '@/lib/format';
 import type { Game } from '@/lib/model/game';
 import type { LeagueId } from '@/lib/model/ids';
+import { dayNumber } from '@/lib/shared/dates';
 
 import DateHeader from './DateHeader';
 import GameList from './GameList';

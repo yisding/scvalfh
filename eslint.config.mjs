@@ -29,6 +29,12 @@ const eslintConfig = defineConfig([
               regex: "^\\.\\./",
               message: "Import repo code as '@/<path>' (README, \"Local development\").",
             },
+            // lib/format.ts and components/ui/plural.ts survive only for the metadata image routes
+            // above, whose own bytes must not change (see the two files' headers).
+            {
+              regex: "^(@/lib/format|@/components/ui/plural|\\./format|\\./plural)$",
+              message: "Import the formatters from '@/lib/format/<dates|numbers|words|score>' or '@/lib/shared/<dates|game>'.",
+            },
           ],
         },
       ],

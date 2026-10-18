@@ -2,7 +2,7 @@
 
 import TeamFinder from '@/components/search/TeamFinder';
 import SectionHeader from '@/components/ui/SectionHeader';
-import type { SearchIndex } from '@/lib/search';
+import type { SearchIndex } from '@/lib/shared/search';
 
 import { focusUnpin } from './MyTeamCard';
 

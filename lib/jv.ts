@@ -20,7 +20,6 @@ import { readFileSync } from 'node:fs';
 
 import bundled from '@/data/jv.json';
 import { getOfficialFixtures, getSnapshot } from './data';
-import { byDateThenId, localDateKey } from './format';
 import { mergeJv, type JvMergeResult } from './jv-merge';
 import { JvFileSchema, type JvFile, type JvTeam } from './jv-schema';
 import {
@@ -33,6 +32,8 @@ import {
 import type { Game } from './model/game';
 import type { ContestId, DivisionId, LeagueId, TeamSlug } from './model/ids';
 import { failValidation } from './schema-primitives';
+import { localDateKey } from './shared/dates';
+import { byDateThenId } from './shared/game';
 
 export type { JvFile, JvTeam } from './jv-schema';
 

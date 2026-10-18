@@ -19,8 +19,9 @@ import type { ReactElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { beforeAll, describe, expect, it } from 'vitest';
 
-import { longDate, parseLocal } from '@/lib/format';
+import { longDate } from '@/lib/format/dates';
 import type { Game } from '@/lib/model/game';
+import { parseLocal } from '@/lib/shared/dates';
 import { textOf } from '@/tests/support/html-text';
 
 type Data = typeof import('@/lib/data');

@@ -1,11 +1,12 @@
 import Link from 'next/link';
 
-import { recordString, scoreSentence } from '@/lib/format';
-import { gameHref } from '@/lib/game-id';
+import { recordString } from '@/lib/format/numbers';
+import { scoreSentence } from '@/lib/format/score';
 import TeamMonogram from '@/components/ui/TeamMonogram';
 import type { Game } from '@/lib/model/game';
 import type { Standing } from '@/lib/model/standings';
 import type { Team } from '@/lib/model/team';
+import { gameHref } from '@/lib/shared/game-id';
 
 /**
  * One two-sided postseason card: a SCVAL crossover game, the BVAL play-in, the MCAL play-in.

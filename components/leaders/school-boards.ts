@@ -15,8 +15,8 @@
  */
 
 import type { AdjustedScoring } from '@/lib/adjusted-scoring';
-import { listWords, recordString, recordWords, signedGd, winPct } from '@/lib/format';
-import { plural } from '@/components/ui/plural';
+import { recordString, recordWords, signedGd, winPct } from '@/lib/format/numbers';
+import { listWords, plural } from '@/lib/format/words';
 import type { Game } from '@/lib/model/game';
 import type { TeamId } from '@/lib/model/ids';
 import type { ComputedRecord, Standing } from '@/lib/model/standings';

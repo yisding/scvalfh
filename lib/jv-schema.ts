@@ -28,8 +28,8 @@ import { z } from 'zod';
 
 import { JV_SLUG_BY_SBLIVE_ID } from './jv-teams';
 import { dateKey, httpUrl, slugId } from './schema-primitives';
+import { contentKey } from './shared/stable-json';
 import { GameSchema } from './snapshot-schema';
-import { contentKey } from './stable-json';
 import { TEAMS, getTeamBySlug } from './teams';
 
 const JV_SLUGS: ReadonlySet<string> = new Set(TEAMS.map((t) => t.slug));

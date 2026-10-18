@@ -16,7 +16,7 @@ import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 
-import { plural } from '@/lib/format';
+import { plural } from '@/lib/format/words';
 import type { Snapshot } from '@/lib/model/snapshot';
 import type { SnapshotMeta } from '@/lib/pipeline/contract';
 import { TIME_ZONE } from '@/lib/season';
@@ -71,7 +71,7 @@ export function buildDataIssues(
 /**
  * The frozen-league title's stamp, e.g. "Oct 1, 8:00 PM" in Pacific time. The title is the key the
  * workflow's `gh` loop finds an open issue by, so it keeps the exact format the issues have always
- * been opened with, not lib/format's formatStamp: a new format would miss every issue already open
+ * been opened with, not lib/format/dates.ts's formatStamp: a new format would miss every issue already open
  * and open a duplicate beside it.
  */
 function frozenSince(lastFreshAt: string): string {

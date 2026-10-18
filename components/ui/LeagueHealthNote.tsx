@@ -1,5 +1,5 @@
 import { getLeagueHealth } from '@/lib/data';
-import { formatStamp } from '@/lib/format';
+import { formatStamp } from '@/lib/format/dates';
 import type { LeagueId } from '@/lib/model/ids';
 
 /**

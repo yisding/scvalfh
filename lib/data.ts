@@ -14,17 +14,9 @@ import { readFileSync } from 'node:fs';
 
 import bundledSnapshot from '@/data/snapshot.json';
 
-import {
-  dateSpan,
-  isoDateKey,
-  leagueClock,
-  localDateKey,
-  numberWord,
-  ordinalWord,
-  recordString,
-  shortDate,
-  sideOutcome,
-} from './format';
+import { dateSpan, leagueClock, shortDate } from './format/dates';
+import { ordinalWord, recordString } from './format/numbers';
+import { numberWord } from './format/words';
 import {
   ALL_DIVISIONS,
   CCS,
@@ -59,8 +51,10 @@ import type { ContentRemoval, Snapshot } from './model/snapshot';
 import type { Standing } from './model/standings';
 import type { Team } from './model/team';
 import { buildLeagueTournament } from './postseason';
-import { buildSearchIndex } from './search';
-import type { SearchIndex } from './search';
+import { isoDateKey, localDateKey } from './shared/dates';
+import { sideOutcome } from './shared/game';
+import { buildSearchIndex } from './shared/search';
+import type { SearchIndex } from './shared/search';
 import { loadSnapshot } from './snapshot-schema';
 import {
   divisionGames,

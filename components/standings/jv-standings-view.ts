@@ -9,7 +9,9 @@
  * SERVER-ONLY: reads lib/jv, which imports data/jv.json and the snapshot.
  */
 
-import { listWords, monthDay, ordinal, plural, recordString } from '@/lib/format';
+import { monthDay } from '@/lib/format/dates';
+import { ordinal, recordString } from '@/lib/format/numbers';
+import { listWords, plural } from '@/lib/format/words';
 import { getJvClassification, getJvTable, getJvTables } from '@/lib/jv';
 import {
   JV_STANDINGS_MIN_REPORTED_SHARE,

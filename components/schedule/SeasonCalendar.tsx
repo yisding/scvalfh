@@ -1,6 +1,7 @@
 import Link from 'next/link';
 
-import { longDate, parseLocal, weekdayIndex } from '@/lib/format';
+import { longDate } from '@/lib/format/dates';
+import { parseLocal, weekdayIndex } from '@/lib/shared/dates';
 
 /**
  * "Pick a date" on a day page (F-34): the season as month grids, every day with a contest a link
@@ -12,7 +13,7 @@ import { longDate, parseLocal, weekdayIndex } from '@/lib/format';
  * fold.
  *
  * Built from the date keys alone: `parseLocal` splits the key and `weekdayIndex` reads the weekday
- * of a UTC date built from its parts (lib/format), so nothing here reads a clock and the grid is
+ * of a UTC date built from its parts (lib/shared/dates.ts), so nothing here reads a clock and the grid is
  * part of the reproducible build. Weeks run Monday first, because the season is weeknight league
  * play with a Saturday tail.
  *

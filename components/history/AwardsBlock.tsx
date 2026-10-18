@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
 import { getTeamBySlug } from '@/lib/data';
-import { gradeWord } from '@/lib/format';
+import { gradeWord } from '@/lib/format/words';
 import type { HistoryAwards, HistoryPlayer } from '@/lib/history';
 import { leagueOfDivision } from '@/lib/leagues';
 import GridRowFiller from '@/components/ui/GridRowFiller';

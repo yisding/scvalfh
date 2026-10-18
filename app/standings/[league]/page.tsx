@@ -14,7 +14,7 @@ import Arrow from '@/components/ui/Arrow';
 import ExternalLink from '@/components/ui/ExternalLink';
 import { biggestGoalDiff } from '@/components/ui/StandingsTable';
 import { getLeagueIds, getLeagueSummary } from '@/lib/data';
-import { shortDate } from '@/lib/format';
+import { shortDate } from '@/lib/format/dates';
 import { hasHistory } from '@/lib/history';
 import { getLeague, leagueSportWords, standingsLabel } from '@/lib/leagues';
 

@@ -1,6 +1,8 @@
 import Link from 'next/link';
 
-import { monthDay, plural, recordString } from '@/lib/format';
+import { monthDay } from '@/lib/format/dates';
+import { recordString } from '@/lib/format/numbers';
+import { plural } from '@/lib/format/words';
 import { getTeamBySlug } from '@/lib/teams';
 import EmptyState from '@/components/ui/EmptyState';
 import TeamMonogram from '@/components/ui/TeamMonogram';

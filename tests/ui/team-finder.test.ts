@@ -1,6 +1,6 @@
 /**
  * The team finder (components/search/TeamFinder.tsx, SPEC §9.3): its initial markup in both modes
- * (react-dom/server), its wiring to lib/search.ts, the pin-mode buttons' accessible names for all
+ * (react-dom/server), its wiring to lib/shared/search.ts, the pin-mode buttons' accessible names for all
  * 102 teams, and unique `useId` ids when a page renders two finders.
  */
 import { Fragment, createElement } from 'react';
@@ -17,9 +17,9 @@ import {
   resultDetail,
 } from '@/components/search/TeamFinder';
 import { getTeamSearchIndex } from '@/lib/data';
-import { pinLabel } from '@/lib/pin-label';
-import { searchTeams } from '@/lib/search';
 
+import { pinLabel } from '@/lib/shared/pin-label';
+import { searchTeams } from '@/lib/shared/search';
 import { textOfSrOnly } from '@/tests/support/html-text';
 
 const index = getTeamSearchIndex();
@@ -78,7 +78,7 @@ describe('TeamFinder initial markup', () => {
   });
 });
 
-describe('TeamFinder wiring to lib/search.ts', () => {
+describe('TeamFinder wiring to lib/shared/search.ts', () => {
   it('has the 102-team index', () => {
     expect(index.teams).toHaveLength(102);
   });

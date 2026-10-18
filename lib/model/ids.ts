@@ -14,7 +14,7 @@ export type TeamId = string;
 
 /**
  * MaxPreps `contestId` GUID, or `sblive:<digits>` for a game that only si.com has and that D2 rule 2
- * published (lib/backfill.ts). URL params map ':' to '-' (lib/game-id.ts).
+ * published (lib/backfill.ts). URL params map ':' to '-' (lib/shared/game-id.ts).
  */
 export type ContestId = string;
 

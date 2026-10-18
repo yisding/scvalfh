@@ -1,9 +1,9 @@
 import Link from 'next/link';
 
-import { gameHref } from '@/lib/game-id';
+import { plural } from '@/lib/format/words';
 import { GameLogRowBody, gameLogRowClass } from '@/components/ui/GameRow';
 import SectionHeader from '@/components/ui/SectionHeader';
-import { plural } from '@/components/ui/plural';
+import { gameHref } from '@/lib/shared/game-id';
 
 import type { GameModel } from './game-view';
 

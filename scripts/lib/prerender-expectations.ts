@@ -16,9 +16,9 @@
  */
 
 import { getClubSlugs } from '@/lib/clubs';
-import { gameIdToParam } from '@/lib/game-id';
 import { LEAGUE_IDS, TOURNAMENT_LEAGUE_IDS } from '@/lib/leagues';
 import type { Snapshot } from '@/lib/model/snapshot';
+import { gameIdToParam } from '@/lib/shared/game-id';
 import { TEAMS } from '@/lib/teams';
 
 /** The pages with no params (`index` is `/`), by their prerendered file name without `.html`. */

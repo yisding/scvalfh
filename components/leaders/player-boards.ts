@@ -14,7 +14,8 @@
  */
 
 import type { AdjustedScoring } from '@/lib/adjusted-scoring';
-import { gradeWord, listWords, shortDate } from '@/lib/format';
+import { shortDate } from '@/lib/format/dates';
+import { gradeWord, listWords, plural } from '@/lib/format/words';
 import type { Game } from '@/lib/model/game';
 import type { TeamId } from '@/lib/model/ids';
 import type { Team } from '@/lib/model/team';
@@ -26,7 +27,6 @@ import type {
   TeamPlayerStats,
 } from '@/lib/player-stats-schema';
 import { gamesSinceUpdate, savePercent } from '@/components/teams/player-stats-view';
-import { plural } from '@/components/ui/plural';
 import { positionWords } from '@/components/ui/position-words';
 import { UNADJUSTED_NOTE, names, num, teamRef } from './board-kit';
 import { BOARD_PLACES, EXPANDED_PLACES, byName, rankBoard } from './ranking';

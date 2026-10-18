@@ -1,4 +1,4 @@
-import { shortDate, timeOfDayPT } from '@/lib/format';
+import { shortDate, timeOfDayPT } from '@/lib/format/dates';
 import type { Game } from '@/lib/model/game';
 import { getTeamBySlug } from '@/lib/teams';
 

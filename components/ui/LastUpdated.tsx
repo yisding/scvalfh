@@ -1,15 +1,8 @@
 import Link from 'next/link';
 
-import {
-  dateWithYear,
-  formatStamp,
-  hoursBetween,
-  monthDay,
-  plural,
-  shortDate,
-  timeOfDay,
-  toLocalTimestamp,
-} from '@/lib/format';
+import { dateWithYear, formatStamp, monthDay, shortDate, timeOfDay } from '@/lib/format/dates';
+import { plural } from '@/lib/format/words';
+import { hoursBetween, toLocalTimestamp } from '@/lib/shared/dates';
 
 /**
  * The freshness stamp (DESIGN §1.3, §7.15). Formatted server-side in America/Los_Angeles so it

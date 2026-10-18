@@ -1,7 +1,8 @@
 import Link from 'next/link';
 
 import type { StandingContext } from '@/lib/data';
-import { EM_DASH, placeWords, recordString, recordWords, streakString, winPct } from '@/lib/format';
+import { placeWords, recordString, recordWords, streakString, winPct } from '@/lib/format/numbers';
+import { EM_DASH, formStripName, plural } from '@/lib/format/words';
 import { divisionHeading, leagueOfDivision } from '@/lib/leagues';
 import type { DivisionId, TeamId, TeamSlug } from '@/lib/model/ids';
 import type { Standing } from '@/lib/model/standings';
@@ -13,7 +14,6 @@ import MissingValue from './MissingValue';
 import { GoalDiffCell } from './GoalDiffBar';
 import { articleFor, membershipSource } from './membership-words';
 import PlaceMark from './PlaceMark';
-import { formStripName, plural } from './plural';
 import TeamMonogram from './TeamMonogram';
 
 /**

@@ -1,10 +1,11 @@
 import Link from 'next/link';
 
-import { dateSpan, longDate, monthDay, parseLocal } from '@/lib/format';
+import { dateSpan, longDate, monthDay } from '@/lib/format/dates';
 import { CCS, getLeague } from '@/lib/leagues';
 
 import Arrow from '@/components/ui/Arrow';
 import type { LeagueId } from '@/lib/model/ids';
+import { parseLocal } from '@/lib/shared/dates';
 import type { RailKind } from './rail-targets';
 
 /**

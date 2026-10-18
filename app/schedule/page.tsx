@@ -8,7 +8,7 @@ import ScheduleIndex from '@/components/schedule/ScheduleIndex';
 import { countGames } from '@/components/schedule/filter-data';
 import { buildScheduleIndex } from '@/components/schedule/schedule-view';
 import { getGames, getLeagueSummaries, getTeamBySlug, getToday } from '@/lib/data';
-import { plural } from '@/lib/format';
+import { plural } from '@/lib/format/words';
 import { SEASON_DISPLAY } from '@/lib/season';
 
 /**

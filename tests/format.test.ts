@@ -1,50 +1,20 @@
 import { describe, expect, it } from 'vitest';
 
 import {
-  EM_DASH,
-  EN_DASH,
-  MINUS,
-  clockTime,
-  dateSpan,
-  dateWithYear,
-  dayDiff,
-  dayNumber,
-  formStripLabel,
-  gameWhen,
-  gradeWord,
-  hoursBetween,
-  isoDateKey,
-  leagueClock,
-  leagueClockPT,
-  listWords,
-  localDateKey,
-  longDate,
-  matchupJoiner,
-  monthDay,
-  numberWord,
-  ordinal,
-  ordinalPlace,
-  ordinalWord,
-  partialDate,
-  partialDateKind,
-  perGame,
-  recordString,
-  recordWords,
-  renderScore,
-  scoreGlyph,
-  scoreSentence,
-  shiftDateKey,
-  shortDate,
-  sideOutcome,
-  signedGd,
-  streakString,
-  timeOfDay,
-  timeOfDayPT,
-  toLocalTimestamp,
-  weekdayName,
-  winPct,
-  shootoutPhrases,
-} from '@/lib/format';
+  clockTime, dateSpan, dateWithYear, gameWhen, leagueClock, leagueClockPT, longDate, monthDay, partialDate,
+  partialDateKind, shortDate, timeOfDay, timeOfDayPT,
+} from '@/lib/format/dates';
+import {
+  ordinal, ordinalPlace, ordinalWord, perGame, recordString, recordWords, signedGd, streakString, winPct,
+} from '@/lib/format/numbers';
+import { matchupJoiner, renderScore, scoreGlyph, scoreSentence, shootoutPhrases } from '@/lib/format/score';
+import {
+  EM_DASH, EN_DASH, MINUS, formStripLabel, gradeWord, listWords, numberWord,
+} from '@/lib/format/words';
+import {
+  dayDiff, dayNumber, hoursBetween, isoDateKey, localDateKey, shiftDateKey, toLocalTimestamp, weekdayName,
+} from '@/lib/shared/dates';
+import { sideOutcome } from '@/lib/shared/game';
 import { game } from './support/game-builder';
 
 describe('format: dates and times are America/Los_Angeles', () => {

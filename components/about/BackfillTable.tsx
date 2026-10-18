@@ -1,9 +1,9 @@
 import Link from 'next/link';
 
-import { shortDate } from '@/lib/format';
-import { gameHref } from '@/lib/game-id';
+import { shortDate } from '@/lib/format/dates';
 import ExternalLink from '@/components/ui/ExternalLink';
 import type { BackfillRow } from '@/lib/model/crosscheck';
+import { gameHref } from '@/lib/shared/game-id';
 
 /**
  * Every si.com score this site published (owner decision D2, SPEC §7.9; /about#backfills): the

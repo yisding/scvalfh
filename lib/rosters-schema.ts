@@ -22,7 +22,7 @@ import { z } from 'zod';
 import { COMMIT_SPORTS } from './commits-schema';
 import { ALL_DIVISIONS } from './leagues';
 import { dateKey, httpUrl, httpsUrl, slugId } from './schema-primitives';
-import { contentKey } from './stable-json';
+import { contentKey } from './shared/stable-json';
 import { TEAMS, getTeamBySlug } from './teams';
 
 /** Rosters cover every registry team, all nine leagues and the five independents: one entry per team of TEAMS. */

@@ -24,7 +24,8 @@
  */
 
 import { getCommitsFile } from '@/lib/commits';
-import { dateWithYear, gradeWord, shortDate, toLocalTimestamp } from '@/lib/format';
+import { dateWithYear, shortDate } from '@/lib/format/dates';
+import { gradeWord } from '@/lib/format/words';
 import type { TeamSlug } from '@/lib/model/ids';
 import {
   getEnrichedTeamRoster,
@@ -41,6 +42,7 @@ import {
 import { playerClubGroups, type RosterClubGroup } from '@/components/clubs/club-view';
 import { SPORT_WORDS, playerCommitLine, sportLabel, type RosterCommitLine } from '@/components/commits/commit-view';
 import { positionWords } from '@/components/ui/position-words';
+import { toLocalTimestamp } from '@/lib/shared/dates';
 
 /**
  * How a conflict sentence names the source that disagrees. A MaxPreps roster page of an earlier

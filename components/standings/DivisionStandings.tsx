@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-import { ordinal } from '@/lib/format';
+import { ordinal } from '@/lib/format/numbers';
 import { leagueOfDivision } from '@/lib/leagues';
 import ExternalLink from '@/components/ui/ExternalLink';
 import LeagueHealthNote from '@/components/ui/LeagueHealthNote';

@@ -5,7 +5,9 @@ import PlaceMark from '@/components/ui/PlaceMark';
 import SectionHeader from '@/components/ui/SectionHeader';
 import { NoGoalDiff, biggestGoalDiff } from '@/components/ui/StandingsTable';
 import TeamMonogram from '@/components/ui/TeamMonogram';
-import { EM_DASH, monthDay, placeWords, plural } from '@/lib/format';
+import { monthDay } from '@/lib/format/dates';
+import { placeWords } from '@/lib/format/numbers';
+import { EM_DASH, plural } from '@/lib/format/words';
 import { getDivision, getLeague, regionOf } from '@/lib/leagues';
 import { ladderLineAfter } from '@/components/standings/standings-view';
 

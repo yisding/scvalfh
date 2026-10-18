@@ -18,7 +18,6 @@ import { countGames } from '@/components/schedule/filter-data';
 import { buildDayJvView } from '@/components/teams/jv-view';
 import EmptyState from '@/components/ui/EmptyState';
 import SectionHeader from '@/components/ui/SectionHeader';
-import { gameWord, plural } from '@/components/ui/plural';
 import { RegionSwitcher } from '@/components/layout/LeagueSwitcher';
 import PageHeader from '@/components/layout/PageHeader';
 import { OG_BASE } from '@/components/layout/site';
@@ -30,10 +29,12 @@ import {
   getTeamBySlug,
   getToday,
 } from '@/lib/data';
-import { longDate, monthDay, parseLocal, shortDate } from '@/lib/format';
+import { longDate, monthDay, shortDate } from '@/lib/format/dates';
+import { gameWord, plural } from '@/lib/format/words';
 import { REGIONS, regionOf } from '@/lib/leagues';
 import type { Game } from '@/lib/model/game';
 import type { RegionId } from '@/lib/model/ids';
+import { parseLocal } from '@/lib/shared/dates';
 
 /**
  * `/scores/[date]` — one day's slate (DESIGN §1.1, §3.4).

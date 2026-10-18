@@ -17,9 +17,9 @@
  *     Los Gatos writes bare "Santa Clara". Both go through the registry alias table.
  */
 
-import { localDateKey, toLocalTimestamp } from '@/lib/format';
 import type { Game } from '@/lib/model/game';
 import type { TeamSlug } from '@/lib/model/ids';
+import { localDateKey, toLocalTimestamp } from '@/lib/shared/dates';
 import { resolveTeam, sideJoinKey, unorderedPairKey } from '@/lib/teams';
 import { icsLine, unfoldIcs } from './http';
 

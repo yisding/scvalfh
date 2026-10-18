@@ -73,7 +73,7 @@ export interface SectionConfig {
    * 'unverified' (the San Diego Section): no box score or tally confirms one, and the other sources disagree
    * with MaxPreps' level score: si.com and the Section's power rankings both record Mt. Carmel–Poway (Sep 11)
    * as 2-0, where MaxPreps has 0-0 marked W and L. The site keeps MaxPreps' score and counts the flagged win,
-   * but copy says only that the team was credited with the win on a level score (lib/format.ts
+   * but copy says only that the team was credited with the win on a level score (lib/format/score.ts
    * shootoutPhrases), never that a shootout decided it, and the chip carries no decider tag.
    * `disagreement` is the sentence the game page adds to an 'unverified' section's level-score note: what
    * the other sources record instead (null for a 'verified' section; assertLeagues checks both ways).

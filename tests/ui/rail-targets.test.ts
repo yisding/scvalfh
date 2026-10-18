@@ -17,7 +17,7 @@ import {
   type RailMarker,
 } from '@/components/schedule/rail-targets';
 import { getGameDates } from '@/lib/data';
-import { monthDay, shortDate } from '@/lib/format';
+import { monthDay, shortDate } from '@/lib/format/dates';
 
 const MARKERS: RailMarker[] = [
   { date: '2026-08-24', kind: 'up' },
@@ -76,7 +76,7 @@ describe('railTargets', () => {
 });
 
 describe('rail text', () => {
-  it('formats exactly as lib/format does, for every date in the snapshot', () => {
+  it('formats exactly as lib/format/dates.ts does, for every date in the snapshot', () => {
     const dates = getGameDates();
     expect(dates.length).toBeGreaterThan(0);
     for (const date of [...dates, '2024-02-29', '2027-01-01', '2026-03-01']) {

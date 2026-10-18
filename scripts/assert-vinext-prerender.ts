@@ -22,7 +22,7 @@
  * SCVAL_SNAPSHOT), cross-checked against lib/leagues.ts and the team registry, gives
  * `standings/<id>` and `schedule/<id>` for each league, `playoffs/<id>` for each league
  * tournament, `game/<param>` for every game plus one stub per `supersededGames` key (param =
- * lib/game-id.ts gameIdToParam: `sblive:N` → `sblive-N`), `scores/<date>` for every distinct game
+ * lib/shared/game-id.ts gameIdToParam: `sblive:N` → `sblive-N`), `scores/<date>` for every distinct game
  * date and `teams/<slug>` for the registry's teams; data/clubs.json (DESIGN §17, SPEC §1.1j2,
  * through lib/clubs.ts) gives `clubs/<slug>` for exactly its slugs, with no OG card (they take the
  * root one); `clubs` and `commits` (DESIGN §21) are fixed pages with the root card.
@@ -83,7 +83,7 @@ if (revalidating.length) fail('revalidates at runtime: ' + revalidating.map((r) 
 const files = (fs.readdirSync(dir, { recursive: true }) as string[]).map((f) => f.split(path.sep).join('/'));
 const fileSet = new Set(files);
 
-// A raw contest id in a URL: `sblive:123` must be prerendered as `sblive-123` (lib/game-id.ts).
+// A raw contest id in a URL: `sblive:123` must be prerendered as `sblive-123` (lib/shared/game-id.ts).
 const colon = files.filter((f) => f.includes(':'));
 if (colon.length) fail(`prerendered paths contain ':' (raw contest id in a URL): ${colon.slice(0, 5).join(', ')}`);
 

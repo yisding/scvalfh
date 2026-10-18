@@ -6,7 +6,7 @@
  * boundary). Everything they need is computed on the server (`home-view.ts`) and passed as plain
  * data: the §5.2 render decision for the last game arrives as a `GameDisplay`, already resolved by
  * `describeGame()`, so no score is ever re-derived on the client and the never-0-0 rule stays in its
- * single place (`renderScore()` in lib/format.ts).
+ * single place (`renderScore()` in lib/format/score.ts).
  *
  * This file imports TYPES ONLY, so it is safe on both sides of the boundary.
  */
@@ -14,8 +14,8 @@
 import type { Outcome } from '@/lib/model/game';
 import type { LeagueId, RegionId } from '@/lib/model/ids';
 import type { SectionConfig } from '@/lib/model/league-config';
-import type { TeamSearchEntry } from '@/lib/search';
 import type { GameDisplay, SideView } from '@/components/ui/describe-game';
+import type { TeamSearchEntry } from '@/lib/shared/search';
 
 /**
  * The identity fields the pinned card renders. They come from the 99-team search index the card
@@ -149,9 +149,9 @@ export interface PinTileView {
   slug: string;
   leagueId: LeagueId;
   name: string;
-  /** The visible tile text, with soft hyphens where it needs them (lib/pin-label.ts `pickerName`). */
+  /** The visible tile text, with soft hyphens where it needs them (lib/shared/pin-label.ts `pickerName`). */
   pickerName: string;
-  /** The pin button's accessible name (lib/pin-label.ts `pinLabel`): 'Pin Leigh, Mt. Hamilton · BVAL'. */
+  /** The pin button's accessible name (lib/shared/pin-label.ts `pinLabel`): 'Pin Leigh, Mt. Hamilton · BVAL'. */
   pinLabel: string;
 }
 

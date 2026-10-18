@@ -38,7 +38,9 @@ import {
   getTournamentLeagueIds,
 } from '@/lib/data';
 import type { LeagueSummary } from '@/lib/data';
-import { dateWithYear, formatStamp, listWords, numberWord, ordinal, plural, shortDate, timeOfDayPT } from '@/lib/format';
+import { dateWithYear, formatStamp, shortDate, timeOfDayPT } from '@/lib/format/dates';
+import { ordinal } from '@/lib/format/numbers';
+import { listWords, numberWord, plural } from '@/lib/format/words';
 import { getAvailableHistoryLeagues, getHistorySeason, getUnavailableHistoryLeagues } from '@/lib/history';
 import { jvTableTitle } from '@/components/standings/jv-standings-view';
 import { getJvFile, getJvMerge, getJvTables } from '@/lib/jv';

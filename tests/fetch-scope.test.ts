@@ -23,7 +23,7 @@ import {
   type Rosters,
 } from '@/lib/rosters-schema';
 import { SEASON_YEAR } from '@/lib/season';
-import { stableStringify } from '@/lib/stable-json';
+import { stableStringify } from '@/lib/shared/stable-json';
 import { TEAMS, teamsInLeague } from '@/lib/teams';
 import { runRepoScript, type ScriptName } from './support/cli';
 import { REPO } from './support/repo';

@@ -15,16 +15,14 @@ import {
   BACKFILL_TEAM_PAGE_CAP,
   applyBackfill,
   cleanSbliveRows,
-  dayDiff,
   eligibleItems,
   isIdResolved,
   planBackfill,
   scoreboardCoverage,
-  shiftDateKey,
   supersededGamesOf,
   type BackfillInput,
 } from '@/lib/backfill';
-import { scoreSentence } from '@/lib/format';
+import { scoreSentence } from '@/lib/format/score';
 import { getDivision } from '@/lib/leagues';
 import type { OfficialFixture } from '@/lib/model/fixture';
 import type { Game } from '@/lib/model/game';
@@ -33,6 +31,7 @@ import type { DivisionId } from '@/lib/model/ids';
 import type { Snapshot } from '@/lib/model/snapshot';
 import { FixtureMissing, TransportError, resourcePath, type ResourceKey, type RunContext } from '@/lib/pipeline/contract';
 import { scoreboardDates, stepSblive } from '@/lib/pipeline/steps/sblive';
+import { dayDiff, shiftDateKey } from '@/lib/shared/dates';
 import { parseScoresPage, parseTeamGamesPage, type SbliveGame, type SbliveSide } from '@/lib/sources/sblive';
 import { loadSnapshot, parseSnapshot } from '@/lib/snapshot-schema';
 import { getTeamBySlug } from '@/lib/teams';

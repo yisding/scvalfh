@@ -16,7 +16,7 @@
  * (`gameDivisions`, `gameFilterAttrs`) live in `filter-data-server.ts`.
  */
 
-import { plural } from '@/lib/format';
+import { plural } from '@/lib/format/words';
 import type { Game } from '@/lib/model/game';
 
 /** What the `state` filter groups games into. */

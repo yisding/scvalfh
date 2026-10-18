@@ -16,7 +16,7 @@ import path from 'node:path';
 import type { OfficialStep, SbliveStep } from '@/lib/pipeline/contract';
 import { SILENT_SINK } from '@/lib/pipeline/ledger';
 import { parseRunArgs, prepareRun, runPipeline } from '@/lib/pipeline/run';
-import { stableStringify } from '@/lib/stable-json';
+import { stableStringify } from '@/lib/shared/stable-json';
 import { VARIANTS_DIR, corpusDir } from '@/tests/support/corpus';
 import { REPO, tempDir, tempFile } from '@/tests/support/repo';
 

@@ -1,4 +1,4 @@
-import { ordinal } from '@/lib/format';
+import { ordinal } from '@/lib/format/numbers';
 
 import MissingValue from './MissingValue';
 
@@ -7,7 +7,7 @@ import MissingValue from './MissingValue';
  * a pill's or a tile's `1st` / `T-7th`. A shared place's `T` mark is aria-hidden and paired with
  * a visually hidden "tied for 7th", so a screen reader never says "T seven"; a team with no
  * reported results gets an em dash and "not ranked" (`ranked={false}`), never a place it has not
- * earned. lib/format's `placeMark` and `placeWords` spell the same notation as strings, for the
+ * earned. lib/format/numbers.ts's `placeMark` and `placeWords` spell the same notation as strings, for the
  * sentences and the stat tile that cannot take markup.
  *
  * `form="table"`: a shared mark never breaks into a "T" over a "7" (`whitespace-nowrap`, added

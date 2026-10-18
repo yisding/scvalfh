@@ -20,11 +20,12 @@
 
 import { beforeAll, describe, expect, it } from 'vitest';
 
-import { localDateKey, sideOutcome } from '@/lib/format';
 import { DATA_QUALITY, LEAGUES, getDivision, getLeague, getSection } from '@/lib/leagues';
 import type { Game } from '@/lib/model/game';
 import type { Snapshot } from '@/lib/model/snapshot';
 import { NO_MAXPREPS_TABLE_REASON } from '@/lib/pipeline/steps/league-meta';
+import { localDateKey } from '@/lib/shared/dates';
+import { sideOutcome } from '@/lib/shared/game';
 import type { ScheduleRow } from '@/lib/sources/maxpreps';
 import { parseScoresPage, parseTeamGamesPage } from '@/lib/sources/sblive';
 import { divisionGames } from '@/lib/standings';
@@ -312,8 +313,8 @@ describe('the section shootout and level games', () => {
       expect(g.shootout, `lib/normalize.ts: no tally stored: ${g.contestId}`).toBeNull();
       expect(g.provenance.resultConflict, `lib/normalize.ts: ${g.contestId}`).toBeUndefined();
       const winner = g.home.result === 'W' ? 'home' : 'away';
-      expect(sideOutcome(g, winner), `lib/format.ts sideOutcome: ${g.contestId}`).toBe('W');
-      expect(sideOutcome(g, winner === 'home' ? 'away' : 'home'), `lib/format.ts sideOutcome: ${g.contestId}`).toBe('L');
+      expect(sideOutcome(g, winner), `lib/shared/game.ts sideOutcome: ${g.contestId}`).toBe('W');
+      expect(sideOutcome(g, winner === 'home' ? 'away' : 'home'), `lib/shared/game.ts sideOutcome: ${g.contestId}`).toBe('L');
     }
     // Clairemont (City) – Eastlake (Metro), Sep 1: two conferences, one section.
     expect(gameOf(snapshot, 'f99ce5ed')).toMatchObject({ decider: 'SO', home: { slug: 'clairemont' }, away: { slug: 'eastlake' } });

@@ -40,12 +40,12 @@ import {
 } from '@/lib/commits';
 import { clubSiteKey } from '@/lib/clubs-schema';
 import { COLLEGE_DIVISIONS, COMMIT_SPORTS, type SocialPlatform } from '@/lib/commits-schema';
-import { dateWithYear, gradeWord, listWords, partialDate } from '@/lib/format';
+import { dateWithYear, partialDate } from '@/lib/format/dates';
+import { gradeWord, listWords, plural } from '@/lib/format/words';
 import { REGIONS, regionOf } from '@/lib/leagues';
 import type { RegionId, TeamSlug } from '@/lib/model/ids';
 import { getRosters } from '@/lib/rosters';
 import { getTeamBySlug } from '@/lib/teams';
-import { plural } from '@/components/ui/plural';
 import { OUTLETS, hostOf, numbered, pathOf, schoolName } from '@/components/ui/source-hosts';
 
 // ---------------------------------------------------------------- wording tables

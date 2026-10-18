@@ -4,7 +4,7 @@
  * DESIGN §5.2 is a table of eleven rows; this module is the single place that table is
  * implemented, and tests/ui/render-score.test.ts walks every row of it. Nothing in
  * components/ PRINTS `game.home.score` / `game.away.score`: every printed score comes from
- * `renderScore()` in lib/format.ts (directly, or through `describeGame()`), and every glyph from
+ * `renderScore()` in lib/format/score.ts (directly, or through `describeGame()`), and every glyph from
  * `scoreGlyph()`. The raw reads that remain are null-guarded comparisons and arithmetic that
  * print no score: the level check in game-view's `resultConflictNoteFor` and its
  * `isOneGoalFinal`, day-summary's headline-game margin and the /leaders school boards' goal
@@ -16,7 +16,9 @@
  * kept so the §5.2 table stays implemented end to end.
  */
 
-import { EN_DASH, MINUS, renderScore, scoreGlyph, scoreSentence, shootoutPhrases, timeOfDay } from '@/lib/format';
+import { timeOfDay } from '@/lib/format/dates';
+import { renderScore, scoreGlyph, scoreSentence, shootoutPhrases, type ScoreView } from '@/lib/format/score';
+import { EN_DASH, MINUS } from '@/lib/format/words';
 import {
   LEAGUES,
   divisionHeading,
@@ -25,7 +27,7 @@ import {
   getSection,
   leagueOfDivision,
 } from '@/lib/leagues';
-import type { Game, Outcome, PostseasonTag, ScoreView } from '@/lib/model/game';
+import type { Game, Outcome, PostseasonTag } from '@/lib/model/game';
 import type { LeagueId, TeamSlug } from '@/lib/model/ids';
 import { type SectionConfig, type ShootoutInference } from '@/lib/model/league-config';
 import { getTeamBySlug } from '@/lib/teams';

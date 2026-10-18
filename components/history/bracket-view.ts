@@ -1,4 +1,4 @@
-import { monthDay } from '@/lib/format';
+import { monthDay } from '@/lib/format/dates';
 import {
   bracketSides,
   historySchoolName,

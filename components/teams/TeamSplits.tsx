@@ -1,5 +1,5 @@
-import { recordString } from '@/lib/format';
 import { MissingValue } from '@/components/ui/MissingValue';
+import { recordString } from '@/lib/format/numbers';
 import type { Record3 } from '@/lib/model/game';
 import type { TeamPageView } from './team-view';
 

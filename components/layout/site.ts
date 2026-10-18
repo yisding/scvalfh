@@ -7,7 +7,7 @@
  */
 import type { Metadata } from 'next';
 
-import { listWords, numberWord } from '@/lib/format';
+import { listWords, numberWord } from '@/lib/format/words';
 import {
   INDEPENDENT_LEAGUES,
   LEAGUES_PROPER,

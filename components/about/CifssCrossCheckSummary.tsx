@@ -1,7 +1,7 @@
 import { CIFSS_NOTES } from '@/lib/cifss-crosscheck';
-import { formatStamp, shortDate } from '@/lib/format';
 
 import ExternalLink from '@/components/ui/ExternalLink';
+import { formatStamp, shortDate } from '@/lib/format/dates';
 import type { CifssCrossCheck, CifssOnlyRow } from '@/lib/model/crosscheck';
 
 /**

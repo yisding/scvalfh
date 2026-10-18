@@ -25,7 +25,7 @@ import {
   getTeamBySlug,
 } from '@/lib/data';
 import type { LeagueSummary } from '@/lib/data';
-import { shortDate } from '@/lib/format';
+import { shortDate } from '@/lib/format/dates';
 import { getDivision } from '@/lib/leagues';
 import type { Team } from '@/lib/model/team';
 import { outcomesFor, playoffOutcomeLabel } from '@/lib/standings';

@@ -38,7 +38,9 @@
  */
 
 import type { MissingOfficialResult, StandingContext } from '@/lib/data';
-import { monthDay, officialSourceFormat, ordinal, shortDate } from '@/lib/format';
+import { monthDay, shortDate } from '@/lib/format/dates';
+import { ordinal } from '@/lib/format/numbers';
+import { officialSourceFormat } from '@/lib/format/words';
 import {
   divisionHeading,
   getDivision,

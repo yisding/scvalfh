@@ -1,6 +1,6 @@
 /**
  * The eleven game-state rows of DESIGN §5.2, over the pure helper the UI actually uses
- * (components/ui/describe-game.ts → `describeGame`, which wraps lib/format's `renderScore`).
+ * (components/ui/describe-game.ts → `describeGame`, which wraps lib/format/score.ts's `renderScore`).
  *
  * The contract being pinned: a missing score is NEVER rendered as 0-0, a genuine 0 is
  * indistinguishable from nothing only to a careless reader (here it is full ink, `hasScore: true`),
@@ -24,7 +24,7 @@ import {
   signedMargin,
 } from '@/components/ui/describe-game';
 import { getGames, getLeagueSummaries } from '@/lib/data';
-import { EN_DASH } from '@/lib/format';
+import { EN_DASH } from '@/lib/format/words';
 import { findDivision, findLeague } from '@/lib/leagues';
 import type { Game, GameStatus } from '@/lib/model/game';
 

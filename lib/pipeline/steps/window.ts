@@ -5,7 +5,7 @@
  * localDateKey(fetchedAt), never the wall clock.
  */
 
-import { monthDay } from '@/lib/format';
+import { monthDay } from '@/lib/format/dates';
 import { seasonWindowBounds } from '@/lib/leagues';
 import type { RunContext } from '@/lib/pipeline/contract';
 

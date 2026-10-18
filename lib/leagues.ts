@@ -20,8 +20,8 @@ import type { PlayoffStatus, TiebreakStage } from './model/standings';
 // (that module imports nothing of ours, only zod).
 import { failInvariant } from './config/invariant';
 import { SHOOTOUT_INFERENCES } from './model/league-config';
-import { DATE_PATTERN, SLUG_PATTERN } from './schema-primitives';
 import { CCS_BRACKET_URL, SEASON_YEAR } from './season';
+import { DATE_PATTERN, SLUG_PATTERN } from './shared/patterns';
 
 // ---------- values (SPEC §2.2, verbatim) ----------
 
@@ -1000,7 +1000,7 @@ const NORTH_COUNTY: LeagueConfig = {
   id: 'north-county', sectionId: 'sds',
   // shortName 'North' (owner decision, 2026-10-06: 'North County' made the chip too wide); copy that prints it
   // alone sits beside City and Metro ('City, North and Metro', 'North teams'). 'North County' still finds the
-  // conference in search: the league's search keys are its short name and its name (lib/search.ts).
+  // conference in search: the league's search keys are its short name and its name (lib/shared/search.ts).
   name: 'North County Conference', shortName: 'North',
   // Alone as a control's target, 'North' reads as a direction ('Jump to North ↓'): there it is 'North County'.
   standaloneName: 'North County',
@@ -1713,7 +1713,7 @@ export function assertLeagues(): void {
     if (s.shootout !== null && !(s.shootout.words.trim() && s.shootout.citation.trim())) {
       fail(`${s.id}: shootout needs words and a citation (use null for none)`);
     }
-    // What copy may say about a level W/L final turns on the inference (lib/format.ts shootoutPhrases), so
+    // What copy may say about a level W/L final turns on the inference (lib/format/score.ts shootoutPhrases), so
     // every shootout rule names one: a typo or a missing value would silently print the 'verified' wording.
     if (s.shootout !== null && !(SHOOTOUT_INFERENCES as readonly string[]).includes(s.shootout.inference)) {
       fail(`${s.id}: shootout.inference must be one of ${SHOOTOUT_INFERENCES.join(', ')}`);

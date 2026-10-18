@@ -17,8 +17,8 @@ const L = useCorpusModules('all-2026-10-02', {
   d: () => import('@/lib/data'),
   m: () => import('@/components/game/game-view'),
   leagues: () => import('@/lib/leagues'),
-  fmt: () => import('@/lib/format'),
-  ids: () => import('@/lib/game-id'),
+  fmt: () => import('@/lib/format/numbers'),
+  ids: () => import('@/lib/shared/game-id'),
 });
 
 describe('recordAsOf', () => {

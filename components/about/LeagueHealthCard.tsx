@@ -1,6 +1,6 @@
-import { formatStamp, officialSourceFormat } from '@/lib/format';
 import ExternalLink from '@/components/ui/ExternalLink';
-import { plural } from '@/components/ui/plural';
+import { formatStamp } from '@/lib/format/dates';
+import { officialSourceFormat, plural } from '@/lib/format/words';
 import type { LeagueHealth, LeagueRunState } from '@/lib/model/health';
 import type { OfficialSourceId } from '@/lib/model/ids';
 

@@ -8,7 +8,7 @@ import JvStandings from '@/components/standings/JvStandings';
 import { buildJvTablesView } from '@/components/standings/jv-standings-view';
 import Arrow from '@/components/ui/Arrow';
 import SectionHeader from '@/components/ui/SectionHeader';
-import { listWords } from '@/lib/format';
+import { listWords } from '@/lib/format/words';
 import { LEAGUES, LEAGUES_PROPER, leaguesInRegion, regionOf } from '@/lib/leagues';
 
 /**

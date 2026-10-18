@@ -6,7 +6,7 @@ import { usePinnedTeam } from './use-pinned-team';
  * Pin / unpin a team (DESIGN §7.12; SPEC §8.2, §10.2). Pinning also remembers the team's league
  * (`leagueId`), which is one of the three writes of `scvalfh.league` the spec allows.
  *
- * `label` is the team's pin label, built by the caller with `pinLabel()` from lib/pin-label.ts
+ * `label` is the team's pin label, built by the caller with `pinLabel()` from lib/shared/pin-label.ts
  * (`Pin Leigh, Mt. Hamilton · BVAL`, `Pin Tamalpais, MCAL`), so this module never reaches the
  * registry or the league config (the client boundary, SPEC §0.4). It names the team in the
  * button's accessible name: the visible words come first ("Pin this team" / "Unpin this team",
@@ -35,7 +35,7 @@ export interface PinControlProps {
   slug: string;
   /** The team's league: pinning remembers it (SPEC §8.2). */
   leagueId: string;
-  /** `pinLabel(…)` from lib/pin-label.ts: 'Pin Leigh, Mt. Hamilton · BVAL'. */
+  /** `pinLabel(…)` from lib/shared/pin-label.ts: 'Pin Leigh, Mt. Hamilton · BVAL'. */
   label: string;
   /** Every slug in the snapshot, so a stale pin can be detected and cleared. */
   knownSlugs?: readonly string[];

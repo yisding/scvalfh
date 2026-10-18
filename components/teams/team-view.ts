@@ -2,7 +2,7 @@
  * Everything /teams and /teams/[slug] need, derived once per page.
  *
  * The page reads the snapshot ONLY through lib/data.ts and every printed score comes from
- * lib/format's renderScore (the form chips' `0–7`) or components/ui/describe-game's describeGame —
+ * lib/format/score.ts's renderScore (the form chips' `0–7`) or components/ui/describe-game's describeGame —
  * nothing here PRINTS `game.home.score`. The only arithmetic in this file is counting
  * fixtures and finding the games either side of "today", and "today" is always
  * `localDateKey(snapshot.fetchedAt)` (getToday()), never Date.now(), so the build is
@@ -28,20 +28,10 @@ import {
   type StandingContext,
   type TeamPostseasonLine,
 } from '@/lib/data';
-import {
-  dateSpan,
-  gameWhen,
-  listWords,
-  monthDay,
-  ordinal,
-  plural,
-  recordString,
-  renderScore,
-  shortDate,
-  shootoutPhrases,
-  sideOutcome,
-  timeOfDayPT,
-} from '@/lib/format';
+import { dateSpan, gameWhen, monthDay, shortDate, timeOfDayPT } from '@/lib/format/dates';
+import { ordinal, recordString } from '@/lib/format/numbers';
+import { renderScore, shootoutPhrases } from '@/lib/format/score';
+import { listWords, plural } from '@/lib/format/words';
 import {
   divisionHeading,
   getDivision,
@@ -59,7 +49,8 @@ import type { DivisionId, LeagueId, RegionId, SectionId, TeamSlug } from '@/lib/
 import { type LeagueRules, type PostseasonConfig } from '@/lib/model/league-config';
 import type { Standing } from '@/lib/model/standings';
 import type { Team } from '@/lib/model/team';
-import { pinLabel } from '@/lib/pin-label';
+import { sideOutcome } from '@/lib/shared/game';
+import { pinLabel } from '@/lib/shared/pin-label';
 import { outcomesFor } from '@/lib/standings';
 import { getEloBoardForTeam } from '@/components/leaders/elo-board';
 import { buildOverviewDivision, type OverviewDivision } from '@/components/standings/standings-view';
@@ -207,7 +198,7 @@ export interface TeamPageView {
   divisionSize: number;
   /** `Red-Tailed Hawks · MCAL · Mill Valley` | `Pirates · De Anza · SCVAL · San Jose` */
   identityLine: string;
-  /** PinControl's accessible name, from lib/pin-label.ts. */
+  /** PinControl's accessible name, from lib/shared/pin-label.ts. */
   pinLabel: string;
   /** `/standings/<league>#<division>` */
   standingsHref: string;

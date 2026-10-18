@@ -1,7 +1,7 @@
 /**
  * The pure view models behind /playoffs (CCS) and /playoffs/<league> (league tournaments). No `fs`
  * and no `lib/data`: the pages read the snapshot and hand plain records down, so every builder here
- * is testable and safe anywhere. The only runtime imports are `lib/format`, the pure config in
+ * is testable and safe anywhere. The only runtime imports are `lib/format/`, the pure config in
  * `lib/leagues` (for `ladderFactsFor`) and the standings view's `ladderLineAfter` (the seeds'
  * tournament line). Server-only: no client component imports this module.
  *
@@ -23,21 +23,9 @@
  * rule), never blank.
  */
 
-import {
-  EM_DASH,
-  leagueClockPT,
-  listWords,
-  monthDay,
-  numberWord,
-  ordinal,
-  ordinalWord,
-  placeWords,
-  plural,
-  recordString,
-  recordWords,
-  shortDate,
-  timeOfDayPT,
-} from '@/lib/format';
+import { leagueClockPT, monthDay, shortDate, timeOfDayPT } from '@/lib/format/dates';
+import { ordinal, ordinalWord, placeWords, recordString, recordWords } from '@/lib/format/numbers';
+import { EM_DASH, listWords, numberWord, plural } from '@/lib/format/words';
 import { divisionHeading, getDivision, getLeague, ladderFor, leagueOfDivision } from '@/lib/leagues';
 
 import { ladderLineAfter, ladderRow } from '@/components/standings/standings-view';

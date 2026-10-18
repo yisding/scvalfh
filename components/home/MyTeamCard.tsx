@@ -11,9 +11,9 @@ import SectionHeader from '@/components/ui/SectionHeader';
 import StatusLabel from '@/components/ui/StatusLabel';
 import TeamMonogram from '@/components/ui/TeamMonogram';
 import type { GameDisplay } from '@/components/ui/describe-game';
-import { formStripName } from '@/components/ui/plural';
 import { isNearViewport, unpinFallbackTarget, usePinnedTeam } from '@/components/ui/use-pinned-team';
-import type { SearchIndex } from '@/lib/search';
+import { formStripName } from '@/lib/format/words';
+import type { SearchIndex } from '@/lib/shared/search';
 
 import {
   postseasonCardLine,

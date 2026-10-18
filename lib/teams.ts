@@ -30,7 +30,7 @@ import { PCAL_SEEDS } from './registry/pcal';
 import { SCVAL_SEEDS } from './registry/scval';
 import type { Seed } from './registry/seed';
 import { SUNSET_SEEDS } from './registry/sunset';
-import { SLUG_PATTERN } from './schema-primitives';
+import { SLUG_PATTERN } from './shared/patterns';
 
 const MP = 'https://www.maxpreps.com';
 const SI = 'https://www.si.com/high-school/stats/california/field-hockey';
