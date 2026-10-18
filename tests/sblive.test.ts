@@ -30,64 +30,12 @@ import {
   sbliveTeamGamesUrl,
 } from '@/lib/sources/sblive';
 import { CHROME_USER_AGENT, htmlUnescape } from '@/lib/sources/http';
+import * as pages from '@/tests/support/sblive-pages';
 
-/** The escaping si.com actually applies to the attribute value. */
-function escapeAttr(json: string): string {
-  return json.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
-}
-
-function page(className: string, props: unknown): string {
-  return (
-    '<!DOCTYPE html><html><body>\n' +
-    `<div data-react-class="${className}" data-react-props="${escapeAttr(JSON.stringify(props))}"></div>\n` +
-    '</body></html>'
-  );
-}
-
-const teamNode = (over: Record<string, unknown> = {}) => ({
-  id: '6528121',
-  date: '2026-09-23T16:00:00.000-07:00',
-  statusId: 3,
-  shortStatusText: 'F',
-  gameTypeLabel: 'League',
-  locationText: 'Los Altos, CA',
-  webPath: '/california/field-hockey/games/6528121-cupertino-vs-los-altos',
-  titleText: 'Los Altos vs Cupertino',
-  featured: {
-    locationDescriptor: 'vs',
-    isHome: true,
-    result: 'WIN',
-    scoreText: '4',
-    standing: { overallRecord: '4-3-2', leagueRecord: '1-0' },
-    team: {
-      name: 'Los Altos',
-      webPath: '/california/field-hockey/teams/458850-los-altos-eagles',
-    },
-  },
-  opponent: {
-    scoreText: '0',
-    isHome: false,
-    team: {
-      name: 'Cupertino',
-      webPath: '/california/field-hockey/teams/458665-cupertino-pioneers',
-    },
-  },
-  ...over,
-});
-
-const teamGamesProps = (nodes: unknown[]) => ({
-  query: {
-    team: {
-      id: '458850',
-      name: 'Los Altos',
-      webPath: '/california/field-hockey/teams/458850-los-altos-eagles',
-      standing: { overallRecord: '4-3-2', leagueRecord: '1-0' },
-      games: { nodes },
-    },
-  },
-  variables: { id: '458850', schoolYear: '2026-2027', paginating: false },
-  application: { env: 'production' },
-});
+// The captured pages are whole documents carrying every field the live pages do.
+const page = (className: string, props: unknown) => pages.page(className, props, { document: true });
+const teamNode = (over: Record<string, unknown> = {}) => pages.teamNode(over, { full: true });
+const teamGamesProps = (nodes: unknown[]) => pages.teamGamesProps(nodes, { full: true });
 
 describe('sblive: the frozen exports (SPEC §7.3) and the live HTTP options', () => {
   it('keeps every Stage-B frozen export', () => {

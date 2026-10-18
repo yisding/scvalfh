@@ -11,7 +11,7 @@
 
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
-import { corpusSnapshotPath } from '@/tests/helpers';
+import { corpusSnapshotPath } from '@/tests/support/corpus-snapshot';
 
 type Data = typeof import('@/lib/data');
 type Model = typeof import('@/components/game/game-view');

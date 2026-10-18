@@ -18,7 +18,8 @@ import { CIFSS_SECTIONS } from '@/lib/sources/cifss';
 import type { ScheduleRow } from '@/lib/sources/maxpreps';
 import { resolveTeam } from '@/lib/teams';
 import type { CifssCrossCheck, Game, Snapshot } from '@/lib/types';
-import { REPO, game } from '@/tests/helpers';
+import { game } from '@/tests/support/game-builder';
+import { REPO } from '@/tests/support/repo';
 
 /** A real listing with no games: its column heads and an empty body. */
 const EMPTY = '<html><body><table class="table"><thead><tr><th>Home Score</th><th>Away Score</th></tr></thead><tbody></tbody></table></body></html>';

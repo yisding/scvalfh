@@ -1,6 +1,3 @@
-import { readFileSync } from 'node:fs';
-import path from 'node:path';
-
 import { describe, expect, it } from 'vitest';
 
 import {
@@ -16,10 +13,11 @@ import {
 } from '@/lib/snapshot-schema';
 import { TEAMS } from '@/lib/teams';
 import type { Game, Snapshot } from '@/lib/types';
-import { game } from './game-builder';
+import { game } from './support/game-builder';
+import { goldenPath, readJson } from './support/repo';
 
-const V1_PATH = path.join(import.meta.dirname, 'golden', 'snapshot-2026-10-02.v1.json');
-const readV1 = (): unknown => JSON.parse(readFileSync(V1_PATH, 'utf8'));
+const V1_PATH = goldenPath('snapshot-2026-10-02.v1.json');
+const readV1 = (): unknown => readJson(V1_PATH);
 
 /** The committed v1 golden, upgraded: a real, valid v2 snapshot (deep copy on every call). */
 const MIGRATED = loadSnapshot(readV1());

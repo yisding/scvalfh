@@ -302,13 +302,13 @@ the wrong season, an empty table, a 503 feed, a revised official schedule, a fin
 MCAL postseason games). It was not extended for the EAL: under it the EAL is "not fetched in this
 run". `tests/fixtures/corpus/eal-2026-10-04/` is a second corpus, captured live on 2026-10-04 with
 `--leagues eal` (19 files, 9 MaxPreps and 9 si.com requests), that drives the EAL's pipeline and view
-tests and a second copy-honesty pass (`EAL_CORPUS` in `tests/helpers.ts`).
+tests and a second copy-honesty pass (`EAL_CORPUS` in `tests/support/corpus.ts`).
 `tests/fixtures/corpus/socal-2026-10-06/` is a third, captured live on 2026-10-06 with `--leagues
 sunset,city,north-county,metro --no-official --no-ccs --no-vnn` (65 MaxPreps requests: 1 + 2 × 7 + 50;
 8.2 MB), that drives `tests/pipeline/socal.test.ts`: Valley's skipped table, the membership counts per
 division, Mission Bay's cross-division games and the eight San Diego shootout finals. Tests that assert
 league-specific values build their snapshot from a corpus
-(`corpusSnapshotPath('all-2026-10-02')` in `tests/helpers.ts`); tests over the bundled
+(`corpusSnapshotPath('all-2026-10-02')` in `tests/support/corpus-snapshot.ts`); tests over the bundled
 `data/snapshot.json` assert invariants only, because that file changes every run.
 `tests/fixtures/corpus/variants/finals-regression/previous-snapshot.json` is frozen as a four-league
 file, so the pipeline tests keep proving that a snapshot written before a league existed loads.

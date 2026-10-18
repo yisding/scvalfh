@@ -20,7 +20,7 @@ import { SNAPSHOT_MAX_BYTES, SNAPSHOT_WARN_BYTES, SOURCES_MAX, budgetLabel } fro
 import { loadSnapshot, snapshotContentHash } from '@/lib/snapshot-schema';
 import { TEAMS, getTeamBySlug } from '@/lib/teams';
 import type { Snapshot } from '@/lib/types';
-import { REPO } from './helpers';
+import { REPO } from './support/repo';
 
 const SNAPSHOT_PATH = path.join(REPO, 'data', 'snapshot.json');
 const META_PATH = path.join(REPO, 'data', 'snapshot.meta.json');

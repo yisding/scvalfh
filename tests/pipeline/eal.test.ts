@@ -7,21 +7,19 @@
  * Assertion messages name the module that produces the value, so a failure is routed to its owner.
  */
 
-import { readFileSync } from 'node:fs';
-import path from 'node:path';
-
 import { beforeAll, describe, expect, it } from 'vitest';
 
 import { localDateKey, sideOutcome } from '@/lib/format';
 import { DATA_QUALITY, LEAGUES } from '@/lib/leagues';
-import { readManifest } from '@/lib/pipeline/corpus';
-import { loadSnapshot } from '@/lib/snapshot-schema';
 import type { ScheduleRow } from '@/lib/sources/maxpreps';
 import { parseScoresPage, parseTeamGamesPage, type SbliveGame } from '@/lib/sources/sblive';
 import { divisionGames } from '@/lib/standings';
 import { TEAMS, teamsInLeague } from '@/lib/teams';
-import type { Game, Snapshot } from '@/lib/types';
-import { EAL_CORPUS, corpusDir, corpusRows, corpusSnapshotPath, runFixtureCli, stubCorpusSnapshot } from '@/tests/helpers';
+import type { Snapshot } from '@/lib/types';
+import { corpusSnapshotPath, stubCorpusSnapshot } from '@/tests/support/corpus-snapshot';
+import { CorpusReader, EAL_CORPUS, gameOf } from '@/tests/support/corpus';
+import { expectOk, runFixtureCli } from '@/tests/support/cli';
+import { readSnapshot } from '@/tests/support/repo';
 
 type DataModule = typeof import('@/lib/data');
 
@@ -30,15 +28,8 @@ const DIVISION = 'eal';
 /** si.com ids that are never an EAL team: Red Bluff (varsity bucket, JV) and the CANC placeholder. */
 const IGNORED_SBLIVE_IDS = ['490259', '490260', '635037'];
 
-const dir = corpusDir(EAL_CORPUS);
-const manifest = readManifest(dir);
-
-/** The path of a corpus resource (every entry of this corpus is a file, not an HTTP status). */
-function fileOf(key: string): string {
-  const entry = manifest.files[key];
-  if (typeof entry !== 'string') throw new Error(`tests/fixtures/corpus/eal-*/manifest.json: ${key} is not a file`);
-  return path.resolve(dir, entry);
-}
+const corpus = new CorpusReader(EAL_CORPUS);
+const manifest = corpus.manifest;
 const members = new Map(teamsInLeague(LEAGUE).map((t) => [t.id, t]));
 
 stubCorpusSnapshot(EAL_CORPUS);
@@ -48,21 +39,14 @@ let data: DataModule;
 
 beforeAll(async () => {
   file = corpusSnapshotPath(EAL_CORPUS);
-  snapshot = loadSnapshot(JSON.parse(readFileSync(file, 'utf8')) as unknown);
+  snapshot = readSnapshot(file);
   data = (await import('@/lib/data')) as DataModule;
 });
-
-/** The corpus's schedule rows, one per contest (every game is in both teams' feeds). */
-function contests(): ScheduleRow[] {
-  const byId = new Map<string, ScheduleRow>();
-  for (const row of corpusRows(EAL_CORPUS)) byId.set(row.contest.contestId, row);
-  return [...byId.values()];
-}
 
 /** League games between two EAL teams that MaxPreps flags, dated before the run's day, not final. */
 function missingFromCorpus(): ScheduleRow[] {
   const today = localDateKey(manifest.fetchedAt);
-  return contests().filter((row) => {
+  return corpus.scheduleRows().filter((row) => {
     const sides = row.contest.teams;
     return (
       row.contest.isDeleted !== true &&
@@ -72,14 +56,6 @@ function missingFromCorpus(): ScheduleRow[] {
       row.calculatedFields.contestState !== 4
     );
   });
-}
-
-function gameOf(prefix: string): Game | undefined {
-  return snapshot.games.find((g) => g.contestId.startsWith(prefix));
-}
-
-function corpusHas(prefix: string): boolean {
-  return contests().some((row) => row.contest.contestId.startsWith(prefix));
 }
 
 describe('the EAL corpus run', () => {
@@ -119,9 +95,9 @@ describe('the EAL corpus run', () => {
   });
 
   it('read the reported table (members plus the known extra row) and logged no unknown school', () => {
-    const standings = JSON.parse(readFileSync(fileOf(`maxpreps/standings/${DIVISION}`), 'utf8')) as {
+    const standings = corpus.json<{
       data: Array<{ schoolId: string }>;
-    };
+    }>(`maxpreps/standings/${DIVISION}`);
     const division = LEAGUES.find((l) => l.id === LEAGUE)!.divisions[0];
     const memberRows = standings.data.filter((r) => !Object.hasOwn(division.maxprepsExtraRows, r.schoolId));
     const health = snapshot.leagueHealth.find((h) => h.leagueId === LEAGUE)!.divisions[0];
@@ -137,19 +113,19 @@ describe('the EAL corpus run', () => {
     expect(source?.rowCount, 'lib/pipeline/steps/reported.ts: source row').toBe(standings.data.length);
 
     const cli = runFixtureCli({ corpus: EAL_CORPUS });
-    expect(cli.status, cli.output).toBe(0);
+    expectOk(cli);
     expect(cli.output, 'lib/pipeline/steps/reported.ts: unknown-school warning').not.toMatch(/unknown school/);
   });
 
   it("computes every team's league W-L-T as MaxPreps' conference W-L-T", () => {
-    const standings = JSON.parse(readFileSync(fileOf(`maxpreps/standings/${DIVISION}`), 'utf8')) as {
+    const standings = corpus.json<{
       data: Array<{
         schoolId: string;
         conferenceWins: number;
         conferenceLosses: number;
         conferenceTies: number;
       }>;
-    };
+    }>(`maxpreps/standings/${DIVISION}`);
     let checked = 0;
     for (const row of standings.data) {
       const team = members.get(row.schoolId);
@@ -169,8 +145,8 @@ describe('the EAL corpus run', () => {
 describe('the EAL games', () => {
   it('counts the 1 v 1 win as a 1 v 1 win, not a conflict (9afebd05)', () => {
     // A played final does not leave a re-capture: a missing contest is a failure, never a silent pass.
-    expect(corpusHas('9afebd05'), 'tests/fixtures/corpus/eal-*: the 9/28 Chico-Davis 1 v 1 game').toBe(true);
-    const g = gameOf('9afebd05');
+    expect(corpus.hasContest('9afebd05'), 'tests/fixtures/corpus/eal-*: the 9/28 Chico-Davis 1 v 1 game').toBe(true);
+    const g = gameOf(snapshot, '9afebd05');
     expect(g, 'lib/normalize.ts: game present').toBeDefined();
     expect(g!.decider, 'lib/normalize.ts: decider').toBe('SO');
     expect(g!.shootout, 'lib/normalize.ts: no tally stored').toBeNull();
@@ -184,8 +160,8 @@ describe('the EAL games', () => {
   });
 
   it('keeps MaxPreps three overtime periods on the 9/2 game as it has them (8a4d7c70)', () => {
-    expect(corpusHas('8a4d7c70'), 'tests/fixtures/corpus/eal-*: the 9/2 PV @ Chico 3-overtime game').toBe(true);
-    const g = gameOf('8a4d7c70');
+    expect(corpus.hasContest('8a4d7c70'), 'tests/fixtures/corpus/eal-*: the 9/2 PV @ Chico 3-overtime game').toBe(true);
+    const g = gameOf(snapshot, '8a4d7c70');
     expect(g, 'lib/normalize.ts: game present').toBeDefined();
     expect(g!.otPeriods, 'lib/normalize.ts: otPeriods').toBe(3);
     expect(g!.decider, 'lib/normalize.ts: decider').toBe('2OT');
@@ -212,7 +188,7 @@ describe('the EAL games', () => {
     const sides: SbliveGame['sides'][number][] = [];
     for (const key of Object.keys(manifest.files)) {
       if (!key.startsWith('sblive/')) continue;
-      const html = readFileSync(fileOf(key), 'utf8');
+      const html = corpus.text(key);
       const rows = key.startsWith('sblive/scores/') ? parseScoresPage(html) : parseTeamGamesPage(html);
       for (const row of rows) sides.push(...row.sides);
     }

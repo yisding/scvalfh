@@ -19,7 +19,7 @@ import { getPlayerClubs } from '@/lib/clubs';
 import { LEAGUE_IDS } from '@/lib/leagues';
 import { getEnrichedTeamRoster } from '@/lib/rosters';
 import { TEAMS, teamsInLeague } from '@/lib/teams';
-import { textOf } from './html-text';
+import { textOf } from '@/tests/support/html-text';
 
 /** Rosters cover every registry team, all five leagues: 49 views. */
 const views = TEAMS.map((t) => ({ slug: t.slug, view: buildRosterView(t.slug)! }));

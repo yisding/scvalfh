@@ -8,8 +8,7 @@
  * the captures.
  */
 
-import { mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
@@ -22,8 +21,9 @@ import { JV_SBLIVE_PATHS, JV_SLUG_BY_SBLIVE_ID, jvMaxprepsScheduleUrl, jvSbliveG
 import { combineJvCopies, parseJvTeamGamesPage, type JvSbliveCopy } from '@/lib/sources/sblive-jv';
 import { TEAMS, getTeamBySlug } from '@/lib/teams';
 import type { Game } from '@/lib/types';
-import { game } from './game-builder';
-import { REPO, runScript } from './helpers';
+import { game } from './support/game-builder';
+import { expectOk, runRepoScript } from './support/cli';
+import { REPO, tempDir, tempFile } from './support/repo';
 
 const FIXTURES = path.join(REPO, 'tests', 'fixtures', 'jv');
 const PCAL = TEAMS.filter((t) => t.league === 'pcal').map((t) => t.slug);
@@ -308,12 +308,12 @@ describe('the JV views', () => {
 describe('scripts/fetch-jv.ts, offline over the PCAL captures', () => {
   const fetchedAt = '2026-10-05T19:52:00.000Z';
   const run = (out: string, ...extra: string[]) =>
-    runScript('scripts/fetch-jv.ts', ['--fixtures', FIXTURES, '--leagues', 'pcal', '--out', out, '--fetched-at', fetchedAt, ...extra]);
+    runRepoScript('fetch-jv', { fixtures: FIXTURES, leagues: 'pcal', out, fetchedAt, extra });
 
   it('builds a valid file: PCAL read from both sources, every other league pending', () => {
-    const out = path.join(mkdtempSync(path.join(tmpdir(), 'scvalfh-jv-')), 'jv.json');
+    const out = tempFile('jv', 'jv.json');
     const r = run(out);
-    expect(r.status, r.output).toBe(0);
+    expectOk(r);
     const file = JvFileSchema.parse(JSON.parse(readFileSync(out, 'utf8')));
     for (const t of file.teams) {
       if (PCAL.includes(t.slug)) {
@@ -332,28 +332,24 @@ describe('scripts/fetch-jv.ts, offline over the PCAL captures', () => {
   });
 
   it('leaves an unchanged file as it was, and carries a failed school’s rows forward', () => {
-    const dir = mkdtempSync(path.join(tmpdir(), 'scvalfh-jv-'));
+    const dir = tempDir('jv');
     const out = path.join(dir, 'jv.json');
-    expect(run(out).status).toBe(0);
+    expectOk(run(out));
     const first = readFileSync(out, 'utf8');
-    const again = runScript('scripts/fetch-jv.ts', [
-      '--fixtures', FIXTURES, '--leagues', 'pcal', '--out', out, '--fetched-at', '2026-10-06T05:00:00.000Z',
-    ]);
-    expect(again.status).toBe(0);
+    const again = runRepoScript('fetch-jv', { fixtures: FIXTURES, leagues: 'pcal', out, fetchedAt: '2026-10-06T05:00:00.000Z' });
+    expectOk(again);
     expect(again.stdout).toContain('no change since');
     expect(readFileSync(out, 'utf8')).toBe(first);
 
     // A fixture directory missing Carmel's MaxPreps capture: Carmel's games are carried.
-    const partial = mkdtempSync(path.join(tmpdir(), 'scvalfh-jv-fx-'));
+    const partial = tempDir('jv-fx');
     for (const slug of PCAL) {
       for (const name of [`jv-sched-${slug}.json`, `jv-sblive-${slug}.html`]) {
         if (name === 'jv-sched-carmel.json') continue;
         writeFileSync(path.join(partial, name), readFileSync(path.join(FIXTURES, name)));
       }
     }
-    const failed = runScript('scripts/fetch-jv.ts', [
-      '--fixtures', partial, '--leagues', 'pcal', '--out', out, '--fetched-at', '2026-10-06T05:00:00.000Z',
-    ]);
+    const failed = runRepoScript('fetch-jv', { fixtures: partial, leagues: 'pcal', out, fetchedAt: '2026-10-06T05:00:00.000Z' });
     expect(failed.status).toBe(1);
     const file = JvFileSchema.parse(JSON.parse(readFileSync(out, 'utf8')));
     const carmel = file.teams.find((t) => t.slug === 'carmel')!;
@@ -369,9 +365,9 @@ describe('scripts/fetch-jv.ts, offline over the PCAL captures', () => {
   // row (lib/fetch-scope.ts readPreviousFile), as fetch-rosters and fetch-player-stats do; it once
   // dropped every such team to 'pending' with no games.
   it('salvages a previous file that fails the whole-file schema row by row, carrying the teams outside the run', () => {
-    const dir = mkdtempSync(path.join(tmpdir(), 'scvalfh-jv-'));
+    const dir = tempDir('jv');
     const out = path.join(dir, 'jv.json');
-    expect(run(out).status).toBe(0);
+    expectOk(run(out));
     const before = JvFileSchema.parse(JSON.parse(readFileSync(out, 'utf8')));
     // A file written before Southwest (the last registry team) was in the registry, and with one bad
     // PCAL row (a teamId that is not the registry's): two different reasons it is not whole.
@@ -384,10 +380,8 @@ describe('scripts/fetch-jv.ts, offline over the PCAL captures', () => {
 
     // A Metro-only run over an empty capture directory: the Metro feeds fail (exit 1 on its own), and
     // PCAL is outside the run.
-    const empty = mkdtempSync(path.join(tmpdir(), 'scvalfh-jv-fx-'));
-    const r = runScript('scripts/fetch-jv.ts', [
-      '--fixtures', empty, '--leagues', 'metro', '--out', out, '--fetched-at', '2026-10-06T05:00:00.000Z',
-    ]);
+    const empty = tempDir('jv-fx');
+    const r = runRepoScript('fetch-jv', { fixtures: empty, leagues: 'metro', out, fetchedAt: '2026-10-06T05:00:00.000Z' });
     expect(r.status, r.output).toBe(1);
     expect(r.output).toMatch(/WARN previous .*jv\.json: 1 row\(s\) do not validate/);
     const file = JvFileSchema.parse(JSON.parse(readFileSync(out, 'utf8')));
@@ -407,9 +401,9 @@ describe('scripts/fetch-jv.ts, offline over the PCAL captures', () => {
   });
 
   it('fetches and writes nothing out of season unless forced', () => {
-    const out = path.join(mkdtempSync(path.join(tmpdir(), 'scvalfh-jv-')), 'jv.json');
-    const r = runScript('scripts/fetch-jv.ts', ['--fixtures', FIXTURES, '--leagues', 'pcal', '--out', out, '--fetched-at', '2026-07-01T19:00:00.000Z']);
-    expect(r.status).toBe(0);
+    const out = tempFile('jv', 'jv.json');
+    const r = runRepoScript('fetch-jv', { fixtures: FIXTURES, leagues: 'pcal', out, fetchedAt: '2026-07-01T19:00:00.000Z' });
+    expectOk(r);
     expect(r.stdout).toContain('out of season');
     expect(() => readFileSync(out)).toThrow();
   });

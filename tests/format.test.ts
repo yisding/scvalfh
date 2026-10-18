@@ -45,7 +45,7 @@ import {
   winPct,
   shootoutPhrases,
 } from '@/lib/format';
-import { game } from './helpers';
+import { game } from './support/game-builder';
 
 describe('format: dates and times are America/Los_Angeles', () => {
   it('formats a short date, a month-day and a long date', () => {

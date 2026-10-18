@@ -1,8 +1,5 @@
 /** Classification (SPEC §5.1): postseason tags, then countsFor, decided once and persisted. */
 
-import { readFileSync } from 'node:fs';
-import path from 'node:path';
-
 import { describe, expect, it, vi } from 'vitest';
 
 import { postseasonTagOf } from '@/components/ui/describe-game';
@@ -15,7 +12,8 @@ import {
   postseasonTag,
 } from '@/lib/classify';
 import type { Game } from '@/lib/types';
-import { game } from './game-builder';
+import { game } from './support/game-builder';
+import { goldenPath, readJson } from './support/repo';
 
 /** A contest MCAL has declared a league game despite its Oct 23 postseason window. */
 const { OVERRIDE_ID } = vi.hoisted(() => ({ OVERRIDE_ID: '00000000-0000-4000-8000-0000000c0de1' }));
@@ -156,9 +154,7 @@ describe('classify: SCVAL (contest-type evidence)', () => {
   });
 
   it('reduces to isLeague && leagueDivision on every committed v1 game', () => {
-    const raw = JSON.parse(
-      readFileSync(path.join(import.meta.dirname, 'golden', 'snapshot-2026-10-02.v1.json'), 'utf8'),
-    ) as { games: Game[] };
+    const raw = readJson(goldenPath('snapshot-2026-10-02.v1.json')) as { games: Game[] };
     const v1Games = raw.games.map((g) => ({
       ...g,
       contestTypes: { home: null, away: null },

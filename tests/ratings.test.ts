@@ -20,7 +20,7 @@ import {
 } from '@/lib/ratings';
 import { TEAMS, getTeamBySlug } from '@/lib/teams';
 import type { Game } from '@/lib/types';
-import { game, type GameSpec } from './game-builder';
+import { game, type GameSpec } from './support/game-builder';
 
 const neutral = (spec: GameSpec): Game => ({ ...game(spec), site: 'neutral' });
 const eloOf = (table: RatingTable, slug: string) => table.ratings.find((r) => r.slug === slug)?.elo;

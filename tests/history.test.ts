@@ -12,8 +12,7 @@
  * committed data: if a parser drifts, the numbers on /history/2025-26 drift with it.
  */
 
-import { existsSync, mkdtempSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { existsSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
@@ -34,7 +33,8 @@ import {
   parseStandingsCsv,
 } from '@/lib/sources/bval-sheet';
 import { getTeamBySlug, teamsInLeague } from '@/lib/teams';
-import { REPO, runScript } from './helpers';
+import { expectOk, runRepoScript } from './support/cli';
+import { REPO, tempDir, tempFile } from './support/repo';
 
 const FIX = path.join(REPO, 'tests', 'fixtures', 'scval');
 const standingsText = readFileSync(path.join(FIX, 'standings-2025-26.txt'), 'utf8');
@@ -761,13 +761,13 @@ describe('history: the league-aware read API', () => {
 
 describe('scripts/build-history.ts', () => {
   /** Run the script; returns its exit code and everything it printed. */
-  const run = (args: string[]) => runScript('scripts/build-history.ts', args);
+  const run = (args: string[]) => runRepoScript('build-history', { extra: args });
   const offline = ['--from', 'tests/fixtures/scval', '--bval-from', 'tests/fixtures/bval'];
 
   it('rebuilds the committed file byte for byte from the fixtures (the file is generated, never hand-edited)', () => {
-    const out = path.join(mkdtempSync(path.join(tmpdir(), 'scvalfh-history-')), 'history.json');
+    const out = tempFile('history', 'history.json');
     const r = run([...offline, '--retrieved-on', '2026-10-03', '--out', out]);
-    expect(r.status, r.output).toBe(0);
+    expectOk(r);
     expect(readFileSync(out, 'utf8')).toBe(readFileSync(path.join(REPO, 'data', 'history-2025-26.json'), 'utf8'));
   }, 30_000);
 
@@ -788,7 +788,7 @@ describe('scripts/build-history.ts', () => {
   }, 30_000);
 
   it('writes nothing, and exits 1, when a school does not resolve', () => {
-    const dir = mkdtempSync(path.join(tmpdir(), 'scvalfh-bval-'));
+    const dir = tempDir('bval');
     for (const f of readdirSync(BVAL_FIX)) {
       const text = readFileSync(path.join(BVAL_FIX, f), 'utf8');
       writeFileSync(path.join(dir, f), f.startsWith('standings') ? text.replace('2,Gilroy,', '2,Gilroyx,') : text);

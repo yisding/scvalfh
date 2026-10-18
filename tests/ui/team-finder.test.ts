@@ -20,19 +20,14 @@ import { getTeamSearchIndex } from '@/lib/data';
 import { pinLabel } from '@/lib/pin-label';
 import { searchTeams } from '@/lib/search';
 
-import { decodeEntities, stripTags } from './html-text';
+import { textOfSrOnly } from '@/tests/support/html-text';
 
 const index = getTeamSearchIndex();
-
-/** The accessible name of a button with no aria-label: all of its text, sr-only included. */
-function textOf(html: string): string {
-  return decodeEntities(stripTags(html, ''));
-}
 
 /** What a sighted reader sees: the text with every sr-only span removed, per line. */
 function visibleLines(html: string): string[] {
   const noSr = html.replace(/<span class="sr-only">[^<]*<\/span>/g, '');
-  return [...noSr.matchAll(/<span class="[^"]*">([^<]*)<\/span>/g)].map((m) => textOf(m[1]));
+  return [...noSr.matchAll(/<span class="[^"]*">([^<]*)<\/span>/g)].map((m) => textOfSrOnly(m[1]));
 }
 
 describe('TeamFinder initial markup', () => {
@@ -161,7 +156,7 @@ describe('pin-mode result buttons', () => {
       expect(html.startsWith('<button type="button"'), entry.slug).toBe(true);
       expect(html, entry.slug).not.toContain('aria-label');
 
-      const name = textOf(html);
+      const name = textOfSrOnly(html);
       const label = pinLabel({
         name: entry.name,
         shortName: entry.shortName,
@@ -182,7 +177,7 @@ describe('pin-mode result buttons', () => {
       expect(at1, entry.slug).toBeGreaterThan(0);
       expect(name.indexOf(line2, at1 + line1.length), entry.slug).toBeGreaterThan(at1);
       // The name minus its sr-only words is exactly the visible text.
-      expect(visibleLines(html).join(''), entry.slug).toBe(textOf(html.replace(/<span class="sr-only">[^<]*<\/span>/g, '')));
+      expect(visibleLines(html).join(''), entry.slug).toBe(textOfSrOnly(html.replace(/<span class="sr-only">[^<]*<\/span>/g, '')));
     }
   });
 
@@ -208,8 +203,8 @@ describe('pin-mode results when this browser stores nothing', () => {
       const html = renderToStaticMarkup(createElement(TeamResultLink, { entry }));
       expect(html, entry.slug).toMatch(new RegExp(`^<a [^>]*href="/teams/${entry.slug}"`));
       expect(html, entry.slug).not.toContain('<button');
-      expect(textOf(html), entry.slug).toBe(`${entry.shortName}${resultDetail(entry)}`);
-      expect(textOf(html).startsWith('Pin '), entry.slug).toBe(false);
+      expect(textOfSrOnly(html), entry.slug).toBe(`${entry.shortName}${resultDetail(entry)}`);
+      expect(textOfSrOnly(html).startsWith('Pin '), entry.slug).toBe(false);
     }
   });
 });

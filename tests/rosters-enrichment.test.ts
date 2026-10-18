@@ -4,11 +4,10 @@
  * value came from.
  */
 
-import { mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import {
   RosterEnrichmentSchema,
@@ -25,7 +24,8 @@ import {
   getTeamRoster,
 } from '@/lib/rosters';
 import { TEAMS, getTeamBySlug, teamsInLeague } from '@/lib/teams';
-import { REPO, runScript } from './helpers';
+import { runRepoScript } from './support/cli';
+import { REPO, tempDir } from './support/repo';
 
 /**
  * The numbers pinned below are what the 2026-10-02 research found for SCVAL, the one league
@@ -92,20 +92,45 @@ const pre: RosterEnrichment = {
   })),
 };
 
-/**
- * Load lib/rosters.ts in a child process with `enrichment` swapped in, and return what it printed
- * to stderr ('' when it loaded). The load-time checks need both files, so only a real load shows them.
- */
-function loadError(enrichment: RosterEnrichment, rosters?: Rosters): string {
-  const dir = mkdtempSync(path.join(tmpdir(), 'scvalfh-enrich-'));
+/** Writes `enrichment` (and `rosters`, when given) to a temp dir and names them in the loader's override variables. */
+function overrideEnv(enrichment: RosterEnrichment, rosters?: Rosters): Record<string, string> {
+  const dir = tempDir('enrich');
   const file = path.join(dir, 'bad.json');
   writeFileSync(file, JSON.stringify(enrichment));
-  const env: NodeJS.ProcessEnv = { ...process.env, SCVAL_ROSTERS_ENRICHMENT: file };
+  const env: Record<string, string> = { SCVAL_ROSTERS_ENRICHMENT: file };
   if (rosters) {
     env.SCVAL_ROSTERS = path.join(dir, 'rosters.json');
     writeFileSync(env.SCVAL_ROSTERS, JSON.stringify(rosters));
   }
-  const run = runScript('lib/rosters.ts', [], { env });
+  return env;
+}
+
+/**
+ * Import lib/rosters.ts with `enrichment` swapped in and return the message it threw ('' when it
+ * loaded). The load-time checks need both files, so only a real load shows them; every failure path
+ * there throws (failValidation and the `fail` closures; nothing calls process.exit), so an import in
+ * this process sees exactly what a child would print.
+ */
+async function loadError(enrichment: RosterEnrichment, rosters?: Rosters): Promise<string> {
+  const env = overrideEnv(enrichment, rosters);
+  vi.resetModules();
+  for (const [name, value] of Object.entries(env)) vi.stubEnv(name, value);
+  try {
+    await import('@/lib/rosters');
+    return '';
+  } catch (err) {
+    return (err as Error).message;
+  } finally {
+    vi.unstubAllEnvs();
+  }
+}
+
+/**
+ * The same load in a CHILD process, returning what it printed to stderr ('' when it loaded): the one
+ * case that keeps the separate-process behaviour proven (a failing load fails the whole module).
+ */
+function loadErrorInChild(enrichment: RosterEnrichment): string {
+  const run = runRepoScript('rosters-module', { env: { ...process.env, ...overrideEnv(enrichment) } });
   return run.status === 0 ? '' : run.stderr;
 }
 
@@ -239,7 +264,7 @@ describe('data/rosters-enrichment.json', () => {
     ]);
   });
 
-  it('says what other sources showed for every team MaxPreps lists nobody for, and validates it at load', () => {
+  it('says what other sources showed for every team MaxPreps lists nobody for, and validates it at load', async () => {
     const recorded = Object.fromEntries(
       (raw.teams as Array<{ slug: string; otherRosters?: { status: string } }>)
         .filter((t) => t.otherRosters)
@@ -270,7 +295,7 @@ describe('data/rosters-enrichment.json', () => {
     // A partial list must say what it lists and link it.
     const bad = structuredClone(raw) as unknown as { teams: Array<{ slug: string; otherRosters?: unknown }> };
     bad.teams.find((t) => t.slug === 'marin-academy')!.otherRosters = { status: 'partial', checkedOn: '2026-10-03' };
-    expect(loadError(bad as unknown as RosterEnrichment)).toMatch(/otherRosters failed validation/);
+    expect(await loadError(bad as unknown as RosterEnrichment)).toMatch(/otherRosters failed validation/);
   });
 
   it('tags every filled value with a source, a kind and a confidence', () => {
@@ -323,8 +348,8 @@ describe('data/rosters-enrichment.json', () => {
     // The schema alone accepts it (it cannot see the base file)...
     expect(RosterEnrichmentSchema.safeParse(bad).success).toBe(true);
     // ...which is why lib/rosters.ts re-checks the join at load. Exercise that check in a child
-    // process with the bad file swapped in.
-    expect(loadError(bad)).toMatch(/grade would overwrite a MaxPreps value/);
+    // process with the bad file swapped in (the other load-time cases import the module in-process).
+    expect(loadErrorInChild(bad)).toMatch(/grade would overwrite a MaxPreps value/);
   });
 });
 
@@ -423,7 +448,7 @@ describe('recruiting profiles', () => {
     expect(RosterEnrichmentSchema.safeParse(explicit).success).toBe(false);
   });
 
-  it('refuses, at load, a profile whose class year disagrees with the roster', () => {
+  it('refuses, at load, a profile whose class year disagrees with the roster', async () => {
     // Storey Lewis is a senior on MaxPreps: class of 2027, never 2028.
     expect(storey.grade).toBe(12);
     const bad = structuredClone(raw);
@@ -431,7 +456,7 @@ describe('recruiting profiles', () => {
       ncsa('https://www.ncsasports.org/field-hockey-recruiting/california/x/y/storey-lewis', 2028),
     ];
     expect(RosterEnrichmentSchema.safeParse(bad).success).toBe(true);
-    expect(loadError(bad)).toMatch(/ncsa profile says class of 2028, the roster shows grade 12/);
+    expect(await loadError(bad)).toMatch(/ncsa profile says class of 2028, the roster shows grade 12/);
   });
 
   it('what was found for SCVAL, as captured on 2026-10-02', () => {
@@ -736,18 +761,18 @@ describe('recruiting profiles', () => {
     expect(names('marin-catholic')).not.toContain('Alexandra Schmidt');
   });
 
-  it("refuses a MaxPreps profile that is not the row's own career page, or that names a sport", () => {
+  it("refuses a MaxPreps profile that is not the row's own career page, or that names a sport", async () => {
     const [mine, other] = base.teams.find((t) => t.slug === 'st-ignatius')!.players;
     const maxpreps = (url: string) => ({ platform: 'maxpreps', url, classOf: null, note: null }) as const;
 
     const ok = structuredClone(raw);
     recordFor(ok, 'st-ignatius', mine.athleteId!, mine.fullName).profiles = [maxpreps(mine.careerUrl!)];
-    expect(loadError(ok)).toBe('');
+    expect(await loadError(ok)).toBe('');
 
     const namesake = structuredClone(raw);
     recordFor(namesake, 'st-ignatius', mine.athleteId!, mine.fullName).profiles = [maxpreps(other.careerUrl!)];
     expect(RosterEnrichmentSchema.safeParse(namesake).success).toBe(true);
-    expect(loadError(namesake)).toMatch(/maxpreps profile .* is not this row's career page/);
+    expect(await loadError(namesake)).toMatch(/maxpreps profile .* is not this row's career page/);
 
     const withSport = structuredClone(raw);
     recordFor(withSport, 'st-ignatius', mine.athleteId!, mine.fullName).profiles = [
@@ -799,29 +824,29 @@ describe('the load-time rules hold for every league, not just SCVAL', () => {
     grade, positions: null, jersey: null, height: null, conflicts: [], profiles: [], note: null,
   });
 
-  it('loads a record that fills a blank on a team of any league', () => {
+  it('loads a record that fills a blank on a team of any league', async () => {
     for (const slug of ['leigh', 'del-mar', 'redwood']) {
       const file = structuredClone(cleanRaw);
       file.teams.find((t) => t.slug === slug)!.players.push(record({ value: 11, derived: false, ...sourced }) as never);
-      expect(loadError(file, rosters), slug).toBe('');
+      expect(await loadError(file, rosters), slug).toBe('');
     }
   });
 
-  it('refuses a record for a player the team does not list, or one that would overwrite MaxPreps', () => {
+  it('refuses a record for a player the team does not list, or one that would overwrite MaxPreps', async () => {
     const stranger = structuredClone(cleanRaw);
     stranger.teams.find((t) => t.slug === 'leigh')!.players.push(
       { ...record({ value: 11, derived: false, ...sourced }), athleteId: 'not-an-athlete' } as never,
     );
-    expect(loadError(stranger, rosters)).toMatch(/not a MaxPreps row of this team/);
+    expect(await loadError(stranger, rosters)).toMatch(/not a MaxPreps row of this team/);
     // A record for a team whose roster is still pending has no row to join to.
     const pending = structuredClone(cleanRaw);
     pending.teams.find((t) => t.slug === 'carmel')!.players.push(record({ value: 11, derived: false, ...sourced }) as never);
-    expect(loadError(pending, rosters)).toMatch(/not a MaxPreps row of this team/);
+    expect(await loadError(pending, rosters)).toMatch(/not a MaxPreps row of this team/);
     const overwrite = structuredClone(cleanRaw);
     overwrite.teams.find((t) => t.slug === 'redwood')!.players.push(
       { ...record({ value: 10, derived: false, ...sourced }), athleteId: withGrade.athleteId!, fullName: withGrade.fullName } as never,
     );
-    expect(loadError(overwrite, rosters)).toMatch(/grade would overwrite a MaxPreps value/);
+    expect(await loadError(overwrite, rosters)).toMatch(/grade would overwrite a MaxPreps value/);
   });
 });
 

@@ -42,6 +42,7 @@ import {
   visibleText,
   withoutLink,
 } from '@/scripts/copy-rules';
+import { REPO } from './support/repo';
 
 describe('SCVAL_ONLY_CLAIM', () => {
   it.each([
@@ -957,7 +958,7 @@ describe('sx-bleed: nothing cancels the phone bleed', () => {
   // `.sx-bleed` pulls a card out to the screen edges with `margin-inline: -16px`; an `m-0` in the
   // utilities layer wins over it, and the card floats inside the gutters with no side edges. A
   // bleeding list zeroes only its block margins (`my-0`, as components/playoffs/KeyDates.tsx does).
-  const root = path.resolve(__dirname, '..');
+  const root = REPO;
   const sources = (dir: string): string[] =>
     readdirSync(path.join(root, dir), { recursive: true, encoding: 'utf8' })
       .filter((f) => f.endsWith('.tsx'))

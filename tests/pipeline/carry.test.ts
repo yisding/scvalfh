@@ -17,8 +17,10 @@ import { stepSblive } from '@/lib/pipeline/steps/sblive';
 import { loadSnapshot, parseSnapshot } from '@/lib/snapshot-schema';
 import type { PipelineSteps } from '@/lib/pipeline/contract';
 import type { Snapshot } from '@/lib/types';
-import { REPO, corpusDir, corpusSnapshotPath } from '@/tests/helpers';
-import { snapshotOf, writeTempVariant } from './support/run-corpus';
+import { corpusSnapshotPath } from '@/tests/support/corpus-snapshot';
+import { corpusDir } from '@/tests/support/corpus';
+import { REPO } from '@/tests/support/repo';
+import { snapshotOf, writeTempVariant } from '@/tests/support/pipeline/run-corpus';
 
 const STEPS: PipelineSteps = { official: stepOfficial, sblive: stepSblive };
 const CORPUS = corpusDir('all-2026-10-02');

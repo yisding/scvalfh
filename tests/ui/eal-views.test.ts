@@ -15,8 +15,9 @@ import { createElement, type ReactElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
-import { EAL_CORPUS, corpusSnapshotPath } from '@/tests/helpers';
-import { textOf } from './html-text';
+import { corpusSnapshotPath } from '@/tests/support/corpus-snapshot';
+import { EAL_CORPUS } from '@/tests/support/corpus';
+import { textOf } from '@/tests/support/html-text';
 
 type Data = typeof import('@/lib/data');
 type Leagues = typeof import('@/lib/leagues');

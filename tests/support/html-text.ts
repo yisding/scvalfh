@@ -47,3 +47,22 @@ export function decodeEntities(s: string): string {
 export function textOf(html: string): string {
   return decodeEntities(stripTags(html, ' ')).replace(/\s+/g, ' ');
 }
+
+/**
+ * The accessible name of a control with no aria-label: ALL of its text, sr-only spans included, tags
+ * dropped without a separator and entities decoded (what a screen reader concatenates).
+ */
+export function textOfSrOnly(html: string): string {
+  return decodeEntities(stripTags(html, ''));
+}
+
+/**
+ * The text of `html` for score-glyph scans: tags → spaces, whitespace runs collapsed, and the two
+ * spellings React emits for an en dash (`&#x2013;`, `&ndash;`) folded to the character. Other
+ * entities are left as written, so a pattern over it sees exactly the glyphs the page prints.
+ */
+export function textFoldingDashes(html: string): string {
+  return stripTags(html, ' ')
+    .replace(/&#x2013;|&ndash;/g, '–')
+    .replace(/\s+/g, ' ');
+}

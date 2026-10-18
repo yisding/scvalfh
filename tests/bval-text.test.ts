@@ -13,7 +13,7 @@ import { describe, expect, it } from 'vitest';
 import { BVAL_DEFAULT_VARSITY, BVAL_TIME_OVERRIDES, parseBvalScheduleText } from '@/lib/official/bval-text';
 import { compareBundleFixtures, readOfficialBundle, serializeBundle } from '@/lib/official/schema';
 import { buildBval, buildBvalFromText } from '@/scripts/build-official-fixtures';
-import { REPO } from './helpers';
+import { REPO } from './support/repo';
 
 const FIX = path.join(REPO, 'tests', 'fixtures', 'official');
 const textA = readFileSync(path.join(FIX, 'bval-sched-A.txt'), 'utf8');

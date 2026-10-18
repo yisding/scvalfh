@@ -9,8 +9,7 @@
  */
 
 import { spawnSync } from 'node:child_process';
-import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
@@ -19,7 +18,8 @@ import { getClubSlugs } from '@/lib/clubs';
 import { gameIdToParam } from '@/lib/game-id';
 import { LEAGUE_IDS, TOURNAMENT_LEAGUE_IDS } from '@/lib/leagues';
 import { loadSnapshot } from '@/lib/snapshot-schema';
-import { REPO, runScript } from './helpers';
+import { expectOk, runRepoScript } from './support/cli';
+import { REPO, tempDir } from './support/repo';
 
 const read = (name: string) => readFileSync(path.join(REPO, '.github', 'workflows', name), 'utf8');
 const update = read('update-data.yml');
@@ -150,7 +150,7 @@ describe('the Test step never lets a stats file block the snapshot', () => {
   const committedJv = '{"jv":"good"}\n';
 
   function repo(files: { stats?: string; snapshot?: string; jv?: string }) {
-    const dir = mkdtempSync(path.join(tmpdir(), 'scvalfh-test-step-'));
+    const dir = tempDir('test-step');
     const git = (...args: string[]) => {
       const r = spawnSync('git', ['-c', 'user.name=t', '-c', 'user.email=t@example.com', ...args], { cwd: dir, encoding: 'utf8' });
       if (r.status !== 0) throw new Error(`git ${args.join(' ')}: ${r.stderr}`);
@@ -363,7 +363,7 @@ describe('assert:prerender on a .next that has served traffic', () => {
   const NOT_FOUND_META = JSON.stringify({ headers: {}, status: 404 });
 
   function tree(extra: Record<string, string>): string {
-    const root = mkdtempSync(path.join(tmpdir(), 'scvalfh-prerender-'));
+    const root = tempDir('prerender');
     const app = path.join(root, '.next', 'server', 'app');
     const put = (rel: string, body = '') => {
       mkdirSync(path.dirname(path.join(app, rel)), { recursive: true });
@@ -403,7 +403,7 @@ describe('assert:prerender on a .next that has served traffic', () => {
   }
 
   function run(root: string) {
-    return runScript('scripts/assert-prerender.ts', [], { cwd: root, env: { ...process.env, SCVAL_SNAPSHOT: SNAPSHOT } });
+    return runRepoScript('assert-prerender', { cwd: root, env: { ...process.env, SCVAL_SNAPSHOT: SNAPSHOT } });
   }
 
   const notFound = (rel: string) => ({ [`${rel}.body`]: '', [`${rel}.meta`]: NOT_FOUND_META });
@@ -411,7 +411,7 @@ describe('assert:prerender on a .next that has served traffic', () => {
   it('passes on the build alone', () => {
     const r = run(tree({}));
     expect(r.output).toContain('assert-prerender: ok');
-    expect(r.status).toBe(0);
+    expectOk(r);
   });
 
   it('ignores the opengraph-image 404s next start cached for unknown params', () => {
@@ -428,7 +428,7 @@ describe('assert:prerender on a .next that has served traffic', () => {
     );
     expect(r.output).toContain('ignoring 7 opengraph-image 404(s)');
     expect(r.output).toContain('assert-prerender: ok');
-    expect(r.status).toBe(0);
+    expectOk(r);
   });
 
   it('fails a team page that lost its Roster or Player stats section, naming the team', () => {
@@ -470,8 +470,8 @@ describe('assert:prerender on a .next that has served traffic', () => {
  */
 describe('assert-vinext-prerender before a vinext build', () => {
   it('fails in one line, naming the file it needs and the build that writes it', () => {
-    const root = mkdtempSync(path.join(tmpdir(), 'scvalfh-vinext-'));
-    const res = runScript('scripts/assert-vinext-prerender.ts', [], { cwd: root });
+    const root = tempDir('vinext');
+    const res = runRepoScript('assert-vinext-prerender', { cwd: root });
     expect(res.stderr.trim()).toBe(
       'assert-vinext-prerender: dist/server/vinext-prerender.json does not exist; ' +
         'run `pnpm build:vinext` (or `pnpm build:cloudflare`) first',

@@ -17,7 +17,7 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { REPO } from '@/tests/helpers';
+import { REPO } from '@/tests/support/repo';
 
 const CSS = readFileSync(path.join(REPO, 'app', 'globals.css'), 'utf8');
 const HEADER = readFileSync(path.join(REPO, 'components', 'layout', 'SiteHeader.tsx'), 'utf8');

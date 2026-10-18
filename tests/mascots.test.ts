@@ -10,8 +10,9 @@ import { describe, expect, it } from 'vitest';
 
 import { MASCOT_FILE_SIZES, MASCOT_TILE_SIZES, mascotFile } from '@/lib/mascots';
 import { TEAMS } from '@/lib/teams';
+import { REPO } from './support/repo';
 
-const PUBLIC = path.resolve(import.meta.dirname, '..', 'public');
+const PUBLIC = path.join(REPO, 'public');
 const DIR = path.join(PUBLIC, 'mascots');
 
 describe('mascot tiles', () => {

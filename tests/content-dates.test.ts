@@ -17,7 +17,7 @@ import {
   stampContentChanges,
 } from '@/lib/content-dates';
 import type { Game } from '@/lib/types';
-import { game } from './game-builder';
+import { game } from './support/game-builder';
 
 const FETCHED = '2026-09-29T15:00:00.000Z';
 
@@ -76,7 +76,7 @@ describe('stampContentChanges (lib/pipeline/steps/assemble.ts)', () => {
   });
 
   it('stamps this run on a game whose shown content changed, or that is new', () => {
-    expect(a.official, 'tests/game-builder.ts: the official stamp').toBeDefined();
+    expect(a.official, 'tests/support/game-builder.ts: the official stamp').toBeDefined();
     const moved = { ...a, official: { ...a.official!, scheduledDate: '2026-09-02' } };
     const noted = { ...b, provenance: { ...b.provenance, hostConflict: 'The official schedule has Los Altos hosting.' } };
     const fresh = game({ home: 'fremont', away: 'los-altos', date: '2026-10-21' });
@@ -157,7 +157,7 @@ describe('gamePageInputs', () => {
       division: null,
       official: null,
     });
-    expect(nonLeague.countsFor, 'tests/game-builder.ts: a non-league game').toBeNull();
+    expect(nonLeague.countsFor, 'tests/support/game-builder.ts: a non-league game').toBeNull();
     const withNonLeague = [early, nonLeague, laterLeg, laterOther, unrelated];
     expect(gamePageInputs(nonLeague, withNonLeague)).toEqual([early, nonLeague, laterLeg, laterOther]);
     const postponed = { ...self, status: 'postponed' as const };
@@ -181,7 +181,7 @@ describe('scoreDayInputs', () => {
   });
 
   it('adds every game of an upcoming league row’s sides, whose current records the row prints', () => {
-    expect(upcoming.countsFor, 'tests/game-builder.ts: a counted league game').not.toBeNull();
+    expect(upcoming.countsFor, 'tests/support/game-builder.ts: a counted league game').not.toBeNull();
     expect(scoreDayInputs([final, upcoming], [fremontEarlier, final, upcoming, unrelated])).toEqual([
       fremontEarlier,
       final,

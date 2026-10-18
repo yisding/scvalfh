@@ -34,7 +34,7 @@
 
 import { describe, expect, it, vi } from 'vitest';
 
-import { corpusSnapshotPath } from '@/tests/helpers';
+import { corpusSnapshotPath } from '@/tests/support/corpus-snapshot';
 
 const BUDGET = 121 * 1024;
 /** all-2026-10-02 measured 65,819 B on 2026-10-06; × 1.12 = 73,717, so 73 KiB = 74,752. */

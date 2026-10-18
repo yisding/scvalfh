@@ -16,9 +16,9 @@ import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import type { MissingOfficialResult } from '@/lib/data';
 import { standaloneName } from '@/lib/leagues';
 import type { LeagueId } from '@/lib/types';
-import { corpusSnapshotPath } from '@/tests/helpers';
+import { corpusSnapshotPath } from '@/tests/support/corpus-snapshot';
 // textOf: visible text, tags dropped and entities decoded.
-import { textOf } from './html-text';
+import { textOf } from '@/tests/support/html-text';
 
 type Data = typeof import('@/lib/data');
 type StandingsPageView = typeof import('@/components/standings/standings-page-view');

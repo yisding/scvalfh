@@ -4,8 +4,7 @@
  * its replay, LiveTransport over injected clients (never the network), and MeteredTransport.
  */
 
-import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
@@ -36,15 +35,12 @@ import { HttpError, type HttpResponse } from '@/lib/sources/http';
 import { MaxPrepsError } from '@/lib/sources/maxpreps';
 import { ALL_DIVISIONS } from '@/lib/leagues';
 import { TEAMS, getTeamBySlug } from '@/lib/teams';
-import { REPO, corpusDir, variantDir } from '@/tests/helpers';
+import { corpusDir, variantDir } from '@/tests/support/corpus';
+import { REPO, tempDir } from '@/tests/support/repo';
 
 const ALL = corpusDir('all-2026-10-02');
 const SCVAL = corpusDir('scval');
 const MISSION = Object.keys(DATA_QUALITY.ignoredMaxprepsLeagueIds)[0];
-
-function tempDir(prefix: string): string {
-  return mkdtempSync(path.join(tmpdir(), `scvalfh-${prefix}-`));
-}
 
 function writeVariant(files: Record<string, unknown>, manifest: Record<string, unknown>): string {
   const dir = tempDir('variant');

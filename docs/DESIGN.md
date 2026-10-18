@@ -4327,7 +4327,7 @@ unaffected.
 
 - **Typeface.** Geist is the create-next-app default and reads as such. A face with more character
   (a variable grotesque with a width axis, condensed for headings and figures) would do the most
-  for the site's identity, but `tests/ui/text-metrics.ts` is calibrated to Geist's advances and the
+  for the site's identity, but `tests/support/text-metrics.ts` is calibrated to Geist's advances and the
   tab-label and pin-label tests depend on it, so a swap must re-measure those tables.
 - **The phone "See something missing?" bar** takes 44px of every page's fold (§1.3 budgets the
   chrome at 100px) and repeats the header's and footer's report links.

@@ -4,17 +4,14 @@
  * different text widths"). Source pins for the fixes measured in Chromium on 2026-10-18; the
  * measurements themselves are in the comments of the files named.
  */
-import { readFileSync } from 'node:fs';
-
 import { describe, expect, it } from 'vitest';
 
 import { pinSelfCss } from '@/components/teams/TeamIdentity';
-
-const read = (rel: string) => readFileSync(new URL(`../../${rel}`, import.meta.url), 'utf8');
+import { readRepoFile } from '@/tests/support/repo';
 
 describe('fonts (app/layout.tsx, app/globals.css)', () => {
-  const layout = read('app/layout.tsx');
-  const css = read('app/globals.css');
+  const layout = readRepoFile('app/layout.tsx');
+  const css = readRepoFile('app/globals.css');
   const call = (name: string) => {
     const m = new RegExp(`= ${name}\\(\\{([\\s\\S]*?)\\}\\);`).exec(layout);
     expect(m, `app/layout.tsx: ${name}({ … })`).not.toBeNull();
@@ -47,17 +44,17 @@ describe('fonts (app/layout.tsx, app/globals.css)', () => {
 
 describe('weight without width', () => {
   it('the top-bar label and the filter pills hold their semibold width', () => {
-    expect(read('app/globals.css')).toMatch(/\.sx-weight-hold::after \{\s*content: attr\(data-label\);[\s\S]*?font-weight: 600;/);
-    const nav = read('components/layout/NavLink.tsx');
+    expect(readRepoFile('app/globals.css')).toMatch(/\.sx-weight-hold::after \{\s*content: attr\(data-label\);[\s\S]*?font-weight: 600;/);
+    const nav = readRepoFile('components/layout/NavLink.tsx');
     expect(nav).toContain('data-label={label}');
     expect(nav).toMatch(/className=\{`sx-indicator sx-weight-hold /);
-    expect(read('components/schedule/ScheduleFilters.tsx')).toContain('<span className="sx-weight-hold" data-label={option.label}>');
+    expect(readRepoFile('components/schedule/ScheduleFilters.tsx')).toContain('<span className="sx-weight-hold" data-label={option.label}>');
   });
 });
 
 describe('PageHeader (components/layout/PageHeader.tsx)', () => {
   it('sets the aside beside the title only from lg, so a header has one shape on every league page', () => {
-    const src = read('components/layout/PageHeader.tsx');
+    const src = readRepoFile('components/layout/PageHeader.tsx');
     expect(src).toContain("'pt-6 md:pt-10 lg:flex lg:flex-wrap lg:items-end lg:justify-between lg:gap-x-8 lg:gap-y-4'");
     expect(src).not.toMatch(/\bmd:flex\b/);
   });
@@ -74,6 +71,6 @@ describe('the pinned team’s own hero (components/teams/TeamIdentity.tsx pinSel
   });
 
   it('globals.css reads the property on the pre-hydration reveal', () => {
-    expect(read('app/globals.css')).toContain('.sx-pin-other[data-pending] { display: var(--sx-pin-other, inline) !important; }');
+    expect(readRepoFile('app/globals.css')).toContain('.sx-pin-other[data-pending] { display: var(--sx-pin-other, inline) !important; }');
   });
 });

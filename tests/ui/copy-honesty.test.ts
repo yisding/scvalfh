@@ -62,7 +62,8 @@ import {
   umpireOfficialClaims,
   visibleText,
 } from '@/scripts/copy-rules';
-import { EAL_CORPUS, corpusSnapshotPath } from '@/tests/helpers';
+import { corpusSnapshotPath } from '@/tests/support/corpus-snapshot';
+import { EAL_CORPUS } from '@/tests/support/corpus';
 
 type Data = typeof import('@/lib/data');
 type Leagues = typeof import('@/lib/leagues');

@@ -4,8 +4,7 @@
  * test can shape exactly the previous run a guard compares against.
  */
 
-import { mkdirSync, mkdtempSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { mkdirSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 
 import type { PipelineResult, PipelineSteps, RunArgs, Transport } from '@/lib/pipeline/contract';
@@ -14,7 +13,8 @@ import { SILENT_SINK, type PipelineContext } from '@/lib/pipeline/ledger';
 import { createPipelineContext, parseRunArgs, runPipeline } from '@/lib/pipeline/run';
 import { FixtureTransport } from '@/lib/pipeline/transport';
 import type { Snapshot } from '@/lib/types';
-import { REPO, corpusDir, variantDir, type CorpusName } from '@/tests/helpers';
+import { corpusDir, variantDir, type CorpusName } from '@/tests/support/corpus';
+import { REPO, tempDir, tempFile } from '@/tests/support/repo';
 import { NOOP_STEPS } from './noop-steps';
 
 export interface RunCorpusOptions {
@@ -39,7 +39,7 @@ export interface CorpusRun {
 export async function runCorpus(opts: RunCorpusOptions = {}): Promise<CorpusRun> {
   const dir = corpusDir(opts.corpus ?? 'all-2026-10-02');
   const variants = (opts.variants ?? []).map(variantDir);
-  const out = path.join(mkdtempSync(path.join(tmpdir(), 'scvalfh-run-')), 'snapshot.json');
+  const out = tempFile('run', 'snapshot.json');
   const parsed = parseRunArgs(
     [
       '--fixtures', dir,
@@ -77,7 +77,7 @@ export async function snapshotOf(opts: RunCorpusOptions = {}): Promise<{ snapsho
 
 /** A temp variant whose manifest maps the given resources to HTTP statuses (or files written beside it). */
 export function writeTempVariant(files: Record<string, number | { rel: string; body: string }>): string {
-  const dir = mkdtempSync(path.join(tmpdir(), 'scvalfh-variant-'));
+  const dir = tempDir('variant');
   const manifestFiles: Record<string, string | number> = {};
   for (const [key, value] of Object.entries(files)) {
     if (typeof value === 'number') {

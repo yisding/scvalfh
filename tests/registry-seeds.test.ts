@@ -31,7 +31,7 @@ import { SCVAL_SEEDS } from '@/lib/registry/scval';
 import type { Seed } from '@/lib/registry/seed';
 import { SUNSET_SEEDS } from '@/lib/registry/sunset';
 import { TEAMS, getTeamBySlug } from '@/lib/teams';
-import { REPO } from './helpers';
+import { REPO } from './support/repo';
 
 interface JsonSeed {
   id: string;

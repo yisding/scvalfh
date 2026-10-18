@@ -6,8 +6,7 @@
  * leagues in its manifest: the EAL (added later) is not in its runs and is frozen "not fetched".
  */
 
-import { existsSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
@@ -25,16 +24,17 @@ import { loadSnapshot } from '@/lib/snapshot-schema';
 import { stableStringify } from '@/lib/stable-json';
 import { FETCHABLE_TEAMS, TEAMS } from '@/lib/teams';
 import type { Snapshot } from '@/lib/types';
-import { game } from '@/tests/game-builder';
-import { REPO, corpusDir, variantDir } from '@/tests/helpers';
-import { NOOP_STEPS } from './support/noop-steps';
-import { runCorpus, snapshotOf, writeTempVariant } from './support/run-corpus';
+import { game } from '@/tests/support/game-builder';
+import { corpusDir, variantDir } from '@/tests/support/corpus';
+import { REPO, tempFile } from '@/tests/support/repo';
+import { NOOP_STEPS } from '@/tests/support/pipeline/noop-steps';
+import { runCorpus, snapshotOf, writeTempVariant } from '@/tests/support/pipeline/run-corpus';
 
 const MISSION = Object.keys(DATA_QUALITY.ignoredMaxprepsLeagueIds)[0];
 const opts = { cwd: REPO, now: '2026-10-02T15:00:00.000Z' };
 /** The four Southern California leagues: in no NorCal corpus, so frozen "not fetched in this run". */
 const SOCAL_FROZEN: Array<[string, string]> = ['sunset', 'city', 'north-county', 'metro', 'independents'].map((id) => [id, 'frozen']);
-const tmpOut = () => path.join(mkdtempSync(path.join(tmpdir(), 'scvalfh-out-')), 'snapshot.json');
+const tmpOut = () => tempFile('out', 'snapshot.json');
 
 function bootstrapHtml(ssid: string): string {
   const data = { query: { ssid, allSeasonId: ALL_SEASON_ID, gendersport: 'girls,fieldhockey' } };

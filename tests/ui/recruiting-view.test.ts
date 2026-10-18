@@ -32,7 +32,7 @@ import { getLeague } from '@/lib/leagues';
 import { TEAMS } from '@/lib/teams';
 import { affiliationLeaks, commitmentLeaks } from '@/scripts/copy-rules';
 import { PUBLIC_TERMS } from '@/scripts/public-terms';
-import { textOf } from './html-text';
+import { textOf } from '@/tests/support/html-text';
 
 const view = buildRecruitingView();
 const html = renderToStaticMarkup(createElement(RecruitingPage));

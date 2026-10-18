@@ -6,9 +6,7 @@
  * few synthetic EAL league games, drives the EAL cases at the end (a fresh module instance).
  */
 
-import { mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
-import path from 'node:path';
+import { writeFileSync } from 'node:fs';
 
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
@@ -18,7 +16,8 @@ import { countsOf } from '@/lib/snapshot-migrate';
 import { loadSnapshot } from '@/lib/snapshot-schema';
 import { computeStandings } from '@/lib/standings';
 import type { Game, Snapshot } from '@/lib/types';
-import { game } from './game-builder';
+import { game } from './support/game-builder';
+import { tempFile, goldenPath, readJson } from './support/repo';
 
 type DataModule = typeof import('@/lib/data');
 let data: DataModule;
@@ -26,10 +25,8 @@ let data: DataModule;
 const priorEnv = process.env.SCVAL_SNAPSHOT;
 
 beforeAll(async () => {
-  const raw = JSON.parse(
-    readFileSync(path.join(import.meta.dirname, 'golden', 'snapshot-2026-10-02.v1.json'), 'utf8'),
-  ) as unknown;
-  const file = path.join(mkdtempSync(path.join(tmpdir(), 'scvalfh-data-')), 'snapshot.json');
+  const raw = readJson(goldenPath('snapshot-2026-10-02.v1.json')) as unknown;
+  const file = tempFile('data', 'snapshot.json');
   writeFileSync(file, JSON.stringify(loadSnapshot(raw)));
   process.env.SCVAL_SNAPSHOT = file;
   data = await import('@/lib/data');
@@ -550,9 +547,7 @@ describe('data: an EAL table with results', () => {
   let pending: Game;
 
   beforeAll(async () => {
-    const raw = JSON.parse(
-      readFileSync(path.join(import.meta.dirname, 'golden', 'snapshot-2026-10-02.v1.json'), 'utf8'),
-    ) as unknown;
+    const raw = readJson(goldenPath('snapshot-2026-10-02.v1.json')) as unknown;
     const base = loadSnapshot(raw);
     pending = game({ home: 'corning', away: 'pleasant-valley', date: '2026-09-29', status: 'score-pending' });
     const added = [
@@ -580,7 +575,7 @@ describe('data: an EAL table with results', () => {
       },
       counts: countsOf(games, standings),
     };
-    const file = path.join(mkdtempSync(path.join(tmpdir(), 'scvalfh-data-eal-')), 'snapshot.json');
+    const file = tempFile('data-eal', 'snapshot.json');
     writeFileSync(file, JSON.stringify(loadSnapshot(next)));
     process.env.SCVAL_SNAPSHOT = file;
     vi.resetModules();
@@ -659,9 +654,7 @@ describe('data: Southern California tables with results', () => {
   let crossDivision: Game;
 
   beforeAll(async () => {
-    const raw = JSON.parse(
-      readFileSync(path.join(import.meta.dirname, 'golden', 'snapshot-2026-10-02.v1.json'), 'utf8'),
-    ) as unknown;
+    const raw = readJson(goldenPath('snapshot-2026-10-02.v1.json')) as unknown;
     const base = loadSnapshot(raw);
     henry = game({ home: 'patrick-henry', away: 'point-loma', date: '2026-09-29', status: 'score-pending', league: false });
     crossDivision = game({ home: 'mission-bay', away: 'clairemont', hs: 1, as: 2, date: '2026-09-16' });
@@ -703,7 +696,7 @@ describe('data: Southern California tables with results', () => {
       },
       counts: countsOf(games, standings),
     };
-    const file = path.join(mkdtempSync(path.join(tmpdir(), 'scvalfh-data-socal-')), 'snapshot.json');
+    const file = tempFile('data-socal', 'snapshot.json');
     writeFileSync(file, JSON.stringify(loadSnapshot(next)));
     process.env.SCVAL_SNAPSHOT = file;
     vi.resetModules();

@@ -13,7 +13,7 @@ import { navLeagueHrefs } from './nav-targets';
  * is an equal fifth of a row capped at 448px, so a 320px phone still gets 64×56 per tab (past the
  * 44×44 minimum) and the fifth tab is never pushed off-screen. The labels are ≤ 8 characters,
  * measured: at 12px/500 Geist the widest, "Playoffs" (renamed from "CCS", which was false for
- * MCAL), is ≈ 49.5px against the 64px tab (tests/ui/text-metrics.ts), and tests/ui/tab-labels.test.ts
+ * MCAL), is ≈ 49.5px against the 64px tab (tests/support/text-metrics.ts), and tests/ui/tab-labels.test.ts
  * fails any label over 56px, so none truncates at any supported width. With a large text setting
  * the label stops growing at 18px (1.5×, NavLink.tsx), where the widest still fits a 390px phone's
  * 78px tab instead of running into its neighbour.

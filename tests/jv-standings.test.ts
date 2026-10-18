@@ -26,7 +26,7 @@ import {
 import { LEAGUES } from '@/lib/leagues';
 import { TEAMS, teamsInDivision } from '@/lib/teams';
 import type { Game, OfficialFixture } from '@/lib/types';
-import { game } from './game-builder';
+import { game } from './support/game-builder';
 
 /** A JV game as lib/jv.ts receives it from the merge: unclassified. */
 function jv(spec: Parameters<typeof game>[0]): Game {

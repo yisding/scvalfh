@@ -26,7 +26,8 @@ import {
 } from '@/lib/sources/cifss';
 import { getTeamBySlug } from '@/lib/teams';
 import type { Game } from '@/lib/types';
-import { REPO, game } from './helpers';
+import { game } from './support/game-builder';
+import { REPO } from './support/repo';
 
 const fixture = (name: string) => readFileSync(path.join(REPO, 'tests/fixtures/cifss', name), 'utf8');
 

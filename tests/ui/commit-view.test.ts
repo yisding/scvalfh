@@ -58,7 +58,7 @@ import { getRosters } from '@/lib/rosters';
 import { TEAMS, getTeamBySlug } from '@/lib/teams';
 import { commitmentLeaks } from '@/scripts/copy-rules';
 import { PUBLIC_TERMS } from '@/scripts/public-terms';
-import { textOf } from './html-text';
+import { textOf } from '@/tests/support/html-text';
 
 const file = getCommitsFile();
 const view = buildCommitsView();

@@ -4,7 +4,7 @@
  * breathing room on each side) would crowd or truncate. "Playoffs" (renamed from "CCS", which was
  * false for MCAL) is the widest.
  *
- * Widths come from tests/ui/text-metrics.ts (A3): a static Geist Sans 500 @ 12px advance-width
+ * Widths come from tests/support/text-metrics.ts (A3): a static Geist Sans 500 @ 12px advance-width
  * table, measured once and committed — nothing is measured at test time.
  *
  * Large text: the label grows with the reader's text size but stops at a px cap in NavLink.tsx
@@ -12,20 +12,19 @@
  * At the cap every label must still fit a 320px phone's 64px tab, with 2px to spare (semibold
  * runs a little wider than the 500-weight table).
  */
-import { readFileSync } from 'node:fs';
-
 import { describe, expect, it } from 'vitest';
 
 import { TABS } from '@/components/layout/BottomTabBar';
 
-import { width } from './text-metrics';
+import { width } from '@/tests/support/text-metrics';
+import { readRepoFile } from '@/tests/support/repo';
 
 const MAX_LABEL_PX = 56;
 /** One fifth of a 320px phone's bar, less 2px of margin for the semibold active label. */
 const TAB_320_PX = 64;
 const TAB_MARGIN_PX = 2;
 
-const navLinkSource = readFileSync(new URL('../../components/layout/NavLink.tsx', import.meta.url), 'utf8');
+const navLinkSource = readRepoFile('components/layout/NavLink.tsx');
 const capMatch = /text-\[length:min\(var\(--text-micro\),(\d+(?:\.\d+)?)px\)\]/.exec(navLinkSource);
 
 describe('bottom tab labels', () => {

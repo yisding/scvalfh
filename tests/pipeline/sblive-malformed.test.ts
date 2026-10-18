@@ -14,8 +14,8 @@ import { stepOfficial } from '@/lib/pipeline/steps/official';
 import { stepSblive } from '@/lib/pipeline/steps/sblive';
 import { parseSnapshot } from '@/lib/snapshot-schema';
 import { stableStringify } from '@/lib/stable-json';
-import { corpusDir } from '@/tests/helpers';
-import { snapshotOf, writeTempVariant } from './support/run-corpus';
+import { corpusDir } from '@/tests/support/corpus';
+import { snapshotOf, writeTempVariant } from '@/tests/support/pipeline/run-corpus';
 
 const STEPS = { official: stepOfficial, sblive: stepSblive };
 const SBLIVE = path.join(corpusDir('all-2026-10-02'), 'sblive');

@@ -16,7 +16,7 @@ import type { ReactElement } from 'react';
 import { createElement } from 'react';
 import { describe, expect, it } from 'vitest';
 
-import { stubCorpusSnapshot } from '@/tests/helpers';
+import { stubCorpusSnapshot } from '@/tests/support/corpus-snapshot';
 
 stubCorpusSnapshot('all-2026-10-02');
 

@@ -20,7 +20,8 @@ import {
   parseVnnIcs,
   vnnIcsUrl,
 } from '@/lib/sources/vnn-ics';
-import { REPO, game } from './helpers';
+import { game } from './support/game-builder';
+import { REPO } from './support/repo';
 
 const paly = readFileSync(path.join(REPO, 'tests', 'fixtures', 'vnn', 'palo-alto-excerpt.ics'), 'utf8');
 const events = parseVnnIcs(paly, 'palo-alto');

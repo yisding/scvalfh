@@ -17,7 +17,7 @@ import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
 import { loadSnapshot } from '@/lib/snapshot-schema';
 import type { DivisionId, LeagueId, Snapshot, Standing } from '@/lib/types';
-import { corpusSnapshotPath } from './helpers';
+import { corpusSnapshotPath } from './support/corpus-snapshot';
 
 type DataModule = typeof import('@/lib/data');
 

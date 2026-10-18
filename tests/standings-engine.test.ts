@@ -23,7 +23,7 @@ import {
   statusLegend,
 } from '@/lib/standings';
 import type { Game, OfficialFixture, ReportedRecord, Standing } from '@/lib/types';
-import { game } from './game-builder';
+import { game } from './support/game-builder';
 
 type Spec = [home: string, away: string, hs: number, as: number];
 

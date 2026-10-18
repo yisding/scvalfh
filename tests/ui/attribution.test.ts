@@ -10,7 +10,7 @@ import { describe, expect, it } from 'vitest';
 import Attribution from '@/components/layout/Attribution';
 import { SITE_SCOPE_NOTE } from '@/components/layout/site';
 import { getFetchedAt } from '@/lib/data';
-import { textOf } from './html-text';
+import { textOf } from '@/tests/support/html-text';
 
 describe('the footer attribution', () => {
   const html = renderToStaticMarkup(createElement(Attribution, { snapshotAt: getFetchedAt() }));

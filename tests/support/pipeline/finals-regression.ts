@@ -10,15 +10,15 @@
  * (steps/sblive.ts) steps. Rebuild with `B1_REBUILD_VARIANTS=1 pnpm exec vitest run tests/pipeline/variants.test.ts`.
  */
 
-import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 
 import type { OfficialStep, SbliveStep } from '@/lib/pipeline/contract';
 import { SILENT_SINK } from '@/lib/pipeline/ledger';
 import { parseRunArgs, prepareRun, runPipeline } from '@/lib/pipeline/run';
 import { stableStringify } from '@/lib/stable-json';
-import { REPO, VARIANTS_DIR, corpusDir } from '@/tests/helpers';
+import { VARIANTS_DIR, corpusDir } from '@/tests/support/corpus';
+import { REPO, tempDir, tempFile } from '@/tests/support/repo';
 
 const CORPUS_ALL = corpusDir('all-2026-10-02');
 export const FINALS_REGRESSION_DIR = path.join(VARIANTS_DIR, 'finals-regression');
@@ -38,7 +38,7 @@ interface RawRow { contest: { contestId: string; hasResult?: boolean; teams: Raw
 
 /** A temporary overlay turning the REGRESSED_FINALS contests into finals. Returns its directory. */
 function writeRegressionOverlay(): string {
-  const dir = mkdtempSync(path.join(tmpdir(), 'scvalfh-regression-overlay-'));
+  const dir = tempDir('regression-overlay');
   const files: Record<string, string> = {};
   for (const slug of FEEDS) {
     const rel = `maxpreps/schedule/${slug}.json`;
@@ -66,7 +66,7 @@ function writeRegressionOverlay(): string {
 /** Runs the pipeline over corpus + overlay and returns the previous snapshot's stable JSON. */
 async function buildFinalsRegressionPrevious(official: OfficialStep, sblive: SbliveStep): Promise<string> {
   const overlay = writeRegressionOverlay();
-  const out = path.join(mkdtempSync(path.join(tmpdir(), 'scvalfh-regression-')), 'snapshot.json');
+  const out = tempFile('regression', 'snapshot.json');
   const args = parseRunArgs(
     ['--fixtures', CORPUS_ALL, '--variant', overlay, '--fetched-at', FINALS_REGRESSION_PREVIOUS_AT, '--out', out, '--dry-run'],
     { cwd: REPO, now: FINALS_REGRESSION_PREVIOUS_AT },

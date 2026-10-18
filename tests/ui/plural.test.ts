@@ -9,7 +9,7 @@ import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 import { formStripName, gameWord, plural } from '@/components/ui/plural';
-import { REPO as ROOT } from '@/tests/helpers';
+import { REPO as ROOT } from '@/tests/support/repo';
 
 function walk(dir: string): string[] {
   const out: string[] = [];

@@ -20,7 +20,7 @@ import {
 import { ScheduleResponseSchema, splitTbaRows, type ScheduleRow } from '@/lib/sources/maxpreps';
 import { getTeamBySlug, resolveTeam } from '@/lib/teams';
 import type { Game } from '@/lib/types';
-import { allScheduleRows, corpusDir } from './helpers';
+import { allScheduleRows, corpusDir } from './support/corpus';
 
 const rows = allScheduleRows();
 const result = normalizeGames(rows, { fetchedAt: '2026-09-29T15:00:00.000Z' });

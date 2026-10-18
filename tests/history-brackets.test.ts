@@ -24,7 +24,7 @@ import {
 } from '@/components/history/bracket-view';
 import { HistoryBracketsSchema, type HistoryBrackets } from '@/lib/history-brackets-schema';
 import { getHistoryBracketFor, getHistoryBrackets } from '@/lib/history';
-import { REPO } from './helpers';
+import { REPO } from './support/repo';
 
 const raw = JSON.parse(readFileSync(path.join(REPO, 'data', 'history-brackets-2025-26.json'), 'utf8')) as HistoryBrackets;
 const brackets = HistoryBracketsSchema.parse(raw);

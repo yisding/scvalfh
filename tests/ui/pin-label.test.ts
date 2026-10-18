@@ -2,7 +2,7 @@
  * `lib/pin-label.ts` over the real 102-team registry (SPEC §10.1).
  *
  * WCAG 2.5.3 Label in Name: a tile's VISIBLE label is `shortName`, so the accessible name has to contain it.
- * The picker's break points are asserted against tests/ui/text-metrics.ts (static Geist 12 px / 500 widths),
+ * The picker's break points are asserted against tests/support/text-metrics.ts (static Geist 12 px / 500 widths),
  * so a new school or a renamed short name that needs one fails here instead of being assumed.
  */
 
@@ -11,7 +11,7 @@ import { describe, expect, it } from 'vitest';
 import { divisionHeading, getLeague } from '@/lib/leagues';
 import { PICKER_BREAKS, pickerName, pinLabel } from '@/lib/pin-label';
 import { TEAMS } from '@/lib/teams';
-import { width } from './text-metrics';
+import { width } from '@/tests/support/text-metrics';
 
 const SHY = '­';
 /** The name's measure in a picker tile at 320 px (four columns). */

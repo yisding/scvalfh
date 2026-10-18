@@ -5,8 +5,7 @@
  * only now.
  */
 
-import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { readFileSync, rmSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 
 import { afterAll, describe, expect, it } from 'vitest';
@@ -14,7 +13,8 @@ import { afterAll, describe, expect, it } from 'vitest';
 import { buildDataIssues, readPreviousMeta, type PreviousMeta } from '@/scripts/data-issues';
 import { loadSnapshot } from '@/lib/snapshot-schema';
 import type { Snapshot } from '@/lib/types';
-import { VARIANTS_DIR } from './helpers';
+import { VARIANTS_DIR } from './support/corpus';
+import { tempDir } from './support/repo';
 
 const base = loadSnapshot(
   JSON.parse(readFileSync(path.join(VARIANTS_DIR, 'finals-regression', 'previous-snapshot.json'), 'utf8')),
@@ -87,7 +87,7 @@ describe('buildDataIssues', () => {
 });
 
 describe('readPreviousMeta', () => {
-  const dir = mkdtempSync(path.join(tmpdir(), 'data-issues-'));
+  const dir = tempDir('data-issues');
   afterAll(() => rmSync(dir, { recursive: true, force: true }));
   const file = (name: string, text: string) => {
     const p = path.join(dir, name);

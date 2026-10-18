@@ -21,7 +21,7 @@ import { beforeAll, describe, expect, it } from 'vitest';
 
 import { longDate, parseLocal } from '@/lib/format';
 import type { Game } from '@/lib/types';
-import { textOf } from './html-text';
+import { textOf } from '@/tests/support/html-text';
 
 type Data = typeof import('@/lib/data');
 type Day = typeof import('@/components/schedule/day-summary');

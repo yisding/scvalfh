@@ -35,8 +35,10 @@ import { isExcludedFor, stepOfficial } from '@/lib/pipeline/steps/official';
 import { ScheduleResponseSchema } from '@/lib/sources/maxpreps';
 import { parseSchedulePdfText } from '@/lib/sources/scval-pdf';
 import type { Game, LeagueId, LeagueRunState, OfficialFixture, Snapshot, SourceStatus } from '@/lib/types';
-import { REPO, allScheduleRows, corpusDir, game } from './helpers';
-import { testRunArgs } from './pipeline/support/run-args';
+import { game } from './support/game-builder';
+import { allScheduleRows, corpusDir } from './support/corpus';
+import { REPO } from './support/repo';
+import { testRunArgs } from './support/pipeline/run-args';
 
 /** Lets one test break a bundle at load (the step's validation-failure path). */
 const breakBundle = vi.hoisted(() => ({ league: null as string | null }));

@@ -32,9 +32,10 @@ import { parseScoresPage, parseTeamGamesPage, type SbliveGame, type SbliveSide }
 import { loadSnapshot, parseSnapshot } from '@/lib/snapshot-schema';
 import { getTeamBySlug } from '@/lib/teams';
 import type { DivisionId, Game, OfficialFixture, Snapshot, SourceStatus } from '@/lib/types';
-import { game } from './game-builder';
-import { REPO, corpusDir } from './helpers';
-import { testRunArgs } from './pipeline/support/run-args';
+import { game } from './support/game-builder';
+import { corpusDir } from './support/corpus';
+import { REPO, goldenPath, readJson } from './support/repo';
+import { testRunArgs } from './support/pipeline/run-args';
 
 const TODAY = '2026-10-02';
 const AT = '2026-10-02T15:00:00.000Z';
@@ -547,7 +548,7 @@ describe('backfill: a level si.com score in a 1 v 1 league (EAL)', () => {
     expect(g.home).toMatchObject({ score: 2, result: 'W' });
     expect(g.away).toMatchObject({ score: 1, result: 'L' });
     expect(scoreSentence(g)).not.toMatch(/1 v 1/);
-    const s = loadSnapshot(JSON.parse(readFileSync(path.join(import.meta.dirname, 'golden', 'snapshot-2026-10-02.v1.json'), 'utf8')));
+    const s = loadSnapshot(readJson(goldenPath('snapshot-2026-10-02.v1.json')));
     expect(() => parseSnapshot({ ...s, games: [...s.games, g], counts: { ...s.counts, games: s.games.length + 1 } })).not.toThrow();
 
     // Rule 4b (stamped, as above): the decider follows MaxPreps' overtime count.

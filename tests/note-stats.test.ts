@@ -34,8 +34,9 @@ import { getTeamRoster } from '@/lib/rosters';
 import { contestIdFromUrl, parseGameStats } from '@/lib/sources/maxpreps-game-stats';
 import { getTeamBySlug } from '@/lib/teams';
 import type { Game, TeamSlug } from '@/lib/types';
-import { game } from './game-builder';
-import { FIXTURE_DIR, buildFixturePlayerStats } from './helpers';
+import { game } from './support/game-builder';
+import { FIXTURE_DIR } from './support/corpus';
+import { buildFixturePlayerStats } from './support/cli';
 
 // ---------------------------------------------------------------- fixtures
 

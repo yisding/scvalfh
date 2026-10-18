@@ -22,7 +22,7 @@ import {
 } from '@/lib/sources/ccs';
 import { CCS } from '@/lib/leagues';
 import { CcsCalendarEventSchema } from '@/lib/snapshot-schema';
-import { REPO } from './helpers';
+import { REPO } from './support/repo';
 
 const ics = readFileSync(path.join(REPO, 'tests', 'fixtures', 'ccs', 'field-hockey.ics'), 'utf8');
 const events = parseCcsIcal(ics);

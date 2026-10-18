@@ -14,8 +14,9 @@ import { type ReactElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { beforeAll, describe, expect, it } from 'vitest';
 
-import { SOCAL_CORPUS, stubCorpusSnapshot } from '@/tests/helpers';
-import { textOf } from './html-text';
+import { stubCorpusSnapshot } from '@/tests/support/corpus-snapshot';
+import { SOCAL_CORPUS } from '@/tests/support/corpus';
+import { textOf } from '@/tests/support/html-text';
 
 stubCorpusSnapshot(SOCAL_CORPUS);
 

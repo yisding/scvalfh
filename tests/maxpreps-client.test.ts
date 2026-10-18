@@ -21,7 +21,8 @@ import {
 import { MAX_RETRY_AFTER_MS, POLITE_USER_AGENT } from '@/lib/sources/http';
 import { BOOTSTRAP_URL, SPORT_SEASON_ID } from '@/lib/season';
 import { getTeamBySlug } from '@/lib/teams';
-import { REPO, allScheduleRows, corpusDir, standingsFixture } from './helpers';
+import { allScheduleRows, corpusDir, standingsFixture } from './support/corpus';
+import { REPO } from './support/repo';
 
 const CORPUS_SCHEDULES = path.join(corpusDir('all-2026-10-02'), 'maxpreps', 'schedule');
 

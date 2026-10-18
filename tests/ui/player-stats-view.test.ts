@@ -34,7 +34,7 @@ import type {
 } from '@/lib/player-stats-schema';
 import { TEAMS, teamsInLeague } from '@/lib/teams';
 import type { Game } from '@/lib/types';
-import { buildFixturePlayerStats } from '@/tests/helpers';
+import { buildFixturePlayerStats } from '@/tests/support/cli';
 
 interface Case {
   slug: string;

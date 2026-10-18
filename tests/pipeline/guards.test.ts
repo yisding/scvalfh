@@ -26,11 +26,11 @@ import { loadSnapshot } from '@/lib/snapshot-schema';
 import { divisionGames } from '@/lib/standings';
 import { teamsInLeague } from '@/lib/teams';
 import type { Game, LeagueId, Snapshot } from '@/lib/types';
-import { variantDir } from '@/tests/helpers';
-import { REGRESSED_FINALS } from './support/finals-regression';
-import { naiveBvalOfficial, noopSblive } from './support/noop-steps';
-import { testRunArgs } from './support/run-args';
-import { runCorpus, snapshotOf, writeTempVariant } from './support/run-corpus';
+import { variantDir } from '@/tests/support/corpus';
+import { REGRESSED_FINALS } from '@/tests/support/pipeline/finals-regression';
+import { naiveBvalOfficial, noopSblive } from '@/tests/support/pipeline/noop-steps';
+import { testRunArgs } from '@/tests/support/pipeline/run-args';
+import { runCorpus, snapshotOf, writeTempVariant } from '@/tests/support/pipeline/run-corpus';
 
 const EARLIER = '2026-10-02T03:00:00.000Z'; // Thu Oct 1, 8:00 PM Pacific
 const NAIVE = { official: naiveBvalOfficial, sblive: noopSblive };

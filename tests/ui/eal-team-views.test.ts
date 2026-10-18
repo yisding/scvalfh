@@ -14,8 +14,7 @@
  * Every assertion message names the module that produced the value.
  */
 
-import { mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 
 import { createElement, type ReactElement } from 'react';
@@ -23,8 +22,10 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
 import type { Game, Snapshot } from '@/lib/types';
-import { EAL_CORPUS, corpusSnapshotPath } from '@/tests/helpers';
-import { textOf } from './html-text';
+import { corpusSnapshotPath } from '@/tests/support/corpus-snapshot';
+import { EAL_CORPUS } from '@/tests/support/corpus';
+import { textOf } from '@/tests/support/html-text';
+import { tempDir } from '@/tests/support/repo';
 
 type Data = typeof import('@/lib/data');
 type Leagues = typeof import('@/lib/leagues');
@@ -110,7 +111,7 @@ beforeAll(async () => {
   final.countsFor = null;
   final.leagueDivision = null;
   final.postseason = { kind: 'league-postseason', leagueId: 'eal', via: 'league-postseason-window' };
-  const dir = mkdtempSync(path.join(tmpdir(), 'scvalfh-eal-team-views-'));
+  const dir = tempDir('eal-team-views');
   const file = path.join(dir, 'snapshot.json');
   writeFileSync(file, JSON.stringify(snap));
   withTag = await load(file);

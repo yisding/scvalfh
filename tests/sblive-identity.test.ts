@@ -28,47 +28,14 @@ import {
   sbliveIdsFrom,
 } from '@/lib/sources/sblive';
 import { TEAMS, getTeamBySlug, normalizeTeamKey } from '@/lib/teams';
-import { REPO } from './helpers';
+import { REPO } from './support/repo';
+import { page, teamGamesProps, teamNode } from './support/sblive-pages';
 
 const DIR = path.join(REPO, 'tests', 'fixtures', 'sblive', 'identity');
 const read = (file: string) => readFileSync(path.join(DIR, file), 'utf8');
 
 const IMG_SCHOOL = (id: string) => `https://assets.scorebooklive.com/uploads/production/school/${id}/image/x.png`;
 const IMG_TEAM = (id: string) => `https://assets.scorebooklive.com/uploads/production/team/${id}-v3/image/x.png`;
-
-function escapeAttr(json: string): string {
-  return json.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
-}
-
-function page(className: string, props: unknown): string {
-  return `<div data-react-class="${className}" data-react-props="${escapeAttr(JSON.stringify(props))}"></div>`;
-}
-
-const teamNode = (over: Record<string, unknown> = {}) => ({
-  id: '6528121',
-  date: '2026-09-23T16:00:00.000-07:00',
-  statusId: 3,
-  webPath: '/california/field-hockey/games/6528121-cupertino-vs-los-altos',
-  featured: {
-    isHome: true,
-    scoreText: '4',
-    team: { name: 'Los Altos', webPath: '/california/field-hockey/teams/458850-los-altos-eagles' },
-  },
-  opponent: {
-    scoreText: '0',
-    isHome: false,
-    team: { name: 'Cupertino', webPath: '/california/field-hockey/teams/458665-cupertino-pioneers' },
-  },
-  ...over,
-});
-
-const teamGamesProps = (nodes: unknown[]) => ({
-  query: {
-    team: { id: '458850', name: 'Los Altos', webPath: '/california/field-hockey/teams/458850-los-altos-eagles', games: { nodes } },
-  },
-  variables: {},
-  application: {},
-});
 
 const scoreboard = (teams: Array<{ name: string; image: string | null }>) =>
   page('games/GenderSportIndex', {

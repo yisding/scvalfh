@@ -42,7 +42,7 @@ import { LEAGUES } from '@/lib/leagues';
 import { classOf, getAllEnrichedRosters, getRosters } from '@/lib/rosters';
 import { isHttpsUrl } from '@/lib/schema-primitives';
 import { getTeamBySlug } from '@/lib/teams';
-import { REPO } from './helpers';
+import { REPO } from './support/repo';
 
 const raw = JSON.parse(readFileSync(path.join(REPO, 'data', 'clubs.json'), 'utf8')) as ClubsFile;
 /** The twelve club records the 2026-10-06 Southern California sweep added. */

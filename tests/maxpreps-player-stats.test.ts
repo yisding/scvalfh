@@ -33,7 +33,7 @@ import {
 } from '@/lib/player-stats-schema';
 import { SPORT_SEASON_ID } from '@/lib/season';
 import { TEAMS as REGISTRY, teamsInLeague } from '@/lib/teams';
-import { FIXTURE_DIR } from './helpers';
+import { FIXTURE_DIR } from './support/corpus';
 
 /** The 15 captures are SCVAL's: the first league captured. */
 const TEAMS = teamsInLeague('scval');

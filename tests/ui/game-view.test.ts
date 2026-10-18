@@ -10,8 +10,7 @@
  * entry. Every assertion message names the module that produced the value.
  */
 
-import { mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 
 import { createElement, type ReactElement } from 'react';
@@ -19,8 +18,9 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
 import type { Game, Snapshot } from '@/lib/types';
-import { corpusSnapshotPath } from '@/tests/helpers';
-import { textOf } from './html-text';
+import { corpusSnapshotPath } from '@/tests/support/corpus-snapshot';
+import { textOf } from '@/tests/support/html-text';
+import { tempDir, tempFile } from '@/tests/support/repo';
 
 type Data = typeof import('@/lib/data');
 type Model = typeof import('@/components/game/game-view');
@@ -301,7 +301,7 @@ describe('MCAL postseason note and superseded stubs (corpus copy)', () => {
     flagged.away.result = 'W';
     flagged.provenance.resultConflict = `MaxPreps marks ${flagged.home.name} L and ${flagged.away.name} W on a 0-0 score.`;
     flagged.provenance.scoreConflict = undefined;
-    const dir = mkdtempSync(path.join(tmpdir(), 'scvalfh-game-view-'));
+    const dir = tempDir('game-view');
     const file = path.join(dir, 'snapshot.json');
     writeFileSync(file, JSON.stringify(snap));
     process.env.SCVAL_SNAPSHOT = file;
@@ -374,7 +374,7 @@ describe('Southern California games (corpus copy with synthetic SoCal games, DES
   let sunsetTie: Game;
 
   beforeAll(async () => {
-    const { game } = await import('@/tests/game-builder');
+    const { game } = await import('@/tests/support/game-builder');
     const { loadSnapshot } = await import('@/lib/snapshot-schema');
     const { computeStandings } = await import('@/lib/standings');
     const { countsOf } = await import('@/lib/snapshot-migrate');
@@ -394,7 +394,7 @@ describe('Southern California games (corpus copy with synthetic SoCal games, DES
     const rows = new Map(computeStandings(games).filter((r) => socal.has(r.division)).map((r) => [r.teamId, r]));
     const standings = base.standings.map((r) => rows.get(r.teamId) ?? r);
     const snap: Snapshot = { ...base, games, standings, counts: countsOf(games, standings) };
-    const file = path.join(mkdtempSync(path.join(tmpdir(), 'scvalfh-game-view-socal-')), 'snapshot.json');
+    const file = tempFile('game-view-socal', 'snapshot.json');
     writeFileSync(file, JSON.stringify(snap));
     process.env.SCVAL_SNAPSHOT = file;
     C = await loadModules();

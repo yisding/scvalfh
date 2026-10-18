@@ -18,22 +18,20 @@
  * Assertion messages name the module that produces the value, so a failure is routed to its owner.
  */
 
-import { readFileSync } from 'node:fs';
-import path from 'node:path';
-
 import { beforeAll, describe, expect, it } from 'vitest';
 
 import { localDateKey, sideOutcome } from '@/lib/format';
 import { DATA_QUALITY, LEAGUES, getDivision, getLeague, getSection } from '@/lib/leagues';
-import { readManifest } from '@/lib/pipeline/corpus';
 import { NO_MAXPREPS_TABLE_REASON } from '@/lib/pipeline/steps/league-meta';
-import { loadSnapshot } from '@/lib/snapshot-schema';
-import { ScheduleResponseSchema, type ScheduleRow } from '@/lib/sources/maxpreps';
+import type { ScheduleRow } from '@/lib/sources/maxpreps';
 import { parseScoresPage, parseTeamGamesPage } from '@/lib/sources/sblive';
 import { divisionGames } from '@/lib/standings';
 import { TEAMS, getTeamBySlug, teamsInDivision, teamsInLeague } from '@/lib/teams';
 import type { Game, Snapshot } from '@/lib/types';
-import { CORPUS_ROOT, SOCAL_CORPUS, corpusSnapshotPath, runFixtureCli, stubCorpusSnapshot } from '@/tests/helpers';
+import { corpusSnapshotPath, stubCorpusSnapshot } from '@/tests/support/corpus-snapshot';
+import { CorpusReader, SOCAL_CORPUS, gameOf } from '@/tests/support/corpus';
+import { expectOk, runFixtureCli } from '@/tests/support/cli';
+import { readSnapshot } from '@/tests/support/repo';
 
 /**
  * The freeze reason of a league not in this run (lib/pipeline/steps/guards.ts notInRunReason): '<SHORT> was
@@ -51,33 +49,15 @@ type DataModule = typeof import('@/lib/data');
 const SOCAL = ['sunset', 'city', 'north-county', 'metro'] as const;
 const NORCAL = ['scval', 'bval', 'pcal', 'mcal', 'eal'] as const;
 
-const dir = path.join(CORPUS_ROOT, SOCAL_CORPUS);
-const manifest = readManifest(dir);
-
-/** The path of a corpus resource (every entry of this corpus is a file, not an HTTP status). */
-function fileOf(key: string): string {
-  const entry = manifest.files[key];
-  if (typeof entry !== 'string') throw new Error(`tests/fixtures/corpus/socal-*/manifest.json: ${key} is not a file`);
-  return path.resolve(dir, entry);
-}
-
-/** Every schedule row of the corpus, one per contest (a game between two of ours is in both feeds). */
-function contests(): ScheduleRow[] {
-  const byId = new Map<string, ScheduleRow>();
-  for (const key of Object.keys(manifest.files)) {
-    if (!key.startsWith('maxpreps/schedule/')) continue;
-    const rows = ScheduleResponseSchema.parse(JSON.parse(readFileSync(fileOf(key), 'utf8')) as unknown).data;
-    for (const row of rows) byId.set(row.contest.contestId, row);
-  }
-  return [...byId.values()];
-}
+const corpus = new CorpusReader(SOCAL_CORPUS);
+const manifest = corpus.manifest;
 
 /** San Diego division games by the membership rule, read off the corpus rows (not off our snapshot). */
 function membershipRows(division: string): ScheduleRow[] {
   const d = getDivision(division);
   const league = getLeague(d.leagueId);
   const members = new Set(teamsInDivision(division).map((t) => t.id));
-  return contests().filter((row) => {
+  return corpus.scheduleRows().filter((row) => {
     const sides = row.contest.teams;
     const date = row.contest.date.slice(0, 10);
     return (
@@ -97,13 +77,9 @@ let data: DataModule;
 stubCorpusSnapshot(SOCAL_CORPUS);
 
 beforeAll(async () => {
-  snapshot = loadSnapshot(JSON.parse(readFileSync(corpusSnapshotPath(SOCAL_CORPUS), 'utf8')) as unknown);
+  snapshot = readSnapshot(corpusSnapshotPath(SOCAL_CORPUS));
   data = (await import('@/lib/data')) as DataModule;
 }, 600_000);
-
-function gameOf(prefix: string): Game | undefined {
-  return snapshot.games.find((g) => g.contestId.startsWith(prefix));
-}
 
 describe('the SoCal corpus run', () => {
   it('names the four Southern California leagues in its manifest, and holds no Valley table', () => {
@@ -143,7 +119,7 @@ describe('the SoCal corpus run', () => {
 
   it('asks MaxPreps for 1 + 2 × 7 division tables + 48 schedules = 63 resources, never /leagues/null/', () => {
     const cli = runFixtureCli({ corpus: SOCAL_CORPUS });
-    expect(cli.status, cli.output).toBe(0);
+    expectOk(cli);
     const urls = cli.output.split('\n').filter((l) => l.startsWith('maxpreps GET '));
     const withTable = LEAGUES.filter((l) => (SOCAL as readonly string[]).includes(l.id))
       .flatMap((l) => l.divisions)
@@ -204,7 +180,7 @@ describe('the San Diego Valley division: MaxPreps publishes no table', () => {
   it('reads every other SoCal table, members only (known extra rows skipped)', () => {
     for (const d of LEAGUES.filter((l) => (SOCAL as readonly string[]).includes(l.id)).flatMap((l) => l.divisions)) {
       if (d.maxprepsLeagueId === null) continue;
-      const table = JSON.parse(readFileSync(fileOf(`maxpreps/standings/${d.id}`), 'utf8')) as { data: Array<{ schoolId: string }> };
+      const table = corpus.json<{ data: Array<{ schoolId: string }> }>(`maxpreps/standings/${d.id}`);
       const members = new Set(teamsInDivision(d.id).map((t) => t.id));
       const health = snapshot.leagueHealth.flatMap((h) => h.divisions).find((x) => x.divisionId === d.id)!;
       expect(health.meta, `lib/pipeline/steps/league-meta.ts: ${d.id}`).toBe('ok');
@@ -343,9 +319,9 @@ describe('the section shootout and level games', () => {
       expect(sideOutcome(g, winner === 'home' ? 'away' : 'home'), `lib/format.ts sideOutcome: ${g.contestId}`).toBe('L');
     }
     // Clairemont (City) – Eastlake (Metro), Sep 1: two conferences, one section.
-    expect(gameOf('f99ce5ed')).toMatchObject({ decider: 'SO', home: { slug: 'clairemont' }, away: { slug: 'eastlake' } });
+    expect(gameOf(snapshot, 'f99ce5ed')).toMatchObject({ decider: 'SO', home: { slug: 'clairemont' }, away: { slug: 'eastlake' } });
     // Westview–San Pasqual, Oct 2: a Valley game, counted as San Pasqual's win.
-    const valley = gameOf('fb944ba7')!;
+    const valley = gameOf(snapshot, 'fb944ba7')!;
     expect(valley.countsFor, 'lib/classify.ts').toBe('valley');
     expect(divisionGames(snapshot.games, 'valley').map((g) => g.contestId)).toContain(valley.contestId);
     expect(sideOutcome(valley, valley.home.slug === 'san-pasqual' ? 'home' : 'away')).toBe('W');
@@ -370,7 +346,7 @@ describe('missing league results and the si.com sides', () => {
         const rows =
           l.rules.classification === 'membership'
             ? membershipRows(d.id)
-            : contests().filter((row) => {
+            : corpus.scheduleRows().filter((row) => {
                 const members = new Set(teamsInDivision(d.id).map((t) => t.id));
                 return (
                   row.contest.isDeleted !== true &&
@@ -398,7 +374,7 @@ describe('missing league results and the si.com sides', () => {
     const unresolved = new Set<string>();
     for (const key of Object.keys(manifest.files)) {
       if (!key.startsWith('sblive/')) continue;
-      const html = readFileSync(fileOf(key), 'utf8');
+      const html = corpus.text(key);
       const rows = key.startsWith('sblive/scores/') ? parseScoresPage(html) : parseTeamGamesPage(html);
       for (const row of rows) {
         for (const s of row.sides) {

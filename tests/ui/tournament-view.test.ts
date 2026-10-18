@@ -19,9 +19,9 @@ import { buildLeagueTournament, SHOOTOUT_NOTE } from '@/lib/postseason';
 import { computeStandings, outcomesFor, playoffOutcomeLabel } from '@/lib/standings';
 import { getTeamBySlug } from '@/lib/teams';
 import type { Game, LeagueTournamentProjection, PostseasonTag, SeasonPhase, Standing, Team } from '@/lib/types';
-import { game } from '@/tests/game-builder';
-import { corpusSnapshotPath } from '@/tests/helpers';
-import { textOf } from './html-text';
+import { game } from '@/tests/support/game-builder';
+import { corpusSnapshotPath } from '@/tests/support/corpus-snapshot';
+import { textOf } from '@/tests/support/html-text';
 
 const VIEW = 'components/playoffs/playoff-view.ts';
 const PAGE = 'app/playoffs/[league]/page.tsx';

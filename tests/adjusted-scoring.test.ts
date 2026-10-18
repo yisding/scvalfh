@@ -16,7 +16,7 @@ import { getSnapshot } from '@/lib/data';
 import { computeRatings, getRatings, ratingGames, type RatingTable } from '@/lib/ratings';
 import { TEAMS, getTeamBySlug } from '@/lib/teams';
 import type { Game } from '@/lib/types';
-import { game, type GameSpec } from './game-builder';
+import { game, type GameSpec } from './support/game-builder';
 
 /** A rating table that rates each slug as given. */
 function table(elos: Record<string, number>): RatingTable {

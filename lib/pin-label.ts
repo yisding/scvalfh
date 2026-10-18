@@ -25,7 +25,7 @@ export function pinLabel(t: { name: string; shortName: string; divisionHeading: 
  * Chromium's `hyphens: auto` never breaks a capitalised word, so the break points are stated here. Two-word
  * names break at their space; 'Lick-Wilmerding' breaks after its hyphen, and 'Wilmerding' (68.9) needs its own.
  *
- * Measured with tests/ui/text-metrics.ts over the 99 league teams' short names: Presentation 77.0, Christopher 71.6,
+ * Measured with tests/support/text-metrics.ts over the 99 league teams' short names: Presentation 77.0, Christopher 71.6,
  * Homestead 70.1, Chaminade 69.5, Huntington (of 'Huntington Beach') 67.9, Clairemont 66.8, Southwest 65.6,
  * Stevenson 64.2, Escondido 63.1, Westmont 62.8, Greenfield 62.6, Tamalpais 61.3 px. Hollister (50.9),
  * University (60.5, also in 'University City') and Cupertino (60.1) fit, and so do the EAL's widest words,

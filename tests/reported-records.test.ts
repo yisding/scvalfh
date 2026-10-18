@@ -20,8 +20,9 @@ import { StandingsResponseSchema } from '@/lib/sources/maxpreps';
 import { buildCrossCheck, computeStandings, toReportedRecord } from '@/lib/standings';
 import { getTeamById, resolveTeam, teamsInDivision } from '@/lib/teams';
 import type { ReportedRecord, TeamId } from '@/lib/types';
-import { REPO, allScheduleRows, corpusDir, standingsFixture } from './helpers';
-import { runCorpus, writeTempVariant } from './pipeline/support/run-corpus';
+import { allScheduleRows, corpusDir, standingsFixture } from './support/corpus';
+import { REPO } from './support/repo';
+import { runCorpus, writeTempVariant } from './support/pipeline/run-corpus';
 
 const reported = new Map<TeamId, ReportedRecord>();
 for (const which of ['da', 'ec'] as const) {

@@ -20,7 +20,8 @@ import { buildCrossCheck, divisionGames } from '@/lib/standings';
 import { loadSnapshot } from '@/lib/snapshot-schema';
 import { stableStringify } from '@/lib/stable-json';
 import type { DivisionId, Snapshot, Standing } from '@/lib/types';
-import { REPO, corpusSnapshotPath } from './helpers';
+import { corpusSnapshotPath } from './support/corpus-snapshot';
+import { REPO } from './support/repo';
 
 interface GoldenCorpus {
   _meta: { fetchedAt: string; officialMatched: number; officialUnmatched: number };

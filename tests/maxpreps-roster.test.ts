@@ -23,7 +23,7 @@ import {
 import { RostersSchema, countRosters } from '@/lib/rosters-schema';
 import { SPORT_SEASON_ID } from '@/lib/season';
 import { TEAMS, getTeamBySlug, teamsInLeague } from '@/lib/teams';
-import { FIXTURE_DIR } from './helpers';
+import { FIXTURE_DIR } from './support/corpus';
 
 const fixture = (slug: string) => readFileSync(path.join(FIXTURE_DIR, `roster-${slug}.html`), 'utf8');
 

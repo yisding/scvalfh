@@ -9,12 +9,12 @@ import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { beforeAll, describe, expect, it } from 'vitest';
 
-import { corpusSnapshotPath } from '@/tests/helpers';
+import { corpusSnapshotPath } from '@/tests/support/corpus-snapshot';
 
 import { POSTSEASON_LEAD, postseasonCardLine, rungCardText } from '@/components/home/home-types';
 
-import { textOf } from './html-text';
-import { width } from './text-metrics';
+import { textOf } from '@/tests/support/html-text';
+import { width } from '@/tests/support/text-metrics';
 
 type HomeView = typeof import('@/components/home/home-view');
 
@@ -534,7 +534,7 @@ describe('the pinned card (components/home/MyTeamCard.tsx ← home-view.ts team 
   });
 
   // The card text is 288px wide at 320 (px-4 in a 320px card); the line is one truncated h-6 row,
-  // so the STATUS must fit whole or the reader sees only the prefix. Widths: tests/ui/text-metrics.ts
+  // so the STATUS must fit whole or the reader sees only the prefix. Widths: tests/support/text-metrics.ts
   // (Geist 12px/500) scaled to the 14px meta size — an over-estimate for the 400 weight.
   const CARD_TEXT_PX = 288;
   const at14 = (s: string) => (width(s) * 14) / 12;

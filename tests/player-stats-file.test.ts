@@ -11,8 +11,7 @@
  * script publishes. Coverage (every team read) is asserted on files built from the captures.
  */
 
-import { existsSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
@@ -32,7 +31,9 @@ import { RostersSchema, countRosters, type Rosters } from '@/lib/rosters-schema'
 import { pendingRoster } from '@/lib/sources/maxpreps-roster';
 import { pendingPlayerStats } from '@/lib/sources/maxpreps-player-stats';
 import { TEAMS, teamsInLeague } from '@/lib/teams';
-import { FIXTURE_DIR, REPO, runScript } from './helpers';
+import { FIXTURE_DIR } from './support/corpus';
+import { expectOk, runRepoScript } from './support/cli';
+import { REPO, tempFile } from './support/repo';
 
 const raw = JSON.parse(readFileSync(path.join(REPO, 'data', 'player-stats.json'), 'utf8')) as PlayerStatsFile;
 
@@ -172,16 +173,16 @@ describe('data/player-stats.json', () => {
 /** Run the script offline against the captures, writing to `out`; asserts it exits 0 and returns its stdout. */
 function buildFromFixtures(out: string, fetchedAt: string, ...extra: string[]): string {
   const res = run(out, fetchedAt, '--leagues', 'scval', ...extra);
-  expect(res.status, res.output).toBe(0);
+  expectOk(res);
   return res.stdout;
 }
 
 /** The same, for runs whose exit code or scope the test sets itself. */
 function run(out: string, fetchedAt: string, ...extra: string[]) {
-  return runScript('scripts/fetch-player-stats.ts', ['--fixtures', FIXTURE_DIR, '--out', out, '--fetched-at', fetchedAt, ...extra]);
+  return runRepoScript('fetch-player-stats', { fixtures: FIXTURE_DIR, out, fetchedAt, extra });
 }
 
-const tmpOut = () => path.join(mkdtempSync(path.join(tmpdir(), 'scvalfh-stats-')), 'player-stats.json');
+const tmpOut = () => tempFile('stats', 'player-stats.json');
 const read = (file: string) => PlayerStatsFileSchema.parse(JSON.parse(readFileSync(file, 'utf8')) as unknown);
 
 describe('playerStatsContentKey', () => {
@@ -363,7 +364,7 @@ describe('scripts/fetch-player-stats.ts --leagues, and failures scoped to a team
     rosters.teams[rosters.teams.findIndex((t) => t.slug === leigh.slug)] = pendingRoster(leigh);
     rosters.counts = countRosters(rosters.teams);
     expect(RostersSchema.safeParse(rosters).success).toBe(true);
-    const rostersPath = path.join(mkdtempSync(path.join(tmpdir(), 'scvalfh-stats-rosters-')), 'rosters.json');
+    const rostersPath = tempFile('stats-rosters', 'rosters.json');
     writeFileSync(rostersPath, JSON.stringify(rosters), 'utf8');
 
     const out = tmpOut();

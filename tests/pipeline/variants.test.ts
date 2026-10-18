@@ -17,14 +17,14 @@ import { FixtureTransport } from '@/lib/pipeline/transport';
 import { SPORT_SEASON_ID } from '@/lib/season';
 import { loadSnapshot } from '@/lib/snapshot-schema';
 import { ScheduleResponseSchema } from '@/lib/sources/maxpreps';
-import { corpusDir, variantDir } from '@/tests/helpers';
+import { corpusDir, variantDir } from '@/tests/support/corpus';
 import {
   FINALS_REGRESSION_DIR,
   FINALS_REGRESSION_PREVIOUS_AT,
   REGRESSED_FINALS,
   writeFinalsRegressionVariant,
-} from './support/finals-regression';
-import { snapshotOf } from './support/run-corpus';
+} from '@/tests/support/pipeline/finals-regression';
+import { snapshotOf } from '@/tests/support/pipeline/run-corpus';
 
 const ALL = corpusDir('all-2026-10-02');
 const transportFor = (variant: string) => new FixtureTransport(loadCorpus(ALL, [variantDir(variant)]));

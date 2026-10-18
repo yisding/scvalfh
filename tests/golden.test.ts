@@ -5,8 +5,7 @@
  * fails, the engine changed SCVAL: fix the engine, never the golden.
  */
 
-import { mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
@@ -34,8 +33,8 @@ import type {
   Standing,
 } from '@/lib/types';
 import { teamsInLeague } from '@/lib/teams';
-import { game } from './game-builder';
-import { REPO } from './helpers';
+import { game } from './support/game-builder';
+import { REPO, tempDir } from './support/repo';
 
 type DataModule = typeof import('@/lib/data');
 
@@ -74,7 +73,7 @@ const isScval = (s: Standing) => SCVAL.includes(s.division);
 
 const migrated: Snapshot = parseSnapshot(migrateV1ToV2(readJson('tests/golden/snapshot-2026-10-02.v1.json')));
 
-const dir = mkdtempSync(path.join(tmpdir(), 'scvalfh-golden-'));
+const dir = tempDir('golden');
 function writeSnapshot(name: string, s: Snapshot): string {
   const file = path.join(dir, name);
   writeFileSync(file, JSON.stringify(s));

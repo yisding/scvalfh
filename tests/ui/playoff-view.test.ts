@@ -19,8 +19,8 @@ import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import type { ProjectionRow } from '@/components/playoffs/playoff-view';
 import { listWords } from '@/lib/format';
 import type { PlayoffStatus } from '@/lib/types';
-import { corpusSnapshotPath } from '@/tests/helpers';
-import { textOf } from './html-text';
+import { corpusSnapshotPath } from '@/tests/support/corpus-snapshot';
+import { textOf } from '@/tests/support/html-text';
 
 type Data = typeof import('@/lib/data');
 type View = typeof import('@/components/playoffs/playoff-view');

@@ -23,7 +23,7 @@ import path from 'node:path';
 import ts from 'typescript';
 import { describe, expect, it } from 'vitest';
 
-import { REPO } from './helpers';
+import { REPO } from './support/repo';
 
 /** §0.4 "No shims": deleted name → its old module (repo-relative, no extension). */
 const DELETED: Readonly<Record<string, readonly string[]>> = {

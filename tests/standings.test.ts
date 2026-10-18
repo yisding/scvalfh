@@ -15,8 +15,8 @@ import {
 } from '@/lib/standings';
 import { TEAMS, resolveTeam, teamsInLeague } from '@/lib/teams';
 import type { Game, Standing } from '@/lib/types';
-import { game } from './game-builder';
-import { allScheduleRows } from './helpers';
+import { game } from './support/game-builder';
+import { allScheduleRows } from './support/corpus';
 
 /** The SCVAL corpus (15 schedules, 2026-09-29), classified exactly as the pipeline does. */
 const live = classifyGames(

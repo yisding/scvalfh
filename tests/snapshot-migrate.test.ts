@@ -24,12 +24,12 @@ import { stableStringify } from '@/lib/stable-json';
 import { buildCrossCheck, computeStandings, divisionGames } from '@/lib/standings';
 import { TEAMS, teamsInLeague } from '@/lib/teams';
 import type { Game, ReportedRecord, Snapshot, TeamId } from '@/lib/types';
-import { VARIANTS_DIR } from './helpers';
+import { VARIANTS_DIR } from './support/corpus';
+import { REPO, goldenPath, readJson } from './support/repo';
 
-const GOLDEN = path.join(import.meta.dirname, 'golden');
 const readV1 = (): Record<string, unknown> =>
-  JSON.parse(readFileSync(path.join(GOLDEN, 'snapshot-2026-10-02.v1.json'), 'utf8')) as Record<string, unknown>;
-const golden = JSON.parse(readFileSync(path.join(GOLDEN, 'scval-committed.json'), 'utf8')) as {
+  JSON.parse(readFileSync(goldenPath('snapshot-2026-10-02.v1.json'), 'utf8')) as Record<string, unknown>;
+const golden = JSON.parse(readFileSync(goldenPath('scval-committed.json'), 'utf8')) as {
   standings: unknown[];
 };
 
@@ -392,7 +392,7 @@ describe('the "league added" upgrade for the four Southern California leagues an
   });
 
   it('loads the committed data/snapshot.json, whichever side of the amendment it was written on', () => {
-    const committed = JSON.parse(readFileSync(path.join(import.meta.dirname, '..', 'data', 'snapshot.json'), 'utf8')) as Snapshot;
+    const committed = readJson<Snapshot>(path.join(REPO, 'data', 'snapshot.json'));
     const predates = lacksConfiguredLeagues(committed);
     const loaded = loadSnapshot(committed);
     expect(loaded.teams).toHaveLength(102);
@@ -415,7 +415,7 @@ describe('the "league added" upgrade for the four Southern California leagues an
 
 // ---------------------------------------------------------------- "rules changed" (DESIGN §24.11)
 
-const COMMITTED = JSON.parse(readFileSync(path.join(import.meta.dirname, '..', 'data', 'snapshot.json'), 'utf8')) as Snapshot;
+const COMMITTED = readJson<Snapshot>(path.join(REPO, 'data', 'snapshot.json'));
 
 function reportedOf(s: Snapshot): Map<TeamId, ReportedRecord> {
   return new Map(s.standings.flatMap((r) => (r.reported ? [[r.teamId, r.reported] as const] : [])));

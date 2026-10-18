@@ -12,7 +12,7 @@ import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { beforeAll, describe, expect, it } from 'vitest';
 
-import { textOf } from './html-text';
+import { textOf } from '@/tests/support/html-text';
 
 let text: string;
 

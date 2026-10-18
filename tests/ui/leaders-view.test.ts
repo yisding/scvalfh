@@ -46,8 +46,8 @@ import {
 import { computeStandings } from '@/lib/standings';
 import { TEAMS, getTeamBySlug } from '@/lib/teams';
 import type { Game } from '@/lib/types';
-import { game } from '@/tests/helpers';
-import { textOf } from './html-text';
+import { game } from '@/tests/support/game-builder';
+import { textOf } from '@/tests/support/html-text';
 
 const PLAYER_IDS = ['most-points', 'adjusted-points', 'most-assists', 'most-saves', 'most-clean-sheets'];
 const SCHOOL_IDS = [

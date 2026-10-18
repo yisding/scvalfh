@@ -4,8 +4,7 @@
  * team no run has covered is status 'pending'; failures and `--leagues` scoping are per team.
  */
 
-import { existsSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
@@ -22,7 +21,9 @@ import {
 import { getRosters, getTeamRoster, sortedPlayers } from '@/lib/rosters';
 import { pendingRoster } from '@/lib/sources/maxpreps-roster';
 import { TEAMS, teamsInLeague } from '@/lib/teams';
-import { FIXTURE_DIR, REPO, runScript } from './helpers';
+import { FIXTURE_DIR } from './support/corpus';
+import { expectOk, runRepoScript } from './support/cli';
+import { REPO, tempDir, tempFile } from './support/repo';
 
 const FILE = path.join(REPO, 'data', 'rosters.json');
 const text = readFileSync(FILE, 'utf8');
@@ -38,11 +39,11 @@ const FIXTURED = LEAGUES.map((l) => l.id).filter((id) =>
 
 /** Run scripts/fetch-rosters.ts offline over the captures, writing to `out`. */
 function fetchRosters(out: string, ...extra: string[]) {
-  return runScript('scripts/fetch-rosters.ts', ['--fixtures', FIXTURE_DIR, '--out', out, '--fetched-at', raw.fetchedAt, ...extra]);
+  return runRepoScript('fetch-rosters', { fixtures: FIXTURE_DIR, out, fetchedAt: raw.fetchedAt, extra });
 }
 /** Whether a team belongs to a league whose every team has a capture. */
 const fixtured = (t: { slug: string }) => FIXTURED.includes(TEAMS.find((x) => x.slug === t.slug)!.league);
-const tmpOut = () => path.join(mkdtempSync(path.join(tmpdir(), 'scvalfh-rosters-')), 'rosters.json');
+const tmpOut = () => tempFile('rosters', 'rosters.json');
 const read = (file: string) => JSON.parse(readFileSync(file, 'utf8')) as Rosters;
 /** A team's entry without the stamp of when its rows were read. */
 const unstamped = <T extends { fetchedAt: string | null }>(t: T) => ({ ...t, fetchedAt: null });
@@ -313,8 +314,8 @@ describe('scripts/fetch-rosters.ts --leagues, and failures scoped to a team', ()
     writeFileSync(out, JSON.stringify(previous), 'utf8');
 
     // An empty fixtures directory: every team of the run fails to read.
-    const none = mkdtempSync(path.join(tmpdir(), 'scvalfh-rosters-none-'));
-    const res = runScript('scripts/fetch-rosters.ts', ['--fixtures', none, '--leagues', 'bval', '--out', out, '--fetched-at', '2026-10-04T00:00:00.000Z']);
+    const none = tempDir('rosters-none');
+    const res = runRepoScript('fetch-rosters', { fixtures: none, leagues: 'bval', out, fetchedAt: '2026-10-04T00:00:00.000Z' });
     expect(res.status, res.stderr).toBe(1);
     const built = read(out);
     const kept = built.teams.find((t) => t.slug === empty.slug)!;
@@ -331,10 +332,10 @@ describe('scripts/fetch-rosters.ts --leagues, and failures scoped to a team', ()
   it('leaves the file as it was when only fetchedAt (and failure text) would change', () => {
     const out = tmpOut();
     const first = fetchRosters(out, '--leagues', 'scval', '--fetched-at', '2026-10-04T00:00:00.000Z');
-    expect(first.status, first.stderr).toBe(0);
+    expectOk(first);
     const bytes = readFileSync(out, 'utf8');
     const second = fetchRosters(out, '--leagues', 'scval', '--fetched-at', '2026-10-05T00:00:00.000Z');
-    expect(second.status, second.stderr).toBe(0);
+    expectOk(second);
     expect(second.stdout).toContain('left as it was');
     expect(readFileSync(out, 'utf8')).toBe(bytes);
   });
@@ -373,10 +374,10 @@ describe('scripts/fetch-rosters.ts over a previous file that is not valid whole'
   function runOver(previous: string, leagues: string, fixtures = FIXTURE_DIR) {
     const out = tmpOut();
     writeFileSync(out, previous, 'utf8');
-    const res = runScript('scripts/fetch-rosters.ts', ['--fixtures', fixtures, '--leagues', leagues, '--out', out, '--fetched-at', '2026-10-04T00:00:00.000Z']);
+    const res = runRepoScript('fetch-rosters', { fixtures, leagues, out, fetchedAt: '2026-10-04T00:00:00.000Z' });
     return { ...res, out };
   }
-  const emptyDir = () => mkdtempSync(path.join(tmpdir(), 'scvalfh-rosters-none-'));
+  const emptyDir = () => tempDir('rosters-none');
   const at = (file: Rosters, slug: string) => file.teams.findIndex((t) => t.slug === slug);
 
   it('drops only the stale row (one BVAL division flipped), names it, and keeps every other team', () => {

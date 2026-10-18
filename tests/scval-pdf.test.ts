@@ -25,7 +25,8 @@ import {
 } from '@/lib/sources/scval-pdf';
 import { teamsInDivision } from '@/lib/teams';
 import type { Game, OfficialFixture, OfficialStamp } from '@/lib/types';
-import { REPO, game } from './helpers';
+import { game } from './support/game-builder';
+import { REPO } from './support/repo';
 
 /** The SCVAL matcher (moved from scval-pdf.ts to lib/official/match.ts as the 'legacy' matcher). */
 const applyOfficialFixtures = (games: readonly Game[], fixtures: readonly OfficialFixture[]) =>

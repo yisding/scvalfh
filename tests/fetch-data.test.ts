@@ -29,8 +29,11 @@ import { SPORT_SEASON_ID } from '@/lib/season';
 import { loadSnapshot, parseSnapshot } from '@/lib/snapshot-schema';
 import { FETCHABLE_TEAMS, TEAMS } from '@/lib/teams';
 import type { Snapshot, Standing } from '@/lib/types';
-import { REPO, corpusDir, corpusSnapshotPath, runFixtureCli, type CliRun } from './helpers';
-import { writeTempVariant } from './pipeline/support/run-corpus';
+import { corpusSnapshotPath } from './support/corpus-snapshot';
+import { corpusDir } from './support/corpus';
+import { expectOk, runFixtureCli, type CliRun } from './support/cli';
+import { REPO } from './support/repo';
+import { writeTempVariant } from './support/pipeline/run-corpus';
 
 /**
  * The freeze reason of a league not in this run (lib/pipeline/steps/guards.ts notInRunReason): '<SHORT> was
@@ -81,7 +84,7 @@ describe('fetch-data --fixtures <the SCVAL corpus>', () => {
   });
 
   it('publishes all 102 teams; SCVAL fresh, the other leagues frozen "not fetched in this run" — no abort', () => {
-    expect(run.status).toBe(0);
+    expectOk(run);
     expect(snapshot.fetchedAt).toBe('2026-09-29T15:00:00.000Z');
     expect(snapshot.teams.length).toBe(102);
     expect(snapshot.standings.length).toBe(102);
@@ -366,7 +369,7 @@ describe('fetch-data --fixtures <all-2026-10-02>', () => {
 describe('fetch-data: flags', () => {
   it('honours --dry-run by writing nothing', () => {
     const res = runFixtureCli({ corpus: 'scval', extraArgs: ['--dry-run'] });
-    expect(res.status, res.output).toBe(0);
+    expectOk(res);
     expect(res.output).toMatch(/dry run: nothing written/);
     expect(existsSync(res.out)).toBe(false);
   });
@@ -382,7 +385,7 @@ describe('fetch-data: flags', () => {
       corpus: 'all-2026-10-02',
       extraArgs: ['--dry-run', '--no-sblive', '--no-scval', '--no-ccs', '--no-vnn'],
     });
-    expect(res.status, res.output).toBe(0);
+    expectOk(res);
     expect(res.output).toMatch(/sblive: skipped \(--no-sblive\)/);
     expect(res.output).toMatch(/vnn: skipped \(--no-vnn\)/);
     expect(res.output).toMatch(/ccs: skipped \(--no-ccs\)/);
@@ -396,7 +399,7 @@ describe('fetch-data: the season-window guard', () => {
   it('exits 0 with "out of season" and touches nothing outside Aug 1 - Nov 30', () => {
     for (const month of ['07', '12']) {
       const res = runFixtureCli({ corpus: 'scval', fetchedAt: `2026-${month}-15T20:00:00.000Z` });
-      expect(res.status, res.output).toBe(0);
+      expectOk(res);
       expect(res.output, month).toMatch(/out of season/);
       expect(res.output, month).not.toMatch(/summary:/);
       expect(existsSync(res.out), month).toBe(false);
@@ -405,7 +408,7 @@ describe('fetch-data: the season-window guard', () => {
 
   it('runs anyway with --force', () => {
     const res = runFixtureCli({ corpus: 'scval', fetchedAt: '2026-12-15T20:00:00.000Z', extraArgs: ['--force', '--dry-run'] });
-    expect(res.status, res.output).toBe(0);
+    expectOk(res);
     expect(res.output).not.toMatch(/out of season/);
     expect(res.stdout).toMatch(/summary: teams 102/);
   });
@@ -413,7 +416,7 @@ describe('fetch-data: the season-window guard', () => {
   it('is in season through the whole league and playoff calendar', () => {
     for (const month of ['08', '09', '10', '11']) {
       const res = runFixtureCli({ corpus: 'scval', fetchedAt: `2026-${month}-15T20:00:00.000Z`, extraArgs: ['--dry-run'] });
-      expect(res.status, res.output).toBe(0);
+      expectOk(res);
       expect(res.output, month).not.toMatch(/out of season/);
     }
   });

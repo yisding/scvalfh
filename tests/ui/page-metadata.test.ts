@@ -11,7 +11,7 @@
 import type { Metadata } from 'next';
 import { beforeAll, describe, expect, it } from 'vitest';
 
-import { stubCorpusSnapshot } from '@/tests/helpers';
+import { stubCorpusSnapshot } from '@/tests/support/corpus-snapshot';
 
 interface PageModule {
   metadata?: Metadata;

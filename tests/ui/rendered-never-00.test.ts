@@ -31,7 +31,9 @@ import { buildGameView, gameDescription, gameKicker, gameTitle } from '@/compone
 import { GameCard, GameLine, GameLogRow, GameRow } from '@/components/ui/GameRow';
 import { getGames, getLeagueSummaries, getTeamBySlug } from '@/lib/data';
 import type { Game } from '@/lib/types';
-import { corpusSnapshotPath, EAL_CORPUS, type CorpusName } from '@/tests/helpers';
+import { corpusSnapshotPath } from '@/tests/support/corpus-snapshot';
+import { EAL_CORPUS, type CorpusName } from '@/tests/support/corpus';
+import { textFoldingDashes } from '@/tests/support/html-text';
 
 interface Rendered {
   games: Game[];
@@ -64,13 +66,6 @@ function scoreGlyphs(html: string): string[] {
       /class="sx-num [^"]*text-(?:score|meta|\[2rem\])[^"]*"><span(?: aria-hidden="true")?>([^<]{1,4})<\/span>/g,
     ),
   ].map((m) => m[1]);
-}
-
-function textOf(html: string): string {
-  return html
-    .replace(/<[^>]+>/g, ' ')
-    .replace(/&#x2013;|&ndash;/g, '–')
-    .replace(/\s+/g, ' ');
 }
 
 /** A score-like pair; a W-L-T record (0-4-0) is three groups, so the lookarounds exclude it. */
@@ -126,7 +121,7 @@ function defineRule(name: string, get: () => Rendered, proof: boolean) {
       const { r, nonFinal } = sets();
       const offenders: string[] = [];
       for (const game of nonFinal) {
-        const text = textOf(renderAllVariants(r, game));
+        const text = textFoldingDashes(renderAllVariants(r, game));
         const hit = text.match(SCORE_PAIR);
         if (hit) offenders.push(`${game.contestId} ${game.status}: ${hit[0]} in "${text.slice(0, 120)}"`);
       }
@@ -252,7 +247,7 @@ describe('every league, rendered', () => {
 
   it('prints the league chip of a counted game and NL for a non-league one', () => {
     for (const game of games) {
-      const text = textOf(renderToStaticMarkup(createElement(GameRow, { game })));
+      const text = textFoldingDashes(renderToStaticMarkup(createElement(GameRow, { game })));
       if (game.countsFor === null && game.postseason === null) {
         expect(text, `components/ui/GameRow.tsx NL ${game.contestId}`).toContain('non-league');
       } else if (game.countsFor !== null) {
@@ -270,9 +265,9 @@ describe('every league, rendered', () => {
     if (!cross) return; // no cross-league game in this snapshot: nothing to tag
     const homeLeague = getTeamBySlug(cross.home.slug!)!.league;
     const awayShort = getLeagueSummaries().find((l) => l.id === getTeamBySlug(cross.away.slug!)!.league)!.shortName;
-    const scoped = textOf(renderToStaticMarkup(createElement(GameRow, { game: cross, scopeLeague: homeLeague })));
+    const scoped = textFoldingDashes(renderToStaticMarkup(createElement(GameRow, { game: cross, scopeLeague: homeLeague })));
     expect(scoped, 'components/ui/GameRow.tsx scopeLeague').toContain(`· ${awayShort}`);
-    const plain = textOf(renderToStaticMarkup(createElement(GameRow, { game: cross })));
+    const plain = textFoldingDashes(renderToStaticMarkup(createElement(GameRow, { game: cross })));
     expect(plain, 'components/ui/GameRow.tsx without scopeLeague').not.toContain(`· ${awayShort}`);
   });
 

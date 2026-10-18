@@ -9,8 +9,7 @@
  * assertion message names the module that produced the value, so a failure routes to its owner.
  */
 
-import { mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 
 import { createElement, type ReactElement } from 'react';
@@ -19,9 +18,10 @@ import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
 import { ordinal } from '@/lib/format';
 import type { Snapshot } from '@/lib/types';
-import { corpusSnapshotPath } from '@/tests/helpers';
+import { corpusSnapshotPath } from '@/tests/support/corpus-snapshot';
 // textOf: the `<main>`-equivalent text of a page (the page component renders no layout).
-import { textOf } from './html-text';
+import { textOf } from '@/tests/support/html-text';
+import { tempDir } from '@/tests/support/repo';
 
 type Data = typeof import('@/lib/data');
 type Leagues = typeof import('@/lib/leagues');
@@ -702,7 +702,7 @@ describe('a team with no results (corpus copy, one MCAL team zeroed)', () => {
       streak: null, last5: [], homeRecord: zero, awayRecord: zero, neutralRecord: zero,
     };
     row.hasReportedResults = false;
-    const dir = mkdtempSync(path.join(tmpdir(), 'scvalfh-team-view-'));
+    const dir = tempDir('team-view');
     const file = path.join(dir, 'snapshot.json');
     writeFileSync(file, JSON.stringify(snap));
     process.env.SCVAL_SNAPSHOT = file;

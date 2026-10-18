@@ -10,7 +10,7 @@ import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { beforeAll, describe, expect, it } from 'vitest';
 
-import { stubCorpusSnapshot } from '@/tests/helpers';
+import { stubCorpusSnapshot } from '@/tests/support/corpus-snapshot';
 
 type StructuredData = typeof import('@/components/layout/structured-data');
 type GameView = typeof import('@/components/game/game-view');

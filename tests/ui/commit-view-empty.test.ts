@@ -14,7 +14,7 @@ import CommitsPage from '@/app/commits/page';
 import { buildCommitsView } from '@/components/commits/commit-view';
 import { buildRosterView } from '@/components/teams/roster-view';
 import { TEAMS } from '@/lib/teams';
-import { textOf } from './html-text';
+import { textOf } from '@/tests/support/html-text';
 
 vi.mock('@/data/commits.json', async (importOriginal) => {
   const real = (await importOriginal()) as { default: Record<string, unknown> };

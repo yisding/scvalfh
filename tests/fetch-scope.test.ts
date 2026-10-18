@@ -25,7 +25,8 @@ import {
 import { SEASON_YEAR } from '@/lib/season';
 import { stableStringify } from '@/lib/stable-json';
 import { TEAMS, teamsInLeague } from '@/lib/teams';
-import { REPO, runScript } from './helpers';
+import { runRepoScript, type ScriptName } from './support/cli';
+import { REPO } from './support/repo';
 
 describe('parseLeaguesFlag', () => {
   it('reads a comma list, drops blanks and repeats', () => {
@@ -55,10 +56,10 @@ describe('parseFetchedAtFlag', () => {
 });
 
 describe('the fetch-scope CLIs read flags by fetch-data\'s rules', () => {
-  const run = (script: string, ...args: string[]) => runScript(`scripts/${script}`, args);
+  const run = (script: ScriptName, ...args: string[]) => runRepoScript(script, { extra: args });
 
-  for (const script of ['fetch-rosters.ts', 'fetch-player-stats.ts']) {
-    it(`${script}: a bad --fetched-at and a flag where a value belongs both fail before anything runs`, () => {
+  for (const script of ['fetch-rosters', 'fetch-player-stats'] as const) {
+    it(`${script}.ts: a bad --fetched-at and a flag where a value belongs both fail before anything runs`, () => {
       // --fixtures keeps a regression offline: a script that accepted the stamp would read no network.
       const bad = run(script, '--fixtures', path.join(REPO, 'tests', 'fixtures', 'no-such-dir'), '--fetched-at', 'yesterday', '--dry-run');
       expect(bad.status).not.toBe(0);

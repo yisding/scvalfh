@@ -18,8 +18,9 @@ import { beforeAll, describe, expect, it } from 'vitest';
 
 import { loadSnapshot, parseSnapshot } from '@/lib/snapshot-schema';
 import type { Game, LeagueHealth, LeagueId, Snapshot } from '@/lib/types';
-import { corpusSnapshotPath, runFixtureCli, type BuildOptions, type CliRun } from '@/tests/helpers';
-import { REGRESSED_FINALS } from './support/finals-regression';
+import { corpusSnapshotPath } from '@/tests/support/corpus-snapshot';
+import { runFixtureCli, type BuildOptions, type CliRun } from '@/tests/support/cli';
+import { REGRESSED_FINALS } from '@/tests/support/pipeline/finals-regression';
 
 const CORPUS = 'all-2026-10-02' as const;
 /** The four Southern California leagues: not in this corpus, so frozen "not fetched in this run". */
@@ -60,15 +61,15 @@ function intraLeague(s: Snapshot, league: LeagueId): string[] {
   return s.games.filter(both).map((g) => g.contestId).sort();
 }
 
-describe('corpusSnapshotPath (tests/helpers.ts)', () => {
+describe('corpusSnapshotPath (tests/support/corpus-snapshot.ts)', () => {
   it('returns a parseable v2 snapshot in os.tmpdir(), with its meta file beside it', () => {
-    expect(path.dirname(corpusFile), 'tests/helpers.ts: cache location').toBe(tmpdir());
+    expect(path.dirname(corpusFile), 'tests/support/corpus-snapshot.ts: cache location').toBe(tmpdir());
     const parsed = parseSnapshot(JSON.parse(readFileSync(corpusFile, 'utf8')) as unknown);
-    expect(parsed.schemaVersion, 'tests/helpers.ts: snapshot version').toBe(2);
-    expect(parsed.fetchedAt, 'tests/helpers.ts: the corpus stamp').toBe('2026-10-02T15:00:00.000Z');
+    expect(parsed.schemaVersion, 'tests/support/corpus-snapshot.ts: snapshot version').toBe(2);
+    expect(parsed.fetchedAt, 'tests/support/corpus-snapshot.ts: the corpus stamp').toBe('2026-10-02T15:00:00.000Z');
     expect(parsed.teams.length).toBe(102);
     const meta = JSON.parse(readFileSync(corpusFile.replace(/\.json$/, '.meta.json'), 'utf8')) as { fetchedAt: string };
-    expect(meta.fetchedAt, 'tests/helpers.ts: meta beside the snapshot').toBe(parsed.fetchedAt);
+    expect(meta.fetchedAt, 'tests/support/corpus-snapshot.ts: meta beside the snapshot').toBe(parsed.fetchedAt);
   });
 
   it('a second call reuses the built file instead of running the pipeline again', () => {
@@ -76,11 +77,11 @@ describe('corpusSnapshotPath (tests/helpers.ts)', () => {
     const t0 = performance.now();
     const again = corpusSnapshotPath(CORPUS);
     const elapsed = performance.now() - t0;
-    expect(again, 'tests/helpers.ts: same path').toBe(corpusFile);
-    expect(statSync(again).mtimeMs, 'tests/helpers.ts: not rebuilt').toBe(before);
-    expect(elapsed, 'tests/helpers.ts: a cache hit does not shell out').toBeLessThan(500);
+    expect(again, 'tests/support/corpus-snapshot.ts: same path').toBe(corpusFile);
+    expect(statSync(again).mtimeMs, 'tests/support/corpus-snapshot.ts: not rebuilt').toBe(before);
+    expect(elapsed, 'tests/support/corpus-snapshot.ts: a cache hit does not shell out').toBeLessThan(500);
     // Different flags are a different cache entry.
-    expect(corpusSnapshotPath(CORPUS, { extraArgs: ['--no-sblive'] }), 'tests/helpers.ts: keyed by flags').not.toBe(corpusFile);
+    expect(corpusSnapshotPath(CORPUS, { extraArgs: ['--no-sblive'] }), 'tests/support/corpus-snapshot.ts: keyed by flags').not.toBe(corpusFile);
   });
 });
 
