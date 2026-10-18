@@ -16,7 +16,7 @@ import { beforeAll, describe, expect, it } from 'vitest';
 
 import type { CcsCalendarEvent } from '@/lib/model/postseason';
 import type { Snapshot } from '@/lib/model/snapshot';
-import { SnapshotSchema } from '@/lib/snapshot-schema';
+import { SnapshotSchema } from '@/lib/snapshot/check';
 import { REPO } from '@/tests/support/repo';
 import { snapshotOf, writeTempVariant } from '@/tests/support/pipeline/run-corpus';
 

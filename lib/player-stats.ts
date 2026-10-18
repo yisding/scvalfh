@@ -1,7 +1,7 @@
 /**
  * The read API for data/player-stats.json — each team's MaxPreps season player stats (SPEC §1.1k).
  *
- * Built by `scripts/fetch-player-stats.ts`; see lib/player-stats-schema.ts for what a number means
+ * Built by `scripts/fetch-player-stats.ts`; see lib/schema/player-stats.ts for what a number means
  * (a tracked 0 is a real zero, an untracked stat is null). Imported so the build bundles it, for
  * the reason lib/rosters.ts gives: a Worker has no project filesystem. Validated once at module
  * scope, so a bad file fails at import time rather than half-way through a render.
@@ -18,13 +18,9 @@ import bundled from '@/data/player-stats.json';
 import { getSnapshot } from './data';
 import type { TeamSlug } from './model/ids';
 import { noteStatsFor, withNoteStats, type NoteSources, type NotedTeamPlayerStats } from './note-stats';
-import {
-  PlayerStatsFileSchema,
-  type PlayerStatsFile,
-  type TeamPlayerStats,
-} from './player-stats-schema';
 import { getTeamRoster } from './rosters';
-import { failValidation } from './schema-primitives';
+import { type PlayerStatsFile, PlayerStatsFileSchema, type TeamPlayerStats } from './schema/player-stats';
+import { failValidation } from './schema/primitives';
 
 export type { NotedTeamPlayerStats } from './note-stats';
 export type {
@@ -35,7 +31,7 @@ export type {
   PlayerStatLine,
   PlayerStatsFile,
   TeamPlayerStats,
-} from './player-stats-schema';
+} from './schema/player-stats';
 
 function load(): PlayerStatsFile {
   const override = process.env.SCVAL_PLAYER_STATS;

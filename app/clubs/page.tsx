@@ -27,13 +27,13 @@ const PAGE_TITLE = 'Club teams';
  * Heading outline: the h1, then one h2 per region that has a club (San Francisco, the Peninsula,
  * the South Bay, the East Bay, Marin, the Central Coast, the Sacramento area, the North State,
  * Ventura County, Los Angeles, Orange County, the Inland Empire, San Diego, then the rest:
- * lib/clubs-schema.ts CLUB_REGIONS), then the h2 "How players are matched"
+ * lib/schema/clubs.ts CLUB_REGIONS), then the h2 "How players are matched"
  * (`#how-matched`, which every club page links). Within a region, the clubs with the most tied
  * players come first (DESIGN §17.5, lib/clubs.ts), so a reader meets the clubs that answer the
  * question before the ones that do not.
  *
  * Regions (DESIGN §24.12): each region's section carries its half of the site's `data-region-scope`
- * (lib/clubs-schema.ts CLUB_REGION_SITE_REGION), under the RegionSwitcher, so a reader sees the clubs
+ * (lib/schema/clubs.ts CLUB_REGION_SITE_REGION), under the RegionSwitcher, so a reader sees the clubs
  * of their own half; `elsewhere` shows under both, and without JavaScript every section renders,
  * NorCal's first. The first section of each half gets the first section's top margin.
  *

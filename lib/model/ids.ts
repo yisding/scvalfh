@@ -21,7 +21,7 @@ export type ContestId = string;
 /**
  * The five CIF sections with a covered league: three in Northern California (CCS, NCS, NS) and two in
  * Southern California (the Southern Section's 'ss' and the San Diego Section's 'sds'). The snapshot
- * schema's `sectionId` enum is this list (lib/snapshot-schema.ts proves the two agree at compile time).
+ * schema's `sectionId` enum is this list (lib/schema/snapshot.ts proves the two agree at compile time).
  */
 export type SectionId = 'ccs' | 'ncs' | 'ns' | 'ss' | 'sds';
 
@@ -29,7 +29,7 @@ export type SectionId = 'ccs' | 'ncs' | 'ns' | 'ss' | 'sds';
  * The site's two halves, the NorCal/SoCal toggle (DESIGN-socal §2.1.1). A property of a SECTION
  * (SectionConfig.region in lib/model/league-config.ts), so a league's or a team's region is always
  * derived from its section and never stored in the snapshot. Not the clubs' CLUB_REGIONS
- * (lib/clubs-schema.ts) and not a venue's `address.region` (a state code): those are separate concepts
+ * (lib/schema/clubs.ts) and not a venue's `address.region` (a state code): those are separate concepts
  * that happen to share the word.
  */
 export type RegionId = 'norcal' | 'socal';

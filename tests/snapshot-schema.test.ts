@@ -2,18 +2,13 @@ import { describe, expect, it } from 'vitest';
 
 import type { Game } from '@/lib/model/game';
 import type { Snapshot } from '@/lib/model/snapshot';
+import { snapshotContentHash } from '@/lib/pipeline/content-hash';
 import { TEAMS } from '@/lib/registry/teams';
 import {
-  GameSchema,
-  LeagueHealthSchema,
-  PostseasonTagSchema,
-  SeasonSchema,
-  SnapshotSchema,
-  TeamSchema,
-  loadSnapshot,
-  parseSnapshot,
-  snapshotContentHash,
-} from '@/lib/snapshot-schema';
+  GameSchema, LeagueHealthSchema, PostseasonTagSchema, SeasonSchema, TeamSchema,
+} from '@/lib/schema/snapshot';
+import { SnapshotSchema } from '@/lib/snapshot/check';
+import { loadSnapshot, parseSnapshot } from '@/lib/snapshot/load';
 import { game } from './support/game-builder';
 import { goldenPath, readJson } from './support/repo';
 

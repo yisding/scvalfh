@@ -1,19 +1,12 @@
 /**
- * lib/schema-primitives.ts: the id, date-key and URL primitives every data contract shares, and the
+ * lib/schema/primitives.ts: the id, date-key and URL primitives every data contract shares, and the
  * one schema-failure message every loader throws. The messages are pinned because tests of the
  * contracts (snapshot, clubs, commits, rosters) match on them.
  */
 
 import { describe, expect, it } from 'vitest';
 
-import {
-  dateKey,
-  failValidation,
-  formatIssues,
-  httpUrl,
-  httpsUrl,
-  slugId,
-} from '@/lib/schema-primitives';
+import { dateKey, failValidation, formatIssues, httpUrl, httpsUrl, slugId } from '@/lib/schema/primitives';
 import { DATE_PATTERN, SLUG_PATTERN, isCalendarDate, isHttpsUrl } from '@/lib/shared/patterns';
 
 const messageOf = (schema: { safeParse: (v: unknown) => { success: boolean; error?: { issues: { message: string }[] } } }, v: unknown) =>

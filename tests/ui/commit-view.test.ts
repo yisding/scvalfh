@@ -41,7 +41,6 @@ import {
   statusWords,
 } from '@/components/commits/commit-view';
 import { buildRosterView } from '@/components/teams/roster-view';
-import { COLLEGE_DIVISIONS, COMMIT_SPORTS } from '@/lib/commits-schema';
 import {
   collegeDisplayName,
   commitClassOf,
@@ -56,6 +55,7 @@ import {
 import { REGIONS, regionOf } from '@/lib/config/leagues';
 import { TEAMS, getTeamBySlug } from '@/lib/registry/teams';
 import { getRosters } from '@/lib/rosters';
+import { COLLEGE_DIVISIONS, COMMIT_SPORTS } from '@/lib/schema/commits';
 import { commitmentLeaks } from '@/scripts/copy-rules';
 import { PUBLIC_TERMS } from '@/scripts/public-terms';
 import { textOf } from '@/tests/support/html-text';

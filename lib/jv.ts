@@ -21,7 +21,6 @@ import { readFileSync } from 'node:fs';
 import bundled from '@/data/jv.json';
 import { getOfficialFixtures, getSnapshot } from './data';
 import { mergeJv, type JvMergeResult } from './jv-merge';
-import { JvFileSchema, type JvFile, type JvTeam } from './jv-schema';
 import {
   classifyJvGames,
   computeJvStandings,
@@ -31,11 +30,12 @@ import {
 } from './jv-standings';
 import type { Game } from './model/game';
 import type { ContestId, DivisionId, LeagueId, TeamSlug } from './model/ids';
-import { failValidation } from './schema-primitives';
+import { type JvFile, JvFileSchema, type JvTeam } from './schema/jv';
+import { failValidation } from './schema/primitives';
 import { localDateKey } from './shared/dates';
 import { byDateThenId } from './shared/game';
 
-export type { JvFile, JvTeam } from './jv-schema';
+export type { JvFile, JvTeam } from './schema/jv';
 
 function load(): JvFile {
   const override = process.env.SCVAL_JV;

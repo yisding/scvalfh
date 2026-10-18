@@ -18,6 +18,8 @@ import type { PlayoffStatus, ReportedRecord, Standing } from '@/lib/model/standi
 import { teamsInLeague } from '@/lib/registry/teams';
 import { buildSeason } from '@/lib/season-build';
 import { stableStringify } from '@/lib/shared/stable-json';
+import { parseSnapshot } from '@/lib/snapshot/load';
+import { countsOf, migrateV1ToV2 } from '@/lib/snapshot/migrate';
 import {
   buildCrossCheck,
   computeStandings,
@@ -26,8 +28,6 @@ import {
   statusBadge,
   statusLegend,
 } from '@/lib/standings';
-import { countsOf, migrateV1ToV2 } from '@/lib/snapshot-migrate';
-import { parseSnapshot } from '@/lib/snapshot-schema';
 import { withSnapshotModules } from './support/corpus-modules';
 import { game } from './support/game-builder';
 import { REPO, tempDir } from './support/repo';

@@ -16,16 +16,11 @@ import type { Snapshot } from '@/lib/model/snapshot';
 import type { ReportedRecord } from '@/lib/model/standings';
 import { TEAMS, teamsInLeague } from '@/lib/registry/teams';
 import { stableStringify } from '@/lib/shared/stable-json';
+import { loadSnapshot, parseSnapshot } from '@/lib/snapshot/load';
 import {
-  addConfiguredLeagues,
-  countsOf,
-  isSnapshotV1,
-  lacksConfiguredLeagues,
-  migrateV1ToV2,
-  needsReclassification,
+  addConfiguredLeagues, countsOf, isSnapshotV1, lacksConfiguredLeagues, migrateV1ToV2, needsReclassification,
   reclassify,
-} from '@/lib/snapshot-migrate';
-import { loadSnapshot, parseSnapshot } from '@/lib/snapshot-schema';
+} from '@/lib/snapshot/migrate';
 import { buildCrossCheck, computeStandings, divisionGames } from '@/lib/standings';
 import { VARIANTS_DIR } from './support/corpus';
 import { REPO, goldenPath, readJson } from './support/repo';

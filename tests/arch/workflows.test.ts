@@ -17,7 +17,7 @@ import { describe, expect, it } from 'vitest';
 import { getClubSlugs } from '@/lib/clubs';
 import { LEAGUE_IDS, TOURNAMENT_LEAGUE_IDS } from '@/lib/config/leagues';
 import { gameIdToParam } from '@/lib/shared/game-id';
-import { loadSnapshot } from '@/lib/snapshot-schema';
+import { loadSnapshot } from '@/lib/snapshot/load';
 import { expectOk, runRepoScript } from '@/tests/support/cli';
 import { REPO, tempDir } from '@/tests/support/repo';
 

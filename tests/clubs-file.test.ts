@@ -15,15 +15,6 @@ import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 import {
-  BANNED_HOSTS,
-  CLUB_REGIONS,
-  ClubsFileSchema,
-  isAsOf,
-  isBannedHost,
-  clubSiteKey,
-  type ClubsFile,
-} from '@/lib/clubs-schema';
-import {
   SEARCHED_REGIONS,
   clubDisplayName,
   getAffiliatedPlayer,
@@ -41,6 +32,9 @@ import {
 import { LEAGUES } from '@/lib/config/leagues';
 import { getTeamBySlug } from '@/lib/registry/teams';
 import { classOf, getAllEnrichedRosters, getRosters } from '@/lib/rosters';
+import {
+  BANNED_HOSTS, CLUB_REGIONS, type ClubsFile, ClubsFileSchema, clubSiteKey, isAsOf, isBannedHost,
+} from '@/lib/schema/clubs';
 import { isHttpsUrl } from '@/lib/shared/patterns';
 import { REPO } from './support/repo';
 
@@ -649,7 +643,7 @@ describe('lib/clubs.ts', () => {
   });
 });
 
-describe('lib/clubs-schema.ts helpers', () => {
+describe('lib/schema/clubs.ts helpers', () => {
   it('isBannedHost matches a social host or its subdomain, never a substring', () => {
     expect(isBannedHost('https://www.instagram.com/p/abc')).toBe(true);
     expect(isBannedHost('https://x.com/club')).toBe(true);

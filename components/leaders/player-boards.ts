@@ -20,14 +20,9 @@ import type { Game } from '@/lib/model/game';
 import type { TeamId } from '@/lib/model/ids';
 import type { Team } from '@/lib/model/team';
 import { notedKinds } from '@/lib/note-stats';
-import type {
-  FieldStatKey,
-  GoalieStatKey,
-  PlayerStatLine,
-  TeamPlayerStats,
-} from '@/lib/player-stats-schema';
 import { gamesSinceUpdate, savePercent } from '@/components/teams/player-stats-view';
 import { positionWords } from '@/components/ui/position-words';
+import type { FieldStatKey, GoalieStatKey, PlayerStatLine, TeamPlayerStats } from '@/lib/schema/player-stats';
 import { UNADJUSTED_NOTE, names, num, teamRef } from './board-kit';
 import { BOARD_PLACES, EXPANDED_PLACES, byName, rankBoard } from './ranking';
 import type { BoardScope } from './scope';

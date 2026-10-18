@@ -30,7 +30,7 @@ import { getAllPlayerStatsWithNotes } from '@/lib/player-stats';
 import { getPriorSeason } from '@/lib/prior-season';
 import { getAllEnrichedRosters } from '@/lib/rosters';
 import { computeRatings, getRatings } from '@/lib/ratings';
-import type { TeamPlayerStats } from '@/lib/player-stats-schema';
+import type { TeamPlayerStats } from '@/lib/schema/player-stats';
 import { buildEloBoard, crossRegionFinals, getCrossRegionFinals, getEloBoard, type EloBoardView } from './elo-board';
 import { buildPlayerBoards } from './player-boards';
 import { buildSchoolBoards } from './school-boards';

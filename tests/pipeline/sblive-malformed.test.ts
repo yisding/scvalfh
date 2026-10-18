@@ -13,7 +13,7 @@ import { describe, expect, it } from 'vitest';
 import { stepOfficial } from '@/lib/pipeline/steps/official';
 import { stepSblive } from '@/lib/pipeline/steps/sblive';
 import { stableStringify } from '@/lib/shared/stable-json';
-import { parseSnapshot } from '@/lib/snapshot-schema';
+import { parseSnapshot } from '@/lib/snapshot/load';
 import { corpusDir } from '@/tests/support/corpus';
 import { snapshotOf, writeTempVariant } from '@/tests/support/pipeline/run-corpus';
 

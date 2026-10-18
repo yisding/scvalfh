@@ -9,7 +9,7 @@
  * shape its facts must have.
  *
  * Separate from lib/commits.ts (the read API, which imports the file) so tests and scripts can
- * parse a file without loading one — the split lib/clubs-schema.ts / lib/clubs.ts uses.
+ * parse a file without loading one — the split lib/schema/clubs.ts / lib/clubs.ts uses.
  *
  * Invariants:
  *   1. college slugs are unique, and a college has at most one program per sport
@@ -19,7 +19,7 @@
  *   4. every college, and every program of it, has at least one commitment: the file holds no
  *      college or program nobody committed to, and no `asOf` is after `capturedAt` (it is the
  *      earliest date a source gave by then)
- *   5. every URL is https, and none is on a social-media host (lib/clubs-schema.ts BANNED_HOSTS, a
+ *   5. every URL is https, and none is on a social-media host (lib/schema/clubs.ts BANNED_HOSTS, a
  *      backstop rather than a complete list) except an official account's post: a college page, a
  *      program page and an account's proof are never social media, and a commitment's source is
  *      social media only as an `official-social` source, a post by the `account` it names (a college,
@@ -34,15 +34,15 @@
  *      agrees with every stated class year — lives in lib/commits.ts: this file cannot see the
  *      rosters
  * 1-4 are one file-level `superRefine(checkCommitsFile)`, each failure a named issue with a path
- * (the lib/snapshot-schema.ts idiom).
+ * (the lib/snapshot/check.ts idiom).
  */
 
 import { z } from 'zod';
 
-import { isBannedHost } from './clubs-schema';
-import { TEAMS } from './registry/teams';
-import { slugId } from './schema-primitives';
-import { isCalendarDate, isHttpsUrl } from './shared/patterns';
+import { isBannedHost } from './clubs';
+import { TEAMS } from '@/lib/registry/teams';
+import { slugId } from './primitives';
+import { isCalendarDate, isHttpsUrl } from '@/lib/shared/patterns';
 
 /**
  * committed  a public page says the player has committed to play field hockey there (a verbal or

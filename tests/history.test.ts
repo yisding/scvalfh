@@ -17,8 +17,8 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { HistorySchema } from '@/lib/history-schema';
 import { getTeamBySlug, teamsInLeague } from '@/lib/registry/teams';
+import { HistorySchema } from '@/lib/schema/history';
 import {
   parseAllLeaguePdfText,
   parseStandingsPdfText,

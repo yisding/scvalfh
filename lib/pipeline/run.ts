@@ -31,7 +31,7 @@ import type { Game } from '@/lib/model/game';
 import type { Snapshot } from '@/lib/model/snapshot';
 import { localDateKey } from '@/lib/shared/dates';
 import { stableStringify } from '@/lib/shared/stable-json';
-import { loadSnapshot } from '@/lib/snapshot-schema';
+import { loadSnapshot } from '@/lib/snapshot/load';
 import {
   RunAbort,
   type OfficialStepResult,

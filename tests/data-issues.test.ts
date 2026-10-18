@@ -11,8 +11,8 @@ import path from 'node:path';
 import { afterAll, describe, expect, it } from 'vitest';
 
 import type { Snapshot } from '@/lib/model/snapshot';
+import { loadSnapshot } from '@/lib/snapshot/load';
 import { buildDataIssues, readPreviousMeta, type PreviousMeta } from '@/scripts/data-issues';
-import { loadSnapshot } from '@/lib/snapshot-schema';
 import { VARIANTS_DIR } from './support/corpus';
 import { tempDir } from './support/repo';
 

@@ -3,7 +3,7 @@
  * tracked varsity rosters a public page ties to one (SPEC §1.1j2, DESIGN §17).
  *
  * The file is research, written by hand and checked twice; no script rebuilds it (see
- * lib/clubs-schema.ts). It is imported so the build bundles it, for the reason lib/rosters.ts
+ * lib/schema/clubs.ts). It is imported so the build bundles it, for the reason lib/rosters.ts
  * gives: a Worker has no project filesystem. It is validated once at module scope — the schema,
  * then the join to the rosters the schema cannot see — so a bad file fails at import time rather
  * than half-way through a render.
@@ -32,18 +32,13 @@
  */
 
 import bundled from '@/data/clubs.json';
-import {
-  CLUB_REGIONS,
-  ClubsFileSchema,
-  type Club,
-  type ClubAffiliation,
-  type ClubRegion,
-  type ClubsFile,
-} from './clubs-schema';
 import type { TeamSlug } from './model/ids';
 import { joinToRoster, playerKey } from './roster-join';
 import { getAllEnrichedRosters, getRosters, type MergedPlayer, type MergedTeamRoster } from './rosters';
-import { failValidation } from './schema-primitives';
+import {
+  CLUB_REGIONS, type Club, type ClubAffiliation, type ClubRegion, type ClubsFile, ClubsFileSchema,
+} from './schema/clubs';
+import { failValidation } from './schema/primitives';
 
 export type {
   AffiliationConfidence,
@@ -56,7 +51,7 @@ export type {
   ClubSource,
   ClubSourceKind,
   ClubsFile,
-} from './clubs-schema';
+} from './schema/clubs';
 
 /**
  * Parse `raw` against the contract, then check the join the schema cannot see (see the header).

@@ -24,11 +24,11 @@
  */
 
 import { datesOf } from './backfill';
-import type { JvSbliveRow } from './jv-schema';
 import type { BackfillProvenance, Game, GameSide, Outcome } from './model/game';
 import type { ContestId, TeamSlug } from './model/ids';
 import type { Team } from './model/team';
 import { getTeamBySlug } from './registry/teams';
+import type { JvSbliveRow } from './schema/jv';
 import { dayDiff } from './shared/dates';
 import { byDateThenId } from './shared/game';
 

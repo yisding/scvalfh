@@ -18,7 +18,7 @@
  * --retrieved-on is the day the BVAL documents were read. A live run defaults it to today; with
  * --bval-from it is required (YYYY-MM-DD), because only the person who saved the fixtures knows it.
  *
- * Nothing is written unless the assembled file passes lib/history-schema.ts' schema and the build
+ * Nothing is written unless the assembled file passes lib/schema/history.ts' schema and the build
  * found no problem (an unresolved school, a missing block): it exits 1 instead.
  *
  * Run once per season, by hand — NOT from the cron. These documents are published once a year and
@@ -36,6 +36,7 @@ import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 
 import { divisionsOf, getLeague } from '@/lib/config/leagues';
+import { HistorySchema } from '@/lib/schema/history';
 import { isCalendarDate } from '@/lib/shared/patterns';
 import { stableStringify } from '@/lib/shared/stable-json';
 import {
@@ -57,7 +58,6 @@ import {
   type BvalStandingsBlock,
 } from '@/lib/sources/bval-sheet';
 import { HttpClient } from '@/lib/sources/http';
-import { HistorySchema } from '@/lib/history-schema';
 import { runCli } from './cli';
 
 interface Args {
@@ -422,7 +422,7 @@ async function main(argv: readonly string[]): Promise<number> {
   }
   console.log('PCAL, MCAL, EAL, Sunset, City, North County, Metro, LA independents: unavailable (see reasons in the file)');
 
-  // Validate against the contract before anything is written. lib/history-schema.ts does not load
+  // Validate against the contract before anything is written. lib/schema/history.ts does not load
   // the committed file (lib/history.ts does), so a broken committed file cannot block the rebuild
   // that replaces it.
   const json = stableStringify(history);

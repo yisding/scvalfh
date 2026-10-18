@@ -66,18 +66,6 @@ import {
 } from '@/lib/fetch-scope';
 import { monthDay } from '@/lib/format/dates';
 import { mergeJv } from '@/lib/jv-merge';
-import {
-  JvFileSchema,
-  JvGameSchema,
-  JvSbliveRowSchema,
-  JvTeamSchema,
-  countJv,
-  jvContentKey,
-  type JvFile,
-  type JvSbliveRow,
-  type JvSourceState,
-  type JvTeam,
-} from '@/lib/jv-schema';
 import type { Game } from '@/lib/model/game';
 import type { LeagueId } from '@/lib/model/ids';
 import type { Team } from '@/lib/model/team';
@@ -85,7 +73,11 @@ import { normalizeGames } from '@/lib/normalize';
 import { inSeasonWindow } from '@/lib/pipeline/steps/window';
 import { jvMaxprepsScheduleUrl, jvSbliveGamesUrl, jvSbliveTeamId } from '@/lib/registry/jv-teams';
 import { TEAMS } from '@/lib/registry/teams';
-import { formatIssues } from '@/lib/schema-primitives';
+import {
+  type JvFile, JvFileSchema, JvGameSchema, type JvSbliveRow, JvSbliveRowSchema, type JvSourceState,
+  type JvTeam, JvTeamSchema, countJv, jvContentKey,
+} from '@/lib/schema/jv';
+import { formatIssues } from '@/lib/schema/primitives';
 import { localDateKey } from '@/lib/shared/dates';
 import { byDateThenId } from '@/lib/shared/game';
 import { stableStringify } from '@/lib/shared/stable-json';

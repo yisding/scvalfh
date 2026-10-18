@@ -8,43 +8,23 @@
  *   4. shootout data exists only when decider === 'SO' (an SO decider may carry no tally: an EAL 1 v 1 win,
  *      or a San Diego Section shootout win MaxPreps records as a level score marked W and L)
  * Ids (league, division, slug) are validated strings here and checked against the config and the
- * registry in one snapshot-level `superRefine(checkAgainstConfig)`, whose every failure is a named
- * issue with a path.
- *
- * `loadSnapshot` is the one entry point for reading a file from disk: a v1 file (no
- * `schemaVersion`) is upgraded in memory by lib/snapshot-migrate.ts first, and so is a v2 file
- * written before a configured league existed (the "league added" upgrade).
+ * registry in one snapshot-level `superRefine(checkAgainstConfig)` (lib/snapshot/check.ts, which
+ * builds `SnapshotSchema` from `SnapshotObject`), whose every failure is a named issue with a path.
+ * This module is the shapes alone: zod and the model types, no config, no registry.
  */
-
-import { createHash } from 'node:crypto';
 
 import { z } from 'zod';
 
-import { classifyGame } from './classify';
-import {
-  CCS, CCS_LEAGUE_IDS, LEAGUES, SECTIONS, findDivision, findLeague, getSection, statusesOf,
-} from './config/leagues';
-import { type DivisionId, OFFICIAL_SOURCE_IDS } from './model/ids';
-import { type Snapshot } from './model/snapshot';
-import { type TiebreakStage } from './model/standings';
-import { TEAMS, getTeamBySlug } from './registry/teams';
-import { dateKey, formatIssues, httpUrl, slugId } from './schema-primitives';
-import { stableStringify } from './shared/stable-json';
-import {
-  addConfiguredLeagues,
-  isSnapshotV1,
-  lacksConfiguredLeagues,
-  migrateV1ToV2,
-  needsReclassification,
-  reclassify,
-} from './snapshot-migrate';
+import { OFFICIAL_SOURCE_IDS } from '@/lib/model/ids';
+import { type Snapshot } from '@/lib/model/snapshot';
+import { dateKey, httpUrl, slugId } from './primitives';
 
 // ---------------------------------------------------------------- primitives
 
 /** League, division and slug ids: validated strings; membership is checked in checkAgainstConfig. */
 const id = slugId;
 const GUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-const SBLIVE_ID_RE = /^sblive:\d+$/;
+export const SBLIVE_ID_RE = /^sblive:\d+$/;
 /** A MaxPreps contest GUID, or `sblive:<digits>` (owner decision D2, rule 2). */
 const contestId = z
   .string()
@@ -100,7 +80,7 @@ const playoffStatus = z.enum([
   'no-postseason',
 ]);
 
-// Every URL in the snapshot that ends up in an `href` is `httpUrl` (lib/schema-primitives.ts says
+// Every URL in the snapshot that ends up in an `href` is `httpUrl` (lib/schema/primitives.ts says
 // why the scheme check sits at this chokepoint).
 
 // ---------------------------------------------------------------- teams
@@ -609,7 +589,7 @@ const countsRow = z.object({
   backfilled: z.number().int().min(0),
 });
 
-const SnapshotObject = z.object({
+export const SnapshotObject = z.object({
   schemaVersion: z.literal(2),
   fetchedAt: z.string().min(20),
   season: SeasonSchema,
@@ -647,272 +627,6 @@ const SnapshotObject = z.object({
   }),
 });
 
-type Ctx = z.RefinementCtx;
-
-function issue(ctx: Ctx, path: Array<string | number>, message: string): void {
-  ctx.addIssue({ code: 'custom', path, message });
-}
-
-/** Every chain stage a league may print as `resolvedBy`, plus 'points' (and 'play-in' for a tournament league). */
-function allowedStages(leagueId: string): ReadonlySet<TiebreakStage> {
-  const league = findLeague(leagueId);
-  const out = new Set<TiebreakStage>(['points']);
-  if (!league) return out;
-  for (const s of league.rules.tiebreaks.default) out.add(s);
-  for (const chain of Object.values(league.rules.tiebreaks.byBucketStart ?? {})) {
-    for (const s of chain ?? []) out.add(s);
-  }
-  if (league.postseason.kind === 'league-tournament') out.add('play-in');
-  return out;
-}
-
-/** SPEC §4.1 checkAgainstConfig, items 1-10. */
-function checkAgainstConfig(s: z.infer<typeof SnapshotObject>, ctx: Ctx): void {
-  // 1. teams = the registry, as sets AND in order; slug and abbr unique.
-  const ids = s.teams.map((t) => t.id);
-  const registry = TEAMS.map((t) => t.id);
-  const missing = registry.filter((x) => !ids.includes(x));
-  const extra = ids.filter((x) => !registry.includes(x));
-  if (missing.length || extra.length || ids.join('|') !== registry.join('|')) {
-    const slugOf = (x: string) => TEAMS.find((t) => t.id === x)?.slug ?? x;
-    issue(
-      ctx,
-      ['teams'],
-      `teams do not equal the registry (missing: ${missing.map(slugOf).join(', ') || 'none'}, extra: ${extra.join(', ') || 'none'}${missing.length || extra.length ? '' : '; order differs'})`,
-    );
-  }
-  if (new Set(s.teams.map((t) => t.slug)).size !== s.teams.length) issue(ctx, ['teams'], 'duplicate team slug');
-  if (new Set(s.teams.map((t) => t.abbr)).size !== s.teams.length) issue(ctx, ['teams'], 'duplicate team abbr');
-
-  // 2. leagues, divisions, sections, per-division counts.
-  const perDivision = new Map<string, number>();
-  s.teams.forEach((t, i) => {
-    const league = findLeague(t.league);
-    if (!league) {
-      issue(ctx, ['teams', i, 'league'], `unknown league ${t.league}`);
-      return;
-    }
-    if (!league.divisions.some((d) => d.id === t.division)) {
-      issue(ctx, ['teams', i, 'division'], `division ${t.division} is not in ${t.league}`);
-    }
-    if (t.section !== league.sectionId) issue(ctx, ['teams', i, 'section'], `section ${t.section} is not ${league.sectionId}`);
-    perDivision.set(t.division, (perDivision.get(t.division) ?? 0) + 1);
-  });
-  for (const league of LEAGUES) {
-    for (const d of league.divisions) {
-      const n = perDivision.get(d.id) ?? 0;
-      if (n !== d.expectedTeams) issue(ctx, ['teams'], `${d.id} has ${n} teams, expected ${d.expectedTeams}`);
-    }
-  }
-
-  // 3. standings: one per team, division, points under the team's league, resolvedBy, status.
-  const teamById = new Map(s.teams.map((t) => [t.id, t]));
-  if (s.standings.length !== s.teams.length) issue(ctx, ['standings'], 'standings row count != team count');
-  const seenStanding = new Set<string>();
-  s.standings.forEach((r, i) => {
-    if (seenStanding.has(r.teamId)) issue(ctx, ['standings', i], `duplicate standings row for ${r.slug}`);
-    seenStanding.add(r.teamId);
-    const team = teamById.get(r.teamId);
-    if (!team) {
-      issue(ctx, ['standings', i], `standings rows do not match the team registry (${r.slug})`);
-      return;
-    }
-    if (r.division !== team.division) issue(ctx, ['standings', i, 'division'], `${r.slug}: division ${r.division} != ${team.division}`);
-    const league = findLeague(team.league);
-    if (!league) return;
-    const p = league.rules.points;
-    for (const key of ['computed', 'overall'] as const) {
-      const c = r[key];
-      if (c.pts !== p.win * c.w + p.tie * c.t + p.loss * c.l) {
-        issue(ctx, ['standings', i, key, 'pts'], `pts is not ${p.win}w + ${p.tie}t under ${league.id}`);
-      }
-    }
-    if (!allowedStages(team.league).has(r.tiebreak.resolvedBy)) {
-      issue(ctx, ['standings', i, 'tiebreak', 'resolvedBy'], `${r.slug}: ${r.tiebreak.resolvedBy} is not a ${league.id} stage`);
-    }
-    if (r.hasReportedResults && !statusesOf(league.id).includes(r.playoffStatus)) {
-      issue(ctx, ['standings', i, 'playoffStatus'], `${r.slug}: ${r.playoffStatus} is not a ${league.id} status`);
-    }
-  });
-  for (const t of s.teams) {
-    if (!seenStanding.has(t.id)) issue(ctx, ['standings'], `standings rows do not match the team registry (missing ${t.slug})`);
-  }
-
-  // 4. games.
-  const degraded = new Set<DivisionId>();
-  for (const h of s.leagueHealth) {
-    for (const d of h.divisions) if (d.classification === 'fallback-contest-type') degraded.add(d.divisionId);
-  }
-  const contestIds = new Set<string>();
-  const countedFixtures = new Map<string, string>();
-  s.games.forEach((g, i) => {
-    if (contestIds.has(g.contestId)) issue(ctx, ['games', i, 'contestId'], `duplicate contestId in games (${g.contestId})`);
-    contestIds.add(g.contestId);
-    for (const side of ['home', 'away'] as const) {
-      const slug = g[side].slug;
-      if (slug !== null && !getTeamBySlug(slug)) issue(ctx, ['games', i, side, 'slug'], `game side references an unknown slug (${slug})`);
-    }
-    if (g.leagueDivision !== null) {
-      const ok = [g.home, g.away].every((side) => {
-        const t = side.slug ? getTeamBySlug(side.slug) : undefined;
-        return t?.division === g.leagueDivision;
-      });
-      if (!ok) issue(ctx, ['games', i, 'leagueDivision'], `leagueDivision ${g.leagueDivision} but a side is not a member`);
-    }
-    const expected = classifyGame(g, { degradedDivisions: degraded });
-    if (g.countsFor !== expected) {
-      issue(ctx, ['games', i, 'countsFor'], `countsFor ${g.countsFor} != classifyGame ${expected} (${g.contestId})`);
-    }
-    if (g.countsFor !== null && g.countsFor !== g.leagueDivision) {
-      issue(ctx, ['games', i, 'countsFor'], 'countsFor differs from leagueDivision');
-    }
-    if (g.official) {
-      const d = findDivision(g.official.division);
-      if (!d) issue(ctx, ['games', i, 'official', 'division'], `unknown division ${g.official.division}`);
-      else if (d.official.mode === 'none') {
-        issue(ctx, ['games', i, 'official', 'division'], `${d.id} publishes no official schedule; a game cannot carry an official stamp for it`);
-      } else if (g.official.source !== d.official.source) {
-        issue(ctx, ['games', i, 'official', 'source'], `official source ${g.official.source} is not ${d.official.source}`);
-      }
-    }
-    // 'SO' only between two teams of a section that decides a level varsity game by shootout (SectionConfig.
-    // shootout: the Northern Section's 1 v 1s, the San Diego Section's shootout, which covers games between its
-    // conferences too); without a tally, a level score flagged W/L. Keyed on the section, as lib/normalize.ts is.
-    if (g.decider === 'SO') {
-      const home = g.home.slug ? getTeamBySlug(g.home.slug) : undefined;
-      const away = g.away.slug ? getTeamBySlug(g.away.slug) : undefined;
-      const section = home && away && home.section === away.section ? getSection(home.section) : undefined;
-      if (!section?.shootout) {
-        issue(ctx, ['games', i, 'decider'], `decider SO but the sides are not two teams of a section that decides level games by shootout (${g.contestId})`);
-      } else if (!section.shootout.coversTournaments && (g.contestTypes?.home === 2 || g.contestTypes?.away === 2)) {
-        // The San Diego procedures do not cover invitational tournaments; lib/normalize.ts reads no 'SO' there.
-        issue(ctx, ['games', i, 'decider'], `decider SO on a tournament row, which the ${section.name}'s shootout rule does not cover (${g.contestId})`);
-      }
-      if (g.shootout === null) {
-        const flags = [g.home.result, g.away.result].sort().join('');
-        if (g.home.score !== g.away.score || flags !== 'LW') {
-          issue(ctx, ['games', i, 'decider'], `decider SO without a tally needs a level score flagged W/L (${g.contestId})`);
-        }
-      }
-    }
-    if (SBLIVE_ID_RE.test(g.contestId)) {
-      if (g.provenance.scores !== 'sblive') issue(ctx, ['games', i, 'provenance', 'scores'], 'a sblive: game must carry sblive scores');
-      if (g.urls.maxpreps !== null) issue(ctx, ['games', i, 'urls', 'maxpreps'], 'a sblive: game has no MaxPreps URL');
-      if (!g.urls.sblive) issue(ctx, ['games', i, 'urls', 'sblive'], 'a sblive: game needs its si.com URL');
-      if (g.provenance.backfill?.rule !== 'absent-fixture') {
-        issue(ctx, ['games', i, 'provenance', 'backfill'], "a sblive: game needs backfill rule 'absent-fixture'");
-      }
-    }
-    if (g.provenance.backfill && g.provenance.scores !== 'sblive') {
-      issue(ctx, ['games', i, 'provenance', 'scores'], 'a backfilled game must carry sblive scores');
-    }
-    // One official fixture is one game: where the official schedule decides what counts, two counted
-    // games stamped with the same fixture would count it twice.
-    if (g.countsFor !== null && g.official) {
-      const d = findDivision(g.countsFor);
-      const league = d ? findLeague(d.leagueId) : undefined;
-      if (league?.rules.classification === 'official-fixtures') {
-        const prior = countedFixtures.get(g.official.fixtureId);
-        if (prior !== undefined) {
-          issue(
-            ctx,
-            ['games', i, 'official', 'fixtureId'],
-            `official fixture ${g.official.fixtureId} is counted twice (${prior} and ${g.contestId})`,
-          );
-        } else countedFixtures.set(g.official.fixtureId, g.contestId);
-      }
-    }
-  });
-
-  // 5. official fixtures.
-  (s.officialFixtures ?? []).forEach((f, i) => {
-    const d = findDivision(f.division);
-    if (!d) {
-      issue(ctx, ['officialFixtures', i, 'division'], `unknown division ${f.division}`);
-      return;
-    }
-    if (f.league !== d.leagueId) issue(ctx, ['officialFixtures', i, 'league'], `${f.league} is not the league of ${f.division}`);
-    for (const key of ['awaySlug', 'homeSlug'] as const) {
-      const slug = f[key];
-      if (slug !== null && getTeamBySlug(slug)?.division !== f.division) {
-        issue(ctx, ['officialFixtures', i, key], `${slug} is not a member of ${f.division}`);
-      }
-    }
-    if (d.official.mode === 'none') {
-      issue(ctx, ['officialFixtures', i, 'division'], `${d.id} publishes no official schedule; there is no official fixture for it`);
-    } else if (f.source !== d.official.source) {
-      issue(ctx, ['officialFixtures', i, 'source'], `source ${f.source} is not ${d.official.source}`);
-    }
-  });
-
-  // 6. season = config (order included).
-  const sectionIds = s.season.sections.map((x) => x.id).join('|');
-  if (sectionIds !== SECTIONS.map((x) => x.id).join('|')) issue(ctx, ['season', 'sections'], 'season sections differ from config');
-  if (s.season.leagues.map((l) => l.id).join('|') !== LEAGUES.map((l) => l.id).join('|')) {
-    issue(ctx, ['season', 'leagues'], 'season leagues differ from config');
-  }
-  s.season.leagues.forEach((l, i) => {
-    const league = findLeague(l.id);
-    if (!league) return;
-    if (l.divisions.map((d) => d.id).join('|') !== league.divisions.map((d) => d.id).join('|')) {
-      issue(ctx, ['season', 'leagues', i, 'divisions'], `${l.id} divisions differ from config`);
-    }
-    l.divisions.forEach((d, j) => {
-      const cfg = league.divisions.find((x) => x.id === d.id);
-      if (cfg && cfg.maxprepsLeagueId !== d.maxprepsLeagueId) {
-        issue(ctx, ['season', 'leagues', i, 'divisions', j, 'maxprepsLeagueId'], `${d.id} maxprepsLeagueId differs from config`);
-      }
-    });
-    if (l.postseasonKind !== league.postseason.kind) {
-      issue(ctx, ['season', 'leagues', i, 'postseasonKind'], `${l.id} postseasonKind differs from config`);
-    }
-  });
-
-  // 7. the CCS field.
-  const aq = s.playoffs.format.autoQualifiers;
-  const keys = Object.keys(aq).sort().join('|');
-  const expectedKeys = [...CCS_LEAGUE_IDS, 'atLarge', 'total'].sort().join('|');
-  if (keys !== expectedKeys) issue(ctx, ['playoffs', 'format', 'autoQualifiers'], `autoQualifiers keys ${keys} != ${expectedKeys}`);
-  let sum = aq.atLarge ?? 0;
-  for (const leagueId of CCS_LEAGUE_IDS) {
-    if (aq[leagueId] !== CCS.autoQualifiers[leagueId]) {
-      issue(ctx, ['playoffs', 'format', 'autoQualifiers', leagueId], `${leagueId} has ${aq[leagueId]} berths, config ${CCS.autoQualifiers[leagueId]}`);
-    }
-    sum += aq[leagueId] ?? 0;
-  }
-  if (sum !== aq.total) issue(ctx, ['playoffs', 'format', 'autoQualifiers'], `autoQualifiers sum ${sum} != total ${aq.total}`);
-
-  // 8. one leagueHealth row per league, config order, with that league's divisions.
-  if (s.leagueHealth.map((h) => h.leagueId).join('|') !== LEAGUES.map((l) => l.id).join('|')) {
-    issue(ctx, ['leagueHealth'], 'leagueHealth rows must be one per configured league, config order');
-  }
-  s.leagueHealth.forEach((h, i) => {
-    const league = findLeague(h.leagueId);
-    if (!league) return;
-    if (h.divisions.map((d) => d.divisionId).join('|') !== league.divisions.map((d) => d.id).join('|')) {
-      issue(ctx, ['leagueHealth', i, 'divisions'], `${h.leagueId} health rows differ from its divisions`);
-    }
-  });
-
-  // 9. cross-check slugs.
-  s.crossCheck.forEach((r, i) => {
-    if (!getTeamBySlug(r.slug)) issue(ctx, ['crossCheck', i, 'slug'], `unknown slug ${r.slug}`);
-  });
-
-  // 10. superseded si.com games.
-  for (const [from, to] of Object.entries(s.supersededGames)) {
-    if (!SBLIVE_ID_RE.test(from)) issue(ctx, ['supersededGames', from], 'a superseded key must be sblive:<digits>');
-    if (contestIds.has(from)) issue(ctx, ['supersededGames', from], 'a superseded game is still in games');
-    if (!contestIds.has(to)) issue(ctx, ['supersededGames', from], `superseding contest ${to} is not in games`);
-  }
-
-  // counts in step with the arrays.
-  if (s.counts.teams !== s.teams.length) issue(ctx, ['counts', 'teams'], 'counts.teams is stale');
-  if (s.counts.games !== s.games.length) issue(ctx, ['counts', 'games'], 'counts.games is stale');
-}
-
-export const SnapshotSchema: z.ZodType<Snapshot> = SnapshotObject.superRefine(checkAgainstConfig);
-
 export type SnapshotOutput = z.infer<typeof SnapshotObject>;
 
 // Compile-time proof that the schema and the hand-written types agree, in both directions.
@@ -920,64 +634,3 @@ const _schemaMatchesType = (s: SnapshotOutput): Snapshot => s;
 const _typeMatchesSchema = (s: Snapshot): SnapshotOutput => s;
 void _schemaMatchesType;
 void _typeMatchesSchema;
-
-/** Parse-or-throw (v2 only), with a readable message naming the first few failures. */
-export function parseSnapshot(raw: unknown): Snapshot {
-  const parsed = SnapshotSchema.safeParse(raw);
-  if (!parsed.success) {
-    const n = parsed.error.issues.length;
-    throw new Error(
-      `snapshot failed validation (${n} ${n === 1 ? 'issue' : 'issues'}):\n${formatIssues(parsed.error.issues)}`,
-    );
-  }
-  return parsed.data;
-}
-
-/**
- * v1 (no schemaVersion) → migrateV1ToV2; a v2 written before a configured league existed →
- * addConfiguredLeagues; a v2 whose games no longer classify under the current rules or registry →
- * reclassify; then parseSnapshot. Used by lib/data.ts and the pipeline's readPrevious.
- */
-export function loadSnapshot(raw: unknown): Snapshot {
-  const v2 = isSnapshotV1(raw) ? migrateV1ToV2(raw) : raw;
-  const complete = lacksConfiguredLeagues(v2) ? addConfiguredLeagues(v2) : v2;
-  return parseSnapshot(needsReclassification(complete) ? reclassify(complete) : complete);
-}
-
-// ---------------------------------------------------------------- canonical form
-
-/**
- * Any key that holds a run's wall-clock stamp rather than a fact about the season.
- *
- * Matched by SHAPE, not by an enumerated list, because an enumerated list is exactly how the hole
- * reopened once: the guard tested `key === 'fetchedAt'` while `sbliveCrossCheck.sbliveFetchedAt`
- * carried the same instant under a different name, so every live in-season run moved the hash and
- * the cron's "commit only if the content changed" guard never fired — a ~370-line timestamp-only
- * commit and a hosting rebuild, twice a day, for no change at all.
- */
-const STAMP_KEY_RE = /fetchedat$/i;
-
-/**
- * A SHA-256 over the snapshot with every wall-clock stamp removed.
- *
- * The snapshot stamps the run's clock in ~160 places — the top level, every game's `provenance`,
- * every `SourceStatus` row and the SBLive cross-check report — so two runs over IDENTICAL upstream
- * data never produce identical bytes. The cron's "commit the snapshot if it changed" guard
- * therefore has to compare content, not bytes; this hash is what it compares, and it is published
- * in snapshot.meta.json so the comparison needs nothing but the previous commit's meta file.
- */
-export function snapshotContentHash(snapshot: Snapshot): string {
-  const strip = (node: unknown): unknown => {
-    if (Array.isArray(node)) return node.map(strip);
-    if (node && typeof node === 'object') {
-      const out: Record<string, unknown> = {};
-      for (const [key, value] of Object.entries(node as Record<string, unknown>)) {
-        if (STAMP_KEY_RE.test(key)) continue;
-        out[key] = strip(value);
-      }
-      return out;
-    }
-    return node;
-  };
-  return createHash('sha256').update(stableStringify(strip(snapshot))).digest('hex');
-}

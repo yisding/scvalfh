@@ -26,7 +26,7 @@ import {
   finalsMissingReason,
 } from '@/lib/pipeline/steps/guards';
 import { teamsInLeague } from '@/lib/registry/teams';
-import { loadSnapshot } from '@/lib/snapshot-schema';
+import { loadSnapshot } from '@/lib/snapshot/load';
 import { divisionGames } from '@/lib/standings';
 import { variantDir } from '@/tests/support/corpus';
 import { REGRESSED_FINALS } from '@/tests/support/pipeline/finals-regression';

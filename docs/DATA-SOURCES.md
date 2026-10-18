@@ -136,7 +136,7 @@ as the schedule page (1.1i), so it is pinned behind an adapter with loud asserti
 
 **Scope: every registry team, all nine leagues and the five independents (102).** The roster page is the same page for a team
 of any league, so `scripts/fetch-rosters.ts` walks the whole registry (`TEAMS`), and
-`data/rosters.json` (`lib/rosters-schema.ts`) holds exactly one entry per team, in registry order,
+`data/rosters.json` (`lib/schema/rosters.ts`) holds exactly one entry per team, in registry order,
 each carrying its registry id and division. Everything below that says "captured 2026-10-02" was
 verified on the 15 SCVAL pages, the only ones captured then. All 43 pages of the four earlier
 leagues were then read live on 2026-10-03 with the same adapter, unchanged: 37 teams ok (745
@@ -335,7 +335,7 @@ articles; MaxPreps career, 2025-26 and JV roster pages for Live Oak, Berkeley an
 Lick-Wilmerding's roster; SportsRecruits, NCSA and Hudl profiles). All held: no record was dropped
 for being wrong. The only thing removed was the 33 low-confidence prior-season positions described above.
 
-Rules of the overlay, enforced by `lib/rosters-schema.ts` and re-checked against the base file in
+Rules of the overlay, enforced by `lib/schema/rosters.ts` and re-checked against the base file in
 `lib/rosters.ts` at load: it joins on `slug + athleteId` (MaxPreps rows only — a school-only name is
 counted, never added); it fills a field **only where MaxPreps is null**; where a source disagrees
 with MaxPreps (SCVAL: 9 numbers, 1 position, 1 grade; BVAL, PCAL and MCAL: 2 grades) MaxPreps stays and the disagreement is stored under
@@ -620,7 +620,7 @@ a profile outside those routes could exist and not be linked. The Southern Calif
 Hudl rosters were read; CaptainU and personal sites were barely covered, and a private Hudl profile or
 an NCSA slug with an unguessed nickname stays unfound.
 
-**(j2) Clubs and club affiliations** — `data/clubs.json` (`lib/clubs-schema.ts`, read by
+**(j2) Clubs and club affiliations** — `data/clubs.json` (`lib/schema/clubs.ts`, read by
 `lib/clubs.ts`; shown on `/clubs`, `/clubs/[slug]` and in a club line on each team page's roster,
 DESIGN §17). Research on 2026-10-03, with an EAL sweep on 2026-10-04 and a re-read of the linked
 recruiting profiles on 2026-10-05, and a Southern California sweep on 2026-10-06, not a script: nothing fetches or refreshes it. It holds 28 youth field hockey clubs (13 from 2026-10-03, 3 from
@@ -982,7 +982,7 @@ Von Klemperer (NorCal Impact), each on her own profile with a class year that ag
 grade, and each current under the live-profile rule. Only the profiles the overlay links were read,
 so other JV players may have club ties no page here records.
 
-**(j3) College commitments** — `data/commits.json` (`lib/commits-schema.ts`, read by
+**(j3) College commitments** — `data/commits.json` (`lib/schema/commits.ts`, read by
 `lib/commits.ts`; shown on `/commits` and in a commitment line on each committed player's team page
 roster, DESIGN §21). Research on 2026-10-03 (field hockey) and 2026-10-04 (every sport, and a second
 field hockey pass; and, for the six EAL teams' schools, a field hockey sweep and then the every-sport
@@ -1380,7 +1380,7 @@ hand; on a rollover, redo the research (the seniors will have graduated).
 other three leagues; the rest of those were read live by the script, and the six EAL teams on
 2026-10-04). Like the rosters it joins to, it covers every registry team, all nine leagues and the five independents (102): one
 call per team,
-and `data/player-stats.json` (`lib/player-stats-schema.ts`) holds exactly one entry per team in
+and `data/player-stats.json` (`lib/schema/player-stats.ts`) holds exactly one entry per team in
 registry order. The same adapter reads every league and throws on any drift. A team's `status` is
 `ok`, `none` (MaxPreps answers "No data was found": the coach entered nothing), `carried-forward`,
 `error`, or `pending` (no run has covered the team; nothing fetched, nothing claimed — the
@@ -1513,7 +1513,7 @@ Gotchas, all **[V]**:
   Each team a game note credits costs one more call, the per-game totals (above): one on 2026-10-06.
 
 **(l) Last season's results** (the Elo rating's starting point, DESIGN §20.1) — `data/prior-season.json`
-(`lib/prior-season-schema.ts`, loaded by `lib/prior-season.ts`), built once a season by
+(`lib/schema/prior-season.ts`, loaded by `lib/prior-season.ts`), built once a season by
 `pnpm fetch-prior-season` (`scripts/fetch-prior-season.ts`). **[V] 2026-10-03.**
 - The season id: `team-context/v1` (e) carries `data.schoolSportSeasonsData[]`, one entry per
   sport-season the school has played (625 for Leigh), each with `sportSeasonId`, `sport`, `gender`,
@@ -1538,7 +1538,7 @@ Gotchas, all **[V]**:
   Corning and Lassen have none). Red Bluff's 2025-26 games are outside the registry and left out. The
   EAL's 2025-11-01 tournament games carried `contestType` 5 on both rows, with the round in
   `contest.location`.
-- **Duplicates named by hand** (`PRIOR_EXCLUDED_CONTEST_IDS` in `lib/prior-season-schema.ts`, counted
+- **Duplicates named by hand** (`PRIOR_EXCLUDED_CONTEST_IDS` in `lib/pipeline/prior-season-feeds.ts`, counted
   under `excluded.excludedByConfig`): a row is listed only when another source shows it repeats a game
   the feeds already carry. One so far, checked 2026-10-07: at Helix's one-day tournament on Sat
   2025-10-18, Patrick Henry played Helix twice. Patrick Henry's own 2025-26 schedule
@@ -1764,10 +1764,10 @@ redirects.
     6-4 Pleasant Valley above 7-5 Bella Vista, i.e. by win percentage) but is not a league document, and the
     site does not show standings from newspapers or third-party sites. No `alsoPublished`.
   - To change an `unavailable` entry to `available`: add a source reader like `lib/sources/bval-sheet.ts`,
-    extend `scripts/build-history.ts`, and the schema (`lib/history-schema.ts`) already validates it against
+    extend `scripts/build-history.ts`, and the schema (`lib/schema/history.ts`) already validates it against
     the league's own registry slugs and divisions (PCAL, MCAL and EAL are single-division).
 - **2025 section playoff brackets** (`data/history-brackets-2025-26.json`, validated by
-  `lib/history-brackets-schema.ts`, read by `lib/history.ts`, shown on /history/2025-26 as `#ccs` after
+  `lib/schema/history-brackets.ts`, read by `lib/history.ts`, shown on /history/2025-26 as `#ccs` after
   PCAL and `#sds` after Metro). Transcribed by hand on 2026-10-07; nothing refreshes it. Each section's
   `notes` say exactly what was read:
   - **CCS** — the two official bracket pages linked from `https://www.cifccs.org/sports/fh/index`
@@ -2474,7 +2474,7 @@ The normalized TypeScript model (`Team`, `Game`, `Standing`, `Snapshot`, `League
 `SourceId` etc.) lives in `lib/model/`, one module per seam (`ids.ts`, `season.ts`, `team.ts`, `game.ts`,
 `standings.ts`, `postseason.ts`, `fixture.ts`, `health.ts`, `crosscheck.ts`, `snapshot.ts`, and the league
 config's shapes in `league-config.ts`); the snapshot is Zod-validated in
-`lib/snapshot-schema.ts` (schema version 2; a version-1 single-league file migrates in memory, a
+`lib/schema/snapshot.ts` (schema version 2; a version-1 single-league file migrates in memory, a
 version-2 file written before a configured league existed gains that league on load, DESIGN §22.7, and a
 version-2 file whose games no longer classify under the current rules or registry is reclassified on load,
 DESIGN §24.11).

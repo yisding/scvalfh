@@ -17,18 +17,13 @@ import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 import { getPlayerStats, getTeamPlayerStats } from '@/lib/player-stats';
-import {
-  FIELD_STAT_KEYS,
-  PLAYER_STATS_TEAM_COUNT,
-  PlayerStatsFileSchema,
-  PlayerStatsPartialSchema,
-  countPlayerStats,
-  playerStatsContentKey,
-  type PlayerStatsFile,
-} from '@/lib/player-stats-schema';
 import { TEAMS, teamsInLeague } from '@/lib/registry/teams';
 import { getRosters } from '@/lib/rosters';
-import { RostersSchema, countRosters, type Rosters } from '@/lib/rosters-schema';
+import {
+  FIELD_STAT_KEYS, PLAYER_STATS_TEAM_COUNT, type PlayerStatsFile, PlayerStatsFileSchema,
+  PlayerStatsPartialSchema, countPlayerStats, playerStatsContentKey,
+} from '@/lib/schema/player-stats';
+import { type Rosters, RostersSchema, countRosters } from '@/lib/schema/rosters';
 import { pendingRoster } from '@/lib/sources/maxpreps-roster';
 import { pendingPlayerStats } from '@/lib/sources/maxpreps-player-stats';
 import { FIXTURE_DIR } from './support/corpus';

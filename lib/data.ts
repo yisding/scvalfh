@@ -43,7 +43,7 @@ import { isoDateKey, localDateKey } from './shared/dates';
 import { sideOutcome } from './shared/game';
 import { buildSearchIndex } from './shared/search';
 import type { SearchIndex } from './shared/search';
-import { loadSnapshot } from './snapshot-schema';
+import { loadSnapshot } from './snapshot/load';
 import {
   divisionGames,
   leaguePairings,

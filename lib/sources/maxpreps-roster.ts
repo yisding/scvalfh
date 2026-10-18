@@ -29,7 +29,7 @@ import { MaxPrepsError, NEXT_DATA_RE } from './maxpreps';
 import { SPORT_SEASON_ID } from '@/lib/config/season';
 import type { Team } from '@/lib/model/team';
 import { recaseNameParts } from '@/lib/person-name';
-import { GRADE_CLASSES, type RosterPlayer, type TeamRoster } from '@/lib/rosters-schema';
+import { GRADE_CLASSES, type RosterPlayer, type TeamRoster } from '@/lib/schema/rosters';
 
 // ---------------------------------------------------------------- the positional map
 
@@ -90,7 +90,7 @@ export const ROSTER_TABLE_HEADERS = ['#', 'Player', 'Grade', 'Position', 'Height
 
 export type GradeClass = (typeof GRADE_CLASSES)[number];
 
-/** `classYear` ↔ `formattedClassYear`, as rendered (from lib/rosters-schema.ts GRADE_CLASSES). A 2026-27 senior is grade 12. */
+/** `classYear` ↔ `formattedClassYear`, as rendered (from lib/schema/rosters.ts GRADE_CLASSES). A 2026-27 senior is grade 12. */
 export const GRADE_LABELS: Readonly<Record<number, GradeClass>> = Object.fromEntries(
   GRADE_CLASSES.map((label, i) => [i + 9, label]),
 );

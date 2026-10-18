@@ -66,7 +66,7 @@ export interface GameVenue {
 export interface PostseasonTag {
   /**
    * 'mcal-tournament' is the tag of any league whose postseason.kind is 'league-tournament' (MCAL today); the
-   * literal is kept for snapshot stability (lib/snapshot-schema.ts PostseasonTagSchema). lib/classify.ts assigns.
+   * literal is kept for snapshot stability (lib/schema/snapshot.ts PostseasonTagSchema). lib/classify.ts assigns.
    * 'section-playoffs' is the San Diego Section's playoffs (DESIGN-socal §2.1.7): any game between two
    * teams of a section whose leagues' postseason.kind is 'section-playoffs', dated on or after the
    * leagues' `postseasonFrom` (Nov 2) or carrying contestType 4, whether or not the two share a conference;

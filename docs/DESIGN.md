@@ -1352,7 +1352,7 @@ export interface Snapshot {
 }
 ```
 
-**Zod invariants that fail the cron rather than the reader** (`lib/snapshot-schema.ts`):
+**Zod invariants that fail the cron rather than the reader** (`lib/schema/snapshot.ts`):
 
 ```ts
 // 1. A final game must have two numbers.
@@ -2594,7 +2594,7 @@ Nothing in a later step can be correct before the step above it. Each step ends 
 verifiable.
 
 **1 — Data contract.** `lib/registry/teams.ts` (the 16-team membership constant + slug/abbr map, with
-the build-time uniqueness assert) and `lib/snapshot-schema.ts` (the Zod schema and all five
+the build-time uniqueness assert) and `lib/schema/snapshot.ts` (the Zod schema and all five
 invariants of §5.1, the left-join against the feed, the cross-check step, and the recap
 cleanup of §5.8). *Done when:* the schema **rejects** a final game with a null score, a
 non-final carrying a score, and a feed that yields fewer than 16 teams — and the cross-check
@@ -2890,7 +2890,7 @@ opens to 25th.)
   equal rate over the same number of games. (Superseded by §23: a board lists every row tied for
   its last place, however many, and no line counts a tie instead.)
 - **Player boards rank only what coaches enter.** A stat a team does not track is null for its
-  players (lib/player-stats-schema.ts) and never ranks as a 0; a 0 never makes a board. The heading
+  players (lib/schema/player-stats.ts) and never ranks as a 0; a 0 never makes a board. The heading
   meta says how many teams a board covers ("From 11 teams"), the note under it names the shorter of
   the two lists (the teams that do enter the stat, or the teams with stats that do not), the section
   names every team with no stats at all, and every team whose totals are behind its finals, by the
@@ -4165,7 +4165,7 @@ committed flag-based snapshot: `readPrevious` caught the validation error and ra
 existing final as newly added: "SCVAL +50 finals"). The regenerated file was complete, so nothing was lost,
 but a transient feed failure during such a run would have dropped a league's published data. `loadSnapshot`
 now has a third upgrade beside v1 → v2 and "league added" (`needsReclassification` / `reclassify`,
-lib/snapshot-migrate.ts): when a v2 file's games no longer classify as written (a rule changed, or a team moved
+lib/snapshot/migrate.ts): when a v2 file's games no longer classify as written (a rule changed, or a team moved
 between divisions, as Bonita and Chaminade did in §24.10), every game is re-resolved and reclassified under the
 current config and the affected divisions' standings rows, cross-check rows, health counts, season windows and
 counts are recomputed by the pipeline's own engine; the other divisions' rows stay byte-identical, and the
@@ -4200,7 +4200,7 @@ checker and, separately, by a refuter, and only what both kept is in the files.
   `elsewhere` to `san-diego` (every HTC California season trains in La Jolla or Chula Vista), so no club
   is `elsewhere` now and its heading does not render; its page gains the region label "San Diego".
   `/clubs/[slug]` goes from 16 pages to 28.
-- **`/clubs` and the region toggle.** `CLUB_REGION_SITE_REGION` (`lib/clubs-schema.ts`) gives each club
+- **`/clubs` and the region toggle.** `CLUB_REGION_SITE_REGION` (`lib/schema/clubs.ts`) gives each club
   region its half of the site; each region's section carries that `data-region-scope`, under a
   `RegionSwitcher` row below the page header (the §24.3 pattern), so a reader sees their own half's
   clubs; `elsewhere` would show under both. Without JavaScript every section renders, NorCal's first.

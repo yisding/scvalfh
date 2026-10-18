@@ -36,7 +36,7 @@
  *   - the MaxPreps goals plus every noted goal cannot exceed the goals the team has scored in all
  *     its finals. If it would, no noted goal is added for that team.
  *
- * Points follow MaxPreps' rule, 2 per goal and 1 per assist (lib/player-stats-schema.ts), on teams
+ * Points follow MaxPreps' rule, 2 per goal and 1 per assist (lib/schema/player-stats.ts), on teams
  * that track them.
  *
  * Pure: everything it reads is passed in, so scripts/fetch-player-stats.ts can use it without
@@ -47,13 +47,9 @@ import { NAME_ALIASES, type NameAlias } from './config/name-aliases';
 import type { Game } from './model/game';
 import type { TeamSlug } from './model/ids';
 import {
-  FIELD_STAT_KEYS,
-  GOALIE_STAT_KEYS,
-  type FieldStats,
-  type GoalieStats,
-  type PlayerStatLine,
+  FIELD_STAT_KEYS, type FieldStats, GOALIE_STAT_KEYS, type GoalieStats, type PlayerStatLine,
   type TeamPlayerStats,
-} from './player-stats-schema';
+} from './schema/player-stats';
 
 // ---------------------------------------------------------------- parsing
 

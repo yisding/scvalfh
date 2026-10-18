@@ -38,14 +38,9 @@ import { TEAMS, getTeamBySlug } from '@/lib/registry/teams';
 import { getEnrichedTeamRoster } from '@/lib/rosters';
 import { computeRatings, getRatings } from '@/lib/ratings';
 import {
-  FIELD_STAT_KEYS,
-  GOALIE_STAT_KEYS,
-  type FieldStatKey,
-  type FieldStats,
-  type GoalieStatKey,
-  type GoalieStats,
+  FIELD_STAT_KEYS, type FieldStatKey, type FieldStats, GOALIE_STAT_KEYS, type GoalieStatKey, type GoalieStats,
   type TeamPlayerStats,
-} from '@/lib/player-stats-schema';
+} from '@/lib/schema/player-stats';
 import { computeStandings } from '@/lib/standings';
 import { game } from '@/tests/support/game-builder';
 import { textOf } from '@/tests/support/html-text';

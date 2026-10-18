@@ -16,12 +16,14 @@ import { describe, expect, it } from 'vitest';
 import { buildDayJvView, buildTeamJvView, jvDiffersNote } from '@/components/teams/jv-view';
 import { getJvFile, getJvGamesForTeam, getJvMerge, getJvTeam } from '@/lib/jv';
 import { JV_FILL_NOTE, mergeJv } from '@/lib/jv-merge';
-import { JV_TEAM_COUNT, JvFileSchema, countJv, jvContentKey, type JvFile, type JvSbliveRow } from '@/lib/jv-schema';
 import type { Game } from '@/lib/model/game';
 import {
   JV_SBLIVE_PATHS, JV_SLUG_BY_SBLIVE_ID, jvMaxprepsScheduleUrl, jvSbliveGamesUrl, jvSbliveTeamId,
 } from '@/lib/registry/jv-teams';
 import { TEAMS, getTeamBySlug } from '@/lib/registry/teams';
+import {
+  JV_TEAM_COUNT, type JvFile, JvFileSchema, type JvSbliveRow, countJv, jvContentKey,
+} from '@/lib/schema/jv';
 import { combineJvCopies, parseJvTeamGamesPage, type JvSbliveCopy } from '@/lib/sources/sblive-jv';
 import { game } from './support/game-builder';
 import { expectOk, runRepoScript } from './support/cli';

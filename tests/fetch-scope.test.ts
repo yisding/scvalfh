@@ -18,12 +18,7 @@ import {
   teamsInScope,
 } from '@/lib/fetch-scope';
 import { TEAMS, teamsInLeague } from '@/lib/registry/teams';
-import {
-  RostersPartialSchema,
-  TeamRosterSchema,
-  countRosters,
-  type Rosters,
-} from '@/lib/rosters-schema';
+import { type Rosters, RostersPartialSchema, TeamRosterSchema, countRosters } from '@/lib/schema/rosters';
 import { stableStringify } from '@/lib/shared/stable-json';
 import { runRepoScript, type ScriptName } from './support/cli';
 import { REPO } from './support/repo';

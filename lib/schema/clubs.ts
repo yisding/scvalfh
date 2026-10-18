@@ -11,7 +11,7 @@
  * rebuilds it. Its facts are fixed; this contract only says what shape they must have.
  *
  * Separate from lib/clubs.ts (the read API, which imports the file) so tests and scripts can parse
- * a file without loading one — the same split as lib/rosters-schema.ts / lib/rosters.ts.
+ * a file without loading one — the same split as lib/schema/rosters.ts / lib/rosters.ts.
  *
  * Invariants:
  *   1. club slugs are unique
@@ -27,7 +27,7 @@
  *   9. `jvAffiliations` hold the same records for players on JV rows, under the same rules (1-8,
  *      except that each must join to a JV row); a player is in one list or the other, never both
  * 1-3 and 9's one-list rule are one file-level `superRefine(checkClubsFile)`, whose every failure is a named issue with
- * a path (the lib/snapshot-schema.ts idiom).
+ * a path (the lib/snapshot/check.ts idiom).
  *
  * Club records name no individual (no coaches, no directors) and that is deliberate; nothing here
  * can check it, so it is a rule for whoever edits the file.
@@ -35,10 +35,10 @@
 
 import { z } from 'zod';
 
-import type { RegionId } from './model/ids';
-import { TEAMS } from './registry/teams';
-import { slugId } from './schema-primitives';
-import { isCalendarDate, isHttpsUrl } from './shared/patterns';
+import type { RegionId } from '@/lib/model/ids';
+import { TEAMS } from '@/lib/registry/teams';
+import { slugId } from './primitives';
+import { isCalendarDate, isHttpsUrl } from '@/lib/shared/patterns';
 
 /**
  * Where a club is based. Also the display order of /clubs' regions: Northern California's (DESIGN
@@ -131,7 +131,7 @@ export type ClubSourceKind = (typeof CLUB_SOURCE_KINDS)[number];
  * Social media is never a source, nor a club's website. A host is banned when it IS one of these or
  * a subdomain of one (`www.instagram.com`, `m.facebook.com`) — never by substring, so `notx.com`
  * and `maxpreps.com` pass. The list covers the networks themselves and their short links (`fb.me`,
- * `instagr.am`, `t.co`, `youtu.be`), and is shared with data/commits.json (lib/commits-schema.ts),
+ * `instagr.am`, `t.co`, `youtu.be`), and is shared with data/commits.json (lib/schema/commits.ts),
  * whose commitments are most often announced on one of them.
  */
 export const BANNED_HOSTS = [

@@ -11,15 +11,10 @@ import { describe, expect, it } from 'vitest';
 
 import { LEAGUES } from '@/lib/config/leagues';
 import { TEAMS, teamsInLeague } from '@/lib/registry/teams';
-import {
-  ROSTER_TEAM_COUNT,
-  RostersPartialSchema,
-  RostersSchema,
-  countRosters,
-  rostersContentKey,
-  type Rosters,
-} from '@/lib/rosters-schema';
 import { getRosters, getTeamRoster, sortedPlayers } from '@/lib/rosters';
+import {
+  ROSTER_TEAM_COUNT, type Rosters, RostersPartialSchema, RostersSchema, countRosters, rostersContentKey,
+} from '@/lib/schema/rosters';
 import { pendingRoster } from '@/lib/sources/maxpreps-roster';
 import { FIXTURE_DIR } from './support/corpus';
 import { expectOk, runRepoScript } from './support/cli';

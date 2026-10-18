@@ -28,25 +28,13 @@ import { z } from 'zod';
 import bundledEnrichment from '@/data/rosters-enrichment.json';
 import bundledRosters from '@/data/rosters.json';
 import type { TeamSlug } from './model/ids';
+import { dateKey, failValidation, httpsUrl } from './schema/primitives';
 import {
-  RosterEnrichmentSchema,
-  RostersSchema,
-  type EnrichedGrade,
-  type EnrichedHeight,
-  type EnrichedJersey,
-  type EnrichedPlayer,
-  type EnrichedPositions,
-  type EnrichedTeam,
-  type EnrichmentSource,
-  type PlayerProfile,
-  type RosterCoach,
-  type RosterConflict,
-  type RosterEnrichment,
-  type RosterPlayer,
-  type Rosters,
+  type EnrichedGrade, type EnrichedHeight, type EnrichedJersey, type EnrichedPlayer, type EnrichedPositions,
+  type EnrichedTeam, type EnrichmentSource, type PlayerProfile, type RosterCoach, type RosterConflict,
+  type RosterEnrichment, RosterEnrichmentSchema, type RosterPlayer, type Rosters, RostersSchema,
   type TeamRoster,
-} from './rosters-schema';
-import { dateKey, failValidation, httpsUrl } from './schema-primitives';
+} from './schema/rosters';
 
 export type {
   EnrichedGrade,
@@ -64,7 +52,7 @@ export type {
   RosterPlayer,
   Rosters,
   TeamRoster,
-} from './rosters-schema';
+} from './schema/rosters';
 
 function readOverride(envName: string, bundled: unknown): unknown {
   const override = process.env[envName];
@@ -86,7 +74,7 @@ function readOverride(envName: string, bundled: unknown): unknown {
  *                rows (Marin Academy: first name, last initial and class year); `summary` says what
  *                it lists and `source` links it
  *   not-checked  nobody looked; the default for a team whose entry does not say
- * It sits beside lib/rosters-schema.ts' team record (whose schema ignores unknown keys) and is
+ * It sits beside lib/schema/rosters.ts' team record (whose schema ignores unknown keys) and is
  * validated here, at load.
  */
 export const OtherRostersSchema = z.discriminatedUnion('status', [

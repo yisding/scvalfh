@@ -53,19 +53,14 @@ import {
 } from '@/lib/fetch-scope';
 import type { LeagueId } from '@/lib/model/ids';
 import { TEAMS } from '@/lib/registry/teams';
+import { formatIssues } from '@/lib/schema/primitives';
+import {
+  type Rosters, RostersPartialSchema, RostersSchema, type TeamRoster, TeamRosterSchema, countRosters,
+  rostersContentKey,
+} from '@/lib/schema/rosters';
 import { stableStringify } from '@/lib/shared/stable-json';
 import { MaxPrepsClient } from '@/lib/sources/maxpreps';
 import { parseRosterPage, pendingRoster, rosterUrl } from '@/lib/sources/maxpreps-roster';
-import {
-  RostersPartialSchema,
-  RostersSchema,
-  TeamRosterSchema,
-  countRosters,
-  rostersContentKey,
-  type Rosters,
-  type TeamRoster,
-} from '@/lib/rosters-schema';
-import { formatIssues } from '@/lib/schema-primitives';
 import { runCli } from './cli';
 
 interface Args {

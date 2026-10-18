@@ -74,20 +74,16 @@ import {
 import type { LeagueId } from '@/lib/model/ids';
 import { teamsCreditedByNotes } from '@/lib/note-stats';
 import { inSeasonWindow } from '@/lib/pipeline/steps/window';
-import {
-  PlayerStatsFileSchema,
-  PlayerStatsPartialSchema,
-  TeamPlayerStatsSchema,
-  countPlayerStats,
-  playerStatsContentKey,
-  type GameTotal,
-  type PlayerStatsFile,
-  type TeamPlayerStats,
-} from '@/lib/player-stats-schema';
 import { TEAMS } from '@/lib/registry/teams';
-import { RostersSchema } from '@/lib/rosters-schema';
+import {
+  type GameTotal, type PlayerStatsFile, PlayerStatsFileSchema, PlayerStatsPartialSchema, type TeamPlayerStats,
+  TeamPlayerStatsSchema, countPlayerStats, playerStatsContentKey,
+} from '@/lib/schema/player-stats';
+import { formatIssues } from '@/lib/schema/primitives';
+import { RostersSchema } from '@/lib/schema/rosters';
 import { localDateKey } from '@/lib/shared/dates';
 import { stableStringify } from '@/lib/shared/stable-json';
+import { loadSnapshot } from '@/lib/snapshot/load';
 import { MaxPrepsClient } from '@/lib/sources/maxpreps';
 import { fetchGameStats, gameStatsUrl, parseGameStats } from '@/lib/sources/maxpreps-game-stats';
 import {
@@ -99,8 +95,6 @@ import {
   teamStatsPageUrl,
   type PlayerStatsPage,
 } from '@/lib/sources/maxpreps-player-stats';
-import { formatIssues } from '@/lib/schema-primitives';
-import { loadSnapshot } from '@/lib/snapshot-schema';
 import { runCli } from './cli';
 
 interface Args {

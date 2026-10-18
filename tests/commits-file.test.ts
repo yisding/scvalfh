@@ -15,17 +15,6 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { BANNED_HOSTS } from '@/lib/clubs-schema';
-import {
-  COLLEGE_DIVISIONS,
-  COMMIT_SPORTS,
-  CommitsFileSchema,
-  isCommitDate,
-  isPostBy,
-  type College,
-  type Commitment,
-  type CommitsFile,
-} from '@/lib/commits-schema';
 import {
   collegeDisplayName,
   commitClassOf,
@@ -43,6 +32,11 @@ import {
 } from '@/lib/commits';
 import { getTeamBySlug } from '@/lib/registry/teams';
 import { classOf, getAllEnrichedRosters, getRosters, type MergedPlayer } from '@/lib/rosters';
+import { BANNED_HOSTS } from '@/lib/schema/clubs';
+import {
+  COLLEGE_DIVISIONS, COMMIT_SPORTS, type College, type Commitment, type CommitsFile, CommitsFileSchema,
+  isCommitDate, isPostBy,
+} from '@/lib/schema/commits';
 import { REPO } from './support/repo';
 
 const raw = JSON.parse(readFileSync(path.join(REPO, 'data', 'commits.json'), 'utf8')) as CommitsFile;

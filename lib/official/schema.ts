@@ -25,7 +25,7 @@ import {
   type DivisionId, type LeagueId, OFFICIAL_SOURCE_IDS, type OfficialSourceId, type TeamSlug,
 } from '@/lib/model/ids';
 import { resolveOfficialName } from '@/lib/registry/resolve';
-import { dateKey } from '@/lib/schema-primitives';
+import { dateKey } from '@/lib/schema/primitives';
 
 export const OFFICIAL_BUNDLE_SCHEMA = 'scvalfh-official-fixtures/1';
 

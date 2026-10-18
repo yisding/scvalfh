@@ -45,7 +45,7 @@ export function dateWithYear(value: string): string {
 
 /**
  * The five shapes a partial date takes in the hand-researched files (data/clubs.json's `asOf`,
- * lib/clubs-schema.ts `isAsOf`): a day, a month, a year, a season ("2025-26": the second year is
+ * lib/schema/clubs.ts `isAsOf`): a day, a month, a year, a season ("2025-26": the second year is
  * the first + 1) or a range of years ("2015-2018"). `YYYY-MM` is a month when MM is 01-12 and a
  * season otherwise, the order isAsOf reads it in; the two can only collide before 2012.
  */

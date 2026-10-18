@@ -35,15 +35,9 @@ import { z } from 'zod';
 
 import { SEASON_YEAR, SPORT_SEASON_ID } from '@/lib/config/season';
 import type { TeamSlug } from '@/lib/model/ids';
-import {
-  previousMaxprepsYear,
-  priorGamesFromFeeds,
-  PriorSeasonSchema,
-  seasonLabel,
-  seasonWindow,
-  type PriorSeason,
-} from '@/lib/prior-season-schema';
+import { previousMaxprepsYear, priorGamesFromFeeds, seasonLabel } from '@/lib/pipeline/prior-season-feeds';
 import { TEAMS } from '@/lib/registry/teams';
+import { type PriorSeason, PriorSeasonSchema, seasonWindow } from '@/lib/schema/prior-season';
 import { MaxPrepsClient, type ScheduleRow } from '@/lib/sources/maxpreps';
 import { runCli } from './cli';
 

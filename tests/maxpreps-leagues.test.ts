@@ -27,9 +27,9 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { PlayerStatsFileSchema, type PlayerStatsFile } from '@/lib/player-stats-schema';
 import { TEAMS, getTeamBySlug } from '@/lib/registry/teams';
-import { RostersSchema, type Rosters } from '@/lib/rosters-schema';
+import { type PlayerStatsFile, PlayerStatsFileSchema } from '@/lib/schema/player-stats';
+import { type Rosters, RostersSchema } from '@/lib/schema/rosters';
 import { parsePlayerStats, joinToRoster } from '@/lib/sources/maxpreps-player-stats';
 import { parseRosterPage, parseRosterTable } from '@/lib/sources/maxpreps-roster';
 import { FIXTURE_DIR } from './support/corpus';

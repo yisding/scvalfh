@@ -38,8 +38,6 @@ import {
   type CommitStatus,
   type Commitment,
 } from '@/lib/commits';
-import { clubSiteKey } from '@/lib/clubs-schema';
-import { COLLEGE_DIVISIONS, COMMIT_SPORTS, type SocialPlatform } from '@/lib/commits-schema';
 import { REGIONS, regionOf } from '@/lib/config/leagues';
 import { dateWithYear, partialDate } from '@/lib/format/dates';
 import { gradeWord, listWords, plural } from '@/lib/format/words';
@@ -47,6 +45,8 @@ import type { RegionId, TeamSlug } from '@/lib/model/ids';
 import { getTeamBySlug } from '@/lib/registry/teams';
 import { getRosters } from '@/lib/rosters';
 import { OUTLETS, hostOf, numbered, pathOf, schoolName } from '@/components/ui/source-hosts';
+import { clubSiteKey } from '@/lib/schema/clubs';
+import { COLLEGE_DIVISIONS, COMMIT_SPORTS, type SocialPlatform } from '@/lib/schema/commits';
 
 // ---------------------------------------------------------------- wording tables
 

@@ -26,7 +26,7 @@ export interface ContentRemoval {
 }
 
 export interface Snapshot {
-  /** NEW. v1 files (no field) are upgraded in memory by lib/snapshot-migrate.ts. */
+  /** NEW. v1 files (no field) are upgraded in memory by lib/snapshot/migrate.ts. */
   schemaVersion: 2;
   /** ISO UTC, when the run started. 'today' everywhere is derived from this. */
   fetchedAt: string;

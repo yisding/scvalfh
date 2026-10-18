@@ -17,9 +17,10 @@ import { describe, expect, it } from 'vitest';
 import { LEAGUES } from '@/lib/config/leagues';
 import { officialDocumentOf } from '@/lib/config/leagues/official';
 import type { Snapshot } from '@/lib/model/snapshot';
+import { snapshotContentHash } from '@/lib/pipeline/content-hash';
 import { SNAPSHOT_MAX_BYTES, SNAPSHOT_WARN_BYTES, SOURCES_MAX, budgetLabel } from '@/lib/pipeline/steps/assemble';
 import { TEAMS, getTeamBySlug } from '@/lib/registry/teams';
-import { loadSnapshot, snapshotContentHash } from '@/lib/snapshot-schema';
+import { loadSnapshot } from '@/lib/snapshot/load';
 import { REPO } from './support/repo';
 
 const SNAPSHOT_PATH = path.join(REPO, 'data', 'snapshot.json');

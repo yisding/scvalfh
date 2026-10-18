@@ -20,8 +20,8 @@ import type { DivisionId } from '@/lib/model/ids';
 import type { Snapshot } from '@/lib/model/snapshot';
 import type { Standing } from '@/lib/model/standings';
 import { stableStringify } from '@/lib/shared/stable-json';
+import { loadSnapshot } from '@/lib/snapshot/load';
 import { buildCrossCheck, divisionGames } from '@/lib/standings';
-import { loadSnapshot } from '@/lib/snapshot-schema';
 import { corpusSnapshotPath } from './support/corpus-snapshot';
 import { REPO } from './support/repo';
 

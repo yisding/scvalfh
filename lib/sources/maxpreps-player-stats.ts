@@ -44,14 +44,9 @@ import { MAXPREPS_API } from '@/lib/config/source-urls';
 import type { Team } from '@/lib/model/team';
 import { recaseName } from '@/lib/person-name';
 import {
-  FIELD_STAT_KEYS,
-  GOALIE_STAT_KEYS,
-  type FieldStatKey,
-  type FieldStats,
-  type GoalieStatKey,
-  type GoalieStats,
+  FIELD_STAT_KEYS, type FieldStatKey, type FieldStats, GOALIE_STAT_KEYS, type GoalieStatKey, type GoalieStats,
   type TeamPlayerStats,
-} from '@/lib/player-stats-schema';
+} from '@/lib/schema/player-stats';
 
 // ---------------------------------------------------------------- the columns we keep
 
@@ -477,7 +472,7 @@ export async function fetchPlayerStats(
 
 // ---------------------------------------------------------------- the roster join
 
-/** The roster fields the join reads (a subset of lib/rosters-schema.ts' RosterPlayer). */
+/** The roster fields the join reads (a subset of lib/schema/rosters.ts' RosterPlayer). */
 export interface RosterJoinPlayer {
   careerId: string | null;
   athleteId: string | null;

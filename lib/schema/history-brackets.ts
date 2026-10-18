@@ -12,10 +12,10 @@
 
 import { z } from 'zod';
 
-import { LEAGUE_IDS, getLeague } from './config/leagues';
-import type { SectionId } from './model/ids';
-import { teamsInLeague } from './registry/teams';
-import { dateKey, slugId } from './schema-primitives';
+import { LEAGUE_IDS, getLeague } from '@/lib/config/leagues';
+import type { SectionId } from '@/lib/model/ids';
+import { teamsInLeague } from '@/lib/registry/teams';
+import { dateKey, slugId } from './primitives';
 
 /** The sections with a 2025 bracket. The NCS, Northern Section and Southern Section held none. */
 export const BRACKET_SECTION_IDS = ['ccs', 'sds'] as const satisfies readonly SectionId[];

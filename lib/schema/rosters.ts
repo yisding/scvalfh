@@ -4,7 +4,7 @@
  *
  * Separate from lib/rosters.ts (the read API, which imports the file) so scripts/fetch-rosters.ts
  * can validate what it is about to write without importing what it is about to overwrite — the
- * same split as lib/snapshot-schema.ts / lib/data.ts.
+ * same split as lib/schema/snapshot.ts / lib/data.ts.
  *
  * Invariants:
  *   1. exactly one team per registry team (102), unique slugs, each with its registry id and division
@@ -19,11 +19,11 @@
 
 import { z } from 'zod';
 
-import { COMMIT_SPORTS } from './commits-schema';
-import { ALL_DIVISIONS } from './config/leagues';
-import { TEAMS, getTeamBySlug } from './registry/teams';
-import { dateKey, httpUrl, httpsUrl, slugId } from './schema-primitives';
-import { contentKey } from './shared/stable-json';
+import { COMMIT_SPORTS } from './commits';
+import { ALL_DIVISIONS } from '@/lib/config/leagues';
+import { TEAMS, getTeamBySlug } from '@/lib/registry/teams';
+import { dateKey, httpUrl, httpsUrl, slugId } from './primitives';
+import { contentKey } from '@/lib/shared/stable-json';
 
 /** Rosters cover every registry team, all nine leagues and the five independents: one entry per team of TEAMS. */
 const ROSTER_SLUGS: ReadonlySet<string> = new Set(TEAMS.map((t) => t.slug));

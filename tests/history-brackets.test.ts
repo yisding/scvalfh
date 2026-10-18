@@ -1,6 +1,6 @@
 /**
  * data/history-brackets-2025-26.json — the 2025 CCS and San Diego Section brackets on
- * /history/2025-26 — and its contract, lib/history-brackets-schema.ts.
+ * /history/2025-26 — and its contract, lib/schema/history-brackets.ts.
  *
  * The file is a hand transcription, so the results it must reproduce are asserted literally from
  * the sources its `notes` name (read 2026-10-07): the CCS bracket pages on cifccs.org and the CCS
@@ -22,8 +22,8 @@ import {
   roundByes,
   sideName,
 } from '@/components/history/bracket-view';
-import { HistoryBracketsSchema, type HistoryBrackets } from '@/lib/history-brackets-schema';
 import { getHistoryBracketFor, getHistoryBrackets } from '@/lib/history';
+import { type HistoryBrackets, HistoryBracketsSchema } from '@/lib/schema/history-brackets';
 import { REPO } from './support/repo';
 
 const raw = JSON.parse(readFileSync(path.join(REPO, 'data', 'history-brackets-2025-26.json'), 'utf8')) as HistoryBrackets;

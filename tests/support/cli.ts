@@ -14,7 +14,7 @@ import path from 'node:path';
 import { expect } from 'vitest';
 
 import { readManifest } from '@/lib/pipeline/corpus';
-import { PlayerStatsFileSchema, type PlayerStatsFile } from '@/lib/player-stats-schema';
+import { type PlayerStatsFile, PlayerStatsFileSchema } from '@/lib/schema/player-stats';
 import { FIXTURE_DIR, corpusDir, variantDir, type CorpusName } from '@/tests/support/corpus';
 import { REPO, TSX, readJson, tempDir } from '@/tests/support/repo';
 

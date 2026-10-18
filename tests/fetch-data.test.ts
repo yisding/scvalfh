@@ -29,7 +29,7 @@ import { RunAbort, type SnapshotMeta } from '@/lib/pipeline/contract';
 import { readManifest } from '@/lib/pipeline/corpus';
 import { describeRunFailure } from '@/lib/pipeline/run-failure';
 import { FETCHABLE_TEAMS, TEAMS } from '@/lib/registry/teams';
-import { loadSnapshot, parseSnapshot } from '@/lib/snapshot-schema';
+import { loadSnapshot, parseSnapshot } from '@/lib/snapshot/load';
 import { corpusSnapshotPath } from './support/corpus-snapshot';
 import { corpusDir } from './support/corpus';
 import { expectOk, runFixtureCli, type CliRun } from './support/cli';

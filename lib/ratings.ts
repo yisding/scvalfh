@@ -58,7 +58,7 @@ import type { Game } from './model/game';
 import type { TeamId, TeamSlug } from './model/ids';
 import type { Team } from './model/team';
 import { getPriorSeason } from './prior-season';
-import type { PriorSeason } from './prior-season-schema';
+import type { PriorSeason } from './schema/prior-season';
 
 /** The average rated team. */
 export const ELO_BASE = 1500;

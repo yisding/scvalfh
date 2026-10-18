@@ -471,7 +471,7 @@ function toGame(
   // covers every varsity game in the Section: of the eight level W/L finals in the inventory read Mon Oct 5 Pacific,
   // Clairemont–Eastlake and Escondido–El Capitan (both Sep 1) are between two conferences. A Sunset pair
   // (Southern Section, no shootout rule) and a Sunset–San Diego pair (two sections) never qualify, so their
-  // level finals stay ties or contradictions. lib/snapshot-schema.ts checks the same rule.
+  // level finals stay ties or contradictions. lib/snapshot/check.ts checks the same rule.
   // A JV row never qualifies (NormalizeOptions.level): the sections' shootout rules are varsity rules.
   // Nor does a tournament row (contestType 2 on either side) in a section whose rule does not reach
   // tournaments (SectionConfig.shootout.coversTournaments false: the SDFHOA procedures cover the regular

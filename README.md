@@ -586,13 +586,13 @@ The rules:
   excerpt of one whose text is not just public names (`affiliationLeaks` in `scripts/copy-rules.ts`,
   with `scripts/public-terms.ts`), because both can name people who are not on the rosters.
 - **No social media**: no source or website on Instagram, Facebook, TikTok, X (Twitter), Threads,
-  YouTube, Snapchat or LinkedIn, or their short links (`BANNED_HOSTS` in `lib/clubs-schema.ts`),
+  YouTube, Snapchat or LinkedIn, or their short links (`BANNED_HOSTS` in `lib/schema/clubs.ts`),
   and every URL is https.
 - **`unknown` is never called current.** A club a source names without saying whether the player
   is still with it reads "Listed by NCSA, 2025" (the date or season the source gives) on the club
   page and "Listed club" on the roster; a `past` one reads "Earlier".
 
-Checked at load, so a bad file fails `pnpm test` and the build (`lib/clubs-schema.ts`, then the
+Checked at load, so a bad file fails `pnpm test` and the build (`lib/schema/clubs.ts`, then the
 join in `lib/clubs.ts`): club slugs are unique, every affiliation names a club, and
 (team, athlete, club) is unique; https only, never social media; at least one source per club and
 per affiliation; `asOf` is a date, a month, a year, a season (`2025-26`) or a range (`2015-2018`);
@@ -700,7 +700,7 @@ college's club team. A commitment in another sport counts (since 2026-10-04): th
 field hockey, but its players commit to lacrosse, soccer and other college teams too, and every
 page names the sport.
 
-Checked at load (`lib/commits-schema.ts`, then the join in `lib/commits.ts`): college slugs are
+Checked at load (`lib/schema/commits.ts`, then the join in `lib/commits.ts`): college slugs are
 unique, every commitment names a college that has a program in its sport, every college and every
 program has a commitment, a college has one program per sport, one commitment per player; https only, never social media except an `official-social` source that is a post by the account it names; a source for every college and commitment; the file's
 `season` is `data/rosters.json`'s; every commitment joins a non-JV row of that team under its own
@@ -976,7 +976,7 @@ current season). Run `pnpm build-history` once, by hand, after they are publishe
 from the Google Sheet and the two all-league documents linked from `https://bval.org/standings/`
 and `https://bval.org/all-league/` (`pnpm build-history --from tests/fixtures/scval --bval-from
 tests/fixtures/bval --retrieved-on 2026-10-03` rebuilds the committed file offline; `--retrieved-on`
-is required with `--bval-from`). The script validates the result against the schema in `lib/history-schema.ts`
+is required with `--bval-from`). The script validates the result against the schema in `lib/schema/history.ts`
 and writes nothing if it fails or any school does not resolve. It is a record-only file (final W-L-T, and BVAL's overall record, as published; no
 recomputed points, since neither source has game-level data to recompute from), has one entry per
 league (`available`, or `unavailable` with the reason: PCAL, MCAL, EAL, Sunset, City, North County,

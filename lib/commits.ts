@@ -4,7 +4,7 @@
  * colleges with the team in each sport a player committed to (SPEC §1.1j3, DESIGN §21).
  *
  * The file is research, written by hand and checked twice; no script rebuilds it (see
- * lib/commits-schema.ts). It is imported so the build bundles it, for the reason lib/rosters.ts
+ * lib/schema/commits.ts). It is imported so the build bundles it, for the reason lib/rosters.ts
  * gives: a Worker has no project filesystem. It is validated once at module scope — the schema,
  * then the join to the rosters the schema cannot see — so a bad file fails at import time rather
  * than half-way through a render. There is no env override, for lib/clubs.ts' reason: nothing
@@ -31,19 +31,14 @@
  */
 
 import bundled from '@/data/commits.json';
-import {
-  COLLEGE_DIVISIONS,
-  CommitsFileSchema,
-  type College,
-  type CollegeProgram,
-  type Commitment,
-  type CommitsFile,
-} from './commits-schema';
 import type { TeamSlug } from './model/ids';
 import { getTeamBySlug } from './registry/teams';
 import { joinToRoster, playerKey } from './roster-join';
 import { classOf, getAllEnrichedRosters, getRosters, type MergedPlayer, type MergedTeamRoster } from './rosters';
-import { failValidation } from './schema-primitives';
+import {
+  COLLEGE_DIVISIONS, type College, type CollegeProgram, type Commitment, type CommitsFile, CommitsFileSchema,
+} from './schema/commits';
+import { failValidation } from './schema/primitives';
 
 export type {
   College,
@@ -57,7 +52,7 @@ export type {
   CommitStatus,
   Commitment,
   CommitsFile,
-} from './commits-schema';
+} from './schema/commits';
 
 /**
  * Parse `raw` against the contract, then check the join the schema cannot see (see the header).

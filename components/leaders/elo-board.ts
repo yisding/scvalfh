@@ -19,7 +19,6 @@ import type { Game } from '@/lib/model/game';
 import type { RegionId, TeamSlug } from '@/lib/model/ids';
 import type { Team } from '@/lib/model/team';
 import { getPriorSeason } from '@/lib/prior-season';
-import type { PriorSeason } from '@/lib/prior-season-schema';
 import {
   ELO_BASE,
   ELO_PER_GOAL,
@@ -29,6 +28,7 @@ import {
   type RatingTable,
   type TeamRating,
 } from '@/lib/ratings';
+import type { PriorSeason } from '@/lib/schema/prior-season';
 import { num, schoolBoard } from './board-kit';
 import { byName, qualifyingMinimum } from './ranking';
 import { AND_INDEPENDENTS, LEAGUE_COUNT, regionScope } from './scope';

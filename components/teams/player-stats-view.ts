@@ -10,7 +10,7 @@
  *   - Goalkeeping: one card per goalkeeper, since a team can track up to ten goalie stats and a
  *     table that wide cannot reflow at 320px (DESIGN §10.8).
  *
- * A column the team does not track never appears (lib/player-stats-schema.ts: untracked is null
+ * A column the team does not track never appears (lib/schema/player-stats.ts: untracked is null
  * for everyone). A tracked stat a player has no entry for prints as a dash, never as 0.
  *
  * Goalkeeping is printed as entered, with one figure this module works out: Save %, saves over
@@ -31,12 +31,7 @@ import type { Game } from '@/lib/model/game';
 import type { TeamSlug } from '@/lib/model/ids';
 import type { NoteCredit, NoteStatKind } from '@/lib/note-stats';
 import { getTeamPlayerStatsWithNotes } from '@/lib/player-stats';
-import type {
-  FieldStatKey,
-  GoalieStatKey,
-  PlayerStatLine,
-  TeamPlayerStats,
-} from '@/lib/player-stats-schema';
+import type { FieldStatKey, GoalieStatKey, PlayerStatLine, TeamPlayerStats } from '@/lib/schema/player-stats';
 
 export interface StatColumn {
   key: string;

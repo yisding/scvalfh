@@ -280,7 +280,7 @@ jobs:
           # `git log` would stop telling anyone which refresh actually moved a score.
           #
           # snapshot.meta.json publishes `contentHash`: a SHA-256 over the snapshot with every
-          # `fetchedAt` stripped (lib/snapshot-schema.ts). That is what "changed" means here.
+          # `fetchedAt` stripped (lib/pipeline/content-hash.ts). That is what "changed" means here.
           PREV="${RUNNER_TEMP:-/tmp}/previous-snapshot-meta.json"
           git show HEAD:data/snapshot.meta.json > "$PREV" 2>/dev/null || true
           SNAPSHOT=$(node -e '
@@ -300,11 +300,11 @@ jobs:
             git checkout -- data/snapshot.json data/snapshot.meta.json
           fi
           # The player stats. fetch-player-stats leaves the file untouched when only its stamps
-          # would change (playerStatsContentKey in lib/player-stats-schema.ts), so a plain diff is
+          # would change (playerStatsContentKey in lib/schema/player-stats.ts), so a plain diff is
           # the content check.
           if git diff --quiet -- data/player-stats.json; then STATS=false; else STATS=true; fi
           # The JV games: fetch-jv leaves the file untouched when only its stamps would change
-          # (jvContentKey in lib/jv-schema.ts), so a plain diff is the content check here too.
+          # (jvContentKey in lib/schema/jv.ts), so a plain diff is the content check here too.
           if git diff --quiet -- data/jv.json; then JV=false; else JV=true; fi
           echo "snapshot=$SNAPSHOT" >> "$GITHUB_OUTPUT"
           echo "stats=$STATS" >> "$GITHUB_OUTPUT"

@@ -134,7 +134,7 @@ describe('the SoCal corpus run', () => {
   });
 
   it('publishes per-league counts (the frozen NorCal leagues hold only the SoCal feeds’ games against them)', () => {
-    expect(snapshot.counts.byLeague, 'lib/snapshot-migrate.ts countsOf').toEqual({
+    expect(snapshot.counts.byLeague, 'lib/snapshot/migrate.ts countsOf').toEqual({
       scval: { teams: 15, games: 10, leagueGames: 0, finals: 5, backfilled: 0 },
       bval: { teams: 12, games: 0, leagueGames: 0, finals: 0, backfilled: 0 },
       pcal: { teams: 7, games: 0, leagueGames: 0, finals: 0, backfilled: 0 },

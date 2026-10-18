@@ -33,12 +33,12 @@ import {
   type ClubAffiliation,
   type ClubRegion,
 } from '@/lib/clubs';
-import { CLUB_REGIONS, CLUB_REGION_SITE_REGION, clubSiteKey } from '@/lib/clubs-schema';
 import { dateWithYear, partialDate, partialDateKind } from '@/lib/format/dates';
 import { gradeWord, listWords, plural } from '@/lib/format/words';
 import type { RegionId, TeamSlug } from '@/lib/model/ids';
 import { getRosters } from '@/lib/rosters';
 import { OUTLETS, hostOf, numbered, pathOf, schoolName } from '@/components/ui/source-hosts';
+import { CLUB_REGIONS, CLUB_REGION_SITE_REGION, clubSiteKey } from '@/lib/schema/clubs';
 
 // ---------------------------------------------------------------- wording tables
 

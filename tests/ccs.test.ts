@@ -12,6 +12,7 @@ import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 import { CCS } from '@/lib/config/leagues';
+import { CcsCalendarEventSchema } from '@/lib/schema/snapshot';
 import {
   CCS_POLL_FROM,
   ccsPollingOpen,
@@ -21,7 +22,6 @@ import {
   parseCcsIcal,
   readBracketPublished,
 } from '@/lib/sources/ccs';
-import { CcsCalendarEventSchema } from '@/lib/snapshot-schema';
 import { REPO } from './support/repo';
 
 const ics = readFileSync(path.join(REPO, 'tests', 'fixtures', 'ccs', 'field-hockey.ics'), 'utf8');

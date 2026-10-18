@@ -11,6 +11,8 @@ Some committed files quote repo paths and cannot be edited: the data files in da
 | tests/helpers.ts | tests/support/cli.ts (buildFixtureSnapshot) | 06 |
 | lib/teams.ts | lib/registry/teams.ts | 12 |
 | lib/jv-teams.ts | lib/registry/jv-teams.ts | 12 |
+| lib/clubs-schema.ts | lib/schema/clubs.ts | 13 |
+| lib/commits-schema.ts | lib/schema/commits.ts | 13 |
 
 ## Legend
 

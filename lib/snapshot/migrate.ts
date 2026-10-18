@@ -25,18 +25,18 @@
  * All three return v2 JSON, NOT yet parsed: the caller (`loadSnapshot`) runs it through `parseSnapshot`.
  */
 
-import { classifyGame, classifyGames } from './classify';
-import { CCS, LEAGUES, LEAGUE_IDS, findDivision, leagueOfDivision } from './config/leagues';
-import type { OfficialFixture } from './model/fixture';
-import type { Game, GameSide, OfficialStamp } from './model/game';
-import type { DivisionHealth, LeagueHealth } from './model/health';
-import type { DivisionId, TeamId } from './model/ids';
-import type { Snapshot } from './model/snapshot';
-import type { ReportedRecord, Standing } from './model/standings';
-import type { Team } from './model/team';
-import { TEAMS, getTeamById, getTeamBySlug, teamOfSide, teamsInLeague } from './registry/teams';
-import { buildSeason, leagueWindowOf } from './season-build';
-import { assertFullTable, buildCrossCheck, computeStandings, divisionGames } from './standings';
+import { classifyGame, classifyGames } from '@/lib/classify';
+import { CCS, LEAGUES, LEAGUE_IDS, findDivision, leagueOfDivision } from '@/lib/config/leagues';
+import type { OfficialFixture } from '@/lib/model/fixture';
+import type { Game, GameSide, OfficialStamp } from '@/lib/model/game';
+import type { DivisionHealth, LeagueHealth } from '@/lib/model/health';
+import type { DivisionId, TeamId } from '@/lib/model/ids';
+import type { Snapshot } from '@/lib/model/snapshot';
+import type { ReportedRecord, Standing } from '@/lib/model/standings';
+import type { Team } from '@/lib/model/team';
+import { TEAMS, getTeamById, getTeamBySlug, teamOfSide, teamsInLeague } from '@/lib/registry/teams';
+import { buildSeason, leagueWindowOf } from '@/lib/season-build';
+import { assertFullTable, buildCrossCheck, computeStandings, divisionGames } from '@/lib/standings';
 
 type Json = Record<string, unknown>;
 
@@ -210,7 +210,7 @@ export function countsOf(games: readonly Game[], standings: readonly Standing[])
 
 /** Returns v2 JSON, not yet parsed. Throws on input that is not a v1 snapshot. */
 export function migrateV1ToV2(raw: unknown): unknown {
-  if (!isSnapshotV1(raw)) throw new Error('lib/snapshot-migrate.ts: not a v1 snapshot');
+  if (!isSnapshotV1(raw)) throw new Error('lib/snapshot/migrate.ts: not a v1 snapshot');
   const v1 = raw as Json;
   const fetchedAt = String(v1.fetchedAt);
 
@@ -306,7 +306,7 @@ function mergeInConfigOrder<T extends { id: string }>(present: readonly T[], all
  * (6) `counts` recomputed. Throws on input that `lacksConfiguredLeagues` rejects.
  */
 export function addConfiguredLeagues(raw: unknown): unknown {
-  if (!lacksConfiguredLeagues(raw)) throw new Error('lib/snapshot-migrate.ts: not a v2 snapshot that lacks a configured league');
+  if (!lacksConfiguredLeagues(raw)) throw new Error('lib/snapshot/migrate.ts: not a v2 snapshot that lacks a configured league');
   const v2 = raw as unknown as Snapshot;
   const presentIds = new Set(v2.season.leagues.map((l) => l.id));
   const missing = LEAGUES.filter((l) => !presentIds.has(l.id));
@@ -429,7 +429,7 @@ export function needsReclassification(raw: unknown): boolean {
  * Throws on input that `needsReclassification` rejects.
  */
 export function reclassify(raw: unknown): unknown {
-  if (!needsReclassification(raw)) throw new Error('lib/snapshot-migrate.ts: not a v2 snapshot whose games need reclassifying');
+  if (!needsReclassification(raw)) throw new Error('lib/snapshot/migrate.ts: not a v2 snapshot whose games need reclassifying');
   const v2 = raw as unknown as Snapshot;
   const degraded = degradedDivisionsOf(v2.leagueHealth);
 

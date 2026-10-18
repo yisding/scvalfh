@@ -16,11 +16,12 @@ import { TEAMS } from '@/lib/registry/teams';
 import { buildSeason } from '@/lib/season-build';
 import { byDateThenId } from '@/lib/shared/game';
 import { stableStringify } from '@/lib/shared/stable-json';
-import { countsOf } from '@/lib/snapshot-migrate';
-import { parseSnapshot, snapshotContentHash } from '@/lib/snapshot-schema';
+import { snapshotContentHash } from '@/lib/pipeline/content-hash';
 import { RunAbort, type SnapshotMeta } from '@/lib/pipeline/contract';
 import type { PipelineContext, RunState } from '@/lib/pipeline/ledger';
 import type { RequestCounts } from '@/lib/pipeline/transport';
+import { parseSnapshot } from '@/lib/snapshot/load';
+import { countsOf } from '@/lib/snapshot/migrate';
 import type { StandingsStepResult } from './standings';
 
 /**

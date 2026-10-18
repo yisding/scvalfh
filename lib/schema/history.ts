@@ -5,15 +5,15 @@
  *
  * Separate from lib/history.ts (the read API, which imports and validates the file at module
  * scope) so scripts/build-history.ts can validate the file it is about to write without importing
- * the one it is about to overwrite — the same split as lib/rosters-schema.ts / lib/rosters.ts.
+ * the one it is about to overwrite — the same split as lib/schema/rosters.ts / lib/rosters.ts.
  */
 
 import { z } from 'zod';
 
-import { LEAGUE_IDS, divisionsOf, getLeague } from './config/leagues';
-import type { LeagueId } from './model/ids';
-import { teamsInLeague } from './registry/teams';
-import { dateKey, slugId } from './schema-primitives';
+import { LEAGUE_IDS, divisionsOf, getLeague } from '@/lib/config/leagues';
+import type { LeagueId } from '@/lib/model/ids';
+import { teamsInLeague } from '@/lib/registry/teams';
+import { dateKey, slugId } from './primitives';
 
 /**
  * The archive is league-aware: every league of lib/config/leagues.ts has an entry, and each entry is

@@ -1,6 +1,6 @@
 /**
  * The read API for data/history-2025-26.json — the prior-season archive (DESIGN §3.9), validated
- * against lib/history-schema.ts.
+ * against lib/schema/history.ts.
  *
  * Why this is a separate file and not part of the snapshot: the 2025-26 standings exist ONLY in each
  * league's own end-of-season documents (SCVAL's two PDFs, BVAL's Google Sheet and all-league
@@ -18,28 +18,17 @@ import { readFileSync } from 'node:fs';
 import bundledBrackets from '@/data/history-brackets-2025-26.json';
 import bundledHistory from '@/data/history-2025-26.json';
 import { LEAGUE_IDS, getLeague, getSection } from './config/leagues';
-import {
-  BRACKET_SECTION_IDS,
-  HistoryBracketsSchema,
-  type BracketSectionId,
-  type HistoryBracketGame,
-  type HistoryBracketSide,
-  type SectionBracket,
-} from './history-brackets-schema';
-import {
-  HistorySchema,
-  type AvailableLeagueHistory,
-  type History,
-  type HistoryAwards,
-  type HistoryDivision,
-  type HistoryLevel,
-  type HistoryRow,
-  type LeagueHistory,
-  type UnavailableLeagueHistory,
-} from './history-schema';
 import type { DivisionId, LeagueId, SectionId, TeamSlug } from './model/ids';
 import { getTeamBySlug } from './registry/teams';
-import { failValidation } from './schema-primitives';
+import {
+  type AvailableLeagueHistory, type History, type HistoryAwards, type HistoryDivision, type HistoryLevel,
+  type HistoryRow, HistorySchema, type LeagueHistory, type UnavailableLeagueHistory,
+} from './schema/history';
+import {
+  BRACKET_SECTION_IDS, type BracketSectionId, type HistoryBracketGame, type HistoryBracketSide,
+  HistoryBracketsSchema, type SectionBracket,
+} from './schema/history-brackets';
+import { failValidation } from './schema/primitives';
 
 export type {
   AvailableLeagueHistory,
@@ -51,7 +40,7 @@ export type {
   HistoryRow,
   LeagueHistory,
   UnavailableLeagueHistory,
-} from './history-schema';
+} from './schema/history';
 export type {
   BracketSectionId,
   HistoryBracketDivision,
@@ -59,7 +48,7 @@ export type {
   HistoryBracketRound,
   HistoryBracketSide,
   SectionBracket,
-} from './history-brackets-schema';
+} from './schema/history-brackets';
 
 /**
  * data/history-2025-26.json is imported, so the build bundles it, for the reason given in
@@ -230,7 +219,7 @@ export function getHistoryUnpublishedTies(leagueId: LeagueId): HistoryRow[] {
 
 /**
  * data/history-brackets-2025-26.json: the 2025 CCS and San Diego Section brackets, transcribed by
- * hand from each section's own documents (lib/history-brackets-schema.ts). Bundled and validated at
+ * hand from each section's own documents (lib/schema/history-brackets.ts). Bundled and validated at
  * module scope, like the standings above.
  */
 function loadBrackets() {

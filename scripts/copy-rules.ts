@@ -3,8 +3,8 @@
  * test can import them without running the script's scan of the built site.
  */
 
-import type { LeagueHistory } from '@/lib/history-schema';
 import { decodeEntities as decodeWith } from '@/lib/html-entities';
+import type { LeagueHistory } from '@/lib/schema/history';
 
 /**
  * A phrase that says something is limited to SCVAL: "SCVAL-only", "SCVAL only", "only SCVAL",

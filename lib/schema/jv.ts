@@ -4,7 +4,7 @@
  *
  * Separate from lib/jv.ts (the read API, which imports the file) so scripts/fetch-jv.ts can
  * validate what it is about to write without importing what it is about to overwrite — the same
- * split as lib/player-stats-schema.ts / lib/player-stats.ts.
+ * split as lib/schema/player-stats.ts / lib/player-stats.ts.
  *
  * The file stores what each source said, not a blend: `games` are MaxPreps' JV contests exactly as
  * lib/normalize.ts builds a varsity game from a schedule row, and `sblive` are si.com's scored JV
@@ -26,11 +26,11 @@
 
 import { z } from 'zod';
 
-import { JV_SLUG_BY_SBLIVE_ID } from './registry/jv-teams';
-import { TEAMS, getTeamBySlug } from './registry/teams';
-import { dateKey, httpUrl, slugId } from './schema-primitives';
-import { contentKey } from './shared/stable-json';
-import { GameSchema } from './snapshot-schema';
+import { JV_SLUG_BY_SBLIVE_ID } from '@/lib/registry/jv-teams';
+import { TEAMS, getTeamBySlug } from '@/lib/registry/teams';
+import { dateKey, httpUrl, slugId } from './primitives';
+import { contentKey } from '@/lib/shared/stable-json';
+import { GameSchema } from './snapshot';
 
 const JV_SLUGS: ReadonlySet<string> = new Set(TEAMS.map((t) => t.slug));
 /** How many teams a JV file holds: TEAMS.length (102). */

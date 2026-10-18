@@ -11,12 +11,6 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { TEAMS, getTeamBySlug, teamsInLeague } from '@/lib/registry/teams';
 import {
-  RosterEnrichmentSchema,
-  countRosters,
-  type RosterEnrichment,
-  type Rosters,
-} from '@/lib/rosters-schema';
-import {
   classOf,
   getAllEnrichedRosters,
   getEnrichedTeamRoster,
@@ -24,6 +18,9 @@ import {
   getRosters,
   getTeamRoster,
 } from '@/lib/rosters';
+import {
+  type RosterEnrichment, RosterEnrichmentSchema, type Rosters, countRosters,
+} from '@/lib/schema/rosters';
 import { runRepoScript } from './support/cli';
 import { REPO, tempDir } from './support/repo';
 
