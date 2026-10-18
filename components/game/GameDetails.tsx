@@ -20,7 +20,7 @@ import type { GameModel } from './game-view';
  * phone list's `first:pt-0` / `last:pb-0` would lose to an `lg:py-3` reset.
  *
  * A FINAL's result links (the box score or si.com game page, and the stream) are not here: the
- * page prints them under the recap (`GameModel.resultLinks`, F-73), and each link has one home on
+ * page prints them under the scoreboard (`GameModel.resultLinks`, F-73), and each link has one home on
  * the page (the exception is the disagreement notes under the scoreboard — GameSources'
  * SourceDisagreement and ResultFlagConflict — which link the source pages they cite).
  *
@@ -65,7 +65,7 @@ export function GameDetails({ model, className }: GameDetailsProps) {
       ? game.official.scheduledDate
       : null;
 
-  // Whatever the page already printed under the recap (a final's result links) is skipped, so no
+  // Whatever the page already printed under the scoreboard (a final's result links) is skipped, so no
   // link appears twice on the page.
   const elsewhere = new Set(model.resultLinks.map((link) => link.href));
   const links: Array<{ href: string; label: string }> = [];
