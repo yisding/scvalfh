@@ -32,17 +32,26 @@ export function JvDayGames({ view }: { view: JvListSummary & { rows: JvRowView[]
                     .join(' ')}
                 >
                   <span className="sr-only">{display.sentence}</span>
-                  <span className="flex flex-col items-start gap-1" aria-hidden="true">
-                    {isTime ? (
-                      <>
-                        <span className="sx-num text-cell text-ink-2">
+                  {/* Two FIXED slots, as GameRow's lead has three: the clock or the status (24px,
+                      room for SCORE NOT REPORTED's two 12px caps lines — 135px will not fit the
+                      104px column on one), then the chips (20px, reserved when there are none).
+                      44px in all, against the 42px of the two names, so every row is 60px. The
+                      status and the chips had shared one wrapping column, so FINAL + SCVAL was two
+                      lines, FINAL + NL one and SCORE NOT REPORTED + SCVAL three: 58, 60 and 70px
+                      rows in one list. */}
+                  <span className="flex min-w-0 flex-col" aria-hidden="true">
+                    <span className="flex min-h-6 items-center">
+                      {isTime ? (
+                        <span className="sx-num whitespace-nowrap text-cell text-ink-2">
                           {game.isTimeTba ? 'TBA' : timeOfDay(game.dateLocal)}
                         </span>
-                        {chips ? <GameChips display={display} /> : null}
-                      </>
-                    ) : (
-                      <StatusLabel display={display} showChips={chips} />
-                    )}
+                      ) : (
+                        <StatusLabel display={display} showChips={false} className="leading-3" />
+                      )}
+                    </span>
+                    <span className="flex min-h-5 items-center">
+                      {chips ? <GameChips display={display} /> : null}
+                    </span>
                   </span>
                   <span className="flex min-w-0 flex-col gap-0.5" aria-hidden="true">
                     <JvSide side={display.away} showScore={display.showScores} />

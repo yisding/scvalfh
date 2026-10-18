@@ -52,9 +52,15 @@ export interface GridRowFillerProps {
   columns: Partial<Record<Breakpoint, number>>;
   /** The cells' element: `li` in a list, `div` in AwardsBlock's `<dd>`. */
   as?: 'li' | 'div';
+  /**
+   * More classes for each filler: the row span of a list whose cells are subgrids of N rows
+   * (`sm:row-span-5` on /commits, `sm:row-span-4` on a club page). A filler spanning one row
+   * would sit in the first of its row's N tracks and draw its surface over a fifth of the row.
+   */
+  className?: string;
 }
 
-export function GridRowFiller({ count, columns, as: Tag = 'li' }: GridRowFillerProps) {
+export function GridRowFiller({ count, columns, as: Tag = 'li', className: extra }: GridRowFillerProps) {
   const most = Math.max(0, ...Object.values(columns).map((cols) => (cols ?? 1) - 1));
   const fillers: { k: number; className: string }[] = [];
   for (let k = 1; k <= most; k++) {
@@ -64,7 +70,11 @@ export function GridRowFiller({ count, columns, as: Tag = 'li' }: GridRowFillerP
   return (
     <>
       {fillers.map(({ k, className }) => (
-        <Tag key={`filler-${k}`} aria-hidden="true" className={`${className} border-t border-divider bg-surface`} />
+        <Tag
+          key={`filler-${k}`}
+          aria-hidden="true"
+          className={[className, 'border-t border-divider bg-surface', extra].filter(Boolean).join(' ')}
+        />
       ))}
     </>
   );

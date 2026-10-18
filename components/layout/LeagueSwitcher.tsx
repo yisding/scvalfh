@@ -25,12 +25,13 @@ import { ALL_LEAGUES } from './prefs-script';
  *   sections, which may include route links (on /playoffs a tournament league's chip goes to
  *   `/playoffs/<league>`). Never writes.
  *
- * Chip token: `text-micro` weight 600, `min-h-11 min-w-11 px-2`, 6px gap, `flex-wrap` (200% text
- * zoom wraps rather than clipping). No visible section captions: the league chips sit in one list
+ * Chip token: `text-micro` weight 600, `min-h-11 min-w-11`, 6px side padding, 4px gap, `flex-wrap`
+ * (200% text zoom wraps rather than clipping). No visible section captions: the league chips sit in one list
  * per section, labelled `Central Coast Section` / `North Coast Section` / `Northern Section` /
  * `Southern Section` / `San Diego Section`, split by hairlines; the `All` chip precedes them all.
- * The current chip is inverse ink (DESIGN §26.1) AND an aria-hidden ✓ (`.sx-chip-check`) — never
- * colour alone. No league hue anywhere. `link` and `anchor` rows are screen-only (`sx-print-hide`);
+ * The current chip is inverse ink (DESIGN §26.1) AND an aria-hidden check (`.sx-chip-check`, drawn
+ * by `.sx-check`) — never colour alone. Every scope and link chip lays the check out
+ * and only the selected one shows it (globals.css), so a chip has one width on every page. No league hue anywhere. `link` and `anchor` rows are screen-only (`sx-print-hide`);
  * the `scope` row is `sx-js-only`, which print hides too.
  *
  * Regions (DESIGN-socal §2.4). In `scope` and `anchor` mode each section list carries
@@ -111,16 +112,24 @@ function bySection(leagues: readonly LeagueChip[]): SectionGroup[] {
   return groups;
 }
 
+/**
+ * The drawn check (`.sx-check`, globals.css): a fixed 0.6667em box, never the U+2713 glyph, which
+ * the latin subset of Geist that next/font serves lacks, so its width came from a system font and
+ * varied by OS (10.6px at 12px in DejaVu Sans). Plain markup, not an inline <svg> or a shared
+ * component: this is a client module, and either put `/teams` past its first-load JS budget.
+ */
 function Check() {
-  return (
-    <span aria-hidden="true" className="sx-chip-check">
-      ✓
-    </span>
-  );
+  return <span aria-hidden="true" className="sx-check sx-chip-check" />;
 }
 
-/** A section list's classes. */
-const SECTION_LIST = 'm-0 flex list-none flex-wrap items-center gap-1.5 p-0';
+/**
+ * A section list's classes. The 4px gap (with the chip's 6px side padding and 8px drawn check,
+ * globals.css) is what fits a per-league page's row on one line at 390: NorCal's All + five chips,
+ * every one carrying its check, measure 347px of the 358px column, SoCal's 335px. At the old 6px
+ * gap and 8px padding the row was 1 line or 2 by which chip was current (375px), moving everything
+ * under it by 50px between league pages.
+ */
+const SECTION_LIST = 'm-0 flex list-none flex-wrap items-center gap-1 p-0';
 
 /**
  * The hairline that splits one section from the next, drawn by the list it introduces (a `::before`,
@@ -199,7 +208,7 @@ function ScopeSwitcher({ leagues, label, includeAll, className }: LeagueSwitcher
     <div
       role="group"
       aria-label={label}
-      className={['sx-js-only flex flex-wrap items-center gap-1.5', className].filter(Boolean).join(' ')}
+      className={['sx-js-only flex flex-wrap items-center gap-1', className].filter(Boolean).join(' ')}
     >
       {includeAll ? button(ALL_LEAGUES, 'All') : null}
       <SectionLists leagues={leagues} regionScoped chip={(l) => button(l.id, l.shortName)} />
@@ -215,9 +224,14 @@ function LinkSwitcher({ mode, leagues, current, hrefs = {}, label, includeAll, c
     const href = hrefs[id];
     if (!href) return null;
     const isCurrent = mode === 'link' && (id === ALL_LEAGUES ? current === undefined : current === id);
+    // Link mode lays the check out on EVERY chip and globals.css shows only the current one's
+    // (`aria-current`), as scope mode does: rendered on the current chip alone it widened that chip
+    // by 14.6px, so every chip after it sat 14.6px further right on its own league's page and the
+    // row wrapped on some league pages and not others. An anchor row marks nothing current and
+    // carries no check.
     const body = (
       <>
-        {isCurrent ? <Check /> : null}
+        {mode === 'link' ? <Check /> : null}
         {text}
       </>
     );
@@ -236,7 +250,7 @@ function LinkSwitcher({ mode, leagues, current, hrefs = {}, label, includeAll, c
   };
 
   return (
-    <nav aria-label={label} className={['sx-print-hide flex flex-wrap items-center gap-1.5', className].filter(Boolean).join(' ')}>
+    <nav aria-label={label} className={['sx-print-hide flex flex-wrap items-center gap-1', className].filter(Boolean).join(' ')}>
       {includeAll && mode === 'link' ? chip(ALL_LEAGUES, 'All') : null}
       <SectionLists leagues={leagues} regionScoped={mode === 'anchor'} chip={(l) => chip(l.id, l.shortName)} />
     </nav>
@@ -258,9 +272,9 @@ export interface RegionSwitcherProps {
 /**
  * The NorCal/SoCal control (DESIGN-socal §2.4): `<div role="group" aria-label="Region">` of two
  * `<button aria-pressed data-region-option>`, styled as a SEGMENTED control — the two segments share
- * one rounded `surface-2` track — rather than as two more league chips, so 'NorCal ✓' never reads
- * as a peer of 'All ✓'. Each segment is the chip token (44px target, `min-h-11 min-w-11`) and the
- * selected one is the same inverse ink and aria-hidden ✓ as a chip: never colour alone, no new
+ * one rounded `surface-2` track — rather than as two more league chips, so a checked 'NorCal' never reads
+ * as a peer of the 'All' chip. Each segment is the chip token (44px target, `min-h-11 min-w-11`) and the
+ * selected one is the same inverse ink and aria-hidden check as a chip: never colour alone, no new
  * colour. Before hydration the scope stylesheet draws the selected segment from
  * `html[data-region]` (`[data-region-option]`, components/layout/league-scope-css.ts); after, aria-pressed
  * does. Hidden without JS (`sx-js-only`: both regions are on the page then, NorCal first) and

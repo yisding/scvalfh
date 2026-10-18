@@ -99,11 +99,16 @@ export function CrossCheckTable({ groups, teamCount, emptyText = null }: CrossCh
           {detail ? <p className="mt-1 mb-0 max-w-prose text-meta text-ink-2">{detail}</p> : null}
           {rows.length > 0 ? (
             <div className="sx-card sx-flush mt-3">
-              {/* Auto layout with the two value columns shrink-wrapped (`w-px` + nowrap): they
-                  hold a place or a record, so they take only their head's width ("Ours",
-                  "MaxPreps") and the Field text gets the rest of the card (about 150px at 320
-                  instead of 104). The longest unbreakable piece of any column is well under the
-                  card's width, so the table still fits a 320px screen without scrolling. */}
+              {/* Auto layout with the two value columns at fixed widths (and nowrap), the same
+                  in every table: they hold a place, a count, a win pct or a record, and Field
+                  gets the rest of the card. Shrink-wrapped (`w-px`), Ours took its own longest
+                  value, so it was 58px in a goals table, 63 in a record table and 71 for
+                  "15-2-3", and the values of the stacked tables moved up to 13px between them.
+                  Ours is 72px: "15-2-3" (6ch of 13px mono, 47px) + 12 a side. MaxPreps is 96:
+                  its 12px head (66px) + 12 + 16. Field keeps 120px at 320, enough for "league
+                  goals against" on two lines; a longer value would widen its column rather than
+                  clip, and the longest is well under the card's width, so the table still fits
+                  a 320px screen without scrolling. */}
               <table className="sx-table text-meta">
                 <caption className="sr-only">
                   {team.name}: our computation compared with MaxPreps&rsquo; standings table
@@ -115,10 +120,10 @@ export function CrossCheckTable({ groups, teamCount, emptyText = null }: CrossCh
                     </th>
                     {/* `tracking-normal`: right-aligned tracked caps leave the letter-spacing
                         after the last letter, a visible gap before the column edge. */}
-                    <th scope="col" className="w-px px-3 text-right tracking-normal">
+                    <th scope="col" className="w-[4.5rem] px-3 text-right tracking-normal">
                       Ours
                     </th>
-                    <th scope="col" className="w-px pl-3 pr-4 text-right tracking-normal">
+                    <th scope="col" className="w-[6rem] pl-3 pr-4 text-right tracking-normal">
                       MaxPreps
                     </th>
                   </tr>

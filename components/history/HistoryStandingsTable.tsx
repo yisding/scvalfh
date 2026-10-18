@@ -15,7 +15,8 @@ import TeamMonogram from '../ui/TeamMonogram';
  * §1.3 — that PDF column was empty for the 2025-26 season), so SCVAL has no Overall column at
  * all: a column of nothing but em dashes told the reader nothing and cost every table a fourth
  * column of width. A league whose source publishes it (BVAL's sheet) gets a fourth column, Overall,
- * and a row that has none still shows an em dash there. `place` is the source's own finish order,
+ * in every one of its tables (the page decides it once per league: `hasOverall`), and a row that
+ * has none still shows an em dash there. `place` is the source's own finish order,
  * not a value recomputed by this site. A team row is one link: the name link's `::after` stretches
  * over the `relative` row, as on the compact standings table.
  *
@@ -39,13 +40,24 @@ export interface HistoryStandingsTableProps {
   rows: HistoryRow[];
   caption: string;
   emptyLabel: string;
+  /**
+   * Whether the table draws an Overall column: the LEAGUE's answer (`leagueHasOverall`), not this
+   * table's. Decided per table, a division or level whose rows all lacked an overall record would
+   * drop the column and widen its League column to 96px beside a sibling's 80, and the records of
+   * one league would stop lining up across its tables.
+   */
+  hasOverall: boolean;
 }
 
-export function HistoryStandingsTable({ rows, caption, emptyLabel }: HistoryStandingsTableProps) {
+/** True when any of a league's tables publishes an overall record (BVAL's sheet; never SCVAL's). */
+export function leagueHasOverall(tables: ReadonlyArray<ReadonlyArray<HistoryRow>>): boolean {
+  return tables.some((rows) => rows.some((r) => r.overallRecord !== null));
+}
+
+export function HistoryStandingsTable({ rows, caption, emptyLabel, hasOverall }: HistoryStandingsTableProps) {
   if (rows.length === 0) {
     return <p className="py-2 text-meta text-ink-3">{emptyLabel}</p>;
   }
-  const hasOverall = rows.some((r) => r.overallRecord !== null);
   return (
     // `lg:self-start`: from lg this card is a grid item in a row track it shares with the other
     // division's table (the page's subgrid), and El Camino's varsity table has one more row than

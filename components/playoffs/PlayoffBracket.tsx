@@ -143,21 +143,25 @@ export function PlayoffBracket({
         ))}
       </ol>
 
-      {/* Desktop: one column per round. Nested <ol>s, so it reads as rounds in order (§10.4). */}
+      {/* Desktop: one column per round. Nested <ol>s, so it reads as rounds in order (§10.4).
+          Two rows, headings and games, and each round a subgrid of them, so a heading that wraps
+          in its column lowers every round's games together instead of its own alone, which put
+          the next round's cards 20px off the midpoints of the pairs feeding them (measured with
+          a two-line heading at 768px; HistoryBracket.tsx had it live, "Quarterfinals · Nov 8"). */}
       <ol
         data-twin
-        className="m-0 hidden list-none gap-0 p-0 md:grid"
+        className="m-0 hidden list-none grid-rows-[auto_1fr] gap-0 p-0 md:grid"
         style={{ gridTemplateColumns: `repeat(${rounds.length}, minmax(0, 1fr))` }}
       >
         {rounds.map((round, roundIndex) => (
-          <li key={round.dateKey} className="flex min-w-0 flex-col">
+          <li key={round.dateKey} className="row-span-2 grid min-w-0 grid-cols-[minmax(0,1fr)] grid-rows-subgrid">
             <RoundHeading className="m-0 mb-3 text-lead text-ink">
               {round.name}{' '}
               <span className="text-meta font-normal text-ink-2">&middot; {round.dateLabel}</span>
             </RoundHeading>
             <ol
               className={[
-                'm-0 flex flex-1 list-none flex-col justify-around gap-4 p-0',
+                'm-0 flex list-none flex-col justify-around gap-4 p-0',
                 roundIndex > 0 ? 'border-l border-divider' : null,
               ]
                 .filter(Boolean)

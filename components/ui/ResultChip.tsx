@@ -25,29 +25,17 @@ export interface ResultChipProps {
   className?: string;
 }
 
-/**
- * The kind's colours, as a class (`.sx-chip-win` …, app/globals.css): wash ground, ring at the
- * mark hue, glyph in the ink token. Cancelled and postponed share the tie's hueless set.
- */
-const KIND_CLASS: Record<Exclude<ChipKind, 'none'>, string> = {
-  W: 'sx-chip-win',
-  L: 'sx-chip-loss',
-  T: 'sx-chip-tie',
-  pending: 'sx-chip-pending',
-  cancelled: 'sx-chip-tie',
-  postponed: 'sx-chip-tie',
+const STYLES: Record<Exclude<ChipKind, 'none'>, { bg: string; ring: string; ink: string }> = {
+  W: { bg: 'var(--sx-win-wash)', ring: 'var(--sx-win)', ink: 'var(--sx-win-ink)' },
+  L: { bg: 'var(--sx-loss-wash)', ring: 'var(--sx-loss)', ink: 'var(--sx-loss-ink)' },
+  T: { bg: 'var(--sx-tie-wash)', ring: 'var(--sx-tie)', ink: 'var(--sx-tie-ink)' },
+  pending: { bg: 'transparent', ring: 'var(--sx-border-strong)', ink: 'var(--sx-text-3)' },
+  cancelled: { bg: 'var(--sx-tie-wash)', ring: 'var(--sx-tie)', ink: 'var(--sx-tie-ink)' },
+  postponed: { bg: 'var(--sx-tie-wash)', ring: 'var(--sx-tie)', ink: 'var(--sx-tie-ink)' },
 };
 
-/**
- * The side and letter size per chip size (`.sx-chip-20` …, app/globals.css): 16 → 10px,
- * 20 → 12px (the smallest letter any visible surface uses), 24 → 13px, 28 → 14px.
- */
-const SIZE_CLASS: Record<16 | 20 | 24 | 28, string> = {
-  16: 'sx-chip-16',
-  20: 'sx-chip-20',
-  24: 'sx-chip-24',
-  28: 'sx-chip-28',
-};
+/** Letter size per chip size, px. 20 → 12 is the smallest letter any visible surface uses. */
+const LETTER: Record<16 | 20 | 24 | 28, number> = { 16: 10, 20: 12, 24: 13, 28: 14 };
 
 const GLYPH: Record<Exclude<ChipKind, 'none'>, string> = {
   W: 'W',
@@ -69,17 +57,28 @@ export const CHIP_LABEL: Record<Exclude<ChipKind, 'none'>, string> = {
 
 export function ResultChip({ kind, size = 20, className }: ResultChipProps) {
   if (kind === 'none') {
-    return <span className={`sx-chip-slot ${SIZE_CLASS[size]}`} />;
+    return <span className="inline-block shrink-0" style={{ width: size, height: size }} />;
   }
+  const s = STYLES[kind];
   return (
     <span
-      className={['sx-chip', SIZE_CLASS[size], KIND_CLASS[kind], className].filter(Boolean).join(' ')}
-      /* The three colours are CUSTOM PROPERTIES set by the kind class and consumed by `.sx-chip`
-         in globals.css, never a `background` / `border-color` / `color` in a `style` attribute:
-         that would outrank every stylesheet rule, including the `forced-colors` block — the chip
-         would then ignore a high-contrast palette entirely while still suppressing the browser's
-         own substitution. The size is a class as well: a `style` on every chip was ~140 bytes,
-         sent once in the markup and again in the RSC payload. */
+      className={`sx-chip inline-flex shrink-0 items-center justify-center border font-sans font-semibold leading-none ${
+        kind === 'pending' ? 'rounded-full border-dashed' : 'rounded-tag'
+      }${className ? ` ${className}` : ''}`}
+      /* The three colours go out as CUSTOM PROPERTIES, consumed by `.sx-chip` in globals.css.
+         Setting `background` / `border-color` / `color` here directly would outrank every
+         stylesheet rule, including the `forced-colors` block — the chip would then ignore a
+         high-contrast palette entirely while still suppressing the browser's own substitution. */
+      style={
+        {
+          width: size,
+          height: size,
+          '--sx-chip-bg': s.bg,
+          '--sx-chip-ring': s.ring,
+          '--sx-chip-ink': s.ink,
+          fontSize: LETTER[size],
+        } as React.CSSProperties
+      }
       role="img"
       aria-label={CHIP_LABEL[kind]}
     >

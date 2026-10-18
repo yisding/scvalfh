@@ -1,6 +1,7 @@
 /**
- * The mono micro-tag: `NL`, `OT`, `2 OT`, `SO`, `F`, a league code (`SCVAL`), a postseason code
- * (`CCS`), `this game` (DESIGN §7.16).
+ * The mono micro-tag: `NL`, `OT`, `2 OT`, `SO`, `F`, a league code (`SCVAL`), `this game`
+ * (DESIGN §7.16). A game's postseason chip is a phrase ("San Diego Section playoffs") that no fixed
+ * track holds, so GameRow's GameChips draws it as a wrapping capsule, not a Tag.
  * A tag is a 1–2 word code — never a hue on its own. It is the one place mono caps survive:
  * 12px, weight 600, 0.06em (all from `text-kicker`), and it never wraps: 20px tall, ink-2 on
  * surface-3.
@@ -21,9 +22,12 @@ export interface TagProps {
 export function Tag({ children, label, className }: TagProps) {
   return (
     <span
-      // `.sx-tag` (app/globals.css) is the whole look, one class instead of eleven utilities:
-      // a game row carries two to four tags, and /schedule/<league> renders every row twice.
-      className={['sx-tag', className].filter(Boolean).join(' ')}
+      className={[
+        'inline-flex shrink-0 items-center whitespace-nowrap rounded-tag font-mono text-kicker uppercase h-5 px-1.5 bg-surface-3 text-ink-2',
+        className,
+      ]
+        .filter(Boolean)
+        .join(' ')}
     >
       <span aria-hidden={label ? 'true' : undefined}>{children}</span>
       {label ? <span className="sr-only">{label}</span> : null}

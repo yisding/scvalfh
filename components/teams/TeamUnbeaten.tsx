@@ -90,11 +90,18 @@ function OpponentRow({ opponent, leagueShort, fixed }: { opponent: UnbeatenOppon
         <span className="sx-num shrink-0 text-cell text-ink-2" aria-hidden="true">
           {opponent.played === 0 ? '' : recordString(opponent.record)}
         </span>
-        {/* A fixed 92px status column ("next Oct 13", "2 unreported" fit it on one line), so the
-            records to its left end on one right edge down the list instead of moving with the
-            width of each status. */}
+        {/* A fixed status column, so the records to its left end on one right edge down the list
+            instead of moving with the width of each status. 92px fits every status of a league
+            with a fixed schedule ("next Oct 13", "2 unreported", "no games left") on one line.
+            Without one (the Sunset) a row can read "no league game listed", 141px, which ran past
+            the card as "no league game l…". There the column is 148px from 640px, the same width
+            on every row of the page; below 640px it stays 92px and that status takes two lines
+            ("no league / game listed", a 56px row): a 148px column left a name 111px at 390
+            (five of Chaparral's seven wrapped, 64px rows) and 41px at 320. */}
         <span
-          className="w-[5.75rem] shrink-0 whitespace-nowrap text-right text-ink-3"
+          className={`shrink-0 text-right text-ink-3 ${
+            fixed ? 'w-[5.75rem] whitespace-nowrap' : 'w-[5.75rem] sm:w-[9.25rem] sm:whitespace-nowrap'
+          }`}
           aria-hidden="true"
         >
           {statusOf(opponent, fixed)}

@@ -149,11 +149,11 @@ function NameCell({ board, row }: { board: LeaderBoard; row: LeaderRow }) {
       </span>
       <span className="min-w-0">
         {/* The ring goes on the stretched `::after`, so a keyboard reader sees the whole row that a
-            tap opens, not just the name (`.sx-rowlink`, app/globals.css). */}
+            tap opens, not just the name. */}
         <Link
           href={team.href}
           prefetch={false}
-          className="sx-rowlink block text-body text-ink no-underline hover:underline"
+          className="block text-body text-ink no-underline hover:underline after:absolute after:inset-0 after:content-[''] focus-visible:outline-none focus-visible:after:outline-solid focus-visible:after:outline-2 focus-visible:after:-outline-offset-2 focus-visible:after:outline-[var(--sx-focus)]"
         >
           <TeamName name={team.name} shortName={team.shortName} />
         </Link>

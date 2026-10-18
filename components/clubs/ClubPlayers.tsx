@@ -32,11 +32,15 @@ import type { ClubPageView, ClubPlayerRow } from './club-view';
  *
  * The two groups get an h3 each only when both exist (DESIGN §17.3): a lone "Current" over
  * the only list adds a heading level and no information, and every row states its own status.
+ *
+ * From two columns each row is a subgrid of the list's rows, four per row of cells, one per line
+ * above, so the lines of the cells side by side start level: when one cell's status wrapped, its
+ * sources sat 20px below its neighbours'. The fillers span the same four.
  */
 
 function PlayerRow({ row }: { row: ClubPlayerRow }) {
   return (
-    <li className="sx-gridcell">
+    <li className="min-w-0 border-t border-divider px-gutter py-2.5 first:border-t-0 sm:row-span-4 sm:grid sm:grid-cols-[minmax(0,1fr)] sm:grid-rows-subgrid sm:px-4 sm:[&:nth-child(2)]:border-t-0 lg:[&:nth-child(3)]:border-t-0">
       <span className="block text-body text-ink">{row.name}</span>
       <span className="block text-meta text-ink-2">
         {/* `prefetch={false}`: one link per row, to a static team page (tests/ui/prefetch-policy). */}
@@ -111,7 +115,7 @@ export function ClubPlayers({ view }: ClubPlayersProps) {
             {group.rows.map((row) => (
               <PlayerRow key={row.key} row={row} />
             ))}
-            <GridRowFiller count={group.rows.length} columns={{ sm: 2, lg: 3 }} />
+            <GridRowFiller count={group.rows.length} columns={{ sm: 2, lg: 3 }} className="sm:row-span-4" />
           </ul>
         </div>
       ))}

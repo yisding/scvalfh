@@ -214,7 +214,7 @@ function PillGroup<T extends string>({
               aria-pressed={active}
               disabled={disabled}
               onClick={() => onPick(option.value)}
-              // The pressed pill is inverse ink plus an aria-hidden ✓, exactly like the selected
+              // The pressed pill is inverse ink plus an aria-hidden check, exactly like the selected
               // `.sx-league-chip` above it (DESIGN §26.1): one selected look on the page, never
               // colour alone. box-shadow is dropped in forced colours, so each pill gets a real
               // border there and the pressed one a Highlight ring as well as its check.
@@ -228,12 +228,14 @@ function PillGroup<T extends string>({
                   : 'bg-surface font-medium text-ink-2 shadow-[var(--sx-ring)] hover:bg-surface-3 active:bg-surface-2 disabled:text-ink-3 disabled:hover:bg-surface lg:bg-surface-2 lg:shadow-none lg:active:bg-surface-3 lg:disabled:hover:bg-surface-2'
               }`}
             >
-              {/* Always laid out, shown only when pressed: a selection never changes a pill's
-                  width, so its neighbours and the wrapped rows stay put. */}
-              <span aria-hidden="true" className={active ? undefined : 'invisible'}>
-                ✓
+              {/* Always laid out, shown only when pressed, and the label holds its semibold width
+                  at either weight (`.sx-weight-hold`, globals.css): a selection never changes a
+                  pill's width, so its neighbours and the wrapped rows stay put. Before the hold
+                  the pressed pill was 0.6–1.4px wider than at rest ("All" 66.1 against 65.5). */}
+              <span aria-hidden="true" className={active ? 'sx-check' : 'sx-check invisible'} />
+              <span className="sx-weight-hold" data-label={option.label}>
+                {option.label}
               </span>
-              {option.label}
             </button>
           );
         })}
@@ -319,7 +321,11 @@ function FiltersPanel({
         .filter(Boolean)
         .join(' ')}
     >
-      <label className="relative flex min-w-[8.5rem] flex-1 items-center md:flex-none">
+      {/* From 768px each select has a fixed width rather than its longest option's: sized by its
+          options, the team select ran 159–197px and the division select 141–177px by league, so
+          "More filters" and the count sat up to 26px further along on one league's page than on
+          another's. 208px and 192px hold the longest name in every league with room to spare. */}
+      <label className="relative flex min-w-[8.5rem] flex-1 items-center md:w-52 md:flex-none">
         <span className="sr-only">Team</span>
         <select
           value={filters.team}
@@ -348,7 +354,7 @@ function FiltersPanel({
       </label>
       {/* No division select for a single-division league: one option would be a dead control. */}
       {divisions.length > 0 ? (
-        <label className="relative flex min-w-[8.5rem] flex-1 items-center md:flex-none">
+        <label className="relative flex min-w-[8.5rem] flex-1 items-center md:w-48 md:flex-none">
           <span className="sr-only">Division</span>
           <select
             value={filters.division}

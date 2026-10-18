@@ -13,6 +13,63 @@
    encoding; they live only inside TeamMonogram.
    ═══════════════════════════════════════════════════════════════════════════ */
 
+/* ── The BOLD half of next/font's metric-matched "Geist Fallback" (app/layout.tsx). next/font
+      emits only a regular face (`src: local(Arial)`, no weight descriptor = 400), and `body` sets
+      `font-synthesis-weight: none`, so every semibold heading, nav item, chip and team name was
+      set in Arial REGULAR until Geist loaded: nav items up to 2.7px narrower, headings and
+      paragraphs re-wrapping on the swap. This face joins the same family (same name, declared
+      once here; vinext's shim emits the same 'Geist Fallback' name) for weights 600–900, so 500
+      still matches the regular face and 600 gets Arial Bold.
+      size-adjust is MEASURED, not derived: Geist at 600 against Arial Bold's advances (Liberation
+      Sans Bold, which shares them, standing in for the local() in a test page). Over the 493
+      distinct semibold strings on ten routes Geist is 99.93% of Arial Bold; over the h1s alone,
+      99.61%. 99.3% leans narrow on purpose: an h1 is the text where a fallback a hair too wide
+      costs a whole 32px line, and the tightest one, "SCVAL schedule and results" at 390, has 0.8px
+      to spare in Geist (at 99.9% the fallback wrapped it, CLS 0.029 on the swap; at 99.3% it fits).
+      Before this face, semibold fell back to Arial Regular at 104.76%, 2–3% narrow (the nav 2.0%,
+      section h2s 2.7%), and with the old mono fallback /teams/cupertino at 390 stood 212px taller
+      in the fallback than in Geist; 80px now (Arial simulated, faces blocked). The
+      overrides are next/font's regular-face values (95.94% / 28.16% at 104.76%) rescaled to this
+      size-adjust, since they apply after it: a line of bold fallback is as tall, with the same
+      baseline, as a line of regular or of Geist. ── */
+@font-face {
+  font-family: "Geist Fallback";
+  src: local("Arial Bold"), local("Arial-BoldMT");
+  font-style: normal;
+  font-weight: 600 900;
+  size-adjust: 99.3%;
+  ascent-override: 101.22%;
+  descent-override: 29.71%;
+  line-gap-override: 0%;
+}
+
+/* ── Geist Mono's fallback (app/layout.tsx sets `adjustFontFallback: false` and lists these two
+      families first). A system monospace already has Geist Mono's 0.6em advance (measured:
+      Liberation Mono 0.6001, DejaVu Sans Mono 0.6021; Menlo and SF Mono are 0.6 too), so it needs
+      no size-adjust, only Geist Mono's line metrics (ascent 100.5%, descent 29.5%, no gap, from
+      next/font's own Geist Mono figures): with its native ones (Liberation Mono 83.3% / 30.0%) a
+      mono score or date inside a line of sans made that line 1px taller until the face loaded.
+      Consolas is the one common monospace that is narrower, 0.55em, so it gets its own family
+      with size-adjust 0.6 / 0.5498 = 109.13% (overrides rescaled the same way). A reader with
+      none of these falls through to the generic list after them. ── */
+@font-face {
+  font-family: "Geist Mono Fallback";
+  src: local("SF Mono Regular"), local("SFMono-Regular"), local("Menlo Regular"), local("Menlo-Regular"),
+    local("Liberation Mono"), local("LiberationMono"), local("DejaVu Sans Mono"), local("DejaVuSansMono"),
+    local("Droid Sans Mono"), local("DroidSansMono");
+  ascent-override: 100.5%;
+  descent-override: 29.5%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: "Geist Mono Fallback Narrow";
+  src: local("Consolas");
+  size-adjust: 109.13%;
+  ascent-override: 92.09%;
+  descent-override: 27.03%;
+  line-gap-override: 0%;
+}
+
 /* The `dark:` variant follows the toggle AND the OS. Tokens carry the theme, so
    `dark:` should be rare — it is for the handful of non-color facts that differ
    (e.g. `dark:shadow-none`). */
@@ -164,9 +221,11 @@
 /* ── Tailwind theme. `inline` is required: the utilities must resolve the
       var() at use-site so the dark overrides above take effect. ─────────── */
 @theme inline {
-  /* fonts — the variables come from next/font in layout.tsx */
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* fonts — the variables come from next/font in layout.tsx. Each ends in a generic family: the
+     `font-sans` / `font-mono` utilities compile to exactly this list, and a list that stopped at
+     the variable fell to the browser default (a serif) wherever none of its named faces existed. */
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
 
   /* colors → bg-surface, text-ink-2, border-hairline, bg-win, fill-bar, … */
   --color-bg:           var(--sx-bg);
@@ -407,6 +466,20 @@
     column-gap: 0.25em;
     min-height: 1.5rem;
   }
+  /* Weight without width: a label whose weight follows its state (the top bar's current item,
+     components/layout/NavLink.tsx; the pressed schedule filter pill) sets its words twice, once
+     visibly and once as a hidden zero-height semibold copy from `data-label`, and is as wide as
+     the wider of the two. Without it the semibold current item was 0.5–1.6px wider than at rest,
+     so every item after it moved between pages, and a pressed filter pill 0.6–1.4px wider than
+     unpressed. `visibility: hidden` keeps the copy out of the accessibility tree; it is generated
+     content, so it is never selected, copied or found. */
+  .sx-weight-hold { display: inline-flex; flex-direction: column; align-items: center; }
+  .sx-weight-hold::after {
+    content: attr(data-label);
+    height: 0; overflow: hidden; visibility: hidden;
+    font-weight: 600;
+  }
+
   .sx-kicker > a {
     display: inline-flex; align-items: center; min-height: 1.5rem;
     margin-left: auto; color: var(--sx-accent);
@@ -424,33 +497,6 @@
   .sx-dategroup {
     content-visibility: auto; contain-intrinsic-size: auto 480px;
     scroll-margin-top: -3rem;
-  }
-  /* A /schedule/<league> date group (components/schedule/ScheduleList.tsx, whose comments say
-     why each line is there): its own upper height estimate from the `--sx-*` counts its `style`
-     sets, per phone row and per card row at 2-, 3- and 4-up; full-bleed on a phone with no gap
-     between days; 48px between days from 768px (32px above the first). These were nine
-     utilities, ~350 bytes on each of up to 60 groups, sent in the markup and the RSC payload.
-     (0,2,0), so the estimate replaces the flat 480px above; a `[content-visibility:visible]`
-     utility (the landing window) still wins. */
-  .sx-dategroup.sx-dategroup-est {
-    margin-top: 0;
-    contain-intrinsic-size: auto calc(var(--sx-n) * var(--sx-rh) + 3.5rem);
-  }
-  @media (width < 48rem) {
-    .sx-dategroup.sx-dategroup-est { margin-inline: calc(var(--spacing-gutter) * -1); }
-  }
-  @media (width >= 48rem) {
-    .sx-dategroup.sx-dategroup-est {
-      margin-top: 3rem;
-      contain-intrinsic-size: auto calc(var(--sx-r) * var(--sx-ch) + 3.5rem);
-    }
-    .sx-dategroup.sx-dategroup-est:first-child { margin-top: 2rem; }
-  }
-  @media (width >= 64rem) {
-    .sx-dategroup.sx-dategroup-est { contain-intrinsic-size: auto calc(var(--sx-r3) * var(--sx-ch) + 3.5rem); }
-  }
-  @media (width >= 80rem) {
-    .sx-dategroup.sx-dategroup-est { contain-intrinsic-size: auto calc(var(--sx-r4) * var(--sx-ch) + 3.5rem); }
   }
 
   /* ── Surfaces. Three planes, one job each:
@@ -549,12 +595,6 @@
      there is raised to the card plane with the hairline ring and hovers and presses down to
      surface-2 (F-56g). Height stays the caller's: `min-h-11` only where the pill is primary. */
   .sx-pill.sx-pill-ring { background: var(--sx-surface); box-shadow: var(--sx-ring); }
-  /* The card-surface pill: on a surface-2 panel (GameRow's open panel) the plain fill would match
-     the panel and read as a bare text link, so it takes the card surface instead. It replaces the
-     `bg-surface hover:bg-surface-3 active:bg-surface-3` utilities each panel pill carried, and it
-     sits BEFORE the hover rules so they still step it to surface-3 (the press rule below already
-     outranks it). */
-  .sx-pill.sx-pill-card { background: var(--sx-surface); }
   /* Press state, for touch (no hover) as much as for the mouse: a plain pill steps to the
      surface-3 chrome plane (its hover plane, already measured above), the canvas pill to its own
      surface-2 hover plane, and the accent pill, which keeps its wash, draws a 1px accent ring
@@ -658,7 +698,13 @@
      (`html[data-pin]`, stamped pre-paint) and the head script did not mark THIS hero as the pinned
      one. It ships `hidden`, so a failed stylesheet keeps it silent; after hydration React drops
      `data-pending` and owns `hidden` itself. */
-  html[data-pin] [data-team-slug]:not([data-pinned]) .sx-pin-other[data-pending] { display: inline !important; }
+  /* On the pinned team's OWN page the head script only marks the hero `[data-pinned]` at
+     DOMContentLoaded, so on a slow phone the note painted first and then vanished, pulling the
+     page up 28px. components/teams/TeamIdentity.tsx server-renders, before the note, a one-line
+     style for its own slug that sets `--sx-pin-other: none` on its hero when `html[data-pin]`
+     names that slug (a custom property, so it wins from outside this layer without an
+     !important of its own), and the note never paints there. */
+  html[data-pin] [data-team-slug]:not([data-pinned]) .sx-pin-other[data-pending] { display: var(--sx-pin-other, inline) !important; }
   .sx-nonleague { box-shadow: inset 2px 0 0 var(--sx-border-strong); }
 
   /* Hover elevation for card-sized links only (TeamTile, GameCard). Shadow only — no translate. */
@@ -671,157 +717,11 @@
   }
 
   /* ── The marks' colours live HERE, not in a `style` attribute (forced-colors must win). ── */
-  /* ResultChip (components/ui/ResultChip.tsx). The box, the kind's three colours and the size are
-     classes, not eight utilities plus a five-property `style` on every chip: /schedule/<league>
-     renders up to ~730 of them (twice per game, once per breakpoint twin) and the repeated
-     ~260 bytes went out once in the markup and again in the RSC payload. The values are what
-     those utilities and that style generated: `border` is a 1px solid edge, `font-sans
-     font-semibold leading-none rounded-tag`, the colours as the same custom properties. The faces
-     here and in `.sx-tag` / `.sx-status` are the bare `var(--font-sans)` / `var(--font-mono)` the
-     `font-sans` / `font-mono` utilities resolve to, without the fallback list the older rules in
-     this layer append, so the computed style is the one the utilities produced. */
   .sx-chip {
-    display: inline-flex; flex-shrink: 0; align-items: center; justify-content: center;
-    border-width: 1px; border-style: solid; border-radius: var(--sx-r-tag);
-    font-family: var(--font-sans);
-    font-weight: 600; line-height: 1;
     background: var(--sx-chip-bg);
     border-color: var(--sx-chip-ring);
     color: var(--sx-chip-ink);
   }
-  .sx-chip-win  { --sx-chip-bg: var(--sx-win-wash);  --sx-chip-ring: var(--sx-win);  --sx-chip-ink: var(--sx-win-ink); }
-  .sx-chip-loss { --sx-chip-bg: var(--sx-loss-wash); --sx-chip-ring: var(--sx-loss); --sx-chip-ink: var(--sx-loss-ink); }
-  /* A tie, and the cancelled ⊘ / postponed ↻ marks, which share the tie's hueless colours. */
-  .sx-chip-tie  { --sx-chip-bg: var(--sx-tie-wash);  --sx-chip-ring: var(--sx-tie);  --sx-chip-ink: var(--sx-tie-ink); }
-  /* `pending` is the dashed circle (ResultChip's docblock). (0,2,0), so the forced-colors
-     `border: 1px solid CanvasText` below cannot turn it back into a solid square edge: when the
-     dash was a utility, the utilities layer kept it dashed there too. */
-  .sx-chip.sx-chip-pending {
-    --sx-chip-bg: transparent; --sx-chip-ring: var(--sx-border-strong); --sx-chip-ink: var(--sx-text-3);
-    border-style: dashed; border-radius: calc(infinity * 1px);
-  }
-  /* The chip's side, and its letter (20 → 12px is the smallest letter any visible surface uses).
-     `.sx-chip-slot` is the empty, invisible slot a row keeps where a side has no chip; it takes
-     the size class too, so the two line up. */
-  .sx-chip-slot { display: inline-block; flex-shrink: 0; }
-  .sx-chip-16 { width: 16px; height: 16px; }
-  .sx-chip-20 { width: 20px; height: 20px; }
-  .sx-chip-24 { width: 24px; height: 24px; }
-  .sx-chip-28 { width: 28px; height: 28px; }
-  .sx-chip.sx-chip-16 { font-size: 10px; }
-  .sx-chip.sx-chip-20 { font-size: 12px; }
-  .sx-chip.sx-chip-24 { font-size: 13px; }
-  .sx-chip.sx-chip-28 { font-size: 14px; }
-
-  /* Tag (components/ui/Tag.tsx): the 20px mono micro-tag, `NL`, `OT`, a league code. Was
-     `inline-flex shrink-0 items-center whitespace-nowrap rounded-tag font-mono text-kicker
-     uppercase h-5 px-1.5 bg-surface-3 text-ink-2` on every tag, two to four per game row.
-     `text-kicker` is 12px / 16px, 0.06em, weight 600. Callers' utilities still win. */
-  .sx-tag {
-    display: inline-flex; flex-shrink: 0; align-items: center; white-space: nowrap;
-    height: 1.25rem; padding-inline: 0.375rem; border-radius: var(--sx-r-tag);
-    background: var(--sx-surface-3); color: var(--sx-text-2);
-    font-family: var(--font-mono);
-    font-size: var(--text-kicker); line-height: 1rem; letter-spacing: 0.06em; font-weight: 600;
-    text-transform: uppercase;
-  }
-  /* StatusLabel (components/ui/StatusLabel.tsx): FINAL · SCORE NOT REPORTED · POSTPONED …, 12px
-     sans semibold caps at 0.04em; its tone stays a `text-*` utility. `.sx-chips` is GameChips,
-     the wrapping row of tags. */
-  .sx-status {
-    display: inline-flex; flex-wrap: wrap; align-items: center; column-gap: 0.375rem; row-gap: 0.125rem;
-    font-family: var(--font-sans);
-    font-size: var(--text-micro); line-height: 1rem; font-weight: 600;
-    letter-spacing: 0.04em; text-transform: uppercase;
-  }
-  .sx-chips { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 0.25rem; }
-
-  /* ── Game rows and cards (components/ui/GameRow.tsx, DESIGN §7.4). /schedule/<league> renders
-        every game of the season twice, a phone GameRow and a ≥768px GameCard (GameList), and each
-        of these utility sets used to be repeated on every one of them: on North County's page
-        (~250 games) the class strings were ~1 MB of the markup, and the same strings went out a
-        second time in the RSC payload the page hydrates from. One class each instead, with the
-        values those utilities generated — breakpoints in rem, as Tailwind writes them (`md` is
-        48rem, the name's step-down 22.4375rem), not the 768px some older rules here use. They
-        sit in this layer, so a caller's className utility still wins. ─────────────────────── */
-  /* TeamLine: one 24px line per side, chip · monogram · name · score, 8px apart. */
-  .sx-teamline { display: flex; min-height: 1.5rem; align-items: center; gap: 0.5rem; }
-  /* The name: up to two lines, wrapping inside a long word rather than overflowing; 16px, and
-     15px on a 20px line below 359px. Its weight and ink stay `nameClass` utilities. */
-  .sx-teamname {
-    display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden;
-    flex: 1; min-width: 0; overflow-wrap: break-word;
-    font-size: var(--text-body); line-height: 1.5rem;
-  }
-  /* The league record after the name: 12px mono ink-3 (`sx-num` is still on the element), dropped
-     below 359px rather than allowed to wrap the name. `text-micro` brought weight 500. */
-  .sx-teamrecord {
-    margin-left: 0.5rem; white-space: nowrap;
-    font-size: var(--text-micro); line-height: 1rem; font-weight: 500; color: var(--sx-text-3);
-  }
-  @media (width < 22.4375rem) {
-    .sx-teamname { font-size: 0.9375rem; line-height: 1.25rem; }
-    .sx-teamrecord { display: none; }
-  }
-  /* The score column, sized to its glyph and right-aligned so scores line up down a list. */
-  .sx-teamscore { display: flex; height: 1.5rem; flex-shrink: 0; align-items: center; justify-content: flex-end; }
-
-  /* GameRow's <summary>: lead column (80px) · the two team lines · the 16px chevron, a 76px row.
-     The ring is drawn inset (the row is an edge-to-edge band), and the native marker is hidden. */
-  .sx-gamerow {
-    position: relative; display: grid; min-height: var(--spacing-gamerow);
-    grid-template-columns: 5rem minmax(0, 1fr) 1rem; align-items: center; column-gap: 0.5rem;
-    padding-inline: var(--spacing-gutter); padding-block: 0.75rem;
-    cursor: pointer; list-style-type: none;
-  }
-  .sx-gamerow:focus-visible { outline-offset: -2px; }
-  .sx-gamerow::-webkit-details-marker { display: none; }
-  /* The lead column stretches to the team block and spreads clock and status to its ends. */
-  .sx-gamerow-lead { display: flex; min-width: 0; flex-direction: column; justify-content: space-between; align-self: stretch; }
-  /* The status word and the NL tag share one wrapping line, 4px apart; the word itself (the
-     StatusLabel, always the first child) takes 14px lines and normal tracking here only. (0,1,1),
-     so it outranks `.sx-status` wherever the two meet. */
-  .sx-gamerow-status { display: flex; min-height: 1.5rem; flex-wrap: wrap; align-items: center; gap: 0.25rem; }
-  .sx-gamerow-status > span:first-child { line-height: 0.875rem; letter-spacing: var(--tracking-normal); }
-  /* The expanded panel: surface-2 under a divider; from 768px indented to the team column
-     (gutter + the 80px lead column + its 8px gap). */
-  .sx-gamedetail {
-    display: flex; flex-direction: column; gap: 0.75rem;
-    border-top-width: 1px; border-top-style: solid; border-color: var(--sx-divider);
-    background: var(--sx-surface-2);
-    padding-inline: var(--spacing-gutter); padding-top: 0.75rem; padding-bottom: 1rem;
-    font-size: var(--text-meta); line-height: 1.25rem;
-  }
-  @media (width >= 48rem) {
-    .sx-gamedetail { padding-left: calc(var(--spacing-gutter) + 5.5rem); }
-  }
-
-  /* GameCard: a column on `.sx-card`, 16px in and 20px from 768px. The stretched "Game page" link
-     covers it, so that link's focus ring is drawn on the card, inset (a /schedule date group's
-     paint containment clips anything outside it). */
-  .sx-gamecard { position: relative; display: flex; flex-direction: column; gap: 0.75rem; padding: 1rem; }
-  @media (width >= 48rem) {
-    .sx-gamecard { padding: 1.25rem; }
-  }
-  .sx-gamecard:has(> div > a[data-stretched]:focus-visible) {
-    outline: 2px solid var(--sx-focus); outline-offset: -2px;
-  }
-  /* The card's compact text links, 16px apart. */
-  .sx-gamecard-links { margin-top: auto; display: flex; flex-wrap: wrap; align-items: center; column-gap: 1rem; row-gap: 0.25rem; font-size: var(--text-meta); line-height: 1.25rem; }
-  /* The stretched link: its ::after covers the card (rounded to it), so the whole card is the
-     target; its own ring is off because the card draws it. */
-  .sx-stretch::after { content: ""; position: absolute; inset: 0; border-radius: var(--sx-r-card-lg); }
-  .sx-stretch:focus-visible { outline-style: none; }
-  /* A link that sits ABOVE the stretched one (Box score, NFHS stream) so it stays its own target.
-     After `.sx-action` in this layer, so its 4px gap replaces that rule's 0.25em. */
-  .sx-gamecard-extlink { position: relative; z-index: 10; gap: 0.25rem; font-weight: 500; }
-
-  /* A table row's stretched name link (components/leaders/LeaderBoardTable.tsx): its ::after
-     covers the row, and the focus ring is drawn on that ::after, inset, so a keyboard reader sees
-     the whole row a tap opens. Was nine utilities on each of ~120 rows on /leaders. */
-  .sx-rowlink::after { content: ""; position: absolute; inset: 0; }
-  .sx-rowlink:focus-visible { outline-style: none; }
-  .sx-rowlink:focus-visible::after { outline: 2px solid var(--sx-focus); outline-offset: -2px; }
   .sx-bar  { background: var(--sx-bar); }
   .sx-zero { background: var(--sx-zero); }
   .sx-meter-track { background: var(--sx-accent-wash); }
@@ -844,33 +744,18 @@
   .sx-list { list-style: none; margin-block: 0; padding: 0; }
   .sx-list > li { border-bottom: 1px solid var(--sx-divider); }
   .sx-list > li:last-child { border-bottom: 0; }
-  /* A cell of a card's row-major grid list (the roster, /recruiting, /commits, /clubs: one column,
-     two from 640px, three from 1024px). Each cell draws a hairline on top, except the first row's
-     cells at each column count. GridRowFiller (components/ui/GridRowFiller.tsx) finishes a short
-     last row with the same hairline. Was eight utilities on every cell — /recruiting has ~600 — and
-     they went out in the markup and again in the RSC payload. `sm:px-4` was the 16px gutter again,
-     so the side padding is one value at every width. */
-  .sx-gridcell {
-    min-width: 0;
-    border-top-width: 1px; border-top-style: solid; border-color: var(--sx-divider);
-    padding-inline: var(--spacing-gutter); padding-block: 0.625rem;
-  }
-  .sx-gridcell:first-child { border-top-width: 0; }
-  @media (width >= 40rem) {
-    .sx-gridcell:nth-child(2) { border-top-width: 0; }
-  }
-  @media (width >= 64rem) {
-    .sx-gridcell:nth-child(3) { border-top-width: 0; }
-  }
 
   /* ── League chips (components/layout/LeagueSwitcher.tsx, SPEC §8.3). text-micro at weight 600,
-        a 44px target, 8px of side padding. The current chip is inverse ink + the aria-hidden ✓ —
+        a 44px target, 6px of side padding and 3px between the check and the word (8px until a
+        per-league row had to fit one line at 390 with every chip carrying its check; the drawn
+        check's own 1px side bearing makes the visible gap 4px). The current chip is inverse ink +
+        the aria-hidden check (`.sx-check`) —
         never colour alone, and no league hue anywhere (DESIGN §6.4, §26.1). Before hydration the
         scope stylesheet (components/layout/league-scope-css.ts, unlayered) draws the same state
         from html[data-league]; after it, aria-pressed / aria-current do. ── */
   .sx-league-chip {
-    display: inline-flex; align-items: center; justify-content: center; gap: 0.25rem;
-    min-height: 2.75rem; min-width: 2.75rem; padding-inline: 0.5rem;
+    display: inline-flex; align-items: center; justify-content: center; gap: 0.1875rem;
+    min-height: 2.75rem; min-width: 2.75rem; padding-inline: 0.375rem;
     border-radius: var(--sx-r-control);
     background: var(--sx-surface-2); color: var(--sx-text-2);
     font-size: var(--text-micro); line-height: 1rem; font-weight: 600;
@@ -889,8 +774,23 @@
   .sx-league-chip:is([aria-pressed="true"], [aria-current="page"]) {
     background: var(--sx-text); color: var(--sx-surface);
   }
-  /* The ✓ is always laid out and only shown when selected, so every chip keeps one width and a
-     selection never reflows a wrapped row. */
+  /* The check is always laid out and only shown when selected, so every chip keeps one width and
+     a selection (or a different current league) never reflows a wrapped row. Scope chips and link
+     chips both render it; anchor chips, which are never current, do not. */
+  /* The drawn check of a selector chip or pill (the league and region chips, the schedule filter
+     pills; DESIGN §15.4: inverse ink AND a check, never colour alone). U+2713 is not in the latin
+     subset of Geist that next/font serves, so a typed ✓ took its advance from a system font and
+     varied by OS. This is a fixed 0.6667em box (8px in a 12px chip, 9.3px in a 14px pill) that
+     scales with text zoom, the stroke a mask over the chip's own ink. Forced colours repaint
+     backgrounds, so there it is painted in the text colour the mode gives the chip. */
+  .sx-check {
+    display: inline-block; flex-shrink: 0; width: 0.6667em; height: 0.6667em;
+    background-color: currentColor;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3E%3Cpath d='M1 4.3 3.1 6.4 7 1.6' fill='none' stroke='%23000' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
+  }
+  @media (forced-colors: active) {
+    .sx-check { forced-colors-adjust: none; background-color: CanvasText; }
+  }
   .sx-chip-check { visibility: hidden; }
   .sx-league-chip:is([aria-pressed="true"], [aria-current="page"]) > .sx-chip-check { visibility: visible; }
 
@@ -1066,6 +966,9 @@ nav:has([data-pending]) [aria-current]:not([aria-current="false"]):not(:has([dat
 nav:has([data-pending]) [aria-current]:not([aria-current="false"]):not(:has([data-pending])) .sx-indicator {
   background: transparent;
   box-shadow: none;
+  /* The resting weight too: the label holds its semibold width either way (`.sx-weight-hold`), so
+     dropping it moves nothing. */
+  font-weight: 500;
 }
 
 /* ── Print (unlayered, after the token blocks, so it outranks the dark blocks, every layer and the
