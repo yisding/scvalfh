@@ -34,6 +34,12 @@ function NotedMark() {
 }
 
 function StatsTable({ table, caption }: { table: StatTable; caption: string }) {
+  // The number slot is the table's, not the row's: when any row has a number, every row keeps the
+  // box (a dash where none is listed, as on the roster), so every name starts at x=48. Drawn only
+  // for the rows that had one, Marin Catholic's names started at 48 or 16 down one column. Two
+  // characters fit 24px; "21/88" (Valley Christian) needs 44px, as the roster's wide column does.
+  const numbered = table.rows.some((r) => r.jersey);
+  const numberWidth = table.rows.some((r) => (r.jersey?.length ?? 0) > 2) ? 'w-11' : 'w-6';
   return (
     <div className="sx-card sx-flush sx-bleed">
       <table className="sx-table text-meta">
@@ -60,16 +66,26 @@ function StatsTable({ table, caption }: { table: StatTable; caption: string }) {
             <tr key={row.key} className="h-11">
               <th scope="row" className="pl-4 text-left font-normal">
                 {/* Wraps rather than truncating, so a long name lowers the row instead of
-                    pushing the numbers past a 320px screen (HistoryStandingsTable's rule). */}
-                <span className="text-body text-ink">
-                  {row.jersey ? (
-                    <span className="sx-num mr-2 inline-block min-w-6 text-right text-cell text-ink-3">
-                      <span className="sr-only">Number </span>
-                      {row.jersey}
+                    pushing the numbers past a 320px screen (HistoryStandingsTable's rule). The
+                    number is its own fixed box beside the name, so a wrapped name's second line
+                    starts under the first, never under the number. */}
+                <span className="flex items-baseline text-body text-ink">
+                  {numbered ? (
+                    <span className={`sx-num mr-2 ${numberWidth} shrink-0 text-right text-cell text-ink-3`}>
+                      {row.jersey ? (
+                        <>
+                          <span className="sr-only">Number </span>
+                          {row.jersey}
+                        </>
+                      ) : (
+                        <MissingValue words="No number listed" />
+                      )}
                     </span>
                   ) : null}
-                  {row.name}
-                  {row.noted ? <NotedMark /> : null}
+                  <span className="min-w-0">
+                    {row.name}
+                    {row.noted ? <NotedMark /> : null}
+                  </span>
                 </span>
               </th>
               {row.values.map((v, i) => (
