@@ -1000,7 +1000,7 @@ function contextNoun(model: GameModel): string {
 
 /** The `<meta name="description">` and the OG description: `… in <League name> girls varsity field hockey, Fall 2026` (SEASON_DISPLAY). */
 export function gameDescription(model: GameModel): string {
-  const { game, display, away, home, league } = model;
+  const { game, league } = model;
   const context = contextNoun(model);
   const where = `${league ? leagueSportWords(league.id) : 'girls varsity field hockey'}, ${SEASON_DISPLAY}`;
   if (game.recap) {
@@ -1009,6 +1009,18 @@ export function gameDescription(model: GameModel): string {
     // same description as the first meeting.
     return `${dateWithYear(game.dateLocal)}: ${game.recap} ${lead} ${context} in ${where} — unofficial, rebuilt twice daily from MaxPreps.`;
   }
+  return gameFactsDescription(model);
+}
+
+/**
+ * `gameDescription` without MaxPreps' recap sentence, which the game page no longer prints: the
+ * SportsEvent JSON-LD's `description` (components/layout/structured-data.ts) must describe only
+ * what the page shows.
+ */
+export function gameFactsDescription(model: GameModel): string {
+  const { game, display, away, home, league } = model;
+  const context = contextNoun(model);
+  const where = `${league ? leagueSportWords(league.id) : 'girls varsity field hockey'}, ${SEASON_DISPLAY}`;
   const joiner = matchupJoiner(game);
   return `${away.name} ${joiner} ${home.name}, ${model.whenLabel} — ${article(
     context,
