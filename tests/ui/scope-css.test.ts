@@ -71,6 +71,8 @@ describe('buildLeagueScopeCss', () => {
     expect(rules).toContain('html:not([data-region-picked]) [data-region-scope]:has(:target){display:block!important}');
     expect(rules).toContain('html:not([data-region-picked]) [data-region-scope]:target{display:block!important}');
     expect(rules.filter((r) => r.includes(':target'))).toHaveLength(2);
+    // A client-side navigation never sets :target: the prefs script marks the blocks instead.
+    expect(rules).toContain('[data-region-scope][data-region-open]{display:block!important}');
     // The /teams lift, scoped to the /teams root so the home finder lifts nothing.
     expect(rules).toContain('[data-teams-page]:has(search[data-searching]) #team-list [data-region-scope]{display:block}');
     expect(css).not.toMatch(/(?:^|[\s,])\[data-searching\]/m);

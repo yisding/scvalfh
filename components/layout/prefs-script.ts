@@ -55,6 +55,20 @@
  * because /teams has no first-load JS to spare (scripts/assert-budgets.ts) and every page already
  * runs this script.
  *
+ * The client-side deep link (`data-region-open`, REGION_OPEN). A `<Link>` to another page's fragment
+ * (`/leaders#players-socal` on a SoCal team page, `/playoffs#sunset` on /about) is a client-side
+ * navigation: the URL changes through `history.pushState`, which never sets `:target`, so the
+ * deep-link rule cannot open the target's region, and the router's own scroll misses the hidden
+ * target (next calls `scrollIntoView` on it, a no-op; vinext skips a 0×0 element and scrolls to its
+ * next visible sibling). So on a tap on any link with a fragment the script waits, one animation
+ * frame at a time for up to 10 s, until the URL carries that fragment and its target exists (after
+ * the router's commit and its scroll attempt, whichever router built the page). Then, only if the
+ * target is hidden, it stamps every `[data-region-scope]` block around it `data-region-open`, which
+ * the stylesheet shows like `:has(:target)`, and scrolls to it. A visible target (a same-page jump
+ * that native `:target` already opened, a target in the reader's own region) is left alone, and a
+ * later tap stops the wait. A region pick, an in-page jump, Back and Forward clear every mark, as
+ * they clear the pick: the reader's region, or the new `:target`, decides again.
+ *
  * The stamp function is also kept on `window[PREFS_RESTAMP]`, so a `storage` event from another tab
  * can re-run EXACTLY this validation (ids, slug map, stale pin, region precedence) instead of a
  * second copy of it. React drops an inline <script> rendered inside <body>, so app/layout.tsx renders
@@ -96,6 +110,14 @@ export const REGION_OF = '__sxRegionOf';
  */
 export const REGION_PICKED = 'data-region-picked';
 
+/**
+ * `data-region-open` on a region block: a client-side navigation landed on a hidden fragment inside
+ * it (`/leaders#players-socal` from a SoCal team page, read in NorCal). Set by the script's link-tap
+ * listener, cleared by a region pick, an in-page jump, Back and Forward (see the header). The scope
+ * stylesheet shows a block that carries it (components/layout/league-scope-css.ts).
+ */
+export const REGION_OPEN = 'data-region-open';
+
 const ID = /^[a-z0-9-]+$/;
 
 export interface PrefsScriptInput {
@@ -121,7 +143,7 @@ export function buildPrefsScript({ leagueIds, slugLeague, leagueRegion, defaultR
     throw new Error(`prefs-script: the default region must be ${STAMPLESS_REGION}, got ${JSON.stringify(defaultRegion)}`);
   }
   // The map is shipped grouped by league, slugs space-joined, which is about half the bytes of a
-  // flat {slug: league} object (102 entries) and keeps the whole script within its 3 KB line
+  // flat {slug: league} object (102 entries) and keeps the whole script within its 4 KB line
   // (2,454 B measured 2026-10-06; tests/ui/prefs-script.test.ts).
   const grouped: Record<string, string[]> = {};
   for (const [slug, league] of Object.entries(slugLeague)) {
@@ -170,13 +192,23 @@ export function buildPrefsScript({ leagueIds, slugLeague, leagueRegion, defaultR
     // The region pick (REGION_PICKED): b the tapped switcher button, k the fragment's target and then
     // the region block holding it. Every fragment target on the site is a plain [a-z0-9-] id, so the
     // hash is not decoded (decodeURIComponent throws on a stray %).
-    `try{var P='${REGION_PICKED}';document.addEventListener('click',function(e){var b=e.target,k;` +
-    `b=b&&b.closest&&b.closest('[data-region-option]');if(!b||b.disabled)return;d.setAttribute(P,'');` +
+    // The client-side deep link (REGION_OPEN): a the tapped link, F its fragment, I this tap's number
+    // (any later tap stops the wait), T when it began; w() waits a frame at a time, up to 10 s, for
+    // the URL to carry #F and the target t to exist, and opens and scrolls to t only if it is hidden.
+    // z() clears every mark: a region pick, an in-page jump, Back or Forward.
+    `try{var P='${REGION_PICKED}',O='${REGION_OPEN}',N=0;` +
+    `function z(){var s=document.querySelectorAll('['+O+']'),i;for(i=s.length;i--;)s[i].removeAttribute(O)}` +
+    `document.addEventListener('click',function(e){var b=e.target,a,k,F,I=++N,T=Date.now();if(!b||!b.closest)return;` +
+    `a=b.closest('a[href*="#"]');if(a){F=(a.hash||'').slice(1);if(F)(function w(){var t;if(I!==N)return;` +
+    `t=location.hash==='#'+F&&document.getElementById(F);if(!t){if(1e4>Date.now()-T)requestAnimationFrame(w);return}` +
+    `if(!t.getClientRects().length){for(k=t;k;k=k.parentElement)if(k.hasAttribute('data-region-scope'))k.setAttribute(O,'');` +
+    `t.scrollIntoView()}})();return}` +
+    `b=b.closest('[data-region-option]');if(!b||b.disabled)return;d.setAttribute(P,'');z();` +
     `k=document.getElementById(location.hash.slice(1));k=k&&k.closest('[data-region-scope]');` +
     `if(k&&k.dataset.regionScope!==b.dataset.regionOption)` +
     `history.replaceState(history.state,'',location.pathname+location.search)});` +
     // Back or Forward across App Router paths restores a `:target` with no hashchange (that fires
     // only when the URLs differ by the fragment alone), so popstate clears the pick too.
-    `function c(){d.removeAttribute(P)}addEventListener('hashchange',c);addEventListener('popstate',c)}catch(x){}})();`
+    `function c(){d.removeAttribute(P);z()}addEventListener('hashchange',c);addEventListener('popstate',c)}catch(x){}})();`
   );
 }
