@@ -28,7 +28,8 @@ import { parseScoresPage, parseTeamGamesPage } from '@/lib/sources/sblive';
 import { divisionGames } from '@/lib/standings';
 import { TEAMS, getTeamBySlug, teamsInDivision, teamsInLeague } from '@/lib/teams';
 import type { Game, Snapshot } from '@/lib/types';
-import { corpusSnapshotPath, stubCorpusSnapshot } from '@/tests/support/corpus-snapshot';
+import { useCorpusModules } from '@/tests/support/corpus-modules';
+import { corpusSnapshotPath } from '@/tests/support/corpus-snapshot';
 import { CorpusReader, SOCAL_CORPUS, gameOf } from '@/tests/support/corpus';
 import { expectOk, runFixtureCli } from '@/tests/support/cli';
 import { readSnapshot } from '@/tests/support/repo';
@@ -43,8 +44,6 @@ function notFetchedReason(id: Parameters<typeof getLeague>[0]): string {
     ? 'The LA independents were not fetched in this run.'
     : `${getLeague(id).shortName} was not fetched in this run.`;
 }
-
-type DataModule = typeof import('@/lib/data');
 
 const SOCAL = ['sunset', 'city', 'north-county', 'metro'] as const;
 const NORCAL = ['scval', 'bval', 'pcal', 'mcal', 'eal'] as const;
@@ -71,15 +70,12 @@ function membershipRows(division: string): ScheduleRow[] {
   });
 }
 
+const m = useCorpusModules(SOCAL_CORPUS, { data: () => import('@/lib/data') });
 let snapshot: Snapshot;
-let data: DataModule;
 
-stubCorpusSnapshot(SOCAL_CORPUS);
-
-beforeAll(async () => {
+beforeAll(() => {
   snapshot = readSnapshot(corpusSnapshotPath(SOCAL_CORPUS));
-  data = (await import('@/lib/data')) as DataModule;
-}, 600_000);
+});
 
 describe('the SoCal corpus run', () => {
   it('names the four Southern California leagues in its manifest, and holds no Valley table', () => {
@@ -358,13 +354,13 @@ describe('missing league results and the si.com sides', () => {
           .filter((r) => r.contest.date.slice(0, 10) < today && r.calculatedFields.contestState !== 4)
           .map((r) => r.contest.contestId)
           .sort();
-        const listed = data
+        const listed = m.data
           .getMissingOfficialResults(d.id)
           .filter((r) => r.kind === 'missing')
           .map((r) => r.game?.contestId ?? '')
           .sort();
         expect(listed, `lib/standings.ts missingOfficialResults: ${d.id}`).toEqual(expected);
-        const health = data.getLeagueHealth(l.id).divisions.find((x) => x.divisionId === d.id)!;
+        const health = m.data.getLeagueHealth(l.id).divisions.find((x) => x.divisionId === d.id)!;
         expect(health.missingLeaguePast, `lib/pipeline/steps/standings.ts: ${d.id}`).toBe(listed.length);
       }
     }

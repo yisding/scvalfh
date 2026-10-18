@@ -3,8 +3,8 @@
  * light `/schedule` index, the `ScheduleFilters` props per league, the `/scores/[date]` league
  * groups and the client-boundary split of `components/schedule/filter-data.ts`.
  *
- * League-specific values run on the all-2026-10-02 CORPUS snapshot (SPEC §13.6): SCVAL_SNAPSHOT is
- * set before lib/data is imported (dynamic imports after `vi.resetModules()`). Every assertion
+ * League-specific values run on the all-2026-10-02 CORPUS snapshot (SPEC §13.6): useCorpusModules
+ * points lib/data at it before lib/data is imported. Every assertion
  * message names the module that produced the value.
  */
 
@@ -13,68 +13,52 @@ import path from 'node:path';
 
 import { createElement, type ReactElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
-import { corpusSnapshotPath } from '@/tests/support/corpus-snapshot';
+import { useCorpusModules } from '@/tests/support/corpus-modules';
 import { REPO } from '@/tests/support/repo';
 import { textOf } from '@/tests/support/html-text';
 
-type Data = typeof import('@/lib/data');
-type Server = typeof import('@/components/schedule/filter-data-server');
-type Index = typeof import('@/components/schedule/schedule-view');
-type Day = typeof import('@/components/schedule/day-summary');
-
-const priorEnv = process.env.SCVAL_SNAPSHOT;
-let data: Data;
-let server: Server;
-let index: Index;
-let day: Day;
-let Filters: typeof import('@/components/schedule/ScheduleFilters').ScheduleFilters;
-let renderLeague: (league: string) => Promise<string>;
-let renderIndex: () => string;
-let renderDay: (date: string) => Promise<string>;
-
-beforeAll(async () => {
-  process.env.SCVAL_SNAPSHOT = corpusSnapshotPath('all-2026-10-02');
-  vi.resetModules();
-  data = await import('@/lib/data');
-  server = await import('@/components/schedule/filter-data-server');
-  index = await import('@/components/schedule/schedule-view');
-  day = await import('@/components/schedule/day-summary');
-  Filters = (await import('@/components/schedule/ScheduleFilters')).ScheduleFilters;
-  const leaguePage = (await import('@/app/schedule/[league]/page')).default;
-  const indexPage = (await import('@/app/schedule/page')).default;
-  const dayPage = (await import('@/app/scores/[date]/page')).default;
-  renderLeague = async (league) =>
-    renderToStaticMarkup((await leaguePage({ params: Promise.resolve({ league }) } as never)) as ReactElement);
-  renderIndex = () => renderToStaticMarkup(createElement(indexPage));
-  renderDay = async (date) =>
-    renderToStaticMarkup((await dayPage({ params: Promise.resolve({ date }) } as never)) as ReactElement);
-}, 600_000);
-
-afterAll(() => {
-  if (priorEnv === undefined) delete process.env.SCVAL_SNAPSHOT;
-  else process.env.SCVAL_SNAPSHOT = priorEnv;
-  vi.resetModules();
+const m = useCorpusModules('all-2026-10-02', {
+  data: () => import('@/lib/data'),
+  server: () => import('@/components/schedule/filter-data-server'),
+  index: () => import('@/components/schedule/schedule-view'),
+  day: () => import('@/components/schedule/day-summary'),
+  filters: () => import('@/components/schedule/ScheduleFilters'),
+  leaguePage: () => import('@/app/schedule/[league]/page'),
+  indexPage: () => import('@/app/schedule/page'),
+  dayPage: () => import('@/app/scores/[date]/page'),
 });
 
-const leagueOfSlug = (slug: string | null) => (slug ? data.getTeamBySlug(slug)?.league : undefined);
+async function renderLeague(league: string): Promise<string> {
+  return renderToStaticMarkup((await m.leaguePage.default({ params: Promise.resolve({ league }) } as never)) as ReactElement);
+}
+
+function renderIndex(): string {
+  return renderToStaticMarkup(createElement(m.indexPage.default));
+}
+
+async function renderDay(date: string): Promise<string> {
+  return renderToStaticMarkup((await m.dayPage.default({ params: Promise.resolve({ date }) } as never)) as ReactElement);
+}
+
+const leagueOfSlug = (slug: string | null) => (slug ? m.data.getTeamBySlug(slug)?.league : undefined);
 
 describe('league scoping (/schedule/<league>)', () => {
   it('lists every game with a side in the league exactly once, and a cross-league game in both leagues', () => {
     const lists = new Map<string, string[]>();
-    for (const id of data.getLeagueIds()) {
-      const ids = data.getGamesByDate({ league: id }).flatMap((g) => g.games.map((x) => x.contestId));
+    for (const id of m.data.getLeagueIds()) {
+      const ids = m.data.getGamesByDate({ league: id }).flatMap((g) => g.games.map((x) => x.contestId));
       expect(new Set(ids).size, `lib/data.ts getGamesByDate(${id}): duplicates`).toBe(ids.length);
       lists.set(id, ids);
-      for (const g of data.getGames({ league: id })) {
+      for (const g of m.data.getGames({ league: id })) {
         expect(
           [leagueOfSlug(g.home.slug), leagueOfSlug(g.away.slug)],
           `lib/data.ts getGames({league:${id}}) ${g.contestId}`,
         ).toContain(id);
       }
     }
-    const cross = data.getGames().filter((g) => {
+    const cross = m.data.getGames().filter((g) => {
       const a = leagueOfSlug(g.away.slug);
       const h = leagueOfSlug(g.home.slug);
       return a && h && a !== h;
@@ -86,10 +70,10 @@ describe('league scoping (/schedule/<league>)', () => {
   });
 
   it('renders each of the league’s games once, tags the other league, and ends the rail with its own postseason', async () => {
-    for (const id of data.getLeagueIds()) {
+    for (const id of m.data.getLeagueIds()) {
       const html = await renderLeague(id);
       const rendered = [...html.matchAll(/data-game="([^"]+)"/g)].map((m) => m[1]);
-      const expected = data.getGames({ league: id }).map((g) => g.contestId);
+      const expected = m.data.getGames({ league: id }).map((g) => g.contestId);
       expect(rendered.length, `app/schedule/[league]/page.tsx ${id}: rows`).toBe(expected.length);
       expect(new Set(rendered)).toEqual(new Set(expected));
       expect(textOf(html), `app/schedule/[league]/page.tsx ${id}`).not.toContain('Gabilan');
@@ -116,13 +100,13 @@ describe('league scoping (/schedule/<league>)', () => {
     // The all-2026-10-02 corpus predates the four Southern California leagues, which it carries as
     // "not fetched in this run" with no games, so a league with no game date in it has no landing
     // date to check. The five leagues the corpus does cover must all be checked.
-    const covered = data.getLeagueIds().filter((id) => data.getGameDates({ league: id }).length > 0);
+    const covered = m.data.getLeagueIds().filter((id) => m.data.getGameDates({ league: id }).length > 0);
     expect(covered, 'corpus leagues with games').toEqual(expect.arrayContaining(['scval', 'bval', 'pcal', 'mcal', 'eal']));
     for (const id of covered) {
-      const landing = data.getScoresLandingDate({ league: id });
+      const landing = m.data.getScoresLandingDate({ league: id });
       expect(landing, `lib/data.ts getScoresLandingDate(${id})`).not.toBeNull();
-      expect(data.getGameDates({ league: id }), `lib/data.ts getScoresLandingDate(${id})`).toContain(landing);
-      expect(landing, `lib/data.ts getScoresLandingDate(${id})`).toBe(data.getLatestResultsDate({ league: id }));
+      expect(m.data.getGameDates({ league: id }), `lib/data.ts getScoresLandingDate(${id})`).toContain(landing);
+      expect(landing, `lib/data.ts getScoresLandingDate(${id})`).toBe(m.data.getLatestResultsDate({ league: id }));
       const html = await renderLeague(id);
       expect(html, `components/schedule/ScheduleList.tsx ${id}: #${landing}`).toContain(`id="${landing}"`);
     }
@@ -132,13 +116,13 @@ describe('league scoping (/schedule/<league>)', () => {
 describe('ScheduleFilters props', () => {
   it('single-division leagues get no divisions and no division labels', () => {
     for (const id of ['pcal', 'mcal', 'eal']) {
-      const summary = data.getLeagueSummary(id)!;
-      const props = server.scheduleFilterProps(summary, data.getTeams({ league: id }));
+      const summary = m.data.getLeagueSummary(id)!;
+      const props = m.server.scheduleFilterProps(summary, m.data.getTeams({ league: id }));
       expect(props.divisions, `components/schedule/filter-data-server.ts ${id}`).toEqual([]);
       expect(props.teams.every((t) => t.divisionLabel === null)).toBe(true);
       expect(props.teams.length).toBe(summary.teamCount);
       const html = renderToStaticMarkup(
-        createElement(Filters, { ...props, counts: { total: 1, final: 1, upcoming: 0, pending: 0 }, listId: 'x' }),
+        createElement(m.filters.ScheduleFilters, { ...props, counts: { total: 1, final: 1, upcoming: 0, pending: 0 }, listId: 'x' }),
       );
       expect(html, `components/schedule/ScheduleFilters.tsx ${id}: division select`).not.toContain('>Division<');
       expect(html, `components/schedule/ScheduleFilters.tsx ${id}: optgroup`).not.toContain('<optgroup');
@@ -146,14 +130,14 @@ describe('ScheduleFilters props', () => {
   });
 
   it('multi-division leagues get one optgroup per division and a division select', () => {
-    const summary = data.getLeagueSummary('bval')!;
-    const props = server.scheduleFilterProps(summary, data.getTeams({ league: 'bval' }));
+    const summary = m.data.getLeagueSummary('bval')!;
+    const props = m.server.scheduleFilterProps(summary, m.data.getTeams({ league: 'bval' }));
     expect(props.divisions).toEqual([
       { id: 'mt-hamilton', label: 'Mt. Hamilton' },
       { id: 'santa-teresa', label: 'Santa Teresa' },
     ]);
     const html = renderToStaticMarkup(
-      createElement(Filters, { ...props, counts: { total: 1, final: 1, upcoming: 0, pending: 0 }, listId: 'x' }),
+      createElement(m.filters.ScheduleFilters, { ...props, counts: { total: 1, final: 1, upcoming: 0, pending: 0 }, listId: 'x' }),
     );
     expect(html).toContain('<optgroup label="Mt. Hamilton Division">');
     expect(html).toContain('<optgroup label="Santa Teresa Division">');
@@ -161,8 +145,8 @@ describe('ScheduleFilters props', () => {
   });
 
   it('marks league games from countsFor', () => {
-    for (const g of data.getGames()) {
-      expect(server.gameFilterAttrs(g)['data-league'], `components/schedule/filter-data-server.ts ${g.contestId}`).toBe(
+    for (const g of m.data.getGames()) {
+      expect(m.server.gameFilterAttrs(g)['data-league'], `components/schedule/filter-data-server.ts ${g.contestId}`).toBe(
         g.countsFor !== null ? '1' : '0',
       );
     }
@@ -177,7 +161,7 @@ describe('ScheduleFilters props', () => {
 describe('the /schedule index', () => {
   it('has one row per game day with id=YYYY-MM-DD linking the day page', () => {
     const html = renderIndex();
-    for (const date of data.getGameDates()) {
+    for (const date of m.data.getGameDates()) {
       expect(html, `components/schedule/ScheduleIndex.tsx #${date}`).toContain(`id="${date}"`);
       expect(html).toContain(`href="/scores/${date}"`);
     }
@@ -229,11 +213,11 @@ describe('the /schedule index', () => {
   });
 
   it('builds Recent and Next around today, at most three rows per league, and per-league day counts', () => {
-    const today = data.getToday();
-    const built = index.buildScheduleIndex({
-      games: data.getGames(),
-      leagues: data.getLeagueSummaries(),
-      leagueOf: (slug) => data.getTeamBySlug(slug)?.league,
+    const today = m.data.getToday();
+    const built = m.index.buildScheduleIndex({
+      games: m.data.getGames(),
+      leagues: m.data.getLeagueSummaries(),
+      leagueOf: (slug) => m.data.getTeamBySlug(slug)?.league,
       today,
     });
     expect(built.recent.length).toBeLessThanOrEqual(3);
@@ -241,19 +225,19 @@ describe('the /schedule index', () => {
     expect(built.recent.every((d) => d.date <= today), 'components/schedule/schedule-view.ts recent').toBe(true);
     expect(built.next.every((d) => d.date > today), 'components/schedule/schedule-view.ts next').toBe(true);
     for (const d of built.days) {
-      const games = data.getGames({ date: d.date });
+      const games = m.data.getGames({ date: d.date });
       expect(d.total).toBe(games.length);
       for (const l of d.byLeague) {
-        const id = data.getLeagueSummaries().find((x) => x.shortName === l.shortName)!.id;
+        const id = m.data.getLeagueSummaries().find((x) => x.shortName === l.shortName)!.id;
         expect(l.games, `components/schedule/schedule-view.ts ${d.date} ${id}`).toBe(
           games.filter((g) => leagueOfSlug(g.home.slug) === id || leagueOfSlug(g.away.slug) === id).length,
         );
       }
     }
-    expect(built.cards.map((c) => c.id)).toEqual(data.getLeagueIds());
+    expect(built.cards.map((c) => c.id)).toEqual(m.data.getLeagueIds());
     for (const card of built.cards) {
       expect(card.games, `components/schedule/schedule-view.ts card ${card.id}`).toBe(
-        data.getGames({ league: card.id }).length,
+        m.data.getGames({ league: card.id }).length,
       );
     }
     // Per region (DESIGN-socal §2.4): each region's Recent and Next are its own game days, and each
@@ -278,7 +262,7 @@ describe('the /schedule index', () => {
     expect(html).toContain('<div data-region-scope="socal">');
     // A card grid holding a jump target is never itself region-scoped (the deep-link rule would unset its grid).
     expect(html).not.toMatch(/<ul data-region-scope[^>]*grid/);
-    for (const id of data.getLeagueIds()) expect(html, `components/schedule/ScheduleIndex.tsx #${id}`).toContain(`id="${id}"`);
+    for (const id of m.data.getLeagueIds()) expect(html, `components/schedule/ScheduleIndex.tsx #${id}`).toContain(`id="${id}"`);
     const ids = [...html.matchAll(/\sid="([^"]+)"/g)].map((m) => m[1]);
     expect(ids.filter((id, i) => ids.indexOf(id) !== i), 'app/schedule/page.tsx duplicate ids').toEqual([]);
   });
@@ -360,9 +344,9 @@ describe('Southern California schedule pages (DESIGN-socal §2.4)', () => {
 
 describe('/scores/[date]', () => {
   it('groups a day by league then Non-league, each game once, with real plurals', async () => {
-    for (const date of data.getGameDates()) {
-      const games = data.getGames({ date });
-      const groups = day.dayGroups(games);
+    for (const date of m.data.getGameDates()) {
+      const games = m.data.getGames({ date });
+      const groups = m.day.dayGroups(games);
       const ids = groups.flatMap((g) => g.games.map((x) => x.contestId));
       expect(ids.length, `components/schedule/day-summary.ts dayGroups ${date}`).toBe(games.length);
       expect(new Set(ids).size).toBe(games.length);
@@ -376,9 +360,9 @@ describe('/scores/[date]', () => {
         }
       }
     }
-    const busiest = data
+    const busiest = m.data
       .getGameDates()
-      .map((date) => ({ date, groups: day.dayGroups(data.getGames({ date })) }))
+      .map((date) => ({ date, groups: m.day.dayGroups(m.data.getGames({ date })) }))
       .sort((a, b) => b.groups.length - a.groups.length)[0];
     const html = await renderDay(busiest.date);
     for (const group of busiest.groups) {
@@ -388,13 +372,13 @@ describe('/scores/[date]', () => {
   });
 
   it('describes the day with no league name and titles the card with the league count', () => {
-    const date = data.getGameDates()[0];
-    const games = data.getGames({ date });
-    expect(day.daySummary(games, 'Monday, August 24, 2026').sentence).toMatch(
+    const date = m.data.getGameDates()[0];
+    const games = m.data.getGames({ date });
+    expect(m.day.daySummary(games, 'Monday, August 24, 2026').sentence).toMatch(
       /^\d+ girls varsity field hockey games? on Monday, August 24, 2026\./,
     );
-    const k = day.leaguesInvolved(games).length;
-    expect(day.dayCardTitle('Mon Aug 24', games)).toBe(
+    const k = m.day.leaguesInvolved(games).length;
+    expect(m.day.dayCardTitle('Mon Aug 24', games)).toBe(
       `Mon Aug 24 · ${games.length} ${games.length === 1 ? 'game' : 'games'} in ${k} ${k === 1 ? 'league' : 'leagues'}`,
     );
   });
@@ -403,8 +387,8 @@ describe('/scores/[date]', () => {
 describe('fixture status and slate records (UI pass, league-aware)', () => {
   it('an official fixture reads "Upcoming" on or after today and "No result" before it', async () => {
     const { OfficialFixtures } = await import('@/components/schedule/OfficialFixtures');
-    const team = data.getTeams({ league: 'bval' })[0];
-    const today = data.getToday();
+    const team = m.data.getTeams({ league: 'bval' })[0];
+    const today = m.data.getToday();
     const fixture = (dateKey: string) => ({
       id: `${team.division}:${dateKey}:Somewhere@${team.slug}`,
       league: team.league,
@@ -438,8 +422,8 @@ describe('fixture status and slate records (UI pass, league-aware)', () => {
   it('an upcoming league game on a slate names both sides’ league records in words, never 0-0-0', async () => {
     const { GameRow } = await import('@/components/ui/GameRow');
     const { recordWords } = await import('@/lib/format');
-    const today = data.getToday();
-    const upcoming = data
+    const today = m.data.getToday();
+    const upcoming = m.data
       .getGames()
       .filter((g) => g.status === 'scheduled' && g.dateKey >= today);
     const league = upcoming.find((g) => g.countsFor !== null);
@@ -447,7 +431,7 @@ describe('fixture status and slate records (UI pass, league-aware)', () => {
     const text = textOf(renderToStaticMarkup(createElement(GameRow, { game: league!, showRecords: true })));
     let checked = 0;
     for (const side of [league!.away, league!.home]) {
-      const standing = side.slug ? data.getStandingFor(side.slug) : undefined;
+      const standing = side.slug ? m.data.getStandingFor(side.slug) : undefined;
       if (standing?.hasReportedResults) {
         checked += 1;
         expect(text, `components/ui/GameRow.tsx records: ${side.slug}`).toContain(

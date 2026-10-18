@@ -9,42 +9,39 @@ import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { beforeAll, describe, expect, it } from 'vitest';
 
-import { corpusSnapshotPath } from '@/tests/support/corpus-snapshot';
+import { useCorpusModules } from '@/tests/support/corpus-modules';
 
 import { POSTSEASON_LEAD, postseasonCardLine, rungCardText } from '@/components/home/home-types';
 
 import { textOf } from '@/tests/support/html-text';
 import { width } from '@/tests/support/text-metrics';
 
-type HomeView = typeof import('@/components/home/home-view');
-
-let home: HomeView;
-let data: ReturnType<HomeView['buildHomeView']>;
-let leagues: typeof import('@/lib/leagues');
+const m = useCorpusModules('all-2026-10-02', {
+  home: () => import('@/components/home/home-view'),
+  leagues: () => import('@/lib/leagues'),
+  homePage: () => import('@/app/page'),
+  leaguePanel: () => import('@/components/home/LeaguePanel'),
+});
+let data: ReturnType<typeof m.home.buildHomeView>;
 let pageHtml = '';
 const panelHtml = new Map<string, string>();
 let renderPanel: (id: string) => string;
 
 const HV = 'components/home/home-view.ts';
 
-beforeAll(async () => {
-  process.env.SCVAL_SNAPSHOT = corpusSnapshotPath('all-2026-10-02');
-  home = await import('@/components/home/home-view');
-  leagues = await import('@/lib/leagues');
-  const { default: HomePage } = await import('@/app/page');
-  const { LeaguePanel } = await import('@/components/home/LeaguePanel');
-  data = home.buildHomeView();
-  pageHtml = renderToStaticMarkup(createElement(HomePage));
+beforeAll(() => {
+  data = m.home.buildHomeView();
+  pageHtml = renderToStaticMarkup(createElement(m.homePage.default));
   renderPanel = (id: string) => {
     const cached = panelHtml.get(id);
     if (cached) return cached;
     const panel = data.panels.find((p) => p.id === id);
     if (!panel) throw new Error(`${HV}: no panel for ${id}`);
-    const html = renderToStaticMarkup(createElement(LeaguePanel, { panel }));
+    const html = renderToStaticMarkup(createElement(m.leaguePanel.LeaguePanel, { panel }));
     panelHtml.set(id, html);
     return html;
   };
-}, 600_000);
+});
 
 describe('home panels (components/home/home-view.ts → LeaguePanel)', () => {
   it('builds one panel per league, config order', () => {
@@ -82,7 +79,7 @@ describe('home panels (components/home/home-view.ts → LeaguePanel)', () => {
 
   it('the EAL panel: the Super Regional line and note, no meter, no bracket and no CCS concept', () => {
     const eal = data.panels.find((p) => p.id === 'eal')!;
-    const config = leagues.getLeague('eal');
+    const config = m.leagues.getLeague('eal');
     expect(eal.postseason.kind, `${HV}: EAL postseason`).toBe('unbracketed-tournament');
     if (eal.postseason.kind === 'unbracketed-tournament' && config.postseason.kind === 'unbracketed-tournament') {
       expect(eal.postseason.line, `${HV}: EAL postseason line`).toBe('Super Regional, Oct 30–31 — the top six qualify');
@@ -159,7 +156,7 @@ describe('home panels (components/home/home-view.ts → LeaguePanel)', () => {
     };
     for (const panel of data.panels) {
       for (const division of panel.divisions) {
-        expect(division.home, `${HV}: ${division.id} home`).toEqual(leagues.getDivision(division.id).home);
+        expect(division.home, `${HV}: ${division.id} home`).toEqual(m.leagues.getDivision(division.id).home);
         const html = renderToStaticMarkup(
           createElement(MiniStandings, { division }),
         );
@@ -199,7 +196,7 @@ describe('home panels (components/home/home-view.ts → LeaguePanel)', () => {
     // independents' table included, DESIGN §24.10).
     for (const panel of data.panels) {
       expect(panel.pointsLegend, `${HV}: ${panel.id} legend`).toBe(
-        `PTS: ${leagues.getLeague(panel.id).rules.citations.points}.`,
+        `PTS: ${m.leagues.getLeague(panel.id).rules.citations.points}.`,
       );
       const html = renderPanel(panel.id);
       expect(html.split(panel.pointsLegend).length - 1, `components/home/LeaguePanel.tsx: ${panel.id} legend once`).toBe(
@@ -246,8 +243,8 @@ describe('home panels (components/home/home-view.ts → LeaguePanel)', () => {
   });
 
   it('writes the phase copy per league (dates from config)', () => {
-    const lead = (id: string, phase: Parameters<HomeView['phaseLead']>[1], today: string) =>
-      home.phaseLead(leagues.getLeague(id), phase, today);
+    const lead = (id: string, phase: Parameters<typeof m.home.phaseLead>[1], today: string) =>
+      m.home.phaseLead(m.leagues.getLeague(id), phase, today);
     expect(lead('mcal', 'regular', '2026-10-02'), `${HV}: regular renders nothing`).toBeNull();
     // The independents (DESIGN §24.10): the lead names the first game between two of them, never "Independent
     // league play", and the body says the table counts only games between them.
@@ -310,7 +307,7 @@ describe('home panels (components/home/home-view.ts → LeaguePanel)', () => {
 
   it('the Southern California postseason cards read their config, never "the top N qualify"', () => {
     const sunset = data.panels.find((p) => p.id === 'sunset')!;
-    const sunsetPs = leagues.getLeague('sunset').postseason;
+    const sunsetPs = m.leagues.getLeague('sunset').postseason;
     expect(sunset.postseason, `${HV}: Sunset postseason`).toEqual({
       kind: 'no-postseason',
       leagueId: 'sunset',
@@ -321,7 +318,7 @@ describe('home panels (components/home/home-view.ts → LeaguePanel)', () => {
     expect(sunset.afterSchedule).toEqual({ href: '/playoffs#sunset', label: 'Postseason' });
     for (const id of ['city', 'north-county', 'metro']) {
       const panel = data.panels.find((p) => p.id === id)!;
-      const ps = leagues.getLeague(id).postseason;
+      const ps = m.leagues.getLeague(id).postseason;
       if (ps.kind !== 'section-playoffs') throw new Error(`${id}: section-playoffs`);
       expect(panel.postseason, `${HV}: ${id} postseason`).toEqual({
         kind: 'section-playoffs',
@@ -359,7 +356,7 @@ describe('first visit (components/home/FindYourTeam.tsx, LeagueCard.tsx)', () =>
       name: 'Metro Conference',
       sectionShort: 'SDS',
       regionId: 'socal',
-      cities: leagues.getLeague('metro').cities,
+      cities: m.leagues.getLeague('metro').cities,
       teamsLine: '9 teams',
       divisions: ['Metro Mesa', 'Metro South Bay'],
     });
@@ -378,9 +375,9 @@ describe('first visit (components/home/FindYourTeam.tsx, LeagueCard.tsx)', () =>
     for (const card of data.leagueCards) {
       const html = renderToStaticMarkup(createElement(LeagueCard, { card }));
       // The button names the league by its standalone name: 'Show North County here', 'Show the independents here'.
-      expect(textOf(html), `components/home/LeagueCard.tsx: ${card.id}`).toContain(`Show ${leagues.standaloneName(card.id)} here`);
+      expect(textOf(html), `components/home/LeagueCard.tsx: ${card.id}`).toContain(`Show ${m.leagues.standaloneName(card.id)} here`);
       expect(html, `components/home/LeagueCard.tsx: ${card.id} link`).toContain(`href="/standings/${card.id}"`);
-      expect(textOf(html), `components/home/LeagueCard.tsx: ${card.id} link words`).toContain(leagues.standingsLabel(card.id));
+      expect(textOf(html), `components/home/LeagueCard.tsx: ${card.id} link words`).toContain(m.leagues.standingsLabel(card.id));
       expect(html, 'components/home/SetLeagueButton.tsx: js-only, disabled before hydration').toMatch(
         /<button[^>]*disabled=""[^>]*class="sx-js-only/,
       );
@@ -494,7 +491,7 @@ describe('the pinned card (components/home/MyTeamCard.tsx ← home-view.ts team 
     for (const v of data.teamViews) {
       // A team with no result is never placed, except that a Sunset team's line is the league's "no
       // playoffs" note whatever it has played (lib/data getTeamPostseasonLine).
-      const noPostseason = leagues.NO_POSTSEASON_LEAGUE_IDS.includes(leagues.getLeague(cardTeamLeague(v.slug)).id);
+      const noPostseason = m.leagues.NO_POSTSEASON_LEAGUE_IDS.includes(m.leagues.getLeague(cardTeamLeague(v.slug)).id);
       if (!v.hasResults && !noPostseason) expect(v.postseason, `${HV}: ${v.slug} gp 0 has no postseason line`).toBeNull();
       const html = renderToStaticMarkup(createElement(PinnedCard, { view: v, team: cardTeam(v.slug), onUnpin: () => {} }));
       expect(html, `components/home/MyTeamCard.tsx: ${v.slug} unpin id`).toContain('id="my-team-unpin"');
@@ -548,7 +545,7 @@ describe('the pinned card (components/home/MyTeamCard.tsx ← home-view.ts team 
   });
 
   it('every ladder label, and every two-rung tie, fits that line in every league', () => {
-    for (const league of leagues.LEAGUES) {
+    for (const league of m.leagues.LEAGUES) {
       const rungs = league.postseason.ladder;
       for (const division of league.divisions) {
         const mine = rungs.filter((r) => r.divisions === '*' || r.divisions.includes(division.id));

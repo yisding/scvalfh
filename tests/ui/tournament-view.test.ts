@@ -11,7 +11,7 @@
 
 import { renderToStaticMarkup } from 'react-dom/server';
 import type { ReactElement } from 'react';
-import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
+import { beforeAll, describe, expect, it } from 'vitest';
 
 import { buildTournamentView, type TournamentView } from '@/components/playoffs/playoff-view';
 import { getDivision, getLeague } from '@/lib/leagues';
@@ -20,7 +20,7 @@ import { computeStandings, outcomesFor, playoffOutcomeLabel } from '@/lib/standi
 import { getTeamBySlug } from '@/lib/teams';
 import type { Game, LeagueTournamentProjection, PostseasonTag, SeasonPhase, Standing, Team } from '@/lib/types';
 import { game } from '@/tests/support/game-builder';
-import { corpusSnapshotPath } from '@/tests/support/corpus-snapshot';
+import { useCorpusModules } from '@/tests/support/corpus-modules';
 import { textOf } from '@/tests/support/html-text';
 
 const VIEW = 'components/playoffs/playoff-view.ts';
@@ -211,43 +211,33 @@ describe('buildTournamentView — results re-seed the semifinals; the final is a
 // ---------------------------------------------------------------- the rendered page (corpus)
 
 describe('/playoffs/mcal (rendered on the corpus snapshot)', () => {
-  const priorEnv = process.env.SCVAL_SNAPSHOT;
+  const m = useCorpusModules('all-2026-10-02', {
+    page: () => import('@/app/playoffs/[league]/page'),
+    og: () => import('@/app/playoffs/[league]/opengraph-image'),
+    data: () => import('@/components/playoffs/tournament-league'),
+  });
   let html = '';
-  let page: typeof import('@/app/playoffs/[league]/page');
-  let og: typeof import('@/app/playoffs/[league]/opengraph-image');
-  let data: typeof import('@/components/playoffs/tournament-league');
 
   beforeAll(async () => {
-    process.env.SCVAL_SNAPSHOT = corpusSnapshotPath('all-2026-10-02');
-    vi.resetModules();
-    page = await import('@/app/playoffs/[league]/page');
-    og = await import('@/app/playoffs/[league]/opengraph-image');
-    data = await import('@/components/playoffs/tournament-league');
-    const el = await page.default({ params: Promise.resolve({ league: 'mcal' }) } as never);
+    const el = await m.page.default({ params: Promise.resolve({ league: 'mcal' }) } as never);
     html = renderToStaticMarkup(el as ReactElement);
-  }, 600_000);
-
-  afterAll(() => {
-    if (priorEnv === undefined) delete process.env.SCVAL_SNAPSHOT;
-    else process.env.SCVAL_SNAPSHOT = priorEnv;
-    vi.resetModules();
   });
 
   const text = () => textOf(html);
 
   it('generates only the tournament leagues, for the page and its OG image alike', () => {
-    expect(page.generateStaticParams(), PAGE).toEqual([{ league: 'mcal' }]);
-    expect(og.generateStaticParams(), OG).toEqual(page.generateStaticParams());
-    expect(data.tournamentStaticParams(), LEAGUE).toEqual(page.generateStaticParams());
-    expect(page.dynamicParams, PAGE).toBe(false);
+    expect(m.page.generateStaticParams(), PAGE).toEqual([{ league: 'mcal' }]);
+    expect(m.og.generateStaticParams(), OG).toEqual(m.page.generateStaticParams());
+    expect(m.data.tournamentStaticParams(), LEAGUE).toEqual(m.page.generateStaticParams());
+    expect(m.page.dynamicParams, PAGE).toBe(false);
   });
 
   it('finds the tournament league the page and its OG image both guard on, and nothing else', () => {
-    const found = data.tournamentLeague('mcal');
+    const found = m.data.tournamentLeague('mcal');
     expect(found?.summary.id, LEAGUE).toBe('mcal');
     expect(found?.ps.name, LEAGUE).toBe('MCAL tournament');
     for (const league of ['scval', 'nope', 'ccs', 'eal']) {
-      expect(data.tournamentLeague(league), `${LEAGUE}: ${league}`).toBeUndefined();
+      expect(m.data.tournamentLeague(league), `${LEAGUE}: ${league}`).toBeUndefined();
     }
   });
 
@@ -299,10 +289,10 @@ describe('/playoffs/mcal (rendered on the corpus snapshot)', () => {
   it('404s an unknown, CCS or unbracketed (EAL) league before any accessor that throws (page and OG image)', async () => {
     // eal: the Super Regional publishes no bracket, so it has a card on /playoffs, never a page here.
     for (const league of ['scval', 'nope', 'ccs', 'eal']) {
-      await expect(page.default({ params: Promise.resolve({ league }) } as never), `${PAGE}: ${league}`).rejects.toMatchObject({
+      await expect(m.page.default({ params: Promise.resolve({ league }) } as never), `${PAGE}: ${league}`).rejects.toMatchObject({
         digest: expect.stringContaining('404'),
       });
-      await expect(og.default({ params: Promise.resolve({ league }) } as never), `${OG}: ${league}`).rejects.toMatchObject({
+      await expect(m.og.default({ params: Promise.resolve({ league }) } as never), `${OG}: ${league}`).rejects.toMatchObject({
         digest: expect.stringContaining('404'),
       });
     }

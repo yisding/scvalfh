@@ -8,7 +8,7 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 
-import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
+import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 import { classifyGames } from '@/lib/classify';
 import { divisionsOf } from '@/lib/leagues';
@@ -33,6 +33,7 @@ import type {
   Standing,
 } from '@/lib/types';
 import { teamsInLeague } from '@/lib/teams';
+import { withSnapshotModules } from './support/corpus-modules';
 import { game } from './support/game-builder';
 import { REPO, tempDir } from './support/repo';
 
@@ -80,18 +81,16 @@ function writeSnapshot(name: string, s: Snapshot): string {
   return file;
 }
 
+let releaseData: () => void = () => {};
+
 /** lib/data loaded fresh against a given snapshot file. */
 async function loadData(file: string): Promise<DataModule> {
-  vi.resetModules();
-  process.env.SCVAL_SNAPSHOT = file;
-  return import('@/lib/data');
+  const loaded = await withSnapshotModules(file, { data: () => import('@/lib/data') });
+  releaseData = loaded.release;
+  return loaded.modules.data;
 }
 
-const priorEnv = process.env.SCVAL_SNAPSHOT;
-afterAll(() => {
-  if (priorEnv === undefined) delete process.env.SCVAL_SNAPSHOT;
-  else process.env.SCVAL_SNAPSHOT = priorEnv;
-});
+afterAll(() => releaseData());
 
 /** Every day 2026-08-01 … 2026-12-01 (123 dates). */
 function goldenDates(): string[] {
@@ -149,7 +148,7 @@ describe('golden item 1: the committed snapshot, migrated and parsed', () => {
     }
   });
 
-  describe('through lib/data (SCVAL_SNAPSHOT = the migrated file)', () => {
+  describe('through lib/data (loaded against the migrated file)', () => {
     let data: DataModule;
     beforeAll(async () => {
       data = await loadData(writeSnapshot('migrated.json', migrated));

@@ -34,6 +34,13 @@ const eslintConfig = defineConfig([
       ],
     },
   },
+  // tests/support/corpus-modules.ts names its vitest hook registrars useCorpusModules and
+  // useSnapshotModules; they are not React hooks, and the rules-of-hooks rule would reject calling
+  // them at the top of a test file (the only place they belong).
+  {
+    files: ["tests/**/*.ts"],
+    rules: { "react-hooks/rules-of-hooks": "off" },
+  },
   // Override default ignores of eslint-config-next.
   globalIgnores([
     // Default ignores of eslint-config-next:

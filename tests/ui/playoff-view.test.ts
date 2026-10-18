@@ -3,9 +3,9 @@
  * ladder projection for every CCS league, the league pairings (SCVAL crossover, BVAL play-in), the key
  * dates, and the rendered CCS page.
  *
- * League-specific values are asserted on the all-2026-10-02 CORPUS snapshot (SPEC §13.6), loaded by
- * pointing SCVAL_SNAPSHOT at it BEFORE lib/data is imported (dynamic imports after
- * `vi.resetModules()`), so live fetch #2 cannot break them. On that snapshot De Anza's 3rd place is
+ * League-specific values are asserted on the all-2026-10-02 CORPUS snapshot (SPEC §13.6), loaded
+ * through useCorpusModules (tests/support/corpus-modules.ts), which points lib/data at it before it is
+ * imported, so live fetch #2 cannot break them. On that snapshot De Anza's 3rd place is
  * shared (Los Altos, Valley Christian), El Camino's 4th straddles the play-in and at-large places,
  * Santa Teresa's champions are level (Prospect, Westmont) and Mt. Hamilton's 4th is shared — every
  * by-law consequence of an uncomputable tiebreak shows up at once. Every assertion message names the
@@ -14,48 +14,34 @@
 
 import { renderToStaticMarkup } from 'react-dom/server';
 import type { ReactElement } from 'react';
-import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
+import { beforeAll, describe, expect, it } from 'vitest';
 
 import type { ProjectionRow } from '@/components/playoffs/playoff-view';
 import { listWords } from '@/lib/format';
 import type { PlayoffStatus } from '@/lib/types';
-import { corpusSnapshotPath } from '@/tests/support/corpus-snapshot';
+import { useCorpusModules } from '@/tests/support/corpus-modules';
 import { textOf } from '@/tests/support/html-text';
-
-type Data = typeof import('@/lib/data');
-type View = typeof import('@/components/playoffs/playoff-view');
-type Leagues = typeof import('@/lib/leagues');
 
 const VIEW = 'components/playoffs/playoff-view.ts';
 const PAGE = 'app/playoffs/page.tsx';
 
-const priorEnv = process.env.SCVAL_SNAPSHOT;
-let data: Data;
-let view: View;
-let leagues: Leagues;
+const m = useCorpusModules('all-2026-10-02', {
+  data: () => import('@/lib/data'),
+  view: () => import('@/components/playoffs/playoff-view'),
+  leagues: () => import('@/lib/leagues'),
+  page: () => import('@/app/playoffs/page'),
+});
 let html = '';
 
-beforeAll(async () => {
-  process.env.SCVAL_SNAPSHOT = corpusSnapshotPath('all-2026-10-02');
-  vi.resetModules();
-  data = await import('@/lib/data');
-  view = await import('@/components/playoffs/playoff-view');
-  leagues = await import('@/lib/leagues');
-  const Page = (await import('@/app/playoffs/page')).default;
-  html = renderToStaticMarkup(Page() as ReactElement);
-}, 600_000);
-
-afterAll(() => {
-  if (priorEnv === undefined) delete process.env.SCVAL_SNAPSHOT;
-  else process.env.SCVAL_SNAPSHOT = priorEnv;
-  vi.resetModules();
+beforeAll(() => {
+  html = renderToStaticMarkup(m.page.default() as ReactElement);
 });
 
 function liveRows(division: string): ProjectionRow[] {
-  const league = leagues.leagueOfDivision(division).id;
-  return data.getPlayoffProjection(league).byDivision[division].flatMap((row) => {
-    const team = data.getTeamById(row.teamId);
-    const standing = data.getStandingFor(row.teamId);
+  const league = m.leagues.leagueOfDivision(division).id;
+  return m.data.getPlayoffProjection(league).byDivision[division].flatMap((row) => {
+    const team = m.data.getTeamById(row.teamId);
+    const standing = m.data.getStandingFor(row.teamId);
     if (!team || !standing) return [];
     return [{ team, standing, status: row.status, statuses: row.statuses, label: row.label, shared: row.shared }];
   });
@@ -80,12 +66,12 @@ function withOutcomes(division: string, outcomes: PlayoffStatus[][]): Projection
 }
 
 function build(division: string, rows: ProjectionRow[]) {
-  return view.buildDivisionProjection(division, leagues.divisionLabel(division), rows, view.ladderFactsFor(division));
+  return m.view.buildDivisionProjection(division, m.leagues.divisionLabel(division), rows, m.view.ladderFactsFor(division));
 }
 
 describe('ladderFactsFor (config → the ladder facts the notes use)', () => {
   it('reads each division’s ladder from config', () => {
-    expect(view.ladderFactsFor('de-anza'), VIEW).toEqual({
+    expect(m.view.ladderFactsFor('de-anza'), VIEW).toEqual({
       aqPlaces: 3,
       playInPlace: 4,
       playInDate: 'Oct 30',
@@ -93,14 +79,14 @@ describe('ladderFactsFor (config → the ladder facts the notes use)', () => {
       line: { status: 'aq', label: 'AQ line' },
       unresolved: 'Article VI §7 decides it with a coin flip',
     });
-    expect(view.ladderFactsFor('santa-teresa'), VIEW).toMatchObject({
+    expect(m.view.ladderFactsFor('santa-teresa'), VIEW).toMatchObject({
       aqPlaces: 0,
       playInPlace: 1,
       playInDate: 'Oct 31',
       atLargePlace: null,
       line: { status: 'play-in', label: 'Play-in host' },
     });
-    expect(view.ladderFactsFor('pcal'), VIEW).toMatchObject({
+    expect(m.view.ladderFactsFor('pcal'), VIEW).toMatchObject({
       aqPlaces: 2,
       playInPlace: null,
       playInDate: null,
@@ -170,9 +156,9 @@ describe('buildDivisionProjection — SCVAL', () => {
 
   it('never calls the teams of a league with no documents an "official alignment" (EAL, D23)', async () => {
     // The all-2026-10-02 corpus does not fetch the EAL, so its rows have no results.
-    const rows: ProjectionRow[] = data.getTeams('eal').map((team) => ({
+    const rows: ProjectionRow[] = m.data.getTeams('eal').map((team) => ({
       team,
-      standing: data.getStandingFor(team.id)!,
+      standing: m.data.getStandingFor(team.id)!,
       status: 'out' as PlayoffStatus,
       statuses: ['out'] as PlayoffStatus[],
       label: 'Outside the top six',
@@ -180,7 +166,7 @@ describe('buildDivisionProjection — SCVAL', () => {
     }));
     expect(rows.every((r) => !r.standing.hasReportedResults), 'the EAL has no data in this corpus').toBe(true);
     const facts = { aqPlaces: 0, playInPlace: null, playInDate: null, atLargePlace: null, line: null, unresolved: '' };
-    const none = view.buildDivisionProjection('eal', 'EAL', rows, facts);
+    const none = m.view.buildDivisionProjection('eal', 'EAL', rows, facts);
     expect(none.notes, VIEW).toEqual([
       'No EAL league results have been reported yet, so there is nothing to project here. The rows below are the EAL table as MaxPreps lists it.',
     ]);
@@ -191,7 +177,7 @@ describe('buildDivisionProjection — SCVAL', () => {
     const text = textOf(
       renderToStaticMarkup(
         PlayoffProjection({
-          projection: view.buildDivisionProjection('eal', 'EAL', partial, facts),
+          projection: m.view.buildDivisionProjection('eal', 'EAL', partial, facts),
           heading: 'League table',
           asOfLabel: 'so far',
           standingsHref: '/standings/eal',
@@ -208,16 +194,16 @@ describe('buildDivisionProjection — SCVAL', () => {
     // The corpus has no SoCal games, so every row is a no-results row. MaxPreps' table for Metro South
     // Bay is 'Grossmont' (El Capitan, Granite Hills) and leaves out Hilltop and Southwest.
     const rowsOf = (division: string) =>
-      data.getTeams().filter((t) => t.division === division).map((team) => ({
+      m.data.getTeams().filter((t) => t.division === division).map((team) => ({
         team,
-        standing: data.getStandingFor(team.id)!,
+        standing: m.data.getStandingFor(team.id)!,
         status: 'out' as PlayoffStatus,
         statuses: ['out'] as PlayoffStatus[],
         label: 'x',
         shared: false,
       }));
     const facts = { aqPlaces: 0, playInPlace: null, playInDate: null, atLargePlace: null, line: null, unresolved: '' };
-    const msb = view.buildDivisionProjection('metro-south-bay', 'Metro South Bay', rowsOf('metro-south-bay'), facts);
+    const msb = m.view.buildDivisionProjection('metro-south-bay', 'Metro South Bay', rowsOf('metro-south-bay'), facts);
     expect(msb.notes[0], VIEW).toBe(
       'No Metro South Bay league results have been reported yet, so there is nothing to project here. The rows below are the Metro South Bay teams (the CIF-SDS 2026-27 League Alignment).',
     );
@@ -229,7 +215,7 @@ describe('buildDivisionProjection — SCVAL', () => {
     const text = textOf(
       renderToStaticMarkup(
         PlayoffProjection({
-          projection: view.buildDivisionProjection('sunset', 'Sunset', partial, facts),
+          projection: m.view.buildDivisionProjection('sunset', 'Sunset', partial, facts),
           heading: 'League table',
           asOfLabel: 'so far',
           standingsHref: '/standings/sunset',
@@ -287,12 +273,12 @@ describe('buildDivisionProjection — BVAL and PCAL ladders', () => {
 
 describe('buildPairingView — the BVAL play-in card', () => {
   it('marks the Santa Teresa #1 seat as host and names both co-champions with the by-law that decides', () => {
-    const [pairing] = data.getLeaguePairings('bval');
+    const [pairing] = m.data.getLeaguePairings('bval');
     const resolve = (id: string) => {
-      const team = data.getTeamById(id);
-      return team ? { team, standing: data.getStandingFor(id) } : undefined;
+      const team = m.data.getTeamById(id);
+      return team ? { team, standing: m.data.getStandingFor(id) } : undefined;
     };
-    const v = view.buildPairingView(pairing, resolve, view.pairingNotesFor(pairing));
+    const v = m.view.buildPairingView(pairing, resolve, m.view.pairingNotesFor(pairing));
     expect(v.title, VIEW).toBe('Play-in');
     expect(v.dateLabel, VIEW).toBe('Sat Oct 31');
     expect(v.timeLabel, VIEW).toBe('11 AM PT');
@@ -303,21 +289,21 @@ describe('buildPairingView — the BVAL play-in card', () => {
     expect(v.seats[1].contenders.map((c) => c.team.slug), VIEW).toEqual(['branham', 'willow-glen']);
     expect(v.unsettled, VIEW).toBe(true);
     expect(v.notes[0], VIEW).toBe('Santa Teresa co-champions: BVAL By-Laws §6b-f decide who hosts.');
-    expect(view.pairingSentence(v), VIEW).toBe(
+    expect(m.view.pairingSentence(v), VIEW).toBe(
       'Play-in, Sat Oct 31, 11 AM PT: Branham or Willow Glen (Mt. Hamilton #4) at Prospect or Westmont (Santa Teresa #1, host).',
     );
   });
 
   it('states the by-law once when only the host seat is level (F95)', () => {
-    const [pairing] = data.getLeaguePairings('bval');
+    const [pairing] = m.data.getLeaguePairings('bval');
     // Willow Glen unresolved: Mt. Hamilton #4 is Branham alone, so only the host seat is level.
-    const v = view.buildPairingView(
+    const v = m.view.buildPairingView(
       pairing,
       (id) => {
-        const team = data.getTeamById(id);
-        return team && team.slug !== 'willow-glen' ? { team, standing: data.getStandingFor(id) } : undefined;
+        const team = m.data.getTeamById(id);
+        return team && team.slug !== 'willow-glen' ? { team, standing: m.data.getStandingFor(id) } : undefined;
       },
-      view.pairingNotesFor(pairing),
+      m.view.pairingNotesFor(pairing),
     );
     expect(v.notes, VIEW).toEqual([
       'Santa Teresa co-champions: BVAL By-Laws §6b-f decide who hosts.',
@@ -326,11 +312,11 @@ describe('buildPairingView — the BVAL play-in card', () => {
   });
 
   it('SCVAL crossover: seat labels from config, no host, the play-in last', () => {
-    const views = data.getLeaguePairings('scval').map((p) =>
-      view.buildPairingView(p, (id) => {
-        const team = data.getTeamById(id);
-        return team ? { team, standing: data.getStandingFor(id) } : undefined;
-      }, view.pairingNotesFor(p)),
+    const views = m.data.getLeaguePairings('scval').map((p) =>
+      m.view.buildPairingView(p, (id) => {
+        const team = m.data.getTeamById(id);
+        return team ? { team, standing: m.data.getStandingFor(id) } : undefined;
+      }, m.view.pairingNotesFor(p)),
     );
     expect(views.map((v) => v.title), VIEW).toEqual(['Crossover · #1 v #1', 'Crossover · #2 v #2', 'Crossover · #3 v #3', 'Play-in']);
     expect(views.every((v) => v.connector === 'vs' && v.seats.every((s) => !s.host)), VIEW).toBe(true);
@@ -344,18 +330,18 @@ describe('buildPairingView — the BVAL play-in card', () => {
 
 describe('splitStatusLabel', () => {
   it('splits a status label into the chip head and the " — " tail', () => {
-    expect(view.splitStatusLabel('Automatic qualifier'), VIEW).toEqual({ head: 'Automatic qualifier', tail: null });
-    expect(view.splitStatusLabel('Play-in game Oct 30 — a coin flip decides it'), VIEW).toEqual({
+    expect(m.view.splitStatusLabel('Automatic qualifier'), VIEW).toEqual({ head: 'Automatic qualifier', tail: null });
+    expect(m.view.splitStatusLabel('Play-in game Oct 30 — a coin flip decides it'), VIEW).toEqual({
       head: 'Play-in game Oct 30',
       tail: 'a coin flip decides it',
     });
-    expect(view.splitStatusLabel('A — b — c'), VIEW).toEqual({ head: 'A', tail: 'b — c' });
+    expect(m.view.splitStatusLabel('A — b — c'), VIEW).toEqual({ head: 'A', tail: 'b — c' });
   });
 });
 
 describe('keyDateRows', () => {
   it('lists the CCS dates and each league’s own date, labelled with its league, in date order', () => {
-    const rows = view.keyDateRows(data.getPlayoffs().keyDates, [
+    const rows = m.view.keyDateRows(m.data.getPlayoffs().keyDates, [
       { id: 'bval', leagueShort: 'BVAL', date: '2026-10-31', time: '11:00', label: 'BVAL play-in', detail: 'x' },
       { id: 'scval', leagueShort: 'SCVAL', date: '2026-10-30', time: null, label: 'SCVAL crossover and 4th-place play-in', detail: 'y' },
     ]);
@@ -375,22 +361,22 @@ describe('keyDateRows', () => {
 
 describe('row copy', () => {
   it('never invents a record for a team with nothing reported', () => {
-    const fremont = data.getStandingFor('fremont');
+    const fremont = m.data.getStandingFor('fremont');
     expect(fremont).toBeTruthy();
     const unreported = { ...fremont!, hasReportedResults: false };
-    expect(view.recordLine(unreported), VIEW).toBe('—');
-    expect(view.recordLine(unreported), VIEW).not.toContain('0-0-0');
+    expect(m.view.recordLine(unreported), VIEW).toBe('—');
+    expect(m.view.recordLine(unreported), VIEW).not.toContain('0-0-0');
   });
 
   it('reads the row link’s record in words and never says "1 points"', () => {
-    const standing = data.getStandingFor('fremont')!;
-    const team = data.getTeamById(standing.teamId)!;
+    const standing = m.data.getStandingFor('fremont')!;
+    const team = m.data.getTeamById(standing.teamId)!;
     const row = {
       team,
       standing: { ...standing, hasReportedResults: true, computed: { ...standing.computed, w: 0, l: 6, t: 1, pts: 1 } },
       shared: false,
     } as unknown as ProjectionRow;
-    const label = view.projectionRowLabel(row, 'De Anza');
+    const label = m.view.projectionRowLabel(row, 'De Anza');
     expect(label, VIEW).toContain('0 wins, 6 losses, 1 tie, 1 point');
     expect(label, VIEW).not.toMatch(/\b1 points\b|\d-\d-\d/);
   });
@@ -481,7 +467,7 @@ describe('/playoffs by region (DESIGN-socal §2.4)', () => {
   it('the San Diego block states the Section’s rule from config and draws no bracket or seed', () => {
     const socal = html.slice(html.indexOf('<div id="socal" data-region-scope="socal">'));
     const text = textOf(socal);
-    const city = leagues.getLeague('city').postseason;
+    const city = m.leagues.getLeague('city').postseason;
     if (city.kind !== 'section-playoffs') throw new Error('city: section-playoffs');
     expect(text, PAGE).toContain(city.qualificationLine);
     expect(text, PAGE).toContain(city.citations.roundDates);
@@ -492,7 +478,7 @@ describe('/playoffs by region (DESIGN-socal §2.4)', () => {
     expect(text, PAGE).toMatch(/City Western[\s\S]*Division I:/);
     expect(text, PAGE).toContain('Division II:');
     // The Sunset's card: its note and its source, labelled from config.
-    const sunset = leagues.getLeague('sunset').postseason;
+    const sunset = m.leagues.getLeague('sunset').postseason;
     if (sunset.kind !== 'no-postseason') throw new Error('sunset: no-postseason');
     expect(text, PAGE).toContain(sunset.note);
     expect(socal, PAGE).toContain(`href="${sunset.sourceUrl}"`);

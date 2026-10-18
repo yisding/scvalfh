@@ -10,6 +10,7 @@
     "typecheck": "next typegen && tsc --noEmit",
     "typecheck:scope": "node scripts/typecheck-scope.mjs",
     "test": "vitest run",
+    "test:arch": "vitest run --project arch",
     "fetch-data": "tsx scripts/fetch-data.ts",
     "fetch-rosters": "tsx scripts/fetch-rosters.ts",
     "fetch-player-stats": "tsx scripts/fetch-player-stats.ts",

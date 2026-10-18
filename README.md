@@ -307,8 +307,9 @@ tests and a second copy-honesty pass (`EAL_CORPUS` in `tests/support/corpus.ts`)
 sunset,city,north-county,metro --no-official --no-ccs --no-vnn` (65 MaxPreps requests: 1 + 2 × 7 + 50;
 8.2 MB), that drives `tests/pipeline/socal.test.ts`: Valley's skipped table, the membership counts per
 division, Mission Bay's cross-division games and the eight San Diego shootout finals. Tests that assert
-league-specific values build their snapshot from a corpus
-(`corpusSnapshotPath('all-2026-10-02')` in `tests/support/corpus-snapshot.ts`); tests over the bundled
+league-specific values read the snapshot a corpus produces
+(`corpusSnapshotPath('all-2026-10-02')` in `tests/support/corpus-snapshot.ts`, built once per test run by
+`tests/support/global-setup.ts`); tests over the bundled
 `data/snapshot.json` assert invariants only, because that file changes every run.
 `tests/fixtures/corpus/variants/finals-regression/previous-snapshot.json` is frozen as a four-league
 file, so the pipeline tests keep proving that a snapshot written before a league existed loads.
@@ -926,6 +927,20 @@ rules and an offline `fetch-jv` run over `tests/fixtures/jv`), `data/clubs.json`
 `data/commits.json`, and further suites pin the copy rules, the workflow files and the
 update-data issue builder, the scoped typecheck's globs and the legacy-import guard. Fixtures
 captured from real (offline) MaxPreps/SCVAL responses live under `tests/fixtures/`.
+
+Tests that render against a corpus do not build it themselves. Vitest's `globalSetup`
+(`tests/support/global-setup.ts`) runs the real `scripts/fetch-data.ts --fixtures …` once per
+`vitest run` for every corpus listed in its `SNAPSHOT_CORPORA` table (the SCVAL, all-leagues,
+all-leagues `--no-sblive`, EAL and SoCal corpora), concurrently, into a temporary directory that the
+run removes at the end. Nothing is cached between runs, so a snapshot can never be stale against the
+code under test; a test that needs another corpus or flag adds a row to the table. A test file that
+loads `lib/data` over a corpus calls `useCorpusModules(corpus, { data: () => import('@/lib/data'), … })`
+from `tests/support/corpus-modules.ts`, which points `lib/data` at the snapshot, resets the module
+registry and imports the modules fresh for that file (`useSnapshotModules` does the same for a
+snapshot file the test writes itself, and the `with…` forms load a second graph inside a test).
+`vitest.config.ts` splits the suite into three named projects: `arch` (`tests/arch/**`, run alone with
+`pnpm test:arch`), `spawn` (the files that run a repo script under tsx) and `unit` (the rest); a plain
+`pnpm test` runs all three, and the setup runs once however many projects are selected.
 
 ## Next-season bootstrap
 

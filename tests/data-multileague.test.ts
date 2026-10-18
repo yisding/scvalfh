@@ -13,10 +13,11 @@
 
 import { readFileSync } from 'node:fs';
 
-import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
+import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 import { loadSnapshot } from '@/lib/snapshot-schema';
 import type { DivisionId, LeagueId, Snapshot, Standing } from '@/lib/types';
+import { withSnapshotModules } from './support/corpus-modules';
 import { corpusSnapshotPath } from './support/corpus-snapshot';
 
 type DataModule = typeof import('@/lib/data');
@@ -28,15 +29,14 @@ interface Variant {
   data: DataModule;
 }
 
-const priorEnv = process.env.SCVAL_SNAPSHOT;
 const variants: Variant[] = [];
+let release: () => void = () => {};
 
 async function load(name: Variant['name'], file: string): Promise<Variant> {
-  process.env.SCVAL_SNAPSHOT = file;
-  vi.resetModules();
-  const data = (await import('@/lib/data')) as DataModule;
+  const loaded = await withSnapshotModules(file, { data: () => import('@/lib/data') });
+  release = loaded.release;
   const snapshot = loadSnapshot(JSON.parse(readFileSync(file, 'utf8')) as unknown);
-  return { name, file, snapshot, data };
+  return { name, file, snapshot, data: loaded.modules.data };
 }
 
 beforeAll(async () => {
@@ -44,11 +44,7 @@ beforeAll(async () => {
   variants.push(await load('--no-sblive', corpusSnapshotPath('all-2026-10-02', { extraArgs: ['--no-sblive'] })));
 });
 
-afterAll(() => {
-  if (priorEnv === undefined) delete process.env.SCVAL_SNAPSHOT;
-  else process.env.SCVAL_SNAPSHOT = priorEnv;
-  vi.resetModules();
-});
+afterAll(() => release());
 
 const withSblive = () => variants[0];
 const withoutSblive = () => variants[1];

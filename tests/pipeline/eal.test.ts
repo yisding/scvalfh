@@ -16,12 +16,11 @@ import { parseScoresPage, parseTeamGamesPage, type SbliveGame } from '@/lib/sour
 import { divisionGames } from '@/lib/standings';
 import { TEAMS, teamsInLeague } from '@/lib/teams';
 import type { Snapshot } from '@/lib/types';
-import { corpusSnapshotPath, stubCorpusSnapshot } from '@/tests/support/corpus-snapshot';
 import { CorpusReader, EAL_CORPUS, gameOf } from '@/tests/support/corpus';
+import { useCorpusModules } from '@/tests/support/corpus-modules';
+import { corpusSnapshotPath } from '@/tests/support/corpus-snapshot';
 import { expectOk, runFixtureCli } from '@/tests/support/cli';
 import { readSnapshot } from '@/tests/support/repo';
-
-type DataModule = typeof import('@/lib/data');
 
 const LEAGUE = 'eal';
 const DIVISION = 'eal';
@@ -32,15 +31,13 @@ const corpus = new CorpusReader(EAL_CORPUS);
 const manifest = corpus.manifest;
 const members = new Map(teamsInLeague(LEAGUE).map((t) => [t.id, t]));
 
-stubCorpusSnapshot(EAL_CORPUS);
+const m = useCorpusModules(EAL_CORPUS, { data: () => import('@/lib/data') });
 let file: string;
 let snapshot: Snapshot;
-let data: DataModule;
 
-beforeAll(async () => {
+beforeAll(() => {
   file = corpusSnapshotPath(EAL_CORPUS);
   snapshot = readSnapshot(file);
-  data = (await import('@/lib/data')) as DataModule;
 });
 
 /** League games between two EAL teams that MaxPreps flags, dated before the run's day, not final. */
@@ -212,7 +209,7 @@ describe('the EAL through the site read API (lib/data.ts)', () => {
     const expected = missingFromCorpus()
       .map((row) => row.contest.contestId)
       .sort();
-    const listed = data
+    const listed = m.data
       .getMissingOfficialResults(DIVISION)
       .filter((r) => r.kind === 'missing')
       .map((r) => r.game?.contestId ?? '')
@@ -223,6 +220,6 @@ describe('the EAL through the site read API (lib/data.ts)', () => {
   it('names no co-leaders on this corpus (Pleasant Valley is alone at the top)', () => {
     // The gating rule (co-leaders are never final while an EAL league result is missing) is tested on a
     // level-top table in tests/data.test.ts ("never calls co-leaders final while an EAL league result is missing").
-    expect(data.getCoLeaders(DIVISION), 'lib/data.ts getCoLeaders').toBeNull();
+    expect(m.data.getCoLeaders(DIVISION), 'lib/data.ts getCoLeaders').toBeNull();
   });
 });

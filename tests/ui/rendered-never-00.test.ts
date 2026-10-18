@@ -18,20 +18,20 @@
  * backfilled by D2 rule 3) or no 0-0 final is a normal day and must never block publishing. The
  * two-direction PROOF — that the sets exist and the rule bites on them — runs over the offline
  * all-2026-10-02 corpus, which has score-pending games, scheduled games and 0-0 finals (lib/data
- * is re-imported after SCVAL_SNAPSHOT points at it). The EAL capture (EAL_CORPUS), whose games
+ * is re-imported over it by useCorpusModules). The EAL capture (EAL_CORPUS), whose games
  * the all corpus does not hold, gets the invariants. Every assertion message names the module
  * that produced the value.
  */
 
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 import { buildGameView, gameDescription, gameKicker, gameTitle } from '@/components/game/game-view';
 import { GameCard, GameLine, GameLogRow, GameRow } from '@/components/ui/GameRow';
 import { getGames, getLeagueSummaries, getTeamBySlug } from '@/lib/data';
 import type { Game } from '@/lib/types';
-import { corpusSnapshotPath } from '@/tests/support/corpus-snapshot';
+import { useCorpusModules } from '@/tests/support/corpus-modules';
 import { EAL_CORPUS, type CorpusName } from '@/tests/support/corpus';
 import { textFoldingDashes } from '@/tests/support/html-text';
 
@@ -181,40 +181,29 @@ function defineRule(name: string, get: () => Rendered, proof: boolean) {
 defineRule('bundled snapshot (invariants)', () => live, false);
 
 /**
- * The rule over one offline corpus, with lib/data re-imported after SCVAL_SNAPSHOT points at it.
+ * The rule over one offline corpus, with lib/data re-imported over its snapshot (useCorpusModules).
  * `proof` is set for the corpus that holds a score-pending game and a 0-0 final.
  */
 function defineCorpus(title: string, corpusName: CorpusName, proof: boolean) {
   describe(title, () => {
-    const priorEnv = process.env.SCVAL_SNAPSHOT;
-    let corpus: Rendered | undefined;
-
-    beforeAll(async () => {
-      process.env.SCVAL_SNAPSHOT = corpusSnapshotPath(corpusName);
-      vi.resetModules();
-      const data = await import('@/lib/data');
-      const model = await import('@/components/game/game-view');
-      const row = await import('@/components/ui/GameRow');
-      corpus = {
-        games: data.getGames(),
-        buildGameView: model.buildGameView,
-        gameTitle: model.gameTitle,
-        gameDescription: model.gameDescription,
-        gameKicker: model.gameKicker,
-        GameRow: row.GameRow,
-        GameCard: row.GameCard,
-        GameLine: row.GameLine,
-        GameLogRow: row.GameLogRow,
-      };
-    }, 600_000);
-
-    afterAll(() => {
-      if (priorEnv === undefined) delete process.env.SCVAL_SNAPSHOT;
-      else process.env.SCVAL_SNAPSHOT = priorEnv;
-      vi.resetModules();
+    const m = useCorpusModules(corpusName, {
+      data: () => import('@/lib/data'),
+      model: () => import('@/components/game/game-view'),
+      row: () => import('@/components/ui/GameRow'),
+    });
+    const corpus = (): Rendered => ({
+      games: m.data.getGames(),
+      buildGameView: m.model.buildGameView,
+      gameTitle: m.model.gameTitle,
+      gameDescription: m.model.gameDescription,
+      gameKicker: m.model.gameKicker,
+      GameRow: m.row.GameRow,
+      GameCard: m.row.GameCard,
+      GameLine: m.row.GameLine,
+      GameLogRow: m.row.GameLogRow,
     });
 
-    defineRule(`corpus ${corpusName}`, () => corpus!, proof);
+    defineRule(`corpus ${corpusName}`, corpus, proof);
   });
 }
 

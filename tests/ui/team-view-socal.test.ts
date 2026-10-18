@@ -12,50 +12,42 @@
  */
 import { type ReactElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { beforeAll, describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
-import { stubCorpusSnapshot } from '@/tests/support/corpus-snapshot';
 import { SOCAL_CORPUS } from '@/tests/support/corpus';
+import { useCorpusModules } from '@/tests/support/corpus-modules';
 import { textOf } from '@/tests/support/html-text';
 
-stubCorpusSnapshot(SOCAL_CORPUS);
+const m = useCorpusModules(SOCAL_CORPUS, {
+  data: () => import('@/lib/data'),
+  view: () => import('@/components/teams/team-view'),
+  teamPage: () => import('@/app/teams/[slug]/page'),
+});
 
-type Data = typeof import('@/lib/data');
-type View = typeof import('@/components/teams/team-view');
-
-let data: Data;
-let view: View;
-let renderTeam: (slug: string) => Promise<string>;
-
-beforeAll(async () => {
-  data = await import('@/lib/data');
-  view = await import('@/components/teams/team-view');
-  const teamPage = await import('@/app/teams/[slug]/page');
-  renderTeam = async (slug: string) => {
-    const el = await teamPage.default({ params: Promise.resolve({ slug }) } as never);
-    return renderToStaticMarkup(el as ReactElement);
-  };
-}, 600_000);
+async function renderTeam(slug: string): Promise<string> {
+  const el = await m.teamPage.default({ params: Promise.resolve({ slug }) } as never);
+  return renderToStaticMarkup(el as ReactElement);
+}
 
 const TV = 'components/teams/team-view.ts';
 
 describe('San Diego team pages (socal corpus)', () => {
   it('the corpus is the Oct 5 Pacific capture', () => {
-    expect(data.getToday()).toBe('2026-10-05');
+    expect(m.data.getToday()).toBe('2026-10-05');
   });
 
   it('an "Earlier:" level W/L final in the San Diego Section is a credited win, never a shootout', () => {
     // Poway 0, Mt. Carmel 0, Sep 11 at Poway: MaxPreps marks Mt. Carmel W and Poway L, decider 'SO'.
-    const mtCarmel = data.getTeamBySlug('mt-carmel')!;
-    const poway = data.getTeamBySlug('poway')!;
-    expect(view.earlierMeeting(mtCarmel, poway, '2026-09-12')?.text, `${TV} earlierMeeting`).toBe(
+    const mtCarmel = m.data.getTeamBySlug('mt-carmel')!;
+    const poway = m.data.getTeamBySlug('poway')!;
+    expect(m.view.earlierMeeting(mtCarmel, poway, '2026-09-12')?.text, `${TV} earlierMeeting`).toBe(
       'Earlier: credited with the win on a level 0–0 score away, Sep 11',
     );
-    expect(view.earlierMeeting(poway, mtCarmel, '2026-09-12')?.text, `${TV} earlierMeeting`).toBe(
+    expect(m.view.earlierMeeting(poway, mtCarmel, '2026-09-12')?.text, `${TV} earlierMeeting`).toBe(
       'Earlier: lost on a level 0–0 score at home, Sep 11',
     );
-    for (const team of data.getTeams()) {
-      const card = view.buildTeamPageView(team.slug)!.nextCard;
+    for (const team of m.data.getTeams()) {
+      const card = m.view.buildTeamPageView(team.slug)!.nextCard;
       if (card.kind === 'game' && card.earlier) {
         expect(card.earlier.text, `${TV} ${team.slug}`).not.toMatch(/shootout|\bSO\b/);
       }

@@ -34,8 +34,8 @@
  *     never "rules require" in a view of a league whose table order is this site's own
  *     (orderScope 'site': every SoCal league).
  *
- * League-specific data comes from the offline corpora (SPEC §13.6: SCVAL_SNAPSHOT =
- * corpusSnapshotPath(...) before lib/data is imported), so a live fetch cannot move it. The
+ * League-specific data comes from the offline corpora (SPEC §13.6: loaded through
+ * useCorpusModules, which points lib/data at the corpus snapshot before it is imported), so a live fetch cannot move it. The
  * all-2026-10-02 corpus holds four leagues' data; the EAL is in it but frozen with no games of its
  * own. So a second collection runs over the EAL corpus (EAL_CORPUS, a fresh module graph): the home
  * EAL panel, card and pinned views, /standings/eal, /schedule/eal and the /playoffs EAL card as
@@ -47,7 +47,7 @@
 
 import { createElement, type ReactElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { beforeAll, describe, expect, it, vi } from 'vitest';
+import { beforeAll, describe, expect, it } from 'vitest';
 
 import {
   EAL_SCHOOL_CLAIM,
@@ -62,15 +62,21 @@ import {
   umpireOfficialClaims,
   visibleText,
 } from '@/scripts/copy-rules';
-import { corpusSnapshotPath } from '@/tests/support/corpus-snapshot';
 import { EAL_CORPUS } from '@/tests/support/corpus';
+import { CORPUS_HOOK_TIMEOUT, useCorpusModules, withCorpusModules } from '@/tests/support/corpus-modules';
 
-type Data = typeof import('@/lib/data');
-type Leagues = typeof import('@/lib/leagues');
-type Home = typeof import('@/components/home/home-view');
-type Standings = typeof import('@/components/standings/standings-page-view');
-type TeamView = typeof import('@/components/teams/team-view');
-type GameView = typeof import('@/components/game/game-view');
+/** The modules every collection reads, in the order the file imported them. */
+const COLLECTED = {
+  data: () => import('@/lib/data'),
+  leagues: () => import('@/lib/leagues'),
+  home: () => import('@/components/home/home-view'),
+  standings: () => import('@/components/standings/standings-page-view'),
+  teamView: () => import('@/components/teams/team-view'),
+  gameView: () => import('@/components/game/game-view'),
+};
+
+const corpus = useCorpusModules('all-2026-10-02', COLLECTED);
+type Leagues = typeof corpus.leagues;
 
 const HV = 'components/home/home-view.ts';
 const SPV = 'components/standings/standings-page-view.ts (via components/standings/standings-view.ts)';
@@ -80,12 +86,12 @@ const SP = 'app/schedule/[league]/page.tsx (rendered)';
 const PP = 'app/playoffs/page.tsx (rendered)';
 const TP = 'app/teams/[slug]/page.tsx (rendered)';
 
-let data: Data;
+let data: typeof corpus.data;
 let leagues: Leagues;
-let home: ReturnType<Home['buildHomeView']>;
-let standings: Standings;
-let teamView: TeamView;
-let gameView: GameView;
+let home: ReturnType<typeof corpus.home.buildHomeView>;
+let standings: typeof corpus.standings;
+let teamView: typeof corpus.teamView;
+let gameView: typeof corpus.gameView;
 
 /** One view model under test: who produced it, which league it belongs to, the value. */
 interface Subject {
@@ -98,24 +104,18 @@ interface Subject {
 }
 let subjects: Subject[] = [];
 
-/** The EAL corpus's collection, from its own module graph (lib/data reads SCVAL_SNAPSHOT once). */
+/** The EAL corpus's collection, from its own module graph (lib/data reads its snapshot once). */
 interface EalCorpus {
-  data: Data;
+  data: typeof corpus.data;
   leagues: Leagues;
-  gameView: GameView;
+  gameView: typeof corpus.gameView;
   subjects: Subject[];
 }
 let eal: EalCorpus;
 
 beforeAll(async () => {
-  process.env.SCVAL_SNAPSHOT = corpusSnapshotPath('all-2026-10-02');
-  data = await import('@/lib/data');
-  leagues = await import('@/lib/leagues');
-  const h = await import('@/components/home/home-view');
-  standings = await import('@/components/standings/standings-page-view');
-  teamView = await import('@/components/teams/team-view');
-  gameView = await import('@/components/game/game-view');
-  home = h.buildHomeView();
+  ({ data, leagues, standings, teamView, gameView } = corpus);
+  home = corpus.home.buildHomeView();
   markConfig(leagues.LEAGUES);
   markConfig(leagues.SECTIONS);
   markConfig(leagues.CCS);
@@ -167,7 +167,7 @@ beforeAll(async () => {
   subjects = s;
 
   eal = await collectEal();
-}, 600_000);
+}, CORPUS_HOOK_TIMEOUT);
 
 /**
  * The EAL corpus: a fresh module graph over corpusSnapshotPath(EAL_CORPUS), and every EAL view on
@@ -175,17 +175,19 @@ beforeAll(async () => {
  * pages (whose kicker the page composes), are rendered, and their visible text is the subject.
  */
 async function collectEal(): Promise<EalCorpus> {
-  process.env.SCVAL_SNAPSHOT = corpusSnapshotPath(EAL_CORPUS);
-  vi.resetModules();
-  const d: Data = await import('@/lib/data');
-  const l: Leagues = await import('@/lib/leagues');
-  const h = (await import('@/components/home/home-view')).buildHomeView();
-  const sd: Standings = await import('@/components/standings/standings-page-view');
-  const tv: TeamView = await import('@/components/teams/team-view');
-  const gm: GameView = await import('@/components/game/game-view');
-  const schedulePage = (await import('@/app/schedule/[league]/page')).default;
-  const playoffsPage = (await import('@/app/playoffs/page')).default;
-  const teamPage = (await import('@/app/teams/[slug]/page')).default;
+  // Not released: the file's other tests keep reading these modules, and the afterAll of
+  // useCorpusModules above unstubs the variable at the end of the file.
+  const { modules } = await withCorpusModules(EAL_CORPUS, {
+    ...COLLECTED,
+    schedulePage: () => import('@/app/schedule/[league]/page'),
+    playoffsPage: () => import('@/app/playoffs/page'),
+    teamPage: () => import('@/app/teams/[slug]/page'),
+  });
+  const { data: d, leagues: l, standings: sd, teamView: tv, gameView: gm } = modules;
+  const h = modules.home.buildHomeView();
+  const schedulePage = modules.schedulePage.default;
+  const playoffsPage = modules.playoffsPage.default;
+  const teamPage = modules.teamPage.default;
   markConfig(l.LEAGUES);
   markConfig(l.SECTIONS);
   markConfig(l.CCS);

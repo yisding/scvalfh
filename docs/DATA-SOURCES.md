@@ -2781,8 +2781,9 @@ pnpm fetch-data --capture tests/fixtures/corpus/<new-name>     # live: also reco
 
 `--capture` is a normal live run (the full request budget, all the politeness limits) that wraps
 the live transport in a recorder; it is the only way to make a new corpus, and the only reason to
-run a live fetch by hand. Tests that assert league-specific values build their snapshot from the
-corpus with `corpusSnapshotPath('all-2026-10-02')` (`tests/support/corpus-snapshot.ts`); tests over the bundled
+run a live fetch by hand. Tests that assert league-specific values read the snapshot the corpus produces
+with `corpusSnapshotPath('all-2026-10-02')` (`tests/support/corpus-snapshot.ts`, built once per test run by
+`tests/support/global-setup.ts`); tests over the bundled
 `data/snapshot.json` assert invariants only, since that file changes every run. An offline run
 never touches the network.
 

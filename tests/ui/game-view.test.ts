@@ -15,38 +15,35 @@ import path from 'node:path';
 
 import { createElement, type ReactElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
+import { beforeAll, describe, expect, it } from 'vitest';
 
 import type { Game, Snapshot } from '@/lib/types';
+import { CORPUS_HOOK_TIMEOUT, useCorpusModules, withSnapshotModules, type CorpusModules } from '@/tests/support/corpus-modules';
 import { corpusSnapshotPath } from '@/tests/support/corpus-snapshot';
 import { textOf } from '@/tests/support/html-text';
 import { tempDir, tempFile } from '@/tests/support/repo';
 
-type Data = typeof import('@/lib/data');
-type Model = typeof import('@/components/game/game-view');
-type GameIds = typeof import('@/lib/game-id');
+const loaders = {
+  d: () => import('@/lib/data'),
+  m: () => import('@/components/game/game-view'),
+  ids: () => import('@/lib/game-id'),
+  page: () => import('@/app/game/[id]/page'),
+  og: () => import('@/app/game/[id]/opengraph-image'),
+};
+type Modules = CorpusModules<typeof loaders>;
 
 interface Loaded {
-  d: Data;
-  m: Model;
-  ids: GameIds;
+  d: Modules['d'];
+  m: Modules['m'];
+  ids: Modules['ids'];
   pageParams: () => Array<{ id: string }>;
   ogParams: () => Array<{ id: string }>;
   renderPage: (id: string) => Promise<string>;
   metadata: (id: string) => Promise<import('next').Metadata>;
 }
 
-const priorEnv = process.env.SCVAL_SNAPSHOT;
-let corpusPath: string;
-let L: Loaded;
-
-async function loadModules(): Promise<Loaded> {
-  vi.resetModules();
-  const d = await import('@/lib/data');
-  const m = await import('@/components/game/game-view');
-  const ids = await import('@/lib/game-id');
-  const page = await import('@/app/game/[id]/page');
-  const og = await import('@/app/game/[id]/opengraph-image');
+/** The modules of one loaded graph with the game page's renderers over them. */
+function loadedOf({ d, m, ids, page, og }: Modules): Loaded {
   return {
     d,
     m,
@@ -61,16 +58,17 @@ async function loadModules(): Promise<Loaded> {
   };
 }
 
-beforeAll(async () => {
-  corpusPath = corpusSnapshotPath('all-2026-10-02');
-  process.env.SCVAL_SNAPSHOT = corpusPath;
-  L = await loadModules();
-}, 600_000);
+/** A fresh graph over a snapshot file the test wrote (the file-wide afterAll of useCorpusModules unstubs it). */
+async function loadFrom(file: string): Promise<Loaded> {
+  return loadedOf((await withSnapshotModules(file, loaders)).modules);
+}
 
-afterAll(() => {
-  if (priorEnv === undefined) delete process.env.SCVAL_SNAPSHOT;
-  else process.env.SCVAL_SNAPSHOT = priorEnv;
-  vi.resetModules();
+const corpus = useCorpusModules('all-2026-10-02', loaders);
+const corpusPath = corpusSnapshotPath('all-2026-10-02');
+let L: Loaded;
+
+beforeAll(() => {
+  L = loadedOf(corpus);
 });
 
 const leagueOfSlug = (slug: string | null) => (slug ? L.d.getTeamBySlug(slug)?.league : undefined);
@@ -304,9 +302,8 @@ describe('MCAL postseason note and superseded stubs (corpus copy)', () => {
     const dir = tempDir('game-view');
     const file = path.join(dir, 'snapshot.json');
     writeFileSync(file, JSON.stringify(snap));
-    process.env.SCVAL_SNAPSHOT = file;
-    S = await loadModules();
-  }, 600_000);
+    S = await loadFrom(file);
+  }, CORPUS_HOOK_TIMEOUT);
 
   it('FormGoingIn names the 102 teams this site follows for a side outside them (components/game/FormGoingIn.tsx)', async () => {
     const g = S.d.getGames().find((x) => (x.home.slug === null) !== (x.away.slug === null))!;
@@ -396,9 +393,8 @@ describe('Southern California games (corpus copy with synthetic SoCal games, DES
     const snap: Snapshot = { ...base, games, standings, counts: countsOf(games, standings) };
     const file = tempFile('game-view-socal', 'snapshot.json');
     writeFileSync(file, JSON.stringify(snap));
-    process.env.SCVAL_SNAPSHOT = file;
-    C = await loadModules();
-  }, 600_000);
+    C = await loadFrom(file);
+  }, CORPUS_HOOK_TIMEOUT);
 
   it('a San Diego level final MaxPreps marks W/L: the win credited, no SO tag, the rule cited, no shootout asserted', () => {
     // SectionConfig.shootout.inference 'unverified': si.com and the Section's power rankings record

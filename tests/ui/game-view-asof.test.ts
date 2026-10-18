@@ -9,88 +9,67 @@
  * current standing has.
  */
 
-import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
-import { corpusSnapshotPath } from '@/tests/support/corpus-snapshot';
+import { useCorpusModules } from '@/tests/support/corpus-modules';
 
-type Data = typeof import('@/lib/data');
-type Model = typeof import('@/components/game/game-view');
-type Leagues = typeof import('@/lib/leagues');
-type Format = typeof import('@/lib/format');
-type GameIds = typeof import('@/lib/game-id');
-
-const priorEnv = process.env.SCVAL_SNAPSHOT;
-let d: Data;
-let m: Model;
-let leagues: Leagues;
-let fmt: Format;
-let ids: GameIds;
-
-beforeAll(async () => {
-  process.env.SCVAL_SNAPSHOT = corpusSnapshotPath('all-2026-10-02');
-  vi.resetModules();
-  d = await import('@/lib/data');
-  m = await import('@/components/game/game-view');
-  leagues = await import('@/lib/leagues');
-  fmt = await import('@/lib/format');
-  ids = await import('@/lib/game-id');
-}, 600_000);
-
-afterAll(() => {
-  if (priorEnv === undefined) delete process.env.SCVAL_SNAPSHOT;
-  else process.env.SCVAL_SNAPSHOT = priorEnv;
-  vi.resetModules();
+const L = useCorpusModules('all-2026-10-02', {
+  d: () => import('@/lib/data'),
+  m: () => import('@/components/game/game-view'),
+  leagues: () => import('@/lib/leagues'),
+  fmt: () => import('@/lib/format'),
+  ids: () => import('@/lib/game-id'),
 });
 
 describe('recordAsOf', () => {
   it("equals the current standing on each team's latest league final", () => {
     let checked = 0;
-    for (const team of d.getTeams()) {
-      const form = d.getTeamForm(team.slug);
-      const standing = d.getStandingFor(team.slug);
+    for (const team of L.d.getTeams()) {
+      const form = L.d.getTeamForm(team.slug);
+      const standing = L.d.getStandingFor(team.slug);
       const latest = form?.leagueGames.filter((g) => g.outcome !== null).at(-1);
       if (!latest || !standing) continue;
-      const model = m.buildGameView(ids.gameIdToParam(latest.contestId));
+      const model = L.m.buildGameView(L.ids.gameIdToParam(latest.contestId));
       expect(model, latest.contestId).toBeDefined();
       if (!model) continue;
       const side = model.home.team?.slug === team.slug ? model.home : model.away;
       expect(side.team?.slug, team.slug).toBe(team.slug);
       const scope =
-        leagues.divisionHeading(team.division) ?? leagues.leagueOfDivision(team.division).shortName;
-      expect(side.sub, team.slug).toBe(`${fmt.recordString(standing.computed)} ${scope}`);
+        L.leagues.divisionHeading(team.division) ?? L.leagues.leagueOfDivision(team.division).shortName;
+      expect(side.sub, team.slug).toBe(`${L.fmt.recordString(standing.computed)} ${scope}`);
       checked += 1;
     }
     // The 2026-10-02 corpus has league results for most of the 49 NorCal teams (the 50 SoCal teams have none
     // in it: only their games against NorCal teams are there); a vacuous pass is a failure.
-    const norcal = d.getTeams().filter((t) => leagues.regionOf(t.league) === 'norcal');
+    const norcal = L.d.getTeams().filter((t) => L.leagues.regionOf(t.league) === 'norcal');
     expect(norcal).toHaveLength(49);
     expect(checked).toBeGreaterThan(norcal.length / 2);
   });
 
   it('counts this game on a final and leaves it out of a game still to play', () => {
     let checked = 0;
-    for (const game of d.getGames({ leagueOnly: true })) {
+    for (const game of L.d.getGames({ leagueOnly: true })) {
       for (const side of [game.home, game.away]) {
         if (!side.slug) continue;
-        const form = d.getTeamForm(side.slug);
+        const form = L.d.getTeamForm(side.slug);
         const entry = form?.leagueGames.find((g) => g.contestId === game.contestId);
-        const record = m.recordAsOf(game, side);
+        const record = L.m.recordAsOf(game, side);
         if (!form || !entry || !record) continue;
         const index = form.leagueGames.indexOf(entry);
         const before = form.leagueGames.slice(0, index).filter((g) => g.outcome !== null).length;
         expect(record.gp, game.contestId).toBe(before + (entry.outcome !== null ? 1 : 0));
         expect(record.w + record.l + record.t).toBe(record.gp);
-        const current = d.getStandingFor(side.slug)?.computed.gp ?? 0;
+        const current = L.d.getStandingFor(side.slug)?.computed.gp ?? 0;
         expect(record.gp).toBeLessThanOrEqual(current);
         checked += 1;
       }
     }
-    expect(checked, 'a vacuous pass is a failure').toBeGreaterThan(d.getTeams().length);
+    expect(checked, 'a vacuous pass is a failure').toBeGreaterThan(L.d.getTeams().length);
   });
 
   it('never prints 0-0-0 — a side with no league result yet gets the honest line', () => {
-    for (const game of d.getGames()) {
-      const model = m.buildGameView(ids.gameIdToParam(game.contestId));
+    for (const game of L.d.getGames()) {
+      const model = L.m.buildGameView(L.ids.gameIdToParam(game.contestId));
       for (const side of model ? [model.away, model.home] : []) {
         if (side.sub === null) continue;
         expect(side.sub.startsWith('0-0-0'), game.contestId).toBe(false);
@@ -100,8 +79,8 @@ describe('recordAsOf', () => {
 
   it("keeps 'not reported' for teams with no results — a team with results never reads as a gap", () => {
     let checked = 0;
-    for (const game of d.getGames()) {
-      const model = m.buildGameView(ids.gameIdToParam(game.contestId));
+    for (const game of L.d.getGames()) {
+      const model = L.m.buildGameView(L.ids.gameIdToParam(game.contestId));
       for (const side of model ? [model.away, model.home] : []) {
         if (side.sub === null || !side.standing?.hasReportedResults) continue;
         // DESIGN §8's missing-data line on a team that later posted a record read as a site gap.
@@ -109,27 +88,27 @@ describe('recordAsOf', () => {
         checked += 1;
       }
     }
-    expect(checked, 'a vacuous pass is a failure').toBeGreaterThan(d.getTeams().length);
+    expect(checked, 'a vacuous pass is a failure').toBeGreaterThan(L.d.getTeams().length);
   });
 
   it('shows the current league record on a regular-season non-league game, captioned "to date"', () => {
     let checked = 0;
-    for (const game of d.getGames()) {
+    for (const game of L.d.getGames()) {
       if (game.countsFor !== null || game.postseason !== null) continue;
-      const model = m.buildGameView(ids.gameIdToParam(game.contestId));
+      const model = L.m.buildGameView(L.ids.gameIdToParam(game.contestId));
       expect(model, game.contestId).toBeDefined();
       if (!model) continue;
       for (const side of [model.away, model.home]) {
         const computed = side.standing?.computed;
         if (!side.team || !computed || computed.gp === 0) continue;
         const scope =
-          leagues.divisionHeading(side.team.division) ?? leagues.leagueOfDivision(side.team.division).shortName;
+          L.leagues.divisionHeading(side.team.division) ?? L.leagues.leagueOfDivision(side.team.division).shortName;
         // An August non-league final once read "No league results yet" on both sides.
-        expect(side.sub, game.contestId).toBe(`${fmt.recordString(computed)} ${scope}`);
+        expect(side.sub, game.contestId).toBe(`${L.fmt.recordString(computed)} ${scope}`);
         checked += 1;
       }
       expect(model.recordsCaption?.endsWith(' to date'), game.contestId).toBe(true);
     }
-    expect(checked, 'a vacuous pass is a failure').toBeGreaterThan(d.getTeams().length);
+    expect(checked, 'a vacuous pass is a failure').toBeGreaterThan(L.d.getTeams().length);
   });
 });

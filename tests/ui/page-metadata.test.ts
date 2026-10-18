@@ -11,7 +11,7 @@
 import type { Metadata } from 'next';
 import { beforeAll, describe, expect, it } from 'vitest';
 
-import { stubCorpusSnapshot } from '@/tests/support/corpus-snapshot';
+import { useCorpusModules } from '@/tests/support/corpus-modules';
 
 interface PageModule {
   metadata?: Metadata;
@@ -29,13 +29,18 @@ function read(mod: PageModule, params: Record<string, string> = {}): Promise<Met
   return Promise.resolve(mod.generateMetadata({ params: Promise.resolve(params) } as never));
 }
 
-stubCorpusSnapshot('all-2026-10-02');
+const m = useCorpusModules('all-2026-10-02', {
+  site: () => import('@/components/layout/site'),
+  data: () => import('@/lib/data'),
+  clubs: () => import('@/lib/clubs'),
+  gameView: () => import('@/components/game/game-view'),
+});
 
-beforeAll(async () => {
-  ({ SITE_NAME, SITE_WORDMARK } = await import('@/components/layout/site'));
-  const data = await import('@/lib/data');
-  const { getClubSlugs } = await import('@/lib/clubs');
-  const { gameStaticParams } = await import('@/components/game/game-view');
+beforeAll(() => {
+  ({ SITE_NAME, SITE_WORDMARK } = m.site);
+  const { data, clubs, gameView } = m;
+  const { getClubSlugs } = clubs;
+  const { gameStaticParams } = gameView;
   const page = (path: string, mod: () => Promise<PageModule>, params?: Record<string, string>) => ({
     path,
     load: async () => read(await mod(), params),
@@ -62,7 +67,7 @@ beforeAll(async () => {
     page('app/teams/page.tsx', () => import('@/app/teams/page')),
     page('app/teams/[slug]/page.tsx', () => import('@/app/teams/[slug]/page'), { slug: data.getTeams()[0].slug }),
   ];
-}, 600_000);
+});
 
 describe('og:title (components/layout/site.ts OG_BASE)', () => {
   it('every page states its own og:title, with no site-name suffix, beside og:site_name', async () => {

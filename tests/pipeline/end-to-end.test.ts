@@ -10,8 +10,7 @@
  * loads through loadSnapshot's league-added upgrade.
  */
 
-import { readFileSync, statSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { existsSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 
 import { beforeAll, describe, expect, it } from 'vitest';
@@ -62,8 +61,8 @@ function intraLeague(s: Snapshot, league: LeagueId): string[] {
 }
 
 describe('corpusSnapshotPath (tests/support/corpus-snapshot.ts)', () => {
-  it('returns a parseable v2 snapshot in os.tmpdir(), with its meta file beside it', () => {
-    expect(path.dirname(corpusFile), 'tests/support/corpus-snapshot.ts: cache location').toBe(tmpdir());
+  it('returns a parseable v2 snapshot built by the global setup, with its meta file beside it', () => {
+    expect(path.basename(path.dirname(path.dirname(corpusFile))), 'tests/support/global-setup.ts: run directory').toMatch(/^scvalfh-corpora-/);
     const parsed = parseSnapshot(JSON.parse(readFileSync(corpusFile, 'utf8')) as unknown);
     expect(parsed.schemaVersion, 'tests/support/corpus-snapshot.ts: snapshot version').toBe(2);
     expect(parsed.fetchedAt, 'tests/support/corpus-snapshot.ts: the corpus stamp').toBe('2026-10-02T15:00:00.000Z');
@@ -72,16 +71,17 @@ describe('corpusSnapshotPath (tests/support/corpus-snapshot.ts)', () => {
     expect(meta.fetchedAt, 'tests/support/corpus-snapshot.ts: meta beside the snapshot').toBe(parsed.fetchedAt);
   });
 
-  it('a second call reuses the built file instead of running the pipeline again', () => {
-    const before = statSync(corpusFile).mtimeMs;
-    const t0 = performance.now();
+  it('a second call returns the same existing file, and different flags are a different snapshot', () => {
     const again = corpusSnapshotPath(CORPUS);
-    const elapsed = performance.now() - t0;
     expect(again, 'tests/support/corpus-snapshot.ts: same path').toBe(corpusFile);
-    expect(statSync(again).mtimeMs, 'tests/support/corpus-snapshot.ts: not rebuilt').toBe(before);
-    expect(elapsed, 'tests/support/corpus-snapshot.ts: a cache hit does not shell out').toBeLessThan(500);
-    // Different flags are a different cache entry.
-    expect(corpusSnapshotPath(CORPUS, { extraArgs: ['--no-sblive'] }), 'tests/support/corpus-snapshot.ts: keyed by flags').not.toBe(corpusFile);
+    expect(existsSync(again), 'tests/support/corpus-snapshot.ts: the file exists').toBe(true);
+    const noSblive = corpusSnapshotPath(CORPUS, { extraArgs: ['--no-sblive'] });
+    expect(noSblive, 'tests/support/corpus-snapshot.ts: keyed by flags').not.toBe(corpusFile);
+    expect(existsSync(noSblive), 'tests/support/corpus-snapshot.ts: the flagged file exists').toBe(true);
+  });
+
+  it('names the key to add for a corpus the setup does not build', () => {
+    expect(() => corpusSnapshotPath(CORPUS, { extraArgs: ['--bogus'] }), 'tests/support/corpus-snapshot.ts: unlisted corpus').toThrow(/add it to SNAPSHOT_CORPORA/);
   });
 });
 

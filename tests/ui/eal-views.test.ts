@@ -6,30 +6,31 @@
  * The EAL publishes no schedule document (`official.mode: 'none'`), decides its title on points and
  * publishes no standings (`orderScope: 'title'`), and its postseason is the Super Regional, an unbracketed
  * tournament: no ladder line, no bracket, no seeding. These tests run on the EAL corpus (where the
- * EAL has data, including two league games past their date with no score), loaded by pointing
- * SCVAL_SNAPSHOT at it BEFORE lib/data is imported. Every expected number is read from the snapshot
+ * EAL has data, including two league games past their date with no score), loaded through
+ * useCorpusModules (tests/support/corpus-modules.ts), which points lib/data at it. Every expected number is read from the snapshot
  * or from config; every assertion message names the module that produced the value.
  */
 
 import { createElement, type ReactElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
+import { beforeAll, describe, expect, it } from 'vitest';
 
-import { corpusSnapshotPath } from '@/tests/support/corpus-snapshot';
 import { EAL_CORPUS } from '@/tests/support/corpus';
+import { useCorpusModules } from '@/tests/support/corpus-modules';
 import { textOf } from '@/tests/support/html-text';
 
-type Data = typeof import('@/lib/data');
-type Leagues = typeof import('@/lib/leagues');
-type StandingsPageView = typeof import('@/components/standings/standings-page-view');
-type View = typeof import('@/components/standings/standings-view');
-
 const LEAGUE = 'eal';
-const priorEnv = process.env.SCVAL_SNAPSHOT;
-let data: Data;
-let leagues: Leagues;
-let sd: StandingsPageView;
-let view: View;
+const m = useCorpusModules(EAL_CORPUS, {
+  data: () => import('@/lib/data'),
+  leagues: () => import('@/lib/leagues'),
+  sd: () => import('@/components/standings/standings-page-view'),
+  view: () => import('@/components/standings/standings-view'),
+  leagueStandings: () => import('@/app/standings/[league]/page'),
+  overview: () => import('@/app/standings/page'),
+  leagueSchedule: () => import('@/app/schedule/[league]/page'),
+  about: () => import('@/app/about/page'),
+  history: () => import('@/app/history/2025-26/page'),
+});
 let standingsHtml: string;
 let overviewHtml: string;
 let scheduleHtml: string;
@@ -61,41 +62,24 @@ function sectionLabelledBy(html: string, id: string): string {
 }
 
 beforeAll(async () => {
-  process.env.SCVAL_SNAPSHOT = corpusSnapshotPath(EAL_CORPUS);
-  vi.resetModules();
-  data = await import('@/lib/data');
-  leagues = await import('@/lib/leagues');
-  sd = await import('@/components/standings/standings-page-view');
-  view = await import('@/components/standings/standings-view');
-  const leagueStandings = (await import('@/app/standings/[league]/page')).default;
-  const overview = (await import('@/app/standings/page')).default;
-  const leagueSchedule = (await import('@/app/schedule/[league]/page')).default;
-  const about = (await import('@/app/about/page')).default;
-  const history = (await import('@/app/history/2025-26/page')).default;
   const params = { params: Promise.resolve({ league: LEAGUE }) } as never;
-  standingsHtml = renderToStaticMarkup((await leagueStandings(params)) as ReactElement);
-  overviewHtml = renderToStaticMarkup(createElement(overview));
-  scheduleHtml = renderToStaticMarkup((await leagueSchedule(params)) as ReactElement);
-  aboutHtml = renderToStaticMarkup(createElement(about));
-  historyHtml = renderToStaticMarkup(createElement(history));
-}, 600_000);
-
-afterAll(() => {
-  if (priorEnv === undefined) delete process.env.SCVAL_SNAPSHOT;
-  else process.env.SCVAL_SNAPSHOT = priorEnv;
-  vi.resetModules();
+  standingsHtml = renderToStaticMarkup((await m.leagueStandings.default(params)) as ReactElement);
+  overviewHtml = renderToStaticMarkup(createElement(m.overview.default));
+  scheduleHtml = renderToStaticMarkup((await m.leagueSchedule.default(params)) as ReactElement);
+  aboutHtml = renderToStaticMarkup(createElement(m.about.default));
+  historyHtml = renderToStaticMarkup(createElement(m.history.default));
 });
 
 describe('/standings/eal', () => {
   it('prints the membership note under the header, from config', () => {
-    const note = leagues.getLeague(LEAGUE).membershipNote!;
+    const note = m.leagues.getLeague(LEAGUE).membershipNote!;
     expect(note).toBeTruthy();
     expect(textOf(standingsHtml), 'app/standings/[league]/page.tsx membershipNote').toContain(note);
-    expect(sd.buildStandingsPageView(LEAGUE).membershipNote).toBe(note);
+    expect(m.sd.buildStandingsPageView(LEAGUE).membershipNote).toBe(note);
   });
 
   it('links no official schedule and says where its league games come from', () => {
-    const [v] = sd.buildStandingsPageView(LEAGUE).views;
+    const [v] = m.sd.buildStandingsPageView(LEAGUE).views;
     expect(v.officialSchedule, 'components/standings/standings-view.ts officialSchedule').toBeNull();
     expect(v.scheduledPer).toBe('League games as MaxPreps marks them (EAL publishes no schedule)');
     const text = textOf(standingsHtml);
@@ -106,7 +90,7 @@ describe('/standings/eal', () => {
   });
 
   it('words the rank rule and the order legend for a league that publishes no standings (D26)', () => {
-    const [v] = sd.buildStandingsPageView(LEAGUE).views;
+    const [v] = m.sd.buildStandingsPageView(LEAGUE).views;
     expect(v.rankRule, 'components/standings/standings-view.ts rankRule').toBe(
       'EAL decides its title on points (NS Guidelines §VII.C.2) and publishes no standings; this site orders the whole table by the same points.',
     );
@@ -121,25 +105,25 @@ describe('/standings/eal', () => {
     // The San Diego Section's Valley has, in fact, no MaxPreps table, and its health card says so in
     // lib/standings.ts crossCheckSkipReason's words; that sentence is about Valley, not the EAL.
     expect(textOf(aboutHtml).replaceAll('MaxPreps publishes no table for this division', ''), 'app/about/page.tsx').not.toMatch(claims);
-    const order = leagues.getLeague(LEAGUE).rules.citations.order;
+    const order = m.leagues.getLeague(LEAGUE).rules.citations.order;
     expect(order, 'lib/leagues.ts EAL citations.order').toContain('§III.E.1 Super Regional seeding criteria are not applied here');
     expect(textOf(aboutHtml), 'app/about/page.tsx rules').toContain(`${order}.`);
-    const alone = data.getStandings(LEAGUE).filter((r) => r.hasReportedResults && !r.tiebreak.shared);
+    const alone = m.data.getStandings(LEAGUE).filter((r) => r.hasReportedResults && !r.tiebreak.shared);
     expect(alone.length, 'the EAL corpus has teams placed on points alone').toBeGreaterThan(0);
     for (const s of alone) expect(s.tiebreak.note, 'lib/standings.ts EAL tiebreak note').toContain(order);
-    expect(view.rankRuleText(leagues.getLeague('mcal')), 'table-scope leagues unchanged').toBe(
+    expect(m.view.rankRuleText(m.leagues.getLeague('mcal')), 'table-scope leagues unchanged').toBe(
       'MCAL ranks by points (MCAL Handbook §7a), and so do we.',
     );
   });
 
   it('heads the band "Super Regional, as things stand", links the /playoffs card, and draws no 2px rule', () => {
-    const [v] = sd.buildStandingsPageView(LEAGUE).views;
+    const [v] = m.sd.buildStandingsPageView(LEAGUE).views;
     expect(v.statusHeading, 'components/standings/standings-view.ts statusHeading').toBe('Super Regional, as things stand');
     expect(v.playoffsHref).toBe(`/playoffs#${LEAGUE}`);
     expect(v.playoffsLinkText).toBe('Postseason');
     expect(v.berthRuleAfter, 'no ladder line: every team is in the top six').toBeUndefined();
     expect(v.ladderLineLabel).toBeNull();
-    const ps = leagues.getLeague(LEAGUE).postseason;
+    const ps = m.leagues.getLeague(LEAGUE).postseason;
     if (ps.kind !== 'unbracketed-tournament') throw new Error('EAL postseason kind');
     expect(v.legendNotes[0], 'components/standings/standings-view.ts legend').toBe(`${ps.citations.qualification}.`);
     const text = textOf(standingsHtml);
@@ -149,8 +133,8 @@ describe('/standings/eal', () => {
   });
 
   it('lists every league game past its date with no counted result, in words that never say "official" (D23)', () => {
-    const today = data.getToday();
-    const expected = data
+    const today = m.data.getToday();
+    const expected = m.data
       .getGames({ division: LEAGUE })
       .filter(
         (g) =>
@@ -160,11 +144,11 @@ describe('/standings/eal', () => {
       )
       .map((g) => g.contestId)
       .sort();
-    const rows = data.getMissingOfficialResults(LEAGUE).filter((r) => r.kind === 'missing');
+    const rows = m.data.getMissingOfficialResults(LEAGUE).filter((r) => r.kind === 'missing');
     expect(rows.map((r) => r.game?.contestId).sort(), 'lib/data.ts getMissingOfficialResults(eal)').toEqual(expected);
     expect(expected.length, 'the EAL corpus has league games past their date with no score').toBeGreaterThan(0);
 
-    const [v] = sd.buildStandingsPageView(LEAGUE).views;
+    const [v] = m.sd.buildStandingsPageView(LEAGUE).views;
     expect(v.missing).toHaveLength(expected.length);
     expect(v.missingBanner, 'components/standings/standings-view.ts missingBanner').toBe(
       expected.length === 1
@@ -184,8 +168,8 @@ describe('/standings/eal', () => {
   });
 
   it('keeps the wording for a league with a schedule document', () => {
-    expect(view.missingBannerText(1)).toBe('⚑ 1 official league result missing — listed below the table.');
-    expect(view.missingBannerText(2, { official: false })).toBe('⚑ 2 league results missing — listed below the table.');
+    expect(m.view.missingBannerText(1)).toBe('⚑ 1 official league result missing — listed below the table.');
+    expect(m.view.missingBannerText(2, { official: false })).toBe('⚑ 2 league results missing — listed below the table.');
   });
 
   it('carries no CCS concept and no seed word', () => {
@@ -203,7 +187,7 @@ describe('/standings, the EAL block', () => {
     expect(outline.slice(ns, ns + 2), 'app/standings/page.tsx outline').toEqual(['h2 Northern Section', 'h3 EAL — Eastern Athletic League']);
     expect(outline[ns + 2], 'app/standings/page.tsx outline').toBe('h2 Southern Section');
     const block = textOf(sectionLabelledBy(overviewHtml, 'ns'));
-    expect(block, 'app/standings/page.tsx EAL block').toContain(leagues.getLeague(LEAGUE).membershipNote!);
+    expect(block, 'app/standings/page.tsx EAL block').toContain(m.leagues.getLeague(LEAGUE).membershipNote!);
     // No ladder line in the compact table (ladderLine null).
     expect(block).not.toMatch(/\bline\b/i);
     // Only the EAL carries a NorCal membership note.
@@ -229,7 +213,7 @@ describe('/about, the EAL parts', () => {
   const rules = () => byId(aboutHtml, `rules-${LEAGUE}`);
 
   it('lists the five postseason citations, the note and the counts sentence in the generated rules', () => {
-    const ps = leagues.getLeague(LEAGUE).postseason;
+    const ps = m.leagues.getLeague(LEAGUE).postseason;
     if (ps.kind !== 'unbracketed-tournament') throw new Error('EAL postseason kind');
     const text = textOf(rules());
     for (const key of ['qualification', 'format', 'seeding', 'eligibility', 'noFurtherPath'] as const) {
@@ -243,11 +227,11 @@ describe('/about, the EAL parts', () => {
   });
 
   it('prints no multi-team tie procedure for the EAL, whose chain has no step that separates teams', () => {
-    expect(leagues.getLeague(LEAGUE).rules.tiebreaks.default, 'lib/leagues.ts EAL chain').toEqual(['no-rule']);
+    expect(m.leagues.getLeague(LEAGUE).rules.tiebreaks.default, 'lib/leagues.ts EAL chain').toEqual(['no-rule']);
     expect(textOf(rules()), 'app/about/page.tsx EAL rules').not.toContain('three or more teams are level');
     // Every other league with generated rules (SCVAL's by-laws are quoted) keeps the paragraph exactly when
     // its chain has a separating step: the Southern California leagues' lone 'no-rule' has none, like the EAL's.
-    for (const other of leagues.LEAGUES.filter((l) => l.id !== LEAGUE && l.rules.matcher !== 'legacy')) {
+    for (const other of m.leagues.LEAGUES.filter((l) => l.id !== LEAGUE && l.rules.matcher !== 'legacy')) {
       const separates =
         Object.keys(other.rules.tiebreaks.byBucketStart ?? {}).length > 0 ||
         other.rules.tiebreaks.default.some((stage) => stage !== 'no-rule');
@@ -259,16 +243,16 @@ describe('/about, the EAL parts', () => {
 
   it('gives the EAL a source card with the Guidelines, its official note and its membership note, and no schedule link', () => {
     const text = textOf(aboutHtml);
-    const division = leagues.getDivision(LEAGUE);
+    const division = m.leagues.getDivision(LEAGUE);
     if (division.official.mode !== 'none') throw new Error('EAL official mode');
     expect(text, 'app/about/page.tsx source card').toContain(
-      `The rules quoted under EAL rules come from the CIF Northern Section’s Field Hockey Guidelines 2026-28. ${division.official.note} ${leagues.getLeague(LEAGUE).membershipNote}`,
+      `The rules quoted under EAL rules come from the CIF Northern Section’s Field Hockey Guidelines 2026-28. ${division.official.note} ${m.leagues.getLeague(LEAGUE).membershipNote}`,
     );
     expect(text).not.toMatch(/EAL schedule \((PDF|Google Doc)\)/);
     expect(text, 'app/about/page.tsx CIF Northern Section card').toContain(
       'CIF Northern Section Rules & postseason dates',
     );
-    const ps = leagues.getLeague(LEAGUE).postseason;
+    const ps = m.leagues.getLeague(LEAGUE).postseason;
     if (ps.kind !== 'unbracketed-tournament') throw new Error('EAL postseason kind');
     expect(textOf(byId(aboutHtml, 'playoffs')), 'app/about/page.tsx Postseason').toContain(
       `Northern Section: ${ps.note} Northern Section Field Hockey Guidelines (PDF)`,
@@ -296,10 +280,10 @@ describe('/about, the EAL parts', () => {
   it('shows "No official schedule document." and the D23 Missing row on the EAL health card', () => {
     const card = /<article[^>]*aria-label="EAL data health"[^>]*>([\s\S]*?)<\/article>/.exec(aboutHtml)?.[1] ?? '';
     const text = textOf(card);
-    const division = leagues.getDivision(LEAGUE);
+    const division = m.leagues.getDivision(LEAGUE);
     if (division.official.mode !== 'none') throw new Error('EAL official mode');
     expect(text, 'components/about/LeagueHealthCard.tsx').toContain(`No official schedule document. ${division.official.note}`);
-    const missing = data
+    const missing = m.data
       .getLeagueHealth(LEAGUE)
       .divisions.reduce((n, d) => n + (d.official?.missingPast ?? d.missingLeaguePast ?? 0), 0);
     expect(missing, 'the EAL corpus health row counts the past league games with no score').toBeGreaterThan(0);
@@ -311,8 +295,8 @@ describe('/about, the EAL parts', () => {
 
   it('counts the member rows of the MaxPreps table, never its extra non-member row', () => {
     const card = /<article[^>]*aria-label="EAL data health"[^>]*>([\s\S]*?)<\/article>/.exec(aboutHtml)?.[1] ?? '';
-    const health = data.getLeagueHealth(LEAGUE).divisions[0];
-    const members = data.getStandings(LEAGUE).filter((s) => s.reported !== null).length;
+    const health = m.data.getLeagueHealth(LEAGUE).divisions[0];
+    const members = m.data.getStandings(LEAGUE).filter((s) => s.reported !== null).length;
     expect(health.reportedTable, 'lib/pipeline/steps/reported.ts').toBe('ok');
     expect(health.reportedRows, 'lib/pipeline/steps/reported.ts: the members the table resolved to').toBe(members);
     expect(textOf(card), 'components/about/LeagueHealthCard.tsx').toContain(`read in this update (${members} member rows).`);
@@ -322,10 +306,10 @@ describe('/about, the EAL parts', () => {
     // A snapshot written before reported.ts stopped counting MaxPreps' extra row stored one more
     // than the members (7 for the six EAL teams); the card must still print the member count.
     const { LeagueHealthCard } = await import('@/components/about/LeagueHealthCard');
-    const health = data.getLeagueHealth(LEAGUE);
+    const health = m.data.getLeagueHealth(LEAGUE);
     const stale = { ...health, divisions: health.divisions.map((d) => ({ ...d, reportedRows: (d.reportedRows ?? 0) + 1 })) };
-    const division = leagues.getLeague(LEAGUE).divisions[0];
-    const members = data.getStandings(division.id).filter((s) => s.reported !== null).length;
+    const division = m.leagues.getLeague(LEAGUE).divisions[0];
+    const members = m.data.getStandings(division.id).filter((s) => s.reported !== null).length;
     const html = renderToStaticMarkup(
       createElement(LeagueHealthCard, {
         shortName: 'EAL',

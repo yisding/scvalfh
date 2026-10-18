@@ -16,9 +16,10 @@ import type { ReactElement } from 'react';
 import { createElement } from 'react';
 import { describe, expect, it } from 'vitest';
 
-import { stubCorpusSnapshot } from '@/tests/support/corpus-snapshot';
+import { useCorpusModules } from '@/tests/support/corpus-modules';
 
-stubCorpusSnapshot('all-2026-10-02');
+// The cards and OG routes are imported per test; the loaders are empty, so the file only points lib/data at the corpus.
+useCorpusModules('all-2026-10-02', {});
 
 /** Decode an 8-bit RGB or RGBA, non-interlaced PNG (what resvg writes) to rows of pixels. */
 function decodePng(buf: Buffer): { width: number; height: number; channels: number; rows: Buffer[] } {

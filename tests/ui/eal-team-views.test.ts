@@ -7,8 +7,8 @@
  *
  * The EAL has no official schedule (`official.mode: 'none'`), so a team page links none; its
  * postseason is the Super Regional, an unbracketed tournament, so no page draws a bracket. These
- * tests run on the EAL corpus (SCVAL_SNAPSHOT pointed at it BEFORE lib/data is imported, with the
- * modules re-imported after `vi.resetModules()`). Expected values are read from the snapshot or from
+ * tests run on the EAL corpus (loaded through useCorpusModules, which points lib/data at it before it
+ * is imported). Expected values are read from the snapshot or from
  * config where the test can derive them; the rest (Chico 4-1-0 and Davis 3-2-0, the 1-0 season series,
  * the three overtime periods and the 'Earlier:' lines) are those of the frozen eal-2026-10-04 corpus.
  * Every assertion message names the module that produced the value.
@@ -19,31 +19,15 @@ import path from 'node:path';
 
 import { createElement, type ReactElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
+import { beforeAll, describe, expect, it } from 'vitest';
 
 import type { Game, Snapshot } from '@/lib/types';
-import { corpusSnapshotPath } from '@/tests/support/corpus-snapshot';
 import { EAL_CORPUS } from '@/tests/support/corpus';
+import { CORPUS_HOOK_TIMEOUT, useCorpusModules, withSnapshotModules, type CorpusModules } from '@/tests/support/corpus-modules';
+import { corpusSnapshotPath } from '@/tests/support/corpus-snapshot';
 import { textOf } from '@/tests/support/html-text';
 import { tempDir } from '@/tests/support/repo';
 
-type Data = typeof import('@/lib/data');
-type Leagues = typeof import('@/lib/leagues');
-type View = typeof import('@/components/teams/team-view');
-type GameViewModule = typeof import('@/components/game/game-view');
-
-interface Loaded {
-  d: Data;
-  l: Leagues;
-  v: View;
-  gm: GameViewModule;
-  renderTeam: (slug: string) => Promise<string>;
-  renderGame: (contestId: string) => Promise<string>;
-  renderIndex: () => string;
-  describeTeam: (slug: string) => Promise<string | undefined>;
-}
-
-const priorEnv = process.env.SCVAL_SNAPSHOT;
 let eal: Loaded;
 let withTag: Loaded;
 let tagged: Game;
@@ -52,16 +36,30 @@ let taggedFinal: Game;
 /** CCS concepts and seed words no EAL view may carry (spec D21, D10). */
 const BANNED = /\bCCS\b|at-large|automatic qualifier|\b(\d+(st|nd|rd|th)|No\. ?\d+|top|first|second) seed(ed)?\b/i;
 
-async function load(snapshotPath: string): Promise<Loaded> {
-  process.env.SCVAL_SNAPSHOT = snapshotPath;
-  vi.resetModules();
-  const d = await import('@/lib/data');
-  const l = await import('@/lib/leagues');
-  const v = await import('@/components/teams/team-view');
-  const gm = await import('@/components/game/game-view');
-  const teamPage = await import('@/app/teams/[slug]/page');
-  const gamePage = await import('@/app/game/[id]/page');
-  const indexPage = (await import('@/app/teams/page')).default;
+const loaders = {
+  d: () => import('@/lib/data'),
+  l: () => import('@/lib/leagues'),
+  v: () => import('@/components/teams/team-view'),
+  gm: () => import('@/components/game/game-view'),
+  teamPage: () => import('@/app/teams/[slug]/page'),
+  gamePage: () => import('@/app/game/[id]/page'),
+  indexPage: () => import('@/app/teams/page'),
+};
+type Modules = CorpusModules<typeof loaders>;
+
+interface Loaded {
+  d: Modules['d'];
+  l: Modules['l'];
+  v: Modules['v'];
+  gm: Modules['gm'];
+  renderTeam: (slug: string) => Promise<string>;
+  renderGame: (contestId: string) => Promise<string>;
+  renderIndex: () => string;
+  describeTeam: (slug: string) => Promise<string | undefined>;
+}
+
+/** The modules of one loaded graph with the team, game and index page renderers over them. */
+function loadedOf({ d, l, v, gm, teamPage, gamePage, indexPage }: Modules): Loaded {
   return {
     d,
     l,
@@ -73,13 +71,15 @@ async function load(snapshotPath: string): Promise<Loaded> {
       renderToStaticMarkup(
         (await gamePage.default({ params: Promise.resolve({ id: contestId }) } as never)) as ReactElement,
       ),
-    renderIndex: () => renderToStaticMarkup(createElement(indexPage)),
+    renderIndex: () => renderToStaticMarkup(createElement(indexPage.default)),
     describeTeam: async (slug) => {
       const meta = await teamPage.generateMetadata({ params: Promise.resolve({ slug }) } as never);
       return typeof meta.description === 'string' ? meta.description : undefined;
     },
   };
 }
+
+const corpus = useCorpusModules(EAL_CORPUS, loaders);
 
 /** The one EAL game between these two teams on a date. */
 function gameOn(m: Loaded, a: string, b: string, dateKey: string): Game {
@@ -91,8 +91,8 @@ function gameOn(m: Loaded, a: string, b: string, dateKey: string): Game {
 }
 
 beforeAll(async () => {
+  eal = loadedOf(corpus);
   const path0 = corpusSnapshotPath(EAL_CORPUS);
-  eal = await load(path0);
 
   // A copy of the corpus in which one scheduled EAL league game is tagged a Super Regional game:
   // no league game is that late in the capture, so the tag is written by hand (the pipeline writes
@@ -114,16 +114,10 @@ beforeAll(async () => {
   const dir = tempDir('eal-team-views');
   const file = path.join(dir, 'snapshot.json');
   writeFileSync(file, JSON.stringify(snap));
-  withTag = await load(file);
+  withTag = loadedOf((await withSnapshotModules(file, loaders)).modules);
   tagged = withTag.d.getGameById(target.contestId)!;
   taggedFinal = withTag.d.getGameById(final.contestId)!;
-}, 600_000);
-
-afterAll(() => {
-  if (priorEnv === undefined) delete process.env.SCVAL_SNAPSHOT;
-  else process.env.SCVAL_SNAPSHOT = priorEnv;
-  vi.resetModules();
-});
+}, CORPUS_HOOK_TIMEOUT);
 
 describe('an EAL team page (/teams/davis)', () => {
   it('reads Super Regional picture, states the Super Regional line, and carries no CCS concept or seed word', async () => {
