@@ -28,8 +28,8 @@ import type { Standing } from '@/lib/model/standings';
 import { RunAbort, type SnapshotMeta } from '@/lib/pipeline/contract';
 import { readManifest } from '@/lib/pipeline/corpus';
 import { describeRunFailure } from '@/lib/pipeline/run-failure';
+import { FETCHABLE_TEAMS, TEAMS } from '@/lib/registry/teams';
 import { loadSnapshot, parseSnapshot } from '@/lib/snapshot-schema';
-import { FETCHABLE_TEAMS, TEAMS } from '@/lib/teams';
 import { corpusSnapshotPath } from './support/corpus-snapshot';
 import { corpusDir } from './support/corpus';
 import { expectOk, runFixtureCli, type CliRun } from './support/cli';
@@ -500,11 +500,11 @@ describe('describeRunFailure: how the entry point reports a throw (SPEC §7.5)',
   });
 
   it('recognises an invariant error from a second module instance by its name', () => {
-    const foreign = new Error('lib/teams.ts: expected 102 teams, got 101');
+    const foreign = new Error('lib/registry/teams.ts: expected 102 teams, got 101');
     foreign.name = 'ConfigInvariantError';
     expect(describeRunFailure(foreign)).toEqual({
       abort: true,
-      line: 'ABORT (previous snapshot kept): lib/teams.ts: expected 102 teams, got 101',
+      line: 'ABORT (previous snapshot kept): lib/registry/teams.ts: expected 102 teams, got 101',
     });
   });
 

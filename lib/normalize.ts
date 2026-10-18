@@ -29,9 +29,10 @@ import type { DroppedContest } from './model/health';
 import type { ContestId, DivisionId, SourceId } from './model/ids';
 import { type DataQualityConfig, type SectionConfig } from './model/league-config';
 import type { SeasonWindow } from './model/season';
+import { resolveTeam } from './registry/resolve';
+import { getTeamById } from './registry/teams';
 import { toLocalTimestamp } from './shared/dates';
 import { byDateThenId } from './shared/game';
-import { getTeamById, resolveTeam } from './teams';
 import { splitTbaRows, type ContestTeam, type ScheduleRow } from './sources/maxpreps';
 
 export interface NormalizeOptions {

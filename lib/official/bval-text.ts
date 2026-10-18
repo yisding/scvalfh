@@ -14,7 +14,7 @@
 
 import { getDivision } from '@/lib/config/leagues';
 import type { DivisionId, TeamSlug } from '@/lib/model/ids';
-import { resolveOfficialName } from '@/lib/teams';
+import { resolveOfficialName } from '@/lib/registry/resolve';
 import { officialFixtureId, type BundleEvent, type BundleFixture } from './schema';
 
 /** The default varsity start ("GAME TIMES: VARSITY – 5:00pm"). */

@@ -7,6 +7,7 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { BOOTSTRAP_URL, SPORT_SEASON_ID } from '@/lib/config/season';
 import type { RawResponse } from '@/lib/pipeline/contract';
+import { getTeamBySlug } from '@/lib/registry/teams';
 import {
   DEFAULT_USER_AGENT,
   MaxPrepsClient,
@@ -20,7 +21,6 @@ import {
   type ScheduleRow,
 } from '@/lib/sources/maxpreps';
 import { MAX_RETRY_AFTER_MS, POLITE_USER_AGENT } from '@/lib/sources/http';
-import { getTeamBySlug } from '@/lib/teams';
 import { allScheduleRows, corpusDir, standingsFixture } from './support/corpus';
 import { REPO } from './support/repo';
 

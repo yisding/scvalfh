@@ -13,8 +13,8 @@ import { regionOf } from '@/lib/config/leagues';
 import { getJvClassification, getJvFetchedAt, getJvGamesForTeam, getJvGamesOn, getJvTeam } from '@/lib/jv';
 import type { Game, GameSide } from '@/lib/model/game';
 import type { RegionId, TeamSlug } from '@/lib/model/ids';
+import { getTeamBySlug } from '@/lib/registry/teams';
 import { localDateKey } from '@/lib/shared/dates';
-import { getTeamBySlug } from '@/lib/teams';
 
 export interface JvRowView {
   game: Game;

@@ -10,6 +10,7 @@ import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 import { LEAGUES } from '@/lib/config/leagues';
+import { TEAMS, teamsInLeague } from '@/lib/registry/teams';
 import {
   ROSTER_TEAM_COUNT,
   RostersPartialSchema,
@@ -20,7 +21,6 @@ import {
 } from '@/lib/rosters-schema';
 import { getRosters, getTeamRoster, sortedPlayers } from '@/lib/rosters';
 import { pendingRoster } from '@/lib/sources/maxpreps-roster';
-import { TEAMS, teamsInLeague } from '@/lib/teams';
 import { FIXTURE_DIR } from './support/corpus';
 import { expectOk, runRepoScript } from './support/cli';
 import { REPO, tempDir, tempFile } from './support/repo';

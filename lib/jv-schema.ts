@@ -26,11 +26,11 @@
 
 import { z } from 'zod';
 
-import { JV_SLUG_BY_SBLIVE_ID } from './jv-teams';
+import { JV_SLUG_BY_SBLIVE_ID } from './registry/jv-teams';
+import { TEAMS, getTeamBySlug } from './registry/teams';
 import { dateKey, httpUrl, slugId } from './schema-primitives';
 import { contentKey } from './shared/stable-json';
 import { GameSchema } from './snapshot-schema';
-import { TEAMS, getTeamBySlug } from './teams';
 
 const JV_SLUGS: ReadonlySet<string> = new Set(TEAMS.map((t) => t.slug));
 /** How many teams a JV file holds: TEAMS.length (102). */

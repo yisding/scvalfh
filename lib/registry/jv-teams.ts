@@ -15,9 +15,9 @@
  * Pure config: no I/O.
  */
 
-import type { TeamSlug } from './model/ids';
-import type { Team } from './model/team';
-import { SBLIVE_WEB } from './sources/sblive';
+import type { TeamSlug } from '@/lib/model/ids';
+import type { Team } from '@/lib/model/team';
+import { SBLIVE_WEB } from '@/lib/sources/sblive';
 import { TEAMS } from './teams';
 
 /** Registry slug → the JV team's si.com web path segment (`<id>-<slug>-jv`), or null when si.com has none. */

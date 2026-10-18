@@ -21,10 +21,10 @@ import type {
 import type { DivisionId, LeagueId, TeamId, TeamSlug } from '@/lib/model/ids';
 import type { Snapshot } from '@/lib/model/snapshot';
 import type { ReportedRecord } from '@/lib/model/standings';
+import { TEAMS, getTeamBySlug } from '@/lib/registry/teams';
 import { localDateKey, toLocalTimestamp } from '@/lib/shared/dates';
 import { CIFSS_SECTIONS } from '@/lib/sources/cifss';
 import type { ScheduleRow } from '@/lib/sources/maxpreps';
-import { TEAMS, getTeamBySlug } from '@/lib/teams';
 import type { OfficialStepResult, RunArgs, RunContext, SecondaryStepResult, Transport } from './contract';
 
 // ---------------------------------------------------------------- sources

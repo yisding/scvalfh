@@ -2412,7 +2412,7 @@ source at all** — not "0-0-0", not last place: *absent*. Official 2026-27 memb
 eight. Any design that derives its rows from the feed array silently drops a school from the
 league, which is the worst bug this site could ship.
 
-**Resolution:** `lib/teams.ts` holds a hand-maintained membership constant. `lib/standings.ts`
+**Resolution:** `lib/registry/teams.ts` holds a hand-maintained membership constant. `lib/standings.ts`
 **left-joins** it against the feed, so the table always has 16 rows across two divisions and a
 missing school lands in the designed no-results state (§8) rather than vanishing. A Zod
 invariant asserts `snapshot.teams.length === 16` and CI asserts it again.
@@ -2509,7 +2509,7 @@ explicit constant, never derived by string munging (`mitty` ≠ `archbishop-mitt
 under `/ca/san-francisco/`, not a Santa Clara city path).
 
 ```ts
-// lib/teams.ts — the membership constant. THIS is the league, not the feed.
+// lib/registry/teams.ts — the membership constant. THIS is the league, not the feed.
 export const TEAMS = [
   // site slug          display              short          abbr  division     maxpreps slug
   ['cupertino',         'Cupertino',         'Cupertino',   'CU', 'de-anza',   'cupertino'],
@@ -2593,7 +2593,7 @@ know the pin, so no caller ever passed it. A pinned row is marked only by `[data
 Nothing in a later step can be correct before the step above it. Each step ends in something
 verifiable.
 
-**1 — Data contract.** `lib/teams.ts` (the 16-team membership constant + slug/abbr map, with
+**1 — Data contract.** `lib/registry/teams.ts` (the 16-team membership constant + slug/abbr map, with
 the build-time uniqueness assert) and `lib/snapshot-schema.ts` (the Zod schema and all five
 invariants of §5.1, the left-join against the feed, the cross-check step, and the recap
 cleanup of §5.8). *Done when:* the schema **rejects** a final game with a null score, a
@@ -4089,7 +4089,7 @@ and Thousand Oaks, and each other, home and away (all ten pairs of the five meet
 Chaminade–Thousand Oaks three times). The one MaxPreps league flag between the two and a Sunset team is
 Bonita at Great Oak, Aug 27. So the site lists them with the independents, says on every surface that
 MaxPreps and si.com list them in the Sunset, and skips their MaxPreps Sunset rows as the Sunset's
-`maxprepsExtraRows` (a registry team of another division may be one; `lib/teams.ts`).
+`maxprepsExtraRows` (a registry team of another division may be one; `lib/registry/teams.ts`).
 
 **The group gets a table.** The five are still not a league, and nothing calls them one: a new
 `LeagueConfig.independents: true` flag carries the group identity (`isIndependentLeague`,

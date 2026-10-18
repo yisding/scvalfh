@@ -19,7 +19,7 @@ import {
 } from '@/components/history/history-view';
 import { positionFromText } from '@/components/ui/position-words';
 import { getAvailableHistoryLeagues, type HistoryAwards } from '@/lib/history';
-import { getTeamBySlug } from '@/lib/teams';
+import { getTeamBySlug } from '@/lib/registry/teams';
 import { sectionById } from '@/scripts/copy-rules';
 import { textOf } from '@/tests/support/html-text';
 

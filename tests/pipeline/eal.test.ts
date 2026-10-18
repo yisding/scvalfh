@@ -11,12 +11,12 @@ import { beforeAll, describe, expect, it } from 'vitest';
 
 import { DATA_QUALITY, LEAGUES } from '@/lib/config/leagues';
 import type { Snapshot } from '@/lib/model/snapshot';
+import { TEAMS, teamsInLeague } from '@/lib/registry/teams';
 import { localDateKey } from '@/lib/shared/dates';
 import { sideOutcome } from '@/lib/shared/game';
 import type { ScheduleRow } from '@/lib/sources/maxpreps';
 import { parseScoresPage, parseTeamGamesPage, type SbliveGame } from '@/lib/sources/sblive';
 import { divisionGames } from '@/lib/standings';
-import { TEAMS, teamsInLeague } from '@/lib/teams';
 import { CorpusReader, EAL_CORPUS, gameOf } from '@/tests/support/corpus';
 import { useCorpusModules } from '@/tests/support/corpus-modules';
 import { corpusSnapshotPath } from '@/tests/support/corpus-snapshot';
@@ -180,7 +180,7 @@ describe('the EAL games', () => {
       expect(DATA_QUALITY.sbliveIgnoredTeamIds, `lib/config/leagues.ts: ${id}`).toHaveProperty(id);
       expect(
         TEAMS.some((t) => t.external.sbliveTeamId === id),
-        `lib/teams.ts: ${id} is not a registry team`,
+        `lib/registry/teams.ts: ${id} is not a registry team`,
       ).toBe(false);
     }
     const sides: SbliveGame['sides'][number][] = [];

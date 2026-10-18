@@ -10,8 +10,8 @@ import { describe, expect, it } from 'vitest';
 
 import { getLeague } from '@/lib/config/leagues';
 import { divisionHeading } from '@/lib/config/leagues/labels';
+import { TEAMS } from '@/lib/registry/teams';
 import { PICKER_BREAKS, pickerName, pinLabel } from '@/lib/shared/pin-label';
-import { TEAMS } from '@/lib/teams';
 import { width } from '@/tests/support/text-metrics';
 
 const SHY = '­';

@@ -18,6 +18,7 @@ import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 import { HistorySchema } from '@/lib/history-schema';
+import { getTeamBySlug, teamsInLeague } from '@/lib/registry/teams';
 import {
   parseAllLeaguePdfText,
   parseStandingsPdfText,
@@ -32,7 +33,6 @@ import {
   parseGradeYear,
   parseStandingsCsv,
 } from '@/lib/sources/bval-sheet';
-import { getTeamBySlug, teamsInLeague } from '@/lib/teams';
 import { expectOk, runRepoScript } from './support/cli';
 import { REPO, tempDir, tempFile } from './support/repo';
 

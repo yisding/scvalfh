@@ -27,8 +27,9 @@ import { z } from 'zod';
 import { DATA_QUALITY, LEAGUES } from '@/lib/config/leagues';
 import type { TeamSlug } from '@/lib/model/ids';
 import type { Team } from '@/lib/model/team';
+import { isWithdrawnSchool, resolveTeam, sideJoinKey } from '@/lib/registry/resolve';
+import { TEAMS, normalizeTeamKey } from '@/lib/registry/teams';
 import { localDateKey } from '@/lib/shared/dates';
-import { TEAMS, isWithdrawnSchool, normalizeTeamKey, resolveTeam, sideJoinKey } from '@/lib/teams';
 import { CHROME_USER_AGENT, type HttpClientOptions, htmlUnescape } from './http';
 
 export const SBLIVE_WEB = 'https://www.si.com/high-school/stats/california/field-hockey';

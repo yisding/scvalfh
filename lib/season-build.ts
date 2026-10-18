@@ -12,7 +12,7 @@ import type { Game, GameSide } from './model/game';
 import type { LeagueId } from './model/ids';
 import type { Season, SeasonLeague, SeasonWindow } from './model/season';
 import { seasonWindowOf } from './normalize';
-import { teamOfSide } from './teams';
+import { teamOfSide } from './registry/teams';
 
 /** The registry league of one side, by MaxPreps GUID first, then by slug; null for a non-member. */
 function leagueOfSide(side: GameSide): LeagueId | null {

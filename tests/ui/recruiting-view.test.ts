@@ -29,7 +29,7 @@ import { getClubsFile } from '@/lib/clubs';
 import { getCommitsFile } from '@/lib/commits';
 import { getLeague } from '@/lib/config/leagues';
 import { getTeamsGrouped } from '@/lib/data';
-import { TEAMS } from '@/lib/teams';
+import { TEAMS } from '@/lib/registry/teams';
 import { affiliationLeaks, commitmentLeaks } from '@/scripts/copy-rules';
 import { PUBLIC_TERMS } from '@/scripts/public-terms';
 import { textOf } from '@/tests/support/html-text';

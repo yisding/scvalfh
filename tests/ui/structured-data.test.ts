@@ -51,7 +51,7 @@ describe('websiteJsonLd', () => {
 
 describe('teamJsonLd', () => {
   it('describes every registry team: sport, its city, its league unless it is a group of independents', async () => {
-    const { TEAMS } = await import('@/lib/teams');
+    const { TEAMS } = await import('@/lib/registry/teams');
     const { getLeague, isIndependentLeague } = await import('@/lib/config/leagues');
     for (const team of TEAMS) {
       const node = m.sd.teamJsonLd(team, getLeague(team.league));

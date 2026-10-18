@@ -39,9 +39,9 @@ import {
   loadClubs,
 } from '@/lib/clubs';
 import { LEAGUES } from '@/lib/config/leagues';
+import { getTeamBySlug } from '@/lib/registry/teams';
 import { classOf, getAllEnrichedRosters, getRosters } from '@/lib/rosters';
 import { isHttpsUrl } from '@/lib/shared/patterns';
-import { getTeamBySlug } from '@/lib/teams';
 import { REPO } from './support/repo';
 
 const raw = JSON.parse(readFileSync(path.join(REPO, 'data', 'clubs.json'), 'utf8')) as ClubsFile;

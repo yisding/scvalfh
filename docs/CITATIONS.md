@@ -9,6 +9,8 @@ Some committed files quote repo paths and cannot be edited: the data files in da
 | Quoted path | Current home | Item |
 |---|---|---|
 | tests/helpers.ts | tests/support/cli.ts (buildFixtureSnapshot) | 06 |
+| lib/teams.ts | lib/registry/teams.ts | 12 |
+| lib/jv-teams.ts | lib/registry/jv-teams.ts | 12 |
 
 ## Legend
 

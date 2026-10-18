@@ -10,9 +10,9 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 
 import TeamPage from '@/app/teams/[slug]/page';
+import { TEAMS } from '@/lib/registry/teams';
 import { getRosters } from '@/lib/rosters';
 import { getPlayerStats } from '@/lib/player-stats';
-import { TEAMS } from '@/lib/teams';
 import { SCVAL_ONLY_CLAIM } from '@/scripts/copy-rules';
 
 async function render(slug: string): Promise<string> {

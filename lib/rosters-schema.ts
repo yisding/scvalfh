@@ -21,9 +21,9 @@ import { z } from 'zod';
 
 import { COMMIT_SPORTS } from './commits-schema';
 import { ALL_DIVISIONS } from './config/leagues';
+import { TEAMS, getTeamBySlug } from './registry/teams';
 import { dateKey, httpUrl, httpsUrl, slugId } from './schema-primitives';
 import { contentKey } from './shared/stable-json';
-import { TEAMS, getTeamBySlug } from './teams';
 
 /** Rosters cover every registry team, all nine leagues and the five independents: one entry per team of TEAMS. */
 const ROSTER_SLUGS: ReadonlySet<string> = new Set(TEAMS.map((t) => t.slug));
@@ -98,7 +98,7 @@ export const TeamRosterStatus = z.enum(['ok', 'empty', 'carried-forward', 'error
 export const TeamRosterSchema = z
   .object({
     slug: teamSlug,
-    /** The registry id (lib/teams.ts) — the join key to the snapshot. */
+    /** The registry id (lib/registry/teams.ts) — the join key to the snapshot. */
     teamId: z.string().min(1),
     /** The GUID the page itself reports; null when the page was not read. */
     maxprepsTeamId: z.string().min(1).nullable(),

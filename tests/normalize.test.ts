@@ -18,9 +18,10 @@ import {
   splitLocation,
   toUtcIso,
 } from '@/lib/normalize';
+import { resolveTeam } from '@/lib/registry/resolve';
+import { getTeamBySlug } from '@/lib/registry/teams';
 import { sideOutcome } from '@/lib/shared/game';
 import { ScheduleResponseSchema, splitTbaRows, type ScheduleRow } from '@/lib/sources/maxpreps';
-import { getTeamBySlug, resolveTeam } from '@/lib/teams';
 import { allScheduleRows, corpusDir } from './support/corpus';
 
 const rows = allScheduleRows();

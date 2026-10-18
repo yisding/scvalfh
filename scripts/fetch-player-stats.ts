@@ -84,6 +84,7 @@ import {
   type PlayerStatsFile,
   type TeamPlayerStats,
 } from '@/lib/player-stats-schema';
+import { TEAMS } from '@/lib/registry/teams';
 import { RostersSchema } from '@/lib/rosters-schema';
 import { localDateKey } from '@/lib/shared/dates';
 import { stableStringify } from '@/lib/shared/stable-json';
@@ -100,7 +101,6 @@ import {
 } from '@/lib/sources/maxpreps-player-stats';
 import { formatIssues } from '@/lib/schema-primitives';
 import { loadSnapshot } from '@/lib/snapshot-schema';
-import { TEAMS } from '@/lib/teams';
 import { runCli } from './cli';
 
 interface Args {

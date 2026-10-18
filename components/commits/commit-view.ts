@@ -44,8 +44,8 @@ import { REGIONS, regionOf } from '@/lib/config/leagues';
 import { dateWithYear, partialDate } from '@/lib/format/dates';
 import { gradeWord, listWords, plural } from '@/lib/format/words';
 import type { RegionId, TeamSlug } from '@/lib/model/ids';
+import { getTeamBySlug } from '@/lib/registry/teams';
 import { getRosters } from '@/lib/rosters';
-import { getTeamBySlug } from '@/lib/teams';
 import { OUTLETS, hostOf, numbered, pathOf, schoolName } from '@/components/ui/source-hosts';
 
 // ---------------------------------------------------------------- wording tables

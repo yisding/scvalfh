@@ -17,8 +17,8 @@ import GridRowFiller, { fillerClasses } from '@/components/ui/GridRowFiller';
 import { buildRosterView, profileLabel, seasonPage, type RosterRow } from '@/components/teams/roster-view';
 import { getPlayerClubs } from '@/lib/clubs';
 import { LEAGUE_IDS } from '@/lib/config/leagues';
+import { TEAMS, teamsInLeague } from '@/lib/registry/teams';
 import { getEnrichedTeamRoster } from '@/lib/rosters';
-import { TEAMS, teamsInLeague } from '@/lib/teams';
 import { textOf } from '@/tests/support/html-text';
 
 /** Rosters cover every registry team, all five leagues: 49 views. */

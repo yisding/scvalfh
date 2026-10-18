@@ -32,9 +32,9 @@ import {
 } from '@/lib/note-stats';
 import { getAllPlayerStatsWithNotes, getPlayerStats } from '@/lib/player-stats';
 import { FIELD_STAT_KEYS, GOALIE_STAT_KEYS, type PlayerStatLine, type TeamPlayerStats } from '@/lib/player-stats-schema';
+import { getTeamBySlug } from '@/lib/registry/teams';
 import { getTeamRoster } from '@/lib/rosters';
 import { contestIdFromUrl, parseGameStats } from '@/lib/sources/maxpreps-game-stats';
-import { getTeamBySlug } from '@/lib/teams';
 import { game } from './support/game-builder';
 import { FIXTURE_DIR } from './support/corpus';
 import { buildFixturePlayerStats } from './support/cli';

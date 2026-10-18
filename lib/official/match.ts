@@ -22,8 +22,9 @@ import { monthDay, shortDate } from '@/lib/format/dates';
 import type { OfficialFixture } from '@/lib/model/fixture';
 import type { Game, GameSide, OfficialStamp } from '@/lib/model/game';
 import type { DivisionId, TeamSlug } from '@/lib/model/ids';
+import { resolveTeam, sideJoinKey, unorderedPairKey } from '@/lib/registry/resolve';
+import { getTeamBySlug, teamOfSide } from '@/lib/registry/teams';
 import { dayDiff, shiftDateKey } from '@/lib/shared/dates';
-import { getTeamBySlug, resolveTeam, sideJoinKey, teamOfSide, unorderedPairKey } from '@/lib/teams';
 
 export interface MatchOptions {
   matcher: 'legacy' | 'two-phase';

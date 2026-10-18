@@ -5,6 +5,8 @@ import { ALL_DIVISIONS, divisionsOf } from '@/lib/config/leagues';
 import type { Game } from '@/lib/model/game';
 import type { Standing } from '@/lib/model/standings';
 import { normalizeGames } from '@/lib/normalize';
+import { resolveTeam } from '@/lib/registry/resolve';
+import { TEAMS, teamsInLeague } from '@/lib/registry/teams';
 import {
   computeStandings,
   divisionGames,
@@ -15,7 +17,6 @@ import {
   playoffOutcomes,
   playoffStatusFor,
 } from '@/lib/standings';
-import { TEAMS, resolveTeam, teamsInLeague } from '@/lib/teams';
 import { game } from './support/game-builder';
 import { allScheduleRows } from './support/corpus';
 

@@ -3,8 +3,8 @@ import Link from 'next/link';
 import { monthDay } from '@/lib/format/dates';
 import { EN_DASH } from '@/lib/format/words';
 import type { FormGame } from '@/lib/data';
+import { getTeamBySlug } from '@/lib/registry/teams';
 import { gameHref } from '@/lib/shared/game-id';
-import { getTeamBySlug } from '@/lib/teams';
 
 import EmptyState from './EmptyState';
 import { signedMargin } from './describe-game';

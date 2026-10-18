@@ -17,8 +17,8 @@ import {
   seasonWindow,
   type PriorSeason,
 } from '@/lib/prior-season-schema';
+import { TEAMS, getTeamBySlug } from '@/lib/registry/teams';
 import { ScheduleRowSchema, type ScheduleRow } from '@/lib/sources/maxpreps';
-import { TEAMS, getTeamBySlug } from '@/lib/teams';
 
 describe('data/prior-season.json', () => {
   const file = getPriorSeason();

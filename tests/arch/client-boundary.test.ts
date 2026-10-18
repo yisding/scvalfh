@@ -95,7 +95,7 @@ describe('client boundary: no "use client" module reaches a server-only module',
       specs(
         [
           "import type { A } from '../../lib/data';",
-          "import { type B, type C } from '../../lib/teams';",
+          "import { type B, type C } from '../../lib/registry/teams';",
           "export type { D } from '../../lib/config/leagues';",
           "import { x, type Y } from './keep';",
           "import './side-effect';",
@@ -110,12 +110,12 @@ describe('client boundary: no "use client" module reaches a server-only module',
   it('the import scanner collects dynamic import() and require() specifiers', () => {
     const text = [
       "const g = await import('../lib/data');",
-      'const h = import ( "@/lib/teams" );',
+      'const h = import ( "@/lib/registry/teams" );',
       "const j = require('./legacy');",
     ].join('\n');
     expect(importsOf(parseText(PROBE, text), { runtimeOnly: true }).map((r) => r.spec)).toEqual([
       '../lib/data',
-      '@/lib/teams',
+      '@/lib/registry/teams',
       './legacy',
     ]);
   });

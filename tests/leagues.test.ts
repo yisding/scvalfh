@@ -23,7 +23,7 @@ import { CCS_BRACKET_URL } from '@/lib/config/season';
 import type { RegionId } from '@/lib/model/ids';
 import { type LeagueConfig, type SectionConfig } from '@/lib/model/league-config';
 import type { PlayoffStatus, TiebreakStage } from '@/lib/model/standings';
-import { getTeamById } from '@/lib/teams';
+import { getTeamById } from '@/lib/registry/teams';
 import { SEED_CLAIM, umpireOfficialClaims } from '@/scripts/copy-rules';
 
 const UNCOMPUTABLE: readonly TiebreakStage[] = ['coin-flip', 'ccs-points', 'no-rule'];

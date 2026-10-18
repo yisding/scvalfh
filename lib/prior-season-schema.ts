@@ -22,9 +22,9 @@ import { z } from 'zod';
 
 import type { TeamSlug } from './model/ids';
 import type { Team } from './model/team';
+import { TEAMS } from './registry/teams';
 import { dateKey } from './schema-primitives';
 import type { ScheduleRow } from './sources/maxpreps';
-import { TEAMS } from './teams';
 
 export const PriorSeasonSchema = z
   .object({

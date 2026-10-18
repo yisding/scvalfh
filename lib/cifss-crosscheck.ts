@@ -13,7 +13,7 @@
  *     reschedule or a cancellation: a school's own widget row is often left behind) or the pipeline
  *     dropped one on purpose (`Snapshot.dropped`), or the row's note says it was a scrimmage.
  *
- * The join is `(date, unordered pair)` with lib/teams.ts sideJoinKey, as the si.com join is, then
+ * The join is `(date, unordered pair)` with lib/registry/resolve.ts sideJoinKey, as the si.com join is, then
  * the pair's nearest unmatched game within three days (a school that never moved its row after a
  * reschedule). A pair listed by both schools is one game; when their scores differ it agrees if
  * either matches MaxPreps and is set aside otherwise (`ambiguous`).
@@ -22,9 +22,10 @@
 import { gamePairKey } from './crosscheck';
 import type { CifssConflictRow, CifssCrossCheck, CifssOnlyRow } from './model/crosscheck';
 import type { Game } from './model/game';
+import { sideJoinKey, unorderedPairKey } from './registry/resolve';
+import { getTeamBySlug } from './registry/teams';
 import { dayNumber } from './shared/dates';
 import { cifssListingUrl, type CifssRow, type CifssSide } from './sources/cifss';
-import { getTeamBySlug, sideJoinKey, unorderedPairKey } from './teams';
 
 /** How far apart the widget's date and MaxPreps' may be and still be one game. */
 export const CIFSS_DATE_TOLERANCE_DAYS = 3;

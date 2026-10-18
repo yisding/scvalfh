@@ -26,11 +26,11 @@ import {
   playerStatsContentKey,
   type PlayerStatsFile,
 } from '@/lib/player-stats-schema';
+import { TEAMS, teamsInLeague } from '@/lib/registry/teams';
 import { getRosters } from '@/lib/rosters';
 import { RostersSchema, countRosters, type Rosters } from '@/lib/rosters-schema';
 import { pendingRoster } from '@/lib/sources/maxpreps-roster';
 import { pendingPlayerStats } from '@/lib/sources/maxpreps-player-stats';
-import { TEAMS, teamsInLeague } from '@/lib/teams';
 import { FIXTURE_DIR } from './support/corpus';
 import { expectOk, runRepoScript } from './support/cli';
 import { REPO, tempFile } from './support/repo';

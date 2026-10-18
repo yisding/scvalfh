@@ -9,7 +9,7 @@ import sharp from 'sharp';
 import { describe, expect, it } from 'vitest';
 
 import { MASCOT_FILE_SIZES, MASCOT_TILE_SIZES, mascotFile } from '@/lib/config/mascots';
-import { TEAMS } from '@/lib/teams';
+import { TEAMS } from '@/lib/registry/teams';
 import { REPO } from './support/repo';
 
 const PUBLIC = path.join(REPO, 'public');

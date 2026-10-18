@@ -9,7 +9,7 @@ import {
   EARLIER_MEETING_NOTE, SHOOTOUT_NOTE, buildLeagueTournament, finalGame, matchTournamentGames, quarterfinals,
   seedsFromStandings, semifinals, sixthPlaceRule,
 } from '@/lib/postseason';
-import { getTeamBySlug } from '@/lib/teams';
+import { getTeamBySlug } from '@/lib/registry/teams';
 
 const MCAL = getLeague('mcal');
 const DIV = 'marin-county';

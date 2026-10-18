@@ -52,6 +52,7 @@ import {
   type PreviousFile,
 } from '@/lib/fetch-scope';
 import type { LeagueId } from '@/lib/model/ids';
+import { TEAMS } from '@/lib/registry/teams';
 import { stableStringify } from '@/lib/shared/stable-json';
 import { MaxPrepsClient } from '@/lib/sources/maxpreps';
 import { parseRosterPage, pendingRoster, rosterUrl } from '@/lib/sources/maxpreps-roster';
@@ -65,7 +66,6 @@ import {
   type TeamRoster,
 } from '@/lib/rosters-schema';
 import { formatIssues } from '@/lib/schema-primitives';
-import { TEAMS } from '@/lib/teams';
 import { runCli } from './cli';
 
 interface Args {

@@ -18,7 +18,7 @@ import {
   hasPreviousData,
   lastFreshStamp,
 } from '@/lib/pipeline/ledger';
-import { TEAMS } from '@/lib/teams';
+import { TEAMS } from '@/lib/registry/teams';
 import { testRunArgs } from '@/tests/support/pipeline/run-args';
 
 const AT = '2026-10-02T15:00:00.000Z';

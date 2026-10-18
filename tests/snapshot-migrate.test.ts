@@ -14,6 +14,7 @@ import type { Game } from '@/lib/model/game';
 import type { TeamId } from '@/lib/model/ids';
 import type { Snapshot } from '@/lib/model/snapshot';
 import type { ReportedRecord } from '@/lib/model/standings';
+import { TEAMS, teamsInLeague } from '@/lib/registry/teams';
 import { stableStringify } from '@/lib/shared/stable-json';
 import {
   addConfiguredLeagues,
@@ -26,7 +27,6 @@ import {
 } from '@/lib/snapshot-migrate';
 import { loadSnapshot, parseSnapshot } from '@/lib/snapshot-schema';
 import { buildCrossCheck, computeStandings, divisionGames } from '@/lib/standings';
-import { TEAMS, teamsInLeague } from '@/lib/teams';
 import { VARIANTS_DIR } from './support/corpus';
 import { REPO, goldenPath, readJson } from './support/repo';
 

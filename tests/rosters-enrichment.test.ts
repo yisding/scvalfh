@@ -9,6 +9,7 @@ import path from 'node:path';
 
 import { describe, expect, it, vi } from 'vitest';
 
+import { TEAMS, getTeamBySlug, teamsInLeague } from '@/lib/registry/teams';
 import {
   RosterEnrichmentSchema,
   countRosters,
@@ -23,7 +24,6 @@ import {
   getRosters,
   getTeamRoster,
 } from '@/lib/rosters';
-import { TEAMS, getTeamBySlug, teamsInLeague } from '@/lib/teams';
 import { runRepoScript } from './support/cli';
 import { REPO, tempDir } from './support/repo';
 

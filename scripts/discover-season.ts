@@ -34,8 +34,8 @@ import {
   ALL_SEASON_ID, BOOTSTRAP_URL, GENDER_SPORT, SEASON_LABEL, SEASON_YEAR, SPORT_SEASON_ID, TEAM_LEVEL,
 } from '@/lib/config/season';
 import type { Team } from '@/lib/model/team';
+import { TEAMS, teamsInDivision } from '@/lib/registry/teams';
 import { MaxPrepsClient, MaxPrepsError } from '@/lib/sources/maxpreps';
-import { TEAMS, teamsInDivision } from '@/lib/teams';
 import { runCli } from './cli';
 
 const USAGE = `Usage: pnpm discover-season [--ssid <sportSeasonId>] [--teams <slug,slug,...>] [--help]

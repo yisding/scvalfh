@@ -97,7 +97,7 @@ export interface CifssOnlyRow {
   label: string;
   /** Aligned to MaxPreps' home and away when MaxPreps lists the game; the widget's own otherwise. */
   cifss: { home: number; away: number };
-  /** The two sides' lib/teams.ts sideJoinKey, `a~b` sorted: how a later run tells whether MaxPreps has the game yet. */
+  /** The two sides' lib/registry/resolve.ts sideJoinKey, `a~b` sorted: how a later run tells whether MaxPreps has the game yet. */
   pairKey: string;
   /** The widget's date for the game. */
   cifssDateKey: string;

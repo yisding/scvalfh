@@ -34,9 +34,9 @@ import type { DivisionId, TeamId } from './model/ids';
 import type { Snapshot } from './model/snapshot';
 import type { ReportedRecord, Standing } from './model/standings';
 import type { Team } from './model/team';
+import { TEAMS, getTeamById, getTeamBySlug, teamOfSide, teamsInLeague } from './registry/teams';
 import { buildSeason, leagueWindowOf } from './season-build';
 import { assertFullTable, buildCrossCheck, computeStandings, divisionGames } from './standings';
-import { TEAMS, getTeamById, getTeamBySlug, teamOfSide, teamsInLeague } from './teams';
 
 type Json = Record<string, unknown>;
 

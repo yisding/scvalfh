@@ -23,7 +23,7 @@ import {
 } from '@/lib/jv-standings';
 import type { DivisionId, LeagueId, TeamSlug } from '@/lib/model/ids';
 import type { Team } from '@/lib/model/team';
-import { getTeamBySlug } from '@/lib/teams';
+import { getTeamBySlug } from '@/lib/registry/teams';
 
 export interface JvTableView {
   division: DivisionId;

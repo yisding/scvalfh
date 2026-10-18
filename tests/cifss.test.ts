@@ -16,6 +16,7 @@ import { describe, expect, it } from 'vitest';
 import { CIFSS_NOTES, carryCifssCrossCheck, compareCifss } from '@/lib/cifss-crosscheck';
 import { gamePairKey } from '@/lib/crosscheck';
 import type { Game } from '@/lib/model/game';
+import { getTeamBySlug } from '@/lib/registry/teams';
 import {
   CIFSS_NO_SECTION_TEAMS,
   CIFSS_SECTION_OVERRIDES,
@@ -25,7 +26,6 @@ import {
   type CifssRow,
   type CifssSectionKey,
 } from '@/lib/sources/cifss';
-import { getTeamBySlug } from '@/lib/teams';
 import { game } from './support/game-builder';
 import { REPO } from './support/repo';
 

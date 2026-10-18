@@ -33,7 +33,7 @@ import type {
   PlayerStatLine,
   TeamPlayerStats as TeamStats,
 } from '@/lib/player-stats-schema';
-import { TEAMS, teamsInLeague } from '@/lib/teams';
+import { TEAMS, teamsInLeague } from '@/lib/registry/teams';
 import { buildFixturePlayerStats } from '@/tests/support/cli';
 
 interface Case {

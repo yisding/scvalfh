@@ -12,7 +12,7 @@
  *
  * CLIENT BOUNDARY (SPEC §0.4, §10.4): the client `ScheduleFilters` imports this module, so it
  * keeps only client-safe code — types, constants and pure functions over a `Game` — and NEVER
- * imports lib/teams or any other server module. The registry-dependent writers of the attributes
+ * imports lib/registry/teams or any other server module. The registry-dependent writers of the attributes
  * (`gameDivisions`, `gameFilterAttrs`) live in `filter-data-server.ts`.
  */
 

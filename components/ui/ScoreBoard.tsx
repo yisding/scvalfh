@@ -1,6 +1,6 @@
 import { shortDate, timeOfDayPT } from '@/lib/format/dates';
 import type { Game } from '@/lib/model/game';
-import { getTeamBySlug } from '@/lib/teams';
+import { getTeamBySlug } from '@/lib/registry/teams';
 
 import { NON_MEMBER_NOTE } from './GameRow';
 import GhostMonogram from './GhostMonogram';

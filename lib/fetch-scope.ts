@@ -24,7 +24,7 @@ import type { ZodType } from 'zod';
 import { LEAGUES, LEAGUE_IDS, getLeague, isLeagueId } from './config/leagues';
 import type { LeagueId } from './model/ids';
 import type { Team } from './model/team';
-import { TEAMS, getTeamBySlug } from './teams';
+import { TEAMS, getTeamBySlug } from './registry/teams';
 
 /** `scval,bval` → ['scval', 'bval']; an unknown id or an empty list throws. */
 export function parseLeaguesFlag(value: string, flag = '--leagues'): LeagueId[] {

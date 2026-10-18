@@ -38,8 +38,8 @@ import sharp, { type Sharp } from 'sharp';
 
 import { MASCOT_FILE_SIZES } from '@/lib/config/mascots';
 import type { Team } from '@/lib/model/team';
+import { TEAMS } from '@/lib/registry/teams';
 import { CHROME_USER_AGENT, HttpClient } from '@/lib/sources/http';
-import { TEAMS } from '@/lib/teams';
 import { runCli } from './cli';
 
 const USAGE = 'Usage: pnpm fetch-mascots [--only <slug>]... [--dry-run]';

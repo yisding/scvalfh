@@ -17,6 +17,7 @@ import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 import { DATA_QUALITY } from '@/lib/config/leagues';
+import { TEAMS, getTeamBySlug, normalizeTeamKey } from '@/lib/registry/teams';
 import {
   STATEWIDE_AMBIGUOUS,
   extractReactProps,
@@ -27,7 +28,6 @@ import {
   resolveSbliveSide,
   sbliveIdsFrom,
 } from '@/lib/sources/sblive';
-import { TEAMS, getTeamBySlug, normalizeTeamKey } from '@/lib/teams';
 import { REPO } from './support/repo';
 import { page, teamGamesProps, teamNode } from './support/sblive-pages';
 

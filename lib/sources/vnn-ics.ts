@@ -19,8 +19,8 @@
 
 import type { Game } from '@/lib/model/game';
 import type { TeamSlug } from '@/lib/model/ids';
+import { resolveTeam, sideJoinKey, unorderedPairKey } from '@/lib/registry/resolve';
 import { localDateKey, toLocalTimestamp } from '@/lib/shared/dates';
-import { resolveTeam, sideJoinKey, unorderedPairKey } from '@/lib/teams';
 import { icsLine, unfoldIcs } from './http';
 
 /** [V] the only two verified siteIds (SPEC §1.5). */

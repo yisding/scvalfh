@@ -23,6 +23,7 @@ import type { OfficialFixture } from '@/lib/model/fixture';
 import type { Game } from '@/lib/model/game';
 import type { SourceStatus } from '@/lib/model/health';
 import type { TeamSlug } from '@/lib/model/ids';
+import { getTeamBySlug, teamsInLeague } from '@/lib/registry/teams';
 import { shiftDateKey } from '@/lib/shared/dates';
 import {
   dedupeSbliveGames,
@@ -31,7 +32,6 @@ import {
   sbliveScoresUrl,
   type SbliveGame,
 } from '@/lib/sources/sblive';
-import { getTeamBySlug, teamsInLeague } from '@/lib/teams';
 import {
   type ResourceKey,
   type RunContext,

@@ -18,7 +18,7 @@ import type { Standing } from '@/lib/model/standings';
 import {
   SHOOTOUT_NOTE, buildLeagueTournament, finalGame, quarterfinals, seedsFromStandings, semifinals,
 } from '@/lib/postseason';
-import { getTeamById } from '@/lib/teams';
+import { getTeamById } from '@/lib/registry/teams';
 
 const MCAL = getLeague('mcal');
 const DIV = 'marin-county';

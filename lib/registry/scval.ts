@@ -1,5 +1,5 @@
 /**
- * The 15 SCVAL seeds, moved verbatim from lib/teams.ts (plus `section`, `league` and the si.com
+ * The 15 SCVAL seeds, moved verbatim from lib/registry/teams.ts (plus `section`, `league` and the si.com
  * school ids observed on logo URLs). The 15 slugs, abbrs, ids, names and divisions are frozen
  * (tests/teams.test.ts).
  *

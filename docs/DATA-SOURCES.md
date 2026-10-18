@@ -1992,7 +1992,7 @@ tables of their own are computed (`lib/jv-standings.ts`, last bullet). Read 2026
   at season's end (§1.3; the 2025-26 ones are on `/history/2025-26`).
 - **si.com.** Each varsity games page's level switcher (`level.name` "Junior Varsity", `webPath`)
   names the school's JV team page; the 48 paths (all but Marin Academy, which has no si.com page) are
-  in `lib/jv-teams.ts`. A JV side is one of ours only by those ids (`JV_SLUG_BY_SBLIVE_ID`), never by
+  in `lib/registry/jv-teams.ts`. A JV side is one of ours only by those ids (`JV_SLUG_BY_SBLIVE_ID`), never by
   name or by the varsity resolver (which ignores Tamalpais JV and York on purpose). Kept: scored
   finals on `/california/field-hockey/games/` pages; the page must be the JV team asked for. On
   2026-10-05: 68 scored JV finals; no EAL JV page has a score. Matched against MaxPreps by pair and
@@ -2178,7 +2178,7 @@ Team identity is the MaxPreps GUID (`schoolId`/`teamId`), re-read from the live 
 mascots and cities also come from MaxPreps; **slugs and abbreviations are ours** (kebab-case short
 names, unique across all 102). The registry is
 `lib/registry/{scval,bval,pcal,mcal,eal,sunset,city,north-county,metro,independents}.ts`, assembled by
-`lib/teams.ts` in league order (the 49 NorCal teams first, unchanged, then the 48 SoCal league teams,
+`lib/registry/teams.ts` in league order (the 49 NorCal teams first, unchanged, then the 48 SoCal league teams,
 then the five independents), and a
 test pins the 15 SCVAL slugs, abbreviations and GUIDs.
 
@@ -2195,7 +2195,7 @@ Alignment writes the school: Cathedral Catholic → Cathedral (whole words; deli
 since Cathedral of Los Angeles and Cathedral City are statewide namesakes), La Jolla Country Day →
 LJCD and Rancho Buena Vista → RBV (both aliases), Canyon Crest Academy → Canyon Crest and San
 Dieguito Academy → San Dieguito (whole words, and aliases). Local nicknames the leagues do not print (Paly, Tam, Lick, SI, Pres) are not used.
-`lib/teams.ts` fails at load on any other short name, and the short name is display only: matching
+`lib/registry/teams.ts` fails at load on any other short name, and the short name is display only: matching
 keys on the name and the aliases, never on it, so bare "University" (also Irvine's on si.com) stays
 out of the index. Source spellings ("ST. IGNATIUS",
 "MItty", "Presentation HS", "St. Francis") are aliases for matching; the 2025-26 archive stores

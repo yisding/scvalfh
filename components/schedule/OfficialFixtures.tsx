@@ -4,9 +4,9 @@ import { shortDate } from '@/lib/format/dates';
 import { plural } from '@/lib/format/words';
 import type { OfficialFixture } from '@/lib/model/fixture';
 import type { LeagueId } from '@/lib/model/ids';
-import { getTeamBySlug } from '@/lib/teams';
 import ExternalLink from '@/components/ui/ExternalLink';
 import { officialScheduleLabel } from '@/components/standings/standings-view';
+import { getTeamBySlug } from '@/lib/registry/teams';
 
 /**
  * Fixtures a league's official schedule publishes and no source has a contest for

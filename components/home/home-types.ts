@@ -2,7 +2,7 @@
  * The serializable view models the home page hands to its client components (SPEC §10.1).
  *
  * `MyTeamCard`, `PinTile`, `FindYourTeam` and `SetLeagueButton` are `'use client'`, so they cannot
- * read `lib/data` (an `fs` read at import), `lib/teams` or `lib/config/leagues` (SPEC §0.4 client
+ * read `lib/data` (an `fs` read at import), `lib/registry/teams` or `lib/config/leagues` (SPEC §0.4 client
  * boundary). Everything they need is computed on the server (`home-view.ts`) and passed as plain
  * data: the §5.2 render decision for the last game arrives as a `GameDisplay`, already resolved by
  * `describeGame()`, so no score is ever re-derived on the client and the never-0-0 rule stays in its

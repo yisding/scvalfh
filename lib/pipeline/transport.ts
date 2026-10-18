@@ -27,6 +27,7 @@ import { CCS, getDivision, getLeague } from '@/lib/config/leagues';
 import { BOOTSTRAP_URL } from '@/lib/config/season';
 import type { DivisionId, TeamSlug } from '@/lib/model/ids';
 import { officialChangesCellText, sha256Hex } from '@/lib/official/validate';
+import { getTeamBySlug } from '@/lib/registry/teams';
 import { CCS_ICAL_URL } from '@/lib/sources/ccs';
 import { CIFSS_SEASON_FROM, cifssListingUrl } from '@/lib/sources/cifss';
 import { HttpClient, HttpError, type HttpClientOptions } from '@/lib/sources/http';
@@ -34,7 +35,6 @@ import { MaxPrepsClient, MaxPrepsError } from '@/lib/sources/maxpreps';
 import { SBLIVE_HTTP_OPTIONS, sbliveScoresUrl } from '@/lib/sources/sblive';
 import { SCVAL_STANDINGS_INDEX, pdfToText, scvalScheduleUrl } from '@/lib/sources/scval-pdf';
 import { VNN_SITE_IDS, vnnIcsUrl } from '@/lib/sources/vnn-ics';
-import { getTeamBySlug } from '@/lib/teams';
 import {
   FixtureMissing,
   TransportError,

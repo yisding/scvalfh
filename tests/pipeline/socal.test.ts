@@ -24,12 +24,12 @@ import { DATA_QUALITY, LEAGUES, getDivision, getLeague, getSection } from '@/lib
 import type { Game } from '@/lib/model/game';
 import type { Snapshot } from '@/lib/model/snapshot';
 import { NO_MAXPREPS_TABLE_REASON } from '@/lib/pipeline/steps/league-meta';
+import { TEAMS, getTeamBySlug, teamsInDivision, teamsInLeague } from '@/lib/registry/teams';
 import { localDateKey } from '@/lib/shared/dates';
 import { sideOutcome } from '@/lib/shared/game';
 import type { ScheduleRow } from '@/lib/sources/maxpreps';
 import { parseScoresPage, parseTeamGamesPage } from '@/lib/sources/sblive';
 import { divisionGames } from '@/lib/standings';
-import { TEAMS, getTeamBySlug, teamsInDivision, teamsInLeague } from '@/lib/teams';
 import { useCorpusModules } from '@/tests/support/corpus-modules';
 import { corpusSnapshotPath } from '@/tests/support/corpus-snapshot';
 import { CorpusReader, SOCAL_CORPUS, gameOf } from '@/tests/support/corpus';

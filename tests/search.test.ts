@@ -3,8 +3,8 @@
 import { describe, expect, it } from 'vitest';
 
 import { DATA_QUALITY, LEAGUES, SECTIONS } from '@/lib/config/leagues';
+import { TEAMS } from '@/lib/registry/teams';
 import { buildSearchIndex, normalizeQuery, searchTeams } from '@/lib/shared/search';
-import { TEAMS } from '@/lib/teams';
 
 const INDEX = buildSearchIndex(
   TEAMS.map((t) => ({

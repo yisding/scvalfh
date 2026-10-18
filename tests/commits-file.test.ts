@@ -41,8 +41,8 @@ import {
   getTeamCommitments,
   loadCommits,
 } from '@/lib/commits';
+import { getTeamBySlug } from '@/lib/registry/teams';
 import { classOf, getAllEnrichedRosters, getRosters, type MergedPlayer } from '@/lib/rosters';
-import { getTeamBySlug } from '@/lib/teams';
 import { REPO } from './support/repo';
 
 const raw = JSON.parse(readFileSync(path.join(REPO, 'data', 'commits.json'), 'utf8')) as CommitsFile;

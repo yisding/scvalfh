@@ -15,7 +15,7 @@ import {
 import { getSnapshot } from '@/lib/data';
 import type { Game } from '@/lib/model/game';
 import { computeRatings, getRatings, ratingGames, type RatingTable } from '@/lib/ratings';
-import { TEAMS, getTeamBySlug } from '@/lib/teams';
+import { TEAMS, getTeamBySlug } from '@/lib/registry/teams';
 import { game, type GameSpec } from './support/game-builder';
 
 /** A rating table that rates each slug as given. */

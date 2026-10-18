@@ -34,8 +34,8 @@ import {
   type HistoryPlayer,
 } from '@/lib/history';
 import type { LeagueId, TeamSlug } from '@/lib/model/ids';
+import { teamsInLeague } from '@/lib/registry/teams';
 import { getEnrichedTeamRoster, getRosters } from '@/lib/rosters';
-import { teamsInLeague } from '@/lib/teams';
 import { positionFromText } from '@/components/ui/position-words';
 
 /** One award winner or team-list player, as the page prints them. */

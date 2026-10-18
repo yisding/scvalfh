@@ -13,8 +13,8 @@ import { matchupJoiner } from '@/lib/format/score';
 import { gameWord, plural } from '@/lib/format/words';
 import type { Game } from '@/lib/model/game';
 import type { LeagueId, RegionId } from '@/lib/model/ids';
-import { getTeamBySlug } from '@/lib/teams';
 import { describeGame } from '@/components/ui/describe-game';
+import { getTeamBySlug } from '@/lib/registry/teams';
 
 import { countGames, type ScheduleCounts } from './filter-data';
 

@@ -22,9 +22,9 @@
 
 import { z } from 'zod';
 
+import { TEAMS, getTeamBySlug } from './registry/teams';
 import { httpUrl, slugId } from './schema-primitives';
 import { contentKey } from './shared/stable-json';
-import { TEAMS, getTeamBySlug } from './teams';
 
 /** Player stats cover every registry team, all nine leagues and the five independents: one entry per team of TEAMS. */
 const STATS_SLUGS: ReadonlySet<string> = new Set(TEAMS.map((t) => t.slug));

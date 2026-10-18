@@ -34,6 +34,7 @@ import { computeAdjustedScoring, getAdjustedScoring } from '@/lib/adjusted-scori
 import type { Game } from '@/lib/model/game';
 import { getAllPlayerStatsWithNotes } from '@/lib/player-stats';
 import { getPriorSeason } from '@/lib/prior-season';
+import { TEAMS, getTeamBySlug } from '@/lib/registry/teams';
 import { getEnrichedTeamRoster } from '@/lib/rosters';
 import { computeRatings, getRatings } from '@/lib/ratings';
 import {
@@ -46,7 +47,6 @@ import {
   type TeamPlayerStats,
 } from '@/lib/player-stats-schema';
 import { computeStandings } from '@/lib/standings';
-import { TEAMS, getTeamBySlug } from '@/lib/teams';
 import { game } from '@/tests/support/game-builder';
 import { textOf } from '@/tests/support/html-text';
 

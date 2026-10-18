@@ -40,10 +40,10 @@ import {
   type CommitsFile,
 } from './commits-schema';
 import type { TeamSlug } from './model/ids';
+import { getTeamBySlug } from './registry/teams';
 import { joinToRoster, playerKey } from './roster-join';
 import { classOf, getAllEnrichedRosters, getRosters, type MergedPlayer, type MergedTeamRoster } from './rosters';
 import { failValidation } from './schema-primitives';
-import { getTeamBySlug } from './teams';
 
 export type {
   College,

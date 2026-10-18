@@ -5,7 +5,7 @@
  * fixed pages, the families' expected params and the per-family check live here once.
  *
  * The expectations come from the build's INPUT, never from its output: the snapshot (as lib/data.ts
- * loads it), the league config (`lib/config/leagues.ts`), the team registry (`lib/teams.ts`) and the clubs
+ * loads it), the league config (`lib/config/leagues.ts`), the team registry (`lib/registry/teams.ts`) and the clubs
  * file (through lib/clubs.ts). Games take `gameIdToParam` (`sblive:N` → `sblive-N`), which
  * tests/game-id.test.ts holds and both gates' ':' check backs up.
  *
@@ -18,8 +18,8 @@
 import { getClubSlugs } from '@/lib/clubs';
 import { LEAGUE_IDS, TOURNAMENT_LEAGUE_IDS } from '@/lib/config/leagues';
 import type { Snapshot } from '@/lib/model/snapshot';
+import { TEAMS } from '@/lib/registry/teams';
 import { gameIdToParam } from '@/lib/shared/game-id';
-import { TEAMS } from '@/lib/teams';
 
 /** The pages with no params (`index` is `/`), by their prerendered file name without `.html`. */
 export const FIXED_PAGES = [

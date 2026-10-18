@@ -43,8 +43,8 @@ import {
   seasonWindow,
   type PriorSeason,
 } from '@/lib/prior-season-schema';
+import { TEAMS } from '@/lib/registry/teams';
 import { MaxPrepsClient, type ScheduleRow } from '@/lib/sources/maxpreps';
-import { TEAMS } from '@/lib/teams';
 import { runCli } from './cli';
 
 const USAGE =

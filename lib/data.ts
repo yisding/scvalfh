@@ -38,6 +38,7 @@ import type { ContentRemoval, Snapshot } from './model/snapshot';
 import type { Standing } from './model/standings';
 import type { Team } from './model/team';
 import { buildLeagueTournament } from './postseason';
+import { getTeamById, getTeamBySlug, teamOfSide } from './registry/teams';
 import { isoDateKey, localDateKey } from './shared/dates';
 import { sideOutcome } from './shared/game';
 import { buildSearchIndex } from './shared/search';
@@ -52,7 +53,6 @@ import {
   sortStandings,
 } from './standings';
 import type { MissingOfficialRow } from './standings';
-import { getTeamById, getTeamBySlug, teamOfSide } from './teams';
 
 /**
  * data/snapshot.json is IMPORTED, so every toolchain bundles it into the server code at build time:
@@ -313,7 +313,7 @@ export function getTeamsGrouped(region?: RegionId): Array<{
 }
 
 /**
- * The registry lookups (lib/teams.ts), re-exported so a page can name a team through this module.
+ * The registry lookups (lib/registry/teams.ts), re-exported so a page can name a team through this module.
  * The snapshot's teams equal the registry, in membership and order (checkAgainstConfig #1), so
  * there is one lookup, not a second scan of `snapshot.teams`.
  */

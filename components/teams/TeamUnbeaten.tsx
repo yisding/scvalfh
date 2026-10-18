@@ -3,9 +3,9 @@ import Link from 'next/link';
 import { monthDay } from '@/lib/format/dates';
 import { recordString } from '@/lib/format/numbers';
 import { plural } from '@/lib/format/words';
-import { getTeamBySlug } from '@/lib/teams';
 import EmptyState from '@/components/ui/EmptyState';
 import TeamMonogram from '@/components/ui/TeamMonogram';
+import { getTeamBySlug } from '@/lib/registry/teams';
 import type { TeamPageView, UnbeatenOpponent } from './team-view';
 
 /**

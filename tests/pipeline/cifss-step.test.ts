@@ -17,9 +17,9 @@ import { SILENT_SINK, emptyRunState } from '@/lib/pipeline/ledger';
 import { createPipelineContext, parseRunArgs } from '@/lib/pipeline/run';
 import { stepCifss } from '@/lib/pipeline/steps/cifss';
 import { resourceUrl } from '@/lib/pipeline/transport';
+import { resolveTeam } from '@/lib/registry/resolve';
 import { CIFSS_SECTIONS } from '@/lib/sources/cifss';
 import type { ScheduleRow } from '@/lib/sources/maxpreps';
-import { resolveTeam } from '@/lib/teams';
 import { game } from '@/tests/support/game-builder';
 import { REPO } from '@/tests/support/repo';
 

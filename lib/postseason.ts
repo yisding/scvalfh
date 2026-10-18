@@ -27,7 +27,7 @@
  * rankings, Green Book 2026-27 Bylaw 2000.1) have 'tournament' for 1st (a designated champion's
  * guaranteed play-in) and 'selection' below, and no bracket is drawn before the Section publishes one.
  *
- * Imports the standings engine (lib/standings.ts), lib/shared/game.ts, lib/config/leagues.ts, lib/teams.ts and types.
+ * Imports the standings engine (lib/standings.ts), lib/shared/game.ts, lib/config/leagues.ts, lib/registry/teams.ts and types.
  */
 
 import { drawNumberOf } from './config/leagues';
@@ -39,9 +39,9 @@ import type {
 } from './model/postseason';
 import type { SeasonPhase } from './model/season';
 import type { Standing } from './model/standings';
+import { getTeamById, getTeamBySlug } from './registry/teams';
 import { byDateThenId, sideOutcome } from './shared/game';
 import { lastSpotOutcome } from './standings';
-import { getTeamById, getTeamBySlug } from './teams';
 
 export interface SixthPlaceDecision {
   playInNeeded: 'no' | 'yes' | 'possible';

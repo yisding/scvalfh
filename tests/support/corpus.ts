@@ -11,8 +11,8 @@ import type { Game } from '@/lib/model/game';
 import type { DivisionId, LeagueId } from '@/lib/model/ids';
 import type { Snapshot } from '@/lib/model/snapshot';
 import { readManifest, type Manifest } from '@/lib/pipeline/corpus';
+import { TEAMS } from '@/lib/registry/teams';
 import { ScheduleResponseSchema, type ScheduleRow } from '@/lib/sources/maxpreps';
-import { TEAMS } from '@/lib/teams';
 import { FIXTURES_ROOT, fixturePath, readJson } from '@/tests/support/repo';
 
 /** The original SCVAL capture directory (2026-09-29), now also the `scval` corpus (its manifest.json). */

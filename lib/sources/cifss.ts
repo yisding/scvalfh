@@ -22,7 +22,8 @@
 import { SEASON_CALENDAR_YEAR } from '@/lib/config/season';
 import type { TeamSlug } from '@/lib/model/ids';
 import type { Team } from '@/lib/model/team';
-import { getTeamBySlug, normalizeTeamKey, resolveTeam } from '@/lib/teams';
+import { resolveTeam } from '@/lib/registry/resolve';
+import { getTeamBySlug, normalizeTeamKey } from '@/lib/registry/teams';
 import { htmlUnescape } from './http';
 
 export const CIFSS_WIDGET_URL = 'https://www.cifsshome.org/widget/schedule-score';

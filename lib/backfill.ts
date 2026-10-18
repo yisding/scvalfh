@@ -38,6 +38,8 @@ import type { ContestId, TeamSlug } from './model/ids';
 import { type SectionConfig } from './model/league-config';
 import type { Snapshot } from './model/snapshot';
 import type { Team } from './model/team';
+import { unorderedPairKey } from './registry/resolve';
+import { getTeamBySlug } from './registry/teams';
 import { dayDiff, toLocalTimestamp } from './shared/dates';
 import {
   isCaliforniaGameRow,
@@ -46,7 +48,6 @@ import {
   type SbliveGame,
   type SbliveSide,
 } from './sources/sblive';
-import { getTeamBySlug, unorderedPairKey } from './teams';
 
 // ---------------------------------------------------------------- constants
 

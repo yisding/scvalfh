@@ -20,7 +20,7 @@ import {
 import { CCS } from '@/lib/config/leagues';
 import type { Game } from '@/lib/model/game';
 import type { CcsPlayoffs } from '@/lib/model/postseason';
-import { resolveTeam } from '@/lib/teams';
+import { resolveTeam } from '@/lib/registry/resolve';
 import { game } from '@/tests/support/game-builder';
 
 const MODEL = 'components/playoffs/bracket-model.ts';

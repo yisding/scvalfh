@@ -14,7 +14,7 @@ import { SEASON_CALENDAR_YEAR } from '@/lib/config/season';
 import { listWords, numberWord } from '@/lib/format/words';
 import type { RegionId } from '@/lib/model/ids';
 import { type LeagueConfig, type SectionConfig } from '@/lib/model/league-config';
-import { TEAMS } from '@/lib/teams';
+import { TEAMS } from '@/lib/registry/teams';
 
 import { OG_SIZE } from './og-theme';
 

@@ -40,9 +40,9 @@
 import { z } from 'zod';
 
 import { isBannedHost } from './clubs-schema';
+import { TEAMS } from './registry/teams';
 import { slugId } from './schema-primitives';
 import { isCalendarDate, isHttpsUrl } from './shared/patterns';
-import { TEAMS } from './teams';
 
 /**
  * committed  a public page says the player has committed to play field hockey there (a verbal or

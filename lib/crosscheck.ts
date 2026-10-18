@@ -27,11 +27,12 @@
 
 import type { BackfillRow, SbliveCrossCheck, SbliveOnlyRow, ScoreConflictRow } from './model/crosscheck';
 import type { Game } from './model/game';
+import { sideJoinKey, unorderedPairKey } from './registry/resolve';
+import { getTeamBySlug } from './registry/teams';
 import { dayNumber } from './shared/dates';
 import { sblivePairKey, type SbliveGame, type SbliveSide } from './sources/sblive';
-import { getTeamBySlug, sideJoinKey, unorderedPairKey } from './teams';
 
-/** The same key `sblivePairKey` gives (lib/teams.ts sideJoinKey), so the two halves of the join agree exactly. */
+/** The same key `sblivePairKey` gives (lib/registry/resolve.ts sideJoinKey), so the two halves of the join agree exactly. */
 export function gamePairKey(game: Pick<Game, 'home' | 'away'>): string {
   return unorderedPairKey(sideJoinKey(game.home), sideJoinKey(game.away));
 }

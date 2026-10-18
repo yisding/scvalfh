@@ -19,7 +19,7 @@ import {
   ratingGames,
   type RatingTable,
 } from '@/lib/ratings';
-import { TEAMS, getTeamBySlug } from '@/lib/teams';
+import { TEAMS, getTeamBySlug } from '@/lib/registry/teams';
 import { game, type GameSpec } from './support/game-builder';
 
 const neutral = (spec: GameSpec): Game => ({ ...game(spec), site: 'neutral' });

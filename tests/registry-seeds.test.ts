@@ -30,7 +30,7 @@ import { PCAL_SEEDS } from '@/lib/registry/pcal';
 import { SCVAL_SEEDS } from '@/lib/registry/scval';
 import type { Seed } from '@/lib/registry/seed';
 import { SUNSET_SEEDS } from '@/lib/registry/sunset';
-import { TEAMS, getTeamBySlug } from '@/lib/teams';
+import { TEAMS, getTeamBySlug } from '@/lib/registry/teams';
 import { REPO } from './support/repo';
 
 interface JsonSeed {

@@ -13,9 +13,9 @@
  * Pure: no I/O.
  */
 
-import { JV_SLUG_BY_SBLIVE_ID } from '@/lib/jv-teams';
 import type { JvSbliveRow } from '@/lib/jv-schema';
 import type { TeamSlug } from '@/lib/model/ids';
+import { JV_SLUG_BY_SBLIVE_ID } from '@/lib/registry/jv-teams';
 import { localDateKey } from '@/lib/shared/dates';
 import {
   SbliveError,

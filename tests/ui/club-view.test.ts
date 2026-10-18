@@ -45,8 +45,8 @@ import {
   type Club,
   type ClubAffiliation,
 } from '@/lib/clubs';
+import { getTeamBySlug } from '@/lib/registry/teams';
 import { getEnrichedTeamRoster, getRosters } from '@/lib/rosters';
-import { getTeamBySlug } from '@/lib/teams';
 import { affiliationLeaks } from '@/scripts/copy-rules';
 import { PUBLIC_TERMS } from '@/scripts/public-terms';
 import { textOf } from '@/tests/support/html-text';

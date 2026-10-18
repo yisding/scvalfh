@@ -20,8 +20,8 @@ import { getColleges } from '@/lib/commits';
 import { gradeWord } from '@/lib/format/words';
 import { getAvailableHistoryLeagues } from '@/lib/history';
 import type { TeamSlug } from '@/lib/model/ids';
+import { TEAMS, getTeamBySlug } from '@/lib/registry/teams';
 import { getAllEnrichedRosters } from '@/lib/rosters';
-import { TEAMS, getTeamBySlug } from '@/lib/teams';
 import type { ArchiveLine } from './copy-rules';
 
 const terms = new Set<string>(['Field Hockey', ...Object.values(SPORT_WORDS)]);

@@ -35,7 +35,8 @@ import type { OfficialFixture } from '@/lib/model/fixture';
 import type { Game } from '@/lib/model/game';
 import type { DivisionId, TeamSlug } from '@/lib/model/ids';
 import { officialFixtureId } from '@/lib/official/schema';
-import { isWithdrawnSchool, resolveOfficialName, resolveTeam, teamsInDivision } from '@/lib/teams';
+import { isWithdrawnSchool, resolveOfficialName, resolveTeam } from '@/lib/registry/resolve';
+import { teamsInDivision } from '@/lib/registry/teams';
 import { HttpClient, type HttpClientOptions } from './http';
 
 /**

@@ -2,10 +2,12 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { ALL_DIVISIONS, LEAGUES } from '@/lib/config/leagues';
 import {
-  ACRONYM_COLLISIONS, FETCHABLE_TEAMS, TEAMS, getTeamById, getTeamBySlug, isRegistryTeamId,
-  isWithdrawnSchool, normalizeTeamKey, onPrimaryInk, resolveOfficialName, resolveTeam,
-  sideJoinKey, teamOfSide, teamsInDivision, teamsInLeague, unorderedPairKey,
-} from '@/lib/teams';
+  isRegistryTeamId, isWithdrawnSchool, resolveOfficialName, resolveTeam, sideJoinKey, unorderedPairKey,
+} from '@/lib/registry/resolve';
+import {
+  ACRONYM_COLLISIONS, FETCHABLE_TEAMS, TEAMS, getTeamById, getTeamBySlug, normalizeTeamKey, onPrimaryInk,
+  teamOfSide, teamsInDivision, teamsInLeague,
+} from '@/lib/registry/teams';
 
 /**
  * FROZEN (SPEC §0.3): the 15 SCVAL slugs, abbrs, MaxPreps ids, names and division memberships.
@@ -421,7 +423,7 @@ describe('teams: a violated registry invariant is a ConfigInvariantError', () =>
     vi.resetModules();
   });
 
-  it('throws one at import, naming lib/teams.ts, when two seeds share an alias', async () => {
+  it('throws one at import, naming lib/registry/teams.ts, when two seeds share an alias', async () => {
     vi.resetModules();
     vi.doMock('@/lib/registry/scval', async (importOriginal) => {
       const original = await importOriginal<typeof import('@/lib/registry/scval')>();
@@ -430,11 +432,11 @@ describe('teams: a violated registry invariant is a ConfigInvariantError', () =>
     });
     // The fresh module graph holds its own class, so compare through the freshly imported one.
     const { ConfigInvariantError } = await import('@/lib/config/invariant');
-    const failure = await import('@/lib/teams').then(
+    const failure = await import('@/lib/registry/teams').then(
       () => null,
       (err: unknown) => err,
     );
     expect(failure).toBeInstanceOf(ConfigInvariantError);
-    expect((failure as Error).message).toMatch(/^lib\/teams\.ts: alias ".*" \(.*\) maps to both st-ignatius and st-ignatius$/);
+    expect((failure as Error).message).toMatch(/^lib\/registry\/teams\.ts: alias ".*" \(.*\) maps to both st-ignatius and st-ignatius$/);
   });
 });

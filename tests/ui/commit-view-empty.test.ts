@@ -13,7 +13,7 @@ import { describe, expect, it, vi } from 'vitest';
 import CommitsPage from '@/app/commits/page';
 import { buildCommitsView } from '@/components/commits/commit-view';
 import { buildRosterView } from '@/components/teams/roster-view';
-import { TEAMS } from '@/lib/teams';
+import { TEAMS } from '@/lib/registry/teams';
 import { textOf } from '@/tests/support/html-text';
 
 vi.mock('@/data/commits.json', async (importOriginal) => {

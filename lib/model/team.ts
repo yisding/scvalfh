@@ -42,7 +42,7 @@ export interface Team {
    * The one canonical short name (≤ 16 characters), for rows and tiles too narrow for `name`: the
    * name the school goes by ('Mitty', 'Sobrato', 'Convent', 'SF University'). It is `name` itself,
    * whole words of it, or one of the school's aliases (a spelling a source uses), never a made-up
-   * abbreviation; enforced at load (lib/teams.ts). Display only: resolution never keys on it.
+   * abbreviation; enforced at load (lib/registry/teams.ts). Display only: resolution never keys on it.
    */
   shortName: string;
   /** 2 letters, unique across the whole registry (102 teams). */

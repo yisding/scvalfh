@@ -16,6 +16,7 @@ import { describe, expect, it } from 'vitest';
 import type { OfficialFixture } from '@/lib/model/fixture';
 import type { Game, OfficialStamp } from '@/lib/model/game';
 import { matchOfficialFixtures } from '@/lib/official/match';
+import { teamsInDivision } from '@/lib/registry/teams';
 import {
   carryOfficialForward,
   diffMembership,
@@ -25,7 +26,6 @@ import {
   scvalPdfDivisions,
   scvalScheduleUrl,
 } from '@/lib/sources/scval-pdf';
-import { teamsInDivision } from '@/lib/teams';
 import { game } from './support/game-builder';
 import { REPO } from './support/repo';
 

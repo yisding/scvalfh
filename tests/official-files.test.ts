@@ -23,7 +23,8 @@ import {
   serializeBundle,
 } from '@/lib/official/schema';
 import { OfficialValidationError, assertDoubleRoundRobin } from '@/lib/official/validate';
-import { isWithdrawnSchool, resolveOfficialName, resolveTeam, teamsInDivision } from '@/lib/teams';
+import { isWithdrawnSchool, resolveOfficialName, resolveTeam } from '@/lib/registry/resolve';
+import { teamsInDivision } from '@/lib/registry/teams';
 import { BUNDLED_LEAGUES, buildBundles, outputFileOf } from '@/scripts/build-official-fixtures';
 import { runRepoScript } from './support/cli';
 import { REPO, tempDir } from './support/repo';

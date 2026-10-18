@@ -41,10 +41,10 @@ import type { OfficialFixture } from './model/fixture';
 import type { Game } from './model/game';
 import type { ContestId, DivisionId, LeagueId, TeamSlug } from './model/ids';
 import type { ComputedRecord } from './model/standings';
+import { getTeamBySlug, teamsInDivision } from './registry/teams';
 import { dayDiff } from './shared/dates';
 import { byDateThenId } from './shared/game';
 import { recordOver } from './standings';
-import { getTeamBySlug, teamsInDivision } from './teams';
 
 /** A varsity game or official fixture this many days either side of the JV date can be its counterpart. */
 export const JV_COUNTERPART_WINDOW_DAYS = 3;

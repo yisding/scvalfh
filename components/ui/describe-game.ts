@@ -24,7 +24,7 @@ import { EN_DASH, MINUS } from '@/lib/format/words';
 import type { Game, Outcome, PostseasonTag } from '@/lib/model/game';
 import type { LeagueId, TeamSlug } from '@/lib/model/ids';
 import { type SectionConfig, type ShootoutInference } from '@/lib/model/league-config';
-import { getTeamBySlug } from '@/lib/teams';
+import { getTeamBySlug } from '@/lib/registry/teams';
 
 /** The chip a side or a row carries. `none` = no chip at all (a scheduled game). */
 export type ChipKind = Outcome | 'pending' | 'cancelled' | 'postponed' | 'none';

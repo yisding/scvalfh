@@ -1,5 +1,5 @@
 /**
- * One registry seed: the hand-maintained source of a Team (lib/teams.ts `toTeam`).
+ * One registry seed: the hand-maintained source of a Team (lib/registry/team-list.ts `toTeam`).
  *
  * Seeds are transcribed from the verified registry seeds (tests/fixtures/seeds/*.json:
  * registry-seed.json, registry-seed-ncs.json, registry-seed-ns.json, and for Southern California

@@ -1,7 +1,7 @@
 #!/usr/bin/env tsx
 /**
  * Fetch every registry school's JV games into data/jv.json: MaxPreps' JV schedule feed for all 102
- * schools, and si.com's JV team page for the 101 that have one (lib/jv-teams.ts).
+ * schools, and si.com's JV team page for the 101 that have one (lib/registry/jv-teams.ts).
  *
  *   pnpm fetch-jv                       live: 102 MaxPreps JSON calls + up to 101 si.com pages
  *   pnpm fetch-jv --leagues scval,bval  only these leagues; the others keep their previous rows
@@ -78,12 +78,13 @@ import {
   type JvSourceState,
   type JvTeam,
 } from '@/lib/jv-schema';
-import { jvMaxprepsScheduleUrl, jvSbliveGamesUrl, jvSbliveTeamId } from '@/lib/jv-teams';
 import type { Game } from '@/lib/model/game';
 import type { LeagueId } from '@/lib/model/ids';
 import type { Team } from '@/lib/model/team';
 import { normalizeGames } from '@/lib/normalize';
 import { inSeasonWindow } from '@/lib/pipeline/steps/window';
+import { jvMaxprepsScheduleUrl, jvSbliveGamesUrl, jvSbliveTeamId } from '@/lib/registry/jv-teams';
+import { TEAMS } from '@/lib/registry/teams';
 import { formatIssues } from '@/lib/schema-primitives';
 import { localDateKey } from '@/lib/shared/dates';
 import { byDateThenId } from '@/lib/shared/game';
@@ -92,7 +93,6 @@ import { HttpClient } from '@/lib/sources/http';
 import { MaxPrepsClient, ScheduleResponseSchema, splitTbaRows, type ScheduleRow } from '@/lib/sources/maxpreps';
 import { SBLIVE_HTTP_OPTIONS } from '@/lib/sources/sblive';
 import { combineJvCopies, parseJvTeamGamesPage, type JvSbliveCopy } from '@/lib/sources/sblive-jv';
-import { TEAMS } from '@/lib/teams';
 import { runCli } from './cli';
 
 interface Args {

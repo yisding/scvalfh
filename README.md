@@ -52,7 +52,7 @@ Section's 2026-27 League Alignment; the division names are ours). Every league f
 ids, rules, tiebreak chains with their citations, postseason ladders, official sources,
 data-quality lists) lives in `lib/config/leagues.ts`, along with the regions (`REGIONS`, `regionOf`); the
 teams live in `lib/registry/{scval,bval,pcal,mcal,eal,sunset,city,north-county,metro,independents}.ts`, assembled
-by `lib/teams.ts`. The CCS holds a 16-team championship fed by SCVAL (7 berths), BVAL (4), PCAL (2)
+by `lib/registry/teams.ts`. The CCS holds a 16-team championship fed by SCVAL (7 berths), BVAL (4), PCAL (2)
 and three at-large berths; the NCS holds no field hockey championship, so MCAL's own six-team
 tournament is its postseason; the Northern Section's EAL postseason is the Super Regional (Oct
 30-31, the top six qualify, format and site not published), which the site describes and never
@@ -517,7 +517,7 @@ each said:
   independents (Glendora 8 games, Harvard-Westlake 13, Thousand Oaks none), 533 games for 93 of the
   102, 209 of them final.
 - **si.com** (`sblive`): each school's JV team page (101 schools; Marin Academy has no si.com page),
-  scored finals only. A JV side is one of ours only by its si.com JV team id (`lib/jv-teams.ts`,
+  scored finals only. A JV side is one of ours only by its si.com JV team id (`lib/registry/jv-teams.ts`,
   read from each varsity page's level switcher), never by name.
 
 What the pages show is `mergeJv` (`lib/jv-merge.ts`) over the two, decided again on every build

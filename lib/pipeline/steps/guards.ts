@@ -24,9 +24,9 @@ import type { Game } from '@/lib/model/game';
 import type { DivisionHealth } from '@/lib/model/health';
 import type { DivisionId, LeagueId } from '@/lib/model/ids';
 import { type LeagueConfig } from '@/lib/model/league-config';
+import { teamsInLeague } from '@/lib/registry/teams';
 import { byDateThenId } from '@/lib/shared/game';
 import { divisionGames } from '@/lib/standings';
-import { teamsInLeague } from '@/lib/teams';
 import { RunAbort } from '@/lib/pipeline/contract';
 import {
   hasPreviousData,

@@ -15,6 +15,7 @@ import { divisionsOf } from '@/lib/config/leagues';
 import type { Game, GameStatus } from '@/lib/model/game';
 import type { Snapshot } from '@/lib/model/snapshot';
 import type { PlayoffStatus, ReportedRecord, Standing } from '@/lib/model/standings';
+import { teamsInLeague } from '@/lib/registry/teams';
 import { buildSeason } from '@/lib/season-build';
 import { stableStringify } from '@/lib/shared/stable-json';
 import {
@@ -27,7 +28,6 @@ import {
 } from '@/lib/standings';
 import { countsOf, migrateV1ToV2 } from '@/lib/snapshot-migrate';
 import { parseSnapshot } from '@/lib/snapshot-schema';
-import { teamsInLeague } from '@/lib/teams';
 import { withSnapshotModules } from './support/corpus-modules';
 import { game } from './support/game-builder';
 import { REPO, tempDir } from './support/repo';

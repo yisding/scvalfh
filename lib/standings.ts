@@ -43,8 +43,8 @@ import type {
   ComputedRecord, PlayoffStatus, ReportedRecord, Standing, TiebreakInfo, TiebreakStage,
 } from './model/standings';
 import type { Team } from './model/team';
+import { TEAMS, getTeamById, teamsInDivision } from './registry/teams';
 import { byDateThenId, sideOutcome } from './shared/game';
-import { TEAMS, getTeamById, teamsInDivision } from './teams';
 
 // ---------------------------------------------------------------- accumulation
 

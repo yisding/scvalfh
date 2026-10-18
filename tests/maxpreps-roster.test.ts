@@ -9,6 +9,7 @@ import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 import { SPORT_SEASON_ID } from '@/lib/config/season';
+import { TEAMS, getTeamBySlug, teamsInLeague } from '@/lib/registry/teams';
 import { MaxPrepsError } from '@/lib/sources/maxpreps';
 import {
   COL,
@@ -22,7 +23,6 @@ import {
   rosterUrl,
 } from '@/lib/sources/maxpreps-roster';
 import { RostersSchema, countRosters } from '@/lib/rosters-schema';
-import { TEAMS, getTeamBySlug, teamsInLeague } from '@/lib/teams';
 import { FIXTURE_DIR } from './support/corpus';
 
 const fixture = (slug: string) => readFileSync(path.join(FIXTURE_DIR, `roster-${slug}.html`), 'utf8');

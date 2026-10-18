@@ -38,8 +38,8 @@ import {
   type UnavailableLeagueHistory,
 } from './history-schema';
 import type { DivisionId, LeagueId, SectionId, TeamSlug } from './model/ids';
+import { getTeamBySlug } from './registry/teams';
 import { failValidation } from './schema-primitives';
-import { getTeamBySlug } from './teams';
 
 export type {
   AvailableLeagueHistory,

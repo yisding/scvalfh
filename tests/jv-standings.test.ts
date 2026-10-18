@@ -26,7 +26,7 @@ import {
 } from '@/lib/jv-standings';
 import type { OfficialFixture } from '@/lib/model/fixture';
 import type { Game } from '@/lib/model/game';
-import { TEAMS, teamsInDivision } from '@/lib/teams';
+import { TEAMS, teamsInDivision } from '@/lib/registry/teams';
 import { game } from './support/game-builder';
 
 /** A JV game as lib/jv.ts receives it from the merge: unclassified. */

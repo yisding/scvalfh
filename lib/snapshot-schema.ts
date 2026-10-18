@@ -27,6 +27,7 @@ import {
 import { type DivisionId, OFFICIAL_SOURCE_IDS } from './model/ids';
 import { type Snapshot } from './model/snapshot';
 import { type TiebreakStage } from './model/standings';
+import { TEAMS, getTeamBySlug } from './registry/teams';
 import { dateKey, formatIssues, httpUrl, slugId } from './schema-primitives';
 import { stableStringify } from './shared/stable-json';
 import {
@@ -37,7 +38,6 @@ import {
   needsReclassification,
   reclassify,
 } from './snapshot-migrate';
-import { TEAMS, getTeamBySlug } from './teams';
 
 // ---------------------------------------------------------------- primitives
 

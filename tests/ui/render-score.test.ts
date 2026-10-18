@@ -461,7 +461,7 @@ describe('rendered rows and the scoreboard (GameRow, ScoreBoard: UI pass, league
   it('a side outside the registry carries NON_MEMBER_NOTE on the scoreboard, counted from the registry', async () => {
     const { ScoreBoard } = await import('@/components/ui/ScoreBoard');
     const { NON_MEMBER_NOTE } = await import('@/components/ui/GameRow');
-    const { TEAMS } = await import('@/lib/teams');
+    const { TEAMS } = await import('@/lib/registry/teams');
     expect(NON_MEMBER_NOTE, 'components/ui/GameRow.tsx NON_MEMBER_NOTE').toBe(
       `Not one of the ${TEAMS.length} teams this site follows`,
     );

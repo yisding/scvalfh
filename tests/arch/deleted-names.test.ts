@@ -39,7 +39,7 @@ const DELETED: Readonly<Record<string, readonly string[]>> = {
     'buildSeason',
   ],
   'lib/standings': ['crossoverPairings', 'playoffStatus', 'PLAYOFF_STATUS_LABELS'],
-  'lib/teams': ['isScvalTeamId', 'WITHDRAWN_SCHOOL_NAMES'],
+  'lib/registry': ['isScvalTeamId', 'WITHDRAWN_SCHOOL_NAMES'],
   'lib/model': ['CrossoverPairing', 'Division', 'PlayoffKeyDates', 'Playoffs'],
 };
 
@@ -85,13 +85,13 @@ describe('deleted names stay deleted (SPEC §0.4)', () => {
 
   it('the scanner itself catches each banned form (synthetic sources)', () => {
     expect(resolveModule('app/teams/page.tsx', '../../lib/config/season')).toBe('lib/config/season');
-    expect(resolveModule('components/home/x.ts', '@/lib/teams')).toBe('lib/teams');
+    expect(resolveModule('components/home/x.ts', '@/lib/registry/teams')).toBe('lib/registry/teams');
     expect(resolveModule('tests/ui/a.test.ts', '../../lib/model/ids.ts')).toBe('lib/model/ids');
     expect(resolveModule('app/x.tsx', 'next/link')).toBeNull();
     const bad = [
       "import { DIVISIONS } from '../lib/config/season';",
       "import { playoffStatus as ps } from '@/lib/standings';",
-      "export { isScvalTeamId } from '../lib/teams';",
+      "export { isScvalTeamId } from '../lib/registry/teams';",
       "import type { Division } from '../lib/model/ids';",
       "type P = import('@/lib/model/postseason').Playoffs;",
       // A key matches the module AND anything under it (the module became a directory).

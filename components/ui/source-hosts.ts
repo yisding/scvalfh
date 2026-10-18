@@ -8,7 +8,7 @@
  * components/commits/commit-view.ts). Server-only: it reads the registry.
  */
 
-import { getTeamBySlug } from '@/lib/teams';
+import { getTeamBySlug } from '@/lib/registry/teams';
 
 /**
  * A news or other site a source sits on: its link text, and how a sentence names it. Any other

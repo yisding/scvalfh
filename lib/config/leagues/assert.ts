@@ -228,7 +228,7 @@ export function checkLeagueConfig({ leagues, regions, sections, ccs, dataQuality
       if (l.rules.postseasonFrom === null || !(l.rules.postseasonFrom <= ps.dates.first)) {
         fail(`${l.id}: section playoffs need postseasonFrom on or before dates.first`);
       }
-      // Shape only: lib/teams.ts asserts the keys are exactly the league's slugs (this module never reads the registry).
+      // Shape only: lib/registry/teams.ts asserts the keys are exactly the league's slugs (this module never reads the registry).
       const entries = Object.entries(ps.playoffDivisionOf);
       const total = l.divisions.reduce((n, d) => n + d.expectedTeams, 0);
       if (entries.length !== total) fail(`${l.id}: ${entries.length} playoff divisions for ${total} teams`);

@@ -7,8 +7,8 @@ import { matchupJoiner } from '@/lib/format/score';
 import { EM_DASH } from '@/lib/format/words';
 import type { Game, Record3 } from '@/lib/model/game';
 import type { LeagueId, TeamSlug } from '@/lib/model/ids';
+import { TEAMS, getTeamBySlug } from '@/lib/registry/teams';
 import { gameHref } from '@/lib/shared/game-id';
-import { TEAMS, getTeamBySlug } from '@/lib/teams';
 
 import ExternalLink from './ExternalLink';
 import GhostMonogram from './GhostMonogram';
@@ -50,7 +50,7 @@ import {
  * `sblive:<n>`, which the route spells `sblive-<n>`.
  *
  * SERVER-ONLY: `showRecords` reads the standings through lib/data, which does an fs read at module
- * scope, and NON_MEMBER_NOTE counts the registry through lib/teams. Every consumer is a server
+ * scope, and NON_MEMBER_NOTE counts the registry through lib/registry/teams. Every consumer is a server
  * component; nothing on the client imports this module.
  */
 export interface GameViewProps {

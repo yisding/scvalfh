@@ -58,11 +58,11 @@ import {
 } from '@/lib/model/league-config';
 import type { SeasonPhase } from '@/lib/model/season';
 import type { Team } from '@/lib/model/team';
+import { teamOfSide } from '@/lib/registry/teams';
 import { gameHref } from '@/lib/shared/game-id';
 import { pickerName, pinLabel } from '@/lib/shared/pin-label';
 import type { SearchIndex } from '@/lib/shared/search';
 import { outcomesFor, playoffOutcomeLabel, statusBadge } from '@/lib/standings';
-import { teamOfSide } from '@/lib/teams';
 import type { LeagueChip } from '@/components/layout/LeagueSwitcher';
 import { leagueChips } from '@/components/layout/league-chips';
 import { fixtureOpponent, nextOfficialFixture } from '@/components/teams/team-view';

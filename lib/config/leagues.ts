@@ -2,7 +2,7 @@
  * League configuration: every region, section, league, division, rule, tiebreak chain, citation, ladder,
  * pairing, phase, date and official source (SPEC §2; the Southern California amendment, DESIGN-socal §2.1).
  * Nothing else in the codebase names a league, a division or a by-law; teams live in lib/registry/* and
- * are assembled by lib/teams.ts. The configuration's shapes (its types) are lib/model/league-config.ts.
+ * are assembled by lib/registry/team-list.ts. The configuration's shapes (its types) are lib/model/league-config.ts.
  *
  * Pure data plus small helpers: no fs, no lib/data import, no snapshot. `assertLeagues()` runs at
  * module load and throws `lib/config/leagues.ts: <message>` on any violated invariant (SPEC §2.4).
@@ -221,7 +221,7 @@ export function tiebreakChainFor(id: DivisionId, bucketStartPlace: number): read
 
 /**
  * A team's draw number (MCAL's spring draw: lower wins a `draw-number` stage). Takes a slug, so this
- * module never reads the registry; lib/teams.ts fails at import unless a league's `drawNumbers` keys are
+ * module never reads the registry; lib/registry/teams.ts fails at import unless a league's `drawNumbers` keys are
  * exactly its slugs, so a miss here is a caller's bug and throws instead of falling back.
  */
 export function drawNumberOf(rules: LeagueRules, slug: TeamSlug): number {

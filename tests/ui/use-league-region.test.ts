@@ -16,7 +16,7 @@ import { LEAGUE_KEY, REGION_KEY, buildPrefsScript } from '@/components/layout/pr
 import { PINNED_TEAM_KEY } from '@/components/layout/pinned-team-script';
 import { setRegion } from '@/components/ui/use-league';
 import { DEFAULT_REGION, LEAGUE_IDS, regionOf } from '@/lib/config/leagues';
-import { TEAMS } from '@/lib/teams';
+import { TEAMS } from '@/lib/registry/teams';
 
 const SCRIPT = buildPrefsScript({
   leagueIds: LEAGUE_IDS,
