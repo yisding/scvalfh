@@ -5,13 +5,13 @@
  * headline result (the final with the largest margin), how many games did not fit, and the counts
  * for the footer.
  *
- * Every line comes from `dayLines()` → `describeGame()` (views/schedule/day-summary.ts), so a game
+ * Every line comes from `dayLines()` → `describeGame()` (views/scores/day-summary.ts), so a game
  * with no published score shows an en dash on the card exactly as it does in the HTML.
  */
 
 import { shortDate } from '@/lib/format/dates';
 import { getGames } from '@/lib/queries/games';
-import { type DayLine, dayCardTitle, dayLines, headlineGame, orderedForPreview } from '@/views/schedule/day-summary';
+import { type DayLine, dayCardTitle, dayLines, headlineGame, orderedForPreview } from './day-summary';
 
 /** The most game lines the card has room for. */
 const MAX_LINES = 4;

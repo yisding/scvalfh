@@ -22,7 +22,7 @@ const m = useCorpusModules('all-2026-10-02', {
   data: loadQueries,
   server: () => import('@/views/schedule/filters'),
   index: () => import('@/views/schedule/schedule-view'),
-  day: () => import('@/views/schedule/day-summary'),
+  day: () => import('@/views/scores/day-summary'),
   filters: () => import('@/components/schedule/ScheduleFilters'),
   leaguePage: () => import('@/app/schedule/[league]/page'),
   indexPage: () => import('@/app/schedule/page'),
@@ -342,7 +342,7 @@ describe('/scores/[date]', () => {
       const games = m.data.getGames({ date });
       const groups = m.day.dayGroups(games);
       const ids = groups.flatMap((g) => g.games.map((x) => x.contestId));
-      expect(ids.length, `views/schedule/day-summary.ts dayGroups ${date}`).toBe(games.length);
+      expect(ids.length, `views/scores/day-summary.ts dayGroups ${date}`).toBe(games.length);
       expect(new Set(ids).size).toBe(games.length);
       for (const group of groups) {
         expect(group.kicker).not.toMatch(/\(s\)/);

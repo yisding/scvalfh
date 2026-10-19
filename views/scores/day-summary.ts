@@ -16,7 +16,7 @@ import type { LeagueId, RegionId } from '@/lib/model/ids';
 import { getTeamBySlug } from '@/lib/registry/teams';
 import { describeGame } from '@/views/shared/describe-game';
 
-import { countGames, type ScheduleCounts } from './filters-client';
+import { countGames, type ScheduleCounts } from '@/views/schedule/filters-client';
 
 export interface DayLine {
   contestId: string;

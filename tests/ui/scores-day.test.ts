@@ -26,7 +26,7 @@ import { textOf } from '@/tests/support/html-text';
 import { type Queries, loadQueries } from '@/tests/support/queries';
 
 type Data = Queries;
-type Day = typeof import('@/views/schedule/day-summary');
+type Day = typeof import('@/views/scores/day-summary');
 
 let data: Data;
 let day: Day;
@@ -36,7 +36,7 @@ let describeDay: (date: string) => Promise<string>;
 
 beforeAll(async () => {
   data = await loadQueries();
-  day = await import('@/views/schedule/day-summary');
+  day = await import('@/views/scores/day-summary');
   jvView = await import('@/views/teams/jv');
   const page = await import('@/app/scores/[date]/page');
   renderDay = async (date) =>
@@ -65,7 +65,7 @@ function block(html: string, from: string, to: readonly string[]): string {
 
 const gameIn = (html: string, game: Game) => html.includes(`data-game="${game.contestId}"`);
 
-describe('/scores/[date] by region (app/scores/[date]/page.tsx, views/schedule/day-summary.ts)', () => {
+describe('/scores/[date] by region (app/scores/[date]/page.tsx, views/scores/day-summary.ts)', () => {
   it('places every game exactly once: one region block, or NorCal vs SoCal', () => {
     for (const date of data.getGameDates()) {
       const games = data.getGames({ date });
