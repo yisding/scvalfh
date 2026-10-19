@@ -78,8 +78,6 @@ const ALLOWED_SYNTHETIC: Record<string, string> = {
     'tests/scripts/dev/typecheck-scope.test.ts: the sample path its globs and tsc diagnostics name (tests/support/source-tree.ts quotes one); the module itself was deleted',
   'components/teams/TeamHero.tsx': 'tests/scripts/dev/typecheck-scope.test.ts: a path the glob must not match',
   'lib/dataXts': 'tests/scripts/dev/typecheck-scope.test.ts: proof that the dot in a glob is escaped',
-  'tests/ui/region-card.test.ts':
-    'app/opengraph-image.tsx: its own source bytes feed the content hash in every page\'s og:image URL, so the comment keeps the test\'s old path (now tests/components/og/RegionCard.test.ts) until the owner accepts one hash change',
   'docs/01-app/03-api-reference/03-file-conventions/page.md':
     'components/schedule/ScheduleFilters.tsx: a page of the Next.js docs installed at node_modules/next/dist/docs, cited relative to it',
 };

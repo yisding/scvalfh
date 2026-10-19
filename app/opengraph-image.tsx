@@ -16,7 +16,7 @@ import { ROOT_OG_ALT } from '@/views/site/site';
  * " & ", then ` +<n>`. A league with no counted result reads `No league results yet`. No league hue.
  * The layout is shared with the /standings card (components/og/RegionCard.tsx, which says why nine
  * rows needed two columns), and so are the words (views/site/region-card.ts); the fit is
- * render-tested with every leader line at its longest (tests/ui/region-card.test.ts).
+ * render-tested with every leader line at its longest (tests/components/og/RegionCard.test.ts).
  */
 export const alt = ROOT_OG_ALT;
 export const size = OG_SIZE;
