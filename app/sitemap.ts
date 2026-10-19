@@ -115,6 +115,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.3,
   }));
 
+  // Every game from the snapshot, not gameStaticParams(): the superseded-game stubs are pages, but
+  // they are never listed here.
   const games = getGames();
   const removals = getContentRemovals();
   // A day page also lists that day's official fixtures no game matched (OfficialFixtures). They

@@ -1,8 +1,10 @@
 /**
  * The `/schedule` index's view (SPEC §8.1, §10.4): the league cards, the Recent and Next game days
- * and the every-game-day rows that `ScheduleIndex.tsx` renders. Pure: `app/schedule/page.tsx`
- * passes it the games, the league summaries, a slug → league lookup and `getToday()`, so
- * tests/ui/schedule-view.test.ts can run it over any snapshot.
+ * and the every-game-day rows that `ScheduleIndex.tsx` renders. `buildScheduleIndex` is pure:
+ * `app/schedule/page.tsx` passes it the games, the league summaries, a slug → league lookup and
+ * `getToday()`, so tests/ui/schedule-view.test.ts can run it over any snapshot. The
+ * `/schedule/<league>` page's view, `buildLeagueSchedulePageView(id)`, reads lib/queries itself,
+ * as the other per-route views do.
  *
  * Regions (DESIGN-socal §2.4): every card and every league group carries its league's region, and the
  * Recent and Next blocks are built once per region (`regions`): a region's last and next game days are
