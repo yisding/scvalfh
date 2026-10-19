@@ -22,7 +22,7 @@ import {
 } from '@/lib/datasets/commits';
 import { type MergedPlayer, classOf, getAllEnrichedRosters, getRosters } from '@/lib/datasets/rosters';
 import { getTeamBySlug } from '@/lib/registry/teams';
-import { BANNED_HOSTS } from '@/lib/schema/clubs';
+import { BANNED_HOSTS } from '@/lib/schema/source-url';
 import {
   COLLEGE_DIVISIONS, COMMIT_SPORTS, type College, type Commitment, type CommitsFile, CommitsFileSchema,
   isCommitDate, isPostBy,

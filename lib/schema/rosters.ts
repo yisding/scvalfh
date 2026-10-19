@@ -21,17 +21,14 @@ import { z } from 'zod';
 
 import { COMMIT_SPORTS } from './commits';
 import { ALL_DIVISIONS } from '@/lib/config/leagues';
-import { TEAMS, getTeamBySlug } from '@/lib/registry/teams';
+import { getTeamBySlug } from '@/lib/registry/teams';
 import { dateKey, httpUrl, httpsUrl, slugId } from './primitives';
+import { REGISTRY_TEAM_COUNT, registryTeamSlug } from './registry-primitives';
 import { contentKey } from '@/lib/shared/stable-json';
 
 /** Rosters cover every registry team, all nine leagues and the five independents: one entry per team of TEAMS. */
-const ROSTER_SLUGS: ReadonlySet<string> = new Set(TEAMS.map((t) => t.slug));
+export const ROSTER_TEAM_COUNT = REGISTRY_TEAM_COUNT;
 const ROSTER_DIVISIONS: ReadonlySet<string> = new Set(ALL_DIVISIONS.map((d) => d.id));
-/** How many teams a rosters file holds: TEAMS.length (102). */
-export const ROSTER_TEAM_COUNT = ROSTER_SLUGS.size;
-
-const teamSlug = slugId.refine((slug) => ROSTER_SLUGS.has(slug), 'not a registry team slug');
 
 const division = slugId.refine((d) => ROSTER_DIVISIONS.has(d), 'not a registry division');
 
@@ -97,7 +94,7 @@ export const TeamRosterStatus = z.enum(['ok', 'empty', 'carried-forward', 'error
 
 export const TeamRosterSchema = z
   .object({
-    slug: teamSlug,
+    slug: registryTeamSlug,
     /** The registry id (lib/registry/teams.ts) — the join key to the snapshot. */
     teamId: z.string().min(1),
     /** The GUID the page itself reports; null when the page was not read. */
@@ -394,7 +391,7 @@ export const EnrichmentSourceSchema = z.object({
 
 export const EnrichedTeamSchema = z
   .object({
-    slug: teamSlug,
+    slug: registryTeamSlug,
     sources: z.array(EnrichmentSourceSchema),
     players: z.array(EnrichedPlayerSchema),
     coaches: z.array(RosterCoachSchema),
@@ -419,6 +416,31 @@ export const RosterEnrichmentSchema = z
     const urls = e.teams.flatMap((t) => t.players.flatMap((p) => p.profiles.map((x) => x.url)));
     return new Set(urls).size === urls.length;
   }, 'a profile URL is linked to more than one player');
+
+/**
+ * What other public sources showed for a team's CURRENT roster — the one claim a team page with
+ * no MaxPreps players makes about them, so it is recorded per team rather than inferred:
+ *   none         looked, and no other source publishes a current roster (`note`: what was looked at)
+ *   partial      a source lists current players, but not in a form that can be joined to MaxPreps
+ *                rows (Marin Academy: first name, last initial and class year); `summary` says what
+ *                it lists and `source` links it
+ *   not-checked  nobody looked; the default for a team whose entry does not say
+ * It sits beside the team record EnrichedTeamSchema (whose schema ignores unknown keys) and is
+ * validated by lib/datasets/rosters.ts, at load, against OtherRostersFileSchema.
+ */
+export const OtherRostersSchema = z.discriminatedUnion('status', [
+  z.object({ status: z.literal('none'), checkedOn: dateKey, note: z.string().min(1) }).strict(),
+  z
+    .object({ status: z.literal('partial'), checkedOn: dateKey, source: httpsUrl, summary: z.string().min(1) })
+    .strict(),
+  z.object({ status: z.literal('not-checked') }).strict(),
+]);
+export type OtherRosters = z.infer<typeof OtherRostersSchema>;
+
+/** Just the slice of data/rosters-enrichment.json that carries `otherRosters`: one optional record per team. */
+export const OtherRostersFileSchema = z.object({
+  teams: z.array(z.object({ slug: z.string(), otherRosters: OtherRostersSchema.optional() })),
+});
 
 export type EnrichedGrade = z.infer<typeof EnrichedGradeSchema>;
 export type EnrichedPositions = z.infer<typeof EnrichedPositionsSchema>;

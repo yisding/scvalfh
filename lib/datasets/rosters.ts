@@ -22,18 +22,16 @@
  * only; never set them on a Worker).
  */
 
-import { z } from 'zod';
 import bundledEnrichment from '@/data/rosters-enrichment.json';
 import bundledRosters from '@/data/rosters.json';
 import type { TeamSlug } from '@/lib/model/ids';
-import { dateKey, httpsUrl } from '@/lib/schema/primitives';
 import {
   type EnrichedGrade, type EnrichedHeight, type EnrichedJersey, type EnrichedPlayer, type EnrichedPositions,
-  type EnrichedTeam, type EnrichmentSource, type PlayerProfile, type RosterCoach, type RosterConflict,
-  type RosterEnrichment, RosterEnrichmentSchema, type RosterPlayer, type Rosters, RostersSchema,
-  type TeamRoster,
+  type EnrichedTeam, type EnrichmentSource, type OtherRosters, OtherRostersFileSchema, type PlayerProfile,
+  type RosterCoach, type RosterConflict, type RosterEnrichment, RosterEnrichmentSchema, type RosterPlayer,
+  type Rosters, RostersSchema, type TeamRoster,
 } from '@/lib/schema/rosters';
-import { readDataset } from './read';
+import { parseDataset, readDataset, readDatasetRaw } from './read';
 
 export type {
   EnrichedGrade,
@@ -43,6 +41,7 @@ export type {
   EnrichedPositions,
   EnrichedTeam,
   EnrichmentSource,
+  OtherRosters,
   PlayerProfile,
   ProfilePlatform,
   RosterCoach,
@@ -61,38 +60,11 @@ const rostersSource = (env: string, bundled: unknown) => ({
   malformedOverride: 'propagate' as const,
 });
 
-/**
- * What other public sources showed for a team's CURRENT roster — the one claim a team page with
- * no MaxPreps players makes about them, so it is recorded per team rather than inferred:
- *   none         looked, and no other source publishes a current roster (`note`: what was looked at)
- *   partial      a source lists current players, but not in a form that can be joined to MaxPreps
- *                rows (Marin Academy: first name, last initial and class year); `summary` says what
- *                it lists and `source` links it
- *   not-checked  nobody looked; the default for a team whose entry does not say
- * It sits beside lib/schema/rosters.ts' team record (whose schema ignores unknown keys) and is
- * validated here, at load.
- */
-export const OtherRostersSchema = z.discriminatedUnion('status', [
-  z.object({ status: z.literal('none'), checkedOn: dateKey, note: z.string().min(1) }).strict(),
-  z
-    .object({ status: z.literal('partial'), checkedOn: dateKey, source: httpsUrl, summary: z.string().min(1) })
-    .strict(),
-  z.object({ status: z.literal('not-checked') }).strict(),
-]);
-export type OtherRosters = z.infer<typeof OtherRostersSchema>;
-
 const NOT_CHECKED: OtherRosters = { status: 'not-checked' };
 
-const OtherRostersFileSchema = z.object({
-  teams: z.array(z.object({ slug: z.string(), otherRosters: OtherRostersSchema.optional() })),
-});
-
-function loadOtherRosters(): Map<string, OtherRosters> {
-  const file = readDataset({
-    ...rostersSource('SCVAL_ROSTERS_ENRICHMENT', bundledEnrichment),
-    label: 'rosters-enrichment otherRosters',
-    schema: OtherRostersFileSchema,
-  });
+/** The enrichment file's `otherRosters` records, from the one read of the file that loadEnrichment also parses. */
+function loadOtherRosters(rawEnrichment: unknown): Map<string, OtherRosters> {
+  const file = parseDataset('rosters-enrichment otherRosters', OtherRostersFileSchema, rawEnrichment);
   return new Map(file.teams.map((t) => [t.slug, t.otherRosters ?? NOT_CHECKED]));
 }
 
@@ -107,12 +79,8 @@ function loadRosters(): Rosters {
  * states a class year agrees with the grade the row shows, and a claimed MaxPreps profile is the
  * row's own career page.
  */
-function loadEnrichment(base: Rosters): RosterEnrichment {
-  const enrichment = readDataset({
-    ...rostersSource('SCVAL_ROSTERS_ENRICHMENT', bundledEnrichment),
-    label: 'rosters-enrichment',
-    schema: RosterEnrichmentSchema,
-  });
+function loadEnrichment(base: Rosters, rawEnrichment: unknown): RosterEnrichment {
+  const enrichment = parseDataset('rosters-enrichment', RosterEnrichmentSchema, rawEnrichment);
   if (enrichment.season !== base.season) {
     throw new Error(`rosters-enrichment is for season ${enrichment.season}, rosters for ${base.season}`);
   }
@@ -163,8 +131,10 @@ export function classOf(season: string, grade: number): number {
 }
 
 const rosters = loadRosters();
-const enrichment = loadEnrichment(rosters);
-const OTHER_ROSTERS = loadOtherRosters();
+// data/rosters-enrichment.json is read once (an override file included) and parsed against both of its schemas.
+const rawEnrichment = readDatasetRaw(rostersSource('SCVAL_ROSTERS_ENRICHMENT', bundledEnrichment));
+const enrichment = loadEnrichment(rosters, rawEnrichment);
+const OTHER_ROSTERS = loadOtherRosters(rawEnrichment);
 const BASE_BY_SLUG = new Map<string, TeamRoster>(rosters.teams.map((t) => [t.slug, t]));
 const ENRICHMENT_BY_SLUG = new Map<string, EnrichedTeam>(enrichment.teams.map((t) => [t.slug, t]));
 

@@ -586,7 +586,7 @@ The rules:
   excerpt of one whose text is not just public names (`affiliationLeaks` in `scripts/copy-rules.ts`,
   with `scripts/public-terms.ts`), because both can name people who are not on the rosters.
 - **No social media**: no source or website on Instagram, Facebook, TikTok, X (Twitter), Threads,
-  YouTube, Snapchat or LinkedIn, or their short links (`BANNED_HOSTS` in `lib/schema/clubs.ts`),
+  YouTube, Snapchat or LinkedIn, or their short links (`BANNED_HOSTS` in `lib/schema/source-url.ts`),
   and every URL is https.
 - **`unknown` is never called current.** A club a source names without saying whether the player
   is still with it reads "Listed by NCSA, 2025" (the date or season the source gives) on the club

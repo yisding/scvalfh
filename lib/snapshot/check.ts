@@ -15,14 +15,11 @@ import { type DivisionId } from '@/lib/model/ids';
 import { type Snapshot } from '@/lib/model/snapshot';
 import { type TiebreakStage } from '@/lib/model/standings';
 import { TEAMS, getTeamBySlug } from '@/lib/registry/teams';
+import { customIssue } from '@/lib/schema/primitives';
 import { SnapshotObject } from '@/lib/schema/snapshot';
 import { isSbliveContestId } from '@/lib/shared/contest-id';
 
 type Ctx = z.RefinementCtx;
-
-function issue(ctx: Ctx, path: Array<string | number>, message: string): void {
-  ctx.addIssue({ code: 'custom', path, message });
-}
 
 /** Every chain stage a league may print as `resolvedBy`, plus 'points' (and 'play-in' for a tournament league). */
 function allowedStages(leagueId: string): ReadonlySet<TiebreakStage> {
@@ -46,67 +43,67 @@ function checkAgainstConfig(s: z.infer<typeof SnapshotObject>, ctx: Ctx): void {
   const extra = ids.filter((x) => !registry.includes(x));
   if (missing.length || extra.length || ids.join('|') !== registry.join('|')) {
     const slugOf = (x: string) => TEAMS.find((t) => t.id === x)?.slug ?? x;
-    issue(
+    customIssue(
       ctx,
       ['teams'],
       `teams do not equal the registry (missing: ${missing.map(slugOf).join(', ') || 'none'}, extra: ${extra.join(', ') || 'none'}${missing.length || extra.length ? '' : '; order differs'})`,
     );
   }
-  if (new Set(s.teams.map((t) => t.slug)).size !== s.teams.length) issue(ctx, ['teams'], 'duplicate team slug');
-  if (new Set(s.teams.map((t) => t.abbr)).size !== s.teams.length) issue(ctx, ['teams'], 'duplicate team abbr');
+  if (new Set(s.teams.map((t) => t.slug)).size !== s.teams.length) customIssue(ctx, ['teams'], 'duplicate team slug');
+  if (new Set(s.teams.map((t) => t.abbr)).size !== s.teams.length) customIssue(ctx, ['teams'], 'duplicate team abbr');
 
   // 2. leagues, divisions, sections, per-division counts.
   const perDivision = new Map<string, number>();
   s.teams.forEach((t, i) => {
     const league = findLeague(t.league);
     if (!league) {
-      issue(ctx, ['teams', i, 'league'], `unknown league ${t.league}`);
+      customIssue(ctx, ['teams', i, 'league'], `unknown league ${t.league}`);
       return;
     }
     if (!league.divisions.some((d) => d.id === t.division)) {
-      issue(ctx, ['teams', i, 'division'], `division ${t.division} is not in ${t.league}`);
+      customIssue(ctx, ['teams', i, 'division'], `division ${t.division} is not in ${t.league}`);
     }
-    if (t.section !== league.sectionId) issue(ctx, ['teams', i, 'section'], `section ${t.section} is not ${league.sectionId}`);
+    if (t.section !== league.sectionId) customIssue(ctx, ['teams', i, 'section'], `section ${t.section} is not ${league.sectionId}`);
     perDivision.set(t.division, (perDivision.get(t.division) ?? 0) + 1);
   });
   for (const league of LEAGUES) {
     for (const d of league.divisions) {
       const n = perDivision.get(d.id) ?? 0;
-      if (n !== d.expectedTeams) issue(ctx, ['teams'], `${d.id} has ${n} teams, expected ${d.expectedTeams}`);
+      if (n !== d.expectedTeams) customIssue(ctx, ['teams'], `${d.id} has ${n} teams, expected ${d.expectedTeams}`);
     }
   }
 
   // 3. standings: one per team, division, points under the team's league, resolvedBy, status.
   const teamById = new Map(s.teams.map((t) => [t.id, t]));
-  if (s.standings.length !== s.teams.length) issue(ctx, ['standings'], 'standings row count != team count');
+  if (s.standings.length !== s.teams.length) customIssue(ctx, ['standings'], 'standings row count != team count');
   const seenStanding = new Set<string>();
   s.standings.forEach((r, i) => {
-    if (seenStanding.has(r.teamId)) issue(ctx, ['standings', i], `duplicate standings row for ${r.slug}`);
+    if (seenStanding.has(r.teamId)) customIssue(ctx, ['standings', i], `duplicate standings row for ${r.slug}`);
     seenStanding.add(r.teamId);
     const team = teamById.get(r.teamId);
     if (!team) {
-      issue(ctx, ['standings', i], `standings rows do not match the team registry (${r.slug})`);
+      customIssue(ctx, ['standings', i], `standings rows do not match the team registry (${r.slug})`);
       return;
     }
-    if (r.division !== team.division) issue(ctx, ['standings', i, 'division'], `${r.slug}: division ${r.division} != ${team.division}`);
+    if (r.division !== team.division) customIssue(ctx, ['standings', i, 'division'], `${r.slug}: division ${r.division} != ${team.division}`);
     const league = findLeague(team.league);
     if (!league) return;
     const p = league.rules.points;
     for (const key of ['computed', 'overall'] as const) {
       const c = r[key];
       if (c.pts !== p.win * c.w + p.tie * c.t + p.loss * c.l) {
-        issue(ctx, ['standings', i, key, 'pts'], `pts is not ${p.win}w + ${p.tie}t under ${league.id}`);
+        customIssue(ctx, ['standings', i, key, 'pts'], `pts is not ${p.win}w + ${p.tie}t under ${league.id}`);
       }
     }
     if (!allowedStages(team.league).has(r.tiebreak.resolvedBy)) {
-      issue(ctx, ['standings', i, 'tiebreak', 'resolvedBy'], `${r.slug}: ${r.tiebreak.resolvedBy} is not a ${league.id} stage`);
+      customIssue(ctx, ['standings', i, 'tiebreak', 'resolvedBy'], `${r.slug}: ${r.tiebreak.resolvedBy} is not a ${league.id} stage`);
     }
     if (r.hasReportedResults && !statusesOf(league.id).includes(r.playoffStatus)) {
-      issue(ctx, ['standings', i, 'playoffStatus'], `${r.slug}: ${r.playoffStatus} is not a ${league.id} status`);
+      customIssue(ctx, ['standings', i, 'playoffStatus'], `${r.slug}: ${r.playoffStatus} is not a ${league.id} status`);
     }
   });
   for (const t of s.teams) {
-    if (!seenStanding.has(t.id)) issue(ctx, ['standings'], `standings rows do not match the team registry (missing ${t.slug})`);
+    if (!seenStanding.has(t.id)) customIssue(ctx, ['standings'], `standings rows do not match the team registry (missing ${t.slug})`);
   }
 
   // 4. games.
@@ -117,33 +114,33 @@ function checkAgainstConfig(s: z.infer<typeof SnapshotObject>, ctx: Ctx): void {
   const contestIds = new Set<string>();
   const countedFixtures = new Map<string, string>();
   s.games.forEach((g, i) => {
-    if (contestIds.has(g.contestId)) issue(ctx, ['games', i, 'contestId'], `duplicate contestId in games (${g.contestId})`);
+    if (contestIds.has(g.contestId)) customIssue(ctx, ['games', i, 'contestId'], `duplicate contestId in games (${g.contestId})`);
     contestIds.add(g.contestId);
     for (const side of ['home', 'away'] as const) {
       const slug = g[side].slug;
-      if (slug !== null && !getTeamBySlug(slug)) issue(ctx, ['games', i, side, 'slug'], `game side references an unknown slug (${slug})`);
+      if (slug !== null && !getTeamBySlug(slug)) customIssue(ctx, ['games', i, side, 'slug'], `game side references an unknown slug (${slug})`);
     }
     if (g.leagueDivision !== null) {
       const ok = [g.home, g.away].every((side) => {
         const t = side.slug ? getTeamBySlug(side.slug) : undefined;
         return t?.division === g.leagueDivision;
       });
-      if (!ok) issue(ctx, ['games', i, 'leagueDivision'], `leagueDivision ${g.leagueDivision} but a side is not a member`);
+      if (!ok) customIssue(ctx, ['games', i, 'leagueDivision'], `leagueDivision ${g.leagueDivision} but a side is not a member`);
     }
     const expected = classifyGame(g, { degradedDivisions: degraded });
     if (g.countsFor !== expected) {
-      issue(ctx, ['games', i, 'countsFor'], `countsFor ${g.countsFor} != classifyGame ${expected} (${g.contestId})`);
+      customIssue(ctx, ['games', i, 'countsFor'], `countsFor ${g.countsFor} != classifyGame ${expected} (${g.contestId})`);
     }
     if (g.countsFor !== null && g.countsFor !== g.leagueDivision) {
-      issue(ctx, ['games', i, 'countsFor'], 'countsFor differs from leagueDivision');
+      customIssue(ctx, ['games', i, 'countsFor'], 'countsFor differs from leagueDivision');
     }
     if (g.official) {
       const d = findDivision(g.official.division);
-      if (!d) issue(ctx, ['games', i, 'official', 'division'], `unknown division ${g.official.division}`);
+      if (!d) customIssue(ctx, ['games', i, 'official', 'division'], `unknown division ${g.official.division}`);
       else if (d.official.mode === 'none') {
-        issue(ctx, ['games', i, 'official', 'division'], `${d.id} publishes no official schedule; a game cannot carry an official stamp for it`);
+        customIssue(ctx, ['games', i, 'official', 'division'], `${d.id} publishes no official schedule; a game cannot carry an official stamp for it`);
       } else if (g.official.source !== d.official.source) {
-        issue(ctx, ['games', i, 'official', 'source'], `official source ${g.official.source} is not ${d.official.source}`);
+        customIssue(ctx, ['games', i, 'official', 'source'], `official source ${g.official.source} is not ${d.official.source}`);
       }
     }
     // 'SO' only between two teams of a section that decides a level varsity game by shootout (SectionConfig.
@@ -154,28 +151,28 @@ function checkAgainstConfig(s: z.infer<typeof SnapshotObject>, ctx: Ctx): void {
       const away = g.away.slug ? getTeamBySlug(g.away.slug) : undefined;
       const section = home && away && home.section === away.section ? getSection(home.section) : undefined;
       if (!section?.shootout) {
-        issue(ctx, ['games', i, 'decider'], `decider SO but the sides are not two teams of a section that decides level games by shootout (${g.contestId})`);
+        customIssue(ctx, ['games', i, 'decider'], `decider SO but the sides are not two teams of a section that decides level games by shootout (${g.contestId})`);
       } else if (!section.shootout.coversTournaments && (g.contestTypes?.home === 2 || g.contestTypes?.away === 2)) {
         // The San Diego procedures do not cover invitational tournaments; lib/pipeline/reconcile/normalize.ts reads no 'SO' there.
-        issue(ctx, ['games', i, 'decider'], `decider SO on a tournament row, which the ${section.name}'s shootout rule does not cover (${g.contestId})`);
+        customIssue(ctx, ['games', i, 'decider'], `decider SO on a tournament row, which the ${section.name}'s shootout rule does not cover (${g.contestId})`);
       }
       if (g.shootout === null) {
         const flags = [g.home.result, g.away.result].sort().join('');
         if (g.home.score !== g.away.score || flags !== 'LW') {
-          issue(ctx, ['games', i, 'decider'], `decider SO without a tally needs a level score flagged W/L (${g.contestId})`);
+          customIssue(ctx, ['games', i, 'decider'], `decider SO without a tally needs a level score flagged W/L (${g.contestId})`);
         }
       }
     }
     if (isSbliveContestId(g.contestId)) {
-      if (g.provenance.scores !== 'sblive') issue(ctx, ['games', i, 'provenance', 'scores'], 'a sblive: game must carry sblive scores');
-      if (g.urls.maxpreps !== null) issue(ctx, ['games', i, 'urls', 'maxpreps'], 'a sblive: game has no MaxPreps URL');
-      if (!g.urls.sblive) issue(ctx, ['games', i, 'urls', 'sblive'], 'a sblive: game needs its si.com URL');
+      if (g.provenance.scores !== 'sblive') customIssue(ctx, ['games', i, 'provenance', 'scores'], 'a sblive: game must carry sblive scores');
+      if (g.urls.maxpreps !== null) customIssue(ctx, ['games', i, 'urls', 'maxpreps'], 'a sblive: game has no MaxPreps URL');
+      if (!g.urls.sblive) customIssue(ctx, ['games', i, 'urls', 'sblive'], 'a sblive: game needs its si.com URL');
       if (g.provenance.backfill?.rule !== 'absent-fixture') {
-        issue(ctx, ['games', i, 'provenance', 'backfill'], "a sblive: game needs backfill rule 'absent-fixture'");
+        customIssue(ctx, ['games', i, 'provenance', 'backfill'], "a sblive: game needs backfill rule 'absent-fixture'");
       }
     }
     if (g.provenance.backfill && g.provenance.scores !== 'sblive') {
-      issue(ctx, ['games', i, 'provenance', 'scores'], 'a backfilled game must carry sblive scores');
+      customIssue(ctx, ['games', i, 'provenance', 'scores'], 'a backfilled game must carry sblive scores');
     }
     // One official fixture is one game: where the official schedule decides what counts, two counted
     // games stamped with the same fixture would count it twice.
@@ -185,7 +182,7 @@ function checkAgainstConfig(s: z.infer<typeof SnapshotObject>, ctx: Ctx): void {
       if (league?.rules.classification === 'official-fixtures') {
         const prior = countedFixtures.get(g.official.fixtureId);
         if (prior !== undefined) {
-          issue(
+          customIssue(
             ctx,
             ['games', i, 'official', 'fixtureId'],
             `official fixture ${g.official.fixtureId} is counted twice (${prior} and ${g.contestId})`,
@@ -199,43 +196,43 @@ function checkAgainstConfig(s: z.infer<typeof SnapshotObject>, ctx: Ctx): void {
   (s.officialFixtures ?? []).forEach((f, i) => {
     const d = findDivision(f.division);
     if (!d) {
-      issue(ctx, ['officialFixtures', i, 'division'], `unknown division ${f.division}`);
+      customIssue(ctx, ['officialFixtures', i, 'division'], `unknown division ${f.division}`);
       return;
     }
-    if (f.league !== d.leagueId) issue(ctx, ['officialFixtures', i, 'league'], `${f.league} is not the league of ${f.division}`);
+    if (f.league !== d.leagueId) customIssue(ctx, ['officialFixtures', i, 'league'], `${f.league} is not the league of ${f.division}`);
     for (const key of ['awaySlug', 'homeSlug'] as const) {
       const slug = f[key];
       if (slug !== null && getTeamBySlug(slug)?.division !== f.division) {
-        issue(ctx, ['officialFixtures', i, key], `${slug} is not a member of ${f.division}`);
+        customIssue(ctx, ['officialFixtures', i, key], `${slug} is not a member of ${f.division}`);
       }
     }
     if (d.official.mode === 'none') {
-      issue(ctx, ['officialFixtures', i, 'division'], `${d.id} publishes no official schedule; there is no official fixture for it`);
+      customIssue(ctx, ['officialFixtures', i, 'division'], `${d.id} publishes no official schedule; there is no official fixture for it`);
     } else if (f.source !== d.official.source) {
-      issue(ctx, ['officialFixtures', i, 'source'], `source ${f.source} is not ${d.official.source}`);
+      customIssue(ctx, ['officialFixtures', i, 'source'], `source ${f.source} is not ${d.official.source}`);
     }
   });
 
   // 6. season = config (order included).
   const sectionIds = s.season.sections.map((x) => x.id).join('|');
-  if (sectionIds !== SECTIONS.map((x) => x.id).join('|')) issue(ctx, ['season', 'sections'], 'season sections differ from config');
+  if (sectionIds !== SECTIONS.map((x) => x.id).join('|')) customIssue(ctx, ['season', 'sections'], 'season sections differ from config');
   if (s.season.leagues.map((l) => l.id).join('|') !== LEAGUES.map((l) => l.id).join('|')) {
-    issue(ctx, ['season', 'leagues'], 'season leagues differ from config');
+    customIssue(ctx, ['season', 'leagues'], 'season leagues differ from config');
   }
   s.season.leagues.forEach((l, i) => {
     const league = findLeague(l.id);
     if (!league) return;
     if (l.divisions.map((d) => d.id).join('|') !== league.divisions.map((d) => d.id).join('|')) {
-      issue(ctx, ['season', 'leagues', i, 'divisions'], `${l.id} divisions differ from config`);
+      customIssue(ctx, ['season', 'leagues', i, 'divisions'], `${l.id} divisions differ from config`);
     }
     l.divisions.forEach((d, j) => {
       const cfg = league.divisions.find((x) => x.id === d.id);
       if (cfg && cfg.maxprepsLeagueId !== d.maxprepsLeagueId) {
-        issue(ctx, ['season', 'leagues', i, 'divisions', j, 'maxprepsLeagueId'], `${d.id} maxprepsLeagueId differs from config`);
+        customIssue(ctx, ['season', 'leagues', i, 'divisions', j, 'maxprepsLeagueId'], `${d.id} maxprepsLeagueId differs from config`);
       }
     });
     if (l.postseasonKind !== league.postseason.kind) {
-      issue(ctx, ['season', 'leagues', i, 'postseasonKind'], `${l.id} postseasonKind differs from config`);
+      customIssue(ctx, ['season', 'leagues', i, 'postseasonKind'], `${l.id} postseasonKind differs from config`);
     }
   });
 
@@ -243,43 +240,43 @@ function checkAgainstConfig(s: z.infer<typeof SnapshotObject>, ctx: Ctx): void {
   const aq = s.playoffs.format.autoQualifiers;
   const keys = Object.keys(aq).sort().join('|');
   const expectedKeys = [...CCS_LEAGUE_IDS, 'atLarge', 'total'].sort().join('|');
-  if (keys !== expectedKeys) issue(ctx, ['playoffs', 'format', 'autoQualifiers'], `autoQualifiers keys ${keys} != ${expectedKeys}`);
+  if (keys !== expectedKeys) customIssue(ctx, ['playoffs', 'format', 'autoQualifiers'], `autoQualifiers keys ${keys} != ${expectedKeys}`);
   let sum = aq.atLarge ?? 0;
   for (const leagueId of CCS_LEAGUE_IDS) {
     if (aq[leagueId] !== CCS.autoQualifiers[leagueId]) {
-      issue(ctx, ['playoffs', 'format', 'autoQualifiers', leagueId], `${leagueId} has ${aq[leagueId]} berths, config ${CCS.autoQualifiers[leagueId]}`);
+      customIssue(ctx, ['playoffs', 'format', 'autoQualifiers', leagueId], `${leagueId} has ${aq[leagueId]} berths, config ${CCS.autoQualifiers[leagueId]}`);
     }
     sum += aq[leagueId] ?? 0;
   }
-  if (sum !== aq.total) issue(ctx, ['playoffs', 'format', 'autoQualifiers'], `autoQualifiers sum ${sum} != total ${aq.total}`);
+  if (sum !== aq.total) customIssue(ctx, ['playoffs', 'format', 'autoQualifiers'], `autoQualifiers sum ${sum} != total ${aq.total}`);
 
   // 8. one leagueHealth row per league, config order, with that league's divisions.
   if (s.leagueHealth.map((h) => h.leagueId).join('|') !== LEAGUES.map((l) => l.id).join('|')) {
-    issue(ctx, ['leagueHealth'], 'leagueHealth rows must be one per configured league, config order');
+    customIssue(ctx, ['leagueHealth'], 'leagueHealth rows must be one per configured league, config order');
   }
   s.leagueHealth.forEach((h, i) => {
     const league = findLeague(h.leagueId);
     if (!league) return;
     if (h.divisions.map((d) => d.divisionId).join('|') !== league.divisions.map((d) => d.id).join('|')) {
-      issue(ctx, ['leagueHealth', i, 'divisions'], `${h.leagueId} health rows differ from its divisions`);
+      customIssue(ctx, ['leagueHealth', i, 'divisions'], `${h.leagueId} health rows differ from its divisions`);
     }
   });
 
   // 9. cross-check slugs.
   s.crossCheck.forEach((r, i) => {
-    if (!getTeamBySlug(r.slug)) issue(ctx, ['crossCheck', i, 'slug'], `unknown slug ${r.slug}`);
+    if (!getTeamBySlug(r.slug)) customIssue(ctx, ['crossCheck', i, 'slug'], `unknown slug ${r.slug}`);
   });
 
   // 10. superseded si.com games.
   for (const [from, to] of Object.entries(s.supersededGames)) {
-    if (!isSbliveContestId(from)) issue(ctx, ['supersededGames', from], 'a superseded key must be sblive:<digits>');
-    if (contestIds.has(from)) issue(ctx, ['supersededGames', from], 'a superseded game is still in games');
-    if (!contestIds.has(to)) issue(ctx, ['supersededGames', from], `superseding contest ${to} is not in games`);
+    if (!isSbliveContestId(from)) customIssue(ctx, ['supersededGames', from], 'a superseded key must be sblive:<digits>');
+    if (contestIds.has(from)) customIssue(ctx, ['supersededGames', from], 'a superseded game is still in games');
+    if (!contestIds.has(to)) customIssue(ctx, ['supersededGames', from], `superseding contest ${to} is not in games`);
   }
 
   // counts in step with the arrays.
-  if (s.counts.teams !== s.teams.length) issue(ctx, ['counts', 'teams'], 'counts.teams is stale');
-  if (s.counts.games !== s.games.length) issue(ctx, ['counts', 'games'], 'counts.games is stale');
+  if (s.counts.teams !== s.teams.length) customIssue(ctx, ['counts', 'teams'], 'counts.teams is stale');
+  if (s.counts.games !== s.games.length) customIssue(ctx, ['counts', 'games'], 'counts.games is stale');
 }
 
 export const SnapshotSchema: z.ZodType<Snapshot> = SnapshotObject.superRefine(checkAgainstConfig);

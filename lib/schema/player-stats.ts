@@ -22,14 +22,13 @@
 
 import { z } from 'zod';
 
-import { TEAMS, getTeamBySlug } from '@/lib/registry/teams';
-import { httpUrl, slugId } from './primitives';
+import { getTeamBySlug } from '@/lib/registry/teams';
+import { httpUrl } from './primitives';
+import { REGISTRY_TEAM_COUNT, registryTeamSlug } from './registry-primitives';
 import { contentKey } from '@/lib/shared/stable-json';
 
 /** Player stats cover every registry team, all nine leagues and the five independents: one entry per team of TEAMS. */
-const STATS_SLUGS: ReadonlySet<string> = new Set(TEAMS.map((t) => t.slug));
-/** How many teams a player-stats file holds: TEAMS.length (102). */
-export const PLAYER_STATS_TEAM_COUNT = STATS_SLUGS.size;
+export const PLAYER_STATS_TEAM_COUNT = REGISTRY_TEAM_COUNT;
 
 /** What a field player's line can hold, in display order. */
 export const FIELD_STAT_KEYS = [
@@ -62,8 +61,6 @@ export type FieldStatKey = (typeof FIELD_STAT_KEYS)[number];
 export type GoalieStatKey = (typeof GOALIE_STAT_KEYS)[number];
 export type FieldStats = Record<FieldStatKey, number | null>;
 export type GoalieStats = Record<GoalieStatKey, number | null>;
-
-const teamSlug = slugId.refine((slug) => STATS_SLUGS.has(slug), 'not a registry team slug');
 
 const stat = z.number().min(0).nullable();
 const fieldKey = z.enum(FIELD_STAT_KEYS);
@@ -110,7 +107,7 @@ export const GameTotalSchema = z.object({
 
 export const TeamPlayerStatsSchema = z
   .object({
-    slug: teamSlug,
+    slug: registryTeamSlug,
     teamId: z.string().min(1),
     name: z.string().min(1),
     maxprepsTeamId: z.string().min(1).nullable(),

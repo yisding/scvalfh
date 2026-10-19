@@ -19,7 +19,7 @@
  *   4. every college, and every program of it, has at least one commitment: the file holds no
  *      college or program nobody committed to, and no `asOf` is after `capturedAt` (it is the
  *      earliest date a source gave by then)
- *   5. every URL is https, and none is on a social-media host (lib/schema/clubs.ts BANNED_HOSTS, a
+ *   5. every URL is https, and none is on a social-media host (lib/schema/source-url.ts BANNED_HOSTS, a
  *      backstop rather than a complete list) except an official account's post: a college page, a
  *      program page and an account's proof are never social media, and a commitment's source is
  *      social media only as an `official-social` source, a post by the `account` it names (a college,
@@ -39,9 +39,10 @@
 
 import { z } from 'zod';
 
-import { isBannedHost } from './clubs';
-import { TEAMS } from '@/lib/registry/teams';
-import { slugId } from './primitives';
+import { customIssue, slugId } from './primitives';
+import { registryTeamSlug } from './registry-primitives';
+import { dateOnly, httpsSourceUrl, isBannedHost, text } from './source-url';
+import { partialDateKind } from '@/lib/shared/partial-date';
 import { isCalendarDate, isHttpsUrl } from '@/lib/shared/patterns';
 
 /**
@@ -150,24 +151,11 @@ export type CommitSourceKind = (typeof COMMIT_SOURCE_KINDS)[number];
  * A season ("2025-26") or a range ("2025-2026") is not a date a commitment happened on.
  */
 export function isCommitDate(v: string): boolean {
-  if (isCalendarDate(v)) return true;
-  if (/^\d{4}$/.test(v)) return true;
-  const month = /^\d{4}-(\d{2})$/.exec(v);
-  return month !== null && Number(month[1]) >= 1 && Number(month[1]) <= 12;
+  const kind = partialDateKind(v);
+  return (kind === 'day' && isCalendarDate(v)) || kind === 'month' || kind === 'year';
 }
 
 // ---------------------------------------------------------------- building blocks
-
-const TEAM_SLUGS: ReadonlySet<string> = new Set(TEAMS.map((t) => t.slug));
-const teamSlug = slugId.refine((slug) => TEAM_SLUGS.has(slug), 'not a registry team slug');
-
-const dateOnly = z.string().refine(isCalendarDate, 'expected YYYY-MM-DD');
-
-/** Two refusals, two messages: not an https URL at all, or a social-media host. */
-const httpsUrl = z
-  .string()
-  .refine(isHttpsUrl, 'expected an https URL')
-  .refine((v) => !isBannedHost(v), 'social media is not a source');
 
 /**
  * The social platforms an official account can post on, and the hosts each one's posts live at
@@ -205,13 +193,11 @@ export function isPostBy(url: string, platform: SocialPlatform, handle: string):
   return (first ?? '').replace(/^@/, '').toLowerCase() === handle.toLowerCase() && rest.length > 0;
 }
 
-const text = z.string().min(1);
-
 // ---------------------------------------------------------------- colleges
 
 /** A page the college record was read from, and what it gave. */
 export const CollegeSourceSchema = z.object({
-  url: httpsUrl,
+  url: httpsSourceUrl,
   what: text,
 });
 
@@ -228,7 +214,7 @@ export const CollegeProgramSchema = z.object({
   /** This team's conference, as the college's athletics site names it, when it has one. */
   conference: text.nullable(),
   /** This sport's page on the college's own athletics site. */
-  url: httpsUrl.nullable(),
+  url: httpsSourceUrl.nullable(),
 });
 
 export const CollegeSchema = z.object({
@@ -261,7 +247,7 @@ export const OfficialAccountSchema = z.object({
   owner: z.enum(ACCOUNT_OWNERS),
   /** The account's owner as the site names it: "Valley Christian athletics", "CBU softball". Rendered. */
   ownerName: text,
-  proof: httpsUrl,
+  proof: httpsSourceUrl,
 });
 
 /**
@@ -270,15 +256,15 @@ export const OfficialAccountSchema = z.object({
  * source has no `account` and is never on a social-media host.
  */
 function checkSource(s: { url: string; kind: CommitSourceKind; account?: z.infer<typeof OfficialAccountSchema> }, ctx: Ctx): void {
-  if (!isHttpsUrl(s.url)) return issue(ctx, ['url'], 'expected an https URL');
+  if (!isHttpsUrl(s.url)) return customIssue(ctx, ['url'], 'expected an https URL');
   if (s.kind !== 'official-social') {
-    if (s.account !== undefined) issue(ctx, ['account'], 'only an official-social source names an account');
-    if (isBannedHost(s.url)) issue(ctx, ['url'], 'social media is not a source');
+    if (s.account !== undefined) customIssue(ctx, ['account'], 'only an official-social source names an account');
+    if (isBannedHost(s.url)) customIssue(ctx, ['url'], 'social media is not a source');
     return;
   }
-  if (s.account === undefined) return issue(ctx, ['account'], 'an official-social source names the account');
+  if (s.account === undefined) return customIssue(ctx, ['account'], 'an official-social source names the account');
   if (!isPostBy(s.url, s.account.platform, s.account.handle)) {
-    issue(ctx, ['url'], `not a post by ${s.account.handle} on ${s.account.platform}`);
+    customIssue(ctx, ['url'], `not a post by ${s.account.handle} on ${s.account.platform}`);
   }
 }
 
@@ -298,7 +284,7 @@ export const CommitSourceSchema = z.object({
 }).superRefine(checkSource);
 
 export const CommitmentSchema = z.object({
-  teamSlug,
+  teamSlug: registryTeamSlug,
   /** The MaxPreps per-season athlete GUID: the join key to data/rosters.json. */
   athleteId: text,
   /** As MaxPreps spells it; lib/datasets/commits.ts refuses any other spelling. */
@@ -329,20 +315,16 @@ const CommitsFileObject = z.object({
 
 type Ctx = z.RefinementCtx;
 
-function issue(ctx: Ctx, path: Array<string | number>, message: string): void {
-  ctx.addIssue({ code: 'custom', path, message });
-}
-
 /** Invariants 1-4: what no single record can see. */
 function checkCommitsFile(f: z.infer<typeof CommitsFileObject>, ctx: Ctx): void {
   const slugs = new Set<string>();
   const programs = new Set<string>();
   f.colleges.forEach((c, i) => {
-    if (slugs.has(c.slug)) issue(ctx, ['colleges', i, 'slug'], `duplicate college slug ${c.slug}`);
+    if (slugs.has(c.slug)) customIssue(ctx, ['colleges', i, 'slug'], `duplicate college slug ${c.slug}`);
     slugs.add(c.slug);
     c.programs.forEach((p, j) => {
       const key = `${c.slug} ${p.sport}`;
-      if (programs.has(key)) issue(ctx, ['colleges', i, 'programs', j, 'sport'], `${c.slug} has two ${p.sport} programs`);
+      if (programs.has(key)) customIssue(ctx, ['colleges', i, 'programs', j, 'sport'], `${c.slug} has two ${p.sport} programs`);
       programs.add(key);
     });
   });
@@ -350,30 +332,30 @@ function checkCommitsFile(f: z.infer<typeof CommitsFileObject>, ctx: Ctx): void 
   const committedTo = new Set<string>();
   f.commitments.forEach((c, i) => {
     if (!slugs.has(c.college)) {
-      issue(ctx, ['commitments', i, 'college'], `${c.college} is not a college in colleges[]`);
+      customIssue(ctx, ['commitments', i, 'college'], `${c.college} is not a college in colleges[]`);
     } else if (!programs.has(`${c.college} ${c.sport}`)) {
-      issue(ctx, ['commitments', i, 'sport'], `${c.college} has no ${c.sport} program in colleges[]`);
+      customIssue(ctx, ['commitments', i, 'sport'], `${c.college} has no ${c.sport} program in colleges[]`);
     }
     committedTo.add(c.college);
     committedTo.add(`${c.college} ${c.sport}`);
     // ISO prefixes compare as strings: '2026-06' against '2026-10', '2026' against '2026'.
     if (c.asOf !== null && c.asOf > f.capturedAt.slice(0, c.asOf.length)) {
-      issue(ctx, ['commitments', i, 'asOf'], `${c.asOf} is after the research date ${f.capturedAt}`);
+      customIssue(ctx, ['commitments', i, 'asOf'], `${c.asOf} is after the research date ${f.capturedAt}`);
     }
     const key = `${c.teamSlug} ${c.athleteId}`;
     if (players.has(key)) {
-      issue(ctx, ['commitments', i], `a second commitment for ${c.teamSlug} / ${c.fullName}: a player has one`);
+      customIssue(ctx, ['commitments', i], `a second commitment for ${c.teamSlug} / ${c.fullName}: a player has one`);
     }
     players.add(key);
   });
   f.colleges.forEach((c, i) => {
     if (!committedTo.has(c.slug)) {
-      issue(ctx, ['colleges', i], `no commitment names ${c.slug}: drop the college record`);
+      customIssue(ctx, ['colleges', i], `no commitment names ${c.slug}: drop the college record`);
       return;
     }
     c.programs.forEach((p, j) => {
       if (!committedTo.has(`${c.slug} ${p.sport}`)) {
-        issue(ctx, ['colleges', i, 'programs', j], `no ${p.sport} commitment names ${c.slug}: drop the program`);
+        customIssue(ctx, ['colleges', i, 'programs', j], `no ${p.sport} commitment names ${c.slug}: drop the program`);
       }
     });
   });

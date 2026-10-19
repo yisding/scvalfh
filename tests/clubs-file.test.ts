@@ -23,8 +23,9 @@ import {
 import { classOf, getAllEnrichedRosters, getRosters } from '@/lib/datasets/rosters';
 import { getTeamBySlug } from '@/lib/registry/teams';
 import {
-  BANNED_HOSTS, CLUB_REGIONS, type ClubsFile, ClubsFileSchema, clubSiteKey, isAsOf, isBannedHost,
+  CLUB_REGIONS, type ClubsFile, ClubsFileSchema, clubSiteKey, isAsOf,
 } from '@/lib/schema/clubs';
+import { BANNED_HOSTS, isBannedHost } from '@/lib/schema/source-url';
 import { isHttpsUrl } from '@/lib/shared/patterns';
 import { REPO } from './support/repo';
 

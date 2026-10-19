@@ -6,7 +6,12 @@
 
 import { describe, expect, it } from 'vitest';
 
-import { dateKey, failValidation, formatIssues, httpUrl, httpsUrl, slugId } from '@/lib/schema/primitives';
+import { z } from 'zod';
+
+import { TEAMS } from '@/lib/registry/teams';
+import { customIssue, dateKey, failValidation, formatIssues, httpUrl, httpsUrl, slugId } from '@/lib/schema/primitives';
+import { REGISTRY_TEAM_COUNT, registryTeamSlug } from '@/lib/schema/registry-primitives';
+import { dateOnly, httpsSourceUrl, text } from '@/lib/schema/source-url';
 import { DATE_PATTERN, SLUG_PATTERN, isCalendarDate, isHttpsUrl } from '@/lib/shared/patterns';
 
 const messageOf = (schema: { safeParse: (v: unknown) => { success: boolean; error?: { issues: { message: string }[] } } }, v: unknown) =>
@@ -44,5 +49,28 @@ describe('schema primitives', () => {
     expect(formatIssues([{ path: [], message: 'not an object' }])).toBe('  (root): not an object');
     expect(formatIssues(issues).split('\n')).toHaveLength(10);
     expect(() => failValidation('rosters', issues)).toThrow(/^rosters failed validation:\n {2}teams\.0\.slug: bad 0\n/);
+  });
+
+  it('customIssue adds a custom issue at its path', () => {
+    const schema = z.object({ a: z.number() }).superRefine((v, ctx) => customIssue(ctx, ['a', 0], `bad ${v.a}`));
+    const issue = schema.safeParse({ a: 1 }).error?.issues[0];
+    expect(issue).toMatchObject({ code: 'custom', path: ['a', 0], message: 'bad 1' });
+  });
+
+  it('the registry primitives are the registry: its slugs and its team count', () => {
+    expect(REGISTRY_TEAM_COUNT).toBe(TEAMS.length);
+    expect(messageOf(registryTeamSlug, TEAMS[0].slug)).toBeNull();
+    expect(messageOf(registryTeamSlug, 'not-a-team')).toBe('not a registry team slug');
+    expect(messageOf(registryTeamSlug, 'Not A Team')).toBe('expected a lower-case id');
+  });
+
+  it('the source-URL primitives refuse a social host under their own message, a non-day, a non-https URL', () => {
+    expect(messageOf(httpsSourceUrl, 'https://www.maxpreps.com/')).toBeNull();
+    expect(messageOf(httpsSourceUrl, 'https://www.instagram.com/club/')).toBe('social media is not a source');
+    expect(messageOf(httpsSourceUrl, 'http://www.maxpreps.com/')).toBe('expected an https URL');
+    expect(messageOf(dateOnly, '2026-02-28')).toBeNull();
+    expect(messageOf(dateOnly, '2026-02-30')).toBe('expected YYYY-MM-DD');
+    expect(messageOf(text, 'x')).toBeNull();
+    expect(messageOf(text, '')).not.toBeNull();
   });
 });

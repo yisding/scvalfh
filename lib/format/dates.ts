@@ -16,6 +16,7 @@ import {
   toLocalTimestamp,
   weekdayIndex,
 } from '@/lib/shared/dates';
+import { type PartialDateKind, partialDateKind as kindOf } from '@/lib/shared/partial-date';
 
 import { EN_DASH } from './words';
 
@@ -44,26 +45,15 @@ export function dateWithYear(value: string): string {
 }
 
 /**
- * The five shapes a partial date takes in the hand-researched files (data/clubs.json's `asOf`,
- * lib/schema/clubs.ts `isAsOf`): a day, a month, a year, a season ("2025-26": the second year is
- * the first + 1) or a range of years ("2015-2018"). `YYYY-MM` is a month when MM is 01-12 and a
- * season otherwise, the order isAsOf reads it in; the two can only collide before 2012.
+ * Which of the five shapes a partial date takes (lib/shared/partial-date.ts, the grammar
+ * lib/schema/clubs.ts `isAsOf` and lib/schema/commits.ts `isCommitDate` validate with): a day, a
+ * month, a year, a season ("2025-26") or a range of years ("2015-2018"). Throws on anything else
+ * ("2025-27", "2025/26"); a value that came through a contract never does.
  */
-export type PartialDateKind = 'day' | 'month' | 'year' | 'season' | 'range';
-
-/** Which of the five shapes `value` is. Throws on anything else ("2025-27", "2025/26"). */
 export function partialDateKind(value: string): PartialDateKind {
-  if (/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/.test(value)) return 'day';
-  if (/^\d{4}$/.test(value)) return 'year';
-  const short = /^(\d{4})-(\d{2})$/.exec(value);
-  if (short) {
-    const [year, tail] = [Number(short[1]), Number(short[2])];
-    if (tail >= 1 && tail <= 12) return 'month';
-    if (tail === (year + 1) % 100) return 'season';
-  }
-  const range = /^(\d{4})-(\d{4})$/.exec(value);
-  if (range && Number(range[1]) <= Number(range[2])) return 'range';
-  throw new Error(`format: not a partial date: ${value}`);
+  const kind = kindOf(value);
+  if (kind === null) throw new Error(`format: not a partial date: ${value}`);
+  return kind;
 }
 
 /**

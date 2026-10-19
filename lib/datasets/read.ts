@@ -67,9 +67,17 @@ export type DatasetOptions<T> = DatasetSource & {
   schema: ZodType<T>;
 };
 
-/** readDatasetRaw, then `schema.safeParse`; a failure throws `<label> failed validation:` and the first issues. */
-export function readDataset<T>({ label, schema, ...source }: DatasetOptions<T>): T {
-  const parsed = schema.safeParse(readDatasetRaw(source));
+/** `schema.safeParse(raw)`; a failure throws `<label> failed validation:` and the first issues. */
+export function parseDataset<T>(label: string, schema: ZodType<T>, raw: unknown): T {
+  const parsed = schema.safeParse(raw);
   if (!parsed.success) failValidation(label, parsed.error.issues);
   return parsed.data;
+}
+
+/**
+ * readDatasetRaw, then parseDataset. A file that one module parses against two schemas (the rosters
+ * enrichment) is read once with readDatasetRaw and handed to parseDataset twice.
+ */
+export function readDataset<T>({ label, schema, ...source }: DatasetOptions<T>): T {
+  return parseDataset(label, schema, readDatasetRaw(source));
 }

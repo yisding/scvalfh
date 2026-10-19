@@ -459,6 +459,9 @@ export function checkLeagueConfig({ leagues, regions, sections, ccs, dataQuality
   // contest is never both corrected and excluded (the correction would be for nothing).
   for (const [id, o] of Object.entries(dataQuality.contestDateOverrides)) {
     if (!GUID_RE.test(id)) fail(`contestDateOverrides: ${id} is not a contest GUID`);
+    // Not isCalendarDate (lib/shared/patterns.ts): that one builds the day with Date.UTC, which reads the years 0000-0099
+    // as 1900-1999 and so refuses them, where this ISO round trip accepts them (and then fails the season-window check
+    // below under its own message). The two agree on every year a season window can hold, but not on every string.
     const valid = DATE_PATTERN.test(o.dateKey) && !Number.isNaN(Date.parse(`${o.dateKey}T12:00:00Z`)) &&
       new Date(`${o.dateKey}T12:00:00Z`).toISOString().slice(0, 10) === o.dateKey;
     if (!valid) fail(`contestDateOverrides ${id}: dateKey ${o.dateKey} is not a valid YYYY-MM-DD date`);

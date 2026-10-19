@@ -36,9 +36,11 @@
 import { z } from 'zod';
 
 import type { RegionId } from '@/lib/model/ids';
-import { TEAMS } from '@/lib/registry/teams';
-import { slugId } from './primitives';
-import { isCalendarDate, isHttpsUrl } from '@/lib/shared/patterns';
+import { customIssue, slugId } from './primitives';
+import { registryTeamSlug } from './registry-primitives';
+import { dateOnly, httpsSourceUrl, text } from './source-url';
+import { partialDateKind } from '@/lib/shared/partial-date';
+import { isCalendarDate } from '@/lib/shared/patterns';
 
 /**
  * Where a club is based. Also the display order of /clubs' regions: Northern California's (DESIGN
@@ -128,41 +130,6 @@ export const CLUB_SOURCE_KINDS = [
 export type ClubSourceKind = (typeof CLUB_SOURCE_KINDS)[number];
 
 /**
- * Social media is never a source, nor a club's website. A host is banned when it IS one of these or
- * a subdomain of one (`www.instagram.com`, `m.facebook.com`) — never by substring, so `notx.com`
- * and `maxpreps.com` pass. The list covers the networks themselves and their short links (`fb.me`,
- * `instagr.am`, `t.co`, `youtu.be`), and is shared with data/commits.json (lib/schema/commits.ts),
- * whose commitments are most often announced on one of them.
- */
-export const BANNED_HOSTS = [
-  'instagram.com',
-  'instagr.am',
-  'facebook.com',
-  'fb.com',
-  'fb.me',
-  'tiktok.com',
-  'x.com',
-  'twitter.com',
-  't.co',
-  'threads.net',
-  'threads.com',
-  'youtube.com',
-  'youtu.be',
-  'snapchat.com',
-  'linkedin.com',
-] as const;
-
-export function isBannedHost(url: string): boolean {
-  let host: string;
-  try {
-    host = new URL(url).hostname.toLowerCase();
-  } catch {
-    return false; // not a URL at all: isHttpsUrl refuses it under its own message
-  }
-  return BANNED_HOSTS.some((h) => host === h || host.endsWith(`.${h}`));
-}
-
-/**
  * Hosts that serve many unrelated sites, and how many leading path segments name one site there:
  * Google Sites `/view/<site>` or `/<domain>/<site>` (2; 3 for classic `/a/<domain>/<site>`), TeamLinkt `/<league slug>` (1). A club's own
  * site on one of them is the host plus those segments, so Davis High's Google Site is never taken
@@ -195,31 +162,12 @@ export function clubSiteKey(url: string): string {
  * "2025-27", "2025-13", "2025/26" and "2018-2015" are none of them.
  */
 export function isAsOf(v: string): boolean {
-  if (isCalendarDate(v)) return true;
-  if (/^\d{4}$/.test(v)) return true;
-  const short = /^(\d{4})-(\d{2})$/.exec(v);
-  if (short) {
-    const [year, tail] = [Number(short[1]), Number(short[2])];
-    return (tail >= 1 && tail <= 12) || tail === (year + 1) % 100;
-  }
-  const range = /^(\d{4})-(\d{4})$/.exec(v);
-  return range !== null && Number(range[1]) <= Number(range[2]);
+  const kind = partialDateKind(v);
+  return kind !== null && (kind !== 'day' || isCalendarDate(v));
 }
 
 // ---------------------------------------------------------------- building blocks
 
-const TEAM_SLUGS: ReadonlySet<string> = new Set(TEAMS.map((t) => t.slug));
-const teamSlug = slugId.refine((slug) => TEAM_SLUGS.has(slug), 'not a registry team slug');
-
-const dateOnly = z.string().refine(isCalendarDate, 'expected YYYY-MM-DD');
-
-/** Two refusals, two messages: not an https URL at all, or a social-media host. */
-const httpsUrl = z
-  .string()
-  .refine(isHttpsUrl, 'expected an https URL')
-  .refine((v) => !isBannedHost(v), 'social media is not a source');
-
-const text = z.string().min(1);
 
 // ---------------------------------------------------------------- clubs
 
@@ -227,12 +175,12 @@ const text = z.string().min(1);
 export const ClubProgramSchema = z.object({
   name: text,
   detail: text.nullable(),
-  source: httpsUrl,
+  source: httpsSourceUrl,
 });
 
 /** A page the club record was read from, and what it gave. */
 export const ClubSourceSchema = z.object({
-  url: httpsUrl,
+  url: httpsSourceUrl,
   what: text,
 });
 
@@ -244,7 +192,7 @@ export const ClubSchema = z.object({
   shortName: text.nullable(),
   /** Other names sources use for the club or its teams. Kept for maintainers; not rendered. */
   aliases: z.array(text),
-  website: httpsUrl.nullable(),
+  website: httpsSourceUrl.nullable(),
   city: text.nullable(),
   region: z.enum(CLUB_REGIONS),
   youth: z.boolean(),
@@ -253,7 +201,7 @@ export const ClubSchema = z.object({
   founded: z.number().int().nullable(),
   programs: z.array(ClubProgramSchema),
   /** The club's own public roster pages: linked instead of naming players who are not tracked here. */
-  rosterPages: z.array(httpsUrl),
+  rosterPages: z.array(httpsSourceUrl),
   sources: z.array(ClubSourceSchema).min(1, 'a club needs at least one source'),
   checkedOn: dateOnly,
 });
@@ -261,7 +209,7 @@ export const ClubSchema = z.object({
 // ---------------------------------------------------------------- affiliations
 
 export const AffiliationSourceSchema = z.object({
-  url: httpsUrl,
+  url: httpsSourceUrl,
   kind: z.enum(CLUB_SOURCE_KINDS),
   /** Verbatim from the page. Kept in the file so a maintainer can re-check it; never rendered. */
   quote: text.max(300),
@@ -274,7 +222,7 @@ export const AffiliationSourceSchema = z.object({
 });
 
 export const ClubAffiliationSchema = z.object({
-  teamSlug,
+  teamSlug: registryTeamSlug,
   /** The MaxPreps per-season athlete GUID: the join key to data/rosters.json. */
   athleteId: text,
   /** As MaxPreps spells it; lib/datasets/clubs.ts refuses any other spelling. */
@@ -310,37 +258,33 @@ const ClubsFileObject = z.object({
 
 type Ctx = z.RefinementCtx;
 
-function issue(ctx: Ctx, path: Array<string | number>, message: string): void {
-  ctx.addIssue({ code: 'custom', path, message });
-}
-
 /** Invariants 1-3, and 9's one-list rule: what no single record can see. */
 function checkClubsFile(f: z.infer<typeof ClubsFileObject>, ctx: Ctx): void {
   const slugs = new Set<string>();
   f.clubs.forEach((c, i) => {
-    if (slugs.has(c.slug)) issue(ctx, ['clubs', i, 'slug'], `duplicate club slug ${c.slug}`);
+    if (slugs.has(c.slug)) customIssue(ctx, ['clubs', i, 'slug'], `duplicate club slug ${c.slug}`);
     slugs.add(c.slug);
   });
   const triples = new Set<string>();
   f.affiliations.forEach((a, i) => {
-    if (!slugs.has(a.club)) issue(ctx, ['affiliations', i, 'club'], `${a.club} is not a club in clubs[]`);
+    if (!slugs.has(a.club)) customIssue(ctx, ['affiliations', i, 'club'], `${a.club} is not a club in clubs[]`);
     const key = `${a.teamSlug} ${a.athleteId} ${a.club}`;
     if (triples.has(key)) {
-      issue(ctx, ['affiliations', i], `duplicate affiliation: ${a.teamSlug} / ${a.fullName} / ${a.club}`);
+      customIssue(ctx, ['affiliations', i], `duplicate affiliation: ${a.teamSlug} / ${a.fullName} / ${a.club}`);
     }
     triples.add(key);
   });
   const varsityPlayers = new Set(f.affiliations.map((a) => `${a.teamSlug} ${a.athleteId}`));
   const jvTriples = new Set<string>();
   f.jvAffiliations.forEach((a, i) => {
-    if (!slugs.has(a.club)) issue(ctx, ['jvAffiliations', i, 'club'], `${a.club} is not a club in clubs[]`);
+    if (!slugs.has(a.club)) customIssue(ctx, ['jvAffiliations', i, 'club'], `${a.club} is not a club in clubs[]`);
     const key = `${a.teamSlug} ${a.athleteId} ${a.club}`;
     if (jvTriples.has(key)) {
-      issue(ctx, ['jvAffiliations', i], `duplicate JV affiliation: ${a.teamSlug} / ${a.fullName} / ${a.club}`);
+      customIssue(ctx, ['jvAffiliations', i], `duplicate JV affiliation: ${a.teamSlug} / ${a.fullName} / ${a.club}`);
     }
     jvTriples.add(key);
     if (varsityPlayers.has(`${a.teamSlug} ${a.athleteId}`)) {
-      issue(ctx, ['jvAffiliations', i], `${a.teamSlug} / ${a.fullName} is also in affiliations`);
+      customIssue(ctx, ['jvAffiliations', i], `${a.teamSlug} / ${a.fullName} is also in affiliations`);
     }
   });
 }

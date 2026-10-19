@@ -28,16 +28,14 @@ import { z } from 'zod';
 
 import { JV_SLUG_BY_SBLIVE_ID } from '@/lib/registry/jv-teams';
 import { TEAMS, getTeamBySlug } from '@/lib/registry/teams';
-import { dateKey, httpUrl, slugId } from './primitives';
+import { dateKey, httpUrl } from './primitives';
+import { REGISTRY_TEAM_COUNT, registryTeamSlug } from './registry-primitives';
 import { hasSbliveContestPrefix } from '@/lib/shared/contest-id';
 import { contentKey } from '@/lib/shared/stable-json';
 import { GameSchema } from './snapshot';
 
-const JV_SLUGS: ReadonlySet<string> = new Set(TEAMS.map((t) => t.slug));
-/** How many teams a JV file holds: TEAMS.length (102). */
-export const JV_TEAM_COUNT = JV_SLUGS.size;
-
-const teamSlug = slugId.refine((slug) => JV_SLUGS.has(slug), 'not a registry team slug');
+/** How many teams a JV file holds: one per registry team. */
+export const JV_TEAM_COUNT = REGISTRY_TEAM_COUNT;
 
 /**
  * One source's outcome for one team in the latest run:
@@ -69,7 +67,7 @@ const sourceState = z
 
 export const JvTeamSchema = z
   .object({
-    slug: teamSlug,
+    slug: registryTeamSlug,
     teamId: z.string().min(1),
     name: z.string().min(1),
     /** MaxPreps' human-facing JV schedule page. */
@@ -85,7 +83,7 @@ export const JvTeamSchema = z
 
 const sbliveSide = z.object({
   /** Our slug when si.com's JV team id is a registry school's JV (JV_SLUG_BY_SBLIVE_ID); never by name. */
-  slug: teamSlug.nullable(),
+  slug: registryTeamSlug.nullable(),
   sbliveTeamId: z.string().regex(/^\d+$/).nullable(),
   /** si.com's display name, verbatim. */
   name: z.string().min(1),
@@ -104,7 +102,7 @@ export const JvSbliveRowSchema = z
     url: httpUrl.nullable(),
     sides: z.tuple([sbliveSide, sbliveSide]),
     /** The registry teams whose JV page listed the game (sorted). */
-    pages: z.array(teamSlug).min(1),
+    pages: z.array(registryTeamSlug).min(1),
     /** Two pages listed this game with different scores: the merge never uses it. */
     copiesDisagree: z.boolean(),
   })
