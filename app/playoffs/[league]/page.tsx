@@ -8,19 +8,13 @@ import Arrow from '@/components/ui/Arrow';
 import ExternalLink from '@/components/ui/ExternalLink';
 import LeagueHealthNote from '@/components/ui/LeagueHealthNote';
 import SectionHeader from '@/components/ui/SectionHeader';
-import { SECTIONS, getDivision } from '@/lib/config/leagues';
-import { outcomesFor, playoffOutcomeLabel } from '@/lib/engine/standings';
-import { shortDate } from '@/lib/format/dates';
-import type { Team } from '@/lib/model/team';
-import type { LeagueSummary } from '@/lib/queries/leagues';
-import { getCcsField, getLeagueTournament } from '@/lib/queries/postseason';
-import { getStandingContext, getStandings } from '@/lib/queries/standings';
-import { getTeamById, getTeamBySlug } from '@/lib/registry/teams';
-import { buildTournamentView, type TournamentView } from '@/views/playoffs/tournament';
+import { SECTIONS } from '@/lib/config/leagues';
+import { getCcsField } from '@/lib/queries/postseason';
 import {
+  tournamentHeaderMeta,
+  tournamentPageView,
   tournamentParam,
   tournamentStaticParams,
-  type TournamentConfig,
 } from '@/views/playoffs/tournament-route';
 import { missingMetadata, pageMetadata } from '@/views/site/page-metadata';
 
@@ -44,29 +38,13 @@ export function generateStaticParams(): { league: string }[] {
   return tournamentStaticParams();
 }
 
-function roundDate(ps: TournamentConfig, round: string): string | null {
-  return ps.rounds.find((r) => r.round === round)?.date ?? null;
-}
-
-/** 'Marin County Athletic League · 6 teams · Quarterfinals Mon Oct 26 · Final Fri Oct 30' */
-function headerMeta(summary: LeagueSummary, ps: TournamentConfig): string {
-  const qf = roundDate(ps, 'quarterfinal');
-  const final = roundDate(ps, 'final');
-  return [
-    summary.name,
-    `${ps.qualifiers} teams`,
-    ...(qf ? [`Quarterfinals ${shortDate(qf)}`] : []),
-    ...(final ? [`Final ${shortDate(final)}`] : []),
-  ].join(' · ');
-}
-
 export async function generateMetadata({ params }: PageProps<'/playoffs/[league]'>): Promise<Metadata> {
   const { league } = await params;
   const found = tournamentParam(league);
   if (!found) return missingMetadata('Page not found');
   const { summary, ps } = found;
   const title = ps.name;
-  const description = `${headerMeta(summary, ps)}. Seeds from the ${summary.shortName} table, the play-in rule and the bracket, computed from published results; unofficial.`;
+  const description = `${tournamentHeaderMeta(summary, ps)}. Seeds from the ${summary.shortName} table, the play-in rule and the bracket, computed from published results; unofficial.`;
   return pageMetadata({
     path: `/playoffs/${summary.id}`,
     title,
@@ -77,43 +55,13 @@ export async function generateMetadata({ params }: PageProps<'/playoffs/[league]
   });
 }
 
-function viewFor(summary: LeagueSummary, ps: TournamentConfig): TournamentView {
-  const projection = getLeagueTournament(summary.id);
-  const rows = summary.divisions.flatMap((d) => {
-    const context = getStandingContext(d.id);
-    return getStandings(d.id).flatMap((standing) => {
-      const team = getTeamById(standing.teamId);
-      if (!team) return [];
-      const ctx = context.get(standing.teamId);
-      return [
-        {
-          team,
-          standing,
-          counted: ctx?.counted ?? standing.computed.gp,
-          scheduled: ctx?.scheduled ?? getDivision(d.id).gamesPerTeam,
-          label: playoffOutcomeLabel(d.id, outcomesFor(standing)),
-        },
-      ];
-    });
-  });
-  // A league tournament is single-division (MCAL); its one division's ladder line is the tournament line.
-  const division = getDivision(summary.divisions[0].id);
-  return buildTournamentView({
-    projection,
-    rows,
-    teamOf: (slug): Team | undefined => getTeamBySlug(slug),
-    lastPlace: ps.lastSpot.place,
-    ladderLine: division.ladderLine,
-  });
-}
-
 export default async function LeagueTournamentPage({ params }: PageProps<'/playoffs/[league]'>) {
   const { league } = await params;
   const found = tournamentParam(league);
   if (!found) notFound();
   const { summary, config, ps } = found;
   const section = SECTIONS.find((s) => s.id === summary.section.id);
-  const view = viewFor(summary, ps);
+  const view = tournamentPageView(summary, ps);
   const ccsLeagues = getCcsField().byLeague.map((l) => l.shortName);
   const playInRound = ps.rounds.find((r) => r.round === 'play-in');
 
@@ -121,7 +69,7 @@ export default async function LeagueTournamentPage({ params }: PageProps<'/playo
     <div className="pb-section-lg">
       <PageHeader
         title={ps.name}
-        description={headerMeta(summary, ps)}
+        description={tournamentHeaderMeta(summary, ps)}
         meta={
           ccsLeagues.length > 0 ? (
             <Link href="/playoffs" className="sx-action text-meta text-accent hover:underline">

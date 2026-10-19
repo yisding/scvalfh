@@ -1,8 +1,9 @@
 /**
- * The words of a league's postseason source link, for every page that prints one: app/playoffs/page.tsx's
- * EAL, San Diego and Sunset/independents cards, and /about's source card and Postseason paragraphs
- * (components/about/AboutSources.tsx, components/about/AboutPostseason.tsx). Server-only: it reads
- * lib/config/leagues.
+ * The words of a league's postseason source link, for every page that prints one: /playoffs's
+ * EAL, San Diego and Sunset/independents cards (views/playoffs/playoffs-view.ts builds them for
+ * components/playoffs/UnbracketedCard.tsx, SectionPlayoffsBlock.tsx and NoPostseasonCard.tsx), and
+ * /about's source card and Postseason paragraphs (components/about/AboutSources.tsx,
+ * components/about/AboutPostseason.tsx). Server-only: it reads lib/config/leagues.
  *
  * One function, returning EXACTLY what those pages print, so no page templates a document name
  * (design-review UI §3): a section-name template such as `${section.name} Field Hockey Guidelines (PDF)`
