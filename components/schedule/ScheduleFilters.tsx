@@ -2,7 +2,18 @@
 
 import { useEffect, useRef, useState } from 'react';
 
+// The one import block out of house order (eslint.config.mjs import/order): ./FiltersPanel stays in
+// the place its old '@/components/schedule/FiltersPanel' specifier sorted to, because moving it below
+// the '@/' block reorders this client module's bundle and grows /schedule/[league]'s first-load JS by
+// 4 bytes (measured with `pnpm build`; scripts/ci/assert-budgets.ts).
+/* eslint-disable import/order */
 import { applyFilters } from '@/components/hooks/schedule-filter-dom';
+import {
+  FiltersPanel,
+  STATE_OPTIONS,
+  type FilterDivisions,
+  type FilterTeams,
+} from './FiltersPanel';
 import EmptyState from '@/components/ui/EmptyState';
 import { gameWord } from '@/lib/format/words';
 import {
@@ -12,13 +23,7 @@ import {
   type FilterState,
   type ScheduleCounts,
 } from '@/views/schedule/filters-client';
-
-import {
-  FiltersPanel,
-  STATE_OPTIONS,
-  type FilterDivisions,
-  type FilterTeams,
-} from './FiltersPanel';
+/* eslint-enable import/order */
 
 /**
  * `/schedule/<league>`'s filters — the state half (DESIGN §7, §7.13): filter state, the removable
