@@ -1,23 +1,7 @@
 import type { LeagueId, TeamSlug } from '@/lib/model/ids';
-import { navLeagueHrefs } from '@/views/site/nav-targets';
+import { NAV_DESTINATIONS, navLeagueHrefs } from '@/views/site/nav-targets';
 
 import NavLink from './NavLink';
-
-/**
- * The desktop nav: seven links, no sidebar, no bottom bar (DESIGN §1.3, §16, §18). It matches the
- * phone bar: Teams is the teams-and-standings page (the standings live there, and Teams stays lit
- * on every /standings page), so there is no separate Standings link. History keeps its short
- * visible label; an sr-only suffix says what it holds (its page is titled with the same words).
- */
-const TOP_LINKS: ReadonlyArray<{ href: string; label: string; srSuffix?: string }> = [
-  { href: '/', label: 'Home' },
-  { href: '/schedule', label: 'Schedule' },
-  { href: '/teams', label: 'Teams' },
-  { href: '/leaders', label: 'Leaders' },
-  { href: '/playoffs', label: 'Playoffs' },
-  { href: '/history/2025-26', label: 'History', srSuffix: ' (2025-26 final standings)' },
-  { href: '/about', label: 'About' },
-];
 
 export interface TopNavProps {
   className?: string;
@@ -25,12 +9,16 @@ export interface TopNavProps {
   slugLeague?: Readonly<Record<TeamSlug, LeagueId>>;
 }
 
+/**
+ * The desktop nav: seven links, no sidebar, no bottom bar (DESIGN §1.3, §16, §18), rendered from
+ * `NAV_DESTINATIONS` (views/site/nav-targets.ts), which also feeds the 404 page's cards.
+ */
 export function TopNav({ className, slugLeague }: TopNavProps) {
   const hrefs = navLeagueHrefs();
   return (
     <nav aria-label="Main" className={className}>
       <ul className="flex list-none items-center gap-0.5 p-0">
-        {TOP_LINKS.map((link) => (
+        {NAV_DESTINATIONS.map((link) => (
           <li key={link.href}>
             <NavLink
               href={link.href}

@@ -11,10 +11,16 @@
  * carries one count line per region (`byRegion`), which the page scopes.
  */
 
-import { regionIdSuffix } from '@/lib/config/leagues';
+import { isIndependentLeague, regionIdSuffix } from '@/lib/config/leagues';
+import { standaloneName } from '@/lib/config/leagues/labels';
+import { monthDay } from '@/lib/format/dates';
 import type { Game } from '@/lib/model/game';
 import type { LeagueId, RegionId } from '@/lib/model/ids';
+import { getGamesByDate } from '@/lib/queries/games';
+import { getLeagueSummary } from '@/lib/queries/leagues';
 import { byDateLocal } from '@/lib/shared/game';
+
+import { countGames, type ScheduleCounts } from './filters-client';
 
 export interface LeagueCardData {
   id: LeagueId;
@@ -157,5 +163,38 @@ export function buildScheduleIndex(input: {
         }),
       };
     }),
+  };
+}
+
+/** What `/schedule/<league>` prints about its league outside the lists: the titles, the sentence's subject, the counts and the date span. */
+export interface LeagueSchedulePageView {
+  /** The `<title>`: the h1 plus the sport, which a search result has no other way to show. */
+  title: string;
+  /** The page's h1: 'SCVAL schedule and results'; for the LA independents, 'LA teams: schedule and results'. */
+  h1: string;
+  /** 'SCVAL teams'; the LA independents are named by their standaloneName: 'the LA independents'. */
+  involving: string;
+  counts: ScheduleCounts;
+  /** 'Aug 28 – Nov 8' over the league's game days, or null before any game is on the schedule. */
+  span: string | null;
+}
+
+/** The league's schedule page, from its id (the page's metadata and body ask for the same facts). */
+export function buildLeagueSchedulePageView(id: LeagueId): LeagueSchedulePageView {
+  const summary = getLeagueSummary(id);
+  if (!summary) throw new Error(`views/schedule/schedule-view.ts: unknown league ${id}`);
+  const groups = getGamesByDate({ league: id });
+  const h1 = isIndependentLeague(id)
+    ? `${summary.shortName} teams: schedule and results`
+    : `${summary.shortName} schedule and results`;
+  const first = groups[0];
+  const last = groups[groups.length - 1];
+  return {
+    // The h1 is the schedule title; the <title> adds the sport, which a search result has no other way to show.
+    title: h1.replace('schedule and results', 'field hockey schedule and results'),
+    h1,
+    involving: isIndependentLeague(id) ? standaloneName(id) : `${summary.shortName} teams`,
+    counts: countGames(groups.flatMap((group) => group.games)),
+    span: first && last ? `${monthDay(first.date)} – ${monthDay(last.date)}` : null,
   };
 }

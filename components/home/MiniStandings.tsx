@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { GoalDiffCell } from '@/components/ui/GoalDiffBar';
 import PlaceMark from '@/components/ui/PlaceMark';
 import SectionHeader from '@/components/ui/SectionHeader';
-import { NoGoalDiff, biggestGoalDiff } from '@/components/ui/StandingsTable';
+import { NoGoalDiff } from '@/components/ui/StandingsTable';
 import TeamMonogram from '@/components/ui/TeamMonogram';
 import { getDivision, getLeague, isDefaultRegion, regionOf } from '@/lib/config/leagues';
 import { monthDay } from '@/lib/format/dates';
@@ -11,6 +11,7 @@ import { placeWords } from '@/lib/format/numbers';
 import { EM_DASH, plural } from '@/lib/format/words';
 import type { MiniDivisionView, MiniRow } from '@/views/home/mini-standings';
 import { ladderLineAfter } from '@/views/standings/division';
+import { biggestGoalDiff } from '@/views/standings/goal-diff';
 
 /**
  * One division's top of the table inside a league panel (SPEC §10.1, DESIGN §3.1).

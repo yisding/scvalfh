@@ -34,6 +34,7 @@ import { getTeams } from '@/lib/queries/teams';
 
 import { buildDivisionView } from './division';
 import { coLeadersLine, rulesFootnote, unevenGpFootnote } from './footnotes';
+import { biggestGoalDiff } from './goal-diff';
 import type { LeaderLine } from './leader-lines';
 import { buildOverviewDivision, overviewOutline, type OverviewSection } from './overview';
 import type { DivisionView } from './types';
@@ -45,6 +46,10 @@ export interface StandingsPageView {
   membershipNote: string | null;
   views: DivisionView[];
   leaders: LeaderLine[];
+  /** The latest league-result date across the divisions (the metadata's "League games through …"), or null before any. */
+  throughDate: string | null;
+  /** The page disclosure's paragraphs, in order: the GD note with its scale in words, GP/LEFT/MAX, then each division's generic notes once. */
+  legend: string[];
   /** The rules footnote under the last table. */
   rules: string;
   /** Uneven-GP footnotes, one per table that needs one (`<heading>: ` prefixed when there are several tables). */
@@ -126,11 +131,44 @@ export function buildStandingsPageView(leagueId: LeagueId): StandingsPageView {
     membershipNote: getLeague(leagueId).membershipNote,
     views,
     leaders: league.divisions.map((d) => leaderLine(d.id, d.heading)),
+    throughDate: views
+      .map((v) => v.throughDate)
+      .filter((d): d is string => d !== null)
+      .sort()
+      .at(-1) ?? null,
+    legend: standingsLegend(league, views),
     rules: rulesFootnote(leagueId),
     unevenGp,
     coLeaders,
     notice: buildNotice(leagueId, views),
   };
+}
+
+/**
+ * The page disclosure: the GD paragraph and each generic per-division sentence once. The GD
+ * scale is in words ("De Anza's is 36"), not "|GD| max 36"; a single-division league names no
+ * division (SPEC §10.3).
+ * A division where every |GD| is 0 (Metro South Bay before its first game) is left out of the
+ * list: its `gdDomain` is the bar floor of 1, not a goal difference (biggestGoalDiff).
+ */
+function standingsLegend(league: LeagueSummary, views: readonly DivisionView[]): string[] {
+  const scaled = views.filter((v) => biggestGoalDiff(v.rows.map((r) => r.standing.computed.gd)) > 0);
+  const gdScale =
+    league.divisions.length > 1
+      ? `Bars are scaled to each division’s own biggest goal difference${
+          scaled.length > 0 ? ` (${scaled.map((v) => `${v.label}’s is ${v.gdDomain}`).join(', ')})` : ''
+        }, so bars in different divisions are not comparable.`
+      : `Bars are scaled to the league’s biggest goal difference${
+          scaled.length > 0 ? ` (${scaled[0]!.gdDomain})` : ''
+        }.`;
+  return [
+    `GD = league goals for minus goals against. ${gdScale} A real 0 shows as 0; a score we do not have shows as an em dash. Forfeits count in the win-loss-tie record, not in the goal columns.`,
+    // A league with no fixed schedule (the Sunset, gamesPerTeam null) has no "of N", LEFT or MAX.
+    views.every((view) => view.fixedSchedule)
+      ? 'GP is league games counted of those scheduled. LEFT is league games with no counted result yet — still to play, or played and not reported. MAX is the most points a team could reach if it won all of them: a ceiling, not a projection.'
+      : `GP is league games counted. ${league.shortName} has no fixed league schedule, so there is no LEFT or MAX column.`,
+    ...new Set(views.flatMap((view) => view.legendNotes)),
+  ];
 }
 
 /**

@@ -11,12 +11,13 @@ import {
   SourceDisagreement,
 } from '@/components/game/GameSources';
 import SeasonSeries from '@/components/game/SeasonSeries';
+import SupersededStub from '@/components/game/SupersededStub';
 import JsonLd from '@/components/layout/JsonLd';
 import Arrow from '@/components/ui/Arrow';
 import ExternalLink from '@/components/ui/ExternalLink';
 import ScoreBoard from '@/components/ui/ScoreBoard';
 import { gameStaticParams } from '@/views/game/game-route';
-import { buildGameView, buildSupersededStub } from '@/views/game/game-view';
+import { buildGameView, buildSupersededStub, hasLeadRow } from '@/views/game/game-view';
 import { gameDescription, gameRecap, gameTitle } from '@/views/game/titles';
 import { missingMetadata, pageMetadata } from '@/views/site/page-metadata';
 import { gameJsonLd } from '@/views/site/structured-data';
@@ -97,23 +98,7 @@ export default async function GamePage({ params }: PageProps<'/game/[id]'>) {
   if (!model) {
     const stub = buildSupersededStub(id);
     if (!stub) notFound();
-    return (
-      <div className="pb-section-lg">
-        <h1 className="mt-6 mb-0 text-h1 text-ink">{stub.sentence}</h1>
-        <p className="mt-4 mb-0">
-          <Link
-            href={stub.targetHref}
-            className="sx-pill sx-pill-ring min-h-11"
-          >
-            {stub.targetModel ? gameTitle(stub.targetModel) : 'The MaxPreps game'} <Arrow />
-          </Link>
-        </p>
-        <p className="mt-4 mb-0 max-w-prose text-meta text-ink-3">
-          This page held a score published from High School on SI (si.com) while MaxPreps had no
-          contest for the game. MaxPreps has it now, so the game&rsquo;s page is the MaxPreps one.
-        </p>
-      </div>
-    );
+    return <SupersededStub stub={stub} />;
   }
 
   const { game, away, home, dayLabel, resultLinks, recordsCaption } = model;
@@ -126,14 +111,7 @@ export default async function GamePage({ params }: PageProps<'/game/[id]'>) {
   // it takes the recap's 24px top margin when the row is there and the section margin when it is
   // not: either way its top lines up with the first thing in the left column — the recap, or the
   // FORM GOING IN heading (F-27c).
-  const leadRow =
-    Boolean(recap) ||
-    resultLinks.length > 0 ||
-    Boolean(model.source) ||
-    model.postseasonNotes.length > 0 ||
-    Boolean(model.scoreNote) ||
-    Boolean(model.conflict) ||
-    Boolean(model.resultConflictNote);
+  const leadRow = hasLeadRow(model, recap);
 
   return (
     <div className="pb-section-lg">

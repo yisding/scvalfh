@@ -2,9 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 import PageHeader from '@/components/layout/PageHeader';
-import { LEAGUES_PROPER, getLeague } from '@/lib/config/leagues';
-import { getAvailableHistoryLeagues } from '@/lib/datasets/history';
-import { listWords, numberWord } from '@/lib/format/words';
+import { NAV_DESTINATIONS } from '@/views/site/nav-targets';
 import { pageMetadata } from '@/views/site/page-metadata';
 
 // No path: a 404 page has no canonical and no og:url of its own.
@@ -14,29 +12,6 @@ export const metadata: Metadata = pageMetadata({
   ogTitle: 'Page not found',
   card: 'own',
 });
-
-/**
- * 'the nine leagues', from the config (never a literal count). It named every league ('SCVAL, BVAL, PCAL,
- * MCAL and EAL') while there were five; with nine across two regions the list outgrew a one-line card
- * description, so the count stands in for it (the Teams page itself lists them, region by region). It counts
- * the leagues with a table: the LA independents have none (DESIGN §24.9), so "every table in
- * the nine leagues" stays exact.
- */
-const LEAGUE_COUNT = `the ${numberWord(LEAGUES_PROPER.length)} leagues`;
-
-const LINKS: Array<{ href: string; name: string; description: string }> = [
-  { href: '/', name: 'Home', description: 'What just happened, and when the next game is' },
-  { href: '/schedule', name: 'Schedule & results', description: 'Every league’s season' },
-  { href: '/teams', name: 'Teams and standings', description: `Find your school; every table in ${LEAGUE_COUNT}` },
-  { href: '/leaders', name: 'Season leaders', description: 'Top scorers, keepers and records, every league' },
-  { href: '/playoffs', name: 'Playoffs', description: 'Who is in, and the key dates' },
-  {
-    href: '/history/2025-26',
-    name: 'History',
-    description: `Last season’s final ${listWords(getAvailableHistoryLeagues().map((l) => getLeague(l.id).shortName))} tables and awards`,
-  },
-  { href: '/about', name: 'About', description: 'Where this data comes from' },
-];
 
 /**
  * Say what is true, say what to do next (DESIGN §8). No illustration, no dashed box, and the
@@ -59,14 +34,14 @@ export default function NotFound() {
         description="The link may be out of date, or that game or day isn’t in this season’s schedule. Every team, game and day is reachable from one of these:"
       />
       <ul className="m-0 mt-8 grid list-none gap-3 p-0 sm:grid-cols-2 md:mt-10 lg:grid-cols-4">
-        {LINKS.map((l) => (
+        {NAV_DESTINATIONS.map((l) => (
           <li key={l.href}>
             <Link
               href={l.href}
               prefetch={false}
               className="sx-card sx-lift block h-full min-h-11 p-4 no-underline"
             >
-              <span className="block text-body font-semibold text-ink">{l.name}</span>
+              <span className="block text-body font-semibold text-ink">{l.cardName}</span>
               <span className="mt-0.5 block text-meta text-ink-2">{l.description}</span>
             </Link>
           </li>

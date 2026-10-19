@@ -8,7 +8,6 @@ import DivisionStandings from '@/components/standings/DivisionStandings';
 import DivisionTabs from '@/components/standings/DivisionTabs';
 import Arrow from '@/components/ui/Arrow';
 import ExternalLink from '@/components/ui/ExternalLink';
-import { biggestGoalDiff } from '@/components/ui/StandingsTable';
 import { getLeague } from '@/lib/config/leagues';
 import { leagueSportWords, standingsLabel } from '@/lib/config/leagues/labels';
 import { hasHistory } from '@/lib/datasets/history';
@@ -53,12 +52,7 @@ export async function generateMetadata({ params }: PageProps<'/standings/[league
   const { league } = await params;
   const summary = leagueParam(league);
   if (!summary) return missingMetadata('League not found');
-  const { leaders, views } = buildStandingsPageView(league);
-  const through = views
-    .map((v) => v.throughDate)
-    .filter((d): d is string => d !== null)
-    .sort()
-    .at(-1);
+  const { leaders, throughDate: through } = buildStandingsPageView(league);
   // The <title> names the sport, the page's h1 (standingsLabel) does not need to: a search result
   // has only the title to say this is field hockey, and "SCVAL standings" alone could be any sport.
   const title = `${summary.shortName} field hockey standings`;
@@ -84,28 +78,6 @@ export default async function LeagueStandingsPage({ params }: PageProps<'/standi
   const data = buildStandingsPageView(summary.id);
   const multi = summary.divisions.length > 1;
   const tabs = data.views.map((view) => ({ href: `#${view.division}`, label: view.kicker }));
-
-  // The page disclosure: the GD paragraph and each generic per-division sentence once. The GD
-  // scale is in words ("De Anza's is 36"), not "|GD| max 36"; a single-division league names no
-  // division (SPEC §10.3).
-  // A division where every |GD| is 0 (Metro South Bay before its first game) is left out of the
-  // list: its `gdDomain` is the bar floor of 1, not a goal difference (StandingsTable biggestGoalDiff).
-  const scaled = data.views.filter((v) => biggestGoalDiff(v.rows.map((r) => r.standing.computed.gd)) > 0);
-  const gdScale = multi
-    ? `Bars are scaled to each division’s own biggest goal difference${
-        scaled.length > 0 ? ` (${scaled.map((v) => `${v.label}’s is ${v.gdDomain}`).join(', ')})` : ''
-      }, so bars in different divisions are not comparable.`
-    : `Bars are scaled to the league’s biggest goal difference${
-        scaled.length > 0 ? ` (${scaled[0]!.gdDomain})` : ''
-      }.`;
-  const legend = [
-    `GD = league goals for minus goals against. ${gdScale} A real 0 shows as 0; a score we do not have shows as an em dash. Forfeits count in the win-loss-tie record, not in the goal columns.`,
-    // A league with no fixed schedule (the Sunset, gamesPerTeam null) has no "of N", LEFT or MAX.
-    data.views.every((view) => view.fixedSchedule)
-      ? 'GP is league games counted of those scheduled. LEFT is league games with no counted result yet — still to play, or played and not reported. MAX is the most points a team could reach if it won all of them: a ceiling, not a projection.'
-      : `GP is league games counted. ${summary.shortName} has no fixed league schedule, so there is no LEFT or MAX column.`,
-    ...new Set(data.views.flatMap((view) => view.legendNotes)),
-  ];
 
   return (
     /* Multi-division: the sticky table heads park under the 48px top bar plus the 48px division
@@ -187,7 +159,7 @@ export default async function LeagueStandingsPage({ params }: PageProps<'/standi
           component. The paragraphs inside keep the prose measure. */}
       <details className="sx-inset sx-disclosure mt-6 max-w-3xl">
         <summary>How to read these tables</summary>
-        {legend.map((note) => (
+        {data.legend.map((note) => (
           <p key={note} className="mb-0 max-w-prose">
             {note}
           </p>

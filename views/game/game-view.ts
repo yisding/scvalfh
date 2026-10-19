@@ -427,6 +427,25 @@ export function buildGameView(param: string): GameView | null {
 }
 
 /**
+ * Does the main column's row 2 of `/game/[id]` (recap · result links · source line · postseason
+ * notes · score note · source disagreement · result-flag conflict) render anything? `recap` is
+ * `gameRecap(model)` (views/game/titles.ts), passed in because the page prints it too. The DETAILS
+ * rail starts in that row, so the page gives it the recap's 24px top margin when the row is there
+ * and the section margin when it is not (F-27c).
+ */
+export function hasLeadRow(model: GameView, recap: string | null): boolean {
+  return (
+    Boolean(recap) ||
+    model.resultLinks.length > 0 ||
+    Boolean(model.source) ||
+    model.postseasonNotes.length > 0 ||
+    Boolean(model.scoreNote) ||
+    Boolean(model.conflict) ||
+    Boolean(model.resultConflictNote)
+  );
+}
+
+/**
  * The stub for a superseded si.com game (`/game/sblive-<id>` whose result MaxPreps now has):
  * `<SHORT> game — this result is now on MaxPreps.`, linking and canonical to the MaxPreps game.
  * null for any other param.

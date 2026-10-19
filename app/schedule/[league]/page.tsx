@@ -11,16 +11,14 @@ import ScheduleList from '@/components/schedule/ScheduleList';
 import TimelineRail from '@/components/schedule/TimelineRail';
 import LeagueHealthNote from '@/components/ui/LeagueHealthNote';
 import SectionHeader from '@/components/ui/SectionHeader';
-import { isIndependentLeague } from '@/lib/config/leagues';
-import { leagueSportWords, standaloneName } from '@/lib/config/leagues/labels';
+import { leagueSportWords } from '@/lib/config/leagues/labels';
 import { SEASON_DISPLAY } from '@/lib/config/season';
 import { getToday } from '@/lib/datasets/snapshot';
-import { monthDay } from '@/lib/format/dates';
 import { plural } from '@/lib/format/words';
 import { getGamesByDate, getOfficialFixtures } from '@/lib/queries/games';
 import { getTeams } from '@/lib/queries/teams';
 import { scheduleFilterProps } from '@/views/schedule/filters';
-import { countGames } from '@/views/schedule/filters-client';
+import { buildLeagueSchedulePageView } from '@/views/schedule/schedule-view';
 import { leagueChips, leagueHrefs } from '@/views/site/league-chips';
 import { leagueParam, leagueStaticParams } from '@/views/site/league-route';
 import { missingMetadata, pageMetadata } from '@/views/site/page-metadata';
@@ -48,12 +46,6 @@ import { missingMetadata, pageMetadata } from '@/views/site/page-metadata';
  * and its header says "the LA independents" (standaloneName).
  */
 
-/** 'SCVAL schedule and results'; for the LA independents, 'LA teams: schedule and results'. */
-function scheduleTitle(summary: { id: string; shortName: string }): string {
-  return isIndependentLeague(summary.id)
-    ? `${summary.shortName} teams: schedule and results`
-    : `${summary.shortName} schedule and results`;
-}
 export const dynamicParams = false;
 
 export function generateStaticParams(): { league: string }[] {
@@ -64,11 +56,7 @@ export async function generateMetadata({ params }: PageProps<'/schedule/[league]
   const { league } = await params;
   const summary = leagueParam(league);
   if (!summary) return missingMetadata('League not found');
-  const counts = countGames(getGamesByDate({ league: summary.id }).flatMap((group) => group.games));
-  // The h1 is scheduleTitle; the <title> adds the sport, which a search result has no other way to show.
-  const title = scheduleTitle(summary).replace('schedule and results', 'field hockey schedule and results');
-  // 'involving SCVAL teams'; the LA independents are named by their standaloneName: 'involving the LA independents'.
-  const involving = isIndependentLeague(summary.id) ? standaloneName(summary.id) : `${summary.shortName} teams`;
+  const { title, counts, involving } = buildLeagueSchedulePageView(summary.id);
   const description = `All ${plural(counts.total, 'girls varsity field hockey game')} involving ${involving} for ${SEASON_DISPLAY}, grouped by date: ${plural(counts.final, 'final score')}, ${counts.upcoming} still to come. Filter by team, game type or status.`;
   return pageMetadata({
     path: `/schedule/${summary.id}`,
@@ -87,13 +75,10 @@ export default async function LeagueSchedulePage({ params }: PageProps<'/schedul
 
   const groups = getGamesByDate({ league: summary.id });
   const dates = groups.map((group) => group.date);
-  const counts = countGames(groups.flatMap((group) => group.games));
+  const { h1, counts, involving, span } = buildLeagueSchedulePageView(summary.id);
   const today = getToday();
   const { teams, divisions } = scheduleFilterProps(summary, getTeams({ league: summary.id }));
   const fixtures = getOfficialFixtures({ league: summary.id });
-  const span = dates.length > 0 ? `${monthDay(dates[0])} – ${monthDay(dates[dates.length - 1])}` : null;
-  // 'involving SCVAL teams'; the LA independents are named by their standaloneName (as in generateMetadata).
-  const involving = isIndependentLeague(summary.id) ? standaloneName(summary.id) : `${summary.shortName} teams`;
 
   return (
     // `scroll-behavior: auto` on <html> while this page is mounted: a smooth scroll to a date
@@ -101,7 +86,7 @@ export default async function LeagueSchedulePage({ params }: PageProps<'/schedul
     // estimates mid-flight, and the target slid out of view. An instant jump lands exactly.
     <div className="pb-section-lg [--sx-sticky-stack:var(--spacing-topbar)] md:[--sx-sticky-stack:var(--spacing-topbar-lg)] [html:has(&)]:[scroll-behavior:auto]">
       <PageHeader
-        title={scheduleTitle(summary)}
+        title={h1}
         description={
           span ? (
             <>
