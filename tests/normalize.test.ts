@@ -21,7 +21,8 @@ import {
 import { resolveTeam } from '@/lib/registry/resolve';
 import { getTeamBySlug } from '@/lib/registry/teams';
 import { sideOutcome } from '@/lib/shared/game';
-import { ScheduleResponseSchema, splitTbaRows, type ScheduleRow } from '@/lib/sources/maxpreps';
+import { splitTbaRows } from '@/lib/sources/maxpreps/schedule';
+import { ScheduleResponseSchema, type ScheduleRow } from '@/lib/sources/maxpreps/schemas';
 import { allScheduleRows, corpusDir } from './support/corpus';
 
 const rows = allScheduleRows();

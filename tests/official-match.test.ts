@@ -38,7 +38,7 @@ import {
   type Transport,
 } from '@/lib/pipeline/contract';
 import { isExcludedFor, stepOfficial } from '@/lib/pipeline/steps/official';
-import { ScheduleResponseSchema } from '@/lib/sources/maxpreps';
+import { ScheduleResponseSchema } from '@/lib/sources/maxpreps/schemas';
 import { parseSchedulePdfText } from '@/lib/sources/scval-pdf';
 import { game } from './support/game-builder';
 import { allScheduleRows, corpusDir } from './support/corpus';

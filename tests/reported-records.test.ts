@@ -21,7 +21,7 @@ import { normalizeGames } from '@/lib/pipeline/reconcile/normalize';
 import { readManifest } from '@/lib/pipeline/corpus';
 import { resolveTeam } from '@/lib/registry/resolve';
 import { getTeamById, teamsInDivision } from '@/lib/registry/teams';
-import { StandingsResponseSchema } from '@/lib/sources/maxpreps';
+import { StandingsResponseSchema } from '@/lib/sources/maxpreps/schemas';
 import { allScheduleRows, corpusDir, standingsFixture } from './support/corpus';
 import { REPO } from './support/repo';
 import { runCorpus, writeTempVariant } from './support/pipeline/run-corpus';

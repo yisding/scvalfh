@@ -14,7 +14,7 @@
  *   7. opponent identity by GUID; a non-member is a name only
  *
  * SPEC §7.6 adds, in pipeline order (all pure):
- *   1. `splitTbaRows` (lib/sources/maxpreps.ts) — a row with an unnamed side is dropped and recorded;
+ *   1. `splitTbaRows` (lib/sources/maxpreps/schedule.ts) — a row with an unnamed side is dropped and recorded;
  *      `normalizeGames` applies it too, so raw feed rows can be passed straight in
  *   2. `normalizeGames` — plus `contestTypes`, `provenance.resultConflict`, and the `countsFor` /
  *      `postseason` placeholders that lib/engine/classify.ts fills
@@ -32,7 +32,8 @@ import { resolveTeam } from '@/lib/registry/resolve';
 import { getTeamById } from '@/lib/registry/teams';
 import { toLocalTimestamp } from '@/lib/shared/dates';
 import { byDateThenId } from '@/lib/shared/game';
-import { splitTbaRows, type ContestTeam, type ScheduleRow } from '@/lib/sources/maxpreps';
+import { splitTbaRows } from '@/lib/sources/maxpreps/schedule';
+import { type ContestTeam, type ScheduleRow } from '@/lib/sources/maxpreps/schemas';
 
 export interface NormalizeOptions {
   /** ISO UTC stamp written into every Game.provenance.fetchedAt. */

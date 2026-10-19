@@ -18,16 +18,10 @@ import { describe, expect, it } from 'vitest';
 
 import { DATA_QUALITY } from '@/lib/config/leagues';
 import { TEAMS, getTeamBySlug, normalizeTeamKey } from '@/lib/registry/teams';
-import {
-  STATEWIDE_AMBIGUOUS,
-  extractReactProps,
-  harvestTeamWebPaths,
-  parseScoresPage,
-  parseStandingsTeamRefs,
-  parseTeamGamesPage,
-  resolveSbliveSide,
-  sbliveIdsFrom,
-} from '@/lib/sources/sblive';
+import { parseScoresPage, parseTeamGamesPage } from '@/lib/sources/sblive/games';
+import { harvestTeamWebPaths, parseStandingsTeamRefs } from '@/lib/sources/sblive/harvest';
+import { STATEWIDE_AMBIGUOUS, resolveSbliveSide, sbliveIdsFrom } from '@/lib/sources/sblive/identity';
+import { extractReactProps } from '@/lib/sources/sblive/props';
 import { REPO } from './support/repo';
 import { page, teamGamesProps, teamNode } from './support/sblive-pages';
 

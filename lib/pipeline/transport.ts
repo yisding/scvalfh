@@ -9,7 +9,7 @@
  *                       Mission league id can be grepped from a run log, live or offline).
  *
  * Live resource map (frozen at the end of Stage A):
- *   maxpreps-*            URL builders of lib/sources/maxpreps.ts → MaxPrepsClient.raw (its gate, retries, UA)
+ *   maxpreps-*            URL builders of lib/sources/maxpreps/urls.ts → MaxPrepsClient.raw (its gate, retries, UA)
  *   scval-pdf-text        scvalScheduleUrl(d) (config official.scheduleUrl) → HttpClient.bytes → pdfToText
  *   scval-standings-index SCVAL_STANDINGS_INDEX → HttpClient.text
  *   official-revision     getDivision(d).official.revisionCheckUrl (bundled only) → bytes → sha256 hex
@@ -30,10 +30,12 @@ import { officialChangesCellText, sha256Hex } from '@/lib/official/validate';
 import { getTeamBySlug } from '@/lib/registry/teams';
 import { CCS_ICAL_URL } from '@/lib/sources/ccs';
 import { CIFSS_SEASON_FROM, cifssListingUrl } from '@/lib/sources/cifss';
-import { HttpClient, HttpError, type HttpClientOptions } from '@/lib/sources/http';
+import { HttpClient, HttpError, type HttpClientOptions } from '@/lib/sources/http/client';
 import type { RawResponse } from '@/lib/sources/http/raw-response';
-import { MaxPrepsClient, MaxPrepsError } from '@/lib/sources/maxpreps';
-import { SBLIVE_HTTP_OPTIONS, sbliveScoresUrl } from '@/lib/sources/sblive';
+import { MaxPrepsClient } from '@/lib/sources/maxpreps/client';
+import { MaxPrepsError } from '@/lib/sources/maxpreps/error';
+import { leagueMetaUrl, scheduleUrl, standingsUrl } from '@/lib/sources/maxpreps/urls';
+import { SBLIVE_HTTP_OPTIONS, sbliveScoresUrl } from '@/lib/sources/sblive/urls';
 import { SCVAL_STANDINGS_INDEX, pdfToText, scvalScheduleUrl } from '@/lib/sources/scval-pdf';
 import { VNN_SITE_IDS, vnnIcsUrl } from '@/lib/sources/vnn-ics';
 import {
@@ -46,9 +48,6 @@ import {
 import type { Corpus } from './corpus';
 
 // ---------------------------------------------------------------- the resource map
-
-/** URL builders only; constructing the client opens no connection. */
-const MAXPREPS_URLS = new MaxPrepsClient();
 
 export type RequestHost = 'maxpreps' | 'sblive' | 'official' | 'other';
 
@@ -102,11 +101,11 @@ export function resourceUrl(key: ResourceKey): string {
     case 'maxpreps-bootstrap':
       return BOOTSTRAP_URL;
     case 'maxpreps-league-meta':
-      return MAXPREPS_URLS.leagueMetaUrl(maxprepsLeagueIdOrThrow(key.division));
+      return leagueMetaUrl(maxprepsLeagueIdOrThrow(key.division));
     case 'maxpreps-standings':
-      return MAXPREPS_URLS.standingsUrl(maxprepsLeagueIdOrThrow(key.division));
+      return standingsUrl(maxprepsLeagueIdOrThrow(key.division));
     case 'maxpreps-schedule':
-      return MAXPREPS_URLS.scheduleUrl(teamOrThrow(key.team).id);
+      return scheduleUrl(teamOrThrow(key.team).id);
     case 'scval-pdf-text':
       return scvalScheduleUrl(key.division);
     case 'scval-standings-index':

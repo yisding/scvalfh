@@ -16,7 +16,7 @@
  *
  * The join is `(local date, {teamA, teamB} as an UNORDERED pair)`, because the statewide si.com
  * scoreboard exposes neither home/away nor a web path — only two names, two logo URLs and two score
- * strings. Team identity comes from lib/sources/sblive.ts `resolveSbliveSide` (id first).
+ * strings. Team identity comes from lib/sources/sblive/identity.ts `resolveSbliveSide` (id first).
  *
  * Only scores are compared; no W/L/T is derived here (that is lib/shared/game.ts `sideOutcome`). So an EAL 1 v 1
  * win, level on goals with decider 'SO' (MaxPreps 1-1), and si.com's 1-1 for the same game agree, as do a San
@@ -35,7 +35,7 @@ import { sideJoinKey, unorderedPairKey } from '@/lib/registry/resolve';
 import { getTeamBySlug } from '@/lib/registry/teams';
 import { hasSbliveContestPrefix, sbliveContestId } from '@/lib/shared/contest-id';
 import { dayNumber } from '@/lib/shared/dates';
-import { sblivePairKey, type SbliveGame, type SbliveSide } from '@/lib/sources/sblive';
+import { sblivePairKey, type SbliveGame, type SbliveSide } from '@/lib/sources/sblive/games';
 
 /** The same key `sblivePairKey` gives (lib/registry/resolve.ts sideJoinKey), so the two halves of the join agree exactly. */
 export function gamePairKey(game: Pick<Game, 'home' | 'away'>): string {

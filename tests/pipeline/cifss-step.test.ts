@@ -20,7 +20,7 @@ import { resourceUrl } from '@/lib/pipeline/transport';
 import { resolveTeam } from '@/lib/registry/resolve';
 import { CIFSS_SECTIONS } from '@/lib/sources/cifss';
 import type { RawResponse } from '@/lib/sources/http/raw-response';
-import type { ScheduleRow } from '@/lib/sources/maxpreps';
+import type { ScheduleRow } from '@/lib/sources/maxpreps/schemas';
 import { game } from '@/tests/support/game-builder';
 import { REPO } from '@/tests/support/repo';
 

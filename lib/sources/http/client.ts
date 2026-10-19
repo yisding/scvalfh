@@ -2,7 +2,7 @@
  * Minimal HTTP transport for every polite non-MaxPreps-API read: the SECONDARY sources (si.com,
  * scval.com, cifccs.org, VNN) and the history, JV and mascot scripts.
  *
- * `lib/sources/maxpreps.ts` keeps its own copy of this logic on purpose: the primary client is
+ * `lib/sources/maxpreps/client.ts` keeps its own copy of this logic on purpose: the primary client is
  * JSON-and-zod-only, carries the descriptive User-Agent, and its retry semantics are pinned by
  * tests. The secondary sources need three things it does not have — a per-source User-Agent
  * (si.com gates on a browser UA), binary bodies (PDFs), and a `never throw` mode so a failure
@@ -15,7 +15,7 @@
 /**
  * Descriptive UA for sources that do not gate on a browser (SPEC §5.3).
  *
- * ONE definition for the whole repo — `lib/sources/maxpreps.ts` re-exports this rather than keeping
+ * ONE definition for the whole repo — `lib/sources/maxpreps/client.ts` re-exports this rather than keeping
  * a second literal, which is how the two drifted out of sync in the first place.
  *
  * SPEC §5.3's template is `+https://<our-site>/about; contact: <email>`, and both halves matter:
@@ -225,47 +225,4 @@ function retryAfterMs(res: Response): number | null {
   const seconds = Number(res.headers.get('retry-after'));
   if (!Number.isFinite(seconds) || seconds <= 0) return null;
   return Math.min(seconds * 1000, MAX_RETRY_AFTER_MS);
-}
-
-/** The five named HTML entities SBLive's `data-react-props` attribute can contain (SPEC §1.2). */
-export function htmlUnescape(input: string): string {
-  return input
-    .replace(/&quot;/g, '"')
-    .replace(/&#0*39;/g, "'")
-    .replace(/&#x0*27;/gi, "'")
-    .replace(/&apos;/g, "'")
-    .replace(/&lt;/g, '<')
-    .replace(/&gt;/g, '>')
-    .replace(/&nbsp;/g, ' ')
-    .replace(/&amp;/g, '&');
-}
-
-/**
- * RFC 5545 line unfolding — a continuation line starts with a space or tab and joins the previous
- * one with no separator. Mandatory before parsing any `.ics` (SPEC §1.5).
- */
-export function unfoldIcs(text: string): string[] {
-  const out: string[] = [];
-  for (const raw of text.replace(/\r\n/g, '\n').replace(/\r/g, '\n').split('\n')) {
-    if (/^[ \t]/.test(raw) && out.length > 0) out[out.length - 1] += raw.slice(1);
-    else out.push(raw);
-  }
-  return out;
-}
-
-/** Split one unfolded iCalendar line into its name (with params) and value. */
-export function icsLine(line: string): { name: string; params: string; value: string } | null {
-  const colon = line.indexOf(':');
-  if (colon < 0) return null;
-  const left = line.slice(0, colon);
-  const semi = left.indexOf(';');
-  return {
-    name: (semi < 0 ? left : left.slice(0, semi)).toUpperCase(),
-    params: semi < 0 ? '' : left.slice(semi + 1),
-    // iCalendar TEXT escaping: \, \; \n \\ .
-    value: line
-      .slice(colon + 1)
-      .replace(/\\n/gi, '\n')
-      .replace(/\\([,;\\])/g, '$1'),
-  };
 }

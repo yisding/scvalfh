@@ -13,7 +13,7 @@ import {
 } from '@/lib/pipeline/prior-season-feeds';
 import { TEAMS, getTeamBySlug } from '@/lib/registry/teams';
 import { type PriorSeason, PriorSeasonSchema, seasonWindow } from '@/lib/schema/prior-season';
-import { ScheduleRowSchema, type ScheduleRow } from '@/lib/sources/maxpreps';
+import { ScheduleRowSchema, type ScheduleRow } from '@/lib/sources/maxpreps/schemas';
 
 describe('data/prior-season.json', () => {
   const file = getPriorSeason();

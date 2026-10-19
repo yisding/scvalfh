@@ -58,8 +58,8 @@ import {
   rostersContentKey,
 } from '@/lib/schema/rosters';
 import { stableStringify } from '@/lib/shared/stable-json';
-import { MaxPrepsClient } from '@/lib/sources/maxpreps';
-import { parseRosterPage, pendingRoster, rosterUrl } from '@/lib/sources/maxpreps-roster';
+import { MaxPrepsClient } from '@/lib/sources/maxpreps/client';
+import { parseRosterPage, pendingRoster, rosterUrl } from '@/lib/sources/maxpreps/roster';
 import { runCli } from './cli';
 
 interface Args {

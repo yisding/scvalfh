@@ -18,7 +18,8 @@ import type { SourceStatus } from '@/lib/model/health';
 import type { LeagueId } from '@/lib/model/ids';
 import type { Team } from '@/lib/model/team';
 import { FETCHABLE_TEAMS, TEAMS } from '@/lib/registry/teams';
-import { ScheduleResponseSchema, splitTbaRows, type ScheduleRow } from '@/lib/sources/maxpreps';
+import { splitTbaRows } from '@/lib/sources/maxpreps/schedule';
+import { ScheduleResponseSchema, type ScheduleRow } from '@/lib/sources/maxpreps/schemas';
 import {
   asOfStamp,
   carriedFromOf,

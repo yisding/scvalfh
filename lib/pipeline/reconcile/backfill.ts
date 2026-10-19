@@ -49,7 +49,7 @@ import {
   sblivePairKey,
   type SbliveGame,
   type SbliveSide,
-} from '@/lib/sources/sblive';
+} from '@/lib/sources/sblive/games';
 
 // ---------------------------------------------------------------- constants
 

@@ -26,7 +26,7 @@ import type { LeagueId } from '@/lib/model/ids';
 import type { DivisionConfig } from '@/lib/model/league-config';
 import { resolveTeam } from '@/lib/registry/resolve';
 import { teamsInDivision } from '@/lib/registry/teams';
-import { StandingsResponseSchema, type StandingsRow } from '@/lib/sources/maxpreps';
+import { StandingsResponseSchema, type StandingsRow } from '@/lib/sources/maxpreps/schemas';
 import { asOfDay, carriedFromOf, type PipelineContext, type RunState } from '@/lib/pipeline/ledger';
 import { classifyFetchError, parseJsonBody } from '@/lib/pipeline/read';
 import { resourceUrl } from '@/lib/pipeline/transport';

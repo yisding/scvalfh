@@ -21,7 +21,7 @@ import type { Game } from '@/lib/model/game';
 import type { TeamSlug } from '@/lib/model/ids';
 import { resolveTeam, sideJoinKey, unorderedPairKey } from '@/lib/registry/resolve';
 import { localDateKey, toLocalTimestamp } from '@/lib/shared/dates';
-import { icsLine, unfoldIcs } from './http';
+import { icsLine, unfoldIcs } from './ics';
 
 /** [V] the only two verified siteIds (SPEC §1.5). */
 export const VNN_SITE_IDS: ReadonlyArray<{ slug: TeamSlug; siteId: string; school: string }> = [

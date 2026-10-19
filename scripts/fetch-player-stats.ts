@@ -31,7 +31,7 @@
  *
  * Game notes (lib/engine/note-stats.ts). For a team a game note on one of its finals in data/snapshot.json
  * credits with goals, assists or saves (teamsCreditedByNotes), the run also reads MaxPreps'
- * per-game team totals (lib/sources/maxpreps-game-stats.ts) into `gameTotals`, so a noted stat the
+ * per-game team totals (lib/sources/maxpreps/game-stats.ts) into `gameTotals`, so a noted stat the
  * coach has also entered is not counted twice: one more small call per such team (one, Homestead,
  * on 2026-10-06). Offline it reads `game-stats-<slug>.json` beside the rollup captures; a missing
  * capture, or a failed call, leaves `gameTotals` out with a warning and never fails the team; its
@@ -83,8 +83,8 @@ import { RostersSchema } from '@/lib/schema/rosters';
 import { localDateKey } from '@/lib/shared/dates';
 import { stableStringify } from '@/lib/shared/stable-json';
 import { loadSnapshot } from '@/lib/snapshot/load';
-import { MaxPrepsClient } from '@/lib/sources/maxpreps';
-import { fetchGameStats, gameStatsUrl, parseGameStats } from '@/lib/sources/maxpreps-game-stats';
+import { MaxPrepsClient } from '@/lib/sources/maxpreps/client';
+import { fetchGameStats, gameStatsUrl, parseGameStats } from '@/lib/sources/maxpreps/game-stats';
 import {
   fetchPlayerStats,
   joinToRoster,
@@ -93,7 +93,7 @@ import {
   playerStatsUrl,
   teamStatsPageUrl,
   type PlayerStatsPage,
-} from '@/lib/sources/maxpreps-player-stats';
+} from '@/lib/sources/maxpreps/player-stats';
 import { runCli } from './cli';
 
 interface Args {

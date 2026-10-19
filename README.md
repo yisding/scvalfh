@@ -286,7 +286,7 @@ has the same list):
 
 The fetch scripts (`fetch-data`, the other `fetch-*` scripts, `build-history` and
 `discover-season`) identify themselves with one descriptive User-Agent that carries a contact
-address (`POLITE_USER_AGENT` in `lib/sources/http.ts`; si.com, which refuses a non-browser one, gets
+address (`POLITE_USER_AGENT` in `lib/sources/http/client.ts`; si.com, which refuses a non-browser one, gets
 a browser User-Agent instead). Set `SCVAL_CONTACT=<email>` in the scripts' environment to put your
 own deployment's address there. Only the scripts read it, at fetch time: it is not a build-time
 file override, and the build and the site never use it.
@@ -336,7 +336,7 @@ height and captain flag, whatever the coach entered on MaxPreps — built by `pn
 from the 102 MaxPreps roster pages (every registry team, all nine leagues and the five independents; one entry per team) and
 committed, like the history file, rather than refreshed by the cron (rosters change a few times a
 season; run it by hand or weekly). The page encodes each athlete as a 37-element positional array, so
-`lib/sources/maxpreps-roster.ts` decodes it with MaxPreps' own column list and cross-checks every
+`lib/sources/maxpreps/roster.ts` decodes it with MaxPreps' own column list and cross-checks every
 row against the page's rendered table, failing the team rather than publishing a wrong grade beside
 a name. Blanks are `null`, never guessed; soft-deleted rows are dropped; a team whose fetch fails
 keeps its previous rows with `status: "carried-forward"`. Failures are scoped to the team, and

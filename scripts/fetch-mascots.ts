@@ -40,7 +40,7 @@ import { type FlagSpec, parseFlags } from '@/lib/cli/flags';
 import { MASCOT_FILE_SIZES } from '@/lib/config/mascots';
 import type { Team } from '@/lib/model/team';
 import { TEAMS } from '@/lib/registry/teams';
-import { CHROME_USER_AGENT, HttpClient } from '@/lib/sources/http';
+import { CHROME_USER_AGENT, HttpClient } from '@/lib/sources/http/client';
 import { runCli } from './cli';
 
 const USAGE = 'Usage: pnpm fetch-mascots [--only <slug>]... [--dry-run]';
@@ -234,7 +234,7 @@ async function main(argv: readonly string[]): Promise<number> {
 
   const onLog = (line: string) => console.log(`  ${line}`);
   const http = new HttpClient({ onLog });
-  // SBLive's asset CDN 403s a non-browser User-Agent, like si.com itself (lib/sources/sblive.ts).
+  // SBLive's asset CDN 403s a non-browser User-Agent, like si.com itself (lib/sources/sblive/urls.ts).
   const sblive = new HttpClient({ onLog, userAgent: CHROME_USER_AGENT });
   const results = await Promise.all(
     teams.map(async (team) => {

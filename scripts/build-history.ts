@@ -49,7 +49,7 @@ import {
   type BvalAllLeagueBlock,
   type BvalStandingsBlock,
 } from '@/lib/sources/bval-sheet';
-import { HttpClient } from '@/lib/sources/http';
+import { HttpClient } from '@/lib/sources/http/client';
 import {
   SCVAL_HISTORY_PDFS,
   ScvalClient,

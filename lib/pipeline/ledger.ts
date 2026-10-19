@@ -24,7 +24,7 @@ import type { ReportedRecord } from '@/lib/model/standings';
 import { TEAMS, getTeamBySlug } from '@/lib/registry/teams';
 import { localDateKey, toLocalTimestamp } from '@/lib/shared/dates';
 import { CIFSS_SECTIONS } from '@/lib/sources/cifss';
-import type { ScheduleRow } from '@/lib/sources/maxpreps';
+import type { ScheduleRow } from '@/lib/sources/maxpreps/schemas';
 import type { OfficialStepResult, RunArgs, RunContext, SecondaryStepResult, Transport } from './contract';
 
 // ---------------------------------------------------------------- sources

@@ -24,12 +24,13 @@
 
 import { z } from 'zod';
 
-import { htmlUnescape } from './http';
-import { MaxPrepsError, NEXT_DATA_RE } from './maxpreps';
 import { SPORT_SEASON_ID } from '@/lib/config/season';
 import type { Team } from '@/lib/model/team';
-import { recaseNameParts } from './text/person-name';
 import { GRADE_CLASSES, type RosterPlayer, type TeamRoster } from '@/lib/schema/rosters';
+import { htmlUnescape } from '@/lib/sources/html';
+import { recaseNameParts } from '@/lib/sources/text/person-name';
+import { NEXT_DATA_RE } from './bootstrap';
+import { MaxPrepsError } from './error';
 
 // ---------------------------------------------------------------- the positional map
 

@@ -34,7 +34,7 @@ import { scoreboardDates, stepSblive } from '@/lib/pipeline/steps/sblive';
 import { getTeamBySlug } from '@/lib/registry/teams';
 import { dayDiff, shiftDateKey } from '@/lib/shared/dates';
 import { loadSnapshot, parseSnapshot } from '@/lib/snapshot/load';
-import { parseScoresPage, parseTeamGamesPage, type SbliveGame, type SbliveSide } from '@/lib/sources/sblive';
+import { parseScoresPage, parseTeamGamesPage, type SbliveGame, type SbliveSide } from '@/lib/sources/sblive/games';
 import { game } from './support/game-builder';
 import { corpusDir } from './support/corpus';
 import { REPO, goldenPath, readJson } from './support/repo';

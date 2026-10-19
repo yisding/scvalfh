@@ -28,8 +28,8 @@ import { NO_MAXPREPS_TABLE_REASON } from '@/lib/pipeline/steps/league-meta';
 import { TEAMS, getTeamBySlug, teamsInDivision, teamsInLeague } from '@/lib/registry/teams';
 import { localDateKey } from '@/lib/shared/dates';
 import { sideOutcome } from '@/lib/shared/game';
-import type { ScheduleRow } from '@/lib/sources/maxpreps';
-import { parseScoresPage, parseTeamGamesPage } from '@/lib/sources/sblive';
+import type { ScheduleRow } from '@/lib/sources/maxpreps/schemas';
+import { parseScoresPage, parseTeamGamesPage } from '@/lib/sources/sblive/games';
 import { useCorpusModules } from '@/tests/support/corpus-modules';
 import { corpusSnapshotPath } from '@/tests/support/corpus-snapshot';
 import { CorpusReader, SOCAL_CORPUS, gameOf } from '@/tests/support/corpus';
@@ -377,7 +377,7 @@ describe('missing league results and the si.com sides', () => {
       const rows = key.startsWith('sblive/scores/') ? parseScoresPage(html) : parseTeamGamesPage(html);
       for (const row of rows) {
         for (const s of row.sides) {
-          if (s.slug) expect(getTeamBySlug(s.slug), `lib/sources/sblive.ts: ${s.name}`).toBeDefined();
+          if (s.slug) expect(getTeamBySlug(s.slug), `lib/sources/sblive/identity.ts: ${s.name}`).toBeDefined();
           else unresolved.add(s.name);
         }
       }
@@ -385,7 +385,7 @@ describe('missing league results and the si.com sides', () => {
     // York (JV only) and the EAL's si.com placeholder: none of the si.com phantoms of the league buckets
     // (Westlake, Los Alamitos, Madison, Santana, Castle Park, Chula Vista, …) appears on a captured scoreboard or
     // team page. Glendora, Harvard-Westlake and Thousand Oaks resolve now: they are the registry's independents.
-    expect([...unresolved].sort(), 'lib/sources/sblive.ts').toEqual(['Educational Outreach Academy', 'York'].sort());
+    expect([...unresolved].sort(), 'lib/sources/sblive/identity.ts').toEqual(['Educational Outreach Academy', 'York'].sort());
   });
 });
 

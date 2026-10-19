@@ -37,16 +37,17 @@
 
 import { z } from 'zod';
 
-import { MaxPrepsError, type MaxPrepsClient } from './maxpreps';
-import { careerIdFromUrl } from './maxpreps-roster';
 import { SPORT_SEASON_ID } from '@/lib/config/season';
 import { MAXPREPS_API } from '@/lib/config/source-urls';
 import type { Team } from '@/lib/model/team';
-import { recaseName } from './text/person-name';
 import {
   FIELD_STAT_KEYS, type FieldStatKey, type FieldStats, GOALIE_STAT_KEYS, type GoalieStatKey, type GoalieStats,
   type TeamPlayerStats,
 } from '@/lib/schema/player-stats';
+import { recaseName } from '@/lib/sources/text/person-name';
+import type { MaxPrepsClient } from './client';
+import { MaxPrepsError } from './error';
+import { careerIdFromUrl } from './roster';
 
 // ---------------------------------------------------------------- the columns we keep
 

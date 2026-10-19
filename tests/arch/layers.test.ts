@@ -318,11 +318,11 @@ describe('layers: the dependency rule', () => {
       expect(broken('lib/official/match.ts', 'components/ui/GameRow')).toEqual(['c']);
       expect(broken('lib/pipeline/run.ts', 'scripts/cli')).toEqual(['c']);
       expect(broken('lib/pipeline/run.ts', 'lib/snapshot/check')).toEqual([]);
-      expect(broken('lib/pipeline/run.ts', 'lib/sources/http')).toEqual([]);
+      expect(broken('lib/pipeline/run.ts', 'lib/sources/http/client')).toEqual([]);
     });
 
     it('(d) sources import neither the pipeline nor lib/official', () => {
-      expect(broken('lib/sources/maxpreps.ts', 'lib/pipeline/contract')).toEqual(['d']);
+      expect(broken('lib/sources/maxpreps/client.ts', 'lib/pipeline/contract')).toEqual(['d']);
       expect(broken('lib/sources/scval-pdf.ts', 'lib/official/schema')).toEqual(['d']);
       expect(broken('lib/pipeline/contract.ts', 'lib/sources/http/raw-response')).toEqual([]);
     });
@@ -378,7 +378,7 @@ describe('layers: the dependency rule', () => {
     it('the LEAVES are importable from every rank', () => {
       expect(broken('lib/model/game.ts', 'lib/config/invariant')).toEqual(['a']);
       expect(broken('lib/format/words.ts', 'lib/config/source-urls')).toEqual([]);
-      expect(broken('lib/sources/maxpreps.ts', 'lib/config/season')).toEqual([]);
+      expect(broken('lib/sources/maxpreps/client.ts', 'lib/config/season')).toEqual([]);
     });
   });
 });

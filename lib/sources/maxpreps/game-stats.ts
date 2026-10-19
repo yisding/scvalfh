@@ -1,7 +1,7 @@
 /**
  * MaxPreps team stats GAME BY GAME — `GET /gatewayweb/react/team-season-game-stats/rollup/v1
  * ?teamId=&sportSeasonId=` on the ghost API (SPEC §1.1k), the sibling of the player stats rollup
- * (lib/sources/maxpreps-player-stats.ts) in the same page chunk.
+ * (lib/sources/maxpreps/player-stats.ts) in the same page chunk.
  *
  * Read only for a team a game note credits with stats (lib/engine/note-stats.ts): it says what
  * the coach has ALREADY entered on the stats sheet for each game, so a goal, assist or save the
@@ -16,10 +16,11 @@
 
 import { z } from 'zod';
 
-import { MaxPrepsError, type MaxPrepsClient } from './maxpreps';
 import { SPORT_SEASON_ID } from '@/lib/config/season';
 import { MAXPREPS_API } from '@/lib/config/source-urls';
 import type { GameTotal } from '@/lib/schema/player-stats';
+import type { MaxPrepsClient } from './client';
+import { MaxPrepsError } from './error';
 
 export function gameStatsUrl(teamId: string, sportSeasonId = SPORT_SEASON_ID): string {
   return `${MAXPREPS_API}/gatewayweb/react/team-season-game-stats/rollup/v1?teamId=${teamId}&sportSeasonId=${sportSeasonId}`;

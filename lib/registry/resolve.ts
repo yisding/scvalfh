@@ -16,7 +16,7 @@ import { getTeamById, getTeamBySlug } from './teams';
 /**
  * One side of a game as the cross-source join key (SPEC §5.7): its registry slug, else `name:` and
  * the name lower-cased with everything but a-z and 0-9 removed. Every source joined to MaxPreps
- * (si.com in lib/pipeline/reconcile/sblive-crosscheck.ts and lib/sources/sblive.ts, the official schedules in
+ * (si.com in lib/pipeline/reconcile/sblive-crosscheck.ts and lib/sources/sblive/games.ts, the official schedules in
  * lib/official/match.ts, the school calendars in lib/sources/vnn-ics.ts) keys a side with this, so
  * the two halves of a join agree exactly.
  */

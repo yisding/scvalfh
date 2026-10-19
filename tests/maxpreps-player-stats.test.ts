@@ -1,5 +1,5 @@
 /**
- * lib/sources/maxpreps-player-stats.ts — the team-season-player-stats rollup, over the 15
+ * lib/sources/maxpreps/player-stats.ts — the team-season-player-stats rollup, over the 15
  * captures in tests/fixtures/maxpreps/stats-<slug>.json (2026-10-02; SCVAL's teams, the first
  * league captured — the adapter reads every league's teams the same way).
  *
@@ -19,7 +19,8 @@ import { TEAMS as REGISTRY, teamsInLeague } from '@/lib/registry/teams';
 import {
   FIELD_STAT_KEYS, type FieldStatKey, type GoalieStatKey, PlayerStatsFileSchema, countPlayerStats,
 } from '@/lib/schema/player-stats';
-import { MaxPrepsClient, NEXT_DATA_RE } from '@/lib/sources/maxpreps';
+import { NEXT_DATA_RE } from '@/lib/sources/maxpreps/bootstrap';
+import { MaxPrepsClient } from '@/lib/sources/maxpreps/client';
 import {
   fetchPlayerStats,
   joinToRoster,
@@ -28,7 +29,7 @@ import {
   playerStatsUrl,
   reconcileTotals,
   teamStatsPageUrl,
-} from '@/lib/sources/maxpreps-player-stats';
+} from '@/lib/sources/maxpreps/player-stats';
 import { FIXTURE_DIR } from './support/corpus';
 
 /** The 15 captures are SCVAL's: the first league captured. */
@@ -77,7 +78,7 @@ describe('parsePlayerStats over the captures', () => {
       const rows = (
         JSON.parse(NEXT_DATA_RE.exec(html)![1]) as { props: { pageProps: { athleteData: unknown[][] } } }
       ).props.pageProps.athleteData;
-      // athleteData index 15 is hasStats, 17 isDeleted (lib/sources/maxpreps-roster.ts ROSTER_KEYS).
+      // athleteData index 15 is hasStats, 17 isDeleted (lib/sources/maxpreps/roster.ts ROSTER_KEYS).
       const flagged = rows.some((r) => r[15] === true && r[17] !== true);
       expect(parse(team.slug) !== null, team.slug).toBe(flagged);
     }

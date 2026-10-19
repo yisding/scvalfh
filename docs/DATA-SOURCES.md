@@ -132,7 +132,7 @@ and verified 2026-10-02). There is **no ghost-API roster endpoint**: `gatewayweb
 `countData {teamId, sportSeasonId, athleteCount, staffCount}`, `schoolId`, `canonicalUrl` and
 `athleteData`: an array of **37-element positional arrays**, one per athlete — the same tuple encoding
 as the schedule page (1.1i), so it is pinned behind an adapter with loud assertions
-(`lib/sources/maxpreps-roster.ts`, written by `scripts/fetch-rosters.ts` to `data/rosters.json`).
+(`lib/sources/maxpreps/roster.ts`, written by `scripts/fetch-rosters.ts` to `data/rosters.json`).
 
 **Scope: every registry team, all nine leagues and the five independents (102).** The roster page is the same page for a team
 of any league, so `scripts/fetch-rosters.ts` walks the whole registry (`TEAMS`), and
@@ -1398,7 +1398,7 @@ the same chunk: `team-season-game-stats/rollup/v1` (the team's stats game by gam
 team a game note credits; see "Stats in the game note" below), and, not used,
 `team-season-stats/rollup/v1` and `team-leaderboard-leaders/v2`; a `leagueId=` parameter limits the
 rollup to league games.
-`lib/sources/maxpreps-player-stats.ts`, written by `scripts/fetch-player-stats.ts` to
+`lib/sources/maxpreps/player-stats.ts`, written by `scripts/fetch-player-stats.ts` to
 `data/player-stats.json`.
 
 Shape **[V]**: `data.groups[]` = "Field Stats" and "Goaltending Stats", each with `subgroups[]` (a
@@ -1479,7 +1479,7 @@ Gotchas, all **[V]**:
     `team-season-game-stats/rollup/v1` (same parameters) gives the TEAM's stats game by game **[V]**
     2026-10-06: Homestead's four sheet goals are entered on Lynbrook (3) and Los Altos (1, in a game
     Homestead lost 0-1), and Sep 28, Sep 30 and Oct 5 have 0 goals and 0 saves.
-    `scripts/fetch-player-stats.ts` reads it (`lib/sources/maxpreps-game-stats.ts`, into the team's
+    `scripts/fetch-player-stats.ts` reads it (`lib/sources/maxpreps/game-stats.ts`, into the team's
     `gameTotals`) for each team a note credits — one call on 2026-10-06 — and a noted game whose
     goals, assists or saves the coach also entered adds none of that stat. A note never credits more
     goals or assists in a game than the team scored, and no noted goal is added where MaxPreps' goals
@@ -1611,7 +1611,7 @@ team}`, `gameTypeLabel`, `statusId`/`shortStatusText` (`3`/`"F"` = final, `1` = 
    team of that name, and Chico's one team named Chico (458564; the search also returns fuzzy
    matches, Pleasant Valley, Chino, Chino Hills, Ayala and Don Lugo, which are other names). So only
    Davis joined the name-collision list (§5.3). The same search for the 50 Southern California names
-   (2026-10-06) added seven more (§5.3 step 4; `STATEWIDE_AMBIGUOUS` in `lib/sources/sblive.ts`).
+   (2026-10-06) added seven more (§5.3 step 4; `STATEWIDE_AMBIGUOUS` in `lib/sources/sblive/identity.ts`).
 10. ⚠️ **The statewide scoreboard is truncated at 24 games a day.** `.../scores?date=` server-renders
    only the day's first 24 games; the browser loads the rest through si.com's own GraphQL client.
    On 2026-10-06 the page's `query.scoreboardDate.games` said `totalCount` 29 with
@@ -2693,7 +2693,7 @@ on points differently (see `docs/LEAGUE-RULES.md`).
 ### 5.3 si.com identity: id first
 
 si.com team names are not safe keys (statewide collisions, JV teams, renamed schools). The resolver
-in `lib/sources/sblive.ts` identifies each side in this order:
+in `lib/sources/sblive/identity.ts` identifies each side in this order:
 
 1. the si.com **team id** is in the ignored list → refused (`ignored-team`);
 2. the team id equals a registry team's `sbliveTeamId` → that team (`team-id`);
@@ -2701,7 +2701,7 @@ in `lib/sources/sblive.ts` identifies each side in this order:
    (`school-id`);
 4. the normalized name is `university`, `losaltos`, `santaclara`, `davis`, `westview`, `delnorte`,
    `marina`, `sanmarcos`, `missionvista`, `granitehills` or `southwest` (names shared with other
-   schools statewide: §1.2 caveat 9; `STATEWIDE_AMBIGUOUS` in `lib/sources/sblive.ts`) → refused
+   schools statewide: §1.2 caveat 9; `STATEWIDE_AMBIGUOUS` in `lib/sources/sblive/identity.ts`) → refused
    (`ambiguous-name`). The last seven come from si.com's team search for the 50 Southern California
    names on 2026-10-06 **[V]**: Westview (ours 458949, San Diego; 464882 is West Los Angeles's, which
    si.com shows playing Sage Creek); Del Norte (ours 458937, San Diego; 458609 is Crescent City's, the

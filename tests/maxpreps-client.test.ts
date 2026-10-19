@@ -8,19 +8,12 @@ import { describe, expect, it, vi } from 'vitest';
 import { BOOTSTRAP_URL, SPORT_SEASON_ID } from '@/lib/config/season';
 import type { RawResponse } from '@/lib/sources/http/raw-response';
 import { getTeamBySlug } from '@/lib/registry/teams';
-import {
-  DEFAULT_USER_AGENT,
-  MaxPrepsClient,
-  MaxPrepsError,
-  NEXT_DATA_RE,
-  ScheduleResponseSchema,
-  StandingsResponseSchema,
-  TBA_TEAM_ID,
-  parseBootstrap,
-  splitTbaRows,
-  type ScheduleRow,
-} from '@/lib/sources/maxpreps';
-import { MAX_RETRY_AFTER_MS, POLITE_USER_AGENT } from '@/lib/sources/http';
+import { MAX_RETRY_AFTER_MS, POLITE_USER_AGENT } from '@/lib/sources/http/client';
+import { NEXT_DATA_RE, parseBootstrap } from '@/lib/sources/maxpreps/bootstrap';
+import { DEFAULT_USER_AGENT, MaxPrepsClient } from '@/lib/sources/maxpreps/client';
+import { MaxPrepsError } from '@/lib/sources/maxpreps/error';
+import { TBA_TEAM_ID, splitTbaRows } from '@/lib/sources/maxpreps/schedule';
+import { ScheduleResponseSchema, type ScheduleRow, StandingsResponseSchema } from '@/lib/sources/maxpreps/schemas';
 import { allScheduleRows, corpusDir, standingsFixture } from './support/corpus';
 import { REPO } from './support/repo';
 

@@ -25,13 +25,8 @@ import type { SourceStatus } from '@/lib/model/health';
 import type { TeamSlug } from '@/lib/model/ids';
 import { getTeamBySlug, teamsInLeague } from '@/lib/registry/teams';
 import { shiftDateKey } from '@/lib/shared/dates';
-import {
-  dedupeSbliveGames,
-  parseScoresPage,
-  parseTeamGamesPage,
-  sbliveScoresUrl,
-  type SbliveGame,
-} from '@/lib/sources/sblive';
+import { type SbliveGame, dedupeSbliveGames, parseScoresPage, parseTeamGamesPage } from '@/lib/sources/sblive/games';
+import { sbliveScoresUrl } from '@/lib/sources/sblive/urls';
 import {
   type ResourceKey,
   type RunContext,

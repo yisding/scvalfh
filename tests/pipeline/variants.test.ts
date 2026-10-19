@@ -16,7 +16,7 @@ import { TransportError } from '@/lib/pipeline/contract';
 import { loadCorpus } from '@/lib/pipeline/corpus';
 import { FixtureTransport } from '@/lib/pipeline/transport';
 import { loadSnapshot } from '@/lib/snapshot/load';
-import { ScheduleResponseSchema } from '@/lib/sources/maxpreps';
+import { ScheduleResponseSchema } from '@/lib/sources/maxpreps/schemas';
 import { corpusDir, variantDir } from '@/tests/support/corpus';
 import {
   FINALS_REGRESSION_DIR,

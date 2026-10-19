@@ -17,7 +17,7 @@ import { NOT_PUBLISHED, carryCrossCheck, emptyCrossCheck, gameJoinKey, gamePairK
 import type { BackfillRow, SbliveCrossCheck, SbliveOnlyRow } from '@/lib/model/crosscheck';
 import type { Game } from '@/lib/model/game';
 import { resolveTeam } from '@/lib/registry/resolve';
-import type { SbliveGame, SbliveSide } from '@/lib/sources/sblive';
+import type { SbliveGame, SbliveSide } from '@/lib/sources/sblive/games';
 import { game } from './support/game-builder';
 
 function side(ref: string, score: number | null, via: SbliveSide['via'] = 'team-id'): SbliveSide {

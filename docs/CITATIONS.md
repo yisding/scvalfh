@@ -19,6 +19,8 @@ Some committed files quote repo paths and cannot be edited: the data files in da
 | lib/note-stats.ts | lib/engine/note-stats.ts | 14 |
 | lib/clubs.ts | lib/datasets/clubs.ts | 16 |
 | lib/rosters.ts | lib/datasets/rosters.ts | 16 |
+| lib/sources/sblive.ts | lib/sources/sblive/games.ts (parseStandingsTeamRefs: lib/sources/sblive/harvest.ts; extractReactProps: lib/sources/sblive/props.ts; STATEWIDE_AMBIGUOUS: lib/sources/sblive/identity.ts) | 24 |
+| lib/sources/http.ts | lib/sources/http/client.ts (CHROME_USER_AGENT) | 24 |
 
 ## Legend
 

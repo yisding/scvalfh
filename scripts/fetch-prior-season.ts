@@ -39,7 +39,8 @@ import type { TeamSlug } from '@/lib/model/ids';
 import { previousMaxprepsYear, priorGamesFromFeeds, seasonLabel } from '@/lib/pipeline/prior-season-feeds';
 import { TEAMS } from '@/lib/registry/teams';
 import { type PriorSeason, PriorSeasonSchema, seasonWindow } from '@/lib/schema/prior-season';
-import { MaxPrepsClient, type ScheduleRow } from '@/lib/sources/maxpreps';
+import { MaxPrepsClient } from '@/lib/sources/maxpreps/client';
+import { type ScheduleRow } from '@/lib/sources/maxpreps/schemas';
 import { runCli } from './cli';
 
 const USAGE =

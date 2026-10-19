@@ -8,7 +8,7 @@
  * check visible copy. Decimal and hex references are always decoded (up to U+10FFFF); a name the
  * table does not hold is left as written.
  *
- * Not used by lib/sources/http.ts htmlUnescape (scoped to SBLive's data-react-props attribute) or
+ * Not used by lib/sources/html.ts htmlUnescape (scoped to SBLive's data-react-props attribute) or
  * lib/official/validate.ts cellText, whose output feeds a stored hash.
  *
  * Pure, with no imports.

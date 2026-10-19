@@ -15,7 +15,7 @@ import type { TeamSlug } from '@/lib/model/ids';
 import type { Team } from '@/lib/model/team';
 import { TEAMS } from '@/lib/registry/teams';
 import type { PriorExcluded, PriorGame } from '@/lib/schema/prior-season';
-import type { ScheduleRow } from '@/lib/sources/maxpreps';
+import type { ScheduleRow } from '@/lib/sources/maxpreps/schemas';
 
 /** "25-26" (MaxPreps) → "2025-26". */
 export function seasonLabel(maxprepsYear: string): string {

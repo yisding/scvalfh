@@ -13,7 +13,7 @@ import { divisionsOf, getLeague, leagueOfDivision, sectionOf } from '@/lib/confi
 import { divisionLabel } from '@/lib/config/leagues/labels';
 import { SEASON_YEAR, SPORT_SEASON_ID } from '@/lib/config/season';
 import type { DivisionId, LeagueId } from '@/lib/model/ids';
-import { LeagueMetaSchema } from '@/lib/sources/maxpreps';
+import { LeagueMetaSchema } from '@/lib/sources/maxpreps/schemas';
 import { lastFreshStamp, type PipelineContext, type RunState } from '@/lib/pipeline/ledger';
 import { classifyFetchError, parseJsonBody } from '@/lib/pipeline/read';
 import { resourceUrl } from '@/lib/pipeline/transport';

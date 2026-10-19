@@ -1,7 +1,7 @@
 /**
  * si.com JV team pages → the scored JV finals data/jv.json keeps (lib/schema/jv.ts JvSbliveRow).
  *
- * The page is the same `teams/Games` payload as a varsity team's (lib/sources/sblive.ts
+ * The page is the same `teams/Games` payload as a varsity team's (lib/sources/sblive/schemas.ts
  * TeamGamesPropsSchema); what differs is identity. A JV side is ours only when its si.com team id
  * is one of the registry schools' JV ids (JV_SLUG_BY_SBLIVE_ID), never by name and never by the
  * varsity ids resolveSbliveSide knows: si.com names a JV team exactly as it names the varsity one.
@@ -17,15 +17,11 @@ import type { TeamSlug } from '@/lib/model/ids';
 import { JV_SLUG_BY_SBLIVE_ID } from '@/lib/registry/jv-teams';
 import type { JvSbliveRow } from '@/lib/schema/jv';
 import { localDateKey } from '@/lib/shared/dates';
-import {
-  SbliveError,
-  TeamGamesPropsSchema,
-  extractReactProps,
-  isCaliforniaGameRow,
-  sbliveGameIdOf,
-  sbliveGameUrl,
-  sbliveIdsFrom,
-} from './sblive';
+import { isCaliforniaGameRow } from './games';
+import { sbliveIdsFrom } from './identity';
+import { SbliveError, extractReactProps } from './props';
+import { TeamGamesPropsSchema } from './schemas';
+import { sbliveGameUrl, sbliveRawGameId } from './urls';
 
 /** One page's view of one game, before the copies from both teams' pages are combined. */
 export type JvSbliveCopy = Omit<JvSbliveRow, 'pages' | 'copiesDisagree'> & { page: TeamSlug };
@@ -56,7 +52,7 @@ export function parseJvTeamGamesPage(
   const out: JvSbliveCopy[] = [];
   for (const node of team.games.nodes) {
     if (node.statusId !== 3) continue;
-    const gameId = sbliveGameIdOf(node.id);
+    const gameId = sbliveRawGameId(node.id);
     const url = sbliveGameUrl(node.webPath);
     if (!gameId || !isCaliforniaGameRow({ url })) continue;
     const mineScore = toScore(node.featured.scoreText);

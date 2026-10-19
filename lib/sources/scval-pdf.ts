@@ -37,7 +37,7 @@ import type { DivisionId, TeamSlug } from '@/lib/model/ids';
 import { officialFixtureId } from '@/lib/shared/official-id';
 import { isWithdrawnSchool, resolveOfficialName, resolveTeam } from '@/lib/registry/resolve';
 import { teamsInDivision } from '@/lib/registry/teams';
-import { HttpClient, type HttpClientOptions } from './http';
+import { HttpClient, type HttpClientOptions } from './http/client';
 
 /**
  * The divisions whose official schedule is a live scval.com grid PDF (config: `official.source`

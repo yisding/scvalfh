@@ -15,8 +15,8 @@ import type { Snapshot } from '@/lib/model/snapshot';
 import { TEAMS, teamsInLeague } from '@/lib/registry/teams';
 import { localDateKey } from '@/lib/shared/dates';
 import { sideOutcome } from '@/lib/shared/game';
-import type { ScheduleRow } from '@/lib/sources/maxpreps';
-import { parseScoresPage, parseTeamGamesPage, type SbliveGame } from '@/lib/sources/sblive';
+import type { ScheduleRow } from '@/lib/sources/maxpreps/schemas';
+import { parseScoresPage, parseTeamGamesPage, type SbliveGame } from '@/lib/sources/sblive/games';
 import { CorpusReader, EAL_CORPUS, gameOf } from '@/tests/support/corpus';
 import { useCorpusModules } from '@/tests/support/corpus-modules';
 import { corpusSnapshotPath } from '@/tests/support/corpus-snapshot';
@@ -193,8 +193,8 @@ describe('the EAL games', () => {
     }
     const ignored = sides.filter((s) => s.sbliveTeamId !== null && IGNORED_SBLIVE_IDS.includes(s.sbliveTeamId));
     for (const s of ignored) {
-      expect(s.slug, `lib/sources/sblive.ts: ${s.sbliveTeamId}`).toBeNull();
-      expect(s.refused, `lib/sources/sblive.ts: ${s.sbliveTeamId}`).toBe('ignored-team');
+      expect(s.slug, `lib/sources/sblive/identity.ts: ${s.sbliveTeamId}`).toBeNull();
+      expect(s.refused, `lib/sources/sblive/identity.ts: ${s.sbliveTeamId}`).toBe('ignored-team');
     }
     expect(JSON.stringify(snapshot.sbliveCrossCheck ?? null), 'lib/pipeline/reconcile/backfill.ts: cross-check rows').not.toMatch(
       /Red Bluff|Educational Outreach/,

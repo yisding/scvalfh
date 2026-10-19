@@ -17,7 +17,7 @@
  * guessed; si.com's league buckets are stale (it spreads the Valley six over its Avocado and
  * Palomar pages) and are never membership evidence. si.com's team search lists a second team named
  * Del Norte, Mission Vista, San Marcos and Westview, so those names are statewide namesakes
- * (STATEWIDE_AMBIGUOUS in lib/sources/sblive.ts) and si.com sides with them resolve by id only.
+ * (STATEWIDE_AMBIGUOUS in lib/sources/sblive/identity.ts) and si.com sides with them resolve by id only.
  */
 
 import type { Seed } from './seed';
@@ -150,7 +150,7 @@ export const NORTH_COUNTY_SEEDS: readonly Seed[] = [
       'San Marcos', 'SAN MARCOS', 'San Marcos High School', 'San Marcos Knights',
     ],
     // si.com also lists a San Marcos of Santa Barbara (459073), so 'San Marcos' is in STATEWIDE_AMBIGUOUS
-    // (lib/sources/sblive.ts) and si.com sides resolve to this team by these ids only.
+    // (lib/sources/sblive/identity.ts) and si.com sides resolve to this team by these ids only.
     sbliveTeamId: '459066',
     sbliveSlug: '459066-san-marcos-knights',
     // si.com school id from the team page's school.id: no school-logo URL was observed for it.
@@ -204,7 +204,7 @@ export const NORTH_COUNTY_SEEDS: readonly Seed[] = [
     ],
     // si.com also lists a Crescent City Del Norte (458609), and shows it playing Tamalpais and Davis on Oct
     // 16, the games MaxPreps gives this team. So 'Del Norte' is in STATEWIDE_AMBIGUOUS
-    // (lib/sources/sblive.ts) and si.com sides resolve to this team by these ids only.
+    // (lib/sources/sblive/identity.ts) and si.com sides resolve to this team by these ids only.
     sbliveTeamId: '458937',
     sbliveSlug: '458937-del-norte-nighthawks',
     sbliveSchoolId: '12669',
@@ -257,7 +257,7 @@ export const NORTH_COUNTY_SEEDS: readonly Seed[] = [
       'Mission Vista (Oceanside)',
     ],
     // si.com lists a second Mission Vista (480754, located 'Vista, CA', whose games page serves si.com's
-    // index); this one carries the games. 'Mission Vista' is in STATEWIDE_AMBIGUOUS (lib/sources/sblive.ts),
+    // index); this one carries the games. 'Mission Vista' is in STATEWIDE_AMBIGUOUS (lib/sources/sblive/identity.ts),
     // so si.com sides resolve to this team by these ids only.
     sbliveTeamId: '464852',
     sbliveSlug: '464852-mission-vista',
@@ -512,7 +512,7 @@ export const NORTH_COUNTY_SEEDS: readonly Seed[] = [
     ],
     // si.com has a second Westview, the Westview Wildcats of West Los Angeles (464882, which si.com shows
     // playing Sage Creek on Sep 30 and Oct 28), so 'Westview' is in STATEWIDE_AMBIGUOUS
-    // (lib/sources/sblive.ts) and si.com sides resolve to this team by these ids only.
+    // (lib/sources/sblive/identity.ts) and si.com sides resolve to this team by these ids only.
     sbliveTeamId: '458949',
     sbliveSlug: '458949-westview-wolverines',
     sbliveSchoolId: '12673',

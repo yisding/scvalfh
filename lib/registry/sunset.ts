@@ -23,7 +23,7 @@
  * other value, 'placeholder', means invented colours. si.com team ids, slugs and school ids were
  * harvested from si.com league and team pages on 2026-10-06, never guessed. si.com's team search
  * lists a second Marina (Marina, CA), so "Marina" is a statewide namesake (STATEWIDE_AMBIGUOUS in
- * lib/sources/sblive.ts) and resolves on si.com by id only; the other seven names are unique there.
+ * lib/sources/sblive/identity.ts) and resolves on si.com by id only; the other seven names are unique there.
  */
 
 import type { Seed } from './seed';
@@ -170,7 +170,7 @@ export const SUNSET_SEEDS: readonly Seed[] = [
       'Marina', 'MARINA', 'Marina High School', 'Marina Vikings', 'Marina (Huntington Beach)',
     ],
     // si.com also lists a Marina of Marina, CA (500865, no games: the Central Coast school with no 2026-27
-    // varsity team), so 'Marina' is in STATEWIDE_AMBIGUOUS (lib/sources/sblive.ts) and si.com sides resolve
+    // varsity team), so 'Marina' is in STATEWIDE_AMBIGUOUS (lib/sources/sblive/identity.ts) and si.com sides resolve
     // to this team by these ids only.
     sbliveTeamId: '458748',
     sbliveSlug: '458748-marina-vikings',

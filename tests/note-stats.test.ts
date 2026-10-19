@@ -1,7 +1,7 @@
 /**
  * lib/engine/note-stats.ts — goals, assists and saves a coach wrote in MaxPreps' game note, added to the
  * MaxPreps numbers for any team — lib/config/name-aliases.ts, and the per-game totals that keep a noted
- * stat from counting twice (lib/sources/maxpreps-game-stats.ts).
+ * stat from counting twice (lib/sources/maxpreps/game-stats.ts).
  *
  * The rules are asserted on synthetic games, Homestead's real notes among them (Sep 28 – Oct 5),
  * so they hold whatever the next refresh brings; the committed data is checked only against rules
@@ -30,7 +30,7 @@ import { getTeamBySlug } from '@/lib/registry/teams';
 import {
   FIELD_STAT_KEYS, GOALIE_STAT_KEYS, type PlayerStatLine, type TeamPlayerStats,
 } from '@/lib/schema/player-stats';
-import { contestIdFromUrl, parseGameStats } from '@/lib/sources/maxpreps-game-stats';
+import { contestIdFromUrl, parseGameStats } from '@/lib/sources/maxpreps/game-stats';
 import { game } from './support/game-builder';
 import { FIXTURE_DIR } from './support/corpus';
 import { buildFixturePlayerStats } from './support/cli';

@@ -15,7 +15,7 @@ import { TEAMS, teamsInLeague } from '@/lib/registry/teams';
 import {
   ROSTER_TEAM_COUNT, type Rosters, RostersPartialSchema, RostersSchema, countRosters, rostersContentKey,
 } from '@/lib/schema/rosters';
-import { pendingRoster } from '@/lib/sources/maxpreps-roster';
+import { pendingRoster } from '@/lib/sources/maxpreps/roster';
 import { FIXTURE_DIR } from './support/corpus';
 import { expectOk, runRepoScript } from './support/cli';
 import { REPO, tempDir, tempFile } from './support/repo';

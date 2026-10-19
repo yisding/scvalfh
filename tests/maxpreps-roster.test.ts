@@ -11,7 +11,7 @@ import { describe, expect, it } from 'vitest';
 import { SPORT_SEASON_ID } from '@/lib/config/season';
 import { TEAMS, getTeamBySlug, teamsInLeague } from '@/lib/registry/teams';
 import { RostersSchema, countRosters } from '@/lib/schema/rosters';
-import { MaxPrepsError } from '@/lib/sources/maxpreps';
+import { MaxPrepsError } from '@/lib/sources/maxpreps/error';
 import {
   COL,
   GRADE_LABELS,
@@ -22,7 +22,7 @@ import {
   pendingRoster,
   parseRosterTable,
   rosterUrl,
-} from '@/lib/sources/maxpreps-roster';
+} from '@/lib/sources/maxpreps/roster';
 import { FIXTURE_DIR } from './support/corpus';
 
 const fixture = (slug: string) => readFileSync(path.join(FIXTURE_DIR, `roster-${slug}.html`), 'utf8');

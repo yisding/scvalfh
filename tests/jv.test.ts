@@ -25,7 +25,7 @@ import { TEAMS, getTeamBySlug } from '@/lib/registry/teams';
 import {
   JV_TEAM_COUNT, type JvFile, JvFileSchema, type JvSbliveRow, countJv, jvContentKey,
 } from '@/lib/schema/jv';
-import { combineJvCopies, parseJvTeamGamesPage, type JvSbliveCopy } from '@/lib/sources/sblive-jv';
+import { combineJvCopies, parseJvTeamGamesPage, type JvSbliveCopy } from '@/lib/sources/sblive/jv';
 import { game } from './support/game-builder';
 import { expectOk, runRepoScript } from './support/cli';
 import { REPO, tempDir, tempFile } from './support/repo';

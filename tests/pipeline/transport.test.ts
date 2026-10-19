@@ -31,9 +31,9 @@ import {
 } from '@/lib/pipeline/transport';
 import { officialChangesCellText, sha256Hex, tdCellBodies } from '@/lib/official/validate';
 import { TEAMS, getTeamBySlug } from '@/lib/registry/teams';
-import { HttpError, type HttpResponse } from '@/lib/sources/http';
+import { HttpError, type HttpResponse } from '@/lib/sources/http/client';
 import type { RawResponse } from '@/lib/sources/http/raw-response';
-import { MaxPrepsError } from '@/lib/sources/maxpreps';
+import { MaxPrepsError } from '@/lib/sources/maxpreps/error';
 import { corpusDir, variantDir } from '@/tests/support/corpus';
 import { REPO, tempDir } from '@/tests/support/repo';
 

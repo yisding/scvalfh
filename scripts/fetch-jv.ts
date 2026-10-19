@@ -80,10 +80,13 @@ import { formatIssues } from '@/lib/schema/primitives';
 import { localDateKey } from '@/lib/shared/dates';
 import { byDateThenId } from '@/lib/shared/game';
 import { stableStringify } from '@/lib/shared/stable-json';
-import { HttpClient } from '@/lib/sources/http';
-import { MaxPrepsClient, ScheduleResponseSchema, splitTbaRows, type ScheduleRow } from '@/lib/sources/maxpreps';
-import { SBLIVE_HTTP_OPTIONS } from '@/lib/sources/sblive';
-import { combineJvCopies, parseJvTeamGamesPage, type JvSbliveCopy } from '@/lib/sources/sblive-jv';
+import { HttpClient } from '@/lib/sources/http/client';
+import { MaxPrepsClient } from '@/lib/sources/maxpreps/client';
+import { splitTbaRows } from '@/lib/sources/maxpreps/schedule';
+import { ScheduleResponseSchema, type ScheduleRow } from '@/lib/sources/maxpreps/schemas';
+import { scheduleUrl } from '@/lib/sources/maxpreps/urls';
+import { combineJvCopies, parseJvTeamGamesPage, type JvSbliveCopy } from '@/lib/sources/sblive/jv';
+import { SBLIVE_HTTP_OPTIONS } from '@/lib/sources/sblive/urls';
 import { runCli } from './cli';
 
 interface Args {
@@ -283,7 +286,7 @@ async function main(argv: readonly string[]): Promise<number> {
       const prior = priorTeam.get(team.slug);
       const had = previous?.games.filter((g) => involves(g, team.slug)).length ?? 0;
       try {
-        const url = maxpreps.scheduleUrl(team.id, JV_SPORT_SEASON_ID);
+        const url = scheduleUrl(team.id, JV_SPORT_SEASON_ID);
         const body = args.fixtures ? read(`jv-sched-${team.slug}.json`) : (await maxpreps.text(url, 'application/json')).data;
         if (!args.fixtures) save(`jv-sched-${team.slug}.json`, body);
         const split = splitTbaRows(parseSchedule(body, team));

@@ -1,5 +1,5 @@
 /**
- * lib/sources/sblive.ts — the si.com (ex-SBLive) client.
+ * lib/sources/sblive/ — the si.com (ex-SBLive) client: urls, props, schemas, identity, games, harvest.
  *
  * Fixtures are inline `data-react-props` snippets, HTML-escaped exactly the way si.com escapes
  * them, so the unescape → raw_decode → zod path is exercised end to end. Field names and shapes are
@@ -12,24 +12,21 @@
 import { describe, expect, it } from 'vitest';
 
 import { LEAGUES } from '@/lib/config/leagues';
-import * as sblive from '@/lib/sources/sblive';
+import { htmlUnescape } from '@/lib/sources/html';
+import { CHROME_USER_AGENT } from '@/lib/sources/http/client';
+import * as sblive from '@/lib/sources/sblive/games';
+import { dedupeSbliveGames, isCaliforniaGameRow, parseScoresPage, parseTeamGamesPage, sbliveGameKey } from '@/lib/sources/sblive/games';
+import { SBLIVE_LEAGUE_SLUGS, harvestTeamWebPaths, parseStandingsTeamRefs } from '@/lib/sources/sblive/harvest';
+import { sbliveIdFromWebPath } from '@/lib/sources/sblive/identity';
+import { extractReactProps, parseJsonPrefix, reactPropsPairs } from '@/lib/sources/sblive/props';
+import * as sbliveUrls from '@/lib/sources/sblive/urls';
 import {
   SBLIVE_HTTP_OPTIONS,
-  SBLIVE_LEAGUE_SLUGS,
-  dedupeSbliveGames,
-  extractReactProps,
-  harvestTeamWebPaths,
-  isCaliforniaGameRow,
-  parseJsonPrefix,
-  parseScoresPage,
-  parseStandingsTeamRefs,
-  parseTeamGamesPage,
-  sbliveGameKey,
-  sbliveIdFromWebPath,
+  sbliveGameUrl,
+  sbliveRawGameId,
   sbliveScoresUrl,
   sbliveTeamGamesUrl,
-} from '@/lib/sources/sblive';
-import { CHROME_USER_AGENT, htmlUnescape } from '@/lib/sources/http';
+} from '@/lib/sources/sblive/urls';
 import * as pages from '@/tests/support/sblive-pages';
 
 // The captured pages are whole documents carrying every field the live pages do.
@@ -39,8 +36,10 @@ const teamGamesProps = (nodes: unknown[]) => pages.teamGamesProps(nodes, { full:
 
 describe('sblive: the frozen exports (SPEC §7.3) and the live HTTP options', () => {
   it('keeps every Stage-B frozen export', () => {
+    // The frozen surface spans the folder: the URL builders in urls.ts, the parsers in games.ts.
+    const surface: Record<string, unknown> = { ...sbliveUrls, ...sblive };
     for (const name of ['sbliveScoresUrl', 'sbliveTeamGamesUrl', 'parseScoresPage', 'parseTeamGamesPage', 'dedupeSbliveGames'] as const) {
-      expect(typeof sblive[name], name).toBe('function');
+      expect(typeof surface[name], name).toBe('function');
     }
   });
 
@@ -100,16 +99,16 @@ describe('sblive: malformed upstream rows never reach the snapshot', () => {
     expect(rows.filter((r) => sblive.isCaliforniaGameRow(r)).map((r) => r.sbliveGameId)).toEqual(['6528123']);
   });
 
-  it('sbliveGameUrl accepts only plain paths; sbliveGameIdOf only digits', () => {
-    expect(sblive.sbliveGameUrl('/california/field-hockey/games/1-a-vs-b')).toBe(
+  it('sbliveGameUrl accepts only plain paths; sbliveRawGameId only digits', () => {
+    expect(sbliveGameUrl('/california/field-hockey/games/1-a-vs-b')).toBe(
       'https://www.si.com/high-school/stats/california/field-hockey/games/1-a-vs-b',
     );
     for (const bad of [null, undefined, '', 'california/x', '/a b', '/a?b=1', '/a\nb', '/a"b']) {
-      expect(sblive.sbliveGameUrl(bad), String(bad)).toBeNull();
+      expect(sbliveGameUrl(bad), String(bad)).toBeNull();
     }
-    expect(sblive.sbliveGameIdOf(6541425)).toBe('6541425');
-    expect(sblive.sbliveGameIdOf('G6541425')).toBeNull();
-    expect(sblive.sbliveGameIdOf(null)).toBeNull();
+    expect(sbliveRawGameId(6541425)).toBe('6541425');
+    expect(sbliveRawGameId('G6541425')).toBeNull();
+    expect(sbliveRawGameId(null)).toBeNull();
   });
 });
 
@@ -122,11 +121,11 @@ describe('sblive: props extraction', () => {
     const next = () => ((x = (x * 1103515245 + 12345) >>> 0) % tokens.length);
     for (let n = 0; n < 400; n++) {
       const html = Array.from({ length: 1 + (n % 40) }, () => tokens[next()]).join('');
-      expect(sblive.reactPropsPairs(html), html).toEqual(viaRegex(html));
+      expect(reactPropsPairs(html), html).toEqual(viaRegex(html));
     }
     const hostile = 'data-react-class="a" '.repeat(40_000); // ~840 KB, no props, no '>'
     const t0 = Date.now();
-    expect(sblive.reactPropsPairs(hostile)).toEqual([]);
+    expect(reactPropsPairs(hostile)).toEqual([]);
     expect(Date.now() - t0).toBeLessThan(1500);
   });
 

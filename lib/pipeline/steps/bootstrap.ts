@@ -6,7 +6,7 @@
  */
 
 import { ALL_SEASON_ID, BOOTSTRAP_URL, SPORT_SEASON_ID } from '@/lib/config/season';
-import { parseBootstrap } from '@/lib/sources/maxpreps';
+import { parseBootstrap } from '@/lib/sources/maxpreps/bootstrap';
 import { RunAbort, type RunContext } from '@/lib/pipeline/contract';
 import { classifyFetchError } from '@/lib/pipeline/read';
 

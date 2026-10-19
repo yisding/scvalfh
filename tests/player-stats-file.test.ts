@@ -24,8 +24,8 @@ import {
   PlayerStatsPartialSchema, countPlayerStats, playerStatsContentKey,
 } from '@/lib/schema/player-stats';
 import { type Rosters, RostersSchema, countRosters } from '@/lib/schema/rosters';
-import { pendingPlayerStats } from '@/lib/sources/maxpreps-player-stats';
-import { pendingRoster } from '@/lib/sources/maxpreps-roster';
+import { pendingPlayerStats } from '@/lib/sources/maxpreps/player-stats';
+import { pendingRoster } from '@/lib/sources/maxpreps/roster';
 import { FIXTURE_DIR } from './support/corpus';
 import { expectOk, runRepoScript } from './support/cli';
 import { REPO, tempFile } from './support/repo';

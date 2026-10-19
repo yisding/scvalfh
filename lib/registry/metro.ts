@@ -20,7 +20,7 @@
  * harvested from si.com league and team pages on 2026-10-06, never guessed; si.com's league buckets
  * are stale (it files Hilltop and Southwest under Metro Mesa) and are never membership evidence.
  * si.com's team search lists two other teams named Granite Hills and one named Southwest (El
- * Centro), so those names are statewide namesakes (STATEWIDE_AMBIGUOUS in lib/sources/sblive.ts)
+ * Centro), so those names are statewide namesakes (STATEWIDE_AMBIGUOUS in lib/sources/sblive/identity.ts)
  * and resolve on si.com by id only.
  */
 
@@ -193,7 +193,7 @@ export const METRO_SEEDS: readonly Seed[] = [
       'Granite Hills (El Cajon)',
     ],
     // si.com also lists Granite Hills of Porterville (554634) and of Apple Valley (458466), so 'Granite
-    // Hills' is in STATEWIDE_AMBIGUOUS (lib/sources/sblive.ts) and si.com sides resolve to this team by these
+    // Hills' is in STATEWIDE_AMBIGUOUS (lib/sources/sblive/identity.ts) and si.com sides resolve to this team by these
     // ids only.
     sbliveTeamId: '458713',
     sbliveSlug: '458713-granite-hills-eagles',
@@ -228,7 +228,7 @@ export const METRO_SEEDS: readonly Seed[] = [
     slug: 'southwest',
     // MaxPreps' and si.com's schoolName is 'Southwest SD' (kept in the aliases and in maxprepsPath).
     // Southwest of El Centro has no field hockey team on MaxPreps, but si.com lists one (583246, no games),
-    // so bare 'Southwest' is in STATEWIDE_AMBIGUOUS (lib/sources/sblive.ts): si.com sides resolve to this
+    // so bare 'Southwest' is in STATEWIDE_AMBIGUOUS (lib/sources/sblive/identity.ts): si.com sides resolve to this
     // team by its ids or by 'Southwest SD', never by 'Southwest'.
     name: 'Southwest',
     shortName: 'Southwest',
