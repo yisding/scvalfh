@@ -85,8 +85,9 @@ export function pinResultDetail(entry: TeamSearchEntry): string {
  *
  * The words are `SECTION_NAMES.SS` and `.SDS` of lib/shared/region-words.ts, spelled out here a second time
  * on purpose: LeagueSwitcher is that module's only client importer, and a second one stops the bundler
- * folding it into its importer's chunk. Measured on `/teams` at item 51 (+135 B of first-load JS) against
- * 42 B of headroom under assert:budgets, so the page cannot afford it.
+ * folding it into its importer's chunk. Measured on `/teams` when region-words.ts became a client import
+ * (2026-10, +135 B of first-load JS) against 42 B of headroom under assert:budgets, so the page cannot
+ * afford it.
  */
 const SOCAL_SECTION_WORDS: Readonly<Partial<Record<TeamSearchEntry['sectionShort'], string>>> = {
   SS: 'Southern Section',

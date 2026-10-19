@@ -254,8 +254,8 @@ for (const league of nonCcsLeagues) {
 
 // ---------------------------------------------------------------- the /playoffs cards, and no seed words
 // /playoffs keeps the CCS content in its NorCal block; every league with no bracket or page of its own
-// gets a card there with its league id, which the league chip, the nav (components/layout/
-// nav-targets.ts) and the jump link target: the EAL ('unbracketed-tournament'), the three San Diego
+// gets a card there with its league id, which the league chip, the nav (views/site/nav-targets.ts)
+// and the jump link target: the EAL ('unbracketed-tournament'), the three San Diego
 // leagues ('section-playoffs': City, North County, Metro) and the Sunset ('no-postseason'). Each card
 // is that league's copy, so it gets the non-CCS bans; it, the league's own pages and its team pages get
 // the seed-word ban (the EAL's and the San Diego Section's seeding is quoted or described, never

@@ -1,8 +1,8 @@
 /**
  * The names of the two regions and the five sections, import-free so the client component that prints
- * them (`LeagueSwitcher`) can share them with the league config. It used to spell them out a second
- * time "so the league config stays out of the client bundle"; now lib/config/leagues/regions.ts builds
- * REGIONS and SECTIONS from this file, which is the one place the words live. Pure data, ZERO imports
+ * them (`LeagueSwitcher`) can share them with the league config without pulling the config into the
+ * client bundle: lib/config/leagues/regions.ts builds REGIONS and SECTIONS from this file, which is
+ * the one place the words live. Pure data, ZERO imports
  * (`as const`, so the config keeps its literal types). `TeamFinder` prints two of the section names
  * itself, for a bundle-size reason its comment gives; tests/components/search/TeamFinder.test.ts holds it to these.
  */

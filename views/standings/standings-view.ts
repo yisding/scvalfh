@@ -2,11 +2,12 @@
  * The page data for /standings and /standings/<league>, assembled once from `lib/queries/`, plus the
  * `leaderLine` rows the root and /standings OG cards print.
  *
- * It is the `lib/queries/`-reading side of a split with the pure `standings-view.ts`: this module reads
- * the snapshot, and the view builders and components under `components/standings/` take what is
- * built here, so they can be reasoned about (and exercised from a test) without an `fs` read. It is not the only reader: the pages' `generateMetadata`, the
- * OG routes and the OG card models (views/standings/standings-card.ts, views/site/region-card.ts)
- * call `lib/queries/` directly too.
+ * It is the `lib/queries/`-reading side of a split with the pure `views/standings/division.ts`: this
+ * module reads the snapshot, and the view builders beside it and the components under
+ * `components/standings/` take what is built here, so they can be reasoned about (and exercised from
+ * a test) without an `fs` read. It is not the only reader: the pages' `generateMetadata`, the OG
+ * routes and the OG card models (views/standings/standings-card.ts, views/site/region-card.ts) call
+ * `lib/queries/` directly too.
  *
  * "Today" is never `Date.now()`: the through-date comes from the games themselves and the stamp
  * comes from `snapshot.fetchedAt`, so two builds of the same snapshot are byte-identical.

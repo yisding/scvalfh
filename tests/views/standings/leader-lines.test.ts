@@ -9,7 +9,7 @@ import { describe, expect, it } from 'vitest';
 
 import { m } from '@/tests/support/standings-view';
 
-describe('OG card rows (standings-view.ts leaderClause over standings-page-view.ts leaderLine: the root and /standings cards)', () => {
+describe('OG card rows (leader-lines.ts leaderClause over standings-view.ts leaderLine: the root and /standings cards)', () => {
   const SV = 'views/standings/leader-lines.ts leaderClause';
   it('names each division leader with points, co-leaders capped at two', () => {
     const row = (id: string) => {

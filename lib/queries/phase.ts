@@ -1,6 +1,7 @@
 /**
  * The season phase (SPEC §5.9) of one league and of the whole site, on the day of a timestamp
- * (default: the snapshot stamp). A region's phase is `combinedPhase` (lib/engine/phase.ts) over its leagues' phases.
+ * (default: the snapshot stamp). The site's phase is `combinedPhase` (lib/engine/phase.ts) over every
+ * league's phase.
  */
 
 import { LEAGUES, getLeague } from '@/lib/config/leagues';

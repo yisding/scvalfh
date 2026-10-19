@@ -94,7 +94,7 @@ export function buildTeamViews(): HomeTeamView[] {
     const tieBadges =
       line && outcomes.length > 1 ? `${outcomes.map((o) => statusBadge(team.division, o)).join(' or ')} (tied)` : null;
     // A one-rung label too long for that line ("<who>: <what>", the San Diego Section's champion rung)
-    // gets its short form too (home-types.ts rungCardText); every other label is shown whole.
+    // gets its short form too (home-client.ts rungCardText); every other label is shown whole.
     const oneRung =
       line && outcomes.length === 1
         ? rungCardText(playoffOutcomeLabel(team.division, outcomes), statusBadge(team.division, outcomes[0]))

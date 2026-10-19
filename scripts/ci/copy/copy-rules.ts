@@ -259,8 +259,9 @@ export function sunsetLeagueClaims(text: string): string[] {
 /**
  * "rules require" (any case): never on the pages of a league whose table order is this site's own
  * (LeagueRules.orderScope 'site': the Sunset, City, North County, Metro). No document of theirs
- * requires anything, so "as {league} rules require" would be false (components/standings/
- * standings-view.ts orders them with "this site’s 3-1-0 points"). Applied per page by assert-copy.
+ * requires anything, so "as {league} rules require" would be false (their config in
+ * lib/config/leagues/ says "this site’s 3-1-0 points", and views/standings/footnotes.ts and
+ * division.ts print it). Applied per page by assert-copy.
  */
 export const RULES_REQUIRE_CLAIM = /\brules require\b/i;
 

@@ -3,7 +3,7 @@
  * that read it (provenance, leagues, teams, games, standings, phase, postseason), imported in that
  * fixed order and merged. Tests pass `loadQueries` as a module loader (`data: loadQueries` in
  * useCorpusModules / useSnapshotModules, tests/support/corpus-modules.ts), so a fresh module graph
- * reads the snapshot SCVAL_SNAPSHOT points at, and call `m.data.getStandings(…)` as before. Pages
+ * reads the snapshot SCVAL_SNAPSHOT points at, and call `m.data.getStandings(…)`. Pages
  * and components import the one module they need instead; nothing outside tests/ imports this.
  */
 

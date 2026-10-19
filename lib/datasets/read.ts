@@ -9,8 +9,8 @@
  * (lib/datasets/snapshot.ts explains). `readFileSync` runs only when the override variable is set,
  * which needs a real filesystem (next start, vinext start, vitest, tsx; never a Worker).
  *
- * Two behaviours for an override file that is not JSON, both kept as they were before this module
- * existed (the message is observable, tests and operators read it):
+ * Two behaviours for an override file that is not JSON (the message is observable: tests and
+ * operators read it):
  *   'propagate'    the file is read inside the guard and parsed OUTSIDE it, so a SyntaxError
  *                  surfaces raw: the snapshot, the history archive and the rosters files.
  *   'cannot-read'  the file is read AND parsed inside the guard, so the same failure reads

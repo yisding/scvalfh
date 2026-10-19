@@ -3,7 +3,7 @@
  * league renders both a Player stats and a Roster section, once each, in that order, and neither
  * says another league's data is missing because it is "SCVAL only". Every roster section links
  * /clubs (DESIGN §17.4), empty rosters included. tests/views/teams/roster.test.ts and
- * player-stats-view.test.ts hold the view builders; this renders the real route.
+ * tests/views/teams/player-stats.test.ts hold the view builders; this renders the real route.
  */
 
 import { renderToStaticMarkup } from 'react-dom/server';

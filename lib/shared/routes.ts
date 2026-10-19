@@ -1,9 +1,10 @@
 /**
- * The URL of every routed page, built in one place (finding cmp-12). Pure, client-safe and import-free
- * on purpose: TeamFinder, MyTeamCard and PinTile ship it to the browser, and the client bundle keeps every
- * export of a module it reaches, so a dependency here would be paid for by /teams (assert:budgets pins
- * it to the byte). The game link is the one exception to "every routed page": `gameHref` stays in
- * lib/shared/game-id.ts beside the `sblive:` grammar it needs, which only the server ever builds.
+ * The URL of every dynamic route family (and the cross-league /playoffs), built in one place. Pure,
+ * client-safe and import-free on purpose: TeamFinder, MyTeamCard and PinTile ship it to the browser,
+ * and the client bundle keeps every export of a module it reaches, so a dependency here would be paid
+ * for by /teams (assert:budgets pins it to the byte). The game link is the one family not here:
+ * `gameHref` stays in lib/shared/game-id.ts beside the `sblive:` grammar it needs, which only the
+ * server ever builds.
  *
  * app/, components/ and views/ never spell `/teams/${…}`, `/standings/${…}`, `/schedule/${…}`,
  * `/scores/${…}`, `/playoffs/${…}`, `/clubs/${…}` or `/game/${…}`: tests/arch/page-code-literals.test.ts

@@ -106,7 +106,7 @@ describe('the pinned card (components/home/MyTeamCard.tsx ← home-view.ts team 
         const mine = rungs.filter((r) => r.divisions === '*' || r.divisions.includes(division.id));
         for (const lead of Object.values(POSTSEASON_LEAD).map((l) => l.short)) {
           for (const r of mine) {
-            // The card shows a long "<who>: <what>" label by its short form (home-types.ts rungCardText).
+            // The card shows a long "<who>: <what>" label by its short form (views/home/home-client.ts rungCardText).
             const line = `${lead} ${rungCardText(r.label, r.badge)}`;
             expect(at14(line), `${HV}: ${division.id} "${line}"`).toBeLessThanOrEqual(CARD_TEXT_PX);
           }

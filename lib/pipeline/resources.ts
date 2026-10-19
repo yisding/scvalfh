@@ -5,10 +5,9 @@
  * the budget host it counts against, whether its body is a hash by contract, its upstream URL
  * (the frozen live resource map; transport.ts documents it) and how LiveTransport reads it.
  *
- * Before this table those six facts were five parallel `switch (key.kind)` statements in
- * contract.ts and transport.ts. `satisfies { [K in ResourceKey['kind']]: … }` makes a new kind a
- * compile error until every fact exists, instead of a silent fall-through in the one switch someone
- * forgot. The five functions that read the table (`resourcePath`, `requestHostOf`, `resourceUrl`,
+ * One row per resource kind: `satisfies { [K in ResourceKey['kind']]: … }` makes a new kind a
+ * compile error until every fact exists, where parallel `switch (key.kind)` statements would let one
+ * fall through silently in the switch someone forgot. The five functions that read the table (`resourcePath`, `requestHostOf`, `resourceUrl`,
  * `recordedExtension`, `isHashResource`) keep their names and live where their callers import them.
  *
  * Pure: builds paths and URLs from configuration, never fetches.

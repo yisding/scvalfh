@@ -1,7 +1,7 @@
 /**
  * The SERVER half of the schedule filter contract (SPEC §10.4): the registry-dependent writers of
- * the `data-*` attributes that `ScheduleFilters` reads. They moved here unchanged in behaviour
- * from `filter-data.ts`, so the client module never reaches lib/registry/teams (SPEC §0.4 client boundary).
+ * the `data-*` attributes that `ScheduleFilters` reads. They live here, not in `filters-client.ts`,
+ * so the client module never reaches lib/registry/teams (SPEC §0.4 client boundary).
  */
 
 import type { Game } from '@/lib/model/game';

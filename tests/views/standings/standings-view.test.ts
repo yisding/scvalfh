@@ -64,7 +64,7 @@ describe('status chips, rank rule and level reason (UI pass, from config)', () =
   });
 });
 
-describe('the preseason notice (standings-page-view.ts buildNotice, DESIGN §8)', () => {
+describe('the preseason notice (standings-view.ts buildNotice, DESIGN §8)', () => {
   const SPV = 'views/standings/standings-view.ts buildNotice';
   it('is absent once a league has a counted final, and shown while it has none (the EAL here)', () => {
     // The corpus predates the Southern California leagues too: they load with no games at all.
@@ -92,7 +92,7 @@ describe('the preseason notice (standings-page-view.ts buildNotice, DESIGN §8)'
   });
 });
 
-describe('the ladder line (standings-view.ts ladderLineAfter)', () => {
+describe('the ladder line (division.ts ladderLineAfter)', () => {
   const LL = 'views/standings/division.ts ladderLineAfter';
   const rows = (...places: Array<number | null>) =>
     places.map((place) => ({ ranked: place !== null, place: place ?? 0 }));
@@ -107,7 +107,7 @@ describe('the ladder line (standings-view.ts ladderLineAfter)', () => {
   });
 });
 
-describe('Southern California tables (standings-view.ts, DESIGN-socal §2.1.7)', () => {
+describe('Southern California tables (division.ts, DESIGN-socal §2.1.7)', () => {
   const SV = 'views/standings/division.ts';
 
   it('a ‘site’ league says the order is this site’s points, never that its rules require it', () => {

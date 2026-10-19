@@ -3,10 +3,9 @@
  * backoff under BOTH transports — `HttpClient` (lib/sources/http/client.ts, every secondary
  * source and the scripts) and `MaxPrepsClient` (lib/sources/maxpreps/client.ts, the primary API).
  *
- * The two clients used to carry a copy each, and copies drift (the User-Agent already had, see
- * POLITE_USER_AGENT). This engine was built from MaxPrepsClient's tested copy and diffed line by
- * line against HttpClient's. Where the two differed, the difference is an option whose DEFAULT is
- * HttpClient's old behaviour and MaxPrepsClient passes its own value:
+ * One engine, because copies drift (the User-Agent once had, see POLITE_USER_AGENT). Where the two
+ * clients need different behaviour, it is an option whose DEFAULT is HttpClient's and
+ * MaxPrepsClient passes its own value:
  *   - default concurrency 2 (MaxPreps: 3); both hard-capped at 3 and floored at 1;
  *   - a non-2xx body is not read (`errorBodyChars` 0; MaxPreps keeps the first 4096 characters);
  *   - the body reader is the caller's (`read`: text or bytes; MaxPreps reads text only);

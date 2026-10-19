@@ -5,7 +5,7 @@
  * held to the same rule and refused under the same message.
  *
  * zod and lib/shared/patterns.ts only, so lib/schema/clubs.ts, lib/schema/commits.ts and the tests
- * take them without a dependency cycle (commits used to import them out of clubs).
+ * take them without a dependency cycle (neither schema imports the other).
  */
 
 import { z } from 'zod';

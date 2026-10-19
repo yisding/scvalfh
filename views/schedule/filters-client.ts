@@ -13,7 +13,7 @@
  * CLIENT BOUNDARY (SPEC §0.4, §10.4): the client `ScheduleFilters` imports this module, so it
  * keeps only client-safe code — types, constants and pure functions over a `Game` — and NEVER
  * imports lib/registry/teams or any other server module. The registry-dependent writers of the attributes
- * (`gameDivisions`, `gameFilterAttrs`) live in `filter-data-server.ts`.
+ * (`gameDivisions`, `gameFilterAttrs`) live in `filters.ts` beside it.
  */
 
 import { plural } from '@/lib/format/words';
@@ -62,7 +62,7 @@ export function scheduleState(game: Game): ScheduleState {
   return 'upcoming';
 }
 
-/** The `data-*` attributes on a game's list item (written by `filter-data-server.ts`). */
+/** The `data-*` attributes on a game's list item (written by `filters.ts`). */
 export interface GameFilterAttrs {
   'data-game': string;
   'data-slugs': string;

@@ -1,9 +1,9 @@
 /**
  * One declarative flag parser for the argv loops of lib/pipeline/cli.ts and the scripts
  * (fetch-rosters, fetch-player-stats, fetch-jv, build-history, build-official-fixtures,
- * discover-season, fetch-prior-season, fetch-mascots). Each used to carry its own copy of the same
- * loop (an index, a `next()` that refuses a missing value, an if/else chain, an `unknown flag`
- * throw); they differed only in the quirks below, which are options here rather than copies.
+ * discover-season, fetch-prior-season, fetch-mascots). Every one of those argv loops parses through
+ * it (an index, a `next()` that refuses a missing value, a lookup per flag, an `unknown flag`
+ * throw); the quirks they need are options (below), not copies.
  *
  * A caller lists its flags once (FlagSpec: flags and their aliases, what each flag's value is
  * parsed as, where it lands in the caller's args) and says how the loop words its failures
