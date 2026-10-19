@@ -5,7 +5,7 @@
  * fallback targets themselves live beside the pin state in use-pinned-team.ts.
  */
 
-import { isNearViewport, unpinFallbackTarget } from '@/components/hooks/use-pinned-team';
+import { isNearViewport, unpinFallbackTarget } from './use-pinned-team';
 
 /** The pinned card's Unpin button: where focus lands once a team is pinned (FindYourTeam, TeamFinder). */
 export const UNPIN_ID = 'my-team-unpin';

@@ -1,4 +1,4 @@
-import SectionPlayoffsLeagueCard from '@/components/playoffs/SectionPlayoffsLeagueCard';
+import SectionPlayoffsLeagueCard from './SectionPlayoffsLeagueCard';
 import ExternalLink from '@/components/ui/ExternalLink';
 import SectionHeader from '@/components/ui/SectionHeader';
 import { dateSpan, shortDate } from '@/lib/format/dates';

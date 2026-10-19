@@ -20,7 +20,7 @@ import path from 'node:path';
 import type { TestProject } from 'vitest/node';
 
 import { readManifest } from '@/lib/pipeline/corpus';
-import type { CorpusName } from '@/tests/support/corpus';
+import type { CorpusName } from './corpus';
 
 declare module 'vitest' {
   interface ProvidedContext {

@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-import { LadderLineRow, PinNote, TeamNameCell } from '@/components/standings/table/parts';
+import { LadderLineRow, PinNote, TeamNameCell } from './table/parts';
 import PlaceMark from '@/components/ui/PlaceMark';
 import { recordString } from '@/lib/format/numbers';
 import { EM_DASH } from '@/lib/format/words';

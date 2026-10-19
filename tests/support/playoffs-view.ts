@@ -6,8 +6,8 @@
 
 import type { PlayoffStatus } from '@/lib/model/standings';
 import { getTeamById } from '@/lib/registry/teams';
-import { useCorpusModules } from '@/tests/support/corpus-modules';
-import { loadQueries } from '@/tests/support/queries';
+import { useCorpusModules } from './corpus-modules';
+import { loadQueries } from './queries';
 import type { ProjectionRow } from '@/views/playoffs/projection';
 
 export const VIEW = 'views/playoffs/projection.ts';

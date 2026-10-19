@@ -15,8 +15,8 @@ import { expect } from 'vitest';
 
 import { readManifest } from '@/lib/pipeline/corpus';
 import { type PlayerStatsFile, PlayerStatsFileSchema } from '@/lib/schema/player-stats';
-import { FIXTURE_DIR, corpusDir, variantDir, type CorpusName } from '@/tests/support/corpus';
-import { REPO, TSX, readJson, tempDir } from '@/tests/support/repo';
+import { FIXTURE_DIR, corpusDir, variantDir, type CorpusName } from './corpus';
+import { REPO, TSX, readJson, tempDir } from './repo';
 
 /** What a finished script printed. Never thrown for a non-zero exit: callers assert on `status`. */
 export interface ScriptRun {

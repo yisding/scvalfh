@@ -1,5 +1,5 @@
-import AwardsBlock from '@/components/history/AwardsBlock';
-import HistoryStandingsTable from '@/components/history/HistoryStandingsTable';
+import AwardsBlock from './AwardsBlock';
+import HistoryStandingsTable from './HistoryStandingsTable';
 import ExternalLink from '@/components/ui/ExternalLink';
 import SectionHeader from '@/components/ui/SectionHeader';
 import TeamMonogram from '@/components/ui/TeamMonogram';

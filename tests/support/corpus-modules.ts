@@ -9,8 +9,8 @@
 
 import { afterAll, beforeAll, vi } from 'vitest';
 
-import type { CorpusName } from '@/tests/support/corpus';
-import { corpusSnapshotPath } from '@/tests/support/corpus-snapshot';
+import type { CorpusName } from './corpus';
+import { corpusSnapshotPath } from './corpus-snapshot';
 
 /** A hook budget for the first import of a heavy module graph (lib/queries/, the views, a route page) under a loaded machine. */
 export const CORPUS_HOOK_TIMEOUT = 120_000;

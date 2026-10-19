@@ -7,8 +7,8 @@
 import { createElement, type ReactElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 
-import { useCorpusModules, type CorpusModules } from '@/tests/support/corpus-modules';
-import { loadQueries } from '@/tests/support/queries';
+import { useCorpusModules, type CorpusModules } from './corpus-modules';
+import { loadQueries } from './queries';
 
 export const loaders = {
   data: loadQueries,

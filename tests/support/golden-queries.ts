@@ -12,9 +12,9 @@ import { leaguesInRegion } from '@/lib/config/leagues';
 import { combinedPhase } from '@/lib/engine/phase';
 import type { RegionId } from '@/lib/model/ids';
 import { loadSnapshot } from '@/lib/snapshot/load';
-import { useSnapshotModules } from '@/tests/support/corpus-modules';
-import { loadQueries } from '@/tests/support/queries';
-import { tempFile, goldenPath, readJson } from '@/tests/support/repo';
+import { useSnapshotModules } from './corpus-modules';
+import { loadQueries } from './queries';
+import { tempFile, goldenPath, readJson } from './repo';
 
 export const goldenQueries = useSnapshotModules(
   () => {

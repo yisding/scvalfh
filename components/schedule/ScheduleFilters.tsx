@@ -8,7 +8,7 @@ import {
   STATE_OPTIONS,
   type FilterDivisions,
   type FilterTeams,
-} from '@/components/schedule/FiltersPanel';
+} from './FiltersPanel';
 import EmptyState from '@/components/ui/EmptyState';
 import { gameWord } from '@/lib/format/words';
 import {

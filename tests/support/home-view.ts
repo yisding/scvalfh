@@ -8,7 +8,7 @@ import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { beforeAll } from 'vitest';
 
-import { useCorpusModules } from '@/tests/support/corpus-modules';
+import { useCorpusModules } from './corpus-modules';
 
 export const m = useCorpusModules('all-2026-10-02', {
   home: () => import('@/views/home/home-view'),

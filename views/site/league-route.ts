@@ -7,7 +7,7 @@
 
 import { LEAGUE_IDS } from '@/lib/config/leagues';
 import { type LeagueSummary, getLeagueSummary } from '@/lib/queries/leagues';
-import type { StaticParams } from '@/views/site/route-contract';
+import type { StaticParams } from './route-contract';
 
 /** One param per league, in config order. */
 export function leagueStaticParams(): StaticParams<'league'> {

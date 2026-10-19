@@ -11,10 +11,10 @@ import { getHistoryFor, getHistorySeason, getHistoryStandings } from '@/lib/data
 import type { Game } from '@/lib/model/game';
 import type { DivisionId } from '@/lib/model/ids';
 import { teamJvStanding } from '@/views/standings/jv';
-import { buildTeamJvView, type TeamJvView } from '@/views/teams/jv';
-import { buildPlayerStatsView, type PlayerStatsView } from '@/views/teams/player-stats';
-import { buildRosterView, type RosterView } from '@/views/teams/roster';
-import { buildTeamPageView, lastSeasonScope, type TeamPageView } from '@/views/teams/team-view';
+import { buildTeamJvView, type TeamJvView } from './jv';
+import { buildPlayerStatsView, type PlayerStatsView } from './player-stats';
+import { buildRosterView, type RosterView } from './roster';
+import { buildTeamPageView, lastSeasonScope, type TeamPageView } from './team-view';
 
 /**
  * Last season's varsity row from the league's own 2025-26 standings (SCVAL's PDF, BVAL's sheet;

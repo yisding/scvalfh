@@ -1,4 +1,4 @@
-import PlayoffBracket from '@/components/playoffs/PlayoffBracket';
+import PlayoffBracket from './PlayoffBracket';
 import ExternalLink from '@/components/ui/ExternalLink';
 import SectionHeader from '@/components/ui/SectionHeader';
 import { shortDate } from '@/lib/format/dates';

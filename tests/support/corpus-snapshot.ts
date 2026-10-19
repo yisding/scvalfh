@@ -6,8 +6,8 @@
 
 import { inject } from 'vitest';
 
-import type { CorpusName } from '@/tests/support/corpus';
-import { keyOf } from '@/tests/support/global-setup';
+import type { CorpusName } from './corpus';
+import { keyOf } from './global-setup';
 
 /**
  * The snapshot of a whole corpus run (the real cron script, the corpus's own `fetchedAt`) that

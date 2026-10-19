@@ -7,7 +7,7 @@
 
 import type { Metadata } from 'next';
 
-import { OG_BASE, ROOT_OG_IMAGE } from '@/views/site/site';
+import { OG_BASE, ROOT_OG_IMAGE } from './site';
 
 type OpenGraph = NonNullable<Metadata['openGraph']>;
 

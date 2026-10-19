@@ -1,4 +1,4 @@
-import HistoryBracket from '@/components/history/HistoryBracket';
+import HistoryBracket from './HistoryBracket';
 import ExternalLink from '@/components/ui/ExternalLink';
 import SectionHeader from '@/components/ui/SectionHeader';
 import TeamMonogram from '@/components/ui/TeamMonogram';

@@ -6,8 +6,8 @@
 import { createElement, type ReactElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 
-import { useCorpusModules } from '@/tests/support/corpus-modules';
-import { loadQueries } from '@/tests/support/queries';
+import { useCorpusModules } from './corpus-modules';
+import { loadQueries } from './queries';
 
 export const m = useCorpusModules('all-2026-10-02', {
   data: loadQueries,

@@ -279,6 +279,16 @@ describe('layers: the dependency rule', () => {
     expect(failures).toEqual([]);
   });
 
+  it("imports inside the file's own directory are './', never '@/' (docs/DEVELOPMENT.md \"Imports\")", () => {
+    const aliased = FILES.flatMap((file) => {
+      const dir = file.slice(0, file.lastIndexOf('/') + 1);
+      return importsOf(file)
+        .filter(({ spec }) => spec.startsWith('@/') && resolveModule(file, spec)?.startsWith(dir))
+        .map(({ spec, line }) => `${file}:${line} ${spec} -> './${spec.slice(2 + dir.length)}'`);
+    });
+    expect(aliased).toEqual([]);
+  });
+
   it('only the package doors re-export (no barrels, no shims)', () => {
     const doors = DOORS.map(({ door }) => door);
     const reexports = FILES.filter((file) => !doors.includes(moduleOf(file))).flatMap((file) =>

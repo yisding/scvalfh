@@ -1,5 +1,5 @@
-import LeaguePairings from '@/components/playoffs/LeaguePairings';
-import PlayoffProjection, { ProjectionKey } from '@/components/playoffs/PlayoffProjection';
+import LeaguePairings from './LeaguePairings';
+import PlayoffProjection, { ProjectionKey } from './PlayoffProjection';
 import LeagueHealthNote from '@/components/ui/LeagueHealthNote';
 import SectionHeader from '@/components/ui/SectionHeader';
 import { leagueTitle } from '@/lib/config/leagues/labels';

@@ -152,7 +152,8 @@ The rules below are enforced where a test or a lint rule can enforce them; each 
 ### Imports
 
 - `@/<path>` for any import that leaves the file's directory, `./<path>` for the same directory and its
-  children, never `../` (ESLint `no-restricted-imports`). Next and vinext resolve the alias natively,
+  children, never `../` (ESLint `no-restricted-imports` bans `../`; `tests/arch/layers.test.ts` flags an
+  `@/` specifier that stays inside the importer's directory). Next and vinext resolve the alias natively,
   Vitest through `resolve.tsconfigPaths` (`vitest.config.ts`), and tsx from the `tsconfig.json` of its
   working directory, so a script run from anywhere but the repo root needs
   `tsx --tsconfig <repo>/tsconfig.json …` (`runScript` in `tests/support/cli.ts` always passes it).

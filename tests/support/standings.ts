@@ -7,7 +7,7 @@
 import { computeStandings } from '@/lib/engine/standings';
 import type { Game } from '@/lib/model/game';
 import type { Standing } from '@/lib/model/standings';
-import { game } from '@/tests/support/game-builder';
+import { game } from './game-builder';
 
 export type Spec = [home: string, away: string, hs: number, as: number];
 

@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-import { PinNote, TeamNameCell } from '@/components/standings/table/parts';
+import { PinNote, TeamNameCell } from './table/parts';
 import EmptyState from '@/components/ui/EmptyState';
 import PlaceMark from '@/components/ui/PlaceMark';
 import SectionHeader from '@/components/ui/SectionHeader';
