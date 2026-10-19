@@ -1,9 +1,9 @@
 import { LEAGUE_IDS } from '@/lib/config/leagues';
 import type { LeagueId, TeamSlug } from '@/lib/model/ids';
 import { getScoresLandingDate } from '@/lib/queries/games';
+import { navLeagueHrefs } from '@/views/site/nav-targets';
 
 import NavLink from './NavLink';
-import { navLeagueHrefs } from './nav-targets';
 
 /**
  * The phone bottom bar (DESIGN §1.3, §3.1, R-3, §18). FIVE tabs: Home, Scores, Teams, Leaders,

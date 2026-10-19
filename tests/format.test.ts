@@ -230,7 +230,7 @@ describe('format: sideOutcome, the one W/L/T derivation', () => {
   });
 
   it('renders a 1 v 1 win as a level final the home side won, and says who won on 1 v 1s', () => {
-    // The section's words come from the caller (components/ui/describe-game.ts passes SectionConfig.shootout.words).
+    // The section's words come from the caller (views/shared/describe-game.ts passes SectionConfig.shootout.words).
     expect(renderScore(oneVOne)).toEqual({ kind: 'final', home: 1, away: 1, outcome: 'W', decider: 'SO', shootout: null });
     expect(scoreSentence(oneVOne, { shootoutWords: '1 v 1s' })).toBe('Chico 1, Davis 1, final; Chico won on 1 v 1s.');
     const awayWin = game({ home: 'chico', away: 'davis', hs: 1, as: 1, results: { home: 'L', away: 'W' } });

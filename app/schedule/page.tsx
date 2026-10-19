@@ -3,16 +3,16 @@ import type { Metadata } from 'next';
 import LeagueJumpLinks from '@/components/layout/LeagueJumpLinks';
 import { RegionSwitcher } from '@/components/layout/LeagueSwitcher';
 import PageHeader from '@/components/layout/PageHeader';
-import { OG_BASE, ROOT_OG_IMAGE, coveredLeagueWords } from '@/components/layout/site';
 import ScheduleIndex from '@/components/schedule/ScheduleIndex';
-import { countGames } from '@/components/schedule/filter-data';
-import { buildScheduleIndex } from '@/components/schedule/schedule-view';
 import { SEASON_DISPLAY } from '@/lib/config/season';
 import { getToday } from '@/lib/datasets/snapshot';
 import { plural } from '@/lib/format/words';
 import { getGames } from '@/lib/queries/games';
 import { getLeagueSummaries } from '@/lib/queries/leagues';
 import { getTeamBySlug } from '@/lib/registry/teams';
+import { countGames } from '@/views/schedule/filters-client';
+import { buildScheduleIndex } from '@/views/schedule/schedule-view';
+import { OG_BASE, ROOT_OG_IMAGE, coveredLeagueWords } from '@/views/site/site';
 
 /**
  * `/schedule` — "What's on across the leagues?" (SPEC §8.1, §10.4): a LIGHT index. One page of

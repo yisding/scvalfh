@@ -1,5 +1,5 @@
 /**
- * `recordAsOf` (components/game/game-view.ts) — the scoreboard sub-line is the league record AT
+ * `recordAsOf` (views/game/game-view.ts) — the scoreboard sub-line is the league record AT
  * the game, not today's (G-1).
  *
  * Built from the all-2026-10-02 CORPUS snapshot (SPEC §13.6), like the other game-view tests, so
@@ -16,7 +16,7 @@ import { loadQueries } from '@/tests/support/queries';
 
 const L = useCorpusModules('all-2026-10-02', {
   d: loadQueries,
-  m: () => import('@/components/game/game-view'),
+  m: () => import('@/views/game/game-view'),
   leagues: () => import('@/lib/config/leagues'),
   labels: () => import('@/lib/config/leagues/labels'),
   fmt: () => import('@/lib/format/numbers'),

@@ -2,10 +2,9 @@
 
 import Link from 'next/link';
 
+import { usePinnedTeam } from '@/components/hooks/use-pinned-team';
 import TeamMonogram from '@/components/ui/TeamMonogram';
-import { usePinnedTeam } from '@/components/ui/use-pinned-team';
-
-import type { PinTileView } from './home-types';
+import type { PinTileView } from '@/views/home/home-client';
 
 /**
  * One tile of a league panel's "Teams in <SHORT>" grid (SPEC §10.1).

@@ -956,7 +956,7 @@
         check's own 1px side bearing makes the visible gap 4px). The current chip is inverse ink +
         the aria-hidden check (`.sx-check`) —
         never colour alone, and no league hue anywhere (DESIGN §6.4, §26.1). Before hydration the
-        scope stylesheet (components/layout/league-scope-css.ts, unlayered) draws the same state
+        scope stylesheet (components/head/league-scope-css.ts, unlayered) draws the same state
         from html[data-league]; after it, aria-pressed / aria-current do. ── */
   .sx-league-chip {
     display: inline-flex; align-items: center; justify-content: center; gap: 0.1875rem;

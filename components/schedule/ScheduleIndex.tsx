@@ -1,13 +1,13 @@
 import Link from 'next/link';
 
-import { REGIONS } from '@/lib/config/leagues';
-import { longDate, shortDate } from '@/lib/format/dates';
-import { gameWord, plural } from '@/lib/format/words';
 import Arrow from '@/components/ui/Arrow';
 import { GameRow } from '@/components/ui/GameRow';
 import SectionHeader from '@/components/ui/SectionHeader';
+import { REGIONS } from '@/lib/config/leagues';
+import { longDate, shortDate } from '@/lib/format/dates';
+import { gameWord, plural } from '@/lib/format/words';
 import type { RegionId } from '@/lib/model/ids';
-import type { IndexDay, LeagueCardData, ScheduleIndexView } from './schedule-view';
+import type { IndexDay, LeagueCardData, ScheduleIndexView } from '@/views/schedule/schedule-view';
 
 /**
  * The light `/schedule` index (SPEC §8.1, §10.4): the whole season no longer fits one fast page,
@@ -27,7 +27,7 @@ import type { IndexDay, LeagueCardData, ScheduleIndexView } from './schedule-vie
  * index stays one list, so each `id="YYYY-MM-DD"` exists once, and each row's counts are scoped per
  * region. A card grid sits inside a plain region `<div>`: the jump links target a card's id, and a
  * region-scoped grid holding the target would be forced to `display:block` by the deep-link rule
- * (components/layout/league-scope-css.ts).
+ * (components/head/league-scope-css.ts).
  *
  * A server component over plain data; every row link carries `prefetch={false}`.
  */

@@ -6,7 +6,7 @@
  * a region. What makes the two regions one scale is the finals between them, which are few (on
  * 2026-10-06, 7 NorCal–San Diego finals with 8 more scheduled Oct 16–17, and 11 last season through
  * Leigh, Gilroy and Mitty), while the Sunset and the San Diego Section are linked by 38 finals; so
- * /leaders prints how many link the regions (components/leaders/elo-board.ts crossRegionFinals,
+ * /leaders prints how many link the regions (views/leaders/elo-board.ts crossRegionFinals,
  * counted at build time) and calls a NorCal–SoCal comparison rough. The model's constants below were
  * set on NorCal seasons only; they are not refitted for SoCal, whose teams' games look the same to
  * the model (a goal margin, a host or not).

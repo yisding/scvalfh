@@ -12,7 +12,8 @@
  * like `-t 'components/(layout|search)/'` runs one owner's modules. Each walks the runtime import
  * graph (tests/support/source-tree.ts importsOf: `@/` and relative specifiers, static and dynamic
  * `import()` / `require()`; `import type` / `export type` and all-type specifier lists are ignored,
- * since they vanish at compile time) through components/ and app/ and fails with the chain that
+ * since they vanish at compile time) through components/, app/ and the client-safe view slices
+ * (views/**\/*-client.ts; every other views/ module is server-only) and fails with the chain that
  * reached a banned module. Anything else a client module reaches must be in CLIENT_SAFE, whose
  * files are walked too (what a client-safe module imports must be client-safe as well). Anything
  * under data/, zod and the Node built-ins are banned outright.
@@ -36,7 +37,8 @@ import {
 
 /**
  * Repo-relative module paths (no extension, no trailing /index) a client module may import from
- * outside components/ and app/. An entry ending in '/' is a prefix: it admits everything under it.
+ * outside the client tree (components/, app/, views/**\/*-client). An entry ending in '/' is a
+ * prefix: it admits everything under it.
  * The client-safe tier is three whole directories (the bottom two ranks of tests/arch/layers.test.ts)
  * plus the import-free LEAVES of lib/config.
  */
@@ -47,7 +49,14 @@ const NODE_BUILTINS = new Set(builtinModules);
 const isClientSafe = (mod: string): boolean =>
   CLIENT_SAFE.some((entry) => (entry.endsWith('/') ? mod.startsWith(entry) : mod === entry));
 
-const inPageCode = (mod: string): boolean => PAGE_CODE_ROOTS.some((root) => mod.startsWith(`${root}/`));
+/**
+ * The client tree: every module under components/ and app/, and the `*-client` slices of views/
+ * (types and import-free helpers a client component shares with its view model; layers rule h in
+ * tests/arch/layers.test.ts keeps them client-safe). Any other views/ module is a server-side view
+ * model and is banned from a client graph like the rest of the server.
+ */
+const inClientTree = (mod: string): boolean =>
+  mod.startsWith('components/') || mod.startsWith('app/') || (mod.startsWith('views/') && mod.endsWith('-client'));
 
 type Target = { kind: 'file'; file: string } | { kind: 'banned'; name: string } | { kind: 'external' };
 
@@ -59,7 +68,7 @@ function classify(spec: string, fromFile: string): Target {
   if (mod === null) return { kind: 'external' };
   // Anything under data/ (the snapshot, the official fixtures, the history) is server-only.
   if (mod === 'data' || mod.startsWith('data/')) return { kind: 'banned', name: mod };
-  if (!inPageCode(mod) && !isClientSafe(mod)) return { kind: 'banned', name: mod };
+  if (!inClientTree(mod) && !isClientSafe(mod)) return { kind: 'banned', name: mod };
   const file = moduleFile(mod);
   return file ? { kind: 'file', file } : { kind: 'external' };
 }
@@ -130,7 +139,7 @@ describe('client boundary: no "use client" module reaches a server-only module',
     expect(classify('../../lib/data', from).kind).toBe('banned');
   });
 
-  it('only CLIENT_SAFE modules are reachable from outside components/ and app/ (allowlist)', () => {
+  it('only CLIENT_SAFE modules are reachable from outside the client tree (allowlist)', () => {
     const from = PROBE;
     // A module nobody listed is banned, wherever it lives: this is what makes the list an allowlist.
     // (lib/format.ts, beside the client-safe lib/format/ directory, serves only the metadata image routes.)
@@ -140,7 +149,13 @@ describe('client boundary: no "use client" module reaches a server-only module',
     // A listed one passes (and is walked), a trailing /index is the same module, and the client's own tree is free.
     expect(classify('@/lib/format/words', from).kind).toBe('file');
     expect(classify('@/lib/format/words/index', from).kind).toBe('file');
-    expect(classify('@/components/ui/local-store', from).kind).toBe('file');
+    expect(classify('@/components/hooks/local-store', from).kind).toBe('file');
+    // views/: only the *-client slices; a view model (it reads the snapshot) is server-only.
+    expect(classify('@/views/schedule/filters-client', from).kind).toBe('file');
+    expect(classify('@/views/shared/game-display-client', from).kind).toBe('file');
+    for (const spec of ['@/views/game/game-view', '@/views/shared/describe-game', '@/views/schedule/filters']) {
+      expect(classify(spec, from), spec).toEqual({ kind: 'banned', name: spec.slice(2) });
+    }
     expect(classify('react', from)).toEqual({ kind: 'external' });
     // zod and the Node built-ins stay banned.
     expect(classify('zod', from)).toEqual({ kind: 'banned', name: 'zod' });

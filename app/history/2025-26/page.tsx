@@ -2,16 +2,14 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 import AwardsBlock from '@/components/history/AwardsBlock';
-import { divisionChampion, finalLine, sideName } from '@/components/history/bracket-view';
 import HistoryBracket from '@/components/history/HistoryBracket';
 import HistoryStandingsTable, { leagueHasOverall } from '@/components/history/HistoryStandingsTable';
-import ExternalLink from '@/components/ui/ExternalLink';
 import { RegionSwitcher } from '@/components/layout/LeagueSwitcher';
 import PageHeader from '@/components/layout/PageHeader';
 import DivisionTabs from '@/components/standings/DivisionTabs';
-import TeamMonogram from '@/components/ui/TeamMonogram';
+import ExternalLink from '@/components/ui/ExternalLink';
 import SectionHeader from '@/components/ui/SectionHeader';
-import { OG_BASE, ROOT_OG_IMAGE } from '@/components/layout/site';
+import TeamMonogram from '@/components/ui/TeamMonogram';
 import { getDivision, getLeague, getSection, isIndependentLeague, regionOf } from '@/lib/config/leagues';
 import {
   type AvailableLeagueHistory, type BracketSectionId, type SectionBracket, type UnavailableLeagueHistory,
@@ -23,6 +21,8 @@ import { dateWithYear } from '@/lib/format/dates';
 import { listWords } from '@/lib/format/words';
 import type { LeagueId } from '@/lib/model/ids';
 import { getTeamBySlug } from '@/lib/registry/teams';
+import { divisionChampion, finalLine, sideName } from '@/views/history/bracket';
+import { OG_BASE, ROOT_OG_IMAGE } from '@/views/site/site';
 
 /**
  * `/history/2025-26` (DESIGN §1.1, §3.9; SPEC §10.8) — last season's final standings, one section

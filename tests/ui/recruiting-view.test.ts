@@ -1,5 +1,5 @@
 /**
- * `components/recruiting/recruiting-view.ts` and /recruiting over the committed data files
+ * `views/recruiting/recruiting-view.ts` and /recruiting over the committed data files
  * (DESIGN §25): the page that gathers every school's recruiting profiles, clubs and commitments.
  *
  * The page makes promises a test can hold it to:
@@ -23,8 +23,6 @@ import CommitsPage from '@/app/commits/page';
 import RecruitingPage, { metadata } from '@/app/recruiting/page';
 import TeamPage from '@/app/teams/[slug]/page';
 import TeamsPage from '@/app/teams/page';
-import { buildRecruitingView, ledeWords, regionSummary, schoolMeta } from '@/components/recruiting/recruiting-view';
-import { buildRosterView } from '@/components/teams/roster-view';
 import { getLeague } from '@/lib/config/leagues';
 import { getClubsFile } from '@/lib/datasets/clubs';
 import { getCommitsFile } from '@/lib/datasets/commits';
@@ -33,6 +31,8 @@ import { TEAMS } from '@/lib/registry/teams';
 import { affiliationLeaks, commitmentLeaks } from '@/scripts/ci/copy/copy-rules';
 import { PUBLIC_TERMS } from '@/scripts/ci/copy/public-terms';
 import { textOf } from '@/tests/support/html-text';
+import { buildRecruitingView, ledeWords, regionSummary, schoolMeta } from '@/views/recruiting/recruiting-view';
+import { buildRosterView } from '@/views/teams/roster';
 
 const view = buildRecruitingView();
 const html = renderToStaticMarkup(createElement(RecruitingPage));

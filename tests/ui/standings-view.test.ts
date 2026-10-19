@@ -1,6 +1,6 @@
 /**
  * The standings pages' view models and markup (SPEC §10.3, §8.1, §10.0, §10.9):
- * `components/standings/standings-view.ts`, `components/standings/standings-page-view.ts`, the per-league page
+ * `views/standings/division.ts`, `views/standings/standings-view.ts`, the per-league page
  * `/standings/<league>` and the all-league overview `/standings`.
  *
  * League-specific values are asserted on the all-2026-10-02 CORPUS snapshot (SPEC §13.6), loaded
@@ -25,8 +25,8 @@ import { loadQueries } from '@/tests/support/queries';
 
 const m = useCorpusModules('all-2026-10-02', {
   data: loadQueries,
-  sd: () => import('@/components/standings/standings-page-view'),
-  view: () => import('@/components/standings/standings-view'),
+  sd: () => import('@/views/standings/standings-view'),
+  view: () => import('@/views/standings/division'),
   leaguePage: () => import('@/app/standings/[league]/page'),
   overviewPage: () => import('@/app/standings/page'),
 });
@@ -51,16 +51,16 @@ describe('ladder badges and legends, per league (verbatim from config)', () => {
 
   it('SCVAL keeps today’s strings', () => {
     const l = legends('scval');
-    expect(l['de-anza:AQ'], 'components/standings/standings-view.ts SCVAL AQ').toBe('Places 1-3 — automatic CCS qualifier');
-    expect(l['de-anza:Play-in'], 'components/standings/standings-view.ts SCVAL play-in').toBe(
+    expect(l['de-anza:AQ'], 'views/standings/division.ts SCVAL AQ').toBe('Places 1-3 — automatic CCS qualifier');
+    expect(l['de-anza:Play-in'], 'views/standings/division.ts SCVAL play-in').toBe(
       '4th place — play-in Fri Oct 30 for the SCVAL 7th berth',
     );
     const scval = m.sd.buildStandingsPageView('scval');
     const deAnza = scval.views.find((v) => v.division === 'de-anza')!;
-    expect(deAnza.caption, 'components/standings/standings-view.ts caption').toMatch(
+    expect(deAnza.caption, 'views/standings/division.ts caption').toMatch(
       /^De Anza Division league standings, league games only, through /,
     );
-    expect(deAnza.legendNotes, 'components/standings/standings-view.ts legend').toContain(
+    expect(deAnza.legendNotes, 'views/standings/division.ts legend').toContain(
       'This order is our computation from published results, not a league ruling: the official tiebreak, including any coin flip, belongs to SCVAL.',
     );
     expect(deAnza.kicker).toBe('De Anza');
@@ -69,31 +69,31 @@ describe('ladder badges and legends, per league (verbatim from config)', () => {
 
   it('BVAL: Mt. Hamilton ladder and the Santa Teresa play-in host', () => {
     const l = legends('bval');
-    expect(l['mt-hamilton:AQ'], 'components/standings/standings-view.ts BVAL').toBe(
+    expect(l['mt-hamilton:AQ'], 'views/standings/division.ts BVAL').toBe(
       'Places 1-3 — automatic CCS qualifier (BVAL #1-#3)',
     );
-    expect(l['santa-teresa:Play-in host'], 'components/standings/standings-view.ts BVAL').toBe(
+    expect(l['santa-teresa:Play-in host'], 'views/standings/division.ts BVAL').toBe(
       'Champion — hosts Mt. Hamilton #4 Sat Oct 31, 11 AM, for BVAL’s 4th berth',
     );
-    expect(l['santa-teresa:No AQ route'], 'components/standings/standings-view.ts BVAL').toBe(
+    expect(l['santa-teresa:No AQ route'], 'views/standings/division.ts BVAL').toBe(
       '2nd or lower — no automatic-berth route (at-large is the CCS committee’s call)',
     );
   });
 
   it('PCAL: two automatic berths', () => {
     const l = legends('pcal');
-    expect(l['pcal:AQ'], 'components/standings/standings-view.ts PCAL').toBe('Places 1-2 — automatic CCS qualifier');
+    expect(l['pcal:AQ'], 'views/standings/division.ts PCAL').toBe('Places 1-2 — automatic CCS qualifier');
     expect(l['pcal:No AQ route']).toBe('3rd or lower — no automatic-berth route; may apply for at-large (PCAL By-laws §23.4)');
   });
 
   it('MCAL: the tournament ladder and no CCS concept', () => {
     const l = legends('mcal');
-    expect(l['marin-county:Bye'], 'components/standings/standings-view.ts MCAL').toBe(
+    expect(l['marin-county:Bye'], 'views/standings/division.ts MCAL').toBe(
       'Places 1-2 — bye to the semifinals, Wed Oct 28',
     );
     expect(l['marin-county:Top 6']).toBe('Places 3-6 — quarterfinal Mon Oct 26 (3 hosts 6, 4 hosts 5)');
     const mcal = m.sd.buildStandingsPageView('mcal').views[0];
-    expect(mcal.statusHeading, 'components/standings/standings-view.ts MCAL heading').toBe('MCAL tournament, as things stand');
+    expect(mcal.statusHeading, 'views/standings/division.ts MCAL heading').toBe('MCAL tournament, as things stand');
     expect(mcal.playoffsHref).toBe('/playoffs/mcal');
   });
 });
@@ -102,8 +102,8 @@ describe('single-division leagues have no division label', () => {
   it('kicker, caption and heading (view model)', () => {
     for (const league of ['pcal', 'mcal', 'eal']) {
       const [v] = m.sd.buildStandingsPageView(league).views;
-      expect(v.heading, `components/standings/standings-view.ts ${league} heading`).toBeNull();
-      expect(v.kicker, `components/standings/standings-view.ts ${league} kicker`).toBe('League table');
+      expect(v.heading, `views/standings/division.ts ${league} heading`).toBeNull();
+      expect(v.kicker, `views/standings/division.ts ${league} kicker`).toBe('League table');
       expect(v.caption).not.toMatch(/Division/);
     }
   });
@@ -175,7 +175,7 @@ describe('missing official results and postponed rows', () => {
   it('Santa Teresa shows its two missing results with the one-line banner', async () => {
     const st = m.sd.buildStandingsPageView('bval').views.find((v) => v.division === 'santa-teresa')!;
     expect(st.missing.length, 'lib/queries/standings.ts getMissingOfficialResults(santa-teresa)').toBe(2);
-    expect(st.missingBanner, 'components/standings/standings-view.ts banner').toBe(
+    expect(st.missingBanner, 'views/standings/division.ts banner').toBe(
       '⚑ 2 official league results missing — listed below the table.',
     );
     expect(st.missingIntro).toBe(
@@ -213,7 +213,7 @@ describe('missing official results and postponed rows', () => {
       leagueFinals: 10,
       pendingLeagueGames: 0,
     });
-    expect(v.missingBanner, 'components/standings/standings-view.ts').toBe(
+    expect(v.missingBanner, 'views/standings/division.ts').toBe(
       '⚑ 1 official league result missing — listed below the table.',
     );
     expect(v.missing.map((r) => r.text)).toEqual(['Sep 9 Homestead at Cupertino']);
@@ -242,7 +242,7 @@ describe('GP, LEFT and MAX', () => {
     const spread = m.data.getGamesPlayedSpread('marin-county');
     const note = m.view.unevenGpFootnote('mcal', spread);
     if (spread.max - spread.min >= 2) {
-      expect(note, 'components/standings/standings-view.ts uneven-GP').toBe(
+      expect(note, 'views/standings/division.ts uneven-GP').toBe(
         `Teams have played between ${spread.min} and ${spread.max} of ${spread.scheduled} league games, so points favour teams that have played more. LEFT is league games with no counted result yet — still to play, or played and not reported. MAX is the most points a team could reach if it won all of them. The order is points, as MCAL rules require. If the season ends with games unplayed, MCAL General Rules (with an incomplete schedule, winning percentage replaces points); we will show that order then.`,
       );
     }
@@ -251,7 +251,7 @@ describe('GP, LEFT and MAX', () => {
 
   it('marks si.com-backfilled records with † and the footnote (PCAL corpus: three backfills)', async () => {
     const pcal = m.sd.buildStandingsPageView('pcal').views[0];
-    expect(pcal.backfilledGames, 'components/standings/standings-page-view.ts backfilledGames').toBe(3);
+    expect(pcal.backfilledGames, 'views/standings/standings-view.ts backfilledGames').toBe(3);
     expect(pcal.backfillFootnote).toBe(
       '† Includes 3 results from High School on SI (si.com) that MaxPreps does not have, counted under the site’s rules for missing or wrong scores (About → Sources).',
     );
@@ -264,7 +264,7 @@ describe('GP, LEFT and MAX', () => {
 
   it('never claims agreement for Santa Teresa or PCAL', () => {
     const st = m.sd.buildStandingsPageView('bval').views.find((v) => v.division === 'santa-teresa')!;
-    expect(st.comparison.agreement, 'components/standings/standings-view.ts').toBeNull();
+    expect(st.comparison.agreement, 'views/standings/division.ts').toBeNull();
     expect(st.comparison.leftOut).toEqual(['MaxPreps’ table leaves out Prospect.']);
     const pcal = m.sd.buildStandingsPageView('pcal').views[0];
     expect(pcal.comparison.agreement).toBeNull();
@@ -281,7 +281,7 @@ describe('GP, LEFT and MAX', () => {
   });
 
   it('writes the rules footnote with the league’s own points citation', () => {
-    expect(m.view.rulesFootnote('scval'), 'components/standings/standings-view.ts rules').toBe(
+    expect(m.view.rulesFootnote('scval'), 'views/standings/division.ts rules').toBe(
       'PTS: SCVAL Field Hockey By-Laws 2026-27, Article VI §2 (3 points for a win, 1 for a tie). Ties: head-to-head, then division wins, then fewest goals given up between the tied teams, then head-to-head goal differential, then a coin flip (Article VI §3, §4, §5, §6, §7).',
     );
     expect(m.view.rulesFootnote('pcal')).toMatch(/^PTS: PCAL Sports Rules — Field Hockey \(Jan 2022\) §1\.7/);
@@ -378,19 +378,19 @@ describe('status chips, rank rule and level reason (UI pass, from config)', () =
     );
 
   it('each chip is the ladder rung’s own label; MCAL’s carry no CCS concept', () => {
-    expect(texts('scval')['de-anza'], 'components/standings/standings-view.ts SCVAL statusText').toEqual([
+    expect(texts('scval')['de-anza'], 'views/standings/division.ts SCVAL statusText').toEqual([
       'Automatic qualifier',
       'Play-in game Oct 30',
       'At-large consideration',
       'No automatic path',
     ]);
-    expect(texts('bval')['santa-teresa'], 'components/standings/standings-view.ts BVAL statusText').toEqual([
+    expect(texts('bval')['santa-teresa'], 'views/standings/division.ts BVAL statusText').toEqual([
       'Hosts the play-in Oct 31',
       'No automatic-berth route',
     ]);
     expect(texts('pcal').pcal).toEqual(['Automatic qualifier', 'No automatic-berth route']);
     const mcal = texts('mcal')['marin-county'];
-    expect(mcal, 'components/standings/standings-view.ts MCAL statusText').toEqual([
+    expect(mcal, 'views/standings/division.ts MCAL statusText').toEqual([
       'Semifinal bye',
       'MCAL tournament',
       'Below the tournament line',
@@ -400,7 +400,7 @@ describe('status chips, rank rule and level reason (UI pass, from config)', () =
 
   it('the rank rule comes from each league’s citation', () => {
     const [deAnza] = m.sd.buildStandingsPageView('scval').views;
-    expect(deAnza.rankRule, 'components/standings/standings-view.ts rankRule').toBe(
+    expect(deAnza.rankRule, 'views/standings/division.ts rankRule').toBe(
       'SCVAL ranks by points (Art. VI §2), and so do we.',
     );
     const [mcal] = m.sd.buildStandingsPageView('mcal').views;
@@ -422,7 +422,7 @@ describe('status chips, rank rule and level reason (UI pass, from config)', () =
 });
 
 describe('OG card rows (standings-view.ts leaderClause over standings-page-view.ts leaderLine: the root and /standings cards)', () => {
-  const SV = 'components/standings/standings-view.ts leaderClause';
+  const SV = 'views/standings/division.ts leaderClause';
   it('names each division leader with points, co-leaders capped at two', () => {
     const row = (id: string) => {
       const league = m.data.getLeagueSummary(id as Parameters<typeof m.data.getLeagueSummary>[0]);
@@ -445,7 +445,7 @@ describe('OG card rows (standings-view.ts leaderClause over standings-page-view.
 });
 
 describe('the preseason notice (standings-page-view.ts buildNotice, DESIGN §8)', () => {
-  const SPV = 'components/standings/standings-page-view.ts buildNotice';
+  const SPV = 'views/standings/standings-view.ts buildNotice';
   it('is absent once a league has a counted final, and shown while it has none (the EAL here)', () => {
     // The corpus predates the Southern California leagues too: they load with no games at all.
     const empty = ['eal', 'sunset', 'city', 'north-county', 'metro', 'independents'];
@@ -473,7 +473,7 @@ describe('the preseason notice (standings-page-view.ts buildNotice, DESIGN §8)'
 });
 
 describe('the ladder line (standings-view.ts ladderLineAfter)', () => {
-  const LL = 'components/standings/standings-view.ts ladderLineAfter';
+  const LL = 'views/standings/division.ts ladderLineAfter';
   const rows = (...places: Array<number | null>) =>
     places.map((place) => ({ ranked: place !== null, place: place ?? 0 }));
   it('is counted, not assumed: two teams level on the line both sit above it', () => {
@@ -488,7 +488,7 @@ describe('the ladder line (standings-view.ts ladderLineAfter)', () => {
 });
 
 describe('Southern California tables (standings-view.ts, DESIGN-socal §2.1.7)', () => {
-  const SV = 'components/standings/standings-view.ts';
+  const SV = 'views/standings/division.ts';
 
   it('a ‘site’ league says the order is this site’s points, never that its rules require it', () => {
     for (const id of ['sunset', 'city', 'north-county', 'metro']) {

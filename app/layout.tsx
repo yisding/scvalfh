@@ -1,21 +1,21 @@
 import type { Metadata, Viewport } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 
+import { DISCLOSURE_SCRIPT } from '@/components/head/disclosure-script';
+import { buildLeagueScopeCss } from '@/components/head/league-scope-css';
+import { PINNED_TEAM_SCRIPT } from '@/components/head/pinned-team-script';
+import { buildPrefsScript } from '@/components/head/prefs-script';
+import { THEME_COLOR, THEME_SCRIPT } from '@/components/head/theme-script';
 import Attribution from '@/components/layout/Attribution';
 import BottomTabBar from '@/components/layout/BottomTabBar';
 import SiteHeader from '@/components/layout/SiteHeader';
-import { BUILD_INSTANT } from '@/components/layout/build-instant';
-import { DISCLOSURE_SCRIPT } from '@/components/layout/disclosure-script';
-import { buildLeagueScopeCss } from '@/components/layout/league-scope-css';
-import { buildPrefsScript } from '@/components/layout/prefs-script';
-import { OG_BASE, SITE_DESCRIPTION, SITE_NAME, SITE_URL, SITE_WORDMARK } from '@/components/layout/site';
-import { PINNED_TEAM_SCRIPT } from '@/components/layout/pinned-team-script';
-import { THEME_COLOR, THEME_SCRIPT } from '@/components/layout/theme-script';
 import PinnedTeamMarks from '@/components/ui/PinnedTeamMarks';
 import TwinMarks from '@/components/ui/TwinMarks';
 import { DEFAULT_REGION, LEAGUE_IDS, regionOf } from '@/lib/config/leagues';
 import { getFetchedAt } from '@/lib/datasets/snapshot';
 import { getTeams } from '@/lib/queries/teams';
+import { BUILD_INSTANT } from '@/views/site/build-instant';
+import { OG_BASE, SITE_DESCRIPTION, SITE_NAME, SITE_URL, SITE_WORDMARK } from '@/views/site/site';
 
 import './globals.css';
 
@@ -97,7 +97,7 @@ export const metadata: Metadata = {
   applicationName: SITE_NAME,
   // The fallback for metadata that declares no `openGraph` of its own (a `generateMetadata` that
   // answers an unknown param); every page, the 404 included, replaces it whole and states its own
-  // og:title (components/layout/site.ts OG_BASE).
+  // og:title (views/site/site.ts OG_BASE).
   openGraph: { ...OG_BASE },
   twitter: { card: 'summary_large_image' },
   // No `robots` here on purpose. `index, follow` is what a crawler assumes when the tag is absent,
@@ -113,7 +113,7 @@ export const viewport: Viewport = {
   initialScale: 1,
   // Matches --sx-bg in each mode, so the browser chrome never flashes the other theme. These follow
   // the OS; an explicit Light/Dark choice prepends a media-less meta that outranks them
-  // (components/layout/theme-script.ts), from the same THEME_COLOR pair.
+  // (components/head/theme-script.ts), from the same THEME_COLOR pair.
   themeColor: [
     { media: '(prefers-color-scheme: light)', color: THEME_COLOR.light },
     { media: '(prefers-color-scheme: dark)', color: THEME_COLOR.dark },
@@ -150,7 +150,7 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
         {/* Marks the pinned team's row on /standings and its tile on /teams before the first
             paint, once the DOM is parsed. `DOMContentLoaded` fires once per document, so
             <PinnedTeamMarks /> below re-applies it after every client-side navigation; see
-            components/layout/pinned-team-script.ts for why this pass still lives here. */}
+            components/head/pinned-team-script.ts for why this pass still lives here. */}
         <script dangerouslySetInnerHTML={{ __html: PINNED_TEAM_SCRIPT }} />
         {/* The remembered league and region (SPEC §8.2, DESIGN-socal §2.4), a SEPARATE blocking
             script: stamps data-js, data-league, data-region (SoCal only), data-pin and
@@ -158,11 +158,11 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
             right region and home panel first (CLS 0, no reordering). */}
         <script dangerouslySetInnerHTML={{ __html: PREFS_SCRIPT }} />
         {/* Unlayered on purpose: it must outrank every @layer, utilities included. Tailwind
-            cannot generate one selector per league id (components/layout/league-scope-css.ts);
+            cannot generate one selector per league id (components/head/league-scope-css.ts);
             the region rules ride in the same sheet. */}
         <style dangerouslySetInnerHTML={{ __html: SCOPE_CSS }} />
         {/* Scrolls a <details> the reader just opened into view when its panel lands under the
-            phone tab bar; see components/layout/disclosure-script.ts. */}
+            phone tab bar; see components/head/disclosure-script.ts. */}
         <script dangerouslySetInnerHTML={{ __html: DISCLOSURE_SCRIPT }} />
       </head>
       <body>

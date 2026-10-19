@@ -4,8 +4,8 @@ import ExternalLink from '@/components/ui/ExternalLink';
 import LastUpdated from '@/components/ui/LastUpdated';
 import type { LeagueId, TeamSlug } from '@/lib/model/ids';
 import { getSitePhase } from '@/lib/queries/phase';
+import { DATA_CORRECTIONS_URL, SITE_WORDMARK } from '@/views/site/site';
 
-import { DATA_CORRECTIONS_URL, SITE_WORDMARK } from './site';
 import ThemeToggle from './ThemeToggle';
 import TopNav from './TopNav';
 

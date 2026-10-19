@@ -1,6 +1,6 @@
 /**
  * The league-tournament view (SPEC §6.2, §10.7 `/playoffs/<league>`; MCAL):
- * `buildTournamentView` in components/playoffs/playoff-view.ts over the ENGINE's output
+ * `buildTournamentView` in views/playoffs/playoff-view.ts over the ENGINE's output
  * (lib/engine/standings computeStandings → lib/engine/postseason buildLeagueTournament), and the rendered page.
  *
  * The synthetic seasons run through the real standings engine, so the shared 6th the table shows
@@ -13,7 +13,6 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import type { ReactElement } from 'react';
 import { beforeAll, describe, expect, it } from 'vitest';
 
-import { buildTournamentView, type TournamentView } from '@/components/playoffs/playoff-view';
 import { getDivision, getLeague } from '@/lib/config/leagues';
 import { SHOOTOUT_NOTE, buildLeagueTournament } from '@/lib/engine/postseason';
 import { computeStandings, outcomesFor, playoffOutcomeLabel } from '@/lib/engine/standings';
@@ -23,14 +22,15 @@ import type { SeasonPhase } from '@/lib/model/season';
 import type { Standing } from '@/lib/model/standings';
 import type { Team } from '@/lib/model/team';
 import { getTeamBySlug } from '@/lib/registry/teams';
-import { game } from '@/tests/support/game-builder';
 import { useCorpusModules } from '@/tests/support/corpus-modules';
+import { game } from '@/tests/support/game-builder';
 import { textOf } from '@/tests/support/html-text';
+import { buildTournamentView, type TournamentView } from '@/views/playoffs/playoff-view';
 
-const VIEW = 'components/playoffs/playoff-view.ts';
+const VIEW = 'views/playoffs/playoff-view.ts';
 const PAGE = 'app/playoffs/[league]/page.tsx';
 const OG = 'app/playoffs/[league]/opengraph-image.tsx';
-const LEAGUE = 'components/playoffs/tournament-league.ts';
+const LEAGUE = 'views/playoffs/tournament-route.ts';
 
 const MCAL = getLeague('mcal');
 const DIV = 'marin-county';
@@ -218,7 +218,7 @@ describe('/playoffs/mcal (rendered on the corpus snapshot)', () => {
   const m = useCorpusModules('all-2026-10-02', {
     page: () => import('@/app/playoffs/[league]/page'),
     og: () => import('@/app/playoffs/[league]/opengraph-image'),
-    data: () => import('@/components/playoffs/tournament-league'),
+    data: () => import('@/views/playoffs/tournament-route'),
   });
   let html = '';
 

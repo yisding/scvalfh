@@ -42,8 +42,8 @@ const BANNED = /\bCCS\b|at-large|automatic qualifier|\b(\d+(st|nd|rd|th)|No\. ?\
 const loaders = {
   d: loadQueries,
   l: () => import('@/lib/config/leagues'),
-  v: () => import('@/components/teams/team-view'),
-  gm: () => import('@/components/game/game-view'),
+  v: () => import('@/views/teams/team-view'),
+  gm: () => import('@/views/game/game-view'),
   teamPage: () => import('@/app/teams/[slug]/page'),
   gamePage: () => import('@/app/game/[id]/page'),
   indexPage: () => import('@/app/teams/page'),
@@ -148,7 +148,7 @@ describe('an EAL team page (/teams/davis)', () => {
   it('links no official schedule, for any team of the league (it publishes none)', async () => {
     for (const team of eal.d.getTeams({ league: 'eal' })) {
       const v = eal.v.buildTeamPageView(team.slug)!;
-      expect(v.officialScheduleUrl, `components/teams/team-view.ts ${team.slug}`).toBeNull();
+      expect(v.officialScheduleUrl, `views/teams/team-view.ts ${team.slug}`).toBeNull();
       const text = textOf(await eal.renderTeam(team.slug));
       expect(text, `app/teams/[slug]/page.tsx ${team.slug}`).not.toMatch(/Official EAL schedule|official EAL schedule/);
       expect(text, `app/teams/[slug]/page.tsx ${team.slug}`).not.toMatch(BANNED);
@@ -167,11 +167,11 @@ describe('an EAL team page (/teams/davis)', () => {
     const chico = eal.v.buildTeamPageView('chico')!;
     const davis = eal.v.buildTeamPageView('davis')!;
     const record = (v: typeof chico) => `${v.standing!.computed.w}-${v.standing!.computed.l}-${v.standing!.computed.t}`;
-    expect(record(chico), 'components/teams/team-view.ts chico').toBe('4-1-0');
-    expect(record(davis), 'components/teams/team-view.ts davis').toBe('3-2-0');
+    expect(record(chico), 'views/teams/team-view.ts chico').toBe('4-1-0');
+    expect(record(davis), 'views/teams/team-view.ts davis').toBe('3-2-0');
     // The form strips go through the same outcome rule: Chico's last result is the win.
-    expect(chico.formEntries.at(-1)?.outcome, 'components/teams/team-view.ts chico form').toBe('W');
-    expect(davis.formEntries.at(-1)?.outcome, 'components/teams/team-view.ts davis form').toBe('L');
+    expect(chico.formEntries.at(-1)?.outcome, 'views/teams/team-view.ts chico form').toBe('W');
+    expect(davis.formEntries.at(-1)?.outcome, 'views/teams/team-view.ts davis form').toBe('L');
   });
 
   it('words an earlier 1 v 1 meeting as won 1–1 on 1 v 1s, never "in SO"', () => {
@@ -183,12 +183,12 @@ describe('an EAL team page (/teams/davis)', () => {
     );
     expect(later, 'the corpus has the return meeting').toBeDefined();
     const earlier = eal.v.earlierMeeting(chico, davis, later!.dateLocal);
-    expect(earlier?.contestId, 'components/teams/team-view.ts earlierMeeting').toBe(decided.contestId);
-    expect(earlier?.text, 'components/teams/team-view.ts earlierMeeting').toBe(
+    expect(earlier?.contestId, 'views/teams/team-view.ts earlierMeeting').toBe(decided.contestId);
+    expect(earlier?.text, 'views/teams/team-view.ts earlierMeeting').toBe(
       `Earlier: won 1–1 on 1 v 1s ${decided.home.slug === 'chico' ? 'at home' : 'away'}, Sep 28`,
     );
     const theirs = eal.v.earlierMeeting(davis, chico, later!.dateLocal);
-    expect(theirs?.text, 'components/teams/team-view.ts earlierMeeting (Davis)').toMatch(/^Earlier: lost 1–1 on 1 v 1s /);
+    expect(theirs?.text, 'views/teams/team-view.ts earlierMeeting (Davis)').toMatch(/^Earlier: lost 1–1 on 1 v 1s /);
     expect(`${earlier?.text} ${theirs?.text}`).not.toMatch(/ in SO\b/);
   });
 
@@ -206,17 +206,17 @@ describe('the 9/28 Chico-Davis game page (decider SO, no stored tally)', () => {
     expect(game.shootout, 'lib/pipeline/reconcile/normalize.ts shootout').toBeNull();
     const model = eal.gm.buildGameView(game.contestId)!;
     const title = eal.gm.gameTitle(model);
-    expect(title.startsWith('Chico 1, Davis 1 (SO)'), `components/game/game-view.ts gameTitle: ${title}`).toBe(true);
-    expect(eal.gm.gameKicker(model), 'components/game/game-view.ts gameKicker').toContain('SO');
+    expect(title.startsWith('Chico 1, Davis 1 (SO)'), `views/game/game-view.ts gameTitle: ${title}`).toBe(true);
+    expect(eal.gm.gameKicker(model), 'views/game/game-view.ts gameKicker').toContain('SO');
     const rule = `${eal.l.getSection('ns').name} Field Hockey Guidelines §VII.E.4`;
-    expect(model.scoreNote, 'components/game/game-view.ts scoreNote').toBe(
+    expect(model.scoreNote, 'views/game/game-view.ts scoreNote').toBe(
       `Level at 1–1; MaxPreps marks Chico the winner, which under the EAL’s rules means 1 v 1s decided it (a level varsity game goes to a 10-minute sudden-victory period, then 1 v 1s: ${rule}). This site counts it as Chico’s win and does not show the 1 v 1 tally.`,
     );
-    expect(model.resultConflictNote, 'components/game/game-view.ts: no level-score-marked-W/L note').toBeNull();
+    expect(model.resultConflictNote, 'views/game/game-view.ts: no level-score-marked-W/L note').toBeNull();
     const text = textOf(await eal.renderGame(game.contestId));
     expect(text, 'app/game/[id]/page.tsx note').toContain(model.scoreNote!);
     expect(text, 'app/game/[id]/page.tsx').not.toMatch(/counts it as a tie|level, so this site counts/);
-    expect(model.display.sentence, 'components/ui/describe-game.ts sentence').toBe(
+    expect(model.display.sentence, 'views/shared/describe-game.ts sentence').toBe(
       'Chico 1, Davis 1, final; Chico won on 1 v 1s.',
     );
   });
@@ -224,8 +224,8 @@ describe('the 9/28 Chico-Davis game page (decider SO, no stored tally)', () => {
   it('counts it as a win in the season series', () => {
     const game = gameOn(eal, 'chico', 'davis', '2026-09-28');
     const summary = eal.gm.buildGameView(game.contestId)!.series.summary;
-    expect(summary, 'components/game/game-view.ts series summary').toMatch(/^Chico leads the season series 1-0\./);
-    expect(summary, 'components/game/game-view.ts series summary').not.toMatch(/draw|level/);
+    expect(summary, 'views/game/game-view.ts series summary').toMatch(/^Chico leads the season series 1-0\./);
+    expect(summary, 'views/game/game-view.ts series summary').not.toMatch(/draw|level/);
   });
 
   it('gives each side its outcome chip: Chico W, Davis L', () => {
@@ -233,8 +233,8 @@ describe('the 9/28 Chico-Davis game page (decider SO, no stored tally)', () => {
     const model = eal.gm.buildGameView(game.contestId)!;
     const chico = [model.home, model.away].find((s) => s.team?.slug === 'chico')!;
     const davis = [model.home, model.away].find((s) => s.team?.slug === 'davis')!;
-    expect(chico.outcome, 'components/game/game-view.ts chico').toBe('W');
-    expect(davis.outcome, 'components/game/game-view.ts davis').toBe('L');
+    expect(chico.outcome, 'views/game/game-view.ts chico').toBe('W');
+    expect(davis.outcome, 'views/game/game-view.ts davis').toBe('L');
   });
 });
 
@@ -243,14 +243,14 @@ describe('the 9/2 Pleasant Valley at Chico game page (3 overtime periods, imposs
     const game = gameOn(eal, 'chico', 'pleasant-valley', '2026-09-02');
     expect(game.otPeriods, 'lib/pipeline/reconcile/normalize.ts otPeriods as MaxPreps has it').toBe(3);
     const model = eal.gm.buildGameView(game.contestId)!;
-    expect(model.display.deciderTag, 'components/ui/describe-game.ts deciderTag').toBeNull();
-    expect(eal.gm.gameTitle(model), 'components/game/game-view.ts gameTitle').not.toMatch(/\bOT\b|overtime/i);
-    expect(eal.gm.gameKicker(model), 'components/game/game-view.ts gameKicker').not.toMatch(/\bOT\b/);
-    expect(model.display.sentence, 'components/ui/describe-game.ts sentence').toBe(
+    expect(model.display.deciderTag, 'views/shared/describe-game.ts deciderTag').toBeNull();
+    expect(eal.gm.gameTitle(model), 'views/game/game-view.ts gameTitle').not.toMatch(/\bOT\b|overtime/i);
+    expect(eal.gm.gameKicker(model), 'views/game/game-view.ts gameKicker').not.toMatch(/\bOT\b/);
+    expect(model.display.sentence, 'views/shared/describe-game.ts sentence').toBe(
       'Chico 0, Pleasant Valley 1, final.',
     );
     const rule = `${eal.l.getSection('ns').name} Field Hockey Guidelines §VII.E.4`;
-    expect(model.scoreNote, 'components/game/game-view.ts scoreNote').toBe(
+    expect(model.scoreNote, 'views/game/game-view.ts scoreNote').toBe(
       `MaxPreps records 3 overtime periods for this game, but the EAL plays one 10-minute overtime period and then 1 v 1s (${rule}), so MaxPreps may have recorded a 1 v 1 win as a goal. The score is shown as MaxPreps has it.`,
     );
     const text = textOf(await eal.renderGame(game.contestId));
@@ -269,7 +269,7 @@ describe('the 9/2 Pleasant Valley at Chico game page (3 overtime periods, imposs
       getTeamBySlug('pleasant-valley')!,
       '2026-10-06',
     );
-    expect(earlier?.text, 'components/teams/team-view.ts earlierMeeting').toBe('Earlier: lost 0–1 at home, Sep 2');
+    expect(earlier?.text, 'views/teams/team-view.ts earlierMeeting').toBe('Earlier: lost 0–1 at home, Sep 2');
   });
 });
 
@@ -333,15 +333,15 @@ describe('a Super Regional game (tag league-postseason)', () => {
   it('says it does not count in the league table, under the EAL Super Regional label', async () => {
     expect(tagged.postseason?.kind, 'the hand-tagged corpus copy').toBe('league-postseason');
     const model = withTag.gm.buildGameView(tagged.contestId)!;
-    expect(model.postseasonNotes, 'components/game/game-view.ts postseasonNotes').toEqual([
+    expect(model.postseasonNotes, 'views/game/game-view.ts postseasonNotes').toEqual([
       'Super Regional game — it does not count in the league table.',
     ]);
-    expect(model.contextLabel, 'components/game/game-view.ts contextLabel').toBe('EAL Super Regional');
-    expect(model.countsAs.label, 'components/game/game-view.ts countsAs').toBe('EAL Super Regional');
+    expect(model.contextLabel, 'views/game/game-view.ts contextLabel').toBe('EAL Super Regional');
+    expect(model.countsAs.label, 'views/game/game-view.ts countsAs').toBe('EAL Super Regional');
     const text = textOf(await withTag.renderGame(tagged.contestId));
     expect(text, 'app/game/[id]/page.tsx').toContain('Super Regional game — it does not count in the league table.');
     expect(text, 'app/game/[id]/page.tsx').not.toMatch(/\bCCS\b/);
-    expect(withTag.gm.gameDescription(model), 'components/game/game-view.ts gameDescription').toContain(
+    expect(withTag.gm.gameDescription(model), 'views/game/game-view.ts gameDescription').toContain(
       'an EAL Super Regional game',
     );
   });
@@ -364,9 +364,9 @@ describe('/teams on the EAL corpus', () => {
     expect(textOf(html).split(note).length - 1, 'app/teams/page.tsx note appears once').toBe(1);
     const groups = eal.v.buildTeamsByLeague().flatMap((s) => s.leagues);
     // The EAL and the Sunset (a field hockey grouping, not the all-sports league of that name) carry one.
-    expect(groups.filter((g) => g.membershipNote).map((g) => g.league.id), 'components/teams/team-view.ts groups').toEqual(['eal', 'sunset', 'independents']);
+    expect(groups.filter((g) => g.membershipNote).map((g) => g.league.id), 'views/teams/team-view.ts groups').toEqual(['eal', 'sunset', 'independents']);
     // Nine leagues and the LA independents' group (DESIGN §24.9).
-    expect(groups.length, 'components/teams/team-view.ts nine league groups and the independents').toBe(10);
+    expect(groups.length, 'views/teams/team-view.ts nine league groups and the independents').toBe(10);
   });
 
   it('states what the six EAL teams are, and carries no seed word', () => {

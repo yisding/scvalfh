@@ -5,8 +5,7 @@ import BerthMeter from '@/components/ui/BerthMeter';
 import ExternalLink from '@/components/ui/ExternalLink';
 import SectionHeader from '@/components/ui/SectionHeader';
 import { monthDay, shortDate } from '@/lib/format/dates';
-
-import type { PostseasonView } from './home-view';
+import type { PostseasonView } from '@/views/home/home-view';
 
 /**
  * A league panel's postseason block (SPEC §10.1; replaces the SCVAL-only PlayoffsCard).

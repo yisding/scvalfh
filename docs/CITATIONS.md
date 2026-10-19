@@ -22,6 +22,8 @@ Some committed files quote repo paths and cannot be edited: the data files in da
 | lib/sources/sblive.ts | lib/sources/sblive/games.ts (parseStandingsTeamRefs: lib/sources/sblive/harvest.ts; extractReactProps: lib/sources/sblive/props.ts; STATEWIDE_AMBIGUOUS: lib/sources/sblive/identity.ts) | 24 |
 | lib/sources/http.ts | lib/sources/http/client.ts (CHROME_USER_AGENT) | 24 |
 | lib/sources/scval-pdf.ts | lib/sources/scval/grid.ts (parseSchedulePdfText) | 26 |
+| components/standings/standings-view.ts | views/standings/division.ts | 35 |
+| components/history/history-view.ts | views/history/history-view.ts | 35 |
 
 ## Legend
 

@@ -3,8 +3,8 @@ import ExternalLink from '@/components/ui/ExternalLink';
 import MissingValue from '@/components/ui/MissingValue';
 import SectionHeader from '@/components/ui/SectionHeader';
 import { plural } from '@/lib/format/words';
-import type { GoalieCard, PlayerStatsView, StatTable } from './player-stats-view';
-import { statText } from './player-stats-view';
+import { statText } from '@/views/teams/player-stats';
+import type { GoalieCard, PlayerStatsView, StatTable } from '@/views/teams/player-stats';
 
 /**
  * The team page's player stats (SPEC §1.1k): season totals as the coach entered them on MaxPreps.

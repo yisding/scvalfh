@@ -1,16 +1,16 @@
 import Link from 'next/link';
 
-import { leagueOfDivision } from '@/lib/config/leagues';
-import { ordinal } from '@/lib/format/numbers';
 import ExternalLink from '@/components/ui/ExternalLink';
 import LeagueHealthNote from '@/components/ui/LeagueHealthNote';
 import SectionHeader from '@/components/ui/SectionHeader';
 import StandingsTable, { biggestGoalDiff, collectStandingsNotes, type StandingsTableProps } from '@/components/ui/StandingsTable';
+import { leagueOfDivision } from '@/lib/config/leagues';
+import { ordinal } from '@/lib/format/numbers';
+import type { DivisionView } from '@/views/standings/division';
 
 import MissingResultsBanner from './MissingResultsBanner';
 import PlayoffStatusBand from './PlayoffStatusBand';
 import StandingsNotes from './StandingsNotes';
-import type { DivisionView } from './standings-view';
 
 /**
  * One division's whole section (SPEC §10.3), in this order: the heading (the division heading,

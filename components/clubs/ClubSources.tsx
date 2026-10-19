@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 import ExternalLink from '@/components/ui/ExternalLink';
 import SectionHeader from '@/components/ui/SectionHeader';
-import type { ClubHostLink, ClubPageView } from './club-view';
+import type { ClubHostLink, ClubPageView } from '@/views/clubs/club-view';
 
 /**
  * A club page's "Where this comes from" (DESIGN §17.1): the club's own roster pages, then the pages

@@ -1,6 +1,6 @@
 'use client';
 
-import { setLeague, useEffectiveLeague } from '@/components/ui/use-league';
+import { setLeague, useEffectiveLeague } from '@/components/hooks/use-league';
 import type { LeagueId } from '@/lib/model/ids';
 
 /**

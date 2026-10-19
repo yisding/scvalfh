@@ -4,7 +4,7 @@ import EmptyState from '@/components/ui/EmptyState';
 import ExternalLink from '@/components/ui/ExternalLink';
 import { GAME_LOG_ROW_GRID, GameLogRowBody } from '@/components/ui/GameRow';
 import type { TeamSlug } from '@/lib/model/ids';
-import type { JvListSummary, TeamJvView } from './jv-view';
+import type { JvListSummary, TeamJvView } from '@/views/teams/jv';
 
 /**
  * A team page's JV games (DESIGN §3.7's game log, one list): `Sep 14 (W) 4–0 vs Cupertino FINAL`.

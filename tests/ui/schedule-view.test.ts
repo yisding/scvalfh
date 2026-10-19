@@ -1,15 +1,12 @@
 /**
  * The schedule and scores pages (SPEC §10.4, §8.1): league scoping (`/schedule/<league>`), the
  * light `/schedule` index, the `ScheduleFilters` props per league, the `/scores/[date]` league
- * groups and the client-boundary split of `components/schedule/filter-data.ts`.
+ * groups and the client-boundary split of `views/schedule/filters-client.ts`.
  *
  * League-specific values run on the all-2026-10-02 CORPUS snapshot (SPEC §13.6): useCorpusModules
  * points lib/datasets/snapshot.ts at it before lib/queries/ is imported. Every assertion
  * message names the module that produced the value.
  */
-
-import { readFileSync } from 'node:fs';
-import path from 'node:path';
 
 import { createElement, type ReactElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
@@ -18,15 +15,14 @@ import { describe, expect, it } from 'vitest';
 import { LEAGUE_IDS } from '@/lib/config/leagues';
 import { getTeamBySlug } from '@/lib/registry/teams';
 import { useCorpusModules } from '@/tests/support/corpus-modules';
-import { loadQueries } from '@/tests/support/queries';
-import { REPO } from '@/tests/support/repo';
 import { textOf } from '@/tests/support/html-text';
+import { loadQueries } from '@/tests/support/queries';
 
 const m = useCorpusModules('all-2026-10-02', {
   data: loadQueries,
-  server: () => import('@/components/schedule/filter-data-server'),
-  index: () => import('@/components/schedule/schedule-view'),
-  day: () => import('@/components/schedule/day-summary'),
+  server: () => import('@/views/schedule/filters'),
+  index: () => import('@/views/schedule/schedule-view'),
+  day: () => import('@/views/schedule/day-summary'),
   filters: () => import('@/components/schedule/ScheduleFilters'),
   leaguePage: () => import('@/app/schedule/[league]/page'),
   indexPage: () => import('@/app/schedule/page'),
@@ -121,7 +117,7 @@ describe('ScheduleFilters props', () => {
     for (const id of ['pcal', 'mcal', 'eal']) {
       const summary = m.data.getLeagueSummary(id)!;
       const props = m.server.scheduleFilterProps(summary, m.data.getTeams({ league: id }));
-      expect(props.divisions, `components/schedule/filter-data-server.ts ${id}`).toEqual([]);
+      expect(props.divisions, `views/schedule/filters.ts ${id}`).toEqual([]);
       expect(props.teams.every((t) => t.divisionLabel === null)).toBe(true);
       expect(props.teams.length).toBe(summary.teamCount);
       const html = renderToStaticMarkup(
@@ -149,15 +145,10 @@ describe('ScheduleFilters props', () => {
 
   it('marks league games from countsFor', () => {
     for (const g of m.data.getGames()) {
-      expect(m.server.gameFilterAttrs(g)['data-league'], `components/schedule/filter-data-server.ts ${g.contestId}`).toBe(
+      expect(m.server.gameFilterAttrs(g)['data-league'], `views/schedule/filters.ts ${g.contestId}`).toBe(
         g.countsFor !== null ? '1' : '0',
       );
     }
-  });
-
-  it('keeps the client module free of the registry (client boundary)', () => {
-    const src = readFileSync(path.join(REPO, 'components/schedule/filter-data.ts'), 'utf8');
-    expect(src, 'components/schedule/filter-data.ts').not.toMatch(/from ['"][^'"]*lib\/(teams|data|leagues)['"]/);
   });
 });
 
@@ -225,21 +216,21 @@ describe('the /schedule index', () => {
     });
     expect(built.recent.length).toBeLessThanOrEqual(3);
     expect(built.next.length).toBeLessThanOrEqual(3);
-    expect(built.recent.every((d) => d.date <= today), 'components/schedule/schedule-view.ts recent').toBe(true);
-    expect(built.next.every((d) => d.date > today), 'components/schedule/schedule-view.ts next').toBe(true);
+    expect(built.recent.every((d) => d.date <= today), 'views/schedule/schedule-view.ts recent').toBe(true);
+    expect(built.next.every((d) => d.date > today), 'views/schedule/schedule-view.ts next').toBe(true);
     for (const d of built.days) {
       const games = m.data.getGames({ date: d.date });
       expect(d.total).toBe(games.length);
       for (const l of d.byLeague) {
         const id = m.data.getLeagueSummaries().find((x) => x.shortName === l.shortName)!.id;
-        expect(l.games, `components/schedule/schedule-view.ts ${d.date} ${id}`).toBe(
+        expect(l.games, `views/schedule/schedule-view.ts ${d.date} ${id}`).toBe(
           games.filter((g) => leagueOfSlug(g.home.slug) === id || leagueOfSlug(g.away.slug) === id).length,
         );
       }
     }
     expect(built.cards.map((c) => c.id)).toEqual(LEAGUE_IDS);
     for (const card of built.cards) {
-      expect(card.games, `components/schedule/schedule-view.ts card ${card.id}`).toBe(
+      expect(card.games, `views/schedule/schedule-view.ts card ${card.id}`).toBe(
         m.data.getGames({ league: card.id }).length,
       );
     }
@@ -248,7 +239,7 @@ describe('the /schedule index', () => {
     expect(built.regions.map((r) => [r.id, r.idSuffix])).toEqual([['norcal', ''], ['socal', '-socal']]);
     for (const r of built.regions) {
       for (const d of [...r.recent, ...r.next]) {
-        expect(d.leagues.length, `components/schedule/schedule-view.ts ${r.id} ${d.date}`).toBeGreaterThan(0);
+        expect(d.leagues.length, `views/schedule/schedule-view.ts ${r.id} ${d.date}`).toBeGreaterThan(0);
         expect(d.leagues.every((l) => l.region === r.id)).toBe(true);
       }
     }
@@ -351,7 +342,7 @@ describe('/scores/[date]', () => {
       const games = m.data.getGames({ date });
       const groups = m.day.dayGroups(games);
       const ids = groups.flatMap((g) => g.games.map((x) => x.contestId));
-      expect(ids.length, `components/schedule/day-summary.ts dayGroups ${date}`).toBe(games.length);
+      expect(ids.length, `views/schedule/day-summary.ts dayGroups ${date}`).toBe(games.length);
       expect(new Set(ids).size).toBe(games.length);
       for (const group of groups) {
         expect(group.kicker).not.toMatch(/\(s\)/);

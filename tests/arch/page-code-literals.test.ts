@@ -2,8 +2,8 @@
  * The page-code literal guard (SPEC §12.2): the pages read league and division ids from config
  * instead of spelling them, and link to games through the one URL builder.
  *
- * Over every .ts/.tsx file under PAGE_CODE_ROOTS (tests/support/source-tree.ts: app/ and
- * components/), parsed with the TypeScript compiler (so comments and strings in comments never
+ * Over every .ts/.tsx file under PAGE_CODE_ROOTS (tests/support/source-tree.ts: app/,
+ * components/ and views/), parsed with the TypeScript compiler (so comments and strings in comments never
  * count):
  *  1. no league or division id as a string literal ('scval', 'bval', 'pcal', 'mcal', 'de-anza',
  *     'el-camino', 'mt-hamilton', 'santa-teresa', 'marin-county', …): ids come from lib/config/leagues.ts or
@@ -94,6 +94,7 @@ describe('page code reads ids from config (SPEC §12.2)', () => {
   it('scans a non-trivial tree', () => {
     expectAtLeast(11, FILES.filter((f) => f.startsWith('app/')), 'app/ files');
     expectAtLeast(21, FILES.filter((f) => f.startsWith('components/')), 'components/ files');
+    expectAtLeast(40, FILES.filter((f) => f.startsWith('views/')), 'views/ files');
   });
 
   it('the scanner itself catches each banned form (synthetic sources)', () => {

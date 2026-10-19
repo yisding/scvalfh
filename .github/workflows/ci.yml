@@ -94,7 +94,7 @@ jobs:
           CI_GATE: '1'
 
       # SCVAL_BUILD_AT pins the instant the "stale snapshot" warning is measured against
-      # (components/layout/build-instant.ts), so two builds of one commit are byte-identical.
+      # (views/site/build-instant.ts), so two builds of one commit are byte-identical.
       - name: Build
         run: pnpm build
         env:
@@ -212,7 +212,7 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      # Same pin as the Next build (components/layout/build-instant.ts): the instant the "stale
+      # Same pin as the Next build (views/site/build-instant.ts): the instant the "stale
       # snapshot" warning is measured against comes from the event payload, not the runner's
       # clock, so a rerun is byte-identical and both builds stamp the same instant. cloudflare.config.ts
       # is present, so this also fails if the patch stops letting a Node build run beside it.

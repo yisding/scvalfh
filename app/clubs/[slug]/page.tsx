@@ -5,13 +5,13 @@ import { notFound } from 'next/navigation';
 import ClubPlayers from '@/components/clubs/ClubPlayers';
 import ClubPrograms from '@/components/clubs/ClubPrograms';
 import ClubSources from '@/components/clubs/ClubSources';
-import { buildClubPageView } from '@/components/clubs/club-view';
 import PageHeader from '@/components/layout/PageHeader';
-import { OG_BASE, ROOT_OG_IMAGE } from '@/components/layout/site';
 import ExternalLink from '@/components/ui/ExternalLink';
 import SectionHeader from '@/components/ui/SectionHeader';
 import { clubDisplayName, getClub, getClubAffiliations, getClubSlugs } from '@/lib/datasets/clubs';
 import { plural } from '@/lib/format/words';
+import { buildClubPageView } from '@/views/clubs/club-view';
+import { OG_BASE, ROOT_OG_IMAGE } from '@/views/site/site';
 
 /**
  * /clubs/[slug] — "Who here plays for this club, and how do we know?" (DESIGN §17.1, SPEC §1.1j2).
@@ -27,7 +27,7 @@ import { plural } from '@/lib/format/words';
  *
  * Privacy (DESIGN §17.2). Only players already on the tracked varsity rosters are named, each by
  * the roster's own spelling. A source's verbatim quote, an affiliation's basis and its confidence
- * are never rendered (they are not in the view, components/clubs/club-view.ts), and the metadata
+ * are never rendered (they are not in the view, views/clubs/club-view.ts), and the metadata
  * names no player at all: a title or description travels further than the page. The club record
  * itself names no individual.
  *

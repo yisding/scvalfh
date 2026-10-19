@@ -1,16 +1,16 @@
 import Link from 'next/link';
 
+import GridRowFiller from '@/components/ui/GridRowFiller';
 import { leagueOfDivision } from '@/lib/config/leagues';
 import type { HistoryAwards, HistoryPlayer } from '@/lib/datasets/history';
 import { gradeWord } from '@/lib/format/words';
 import { getTeamBySlug } from '@/lib/registry/teams';
-import GridRowFiller from '@/components/ui/GridRowFiller';
-import { awardLine, overallAwards, type AwardLine } from './history-view';
+import { awardLine, overallAwards, type AwardLine } from '@/views/history/history-view';
 
 /**
  * The 2025-26 all-league awards (DESIGN §3.9): the overall awards, then First Team / Second
  * Team / Honorable Mention as `<dl>`s. Every winner and listed player reads the same way, in the
- * site's words (components/history/history-view.ts), and the way the roster, /clubs, /commits and
+ * site's words (views/history/history-view.ts), and the way the roster, /clubs, /commits and
  * /leaders print a player: the player, then school · grade · position, the school linked to its
  * team page and the grade a word ("Senior"). The documents write each of those several ways ("GK",
  * "Goalie", "Goalkeeper"; "St Ignatius", "MItty"; an overall award as "School- Player" or "Player

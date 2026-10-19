@@ -1,12 +1,12 @@
-import { getDivision, leagueOfDivision } from '@/lib/config/leagues';
-import { monthDay } from '@/lib/format/dates';
 import ExternalLink from '@/components/ui/ExternalLink';
 import { NON_MEMBER_NOTE } from '@/components/ui/GameRow';
 import GhostMonogram from '@/components/ui/GhostMonogram';
 import TeamMonogram from '@/components/ui/TeamMonogram';
+import { getDivision, leagueOfDivision } from '@/lib/config/leagues';
+import { monthDay } from '@/lib/format/dates';
 import type { OfficialFixture } from '@/lib/model/fixture';
 import type { DivisionId, TeamSlug } from '@/lib/model/ids';
-import { fixtureOpponent } from './team-view';
+import { fixtureOpponent } from '@/views/teams/team-view';
 
 /**
  * Fixtures that exist in the league's official schedule and in NO data source (SPEC §1.3, §7.8).

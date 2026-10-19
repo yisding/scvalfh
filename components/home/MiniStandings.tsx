@@ -9,9 +9,8 @@ import { getDivision, getLeague, isDefaultRegion, regionOf } from '@/lib/config/
 import { monthDay } from '@/lib/format/dates';
 import { placeWords } from '@/lib/format/numbers';
 import { EM_DASH, plural } from '@/lib/format/words';
-import { ladderLineAfter } from '@/components/standings/standings-view';
-
-import type { MiniDivisionView, MiniRow } from './home-view';
+import type { MiniDivisionView, MiniRow } from '@/views/home/home-view';
+import { ladderLineAfter } from '@/views/standings/division';
 
 /**
  * One division's top of the table inside a league panel (SPEC §10.1, DESIGN §3.1).

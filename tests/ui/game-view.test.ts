@@ -1,6 +1,6 @@
 /**
  * The /game/[id] view model and route params (SPEC §10.6, §8.1, §8.4):
- * `components/game/game-view.ts`, `components/game/*`, `components/ui/ScoreBoard.tsx`,
+ * `views/game/game-view.ts`, `components/game/*`, `components/ui/ScoreBoard.tsx`,
  * `app/game/[id]/page.tsx` and `app/game/[id]/opengraph-image.tsx`.
  *
  * League-specific values are asserted on the all-2026-10-02 CORPUS snapshot (SPEC §13.6; it holds
@@ -28,7 +28,7 @@ import { tempDir, tempFile } from '@/tests/support/repo';
 
 const loaders = {
   d: loadQueries,
-  m: () => import('@/components/game/game-view'),
+  m: () => import('@/views/game/game-view'),
   ids: () => import('@/lib/shared/game-id'),
   page: () => import('@/app/game/[id]/page'),
   og: () => import('@/app/game/[id]/opengraph-image'),
@@ -91,39 +91,39 @@ describe('params (app/game/[id]/page.tsx and opengraph-image.tsx via game-view.t
     expect(og, 'app/game/[id]/opengraph-image.tsx: OG params === page params').toEqual(page);
     const games = L.d.getGames();
     const superseded = Object.keys(L.d.getSupersededGames());
-    expect(page.length, 'components/game/game-view.ts gameStaticParams count').toBe(games.length + superseded.length);
+    expect(page.length, 'views/game/game-view.ts gameStaticParams count').toBe(games.length + superseded.length);
     for (const { id } of page) {
-      expect(id, 'components/game/game-view.ts param').not.toContain(':');
+      expect(id, 'views/game/game-view.ts param').not.toContain(':');
       const contestId = L.ids.paramToGameId(id);
       expect(L.ids.gameIdToParam(contestId), `lib/shared/game-id.ts round trip ${id}`).toBe(id);
       expect(
         !!L.d.getGameById(contestId) || superseded.includes(contestId),
-        `components/game/game-view.ts ${id} resolves`,
+        `views/game/game-view.ts ${id} resolves`,
       ).toBe(true);
     }
     const sblive = games.filter((g) => g.contestId.startsWith('sblive:'));
     expect(sblive.length, 'lib/queries/games.ts: the corpus has si.com-only games').toBeGreaterThan(0);
     for (const g of sblive) {
-      expect(page.map((p) => p.id), `components/game/game-view.ts ${g.contestId}`).toContain(g.contestId.replace(':', '-'));
+      expect(page.map((p) => p.id), `views/game/game-view.ts ${g.contestId}`).toContain(g.contestId.replace(':', '-'));
     }
   });
 
   it('buildGameView takes the URL param and returns undefined for an unknown id', () => {
     const g = L.d.getGames().find((x) => x.contestId.startsWith('sblive:'))!;
     const model = L.m.buildGameView(L.ids.gameIdToParam(g.contestId));
-    expect(model?.game.contestId, 'components/game/game-view.ts sblive param').toBe(g.contestId);
-    expect(model?.canonical, 'components/game/game-view.ts canonical').toBe(L.ids.gameHref(g.contestId));
-    expect(L.m.buildGameView('nope'), 'components/game/game-view.ts unknown').toBeUndefined();
-    expect(L.m.buildGameView('sblive-1'), 'components/game/game-view.ts unknown sblive').toBeUndefined();
-    expect(L.m.buildSupersededStub('sblive-1'), 'components/game/game-view.ts unknown stub').toBeUndefined();
+    expect(model?.game.contestId, 'views/game/game-view.ts sblive param').toBe(g.contestId);
+    expect(model?.canonical, 'views/game/game-view.ts canonical').toBe(L.ids.gameHref(g.contestId));
+    expect(L.m.buildGameView('nope'), 'views/game/game-view.ts unknown').toBeUndefined();
+    expect(L.m.buildGameView('sblive-1'), 'views/game/game-view.ts unknown sblive').toBeUndefined();
+    expect(L.m.buildSupersededStub('sblive-1'), 'views/game/game-view.ts unknown stub').toBeUndefined();
     // The superseded map is a plain JSON object: no prototype member is ever a "target".
     for (const param of ['constructor', '__proto__', 'toString', 'hasOwnProperty', 'valueOf']) {
-      expect(L.m.buildSupersededStub(param), `components/game/game-view.ts stub for "${param}"`).toBeUndefined();
+      expect(L.m.buildSupersededStub(param), `views/game/game-view.ts stub for "${param}"`).toBeUndefined();
     }
   });
 });
 
-describe('sub-lines, kicker and context (components/game/game-view.ts)', () => {
+describe('sub-lines, kicker and context (views/game/game-view.ts)', () => {
   it('sub-line is "<record> <division heading ?? league short>"', () => {
     const cases: Array<[string, RegExp]> = [
       ['scval', /^\d+-\d+-\d+ (De Anza|El Camino)$/],
@@ -133,39 +133,39 @@ describe('sub-lines, kicker and context (components/game/game-view.ts)', () => {
     ];
     for (const [league, re] of cases) {
       const model = L.m.buildGameView(counted(league).contestId)!;
-      expect(model.home.sub, `components/game/game-view.ts ${league} home sub`).toMatch(re);
-      expect(model.away.sub, `components/game/game-view.ts ${league} away sub`).toMatch(re);
+      expect(model.home.sub, `views/game/game-view.ts ${league} home sub`).toMatch(re);
+      expect(model.away.sub, `views/game/game-view.ts ${league} away sub`).toMatch(re);
     }
   });
 
   it('the kicker names the league (BVAL · Santa Teresa, MCAL, Non-league)', () => {
     const bval = L.m.buildGameView(counted('bval').contestId)!;
-    expect(L.m.gameKicker(bval), 'components/game/game-view.ts BVAL kicker').toMatch(
+    expect(L.m.gameKicker(bval), 'views/game/game-view.ts BVAL kicker').toMatch(
       /^FINAL( · \S+)? · BVAL · (Mt\. Hamilton|Santa Teresa)$/,
     );
     const mcal = L.m.buildGameView(counted('mcal').contestId)!;
-    expect(mcal.contextLabel, 'components/game/game-view.ts MCAL context').toBe('MCAL');
-    expect(mcal.countsAs.label, 'components/game/game-view.ts MCAL counts as').toBe('League game · MCAL');
-    expect(mcal.countsAs.detail, 'components/game/game-view.ts MCAL points').toBe(
+    expect(mcal.contextLabel, 'views/game/game-view.ts MCAL context').toBe('MCAL');
+    expect(mcal.countsAs.label, 'views/game/game-view.ts MCAL counts as').toBe('League game · MCAL');
+    expect(mcal.countsAs.detail, 'views/game/game-view.ts MCAL points').toBe(
       'Counts toward the MCAL standings — MCAL Field Hockey Handbook (rev. 10/19/24) §7a (3 points for a win, 1 for a tie).',
     );
     const scval = L.m.buildGameView(counted('scval').contestId)!;
-    expect(scval.countsAs.label, 'components/game/game-view.ts SCVAL counts as').toMatch(/^League game · (De Anza|El Camino) Division$/);
+    expect(scval.countsAs.label, 'views/game/game-view.ts SCVAL counts as').toMatch(/^League game · (De Anza|El Camino) Division$/);
     const nonLeague = L.d.getGames().find((g) => g.countsFor === null && g.postseason === null)!;
     const nl = L.m.buildGameView(nonLeague.contestId)!;
-    expect(nl.contextLabel, 'components/game/game-view.ts non-league').toBe('Non-league');
-    expect(L.m.gameKicker(nl).endsWith(' · Non-league'), 'components/game/game-view.ts non-league kicker').toBe(true);
+    expect(nl.contextLabel, 'views/game/game-view.ts non-league').toBe('Non-league');
+    expect(L.m.gameKicker(nl).endsWith(' · Non-league'), 'views/game/game-view.ts non-league kicker').toBe(true);
   });
 
   it('the meta description names the league; the head-to-head note cites its own league', () => {
     const mcal = L.m.buildGameView(counted('mcal').contestId)!;
-    expect(L.m.gameDescription(mcal), 'components/game/game-view.ts MCAL description').toContain(
+    expect(L.m.gameDescription(mcal), 'views/game/game-view.ts MCAL description').toContain(
       'Marin County Athletic League girls varsity field hockey, Fall 2026',
     );
-    expect(mcal.series.tiebreakNote, 'components/game/game-view.ts MCAL h2h').toContain('MCAL Tie-Breaking Criteria (rev. 3/26) step 1');
+    expect(mcal.series.tiebreakNote, 'views/game/game-view.ts MCAL h2h').toContain('MCAL Tie-Breaking Criteria (rev. 3/26) step 1');
     const scval = L.m.buildGameView(counted('scval').contestId)!;
-    expect(scval.series.tiebreakNote, 'components/game/game-view.ts SCVAL h2h').toContain('Article VI §3');
-    expect(L.m.gameDescription(scval), 'components/game/game-view.ts SCVAL description').toContain(
+    expect(scval.series.tiebreakNote, 'views/game/game-view.ts SCVAL h2h').toContain('Article VI §3');
+    expect(L.m.gameDescription(scval), 'views/game/game-view.ts SCVAL description').toContain(
       'Santa Clara Valley Athletic League girls varsity field hockey, Fall 2026',
     );
   });
@@ -176,16 +176,16 @@ describe('si.com source line and the conflict block (components/game/GameSources
     const g = L.d.getGames().find((x) => x.contestId.startsWith('sblive:'))!;
     const model = L.m.buildGameView(L.ids.gameIdToParam(g.contestId))!;
     const note = g.provenance.backfill!.note.replace(/[.\s]+$/, '');
-    expect(model.source?.text, 'components/game/game-view.ts source line').toBe(
+    expect(model.source?.text, 'views/game/game-view.ts source line').toBe(
       `Score via High School on SI (si.com): ${note}.`,
     );
-    expect(model.source?.sbliveUrl, 'components/game/game-view.ts source link').toBe(g.urls.sblive);
+    expect(model.source?.sbliveUrl, 'views/game/game-view.ts source link').toBe(g.urls.sblive);
     const html = await L.renderPage(L.ids.gameIdToParam(g.contestId));
     const text = textOf(html);
     expect(text, 'components/game/GameSources.tsx source line').toContain(`Score via High School on SI (si.com): ${note}.`);
     expect(text, 'components/ui/ScoreBoard.tsx † mark').toContain('† Score via si.com');
     expect(html, 'app/game/[id]/page.tsx').not.toContain('sblive:');
-    expect(L.m.gameDescription(model), 'components/game/game-view.ts PCAL description').toContain(
+    expect(L.m.gameDescription(model), 'views/game/game-view.ts PCAL description').toContain(
       'Pacific Coast Athletic League girls varsity field hockey, Fall 2026',
     );
   });
@@ -194,17 +194,17 @@ describe('si.com source line and the conflict block (components/game/GameSources
     const g = L.d.getGames().find((x) => !x.contestId.startsWith('sblive:') && x.provenance.scores === 'sblive');
     expect(g, 'lib/queries/games.ts: the corpus has a rule-3 backfill').toBeDefined();
     const model = L.m.buildGameView(g!.contestId)!;
-    expect(model.source?.text, 'components/game/game-view.ts rule 3').toMatch(/^Score via High School on SI \(si\.com\): .+\.$/);
-    expect(model.source?.maxprepsUrl, 'components/game/game-view.ts rule 3 MaxPreps link').toBe(g!.urls.maxpreps);
+    expect(model.source?.text, 'views/game/game-view.ts rule 3').toMatch(/^Score via High School on SI \(si\.com\): .+\.$/);
+    expect(model.source?.maxprepsUrl, 'views/game/game-view.ts rule 3 MaxPreps link').toBe(g!.urls.maxpreps);
   });
 
   it('a plain disagreement keeps MaxPreps’ score and shows the note with both links', async () => {
     const g = L.d.getGames().find((x) => x.provenance.scoreConflict && x.provenance.scores !== 'sblive');
     expect(g, 'lib/queries/games.ts: the corpus has a score conflict').toBeDefined();
     const model = L.m.buildGameView(g!.contestId)!;
-    expect(model.source, 'components/game/game-view.ts no source line on a MaxPreps score').toBeNull();
-    expect(model.conflict?.note, 'components/game/game-view.ts conflict note').toBe(g!.provenance.scoreConflict!.note);
-    expect(model.conflict?.sblive, 'components/game/game-view.ts conflict si.com value').toEqual(g!.provenance.scoreConflict!.sblive);
+    expect(model.source, 'views/game/game-view.ts no source line on a MaxPreps score').toBeNull();
+    expect(model.conflict?.note, 'views/game/game-view.ts conflict note').toBe(g!.provenance.scoreConflict!.note);
+    expect(model.conflict?.sblive, 'views/game/game-view.ts conflict si.com value').toEqual(g!.provenance.scoreConflict!.sblive);
     const text = textOf(await L.renderPage(g!.contestId));
     expect(text, 'components/game/GameSources.tsx conflict').toContain(g!.provenance.scoreConflict!.note);
     expect(text, 'components/ui/ScoreBoard.tsx no † on a MaxPreps score').not.toContain('Score via si.com');
@@ -321,11 +321,11 @@ describe('MCAL postseason note and superseded stubs (corpus copy)', () => {
   it('an MCAL tournament game: the not-counted sentence and the shootout caveat', async () => {
     const model = S.m.buildGameView(tournament.contestId)!;
     const { SHOOTOUT_NOTE } = await import('@/lib/engine/postseason');
-    expect(model.postseasonNotes, 'components/game/game-view.ts MCAL postseason notes').toEqual([
+    expect(model.postseasonNotes, 'views/game/game-view.ts MCAL postseason notes').toEqual([
       'MCAL tournament game — it does not count in the league table.',
       SHOOTOUT_NOTE,
     ]);
-    expect(model.contextLabel, 'components/game/game-view.ts MCAL tournament kicker').toMatch(/^MCAL (tournament|play-in|quarterfinal|semifinal|final)$/);
+    expect(model.contextLabel, 'views/game/game-view.ts MCAL tournament kicker').toMatch(/^MCAL (tournament|play-in|quarterfinal|semifinal|final)$/);
     const text = textOf(await S.renderPage(tournament.contestId));
     expect(text, 'app/game/[id]/page.tsx MCAL note').toContain('MCAL tournament game — it does not count in the league table.');
     expect(text, 'app/game/[id]/page.tsx shootout caveat').toContain(SHOOTOUT_NOTE);
@@ -335,10 +335,10 @@ describe('MCAL postseason note and superseded stubs (corpus copy)', () => {
   it('a level final MaxPreps flags W/L: the note under the score, and the series never says just "a draw"', async () => {
     expect(flagged, 'tests: a single-meeting non-league final in the corpus').toBeDefined();
     const model = S.m.buildGameView(flagged.contestId)!;
-    expect(model.resultConflictNote, 'components/game/game-view.ts resultConflictNote').toBe(
+    expect(model.resultConflictNote, 'views/game/game-view.ts resultConflictNote').toBe(
       `${flagged.provenance.resultConflict!.replace(/\.$/, '')}. The score is level, so this site counts it as a tie.`,
     );
-    expect(model.series.summary, 'components/game/game-view.ts series summary').toBe(
+    expect(model.series.summary, 'views/game/game-view.ts series summary').toBe(
       `Their only meeting this season ended 0-0, which this site counts as a draw; MaxPreps lists ${model.away.name} as the winner.`,
     );
     expect(model.series.summary).not.toContain('was a draw.');
@@ -346,22 +346,22 @@ describe('MCAL postseason note and superseded stubs (corpus copy)', () => {
     expect(text, 'components/game/GameSources.tsx ResultFlagConflict').toContain('The score is level, so this site counts it as a tie.');
     // A backfilled game explains itself in the source line instead.
     const plain = S.m.buildGameView(tournament.contestId)!;
-    expect(plain.resultConflictNote, 'components/game/game-view.ts: no conflict, no note').toBeNull();
+    expect(plain.resultConflictNote, 'views/game/game-view.ts: no conflict, no note').toBeNull();
   });
 
   it('a superseded si.com id is a stub page, in both param lists, canonical to the MaxPreps game', async () => {
     const page = S.pageParams();
     expect(S.ogParams(), 'app/game/[id]/opengraph-image.tsx: OG params === page params (stubs)').toEqual(page);
-    expect(page.map((p) => p.id), 'components/game/game-view.ts stub param').toContain('sblive-999999');
+    expect(page.map((p) => p.id), 'views/game/game-view.ts stub param').toContain('sblive-999999');
     const stub = S.m.buildSupersededStub('sblive-999999')!;
-    expect(stub.sentence, 'components/game/game-view.ts stub sentence').toBe('MCAL game — this result is now on MaxPreps.');
-    expect(stub.targetHref, 'components/game/game-view.ts stub target').toBe(S.ids.gameHref(target.contestId));
+    expect(stub.sentence, 'views/game/game-view.ts stub sentence').toBe('MCAL game — this result is now on MaxPreps.');
+    expect(stub.targetHref, 'views/game/game-view.ts stub target').toBe(S.ids.gameHref(target.contestId));
     const html = await S.renderPage('sblive-999999');
     expect(textOf(html), 'app/game/[id]/page.tsx stub').toContain('MCAL game — this result is now on MaxPreps.');
     expect(html, 'app/game/[id]/page.tsx stub link').toContain(`href="${stub.targetHref}"`);
     const meta = await S.metadata('sblive-999999');
     expect(meta.alternates?.canonical, 'app/game/[id]/page.tsx stub canonical').toBe(stub.targetHref);
-    expect(S.m.buildGameView('sblive-999999'), 'components/game/game-view.ts: a stub has no game model').toBeUndefined();
+    expect(S.m.buildGameView('sblive-999999'), 'views/game/game-view.ts: a stub has no game model').toBeUndefined();
   });
 });
 
@@ -402,16 +402,16 @@ describe('Southern California games (corpus copy with synthetic SoCal games, DES
   it('a San Diego level final MaxPreps marks W/L: the win credited, no SO tag, the rule cited, no shootout asserted', () => {
     // SectionConfig.shootout.inference 'unverified': si.com and the Section's power rankings record
     // Mt. Carmel–Poway (Sep 11) as 2-0 where MaxPreps has 0-0 marked W/L, so no view says a shootout decided
-    // this game. (A team page's "Earlier:" line is components/teams/team-view.ts, pinned with it.)
+    // this game. (A team page's "Earlier:" line is views/teams/team-view.ts, pinned with it.)
     const model = C.m.buildGameView(shootoutWin.contestId)!;
     expect(model.game.decider).toBe('SO');
-    expect(model.display.deciderTag, 'components/ui/describe-game.ts deciderTagFor').toBeNull();
-    expect(model.display.shootoutLabel, 'components/ui/describe-game.ts shootoutLabel').toBeNull();
+    expect(model.display.deciderTag, 'views/shared/describe-game.ts deciderTagFor').toBeNull();
+    expect(model.display.shootoutLabel, 'views/shared/describe-game.ts shootoutLabel').toBeNull();
     expect([model.display.home.chip, model.display.away.chip]).toEqual(['L', 'W']);
-    expect(model.display.sentence, 'components/ui/describe-game.ts sentence').toBe(
+    expect(model.display.sentence, 'views/shared/describe-game.ts sentence').toBe(
       'Clairemont 0, Eastlake 0, final; Eastlake credited with the win (MaxPreps lists 0–0 with no tally).',
     );
-    expect(model.scoreNote, 'components/game/game-view.ts scoreNote').toBe(
+    expect(model.scoreNote, 'views/game/game-view.ts scoreNote').toBe(
       'MaxPreps lists 0–0 with no tally and marks Eastlake the winner; a level San Diego Section varsity game outside a tournament goes to a sudden-victory period and then a shootout (San Diego Field Hockey Officials Association 2026 Mercy & Overtime Procedures), so this site counts it as Eastlake’s win. si.com and the Section’s power rankings record some of these games with a decisive score (Mt. Carmel–Poway, Sep 11: 2-0).',
     );
     expect(model.scoreNote).not.toMatch(/decided it|1 v 1s/);
@@ -460,7 +460,7 @@ describe('Southern California games (corpus copy with synthetic SoCal games, DES
       detail: 'San Diego Section playoffs game — it does not count in the league table.',
       classificationNote: null,
     });
-    expect(model.display.postseasonTag, 'components/ui/describe-game.ts postseasonTagOf').toBe('San Diego Section playoffs');
+    expect(model.display.postseasonTag, 'views/shared/describe-game.ts postseasonTagOf').toBe('San Diego Section playoffs');
   });
 
   it('a game MaxPreps flags between two City divisions: non-league, with the classifier’s note', () => {

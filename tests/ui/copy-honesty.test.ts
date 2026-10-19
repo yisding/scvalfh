@@ -3,12 +3,12 @@
  * Stage C builders hand to the pages (the built HTML is checked separately by
  * scripts/ci/assert-copy.ts):
  *
- *   components/home/home-view.ts                  buildHomeView(): league panels, league cards, the
+ *   views/home/home-view.ts                  buildHomeView(): league panels, league cards, the
  *                                                 team views (one per registry team)
- *   components/standings/standings-page-view.ts   buildStandingsPageView(league) (division views
- *                                                 built by components/standings/standings-view.ts)
- *   components/teams/team-view.ts                 buildTeamPageView(slug), buildTeamsByLeague()
- *   components/game/game-view.ts                  buildGameView(param) for every game,
+ *   views/standings/standings-view.ts   buildStandingsPageView(league) (division views
+ *                                                 built by views/standings/division.ts)
+ *   views/teams/team-view.ts                 buildTeamPageView(slug), buildTeamsByLeague()
+ *   views/game/game-view.ts                  buildGameView(param) for every game,
  *                                                 buildSupersededStub
  *
  * Rules (every string VALUE in the model, keys excluded):
@@ -41,7 +41,7 @@
  * EAL panel, card and pinned views, /standings/eal, /schedule/eal and the /playoffs EAL card as
  * rendered, the EAL team pages (view model and rendered page) and every game model, where the postseason line and kicker, the
  * 1 v 1 note, the missing banner and the membership note carry real EAL data. Every expect message
- * starts with the PRODUCING module, e.g. `components/home/home-view.ts: MCAL panel`, so the
+ * starts with the PRODUCING module, e.g. `views/home/home-view.ts: MCAL panel`, so the
  * orchestrator routes a failure to its owner.
  */
 
@@ -72,19 +72,19 @@ const COLLECTED = {
   data: loadQueries,
   leagues: () => import('@/lib/config/leagues'),
   labels: () => import('@/lib/config/leagues/labels'),
-  home: () => import('@/components/home/home-view'),
-  standings: () => import('@/components/standings/standings-page-view'),
-  teamView: () => import('@/components/teams/team-view'),
-  gameView: () => import('@/components/game/game-view'),
+  home: () => import('@/views/home/home-view'),
+  standings: () => import('@/views/standings/standings-view'),
+  teamView: () => import('@/views/teams/team-view'),
+  gameView: () => import('@/views/game/game-view'),
 };
 
 const corpus = useCorpusModules('all-2026-10-02', COLLECTED);
 type Leagues = typeof corpus.leagues;
 
-const HV = 'components/home/home-view.ts';
-const SPV = 'components/standings/standings-page-view.ts (via components/standings/standings-view.ts)';
-const TV = 'components/teams/team-view.ts';
-const GV = 'components/game/game-view.ts';
+const HV = 'views/home/home-view.ts';
+const SPV = 'views/standings/standings-view.ts (via views/standings/division.ts)';
+const TV = 'views/teams/team-view.ts';
+const GV = 'views/game/game-view.ts';
 const SP = 'app/schedule/[league]/page.tsx (rendered)';
 const PP = 'app/playoffs/page.tsx (rendered)';
 const TP = 'app/teams/[slug]/page.tsx (rendered)';

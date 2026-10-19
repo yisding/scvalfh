@@ -1,12 +1,11 @@
 import Link from 'next/link';
 
+import Arrow from '@/components/ui/Arrow';
 import { CCS, getLeague } from '@/lib/config/leagues';
 import { dateSpan, longDate, monthDay } from '@/lib/format/dates';
-
-import Arrow from '@/components/ui/Arrow';
 import type { LeagueId } from '@/lib/model/ids';
 import { parseLocal } from '@/lib/shared/dates';
-import type { RailKind } from './rail-targets';
+import type { RailKind } from '@/views/schedule/rail-client';
 
 /**
  * The season rail (DESIGN §3.3, §7.16): `↑ Aug 24 · Sep · ● Today · Oct · Oct 28 ↓ · CCS Nov 7–14`,

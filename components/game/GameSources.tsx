@@ -1,10 +1,9 @@
-import { findDivision, findLeague } from '@/lib/config/leagues';
-import { shootoutPhrases } from '@/lib/format/score';
-import { shootoutGroupName, shootoutSectionOf } from '@/components/ui/describe-game';
 import ExternalLink from '@/components/ui/ExternalLink';
 import SectionHeader from '@/components/ui/SectionHeader';
-
-import type { GameModel } from './game-view';
+import { findDivision, findLeague } from '@/lib/config/leagues';
+import { shootoutPhrases } from '@/lib/format/score';
+import type { GameModel } from '@/views/game/game-view';
+import { shootoutGroupName, shootoutSectionOf } from '@/views/shared/describe-game';
 
 /**
  * The source blocks of a game page.

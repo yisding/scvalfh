@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
+import JsonLd from '@/components/layout/JsonLd';
 import TeamElo from '@/components/teams/TeamElo';
 import TeamGameLog from '@/components/teams/TeamGameLog';
 import TeamIdentity from '@/components/teams/TeamIdentity';
@@ -14,26 +15,14 @@ import TeamRoster from '@/components/teams/TeamRoster';
 import TeamSplits from '@/components/teams/TeamSplits';
 import TeamStatTiles from '@/components/teams/TeamStatTiles';
 import TeamUnbeaten from '@/components/teams/TeamUnbeaten';
-import {
-  buildPlayerStatsView,
-  type PlayerStatsView,
-} from '@/components/teams/player-stats-view';
-import { teamJvStanding } from '@/components/standings/jv-standings-view';
-import { buildTeamJvView } from '@/components/teams/jv-view';
-import { buildRosterView, type RosterView } from '@/components/teams/roster-view';
-import { buildTeamPageView, type TeamPageView } from '@/components/teams/team-view';
 import Arrow from '@/components/ui/Arrow';
 import EmptyState from '@/components/ui/EmptyState';
 import ExternalLink from '@/components/ui/ExternalLink';
 import FormStrip from '@/components/ui/FormStrip';
-import { gameKindLabel } from '@/components/ui/describe-game';
 import { GameCard, GameRow } from '@/components/ui/GameRow';
 import LeagueHealthNote from '@/components/ui/LeagueHealthNote';
 import MarginStrip from '@/components/ui/MarginStrip';
 import SectionHeader from '@/components/ui/SectionHeader';
-import JsonLd from '@/components/layout/JsonLd';
-import { DATA_CORRECTIONS_URL, OG_BASE } from '@/components/layout/site';
-import { teamJsonLd } from '@/components/layout/structured-data';
 import { getLeague, leagueOfDivision, regionIdSuffix, regionOf } from '@/lib/config/leagues';
 import { divisionHeading } from '@/lib/config/leagues/labels';
 import { getHistoryFor, getHistorySeason, getHistoryStandings } from '@/lib/datasets/history';
@@ -43,6 +32,17 @@ import { ordinal, recordString } from '@/lib/format/numbers';
 import { formStripName, plural } from '@/lib/format/words';
 import type { DivisionId, LeagueId } from '@/lib/model/ids';
 import { getTeamSlugs } from '@/lib/queries/teams';
+import { gameKindLabel } from '@/views/shared/describe-game';
+import { DATA_CORRECTIONS_URL, OG_BASE } from '@/views/site/site';
+import { teamJsonLd } from '@/views/site/structured-data';
+import { teamJvStanding } from '@/views/standings/jv';
+import { buildTeamJvView } from '@/views/teams/jv';
+import {
+  buildPlayerStatsView,
+  type PlayerStatsView,
+} from '@/views/teams/player-stats';
+import { buildRosterView, type RosterView } from '@/views/teams/roster';
+import { buildTeamPageView, type TeamPageView } from '@/views/teams/team-view';
 
 /**
  * /teams/[slug] — "How is MY team doing?" (DESIGN §3.7).

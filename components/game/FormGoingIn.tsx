@@ -6,8 +6,7 @@ import GhostMonogram from '@/components/ui/GhostMonogram';
 import ResultChip, { CHIP_LABEL } from '@/components/ui/ResultChip';
 import SectionHeader from '@/components/ui/SectionHeader';
 import TeamMonogram from '@/components/ui/TeamMonogram';
-
-import type { GameModel, GameSideModel } from './game-view';
+import type { GameModel, GameSideModel } from '@/views/game/game-view';
 
 /**
  * FORM GOING IN (DESIGN §3.5) — the last five LEAGUE results each side carried into this contest,

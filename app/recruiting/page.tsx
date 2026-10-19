@@ -3,12 +3,12 @@ import Link from 'next/link';
 
 import LeagueSwitcher, { RegionSwitcher } from '@/components/layout/LeagueSwitcher';
 import PageHeader from '@/components/layout/PageHeader';
-import { leagueChips, leagueHrefs } from '@/components/layout/league-chips';
-import { OG_BASE, ROOT_OG_IMAGE } from '@/components/layout/site';
 import RecruitingList from '@/components/recruiting/RecruitingList';
-import { buildRecruitingView } from '@/components/recruiting/recruiting-view';
 import SectionHeader from '@/components/ui/SectionHeader';
 import { getRosters } from '@/lib/datasets/rosters';
+import { buildRecruitingView } from '@/views/recruiting/recruiting-view';
+import { leagueChips, leagueHrefs } from '@/views/site/league-chips';
+import { OG_BASE, ROOT_OG_IMAGE } from '@/views/site/site';
 
 /** The page's title, and its og:title too: og:title never carries the site-name suffix (OG_BASE). */
 const PAGE_TITLE = 'Recruiting';
@@ -19,7 +19,7 @@ const PAGE_TITLE = 'Recruiting';
  * Every school's recruiting data on one page: the players' own recruiting profiles, the youth clubs
  * a public page ties them to and the colleges a public page says they have committed to. Each team
  * page's roster shows the same three lines for its own players; this page gathers them, built from
- * the same rows (components/recruiting/recruiting-view.ts), so the two never disagree. /clubs and
+ * the same rows (views/recruiting/recruiting-view.ts), so the two never disagree. /clubs and
  * /commits stay the pages that cite the club and commitment sources, and the lines link them.
  *
  * Regions (DESIGN-socal §2.4): the RegionSwitcher sits under the header, and each region's leagues

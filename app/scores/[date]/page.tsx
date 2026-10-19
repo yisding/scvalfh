@@ -3,24 +3,14 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Fragment } from 'react';
 
+import { RegionSwitcher } from '@/components/layout/LeagueSwitcher';
+import PageHeader from '@/components/layout/PageHeader';
 import GameList from '@/components/schedule/GameList';
 import JvDayGames from '@/components/schedule/JvDayGames';
 import OfficialFixtures from '@/components/schedule/OfficialFixtures';
 import SeasonCalendar from '@/components/schedule/SeasonCalendar';
-import {
-  dayDescription,
-  dayRegions,
-  daySummary,
-  leaguesInvolved,
-  type DayRegion,
-} from '@/components/schedule/day-summary';
-import { countGames } from '@/components/schedule/filter-data';
-import { buildDayJvView } from '@/components/teams/jv-view';
 import EmptyState from '@/components/ui/EmptyState';
 import SectionHeader from '@/components/ui/SectionHeader';
-import { RegionSwitcher } from '@/components/layout/LeagueSwitcher';
-import PageHeader from '@/components/layout/PageHeader';
-import { OG_BASE } from '@/components/layout/site';
 import { REGIONS, regionIdSuffix, regionOf } from '@/lib/config/leagues';
 import { getToday } from '@/lib/datasets/snapshot';
 import { longDate, monthDay, shortDate } from '@/lib/format/dates';
@@ -31,6 +21,16 @@ import { getGameDates, getGames, getOfficialFixtures } from '@/lib/queries/games
 import { getLeagueSummaries } from '@/lib/queries/leagues';
 import { getTeamBySlug } from '@/lib/registry/teams';
 import { parseLocal } from '@/lib/shared/dates';
+import {
+  dayDescription,
+  dayRegions,
+  daySummary,
+  leaguesInvolved,
+  type DayRegion,
+} from '@/views/schedule/day-summary';
+import { countGames } from '@/views/schedule/filters-client';
+import { OG_BASE } from '@/views/site/site';
+import { buildDayJvView } from '@/views/teams/jv';
 
 /**
  * `/scores/[date]` — one day's slate (DESIGN §1.1, §3.4).

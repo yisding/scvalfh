@@ -1,5 +1,6 @@
+import { pairingSentence, type PairingView, type SeatView } from '@/views/playoffs/playoff-view';
+
 import PlayInCard, { type PlayInSide } from './PlayInCard';
-import { pairingSentence, type PairingView, type SeatView } from './playoff-view';
 
 /**
  * A CCS league's postseason pairings from config (SPEC §6.1, §10.7): SCVAL's four Oct 30 crossover

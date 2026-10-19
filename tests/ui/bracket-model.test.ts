@@ -1,5 +1,5 @@
 /**
- * `components/playoffs/bracket-model.ts` — the CCS bracket, recovered from a `Game[]` that
+ * `views/playoffs/bracket.ts` — the CCS bracket, recovered from a `Game[]` that
  * carries no seeds and no CCS division label (`format.ccsDivisions`, always "CCS Division 1/2" in
  * copy).
  *
@@ -10,20 +10,20 @@
 
 import { describe, expect, it } from 'vitest';
 
+import { CCS } from '@/lib/config/leagues';
+import type { Game } from '@/lib/model/game';
+import type { CcsPlayoffs } from '@/lib/model/postseason';
+import { resolveTeam } from '@/lib/registry/resolve';
+import { game } from '@/tests/support/game-builder';
 import {
   buildBrackets,
   ccsDivisionLabels,
   isNamedSide,
   pendingRounds,
   roundKeyFor,
-} from '@/components/playoffs/bracket-model';
-import { CCS } from '@/lib/config/leagues';
-import type { Game } from '@/lib/model/game';
-import type { CcsPlayoffs } from '@/lib/model/postseason';
-import { resolveTeam } from '@/lib/registry/resolve';
-import { game } from '@/tests/support/game-builder';
+} from '@/views/playoffs/bracket';
 
-const MODEL = 'components/playoffs/bracket-model.ts';
+const MODEL = 'views/playoffs/bracket.ts';
 
 const playoffs: CcsPlayoffs = {
   keyDates: { ...CCS.keyDates },

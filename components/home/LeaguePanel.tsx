@@ -1,8 +1,10 @@
 import EmptyState from '@/components/ui/EmptyState';
 import LeagueHealthNote from '@/components/ui/LeagueHealthNote';
 import SectionHeader from '@/components/ui/SectionHeader';
+import { isIndependentLeague } from '@/lib/config/leagues';
+import { longDate } from '@/lib/format/dates';
+import type { HomeLeaguePanel } from '@/views/home/home-view';
 
-import type { HomeLeaguePanel } from './home-view';
 import LatestScores from './LatestScores';
 import LeagueTeams from './LeagueTeams';
 import MiniStandings from './MiniStandings';
@@ -10,8 +12,6 @@ import NextSlate from './NextSlate';
 import OtherLeaguesStrip from './OtherLeaguesStrip';
 import PhaseLead from './PhaseLead';
 import PostseasonCard from './PostseasonCard';
-import { isIndependentLeague } from '@/lib/config/leagues';
-import { longDate } from '@/lib/format/dates';
 
 /**
  * One league's home panel (SPEC §10.1). Every league's panel is in the static HTML; the scope

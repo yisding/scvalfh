@@ -7,7 +7,7 @@ import type { LeagueId } from '@/lib/model/ids';
 /**
  * The "Jump to <league>" pills on the three league index pages (/standings, /schedule,
  * /playoffs). Every pill is in the HTML, but the league-scope stylesheet
- * (components/layout/league-scope-css.ts) hides `.sx-jump` and shows only `.sx-jump-<id>` for
+ * (components/head/league-scope-css.ts) hides `.sx-jump` and shows only `.sx-jump-<id>` for
  * the remembered league, before paint. So each anchor carries exactly `sx-jump sx-jump-<id>`,
  * and this is the one place that writes them.
  *

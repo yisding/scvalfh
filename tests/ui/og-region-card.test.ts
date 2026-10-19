@@ -1,5 +1,5 @@
 /**
- * The two-region leaders card (components/layout/og-region-card.tsx), shared by the root OG card and
+ * The two-region leaders card (components/og/RegionCard.tsx), shared by the root OG card and
  * the /standings card (DESIGN-socal §2.4; design-review UI §7): nine league rows in two region columns
  * must fit 1200×630 even when every division's leader line is at its longest.
  *
@@ -93,9 +93,9 @@ async function renderPng(element: ReactElement, height: number): Promise<ReturnT
   return decodePng(Buffer.from(await response.arrayBuffer()));
 }
 
-describe('the two-region leaders card (components/layout/og-region-card.tsx)', () => {
+describe('the two-region leaders card (components/og/RegionCard.tsx)', () => {
   it('lays the nine leagues and the independents’ table out in two region columns, NorCal first (DESIGN §24.10)', async () => {
-    const { regionCardColumns } = await import('@/components/layout/og-region-card');
+    const { regionCardColumns } = await import('@/components/og/RegionCard');
     const columns = regionCardColumns();
     expect(columns.map((c) => c.heading)).toEqual(['Northern California', 'Southern California']);
     expect(columns.map((c) => c.rows.map((r) => r.id))).toEqual([
@@ -107,7 +107,7 @@ describe('the two-region leaders card (components/layout/og-region-card.tsx)', (
   });
 
   it('titles the cards from SITE_WORDMARK and counts leagues and teams in the footer', async () => {
-    const { rootCardProps, standingsCardProps } = await import('@/components/layout/og-region-card');
+    const { rootCardProps, standingsCardProps } = await import('@/components/og/RegionCard');
     const root = rootCardProps();
     expect(root.title).toBe('NorCal HS Field Hockey · 2026');
     expect(root.footer).toMatch(/^9 leagues, 5 independents · 102 teams · (results through \S.*|no results yet) · unofficial$/);
@@ -118,7 +118,7 @@ describe('the two-region leaders card (components/layout/og-region-card.tsx)', (
   });
 
   it('both cards fit 1200×630 with every leader line forced to its longest, and render as PNG', async () => {
-    const card = await import('@/components/layout/og-region-card');
+    const card = await import('@/components/og/RegionCard');
     const { getLeagueSummaries, getTeams } = await loadQueries();
     const teams = getTeams();
     // Per division: the two longest short names as co-leaders of a three-way tie ("A & B +1 99 pts").

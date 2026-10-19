@@ -1,7 +1,7 @@
-import type { JsonLdNode } from './structured-data';
+import type { JsonLdNode } from '@/views/site/structured-data';
 
 /**
- * One `<script type="application/ld+json">` (components/layout/structured-data.ts builds the node).
+ * One `<script type="application/ld+json">` (views/site/structured-data.ts builds the node).
  * Rendered from the page component, the place node_modules/next/dist/docs/01-app/02-guides/json-ld.md
  * recommends; plain JSX, so the Next and vinext builds print it alike.
  *

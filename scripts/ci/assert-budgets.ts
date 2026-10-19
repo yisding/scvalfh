@@ -160,7 +160,7 @@ if (!workerOnly) {
   // 99.4 % of the old line and 86 % of 43,224 B.
   check('/playoffs HTML gzip', gz(file('playoffs.html')), 2.3 * baseline.playoffs.htmlGzip, '2.3 × playoffs');
   // Six school boards of 10 places and four player boards of 25 (seven and five since DESIGN §27), 15 of them behind "Show N more"
-  // (components/leaders/leaders-view.ts): ~28 KB on 2026-10-03. The player boards' places to 25th
+  // (views/leaders/leaders-view.ts): ~28 KB on 2026-10-03. The player boards' places to 25th
   // (DESIGN §23) took it from 29,328 to 34,664 B on 2026-10-04 (51 more rows), over the 1.0 × line,
   // which moved to 1.2 ×; listing every tied row (no cap since §23) took it to 35,499 B the same day.
   // The places are fixed but the rows sharing them are not, so a long tie is how this page grows.

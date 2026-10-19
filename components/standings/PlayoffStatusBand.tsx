@@ -2,8 +2,7 @@ import Link from 'next/link';
 
 import PlaceMark from '@/components/ui/PlaceMark';
 import StatusChip from '@/components/ui/StatusChip';
-
-import type { StatusGroup } from './standings-view';
+import type { StatusGroup } from '@/views/standings/division';
 
 /**
  * The league ladder's markers AND their legend, in one block under each division's table

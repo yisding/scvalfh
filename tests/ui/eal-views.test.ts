@@ -24,8 +24,8 @@ const LEAGUE = 'eal';
 const m = useCorpusModules(EAL_CORPUS, {
   data: loadQueries,
   leagues: () => import('@/lib/config/leagues'),
-  sd: () => import('@/components/standings/standings-page-view'),
-  view: () => import('@/components/standings/standings-view'),
+  sd: () => import('@/views/standings/standings-view'),
+  view: () => import('@/views/standings/division'),
   leagueStandings: () => import('@/app/standings/[league]/page'),
   overview: () => import('@/app/standings/page'),
   leagueSchedule: () => import('@/app/schedule/[league]/page'),
@@ -81,7 +81,7 @@ describe('/standings/eal', () => {
 
   it('links no official schedule and says where its league games come from', () => {
     const [v] = m.sd.buildStandingsPageView(LEAGUE).views;
-    expect(v.officialSchedule, 'components/standings/standings-view.ts officialSchedule').toBeNull();
+    expect(v.officialSchedule, 'views/standings/division.ts officialSchedule').toBeNull();
     expect(v.scheduledPer).toBe('League games as MaxPreps marks them (EAL publishes no schedule)');
     const text = textOf(standingsHtml);
     expect(text, 'components/standings/StandingsNotes.tsx source line').toContain(
@@ -92,10 +92,10 @@ describe('/standings/eal', () => {
 
   it('words the rank rule and the order legend for a league that publishes no standings (D26)', () => {
     const [v] = m.sd.buildStandingsPageView(LEAGUE).views;
-    expect(v.rankRule, 'components/standings/standings-view.ts rankRule').toBe(
+    expect(v.rankRule, 'views/standings/division.ts rankRule').toBe(
       'EAL decides its title on points (NS Guidelines §VII.C.2) and publishes no standings; this site orders the whole table by the same points.',
     );
-    expect(v.legendNotes, 'components/standings/standings-view.ts legend').toContain(
+    expect(v.legendNotes, 'views/standings/division.ts legend').toContain(
       'This order is our computation from published results, not a league ruling: EAL publishes no standings.',
     );
     expect(textOf(standingsHtml)).not.toContain('the official tiebreak belongs to EAL');
@@ -119,14 +119,14 @@ describe('/standings/eal', () => {
 
   it('heads the band "Super Regional, as things stand", links the /playoffs card, and draws no 2px rule', () => {
     const [v] = m.sd.buildStandingsPageView(LEAGUE).views;
-    expect(v.statusHeading, 'components/standings/standings-view.ts statusHeading').toBe('Super Regional, as things stand');
+    expect(v.statusHeading, 'views/standings/division.ts statusHeading').toBe('Super Regional, as things stand');
     expect(v.playoffsHref).toBe(`/playoffs#${LEAGUE}`);
     expect(v.playoffsLinkText).toBe('Postseason');
     expect(v.berthRuleAfter, 'no ladder line: every team is in the top six').toBeUndefined();
     expect(v.ladderLineLabel).toBeNull();
     const ps = m.leagues.getLeague(LEAGUE).postseason;
     if (ps.kind !== 'unbracketed-tournament') throw new Error('EAL postseason kind');
-    expect(v.legendNotes[0], 'components/standings/standings-view.ts legend').toBe(`${ps.citations.qualification}.`);
+    expect(v.legendNotes[0], 'views/standings/division.ts legend').toBe(`${ps.citations.qualification}.`);
     const text = textOf(standingsHtml);
     expect(text, 'components/standings/PlayoffStatusBand.tsx').toContain('Super Regional, as things stand');
     expect(standingsHtml).toContain(`href="/playoffs#${LEAGUE}"`);
@@ -151,7 +151,7 @@ describe('/standings/eal', () => {
 
     const [v] = m.sd.buildStandingsPageView(LEAGUE).views;
     expect(v.missing).toHaveLength(expected.length);
-    expect(v.missingBanner, 'components/standings/standings-view.ts missingBanner').toBe(
+    expect(v.missingBanner, 'views/standings/division.ts missingBanner').toBe(
       expected.length === 1
         ? '⚑ 1 league result missing — listed below the table.'
         : `⚑ ${expected.length} league results missing — listed below the table.`,

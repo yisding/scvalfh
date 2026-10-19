@@ -3,16 +3,16 @@ import Link from 'next/link';
 
 import LeagueSwitcher, { RegionSwitcher } from '@/components/layout/LeagueSwitcher';
 import PageHeader from '@/components/layout/PageHeader';
-import { leagueChips, leagueHrefs } from '@/components/layout/league-chips';
-import { OG_BASE, ROOT_OG_IMAGE, leaguesBySectionWords } from '@/components/layout/site';
 import TeamFinder from '@/components/search/TeamFinder';
 import OverviewDivisionBlock from '@/components/standings/OverviewDivisionBlock';
-import { alignmentSentence, buildTeamsByRegion } from '@/components/teams/team-view';
 import SectionHeader from '@/components/ui/SectionHeader';
 import { LEAGUES_PROPER } from '@/lib/config/leagues';
 import { listWords } from '@/lib/format/words';
 import { getCounts } from '@/lib/queries/provenance';
 import { getTeamSearchIndex } from '@/lib/queries/teams';
+import { leagueChips, leagueHrefs } from '@/views/site/league-chips';
+import { OG_BASE, ROOT_OG_IMAGE, leaguesBySectionWords } from '@/views/site/site';
+import { alignmentSentence, buildTeamsByRegion } from '@/views/teams/team-view';
 
 /** The page's title, and its og:title too: og:title never carries the site-name suffix (OG_BASE). */
 const PAGE_TITLE = 'Teams and standings';
@@ -80,7 +80,7 @@ export default function TeamsPage() {
 
       {/* The region control, its own row under the header (DESIGN-socal §2.4). The finder below stays
           outside the region blocks and searches every team; while it is searching, both regions'
-          lists show (the /teams lift, components/layout/league-scope-css.ts). */}
+          lists show (the /teams lift, components/head/league-scope-css.ts). */}
       <RegionSwitcher className="mt-4" />
 
       {/* The finder is client-rendered on the server too, so its 48px field is in the first paint

@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 
+import { isNearViewport, unpinFallbackTarget, usePinnedTeam } from '@/components/hooks/use-pinned-team';
 import TeamFinder from '@/components/search/TeamFinder';
 import ExternalLink from '@/components/ui/ExternalLink';
 import FormStrip from '@/components/ui/FormStrip';
@@ -10,18 +11,16 @@ import { ScoreGlyph, nameClass } from '@/components/ui/ScoreGlyph';
 import SectionHeader from '@/components/ui/SectionHeader';
 import StatusLabel from '@/components/ui/StatusLabel';
 import TeamMonogram from '@/components/ui/TeamMonogram';
-import type { GameDisplay } from '@/components/ui/describe-game';
-import { isNearViewport, unpinFallbackTarget, usePinnedTeam } from '@/components/ui/use-pinned-team';
 import { formStripName } from '@/lib/format/words';
 import type { SearchIndex } from '@/lib/shared/search';
-
 import {
   postseasonCardLine,
   type HomeCardTeam,
   type HomeLastDisplay,
   type HomeSide,
   type HomeTeamView,
-} from './home-types';
+} from '@/views/home/home-client';
+import type { GameDisplay } from '@/views/shared/game-display-client';
 
 /**
  * The My-team slot (SPEC §10.1, §8.2; DESIGN §3.1, §7.12) — the one optional personalization.

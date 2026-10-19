@@ -115,7 +115,7 @@ describe('prefetch policy: a link that repeats per row never prefetches', () => 
     // A string matches as a substring of the tag; a RegExp with `.test()`. The two game links take
     // either form because their owners switch them to `gameHref` only in Stage C (SPEC §10.2), and
     // this test has to pass before that; tests/arch/page-code-literals.test.ts then bans the raw
-    // `/game/${…}` template in app/ and components/, so the old form cannot come back.
+    // `/game/${…}` template in app/, components/ and views/, so the old form cannot come back.
     const GAME_LINK = /gameHref\(game\.contestId\)|\/game\/\$\{game\.contestId\}/;
     const WANT: [string, string | RegExp][] = [
       ['components/ui/StandingsTable.tsx', 'href={href}'],

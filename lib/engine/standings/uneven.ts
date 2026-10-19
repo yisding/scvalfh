@@ -15,7 +15,7 @@ import type { LeagueId } from '@/lib/model/ids';
  * (gamesPerTeam null: the Sunset, whose ten teams meet 0, 1 or 2 times and play only the games MaxPreps
  * marks as league games) has no "of N" to say, and no LEFT or MAX column to explain; its sentence says
  * what the gap is instead (DESIGN-socal §2.1.7). The rest of the footnote — LEFT, MAX and how the table
- * is ordered — is components/standings/standings-view.ts unevenGpFootnote's, which reads this.
+ * is ordered — is views/standings/division.ts unevenGpFootnote's, which reads this.
  */
 export function unevenGamesSentence(
   leagueId: LeagueId,

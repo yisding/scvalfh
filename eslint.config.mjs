@@ -40,6 +40,13 @@ const eslintConfig = defineConfig([
               regex: "^(@/lib/data|\\./data)$",
               message: "Read the snapshot through '@/lib/datasets/snapshot' and '@/lib/queries/<provenance|leagues|teams|games|standings|phase|postseason>'.",
             },
+            // The view models moved to views/ and the OG factories to components/og/; their old
+            // component paths survive as re-exports only for the metadata image routes (see each
+            // file's header).
+            {
+              regex: "^@/components/(layout/(og-theme|site|og-region-card|monogram-image)|standings/league-standings-card|schedule/day-summary|playoffs/(playoff-view|tournament-league)|teams/team-view|game/game-view)$",
+              message: "Import from the module's home in views/ or components/og/; this path re-exports only for the metadata image routes.",
+            },
           ],
         },
       ],

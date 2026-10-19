@@ -26,13 +26,16 @@ export const REPO_ROOT = path.resolve(import.meta.dirname, '..', '..');
 // ---------------------------------------------------------------- what the source is
 
 /** The directories whose .ts/.tsx/.mts/.mjs/.js files are the repo's own source. */
-export const SOURCE_ROOTS: readonly string[] = ['app', 'components', 'lib', 'scripts', 'tests'];
+export const SOURCE_ROOTS: readonly string[] = ['app', 'components', 'views', 'lib', 'scripts', 'tests'];
 
 /** Inside SOURCE_ROOTS, captured and frozen data that is not source. */
 export const EXCLUDED: readonly string[] = ['tests/fixtures/', 'tests/golden/'];
 
-/** The directories whose files render a page: the id-literal and URL-template bans apply here. */
-export const PAGE_CODE_ROOTS: readonly string[] = ['app', 'components'];
+/**
+ * The directories whose files build or render a page (route files, components, view models): the
+ * id-literal and URL-template bans apply here.
+ */
+export const PAGE_CODE_ROOTS: readonly string[] = ['app', 'components', 'views'];
 
 /**
  * The import-free leaves of lib/config (module paths, no extension): the season constants, the

@@ -2,11 +2,10 @@ import Link from 'next/link';
 
 import PlaceMark from '@/components/ui/PlaceMark';
 import TeamMonogram from '@/components/ui/TeamMonogram';
-import type { StandingsRowData } from '@/components/ui/StandingsTable';
 import { recordString } from '@/lib/format/numbers';
 import { EM_DASH } from '@/lib/format/words';
-
-import { ladderLineAfter, ladderRow } from './standings-view';
+import { ladderLineAfter, ladderRow } from '@/views/standings/division';
+import type { StandingsRowData } from '@/views/standings/division';
 
 /**
  * The COMPACT full table of the all-league `/standings` overview (SPEC §10.3): place, team

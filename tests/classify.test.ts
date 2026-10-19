@@ -2,11 +2,12 @@
 
 import { describe, expect, it, vi } from 'vitest';
 
-import { postseasonTagOf } from '@/components/ui/describe-game';
 import {
   classifyGame, classifyGames, crossDivisionNote, postseasonTag,
 } from '@/lib/engine/classify';
 import type { Game } from '@/lib/model/game';
+import { postseasonTagOf } from '@/views/shared/describe-game';
+
 import { game } from './support/game-builder';
 import { goldenPath, readJson } from './support/repo';
 

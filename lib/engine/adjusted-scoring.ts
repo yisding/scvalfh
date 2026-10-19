@@ -1,7 +1,7 @@
 /**
  * Elo-adjusted scoring: goals and points weighed by how hard the defenses they came against are,
  * with the Elo table (lib/engine/ratings.ts, DESIGN §20) at the core of that measure. Two /leaders boards use
- * it (components/leaders/school-boards.ts, player-boards.ts): a school's Elo-adjusted goals per game, and a player's
+ * it (views/leaders/school-boards.ts, player-boards.ts): a school's Elo-adjusted goals per game, and a player's
  * Elo-adjusted points. DESIGN §27 and the README's "Elo-adjusted goals and points" say how it was chosen.
  *
  * The goal model. Every counted final gives two Poisson counts, one per side, with

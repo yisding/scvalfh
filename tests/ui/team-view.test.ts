@@ -1,6 +1,6 @@
 /**
  * The teams pages' view models and markup (SPEC §10.5, §8.1, §10.0, §10.9):
- * `components/teams/team-view.ts`, `components/teams/*`, `/teams` and `/teams/[slug]`.
+ * `views/teams/team-view.ts`, `components/teams/*`, `/teams` and `/teams/[slug]`.
  *
  * League-specific values are asserted on the all-2026-10-02 CORPUS snapshot (SPEC §13.6), loaded
  * through useCorpusModules (tests/support/corpus-modules.ts), which points lib/datasets/snapshot.ts at it before it is
@@ -30,7 +30,7 @@ const loaders = {
   data: loadQueries,
   leagues: () => import('@/lib/config/leagues'),
   labels: () => import('@/lib/config/leagues/labels'),
-  view: () => import('@/components/teams/team-view'),
+  view: () => import('@/views/teams/team-view'),
   teamPage: () => import('@/app/teams/[slug]/page'),
   indexPage: () => import('@/app/teams/page'),
 };
@@ -67,46 +67,46 @@ describe('team-view.ts over every division (ALL_DIVISIONS)', () => {
       expect(teams.length, `lib/queries/teams.ts getTeams(${division.id})`).toBe(division.expectedTeams);
       for (const team of teams) {
         const v = m.view.buildTeamPageView(team.slug);
-        expect(v, `components/teams/team-view.ts ${team.slug}`).toBeDefined();
+        expect(v, `views/teams/team-view.ts ${team.slug}`).toBeDefined();
         if (!v) continue;
         seen += 1;
         // A Southern Section independent (DESIGN §24.10): a league team's view, with the group's table (no fixed
         // schedule, so no scheduled count) and its standings link labelled 'LA standings'.
         if (m.leagues.isIndependentDivision(division.id)) {
-          expect(v.scopeLabel, `components/teams/team-view.ts ${team.slug} scope`).toBe('LA');
-          expect(v.divisionSize, `components/teams/team-view.ts ${team.slug} divisionSize`).toBe(division.expectedTeams);
-          expect(v.standingsHref, `components/teams/team-view.ts ${team.slug} standingsHref`).toBe(
+          expect(v.scopeLabel, `views/teams/team-view.ts ${team.slug} scope`).toBe('LA');
+          expect(v.divisionSize, `views/teams/team-view.ts ${team.slug} divisionSize`).toBe(division.expectedTeams);
+          expect(v.standingsHref, `views/teams/team-view.ts ${team.slug} standingsHref`).toBe(
             `/standings/${division.leagueId}#${division.id}`,
           );
-          expect(v.standingsLabel, `components/teams/team-view.ts ${team.slug} standingsLabel`).toBe('LA standings');
-          expect(v.leagueScheduled, `components/teams/team-view.ts ${team.slug} scheduled`).toBeNull();
+          expect(v.standingsLabel, `views/teams/team-view.ts ${team.slug} standingsLabel`).toBe('LA standings');
+          expect(v.leagueScheduled, `views/teams/team-view.ts ${team.slug} scheduled`).toBeNull();
           continue;
         }
-        expect(v.divisionSize, `components/teams/team-view.ts ${team.slug} divisionSize`).toBe(division.expectedTeams);
-        expect(v.scopeLabel, `components/teams/team-view.ts ${team.slug} scope`).toBe(scope);
+        expect(v.divisionSize, `views/teams/team-view.ts ${team.slug} divisionSize`).toBe(division.expectedTeams);
+        expect(v.scopeLabel, `views/teams/team-view.ts ${team.slug} scope`).toBe(scope);
         const sub = m.view.placeSub(v);
         // The tile's VALUE is the ordinal (T-prefixed when level); the sub-line only completes it,
         // so a shared place is never written a second way under the value.
-        expect(sub, `components/teams/team-view.ts placeSub ${team.slug}`).toBe(
+        expect(sub, `views/teams/team-view.ts placeSub ${team.slug}`).toBe(
           `of ${division.expectedTeams} in ${scope}`,
         );
-        expect(v.standingsHref, `components/teams/team-view.ts standingsHref ${team.slug}`).toBe(
+        expect(v.standingsHref, `views/teams/team-view.ts standingsHref ${team.slug}`).toBe(
           `/standings/${division.leagueId}#${division.id}`,
         );
         // A league that publishes no schedule (`official.mode` 'none') has no link to give.
-        expect(v.officialScheduleUrl, `components/teams/team-view.ts schedule url ${team.slug}`).toBe(
+        expect(v.officialScheduleUrl, `views/teams/team-view.ts schedule url ${team.slug}`).toBe(
           division.official.mode === 'none' ? null : division.official.scheduleUrl,
         );
-        expect(v.leagueScheduled, `components/teams/team-view.ts scheduled ${team.slug}`).toBe(division.gamesPerTeam);
+        expect(v.leagueScheduled, `views/teams/team-view.ts scheduled ${team.slug}`).toBe(division.gamesPerTeam);
         // The league log is exactly the games that count for this team's table.
         expect(
           v.leagueLog.every((g) => g.countsFor === division.id),
-          `components/teams/team-view.ts leagueLog ${team.slug}`,
+          `views/teams/team-view.ts leagueLog ${team.slug}`,
         ).toBe(true);
-        expect(v.nonLeagueLog.every((g) => g.countsFor === null), `components/teams/team-view.ts nonLeagueLog ${team.slug}`).toBe(true);
+        expect(v.nonLeagueLog.every((g) => g.countsFor === null), `views/teams/team-view.ts nonLeagueLog ${team.slug}`).toBe(true);
       }
     }
-    expect(seen, 'components/teams/team-view.ts: every registry team').toBe(102);
+    expect(seen, 'views/teams/team-view.ts: every registry team').toBe(102);
   });
 
   it('single-division leagues read "of N in <league short>"', () => {
@@ -116,35 +116,35 @@ describe('team-view.ts over every division (ALL_DIVISIONS)', () => {
   });
 });
 
-describe('identity lines (components/teams/team-view.ts identityLine)', () => {
+describe('identity lines (views/teams/team-view.ts identityLine)', () => {
   it('a multi-division team: mascot and sport · division · league · city', () => {
     const leigh = m.view.buildTeamPageView('leigh')!;
-    expect(leigh.identityLine, 'components/teams/team-view.ts leigh').toBe(
+    expect(leigh.identityLine, 'views/teams/team-view.ts leigh').toBe(
       `${leigh.team.mascot} girls varsity field hockey · Mt. Hamilton · BVAL · ${leigh.team.city}`,
     );
     const si = m.view.buildTeamPageView('st-ignatius')!;
-    expect(si.identityLine, 'components/teams/team-view.ts st-ignatius').toBe(
+    expect(si.identityLine, 'views/teams/team-view.ts st-ignatius').toBe(
       `${si.team.mascot} girls varsity field hockey · De Anza · SCVAL · ${si.team.city}`,
     );
   });
 
   it('a single-division team has no division label (SPEC §10.5 example)', () => {
-    expect(m.view.buildTeamPageView('tamalpais')!.identityLine, 'components/teams/team-view.ts tamalpais').toBe(
+    expect(m.view.buildTeamPageView('tamalpais')!.identityLine, 'views/teams/team-view.ts tamalpais').toBe(
       'Red-Tailed Hawks girls varsity field hockey · MCAL · Mill Valley',
     );
     const carmel = m.view.buildTeamPageView('carmel')!;
-    expect(carmel.identityLine, 'components/teams/team-view.ts carmel').toBe(`${carmel.team.mascot} girls varsity field hockey · PCAL · ${carmel.team.city}`);
+    expect(carmel.identityLine, 'views/teams/team-view.ts carmel').toBe(`${carmel.team.mascot} girls varsity field hockey · PCAL · ${carmel.team.city}`);
   });
 
   it('the pin label names the team and its league', () => {
-    expect(m.view.buildTeamPageView('leigh')!.pinLabel, 'components/teams/team-view.ts pinLabel').toBe(
+    expect(m.view.buildTeamPageView('leigh')!.pinLabel, 'views/teams/team-view.ts pinLabel').toBe(
       'Pin Leigh, Mt. Hamilton · BVAL',
     );
-    expect(m.view.buildTeamPageView('tamalpais')!.pinLabel, 'components/teams/team-view.ts pinLabel').toBe('Pin Tamalpais, MCAL');
+    expect(m.view.buildTeamPageView('tamalpais')!.pinLabel, 'views/teams/team-view.ts pinLabel').toBe('Pin Tamalpais, MCAL');
   });
 });
 
-describe('league copy (components/teams/team-view.ts leagueCopy)', () => {
+describe('league copy (views/teams/team-view.ts leagueCopy)', () => {
   it('end-of-season and bracket sentences by league', () => {
     const scval = m.view.leagueCopy('scval');
     expect(scval.seasonEndSentence).toBe('The SCVAL league season ends Wed Oct 28 and the SCVAL crossover is Fri Oct 30.');
@@ -164,19 +164,19 @@ describe('league copy (components/teams/team-view.ts leagueCopy)', () => {
     for (const league of unbracketed) {
       if (league.postseason.kind !== 'unbracketed-tournament') continue;
       const copy = m.view.leagueCopy(league.id);
-      expect(copy.postseasonKind, 'components/teams/team-view.ts kind').toBe('unbracketed-tournament');
-      expect(copy.postseasonName, 'components/teams/team-view.ts postseasonName').toBe('Super Regional');
-      expect(copy.seasonEndSentence, 'components/teams/team-view.ts seasonEndSentence').toBe(
+      expect(copy.postseasonKind, 'views/teams/team-view.ts kind').toBe('unbracketed-tournament');
+      expect(copy.postseasonName, 'views/teams/team-view.ts postseasonName').toBe('Super Regional');
+      expect(copy.seasonEndSentence, 'views/teams/team-view.ts seasonEndSentence').toBe(
         'The EAL league season ends Wed Oct 28; the Super Regional follows, Oct 30–31.',
       );
-      expect(copy.bracketSentence, 'components/teams/team-view.ts bracketSentence').toBe(
+      expect(copy.bracketSentence, 'views/teams/team-view.ts bracketSentence').toBe(
         'We will not guess a bracket: the Super Regional’s format and site are not published yet.',
       );
     }
     for (const id of ['scval', 'bval', 'pcal']) {
-      expect(m.view.leagueCopy(id as never).postseasonName, `components/teams/team-view.ts ${id}`).toBeNull();
+      expect(m.view.leagueCopy(id as never).postseasonName, `views/teams/team-view.ts ${id}`).toBeNull();
     }
-    expect(m.view.leagueCopy('mcal').postseasonName, 'components/teams/team-view.ts mcal').toBe('MCAL tournament');
+    expect(m.view.leagueCopy('mcal').postseasonName, 'views/teams/team-view.ts mcal').toBe('MCAL tournament');
   });
 });
 
@@ -246,7 +246,7 @@ describe('Southern California team pages (DESIGN-socal §2.4)', () => {
 
   it('a Sunset page: kicker "Postseason", the league note whatever it has played, no projection, GP bare', async () => {
     const v = m.view.buildTeamPageView('huntington-beach')!;
-    expect(v.leagueScheduled, 'components/teams/team-view.ts no fixed schedule').toBeNull();
+    expect(v.leagueScheduled, 'views/teams/team-view.ts no fixed schedule').toBeNull();
     expect(v.postseasonLine?.href).toBe('/playoffs#sunset');
     const text = textOf(await renderTeam('huntington-beach'));
     expect(text).toContain('Postseason');
@@ -330,7 +330,7 @@ describe('/teams/[slug] pages (app/teams/[slug]/page.tsx)', () => {
       // the bare count, as the Sunset's does (no fixed schedule).
       if (m.leagues.isIndependentLeague(team.league)) {
         expect(text, `app/teams/[slug]/page.tsx ${team.slug} group link`).toContain('LA standings →');
-        expect(v.context!.scheduled, `components/teams/team-view.ts ${team.slug} scheduled`).toBeNull();
+        expect(v.context!.scheduled, `views/teams/team-view.ts ${team.slug} scheduled`).toBeNull();
         expect(text, `components/teams/TeamStatTiles.tsx ${team.slug} GP`).toMatch(new RegExp(`GP\\s*${v.context!.counted}\\b`));
         expect(html, `app/teams/[slug]/page.tsx ${team.slug}`).not.toContain('Gabilan');
         continue;
@@ -376,7 +376,7 @@ describe('/teams/[slug] pages (app/teams/[slug]/page.tsx)', () => {
   });
 
   it('every page: the Elo card is the /leaders board’s rating and place, and names no place below its top 10', async () => {
-    const { buildLeadersView } = await import('@/components/leaders/leaders-view');
+    const { buildLeadersView } = await import('@/views/leaders/leaders-view');
     // One Elo board per region (DESIGN-socal §2.3): a team's place is on its own region's board, whose id
     // is `elo-rating` (NorCal) or `elo-rating-socal` (SoCal), and the card links that board.
     const regions = buildLeadersView().regions;
@@ -390,8 +390,8 @@ describe('/teams/[slug] pages (app/teams/[slug]/page.tsx)', () => {
       const board = boardFor(team.league);
       const listed = new Map(board.rows.map((r) => [r.team.slug, r]));
       const { elo } = m.view.buildTeamPageView(team.slug)!;
-      expect(elo.boardHref, `components/teams/team-view.ts ${team.slug}: board link`).toBe(`/leaders#${board.id}`);
-      expect(elo.fitTeams, `components/teams/team-view.ts ${team.slug}: one fit`).toBe(m.data.getTeams().length);
+      expect(elo.boardHref, `views/teams/team-view.ts ${team.slug}: board link`).toBe(`/leaders#${board.id}`);
+      expect(elo.fitTeams, `views/teams/team-view.ts ${team.slug}: one fit`).toBe(m.data.getTeams().length);
       const html = await renderTeam(team.slug);
       const text = textOf(html);
       const row = listed.get(team.slug);
@@ -401,19 +401,19 @@ describe('/teams/[slug] pages (app/teams/[slug]/page.tsx)', () => {
       );
       expect(html, `components/teams/TeamElo.tsx ${team.slug}: method link`).toContain(`href="/leaders#${board.id}"`);
       if (row) {
-        expect(elo.boardPlace, `components/teams/team-view.ts ${team.slug}`).toEqual({ rank: row.rank, tied: row.tied });
-        expect(String(elo.elo), `components/teams/team-view.ts ${team.slug}`).toBe(row.cells[board.rankedBy].text);
+        expect(elo.boardPlace, `views/teams/team-view.ts ${team.slug}`).toEqual({ rank: row.rank, tied: row.tied });
+        expect(String(elo.elo), `views/teams/team-view.ts ${team.slug}`).toBe(row.cells[board.rankedBy].text);
         expect(text, `components/teams/TeamElo.tsx ${team.slug}`).toContain(
           `${row.tied ? 'tied for ' : ''}${ordinal(row.rank)} on the ${elo.boardRegion} Elo board`,
         );
       } else {
-        expect(elo.boardPlace, `components/teams/team-view.ts ${team.slug}`).toBeNull();
+        expect(elo.boardPlace, `views/teams/team-view.ts ${team.slug}`).toBeNull();
         expect(text, `components/teams/TeamElo.tsx ${team.slug}`).not.toMatch(/on the \w+ Elo board/);
       }
-      expect(elo.provisional, `components/teams/team-view.ts ${team.slug} provisional`).toBe(
+      expect(elo.provisional, `views/teams/team-view.ts ${team.slug} provisional`).toBe(
         elo.elo !== null && elo.games > 0 && elo.games < elo.minGames,
       );
-      expect(elo.preseason, `components/teams/team-view.ts ${team.slug} preseason`).toBe(elo.elo !== null && elo.games === 0);
+      expect(elo.preseason, `views/teams/team-view.ts ${team.slug} preseason`).toBe(elo.elo !== null && elo.games === 0);
       if (elo.elo !== null) {
         rated += 1;
         expect(text, `components/teams/TeamElo.tsx ${team.slug}`).toContain(`Elo rating ${elo.elo} points ·`);
@@ -422,7 +422,7 @@ describe('/teams/[slug] pages (app/teams/[slug]/page.tsx)', () => {
         expect(text, `components/teams/TeamElo.tsx ${team.slug}`).toContain(`provisional, from ${elo.games}`);
       }
     }
-    expect(rated, 'components/teams/team-view.ts: the corpus rates most teams').toBeGreaterThan(30);
+    expect(rated, 'views/teams/team-view.ts: the corpus rates most teams').toBeGreaterThan(30);
   });
 
   it('a si.com-only game links by its param, never the raw contest id', async () => {
@@ -555,10 +555,10 @@ describe('the NEXT card and the identity place line (UI pass, league-aware)', ()
     const scval = ranked('scval');
     const mcal = ranked('mcal');
     const heading = m.labels.divisionHeading(scval.division)!;
-    expect(m.view.opponentRecordLine(scval, 'scval'), 'components/teams/team-view.ts same league').toMatch(
+    expect(m.view.opponentRecordLine(scval, 'scval'), 'views/teams/team-view.ts same league').toMatch(
       new RegExp(` in ${heading}$`),
     );
-    expect(m.view.opponentRecordLine(scval, 'bval'), 'components/teams/team-view.ts cross-league').toMatch(
+    expect(m.view.opponentRecordLine(scval, 'bval'), 'views/teams/team-view.ts cross-league').toMatch(
       new RegExp(` in SCVAL ${heading}$`),
     );
     expect(m.view.opponentRecordLine(mcal, 'mcal')).toMatch(/ in MCAL$/);
@@ -571,7 +571,7 @@ describe('the NEXT card and the identity place line (UI pass, league-aware)', ()
       const v = m.view.buildTeamPageView(team.slug)!;
       const card = v.nextCard;
       if (card.kind === 'game' && card.earlier) {
-        expect(card.earlier.text, `components/teams/team-view.ts ${team.slug} earlier`).toMatch(
+        expect(card.earlier.text, `views/teams/team-view.ts ${team.slug} earlier`).toMatch(
           /^Earlier: ((won|lost|tied) \d+–\d+|(credited with the win|lost) on a level \d+–\d+ score)/,
         );
       }
@@ -586,7 +586,7 @@ describe('the NEXT card and the identity place line (UI pass, league-aware)', ()
             ? [card.place ?? '', card.earlier?.text ?? '', ...card.chips.map((c) => c.label)]
             : []),
         ].join(' ');
-        expect(printed, `components/teams/team-view.ts ${team.slug} nextCard`).not.toMatch(
+        expect(printed, `views/teams/team-view.ts ${team.slug} nextCard`).not.toMatch(
           /\bCCS\b|automatic qualifier/i,
         );
       }
@@ -694,7 +694,7 @@ describe('a team with no results (corpus copy, one MCAL team zeroed)', () => {
   it('getTeamPostseasonLine is null and the block says "No results reported yet."', async () => {
     expect(zeroed.data.getTeamPostseasonLine(slug), 'lib/queries/postseason.ts getTeamPostseasonLine gp 0').toBeNull();
     const v = zeroed.view.buildTeamPageView(slug)!;
-    expect(v.hasResults, 'components/teams/team-view.ts hasResults').toBe(false);
+    expect(v.hasResults, 'views/teams/team-view.ts hasResults').toBe(false);
     const text = textOf(await zeroedPages.renderTeam(slug));
     expect(text, 'components/teams/TeamPlayoffLine.tsx gp 0').toContain('No results reported yet.');
     expect(text, 'app/teams/[slug]/page.tsx gp 0').not.toMatch(/0-0-0/);
@@ -703,15 +703,15 @@ describe('a team with no results (corpus copy, one MCAL team zeroed)', () => {
 
   it('the Elo card rates the team from last season alone, as preseason, and keeps it off the board', async () => {
     const v = zeroed.view.buildTeamPageView(slug)!;
-    expect(v.elo, 'components/teams/team-view.ts elo gp 0').toMatchObject({
+    expect(v.elo, 'views/teams/team-view.ts elo gp 0').toMatchObject({
       games: 0,
       preseason: true,
       provisional: false,
       boardPlace: null,
       seededFrom: '2025-26',
     });
-    expect(v.elo.elo, 'components/teams/team-view.ts elo gp 0').not.toBeNull();
-    expect(v.elo.seeded, 'components/teams/team-view.ts elo gp 0: its own start').toBe(true);
+    expect(v.elo.elo, 'views/teams/team-view.ts elo gp 0').not.toBeNull();
+    expect(v.elo.seeded, 'views/teams/team-view.ts elo gp 0: its own start').toBe(true);
     const text = textOf(await zeroedPages.renderTeam(slug));
     expect(text, 'components/teams/TeamElo.tsx gp 0').toContain(`Elo rating ${v.elo.elo} points · preseason, from 2025-26`);
     expect(text, 'components/teams/TeamElo.tsx gp 0').toContain('No counted result this season yet, so this is where it starts');
@@ -762,7 +762,7 @@ function dayBefore(dateKey: string): string {
 // Invariants over the corpus snapshot, checked for every registry team in all five leagues rather
 // than pinned per team, so a corpus refresh that moves a game keeps them meaningful.
 // `buildNextCard` takes `today` as a parameter, so the Today label is tested without the clock.
-describe('buildNextCard (components/teams/team-view.ts)', () => {
+describe('buildNextCard (views/teams/team-view.ts)', () => {
   it("labels the next game 'Today · ' only on its own day", () => {
     let checked = 0;
     for (const team of m.data.getTeams()) {
@@ -772,10 +772,10 @@ describe('buildNextCard (components/teams/team-view.ts)', () => {
       checked += 1;
       const onDay = m.view.buildNextCard(team, next, [], next.dateKey, v.league);
       const dayAhead = m.view.buildNextCard(team, next, [], dayBefore(next.dateKey), v.league);
-      expect(onDay.kind, `components/teams/team-view.ts ${team.slug}`).toBe('game');
+      expect(onDay.kind, `views/teams/team-view.ts ${team.slug}`).toBe('game');
       if (onDay.kind === 'none' || dayAhead.kind === 'none') continue;
-      expect(onDay.dateLabel.startsWith('Today \u00b7 '), `components/teams/team-view.ts ${team.slug}`).toBe(true);
-      expect(dayAhead.dateLabel.startsWith('Today'), `components/teams/team-view.ts ${team.slug}`).toBe(false);
+      expect(onDay.dateLabel.startsWith('Today \u00b7 '), `views/teams/team-view.ts ${team.slug}`).toBe(true);
+      expect(dayAhead.dateLabel.startsWith('Today'), `views/teams/team-view.ts ${team.slug}`).toBe(false);
     }
     expect(checked, 'the corpus has upcoming games to label').toBeGreaterThan(0);
   });
@@ -788,7 +788,7 @@ describe('buildNextCard (components/teams/team-view.ts)', () => {
         const team = slug ? getTeamBySlug(slug) : undefined;
         if (!team) continue;
         const card = m.view.buildNextCard(team, game, [], game.dateKey, m.view.leagueCopy(team.league));
-        expect(card.kind === 'game' ? card.place : 'not a game card', `components/teams/team-view.ts ${game.contestId}`).toBeNull();
+        expect(card.kind === 'game' ? card.place : 'not a game card', `views/teams/team-view.ts ${game.contestId}`).toBeNull();
       }
     }
   });
@@ -819,7 +819,7 @@ describe('buildNextCard (components/teams/team-view.ts)', () => {
       });
       const today = dayBefore(dayBefore(next.dateKey));
       const before = m.view.buildNextCard(team, next, [fixture(dayBefore(next.dateKey))], today, v.league);
-      expect(before.kind === 'game' ? before.officialBefore : null, `components/teams/team-view.ts ${team.slug}`).toEqual({
+      expect(before.kind === 'game' ? before.officialBefore : null, `views/teams/team-view.ts ${team.slug}`).toEqual({
         dateLabel: expect.any(String),
         timeLabel: null,
         versus: 'vs',
@@ -827,15 +827,15 @@ describe('buildNextCard (components/teams/team-view.ts)', () => {
       });
       // A league that publishes the start time (PCAL, BVAL): the card names it.
       const timed = m.view.buildNextCard(team, next, [fixture(dayBefore(next.dateKey), '16:00')], today, v.league);
-      expect(timed.kind === 'game' ? timed.officialBefore?.timeLabel : null, `components/teams/team-view.ts ${team.slug}`).toBe('4:00 PM PT');
+      expect(timed.kind === 'game' ? timed.officialBefore?.timeLabel : null, `views/teams/team-view.ts ${team.slug}`).toBe('4:00 PM PT');
       const sameDay = m.view.buildNextCard(team, next, [fixture(next.dateKey)], today, v.league);
-      expect(sameDay.kind === 'game' ? sameDay.officialBefore : 'not a game card', `components/teams/team-view.ts ${team.slug}`).toBeNull();
+      expect(sameDay.kind === 'game' ? sameDay.officialBefore : 'not a game card', `views/teams/team-view.ts ${team.slug}`).toBeNull();
     }
     expect(checked, 'the corpus has upcoming games').toBeGreaterThan(0);
   });
 });
 
-describe('fixtureOpponent (components/teams/team-view.ts)', () => {
+describe('fixtureOpponent (views/teams/team-view.ts)', () => {
   it('names a registered opponent by short name and title-cases a grid name outside the registry', () => {
     const team = m.data.getTeams()[0];
     const base = {
@@ -859,10 +859,10 @@ describe('fixtureOpponent (components/teams/team-view.ts)', () => {
   });
 });
 
-describe('opponentRecordLine (components/teams/team-view.ts)', () => {
+describe('opponentRecordLine (views/teams/team-view.ts)', () => {
   it('prints nothing for an opponent outside the registry, whichever league is asking', () => {
     for (const league of m.leagues.LEAGUES) {
-      expect(m.view.opponentRecordLine(undefined, league.id), `components/teams/team-view.ts ${league.id}`).toBeNull();
+      expect(m.view.opponentRecordLine(undefined, league.id), `views/teams/team-view.ts ${league.id}`).toBeNull();
     }
   });
 
@@ -872,21 +872,21 @@ describe('opponentRecordLine (components/teams/team-view.ts)', () => {
       if (line === 'no league results yet') continue;
       // An independent has no place: its overall record and the group's short name (DESIGN §24.9).
       if (m.leagues.isIndependentLeague(team.league)) {
-        expect(line, `components/teams/team-view.ts ${team.slug}`).toMatch(/^(\d+-\d+-\d+ overall \u00b7 LA|no results yet)$/);
+        expect(line, `views/teams/team-view.ts ${team.slug}`).toMatch(/^(\d+-\d+-\d+ overall \u00b7 LA|no results yet)$/);
         continue;
       }
       const scope = m.labels.divisionHeading(team.division) ?? m.leagues.getLeague(team.league).shortName;
       const match = /^\d+-\d+-\d+ \u00b7 (tied )?\d+(?:st|nd|rd|th) in (.+)$/.exec(line ?? '');
-      expect(match, `components/teams/team-view.ts ${team.slug}: ${line}`).not.toBeNull();
+      expect(match, `views/teams/team-view.ts ${team.slug}: ${line}`).not.toBeNull();
       if (!match) continue;
-      expect(match[2], `components/teams/team-view.ts ${team.slug} scope`).toBe(scope);
+      expect(match[2], `views/teams/team-view.ts ${team.slug} scope`).toBe(scope);
       const standing = m.data.getStandingFor(team.slug);
-      expect(match[1] === 'tied ', `components/teams/team-view.ts ${team.slug} tied`).toBe(standing?.tiebreak.shared ?? false);
+      expect(match[1] === 'tied ', `views/teams/team-view.ts ${team.slug} tied`).toBe(standing?.tiebreak.shared ?? false);
     }
   });
 });
 
-describe('earlierMeeting (components/teams/team-view.ts)', () => {
+describe('earlierMeeting (views/teams/team-view.ts)', () => {
   it('recalls only a final played before the next game', () => {
     for (const team of m.data.getTeams()) {
       const next = m.view.buildTeamPageView(team.slug)?.next;
@@ -896,13 +896,13 @@ describe('earlierMeeting (components/teams/team-view.ts)', () => {
       const earlier = m.view.earlierMeeting(team, opponent, next.dateLocal);
       if (!earlier) continue;
       const game = m.data.getGameById(earlier.contestId);
-      expect(game?.status, `components/teams/team-view.ts ${team.slug}`).toBe('final');
-      expect(game !== undefined && game.dateLocal < next.dateLocal, `components/teams/team-view.ts ${team.slug}`).toBe(true);
+      expect(game?.status, `views/teams/team-view.ts ${team.slug}`).toBe('final');
+      expect(game !== undefined && game.dateLocal < next.dateLocal, `views/teams/team-view.ts ${team.slug}`).toBe(true);
     }
   });
 });
 
-describe('"Who we haven’t beaten" official-only fixtures (components/teams/team-view.ts buildUnbeaten)', () => {
+describe('"Who we haven’t beaten" official-only fixtures (views/teams/team-view.ts buildUnbeaten)', () => {
   it('counts only past-dated fixtures as unreported, and carries the next future one as a date', () => {
     for (const team of m.data.getTeams()) {
       const v = m.view.buildTeamPageView(team.slug);
@@ -912,8 +912,8 @@ describe('"Who we haven’t beaten" official-only fixtures (components/teams/tea
         const theirs = fixtures.filter((f) => f.awaySlug === o.slug || f.homeSlug === o.slug);
         const past = theirs.filter((f) => f.dateKey < v.today);
         const ahead = theirs.filter((f) => f.dateKey >= v.today).map((f) => f.dateKey).sort();
-        expect(o.unreportedFixtures, `components/teams/team-view.ts ${team.slug} v ${o.slug}`).toBe(past.length);
-        expect(o.nextFixtureDate, `components/teams/team-view.ts ${team.slug} v ${o.slug}`).toBe(ahead[0] ?? null);
+        expect(o.unreportedFixtures, `views/teams/team-view.ts ${team.slug} v ${o.slug}`).toBe(past.length);
+        expect(o.nextFixtureDate, `views/teams/team-view.ts ${team.slug} v ${o.slug}`).toBe(ahead[0] ?? null);
       }
     }
   });
@@ -924,15 +924,15 @@ describe('"Who we haven’t beaten" official-only fixtures (components/teams/tea
       if (!v) continue;
       const shown = v.unbeaten.map((o) => o.nextDate ?? o.nextFixtureDate);
       const dated = shown.filter((d): d is string => d !== null);
-      expect(dated, `components/teams/team-view.ts ${team.slug}`).toEqual([...dated].sort());
-      expect(shown.slice(0, dated.length), `components/teams/team-view.ts ${team.slug}`).toEqual(dated);
+      expect(dated, `views/teams/team-view.ts ${team.slug}`).toEqual([...dated].sort());
+      expect(shown.slice(0, dated.length), `views/teams/team-view.ts ${team.slug}`).toEqual(dated);
     }
   });
 
   it('says "next <date>" for a future fixture and "N unreported" only for a past one', async () => {
     const { TeamUnbeaten } = await import('@/components/teams/TeamUnbeaten');
     const base = m.view.buildTeamPageView('carmel')!;
-    const opponent = (slug: string, extra: Partial<import('@/components/teams/team-view').UnbeatenOpponent>) => {
+    const opponent = (slug: string, extra: Partial<import('@/views/teams/team-view').UnbeatenOpponent>) => {
       const t = getTeamBySlug(slug)!;
       return {
         slug: t.slug,

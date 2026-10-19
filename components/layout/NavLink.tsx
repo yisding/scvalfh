@@ -3,7 +3,7 @@
 import Link, { useLinkStatus } from 'next/link';
 import { usePathname } from 'next/navigation';
 
-import { useEffectiveLeague } from '@/components/ui/use-league';
+import { useEffectiveLeague } from '@/components/hooks/use-league';
 import type { LeagueId, TeamSlug } from '@/lib/model/ids';
 
 /**

@@ -2,15 +2,15 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 import PageHeader from '@/components/layout/PageHeader';
-import { OG_BASE } from '@/components/layout/site';
 import { LEAGUES_PROPER, getLeague } from '@/lib/config/leagues';
 import { getAvailableHistoryLeagues } from '@/lib/datasets/history';
 import { listWords, numberWord } from '@/lib/format/words';
+import { OG_BASE } from '@/views/site/site';
 
 export const metadata: Metadata = {
   title: 'Page not found',
   // Stated, not inherited: an inherited og:title is the templated one, with the site-name suffix
-  // that no og:title carries (components/layout/site.ts OG_BASE).
+  // that no og:title carries (views/site/site.ts OG_BASE).
   openGraph: { ...OG_BASE, title: 'Page not found' },
 };
 

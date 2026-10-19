@@ -1,4 +1,4 @@
-import type { ChipKind } from './describe-game';
+import type { ChipKind } from '@/views/shared/game-display-client';
 
 /**
  * A square with the LETTER inside (DESIGN §7.5, §6.5).

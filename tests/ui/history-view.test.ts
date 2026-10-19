@@ -1,5 +1,5 @@
 /**
- * `components/history/history-view.ts` and `AwardsBlock` over the committed
+ * `views/history/history-view.ts` and `AwardsBlock` over the committed
  * data/history-2025-26.json: every award line on /history/2025-26 reads one way (player, then
  * school · grade · position, as the roster and /leaders print a player), in the site's words, with
  * the school linked, whatever the document wrote ("St Ignatius- Olivia Van de Braak", "Leaya Cleary Los Gatos 12", "GK", "Midfiled").
@@ -10,18 +10,18 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 
 import AwardsBlock from '@/components/history/AwardsBlock';
+import { type HistoryAwards, getAvailableHistoryLeagues } from '@/lib/datasets/history';
+import { getTeamBySlug } from '@/lib/registry/teams';
+import { sectionById } from '@/scripts/ci/copy/copy-rules';
+import { textOf } from '@/tests/support/html-text';
 import {
   awardLine,
   awardTitle,
   overallAwards,
   rosterYear,
   splitOverallValue,
-} from '@/components/history/history-view';
-import { positionFromText } from '@/components/ui/position-words';
-import { type HistoryAwards, getAvailableHistoryLeagues } from '@/lib/datasets/history';
-import { getTeamBySlug } from '@/lib/registry/teams';
-import { sectionById } from '@/scripts/ci/copy/copy-rules';
-import { textOf } from '@/tests/support/html-text';
+} from '@/views/history/history-view';
+import { positionFromText } from '@/views/shared/words/position';
 
 const blocks: Array<{ leagueId: string; division: string; awards: HistoryAwards }> = getAvailableHistoryLeagues()
   .flatMap(({ id, entry }) =>

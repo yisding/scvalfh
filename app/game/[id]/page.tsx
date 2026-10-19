@@ -11,6 +11,10 @@ import {
   SourceDisagreement,
 } from '@/components/game/GameSources';
 import SeasonSeries from '@/components/game/SeasonSeries';
+import JsonLd from '@/components/layout/JsonLd';
+import Arrow from '@/components/ui/Arrow';
+import ExternalLink from '@/components/ui/ExternalLink';
+import ScoreBoard from '@/components/ui/ScoreBoard';
 import {
   buildGameView,
   buildSupersededStub,
@@ -18,13 +22,9 @@ import {
   gameRecap,
   gameStaticParams,
   gameTitle,
-} from '@/components/game/game-view';
-import JsonLd from '@/components/layout/JsonLd';
-import { OG_BASE } from '@/components/layout/site';
-import { gameJsonLd } from '@/components/layout/structured-data';
-import Arrow from '@/components/ui/Arrow';
-import ExternalLink from '@/components/ui/ExternalLink';
-import ScoreBoard from '@/components/ui/ScoreBoard';
+} from '@/views/game/game-view';
+import { OG_BASE } from '@/views/site/site';
+import { gameJsonLd } from '@/views/site/structured-data';
 
 /**
  * `/game/[id]` — the shareable scoreboard (DESIGN §1.1, §3.5, R-4).
@@ -71,7 +71,7 @@ export async function generateMetadata({ params }: PageProps<'/game/[id]'>): Pro
         // not to noindex a page whose canonical points elsewhere, since the noindex can be carried
         // over to the target. The stub stays out of the sitemap (app/sitemap.ts).
         alternates: { canonical: stub.targetHref },
-        // The title stated, not inherited with the site-name suffix (components/layout/site.ts OG_BASE).
+        // The title stated, not inherited with the site-name suffix (views/site/site.ts OG_BASE).
         openGraph: { ...OG_BASE, title },
       };
     }

@@ -1,5 +1,5 @@
 /**
- * `components/teams/roster-view.ts` and `TeamRoster` — the team page's roster section, over the
+ * `views/teams/roster.ts` and `TeamRoster` — the team page's roster section, over the
  * committed data/rosters.json + data/rosters-enrichment.json.
  *
  * The section makes three promises a test can hold it to: it is varsity only, a blank is never
@@ -14,12 +14,12 @@ import { describe, expect, it } from 'vitest';
 
 import TeamRoster from '@/components/teams/TeamRoster';
 import GridRowFiller, { fillerClasses } from '@/components/ui/GridRowFiller';
-import { buildRosterView, profileLabel, seasonPage, type RosterRow } from '@/components/teams/roster-view';
 import { LEAGUE_IDS } from '@/lib/config/leagues';
 import { getPlayerClubs } from '@/lib/datasets/clubs';
 import { getEnrichedTeamRoster } from '@/lib/datasets/rosters';
 import { TEAMS, teamsInLeague } from '@/lib/registry/teams';
 import { textOf } from '@/tests/support/html-text';
+import { buildRosterView, profileLabel, seasonPage, type RosterRow } from '@/views/teams/roster';
 
 /** Rosters cover every registry team, all five leagues: 49 views. */
 const views = TEAMS.map((t) => ({ slug: t.slug, view: buildRosterView(t.slug)! }));

@@ -1,5 +1,5 @@
 /**
- * `components/commits/commit-view.ts` and /commits over the committed data/commits.json,
+ * `views/commits/commit-view.ts` and /commits over the committed data/commits.json,
  * data/rosters.json and data/rosters-enrichment.json (SPEC §1.1j3, DESIGN §21), plus the team
  * roster's commitment line.
  *
@@ -26,6 +26,17 @@ import AboutPage from '@/app/about/page';
 import CommitsPage, { metadata as commitsMetadata } from '@/app/commits/page';
 import TeamPage from '@/app/teams/[slug]/page';
 import TeamsPage from '@/app/teams/page';
+import { REGIONS, regionOf } from '@/lib/config/leagues';
+import {
+  type College, collegeDisplayName, commitClassOf, commitProgram, getColleges, getCommitments,
+  getCommitsFile, getCommittedPlayer,
+} from '@/lib/datasets/commits';
+import { getRosters } from '@/lib/datasets/rosters';
+import { TEAMS, getTeamBySlug } from '@/lib/registry/teams';
+import { COLLEGE_DIVISIONS, COMMIT_SPORTS } from '@/lib/schema/commits';
+import { commitmentLeaks } from '@/scripts/ci/copy/copy-rules';
+import { PUBLIC_TERMS } from '@/scripts/ci/copy/public-terms';
+import { textOf } from '@/tests/support/html-text';
 import {
   DIVISION_WORDS,
   SPORT_WORDS,
@@ -39,19 +50,8 @@ import {
   sourceLabel,
   sportLabel,
   statusWords,
-} from '@/components/commits/commit-view';
-import { buildRosterView } from '@/components/teams/roster-view';
-import { REGIONS, regionOf } from '@/lib/config/leagues';
-import {
-  type College, collegeDisplayName, commitClassOf, commitProgram, getColleges, getCommitments,
-  getCommitsFile, getCommittedPlayer,
-} from '@/lib/datasets/commits';
-import { getRosters } from '@/lib/datasets/rosters';
-import { TEAMS, getTeamBySlug } from '@/lib/registry/teams';
-import { COLLEGE_DIVISIONS, COMMIT_SPORTS } from '@/lib/schema/commits';
-import { commitmentLeaks } from '@/scripts/ci/copy/copy-rules';
-import { PUBLIC_TERMS } from '@/scripts/ci/copy/public-terms';
-import { textOf } from '@/tests/support/html-text';
+} from '@/views/commits/commit-view';
+import { buildRosterView } from '@/views/teams/roster';
 
 const file = getCommitsFile();
 const view = buildCommitsView();

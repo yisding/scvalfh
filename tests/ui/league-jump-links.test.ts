@@ -2,7 +2,7 @@
  * `components/layout/LeagueJumpLinks.tsx`: a `#<id>` pill is a plain `<a>`, a route pill a
  * `<Link prefetch={false}>` (/playoffs sends a tournament league to its own page). Either way each
  * pill keeps exactly `sx-jump sx-jump-<id>`, the hook the league-scope stylesheet
- * (components/layout/league-scope-css.ts) shows and hides it by.
+ * (components/head/league-scope-css.ts) shows and hides it by.
  */
 
 import { createElement } from 'react';

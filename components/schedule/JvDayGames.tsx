@@ -1,9 +1,10 @@
 import { JvFootnote } from '@/components/teams/TeamJvGames';
-import type { JvListSummary, JvRowView } from '@/components/teams/jv-view';
-import { describeGame, statusLabelIsTime, type SideView } from '@/components/ui/describe-game';
 import { ScoreGlyph, nameClass } from '@/components/ui/ScoreGlyph';
 import StatusLabel, { GameChips } from '@/components/ui/StatusLabel';
 import { timeOfDay } from '@/lib/format/dates';
+import { describeGame, statusLabelIsTime } from '@/views/shared/describe-game';
+import type { SideView } from '@/views/shared/game-display-client';
+import type { JvListSummary, JvRowView } from '@/views/teams/jv';
 
 /**
  * A day page's JV games: one compact card, a row per game — the time (or the status once there

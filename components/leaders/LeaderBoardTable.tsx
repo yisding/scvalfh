@@ -5,7 +5,7 @@ import MissingValue from '@/components/ui/MissingValue';
 import PlaceMark from '@/components/ui/PlaceMark';
 import SectionHeader from '@/components/ui/SectionHeader';
 import TeamMonogram from '@/components/ui/TeamMonogram';
-import type { LeaderBoard, LeaderCell, LeaderColumnKey, LeaderRow } from './types';
+import type { LeaderBoard, LeaderCell, LeaderColumnKey, LeaderRow } from '@/views/leaders/types';
 
 /**
  * One /leaders board (DESIGN §16): an h3, a ranked table, and the line that says what it counts,

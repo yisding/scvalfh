@@ -1,12 +1,12 @@
 import Link from 'next/link';
 
-import { splitStatusLabel } from '@/components/playoffs/playoff-view';
 import Arrow from '@/components/ui/Arrow';
 import EmptyState from '@/components/ui/EmptyState';
 import ExternalLink from '@/components/ui/ExternalLink';
 import StatusChip from '@/components/ui/StatusChip';
 import { CCS } from '@/lib/config/leagues';
-import type { TeamPageView } from './team-view';
+import { splitStatusLabel } from '@/views/playoffs/playoff-view';
+import type { TeamPageView } from '@/views/teams/team-view';
 
 /**
  * 'MCAL tournament' | 'Super Regional' | 'San Diego Section playoffs' | 'playoff': the event a

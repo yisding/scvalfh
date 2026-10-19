@@ -1,13 +1,13 @@
 import Link from 'next/link';
 
 import EmptyState from '@/components/ui/EmptyState';
-import GridRowFiller from '@/components/ui/GridRowFiller';
 import ExternalLink from '@/components/ui/ExternalLink';
+import GridRowFiller from '@/components/ui/GridRowFiller';
+import { MissingValue } from '@/components/ui/MissingValue';
 import SectionHeader from '@/components/ui/SectionHeader';
 import Tag from '@/components/ui/Tag';
-import { MissingValue } from '@/components/ui/MissingValue';
 import { listWords } from '@/lib/format/words';
-import type { RosterFact, RosterRow, RosterView } from './roster-view';
+import type { RosterFact, RosterRow, RosterView } from '@/views/teams/roster';
 
 /**
  * The team page's roster (SPEC §1.1j): every varsity player MaxPreps lists, with whatever number,
@@ -41,7 +41,7 @@ import type { RosterFact, RosterRow, RosterView } from './roster-view';
  * internal, to the club's page on this site, which cites a source for every tie: no arrow, the
  * `sx-action` box, and an accessible name that leads with the player ("Storey Lewis’s club: SF
  * Hawks"), the visible label hidden from assistive technology so it is not read twice. The words
- * are components/clubs/club-view.ts', shared with the club pages. A footnote explains the line, and
+ * are views/clubs/club-view.ts', shared with the club pages. A footnote explains the line, and
  * says recall is partial, wherever one appears.
  *
  * A player a public page says has committed to play a college sport gets a commitment line
@@ -51,7 +51,7 @@ import type { RosterFact, RosterRow, RosterView } from './roster-view';
  * with the `sx-action` box and no arrow, the visible label (and the sport in parentheses) hidden
  * from assistive technology and the link's accessible name leading with the player ("Pat Example’s
  * college commitment: Stanford", "Pat Example’s college soccer commitment: St. Lawrence") — and it
- * links the player's row on /commits, which cites the sources. The words are components/commits/commit-view.ts'. A footnote explains it, links
+ * links the player's row on /commits, which cites the sources. The words are views/commits/commit-view.ts'. A footnote explains it, links
  * /commits and says recall is partial, wherever one appears.
  *
  * Wherever a row has a profile, a club or a commitment line, one more footnote links this school's

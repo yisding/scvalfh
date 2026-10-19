@@ -10,9 +10,10 @@
 
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
-
 import { describe, expect, it } from 'vitest';
 
+import { getHistoryBracketFor, getHistoryBrackets } from '@/lib/datasets/history';
+import { type HistoryBrackets, HistoryBracketsSchema } from '@/lib/schema/history-brackets';
 import {
   divisionChampion,
   finalLine,
@@ -21,9 +22,8 @@ import {
   gameSentenceTail,
   roundByes,
   sideName,
-} from '@/components/history/bracket-view';
-import { getHistoryBracketFor, getHistoryBrackets } from '@/lib/datasets/history';
-import { type HistoryBrackets, HistoryBracketsSchema } from '@/lib/schema/history-brackets';
+} from '@/views/history/bracket';
+
 import { REPO } from './support/repo';
 
 const raw = JSON.parse(readFileSync(path.join(REPO, 'data', 'history-brackets-2025-26.json'), 'utf8')) as HistoryBrackets;

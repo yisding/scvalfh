@@ -1,11 +1,9 @@
 import Link from 'next/link';
 
 import ExternalLink from '@/components/ui/ExternalLink';
-import type { StandingsRowData } from '@/components/ui/StandingsTable';
 import { ordinal } from '@/lib/format/numbers';
 import type { Standing } from '@/lib/model/standings';
-
-import type { ComparisonView, MismatchNote, MissingRowView } from './standings-view';
+import type { ComparisonView, MismatchNote, MissingRowView, StandingsRowData } from '@/views/standings/division';
 
 /**
  * The division's Notes block (DESIGN §9, §8; SPEC §10.3): an inset under the table that holds

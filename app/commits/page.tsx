@@ -3,14 +3,14 @@ import Link from 'next/link';
 
 import CollegeList from '@/components/commits/CollegeList';
 import CommitList from '@/components/commits/CommitList';
-import { buildCommitsView } from '@/components/commits/commit-view';
 import { RegionSwitcher } from '@/components/layout/LeagueSwitcher';
 import PageHeader from '@/components/layout/PageHeader';
-import { OG_BASE, ROOT_OG_IMAGE } from '@/components/layout/site';
 import EmptyState from '@/components/ui/EmptyState';
 import SectionHeader from '@/components/ui/SectionHeader';
 import { getRosters } from '@/lib/datasets/rosters';
 import { plural } from '@/lib/format/words';
+import { buildCommitsView } from '@/views/commits/commit-view';
+import { OG_BASE, ROOT_OG_IMAGE } from '@/views/site/site';
 
 /** The page's title, and its og:title too: og:title never carries the site-name suffix (OG_BASE). */
 const PAGE_TITLE = 'College commitments';
@@ -31,7 +31,7 @@ const PAGE_TITLE = 'College commitments';
  * (`#norcal-class-2027`, the earliest class first) and the h2 "Colleges" (`#norcal-colleges`, one row
  * per college, `#norcal-college-<slug>`), then the h2 "How commitments are matched" (`#how-matched`).
  * A team page's commitment line links the player's row (`#<team slug>-<athleteId>`,
- * components/commits/commit-view.ts commitAnchor), which opens its block when that region is hidden
+ * views/commits/commit-view.ts commitAnchor), which opens its block when that region is hidden
  * (`:has(:target)`). A region with no commitment shows only its sentence. With no commitment in the
  * file, one empty state stands where the regions would be, with no switcher.
  *

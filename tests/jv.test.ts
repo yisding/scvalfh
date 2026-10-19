@@ -10,10 +10,8 @@
 
 import { readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
-
 import { describe, expect, it } from 'vitest';
 
-import { buildDayJvView, buildTeamJvView, jvDiffersNote } from '@/components/teams/jv-view';
 import { getJvFile, getJvTeam } from '@/lib/datasets/jv';
 import { JV_FILL_NOTE, mergeJv } from '@/lib/engine/jv/merge';
 import type { Game } from '@/lib/model/game';
@@ -26,8 +24,10 @@ import {
   JV_TEAM_COUNT, type JvFile, JvFileSchema, type JvSbliveRow, countJv, jvContentKey,
 } from '@/lib/schema/jv';
 import { combineJvCopies, parseJvTeamGamesPage, type JvSbliveCopy } from '@/lib/sources/sblive/jv';
-import { game } from './support/game-builder';
+import { buildDayJvView, buildTeamJvView, jvDiffersNote } from '@/views/teams/jv';
+
 import { expectOk, runRepoScript } from './support/cli';
+import { game } from './support/game-builder';
 import { REPO, tempDir, tempFile } from './support/repo';
 
 const FIXTURES = path.join(REPO, 'tests', 'fixtures', 'jv');
@@ -297,7 +297,7 @@ describe('the JV views', () => {
     for (const t of TEAMS) {
       const v = buildTeamJvView(t.slug);
       if (!v) continue;
-      expect(v.played + v.toCome + v.noScore, `components/teams/jv-view.ts ${t.slug}`).toBe(v.rows.length);
+      expect(v.played + v.toCome + v.noScore, `views/teams/jv.ts ${t.slug}`).toBe(v.rows.length);
     }
     expect(view.sbliveScores).toBe(view.rows.filter((r) => r.game.provenance.scores === 'sblive').length);
     expect(buildTeamJvView('not-a-school')).toBeNull();

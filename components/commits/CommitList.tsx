@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 import ExternalLink from '@/components/ui/ExternalLink';
 import GridRowFiller from '@/components/ui/GridRowFiller';
-import type { CommitRow } from './commit-view';
+import type { CommitRow } from '@/views/commits/commit-view';
 
 /**
  * One class's commitments on /commits (DESIGN §21.1): each a player on the tracked varsity rosters,
@@ -11,7 +11,7 @@ import type { CommitRow } from './commit-view';
  * Privacy (DESIGN §21.2, the clubs pages' posture): a row is a roster row of this site, by its own
  * spelling, and shows what the team page already shows (name, school, grade) plus the college, the
  * status and the links. The quotes, the basis and the confidence the data file keeps are not in the
- * view at all (components/commits/commit-view.ts), so nothing here can print them.
+ * view at all (views/commits/commit-view.ts), so nothing here can print them.
  *
  * Each row is the club page's player row (components/clubs/ClubPlayers.tsx), the same card and
  * row-major grid as the team roster:

@@ -1,35 +1,13 @@
-import { ImageResponse } from 'next/og';
-
 /**
- * The `FH` monogram as a PNG, at whatever size the caller needs (DESIGN §7.1's language applied to
- * the site itself).
+ * NOT a module to import: the code lives in components/og/monogram-image.tsx. This file re-exports
+ * only the names the metadata image routes still import through their relative specifier:
+ * app/icon.tsx and app/apple-icon.tsx.
  *
- * One renderer for every icon route, because there are four of them at four sizes and they have to
- * be the same mark: app/icon.tsx (32px favicon), app/apple-icon.tsx (180px iOS tile) and the
- * installable manifest icons, app/icon-192/route.tsx and app/icon-512/route.tsx. Generated at build
- * from type — no bitmap icon asset in the repo and no third-party image request anywhere on the site.
+ * Next prints a content hash of each metadata image file's OWN source into the URL every page
+ * carries (`og:image` …/opengraph-image?<hash>, `<link rel="icon" href="/icon?<hash>">`), so
+ * repointing those imports would change the HTML of every page under those routes. The files keep
+ * their bytes, and this module keeps their specifier resolving, until the change that rewrites
+ * those routes anyway deletes it. eslint.config.mjs refuses any other import of it.
  */
-export function monogramImage(size: number): ImageResponse {
-  return new ImageResponse(
-    (
-      <div
-        style={{
-          width: '100%',
-          height: '100%',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          background: '#0e1116',
-          color: '#f2f5f8',
-          // The same optical ratio the 32px and 180px marks already use.
-          fontSize: Math.round(size * 0.455),
-          fontWeight: 600,
-          letterSpacing: '-0.04em',
-        }}
-      >
-        FH
-      </div>
-    ),
-    { width: size, height: size },
-  );
-}
+
+export { monogramImage } from '@/components/og/monogram-image';

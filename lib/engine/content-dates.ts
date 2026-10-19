@@ -145,14 +145,14 @@ function sideSlugs(game: Game): string[] {
  * make the records on its scoreboard and the form going in; and every meeting of the two schools
  * this season (the season series, later legs included). The records are "as of this game" — so
  * the sides' games up to its date — except on a postponed game or a regular-season non-league one,
- * whose records are TODAY'S (components/game/game-view.ts recordAsOf, "League records to date"),
+ * whose records are TODAY'S (views/game/game-view.ts recordAsOf, "League records to date"),
  * so every game of both sides. A superset is harmless here — at worst a page reads as changed a
  * little more often than it did — while a missing game would make the date too early.
  */
 export function gamePageInputs(game: Game, all: readonly Game[]): Game[] {
   const sides = sideSlugs(game);
   const recordsToDate = game.status === 'postponed' || (game.countsFor === null && game.postseason === null);
-  // components/game/game-view.ts seriesGames' key: the slug, else the name, trimmed and lower-cased.
+  // views/game/game-view.ts seriesGames' key: the slug, else the name, trimmed and lower-cased.
   const key = (side: Game['home']) => side.slug ?? `name:${side.name.trim().toLowerCase()}`;
   const pair = [key(game.home), key(game.away)];
   return all.filter((g) => {

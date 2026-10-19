@@ -67,7 +67,7 @@ const ALLOWED_SYNTHETIC: Record<string, string> = {
   'components/probe.tsx': 'tests/arch/page-code-literals.test.ts: a planted module',
   'tests/probe.test.ts': 'tests/arch/page-code-literals.test.ts: a planted test file',
   'app/x.tsx': 'tests/arch/deleted-names.test.ts: the importer of a resolveModule probe',
-  'app/layout.js': 'components/layout/site.ts: a quotation from the Next.js docs (the route file here is app/layout.tsx)',
+  'app/layout.js': 'views/site/site.ts: a quotation from the Next.js docs (the route file here is app/layout.tsx)',
   'scripts/lib/x.ts': 'tests/typecheck-scope.test.ts: a path the glob must not match',
   'lib/dat/.ts': 'tests/typecheck-scope.test.ts: a path the glob must not match',
   'components/home/x.ts': 'tests/arch/deleted-names.test.ts: the importer of a resolveModule probe',

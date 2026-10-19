@@ -1,11 +1,10 @@
+import MissingValue from '@/components/ui/MissingValue';
+import TeamMonogram from '@/components/ui/TeamMonogram';
 import type {
   HistoryBracketDivision, HistoryBracketGame, HistoryBracketRound, HistoryBracketSide,
 } from '@/lib/datasets/history';
 import { getTeamBySlug } from '@/lib/registry/teams';
-import MissingValue from '@/components/ui/MissingValue';
-import TeamMonogram from '@/components/ui/TeamMonogram';
-
-import { gameNote, gameSentence, gameSentenceTail, roundByes, roundDate, sideName } from './bracket-view';
+import { gameNote, gameSentence, gameSentenceTail, roundByes, roundDate, sideName } from '@/views/history/bracket';
 
 /**
  * One division of a 2025 section bracket on /history/2025-26 (DESIGN §3.9), drawn the way the live

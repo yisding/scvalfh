@@ -1,12 +1,12 @@
 import Link from 'next/link';
 
+import EmptyState from '@/components/ui/EmptyState';
+import TeamMonogram from '@/components/ui/TeamMonogram';
 import { monthDay } from '@/lib/format/dates';
 import { recordString } from '@/lib/format/numbers';
 import { plural } from '@/lib/format/words';
-import EmptyState from '@/components/ui/EmptyState';
-import TeamMonogram from '@/components/ui/TeamMonogram';
 import { getTeamBySlug } from '@/lib/registry/teams';
-import type { TeamPageView, UnbeatenOpponent } from './team-view';
+import type { TeamPageView, UnbeatenOpponent } from '@/views/teams/team-view';
 
 /**
  * "Who we haven't beaten" (DESIGN §3.7, grafted from `data-dense`).

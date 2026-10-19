@@ -4,15 +4,14 @@ import { useEffect, useRef, useState } from 'react';
 
 import EmptyState from '@/components/ui/EmptyState';
 import { gameWord } from '@/lib/format/words';
-
 import {
   DEFAULT_FILTERS,
   isDefaultFilters,
   unfilteredCountLine,
   type FilterState,
   type ScheduleCounts,
-} from './filter-data';
-import { railLabel, railSr, railTargets, type RailKind, type RailMarker } from './rail-targets';
+} from '@/views/schedule/filters-client';
+import { railLabel, railSr, railTargets, type RailKind, type RailMarker } from '@/views/schedule/rail-client';
 
 /**
  * `/schedule/<league>`'s filters — the only client module this route has (DESIGN §7, §7.13);
@@ -21,7 +20,7 @@ import { railLabel, railSr, railTargets, type RailKind, type RailMarker } from '
  * The complete, unfiltered, server-rendered list is ALREADY in the HTML. This component does not
  * own the list, does not receive it as props and never re-renders it: it toggles the `hidden`
  * attribute on the `[data-game]` items and `[data-dategroup]` sections that the server wrote
- * (`components/schedule/filter-data.ts` is the shared contract). Consequences, all of them the
+ * (`views/schedule/filters-client.ts` is the shared contract). Consequences, all of them the
  * point:
  *
  *   - the page is complete and useful before hydration and with JavaScript disabled,

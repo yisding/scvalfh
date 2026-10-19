@@ -8,9 +8,9 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 
 import Attribution from '@/components/layout/Attribution';
-import { SITE_SCOPE_NOTE } from '@/components/layout/site';
 import { getFetchedAt } from '@/lib/datasets/snapshot';
 import { textOf } from '@/tests/support/html-text';
+import { SITE_SCOPE_NOTE } from '@/views/site/site';
 
 describe('the footer attribution', () => {
   const html = renderToStaticMarkup(createElement(Attribution, { snapshotAt: getFetchedAt() }));

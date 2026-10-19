@@ -1,5 +1,5 @@
 /**
- * `components/teams/player-stats-view.ts` and `TeamPlayerStats` — the team page's player stats.
+ * `views/teams/player-stats.ts` and `TeamPlayerStats` — the team page's player stats.
  *
  * The section's promises: a column appears only when the team tracks that stat, a tracked stat a
  * player has no entry for is a dash (never a 0), a team with no stats says so, and the reader is
@@ -17,20 +17,20 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 
 import TeamPlayerStats from '@/components/teams/TeamPlayerStats';
-import {
-  buildPlayerStatsView,
-  goalieFiguresDisagree,
-  savePercent,
-  statText,
-  type PlayerStatsView,
-} from '@/components/teams/player-stats-view';
-import { buildTeamPageView } from '@/components/teams/team-view';
 import { LEAGUE_IDS } from '@/lib/config/leagues';
 import type { Game } from '@/lib/model/game';
 import { getAllPlayerStatsWithNotes } from '@/lib/queries/player-stats';
 import { TEAMS, teamsInLeague } from '@/lib/registry/teams';
 import type { GoalieStatKey, PlayerStatLine, TeamPlayerStats as TeamStats } from '@/lib/schema/player-stats';
 import { buildFixturePlayerStats } from '@/tests/support/cli';
+import {
+  buildPlayerStatsView,
+  goalieFiguresDisagree,
+  savePercent,
+  statText,
+  type PlayerStatsView,
+} from '@/views/teams/player-stats';
+import { buildTeamPageView } from '@/views/teams/team-view';
 
 interface Case {
   slug: string;

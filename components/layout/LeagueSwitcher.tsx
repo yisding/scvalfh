@@ -3,11 +3,11 @@
 import Link from 'next/link';
 import { useState } from 'react';
 
-import { setLeague, setRegion, useEffectiveLeague, useEffectiveRegion } from '@/components/ui/use-league';
+import { ALL_LEAGUES } from '@/components/head/prefs-script';
+import { setLeague, setRegion, useEffectiveLeague, useEffectiveRegion } from '@/components/hooks/use-league';
 import type { LeagueId, RegionId } from '@/lib/model/ids';
 import type { SectionConfig } from '@/lib/model/league-config';
-
-import { ALL_LEAGUES } from './prefs-script';
+import type { LeagueChip } from '@/views/site/league-chips';
 
 /**
  * The league chips (SPEC §8.3). One component, three modes:
@@ -15,7 +15,7 @@ import { ALL_LEAGUES } from './prefs-script';
  * - `scope` (home): `<div role="group">` of `<button aria-pressed>` chips — `All SCVAL BVAL PCAL
  *   MCAL EAL` — and the ONLY chips that write the remembered league (`setLeague`). The selected
  *   chip is drawn by the scope stylesheet from `html[data-league]` before hydration
- *   (`[data-league-option]`, components/layout/league-scope-css.ts) and is announced through
+ *   (`[data-league-option]`, components/head/league-scope-css.ts) and is announced through
  *   `aria-pressed` after. Hidden without JS (`sx-js-only`), and `disabled` until hydrated: a tap
  *   before hydration would do nothing. A polite live region says what a tap did.
  * - `link` (`/standings/[league]`, `/schedule/[league]`): `<nav>` of plain links, the page's league
@@ -40,21 +40,13 @@ import { ALL_LEAGUES } from './prefs-script';
  * never on a wrapper: a wrapper would make a region one flex item and stop the per-list wrapping
  * DESIGN §22.3 relies on. The hairline is drawn from a list's index WITHIN ITS REGION, so the first
  * SoCal list never opens the row with a divider when NorCal's lists are hidden. `link` mode is handed
- * one region's chips (components/layout/league-chips.ts, the page league's region) and stamps no
+ * one region's chips (views/site/league-chips.ts, the page league's region) and stamps no
  * scope: its lists must show whichever region the reader last chose.
  *
  * `RegionSwitcher` (below) is the NorCal/SoCal control. It lives in this module and keeps its state
- * in components/ui/use-league.ts on purpose: every page that renders it already ships both, so the
+ * in components/hooks/use-league.ts on purpose: every page that renders it already ships both, so the
  * toggle adds no client module to first-load JS (design-review UI budgets §2).
  */
-export interface LeagueChip {
-  id: LeagueId;
-  shortName: string;
-  sectionShort: SectionConfig['shortName'];
-  /** The league's region (its section's): the `data-region-scope` of the list it sits in. */
-  region: RegionId;
-}
-
 export interface LeagueSwitcherProps {
   mode: 'scope' | 'link' | 'anchor';
   /** Config order. */
@@ -276,12 +268,12 @@ export interface RegionSwitcherProps {
  * as a peer of the 'All' chip. Each segment is the chip token (44px target, `min-h-11 min-w-11`) and the
  * selected one is the same inverse ink and aria-hidden check as a chip: never colour alone, no new
  * colour. Before hydration the scope stylesheet draws the selected segment from
- * `html[data-region]` (`[data-region-option]`, components/layout/league-scope-css.ts); after, aria-pressed
+ * `html[data-region]` (`[data-region-option]`, components/head/league-scope-css.ts); after, aria-pressed
  * does. Hidden without JS (`sx-js-only`: both regions are on the page then, NorCal first) and
  * `disabled` until hydrated. A polite live region says what a tap did ("Showing Southern California.").
  * `setRegion` writes `scvalfh.region` and, when the effective league is in the other region, removes the
  * remembered league (never writes 'All'), so a pinned team's league returns with its region
- * (components/ui/use-league.ts). Not in the SiteHeader: a page renders it under its header.
+ * (components/hooks/use-league.ts). Not in the SiteHeader: a page renders it under its header.
  */
 export function RegionSwitcher({ className, label = 'Region', separated = false }: RegionSwitcherProps) {
   const { region, ready } = useEffectiveRegion();

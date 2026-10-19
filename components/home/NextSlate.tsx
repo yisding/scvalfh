@@ -3,11 +3,11 @@ import Link from 'next/link';
 import EmptyState from '@/components/ui/EmptyState';
 import { GameLine } from '@/components/ui/GameRow';
 import SectionHeader from '@/components/ui/SectionHeader';
-import { gameKind } from '@/components/ui/describe-game';
 import { shortDate } from '@/lib/format/dates';
 import { plural } from '@/lib/format/words';
 import type { Game } from '@/lib/model/game';
-import type { NextLeagueDay } from './home-view';
+import type { NextLeagueDay } from '@/views/home/home-view';
+import { gameKind } from '@/views/shared/describe-game';
 
 /**
  * A league's remaining slate for today, or the next day that has one (SPEC §10.1, DESIGN §3.1).

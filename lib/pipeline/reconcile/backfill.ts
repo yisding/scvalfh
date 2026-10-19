@@ -311,7 +311,7 @@ function shootoutSectionOf(g: Pick<Game, 'home' | 'away' | 'contestTypes'>): Sec
 /**
  * Who the D24 skip note names: the section's one covered league when it has just one ('a varsity EAL game',
  * as the note always read), else the section ('a varsity San Diego Section game': its rule covers its three
- * conferences alike). components/ui/describe-game.ts shootoutGroupName is the same rule for the game page.
+ * conferences alike). views/shared/describe-game.ts shootoutGroupName is the same rule for the game page.
  */
 function shootoutGroupName(section: SectionConfig): string {
   const leagues = LEAGUES.filter((l) => l.sectionId === section.id);

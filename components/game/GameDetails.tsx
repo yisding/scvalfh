@@ -1,14 +1,13 @@
 import Link from 'next/link';
 
+import ExternalLink from '@/components/ui/ExternalLink';
+import SectionHeader from '@/components/ui/SectionHeader';
 import { findDivision, findLeague } from '@/lib/config/leagues';
 import { standingsLabel } from '@/lib/config/leagues/labels';
 import { dateTimeAttr, longDate, monthDay, timeOfDayPT } from '@/lib/format/dates';
-import ExternalLink from '@/components/ui/ExternalLink';
-import SectionHeader from '@/components/ui/SectionHeader';
-import { maxPrepsLabel } from '@/components/ui/maxpreps-label';
 import { parseLocal } from '@/lib/shared/dates';
-
-import type { GameModel } from './game-view';
+import type { GameModel } from '@/views/game/game-view';
+import { maxPrepsLabel } from '@/views/shared/words/maxpreps-label';
 
 /**
  * The DETAILS card of DESIGN §3.5 — when, where, and the off-site links that are not the result's.

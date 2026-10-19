@@ -1,5 +1,5 @@
 /**
- * The pin write and the focus after an unpin (components/ui/use-pinned-team.ts,
+ * The pin write and the focus after an unpin (components/hooks/use-pinned-team.ts,
  * components/home/MyTeamCard.tsx), against a minimal fake DOM — the suite runs in node.
  *
  * - With storage blocked, `pinTeam` changes nothing (no `html[data-pin]`, no remembered league)
@@ -11,7 +11,7 @@
 import { afterEach, describe, expect, it } from 'vitest';
 
 import { unpinFocusTarget } from '@/components/home/MyTeamCard';
-import { pinTeam, unpinFallbackTarget } from '@/components/ui/use-pinned-team';
+import { pinTeam, unpinFallbackTarget } from '@/components/hooks/use-pinned-team';
 
 type Attrs = Map<string, string>;
 

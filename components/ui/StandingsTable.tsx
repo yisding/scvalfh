@@ -6,14 +6,14 @@ import { placeWords, recordString, recordWords, streakString, winPct } from '@/l
 import { EM_DASH, formStripName, plural } from '@/lib/format/words';
 import type { DivisionId, TeamId, TeamSlug } from '@/lib/model/ids';
 import type { Standing } from '@/lib/model/standings';
-import type { Team } from '@/lib/model/team';
 import type { StandingContext } from '@/lib/queries/standings';
+import { articleFor, membershipSource } from '@/views/shared/words/membership';
+import type { StandingsRowData } from '@/views/standings/division';
 
 import ExternalLink from './ExternalLink';
 import FormStrip, { toFormEntries } from './FormStrip';
-import MissingValue from './MissingValue';
 import { GoalDiffCell } from './GoalDiffBar';
-import { articleFor, membershipSource } from './membership-words';
+import MissingValue from './MissingValue';
 import PlaceMark from './PlaceMark';
 import TeamMonogram from './TeamMonogram';
 
@@ -57,13 +57,6 @@ import TeamMonogram from './TeamMonogram';
  * `context` and `columns` the table renders exactly today's columns.
  */
 export type StandingsVariant = 'phone' | 'desktop' | 'mini' | 'archive';
-
-export interface StandingsRowData {
-  standing: Standing;
-  team: Team;
-  /** Defaults to /teams/[slug]. */
-  href?: string;
-}
 
 export type StandingsColumn = 'gp' | 'left' | 'max';
 
@@ -302,7 +295,7 @@ export function collectStandingsNotes(
       // A league with no documents of its own (`official.mode: 'none'`) publishes no alignment, so
       // nothing says "official". "As MaxPreps lists it" only where MaxPreps' table for this division
       // lists the team (the EAL); otherwise the league's membership source is named (Newport
-      // Harbor, Hilltop, Southwest: components/ui/membership-words.ts).
+      // Harbor, Hilltop, Southwest: views/shared/words/membership.ts).
       const table = tableName(row.team.division);
       const source = membershipSource(row.team.division, [row.team.slug]);
       const is =
@@ -449,7 +442,7 @@ export function StandingsTable(props: StandingsTableProps) {
 
   // The pinned team's 2px accent left rule has one channel. The pages are static and the pin lives
   // in localStorage, so every row carries `data-team-slug`, and the pinned-team head script
-  // (components/layout/pinned-team-script.ts, run from app/layout.tsx's <head>; then
+  // (components/head/pinned-team-script.ts, run from app/layout.tsx's <head>; then
   // components/ui/PinnedTeamMarks.tsx after a client navigation) sets `[data-pinned]` on the
   // matching row.
   // The 2px automatic-qualifier cut: the one deliberately strong line in the table.

@@ -1,21 +1,21 @@
 import Link from 'next/link';
 import { Fragment } from 'react';
 
-import { placeWords } from '@/lib/format/numbers';
-import { scoreSentence } from '@/lib/format/score';
-import { plural } from '@/lib/format/words';
 import PlaceMark from '@/components/ui/PlaceMark';
 import SectionHeader from '@/components/ui/SectionHeader';
 import TeamMonogram from '@/components/ui/TeamMonogram';
+import { placeWords } from '@/lib/format/numbers';
+import { scoreSentence } from '@/lib/format/score';
+import { plural } from '@/lib/format/words';
 import { gameHref } from '@/lib/shared/game-id';
-
-import PlayInCard, { type PlayInSide } from './PlayInCard';
 import type {
   SeedRowView,
   TournamentGameView,
   TournamentSlotView,
   TournamentView,
-} from './playoff-view';
+} from '@/views/playoffs/playoff-view';
+
+import PlayInCard, { type PlayInSide } from './PlayInCard';
 
 /**
  * A league's own tournament (SPEC §6.2, §10.7 `/playoffs/<league>`; MCAL): Seeds, the Play-in when

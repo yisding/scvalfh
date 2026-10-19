@@ -3,19 +3,19 @@ import Link from 'next/link';
 
 import { RegionSwitcher } from '@/components/layout/LeagueSwitcher';
 import PageHeader from '@/components/layout/PageHeader';
-import { OG_BASE, ROOT_OG_IMAGE } from '@/components/layout/site';
 import JvStandings from '@/components/standings/JvStandings';
-import { buildJvTablesView } from '@/components/standings/jv-standings-view';
 import Arrow from '@/components/ui/Arrow';
 import SectionHeader from '@/components/ui/SectionHeader';
 import { LEAGUES, LEAGUES_PROPER, leaguesInRegion, regionOf } from '@/lib/config/leagues';
 import { listWords } from '@/lib/format/words';
+import { OG_BASE, ROOT_OG_IMAGE } from '@/views/site/site';
+import { buildJvTablesView } from '@/views/standings/jv';
 
 /**
  * `/jv` — "Where does our JV stand?" Every league's JV tables, computed (lib/engine/jv/standings.ts) and
  * unofficial: one section per league (`#scval`, …), one block per division (`#de-anza`, …). Each
  * league's section carries its region's `data-region-scope` (DESIGN-socal §2.4), so the reader's region
- * shows; a deep link into the other region opens it (components/layout/league-scope-css.ts).
+ * shows; a deep link into the other region opens it (components/head/league-scope-css.ts).
  *
  * Its own page rather than a section of `/standings/<league>`: those pages carry the varsity tables
  * at their weight budget, and the JV tables are a different kind of claim (no league publishes one

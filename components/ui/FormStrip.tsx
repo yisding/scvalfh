@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { OUTCOME_WORDS } from '@/lib/format/words';
 import type { Outcome } from '@/lib/model/game';
 import { gameHref } from '@/lib/shared/game-id';
+import type { FormEntry } from '@/views/shared/form-entry';
 
 import ResultChip, { CHIP_LABEL } from './ResultChip';
 
@@ -31,15 +32,6 @@ import ResultChip, { CHIP_LABEL } from './ResultChip';
  * 24px"), and §10.9 makes a clean axe run a gate. So the gap widens exactly where the chip
  * becomes something you aim a thumb at, and nowhere else.
  */
-export interface FormEntry {
-  outcome: Outcome;
-  /** Links the chip to the game page (`gameHref(contestId)`) when the caller has it. */
-  contestId?: string;
-  opponent?: string;
-  score?: string;
-  date?: string;
-}
-
 export interface FormStripProps {
   /** Oldest → newest, league only, at most 5. */
   entries: FormEntry[];

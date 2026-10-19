@@ -1,11 +1,10 @@
 import Link from 'next/link';
 
-import { plural } from '@/lib/format/words';
 import { GameLogRowBody, gameLogRowClass } from '@/components/ui/GameRow';
 import SectionHeader from '@/components/ui/SectionHeader';
+import { plural } from '@/lib/format/words';
 import { gameHref } from '@/lib/shared/game-id';
-
-import type { GameModel } from './game-view';
+import type { GameModel } from '@/views/game/game-view';
 
 /**
  * THESE TWO THIS SEASON (DESIGN §3.5) — every contest between the same two schools, in date order,

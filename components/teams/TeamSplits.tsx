@@ -1,7 +1,7 @@
 import { MissingValue } from '@/components/ui/MissingValue';
 import { recordString } from '@/lib/format/numbers';
 import type { Record3 } from '@/lib/model/game';
-import type { TeamPageView } from './team-view';
+import type { TeamPageView } from '@/views/teams/team-view';
 
 /**
  * Home / away / neutral league splits (DESIGN §3.7, §12.5): three unboxed tiles, label over value,

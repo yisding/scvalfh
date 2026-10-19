@@ -88,7 +88,7 @@ export interface ShootoutPhrases {
   /**
    * 'on 1 v 1s' | 'in a shootout': the phrase that follows a verb and a score, for a line that says
    * who won or lost without the word 'won' ('Earlier: lost 1–1 on 1 v 1s at home',
-   * components/teams/team-view.ts). For a 'verified' section `wonOn` is 'won ' + this.
+   * views/teams/team-view.ts). For a 'verified' section `wonOn` is 'won ' + this.
    */
   onPhrase: string;
   wonOn: string;
@@ -147,7 +147,7 @@ const GENERIC_SHOOTOUT_WORDS = 'a shootout';
 /**
  * 'Saint Francis 7, Homestead 0, final.' — the screen-reader sentence (DESIGN §10.6). A final
  * decided by a shootout with no stored tally (decider 'SO') names the winner instead, in the words
- * of the section's rule (`shootoutWords`, SectionConfig.shootout.words: components/ui/describe-game.ts
+ * of the section's rule (`shootoutWords`, SectionConfig.shootout.words: views/shared/describe-game.ts
  * passes them): 'Chico 1, Davis 1, final; Chico won on 1 v 1s.' for the EAL, '<home> 0, <away> 0,
  * final; <winner> won in a shootout.' for a section whose shootouts are verified. A caller that names
  * no section gets the generic 'won in a shootout', true of every 'SO' game. With `shootoutInference`

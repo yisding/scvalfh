@@ -1,7 +1,8 @@
 import Link from 'next/link';
 
 import Arrow from '@/components/ui/Arrow';
-import type { LeagueCardView } from './home-types';
+import type { LeagueCardView } from '@/views/home/home-client';
+
 import SetLeagueButton from './SetLeagueButton';
 
 /**

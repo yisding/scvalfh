@@ -1,5 +1,5 @@
 /**
- * The timeline rail's re-aiming under a filter (components/schedule/rail-targets.ts, F-21).
+ * The timeline rail's re-aiming under a filter (views/schedule/rail-client.ts, F-21).
  *
  * The rule: while groups are hidden, every chip that stays visible must jump to a group that is
  * still shown — `up` to the first, `down` to the last, a month to its first shown day, `Today` to
@@ -8,6 +8,8 @@
 
 import { describe, expect, it } from 'vitest';
 
+import { monthDay, shortDate } from '@/lib/format/dates';
+import { getGameDates } from '@/lib/queries/games';
 import {
   railLabel,
   railMonthDay,
@@ -15,9 +17,7 @@ import {
   railSr,
   railTargets,
   type RailMarker,
-} from '@/components/schedule/rail-targets';
-import { monthDay, shortDate } from '@/lib/format/dates';
-import { getGameDates } from '@/lib/queries/games';
+} from '@/views/schedule/rail-client';
 
 const MARKERS: RailMarker[] = [
   { date: '2026-08-24', kind: 'up' },

@@ -3,14 +3,13 @@
 import { usePathname } from 'next/navigation';
 import { useEffect } from 'react';
 
-import { PINNED_TEAM_ATTR } from '@/components/layout/pinned-team-script';
-
-import { usePinnedTeam } from './use-pinned-team';
+import { PINNED_TEAM_ATTR } from '@/components/head/pinned-team-script';
+import { usePinnedTeam } from '@/components/hooks/use-pinned-team';
 
 /**
  * The pinned-team highlight, pass two: keep it correct after a CLIENT-SIDE navigation.
  *
- * Pass one is the inline <head> script (components/layout/pinned-team-script.ts), which is the only
+ * Pass one is the inline <head> script (components/head/pinned-team-script.ts), which is the only
  * thing that can mark a row before the first paint — but it hangs off `DOMContentLoaded`, which
  * fires once per document. Tapping Standings in the bottom tab bar is an RSC navigation, not a new
  * document, so on the primary phone journey the rows arrived unmarked: both the 2px accent rule and

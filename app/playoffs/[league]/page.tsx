@@ -3,14 +3,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
 import PageHeader from '@/components/layout/PageHeader';
-import { OG_BASE } from '@/components/layout/site';
 import LeagueTournament from '@/components/playoffs/LeagueTournament';
-import { buildTournamentView, type TournamentView } from '@/components/playoffs/playoff-view';
-import {
-  tournamentLeague,
-  tournamentStaticParams,
-  type TournamentConfig,
-} from '@/components/playoffs/tournament-league';
 import Arrow from '@/components/ui/Arrow';
 import ExternalLink from '@/components/ui/ExternalLink';
 import LeagueHealthNote from '@/components/ui/LeagueHealthNote';
@@ -23,6 +16,13 @@ import type { LeagueSummary } from '@/lib/queries/leagues';
 import { getCcsField, getLeagueTournament } from '@/lib/queries/postseason';
 import { getStandingContext, getStandings } from '@/lib/queries/standings';
 import { getTeamById, getTeamBySlug } from '@/lib/registry/teams';
+import { buildTournamentView, type TournamentView } from '@/views/playoffs/playoff-view';
+import {
+  tournamentLeague,
+  tournamentStaticParams,
+  type TournamentConfig,
+} from '@/views/playoffs/tournament-route';
+import { OG_BASE } from '@/views/site/site';
 
 /**
  * /playoffs/<league> — a league's own tournament (SPEC §6.2, §6.3, §10.7): "MCAL tournament — who

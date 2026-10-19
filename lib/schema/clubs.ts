@@ -133,7 +133,7 @@ export type ClubSourceKind = (typeof CLUB_SOURCE_KINDS)[number];
  * Hosts that serve many unrelated sites, and how many leading path segments name one site there:
  * Google Sites `/view/<site>` or `/<domain>/<site>` (2; 3 for classic `/a/<domain>/<site>`), TeamLinkt `/<league slug>` (1). A club's own
  * site on one of them is the host plus those segments, so Davis High's Google Site is never taken
- * for D-City's. Shared with components/commits/commit-view.ts.
+ * for D-City's. Shared with views/commits/commit-view.ts.
  */
 export const SHARED_SITE_HOSTS: ReadonlyMap<string, number> = new Map([
   ['sites.google.com', 2],

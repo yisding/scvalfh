@@ -1532,7 +1532,7 @@ container never gets a nested scrollbar. Desktop: 24px columns, 4px gaps, 200px 
 The recap is auto-generated, not editorial, so it gets no prominence: 13px `--sx-text-2`,
 clamped to 2 lines, below the hairline, and suppressed entirely in dense team-page tables.
 
-It is the site's own sentence (`resultSentence`, components/ui/describe-game.ts), written from
+It is the site's own sentence (`resultSentence`, views/shared/describe-game.ts), written from
 the score, the venue and the site's own classification, never MaxPreps' recap, which the
 pipeline no longer stores. MaxPreps wrote from the away side, so half its sentences opened on
 the loser, and its "conference" / "non-conference" was its own league flag, which the
@@ -2195,7 +2195,7 @@ The browser chrome follows an explicit choice too. The layout's two `theme-color
 the OS (`media`), so for Light or Dark the script, and `applyTheme` on a tap, prepend one
 media-less `<meta id="sx-theme-color">` with that theme's `--sx-bg` (the first matching meta wins);
 System removes it. The two hex values are one exported constant (`THEME_COLOR` in
-components/layout/theme-script.ts) that the layout and both scripts read; the added meta writes
+components/head/theme-script.ts) that the layout and both scripts read; the added meta writes
 them in upper case, because React 19 adopts an existing meta with the same name and content (it
 ignores `media`) and then drops it on the next client-side navigation. Rewriting the layout's own
 metas does not hold either: Next re-creates them on every client-side navigation.
@@ -2578,7 +2578,7 @@ chips · `MarginStrip`'s outline/`?`-tick/`H-A-N` treatment · slug map and abbr
 (all *data-dense*).
 
 *Later (2026-10):* `ScoreCell` was retired once no route rendered it. The never-0-0 owner is
-`describeGame` (components/ui/describe-game.ts) over `renderScore`, and every score glyph goes through
+`describeGame` (views/shared/describe-game.ts) over `renderScore`, and every score glyph goes through
 `ScoreGlyph` (§7.4). R-19 and the line above are kept as the record of what was adopted.
 
 *Later (2026-10):* the server-side pin channel (`highlightSlug` on `StandingsTable`,
@@ -2798,7 +2798,7 @@ citation, the card shows the two rungs' badges plus "(tied)" instead (e.g. "Toda
 route (tied)"; `HomeTeamView.postseasonShort`, set only for those ties). The full sentence ("If the
 season ended today: <label>" / "Final place: <label>") remains the line's accessible text and its
 `title`, and lives in full on the team page (`postseasonCardLine` in
-`components/home/home-types.ts` picks the visible form).
+`views/home/home-client.ts` picks the visible form).
 
 ### 15.7 GP, LEFT, MAX and the missing-results line
 
@@ -2870,7 +2870,7 @@ else stands: static rendering, "today" from the snapshot, no new hue (§6.4, §1
 |---|---|---|
 | `/leaders` | "Who leads the whole site?" `#players` (most points, assists, saves, clean sheets) and `#schools` (best record, best league record, most goals per game, fewest goals allowed per game, most clean sheets); each board has its own anchor (`#most-points`, `#best-record`, …) | 1 |
 
-The page is built by `components/leaders/leaders-view.ts` from the two files every other page reads,
+The page is built by `views/leaders/leaders-view.ts` from the two files every other page reads,
 so a player's line is the one on their team page and a school's record is the one in its standings row.
 Each board is one table (`components/leaders/LeaderBoardTable.tsx`): place, name (the player's team
 and league on a second line, then the grade and position the team page's roster gives, or the
@@ -3002,7 +3002,7 @@ The players are minors, so the pages are narrower than the data:
   and shown under the roster's own spelling; JV rows are out. A club's own roster names many more
   players: the club page links it and names none of them.
 - **A source's verbatim quote, an affiliation's `basis` and its `confidence` are never rendered.**
-  They are not in the view types (`components/clubs/club-view.ts`), and `scripts/ci/assert-copy.ts`
+  They are not in the view types (`views/clubs/club-view.ts`), and `scripts/ci/assert-copy.ts`
   fails the build on any page whose text, entities decoded and RSC payload included, contains a
   basis, a whole fragment of a quote of 40 or more letters and digits, or an excerpt of one that long
   in which at least 20 letters and digits are not public names (schools, clubs, colleges, cities,
@@ -3244,7 +3244,7 @@ what "Committed", "Signed" and the "as of" date mean, and that recall is partial
   and shown under the roster's own spelling; JV rows and graduates are out. A commitment list or a
   news story names many more people; none of them appears.
 - **A source's quote, a commitment's `basis` and its `confidence` are never rendered.** They are not
-  in the view types (`components/commits/commit-view.ts`), and `scripts/ci/assert-copy.ts` fails the
+  in the view types (`views/commits/commit-view.ts`), and `scripts/ci/assert-copy.ts` fails the
   build on any page that shows a basis, a quote fragment or an excerpt of one (`commitmentLeaks` in
   `scripts/ci/copy/copy-rules.ts`, the clubs rule with the same thresholds, public names and `printsItself`
   excuse), also run by `tests/ui/commit-view.test.ts` over /commits, the team pages and /about.
@@ -3340,7 +3340,7 @@ state a reader rarely wants together. `/commits` now takes the `/recruiting` pat
 - **The `RegionSwitcher`** (the §24.3 pattern) sits under the page header, and each region's
   commitments sit in one `<div id="norcal|socal" data-region-scope>`, so a reader sees their own half;
   without JavaScript both render, NorCal first. A commitment's region is its school's league's
-  (`commitRegion`, `components/commits/commit-view.ts`).
+  (`commitRegion`, `views/commits/commit-view.ts`).
 - **Each block** opens with the region's count sentence, the lede's counts for that half ("Southern
   California: 12 players from 7 schools have committed to 10 colleges. Of them, …"; with none, "no
   public page we found shows a commitment by a player here yet", and nothing else), then one h2 per
@@ -3605,7 +3605,7 @@ from 13 pages to 16.
   own site" is now `clubSiteKey`: the host, or on a shared host the host plus the site's path
   segments (two on `sites.google.com`, one on `leagues.teamlinkt.com`). Davis High's Google Site and
   other TeamLinkt leagues are therefore never labelled a club's own site
-  (`components/clubs/club-view.ts`, `components/commits/commit-view.ts`).
+  (`views/clubs/club-view.ts`, `views/commits/commit-view.ts`).
 - **Sitemap dates.** `/clubs` and every club page carry `getClubsLastChecked()`, as `/commits` does:
   the file's `capturedAt`, or a later record's `checkedOn` (2026-10-04).
 - **Not built.** The Sacramento Hockey Academy (a 2025 club on one Davis player's NCSA profile) was
@@ -3744,7 +3744,7 @@ layout never shifts. With JavaScript, `league-scope-css.ts` hides the other regi
 plus `:target` on the wrapper itself). On `/teams`, a search shows both regions' lists.
 
 **The control.** `RegionSwitcher` lives in `components/layout/LeagueSwitcher.tsx`, with its state in
-`components/ui/use-league.ts`. There is no new client module and no header toggle.
+`components/hooks/use-league.ts`. There is no new client module and no header toggle.
 
 - Markup: `<div role="group" aria-label="Region">` around two `aria-pressed` buttons, "NorCal" and "SoCal".
 - Style: a segmented control at `min-h-11 min-w-11`, `sx-js-only`, disabled until hydrated.
@@ -4021,7 +4021,7 @@ lists the same 1,093 URLs. The MaxPreps sweep is 1 + 2 × 14 + 102 = **131 reque
 the three, so only their schedules are read.
 
 **Where a table would be** (`IndependentGroupView` from `independentGroupView` in
-`components/standings/standings-view.ts`, drawn by `components/standings/DivisionStandings.tsx`): the
+`views/standings/division.ts`, drawn by `components/standings/DivisionStandings.tsx`): the
 group's note, the official note of its division, and its three team links, each `[data-team-slug]` with
 the hidden "Your team." note and, on `/teams`, the finder's `data-team-tile` hook. No place, PTS, GP,
 ladder line, caption or legend.
@@ -4464,7 +4464,7 @@ component (every change below is zero-JavaScript HTML).
   midseason. It is now a closed disclosure, "19 teams’ totals lag the scores", over a list ("Archie
   Williams: 5 games since Mon Sep 28"), most games behind first. The teams with no stats and the
   carried-forward note stay open.
-- **Code.** `components/leaders/leaders-view.ts` only assembles a region now. The boards live in
+- **Code.** `views/leaders/leaders-view.ts` only assembles a region now. The boards live in
   `school-boards.ts`, `player-boards.ts` and `elo-board.ts` (which the team pages read their place
   from), the shared ranking in `ranking.ts`, the region words and id suffix in `scope.ts`, the view
   types in `types.ts`, and a section's markup in `LeaderSection.tsx`. A column key is the closed
@@ -4487,7 +4487,7 @@ leagues" (§24.9).
   "League games only, as the standings count them; the independents’ table counts their games
   against each other." NorCal's note is unchanged.
 - **Code.** `BoardScope.leaguesOnly`, which existed only for that caption, is gone; `BoardScope`
-  carries the region's independents count for the note instead (`components/leaders/scope.ts`).
+  carries the region's independents count for the note instead (`views/leaders/scope.ts`).
 
 ## 30. Text-width amendment (2026-10)
 

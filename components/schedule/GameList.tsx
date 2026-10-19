@@ -1,8 +1,7 @@
 import { GameCard, GameRow } from '@/components/ui/GameRow';
 import type { Game } from '@/lib/model/game';
 import type { LeagueId } from '@/lib/model/ids';
-
-import { gameFilterAttrs } from './filter-data-server';
+import { gameFilterAttrs } from '@/views/schedule/filters';
 
 /**
  * One day's contests as a list (DESIGN §3.3, §3.4, §7.4).

@@ -9,24 +9,23 @@ import type { LeagueId, TeamSlug } from '@/lib/model/ids';
 import { getStandingFor } from '@/lib/queries/standings';
 import { TEAMS, getTeamBySlug } from '@/lib/registry/teams';
 import { gameHref } from '@/lib/shared/game-id';
-
-import ExternalLink from './ExternalLink';
-import GhostMonogram from './GhostMonogram';
-import { maxPrepsLabel } from './maxpreps-label';
-import ResultChip from './ResultChip';
-import { ScoreGlyph, nameClass } from './ScoreGlyph';
-import StatusLabel, { GameChips } from './StatusLabel';
-import Tag from './Tag';
-import TeamMonogram from './TeamMonogram';
 import {
   describeGame,
   gameKind,
   otherLeagueSuffix,
   resultSentence,
   statusLabelIsTime,
-  type GameDisplay,
-  type SideView,
-} from './describe-game';
+} from '@/views/shared/describe-game';
+import type { GameDisplay, SideView } from '@/views/shared/game-display-client';
+import { maxPrepsLabel } from '@/views/shared/words/maxpreps-label';
+
+import ExternalLink from './ExternalLink';
+import GhostMonogram from './GhostMonogram';
+import ResultChip from './ResultChip';
+import { ScoreGlyph, nameClass } from './ScoreGlyph';
+import StatusLabel, { GameChips } from './StatusLabel';
+import Tag from './Tag';
+import TeamMonogram from './TeamMonogram';
 
 /**
  * GameRow / GameCard / GameLine / GameLogRow (DESIGN §7.4, modernization brief §4.15).

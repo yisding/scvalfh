@@ -2,14 +2,14 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Fragment } from 'react';
 
-import LeaderSection from '@/components/leaders/LeaderSection';
-import { buildLeadersView } from '@/components/leaders/leaders-view';
-import { AND_INDEPENDENTS_SHORT, LEAGUE_COUNT } from '@/components/leaders/scope';
-import type { RegionLeadersView } from '@/components/leaders/types';
 import { RegionSwitcher } from '@/components/layout/LeagueSwitcher';
 import PageHeader from '@/components/layout/PageHeader';
-import { OG_BASE, ROOT_OG_IMAGE, coveredLeagueWords } from '@/components/layout/site';
+import LeaderSection from '@/components/leaders/LeaderSection';
 import DivisionTabs from '@/components/standings/DivisionTabs';
+import { buildLeadersView } from '@/views/leaders/leaders-view';
+import { AND_INDEPENDENTS_SHORT, LEAGUE_COUNT } from '@/views/leaders/scope';
+import type { RegionLeadersView } from '@/views/leaders/types';
+import { OG_BASE, ROOT_OG_IMAGE, coveredLeagueWords } from '@/views/site/site';
 
 /**
  * `/leaders` (DESIGN §16, §23, §28) — "Who leads the whole site?" Leaderboards across every covered
@@ -18,7 +18,7 @@ import DivisionTabs from '@/components/standings/DivisionTabs';
  * DESIGN §20), and the players with the most points (raw and Elo-adjusted: lib/engine/adjusted-scoring.ts),
  * assists, saves and clean sheets.
  *
- * One static page, built by components/leaders/leaders-view.ts from the two files every other page
+ * One static page, built by views/leaders/leaders-view.ts from the two files every other page
  * reads (data/player-stats.json and data/snapshot.json), so a player's line is the one on their
  * team page and a school's record is the one in its standings row. Per region (DESIGN-socal §2.3,
  * §2.4), two sections, `#schools` and then `#players` (DESIGN §23; SoCal's `#schools-socal`,

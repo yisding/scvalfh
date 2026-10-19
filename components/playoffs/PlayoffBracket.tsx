@@ -1,14 +1,14 @@
 import Link from 'next/link';
 
-import { getTeamBySlug } from '@/lib/registry/teams';
 import { GameRow } from '@/components/ui/GameRow';
 import { ScoreGlyph, nameClass } from '@/components/ui/ScoreGlyph';
 import StatusLabel from '@/components/ui/StatusLabel';
 import TeamMonogram from '@/components/ui/TeamMonogram';
-import { describeGame, type SideView } from '@/components/ui/describe-game';
+import { getTeamBySlug } from '@/lib/registry/teams';
 import { gameHref } from '@/lib/shared/game-id';
-
-import { isNamedSide, type BracketGame, type BracketPath } from './bracket-model';
+import { isNamedSide, type BracketGame, type BracketPath } from '@/views/playoffs/bracket';
+import { describeGame } from '@/views/shared/describe-game';
+import type { SideView } from '@/views/shared/game-display-client';
 
 /**
  * One published bracket (DESIGN §3.8, §7.11).

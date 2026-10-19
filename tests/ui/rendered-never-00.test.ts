@@ -27,16 +27,16 @@ import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 
-import { buildGameView, gameDescription, gameKicker, gameTitle } from '@/components/game/game-view';
 import { GameCard, GameLine, GameLogRow, GameRow } from '@/components/ui/GameRow';
 import type { Game } from '@/lib/model/game';
 import { getGames } from '@/lib/queries/games';
 import { getLeagueSummaries } from '@/lib/queries/leagues';
 import { getTeamBySlug } from '@/lib/registry/teams';
-import { useCorpusModules } from '@/tests/support/corpus-modules';
 import { EAL_CORPUS, type CorpusName } from '@/tests/support/corpus';
+import { useCorpusModules } from '@/tests/support/corpus-modules';
 import { textFoldingDashes } from '@/tests/support/html-text';
 import { loadQueries } from '@/tests/support/queries';
+import { buildGameView, gameDescription, gameKicker, gameTitle } from '@/views/game/game-view';
 
 interface Rendered {
   games: Game[];
@@ -191,7 +191,7 @@ function defineCorpus(title: string, corpusName: CorpusName, proof: boolean) {
   describe(title, () => {
     const m = useCorpusModules(corpusName, {
       data: loadQueries,
-      model: () => import('@/components/game/game-view'),
+      model: () => import('@/views/game/game-view'),
       row: () => import('@/components/ui/GameRow'),
     });
     const corpus = (): Rendered => ({

@@ -1,7 +1,7 @@
 import type { LeagueId, TeamSlug } from '@/lib/model/ids';
+import { navLeagueHrefs } from '@/views/site/nav-targets';
 
 import NavLink from './NavLink';
-import { navLeagueHrefs } from './nav-targets';
 
 /**
  * The desktop nav: seven links, no sidebar, no bottom bar (DESIGN §1.3, §16, §18). It matches the

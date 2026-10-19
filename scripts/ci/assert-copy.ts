@@ -78,19 +78,20 @@
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import path from 'node:path';
 
-import { buildLeadersView } from '@/components/leaders/leaders-view';
 import {
   LEAGUES, NO_POSTSEASON_LEAGUE_IDS, SECTION_PLAYOFFS_LEAGUE_IDS, TOURNAMENT_LEAGUE_IDS,
   UNBRACKETED_LEAGUE_IDS, getSection, isSingleDivision, regionOf,
 } from '@/lib/config/leagues';
 import { divisionLabel } from '@/lib/config/leagues/labels';
-import { gameSentence } from '@/components/history/bracket-view';
 import { getClubsFile } from '@/lib/datasets/clubs';
 import { getCommitsFile } from '@/lib/datasets/commits';
 import { getHistoryBrackets, getHistoryLeagues } from '@/lib/datasets/history';
 import { getPlayerStats } from '@/lib/datasets/player-stats';
 import { getSnapshot } from '@/lib/datasets/snapshot';
 import type { LeagueId } from '@/lib/model/ids';
+import { gameSentence } from '@/views/history/bracket';
+import { buildLeadersView } from '@/views/leaders/leaders-view';
+
 import {
   EAL_SCHOOL_CLAIM,
   RED_BLUFF_STATUS_CLAIM,

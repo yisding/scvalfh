@@ -4,27 +4,15 @@ import Link from 'next/link';
 import LeagueJumpLinks from '@/components/layout/LeagueJumpLinks';
 import LeagueSwitcher, { RegionSwitcher } from '@/components/layout/LeagueSwitcher';
 import PageHeader from '@/components/layout/PageHeader';
-import { leagueChips } from '@/components/layout/league-chips';
-import { OG_BASE, ROOT_OG_IMAGE } from '@/components/layout/site';
 import KeyDates from '@/components/playoffs/KeyDates';
 import LeaguePairings from '@/components/playoffs/LeaguePairings';
 import PlayoffBracket from '@/components/playoffs/PlayoffBracket';
 import PlayoffProjection, { ProjectionKey } from '@/components/playoffs/PlayoffProjection';
-import { buildBrackets, ccsDivisionLabels, pendingRounds } from '@/components/playoffs/bracket-model';
-import {
-  buildDivisionProjection,
-  buildPairingView,
-  ladderFactsFor,
-  pairingNotesFor,
-  type LeagueKeyDate,
-  type ProjectionRow,
-} from '@/components/playoffs/playoff-view';
 import Arrow from '@/components/ui/Arrow';
 import BerthMeter from '@/components/ui/BerthMeter';
 import ExternalLink from '@/components/ui/ExternalLink';
 import LeagueHealthNote from '@/components/ui/LeagueHealthNote';
 import SectionHeader from '@/components/ui/SectionHeader';
-import { leaderLine } from '@/components/standings/standings-page-view';
 import {
   NO_POSTSEASON_LEAGUE_IDS, SECTION_PLAYOFFS_LEAGUE_IDS, TOURNAMENT_LEAGUE_IDS, UNBRACKETED_LEAGUE_IDS,
   getLeague, isIndependentLeague,
@@ -42,6 +30,18 @@ import { areKeyDatesConfirmed } from '@/lib/queries/provenance';
 import { getStandingFor } from '@/lib/queries/standings';
 import { getTeams } from '@/lib/queries/teams';
 import { getTeamById } from '@/lib/registry/teams';
+import { buildBrackets, ccsDivisionLabels, pendingRounds } from '@/views/playoffs/bracket';
+import {
+  buildDivisionProjection,
+  buildPairingView,
+  ladderFactsFor,
+  pairingNotesFor,
+  type LeagueKeyDate,
+  type ProjectionRow,
+} from '@/views/playoffs/playoff-view';
+import { leagueChips } from '@/views/site/league-chips';
+import { OG_BASE, ROOT_OG_IMAGE } from '@/views/site/site';
+import { leaderLine } from '@/views/standings/standings-view';
 
 /**
  * /playoffs — "Are we in, and who do we play?" (SPEC §6.3, §10.7; DESIGN-socal §2.4): every league's

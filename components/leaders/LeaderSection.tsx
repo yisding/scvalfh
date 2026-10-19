@@ -2,8 +2,9 @@ import type { ReactNode } from 'react';
 
 import SectionHeader from '@/components/ui/SectionHeader';
 import type { RegionId } from '@/lib/model/ids';
+import type { LeaderBoard } from '@/views/leaders/types';
+
 import LeaderBoardTable from './LeaderBoardTable';
-import type { LeaderBoard } from './types';
 
 /**
  * One region's Schools or Players section on /leaders (DESIGN §16, §28): the h2, an index of its

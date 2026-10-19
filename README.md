@@ -9,7 +9,7 @@ Glendora, Harvard-Westlake and Thousand Oaks, schools in no field hockey league)
 default is NorCal, because the owner keeps the NorCal focus (2026-10-06); the browser remembers the
 choice, and without JavaScript both regions show, NorCal first. Every California team we found with
 a 2026 varsity game on MaxPreps (2026-10-06) is covered; other teams appear only as opponents (this is the site's scope
-note, `SITE_SCOPE_NOTE` in `components/layout/site.ts`). A static Next.js site rebuilt from one JSON
+note, `SITE_SCOPE_NOTE` in `views/site/site.ts`). A static Next.js site rebuilt from one JSON
 snapshot, refreshed twice a day in season by a scheduled GitHub Actions job. The same source also
 builds and serves on vinext (Vite), on Node and as a Cloudflare Worker; see "Deploy notes".
 
@@ -374,7 +374,7 @@ way, under the player's `conflicts`. Every value carries its source URL, kind an
 `getTeamRoster(slug)` is MaxPreps alone, `getEnrichedTeamRoster(slug)` the merged view with
 per-field provenance, conflicts and coaches, `sortedPlayers(team)` the display order. Every team
 page, in all nine leagues and the five independents, renders it in a Roster section (`components/teams/TeamRoster.tsx`,
-built by `components/teams/roster-view.ts`): varsity only, a † on every value that did not come
+built by `views/teams/roster.ts`): varsity only, a † on every value that did not come
 from MaxPreps, the coaches, every recorded disagreement and a link to each source. A team with no
 list says why instead of showing an empty card: MaxPreps lists no players, the last update failed
 with nothing to fall back on, or no update has covered the team yet; its coaches and their sources
@@ -429,10 +429,10 @@ California teams, 62 of the 99 (758 players); on 2026-10-06, with the three inde
 63 of the 102 (776 players; Harvard-Westlake's 18, Glendora and Thousand Oaks none); where MaxPreps answers "No data was found" the file says `status: "none"`, and a team no
 run has covered yet is `status: "pending"`. `lib/datasets/player-stats.ts` loads it and `lib/queries/player-stats.ts` adds the game-note stats; each team page
 renders it in a Player stats section (`components/teams/TeamPlayerStats.tsx`, built by
-`components/teams/player-stats-view.ts`), which says when MaxPreps last updated and how many games
+`views/teams/player-stats.ts`), which says when MaxPreps last updated and how many games
 the team has played since. See `docs/DATA-SOURCES.md` §1.1k.
 
-The same file feeds the player boards on `/leaders` (`components/leaders/player-boards.ts`): most
+The same file feeds the player boards on `/leaders` (`views/leaders/player-boards.ts`): most
 points, Elo-adjusted points (see "Elo-adjusted goals and points"), assists, saves and clean sheets
 (MaxPreps' goalkeeper "shutouts"), one set of boards per region.
 A player can only appear where the coach tracks that stat, so each board says how many teams it
@@ -477,7 +477,7 @@ place when its table is shown and links it.
 
 `lib/engine/jv/standings.ts` builds one JV table per division, in three steps, and `/jv` prints them, one
 section per league (`app/jv/page.tsx`, `components/standings/JvStandings.tsx`, built by
-`components/standings/jv-standings-view.ts`). They are a page of their own, linked from each
+`views/standings/jv.ts`). They are a page of their own, linked from each
 `/standings/<league>` page and from team pages, because the SCVAL standings page is at its weight
 budget and the JV tables are a different kind of claim, stated once at the top of `/jv`:
 
@@ -528,7 +528,7 @@ score for, and adds a game MaxPreps does not list when MaxPreps has no JV game o
 score stays and si.com's is noted under the row. A game si.com lists twice with different scores,
 or two si.com games equally near one MaxPreps game, is never used. On 2026-10-05 si.com filled 7
 scores, added 12 games (mostly PCAL, where MaxPreps had one JV score) and disagreed on 3.
-`lib/datasets/jv.ts` loads it and `lib/queries/jv.ts` is the read API; `components/teams/jv-view.ts` builds both lists
+`lib/datasets/jv.ts` loads it and `lib/queries/jv.ts` is the read API; `views/teams/jv.ts` builds both lists
 (`components/teams/TeamJvGames.tsx`, `components/schedule/JvDayGames.tsx`).
 
 `update-data.yml` runs it after `fetch-player-stats`, on the same terms: it may fail without
@@ -664,7 +664,7 @@ automatically.
 `lib/datasets/clubs.ts` is the read API: `getClubs()` and `getClubSlugs()` in display order (region, then
 most tied players, then name), `getClub(slug)`, `getClubAffiliations(slug)`
 and `getPlayerClubs(team, athleteId)` (current, then listed, then
-earlier). `components/clubs/club-view.ts` builds every view and chooses every word the pages say
+earlier). `views/clubs/club-view.ts` builds every view and chooses every word the pages say
 about a tie. The gates know the pages: `assert:prerender` and `assert-vinext-prerender.ts` expect
 `clubs/<slug>` for exactly the file's slugs, `smoke-server.sh` counts them in the sitemap and
 expects `/clubs/nope` to be a 404, and `a11y-axe.mjs` checks `/clubs`, the first club page and the
@@ -797,7 +797,7 @@ or drop it by hand. On a rollover the seniors graduate: redo the research for th
 name), `getColleges()` (most players first), `commitProgram(commitment)` (its
 college's team in its sport, with that team's level),
 `getPlayerCommitment(team, athleteId)` and `commitClassOf(commitment)`.
-`components/commits/commit-view.ts` builds the page and the roster line and chooses every word they
+`views/commits/commit-view.ts` builds the page and the roster line and chooses every word they
 say. `/commits` is one static page (DESIGN §21): one section per class year, then the colleges, then
 how commitments are matched; every team page with a committed player shows a commitment line under
 that player's facts ("Committed: Colgate", or "Committed: St. Lawrence (soccer)" in another sport),
@@ -1635,7 +1635,7 @@ Copy `.env.example` to `.env` (or set the same variables in the host's dashboard
   run and snapshot refresh on `main` once an account is connected. See "vinext" and "Cloudflare
   Workers" below.
 
-`SITE_URL` defaults to `http://localhost:3000` (`components/layout/site.ts`) when unset, so
+`SITE_URL` defaults to `http://localhost:3000` (`views/site/site.ts`) when unset, so
 `metadataBase`, `robots.txt` and `sitemap.xml` will point at localhost until it's set in the
 deploy environment — no production domain is hardcoded anywhere in the repo. `.env.example` lists
 it and the six optional variables; copy it to `.env` for a local production build.

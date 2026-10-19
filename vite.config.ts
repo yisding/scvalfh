@@ -39,7 +39,7 @@ import { defineConfig, loadEnv } from 'vite';
 export default defineConfig(({ mode }) => {
   const workers = mode === 'cloudflare';
   /**
-   * SITE_URL and SCVAL_BUILD_AT are read at module scope (components/layout/site.ts,
+   * SITE_URL and SCVAL_BUILD_AT are read at module scope (views/site/site.ts,
    * build-instant.ts). They are inlined here, once per build, so the prerendered pages and anything
    * rendered on request (every 404) carry the same values on both vinext targets. On a Worker,
    * process.env holds only Worker vars and the clock reads the Unix epoch at module scope, so

@@ -1,13 +1,13 @@
 import Link from 'next/link';
 
+import type { FormGame } from '@/lib/engine/form';
 import { monthDay } from '@/lib/format/dates';
 import { EN_DASH } from '@/lib/format/words';
-import type { FormGame } from '@/lib/engine/form';
 import { getTeamBySlug } from '@/lib/registry/teams';
 import { gameHref } from '@/lib/shared/game-id';
+import { signedMargin } from '@/views/shared/describe-game';
 
 import EmptyState from './EmptyState';
-import { signedMargin } from './describe-game';
 
 /**
  * The second and last chart on the site (DESIGN §5.7, §7.9).

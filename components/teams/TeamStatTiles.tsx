@@ -1,8 +1,8 @@
 import StatTile from '@/components/ui/StatTile';
 import { perGame, placeMark, placeWords, recordString, signedGd, streakString } from '@/lib/format/numbers';
 import { EM_DASH, plural } from '@/lib/format/words';
-import type { TeamPageView } from './team-view';
-import { placeSub } from './team-view';
+import { placeSub } from '@/views/teams/team-view';
+import type { TeamPageView } from '@/views/teams/team-view';
 
 /**
  * The headline numbers (DESIGN §3.7, §7.7, SPEC §10.5): eight card tiles, 2-up on a phone and

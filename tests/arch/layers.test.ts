@@ -260,7 +260,7 @@ describe('layers: the dependency rule', () => {
     expectAtLeast(500, LIB_EDGES, 'lib/ → lib/ import edges');
   });
 
-  it('every lib/, components/ and app/ module has a layer', () => {
+  it('every lib/, views/, components/ and app/ module has a layer', () => {
     const unclassified = FILES.map(moduleOf).filter((mod) => !mod.startsWith('scripts/') && !mod.startsWith('tests/') && layerOf(mod).kind === 'unclassified');
     expect(unclassified, 'add the directory to LAYERS or INGESTION in tests/arch/layers.test.ts').toEqual([]);
   });

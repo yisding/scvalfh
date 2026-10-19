@@ -1,5 +1,5 @@
 /**
- * The JSON-LD the pages carry (components/layout/structured-data.ts, components/layout/JsonLd.tsx):
+ * The JSON-LD the pages carry (views/site/structured-data.ts, components/layout/JsonLd.tsx):
  * the escaping that keeps free text inside its <script>, the WebSite node on `/`, a SportsTeam per
  * registry team and a SportsEvent per game of the corpus snapshot — each property the page shows,
  * and nothing the data does not have (no score property, no venue from MaxPreps' note field, no
@@ -14,8 +14,8 @@ import { useCorpusModules } from '@/tests/support/corpus-modules';
 import { loadQueries } from '@/tests/support/queries';
 
 const m = useCorpusModules('all-2026-10-02', {
-  sd: () => import('@/components/layout/structured-data'),
-  gv: () => import('@/components/game/game-view'),
+  sd: () => import('@/views/site/structured-data'),
+  gv: () => import('@/views/game/game-view'),
   data: loadQueries,
 });
 
@@ -40,7 +40,7 @@ describe('JsonLd (components/layout/JsonLd.tsx)', () => {
 
 describe('websiteJsonLd', () => {
   it('names the site as og:site_name and the wordmark do, with no SearchAction', async () => {
-    const { SITE_NAME, SITE_URL, SITE_WORDMARK } = await import('@/components/layout/site');
+    const { SITE_NAME, SITE_URL, SITE_WORDMARK } = await import('@/views/site/site');
     const node = m.sd.websiteJsonLd();
     expect(node['@type']).toBe('WebSite');
     expect(node.name).toBe(SITE_NAME);
@@ -56,7 +56,7 @@ describe('teamJsonLd', () => {
     const { getLeague, isIndependentLeague } = await import('@/lib/config/leagues');
     for (const team of TEAMS) {
       const node = m.sd.teamJsonLd(team, getLeague(team.league));
-      const where = `components/layout/structured-data.ts teamJsonLd ${team.slug}`;
+      const where = `views/site/structured-data.ts teamJsonLd ${team.slug}`;
       expect(node['@type'], where).toBe('SportsTeam');
       expect(node['@id'], where).toBe(m.sd.teamNodeId(team.slug));
       expect(node.name, where).toBe(team.name);
@@ -78,7 +78,7 @@ describe('gameJsonLd', () => {
       if (!model) continue; // a superseded stub: no event of its own
       const { game } = model;
       const node = m.sd.gameJsonLd(model);
-      const where = `components/layout/structured-data.ts gameJsonLd ${id}`;
+      const where = `views/site/structured-data.ts gameJsonLd ${id}`;
       expect(node['@type'], where).toBe('SportsEvent');
       expect(node.name, where).toBe(m.gv.gameTitle(model));
       expect(node.startDate, where).toBe(game.isDateTba ? undefined : dateTimeAttr(game));

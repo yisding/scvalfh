@@ -10,8 +10,6 @@
 
 import { describe, expect, it } from 'vitest';
 
-import { postseasonSourceLink } from '@/components/layout/source-labels';
-import { SITE_SCOPE_NOTE } from '@/components/layout/site';
 import { LEAGUES, getLeague } from '@/lib/config/leagues';
 import { getHistoryLeagues } from '@/lib/datasets/history';
 import {
@@ -39,6 +37,8 @@ import {
   visibleText,
   withoutLink,
 } from '@/scripts/ci/copy/copy-rules';
+import { SITE_SCOPE_NOTE } from '@/views/site/site';
+import { postseasonSourceLink } from '@/views/site/source-labels';
 
 describe('SCVAL_ONLY_CLAIM', () => {
   it.each([
@@ -929,7 +929,7 @@ describe('the SoCal leagues’ own config strings pass every rule', () => {
   });
 });
 
-describe('postseasonSourceLink (components/layout/source-labels.ts): the source link’s words', () => {
+describe('postseasonSourceLink (views/site/source-labels.ts): the source link’s words', () => {
   it('keeps the EAL’s link text byte-identical', () => {
     expect(postseasonSourceLink('eal')?.text).toBe('Northern Section Field Hockey Guidelines (PDF)');
   });

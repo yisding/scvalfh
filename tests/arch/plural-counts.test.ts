@@ -8,7 +8,7 @@ import { describe, expect, it } from 'vitest';
 import { PAGE_CODE_ROOTS, readSource, sourceFiles } from '@/tests/support/source-tree';
 
 describe('no count template ignores n === 1', () => {
-  it('app/ and components/ never interpolate a count straight before "games"', () => {
+  it('app/, components/ and views/ never interpolate a count straight before "games"', () => {
     const offenders: string[] = [];
     for (const file of sourceFiles({ roots: PAGE_CODE_ROOTS, ext: ['.ts', '.tsx'] })) {
       for (const line of readSource(file).split('\n')) {

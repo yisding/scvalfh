@@ -1,5 +1,5 @@
 /**
- * `components/playoffs/playoff-view.ts` and `/playoffs` (SPEC §6.1, §10.7) — the per-division CCS
+ * `views/playoffs/playoff-view.ts` and `/playoffs` (SPEC §6.1, §10.7) — the per-division CCS
  * ladder projection for every CCS league, the league pairings (SCVAL crossover, BVAL play-in), the key
  * dates, and the rendered CCS page.
  *
@@ -16,20 +16,20 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import type { ReactElement } from 'react';
 import { beforeAll, describe, expect, it } from 'vitest';
 
-import type { ProjectionRow } from '@/components/playoffs/playoff-view';
 import { listWords } from '@/lib/format/words';
 import type { PlayoffStatus } from '@/lib/model/standings';
 import { getTeamById } from '@/lib/registry/teams';
 import { useCorpusModules } from '@/tests/support/corpus-modules';
 import { textOf } from '@/tests/support/html-text';
 import { loadQueries } from '@/tests/support/queries';
+import type { ProjectionRow } from '@/views/playoffs/playoff-view';
 
-const VIEW = 'components/playoffs/playoff-view.ts';
+const VIEW = 'views/playoffs/playoff-view.ts';
 const PAGE = 'app/playoffs/page.tsx';
 
 const m = useCorpusModules('all-2026-10-02', {
   data: loadQueries,
-  view: () => import('@/components/playoffs/playoff-view'),
+  view: () => import('@/views/playoffs/playoff-view'),
   leagues: () => import('@/lib/config/leagues'),
   labels: () => import('@/lib/config/leagues/labels'),
   page: () => import('@/app/playoffs/page'),

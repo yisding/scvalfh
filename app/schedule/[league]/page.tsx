@@ -5,14 +5,10 @@ import { Suspense } from 'react';
 
 import LeagueSwitcher from '@/components/layout/LeagueSwitcher';
 import PageHeader from '@/components/layout/PageHeader';
-import { leagueChips, leagueHrefs } from '@/components/layout/league-chips';
-import { OG_BASE } from '@/components/layout/site';
 import OfficialFixtures from '@/components/schedule/OfficialFixtures';
 import ScheduleFilters, { ScheduleFiltersFallback } from '@/components/schedule/ScheduleFilters';
 import ScheduleList from '@/components/schedule/ScheduleList';
 import TimelineRail from '@/components/schedule/TimelineRail';
-import { countGames } from '@/components/schedule/filter-data';
-import { scheduleFilterProps } from '@/components/schedule/filter-data-server';
 import LeagueHealthNote from '@/components/ui/LeagueHealthNote';
 import SectionHeader from '@/components/ui/SectionHeader';
 import { LEAGUE_IDS, isIndependentLeague } from '@/lib/config/leagues';
@@ -24,7 +20,10 @@ import { plural } from '@/lib/format/words';
 import { getGamesByDate, getOfficialFixtures } from '@/lib/queries/games';
 import { getLeagueSummary } from '@/lib/queries/leagues';
 import { getTeams } from '@/lib/queries/teams';
-
+import { scheduleFilterProps } from '@/views/schedule/filters';
+import { countGames } from '@/views/schedule/filters-client';
+import { leagueChips, leagueHrefs } from '@/views/site/league-chips';
+import { OG_BASE } from '@/views/site/site';
 
 /**
  * `/schedule/<league>` — "My league's whole season" (SPEC §8.1, §10.4): every game with at least

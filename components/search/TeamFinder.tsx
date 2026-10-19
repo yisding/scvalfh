@@ -3,8 +3,8 @@
 import Link from 'next/link';
 import { Fragment, useEffect, useId, useMemo, useState } from 'react';
 
+import { usePinnedTeam } from '@/components/hooks/use-pinned-team';
 import Arrow from '@/components/ui/Arrow';
-import { usePinnedTeam } from '@/components/ui/use-pinned-team';
 import { listWords, plural } from '@/lib/format/words';
 import { pinLabel } from '@/lib/shared/pin-label';
 import {

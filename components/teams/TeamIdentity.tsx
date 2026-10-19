@@ -1,8 +1,8 @@
 import PinControl from '@/components/ui/PinControl';
 import PlaceMark from '@/components/ui/PlaceMark';
 import TeamMonogram from '@/components/ui/TeamMonogram';
-import type { TeamPageView } from './team-view';
-import { placeScope } from './team-view';
+import { placeScope } from '@/views/teams/team-view';
+import type { TeamPageView } from '@/views/teams/team-view';
 
 /**
  * The identity hero (DESIGN §3.7, modernization brief §5.7): one card holding the school's

@@ -1,13 +1,14 @@
 import { shortDate, timeOfDayPT } from '@/lib/format/dates';
 import type { Game } from '@/lib/model/game';
 import { getTeamBySlug } from '@/lib/registry/teams';
+import { describeGame, statusLabelIsTime } from '@/views/shared/describe-game';
+import type { SideView } from '@/views/shared/game-display-client';
 
 import { NON_MEMBER_NOTE } from './GameRow';
 import GhostMonogram from './GhostMonogram';
 import { ScoreGlyph, nameClass } from './ScoreGlyph';
 import StatusLabel, { GameChips } from './StatusLabel';
 import TeamMonogram from './TeamMonogram';
-import { describeGame, statusLabelIsTime, type SideView } from './describe-game';
 
 /**
  * The /game/[id] hero (DESIGN §3.5, §7.4; modernization brief §4.16). A final score is the

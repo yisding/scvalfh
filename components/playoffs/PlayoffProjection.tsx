@@ -2,20 +2,19 @@ import Link from 'next/link';
 import { Fragment } from 'react';
 
 import BerthMeter from '@/components/ui/BerthMeter';
-import { articleFor, membershipSource } from '@/components/ui/membership-words';
 import PlaceMark from '@/components/ui/PlaceMark';
 import SectionHeader from '@/components/ui/SectionHeader';
 import StatusChip from '@/components/ui/StatusChip';
 import TeamMonogram from '@/components/ui/TeamMonogram';
 import { listWords } from '@/lib/format/words';
-
 import {
   projectionRowLabel,
   recordLine,
   splitStatusLabel,
   type DivisionProjection,
   type ProjectionRow,
-} from './playoff-view';
+} from '@/views/playoffs/playoff-view';
+import { articleFor, membershipSource } from '@/views/shared/words/membership';
 
 /**
  * One division's projected CCS qualification (DESIGN §3.8, §7.11; SPEC §10.7), for any CCS league.
@@ -167,7 +166,7 @@ export function PlayoffProjection({
     const single = noData.length === 1;
     // A league with no documents of its own (`official.mode: 'none'`) publishes no alignment. "As
     // MaxPreps lists it" only where MaxPreps' table for this division lists every one of them (the
-    // EAL); otherwise the league's membership source (components/ui/membership-words.ts).
+    // EAL); otherwise the league's membership source (views/shared/words/membership.ts).
     const source = membershipSource(
       projection.division,
       rows.filter((r) => !r.standing.hasReportedResults).map((r) => r.team.slug),

@@ -9,7 +9,7 @@
  * this test is what holds it. Class strings are built with `[…].filter(Boolean).join(' ')`.
  *
  * One shape is allowed: an `sx-` class completed by an id (`sx-jump-${league.id}`). That is a
- * plain CSS hook written by components/layout/league-scope-css.ts, not a Tailwind utility, so
+ * plain CSS hook written by components/head/league-scope-css.ts, not a Tailwind utility, so
  * there is no candidate to lose.
  *
  * Modelled on tests/arch/prefetch-policy.test.ts: a source scan over app/ and components/.

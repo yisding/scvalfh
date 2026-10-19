@@ -7,13 +7,6 @@
 
 import { describe, expect, it } from 'vitest';
 
-import {
-  UNCOUNTED_REASON_WORDS,
-  buildJvTablesView,
-  jvTableTitle,
-  teamJvStanding,
-} from '@/components/standings/jv-standings-view';
-import { buildTeamJvView } from '@/components/teams/jv-view';
 import { LEAGUES } from '@/lib/config/leagues';
 import { getSnapshot } from '@/lib/datasets/snapshot';
 import {
@@ -24,6 +17,14 @@ import type { OfficialFixture } from '@/lib/model/fixture';
 import type { Game } from '@/lib/model/game';
 import { getJvClassification, getJvGamesForTeam, getJvMerge, getJvTables } from '@/lib/queries/jv';
 import { TEAMS, teamsInDivision } from '@/lib/registry/teams';
+import {
+  UNCOUNTED_REASON_WORDS,
+  buildJvTablesView,
+  jvTableTitle,
+  teamJvStanding,
+} from '@/views/standings/jv';
+import { buildTeamJvView } from '@/views/teams/jv';
+
 import { game } from './support/game-builder';
 
 /** A JV game as lib/queries/jv.ts receives it from the merge: unclassified. */

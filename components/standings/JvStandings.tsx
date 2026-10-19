@@ -6,7 +6,7 @@ import SectionHeader from '@/components/ui/SectionHeader';
 import TeamMonogram from '@/components/ui/TeamMonogram';
 import { recordString } from '@/lib/format/numbers';
 import { EM_DASH } from '@/lib/format/words';
-import type { JvTableView } from './jv-standings-view';
+import type { JvTableView } from '@/views/standings/jv';
 
 /**
  * One league's JV tables on `/jv` (`#<division>` each): its divisions' blocks, in config order.

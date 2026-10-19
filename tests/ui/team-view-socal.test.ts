@@ -22,7 +22,7 @@ import { loadQueries } from '@/tests/support/queries';
 
 const m = useCorpusModules(SOCAL_CORPUS, {
   data: loadQueries,
-  view: () => import('@/components/teams/team-view'),
+  view: () => import('@/views/teams/team-view'),
   teamPage: () => import('@/app/teams/[slug]/page'),
 });
 
@@ -31,7 +31,7 @@ async function renderTeam(slug: string): Promise<string> {
   return renderToStaticMarkup(el as ReactElement);
 }
 
-const TV = 'components/teams/team-view.ts';
+const TV = 'views/teams/team-view.ts';
 
 describe('San Diego team pages (socal corpus)', () => {
   it('the corpus is the Oct 5 Pacific capture', () => {

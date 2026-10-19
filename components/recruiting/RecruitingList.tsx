@@ -1,6 +1,6 @@
 import { Clubs, Commitment, Profiles } from '@/components/teams/TeamRoster';
 import GridRowFiller from '@/components/ui/GridRowFiller';
-import type { RecruitingRow } from './recruiting-view';
+import type { RecruitingRow } from '@/views/recruiting/recruiting-view';
 
 /**
  * One school's listed players on /recruiting: each a row of the school's own roster, with the

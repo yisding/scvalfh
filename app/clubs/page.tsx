@@ -3,11 +3,11 @@ import Link from 'next/link';
 
 import ClubList from '@/components/clubs/ClubList';
 import { RegionSwitcher } from '@/components/layout/LeagueSwitcher';
-import { buildClubsIndexView } from '@/components/clubs/club-view';
 import PageHeader from '@/components/layout/PageHeader';
-import { OG_BASE, ROOT_OG_IMAGE } from '@/components/layout/site';
 import SectionHeader from '@/components/ui/SectionHeader';
 import { getRosters } from '@/lib/datasets/rosters';
+import { buildClubsIndexView } from '@/views/clubs/club-view';
+import { OG_BASE, ROOT_OG_IMAGE } from '@/views/site/site';
 
 /** The page's title, and its og:title too: og:title never carries the site-name suffix (OG_BASE). */
 const PAGE_TITLE = 'Club teams';

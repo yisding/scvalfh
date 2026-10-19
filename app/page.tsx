@@ -6,16 +6,16 @@ import FindYourTeam from '@/components/home/FindYourTeam';
 import LeagueCard from '@/components/home/LeagueCard';
 import LeaguePanel from '@/components/home/LeaguePanel';
 import MyTeamCard from '@/components/home/MyTeamCard';
-import { buildHomeView } from '@/components/home/home-view';
+import JsonLd from '@/components/layout/JsonLd';
 import LeagueSwitcher, { RegionSwitcher } from '@/components/layout/LeagueSwitcher';
 import PageHeader from '@/components/layout/PageHeader';
-import JsonLd from '@/components/layout/JsonLd';
-import { OG_BASE, SITE_NAME, leaguesBySectionWords } from '@/components/layout/site';
-import { websiteJsonLd } from '@/components/layout/structured-data';
 import { INDEPENDENT_LEAGUES, LEAGUES_PROPER } from '@/lib/config/leagues';
 import { shortDate } from '@/lib/format/dates';
 import { listWords } from '@/lib/format/words';
 import { TEAMS } from '@/lib/registry/teams';
+import { buildHomeView } from '@/views/home/home-view';
+import { OG_BASE, SITE_NAME, leaguesBySectionWords } from '@/views/site/site';
+import { websiteJsonLd } from '@/views/site/structured-data';
 
 /**
  * `/` — "What just happened in MY league, and when's my team's next game?" (SPEC §10.1, §8.2)
@@ -31,7 +31,7 @@ import { TEAMS } from '@/lib/registry/teams';
  * block is `display: none`, out of the accessibility tree. JS off or storage blocked → no stamp →
  * the first-visit view with every link working.
  *
- * The page body is read through `components/home/home-view.ts` (which reads the snapshot only through `lib/queries/`) and
+ * The page body is read through `views/home/home-view.ts` (which reads the snapshot only through `lib/queries/`) and
  * formatted in America/Los_Angeles from `snapshot.fetchedAt`; only the metadata description and
  * the sr-only league list read config (`lib/registry/teams`, `lib/config/leagues`) directly. No page calls `Date.now()`, and
  * there is no `searchParams` in this signature, which is what keeps the route static.

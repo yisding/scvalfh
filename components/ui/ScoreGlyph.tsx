@@ -1,4 +1,4 @@
-import type { SideView } from './describe-game';
+import type { SideView } from '@/views/shared/game-display-client';
 
 /**
  * The never-0-0 rule, rendered (DESIGN §5.2, §5.3).

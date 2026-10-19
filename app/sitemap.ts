@@ -1,6 +1,5 @@
 import type { MetadataRoute } from 'next';
 
-import { SITE_URL } from '@/components/layout/site';
 import { LEAGUE_IDS, TOURNAMENT_LEAGUE_IDS } from '@/lib/config/leagues';
 import { getClubSlugs, getClubsLastChecked } from '@/lib/datasets/clubs';
 import { getCommitsLastChecked } from '@/lib/datasets/commits';
@@ -17,6 +16,7 @@ import { getContentRemovals } from '@/lib/queries/provenance';
 import { getTeams } from '@/lib/queries/teams';
 import { latestDateKey } from '@/lib/shared/dates';
 import { gameHref } from '@/lib/shared/game-id';
+import { SITE_URL } from '@/views/site/site';
 
 /**
  * /sitemap.xml — every route family (SPEC §8.1): the fixed pages, `/standings/<id>` and

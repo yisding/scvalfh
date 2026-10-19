@@ -10,11 +10,8 @@
 
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
-
 import { describe, expect, it } from 'vitest';
 
-import { buildLeadersView } from '@/components/leaders/leaders-view';
-import { buildPlayerStatsView } from '@/components/teams/player-stats-view';
 import { NAME_ALIASES } from '@/lib/config/name-aliases';
 import { getPlayerStats } from '@/lib/datasets/player-stats';
 import { getTeamRoster } from '@/lib/datasets/rosters';
@@ -31,9 +28,12 @@ import {
   FIELD_STAT_KEYS, GOALIE_STAT_KEYS, type PlayerStatLine, type TeamPlayerStats,
 } from '@/lib/schema/player-stats';
 import { contestIdFromUrl, parseGameStats } from '@/lib/sources/maxpreps/game-stats';
-import { game } from './support/game-builder';
-import { FIXTURE_DIR } from './support/corpus';
+import { buildLeadersView } from '@/views/leaders/leaders-view';
+import { buildPlayerStatsView } from '@/views/teams/player-stats';
+
 import { buildFixturePlayerStats } from './support/cli';
+import { FIXTURE_DIR } from './support/corpus';
+import { game } from './support/game-builder';
 
 // ---------------------------------------------------------------- fixtures
 

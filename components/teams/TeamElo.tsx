@@ -1,10 +1,10 @@
 import Link from 'next/link';
 
-import { ELO_SCALE } from '@/components/leaders/elo-board';
-import { AND_INDEPENDENTS, LEAGUE_COUNT } from '@/components/leaders/scope';
 import { placeWords } from '@/lib/format/numbers';
 import { plural } from '@/lib/format/words';
-import type { TeamEloView } from './team-view';
+import { ELO_SCALE } from '@/views/leaders/elo-board';
+import { AND_INDEPENDENTS, LEAGUE_COUNT } from '@/views/leaders/scope';
+import type { TeamEloView } from '@/views/teams/team-view';
 
 /**
  * The team's Elo rating (DESIGN §20.2), kept low on purpose: a closed disclosure under the stat

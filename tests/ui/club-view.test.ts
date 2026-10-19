@@ -1,5 +1,5 @@
 /**
- * `components/clubs/club-view.ts` and the clubs routes (/clubs, /clubs/[slug]) over the committed
+ * `views/clubs/club-view.ts` and the clubs routes (/clubs, /clubs/[slug]) over the committed
  * data/clubs.json, data/rosters.json and data/rosters-enrichment.json (SPEC §1.1j2, DESIGN §17).
  *
  * The pages make promises a test can hold them to:
@@ -26,16 +26,6 @@ import ClubPage, { generateMetadata, generateStaticParams } from '@/app/clubs/[s
 import ClubsPage, { metadata as clubsMetadata } from '@/app/clubs/page';
 import TeamPage from '@/app/teams/[slug]/page';
 import {
-  REGION_WORDS,
-  buildClubPageView,
-  buildClubsIndexView,
-  countLine,
-  sourceLabel,
-  sourceName,
-  statusWords,
-  type ClubPageView,
-} from '@/components/clubs/club-view';
-import {
   type Club, type ClubAffiliation, clubDisplayName, getClub, getClubAffiliations, getClubSlugs, getClubs,
   getClubsFile,
 } from '@/lib/datasets/clubs';
@@ -44,6 +34,16 @@ import { getTeamBySlug } from '@/lib/registry/teams';
 import { affiliationLeaks } from '@/scripts/ci/copy/copy-rules';
 import { PUBLIC_TERMS } from '@/scripts/ci/copy/public-terms';
 import { textOf } from '@/tests/support/html-text';
+import {
+  REGION_WORDS,
+  buildClubPageView,
+  buildClubsIndexView,
+  countLine,
+  sourceLabel,
+  sourceName,
+  statusWords,
+  type ClubPageView,
+} from '@/views/clubs/club-view';
 
 const file = getClubsFile();
 const club = (slug: string): Club => getClub(slug)!;

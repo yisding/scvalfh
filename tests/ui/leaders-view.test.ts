@@ -1,5 +1,5 @@
 /**
- * `components/leaders/leaders-view.ts`, `LeaderBoardTable` and the /leaders page (DESIGN §16).
+ * `views/leaders/leaders-view.ts`, `LeaderBoardTable` and the /leaders page (DESIGN §16).
  *
  * The page's promises: a player's number is the one on their team page and a school's record the one
  * in its standings row; a board ranks with shared places (1, 2, 2, 4) and lists the places to 10th
@@ -20,12 +20,6 @@ import { describe, expect, it } from 'vitest';
 
 import LeadersPage from '@/app/leaders/page';
 import LeaderBoardTable from '@/components/leaders/LeaderBoardTable';
-import { buildEloBoard, crossRegionFinals, getEloBoard, getEloBoardForTeam } from '@/components/leaders/elo-board';
-import { buildLeadersView } from '@/components/leaders/leaders-view';
-import { BOARD_PLACES, EXPANDED_PLACES, qualifyingMinimum, rankBoard } from '@/components/leaders/ranking';
-import type { LeaderBoard, LeaderSources, LeadersView, RegionLeadersView } from '@/components/leaders/types';
-import { statText } from '@/components/teams/player-stats-view';
-import { positionWords } from '@/components/ui/position-words';
 import { regionOf } from '@/lib/config/leagues';
 import { getPriorSeason } from '@/lib/datasets/prior-season';
 import { getEnrichedTeamRoster } from '@/lib/datasets/rosters';
@@ -47,6 +41,12 @@ import {
 } from '@/lib/schema/player-stats';
 import { game } from '@/tests/support/game-builder';
 import { textOf } from '@/tests/support/html-text';
+import { buildEloBoard, crossRegionFinals, getEloBoard, getEloBoardForTeam } from '@/views/leaders/elo-board';
+import { buildLeadersView } from '@/views/leaders/leaders-view';
+import { BOARD_PLACES, EXPANDED_PLACES, qualifyingMinimum, rankBoard } from '@/views/leaders/ranking';
+import type { LeaderBoard, LeaderSources, LeadersView, RegionLeadersView } from '@/views/leaders/types';
+import { positionWords } from '@/views/shared/words/position';
+import { statText } from '@/views/teams/player-stats';
 
 const PLAYER_IDS = ['most-points', 'adjusted-points', 'most-assists', 'most-saves', 'most-clean-sheets'];
 const SCHOOL_IDS = [
@@ -1127,11 +1127,11 @@ describe('LeaderBoardTable and the /leaders page', () => {
 
   it('counts the leagues from config: nine and the independents on one Elo scale, five NorCal and four SoCal (and five independents) on the boards', () => {
     const text = textOf(renderToStaticMarkup(LeadersPage()));
-    expect(text, 'components/leaders/leaders-view.ts captions').toMatch(/players in all five NorCal leagues, this season/);
-    expect(text, 'components/leaders/leaders-view.ts captions').toMatch(/schools in all five NorCal leagues, this season/);
-    expect(text, 'components/leaders/leaders-view.ts captions').toMatch(/schools in all four SoCal leagues and five independents, this season/);
-    expect(text, 'components/leaders/leaders-view.ts Elo note').toContain('on one scale across all nine leagues and the Southern Section’s five independents');
-    expect(text, 'components/leaders/leaders-view.ts').not.toMatch(/all (four|five) leagues|\bten leagues\b|\b10 leagues\b/);
+    expect(text, 'views/leaders/leaders-view.ts captions').toMatch(/players in all five NorCal leagues, this season/);
+    expect(text, 'views/leaders/leaders-view.ts captions').toMatch(/schools in all five NorCal leagues, this season/);
+    expect(text, 'views/leaders/leaders-view.ts captions').toMatch(/schools in all four SoCal leagues and five independents, this season/);
+    expect(text, 'views/leaders/leaders-view.ts Elo note').toContain('on one scale across all nine leagues and the Southern Section’s five independents');
+    expect(text, 'views/leaders/leaders-view.ts').not.toMatch(/all (four|five) leagues|\bten leagues\b|\b10 leagues\b/);
     expect(text, 'app/leaders/page.tsx eyebrow').toContain('All nine leagues and five independents');
   });
 });

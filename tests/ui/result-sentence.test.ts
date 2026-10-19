@@ -1,12 +1,12 @@
 /**
- * The site's own result sentence (components/ui/describe-game.ts `resultSentence`): winner first,
+ * The site's own result sentence (views/shared/describe-game.ts `resultSentence`): winner first,
  * from the score, the venue and the site's own classification. MaxPreps' recap is not stored.
  */
 
 import { describe, expect, it } from 'vitest';
 
-import { resultSentence } from '@/components/ui/describe-game';
 import { game } from '@/tests/support/game-builder';
+import { resultSentence } from '@/views/shared/describe-game';
 
 const LEAGUE_DAY = '2026-09-16';
 

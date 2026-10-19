@@ -1,5 +1,6 @@
+import type { GameDisplay, StatusTone } from '@/views/shared/game-display-client';
+
 import Tag from './Tag';
-import type { GameDisplay, StatusTone } from './describe-game';
 
 /**
  * The written label beside every score: FINAL · SCORE NOT REPORTED · POSTPONED ·

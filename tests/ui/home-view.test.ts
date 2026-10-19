@@ -11,15 +11,13 @@ import { beforeAll, describe, expect, it } from 'vitest';
 
 import { getTeamBySlug } from '@/lib/registry/teams';
 import { useCorpusModules } from '@/tests/support/corpus-modules';
-
-import { POSTSEASON_LEAD, postseasonCardLine, rungCardText } from '@/components/home/home-types';
-
 import { textOf } from '@/tests/support/html-text';
 import { loadQueries } from '@/tests/support/queries';
 import { width } from '@/tests/support/text-metrics';
+import { POSTSEASON_LEAD, postseasonCardLine, rungCardText } from '@/views/home/home-client';
 
 const m = useCorpusModules('all-2026-10-02', {
-  home: () => import('@/components/home/home-view'),
+  home: () => import('@/views/home/home-view'),
   leagues: () => import('@/lib/config/leagues'),
   labels: () => import('@/lib/config/leagues/labels'),
   homePage: () => import('@/app/page'),
@@ -30,7 +28,7 @@ let pageHtml = '';
 const panelHtml = new Map<string, string>();
 let renderPanel: (id: string) => string;
 
-const HV = 'components/home/home-view.ts';
+const HV = 'views/home/home-view.ts';
 
 beforeAll(() => {
   data = m.home.buildHomeView();
@@ -46,7 +44,7 @@ beforeAll(() => {
   };
 });
 
-describe('home panels (components/home/home-view.ts → LeaguePanel)', () => {
+describe('home panels (views/home/home-view.ts → LeaguePanel)', () => {
   it('builds one panel per league, config order', () => {
     expect(data.panels.map((p) => p.id), `${HV}: panels`).toEqual([
       'scval', 'bval', 'pcal', 'mcal', 'eal', 'sunset', 'city', 'north-county', 'metro', 'independents',
@@ -507,7 +505,7 @@ describe('the pinned card (components/home/MyTeamCard.tsx ← home-view.ts team 
 
   it('"Last" is the newest PLAYED game: a score-pending one shows as unreported, never as a final', async () => {
     const d = await loadQueries();
-    const { describeGame } = await import('@/components/ui/describe-game');
+    const { describeGame } = await import('@/views/shared/describe-game');
     const { gameHref } = await import('@/lib/shared/game-id');
     const { PinnedCard } = await import('@/components/home/MyTeamCard');
     let pending = 0;

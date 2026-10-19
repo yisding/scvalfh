@@ -1,9 +1,9 @@
 import Link from 'next/link';
 
 import Arrow from '@/components/ui/Arrow';
+import type { OverviewDivision } from '@/views/standings/division';
 
 import CompactStandingsTable from './CompactStandingsTable';
-import type { OverviewDivision } from './standings-view';
 
 /**
  * One division of a section → league → division overview (SPEC §10.3, DESIGN §18.1): its h4

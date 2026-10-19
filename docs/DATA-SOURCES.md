@@ -2853,7 +2853,7 @@ page:
 > CIF-CCS, CIF-NCS, CIF-NS, CIF-SS, CIF-SDS, MaxPreps or SI. Records are computed from published game
 > results and may differ from official standings. Last updated {fetchedAt}.
 
-with the site's scope note beneath it (`SITE_SCOPE_NOTE`, components/layout/site.ts): "Covers the CIF
+with the site's scope note beneath it (`SITE_SCOPE_NOTE`, views/site/site.ts): "Covers the CIF
 Central Coast Section (SCVAL, BVAL, PCAL), the North Coast Section’s MCAL, the Northern Section’s EAL,
 the Southern Section’s Sunset field hockey league and the San Diego Section’s City, North and Metro
 conferences, plus the Southern Section’s five independents (Bonita, Chaminade, Glendora, Harvard-Westlake

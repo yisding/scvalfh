@@ -1,6 +1,6 @@
 'use client';
 
-import { usePinnedTeam } from './use-pinned-team';
+import { usePinnedTeam } from '@/components/hooks/use-pinned-team';
 
 /**
  * Pin / unpin a team (DESIGN §7.12; SPEC §8.2, §10.2). Pinning also remembers the team's league

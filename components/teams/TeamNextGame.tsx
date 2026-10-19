@@ -1,15 +1,15 @@
 import Link from 'next/link';
 
-import { dateTimeAttr, timeOfDayPT } from '@/lib/format/dates';
 import EmptyState from '@/components/ui/EmptyState';
 import ExternalLink from '@/components/ui/ExternalLink';
 import ResultChip from '@/components/ui/ResultChip';
 import SectionHeader from '@/components/ui/SectionHeader';
 import StatusLabel from '@/components/ui/StatusLabel';
 import TeamMonogram from '@/components/ui/TeamMonogram';
-import { describeGame, gameKindLabel } from '@/components/ui/describe-game';
+import { dateTimeAttr, timeOfDayPT } from '@/lib/format/dates';
 import { gameHref } from '@/lib/shared/game-id';
-import type { NextCard, TeamLeagueCopy } from './team-view';
+import { describeGame, gameKindLabel } from '@/views/shared/describe-game';
+import type { NextCard, TeamLeagueCopy } from '@/views/teams/team-view';
 
 /**
  * The NEXT block (DESIGN §3.7, modernization brief §5.7). Presentational: every string comes from

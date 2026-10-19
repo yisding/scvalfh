@@ -1,10 +1,10 @@
 /**
- * The scope stylesheet (components/layout/league-scope-css.ts, SPEC §8.2): one rule per league id
+ * The scope stylesheet (components/head/league-scope-css.ts, SPEC §8.2): one rule per league id
  * for each per-league family, the fixed rules verbatim, and nothing that could carry a league hue.
  */
 import { describe, expect, it } from 'vitest';
 
-import { buildLeagueScopeCss } from '@/components/layout/league-scope-css';
+import { buildLeagueScopeCss } from '@/components/head/league-scope-css';
 import { LEAGUE_IDS } from '@/lib/config/leagues';
 
 const css = buildLeagueScopeCss(LEAGUE_IDS);

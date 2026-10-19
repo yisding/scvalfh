@@ -1,5 +1,4 @@
 import Link from 'next/link';
-
 import { Fragment } from 'react';
 
 import ExternalLink from '@/components/ui/ExternalLink';
@@ -9,8 +8,7 @@ import { SOURCE_LINKS } from '@/lib/config/source-urls';
 import { listWords } from '@/lib/format/words';
 import type { LeagueConfig } from '@/lib/model/league-config';
 import { getSitePhase } from '@/lib/queries/phase';
-
-import { DATA_CORRECTIONS_URL, SITE_SCOPE_NOTE } from './site';
+import { DATA_CORRECTIONS_URL, SITE_SCOPE_NOTE } from '@/views/site/site';
 
 /**
  * The footer that ends EVERY page (DESIGN §1.3, §7.15; SPEC §6).

@@ -1,18 +1,17 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
-import { RegionSwitcher } from '@/components/layout/LeagueSwitcher';
-import PageHeader from '@/components/layout/PageHeader';
 import BackfillTable from '@/components/about/BackfillTable';
 import CifssCrossCheckSummary from '@/components/about/CifssCrossCheckSummary';
 import CrossCheckTable, { type CrossCheckGroup } from '@/components/about/CrossCheckTable';
 import LeagueHealthCard, { officialSourceLabel, type HealthDivision } from '@/components/about/LeagueHealthCard';
 import SbliveCrossCheckSummary from '@/components/about/SbliveCrossCheckSummary';
+import { RegionSwitcher } from '@/components/layout/LeagueSwitcher';
+import PageHeader from '@/components/layout/PageHeader';
 import Arrow from '@/components/ui/Arrow';
 import EmptyState from '@/components/ui/EmptyState';
 import ExternalLink from '@/components/ui/ExternalLink';
 import SectionHeader from '@/components/ui/SectionHeader';
-import { DATA_CORRECTIONS_URL, OG_BASE, ROOT_OG_IMAGE, SITE_SCOPE_NOTE, independentsWords } from '@/components/layout/site';
 import {
   CCS, SECTIONS, TOURNAMENT_LEAGUE_IDS, UNBRACKETED_LEAGUE_IDS, getLeague, getSection, isIndependentLeague,
   isDefaultRegion, leagueStandingsUrl, regionOf,
@@ -30,6 +29,10 @@ import { crossCheckSkipReason, statusLegend } from '@/lib/engine/standings';
 import { dateWithYear, formatStamp, shortDate, timeOfDayPT } from '@/lib/format/dates';
 import { ordinal } from '@/lib/format/numbers';
 import { listWords, numberWord, plural } from '@/lib/format/words';
+import type { CrossCheckRow } from '@/lib/model/crosscheck';
+import type { DroppedContest, SourceStatus } from '@/lib/model/health';
+import type { LeagueConfig, SectionConfig } from '@/lib/model/league-config';
+import type { TiebreakStage } from '@/lib/model/standings';
 import { getOfficialFixtures } from '@/lib/queries/games';
 import { getJvMerge, getJvTables } from '@/lib/queries/jv';
 import { getLeagueHealth, getLeagueSummaries } from '@/lib/queries/leagues';
@@ -41,12 +44,9 @@ import {
 } from '@/lib/queries/provenance';
 import { getAllStandings } from '@/lib/queries/standings';
 import { getTeams } from '@/lib/queries/teams';
-import { jvTableTitle } from '@/components/standings/jv-standings-view';
-import type { CrossCheckRow } from '@/lib/model/crosscheck';
-import type { DroppedContest, SourceStatus } from '@/lib/model/health';
-import type { LeagueConfig, SectionConfig } from '@/lib/model/league-config';
-import type { TiebreakStage } from '@/lib/model/standings';
 import { getTeamBySlug } from '@/lib/registry/teams';
+import { DATA_CORRECTIONS_URL, OG_BASE, ROOT_OG_IMAGE, SITE_SCOPE_NOTE, independentsWords } from '@/views/site/site';
+import { jvTableTitle } from '@/views/standings/jv';
 
 /**
  * `/about` (DESIGN §3.10, SPEC §10.8) — where the data comes from for every league, how each

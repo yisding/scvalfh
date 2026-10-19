@@ -12,9 +12,6 @@
  * and by the tests that run the leak rules over rendered pages.
  */
 
-import { SPORT_WORDS } from '@/components/commits/commit-view';
-import { overallAwards, splitOverallValue } from '@/components/history/history-view';
-import { positionFromText } from '@/components/ui/position-words';
 import { getClubs } from '@/lib/datasets/clubs';
 import { getColleges } from '@/lib/datasets/commits';
 import { getAvailableHistoryLeagues } from '@/lib/datasets/history';
@@ -22,6 +19,10 @@ import { getAllEnrichedRosters } from '@/lib/datasets/rosters';
 import { gradeWord } from '@/lib/format/words';
 import type { TeamSlug } from '@/lib/model/ids';
 import { TEAMS, getTeamBySlug } from '@/lib/registry/teams';
+import { SPORT_WORDS } from '@/views/commits/commit-view';
+import { overallAwards, splitOverallValue } from '@/views/history/history-view';
+import { positionFromText } from '@/views/shared/words/position';
+
 import type { ArchiveLine } from './copy-rules';
 
 const terms = new Set<string>(['Field Hockey', ...Object.values(SPORT_WORDS)]);

@@ -4,12 +4,8 @@ import { notFound } from 'next/navigation';
 
 import LeagueSwitcher from '@/components/layout/LeagueSwitcher';
 import PageHeader from '@/components/layout/PageHeader';
-import { leagueChips, leagueHrefs } from '@/components/layout/league-chips';
-import { OG_BASE } from '@/components/layout/site';
 import DivisionStandings from '@/components/standings/DivisionStandings';
 import DivisionTabs from '@/components/standings/DivisionTabs';
-import { buildStandingsPageView } from '@/components/standings/standings-page-view';
-import { leaderClause } from '@/components/standings/standings-view';
 import Arrow from '@/components/ui/Arrow';
 import ExternalLink from '@/components/ui/ExternalLink';
 import { biggestGoalDiff } from '@/components/ui/StandingsTable';
@@ -18,6 +14,10 @@ import { leagueSportWords, standingsLabel } from '@/lib/config/leagues/labels';
 import { hasHistory } from '@/lib/datasets/history';
 import { shortDate } from '@/lib/format/dates';
 import { getLeagueSummary } from '@/lib/queries/leagues';
+import { leagueChips, leagueHrefs } from '@/views/site/league-chips';
+import { OG_BASE } from '@/views/site/site';
+import { leaderClause } from '@/views/standings/division';
+import { buildStandingsPageView } from '@/views/standings/standings-view';
 
 /**
  * /standings/<league> — "Where do WE stand?" (SPEC §8.1, §10.3): one league's full tables.
