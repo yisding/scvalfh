@@ -10,11 +10,13 @@ import type { z } from 'zod';
 
 import { BOOTSTRAP_URL, SPORT_SEASON_ID } from '@/lib/config/season';
 import { MAXPREPS_API } from '@/lib/config/source-urls';
+import { describeIssues } from '@/lib/schema/primitives';
 import { MAX_RETRY_AFTER_MS, POLITE_USER_AGENT } from '@/lib/sources/http/client';
 import { PoliteFetchError, PoliteFetcher } from '@/lib/sources/http/polite-fetcher';
 import type { RawResponse } from '@/lib/sources/http/raw-response';
 import { type Bootstrap, parseBootstrap } from './bootstrap';
 import { MaxPrepsError } from './error';
+import { assertFeedHasTeam } from './schedule';
 import {
   type LeagueMeta,
   LeagueMetaSchema,
@@ -110,10 +112,7 @@ export class MaxPrepsClient {
     const parsed = schema.safeParse(raw);
     if (!parsed.success) {
       // Schema drift must fail loudly rather than silently writing garbage (SPEC §7.9).
-      const issues = parsed.error.issues
-        .slice(0, 5)
-        .map((i) => `${i.path.join('.') || '(root)'}: ${i.message}`)
-        .join('; ');
+      const issues = describeIssues(parsed.error.issues, { limit: 5, empty: '(root)', separator: '; ' });
       throw new MaxPrepsError(`schema drift: ${issues}`, {
         url,
         httpStatus: res.meta.httpStatus,
@@ -178,16 +177,10 @@ export class MaxPrepsClient {
     const res = await this.json(url, ScheduleResponseSchema);
     // Guard the Presentation/Los Gatos class of routing bug: a team's feed must contain that
     // team (SPEC §7.2). An empty feed is legitimate (a school that has published nothing).
-    if (res.data.data.length > 0) {
-      const present = res.data.data.some((row) =>
-        row.contest.teams.some((t) => t.teamId === teamId),
-      );
-      if (!present) {
-        throw new MaxPrepsError(`feed for ${teamId} contains no row for that teamId`, {
-          url,
-          httpStatus: res.meta.httpStatus,
-        });
-      }
+    try {
+      assertFeedHasTeam(res.data.data, teamId, { message: `feed for ${teamId} contains no row for that teamId` });
+    } catch (err) {
+      throw new MaxPrepsError((err as Error).message, { url, httpStatus: res.meta.httpStatus });
     }
     return { data: res.data.data, meta: res.meta };
   }

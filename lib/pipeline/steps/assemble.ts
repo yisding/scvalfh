@@ -17,6 +17,7 @@ import { TEAMS } from '@/lib/registry/teams';
 import { hasSbliveContestPrefix } from '@/lib/shared/contest-id';
 import { byDateThenId } from '@/lib/shared/game';
 import { stableStringify } from '@/lib/shared/stable-json';
+import { SNAPSHOT_MAX_BYTES, SNAPSHOT_WARN_BYTES, SOURCES_MAX, budgetLabel } from '@/lib/pipeline/budgets';
 import { snapshotContentHash } from '@/lib/pipeline/content-hash';
 import { RunAbort, type SnapshotMeta } from '@/lib/pipeline/contract';
 import type { RunState } from '@/lib/pipeline/state';
@@ -25,25 +26,6 @@ import type { RequestCounts } from '@/lib/pipeline/transport';
 import { parseSnapshot } from '@/lib/snapshot/load';
 import { countsOf } from '@/lib/snapshot/migrate';
 import type { StandingsStepResult } from './standings';
-
-/**
- * SPEC §7.11 budgets, raised deliberately for the Southern California amendment (DESIGN-socal §2.2):
- * 49 teams in five leagues measured 980 KB with 101 source rows against 1.6 MB / 140. The 50 SoCal
- * teams roughly double the games, teams and standings rows (~1,700 B per game, ~1,140 B per team,
- * ~2,430 B per standings row, ~430 B per source row, measured on the 49-team file), so the snapshot
- * lands near 2.2-2.4 MB and the sources near 200 (1 bootstrap + 2 × 14 MaxPreps tables + 102 schedules
- * + the official, si.com, VNN and CCS rows). The caps below leave room for the rest of the season's
- * games; the measured numbers are recorded in DESIGN §24. Labels print from these constants
- * (budgetLabel), never from a literal.
- */
-export const SNAPSHOT_MAX_BYTES = 3_200_000;
-export const SNAPSHOT_WARN_BYTES = 2_400_000;
-export const SOURCES_MAX = 280;
-
-/** '3.2 MB' from 3_200_000: the human label of a byte budget (decimal megabytes, one decimal). */
-export function budgetLabel(bytes: number): string {
-  return `${(bytes / 1_000_000).toFixed(1)} MB`;
-}
 
 /**
  * D2 rule 10: a `sblive:<id>` game an earlier run published that a MaxPreps contest now supersedes

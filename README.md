@@ -218,7 +218,7 @@ season** (cron `0 14 * 8-12 *` and `0 5 * 8-12 *` — 7:00 AM and 10:00 PM Pacif
 restricted to Aug-Dec so it rarely fires out of season; the cron's months are UTC, and December
 is there only for the Nov 30 10:00 PM Pacific run, which is already December 1 in UTC). The
 season itself is bounded by the scripts' own Aug 1 - Nov 30 Pacific window guard
-(`inSeasonWindow` in `lib/pipeline/steps/window.ts`, over the sections' season windows in
+(`inSeasonWindow` in `lib/pipeline/season-window.ts`, over the sections' season windows in
 `lib/config/leagues.ts`; `fetch-player-stats` imports the same function): a run outside it exits without
 writing anything. Right after `fetch-data` it runs `pnpm fetch-player-stats` (all 102 teams; see
 "Player stats" below) and then `pnpm fetch-jv` (see "JV games" below), each allowed to fail without

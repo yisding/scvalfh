@@ -9,7 +9,7 @@ import { describe, expect, it } from 'vitest';
 import { z } from 'zod';
 
 import { TEAMS } from '@/lib/registry/teams';
-import { customIssue, dateKey, failValidation, formatIssues, httpUrl, httpsUrl, slugId } from '@/lib/schema/primitives';
+import { customIssue, dateKey, describeIssues, failValidation, formatIssues, httpUrl, httpsUrl, slugId } from '@/lib/schema/primitives';
 import { REGISTRY_TEAM_COUNT, registryTeamSlug } from '@/lib/schema/registry-primitives';
 import { dateOnly, httpsSourceUrl, text } from '@/lib/schema/source-url';
 import { DATE_PATTERN, SLUG_PATTERN, isCalendarDate, isHttpsUrl } from '@/lib/shared/patterns';
@@ -49,6 +49,25 @@ describe('schema primitives', () => {
     expect(formatIssues([{ path: [], message: 'not an object' }])).toBe('  (root): not an object');
     expect(formatIssues(issues).split('\n')).toHaveLength(10);
     expect(() => failValidation('rosters', issues)).toThrow(/^rosters failed validation:\n {2}teams\.0\.slug: bad 0\n/);
+  });
+
+  it('describeIssues is every caller of the formatter: limit, empty path, separator, indent, prefix, path join', () => {
+    const issues = [
+      { path: [], message: 'not an object' },
+      { path: ['data', 0, 'schoolId'], message: 'Invalid input' },
+      { path: ['data', 1], message: 'Required' },
+      { path: ['data', 2], message: 'beyond the limit' },
+    ];
+    expect(describeIssues(issues, { limit: 3, empty: '(row)', separator: '; ' })).toBe(
+      '(row): not an object; data.0.schoolId: Invalid input; data.1: Required',
+    );
+    expect(describeIssues(issues, { limit: 2, empty: '(root)', separator: '; ', prefix: 'schema drift: ' })).toBe(
+      'schema drift: (root): not an object; data.0.schoolId: Invalid input',
+    );
+    expect(describeIssues(issues, { limit: 2, empty: '-', separator: '|', indent: '> ', pathJoin: '>' })).toBe(
+      '> -: not an object|> data>0>schoolId: Invalid input',
+    );
+    expect(describeIssues([], { limit: 3, empty: '(row)', separator: '; ', prefix: 'p: ' })).toBe('p: ');
   });
 
   it('customIssue adds a custom issue at its path', () => {

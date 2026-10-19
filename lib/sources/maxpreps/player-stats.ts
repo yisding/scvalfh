@@ -40,6 +40,7 @@ import { z } from 'zod';
 import { SPORT_SEASON_ID } from '@/lib/config/season';
 import { MAXPREPS_API } from '@/lib/config/source-urls';
 import type { Team } from '@/lib/model/team';
+import { describeIssues } from '@/lib/schema/primitives';
 import {
   FIELD_STAT_KEYS, type FieldStatKey, type FieldStats, GOALIE_STAT_KEYS, type GoalieStatKey, type GoalieStats,
   type TeamPlayerStats,
@@ -247,10 +248,7 @@ export function parsePlayerStats(
   const url = opts.url ?? '(player stats)';
   const parsed = PlayerStatsResponseSchema.safeParse(raw);
   if (!parsed.success) {
-    const issues = parsed.error.issues
-      .slice(0, 5)
-      .map((i) => `${i.path.join('.') || '(root)'}: ${i.message}`)
-      .join('; ');
+    const issues = describeIssues(parsed.error.issues, { limit: 5, empty: '(root)', separator: '; ' });
     fail(`schema drift: ${issues}`, url);
   }
   const data = parsed.data.data;

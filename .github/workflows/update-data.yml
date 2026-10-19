@@ -10,13 +10,13 @@
 # (UTC-7/-8) — never ahead. So the disagreement is one-sided: it needs a month at the DECEMBER end,
 # where the Nov 30 evening run is 2026-12-01T05:00Z, and none at the August end, where the earliest
 # Pacific-August instant (Aug 1 00:00 PDT) is already 2026-08-01T07:00Z. A UTC-July fire is always
-# Pacific July, which the season-window guard (lib/pipeline/steps/window.ts: the sections' season
+# Pacific July, which the season-window guard (lib/pipeline/season-window.ts: the sections' season
 # windows, Aug 1 – Nov 30 Pacific) rejects every time — 62 runs a season that each did a checkout,
 # an apt install, `pnpm install --frozen-lockfile` and the whole test suite before correctly
 # writing nothing. Hence 8-12, with the scripts' own
 # Aug 1 – Nov 30 Pacific guard still the single source of truth for the window: an out-of-season
 # cron fires, both scripts exit 0 and write nothing (fetch-player-stats imports the same
-# `inSeasonWindow` from lib/pipeline/steps/window.ts).
+# `inSeasonWindow` from lib/pipeline/season-window.ts).
 #
 # Player stats ride the same run because they move after every game, as the scores do, and the
 # same commit, so a refresh is still one deploy. They cover every registry team of the nine

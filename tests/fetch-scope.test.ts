@@ -5,6 +5,8 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
+import { z } from 'zod';
+
 import { SEASON_YEAR } from '@/lib/config/season';
 import {
   describePrevious,
@@ -12,6 +14,7 @@ import {
   inScope,
   readPreviousFile,
   runExitCode,
+  salvageRows,
   summarizeByLeague,
   teamsInScope,
 } from '@/lib/pipeline/fetch-scope';
@@ -254,5 +257,41 @@ describe('stableStringify', () => {
     expect(stableStringify({ b: [{ z: 1, a: 2 }], a: undefined, c: null })).toBe(
       '{\n  "b": [\n    {\n      "a": 2,\n      "z": 1\n    }\n  ],\n  "c": null\n}\n',
     );
+  });
+});
+
+describe('salvageRows', () => {
+  const Row = z.object({ id: z.string(), n: z.number() });
+  const list = [{ id: 'a', n: 1 }, { id: 'b', n: 'x' }, { id: 'a', n: 2 }, { id: 'c', n: 3 }, { id: 'b', n: 4 }, null];
+
+  it("'all' counts every entry's id, valid or not, and names each invalid entry", () => {
+    const idOf = (entry: unknown, i: number) =>
+      typeof entry === 'object' && entry !== null && 'id' in entry ? String((entry as { id: string }).id) : `teams[${i}]`;
+    const out = salvageRows(list, Row, idOf, { duplicatesAmong: 'all' });
+    expect(out.kept).toEqual([{ id: 'c', row: { id: 'c', n: 3 } }]);
+    expect(out.invalid.map((r) => [r.index, r.id])).toEqual([[1, 'b'], [5, 'teams[5]']]);
+    expect(out.invalid[0]?.reason).toMatch(/^n: /);
+    expect(out.invalid[1]?.reason).toMatch(/^\(row\): /);
+    expect(out.duplicates).toEqual([{ id: 'a', n: 2 }, { id: 'b', n: 2 }]);
+  });
+
+  it("'valid' counts the rows that validated only, so an invalid entry claims nothing", () => {
+    const out = salvageRows(list, Row, (row) => row.id, { duplicatesAmong: 'valid' });
+    expect(out.kept.map((k) => k.id)).toEqual(['c', 'b']);
+    expect(out.invalid.map((r) => [r.index, r.id])).toEqual([[1, null], [5, null]]);
+    expect(out.duplicates).toEqual([{ id: 'a', n: 2 }]);
+  });
+});
+
+describe('readPreviousFile keepJson', () => {
+  it('hands back the parsed file only when asked', () => {
+    const text = JSON.stringify({ season: SEASON_YEAR, teams: [], extra: 7 });
+    const opts = { season: SEASON_YEAR, row: z.object({ slug: z.string() }), file: z.unknown() };
+    const plain = readPreviousFile(text, opts);
+    const kept = readPreviousFile(text, { ...opts, keepJson: true });
+    expect(plain.readable && plain.json).toBeUndefined();
+    expect(kept.readable && kept.json).toEqual({ season: SEASON_YEAR, teams: [], extra: 7 });
+    const other = readPreviousFile(JSON.stringify({ season: '1999', teams: [] }), { ...opts, keepJson: true });
+    expect(other.readable && other.json).toEqual({ season: '1999', teams: [] });
   });
 });

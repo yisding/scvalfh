@@ -9,6 +9,7 @@
 import type { z } from 'zod';
 
 import type { SourceStatus } from '@/lib/model/health';
+import { describeIssues } from '@/lib/schema/primitives';
 import type { RawResponse } from '@/lib/sources/http/raw-response';
 import { FixtureMissing, TransportError, type RunContext, type RunLog } from './contract';
 import type { ResourceKey } from './resources';
@@ -70,10 +71,7 @@ export function sourceBase(
 
 /** `schema drift: data.0.schoolId: Invalid input; …`: the first three issues, one `path: message` each. */
 function schemaDrift(issues: ReadonlyArray<{ path: readonly PropertyKey[]; message: string }>): string {
-  return `schema drift: ${issues
-    .slice(0, 3)
-    .map((i) => `${i.path.map(String).join('.') || '(root)'}: ${i.message}`)
-    .join('; ')}`;
+  return describeIssues(issues, { limit: 3, empty: '(root)', separator: '; ', prefix: 'schema drift: ' });
 }
 
 /** The body parsed as JSON and held to `schema`; throws 'invalid JSON: …' or 'schema drift: …'. */

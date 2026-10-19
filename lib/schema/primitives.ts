@@ -51,12 +51,44 @@ export function customIssue(ctx: z.RefinementCtx, path: Array<string | number>, 
   ctx.addIssue({ code: 'custom', path, message });
 }
 
+/** How `describeIssues` renders a list of schema issues. */
+export interface DescribeIssuesOptions {
+  /** Only the first `limit` issues are described. */
+  limit: number;
+  /** What an empty path reads as, e.g. '(root)' or '(row)'. */
+  empty: string;
+  /** Between issues. */
+  separator: string;
+  /** In front of every issue. Default none. */
+  indent?: string;
+  /** In front of the whole description. Default none. */
+  prefix?: string;
+  /** Between the segments of one issue's path. Default '.'. */
+  pathJoin?: string;
+}
+
+/**
+ * The one way a zod failure is put into words: the first `limit` issues, each `path: message`, so the
+ * loaders, the fetch scripts and the pipeline's drift reports differ only in the parameters they pass
+ * (formatIssues, lib/pipeline/fetch-scope.ts describeRowIssues, lib/pipeline/read.ts parseJsonBody,
+ * lib/sources/maxpreps/client.ts and player-stats.ts, lib/pipeline/corpus.ts), never in the code.
+ */
+export function describeIssues(
+  issues: ReadonlyArray<{ path: readonly PropertyKey[]; message: string }>,
+  { limit, empty, separator, indent = '', prefix = '', pathJoin = '.' }: DescribeIssuesOptions,
+): string {
+  return (
+    prefix +
+    issues
+      .slice(0, limit)
+      .map((i) => `${indent}${i.path.map(String).join(pathJoin) || empty}: ${i.message}`)
+      .join(separator)
+  );
+}
+
 /** A schema failure's first ten issues, one `  path: message` line each (`(root)` for an empty path). */
 export function formatIssues(issues: ReadonlyArray<{ path: readonly PropertyKey[]; message: string }>): string {
-  return issues
-    .slice(0, 10)
-    .map((i) => `  ${i.path.map(String).join('.') || '(root)'}: ${i.message}`)
-    .join('\n');
+  return describeIssues(issues, { limit: 10, empty: '(root)', separator: '\n', indent: '  ' });
 }
 
 /** Throws `<what> failed validation:` and the first ten issues (formatIssues). */

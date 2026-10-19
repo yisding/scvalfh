@@ -9,7 +9,7 @@
  *
  * | Measure                                                        | Limit                              |
  * |----------------------------------------------------------------|------------------------------------|
- * | data/snapshot.json raw                                         | ≤ SNAPSHOT_MAX_BYTES (warn > SNAPSHOT_WARN_BYTES), lib/pipeline/steps/assemble.ts: 3.2 MB (warn 2.4 MB) |
+ * | data/snapshot.json raw                                         | ≤ SNAPSHOT_MAX_BYTES (warn > SNAPSHOT_WARN_BYTES), lib/pipeline/budgets.ts: 3.2 MB (warn 2.4 MB) |
  * | `/` HTML gzip and RSC gzip                                     | each ≤ 4.4 × baseline `index`      |
  * | first-load JS of `/`, `/schedule/<league>`, `/teams`, `/teams/<slug>`, `/standings/<league>`, `/leaders` | ≤ baseline + 20 KB |
  * | `/standings` (overview) HTML gzip                              | ≤ 1.2 × baseline `standings`       |
@@ -68,7 +68,7 @@ import path from 'node:path';
 import { gzipSync } from 'node:zlib';
 
 import { LEAGUE_IDS } from '@/lib/config/leagues';
-import { SNAPSHOT_MAX_BYTES, SNAPSHOT_WARN_BYTES, budgetLabel } from '@/lib/pipeline/steps/assemble';
+import { SNAPSHOT_MAX_BYTES, SNAPSHOT_WARN_BYTES, budgetLabel } from '@/lib/pipeline/budgets';
 
 const APP = '.next/server/app';
 const STATS = '.next/diagnostics/route-bundle-stats.json';

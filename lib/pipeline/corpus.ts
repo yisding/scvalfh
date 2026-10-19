@@ -12,6 +12,8 @@ import path from 'node:path';
 
 import { z } from 'zod';
 
+import { describeIssues } from '@/lib/schema/primitives';
+
 const isoStamp = z.string().regex(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2}(\.\d+)?)?Z$/, 'expected an ISO UTC stamp');
 /** A file path relative to the manifest's directory, or the HTTP status the resource answers with. */
 const entry = z.union([z.string().min(1), z.number().int().min(100).max(599)]);
@@ -69,10 +71,7 @@ function readJson(file: string): unknown {
 }
 
 function issues(err: z.ZodError): string {
-  return err.issues
-    .slice(0, 5)
-    .map((i) => `${i.path.join('.') || '(root)'}: ${i.message}`)
-    .join('; ');
+  return describeIssues(err.issues, { limit: 5, empty: '(root)', separator: '; ' });
 }
 
 export function readManifest(dir: string): Manifest {

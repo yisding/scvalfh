@@ -5,21 +5,12 @@
  * localDateKey(fetchedAt), never the wall clock.
  */
 
-import { seasonWindowBounds } from '@/lib/config/leagues';
-import { monthDay } from '@/lib/format/dates';
 import type { RunContext } from '@/lib/pipeline/contract';
-
-export function inSeasonWindow(today: string, bounds = seasonWindowBounds()): boolean {
-  return today >= bounds.start && today <= bounds.end;
-}
+import { inSeasonWindow, outOfSeasonLine } from '@/lib/pipeline/season-window';
 
 /** true = run the pipeline; false = out of season (already logged). */
 export function stepWindow(ctx: RunContext): boolean {
   if (ctx.args.force || inSeasonWindow(ctx.today)) return true;
-  const { start, end } = seasonWindowBounds();
-  ctx.log(
-    `out of season: ${ctx.today} is outside ${monthDay(start)} – ${monthDay(end)} Pacific. ` +
-      'Nothing fetched, nothing written. Re-run with --force to override.',
-  );
+  ctx.log(outOfSeasonLine(ctx.today));
   return false;
 }

@@ -51,7 +51,7 @@ import path from 'node:path';
 import type { ZodType } from 'zod';
 
 import { type FlagSpec, parseFlags } from '@/lib/cli/flags';
-import { INDEPENDENT_LEAGUES, LEAGUES_PROPER, seasonWindowBounds } from '@/lib/config/leagues';
+import { INDEPENDENT_LEAGUES, LEAGUES_PROPER } from '@/lib/config/leagues';
 import { JV_SPORT_SEASON_ID, SEASON_YEAR } from '@/lib/config/season';
 import { mergeJv } from '@/lib/engine/jv/merge';
 import {
@@ -60,16 +60,16 @@ import {
   inScope,
   readPreviousFile,
   runExitCode,
+  salvageRows,
   summarizeByLeague,
   teamsInScope,
   type PreviousRows,
 } from '@/lib/pipeline/fetch-scope';
-import { monthDay } from '@/lib/format/dates';
 import type { Game } from '@/lib/model/game';
 import type { LeagueId } from '@/lib/model/ids';
 import type { Team } from '@/lib/model/team';
 import { normalizeGames } from '@/lib/pipeline/reconcile/normalize';
-import { inSeasonWindow } from '@/lib/pipeline/steps/window';
+import { inSeasonWindow, outOfSeasonLine } from '@/lib/pipeline/season-window';
 import { jvMaxprepsScheduleUrl, jvSbliveGamesUrl, jvSbliveTeamId } from '@/lib/registry/jv-teams';
 import { TEAMS } from '@/lib/registry/teams';
 import {
@@ -82,7 +82,7 @@ import { byDateThenId } from '@/lib/shared/game';
 import { stableStringify } from '@/lib/shared/stable-json';
 import { HttpClient } from '@/lib/sources/http/client';
 import { MaxPrepsClient } from '@/lib/sources/maxpreps/client';
-import { splitTbaRows } from '@/lib/sources/maxpreps/schedule';
+import { assertFeedHasTeam, emptyFeedBlip, splitTbaRows } from '@/lib/sources/maxpreps/schedule';
 import { ScheduleResponseSchema, type ScheduleRow } from '@/lib/sources/maxpreps/schemas';
 import { scheduleUrl } from '@/lib/sources/maxpreps/urls';
 import { combineJvCopies, parseJvTeamGamesPage, type JvSbliveCopy } from '@/lib/sources/sblive/jv';
@@ -158,22 +158,12 @@ function salvageList<T>(
     log.push(`WARN previous ${label}: not a list; nothing is carried from it`);
     return [];
   }
-  const kept: T[] = [];
-  list.forEach((entry, i) => {
-    const parsed = schema.safeParse(entry);
-    if (parsed.success) kept.push(parsed.data);
-    else {
-      const why = parsed.error.issues
-        .slice(0, 3)
-        .map((issue) => `${issue.path.map(String).join('.') || '(row)'}: ${issue.message}`)
-        .join('; ');
-      log.push(`WARN previous ${label}[${i}] does not validate and is dropped: ${why}`);
-    }
-  });
-  const times = new Map<string, number>();
-  for (const row of kept) times.set(idOf(row), (times.get(idOf(row)) ?? 0) + 1);
-  for (const [id, n] of times) if (n > 1) log.push(`WARN previous ${label}: ${n} entries claim ${id}; none is kept`);
-  return kept.filter((row) => times.get(idOf(row)) === 1);
+  const salvaged = salvageRows(list, schema, idOf, { duplicatesAmong: 'valid' });
+  for (const { index, reason } of salvaged.invalid) {
+    log.push(`WARN previous ${label}[${index}] does not validate and is dropped: ${reason}`);
+  }
+  for (const { id, n } of salvaged.duplicates) log.push(`WARN previous ${label}: ${n} entries claim ${id}; none is kept`);
+  return salvaged.kept.map(({ row }) => row);
 }
 
 /**
@@ -183,9 +173,9 @@ function salvageList<T>(
 function loadPrevious(file: string): { previous: PreviousJv | null; unreadable: string | null; log: string[] } {
   if (!existsSync(file)) return { previous: null, unreadable: null, log: [] };
   const text = readFileSync(file, 'utf8');
-  const read = readPreviousFile(text, { season: SEASON_YEAR, row: JvTeamSchema, file: JvFileSchema });
+  const read = readPreviousFile(text, { season: SEASON_YEAR, row: JvTeamSchema, file: JvFileSchema, keepJson: true });
   if (!read.readable) return { previous: null, unreadable: read.reason, log: [] };
-  const json = JSON.parse(text) as Record<string, unknown>;
+  const json = read.json as Record<string, unknown>;
   const label = path.relative(process.cwd(), file);
   // This season's year with another JV season id is another season's games, as readPreviousFile treats
   // another year: every row is ignored and named.
@@ -216,9 +206,7 @@ function loadPrevious(file: string): { previous: PreviousJv | null; unreadable: 
 /** A schedule body → its rows, with MaxPreps' routing guard: a non-empty feed must contain the school. */
 function parseSchedule(body: string, team: Team): ScheduleRow[] {
   const rows = ScheduleResponseSchema.parse(JSON.parse(body) as unknown).data;
-  if (rows.length > 0 && !rows.some((r) => r.contest.teams.some((t) => t.teamId === team.id))) {
-    throw new Error(`JV feed for ${team.id} contains no row for that teamId`);
-  }
+  assertFeedHasTeam(rows, team.id, { message: `JV feed for ${team.id} contains no row for that teamId` });
   return rows;
 }
 
@@ -241,11 +229,7 @@ async function main(argv: readonly string[]): Promise<number> {
   const fetchedAt = args.fetchedAt ?? new Date().toISOString();
   const today = localDateKey(fetchedAt);
   if (!args.force && !inSeasonWindow(today)) {
-    const { start, end } = seasonWindowBounds();
-    console.log(
-      `out of season: ${today} is outside ${monthDay(start)} – ${monthDay(end)} Pacific. ` +
-        'Nothing fetched, nothing written. Re-run with --force to override.',
-    );
+    console.log(outOfSeasonLine(today));
     return 0;
   }
   const { previous, unreadable, log } = loadPrevious(args.out);
@@ -293,7 +277,7 @@ async function main(argv: readonly string[]): Promise<number> {
         const live = split.rows.filter((r) => r.calculatedFields.contestState !== 1);
         for (const r of split.rows) if (r.calculatedFields.contestState === 1) deleted.add(r.contest.contestId);
         // The varsity rule: an empty answer for a school we hold games for is a blip, not a wipe.
-        if (live.length === 0 && had > 0) throw new Error(`JV feed returned no games but the previous file has ${had}`);
+        emptyFeedBlip(live, had > 0, `JV feed returned no games but the previous file has ${had}`);
         mpRows.push(...split.rows);
         mpState.set(team.slug, ok(live.length, fetchedAt));
       } catch (err) {

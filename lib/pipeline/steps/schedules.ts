@@ -18,7 +18,7 @@ import type { SourceStatus } from '@/lib/model/health';
 import type { LeagueId } from '@/lib/model/ids';
 import type { Team } from '@/lib/model/team';
 import { FETCHABLE_TEAMS, TEAMS } from '@/lib/registry/teams';
-import { splitTbaRows } from '@/lib/sources/maxpreps/schedule';
+import { assertFeedHasTeam, emptyFeedBlip, splitTbaRows } from '@/lib/sources/maxpreps/schedule';
 import { ScheduleResponseSchema, type ScheduleRow } from '@/lib/sources/maxpreps/schemas';
 import type { RunContext } from '@/lib/pipeline/contract';
 import type { RunState } from '@/lib/pipeline/state';
@@ -66,15 +66,15 @@ async function readFeed(ctx: RunContext, state: RunState, team: Team): Promise<F
       state.tbaDropped.push(...split.dropped);
       const rows = split.rows;
       // The feed must contain its own team (an empty feed is a legitimate answer, checked below).
-      if (rows.length > 0 && !rows.some((row) => row.contest.teams.some((t) => t.teamId === team.id))) {
-        throw new Error(`feed for ${team.id} contains no row for that teamId`);
-      }
+      assertFeedHasTeam(rows, team.id, { message: `feed for ${team.id} contains no row for that teamId` });
       // A 200 with no rows for a team we ALREADY hold games for is indistinguishable from an upstream
       // blip; taking it at face value would delete that team's non-league games with no warning.
       const had = previousGameCount(ctx, team);
-      if (rows.length === 0 && split.dropped.length === 0 && had > 0) {
-        throw new Error(`schedule feed returned 0 rows but the previous snapshot has ${had} ${had === 1 ? 'game' : 'games'} for this team`);
-      }
+      emptyFeedBlip(
+        feed,
+        had > 0,
+        `schedule feed returned 0 rows but the previous snapshot has ${had} ${had === 1 ? 'game' : 'games'} for this team`,
+      );
       return {
         rows,
         status: 'ok',

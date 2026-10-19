@@ -25,6 +25,7 @@ import { LEAGUES, getLeague } from '@/lib/config/leagues';
 import type { LeagueId } from '@/lib/model/ids';
 import type { Team } from '@/lib/model/team';
 import { TEAMS, getTeamBySlug } from '@/lib/registry/teams';
+import { describeIssues } from '@/lib/schema/primitives';
 
 /** The registry teams a run covers, in registry order: all 102, or those of `leagues`. */
 export function teamsInScope(leagues: readonly LeagueId[] | null): readonly Team[] {
@@ -74,18 +75,88 @@ export interface PreviousRows<Row, Whole> {
 }
 
 export type PreviousFile<Row, Whole> =
-  | ({ readable: true } & PreviousRows<Row, Whole>)
+  | ({ readable: true } & PreviousRows<Row, Whole> & {
+      /** The parsed file, when readPreviousFile was asked to keep it (`keepJson`). */
+      json?: Record<string, unknown>;
+    })
   /** Not JSON, or JSON with no teams[] array: nothing can be told apart from a wipe, so the run stops. */
   | { readable: false; reason: string };
 
 const isRecord = (v: unknown): v is Record<string, unknown> =>
   typeof v === 'object' && v !== null && !Array.isArray(v);
 
-function describeIssues(issues: ReadonlyArray<{ path: ReadonlyArray<PropertyKey>; message: string }>): string {
-  return issues
-    .slice(0, 3)
-    .map((i) => `${i.path.map(String).join('.') || '(row)'}: ${i.message}`)
-    .join('; ');
+/**
+ * A row's schema failure as one line: the first three issues, `path: message` joined with '; ' (`(row)`
+ * for an empty path). The previous-file salvage here, scripts/fetch-jv.ts and the scoped-fetch kernel
+ * (item 33) report every dropped row this way.
+ */
+export function describeRowIssues(issues: ReadonlyArray<{ path: readonly PropertyKey[]; message: string }>): string {
+  return describeIssues(issues, { limit: 3, empty: '(row)', separator: '; ' });
+}
+
+/** One list entry that fails its row schema, named by its position and (when the mode reads it) its id. */
+export interface InvalidRow {
+  index: number;
+  entry: unknown;
+  /** The entry's id; null in 'valid' mode, which only reads the id of a row that validated. */
+  id: string | null;
+  /** The first three issues (describeRowIssues). */
+  reason: string;
+}
+
+export interface SalvagedRows<T> {
+  /** The rows that validate and that no other entry claims, in list order, each with its id. */
+  kept: Array<{ id: string; row: T }>;
+  /** Every entry that fails the schema, in list order (also those whose id a duplicate claims). */
+  invalid: InvalidRow[];
+  /** Every id claimed by more than one entry, in first-seen order, with how many entries claim it. */
+  duplicates: Array<{ id: string; n: number }>;
+}
+
+/**
+ * A list held to a row schema entry by entry, so one stale entry costs that entry only. The
+ * entries two rows claim are dropped in both; `duplicatesAmong` says which entries count as claiming:
+ *   - 'all': every entry, valid or not, counted by `idOf(entry, index)` on the raw entry (a team row
+ *     in the previous rosters / player-stats file: a broken row still holds its team's slug);
+ *   - 'valid': only the entries that validated, counted by `idOf(row)` on the parsed row (a game list:
+ *     an entry that failed has no trustworthy id).
+ * The caller words what it logs from `invalid` and `duplicates`.
+ */
+export function salvageRows<T>(
+  list: readonly unknown[],
+  schema: ZodType<T>,
+  idOf: (row: T) => string,
+  opts: { duplicatesAmong: 'valid' },
+): SalvagedRows<T>;
+export function salvageRows<T>(
+  list: readonly unknown[],
+  schema: ZodType<T>,
+  idOf: (entry: unknown, index: number) => string,
+  opts: { duplicatesAmong: 'all' },
+): SalvagedRows<T>;
+export function salvageRows<T>(
+  list: readonly unknown[],
+  schema: ZodType<T>,
+  idOf: ((row: T) => string) | ((entry: unknown, index: number) => string),
+  opts: { duplicatesAmong: 'all' | 'valid' },
+): SalvagedRows<T> {
+  const all = opts.duplicatesAmong === 'all';
+  const rows: Array<{ id: string; row: T }> = [];
+  const invalid: InvalidRow[] = [];
+  const times = new Map<string, number>();
+  list.forEach((entry, index) => {
+    const parsed = schema.safeParse(entry);
+    const id = all
+      ? (idOf as (entry: unknown, index: number) => string)(entry, index)
+      : parsed.success
+        ? (idOf as (row: T) => string)(parsed.data)
+        : null;
+    if (id !== null) times.set(id, (times.get(id) ?? 0) + 1);
+    if (parsed.success) rows.push({ id: id as string, row: parsed.data });
+    else invalid.push({ index, entry, id, reason: describeRowIssues(parsed.error.issues) });
+  });
+  const duplicates = [...times].filter(([, n]) => n > 1).map(([id, n]) => ({ id, n }));
+  return { kept: rows.filter(({ id }) => times.get(id) === 1), invalid, duplicates };
 }
 
 /**
@@ -101,7 +172,7 @@ function describeIssues(issues: ReadonlyArray<{ path: ReadonlyArray<PropertyKey>
  */
 export function readPreviousFile<Row extends { slug: string }, Whole>(
   text: string,
-  opts: { season: string; row: ZodType<Row>; file: ZodType<Whole> },
+  opts: { season: string; row: ZodType<Row>; file: ZodType<Whole>; keepJson?: boolean },
 ): PreviousFile<Row, Whole> {
   let json: unknown;
   try {
@@ -113,6 +184,9 @@ export function readPreviousFile<Row extends { slug: string }, Whole>(
   if (!isRecord(json) || !Array.isArray(teams)) return { readable: false, reason: 'no teams[] array' };
   const slugOf = (t: unknown, i: number) =>
     isRecord(t) && typeof t.slug === 'string' && t.slug ? t.slug : `teams[${i}]`;
+
+  // `keepJson`: the parsed file rides along, for a caller (scripts/fetch-jv.ts) that reads more of it.
+  const withJson = opts.keepJson ? { json } : {};
 
   if (json.season !== opts.season) {
     const season = typeof json.season === 'string' && json.season ? json.season : '(none)';
@@ -127,24 +201,21 @@ export function readPreviousFile<Row extends { slug: string }, Whole>(
       otherSeason: season,
       whole: null,
       problems: [],
+      ...withJson,
     };
   }
 
+  const salvaged = salvageRows(teams, opts.row, slugOf, { duplicatesAmong: 'all' });
   const rows = new Map<string, Row>();
-  let dropped: DroppedRow[] = [];
-  const times = new Map<string, number>();
-  teams.forEach((t, i) => {
-    const slug = slugOf(t, i);
-    times.set(slug, (times.get(slug) ?? 0) + 1);
-    const parsed = opts.row.safeParse(t);
-    if (parsed.success) rows.set(slug, parsed.data);
-    else dropped.push({ slug, team: registryTeamOf(t, slug), reason: describeIssues(parsed.error.issues) });
-  });
-  for (const [slug, n] of times) {
-    if (n < 2) continue;
-    rows.delete(slug);
-    dropped = dropped.filter((d) => d.slug !== slug);
-    dropped.push({ slug, team: registryTeamOf(undefined, slug), reason: `${n} rows claim this team; none is kept` });
+  for (const { id, row } of salvaged.kept) rows.set(id, row);
+  let dropped: DroppedRow[] = salvaged.invalid.map(({ entry, id, reason }) => ({
+    slug: id as string,
+    team: registryTeamOf(entry, id as string),
+    reason,
+  }));
+  for (const { id, n } of salvaged.duplicates) {
+    dropped = dropped.filter((d) => d.slug !== id);
+    dropped.push({ slug: id, team: registryTeamOf(undefined, id), reason: `${n} rows claim this team; none is kept` });
   }
 
   const problems: string[] = [];
@@ -152,9 +223,9 @@ export function readPreviousFile<Row extends { slug: string }, Whole>(
   if (dropped.length === 0) {
     const parsed = opts.file.safeParse(json);
     if (parsed.success) whole = parsed.data;
-    else problems.push(`does not validate as a whole (${describeIssues(parsed.error.issues)}); its rows are kept one by one`);
+    else problems.push(`does not validate as a whole (${describeRowIssues(parsed.error.issues)}); its rows are kept one by one`);
   }
-  return { readable: true, rows, dropped, otherSeason: null, whole, problems };
+  return { readable: true, rows, dropped, otherSeason: null, whole, problems, ...withJson };
 }
 
 /** The loud log of what readPreviousFile did not keep: one line per dropped row, by name. */
