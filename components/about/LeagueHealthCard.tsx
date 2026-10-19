@@ -1,8 +1,8 @@
 import ExternalLink from '@/components/ui/ExternalLink';
 import { formatStamp } from '@/lib/format/dates';
-import { officialSourceFormat, plural } from '@/lib/format/words';
+import { plural } from '@/lib/format/words';
 import type { LeagueHealth, LeagueRunState } from '@/lib/model/health';
-import type { OfficialSourceId } from '@/lib/model/ids';
+import { type HealthDivision, officialSourceLabel } from '@/views/about/about-view';
 
 /**
  * One league's data health on /about#health (SPEC §10.8): how the last run went for THIS league,
@@ -18,45 +18,10 @@ import type { OfficialSourceId } from '@/lib/model/ids';
  * from; its Missing row counts the past games MaxPreps marks as league games with no counted result
  * (`missingLeaguePast`), in words that never say "official".
  *
- * A server component with plain props: the page reads `getLeagueHealth()`, `getSources({ league })`
- * and `getDropped()` and hands the numbers down. No hue: the state is a word.
+ * A server component with plain props: the /about view (views/about/about-view.ts buildAboutView) reads
+ * `getLeagueHealth()`, `getSources({ league })` and `getDropped()`, and components/about/AboutHealth.tsx
+ * hands the numbers down. No hue: the state is a word.
  */
-export interface HealthDivision {
-  id: string;
-  /** Division heading, or null for a single-division league (no division label). */
-  heading: string | null;
-  /**
-   * MaxPreps league standings page, or null where MaxPreps publishes no table for the division (the San
-   * Diego Section's Valley: lib/config/leagues.ts leagueStandingsUrl). The card then says so, and that the
-   * cross-check is skipped, instead of linking anything.
-   */
-  maxprepsUrl: string | null;
-  /** Why there is no table (lib/engine/standings/maxpreps-crosscheck.ts crossCheckSkipReason); null when there is one. */
-  skipReason?: string | null;
-  /**
-   * The division's standings rows that carry MaxPreps' reported record: the member rows its table
-   * matched, read this run or carried. Counted from the standings rather than taken from the stored
-   * `reportedRows`, which a snapshot written before 2026-10-04 counted with MaxPreps' extra
-   * non-member row (EAL: Red Bluff).
-   */
-  memberRows: number;
-  knownCause: string | null;
-  official:
-    | {
-        source: OfficialSourceId;
-        url: string;
-        /** 'live-pdf' = read every run; 'bundled' = our transcription, sha256-checked against upstream. */
-        mode: 'live-pdf' | 'bundled';
-        revisedOn: string | null;
-      }
-    | {
-        /** The league publishes no schedule (EAL, the Sunset, the San Diego leagues). */
-        mode: 'none';
-        /** `DivisionConfig.official.note`: where its league games come from instead. */
-        note: string;
-      };
-}
-
 export interface LeagueHealthCardProps {
   shortName: string;
   name: string;
@@ -84,11 +49,6 @@ const TABLE_WORDS = {
   missing: 'could not be read',
   skipped: 'not requested',
 } as const;
-
-/** 'MCAL schedule (PDF)' / 'BVAL schedule (Google Doc)'. Only for a league that publishes one (not mode 'none'). */
-export function officialSourceLabel(shortName: string, source: OfficialSourceId): string {
-  return `${shortName} schedule (${officialSourceFormat(source)})`;
-}
 
 type DocumentOfficial = Exclude<HealthDivision['official'], { mode: 'none' }>;
 

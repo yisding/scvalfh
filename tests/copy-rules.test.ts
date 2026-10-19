@@ -38,7 +38,7 @@ import {
   withoutLink,
 } from '@/scripts/ci/copy/copy-rules';
 import { SITE_SCOPE_NOTE } from '@/views/site/site';
-import { postseasonSourceLink } from '@/views/site/source-labels';
+import { postseasonSourceLink } from '@/views/shared/postseason-source';
 
 describe('SCVAL_ONLY_CLAIM', () => {
   it.each([
@@ -929,17 +929,22 @@ describe('the SoCal leagues’ own config strings pass every rule', () => {
   });
 });
 
-describe('postseasonSourceLink (views/site/source-labels.ts): the source link’s words', () => {
+describe('postseasonSourceLink (views/shared/postseason-source.ts): the source link’s words', () => {
   it('keeps the EAL’s link text byte-identical', () => {
     expect(postseasonSourceLink('eal')?.text).toBe('Northern Section Field Hockey Guidelines (PDF)');
   });
 
-  it('names the SoCal documents from config, never a "Field Hockey Guidelines" the sections do not publish', () => {
-    expect(postseasonSourceLink('sunset')?.text).toBe('CIF-SS Blue Book 2026-27 (PDF)');
+  it('names the SoCal documents as /playoffs and /about print them: the config’s sourceLabel, with no format', () => {
+    // Whether to add the document's format ("(PDF)", "(Google Doc)") is an open owner decision
+    // (views/shared/postseason-source.ts); until it is made, the words are the pages' words.
+    for (const id of ['sunset', 'independents']) expect(postseasonSourceLink(id)?.text, id).toBe('CIF-SS Blue Book 2026-27');
     for (const id of ['city', 'north-county', 'metro']) {
-      expect(postseasonSourceLink(id)?.text, id).toBe('CIF-SDS Green Book 2026-27, Bylaw 2000.1 (Google Doc)');
+      expect(postseasonSourceLink(id)?.text, id).toBe('CIF-SDS Green Book 2026-27, Bylaw 2000.1');
     }
-    for (const id of ['sunset', 'city', 'north-county', 'metro']) {
+  });
+
+  it('never names a "Field Hockey Guidelines" the SoCal sections do not publish', () => {
+    for (const id of ['sunset', 'independents', 'city', 'north-county', 'metro']) {
       expect(postseasonSourceLink(id)?.text, id).not.toMatch(/Field Hockey Guidelines/);
       expect(postseasonSourceLink(id)?.href, id).toMatch(/^https:\/\//);
     }

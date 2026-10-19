@@ -71,7 +71,8 @@ export function listWords(words: readonly string[], conj: 'and' | 'or' | '&' = '
  * What kind of document a league's official schedule is, as a link label names it: the BVAL
  * sheet is a Google Doc, the rest are PDFs. A `Record` over every `OfficialSourceId`, so a new
  * source fails typecheck until someone classifies it. The /standings link
- * (`officialScheduleLabel`) and the /about health card (`officialSourceLabel`) both read it.
+ * (`officialScheduleLabel`) and the /about source and health cards (`officialSourceLabel`,
+ * views/about/about-view.ts) both read it.
  */
 const OFFICIAL_SOURCE_FORMAT: Readonly<Record<OfficialSourceId, 'PDF' | 'Google Doc'>> = {
   'scval-pdf': 'PDF',

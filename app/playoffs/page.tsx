@@ -34,6 +34,7 @@ import { buildBrackets, ccsDivisionLabels, pendingRounds } from '@/views/playoff
 import type { LeagueKeyDate } from '@/views/playoffs/key-dates';
 import { buildPairingView, pairingNotesFor } from '@/views/playoffs/pairings';
 import { buildDivisionProjection, ladderFactsFor, type ProjectionRow } from '@/views/playoffs/projection';
+import { postseasonSourceLink, type SourceLink } from '@/views/shared/postseason-source';
 import { leagueChips } from '@/views/site/league-chips';
 import { pageMetadata } from '@/views/site/page-metadata';
 import { leaderLine } from '@/views/standings/standings-view';
@@ -210,14 +211,17 @@ function postseasonWords(): string {
 /** The San Diego Section's playoffs: the config every San Diego league shares, and its leagues. */
 function sectionPlayoffs(): {
   ps: Extract<LeagueConfig['postseason'], { kind: 'section-playoffs' }>;
+  source: SourceLink;
   seeding: string | null;
   leagues: LeagueSummary[];
 } | null {
   const leagues = getLeagueSummaries().filter((s) => SECTION_PLAYOFFS_LEAGUE_IDS.includes(s.id));
   const first = leagues[0] ? getLeague(leagues[0].id) : undefined;
-  if (!first || first.postseason.kind !== 'section-playoffs') return null;
+  const source = first ? postseasonSourceLink(first.id) : null;
+  if (!first || first.postseason.kind !== 'section-playoffs' || !source) return null;
   return {
     ps: first.postseason,
+    source,
     seeding: first.keyDates.find((d) => d.id === 'seeding-meeting')?.date ?? null,
     leagues,
   };
@@ -342,11 +346,12 @@ export default function PlayoffsPage() {
 
         {/* 2b. One card per unbracketed league (EAL): the rule, its dates and its source, never a
             bracket or a seed. Its id is the EAL chip's and jump link's target. The link words are
-            today's, byte for byte (tests/ui/eal-views.test.ts): the EAL's rules document is the
-            Northern Section's Guidelines, which `SectionConfig.rulesSource.name` names with its years. */}
+            today's, byte for byte (tests/ui/eal-views.test.ts), from postseasonSourceLink: the EAL's rules
+            document is the Northern Section's Guidelines, which `SectionConfig.rulesSource.name` names with its years. */}
         {unbracketedLeagues.map((league) => {
           const ps = getLeague(league.id).postseason;
-          if (ps.kind !== 'unbracketed-tournament') return null;
+          const source = postseasonSourceLink(league.id);
+          if (ps.kind !== 'unbracketed-tournament' || !source) return null;
           return (
             <div key={league.id} id={league.id} className="mt-4 sx-inset max-w-3xl text-body text-ink-2">
               <p className="m-0">
@@ -354,7 +359,7 @@ export default function PlayoffsPage() {
               </p>
               <p className="mb-0 text-meta">
                 {`${ps.citations.qualification}.`}{' '}
-                <ExternalLink href={ps.sourceUrl}>{`${league.section.name} Field Hockey Guidelines (PDF)`}</ExternalLink>
+                <ExternalLink href={source.href}>{source.text}</ExternalLink>
               </p>
             </div>
           );
@@ -518,10 +523,12 @@ export default function PlayoffsPage() {
  */
 function SectionPlayoffsBlock({
   ps,
+  source,
   seeding,
   leagues,
 }: {
   ps: Extract<LeagueConfig['postseason'], { kind: 'section-playoffs' }>;
+  source: SourceLink;
   seeding: string | null;
   leagues: LeagueSummary[];
 }) {
@@ -541,8 +548,8 @@ function SectionPlayoffsBlock({
           {ps.citations.roundDates}
         </p>
         <p className="mb-0 flex flex-wrap gap-x-4 gap-y-1 text-meta">
-          <ExternalLink href={ps.sourceUrl} className="sx-action gap-1">
-            {ps.sourceLabel}
+          <ExternalLink href={source.href} className="sx-action gap-1">
+            {source.text}
           </ExternalLink>
           <ExternalLink href={ps.powerRankingsUrl} className="sx-action gap-1">
             CIF-SDS power rankings
@@ -618,7 +625,8 @@ function SectionPlayoffsLeagueCard({ summary }: { summary: LeagueSummary }) {
 function NoPostseasonCard({ summary }: { summary: LeagueSummary }) {
   const league = getLeague(summary.id);
   const ps = league.postseason;
-  if (ps.kind !== 'no-postseason') return null;
+  const source = postseasonSourceLink(summary.id);
+  if (ps.kind !== 'no-postseason' || !source) return null;
   const independent = isIndependentLeague(summary.id);
   const groupNote = independent && league.divisions[0]?.official.mode === 'none' ? league.divisions[0].official.note : null;
   return (
@@ -632,7 +640,7 @@ function NoPostseasonCard({ summary }: { summary: LeagueSummary }) {
         <p className="m-0">{ps.note}</p>
         <p className="mb-0 text-meta">
           {`${ps.citations.noPlayoffs}.`}{' '}
-          <ExternalLink href={ps.sourceUrl}>{ps.sourceLabel}</ExternalLink>
+          <ExternalLink href={source.href}>{source.text}</ExternalLink>
         </p>
       </div>
     </section>
