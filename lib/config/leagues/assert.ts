@@ -18,6 +18,7 @@ import type { PlayoffStatus, TiebreakStage } from '@/lib/model/standings';
 import { failInvariant } from '@/lib/config/invariant';
 import { RESERVED_SEGMENTS } from '@/lib/config/routes';
 import { SHOOTOUT_INFERENCES } from '@/lib/model/league-config';
+import { GUID_RE } from '@/lib/shared/contest-id';
 import { DATE_PATTERN, SLUG_PATTERN } from '@/lib/shared/patterns';
 
 import { PLACE_VS_STAGES, UNCOMPUTABLE_STAGES } from './tiebreak-stages';
@@ -31,7 +32,6 @@ const TOURNAMENT_LADDER_STATUSES: ReadonlySet<PlayoffStatus> = new Set<PlayoffSt
 const UNBRACKETED_STATUSES: ReadonlySet<PlayoffStatus> = new Set<PlayoffStatus>(['tournament', 'below-line']);
 const NO_POSTSEASON_STATUSES: ReadonlySet<PlayoffStatus> = new Set<PlayoffStatus>(['no-postseason']);
 const SECTION_PLAYOFFS_STATUSES: ReadonlySet<PlayoffStatus> = new Set<PlayoffStatus>(['tournament', 'selection']);
-const GUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
 
 /** The ladder statuses a postseason kind may use. */
 function allowedStatuses(kind: PostseasonConfig['kind']): ReadonlySet<PlayoffStatus> {

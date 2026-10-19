@@ -15,7 +15,8 @@ import { type DivisionId } from '@/lib/model/ids';
 import { type Snapshot } from '@/lib/model/snapshot';
 import { type TiebreakStage } from '@/lib/model/standings';
 import { TEAMS, getTeamBySlug } from '@/lib/registry/teams';
-import { SBLIVE_ID_RE, SnapshotObject } from '@/lib/schema/snapshot';
+import { SnapshotObject } from '@/lib/schema/snapshot';
+import { isSbliveContestId } from '@/lib/shared/contest-id';
 
 type Ctx = z.RefinementCtx;
 
@@ -165,7 +166,7 @@ function checkAgainstConfig(s: z.infer<typeof SnapshotObject>, ctx: Ctx): void {
         }
       }
     }
-    if (SBLIVE_ID_RE.test(g.contestId)) {
+    if (isSbliveContestId(g.contestId)) {
       if (g.provenance.scores !== 'sblive') issue(ctx, ['games', i, 'provenance', 'scores'], 'a sblive: game must carry sblive scores');
       if (g.urls.maxpreps !== null) issue(ctx, ['games', i, 'urls', 'maxpreps'], 'a sblive: game has no MaxPreps URL');
       if (!g.urls.sblive) issue(ctx, ['games', i, 'urls', 'sblive'], 'a sblive: game needs its si.com URL');
@@ -271,7 +272,7 @@ function checkAgainstConfig(s: z.infer<typeof SnapshotObject>, ctx: Ctx): void {
 
   // 10. superseded si.com games.
   for (const [from, to] of Object.entries(s.supersededGames)) {
-    if (!SBLIVE_ID_RE.test(from)) issue(ctx, ['supersededGames', from], 'a superseded key must be sblive:<digits>');
+    if (!isSbliveContestId(from)) issue(ctx, ['supersededGames', from], 'a superseded key must be sblive:<digits>');
     if (contestIds.has(from)) issue(ctx, ['supersededGames', from], 'a superseded game is still in games');
     if (!contestIds.has(to)) issue(ctx, ['supersededGames', from], `superseding contest ${to} is not in games`);
   }

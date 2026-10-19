@@ -17,18 +17,17 @@ import { z } from 'zod';
 
 import { OFFICIAL_SOURCE_IDS } from '@/lib/model/ids';
 import { type Snapshot } from '@/lib/model/snapshot';
+import { isContestId } from '@/lib/shared/contest-id';
 import { dateKey, httpUrl, slugId } from './primitives';
 
 // ---------------------------------------------------------------- primitives
 
 /** League, division and slug ids: validated strings; membership is checked in checkAgainstConfig. */
 const id = slugId;
-const GUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-export const SBLIVE_ID_RE = /^sblive:\d+$/;
 /** A MaxPreps contest GUID, or `sblive:<digits>` (owner decision D2, rule 2). */
 const contestId = z
   .string()
-  .refine((v) => GUID_RE.test(v) || SBLIVE_ID_RE.test(v), 'expected a contest GUID or sblive:<digits>');
+  .refine(isContestId, 'expected a contest GUID or sblive:<digits>');
 const outcome = z.enum(['W', 'L', 'T']);
 // SectionId (lib/model/ids.ts); the compile-time proof at the end of this file fails if the two lists drift.
 const sectionId = z.enum(['ccs', 'ncs', 'ns', 'ss', 'sds']);

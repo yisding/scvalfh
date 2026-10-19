@@ -25,6 +25,7 @@
 import { z } from 'zod';
 
 import { DATA_QUALITY, LEAGUES } from '@/lib/config/leagues';
+import { SBLIVE_WEB } from '@/lib/config/source-urls';
 import type { TeamSlug } from '@/lib/model/ids';
 import type { Team } from '@/lib/model/team';
 import { isWithdrawnSchool, resolveTeam, sideJoinKey } from '@/lib/registry/resolve';
@@ -32,7 +33,6 @@ import { TEAMS, normalizeTeamKey } from '@/lib/registry/teams';
 import { localDateKey } from '@/lib/shared/dates';
 import { CHROME_USER_AGENT, type HttpClientOptions, htmlUnescape } from './http';
 
-export const SBLIVE_WEB = 'https://www.si.com/high-school/stats/california/field-hockey';
 export const SBLIVE_HOST = 'https://www.si.com';
 
 export function sbliveTeamGamesUrl(sbliveSlug: string): string {

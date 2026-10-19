@@ -33,6 +33,7 @@ import type { BackfillRow, SbliveCrossCheck, SbliveOnlyRow, ScoreConflictRow } f
 import type { Game } from '@/lib/model/game';
 import { sideJoinKey, unorderedPairKey } from '@/lib/registry/resolve';
 import { getTeamBySlug } from '@/lib/registry/teams';
+import { hasSbliveContestPrefix, sbliveContestId } from '@/lib/shared/contest-id';
 import { dayNumber } from '@/lib/shared/dates';
 import { sblivePairKey, type SbliveGame, type SbliveSide } from '@/lib/sources/sblive';
 
@@ -245,7 +246,7 @@ export function reconcile(
         ? NOT_PUBLISHED.nameOnly
         : NOT_PUBLISHED.notOfficial;
     sbliveOnlyScored.push({
-      contestId: `sblive:${sb.sbliveGameId}`,
+      contestId: sbliveContestId(sb.sbliveGameId),
       dateKey: sb.dateKey,
       // si.com's scoreboard does not say who hosted: the pair is named without a host.
       label: `${displayName(a)} vs ${displayName(b)}`,
@@ -291,7 +292,7 @@ export function withBackfill(
   ]);
   const only = new Map<string, SbliveOnlyRow>();
   for (const r of report.sbliveOnlyScored) {
-    if (r.contestId.startsWith('sblive:') && r.sbliveUrl && handledUrls.has(r.sbliveUrl)) continue;
+    if (hasSbliveContestPrefix(r.contestId) && r.sbliveUrl && handledUrls.has(r.sbliveUrl)) continue;
     only.set(r.contestId, r);
   }
   for (const r of backfill.skipped) only.set(r.contestId, r);
@@ -339,7 +340,7 @@ export function carryCrossCheck(
   });
   const sbliveOnlyScored = prior.sbliveOnlyScored.filter((r) => {
     if (published.has(r.contestId)) return false;
-    if (r.contestId.startsWith('sblive:')) {
+    if (hasSbliveContestPrefix(r.contestId)) {
       return !byId.has(r.contestId) && !(r.sbliveUrl !== null && publishedUrls.has(r.sbliveUrl));
     }
     const g = byId.get(r.contestId);

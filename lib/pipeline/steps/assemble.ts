@@ -14,6 +14,7 @@ import type { LeagueHealth } from '@/lib/model/health';
 import type { ContestId } from '@/lib/model/ids';
 import type { Snapshot } from '@/lib/model/snapshot';
 import { TEAMS } from '@/lib/registry/teams';
+import { hasSbliveContestPrefix } from '@/lib/shared/contest-id';
 import { byDateThenId } from '@/lib/shared/game';
 import { stableStringify } from '@/lib/shared/stable-json';
 import { snapshotContentHash } from '@/lib/pipeline/content-hash';
@@ -57,10 +58,10 @@ export function supersededGamesOf(games: readonly Game[], previous: Snapshot | n
   }
   const byFixture = new Map<string, ContestId>();
   for (const g of games) {
-    if (g.official && !g.contestId.startsWith('sblive:')) byFixture.set(g.official.fixtureId, g.contestId);
+    if (g.official && !hasSbliveContestPrefix(g.contestId)) byFixture.set(g.official.fixtureId, g.contestId);
   }
   for (const g of previous?.games ?? []) {
-    if (!g.contestId.startsWith('sblive:') || ids.has(g.contestId) || !g.official) continue;
+    if (!hasSbliveContestPrefix(g.contestId) || ids.has(g.contestId) || !g.official) continue;
     const winner = byFixture.get(g.official.fixtureId);
     if (winner) out[g.contestId] = winner;
   }

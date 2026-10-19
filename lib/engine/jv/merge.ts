@@ -29,6 +29,7 @@ import type { ContestId, TeamSlug } from '@/lib/model/ids';
 import type { Team } from '@/lib/model/team';
 import { getTeamBySlug } from '@/lib/registry/teams';
 import type { JvSbliveRow } from '@/lib/schema/jv';
+import { sbliveContestId } from '@/lib/shared/contest-id';
 import { dayDiff } from '@/lib/shared/dates';
 import { byDateThenId } from '@/lib/shared/game';
 
@@ -137,7 +138,7 @@ function sbliveOnlyGame(row: JvSbliveRow, fetchedAt: string): Game | null {
   const [home, away, homeTeam, awayTeam] = bHosts ? [b, a, tb, ta] : [a, b, ta, tb];
   const dates = datesOf(row);
   return {
-    contestId: `sblive:${row.sbliveGameId}`,
+    contestId: sbliveContestId(row.sbliveGameId),
     dateLocal: dates.dateLocal,
     dateUtc: dates.dateUtc,
     dateKey: dates.dateKey,

@@ -41,6 +41,7 @@ import type { Snapshot } from '@/lib/model/snapshot';
 import type { Team } from '@/lib/model/team';
 import { unorderedPairKey } from '@/lib/registry/resolve';
 import { getTeamBySlug } from '@/lib/registry/teams';
+import { hasSbliveContestPrefix, sbliveContestId } from '@/lib/shared/contest-id';
 import { dayDiff } from '@/lib/shared/dates';
 import {
   isCaliforniaGameRow,
@@ -133,7 +134,6 @@ function fixturePair(f: OfficialFixture): string | null {
   return f.homeSlug && f.awaySlug && f.homeSlug !== f.awaySlug ? unorderedPairKey(f.homeSlug, f.awaySlug) : null;
 }
 
-const isSbliveContest = (id: string) => id.startsWith('sblive:');
 
 /** Rows oldest first by date key, then by contest id. */
 const byDateKey = (a: { dateKey: string; contestId: string }, b: { dateKey: string; contestId: string }): number =>
@@ -367,7 +367,7 @@ function hasPairContestNear(
 ): Game[] {
   return games.filter(
     (g) =>
-      !isSbliveContest(g.contestId) &&
+      !hasSbliveContestPrefix(g.contestId) &&
       gamePair(g) === pairKey &&
       within(g.dateKey, date, days) &&
       !(g.official && g.official.fixtureId !== fixtureId),
@@ -377,7 +377,7 @@ function hasPairContestNear(
 /** A si.com row that is the same game as an existing MaxPreps contest (reconcile's join: same date, same pair). */
 function isMaxprepsGame(games: readonly Game[], row: SbliveGame): boolean {
   const pairKey = sblivePairKey(row.sides);
-  return games.some((g) => !isSbliveContest(g.contestId) && g.dateKey === row.dateKey && gamePair(g) === pairKey);
+  return games.some((g) => !hasSbliveContestPrefix(g.contestId) && g.dateKey === row.dateKey && gamePair(g) === pairKey);
 }
 
 /** Every item D2 could act on this run, whether or not si.com has it. */
@@ -388,7 +388,7 @@ export function eligibleItems(
 ): EligibleItem[] {
   const out: EligibleItem[] = [];
   for (const g of games) {
-    if (isSbliveContest(g.contestId)) continue;
+    if (hasSbliveContestPrefix(g.contestId)) continue;
     const pairKey = gamePair(g);
     if (!pairKey) continue;
     if (g.status === 'score-pending' && g.dateKey < today) {
@@ -498,7 +498,7 @@ function absentFixtureGame(
   const note = `MaxPreps has no contest for this ${short} fixture (official date ${monthDay(f.dateKey)}), so the score is si.com’s.`;
   const backfill: BackfillProvenance = { rule: 'absent-fixture', sbliveGameId: row.sbliveGameId, maxpreps: null, note };
   return {
-    contestId: `sblive:${row.sbliveGameId}`,
+    contestId: sbliveContestId(row.sbliveGameId),
     dateLocal: dates.dateLocal,
     dateUtc: dates.dateUtc,
     dateKey: dates.dateKey,
@@ -639,7 +639,7 @@ export function applyBackfill(input: BackfillInput): BackfillResult {
   } else {
     // ---- rules 3 and 4: MaxPreps contests
     games = games.map((g) => {
-      if (isSbliveContest(g.contestId)) return g;
+      if (hasSbliveContestPrefix(g.contestId)) return g;
       const pairKey = gamePair(g);
       if (!pairKey || !g.home.slug || !g.away.slug) return g;
       const label = labelOf(g);
@@ -790,7 +790,7 @@ export function applyBackfill(input: BackfillInput): BackfillResult {
         stillUnmatched.push(f);
         warnings.push(`si.com has ${pick.rows.length} different scores for the ${f.dateKey} fixture ${label}; not filled`);
         const s = scoreFor(pick.rows[0], f.homeSlug, f.awaySlug);
-        if (s) skipped.push(skippedRow(`sblive:${pick.rows[0].sbliveGameId}`, f.dateKey, label, s, pick.rows[0].url, null, 'scheduled', CONFLICT_NOTE));
+        if (s) skipped.push(skippedRow(sbliveContestId(pick.rows[0].sbliveGameId), f.dateKey, label, s, pick.rows[0].url, null, 'scheduled', CONFLICT_NOTE));
         continue;
       }
       if (pick.kind === 'none') {
@@ -802,7 +802,7 @@ export function applyBackfill(input: BackfillInput): BackfillResult {
         const row = loose ?? outside;
         const s = row ? scoreFor(row, f.homeSlug, f.awaySlug) : null;
         if (row && s) {
-          skipped.push(skippedRow(`sblive:${row.sbliveGameId}`, row.dateKey, label, s, row.url, null, 'scheduled', loose ? NAME_ONLY_NOTE : OUTSIDE_NOTE));
+          skipped.push(skippedRow(sbliveContestId(row.sbliveGameId), row.dateKey, label, s, row.url, null, 'scheduled', loose ? NAME_ONLY_NOTE : OUTSIDE_NOTE));
         }
         continue;
       }
@@ -879,10 +879,10 @@ export function supersededGamesOf(games: readonly Game[], previous: Snapshot | n
   }
   const byFixture = new Map<string, ContestId>();
   for (const g of games) {
-    if (g.official && !isSbliveContest(g.contestId)) byFixture.set(g.official.fixtureId, g.contestId);
+    if (g.official && !hasSbliveContestPrefix(g.contestId)) byFixture.set(g.official.fixtureId, g.contestId);
   }
   for (const g of previous?.games ?? []) {
-    if (!isSbliveContest(g.contestId) || ids.has(g.contestId) || !g.official) continue;
+    if (!hasSbliveContestPrefix(g.contestId) || ids.has(g.contestId) || !g.official) continue;
     const winner = byFixture.get(g.official.fixtureId);
     if (winner) out[g.contestId] = winner;
   }
@@ -911,7 +911,7 @@ function carryForward(
   const out = games.map((g) => {
     const prev = prevById.get(g.contestId);
     const b = prev?.provenance.backfill;
-    if (!prev || !b || isSbliveContest(g.contestId) || prev.home.score === null || prev.away.score === null) return g;
+    if (!prev || !b || hasSbliveContestPrefix(g.contestId) || prev.home.score === null || prev.away.score === null) return g;
     if (g.provenance.backfill) return g;
     const pairKey = gamePair(g);
     const itemDate = b.rule === 'off-schedule-date' ? (offScheduleDate(g) ?? g.dateKey) : g.dateKey;
@@ -950,7 +950,7 @@ function carryForward(
   const added: Game[] = [];
   const filled = new Set<string>();
   for (const prev of previous.games) {
-    if (!isSbliveContest(prev.contestId) || prev.provenance.backfill?.rule !== 'absent-fixture' || !prev.official) continue;
+    if (!hasSbliveContestPrefix(prev.contestId) || prev.provenance.backfill?.rule !== 'absent-fixture' || !prev.official) continue;
     if (have.has(prev.contestId)) continue;
     const f = byFixtureId.get(prev.official.fixtureId);
     const pairKey = f ? fixturePair(f) : null;

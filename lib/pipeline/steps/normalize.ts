@@ -20,6 +20,7 @@ import { DATA_QUALITY } from '@/lib/config/leagues';
 import type { Game } from '@/lib/model/game';
 import { applyExclusions, dedupePhantomPairs, normalizeGames } from '@/lib/pipeline/reconcile/normalize';
 import type { PipelineContext, RunState } from '@/lib/pipeline/ledger';
+import { hasSbliveContestPrefix } from '@/lib/shared/contest-id';
 import { byDateThenId } from '@/lib/shared/game';
 
 /** A carried game with the earlier run's classification cleared, so this run decides it again. */
@@ -62,7 +63,7 @@ export function stepNormalize(ctx: PipelineContext, state: RunState): void {
     const candidates = ctx.previous.games
       .filter(
         (g) =>
-          !g.contestId.startsWith('sblive:') &&
+          !hasSbliveContestPrefix(g.contestId) &&
           !have.has(g.contestId) &&
           !droppedIds.has(g.contestId) &&
           !deleted.has(g.contestId) &&

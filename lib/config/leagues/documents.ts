@@ -1,14 +1,8 @@
 /**
  * A part of the league configuration package (lib/config/leagues.ts is its door; SPEC §2, DESIGN-socal §2.1).
  * This file: the official documents and pages the configuration cites (rule books, section pages, the San
- * Diego alignment and power rankings), shared by the sections, the leagues and the CCS block, and the MaxPreps
- * web base the door builds league standings URLs on.
+ * Diego alignment and power rankings), shared by the sections, the leagues and the CCS block.
  */
-
-import { MAXPREPS_WEB } from '@/lib/config/source-urls';
-
-/** The MaxPreps web base (lib/config/source-urls.ts). */
-export const MP = MAXPREPS_WEB;
 
 /** [V] the CCS Field Hockey Bylaws 2026-27 (also CCS.sources.bylaws, ./ccs.ts). */
 export const CCS_BYLAWS_URL = 'https://cifccs.org/sports/fh/field_hockey_bylaws_2026-27.pdf';

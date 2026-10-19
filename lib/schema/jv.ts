@@ -29,6 +29,7 @@ import { z } from 'zod';
 import { JV_SLUG_BY_SBLIVE_ID } from '@/lib/registry/jv-teams';
 import { TEAMS, getTeamBySlug } from '@/lib/registry/teams';
 import { dateKey, httpUrl, slugId } from './primitives';
+import { hasSbliveContestPrefix } from '@/lib/shared/contest-id';
 import { contentKey } from '@/lib/shared/stable-json';
 import { GameSchema } from './snapshot';
 
@@ -115,7 +116,7 @@ export const JvSbliveRowSchema = z
   )
   .refine((r) => r.pages.every((p, i) => i === 0 || r.pages[i - 1] < p), 'pages are sorted and unique');
 
-export const JvGameSchema = GameSchema.refine((g) => !g.contestId.startsWith('sblive:'), 'stored JV games are MaxPreps contests')
+export const JvGameSchema = GameSchema.refine((g) => !hasSbliveContestPrefix(g.contestId), 'stored JV games are MaxPreps contests')
   .refine((g) => g.home.slug !== null || g.away.slug !== null, 'a JV game needs a registry side')
   .refine((g) => g.countsFor === null && g.postseason === null, 'stored JV games are unclassified: lib/engine/jv/standings.ts classifies them at load');
 

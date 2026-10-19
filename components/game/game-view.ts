@@ -54,6 +54,7 @@ import {
   type SideView,
 } from '@/components/ui/describe-game';
 import { getTeamBySlug } from '@/lib/registry/teams';
+import { isSbliveContestId } from '@/lib/shared/contest-id';
 import { sideOutcome } from '@/lib/shared/game';
 import { gameHref, gameIdToParam, paramToGameId } from '@/lib/shared/game-id';
 
@@ -912,7 +913,7 @@ export function buildSupersededStub(param: string): SupersededStub | undefined {
   const contestId = paramToGameId(param);
   // Only an si.com id can be superseded, and the map is a plain JSON object: an own-property
   // lookup, so 'constructor' or '__proto__' never reads Object.prototype as a "target".
-  if (!/^sblive:\d+$/.test(contestId)) return undefined;
+  if (!isSbliveContestId(contestId)) return undefined;
   const map = getSupersededGames();
   const target = Object.hasOwn(map, contestId) ? map[contestId] : undefined;
   if (typeof target !== 'string' || target === '') return undefined;

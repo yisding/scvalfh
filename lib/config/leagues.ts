@@ -24,12 +24,12 @@ import type {
 import type { PlayoffStatus, TiebreakStage } from '@/lib/model/standings';
 
 import { failInvariant } from './invariant';
+import { MAXPREPS_WEB } from './source-urls';
 import { checkLeagueConfig } from './leagues/assert';
 import { BVAL } from './leagues/bval';
 import { CCS } from './leagues/ccs';
 import { CITY } from './leagues/city';
 import { DATA_QUALITY } from './leagues/data-quality';
-import { MP } from './leagues/documents';
 import { EAL } from './leagues/eal';
 import { INDEPENDENTS } from './leagues/independents';
 import { MCAL } from './leagues/mcal';
@@ -194,7 +194,7 @@ export function isSingleDivision(leagueId: LeagueId): boolean {
 export function leagueStandingsUrl(id: DivisionId): string | null {
   const d = getDivision(id);
   if (d.maxprepsLeagueId === null || d.maxprepsSlug === null) return null;
-  return `${MP}/ca/field-hockey/${SEASON_YEAR}/league/${d.maxprepsSlug}/?leagueid=${d.maxprepsLeagueId}`;
+  return `${MAXPREPS_WEB}/ca/field-hockey/${SEASON_YEAR}/league/${d.maxprepsSlug}/?leagueid=${d.maxprepsLeagueId}`;
 }
 
 /** The rungs of the division's league ladder that apply to this division, in ladder order. */

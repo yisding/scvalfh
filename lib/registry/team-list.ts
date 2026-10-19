@@ -5,6 +5,7 @@
  */
 
 import { LEAGUES } from '@/lib/config/leagues';
+import { MAXPREPS_WEB, SBLIVE_WEB } from '@/lib/config/source-urls';
 import type { GameSide } from '@/lib/model/game';
 import type { DivisionId, LeagueId, TeamId } from '@/lib/model/ids';
 import type { Team } from '@/lib/model/team';
@@ -22,8 +23,6 @@ import { SCVAL_SEEDS } from './scval';
 import type { Seed } from './seed';
 import { SUNSET_SEEDS } from './sunset';
 
-const MP = 'https://www.maxpreps.com';
-const SI = 'https://www.si.com/high-school/stats/california/field-hockey';
 const VNN = 'https://mmboltapi.azurewebsites.net/api/v2/events/calendar';
 
 function toTeam(s: Seed): Team {
@@ -51,11 +50,11 @@ function toTeam(s: Seed): Team {
     mascotUrl: null,
     external: {
       maxprepsTeamId: s.id,
-      maxprepsTeamUrl: s.maxprepsPath ? MP + s.maxprepsPath : null,
-      maxprepsScheduleUrl: s.maxprepsPath ? `${MP + s.maxprepsPath}schedule/` : null,
+      maxprepsTeamUrl: s.maxprepsPath ? MAXPREPS_WEB + s.maxprepsPath : null,
+      maxprepsScheduleUrl: s.maxprepsPath ? `${MAXPREPS_WEB + s.maxprepsPath}schedule/` : null,
       ...(s.sbliveTeamId ? { sbliveTeamId: s.sbliveTeamId } : {}),
       ...(s.sbliveSchoolId ? { sbliveSchoolId: s.sbliveSchoolId } : {}),
-      ...(s.sbliveSlug ? { sbliveGamesUrl: `${SI}/teams/${s.sbliveSlug}/games` } : {}),
+      ...(s.sbliveSlug ? { sbliveGamesUrl: `${SBLIVE_WEB}/teams/${s.sbliveSlug}/games` } : {}),
       ...(s.vnnSiteId
         ? { vnnSiteId: s.vnnSiteId, vnnIcsUrl: `${VNN}/${s.vnnSiteId}/0/calendar.ics` }
         : {}),
