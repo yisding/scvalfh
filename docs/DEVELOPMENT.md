@@ -206,7 +206,8 @@ owner decision with its date, or a measurement. When code moves, its comments mo
 paths they quote are rewritten; prose that is still true is not reworded. Every quoted repo path and
 every `docs/<FILE>.md "<Heading>"` citation must resolve (`tests/arch/citations.test.ts`).
 `docs/CITATIONS.md` has the frozen-path table: the paths that committed data and fixtures quote
-forever, with where each now lives.
+forever, with where each now lives; its legend explains the shorthands for documents not kept here
+(`SPEC §n`, `BUILD-BRIEF`, `DESIGN-socal §n`, `design-review UI §n`, the build stages).
 
 ### Moving a module
 

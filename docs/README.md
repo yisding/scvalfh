@@ -16,7 +16,7 @@ The repository's own front door is the top-level `README.md`; this is the index 
 |---|---|
 | `docs/LEAGUES.md` | The leagues and teams covered, and the facts that shape them |
 | `docs/ROUTES.md` | Every route, what it shows, its anchors and the region scoping |
-| `docs/STANDINGS.md` | How standings are computed, league by league |
+| `docs/STANDINGS.md` | How standings are computed: the rules every league shares, with a link to each league's rules |
 | `docs/RATINGS.md` | The Elo rating and the Elo-adjusted goals and points |
 | `docs/KNOWN-LIMITATIONS.md` | What the site cannot know or show yet, and the open owner decisions |
 
@@ -36,7 +36,7 @@ The repository's own front door is the top-level `README.md`; this is the index 
 | `docs/LEAGUE-RULES.md` | Per league: points, order, the tiebreak chain with citations, multi-team ties, co-champions, the postseason, official sources and known data gaps |
 | `docs/BYLAWS-2026-27.md` | The verified SCVAL by-laws excerpt that governs standings, points, tiebreaks and CCS qualification |
 | `docs/DESIGN.md` | The design record: routes, tokens, component signatures, rendering rules, empty states, accessibility, and the amendments that followed |
-| `docs/CITATIONS.md` | How citations work here: the frozen-path table for paths that committed data quotes |
+| `docs/CITATIONS.md` | How citations work here: the frozen-path table for paths that committed data quotes, and the legend of every citation shorthand (`SPEC §n`, `BUILD-BRIEF`, `DESIGN-socal §n` and the rest) |
 
 ## Deployment
 

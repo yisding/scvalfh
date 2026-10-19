@@ -1,12 +1,5 @@
 @import "tailwindcss";
 
-/* Six utilities no page uses any more. Only the standings table's never-rendered `mini` and
-   `archive` variants and its never-rendered inline notes named them, and those branches were
-   deleted when the table was split into components/standings/table/. They stay in the generated
-   stylesheet so the built CSS is byte-identical to before that deletion (a refactor freezes every
-   build output). A change that may alter the stylesheet deletes this line. */
-@source inline("w-9 w-[68px] space-y-1.5 text-[0.6875rem] md:pl-5 md:pr-5");
-
 /* ═══════════════════════════════════════════════════════════════════════════
    NorCal High School Field Hockey — design tokens (DESIGN §4.1 / §4.2)
 

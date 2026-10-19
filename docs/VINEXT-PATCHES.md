@@ -4,8 +4,8 @@
 `pnpm-workspace.yaml`), so `node_modules/vinext` is never the stock package. It closes eleven
 vinext 1.0.0 gaps that broke this site's contract with `next build`/`next start` or kept one of
 the two vinext targets from building or serving it; each fix carries a comment citing the
-behaviour it matches, and `pnpm-workspace.yaml` lists them (file paths below are under
-`node_modules/vinext/dist/`):
+behaviour it matches, and this page is the list (`pnpm-workspace.yaml` only points here; file
+paths below are under `node_modules/vinext/dist/`):
 
 - **Header source parsing** (`config/config-matchers.js`): a nested group such as
   `/:path((?!_next/static/).*)` was mis-parsed, so the Cache-Control rule matched only paths
@@ -13,7 +13,8 @@ behaviour it matches, and `pnpm-workspace.yaml` lists them (file paths below are
 - **`notFound()` in a metadata route** (`server/metadata-route-response.js`): the per-game, date
   and team OG images answered an unknown param with a 500 instead of a 404.
 - **ISR lifetime** (`build/prerender.js`, `server/app-page-response.js`): the prerender read the
-  `s-maxage=300` rule back as each page's revalidate time, so `vinext start` re-rendered every
+  `s-maxage=300` rule back as each page's revalidate time (revalidate=300 in
+  `dist/server/vinext-prerender.json`), so `vinext start` re-rendered every
   "static" page after five minutes; pages are `revalidate: false`, as on Next.
 - **404 caching** (`server/app-rsc-response-finalizer.js`, `server/app-fallback-renderer.js`):
   the same rule overwrote the no-store header on 404 pages, so a CDN could cache a 404. A Route

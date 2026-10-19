@@ -6,8 +6,9 @@ standings, so this site extends them to the table). Four of them can end a leagu
 decides a level varsity game with 1 v 1s. The four Southern California leagues (the Sunset and the San
 Diego Section's City, North County and Metro conferences) publish no points rule, no standings and no
 schedule at all: this site orders their tables by its own 3-1-0 points and says so on every page
-(`orderScope: 'site'`). The Southern Section's three independents (Glendora, Harvard-Westlake and
-Thousand Oaks) are not a league and have no table at all: see "LA independents" below.
+(`orderScope: 'site'`). The five LA independents (Bonita, Chaminade, Glendora, Harvard-Westlake and
+Thousand Oaks) are not a league; this site groups them and orders their table the same way: see "LA
+independents" below.
 The leagues differ in the tiebreak chain, in how a tie among three or more teams is worked through, in how a division champion is
 named and in what the postseason looks like. Every rule below is data in `lib/config/leagues.ts` with the
 by-law citation beside it; one engine (`lib/engine/standings.ts`) runs them, and `/about#rules-<league>`
@@ -26,7 +27,7 @@ are also quoted in `docs/BYLAWS-2026-27.md`.
    separate the teams (all keys equal) is skipped; a stage that is *not applicable* (for example,
    head-to-head when two teams never met) is skipped too.
 3. **Multi-team procedure.** The leagues differ here, and the difference changes results:
-   - `partition-restart` (SCVAL, PCAL, EAL, Sunset, San Diego): a stage splits the bucket into a better and a worse group;
+   - `partition-restart` (SCVAL, PCAL, EAL, Sunset, San Diego, LA independents): a stage splits the bucket into a better and a worse group;
      each group restarts the chain from its first stage, using only its own members.
    - `seed-one-restart` (BVAL, MCAL): a stage picks the *one* best team for the current place; the
      chain then restarts among the rest for the next place.
@@ -34,9 +35,10 @@ are also quoted in `docs/BYLAWS-2026-27.md`.
    `no-rule`) ends the walk: the remaining teams share a place, listed by name, with the league's
    citation as the footnote.
 5. Only games that count toward the division table are used: two teams of the same division, a
-   league game by the league's own evidence (SCVAL, EAL and Sunset: MaxPreps' league flag; BVAL, PCAL
-   and MCAL: it is on the official schedule; the San Diego divisions: any game between two members
-   inside league play, whatever MaxPreps' flag says), never a tournament, neutral or postseason game.
+   league game by the league's own evidence (SCVAL and EAL: MaxPreps' league flag; BVAL, PCAL and
+   MCAL: it is on the official schedule; the Sunset, the San Diego divisions and the LA independents:
+   any game between two members inside league play, whatever MaxPreps' flag says), never a
+   tournament, neutral or postseason game.
 6. A team with no results is named and listed last, never ranked by merit and never shown as 0-0-0.
 7. A tie at the top is shown as "Level on points at the top" until the league's regular phase is
    over; only then does the league's co-champion label appear.
@@ -78,6 +80,7 @@ fifth-place teams are submitted for at-large consideration; 6th and below have n
 On **Fri Oct 30** the four De Anza places meet the four El Camino places (#1 v #1 … #4 v #4);
 #1 to #3 help CCS ordering and #4 v #4 is the play-in for the 7th automatic berth. The CCS
 championship follows (entries due Nov 2, quarterfinals Nov 7, semifinals Nov 11, final Nov 14).
+The `/playoffs` page labels every row with its by-law citation.
 
 **Official sources.** The two schedule grids as PDFs (De Anza and El Camino), read live every run and
 parsed with `pdftotext`; the by-laws PDF; the standings index (polled for a 2026-27 standings
@@ -242,7 +245,7 @@ regular-season points leader is MCAL Champion; if a different team wins the tour
 receives a pennant.
 
 **Postseason** (a league tournament, not a section playoff; the NCS and CIF hold no field hockey
-championship). Six teams qualify (the 2026 play-off sheet; the Handbook's §8b says four, and the
+championship, so no MCAL page describes CCS berths). Six teams qualify (the 2026 play-off sheet; the Handbook's §8b says four, and the
 sheet and the 2025 tournament use six, so the site follows the sheet and says so):
 
 | Seed | Outcome |
@@ -308,7 +311,8 @@ final as a 1 v 1 win: a level JV score stays a tie, and W/L flags on one are kep
 | 1 | no rule: the Guidelines break no tie in the league table (not computable; the teams share a place) | §VII.C; §III.E.1 |
 
 Teams level on points share a place and the footnote cites the two clauses. The Super Regional
-seeding criteria (§III.E.1) belong to the coaches and are not a table tiebreak.
+seeding criteria (§III.E.1) belong to the coaches and are not a table tiebreak. `docs/DESIGN.md` §22
+records what the site does with these clauses.
 
 **Co-champions.** "In the case of a tie, duplicate awards will be given" (§VII.C), so equal points at
 the top means co-champions; the Guidelines add that a team must play all its league games unless the
@@ -538,7 +542,8 @@ Bernardo; it has no Valley table at all (`maxprepsLeagueId: null`, the cross-che
 South Bay" table holds the five Metro Mesa teams; its "Grossmont" table holds El Capitan, Granite Hills
 and Santana (no 2026 varsity game) and lists no league for Hilltop or Southwest. MaxPreps counts Mission
 Bay's five games against City Eastern teams as league games, so its Mission Bay record (3-5-0 on Oct 5)
-is not a City Western record. Every San Diego table is labelled informational. Madison, Santana, Castle
+is not a City Western record. Every San Diego table is labelled informational, and the known cause is
+printed beside the comparison. Madison, Santana, Castle
 Park, Chula Vista, Montgomery and Sweetwater have a 2026-27 MaxPreps team but no game there or in the
 power rankings [V]; search names each.
 
@@ -548,7 +553,8 @@ power rankings [V]; search names each.
 
 **Who.** Bonita (La Verne), Chaminade (West Hills), Glendora, Harvard-Westlake (Studio City) and Thousand
 Oaks: five Los Angeles-area Southern Section schools in no field hockey league, grouped by this site as "LA
-independents" (short name "LA"; the id and URL stay `independents`). Glendora, Harvard-Westlake and Thousand Oaks are each the only
+independents" (short name "LA", `independents: true` in `lib/config/leagues.ts`; the id and URL stay
+`independents`). Glendora, Harvard-Westlake and Thousand Oaks are each the only
 field hockey team in their all-sports league on MaxPreps for 2026-27: the Palomares League (Glendora),
 League B (Harvard-Westlake) and the Marmonte League (Thousand Oaks) [V: each team's MaxPreps team page,
 2026-10-06]; MaxPreps' 2025-26 tables for the same three leagues list one field hockey team each [V:
@@ -602,8 +608,9 @@ Oaks and omits Chaminade and Harvard-Westlake, which field teams [V].
 **Known data gaps.** No MaxPreps or si.com table gathers the five: MaxPreps' and si.com's Sunset tables
 hold Bonita's and Chaminade's rows (skipped as `maxprepsExtraRows` of the Sunset, never compared), and
 si.com's one-school league pages (Palomares 4235, League B 4207 and Marmonte 4213) are read for backfill
-only. `/history/2025-26` marks the group unavailable: it is this site's grouping, so no 2025-26 table of
-it was published.
+only; the site reads the five's team schedules. `/history/2025-26` marks the group unavailable: it is this
+site's grouping, so no 2025-26 table of it was published. Their games count in the Elo fit and on the SoCal
+school boards, the league-record board included: their table's games are their league record.
 
 ---
 
@@ -625,11 +632,11 @@ it was published.
 | | Sunset | City | North County | Metro | Independents |
 |---|---|---|---|---|---|
 | Section | SS | SDS | SDS | SDS | SS |
-| Teams / divisions | 10 / 1 | 12 / 2 | 19 / 3 | 9 / 2 | 3 / no league |
-| League games a team | no fixed number (2 to 7 flagged) | 10 | 10 or 12 | 6 or 8 | none |
-| Points (W / T / L) | this site's 3 / 1 / 0 (no league rule) | this site's 3 / 1 / 0 | this site's 3 / 1 / 0 | this site's 3 / 1 / 0 | none (no table) |
-| First tiebreak | none (no rule) | none (no rule) | none (no rule) | none (no rule) | — |
-| League evidence | MaxPreps league flag | division membership | division membership | division membership | none: every game is non-league |
+| Teams / divisions | 8 / 1 | 12 / 2 | 19 / 3 | 9 / 2 | 5 / 1 (no league) |
+| League games a team | no fixed number (no round robin) | 10 | 10 or 12 | 6 or 8 | no fixed number |
+| Points (W / T / L) | this site's 3 / 1 / 0 (no league rule) | this site's 3 / 1 / 0 | this site's 3 / 1 / 0 | this site's 3 / 1 / 0 | this site's 3 / 1 / 0 (no league) |
+| First tiebreak | none (no rule) | none (no rule) | none (no rule) | none (no rule) | none (no rule) |
+| League evidence | division membership | division membership | division membership | division membership | group membership |
 | Level games | stand as reported | Section shootout (a win) | Section shootout (a win) | Section shootout (a win) | stand as reported |
 | Postseason | none (Blue Book 2011.1, 3500.2) | Section playoffs Nov 2–14: Open 8, I 12, II 12 | same | same | none (Blue Book 2011.1, 3500.2) |
 | MaxPreps' table is trusted for | informational only | informational only | informational only (Valley: no table) | informational only | no table |

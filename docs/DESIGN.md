@@ -1,93 +1,93 @@
-> **Note on this copy.** This is the implementation-ready design record produced during the
-> design stage, kept verbatim below for history. **Sections 1-14 describe the single-league
-> (SCVAL, 15-team) site as designed; the site now covers four leagues and 43 teams, and §15
-> ("Multi-league amendment (2026-10)") at the end of this file records what that changed and
-> which decisions below it reverses. Where §15 and an earlier section disagree, §15 wins.** One
-> decision in it was later overridden by
-> `docs/BYLAWS-2026-27.md` (fetched after this document was written): **§1.2's "No PTS column"
-> is superseded — the by-laws (Article VI §2) make points the official ordering key, so the
-> standings table DOES show a PTS column.** See docs/STANDINGS.md "How standings are computed" and
-> `docs/BYLAWS-2026-27.md` for the current rule.
->
-> **Later still: now five leagues and 49 teams (§22).** The Eastern Athletic League joined as a
-> fifth league in a third section, the Northern Section; §22 at the end of this file records what
-> that changed and wins where it disagrees with §15 or anything above it.
->
-> **Later again: nine leagues and 99 teams in five sections and two regions (§24).** The Southern
-> Section's Sunset field hockey league and the San Diego Section's City, North County and Metro
-> conferences joined on 2026-10-06, behind a NorCal/SoCal region toggle (default NorCal). The site
-> stays "NorCal High School Field Hockey" (owner decision, 2026-10-06); §24 records what the amendment
-> changed and wins where it disagrees with §22 or anything above it. Later the same day the Southern
-> Section's three independents (Glendora, Harvard-Westlake and Thousand Oaks, no league games) joined:
-> 102 teams in nine leagues and one group with no table, and North County's short name became "North"
-> (§24.9). Later still, Bonita and Chaminade moved from the Sunset to the independents, and the
-> group of five got a table of its games against each other (§24.10, which wins over §24.9).
->
-> **`SPEC §n` and `BUILD-BRIEF` in code comments** refer to the build-time research spec and
-> build brief, which are not kept in this repo. Their §1.x sections survive, condensed, as
-> `docs/DATA-SOURCES.md` §1.x; every other section number does NOT match DATA-SOURCES' numbering,
-> so treat it as historical. New comments cite DESIGN, DATA-SOURCES, LEAGUE-RULES or BYLAWS
-> sections instead.
->
-> **Wilcox has since been removed.** Every Wilcox row, wireframe and "no results reported"
-> example below predates the news that Wilcox is not fielding a team this season. The site now
-> had 15 teams (De Anza 7, El Camino 8) at that point, and since the multi-league amendment (§15)
-> SCVAL's 15 are four of the site's 43; Wilcox's grid fixtures are dropped at parse time (it is in
-> SCVAL's `withdrawnNames` in `lib/config/leagues/scval.ts`, which replaced `WITHDRAWN_SCHOOL_NAMES`). The
-> no-results state itself still applies to any fielded team with nothing reported.
->
-> One number in it is **not reachable as written**: §13's "`/` under **120 KB** gzipped including
-> fonts". The App Router's own client runtime is ~150 KB gzipped on a page that ships no
-> interactive code at all, so nothing this site does to its own code can get under 120 KB without
-> leaving the framework. Measured on `/` at 390×844 against `next start` (CDP
-> `encodedDataLength`, every non-RSC response): **236 KB over 13 requests** — framework and app JS
-> ~150 KB (498 KB uncompressed first-load, per `.next/diagnostics/route-bundle-stats.json`),
-> document 22 KB, CSS 10 KB, the two woff2 faces 53 KB. The half of §13 that IS a statement about
-> this site's own code holds with room to spare: the client modules total ~23 KB gzipped (gzip -9
-> of the app-owned chunks listed in `.next/diagnostics/route-bundle-stats.json`: ~6.7 KB shared,
-> plus 8.4 KB on `/`, 7.2 KB on `/schedule` and 0.9 KB on `/teams/[slug]`) against
-> the "≤ 40 KB beyond the framework" allowance, with no chart JS and no image anywhere on the
-> critical path. LCP, TBT and CLS all sit inside their §13 targets as written (CLS measures
-> 0.0000 on `/`).
->
-> **So the budget to wire into §12's Lighthouse gate is 40 KB of app JS beyond the framework plus
-> a 240 KB ceiling on the whole critical path for `/`** — figures the site holds today and that a
-> regression can break, rather than one it failed on the day it was written. Two ways to buy the
-> difference were measured and rejected: `preload: false` on Geist Mono saves only the ~550 bytes
-> of its own `<link>` (the kickers ask for the face above the fold either way), and dropping the
-> mono family for `ui-monospace` would save its 23 KB at the cost of §4.2's numerals, which are
-> the type system. See the comment above the font calls in `app/layout.tsx`.
->
-> One layout in it was **deliberately not built as drawn**: §3.7's 3fr/2fr desktop split for
-> `/teams/[slug]`, with NEXT / LAST / FORM / SPLITS / WHO WE HAVEN'T BEATEN in a right rail. The
-> page is one column with two paired 2-up blocks instead, and the row lists are capped at a 46rem
-> measure, because a game-log row stretched across the full 1120px main column puts "vs Los Altos"
-> and its "FINAL" about 850px apart — a distance the eye has to bridge to read a single row. The
-> rationale also lives at the top of `components/teams/TeamPageGrid.tsx`; it is recorded here so the
-> deviation reads as a decision rather than an omission.
->
-> One count in it is **out of date**: §7's and §13's "**four** client modules in the whole app"
-> (`ThemeToggle`, `PinControl`, `MyTeamCard`, `ScheduleFilters`). The count has grown with the
-> multi-league work, so no number is kept here: `git grep -l "^'use client'" app components` and
-> tests/arch/client-boundary.test.ts, which finds every client module itself, are the live
-> inventory. The number mattered beyond bookkeeping — "without a fifth client module" was once
-> written down as the reason the pinned-team highlight had to be an inline script rather than a
-> component, a constraint that had already been spent. What the §13
-> budget actually rations is **bytes, not modules**, and that half holds: ~23 KB gzipped against the
-> 40 KB allowance (see the note on §13 above).
->
-> **The clubs pages came later still.** `/clubs`, `/clubs/[slug]` and a club line on each team
-> page's roster were added from `data/clubs.json` (researched 2026-10-03); §17 ("Clubs amendment
-> (2026-10)") records what they answer, the privacy rules they keep and how they are laid out, and
-> §1.1 lists the two routes. `/commits` and a commitment line on team rosters followed, from
-> `data/commits.json`; §21 records them, and §1.1 lists the route.
->
-> Everything else below (routes, tokens, component signatures, rendering rules, empty states,
-> a11y, build checklist) reflects what was built.
+# SCVAL Girls Varsity Field Hockey — Fall 2026
+
+## Sections
+
+This is the implementation-ready design record produced during the design stage, kept verbatim below
+for history. Sections 1-14 describe the single-league (SCVAL, 15-team) site as designed; each later
+section is an amendment that records what changed and wins where it disagrees with the sections before
+it. The site now covers nine leagues and the LA independents, 102 teams in five sections and two
+regions (§24). Everything else below (routes, tokens, component signatures, rendering rules, empty
+states, a11y, build checklist) reflects what was built unless the status column says otherwise.
+`SPEC §n` and `BUILD-BRIEF` in it cite build-time documents not kept in this repo: see
+docs/CITATIONS.md "Legend".
+
+| § | Section | Status |
+|---|---|---|
+| 1 | [Information architecture](#1-information-architecture) | Partly superseded. §15 (nine leagues' routes, the team finder, per-league pages), §16, §17, §21 and §25 (pages added; §1.1 lists the clubs and commits routes), §18 (one `/teams` page). §1.2's "No PTS column" is superseded by `docs/BYLAWS-2026-27.md` (Article VI §2 makes points the official ordering key), so the standings table shows a PTS column: see docs/STANDINGS.md "How standings are computed". |
+| 2 | [The reference data every wireframe in this spec is drawn against](#2-the-reference-data-every-wireframe-in-this-spec-is-drawn-against) | Historical: the single-league (SCVAL, 15-team) data the wireframes are drawn against. Its Wilcox rows predate the news that Wilcox is not fielding a team this season: its grid fixtures are dropped at parse time (it is in SCVAL's `withdrawnNames` in `lib/config/leagues/scval.ts`, which replaced `WITHDRAWN_SCHOOL_NAMES`). The no-results state itself still applies to any fielded team with nothing reported. |
+| 3 | [Page-by-page wireframes](#3-page-by-page-wireframes) | Current where no later section disagrees: §15.1 (§3.1's tab label, team picker and reserved card height), §18, §19.1 (§3.8's "no probabilities" line), §26 (the look). §3.7's desktop split was deliberately not built as drawn (note b). |
+| 4 | [Visual system](#4-visual-system) | Current; §26 wins over §4.4, §30 wherever text widths decide geometry. |
+| 5 | [Domain contract and result rendering](#5-domain-contract-and-result-rendering) | Current; §15, §22 and §24 win where they disagree (more leagues and sections, shootouts, site-ordered tables). |
+| 6 | [Data-viz decisions](#6-data-viz-decisions) | Current; §19.1 withdraws §6.1's and §6.2's "no probability model". |
+| 7 | [Component inventory](#7-component-inventory) | Current; §15.1 replaces §7.12's team picker, §19.1 withdraws §7.11's "no percentages anywhere", §26.1 brings back §7.2's section rule. Its count of client modules is out of date (note c). |
+| 8 | [Empty and edge states](#8-empty-and-edge-states) | Current. |
+| 9 | [The cross-check log — the site's credibility mechanism](#9-the-cross-check-log--the-sites-credibility-mechanism) | Current. |
+| 10 | [Accessibility checklist](#10-accessibility-checklist) | Current; §15.1 replaces §10.12's "exactly two things stored" (four since §24.1: theme, pinned team, league, region). |
+| 11 | [Scoring and rendering rules — published verbatim on `/about#standings`](#11-scoring-and-rendering-rules--published-verbatim-on-aboutstandings) | Partly superseded: rule 8's sort order by the by-laws' points (see §1) and each league's chain in `docs/LEAGUE-RULES.md`; rule 2's Wilcox row by its withdrawal (see §2). |
+| 12 | [Appendix A — what the real data forced into this design](#12-appendix-a--what-the-real-data-forced-into-this-design) | Historical. |
+| 13 | [Appendix B — resolution index](#13-appendix-b--resolution-index) | Historical index of the [R-n] resolutions. Its "`/` under 120 KB gzipped" is not reachable as written (note a), and its client-module count is out of date (note c). |
+| 14 | [Build checklist, ordered by dependency](#14-build-checklist-ordered-by-dependency) | Historical. |
+| 15 | [Multi-league amendment (2026-10)](#15-multi-league-amendment-2026-10) | Current, and wins over §1-§14 where they disagree; its counts (four leagues, 43 teams) are superseded by §22 and §24, which win where they disagree with it. |
+| 16 | [Leaders amendment (2026-10)](#16-leaders-amendment-2026-10) | Current; §20, §23, §27 and §28 amend the boards and their order. |
+| 17 | [Clubs amendment (2026-10)](#17-clubs-amendment-2026-10) | Current; §24.12 extends it to the Southern California schools. |
+| 18 | [Teams and standings amendment (2026-10)](#18-teams-and-standings-amendment-2026-10) | Current. |
+| 19 | [Probabilities amendment (2026-10)](#19-probabilities-amendment-2026-10) | Current. |
+| 20 | [Elo ratings amendment (2026-10)](#20-elo-ratings-amendment-2026-10) | Current; §23 and §27 amend its board. |
+| 21 | [College commitments amendment (2026-10)](#21-college-commitments-amendment-2026-10) | Current; §24.12 extends it to the Southern California schools. |
+| 22 | [Eastern Athletic League amendment (2026-10)](#22-eastern-athletic-league-amendment-2026-10) | Current; §24 wins where they disagree. |
+| 23 | [Leaders layout amendment (2026-10)](#23-leaders-layout-amendment-2026-10) | Current; §27 and §28 amend it. |
+| 24 | [Southern California amendment (2026-10)](#24-southern-california-amendment-2026-10) | Current. §24.9 is superseded in part by §24.10 (five independents with a table); §24.11 moves the Sunset to membership; §29 treats the independents as a league on `/leaders`. |
+| 25 | [Recruiting amendment (2026-10)](#25-recruiting-amendment-2026-10) | Current. |
+| 26 | [Visual refresh amendment (2026-10)](#26-visual-refresh-amendment-2026-10) | Current; §30 wins where text widths decide geometry. |
+| 27 | [Elo-adjusted scoring amendment (2026-10)](#27-elo-adjusted-scoring-amendment-2026-10) | Current; §28 amends its notes. |
+| 28 | [Leaders reading amendment (2026-10)](#28-leaders-reading-amendment-2026-10) | Current. |
+| 29 | [The independents' table is their league on /leaders (2026-10)](#29-the-independents-table-is-their-league-on-leaders-2026-10) | Current. |
+| 30 | [Text-width amendment (2026-10)](#30-text-width-amendment-2026-10) | Current. |
+
+**Notes on the status column.**
+
+(a) One number in it is **not reachable as written**: §13's "`/` under **120 KB** gzipped including
+fonts". The App Router's own client runtime is ~150 KB gzipped on a page that ships no
+interactive code at all, so nothing this site does to its own code can get under 120 KB without
+leaving the framework. Measured on `/` at 390×844 against `next start` (CDP
+`encodedDataLength`, every non-RSC response): **236 KB over 13 requests** — framework and app JS
+~150 KB (498 KB uncompressed first-load, per `.next/diagnostics/route-bundle-stats.json`),
+document 22 KB, CSS 10 KB, the two woff2 faces 53 KB. The half of §13 that IS a statement about
+this site's own code holds with room to spare: the client modules total ~23 KB gzipped (gzip -9
+of the app-owned chunks listed in `.next/diagnostics/route-bundle-stats.json`: ~6.7 KB shared,
+plus 8.4 KB on `/`, 7.2 KB on `/schedule` and 0.9 KB on `/teams/[slug]`) against
+the "≤ 40 KB beyond the framework" allowance, with no chart JS and no image anywhere on the
+critical path. LCP, TBT and CLS all sit inside their §13 targets as written (CLS measures
+0.0000 on `/`).
+
+**So the budget to wire into §12's Lighthouse gate is 40 KB of app JS beyond the framework plus
+a 240 KB ceiling on the whole critical path for `/`** — figures the site holds today and that a
+regression can break, rather than one it failed on the day it was written. Two ways to buy the
+difference were measured and rejected: `preload: false` on Geist Mono saves only the ~550 bytes
+of its own `<link>` (the kickers ask for the face above the fold either way), and dropping the
+mono family for `ui-monospace` would save its 23 KB at the cost of §4.2's numerals, which are
+the type system. See the comment above the font calls in `app/layout.tsx`.
+
+(b) One layout in it was **deliberately not built as drawn**: §3.7's 3fr/2fr desktop split for
+`/teams/[slug]`, with NEXT / LAST / FORM / SPLITS / WHO WE HAVEN'T BEATEN in a right rail. The
+page is one column with two paired 2-up blocks instead, and the row lists are capped at a 46rem
+measure, because a game-log row stretched across the full 1120px main column puts "vs Los Altos"
+and its "FINAL" about 850px apart — a distance the eye has to bridge to read a single row. The
+rationale also lives at the top of `components/teams/TeamPageGrid.tsx`; it is recorded here so the
+deviation reads as a decision rather than an omission.
+
+(c) One count in it is **out of date**: §7's and §13's "**four** client modules in the whole app"
+(`ThemeToggle`, `PinControl`, `MyTeamCard`, `ScheduleFilters`). The count has grown with the
+multi-league work, so no number is kept here: `git grep -l "^'use client'" app components` and
+tests/arch/client-boundary.test.ts, which finds every client module itself, are the live
+inventory. The number mattered beyond bookkeeping — "without a fifth client module" was once
+written down as the reason the pinned-team highlight had to be an inline script rather than a
+component, a constraint that had already been spent. What the §13
+budget actually rations is **bytes, not modules**, and that half holds: ~23 KB gzipped against the
+40 KB allowance (see note a).
 
 ---
 
-# SCVAL Girls Varsity Field Hockey — Fall 2026
 ## FINAL DESIGN SPEC — implementation-ready
 
 **Status:** this is the spec to build. It starts from the winning `phone-first` architecture,
@@ -561,7 +561,9 @@ PHONE 390px  —  /schedule
 ```
 
 **Filters, exactly.** One row above everything it scopes — never inside a card, never per
-section. `ScheduleFilters` is the only client component on this page. The **complete,
+section. Two client components carry it on this page: `ScheduleFilters` (the filter state, the
+chips and the count line) and `components/schedule/FiltersPanel.tsx` (the panel markup and the
+Suspense fallback). The **complete,
 unfiltered, server-rendered list is already in the HTML**; the filter toggles `hidden` on
 `data-*`-tagged rows and date groups (a group whose every child is hidden hides itself).
 Consequences: the page is useful before hydration, works fully with JS off, filtering costs
@@ -3691,7 +3693,7 @@ it says otherwise.
 | An id appears once per page | **The id suffix rule**: an id that a region block repeats gets `-socal` on the Southern California copy, and NorCal keeps today's ids. Examples are `#latest-every-league-socal`, `#schools-socal`, `#players-socal` and `#elo-rating-socal`. | Old links keep working, and both regions render without JavaScript. |
 | `LeagueConfig.region` is plain-words geography | It is renamed **`cities`**. "Region" now means NorCal or SoCal. Club regions (`CLUB_REGIONS`) and venue `address.region` are separate and unchanged. | One word, one meaning. |
 | `/playoffs` is the CCS page with cards for other leagues (§22.2) | It is **"Playoffs"**, with a `#norcal` block (the CCS content under an h2 "CCS playoffs", the MCAL pointer and the EAL card) and a `#socal` block (24.4). | A Southern California reader has no CCS. |
-| One site phase: the least advanced league's | `combinedPhase()` is computed per region (over that region's leagues). It is preseason only when every league is, and complete only when every league is. | Metro South Bay's first league game is Oct 7, so a whole-site "least advanced" would have read preseason for everyone. |
+| One site phase: the least advanced league's | `combinedPhase()` (`lib/engine/phase.ts`) folds the phases of the leagues given to it, and the site phase (`getSitePhase`) is computed over every league: it is preseason only when every league is, and complete only when every league is. | Metro South Bay's first league game is Oct 7, so a whole-site "least advanced" would have read preseason for everyone. |
 | A NorCal school's acronym resolves to it | 16 acronyms now collide (`EXPECTED_ACRONYM_COLLISIONS`), and seven NorCal acronyms stop resolving: BVHS, FHS, MCHS, MHS, MVHS, VCHS and WHS. | Each now names schools in both regions. Search finds them by name instead. |
 
 ### 24.2 Routes and counts

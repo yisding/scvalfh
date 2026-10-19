@@ -98,16 +98,16 @@ own computation.
   multi-team ties are resolved, co-champions, the postseason, official sources and known data gaps.
 - `docs/BYLAWS-2026-27.md` — the verified SCVAL by-laws excerpt that governs standings, points,
   tiebreaks and CCS qualification.
-- `SPEC §n` and `BUILD-BRIEF` in code comments refer to the build-time research spec and build
-  brief, which are not kept in this repo. Their §1.x sections survive, condensed, as
-  `docs/DATA-SOURCES.md` §1.x; every other section number does NOT match DATA-SOURCES' numbering,
-  so treat it as historical. New comments cite `docs/DESIGN.md`, `docs/DATA-SOURCES.md`,
-  `docs/LEAGUE-RULES.md` or `docs/BYLAWS-2026-27.md` sections instead.
+- `SPEC §n`, `BUILD-BRIEF`, `DESIGN-socal §n`, `design-review UI §n` and `Stage 0`/`A`/`C`/`D` in code
+  comments refer to build-time documents that are not kept in this repo: docs/CITATIONS.md "Legend"
+  says what each means and where its content lives now. New comments cite `docs/DESIGN.md`,
+  `docs/DATA-SOURCES.md`, `docs/LEAGUE-RULES.md` or `docs/BYLAWS-2026-27.md` sections instead.
 - `docs/DESIGN.md` — the implementation-ready design record: routes, tokens, component
   signatures, rendering rules, empty states, accessibility requirements. §15 is the multi-league
   amendment (what changed from the single-league design, and why). §22 is the EAL amendment (the
   fifth league and third section: what it reverses, its postseason surfaces, the copy rules and the
   measured budgets).
-- `docs/CITATIONS.md` — the frozen-path table, for the module paths committed data quotes.
+- `docs/CITATIONS.md` — the frozen-path table, for the module paths committed data quotes, and the
+  legend of every citation shorthand.
 
 `docs/README.md` indexes the same documents by topic.

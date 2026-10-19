@@ -167,7 +167,7 @@ jobs:
         uses: actions/checkout@v4
 
       # The install in this setup also applies patches/vinext@1.0.0.patch (patchedDependencies in
-      # pnpm-workspace.yaml, which lists the gaps it closes). Without it the build below is refused
+      # pnpm-workspace.yaml; docs/VINEXT-PATCHES.md lists the gaps it closes). Without it the build below is refused
       # outright: stock vinext stops any build that lacks the cloudflare() plugin while
       # cloudflare.config.ts exists. A patch that applies only in part is caught after the build:
       # the assertions fail on pages that revalidate after five minutes, and the smoke on icons,

@@ -34,7 +34,7 @@ import { defineConfig, loadEnv } from 'vite';
  * vinext 1.0.0 prerenders a metadata route only when its default export is `"use cache"` (which
  * needs `cacheComponents`, off here — see next.config.ts) and skips every Route Handler, so each
  * one rendered per request, the images through satori/resvg; patches/vinext@1.0.0.patch closes
- * that gap (see pnpm-workspace.yaml).
+ * that gap (see docs/VINEXT-PATCHES.md "The vinext patch").
  */
 export default defineConfig(({ mode }) => {
   const workers = mode === 'cloudflare';
