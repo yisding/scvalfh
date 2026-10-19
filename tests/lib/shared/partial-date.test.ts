@@ -1,13 +1,14 @@
 /**
  * The one partial-date grammar (lib/shared/partial-date.ts) and the three readers of it: the
  * clubs contract's `isAsOf`, the commits contract's `isCommitDate` and the formatter's throwing
- * `partialDateKind`. The table was checked against the three hand-written grammars they replaced
- * (the formatter's regexes, `isAsOf` and `isCommitDate`) string by string before those were deleted.
+ * `requirePartialDateKind`. The table was checked against the three hand-written grammars they
+ * replaced (the formatter's regexes, `isAsOf` and `isCommitDate`) string by string before those
+ * were deleted.
  */
 
 import { describe, expect, it } from 'vitest';
 
-import { partialDateKind as formatKind } from '@/lib/format/dates';
+import { requirePartialDateKind as formatKind } from '@/lib/format/dates';
 import { isAsOf } from '@/lib/schema/clubs';
 import { isCommitDate } from '@/lib/schema/commits';
 import { type PartialDateKind, partialDateKind } from '@/lib/shared/partial-date';

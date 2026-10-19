@@ -11,8 +11,9 @@
  *    COMPONENT_TS: view models do not live in components/ (they are views/), so a new .ts there needs
  *    a reason written down here.
  *  - views/**\/*.ts and lib/**\/*.ts are kebab-case; neither holds a .tsx. A views entry is
- *    <area>-view.ts in the directory <area> (one per directory), a route-parameter module is
- *    <name>-route.ts, a client-safe slice is <name>-client.ts, and the suffixes belong to views/ only.
+ *    <area>-view.ts in the directory <area> (one per directory; the area may be the singular of the
+ *    directory, team-view.ts in teams/), a route-parameter module is <name>-route.ts, a client-safe
+ *    slice is <name>-client.ts, and the suffixes belong to views/ only.
  *  - No lib basename ends in -schema, -view or -build (the directory says it: lib/schema/, views/,
  *    lib/pipeline/), and no index.ts exists anywhere in the source (no barrels; the three package doors
  *    are named files beside their directories).

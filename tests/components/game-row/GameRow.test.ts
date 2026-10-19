@@ -15,6 +15,7 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 
 import { findDivision, findLeague } from '@/lib/config/leagues';
+import { signedGd } from '@/lib/format/numbers';
 import { EN_DASH } from '@/lib/format/words';
 import type { Game, GameStatus } from '@/lib/model/game';
 import { getGames } from '@/lib/queries/games';
@@ -26,7 +27,6 @@ import {
   gameKindLabel,
   otherLeagueSuffix,
   overtimeInDoubt,
-  signedMargin,
 } from '@/views/shared/describe-game';
 
 function game(overrides: Partial<Game> = {}): Game {
@@ -561,11 +561,11 @@ describe('perspective', () => {
   });
 });
 
-describe('margin glyphs', () => {
+describe('margin glyphs (MarginStrip prints a per-game margin through lib/format/numbers.ts signedGd)', () => {
   it('uses the typographic minus and always signs a non-zero margin', () => {
-    expect(signedMargin(3)).toBe('+3');
-    expect(signedMargin(0)).toBe('0');
-    expect(signedMargin(-7)).toBe('−7');
+    expect(signedGd(3)).toBe('+3');
+    expect(signedGd(0)).toBe('0');
+    expect(signedGd(-7)).toBe('−7');
   });
 });
 

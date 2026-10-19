@@ -5,14 +5,14 @@
 
 import { clubDisplayName, getClub, getPlayerClubs } from '@/lib/datasets/clubs';
 import type { AffiliationStatus, Club } from '@/lib/schema/clubs';
-import { partialDateKind } from '@/lib/format/dates';
+import { requirePartialDateKind } from '@/lib/format/dates';
 import type { TeamSlug } from '@/lib/model/ids';
 import { clubHref } from '@/lib/shared/routes';
 
 /** The last year an `asOf` covers (a range's or a season's end), for "latest first"; null last. */
 function endYear(asOf: string | null): number {
   if (asOf === null) return Number.NEGATIVE_INFINITY;
-  const kind = partialDateKind(asOf);
+  const kind = requirePartialDateKind(asOf);
   if (kind === 'range') return Number(asOf.slice(5, 9));
   if (kind === 'season') return Number(asOf.slice(0, 4)) + 1;
   return Number(asOf.slice(0, 4));

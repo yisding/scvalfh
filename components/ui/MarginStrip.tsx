@@ -2,10 +2,10 @@ import Link from 'next/link';
 
 import type { FormGame } from '@/lib/engine/form';
 import { monthDay } from '@/lib/format/dates';
+import { signedGd } from '@/lib/format/numbers';
 import { EN_DASH } from '@/lib/format/words';
 import { getTeamBySlug } from '@/lib/registry/teams';
 import { gameHref } from '@/lib/shared/game-id';
-import { signedMargin } from '@/views/shared/describe-game';
 
 import EmptyState from './EmptyState';
 
@@ -137,7 +137,7 @@ export function MarginStrip({
           <span className="absolute right-0" style={{ top: arm - 8 }}>
             0
           </span>
-          <span className="absolute right-0 bottom-0">{signedMargin(-domain)}</span>
+          <span className="absolute right-0 bottom-0">{signedGd(-domain)}</span>
         </div>
         {/* The plot is as wide as its card, and the columns are FLUID (12px floor on phone, 24px on
             desktop, 20px at a 24px pitch for a slate longer than 14, 56px cap), so
@@ -163,11 +163,11 @@ export function MarginStrip({
                 margin === null ? 0 : Math.max(2, Math.round((Math.abs(margin) / domain) * arm));
               const label =
                 i === bestIndex
-                  ? `best ${signedMargin(best)}`
+                  ? `best ${signedGd(best)}`
                   : i === worstIndex
-                    ? `worst ${signedMargin(worst)}`
+                    ? `worst ${signedGd(worst)}`
                     : i === latestIndex
-                      ? `latest ${signedMargin(latest)}`
+                      ? `latest ${signedGd(latest)}`
                       : null;
               const body = (
                 <>
@@ -230,7 +230,7 @@ export function MarginStrip({
                     : isUnreported(entry)
                       ? 'score not reported'
                       : 'not played yet'
-                  : `margin ${signedMargin(entry.margin)}`) +
+                  : `margin ${signedGd(entry.margin)}`) +
                 (label ? `, ${label}` : '');
               return (
                 <span
@@ -267,7 +267,7 @@ export function MarginStrip({
                   <span className="sx-tip-body" aria-hidden="true">
                     {monthDay(entry.date)} &middot; {opponentPhrase(entry)}
                     {entry.margin !== null
-                      ? ` · ${signedMargin(entry.margin)}`
+                      ? ` · ${signedGd(entry.margin)}`
                       : entry.excludedFromMargin
                         ? ' · forfeit'
                         : isUnreported(entry)
@@ -285,8 +285,8 @@ export function MarginStrip({
 
       {/* The chart is as wide as its card; the legend is prose, so it keeps a reading measure. */}
       <p className="mt-3 mb-0 max-w-prose text-meta text-ink-3">
-        {signedMargin(best)} best &middot; {signedMargin(worst)} worst &middot;{' '}
-        {signedMargin(latest)} most recent. H / A / N is home, away, neutral;{' '}
+        {signedGd(best)} best &middot; {signedGd(worst)} worst &middot;{' '}
+        {signedGd(latest)} most recent. H / A / N is home, away, neutral;{' '}
         <b>?</b> is a league game with no result yet
         {unreported ? (
           <>
@@ -326,7 +326,7 @@ export function MarginStrip({
                       ? 'score not reported'
                       : entry.margin === null
                         ? 'not played'
-                        : signedMargin(entry.margin)}
+                        : signedGd(entry.margin)}
                 </td>
               </tr>
             ))}

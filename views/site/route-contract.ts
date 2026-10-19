@@ -2,12 +2,13 @@
  * The contract every view module and every route-param module meets, in one place, so a dynamic
  * route family reads the same everywhere (a page, its metadata, its OG card and the sitemap).
  *
- * A VIEW module, `views/<area>/<area>-view.ts`, exports `build<Area>View(params)`: it returns a
- * plain, serializable `View` (no JSX, no class instances, nothing a server-to-client boundary
- * would refuse) or `null` when the params name nothing. `null`, never `undefined`: a route that
- * has nothing to show answers `notFound()` (or a "not found" title in `generateMetadata`) on
- * exactly one test, `if (!view)`, and a JSON-serialized view cannot silently turn a missing value
- * into an absent key.
+ * A VIEW module, `views/<area>/<area>-view.ts` (the area may be singular: `views/teams/team-view.ts`),
+ * exports one or more `build…View(params)` builders (`buildTeamPageView`, `buildStandingsOverviewView`,
+ * …): each returns a plain, serializable view (no JSX, no class instances, nothing a
+ * server-to-client boundary would refuse), or `null` when the params name nothing. `null`, never
+ * `undefined`: a route that has nothing to show answers `notFound()` (or a "not found" title in
+ * `generateMetadata`) on one null test, of the route param or of what was built from it, and a
+ * JSON-serialized view cannot silently turn a missing value into an absent key.
  *
  * A ROUTE module, `views/<area>/<area>-route.ts` (`views/site/league-route.ts` for the two
  * `[league]` families that share it), exports two functions for a dynamic family:
@@ -26,9 +27,3 @@
 
 /** The prerendered params of a family with one dynamic segment named `K`: `{ league: 'mcal' }[]`. */
 export type StaticParams<K extends string> = Array<Record<K, string>>;
-
-/** A route module's guard: the value a raw URL segment names, or `null` for a segment that names nothing. */
-export type RouteParam<T> = (raw: string) => T | null;
-
-/** A view module's entry: the serializable view for one route's params, or `null` when they name nothing. */
-export type ViewBuilder<P, V> = (params: P) => V | null;

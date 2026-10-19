@@ -11,7 +11,7 @@ import {
   leaguesInRegion, regionOf, sectionsInRegion, PLACE_VS_STAGES, UNCOMPUTABLE_STAGES, byRegion, isDefaultRegion,
   regionIdSuffix, tiebreakChains,
 } from '@/lib/config/leagues';
-import { RESERVED_SEGMENTS } from '@/lib/config/routes';
+import { RESERVED_SEGMENTS } from '@/lib/config/reserved-segments';
 import type { RegionId } from '@/lib/model/ids';
 import { REGION_WORDS, SECTION_NAMES } from '@/lib/shared/region-words';
 import { UNCOMPUTABLE, SOCAL_IDS } from '@/tests/support/leagues';

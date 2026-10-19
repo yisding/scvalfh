@@ -12,12 +12,8 @@ import { SECTIONS } from '@/lib/config/leagues';
 import { getLeagueHealth } from '@/lib/queries/leagues';
 import { getCcsField } from '@/lib/queries/postseason';
 import { playoffsHref, standingsHref } from '@/lib/shared/routes';
-import {
-  tournamentHeaderMeta,
-  tournamentPageView,
-  tournamentParam,
-  tournamentStaticParams,
-} from '@/views/playoffs/tournament-route';
+import { tournamentHeaderMeta, tournamentPageView } from '@/views/playoffs/tournament-page';
+import { tournamentParam, tournamentStaticParams } from '@/views/playoffs/tournament-route';
 import { missingMetadata, pageMetadata } from '@/views/site/page-metadata';
 
 /**
@@ -74,7 +70,7 @@ export default async function LeagueTournamentPage({ params }: PageProps<'/playo
         description={tournamentHeaderMeta(summary, ps)}
         meta={
           ccsLeagues.length > 0 ? (
-            <Link href="/playoffs" className="sx-action text-meta text-accent hover:underline">
+            <Link href={playoffsHref()} className="sx-action text-meta text-accent hover:underline">
               {`CCS playoffs (${ccsLeagues.join(', ')})`} <Arrow />
             </Link>
           ) : null

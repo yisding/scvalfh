@@ -7,7 +7,7 @@
  */
 
 import { clubDisplayName } from '@/lib/datasets/clubs';
-import { partialDate, partialDateKind } from '@/lib/format/dates';
+import { partialDate, requirePartialDateKind } from '@/lib/format/dates';
 import { listWords } from '@/lib/format/words';
 import {
   type AffiliationSource, type Club, type ClubAffiliation, type ClubRegion, clubSiteKey,
@@ -146,7 +146,7 @@ export function statusWords(aff: Pick<ClubAffiliation, 'status' | 'asOf' | 'sour
   switch (aff.status) {
     case 'current': {
       if (when === null) return 'Current';
-      const kind = partialDateKind(aff.asOf!);
+      const kind = requirePartialDateKind(aff.asOf!);
       return kind === 'season' || kind === 'range' ? `Current, ${when}` : `Current, as of ${when}`;
     }
     case 'past':

@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import {
   dateSpan, dateWithYear, gameWhen, leagueClock, leagueClockPT, longDate, monthDay, partialDate,
-  partialDateKind, shortDate, timeOfDay, timeOfDayPT,
+  requirePartialDateKind, shortDate, timeOfDay, timeOfDayPT,
 } from '@/lib/format/dates';
 import {
   ordinal, ordinalWord, perGame, recordString, recordWords, signedGd, streakString, winPct,
@@ -348,7 +348,7 @@ describe('partialDate: the five shapes of a hand-researched date (data/clubs.jso
     expect(partialDate('2025')).toBe('2025');
     expect(partialDate('2025-26')).toBe('2025-26 season');
     expect(partialDate('2015-2018')).toBe(`2015${EN_DASH}2018`);
-    expect(['2026-07-08', '2025-10', '2025', '2025-26', '2015-2018'].map(partialDateKind)).toEqual([
+    expect(['2026-07-08', '2025-10', '2025', '2025-26', '2015-2018'].map(requirePartialDateKind)).toEqual([
       'day',
       'month',
       'year',
@@ -358,8 +358,8 @@ describe('partialDate: the five shapes of a hand-researched date (data/clubs.jso
   });
 
   it('reads YYYY-MM as a month when MM is 01-12 (isAsOf’s order), a season only by the +1 rule', () => {
-    expect(partialDateKind('2025-12')).toBe('month');
-    expect(partialDateKind('1999-00')).toBe('season');
+    expect(requirePartialDateKind('2025-12')).toBe('month');
+    expect(requirePartialDateKind('1999-00')).toBe('season');
     expect(partialDate('2099-00')).toBe('2099-00 season');
   });
 

@@ -16,7 +16,7 @@ import {
   toLocalTimestamp,
   weekdayIndex,
 } from '@/lib/shared/dates';
-import { type PartialDateKind, partialDateKind as kindOf } from '@/lib/shared/partial-date';
+import { type PartialDateKind, partialDateKind } from '@/lib/shared/partial-date';
 
 import { EN_DASH } from './words';
 
@@ -50,8 +50,8 @@ export function dateWithYear(value: string): string {
  * month, a year, a season ("2025-26") or a range of years ("2015-2018"). Throws on anything else
  * ("2025-27", "2025/26"); a value that came through a contract never does.
  */
-export function partialDateKind(value: string): PartialDateKind {
-  const kind = kindOf(value);
+export function requirePartialDateKind(value: string): PartialDateKind {
+  const kind = partialDateKind(value);
   if (kind === null) throw new Error(`format: not a partial date: ${value}`);
   return kind;
 }
@@ -61,7 +61,7 @@ export function partialDateKind(value: string): PartialDateKind {
  * '2025', '2025-26 season', '2015–2018' (an en dash between the years). Throws on any other shape.
  */
 export function partialDate(value: string): string {
-  switch (partialDateKind(value)) {
+  switch (requirePartialDateKind(value)) {
     case 'day':
       return dateWithYear(value);
     case 'month':

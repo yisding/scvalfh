@@ -20,7 +20,7 @@ import { LEAGUES, findDivision, findLeague, getSection, leagueOfDivision } from 
 import { divisionHeading } from '@/lib/config/leagues/labels';
 import { timeOfDay } from '@/lib/format/dates';
 import { renderScore, scoreGlyph, scoreSentence, shootoutPhrases } from '@/lib/format/score';
-import { EN_DASH, MINUS } from '@/lib/format/words';
+import { EN_DASH } from '@/lib/format/words';
 import type { Game, Outcome, PostseasonTag } from '@/lib/model/game';
 import type { LeagueId, TeamSlug } from '@/lib/model/ids';
 import type { SectionConfig, ShootoutInference } from '@/lib/model/league-config';
@@ -402,12 +402,6 @@ export function statusLabelIsTime(game: Game, statusLabel: string): boolean {
   return (
     statusLabel === 'TIME TBA' || (!game.isTimeTba && statusLabel === timeOfDay(game.dateLocal))
   );
-}
-
-/** '+3' / '−7' / '0' for a per-game margin. */
-export function signedMargin(margin: number): string {
-  if (margin === 0) return '0';
-  return margin > 0 ? `+${margin}` : `${MINUS}${Math.abs(margin)}`;
 }
 
 /**

@@ -9,7 +9,7 @@ import {
   ALL_DIVISIONS, CCS, CCS_LEAGUE_IDS, DATA_QUALITY, LEAGUES, LEAGUE_IDS, SECTIONS, assertLeagues, getDivision,
   getLeague, getSection, leagueOfDivision,
 } from '@/lib/config/leagues';
-import { RESERVED_SEGMENTS } from '@/lib/config/routes';
+import { RESERVED_SEGMENTS } from '@/lib/config/reserved-segments';
 import { type SectionConfig } from '@/lib/model/league-config';
 import type { PlayoffStatus, TiebreakStage } from '@/lib/model/standings';
 import { UNCOMPUTABLE, chainsOf, expectViolation } from '@/tests/support/leagues';

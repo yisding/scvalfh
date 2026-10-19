@@ -5,8 +5,9 @@
  * the door. A violation throws a ConfigInvariantError `lib/config/leagues.ts: <message>`.
  *
  * Its runtime imports are leaves and parts: lib/config/invariant.ts (the typed invariant failure),
- * lib/model/league-config.ts (the config's shapes, for its SHOOTOUT_INFERENCES table), lib/config/routes.ts
- * (the reserved route segments), lib/shared/patterns.ts (the date-key and slug RegExps) and ./tiebreak-stages.ts.
+ * lib/model/league-config.ts (the config's shapes, for its SHOOTOUT_INFERENCES table),
+ * lib/config/reserved-segments.ts (the reserved route segments), lib/shared/patterns.ts (the date-key
+ * and slug RegExps) and ./tiebreak-stages.ts.
  */
 
 import type { LeagueId } from '@/lib/model/ids';
@@ -16,7 +17,7 @@ import type {
 import type { PlayoffStatus, TiebreakStage } from '@/lib/model/standings';
 
 import { failInvariant } from '@/lib/config/invariant';
-import { RESERVED_SEGMENTS } from '@/lib/config/routes';
+import { RESERVED_SEGMENTS } from '@/lib/config/reserved-segments';
 import { SHOOTOUT_INFERENCES } from '@/lib/model/league-config';
 import { GUID_RE } from '@/lib/shared/contest-id';
 import { DATE_PATTERN, SLUG_PATTERN } from '@/lib/shared/patterns';
