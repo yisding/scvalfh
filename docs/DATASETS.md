@@ -508,6 +508,6 @@ edited, so the module paths they quote are the names proposed at the time, not f
 | File | What it is | What replaced it |
 |---|---|---|
 | `tests/fixtures/mcal/reference/mcal-bracket.ts.txt` | The reference implementation of the MCAL six-team tournament (seeds by league points, the re-seeded semifinals, the fixed final site) | `lib/engine/postseason.ts`, which ports it onto `Standing[]` and `LeagueConfig.postseason` |
-| `tests/fixtures/mcal/reference/mcal-bracket.test.ts.txt` | Its seven cases on the 2025 MCAL bracket | `tests/lib/engine/mcal-bracket.test.ts` |
+| `tests/fixtures/mcal/reference/mcal-bracket.test.ts.txt` | Its seven cases on the 2025 MCAL bracket | `tests/lib/engine/postseason-mcal-2025.test.ts` |
 | `tests/fixtures/sblive/identity/proto-resolver.ts.txt` | A prototype of id-first si.com side resolution over the captured pages beside it | `lib/sources/sblive/identity.ts` |
 | `tests/fixtures/sblive/identity/sblive-identity.test.draft.ts.txt` | Draft regression tests for that resolution (the statewide namesakes) | `tests/lib/sources/sblive/identity.test.ts`, run against the captured si.com pages in `tests/fixtures/sblive/identity/` |

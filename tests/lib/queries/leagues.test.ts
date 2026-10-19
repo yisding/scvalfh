@@ -8,7 +8,7 @@ import { describe, expect, it } from 'vitest';
 import { LEAGUE_IDS, SECTIONS, TOURNAMENT_LEAGUE_IDS } from '@/lib/config/leagues';
 import { goldenQueries } from '@/tests/support/golden-queries';
 
-describe('data: sections and leagues', () => {
+describe('lib/queries/leagues: sections and leagues', () => {
   it('summarises the nine leagues and the independents in config order, each with its region and its cities', () => {
     const leagues = goldenQueries.data.getLeagueSummaries();
     expect(leagues.map((l) => l.id)).toEqual(['scval', 'bval', 'pcal', 'mcal', 'eal', 'sunset', 'city', 'north-county', 'metro', 'independents']);

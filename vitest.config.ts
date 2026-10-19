@@ -4,6 +4,7 @@ import { defineConfig } from 'vitest/config';
  * Test files that spawn a repo script under tsx (runScript / runRepoScript / runFixtureCli /
  * buildFixtureSnapshot / buildFixturePlayerStats from tests/support/cli.ts). They are the slow,
  * process-bound files, kept in their own project so `vitest run --project spawn` runs just them.
+ * tests/arch/spawn-project.test.ts fails when this list and the files importing those helpers differ.
  */
 const SPAWN = [
   'tests/data/official-files.test.ts',

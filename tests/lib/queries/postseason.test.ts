@@ -8,7 +8,7 @@ import { describe, expect, it } from 'vitest';
 import { getLeague } from '@/lib/config/leagues';
 import { goldenQueries } from '@/tests/support/golden-queries';
 
-describe('data: postseason', () => {
+describe('lib/queries/postseason: postseason', () => {
   it('projects SCVAL with written labels and the four crossover pairings', () => {
     const projection = goldenQueries.data.getPlayoffProjection('scval');
     expect(projection.leagueId).toBe('scval');

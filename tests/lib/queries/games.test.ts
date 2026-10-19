@@ -8,7 +8,7 @@ import { describe, expect, it } from 'vitest';
 import { getTeamBySlug } from '@/lib/registry/teams';
 import { goldenQueries } from '@/tests/support/golden-queries';
 
-describe('data: games', () => {
+describe('lib/queries/games: games', () => {
   it('filters by team, league, division, league games, postseason, status and date', () => {
     const all = goldenQueries.data.getGames();
     expect(all.length).toBe(158);

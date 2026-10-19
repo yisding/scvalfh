@@ -92,6 +92,7 @@ The other structural checks, each a test under `tests/arch/` unless named otherw
 | Per-row links do not prefetch; class strings keep Tailwind candidates whole | `tests/arch/prefetch-policy.test.ts`, `tests/arch/class-join.test.ts` |
 | Count copy handles n === 1; no className cancels the phone bleed | `tests/arch/plural-counts.test.ts`, `tests/arch/sx-bleed.test.ts` |
 | The cron and the deploy workflow agree on what a data commit is | `tests/arch/workflows.test.ts` |
+| The Vitest `spawn` project lists exactly the tests that run a repo script | `tests/arch/spawn-project.test.ts` |
 | The top-level directions and the rule (g) cycles, in the editor | ESLint `import/no-restricted-paths`, `import/no-cycle` (`eslint.config.mjs`) |
 | No server module leaks into a page's browser bundle | `scripts/ci/assert-budgets.ts` (first-load JS per route) |
 

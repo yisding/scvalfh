@@ -7,7 +7,7 @@ import { describe, expect, it } from 'vitest';
 
 import { goldenQueries, regionPhase } from '@/tests/support/golden-queries';
 
-describe('data: season phase per league', () => {
+describe('lib/queries/phase: season phase per league', () => {
   it('SCVAL follows its data window; the others are preseason until they have games', () => {
     expect(goldenQueries.data.getSeasonPhase('scval')).toBe('regular');
     expect(goldenQueries.data.getSeasonPhase('scval', '2026-08-01T15:00:00.000Z')).toBe('preseason');

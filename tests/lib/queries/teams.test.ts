@@ -8,7 +8,7 @@ import { describe, expect, it } from 'vitest';
 import { getTeamById, getTeamBySlug } from '@/lib/registry/teams';
 import { goldenQueries } from '@/tests/support/golden-queries';
 
-describe('data: teams', () => {
+describe('lib/queries/teams: teams', () => {
   it('returns all 102, one division, or one league', () => {
     expect(goldenQueries.data.getTeams().length).toBe(102);
     expect(goldenQueries.data.getTeams('de-anza').length).toBe(7);
@@ -68,7 +68,7 @@ describe('data: teams', () => {
   });
 });
 
-describe('data: head-to-head and form', () => {
+describe('lib/queries/teams: head-to-head and form', () => {
   it('summarises a meeting between two teams', () => {
     const h2h = goldenQueries.data.getHeadToHead('los-altos', 'saint-francis');
     expect(h2h).toBeDefined();

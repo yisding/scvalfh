@@ -8,7 +8,7 @@ import { describe, expect, it } from 'vitest';
 
 import { goldenQueries } from '@/tests/support/golden-queries';
 
-describe('data: identity and freshness', () => {
+describe('lib/queries/provenance: identity and freshness', () => {
   it('loads the snapshot once and exposes it', () => {
     expect(goldenQueries.data.getSnapshot().schemaVersion).toBe(2);
     expect(goldenQueries.data.getSnapshot().teams.length).toBe(102);
@@ -22,7 +22,7 @@ describe('data: identity and freshness', () => {
   });
 });
 
-describe('data: the secondary-source read API', () => {
+describe('lib/queries/provenance: the secondary-source read API', () => {
   it('returns what the snapshot carries, and is safe to call when it carries nothing', () => {
     expect(goldenQueries.data.getDropped()).toEqual([]);
     expect(goldenQueries.data.getSupersededGames()).toEqual({});

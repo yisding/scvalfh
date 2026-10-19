@@ -21,7 +21,7 @@ import { loadQueries } from '@/tests/support/queries';
 import { tempFile, goldenPath, readJson } from '@/tests/support/repo';
 import { goldenQueries, regionPhase } from '@/tests/support/golden-queries';
 
-describe('data: standings and derived facts', () => {
+describe('lib/queries/standings: standings and derived facts', () => {
   it('returns a division table in finishing order', () => {
     const table = goldenQueries.data.getStandings('de-anza');
     expect(table.length).toBe(7);
@@ -112,7 +112,7 @@ describe('data: standings and derived facts', () => {
  * beat Lassen, so the two are level on 3 points at the top; Pleasant Valley at Corning (Sep 29) is
  * past with no score, and Davis–Pleasant Valley (Oct 28) is still to come.
  */
-describe('data: an EAL table with results', () => {
+describe('lib/queries/standings: an EAL table with results', () => {
   let eal: typeof goldenQueries.data;
   let pending: Game;
 
@@ -216,7 +216,7 @@ describe('data: an EAL table with results', () => {
  * at Great Oak is flagged by MaxPreps but counts for neither table; Harvard-Westlake–Glendora counts for the
  * group's table though MaxPreps marks it non-league.
  */
-describe('data: Southern California tables with results', () => {
+describe('lib/queries/standings: Southern California tables with results', () => {
   let socal: typeof goldenQueries.data;
   let henry: Game;
   let crossDivision: Game;
