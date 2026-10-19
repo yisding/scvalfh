@@ -44,7 +44,7 @@ export function LeaguePanel({ panel }: LeaguePanelProps) {
     <section data-scope={panel.id} aria-labelledby={headingId} className={STACK}>
       <SectionHeader id={headingId} kicker={`${panel.shortName} · ${panel.name}`} />
 
-      <LeagueHealthNote leagueId={panel.id} />
+      <LeagueHealthNote health={panel.health} />
       <PhaseLead lead={panel.lead} />
 
       {/* A day that was played and reported nothing is shown, not hidden (DESIGN §8). */}

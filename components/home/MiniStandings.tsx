@@ -3,7 +3,6 @@ import { LadderLineRow, TeamNameCell, TeamRowLink } from '@/components/standings
 import { GoalDiffCell } from '@/components/ui/GoalDiffBar';
 import PlaceMark from '@/components/ui/PlaceMark';
 import SectionHeader from '@/components/ui/SectionHeader';
-import { getDivision, getLeague, isDefaultRegion, regionOf } from '@/lib/config/leagues';
 import { monthDay } from '@/lib/format/dates';
 import { EM_DASH } from '@/lib/format/words';
 import type { MiniDivisionView, MiniRow } from '@/views/home/mini-standings';
@@ -26,6 +25,9 @@ import { biggestGoalDiff } from '@/views/standings/goal-diff';
  * its numbers — never `0-0-0`, never ranked by merit — and is still a link.
  *
  * A single-division league (PCAL, MCAL, EAL) shows NO division label: its kicker is `League table`.
+ * The kicker, the caption's subject (the full table's words, review 2026-10-06) and how many rows
+ * show (`miniShownCount`: a place shared at the cutoff stays whole) come from the view,
+ * views/home/mini-standings.ts.
  *
  * The GD plot keys off the card's width (`@container`): below a 23.4375rem card (375px at the
  * default text size, wider under a larger one) only the signed numeral shows, and the sentences
@@ -52,28 +54,11 @@ export interface MiniStandingsProps {
 
 const COLS = 6;
 
-/**
- * How many rows the mini table shows: `miniRows`, stretched to keep a place shared AT the cutoff
- * whole — a parent never sees a rival in "T4" and their own team, equally 4th, missing. Only
- * teams with results and the SAME shared place extend it, so an unplayed table (or the next tied
- * cluster) never stretches the card.
- */
-export function miniShownCount(
-  rows: readonly Pick<MiniRow, 'hasResults' | 'shared' | 'place'>[],
-  miniRows: number,
-): number {
-  let n = Math.min(miniRows, rows.length);
-  const last = rows[n - 1];
-  if (!last || !last.hasResults || !last.shared) return n;
-  while (n < rows.length && rows[n].hasResults && rows[n].shared && rows[n].place === last.place) n++;
-  return n;
-}
-
 export function MiniStandings({ division, legend, className }: MiniStandingsProps) {
   const { href, home } = division;
   // A single-division league (no heading) shows no division label.
   const showDivisionLabel = division.heading !== null;
-  const shown = division.rows.slice(0, miniShownCount(division.rows, home.miniRows));
+  const shown = division.rows.slice(0, division.shown);
   const where = showDivisionLabel && division.heading ? division.heading : division.leagueShort;
   const through = division.throughDate;
   // The labelled line goes after PLACE `home.lineAfter`, counted over the shown rows
@@ -83,31 +68,18 @@ export function MiniStandings({ division, legend, className }: MiniStandingsProp
     home.lineAfter,
   );
   const lineAt = lineAfter === null ? -1 : lineAfter - 1;
-  // A group of independents (the LA independents, DESIGN §24.10) is in no league: its kicker is
-  // 'Table' and its caption names the group in full, never 'LA league standings'.
-  const league = getLeague(getDivision(division.id).leagueId);
-  const kicker = showDivisionLabel && division.heading ? division.heading : league.independents ? 'Table' : 'League table';
-  // "Division" only for NorCal: the San Diego Section calls Palomar or Metro Mesa a league, and its
-  // "Division I" / "Division II" are playoff tiers (standings-view.ts tableWords, review 2026-10-06).
-  const subject = showDivisionLabel && division.heading
-    ? isDefaultRegion(regionOf(league.id))
-      ? `${division.heading} Division league standings`
-      : `${division.heading} league standings`
-    : league.independents
-      ? `${league.name} standings`
-      : `${division.leagueShort} league standings`;
   return (
     <section className={className}>
       <SectionHeader
         as="h3"
-        kicker={kicker}
+        kicker={division.kicker}
         meta={through ? `through ${monthDay(through)}` : 'no league games yet'}
         action={{ href, label: 'Full table' }}
       />
       <div className="sx-card sx-flush sx-bleed @container">
         <table className="sx-table text-cell">
           <caption className="sr-only">
-            {subject}
+            {division.captionSubject}
             {through ? ` through ${monthDay(through)}` : ', no league games played yet'} — top {shown.length} of{' '}
             {division.total}
           </caption>

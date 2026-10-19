@@ -1,10 +1,6 @@
 import MissingValue from '@/components/ui/MissingValue';
 import TeamMonogram from '@/components/ui/TeamMonogram';
-import type {
-  HistoryBracketDivision, HistoryBracketGame, HistoryBracketRound, HistoryBracketSide,
-} from '@/lib/datasets/history';
-import { getTeamBySlug } from '@/lib/registry/teams';
-import { gameNote, gameSentence, gameSentenceTail, roundByes, roundDate, sideName } from '@/views/history/bracket';
+import type { BracketCardView, BracketDivisionView, BracketLineView } from '@/views/history/bracket';
 
 /**
  * One division of a 2025 section bracket on /history/2025-26 (DESIGN §3.9), drawn the way the live
@@ -17,27 +13,27 @@ import { gameNote, gameSentence, gameSentenceTail, roundByes, roundDate, sideNam
  * spread with `justify-around` so each pair points at the game it feeds, with the same 1px rail and
  * stubs as the live bracket. The winner's line is 600 weight with a 2px ink rule on its left, never
  * colour alone. Each card is one sentence for a screen reader ("Los Gatos beat Saint Francis 3-0.");
- * the two drawn lines are hidden from it.
+ * the two drawn lines are hidden from it. Every word and school arrives resolved
+ * (views/history/bracket.ts `bracketDivisionView`).
  */
 export interface HistoryBracketProps {
-  division: HistoryBracketDivision;
+  division: BracketDivisionView;
   /** Names the list for a screen reader: "CCS Division 1 bracket, 2025". */
   label: string;
 }
 
-function Line({ side, goals, won }: { side: HistoryBracketSide; goals: number | null; won: boolean }) {
-  const team = getTeamBySlug(side.slug);
+function Line({ line: { seed, team, name, goals, won } }: { line: BracketLineView }) {
   const weight = won ? 'font-semibold text-ink' : 'font-normal text-ink-2';
   return (
     <span
       className="flex items-center gap-2 py-1 pr-3 pl-2"
       style={won ? { boxShadow: 'inset 2px 0 0 var(--sx-text)' } : undefined}
     >
-      <span className="sx-num w-5 shrink-0 text-right text-meta text-ink-3">{side.seed}</span>
+      <span className="sx-num w-5 shrink-0 text-right text-meta text-ink-3">{seed}</span>
       {team ? <TeamMonogram team={team} size={20} /> : <span className="inline-block w-5 shrink-0" />}
       {/* The registry's short name, as the live bracket draws it ("RBV", "San Dieguito"): five round
           columns leave a line little room. The screen-reader sentence keeps the full name. */}
-      <span className={`min-w-0 flex-1 truncate text-meta ${weight}`}>{team?.shortName ?? sideName(side)}</span>
+      <span className={`min-w-0 flex-1 truncate text-meta ${weight}`}>{name}</span>
       <span className={`sx-num shrink-0 text-meta ${weight}`}>
         {goals === null ? <MissingValue words="score not posted" /> : goals}
       </span>
@@ -53,17 +49,17 @@ function Line({ side, goals, won }: { side: HistoryBracketSide; goals: number | 
  * above it (gameSentence says how the game was decided and that no score was posted,
  * gameSentenceTail a moved date and the site), and in the `title` for a pointer.
  */
-function Card({ game, round, noted }: { game: HistoryBracketGame; round: HistoryBracketRound; noted: boolean }) {
-  const note = gameNote(game, round);
+function Card({ card, noted }: { card: BracketCardView; noted: boolean }) {
+  const { note } = card;
   return (
     <div className="sx-card min-w-0 flex-1 py-1">
       <p className="sr-only">
-        {gameSentence(game)}
-        {gameSentenceTail(game, round)}
+        {card.sentence}
+        {card.tail}
       </p>
       <div aria-hidden="true">
-        <Line side={game.top} goals={game.score?.[0] ?? null} won={game.winner === 'top'} />
-        <Line side={game.bottom} goals={game.score?.[1] ?? null} won={game.winner === 'bottom'} />
+        <Line line={card.top} />
+        <Line line={card.bottom} />
         {noted ? (
           <span className="block h-[1.375rem] truncate px-2 pt-0.5 text-micro text-ink-3" title={note ?? undefined}>
             {note}
@@ -109,9 +105,8 @@ const COLUMNS = {
 const cx = (...parts: (string | null | false)[]) => parts.filter(Boolean).join(' ');
 
 export function HistoryBracket({ division, label }: HistoryBracketProps) {
-  const { rounds } = division;
+  const { rounds, noted } = division;
   const at = COLUMNS[rounds.length >= 4 ? 'lg' : 'md'];
-  const noted = rounds.some((round) => round.games.some((game) => gameNote(game, round) !== null));
   return (
     <ol
       aria-label={label}
@@ -119,11 +114,11 @@ export function HistoryBracket({ division, label }: HistoryBracketProps) {
       style={{ '--sx-rounds': `repeat(${rounds.length}, minmax(0, 1fr))` } as React.CSSProperties}
     >
       {rounds.map((round, roundIndex) => {
-        const byes = roundByes(division, roundIndex);
+        const { byes } = round;
         return (
           <li key={round.name} className={cx('flex min-w-0 flex-col', at.round)}>
             <h4 className={cx('m-0 mb-3 text-meta font-semibold text-ink', roundIndex > 0 && at.heading)}>
-              {round.name} <span className="font-normal text-ink-2">&middot; {roundDate(round)}</span>
+              {round.name} <span className="font-normal text-ink-2">&middot; {round.date}</span>
             </h4>
             <ol
               className={cx(
@@ -132,12 +127,12 @@ export function HistoryBracket({ division, label }: HistoryBracketProps) {
                 roundIndex > 0 && at.rail,
               )}
             >
-              {round.games.map((game) => (
-                <li key={`${game.top.slug}-${game.bottom.slug}`} className="flex min-w-0 items-center">
+              {round.games.map((card) => (
+                <li key={card.key} className="flex min-w-0 items-center">
                   {roundIndex > 0 ? (
                     <span className={cx('hidden w-4 shrink-0 border-t border-divider', at.stub)} aria-hidden="true" />
                   ) : null}
-                  <Card game={game} round={round} noted={noted} />
+                  <Card card={card} noted={noted} />
                   {roundIndex < rounds.length - 1 ? (
                     <span className={cx('hidden w-4 shrink-0 border-t border-divider', at.stub)} aria-hidden="true" />
                   ) : null}
@@ -146,7 +141,7 @@ export function HistoryBracket({ division, label }: HistoryBracketProps) {
             </ol>
             {byes.length > 0 ? (
               <p className={cx('m-0 mt-2 text-micro text-ink-3', at.byes)}>
-                Byes: {byes.map((s) => `${sideName(s)} (${s.seed})`).join(', ')}
+                Byes: {byes.join(', ')}
               </p>
             ) : null}
           </li>

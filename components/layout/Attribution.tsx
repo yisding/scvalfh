@@ -7,7 +7,7 @@ import { LEAGUES_PROPER, SECTIONS, getSection } from '@/lib/config/leagues';
 import { SOURCE_LINKS } from '@/lib/config/source-urls';
 import { listWords } from '@/lib/format/words';
 import type { LeagueConfig } from '@/lib/model/league-config';
-import { getSitePhase } from '@/lib/queries/phase';
+import type { SeasonPhase } from '@/lib/model/season';
 import { DATA_CORRECTIONS_URL, SITE_SCOPE_NOTE } from '@/views/site/site';
 
 /**
@@ -31,7 +31,7 @@ import { DATA_CORRECTIONS_URL, SITE_SCOPE_NOTE } from '@/views/site/site';
  * are in (SectionConfig.rulesSource: the Blue Book's Article 200, the Green Book's Bylaw 2000.1). The
  * not-affiliated line names every league and every section (CIF-CCS … CIF-SS, CIF-SDS) from config.
  *
- * Once every league's season is over (`getSitePhase() === 'complete'`) the stamp says so instead
+ * Once every league's season is over (`sitePhase === 'complete'`, the layout's ChromeView) the stamp says so instead
  * of turning into the stale warning. Always visible, never a tooltip. The attribution posture in
  * SPEC §6 is the reason it is not negotiable: we store derived records, deep-link back on every
  * row, and say on every page where the numbers came from.
@@ -41,6 +41,8 @@ export interface AttributionProps {
   snapshotAt: string;
   /** The instant staleness is measured against (the build instant). */
   now?: string;
+  /** The whole site's phase (views/site/chrome-view.ts `ChromeView.sitePhase`). */
+  sitePhase: SeasonPhase;
   className?: string;
 }
 
@@ -72,8 +74,8 @@ function joined(items: readonly React.ReactNode[]): React.ReactNode[] {
   ));
 }
 
-export function Attribution({ snapshotAt, now, className }: AttributionProps) {
-  const seasonComplete = getSitePhase() === 'complete';
+export function Attribution({ snapshotAt, now, sitePhase, className }: AttributionProps) {
+  const seasonComplete = sitePhase === 'complete';
   // The leagues only: the LA independents are three schools in no league, not an organization
   // (DESIGN §24.9); their alignment and rules sentences are the scope note's and the Section's.
   // Each `CIF-XX` code is one nowrap span, so a phone never breaks it at its hyphen ("CIF-" / "NS");

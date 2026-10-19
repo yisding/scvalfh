@@ -12,8 +12,8 @@
 import { getFetchedAt } from '@/lib/datasets/snapshot';
 import { ordinal, recordString, signedGd, streakString } from '@/lib/format/numbers';
 import { EM_DASH } from '@/lib/format/words';
+import type { StandingContext } from '@/lib/model/standings';
 import type { Team } from '@/lib/model/team';
-import type { StandingContext } from '@/lib/queries/standings';
 import { nextOfficialFixture } from '@/views/shared/official-fixtures';
 import { asOfLeagueGamesWords } from '@/views/site/og-theme';
 

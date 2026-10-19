@@ -21,10 +21,11 @@ import { shortDate } from '@/lib/format/dates';
 import { recordString } from '@/lib/format/numbers';
 import { plural } from '@/lib/format/words';
 import type { Game } from '@/lib/model/game';
+import type { LeagueHealth } from '@/lib/model/health';
 import type { DivisionId, LeagueId, RegionId } from '@/lib/model/ids';
 import type { RegionConfig } from '@/lib/model/league-config';
 import { getGames, getLastLeagueResultDate, getNonLeagueFinalsPlayed } from '@/lib/queries/games';
-import { type LeagueSummary, getLeagueSummaries, getLeagueSummary } from '@/lib/queries/leagues';
+import { type LeagueSummary, getLeagueHealth, getLeagueSummaries, getLeagueSummary } from '@/lib/queries/leagues';
 import { getCrossCheck } from '@/lib/queries/provenance';
 import {
   getCoLeaders, getGamesPlayedSpread, getGoalDiffDomain, getMissingOfficialResults, getStandingContext,
@@ -44,6 +45,8 @@ export interface StandingsPageView {
   league: LeagueSummary;
   /** `LeagueConfig.membershipNote`, printed under the page header (EAL); null for most leagues. */
   membershipNote: string | null;
+  /** The league's data health, which the page's first table prints (LeagueHealthNote). */
+  health: LeagueHealth;
   views: DivisionView[];
   leaders: LeaderLine[];
   /** The latest league-result date across the divisions (the metadata's "League games through …"), or null before any. */
@@ -129,6 +132,7 @@ export function buildStandingsPageView(leagueId: LeagueId): StandingsPageView {
     asOf: getFetchedAt(),
     league,
     membershipNote: getLeague(leagueId).membershipNote,
+    health: getLeagueHealth(leagueId),
     views,
     leaders: league.divisions.map((d) => leaderLine(d.id, d.heading)),
     throughDate: views

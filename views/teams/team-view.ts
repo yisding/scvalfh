@@ -24,14 +24,12 @@ import type { OfficialFixture } from '@/lib/model/fixture';
 import type { Game, Outcome, Record3 } from '@/lib/model/game';
 import type { DivisionId, LeagueId, RegionId, SectionId, TeamSlug } from '@/lib/model/ids';
 import type { LeagueRules, PostseasonConfig } from '@/lib/model/league-config';
-import type { Standing } from '@/lib/model/standings';
+import type { Standing, StandingContext } from '@/lib/model/standings';
 import type { Team } from '@/lib/model/team';
 import { getGames, getLastLeagueResultDate, getOfficialFixtures } from '@/lib/queries/games';
 import { type LeagueSummary, getTeamsGrouped } from '@/lib/queries/leagues';
 import { type TeamPostseasonLine, getTeamPostseasonLine } from '@/lib/queries/postseason';
-import {
-  type StandingContext, getStandingContext, getStandingFor, getStandings,
-} from '@/lib/queries/standings';
+import { getStandingContext, getStandingFor, getStandings } from '@/lib/queries/standings';
 import { getHeadToHead, getTeamForm, getTeams } from '@/lib/queries/teams';
 import { getTeamBySlug } from '@/lib/registry/teams';
 import { byDateLocal, sideOutcome } from '@/lib/shared/game';

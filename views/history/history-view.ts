@@ -25,19 +25,33 @@
  *
  * Every line then prints the way the rest of the site prints a player (the roster, /clubs,
  * /commits, /leaders): the school, then the grade in words ("Senior"), then the position.
+ *
+ * The page's league cards are built here too (`buildHistoryPageView`): every table row, award line
+ * and champion carries its school already resolved (`team`, `school`), so the components under
+ * components/history/ never read the archive or the registry themselves.
  */
 
-import { getLeague, getSection, isIndependentLeague } from '@/lib/config/leagues';
+import { getLeague, getSection, isIndependentLeague, leagueOfDivision } from '@/lib/config/leagues';
 import {
-  type HistoryAwards, type HistoryPlayer, getAvailableHistoryLeagues, getHistoryBrackets, getHistoryLeagues,
-  getHistorySeason, getUnavailableHistoryLeagues, historySchoolName,
+  type AvailableLeagueHistory, type BracketSectionId, type HistoryAwards, type HistoryPlayer, type HistoryRow,
+  type UnavailableLeagueHistory, bracketSectionName, getAvailableHistoryLeagues, getHistoryBracketFor,
+  getHistoryBrackets, getHistoryChampions, getHistoryDivisionChanges, getHistoryLeagues, getHistorySeason,
+  getHistoryUnpublishedTies, getUnavailableHistoryLeagues, historySchoolName,
 } from '@/lib/datasets/history';
 import { getEnrichedTeamRoster, getRosters } from '@/lib/datasets/rosters';
 import { listWords } from '@/lib/format/words';
-import type { LeagueId, TeamSlug } from '@/lib/model/ids';
-import { teamsInLeague } from '@/lib/registry/teams';
+import type { DivisionId, LeagueId, TeamSlug } from '@/lib/model/ids';
+import type { Team } from '@/lib/model/team';
+import { getTeamBySlug, teamsInLeague } from '@/lib/registry/teams';
 import { positionFromText } from '@/views/shared/words/position';
 import type { PageMetadataInput } from '@/views/site/page-metadata';
+
+import { type SectionBracketView, sectionBracketView } from './bracket';
+
+/** A school the registry tracks, as the archive's components draw it (mascot tile, name, link); null for one it does not. */
+export type HistoryTeam = Pick<Team, 'slug' | 'name' | 'shortName'>;
+
+const historyTeam = (slug: TeamSlug | null): HistoryTeam | null => (slug ? (getTeamBySlug(slug) ?? null) : null);
 
 /** One award winner or team-list player, as the page prints them. */
 export interface AwardLine {
@@ -49,6 +63,8 @@ export interface AwardLine {
   /** The registry name, or the document's spelling for a school the registry does not have. */
   school: string;
   slug: TeamSlug | null;
+  /** The school's registry team, whose page the school links to; null for a school it does not have. */
+  team: HistoryTeam | null;
 }
 
 export interface OverallAwardView {
@@ -107,6 +123,7 @@ export function awardLine(p: HistoryPlayer): AwardLine {
     year: p.year,
     school: historySchoolName(p.slug, p.school),
     slug: p.slug,
+    team: historyTeam(p.slug),
   };
 }
 
@@ -175,9 +192,126 @@ export function overallAwards(leagueId: LeagueId, awards: HistoryAwards): Overal
           rosterYear(split.slug, split.player),
         school: historySchoolName(split.slug, ''),
         slug: split.slug,
+        team: historyTeam(split.slug),
       },
     };
   });
+}
+
+/** One division's awards (varsity or JV) as AwardsBlock prints them: the overall awards, then the three lists. */
+export interface AwardsView {
+  overall: OverallAwardView[];
+  firstTeam: AwardLine[];
+  secondTeam: AwardLine[];
+  honorableMention: AwardLine[];
+}
+
+/** A division's awards in the site's words (`overallAwards`, `awardLine`), for AwardsBlock. */
+export function awardsView(awards: HistoryAwards): AwardsView {
+  return {
+    overall: overallAwards(leagueOfDivision(awards.division).id, awards),
+    firstTeam: awards.firstTeam.map(awardLine),
+    secondTeam: awards.secondTeam.map(awardLine),
+    honorableMention: awards.honorableMention.map(awardLine),
+  };
+}
+
+// ---------------------------------------------------------------- the league cards
+
+/** One archive standings row, its school resolved: `school` is `historySchoolName`'s, `team` the registry's. */
+export interface HistoryRowView extends HistoryRow {
+  team: HistoryTeam | null;
+  school: string;
+}
+
+function rowView(row: HistoryRow): HistoryRowView {
+  return { ...row, team: historyTeam(row.slug), school: historySchoolName(row.slug, row.name) };
+}
+
+/** True when any of a league's tables publishes an overall record (BVAL's sheet; never SCVAL's). */
+export function leagueHasOverall(tables: ReadonlyArray<ReadonlyArray<HistoryRow>>): boolean {
+  return tables.some((rows) => rows.some((r) => r.overallRecord !== null));
+}
+
+/** One division of a league with final standings: its tables and awards, every school resolved. */
+export interface HistoryDivisionView {
+  division: DivisionId;
+  label: string;
+  standings: { varsity: HistoryRowView[]; jv: HistoryRowView[] };
+  awards: { varsity: AwardsView | null; jv: AwardsView | null };
+}
+
+/** A league with final standings (components/history/AvailableLeague.tsx). */
+export interface AvailableLeagueView {
+  id: LeagueId;
+  status: 'available';
+  provenance: AvailableLeagueHistory['provenance'];
+  divisions: HistoryDivisionView[];
+  /**
+   * Whether the league's tables draw an Overall column: the LEAGUE's answer (`leagueHasOverall`), so
+   * every table of one league lines its record columns up (HistoryStandingsTable `hasOverall`).
+   */
+  hasOverall: boolean;
+  /** Each division's first-place varsity row (`getHistoryChampions`). */
+  champions: Array<{ division: DivisionId; team: HistoryTeam | null; school: string; leagueRecord: string }>;
+  /** Teams the source lists in another division than the registry does today (`getHistoryDivisionChanges`). */
+  changes: Array<{ slug: TeamSlug; name: string; historyDivision: DivisionId; registryDivision: DivisionId }>;
+  /** Varsity rows whose source record has no ties field (`getHistoryUnpublishedTies`). */
+  unpublishedTies: Array<{ school: string; leagueRecord: string }>;
+}
+
+/** A league marked unavailable (components/history/UnavailableLeague.tsx). */
+export interface UnavailableLeagueView {
+  id: LeagueId;
+  status: 'unavailable';
+  entry: UnavailableLeagueHistory;
+  /** The section bracket on this page the card points to; null for a group of independents or a section with none. */
+  bracket: { id: BracketSectionId; name: string } | null;
+}
+
+export type HistoryLeagueView = AvailableLeagueView | UnavailableLeagueView;
+
+function availableLeagueView(id: LeagueId, entry: AvailableLeagueHistory): AvailableLeagueView {
+  const divisions = entry.divisions;
+  return {
+    id,
+    status: 'available',
+    provenance: entry.provenance,
+    divisions: divisions.map((d) => ({
+      division: d.division,
+      label: d.label,
+      standings: { varsity: d.standings.varsity.map(rowView), jv: d.standings.jv.map(rowView) },
+      awards: {
+        varsity: d.awards.varsity ? awardsView(d.awards.varsity) : null,
+        jv: d.awards.jv ? awardsView(d.awards.jv) : null,
+      },
+    })),
+    // The Overall column too: every standings table of a league draws it or none does, so the
+    // League and Overall columns sit at one x down the league's section and across its divisions.
+    hasOverall: leagueHasOverall(divisions.flatMap((d) => [d.standings.varsity, d.standings.jv])),
+    champions: getHistoryChampions(id).map(({ division, row }) => ({
+      division,
+      team: historyTeam(row.slug),
+      school: historySchoolName(row.slug, row.name),
+      leagueRecord: row.leagueRecord,
+    })),
+    changes: getHistoryDivisionChanges(id),
+    unpublishedTies: getHistoryUnpublishedTies(id).map((r) => ({
+      school: historySchoolName(r.slug, r.name),
+      leagueRecord: r.leagueRecord,
+    })),
+  };
+}
+
+function unavailableLeagueView(id: LeagueId, entry: UnavailableLeagueHistory): UnavailableLeagueView {
+  // The CCS and San Diego Section brackets are on this page: the card says where.
+  const bracket = isIndependentLeague(id) ? null : getHistoryBracketFor(id);
+  return {
+    id,
+    status: 'unavailable',
+    entry,
+    bracket: bracket ? { id: bracket.id, name: bracketSectionName(bracket.id) } : null,
+  };
 }
 
 /**
@@ -191,8 +325,10 @@ export interface HistoryPageView {
   season: string;
   /** The page's title, which is also its og:title: '2025-26 final standings'. */
   title: string;
-  leagues: ReturnType<typeof getHistoryLeagues>;
-  brackets: ReturnType<typeof getHistoryBrackets>;
+  /** Every league's card, in lib/config/leagues.ts order. */
+  leagues: HistoryLeagueView[];
+  /** Each section's bracket block, with the league it follows. */
+  brackets: SectionBracketView[];
   /** "the CCS and San Diego Section": the sections whose brackets the page shows. */
   bracketSections: string;
   /** "SCVAL and BVAL": the leagues whose final standings the page carries. */
@@ -220,8 +356,10 @@ export function buildHistoryPageView(): HistoryPageView {
   return {
     season,
     title: `${season} final standings`,
-    leagues: getHistoryLeagues(),
-    brackets,
+    leagues: getHistoryLeagues().map(({ id, entry }) =>
+      entry.status === 'available' ? availableLeagueView(id, entry) : unavailableLeagueView(id, entry),
+    ),
+    brackets: brackets.map(sectionBracketView),
     bracketSections: listWords(brackets.map((b) => getSection(b.id).briefLabel)),
     available: listWords(available.map((l) => short(l.id))),
     unavailableSubject: unavailableLeagues.length

@@ -1,9 +1,10 @@
 import type { ImageResponse } from 'next/og';
 
-import type { LeagueSummary } from '@/lib/queries/leagues';
 import { OG, OG_SIZE } from '@/views/site/og-theme';
 import { SITE_WORDMARK } from '@/views/site/site';
-import { type LeagueStandingsCardModel, leagueStandingsCardModel } from '@/views/standings/standings-card';
+import {
+  type LeagueStandingsCardModel, type LeagueStandingsCardSource, leagueStandingsCardModel,
+} from '@/views/standings/standings-card';
 
 import { ogPng } from './png';
 import { OgFooter, OgFrame, OgKicker, OgRule, OgTitle } from './primitives';
@@ -179,6 +180,6 @@ export function LeagueStandingsCard({ model }: { model: LeagueStandingsCardModel
 }
 
 /** The league standings card as the PNG both `[league]` OG routes return. */
-export function leagueStandingsImage(league: LeagueSummary): ImageResponse {
+export function leagueStandingsImage(league: LeagueStandingsCardSource): ImageResponse {
   return ogPng(<LeagueStandingsCard model={leagueStandingsCardModel(league)} />);
 }

@@ -9,7 +9,7 @@ import { divisionGames, missingOfficialResults, sortStandings } from '@/lib/engi
 import type { MissingOfficialRow } from '@/lib/engine/standings';
 import type { DivisionId, TeamId, TeamSlug } from '@/lib/model/ids';
 import type { SeasonPhase } from '@/lib/model/season';
-import type { Standing } from '@/lib/model/standings';
+import type { Standing, StandingContext } from '@/lib/model/standings';
 import type { Team } from '@/lib/model/team';
 import { getTeamById, getTeamBySlug } from '@/lib/registry/teams';
 import { localDateKey } from '@/lib/shared/dates';
@@ -42,29 +42,6 @@ export function getGoalDiffDomain(division: DivisionId): number {
 }
 
 // ---------------------------------------------------------------- derived per-row facts (§5.10)
-
-export interface StandingContext {
-  teamId: TeamId;
-  /**
-   * division.gamesPerTeam. null where the league has no fixed schedule (the Sunset: its ten teams meet 0, 1
-   * or 2 times, and a Sunset game is one MaxPreps marks as a league game), so no reader may print "of N",
-   * LEFT or MAX for it (DESIGN-socal §2.1.7).
-   */
-  scheduled: number | null;
-  /** computed.gp */
-  counted: number;
-  /**
-   * max(0, scheduled − counted): league games with no counted result yet — still to play, or played and not
-   * reported. null with `scheduled`.
-   */
-  remaining: number | null;
-  /** pts + points.win × remaining. A ceiling, not a projection. null with `scheduled`. */
-  maxPts: number | null;
-  /** Rows of kind 'missing' from missingOfficialResults() (lib/engine/standings/missing.ts) that involve this team. */
-  missingPast: number;
-  /** Counted games whose score came from si.com (provenance.scores === 'sblive'). */
-  backfilled: number;
-}
 
 function missingRows(division: DivisionId, asOf?: string): MissingOfficialRow[] {
   const today = localDateKey(asOf ?? snapshot.fetchedAt);

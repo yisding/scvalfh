@@ -1,6 +1,5 @@
 import type { Game } from '@/lib/model/game';
 import type { LeagueId } from '@/lib/model/ids';
-import { getScoresLandingDate } from '@/lib/queries/games';
 import { dayNumber } from '@/lib/shared/dates';
 import type { RecordsByGame } from '@/views/shared/game-records';
 
@@ -40,6 +39,11 @@ export interface ScheduleListProps {
   scopeLeague?: LeagueId | null;
   /** The league records the games print before kickoff (GameList `records`), from the page's view. */
   records?: RecordsByGame;
+  /**
+   * The Scores tab's landing date for this list (lib/queries/games `getScoresLandingDate`, scoped to
+   * `scopeLeague`), from the page's view: the days around it are always laid out.
+   */
+  landingDate: string | null;
   className?: string;
   id?: string;
 }
@@ -68,10 +72,10 @@ function cardEstimate(games: readonly Game[]): string {
   return games.some((g) => g.status === 'final') ? '15rem' : '11rem';
 }
 
-export function ScheduleList({ groups, scopeLeague = null, records, className, id }: ScheduleListProps) {
-  // The date BottomTabBar's Scores tab aims at on this league's list (F-1a): one helper for both.
-  const landing = getScoresLandingDate(scopeLeague ? { league: scopeLeague } : {});
-  const landingDay = landing ? dayNumber(landing) : null;
+export function ScheduleList({ groups, scopeLeague = null, records, landingDate, className, id }: ScheduleListProps) {
+  // The date BottomTabBar's Scores tab aims at on this league's list (F-1a): one helper for both,
+  // read by the page's view (views/schedule/schedule-view.ts) and by the chrome's (views/site/chrome-view.ts).
+  const landingDay = landingDate ? dayNumber(landingDate) : null;
   return (
     // `max-md:mt-4`: on a phone the groups carry no top margin of their own (below), so the gap
     // between the rail and the first SHOWN group lives here, where it survives a filter hiding

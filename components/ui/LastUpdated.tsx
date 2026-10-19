@@ -27,7 +27,7 @@ import { hoursBetween, toLocalTimestamp } from '@/lib/shared/dates';
  * old stamp is not a failure. Then the stamp's stale state reads `Season complete — final update
  * <date>.` in the quiet grey instead of the alarm, and the top bar keeps its plain "Updated …"
  * stamp instead of the pill (SPEC §10.2; SiteHeader and Attribution pass
- * `getSitePhase() === 'complete'`).
+ * `sitePhase === 'complete'`, from the layout's views/site/chrome-view.ts).
  */
 export interface LastUpdatedProps {
   /** ISO UTC instant — `snapshot.fetchedAt`. */

@@ -83,14 +83,14 @@ export default function HistoryPage() {
       <DivisionTabs variant="bar" tabs={tabs} label="Jump to a league" className="mt-4" />
 
       <div className="mt-8 grid gap-y-section md:mt-10 md:gap-y-section-lg">
-        {leagues.flatMap(({ id, entry }) => [
-          entry.status === 'available' ? (
-            <AvailableLeague key={id} leagueId={id} entry={entry} season={season} />
+        {leagues.flatMap((league) => [
+          league.status === 'available' ? (
+            <AvailableLeague key={league.id} view={league} season={season} />
           ) : (
-            <UnavailableLeague key={id} leagueId={id} entry={entry} season={season} />
+            <UnavailableLeague key={league.id} view={league} season={season} />
           ),
-          ...brackets.filter((b) => b.afterLeague === id).map((b) => (
-            <SectionBracketBlock key={b.id} id={b.id} bracket={b.bracket} season={season} />
+          ...brackets.filter((b) => b.afterLeague === league.id).map((b) => (
+            <SectionBracketBlock key={b.id} view={b} season={season} />
           )),
         ])}
       </div>

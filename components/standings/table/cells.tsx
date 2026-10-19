@@ -4,8 +4,7 @@ import MissingValue from '@/components/ui/MissingValue';
 import PlaceMark from '@/components/ui/PlaceMark';
 import { EM_DASH, formStripName } from '@/lib/format/words';
 import type { DivisionId } from '@/lib/model/ids';
-import type { Standing } from '@/lib/model/standings';
-import type { StandingContext } from '@/lib/queries/standings';
+import type { Standing, StandingContext } from '@/lib/model/standings';
 import type { StandingsRowData } from '@/views/standings/types';
 
 import type { StandingsColumn } from './desktop-columns';

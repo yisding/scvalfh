@@ -1,5 +1,5 @@
 import type { DivisionId, TeamId, TeamSlug } from '@/lib/model/ids';
-import type { StandingContext } from '@/lib/queries/standings';
+import type { StandingContext } from '@/lib/model/standings';
 import type { StandingsRowData } from '@/views/standings/types';
 
 import type { StandingsVariantProps } from './cells';

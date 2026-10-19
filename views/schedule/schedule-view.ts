@@ -17,9 +17,10 @@ import { isIndependentLeague, regionIdSuffix } from '@/lib/config/leagues';
 import { standaloneName } from '@/lib/config/leagues/labels';
 import { monthDay } from '@/lib/format/dates';
 import type { Game } from '@/lib/model/game';
+import type { LeagueHealth } from '@/lib/model/health';
 import type { LeagueId, RegionId } from '@/lib/model/ids';
-import { getGamesByDate } from '@/lib/queries/games';
-import { getLeagueSummary } from '@/lib/queries/leagues';
+import { getGamesByDate, getScoresLandingDate } from '@/lib/queries/games';
+import { getLeagueHealth, getLeagueSummary } from '@/lib/queries/leagues';
 import { byDateLocal } from '@/lib/shared/game';
 import { type RecordsByGame, recordsByGame } from '@/views/shared/game-records';
 
@@ -169,7 +170,11 @@ export function buildScheduleIndex(input: {
   };
 }
 
-/** What `/schedule/<league>` prints about its league outside the lists: the titles, the sentence's subject, the counts and the date span. */
+/**
+ * What `/schedule/<league>` prints about its league outside the lists: the titles, the sentence's
+ * subject, the counts and the date span, plus what its components would otherwise read themselves:
+ * the league's health note and the date its list lays out around.
+ */
 export interface LeagueSchedulePageView {
   /** The `<title>`: the h1 plus the sport, which a search result has no other way to show. */
   title: string;
@@ -182,6 +187,13 @@ export interface LeagueSchedulePageView {
   span: string | null;
   /** The current league records each upcoming league game of the list prints (GameList `records`). */
   records: RecordsByGame;
+  /** The league's data health (LeagueHealthNote). */
+  health: LeagueHealth;
+  /**
+   * The Scores tab's landing date within this league (lib/queries/games `getScoresLandingDate`, the
+   * date BottomTabBar's league target aims at): ScheduleList lays out the days around it.
+   */
+  landingDate: string | null;
 }
 
 /** The league's schedule page, from its id (the page's metadata and body ask for the same facts). */
@@ -202,5 +214,7 @@ export function buildLeagueSchedulePageView(id: LeagueId): LeagueSchedulePageVie
     counts: countGames(groups.flatMap((group) => group.games)),
     span: first && last ? `${monthDay(first.date)} – ${monthDay(last.date)}` : null,
     records: recordsByGame(groups.flatMap((group) => group.games)),
+    health: getLeagueHealth(id),
+    landingDate: getScoresLandingDate({ league: id }),
   };
 }

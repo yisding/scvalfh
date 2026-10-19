@@ -96,6 +96,12 @@ export interface GameView {
   division: DivisionId | null;
   /** The game's league: the league of `countsFor`, else of the postseason tag, else of a member side. */
   league: LeagueConfig | null;
+  /**
+   * The short name of the league whose official schedule lists this game (`game.official.division`'s),
+   * which GameDetails' "Moved — the official <SHORT> schedule …" line names; null when no official
+   * schedule lists it, or its division is no longer configured (the line then says "league").
+   */
+  officialLeague: string | null;
   /** `BVAL · Santa Teresa` | `MCAL` | `MCAL semifinal` | `SCVAL crossover` | `CCS` | `Non-league` */
   contextLabel: string;
   countsAs: CountsAs;
@@ -396,6 +402,9 @@ export function buildGameView(param: string): GameView | null {
     recordsCaption: recordsCaptionFor(game, display, away, home),
     division,
     league,
+    officialLeague: game.official
+      ? (findLeague(findDivision(game.official.division)?.leagueId ?? '')?.shortName ?? null)
+      : null,
     contextLabel: post?.contextLabel ?? (division ? divisionDisplay(division) : 'Non-league'),
     countsAs: post?.countsAs ?? countsAsFor(game),
     postseasonNotes: post?.notes ?? [],

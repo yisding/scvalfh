@@ -1,17 +1,16 @@
 import Link from 'next/link';
 
-import { type HistoryRow, historySchoolName } from '@/lib/datasets/history';
 import { ordinal } from '@/lib/format/numbers';
-import { getTeamBySlug } from '@/lib/registry/teams';
 import { TeamNameCell } from '@/components/standings/table/parts';
 import MissingValue from '@/components/ui/MissingValue';
+import type { HistoryRowView } from '@/views/history/history-view';
 
 /**
  * The 2025-26 archive standings table (DESIGN §3.9) — final records only, no GD bar, no form
  * strip: the source PDF carries no game-level data, only a final W-L(-T) line per school.
  *
- * Three columns: place, team, league record. The team is named by the registry (historySchoolName),
- * not by the source's spelling, so "St. Francis" in the PDF prints "Saint Francis" as everywhere else. `overallRecord` is null for every SCVAL row (SPEC
+ * Three columns: place, team, league record. The team is named by the registry (historySchoolName,
+ * resolved into each row by views/history/history-view.ts), not by the source's spelling, so "St. Francis" in the PDF prints "Saint Francis" as everywhere else. `overallRecord` is null for every SCVAL row (SPEC
  * §1.3 — that PDF column was empty for the 2025-26 season), so SCVAL has no Overall column at
  * all: a column of nothing but em dashes told the reader nothing and cost every table a fourth
  * column of width. A league whose source publishes it (BVAL's sheet) gets a fourth column, Overall,
@@ -37,21 +36,16 @@ function NotPublished() {
 }
 
 export interface HistoryStandingsTableProps {
-  rows: HistoryRow[];
+  rows: HistoryRowView[];
   caption: string;
   emptyLabel: string;
   /**
-   * Whether the table draws an Overall column: the LEAGUE's answer (`leagueHasOverall`), not this
-   * table's. Decided per table, a division or level whose rows all lacked an overall record would
-   * drop the column and widen its League column to 96px beside a sibling's 80, and the records of
-   * one league would stop lining up across its tables.
+   * Whether the table draws an Overall column: the LEAGUE's answer (views/history/history-view.ts
+   * `leagueHasOverall`), not this table's. Decided per table, a division or level whose rows all
+   * lacked an overall record would drop the column and widen its League column to 96px beside a
+   * sibling's 80, and the records of one league would stop lining up across its tables.
    */
   hasOverall: boolean;
-}
-
-/** True when any of a league's tables publishes an overall record (BVAL's sheet; never SCVAL's). */
-export function leagueHasOverall(tables: ReadonlyArray<ReadonlyArray<HistoryRow>>): boolean {
-  return tables.some((rows) => rows.some((r) => r.overallRecord !== null));
 }
 
 export function HistoryStandingsTable({ rows, caption, emptyLabel, hasOverall }: HistoryStandingsTableProps) {
@@ -109,8 +103,7 @@ export function HistoryStandingsTable({ rows, caption, emptyLabel, hasOverall }:
         </thead>
         <tbody>
           {rows.map((row) => {
-            const team = row.slug ? getTeamBySlug(row.slug) : undefined;
-            const name = historySchoolName(row.slug, row.name);
+            const { team, school: name } = row;
             const overall = row.overallRecord ? (
               <span className="sx-num whitespace-nowrap">{row.overallRecord}</span>
             ) : (

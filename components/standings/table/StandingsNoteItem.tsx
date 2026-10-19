@@ -1,5 +1,5 @@
 import ExternalLink from '@/components/ui/ExternalLink';
-import type { NoteItem } from '@/views/standings/table-notes';
+import type { NoteItem } from '@/views/standings/types';
 
 /**
  * One table-specific note (views/standings/table-notes.ts `collectStandingsNotes`), as the Notes

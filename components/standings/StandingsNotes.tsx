@@ -2,9 +2,9 @@ import Link from 'next/link';
 
 import ExternalLink from '@/components/ui/ExternalLink';
 import { ordinal } from '@/lib/format/numbers';
-import type { Standing } from '@/lib/model/standings';
-import type { NoteItem as TableNote } from '@/views/standings/table-notes';
-import type { ComparisonView, MismatchNote, MissingRowView, StandingsRowData } from '@/views/standings/types';
+import type {
+  ComparisonView, FieldItem, FlagLine, MismatchItem, MissingRowView, NoteItem,
+} from '@/views/standings/types';
 
 import StandingsNoteItem from './table/StandingsNoteItem';
 
@@ -25,7 +25,8 @@ import StandingsNoteItem from './table/StandingsNoteItem';
  *     The differences are PLAIN SENTENCES, with our figure and theirs. The cross-check log's raw
  *     field names ("place (we order on points, Art. VI §2; MaxPreps orders on win pct)") are for
  *     /about#cross-check; here they are rewritten at render time, without touching lib or the
- *     snapshot:
+ *     snapshot (the items, with what each may claim, come from views/standings/footnotes.ts
+ *     `mismatchItems`):
  *      - a RECIPROCAL place swap (we have A 1st and B 2nd, MaxPreps the other way round) is ONE
  *        item naming both teams, because it is one fact: MaxPreps ranks by win percentage, the
  *        league ranks by points (`rankRule`, from the league's citations);
@@ -50,14 +51,14 @@ import StandingsNoteItem from './table/StandingsNoteItem';
 export interface StandingsNotesProps {
   /** The division heading, or the league's short name for a single-division league. */
   divisionLabel: string;
-  /**
-   * The division's rows, for the facts a mismatch sentence needs (is the place shared, do the win
-   * percentages differ). Without them the sentences make no win-percentage claim.
-   */
-  rows?: readonly StandingsRowData[];
   /** `collectStandingsNotes(...)` (views/standings/table-notes.ts) without the footnotes. */
-  tableNotes?: readonly TableNote[];
-  mismatches: MismatchNote[];
+  tableNotes?: readonly NoteItem[];
+  /**
+   * The comparison list (`DivisionView.noteItems`, views/standings/footnotes.ts `mismatchItems`): one
+   * item per team or reciprocal place swap, with whether the place is shared and whether MaxPreps'
+   * win-percentage order explains it already decided.
+   */
+  items: readonly MismatchItem[];
   comparison: ComparisonView;
   missingId: string;
   missingIntro: string;
@@ -81,9 +82,6 @@ export interface StandingsNotesProps {
   className?: string;
 }
 
-/** lib/engine/standings/maxpreps-crosscheck.ts `buildCrossCheck` field names: the place row starts with "place". */
-const isPlaceField = (field: string) => field.startsWith('place');
-
 /** The log's terse field names, in words. Anything unknown is printed as it comes. */
 const FIELD_WORDS: Record<string, string> = {
   'league record': 'league record',
@@ -92,108 +90,6 @@ const FIELD_WORDS: Record<string, string> = {
   'league goals against': 'league goals conceded',
   'win pct': 'league win percentage',
 };
-
-type FieldItem = Pick<MismatchNote, 'field' | 'ours' | 'theirs'>;
-
-interface FlagLine {
-  slug: string;
-  name: string;
-  /** The place disagreement, when there is one: our place and MaxPreps' (null if it gives none). */
-  place: { ours: number; theirs: number | null } | null;
-  /** Every other field. */
-  items: FieldItem[];
-  urls: string[];
-}
-
-/** One line per team, keeping every field's figures. */
-function byTeam(mismatches: MismatchNote[]): FlagLine[] {
-  const lines = new Map<string, FlagLine>();
-  for (const note of mismatches) {
-    const line = lines.get(note.slug) ?? {
-      slug: note.slug,
-      name: note.name,
-      place: null,
-      items: [],
-      urls: [],
-    };
-    const ours = Number(note.ours);
-    if (isPlaceField(note.field) && Number.isInteger(ours)) {
-      const theirs = Number(note.theirs);
-      line.place = { ours, theirs: Number.isInteger(theirs) ? theirs : null };
-    } else {
-      line.items.push({ field: note.field, ours: note.ours, theirs: note.theirs });
-    }
-    if (!line.urls.includes(note.url)) line.urls.push(note.url);
-    lines.set(note.slug, line);
-  }
-  return [...lines.values()];
-}
-
-type NoteItem =
-  | { kind: 'swap'; key: string; a: FlagLine; b: FlagLine }
-  | { kind: 'team'; key: string; line: FlagLine };
-
-/** Pair every reciprocal place swap (A ours 1 / theirs 2, B ours 2 / theirs 1) into one item. */
-function toItems(lines: FlagLine[]): NoteItem[] {
-  const paired = new Set<string>();
-  const items: NoteItem[] = [];
-  for (const line of lines) {
-    if (paired.has(line.slug)) continue;
-    const p = line.place;
-    const partner =
-      p && p.theirs !== null && p.theirs !== p.ours
-        ? lines.find(
-            (other) =>
-              other.slug !== line.slug &&
-              !paired.has(other.slug) &&
-              other.place?.ours === p.theirs &&
-              other.place.theirs === p.ours,
-          )
-        : undefined;
-    if (partner) {
-      paired.add(line.slug);
-      paired.add(partner.slug);
-      const [a, b] = p!.ours < partner.place!.ours ? [line, partner] : [partner, line];
-      items.push({ kind: 'swap', key: `${a.slug}+${b.slug}`, a, b });
-    } else {
-      items.push({ kind: 'team', key: line.slug, line });
-    }
-  }
-  return items;
-}
-
-/** Win percentages to the three places both tables print, so .8333 and .833 are the same. */
-const pct3 = (s: Standing) => Math.round(s.computed.winPct * 1000);
-
-/**
- * Does MaxPreps' win-percentage ordering explain a place difference? Only if it points the same
- * way: MaxPreps puts the team LOWER than we do only if a team between the two places has a higher
- * win percentage, and HIGHER only if one has a lower percentage. A percentage that merely differs
- * does not establish the cause (the gap could be a game one table counts and the other does not),
- * and then no reason is given. Unknown (no rows, no MaxPreps place) claims nothing.
- */
-function winPctExplains(
-  slug: string,
-  place: { ours: number; theirs: number | null },
-  rows: readonly StandingsRowData[],
-): boolean {
-  const theirs = place.theirs;
-  if (theirs === null || theirs === place.ours) return false;
-  const self = rows.find((r) => r.team.slug === slug)?.standing;
-  if (!self) return false;
-  const lo = Math.min(place.ours, theirs);
-  const hi = Math.max(place.ours, theirs);
-  const outranksOnPct = (other: Standing) =>
-    theirs > place.ours ? pct3(other) > pct3(self) : pct3(other) < pct3(self);
-  return rows.some(
-    (r) =>
-      r.team.slug !== slug &&
-      r.standing.hasReportedResults &&
-      r.standing.computed.place >= lo &&
-      r.standing.computed.place <= hi &&
-      outranksOnPct(r.standing),
-  );
-}
 
 /** "league record 1-3-2 here, 1-4-2 on MaxPreps; …" */
 function FieldPhrases({ items }: { items: FieldItem[] }) {
@@ -226,16 +122,16 @@ const Name = ({ children }: { children: React.ReactNode }) => (
 /** A lone team: its place sentence (if any), then any other fields. */
 function TeamSentence({
   line,
-  rows,
+  shared,
+  byWinPct,
   rankRule,
 }: {
   line: FlagLine;
-  rows: readonly StandingsRowData[];
+  shared: boolean;
+  byWinPct: boolean;
   rankRule: string;
 }) {
   const p = line.place;
-  const shared = rows.find((r) => r.team.slug === line.slug)?.standing.tiebreak.shared ?? false;
-  const reason = p ? winPctExplains(line.slug, p, rows) : false;
   return (
     <>
       <Name>{line.name}</Name>:{' '}
@@ -253,7 +149,7 @@ function TeamSentence({
           </>
         )
       ) : null}
-      {p && reason ? <> MaxPreps ranks by win percentage. {rankRule}</> : null}
+      {p && byWinPct ? <> MaxPreps ranks by win percentage. {rankRule}</> : null}
       {line.items.length > 0 ? (
         <>
           {p ? ' Also ' : null}
@@ -268,20 +164,19 @@ function TeamSentence({
 function SwapSentence({
   a,
   b,
-  rows,
+  byWinPct,
   rankRule,
 }: {
   a: FlagLine;
   b: FlagLine;
-  rows: readonly StandingsRowData[];
+  byWinPct: boolean;
   rankRule: string;
 }) {
-  const reason = winPctExplains(a.slug, a.place!, rows);
   return (
     <>
       <Name>{a.name}</Name> ({ordinal(a.place!.ours)}) and <Name>{b.name}</Name> (
       {ordinal(b.place!.ours)}): MaxPreps lists them the other way round
-      {reason ? ' because it ranks by win percentage' : null}. {rankRule}
+      {byWinPct ? ' because it ranks by win percentage' : null}. {rankRule}
       {[a, b]
         .filter((line) => line.items.length > 0)
         .map((line) => (
@@ -294,9 +189,8 @@ function SwapSentence({
   );
 }
 
-/** A per-team MaxPreps link only when it is NOT the division table linked below. */
-function TeamLinks({ lines, sourceUrl }: { lines: FlagLine[]; sourceUrl?: string }) {
-  const urls = [...new Set(lines.flatMap((line) => line.urls))].filter((url) => url !== sourceUrl);
+/** The item's per-team MaxPreps links: only those that are NOT the division table linked below. */
+function TeamLinks({ urls }: { urls: readonly string[] }) {
   return (
     <>
       {urls.map((url) => (
@@ -311,9 +205,8 @@ function TeamLinks({ lines, sourceUrl }: { lines: FlagLine[]; sourceUrl?: string
 
 export function StandingsNotes({
   divisionLabel,
-  rows = [],
   tableNotes = [],
-  mismatches,
+  items,
   comparison,
   missingId,
   missingIntro,
@@ -327,7 +220,6 @@ export function StandingsNotes({
   rankRule,
   className,
 }: StandingsNotesProps) {
-  const items = toItems(byTeam(mismatches));
   return (
     <div
       className={['sx-inset flex flex-col rounded-card-lg p-5 md:p-6', className].filter(Boolean).join(' ')}
@@ -372,13 +264,13 @@ export function StandingsNotes({
                 {comparison.flag ? <Flag /> : null}
                 {item.kind === 'swap' ? (
                   <>
-                    <SwapSentence a={item.a} b={item.b} rows={rows} rankRule={rankRule} />
-                    <TeamLinks lines={[item.a, item.b]} sourceUrl={sourceUrl} />
+                    <SwapSentence a={item.a} b={item.b} byWinPct={item.byWinPct} rankRule={rankRule} />
+                    <TeamLinks urls={item.links} />
                   </>
                 ) : (
                   <>
-                    <TeamSentence line={item.line} rows={rows} rankRule={rankRule} />
-                    <TeamLinks lines={[item.line]} sourceUrl={sourceUrl} />
+                    <TeamSentence line={item.line} shared={item.shared} byWinPct={item.byWinPct} rankRule={rankRule} />
+                    <TeamLinks urls={item.links} />
                   </>
                 )}
               </li>

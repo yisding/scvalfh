@@ -52,8 +52,11 @@ export interface LeagueStandingsCardModel {
   asOf: string;
 }
 
+/** What the card reads of a league summary (the `[league]` OG routes hand it `leagueParam`'s). */
+export type LeagueStandingsCardSource = Pick<LeagueSummary, 'id' | 'name' | 'shortName' | 'divisions'>;
+
 /** The card for `league`, a league the route has already checked with `leagueParam`. */
-export function leagueStandingsCardModel(league: LeagueSummary): LeagueStandingsCardModel {
+export function leagueStandingsCardModel(league: LeagueStandingsCardSource): LeagueStandingsCardModel {
   const teams = getTeams();
   const single = league.divisions.length === 1;
   const through = getLastLeagueResultDate({ league: league.id });

@@ -7,9 +7,8 @@
  */
 
 import type { DivisionId, LeagueId, TeamId, TeamSlug } from '@/lib/model/ids';
-import type { PlayoffStatus, Standing } from '@/lib/model/standings';
+import type { PlayoffStatus, Standing, StandingContext } from '@/lib/model/standings';
 import type { Team } from '@/lib/model/team';
-import type { StandingContext } from '@/lib/queries/standings';
 
 /**
  * One row of a standings table (components/standings/table/StandingsTable.tsx renders it): the standing, its
@@ -59,6 +58,45 @@ export interface MismatchNote {
   url: string;
 }
 
+/**
+ * One table-specific note, as data (components/standings/table/StandingsNoteItem.tsx renders it):
+ *  - `shared`: one tied group's tiebreak note, led by the first team's name in bold;
+ *  - `no-results`: the team with no results, in a sentence;
+ *  - `mismatch`: a `standing.mismatch` flag (⚑), its detail and the team's MaxPreps page;
+ *  - `footnote`: one of the caller's `footnotes`, verbatim.
+ */
+export type NoteItem =
+  | { kind: 'shared'; team: string; note: string }
+  | { kind: 'no-results'; text: string }
+  | { kind: 'mismatch'; team: string; detail: string; maxprepsUrl: string | null }
+  | { kind: 'footnote'; text: string };
+
+/** One differing field of a team's row, with our figure and MaxPreps'. */
+export type FieldItem = Pick<MismatchNote, 'field' | 'ours' | 'theirs'>;
+
+/** One team's differences from MaxPreps' table, every field's figures kept (views/standings/footnotes.ts). */
+export interface FlagLine {
+  slug: string;
+  name: string;
+  /** The place disagreement, when there is one: our place and MaxPreps' (null if it gives none). */
+  place: { ours: number; theirs: number | null } | null;
+  /** Every other field. */
+  items: FieldItem[];
+  urls: string[];
+}
+
+/**
+ * One item of the Notes block's comparison list (components/standings/StandingsNotes.tsx), with what
+ * its sentence may claim already decided (views/standings/footnotes.ts `mismatchItems`): a reciprocal
+ * place swap, ONE item naming both teams, or one team's differences. `byWinPct`: MaxPreps'
+ * win-percentage order explains the place difference, so the sentence may say so. `shared`: the team
+ * holds its place level ("tied for 7th here"). `links`: the per-team MaxPreps tables that are NOT the
+ * division table the block links below.
+ */
+export type MismatchItem =
+  | { kind: 'swap'; key: string; a: FlagLine; b: FlagLine; byWinPct: boolean; links: string[] }
+  | { kind: 'team'; key: string; line: FlagLine; shared: boolean; byWinPct: boolean; links: string[] };
+
 /** One past official fixture with no counted result, or one postponed (never counted as missing). */
 export interface MissingRowView {
   key: string;
@@ -104,6 +142,8 @@ export interface DivisionView {
   meta: string;
   /** Division-specific notes (pending games, no league results yet), visible in the Notes block. */
   footnotes: string[];
+  /** The league's points rule as its document words it (`rules.citations.points`), the legend's `PTS:` line. */
+  pointsCitation: string;
   /** Generic sentences, printed once per page. */
   legendNotes: string[];
   /** 1-based row index to draw the 2px ladder line after (`DivisionConfig.ladderLine`). */
@@ -139,6 +179,13 @@ export interface DivisionView {
   /** Teams with no reported results — named, never ranked. */
   unrankedTeams: string[];
   mismatches: MismatchNote[];
+  /** The Notes block's comparison list: `mismatches`, one item per team or reciprocal place swap. */
+  noteItems: MismatchItem[];
+  /**
+   * The table's own notes for the Notes block (`collectStandingsNotes`, views/standings/table-notes.ts):
+   * shared places, the team with no results, any `standing.mismatch`, without `footnotes`.
+   */
+  tableNotes: NoteItem[];
   comparison: ComparisonView;
   /** Rows of kind 'missing', then the postponed ones (listed after them, never counted). */
   missing: MissingRowView[];

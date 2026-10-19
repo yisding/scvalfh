@@ -1,16 +1,11 @@
 import AwardsBlock from '@/components/history/AwardsBlock';
-import HistoryStandingsTable, { leagueHasOverall } from '@/components/history/HistoryStandingsTable';
+import HistoryStandingsTable from '@/components/history/HistoryStandingsTable';
 import ExternalLink from '@/components/ui/ExternalLink';
 import SectionHeader from '@/components/ui/SectionHeader';
 import TeamMonogram from '@/components/ui/TeamMonogram';
 import { getDivision, getLeague, regionOf } from '@/lib/config/leagues';
-import {
-  type AvailableLeagueHistory, getHistoryChampions, getHistoryDivisionChanges, getHistoryUnpublishedTies,
-  historySchoolName,
-} from '@/lib/datasets/history';
 import { listWords } from '@/lib/format/words';
-import type { LeagueId } from '@/lib/model/ids';
-import { getTeamBySlug } from '@/lib/registry/teams';
+import type { AvailableLeagueView } from '@/views/history/history-view';
 
 /** `lg:grid-rows-[repeat(N,auto)]` for the subgrid, spelled out so Tailwind can see each class. */
 const ROWS_CLASS: Record<number, string> = {
@@ -26,61 +21,51 @@ const SPAN_CLASS: Record<number, string> = {
   8: 'lg:row-span-8',
 };
 
-function Champions({ leagueId }: { leagueId: LeagueId }) {
-  const champions = getHistoryChampions(leagueId);
+function Champions({ champions }: Pick<AvailableLeagueView, 'champions'>) {
   if (champions.length === 0) return null;
   return (
     <div className="mt-4 grid gap-3 sm:grid-cols-2 sm:gap-4 lg:gap-x-10">
-      {champions.map(({ division, row }) => {
-        const team = row.slug ? getTeamBySlug(row.slug) : undefined;
-        return (
-          // Monogram on the left spanning three short lines, so the pair is ~190px tall on a
-          // phone instead of ~300 and the first standings row stays near the first screen.
-          <div
-            key={division}
-            className="sx-card grid grid-cols-[auto_minmax(0,1fr)] items-center gap-x-3 p-4 sm:p-5"
-          >
-            {team ? <TeamMonogram team={team} size={40} /> : null}
-            <div className="col-start-2 min-w-0">
-              <p className="m-0 text-micro font-medium text-ink-3">
-                {getDivision(division)?.label ?? division} champion
-              </p>
-              <p className="m-0 mt-0.5 text-lead text-ink sm:text-title">{historySchoolName(row.slug, row.name)}</p>
-              <p className="m-0 mt-0.5 text-meta text-ink-2">{row.leagueRecord} league record</p>
-            </div>
+      {champions.map(({ division, team, school, leagueRecord }) => (
+        // Monogram on the left spanning three short lines, so the pair is ~190px tall on a
+        // phone instead of ~300 and the first standings row stays near the first screen.
+        <div
+          key={division}
+          className="sx-card grid grid-cols-[auto_minmax(0,1fr)] items-center gap-x-3 p-4 sm:p-5"
+        >
+          {team ? <TeamMonogram team={team} size={40} /> : null}
+          <div className="col-start-2 min-w-0">
+            <p className="m-0 text-micro font-medium text-ink-3">
+              {getDivision(division)?.label ?? division} champion
+            </p>
+            <p className="m-0 mt-0.5 text-lead text-ink sm:text-title">{school}</p>
+            <p className="m-0 mt-0.5 text-meta text-ink-2">{leagueRecord} league record</p>
           </div>
-        );
-      })}
+        </div>
+      ))}
     </div>
   );
 }
 
+/** A league with final standings (views/history/history-view.ts `AvailableLeagueView`, every school resolved). */
 export default function AvailableLeague({
-  leagueId,
-  entry,
+  view,
   season,
 }: {
-  leagueId: LeagueId;
-  entry: AvailableLeagueHistory;
+  view: AvailableLeagueView;
   /** '2025-26'. */
   season: string;
 }) {
+  const { id: leagueId, divisions, hasOverall, changes, unpublishedTies } = view;
   const league = getLeague(leagueId);
-  const divisions = entry.divisions;
   // Which of the four blocks a division has is a property of the league: SCVAL has all four,
   // BVAL has varsity standings and varsity awards only. A league never shows an empty heading for
   // a block none of its divisions has.
   const hasJv = divisions.some((d) => d.standings.jv.length > 0);
   const hasVarsityAwards = divisions.some((d) => d.awards.varsity !== null);
   const hasJvAwards = divisions.some((d) => d.awards.jv !== null);
-  // The Overall column too: every standings table of a league draws it or none does, so the
-  // League and Overall columns sit at one x down the league's section and across its divisions.
-  const hasOverall = leagueHasOverall(divisions.flatMap((d) => [d.standings.varsity, d.standings.jv]));
   const blocks = 1 + (hasJv ? 1 : 0) + (hasVarsityAwards ? 1 : 0) + (hasJvAwards ? 1 : 0);
   const rows = blocks * 2;
-  const changes = getHistoryDivisionChanges(leagueId);
-  const unpublishedTies = getHistoryUnpublishedTies(leagueId);
-  const p = entry.provenance;
+  const p = view.provenance;
 
   return (
     <section id={leagueId} data-region-scope={regionOf(leagueId)} aria-label={league.name} className="min-w-0">
@@ -89,7 +74,7 @@ export default function AvailableLeague({
         kicker={`${league.shortName} · ${league.name}`}
         meta={<span className="whitespace-nowrap">{season}</span>}
       />
-      <Champions leagueId={leagueId} />
+      <Champions champions={view.champions} />
 
       {/* From lg the divisions sit side by side and share the same row tracks (subgrid): each
           division's headings and blocks are its direct grid items, so the JV heading, the awards
@@ -188,7 +173,7 @@ export default function AvailableLeague({
         )}
         {unpublishedTies.length > 0 ? (
           <p className="m-0">
-            {listWords(unpublishedTies.map((r) => historySchoolName(r.slug, r.name)))}&rsquo;s record{unpublishedTies.length === 1 ? ' has' : 's have'} no
+            {listWords(unpublishedTies.map((r) => r.school))}&rsquo;s record{unpublishedTies.length === 1 ? ' has' : 's have'} no
             ties field in the source ({unpublishedTies.map((r) => r.leagueRecord).join(', ')}), so{' '}
             {unpublishedTies.length === 1 ? 'it is' : 'they are'} shown as published; we do not assume zero ties.
           </p>

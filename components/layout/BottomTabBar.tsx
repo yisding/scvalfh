@@ -1,6 +1,6 @@
 import { LEAGUE_IDS } from '@/lib/config/leagues';
 import type { LeagueId, TeamSlug } from '@/lib/model/ids';
-import { getScoresLandingDate } from '@/lib/queries/games';
+import type { ChromeView } from '@/views/site/chrome-view';
 import { navLeagueHrefs } from '@/views/site/nav-targets';
 
 import NavLink from './NavLink';
@@ -44,15 +44,12 @@ const ICON_PROPS = {
 };
 
 /**
- * The Scores tab's landing date, across every league or within one (lib/queries/games.ts
- * getScoresLandingDate, which ScheduleList also reads). Each day on the /schedule index's "Every
- * game day" list (components/schedule/ScheduleIndex.tsx) and each date group on /schedule/<id>
+ * The Scores tab's landing dates, across every league and within each (lib/queries/games.ts
+ * getScoresLandingDate, which ScheduleList's page view also reads), arrive in the chrome's view
+ * (views/site/chrome-view.ts). Each day on the /schedule index's "Every game day" list
+ * (components/schedule/ScheduleIndex.tsx) and each date group on /schedule/<id>
  * (components/schedule/ScheduleList.tsx) carries its date key as its `id`.
  */
-function scoresDate(league?: LeagueId): string | null {
-  return getScoresLandingDate(league ? { league } : {});
-}
-
 const withDate = (path: string, date: string | null) => (date ? `${path}#${date}` : path);
 
 /**
@@ -60,10 +57,13 @@ const withDate = (path: string, date: string | null) => (date ? `${path}#${date}
  * Computed at build time like every other page fact, so it costs no client JavaScript. NavLink
  * compares only the path part, so the tab is still current on /schedule and /schedule/<id>.
  */
-function scoresHrefs(): { href: string; leagueHrefs: Readonly<Record<LeagueId, string>> } {
+function scoresHrefs(landing: ChromeView['scoresLandingDate']): {
+  href: string;
+  leagueHrefs: Readonly<Record<LeagueId, string>>;
+} {
   return {
-    href: withDate('/schedule', scoresDate()),
-    leagueHrefs: Object.fromEntries(LEAGUE_IDS.map((id) => [id, withDate(`/schedule/${id}`, scoresDate(id))])),
+    href: withDate('/schedule', landing.all),
+    leagueHrefs: Object.fromEntries(LEAGUE_IDS.map((id) => [id, withDate(`/schedule/${id}`, landing.byLeague[id])])),
   };
 }
 
@@ -126,13 +126,15 @@ export const TABS = [
 ];
 
 export interface BottomTabBarProps {
+  /** The Scores tab's landing dates (views/site/chrome-view.ts `ChromeView.scoresLandingDate`). */
+  scoresLandingDate: ChromeView['scoresLandingDate'];
   /** `{ slug: league }` for every team (the same map the prefs script embeds). */
   slugLeague?: Readonly<Record<TeamSlug, LeagueId>>;
 }
 
-export function BottomTabBar({ slugLeague }: BottomTabBarProps) {
+export function BottomTabBar({ scoresLandingDate, slugLeague }: BottomTabBarProps) {
   const hrefs = navLeagueHrefs();
-  const scores = scoresHrefs();
+  const scores = scoresHrefs(scoresLandingDate);
   return (
     <nav
       aria-label="Sections"

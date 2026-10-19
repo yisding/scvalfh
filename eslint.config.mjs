@@ -56,6 +56,12 @@ const eslintConfig = defineConfig([
               message: "components/ never import route files or scripts (tests/arch/layers.test.ts).",
             },
             {
+              target: "./components",
+              from: ["./lib/queries", "./lib/datasets"],
+              message:
+                "components/ never read the snapshot: the page or its view hands them resolved props (tests/arch/layers.test.ts rule j).",
+            },
+            {
               target: ["./app", "./components", "./lib", "./scripts", "./views", "./*.{ts,mts,mjs}"],
               from: "./tests",
               message: "Only tests import tests/ (tests/arch/layers.test.ts).",

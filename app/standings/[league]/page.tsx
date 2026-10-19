@@ -126,7 +126,7 @@ export default async function LeagueStandingsPage({ params }: PageProps<'/standi
         <DivisionStandings
           key={view.division}
           view={view}
-          showHealth={index === 0}
+          health={index === 0 ? data.health : undefined}
           className={index === 0 && !data.notice ? 'mt-8 md:mt-10' : 'mt-section md:mt-section-lg'}
         />
       ))}

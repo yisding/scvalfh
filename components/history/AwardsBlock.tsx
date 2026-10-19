@@ -1,11 +1,8 @@
 import Link from 'next/link';
 
 import GridRowFiller from '@/components/ui/GridRowFiller';
-import { leagueOfDivision } from '@/lib/config/leagues';
-import type { HistoryAwards, HistoryPlayer } from '@/lib/datasets/history';
 import { gradeWord } from '@/lib/format/words';
-import { getTeamBySlug } from '@/lib/registry/teams';
-import { awardLine, overallAwards, type AwardLine } from '@/views/history/history-view';
+import type { AwardLine, AwardsView } from '@/views/history/history-view';
 
 /**
  * The 2025-26 all-league awards (DESIGN §3.9): the overall awards, then First Team / Second
@@ -14,17 +11,18 @@ import { awardLine, overallAwards, type AwardLine } from '@/views/history/histor
  * /leaders print a player: the player, then school · grade · position, the school linked to its
  * team page and the grade a word ("Senior"). The documents write each of those several ways ("GK",
  * "Goalie", "Goalkeeper"; "St Ignatius", "MItty"; an overall award as "School- Player" or "Player
- * School Year"); the page never shows those differences.
+ * School Year"); the page never shows those differences. The view (`awardsView`) hands every line
+ * over in those words, its school already resolved.
  */
 export interface AwardsBlockProps {
-  awards: HistoryAwards | null;
+  awards: AwardsView | null;
   /** "Varsity" or "JV" — used only in the empty-state sentence. */
   levelLabel: string;
 }
 
 /** "Los Gatos · Senior · Midfield", the school linked; a part nobody published is not shown. */
 function AwardMeta({ line }: { line: AwardLine }) {
-  const team = line.slug ? getTeamBySlug(line.slug) : undefined;
+  const { team } = line;
   // A grade or position no source gives is null: say nothing rather than guess.
   const facts = [line.year !== null ? gradeWord(line.year) : null, line.position].filter(
     (f): f is string => f !== null,
@@ -58,7 +56,7 @@ function PlayerList({
   columns,
 }: {
   title: string;
-  players: HistoryPlayer[];
+  players: AwardLine[];
   /**
    * Where the card's rows flow into two columns: `sm` for a list that has the full division
    * width from `sm` up (honorable mention), `lg` for First/Second team, which sit side by side
@@ -82,22 +80,19 @@ function PlayerList({
           columns === 'sm' ? 'sm:grid-cols-2' : 'lg:grid-cols-2'
         }`}
       >
-        {players.map((p, i) => {
-          const line = awardLine(p);
-          return (
-            <div
-              key={i}
-              // A rule on top of every row but the first in each column: one row in a single
-              // column, the first two once the grid has two columns.
-              className={`min-w-0 border-t border-divider px-4 py-2 first:border-t-0 ${
-                columns === 'sm' ? 'sm:[&:nth-child(2)]:border-t-0' : 'lg:[&:nth-child(2)]:border-t-0'
-              }`}
-            >
-              <span className="block text-body text-ink">{line.player}</span>
-              <AwardMeta line={line} />
-            </div>
-          );
-        })}
+        {players.map((line, i) => (
+          <div
+            key={i}
+            // A rule on top of every row but the first in each column: one row in a single
+            // column, the first two once the grid has two columns.
+            className={`min-w-0 border-t border-divider px-4 py-2 first:border-t-0 ${
+              columns === 'sm' ? 'sm:[&:nth-child(2)]:border-t-0' : 'lg:[&:nth-child(2)]:border-t-0'
+            }`}
+          >
+            <span className="block text-body text-ink">{line.player}</span>
+            <AwardMeta line={line} />
+          </div>
+        ))}
         <GridRowFiller as="div" count={players.length} columns={columns === 'sm' ? { sm: 2 } : { lg: 2 }} />
       </dd>
     </div>
@@ -112,7 +107,7 @@ export function AwardsBlock({ awards, levelLabel }: AwardsBlockProps) {
       </p>
     );
   }
-  const overall = overallAwards(leagueOfDivision(awards.division).id, awards);
+  const { overall } = awards;
   return (
     <div className="flex flex-col gap-8">
       {overall.length > 0 ? (

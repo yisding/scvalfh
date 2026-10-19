@@ -3,13 +3,11 @@ import ExternalLink from '@/components/ui/ExternalLink';
 import SectionHeader from '@/components/ui/SectionHeader';
 import TeamMonogram from '@/components/ui/TeamMonogram';
 import { getSection } from '@/lib/config/leagues';
-import { type BracketSectionId, type SectionBracket, bracketSectionName } from '@/lib/datasets/history';
 import { dateWithYear } from '@/lib/format/dates';
-import { getTeamBySlug } from '@/lib/registry/teams';
-import { divisionChampion, finalLine, sideName } from '@/views/history/bracket';
+import type { SectionBracketView } from '@/views/history/bracket';
 
 /** The source line of a section's bracket block, in that section's words. */
-function BracketSources({ id, bracket }: { id: BracketSectionId; bracket: SectionBracket }) {
+function BracketSources({ id, bracket }: Pick<SectionBracketView, 'id' | 'bracket'>) {
   const links = bracket.sources.map((doc, i) => (
     <span key={doc.url}>
       {i > 0 ? ' · ' : ''}
@@ -32,18 +30,17 @@ function BracketSources({ id, bracket }: { id: BracketSectionId; bracket: Sectio
   );
 }
 
+/** A section's 2025 bracket block (views/history/bracket.ts `sectionBracketView`): champions, brackets, sources. */
 export default function SectionBracketBlock({
-  id,
-  bracket,
+  view,
   season,
 }: {
-  id: BracketSectionId;
-  bracket: SectionBracket;
+  view: SectionBracketView;
   /** '2025-26'. */
   season: string;
 }) {
+  const { id, name, bracket, divisions } = view;
   const section = getSection(id);
-  const name = bracketSectionName(id);
   return (
     <section id={id} data-region-scope={section.region} aria-label={`${name} playoffs`} className="min-w-0">
       <SectionHeader
@@ -51,24 +48,23 @@ export default function SectionBracketBlock({
         kicker={`${section.shortName} playoffs · ${name}`}
         meta={<span className="whitespace-nowrap">{season}</span>}
       />
-      <div className={`mt-4 grid gap-3 sm:grid-cols-2 sm:gap-4 ${bracket.divisions.length > 2 ? 'lg:grid-cols-3' : ''}`}>
-        {bracket.divisions.map((d) => {
-          const { champion, final } = divisionChampion(d);
-          const team = getTeamBySlug(champion.slug);
+      <div className={`mt-4 grid gap-3 sm:grid-cols-2 sm:gap-4 ${divisions.length > 2 ? 'lg:grid-cols-3' : ''}`}>
+        {divisions.map((d) => {
+          const { team, school, finalLine } = d.champion;
           return (
             <div key={d.id} className="sx-card grid grid-cols-[auto_minmax(0,1fr)] items-center gap-x-3 p-4 sm:p-5">
               {team ? <TeamMonogram team={team} size={40} /> : null}
               <div className="col-start-2 min-w-0">
                 <p className="m-0 text-micro font-medium text-ink-3">{d.label} champion</p>
-                <p className="m-0 mt-0.5 text-lead text-ink sm:text-title">{sideName(champion)}</p>
-                <p className="m-0 mt-0.5 text-meta text-ink-2">{finalLine(final)}</p>
+                <p className="m-0 mt-0.5 text-lead text-ink sm:text-title">{school}</p>
+                <p className="m-0 mt-0.5 text-meta text-ink-2">{finalLine}</p>
               </div>
             </div>
           );
         })}
       </div>
 
-      {bracket.divisions.map((d) => (
+      {divisions.map((d) => (
         <section key={d.id} id={`${id}-${d.id}`} aria-label={`${section.shortName} ${d.label}`} className="mt-section min-w-0 md:mt-section-lg">
           <SectionHeader
             as="h3"
@@ -77,7 +73,7 @@ export default function SectionBracketBlock({
             meta={<span className="whitespace-nowrap">{season}</span>}
             className="mb-4"
           />
-          <HistoryBracket division={d} label={`${name} ${d.label} bracket, ${season}`} />
+          <HistoryBracket division={d.bracket} label={`${name} ${d.label} bracket, ${season}`} />
         </section>
       ))}
 

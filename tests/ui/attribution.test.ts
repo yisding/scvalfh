@@ -9,11 +9,12 @@ import { describe, expect, it } from 'vitest';
 
 import Attribution from '@/components/layout/Attribution';
 import { getFetchedAt } from '@/lib/datasets/snapshot';
+import { getSitePhase } from '@/lib/queries/phase';
 import { textOf } from '@/tests/support/html-text';
 import { SITE_SCOPE_NOTE } from '@/views/site/site';
 
 describe('the footer attribution', () => {
-  const html = renderToStaticMarkup(createElement(Attribution, { snapshotAt: getFetchedAt() }));
+  const html = renderToStaticMarkup(createElement(Attribution, { snapshotAt: getFetchedAt(), sitePhase: getSitePhase() }));
   const text = textOf(html)
     // ExternalLink's sr-only "(opens in a new tab)" is not part of the sentence a sighted reader sees.
     .replace(/ \(opens in a new tab\)/g, '')

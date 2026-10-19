@@ -6,11 +6,12 @@
 
 import { getLeague, isIndependentLeague, isSingleDivision, sectionOf } from '@/lib/config/leagues';
 import { divisionHeading } from '@/lib/config/leagues/labels';
+import type { LeagueHealth } from '@/lib/model/health';
 import type { LeagueId, RegionId } from '@/lib/model/ids';
 import type { LeagueConfig } from '@/lib/model/league-config';
 import type { SeasonPhase } from '@/lib/model/season';
 import { getGameDates, getLatestResultsDate, getUpcoming } from '@/lib/queries/games';
-import type { LeagueSummary } from '@/lib/queries/leagues';
+import { type LeagueSummary, getLeagueHealth } from '@/lib/queries/leagues';
 import { getSeasonPhase } from '@/lib/queries/phase';
 import { getTeams } from '@/lib/queries/teams';
 
@@ -33,6 +34,8 @@ export interface HomeLeaguePanel {
   region: RegionId;
   shortName: string;
   name: string;
+  /** The league's data health (LeagueHealthNote, under the panel's heading). */
+  health: LeagueHealth;
   phase: SeasonPhase;
   lead: PhaseLeadView | null;
   latest: HomeDay | null;
@@ -69,6 +72,7 @@ export function buildPanel(summary: LeagueSummary, all: readonly LeagueSummary[]
     region: summary.region,
     shortName: league.shortName,
     name: league.name,
+    health: getLeagueHealth(league.id),
     phase,
     lead: phaseLead(league, phase, today),
     latest: latestDate ? leagueDay(league.id, latestDate, today, { finalsFirst: true }) : null,

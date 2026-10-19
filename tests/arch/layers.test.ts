@@ -35,6 +35,9 @@
  *   (g) no import cycle inside lib/
  *   (h) a views/**\/*-client.ts module imports only ranks 0-1, LEAVES and other *-client modules
  *   (i) scripts and app never import tests
+ *   (j) components never import lib/queries/** or lib/datasets/** (app/** may): a component renders
+ *       what its page or view model hands it (views/site/chrome-view.ts for the site chrome), so the
+ *       snapshot is read in exactly two layers, views and app
  * The LEAVES themselves import nothing but other LEAVES.
  *
  * tests/arch/client-boundary.test.ts is the runtime half for 'use client' graphs; ESLint
@@ -76,6 +79,9 @@ const INGESTION: readonly string[] = ['sources', 'official', 'cli', 'pipeline'].
 
 /** The highest rank INGESTION may import (lib/snapshot). */
 const INGESTION_MAX_RANK = 6;
+
+/** The snapshot read API, which views/ and app/ read and components/ never do (rule j). */
+const READ_API: readonly string[] = ['lib/queries/', 'lib/datasets/'];
 
 /**
  * Package doors: the parts inside `dir` are imported only by `door` or from inside `dir`, except the
@@ -122,7 +128,7 @@ const isViewClient = (mod: string): boolean => mod.startsWith('views/') && mod.e
 /** One import: the importing file and line, and the module it names. */
 type Edge = { file: string; line: number; to: string };
 
-/** The rules (a)-(f), (h) and (i) one import breaks, as letters. Rule (g) is a property of the whole graph. */
+/** The rules (a)-(f) and (h)-(j) one import breaks, as letters. Rule (g) is a property of the whole graph. */
 function rulesBroken({ file, to }: Edge): string[] {
   const from = moduleOf(file);
   const source = layerOf(from);
@@ -156,6 +162,7 @@ function rulesBroken({ file, to }: Edge): string[] {
     if (!allowed) broken.push('h');
   }
   if ((source.kind === 'scripts' || from.startsWith('app/')) && target.kind === 'tests') broken.push('i');
+  if (from.startsWith('components/') && READ_API.some((prefix) => to.startsWith(prefix))) broken.push('j');
   return broken;
 }
 
@@ -261,7 +268,7 @@ describe('layers: the dependency rule', () => {
     }
   });
 
-  it('no import breaks rules (a)-(f), (h) or (i)', () => {
+  it('no import breaks rules (a)-(f) or (h)-(j)', () => {
     const failures = EDGES.flatMap((edge) => rulesBroken(edge).map((rule) => lineOf(edge, rule)));
     expect(failures).toEqual([]);
   });
@@ -284,7 +291,7 @@ describe('layers: the dependency rule', () => {
       expect(broken('lib/model/game.ts', 'lib/model/ids')).toEqual([]);
       expect(broken('lib/shared/game-id.ts', 'lib/config/season')).toEqual([]);
       expect(broken('lib/queries/games.ts', 'lib/engine/classify')).toEqual([]);
-      expect(broken('components/game-row/GameRow.tsx', 'lib/queries/games')).toEqual([]);
+      expect(broken('components/game-row/GameRow.tsx', 'views/shared/describe-game')).toEqual([]);
       expect(broken('components/game-row/GameRow.tsx', 'app/page')).toEqual(['a']);
     });
 
@@ -355,6 +362,15 @@ describe('layers: the dependency rule', () => {
       expect(broken('scripts/fetch-data.ts', 'tests/support/repo')).toEqual(['i']);
       expect(broken('app/page.tsx', 'tests/support/repo')).toEqual(['b', 'i']);
       expect(broken('tests/data.test.ts', 'scripts/lib/cli')).toEqual([]);
+    });
+
+    it('(j) components never read the snapshot; views and app do', () => {
+      expect(broken('components/game-row/GameRow.tsx', 'lib/queries/games')).toEqual(['j']);
+      expect(broken('components/layout/SiteHeader.tsx', 'lib/queries/phase')).toEqual(['j']);
+      expect(broken('components/history/AwardsBlock.tsx', 'lib/datasets/history')).toEqual(['j']);
+      expect(broken('views/site/chrome-view.ts', 'lib/queries/phase')).toEqual([]);
+      expect(broken('app/layout.tsx', 'lib/datasets/snapshot')).toEqual([]);
+      expect(broken('components/standings/table/cells.tsx', 'lib/model/standings')).toEqual([]);
     });
 
     it('the LEAVES are importable from every rank', () => {

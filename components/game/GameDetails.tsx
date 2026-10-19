@@ -2,7 +2,6 @@ import Link from 'next/link';
 
 import ExternalLink from '@/components/ui/ExternalLink';
 import SectionHeader from '@/components/ui/SectionHeader';
-import { findDivision, findLeague } from '@/lib/config/leagues';
 import { standingsLabel } from '@/lib/config/leagues/labels';
 import { dateTimeAttr, longDate, monthDay, timeOfDayPT } from '@/lib/format/dates';
 import { parseLocal } from '@/lib/shared/dates';
@@ -50,10 +49,7 @@ export interface GameDetailsProps {
 }
 
 export function GameDetails({ model, className }: GameDetailsProps) {
-  const { game, home, countsAs } = model;
-  const officialLeague = game.official
-    ? findLeague(findDivision(game.official.division)?.leagueId ?? '')?.shortName
-    : undefined;
+  const { game, home, countsAs, officialLeague } = model;
   const address = game.venue.address;
   const host = game.site === 'neutral' ? null : home;
   const movedFrom =

@@ -9,6 +9,7 @@ import { getLeague } from '@/lib/config/leagues';
 import { getToday } from '@/lib/datasets/snapshot';
 import { recordString } from '@/lib/format/numbers';
 import { plural } from '@/lib/format/words';
+import { getLeagueHealth } from '@/lib/queries/leagues';
 import { getTeamSlugs } from '@/lib/queries/teams';
 import { missingMetadata, pageMetadata } from '@/views/site/page-metadata';
 import { teamJsonLd } from '@/views/site/structured-data';
@@ -68,7 +69,7 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
       <JsonLd data={teamJsonLd(team, getLeague(team.league))} />
       <TeamIdentity view={view} knownSlugs={getTeamSlugs()} />
 
-      <LeagueHealthNote leagueId={team.league} className="mt-4" />
+      <LeagueHealthNote health={getLeagueHealth(team.league)} className="mt-4" />
 
       <TeamPageGrid view={view} {...rest} layout={teamPageLayout(bundle, getToday())} />
     </div>

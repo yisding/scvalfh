@@ -9,6 +9,7 @@ import ExternalLink from '@/components/ui/ExternalLink';
 import LeagueHealthNote from '@/components/ui/LeagueHealthNote';
 import SectionHeader from '@/components/ui/SectionHeader';
 import { SECTIONS } from '@/lib/config/leagues';
+import { getLeagueHealth } from '@/lib/queries/leagues';
 import { getCcsField } from '@/lib/queries/postseason';
 import {
   tournamentHeaderMeta,
@@ -90,7 +91,7 @@ export default async function LeagueTournamentPage({ params }: PageProps<'/playo
         view={view}
         leagueShort={summary.shortName}
         standingsHref={`/standings/${summary.id}`}
-        beforeSeeds={<LeagueHealthNote leagueId={summary.id} className="mb-4" />}
+        beforeSeeds={<LeagueHealthNote health={getLeagueHealth(summary.id)} className="mb-4" />}
         playInRule={playInRound ? `${playInRound.pairing}.` : null}
       />
 

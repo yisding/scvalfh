@@ -137,7 +137,8 @@ describe('home panels (views/home/home-view.ts → LeaguePanel)', () => {
   });
 
   it('the division `home` config drives each mini table', async () => {
-    const { MiniStandings, miniShownCount } = await import('@/components/home/MiniStandings');
+    const { MiniStandings } = await import('@/components/home/MiniStandings');
+    const { miniShownCount } = await import('@/views/home/mini-standings');
     const expected: Record<string, { rows: number; line: string | null }> = {
       'de-anza': { rows: 4, line: null },
       'el-camino': { rows: 4, line: null },
@@ -167,6 +168,7 @@ describe('home panels (views/home/home-view.ts → LeaguePanel)', () => {
         const rows = (html.match(/<tr data-team-slug=/g) ?? []).length;
         // `want.rows`, plus any team sharing the place at the cutoff.
         expect(rows, `components/home/MiniStandings.tsx: ${division.id} rows`).toBe(miniShownCount(division.rows, want.rows));
+        expect(division.shown, `views/home/mini-standings.ts: ${division.id} shown`).toBe(rows);
         expect(rows, `components/home/MiniStandings.tsx: ${division.id} rows`).toBeGreaterThanOrEqual(Math.min(want.rows, division.total));
         if (want.line) expect(textOf(html), `components/home/MiniStandings.tsx: ${division.id} line`).toContain(want.line);
         // No line configured (the EAL: `lineAfter` null): no labelled separator row at all.
@@ -209,7 +211,7 @@ describe('home panels (views/home/home-view.ts → LeaguePanel)', () => {
   });
 
   it('a place shared at the row cutoff is shown whole (Mt. Hamilton 4= pair), and nothing else stretches it', async () => {
-    const { miniShownCount } = await import('@/components/home/MiniStandings');
+    const { miniShownCount } = await import('@/views/home/mini-standings');
     const row = (place: number, shared: boolean, hasResults = true) => ({ place, shared, hasResults });
     // 1, 2, 3, 4=, 4=, 6: four rows asked, both 4= teams shown.
     const tied = [row(1, false), row(2, false), row(3, false), row(4, true), row(4, true), row(6, false)];

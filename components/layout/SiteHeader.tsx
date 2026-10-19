@@ -3,7 +3,7 @@ import Link from 'next/link';
 import ExternalLink from '@/components/ui/ExternalLink';
 import LastUpdated from '@/components/ui/LastUpdated';
 import type { LeagueId, TeamSlug } from '@/lib/model/ids';
-import { getSitePhase } from '@/lib/queries/phase';
+import type { SeasonPhase } from '@/lib/model/season';
 import { DATA_CORRECTIONS_URL, SITE_WORDMARK } from '@/views/site/site';
 
 import ThemeToggle from './ThemeToggle';
@@ -51,6 +51,8 @@ export interface SiteHeaderProps {
   snapshotAt: string;
   /** The instant staleness is measured against (the build instant). Omit to never show stale. */
   now?: string;
+  /** The whole site's phase (views/site/chrome-view.ts `ChromeView.sitePhase`). */
+  sitePhase: SeasonPhase;
   /** `{ slug: league }` for every team, so the nav can follow the page's league (SPEC §8.3). */
   slugLeague?: Readonly<Record<TeamSlug, LeagueId>>;
 }
@@ -62,10 +64,10 @@ const WORDMARK_TAIL = WORDMARK_WORDS.slice(2).join(' ');
 /** 'FH': the tail's initials, shown in its place below 1280px. */
 const WORDMARK_TAIL_ABBR = WORDMARK_WORDS.slice(2).map((word) => word[0]).join('');
 
-export function SiteHeader({ snapshotAt, now, slugLeague }: SiteHeaderProps) {
+export function SiteHeader({ snapshotAt, now, sitePhase, slugLeague }: SiteHeaderProps) {
   // After every league's season ends the scheduled update stops on purpose; the stale pill would
   // then shout "Updated 9 days ago" in every header, so the stamp stays a plain date.
-  const seasonComplete = getSitePhase() === 'complete';
+  const seasonComplete = sitePhase === 'complete';
   return (
     <>
       <header className="sx-chrome-top sticky top-0 z-20 bg-surface shadow-sticky">

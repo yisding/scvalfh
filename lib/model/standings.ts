@@ -97,7 +97,7 @@ export interface TiebreakInfo {
   shared: boolean;
 }
 
-/** SHAPE UNCHANGED — only field types widen. Derived per-row facts live in lib/queries/standings.ts StandingContext. */
+/** SHAPE UNCHANGED — only field types widen. Derived per-row facts are StandingContext, below. */
 export interface Standing {
   teamId: TeamId;
   slug: TeamSlug;
@@ -110,4 +110,32 @@ export interface Standing {
   tiebreak: TiebreakInfo;
   playoffStatus: PlayoffStatus;
   hasReportedResults: boolean;
+}
+
+/**
+ * The derived per-row facts of a standings row (SPEC §5.10), computed by lib/queries/standings.ts
+ * `getStandingContext(division)`: a type here, so the views and the tables that print them read
+ * the shape without importing the read API.
+ */
+export interface StandingContext {
+  teamId: TeamId;
+  /**
+   * division.gamesPerTeam. null where the league has no fixed schedule (the Sunset: its ten teams meet 0, 1
+   * or 2 times, and a Sunset game is one MaxPreps marks as a league game), so no reader may print "of N",
+   * LEFT or MAX for it (DESIGN-socal §2.1.7).
+   */
+  scheduled: number | null;
+  /** computed.gp */
+  counted: number;
+  /**
+   * max(0, scheduled − counted): league games with no counted result yet — still to play, or played and not
+   * reported. null with `scheduled`.
+   */
+  remaining: number | null;
+  /** pts + points.win × remaining. A ceiling, not a projection. null with `scheduled`. */
+  maxPts: number | null;
+  /** Rows of kind 'missing' from missingOfficialResults() (lib/engine/standings/missing.ts) that involve this team. */
+  missingPast: number;
+  /** Counted games whose score came from si.com (provenance.scores === 'sblive'). */
+  backfilled: number;
 }

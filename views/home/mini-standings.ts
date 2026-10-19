@@ -1,7 +1,7 @@
 /**
  * The home panel's mini standings (components/home/MiniStandings.tsx): one division's table rows,
  * as plain strings and numbers (each row's link sentence included), with the division's last
- * result day and its standings link.
+ * result day, its standings link, its kicker and caption words and how many rows it shows.
  */
 
 import { divisionHeading } from '@/lib/config/leagues/labels';
@@ -11,6 +11,7 @@ import type { DivisionConfig, LeagueConfig } from '@/lib/model/league-config';
 import { getLastLeagueResultDate } from '@/lib/queries/games';
 import { getGoalDiffDomain, getStandings } from '@/lib/queries/standings';
 import { getTeamById } from '@/lib/registry/teams';
+import { tableSubject } from '@/views/standings/division';
 import { standingRowLabel, tableName } from '@/views/standings/table-notes';
 
 export interface MiniRow {
@@ -35,8 +36,23 @@ export interface MiniDivisionView {
   /** null for a single-division league: no division label anywhere. */
   heading: string | null;
   leagueShort: string;
-  /** Every row, table order; the component shows `home.miniRows` of them. */
+  /**
+   * The section kicker: the division heading; `League table` for a single-division league (it shows
+   * NO division label); `Table` for a group of independents (the LA independents, DESIGN §24.10),
+   * which is in no league.
+   */
+  kicker: string;
+  /**
+   * The sr-only caption's subject, as the full table names it (views/standings/division.ts
+   * `tableSubject`): 'De Anza Division league standings', 'Palomar league standings', and a group
+   * named in full, 'LA independents standings', never 'LA league standings'. The component adds the
+   * date and the `top N of M` count.
+   */
+  captionSubject: string;
+  /** Every row, table order; the component shows the first `shown` of them. */
   rows: MiniRow[];
+  /** How many rows the card shows (`miniShownCount` over `home.miniRows`). */
+  shown: number;
   total: number;
   gdDomain: number;
   /** THIS division's last league result day, or null. */
@@ -45,6 +61,23 @@ export interface MiniDivisionView {
   href: string;
   /** `getDivision(d).home`, never a map keyed by division id. */
   home: DivisionConfig['home'];
+}
+
+/**
+ * How many rows the mini table shows: `miniRows`, stretched to keep a place shared AT the cutoff
+ * whole — a parent never sees a rival in "T4" and their own team, equally 4th, missing. Only
+ * teams with results and the SAME shared place extend it, so an unplayed table (or the next tied
+ * cluster) never stretches the card.
+ */
+export function miniShownCount(
+  rows: readonly Pick<MiniRow, 'hasResults' | 'shared' | 'place'>[],
+  miniRows: number,
+): number {
+  let n = Math.min(miniRows, rows.length);
+  const last = rows[n - 1];
+  if (!last || !last.hasResults || !last.shared) return n;
+  while (n < rows.length && rows[n].hasResults && rows[n].shared && rows[n].place === last.place) n++;
+  return n;
 }
 
 export function miniDivision(league: LeagueConfig, division: DivisionConfig): MiniDivisionView {
@@ -66,11 +99,15 @@ export function miniDivision(league: LeagueConfig, division: DivisionConfig): Mi
     };
     return { ...row, label: standingRowLabel(row, where) };
   });
+  const heading = divisionHeading(division.id);
   return {
     id: division.id,
-    heading: divisionHeading(division.id),
+    heading,
     leagueShort: league.shortName,
+    kicker: heading ? heading : league.independents ? 'Table' : 'League table',
+    captionSubject: tableSubject(league, heading),
     rows,
+    shown: miniShownCount(rows, division.home.miniRows),
     total: rows.length,
     gdDomain: getGoalDiffDomain(division.id),
     throughDate: getLastLeagueResultDate({ division: division.id }),

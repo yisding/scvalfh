@@ -50,10 +50,12 @@ import { officialSourceFormat } from '@/lib/format/words';
 import type { CrossCheckRow } from '@/lib/model/crosscheck';
 import type { DivisionId, OfficialSourceId, TeamId, TeamSlug } from '@/lib/model/ids';
 import type { DivisionConfig, LeagueConfig } from '@/lib/model/league-config';
-import type { Standing } from '@/lib/model/standings';
+import type { Standing, StandingContext } from '@/lib/model/standings';
 import type { Team } from '@/lib/model/team';
-import type { MissingOfficialResult, StandingContext } from '@/lib/queries/standings';
+import type { MissingOfficialResult } from '@/lib/queries/standings';
 
+import { mismatchItems, pointsWords } from './footnotes';
+import { collectStandingsNotes } from './table-notes';
 import type {
   ComparisonView,
   DivisionView,
@@ -64,6 +66,27 @@ import type {
 } from './types';
 
 // ---------------------------------------------------------------- small helpers
+
+/**
+ * What a division's table is called in its caption, here and in the home page's mini table
+ * (views/home/mini-standings.ts): 'De Anza Division league standings', 'MCAL league standings'.
+ *
+ * "Division" only for NorCal, where the leagues call their groupings divisions (SCVAL's De Anza,
+ * BVAL's Mt. Hamilton). The San Diego Section's alignment calls City Western or Palomar a league
+ * inside a conference, and its own "Division I" / "Division II" are playoff tiers, so a SoCal
+ * caption reads "Palomar league standings" (review 2026-10-06).
+ * A group of independents is named in full: 'LA independents standings', never 'Independent
+ * league standings' (DESIGN §24.10).
+ */
+export function tableSubject(league: LeagueConfig, heading: string | null): string {
+  return heading
+    ? isDefaultRegion(regionOf(league.id))
+      ? `${heading} Division league standings`
+      : `${heading} league standings`
+    : league.independents
+      ? `${league.name} standings`
+      : `${league.shortName} league standings`;
+}
 
 /**
  * Where a table's labelled ladder line goes: after how many rows, or null for no line.
@@ -94,12 +117,6 @@ export function ladderRow(row: { standing: Standing }): { ranked: boolean; place
 /** The official schedule link's label, by source (SPEC §10.3). */
 export function officialScheduleLabel(source: OfficialSourceId): string {
   return `Official schedule (${officialSourceFormat(source)})`;
-}
-
-/** `3-1-0`: the league's points for a win, a tie and a loss, from config (never typed into copy). */
-export function pointsWords(league: LeagueConfig): string {
-  const { win, tie, loss } = league.rules.points;
-  return `${win}-${tie}-${loss}`;
 }
 
 /**
@@ -381,19 +398,7 @@ export function buildDivisionView(input: DivisionViewInput): DivisionView {
 
   const through = input.throughDate ? shortDate(input.throughDate) : null;
   const meta = through ? `League games only · through ${through}` : 'League games only · none played yet';
-  // "Division" only for NorCal, where the leagues call their groupings divisions (SCVAL's De Anza,
-  // BVAL's Mt. Hamilton). The San Diego Section's alignment calls City Western or Palomar a league
-  // inside a conference, and its own "Division I" / "Division II" are playoff tiers, so a SoCal
-  // caption reads "Palomar league standings" (review 2026-10-06).
-  // A group of independents is named in full: 'LA independents standings', never 'Independent
-  // league standings' (DESIGN §24.10).
-  const tableWords = heading
-    ? isDefaultRegion(regionOf(league.id))
-      ? `${heading} Division league standings`
-      : `${heading} league standings`
-    : league.independents
-      ? `${league.name} standings`
-      : `${league.shortName} league standings`;
+  const tableWords = tableSubject(league, heading);
   const caption = through
     ? `${tableWords}, league games only, through ${through}. Computed from published results; unofficial.`
     : `${tableWords}. No league game has been reported yet.`;
@@ -426,6 +431,14 @@ export function buildDivisionView(input: DivisionViewInput): DivisionView {
   }
 
   const links = postseasonLinks(league);
+  const sourceUrl = leagueStandingsUrl(input.division);
+  // `footnotes` go last in the Notes block, so they are left out of the table's own list here.
+  // A team the comparison list already names (it prints its items unless MaxPreps agrees) keeps
+  // only that sentence: the ⚑ line would repeat it in other words.
+  const tableNotes = collectStandingsNotes({
+    rows,
+    statedElsewhere: comparison.agreement ? [] : mismatches.map((m) => m.slug),
+  });
   return {
     division: input.division,
     leagueId: league.id,
@@ -439,6 +452,7 @@ export function buildDivisionView(input: DivisionViewInput): DivisionView {
     caption,
     meta,
     footnotes,
+    pointsCitation: league.rules.citations.points,
     legendNotes,
     ...(berthRuleAfter ? { berthRuleAfter } : {}),
     ladderLineLabel: line?.label ?? null,
@@ -459,6 +473,8 @@ export function buildDivisionView(input: DivisionViewInput): DivisionView {
     playoffsLinkText: links.linkText,
     unrankedTeams,
     mismatches,
+    noteItems: mismatchItems(mismatches, rows, sourceUrl),
+    tableNotes,
     comparison,
     missing,
     postponed,
@@ -474,7 +490,7 @@ export function buildDivisionView(input: DivisionViewInput): DivisionView {
         : { href: config.official.scheduleUrl, label: officialScheduleLabel(config.official.source) },
     scheduledPer: scheduledPerText(league, config.official),
     rankRule: rankRuleText(league),
-    sourceUrl: leagueStandingsUrl(input.division),
+    sourceUrl,
     sourceSkipped: crossCheckSkipReason(input.division),
     throughDate: input.throughDate,
     leagueFinals: input.leagueFinals,

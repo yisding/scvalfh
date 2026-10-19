@@ -3,10 +3,9 @@ import Link from 'next/link';
 import ExternalLink from '@/components/ui/ExternalLink';
 import LeagueHealthNote from '@/components/ui/LeagueHealthNote';
 import SectionHeader from '@/components/ui/SectionHeader';
-import { leagueOfDivision } from '@/lib/config/leagues';
 import { ordinal } from '@/lib/format/numbers';
+import type { LeagueHealth } from '@/lib/model/health';
 import { biggestGoalDiff } from '@/views/standings/goal-diff';
-import { collectStandingsNotes } from '@/views/standings/table-notes';
 import type { DivisionView } from '@/views/standings/types';
 
 import MissingResultsBanner from './MissingResultsBanner';
@@ -27,9 +26,9 @@ import StandingsTable, { type StandingsTableProps } from './table/StandingsTable
  * reflow: DESIGN §10.8 requires 400% zoom at 320px to reflow with no scrollable data table. The
  * swap is at `lg`.
  *
- * Neither table prints notes: their division-specific notes are collected here once
- * (views/standings/table-notes.ts) and go into the Notes inset, and the generic legend is printed
- * once per page by the page.
+ * Neither table prints notes: their division-specific notes are collected once by the view
+ * (`DivisionView.tableNotes`, views/standings/table-notes.ts) and go into the Notes inset, and the
+ * generic legend is printed once per page by the page.
  *
  * From `lg` the Notes inset and the postseason card share a row and STRETCH to the taller of the
  * two; each is a flex column whose link row is pushed to the bottom (`mt-auto`), so the two panels
@@ -37,16 +36,12 @@ import StandingsTable, { type StandingsTableProps } from './table/StandingsTable
  */
 export interface DivisionStandingsProps {
   view: DivisionView;
-  /** Render the league's health note here (the page's first table only, so it is said once). */
-  showHealth?: boolean;
+  /** The league's health, for its note here: pass it to the page's first table only, so it is said once. */
+  health?: LeagueHealth;
   className?: string;
 }
 
-export function DivisionStandings({
-  view,
-  showHealth = false,
-  className,
-}: DivisionStandingsProps) {
+export function DivisionStandings({ view, health, className }: DivisionStandingsProps) {
   const table: Omit<StandingsTableProps, 'variant' | 'className'> = {
     division: view.division,
     rows: view.rows,
@@ -61,19 +56,10 @@ export function DivisionStandings({
     flaggedSlugs: view.comparison.flag ? view.mismatches.map((m) => m.slug) : [],
     ...(view.berthRuleAfter === undefined ? {} : { berthRuleAfter: view.berthRuleAfter }),
   };
-  // `footnotes` go last in the Notes block, so they are left out of the table's own list here.
-  // A team the comparison list below already names (it prints its items unless MaxPreps agrees)
-  // keeps only that sentence: the ⚑ line would repeat it in other words.
-  const tableNotes = collectStandingsNotes({
-    rows: view.rows,
-    statedElsewhere: view.comparison.agreement ? [] : view.mismatches.map((m) => m.slug),
-  });
-  const points = leagueOfDivision(view.division).rules.citations.points;
-
   return (
     <section id={view.division} aria-labelledby={`${view.division}-heading`} className={className}>
       <SectionHeader id={`${view.division}-heading`} kicker={view.kicker} meta={`${view.meta} · unofficial`} />
-      {showHealth ? <LeagueHealthNote leagueId={view.leagueId} className="mb-4" /> : null}
+      {health ? <LeagueHealthNote health={health} className="mb-4" /> : null}
       <MissingResultsBanner text={view.missingBanner} targetId={view.missingId} className="mb-3" />
       <div data-twin className="lg:hidden">
         <StandingsTable {...table} variant="phone" />
@@ -83,7 +69,7 @@ export function DivisionStandings({
       </div>
       {/* Plain words: "|GD| max 36" was notation a parent at a game had to decode. */}
       <p className="mt-3 mb-0 text-meta text-ink-3">
-        PTS: {points}. GD bars are per division
+        PTS: {view.pointsCitation}. GD bars are per division
         {/* The scale is named only when some team has a goal difference (views/standings/goal-diff.ts biggestGoalDiff). */}
         {biggestGoalDiff(view.rows.map((r) => r.standing.computed.gd)) > 0 ? (
           <>
@@ -102,9 +88,8 @@ export function DivisionStandings({
       <div className="mt-6 grid gap-6 lg:grid-cols-2 lg:items-stretch">
         <StandingsNotes
           divisionLabel={view.label}
-          rows={view.rows}
-          tableNotes={tableNotes}
-          mismatches={view.mismatches}
+          tableNotes={view.tableNotes}
+          items={view.noteItems}
           comparison={view.comparison}
           missingId={view.missingId}
           missingIntro={view.missingIntro}

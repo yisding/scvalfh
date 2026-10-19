@@ -14,7 +14,7 @@ export default function CcsLeagueSection({
   block: LeagueBlock;
   keyDates: PlayoffsPageView['playoffs']['keyDates'];
 }) {
-  const { summary, config, divisions, meterNote, pairings, pairingDate } = block;
+  const { summary, config, health, divisions, meterNote, pairings, pairingDate } = block;
   const citation = config.postseason.kind === 'ccs-ladder' ? config.postseason.citation : '';
   const qualification = `How ${summary.shortName} qualifies — ${citation}.`;
   return (
@@ -25,7 +25,7 @@ export default function CcsLeagueSection({
         {field.total} CCS berths. Ordered by league points; every status below is a written word, and
         nothing here is official until {shortDate(keyDates.seedingMeeting)}.
       </p>
-      <LeagueHealthNote leagueId={summary.id} className="mt-stack" />
+      <LeagueHealthNote health={health} className="mt-stack" />
       {/* Side by side from md, not lg: at 768 each half is ~350px, which holds the tile, the
           longest short name and the status column without truncating, so the tables no
           longer stack into a long phone-style scroll on a tablet. `items-start` keeps the

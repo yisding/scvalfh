@@ -2,7 +2,7 @@
  * What the standings tables (components/standings/table/) say in words, as plain data: a row
  * link's sentence, the GP figure and its head's title, the table's name, and the division's
  * table-specific notes. The components only place these strings; StandingsNoteItem renders a
- * `NoteItem` with the markup each kind needs.
+ * `NoteItem` (views/standings/types.ts) with the markup each kind needs.
  */
 
 import { leagueOfDivision } from '@/lib/config/leagues';
@@ -10,10 +10,10 @@ import { divisionHeading } from '@/lib/config/leagues/labels';
 import { placeWords, recordWords } from '@/lib/format/numbers';
 import { EM_DASH, plural } from '@/lib/format/words';
 import type { DivisionId, TeamSlug } from '@/lib/model/ids';
-import type { StandingContext } from '@/lib/queries/standings';
+import type { StandingContext } from '@/lib/model/standings';
 import { articleFor, membershipSource } from '@/views/shared/words/membership';
 
-import type { StandingsRowData } from './types';
+import type { NoteItem, StandingsRowData } from './types';
 
 /**
  * `6/12` games counted of the division's scheduled league games, or the bare count (`6`) in a league
@@ -75,19 +75,6 @@ export function tableRowLabel(row: StandingsRowData): string {
     tableName(team.division),
   );
 }
-
-/**
- * One table-specific note, as data (components/standings/table/StandingsNoteItem.tsx renders it):
- *  - `shared`: one tied group's tiebreak note, led by the first team's name in bold;
- *  - `no-results`: the team with no results, in a sentence;
- *  - `mismatch`: a `standing.mismatch` flag (⚑), its detail and the team's MaxPreps page;
- *  - `footnote`: one of the caller's `footnotes`, verbatim.
- */
-export type NoteItem =
-  | { kind: 'shared'; team: string; note: string }
-  | { kind: 'no-results'; text: string }
-  | { kind: 'mismatch'; team: string; detail: string; maxprepsUrl: string | null }
-  | { kind: 'footnote'; text: string };
 
 /**
  * The table's notes (brief §4.22): shared-place notes, the no-results team, `standing.mismatch`

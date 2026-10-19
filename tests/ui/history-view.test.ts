@@ -1,5 +1,5 @@
 /**
- * `views/history/history-view.ts` and `AwardsBlock` over the committed
+ * `views/history/history-view.ts` and `AwardsBlock` (over `awardsView`) over the committed
  * data/history-2025-26.json: every award line on /history/2025-26 reads one way (player, then
  * school · grade · position, as the roster and /leaders print a player), in the site's words, with
  * the school linked, whatever the document wrote ("St Ignatius- Olivia Van de Braak", "Leaya Cleary Los Gatos 12", "GK", "Midfiled").
@@ -17,6 +17,7 @@ import { textOf } from '@/tests/support/html-text';
 import {
   awardLine,
   awardTitle,
+  awardsView,
   overallAwards,
   rosterYear,
   splitOverallValue,
@@ -155,7 +156,7 @@ describe('overall awards', () => {
 describe('AwardsBlock', () => {
   it('links every winner’s and listed player’s school to its team page', () => {
     for (const { division, awards } of blocks) {
-      const html = renderToStaticMarkup(createElement(AwardsBlock, { awards, levelLabel: 'Varsity' }));
+      const html = renderToStaticMarkup(createElement(AwardsBlock, { awards: awardsView(awards), levelLabel: 'Varsity' }));
       const links = [...html.matchAll(/<a [^>]*href="\/teams\/([a-z0-9-]+)"/g)].map((m) => m[1]);
       expect(links.length, division).toBe(awards.overall.length + listed(awards).length);
       // No document spelling survives: the overall values are never printed as written.
@@ -166,7 +167,7 @@ describe('AwardsBlock', () => {
 
   it('prints school · grade · position, the grade a word, as the roster and /leaders do', () => {
     const deAnza = blocks.find((b) => b.division === 'de-anza')!;
-    const html = renderToStaticMarkup(createElement(AwardsBlock, { awards: deAnza.awards, levelLabel: 'Varsity' }));
+    const html = renderToStaticMarkup(createElement(AwardsBlock, { awards: awardsView(deAnza.awards), levelLabel: 'Varsity' }));
     // Sophie Ghosh, Saint Ignatius, Midfield, 12 in the document.
     expect(html).toMatch(
       /Sophie Ghosh<\/span><span[^>]*><a [^>]*>St\. Ignatius<\/a><span>\u00a0· <span class="whitespace-nowrap">Senior<\/span><\/span><span>\u00a0· <span class="whitespace-nowrap">Midfield<\/span><\/span><\/span>/,

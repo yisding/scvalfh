@@ -16,6 +16,7 @@ import { getFetchedAt } from '@/lib/datasets/snapshot';
 import { getTeams } from '@/lib/queries/teams';
 import { THEME_COLOR } from '@/lib/shared/theme';
 import { BUILD_INSTANT } from '@/views/site/build-instant';
+import { buildChromeView } from '@/views/site/chrome-view';
 import { OG_BASE, SITE_DESCRIPTION, SITE_NAME, SITE_URL, SITE_WORDMARK } from '@/views/site/site';
 
 import './globals.css';
@@ -141,6 +142,9 @@ const SCOPE_CSS = buildLeagueScopeCss(LEAGUE_IDS);
 
 export default function RootLayout({ children }: LayoutProps<'/'>) {
   const snapshotAt = getFetchedAt();
+  // What the header, footer and tab bar read from the snapshot: built here, so no chrome component
+  // imports the read API (views/site/chrome-view.ts).
+  const chrome = buildChromeView();
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`} suppressHydrationWarning>
       <head>
@@ -175,7 +179,12 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
         </a>
         <PinnedTeamMarks />
         <TwinMarks />
-        <SiteHeader snapshotAt={snapshotAt} now={BUILD_INSTANT} slugLeague={SLUG_LEAGUE} />
+        <SiteHeader
+          snapshotAt={snapshotAt}
+          now={BUILD_INSTANT}
+          sitePhase={chrome.sitePhase}
+          slugLeague={SLUG_LEAGUE}
+        />
         {/* `tabIndex={-1}` is what makes the skip link actually MOVE focus. Without it only
             browsers that implement the sequential-focus-navigation starting point continue from
             here; elsewhere `#main` scrolls into view while focus stays on <body> and a screen
@@ -188,8 +197,8 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
         >
           {children}
         </main>
-        <Attribution snapshotAt={snapshotAt} now={BUILD_INSTANT} />
-        <BottomTabBar slugLeague={SLUG_LEAGUE} />
+        <Attribution snapshotAt={snapshotAt} now={BUILD_INSTANT} sitePhase={chrome.sitePhase} />
+        <BottomTabBar scoresLandingDate={chrome.scoresLandingDate} slugLeague={SLUG_LEAGUE} />
       </body>
     </html>
   );

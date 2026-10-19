@@ -1,7 +1,8 @@
 /**
  * The page-level footnotes under a league's standings (SPEC §10.3): the rules footnote (points,
  * then the tiebreak chain in words with its citations), the uneven-games footnote and the
- * co-leaders line, each worded from the league's config (lib/config/leagues).
+ * co-leaders line, each worded from the league's config (lib/config/leagues); and each division's
+ * comparison with MaxPreps' table as the Notes block lists it (`mismatchItems`, DivisionView.noteItems).
  */
 
 import { getLeague } from '@/lib/config/leagues';
@@ -9,10 +10,17 @@ import { unevenGamesSentence } from '@/lib/engine/standings';
 import { ordinal } from '@/lib/format/numbers';
 import type { LeagueId } from '@/lib/model/ids';
 import type { LeagueConfig } from '@/lib/model/league-config';
-import type { TiebreakStage } from '@/lib/model/standings';
+import type { Standing, TiebreakStage } from '@/lib/model/standings';
 import type { Team } from '@/lib/model/team';
 
-import { pointsWords } from './division';
+import type { FlagLine, MismatchItem, MismatchNote, StandingsRowData } from './types';
+
+/** `3-1-0`: the league's points for a win, a tie and a loss, from config (never typed into copy). */
+export function pointsWords(league: LeagueConfig): string {
+  const { win, tie, loss } = league.rules.points;
+  return `${win}-${tie}-${loss}`;
+}
+
 
 const STAGE_WORDS: Readonly<Record<TiebreakStage, string>> = {
   points: 'points',
@@ -125,4 +133,132 @@ export function unevenGpFootnote(
 export function coLeadersLine(coLeaders: { label: string; teams: readonly Pick<Team, 'shortName'>[] } | null): string | null {
   if (!coLeaders || coLeaders.teams.length < 2) return null;
   return `${coLeaders.label}: ${coLeaders.teams.map((t) => t.shortName).join(' & ')}.`;
+}
+
+// ---------------------------------------------------------------- the comparison with MaxPreps' table
+
+/** lib/engine/standings/maxpreps-crosscheck.ts `buildCrossCheck` field names: the place row starts with "place". */
+const isPlaceField = (field: string) => field.startsWith('place');
+
+/** One line per team, keeping every field's figures. */
+function byTeam(mismatches: readonly MismatchNote[]): FlagLine[] {
+  const lines = new Map<string, FlagLine>();
+  for (const note of mismatches) {
+    const line = lines.get(note.slug) ?? {
+      slug: note.slug,
+      name: note.name,
+      place: null,
+      items: [],
+      urls: [],
+    };
+    const ours = Number(note.ours);
+    if (isPlaceField(note.field) && Number.isInteger(ours)) {
+      const theirs = Number(note.theirs);
+      line.place = { ours, theirs: Number.isInteger(theirs) ? theirs : null };
+    } else {
+      line.items.push({ field: note.field, ours: note.ours, theirs: note.theirs });
+    }
+    if (!line.urls.includes(note.url)) line.urls.push(note.url);
+    lines.set(note.slug, line);
+  }
+  return [...lines.values()];
+}
+
+type Paired = { kind: 'swap'; key: string; a: FlagLine; b: FlagLine } | { kind: 'team'; key: string; line: FlagLine };
+
+/** Pair every reciprocal place swap (A ours 1 / theirs 2, B ours 2 / theirs 1) into one item. */
+function toItems(lines: FlagLine[]): Paired[] {
+  const paired = new Set<string>();
+  const items: Paired[] = [];
+  for (const line of lines) {
+    if (paired.has(line.slug)) continue;
+    const p = line.place;
+    const partner =
+      p && p.theirs !== null && p.theirs !== p.ours
+        ? lines.find(
+            (other) =>
+              other.slug !== line.slug &&
+              !paired.has(other.slug) &&
+              other.place?.ours === p.theirs &&
+              other.place.theirs === p.ours,
+          )
+        : undefined;
+    if (partner) {
+      paired.add(line.slug);
+      paired.add(partner.slug);
+      const [a, b] = p!.ours < partner.place!.ours ? [line, partner] : [partner, line];
+      items.push({ kind: 'swap', key: `${a.slug}+${b.slug}`, a, b });
+    } else {
+      items.push({ kind: 'team', key: line.slug, line });
+    }
+  }
+  return items;
+}
+
+/** Win percentages to the three places both tables print, so .8333 and .833 are the same. */
+const pct3 = (s: Standing) => Math.round(s.computed.winPct * 1000);
+
+/**
+ * Does MaxPreps' win-percentage ordering explain a place difference? Only if it points the same
+ * way: MaxPreps puts the team LOWER than we do only if a team between the two places has a higher
+ * win percentage, and HIGHER only if one has a lower percentage. A percentage that merely differs
+ * does not establish the cause (the gap could be a game one table counts and the other does not),
+ * and then no reason is given. Unknown (no rows, no MaxPreps place) claims nothing.
+ */
+function winPctExplains(
+  slug: string,
+  place: { ours: number; theirs: number | null },
+  rows: readonly StandingsRowData[],
+): boolean {
+  const theirs = place.theirs;
+  if (theirs === null || theirs === place.ours) return false;
+  const self = rows.find((r) => r.team.slug === slug)?.standing;
+  if (!self) return false;
+  const lo = Math.min(place.ours, theirs);
+  const hi = Math.max(place.ours, theirs);
+  const outranksOnPct = (other: Standing) =>
+    theirs > place.ours ? pct3(other) > pct3(self) : pct3(other) < pct3(self);
+  return rows.some(
+    (r) =>
+      r.team.slug !== slug &&
+      r.standing.hasReportedResults &&
+      r.standing.computed.place >= lo &&
+      r.standing.computed.place <= hi &&
+      outranksOnPct(r.standing),
+  );
+}
+
+/** A per-team MaxPreps link only when it is NOT the division table linked below. */
+function teamLinks(lines: readonly FlagLine[], sourceUrl: string | null): string[] {
+  return [...new Set(lines.flatMap((line) => line.urls))].filter((url) => url !== sourceUrl);
+}
+
+/**
+ * The Notes block's comparison list (components/standings/StandingsNotes.tsx): the cross-check
+ * log's differences for this division, one item per team, a RECIPROCAL place swap (we have A 1st
+ * and B 2nd, MaxPreps the other way round) paired into one item naming both, because it is one
+ * fact. `rows` are the division's, for the facts a sentence needs (is the place shared, do the win
+ * percentages explain it); `sourceUrl` is the division's MaxPreps table, which the block links once.
+ */
+export function mismatchItems(
+  mismatches: readonly MismatchNote[],
+  rows: readonly StandingsRowData[],
+  sourceUrl: string | null,
+): MismatchItem[] {
+  return toItems(byTeam(mismatches)).map((item): MismatchItem => {
+    if (item.kind === 'swap') {
+      return {
+        ...item,
+        byWinPct: winPctExplains(item.a.slug, item.a.place!, rows),
+        links: teamLinks([item.a, item.b], sourceUrl),
+      };
+    }
+    const p = item.line.place;
+    return {
+      ...item,
+      shared: rows.find((r) => r.team.slug === item.line.slug)?.standing.tiebreak.shared ?? false,
+      byWinPct: p ? winPctExplains(item.line.slug, p, rows) : false,
+      links: teamLinks([item.line], sourceUrl),
+    };
+  });
 }

@@ -21,11 +21,12 @@ import {
 } from '@/lib/config/leagues';
 import { monthDay } from '@/lib/format/dates';
 import { listWords } from '@/lib/format/words';
+import type { LeagueHealth } from '@/lib/model/health';
 import type { LeagueId } from '@/lib/model/ids';
 import type { LeagueConfig } from '@/lib/model/league-config';
 import type { PlayoffProjection as Projection } from '@/lib/model/postseason';
 import { getLastLeagueResultDate } from '@/lib/queries/games';
-import { getLeagueSummaries } from '@/lib/queries/leagues';
+import { getLeagueHealth, getLeagueSummaries } from '@/lib/queries/leagues';
 import type { LeagueSummary } from '@/lib/queries/leagues';
 import { getCcsField, getLeaguePairings, getPlayoffProjection, getPlayoffs } from '@/lib/queries/postseason';
 import { areKeyDatesConfirmed } from '@/lib/queries/provenance';
@@ -88,6 +89,8 @@ function leagueKeyDate(league: LeagueConfig): LeagueKeyDate | null {
 export interface LeagueBlock {
   summary: LeagueSummary;
   config: LeagueConfig;
+  /** The league's data health (LeagueHealthNote, under the section's intro). */
+  health: LeagueHealth;
   divisions: Array<{
     id: string;
     heading: string;
@@ -126,6 +129,7 @@ function leagueBlock(summary: LeagueSummary): LeagueBlock {
   return {
     summary,
     config,
+    health: getLeagueHealth(summary.id),
     divisions,
     meterNote,
     pairings,
