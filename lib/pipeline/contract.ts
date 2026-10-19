@@ -1,75 +1,24 @@
 /**
- * The pipeline contract (SPEC §7.2): resource keys, transports, run arguments, the run context
- * and the step signatures every pipeline module codes against. Types plus `resourcePath` and three
- * error classes; no I/O.
+ * The pipeline contract (SPEC §7.2): transports, run arguments, the run context and the step
+ * signatures every pipeline module codes against. Types plus `resourcePath` and three error
+ * classes; no I/O. The resource keys (ResourceKey) and what is known per kind live in the table of
+ * lib/pipeline/resources.ts.
  */
 
 import type { SbliveCrossCheck } from '@/lib/model/crosscheck';
 import type { OfficialFixture } from '@/lib/model/fixture';
 import type { Game } from '@/lib/model/game';
 import type { DroppedContest, LeagueRunState, SourceStatus } from '@/lib/model/health';
-import type { DivisionId, LeagueId, TeamSlug } from '@/lib/model/ids';
+import type { DivisionId, LeagueId } from '@/lib/model/ids';
 import type { CcsCalendarEvent } from '@/lib/model/postseason';
 import type { SeasonWindow } from '@/lib/model/season';
 import type { Snapshot } from '@/lib/model/snapshot';
-import type { CifssSectionKey } from '@/lib/sources/cifss';
 import type { RawResponse } from '@/lib/sources/http/raw-response';
+import { specOf, type ResourceKey } from './resources';
 
-/** One upstream resource. `resourcePath(key)` is its manifest key and its corpus file stem. */
-export type ResourceKey =
-  | { kind: 'maxpreps-bootstrap' }
-  | { kind: 'maxpreps-league-meta'; division: DivisionId }
-  | { kind: 'maxpreps-standings'; division: DivisionId }
-  | { kind: 'maxpreps-schedule'; team: TeamSlug }
-  | { kind: 'scval-pdf-text'; division: DivisionId }      // pdftotext output of the SCVAL grid PDF
-  | { kind: 'scval-standings-index' }
-  | { kind: 'official-revision'; division: DivisionId }   // body = lowercase hex sha256 of the upstream document bytes
-  | { kind: 'official-changes'; league: LeagueId }        // body = lowercase hex sha256 of the officialChanges cell text (§2.1)
-  | { kind: 'sblive-scores'; date: string }               // YYYY-MM-DD
-  | { kind: 'sblive-team-games'; team: TeamSlug }
-  | { kind: 'vnn-ics'; team: TeamSlug }
-  | { kind: 'ccs-ical' }
-  | { kind: 'ccs-bracket' }
-  /** One page of a Section's cifsshome.org listing, season start through `through` (YYYY-MM-DD). */
-  | { kind: 'cifss-scores'; section: CifssSectionKey; page: number; through: string };
-
-/**
- * 'maxpreps/bootstrap', 'maxpreps/league-meta/<division>', 'maxpreps/standings/<division>',
- * 'maxpreps/schedule/<slug>', 'scval/pdf-text/<division>', 'scval/standings-index',
- * 'official/revision/<division>', 'official/changes/<league>', 'sblive/scores/<date>', 'sblive/team-games/<slug>',
- * 'vnn/<slug>', 'ccs/ical', 'ccs/bracket', 'cifss/<section>/<page>'
- */
+/** The manifest key and corpus file stem of a resource: its row of the table in lib/pipeline/resources.ts (the path shapes are listed there). */
 export function resourcePath(key: ResourceKey): string {
-  switch (key.kind) {
-    case 'maxpreps-bootstrap':
-      return 'maxpreps/bootstrap';
-    case 'maxpreps-league-meta':
-      return `maxpreps/league-meta/${key.division}`;
-    case 'maxpreps-standings':
-      return `maxpreps/standings/${key.division}`;
-    case 'maxpreps-schedule':
-      return `maxpreps/schedule/${key.team}`;
-    case 'scval-pdf-text':
-      return `scval/pdf-text/${key.division}`;
-    case 'scval-standings-index':
-      return 'scval/standings-index';
-    case 'official-revision':
-      return `official/revision/${key.division}`;
-    case 'official-changes':
-      return `official/changes/${key.league}`;
-    case 'sblive-scores':
-      return `sblive/scores/${key.date}`;
-    case 'sblive-team-games':
-      return `sblive/team-games/${key.team}`;
-    case 'vnn-ics':
-      return `vnn/${key.team}`;
-    case 'ccs-ical':
-      return 'ccs/ical';
-    case 'ccs-bracket':
-      return 'ccs/bracket';
-    case 'cifss-scores':
-      return `cifss/${key.section}/${key.page}`;
-  }
+  return specOf(key).path(key);
 }
 
 export interface Transport {

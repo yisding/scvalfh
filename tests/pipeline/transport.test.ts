@@ -16,17 +16,17 @@ import {
   FixtureMissing,
   TransportError,
   resourcePath,
-  type ResourceKey,
   type Transport,
 } from '@/lib/pipeline/contract';
+import type { ResourceKey } from '@/lib/pipeline/resources';
 import { loadCorpus, readManifest } from '@/lib/pipeline/corpus';
 import {
   FixtureTransport,
   LiveTransport,
   MeteredTransport,
   RecordingTransport,
-  hostOf,
   recordedExtension,
+  requestHostOf,
   resourceUrl,
 } from '@/lib/pipeline/transport';
 import { officialChangesCellText, sha256Hex, tdCellBodies } from '@/lib/official/changes-page';
@@ -148,7 +148,7 @@ describe('the live resource map', () => {
       const url = resourceUrl(key);
       expect(url, resourcePath(key)).toMatch(/^https?:\/\//);
       expect(url).not.toContain(MISSION);
-      expect(['maxpreps', 'sblive', 'official', 'other']).toContain(hostOf(key));
+      expect(['maxpreps', 'sblive', 'official', 'other']).toContain(requestHostOf(key));
     }
     expect(resourceUrl({ kind: 'maxpreps-bootstrap' })).toBe(BOOTSTRAP_URL);
     expect(resourceUrl({ kind: 'maxpreps-league-meta', division: 'pcal' })).toContain(getDivision('pcal').maxprepsLeagueId);

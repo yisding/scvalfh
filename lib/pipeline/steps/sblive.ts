@@ -28,11 +28,11 @@ import { shiftDateKey } from '@/lib/shared/dates';
 import { type SbliveGame, dedupeSbliveGames, parseScoresPage, parseTeamGamesPage } from '@/lib/sources/sblive/games';
 import { sbliveScoresUrl } from '@/lib/sources/sblive/urls';
 import {
-  type ResourceKey,
   type RunContext,
   type SbliveStep,
   type SbliveStepResult,
 } from '@/lib/pipeline/contract';
+import type { ResourceKey } from '@/lib/pipeline/resources';
 import { classifyFetchError } from '@/lib/pipeline/read';
 
 /** The scoreboard window (SPEC §7.7: ≤ 15 scoreboards). */

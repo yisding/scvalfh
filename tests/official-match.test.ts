@@ -33,10 +33,10 @@ import {
   FixtureMissing,
   TransportError,
   resourcePath,
-  type ResourceKey,
   type RunContext,
   type Transport,
 } from '@/lib/pipeline/contract';
+import type { ResourceKey } from '@/lib/pipeline/resources';
 import { stepOfficial } from '@/lib/pipeline/steps/official';
 import { ScheduleResponseSchema } from '@/lib/sources/maxpreps/schemas';
 import { parseSchedulePdfText } from '@/lib/sources/scval/grid';

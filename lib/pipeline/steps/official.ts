@@ -40,9 +40,9 @@ import { SCVAL_STANDINGS_INDEX, findStandingsPdfLink, listFieldHockeyLinks } fro
 import {
   type OfficialStep,
   type OfficialStepResult,
-  type ResourceKey,
   type RunContext,
 } from '@/lib/pipeline/contract';
+import type { ResourceKey } from '@/lib/pipeline/resources';
 import { carriedFromOf } from '@/lib/pipeline/ledger';
 import { classifyFetchError, type FetchFailure } from '@/lib/pipeline/read';
 
