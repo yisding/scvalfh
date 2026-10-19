@@ -39,6 +39,7 @@ import type { ContestId, TeamSlug } from '@/lib/model/ids';
 import { type SectionConfig } from '@/lib/model/league-config';
 import type { Snapshot } from '@/lib/model/snapshot';
 import type { Team } from '@/lib/model/team';
+import { supersededGamesOf } from '@/lib/pipeline/reconcile/superseded';
 import { unorderedPairKey } from '@/lib/registry/resolve';
 import { getTeamBySlug } from '@/lib/registry/teams';
 import { hasSbliveContestPrefix, sbliveContestId } from '@/lib/shared/contest-id';
@@ -862,31 +863,6 @@ function dedupeSkipped(rows: readonly SbliveOnlyRow[]): SbliveOnlyRow[] {
   const byId = new Map<string, SbliveOnlyRow>();
   for (const r of rows) if (!byId.has(r.contestId)) byId.set(r.contestId, r);
   return [...byId.values()].sort(byDateKey);
-}
-
-// ---------------------------------------------------------------- rule 10
-
-/**
- * Rule 10: an earlier run's `sblive:<id>` game whose fixture a MaxPreps contest now matches maps to that
- * contest; the previous snapshot's map is carried while both ends still hold (the key is no longer a
- * game, the value still is).
- */
-export function supersededGamesOf(games: readonly Game[], previous: Snapshot | null): Record<ContestId, ContestId> {
-  const ids = new Set(games.map((g) => g.contestId));
-  const out: Record<ContestId, ContestId> = {};
-  for (const [from, to] of Object.entries(previous?.supersededGames ?? {})) {
-    if (!ids.has(from) && ids.has(to)) out[from] = to;
-  }
-  const byFixture = new Map<string, ContestId>();
-  for (const g of games) {
-    if (g.official && !hasSbliveContestPrefix(g.contestId)) byFixture.set(g.official.fixtureId, g.contestId);
-  }
-  for (const g of previous?.games ?? []) {
-    if (!hasSbliveContestPrefix(g.contestId) || ids.has(g.contestId) || !g.official) continue;
-    const winner = byFixture.get(g.official.fixtureId);
-    if (winner) out[g.contestId] = winner;
-  }
-  return Object.fromEntries(Object.entries(out).sort(([a], [b]) => a.localeCompare(b)));
 }
 
 // ---------------------------------------------------------------- carry-forward (every si.com request failed)

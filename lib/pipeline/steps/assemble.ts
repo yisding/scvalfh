@@ -9,47 +9,21 @@ import { CCS, getLeague } from '@/lib/config/leagues';
 import { contentRemovalsOf, stampContentChanges } from '@/lib/engine/content-dates';
 import { buildSeason } from '@/lib/engine/season-record';
 import type { OfficialFixture } from '@/lib/model/fixture';
-import type { Game } from '@/lib/model/game';
 import type { LeagueHealth } from '@/lib/model/health';
-import type { ContestId } from '@/lib/model/ids';
 import type { Snapshot } from '@/lib/model/snapshot';
 import { TEAMS } from '@/lib/registry/teams';
-import { hasSbliveContestPrefix } from '@/lib/shared/contest-id';
 import { byDateThenId } from '@/lib/shared/game';
 import { stableStringify } from '@/lib/shared/stable-json';
 import { SNAPSHOT_MAX_BYTES, SNAPSHOT_WARN_BYTES, SOURCES_MAX, budgetLabel } from '@/lib/pipeline/budgets';
 import { snapshotContentHash } from '@/lib/pipeline/content-hash';
 import { RunAbort, type SnapshotMeta } from '@/lib/pipeline/contract';
+import { supersededGamesOf } from '@/lib/pipeline/reconcile/superseded';
 import type { RunState } from '@/lib/pipeline/state';
 import type { PipelineContext } from '@/lib/pipeline/context';
 import type { RequestCounts } from '@/lib/pipeline/transport';
 import { parseSnapshot } from '@/lib/snapshot/load';
 import { countsOf } from '@/lib/snapshot/migrate';
 import type { StandingsStepResult } from './standings';
-
-/**
- * D2 rule 10: a `sblive:<id>` game an earlier run published that a MaxPreps contest now supersedes
- * (the contest matched the same official fixture) maps to that contest, and the mapping is carried
- * for the rest of the season. Only keys that are no longer games and values that are games survive
- * (snapshot refinement 10).
- */
-export function supersededGamesOf(games: readonly Game[], previous: Snapshot | null): Record<ContestId, ContestId> {
-  const ids = new Set(games.map((g) => g.contestId));
-  const out: Record<ContestId, ContestId> = {};
-  for (const [from, to] of Object.entries(previous?.supersededGames ?? {})) {
-    if (!ids.has(from) && ids.has(to)) out[from] = to;
-  }
-  const byFixture = new Map<string, ContestId>();
-  for (const g of games) {
-    if (g.official && !hasSbliveContestPrefix(g.contestId)) byFixture.set(g.official.fixtureId, g.contestId);
-  }
-  for (const g of previous?.games ?? []) {
-    if (!hasSbliveContestPrefix(g.contestId) || ids.has(g.contestId) || !g.official) continue;
-    const winner = byFixture.get(g.official.fixtureId);
-    if (winner) out[g.contestId] = winner;
-  }
-  return out;
-}
 
 function sortFixtures(fixtures: readonly OfficialFixture[]): OfficialFixture[] {
   return [...fixtures].sort((a, b) => (a.dateKey === b.dateKey ? a.id.localeCompare(b.id) : a.dateKey.localeCompare(b.dateKey)));

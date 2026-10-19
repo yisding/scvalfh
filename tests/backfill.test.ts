@@ -19,9 +19,9 @@ import {
   isIdResolved,
   planBackfill,
   scoreboardCoverage,
-  supersededGamesOf,
   type BackfillInput,
 } from '@/lib/pipeline/reconcile/backfill';
+import { supersededGamesOf } from '@/lib/pipeline/reconcile/superseded';
 import { getDivision } from '@/lib/config/leagues';
 import { scoreSentence } from '@/lib/format/score';
 import type { OfficialFixture } from '@/lib/model/fixture';
