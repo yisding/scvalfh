@@ -10,8 +10,6 @@ import { getTeamBySlug } from '@/lib/registry/teams';
 
 import { scheduleState, type GameFilterAttrs } from './filters-client';
 
-export type { GameFilterAttrs } from './filters-client';
-
 /** The divisions a contest touches. A cross-division (or cross-league) game touches both. */
 export function gameDivisions(game: Game): DivisionId[] {
   const out: DivisionId[] = [];

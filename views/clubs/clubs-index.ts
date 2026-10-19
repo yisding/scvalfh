@@ -4,7 +4,7 @@
  * `buildClubsIndexView` (views/clubs/club-view.ts) assembles them.
  */
 
-import type { ClubAffiliation, ClubRegion } from '@/lib/datasets/clubs';
+import type { ClubAffiliation, ClubRegion } from '@/lib/schema/clubs';
 import { agree, listWords, plural } from '@/lib/format/words';
 import type { RegionId } from '@/lib/model/ids';
 

@@ -4,12 +4,8 @@
  * (views/clubs/club-view.ts) assembles them.
  */
 
-import {
-  type AffiliationStatus,
-  type Club,
-  type ClubAffiliation,
-  getAffiliatedPlayer,
-} from '@/lib/datasets/clubs';
+import { getAffiliatedPlayer } from '@/lib/datasets/clubs';
+import type { AffiliationStatus, Club, ClubAffiliation } from '@/lib/schema/clubs';
 import { gradeWord } from '@/lib/format/words';
 import { teamHref } from '@/lib/shared/routes';
 import { hostOf, isSportsRecruits, numbered, pathOf, schoolName } from '@/views/shared/source-links';

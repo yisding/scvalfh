@@ -18,16 +18,6 @@ import type { TeamSlug } from '@/lib/model/ids';
 import { type PlayerStatsFile, PlayerStatsFileSchema, type TeamPlayerStats } from '@/lib/schema/player-stats';
 import { readDataset } from './read';
 
-export type {
-  FieldStatKey,
-  FieldStats,
-  GoalieStatKey,
-  GoalieStats,
-  PlayerStatLine,
-  PlayerStatsFile,
-  TeamPlayerStats,
-} from '@/lib/schema/player-stats';
-
 const file = readDataset({
   env: 'SCVAL_PLAYER_STATS',
   bundled,

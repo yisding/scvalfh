@@ -25,13 +25,15 @@
 
 import { getCommitsFile } from '@/lib/datasets/commits';
 import {
-  type EnrichmentSource, type MergedPlayer, type MergedTeamRoster, type OtherRosters, type PlayerProfile,
-  type ProfilePlatform, type RosterConflict, getEnrichedTeamRoster, getRosters, sortedPlayers,
+  type MergedPlayer, type MergedTeamRoster, getEnrichedTeamRoster, getRosters, sortedPlayers,
 } from '@/lib/datasets/rosters';
 import { dateWithYear, shortDate } from '@/lib/format/dates';
 import { gradeWord } from '@/lib/format/words';
 import type { TeamSlug } from '@/lib/model/ids';
-import { PROFILE_PLATFORMS } from '@/lib/schema/rosters';
+import {
+  type EnrichmentSource, type OtherRosters, PROFILE_PLATFORMS, type PlayerProfile,
+  type ProfilePlatform, type RosterConflict,
+} from '@/lib/schema/rosters';
 import { toLocalTimestamp } from '@/lib/shared/dates';
 import { playerClubGroups, type RosterClubGroup } from '@/views/clubs/club-line';
 import { SPORT_WORDS, playerCommitLine, sportLabel, type RosterCommitLine } from '@/views/commits/commit-view';

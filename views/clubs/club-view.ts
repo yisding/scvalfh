@@ -21,12 +21,13 @@
  */
 
 import {
-  type Club, SEARCHED_REGIONS, clubDisplayName, getAffiliatedPlayer, getClubAffiliations, getClubs, getClubsFile,
+  SEARCHED_REGIONS, clubDisplayName, getAffiliatedPlayer, getClubAffiliations, getClubs,
+  getClubsFile,
 } from '@/lib/datasets/clubs';
 import { getRosters } from '@/lib/datasets/rosters';
 import { dateWithYear } from '@/lib/format/dates';
 import { plural } from '@/lib/format/words';
-import { CLUB_REGIONS, CLUB_REGION_SITE_REGION } from '@/lib/schema/clubs';
+import { CLUB_REGIONS, CLUB_REGION_SITE_REGION, type Club } from '@/lib/schema/clubs';
 import { clubHref } from '@/lib/shared/routes';
 import { hostOf, numbered, schoolName } from '@/views/shared/source-links';
 

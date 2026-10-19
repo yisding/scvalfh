@@ -10,7 +10,7 @@ import type { RawResponse } from '@/lib/sources/http/raw-response';
 import { getTeamBySlug } from '@/lib/registry/teams';
 import { MAX_RETRY_AFTER_MS, POLITE_USER_AGENT } from '@/lib/sources/http/client';
 import { NEXT_DATA_RE, parseBootstrap } from '@/lib/sources/maxpreps/bootstrap';
-import { DEFAULT_USER_AGENT, MaxPrepsClient } from '@/lib/sources/maxpreps/client';
+import { MaxPrepsClient } from '@/lib/sources/maxpreps/client';
 import { MaxPrepsError } from '@/lib/sources/maxpreps/error';
 import { TBA_TEAM_ID, splitTbaRows } from '@/lib/sources/maxpreps/schedule';
 import { ScheduleResponseSchema, type ScheduleRow, StandingsResponseSchema } from '@/lib/sources/maxpreps/schemas';
@@ -312,7 +312,6 @@ describe('maxpreps: MaxPrepsClient.raw (the LiveTransport read, SPEC §7.2-§7.3
     const init = fetchImpl.mock.calls[0][1] as RequestInit;
     const headers = init.headers as Record<string, string>;
     expect(headers['user-agent']).toBe(POLITE_USER_AGENT);
-    expect(DEFAULT_USER_AGENT).toBe(POLITE_USER_AGENT);
     expect(headers.accept).toBe('application/json');
   });
 

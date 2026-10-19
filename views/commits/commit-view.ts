@@ -23,9 +23,8 @@
 import { byRegion, regionOf } from '@/lib/config/leagues';
 import { clubDisplayName } from '@/lib/datasets/clubs';
 import {
-  type College, type CollegeDivision, type CollegeProgram, type CommitSource, type CommitSport,
-  type CommitStatus, type Commitment, collegeDisplayName, commitClassOf, commitProgram, getColleges,
-  getCommitments, getCommitsFile, getCommittedPlayer, getPlayerCommitment,
+  collegeDisplayName, commitClassOf, commitProgram, getColleges, getCommitments, getCommitsFile,
+  getCommittedPlayer, getPlayerCommitment,
 } from '@/lib/datasets/commits';
 import { getRosters } from '@/lib/datasets/rosters';
 import { dateWithYear, partialDate } from '@/lib/format/dates';
@@ -33,7 +32,10 @@ import { agree, gradeWord, listWords, plural } from '@/lib/format/words';
 import type { RegionId, TeamSlug } from '@/lib/model/ids';
 import { getTeamBySlug } from '@/lib/registry/teams';
 import { clubSiteKey } from '@/lib/schema/clubs';
-import { COLLEGE_DIVISIONS, COMMIT_SPORTS, type SocialPlatform } from '@/lib/schema/commits';
+import {
+  COLLEGE_DIVISIONS, COMMIT_SPORTS, type College, type CollegeDivision, type CollegeProgram,
+  type CommitSource, type CommitSport, type CommitStatus, type Commitment, type SocialPlatform,
+} from '@/lib/schema/commits';
 import { teamHref } from '@/lib/shared/routes';
 import { OUTLETS, PLATFORMS, clubBySite, hostOf, numbered, pathOf, schoolName, sportsRecruitsLabel } from '@/views/shared/source-links';
 

@@ -33,11 +33,14 @@
 
 import { getLeague, getSection, isIndependentLeague, leagueOfDivision } from '@/lib/config/leagues';
 import {
-  type AvailableLeagueHistory, type BracketSectionId, type HistoryAwards, type HistoryPlayer, type HistoryRow,
-  type UnavailableLeagueHistory, bracketSectionName, getAvailableHistoryLeagues, getHistoryBracketFor,
-  getHistoryBrackets, getHistoryChampions, getHistoryDivisionChanges, getHistoryLeagues, getHistorySeason,
+  bracketSectionName, getAvailableHistoryLeagues, getHistoryBracketFor, getHistoryBrackets,
+  getHistoryChampions, getHistoryDivisionChanges, getHistoryLeagues, getHistorySeason,
   getHistoryUnpublishedTies, getUnavailableHistoryLeagues, historySchoolName,
 } from '@/lib/datasets/history';
+import type {
+  AvailableLeagueHistory, HistoryAwards, HistoryPlayer, HistoryRow, UnavailableLeagueHistory,
+} from '@/lib/schema/history';
+import type { BracketSectionId } from '@/lib/schema/history-brackets';
 import { getEnrichedTeamRoster, getRosters } from '@/lib/datasets/rosters';
 import { agree, listWords } from '@/lib/format/words';
 import type { DivisionId, LeagueId, TeamSlug } from '@/lib/model/ids';

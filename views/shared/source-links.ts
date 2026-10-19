@@ -13,9 +13,8 @@
  */
 
 import { getClubs } from '@/lib/datasets/clubs';
-import type { Club } from '@/lib/datasets/clubs';
 import { getTeamBySlug } from '@/lib/registry/teams';
-import { clubSiteKey } from '@/lib/schema/clubs';
+import { type Club, clubSiteKey } from '@/lib/schema/clubs';
 import type { ProfilePlatform } from '@/lib/schema/rosters';
 
 /**

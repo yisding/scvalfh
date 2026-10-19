@@ -24,7 +24,7 @@ import { PoliteFetchError, PoliteFetcher } from './polite-fetcher';
 /**
  * Descriptive UA for sources that do not gate on a browser (SPEC §5.3).
  *
- * ONE definition for the whole repo — `lib/sources/maxpreps/client.ts` re-exports this rather than keeping
+ * ONE definition for the whole repo — `lib/sources/maxpreps/client.ts` imports this rather than keeping
  * a second literal, which is how the two drifted out of sync in the first place.
  *
  * SPEC §5.3's template is `+https://<our-site>/about; contact: <email>`, and both halves matter:

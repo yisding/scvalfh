@@ -12,8 +12,6 @@ import {
 } from '@/lib/engine/note-stats';
 import type { TeamSlug } from '@/lib/model/ids';
 
-export type { NotedTeamPlayerStats } from '@/lib/engine/note-stats';
-
 /** The committed snapshot's games and rosters, for lib/engine/note-stats.ts. */
 function noteSources(): NoteSources {
   return { games: getSnapshot().games, roster: (slug) => getTeamRoster(slug)?.players };

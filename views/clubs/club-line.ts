@@ -3,13 +3,8 @@
  * clubs grouped current, listed, earlier, each linking its club page.
  */
 
-import {
-  type AffiliationStatus,
-  type Club,
-  clubDisplayName,
-  getClub,
-  getPlayerClubs,
-} from '@/lib/datasets/clubs';
+import { clubDisplayName, getClub, getPlayerClubs } from '@/lib/datasets/clubs';
+import type { AffiliationStatus, Club } from '@/lib/schema/clubs';
 import { partialDateKind } from '@/lib/format/dates';
 import type { TeamSlug } from '@/lib/model/ids';
 import { clubHref } from '@/lib/shared/routes';

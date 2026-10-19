@@ -4,7 +4,8 @@
  * The page and the sitemap list the same slugs.
  */
 
-import { type Club, getClub, getClubSlugs } from '@/lib/datasets/clubs';
+import { getClub, getClubSlugs } from '@/lib/datasets/clubs';
+import type { Club } from '@/lib/schema/clubs';
 import type { StaticParams } from '@/views/site/route-contract';
 
 /** One param per club, in display order: the fullest club page is listed first. */

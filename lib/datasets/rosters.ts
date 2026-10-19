@@ -33,25 +33,6 @@ import {
 } from '@/lib/schema/rosters';
 import { parseDataset, readDataset, readDatasetRaw } from './read';
 
-export type {
-  EnrichedGrade,
-  EnrichedHeight,
-  EnrichedJersey,
-  EnrichedPlayer,
-  EnrichedPositions,
-  EnrichedTeam,
-  EnrichmentSource,
-  OtherRosters,
-  PlayerProfile,
-  ProfilePlatform,
-  RosterCoach,
-  RosterConflict,
-  RosterEnrichment,
-  RosterPlayer,
-  Rosters,
-  TeamRoster,
-} from '@/lib/schema/rosters';
-
 /** Both rosters files are read through readDataset with this env, owner and mode. */
 const rostersSource = (env: string, bundled: unknown) => ({
   env,

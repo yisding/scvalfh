@@ -106,8 +106,8 @@ door's path. Rule (f) keeps everyone else on the door.
 | `lib/registry/teams.ts` | `lib/registry/`: one seed file per league, the team list, acronyms, ink, the assert | `resolve.ts`, `jv-teams.ts` |
 | `lib/engine/standings.ts` | `lib/engine/standings/`: record, tiebreak, seed-one, ladder, pairings, missing, uneven, the MaxPreps cross-check | none |
 
-The doors are the only re-exporting modules in the repository: there are no barrels (`index.ts`) and
-no shims at old paths. `LEAGUES` holds the very objects of its parts, so a test that mutates one sees
+The doors are the only re-exporting modules in the repository (`tests/arch/layers.test.ts` fails on an
+`export … from` anywhere else): there are no barrels (`index.ts`) and no shims at old paths. `LEAGUES` holds the very objects of its parts, so a test that mutates one sees
 it in every lookup.
 
 ## The client tier

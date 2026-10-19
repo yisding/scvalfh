@@ -3,7 +3,8 @@
  * data/rosters-enrichment.json (SPEC §1.1j2, DESIGN §17), shared by tests/views/clubs/*.test.ts.
  */
 
-import { type Club, type ClubAffiliation, getClub, getClubSlugs, getClubsFile } from '@/lib/datasets/clubs';
+import { getClub, getClubSlugs, getClubsFile } from '@/lib/datasets/clubs';
+import type { Club, ClubAffiliation } from '@/lib/schema/clubs';
 import type { ClubPageView } from '@/views/clubs/club-page';
 import { buildClubPageView } from '@/views/clubs/club-view';
 

@@ -28,14 +28,6 @@ import {
 } from './schemas';
 import { leagueMetaUrl, scheduleUrl, standingsUrl, teamContextUrl } from './urls';
 
-/**
- * Re-exported, not re-declared: two literals of the same string is how the `+` contact URL came to
- * be a placeholder in both places at once. `lib/sources/http/client.ts` owns it and explains the format;
- * the transport underneath is the shared engine, lib/sources/http/polite-fetcher.ts (see
- * lib/sources/http/client.ts' header for why there are still two clients).
- */
-export { POLITE_USER_AGENT as DEFAULT_USER_AGENT };
-
 export interface ClientOptions {
   /** Injected in tests; defaults to global fetch. */
   fetchImpl?: typeof fetch;
@@ -70,6 +62,10 @@ export class MaxPrepsClient {
   constructor(opts: ClientOptions = {}) {
     this.fetcher = new PoliteFetcher({
       ...opts,
+      // Imported, not re-declared: two literals of the same string is how the `+` contact URL came
+      // to be a placeholder in both places at once. lib/sources/http/client.ts owns it and explains
+      // the format; the transport underneath is the shared engine, lib/sources/http/polite-fetcher.ts
+      // (see lib/sources/http/client.ts' header for why there are still two clients).
       userAgent: opts.userAgent ?? POLITE_USER_AGENT,
       retryAfterCapMs: MAX_RETRY_AFTER_MS,
       // The primary API's own courtesy values (SPEC §5.2): 3 in flight, and the first 4 KB of a

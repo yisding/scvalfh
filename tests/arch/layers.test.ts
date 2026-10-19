@@ -273,6 +273,16 @@ describe('layers: the dependency rule', () => {
     expect(failures).toEqual([]);
   });
 
+  it('only the package doors re-export (no barrels, no shims)', () => {
+    const doors = DOORS.map(({ door }) => door);
+    const reexports = FILES.filter((file) => !doors.includes(moduleOf(file))).flatMap((file) =>
+      importsOf(file)
+        .filter(({ form }) => form === 'export')
+        .map(({ spec, line }) => `${file}:${line} re-exports from ${spec}`),
+    );
+    expect(reexports, 'import the name where it is used; only DOORS re-export').toEqual([]);
+  });
+
   it('no import cycle inside lib/ (rule g)', () => {
     const cycles = cyclesOf(LIB_EDGES).map((cycle) => `${cycle.join(' → ')} (rule g)`);
     expect(cycles).toEqual([]);

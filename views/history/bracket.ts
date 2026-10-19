@@ -1,7 +1,8 @@
-import {
-  type BracketSectionId, type HistoryBracketDivision, type HistoryBracketGame, type HistoryBracketRound,
-  type HistoryBracketSide, type SectionBracket, bracketSectionName, bracketSides, historySchoolName,
-} from '@/lib/datasets/history';
+import { bracketSectionName, bracketSides, historySchoolName } from '@/lib/datasets/history';
+import type {
+  BracketSectionId, HistoryBracketDivision, HistoryBracketGame, HistoryBracketRound,
+  HistoryBracketSide, SectionBracket,
+} from '@/lib/schema/history-brackets';
 import { monthDay } from '@/lib/format/dates';
 import type { LeagueId } from '@/lib/model/ids';
 import type { Team } from '@/lib/model/team';

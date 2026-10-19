@@ -28,12 +28,12 @@ import TeamPage from '@/app/teams/[slug]/page';
 import TeamsPage from '@/app/teams/page';
 import { REGIONS, regionOf } from '@/lib/config/leagues';
 import {
-  type College, collegeDisplayName, commitClassOf, commitProgram, getColleges, getCommitments,
-  getCommitsFile, getCommittedPlayer,
+  collegeDisplayName, commitClassOf, commitProgram, getColleges, getCommitments, getCommitsFile,
+  getCommittedPlayer,
 } from '@/lib/datasets/commits';
 import { getRosters } from '@/lib/datasets/rosters';
 import { TEAMS, getTeamBySlug } from '@/lib/registry/teams';
-import { COLLEGE_DIVISIONS, COMMIT_SPORTS } from '@/lib/schema/commits';
+import { COLLEGE_DIVISIONS, COMMIT_SPORTS, type College } from '@/lib/schema/commits';
 import { commitmentLeaks } from '@/scripts/ci/copy/copy-rules';
 import { PUBLIC_TERMS } from '@/scripts/ci/copy/public-terms';
 import { textOf } from '@/tests/support/html-text';

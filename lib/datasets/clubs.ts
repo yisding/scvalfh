@@ -40,19 +40,6 @@ import {
 } from '@/lib/schema/clubs';
 import { latestDateKey } from '@/lib/shared/dates';
 
-export type {
-  AffiliationConfidence,
-  AffiliationSource,
-  AffiliationStatus,
-  Club,
-  ClubAffiliation,
-  ClubProgram,
-  ClubRegion,
-  ClubSource,
-  ClubSourceKind,
-  ClubsFile,
-} from '@/lib/schema/clubs';
-
 /**
  * Parse `raw` against the contract, then check the join the schema cannot see (see the header).
  * Throws on the first failure: a schema failure lists the first ten issues with their paths, a

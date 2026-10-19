@@ -6,16 +6,12 @@
  * moves (views/clubs/club-view.ts).
  */
 
-import {
-  type AffiliationSource,
-  type Club,
-  type ClubAffiliation,
-  type ClubRegion,
-  clubDisplayName,
-} from '@/lib/datasets/clubs';
+import { clubDisplayName } from '@/lib/datasets/clubs';
 import { partialDate, partialDateKind } from '@/lib/format/dates';
 import { listWords } from '@/lib/format/words';
-import { clubSiteKey } from '@/lib/schema/clubs';
+import {
+  type AffiliationSource, type Club, type ClubAffiliation, type ClubRegion, clubSiteKey,
+} from '@/lib/schema/clubs';
 import { OUTLETS, PLATFORMS, clubBySite, hostOf, pathOf, sportsRecruitsLabel } from '@/views/shared/source-links';
 
 /**

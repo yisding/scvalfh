@@ -10,7 +10,8 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 
 import AwardsBlock from '@/components/history/AwardsBlock';
-import { type HistoryAwards, getAvailableHistoryLeagues } from '@/lib/datasets/history';
+import { getAvailableHistoryLeagues } from '@/lib/datasets/history';
+import type { HistoryAwards } from '@/lib/schema/history';
 import { getTeamBySlug } from '@/lib/registry/teams';
 import { sectionById } from '@/scripts/ci/copy/copy-rules';
 import { textOf } from '@/tests/support/html-text';

@@ -40,20 +40,6 @@ import {
 } from '@/lib/schema/commits';
 import { latestDateKey } from '@/lib/shared/dates';
 
-export type {
-  College,
-  CollegeDivision,
-  CollegeProgram,
-  CollegeSource,
-  CommitConfidence,
-  CommitSource,
-  CommitSourceKind,
-  CommitSport,
-  CommitStatus,
-  Commitment,
-  CommitsFile,
-} from '@/lib/schema/commits';
-
 /**
  * Parse `raw` against the contract, then check the join the schema cannot see (see the header).
  * Throws on the first failure: a schema failure lists the first ten issues with their paths, a

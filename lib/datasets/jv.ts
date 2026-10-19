@@ -14,8 +14,6 @@ import type { TeamSlug } from '@/lib/model/ids';
 import { type JvFile, JvFileSchema, type JvTeam } from '@/lib/schema/jv';
 import { readDataset } from './read';
 
-export type { JvFile, JvTeam } from '@/lib/schema/jv';
-
 const file = readDataset({
   env: 'SCVAL_JV',
   bundled,

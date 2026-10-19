@@ -29,26 +29,6 @@ import {
 import { latestDateKey } from '@/lib/shared/dates';
 import { readDataset } from './read';
 
-export type {
-  AvailableLeagueHistory,
-  History,
-  HistoryAwards,
-  HistoryDivision,
-  HistoryLevel,
-  HistoryPlayer,
-  HistoryRow,
-  LeagueHistory,
-  UnavailableLeagueHistory,
-} from '@/lib/schema/history';
-export type {
-  BracketSectionId,
-  HistoryBracketDivision,
-  HistoryBracketGame,
-  HistoryBracketRound,
-  HistoryBracketSide,
-  SectionBracket,
-} from '@/lib/schema/history-brackets';
-
 /**
  * data/history-2025-26.json is imported, so the build bundles it, for the reason given in
  * lib/datasets/snapshot.ts: a Worker has no project filesystem, and this module loads on the first
