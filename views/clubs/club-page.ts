@@ -11,9 +11,9 @@ import {
   getAffiliatedPlayer,
 } from '@/lib/datasets/clubs';
 import { gradeWord } from '@/lib/format/words';
-import { hostOf, numbered, pathOf, schoolName } from '@/views/shared/source-links';
+import { hostOf, isSportsRecruits, numbered, pathOf, schoolName } from '@/views/shared/source-links';
 
-import { isOwnSite, isSportsRecruits, sourceLabel, statusWords } from './words';
+import { isOwnSite, sourceLabel, statusWords } from './words';
 
 export interface ClubSourceLink {
   label: string;

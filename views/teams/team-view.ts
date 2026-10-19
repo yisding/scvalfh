@@ -12,7 +12,7 @@
 import {
   REGIONS, getDivision, getLeague, getRegion, leagueOfDivision, leaguePlayEnds, leaguesInRegion, regionOf,
 } from '@/lib/config/leagues';
-import { divisionHeading, standingsLabel } from '@/lib/config/leagues/labels';
+import { divisionHeading, leagueTitle, standingsLabel } from '@/lib/config/leagues/labels';
 import { getToday } from '@/lib/datasets/snapshot';
 import type { FormGame } from '@/lib/engine/form';
 import { outcomesFor } from '@/lib/engine/standings';
@@ -31,7 +31,7 @@ import { type LeagueSummary, getTeamsGrouped } from '@/lib/queries/leagues';
 import { type TeamPostseasonLine, getTeamPostseasonLine } from '@/lib/queries/postseason';
 import { getStandingContext, getStandingFor, getStandings } from '@/lib/queries/standings';
 import { getHeadToHead, getTeamForm, getTeams } from '@/lib/queries/teams';
-import { getTeamBySlug } from '@/lib/registry/teams';
+import { getTeamBySlug, sideShortName } from '@/lib/registry/teams';
 import { byDateLocal, sideOutcome } from '@/lib/shared/game';
 import { pinLabel } from '@/lib/shared/pin-label';
 import { getEloBoardForTeam } from '@/views/leaders/elo-board';
@@ -652,7 +652,7 @@ export function buildTeamPageView(slug: string): TeamPageView | null {
       // A final always has an outcome; the fallback keeps the type honest rather than asserting.
       outcome: outcome ?? 'T',
       contestId: game.contestId,
-      opponent: theirs.slug ? (getTeamBySlug(theirs.slug)?.shortName ?? theirs.name) : theirs.name,
+      opponent: sideShortName(theirs),
       score: scorePair(game, team.id),
       date: monthDay(game.dateLocal),
     };
@@ -834,12 +834,9 @@ export function buildTeamsByLeague(region?: RegionId): TeamsSectionGroup[] {
     id: section.id,
     name: section.name,
     leagues: leagues.map(({ league, divisions }) => {
-      // A group of independents (the LA independents) is headed by its name: its short name is
-      // an adjective.
-      const independent = getLeague(league.id).independents === true;
       return {
         league,
-        title: independent ? league.name : `${league.shortName} — ${league.name}`,
+        title: leagueTitle(league.id),
         meta: plural(league.teamCount, 'team'),
         membershipNote: getLeague(league.id).membershipNote,
         standingsHref: `/standings/${league.id}`,

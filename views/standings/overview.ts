@@ -5,7 +5,7 @@
  */
 
 import { getDivision, getLeague, sectionOf } from '@/lib/config/leagues';
-import { divisionHeading } from '@/lib/config/leagues/labels';
+import { divisionHeading, leagueTitle } from '@/lib/config/leagues/labels';
 import { shortDate } from '@/lib/format/dates';
 import type { DivisionId, LeagueId } from '@/lib/model/ids';
 import type { Standing } from '@/lib/model/standings';
@@ -94,8 +94,7 @@ export function overviewOutline(
     }
     group.leagues.push({
       id,
-      // A group of independents is not a league: its heading is its name alone ('LA independents').
-      title: league.independents ? league.name : `${league.shortName} — ${league.name}`,
+      title: leagueTitle(id),
       shortName: league.shortName,
       membershipNote: league.membershipNote,
       divisions: league.divisions.map((d) => divisionOf(d.id)),

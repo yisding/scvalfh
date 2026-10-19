@@ -1,5 +1,5 @@
 import SectionHeader from '@/components/ui/SectionHeader';
-import { isIndependentLeague } from '@/lib/config/leagues';
+import { leagueTitle } from '@/lib/config/leagues/labels';
 import { listWords, numberWord } from '@/lib/format/words';
 import { type AboutView, isQuotedLeague, leagueRef } from '@/views/about/about-view';
 
@@ -76,7 +76,7 @@ export function AboutStandingsRules({
           <SectionHeader
             as="h3"
             id={`rules-${summary.id}-heading`}
-            kicker={isIndependentLeague(summary.id) ? summary.name : `${summary.shortName} — ${summary.name}`}
+            kicker={leagueTitle(summary.id)}
           />
           {isQuotedLeague(config) ? (
             <QuotedRules league={config} />

@@ -14,7 +14,7 @@ import { getJvFetchedAt, getJvTeam } from '@/lib/datasets/jv';
 import type { Game, GameSide } from '@/lib/model/game';
 import type { RegionId, TeamSlug } from '@/lib/model/ids';
 import { getJvClassification, getJvGamesForTeam, getJvGamesOn } from '@/lib/queries/jv';
-import { getTeamBySlug } from '@/lib/registry/teams';
+import { getTeamBySlug, sideShortName } from '@/lib/registry/teams';
 import { localDateKey } from '@/lib/shared/dates';
 
 export interface JvRowView {
@@ -54,17 +54,12 @@ export interface TeamJvView extends JvListSummary {
   emptyBody: string;
 }
 
-function shortName(side: GameSide): string {
-  const team = side.slug ? getTeamBySlug(side.slug) : undefined;
-  return team ? team.shortName : side.name;
-}
-
 /** The sentence beside a MaxPreps JV final si.com reports differently, or null. */
 export function jvDiffersNote(game: Game): string | null {
   const conflict = game.provenance.scoreConflict;
   if (!conflict || game.provenance.scores === 'sblive') return null;
   return (
-    `si.com has ${shortName(game.away)} ${conflict.sblive.away}, ${shortName(game.home)} ${conflict.sblive.home}; ` +
+    `si.com has ${sideShortName(game.away)} ${conflict.sblive.away}, ${sideShortName(game.home)} ${conflict.sblive.home}; ` +
     'MaxPreps’ score is shown.'
   );
 }

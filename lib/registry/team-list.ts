@@ -94,6 +94,22 @@ export function getTeamBySlug(slug: string): Team | undefined {
   return BY_SLUG.get(slug);
 }
 
+/**
+ * A registry team's short name ("Mitty" on a 358px card, never "Archbishop Mitty High School"), by slug
+ * or by MaxPreps GUID (the two never collide: ids are GUIDs, slugs are ours and kebab-case); anyone the
+ * registry does not hold is the `fallback`, the name as the source printed it. `null` (a side with no
+ * slug) is the fallback too. The one lookup behind every "short name of this side" in the copy.
+ */
+export function teamShortName(slugOrId: string | null | undefined, fallback: string): string {
+  const team = slugOrId ? (BY_SLUG.get(slugOrId) ?? BY_ID.get(slugOrId as TeamId)) : undefined;
+  return team ? team.shortName : fallback;
+}
+
+/** A game side by its registry short name, else the name the source gave it (by slug, like the page copy). */
+export function sideShortName(side: Pick<GameSide, 'name' | 'slug'>): string {
+  return teamShortName(side.slug, side.name);
+}
+
 /** The registry team on one side of a game: by MaxPreps GUID first, then by slug. */
 export function teamOfSide(side: Pick<GameSide, 'teamId' | 'slug'>): Team | undefined {
   return (side.teamId ? BY_ID.get(side.teamId) : undefined) ?? (side.slug ? BY_SLUG.get(side.slug) : undefined);

@@ -10,14 +10,10 @@ import { leagueSportWords } from '@/lib/config/leagues/labels';
 import { SEASON_DISPLAY } from '@/lib/config/season';
 import { dateWithYear, timeOfDayPT } from '@/lib/format/dates';
 import { matchupJoiner } from '@/lib/format/score';
+import { indefiniteArticle } from '@/lib/format/words';
 import { gameContextNoun, resultSentence } from '@/views/shared/describe-game';
 
 import type { GameView } from './game-view';
-
-/** 'a' or 'an', so "an MCAL tournament game" reads like English (acronyms by their letter name). */
-function article(noun: string): string {
-  return /^([aeiou]|MCAL|SCVAL)/i.test(noun) ? 'an' : 'a';
-}
 
 /**
  * The page title, the OG title and the `<h1>` — one composer, so they cannot drift.
@@ -79,8 +75,9 @@ export function gameDescription(model: GameView): string {
     }`;
   }
   const joiner = matchupJoiner(game);
-  return `${away.name} ${joiner} ${home.name}, ${model.whenLabel} — ${article(
+  return `${away.name} ${joiner} ${home.name}, ${model.whenLabel} — ${indefiniteArticle(
     context,
+    { mode: 'vowel-or-acronym' },
   )} ${context} in ${where}. ${
     display.kind === 'unreported'
       ? 'Played; no score reported yet.'

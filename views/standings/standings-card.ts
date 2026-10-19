@@ -17,7 +17,7 @@ import type { DivisionId, TeamId } from '@/lib/model/ids';
 import { getLastLeagueResultDate } from '@/lib/queries/games';
 import type { LeagueSummary } from '@/lib/queries/leagues';
 import { getStandings } from '@/lib/queries/standings';
-import { getTeams } from '@/lib/queries/teams';
+import { teamShortName } from '@/lib/registry/teams';
 import { asOfLeagueGamesWords } from '@/views/site/og-theme';
 
 export interface LeagueStandingsCardRow {
@@ -57,7 +57,6 @@ export type LeagueStandingsCardSource = Pick<LeagueSummary, 'id' | 'name' | 'sho
 
 /** The card for `league`, a league the route has already checked with `leagueParam`. */
 export function leagueStandingsCardModel(league: LeagueStandingsCardSource): LeagueStandingsCardModel {
-  const teams = getTeams();
   const single = league.divisions.length === 1;
   const through = getLastLeagueResultDate({ league: league.id });
   return {
@@ -74,7 +73,7 @@ export function leagueStandingsCardModel(league: LeagueStandingsCardSource): Lea
         .map((s) => ({
           id: s.teamId,
           place: placeMark(s.computed.place, s.tiebreak.shared, 'table'),
-          name: teams.find((t) => t.id === s.teamId)?.shortName ?? s.slug,
+          name: teamShortName(s.teamId, s.slug),
           pts: s.computed.pts,
           record: recordString(s.computed),
         })),

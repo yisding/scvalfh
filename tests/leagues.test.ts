@@ -17,7 +17,9 @@ import {
   leagueStandingsUrl, leaguesInRegion, regionOf, seasonWindowBounds, sectionOf, sectionsInRegion, statusesOf,
   PLACE_VS_STAGES, UNCOMPUTABLE_STAGES, byRegion, isDefaultRegion, regionIdSuffix, tiebreakChainFor, tiebreakChains,
 } from '@/lib/config/leagues';
-import { divisionDisplay, divisionHeading, divisionLabel, standingsLabel } from '@/lib/config/leagues/labels';
+import {
+  divisionDisplay, divisionHeading, divisionLabel, independentTeamCount, leagueTitle, readerName, standingsLabel,
+} from '@/lib/config/leagues/labels';
 import { RESERVED_SEGMENTS } from '@/lib/config/routes';
 import { CCS_BRACKET_URL } from '@/lib/config/season';
 import type { RegionId } from '@/lib/model/ids';
@@ -1357,6 +1359,14 @@ describe('leagues: the LA independents (DESIGN §24.9, §24.10)', () => {
     expect(INDEPENDENT_LEAGUES.map((l) => l.id)).toEqual(['independents']);
     expect(standingsLabel('independents')).toBe('LA standings');
     expect(standingsLabel('sunset')).toBe('Sunset standings');
+  });
+
+  it('heads a group by its name alone, and names it as a reader does', () => {
+    expect(leagueTitle('independents')).toBe('LA independents');
+    expect(leagueTitle('scval')).toBe('SCVAL — Santa Clara Valley Athletic League');
+    expect(readerName('independents')).toBe('the LA independents');
+    expect(readerName('north-county')).toBe('North');
+    expect(independentTeamCount(group)).toBe(5);
   });
 
   it('says only what is true of a group in no league: no citation claims a league rule', () => {

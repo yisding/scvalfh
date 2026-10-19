@@ -7,6 +7,7 @@
 import {
   INDEPENDENT_LEAGUES, LEAGUES_PROPER, REGIONS, getSection, leaguesInRegion, regionIdSuffix,
 } from '@/lib/config/leagues';
+import { independentTeamCount } from '@/lib/config/leagues/labels';
 import { numberWord } from '@/lib/format/words';
 import type { RegionId } from '@/lib/model/ids';
 
@@ -18,20 +19,17 @@ import type { RegionId } from '@/lib/model/ids';
  */
 export const LEAGUE_COUNT = numberWord(LEAGUES_PROPER.length);
 
-const independentTeams = (group: { divisions: readonly { expectedTeams: number }[] }) =>
-  group.divisions.reduce((n, d) => n + d.expectedTeams, 0);
-
 /**
  * ' and the Southern Section’s five independents' ('' with no independent group): the covered teams that
  * are in no league, named after a count of leagues wherever the sentence speaks for every covered team.
  */
 export const AND_INDEPENDENTS = INDEPENDENT_LEAGUES.map(
-  (g) => ` and the ${getSection(g.sectionId).name}’s ${numberWord(independentTeams(g))} independents`,
+  (g) => ` and the ${getSection(g.sectionId).name}’s ${numberWord(independentTeamCount(g))} independents`,
 ).join('');
 
 /** ' and five independents' ('' with none): the short form, for an eyebrow. */
 export const AND_INDEPENDENTS_SHORT = INDEPENDENT_LEAGUES.map(
-  (g) => ` and ${numberWord(independentTeams(g))} independents`,
+  (g) => ` and ${numberWord(independentTeamCount(g))} independents`,
 ).join('');
 
 /** What a board needs to know about the region it ranks: its id suffix and the words for its leagues. */
@@ -63,7 +61,7 @@ export function regionScope(region: RegionId): RegionScope {
   const config = REGIONS.find((r) => r.id === region)!;
   const all = leaguesInRegion(region);
   const leagues = all.filter((l) => !l.independents).length;
-  const independents = all.filter((l) => l.independents).reduce((n, l) => n + independentTeams(l), 0);
+  const independents = all.filter((l) => l.independents).reduce((n, l) => n + independentTeamCount(l), 0);
   const andIndependents = independents > 0 ? ` and ${numberWord(independents)} independents` : '';
   return {
     config,

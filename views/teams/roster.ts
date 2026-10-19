@@ -31,9 +31,11 @@ import {
 import { dateWithYear, shortDate } from '@/lib/format/dates';
 import { gradeWord } from '@/lib/format/words';
 import type { TeamSlug } from '@/lib/model/ids';
+import { PROFILE_PLATFORMS } from '@/lib/schema/rosters';
 import { toLocalTimestamp } from '@/lib/shared/dates';
 import { playerClubGroups, type RosterClubGroup } from '@/views/clubs/club-line';
 import { SPORT_WORDS, playerCommitLine, sportLabel, type RosterCommitLine } from '@/views/commits/commit-view';
+import { PLATFORMS } from '@/views/shared/source-links';
 import { positionWords } from '@/views/shared/words/position';
 
 /**
@@ -82,24 +84,15 @@ function seasonsSince(pageSeason: string): number {
   return current && page ? Number(current[1]) - Number(page[1]) : 0;
 }
 
-/** A row's link text, and how the footnote names the platform. */
-const PROFILE_WORDS: Record<ProfilePlatform, { link: string; footnote: string }> = {
-  ncsa: { link: 'NCSA profile', footnote: 'NCSA' },
-  sportsrecruits: { link: 'SportsRecruits profile', footnote: 'SportsRecruits' },
-  fieldlevel: { link: 'FieldLevel profile', footnote: 'FieldLevel' },
-  hudl: { link: 'Hudl profile', footnote: 'Hudl' },
-  captainu: { link: 'Captain U profile', footnote: 'Captain U' },
-  maxpreps: { link: 'MaxPreps profile', footnote: 'MaxPreps' },
-  personal: { link: 'Recruiting site', footnote: 'personal sites' },
-};
-const PROFILE_ORDER = Object.keys(PROFILE_WORDS) as ProfilePlatform[];
+/** The order a row's profile links and the footnote's platforms are listed in: NCSA first, a personal site last. */
+const PROFILE_ORDER: readonly ProfilePlatform[] = PROFILE_PLATFORMS;
 
 /**
  * A profile link's text: "NCSA profile" for field hockey, the site's own sport; a profile in another
  * sport names it, "SportsRecruits lacrosse profile", "Hudl softball profile", "Lacrosse recruiting site".
  */
 export function profileLabel(x: Pick<PlayerProfile, 'platform' | 'sport'>): string {
-  const link = PROFILE_WORDS[x.platform].link;
+  const link = PLATFORMS[x.platform].label;
   if (x.sport === undefined) return link;
   if (x.platform === 'personal') return `${sportLabel(x.sport)} recruiting site`;
   return link.replace(/ profile$/, ` ${SPORT_WORDS[x.sport]} profile`);
@@ -502,7 +495,7 @@ export function buildRosterView(slug: TeamSlug): RosterView | null {
     }),
     profilePlatforms: PROFILE_ORDER.filter(
       (k) => k !== 'maxpreps' && players.some((p) => p.profiles.some((x) => x.platform === k)),
-    ).map((k) => PROFILE_WORDS[k].footnote),
+    ).map((k) => PLATFORMS[k].footnote),
     hasClaimedMaxPreps: players.some((p) => p.profiles.some((x) => x.platform === 'maxpreps')),
     hasClubs: rows.some((r) => r.clubs.length > 0),
     hasListedClub: rows.some((r) => r.clubs.some((g) => g.status === 'unknown')),

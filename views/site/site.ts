@@ -10,6 +10,7 @@ import type { Metadata } from 'next';
 import {
   INDEPENDENT_LEAGUES, LEAGUES_PROPER, SECTIONS, byRegion, getSection, regionOf, sectionsInRegion,
 } from '@/lib/config/leagues';
+import { independentTeamCount } from '@/lib/config/leagues/labels';
 import { SEASON_CALENDAR_YEAR } from '@/lib/config/season';
 import { listWords, numberWord } from '@/lib/format/words';
 import type { RegionId } from '@/lib/model/ids';
@@ -53,8 +54,7 @@ export const SITE_SHORT_NAME = 'NorCal FH';
  * DESIGN §24.9, §24.10).
  */
 export function independentsWords(group: LeagueConfig): string {
-  const teams = group.divisions.reduce((n, d) => n + d.expectedTeams, 0);
-  return `${numberWord(teams)} ${getSection(group.sectionId).briefLabel} independents`;
+  return `${numberWord(independentTeamCount(group))} ${getSection(group.sectionId).briefLabel} independents`;
 }
 
 /**

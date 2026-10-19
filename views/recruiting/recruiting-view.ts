@@ -24,14 +24,15 @@
  *     each school's heading links, says where each came from.
  */
 
-import { REGIONS, getLeague } from '@/lib/config/leagues';
+import { REGIONS } from '@/lib/config/leagues';
+import { leagueTitle } from '@/lib/config/leagues/labels';
 import { getClubsFile } from '@/lib/datasets/clubs';
 import { getCommitsFile } from '@/lib/datasets/commits';
 import { getRosterEnrichment, getRosters } from '@/lib/datasets/rosters';
 import { dateWithYear } from '@/lib/format/dates';
-import { listWords, plural } from '@/lib/format/words';
+import { agree, listWords, plural } from '@/lib/format/words';
 import type { RegionId, TeamSlug } from '@/lib/model/ids';
-import { type LeagueSummary, getTeamsGrouped } from '@/lib/queries/leagues';
+import { getTeamsGrouped } from '@/lib/queries/leagues';
 import { buildRosterView, type RosterRow } from '@/views/teams/roster';
 
 /** A roster row with something to show here: its commitment, clubs and profiles, as the team page has them. */
@@ -136,12 +137,11 @@ export function schoolMeta(rows: readonly RecruitingRow[]): string {
  * have a recruiting profile", the zero counts left out.
  */
 function breakdownWords(c: Pick<RecruitingCounts, 'committed' | 'withClub' | 'withProfile'>): string {
-  const verb = (n: number, one: string, many: string) => (n === 1 ? one : many);
   return listWords(
     [
-      c.committed > 0 ? `${c.committed} ${verb(c.committed, 'has', 'have')} committed to a college` : null,
-      c.withClub > 0 ? `${c.withClub} ${verb(c.withClub, 'is', 'are')} tied to a club` : null,
-      c.withProfile > 0 ? `${c.withProfile} ${verb(c.withProfile, 'has', 'have')} a recruiting profile` : null,
+      c.committed > 0 ? `${c.committed} ${agree(c.committed, 'has', 'have')} committed to a college` : null,
+      c.withClub > 0 ? `${c.withClub} ${agree(c.withClub, 'is', 'are')} tied to a club` : null,
+      c.withProfile > 0 ? `${c.withProfile} ${agree(c.withProfile, 'has', 'have')} a recruiting profile` : null,
     ].filter((p): p is string => p !== null),
   );
 }
@@ -159,7 +159,7 @@ export function regionSummary(name: string, c: RecruitingCounts): string {
 export function ledeWords(trackedTeams: number, c: RecruitingCounts): string {
   const opening = `Every player on this site’s ${trackedTeams} varsity rosters with a recruiting profile, a youth club or a college commitment that a public page shows, school by school.`;
   if (c.players === 0) return `${opening} No public page we found shows one for a player here yet.`;
-  return `${opening} ${plural(c.players, 'player')} from ${plural(c.schools, 'school')} ${c.players === 1 ? 'is' : 'are'} listed: ${breakdownWords(c)}.`;
+  return `${opening} ${plural(c.players, 'player')} from ${plural(c.schools, 'school')} ${agree(c.players, 'is', 'are')} listed: ${breakdownWords(c)}.`;
 }
 
 /** `/recruiting`: region → league → school, each school's listed players in the roster's order. */
@@ -193,7 +193,7 @@ export function buildRecruitingView(): RecruitingView {
         return [
           {
             id: league.id,
-            title: leagueTitle(league),
+            title: leagueTitle(league.id),
             meta: `${plural(players, 'player')} at ${plural(schools.length, 'school')}`,
             schools,
           },
@@ -214,9 +214,4 @@ export function buildRecruitingView(): RecruitingView {
     clubsCheckedOn: dateWithYear(getClubsFile().capturedAt),
     commitsCheckedOn: dateWithYear(getCommitsFile().capturedAt),
   };
-}
-
-/** /teams' league heading: "SCVAL — Santa Clara Valley Athletic League", a group of independents by its name. */
-function leagueTitle(league: LeagueSummary): string {
-  return getLeague(league.id).independents === true ? league.name : `${league.shortName} — ${league.name}`;
 }

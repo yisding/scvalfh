@@ -306,7 +306,8 @@ export const PROFILE_HOSTS: Record<Exclude<ProfilePlatform, 'personal'>, string>
   maxpreps: 'maxpreps.com',
 };
 
-function hostOf(url: string): string | null {
+/** A URL's lowercase host (`www.` kept: the platform check allows a subdomain), or null for a string that is not a URL. */
+function hostOrNull(url: string): string | null {
   try {
     return new URL(url).hostname.toLowerCase();
   } catch {
@@ -325,7 +326,7 @@ export const PlayerProfileSchema = z
     sport: z.enum(COMMIT_SPORTS).exclude(['field-hockey']).optional(),
   })
   .refine((p) => {
-    const host = hostOf(p.url);
+    const host = hostOrNull(p.url);
     if (host === null) return false;
     if (p.platform === 'personal') return true;
     const want = PROFILE_HOSTS[p.platform];

@@ -6,8 +6,8 @@ import LeagueSwitcher, { RegionSwitcher } from '@/components/layout/LeagueSwitch
 import PageHeader from '@/components/layout/PageHeader';
 import OverviewDivisionBlock from '@/components/standings/OverviewDivisionBlock';
 import SectionHeader from '@/components/ui/SectionHeader';
-import { getLeague, isIndependentLeague } from '@/lib/config/leagues';
-import { standaloneName } from '@/lib/config/leagues/labels';
+import { getLeague } from '@/lib/config/leagues';
+import { readerName } from '@/lib/config/leagues/labels';
 import { shortDate } from '@/lib/format/dates';
 import { listWords } from '@/lib/format/words';
 import type { LeagueId } from '@/lib/model/ids';
@@ -60,14 +60,14 @@ export function generateMetadata(): Metadata {
 function siteOrderedLeagues(leagues: readonly { id: LeagueId; shortName: string }[]): string[] {
   return leagues
     .filter((l) => getLeague(l.id).rules.orderScope === 'site')
-    .map((l) => (isIndependentLeague(l.id) ? standaloneName(l.id) : l.shortName));
+    .map((l) => readerName(l.id));
 }
 
 export default function StandingsPage() {
   const { leagues, regions } = buildStandingsOverviewView();
   const siteOrdered = siteOrderedLeagues(leagues);
   // Every table, the independents' included, named as a reader names it.
-  const tabled = leagues.map((l) => (isIndependentLeague(l.id) ? standaloneName(l.id) : l.shortName));
+  const tabled = leagues.map((l) => readerName(l.id));
 
   return (
     <div className="pb-section-lg">

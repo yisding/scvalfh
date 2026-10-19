@@ -21,7 +21,7 @@
  */
 
 import { byRegion, regionOf } from '@/lib/config/leagues';
-import { clubDisplayName, getClubs } from '@/lib/datasets/clubs';
+import { clubDisplayName } from '@/lib/datasets/clubs';
 import {
   type College, type CollegeDivision, type CollegeProgram, type CommitSource, type CommitSport,
   type CommitStatus, type Commitment, collegeDisplayName, commitClassOf, commitProgram, getColleges,
@@ -29,12 +29,12 @@ import {
 } from '@/lib/datasets/commits';
 import { getRosters } from '@/lib/datasets/rosters';
 import { dateWithYear, partialDate } from '@/lib/format/dates';
-import { gradeWord, listWords, plural } from '@/lib/format/words';
+import { agree, gradeWord, listWords, plural } from '@/lib/format/words';
 import type { RegionId, TeamSlug } from '@/lib/model/ids';
 import { getTeamBySlug } from '@/lib/registry/teams';
 import { clubSiteKey } from '@/lib/schema/clubs';
 import { COLLEGE_DIVISIONS, COMMIT_SPORTS, type SocialPlatform } from '@/lib/schema/commits';
-import { OUTLETS, hostOf, numbered, pathOf, schoolName } from '@/views/shared/source-links';
+import { OUTLETS, PLATFORMS, clubBySite, hostOf, numbered, pathOf, schoolName, sportsRecruitsLabel } from '@/views/shared/source-links';
 
 // ---------------------------------------------------------------- wording tables
 
@@ -101,13 +101,6 @@ const OTHER_CLUBS: Readonly<Record<string, string>> = {
   'advnclacrosse.com': 'ADVNC Lacrosse',
 };
 
-/** The recruiting platforms' profile links. */
-const PLATFORM_LABELS = {
-  ncsa: 'NCSA profile',
-  hudl: 'Hudl profile',
-  fieldlevel: 'FieldLevel profile',
-} as const;
-
 /** A social platform's name in a link: "Valley Christian athletics on X". */
 const PLATFORM_NAMES: Record<SocialPlatform, string> = {
   x: 'X',
@@ -117,11 +110,6 @@ const PLATFORM_NAMES: Record<SocialPlatform, string> = {
   threads: 'Threads',
 };
 
-/** Which club's own site a URL is on: every club of data/clubs.json with a website, by clubSiteKey (a host, or a site on a shared host). */
-const CLUB_BY_SITE: ReadonlyMap<string, string> = new Map(
-  getClubs().flatMap((c) => (c.website ? [[clubSiteKey(c.website), clubDisplayName(c)] as const] : [])),
-);
-
 /**
  * A source's link text: "SportsRecruits profile", "SportsRecruits college page", "NCSA profile",
  * "MaxPreps profile", "Stanford athletics", "SF Hawks site", "Stick Together", "The Talon", an
@@ -130,18 +118,14 @@ const CLUB_BY_SITE: ReadonlyMap<string, string> = new Map(
 export function sourceLabel(src: Pick<CommitSource, 'url' | 'kind' | 'account'>, college: College): string {
   const host = hostOf(src.url);
   switch (src.kind) {
-    case 'sportsrecruits': {
-      const path = pathOf(src.url);
-      if (path.includes('/athlete/')) return 'SportsRecruits profile';
-      // A college's recruiting page, which lists its committed athletes.
-      return path.includes('/athletic-scholarships/') ? 'SportsRecruits college page' : 'SportsRecruits page';
-    }
+    case 'sportsrecruits':
+      return sportsRecruitsLabel(src.url, 'commit');
     case 'ncsa':
     case 'hudl':
     case 'fieldlevel':
-      return PLATFORM_LABELS[src.kind];
+      return PLATFORMS[src.kind].label;
     case 'maxpreps':
-      return pathOf(src.url).includes('/athletes/') ? 'MaxPreps profile' : 'MaxPreps page';
+      return pathOf(src.url).includes('/athletes/') ? PLATFORMS.maxpreps.label : 'MaxPreps page';
     case 'college':
       return college.programs.some((p) => p.url !== null && hostOf(p.url) === host)
         ? `${collegeDisplayName(college)} athletics`
@@ -150,7 +134,8 @@ export function sourceLabel(src: Pick<CommitSource, 'url' | 'kind' | 'account'>,
       // The schema holds every official-social source to an account; the host is a fallback only.
       return src.account ? `${src.account.ownerName} on ${PLATFORM_NAMES[src.account.platform]}` : host;
     case 'club-site': {
-      const club = CLUB_BY_SITE.get(clubSiteKey(src.url)) ?? OTHER_CLUBS[host];
+      const own = clubBySite().get(clubSiteKey(src.url));
+      const club = own ? clubDisplayName(own) : OTHER_CLUBS[host];
       return club ? `${club} site` : host;
     }
     default:
@@ -512,7 +497,7 @@ function countWords(commitments: readonly CommitPick[]): string {
   });
   // Every level's words start with "N" ("NCAA", "NAIA"), so the article is always "an".
   const programWords = (k: number, words: string) => (k === 1 ? `an ${words} program` : `${words} programs`);
-  const who = `${plural(players, 'player')} from ${plural(schools, 'school')} ${players === 1 ? 'has' : 'have'} committed to ${plural(colleges, 'college')}`;
+  const who = `${plural(players, 'player')} from ${plural(schools, 'school')} ${agree(players, 'has', 'have')} committed to ${plural(colleges, 'college')}`;
   const bySport =
     sports.length > 1 ? ` By sport, ${listWords(sports.map(({ sport, n }) => `${n} in ${SPORT_WORDS[sport]}`))}.` : '';
   if (byDivision.length === 1) {

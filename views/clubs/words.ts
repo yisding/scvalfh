@@ -12,12 +12,11 @@ import {
   type ClubAffiliation,
   type ClubRegion,
   clubDisplayName,
-  getClubs,
 } from '@/lib/datasets/clubs';
 import { partialDate, partialDateKind } from '@/lib/format/dates';
 import { listWords } from '@/lib/format/words';
 import { clubSiteKey } from '@/lib/schema/clubs';
-import { OUTLETS, hostOf, pathOf } from '@/views/shared/source-links';
+import { OUTLETS, PLATFORMS, clubBySite, hostOf, pathOf, sportsRecruitsLabel } from '@/views/shared/source-links';
 
 /**
  * A region's heading, and how a sentence says a club is based there: "in San Francisco", "on the
@@ -59,20 +58,14 @@ export function basedWords(regions: readonly ClubRegion[]): string {
   );
 }
 
-/** The recruiting platforms: a profile's link text, and the platform's name in a sentence. */
-const PLATFORM_WORDS = {
-  ncsa: { label: 'NCSA profile', inSentence: 'NCSA' },
-  hudl: { label: 'Hudl profile', inSentence: 'Hudl' },
-  fieldlevel: { label: 'FieldLevel profile', inSentence: 'FieldLevel' },
-  'maxpreps-career': { label: 'MaxPreps profile', inSentence: 'MaxPreps' },
+/** The recruiting-platform source kinds of a club page, by the platform whose words they read. */
+const PLATFORM_OF_KIND = {
+  ncsa: 'ncsa',
+  hudl: 'hudl',
+  fieldlevel: 'fieldlevel',
+  'maxpreps-career': 'maxpreps',
 } as const;
 
-export const isSportsRecruits = (host: string) => host === 'sportsrecruits.com' || host.endsWith('.sportsrecruits.com');
-
-/** Which club's own site a URL is on: every club with a website, by clubSiteKey (a host, or a site on a shared host). */
-const CLUB_BY_SITE: ReadonlyMap<string, Club> = new Map(
-  getClubs().flatMap((c) => (c.website ? [[clubSiteKey(c.website), c] as const] : [])),
-);
 /** Whether `url` is on `club`'s own site. */
 export function isOwnSite(url: string, club: Club): boolean {
   return club.website !== null && clubSiteKey(url) === clubSiteKey(club.website);
@@ -92,7 +85,7 @@ function outlet(url: string): { label: string; inSentence: string } {
  * club record names (say, Fly's old sanjosefly.com).
  */
 function clubSite(url: string, pageClub: Club): { owner: Club | null; roster: boolean } {
-  const owner = CLUB_BY_SITE.get(clubSiteKey(url)) ?? null;
+  const owner = clubBySite().get(clubSiteKey(url)) ?? null;
   const roster = owner !== null && (owner.rosterPages.includes(url) || pathOf(url).includes('/roster'));
   return { owner: owner && owner.slug === pageClub.slug ? pageClub : owner, roster };
 }
@@ -104,12 +97,12 @@ function clubSite(url: string, pageClub: Club): { owner: Club | null; roster: bo
 export function sourceLabel(src: Pick<AffiliationSource, 'url' | 'kind'>, pageClub: Club): string {
   switch (src.kind) {
     case 'sportsrecruits':
-      return pathOf(src.url).includes('/athlete/') ? 'SportsRecruits profile' : 'SportsRecruits team page';
+      return sportsRecruitsLabel(src.url, 'club');
     case 'ncsa':
     case 'hudl':
     case 'fieldlevel':
     case 'maxpreps-career':
-      return PLATFORM_WORDS[src.kind].label;
+      return PLATFORMS[PLATFORM_OF_KIND[src.kind]].label;
     case 'club-site': {
       const { owner, roster } = clubSite(src.url, pageClub);
       if (owner === null) return hostOf(src.url);
@@ -125,12 +118,12 @@ export function sourceLabel(src: Pick<AffiliationSource, 'url' | 'kind'>, pageCl
 export function sourceName(src: Pick<AffiliationSource, 'url' | 'kind'>, pageClub: Club): string {
   switch (src.kind) {
     case 'sportsrecruits':
-      return 'SportsRecruits';
+      return PLATFORMS.sportsrecruits.inSentence;
     case 'ncsa':
     case 'hudl':
     case 'fieldlevel':
     case 'maxpreps-career':
-      return PLATFORM_WORDS[src.kind].inSentence;
+      return PLATFORMS[PLATFORM_OF_KIND[src.kind]].inSentence;
     case 'club-site': {
       const { owner } = clubSite(src.url, pageClub);
       if (owner === null) return hostOf(src.url);

@@ -1,6 +1,7 @@
 
 import ExternalLink from '@/components/ui/ExternalLink';
 import { formatStamp, shortDate } from '@/lib/format/dates';
+import { agree } from '@/lib/format/words';
 import type { SbliveCrossCheck } from '@/lib/model/crosscheck';
 
 /**
@@ -38,7 +39,7 @@ export function SbliveCrossCheckSummary({ cross }: SbliveCrossCheckSummaryProps)
           ? `, ${conflicts.length} disagreed. Where neither of the clearly-wrong checks applies we publish MaxPreps’ score, and every disagreement is listed below.`
           : ' and none disagreed.'}
         {unscored > 0
-          ? ` The other ${unscored} ${unscored === 1 ? 'has' : 'have'} no score on si.com yet.`
+          ? ` The other ${unscored} ${agree(unscored, 'has', 'have')} no score on si.com yet.`
           : ''}
       </p>
       {conflicts.length > 0 ? (

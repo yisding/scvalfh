@@ -16,7 +16,7 @@
 import type { AdjustedScoring } from '@/lib/engine/adjusted-scoring';
 import { notedKinds } from '@/lib/engine/note-stats';
 import { shortDate } from '@/lib/format/dates';
-import { gradeWord, listWords, plural } from '@/lib/format/words';
+import { agree, gradeWord, listWords, plural } from '@/lib/format/words';
 import type { Game } from '@/lib/model/game';
 import type { TeamId } from '@/lib/model/ids';
 import type { Team } from '@/lib/model/team';
@@ -253,12 +253,12 @@ function playerBoard(
         ? `Every team with player stats enters ${spec.statWord}.`
         : tracking.length <= notTracking.length
           ? `Only ${plural(tracking.length, 'team enters', 'teams enter')} ${spec.statWord}: ${listWords(names(tracking.map((t) => t.team)))}.`
-          : `Of the ${plural(withStats.length, 'team')} with player stats, ${listWords(names(notTracking.map((t) => t.team)))} ${notTracking.length === 1 ? 'does' : 'do'} not enter ${spec.statWord}.`;
+          : `Of the ${plural(withStats.length, 'team')} with player stats, ${listWords(names(notTracking.map((t) => t.team)))} ${agree(notTracking.length, 'does', 'do')} not enter ${spec.statWord}.`;
 
   // An adjusted board names the teams that enter the stat but have no schedule factor yet.
   const unfactored = spec.value ? tracking.filter((t) => t.factor === null).map((t) => t.team) : [];
   const unfactoredNote = unfactored.length
-    ? ` ${listWords(names(unfactored))} ${unfactored.length === 1 ? 'has' : 'have'} not played enough counted games for a schedule factor yet.`
+    ? ` ${listWords(names(unfactored))} ${agree(unfactored.length, 'has', 'have')} not played enough counted games for a schedule factor yet.`
     : '';
 
   return {
@@ -353,7 +353,7 @@ export function buildPlayerBoards(input: PlayerBoardsInput): PlayerBoards {
     `Season totals for every varsity game, league and non-league, as each team’s coach entered them on MaxPreps. ` +
       (noStats.length === 0
         ? `All ${plural(teams.length, 'team')} have entered player stats.`
-        : `${withStats.length} of the ${plural(teams.length, 'team')} have entered some. ${listWords(names(noStats))} ${noStats.length === 1 ? 'has' : 'have'} entered none, so ${noStats.length === 1 ? 'its' : 'their'} players cannot appear here.`),
+        : `${withStats.length} of the ${plural(teams.length, 'team')} have entered some. ${listWords(names(noStats))} ${agree(noStats.length, 'has', 'have')} entered none, so ${noStats.length === 1 ? 'its' : 'their'} players cannot appear here.`),
   ];
   const carried = withStats.filter((t) => t.stats.status === 'carried-forward').map((t) => t.team);
   if (carried.length > 0) {

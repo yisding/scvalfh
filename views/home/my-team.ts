@@ -10,7 +10,7 @@ import { dateTimeAttr, shortDate, timeOfDayPT } from '@/lib/format/dates';
 import type { Game } from '@/lib/model/game';
 import type { Team } from '@/lib/model/team';
 import { getOfficialFixtures } from '@/lib/queries/games';
-import { getTeamBySlug } from '@/lib/registry/teams';
+import { sideShortName } from '@/lib/registry/teams';
 import { gameHref } from '@/lib/shared/game-id';
 import { describeGame, gameKind, postseasonTagOf } from '@/views/shared/describe-game';
 import type { GameDisplay, SideView } from '@/views/shared/game-display-client';
@@ -18,10 +18,6 @@ import { gameExternalLinks } from '@/views/shared/game-links';
 import { fixtureOpponent, nextOfficialFixture } from '@/views/shared/official-fixtures';
 
 import type { HomeLastDisplay, HomeLastGame, HomeNextGame, HomeOfficialFixture } from './home-client';
-
-function shortNameOf(side: Game['home']): string {
-  return (side.slug ? getTeamBySlug(side.slug)?.shortName : undefined) ?? side.name;
-}
 
 /** One score line: the registry short name ("Mitty" on a 358px card), glyph, weight, chip. */
 function homeSide(side: SideView): HomeLastDisplay['home'] {
@@ -75,7 +71,7 @@ export function nextGameView(game: Game, slug: string): HomeNextGame {
     dateTime: dateTimeAttr(game),
     timeLabel: game.isTimeTba ? 'Time TBA' : timeOfDayPT(game.dateLocal),
     versus: describeGame(game, slug).versus ?? 'vs',
-    opponent: shortNameOf(theirs),
+    opponent: sideShortName(theirs),
     kindLabel: postseasonTagOf(game) ?? (gameKind(game) === 'league' ? 'league' : 'non-league'),
     href: gameHref(game.contestId),
     // Two external chips at most plus "Game page": three chips, one row, the same height for every

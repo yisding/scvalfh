@@ -6,7 +6,7 @@ import {
 } from '@/lib/registry/resolve';
 import {
   ACRONYM_COLLISIONS, FETCHABLE_TEAMS, TEAMS, getTeamById, getTeamBySlug, normalizeTeamKey, onPrimaryInk,
-  teamOfSide, teamsInDivision, teamsInLeague,
+  sideShortName, teamOfSide, teamShortName, teamsInDivision, teamsInLeague,
 } from '@/lib/registry/teams';
 
 /**
@@ -413,6 +413,23 @@ describe('teams: the registry team on one side of a game', () => {
     expect(teamOfSide({ teamId: a.id, slug: b.slug })).toBe(a);
     expect(teamOfSide({ teamId: '00000000-0000-0000-0000-000000000000', slug: b.slug })).toBe(b);
     expect(teamOfSide({ teamId: null, slug: null })).toBeUndefined();
+  });
+});
+
+describe('teams: the short name of a slug, an id or a game side', () => {
+  it('is the registry short name by slug or GUID, else the fallback the source printed', () => {
+    const t = TEAMS.find((x) => x.shortName !== x.name) ?? TEAMS[0];
+    expect(teamShortName(t.slug, 'ignored')).toBe(t.shortName);
+    expect(teamShortName(t.id, 'ignored')).toBe(t.shortName);
+    expect(teamShortName('not-a-team', 'Outside High')).toBe('Outside High');
+    expect(teamShortName(null, 'Outside High')).toBe('Outside High');
+    expect(teamShortName(undefined, 'Outside High')).toBe('Outside High');
+  });
+
+  it('names a game side by its slug, and anyone else by the name given', () => {
+    const t = TEAMS[0];
+    expect(sideShortName({ slug: t.slug, name: 'Full Official Name' })).toBe(t.shortName);
+    expect(sideShortName({ slug: null, name: 'Outside High' })).toBe('Outside High');
   });
 });
 

@@ -2,7 +2,7 @@ import PlayoffBracket from '@/components/playoffs/PlayoffBracket';
 import ExternalLink from '@/components/ui/ExternalLink';
 import SectionHeader from '@/components/ui/SectionHeader';
 import { shortDate } from '@/lib/format/dates';
-import { listWords } from '@/lib/format/words';
+import { agree, listWords } from '@/lib/format/words';
 import type { PlayoffsPageView } from '@/views/playoffs/playoffs-view';
 
 /** The bracket, once published; before that, the one sentence that says when it will be. */
@@ -35,7 +35,7 @@ export default function CcsBracket({
             {pending.length > 0 ? (
               <p className="m-0">
                 {listWords(pending.map((r) => `${r.name} (${r.dateLabel})`))}{' '}
-                {pending.length === 1 ? 'has' : 'have'} no games posted yet. Pairings appear here as
+                {agree(pending.length, 'has', 'have')} no games posted yet. Pairings appear here as
                 CCS posts them.
               </p>
             ) : null}

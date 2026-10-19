@@ -2,6 +2,7 @@ import LeaguePairings from '@/components/playoffs/LeaguePairings';
 import PlayoffProjection, { ProjectionKey } from '@/components/playoffs/PlayoffProjection';
 import LeagueHealthNote from '@/components/ui/LeagueHealthNote';
 import SectionHeader from '@/components/ui/SectionHeader';
+import { leagueTitle } from '@/lib/config/leagues/labels';
 import { shortDate } from '@/lib/format/dates';
 import type { LeagueBlock, PlayoffsPageView } from '@/views/playoffs/playoffs-view';
 
@@ -19,7 +20,7 @@ export default function CcsLeagueSection({
   const qualification = `How ${summary.shortName} qualifies — ${citation}.`;
   return (
     <section id={summary.id} className="mt-section md:mt-section-lg" aria-labelledby={`${summary.id}-heading`}>
-      <SectionHeader kicker={`${summary.shortName} — ${summary.name}`} id={`${summary.id}-heading`} />
+      <SectionHeader kicker={leagueTitle(summary.id)} id={`${summary.id}-heading`} />
       <p className="m-0 max-w-prose text-meta text-ink-2">
         {summary.shortName} holds {field.byLeague.find((l) => l.leagueId === summary.id)?.auto ?? 0} of the{' '}
         {field.total} CCS berths. Ordered by league points; every status below is a written word, and

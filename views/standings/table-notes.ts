@@ -8,10 +8,10 @@
 import { leagueOfDivision } from '@/lib/config/leagues';
 import { divisionHeading } from '@/lib/config/leagues/labels';
 import { placeWords, recordWords } from '@/lib/format/numbers';
-import { EM_DASH, plural } from '@/lib/format/words';
+import { EM_DASH, indefiniteArticle, plural } from '@/lib/format/words';
 import type { DivisionId, TeamSlug } from '@/lib/model/ids';
 import type { StandingContext } from '@/lib/model/standings';
-import { articleFor, membershipSource } from '@/views/shared/words/membership';
+import { membershipSource } from '@/views/shared/words/membership';
 
 import type { NoteItem, StandingsRowData } from './types';
 
@@ -115,7 +115,7 @@ export function collectStandingsNotes(input: {
           ? `is in the ${table} table as MaxPreps lists it`
           : source.kind === 'official'
             ? `is in the official ${table} alignment`
-            : `is ${articleFor(table)} ${table} team (${source.source})`;
+            : `is ${indefiniteArticle(table, { mode: 'vowel' })} ${table} team (${source.source})`;
       notes.push({
         kind: 'no-results',
         text: `${row.team.name} ${is} but has no results in the source table — no record is invented for them.`,

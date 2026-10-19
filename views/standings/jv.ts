@@ -16,11 +16,11 @@ import {
 } from '@/lib/engine/jv/standings';
 import { monthDay } from '@/lib/format/dates';
 import { ordinal, recordString } from '@/lib/format/numbers';
-import { listWords, plural } from '@/lib/format/words';
+import { agree, listWords, plural } from '@/lib/format/words';
 import type { DivisionId, LeagueId, TeamSlug } from '@/lib/model/ids';
 import type { Team } from '@/lib/model/team';
 import { getJvClassification, getJvTable, getJvTables } from '@/lib/queries/jv';
-import { getTeamBySlug } from '@/lib/registry/teams';
+import { getTeamBySlug, sideShortName, teamShortName } from '@/lib/registry/teams';
 
 export interface JvTableView {
   division: DivisionId;
@@ -53,11 +53,6 @@ type UncountedReason = Extract<JvClassification, { kind: 'uncounted' }>['reason'
 
 const SHARE_WORDS = `${Math.round(JV_STANDINGS_MIN_REPORTED_SHARE * 100)}%`;
 
-function shortNameOf(slug: TeamSlug | null, fallback: string): string {
-  const team = slug ? getTeamBySlug(slug) : undefined;
-  return team ? team.shortName : fallback;
-}
-
 /** `De Anza JV` | `MCAL JV`. */
 export function jvTableTitle(division: DivisionId): string {
   const heading = divisionHeading(division);
@@ -66,12 +61,11 @@ export function jvTableTitle(division: DivisionId): string {
 
 function viewOf(t: JvDivisionTable): JvTableView {
   const title = jvTableTitle(t.division);
-  const isAre = (n: number) => `${n} ${n === 1 ? 'is' : 'are'}`;
-  const sblive = t.sbliveScores > 0 ? ` (${isAre(t.sbliveScores)} si.com’s †)` : '';
+  const sblive = t.sbliveScores > 0 ? ` (${t.sbliveScores} ${agree(t.sbliveScores, 'is', 'are')} si.com’s †)` : '';
   const coverage =
     t.played === 0
-      ? `No ${title} league game has been played yet${t.toCome > 0 ? `; ${isAre(t.toCome)} to come` : ''}.`
-      : `${t.reported} of the ${plural(t.played, `${title} league game`)} played so far ${t.reported === 1 ? 'has' : 'have'} a score${sblive}.`;
+      ? `No ${title} league game has been played yet${t.toCome > 0 ? `; ${t.toCome} ${agree(t.toCome, 'is', 'are')} to come` : ''}.`
+      : `${t.reported} of the ${plural(t.played, `${title} league game`)} played so far ${agree(t.reported, 'has', 'have')} a score${sblive}.`;
   const emptyHeading =
     t.status === 'shown'
       ? null
@@ -80,7 +74,7 @@ function viewOf(t: JvDivisionTable): JvTableView {
           ? `No ${title} league games are listed.`
           : `No ${title} league games have been played yet.`
         : `Not enough ${title} results for a table yet.`;
-  const absent = t.absent.map((slug) => getTeamBySlug(slug)?.shortName ?? slug);
+  const absent = t.absent.map((slug) => teamShortName(slug, slug));
   // No school of the division has a JV league game at all: one heading, one line, nothing else.
   const noneListed = t.rows.length === 0;
   return {
@@ -98,14 +92,14 @@ function viewOf(t: JvDivisionTable): JvTableView {
     emptyHeading,
     absentNote:
       absent.length && !noneListed
-        ? `${listWords(absent)} ${absent.length === 1 ? 'has' : 'have'} no JV league game on MaxPreps or si.com, so ${absent.length === 1 ? 'is' : 'are'} not in the table.`
+        ? `${listWords(absent)} ${agree(absent.length, 'has', 'have')} no JV league game on MaxPreps or si.com, so ${agree(absent.length, 'is', 'are')} not in the table.`
         : null,
     uncountedNote: t.uncounted.length
       ? `Not counted: ${t.uncounted
           .map((g) => {
             const c = getJvClassification(g.contestId);
             const why = c?.kind === 'uncounted' ? ` (${UNCOUNTED_REASON_WORDS[c.reason]})` : '';
-            return `${shortNameOf(g.away.slug, g.away.name)} at ${shortNameOf(g.home.slug, g.home.name)}, ${monthDay(g.dateKey)}${why}`;
+            return `${sideShortName(g.away)} at ${sideShortName(g.home)}, ${monthDay(g.dateKey)}${why}`;
           })
           .join('; ')}.`
       : null,

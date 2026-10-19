@@ -13,12 +13,12 @@
 import { REGIONS, regionIdSuffix, regionOf } from '@/lib/config/leagues';
 import { getToday } from '@/lib/datasets/snapshot';
 import { longDate, monthDay, shortDate } from '@/lib/format/dates';
-import { gameWord, plural } from '@/lib/format/words';
+import { agree, gameWord, plural } from '@/lib/format/words';
 import type { Game } from '@/lib/model/game';
 import type { RegionId } from '@/lib/model/ids';
 import { getGameDates, getGames, getOfficialFixtures } from '@/lib/queries/games';
 import { getLeagueSummaries } from '@/lib/queries/leagues';
-import { getTeamBySlug } from '@/lib/registry/teams';
+import { sideShortName } from '@/lib/registry/teams';
 import { parseLocal } from '@/lib/shared/dates';
 import { countGames } from '@/views/schedule/filters-client';
 import { type RecordsByGame, recordsByGame } from '@/views/shared/game-records';
@@ -104,12 +104,6 @@ export interface ScoresDayView {
   longTitle: string;
 }
 
-/** A registry team renders by its short name; anyone else is a name and nothing else. */
-function sideName(slug: string | null, fallback: string): string {
-  const team = slug ? getTeamBySlug(slug) : undefined;
-  return team ? team.shortName : fallback;
-}
-
 /**
  * `game.official.scheduledDate` is the date on the league's official schedule. When it differs from the
  * date the game is actually on, the game moved. One list per block, over that block's games, so a
@@ -119,8 +113,8 @@ export function movedGames(games: readonly Game[], date: string): MovedGame[] {
   return games
     .filter((game) => game.official && game.official.scheduledDate !== date)
     .map((game) => ({
-      awayName: sideName(game.away.slug, game.away.name),
-      homeName: sideName(game.home.slug, game.home.name),
+      awayName: sideShortName(game.away),
+      homeName: sideShortName(game.home),
       scheduledDate: game.official?.scheduledDate ?? date,
     }));
 }
@@ -151,7 +145,7 @@ export function regionEmptySentence({
 }): string {
   const besides =
     betweenCount === 0 ? '' : ` besides the NorCal vs SoCal ${gameWord(betweenCount)} ${betweenBelow ? 'below' : 'above'}`;
-  const jvNote = jvCount === 0 ? '' : `; the JV ${gameWord(jvCount)} ${jvCount === 1 ? 'is' : 'are'} below`;
+  const jvNote = jvCount === 0 ? '' : `; the JV ${gameWord(jvCount)} ${agree(jvCount, 'is', 'are')} below`;
   const varsity = jvCount === 0 ? '' : 'varsity ';
   // A league's official fixture with no source behind it (the blocks at the end of the region) is still a
   // game on that day, so a region with one never reads "No … games"; none such on 2026-10-06's data.

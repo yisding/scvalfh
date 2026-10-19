@@ -1,6 +1,7 @@
 import Link from 'next/link';
 
 import Arrow from '@/components/ui/Arrow';
+import { leagueTitle } from '@/lib/config/leagues/labels';
 import { listWords } from '@/lib/format/words';
 import type { SectionLeagueCardData } from '@/views/playoffs/playoffs-view';
 
@@ -14,7 +15,7 @@ export default function SectionPlayoffsLeagueCard({ card }: { card: SectionLeagu
   const { summary, divisions } = card;
   return (
     <div id={summary.id} className="sx-card mt-6 p-5 md:p-6">
-      <h3 className="m-0 text-lead text-ink">{`${summary.shortName} — ${summary.name}`}</h3>
+      <h3 className="m-0 text-lead text-ink">{leagueTitle(summary.id)}</h3>
       <div className="mt-2 grid gap-5 md:grid-cols-2">
         {divisions.map((d) => (
           <div key={d.id} className="min-w-0">

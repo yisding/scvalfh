@@ -29,7 +29,8 @@ import { FETCHABLE_TEAMS, TEAMS } from './team-list';
 export { ACRONYM_COLLISIONS, normalizeTeamKey } from './acronyms';
 export { onPrimaryInk } from './ink';
 export {
-  FETCHABLE_TEAMS, TEAMS, getTeamById, getTeamBySlug, teamOfSide, teamsInDivision, teamsInLeague,
+  FETCHABLE_TEAMS, TEAMS, getTeamById, getTeamBySlug, sideShortName, teamOfSide, teamShortName, teamsInDivision,
+  teamsInLeague,
 } from './team-list';
 
 function assertRegistry(): void {

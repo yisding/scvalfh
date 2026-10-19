@@ -12,7 +12,7 @@ import JvDayBlocks from '@/components/scores/JvDayBlocks';
 import RegionDayBlock from '@/components/scores/RegionDayBlock';
 import EmptyState from '@/components/ui/EmptyState';
 import { shortDate } from '@/lib/format/dates';
-import { gameWord } from '@/lib/format/words';
+import { agree, gameWord } from '@/lib/format/words';
 import { scoresStaticParams } from '@/views/scores/scores-route';
 import { buildScoresDayView } from '@/views/scores/scores-view';
 import { missingMetadata, pageMetadata } from '@/views/site/page-metadata';
@@ -120,7 +120,7 @@ export default async function ScoresByDatePage({ params }: PageProps<'/scores/[d
 
       {view.nothingReportedYet ? (
         <p className="sx-inset mt-6 mb-0 max-w-prose text-ink">
-          {summary.total} {gameWord(summary.total)} {summary.total === 1 ? 'is' : 'are'} on the
+          {summary.total} {gameWord(summary.total)} {agree(summary.total, 'is', 'are')} on the
           schedule for {shortDate(date)} and no score has been reported yet. Coaches enter results by
           hand, so a game that finishes in the evening usually appears the next morning.
         </p>

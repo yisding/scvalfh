@@ -9,7 +9,7 @@ import { standaloneName } from '@/lib/config/leagues/labels';
 import { hasHistory } from '@/lib/datasets/history';
 import { dateSpan, shortDate } from '@/lib/format/dates';
 import { ordinalWord } from '@/lib/format/numbers';
-import { plural } from '@/lib/format/words';
+import { agree, plural } from '@/lib/format/words';
 import type { LeagueConfig } from '@/lib/model/league-config';
 import type { SeasonPhase } from '@/lib/model/season';
 import { getNonLeagueFinalsPlayed } from '@/lib/queries/games';
@@ -43,7 +43,7 @@ export function phaseLead(league: LeagueConfig, phase: SeasonPhase, today: strin
         body:
           nonLeague > 0
             ? `The table counts only games between the independents, so the ${plural(nonLeague, 'game')} played so far against other teams ${
-                nonLeague === 1 ? 'is' : 'are'
+                agree(nonLeague, 'is', 'are')
               } on the schedule and in the overall records, not in the standings.`
             : 'No games have been played yet, so every record below is empty on purpose.',
         link: { href: `/schedule/${league.id}`, label: 'Full schedule' },
@@ -54,7 +54,7 @@ export function phaseLead(league: LeagueConfig, phase: SeasonPhase, today: strin
       body:
         nonLeague > 0
           ? `These tables count league games only, so the ${plural(nonLeague, 'non-league game')} played so far ${
-              nonLeague === 1 ? 'is' : 'are'
+              agree(nonLeague, 'is', 'are')
             } on the schedule and in the overall records, not in the standings.`
           : 'No games have been played yet, so every record below is empty on purpose.',
       link: { href: `/schedule/${league.id}`, label: 'Full schedule' },

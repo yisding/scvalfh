@@ -24,7 +24,7 @@ import { EN_DASH, MINUS } from '@/lib/format/words';
 import type { Game, Outcome, PostseasonTag } from '@/lib/model/game';
 import type { LeagueId, TeamSlug } from '@/lib/model/ids';
 import type { SectionConfig, ShootoutInference } from '@/lib/model/league-config';
-import { getTeamBySlug } from '@/lib/registry/teams';
+import { getTeamBySlug, teamShortName } from '@/lib/registry/teams';
 
 import type { ChipKind, GameDisplay, GameKind, SideView } from './game-display-client';
 
@@ -243,10 +243,9 @@ function sideView(
   weight: SideView['weight'],
   chip: ChipKind,
 ): SideView {
-  const team = slug ? getTeamBySlug(slug) : undefined;
   return {
     name,
-    shortName: team?.shortName ?? name,
+    shortName: teamShortName(slug, name),
     slug,
     glyph: scoreGlyph(score),
     hasScore: score !== null,

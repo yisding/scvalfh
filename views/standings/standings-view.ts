@@ -19,7 +19,7 @@ import { standaloneName } from '@/lib/config/leagues/labels';
 import { getFetchedAt } from '@/lib/datasets/snapshot';
 import { shortDate } from '@/lib/format/dates';
 import { recordString } from '@/lib/format/numbers';
-import { plural } from '@/lib/format/words';
+import { agree, plural } from '@/lib/format/words';
 import type { Game } from '@/lib/model/game';
 import type { LeagueHealth } from '@/lib/model/health';
 import type { DivisionId, LeagueId, RegionId } from '@/lib/model/ids';
@@ -32,6 +32,7 @@ import {
   getStandings,
 } from '@/lib/queries/standings';
 import { getTeams } from '@/lib/queries/teams';
+import { teamShortName } from '@/lib/registry/teams';
 
 import { buildDivisionView } from './division';
 import { coLeadersLine, rulesFootnote, unevenGpFootnote } from './footnotes';
@@ -97,14 +98,13 @@ function buildDivisionStandingsView(division: DivisionId): DivisionView {
  * /standings card through `leaderClause`.
  */
 export function leaderLine(division: DivisionId, heading: string | null): LeaderLine {
-  const teams = getTeams();
   const top = getStandings(division).filter((s) => s.hasReportedResults && s.computed.place === 1);
   return {
     division,
     heading,
     teams: top.map((s) => ({
       // shortName: "Convent of the Sacred Heart" wraps to three lines on an OG card.
-      name: teams.find((t) => t.id === s.teamId)?.shortName ?? s.slug,
+      name: teamShortName(s.teamId, s.slug),
       record: recordString(s.computed),
       pts: s.computed.pts,
     })),
@@ -196,7 +196,7 @@ export function buildNotice(leagueId: LeagueId, views: DivisionView[]): Standing
     body: `These tables count league games only, so every record reads 0-0-0 until the first league result is published${
       nonLeagueFinals > 0
         ? `. The ${plural(nonLeagueFinals, 'non-league game')} played so far ${
-            nonLeagueFinals === 1 ? 'is' : 'are'
+            agree(nonLeagueFinals, 'is', 'are')
           } on the schedule`
         : ''
     }.`,

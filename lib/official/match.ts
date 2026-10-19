@@ -21,6 +21,7 @@ import { getDivision, leagueOfDivision } from '@/lib/config/leagues';
 import { divisionLabel } from '@/lib/config/leagues/labels';
 import { postseasonTag } from '@/lib/engine/classify';
 import { monthDay, shortDate } from '@/lib/format/dates';
+import { indefiniteArticle } from '@/lib/format/words';
 import type { OfficialFixture } from '@/lib/model/fixture';
 import type { Game, GameSide, OfficialStamp } from '@/lib/model/game';
 import type { DivisionId, TeamSlug } from '@/lib/model/ids';
@@ -254,11 +255,6 @@ function matchLegacy(games: readonly Game[], fixtures: readonly OfficialFixture[
 
 // ---------------------------------------------------------------- two-phase (BVAL, PCAL, MCAL)
 
-/** "An MCAL", "A BVAL": the article an acronym takes when read letter by letter. */
-function articleFor(acronym: string): 'A' | 'An' {
-  return /^[AEFHILMNORSX]/.test(acronym) ? 'An' : 'A';
-}
-
 /** The day before a YYYY-MM-DD date. */
 function dayBefore(dateKey: string): string {
   return shiftDateKey(dateKey, -1);
@@ -405,7 +401,7 @@ function matchTwoPhase(games: readonly Game[], fixtures: readonly OfficialFixtur
       // contestType 4 after the cut-off is the league's own tournament: nothing to publish.
       if (ct !== 4) {
         sentence =
-          `${articleFor(l.shortName)} ${l.shortName} contest between ${a} and ${b} on ${shortDate(nearest.dateKey)} is after ` +
+          `${indefiniteArticle(l.shortName, { mode: 'letter-name' }) === 'an' ? 'An' : 'A'} ${l.shortName} contest between ${a} and ${b} on ${shortDate(nearest.dateKey)} is after ` +
           `the league's ${monthDay(dayBefore(cutoff))} cut-off, so it is treated as tournament play. ` +
           `If it is the rescheduled league game from ${shortDate(f.dateKey)}, add its contest id to ` +
           `LEAGUES.${l.id}.rules.leagueGameOverrides.`;

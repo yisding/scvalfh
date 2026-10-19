@@ -42,14 +42,6 @@ export function membershipSource(division: DivisionId, slugs: readonly TeamSlug[
 }
 
 /**
- * 'a' or 'an' before a division name: "an Avocado team", "a Metro South Bay team". The callers say
- * "team", never "member": the copy rules (scripts/ci/assert-copy.ts) forbid "Sunset member(s)".
- */
-export function articleFor(word: string): 'a' | 'an' {
-  return /^[aeiou]/i.test(word) ? 'an' : 'a';
-}
-
-/**
  * The ghost monogram's words (a tooltip; the monogram itself is decorative) for a side that is not
  * one of the registry's teams (DESIGN §8): components/ui/SideMonogram.tsx titles the tile with it, and
  * the game page's ScoreBoard (components/game/ScoreBoard.tsx) prints it as that side's sub line.

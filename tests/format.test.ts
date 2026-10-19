@@ -10,7 +10,7 @@ import {
 import { playInWords } from '@/lib/format/postseason';
 import { matchupJoiner, renderScore, scoreGlyph, scoreSentence, shootoutPhrases } from '@/lib/format/score';
 import {
-  EM_DASH, EN_DASH, MINUS, formStripLabel, gradeWord, listWords, numberWord,
+  EM_DASH, EN_DASH, MINUS, agree, formStripLabel, gradeWord, indefiniteArticle, listWords, numberWord,
 } from '@/lib/format/words';
 import {
   dayDiff, dayNumber, earliestDateKey, hoursBetween, isoDateKey, latestDateKey, localDateKey, shiftDateKey,
@@ -374,6 +374,43 @@ describe('gradeWord', () => {
   it('words grades 9-12 and prints any other as its number', () => {
     expect([9, 10, 11, 12].map(gradeWord)).toEqual(['Freshman', 'Sophomore', 'Junior', 'Senior']);
     expect(gradeWord(8)).toBe('Grade 8');
+  });
+});
+
+describe('indefiniteArticle: one rule table, three modes', () => {
+  it('vowel: a vowel letter, any case', () => {
+    const a = (w: string) => indefiniteArticle(w, { mode: 'vowel' });
+    expect(['Avocado', 'Eagle', 'Ivy', 'Oak', 'Union', 'assist'].map(a)).toEqual(['an', 'an', 'an', 'an', 'an', 'an']);
+    expect(['Metro South Bay', 'goal', 'save', 'BVAL'].map(a)).toEqual(['a', 'a', 'a', 'a']);
+    // The recorded edge: an acronym is read by its first letter, not its letter name.
+    expect(a('MCAL')).toBe('a');
+  });
+
+  it('letter-name: a capital whose letter name opens on a vowel sound', () => {
+    const a = (w: string) => indefiniteArticle(w, { mode: 'letter-name' });
+    expect(['MCAL', 'EAL', 'SCVAL', 'NCS', 'LA', 'FHS', 'HS', 'RBV', 'XYZ', 'AIA', 'IAC', 'OIA'].map(a)).toEqual(
+      Array(12).fill('an'),
+    );
+    expect(['BVAL', 'PCAL', 'CCS', 'DAL', 'GAL', 'KAL', 'TAL', 'UAL', 'WAL', 'YAL', 'ZAL', 'VAL', 'JAL', 'QAL'].map(a)).toEqual(
+      Array(14).fill('a'),
+    );
+  });
+
+  it('vowel-or-acronym: a vowel letter, or MCAL / SCVAL (the game page title)', () => {
+    const a = (w: string) => indefiniteArticle(w, { mode: 'vowel-or-acronym' });
+    expect(['MCAL tournament game', 'SCVAL league game', 'mcal', 'exhibition game', 'Avocado game'].map(a)).toEqual([
+      'an', 'an', 'an', 'an', 'an',
+    ]);
+    expect(['BVAL league game', 'league game', 'non-league game', 'PCAL game'].map(a)).toEqual(['a', 'a', 'a', 'a']);
+  });
+});
+
+describe('agree', () => {
+  it('picks the word for a count of exactly one', () => {
+    expect(agree(1, 'is', 'are')).toBe('is');
+    expect(agree(0, 'has', 'have')).toBe('have');
+    expect(agree(2, 'was', 'were')).toBe('were');
+    expect(agree(11, 'does', 'do')).toBe('do');
   });
 });
 

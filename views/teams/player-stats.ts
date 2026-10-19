@@ -27,7 +27,7 @@
 
 import type { NoteCredit, NoteStatKind } from '@/lib/engine/note-stats';
 import { shortDate } from '@/lib/format/dates';
-import { listWords, numberWord, plural } from '@/lib/format/words';
+import { indefiniteArticle, listWords, numberWord, plural } from '@/lib/format/words';
 import type { Game } from '@/lib/model/game';
 import type { TeamSlug } from '@/lib/model/ids';
 import { getTeamPlayerStatsWithNotes } from '@/lib/queries/player-stats';
@@ -146,7 +146,7 @@ const isNoted = (keys: Set<string>, p: PlayerStatLine) =>
   (p.careerId !== null && keys.has(p.careerId)) || (p.athleteId !== null && keys.has(p.athleteId));
 
 function count(n: number, one: string, many: string): string {
-  return n === 1 ? `${/^[aeiou]/.test(one) ? 'an' : 'a'} ${one}` : `${numberWord(n)} ${many}`;
+  return n === 1 ? `${indefiniteArticle(one, { mode: 'vowel' })} ${one}` : `${numberWord(n)} ${many}`;
 }
 
 const KIND_WORDS: Record<NoteStatKind, [string, string]> = {

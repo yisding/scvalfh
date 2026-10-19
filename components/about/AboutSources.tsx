@@ -4,7 +4,7 @@ import ExternalLink from '@/components/ui/ExternalLink';
 import SectionHeader from '@/components/ui/SectionHeader';
 import { getLeague, getSection, isIndependentLeague } from '@/lib/config/leagues';
 import { SOURCE_LINKS } from '@/lib/config/source-urls';
-import { listWords, numberWord, plural } from '@/lib/format/words';
+import { agree, listWords, numberWord, plural } from '@/lib/format/words';
 import {
   type AboutView, isQuotedLeague, leagueRef, officialSourceLabel, rulesDocument,
 } from '@/views/about/about-view';
@@ -305,7 +305,7 @@ export function AboutSources({
           <>
             {' '}
             {listWords(history.unavailableLeagues.map((l) => getLeague(l.id).shortName))}{' '}
-            {history.unavailableLeagues.length === 1 ? 'is' : 'are'} marked unavailable: we found no official{' '}
+            {agree(history.unavailableLeagues.length, 'is', 'are')} marked unavailable: we found no official{' '}
             {history.season} final standings, and we do not fill the gap with standings or awards from third-party
             sites or newspapers.
           </>

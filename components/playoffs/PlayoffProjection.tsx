@@ -7,7 +7,7 @@ import PlaceMark from '@/components/ui/PlaceMark';
 import SectionHeader from '@/components/ui/SectionHeader';
 import StatusChip from '@/components/ui/StatusChip';
 import TeamMonogram from '@/components/ui/TeamMonogram';
-import { listWords } from '@/lib/format/words';
+import { indefiniteArticle, listWords } from '@/lib/format/words';
 import {
   projectionRowLabel,
   recordLine,
@@ -15,7 +15,7 @@ import {
   type DivisionProjection,
   type ProjectionRow,
 } from '@/views/playoffs/projection';
-import { articleFor, membershipSource } from '@/views/shared/words/membership';
+import { membershipSource } from '@/views/shared/words/membership';
 
 /**
  * One division's projected CCS qualification (DESIGN §3.8, §7.11; SPEC §10.7), for any CCS league.
@@ -178,7 +178,7 @@ export function PlayoffProjection({
         : source.kind === 'official'
           ? `in the official ${divisionLabel} alignment`
           : single
-            ? `${articleFor(divisionLabel)} ${divisionLabel} team (${source.source})`
+            ? `${indefiniteArticle(divisionLabel, { mode: 'vowel' })} ${divisionLabel} team (${source.source})`
             : `${divisionLabel} teams (${source.source})`;
     footnotes.push(
       `${listWords(noData)} ${single ? 'is' : 'are'} ${where} ` +

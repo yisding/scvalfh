@@ -7,7 +7,7 @@
 
 import type { DivisionId, LeagueId } from '@/lib/model/ids';
 
-import { getDivision, getLeague, isSingleDivision, leagueOfDivision } from '@/lib/config/leagues';
+import { getDivision, getLeague, isIndependentLeague, isSingleDivision, leagueOfDivision } from '@/lib/config/leagues';
 
 /**
  * A league's words where its short name would stand alone as a control's target ('Jump to … ↓',
@@ -49,4 +49,28 @@ export function divisionDisplay(id: DivisionId): string {
   const league = leagueOfDivision(id);
   const heading = divisionHeading(id);
   return heading === null ? league.shortName : `${league.shortName} · ${heading}`;
+}
+
+/**
+ * A league's heading where a page lists leagues side by side: 'SCVAL — Santa Clara Valley Athletic
+ * League', but a group of independents by its name alone ('LA independents'), because its short name
+ * ('LA') is an adjective and not a league. One rule for /standings, /teams, /recruiting, /about and
+ * /playoffs.
+ */
+export function leagueTitle(id: LeagueId): string {
+  const league = getLeague(id);
+  return league.independents === true ? league.name : `${league.shortName} — ${league.name}`;
+}
+
+/**
+ * The league as a reader names it in a sentence about every table: its short name, but a group of
+ * independents by its `standaloneName` ('the LA independents'; 'LA' alone names a place).
+ */
+export function readerName(id: LeagueId): string {
+  return isIndependentLeague(id) ? standaloneName(id) : getLeague(id).shortName;
+}
+
+/** The teams a group of independents is configured for (its divisions' expected teams, summed). */
+export function independentTeamCount(group: { divisions: readonly { expectedTeams: number }[] }): number {
+  return group.divisions.reduce((n, d) => n + d.expectedTeams, 0);
 }

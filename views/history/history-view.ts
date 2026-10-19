@@ -39,7 +39,7 @@ import {
   getHistoryUnpublishedTies, getUnavailableHistoryLeagues, historySchoolName,
 } from '@/lib/datasets/history';
 import { getEnrichedTeamRoster, getRosters } from '@/lib/datasets/rosters';
-import { listWords } from '@/lib/format/words';
+import { agree, listWords } from '@/lib/format/words';
 import type { DivisionId, LeagueId, TeamSlug } from '@/lib/model/ids';
 import type { Team } from '@/lib/model/team';
 import { getTeamBySlug, teamsInLeague } from '@/lib/registry/teams';
@@ -363,7 +363,7 @@ export function buildHistoryPageView(): HistoryPageView {
     bracketSections: listWords(brackets.map((b) => getSection(b.id).briefLabel)),
     available: listWords(available.map((l) => short(l.id))),
     unavailableSubject: unavailableLeagues.length
-      ? `${listWords(unavailableLeagues.map((l) => short(l.id)))} ${unavailableLeagues.length === 1 ? 'is' : 'are'}`
+      ? `${listWords(unavailableLeagues.map((l) => short(l.id)))} ${agree(unavailableLeagues.length, 'is', 'are')}`
       : null,
     groupsSentence: unavailableGroups.length
       ? `${listWords(unavailableGroups.map((l) => `the ${getLeague(l.id).name}`)).replace(/^t/, 'T')} are this site’s grouping, so no table of them was published.`

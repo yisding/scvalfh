@@ -19,8 +19,9 @@ import {
   getLeague,
   isIndependentLeague,
 } from '@/lib/config/leagues';
+import { leagueTitle } from '@/lib/config/leagues/labels';
 import { monthDay } from '@/lib/format/dates';
-import { listWords } from '@/lib/format/words';
+import { indefiniteArticle, listWords } from '@/lib/format/words';
 import type { LeagueHealth } from '@/lib/model/health';
 import type { LeagueId } from '@/lib/model/ids';
 import type { LeagueConfig } from '@/lib/model/league-config';
@@ -48,11 +49,6 @@ export const AT_LARGE_PARAGRAPH =
 /** "through Sep 29" / "so far", from the last day a LEAGUE result was reported (never getToday()). */
 export function asOfPhrase(lastResult: string | null): string {
   return lastResult ? `through ${monthDay(lastResult)}` : 'so far';
-}
-
-/** 'an MCAL', 'a BVAL' — the article an acronym takes when read letter by letter. */
-function article(acronym: string): string {
-  return /^[AEFHILMNORSX]/.test(acronym) ? 'an' : 'a';
 }
 
 function projectionRows(projection: Projection, division: string): ProjectionRow[] {
@@ -273,7 +269,7 @@ function noPostseasonCard(summary: LeagueSummary): NoPostseasonCardData | null {
   const groupNote = independent && league.divisions[0]?.official.mode === 'none' ? league.divisions[0].official.note : null;
   return {
     id: summary.id,
-    kicker: independent ? summary.name : `${summary.shortName} — ${summary.name}`,
+    kicker: leagueTitle(summary.id),
     groupNote,
     note: ps.note,
     citation: `${ps.citations.noPlayoffs}.`,
@@ -287,7 +283,7 @@ function unbracketedCard(league: LeagueSummary): UnbracketedCardData | null {
   if (ps.kind !== 'unbracketed-tournament' || !source) return null;
   return {
     id: league.id,
-    lead: `Following ${article(league.shortName)} ${league.shortName} team? ${ps.note}`,
+    lead: `Following ${indefiniteArticle(league.shortName, { mode: 'letter-name' })} ${league.shortName} team? ${ps.note}`,
     qualification: `${ps.citations.qualification}.`,
     source,
   };
@@ -297,7 +293,7 @@ function tournamentPointer(league: LeagueSummary): TournamentPointerData {
   const ps = getLeague(league.id).postseason;
   return {
     id: league.id,
-    lead: `Following ${article(league.shortName)} ${league.shortName} team? The ${league.section.name} holds no field hockey championship. `,
+    lead: `Following ${indefiniteArticle(league.shortName, { mode: 'letter-name' })} ${league.shortName} team? The ${league.section.name} holds no field hockey championship. `,
     href: `/playoffs/${league.id}`,
     name: ps.kind === 'league-tournament' ? ps.name : `${league.shortName} postseason`,
   };

@@ -13,7 +13,7 @@ import { matchupJoiner } from '@/lib/format/score';
 import { gameWord, plural } from '@/lib/format/words';
 import type { Game } from '@/lib/model/game';
 import type { LeagueId, RegionId } from '@/lib/model/ids';
-import { getTeamBySlug } from '@/lib/registry/teams';
+import { getTeamBySlug, sideShortName } from '@/lib/registry/teams';
 import { describeGame } from '@/views/shared/describe-game';
 
 import { countGames, type ScheduleCounts } from '@/views/schedule/filters-client';
@@ -35,18 +35,13 @@ export interface DayLine {
   versus: 'at' | 'vs';
 }
 
-function displayName(slug: string | null, fallback: string): string {
-  const team = slug ? getTeamBySlug(slug) : undefined;
-  return team ? team.shortName : fallback;
-}
-
 export function dayLines(games: readonly Game[]): DayLine[] {
   return games.map((game) => {
     const display = describeGame(game);
     return {
       contestId: game.contestId,
-      awayName: displayName(game.away.slug, game.away.name),
-      homeName: displayName(game.home.slug, game.home.name),
+      awayName: sideShortName(game.away),
+      homeName: sideShortName(game.home),
       awayGlyph: display.away.glyph,
       homeGlyph: display.home.glyph,
       awayWinner: display.away.weight === 'winner',

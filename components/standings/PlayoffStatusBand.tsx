@@ -2,6 +2,7 @@ import Link from 'next/link';
 
 import PlaceMark from '@/components/ui/PlaceMark';
 import StatusChip from '@/components/ui/StatusChip';
+import { agree } from '@/lib/format/words';
 import type { StatusGroup } from '@/views/standings/types';
 
 /**
@@ -129,7 +130,7 @@ export function PlayoffStatusBand({
       {caveat ? <p className="mt-3 mb-0 max-w-prose text-meta text-ink-2">{caveat}</p> : null}
       {unrankedTeams.length > 0 ? (
         <p className="mt-3 mb-0 max-w-prose text-meta text-ink-2">
-          {unrankedTeams.join(', ')} {unrankedTeams.length === 1 ? 'has' : 'have'} no published
+          {unrankedTeams.join(', ')} {agree(unrankedTeams.length, 'has', 'have')} no published
           result, so no place and no postseason status is projected.
         </p>
       ) : null}

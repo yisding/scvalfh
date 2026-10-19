@@ -5,7 +5,7 @@
  */
 
 import type { ClubAffiliation, ClubRegion } from '@/lib/datasets/clubs';
-import { listWords, plural } from '@/lib/format/words';
+import { agree, listWords, plural } from '@/lib/format/words';
 import type { RegionId } from '@/lib/model/ids';
 
 import { REGION_WORDS } from './words';
@@ -84,7 +84,7 @@ export function countLine(ties: readonly Pick<ClubAffiliation, 'status'>[]): str
 /** "The Sacramento area and the North State were not searched for every club, so other clubs may be based there." */
 export function notSearchedSentence(regions: readonly ClubRegion[]): string {
   const places = listWords(regions.map((r) => REGION_WORDS[r].place));
-  return `${places[0].toUpperCase()}${places.slice(1)} ${regions.length === 1 ? 'was' : 'were'} not searched for every club, so other clubs may be based there.`;
+  return `${places[0].toUpperCase()}${places.slice(1)} ${agree(regions.length, 'was', 'were')} not searched for every club, so other clubs may be based there.`;
 }
 
 /** "26-27" → "2025-26 or 2026-27". */
@@ -104,7 +104,7 @@ export function lede(
 ): string {
   const opening = `Which youth clubs players on this site’s ${trackedTeams} varsity rosters play for, or played for, according to public pages that name both.`;
   const count = (r: ClubIndexRow) => `${r.name} (${r.current + r.other})`;
-  const who = `${plural(players, 'player')} from ${plural(schools, 'school')} ${players === 1 ? 'is' : 'are'} tied to`;
+  const who = `${plural(players, 'player')} from ${plural(schools, 'school')} ${agree(players, 'is', 'are')} tied to`;
   if (withPlayers.length === 0) return `${opening} No public page we found ties a player here to one of these ${clubCount} clubs yet.`;
   if (withPlayers.length === 1) return `${opening} ${who} one of these ${clubCount} clubs, ${count(withPlayers[0])}.`;
   return `${opening} ${who} ${withPlayers.length} of these ${clubCount} clubs, the most to ${count(withPlayers[0])} and ${count(withPlayers[1])}.`;
