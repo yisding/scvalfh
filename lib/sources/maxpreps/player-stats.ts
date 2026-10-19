@@ -47,7 +47,9 @@ import {
 import { recaseName } from '@/lib/sources/text/person-name';
 import type { MaxPrepsClient } from './client';
 import { MaxPrepsError } from './error';
+import { fetchRollupBody } from './rollup';
 import { careerIdFromUrl } from './roster';
+import { envelope } from './schemas';
 
 // ---------------------------------------------------------------- the columns we keep
 
@@ -121,10 +123,8 @@ const SubgroupSchema = z.looseObject({
   }),
 });
 
-export const PlayerStatsResponseSchema = z.looseObject({
-  status: z.union([z.number(), z.string()]).optional(),
-  message: z.unknown().optional(),
-  data: z
+export const PlayerStatsResponseSchema = envelope(
+  z
     .looseObject({
       teamId: z.string(),
       sportSeasonId: z.string(),
@@ -132,7 +132,7 @@ export const PlayerStatsResponseSchema = z.looseObject({
       lastUpdated: z.looseObject({ timeStamp: z.string().nullable().optional() }).nullable().optional(),
     })
     .nullable(),
-});
+);
 
 // ---------------------------------------------------------------- parsed shape
 
@@ -435,8 +435,9 @@ export function reconcileTotals<
 
 /**
  * Fetch one team's rollup. The client throws on any non-2xx, so a 400 is read from the error's
- * body: MaxPreps' "No data was found" envelope comes back as null, the same as parsing that
- * envelope, and any other 400 — or one whose body cannot be read — still throws.
+ * body (lib/sources/maxpreps/rollup.ts): MaxPreps' "No data was found" envelope comes back as
+ * null, the same as parsing that envelope, and any other 400 — or one whose body cannot be read —
+ * still throws.
  *
  * `onRaw` sees the body as received, BEFORE it is decoded or validated, so a response that drifted
  * (or is not JSON at all) is still handed over — what --capture saves is exactly what failed.
@@ -449,25 +450,11 @@ export async function fetchPlayerStats(
   onRaw?: (body: string) => void,
 ): Promise<PlayerStatsPage | null> {
   const url = playerStatsUrl(teamId);
-  let raw: unknown;
-  try {
-    const res = await client.text(url, 'application/json');
-    onRaw?.(res.data);
-    try {
-      raw = JSON.parse(res.data) as unknown;
-    } catch (err) {
-      throw new MaxPrepsError(`invalid JSON: ${(err as Error).message}`, { url, httpStatus: res.meta.httpStatus });
-    }
-  } catch (err) {
-    if (!(err instanceof MaxPrepsError) || err.httpStatus !== 400 || !err.body) throw err;
-    onRaw?.(err.body);
-    try {
-      raw = JSON.parse(err.body) as unknown;
-    } catch {
-      // A 400 that is not JSON is not MaxPreps' "no data" envelope: the HTTP error says it best.
-      throw err;
-    }
-  }
+  const raw = await fetchRollupBody(client, url, onRaw, {
+    // A 400 that is not JSON is not MaxPreps' "no data" envelope: the HTTP error says it best.
+    nonJson400: 'rethrow',
+    invalidJson: (detail, httpStatus) => new MaxPrepsError(`invalid JSON: ${detail}`, { url, httpStatus }),
+  });
   return parsePlayerStats(raw, { expectedTeamId: teamId, url });
 }
 

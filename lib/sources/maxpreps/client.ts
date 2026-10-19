@@ -11,6 +11,7 @@ import type { z } from 'zod';
 import { BOOTSTRAP_URL, SPORT_SEASON_ID } from '@/lib/config/season';
 import { MAXPREPS_API } from '@/lib/config/source-urls';
 import { MAX_RETRY_AFTER_MS, POLITE_USER_AGENT } from '@/lib/sources/http/client';
+import { PoliteFetchError, PoliteFetcher } from '@/lib/sources/http/polite-fetcher';
 import type { RawResponse } from '@/lib/sources/http/raw-response';
 import { type Bootstrap, parseBootstrap } from './bootstrap';
 import { MaxPrepsError } from './error';
@@ -28,7 +29,8 @@ import { leagueMetaUrl, scheduleUrl, standingsUrl, teamContextUrl } from './urls
 /**
  * Re-exported, not re-declared: two literals of the same string is how the `+` contact URL came to
  * be a placeholder in both places at once. `lib/sources/http/client.ts` owns it and explains the format;
- * this client still keeps its own TRANSPORT (see that file's header for why).
+ * the transport underneath is the shared engine, lib/sources/http/polite-fetcher.ts (see
+ * lib/sources/http/client.ts' header for why there are still two clients).
  */
 export { POLITE_USER_AGENT as DEFAULT_USER_AGENT };
 
@@ -49,37 +51,6 @@ export interface ClientOptions {
   onLog?: (line: string) => void;
 }
 
-const sleepReal = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
-
-/** Concurrency limiter with a minimum spacing between request STARTS. */
-class Gate {
-  private active = 0;
-  private lastStart = 0;
-  private queue: Array<() => void> = [];
-
-  constructor(
-    private readonly concurrency: number,
-    private readonly spacingMs: number,
-    private readonly sleep: (ms: number) => Promise<void>,
-  ) {}
-
-  async run<T>(fn: () => Promise<T>): Promise<T> {
-    if (this.active >= this.concurrency) {
-      await new Promise<void>((resolve) => this.queue.push(resolve));
-    }
-    this.active += 1;
-    try {
-      const wait = this.lastStart + this.spacingMs - Date.now();
-      if (wait > 0) await this.sleep(wait);
-      this.lastStart = Date.now();
-      return await fn();
-    } finally {
-      this.active -= 1;
-      this.queue.shift()?.();
-    }
-  }
-}
-
 export interface RequestMeta {
   url: string;
   httpStatus: number;
@@ -92,26 +63,18 @@ export interface Fetched<T> {
 }
 
 export class MaxPrepsClient {
-  private readonly fetchImpl: typeof fetch;
-  private readonly userAgent: string;
-  private readonly timeoutMs: number;
-  private readonly attempts: number;
-  private readonly sleep: (ms: number) => Promise<void>;
-  private readonly gate: Gate;
-  private readonly onLog: (line: string) => void;
+  private readonly fetcher: PoliteFetcher;
 
   constructor(opts: ClientOptions = {}) {
-    this.fetchImpl = opts.fetchImpl ?? globalThis.fetch;
-    this.userAgent = opts.userAgent ?? POLITE_USER_AGENT;
-    this.timeoutMs = opts.timeoutMs ?? 15_000;
-    this.attempts = Math.max(1, opts.attempts ?? 3);
-    this.sleep = opts.sleep ?? sleepReal;
-    this.onLog = opts.onLog ?? (() => {});
-    this.gate = new Gate(
-      Math.min(3, Math.max(1, opts.concurrency ?? 3)),
-      Math.max(0, opts.spacingMs ?? 500),
-      this.sleep,
-    );
+    this.fetcher = new PoliteFetcher({
+      ...opts,
+      userAgent: opts.userAgent ?? POLITE_USER_AGENT,
+      retryAfterCapMs: MAX_RETRY_AFTER_MS,
+      // The primary API's own courtesy values (SPEC §5.2): 3 in flight, and the first 4 KB of a
+      // non-2xx body kept on the MaxPrepsError (see its `body`).
+      concurrency: opts.concurrency ?? 3,
+      errorBodyChars: 4096,
+    });
   }
 
   /**
@@ -123,18 +86,18 @@ export class MaxPrepsClient {
    */
   async raw(url: string): Promise<RawResponse> {
     const accept = url.startsWith(MAXPREPS_API) ? 'application/json' : 'text/html';
-    const res = await this.gate.run(() => this.attempt(url, accept));
+    const res = await this.fetch(url, accept);
     return { url: res.meta.url, httpStatus: res.meta.httpStatus, body: res.data };
   }
 
   /** Raw text with retry/backoff. Used for the HTML bootstrap read. */
   async text(url: string, accept = 'text/html'): Promise<Fetched<string>> {
-    return this.gate.run(() => this.attempt(url, accept));
+    return this.fetch(url, accept);
   }
 
   /** Raw JSON (unvalidated) with retry/backoff. */
   async json<T>(url: string, schema: z.ZodType<T>): Promise<Fetched<T>> {
-    const res = await this.gate.run(() => this.attempt(url, 'application/json'));
+    const res = await this.fetch(url, 'application/json');
     let raw: unknown;
     try {
       raw = JSON.parse(res.data) as unknown;
@@ -160,77 +123,26 @@ export class MaxPrepsClient {
   }
 
   /**
-   * The body is read INSIDE the timer's scope: SPEC §5.3's 15s per-request timeout has to cover
-   * the whole exchange, and clearing the abort timer as soon as the headers arrived left a
-   * connection that then stalled mid-body with no timeout at all.
+   * One request through the shared engine (gate, timeout covering the body, retry 429/5xx,
+   * backoff): its answer as a Fetched (`meta.url` is the URL REQUESTED, not the one a redirect
+   * ended at), its failure as a MaxPrepsError.
    */
-  private async attempt(url: string, accept: string): Promise<Fetched<string>> {
-    let lastError: MaxPrepsError | null = null;
-    for (let attempt = 1; attempt <= this.attempts; attempt += 1) {
-      const last = attempt === this.attempts;
-      try {
-        const controller = new AbortController();
-        const timer = setTimeout(() => controller.abort(), this.timeoutMs);
-        try {
-          const res = await this.fetchImpl(url, {
-            headers: { 'user-agent': this.userAgent, accept },
-            signal: controller.signal,
-            redirect: 'follow',
-          });
-          if (res.ok) {
-            return {
-              data: await res.text(),
-              meta: { url, httpStatus: res.status, attempts: attempt },
-            };
-          }
-          // Retry 429 and 5xx only; never retry another 4xx — a 404 means the URL is wrong
-          // and retrying it just adds load (SPEC §5.3).
-          const retryable = res.status === 429 || res.status >= 500;
-          // Best effort, inside the timer like a 2xx body: a body that cannot be read (or stalls
-          // until the abort) leaves `body` empty rather than turning a 4xx into a retry.
-          let body = '';
-          try {
-            body = (await res.text()).slice(0, 4096);
-          } catch {
-            body = '';
-          }
-          lastError = new MaxPrepsError(`HTTP ${res.status}`, {
-            url,
-            httpStatus: res.status,
-            retryable,
-            body,
-          });
-          if (!retryable) throw lastError;
-          // Guarded like the network-error branch: the last attempt throws immediately rather
-          // than sleeping ~4s on its way out.
-          if (!last) await this.backoff(attempt, retryAfterMs(res));
-        } finally {
-          clearTimeout(timer);
-        }
-      } catch (err) {
-        if (err instanceof MaxPrepsError) {
-          if (!err.retryable) throw err;
-          lastError = err;
-          continue;
-        }
-        // Network error / abort: retryable.
-        lastError = new MaxPrepsError((err as Error).message || 'network error', {
-          url,
-          retryable: true,
-        });
-        if (!last) await this.backoff(attempt, null);
-      }
+  private async fetch(url: string, accept: string): Promise<Fetched<string>> {
+    try {
+      const res = await this.fetcher.fetch(url, accept, (r) => r.text());
+      return {
+        data: res.body,
+        meta: { url: res.requestedUrl, httpStatus: res.httpStatus, attempts: res.attempts },
+      };
+    } catch (err) {
+      if (!(err instanceof PoliteFetchError)) throw err;
+      throw new MaxPrepsError(err.message, {
+        url: err.url,
+        httpStatus: err.httpStatus,
+        retryable: err.retryable,
+        body: err.body,
+      });
     }
-    throw lastError ?? new MaxPrepsError('request failed', { url });
-  }
-
-  /** 1 s → 2 s → 4 s with ±20 % jitter, or Retry-After when the server sent one. */
-  private async backoff(attempt: number, retryAfterMs: number | null): Promise<void> {
-    const base = retryAfterMs ?? 1000 * 2 ** (attempt - 1);
-    const jitter = base * 0.2 * (Math.random() * 2 - 1);
-    const ms = Math.max(0, Math.round(base + jitter));
-    this.onLog(`retry in ${ms}ms (attempt ${attempt})`);
-    await this.sleep(ms);
   }
 
   // -------------------------------------------------------------- endpoints
@@ -295,9 +207,3 @@ export class MaxPrepsClient {
   }
 }
 
-/** `Retry-After` in milliseconds, capped — see MAX_RETRY_AFTER_MS in lib/sources/http/client.ts. */
-function retryAfterMs(res: Response): number | null {
-  const seconds = Number(res.headers.get('retry-after'));
-  if (!Number.isFinite(seconds) || seconds <= 0) return null;
-  return Math.min(seconds * 1000, MAX_RETRY_AFTER_MS);
-}

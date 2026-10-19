@@ -21,6 +21,8 @@ import { MAXPREPS_API } from '@/lib/config/source-urls';
 import type { GameTotal } from '@/lib/schema/player-stats';
 import type { MaxPrepsClient } from './client';
 import { MaxPrepsError } from './error';
+import { fetchRollupBody } from './rollup';
+import { envelope } from './schemas';
 
 export function gameStatsUrl(teamId: string, sportSeasonId = SPORT_SEASON_ID): string {
   return `${MAXPREPS_API}/gatewayweb/react/team-season-game-stats/rollup/v1?teamId=${teamId}&sportSeasonId=${sportSeasonId}`;
@@ -28,10 +30,8 @@ export function gameStatsUrl(teamId: string, sportSeasonId = SPORT_SEASON_ID): s
 
 const CellSchema = z.looseObject({ value: z.string().nullable(), href: z.string().nullable().optional() });
 
-const ResponseSchema = z.looseObject({
-  status: z.union([z.number(), z.string()]).optional(),
-  message: z.unknown().optional(),
-  data: z
+const ResponseSchema = envelope(
+  z
     .looseObject({
       teamId: z.string(),
       sportSeasonId: z.string(),
@@ -50,7 +50,7 @@ const ResponseSchema = z.looseObject({
       ),
     })
     .nullable(),
-});
+);
 
 /** MaxPreps column → the stat a game note can name. */
 const COLUMNS = { Goals: 'goals', Assists: 'assists', Saves: 'saves' } as const;
@@ -127,19 +127,9 @@ export async function fetchGameStats(
   onRaw?: (body: string) => void,
 ): Promise<GameTotal[]> {
   const url = gameStatsUrl(teamId);
-  let body: string;
-  try {
-    body = (await client.text(url, 'application/json')).data;
-  } catch (err) {
-    if (!(err instanceof MaxPrepsError) || err.httpStatus !== 400 || !err.body) throw err;
-    body = err.body;
-  }
-  onRaw?.(body);
-  let raw: unknown;
-  try {
-    raw = JSON.parse(body) as unknown;
-  } catch (err) {
-    throw new MaxPrepsError(`game stats: invalid JSON: ${(err as Error).message}`, { url });
-  }
+  const raw = await fetchRollupBody(client, url, onRaw, {
+    nonJson400: 'invalid-json',
+    invalidJson: (detail) => new MaxPrepsError(`game stats: invalid JSON: ${detail}`, { url }),
+  });
   return parseGameStats(raw, { expectedTeamId: teamId, url });
 }

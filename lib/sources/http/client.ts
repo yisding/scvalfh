@@ -2,15 +2,18 @@
  * Minimal HTTP transport for every polite non-MaxPreps-API read: the SECONDARY sources (si.com,
  * scval.com, cifccs.org, VNN) and the history, JV and mascot scripts.
  *
- * `lib/sources/maxpreps/client.ts` keeps its own copy of this logic on purpose: the primary client is
- * JSON-and-zod-only, carries the descriptive User-Agent, and its retry semantics are pinned by
- * tests. The secondary sources need three things it does not have — a per-source User-Agent
- * (si.com gates on a browser UA), binary bodies (PDFs), and a `never throw` mode so a failure
- * becomes a SourceStatus row instead of aborting the cron (SPEC §5.3).
+ * The gate, timeout, retries and backoff are one engine shared with `lib/sources/maxpreps/client.ts`
+ * (lib/sources/http/polite-fetcher.ts); each client is an adapter over it. They stay two clients
+ * because the primary one is JSON-and-zod-only, carries the descriptive User-Agent, and its retry
+ * semantics are pinned by tests. The secondary sources need three things it does not have — a
+ * per-source User-Agent (si.com gates on a browser UA), binary bodies (PDFs), and a `never throw`
+ * mode so a failure becomes a SourceStatus row instead of aborting the cron (SPEC §5.3).
  *
  * Budget, same courtesy ceiling as the primary client (SPEC §5.2, §5.3):
  *   concurrency <= 3 · >= 500 ms between request starts · 15 s timeout · retry 429/5xx only.
  */
+
+import { PoliteFetchError, PoliteFetcher } from './polite-fetcher';
 
 /**
  * Descriptive UA for sources that do not gate on a browser (SPEC §5.3).
@@ -81,135 +84,46 @@ export interface HttpClientOptions {
   onLog?: (line: string) => void;
 }
 
-const sleepReal = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
-
-/** Concurrency limiter with a minimum spacing between request STARTS. */
-class Gate {
-  private active = 0;
-  private lastStart = 0;
-  private readonly waiting: Array<() => void> = [];
-
-  constructor(
-    private readonly concurrency: number,
-    private readonly spacingMs: number,
-    private readonly sleep: (ms: number) => Promise<void>,
-  ) {}
-
-  async run<T>(fn: () => Promise<T>): Promise<T> {
-    if (this.active >= this.concurrency) {
-      await new Promise<void>((resolve) => this.waiting.push(resolve));
-    }
-    this.active += 1;
-    try {
-      const wait = this.lastStart + this.spacingMs - Date.now();
-      if (wait > 0) await this.sleep(wait);
-      this.lastStart = Date.now();
-      return await fn();
-    } finally {
-      this.active -= 1;
-      this.waiting.shift()?.();
-    }
-  }
-}
-
 export class HttpClient {
-  private readonly fetchImpl: typeof fetch;
-  private readonly userAgent: string;
-  private readonly timeoutMs: number;
-  private readonly maxAttempts: number;
-  private readonly sleep: (ms: number) => Promise<void>;
-  private readonly gate: Gate;
-  private readonly onLog: (line: string) => void;
+  private readonly fetcher: PoliteFetcher;
 
   constructor(opts: HttpClientOptions = {}) {
-    this.fetchImpl = opts.fetchImpl ?? globalThis.fetch;
-    this.userAgent = opts.userAgent ?? POLITE_USER_AGENT;
-    this.timeoutMs = opts.timeoutMs ?? 15_000;
-    this.maxAttempts = Math.max(1, opts.attempts ?? 3);
-    this.sleep = opts.sleep ?? sleepReal;
-    this.onLog = opts.onLog ?? (() => {});
-    this.gate = new Gate(
-      Math.min(3, Math.max(1, opts.concurrency ?? 2)),
-      Math.max(0, opts.spacingMs ?? 500),
-      this.sleep,
-    );
+    this.fetcher = new PoliteFetcher({
+      ...opts,
+      userAgent: opts.userAgent ?? POLITE_USER_AGENT,
+      retryAfterCapMs: MAX_RETRY_AFTER_MS,
+    });
   }
 
   /** Follows redirects: scorebooklive.com 301s to si.com and http→https on scval.com (SPEC §1.2). */
   async text(url: string, accept = 'text/html,application/xhtml+xml,*/*'): Promise<HttpResponse<string>> {
-    return this.gate.run(() => this.attempt(url, accept, (res) => res.text()));
+    return this.fetch(url, accept, (res) => res.text());
   }
 
   /** For PDFs. */
   async bytes(url: string, accept = 'application/pdf,*/*'): Promise<HttpResponse<Uint8Array>> {
-    return this.gate.run(() =>
-      this.attempt(url, accept, async (res) => new Uint8Array(await res.arrayBuffer())),
-    );
+    return this.fetch(url, accept, async (res) => new Uint8Array(await res.arrayBuffer()));
   }
 
-  /**
-   * The body is read INSIDE the timer's scope, and inside the retry loop.
-   *
-   * SPEC §5.3's 15s per-request timeout has to cover the whole exchange: clearing the abort timer
-   * as soon as the headers arrive left a connection that then stalled mid-body with no timeout at
-   * all, bounded only by the workflow's 20-minute kill. Reading here also means a body that fails
-   * is retried like any other failure, rather than throwing past the loop.
-   */
-  private async attempt<T>(
+  /** The engine's answer as an HttpResponse (`url` is the final URL after redirects), its failure as an HttpError. */
+  private async fetch<T>(
     url: string,
     accept: string,
     read: (res: Response) => Promise<T>,
   ): Promise<HttpResponse<T>> {
-    let lastError: HttpError | null = null;
-    for (let attempt = 1; attempt <= this.maxAttempts; attempt += 1) {
-      const last = attempt === this.maxAttempts;
-      try {
-        const controller = new AbortController();
-        const timer = setTimeout(() => controller.abort(), this.timeoutMs);
-        try {
-          const res = await this.fetchImpl(url, {
-            headers: { 'user-agent': this.userAgent, accept },
-            signal: controller.signal,
-            redirect: 'follow',
-          });
-          if (res.ok) {
-            return {
-              body: await read(res),
-              url: res.url || url,
-              httpStatus: res.status,
-              contentType: res.headers.get('content-type'),
-              attempts: attempt,
-            };
-          }
-          const retryable = res.status === 429 || res.status >= 500;
-          lastError = new HttpError(`HTTP ${res.status}`, { url, httpStatus: res.status, retryable });
-          if (!retryable) throw lastError;
-          // Guarded like the network-error branch below: the last attempt throws immediately
-          // instead of sleeping ~4s on its way out.
-          if (!last) await this.backoff(attempt, retryAfterMs(res));
-        } finally {
-          clearTimeout(timer);
-        }
-      } catch (err) {
-        if (err instanceof HttpError) {
-          if (!err.retryable) throw err;
-          lastError = err;
-          continue;
-        }
-        lastError = new HttpError((err as Error).message || 'network error', { url, retryable: true });
-        if (!last) await this.backoff(attempt, null);
-      }
+    try {
+      const res = await this.fetcher.fetch(url, accept, read);
+      return {
+        body: res.body,
+        url: res.finalUrl,
+        httpStatus: res.httpStatus,
+        contentType: res.contentType,
+        attempts: res.attempts,
+      };
+    } catch (err) {
+      if (!(err instanceof PoliteFetchError)) throw err;
+      throw new HttpError(err.message, { url: err.url, httpStatus: err.httpStatus, retryable: err.retryable });
     }
-    throw lastError ?? new HttpError('request failed', { url });
-  }
-
-  /** 1 s → 2 s → 4 s with ±20 % jitter, or Retry-After when the server sent one. */
-  private async backoff(attempt: number, retryAfterMs: number | null): Promise<void> {
-    const base = retryAfterMs ?? 1000 * 2 ** (attempt - 1);
-    const jitter = base * 0.2 * (Math.random() * 2 - 1);
-    const ms = Math.max(0, Math.round(base + jitter));
-    this.onLog(`retry in ${ms}ms (attempt ${attempt})`);
-    await this.sleep(ms);
   }
 }
 
@@ -221,8 +135,3 @@ export class HttpClient {
  */
 export const MAX_RETRY_AFTER_MS = 30_000;
 
-function retryAfterMs(res: Response): number | null {
-  const seconds = Number(res.headers.get('retry-after'));
-  if (!Number.isFinite(seconds) || seconds <= 0) return null;
-  return Math.min(seconds * 1000, MAX_RETRY_AFTER_MS);
-}
