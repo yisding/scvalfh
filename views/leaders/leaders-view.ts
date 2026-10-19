@@ -32,6 +32,8 @@ import type { Team } from '@/lib/model/team';
 import { getAllPlayerStatsWithNotes } from '@/lib/queries/player-stats';
 import { getAdjustedScoring, getRatings } from '@/lib/queries/ratings';
 import type { TeamPlayerStats } from '@/lib/schema/player-stats';
+import type { PageMetadataInput } from '@/views/site/page-metadata';
+import { coveredLeagueWords } from '@/views/site/site';
 
 import { buildEloBoard, crossRegionFinals, getCrossRegionFinals, getEloBoard, type EloBoardView } from './elo-board';
 import { buildPlayerBoards } from './player-boards';
@@ -139,5 +141,19 @@ export function buildLeadersView(sources?: LeaderSources): LeadersView {
       : buildEloBoard(regionTeams, table, { region, crossRegion: both ? crossRegion : null, fitTeams: teams.length });
     return buildRegion({ region, teams: regionTeams, stats, standings, games, rosters, elo, adjusted });
   });
-  return { regions, crossRegion, teamCount: teams.length, resultsThrough: lastFinal(games) };
+  return { regions, crossRegion, teamCount: teams.length, resultsThrough: lastFinal(games), shortNames: coveredLeagueWords() };
+}
+
+/** The page's title, which is also its og:title (no site-name suffix). */
+export const LEADERS_PAGE_TITLE = 'Season leaders';
+
+/** What `app/leaders/page.tsx` hands `pageMetadata`: the metadata is static, so this runs once at module load. */
+export function leadersPageMeta(): PageMetadataInput {
+  return {
+    path: '/leaders',
+    title: LEADERS_PAGE_TITLE,
+    description: `Girls varsity field hockey leaders across ${coveredLeagueWords()}, unofficial: the schools with the best records, the most goals per game (raw and Elo-adjusted) and the highest Elo ratings, and the players with the most points (raw and Elo-adjusted), assists, saves and clean sheets.`,
+    ogTitle: LEADERS_PAGE_TITLE,
+    card: 'root',
+  };
 }

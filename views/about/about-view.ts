@@ -475,7 +475,7 @@ export function buildAboutView(): AboutView {
   const historyPublishedOnly = historyUnavailable.filter((l) => (l.entry.alsoPublished?.length ?? 0) > 0);
   // What was published officially, by PUBLISHER and once per document: a league with no site of its own
   // links its section's document (the San Diego Section's 2025 bracket sheet for City, North County and
-  // Metro), so the section is named, as app/history/2025-26/page.tsx names it on each card. Crediting
+  // Metro), so the section is named, as components/history/UnavailableLeague.tsx names it on each card. Crediting
   // the sheet to the three conferences and listing it three times was the review's finding (2026-10-06).
   const historyPublishers = new Map<string, Map<string, string>>();
   for (const l of historyPublishedOnly) {

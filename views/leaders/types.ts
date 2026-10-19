@@ -191,6 +191,8 @@ export interface LeadersView {
   teamCount: number;
   /** "Fri Oct 2": the last day with a final anywhere, or null before the first one. */
   resultsThrough: string | null;
+  /** Every covered league by its short name ('SCVAL, BVAL, … and the LA independents'): the lede's scope. */
+  shortNames: string;
 }
 
 /** A team's roster rows, as far as a leaderboard reads them. */

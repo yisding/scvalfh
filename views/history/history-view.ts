@@ -27,13 +27,17 @@
  * /commits, /leaders): the school, then the grade in words ("Senior"), then the position.
  */
 
+import { getLeague, getSection, isIndependentLeague } from '@/lib/config/leagues';
 import {
-  type HistoryAwards, type HistoryPlayer, getHistorySeason, historySchoolName,
+  type HistoryAwards, type HistoryPlayer, getAvailableHistoryLeagues, getHistoryBrackets, getHistoryLeagues,
+  getHistorySeason, getUnavailableHistoryLeagues, historySchoolName,
 } from '@/lib/datasets/history';
 import { getEnrichedTeamRoster, getRosters } from '@/lib/datasets/rosters';
+import { listWords } from '@/lib/format/words';
 import type { LeagueId, TeamSlug } from '@/lib/model/ids';
 import { teamsInLeague } from '@/lib/registry/teams';
 import { positionFromText } from '@/views/shared/words/position';
+import type { PageMetadataInput } from '@/views/site/page-metadata';
 
 /** One award winner or team-list player, as the page prints them. */
 export interface AwardLine {
@@ -174,4 +178,76 @@ export function overallAwards(leagueId: LeagueId, awards: HistoryAwards): Overal
       },
     };
   });
+}
+
+/**
+ * Everything `/history/2025-26` says outside the league and bracket cards (app/history/2025-26/page.tsx,
+ * DESIGN §1.1, §3.9): the season, the leagues and brackets in the order the page lays them out, and the
+ * words of the lede. The leagues, divisions and notes all come from `data/history-2025-26.json` and
+ * lib/config/leagues.ts, never from a literal list, so a league cannot be dropped or invented here.
+ */
+export interface HistoryPageView {
+  /** '2025-26'. */
+  season: string;
+  /** The page's title, which is also its og:title: '2025-26 final standings'. */
+  title: string;
+  leagues: ReturnType<typeof getHistoryLeagues>;
+  brackets: ReturnType<typeof getHistoryBrackets>;
+  /** "the CCS and San Diego Section": the sections whose brackets the page shows. */
+  bracketSections: string;
+  /** "SCVAL and BVAL": the leagues whose final standings the page carries. */
+  available: string;
+  /** "PCAL, MCAL and EAL are", "MCAL is", or null when every league has its tables. */
+  unavailableSubject: string | null;
+  /** "The LA independents are this site’s grouping, so no table of them was published.", or null with no such group. */
+  groupsSentence: string | null;
+}
+
+/** The page's view, built at render time from the committed archive. */
+export function buildHistoryPageView(): HistoryPageView {
+  const season = getHistorySeason();
+  const brackets = getHistoryBrackets();
+  const available = getAvailableHistoryLeagues();
+  const unavailable = getUnavailableHistoryLeagues();
+  const short = (id: LeagueId) => getLeague(id).shortName;
+  /**
+   * The unavailable leagues, and the groups of independents (the LA independents, DESIGN §24.9,
+   * §24.10): "we found no official final standings" is said of the first only, since the group is this site's
+   * grouping and nobody published a table of it.
+   */
+  const unavailableLeagues = unavailable.filter((l) => !isIndependentLeague(l.id));
+  const unavailableGroups = unavailable.filter((l) => isIndependentLeague(l.id));
+  return {
+    season,
+    title: `${season} final standings`,
+    leagues: getHistoryLeagues(),
+    brackets,
+    bracketSections: listWords(brackets.map((b) => getSection(b.id).briefLabel)),
+    available: listWords(available.map((l) => short(l.id))),
+    unavailableSubject: unavailableLeagues.length
+      ? `${listWords(unavailableLeagues.map((l) => short(l.id)))} ${unavailableLeagues.length === 1 ? 'is' : 'are'}`
+      : null,
+    groupsSentence: unavailableGroups.length
+      ? `${listWords(unavailableGroups.map((l) => `the ${getLeague(l.id).name}`)).replace(/^t/, 'T')} are this site’s grouping, so no table of them was published.`
+      : null,
+  };
+}
+
+/** What `app/history/2025-26/page.tsx` hands `pageMetadata`: the metadata is static, so this runs once at module load. */
+export function historyPageMeta(): PageMetadataInput {
+  const { title, season, available, bracketSections, unavailableSubject, groupsSentence } = buildHistoryPageView();
+  return {
+    path: '/history/2025-26',
+    title,
+    description:
+      `Final ${available} girls field hockey standings` +
+      ` and all-league awards from the ${season} season, from each league’s own documents, and the` +
+      ` ${bracketSections} playoff brackets.` +
+      (unavailableSubject
+        ? ` ${unavailableSubject} marked unavailable: we found no official ${season} final standings.`
+        : '') +
+      (groupsSentence ? ` ${groupsSentence}` : ''),
+    ogTitle: title,
+    card: 'root',
+  };
 }

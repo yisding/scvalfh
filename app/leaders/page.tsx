@@ -6,11 +6,10 @@ import { RegionSwitcher } from '@/components/layout/LeagueSwitcher';
 import PageHeader from '@/components/layout/PageHeader';
 import LeaderSection from '@/components/leaders/LeaderSection';
 import DivisionTabs from '@/components/standings/DivisionTabs';
-import { buildLeadersView } from '@/views/leaders/leaders-view';
+import { LEADERS_PAGE_TITLE, buildLeadersView, leadersPageMeta } from '@/views/leaders/leaders-view';
 import { AND_INDEPENDENTS_SHORT, LEAGUE_COUNT } from '@/views/leaders/scope';
 import type { RegionLeadersView } from '@/views/leaders/types';
 import { pageMetadata } from '@/views/site/page-metadata';
-import { coveredLeagueWords } from '@/views/site/site';
 
 /**
  * `/leaders` (DESIGN §16, §23, §28) — "Who leads the whole site?" Leaderboards across every covered
@@ -32,17 +31,7 @@ import { coveredLeagueWords } from '@/views/site/site';
  * totals are behind the scores. The school boards cover every team.
  */
 
-const SHORT_NAMES = coveredLeagueWords();
-
-const PAGE_TITLE = 'Season leaders';
-
-export const metadata: Metadata = pageMetadata({
-  path: '/leaders',
-  title: PAGE_TITLE,
-  description: `Girls varsity field hockey leaders across ${SHORT_NAMES}, unofficial: the schools with the best records, the most goals per game (raw and Elo-adjusted) and the highest Elo ratings, and the players with the most points (raw and Elo-adjusted), assists, saves and clean sheets.`,
-  ogTitle: PAGE_TITLE,
-  card: 'root',
-});
+export const metadata: Metadata = pageMetadata(leadersPageMeta());
 
 export default function LeadersPage() {
   const view = buildLeadersView();
@@ -61,12 +50,12 @@ export default function LeadersPage() {
     <div className="pb-section-lg [--sx-sticky-top:6rem] md:[--sx-sticky-top:var(--spacing-topbar-lg)]">
       <PageHeader
         eyebrow={`All ${LEAGUE_COUNT} leagues${AND_INDEPENDENTS_SHORT}`}
-        title={PAGE_TITLE}
+        title={LEADERS_PAGE_TITLE}
         description={
           // Two sentences before the first table (DESIGN §28): what is ranked and where the numbers
           // come from. How the Elo scale links the regions is the Elo board's to say.
           <>
-            The top schools and players across {SHORT_NAMES}, ranked within each region. School
+            The top schools and players across {view.shortNames}, ranked within each region. School
             records and ratings are computed from the scores on this site; player numbers are what
             each coach enters on MaxPreps.
           </>
