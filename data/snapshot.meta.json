@@ -1,13 +1,13 @@
 {
   "cifssCrossCheck": {
-    "agreements": 589,
+    "agreements": 592,
     "cifssOnlyScored": 0,
-    "compared": 596,
+    "compared": 599,
     "conflicts": 7,
-    "notOnMaxPreps": 1
+    "notOnMaxPreps": 2
   },
-  "commitSummary": "SCVAL +0 finals · BVAL +0 · PCAL +0 · MCAL +0 · EAL +0 · Sunset +0 · City +0 · North +0 · Metro +0 · LA +0",
-  "contentHash": "c64e0c504bcd0833cd4e1a25b22375566604471030715c14ce7f3b4b78a01fa6",
+  "commitSummary": "SCVAL +0 finals · BVAL +0 · PCAL +0 · MCAL +0 · EAL +0 · Sunset +1 · City +0 · North +0 · Metro +0 · LA +0",
+  "contentHash": "da4a76b1eb073ca9923ad8aae0b76ad771722bd50f0f6edb2e960ae412111ddd",
   "counts": {
     "byLeague": {
       "bval": {
@@ -19,7 +19,7 @@
       },
       "city": {
         "backfilled": 0,
-        "finals": 143,
+        "finals": 145,
         "games": 170,
         "leagueGames": 60,
         "teams": 12
@@ -47,7 +47,7 @@
       },
       "metro": {
         "backfilled": 0,
-        "finals": 82,
+        "finals": 83,
         "games": 102,
         "leagueGames": 30,
         "teams": 9
@@ -68,34 +68,34 @@
       },
       "scval": {
         "backfilled": 0,
-        "finals": 130,
+        "finals": 132,
         "games": 160,
         "leagueGames": 97,
         "teams": 15
       },
       "sunset": {
         "backfilled": 0,
-        "finals": 96,
+        "finals": 97,
         "games": 102,
         "leagueGames": 35,
         "teams": 8
       }
     },
-    "finals": 731,
+    "finals": 735,
     "games": 903,
     "leagueGames": 548,
     "mismatches": 26,
-    "pending": 12,
+    "pending": 8,
     "teams": 102
   },
   "crossCheck": {
-    "agreements": 210,
+    "agreements": 206,
     "backfilled": 3,
-    "compared": 257,
+    "compared": 256,
     "conflicts": 6,
-    "sbliveOnlyScored": 4
+    "sbliveOnlyScored": 8
   },
-  "fetchedAt": "2026-10-18T17:04:32.937Z",
+  "fetchedAt": "2026-10-19T10:24:48.331Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -144,10 +144,10 @@
     },
     {
       "backfilled": 0,
-      "countedFinals": 32,
-      "finalsDelta": 0,
+      "countedFinals": 33,
+      "finalsDelta": 1,
       "id": "sunset",
-      "missingPast": 1,
+      "missingPast": 0,
       "reasons": [],
       "state": "fresh"
     },
@@ -193,7 +193,7 @@
   "requests": {
     "maxpreps": 131,
     "official": 8,
-    "sblive": 20
+    "sblive": 21
   },
   "sources": [
     {
@@ -958,7 +958,7 @@
     },
     {
       "label": "sblive scoreboard 2026-10-15",
-      "rowCount": 24,
+      "rowCount": 21,
       "status": "ok"
     },
     {
@@ -972,6 +972,11 @@
       "status": "ok"
     },
     {
+      "label": "sblive scoreboard 2026-10-19",
+      "rowCount": 11,
+      "status": "ok"
+    },
+    {
       "label": "sblive archie-williams games",
       "rowCount": 18,
       "status": "ok"
@@ -979,11 +984,6 @@
     {
       "label": "sblive berkeley games",
       "rowCount": 17,
-      "status": "ok"
-    },
-    {
-      "label": "sblive bonita-vista games",
-      "rowCount": 21,
       "status": "ok"
     },
     {
@@ -1007,6 +1007,11 @@
       "status": "ok"
     },
     {
+      "label": "sblive gilroy games",
+      "rowCount": 17,
+      "status": "ok"
+    },
+    {
       "label": "sblive greenfield games",
       "rowCount": 14,
       "status": "ok"
@@ -1023,17 +1028,17 @@
     },
     {
       "label": "cifsshome.org Central Coast Section field hockey",
-      "rowCount": 154,
+      "rowCount": 156,
       "status": "ok"
     },
     {
       "label": "cifsshome.org North Coast Section field hockey",
-      "rowCount": 127,
+      "rowCount": 129,
       "status": "ok"
     },
     {
       "label": "cifsshome.org Northern Section field hockey",
-      "rowCount": 16,
+      "rowCount": 17,
       "status": "ok"
     },
     {
@@ -1043,12 +1048,12 @@
     },
     {
       "label": "cifsshome.org Southern Section field hockey",
-      "rowCount": 185,
+      "rowCount": 189,
       "status": "ok"
     },
     {
       "label": "cifsshome.org San Diego Section field hockey",
-      "rowCount": 569,
+      "rowCount": 574,
       "status": "ok"
     },
     {
@@ -1062,8 +1067,8 @@
       "status": "skipped"
     }
   ],
-  "today": "2026-10-18",
-  "warnings": 44,
+  "today": "2026-10-19",
+  "warnings": 43,
   "window": {
     "firstGame": "2026-08-12T17:15:00",
     "lastGame": "2026-10-30T19:00:00",
