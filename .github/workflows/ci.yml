@@ -200,7 +200,7 @@ jobs:
 
       # vite.config.ts inlines SCVAL_BUILD_AT into the build (define), so the 404s this server renders
       # on request measure the snapshot's age against the same instant as every prerendered page
-      # whatever the server's environment says (README, "Deploy notes"); the smoke checks that they
+      # whatever the server's environment says (docs/DEPLOYMENT.md "vinext"); the smoke checks that they
       # agree on the stale-snapshot notice. The pin is passed anyway so the step matches the build
       # step, as a server that read it at run time would need.
       - name: Start the vinext server

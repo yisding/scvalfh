@@ -5,7 +5,7 @@
  * that names what is wrong (the path, or the team, player and club).
  *
  * The file is research, not a script's output, so the counts pinned below change only with a new
- * sweep: when one lands, re-count from the file and update them together with README §Clubs and
+ * sweep: when one lands, re-count from the file and update them together with docs/DATASETS.md "Clubs" and
  * DATA-SOURCES §1.1j2.
  */
 
@@ -226,7 +226,7 @@ describe('data/clubs.json', () => {
 
     it('rests on 251 source entries on 118 distinct URLs, by kind', () => {
       // An entry is one page backing one tie: a club roster or a news story naming several players
-      // is one page and several entries, so README §Clubs and DATA-SOURCES §1.1j2 give both counts.
+      // is one page and several entries, so docs/DATASETS.md "Clubs" and DATA-SOURCES §1.1j2 give both counts.
       const sources = norcal.flatMap((a) => a.sources);
       expect(sources).toHaveLength(251);
       expect(new Set(sources.map((s) => s.url)).size).toBe(118);

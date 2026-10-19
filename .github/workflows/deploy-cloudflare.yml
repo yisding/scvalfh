@@ -1,9 +1,9 @@
-# Deploy the vinext Cloudflare Workers build (README "Cloudflare Workers") to the account the repo's
+# Deploy the vinext Cloudflare Workers build (docs/DEPLOYMENT.md "Cloudflare Workers") to the account the repo's
 # secrets name. It is the third deploy beside `next start` and `vinext start`, and the one a
 # workflow can own end to end: `pnpm run deploy:cloudflare` builds in mode `cloudflare`, prerenders
 # every route and uploads the Worker and its Static Assets with `cf deploy`.
 #
-# When it runs. Like the hosting rebuild the README describes ("Deploy notes"), a new commit on
+# When it runs. Like the hosting rebuild docs/DEPLOYMENT.md describes ("Deploy notes"), a new commit on
 # main is what redeploys — including update-data.yml's snapshot commit, which is the whole point of
 # that job. But update-data pushes with GITHUB_TOKEN, and a push made with GITHUB_TOKEN starts no
 # `push` workflow, so a `push` trigger here would never see a data refresh. Instead this follows
@@ -107,13 +107,13 @@ jobs:
           set -euo pipefail
           skip() { echo "::notice title=deploy-cloudflare skipped::$1"; echo "ready=false" >> "$GITHUB_OUTPUT"; exit 0; }
           if [ -z "$CLOUDFLARE_API_TOKEN" ]; then
-            skip "skipped: no CLOUDFLARE_API_TOKEN secret, so nothing is deployed. Add it, the CLOUDFLARE_ACCOUNT_ID variable and the SITE_URL variable to deploy (README \"Cloudflare Workers\")."
+            skip "skipped: no CLOUDFLARE_API_TOKEN secret, so nothing is deployed. Add it, the CLOUDFLARE_ACCOUNT_ID variable and the SITE_URL variable to deploy (docs/DEPLOYMENT.md \"Cloudflare Workers\")."
           fi
           missing=''
           [ -n "$CLOUDFLARE_ACCOUNT_ID" ] || missing+=' CLOUDFLARE_ACCOUNT_ID'
           [ -n "$SITE_URL" ] || missing+=' SITE_URL'
           if [ -n "$missing" ]; then
-            echo "::error title=deploy-cloudflare misconfigured::CLOUDFLARE_API_TOKEN is set but these are not:$missing (Actions variables; README \"Cloudflare Workers\")"
+            echo "::error title=deploy-cloudflare misconfigured::CLOUDFLARE_API_TOKEN is set but these are not:$missing (Actions variables; docs/DEPLOYMENT.md \"Cloudflare Workers\")"
             exit 1
           fi
           # An origin, as site.ts expects (it drops one trailing slash): a path, query string or

@@ -6,7 +6,7 @@
 > decision in it was later overridden by
 > `docs/BYLAWS-2026-27.md` (fetched after this document was written): **§1.2's "No PTS column"
 > is superseded — the by-laws (Article VI §2) make points the official ordering key, so the
-> standings table DOES show a PTS column.** See `README.md` ("How standings are computed") and
+> standings table DOES show a PTS column.** See docs/STANDINGS.md "How standings are computed" and
 > `docs/BYLAWS-2026-27.md` for the current rule.
 >
 > **Later still: now five leagues and 49 teams (§22).** The Eastern Athletic League joined as a
@@ -2944,7 +2944,7 @@ not for a new section.
 
 The site gained club field hockey: which youth clubs the players on the 43 tracked varsity rosters
 play for, or played for, according to public pages that name both. The data is `data/clubs.json`,
-research done by hand on 2026-10-03 and checked twice (`docs/DATA-SOURCES.md` §1.1j2, README
+research done by hand on 2026-10-03 and checked twice (`docs/DATA-SOURCES.md` §1.1j2, docs/DATASETS.md
 "Clubs"); nothing refreshes it. This section records what the pages answer, the rules they keep and
 how they are laid out. Everything in §1-§15 still stands: static rendering, the rule-and-kicker
 headers, two data hues, lists that reflow, the phone-first chrome.
@@ -3158,7 +3158,7 @@ Every team gets an Elo rating: on its own page, and the ten highest on `/leaders
 wins where §1-§19 disagree. Everything else stands: static rendering, "today" from the snapshot,
 no new hue (§6.4, §15.5) and no new chart (decision 8: the rating is a card and a table). It is the
 first number on the site that comes from a model, so it keeps §19.2: computed from the snapshot's
-results by a documented model (`lib/engine/ratings.ts`; README "How Elo ratings are computed"), read as
+results by a documented model (`lib/engine/ratings.ts`; docs/RATINGS.md "How Elo ratings are computed"), read as
 an estimate, linked to its method, and never a status: it orders no table, berth or seed.
 
 ### 20.1 The rating
@@ -3175,7 +3175,7 @@ snapshot always builds the same numbers (one linear solve in a fixed order).
 
 Replayed day by day, each day predicted from only the games before it, the start from last season
 raised the winners picked from 79% to 89% in 2026 (through Oct 2) and from 84% to 88% in 2025-26;
-the README's "How Elo ratings are computed" has the rest. No page prints a win probability for a
+docs/RATINGS.md "How Elo ratings are computed" has the rest. No page prints a win probability for a
 game; the board's note says only what a 400-point gap means on the scale.
 
 ### 20.2 Where it shows
@@ -3196,7 +3196,7 @@ game; the board's note says only what a 400-point gap means on the scale.
 The site gained college commitments: which players on the tracked varsity rosters (43 then, 49 with
 the EAL) a public page says have committed to play a sport in college, and where. It began with
 field hockey only and took in every sport on 2026-10-04 (§21.7). The data is `data/commits.json`,
-research done by hand and checked twice (`docs/DATA-SOURCES.md` §1.1j3, README "College
+research done by hand and checked twice (`docs/DATA-SOURCES.md` §1.1j3, docs/DATASETS.md "College
 commitments"); nothing refreshes it. It follows the clubs amendment (§17) wherever the two could
 differ: the same matching rule, the same privacy posture, the same row and list layout. This section
 records what is new and where it departs.
@@ -3789,7 +3789,7 @@ figures above are this build's. The home-page keyboard probe passed: Tab to "SoC
 `data-region="socal"`, renders the SoCal blocks, hides the NorCal ones and keeps focus on the
 button. axe-core 4.13 found 0 serious or critical violations over 176 page loads (the install is
 pinned to 4.13: 4.14.0, published 2026-10-05, flags three pre-existing label patterns — see
-README "Known limitations").
+docs/KNOWN-LIMITATIONS.md "Known limitations").
 
 ### 24.4 Southern California postseason surfaces
 
@@ -4394,7 +4394,7 @@ The owner asked for two more rankings: Elo-adjusted points for players and Elo-a
 teams. This section wins where §16, §20 and §23 disagree. Everything else stands: the boards are
 tables ranked 1, 2, 2, 4, once per region with suffixed ids (§24), and the page ships no client
 component. Like the Elo rating (§19.2, §20), both are estimates from a documented model
-(`lib/engine/adjusted-scoring.ts`; README "Elo-adjusted goals and points"), never a status.
+(`lib/engine/adjusted-scoring.ts`; docs/RATINGS.md "Elo-adjusted goals and points"), never a status.
 
 - **The model.** A Poisson attack-defense model anchored on Elo (Maher 1982; Dixon-Coles 1997;
   shrinkage as Baio-Blangiardo 2010): log expected goals = μ + h·host + a·s_team + u_team −
@@ -4407,7 +4407,7 @@ component. Like the Elo rating (§19.2, §20), both are estimates from a documen
   Poisson log-likelihood, against no adjustment, the opponent's Elo alone (an earlier draft of these
   boards: a tenfold fall in goals per 1000 points) and an attack-defense model with no Elo. It has the
   best likelihood on the board's teams; the no-Elo model is about level overall and better on RMSE, so
-  the deciding reason is that this one builds on the site's one Elo table. The README's "Elo-adjusted
+  the deciding reason is that this one builds on the site's one Elo table. docs/RATINGS.md "Elo-adjusted
   goals and points" has the table and the caveats (extrapolation at the extremes, ratings that include
   the game weighed, lagging player totals).
 - **Most Elo-adjusted goals per game** (`#adjusted-goals`), the school board after "Most goals per
@@ -4420,7 +4420,7 @@ component. Like the Elo rating (§19.2, §20), both are estimates from a documen
   × (the team's schedule factor, two places; "Schedule factor" to a screen reader) and Adj (Pts
   times the × as printed, one place, ranked on as printed). Season totals have no per-game split,
   so this is the only adjustment the data in hand allows. MaxPreps' per-game box scores were read
-  and tested (README "Elo-adjusted goals and points"): weighing each game's points by its own
+  and tested (docs/RATINGS.md "Elo-adjusted goals and points"): weighing each game's points by its own
   opponent predicted a player's later points worse than the team's schedule, so they are not
   fetched. Only a player whose team is past the Elo board's minimum is
   ranked; the note names any team that enters points but has no factor yet, and its "From N teams"
@@ -4562,7 +4562,7 @@ neighbouring label is longer.
   a card with three or more division columns puts the stats under the name rather than ellipsize it.
 
 **Not changed (owner calls).** League games still carry their league chip in a league context
-(§5.4 says they carry none; the README says JV rows carry it), and the decider tag stays in the
+(§5.4 says they carry none; docs/DATASETS.md "JV standings" says JV rows carry it), and the decider tag stays in the
 status line rather than after the score (§7.4). Home's mini standings keep their GD bars on phones,
 where about a third of the names wrap; `/leaders` player rows keep their full school · league ·
 grade · position line, which wraps on some rows. The arrows →, ← and ↗ are still glyphs from a

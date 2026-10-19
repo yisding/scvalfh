@@ -6,8 +6,9 @@ const eslintConfig = defineConfig([
   ...nextVitals,
   ...nextTs,
   // Repo code is imported as '@/<path>' whenever the import leaves the file's directory, and as
-  // './<path>' for same-directory and child modules; a '../' specifier is never needed (README,
-  // "Local development"). tsconfig.json's `paths` maps '@/'; vitest, Next, vinext and tsx all read it.
+  // './<path>' for same-directory and child modules; a '../' specifier is never needed
+  // (docs/DEVELOPMENT.md "Imports"). tsconfig.json's `paths` maps '@/'; vitest, Next, vinext and tsx
+  // all read it.
   {
     files: ["**/*.{ts,tsx,mts}"],
     ignores: ["tests/fixtures/**"],
@@ -18,7 +19,7 @@ const eslintConfig = defineConfig([
           patterns: [
             {
               regex: "^\\.\\./",
-              message: "Import repo code as '@/<path>' (README, \"Local development\").",
+              message: "Import repo code as '@/<path>' (docs/DEVELOPMENT.md \"Imports\").",
             },
           ],
         },

@@ -24,7 +24,7 @@ runs:
         # keeps the soft hyphens of the picker tiles (lib/shared/pin-label.ts PICKER_BREAKS), so it flags the
         # home pin tiles, the "who we haven't beaten" rows and the pinned card's last-game link, all of
         # whose names are deliberate sentences (DESIGN §7.12, §10). Those three patterns are a
-        # follow-up (README "Known limitations"); until they are reworked, 4.14 would fail this job on
+        # follow-up (docs/KNOWN-LIMITATIONS.md "Known limitations"); until they are reworked, 4.14 would fail this job on
         # main and on every branch alike, for reasons no change introduced.
         npm install --no-save --no-audit --no-fund axe-core@4.13 playwright
         npx playwright install --with-deps chromium

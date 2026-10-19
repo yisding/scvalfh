@@ -10,7 +10,7 @@
  *   pnpm fetch-prior-season --out <path>       write somewhere else
  *   pnpm fetch-prior-season --dry-run          fetch and report, write nothing
  *
- * Run once a season, at the next-season bootstrap (README): last season is over, so the file never
+ * Run once a season, at the next-season bootstrap (docs/SEASON-ROLLOVER.md "Next-season bootstrap"): last season is over, so the file never
  * changes in between and the twice-daily cron never runs this. Cost: one team-context read (about
  * 0.5-0.7 MB, to find the season's id) and 102 schedule reads (about 150 KB each), through the
  * MaxPreps client's own budget (at most 3 at a time, 500 ms between starts, retries on 429/5xx).

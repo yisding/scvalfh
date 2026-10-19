@@ -2,7 +2,7 @@
  * Elo-adjusted scoring: goals and points weighed by how hard the defenses they came against are,
  * with the Elo table (lib/engine/ratings.ts, DESIGN §20) at the core of that measure. Two /leaders boards use
  * it (views/leaders/school-boards.ts, player-boards.ts): a school's Elo-adjusted goals per game, and a player's
- * Elo-adjusted points. DESIGN §27 and the README's "Elo-adjusted goals and points" say how it was chosen.
+ * Elo-adjusted points. DESIGN §27 and docs/RATINGS.md "Elo-adjusted goals and points" say how it was chosen.
  *
  * The goal model. Every counted final gives two Poisson counts, one per side, with
  *
@@ -40,7 +40,7 @@
  * box scores were read and tried instead (2026-10-15, all 518): weighing each game's points by its own
  * opponent predicted a player's later points worse than this (log-likelihood −1.003 to −0.964 per
  * player-game), and counting only the games a coach has entered was no better, so they are not used
- * (README "Elo-adjusted goals and points").
+ * (docs/RATINGS.md "Elo-adjusted goals and points").
  *
  * At the extremes it extrapolates. Ratings run from about 200 to 2600, so a game against the strongest
  * defense counts as less than a tenth of a game against an average one and a game against the weakest

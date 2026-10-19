@@ -16,7 +16,7 @@ import { bindings, defineConfig, defineWorker } from 'cf/config';
  *   ASSETS. runWorkerFirst keeps those raw cache files from being fetched directly (they 404).
  * - No vars: SITE_URL and SCVAL_BUILD_AT are inlined at build time (vite.config.ts). Never set
  *   SCVAL_SNAPSHOT or SCVAL_HISTORY here: a Worker has no filesystem to read them from.
- * - No accountId: a deploy takes it from CLOUDFLARE_ACCOUNT_ID (README "Cloudflare Workers").
+ * - No accountId: a deploy takes it from CLOUDFLARE_ACCOUNT_ID (docs/DEPLOYMENT.md "Cloudflare Workers").
  */
 export default defineConfig({
   worker: defineWorker({

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Scoped typecheck for agents working concurrently in one tree (README, "Local development"): a
+ * Scoped typecheck for agents working concurrently in one tree (docs/DEVELOPMENT.md "Local development"): a
  * dev-only aid, not part of the CI gate, which is `pnpm typecheck`.
  *
  *   pnpm typecheck:scope <glob> [<glob>…]      (node scripts/dev/typecheck-scope.mjs <glob> [<glob>…])

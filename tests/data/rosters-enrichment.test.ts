@@ -478,7 +478,7 @@ describe('recruiting profiles', () => {
     // 82 grades: 85 were filled on 2026-10-03; three were then blanked because their sources
     // disagree (Leland's Michaela Reichmuth, Redwood's Audrey Dickerman and Eloise Tonderys).
     expect([fills('grade'), fills('positions')]).toEqual([82, 5]);
-    // Jersey numbers and heights are never filled for these leagues (the README says so).
+    // Jersey numbers and heights are never filled for these leagues (docs/KNOWN-LIMITATIONS.md says so).
     expect([fills('jersey'), fills('height')]).toEqual([0, 0]);
     // A position MaxPreps lists only for the previous season is never filled.
     for (const t of others) {

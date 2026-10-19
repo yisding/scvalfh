@@ -6,7 +6,7 @@
  *
  * The file is research, not a script's output. The cases below that need a commitment build one
  * from real roster rows, so they hold whatever the committed file holds; the counts pinned against
- * the file change only with a new sweep (update them with README "College commitments" and
+ * the file change only with a new sweep (update them with docs/DATASETS.md "College commitments" and
  * DATA-SOURCES §1.1j3).
  */
 
@@ -169,7 +169,7 @@ describe('the committed data/commits.json', () => {
   });
 });
 
-describe('the research of 2026-10-03, 2026-10-04, 2026-10-06 and 2026-10-12 (the EAL sweeps found no row; the Southern California round twelve; the 2026-10-12 round three), as counted in README "College commitments" and DATA-SOURCES §1.1j3', () => {
+describe('the research of 2026-10-03, 2026-10-04, 2026-10-06 and 2026-10-12 (the EAL sweeps found no row; the Southern California round twelve; the 2026-10-12 round three), as counted in docs/DATASETS.md "College commitments" and DATA-SOURCES §1.1j3', () => {
   // Pinned: change these only with a new sweep, together with those two documents.
   const SOCAL = new Set(['sunset', 'city', 'north-county', 'metro', 'independents']);
   const socal = raw.commitments.filter((c) => SOCAL.has(getTeamBySlug(c.teamSlug)!.league));

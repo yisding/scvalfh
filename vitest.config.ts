@@ -23,7 +23,7 @@ const SPAWN = [
 ];
 
 export default defineConfig({
-  // '@/' imports: Vite 8's native tsconfig.json `paths` resolver (README, "Local development").
+  // '@/' imports: Vite 8's native tsconfig.json `paths` resolver (docs/DEVELOPMENT.md "Imports").
   resolve: { tsconfigPaths: true },
   test: {
     environment: 'node',

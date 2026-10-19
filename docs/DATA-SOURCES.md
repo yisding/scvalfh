@@ -2865,7 +2865,7 @@ under its section's rules source, linked to the document they are in: the Southe
 Article 200 and the San Diego Section's Green Book Bylaw 2000.1. tests/app/attribution.test.ts pins the
 rules clause.)
 
-## 7. Known open risks (carried into README "Known limitations")
+## 7. Known open risks (carried into docs/KNOWN-LIMITATIONS.md "Known limitations")
 
 - MaxPreps' own De Anza standings arithmetic looked internally inconsistent at capture time
   (e.g. two teams reporting zero league goals scored *and* against across a full slate) — this

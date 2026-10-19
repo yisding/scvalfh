@@ -15,7 +15,7 @@ allowBuilds:
 # cloudflare.config.ts's compatibilityDate follows the workerd the plugin bundles. The lockfile
 # pins the tarballs' integrity; if npm ever drops a sha-tagged build, move to the next `beta`.
 # Eleven vinext 1.0.0 gaps and one @vinext/cloudflare 1.0.0 gap, each fixed where it lives (see the
-# comments inside the two patches and README "The vinext patch"); drop each patch once upstream
+# comments inside the two patches and docs/VINEXT-PATCHES.md "The vinext patch"); drop each patch once upstream
 # ships all of its fixes:
 #  - a nested group in a next.config `headers()` source is mis-parsed (the trailing `.*` became
 #    `\..*`), so the `/:path((?!_next/static/).*)` Cache-Control rule matched only paths starting
