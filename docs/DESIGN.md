@@ -63,7 +63,7 @@
 > page is one column with two paired 2-up blocks instead, and the row lists are capped at a 46rem
 > measure, because a game-log row stretched across the full 1120px main column puts "vs Los Altos"
 > and its "FINAL" about 850px apart — a distance the eye has to bridge to read a single row. The
-> rationale also lives at the top of `app/teams/[slug]/page.tsx`; it is recorded here so the
+> rationale also lives at the top of `components/teams/TeamPageGrid.tsx`; it is recorded here so the
 > deviation reads as a decision rather than an omission.
 >
 > One count in it is **out of date**: §7's and §13's "**four** client modules in the whole app"

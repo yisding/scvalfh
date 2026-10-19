@@ -10,7 +10,7 @@
  */
 
 import {
-  REGIONS, getDivision, getLeague, getRegion, leaguePlayEnds, leaguesInRegion, regionOf,
+  REGIONS, getDivision, getLeague, getRegion, leagueOfDivision, leaguePlayEnds, leaguesInRegion, regionOf,
 } from '@/lib/config/leagues';
 import { divisionHeading, standingsLabel } from '@/lib/config/leagues/labels';
 import { getToday } from '@/lib/datasets/snapshot';
@@ -42,6 +42,8 @@ import type { FormEntry } from '@/views/shared/form-entry';
 import { fixtureOpponent, nextOfficialFixture } from '@/views/shared/official-fixtures';
 import { maxPrepsLabel } from '@/views/shared/words/maxpreps-label';
 import { buildOverviewDivision, type OverviewDivision } from '@/views/standings/overview';
+import type { PlayerStatsView } from '@/views/teams/player-stats';
+import type { RosterView } from '@/views/teams/roster';
 
 import { teamParam } from './team-route';
 
@@ -720,6 +722,58 @@ export function buildTeamPageView(slug: string): TeamPageView | null {
     elo: teamElo(team),
     today,
   };
+}
+
+// ---------------------------------------------------------------- /teams/[slug] meta description and section kickers
+
+/**
+ * `player stats, roster, ` for the description, naming only what this page shows: stats when the
+ * coach has entered some, the roster when it lists players. Empty for a team that has neither
+ * (a coach who published nothing, or a team no update has covered yet), so its description does not
+ * promise what the page lacks.
+ */
+export function rosterExtras(stats: PlayerStatsView | null, roster: RosterView | null): string {
+  const parts: string[] = [];
+  if (stats && (stats.scoring || stats.more || stats.goalies.length > 0)) parts.push('player stats');
+  if (roster && roster.rows.length > 0) parts.push('roster');
+  return parts.map((p) => `${p}, `).join('');
+}
+
+/**
+ * `CCS picture` (SCVAL, BVAL, PCAL) | `MCAL tournament picture` | `Super Regional picture` (EAL) |
+ * `San Diego Section playoffs picture` (City, North County, Metro) | `Postseason` (the Sunset, which has
+ * none: CIF-SS Blue Book 2011.1, 3500.2, so there is no picture to draw), by `postseason.kind`.
+ */
+export function postseasonKicker(view: TeamPageView): string {
+  const { postseasonKind, postseasonName, shortName } = view.league;
+  switch (postseasonKind) {
+    case 'ccs-ladder':
+      return 'CCS picture';
+    case 'league-tournament':
+      return `${shortName} tournament picture`;
+    case 'unbracketed-tournament':
+    case 'section-playoffs':
+      return `${postseasonName} picture`;
+    case 'no-postseason':
+      return 'Postseason';
+  }
+}
+
+/** The meta description's last words: the kicker, except where there is no postseason to picture. */
+export function postseasonDescription(view: TeamPageView): string {
+  return view.league.postseasonKind === 'no-postseason' ? 'why there are no playoffs' : postseasonKicker(view);
+}
+
+/**
+ * Where last season's row sat: the division heading (`El Camino`), prefixed by that division's
+ * league when this team plays in another league now, so no page reads as if "El Camino" were a
+ * division of its own league.
+ */
+export function lastSeasonScope(division: DivisionId, league: LeagueId): string {
+  const owner = leagueOfDivision(division);
+  const heading = divisionHeading(division);
+  if (heading === null) return owner.shortName;
+  return owner.id === league ? heading : `${owner.shortName} ${heading}`;
 }
 
 // ---------------------------------------------------------------- /teams

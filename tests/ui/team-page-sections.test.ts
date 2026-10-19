@@ -13,6 +13,7 @@ import TeamPage from '@/app/teams/[slug]/page';
 import { getPlayerStats } from '@/lib/datasets/player-stats';
 import { getRosters } from '@/lib/datasets/rosters';
 import { TEAMS } from '@/lib/registry/teams';
+import { buildTeamPageBundle } from '@/views/teams/team-page';
 import { SCVAL_ONLY_CLAIM } from '@/scripts/ci/copy/copy-rules';
 
 async function render(slug: string): Promise<string> {
@@ -70,5 +71,17 @@ describe('the team page, every league', () => {
     if (noStats) {
       expect(await render(noStats.slug)).toMatch(/No player stats for|Nobody has entered any/);
     }
+  });
+});
+
+describe('the team page bundle (views/teams/team-page.ts)', () => {
+  it('is built once per slug, so generateMetadata and the page read the same objects', () => {
+    const first = buildTeamPageBundle('st-ignatius');
+    expect(first).not.toBeNull();
+    expect(buildTeamPageBundle('st-ignatius')).toBe(first);
+  });
+
+  it('is null for a slug that is not a registry team', () => {
+    expect(buildTeamPageBundle('nope')).toBeNull();
   });
 });

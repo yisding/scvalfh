@@ -17,7 +17,7 @@ import ResultChip, { CHIP_LABEL } from './ResultChip';
  *
  * The direction in words and the excluded-games caption (DESIGN §5.5) are the host's, not the
  * strip's: the team page states "League, oldest to newest" in its Form heading's meta and prints
- * "+ N other games, not counted here" as a line of its own (app/teams/[slug]/page.tsx), and the
+ * "+ N other games, not counted here" as a line of its own (components/teams/TeamFormAndMargin.tsx), and the
  * game page's FormGoingIn heading says "League games · oldest → newest".
  *
  * Screen readers get ONE sentence for the whole strip (DESIGN §10.6), never five letters. When
