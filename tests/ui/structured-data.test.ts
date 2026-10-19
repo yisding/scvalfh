@@ -16,6 +16,7 @@ import { loadQueries } from '@/tests/support/queries';
 const m = useCorpusModules('all-2026-10-02', {
   sd: () => import('@/views/site/structured-data'),
   gv: () => import('@/views/game/game-view'),
+  gr: () => import('@/views/game/game-route'),
   data: loadQueries,
 });
 
@@ -73,7 +74,7 @@ describe('teamJsonLd', () => {
 describe('gameJsonLd', () => {
   it('describes every corpus game as the page does: title, start, status, sides and only a published place', async () => {
     const { dateTimeAttr } = await import('@/lib/format/dates');
-    for (const { id } of m.gv.gameStaticParams()) {
+    for (const { id } of m.gr.gameStaticParams()) {
       const model = m.gv.buildGameView(id);
       if (!model) continue; // a superseded stub: no event of its own
       const { game } = model;

@@ -42,6 +42,7 @@ import {
   type PlayerStatsView,
 } from '@/views/teams/player-stats';
 import { buildRosterView, type RosterView } from '@/views/teams/roster';
+import { teamStaticParams } from '@/views/teams/team-route';
 import { buildTeamPageView, type TeamPageView } from '@/views/teams/team-view';
 
 /**
@@ -131,7 +132,7 @@ import { buildTeamPageView, type TeamPageView } from '@/views/teams/team-view';
 export const dynamicParams = false;
 
 export function generateStaticParams() {
-  return getTeamSlugs().map((slug) => ({ slug }));
+  return teamStaticParams();
 }
 
 export async function generateMetadata({ params }: PageProps<'/teams/[slug]'>): Promise<Metadata> {

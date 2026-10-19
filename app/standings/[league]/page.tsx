@@ -9,12 +9,12 @@ import DivisionTabs from '@/components/standings/DivisionTabs';
 import Arrow from '@/components/ui/Arrow';
 import ExternalLink from '@/components/ui/ExternalLink';
 import { biggestGoalDiff } from '@/components/ui/StandingsTable';
-import { LEAGUE_IDS, getLeague } from '@/lib/config/leagues';
+import { getLeague } from '@/lib/config/leagues';
 import { leagueSportWords, standingsLabel } from '@/lib/config/leagues/labels';
 import { hasHistory } from '@/lib/datasets/history';
 import { shortDate } from '@/lib/format/dates';
-import { getLeagueSummary } from '@/lib/queries/leagues';
 import { leagueChips, leagueHrefs } from '@/views/site/league-chips';
+import { leagueParam, leagueStaticParams } from '@/views/site/league-route';
 import { OG_BASE } from '@/views/site/site';
 import { leaderClause } from '@/views/standings/division';
 import { buildStandingsPageView } from '@/views/standings/standings-view';
@@ -39,19 +39,19 @@ import { buildStandingsPageView } from '@/views/standings/standings-view';
  * games against each other, and its notes carry the group's own sentence (`official.note`). The title names the
  * group ('Independents standings'), since its short name is an adjective.
  *
- * Static: `generateStaticParams` from `LEAGUE_IDS` with `dynamicParams = false`, no
+ * Static: `generateStaticParams` from `leagueStaticParams` (`LEAGUE_IDS`) with `dynamicParams = false`, no
  * search params, nothing derived from `Date.now()`. Following this URL never writes the
  * remembered league (the switcher is in link mode).
  */
 export const dynamicParams = false;
 
 export function generateStaticParams(): { league: string }[] {
-  return LEAGUE_IDS.map((league) => ({ league }));
+  return leagueStaticParams();
 }
 
 export async function generateMetadata({ params }: PageProps<'/standings/[league]'>): Promise<Metadata> {
   const { league } = await params;
-  const summary = getLeagueSummary(league);
+  const summary = leagueParam(league);
   if (!summary) return { title: 'League not found' };
   const { leaders, views } = buildStandingsPageView(league);
   const through = views
@@ -77,7 +77,7 @@ export async function generateMetadata({ params }: PageProps<'/standings/[league
 
 export default async function LeagueStandingsPage({ params }: PageProps<'/standings/[league]'>) {
   const { league } = await params;
-  const summary = getLeagueSummary(league);
+  const summary = leagueParam(league);
   if (!summary) notFound();
   const data = buildStandingsPageView(summary.id);
   const multi = summary.divisions.length > 1;

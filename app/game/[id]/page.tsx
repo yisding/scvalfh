@@ -15,12 +15,12 @@ import JsonLd from '@/components/layout/JsonLd';
 import Arrow from '@/components/ui/Arrow';
 import ExternalLink from '@/components/ui/ExternalLink';
 import ScoreBoard from '@/components/ui/ScoreBoard';
+import { gameStaticParams } from '@/views/game/game-route';
 import {
   buildGameView,
   buildSupersededStub,
   gameDescription,
   gameRecap,
-  gameStaticParams,
   gameTitle,
 } from '@/views/game/game-view';
 import { OG_BASE } from '@/views/site/site';

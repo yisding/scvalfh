@@ -84,14 +84,14 @@ function counted(league: string, status: Game['status'] = 'final'): Game {
   return game;
 }
 
-describe('params (app/game/[id]/page.tsx and opengraph-image.tsx via game-view.ts gameStaticParams)', () => {
+describe('params (app/game/[id]/page.tsx and opengraph-image.tsx via game-route.ts gameStaticParams)', () => {
   it('page params === OG params, one per game, gameIdToParam round trip, no ":"', () => {
     const page = L.pageParams();
     const og = L.ogParams();
     expect(og, 'app/game/[id]/opengraph-image.tsx: OG params === page params').toEqual(page);
     const games = L.d.getGames();
     const superseded = Object.keys(L.d.getSupersededGames());
-    expect(page.length, 'views/game/game-view.ts gameStaticParams count').toBe(games.length + superseded.length);
+    expect(page.length, 'views/game/game-route.ts gameStaticParams count').toBe(games.length + superseded.length);
     for (const { id } of page) {
       expect(id, 'views/game/game-view.ts param').not.toContain(':');
       const contestId = L.ids.paramToGameId(id);
@@ -108,17 +108,17 @@ describe('params (app/game/[id]/page.tsx and opengraph-image.tsx via game-view.t
     }
   });
 
-  it('buildGameView takes the URL param and returns undefined for an unknown id', () => {
+  it('buildGameView takes the URL param and returns null for an unknown id', () => {
     const g = L.d.getGames().find((x) => x.contestId.startsWith('sblive:'))!;
     const model = L.m.buildGameView(L.ids.gameIdToParam(g.contestId));
     expect(model?.game.contestId, 'views/game/game-view.ts sblive param').toBe(g.contestId);
     expect(model?.canonical, 'views/game/game-view.ts canonical').toBe(L.ids.gameHref(g.contestId));
-    expect(L.m.buildGameView('nope'), 'views/game/game-view.ts unknown').toBeUndefined();
-    expect(L.m.buildGameView('sblive-1'), 'views/game/game-view.ts unknown sblive').toBeUndefined();
-    expect(L.m.buildSupersededStub('sblive-1'), 'views/game/game-view.ts unknown stub').toBeUndefined();
+    expect(L.m.buildGameView('nope'), 'views/game/game-view.ts unknown').toBeNull();
+    expect(L.m.buildGameView('sblive-1'), 'views/game/game-view.ts unknown sblive').toBeNull();
+    expect(L.m.buildSupersededStub('sblive-1'), 'views/game/game-view.ts unknown stub').toBeNull();
     // The superseded map is a plain JSON object: no prototype member is ever a "target".
     for (const param of ['constructor', '__proto__', 'toString', 'hasOwnProperty', 'valueOf']) {
-      expect(L.m.buildSupersededStub(param), `views/game/game-view.ts stub for "${param}"`).toBeUndefined();
+      expect(L.m.buildSupersededStub(param), `views/game/game-view.ts stub for "${param}"`).toBeNull();
     }
   });
 });
@@ -361,7 +361,7 @@ describe('MCAL postseason note and superseded stubs (corpus copy)', () => {
     expect(html, 'app/game/[id]/page.tsx stub link').toContain(`href="${stub.targetHref}"`);
     const meta = await S.metadata('sblive-999999');
     expect(meta.alternates?.canonical, 'app/game/[id]/page.tsx stub canonical').toBe(stub.targetHref);
-    expect(S.m.buildGameView('sblive-999999'), 'views/game/game-view.ts: a stub has no game model').toBeUndefined();
+    expect(S.m.buildGameView('sblive-999999'), 'views/game/game-view.ts: a stub has no game model').toBeNull();
   });
 });
 

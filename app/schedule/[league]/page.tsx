@@ -11,18 +11,18 @@ import ScheduleList from '@/components/schedule/ScheduleList';
 import TimelineRail from '@/components/schedule/TimelineRail';
 import LeagueHealthNote from '@/components/ui/LeagueHealthNote';
 import SectionHeader from '@/components/ui/SectionHeader';
-import { LEAGUE_IDS, isIndependentLeague } from '@/lib/config/leagues';
+import { isIndependentLeague } from '@/lib/config/leagues';
 import { leagueSportWords, standaloneName } from '@/lib/config/leagues/labels';
 import { SEASON_DISPLAY } from '@/lib/config/season';
 import { getToday } from '@/lib/datasets/snapshot';
 import { monthDay } from '@/lib/format/dates';
 import { plural } from '@/lib/format/words';
 import { getGamesByDate, getOfficialFixtures } from '@/lib/queries/games';
-import { getLeagueSummary } from '@/lib/queries/leagues';
 import { getTeams } from '@/lib/queries/teams';
 import { scheduleFilterProps } from '@/views/schedule/filters';
 import { countGames } from '@/views/schedule/filters-client';
 import { leagueChips, leagueHrefs } from '@/views/site/league-chips';
+import { leagueParam, leagueStaticParams } from '@/views/site/league-route';
 import { OG_BASE } from '@/views/site/site';
 
 /**
@@ -57,12 +57,12 @@ function scheduleTitle(summary: { id: string; shortName: string }): string {
 export const dynamicParams = false;
 
 export function generateStaticParams(): { league: string }[] {
-  return LEAGUE_IDS.map((league) => ({ league }));
+  return leagueStaticParams();
 }
 
 export async function generateMetadata({ params }: PageProps<'/schedule/[league]'>): Promise<Metadata> {
   const { league } = await params;
-  const summary = getLeagueSummary(league);
+  const summary = leagueParam(league);
   if (!summary) return { title: 'League not found' };
   const counts = countGames(getGamesByDate({ league: summary.id }).flatMap((group) => group.games));
   // The h1 is scheduleTitle; the <title> adds the sport, which a search result has no other way to show.
@@ -80,7 +80,7 @@ export async function generateMetadata({ params }: PageProps<'/schedule/[league]
 
 export default async function LeagueSchedulePage({ params }: PageProps<'/schedule/[league]'>) {
   const { league } = await params;
-  const summary = getLeagueSummary(league);
+  const summary = leagueParam(league);
   if (!summary) notFound();
 
   const groups = getGamesByDate({ league: summary.id });

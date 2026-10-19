@@ -42,6 +42,8 @@ import type { FormEntry } from '@/views/shared/form-entry';
 import { maxPrepsLabel } from '@/views/shared/words/maxpreps-label';
 import { buildOverviewDivision, type OverviewDivision } from '@/views/standings/division';
 
+import { teamParam } from './team-route';
+
 /** One opponent in this team's table that it has not beaten yet (DESIGN §3.7). */
 export interface UnbeatenOpponent {
   slug: TeamSlug;
@@ -670,9 +672,9 @@ export function fixtureOpponent(
   };
 }
 
-export function buildTeamPageView(slug: string): TeamPageView | undefined {
-  const team = getTeamBySlug(slug);
-  if (!team) return undefined;
+export function buildTeamPageView(slug: string): TeamPageView | null {
+  const team = teamParam(slug);
+  if (!team) return null;
 
   const today = getToday();
   const league = leagueCopy(team.league);

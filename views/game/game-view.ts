@@ -35,7 +35,7 @@ import type { LeagueConfig } from '@/lib/model/league-config';
 import type { TournamentGame } from '@/lib/model/postseason';
 import type { Standing, TiebreakStage } from '@/lib/model/standings';
 import type { Team } from '@/lib/model/team';
-import { getGameById, getGames } from '@/lib/queries/games';
+import { getGames } from '@/lib/queries/games';
 import { getLeagueTournament } from '@/lib/queries/postseason';
 import { getSbliveCrossCheck, getSupersededGames } from '@/lib/queries/provenance';
 import { getStandingFor } from '@/lib/queries/standings';
@@ -56,6 +56,8 @@ import {
 } from '@/views/shared/describe-game';
 import type { FormEntry } from '@/views/shared/form-entry';
 import type { GameDisplay, SideView } from '@/views/shared/game-display-client';
+
+import { gameParam } from './game-route';
 
 // ---------------------------------------------------------------- types
 
@@ -141,7 +143,7 @@ export interface CountsAs {
   classificationNote: string | null;
 }
 
-export interface GameModel {
+export interface GameView {
   game: Game;
   /** The URL param: `gameIdToParam(contestId)`. */
   param: string;
@@ -218,7 +220,7 @@ export interface SupersededStub {
   /** `<SHORT> game — this result is now on MaxPreps.` */
   sentence: string;
   /** The target game's model (the OG card renders it), when the target is in the snapshot. */
-  targetModel: GameModel | undefined;
+  targetModel: GameView | null;
 }
 
 // ---------------------------------------------------------------- helpers
@@ -325,7 +327,7 @@ function subFor(
   return `${recordString(record)} ${scope}`;
 }
 
-/** The scoreboard caption — see `GameModel.recordsCaption`. */
+/** The scoreboard caption — see `GameView.recordsCaption`. */
 function recordsCaptionFor(
   game: Game,
   display: GameDisplay,
@@ -347,7 +349,7 @@ function recordsCaptionFor(
 }
 
 /**
- * A final's result links (`GameModel.resultLinks`). The accent pill is the source the score came
+ * A final's result links (`GameView.resultLinks`). The accent pill is the source the score came
  * from: si.com's game page when the published score is si.com's (D2), else the MaxPreps box score.
  */
 function resultLinksFor(game: Game): GameLink[] {
@@ -826,32 +828,16 @@ function countsAsFor(game: Game): CountsAs {
   };
 }
 
-// ---------------------------------------------------------------- params
-
-/**
- * The /game/[id] params: every game (`gameIdToParam`, so `sblive:123` → `sblive-123`) plus every
- * superseded si.com id (stub pages). The page AND its opengraph-image both return exactly this
- * (SPEC §8.1, §10.6), so the OG URL a page points at always exists.
- */
-export function gameStaticParams(): Array<{ id: string }> {
-  const ids = [
-    ...getGames().map((g) => gameIdToParam(g.contestId)),
-    ...Object.keys(getSupersededGames()).map((id) => gameIdToParam(id)),
-  ];
-  return [...new Set(ids)].map((id) => ({ id }));
-}
-
 // ---------------------------------------------------------------- the model
 
 /**
- * `undefined` for a param that is not a game in the snapshot — the page turns that into a 404 (or a
- * superseded stub). `param` is the URL segment: `paramToGameId` runs FIRST, so `sblive-123` finds
- * `sblive:123`, and no accessor that can throw runs for an unknown id.
+ * `null` for a param that is not a game in the snapshot — the page turns that into a 404 (or a
+ * superseded stub). `param` is the URL segment: `gameParam` runs FIRST (`paramToGameId`, so
+ * `sblive-123` finds `sblive:123`), and no accessor that can throw runs for an unknown id.
  */
-export function buildGameView(param: string): GameModel | undefined {
-  const contestId = paramToGameId(param);
-  const game = getGameById(contestId);
-  if (!game) return undefined;
+export function buildGameView(param: string): GameView | null {
+  const game = gameParam(param);
+  if (!game) return null;
   const display = describeGame(game);
   const away = sideModel(game, game.away, display.away, display);
   const home = sideModel(game, game.home, display.home, display);
@@ -906,16 +892,16 @@ export function buildGameView(param: string): GameModel | undefined {
 /**
  * The stub for a superseded si.com game (`/game/sblive-<id>` whose result MaxPreps now has):
  * `<SHORT> game — this result is now on MaxPreps.`, linking and canonical to the MaxPreps game.
- * undefined for any other param.
+ * null for any other param.
  */
-export function buildSupersededStub(param: string): SupersededStub | undefined {
+export function buildSupersededStub(param: string): SupersededStub | null {
   const contestId = paramToGameId(param);
   // Only an si.com id can be superseded, and the map is a plain JSON object: an own-property
   // lookup, so 'constructor' or '__proto__' never reads Object.prototype as a "target".
-  if (!isSbliveContestId(contestId)) return undefined;
+  if (!isSbliveContestId(contestId)) return null;
   const map = getSupersededGames();
   const target = Object.hasOwn(map, contestId) ? map[contestId] : undefined;
-  if (typeof target !== 'string' || target === '') return undefined;
+  if (typeof target !== 'string' || target === '') return null;
   const targetModel = buildGameView(gameIdToParam(target));
   const short = targetModel?.league?.shortName;
   return {
@@ -942,7 +928,7 @@ export function buildSupersededStub(param: string): SupersededStub | undefined {
  * PT". People search a matchup as "<school> <school> field hockey", and the site-name suffix that
  * used to be the only "field hockey" in the title was the part a result cut off.
  */
-export function gameTitle(model: GameModel): string {
+export function gameTitle(model: GameView): string {
   const { display, game, away, home } = model;
   const date = dateWithYear(game.dateLocal);
   if (display.kind === 'final') {
@@ -962,7 +948,7 @@ export function gameTitle(model: GameModel): string {
 }
 
 /** `De Anza Division league game` | `MCAL league game` | `MCAL semifinal` | `non-league game`. */
-function contextNoun(model: GameModel): string {
+function contextNoun(model: GameView): string {
   // The postseason's round label ('MCAL semifinal'); 'Postseason' is the label of an independents'
   // postseason game, a common noun mid-sentence.
   return gameContextNoun(model.game, model.contextLabel === 'Postseason' ? 'postseason' : model.contextLabel);
@@ -972,12 +958,12 @@ function contextNoun(model: GameModel): string {
  * The page's result sentence, winner first ('Point Loma won their home non-league game against Helix
  * 7–1.'), with the page's own context noun (`resultSentence`); null for anything but a final.
  */
-export function gameRecap(model: GameModel): string | null {
+export function gameRecap(model: GameView): string | null {
   return resultSentence(model.game, contextNoun(model));
 }
 
 /** The `<meta name="description">` and the OG description: `… in <League name> girls varsity field hockey, Fall 2026` (SEASON_DISPLAY). */
-export function gameDescription(model: GameModel): string {
+export function gameDescription(model: GameView): string {
   const { game, display, away, home, league } = model;
   const context = contextNoun(model);
   const where = `${league ? leagueSportWords(league.id) : 'girls varsity field hockey'}, ${SEASON_DISPLAY}`;
@@ -1002,7 +988,7 @@ export function gameDescription(model: GameModel): string {
 }
 
 /** The kicker line on the OG card: `FINAL · BVAL · Santa Teresa`, `FINAL · Non-league`, `FINAL · MCAL semifinal`. */
-export function gameKicker(model: GameModel): string {
+export function gameKicker(model: GameView): string {
   const parts = [model.display.statusLabel];
   if (model.display.deciderTag) parts.push(model.display.deciderTag);
   parts.push(model.contextLabel);

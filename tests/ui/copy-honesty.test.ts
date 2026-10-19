@@ -76,6 +76,7 @@ const COLLECTED = {
   standings: () => import('@/views/standings/standings-view'),
   teamView: () => import('@/views/teams/team-view'),
   gameView: () => import('@/views/game/game-view'),
+  gameRoute: () => import('@/views/game/game-route'),
 };
 
 const corpus = useCorpusModules('all-2026-10-02', COLLECTED);
@@ -95,6 +96,7 @@ let home: ReturnType<typeof corpus.home.buildHomeView>;
 let standings: typeof corpus.standings;
 let teamView: typeof corpus.teamView;
 let gameView: typeof corpus.gameView;
+let gameRoute: typeof corpus.gameRoute;
 
 /** One view model under test: who produced it, which league it belongs to, the value. */
 interface Subject {
@@ -112,12 +114,13 @@ interface EalCorpus {
   data: typeof corpus.data;
   leagues: Leagues;
   gameView: typeof corpus.gameView;
+  gameRoute: typeof corpus.gameRoute;
   subjects: Subject[];
 }
 let eal: EalCorpus;
 
 beforeAll(async () => {
-  ({ data, leagues, standings, teamView, gameView } = corpus);
+  ({ data, leagues, standings, teamView, gameView, gameRoute } = corpus);
   home = corpus.home.buildHomeView();
   markConfig(leagues.LEAGUES);
   markConfig(leagues.SECTIONS);
@@ -155,7 +158,7 @@ beforeAll(async () => {
   }
   s.push({ producer: TV, label: 'teams index', league: null, value: teamView.buildTeamsByLeague() });
 
-  for (const { id: param } of gameView.gameStaticParams()) {
+  for (const { id: param } of gameRoute.gameStaticParams()) {
     const model = gameView.buildGameView(param);
     if (!model) {
       const stub = gameView.buildSupersededStub(param);
@@ -186,7 +189,7 @@ async function collectEal(): Promise<EalCorpus> {
     playoffsPage: () => import('@/app/playoffs/page'),
     teamPage: () => import('@/app/teams/[slug]/page'),
   });
-  const { data: d, leagues: l, standings: sd, teamView: tv, gameView: gm } = modules;
+  const { data: d, leagues: l, standings: sd, teamView: tv, gameView: gm, gameRoute: gr } = modules;
   const h = modules.home.buildHomeView();
   const schedulePage = modules.schedulePage.default;
   const playoffsPage = modules.playoffsPage.default;
@@ -233,7 +236,7 @@ async function collectEal(): Promise<EalCorpus> {
     s.push({ producer: TP, label: `/teams/${t.slug} (EAL corpus)`, league: t.league, value: visibleText(html) });
     s.push({ producer: TP, label: `/teams/${t.slug} attributes (EAL corpus)`, league: t.league, value: attributeText(html) });
   }
-  for (const { id: param } of gm.gameStaticParams()) {
+  for (const { id: param } of gr.gameStaticParams()) {
     const model = gm.buildGameView(param);
     if (!model) {
       s.push({ producer: GV, label: `superseded stub ${param} (EAL corpus)`, league: null, value: gm.buildSupersededStub(param) });
@@ -243,7 +246,7 @@ async function collectEal(): Promise<EalCorpus> {
     const league = leagueOfDivision(g.countsFor) ?? g.postseason?.leagueId ?? null;
     s.push({ producer: GV, label: `game ${param} (EAL corpus)`, league, value: model, unplayed: g.status !== 'final' });
   }
-  return { data: d, leagues: l, gameView: gm, subjects: s };
+  return { data: d, leagues: l, gameView: gm, gameRoute: gr, subjects: s };
 }
 
 // ---------------------------------------------------------------- string walking
@@ -348,7 +351,7 @@ describe('copy honesty over every league’s view models (SPEC §10.9)', () => {
         expect(subjects.some((s) => s.producer === producer && s.league === id), `${producer}: no view model for ${id}`).toBe(true);
       }
     }
-    expect(subjects.filter((s) => s.producer === GV).length, `${GV}: game models`).toBe(gameView.gameStaticParams().length);
+    expect(subjects.filter((s) => s.producer === GV).length, `${GV}: game models`).toBe(gameRoute.gameStaticParams().length);
   });
 
   it('collects the EAL views on the EAL corpus, where the EAL has data', () => {
@@ -366,7 +369,7 @@ describe('copy honesty over every league’s view models (SPEC §10.9)', () => {
       expect(eal.data.getGames().filter((g) => g.countsFor && eal.leagues.leagueOfDivision(g.countsFor).id === id && g.status === 'final').length,
         `${id}: counted league finals on the EAL corpus`).toBeGreaterThan(0);
     }
-    expect(eal.subjects.filter((s) => s.producer === GV).length, `${GV}: game models (EAL corpus)`).toBe(eal.gameView.gameStaticParams().length);
+    expect(eal.subjects.filter((s) => s.producer === GV).length, `${GV}: game models (EAL corpus)`).toBe(eal.gameRoute.gameStaticParams().length);
     // The copy the second pass exists for is there to be checked: the Super Regional kicker, the
     // 1 v 1 note, the missing banner and the membership note.
     const text = eal.subjects.flatMap((s) => strings(s.value).map(([, v]) => v)).join('\n');

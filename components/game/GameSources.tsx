@@ -2,7 +2,7 @@ import ExternalLink from '@/components/ui/ExternalLink';
 import SectionHeader from '@/components/ui/SectionHeader';
 import { findDivision, findLeague } from '@/lib/config/leagues';
 import { shootoutPhrases } from '@/lib/format/score';
-import type { GameModel } from '@/views/game/game-view';
+import type { GameView } from '@/views/game/game-view';
 import { shootoutGroupName, shootoutSectionOf } from '@/views/shared/describe-game';
 
 /**
@@ -12,7 +12,7 @@ import { shootoutGroupName, shootoutSectionOf } from '@/views/shared/describe-ga
  * is High School on SI's (si.com) — MaxPreps had no contest for an official fixture, had the
  * contest with no score, or its row was clearly wrong — the page says so, with the rule's own note:
  * `Score via High School on SI (si.com): <rule note>.` Both sources are linked, but a link that is
- * already one of the final's result pills directly above (`GameModel.resultLinks`, where si.com's
+ * already one of the final's result pills directly above (`GameView.resultLinks`, where si.com's
  * game page is the accent pill) is not repeated here.
  *
  * `SourceDisagreement` is the site's credibility mechanism applied to one contest (DESIGN §9,
@@ -23,7 +23,7 @@ import { shootoutGroupName, shootoutSectionOf } from '@/views/shared/describe-ga
  * `GameElsewhere` is the per-page half of the attribution posture: the layout's footer credits the
  * sources site-wide, and this block carries the deep links for these two schools (DESIGN §7.15).
  * The links for THIS contest are not repeated here (F-71c): a final's result links sit under the
- * recap (`GameModel.resultLinks`), and every other per-game link is in DETAILS and the source
+ * recap (`GameView.resultLinks`), and every other per-game link is in DETAILS and the source
  * line. Each link has one home, except in this file's two disagreement notes: SourceDisagreement
  * cites both sources' pages and ResultFlagConflict MaxPreps' page beside their sentences, even
  * when that page is also a result pill under the recap.
@@ -38,7 +38,7 @@ import { shootoutGroupName, shootoutSectionOf } from '@/views/shared/describe-ga
  */
 
 export interface GameSourceLineProps {
-  model: GameModel;
+  model: GameView;
   className?: string;
 }
 
@@ -78,7 +78,7 @@ export function GameSourceLine({ model, className }: GameSourceLineProps) {
 }
 
 export interface SourceDisagreementProps {
-  model: GameModel;
+  model: GameView;
   className?: string;
 }
 
@@ -142,7 +142,7 @@ export function ResultFlagConflict({ model, className }: SourceDisagreementProps
 }
 
 export interface GameElsewhereProps {
-  model: GameModel;
+  model: GameView;
   className?: string;
 }
 

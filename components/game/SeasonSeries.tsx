@@ -4,7 +4,7 @@ import { GameLogRowBody, gameLogRowClass } from '@/components/ui/GameRow';
 import SectionHeader from '@/components/ui/SectionHeader';
 import { plural } from '@/lib/format/words';
 import { gameHref } from '@/lib/shared/game-id';
-import type { GameModel } from '@/views/game/game-view';
+import type { GameView } from '@/views/game/game-view';
 
 /**
  * THESE TWO THIS SEASON (DESIGN §3.5) — every contest between the same two schools, in date order,
@@ -25,7 +25,7 @@ import type { GameModel } from '@/views/game/game-view';
  * meeting renders two en dashes and never `0 – 0` (DESIGN §5.2, §5.3).
  */
 export interface SeasonSeriesProps {
-  model: GameModel;
+  model: GameView;
   className?: string;
 }
 

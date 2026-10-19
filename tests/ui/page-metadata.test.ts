@@ -34,14 +34,14 @@ const m = useCorpusModules('all-2026-10-02', {
   site: () => import('@/views/site/site'),
   data: loadQueries,
   clubs: () => import('@/lib/datasets/clubs'),
-  gameView: () => import('@/views/game/game-view'),
+  gameRoute: () => import('@/views/game/game-route'),
 });
 
 beforeAll(() => {
   ({ SITE_NAME, SITE_WORDMARK } = m.site);
-  const { data, clubs, gameView } = m;
+  const { data, clubs, gameRoute } = m;
   const { getClubSlugs } = clubs;
-  const { gameStaticParams } = gameView;
+  const { gameStaticParams } = gameRoute;
   const page = (path: string, mod: () => Promise<PageModule>, params?: Record<string, string>) => ({
     path,
     load: async () => read(await mod(), params),

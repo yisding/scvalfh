@@ -6,7 +6,7 @@ import { findDivision, findLeague } from '@/lib/config/leagues';
 import { standingsLabel } from '@/lib/config/leagues/labels';
 import { dateTimeAttr, longDate, monthDay, timeOfDayPT } from '@/lib/format/dates';
 import { parseLocal } from '@/lib/shared/dates';
-import type { GameModel } from '@/views/game/game-view';
+import type { GameView } from '@/views/game/game-view';
 import { maxPrepsLabel } from '@/views/shared/words/maxpreps-label';
 
 /**
@@ -21,7 +21,7 @@ import { maxPrepsLabel } from '@/views/shared/words/maxpreps-label';
  * phone list's `first:pt-0` / `last:pb-0` would lose to an `lg:py-3` reset.
  *
  * A FINAL's result links (the box score or si.com game page, and the stream) are not here: the
- * page prints them under the recap (`GameModel.resultLinks`, F-73), and each link has one home on
+ * page prints them under the recap (`GameView.resultLinks`, F-73), and each link has one home on
  * the page (the exception is the disagreement notes under the scoreboard — GameSources'
  * SourceDisagreement and ResultFlagConflict — which link the source pages they cite).
  *
@@ -45,11 +45,11 @@ import { maxPrepsLabel } from '@/views/shared/words/maxpreps-label';
  * league, the postseason round, or `Non-league game`; the points sentence cites the game's league.
  */
 export interface GameDetailsProps {
-  model: GameModel;
+  model: GameView;
   className?: string;
 }
 
-function mapsHref(address: NonNullable<GameModel['game']['venue']['address']>): string {
+function mapsHref(address: NonNullable<GameView['game']['venue']['address']>): string {
   const query = `${address.street}, ${address.city}, ${address.region} ${address.postalCode}`;
   return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
 }

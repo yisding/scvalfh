@@ -30,6 +30,8 @@ import type { RegionId, TeamSlug } from '@/lib/model/ids';
 import { CLUB_REGIONS, CLUB_REGION_SITE_REGION, clubSiteKey } from '@/lib/schema/clubs';
 import { OUTLETS, hostOf, numbered, pathOf, schoolName } from '@/views/shared/source-links';
 
+import { clubParam } from './club-route';
+
 // ---------------------------------------------------------------- wording tables
 
 /**
@@ -581,7 +583,7 @@ function playerRow(a: ClubAffiliation, club: Club): ClubPlayerRow {
 
 /** One club's page. null for a slug data/clubs.json does not hold. */
 export function buildClubPageView(slug: string): ClubPageView | null {
-  const club = getClub(slug);
+  const club = clubParam(slug);
   if (!club) return null;
   const name = clubDisplayName(club);
 

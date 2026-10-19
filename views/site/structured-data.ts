@@ -32,7 +32,7 @@ import { dateTimeAttr } from '@/lib/format/dates';
 import type { LeagueConfig } from '@/lib/model/league-config';
 import type { Team } from '@/lib/model/team';
 import { gameDescription, gameTitle } from '@/views/game/game-view';
-import type { GameModel } from '@/views/game/game-view';
+import type { GameView } from '@/views/game/game-view';
 
 import { SITE_DESCRIPTION, SITE_NAME, SITE_SHORT_NAME, SITE_URL, SITE_WORDMARK } from './site';
 
@@ -106,7 +106,7 @@ export function teamJsonLd(team: Team, league: LeagueConfig): JsonLdNode {
 }
 
 /** One side of a game: a registry team by its `@id` and page, anyone else by name only (DESIGN §8). */
-function sideNode(side: GameModel['home']): JsonLdNode {
+function sideNode(side: GameView['home']): JsonLdNode {
   return side.team
     ? {
         '@type': 'SportsTeam',
@@ -120,7 +120,7 @@ function sideNode(side: GameModel['home']): JsonLdNode {
 }
 
 /** Where the game is, exactly as the DETAILS card says it (see the header); null on a neutral site. */
-function locationNode(model: GameModel): JsonLdNode | null {
+function locationNode(model: GameView): JsonLdNode | null {
   const { game, home } = model;
   const { address } = game.venue;
   const street: JsonLdNode | null = address
@@ -141,7 +141,7 @@ function locationNode(model: GameModel): JsonLdNode | null {
 }
 
 /** `/game/[id]`: the contest, its two sides, when and where, and whether it moved. */
-export function gameJsonLd(model: GameModel): JsonLdNode {
+export function gameJsonLd(model: GameView): JsonLdNode {
   const { game } = model;
   const movedFrom =
     game.official && game.official.scheduledDate !== game.dateKey ? game.official.scheduledDate : null;

@@ -237,11 +237,11 @@ describe('/playoffs/mcal (rendered on the corpus snapshot)', () => {
   });
 
   it('finds the tournament league the page and its OG image both guard on, and nothing else', () => {
-    const found = m.data.tournamentLeague('mcal');
+    const found = m.data.tournamentParam('mcal');
     expect(found?.summary.id, LEAGUE).toBe('mcal');
     expect(found?.ps.name, LEAGUE).toBe('MCAL tournament');
     for (const league of ['scval', 'nope', 'ccs', 'eal']) {
-      expect(m.data.tournamentLeague(league), `${LEAGUE}: ${league}`).toBeUndefined();
+      expect(m.data.tournamentParam(league), `${LEAGUE}: ${league}`).toBeNull();
     }
   });
 

@@ -8,8 +8,9 @@ import ClubSources from '@/components/clubs/ClubSources';
 import PageHeader from '@/components/layout/PageHeader';
 import ExternalLink from '@/components/ui/ExternalLink';
 import SectionHeader from '@/components/ui/SectionHeader';
-import { clubDisplayName, getClub, getClubAffiliations, getClubSlugs } from '@/lib/datasets/clubs';
+import { clubDisplayName, getClubAffiliations } from '@/lib/datasets/clubs';
 import { plural } from '@/lib/format/words';
+import { clubParam, clubStaticParams } from '@/views/clubs/club-route';
 import { buildClubPageView } from '@/views/clubs/club-view';
 import { OG_BASE, ROOT_OG_IMAGE } from '@/views/site/site';
 
@@ -40,12 +41,12 @@ import { OG_BASE, ROOT_OG_IMAGE } from '@/views/site/site';
 export const dynamicParams = false;
 
 export function generateStaticParams() {
-  return getClubSlugs().map((slug) => ({ slug }));
+  return clubStaticParams();
 }
 
 export async function generateMetadata({ params }: PageProps<'/clubs/[slug]'>): Promise<Metadata> {
   const { slug } = await params;
-  const club = getClub(slug);
+  const club = clubParam(slug);
   // No notFound() here: the page itself 404s, and a metadata pass must not cost an unknown slug
   // anything (the team page's pattern).
   if (!club) return { title: 'Club not found' };

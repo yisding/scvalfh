@@ -1,7 +1,6 @@
 import type { MetadataRoute } from 'next';
 
-import { LEAGUE_IDS, TOURNAMENT_LEAGUE_IDS } from '@/lib/config/leagues';
-import { getClubSlugs, getClubsLastChecked } from '@/lib/datasets/clubs';
+import { getClubsLastChecked } from '@/lib/datasets/clubs';
 import { getCommitsLastChecked } from '@/lib/datasets/commits';
 import { getHistoryLastChecked } from '@/lib/datasets/history';
 import { getJvFetchedAt } from '@/lib/datasets/jv';
@@ -10,13 +9,17 @@ import { getFetchedAt } from '@/lib/datasets/snapshot';
 import {
   gamePageInputs, latestContentDate, removalsForGame, removalsOnDay, scoreDayInputs,
 } from '@/lib/engine/content-dates';
-import { getGameDates, getGames, getOfficialFixtures } from '@/lib/queries/games';
+import { getGames, getOfficialFixtures } from '@/lib/queries/games';
 import { getJvGamesOn } from '@/lib/queries/jv';
 import { getContentRemovals } from '@/lib/queries/provenance';
-import { getTeams } from '@/lib/queries/teams';
 import { latestDateKey } from '@/lib/shared/dates';
 import { gameHref } from '@/lib/shared/game-id';
+import { clubStaticParams } from '@/views/clubs/club-route';
+import { tournamentStaticParams } from '@/views/playoffs/tournament-route';
+import { scoresStaticParams } from '@/views/scores/scores-route';
+import { leagueStaticParams } from '@/views/site/league-route';
 import { SITE_URL } from '@/views/site/site';
+import { teamStaticParams } from '@/views/teams/team-route';
 
 /**
  * /sitemap.xml — every route family (SPEC §8.1): the fixed pages, `/standings/<id>` and
@@ -86,26 +89,26 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: url('/recruiting'), lastModified: recruitingStamp, changeFrequency: 'monthly', priority: 0.4 },
   ];
 
-  const leagueRoutes: MetadataRoute.Sitemap = LEAGUE_IDS.flatMap((id) => [
+  const leagueRoutes: MetadataRoute.Sitemap = leagueStaticParams().flatMap(({ league: id }) => [
     { url: url(`/standings/${id}`), lastModified, changeFrequency: 'daily' as const, priority: 0.9 },
     { url: url(`/schedule/${id}`), lastModified, changeFrequency: 'daily' as const, priority: 0.8 },
   ]);
 
-  const tournamentRoutes: MetadataRoute.Sitemap = TOURNAMENT_LEAGUE_IDS.map((id) => ({
+  const tournamentRoutes: MetadataRoute.Sitemap = tournamentStaticParams().map(({ league: id }) => ({
     url: url(`/playoffs/${id}`),
     lastModified,
     changeFrequency: 'weekly',
     priority: 0.7,
   }));
 
-  const teamRoutes: MetadataRoute.Sitemap = getTeams().map((team) => ({
-    url: url(`/teams/${team.slug}`),
+  const teamRoutes: MetadataRoute.Sitemap = teamStaticParams().map(({ slug }) => ({
+    url: url(`/teams/${slug}`),
     lastModified,
     changeFrequency: 'daily',
     priority: 0.6,
   }));
 
-  const clubRoutes: MetadataRoute.Sitemap = getClubSlugs().map((slug) => ({
+  const clubRoutes: MetadataRoute.Sitemap = clubStaticParams().map(({ slug }) => ({
     url: url(`/clubs/${slug}`),
     lastModified: clubsStamp,
     changeFrequency: 'monthly',
@@ -118,7 +121,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   // carry no stamp of their own, and the official sources are read on every run, so such a day
   // takes the snapshot's: it can change with any fetch.
   const fixtureDays = new Set(getOfficialFixtures().map((f) => f.dateKey));
-  const dateRoutes: MetadataRoute.Sitemap = getGameDates().map((date) => ({
+  const dateRoutes: MetadataRoute.Sitemap = scoresStaticParams().map(({ date }) => ({
     url: url(`/scores/${date}`),
     lastModified: fixtureDays.has(date)
       ? lastModified

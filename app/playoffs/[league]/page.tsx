@@ -18,7 +18,7 @@ import { getStandingContext, getStandings } from '@/lib/queries/standings';
 import { getTeamById, getTeamBySlug } from '@/lib/registry/teams';
 import { buildTournamentView, type TournamentView } from '@/views/playoffs/playoff-view';
 import {
-  tournamentLeague,
+  tournamentParam,
   tournamentStaticParams,
   type TournamentConfig,
 } from '@/views/playoffs/tournament-route';
@@ -62,7 +62,7 @@ function headerMeta(summary: LeagueSummary, ps: TournamentConfig): string {
 
 export async function generateMetadata({ params }: PageProps<'/playoffs/[league]'>): Promise<Metadata> {
   const { league } = await params;
-  const found = tournamentLeague(league);
+  const found = tournamentParam(league);
   if (!found) return { title: 'Page not found' };
   const { summary, ps } = found;
   const title = ps.name;
@@ -107,7 +107,7 @@ function viewFor(summary: LeagueSummary, ps: TournamentConfig): TournamentView {
 
 export default async function LeagueTournamentPage({ params }: PageProps<'/playoffs/[league]'>) {
   const { league } = await params;
-  const found = tournamentLeague(league);
+  const found = tournamentParam(league);
   if (!found) notFound();
   const { summary, config, ps } = found;
   const section = SECTIONS.find((s) => s.id === summary.section.id);

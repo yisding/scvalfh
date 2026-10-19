@@ -29,6 +29,7 @@ import {
   type DayRegion,
 } from '@/views/schedule/day-summary';
 import { countGames } from '@/views/schedule/filters-client';
+import { scoresParam, scoresStaticParams } from '@/views/scores/scores-route';
 import { OG_BASE } from '@/views/site/site';
 import { buildDayJvView } from '@/views/teams/jv';
 
@@ -78,14 +79,14 @@ function sideName(slug: string | null, fallback: string): string {
 export const dynamicParams = false;
 
 export function generateStaticParams(): { date: string }[] {
-  return getGameDates().map((date) => ({ date }));
+  return scoresStaticParams();
 }
 
 export async function generateMetadata({
   params,
 }: PageProps<'/scores/[date]'>): Promise<Metadata> {
   const { date } = await params;
-  if (!getGameDates().includes(date)) return { title: 'Day not found' };
+  if (!scoresParam(date)) return { title: 'Day not found' };
   const games = getGames({ date });
   const year = parseLocal(date).year;
   const description = dayDescription(games, `${longDate(date)}, ${year}`);
@@ -101,9 +102,9 @@ export async function generateMetadata({
 
 export default async function ScoresByDatePage({ params }: PageProps<'/scores/[date]'>) {
   const { date } = await params;
+  if (!scoresParam(date)) notFound();
   const dates = getGameDates();
   const index = dates.indexOf(date);
-  if (index === -1) notFound();
 
   const games = getGames({ date });
   const year = parseLocal(date).year;

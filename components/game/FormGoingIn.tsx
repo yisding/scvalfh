@@ -6,7 +6,7 @@ import GhostMonogram from '@/components/ui/GhostMonogram';
 import ResultChip, { CHIP_LABEL } from '@/components/ui/ResultChip';
 import SectionHeader from '@/components/ui/SectionHeader';
 import TeamMonogram from '@/components/ui/TeamMonogram';
-import type { GameModel, GameSideModel } from '@/views/game/game-view';
+import type { GameView, GameSideModel } from '@/views/game/game-view';
 
 /**
  * FORM GOING IN (DESIGN §3.5) — the last five LEAGUE results each side carried into this contest,
@@ -25,7 +25,7 @@ import type { GameModel, GameSideModel } from '@/views/game/game-view';
  * `.sx-action`'s 24px box (WCAG 2.5.8); the short name, because the strip shares its line.
  */
 export interface FormGoingInProps {
-  model: GameModel;
+  model: GameView;
   className?: string;
 }
 
