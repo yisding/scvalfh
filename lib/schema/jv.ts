@@ -2,9 +2,9 @@
  * The Zod contract for data/jv.json — every registry school's JV games: MaxPreps' JV schedule
  * feeds, plus the scored si.com JV finals that lib/engine/jv/merge.ts may supplement them with.
  *
- * Separate from lib/jv.ts (the read API, which imports the file) so scripts/fetch-jv.ts can
+ * Separate from lib/datasets/jv.ts (the read API, which imports the file) so scripts/fetch-jv.ts can
  * validate what it is about to write without importing what it is about to overwrite — the same
- * split as lib/schema/player-stats.ts / lib/player-stats.ts.
+ * split as lib/schema/player-stats.ts / lib/datasets/player-stats.ts.
  *
  * The file stores what each source said, not a blend: `games` are MaxPreps' JV contests exactly as
  * lib/pipeline/reconcile/normalize.ts builds a varsity game from a schedule row, and `sblive` are si.com's scored JV

@@ -1,6 +1,6 @@
 /**
  * The site-facing read API (SPEC §13.3), against the committed v1 golden snapshot migrated to v2
- * and written to a temp file that lib/data is loaded against (useSnapshotModules). SCVAL has its real 2026-10-02 results; BVAL, PCAL
+ * and written to a temp file that lib/queries/ is loaded against (useSnapshotModules). SCVAL has its real 2026-10-02 results; BVAL, PCAL
  * and MCAL are registry teams with no results and a degraded health row, and the EAL (which the v1
  * file predates) is added by loadSnapshot's league upgrade. A second snapshot, the same file plus a
  * few synthetic EAL league games, drives the EAL cases at the end (a fresh module instance).
@@ -10,15 +10,17 @@ import { writeFileSync } from 'node:fs';
 
 import { beforeAll, describe, expect, it } from 'vitest';
 
-import { getLeague } from '@/lib/config/leagues';
+import { LEAGUE_IDS, SECTIONS, TOURNAMENT_LEAGUE_IDS, getLeague } from '@/lib/config/leagues';
 import { buildSeason } from '@/lib/engine/season-record';
 import { computeStandings } from '@/lib/engine/standings';
 import type { Game } from '@/lib/model/game';
 import type { Snapshot } from '@/lib/model/snapshot';
+import { getTeamById, getTeamBySlug } from '@/lib/registry/teams';
 import { loadSnapshot } from '@/lib/snapshot/load';
 import { countsOf } from '@/lib/snapshot/migrate';
 import { useSnapshotModules, withSnapshotModules } from './support/corpus-modules';
 import { game } from './support/game-builder';
+import { loadQueries } from './support/queries';
 import { tempFile, goldenPath, readJson } from './support/repo';
 
 const m = useSnapshotModules(
@@ -28,7 +30,7 @@ const m = useSnapshotModules(
     writeFileSync(file, JSON.stringify(loadSnapshot(raw)));
     return file;
   },
-  { data: () => import('@/lib/data') },
+  { data: loadQueries },
 );
 
 describe('data: identity and freshness', () => {
@@ -83,9 +85,9 @@ describe('data: sections and leagues', () => {
   });
 
   it('lists route params', () => {
-    expect(m.data.getLeagueIds()).toEqual(['scval', 'bval', 'pcal', 'mcal', 'eal', 'sunset', 'city', 'north-county', 'metro', 'independents']);
-    expect(m.data.getTournamentLeagueIds()).toEqual(['mcal']);
-    expect(m.data.getSections().map((s) => s.id)).toEqual(['ccs', 'ncs', 'ns', 'ss', 'sds']);
+    expect(LEAGUE_IDS).toEqual(['scval', 'bval', 'pcal', 'mcal', 'eal', 'sunset', 'city', 'north-county', 'metro', 'independents']);
+    expect(TOURNAMENT_LEAGUE_IDS).toEqual(['mcal']);
+    expect(SECTIONS.map((s) => s.id)).toEqual(['ccs', 'ncs', 'ns', 'ss', 'sds']);
   });
 
   it('summarises each region: its sections, their leagues, its team count', () => {
@@ -155,11 +157,11 @@ describe('data: teams', () => {
   });
 
   it('looks a team up by slug or GUID', () => {
-    const team = m.data.getTeamBySlug('los-altos');
+    const team = getTeamBySlug('los-altos');
     expect(team?.name).toBe('Los Altos');
-    expect(m.data.getTeamById(team!.id)?.slug).toBe('los-altos');
+    expect(getTeamById(team!.id)?.slug).toBe('los-altos');
     expect(m.data.getTeamForm(team!.id)).toBeDefined(); // a GUID resolves as well as a slug
-    expect(m.data.getTeamBySlug('nope')).toBeUndefined();
+    expect(getTeamBySlug('nope')).toBeUndefined();
     expect(m.data.getTeamSlugs()).toHaveLength(102);
   });
 
@@ -190,7 +192,7 @@ describe('data: games', () => {
     // Leigh's games are SCVAL non-league games: she is a side, so the BVAL filter finds them.
     const bval = m.data.getGames({ league: 'bval' });
     expect(bval.length).toBeGreaterThan(0);
-    expect(bval.every((g) => [g.home.slug, g.away.slug].some((s) => s && m.data.getTeamBySlug(s)?.league === 'bval'))).toBe(true);
+    expect(bval.every((g) => [g.home.slug, g.away.slug].some((s) => s && getTeamBySlug(s)?.league === 'bval'))).toBe(true);
     expect(m.data.getGames({ league: 'bval', leagueOnly: true })).toEqual([]);
     expect(m.data.getGames({ division: 'de-anza', leagueOnly: true }).every((g) => g.countsFor === 'de-anza')).toBe(true);
     expect(m.data.getGames({ postseason: true })).toEqual([]);
@@ -229,7 +231,7 @@ describe('data: games', () => {
     const pcal = m.data.getUpcoming(5, { league: 'pcal' });
     expect(pcal.length).toBeGreaterThan(0);
     expect(pcal.every((g) =>
-      [g.home.slug, g.away.slug].some((s) => s && m.data.getTeamBySlug(s)?.league === 'pcal'),
+      [g.home.slug, g.away.slug].some((s) => s && getTeamBySlug(s)?.league === 'pcal'),
     )).toBe(true);
   });
 
@@ -275,8 +277,8 @@ describe('data: standings and derived facts', () => {
       expect(c.backfilled).toBe(0);
     }
     // The Sep 9 Homestead–Cupertino fixture MaxPreps never published is past and missing.
-    const cupertino = m.data.getTeamBySlug('cupertino')!;
-    const homestead = m.data.getTeamBySlug('homestead')!;
+    const cupertino = getTeamBySlug('cupertino')!;
+    const homestead = getTeamBySlug('homestead')!;
     expect(ctx.get(cupertino.id)!.missingPast).toBeGreaterThanOrEqual(1);
     expect(ctx.get(homestead.id)!.missingPast).toBeGreaterThanOrEqual(1);
     const mcal = m.data.getStandingContext('marin-county');
@@ -498,7 +500,7 @@ describe('data: head-to-head and form', () => {
   });
 
   it('knows nothing of a school that is not fielding a team', () => {
-    expect(m.data.getTeamBySlug('wilcox')).toBeUndefined();
+    expect(getTeamBySlug('wilcox')).toBeUndefined();
     expect(m.data.getTeamForm('wilcox')).toBeUndefined();
   });
 });
@@ -571,7 +573,7 @@ describe('data: an EAL table with results', () => {
     };
     const file = tempFile('data-eal', 'snapshot.json');
     writeFileSync(file, JSON.stringify(loadSnapshot(next)));
-    eal = (await withSnapshotModules(file, { data: () => import('@/lib/data') })).modules.data;
+    eal = (await withSnapshotModules(file, { data: loadQueries })).modules.data;
   });
 
   it('counts the 1 v 1 win for Chico in the table and in both forms', () => {
@@ -596,8 +598,8 @@ describe('data: an EAL table with results', () => {
     ]);
     expect(missing[0].sblive).toBeNull();
     const ctx = eal.getStandingContext('eal');
-    expect(ctx.get(eal.getTeamBySlug('corning')!.id)!.missingPast).toBe(1);
-    expect(ctx.get(eal.getTeamBySlug('chico')!.id)!.missingPast).toBe(0);
+    expect(ctx.get(getTeamBySlug('corning')!.id)!.missingPast).toBe(1);
+    expect(ctx.get(getTeamBySlug('chico')!.id)!.missingPast).toBe(0);
     // Once Oct 28 has passed, the unplayed Davis–Pleasant Valley game is missing too.
     expect(eal.getMissingOfficialResults('eal', '2026-10-29T19:00:00.000Z').map((m) => m.dateKey)).toEqual([
       '2026-09-29', '2026-10-28',
@@ -690,7 +692,7 @@ describe('data: Southern California tables with results', () => {
     };
     const file = tempFile('data-socal', 'snapshot.json');
     writeFileSync(file, JSON.stringify(loadSnapshot(next)));
-    socal = (await withSnapshotModules(file, { data: () => import('@/lib/data') })).modules.data;
+    socal = (await withSnapshotModules(file, { data: loadQueries })).modules.data;
   });
 
   it('counts both City Western games, flagged or not, and the shootout win as a win', () => {
@@ -714,7 +716,7 @@ describe('data: Southern California tables with results', () => {
     const missing = socal.getMissingOfficialResults('city-eastern');
     expect(missing.map((m) => [m.kind, m.dateKey, m.game?.contestId])).toEqual([['missing', '2026-09-29', henry.contestId]]);
     const ctx = socal.getStandingContext('city-eastern');
-    expect(ctx.get(socal.getTeamBySlug('patrick-henry')!.id)!.missingPast).toBe(1);
+    expect(ctx.get(getTeamBySlug('patrick-henry')!.id)!.missingPast).toBe(1);
     expect(socal.getMissingOfficialResults('city-western')).toEqual([]);
   });
 
@@ -724,7 +726,7 @@ describe('data: Southern California tables with results', () => {
       expect(c.remaining).toBeNull();
       expect(c.maxPts).toBeNull();
     }
-    expect(socal.getStandingContext('sunset').get(socal.getTeamBySlug('temecula-valley')!.id)!.counted).toBe(3);
+    expect(socal.getStandingContext('sunset').get(getTeamBySlug('temecula-valley')!.id)!.counted).toBe(3);
     // Every member is in the spread, a team with no counted game at 0: the table lists it with GP 0, so a
     // sentence starting from the lowest team with a result ('between 1 and …') would be false under it.
     expect(socal.getStandings('sunset').some((r) => r.computed.gp === 0)).toBe(true);

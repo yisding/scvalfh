@@ -2,9 +2,9 @@
  * The Zod contract for data/player-stats.json — each team's MaxPreps season player stats, joined
  * to data/rosters.json on the career id (SPEC §1.1k).
  *
- * Separate from lib/player-stats.ts (the read API, which imports the file) so
+ * Separate from lib/datasets/player-stats.ts (the read API, which imports the file) so
  * scripts/fetch-player-stats.ts can validate what it is about to write without importing what it
- * is about to overwrite — the same split as lib/schema/rosters.ts / lib/rosters.ts.
+ * is about to overwrite — the same split as lib/schema/rosters.ts / lib/datasets/rosters.ts.
  *
  * Player stats cover every registry team, all nine leagues and the five independents, like the rosters they join to: slugs
  * and team ids are checked against the 102-team registry, and the file holds exactly one entry per

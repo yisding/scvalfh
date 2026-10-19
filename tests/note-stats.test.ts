@@ -16,16 +16,17 @@ import { describe, expect, it } from 'vitest';
 import { buildLeadersView } from '@/components/leaders/leaders-view';
 import { buildPlayerStatsView } from '@/components/teams/player-stats-view';
 import { NAME_ALIASES } from '@/lib/config/name-aliases';
-import { getSnapshot } from '@/lib/data';
+import { getPlayerStats } from '@/lib/datasets/player-stats';
+import { getTeamRoster } from '@/lib/datasets/rosters';
+import { getSnapshot } from '@/lib/datasets/snapshot';
 import {
   type NoteRosterPlayer, type NoteSources, type ParsedNote, noteStatsFor, notedKinds, parseStatNote,
   resolveName, teamsCreditedByNotes, withNoteStats,
 } from '@/lib/engine/note-stats';
 import type { Game } from '@/lib/model/game';
 import type { TeamSlug } from '@/lib/model/ids';
-import { getAllPlayerStatsWithNotes, getPlayerStats } from '@/lib/player-stats';
+import { getAllPlayerStatsWithNotes } from '@/lib/queries/player-stats';
 import { getTeamBySlug } from '@/lib/registry/teams';
-import { getTeamRoster } from '@/lib/rosters';
 import {
   FIELD_STAT_KEYS, GOALIE_STAT_KEYS, type PlayerStatLine, type TeamPlayerStats,
 } from '@/lib/schema/player-stats';

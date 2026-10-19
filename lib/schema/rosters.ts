@@ -2,9 +2,9 @@
  * The Zod contract for data/rosters.json — every registry team's MaxPreps roster, all nine leagues and the five independents
  * (SPEC §1.1j). Slugs, team ids and divisions are checked against the 102-team registry.
  *
- * Separate from lib/rosters.ts (the read API, which imports the file) so scripts/fetch-rosters.ts
+ * Separate from lib/datasets/rosters.ts (the read API, which imports the file) so scripts/fetch-rosters.ts
  * can validate what it is about to write without importing what it is about to overwrite — the
- * same split as lib/schema/snapshot.ts / lib/data.ts.
+ * same split as lib/schema/snapshot.ts / lib/datasets/snapshot.ts.
  *
  * Invariants:
  *   1. exactly one team per registry team (102), unique slugs, each with its registry id and division
@@ -199,7 +199,7 @@ export type Rosters = z.infer<typeof RostersSchema>;
  * data/rosters-enrichment.json — what OTHER public sources add to the MaxPreps rosters, joined on
  * team slug + MaxPreps athleteId (SPEC §1.1j).
  *
- * It is an overlay, never a replacement. The three rules, enforced by lib/rosters.ts at load time:
+ * It is an overlay, never a replacement. The three rules, enforced by lib/datasets/rosters.ts at load time:
  *   1. a value is filled only where MaxPreps has null for that field
  *   2. where a source disagrees with MaxPreps, MaxPreps stays and the disagreement is recorded
  *   3. every filled value names its source URL, its kind and a confidence
@@ -274,7 +274,7 @@ export const EnrichedHeightSchema = z
  * Linked only when the page (or, for NCSA, whose pages are behind a bot wall, the search result
  * for it) names this player and a sport, and either this school, or a class year that agrees with
  * the roster grade together with a hometown in the school's half of California. A stated graduation
- * year must agree with the grade the roster shows: lib/rosters.ts checks that at load time.
+ * year must agree with the grade the roster shows: lib/datasets/rosters.ts checks that at load time.
  *
  * Field hockey profiles came first and carry no `sport`; since 2026-10-12 a profile in any other
  * sport is linked too (a lacrosse or softball profile is often the one a player keeps up), and
@@ -283,7 +283,7 @@ export const EnrichedHeightSchema = z
  * `maxpreps` (since 2026-10-13) is the row's own MaxPreps career page, linked only where the player
  * or a parent has claimed it (the page's `isClaimed`): an unclaimed one is just the roster MaxPreps
  * keeps for every player. It needs no name match, being the page the row comes from, so
- * lib/rosters.ts checks at load that its URL is the row's `careerUrl`. One page covers every sport,
+ * lib/datasets/rosters.ts checks at load that its URL is the row's `careerUrl`. One page covers every sport,
  * so it carries no `sport`.
  */
 export const PROFILE_PLATFORMS = [

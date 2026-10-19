@@ -7,7 +7,7 @@ import { buildClubsIndexView } from '@/components/clubs/club-view';
 import PageHeader from '@/components/layout/PageHeader';
 import { OG_BASE, ROOT_OG_IMAGE } from '@/components/layout/site';
 import SectionHeader from '@/components/ui/SectionHeader';
-import { getRosters } from '@/lib/rosters';
+import { getRosters } from '@/lib/datasets/rosters';
 
 /** The page's title, and its og:title too: og:title never carries the site-name suffix (OG_BASE). */
 const PAGE_TITLE = 'Club teams';
@@ -29,7 +29,7 @@ const PAGE_TITLE = 'Club teams';
  * Ventura County, Los Angeles, Orange County, the Inland Empire, San Diego, then the rest:
  * lib/schema/clubs.ts CLUB_REGIONS), then the h2 "How players are matched"
  * (`#how-matched`, which every club page links). Within a region, the clubs with the most tied
- * players come first (DESIGN §17.5, lib/clubs.ts), so a reader meets the clubs that answer the
+ * players come first (DESIGN §17.5, lib/datasets/clubs.ts), so a reader meets the clubs that answer the
  * question before the ones that do not.
  *
  * Regions (DESIGN §24.12): each region's section carries its half of the site's `data-region-scope`

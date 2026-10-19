@@ -8,8 +8,8 @@
  * independent refuter tried to break it), and nothing rebuilds it. This contract only says what
  * shape its facts must have.
  *
- * Separate from lib/commits.ts (the read API, which imports the file) so tests and scripts can
- * parse a file without loading one — the split lib/schema/clubs.ts / lib/clubs.ts uses.
+ * Separate from lib/datasets/commits.ts (the read API, which imports the file) so tests and scripts can
+ * parse a file without loading one — the split lib/schema/clubs.ts / lib/datasets/clubs.ts uses.
  *
  * Invariants:
  *   1. college slugs are unique, and a college has at most one program per sport
@@ -31,7 +31,7 @@
  *   8. `asOf` is a day, a month or a year (isCommitDate): a commitment happens on a date, never
  *      over a season or a range
  *   9. the join to data/rosters.json — the row exists, carries the same fullName, is not JV, and
- *      agrees with every stated class year — lives in lib/commits.ts: this file cannot see the
+ *      agrees with every stated class year — lives in lib/datasets/commits.ts: this file cannot see the
  *      rosters
  * 1-4 are one file-level `superRefine(checkCommitsFile)`, each failure a named issue with a path
  * (the lib/snapshot/check.ts idiom).
@@ -289,7 +289,7 @@ export const CommitSourceSchema = z.object({
   quote: text.max(300),
   /** The school as the page names it, when it does. */
   statedSchool: text.nullable(),
-  /** The graduation year the page states; lib/commits.ts checks it against the roster grade. */
+  /** The graduation year the page states; lib/datasets/commits.ts checks it against the roster grade. */
   statedClassYear: z.number().int().min(2020).max(2040).nullable(),
   /** The page's own date, as it gives it: free text ("Jun 15, 2026", "Summer 2026"). */
   sourceDate: text.nullable(),
@@ -301,7 +301,7 @@ export const CommitmentSchema = z.object({
   teamSlug,
   /** The MaxPreps per-season athlete GUID: the join key to data/rosters.json. */
   athleteId: text,
-  /** As MaxPreps spells it; lib/commits.ts refuses any other spelling. */
+  /** As MaxPreps spells it; lib/datasets/commits.ts refuses any other spelling. */
   fullName: text,
   college: slugId,
   /** The sport the player committed to play at `college`; that college has a program in it. */
@@ -319,7 +319,7 @@ const CommitsFileObject = z.object({
   /** How the file was made. */
   builtBy: text,
   capturedAt: dateOnly,
-  /** The roster season the commitments join to ("26-27"); lib/commits.ts checks it is rosters.json's. */
+  /** The roster season the commitments join to ("26-27"); lib/datasets/commits.ts checks it is rosters.json's. */
   season: z.string().regex(/^\d{2}-\d{2}$/, 'expected a season like 26-27'),
   /** Method, rules and recall, in words. */
   notes: z.array(text),

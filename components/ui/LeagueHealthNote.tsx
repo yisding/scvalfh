@@ -1,6 +1,6 @@
-import { getLeagueHealth } from '@/lib/data';
 import { formatStamp } from '@/lib/format/dates';
 import type { LeagueId } from '@/lib/model/ids';
+import { getLeagueHealth } from '@/lib/queries/leagues';
 
 /**
  * The league's data-health note (SPEC §10.0, §10.2). A SERVER component: league-scoped pages

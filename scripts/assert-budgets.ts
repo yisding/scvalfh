@@ -73,7 +73,7 @@ import { SNAPSHOT_MAX_BYTES, SNAPSHOT_WARN_BYTES, budgetLabel } from '@/lib/pipe
 const APP = '.next/server/app';
 const STATS = '.next/diagnostics/route-bundle-stats.json';
 const WORKER_BUNDLE = '.cloudflare/output/v0/workers/default/bundle';
-// An empty SCVAL_SNAPSHOT means the bundled file, as lib/data.ts load() (the canonical rule) reads it.
+// An empty SCVAL_SNAPSHOT means the bundled file, as lib/datasets/snapshot.ts load() (the canonical rule) reads it.
 const SNAPSHOT = process.env.SCVAL_SNAPSHOT || 'data/snapshot.json';
 const KB = 1024;
 

@@ -17,7 +17,7 @@
  * when a set is empty, because a day with no score-pending game (every score entered, or
  * backfilled by D2 rule 3) or no 0-0 final is a normal day and must never block publishing. The
  * two-direction PROOF — that the sets exist and the rule bites on them — runs over the offline
- * all-2026-10-02 corpus, which has score-pending games, scheduled games and 0-0 finals (lib/data
+ * all-2026-10-02 corpus, which has score-pending games, scheduled games and 0-0 finals (lib/queries/games.ts
  * is re-imported over it by useCorpusModules). The EAL capture (EAL_CORPUS), whose games
  * the all corpus does not hold, gets the invariants. Every assertion message names the module
  * that produced the value.
@@ -29,11 +29,14 @@ import { describe, expect, it } from 'vitest';
 
 import { buildGameView, gameDescription, gameKicker, gameTitle } from '@/components/game/game-view';
 import { GameCard, GameLine, GameLogRow, GameRow } from '@/components/ui/GameRow';
-import { getGames, getLeagueSummaries, getTeamBySlug } from '@/lib/data';
 import type { Game } from '@/lib/model/game';
+import { getGames } from '@/lib/queries/games';
+import { getLeagueSummaries } from '@/lib/queries/leagues';
+import { getTeamBySlug } from '@/lib/registry/teams';
 import { useCorpusModules } from '@/tests/support/corpus-modules';
 import { EAL_CORPUS, type CorpusName } from '@/tests/support/corpus';
 import { textFoldingDashes } from '@/tests/support/html-text';
+import { loadQueries } from '@/tests/support/queries';
 
 interface Rendered {
   games: Game[];
@@ -181,13 +184,13 @@ function defineRule(name: string, get: () => Rendered, proof: boolean) {
 defineRule('bundled snapshot (invariants)', () => live, false);
 
 /**
- * The rule over one offline corpus, with lib/data re-imported over its snapshot (useCorpusModules).
+ * The rule over one offline corpus, with lib/queries/ re-imported over its snapshot (useCorpusModules).
  * `proof` is set for the corpus that holds a score-pending game and a 0-0 final.
  */
 function defineCorpus(title: string, corpusName: CorpusName, proof: boolean) {
   describe(title, () => {
     const m = useCorpusModules(corpusName, {
-      data: () => import('@/lib/data'),
+      data: loadQueries,
       model: () => import('@/components/game/game-view'),
       row: () => import('@/components/ui/GameRow'),
     });
@@ -221,7 +224,7 @@ describe('every league, rendered', () => {
       const mine = games.filter((g) =>
         [g.home.slug, g.away.slug].some((slug) => slug !== null && getTeamBySlug(slug)?.league === league.id),
       );
-      expect(mine.length, `lib/data.ts: games with a ${league.shortName} side`).toBeGreaterThan(0);
+      expect(mine.length, `lib/queries/games.ts: games with a ${league.shortName} side`).toBeGreaterThan(0);
     }
   });
 

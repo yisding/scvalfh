@@ -4,9 +4,9 @@
  * `dist/server/prerendered-routes` (Node and Workers alike). Both must agree page for page, so the
  * fixed pages, the families' expected params and the per-family check live here once.
  *
- * The expectations come from the build's INPUT, never from its output: the snapshot (as lib/data.ts
+ * The expectations come from the build's INPUT, never from its output: the snapshot (as lib/datasets/snapshot.ts
  * loads it), the league config (`lib/config/leagues.ts`), the team registry (`lib/registry/teams.ts`) and the clubs
- * file (through lib/clubs.ts). Games take `gameIdToParam` (`sblive:N` → `sblive-N`), which
+ * file (through lib/datasets/clubs.ts). Games take `gameIdToParam` (`sblive:N` → `sblive-N`), which
  * tests/game-id.test.ts holds and both gates' ':' check backs up.
  *
  * Three other places list routes and stay as they are, on purpose: app/sitemap.ts is the subject a
@@ -15,8 +15,8 @@
  * contract read by plain bash against any of the three servers.
  */
 
-import { getClubSlugs } from '@/lib/clubs';
 import { LEAGUE_IDS, TOURNAMENT_LEAGUE_IDS } from '@/lib/config/leagues';
+import { getClubSlugs } from '@/lib/datasets/clubs';
 import type { Snapshot } from '@/lib/model/snapshot';
 import { TEAMS } from '@/lib/registry/teams';
 import { gameIdToParam } from '@/lib/shared/game-id';

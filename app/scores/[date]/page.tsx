@@ -22,18 +22,14 @@ import { RegionSwitcher } from '@/components/layout/LeagueSwitcher';
 import PageHeader from '@/components/layout/PageHeader';
 import { OG_BASE } from '@/components/layout/site';
 import { REGIONS, regionOf } from '@/lib/config/leagues';
-import {
-  getGameDates,
-  getGames,
-  getLeagueSummaries,
-  getOfficialFixtures,
-  getTeamBySlug,
-  getToday,
-} from '@/lib/data';
+import { getToday } from '@/lib/datasets/snapshot';
 import { longDate, monthDay, shortDate } from '@/lib/format/dates';
 import { gameWord, plural } from '@/lib/format/words';
 import type { Game } from '@/lib/model/game';
 import type { RegionId } from '@/lib/model/ids';
+import { getGameDates, getGames, getOfficialFixtures } from '@/lib/queries/games';
+import { getLeagueSummaries } from '@/lib/queries/leagues';
+import { getTeamBySlug } from '@/lib/registry/teams';
 import { parseLocal } from '@/lib/shared/dates';
 
 /**
@@ -65,7 +61,7 @@ import { parseLocal } from '@/lib/shared/dates';
  * The unreported official fixtures of the day are one block per league, inside its region: on a past
  * day `Scheduled by <SHORT>, not reported` (SPEC §10.4); today and on a day still to come, more of
  * the day ("Also on <SHORT>’s schedule for this day…"), never a missing result. The day's JV games
- * (lib/jv.ts) come last, one block per region (`#jv`, `#jv-socal`), each region-scoped and omitted
+ * (lib/queries/jv.ts) come last, one block per region (`#jv`, `#jv-socal`), each region-scoped and omitted
  * when empty, never mixed into a league group or a varsity count.
  *
  * The header's badges and the meta description count each region (a NorCal vs SoCal game in both,
@@ -123,7 +119,7 @@ export default async function ScoresByDatePage({ params }: PageProps<'/scores/[d
   /* Both regions have a game (a NorCal vs SoCal game gives each one): the header counts and the
      "Full season" links go per region. A one-region day keeps the page's header as it always was. */
   const twoRegions = regions.every((region) => region.withSide.length > 0);
-  // The day's JV games, after everything varsity (lib/jv.ts), apart from every varsity count; one block per region.
+  // The day's JV games, after everything varsity (lib/queries/jv.ts), apart from every varsity count; one block per region.
   const jvBlocks = REGIONS.map((region) => ({
     region: region.id,
     shortName: region.shortName,

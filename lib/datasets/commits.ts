@@ -4,10 +4,10 @@
  * colleges with the team in each sport a player committed to (SPEC §1.1j3, DESIGN §21).
  *
  * The file is research, written by hand and checked twice; no script rebuilds it (see
- * lib/schema/commits.ts). It is imported so the build bundles it, for the reason lib/rosters.ts
+ * lib/schema/commits.ts). It is imported so the build bundles it, for the reason lib/datasets/rosters.ts
  * gives: a Worker has no project filesystem. It is validated once at module scope — the schema,
  * then the join to the rosters the schema cannot see — so a bad file fails at import time rather
- * than half-way through a render. There is no env override, for lib/clubs.ts' reason: nothing
+ * than half-way through a render. There is no env override, for lib/datasets/clubs.ts' reason: nothing
  * writes the file, and the tests that need a bad one build it in memory and pass it to `loadCommits`.
  *
  * The join, on team slug + MaxPreps athleteId, is against the MERGED rosters
@@ -19,7 +19,7 @@
  *      with each other, and be a class a high school roster of the season can hold (a player with
  *      no grade anywhere still gets one class year, or none)
  * and the file's `season` must be rosters.json's. Steps 1-3 for a row with a grade are
- * lib/roster-join.ts, shared with lib/clubs.ts; only the no-grade half of step 3 is this module's,
+ * lib/datasets/roster-join.ts, shared with lib/datasets/clubs.ts; only the no-grade half of step 3 is this module's,
  * because /commits groups players by class year (commitClassOf) and a club page shows none.
  *
  * A roster refetch can break this, as it can data/clubs.json. If `pnpm fetch-rosters` drops a
@@ -31,14 +31,14 @@
  */
 
 import bundled from '@/data/commits.json';
-import type { TeamSlug } from './model/ids';
-import { getTeamBySlug } from './registry/teams';
+import type { TeamSlug } from '@/lib/model/ids';
+import { getTeamBySlug } from '@/lib/registry/teams';
 import { joinToRoster, playerKey } from './roster-join';
 import { classOf, getAllEnrichedRosters, getRosters, type MergedPlayer, type MergedTeamRoster } from './rosters';
 import {
   COLLEGE_DIVISIONS, type College, type CollegeProgram, type Commitment, type CommitsFile, CommitsFileSchema,
-} from './schema/commits';
-import { failValidation } from './schema/primitives';
+} from '@/lib/schema/commits';
+import { failValidation } from '@/lib/schema/primitives';
 
 export type {
   College,
@@ -52,7 +52,7 @@ export type {
   CommitStatus,
   Commitment,
   CommitsFile,
-} from './schema/commits';
+} from '@/lib/schema/commits';
 
 /**
  * Parse `raw` against the contract, then check the join the schema cannot see (see the header).
@@ -85,7 +85,7 @@ function loadAndJoin(
     noun: 'commitments',
     subject: (c) => c.college,
   });
-  // Step 3 for a row with no grade (lib/roster-join.ts checked the rest): the sources must settle
+  // Step 3 for a row with no grade (lib/datasets/roster-join.ts checked the rest): the sources must settle
   // on one class year a high school roster of the season can hold, which commitClassOf shows.
   for (const c of file.commitments) {
     if (rows.get(playerKey(c.teamSlug, c.athleteId))!.grade !== null) continue;
@@ -114,7 +114,7 @@ const { file, rows: ROW_BY_PLAYER } = loadAndJoin(bundled, getAllEnrichedRosters
  */
 export function getCommittedPlayer(c: Pick<Commitment, 'teamSlug' | 'athleteId'>): MergedPlayer {
   const row = ROW_BY_PLAYER.get(playerKey(c.teamSlug, c.athleteId));
-  if (!row) throw new Error(`lib/commits.ts: no roster row for ${c.teamSlug} / ${c.athleteId}`);
+  if (!row) throw new Error(`lib/datasets/commits.ts: no roster row for ${c.teamSlug} / ${c.athleteId}`);
   return row;
 }
 
@@ -146,7 +146,7 @@ const sortName = (p: MergedPlayer) => p.lastName ?? p.fullName;
 
 /**
  * Display order (DESIGN §21.1): the earliest class first (class year unknown last), then school,
- * then the roster's own name order (lib/rosters.ts sortedPlayers' byName). /commits, and the order
+ * then the roster's own name order (lib/datasets/rosters.ts sortedPlayers' byName). /commits, and the order
  * a college's players are named in.
  */
 const ORDERED: readonly Commitment[] = [...file.commitments]
@@ -209,7 +209,7 @@ export function getCollege(slug: string): College | undefined {
 export function commitProgram(c: Pick<Commitment, 'college' | 'sport'>): { college: College; program: CollegeProgram } {
   const college = BY_SLUG.get(c.college);
   const program = college?.programs.find((p) => p.sport === c.sport);
-  if (!college || !program) throw new Error(`lib/commits.ts: no ${c.sport} program at ${c.college}`);
+  if (!college || !program) throw new Error(`lib/datasets/commits.ts: no ${c.sport} program at ${c.college}`);
   return { college, program };
 }
 

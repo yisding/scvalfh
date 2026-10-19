@@ -1,5 +1,5 @@
 /**
- * Running the repo's CLIs (`scripts/*.ts`, and `lib/rosters.ts` for its import-time checks) from tests.
+ * Running the repo's CLIs (`scripts/*.ts`, and `lib/datasets/rosters.ts` for its import-time checks) from tests.
  *
  * Every spawn goes through {@link runScript}, which names the repo's tsconfig explicitly: tsx reads
  * tsconfig.json (and with it the `@/` paths every repo module imports through) from the cwd, and the
@@ -43,7 +43,7 @@ export const SCRIPT_PATHS = {
   'assert-prerender': 'scripts/assert-prerender.ts',
   'assert-vinext-prerender': 'scripts/assert-vinext-prerender.ts',
   // Not a CLI: a module whose import-time checks exit the process, spawned once to prove that.
-  'rosters-module': 'lib/rosters.ts',
+  'rosters-module': 'lib/datasets/rosters.ts',
 } as const;
 
 export type ScriptName = keyof typeof SCRIPT_PATHS;

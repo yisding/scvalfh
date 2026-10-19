@@ -31,7 +31,7 @@ export function parseSnapshot(raw: unknown): Snapshot {
 /**
  * v1 (no schemaVersion) → migrateV1ToV2; a v2 written before a configured league existed →
  * addConfiguredLeagues; a v2 whose games no longer classify under the current rules or registry →
- * reclassify; then parseSnapshot. Used by lib/data.ts and the pipeline's readPrevious.
+ * reclassify; then parseSnapshot. Used by lib/datasets/snapshot.ts and the pipeline's readPrevious.
  */
 export function loadSnapshot(raw: unknown): Snapshot {
   const v2 = isSnapshotV1(raw) ? migrateV1ToV2(raw) : raw;

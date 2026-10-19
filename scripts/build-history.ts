@@ -40,15 +40,6 @@ import { HistorySchema } from '@/lib/schema/history';
 import { isCalendarDate } from '@/lib/shared/patterns';
 import { stableStringify } from '@/lib/shared/stable-json';
 import {
-  SCVAL_HISTORY_PDFS,
-  ScvalClient,
-  hasPdftotext,
-  parseAllLeaguePdfText,
-  parseStandingsPdfText,
-  type AllLeagueBlock,
-  type HistoryStandingsBlock,
-} from '@/lib/sources/scval-pdf';
-import {
   BVAL_HISTORY_SOURCES,
   bvalDocExportUrl,
   bvalRegistrySlugs,
@@ -58,6 +49,15 @@ import {
   type BvalStandingsBlock,
 } from '@/lib/sources/bval-sheet';
 import { HttpClient } from '@/lib/sources/http';
+import {
+  SCVAL_HISTORY_PDFS,
+  ScvalClient,
+  hasPdftotext,
+  parseAllLeaguePdfText,
+  parseStandingsPdfText,
+  type AllLeagueBlock,
+  type HistoryStandingsBlock,
+} from '@/lib/sources/scval-pdf';
 import { runCli } from './cli';
 
 interface Args {
@@ -423,7 +423,7 @@ async function main(argv: readonly string[]): Promise<number> {
   console.log('PCAL, MCAL, EAL, Sunset, City, North County, Metro, LA independents: unavailable (see reasons in the file)');
 
   // Validate against the contract before anything is written. lib/schema/history.ts does not load
-  // the committed file (lib/history.ts does), so a broken committed file cannot block the rebuild
+  // the committed file (lib/datasets/history.ts does), so a broken committed file cannot block the rebuild
   // that replaces it.
   const json = stableStringify(history);
   const parsed = HistorySchema.safeParse(JSON.parse(json));

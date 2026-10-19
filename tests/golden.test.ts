@@ -25,9 +25,10 @@ import { parseSnapshot } from '@/lib/snapshot/load';
 import { countsOf, migrateV1ToV2 } from '@/lib/snapshot/migrate';
 import { withSnapshotModules } from './support/corpus-modules';
 import { game } from './support/game-builder';
+import { type Queries, loadQueries } from './support/queries';
 import { REPO, tempDir } from './support/repo';
 
-type DataModule = typeof import('@/lib/data');
+type DataModule = Queries;
 
 const readJson = (p: string): unknown => JSON.parse(readFileSync(path.join(REPO, p), 'utf8'));
 
@@ -73,9 +74,9 @@ function writeSnapshot(name: string, s: Snapshot): string {
 
 let releaseData: () => void = () => {};
 
-/** lib/data loaded fresh against a given snapshot file. */
+/** lib/queries/ loaded fresh against a given snapshot file. */
 async function loadData(file: string): Promise<DataModule> {
-  const loaded = await withSnapshotModules(file, { data: () => import('@/lib/data') });
+  const loaded = await withSnapshotModules(file, { data: loadQueries });
   releaseData = loaded.release;
   return loaded.modules.data;
 }
@@ -138,7 +139,7 @@ describe('golden item 1: the committed snapshot, migrated and parsed', () => {
     }
   });
 
-  describe('through lib/data (loaded against the migrated file)', () => {
+  describe('through lib/queries (loaded against the migrated file)', () => {
     let data: DataModule;
     beforeAll(async () => {
       data = await loadData(writeSnapshot('migrated.json', migrated));

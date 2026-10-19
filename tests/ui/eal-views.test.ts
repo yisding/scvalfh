@@ -7,7 +7,7 @@
  * publishes no standings (`orderScope: 'title'`), and its postseason is the Super Regional, an unbracketed
  * tournament: no ladder line, no bracket, no seeding. These tests run on the EAL corpus (where the
  * EAL has data, including two league games past their date with no score), loaded through
- * useCorpusModules (tests/support/corpus-modules.ts), which points lib/data at it. Every expected number is read from the snapshot
+ * useCorpusModules (tests/support/corpus-modules.ts), which points lib/datasets/snapshot.ts at it. Every expected number is read from the snapshot
  * or from config; every assertion message names the module that produced the value.
  */
 
@@ -18,10 +18,11 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import { EAL_CORPUS } from '@/tests/support/corpus';
 import { useCorpusModules } from '@/tests/support/corpus-modules';
 import { textOf } from '@/tests/support/html-text';
+import { loadQueries } from '@/tests/support/queries';
 
 const LEAGUE = 'eal';
 const m = useCorpusModules(EAL_CORPUS, {
-  data: () => import('@/lib/data'),
+  data: loadQueries,
   leagues: () => import('@/lib/config/leagues'),
   sd: () => import('@/components/standings/standings-page-view'),
   view: () => import('@/components/standings/standings-view'),
@@ -145,7 +146,7 @@ describe('/standings/eal', () => {
       .map((g) => g.contestId)
       .sort();
     const rows = m.data.getMissingOfficialResults(LEAGUE).filter((r) => r.kind === 'missing');
-    expect(rows.map((r) => r.game?.contestId).sort(), 'lib/data.ts getMissingOfficialResults(eal)').toEqual(expected);
+    expect(rows.map((r) => r.game?.contestId).sort(), 'lib/queries/standings.ts getMissingOfficialResults(eal)').toEqual(expected);
     expect(expected.length, 'the EAL corpus has league games past their date with no score').toBeGreaterThan(0);
 
     const [v] = m.sd.buildStandingsPageView(LEAGUE).views;
@@ -329,7 +330,7 @@ describe('/about, the EAL parts', () => {
 
 describe('/history/2025-26#eal', () => {
   it('renders the EAL as unavailable, with its reason and no claim of a league site', async () => {
-    const { getHistorySeason } = await import('@/lib/history');
+    const { getHistorySeason } = await import('@/lib/datasets/history');
     expect(getHistorySeason()).toBe('2025-26');
     const section = byId(historyHtml, LEAGUE);
     const text = textOf(section);

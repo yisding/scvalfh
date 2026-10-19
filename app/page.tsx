@@ -31,7 +31,7 @@ import { TEAMS } from '@/lib/registry/teams';
  * block is `display: none`, out of the accessibility tree. JS off or storage blocked → no stamp →
  * the first-visit view with every link working.
  *
- * The page body is read through `components/home/home-view.ts` (which reads only `lib/data.ts`) and
+ * The page body is read through `components/home/home-view.ts` (which reads the snapshot only through `lib/queries/`) and
  * formatted in America/Los_Angeles from `snapshot.fetchedAt`; only the metadata description and
  * the sr-only league list read config (`lib/registry/teams`, `lib/config/leagues`) directly. No page calls `Date.now()`, and
  * there is no `searchParams` in this signature, which is what keeps the route static.

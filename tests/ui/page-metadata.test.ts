@@ -12,6 +12,7 @@ import type { Metadata } from 'next';
 import { beforeAll, describe, expect, it } from 'vitest';
 
 import { useCorpusModules } from '@/tests/support/corpus-modules';
+import { loadQueries } from '@/tests/support/queries';
 
 interface PageModule {
   metadata?: Metadata;
@@ -31,8 +32,8 @@ function read(mod: PageModule, params: Record<string, string> = {}): Promise<Met
 
 const m = useCorpusModules('all-2026-10-02', {
   site: () => import('@/components/layout/site'),
-  data: () => import('@/lib/data'),
-  clubs: () => import('@/lib/clubs'),
+  data: loadQueries,
+  clubs: () => import('@/lib/datasets/clubs'),
   gameView: () => import('@/components/game/game-view'),
 });
 

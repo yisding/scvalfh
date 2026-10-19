@@ -24,15 +24,15 @@
  *     each school's heading links, says where each came from.
  */
 
-import { getClubsFile } from '@/lib/clubs';
-import { getCommitsFile } from '@/lib/commits';
 import { REGIONS, getLeague } from '@/lib/config/leagues';
-import { getTeamsGrouped, type LeagueSummary } from '@/lib/data';
+import { getClubsFile } from '@/lib/datasets/clubs';
+import { getCommitsFile } from '@/lib/datasets/commits';
+import { getRosterEnrichment, getRosters } from '@/lib/datasets/rosters';
 import { dateWithYear } from '@/lib/format/dates';
 import { listWords, plural } from '@/lib/format/words';
 import type { RegionId, TeamSlug } from '@/lib/model/ids';
-import { getRosterEnrichment, getRosters } from '@/lib/rosters';
 import { buildRosterView, type RosterRow } from '@/components/teams/roster-view';
+import { type LeagueSummary, getTeamsGrouped } from '@/lib/queries/leagues';
 
 /** A roster row with something to show here: its commitment, clubs and profiles, as the team page has them. */
 export interface RecruitingRow extends Pick<RosterRow, 'key' | 'name' | 'commitment' | 'clubs' | 'profiles'> {

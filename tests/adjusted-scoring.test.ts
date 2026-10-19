@@ -6,7 +6,7 @@
 
 import { describe, expect, it } from 'vitest';
 
-import { getSnapshot } from '@/lib/data';
+import { getSnapshot } from '@/lib/datasets/snapshot';
 import { SHRINK_GAMES, computeAdjustedScoring, fitGoalModel } from '@/lib/engine/adjusted-scoring';
 import { type RatingTable, computeRatings, ratingGames } from '@/lib/engine/ratings';
 import type { Game } from '@/lib/model/game';

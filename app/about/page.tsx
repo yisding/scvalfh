@@ -13,47 +13,40 @@ import EmptyState from '@/components/ui/EmptyState';
 import ExternalLink from '@/components/ui/ExternalLink';
 import SectionHeader from '@/components/ui/SectionHeader';
 import { DATA_CORRECTIONS_URL, OG_BASE, ROOT_OG_IMAGE, SITE_SCOPE_NOTE, independentsWords } from '@/components/layout/site';
-import { getClubs } from '@/lib/clubs';
-import { getCommitsFile } from '@/lib/commits';
 import {
-  CCS, UNBRACKETED_LEAGUE_IDS, getLeague, getSection, isIndependentLeague, leagueStandingsUrl, regionOf,
+  CCS, SECTIONS, TOURNAMENT_LEAGUE_IDS, UNBRACKETED_LEAGUE_IDS, getLeague, getSection, isIndependentLeague,
+  leagueStandingsUrl, regionOf,
 } from '@/lib/config/leagues';
 import { SOURCE_LINKS } from '@/lib/config/source-urls';
+import { getClubs } from '@/lib/datasets/clubs';
+import { getCommitsFile } from '@/lib/datasets/commits';
 import {
-  areKeyDatesConfirmed,
-  getAllStandings,
-  getCcsCalendar,
-  getCcsField,
-  getCifssCrossCheck,
-  getCounts,
-  getCrossCheck,
-  getDropped,
-  getFetchedAt,
-  getLeagueHealth,
-  getLeagueSummaries,
-  getOfficialFixtures,
-  getOfficialStandingsPdfUrl,
-  getPlayoffs,
-  getSbliveCrossCheck,
-  getSections,
-  getSources,
-  getTeamBySlug,
-  getTeams,
-  getTournamentLeagueIds,
-} from '@/lib/data';
-import type { LeagueSummary } from '@/lib/data';
+  getAvailableHistoryLeagues, getHistorySeason, getUnavailableHistoryLeagues,
+} from '@/lib/datasets/history';
+import { getJvFile } from '@/lib/datasets/jv';
+import { getFetchedAt } from '@/lib/datasets/snapshot';
 import { JV_STANDINGS_MIN_REPORTED_SHARE } from '@/lib/engine/jv/standings';
 import { crossCheckSkipReason, statusLegend } from '@/lib/engine/standings';
 import { dateWithYear, formatStamp, shortDate, timeOfDayPT } from '@/lib/format/dates';
 import { ordinal } from '@/lib/format/numbers';
 import { listWords, numberWord, plural } from '@/lib/format/words';
-import { getAvailableHistoryLeagues, getHistorySeason, getUnavailableHistoryLeagues } from '@/lib/history';
+import { getOfficialFixtures } from '@/lib/queries/games';
+import { getJvMerge, getJvTables } from '@/lib/queries/jv';
+import { getLeagueHealth, getLeagueSummaries } from '@/lib/queries/leagues';
+import type { LeagueSummary } from '@/lib/queries/leagues';
+import { getCcsField, getPlayoffs } from '@/lib/queries/postseason';
+import {
+  areKeyDatesConfirmed, getCcsCalendar, getCifssCrossCheck, getCounts, getCrossCheck, getDropped,
+  getOfficialStandingsPdfUrl, getSbliveCrossCheck, getSources,
+} from '@/lib/queries/provenance';
+import { getAllStandings } from '@/lib/queries/standings';
+import { getTeams } from '@/lib/queries/teams';
 import { jvTableTitle } from '@/components/standings/jv-standings-view';
-import { getJvFile, getJvMerge, getJvTables } from '@/lib/jv';
 import type { CrossCheckRow } from '@/lib/model/crosscheck';
 import type { DroppedContest, SourceStatus } from '@/lib/model/health';
 import type { LeagueConfig, SectionConfig } from '@/lib/model/league-config';
 import type { TiebreakStage } from '@/lib/model/standings';
+import { getTeamBySlug } from '@/lib/registry/teams';
 
 /**
  * `/about` (DESIGN §3.10, SPEC §10.8) — where the data comes from for every league, how each
@@ -498,7 +491,7 @@ export default function AboutPage() {
   // independents' games against each other, and its card says so.
   const tabled = leagues.filter((l) => !isIndependentLeague(l.id));
   const independentGroups = leagues.filter((l) => isIndependentLeague(l.id));
-  const sections = getSections();
+  const sections = SECTIONS;
   const allTeams = getTeams();
   const commitCount = getCommitsFile().commitments.length;
 
@@ -517,7 +510,7 @@ export default function AboutPage() {
   const keyDatesConfirmed = areKeyDatesConfirmed();
   const playoffs = getPlayoffs();
   const field = getCcsField();
-  const tournamentIds = new Set(getTournamentLeagueIds());
+  const tournamentIds = new Set(TOURNAMENT_LEAGUE_IDS);
   const ncs = sections.find((s) => !s.holdsFieldHockeyChampionship);
   // Leagues whose postseason is an unbracketed tournament (EAL's Super Regional), and the sections
   // that hold them: each gets a source card and a Postseason paragraph of its own.

@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 import { monthDay } from '@/lib/format/dates';
 import { EN_DASH } from '@/lib/format/words';
-import type { FormGame } from '@/lib/data';
+import type { FormGame } from '@/lib/queries/games';
 import { getTeamBySlug } from '@/lib/registry/teams';
 import { gameHref } from '@/lib/shared/game-id';
 
@@ -40,7 +40,7 @@ import { signedMargin } from './describe-game';
  * always present, never a fallback.
  */
 export interface MarginStripProps {
-  /** League games in date order, played and remaining — lib/data's `getTeamForm().leagueGames`. */
+  /** League games in date order, played and remaining — lib/queries/games.ts' `getTeamForm().leagueGames`. */
   entries: FormGame[];
   teamName: string;
   /**

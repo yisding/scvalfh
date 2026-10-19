@@ -1,12 +1,12 @@
 /**
  * The college commitments page (/commits) and the team roster's commitment line (SPEC §1.1j3,
- * DESIGN §21), derived from lib/commits.ts. Pure, so tests/ui/commit-view.test.ts can assert it
+ * DESIGN §21), derived from lib/datasets/commits.ts. Pure, so tests/ui/commit-view.test.ts can assert it
  * over the real files; every word the page or a roster line prints about a commitment is chosen
  * here, in one module.
  *
  * What the page promises, and this module enforces (the clubs pages' posture, DESIGN §17.2):
  *   - only rows on the tracked varsity rosters are named: every commitment joined a non-JV row of
- *     data/rosters.json at load (lib/commits.ts), and is shown under that row's own spelling;
+ *     data/rosters.json at load (lib/datasets/commits.ts), and is shown under that row's own spelling;
  *   - `quote`, `basis`, `confidence`, `statedSchool` and `statedClassYear` never reach a view type:
  *     the quote and the basis are for maintainers and can name people who are not players here;
  *   - a commitment is never worded as more than its sources say: "Committed" unless a source says
@@ -20,30 +20,18 @@
  *   - every row links the pages it rests on, each URL once.
  */
 
-import { clubDisplayName, getClubs } from '@/lib/clubs';
-import {
-  collegeDisplayName,
-  commitClassOf,
-  commitProgram,
-  getColleges,
-  getCommitments,
-  getCommitsFile,
-  getCommittedPlayer,
-  getPlayerCommitment,
-  type College,
-  type CollegeDivision,
-  type CollegeProgram,
-  type CommitSource,
-  type CommitSport,
-  type CommitStatus,
-  type Commitment,
-} from '@/lib/commits';
 import { REGIONS, regionOf } from '@/lib/config/leagues';
+import { clubDisplayName, getClubs } from '@/lib/datasets/clubs';
+import {
+  type College, type CollegeDivision, type CollegeProgram, type CommitSource, type CommitSport,
+  type CommitStatus, type Commitment, collegeDisplayName, commitClassOf, commitProgram, getColleges,
+  getCommitments, getCommitsFile, getCommittedPlayer, getPlayerCommitment,
+} from '@/lib/datasets/commits';
+import { getRosters } from '@/lib/datasets/rosters';
 import { dateWithYear, partialDate } from '@/lib/format/dates';
 import { gradeWord, listWords, plural } from '@/lib/format/words';
 import type { RegionId, TeamSlug } from '@/lib/model/ids';
 import { getTeamBySlug } from '@/lib/registry/teams';
-import { getRosters } from '@/lib/rosters';
 import { OUTLETS, hostOf, numbered, pathOf, schoolName } from '@/components/ui/source-hosts';
 import { clubSiteKey } from '@/lib/schema/clubs';
 import { COLLEGE_DIVISIONS, COMMIT_SPORTS, type SocialPlatform } from '@/lib/schema/commits';
@@ -413,7 +401,7 @@ function classGroups(region: RegionId, commitments: readonly Commitment[]): Comm
 /**
  * The colleges one region's players committed to, each with only the programs, players and schools
  * of that region: the most players first, then the highest level of those programs (Division I
- * first), then display name — lib/commits.ts getColleges()' order, counted within the region.
+ * first), then display name — lib/datasets/commits.ts getColleges()' order, counted within the region.
  */
 function collegeRows(region: RegionId, commitments: readonly Commitment[]): CollegeRow[] {
   return getColleges()

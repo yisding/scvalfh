@@ -4,10 +4,10 @@
  *   pnpm build && pnpm assert:prerender
  *
  * The expected set is derived from the inputs of the build, never from its output: the snapshot
- * (`data/snapshot.json`, or `SCVAL_SNAPSHOT`, read through lib/data.ts' getSnapshot as the build
+ * (`data/snapshot.json`, or `SCVAL_SNAPSHOT`, read through lib/datasets/snapshot.ts' getSnapshot as the build
  * reads it, so a file written before a league was added is checked as the build rendered it,
  * upgraded), the league config (`lib/config/leagues.ts`) and the clubs file (`data/clubs.json`, through
- * lib/clubs.ts). So a family that came back short, or long, or a page that lost its
+ * lib/datasets/clubs.ts). So a family that came back short, or long, or a page that lost its
  * generateStaticParams (it would render on demand instead), fails here by name:
  *
  *  - fixed pages: index, about, standings, schedule, playoffs, teams, leaders, history/2025-26, clubs,
@@ -22,7 +22,7 @@
  *    LA independents joined, 99 with the Southern California amendment; the snapshot's team
  *    slugs must equal TEAMS, in order);
  *  - `clubs/*.html` = the slugs of data/clubs.json, by name (DESIGN §17, SPEC §1.1j2). They come
- *    from `getClubSlugs()`, which reads the file through the bundled import lib/clubs.ts validates
+ *    from `getClubSlugs()`, which reads the file through the bundled import lib/datasets/clubs.ts validates
  *    at load, not from the working directory: tests/arch/workflows.test.ts runs this script with its cwd
  *    in a temporary tree. A club with no tied player still has a page, so every slug counts. There
  *    is no clubs OG card (the pages take the root one), so no parity check either;
@@ -50,7 +50,7 @@
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import path from 'node:path';
 
-import { getSnapshot } from '@/lib/data';
+import { getSnapshot } from '@/lib/datasets/snapshot';
 import { FIXED_PAGES, expectedFamilies, makeFamilyChecker, sample } from './lib/prerender-expectations';
 
 const APP = '.next/server/app';

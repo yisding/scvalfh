@@ -14,8 +14,8 @@ import path from 'node:path';
 import { describe, expect, it, vi } from 'vitest';
 
 import { SPORT_SEASON_ID } from '@/lib/config/season';
+import { getRosters } from '@/lib/datasets/rosters';
 import { TEAMS as REGISTRY, teamsInLeague } from '@/lib/registry/teams';
-import { getRosters } from '@/lib/rosters';
 import {
   FIELD_STAT_KEYS, type FieldStatKey, type GoalieStatKey, PlayerStatsFileSchema, countPlayerStats,
 } from '@/lib/schema/player-stats';

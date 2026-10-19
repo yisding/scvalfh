@@ -4,7 +4,7 @@
  * groups and the client-boundary split of `components/schedule/filter-data.ts`.
  *
  * League-specific values run on the all-2026-10-02 CORPUS snapshot (SPEC §13.6): useCorpusModules
- * points lib/data at it before lib/data is imported. Every assertion
+ * points lib/datasets/snapshot.ts at it before lib/queries/ is imported. Every assertion
  * message names the module that produced the value.
  */
 
@@ -15,12 +15,15 @@ import { createElement, type ReactElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 
+import { LEAGUE_IDS } from '@/lib/config/leagues';
+import { getTeamBySlug } from '@/lib/registry/teams';
 import { useCorpusModules } from '@/tests/support/corpus-modules';
+import { loadQueries } from '@/tests/support/queries';
 import { REPO } from '@/tests/support/repo';
 import { textOf } from '@/tests/support/html-text';
 
 const m = useCorpusModules('all-2026-10-02', {
-  data: () => import('@/lib/data'),
+  data: loadQueries,
   server: () => import('@/components/schedule/filter-data-server'),
   index: () => import('@/components/schedule/schedule-view'),
   day: () => import('@/components/schedule/day-summary'),
@@ -42,19 +45,19 @@ async function renderDay(date: string): Promise<string> {
   return renderToStaticMarkup((await m.dayPage.default({ params: Promise.resolve({ date }) } as never)) as ReactElement);
 }
 
-const leagueOfSlug = (slug: string | null) => (slug ? m.data.getTeamBySlug(slug)?.league : undefined);
+const leagueOfSlug = (slug: string | null) => (slug ? getTeamBySlug(slug)?.league : undefined);
 
 describe('league scoping (/schedule/<league>)', () => {
   it('lists every game with a side in the league exactly once, and a cross-league game in both leagues', () => {
     const lists = new Map<string, string[]>();
-    for (const id of m.data.getLeagueIds()) {
+    for (const id of LEAGUE_IDS) {
       const ids = m.data.getGamesByDate({ league: id }).flatMap((g) => g.games.map((x) => x.contestId));
-      expect(new Set(ids).size, `lib/data.ts getGamesByDate(${id}): duplicates`).toBe(ids.length);
+      expect(new Set(ids).size, `lib/queries/games.ts getGamesByDate(${id}): duplicates`).toBe(ids.length);
       lists.set(id, ids);
       for (const g of m.data.getGames({ league: id })) {
         expect(
           [leagueOfSlug(g.home.slug), leagueOfSlug(g.away.slug)],
-          `lib/data.ts getGames({league:${id}}) ${g.contestId}`,
+          `lib/queries/games.ts getGames({league:${id}}) ${g.contestId}`,
         ).toContain(id);
       }
     }
@@ -70,7 +73,7 @@ describe('league scoping (/schedule/<league>)', () => {
   });
 
   it('renders each of the league’s games once, tags the other league, and ends the rail with its own postseason', async () => {
-    for (const id of m.data.getLeagueIds()) {
+    for (const id of LEAGUE_IDS) {
       const html = await renderLeague(id);
       const rendered = [...html.matchAll(/data-game="([^"]+)"/g)].map((m) => m[1]);
       const expected = m.data.getGames({ league: id }).map((g) => g.contestId);
@@ -96,17 +99,17 @@ describe('league scoping (/schedule/<league>)', () => {
     expect(textOf(eal)).not.toMatch(/\ba (MCAL|SCVAL|BVAL|PCAL|EAL)\b/);
   });
 
-  it('lands the Scores tab on a date group the league’s list lays out (lib/data getScoresLandingDate)', async () => {
+  it('lands the Scores tab on a date group the league’s list lays out (lib/queries/games getScoresLandingDate)', async () => {
     // The all-2026-10-02 corpus predates the four Southern California leagues, which it carries as
     // "not fetched in this run" with no games, so a league with no game date in it has no landing
     // date to check. The five leagues the corpus does cover must all be checked.
-    const covered = m.data.getLeagueIds().filter((id) => m.data.getGameDates({ league: id }).length > 0);
+    const covered = LEAGUE_IDS.filter((id) => m.data.getGameDates({ league: id }).length > 0);
     expect(covered, 'corpus leagues with games').toEqual(expect.arrayContaining(['scval', 'bval', 'pcal', 'mcal', 'eal']));
     for (const id of covered) {
       const landing = m.data.getScoresLandingDate({ league: id });
-      expect(landing, `lib/data.ts getScoresLandingDate(${id})`).not.toBeNull();
-      expect(m.data.getGameDates({ league: id }), `lib/data.ts getScoresLandingDate(${id})`).toContain(landing);
-      expect(landing, `lib/data.ts getScoresLandingDate(${id})`).toBe(m.data.getLatestResultsDate({ league: id }));
+      expect(landing, `lib/queries/games.ts getScoresLandingDate(${id})`).not.toBeNull();
+      expect(m.data.getGameDates({ league: id }), `lib/queries/games.ts getScoresLandingDate(${id})`).toContain(landing);
+      expect(landing, `lib/queries/games.ts getScoresLandingDate(${id})`).toBe(m.data.getLatestResultsDate({ league: id }));
       const html = await renderLeague(id);
       expect(html, `components/schedule/ScheduleList.tsx ${id}: #${landing}`).toContain(`id="${landing}"`);
     }
@@ -217,7 +220,7 @@ describe('the /schedule index', () => {
     const built = m.index.buildScheduleIndex({
       games: m.data.getGames(),
       leagues: m.data.getLeagueSummaries(),
-      leagueOf: (slug) => m.data.getTeamBySlug(slug)?.league,
+      leagueOf: (slug) => getTeamBySlug(slug)?.league,
       today,
     });
     expect(built.recent.length).toBeLessThanOrEqual(3);
@@ -234,7 +237,7 @@ describe('the /schedule index', () => {
         );
       }
     }
-    expect(built.cards.map((c) => c.id)).toEqual(m.data.getLeagueIds());
+    expect(built.cards.map((c) => c.id)).toEqual(LEAGUE_IDS);
     for (const card of built.cards) {
       expect(card.games, `components/schedule/schedule-view.ts card ${card.id}`).toBe(
         m.data.getGames({ league: card.id }).length,
@@ -262,7 +265,7 @@ describe('the /schedule index', () => {
     expect(html).toContain('<div data-region-scope="socal">');
     // A card grid holding a jump target is never itself region-scoped (the deep-link rule would unset its grid).
     expect(html).not.toMatch(/<ul data-region-scope[^>]*grid/);
-    for (const id of m.data.getLeagueIds()) expect(html, `components/schedule/ScheduleIndex.tsx #${id}`).toContain(`id="${id}"`);
+    for (const id of LEAGUE_IDS) expect(html, `components/schedule/ScheduleIndex.tsx #${id}`).toContain(`id="${id}"`);
     const ids = [...html.matchAll(/\sid="([^"]+)"/g)].map((m) => m[1]);
     expect(ids.filter((id, i) => ids.indexOf(id) !== i), 'app/schedule/page.tsx duplicate ids').toEqual([]);
   });

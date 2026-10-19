@@ -11,11 +11,12 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 
 import { useCorpusModules } from '@/tests/support/corpus-modules';
+import { loadQueries } from '@/tests/support/queries';
 
 const m = useCorpusModules('all-2026-10-02', {
   sd: () => import('@/components/layout/structured-data'),
   gv: () => import('@/components/game/game-view'),
-  data: () => import('@/lib/data'),
+  data: loadQueries,
 });
 
 /** The node back out of the rendered <script>, the way a crawler reads it. */

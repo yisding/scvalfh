@@ -25,7 +25,7 @@
  * the standings count it as a win.
  *
  * Seeded from last season. Each team starts from the strength the same fit gives it over last
- * season's finals (data/prior-season.json, lib/prior-season.ts), carried over in full (CARRYOVER),
+ * season's finals (data/prior-season.json, lib/datasets/prior-season.ts), carried over in full (CARRYOVER),
  * and the fit pulls it toward that start with the weight of START_WEIGHT games: the start decides
  * the first weeks and fades as the season's own results come in. A team with no result yet this
  * season is rated at its start (preseason); without a prior season every start is average.

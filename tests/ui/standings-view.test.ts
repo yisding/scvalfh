@@ -4,7 +4,7 @@
  * `/standings/<league>` and the all-league overview `/standings`.
  *
  * League-specific values are asserted on the all-2026-10-02 CORPUS snapshot (SPEC §13.6), loaded
- * through useCorpusModules (tests/support/corpus-modules.ts), which points lib/data at it before it is
+ * through useCorpusModules (tests/support/corpus-modules.ts), which points lib/datasets/snapshot.ts at it before it is
  * imported, so live fetch #2 cannot break them. Every assertion message names the
  * module that produced the value, so a failure routes to its owner.
  */
@@ -13,15 +13,18 @@ import { createElement, type ReactElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 
+import { LEAGUE_IDS } from '@/lib/config/leagues';
 import { standaloneName } from '@/lib/config/leagues/labels';
-import type { MissingOfficialResult } from '@/lib/data';
 import type { LeagueId } from '@/lib/model/ids';
+import type { MissingOfficialResult } from '@/lib/queries/standings';
+import { getTeamById } from '@/lib/registry/teams';
 import { useCorpusModules } from '@/tests/support/corpus-modules';
 // textOf: visible text, tags dropped and entities decoded.
 import { textOf } from '@/tests/support/html-text';
+import { loadQueries } from '@/tests/support/queries';
 
 const m = useCorpusModules('all-2026-10-02', {
-  data: () => import('@/lib/data'),
+  data: loadQueries,
   sd: () => import('@/components/standings/standings-page-view'),
   view: () => import('@/components/standings/standings-view'),
   leaguePage: () => import('@/app/standings/[league]/page'),
@@ -131,7 +134,7 @@ describe('single-division leagues have no division label', () => {
   it('never calls a team of a league with no documents "official" when it has no results (EAL, D23)', async () => {
     // The all-2026-10-02 corpus does not fetch the EAL, so all six EAL rows have no results.
     const rows = m.data.getStandings('eal');
-    expect(rows.length, 'lib/data.ts getStandings(eal)').toBe(6);
+    expect(rows.length, 'lib/queries/standings.ts getStandings(eal)').toBe(6);
     expect(rows.every((s) => !s.hasReportedResults), 'the EAL has no data in this corpus').toBe(true);
     const eal = textOf(await renderLeague('eal'));
     for (const team of m.data.getTeams('eal')) {
@@ -145,7 +148,7 @@ describe('single-division leagues have no division label', () => {
     // A league with a schedule document keeps its wording.
     const { collectStandingsNotes } = await import('@/components/ui/StandingsTable');
     const [first] = m.data.getStandings('pcal');
-    const team = m.data.getTeamById(first.teamId)!;
+    const team = getTeamById(first.teamId)!;
     const { specific } = collectStandingsNotes({
       division: 'pcal',
       rows: [{ team, standing: { ...first, hasReportedResults: false } }],
@@ -171,7 +174,7 @@ describe('single-division leagues have no division label', () => {
 describe('missing official results and postponed rows', () => {
   it('Santa Teresa shows its two missing results with the one-line banner', async () => {
     const st = m.sd.buildStandingsPageView('bval').views.find((v) => v.division === 'santa-teresa')!;
-    expect(st.missing.length, 'lib/data.ts getMissingOfficialResults(santa-teresa)').toBe(2);
+    expect(st.missing.length, 'lib/queries/standings.ts getMissingOfficialResults(santa-teresa)').toBe(2);
     expect(st.missingBanner, 'components/standings/standings-view.ts banner').toBe(
       '⚑ 2 official league results missing — listed below the table.',
     );
@@ -229,8 +232,8 @@ describe('GP, LEFT and MAX', () => {
     expect(html).toMatch(/>Max<\/th>/);
     const ctx = m.data.getStandingContext('marin-county');
     for (const c of ctx.values()) {
-      expect(c.scheduled, 'lib/data.ts getStandingContext: MCAL has a fixed schedule').not.toBeNull();
-      expect(c.remaining, 'lib/data.ts getStandingContext').toBe(Math.max(0, c.scheduled! - c.counted));
+      expect(c.scheduled, 'lib/queries/standings.ts getStandingContext: MCAL has a fixed schedule').not.toBeNull();
+      expect(c.remaining, 'lib/queries/standings.ts getStandingContext').toBe(Math.max(0, c.scheduled! - c.counted));
       expect(html, 'components/ui/StandingsTable.tsx GP').toContain(`${c.counted}/${c.scheduled}`);
     }
   });
@@ -450,7 +453,7 @@ describe('the preseason notice (standings-page-view.ts buildNotice, DESIGN §8)'
     expect(m.sd.buildStandingsPageView('independents').notice?.heading, `${SPV}: independents`).toBe(
       'The first game between two of the LA independents is Tue Sep 8.',
     );
-    for (const id of m.data.getLeagueIds().filter((l) => !empty.includes(l))) {
+    for (const id of LEAGUE_IDS.filter((l) => !empty.includes(l))) {
       expect(m.sd.buildStandingsPageView(id).notice, `${SPV}: ${id}`).toBeNull();
     }
     // This corpus predates the EAL's league games, so its tables have no counted final yet.

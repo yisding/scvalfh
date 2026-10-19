@@ -35,6 +35,11 @@ const eslintConfig = defineConfig([
               regex: "^(@/lib/format|@/components/ui/plural|\\./format|\\./plural)$",
               message: "Import the formatters from '@/lib/format/<dates|numbers|words|score>' or '@/lib/shared/<dates|game>'.",
             },
+            // lib/data.ts likewise survives only for the metadata image routes (see its header).
+            {
+              regex: "^(@/lib/data|\\./data)$",
+              message: "Read the snapshot through '@/lib/datasets/snapshot' and '@/lib/queries/<provenance|leagues|teams|games|standings|phase|postseason>'.",
+            },
           ],
         },
       ],

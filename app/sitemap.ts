@@ -1,31 +1,27 @@
 import type { MetadataRoute } from 'next';
 
 import { SITE_URL } from '@/components/layout/site';
-import { getClubSlugs, getClubsLastChecked } from '@/lib/clubs';
-import { getCommitsLastChecked } from '@/lib/commits';
+import { LEAGUE_IDS, TOURNAMENT_LEAGUE_IDS } from '@/lib/config/leagues';
+import { getClubSlugs, getClubsLastChecked } from '@/lib/datasets/clubs';
+import { getCommitsLastChecked } from '@/lib/datasets/commits';
+import { getHistoryLastChecked } from '@/lib/datasets/history';
+import { getJvFetchedAt } from '@/lib/datasets/jv';
+import { getRosterEnrichment } from '@/lib/datasets/rosters';
+import { getFetchedAt } from '@/lib/datasets/snapshot';
 import {
   gamePageInputs, latestContentDate, removalsForGame, removalsOnDay, scoreDayInputs,
 } from '@/lib/engine/content-dates';
-import { getRosterEnrichment } from '@/lib/rosters';
-import {
-  getContentRemovals,
-  getFetchedAt,
-  getGameDates,
-  getGames,
-  getLeagueIds,
-  getOfficialFixtures,
-  getTeams,
-  getTournamentLeagueIds,
-} from '@/lib/data';
-import { getHistoryLastChecked } from '@/lib/history';
-import { getJvFetchedAt, getJvGamesOn } from '@/lib/jv';
+import { getGameDates, getGames, getOfficialFixtures } from '@/lib/queries/games';
+import { getJvGamesOn } from '@/lib/queries/jv';
+import { getContentRemovals } from '@/lib/queries/provenance';
+import { getTeams } from '@/lib/queries/teams';
 import { gameHref } from '@/lib/shared/game-id';
 
 /**
  * /sitemap.xml — every route family (SPEC §8.1): the fixed pages, `/standings/<id>` and
  * `/schedule/<id>` per league, `/playoffs/<id>` per league-tournament league, the team pages (one per registry team),
  * `/clubs/<slug>` per club of data/clubs.json (DESIGN §17.1), one page per date with a contest, and
- * one per game. The clubs come in lib/clubs.ts' display order, so the first club page listed is the
+ * one per game. The clubs come in lib/datasets/clubs.ts' display order, so the first club page listed is the
  * fullest one (scripts/a11y-axe.mjs samples it).
  *
  * Game URLs go through `gameHref`, so a si.com-only game (`sblive:<id>`) is listed at its real
@@ -69,7 +65,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: url('/teams'), lastModified, changeFrequency: 'weekly', priority: 0.7 },
     { url: url('/playoffs'), lastModified, changeFrequency: 'weekly', priority: 0.7 },
     { url: url('/leaders'), lastModified, changeFrequency: 'daily', priority: 0.6 },
-    // The later of the JV file and the snapshot: lib/jv.ts classifies the JV games against the varsity
+    // The later of the JV file and the snapshot: lib/queries/jv.ts classifies the JV games against the varsity
     // snapshot's games and official fixtures, so either can change the page.
     {
       url: url('/jv'),
@@ -89,12 +85,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: url('/recruiting'), lastModified: recruitingStamp, changeFrequency: 'monthly', priority: 0.4 },
   ];
 
-  const leagueRoutes: MetadataRoute.Sitemap = getLeagueIds().flatMap((id) => [
+  const leagueRoutes: MetadataRoute.Sitemap = LEAGUE_IDS.flatMap((id) => [
     { url: url(`/standings/${id}`), lastModified, changeFrequency: 'daily' as const, priority: 0.9 },
     { url: url(`/schedule/${id}`), lastModified, changeFrequency: 'daily' as const, priority: 0.8 },
   ]);
 
-  const tournamentRoutes: MetadataRoute.Sitemap = getTournamentLeagueIds().map((id) => ({
+  const tournamentRoutes: MetadataRoute.Sitemap = TOURNAMENT_LEAGUE_IDS.map((id) => ({
     url: url(`/playoffs/${id}`),
     lastModified,
     changeFrequency: 'weekly',

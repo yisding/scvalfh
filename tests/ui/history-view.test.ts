@@ -18,7 +18,7 @@ import {
   splitOverallValue,
 } from '@/components/history/history-view';
 import { positionFromText } from '@/components/ui/position-words';
-import { getAvailableHistoryLeagues, type HistoryAwards } from '@/lib/history';
+import { type HistoryAwards, getAvailableHistoryLeagues } from '@/lib/datasets/history';
 import { getTeamBySlug } from '@/lib/registry/teams';
 import { sectionById } from '@/scripts/copy-rules';
 import { textOf } from '@/tests/support/html-text';

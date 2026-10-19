@@ -15,18 +15,18 @@ import {
 } from '@/components/standings/jv-standings-view';
 import { buildTeamJvView } from '@/components/teams/jv-view';
 import { LEAGUES } from '@/lib/config/leagues';
-import { getSnapshot } from '@/lib/data';
+import { getSnapshot } from '@/lib/datasets/snapshot';
 import {
   JV_COUNTERPART_WINDOW_DAYS, JV_STANDINGS_MIN_REPORTED_SHARE, classifyJvGames, computeJvStandings,
   withJvClassification,
 } from '@/lib/engine/jv/standings';
-import { getJvClassification, getJvGamesForTeam, getJvMerge, getJvTables } from '@/lib/jv';
 import type { OfficialFixture } from '@/lib/model/fixture';
 import type { Game } from '@/lib/model/game';
+import { getJvClassification, getJvGamesForTeam, getJvMerge, getJvTables } from '@/lib/queries/jv';
 import { TEAMS, teamsInDivision } from '@/lib/registry/teams';
 import { game } from './support/game-builder';
 
-/** A JV game as lib/jv.ts receives it from the merge: unclassified. */
+/** A JV game as lib/queries/jv.ts receives it from the merge: unclassified. */
 function jv(spec: Parameters<typeof game>[0]): Game {
   const { official: _official, ...g } = game({ league: false, official: null, ...spec });
   void _official;

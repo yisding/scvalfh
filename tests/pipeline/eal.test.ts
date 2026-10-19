@@ -21,6 +21,7 @@ import { CorpusReader, EAL_CORPUS, gameOf } from '@/tests/support/corpus';
 import { useCorpusModules } from '@/tests/support/corpus-modules';
 import { corpusSnapshotPath } from '@/tests/support/corpus-snapshot';
 import { expectOk, runFixtureCli } from '@/tests/support/cli';
+import { loadQueries } from '@/tests/support/queries';
 import { readSnapshot } from '@/tests/support/repo';
 
 const LEAGUE = 'eal';
@@ -32,7 +33,7 @@ const corpus = new CorpusReader(EAL_CORPUS);
 const manifest = corpus.manifest;
 const members = new Map(teamsInLeague(LEAGUE).map((t) => [t.id, t]));
 
-const m = useCorpusModules(EAL_CORPUS, { data: () => import('@/lib/data') });
+const m = useCorpusModules(EAL_CORPUS, { data: loadQueries });
 let file: string;
 let snapshot: Snapshot;
 
@@ -205,7 +206,7 @@ describe('the EAL games', () => {
   });
 });
 
-describe('the EAL through the site read API (lib/data.ts)', () => {
+describe('the EAL through the site read API (lib/queries/)', () => {
   it('lists exactly the missing league games', () => {
     const expected = missingFromCorpus()
       .map((row) => row.contest.contestId)
@@ -221,6 +222,6 @@ describe('the EAL through the site read API (lib/data.ts)', () => {
   it('names no co-leaders on this corpus (Pleasant Valley is alone at the top)', () => {
     // The gating rule (co-leaders are never final while an EAL league result is missing) is tested on a
     // level-top table in tests/data.test.ts ("never calls co-leaders final while an EAL league result is missing").
-    expect(m.data.getCoLeaders(DIVISION), 'lib/data.ts getCoLeaders').toBeNull();
+    expect(m.data.getCoLeaders(DIVISION), 'lib/queries/standings.ts getCoLeaders').toBeNull();
   });
 });

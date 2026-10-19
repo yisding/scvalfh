@@ -1,18 +1,19 @@
 /**
  * The JV lists' view model: a team page's "JV games" section and a day page's JV block.
  *
- * Every game comes from lib/jv.ts (MaxPreps' JV schedules, supplemented by si.com under
+ * Every game comes from lib/queries/jv.ts (MaxPreps' JV schedules, supplemented by si.com under
  * lib/engine/jv/merge.ts), classified by lib/engine/jv/standings.ts: a JV league game is one whose varsity
  * counterpart counts. JV games stay apart from varsity: these views feed no varsity record, form
  * strip, margin chart or table, so a JV result is never mistaken for a varsity one.
  *
- * SERVER-ONLY: reads lib/jv, which imports data/jv.json.
+ * SERVER-ONLY: reads lib/queries/jv and lib/datasets/jv, which imports data/jv.json.
  */
 
 import { regionOf } from '@/lib/config/leagues';
-import { getJvClassification, getJvFetchedAt, getJvGamesForTeam, getJvGamesOn, getJvTeam } from '@/lib/jv';
+import { getJvFetchedAt, getJvTeam } from '@/lib/datasets/jv';
 import type { Game, GameSide } from '@/lib/model/game';
 import type { RegionId, TeamSlug } from '@/lib/model/ids';
+import { getJvClassification, getJvGamesForTeam, getJvGamesOn } from '@/lib/queries/jv';
 import { getTeamBySlug } from '@/lib/registry/teams';
 import { localDateKey } from '@/lib/shared/dates';
 

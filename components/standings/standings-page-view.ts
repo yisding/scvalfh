@@ -1,11 +1,11 @@
 /**
- * The page data for /standings and /standings/<league>, assembled once from `lib/data`, plus the
+ * The page data for /standings and /standings/<league>, assembled once from `lib/queries/`, plus the
  * `leaderLine` rows the root and /standings OG cards print.
  *
- * It is the `lib/data`-reading side of a split with the pure `standings-view.ts`: this module reads
+ * It is the `lib/queries/`-reading side of a split with the pure `standings-view.ts`: this module reads
  * the snapshot, and the view builders and components under `components/standings/` take what is
  * built here, so they can be reasoned about (and exercised from a test) without an `fs` read. It is not the only reader: the pages' `generateMetadata`, the
- * OG routes and the league card (`league-standings-card.tsx`) call `lib/data` directly too.
+ * OG routes and the league card (`league-standings-card.tsx`) call `lib/queries/` directly too.
  *
  * "Today" is never `Date.now()`: the through-date comes from the games themselves and the stamp
  * comes from `snapshot.fetchedAt`, so two builds of the same snapshot are byte-identical.
@@ -15,29 +15,21 @@ import {
   REGIONS, getLeague, isIndependentLeague, leagueOfDivision, leaguePlayStarts,
 } from '@/lib/config/leagues';
 import { standaloneName } from '@/lib/config/leagues/labels';
-import {
-  getCoLeaders,
-  getCrossCheck,
-  getFetchedAt,
-  getGames,
-  getGamesPlayedSpread,
-  getGoalDiffDomain,
-  getLastLeagueResultDate,
-  getLeagueSummaries,
-  getLeagueSummary,
-  getMissingOfficialResults,
-  getNonLeagueFinalsPlayed,
-  getStandingContext,
-  getStandings,
-  getTeams,
-  type LeagueSummary,
-} from '@/lib/data';
+import { getFetchedAt } from '@/lib/datasets/snapshot';
 import { shortDate } from '@/lib/format/dates';
 import { recordString } from '@/lib/format/numbers';
 import { plural } from '@/lib/format/words';
 import type { Game } from '@/lib/model/game';
 import type { DivisionId, LeagueId, RegionId } from '@/lib/model/ids';
 import { type RegionConfig } from '@/lib/model/league-config';
+import { getGames, getLastLeagueResultDate, getNonLeagueFinalsPlayed } from '@/lib/queries/games';
+import { type LeagueSummary, getLeagueSummaries, getLeagueSummary } from '@/lib/queries/leagues';
+import { getCrossCheck } from '@/lib/queries/provenance';
+import {
+  getCoLeaders, getGamesPlayedSpread, getGoalDiffDomain, getMissingOfficialResults, getStandingContext,
+  getStandings,
+} from '@/lib/queries/standings';
+import { getTeams } from '@/lib/queries/teams';
 import {
   buildDivisionView,
   buildOverviewDivision,
@@ -154,7 +146,7 @@ export function buildStandingsPageView(leagueId: LeagueId): StandingsPageView {
 export function buildNotice(leagueId: LeagueId, views: DivisionView[]): StandingsPageView['notice'] {
   if (views.some((v) => v.leagueFinals > 0)) return null;
   // The start date is config's (validated, so always set) and the count is games played so far,
-  // the same two facts the home PhaseLead reads (lib/config/leagues leaguePlayStarts, lib/data
+  // the same two facts the home PhaseLead reads (lib/config/leagues leaguePlayStarts, lib/queries/games
   // getNonLeagueFinalsPlayed), so the two notices cannot disagree.
   const nonLeagueFinals = getNonLeagueFinalsPlayed(leagueId);
   return {

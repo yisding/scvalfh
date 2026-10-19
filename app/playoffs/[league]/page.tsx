@@ -15,24 +15,18 @@ import Arrow from '@/components/ui/Arrow';
 import ExternalLink from '@/components/ui/ExternalLink';
 import LeagueHealthNote from '@/components/ui/LeagueHealthNote';
 import SectionHeader from '@/components/ui/SectionHeader';
-import { getDivision } from '@/lib/config/leagues';
-import {
-  getCcsField,
-  getLeagueTournament,
-  getSections,
-  getStandingContext,
-  getStandings,
-  getTeamById,
-  getTeamBySlug,
-} from '@/lib/data';
-import type { LeagueSummary } from '@/lib/data';
+import { SECTIONS, getDivision } from '@/lib/config/leagues';
 import { outcomesFor, playoffOutcomeLabel } from '@/lib/engine/standings';
 import { shortDate } from '@/lib/format/dates';
 import type { Team } from '@/lib/model/team';
+import type { LeagueSummary } from '@/lib/queries/leagues';
+import { getCcsField, getLeagueTournament } from '@/lib/queries/postseason';
+import { getStandingContext, getStandings } from '@/lib/queries/standings';
+import { getTeamById, getTeamBySlug } from '@/lib/registry/teams';
 
 /**
  * /playoffs/<league> — a league's own tournament (SPEC §6.2, §6.3, §10.7): "MCAL tournament — who
- * do we play?". Only league-tournament leagues have this page (`getTournamentLeagueIds()`, today
+ * do we play?". Only league-tournament leagues have this page (`TOURNAMENT_LEAGUE_IDS`, today
  * `mcal`); every other param 404s (`dynamicParams = false`), including the CCS leagues, whose
  * postseason lives on /playoffs.
  *
@@ -116,7 +110,7 @@ export default async function LeagueTournamentPage({ params }: PageProps<'/playo
   const found = tournamentLeague(league);
   if (!found) notFound();
   const { summary, config, ps } = found;
-  const section = getSections().find((s) => s.id === summary.section.id);
+  const section = SECTIONS.find((s) => s.id === summary.section.id);
   const view = viewFor(summary, ps);
   const ccsLeagues = getCcsField().byLeague.map((l) => l.shortName);
   const playInRound = ps.rounds.find((r) => r.round === 'play-in');

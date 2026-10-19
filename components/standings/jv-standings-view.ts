@@ -2,11 +2,11 @@
  * The JV tables' view model: one block per division on `/jv` (`#<division>`), and a team's JV
  * place for its team page.
  *
- * Every number comes from lib/jv.ts (lib/engine/jv/standings.ts: JV league games take their varsity
+ * Every number comes from lib/queries/jv.ts (lib/engine/jv/standings.ts: JV league games take their varsity
  * counterpart's classification; tables order on points; a table is shown only once enough of the
  * played JV league games have a score). The copy says which of those it is, in words.
  *
- * SERVER-ONLY: reads lib/jv, which imports data/jv.json and the snapshot.
+ * SERVER-ONLY: reads lib/queries/jv, which reads data/jv.json (lib/datasets/jv.ts) and the snapshot.
  */
 
 import { getDivision, getLeague, isSingleDivision } from '@/lib/config/leagues';
@@ -17,9 +17,9 @@ import {
 import { monthDay } from '@/lib/format/dates';
 import { ordinal, recordString } from '@/lib/format/numbers';
 import { listWords, plural } from '@/lib/format/words';
-import { getJvClassification, getJvTable, getJvTables } from '@/lib/jv';
 import type { DivisionId, LeagueId, TeamSlug } from '@/lib/model/ids';
 import type { Team } from '@/lib/model/team';
+import { getJvClassification, getJvTable, getJvTables } from '@/lib/queries/jv';
 import { getTeamBySlug } from '@/lib/registry/teams';
 
 export interface JvTableView {

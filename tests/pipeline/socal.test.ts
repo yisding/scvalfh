@@ -34,6 +34,7 @@ import { useCorpusModules } from '@/tests/support/corpus-modules';
 import { corpusSnapshotPath } from '@/tests/support/corpus-snapshot';
 import { CorpusReader, SOCAL_CORPUS, gameOf } from '@/tests/support/corpus';
 import { expectOk, runFixtureCli } from '@/tests/support/cli';
+import { loadQueries } from '@/tests/support/queries';
 import { readSnapshot } from '@/tests/support/repo';
 
 /**
@@ -72,7 +73,7 @@ function membershipRows(division: string): ScheduleRow[] {
   });
 }
 
-const m = useCorpusModules(SOCAL_CORPUS, { data: () => import('@/lib/data') });
+const m = useCorpusModules(SOCAL_CORPUS, { data: loadQueries });
 let snapshot: Snapshot;
 
 beforeAll(() => {

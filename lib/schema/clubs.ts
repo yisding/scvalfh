@@ -10,8 +10,8 @@
  * (notes[5]), each tie checked twice, and each club record is dated by its own `checkedOn`; nothing
  * rebuilds it. Its facts are fixed; this contract only says what shape they must have.
  *
- * Separate from lib/clubs.ts (the read API, which imports the file) so tests and scripts can parse
- * a file without loading one — the same split as lib/schema/rosters.ts / lib/rosters.ts.
+ * Separate from lib/datasets/clubs.ts (the read API, which imports the file) so tests and scripts can parse
+ * a file without loading one — the same split as lib/schema/rosters.ts / lib/datasets/rosters.ts.
  *
  * Invariants:
  *   1. club slugs are unique
@@ -23,7 +23,7 @@
  *   6. a quote is 1-300 characters (it is kept for maintainers and never rendered)
  *   7. `asOf` takes one of five shapes (isAsOf); `sourceDate` is free text ("2025 Fall Season")
  *   8. the join to data/rosters.json — the row exists, carries the same fullName, is not JV, and
- *      agrees with every stated class year — lives in lib/clubs.ts: this file cannot see the rosters
+ *      agrees with every stated class year — lives in lib/datasets/clubs.ts: this file cannot see the rosters
  *   9. `jvAffiliations` hold the same records for players on JV rows, under the same rules (1-8,
  *      except that each must join to a JV row); a player is in one list or the other, never both
  * 1-3 and 9's one-list rule are one file-level `superRefine(checkClubsFile)`, whose every failure is a named issue with
@@ -44,7 +44,7 @@ import { isCalendarDate, isHttpsUrl } from '@/lib/shared/patterns';
  * Where a club is based. Also the display order of /clubs' regions: Northern California's (DESIGN
  * §17.1), then Southern California's from Ventura County down to San Diego, then `elsewhere`. `sacramento` (D-City,
  * Roseville FHC) and `north-state` (Chico Hotshots) hold clubs met near the EAL teams' schools;
- * neither area was searched for every club (lib/clubs.ts SEARCHED_REGIONS). The five Southern
+ * neither area was searched for every club (lib/datasets/clubs.ts SEARCHED_REGIONS). The five Southern
  * California areas were added with the 2026-10-06 sweep of the Southern Section and San Diego
  * Section schools, and each was searched (`inland-empire` holds no club).
  */
@@ -267,7 +267,7 @@ export const AffiliationSourceSchema = z.object({
   quote: text.max(300),
   /** The school as the page names it, when it does. */
   statedSchool: text.nullable(),
-  /** The graduation year the page states; lib/clubs.ts checks it against the roster grade. */
+  /** The graduation year the page states; lib/datasets/clubs.ts checks it against the roster grade. */
   statedClassYear: z.number().int().min(2020).max(2040).nullable(),
   /** The page's own date, as it gives it: free text ("2025-26", "2025 Fall Season"). */
   sourceDate: text.nullable(),
@@ -277,7 +277,7 @@ export const ClubAffiliationSchema = z.object({
   teamSlug,
   /** The MaxPreps per-season athlete GUID: the join key to data/rosters.json. */
   athleteId: text,
-  /** As MaxPreps spells it; lib/clubs.ts refuses any other spelling. */
+  /** As MaxPreps spells it; lib/datasets/clubs.ts refuses any other spelling. */
   fullName: text,
   club: slugId,
   /** The club's own team name ("U19 Hawks Blue"), when a source gives one. */
@@ -295,7 +295,7 @@ const ClubsFileObject = z.object({
   /** How the file was made. */
   builtBy: text,
   capturedAt: dateOnly,
-  /** The roster season the affiliations join to ("26-27"); lib/clubs.ts checks it is rosters.json's. */
+  /** The roster season the affiliations join to ("26-27"); lib/datasets/clubs.ts checks it is rosters.json's. */
   season: z.string().regex(/^\d{2}-\d{2}$/, 'expected a season like 26-27'),
   /** Method, rules and recall, in words. */
   notes: z.array(text),

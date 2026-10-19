@@ -17,8 +17,9 @@ import { createElement } from 'react';
 import { describe, expect, it } from 'vitest';
 
 import { useCorpusModules } from '@/tests/support/corpus-modules';
+import { loadQueries } from '@/tests/support/queries';
 
-// The cards and OG routes are imported per test; the loaders are empty, so the file only points lib/data at the corpus.
+// The cards and OG routes are imported per test; the loaders are empty, so the file only points lib/datasets/snapshot.ts at the corpus.
 useCorpusModules('all-2026-10-02', {});
 
 /** Decode an 8-bit RGB or RGBA, non-interlaced PNG (what resvg writes) to rows of pixels. */
@@ -118,7 +119,7 @@ describe('the two-region leaders card (components/layout/og-region-card.tsx)', (
 
   it('both cards fit 1200×630 with every leader line forced to its longest, and render as PNG', async () => {
     const card = await import('@/components/layout/og-region-card');
-    const { getLeagueSummaries, getTeams } = await import('@/lib/data');
+    const { getLeagueSummaries, getTeams } = await loadQueries();
     const teams = getTeams();
     // Per division: the two longest short names as co-leaders of a three-way tie ("A & B +1 99 pts").
     const longest = card.regionCardColumns((leagueId) => {

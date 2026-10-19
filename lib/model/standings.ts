@@ -97,7 +97,7 @@ export interface TiebreakInfo {
   shared: boolean;
 }
 
-/** SHAPE UNCHANGED — only field types widen. Derived per-row facts live in lib/data.ts StandingContext. */
+/** SHAPE UNCHANGED — only field types widen. Derived per-row facts live in lib/queries/standings.ts StandingContext. */
 export interface Standing {
   teamId: TeamId;
   slug: TeamSlug;

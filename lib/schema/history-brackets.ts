@@ -32,7 +32,7 @@ function sectionSchema(sectionId: BracketSectionId) {
     seed: z.number().int().min(1).max(16),
     /** The source's own spelling ("Mt. Carmel HS", "St. Ignatius College Preparatory"). */
     name: z.string().min(1),
-    /** The join key: the page prints the registry name (lib/history.ts historySchoolName). */
+    /** The join key: the page prints the registry name (lib/datasets/history.ts historySchoolName). */
     slug: teamSlug,
   });
 

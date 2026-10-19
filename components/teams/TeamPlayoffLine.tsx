@@ -11,7 +11,7 @@ import type { TeamPageView } from './team-view';
 /**
  * 'MCAL tournament' | 'Super Regional' | 'San Diego Section playoffs' | 'playoff': the event a
  * result-less team has no place in. The Sunset ('no-postseason') never reaches it: its line is the
- * league's note whatever the team has played (lib/data.ts getTeamPostseasonLine).
+ * league's note whatever the team has played (lib/queries/postseason.ts getTeamPostseasonLine).
  */
 function postseasonPhrase(league: TeamPageView['league']): string {
   switch (league.postseasonKind) {
@@ -29,7 +29,7 @@ function postseasonPhrase(league: TeamPageView['league']): string {
 /**
  * Where this team stands in its league's postseason picture (SPEC §10.5): the CCS ladder for SCVAL,
  * BVAL and PCAL, the MCAL tournament for MCAL, the Super Regional for the EAL. The copy is `getTeamPostseasonLine(slug)` from
- * lib/data.ts — the same accessor the home page's pinned card uses — so the two cannot disagree:
+ * lib/queries/postseason.ts — the same accessor the home page's pinned card uses — so the two cannot disagree:
  *
  * - a CCS league: the ladder label, then the league's sentence (the SCVAL crossover date, BVAL's
  *   Oct 31 play-in, or "No automatic-berth route; …"), and `CCS playoffs →`;
@@ -37,7 +37,7 @@ function postseasonPhrase(league: TeamPageView['league']): string {
  *   berth meter and no CCS bracket link: the North Coast Section holds no field hockey
  *   championship, so a CCS concept on an MCAL page would be false (SPEC §10.9);
  * - the EAL: the status chip (a Super Regional place or outside the top six) and the Super
- *   Regional's dates and what is not published, from lib/data.ts. No CCS sentence, no CCS link and
+ *   Regional's dates and what is not published, from lib/queries/postseason.ts. No CCS sentence, no CCS link and
  *   no bracket, because none is published.
  * - the Sunset ('no-postseason'): the chip 'No section playoffs' and the league's note (CIF-SS Blue
  *   Book 2011.1, 3500.2), for every team whatever it has played; no "projected" line, because no place

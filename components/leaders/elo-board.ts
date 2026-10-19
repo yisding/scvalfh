@@ -13,7 +13,8 @@
  */
 
 import { regionOf } from '@/lib/config/leagues';
-import { getSnapshot } from '@/lib/data';
+import { getPriorSeason } from '@/lib/datasets/prior-season';
+import { getSnapshot } from '@/lib/datasets/snapshot';
 import {
   ELO_BASE, ELO_PER_GOAL, MARGIN_CAP, type RatingTable, type TeamRating, ratingGames,
 } from '@/lib/engine/ratings';
@@ -21,7 +22,6 @@ import { plural } from '@/lib/format/words';
 import type { Game } from '@/lib/model/game';
 import type { RegionId, TeamSlug } from '@/lib/model/ids';
 import type { Team } from '@/lib/model/team';
-import { getPriorSeason } from '@/lib/prior-season';
 import { getRatings } from '@/lib/queries/ratings';
 import type { PriorSeason } from '@/lib/schema/prior-season';
 import { num, schoolBoard } from './board-kit';

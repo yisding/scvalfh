@@ -201,7 +201,7 @@ cifsshome.org         ──┘  (cross-check only)
    (counts, timestamps, a per-league summary: what the update-data workflow uses for its commit
    message and job summary).
 3. **`next build`** (or `vite build` under vinext) reads the `data/` JSON files the read APIs
-   import (`data/snapshot.json` via `lib/data.ts`, plus the files listed under "Local
+   import (`data/snapshot.json` via `lib/datasets/snapshot.ts`, plus the files listed under "Local
    development") and prerenders every route — there is no request-time fetch, no database and no
    `searchParams` anywhere. "Today" for rendering purposes is always derived from the snapshot's
    `fetchedAt`, never `Date.now()`, so a given commit builds byte-identically no matter when
@@ -370,7 +370,7 @@ Academy's first-name-and-initial list); a team without it says "we have not chec
 sources" rather than claim there are none. It only ever fills a blank; where a source disagrees
 with MaxPreps, MaxPreps stays and the disagreement is recorded; where sources disagree with each
 other on a grade MaxPreps leaves blank, the grade stays blank and each source is recorded the same
-way, under the player's `conflicts`. Every value carries its source URL, kind and a confidence. `lib/rosters.ts` is the read API:
+way, under the player's `conflicts`. Every value carries its source URL, kind and a confidence. `lib/datasets/rosters.ts` is the read API:
 `getTeamRoster(slug)` is MaxPreps alone, `getEnrichedTeamRoster(slug)` the merged view with
 per-field provenance, conflicts and coaches, `sortedPlayers(team)` the display order. Every team
 page, in all nine leagues and the five independents, renders it in a Roster section (`components/teams/TeamRoster.tsx`,
@@ -427,7 +427,7 @@ dropped. On 2026-10-03, 28 of the 43 teams had published stats (312 players, 41 
 (404 players, 63 goalkeepers; five EAL teams, Corning none); on 2026-10-06, with the 50 Southern
 California teams, 62 of the 99 (758 players); on 2026-10-06, with the three independents,
 63 of the 102 (776 players; Harvard-Westlake's 18, Glendora and Thousand Oaks none); where MaxPreps answers "No data was found" the file says `status: "none"`, and a team no
-run has covered yet is `status: "pending"`. `lib/player-stats.ts` is the read API; each team page
+run has covered yet is `status: "pending"`. `lib/datasets/player-stats.ts` loads it and `lib/queries/player-stats.ts` adds the game-note stats; each team page
 renders it in a Player stats section (`components/teams/TeamPlayerStats.tsx`, built by
 `components/teams/player-stats-view.ts`), which says when MaxPreps last updated and how many games
 the team has played since. See `docs/DATA-SOURCES.md` §1.1k.
@@ -528,7 +528,7 @@ score for, and adds a game MaxPreps does not list when MaxPreps has no JV game o
 score stays and si.com's is noted under the row. A game si.com lists twice with different scores,
 or two si.com games equally near one MaxPreps game, is never used. On 2026-10-05 si.com filled 7
 scores, added 12 games (mostly PCAL, where MaxPreps had one JV score) and disagreed on 3.
-`lib/jv.ts` is the read API; `components/teams/jv-view.ts` builds both lists
+`lib/datasets/jv.ts` loads it and `lib/queries/jv.ts` is the read API; `components/teams/jv-view.ts` builds both lists
 (`components/teams/TeamJvGames.tsx`, `components/schedule/JvDayGames.tsx`).
 
 `update-data.yml` runs it after `fetch-player-stats`, on the same terms: it may fail without
@@ -593,7 +593,7 @@ The rules:
   page and "Listed club" on the roster; a `past` one reads "Earlier".
 
 Checked at load, so a bad file fails `pnpm test` and the build (`lib/schema/clubs.ts`, then the
-join in `lib/clubs.ts`): club slugs are unique, every affiliation names a club, and
+join in `lib/datasets/clubs.ts`): club slugs are unique, every affiliation names a club, and
 (team, athlete, club) is unique; https only, never social media; at least one source per club and
 per affiliation; `asOf` is a date, a month, a year, a season (`2025-26`) or a range (`2015-2018`);
 the file's `season` is `data/rosters.json`'s; every affiliation joins a row of that team under the
@@ -654,14 +654,14 @@ club records (each re-read from the club's own site).
 Nothing refreshes it, and re-running it is research. Recall is partial: see `docs/DATA-SOURCES.md`
 §1.1j2 for the sources, the gotchas and the count by school.
 
-**When a roster refetch breaks it.** `lib/clubs.ts` throws at import if `pnpm fetch-rosters` drops
+**When a roster refetch breaks it.** `lib/datasets/clubs.ts` throws at import if `pnpm fetch-rosters` drops
 or respells a tied player's row, if the overlay marks that row JV, or if a season rollover moves
 `data/rosters.json` to a season `data/clubs.json` is not for; `pnpm test` and the build then fail
 with `clubs: <team> / <player> (<club>): <what>`. Re-check that affiliation's sources, then edit or
 drop it by hand (on a rollover, redo the research for the new season). Never prune it
 automatically.
 
-`lib/clubs.ts` is the read API: `getClubs()` and `getClubSlugs()` in display order (region, then
+`lib/datasets/clubs.ts` is the read API: `getClubs()` and `getClubSlugs()` in display order (region, then
 most tied players, then name), `getClub(slug)`, `getClubAffiliations(slug)`,
 `getTeamClubAffiliations(team)` and `getPlayerClubs(team, athleteId)` (current, then listed, then
 earlier). `components/clubs/club-view.ts` builds every view and chooses every word the pages say
@@ -700,7 +700,7 @@ college's club team. A commitment in another sport counts (since 2026-10-04): th
 field hockey, but its players commit to lacrosse, soccer and other college teams too, and every
 page names the sport.
 
-Checked at load (`lib/schema/commits.ts`, then the join in `lib/commits.ts`): college slugs are
+Checked at load (`lib/schema/commits.ts`, then the join in `lib/datasets/commits.ts`): college slugs are
 unique, every commitment names a college that has a program in its sport, every college and every
 program has a commitment, a college has one program per sport, one commitment per player; https only, never social media except an `official-social` source that is a post by the account it names; a source for every college and commitment; the file's
 `season` is `data/rosters.json`'s; every commitment joins a non-JV row of that team under its own
@@ -787,13 +787,13 @@ the revised nickname rule, a twelfth: Sami Lee to Columbia, kept by a fresh chec
 SportsRecruits' athlete search was not run for these rows. Recall is partial: see `docs/DATA-SOURCES.md` §1.1j3
 for the sources, what was rejected and why, and the gaps.
 
-**When a roster refetch breaks it.** `lib/commits.ts` throws at import, as `lib/clubs.ts` does, if
+**When a roster refetch breaks it.** `lib/datasets/commits.ts` throws at import, as `lib/datasets/clubs.ts` does, if
 `pnpm fetch-rosters` drops or respells a committed player's row, if the overlay marks it JV, or if a
 season rollover moves `data/rosters.json` to another season; `pnpm test` and the build then fail
 with `commits: <team> / <player> (<college>): <what>`. Re-check the commitment's sources, then edit
 or drop it by hand. On a rollover the seniors graduate: redo the research for the new season.
 
-`lib/commits.ts` is the read API: `getCommitments()` in display order (class, then school, then
+`lib/datasets/commits.ts` is the read API: `getCommitments()` in display order (class, then school, then
 name), `getColleges()` (most players first), `getCollege(slug)`, `commitProgram(commitment)` (its
 college's team in its sport, with that team's level), `getCollegeCommitments(slug)`,
 `getTeamCommitments(team)`, `getPlayerCommitment(team, athleteId)` and `commitClassOf(commitment)`.
@@ -842,15 +842,15 @@ into its server code, each imported by its read module, so no server reads `data
 
 | File | Read by |
 |---|---|
-| `data/snapshot.json` | `lib/data.ts` |
-| `data/history-2025-26.json` | `lib/history.ts` |
-| `data/history-brackets-2025-26.json` | `lib/history.ts` |
-| `data/prior-season.json` | `lib/prior-season.ts` |
-| `data/player-stats.json` | `lib/player-stats.ts` |
-| `data/jv.json` | `lib/jv.ts` |
-| `data/rosters.json`, `data/rosters-enrichment.json` | `lib/rosters.ts` |
-| `data/clubs.json` | `lib/clubs.ts` |
-| `data/commits.json` | `lib/commits.ts` |
+| `data/snapshot.json` | `lib/datasets/snapshot.ts` |
+| `data/history-2025-26.json` | `lib/datasets/history.ts` |
+| `data/history-brackets-2025-26.json` | `lib/datasets/history.ts` |
+| `data/prior-season.json` | `lib/datasets/prior-season.ts` |
+| `data/player-stats.json` | `lib/datasets/player-stats.ts` |
+| `data/jv.json` | `lib/datasets/jv.ts` |
+| `data/rosters.json`, `data/rosters-enrichment.json` | `lib/datasets/rosters.ts` |
+| `data/clubs.json` | `lib/datasets/clubs.ts` |
+| `data/commits.json` | `lib/datasets/commits.ts` |
 
 The vinext scripts read the
 same `app/` and `next.config.ts`; vinext adds `vite.config.ts`, `cloudflare.config.ts` for the
@@ -934,8 +934,8 @@ Tests that render against a corpus do not build it themselves. Vitest's `globalS
 all-leagues `--no-sblive`, EAL and SoCal corpora), concurrently, into a temporary directory that the
 run removes at the end. Nothing is cached between runs, so a snapshot can never be stale against the
 code under test; a test that needs another corpus or flag adds a row to the table. A test file that
-loads `lib/data` over a corpus calls `useCorpusModules(corpus, { data: () => import('@/lib/data'), … })`
-from `tests/support/corpus-modules.ts`, which points `lib/data` at the snapshot, resets the module
+loads the read API over a corpus calls `useCorpusModules(corpus, { data: loadQueries, … })` (`loadQueries`
+from `tests/support/queries.ts`) from `tests/support/corpus-modules.ts`, which points `lib/datasets/snapshot.ts` at the snapshot, resets the module
 registry and imports the modules fresh for that file (`useSnapshotModules` does the same for a
 snapshot file the test writes itself, and the `with…` forms load a second graph inside a test).
 `vitest.config.ts` splits the suite into three named projects: `arch` (`tests/arch/**`, run alone with

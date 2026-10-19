@@ -15,19 +15,15 @@ import { countGames } from '@/components/schedule/filter-data';
 import { scheduleFilterProps } from '@/components/schedule/filter-data-server';
 import LeagueHealthNote from '@/components/ui/LeagueHealthNote';
 import SectionHeader from '@/components/ui/SectionHeader';
-import { isIndependentLeague } from '@/lib/config/leagues';
+import { LEAGUE_IDS, isIndependentLeague } from '@/lib/config/leagues';
 import { leagueSportWords, standaloneName } from '@/lib/config/leagues/labels';
 import { SEASON_DISPLAY } from '@/lib/config/season';
-import {
-  getGamesByDate,
-  getLeagueIds,
-  getLeagueSummary,
-  getOfficialFixtures,
-  getTeams,
-  getToday,
-} from '@/lib/data';
+import { getToday } from '@/lib/datasets/snapshot';
 import { monthDay } from '@/lib/format/dates';
 import { plural } from '@/lib/format/words';
+import { getGamesByDate, getOfficialFixtures } from '@/lib/queries/games';
+import { getLeagueSummary } from '@/lib/queries/leagues';
+import { getTeams } from '@/lib/queries/teams';
 
 
 /**
@@ -62,7 +58,7 @@ function scheduleTitle(summary: { id: string; shortName: string }): string {
 export const dynamicParams = false;
 
 export function generateStaticParams(): { league: string }[] {
-  return getLeagueIds().map((league) => ({ league }));
+  return LEAGUE_IDS.map((league) => ({ league }));
 }
 
 export async function generateMetadata({ params }: PageProps<'/schedule/[league]'>): Promise<Metadata> {

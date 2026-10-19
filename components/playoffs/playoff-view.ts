@@ -1,6 +1,6 @@
 /**
  * The pure view models behind /playoffs (CCS) and /playoffs/<league> (league tournaments). No `fs`
- * and no `lib/data`: the pages read the snapshot and hand plain records down, so every builder here
+ * and no `lib/queries/`: the pages read the snapshot and hand plain records down, so every builder here
  * is testable and safe anywhere. The only runtime imports are `lib/format/`, the pure config in
  * `lib/config/leagues` (for `ladderFactsFor`) and the standings view's `ladderLineAfter` (the seeds'
  * tournament line). Server-only: no client component imports this module.
@@ -153,7 +153,7 @@ export interface ProjectionRow {
    * vanish from the division.
    */
   statuses: PlayoffStatus[];
-  /** The WRITTEN status from lib/data's projection — never a percentage (DESIGN §7.11). */
+  /** The WRITTEN status from lib/queries/postseason.ts' projection — never a percentage (DESIGN §7.11). */
   label: string;
   /** This place is shared with another team and we render them level. */
   shared: boolean;
@@ -408,7 +408,7 @@ export interface PairingView {
 }
 
 /**
- * One `LeaguePairing` (lib/data `getLeaguePairings`) with its seats resolved to teams. Seat labels
+ * One `LeaguePairing` (lib/queries/postseason `getLeaguePairings`) with its seats resolved to teams. Seat labels
  * come from config, never from a division literal; the host seat (BVAL) is marked. Two level
  * co-champions hosting a play-in are both named, with the by-law that decides who hosts.
  */

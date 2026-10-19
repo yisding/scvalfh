@@ -40,7 +40,7 @@
  * that track them.
  *
  * Pure: everything it reads is passed in, so scripts/fetch-player-stats.ts can use it without
- * loading the files it is about to write. lib/player-stats.ts wires it to the committed data.
+ * loading the files it is about to write. lib/queries/player-stats.ts wires it to the committed data.
  */
 
 import { NAME_ALIASES, type NameAlias } from '@/lib/config/name-aliases';

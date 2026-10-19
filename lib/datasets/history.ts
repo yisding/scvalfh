@@ -9,7 +9,7 @@
  * a league URL is cosmetic and always returns the CURRENT table (SPEC §1.1h) — so the daily cron has
  * nothing to fetch and this file is committed, built once by `scripts/build-history.ts`.
  *
- * Loaded and validated once at module scope, like lib/data.ts (and bundled at build time the same
+ * Loaded and validated once at module scope, like lib/datasets/snapshot.ts (and bundled at build time the same
  * way), so a bad file fails at import time rather than half-way through a render.
  */
 
@@ -17,18 +17,18 @@ import { readFileSync } from 'node:fs';
 
 import bundledBrackets from '@/data/history-brackets-2025-26.json';
 import bundledHistory from '@/data/history-2025-26.json';
-import { LEAGUE_IDS, getLeague, getSection } from './config/leagues';
-import type { DivisionId, LeagueId, SectionId, TeamSlug } from './model/ids';
-import { getTeamBySlug } from './registry/teams';
+import { LEAGUE_IDS, getLeague, getSection } from '@/lib/config/leagues';
+import type { DivisionId, LeagueId, SectionId, TeamSlug } from '@/lib/model/ids';
+import { getTeamBySlug } from '@/lib/registry/teams';
 import {
   type AvailableLeagueHistory, type History, type HistoryAwards, type HistoryDivision, type HistoryLevel,
   type HistoryRow, HistorySchema, type LeagueHistory, type UnavailableLeagueHistory,
-} from './schema/history';
+} from '@/lib/schema/history';
 import {
   BRACKET_SECTION_IDS, type BracketSectionId, type HistoryBracketGame, type HistoryBracketSide,
   HistoryBracketsSchema, type SectionBracket,
-} from './schema/history-brackets';
-import { failValidation } from './schema/primitives';
+} from '@/lib/schema/history-brackets';
+import { failValidation } from '@/lib/schema/primitives';
 
 export type {
   AvailableLeagueHistory,
@@ -40,7 +40,7 @@ export type {
   HistoryRow,
   LeagueHistory,
   UnavailableLeagueHistory,
-} from './schema/history';
+} from '@/lib/schema/history';
 export type {
   BracketSectionId,
   HistoryBracketDivision,
@@ -48,11 +48,11 @@ export type {
   HistoryBracketRound,
   HistoryBracketSide,
   SectionBracket,
-} from './schema/history-brackets';
+} from '@/lib/schema/history-brackets';
 
 /**
  * data/history-2025-26.json is imported, so the build bundles it, for the reason given in
- * lib/data.ts: a Worker has no project filesystem, and this module loads on the first
+ * lib/datasets/snapshot.ts: a Worker has no project filesystem, and this module loads on the first
  * /history/2025-26 request in every Worker instance, cached page or not (the route's modules load
  * before the cache read). A missing file is a build error: run `pnpm build-history`. SCVAL_HISTORY
  * still swaps in another file through node:fs (Node only; never set it on a Worker).
@@ -66,7 +66,7 @@ function load(): History {
       text = readFileSync(override, 'utf8');
     } catch (err) {
       throw new Error(
-        `lib/history.ts: cannot read SCVAL_HISTORY=${override} (${(err as Error).message})`,
+        `lib/datasets/history.ts: cannot read SCVAL_HISTORY=${override} (${(err as Error).message})`,
       );
     }
     raw = JSON.parse(text) as unknown;

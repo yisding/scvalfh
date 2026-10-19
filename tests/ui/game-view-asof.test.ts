@@ -12,9 +12,10 @@
 import { describe, expect, it } from 'vitest';
 
 import { useCorpusModules } from '@/tests/support/corpus-modules';
+import { loadQueries } from '@/tests/support/queries';
 
 const L = useCorpusModules('all-2026-10-02', {
-  d: () => import('@/lib/data'),
+  d: loadQueries,
   m: () => import('@/components/game/game-view'),
   leagues: () => import('@/lib/config/leagues'),
   labels: () => import('@/lib/config/leagues/labels'),

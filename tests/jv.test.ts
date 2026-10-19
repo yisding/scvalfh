@@ -14,9 +14,10 @@ import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 import { buildDayJvView, buildTeamJvView, jvDiffersNote } from '@/components/teams/jv-view';
+import { getJvFile, getJvTeam } from '@/lib/datasets/jv';
 import { JV_FILL_NOTE, mergeJv } from '@/lib/engine/jv/merge';
-import { getJvFile, getJvGamesForTeam, getJvMerge, getJvTeam } from '@/lib/jv';
 import type { Game } from '@/lib/model/game';
+import { getJvGamesForTeam, getJvMerge } from '@/lib/queries/jv';
 import {
   JV_SBLIVE_PATHS, JV_SLUG_BY_SBLIVE_ID, jvMaxprepsScheduleUrl, jvSbliveGamesUrl, jvSbliveTeamId,
 } from '@/lib/registry/jv-teams';

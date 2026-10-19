@@ -12,7 +12,7 @@ import { keyOf } from '@/tests/support/global-setup';
 /**
  * The snapshot of a whole corpus run (the real cron script, the corpus's own `fetchedAt`) that
  * global-setup built for this `vitest run`; the meta file is beside it (`*.meta.json`). A test file
- * that renders against a corpus points lib/data at it with `useCorpusModules`
+ * that renders against a corpus points lib/datasets/snapshot.ts at it with `useCorpusModules`
  * (tests/support/corpus-modules.ts). The corpus and flags must be listed in SNAPSHOT_CORPORA.
  */
 export function corpusSnapshotPath(corpus: CorpusName, opts: { extraArgs?: readonly string[] } = {}): string {

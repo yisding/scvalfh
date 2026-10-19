@@ -27,7 +27,7 @@ import {
 import { buildTeamPageView } from '@/components/teams/team-view';
 import { LEAGUE_IDS } from '@/lib/config/leagues';
 import type { Game } from '@/lib/model/game';
-import { getAllPlayerStatsWithNotes } from '@/lib/player-stats';
+import { getAllPlayerStatsWithNotes } from '@/lib/queries/player-stats';
 import { TEAMS, teamsInLeague } from '@/lib/registry/teams';
 import type { GoalieStatKey, PlayerStatLine, TeamPlayerStats as TeamStats } from '@/lib/schema/player-stats';
 import { buildFixturePlayerStats } from '@/tests/support/cli';

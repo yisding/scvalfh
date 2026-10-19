@@ -7,10 +7,10 @@
 import { describe, expect, it } from 'vitest';
 
 import { SEASON_YEAR } from '@/lib/config/season';
+import { getPriorSeason } from '@/lib/datasets/prior-season';
 import {
   PRIOR_EXCLUDED_CONTEST_IDS, previousMaxprepsYear, priorGamesFromFeeds, seasonLabel,
 } from '@/lib/pipeline/prior-season-feeds';
-import { getPriorSeason } from '@/lib/prior-season';
 import { TEAMS, getTeamBySlug } from '@/lib/registry/teams';
 import { type PriorSeason, PriorSeasonSchema, seasonWindow } from '@/lib/schema/prior-season';
 import { ScheduleRowSchema, type ScheduleRow } from '@/lib/sources/maxpreps';

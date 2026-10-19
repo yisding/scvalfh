@@ -3,9 +3,9 @@
  * league of lib/config/leagues.ts with its final standings and awards from an official source, or the
  * reason it has none.
  *
- * Separate from lib/history.ts (the read API, which imports and validates the file at module
+ * Separate from lib/datasets/history.ts (the read API, which imports and validates the file at module
  * scope) so scripts/build-history.ts can validate the file it is about to write without importing
- * the one it is about to overwrite — the same split as lib/schema/rosters.ts / lib/rosters.ts.
+ * the one it is about to overwrite — the same split as lib/schema/rosters.ts / lib/datasets/rosters.ts.
  */
 
 import { z } from 'zod';
@@ -34,7 +34,7 @@ function leagueSchema(leagueId: LeagueId) {
       place: z.number().int().min(1),
       /**
        * Verbatim source spelling, e.g. "St. Francis" where the registry says "Saint Francis". Kept
-       * as provenance; the page prints the registry name (lib/history.ts historySchoolName).
+       * as provenance; the page prints the registry name (lib/datasets/history.ts historySchoolName).
        */
       name: z.string().min(1),
       slug: teamSlug.nullable(),

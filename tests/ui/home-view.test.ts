@@ -9,11 +9,13 @@ import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { beforeAll, describe, expect, it } from 'vitest';
 
+import { getTeamBySlug } from '@/lib/registry/teams';
 import { useCorpusModules } from '@/tests/support/corpus-modules';
 
 import { POSTSEASON_LEAD, postseasonCardLine, rungCardText } from '@/components/home/home-types';
 
 import { textOf } from '@/tests/support/html-text';
+import { loadQueries } from '@/tests/support/queries';
 import { width } from '@/tests/support/text-metrics';
 
 const m = useCorpusModules('all-2026-10-02', {
@@ -256,7 +258,7 @@ describe('home panels (components/home/home-view.ts → LeaguePanel)', () => {
     });
     expect(lead('independents', 'regular', '2026-09-08'), `${HV}: independents in season`).toBeNull();
     // Before the first league date (config's, lib/config/leagues leaguePlayStarts), counting the
-    // non-league finals played by that day only (lib/data getNonLeagueFinalsPlayed).
+    // non-league finals played by that day only (lib/queries/games getNonLeagueFinalsPlayed).
     expect(lead('scval', 'regular', '2026-09-01'), `${HV}: SCVAL before league play`).toEqual({
       lead: 'SCVAL league play starts Wed Sep 9.',
       body: 'These tables count league games only, so the 15 non-league games played so far are on the schedule and in the overall records, not in the standings.',
@@ -491,7 +493,7 @@ describe('the pinned card (components/home/MyTeamCard.tsx ← home-view.ts team 
     expect(tam.meta, `${HV}: single-division meta`).toBe('1st · MCAL');
     for (const v of data.teamViews) {
       // A team with no result is never placed, except that a Sunset team's line is the league's "no
-      // playoffs" note whatever it has played (lib/data getTeamPostseasonLine).
+      // playoffs" note whatever it has played (lib/queries/postseason getTeamPostseasonLine).
       const noPostseason = m.leagues.NO_POSTSEASON_LEAGUE_IDS.includes(m.leagues.getLeague(cardTeamLeague(v.slug)).id);
       if (!v.hasResults && !noPostseason) expect(v.postseason, `${HV}: ${v.slug} gp 0 has no postseason line`).toBeNull();
       const html = renderToStaticMarkup(createElement(PinnedCard, { view: v, team: cardTeam(v.slug), onUnpin: () => {} }));
@@ -504,13 +506,13 @@ describe('the pinned card (components/home/MyTeamCard.tsx ← home-view.ts team 
   });
 
   it('"Last" is the newest PLAYED game: a score-pending one shows as unreported, never as a final', async () => {
-    const d = await import('@/lib/data');
+    const d = await loadQueries();
     const { describeGame } = await import('@/components/ui/describe-game');
     const { gameHref } = await import('@/lib/shared/game-id');
     const { PinnedCard } = await import('@/components/home/MyTeamCard');
     let pending = 0;
     for (const v of data.teamViews) {
-      const team = d.getTeamBySlug(v.slug)!;
+      const team = getTeamBySlug(v.slug)!;
       const played = d
         .getGames({ teamId: team.id })
         .filter((g) => (g.status === 'final' || g.status === 'score-pending') && g.dateKey <= data.today)

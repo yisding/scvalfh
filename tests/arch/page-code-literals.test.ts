@@ -7,7 +7,7 @@
  * count):
  *  1. no league or division id as a string literal ('scval', 'bval', 'pcal', 'mcal', 'de-anza',
  *     'el-camino', 'mt-hamilton', 'santa-teresa', 'marin-county', …): ids come from lib/config/leagues.ts or
- *     lib/data.ts (lib/history.ts for which leagues have a 2025-26 archive);
+ *     lib/queries/leagues.ts (lib/datasets/history.ts for which leagues have a 2025-26 archive);
  *  2. no `/game/${…}` template literal: game links go through gameHref (a `sblive:` id would 404).
  *
  * And over every SOURCE_ROOTS file: no `SOURCE_LINKS.scval*` access (the league links moved to
@@ -73,7 +73,7 @@ function scan(file: string, sf: ts.SourceFile = parse(file)): Finding[] {
         // A module specifier is not a literal id (no such module exists, but be exact). Nor is a literal TYPE:
         // `Pick<Team, 'city'>` names Team's `city` field, and the league id 'city' only ever arrives as data.
         if (!(node.parent && (ts.isImportDeclaration(node.parent) || ts.isExportDeclaration(node.parent) || ts.isLiteralTypeNode(node.parent)))) {
-          at(node, `league/division id literal '${node.text}' (read ids from lib/config/leagues.ts or lib/data.ts)`);
+          at(node, `league/division id literal '${node.text}' (read ids from lib/config/leagues.ts or lib/queries/leagues.ts)`);
         }
       }
       if (ts.isTemplateExpression(node) && /\/game\/\$\{/.test(node.getText(sf))) {

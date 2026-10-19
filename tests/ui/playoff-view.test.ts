@@ -4,7 +4,7 @@
  * dates, and the rendered CCS page.
  *
  * League-specific values are asserted on the all-2026-10-02 CORPUS snapshot (SPEC §13.6), loaded
- * through useCorpusModules (tests/support/corpus-modules.ts), which points lib/data at it before it is
+ * through useCorpusModules (tests/support/corpus-modules.ts), which points lib/datasets/snapshot.ts at it before it is
  * imported, so live fetch #2 cannot break them. On that snapshot De Anza's 3rd place is
  * shared (Los Altos, Valley Christian), El Camino's 4th straddles the play-in and at-large places,
  * Santa Teresa's champions are level (Prospect, Westmont) and Mt. Hamilton's 4th is shared — every
@@ -19,14 +19,16 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import type { ProjectionRow } from '@/components/playoffs/playoff-view';
 import { listWords } from '@/lib/format/words';
 import type { PlayoffStatus } from '@/lib/model/standings';
+import { getTeamById } from '@/lib/registry/teams';
 import { useCorpusModules } from '@/tests/support/corpus-modules';
 import { textOf } from '@/tests/support/html-text';
+import { loadQueries } from '@/tests/support/queries';
 
 const VIEW = 'components/playoffs/playoff-view.ts';
 const PAGE = 'app/playoffs/page.tsx';
 
 const m = useCorpusModules('all-2026-10-02', {
-  data: () => import('@/lib/data'),
+  data: loadQueries,
   view: () => import('@/components/playoffs/playoff-view'),
   leagues: () => import('@/lib/config/leagues'),
   labels: () => import('@/lib/config/leagues/labels'),
@@ -41,7 +43,7 @@ beforeAll(() => {
 function liveRows(division: string): ProjectionRow[] {
   const league = m.leagues.leagueOfDivision(division).id;
   return m.data.getPlayoffProjection(league).byDivision[division].flatMap((row) => {
-    const team = m.data.getTeamById(row.teamId);
+    const team = getTeamById(row.teamId);
     const standing = m.data.getStandingFor(row.teamId);
     if (!team || !standing) return [];
     return [{ team, standing, status: row.status, statuses: row.statuses, label: row.label, shared: row.shared }];
@@ -276,7 +278,7 @@ describe('buildPairingView — the BVAL play-in card', () => {
   it('marks the Santa Teresa #1 seat as host and names both co-champions with the by-law that decides', () => {
     const [pairing] = m.data.getLeaguePairings('bval');
     const resolve = (id: string) => {
-      const team = m.data.getTeamById(id);
+      const team = getTeamById(id);
       return team ? { team, standing: m.data.getStandingFor(id) } : undefined;
     };
     const v = m.view.buildPairingView(pairing, resolve, m.view.pairingNotesFor(pairing));
@@ -301,7 +303,7 @@ describe('buildPairingView — the BVAL play-in card', () => {
     const v = m.view.buildPairingView(
       pairing,
       (id) => {
-        const team = m.data.getTeamById(id);
+        const team = getTeamById(id);
         return team && team.slug !== 'willow-glen' ? { team, standing: m.data.getStandingFor(id) } : undefined;
       },
       m.view.pairingNotesFor(pairing),
@@ -315,7 +317,7 @@ describe('buildPairingView — the BVAL play-in card', () => {
   it('SCVAL crossover: seat labels from config, no host, the play-in last', () => {
     const views = m.data.getLeaguePairings('scval').map((p) =>
       m.view.buildPairingView(p, (id) => {
-        const team = m.data.getTeamById(id);
+        const team = getTeamById(id);
         return team ? { team, standing: m.data.getStandingFor(id) } : undefined;
       }, m.view.pairingNotesFor(p)),
     );
@@ -371,7 +373,7 @@ describe('row copy', () => {
 
   it('reads the row link’s record in words and never says "1 points"', () => {
     const standing = m.data.getStandingFor('fremont')!;
-    const team = m.data.getTeamById(standing.teamId)!;
+    const team = getTeamById(standing.teamId)!;
     const row = {
       team,
       standing: { ...standing, hasReportedResults: true, computed: { ...standing.computed, w: 0, l: 6, t: 1, pts: 1 } },

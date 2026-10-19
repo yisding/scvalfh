@@ -1,5 +1,5 @@
 /**
- * SPEC §12.2 (end-to-end): the site read API (lib/data.ts) over the all-2026-10-02 corpus snapshot
+ * SPEC §12.2 (end-to-end): the site read API (lib/queries/) over the all-2026-10-02 corpus snapshot
  * built by the real pipeline — once with si.com (the cron default) and once with --no-sblive. §7.9
  * fixes the expected PCAL tables; the D2 corpus fills (6541425, 6543072 absent-fixture; 6499423
  * score-pending) are asserted here because they need the official step's unmatched fixtures and
@@ -15,14 +15,16 @@ import { readFileSync } from 'node:fs';
 
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
+import { LEAGUE_IDS } from '@/lib/config/leagues';
 import type { DivisionId, LeagueId } from '@/lib/model/ids';
 import type { Snapshot } from '@/lib/model/snapshot';
 import type { Standing } from '@/lib/model/standings';
 import { loadSnapshot } from '@/lib/snapshot/load';
 import { withSnapshotModules } from './support/corpus-modules';
 import { corpusSnapshotPath } from './support/corpus-snapshot';
+import { type Queries, loadQueries } from './support/queries';
 
-type DataModule = typeof import('@/lib/data');
+type DataModule = Queries;
 
 interface Variant {
   name: 'si.com' | '--no-sblive';
@@ -35,7 +37,7 @@ const variants: Variant[] = [];
 let release: () => void = () => {};
 
 async function load(name: Variant['name'], file: string): Promise<Variant> {
-  const loaded = await withSnapshotModules(file, { data: () => import('@/lib/data') });
+  const loaded = await withSnapshotModules(file, { data: loadQueries });
   release = loaded.release;
   const snapshot = loadSnapshot(JSON.parse(readFileSync(file, 'utf8')) as unknown);
   return { name, file, snapshot, data: loaded.modules.data };
@@ -58,7 +60,7 @@ function table(rows: readonly Standing[]): string[] {
 
 function rowsOf(v: Variant, league: LeagueId, division: DivisionId): Standing[] {
   if (!v.data.getLeagueSummary(league)?.divisions.some((d) => d.id === division)) {
-    throw new Error(`lib/data.ts getLeagueSummary('${league}'): no ${division} table`);
+    throw new Error(`lib/queries/leagues.ts getLeagueSummary('${league}'): no ${division} table`);
   }
   return v.data.getStandings(division);
 }
@@ -77,12 +79,12 @@ const MCAL_TABLE = [
 
 const MCAL_SEEDS = ['tamalpais', 'university-sf', 'redwood', 'marin-catholic', 'convent-sacred-heart', 'lick-wilmerding'];
 
-describe('both runs: the corpus leagues through lib/data', () => {
+describe('both runs: the corpus leagues through lib/queries', () => {
   it('serve 102 teams, every corpus league fresh (the EAL, SoCal and the independents frozen), and the configured division tables', () => {
     for (const v of variants) {
       expect(v.data.getCounts().teams, `lib/pipeline/steps/assemble.ts: teams [${v.name}]`).toBe(102);
       expect(
-        v.data.getLeagueIds().map((l) => `${l}:${v.data.getLeagueHealth(l).state}`),
+        LEAGUE_IDS.map((l) => `${l}:${v.data.getLeagueHealth(l).state}`),
         `lib/pipeline/steps/standings.ts: LeagueHealth states [${v.name}]`,
       ).toEqual([
         'scval:fresh',
@@ -99,7 +101,7 @@ describe('both runs: the corpus leagues through lib/data', () => {
       const shape = (['scval', 'bval', 'pcal', 'mcal', 'eal'] as const).map((l) =>
         v.data.getLeagueSummary(l)!.divisions.map((d) => `${d.id}:${d.heading ?? '-'}:${v.data.getStandings(d.id).length}`),
       );
-      expect(shape, `lib/data.ts getStandings [${v.name}]`).toEqual([
+      expect(shape, `lib/queries/standings.ts getStandings [${v.name}]`).toEqual([
         ['de-anza:De Anza:7', 'el-camino:El Camino:8'],
         ['mt-hamilton:Mt. Hamilton:6', 'santa-teresa:Santa Teresa:6'],
         ['pcal:-:7'],
@@ -111,7 +113,7 @@ describe('both runs: the corpus leagues through lib/data', () => {
 
   it("the EAL, not in this corpus's run: no counted game, no missing league result", () => {
     for (const v of variants) {
-      expect(v.data.getMissingOfficialResults('eal'), `lib/engine/standings.ts missingOfficialResults (via lib/data.ts) [${v.name}]`).toEqual([]);
+      expect(v.data.getMissingOfficialResults('eal'), `lib/engine/standings.ts missingOfficialResults (via lib/queries/standings.ts) [${v.name}]`).toEqual([]);
       const eal = v.data.getLeagueHealth('eal');
       expect(eal.divisions, `lib/pipeline/steps/standings.ts: EAL DivisionHealth [${v.name}]`).toEqual([
         {
@@ -145,7 +147,7 @@ describe('both runs: the corpus leagues through lib/data', () => {
       const bySlug = new Map(rowsOf(v, 'mcal', 'marin-county').map((r) => [r.slug, ctx.get(r.teamId)]));
       expect(
         [...bySlug].map(([slug, c]) => `${slug} ${c?.counted}/${c?.scheduled} left ${c?.remaining} max ${c?.maxPts}`),
-        `lib/data.ts getStandingContext('marin-county') [${v.name}]`,
+        `lib/queries/standings.ts getStandingContext('marin-county') [${v.name}]`,
       ).toEqual([
         'tamalpais 12/16 left 4 max 43',
         'university-sf 9/16 left 7 max 44',
@@ -157,12 +159,12 @@ describe('both runs: the corpus leagues through lib/data', () => {
         'berkeley 11/16 left 5 max 20',
         'archie-williams 11/16 left 5 max 20',
       ]);
-      expect(v.data.getGamesPlayedSpread('marin-county'), `lib/data.ts getGamesPlayedSpread [${v.name}]`).toEqual({
+      expect(v.data.getGamesPlayedSpread('marin-county'), `lib/queries/standings.ts getGamesPlayedSpread [${v.name}]`).toEqual({
         min: 9,
         max: 12,
         scheduled: 16,
       });
-      expect([...ctx.values()].every((c) => c.missingPast === 0 && c.backfilled === 0), `lib/data.ts: MCAL missing/backfilled [${v.name}]`).toBe(true);
+      expect([...ctx.values()].every((c) => c.missingPast === 0 && c.backfilled === 0), `lib/queries/standings.ts: MCAL missing/backfilled [${v.name}]`).toBe(true);
     }
   });
 
@@ -171,7 +173,7 @@ describe('both runs: the corpus leagues through lib/data', () => {
       const rows = v.data.getMissingOfficialResults('santa-teresa');
       expect(
         rows.map((r) => `${r.kind} ${r.dateKey} ${r.awaySlug}@${r.homeSlug} ${r.game?.contestId ?? '-'}`),
-        `lib/engine/standings.ts missingOfficialResults (via lib/data.ts) [${v.name}]`,
+        `lib/engine/standings.ts missingOfficialResults (via lib/queries/standings.ts) [${v.name}]`,
       ).toEqual([
         'missing 2026-10-01 prospect@del-mar 3c691d2c-7e22-46bf-9438-25db21df4640',
         'missing 2026-10-01 sobrato@live-oak be7bd768-4ae2-42a7-b88c-b8e7930b2290',
@@ -259,7 +261,7 @@ describe('with si.com (the cron default): D2 fills exactly three PCAL games', ()
     const ctx = v.data.getStandingContext('pcal');
     expect(
       rowsOf(v, 'pcal', 'pcal').map((r) => `${r.slug} ${ctx.get(r.teamId)?.backfilled} missing ${ctx.get(r.teamId)?.missingPast}`),
-      'lib/data.ts getStandingContext(pcal) with si.com',
+      'lib/queries/standings.ts getStandingContext(pcal) with si.com',
     ).toEqual([
       'stevenson 1 missing 0',
       'hollister 1 missing 0',
@@ -294,7 +296,7 @@ describe('with --no-sblive: no si.com input, so the three PCAL results stay miss
     expect(v.snapshot.sbliveCrossCheck, 'lib/pipeline/steps/sblive.ts: --no-sblive cross-check').toBeUndefined();
     expect(
       v.data.getMissingOfficialResults('pcal').map((r) => `${r.kind} ${r.dateKey} ${r.awaySlug}@${r.homeSlug}`),
-      'lib/engine/standings.ts missingOfficialResults (via lib/data.ts): PCAL without si.com',
+      'lib/engine/standings.ts missingOfficialResults (via lib/queries/standings.ts): PCAL without si.com',
     ).toEqual([
       'missing 2026-09-04 greenfield@santa-catalina',
       'missing 2026-09-29 carmel@stevenson',

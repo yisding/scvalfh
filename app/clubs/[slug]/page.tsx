@@ -10,13 +10,13 @@ import PageHeader from '@/components/layout/PageHeader';
 import { OG_BASE, ROOT_OG_IMAGE } from '@/components/layout/site';
 import ExternalLink from '@/components/ui/ExternalLink';
 import SectionHeader from '@/components/ui/SectionHeader';
-import { clubDisplayName, getClub, getClubAffiliations, getClubSlugs } from '@/lib/clubs';
+import { clubDisplayName, getClub, getClubAffiliations, getClubSlugs } from '@/lib/datasets/clubs';
 import { plural } from '@/lib/format/words';
 
 /**
  * /clubs/[slug] — "Who here plays for this club, and how do we know?" (DESIGN §17.1, SPEC §1.1j2).
  *
- * One static page per club in data/clubs.json, in lib/clubs.ts' display order. A club no tracked
+ * One static page per club in data/clubs.json, in lib/datasets/clubs.ts' display order. A club no tracked
  * player is tied to still gets its page, with an honest empty state (DESIGN §8): what the club is,
  * what it runs and where that was read are true whether or not a public page names a player here.
  *

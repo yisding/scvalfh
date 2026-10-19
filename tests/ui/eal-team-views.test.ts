@@ -7,7 +7,7 @@
  *
  * The EAL has no official schedule (`official.mode: 'none'`), so a team page links none; its
  * postseason is the Super Regional, an unbracketed tournament, so no page draws a bracket. These
- * tests run on the EAL corpus (loaded through useCorpusModules, which points lib/data at it before it
+ * tests run on the EAL corpus (loaded through useCorpusModules, which points lib/datasets/snapshot.ts at it before it
  * is imported). Expected values are read from the snapshot or from
  * config where the test can derive them; the rest (Chico 4-1-0 and Davis 3-2-0, the 1-0 season series,
  * the three overtime periods and the 'Earlier:' lines) are those of the frozen eal-2026-10-04 corpus.
@@ -23,10 +23,12 @@ import { beforeAll, describe, expect, it } from 'vitest';
 
 import type { Game } from '@/lib/model/game';
 import type { Snapshot } from '@/lib/model/snapshot';
+import { getTeamBySlug } from '@/lib/registry/teams';
 import { EAL_CORPUS } from '@/tests/support/corpus';
 import { CORPUS_HOOK_TIMEOUT, useCorpusModules, withSnapshotModules, type CorpusModules } from '@/tests/support/corpus-modules';
 import { corpusSnapshotPath } from '@/tests/support/corpus-snapshot';
 import { textOf } from '@/tests/support/html-text';
+import { loadQueries } from '@/tests/support/queries';
 import { tempDir } from '@/tests/support/repo';
 
 let eal: Loaded;
@@ -38,7 +40,7 @@ let taggedFinal: Game;
 const BANNED = /\bCCS\b|at-large|automatic qualifier|\b(\d+(st|nd|rd|th)|No\. ?\d+|top|first|second) seed(ed)?\b/i;
 
 const loaders = {
-  d: () => import('@/lib/data'),
+  d: loadQueries,
   l: () => import('@/lib/config/leagues'),
   v: () => import('@/components/teams/team-view'),
   gm: () => import('@/components/game/game-view'),
@@ -130,7 +132,7 @@ describe('an EAL team page (/teams/davis)', () => {
     expect(text, 'app/teams/[slug]/page.tsx kicker').toContain(`${ps.name} picture`);
     expect(text, 'app/teams/[slug]/page.tsx kicker').toContain('Super Regional picture');
     const line = eal.d.getTeamPostseasonLine('davis');
-    expect(line, 'lib/data.ts getTeamPostseasonLine').not.toBeNull();
+    expect(line, 'lib/queries/postseason.ts getTeamPostseasonLine').not.toBeNull();
     expect(text, 'components/teams/TeamPlayoffLine.tsx sentence').toContain(
       'The top six schools play the Super Regional, Oct 30–31; its format and site are not published yet.',
     );
@@ -173,8 +175,8 @@ describe('an EAL team page (/teams/davis)', () => {
   });
 
   it('words an earlier 1 v 1 meeting as won 1–1 on 1 v 1s, never "in SO"', () => {
-    const chico = eal.d.getTeamBySlug('chico')!;
-    const davis = eal.d.getTeamBySlug('davis')!;
+    const chico = getTeamBySlug('chico')!;
+    const davis = getTeamBySlug('davis')!;
     const decided = gameOn(eal, 'chico', 'davis', '2026-09-28');
     const later = eal.d.getGames({ teamId: 'chico' }).find(
       (g) => g.dateKey > decided.dateKey && [g.home.slug, g.away.slug].includes('davis'),
@@ -192,8 +194,8 @@ describe('an EAL team page (/teams/davis)', () => {
 
   it('headlines the 1 v 1 game with its SO tag, from either side', () => {
     const decided = gameOn(eal, 'chico', 'davis', '2026-09-28');
-    expect(eal.v.gameHeadline(decided, eal.d.getTeamBySlug('chico')!)).toMatch(/^W 1–1 .* SO$/);
-    expect(eal.v.gameHeadline(decided, eal.d.getTeamBySlug('davis')!)).toMatch(/^L 1–1 .* SO$/);
+    expect(eal.v.gameHeadline(decided, getTeamBySlug('chico')!)).toMatch(/^W 1–1 .* SO$/);
+    expect(eal.v.gameHeadline(decided, getTeamBySlug('davis')!)).toMatch(/^L 1–1 .* SO$/);
   });
 });
 
@@ -263,8 +265,8 @@ describe('the 9/2 Pleasant Valley at Chico game page (3 overtime periods, imposs
     expect(html, 'app/teams/[slug]/page.tsx: the game is linked').toContain(`href="/game/${game.contestId}"`);
     expect(text, 'app/teams/[slug]/page.tsx: no OT tag on a team page').not.toMatch(/\b2 OT\b/);
     const earlier = eal.v.earlierMeeting(
-      eal.d.getTeamBySlug('chico')!,
-      eal.d.getTeamBySlug('pleasant-valley')!,
+      getTeamBySlug('chico')!,
+      getTeamBySlug('pleasant-valley')!,
       '2026-10-06',
     );
     expect(earlier?.text, 'components/teams/team-view.ts earlierMeeting').toBe('Earlier: lost 0–1 at home, Sep 2');

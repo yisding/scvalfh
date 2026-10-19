@@ -4,12 +4,12 @@
  * them without importing the page's assembly.
  */
 
+import type { MergedPlayer } from '@/lib/datasets/rosters';
 import type { Game } from '@/lib/model/game';
 import type { RegionId } from '@/lib/model/ids';
 import type { RegionConfig } from '@/lib/model/league-config';
 import type { Standing } from '@/lib/model/standings';
 import type { Team } from '@/lib/model/team';
-import type { MergedPlayer } from '@/lib/rosters';
 import type { TeamPlayerStats } from '@/lib/schema/player-stats';
 import type { PriorSeason } from '@/lib/schema/prior-season';
 

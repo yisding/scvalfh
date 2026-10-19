@@ -16,8 +16,8 @@ import {
   railTargets,
   type RailMarker,
 } from '@/components/schedule/rail-targets';
-import { getGameDates } from '@/lib/data';
 import { monthDay, shortDate } from '@/lib/format/dates';
+import { getGameDates } from '@/lib/queries/games';
 
 const MARKERS: RailMarker[] = [
   { date: '2026-08-24', kind: 'up' },

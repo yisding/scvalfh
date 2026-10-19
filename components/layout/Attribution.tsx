@@ -6,9 +6,9 @@ import ExternalLink from '@/components/ui/ExternalLink';
 import LastUpdated from '@/components/ui/LastUpdated';
 import { LEAGUES_PROPER, SECTIONS, getSection } from '@/lib/config/leagues';
 import { SOURCE_LINKS } from '@/lib/config/source-urls';
-import { getSitePhase } from '@/lib/data';
 import { listWords } from '@/lib/format/words';
 import type { LeagueConfig } from '@/lib/model/league-config';
+import { getSitePhase } from '@/lib/queries/phase';
 
 import { DATA_CORRECTIONS_URL, SITE_SCOPE_NOTE } from './site';
 

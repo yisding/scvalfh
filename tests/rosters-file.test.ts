@@ -10,8 +10,8 @@ import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 import { LEAGUES } from '@/lib/config/leagues';
+import { getRosters, getTeamRoster, sortedPlayers } from '@/lib/datasets/rosters';
 import { TEAMS, teamsInLeague } from '@/lib/registry/teams';
-import { getRosters, getTeamRoster, sortedPlayers } from '@/lib/rosters';
 import {
   ROSTER_TEAM_COUNT, type Rosters, RostersPartialSchema, RostersSchema, countRosters, rostersContentKey,
 } from '@/lib/schema/rosters';
@@ -453,7 +453,7 @@ describe('scripts/fetch-rosters.ts over a previous file that is not valid whole'
   });
 });
 
-describe('lib/rosters.ts', () => {
+describe('lib/datasets/rosters.ts', () => {
   it('serves the bundled file', () => {
     expect(getRosters().counts).toEqual(raw.counts);
     expect(getTeamRoster('st-ignatius')!.players.length).toBe(23);

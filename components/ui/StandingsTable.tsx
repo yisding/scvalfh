@@ -2,12 +2,12 @@ import Link from 'next/link';
 
 import { leagueOfDivision } from '@/lib/config/leagues';
 import { divisionHeading } from '@/lib/config/leagues/labels';
-import type { StandingContext } from '@/lib/data';
 import { placeWords, recordString, recordWords, streakString, winPct } from '@/lib/format/numbers';
 import { EM_DASH, formStripName, plural } from '@/lib/format/words';
 import type { DivisionId, TeamId, TeamSlug } from '@/lib/model/ids';
 import type { Standing } from '@/lib/model/standings';
 import type { Team } from '@/lib/model/team';
+import type { StandingContext } from '@/lib/queries/standings';
 
 import ExternalLink from './ExternalLink';
 import FormStrip, { toFormEntries } from './FormStrip';
@@ -147,7 +147,7 @@ function gpTitle(fixed: boolean): string {
 /** The division as a reader names it: its heading, or the league's short name for a one-table league. */
 /**
  * The biggest |goal difference| among `gds`, 0 when there is none. Not `getGoalDiffDomain`
- * (lib/data.ts), which floors at 1 so a bar never divides by zero: that floor is a scale, never a
+ * (lib/queries/standings.ts), which floors at 1 so a bar never divides by zero: that floor is a scale, never a
  * fact to print. Every place that prints "biggest goal difference (N)" asks this first and leaves the
  * clause out when it is 0 (StandingsTable's legend, DivisionStandings, MiniStandings, the standings
  * page's disclosure).

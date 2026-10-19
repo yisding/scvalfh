@@ -13,27 +13,16 @@ import TeamMonogram from '@/components/ui/TeamMonogram';
 import SectionHeader from '@/components/ui/SectionHeader';
 import { OG_BASE, ROOT_OG_IMAGE } from '@/components/layout/site';
 import { getDivision, getLeague, getSection, isIndependentLeague, regionOf } from '@/lib/config/leagues';
-import { getTeamBySlug } from '@/lib/data';
+import {
+  type AvailableLeagueHistory, type BracketSectionId, type SectionBracket, type UnavailableLeagueHistory,
+  bracketSectionName, getAvailableHistoryLeagues, getHistoryBracketFor, getHistoryBrackets,
+  getHistoryChampions, getHistoryDivisionChanges, getHistoryLeagues, getHistorySeason,
+  getHistoryUnpublishedTies, getUnavailableHistoryLeagues, historySchoolName,
+} from '@/lib/datasets/history';
 import { dateWithYear } from '@/lib/format/dates';
 import { listWords } from '@/lib/format/words';
-import {
-  bracketSectionName,
-  getAvailableHistoryLeagues,
-  getHistoryBracketFor,
-  getHistoryBrackets,
-  getHistoryChampions,
-  getHistoryDivisionChanges,
-  getHistoryLeagues,
-  getHistorySeason,
-  getHistoryUnpublishedTies,
-  getUnavailableHistoryLeagues,
-  historySchoolName,
-  type AvailableLeagueHistory,
-  type BracketSectionId,
-  type SectionBracket,
-  type UnavailableLeagueHistory,
-} from '@/lib/history';
 import type { LeagueId } from '@/lib/model/ids';
+import { getTeamBySlug } from '@/lib/registry/teams';
 
 /**
  * `/history/2025-26` (DESIGN §1.1, §3.9; SPEC §10.8) — last season's final standings, one section

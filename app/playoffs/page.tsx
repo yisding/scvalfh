@@ -26,28 +26,22 @@ import LeagueHealthNote from '@/components/ui/LeagueHealthNote';
 import SectionHeader from '@/components/ui/SectionHeader';
 import { leaderLine } from '@/components/standings/standings-page-view';
 import {
-  NO_POSTSEASON_LEAGUE_IDS, SECTION_PLAYOFFS_LEAGUE_IDS, UNBRACKETED_LEAGUE_IDS, getLeague,
-  isIndependentLeague,
+  NO_POSTSEASON_LEAGUE_IDS, SECTION_PLAYOFFS_LEAGUE_IDS, TOURNAMENT_LEAGUE_IDS, UNBRACKETED_LEAGUE_IDS,
+  getLeague, isIndependentLeague,
 } from '@/lib/config/leagues';
-import {
-  areKeyDatesConfirmed,
-  getCcsField,
-  getLastLeagueResultDate,
-  getLeaguePairings,
-  getLeagueSummaries,
-  getPlayoffProjection,
-  getPlayoffs,
-  getStandingFor,
-  getTeamById,
-  getTeams,
-  getTournamentLeagueIds,
-} from '@/lib/data';
-import type { LeagueSummary } from '@/lib/data';
 import { dateSpan, monthDay, shortDate } from '@/lib/format/dates';
 import { listWords } from '@/lib/format/words';
 import type { LeagueId } from '@/lib/model/ids';
 import type { LeagueConfig } from '@/lib/model/league-config';
 import type { PlayoffProjection as Projection } from '@/lib/model/postseason';
+import { getLastLeagueResultDate } from '@/lib/queries/games';
+import { getLeagueSummaries } from '@/lib/queries/leagues';
+import type { LeagueSummary } from '@/lib/queries/leagues';
+import { getCcsField, getLeaguePairings, getPlayoffProjection, getPlayoffs } from '@/lib/queries/postseason';
+import { areKeyDatesConfirmed } from '@/lib/queries/provenance';
+import { getStandingFor } from '@/lib/queries/standings';
+import { getTeams } from '@/lib/queries/teams';
+import { getTeamById } from '@/lib/registry/teams';
 
 /**
  * /playoffs — "Are we in, and who do we play?" (SPEC §6.3, §10.7; DESIGN-socal §2.4): every league's
@@ -264,7 +258,7 @@ export default function PlayoffsPage() {
   const summaries = getLeagueSummaries();
   const ccsIds = new Set<LeagueId>(field.byLeague.map((l) => l.leagueId));
   const ccsLeagues = summaries.filter((s) => ccsIds.has(s.id));
-  const tournamentIds = new Set<LeagueId>(getTournamentLeagueIds());
+  const tournamentIds = new Set<LeagueId>(TOURNAMENT_LEAGUE_IDS);
   const tournamentLeagues = summaries.filter((s) => tournamentIds.has(s.id));
   const unbracketedLeagues = summaries.filter((s) => UNBRACKETED_LEAGUE_IDS.includes(s.id));
   const ccsSection = ccsLeagues[0]?.section;

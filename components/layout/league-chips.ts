@@ -2,7 +2,7 @@
  * The `LeagueSwitcher` chips and their targets, config order.
  *
  * Kept out of LeagueSwitcher.tsx because that module is `'use client'` and this one reads the
- * server-side league summaries (lib/data). Every page that renders the chips (/standings,
+ * server-side league summaries (lib/queries/leagues.ts). Every page that renders the chips (/standings,
  * /standings/<league>, /schedule/<league>, /teams, /playoffs and the home scope row) builds them
  * through here; /playoffs keeps its own tournament-aware targets.
  *
@@ -14,8 +14,8 @@
  * index: the page is about one league, its neighbours are the leagues of the same region, and the
  * index is where the other region is one tap away.
  */
-import { getLeagueSummaries, type LeagueSummary } from '@/lib/data';
 import type { LeagueId, RegionId } from '@/lib/model/ids';
+import { type LeagueSummary, getLeagueSummaries } from '@/lib/queries/leagues';
 
 import type { LeagueChip } from './LeagueSwitcher';
 

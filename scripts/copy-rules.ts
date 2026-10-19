@@ -3,8 +3,8 @@
  * test can import them without running the script's scan of the built site.
  */
 
-import { decodeEntities as decodeWith } from '@/lib/sources/text/html-entities';
 import type { LeagueHistory } from '@/lib/schema/history';
+import { decodeEntities as decodeWith } from '@/lib/sources/text/html-entities';
 
 /**
  * A phrase that says something is limited to SCVAL: "SCVAL-only", "SCVAL only", "only SCVAL",
@@ -667,7 +667,7 @@ function withoutTags(html: string): string {
 // ---------------------------------------------------------------- /history/2025-26
 
 /**
- * What the history page's `<main>` gets wrong about `leagues` (lib/history.ts getHistoryLeagues),
+ * What the history page's `<main>` gets wrong about `leagues` (lib/datasets/history.ts getHistoryLeagues),
  * one message per problem: every league has its `<section id="<league>">`; an available league has
  * an anchor for each division and every varsity row's league record, and never says
  * "Unavailable"; an unavailable league has the "Unavailable" card with its reason, and no table and

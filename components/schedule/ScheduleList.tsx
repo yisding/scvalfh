@@ -1,6 +1,6 @@
-import { getScoresLandingDate } from '@/lib/data';
 import type { Game } from '@/lib/model/game';
 import type { LeagueId } from '@/lib/model/ids';
+import { getScoresLandingDate } from '@/lib/queries/games';
 import { dayNumber } from '@/lib/shared/dates';
 
 import DateHeader from './DateHeader';
@@ -25,7 +25,7 @@ import GameList from './GameList';
  * scroll happens. A hard load gets that from the browser, which re-runs the fragment scroll while
  * the page settles; a client navigation (the Scores tab, `router.push`) scrolls ONCE, and the
  * groups that then render around the target swap their estimates for real heights and shove it off
- * its mark. So the days around the Scores tab's landing date (lib/data `getScoresLandingDate`)
+ * its mark. So the days around the Scores tab's landing date (lib/queries/games `getScoresLandingDate`)
  * are never skipped at all: `[content-visibility:visible]` lays them out from the first frame, and
  * the one scroll lands where the hard load does. A day page's "Full season" link can aim at any date, so it
  * is a plain `<a>` (a document navigation) and gets the hard load's settling scroll instead.

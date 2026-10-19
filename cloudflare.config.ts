@@ -8,7 +8,7 @@ import { bindings, defineConfig, defineWorker } from 'cf/config';
  * - entrypoint: vinext's Worker fetch handler (server/app-router-entry.js).
  * - compatibilityDate: pinned to the workerd release the plugin bundles (1.20260926.1), not the
  *   day `vinext init` ran; a date past the runtime's is refused or downgraded with a warning.
- * - nodejs_compat: node:fs/node:crypto imports (lib/data.ts keeps node:fs for its Node-only
+ * - nodejs_compat: node:fs/node:crypto imports (lib/datasets/snapshot.ts keeps node:fs for its Node-only
  *   SCVAL_SNAPSHOT override) and process.env.
  * - assets: Workers Static Assets serves /_next/static/** directly (vinext writes a `_headers` file
  *   giving it the immutable Cache-Control). Every page URL misses (notFoundHandling 'none'), so it

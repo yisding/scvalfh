@@ -27,18 +27,20 @@ import type { LeaderBoard, LeaderSources, LeadersView, RegionLeadersView } from 
 import { statText } from '@/components/teams/player-stats-view';
 import { positionWords } from '@/components/ui/position-words';
 import { regionOf } from '@/lib/config/leagues';
-import { getGames, getStandingFor, getTeams } from '@/lib/data';
+import { getPriorSeason } from '@/lib/datasets/prior-season';
+import { getEnrichedTeamRoster } from '@/lib/datasets/rosters';
 import { computeAdjustedScoring } from '@/lib/engine/adjusted-scoring';
 import { computeRatings } from '@/lib/engine/ratings';
 import { computeStandings } from '@/lib/engine/standings';
 import { recordString } from '@/lib/format/numbers';
 import { gradeWord } from '@/lib/format/words';
 import type { Game } from '@/lib/model/game';
-import { getAllPlayerStatsWithNotes } from '@/lib/player-stats';
-import { getPriorSeason } from '@/lib/prior-season';
+import { getGames } from '@/lib/queries/games';
+import { getAllPlayerStatsWithNotes } from '@/lib/queries/player-stats';
 import { getAdjustedScoring, getRatings } from '@/lib/queries/ratings';
+import { getStandingFor } from '@/lib/queries/standings';
+import { getTeams } from '@/lib/queries/teams';
 import { TEAMS, getTeamBySlug } from '@/lib/registry/teams';
-import { getEnrichedTeamRoster } from '@/lib/rosters';
 import {
   FIELD_STAT_KEYS, type FieldStatKey, type FieldStats, GOALIE_STAT_KEYS, type GoalieStatKey, type GoalieStats,
   type TeamPlayerStats,

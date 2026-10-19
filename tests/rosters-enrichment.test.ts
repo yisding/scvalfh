@@ -9,15 +9,10 @@ import path from 'node:path';
 
 import { describe, expect, it, vi } from 'vitest';
 
-import { TEAMS, getTeamBySlug, teamsInLeague } from '@/lib/registry/teams';
 import {
-  classOf,
-  getAllEnrichedRosters,
-  getEnrichedTeamRoster,
-  getRosterEnrichment,
-  getRosters,
-  getTeamRoster,
-} from '@/lib/rosters';
+  classOf, getAllEnrichedRosters, getEnrichedTeamRoster, getRosterEnrichment, getRosters, getTeamRoster,
+} from '@/lib/datasets/rosters';
+import { TEAMS, getTeamBySlug, teamsInLeague } from '@/lib/registry/teams';
 import {
   type RosterEnrichment, RosterEnrichmentSchema, type Rosters, countRosters,
 } from '@/lib/schema/rosters';
@@ -103,7 +98,7 @@ function overrideEnv(enrichment: RosterEnrichment, rosters?: Rosters): Record<st
 }
 
 /**
- * Import lib/rosters.ts with `enrichment` swapped in and return the message it threw ('' when it
+ * Import lib/datasets/rosters.ts with `enrichment` swapped in and return the message it threw ('' when it
  * loaded). The load-time checks need both files, so only a real load shows them; every failure path
  * there throws (failValidation and the `fail` closures; nothing calls process.exit), so an import in
  * this process sees exactly what a child would print.
@@ -113,7 +108,7 @@ async function loadError(enrichment: RosterEnrichment, rosters?: Rosters): Promi
   vi.resetModules();
   for (const [name, value] of Object.entries(env)) vi.stubEnv(name, value);
   try {
-    await import('@/lib/rosters');
+    await import('@/lib/datasets/rosters');
     return '';
   } catch (err) {
     return (err as Error).message;
@@ -344,7 +339,7 @@ describe('data/rosters-enrichment.json', () => {
     record.grade = { value: 11, derived: false, kind: 'school-site', source: 'https://example.com/', confidence: 'high', note: null };
     // The schema alone accepts it (it cannot see the base file)...
     expect(RosterEnrichmentSchema.safeParse(bad).success).toBe(true);
-    // ...which is why lib/rosters.ts re-checks the join at load. Exercise that check in a child
+    // ...which is why lib/datasets/rosters.ts re-checks the join at load. Exercise that check in a child
     // process with the bad file swapped in (the other load-time cases import the module in-process).
     expect(loadErrorInChild(bad)).toMatch(/grade would overwrite a MaxPreps value/);
   });
@@ -847,7 +842,7 @@ describe('the load-time rules hold for every league, not just SCVAL', () => {
   });
 });
 
-describe('lib/rosters.ts merged view', () => {
+describe('lib/datasets/rosters.ts merged view', () => {
   it('fills blanks from the overlay and says where each value came from', () => {
     const cup = getEnrichedTeamRoster('cupertino')!;
     expect(getTeamRoster('cupertino')!.players.every((p) => p.grade === null)).toBe(true);

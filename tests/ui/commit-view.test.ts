@@ -41,20 +41,13 @@ import {
   statusWords,
 } from '@/components/commits/commit-view';
 import { buildRosterView } from '@/components/teams/roster-view';
-import {
-  collegeDisplayName,
-  commitClassOf,
-  commitProgram,
-  getCollege,
-  getColleges,
-  getCommitments,
-  getCommitsFile,
-  getCommittedPlayer,
-  type College,
-} from '@/lib/commits';
 import { REGIONS, regionOf } from '@/lib/config/leagues';
+import {
+  type College, collegeDisplayName, commitClassOf, commitProgram, getCollege, getColleges, getCommitments,
+  getCommitsFile, getCommittedPlayer,
+} from '@/lib/datasets/commits';
+import { getRosters } from '@/lib/datasets/rosters';
 import { TEAMS, getTeamBySlug } from '@/lib/registry/teams';
-import { getRosters } from '@/lib/rosters';
 import { COLLEGE_DIVISIONS, COMMIT_SPORTS } from '@/lib/schema/commits';
 import { commitmentLeaks } from '@/scripts/copy-rules';
 import { PUBLIC_TERMS } from '@/scripts/public-terms';

@@ -254,7 +254,7 @@ team's note says the school-athletics roster sweep has still not been done. They
 field, and a team page says nothing about other sources (`otherRosters` is absent, "not checked").
 The 53 Southern California entries, swept 2026-10-06, are the same: recruiting profiles only. On the 2026-10-04 MaxPreps rows alone, the EAL's 95 players have 95 grades and
 95 numbers, 56 positions and 7 heights. What a team page with no MaxPreps players says about other sources is
-recorded per team, not inferred: `otherRosters` (validated in `lib/rosters.ts`) is `none` (looked,
+recorded per team, not inferred: `otherRosters` (validated in `lib/datasets/rosters.ts`) is `none` (looked,
 no current roster anywhere: Del Mar, Silver Creek, Sobrato, Monterey, Santa Catalina), `partial`
 (a source lists current players in a form that cannot be joined, with a link: Marin Academy's
 school page, 18 players as first name, last initial and class year) or, when absent, not checked.
@@ -336,7 +336,7 @@ Lick-Wilmerding's roster; SportsRecruits, NCSA and Hudl profiles). All held: no 
 for being wrong. The only thing removed was the 33 low-confidence prior-season positions described above.
 
 Rules of the overlay, enforced by `lib/schema/rosters.ts` and re-checked against the base file in
-`lib/rosters.ts` at load: it joins on `slug + athleteId` (MaxPreps rows only — a school-only name is
+`lib/datasets/rosters.ts` at load: it joins on `slug + athleteId` (MaxPreps rows only — a school-only name is
 counted, never added); it fills a field **only where MaxPreps is null**; where a source disagrees
 with MaxPreps (SCVAL: 9 numbers, 1 position, 1 grade; BVAL, PCAL and MCAL: 2 grades) MaxPreps stays and the disagreement is stored under
 `conflicts`, which also hold, with `kept: null`, the sources of a grade left blank because they
@@ -456,7 +456,7 @@ Southern California differences, all **[V]** on 2026-10-06:
 The rule: a page is linked only when it names the player (or the school's spelling, `sourceName`)
 and a sport, and either names this school or shows the class year the roster shows plus a
 California hometown (for a profile in another sport, a hometown in the school's half of the state).
-A stated class year must agree with the row's grade; `lib/rosters.ts` refuses the file at load
+A stated class year must agree with the row's grade; `lib/datasets/rosters.ts` refuses the file at load
 otherwise. Social media and news stories are not linked. Until 2026-10-12 only field hockey profiles
 were; since then a profile in any other sport is linked too, with its `sport` (a field hockey
 profile has none), and the roster names that sport in the link ("SportsRecruits lacrosse
@@ -512,7 +512,7 @@ Alexandra Schmidt, answered 403 with a redirect to a MaxPreps support article, s
 260 are linked as `platform: "maxpreps"` profiles at the row's own `careerUrl`, with no `sport` (one
 page covers every sport) and `classOf` from the page's `graduatingClass` where it has one (221). They
 are the page the row comes from, so they need no name, school or class-year match to tie them to the
-player; `lib/rosters.ts` instead refuses one whose URL is not its row's `careerUrl`. A `classOf` they
+player; `lib/datasets/rosters.ts` instead refuses one whose URL is not its row's `careerUrl`. A `classOf` they
 state is still checked like any profile's: it must agree with the grade the row shows, or the file
 does not load (none of the 221 disagreed; a page whose `graduatingClass` did would be linked with
 `classOf: null`). 159 of the 260 players had no other
@@ -621,7 +621,7 @@ Hudl rosters were read; CaptainU and personal sites were barely covered, and a p
 an NCSA slug with an unguessed nickname stays unfound.
 
 **(j2) Clubs and club affiliations** — `data/clubs.json` (`lib/schema/clubs.ts`, read by
-`lib/clubs.ts`; shown on `/clubs`, `/clubs/[slug]` and in a club line on each team page's roster,
+`lib/datasets/clubs.ts`; shown on `/clubs`, `/clubs/[slug]` and in a club line on each team page's roster,
 DESIGN §17). Research on 2026-10-03, with an EAL sweep on 2026-10-04 and a re-read of the linked
 recruiting profiles on 2026-10-05, and a Southern California sweep on 2026-10-06, not a script: nothing fetches or refreshes it. It holds 28 youth field hockey clubs (13 from 2026-10-03, 3 from
 2026-10-04, 12 from 2026-10-06) and 171 affiliations (72 from 2026-10-03, 8 from 2026-10-04, 14 from 2026-10-05, 76 from 2026-10-06, 1 from 2026-10-07), each a tie between a player on the 102 tracked varsity rosters and a club, joined to `data/rosters.json` on team slug + MaxPreps athleteId as the overlay
@@ -689,7 +689,7 @@ that agrees with the roster grade together with a location in the school's half 
 the NorCal schools, the player's hometown or a club or team based in Northern California; for the
 Southern California schools, the same in Southern California; "CA", or a hometown with no state, is
 not enough). A name alone never makes a match, and a
-class year that disagrees with the roster grade rules one out (`lib/clubs.ts` refuses the file at
+class year that disagrees with the roster grade rules one out (`lib/datasets/clubs.ts` refuses the file at
 load otherwise: MaxPreps' grade, else the overlay's; Riya Mehrotra and Gabrielle Moll have no grade
 anywhere, so theirs is not checked). A page may use a nickname or another form of the first name
 (Abby for Abigail, Samantha for Sami) when it otherwise meets the rule and the match is backed by
@@ -964,7 +964,7 @@ Southern California gotchas, all **[V]** on 2026-10-06:
 
 *When a roster refetch breaks it.* The join is checked at load against the merged rosters. If
 `pnpm fetch-rosters` drops or respells a tied player's row, if the overlay marks it JV, or if a
-season rollover moves `data/rosters.json` to a season `data/clubs.json` is not for, `lib/clubs.ts`
+season rollover moves `data/rosters.json` to a season `data/clubs.json` is not for, `lib/datasets/clubs.ts`
 throws at import, so `pnpm test` and the build fail with
 `clubs: <team> / <player> (<club>): <what>`. Re-check that affiliation's sources and edit or drop
 it by hand (on a rollover, redo the research for the new season). It is never pruned
@@ -973,7 +973,7 @@ automatically.
 *JV ties.* `jvAffiliations` holds ties for players on JV rows, kept apart from `affiliations`, which
 list varsity rows only and are all the club pages, the club counts and the roster's club lines
 show. They are the same records under the same rules, except that each must join to a row the
-overlay marks JV (`lib/clubs.ts` refuses the file otherwise, and a player is in one list or the
+overlay marks JV (`lib/datasets/clubs.ts` refuses the file otherwise, and a player is in one list or the
 other, never both); `getJvClubAffiliations()` serves them, and nothing renders them yet. They were
 recorded on 2026-10-05 from the recruiting-profile re-read (a SportsRecruits page's CLUB and TEAMS
 blocks, read in a browser because they are rendered by script): four ties for three Los Gatos JV
@@ -983,7 +983,7 @@ grade, and each current under the live-profile rule. Only the profiles the overl
 so other JV players may have club ties no page here records.
 
 **(j3) College commitments** — `data/commits.json` (`lib/schema/commits.ts`, read by
-`lib/commits.ts`; shown on `/commits` and in a commitment line on each committed player's team page
+`lib/datasets/commits.ts`; shown on `/commits` and in a commitment line on each committed player's team page
 roster, DESIGN §21). Research on 2026-10-03 (field hockey) and 2026-10-04 (every sport, and a second
 field hockey pass; and, for the six EAL teams' schools, a field hockey sweep and then the every-sport
 round; and, on 2026-10-06, the every-sport round for the 53 Southern California teams' schools; and, on
@@ -1056,7 +1056,7 @@ here also play lacrosse, soccer or basketball), and either name the player's hig
 year that agrees with the roster grade together with a location in the school's half of the state
 (the player's hometown, or a club or team based in Northern California for a NorCal school, in
 Southern California for a SoCal one; "CA" alone is not enough). A class year
-that disagrees with the roster grade rules a match out, and `lib/commits.ts` refuses the file at load
+that disagrees with the roster grade rules a match out, and `lib/datasets/commits.ts` refuses the file at load
 otherwise (for a row with no grade, the stated class years must agree with each other and be a class
 a high school roster of the season can hold). Not a commitment: MaxPreps' "College Interests"
 (`careerCollegeInterestsData` on a career `/bio/` page, which was empty for every in-scope player
@@ -1369,7 +1369,7 @@ unsigned recruit, so a college's own site rarely shows a class of 2027 or 2028 c
 November signing period. No source found said any player had signed. The class of 2027's signings
 and the class of 2028's commitments are when a new sweep would change the file most.
 
-*When a roster refetch breaks it.* As for §1.1j2: `lib/commits.ts` throws at import if a committed
+*When a roster refetch breaks it.* As for §1.1j2: `lib/datasets/commits.ts` throws at import if a committed
 player's row is dropped, respelled or marked JV, or if `data/rosters.json` moves to another season,
 with `commits: <team> / <player> (<college>): <what>`. Re-check the commitment and edit or drop it by
 hand; on a rollover, redo the research (the seniors will have graduated).
@@ -1513,7 +1513,7 @@ Gotchas, all **[V]**:
   Each team a game note credits costs one more call, the per-game totals (above): one on 2026-10-06.
 
 **(l) Last season's results** (the Elo rating's starting point, DESIGN §20.1) — `data/prior-season.json`
-(`lib/schema/prior-season.ts`, loaded by `lib/prior-season.ts`), built once a season by
+(`lib/schema/prior-season.ts`, loaded by `lib/datasets/prior-season.ts`), built once a season by
 `pnpm fetch-prior-season` (`scripts/fetch-prior-season.ts`). **[V] 2026-10-03.**
 - The season id: `team-context/v1` (e) carries `data.schoolSportSeasonsData[]`, one entry per
   sport-season the school has played (625 for Leigh), each with `sportSeasonId`, `sport`, `gender`,
@@ -1767,7 +1767,7 @@ redirects.
     extend `scripts/build-history.ts`, and the schema (`lib/schema/history.ts`) already validates it against
     the league's own registry slugs and divisions (PCAL, MCAL and EAL are single-division).
 - **2025 section playoff brackets** (`data/history-brackets-2025-26.json`, validated by
-  `lib/schema/history-brackets.ts`, read by `lib/history.ts`, shown on /history/2025-26 as `#ccs` after
+  `lib/schema/history-brackets.ts`, read by `lib/datasets/history.ts`, shown on /history/2025-26 as `#ccs` after
   PCAL and `#sds` after Metro). Transcribed by hand on 2026-10-07; nothing refreshes it. Each section's
   `notes` say exactly what was read:
   - **CCS** — the two official bracket pages linked from `https://www.cifccs.org/sports/fh/index`

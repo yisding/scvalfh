@@ -9,8 +9,8 @@ import PageHeader from '@/components/layout/PageHeader';
 import { OG_BASE, ROOT_OG_IMAGE } from '@/components/layout/site';
 import EmptyState from '@/components/ui/EmptyState';
 import SectionHeader from '@/components/ui/SectionHeader';
+import { getRosters } from '@/lib/datasets/rosters';
 import { plural } from '@/lib/format/words';
-import { getRosters } from '@/lib/rosters';
 
 /** The page's title, and its og:title too: og:title never carries the site-name suffix (OG_BASE). */
 const PAGE_TITLE = 'College commitments';

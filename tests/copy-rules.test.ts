@@ -13,7 +13,7 @@ import { describe, expect, it } from 'vitest';
 import { postseasonSourceLink } from '@/components/layout/source-labels';
 import { SITE_SCOPE_NOTE } from '@/components/layout/site';
 import { LEAGUES, getLeague } from '@/lib/config/leagues';
-import { getHistoryLeagues } from '@/lib/history';
+import { getHistoryLeagues } from '@/lib/datasets/history';
 import {
   EAL_SCHOOL_CLAIM,
   LEAK_MIN_FRAGMENT,

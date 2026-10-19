@@ -9,7 +9,7 @@
  *     to the build;
  *   - honesty: a tie that is only listed is never worded as current, and every row links the
  *     pages it rests on, each labelled by its kind and host, never by its path;
- *   - order: regions in CLUB_REGIONS order, clubs in lib/clubs.ts' display order (DESIGN §17.5),
+ *   - order: regions in CLUB_REGIONS order, clubs in lib/datasets/clubs.ts' display order (DESIGN §17.5),
  *     players current first, then by school and name.
  *
  * The data is hand research that changes only with a new sweep (tests/clubs-file.test.ts), so the
@@ -36,17 +36,11 @@ import {
   type ClubPageView,
 } from '@/components/clubs/club-view';
 import {
-  clubDisplayName,
-  getClub,
-  getClubAffiliations,
-  getClubSlugs,
-  getClubs,
+  type Club, type ClubAffiliation, clubDisplayName, getClub, getClubAffiliations, getClubSlugs, getClubs,
   getClubsFile,
-  type Club,
-  type ClubAffiliation,
-} from '@/lib/clubs';
+} from '@/lib/datasets/clubs';
+import { getEnrichedTeamRoster, getRosters } from '@/lib/datasets/rosters';
 import { getTeamBySlug } from '@/lib/registry/teams';
-import { getEnrichedTeamRoster, getRosters } from '@/lib/rosters';
 import { affiliationLeaks } from '@/scripts/copy-rules';
 import { PUBLIC_TERMS } from '@/scripts/public-terms';
 import { textOf } from '@/tests/support/html-text';

@@ -3,12 +3,12 @@
  * tracked varsity rosters a public page ties to one (SPEC §1.1j2, DESIGN §17).
  *
  * The file is research, written by hand and checked twice; no script rebuilds it (see
- * lib/schema/clubs.ts). It is imported so the build bundles it, for the reason lib/rosters.ts
+ * lib/schema/clubs.ts). It is imported so the build bundles it, for the reason lib/datasets/rosters.ts
  * gives: a Worker has no project filesystem. It is validated once at module scope — the schema,
  * then the join to the rosters the schema cannot see — so a bad file fails at import time rather
  * than half-way through a render.
  *
- * There is no env override. lib/rosters.ts has one because a script rewrites those files and a
+ * There is no env override. lib/datasets/rosters.ts has one because a script rewrites those files and a
  * child-process test swaps them; nothing writes clubs.json, and the tests that need a bad file
  * build one in memory and pass it to `loadClubs`. So this module reads no file of its own.
  *
@@ -20,8 +20,8 @@
  *   2. not be a JV row (the overlay's `level`): clubs list varsity rows only
  *   3. agree with every class year a source states, when the row has a grade (a player with no
  *      grade anywhere has nothing to check)
- * and the file's `season` must be rosters.json's. Steps 1-3 are lib/roster-join.ts, shared with
- * lib/commits.ts, whose step 3 asks more because /commits shows a class year; a club page never does.
+ * and the file's `season` must be rosters.json's. Steps 1-3 are lib/datasets/roster-join.ts, shared with
+ * lib/datasets/commits.ts, whose step 3 asks more because /commits shows a class year; a club page never does.
  * A JV affiliation (`jvAffiliations`) must pass 1 and 3 too, and must be a JV row instead.
  *
  * A roster refetch can break this. If `pnpm fetch-rosters` drops a tied player's row or respells
@@ -32,13 +32,13 @@
  */
 
 import bundled from '@/data/clubs.json';
-import type { TeamSlug } from './model/ids';
+import type { TeamSlug } from '@/lib/model/ids';
 import { joinToRoster, playerKey } from './roster-join';
 import { getAllEnrichedRosters, getRosters, type MergedPlayer, type MergedTeamRoster } from './rosters';
 import {
   CLUB_REGIONS, type Club, type ClubAffiliation, type ClubRegion, type ClubsFile, ClubsFileSchema,
-} from './schema/clubs';
-import { failValidation } from './schema/primitives';
+} from '@/lib/schema/clubs';
+import { failValidation } from '@/lib/schema/primitives';
 
 export type {
   AffiliationConfidence,
@@ -51,7 +51,7 @@ export type {
   ClubSource,
   ClubSourceKind,
   ClubsFile,
-} from './schema/clubs';
+} from '@/lib/schema/clubs';
 
 /**
  * Parse `raw` against the contract, then check the join the schema cannot see (see the header).
@@ -142,7 +142,7 @@ export function getClubsFile(): ClubsFile {
 
 /**
  * The last day the file was checked: its capturedAt (the first sweep), or a later club record's
- * checkedOn. The sitemap's date for the clubs pages (lib/commits.ts getCommitsLastChecked's pattern).
+ * checkedOn. The sitemap's date for the clubs pages (lib/datasets/commits.ts getCommitsLastChecked's pattern).
  */
 export function getClubsLastChecked(): string {
   return [file.capturedAt, ...file.clubs.map((c) => c.checkedOn)].sort().at(-1)!;
@@ -193,7 +193,7 @@ export function getPlayerClubs(teamSlug: TeamSlug, athleteId: string): readonly 
  */
 export function getAffiliatedPlayer(a: Pick<ClubAffiliation, 'teamSlug' | 'athleteId'>): MergedPlayer {
   const row = ROW_BY_PLAYER.get(playerKey(a.teamSlug, a.athleteId));
-  if (!row) throw new Error(`lib/clubs.ts: no roster row for ${a.teamSlug} / ${a.athleteId}`);
+  if (!row) throw new Error(`lib/datasets/clubs.ts: no roster row for ${a.teamSlug} / ${a.athleteId}`);
   return row;
 }
 

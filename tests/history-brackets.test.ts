@@ -22,7 +22,7 @@ import {
   roundByes,
   sideName,
 } from '@/components/history/bracket-view';
-import { getHistoryBracketFor, getHistoryBrackets } from '@/lib/history';
+import { getHistoryBracketFor, getHistoryBrackets } from '@/lib/datasets/history';
 import { type HistoryBrackets, HistoryBracketsSchema } from '@/lib/schema/history-brackets';
 import { REPO } from './support/repo';
 
@@ -166,7 +166,7 @@ describe('the 2025 San Diego Section brackets', () => {
   });
 });
 
-describe('lib/history bracket reads', () => {
+describe('lib/datasets/history bracket reads', () => {
   it('places the CCS bracket after PCAL and the San Diego Section’s after Metro', () => {
     expect(getHistoryBrackets().map((b) => `${b.id}:${b.afterLeague}`)).toEqual(['ccs:pcal', 'sds:metro']);
   });

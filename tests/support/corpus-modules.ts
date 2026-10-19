@@ -1,5 +1,5 @@
 /**
- * Loading modules that read the snapshot at import time (lib/data and everything above it) against
+ * Loading modules that read the snapshot at import time (lib/datasets/snapshot.ts and everything above it) against
  * a chosen snapshot: SCVAL_SNAPSHOT is stubbed to its file, the module registry is reset, and the
  * loaders then import a fresh module graph. {@link useCorpusModules} (a corpus's snapshot, built
  * once per run by tests/support/global-setup.ts) and {@link useSnapshotModules} (any snapshot file
@@ -12,7 +12,7 @@ import { afterAll, beforeAll, vi } from 'vitest';
 import type { CorpusName } from '@/tests/support/corpus';
 import { corpusSnapshotPath } from '@/tests/support/corpus-snapshot';
 
-/** A hook budget for the first import of a heavy module graph (lib/data, the views, a route page) under a loaded machine. */
+/** A hook budget for the first import of a heavy module graph (lib/queries/, the views, a route page) under a loaded machine. */
 export const CORPUS_HOOK_TIMEOUT = 120_000;
 
 /** Loaders by name: each `() => import('…')` of one module (or a function that builds on one). */
@@ -42,7 +42,7 @@ function release(): void {
 }
 
 /**
- * Points lib/data at `source` for the whole test file and imports `loaders` against it: a beforeAll
+ * Points lib/datasets/snapshot.ts at `source` for the whole test file and imports `loaders` against it: a beforeAll
  * stubs SCVAL_SNAPSHOT, resets the module registry and awaits the loaders in key order; an afterAll
  * unstubs the variable and resets the registry again. Returns a holder whose properties are filled
  * in by the beforeAll, so read them inside tests and hooks, never at collection time. Call it at the

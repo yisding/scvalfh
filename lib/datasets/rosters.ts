@@ -15,7 +15,7 @@
  *     A team's entry may also say what other public sources showed for its current roster
  *     (`otherRosters`, below), which is what a team page with no MaxPreps players may claim.
  *
- * Both are imported so the build bundles them, for the reason lib/history.ts and lib/data.ts give:
+ * Both are imported so the build bundles them, for the reason lib/datasets/history.ts and lib/datasets/snapshot.ts give:
  * a Worker has no project filesystem. Both are validated once at module scope, and the merge rules
  * are asserted at load time too, so a bad file fails at import time rather than half-way through a
  * render. `SCVAL_ROSTERS` / `SCVAL_ROSTERS_ENRICHMENT` swap in other files through node:fs (Node
@@ -27,14 +27,14 @@ import { readFileSync } from 'node:fs';
 import { z } from 'zod';
 import bundledEnrichment from '@/data/rosters-enrichment.json';
 import bundledRosters from '@/data/rosters.json';
-import type { TeamSlug } from './model/ids';
-import { dateKey, failValidation, httpsUrl } from './schema/primitives';
+import type { TeamSlug } from '@/lib/model/ids';
+import { dateKey, failValidation, httpsUrl } from '@/lib/schema/primitives';
 import {
   type EnrichedGrade, type EnrichedHeight, type EnrichedJersey, type EnrichedPlayer, type EnrichedPositions,
   type EnrichedTeam, type EnrichmentSource, type PlayerProfile, type RosterCoach, type RosterConflict,
   type RosterEnrichment, RosterEnrichmentSchema, type RosterPlayer, type Rosters, RostersSchema,
   type TeamRoster,
-} from './schema/rosters';
+} from '@/lib/schema/rosters';
 
 export type {
   EnrichedGrade,
@@ -52,7 +52,7 @@ export type {
   RosterPlayer,
   Rosters,
   TeamRoster,
-} from './schema/rosters';
+} from '@/lib/schema/rosters';
 
 function readOverride(envName: string, bundled: unknown): unknown {
   const override = process.env[envName];
@@ -61,7 +61,7 @@ function readOverride(envName: string, bundled: unknown): unknown {
   try {
     text = readFileSync(override, 'utf8');
   } catch (err) {
-    throw new Error(`lib/rosters.ts: cannot read ${envName}=${override} (${(err as Error).message})`);
+    throw new Error(`lib/datasets/rosters.ts: cannot read ${envName}=${override} (${(err as Error).message})`);
   }
   return JSON.parse(text) as unknown;
 }
@@ -162,7 +162,7 @@ function loadEnrichment(base: Rosters): RosterEnrichment {
 /** The graduation year of a player in `grade` during `season`: in "26-27" a senior is class of 2027. */
 export function classOf(season: string, grade: number): number {
   const m = /^(\d{2})-(\d{2})$/.exec(season);
-  if (!m) throw new Error(`lib/rosters.ts: cannot read season "${season}"`);
+  if (!m) throw new Error(`lib/datasets/rosters.ts: cannot read season "${season}"`);
   return 2000 + Number(m[2]) + (12 - grade);
 }
 

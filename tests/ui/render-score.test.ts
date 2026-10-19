@@ -24,9 +24,10 @@ import {
   signedMargin,
 } from '@/components/ui/describe-game';
 import { findDivision, findLeague } from '@/lib/config/leagues';
-import { getGames, getLeagueSummaries } from '@/lib/data';
 import { EN_DASH } from '@/lib/format/words';
 import type { Game, GameStatus } from '@/lib/model/game';
+import { getGames } from '@/lib/queries/games';
+import { getLeagueSummaries } from '@/lib/queries/leagues';
 
 function game(overrides: Partial<Game> = {}): Game {
   const base: Game = {
@@ -504,7 +505,7 @@ describe('every league’s games in the bundled snapshot (invariants)', () => {
   it('has counted games in every league and in the independents’ table (their games against each other, DESIGN §24.10)', () => {
     for (const league of getLeagueSummaries()) {
       const counted = games.filter((g) => g.countsFor !== null && findDivision(g.countsFor)?.leagueId === league.id).length;
-      expect(counted, `lib/data.ts: ${league.id} has counted games`).toBeGreaterThan(0);
+      expect(counted, `lib/queries/games.ts: ${league.id} has counted games`).toBeGreaterThan(0);
     }
     // A game MaxPreps flags between an independent and a Sunset team (Bonita at Great Oak, Aug 27) counts for neither.
     const crossover = games.filter((g) => g.isLeague && [g.home.slug, g.away.slug].includes('bonita') && [g.home.slug, g.away.slug].includes('great-oak'));

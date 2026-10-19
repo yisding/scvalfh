@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-import { getTeamBySlug } from '@/lib/data';
+import { getTeamBySlug } from '@/lib/registry/teams';
 import { GameRow } from '@/components/ui/GameRow';
 import { ScoreGlyph, nameClass } from '@/components/ui/ScoreGlyph';
 import StatusLabel from '@/components/ui/StatusLabel';

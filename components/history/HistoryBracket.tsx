@@ -1,10 +1,7 @@
-import { getTeamBySlug } from '@/lib/data';
 import type {
-  HistoryBracketDivision,
-  HistoryBracketGame,
-  HistoryBracketRound,
-  HistoryBracketSide,
-} from '@/lib/history';
+  HistoryBracketDivision, HistoryBracketGame, HistoryBracketRound, HistoryBracketSide,
+} from '@/lib/datasets/history';
+import { getTeamBySlug } from '@/lib/registry/teams';
 import MissingValue from '@/components/ui/MissingValue';
 import TeamMonogram from '@/components/ui/TeamMonogram';
 

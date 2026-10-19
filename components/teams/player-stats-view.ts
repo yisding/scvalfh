@@ -30,7 +30,7 @@ import { shortDate } from '@/lib/format/dates';
 import { listWords, numberWord, plural } from '@/lib/format/words';
 import type { Game } from '@/lib/model/game';
 import type { TeamSlug } from '@/lib/model/ids';
-import { getTeamPlayerStatsWithNotes } from '@/lib/player-stats';
+import { getTeamPlayerStatsWithNotes } from '@/lib/queries/player-stats';
 import type { FieldStatKey, GoalieStatKey, PlayerStatLine, TeamPlayerStats } from '@/lib/schema/player-stats';
 
 export interface StatColumn {

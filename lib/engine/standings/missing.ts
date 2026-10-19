@@ -27,7 +27,7 @@ const NOT_YET_REPORTED: ReadonlySet<Game['status']> = new Set<Game['status']>([
 /**
  * THE single definition of 'league result missing', used by the pipeline's DivisionHealth
  * (`official.missingPast`; `missingLeaguePast` for a division with no official schedule) AND by
- * lib/data getMissingOfficialResults/getStandingContext. Pure. Sorted by dateKey, then fixture id
+ * lib/queries/standings getMissingOfficialResults/getStandingContext. Pure. Sorted by dateKey, then fixture id
  * (the contest id where there is no fixture).
  *
  * A fixture-backed division: unmatched fixtures of `division` dated before `today` (kind 'missing',

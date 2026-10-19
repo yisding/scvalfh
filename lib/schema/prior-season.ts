@@ -6,7 +6,7 @@
  * site prints them.
  *
  * This module is pure (the schema and its season window), so the script that writes the file can
- * run whatever state the file is in; lib/prior-season.ts loads it, and the script's normalization of
+ * run whatever state the file is in; lib/datasets/prior-season.ts loads it, and the script's normalization of
  * the feeds is lib/pipeline/prior-season-feeds.ts.
  * `PriorSeasonSchema` holds the file to: every side a registry team under its own slug, no game
  * listed twice or against itself, and every date inside the season the file names.

@@ -6,12 +6,12 @@
 
 import { describe, expect, it } from 'vitest';
 
-import { getSnapshot } from '@/lib/data';
+import { getPriorSeason } from '@/lib/datasets/prior-season';
+import { getSnapshot } from '@/lib/datasets/snapshot';
 import {
   ELO_BASE, ELO_PER_GOAL, MARGIN_CAP, type RatingTable, computeRatings, ratingGames,
 } from '@/lib/engine/ratings';
 import type { Game } from '@/lib/model/game';
-import { getPriorSeason } from '@/lib/prior-season';
 import { getRatings } from '@/lib/queries/ratings';
 import { TEAMS, getTeamBySlug } from '@/lib/registry/teams';
 import type { PriorGame, PriorSeason } from '@/lib/schema/prior-season';

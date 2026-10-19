@@ -1,6 +1,6 @@
 /**
  * The team page's roster section (SPEC §1.1j), derived from the merged MaxPreps + enrichment
- * view in lib/rosters.ts, for every team of every league. Pure, so tests/ui/roster-view.test.ts
+ * view in lib/datasets/rosters.ts, for every team of every league. Pure, so tests/ui/roster-view.test.ts
  * can assert it over the real files.
  *
  * What the page promises, and this module enforces:
@@ -23,22 +23,14 @@
  *     components/commits/commit-view.ts' (`playerCommitLine`), shared with /commits.
  */
 
-import { getCommitsFile } from '@/lib/commits';
+import { getCommitsFile } from '@/lib/datasets/commits';
+import {
+  type EnrichmentSource, type MergedPlayer, type MergedTeamRoster, type OtherRosters, type PlayerProfile,
+  type ProfilePlatform, type RosterConflict, getEnrichedTeamRoster, getRosters, sortedPlayers,
+} from '@/lib/datasets/rosters';
 import { dateWithYear, shortDate } from '@/lib/format/dates';
 import { gradeWord } from '@/lib/format/words';
 import type { TeamSlug } from '@/lib/model/ids';
-import {
-  getEnrichedTeamRoster,
-  getRosters,
-  sortedPlayers,
-  type EnrichmentSource,
-  type MergedPlayer,
-  type MergedTeamRoster,
-  type OtherRosters,
-  type PlayerProfile,
-  type ProfilePlatform,
-  type RosterConflict,
-} from '@/lib/rosters';
 import { playerClubGroups, type RosterClubGroup } from '@/components/clubs/club-view';
 import { SPORT_WORDS, playerCommitLine, sportLabel, type RosterCommitLine } from '@/components/commits/commit-view';
 import { positionWords } from '@/components/ui/position-words';
@@ -231,7 +223,7 @@ export interface RosterView {
   elsewhereSources: string[];
   /**
    * What other public sources showed for the current roster, as the enrichment file records it
-   * per team (lib/rosters.ts `OtherRosters`). The empty state says only what this says: "none" is
+   * per team (lib/datasets/rosters.ts `OtherRosters`). The empty state says only what this says: "none" is
    * the one case that may claim no other source has a roster.
    */
   otherRosters: OtherRosters;
@@ -480,7 +472,7 @@ function elsewhereSources(players: MergedPlayer[]): string[] {
 }
 
 /**
- * The roster section for any registry team, in every league. null only for a slug lib/rosters.ts
+ * The roster section for any registry team, in every league. null only for a slug lib/datasets/rosters.ts
  * does not hold (not a registry team), so the team page never prints an empty state for something
  * that does not exist. A team no run has covered yet has status 'pending' and says so; one whose
  * fetch failed with nothing to fall back on has status 'error'; one MaxPreps lists no players for

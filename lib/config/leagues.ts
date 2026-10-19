@@ -4,7 +4,7 @@
  * Nothing else in the codebase names a league, a division or a by-law; teams live in lib/registry/* and
  * are assembled by lib/registry/team-list.ts. The configuration's shapes (its types) are lib/model/league-config.ts.
  *
- * Pure data plus small helpers: no fs, no lib/data import, no snapshot. `assertLeagues()` runs at
+ * Pure data plus small helpers: no fs, no lib/datasets or lib/queries import, no snapshot. `assertLeagues()` runs at
  * module load and throws `lib/config/leagues.ts: <message>` on any violated invariant (SPEC §2.4).
  *
  * This module is the package's door. The values live in lib/config/leagues/: one file per league (scval,

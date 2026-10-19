@@ -19,13 +19,15 @@ import { beforeAll, describe, expect, it } from 'vitest';
 
 import type { Game } from '@/lib/model/game';
 import type { Snapshot } from '@/lib/model/snapshot';
+import { getTeamBySlug } from '@/lib/registry/teams';
 import { CORPUS_HOOK_TIMEOUT, useCorpusModules, withSnapshotModules, type CorpusModules } from '@/tests/support/corpus-modules';
 import { corpusSnapshotPath } from '@/tests/support/corpus-snapshot';
 import { textOf } from '@/tests/support/html-text';
+import { loadQueries } from '@/tests/support/queries';
 import { tempDir, tempFile } from '@/tests/support/repo';
 
 const loaders = {
-  d: () => import('@/lib/data'),
+  d: loadQueries,
   m: () => import('@/components/game/game-view'),
   ids: () => import('@/lib/shared/game-id'),
   page: () => import('@/app/game/[id]/page'),
@@ -72,7 +74,7 @@ beforeAll(() => {
   L = loadedOf(corpus);
 });
 
-const leagueOfSlug = (slug: string | null) => (slug ? L.d.getTeamBySlug(slug)?.league : undefined);
+const leagueOfSlug = (slug: string | null) => (slug ? getTeamBySlug(slug)?.league : undefined);
 
 function counted(league: string, status: Game['status'] = 'final'): Game {
   const game = L.d
@@ -100,7 +102,7 @@ describe('params (app/game/[id]/page.tsx and opengraph-image.tsx via game-view.t
       ).toBe(true);
     }
     const sblive = games.filter((g) => g.contestId.startsWith('sblive:'));
-    expect(sblive.length, 'lib/data.ts: the corpus has si.com-only games').toBeGreaterThan(0);
+    expect(sblive.length, 'lib/queries/games.ts: the corpus has si.com-only games').toBeGreaterThan(0);
     for (const g of sblive) {
       expect(page.map((p) => p.id), `components/game/game-view.ts ${g.contestId}`).toContain(g.contestId.replace(':', '-'));
     }
@@ -190,7 +192,7 @@ describe('si.com source line and the conflict block (components/game/GameSources
 
   it('a si.com score on a score-pending MaxPreps contest also carries the line', () => {
     const g = L.d.getGames().find((x) => !x.contestId.startsWith('sblive:') && x.provenance.scores === 'sblive');
-    expect(g, 'lib/data.ts: the corpus has a rule-3 backfill').toBeDefined();
+    expect(g, 'lib/queries/games.ts: the corpus has a rule-3 backfill').toBeDefined();
     const model = L.m.buildGameView(g!.contestId)!;
     expect(model.source?.text, 'components/game/game-view.ts rule 3').toMatch(/^Score via High School on SI \(si\.com\): .+\.$/);
     expect(model.source?.maxprepsUrl, 'components/game/game-view.ts rule 3 MaxPreps link').toBe(g!.urls.maxpreps);
@@ -198,7 +200,7 @@ describe('si.com source line and the conflict block (components/game/GameSources
 
   it('a plain disagreement keeps MaxPreps’ score and shows the note with both links', async () => {
     const g = L.d.getGames().find((x) => x.provenance.scoreConflict && x.provenance.scores !== 'sblive');
-    expect(g, 'lib/data.ts: the corpus has a score conflict').toBeDefined();
+    expect(g, 'lib/queries/games.ts: the corpus has a score conflict').toBeDefined();
     const model = L.m.buildGameView(g!.contestId)!;
     expect(model.source, 'components/game/game-view.ts no source line on a MaxPreps score').toBeNull();
     expect(model.conflict?.note, 'components/game/game-view.ts conflict note').toBe(g!.provenance.scoreConflict!.note);

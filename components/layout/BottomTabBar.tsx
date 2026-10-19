@@ -1,6 +1,6 @@
 import { LEAGUE_IDS } from '@/lib/config/leagues';
-import { getScoresLandingDate } from '@/lib/data';
 import type { LeagueId, TeamSlug } from '@/lib/model/ids';
+import { getScoresLandingDate } from '@/lib/queries/games';
 
 import NavLink from './NavLink';
 import { navLeagueHrefs } from './nav-targets';
@@ -44,7 +44,7 @@ const ICON_PROPS = {
 };
 
 /**
- * The Scores tab's landing date, across every league or within one (lib/data
+ * The Scores tab's landing date, across every league or within one (lib/queries/games.ts
  * getScoresLandingDate, which ScheduleList also reads). Each day on the /schedule index's "Every
  * game day" list (components/schedule/ScheduleIndex.tsx) and each date group on /schedule/<id>
  * (components/schedule/ScheduleList.tsx) carries its date key as its `id`.

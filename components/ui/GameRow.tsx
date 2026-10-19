@@ -1,12 +1,12 @@
 import Link from 'next/link';
 
-import { getStandingFor } from '@/lib/data';
 import { monthDay, shortDate, timeOfDay } from '@/lib/format/dates';
 import { recordString, recordWords } from '@/lib/format/numbers';
 import { matchupJoiner } from '@/lib/format/score';
 import { EM_DASH } from '@/lib/format/words';
 import type { Game, Record3 } from '@/lib/model/game';
 import type { LeagueId, TeamSlug } from '@/lib/model/ids';
+import { getStandingFor } from '@/lib/queries/standings';
 import { TEAMS, getTeamBySlug } from '@/lib/registry/teams';
 import { gameHref } from '@/lib/shared/game-id';
 
@@ -49,7 +49,7 @@ import {
  * Every game link is `gameHref(game.contestId)` (SPEC §10.0): a si.com-only game's id is
  * `sblive:<n>`, which the route spells `sblive-<n>`.
  *
- * SERVER-ONLY: `showRecords` reads the standings through lib/data, which does an fs read at module
+ * SERVER-ONLY: `showRecords` reads the standings through lib/queries/standings.ts, whose snapshot read (lib/datasets/snapshot.ts) is an fs read at module
  * scope, and NON_MEMBER_NOTE counts the registry through lib/registry/teams. Every consumer is a server
  * component; nothing on the client imports this module.
  */

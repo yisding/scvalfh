@@ -62,7 +62,7 @@ export interface CcsPlayoffs {
   games: Game[];
 }
 
-// ---------- league postseason projections (derived in lib/data.ts, never stored) ----------
+// ---------- league postseason projections (derived in lib/queries/postseason.ts, never stored) ----------
 
 /** Who can take one seat. Empty = TBD; 2+ = a level place spans the seat (all are named). */
 export type CrossoverSeat = Array<{ teamId: TeamId; slug: TeamSlug }>;

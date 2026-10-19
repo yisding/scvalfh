@@ -78,7 +78,7 @@ const CONCURRENCY = Math.max(1, Number(process.env.SCVAL_A11Y_CONCURRENCY) || av
  * the five ids are the fallback when the script runs outside the repo.
  */
 function readSnapshot() {
-  // An empty SCVAL_SNAPSHOT means the bundled file, as lib/data.ts load() (the canonical rule) reads it.
+  // An empty SCVAL_SNAPSHOT means the bundled file, as lib/datasets/snapshot.ts load() (the canonical rule) reads it.
   const file = process.env.SCVAL_SNAPSHOT || 'data/snapshot.json';
   return existsSync(file) ? JSON.parse(readFileSync(file, 'utf8')) : null;
 }

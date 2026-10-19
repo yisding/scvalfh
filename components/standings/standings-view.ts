@@ -4,7 +4,7 @@
  *
  * PURE with respect to the snapshot: it takes records in (standings, teams, cross-check rows,
  * per-row context, missing official results) and returns strings and arrays, so it never touches
- * `fs` or lib/data and can be exercised from a test over any snapshot. League FACTS — headings,
+ * `fs` or lib/queries/ and can be exercised from a test over any snapshot. League FACTS — headings,
  * ladders, citations, official sources, the cross-check trust — come from config (lib/config/leagues),
  * and the ladder's badges and legends from lib/engine/standings, never from a map keyed by division id.
  *
@@ -41,7 +41,6 @@ import {
   getDivision, getLeague, ladderFor, leagueStandingsUrl, regionOf, sectionOf, statusesOf,
 } from '@/lib/config/leagues';
 import { divisionHeading, standaloneName } from '@/lib/config/leagues/labels';
-import type { MissingOfficialResult, StandingContext } from '@/lib/data';
 import {
   crossCheckSkipReason, outcomesFor, playoffOutcomeLabel, statusBadge, statusLegend, unevenGamesSentence,
 } from '@/lib/engine/standings';
@@ -54,6 +53,7 @@ import { type DivisionConfig, type LeagueConfig } from '@/lib/model/league-confi
 import type { PlayoffStatus, Standing, TiebreakStage } from '@/lib/model/standings';
 import type { Team } from '@/lib/model/team';
 import type { StandingsRowData } from '@/components/ui/StandingsTable';
+import type { MissingOfficialResult, StandingContext } from '@/lib/queries/standings';
 
 // ---------------------------------------------------------------- shared shapes
 

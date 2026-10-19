@@ -5,11 +5,11 @@
  * are read-only. The engines stay pure; this module is where the snapshot meets them.
  */
 
-import { getSnapshot } from '@/lib/data';
+import { getPriorSeason } from '@/lib/datasets/prior-season';
+import { getSnapshot } from '@/lib/datasets/snapshot';
 import { type AdjustedScoring, computeAdjustedScoring } from '@/lib/engine/adjusted-scoring';
 import { type RatingTable, computeRatings } from '@/lib/engine/ratings';
 import type { TeamId } from '@/lib/model/ids';
-import { getPriorSeason } from '@/lib/prior-season';
 
 let bundledRatings: RatingTable | null = null;
 

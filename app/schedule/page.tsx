@@ -8,8 +8,11 @@ import ScheduleIndex from '@/components/schedule/ScheduleIndex';
 import { countGames } from '@/components/schedule/filter-data';
 import { buildScheduleIndex } from '@/components/schedule/schedule-view';
 import { SEASON_DISPLAY } from '@/lib/config/season';
-import { getGames, getLeagueSummaries, getTeamBySlug, getToday } from '@/lib/data';
+import { getToday } from '@/lib/datasets/snapshot';
 import { plural } from '@/lib/format/words';
+import { getGames } from '@/lib/queries/games';
+import { getLeagueSummaries } from '@/lib/queries/leagues';
+import { getTeamBySlug } from '@/lib/registry/teams';
 
 /**
  * `/schedule` — "What's on across the leagues?" (SPEC §8.1, §10.4): a LIGHT index. One page of

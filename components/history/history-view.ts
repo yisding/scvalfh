@@ -3,7 +3,7 @@
  * keeps every document's text as written (it is provenance, rebuilt byte for byte by
  * scripts/build-history.ts); this is where the page turns it into one consistent form:
  *
- * - a school is its registry name (lib/history.ts historySchoolName), linked to its team page;
+ * - a school is its registry name (lib/datasets/history.ts historySchoolName), linked to its team page;
  * - a position is the roster's vocabulary (components/ui/position-words.ts): "Defender", "D" and
  *   "Defense" all read "Defense", "GK" and "Goalie" read "Goalkeeper";
  * - an award title says "of the Year" the same way in both leagues ("GK of the Year" and "Goalie of
@@ -28,14 +28,11 @@
  */
 
 import {
-  getHistorySeason,
-  historySchoolName,
-  type HistoryAwards,
-  type HistoryPlayer,
-} from '@/lib/history';
+  type HistoryAwards, type HistoryPlayer, getHistorySeason, historySchoolName,
+} from '@/lib/datasets/history';
+import { getEnrichedTeamRoster, getRosters } from '@/lib/datasets/rosters';
 import type { LeagueId, TeamSlug } from '@/lib/model/ids';
 import { teamsInLeague } from '@/lib/registry/teams';
-import { getEnrichedTeamRoster, getRosters } from '@/lib/rosters';
 import { positionFromText } from '@/components/ui/position-words';
 
 /** One award winner or team-list player, as the page prints them. */

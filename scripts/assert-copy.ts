@@ -79,18 +79,18 @@ import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import path from 'node:path';
 
 import { buildLeadersView } from '@/components/leaders/leaders-view';
-import { getClubsFile } from '@/lib/clubs';
-import { getCommitsFile } from '@/lib/commits';
 import {
   LEAGUES, NO_POSTSEASON_LEAGUE_IDS, SECTION_PLAYOFFS_LEAGUE_IDS, TOURNAMENT_LEAGUE_IDS,
   UNBRACKETED_LEAGUE_IDS, getSection, isSingleDivision, regionOf,
 } from '@/lib/config/leagues';
 import { divisionLabel } from '@/lib/config/leagues/labels';
-import { getSnapshot } from '@/lib/data';
 import { gameSentence } from '@/components/history/bracket-view';
-import { getHistoryBrackets, getHistoryLeagues } from '@/lib/history';
+import { getClubsFile } from '@/lib/datasets/clubs';
+import { getCommitsFile } from '@/lib/datasets/commits';
+import { getHistoryBrackets, getHistoryLeagues } from '@/lib/datasets/history';
+import { getPlayerStats } from '@/lib/datasets/player-stats';
+import { getSnapshot } from '@/lib/datasets/snapshot';
 import type { LeagueId } from '@/lib/model/ids';
-import { getPlayerStats } from '@/lib/player-stats';
 import {
   EAL_SCHOOL_CLAIM,
   RED_BLUFF_STATUS_CLAIM,
@@ -148,7 +148,7 @@ for (const league of LEAGUES) {
 }
 
 const clubsFile = getClubsFile();
-/** The pages whose code reads lib/clubs.ts: app/clubs/**, the roster of app/teams/[slug], app/recruiting, app/about. */
+/** The pages whose code reads lib/datasets/clubs.ts: app/clubs/**, the roster of app/teams/[slug], app/recruiting, app/about. */
 const builtFromClubs = (file: string) =>
   file === 'clubs.html' ||
   file.startsWith('clubs/') ||
@@ -161,7 +161,7 @@ const citedBy = (html: string) =>
   new Set(clubSourceUrls.filter((url) => html.includes(`"${url}"`) || html.includes(`"${url.replace(/&/g, '&amp;')}"`)));
 
 const commitsFile = getCommitsFile();
-/** The pages whose code reads lib/commits.ts: app/commits, the roster of app/teams/[slug], app/recruiting, app/about. */
+/** The pages whose code reads lib/datasets/commits.ts: app/commits, the roster of app/teams/[slug], app/recruiting, app/about. */
 const builtFromCommits = (file: string) =>
   file === 'commits.html' || file.startsWith('teams/') || file === 'recruiting.html' || file === 'about.html';
 const commitSourceUrls = [...new Set(commitsFile.commitments.flatMap((c) => c.sources.map((s) => s.url)))];

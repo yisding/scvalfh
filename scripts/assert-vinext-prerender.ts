@@ -18,13 +18,13 @@
  *
  * The page families are EXACT, derived from the build's input, never from its output (the built
  * sitemap would make the check circular), by scripts/lib/prerender-expectations.ts, which
- * scripts/assert-prerender.ts uses too: the snapshot as lib/data.ts loads it (data/snapshot.json or
+ * scripts/assert-prerender.ts uses too: the snapshot as lib/datasets/snapshot.ts loads it (data/snapshot.json or
  * SCVAL_SNAPSHOT), cross-checked against lib/config/leagues.ts and the team registry, gives
  * `standings/<id>` and `schedule/<id>` for each league, `playoffs/<id>` for each league
  * tournament, `game/<param>` for every game plus one stub per `supersededGames` key (param =
  * lib/shared/game-id.ts gameIdToParam: `sblive:N` → `sblive-N`), `scores/<date>` for every distinct game
  * date and `teams/<slug>` for the registry's teams; data/clubs.json (DESIGN §17, SPEC §1.1j2,
- * through lib/clubs.ts) gives `clubs/<slug>` for exactly its slugs, with no OG card (they take the
+ * through lib/datasets/clubs.ts) gives `clubs/<slug>` for exactly its slugs, with no OG card (they take the
  * root one); `clubs` and `commits` (DESIGN §21) are fixed pages with the root card.
  * No prerendered path may contain ':'. Every family with an image has
  * OG/page parity BY NAME (`game/X.html` ⇔ `game/X/opengraph-image.route`, and the same for
@@ -51,7 +51,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-import { getSnapshot } from '@/lib/data';
+import { getSnapshot } from '@/lib/datasets/snapshot';
 import { FIXED_PAGES, expectedFamilies, makeFamilyChecker, sample } from './lib/prerender-expectations';
 
 interface PrerenderRoute {

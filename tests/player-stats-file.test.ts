@@ -16,16 +16,16 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { getPlayerStats, getTeamPlayerStats } from '@/lib/player-stats';
+import { getPlayerStats, getTeamPlayerStats } from '@/lib/datasets/player-stats';
+import { getRosters } from '@/lib/datasets/rosters';
 import { TEAMS, teamsInLeague } from '@/lib/registry/teams';
-import { getRosters } from '@/lib/rosters';
 import {
   FIELD_STAT_KEYS, PLAYER_STATS_TEAM_COUNT, type PlayerStatsFile, PlayerStatsFileSchema,
   PlayerStatsPartialSchema, countPlayerStats, playerStatsContentKey,
 } from '@/lib/schema/player-stats';
 import { type Rosters, RostersSchema, countRosters } from '@/lib/schema/rosters';
-import { pendingRoster } from '@/lib/sources/maxpreps-roster';
 import { pendingPlayerStats } from '@/lib/sources/maxpreps-player-stats';
+import { pendingRoster } from '@/lib/sources/maxpreps-roster';
 import { FIXTURE_DIR } from './support/corpus';
 import { expectOk, runRepoScript } from './support/cli';
 import { REPO, tempFile } from './support/repo';

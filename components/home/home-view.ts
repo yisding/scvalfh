@@ -2,7 +2,7 @@
  * Everything `/` renders, assembled once on the server (SPEC §10.1, DESIGN §3.1).
  *
  * This is the only module the home page reads data through, and it reads the snapshot ONLY through
- * `lib/data.ts` (plus the pure config helpers of `lib/config/leagues.ts` and `lib/shared/pin-label.ts`). "Today"
+ * `lib/queries/` (plus the pure config helpers of `lib/config/leagues.ts` and `lib/shared/pin-label.ts`). "Today"
  * is always `getToday()` — derived from `snapshot.fetchedAt` in America/Los_Angeles, never
  * `Date.now()` — so the build is reproducible and the "as of" stamp in the header is honest.
  *
@@ -23,35 +23,12 @@ import {
   CCS, REGIONS, getDivision, getLeague, isIndependentLeague, isSingleDivision, leaguePlayStarts, sectionOf,
 } from '@/lib/config/leagues';
 import { divisionHeading, standaloneName, standingsLabel } from '@/lib/config/leagues/labels';
-import {
-  getGameDates,
-  getGames,
-  getGoalDiffDomain,
-  getLastLeagueResultDate,
-  getLatestResultsDate,
-  getLeagueSummaries,
-  getNonLeagueFinalsPlayed,
-  getOfficialFixtures,
-  getPlayoffs,
-  getSeasonPhase,
-  getStandingContext,
-  getStandingFor,
-  getStandings,
-  getTeamById,
-  getTeamBySlug,
-  getTeamPostseasonLine,
-  getTeamSearchIndex,
-  getTeams,
-  getToday,
-  getUpcoming,
-  playInClause,
-  type LeagueSummary,
-} from '@/lib/data';
+import { hasHistory } from '@/lib/datasets/history';
+import { getToday } from '@/lib/datasets/snapshot';
 import { outcomesFor, playoffOutcomeLabel, statusBadge } from '@/lib/engine/standings';
 import { dateSpan, dateTimeAttr, leagueClock, monthDay, shortDate, timeOfDayPT } from '@/lib/format/dates';
 import { ordinal, ordinalWord, recordString, recordWords } from '@/lib/format/numbers';
 import { EM_DASH, listWords, numberWord, plural } from '@/lib/format/words';
-import { hasHistory } from '@/lib/history';
 import type { Game } from '@/lib/model/game';
 import type { DivisionId, LeagueId, RegionId } from '@/lib/model/ids';
 import {
@@ -59,7 +36,16 @@ import {
 } from '@/lib/model/league-config';
 import type { SeasonPhase } from '@/lib/model/season';
 import type { Team } from '@/lib/model/team';
-import { teamOfSide } from '@/lib/registry/teams';
+import {
+  getGameDates, getGames, getLastLeagueResultDate, getLatestResultsDate, getNonLeagueFinalsPlayed,
+  getOfficialFixtures, getUpcoming,
+} from '@/lib/queries/games';
+import { type LeagueSummary, getLeagueSummaries } from '@/lib/queries/leagues';
+import { getSeasonPhase } from '@/lib/queries/phase';
+import { getPlayoffs, getTeamPostseasonLine, playInClause } from '@/lib/queries/postseason';
+import { getGoalDiffDomain, getStandingContext, getStandingFor, getStandings } from '@/lib/queries/standings';
+import { getTeamSearchIndex, getTeams } from '@/lib/queries/teams';
+import { teamOfSide, getTeamById, getTeamBySlug } from '@/lib/registry/teams';
 import { gameHref } from '@/lib/shared/game-id';
 import { pickerName, pinLabel } from '@/lib/shared/pin-label';
 import type { SearchIndex } from '@/lib/shared/search';

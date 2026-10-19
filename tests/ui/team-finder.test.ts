@@ -16,8 +16,8 @@ import {
   pinResultDetail,
   resultDetail,
 } from '@/components/search/TeamFinder';
-import { getTeamSearchIndex } from '@/lib/data';
 
+import { getTeamSearchIndex } from '@/lib/queries/teams';
 import { pinLabel } from '@/lib/shared/pin-label';
 import { searchTeams } from '@/lib/shared/search';
 import { textOfSrOnly } from '@/tests/support/html-text';

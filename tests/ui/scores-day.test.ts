@@ -23,8 +23,9 @@ import { longDate } from '@/lib/format/dates';
 import type { Game } from '@/lib/model/game';
 import { parseLocal } from '@/lib/shared/dates';
 import { textOf } from '@/tests/support/html-text';
+import { type Queries, loadQueries } from '@/tests/support/queries';
 
-type Data = typeof import('@/lib/data');
+type Data = Queries;
 type Day = typeof import('@/components/schedule/day-summary');
 
 let data: Data;
@@ -34,7 +35,7 @@ let renderDay: (date: string) => Promise<string>;
 let describeDay: (date: string) => Promise<string>;
 
 beforeAll(async () => {
-  data = await import('@/lib/data');
+  data = await loadQueries();
   day = await import('@/components/schedule/day-summary');
   jvView = await import('@/components/teams/jv-view');
   const page = await import('@/app/scores/[date]/page');

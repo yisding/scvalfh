@@ -37,12 +37,13 @@ import { DATA_CORRECTIONS_URL, OG_BASE } from '@/components/layout/site';
 import { teamJsonLd } from '@/components/layout/structured-data';
 import { getLeague, leagueOfDivision, regionOf } from '@/lib/config/leagues';
 import { divisionHeading } from '@/lib/config/leagues/labels';
-import { getTeamSlugs, getToday } from '@/lib/data';
+import { getHistoryFor, getHistorySeason, getHistoryStandings } from '@/lib/datasets/history';
+import { getToday } from '@/lib/datasets/snapshot';
 import { shortDate } from '@/lib/format/dates';
 import { ordinal, recordString } from '@/lib/format/numbers';
 import { formStripName, plural } from '@/lib/format/words';
-import { getHistoryFor, getHistorySeason, getHistoryStandings } from '@/lib/history';
 import type { DivisionId, LeagueId } from '@/lib/model/ids';
+import { getTeamSlugs } from '@/lib/queries/teams';
 
 /**
  * /teams/[slug] — "How is MY team doing?" (DESIGN §3.7).

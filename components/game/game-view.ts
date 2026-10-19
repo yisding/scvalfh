@@ -16,7 +16,7 @@
  * head-to-head note cite the game's own league, and a si.com score (owner decision D2) carries its
  * source line.
  *
- * This module reads the snapshot through lib/data.ts only, so it is SERVER-ONLY (lib/data does an
+ * This module reads the snapshot through lib/queries/ only, so it is SERVER-ONLY (lib/datasets/snapshot.ts does an
  * fs read at module scope). The components under components/game/ take its output as plain data and
  * stay free of it.
  */
@@ -24,17 +24,6 @@
 import { findDivision, findLeague, getLeague, leagueOfDivision } from '@/lib/config/leagues';
 import { divisionDisplay, divisionHeading, leagueSportWords } from '@/lib/config/leagues/labels';
 import { SEASON_DISPLAY } from '@/lib/config/season';
-import {
-  getGameById,
-  getGames,
-  getLeagueTournament,
-  getSbliveCrossCheck,
-  getStandingFor,
-  getSupersededGames,
-  getTeamBySlug,
-  getTeamForm,
-  getTeams,
-} from '@/lib/data';
 import { SHOOTOUT_NOTE } from '@/lib/engine/postseason';
 import { dateWithYear, monthDay, shortDate, timeOfDayPT } from '@/lib/format/dates';
 import { recordString } from '@/lib/format/numbers';
@@ -46,6 +35,11 @@ import { type LeagueConfig } from '@/lib/model/league-config';
 import type { TournamentGame } from '@/lib/model/postseason';
 import type { Standing, TiebreakStage } from '@/lib/model/standings';
 import type { Team } from '@/lib/model/team';
+import { getGameById, getGames, getTeamForm } from '@/lib/queries/games';
+import { getLeagueTournament } from '@/lib/queries/postseason';
+import { getSbliveCrossCheck, getSupersededGames } from '@/lib/queries/provenance';
+import { getStandingFor } from '@/lib/queries/standings';
+import { getTeams } from '@/lib/queries/teams';
 import type { FormEntry } from '@/components/ui/FormStrip';
 import {
   describeGame,
@@ -59,6 +53,7 @@ import {
   type GameDisplay,
   type SideView,
 } from '@/components/ui/describe-game';
+import { getTeamBySlug } from '@/lib/registry/teams';
 import { sideOutcome } from '@/lib/shared/game';
 import { gameHref, gameIdToParam, paramToGameId } from '@/lib/shared/game-id';
 

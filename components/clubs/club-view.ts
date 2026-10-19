@@ -1,11 +1,11 @@
 /**
  * The club pages (/clubs, /clubs/[slug]) and the team roster's club line (SPEC §1.1j2, DESIGN §17),
- * derived from lib/clubs.ts. Pure, so tests/ui/club-view.test.ts can assert it over the real files;
+ * derived from lib/datasets/clubs.ts. Pure, so tests/ui/club-view.test.ts can assert it over the real files;
  * every word a club page or a club line prints about a club tie is chosen here, in one module.
  *
  * What the pages promise, and this module enforces:
  *   - only rows on the tracked varsity rosters are named: a row is an affiliation, and every
- *     affiliation joined a non-JV row of data/rosters.json at load (lib/clubs.ts), under that
+ *     affiliation joined a non-JV row of data/rosters.json at load (lib/datasets/clubs.ts), under that
  *     row's own spelling. A club's own roster names many more players; it is linked, never copied;
  *   - `quote`, `basis`, `confidence`, `statedSchool` and `statedClassYear` never reach a view type:
  *     the quote and the basis are for maintainers and can name people who are not players here, and
@@ -19,24 +19,14 @@
  */
 
 import {
-  SEARCHED_REGIONS,
-  clubDisplayName,
-  getAffiliatedPlayer,
-  getClub,
-  getClubAffiliations,
-  getClubs,
-  getClubsFile,
-  getPlayerClubs,
-  type AffiliationSource,
-  type AffiliationStatus,
-  type Club,
-  type ClubAffiliation,
-  type ClubRegion,
-} from '@/lib/clubs';
+  type AffiliationSource, type AffiliationStatus, type Club, type ClubAffiliation, type ClubRegion,
+  SEARCHED_REGIONS, clubDisplayName, getAffiliatedPlayer, getClub, getClubAffiliations, getClubs,
+  getClubsFile, getPlayerClubs,
+} from '@/lib/datasets/clubs';
+import { getRosters } from '@/lib/datasets/rosters';
 import { dateWithYear, partialDate, partialDateKind } from '@/lib/format/dates';
 import { gradeWord, listWords, plural } from '@/lib/format/words';
 import type { RegionId, TeamSlug } from '@/lib/model/ids';
-import { getRosters } from '@/lib/rosters';
 import { OUTLETS, hostOf, numbered, pathOf, schoolName } from '@/components/ui/source-hosts';
 import { CLUB_REGIONS, CLUB_REGION_SITE_REGION, clubSiteKey } from '@/lib/schema/clubs';
 
@@ -298,7 +288,7 @@ export interface ClubsIndexView {
   lede: string;
   /** The regions that have a club, in CLUB_REGIONS order; clubs in getClubs() order (DESIGN §17.5). */
   regions: ClubRegionGroup[];
-  /** The searched areas (lib/clubs.ts SEARCHED_REGIONS) with no club, as headings: ['Peninsula', 'Central Coast']. */
+  /** The searched areas (lib/datasets/clubs.ts SEARCHED_REGIONS) with no club, as headings: ['Peninsula', 'Central Coast']. */
   regionsWithoutClubs: string[];
   /** "This list has no club based on the Peninsula or the Central Coast."; null when every area has one. */
   regionsWithoutClubsSentence: string | null;
@@ -595,7 +585,7 @@ export function buildClubPageView(slug: string): ClubPageView | null {
   if (!club) return null;
   const name = clubDisplayName(club);
 
-  // School, then the roster's own name order (lib/rosters.ts sortedPlayers' byName).
+  // School, then the roster's own name order (lib/datasets/rosters.ts sortedPlayers' byName).
   const ties = [...getClubAffiliations(slug)]
     .map((a) => ({ a, p: getAffiliatedPlayer(a), school: schoolName(a.teamSlug) }))
     .sort(

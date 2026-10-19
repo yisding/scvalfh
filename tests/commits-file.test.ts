@@ -1,6 +1,6 @@
 /**
  * data/commits.json (SPEC §1.1j3, DESIGN §21): the committed file validates and holds every
- * load-time invariant; lib/commits.ts serves it in display order (DESIGN §21.1); and a bad file —
+ * load-time invariant; lib/datasets/commits.ts serves it in display order (DESIGN §21.1); and a bad file —
  * built in memory, never written to disk — is refused at load with a message that names what is
  * wrong (the path, or the team, player and college).
  *
@@ -16,22 +16,12 @@ import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 import {
-  collegeDisplayName,
-  commitClassOf,
-  commitProgram,
-  getCollege,
-  getCollegeCommitments,
-  getColleges,
-  getCommitments,
-  getCommitsFile,
-  getCommitsLastChecked,
-  getCommittedPlayer,
-  getPlayerCommitment,
-  getTeamCommitments,
-  loadCommits,
-} from '@/lib/commits';
+  collegeDisplayName, commitClassOf, commitProgram, getCollege, getCollegeCommitments, getColleges,
+  getCommitments, getCommitsFile, getCommitsLastChecked, getCommittedPlayer, getPlayerCommitment,
+  getTeamCommitments, loadCommits,
+} from '@/lib/datasets/commits';
+import { type MergedPlayer, classOf, getAllEnrichedRosters, getRosters } from '@/lib/datasets/rosters';
 import { getTeamBySlug } from '@/lib/registry/teams';
-import { classOf, getAllEnrichedRosters, getRosters, type MergedPlayer } from '@/lib/rosters';
 import { BANNED_HOSTS } from '@/lib/schema/clubs';
 import {
   COLLEGE_DIVISIONS, COMMIT_SPORTS, type College, type Commitment, type CommitsFile, CommitsFileSchema,
@@ -334,7 +324,7 @@ describe('the research of 2026-10-03, 2026-10-04, 2026-10-06 and 2026-10-12 (the
   });
 });
 
-describe('lib/commits.ts read API', () => {
+describe('lib/datasets/commits.ts read API', () => {
   it('serves commitments by class, earliest first, then school, then name', () => {
     const classes = getCommitments().map((c) => commitClassOf(c) ?? Number.POSITIVE_INFINITY);
     expect(classes).toEqual([...classes].sort((a, b) => a - b));
@@ -349,7 +339,7 @@ describe('lib/commits.ts read API', () => {
 
   it('finds each commitment by player and by team, and nothing for anyone else', () => {
     for (const c of raw.commitments) {
-      // By value: lib/commits.ts serves the objects its own parse produced, not this file's.
+      // By value: lib/datasets/commits.ts serves the objects its own parse produced, not this file's.
       expect(getPlayerCommitment(c.teamSlug as never, c.athleteId)).toEqual(c);
       expect(getTeamCommitments(c.teamSlug as never)).toContainEqual(c);
       expect(getCollege(c.college)).toBeDefined();

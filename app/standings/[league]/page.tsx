@@ -13,11 +13,11 @@ import { leaderClause } from '@/components/standings/standings-view';
 import Arrow from '@/components/ui/Arrow';
 import ExternalLink from '@/components/ui/ExternalLink';
 import { biggestGoalDiff } from '@/components/ui/StandingsTable';
-import { getLeague } from '@/lib/config/leagues';
+import { LEAGUE_IDS, getLeague } from '@/lib/config/leagues';
 import { leagueSportWords, standingsLabel } from '@/lib/config/leagues/labels';
-import { getLeagueIds, getLeagueSummary } from '@/lib/data';
+import { hasHistory } from '@/lib/datasets/history';
 import { shortDate } from '@/lib/format/dates';
-import { hasHistory } from '@/lib/history';
+import { getLeagueSummary } from '@/lib/queries/leagues';
 
 /**
  * /standings/<league> — "Where do WE stand?" (SPEC §8.1, §10.3): one league's full tables.
@@ -39,14 +39,14 @@ import { hasHistory } from '@/lib/history';
  * games against each other, and its notes carry the group's own sentence (`official.note`). The title names the
  * group ('Independents standings'), since its short name is an adjective.
  *
- * Static: `generateStaticParams` from `getLeagueIds()` with `dynamicParams = false`, no
+ * Static: `generateStaticParams` from `LEAGUE_IDS` with `dynamicParams = false`, no
  * search params, nothing derived from `Date.now()`. Following this URL never writes the
  * remembered league (the switcher is in link mode).
  */
 export const dynamicParams = false;
 
 export function generateStaticParams(): { league: string }[] {
-  return getLeagueIds().map((league) => ({ league }));
+  return LEAGUE_IDS.map((league) => ({ league }));
 }
 
 export async function generateMetadata({ params }: PageProps<'/standings/[league]'>): Promise<Metadata> {

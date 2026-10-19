@@ -35,7 +35,7 @@
  *     (orderScope 'site': every SoCal league).
  *
  * League-specific data comes from the offline corpora (SPEC §13.6: loaded through
- * useCorpusModules, which points lib/data at the corpus snapshot before it is imported), so a live fetch cannot move it. The
+ * useCorpusModules, which points lib/datasets/snapshot.ts at the corpus snapshot before it is imported), so a live fetch cannot move it. The
  * all-2026-10-02 corpus holds four leagues' data; the EAL is in it but frozen with no games of its
  * own. So a second collection runs over the EAL corpus (EAL_CORPUS, a fresh module graph): the home
  * EAL panel, card and pinned views, /standings/eal, /schedule/eal and the /playoffs EAL card as
@@ -49,6 +49,7 @@ import { createElement, type ReactElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { beforeAll, describe, expect, it } from 'vitest';
 
+import { LEAGUE_IDS } from '@/lib/config/leagues';
 import {
   EAL_SCHOOL_CLAIM,
   RED_BLUFF_STATUS_CLAIM,
@@ -64,10 +65,11 @@ import {
 } from '@/scripts/copy-rules';
 import { EAL_CORPUS } from '@/tests/support/corpus';
 import { CORPUS_HOOK_TIMEOUT, useCorpusModules, withCorpusModules } from '@/tests/support/corpus-modules';
+import { loadQueries } from '@/tests/support/queries';
 
 /** The modules every collection reads, in the order the file imported them. */
 const COLLECTED = {
-  data: () => import('@/lib/data'),
+  data: loadQueries,
   leagues: () => import('@/lib/config/leagues'),
   labels: () => import('@/lib/config/leagues/labels'),
   home: () => import('@/components/home/home-view'),
@@ -105,7 +107,7 @@ interface Subject {
 }
 let subjects: Subject[] = [];
 
-/** The EAL corpus's collection, from its own module graph (lib/data reads its snapshot once). */
+/** The EAL corpus's collection, from its own module graph (lib/datasets/snapshot.ts reads its snapshot once). */
 interface EalCorpus {
   data: typeof corpus.data;
   leagues: Leagues;
@@ -142,7 +144,7 @@ beforeAll(async () => {
     s.push({ producer: HV, label: `${region.shortName} region (status, cards, latest)`, league: null, value: region });
   }
 
-  for (const id of data.getLeagueIds()) {
+  for (const id of LEAGUE_IDS) {
     const short = leagues.getLeague(id).shortName;
     s.push({ producer: SPV, label: `${short} standings`, league: id, value: standings.buildStandingsPageView(id) });
   }
@@ -340,8 +342,8 @@ describe('copy honesty over every league’s view models (SPEC §10.9)', () => {
     new Set([...leagues.LEAGUES, ...eal.leagues.LEAGUES].filter((l) => l.sectionId !== 'ccs').map((l) => l.id));
 
   it('collects view models for every league from every producer', () => {
-    expect(data.getLeagueIds().length, 'lib/data.ts: league ids').toBe(leagues.LEAGUES.length);
-    for (const id of data.getLeagueIds()) {
+    expect(LEAGUE_IDS.length, 'lib/config/leagues.ts: league ids').toBe(leagues.LEAGUES.length);
+    for (const id of LEAGUE_IDS) {
       for (const producer of [HV, SPV, TV]) {
         expect(subjects.some((s) => s.producer === producer && s.league === id), `${producer}: no view model for ${id}`).toBe(true);
       }
@@ -430,7 +432,7 @@ describe('copy honesty over every league’s view models (SPEC §10.9)', () => {
     expect(quoted.length, 'lib/config/leagues.ts: co-champion rules').toBeGreaterThan(0);
     const unquoted = (v: string) => quoted.reduce((rest, q) => rest.split(q).join(' '), v);
     for (const [corpus, d] of [[subjects, data], [eal.subjects, eal.data]] as const) {
-      for (const id of d.getLeagueIds()) {
+      for (const id of LEAGUE_IDS) {
         const phase = d.getSeasonPhase(id);
         if (phase !== 'preseason' && phase !== 'regular') continue;
         for (const s of corpus.filter((x) => x.league === id)) {

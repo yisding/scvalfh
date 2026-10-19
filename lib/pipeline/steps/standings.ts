@@ -4,7 +4,7 @@
  * cross-check, and one `LeagueHealth` row per configured league in config order.
  *
  * `DivisionHealth.official.missingPast` comes from `missingOfficialResults()` (lib/engine/standings/missing.ts) —
- * the same function lib/data.ts uses, never a second implementation. A division whose league
+ * the same function lib/queries/standings.ts uses, never a second implementation. A division whose league
  * publishes no schedule (official mode 'none': EAL) has `official: null` and carries the same count,
  * from the same function, as `missingLeaguePast`; no other division has that field.
  */

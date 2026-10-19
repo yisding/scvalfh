@@ -5,9 +5,9 @@
  * Every record must join to a row of its team under the row's own fullName, the row must be at the
  * level the caller asks for (varsity, unless `level: 'jv'`), and, when the row has a grade, every class year a source states must be that grade's. A
  * failure throws `<label>: <team> / <player> (<subject>): <what>`, naming the club or the college.
- * What a file asks beyond that stays in its own loader: lib/commits.ts also settles a class year
+ * What a file asks beyond that stays in its own loader: lib/datasets/commits.ts also settles a class year
  * for a player with no grade, because /commits groups players by class year; clubs never show
- * one (lib/clubs.ts).
+ * one (lib/datasets/clubs.ts).
  */
 
 import { classOf, type MergedPlayer, type MergedTeamRoster } from './rosters';

@@ -1,7 +1,7 @@
 /**
  * Everything /teams and /teams/[slug] need, derived once per page.
  *
- * The page reads the snapshot ONLY through lib/data.ts and every printed score comes from
+ * The page reads the snapshot ONLY through lib/queries/ and every printed score comes from
  * lib/format/score.ts's renderScore (the form chips' `0–7`) or components/ui/describe-game's describeGame —
  * nothing here PRINTS `game.home.score`. The only arithmetic in this file is counting
  * fixtures and finding the games either side of "today", and "today" is always
@@ -13,25 +13,7 @@ import {
   REGIONS, getDivision, getLeague, getRegion, leaguePlayEnds, leaguesInRegion, regionOf,
 } from '@/lib/config/leagues';
 import { divisionHeading, standingsLabel } from '@/lib/config/leagues/labels';
-import {
-  getGames,
-  getHeadToHead,
-  getLastLeagueResultDate,
-  getOfficialFixtures,
-  getStandingContext,
-  getStandingFor,
-  getStandings,
-  getTeamBySlug,
-  getTeamForm,
-  getTeamPostseasonLine,
-  getTeams,
-  getTeamsGrouped,
-  getToday,
-  type FormGame,
-  type LeagueSummary,
-  type StandingContext,
-  type TeamPostseasonLine,
-} from '@/lib/data';
+import { getToday } from '@/lib/datasets/snapshot';
 import { outcomesFor } from '@/lib/engine/standings';
 import { dateSpan, gameWhen, monthDay, shortDate, timeOfDayPT } from '@/lib/format/dates';
 import { ordinal, recordString } from '@/lib/format/numbers';
@@ -43,6 +25,16 @@ import type { DivisionId, LeagueId, RegionId, SectionId, TeamSlug } from '@/lib/
 import { type LeagueRules, type PostseasonConfig } from '@/lib/model/league-config';
 import type { Standing } from '@/lib/model/standings';
 import type { Team } from '@/lib/model/team';
+import {
+  type FormGame, getGames, getLastLeagueResultDate, getOfficialFixtures, getTeamForm,
+} from '@/lib/queries/games';
+import { type LeagueSummary, getTeamsGrouped } from '@/lib/queries/leagues';
+import { type TeamPostseasonLine, getTeamPostseasonLine } from '@/lib/queries/postseason';
+import {
+  type StandingContext, getStandingContext, getStandingFor, getStandings,
+} from '@/lib/queries/standings';
+import { getHeadToHead, getTeams } from '@/lib/queries/teams';
+import { getTeamBySlug } from '@/lib/registry/teams';
 import { sideOutcome } from '@/lib/shared/game';
 import { pinLabel } from '@/lib/shared/pin-label';
 import { getEloBoardForTeam } from '@/components/leaders/elo-board';
@@ -201,7 +193,7 @@ export interface TeamPageView {
   officialScheduleUrl: string | null;
   /** false ⇒ every number renders as an em dash, never 0-0-0 (DESIGN §8). */
   hasResults: boolean;
-  /** GP counted / scheduled, games left and the points ceiling (lib/data.ts §5.10). */
+  /** GP counted / scheduled, games left and the points ceiling (lib/queries/standings.ts §5.10). */
   context: StandingContext | undefined;
   /** getTeamPostseasonLine(slug): null for a team with no results (never placed by merit). */
   postseasonLine: TeamPostseasonLine | null;

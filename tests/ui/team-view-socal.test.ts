@@ -14,12 +14,14 @@ import { type ReactElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 
+import { getTeamBySlug } from '@/lib/registry/teams';
 import { SOCAL_CORPUS } from '@/tests/support/corpus';
 import { useCorpusModules } from '@/tests/support/corpus-modules';
 import { textOf } from '@/tests/support/html-text';
+import { loadQueries } from '@/tests/support/queries';
 
 const m = useCorpusModules(SOCAL_CORPUS, {
-  data: () => import('@/lib/data'),
+  data: loadQueries,
   view: () => import('@/components/teams/team-view'),
   teamPage: () => import('@/app/teams/[slug]/page'),
 });
@@ -38,8 +40,8 @@ describe('San Diego team pages (socal corpus)', () => {
 
   it('an "Earlier:" level W/L final in the San Diego Section is a credited win, never a shootout', () => {
     // Poway 0, Mt. Carmel 0, Sep 11 at Poway: MaxPreps marks Mt. Carmel W and Poway L, decider 'SO'.
-    const mtCarmel = m.data.getTeamBySlug('mt-carmel')!;
-    const poway = m.data.getTeamBySlug('poway')!;
+    const mtCarmel = getTeamBySlug('mt-carmel')!;
+    const poway = getTeamBySlug('poway')!;
     expect(m.view.earlierMeeting(mtCarmel, poway, '2026-09-12')?.text, `${TV} earlierMeeting`).toBe(
       'Earlier: credited with the win on a level 0–0 score away, Sep 11',
     );

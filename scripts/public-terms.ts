@@ -15,13 +15,13 @@
 import { SPORT_WORDS } from '@/components/commits/commit-view';
 import { overallAwards, splitOverallValue } from '@/components/history/history-view';
 import { positionFromText } from '@/components/ui/position-words';
-import { getClubs } from '@/lib/clubs';
-import { getColleges } from '@/lib/commits';
+import { getClubs } from '@/lib/datasets/clubs';
+import { getColleges } from '@/lib/datasets/commits';
+import { getAvailableHistoryLeagues } from '@/lib/datasets/history';
+import { getAllEnrichedRosters } from '@/lib/datasets/rosters';
 import { gradeWord } from '@/lib/format/words';
-import { getAvailableHistoryLeagues } from '@/lib/history';
 import type { TeamSlug } from '@/lib/model/ids';
 import { TEAMS, getTeamBySlug } from '@/lib/registry/teams';
-import { getAllEnrichedRosters } from '@/lib/rosters';
 import type { ArchiveLine } from './copy-rules';
 
 const terms = new Set<string>(['Field Hockey', ...Object.values(SPORT_WORDS)]);
