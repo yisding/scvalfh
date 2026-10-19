@@ -13,7 +13,7 @@ import { describe, expect, it } from 'vitest';
 import { compareBundleFixtures, serializeBundle } from '@/lib/official/bundle';
 import { readOfficialBundle } from '@/lib/official/bundle-file';
 import { BVAL_DEFAULT_VARSITY, BVAL_TIME_OVERRIDES, parseBvalScheduleText } from '@/lib/sources/bval/schedule-text';
-import { buildBval, buildBvalFromText } from '@/scripts/build-official-fixtures';
+import { buildBval, buildBvalFromText } from '@/lib/official/build';
 import { REPO } from './support/repo';
 
 const FIX = path.join(REPO, 'tests', 'fixtures', 'official');

@@ -1,5 +1,5 @@
 /**
- * scripts/data-issues.ts: the cron's bookkeeping issues. One per official schedule revised upstream
+ * lib/pipeline/data-issues.ts: the cron's bookkeeping issues. One per official schedule revised upstream
  * (a stale official-revision-check row, titled by the league and, in a split league only, the
  * division) and one per league frozen in this run AND the previous one, never for a league frozen
  * only now.
@@ -12,7 +12,7 @@ import { afterAll, describe, expect, it } from 'vitest';
 
 import type { Snapshot } from '@/lib/model/snapshot';
 import { loadSnapshot } from '@/lib/snapshot/load';
-import { buildDataIssues, readPreviousMeta, type PreviousMeta } from '@/scripts/data-issues';
+import { buildDataIssues, readPreviousMeta, type PreviousMeta } from '@/lib/pipeline/data-issues';
 import { VARIANTS_DIR } from './support/corpus';
 import { tempDir } from './support/repo';
 
