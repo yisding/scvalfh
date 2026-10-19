@@ -42,7 +42,7 @@ couples two modules as surely as a value edge).
 
 | Rank | Directory | Holds |
 |---|---|---|
-| 0 | `lib/model/` | Types only: ids, teams, games, standings, postseason, the snapshot, the league-config shapes |
+| 0 | `lib/model/` | Types (and the two `as const` tuples their unions derive from): ids, teams, games, standings, postseason, the snapshot, the league-config shapes |
 | 1 | `lib/shared/`, `lib/format/` | Client-safe pure helpers (dates, game ids, routes, search, patterns) and copy (words, numbers, scores, the standings and postseason sentences) |
 | 2 | `lib/config/` | The season, base URLs and the league configuration (the `lib/config/leagues.ts` door) |
 | 3 | `lib/registry/` | The team registry (the `lib/registry/teams.ts` door) |
@@ -62,8 +62,9 @@ imports it.
 
 The rules, as `tests/arch/layers.test.ts` prints them in a failure line:
 
-- (a) a ranked module imports only its own rank or below, plus the import-free LEAVES of
-  `lib/config/` (`season`, `source-urls`, `invariant`, `mascots`); `lib/model/` imports only itself;
+- (a) a ranked module imports only its own rank or below, plus the LEAVES of `lib/config/`
+  (`season`, `source-urls`, `invariant`, `mascots`: they import nothing but each other);
+  `lib/model/` imports only itself;
 - (b) a ranked module never imports the ingestion side, `scripts/` or `tests/`;
 - (c) the ingestion side imports ranks up to `lib/snapshot/`, itself and the LEAVES;
 - (d) `lib/sources/` never imports `lib/pipeline/` or `lib/official/`;
@@ -74,8 +75,8 @@ The rules, as `tests/arch/layers.test.ts` prints them in a failure line:
 - (h) a `views/**/*-client.ts` slice imports only ranks 0-1, the LEAVES and other client slices;
 - (i) `scripts/` and `app/` never import `tests/`;
 - (j) `components/` never import `lib/queries/` or `lib/datasets/`: the snapshot is read in exactly two
-  layers, `views/` and `app/`, and a component renders what it is handed (`views/site/chrome-view.ts`
-  for the site chrome).
+  layers, `views/` and `app/`, and a component never reads it (`views/site/chrome-view.ts` hands the
+  site chrome its data); static config and registry lookups and view helpers are allowed.
 
 The other structural checks, each a test under `tests/arch/` unless named otherwise:
 
@@ -89,16 +90,20 @@ The other structural checks, each a test under `tests/arch/` unless named otherw
 | File names say what a file holds | `tests/arch/naming.test.ts` |
 | Every top-level source directory is scanned by the rules above | `tests/arch/source-roots.test.ts` |
 | Per-row links do not prefetch; class strings keep Tailwind candidates whole | `tests/arch/prefetch-policy.test.ts`, `tests/arch/class-join.test.ts` |
+| Count copy handles n === 1; no className cancels the phone bleed | `tests/arch/plural-counts.test.ts`, `tests/arch/sx-bleed.test.ts` |
 | The cron and the deploy workflow agree on what a data commit is | `tests/arch/workflows.test.ts` |
 | The top-level directions and the rule (g) cycles, in the editor | ESLint `import/no-restricted-paths`, `import/no-cycle` (`eslint.config.mjs`) |
 | No server module leaks into a page's browser bundle | `scripts/ci/assert-budgets.ts` (first-load JS per route) |
 
 ## Package doors
 
-Three packages are a named file beside a directory of parts. The door assembles the parts, re-exports
-the public values with explicit named exports, and runs the package's invariants at the end of its
-module, so an inconsistent config or registry fails at import time with a message that starts with the
-door's path. Rule (f) keeps everyone else on the door.
+Three packages have a door file: two sit beside their directory of parts (`lib/config/leagues.ts`,
+`lib/engine/standings.ts`), and the registry's is the named file inside `lib/registry/`, beside its
+seed and part files. A door assembles the parts and re-exports the public values with explicit named
+exports. The config and registry doors also run the package's invariants at the end of their module,
+so an inconsistent config or registry fails at import time with a message that starts with the door's
+path; the engine door re-exports so that its parts stay private. Rule (f) keeps everyone else on the
+door.
 
 | Door | Parts | Also public on their own |
 |---|---|---|
@@ -121,8 +126,8 @@ reached it. The boundary is an allowlist: a new server module is banned the day 
 
 Bytes matter as much as the boundary: every route's first-load JavaScript has a budget
 (`scripts/ci/assert-budgets.ts`, against `tests/golden/page-weights-main.json`), and `/teams`, which
-ships the team finder on top of the site chrome's client modules, has almost none left. A change under `components/` or to a client slice is measured with
-`pnpm build && pnpm assert:budgets`.
+ships the team finder on top of the site chrome's client modules, has almost none left. A change
+under `components/` or to a client slice is measured with `pnpm build && pnpm assert:budgets`.
 
 ## The directory map
 
@@ -132,7 +137,7 @@ ships the team finder on top of the site chrome's client modules, has almost non
 | `components/<feature>/` | PascalCase React components per page area; `components/ui/` holds shared primitives |
 | `components/standings/table/`, `components/game-row/` | The standings table and the game row, split into their variants and parts |
 | `components/og/` | The OG card kit: primitives and one card per route, rendered by the `opengraph-image.tsx` routes |
-| `components/hooks/`, `components/head/` | Client hooks and local storage; the import-free inline `<head>` scripts and CSS |
+| `components/hooks/`, `components/head/` | Client hooks and local storage; the inline `<head>` sources, scripts and CSS (client-safe, no server imports) |
 | `views/<area>/` | `<area>-view.ts` (the page's view builder), `<area>-route.ts` (its params), topic modules, `*-client.ts` slices |
 | `views/shared/`, `views/site/` | View helpers shared across areas; the site's chrome, metadata, OG theme, structured data and route contract |
 | `lib/` | The ranks above, and the ingestion side |
@@ -146,15 +151,16 @@ ships the team finder on top of the site chrome's client modules, has almost non
 
 `views/site/route-contract.ts` states it once:
 
-- A view module `views/<area>/<area>-view.ts` exports `build<Area>View(params)`, which returns a plain,
-  serializable view (no JSX, no class instances) or `null` when the params name nothing. A route answers
-  `notFound()` on exactly one test, `if (!view)`.
+- A view module `views/<area>/<area>-view.ts` (the area may be singular: `views/teams/team-view.ts`)
+  exports one or more `build…View(params)` builders, each returning a plain, serializable view (no
+  JSX, no class instances) or `null` when the params name nothing. A route answers `notFound()` on one
+  null test, of the route param or of what was built from it.
 - A dynamic family's route module `views/<area>/<area>-route.ts` exports `<area>StaticParams()` (every
   param the family prerenders) and `<area>Param(raw)` (the value a raw segment names, or `null`). The
   page's and its OG card's `generateStaticParams` both return the first, and `app/sitemap.ts` lists the
   family from it, so a page, its image and the sitemap cannot disagree (`tests/app/static-params.test.ts`).
   Every guard calls the second before any accessor that can throw for an unknown id.
-- A `*-client.ts` slice holds the types and import-free helpers a client component shares with its view
+- A `*-client.ts` slice holds the types and client-safe helpers a client component shares with its view
   model (rule (h)).
 
 ## The data lifecycle
@@ -188,8 +194,9 @@ each file.
   route file, because Next detects segment config only from literal declarations. An unknown param is a
   404, and nothing reads `searchParams`.
 - Metadata goes through `pageMetadata()`; every prerendered family but the clubs pages has an
-  `opengraph-image.tsx` built from the `components/og/` kit (the clubs pages take the root card). The image routes hash their own source into each page's `og:image` URL, so a
-  byte change in one of those files changes every page that points at it.
+  `opengraph-image.tsx` built from the `components/og/` kit (the clubs pages take the root card). The
+  image routes hash their own source into each page's `og:image` URL, so a byte change in one of those
+  files changes every page that points at it.
 - One `app/` builds three ways: `next build` (served by `next start`), and vinext's `vite build` for Node
   (`vinext start`) and for Cloudflare Workers (`--mode cloudflare`). All three prerender the same routes
   and answer the same response contract (`scripts/ci/smoke-server.sh`); `docs/DEPLOYMENT.md` has the
@@ -201,7 +208,7 @@ each file.
 |---|---|
 | `pnpm check` | `pnpm typecheck && pnpm lint && pnpm test`: types (after `next typegen`), lint, and the whole Vitest suite, the architecture rules (`pnpm test:arch`) among it |
 | `pnpm gate` | `pnpm build`, then every route prerendered with exact counts (`assert:prerender`), the page-weight and first-load budgets (`assert:budgets`) and the copy rules over the built HTML (`assert:copy`) |
-| `pnpm gate:all` | The whole CI job list on one machine: the Next, vinext and Worker builds, each asserted, smoke-tested and run through axe |
+| `pnpm gate:all` | The whole CI job list on one machine: the Next, vinext and Worker builds, each asserted, smoke-tested and run through axe (12-15 min; run it in the background) |
 
 Inside the suite, a few tests pin behaviour rather than code:
 

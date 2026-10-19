@@ -38,7 +38,7 @@ export const EXCLUDED: readonly string[] = ['tests/fixtures/', 'tests/golden/'];
 export const PAGE_CODE_ROOTS: readonly string[] = ['app', 'components', 'views'];
 
 /**
- * The import-free leaves of lib/config (module paths, no extension): the season constants, the
+ * The leaves of lib/config (module paths, no extension): the season constants, the
  * third-party base URLs, the invariant error and the mascot table. Any layer may import them and
  * they import nothing but each other (lib/config/season.ts reads MAXPREPS_WEB from
  * lib/config/source-urls.ts), so they are client-safe as well (tests/arch/layers.test.ts,
@@ -386,7 +386,7 @@ export function frozenTableRows(): Set<string> {
   const rows = new Set<string>();
   let inTable = false;
   for (const line of readSource(CITATIONS_DOC).split('\n')) {
-    if (/^\|\s*Quoted path\s*\|\s*Current home\s*\|\s*Item\s*\|/.test(line)) {
+    if (/^\|\s*Quoted path\s*\|\s*Current home\s*\|\s*Moved in\s*\|/.test(line)) {
       inTable = true;
       continue;
     }

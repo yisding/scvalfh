@@ -40,7 +40,7 @@ import {
  * outside the client tree (components/, app/, views/**\/*-client). An entry ending in '/' is a
  * prefix: it admits everything under it.
  * The client-safe tier is three whole directories (the bottom two ranks of tests/arch/layers.test.ts)
- * plus the import-free LEAVES of lib/config.
+ * plus the LEAVES of lib/config (they import nothing but each other).
  */
 const CLIENT_SAFE: readonly string[] = ['lib/model/', 'lib/shared/', 'lib/format/', ...LEAVES];
 
@@ -51,7 +51,7 @@ const isClientSafe = (mod: string): boolean =>
 
 /**
  * The client tree: every module under components/ and app/, and the `*-client` slices of views/
- * (types and import-free helpers a client component shares with its view model; layers rule h in
+ * (types and client-safe helpers a client component shares with its view model; layers rule h in
  * tests/arch/layers.test.ts keeps them client-safe). Any other views/ module is a server-side view
  * model and is banned from a client graph like the rest of the server.
  */

@@ -1842,8 +1842,8 @@ never applied automatically. A failed fetch is an `error` row and nothing else.
    validates each division as a double round robin before writing anything.
 4. **Review the diff** of `data/official/*.json` (`git diff`): only the fixtures that really moved
    may change.
-5. Update `bundledSha256` and `revisedOn` for that division in `lib/config/leagues.ts` (the sha256 of the
-   new document's bytes: `sha256sum <file>`); for MCAL's changes cell update
+5. Update `bundledSha256` and `revisedOn` for that division in its league's file under
+   `lib/config/leagues/` (the sha256 of the new document's bytes: `sha256sum <file>`); for MCAL's changes cell update
    `officialChanges.sha256` to the hash of the cell text. Update the matching
    `official/revision/<division>.txt` (or `official/changes/mcal.txt`) in the test corpus so the
    "unchanged" case stays true.
@@ -2722,8 +2722,9 @@ team/{id}-v…/` image path. League slugs used to harvest team pages are never u
 
 ### 5.4 What is dropped on purpose
 
-All three lists are config (`DATA_QUALITY` in `lib/config/leagues.ts` and each league's `withdrawnNames`)
-and everything dropped is published in the snapshot's `dropped` list and on `/about#dropped`.
+All three lists are config (`DATA_QUALITY` in `lib/config/leagues/data-quality.ts` and each league's
+`withdrawnNames` in its `lib/config/leagues/<league>.ts`) and everything dropped is published in the
+snapshot's `dropped` list and on `/about#dropped`.
 
 - **Ghost teams** (`ghostTeamIds`): a MaxPreps team that is not a real team. Del Norte (Crescent
   City) `8396a0d3-8021-458d-b592-a5cb2c4a366d` has no league and team size 0; every contest with
@@ -2792,7 +2793,7 @@ never touches the network.
 Two fixture directories are provenance, not test input. `tests/fixtures/maxpreps/ghosts/` holds
 the two MaxPreps schedule captures (Del Norte of Crescent City and Del Norte of San Diego) behind the
 Del Norte (Crescent City) entries in `DATA_QUALITY.ghostTeamIds` and `excludedContestIds`
-(`lib/config/leagues.ts`): the ghost's one contest, `5b9ff911`, duplicates Tamalpais vs Del Norte (San
+(`lib/config/leagues/data-quality.ts`): the ghost's one contest, `5b9ff911`, duplicates Tamalpais vs Del Norte (San
 Diego), `a05bedf5`. `tests/fixtures/sblive/pcal-1002/` is the research record for the PCAL si.com
 fills of 2026-10-02: `fill-candidates.json` (how the pages were captured, the si.com team ids, the
 fills, the rows dropped and the cross-check against MaxPreps) and `games-verified.json` (what each

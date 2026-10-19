@@ -4,7 +4,7 @@
   De Anza grid still lists it, but it is not in the team registry, its 14 grid fixtures are
   dropped when the PDF is parsed, and De Anza is shown as 7 teams. York plays JV field hockey only
   (PCAL's grid slot `CAT/YOR` is Santa Catalina), so it has no varsity results. Both are in the
-  `withdrawnNames` of their league in `lib/config/leagues.ts`, and the team search says so. Red Bluff is not
+  `withdrawnNames` of their league in `lib/config/leagues/`, and the team search says so. Red Bluff is not
   fielding a varsity team in 2026 either (MaxPreps' EAL table still lists it as a 0-0-0 row; a JV
   game of its own exists, so the site says only "not fielding a varsity team in 2026").
   In Southern California, Madison, Santana, Castle Park, Chula Vista, Montgomery and Sweetwater have a
@@ -46,7 +46,7 @@
 - **The San Diego playoff divisions can go stale.** Each team's Division I or II on `/playoffs` and its
   team page comes from the Section's 2026 Divisions sheet (dated 2025-12-23), kept in config; nothing
   re-checks it, so a re-sheet before the Oct 31 seeding meeting would not show until someone edits
-  `lib/config/leagues.ts`. The San Diego brackets are not drawn here at all.
+  the `playoffDivisionOf` tables in `lib/config/leagues/{city,north-county,metro}.ts`. The San Diego brackets are not drawn here at all.
 - **MaxPreps' manual entry lags.** Coaches enter scores by hand; at times only a fraction of
   played games carry a score days after the fact, and MaxPreps occasionally corrects a
   previously-entered result. The fetch script re-ingests every team's entire season on every run

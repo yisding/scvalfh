@@ -43,7 +43,7 @@ Every other command, the build-time data files and their overrides are in `docs/
 | `app/` | Next.js App Router route files (vinext reads the same tree) |
 | `components/` | React components; `og/` the OG cards, `hooks/` and `head/` the browser-side helpers |
 | `views/` | View models: the plain data each page renders |
-| `lib/model/` | Types only |
+| `lib/model/` | Types (and the two tuples their unions derive from) |
 | `lib/shared/`, `lib/format/` | Client-safe helpers and copy |
 | `lib/config/` | The season and the league configuration |
 | `lib/registry/` | The team registry |
@@ -63,14 +63,14 @@ The layers, the dependency rule and the test that enforces each are `docs/ARCHIT
 ## Attribution and legal posture
 
 Every page carries the same visible attribution line in the global footer
-(`components/layout/Attribution.tsx`, rendered once by the root layout), and the deep links back
-to the originating MaxPreps/SBLive/league/cifccs.org page live on the rows themselves: every
-`Game`/`Standing` row's outbound link, the game page's sources and the team page. This site stores its own **derived** records — normalized
-scores and independently computed standings — not verbatim copies of any source page, refreshes
-on a self-imposed 1-2-runs-a-day budget well under any observed rate limit, sends an identifying
-User-Agent, and serves only its own cached static snapshot (it never proxies a live upstream
-request per visitor). See `docs/DATA-SOURCES.md` §6 for the full posture and the exact
-attribution text rendered in the footer.
+(`components/layout/Attribution.tsx`, rendered once by the root layout), and the deep links back to
+the originating MaxPreps/SBLive/league/cifccs.org page live on the rows themselves: every
+`Game`/`Standing` row's outbound link, the game page's sources and the team page. This site stores
+its own **derived** records — normalized scores and independently computed standings — not verbatim
+copies of any source page, refreshes on a self-imposed 1-2-runs-a-day budget well under any observed
+rate limit, sends an identifying User-Agent, and serves only its own cached static snapshot (it
+never proxies a live upstream request per visitor). See `docs/DATA-SOURCES.md` §6 for the full
+posture and the exact attribution text rendered in the footer.
 
 The Southern California rules and dates come from the CIF Southern Section (the Blue Book 2026-27
 Field Hockey excerpt and its sports calendar), the CIF San Diego Section (the Green Book 2026-27, the

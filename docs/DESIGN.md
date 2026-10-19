@@ -3901,8 +3901,9 @@ addition there will cross it.
   2,400,000; 63% used). It has 165 source rows against a cap of 280 (59%). Both caps were raised
   from 1.6 MB / 1.2 MB and 140 sources (`lib/pipeline/steps/assemble.ts`).
 - **Home team views.** The serialized views are 107,545 bytes for 99 teams (52,868 NorCal, 54,577
-  SoCal). The budget in `tests/arch/home-weight.test.ts` is 118 KiB = 120,832 (89% used). On the
-  offline corpus they are 65,819.
+  SoCal). The budget in `tests/arch/home-weight.test.ts` is 118 KiB = 120,832 (89% used); it became
+  121 KiB when the LA independents joined (that test's header has the measurement). On the offline
+  corpus they are 65,819.
 - **Prefs script.** It is 2,454 bytes against a line of 2,816 (87% used). The design had proposed
   3,072.
 - **vinext cache.** After `pnpm build:vinext`, `dist/server/prerendered-routes` holds 367,917,653

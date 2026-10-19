@@ -1,7 +1,7 @@
 # Next-season bootstrap
 
 MaxPreps' season ids are **never hardcoded into more than one place** — they live in
-`lib/config/season.ts`, and the MaxPreps league ids (and every other league fact) in `lib/config/leagues.ts`; both
+`lib/config/season.ts`, and the MaxPreps league ids (and every other league fact) in `lib/config/leagues/`; both
 are re-asserted on every `fetch-data` run. The season ids are global, but **MaxPreps' league ids change
 every season**: the nine leagues have 15 divisions and 14 MaxPreps league ids, because the San Diego
 Section's Valley division has no MaxPreps table (`maxprepsLeagueId: null`); the independents' group

@@ -16,7 +16,7 @@
  *    slice is <name>-client.ts, and the suffixes belong to views/ only.
  *  - No lib basename ends in -schema, -view or -build (the directory says it: lib/schema/, views/,
  *    lib/pipeline/), and no index.ts exists anywhere in the source (no barrels; the three package doors
- *    are named files beside their directories).
+ *    are named files: two beside their directories, the registry's inside lib/registry/).
  *
  * Every allowance below carries its reason; the tests at the end fail when an allowance names a file
  * that is gone, so a list cannot outlive its entry. The rules are plain functions of a path (or a

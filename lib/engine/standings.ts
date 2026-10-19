@@ -31,7 +31,10 @@
  * (seed-one-restart and MCAL's last tournament place), maxpreps-crosscheck.ts, missing.ts (missing league
  * results), ladder.ts (playoff statuses and the config lookups of their copy), pairings.ts and uneven.ts.
  * The sentences the engine prints beside a table (the uneven-games sentence, the ladder's label, legend and
- * badge) are lib/format/standings.ts.
+ * badge) are lib/format/standings.ts. The door re-exports so that its parts stay private: nothing outside
+ * lib/engine/standings/ imports a part (tests/arch/layers.test.ts rule f, with no public part), so a
+ * part can be split or merged without touching a caller. Unlike the config and registry doors it runs no
+ * import-time assert; assertFullTable is a function its callers call.
  */
 
 import { LEAGUES, PLACE_VS_STAGES, UNCOMPUTABLE_STAGES, tiebreakChainFor } from '@/lib/config/leagues';

@@ -19,11 +19,11 @@ each are `docs/ARCHITECTURE.md`.
 | Command | Proves | Rough time |
 |---|---|---|
 | `pnpm typecheck` | `next typegen`, then `tsc --noEmit` | 30 s |
-| `pnpm lint` | ESLint, including the `../` import ban and the layer zones | 30 s |
+| `pnpm lint` | ESLint, including the `../` import ban and the layer zones | 40 s |
 | `pnpm test` | The whole Vitest suite (`pnpm test:arch` runs only `tests/arch/`, in 20 s) | 2 min |
-| `pnpm check` | All three of the above: run before every commit | 3 min |
+| `pnpm check` | All three of the above: run before every commit | 2.5 min |
 | `pnpm gate` | `next build`, exact prerender counts, page-weight and first-load JS budgets, copy rules | 4 min |
-| `pnpm gate:all` | The CI job list: Next, vinext and Worker builds, smoke and axe on each | 10 min |
+| `pnpm gate:all` | The CI job list: Next, vinext and Worker builds, smoke and axe on each | 12-15 min (run it in the background) |
 
 `pnpm typecheck:scope '<glob>'` runs tsc and fails only on diagnostics inside the globs, for agents
 sharing one tree. After any change under `components/` or to a `views/**/*-client.ts` slice, run
@@ -60,8 +60,8 @@ The full list, with each enforcer, is docs/DEVELOPMENT.md "Conventions".
 - A byte change in any `opengraph-image.tsx`, `app/icon.tsx` or `app/apple-icon.tsx` changes the
   `og:image`/icon URL hash on every page that points at it.
 - A `'use client'` graph reaches only `components/`, `app/`, `views/**/*-client.ts`, `lib/model/`,
-  `lib/shared/`, `lib/format/` and the import-free leaves of `lib/config/`
-  (`tests/arch/client-boundary.test.ts`).
+  `lib/shared/`, `lib/format/` and the leaves of `lib/config/` (they import only each other;
+  `tests/arch/client-boundary.test.ts`).
 - League and division ids are never string literals in `app/`, `components/` or `views/`: they come
   from `lib/config/leagues.ts` or the read API. Routed URLs come from the helpers in
   `lib/shared/routes.ts` (`gameHref` in `lib/shared/game-id.ts`).

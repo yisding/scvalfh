@@ -49,21 +49,20 @@ into its server code, each imported by its read module, so no server reads `data
 | `data/clubs.json` | `lib/datasets/clubs.ts` |
 | `data/commits.json` | `lib/datasets/commits.ts` |
 
-The vinext scripts read the
-same `app/` and `next.config.ts`; vinext adds `vite.config.ts`, `cloudflare.config.ts` for the
-Worker, two patches (see docs/VINEXT-PATCHES.md "The vinext patch") and its own outputs, `dist/`, `.vinext/` and
-`.cloudflare/`, all gitignored and skipped by `eslint.config.mjs`. `--mode cloudflare` is what
-switches `vite.config.ts` to the Workers target, and the Vite mode also picks the dotenv files: the
-three Cloudflare scripts load `.env`, `.env.local`, `.env.cloudflare` and `.env.cloudflare.local`,
-never `.env.production`.
+The vinext scripts read the same `app/` and `next.config.ts`; vinext adds `vite.config.ts`,
+`cloudflare.config.ts` for the Worker, two patches (see docs/VINEXT-PATCHES.md "The vinext patch")
+and its own outputs, `dist/`, `.vinext/` and `.cloudflare/`, all gitignored and skipped by
+`eslint.config.mjs`. `--mode cloudflare` is what switches `vite.config.ts` to the Workers target,
+and the Vite mode also picks the dotenv files: the three Cloudflare scripts load `.env`,
+`.env.local`, `.env.cloudflare` and `.env.cloudflare.local`, never `.env.production`.
 
 To point at a different snapshot file (e.g. a fixture-built one), set
 `SCVAL_SNAPSHOT=/path/to/snapshot.json`; `SCVAL_HISTORY` does the same for
 `data/history-2025-26.json`, `SCVAL_PLAYER_STATS` for `data/player-stats.json`, `SCVAL_JV` for
 `data/jv.json`, and `SCVAL_ROSTERS` and `SCVAL_ROSTERS_ENRICHMENT` for `data/rosters.json` and
-`data/rosters-enrichment.json`. All six are read with `node:fs` when the module loads, so they work under Next, vitest, tsx and vinext's
-Node target, never on a Worker, which has no filesystem to read them from: leave them unset for the
-Cloudflare scripts. The other three files have no override.
+`data/rosters-enrichment.json`. All six are read with `node:fs` when the module loads, so they work
+under Next, vitest, tsx and vinext's Node target, never on a Worker, which has no filesystem to read
+them from: leave them unset for the Cloudflare scripts. The other three files have no override.
 
 `pnpm typecheck` runs `next typegen` first because the global `PageProps`/`LayoutProps` types used
 by the dynamic pages, their OG images and `app/layout.tsx` are generated into
@@ -111,17 +110,16 @@ and runs the same `scripts/ci/smoke-server.sh` and axe passes against it. Upload
 `pnpm test` runs the full Vitest suite: snapshot-schema validation, standings/tiebreak arithmetic
 against synthetic and fixture data (including a golden proof that SCVAL's tables are byte-identical
 to the single-league site's), the si.com backfill rules, the official-schedule matcher, PDF-grid
-parsing,
-the "never render a missing score as 0-0" rule across every `GameRow` variant and every non-final
-game page, and playoff-projection edge cases (shared 3rd, the Oct 30 play-in/crossover, unnamed
-rounds). Beside those, `tests/integration/` runs the fetch pipeline over the recorded corpora (end to
-end and every variant), `tests/views/`, `tests/components/` and `tests/app/` cover the view models,
-the rendered components and the pages, the data-file validators in `tests/data/` check
-`data/rosters.json`, `data/player-stats.json`, `data/jv.json` (with the JV merge rules and an
+parsing, the "never render a missing score as 0-0" rule across every `GameRow` variant and every
+non-final game page, and playoff-projection edge cases (shared 3rd, the Oct 30 play-in/crossover,
+unnamed rounds). Beside those, `tests/integration/` runs the fetch pipeline over the recorded
+corpora (end to end and every variant), `tests/views/`, `tests/components/` and `tests/app/` cover
+the view models, the rendered components and the pages, the data-file validators in `tests/data/`
+check `data/rosters.json`, `data/player-stats.json`, `data/jv.json` (with the JV merge rules and an
 offline `fetch-jv` run over `tests/fixtures/jv`), `data/clubs.json` and `data/commits.json`, and
-further suites pin the copy rules (`tests/scripts/ci/copy/`), the workflow files and the architecture
-rules (`tests/arch/`), the update-data issue builder, and the scoped typecheck's globs. Fixtures
-captured from real (offline) MaxPreps/SCVAL responses live under `tests/fixtures/`.
+further suites pin the copy rules (`tests/scripts/ci/copy/`), the workflow files and the
+architecture rules (`tests/arch/`), the update-data issue builder, and the scoped typecheck's globs.
+Fixtures captured from real (offline) MaxPreps/SCVAL responses live under `tests/fixtures/`.
 
 The tree mirrors the source: the test of a module `X` lives at `tests/<directory of X>/<basename of
 X>.test.ts` (`lib/engine/standings.ts` is tested by `tests/lib/engine/standings.test.ts`,
@@ -139,13 +137,12 @@ Tests that render against a corpus do not build it themselves. Vitest's `globalS
 all-leagues `--no-sblive`, EAL and SoCal corpora), concurrently, into a temporary directory that the
 run removes at the end. Nothing is cached between runs, so a snapshot can never be stale against the
 code under test; a test that needs another corpus or flag adds a row to the table. A test file that
-loads the read API over a corpus calls `useCorpusModules(corpus, { data: loadQueries, … })` (`loadQueries`
-from `tests/support/queries.ts`) from `tests/support/corpus-modules.ts`, which points `lib/datasets/snapshot.ts` at the snapshot, resets the module
-registry and imports the modules fresh for that file (`useSnapshotModules` does the same for a
-snapshot file the test writes itself, and the `with…` forms load a second graph inside a test).
-`vitest.config.ts` splits the suite into three named projects: `arch` (`tests/arch/**`, run alone with
-`pnpm test:arch`), `spawn` (the files that run a repo script under tsx) and `unit` (the rest); a plain
-`pnpm test` runs all three, and the setup runs once however many projects are selected.
+loads the read API over a corpus calls `useCorpusModules(corpus, { data: loadQueries, … })`
+(`loadQueries` from `tests/support/queries.ts`) from `tests/support/corpus-modules.ts`, which points
+`lib/datasets/snapshot.ts` at the snapshot, resets the module registry and imports the modules fresh
+for that file (`useSnapshotModules` does the same for a snapshot file the test writes itself, and
+the `with…` forms load a second graph inside a test). A plain `pnpm test` runs all three Vitest
+projects, and the setup runs once however many projects are selected.
 
 ## Conventions
 
@@ -165,8 +162,8 @@ The rules below are enforced where a test or a lint rule can enforce them; each 
   `'use client'` graph is the thing it catches.
 - No barrels (`index.ts`) and no re-export shims at an old path. The three package doors
   (`lib/config/leagues.ts`, `lib/registry/teams.ts`, `lib/engine/standings.ts`) are the only modules
-  that re-export, each for a reason written in its header (an import-time assert, object identity that
-  tests rely on, a `vi.mock` seam).
+  that re-export (`tests/arch/layers.test.ts`), each for a reason written in its header (an
+  import-time assert, object identity that tests rely on, a `vi.mock` seam, parts kept private).
 - Which directory may import which is `tests/arch/layers.test.ts` (ESLint's `import/no-restricted-paths`
   zones repeat the top-level directions as editor feedback).
 
@@ -177,13 +174,15 @@ The directory is the layer and the basename is the concept (`tests/arch/naming.t
 - `components/**/*.tsx` are PascalCase and export only components, UPPER_SNAKE constants or tables, and
   types; a helper or a hook goes in a kebab-case module beside it. The kebab exceptions are the
   ImageResponse kit under `components/og/` and the two part bundles the test lists; thirteen older
-  lowercase helpers are its shrink-only `KNOWN_EXCEPTIONS` ledger (two of them sit in client modules on
-  `/teams`, whose first-load budget has almost no headroom, so moving them is a measured change).
+  lowercase helpers are its shrink-only `KNOWN_EXCEPTIONS` ledger (six of them sit in the two client
+  modules on `/teams`, NavLink and TeamFinder, whose first-load budget has almost no headroom, so
+  moving them is a measured change).
 - `components/**/*.ts` live under `components/hooks/` and `components/head/`, plus the few non-JSX
   modules the test lists with their reasons.
-- `lib/` and `views/` are kebab-case `.ts` only. A view entry is `views/<area>/<area>-view.ts`, a
-  route-parameter module `<name>-route.ts`, a client-safe slice `<name>-client.ts`; those suffixes belong
-  to `views/`. No `lib/` basename ends in `-schema`, `-view` or `-build`: the directory says it.
+- `lib/` and `views/` are kebab-case `.ts` only. A view entry is `views/<area>/<area>-view.ts` (the
+  area may be the singular of the directory: `views/teams/team-view.ts`), a route-parameter module
+  `<name>-route.ts`, a client-safe slice `<name>-client.ts`; those suffixes belong to `views/`. No
+  `lib/` basename ends in `-schema`, `-view` or `-build`: the directory says it.
 - Error messages that name their module start with its path (`lib/config/leagues.ts: …`), so a moved
   module changes that prefix and nothing after it.
 

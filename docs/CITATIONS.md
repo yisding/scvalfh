@@ -6,24 +6,24 @@ Repo paths are quoted all over this repository: in README.md, in docs/, in code 
 
 Some committed files quote repo paths and cannot be edited: the data files in data/, the fixtures in tests/fixtures/ and the golden files in tests/golden/ record where their content came from, and rewriting them would change content keys and golden bytes. This table maps each such quoted path to the module that serves it today; the gate reads it, so a module that moves adds its row in the same commit.
 
-| Quoted path | Current home | Item |
+| Quoted path | Current home | Moved in |
 |---|---|---|
-| tests/helpers.ts | tests/support/cli.ts (buildFixtureSnapshot) | 06 |
-| lib/teams.ts | lib/registry/teams.ts | 12 |
-| lib/jv-teams.ts | lib/registry/jv-teams.ts | 12 |
-| lib/clubs-schema.ts | lib/schema/clubs.ts | 13 |
-| lib/commits-schema.ts | lib/schema/commits.ts | 13 |
-| lib/standings.ts | lib/engine/standings.ts | 14 |
-| lib/jv-merge.ts | lib/engine/jv/merge.ts | 14 |
-| lib/jv-standings.ts | lib/engine/jv/standings.ts | 14 |
-| lib/note-stats.ts | lib/engine/note-stats.ts | 14 |
-| lib/clubs.ts | lib/datasets/clubs.ts | 16 |
-| lib/rosters.ts | lib/datasets/rosters.ts | 16 |
-| lib/sources/sblive.ts | lib/sources/sblive/games.ts (parseStandingsTeamRefs: lib/sources/sblive/harvest.ts; extractReactProps: lib/sources/sblive/props.ts; STATEWIDE_AMBIGUOUS: lib/sources/sblive/identity.ts) | 24 |
-| lib/sources/http.ts | lib/sources/http/client.ts (CHROME_USER_AGENT) | 24 |
-| lib/sources/scval-pdf.ts | lib/sources/scval/grid.ts (parseSchedulePdfText) | 26 |
-| components/standings/standings-view.ts | views/standings/division.ts | 35 |
-| components/history/history-view.ts | views/history/history-view.ts | 35 |
+| tests/helpers.ts | tests/support/cli.ts (buildFixtureSnapshot) | f2ad437 |
+| lib/teams.ts | lib/registry/teams.ts | 3bc9e0d |
+| lib/jv-teams.ts | lib/registry/jv-teams.ts | 3bc9e0d |
+| lib/clubs-schema.ts | lib/schema/clubs.ts | 32e5da6 |
+| lib/commits-schema.ts | lib/schema/commits.ts | 32e5da6 |
+| lib/standings.ts | lib/engine/standings.ts | c5c3e51 |
+| lib/jv-merge.ts | lib/engine/jv/merge.ts | c5c3e51 |
+| lib/jv-standings.ts | lib/engine/jv/standings.ts | c5c3e51 |
+| lib/note-stats.ts | lib/engine/note-stats.ts | c5c3e51 |
+| lib/clubs.ts | lib/datasets/clubs.ts | 707ac05 |
+| lib/rosters.ts | lib/datasets/rosters.ts | 707ac05 |
+| lib/sources/sblive.ts | lib/sources/sblive/games.ts (parseStandingsTeamRefs: lib/sources/sblive/harvest.ts; extractReactProps: lib/sources/sblive/props.ts; STATEWIDE_AMBIGUOUS: lib/sources/sblive/identity.ts) | ceea1ab |
+| lib/sources/http.ts | lib/sources/http/client.ts (CHROME_USER_AGENT) | ceea1ab |
+| lib/sources/scval-pdf.ts | lib/sources/scval/grid.ts (parseSchedulePdfText) | f981ddc |
+| components/standings/standings-view.ts | views/standings/division.ts | 2f66add |
+| components/history/history-view.ts | views/history/history-view.ts | 2f66add |
 
 ## Legend
 
@@ -86,6 +86,6 @@ Four fixtures are TypeScript saved as `.ts.txt`: research drafts kept as the pro
 replaced them. Nothing compiles, imports or runs them, and like every fixture they are never edited, so
 the module paths they quote are the names proposed at the time. Check (D) scans them like any frozen
 file. The proposed home of the MCAL reference implementation never existed, and the registry seed
-fixture names an si.com module deleted before this refactor; those two are the gate's `KNOWN_DEAD`
+fixture names an si.com module that no longer exists; those two are the gate's `KNOWN_DEAD`
 list rather than rows of the table above. Each file and what replaced
 it: docs/DATASETS.md "Research artifacts under tests/fixtures".

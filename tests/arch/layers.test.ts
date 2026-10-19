@@ -6,7 +6,7 @@
  *
  * Ranks (a module imports only its own rank or below, plus the LEAVES):
  *
- *   0 lib/model                types only; imports nothing but lib/model
+ *   0 lib/model                types (and two `as const` tuples); imports nothing but lib/model
  *   1 lib/shared, lib/format   client-safe pure helpers and copy
  *   2 lib/config               season, base URLs, league config (lib/config/leagues.ts door + lib/config/leagues/)
  *   3 lib/registry             the team registry (lib/registry/teams.ts door)
@@ -35,9 +35,10 @@
  *   (g) no import cycle inside lib/, views/ or components/
  *   (h) a views/**\/*-client.ts module imports only ranks 0-1, LEAVES and other *-client modules
  *   (i) scripts and app never import tests
- *   (j) components never import lib/queries/** or lib/datasets/** (app/** may): a component renders
- *       what its page or view model hands it (views/site/chrome-view.ts for the site chrome), so the
- *       snapshot is read in exactly two layers, views and app
+ *   (j) components never import lib/queries/** or lib/datasets/** (app/** may): a component never
+ *       reads the snapshot (views/site/chrome-view.ts hands the site chrome its data), so it is read
+ *       in exactly two layers, views and app; static config and registry lookups and view helpers
+ *       are allowed
  * The LEAVES themselves import nothing but other LEAVES.
  *
  * tests/arch/client-boundary.test.ts is the runtime half for 'use client' graphs; ESLint
@@ -269,7 +270,7 @@ describe('layers: the dependency rule', () => {
       const file = moduleFile(leaf);
       expect(file, `${leaf} is listed in LEAVES but does not exist`).not.toBeNull();
       const imports = importsOf(file!).map(({ spec }) => resolveModule(file!, spec) ?? spec);
-      expect(imports.filter((mod) => !isLeaf(mod)), `${leaf} must stay import-free`).toEqual([]);
+      expect(imports.filter((mod) => !isLeaf(mod)), `${leaf} must import nothing but other LEAVES`).toEqual([]);
     }
   });
 

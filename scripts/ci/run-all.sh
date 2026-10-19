@@ -4,7 +4,7 @@
 # .github/workflows/ci.yml in one script, against all three deploys of the site.
 #
 #   pnpm typecheck && pnpm lint && pnpm test   # first (the gate assumes them)
-#   bash scripts/ci/run-all.sh               # = pnpm gate:all
+#   bash scripts/ci/run-all.sh                 # = pnpm gate:all
 #
 #  1. `pnpm build`, then the build assertions: assert:prerender (exact route counts, ':' check,
 #     OG/page parity by name), assert:budgets (§12.4), assert:copy (§10.9 over the built HTML).

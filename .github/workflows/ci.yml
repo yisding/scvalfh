@@ -74,7 +74,7 @@ jobs:
       - name: Lint
         run: pnpm lint
 
-      # CI_GATE turns tests/arch/home-weight.test.ts's teamViews budget (118 KiB) on the bundled
+      # CI_GATE turns tests/arch/home-weight.test.ts's teamViews budget (121 KiB) on the bundled
       # snapshot from a warning into a failure. Only here: update-data.yml must never set it, so a
       # heavy live fetch warns (past 90 %) and the data cron is never blocked by it.
       - name: Test
