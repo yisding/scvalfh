@@ -25,6 +25,7 @@ import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 
+import { type FlagSpec, parseFlags } from '@/lib/cli/flags';
 import { getDivision, getLeague } from '@/lib/config/leagues';
 import { bundledDivisions } from '@/lib/config/leagues/official';
 import { plural } from '@/lib/format/words';
@@ -285,28 +286,32 @@ export function outputFileOf(leagueId: BundledLeague, outDir = DEFAULT_OUT_DIR):
 
 // ---------------------------------------------------------------- CLI
 
+interface Args {
+  sourceDir: string;
+  outDir: string;
+  bvalTexts: string[] | null;
+  check: boolean;
+}
+
+const FLAGS: FlagSpec<Args> = [
+  { flags: '--check', toggle: (a) => { a.check = true; } },
+  { flags: '--source-dir', value: 'path', set: (a, v) => { a.sourceDir = v; } },
+  { flags: '--out-dir', value: 'path', set: (a, v) => { a.outDir = v; } },
+  {
+    flags: '--bval-text',
+    value: 'words',
+    count: 2,
+    missing: () => '--bval-text needs two files: <Mt. Hamilton> <Santa Teresa>',
+    set: (a, files) => { a.bvalTexts = files.map((f) => readFileSync(path.resolve(f), 'utf8')); },
+  },
+];
+
 function main(argv: readonly string[]): number {
-  let sourceDir = DEFAULT_SOURCE_DIR;
-  let outDir = DEFAULT_OUT_DIR;
-  let bvalTexts: string[] | null = null;
-  let check = false;
-  for (let i = 0; i < argv.length; i += 1) {
-    const a = argv[i];
-    const next = () => {
-      const v = argv[i + 1];
-      if (v === undefined || v.startsWith('--')) throw new Error(`${a} needs a value`);
-      i += 1;
-      return v;
-    };
-    if (a === '--check') check = true;
-    else if (a === '--source-dir') sourceDir = path.resolve(next());
-    else if (a === '--out-dir') outDir = path.resolve(next());
-    else if (a === '--bval-text') {
-      const files = [argv[++i], argv[++i]];
-      if (files.some((f) => f === undefined || f.startsWith('--'))) throw new Error('--bval-text needs two files: <Mt. Hamilton> <Santa Teresa>');
-      bvalTexts = files.map((f) => readFileSync(path.resolve(f as string), 'utf8'));
-    } else throw new Error(`unknown argument: ${a}`);
-  }
+  const { sourceDir, outDir, bvalTexts, check } = parseFlags(argv, FLAGS, {
+    init: () => ({ sourceDir: DEFAULT_SOURCE_DIR, outDir: DEFAULT_OUT_DIR, bvalTexts: null, check: false }),
+    allowEmptyValue: true,
+    unknown: (flag) => `unknown argument: ${flag}`,
+  });
 
   const bundles = buildBundles({ sourceDir, bvalTexts });
   let differs = 0;

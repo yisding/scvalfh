@@ -1,8 +1,8 @@
 /**
  * What scripts/fetch-rosters.ts, scripts/fetch-player-stats.ts and scripts/fetch-jv.ts share:
  * which registry teams a run covers, and how a run reports its teams league by league. The flag
- * parsers for `--leagues` and `--fetched-at` are shared with fetch-data too (lib/pipeline/run.ts
- * parseRunArgs), so all four CLIs read those flags by one rule.
+ * parsers for `--leagues` and `--fetched-at` (lib/cli/flags.ts) are shared with fetch-data too
+ * (lib/pipeline/run.ts parseRunArgs), so all four CLIs read those flags by one rule.
  *
  * Each script walks the whole registry. `--leagues scval,bval` narrows a run to those
  * leagues, exactly as `fetch-data --leagues` does: a team of any other league is not fetched and
@@ -21,28 +21,10 @@
 
 import type { ZodType } from 'zod';
 
-import { LEAGUES, LEAGUE_IDS, getLeague, isLeagueId } from '@/lib/config/leagues';
+import { LEAGUES, getLeague } from '@/lib/config/leagues';
 import type { LeagueId } from '@/lib/model/ids';
 import type { Team } from '@/lib/model/team';
 import { TEAMS, getTeamBySlug } from '@/lib/registry/teams';
-
-/** `scval,bval` → ['scval', 'bval']; an unknown id or an empty list throws. */
-export function parseLeaguesFlag(value: string, flag = '--leagues'): LeagueId[] {
-  const ids = value.split(',').map((s) => s.trim()).filter(Boolean);
-  if (ids.length === 0) throw new Error(`${flag} needs at least one league id`);
-  for (const id of ids) {
-    if (!isLeagueId(id)) throw new Error(`${flag}: unknown league ${id} (known: ${LEAGUE_IDS.join(', ')})`);
-  }
-  return [...new Set(ids)] as LeagueId[];
-}
-
-/** `--fetched-at <iso>`: an ISO timestamp ('2026-10-04T00:00:00.000Z'), returned as given; anything else throws. */
-export function parseFetchedAtFlag(value: string, flag = '--fetched-at'): string {
-  if (!/^\d{4}-\d{2}-\d{2}T/.test(value) || Number.isNaN(Date.parse(value))) {
-    throw new Error(`${flag}: not an ISO timestamp: ${value}`);
-  }
-  return value;
-}
 
 /** The registry teams a run covers, in registry order: all 102, or those of `leagues`. */
 export function teamsInScope(leagues: readonly LeagueId[] | null): readonly Team[] {

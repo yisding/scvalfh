@@ -56,6 +56,7 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 
+import { type FlagSpec, parseFlags } from '@/lib/cli/flags';
 import { INDEPENDENT_LEAGUES, LEAGUES_PROPER, seasonWindowBounds } from '@/lib/config/leagues';
 import { SEASON_YEAR } from '@/lib/config/season';
 import { teamsCreditedByNotes } from '@/lib/engine/note-stats';
@@ -64,8 +65,6 @@ import {
   describePrevious,
   formatLeagueSummary,
   inScope,
-  parseFetchedAtFlag,
-  parseLeaguesFlag,
   readPreviousFile,
   runExitCode,
   summarizeByLeague,
@@ -109,37 +108,33 @@ interface Args {
   force: boolean;
 }
 
+const FLAGS: FlagSpec<Args> = [
+  { flags: '--fixtures', value: 'path', set: (a, v) => { a.fixtures = v; } },
+  { flags: '--capture', value: 'path', set: (a, v) => { a.capture = v; } },
+  { flags: '--leagues', value: 'leagues', set: (a, v) => { a.leagues = v; } },
+  { flags: '--rosters', value: 'path', set: (a, v) => { a.rosters = v; } },
+  { flags: '--snapshot', value: 'path', set: (a, v) => { a.snapshot = v; } },
+  { flags: '--out', value: 'path', set: (a, v) => { a.out = v; } },
+  { flags: '--dry-run', toggle: (a) => { a.dryRun = true; } },
+  { flags: '--fetched-at', value: 'iso', set: (a, v) => { a.fetchedAt = v; } },
+  { flags: '--force', toggle: (a) => { a.force = true; } },
+];
+
 function parseArgs(argv: readonly string[]): Args {
-  const out: Args = {
-    fixtures: null,
-    capture: null,
-    leagues: null,
-    rosters: path.join(process.cwd(), 'data', 'rosters.json'),
-    snapshot: path.join(process.cwd(), 'data', 'snapshot.json'),
-    out: path.join(process.cwd(), 'data', 'player-stats.json'),
-    dryRun: false,
-    fetchedAt: null,
-    force: false,
-  };
-  for (let i = 0; i < argv.length; i += 1) {
-    const arg = argv[i];
-    const next = () => {
-      const v = argv[i + 1];
-      if (!v || v.startsWith('--')) throw new Error(`${arg} needs a value`);
-      i += 1;
-      return v;
-    };
-    if (arg === '--fixtures') out.fixtures = path.resolve(next());
-    else if (arg === '--capture') out.capture = path.resolve(next());
-    else if (arg === '--leagues') out.leagues = parseLeaguesFlag(next(), arg);
-    else if (arg === '--rosters') out.rosters = path.resolve(next());
-    else if (arg === '--snapshot') out.snapshot = path.resolve(next());
-    else if (arg === '--out') out.out = path.resolve(next());
-    else if (arg === '--dry-run') out.dryRun = true;
-    else if (arg === '--fetched-at') out.fetchedAt = parseFetchedAtFlag(next(), arg);
-    else if (arg === '--force') out.force = true;
-    else throw new Error(`unknown flag: ${arg}`);
-  }
+  const out = parseFlags(argv, FLAGS, {
+    init: () => ({
+      fixtures: null,
+      capture: null,
+      leagues: null,
+      rosters: path.join(process.cwd(), 'data', 'rosters.json'),
+      snapshot: path.join(process.cwd(), 'data', 'snapshot.json'),
+      out: path.join(process.cwd(), 'data', 'player-stats.json'),
+      dryRun: false,
+      fetchedAt: null,
+      force: false,
+    }),
+    allowEmptyValue: false,
+  });
   if (out.fixtures && out.capture) throw new Error('--capture records live responses; it cannot be combined with --fixtures');
   return out;
 }

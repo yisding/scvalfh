@@ -23,9 +23,9 @@
 import { copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 
+import { type FlagSpec, parseFlags } from '@/lib/cli/flags';
 import { ALL_DIVISIONS, LEAGUES, LEAGUE_IDS, isLeagueId } from '@/lib/config/leagues';
 import { carryCrossCheck } from './reconcile/sblive-crosscheck';
-import { parseFetchedAtFlag, parseLeaguesFlag } from './fetch-scope';
 import type { OfficialFixture } from '@/lib/model/fixture';
 import type { Game } from '@/lib/model/game';
 import type { Snapshot } from '@/lib/model/snapshot';
@@ -208,59 +208,55 @@ export interface ParseOptions {
   now: string;
 }
 
+type ParsedRunArgs = RunArgs & { help: boolean };
+
+/** The §7.12 flags and what each sets (--no-scval is the old spelling of --no-official). */
+const RUN_FLAGS: FlagSpec<ParsedRunArgs> = [
+  { flags: '--fixtures', value: 'path', set: (a, v) => { a.fixtures = v; } },
+  { flags: '--variant', value: 'path', set: (a, v) => { a.variants.push(v); } },
+  { flags: '--capture', value: 'path', set: (a, v) => { a.capture = v; } },
+  { flags: '--out', value: 'path', set: (a, v) => { a.out = v; } },
+  { flags: '--dry-run', toggle: (a) => { a.dryRun = true; } },
+  { flags: '--fetched-at', value: 'iso', set: (a, v) => { a.fetchedAt = v; } },
+  { flags: '--force', toggle: (a) => { a.force = true; } },
+  { flags: '--leagues', value: 'leagues', set: (a, v) => { a.leagues = v; } },
+  { flags: '--accept-regression', value: 'leagues', set: (a, v) => { a.acceptRegression.push(...v); } },
+  { flags: '--no-sblive', toggle: (a) => { a.sblive = false; } },
+  { flags: '--sblive-full', toggle: (a) => { a.sbliveFull = true; } },
+  { flags: ['--no-official', '--no-scval'], toggle: (a) => { a.official = false; } },
+  { flags: '--no-ccs', toggle: (a) => { a.ccs = false; } },
+  { flags: '--no-vnn', toggle: (a) => { a.vnn = false; } },
+  { flags: '--no-cifss', toggle: (a) => { a.cifss = false; } },
+  { flags: ['--help', '-h'], toggle: (a) => { a.help = true; } },
+];
+
 /**
  * Parses the §7.12 flags. `fetchedAt` is left as '' when not given and the run is offline, so the
  * caller can default it to the corpus's stamp. Throws on an unknown flag or a bad value.
  */
-export function parseRunArgs(argv: readonly string[], opts: ParseOptions): RunArgs & { help: boolean } {
-  const args: RunArgs & { help: boolean } = {
-    fixtures: null,
-    variants: [],
-    capture: null,
-    out: path.join(opts.cwd, 'data', 'snapshot.json'),
-    dryRun: false,
-    fetchedAt: '',
-    force: false,
-    leagues: null,
-    acceptRegression: [],
-    sblive: true,
-    sbliveFull: false,
-    official: true,
-    ccs: true,
-    vnn: true,
-    cifss: true,
-    help: false,
-  };
-  for (let i = 0; i < argv.length; i += 1) {
-    const arg = argv[i];
-    const next = (): string => {
-      const v = argv[i + 1];
-      if (v === undefined || v.startsWith('--')) throw new Error(`${arg} needs a value`);
-      i += 1;
-      return v;
-    };
-    switch (arg) {
-      case '--fixtures': args.fixtures = path.resolve(opts.cwd, next()); break;
-      case '--variant': args.variants.push(path.resolve(opts.cwd, next())); break;
-      case '--capture': args.capture = path.resolve(opts.cwd, next()); break;
-      case '--out': args.out = path.resolve(opts.cwd, next()); break;
-      case '--dry-run': args.dryRun = true; break;
-      case '--fetched-at': args.fetchedAt = parseFetchedAtFlag(next(), arg); break;
-      case '--force': args.force = true; break;
-      case '--leagues': args.leagues = parseLeaguesFlag(next(), arg); break;
-      case '--accept-regression': args.acceptRegression.push(...parseLeaguesFlag(next(), arg)); break;
-      case '--no-sblive': args.sblive = false; break;
-      case '--sblive-full': args.sbliveFull = true; break;
-      case '--no-official':
-      case '--no-scval': args.official = false; break;
-      case '--no-ccs': args.ccs = false; break;
-      case '--no-vnn': args.vnn = false; break;
-      case '--no-cifss': args.cifss = false; break;
-      case '--help':
-      case '-h': args.help = true; break;
-      default: throw new Error(`unknown flag: ${arg}`);
-    }
-  }
+export function parseRunArgs(argv: readonly string[], opts: ParseOptions): ParsedRunArgs {
+  const args = parseFlags(argv, RUN_FLAGS, {
+    init: () => ({
+      fixtures: null,
+      variants: [],
+      capture: null,
+      out: path.join(opts.cwd, 'data', 'snapshot.json'),
+      dryRun: false,
+      fetchedAt: '',
+      force: false,
+      leagues: null,
+      acceptRegression: [],
+      sblive: true,
+      sbliveFull: false,
+      official: true,
+      ccs: true,
+      vnn: true,
+      cifss: true,
+      help: false,
+    }),
+    allowEmptyValue: true,
+    cwd: opts.cwd,
+  });
   if (args.variants.length > 0 && args.fixtures === null) throw new Error('--variant needs --fixtures');
   if (args.capture !== null && args.fixtures !== null) throw new Error('--capture records a live run; it cannot be combined with --fixtures');
   if (args.fetchedAt === '' && args.fixtures === null) args.fetchedAt = opts.now;

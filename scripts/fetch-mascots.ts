@@ -36,6 +36,7 @@ import path from 'node:path';
 
 import sharp, { type Sharp } from 'sharp';
 
+import { type FlagSpec, parseFlags } from '@/lib/cli/flags';
 import { MASCOT_FILE_SIZES } from '@/lib/config/mascots';
 import type { Team } from '@/lib/model/team';
 import { TEAMS } from '@/lib/registry/teams';
@@ -134,16 +135,22 @@ interface Args {
   help: boolean;
 }
 
+const FLAGS: FlagSpec<Args> = [
+  { flags: '--dry-run', toggle: (a) => { a.dryRun = true; } },
+  { flags: ['--help', '-h'], toggle: (a) => { a.help = true; } },
+  { flags: '--only', value: 'string', set: (a, v) => { a.only.push(v); } },
+];
+
 function parseArgs(argv: readonly string[]): Args {
-  const args: Args = { only: [], dryRun: false, help: false };
-  for (let i = 0; i < argv.length; i += 1) {
-    const a = argv[i];
-    if (a === '--dry-run') args.dryRun = true;
-    else if (a === '--help' || a === '-h') args.help = true;
-    else if (a === '--only' && argv[i + 1]) args.only.push(argv[(i += 1)]);
-    else throw new Error(`unknown argument ${a}\n${USAGE}`);
-  }
-  return args;
+  // `--only` with nothing after it is reported as an unknown argument (it matches only with a value),
+  // and its value may be anything non-empty, a `--flag` included.
+  return parseFlags(argv, FLAGS, {
+    init: () => ({ only: [], dryRun: false, help: false }),
+    allowEmptyValue: false,
+    allowFlagValue: true,
+    unknown: (flag) => `unknown argument ${flag}\n${USAGE}`,
+    needsValue: (flag) => `unknown argument ${flag}\n${USAGE}`,
+  });
 }
 
 interface Framing {

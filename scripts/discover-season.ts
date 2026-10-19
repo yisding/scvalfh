@@ -29,6 +29,7 @@
  * check that the school is still that league's only field hockey team; it is never counted as a change.
  */
 
+import { type FlagSpec, parseFlags } from '@/lib/cli/flags';
 import { ALL_DIVISIONS, isIndependentDivision } from '@/lib/config/leagues';
 import {
   ALL_SEASON_ID, BOOTSTRAP_URL, GENDER_SPORT, SEASON_LABEL, SEASON_YEAR, SPORT_SEASON_ID, TEAM_LEVEL,
@@ -55,22 +56,17 @@ interface Args {
   help: boolean;
 }
 
+const FLAGS: FlagSpec<Args> = [
+  { flags: ['--help', '-h'], toggle: (a) => { a.help = true; } },
+  { flags: '--ssid', value: 'string', set: (a, v) => { a.ssid = v; } },
+  { flags: '--teams', value: 'list', set: (a, v) => { a.teams = v; } },
+];
+
 function parseArgs(argv: readonly string[]): Args {
-  const out: Args = { ssid: null, teams: null, help: false };
-  for (let i = 0; i < argv.length; i += 1) {
-    const arg = argv[i];
-    const next = () => {
-      const v = argv[i + 1];
-      if (v === undefined || v.startsWith('--')) throw new Error(`${arg} needs a value`);
-      i += 1;
-      return v;
-    };
-    if (arg === '--help' || arg === '-h') out.help = true;
-    else if (arg === '--ssid') out.ssid = next();
-    else if (arg === '--teams') out.teams = next().split(',').map((s) => s.trim()).filter(Boolean);
-    else throw new Error(`unknown flag: ${arg}`);
-  }
-  return out;
+  return parseFlags(argv, FLAGS, {
+    init: () => ({ ssid: null, teams: null, help: false }),
+    allowEmptyValue: true,
+  });
 }
 
 interface Row {

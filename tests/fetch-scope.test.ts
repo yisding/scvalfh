@@ -10,8 +10,6 @@ import {
   describePrevious,
   formatLeagueSummary,
   inScope,
-  parseFetchedAtFlag,
-  parseLeaguesFlag,
   readPreviousFile,
   runExitCode,
   summarizeByLeague,
@@ -22,33 +20,6 @@ import { type Rosters, RostersPartialSchema, TeamRosterSchema, countRosters } fr
 import { stableStringify } from '@/lib/shared/stable-json';
 import { runRepoScript, type ScriptName } from './support/cli';
 import { REPO } from './support/repo';
-
-describe('parseLeaguesFlag', () => {
-  it('reads a comma list, drops blanks and repeats', () => {
-    expect(parseLeaguesFlag('scval,bval')).toEqual(['scval', 'bval']);
-    expect(parseLeaguesFlag(' mcal , ,mcal')).toEqual(['mcal']);
-    // The Southern California ids, hyphenated ones included (update-data.yml validates ^[a-z0-9,-]+$).
-    expect(parseLeaguesFlag('sunset,city,north-county,metro')).toEqual(['sunset', 'city', 'north-county', 'metro']);
-  });
-
-  it('refuses an unknown league and an empty list, naming the flag', () => {
-    expect(() => parseLeaguesFlag('scval,nope')).toThrow(/--leagues: unknown league nope/);
-    expect(() => parseLeaguesFlag(' , ', '--x')).toThrow(/--x needs at least one league id/);
-  });
-});
-
-describe('parseFetchedAtFlag', () => {
-  it('returns an ISO timestamp as given', () => {
-    expect(parseFetchedAtFlag('2026-10-04T00:00:00.000Z')).toBe('2026-10-04T00:00:00.000Z');
-    expect(parseFetchedAtFlag('2026-10-04T07:02:00-07:00')).toBe('2026-10-04T07:02:00-07:00');
-  });
-
-  it('refuses a date alone, a word and an impossible stamp, naming the flag', () => {
-    expect(() => parseFetchedAtFlag('2026-10-04')).toThrow(/--fetched-at: not an ISO timestamp: 2026-10-04/);
-    expect(() => parseFetchedAtFlag('yesterday')).toThrow(/--fetched-at: not an ISO timestamp: yesterday/);
-    expect(() => parseFetchedAtFlag('2026-13-45T00:00:00Z', '--x')).toThrow(/--x: not an ISO timestamp/);
-  });
-});
 
 describe('the fetch-scope CLIs read flags by fetch-data\'s rules', () => {
   const run = (script: ScriptName, ...args: string[]) => runRepoScript(script, { extra: args });

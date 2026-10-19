@@ -35,6 +35,7 @@
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 
+import { type FlagSpec, parseFlags } from '@/lib/cli/flags';
 import { divisionsOf, getLeague } from '@/lib/config/leagues';
 import { HistorySchema } from '@/lib/schema/history';
 import { isCalendarDate } from '@/lib/shared/patterns';
@@ -68,29 +69,28 @@ interface Args {
   dryRun: boolean;
 }
 
+/** Args as read from the command line: the day the documents were read is still to be defaulted. */
+type ParsedArgs = Omit<Args, 'retrievedOn'> & { retrievedOn: string | null };
+
+const FLAGS: FlagSpec<ParsedArgs> = [
+  { flags: '--from', value: 'path', set: (a, v) => { a.from = v; } },
+  { flags: '--bval-from', value: 'path', set: (a, v) => { a.bvalFrom = v; } },
+  { flags: '--retrieved-on', value: 'string', set: (a, v) => { a.retrievedOn = v; } },
+  { flags: '--out', value: 'path', set: (a, v) => { a.out = v; } },
+  { flags: '--dry-run', toggle: (a) => { a.dryRun = true; } },
+];
+
 function parseArgs(argv: readonly string[]): Args {
-  const out: Omit<Args, 'retrievedOn'> & { retrievedOn: string | null } = {
-    from: null,
-    bvalFrom: null,
-    retrievedOn: null,
-    out: path.join(process.cwd(), 'data', 'history-2025-26.json'),
-    dryRun: false,
-  };
-  for (let i = 0; i < argv.length; i += 1) {
-    const arg = argv[i];
-    const next = () => {
-      const v = argv[i + 1];
-      if (v === undefined || v.startsWith('--')) throw new Error(`${arg} needs a value`);
-      i += 1;
-      return v;
-    };
-    if (arg === '--from') out.from = path.resolve(next());
-    else if (arg === '--bval-from') out.bvalFrom = path.resolve(next());
-    else if (arg === '--retrieved-on') out.retrievedOn = next();
-    else if (arg === '--out') out.out = path.resolve(next());
-    else if (arg === '--dry-run') out.dryRun = true;
-    else throw new Error(`unknown flag: ${arg}`);
-  }
+  const out = parseFlags(argv, FLAGS, {
+    init: (): ParsedArgs => ({
+      from: null,
+      bvalFrom: null,
+      retrievedOn: null,
+      out: path.join(process.cwd(), 'data', 'history-2025-26.json'),
+      dryRun: false,
+    }),
+    allowEmptyValue: true,
+  });
   if (out.retrievedOn !== null && !isCalendarDate(out.retrievedOn)) {
     throw new Error(`--retrieved-on must be a date written YYYY-MM-DD, got "${out.retrievedOn}"`);
   }

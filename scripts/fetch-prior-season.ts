@@ -33,6 +33,7 @@ import path from 'node:path';
 
 import { z } from 'zod';
 
+import { type FlagSpec, parseFlags } from '@/lib/cli/flags';
 import { SEASON_YEAR, SPORT_SEASON_ID } from '@/lib/config/season';
 import type { TeamSlug } from '@/lib/model/ids';
 import { previousMaxprepsYear, priorGamesFromFeeds, seasonLabel } from '@/lib/pipeline/prior-season-feeds';
@@ -52,29 +53,28 @@ interface Args {
   help: boolean;
 }
 
+const FLAGS: FlagSpec<Args> = [
+  { flags: '--year', value: 'string', set: (a, v) => { a.year = v; } },
+  { flags: '--ssid', value: 'string', set: (a, v) => { a.ssid = v; } },
+  { flags: '--out', value: 'path', set: (a, v) => { a.out = v; } },
+  { flags: '--dry-run', toggle: (a) => { a.dryRun = true; } },
+  { flags: '--help', toggle: (a) => { a.help = true; } },
+];
+
 /** The command line (see USAGE); the season defaults to the one before lib/config/season.ts'. */
 function parseArgs(argv: readonly string[]): Args {
-  const args: Args = {
-    year: previousMaxprepsYear(SEASON_YEAR),
-    ssid: null,
-    out: path.resolve(import.meta.dirname, '..', 'data', 'prior-season.json'),
-    dryRun: false,
-    help: false,
-  };
-  for (let i = 0; i < argv.length; i++) {
-    const flag = argv[i];
-    const value = () => {
-      const v = argv[++i];
-      if (v === undefined || v.startsWith('--')) throw new Error(`${flag} needs a value\n${USAGE}`);
-      return v;
-    };
-    if (flag === '--year') args.year = value();
-    else if (flag === '--ssid') args.ssid = value();
-    else if (flag === '--out') args.out = path.resolve(value());
-    else if (flag === '--dry-run') args.dryRun = true;
-    else if (flag === '--help') args.help = true;
-    else throw new Error(`unknown flag ${flag}\n${USAGE}`);
-  }
+  const args = parseFlags(argv, FLAGS, {
+    init: () => ({
+      year: previousMaxprepsYear(SEASON_YEAR),
+      ssid: null,
+      out: path.resolve(import.meta.dirname, '..', 'data', 'prior-season.json'),
+      dryRun: false,
+      help: false,
+    }),
+    allowEmptyValue: true,
+    unknown: (flag) => `unknown flag ${flag}\n${USAGE}`,
+    needsValue: (flag) => `${flag} needs a value\n${USAGE}`,
+  });
   if (!args.help && !/^\d{2}-\d{2}$/.test(args.year)) throw new Error(`--year must look like 25-26\n${USAGE}`);
   return args;
 }

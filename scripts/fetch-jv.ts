@@ -50,6 +50,7 @@ import path from 'node:path';
 
 import type { ZodType } from 'zod';
 
+import { type FlagSpec, parseFlags } from '@/lib/cli/flags';
 import { INDEPENDENT_LEAGUES, LEAGUES_PROPER, seasonWindowBounds } from '@/lib/config/leagues';
 import { JV_SPORT_SEASON_ID, SEASON_YEAR } from '@/lib/config/season';
 import { mergeJv } from '@/lib/engine/jv/merge';
@@ -57,8 +58,6 @@ import {
   describePrevious,
   formatLeagueSummary,
   inScope,
-  parseFetchedAtFlag,
-  parseLeaguesFlag,
   readPreviousFile,
   runExitCode,
   summarizeByLeague,
@@ -98,35 +97,31 @@ interface Args {
   sblive: boolean;
 }
 
+const FLAGS: FlagSpec<Args> = [
+  { flags: '--fixtures', value: 'path', set: (a, v) => { a.fixtures = v; } },
+  { flags: '--capture', value: 'path', set: (a, v) => { a.capture = v; } },
+  { flags: '--leagues', value: 'leagues', set: (a, v) => { a.leagues = v; } },
+  { flags: '--out', value: 'path', set: (a, v) => { a.out = v; } },
+  { flags: '--dry-run', toggle: (a) => { a.dryRun = true; } },
+  { flags: '--fetched-at', value: 'iso', set: (a, v) => { a.fetchedAt = v; } },
+  { flags: '--force', toggle: (a) => { a.force = true; } },
+  { flags: '--no-sblive', toggle: (a) => { a.sblive = false; } },
+];
+
 function parseArgs(argv: readonly string[]): Args {
-  const out: Args = {
-    fixtures: null,
-    capture: null,
-    leagues: null,
-    out: path.join(process.cwd(), 'data', 'jv.json'),
-    dryRun: false,
-    fetchedAt: null,
-    force: false,
-    sblive: true,
-  };
-  for (let i = 0; i < argv.length; i += 1) {
-    const arg = argv[i];
-    const next = () => {
-      const v = argv[i + 1];
-      if (!v || v.startsWith('--')) throw new Error(`${arg} needs a value`);
-      i += 1;
-      return v;
-    };
-    if (arg === '--fixtures') out.fixtures = path.resolve(next());
-    else if (arg === '--capture') out.capture = path.resolve(next());
-    else if (arg === '--leagues') out.leagues = parseLeaguesFlag(next(), arg);
-    else if (arg === '--out') out.out = path.resolve(next());
-    else if (arg === '--dry-run') out.dryRun = true;
-    else if (arg === '--fetched-at') out.fetchedAt = parseFetchedAtFlag(next(), arg);
-    else if (arg === '--force') out.force = true;
-    else if (arg === '--no-sblive') out.sblive = false;
-    else throw new Error(`unknown flag: ${arg}`);
-  }
+  const out = parseFlags(argv, FLAGS, {
+    init: () => ({
+      fixtures: null,
+      capture: null,
+      leagues: null,
+      out: path.join(process.cwd(), 'data', 'jv.json'),
+      dryRun: false,
+      fetchedAt: null,
+      force: false,
+      sblive: true,
+    }),
+    allowEmptyValue: false,
+  });
   if (out.fixtures && out.capture) throw new Error('--capture records live responses; it cannot be combined with --fixtures');
   return out;
 }
