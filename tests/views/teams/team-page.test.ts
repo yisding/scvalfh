@@ -19,7 +19,7 @@ import { CORPUS_HOOK_TIMEOUT, withSnapshotModules } from '@/tests/support/corpus
 import { corpusSnapshotPath } from '@/tests/support/corpus-snapshot';
 import { textOf } from '@/tests/support/html-text';
 import { tempDir } from '@/tests/support/repo';
-import { loaders, Modules, pageRenderers, m, renderTeam, describeTeam } from '@/tests/support/team-view';
+import { loaders, type Modules, pageRenderers, m, renderTeam, describeTeam } from '@/tests/support/team-view';
 
 describe('Southern California team pages (DESIGN-socal §2.4)', () => {
   it('league copy: the Sunset has no playoffs to promise; a San Diego league waits for the Section', () => {

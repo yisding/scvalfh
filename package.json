@@ -32,7 +32,8 @@
     "assert:copy": "tsx scripts/ci/assert-copy.ts",
     "assert:vinext": "tsx scripts/ci/assert-vinext-prerender.ts",
     "gate:all": "bash scripts/ci/run-all.sh",
-    "check": "pnpm typecheck && pnpm lint && pnpm test"
+    "check": "pnpm typecheck && pnpm lint && pnpm test",
+    "gate": "pnpm build && pnpm assert:prerender && pnpm assert:budgets && pnpm assert:copy"
   },
   "dependencies": {
     "@vinext/cloudflare": "1.0.0",

@@ -25,6 +25,18 @@ const eslintConfig = defineConfig([
       ],
     },
   },
+  // A type that is only used as a type is imported as one (`import { type X }`, or `import type` when every
+  // name is a type): the client-boundary rule (tests/arch/client-boundary.test.ts) and the layers rule
+  // (tests/arch/layers.test.ts) read which imports vanish at compile time, and an inline `type` marker
+  // keeps a mixed import's runtime half visible.
+  {
+    files: ["**/*.{ts,tsx,mts}"],
+    ignores: ["tests/fixtures/**"],
+    rules: {
+      // `import("x").T` types stay allowed: vi.importActual<typeof import("x")> is the typed way to reach a mocked module.
+      "@typescript-eslint/consistent-type-imports": ["error", { fixStyle: "inline-type-imports", disallowTypeAnnotations: false }],
+    },
+  },
   // The top-level dependency directions, as editor feedback (tests/arch/layers.test.ts owns the full
   // rule, including the ranks inside lib/): lib imports none of views, components, app, scripts or
   // tests; views never import components, app or scripts; components never import app or scripts;
