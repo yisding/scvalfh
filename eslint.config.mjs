@@ -10,16 +10,7 @@ const eslintConfig = defineConfig([
   // "Local development"). tsconfig.json's `paths` maps '@/'; vitest, Next, vinext and tsx all read it.
   {
     files: ["**/*.{ts,tsx,mts}"],
-    ignores: [
-      "tests/fixtures/**",
-      // Next puts a content hash of each metadata image file's own source into the URL it prints
-      // (`og:image` …/opengraph-image?<hash>, `<link rel="icon" href="/icon?<hash>">`), so rewriting
-      // these files' specifiers alone would change every page's HTML. They keep their relative
-      // imports until a change that is meant to alter them anyway.
-      "app/**/opengraph-image.tsx",
-      "app/icon.tsx",
-      "app/apple-icon.tsx",
-    ],
+    ignores: ["tests/fixtures/**"],
     rules: {
       "no-restricted-imports": [
         "error",
@@ -28,24 +19,6 @@ const eslintConfig = defineConfig([
             {
               regex: "^\\.\\./",
               message: "Import repo code as '@/<path>' (README, \"Local development\").",
-            },
-            // lib/format.ts and components/ui/plural.ts survive only for the metadata image routes
-            // above, whose own bytes must not change (see the two files' headers).
-            {
-              regex: "^(@/lib/format|@/components/ui/plural|\\./format|\\./plural)$",
-              message: "Import the formatters from '@/lib/format/<dates|numbers|words|score>' or '@/lib/shared/<dates|game>'.",
-            },
-            // lib/data.ts likewise survives only for the metadata image routes (see its header).
-            {
-              regex: "^(@/lib/data|\\./data)$",
-              message: "Read the snapshot through '@/lib/datasets/snapshot' and '@/lib/queries/<provenance|leagues|teams|games|standings|phase|postseason>'.",
-            },
-            // The view models moved to views/ and the OG factories to components/og/; their old
-            // component paths survive as re-exports only for the metadata image routes (see each
-            // file's header).
-            {
-              regex: "^@/components/(layout/(og-theme|site|og-region-card|monogram-image)|standings/league-standings-card|schedule/day-summary|playoffs/(playoff-view|tournament-league)|teams/team-view|game/game-view)$",
-              message: "Import from the module's home in views/ or components/og/; this path re-exports only for the metadata image routes.",
             },
           ],
         },

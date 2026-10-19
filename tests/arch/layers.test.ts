@@ -78,17 +78,6 @@ const INGESTION: readonly string[] = ['sources', 'official', 'cli', 'pipeline'].
 const INGESTION_MAX_RANK = 6;
 
 /**
- * Two re-export-only modules at the lib/ root survive only for the metadata image routes, whose own
- * bytes must not change (Next hashes each metadata route file into the og:image URL; see the two
- * files' headers). They are ranked with what they re-export; when the metadata image routes are
- * rewritten they are deleted, and the stale-entry check below then asks for their rows to go.
- */
-const TRANSITIONAL: ReadonlyMap<string, number> = new Map([
-  ['lib/format', 1],
-  ['lib/data', 8],
-]);
-
-/**
  * Package doors: the parts inside `dir` are imported only by `door` or from inside `dir`, except the
  * `public` parts (module paths). Tests are exempt (they unit-test parts and vi.doMock seeds).
  */
@@ -116,8 +105,6 @@ type Layer =
 
 /** Which layer a module path (no extension) belongs to. */
 function layerOf(mod: string): Layer {
-  const transitional = TRANSITIONAL.get(mod);
-  if (transitional !== undefined) return { kind: 'ranked', rank: transitional };
   if (mod === 'data' || mod.startsWith('data/')) return { kind: 'data' };
   if (INGESTION.some((prefix) => mod.startsWith(prefix))) return { kind: 'ingestion' };
   if (mod.startsWith('scripts/')) return { kind: 'scripts' };
@@ -165,7 +152,7 @@ function rulesBroken({ file, to }: Edge): string[] {
     if (to.startsWith(dir) && !open.includes(to) && from !== door && !from.startsWith(dir)) broken.push('f');
   }
   if (isViewClient(from)) {
-    const allowed = isLeaf(to) || isViewClient(to) || (target.kind === 'ranked' && target.rank <= 1 && !TRANSITIONAL.has(to));
+    const allowed = isLeaf(to) || isViewClient(to) || (target.kind === 'ranked' && target.rank <= 1);
     if (!allowed) broken.push('h');
   }
   if ((source.kind === 'scripts' || from.startsWith('app/')) && target.kind === 'tests') broken.push('i');
@@ -274,10 +261,6 @@ describe('layers: the dependency rule', () => {
     }
   });
 
-  it('every TRANSITIONAL module still exists (drop the entry when it is deleted)', () => {
-    for (const mod of TRANSITIONAL.keys()) expect(moduleFile(mod), mod).not.toBeNull();
-  });
-
   it('no import breaks rules (a)-(f), (h) or (i)', () => {
     const failures = EDGES.flatMap((edge) => rulesBroken(edge).map((rule) => lineOf(edge, rule)));
     expect(failures).toEqual([]);
@@ -366,7 +349,6 @@ describe('layers: the dependency rule', () => {
       expect(broken(client, views('shared', 'game-display-client'))).toEqual([]);
       expect(broken(client, 'lib/config/leagues')).toEqual(['h']);
       expect(broken(client, views('home', 'home-view'))).toEqual(['h']);
-      expect(broken(client, 'lib/format')).toEqual(['h']);
     });
 
     it('(i) scripts and app never import tests', () => {

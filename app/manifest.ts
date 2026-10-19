@@ -1,8 +1,17 @@
 import type { MetadataRoute } from 'next';
 
-import { THEME_COLOR } from '@/components/head/theme-script';
+import { ICON_SIZES } from '@/components/og/monogram-image';
 import { SEASON_CALENDAR_YEAR } from '@/lib/config/season';
+import { THEME_COLOR } from '@/lib/shared/theme';
 import { SITE_DESCRIPTION, SITE_NAME, SITE_SHORT_NAME } from '@/views/site/site';
+
+/** Where each icon size is served, keyed like ICON_SIZES (whose order is the manifest's). */
+const ICON_ROUTES: Record<keyof typeof ICON_SIZES, string> = {
+  favicon: '/icon',
+  apple: '/apple-icon',
+  install192: '/icon-192',
+  install512: '/icon-512',
+};
 
 /**
  * /manifest.webmanifest (DESIGN §1.1). Installable, standalone, and themed to `--sx-bg` so the
@@ -30,11 +39,11 @@ export default function manifest(): MetadataRoute.Manifest {
     // (components/og/monogram-image.tsx) and referenced from here only — they are routes rather
     // than `icon` files precisely so no page's head asks a browser to fetch a 512px PNG for a 16px
     // tab glyph.
-    icons: [
-      { src: '/icon', sizes: '32x32', type: 'image/png', purpose: 'any' },
-      { src: '/apple-icon', sizes: '180x180', type: 'image/png', purpose: 'any' },
-      { src: '/icon-192', sizes: '192x192', type: 'image/png', purpose: 'any' },
-      { src: '/icon-512', sizes: '512x512', type: 'image/png', purpose: 'any' },
-    ],
+    icons: (Object.keys(ICON_SIZES) as Array<keyof typeof ICON_SIZES>).map((icon) => ({
+      src: ICON_ROUTES[icon],
+      sizes: `${ICON_SIZES[icon]}x${ICON_SIZES[icon]}`,
+      type: 'image/png',
+      purpose: 'any' as const,
+    })),
   };
 }

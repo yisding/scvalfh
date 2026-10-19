@@ -1,4 +1,4 @@
-import { monogramImage } from '@/components/og/monogram-image';
+import { ICON_SIZES, monogramImage } from '@/components/og/monogram-image';
 
 /**
  * `/icon-192` — the installable-app icon Chromium's install prompt requires, referenced from
@@ -14,5 +14,5 @@ import { monogramImage } from '@/components/og/monogram-image';
 export const dynamic = 'force-static';
 
 export function GET() {
-  return monogramImage(192);
+  return monogramImage(ICON_SIZES.install192);
 }

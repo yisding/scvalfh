@@ -1,18 +1,13 @@
 import { notFound } from 'next/navigation';
-import { ImageResponse } from 'next/og';
 
-import {
-  buildGameView,
-  buildSupersededStub,
-  gameKicker,
-  gameStaticParams,
-} from '../../../components/game/game-view';
-import { OG, OG_SIZE } from '../../../components/layout/og-theme';
-import { SITE_NAME } from '../../../components/layout/site';
-import { dateWithYear, timeOfDayPT } from '../../../lib/format';
+import { GAME_CARD_ALT, GameCard } from '@/components/og/GameCard';
+import { ogPng } from '@/components/og/png';
+import { gameStaticParams } from '@/views/game/game-route';
+import { buildGameView, buildSupersededStub } from '@/views/game/game-view';
+import { OG_CONTENT_TYPE, OG_SIZE } from '@/views/site/og-theme';
 
 /**
- * The per-game OG card (DESIGN §1.1, §3.5).
+ * The per-game OG card (DESIGN §1.1, §3.5), drawn by components/og/GameCard.tsx.
  *
  * TEXT ONLY, like every other card on this site: no logo file, no school colors, no third-party
  * image request — the same constraint that made `TeamMonogram` a color square rather than a
@@ -34,9 +29,9 @@ import { dateWithYear, timeOfDayPT } from '../../../lib/format';
  * side's current league record instead.
  */
 
-export const alt = `${SITE_NAME} — game score card`;
+export const alt = GAME_CARD_ALT;
 export const size = OG_SIZE;
-export const contentType = 'image/png';
+export const contentType = OG_CONTENT_TYPE;
 
 export function generateStaticParams(): Array<{ id: string }> {
   return gameStaticParams();
@@ -50,107 +45,9 @@ export function generateStaticParams(): Array<{ id: string }> {
  */
 export default async function Image({ params }: PageProps<'/game/[id]'>) {
   const { id } = await params;
-  // paramToGameId runs inside buildGameView before any accessor that can throw (SPEC §8.1).
+  // buildGameView guards with gameParam (views/game/game-route.ts), which runs paramToGameId before
+  // any accessor that can throw (SPEC §8.1); a superseded stub's card is its MaxPreps game's.
   const model = buildGameView(id) ?? buildSupersededStub(id)?.targetModel;
   if (!model) notFound();
-
-  const { game, away, home, display } = model;
-  const sides = [away, home];
-  const when = game.isTimeTba
-    ? `${dateWithYear(game.dateLocal)} · time TBA`
-    : `${dateWithYear(game.dateLocal)} · ${timeOfDayPT(game.dateLocal)}`;
-
-  return new ImageResponse(
-    (
-      <div
-        style={{
-          width: '100%',
-          height: '100%',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'space-between',
-          padding: 72,
-          background: OG.BG,
-          color: OG.TEXT,
-          fontFamily: 'sans-serif',
-        }}
-      >
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <div
-            style={{
-              display: 'flex',
-              fontSize: 24,
-              letterSpacing: 4,
-              textTransform: 'uppercase',
-              color: OG.TEXT_3,
-            }}
-          >
-            {gameKicker(model)}
-          </div>
-          <div style={{ display: 'flex', marginTop: 10, height: 2, background: OG.RULE }} />
-        </div>
-
-        {/* Away over home — the same order as every list and the scoreboard on the page. */}
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
-          {sides.map((side, index) => (
-            <div
-              key={side.label}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                gap: 32,
-                paddingTop: index === 0 ? 0 : 18,
-                paddingBottom: index === 0 ? 18 : 0,
-                borderBottom: index === 0 ? `1px solid ${OG.RULE}` : 'none',
-              }}
-            >
-              <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <div
-                  style={{
-                    display: 'flex',
-                    fontSize: 60,
-                    fontWeight: side.view.weight === 'winner' ? 700 : 400,
-                    color: side.view.weight === 'loser' ? OG.TEXT_2 : OG.TEXT,
-                  }}
-                >
-                  {side.label}
-                </div>
-                {side.sub ? (
-                  <div style={{ display: 'flex', marginTop: 8, fontSize: 26, color: OG.TEXT_3 }}>
-                    {side.sub}
-                  </div>
-                ) : null}
-              </div>
-              {/* No score column at all on a game that has none — the status is in the kicker. */}
-              {display.showScores ? (
-                <div
-                  style={{
-                    display: 'flex',
-                    fontSize: 96,
-                    fontWeight: side.view.weight === 'winner' ? 700 : 400,
-                    color: side.view.hasScore
-                      ? side.view.weight === 'loser'
-                        ? OG.TEXT_2
-                        : OG.TEXT
-                      : OG.TEXT_3,
-                  }}
-                >
-                  {side.view.glyph}
-                </div>
-              ) : null}
-            </div>
-          ))}
-        </div>
-
-        <div style={{ display: 'flex', flexDirection: 'column', color: OG.TEXT_3, fontSize: 22 }}>
-          <div style={{ display: 'flex' }}>{when}</div>
-          <div style={{ display: 'flex', marginTop: 6 }}>
-            {model.source ? `${SITE_NAME} · unofficial · Score via si.com` : `${SITE_NAME} · unofficial · data from MaxPreps`}
-          </div>
-        </div>
-      </div>
-    ),
-    { ...OG_SIZE },
-  );
+  return ogPng(<GameCard model={model} />);
 }

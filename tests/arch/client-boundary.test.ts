@@ -141,8 +141,8 @@ describe('client boundary: no "use client" module reaches a server-only module',
 
   it('only CLIENT_SAFE modules are reachable from outside the client tree (allowlist)', () => {
     const from = PROBE;
-    // A module nobody listed is banned, wherever it lives: this is what makes the list an allowlist.
-    // (lib/format.ts, beside the client-safe lib/format/ directory, serves only the metadata image routes.)
+    // A module nobody listed is banned, wherever it lives: this is what makes the list an allowlist
+    // ('@/lib/format' is the bare directory, not the client-safe 'lib/format/' prefix).
     for (const spec of ['@/lib/config/leagues/labels', '@/lib/config/leagues', '@/lib/format', '@/lib/brand-new-module', '@/scripts/lib/cli']) {
       expect(classify(spec, from), spec).toEqual({ kind: 'banned', name: spec.slice(2) });
     }

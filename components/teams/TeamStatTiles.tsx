@@ -1,6 +1,7 @@
 import StatTile from '@/components/ui/StatTile';
 import { perGame, placeMark, placeWords, recordString, signedGd, streakString } from '@/lib/format/numbers';
 import { EM_DASH, plural } from '@/lib/format/words';
+import { gamesPlayedText } from '@/views/teams/team-card';
 import { placeSub } from '@/views/teams/team-view';
 import type { TeamPageView } from '@/views/teams/team-view';
 
@@ -70,7 +71,7 @@ export function TeamStatTiles({ view, className }: TeamStatTilesProps) {
             bare count, and MAX, a ceiling over the games left, has nothing to count (DESIGN-socal §2.1.7). */}
         <StatTile
           label="GP"
-          value={context ? (context.scheduled === null ? context.counted : `${context.counted}/${context.scheduled}`) : null}
+          value={context ? gamesPlayedText(context) : null}
           sub={
             left === null
               ? 'league games counted'

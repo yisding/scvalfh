@@ -875,10 +875,7 @@ overwrites with its own declarations; Next stays the type authority.
 
 Imports use the `@/` alias that `tsconfig.json` declares for any import that leaves the file's
 directory (`import { LEAGUES } from '@/lib/config/leagues'`), and `./` for same-directory and child
-modules; a `../` specifier is never written (ESLint's `no-restricted-imports` rejects it). The
-metadata image files (`opengraph-image.tsx`, `app/icon.tsx`, `app/apple-icon.tsx`) are the one
-exception and keep relative imports: Next prints a hash of each one's own source in the image URL
-(`/icon?<hash>`), so rewriting their specifiers alone would change every page. Every
+modules; a `../` specifier is never written (ESLint's `no-restricted-imports` rejects it). Every
 tool resolves the alias from `tsconfig.json`: Next and vinext natively, Vitest through
 `resolve.tsconfigPaths` (`vitest.config.ts`), and tsx from the tsconfig in its cwd, so a script run
 from anywhere but the repo root needs `--tsconfig <repo>/tsconfig.json` (the tests' `runScript`

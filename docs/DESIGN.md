@@ -2195,7 +2195,7 @@ The browser chrome follows an explicit choice too. The layout's two `theme-color
 the OS (`media`), so for Light or Dark the script, and `applyTheme` on a tap, prepend one
 media-less `<meta id="sx-theme-color">` with that theme's `--sx-bg` (the first matching meta wins);
 System removes it. The two hex values are one exported constant (`THEME_COLOR` in
-components/head/theme-script.ts) that the layout and both scripts read; the added meta writes
+lib/shared/theme.ts) that the layout and both scripts read; the added meta writes
 them in upper case, because React 19 adopts an existing meta with the same name and content (it
 ignores `media`) and then drops it on the next client-side navigation. Rewriting the layout's own
 metas does not hold either: Next re-creates them on every client-side navigation.

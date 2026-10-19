@@ -5,7 +5,8 @@
  * It is the `lib/queries/`-reading side of a split with the pure `standings-view.ts`: this module reads
  * the snapshot, and the view builders and components under `components/standings/` take what is
  * built here, so they can be reasoned about (and exercised from a test) without an `fs` read. It is not the only reader: the pages' `generateMetadata`, the
- * OG routes and the league card (`league-standings-card.tsx`) call `lib/queries/` directly too.
+ * OG routes and the OG card models (views/standings/standings-card.ts, views/site/region-card.ts)
+ * call `lib/queries/` directly too.
  *
  * "Today" is never `Date.now()`: the through-date comes from the games themselves and the stamp
  * comes from `snapshot.fetchedAt`, so two builds of the same snapshot are byte-identical.
@@ -84,8 +85,8 @@ function buildDivisionStandingsView(division: DivisionId): DivisionView {
 
 /**
  * The leaders of one table: every team at place 1 with results. Exported for the root OG card
- * (app/opengraph-image.tsx), which prints the same row as the /standings card through
- * `leaderClause`.
+ * (app/opengraph-image.tsx; words: views/site/region-card.ts), which prints the same row as the
+ * /standings card through `leaderClause`.
  */
 export function leaderLine(division: DivisionId, heading: string | null): LeaderLine {
   const teams = getTeams();

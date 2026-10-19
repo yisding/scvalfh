@@ -1,9 +1,9 @@
 /**
  * The /game/[id] strings that leave the page: the `<title>`, OG title and `<h1>` (`gameTitle`), the
  * result sentence (`gameRecap`), the `<meta name="description">` and OG description
- * (`gameDescription`) and the OG card's kicker (`gameKicker`). One composer each, read by the page,
- * its metadata, views/site/structured-data.ts and the OG card, so a link preview and the page
- * cannot disagree.
+ * (`gameDescription`) and the OG card's kicker and date line (`gameKicker`, `gameCardWhen`). One
+ * composer each, read by the page, its metadata, views/site/structured-data.ts and the OG card
+ * (components/og/GameCard.tsx), so a link preview and the page cannot disagree.
  */
 
 import { leagueSportWords } from '@/lib/config/leagues/labels';
@@ -88,6 +88,14 @@ export function gameDescription(model: GameView): string {
         ? 'Score via High School on SI (si.com); standings rebuilt twice daily. Unofficial.'
         : 'Scores and standings rebuilt twice daily from MaxPreps. Unofficial.'
   }`;
+}
+
+/** The date line on the OG card: `Sep 24, 2026 · 4:00 PM PT` | `Sep 24, 2026 · time TBA`. */
+export function gameCardWhen(model: GameView): string {
+  const { game } = model;
+  return game.isTimeTba
+    ? `${dateWithYear(game.dateLocal)} · time TBA`
+    : `${dateWithYear(game.dateLocal)} · ${timeOfDayPT(game.dateLocal)}`;
 }
 
 /** The kicker line on the OG card: `FINAL · BVAL · Santa Teresa`, `FINAL · Non-league`, `FINAL · MCAL semifinal`. */

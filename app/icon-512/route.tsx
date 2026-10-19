@@ -1,4 +1,4 @@
-import { monogramImage } from '@/components/og/monogram-image';
+import { ICON_SIZES, monogramImage } from '@/components/og/monogram-image';
 
 /**
  * `/icon-512` — the large installable-app icon (splash screen and app list), referenced from
@@ -7,5 +7,5 @@ import { monogramImage } from '@/components/og/monogram-image';
 export const dynamic = 'force-static';
 
 export function GET() {
-  return monogramImage(512);
+  return monogramImage(ICON_SIZES.install512);
 }

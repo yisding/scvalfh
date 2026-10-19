@@ -1,7 +1,8 @@
 /**
- * The two-region leaders card (components/og/RegionCard.tsx), shared by the root OG card and
- * the /standings card (DESIGN-socal §2.4; design-review UI §7): nine league rows in two region columns
- * must fit 1200×630 even when every division's leader line is at its longest.
+ * The two-region leaders card (components/og/RegionCard.tsx; its words: views/site/region-card.ts),
+ * shared by the root OG card and the /standings card (DESIGN-socal §2.4; design-review UI §7): nine
+ * league rows in two region columns must fit 1200×630 even when every division's leader line is at
+ * its longest.
  *
  * The fit is MEASURED, not estimated: each card is rendered by the same `ImageResponse` the routes use
  * (satori + resvg) in its `'natural'` sizing — the same blocks stacked with the minimum gaps, on a
@@ -95,7 +96,7 @@ async function renderPng(element: ReactElement, height: number): Promise<ReturnT
 
 describe('the two-region leaders card (components/og/RegionCard.tsx)', () => {
   it('lays the nine leagues and the independents’ table out in two region columns, NorCal first (DESIGN §24.10)', async () => {
-    const { regionCardColumns } = await import('@/components/og/RegionCard');
+    const { regionCardColumns } = await import('@/views/site/region-card');
     const columns = regionCardColumns();
     expect(columns.map((c) => c.heading)).toEqual(['Northern California', 'Southern California']);
     expect(columns.map((c) => c.rows.map((r) => r.id))).toEqual([
@@ -107,7 +108,7 @@ describe('the two-region leaders card (components/og/RegionCard.tsx)', () => {
   });
 
   it('titles the cards from SITE_WORDMARK and counts leagues and teams in the footer', async () => {
-    const { rootCardProps, standingsCardProps } = await import('@/components/og/RegionCard');
+    const { rootCardProps, standingsCardProps } = await import('@/views/site/region-card');
     const root = rootCardProps();
     expect(root.title).toBe('NorCal HS Field Hockey · 2026');
     expect(root.footer).toMatch(/^9 leagues, 5 independents · 102 teams · (results through \S.*|no results yet) · unofficial$/);
@@ -119,10 +120,11 @@ describe('the two-region leaders card (components/og/RegionCard.tsx)', () => {
 
   it('both cards fit 1200×630 with every leader line forced to its longest, and render as PNG', async () => {
     const card = await import('@/components/og/RegionCard');
+    const words = await import('@/views/site/region-card');
     const { getLeagueSummaries, getTeams } = await loadQueries();
     const teams = getTeams();
     // Per division: the two longest short names as co-leaders of a three-way tie ("A & B +1 99 pts").
-    const longest = card.regionCardColumns((leagueId) => {
+    const longest = words.regionCardColumns((leagueId) => {
       const league = getLeagueSummaries().find((l) => l.id === leagueId)!;
       return league.divisions.map((d) => {
         const names = teams
@@ -140,8 +142,8 @@ describe('the two-region leaders card (components/og/RegionCard.tsx)', () => {
     expect(longest.flatMap((c) => c.rows).every((r) => r.text.includes(' +1 99 pts'))).toBe(true);
 
     for (const [name, props] of [
-      ['root', card.rootCardProps(longest)],
-      ['/standings', card.standingsCardProps(longest)],
+      ['root', words.rootCardProps(longest)],
+      ['/standings', words.standingsCardProps(longest)],
     ] as const) {
       // The natural height: the same blocks at their minimum gaps, on a white canvas taller than the
       // card, so the card's own dark box (bottom padding included) ends at its lowest painted row.

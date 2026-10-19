@@ -1,14 +1,8 @@
-import { INDEPENDENT_LEAGUES, LEAGUES_PROPER, byRegion, isIndependentLeague } from '@/lib/config/leagues';
-import { SEASON_CALENDAR_YEAR } from '@/lib/config/season';
-import { shortDate } from '@/lib/format/dates';
-import type { LeagueId, RegionId } from '@/lib/model/ids';
-import { getLatestResultsDate } from '@/lib/queries/games';
-import { getLeagueSummaries } from '@/lib/queries/leagues';
-import { getTeams } from '@/lib/queries/teams';
 import { OG, OG_SIZE } from '@/views/site/og-theme';
-import { SITE_WORDMARK } from '@/views/site/site';
-import { leaderClause, type LeaderLine } from '@/views/standings/leader-lines';
-import { buildStandingsOverviewView, leaderLine } from '@/views/standings/standings-view';
+import type { RegionCardModel } from '@/views/site/region-card';
+import { SITE_NAME } from '@/views/site/site';
+
+import { OgFooter, OgRule } from './primitives';
 
 /**
  * The two-region leaders card shared by the root OG card (app/opengraph-image.tsx) and the /standings
@@ -23,31 +17,22 @@ import { buildStandingsOverviewView, leaderLine } from '@/views/standings/standi
  * 1.3, 6px row padding, 48px padding) were MEASURED too tall: with every leader line at its longest the
  * root card needed 716px. The sizes below (REGION_CARD) measure 538px for the root card and 567px for the
  * /standings card (its eyebrow line) at the longest lines, rendered by satori/resvg on 2026-10-06
- * (tests/ui/og-region-card.test.ts, which fails above 630). The SoCal column is the taller one: North
+ * (tests/ui/region-card.test.ts, which fails above 630). The SoCal column is the taller one: North
  * County's three divisions wrap to four lines. Columns are (1200 − 2 × 56 − 40) / 2 = 524px wide.
  *
- * The row TEXT is still standings-view's `leaderClause` over standings-page-view's `leaderLine`, so the
- * two cards and the /standings metadata can never word a league's leaders differently. A test renders
- * both cards with every division's leader line forced to its longest (the division's two longest short
- * names as co-leaders, "+n", two-digit points) and measures the rendered height
- * (tests/ui/og-region-card.test.ts).
+ * The words (rows, titles, footers) are views/site/region-card.ts's. A test renders both cards with
+ * every division's leader line forced to its longest (the division's two longest short names as
+ * co-leaders, "+n", two-digit points) and measures the rendered height (tests/ui/region-card.test.ts).
  *
  * TEXT ONLY, like every card on this site: no logo file, no school colors, no third-party image request
  * (DESIGN §12.4), and no league or region hue.
  */
 
-export interface RegionCardRow {
-  id: LeagueId;
-  shortName: string;
-  text: string;
-}
-
-export interface RegionCardColumn {
-  region: RegionId;
-  /** 'Northern California' | 'Southern California'. */
-  heading: string;
-  rows: RegionCardRow[];
-}
+/**
+ * The /standings card's alt (app/standings/opengraph-image.tsx `alt`). The root card's is
+ * ROOT_OG_ALT (views/site/site.ts), which ROOT_OG_IMAGE names for every route that borrows that card.
+ */
+export const STANDINGS_CARD_ALT = `${SITE_NAME} — standings for every league: each division’s leaders with points`;
 
 /** The card's layout constants (the test reads them to know the budget it checks against). */
 export const REGION_CARD = {
@@ -65,43 +50,7 @@ export const REGION_CARD = {
   footerSize: 19,
 } as const;
 
-/** The leader lines per league (config order), grouped into REGIONS order; `lines` overrides for tests. */
-export function regionCardColumns(
-  linesOf: (leagueId: LeagueId) => readonly LeaderLine[] = (id) => {
-    const league = getLeagueSummaries().find((l) => l.id === id);
-    return league ? league.divisions.map((d) => leaderLine(d.id, d.heading)) : [];
-  },
-): RegionCardColumn[] {
-  const leagues = getLeagueSummaries();
-  return byRegion(leagues, (l) => l.region).map(({ region, items }) => ({
-    region: region.id,
-    heading: region.name,
-    // Every table of the region, the LA independents' included (DESIGN §24.10); the group's row is
-    // labelled by its division ('Independents'), since its short name is an adjective.
-    rows: items
-      .map((l) => ({
-        id: l.id,
-        shortName: isIndependentLeague(l.id) ? (l.divisions[0]?.label ?? l.shortName) : l.shortName,
-        text: leaderClause(linesOf(l.id)),
-      })),
-  }));
-}
-
-/**
- * `9 leagues, 5 independents`: the leagues proper, then the teams in no league (DESIGN §24.9), so a card
- * never counts the independents as a tenth league.
- */
-function leagueCountWords(): string {
-  const independents = INDEPENDENT_LEAGUES.reduce((n, g) => n + g.divisions.reduce((m, d) => m + d.expectedTeams, 0), 0);
-  return `${LEAGUES_PROPER.length} leagues${independents > 0 ? `, ${independents} independents` : ''}`;
-}
-
-export interface RegionCardProps {
-  /** Small uppercase line above the title (the /standings card's SITE_WORDMARK); none on the root card. */
-  eyebrow?: string;
-  title: string;
-  columns: readonly RegionCardColumn[];
-  footer: string;
+export interface RegionCardProps extends RegionCardModel {
   /**
    * `'fixed'` (the card): 1200×630 with the footer pushed to the bottom. `'natural'` (tests only): the
    * same blocks stacked at their natural height with the minimum gaps, so a render on a taller canvas
@@ -147,7 +96,7 @@ export function RegionCard({ eyebrow, title, columns, footer, sizing = 'fixed' }
           </div>
         ) : null}
         <div style={{ display: 'flex', fontSize: C.titleSize, fontWeight: 600, lineHeight: 1.15 }}>{title}</div>
-        <div style={{ display: 'flex', marginTop: 12, height: 2, background: OG.RULE }} />
+        <OgRule marginTop={12} />
       </div>
 
       <div style={{ display: 'flex', alignItems: 'flex-start', gap: C.columnGap }}>
@@ -187,7 +136,7 @@ export function RegionCard({ eyebrow, title, columns, footer, sizing = 'fixed' }
                 >
                   {row.shortName}
                 </div>
-                <div style={{ display: 'flex', flex: 1, fontSize: C.textSize, lineHeight: C.textLineHeight, color: '#d5dbe1' }}>
+                <div style={{ display: 'flex', flex: 1, fontSize: C.textSize, lineHeight: C.textLineHeight, color: OG.LEADER_TEXT }}>
                   {row.text}
                 </div>
               </div>
@@ -196,44 +145,10 @@ export function RegionCard({ eyebrow, title, columns, footer, sizing = 'fixed' }
         ))}
       </div>
 
-      <div style={{ display: 'flex', fontSize: C.footerSize, color: OG.TEXT_3 }}>{footer}</div>
+      <OgFooter size={C.footerSize}>{footer}</OgFooter>
     </div>
   );
 }
 
 /** The card's canvas: the same 1200×630 every card uses. */
 export const REGION_CARD_SIZE = OG_SIZE;
-
-// ---------------------------------------------------------------- the two cards' words
-// Kept here rather than in the route files: an `opengraph-image` route exports only its image function
-// and `alt` / `size` / `contentType` (node_modules/next/dist/docs/01-app/03-api-reference/
-// 03-file-conventions/01-metadata/opengraph-image.md, "Config exports"), and the test needs these too.
-
-/**
- * The root card (app/opengraph-image.tsx): `NorCal HS Field Hockey · 2026` (SITE_WORDMARK, shorter
- * than SITE_NAME, so one line at 44px) and `9 leagues, 3 independents · 102 teams · results through Oct 2 ·
- * unofficial`.
- */
-export function rootCardProps(columns: readonly RegionCardColumn[] = regionCardColumns()): RegionCardProps {
-  const through = getLatestResultsDate();
-  return {
-    title: `${SITE_WORDMARK} · ${SEASON_CALENDAR_YEAR}`,
-    columns,
-    footer: `${leagueCountWords()} · ${getTeams().length} teams · ${
-      through ? `results through ${shortDate(through)}` : 'no results yet'
-    } · unofficial`,
-  };
-}
-
-/** The /standings card (app/standings/opengraph-image.tsx): the wordmark as eyebrow, "Standings — every league". */
-export function standingsCardProps(columns: readonly RegionCardColumn[] = regionCardColumns()): RegionCardProps {
-  const { throughDate } = buildStandingsOverviewView();
-  return {
-    eyebrow: SITE_WORDMARK,
-    title: 'Standings — every league',
-    columns,
-    footer: `${leagueCountWords()} · ${getTeams().length} teams${
-      throughDate ? ` · results through ${shortDate(throughDate)}` : ''
-    } · unofficial`,
-  };
-}

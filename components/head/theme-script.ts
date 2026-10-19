@@ -19,10 +19,10 @@
  * and `content` match one it renders, ignoring `media`, so a lowercase twin of the layout's dark
  * meta was claimed as that meta and removed by the next client-side navigation (measured).
  */
-export const THEME_STORAGE_KEY = 'scvalfh.theme';
 
-/** `--sx-bg` in each mode (app/globals.css): the layout's theme-color metas and both scripts read it. */
-export const THEME_COLOR = { light: '#f6f7f8', dark: '#0b0d10' } as const;
+import { THEME_COLOR } from '@/lib/shared/theme';
+
+export const THEME_STORAGE_KEY = 'scvalfh.theme';
 
 /** The id of the media-less theme-color meta an explicit choice adds. */
 export const THEME_META_ID = 'sx-theme-color';

@@ -74,6 +74,8 @@ const ALLOWED_SYNTHETIC: Record<string, string> = {
   'tests/ui/a.test.ts': 'tests/arch/deleted-names.test.ts: the importer of a resolveModule probe',
   'data/official/x.json': 'tests/leagues.test.ts: a bundledFile in an invented document config',
   'scripts/lib/data.ts': 'tests/typecheck-scope.test.ts: a path the glob must not match',
+  'lib/data.ts':
+    'tests/typecheck-scope.test.ts: the sample path its globs and tsc diagnostics name (tests/support/source-tree.ts quotes one); the module itself was deleted',
   'components/teams/TeamHero.tsx': 'tests/typecheck-scope.test.ts: a path the glob must not match',
   'lib/dataXts': 'tests/typecheck-scope.test.ts: proof that the dot in a glob is escaped',
   'docs/01-app/03-api-reference/03-file-conventions/page.md':

@@ -5,7 +5,7 @@ import { DISCLOSURE_SCRIPT } from '@/components/head/disclosure-script';
 import { buildLeagueScopeCss } from '@/components/head/league-scope-css';
 import { PINNED_TEAM_SCRIPT } from '@/components/head/pinned-team-script';
 import { buildPrefsScript } from '@/components/head/prefs-script';
-import { THEME_COLOR, THEME_SCRIPT } from '@/components/head/theme-script';
+import { THEME_SCRIPT } from '@/components/head/theme-script';
 import Attribution from '@/components/layout/Attribution';
 import BottomTabBar from '@/components/layout/BottomTabBar';
 import SiteHeader from '@/components/layout/SiteHeader';
@@ -14,6 +14,7 @@ import TwinMarks from '@/components/ui/TwinMarks';
 import { DEFAULT_REGION, LEAGUE_IDS, regionOf } from '@/lib/config/leagues';
 import { getFetchedAt } from '@/lib/datasets/snapshot';
 import { getTeams } from '@/lib/queries/teams';
+import { THEME_COLOR } from '@/lib/shared/theme';
 import { BUILD_INSTANT } from '@/views/site/build-instant';
 import { OG_BASE, SITE_DESCRIPTION, SITE_NAME, SITE_URL, SITE_WORDMARK } from '@/views/site/site';
 
@@ -113,7 +114,7 @@ export const viewport: Viewport = {
   initialScale: 1,
   // Matches --sx-bg in each mode, so the browser chrome never flashes the other theme. These follow
   // the OS; an explicit Light/Dark choice prepends a media-less meta that outranks them
-  // (components/head/theme-script.ts), from the same THEME_COLOR pair.
+  // (components/head/theme-script.ts), from the same THEME_COLOR pair (lib/shared/theme.ts).
   themeColor: [
     { media: '(prefers-color-scheme: light)', color: THEME_COLOR.light },
     { media: '(prefers-color-scheme: dark)', color: THEME_COLOR.dark },

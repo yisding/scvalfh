@@ -1,4 +1,4 @@
-import { monogramImage } from '../components/layout/monogram-image';
+import { ICON_SIZES, monogramImage } from '@/components/og/monogram-image';
 
 /**
  * The favicon: a plain `FH` monogram (DESIGN §7.1's language, applied to the site itself).
@@ -9,7 +9,7 @@ import { monogramImage } from '../components/layout/monogram-image';
  * icon is a separate concern — app/manifest.ts points at /icon-192 and /icon-512, and iOS reads
  * app/apple-icon.tsx.
  */
-export const size = { width: 32, height: 32 };
+export const size = { width: ICON_SIZES.favicon, height: ICON_SIZES.favicon };
 export const contentType = 'image/png';
 
 export default function Icon() {

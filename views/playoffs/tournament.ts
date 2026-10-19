@@ -1,7 +1,8 @@
 /**
  * The league tournament on /playoffs/<league> (SPEC §6.2, MCAL): `buildTournamentView` turns
  * `LeagueTournamentProjection` into seeds, the play-in, and vertical rounds whose every unfilled
- * slot reads `TBD` (or the written rule), never blank.
+ * slot reads `TBD` (or the written rule), never blank; `tournamentCardModel` turns the same
+ * projection into the OG card's seeds and round line.
  *
  * Pure, like every playoffs view module (key-dates, projection, pairings, tournament): no `fs` and no
  * `lib/queries/`. The pages read the snapshot and hand plain records down, so every builder here is
@@ -16,6 +17,7 @@ import { ordinal } from '@/lib/format/numbers';
 import { EM_DASH, listWords } from '@/lib/format/words';
 import type { Game } from '@/lib/model/game';
 import type { TeamSlug } from '@/lib/model/ids';
+import type { PostseasonConfig } from '@/lib/model/league-config';
 import type {
   CrossoverSeat,
   LeagueTournamentProjection,
@@ -253,5 +255,52 @@ export function buildTournamentView(input: TournamentInput): TournamentView {
     playIn: p.playIn ? tournamentGameView(p.playIn, teamOf, p.seeds) : null,
     rounds,
     notes,
+  };
+}
+
+/** What the `/playoffs/<league>` OG card prints (components/og/TournamentCard.tsx, SPEC §8.4). */
+export interface TournamentCardModel {
+  /** 'MCAL tournament' */
+  name: string;
+  /** 'Seeds if the season ended today' while projected, else 'Seeds'. */
+  sub: string;
+  /** Each seed's team(s): a shared seat reads `A, B or C` as on the page; an empty one `TBD`. */
+  seeds: Array<{ seed: number; names: string }>;
+  /** One per round after the play-in, in config order: `Semifinals Thu Oct 29`, `Final Sat Oct 31 at Tamalpais`. */
+  rounds: string[];
+  /** The league's short name, for the footer. */
+  shortName: string;
+}
+
+export interface TournamentCardInput {
+  /** The league's tournament config (tournament-route.ts `tournamentParam`'s `ps`). */
+  ps: Pick<Extract<PostseasonConfig, { kind: 'league-tournament' }>, 'name' | 'rounds' | 'finalSite'>;
+  projection: LeagueTournamentProjection;
+  teamOf: (slug: TeamSlug) => Team | undefined;
+  shortName: string;
+}
+
+/** The card's seeds and round line, with the page's ROUND_TITLES, so the card and the page cannot word a round differently. */
+export function tournamentCardModel({ ps, projection, teamOf, shortName }: TournamentCardInput): TournamentCardModel {
+  const seeds = projection.seeds.map((s) => ({
+    seed: s.seed,
+    names:
+      s.seat.length === 0
+        ? 'TBD'
+        : listWords(s.seat.map((x) => teamOf(x.slug)?.shortName ?? x.slug), 'or'),
+  }));
+  const rounds = ps.rounds
+    .filter((r) => !r.optional)
+    .reduce<Array<{ round: TournamentRoundView['round']; date: string }>>((out, r) => {
+      if (r.round !== 'play-in' && !out.some((o) => o.round === r.round)) out.push({ round: r.round, date: r.date });
+      return out;
+    }, [])
+    .map((r) => `${ROUND_TITLES[r.round]} ${shortDate(r.date)}${r.round === 'final' ? ` at ${ps.finalSite.label}` : ''}`);
+  return {
+    name: ps.name,
+    sub: projection.status === 'projected' ? 'Seeds if the season ended today' : 'Seeds',
+    seeds,
+    rounds,
+    shortName,
   };
 }
