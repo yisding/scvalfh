@@ -10,13 +10,13 @@
 import { beforeAll, describe, expect, it } from 'vitest';
 
 import { DATA_QUALITY, LEAGUES } from '@/lib/config/leagues';
+import { divisionGames } from '@/lib/engine/standings';
 import type { Snapshot } from '@/lib/model/snapshot';
 import { TEAMS, teamsInLeague } from '@/lib/registry/teams';
 import { localDateKey } from '@/lib/shared/dates';
 import { sideOutcome } from '@/lib/shared/game';
 import type { ScheduleRow } from '@/lib/sources/maxpreps';
 import { parseScoresPage, parseTeamGamesPage, type SbliveGame } from '@/lib/sources/sblive';
-import { divisionGames } from '@/lib/standings';
 import { CorpusReader, EAL_CORPUS, gameOf } from '@/tests/support/corpus';
 import { useCorpusModules } from '@/tests/support/corpus-modules';
 import { corpusSnapshotPath } from '@/tests/support/corpus-snapshot';
@@ -62,8 +62,8 @@ describe('the EAL corpus run', () => {
   });
 
   it('publishes nine leagues and the independents: the EAL fresh, the other nine frozen "not fetched in this run"', () => {
-    expect(snapshot.season.leagues.map((l) => l.id), 'lib/season-build.ts').toEqual(LEAGUES.map((l) => l.id));
-    expect(snapshot.season.leagues, 'lib/season-build.ts').toHaveLength(10);
+    expect(snapshot.season.leagues.map((l) => l.id), 'lib/engine/season-record.ts').toEqual(LEAGUES.map((l) => l.id));
+    expect(snapshot.season.leagues, 'lib/engine/season-record.ts').toHaveLength(10);
     for (const h of snapshot.leagueHealth) {
       if (h.leagueId === LEAGUE) {
         expect(h.state, 'lib/pipeline/steps/standings.ts: EAL health').toBe('fresh');
@@ -89,7 +89,7 @@ describe('the EAL corpus run', () => {
     expect(d.official, 'lib/pipeline/steps/standings.ts: official').toBeNull();
     expect(d.classification, 'lib/pipeline/steps/classify.ts').toBe('contest-type');
     expect(d.countedFinals, 'lib/pipeline/steps/standings.ts').toBe(divisionGames(snapshot.games, DIVISION).length);
-    expect(d.missingLeaguePast, 'lib/standings.ts missingOfficialResults').toBe(missingFromCorpus().length);
+    expect(d.missingLeaguePast, 'lib/engine/standings.ts missingOfficialResults').toBe(missingFromCorpus().length);
   });
 
   it('read the reported table (members plus the known extra row) and logged no unknown school', () => {
@@ -129,10 +129,10 @@ describe('the EAL corpus run', () => {
       const team = members.get(row.schoolId);
       if (!team) continue; // a school in MaxPreps' table that is not a registry team (Red Bluff)
       const s = snapshot.standings.find((x) => x.teamId === team.id);
-      expect(s, `lib/standings.ts: no row for ${team.slug}`).toBeDefined();
+      expect(s, `lib/engine/standings.ts: no row for ${team.slug}`).toBeDefined();
       expect(
         [s!.computed.w, s!.computed.l, s!.computed.t],
-        `lib/standings.ts: ${team.slug} league W-L-T`,
+        `lib/engine/standings.ts: ${team.slug} league W-L-T`,
       ).toEqual([row.conferenceWins, row.conferenceLosses, row.conferenceTies]);
       checked += 1;
     }
@@ -149,7 +149,7 @@ describe('the EAL games', () => {
     expect(g!.decider, 'lib/normalize.ts: decider').toBe('SO');
     expect(g!.shootout, 'lib/normalize.ts: no tally stored').toBeNull();
     expect(g!.provenance.resultConflict, 'lib/normalize.ts: resultConflict').toBeUndefined();
-    expect(g!.countsFor, 'lib/classify.ts').toBe(DIVISION);
+    expect(g!.countsFor, 'lib/engine/classify.ts').toBe(DIVISION);
     expect(divisionGames(snapshot.games, DIVISION).map((x) => x.contestId)).toContain(g!.contestId);
     const chico = g!.home.slug === 'chico' ? 'home' : 'away';
     expect(g![chico].slug).toBe('chico');
@@ -170,7 +170,7 @@ describe('the EAL games', () => {
     expect(counted.length).toBeGreaterThan(0);
     for (const g of counted) {
       for (const type of [g.contestTypes.home, g.contestTypes.away]) {
-        expect([2, 4, 5], `lib/classify.ts: ${g.contestId}`).not.toContain(type);
+        expect([2, 4, 5], `lib/engine/classify.ts: ${g.contestId}`).not.toContain(type);
       }
     }
   });
@@ -215,7 +215,7 @@ describe('the EAL through the site read API (lib/data.ts)', () => {
       .filter((r) => r.kind === 'missing')
       .map((r) => r.game?.contestId ?? '')
       .sort();
-    expect(listed, 'lib/standings.ts missingOfficialResults').toEqual(expected);
+    expect(listed, 'lib/engine/standings.ts missingOfficialResults').toEqual(expected);
   });
 
   it('names no co-leaders on this corpus (Pleasant Valley is alone at the top)', () => {

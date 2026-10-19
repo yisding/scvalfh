@@ -61,12 +61,12 @@ export interface GameVenue {
 
 /**
  * Why a game is postseason. A postseason game never counts for a table. (SCVAL classifies by contest-type: a
- * crossover or play-in is never same-division, and a same-division game tagged 'ccs' is excluded — lib/classify.ts.)
+ * crossover or play-in is never same-division, and a same-division game tagged 'ccs' is excluded — lib/engine/classify.ts.)
  */
 export interface PostseasonTag {
   /**
    * 'mcal-tournament' is the tag of any league whose postseason.kind is 'league-tournament' (MCAL today); the
-   * literal is kept for snapshot stability (lib/schema/snapshot.ts PostseasonTagSchema). lib/classify.ts assigns.
+   * literal is kept for snapshot stability (lib/schema/snapshot.ts PostseasonTagSchema). lib/engine/classify.ts assigns.
    * 'section-playoffs' is the San Diego Section's playoffs (DESIGN-socal §2.1.7): any game between two
    * teams of a section whose leagues' postseason.kind is 'section-playoffs', dated on or after the
    * leagues' `postseasonFrom` (Nov 2) or carrying contestType 4, whether or not the two share a conference;
@@ -125,7 +125,7 @@ export interface Game {
   /** NEW. Raw MaxPreps contestType per row (0 league, 1 non-league, 2 neutral/tournament, 4 postseason); null when unknown or si.com-only. */
   contestTypes: { home: number | null; away: number | null };
   /**
-   * NEW. THE classification (lib/classify.ts classifyGame), for ANY status: the division whose table
+   * NEW. THE classification (lib/engine/classify.ts classifyGame), for ANY status: the division whose table
    * this game belongs to. Standings count it once status === 'final'. Chips, filters and counts read it.
    */
   countsFor: DivisionId | null;
@@ -165,7 +165,7 @@ export interface Game {
     /**
      * When the pipeline last saw this game's published content change (ISO UTC, a run's `fetchedAt`):
      * set by lib/pipeline/steps/assemble.ts against the previous snapshot's copy of the game, every
-     * field compared but the fetch stamps and MaxPreps' own `maxprepsModifiedOn` (lib/content-dates.ts
+     * field compared but the fetch stamps and MaxPreps' own `maxprepsModifiedOn` (lib/engine/content-dates.ts
      * stampContentChanges). Absent on a game unchanged since the stamp was introduced. Read by the
      * sitemap's `lastmod`, never shown.
      */

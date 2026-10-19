@@ -42,18 +42,18 @@ import {
   getTournamentLeagueIds,
 } from '@/lib/data';
 import type { LeagueSummary } from '@/lib/data';
+import { JV_STANDINGS_MIN_REPORTED_SHARE } from '@/lib/engine/jv/standings';
+import { crossCheckSkipReason, statusLegend } from '@/lib/engine/standings';
 import { dateWithYear, formatStamp, shortDate, timeOfDayPT } from '@/lib/format/dates';
 import { ordinal } from '@/lib/format/numbers';
 import { listWords, numberWord, plural } from '@/lib/format/words';
 import { getAvailableHistoryLeagues, getHistorySeason, getUnavailableHistoryLeagues } from '@/lib/history';
 import { jvTableTitle } from '@/components/standings/jv-standings-view';
 import { getJvFile, getJvMerge, getJvTables } from '@/lib/jv';
-import { JV_STANDINGS_MIN_REPORTED_SHARE } from '@/lib/jv-standings';
 import type { CrossCheckRow } from '@/lib/model/crosscheck';
 import type { DroppedContest, SourceStatus } from '@/lib/model/health';
 import type { LeagueConfig, SectionConfig } from '@/lib/model/league-config';
 import type { TiebreakStage } from '@/lib/model/standings';
-import { crossCheckSkipReason, statusLegend } from '@/lib/standings';
 
 /**
  * `/about` (DESIGN §3.10, SPEC §10.8) — where the data comes from for every league, how each

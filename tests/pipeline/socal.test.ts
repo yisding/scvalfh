@@ -7,7 +7,7 @@
  * What it pins, each against the corpus's own files wherever the value can be read there:
  *  - the nullable MaxPreps league: the San Diego Valley division has no MaxPreps table, so it has no
  *    league-meta or standings request (never `/leagues/null/v1`) and its health says 'skipped';
- *  - the 'membership' classification (lib/classify.ts): a San Diego game counts for a division when both
+ *  - the 'membership' classification (lib/engine/classify.ts): a San Diego game counts for a division when both
  *    sides are members, neither row is a tournament or postseason row, and it is dated inside leaguePlay,
  *    whatever MaxPreps' league flag says (Patrick Henry: MaxPreps flags none of its league games);
  *  - the section shootout: a level San Diego final MaxPreps marks W and L is a shootout win (decider 'SO'),
@@ -21,6 +21,7 @@
 import { beforeAll, describe, expect, it } from 'vitest';
 
 import { DATA_QUALITY, LEAGUES, getDivision, getLeague, getSection } from '@/lib/config/leagues';
+import { divisionGames } from '@/lib/engine/standings';
 import type { Game } from '@/lib/model/game';
 import type { Snapshot } from '@/lib/model/snapshot';
 import { NO_MAXPREPS_TABLE_REASON } from '@/lib/pipeline/steps/league-meta';
@@ -29,7 +30,6 @@ import { localDateKey } from '@/lib/shared/dates';
 import { sideOutcome } from '@/lib/shared/game';
 import type { ScheduleRow } from '@/lib/sources/maxpreps';
 import { parseScoresPage, parseTeamGamesPage } from '@/lib/sources/sblive';
-import { divisionGames } from '@/lib/standings';
 import { useCorpusModules } from '@/tests/support/corpus-modules';
 import { corpusSnapshotPath } from '@/tests/support/corpus-snapshot';
 import { CorpusReader, SOCAL_CORPUS, gameOf } from '@/tests/support/corpus';
@@ -170,7 +170,7 @@ describe('the San Diego Valley division: MaxPreps publishes no table', () => {
       'lib/pipeline/steps/reported.ts',
     ).toEqual([]);
     expect(snapshot.standings.filter((s) => s.division === 'valley').every((s) => s.reported === null)).toBe(true);
-    expect(snapshot.crossCheck.filter((r) => getTeamBySlug(r.slug)?.division === 'valley'), 'lib/standings.ts buildCrossCheck').toEqual(
+    expect(snapshot.crossCheck.filter((r) => getTeamBySlug(r.slug)?.division === 'valley'), 'lib/engine/standings.ts buildCrossCheck').toEqual(
       [],
     );
   });
@@ -229,7 +229,7 @@ describe('the membership classification (the San Diego divisions)', () => {
         .filter((g) => g.countsFor === d.id)
         .map((g) => g.contestId)
         .sort();
-      expect(counted, `lib/classify.ts: ${d.id}`).toEqual(expected);
+      expect(counted, `lib/engine/classify.ts: ${d.id}`).toEqual(expected);
     }
   });
 
@@ -240,7 +240,7 @@ describe('the membership classification (the San Diego divisions)', () => {
       return `${d.id}:${snapshot.games.filter((g) => g.countsFor === d.id).length}/${n * (n - 1)}`;
     });
     // On Oct 5 MaxPreps schedules Bonita Vista and Helix once (Oct 23, b9d43b5d): 19 of 20.
-    expect(shape, 'lib/classify.ts').toEqual([
+    expect(shape, 'lib/engine/classify.ts').toEqual([
       'city-western:30/30',
       'city-eastern:30/30',
       'avocado:30/30',
@@ -259,10 +259,10 @@ describe('the membership classification (the San Diego divisions)', () => {
     expect(divisionGamesOfPh, 'lib/normalize.ts').toHaveLength(10);
     for (const g of divisionGamesOfPh) {
       expect(g.isLeague, `MaxPreps' flag: ${g.contestId}`).toBe(false);
-      expect(g.countsFor, `lib/classify.ts: ${g.contestId}`).toBe('city-eastern');
+      expect(g.countsFor, `lib/engine/classify.ts: ${g.contestId}`).toBe('city-eastern');
     }
     for (const g of games.filter((x) => !divisionGamesOfPh.includes(x))) {
-      expect(g.countsFor, `lib/classify.ts: ${g.contestId}`).toBeNull();
+      expect(g.countsFor, `lib/engine/classify.ts: ${g.contestId}`).toBeNull();
     }
     // MaxPreps' City Eastern table leaves Patrick Henry out (config: maxprepsMissing), so it has no reported row.
     expect(getDivision('city-eastern').maxprepsMissing).toContain('patrick-henry');
@@ -279,8 +279,8 @@ describe('the membership classification (the San Diego divisions)', () => {
     const flagged = mb.filter((g) => g.isLeague);
     expect(flagged, 'lib/normalize.ts: Mission Bay’s league-flagged City Eastern games').toHaveLength(5);
     for (const g of flagged) {
-      expect(g.countsFor, `lib/classify.ts: ${g.contestId}`).toBeNull();
-      expect(g.provenance.classificationNote, `lib/classify.ts crossDivisionNote: ${g.contestId}`).toBe(note);
+      expect(g.countsFor, `lib/engine/classify.ts: ${g.contestId}`).toBeNull();
+      expect(g.provenance.classificationNote, `lib/engine/classify.ts crossDivisionNote: ${g.contestId}`).toBe(note);
     }
   });
 });
@@ -320,7 +320,7 @@ describe('the section shootout and level games', () => {
     expect(gameOf(snapshot, 'f99ce5ed')).toMatchObject({ decider: 'SO', home: { slug: 'clairemont' }, away: { slug: 'eastlake' } });
     // Westview–San Pasqual, Oct 2: a Valley game, counted as San Pasqual's win.
     const valley = gameOf(snapshot, 'fb944ba7')!;
-    expect(valley.countsFor, 'lib/classify.ts').toBe('valley');
+    expect(valley.countsFor, 'lib/engine/classify.ts').toBe('valley');
     expect(divisionGames(snapshot.games, 'valley').map((g) => g.contestId)).toContain(valley.contestId);
     expect(sideOutcome(valley, valley.home.slug === 'san-pasqual' ? 'home' : 'away')).toBe('W');
   });
@@ -361,7 +361,7 @@ describe('missing league results and the si.com sides', () => {
           .filter((r) => r.kind === 'missing')
           .map((r) => r.game?.contestId ?? '')
           .sort();
-        expect(listed, `lib/standings.ts missingOfficialResults: ${d.id}`).toEqual(expected);
+        expect(listed, `lib/engine/standings.ts missingOfficialResults: ${d.id}`).toEqual(expected);
         const health = m.data.getLeagueHealth(l.id).divisions.find((x) => x.divisionId === d.id)!;
         expect(health.missingLeaguePast, `lib/pipeline/steps/standings.ts: ${d.id}`).toBe(listed.length);
       }

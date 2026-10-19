@@ -27,12 +27,12 @@
  *    sides share a conference.
  */
 
-import { CCS, LEAGUES } from './config/leagues';
-import type { Game, PostseasonTag } from './model/game';
-import type { DivisionId, LeagueId } from './model/ids';
-import type { LeagueConfig } from './model/league-config';
-import type { Team } from './model/team';
-import { teamOfSide } from './registry/teams';
+import { CCS, LEAGUES } from '@/lib/config/leagues';
+import type { Game, PostseasonTag } from '@/lib/model/game';
+import type { DivisionId, LeagueId } from '@/lib/model/ids';
+import type { LeagueConfig } from '@/lib/model/league-config';
+import type { Team } from '@/lib/model/team';
+import { teamOfSide } from '@/lib/registry/teams';
 
 export interface ClassifyOptions {
   /** Divisions whose official fixture file is missing/invalid this run: classified by contest-type, never by membership alone. */

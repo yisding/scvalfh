@@ -31,7 +31,7 @@ export interface HealthDivision {
    * cross-check is skipped, instead of linking anything.
    */
   maxprepsUrl: string | null;
-  /** Why there is no table (lib/standings.ts crossCheckSkipReason); null when there is one. */
+  /** Why there is no table (lib/engine/standings/maxpreps-crosscheck.ts crossCheckSkipReason); null when there is one. */
   skipReason?: string | null;
   /**
    * The division's standings rows that carry MaxPreps' reported record: the member rows its table

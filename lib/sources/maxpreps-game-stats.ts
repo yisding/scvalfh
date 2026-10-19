@@ -3,7 +3,7 @@
  * ?teamId=&sportSeasonId=` on the ghost API (SPEC §1.1k), the sibling of the player stats rollup
  * (lib/sources/maxpreps-player-stats.ts) in the same page chunk.
  *
- * Read only for a team a game note credits with stats (lib/note-stats.ts): it says what
+ * Read only for a team a game note credits with stats (lib/engine/note-stats.ts): it says what
  * the coach has ALREADY entered on the stats sheet for each game, so a goal, assist or save the
  * note names is not counted twice.
  *

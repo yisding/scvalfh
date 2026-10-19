@@ -7,7 +7,7 @@ import type { DivisionId, TeamId, TeamSlug } from './ids';
 
 // ---------- standings ----------
 
-/** Each member is code in lib/standings.ts. The ORDER of a chain is config (lib/config/leagues.ts). */
+/** Each member is code in lib/engine/standings.ts. The ORDER of a chain is config (lib/config/leagues.ts). */
 export type TiebreakStage =
   | 'points'                   // placed on points alone
   | 'head-to-head'             // SCVAL §3, BVAL §6b, PCAL §23.3 — SCVAL's original stage

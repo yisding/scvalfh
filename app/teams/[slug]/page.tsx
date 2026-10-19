@@ -240,7 +240,7 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
   const roster = buildRosterView(team.slug);
   // The school's JV games (MaxPreps, supplemented by si.com): listed apart from every varsity count.
   const jv = buildTeamJvView(team.slug);
-  // Its JV place, when its division's JV table is shown (lib/jv-standings.ts), and that table's anchor.
+  // Its JV place, when its division's JV table is shown (lib/engine/jv/standings.ts), and that table's anchor.
   const jvStanding = teamJvStanding(team.slug);
   const playerStats = buildPlayerStatsView(team.slug, [...leagueLog, ...nonLeagueLog]);
   const rosterCount = roster && roster.status !== 'error' ? roster.rows.length : 0;

@@ -80,7 +80,7 @@ export interface StandingsNotesProps {
   className?: string;
 }
 
-/** lib/standings.ts `buildCrossCheck` field names: the place row starts with "place". */
+/** lib/engine/standings/maxpreps-crosscheck.ts `buildCrossCheck` field names: the place row starts with "place". */
 const isPlaceField = (field: string) => field.startsWith('place');
 
 /** The log's terse field names, in words. Anything unknown is printed as it comes. */

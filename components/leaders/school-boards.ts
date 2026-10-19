@@ -6,15 +6,15 @@
  * is its record everywhere. The independents' table is their league (DESIGN §29): their games against
  * each other are their league record, so they rank on the league-record board like any league's teams.
  * Clean sheets and the per-game rates come from the same finals, with forfeits
- * left out of goals as lib/standings.ts leaves them out (DESIGN §11.6). Records and rates need a minimum
+ * left out of goals as lib/engine/standings/record.ts leaves them out (DESIGN §11.6). Records and rates need a minimum
  * number of results (ranking.ts qualifyingMinimum); the teams below it are named in the notes.
  *
- * The Elo-adjusted goals board (lib/adjusted-scoring.ts) weighs each game by the opponent's defense: its
+ * The Elo-adjusted goals board (lib/engine/adjusted-scoring.ts) weighs each game by the opponent's defense: its
  * rating in the one Elo table, corrected by the goals it has allowed. It counts the games the Elo rating
  * counts, past the Elo board's minimum.
  */
 
-import type { AdjustedScoring } from '@/lib/adjusted-scoring';
+import type { AdjustedScoring } from '@/lib/engine/adjusted-scoring';
 import { recordString, recordWords, signedGd, winPct } from '@/lib/format/numbers';
 import { listWords, plural } from '@/lib/format/words';
 import type { Game } from '@/lib/model/game';
@@ -156,7 +156,7 @@ function rateBoard(
 }
 
 /**
- * The `#adjusted-goals` board: goals per game against an average team (lib/adjusted-scoring.ts), over the
+ * The `#adjusted-goals` board: goals per game against an average team (lib/engine/adjusted-scoring.ts), over the
  * games the Elo board counts and past its minimum `min`, with the raw rate over the same games beside it.
  * Ranked on the adjusted rate as printed (two places), then more games, as the raw goals board splits
  * equal rates; a school that has not scored is never listed.

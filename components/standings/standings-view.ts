@@ -6,12 +6,12 @@
  * per-row context, missing official results) and returns strings and arrays, so it never touches
  * `fs` or lib/data and can be exercised from a test over any snapshot. League FACTS — headings,
  * ladders, citations, official sources, the cross-check trust — come from config (lib/config/leagues),
- * and the ladder's badges and legends from lib/standings, never from a map keyed by division id.
+ * and the ladder's badges and legends from lib/engine/standings, never from a map keyed by division id.
  *
  * Everything it decides is a by-law, not a preference:
  *
  *  - Order and points are the league's (3 for a win, 1 for a tie in all five NorCal leagues) —
- *    lib/standings has already ranked the rows, so this module never re-sorts them. The EAL uses its
+ *    lib/engine/standings has already ranked the rows, so this module never re-sorts them. The EAL uses its
  *    points only to decide its title and publishes no standings (`rules.orderScope: 'title'`); the
  *    site orders its table by the same points and says so. The Sunset and the three San Diego
  *    leagues publish no points rule and no standings at all (`orderScope: 'site'`, DESIGN-socal
@@ -42,6 +42,9 @@ import {
 } from '@/lib/config/leagues';
 import { divisionHeading, standaloneName } from '@/lib/config/leagues/labels';
 import type { MissingOfficialResult, StandingContext } from '@/lib/data';
+import {
+  crossCheckSkipReason, outcomesFor, playoffOutcomeLabel, statusBadge, statusLegend, unevenGamesSentence,
+} from '@/lib/engine/standings';
 import { monthDay, shortDate } from '@/lib/format/dates';
 import { ordinal } from '@/lib/format/numbers';
 import { officialSourceFormat } from '@/lib/format/words';
@@ -50,14 +53,6 @@ import type { DivisionId, LeagueId, OfficialSourceId, TeamId, TeamSlug } from '@
 import { type DivisionConfig, type LeagueConfig } from '@/lib/model/league-config';
 import type { PlayoffStatus, Standing, TiebreakStage } from '@/lib/model/standings';
 import type { Team } from '@/lib/model/team';
-import {
-  crossCheckSkipReason,
-  outcomesFor,
-  playoffOutcomeLabel,
-  statusBadge,
-  statusLegend,
-  unevenGamesSentence,
-} from '@/lib/standings';
 import type { StandingsRowData } from '@/components/ui/StandingsTable';
 
 // ---------------------------------------------------------------- shared shapes
@@ -408,7 +403,7 @@ function missingRowView(row: MissingOfficialResult, teams: readonly Team[], inde
 
 export interface DivisionViewInput {
   division: DivisionId;
-  /** Already sorted and ranked by lib/standings.ts. */
+  /** Already sorted and ranked by lib/engine/standings.ts. */
   standings: readonly Standing[];
   teams: readonly Team[];
   /** Cross-check rows of the league (filtered to this division's teams here). */
@@ -725,7 +720,7 @@ function unevenOrderSentence(league: LeagueConfig): string {
  * others. MCAL adds its incomplete-schedule rule; a league whose points decide only its title (EAL)
  * does not say its rules require the order, and a 'site' league says the order is the site's. A league
  * with no fixed schedule (`scheduled` null: the Sunset) has no LEFT or MAX column, so its footnote
- * explains neither; its first sentence is lib/standings.ts unevenGamesSentence's no-"of N" variant.
+ * explains neither; its first sentence is lib/engine/standings/uneven.ts unevenGamesSentence's no-"of N" variant.
  */
 export function unevenGpFootnote(
   leagueId: LeagueId,

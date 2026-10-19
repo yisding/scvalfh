@@ -1,5 +1,5 @@
 /**
- * JV league games and JV standings, computed from the JV games (lib/jv-merge.ts) and the varsity
+ * JV league games and JV standings, computed from the JV games (lib/engine/jv/merge.ts) and the varsity
  * snapshot's own classification.
  *
  * Which JV games are league games. MaxPreps' JV league flag (`contestType`) is not usable: it
@@ -36,15 +36,15 @@
  * Pure: no I/O, no clock — `today` is an input.
  */
 
-import { LEAGUES, getLeague } from './config/leagues';
-import type { OfficialFixture } from './model/fixture';
-import type { Game } from './model/game';
-import type { ContestId, DivisionId, LeagueId, TeamSlug } from './model/ids';
-import type { ComputedRecord } from './model/standings';
-import { getTeamBySlug, teamsInDivision } from './registry/teams';
-import { dayDiff } from './shared/dates';
-import { byDateThenId } from './shared/game';
-import { recordOver } from './standings';
+import { LEAGUES, getLeague } from '@/lib/config/leagues';
+import { recordOver } from '@/lib/engine/standings';
+import type { OfficialFixture } from '@/lib/model/fixture';
+import type { Game } from '@/lib/model/game';
+import type { ContestId, DivisionId, LeagueId, TeamSlug } from '@/lib/model/ids';
+import type { ComputedRecord } from '@/lib/model/standings';
+import { getTeamBySlug, teamsInDivision } from '@/lib/registry/teams';
+import { dayDiff } from '@/lib/shared/dates';
+import { byDateThenId } from '@/lib/shared/game';
 
 /** A varsity game or official fixture this many days either side of the JV date can be its counterpart. */
 export const JV_COUNTERPART_WINDOW_DAYS = 3;
@@ -166,7 +166,7 @@ export interface JvDivisionTable {
   played: number;
   /** Of those, the finals. */
   reported: number;
-  /** Counted finals whose score is si.com's (lib/jv-merge.ts). */
+  /** Counted finals whose score is si.com's (lib/engine/jv/merge.ts). */
   sbliveScores: number;
   /** League games still to come (not final, dated today or later). */
   toCome: number;

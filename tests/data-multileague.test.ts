@@ -111,7 +111,7 @@ describe('both runs: the corpus leagues through lib/data', () => {
 
   it("the EAL, not in this corpus's run: no counted game, no missing league result", () => {
     for (const v of variants) {
-      expect(v.data.getMissingOfficialResults('eal'), `lib/standings.ts missingOfficialResults (via lib/data.ts) [${v.name}]`).toEqual([]);
+      expect(v.data.getMissingOfficialResults('eal'), `lib/engine/standings.ts missingOfficialResults (via lib/data.ts) [${v.name}]`).toEqual([]);
       const eal = v.data.getLeagueHealth('eal');
       expect(eal.divisions, `lib/pipeline/steps/standings.ts: EAL DivisionHealth [${v.name}]`).toEqual([
         {
@@ -133,9 +133,9 @@ describe('both runs: the corpus leagues through lib/data', () => {
 
   it('MCAL table: Tamalpais first; Berkeley above Archie Williams (5 points each, BK won 3-1 on 9/22)', () => {
     for (const v of variants) {
-      expect(table(rowsOf(v, 'mcal', 'marin-county')), `lib/standings.ts computeStandings: MCAL table [${v.name}]`).toEqual(MCAL_TABLE);
+      expect(table(rowsOf(v, 'mcal', 'marin-county')), `lib/engine/standings.ts computeStandings: MCAL table [${v.name}]`).toEqual(MCAL_TABLE);
       const bk = rowsOf(v, 'mcal', 'marin-county').find((r) => r.slug === 'berkeley');
-      expect(bk?.tiebreak.shared, `lib/standings.ts: Berkeley/Archie Williams tie resolved [${v.name}]`).toBe(false);
+      expect(bk?.tiebreak.shared, `lib/engine/standings.ts: Berkeley/Archie Williams tie resolved [${v.name}]`).toBe(false);
     }
   });
 
@@ -171,7 +171,7 @@ describe('both runs: the corpus leagues through lib/data', () => {
       const rows = v.data.getMissingOfficialResults('santa-teresa');
       expect(
         rows.map((r) => `${r.kind} ${r.dateKey} ${r.awaySlug}@${r.homeSlug} ${r.game?.contestId ?? '-'}`),
-        `lib/standings.ts missingOfficialResults (via lib/data.ts) [${v.name}]`,
+        `lib/engine/standings.ts missingOfficialResults (via lib/data.ts) [${v.name}]`,
       ).toEqual([
         'missing 2026-10-01 prospect@del-mar 3c691d2c-7e22-46bf-9438-25db21df4640',
         'missing 2026-10-01 sobrato@live-oak be7bd768-4ae2-42a7-b88c-b8e7930b2290',
@@ -184,12 +184,12 @@ describe('both runs: the corpus leagues through lib/data', () => {
   it("getLeagueTournament('mcal'): seeds Tamalpais, University, Redwood, Marin Catholic, Convent, Lick-Wilmerding", () => {
     for (const v of variants) {
       const t = v.data.getLeagueTournament('mcal');
-      expect(t.status, `lib/postseason.ts buildLeagueTournament: status [${v.name}]`).toBe('projected');
+      expect(t.status, `lib/engine/postseason.ts buildLeagueTournament: status [${v.name}]`).toBe('projected');
       expect(
         t.seeds.map((s) => s.seat.map((x) => x.slug).join('|')),
-        `lib/postseason.ts buildLeagueTournament: seeds [${v.name}]`,
+        `lib/engine/postseason.ts buildLeagueTournament: seeds [${v.name}]`,
       ).toEqual(MCAL_SEEDS);
-      expect(t.playInNeeded, `lib/postseason.ts: play-in [${v.name}]`).toBe('no');
+      expect(t.playInNeeded, `lib/engine/postseason.ts: play-in [${v.name}]`).toBe('no');
     }
   });
 
@@ -208,7 +208,7 @@ describe('both runs: the corpus leagues through lib/data', () => {
 
 describe('with si.com (the cron default): D2 fills exactly three PCAL games', () => {
   it('PCAL table: STE 18, HOL 15, CAR 12, MON 9, SAL 6, CAT 3, GRE 0', () => {
-    expect(table(rowsOf(withSblive(), 'pcal', 'pcal')), 'lib/standings.ts computeStandings: PCAL table with si.com').toEqual([
+    expect(table(rowsOf(withSblive(), 'pcal', 'pcal')), 'lib/engine/standings.ts computeStandings: PCAL table with si.com').toEqual([
       'stevenson 1 18',
       'hollister 2 15',
       'carmel 3 12',
@@ -238,7 +238,7 @@ describe('with si.com (the cron default): D2 fills exactly three PCAL games', ()
     const filled = snapshot.games.filter((g) => g.provenance.scores === 'sblive');
     expect(
       filled.map((g) => `${g.contestId} ${g.status} ${g.away.slug} ${g.away.score} @ ${g.home.slug} ${g.home.score} counts ${g.countsFor} ${g.provenance.backfill?.rule}`),
-      'lib/backfill.ts applyBackfill (classified by lib/classify.ts)',
+      'lib/backfill.ts applyBackfill (classified by lib/engine/classify.ts)',
     ).toEqual([
       'sblive:6541425 final greenfield 0 @ santa-catalina 1 counts pcal absent-fixture',
       'f06f9d76-c8a1-4358-b7a9-1c97c2d686f0 final carmel 0 @ stevenson 9 counts pcal score-pending',
@@ -275,7 +275,7 @@ describe('with si.com (the cron default): D2 fills exactly three PCAL games', ()
 describe('with --no-sblive: no si.com input, so the three PCAL results stay missing', () => {
   it('PCAL table: STE 15, HOL 12 (head-to-head over CAR), CAR 12, MON 9, SAL 6, then GRE and CAT sharing 6th', () => {
     const rows = rowsOf(withoutSblive(), 'pcal', 'pcal');
-    expect(table(rows), 'lib/standings.ts computeStandings: PCAL table without si.com').toEqual([
+    expect(table(rows), 'lib/engine/standings.ts computeStandings: PCAL table without si.com').toEqual([
       'stevenson 1 15',
       'hollister 2 12',
       'carmel 3 12',
@@ -284,8 +284,8 @@ describe('with --no-sblive: no si.com input, so the three PCAL results stay miss
       'greenfield 6= 0',
       'santa-catalina 6= 0',
     ]);
-    expect(rows.find((r) => r.slug === 'hollister')?.tiebreak.resolvedBy, 'lib/standings.ts: HOL/CAR tie for 2nd').toBe('head-to-head');
-    expect(rows.find((r) => r.slug === 'greenfield')?.tiebreak.resolvedBy, 'lib/standings.ts: GRE/CAT tie below 2nd').toBe('no-rule');
+    expect(rows.find((r) => r.slug === 'hollister')?.tiebreak.resolvedBy, 'lib/engine/standings.ts: HOL/CAR tie for 2nd').toBe('head-to-head');
+    expect(rows.find((r) => r.slug === 'greenfield')?.tiebreak.resolvedBy, 'lib/engine/standings.ts: GRE/CAT tie below 2nd').toBe('no-rule');
   });
 
   it('publishes no si.com score and lists the three PCAL results as missing', () => {
@@ -294,7 +294,7 @@ describe('with --no-sblive: no si.com input, so the three PCAL results stay miss
     expect(v.snapshot.sbliveCrossCheck, 'lib/pipeline/steps/sblive.ts: --no-sblive cross-check').toBeUndefined();
     expect(
       v.data.getMissingOfficialResults('pcal').map((r) => `${r.kind} ${r.dateKey} ${r.awaySlug}@${r.homeSlug}`),
-      'lib/standings.ts missingOfficialResults (via lib/data.ts): PCAL without si.com',
+      'lib/engine/standings.ts missingOfficialResults (via lib/data.ts): PCAL without si.com',
     ).toEqual([
       'missing 2026-09-04 greenfield@santa-catalina',
       'missing 2026-09-29 carmel@stevenson',

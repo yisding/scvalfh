@@ -47,6 +47,7 @@ import {
   playInClause,
   type LeagueSummary,
 } from '@/lib/data';
+import { outcomesFor, playoffOutcomeLabel, statusBadge } from '@/lib/engine/standings';
 import { dateSpan, dateTimeAttr, leagueClock, monthDay, shortDate, timeOfDayPT } from '@/lib/format/dates';
 import { ordinal, ordinalWord, recordString, recordWords } from '@/lib/format/numbers';
 import { EM_DASH, listWords, numberWord, plural } from '@/lib/format/words';
@@ -62,7 +63,6 @@ import { teamOfSide } from '@/lib/registry/teams';
 import { gameHref } from '@/lib/shared/game-id';
 import { pickerName, pinLabel } from '@/lib/shared/pin-label';
 import type { SearchIndex } from '@/lib/shared/search';
-import { outcomesFor, playoffOutcomeLabel, statusBadge } from '@/lib/standings';
 import type { LeagueChip } from '@/components/layout/LeagueSwitcher';
 import { leagueChips } from '@/components/layout/league-chips';
 import { fixtureOpponent, nextOfficialFixture } from '@/components/teams/team-view';

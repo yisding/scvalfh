@@ -4,12 +4,8 @@ import { SITE_URL } from '@/components/layout/site';
 import { getClubSlugs, getClubsLastChecked } from '@/lib/clubs';
 import { getCommitsLastChecked } from '@/lib/commits';
 import {
-  gamePageInputs,
-  latestContentDate,
-  removalsForGame,
-  removalsOnDay,
-  scoreDayInputs,
-} from '@/lib/content-dates';
+  gamePageInputs, latestContentDate, removalsForGame, removalsOnDay, scoreDayInputs,
+} from '@/lib/engine/content-dates';
 import { getRosterEnrichment } from '@/lib/rosters';
 import {
   getContentRemovals,
@@ -39,7 +35,7 @@ import { gameHref } from '@/lib/shared/game-id';
  * `lastModified` is never `Date.now()`, so a rebuild with unchanged data does not churn every
  * entry's date, and it is as close to when THAT page's content changed as the data can say, because
  * Google trusts `lastmod` only from a sitemap where it is consistently right. A game page and a
- * date page take the latest content stamp of the games they are built from (lib/content-dates.ts):
+ * date page take the latest content stamp of the games they are built from (lib/engine/content-dates.ts):
  * the pipeline's own `contentChangedAt` where it is set, else MaxPreps' stamp, and of the contests
  * that left them (`contentRemovals`: a deleted or moved game changes the pages it leaves). A game page is built
  * from the game, the sides' games behind the records it prints and the season series; a date page

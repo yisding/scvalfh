@@ -4,6 +4,7 @@ import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 import { DATA_QUALITY } from '@/lib/config/leagues';
+import { seasonWindowOf } from '@/lib/engine/season-record';
 import type { Game } from '@/lib/model/game';
 import { type DataQualityConfig } from '@/lib/model/league-config';
 import {
@@ -13,7 +14,6 @@ import {
   dedupePhantomPairs,
   normalizeGames,
   pacificMidnightUtc,
-  seasonWindowOf,
   overtimeFromNote,
   splitLocation,
   toUtcIso,
@@ -377,7 +377,7 @@ describe('normalize: the 43-feed corpus (SPEC §7.6)', () => {
     expect(res.warnings.some((w) => w.includes('TBA copy was ignored'))).toBe(true);
   });
 
-  it('gives every game the countsFor and postseason placeholders for lib/classify.ts', () => {
+  it('gives every game the countsFor and postseason placeholders for lib/engine/classify.ts', () => {
     for (const g of [...corpus.games, ...games]) {
       expect(g.countsFor, g.contestId).toBeNull();
       expect(g.postseason, g.contestId).toBeNull();

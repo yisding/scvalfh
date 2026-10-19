@@ -1,18 +1,17 @@
 /**
  * The Season record written into every snapshot (SPEC §5.9). Server-only: it reads the league
- * config, the registry and lib/normalize, so it is NOT part of lib/config/season.ts, which stays a
+ * config and the registry, so it is NOT part of lib/config/season.ts, which stays a
  * constants leaf (importing only the base-URL leaf) that client modules reach through lib/shared/dates.ts.
  */
 
-import { LEAGUES, SECTIONS } from './config/leagues';
+import { LEAGUES, SECTIONS } from '@/lib/config/leagues';
 import {
   ALL_SEASON_ID, GENDER_SPORT, SEASON_LABEL, SEASON_YEAR, SPORT_SEASON_ID, TEAM_LEVEL,
-} from './config/season';
-import type { Game, GameSide } from './model/game';
-import type { LeagueId } from './model/ids';
-import type { Season, SeasonLeague, SeasonWindow } from './model/season';
-import { seasonWindowOf } from './normalize';
-import { teamOfSide } from './registry/teams';
+} from '@/lib/config/season';
+import type { Game, GameSide } from '@/lib/model/game';
+import type { LeagueId } from '@/lib/model/ids';
+import type { Season, SeasonLeague, SeasonWindow } from '@/lib/model/season';
+import { teamOfSide } from '@/lib/registry/teams';
 
 /** The registry league of one side, by MaxPreps GUID first, then by slug; null for a non-member. */
 function leagueOfSide(side: GameSide): LeagueId | null {
@@ -23,6 +22,17 @@ const maxOf = (dates: readonly string[]): string | null =>
   dates.length === 0 ? null : dates.reduce((a, b) => (b > a ? b : a));
 const minOf = (dates: readonly string[]): string | null =>
   dates.length === 0 ? null : dates.reduce((a, b) => (b < a ? b : a));
+
+/** The season window, computed from the games and never hardcoded (SPEC §5.8). */
+export function seasonWindowOf(games: readonly Game[]): SeasonWindow {
+  const dates = games.map((g) => g.dateLocal).sort();
+  const leagueDates = games.filter((g) => g.isLeague).map((g) => g.dateLocal).sort();
+  return {
+    firstGame: dates[0] ?? null,
+    lastGame: dates[dates.length - 1] ?? null,
+    lastLeagueGame: leagueDates[leagueDates.length - 1] ?? null,
+  };
+}
 
 /**
  * One league's window: over games with at least one registry side in the league AND
@@ -38,7 +48,7 @@ export function leagueWindowOf(games: readonly Game[], leagueId: LeagueId): Seas
       && (leagueOfSide(g.home) === leagueId || leagueOfSide(g.away) === leagueId),
   );
   const dates = inScope.map((g) => g.dateLocal);
-  // Same key order as lib/normalize seasonWindowOf.
+  // Same key order as seasonWindowOf.
   return {
     firstGame: minOf(dates),
     lastGame: maxOf(dates),
@@ -48,7 +58,7 @@ export function leagueWindowOf(games: readonly Game[], leagueId: LeagueId): Seas
   };
 }
 
-/** Global window (the original single-league semantics, unchanged, via lib/normalize seasonWindowOf) + per-league windows over non-postseason games + postseasonKind (§5.9). */
+/** Global window (the original single-league semantics, unchanged, via seasonWindowOf) + per-league windows over non-postseason games + postseasonKind (§5.9). */
 export function buildSeason(games: readonly Game[]): Season {
   const leagues: SeasonLeague[] = LEAGUES.map((l) => ({
     id: l.id,

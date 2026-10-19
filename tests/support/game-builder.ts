@@ -15,11 +15,11 @@
  * is 'SO' (no tally) unless it is a tournament row the section's rule does not cover; otherwise forfeit,
  * then the overtime count. A 'membership' division (San Diego)
  * counts by membership and date, so its games need no stamp; a game MaxPreps flags between two
- * divisions of one such league carries lib/classify.ts's cross-division note, as classifyGames sets it.
+ * divisions of one such league carries lib/engine/classify.ts's cross-division note, as classifyGames sets it.
  */
 
-import { classifyGame, crossDivisionNote, postseasonTag } from '@/lib/classify';
 import { getDivision, getSection, leagueOfDivision } from '@/lib/config/leagues';
+import { classifyGame, crossDivisionNote, postseasonTag } from '@/lib/engine/classify';
 import type { Decider, Game, GameStatus, OfficialStamp, Outcome, PostseasonTag } from '@/lib/model/game';
 import type { DivisionId } from '@/lib/model/ids';
 import { resolveTeam } from '@/lib/registry/resolve';

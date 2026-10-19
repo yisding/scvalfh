@@ -32,6 +32,7 @@ import {
   type StandingContext,
   type TeamPostseasonLine,
 } from '@/lib/data';
+import { outcomesFor } from '@/lib/engine/standings';
 import { dateSpan, gameWhen, monthDay, shortDate, timeOfDayPT } from '@/lib/format/dates';
 import { ordinal, recordString } from '@/lib/format/numbers';
 import { renderScore, shootoutPhrases } from '@/lib/format/score';
@@ -44,7 +45,6 @@ import type { Standing } from '@/lib/model/standings';
 import type { Team } from '@/lib/model/team';
 import { sideOutcome } from '@/lib/shared/game';
 import { pinLabel } from '@/lib/shared/pin-label';
-import { outcomesFor } from '@/lib/standings';
 import { getEloBoardForTeam } from '@/components/leaders/elo-board';
 import { buildOverviewDivision, type OverviewDivision } from '@/components/standings/standings-view';
 import type { FormEntry } from '@/components/ui/FormStrip';
@@ -78,7 +78,7 @@ export interface UnbeatenOpponent {
 }
 
 /**
- * The team page's Elo card (DESIGN §20): this team's rating from lib/ratings.ts, and its place on
+ * The team page's Elo card (DESIGN §20): this team's rating from lib/engine/ratings.ts, and its place on
  * /leaders' Elo board when the board lists it, read off that board so the two cannot disagree.
  */
 export interface TeamEloView {

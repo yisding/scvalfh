@@ -13,6 +13,10 @@ Some committed files quote repo paths and cannot be edited: the data files in da
 | lib/jv-teams.ts | lib/registry/jv-teams.ts | 12 |
 | lib/clubs-schema.ts | lib/schema/clubs.ts | 13 |
 | lib/commits-schema.ts | lib/schema/commits.ts | 13 |
+| lib/standings.ts | lib/engine/standings.ts | 14 |
+| lib/jv-merge.ts | lib/engine/jv/merge.ts | 14 |
+| lib/jv-standings.ts | lib/engine/jv/standings.ts | 14 |
+| lib/note-stats.ts | lib/engine/note-stats.ts | 14 |
 
 ## Legend
 

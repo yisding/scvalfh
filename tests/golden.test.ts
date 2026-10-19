@@ -10,24 +10,19 @@ import path from 'node:path';
 
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
-import { classifyGames } from '@/lib/classify';
 import { divisionsOf } from '@/lib/config/leagues';
+import { classifyGames } from '@/lib/engine/classify';
+import { buildSeason } from '@/lib/engine/season-record';
+import {
+  buildCrossCheck, computeStandings, divisionGames, playoffOutcomeLabel, statusBadge, statusLegend,
+} from '@/lib/engine/standings';
 import type { Game, GameStatus } from '@/lib/model/game';
 import type { Snapshot } from '@/lib/model/snapshot';
 import type { PlayoffStatus, ReportedRecord, Standing } from '@/lib/model/standings';
 import { teamsInLeague } from '@/lib/registry/teams';
-import { buildSeason } from '@/lib/season-build';
 import { stableStringify } from '@/lib/shared/stable-json';
 import { parseSnapshot } from '@/lib/snapshot/load';
 import { countsOf, migrateV1ToV2 } from '@/lib/snapshot/migrate';
-import {
-  buildCrossCheck,
-  computeStandings,
-  divisionGames,
-  playoffOutcomeLabel,
-  statusBadge,
-  statusLegend,
-} from '@/lib/standings';
 import { withSnapshotModules } from './support/corpus-modules';
 import { game } from './support/game-builder';
 import { REPO, tempDir } from './support/repo';

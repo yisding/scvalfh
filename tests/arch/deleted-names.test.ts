@@ -38,7 +38,7 @@ const DELETED: Readonly<Record<string, readonly string[]>> = {
     'PLAYOFF_FORMAT',
     'buildSeason',
   ],
-  'lib/standings': ['crossoverPairings', 'playoffStatus', 'PLAYOFF_STATUS_LABELS'],
+  'lib/engine/standings': ['crossoverPairings', 'playoffStatus', 'PLAYOFF_STATUS_LABELS'],
   'lib/registry': ['isScvalTeamId', 'WITHDRAWN_SCHOOL_NAMES'],
   'lib/model': ['CrossoverPairing', 'Division', 'PlayoffKeyDates', 'Playoffs'],
 };
@@ -90,7 +90,7 @@ describe('deleted names stay deleted (SPEC §0.4)', () => {
     expect(resolveModule('app/x.tsx', 'next/link')).toBeNull();
     const bad = [
       "import { DIVISIONS } from '../lib/config/season';",
-      "import { playoffStatus as ps } from '@/lib/standings';",
+      "import { playoffStatus as ps } from '@/lib/engine/standings';",
       "export { isScvalTeamId } from '../lib/registry/teams';",
       "import type { Division } from '../lib/model/ids';",
       "type P = import('@/lib/model/postseason').Playoffs;",
@@ -101,7 +101,7 @@ describe('deleted names stay deleted (SPEC §0.4)', () => {
     // Allowed: the new homes of moved names, a name that was never deleted, ids in comments, a sibling key.
     const good = [
       "import { LEAGUE_IDS, leagueStandingsUrl } from '../lib/config/leagues';",
-      "import { playoffStatusFor } from '../lib/standings';",
+      "import { playoffStatusFor } from '../lib/engine/standings';",
       "// import { DIVISIONS } from '../lib/config/season';",
       "import { gameHref } from '../lib/shared/game-id';",
       "import { SEASON } from '../lib/config/season';",

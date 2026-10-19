@@ -7,24 +7,15 @@
 import { describe, expect, it } from 'vitest';
 
 import { getLeague } from '@/lib/config/leagues';
+import { sixthPlaceRule } from '@/lib/engine/postseason';
+import {
+  buildCrossCheck, computeStandings, crossCheckSkipReason, lastSpotOutcome, leaguePairings,
+  missingOfficialResults, outcomesFor, playoffOutcomeLabel, playoffStatusFor, statusBadge, statusLegend,
+  unevenGamesSentence,
+} from '@/lib/engine/standings';
 import type { OfficialFixture } from '@/lib/model/fixture';
 import type { Game } from '@/lib/model/game';
 import type { ReportedRecord, Standing } from '@/lib/model/standings';
-import { sixthPlaceRule } from '@/lib/postseason';
-import {
-  buildCrossCheck,
-  computeStandings,
-  crossCheckSkipReason,
-  unevenGamesSentence,
-  lastSpotOutcome,
-  leaguePairings,
-  missingOfficialResults,
-  outcomesFor,
-  playoffOutcomeLabel,
-  playoffStatusFor,
-  statusBadge,
-  statusLegend,
-} from '@/lib/standings';
 import { game } from './support/game-builder';
 
 type Spec = [home: string, away: string, hs: number, as: number];
@@ -611,7 +602,7 @@ describe('MCAL: the last tournament place (§5.4b)', () => {
   });
 });
 
-describe('MCAL: lib/postseason sixthPlaceRule agrees with the engine (§5.4b ⇄ §6.2)', () => {
+describe('MCAL: lib/engine/postseason sixthPlaceRule agrees with the engine (§5.4b ⇄ §6.2)', () => {
   // sixthPlaceRule takes its play-in pair from the engine's lastSpotOutcome; this keeps the bracket's
   // play-in pair and the table's shared 6th (resolvedBy 'play-in') in lockstep over many random seasons.
   const MCAL_SLUGS = Object.keys(getLeague('mcal').rules.drawNumbers ?? {});

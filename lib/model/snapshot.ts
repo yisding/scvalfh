@@ -58,7 +58,7 @@ export interface Snapshot {
    */
   supersededGames: Record<ContestId, ContestId>;
   /**
-   * Contests that left a date: deleted, superseded, or moved to another day (lib/content-dates.ts
+   * Contests that left a date: deleted, superseded, or moved to another day (lib/engine/content-dates.ts
    * contentRemovalsOf). The pages that showed one still changed when it went, though no game left on
    * them did, so the sitemap's `lastmod` counts these too. Carried for the season; never shown.
    */

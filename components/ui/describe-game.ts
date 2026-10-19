@@ -146,7 +146,7 @@ function leagueTagOf(game: Pick<Game, 'countsFor'>): string | null {
 
 /**
  * The section-playoffs league of a tag or, when the tag names no league (a San Diego playoff game between two
- * conferences: lib/classify.ts sets leagueId null), of a registry side; null when neither has one.
+ * conferences: lib/engine/classify.ts sets leagueId null), of a registry side; null when neither has one.
  */
 function sectionPlayoffsName(
   tag: PostseasonTag,
@@ -175,7 +175,7 @@ export function postseasonTagOf(game: Pick<Game, 'postseason'> & Partial<Pick<Ga
   if (tag.kind === 'section-playoffs') return sectionPlayoffsName(tag, game);
   const word = POSTSEASON_WORD[tag.kind];
   if (!word) return null;
-  // Every league kind carries its league (lib/classify.ts postseasonTag); only 'ccs', 'other' and
+  // Every league kind carries its league (lib/engine/classify.ts postseasonTag); only 'ccs', 'other' and
   // 'section-playoffs' may not.
   if (tag.leagueId === null) return null;
   const league = findLeague(tag.leagueId);

@@ -22,9 +22,9 @@
  * a si.com score — and is the stamp whenever it is set. A game unchanged since the field was
  * introduced has none, and falls back to the rules above.
  */
-import type { Game } from './model/game';
-import type { ContentRemoval } from './model/snapshot';
-import { contentKey } from './shared/stable-json';
+import type { Game } from '@/lib/model/game';
+import type { ContentRemoval } from '@/lib/model/snapshot';
+import { contentKey } from '@/lib/shared/stable-json';
 
 /** `2026-09-10T19:51:44` (MaxPreps, no offset, UTC) as an ISO instant; null when it does not parse. */
 function maxprepsInstant(modifiedOn: string): number | null {

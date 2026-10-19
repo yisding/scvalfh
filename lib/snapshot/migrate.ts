@@ -25,8 +25,10 @@
  * All three return v2 JSON, NOT yet parsed: the caller (`loadSnapshot`) runs it through `parseSnapshot`.
  */
 
-import { classifyGame, classifyGames } from '@/lib/classify';
 import { CCS, LEAGUES, LEAGUE_IDS, findDivision, leagueOfDivision } from '@/lib/config/leagues';
+import { classifyGame, classifyGames } from '@/lib/engine/classify';
+import { buildSeason, leagueWindowOf } from '@/lib/engine/season-record';
+import { assertFullTable, buildCrossCheck, computeStandings, divisionGames } from '@/lib/engine/standings';
 import type { OfficialFixture } from '@/lib/model/fixture';
 import type { Game, GameSide, OfficialStamp } from '@/lib/model/game';
 import type { DivisionHealth, LeagueHealth } from '@/lib/model/health';
@@ -35,8 +37,6 @@ import type { Snapshot } from '@/lib/model/snapshot';
 import type { ReportedRecord, Standing } from '@/lib/model/standings';
 import type { Team } from '@/lib/model/team';
 import { TEAMS, getTeamById, getTeamBySlug, teamOfSide, teamsInLeague } from '@/lib/registry/teams';
-import { buildSeason, leagueWindowOf } from '@/lib/season-build';
-import { assertFullTable, buildCrossCheck, computeStandings, divisionGames } from '@/lib/standings';
 
 type Json = Record<string, unknown>;
 

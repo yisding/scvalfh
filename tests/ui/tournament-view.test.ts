@@ -1,7 +1,7 @@
 /**
  * The league-tournament view (SPEC §6.2, §10.7 `/playoffs/<league>`; MCAL):
  * `buildTournamentView` in components/playoffs/playoff-view.ts over the ENGINE's output
- * (lib/standings computeStandings → lib/postseason buildLeagueTournament), and the rendered page.
+ * (lib/engine/standings computeStandings → lib/engine/postseason buildLeagueTournament), and the rendered page.
  *
  * The synthetic seasons run through the real standings engine, so the shared 6th the table shows
  * (`resolvedBy: 'play-in'`) and the play-in pair the bracket uses are the engine's own, not a
@@ -15,14 +15,14 @@ import { beforeAll, describe, expect, it } from 'vitest';
 
 import { buildTournamentView, type TournamentView } from '@/components/playoffs/playoff-view';
 import { getDivision, getLeague } from '@/lib/config/leagues';
+import { SHOOTOUT_NOTE, buildLeagueTournament } from '@/lib/engine/postseason';
+import { computeStandings, outcomesFor, playoffOutcomeLabel } from '@/lib/engine/standings';
 import type { Game, PostseasonTag } from '@/lib/model/game';
 import type { LeagueTournamentProjection } from '@/lib/model/postseason';
 import type { SeasonPhase } from '@/lib/model/season';
 import type { Standing } from '@/lib/model/standings';
 import type { Team } from '@/lib/model/team';
-import { buildLeagueTournament, SHOOTOUT_NOTE } from '@/lib/postseason';
 import { getTeamBySlug } from '@/lib/registry/teams';
-import { computeStandings, outcomesFor, playoffOutcomeLabel } from '@/lib/standings';
 import { game } from '@/tests/support/game-builder';
 import { useCorpusModules } from '@/tests/support/corpus-modules';
 import { textOf } from '@/tests/support/html-text';
@@ -104,8 +104,8 @@ describe('buildTournamentView — the engine’s shared 6th (a play-in is needed
 
   it('seeds from the table with the shared 6th level and the tournament line after both', () => {
     const shared = rows.filter((r) => r.tiebreak.resolvedBy === 'play-in').map((r) => r.slug).sort();
-    expect(shared, 'lib/standings.ts: the engine shares 6th by play-in').toEqual([MC, UN].sort());
-    expect(p.playInNeeded, 'lib/postseason.ts').toBe('yes');
+    expect(shared, 'lib/engine/standings.ts: the engine shares 6th by play-in').toEqual([MC, UN].sort());
+    expect(p.playInNeeded, 'lib/engine/postseason.ts').toBe('yes');
     expect(v.seedRows.map((r) => `${r.standing.computed.place}${r.shared ? '=' : ''}`), VIEW).toEqual([
       '1', '2', '3', '4', '5', '6=', '6=', '8', '9',
     ]);
@@ -152,7 +152,7 @@ describe('buildTournamentView — a play-in that is only possible', () => {
   it('says so in the verbatim words while a meeting is unplayed', () => {
     // University beat Marin Catholic once; the return meeting is unplayed. Marin Catholic beat CSH.
     const { v, p } = view(league([...TOP, [UN, MC, 1, 0], [MC, UN, null, null], [MC, CS, 1, 0]]));
-    expect(p.playInNeeded, 'lib/postseason.ts').toBe('possible');
+    expect(p.playInNeeded, 'lib/engine/postseason.ts').toBe('possible');
     expect(v.playInSentence, VIEW).toBe(
       `A play-in for 6th is possible: ${name(MC)} and ${name(UN)} are level on points and have split or not finished their meetings.`,
     );
@@ -161,7 +161,7 @@ describe('buildTournamentView — a play-in that is only possible', () => {
 
   it('no play-in when one team swept the other 2-0, and the engine’s note says why', () => {
     const { v, p } = view(league([...TOP, [UN, MC, 1, 0], [MC, UN, 0, 1], [MC, CS, 1, 0], [CS, MC, 0, 1]]));
-    expect(p.playInNeeded, 'lib/postseason.ts').toBe('no');
+    expect(p.playInNeeded, 'lib/engine/postseason.ts').toBe('no');
     expect(v.playIn, VIEW).toBeNull();
     expect(v.playInSentence, VIEW).toBeNull();
     expect(v.notes, VIEW).toContain(`${name(UN)} won both meetings with ${name(MC)}, so no play-in is needed.`);

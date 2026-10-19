@@ -205,7 +205,7 @@ export interface LeaderSources {
   teams: readonly Team[];
   /** data/player-stats.json's per-team entries. */
   stats: readonly TeamPlayerStats[];
-  /** One Standing per team (lib/standings.ts). */
+  /** One Standing per team (lib/engine/standings.ts). */
   standings: readonly Standing[];
   /** Every contest. */
   games: readonly Game[];
@@ -216,6 +216,6 @@ export interface LeaderSources {
    * team page shows; left out, no row has either.
    */
   rosters?: readonly RosterSource[];
-  /** The goal model's Newton iterations (lib/adjusted-scoring.ts), 100 if left out: a test caps it to see the fallback. */
+  /** The goal model's Newton iterations (lib/engine/adjusted-scoring.ts), 100 if left out: a test caps it to see the fallback. */
   goalModelIterations?: number;
 }

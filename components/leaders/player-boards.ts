@@ -2,24 +2,24 @@
  * The /leaders player boards (data/player-stats.json): most points, Elo-adjusted points, assists, saves
  * and clean sheets, plus the notes under them. A player's numbers are exactly what the team page shows:
  * season totals as the coach entered them on MaxPreps, plus the goals and saves the coach wrote in game
- * notes instead (lib/note-stats.ts). Their grade and position are the team page's roster row's
+ * notes instead (lib/engine/note-stats.ts). Their grade and position are the team page's roster row's
  * (lib/rosters.ts, joined on the stat line's athleteId), in the roster's words; a player the join misses
  * shows neither. Only teams whose coach tracks a stat can appear on its board, so every board says how
  * many teams it covers and names the ones it leaves out, and the section says whose totals are behind the
  * scores. A 0 never leads a board, and an untracked stat is never read as a 0.
  *
- * A player's Elo-adjusted points (lib/adjusted-scoring.ts) are their points times their team's schedule
+ * A player's Elo-adjusted points (lib/engine/adjusted-scoring.ts) are their points times their team's schedule
  * factor, so only a player whose team is past the Elo board's minimum is ranked: a factor from two games
  * is mostly noise.
  */
 
-import type { AdjustedScoring } from '@/lib/adjusted-scoring';
+import type { AdjustedScoring } from '@/lib/engine/adjusted-scoring';
+import { notedKinds } from '@/lib/engine/note-stats';
 import { shortDate } from '@/lib/format/dates';
 import { gradeWord, listWords, plural } from '@/lib/format/words';
 import type { Game } from '@/lib/model/game';
 import type { TeamId } from '@/lib/model/ids';
 import type { Team } from '@/lib/model/team';
-import { notedKinds } from '@/lib/note-stats';
 import { gamesSinceUpdate, savePercent } from '@/components/teams/player-stats-view';
 import { positionWords } from '@/components/ui/position-words';
 import type { FieldStatKey, GoalieStatKey, PlayerStatLine, TeamPlayerStats } from '@/lib/schema/player-stats';
@@ -37,7 +37,7 @@ interface PlayerEntry {
   /** LeaderRow.facts: the grade and position on the player's roster row. */
   facts: string[];
   /**
-   * The team's schedule factor (lib/adjusted-scoring.ts), or null when the team is under the Elo
+   * The team's schedule factor (lib/engine/adjusted-scoring.ts), or null when the team is under the Elo
    * board's minimum: too few games for one.
    */
   factor: number | null;

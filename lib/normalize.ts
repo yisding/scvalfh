@@ -17,7 +17,7 @@
  *   1. `splitTbaRows` (lib/sources/maxpreps.ts) — a row with an unnamed side is dropped and recorded;
  *      `normalizeGames` applies it too, so raw feed rows can be passed straight in
  *   2. `normalizeGames` — plus `contestTypes`, `provenance.resultConflict`, and the `countsFor` /
- *      `postseason` placeholders that lib/classify.ts fills
+ *      `postseason` placeholders that lib/engine/classify.ts fills
  *   3. `applyExclusions` — DATA_QUALITY ghosts and excluded contests
  *   4. `dedupePhantomPairs` — same-division phantom duplicates only
  */
@@ -28,7 +28,6 @@ import type { Decider, Game, GameSide, GameStatus, Outcome } from './model/game'
 import type { DroppedContest } from './model/health';
 import type { ContestId, DivisionId, SourceId } from './model/ids';
 import { type DataQualityConfig, type SectionConfig } from './model/league-config';
-import type { SeasonWindow } from './model/season';
 import { resolveTeam } from './registry/resolve';
 import { getTeamById } from './registry/teams';
 import { toLocalTimestamp } from './shared/dates';
@@ -568,7 +567,7 @@ function toGame(
     leagueDivision,
     // Raw per-row contestType, in the same home/away slots as the sides.
     contestTypes: { home: first.contestType, away: second.contestType },
-    // Placeholders: lib/classify.ts classifyGames sets both (pipeline step 10).
+    // Placeholders: lib/engine/classify.ts classifyGames sets both (pipeline step 10).
     countsFor: null,
     postseason: null,
     otPeriods,
@@ -736,15 +735,4 @@ export function dedupePhantomPairs(
     }
   }
   return { games: games.filter((g) => !losers.has(g.contestId)), dropped };
-}
-
-/** The season window, computed from the games and never hardcoded (SPEC §5.8). */
-export function seasonWindowOf(games: readonly Game[]): SeasonWindow {
-  const dates = games.map((g) => g.dateLocal).sort();
-  const leagueDates = games.filter((g) => g.isLeague).map((g) => g.dateLocal).sort();
-  return {
-    firstGame: dates[0] ?? null,
-    lastGame: dates[dates.length - 1] ?? null,
-    lastLeagueGame: leagueDates[leagueDates.length - 1] ?? null,
-  };
 }

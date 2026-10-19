@@ -20,16 +20,16 @@
  * on goal, 36 saves, 9 against). The card says the figures disagree instead.
  *
  * Some coaches write goals, assists and saves in MaxPreps' game note rather than on the stats sheet
- * (Homestead: "goals scored Gabby Molly, Emry Borges"). lib/note-stats.ts adds those to the
+ * (Homestead: "goals scored Gabby Molly, Emry Borges"). lib/engine/note-stats.ts adds those to the
  * MaxPreps numbers; every row or card they changed is marked, and the section lists each noted
  * game with the note as written, so a reader can tell the two sources apart.
  */
 
+import type { NoteCredit, NoteStatKind } from '@/lib/engine/note-stats';
 import { shortDate } from '@/lib/format/dates';
 import { listWords, numberWord, plural } from '@/lib/format/words';
 import type { Game } from '@/lib/model/game';
 import type { TeamSlug } from '@/lib/model/ids';
-import type { NoteCredit, NoteStatKind } from '@/lib/note-stats';
 import { getTeamPlayerStatsWithNotes } from '@/lib/player-stats';
 import type { FieldStatKey, GoalieStatKey, PlayerStatLine, TeamPlayerStats } from '@/lib/schema/player-stats';
 
@@ -335,7 +335,7 @@ export function gamesSinceUpdate(lastUpdated: string | null, games: readonly Gam
  * @param games the team's league and non-league contests, to count finals played after MaxPreps'
  *   last stats update.
  * @param team the team's stats; defaults to data/player-stats.json's with the team's game notes
- *   added (lib/note-stats.ts). Tests pass a fixture build, since the committed file moves with
+ *   added (lib/engine/note-stats.ts). Tests pass a fixture build, since the committed file moves with
  *   every refresh. A team without `noteCredits` is shown as MaxPreps has it.
  */
 export function buildPlayerStatsView(

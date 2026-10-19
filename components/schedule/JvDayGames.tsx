@@ -9,7 +9,7 @@ import { timeOfDay } from '@/lib/format/dates';
  * A day page's JV games: one compact card, a row per game — the time (or the status once there
  * is one), then the away and home school each with its score — under the varsity slate and never
  * mixed into it. Rows are not links: a JV game has no page of its own. A JV league game carries
- * its league chip and a non-league one the NL chip and rule (lib/jv-standings.ts); a same-division
+ * its league chip and a non-league one the NL chip and rule (lib/engine/jv/standings.ts); a same-division
  * game no varsity game matched carries neither. A score from si.com carries the † (StatusLabel), and
  * a MaxPreps score si.com reports differently gets one line under its row.
  */

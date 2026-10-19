@@ -43,13 +43,13 @@
  * loading the files it is about to write. lib/player-stats.ts wires it to the committed data.
  */
 
-import { NAME_ALIASES, type NameAlias } from './config/name-aliases';
-import type { Game } from './model/game';
-import type { TeamSlug } from './model/ids';
+import { NAME_ALIASES, type NameAlias } from '@/lib/config/name-aliases';
+import type { Game } from '@/lib/model/game';
+import type { TeamSlug } from '@/lib/model/ids';
 import {
   FIELD_STAT_KEYS, type FieldStats, GOALIE_STAT_KEYS, type GoalieStats, type PlayerStatLine,
   type TeamPlayerStats,
-} from './schema/player-stats';
+} from '@/lib/schema/player-stats';
 
 // ---------------------------------------------------------------- parsing
 

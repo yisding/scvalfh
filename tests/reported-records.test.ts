@@ -12,8 +12,9 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { classifyGames } from '@/lib/classify';
 import { ALL_DIVISIONS, getDivision } from '@/lib/config/leagues';
+import { classifyGames } from '@/lib/engine/classify';
+import { buildCrossCheck, computeStandings, toReportedRecord } from '@/lib/engine/standings';
 import type { TeamId } from '@/lib/model/ids';
 import type { ReportedRecord } from '@/lib/model/standings';
 import { normalizeGames } from '@/lib/normalize';
@@ -21,7 +22,6 @@ import { readManifest } from '@/lib/pipeline/corpus';
 import { resolveTeam } from '@/lib/registry/resolve';
 import { getTeamById, teamsInDivision } from '@/lib/registry/teams';
 import { StandingsResponseSchema } from '@/lib/sources/maxpreps';
-import { buildCrossCheck, computeStandings, toReportedRecord } from '@/lib/standings';
 import { allScheduleRows, corpusDir, standingsFixture } from './support/corpus';
 import { REPO } from './support/repo';
 import { runCorpus, writeTempVariant } from './support/pipeline/run-corpus';

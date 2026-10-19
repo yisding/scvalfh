@@ -12,7 +12,7 @@ import { LEAGUES, LEAGUES_PROPER, leaguesInRegion, regionOf } from '@/lib/config
 import { listWords } from '@/lib/format/words';
 
 /**
- * `/jv` — "Where does our JV stand?" Every league's JV tables, computed (lib/jv-standings.ts) and
+ * `/jv` — "Where does our JV stand?" Every league's JV tables, computed (lib/engine/jv/standings.ts) and
  * unofficial: one section per league (`#scval`, …), one block per division (`#de-anza`, …). Each
  * league's section carries its region's `data-region-scope` (DESIGN-socal §2.4), so the reader's region
  * shows; a deep link into the other region opens it (components/layout/league-scope-css.ts).

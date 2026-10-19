@@ -4,13 +4,8 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { postseasonTagOf } from '@/components/ui/describe-game';
 import {
-  classifyGame,
-  classifyGames,
-  crossDivisionNote,
-  isLeagueGame,
-  leaguesOf,
-  postseasonTag,
-} from '@/lib/classify';
+  classifyGame, classifyGames, crossDivisionNote, isLeagueGame, leaguesOf, postseasonTag,
+} from '@/lib/engine/classify';
 import type { Game } from '@/lib/model/game';
 import { game } from './support/game-builder';
 import { goldenPath, readJson } from './support/repo';

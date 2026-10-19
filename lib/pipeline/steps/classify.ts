@@ -1,10 +1,10 @@
 /**
  * Step 10 (SPEC §7.4, §7.10): THE classification, decided once and persisted: `classifyGames`
- * (lib/classify.ts) sets `postseason` then `countsFor` on every game, with the official step's
+ * (lib/engine/classify.ts) sets `postseason` then `countsFor` on every game, with the official step's
  * degraded divisions (classified by contest-type, never by membership alone).
  */
 
-import { classifyGames } from '@/lib/classify';
+import { classifyGames } from '@/lib/engine/classify';
 import type { Game } from '@/lib/model/game';
 import type { DivisionId } from '@/lib/model/ids';
 import type { RunContext } from '@/lib/pipeline/contract';

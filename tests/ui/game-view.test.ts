@@ -318,7 +318,7 @@ describe('MCAL postseason note and superseded stubs (corpus copy)', () => {
 
   it('an MCAL tournament game: the not-counted sentence and the shootout caveat', async () => {
     const model = S.m.buildGameView(tournament.contestId)!;
-    const { SHOOTOUT_NOTE } = await import('@/lib/postseason');
+    const { SHOOTOUT_NOTE } = await import('@/lib/engine/postseason');
     expect(model.postseasonNotes, 'components/game/game-view.ts MCAL postseason notes').toEqual([
       'MCAL tournament game — it does not count in the league table.',
       SHOOTOUT_NOTE,
@@ -374,7 +374,7 @@ describe('Southern California games (corpus copy with synthetic SoCal games, DES
   beforeAll(async () => {
     const { game } = await import('@/tests/support/game-builder');
     const { loadSnapshot } = await import('@/lib/snapshot/load');
-    const { computeStandings } = await import('@/lib/standings');
+    const { computeStandings } = await import('@/lib/engine/standings');
     const { countsOf } = await import('@/lib/snapshot/migrate');
     const { getLeague } = await import('@/lib/config/leagues');
     const base = loadSnapshot(JSON.parse(readFileSync(corpusPath, 'utf8')) as unknown);

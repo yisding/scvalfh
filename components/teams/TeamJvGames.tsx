@@ -11,7 +11,7 @@ import type { JvListSummary, TeamJvView } from './jv-view';
  *
  * The rows are the varsity log's rows (GameLogRowBody, the same four columns) without the link —
  * a JV game has no page of its own. A JV league game (one whose varsity counterpart counts,
- * lib/jv-standings.ts) carries its league chip, a non-league one the NL chip and rule, and a
+ * lib/engine/jv/standings.ts) carries its league chip, a non-league one the NL chip and rule, and a
  * same-division game no varsity game matched carries neither: it counts nowhere and we do not
  * guess. A score from si.com carries the †, as everywhere else; a MaxPreps score si.com reports
  * differently gets one line under its row saying so. The footnote says what the list is and is not.

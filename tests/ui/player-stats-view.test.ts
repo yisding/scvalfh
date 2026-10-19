@@ -48,7 +48,7 @@ function casesFor(teams: readonly TeamStats[]): Case[] {
   });
 }
 
-// The pages read MaxPreps' numbers with the coaches' game notes added (lib/note-stats.ts).
+// The pages read MaxPreps' numbers with the coaches' game notes added (lib/engine/note-stats.ts).
 const live = casesFor(getAllPlayerStatsWithNotes());
 const fixture = casesFor(buildFixturePlayerStats().teams);
 const at = (slug: string) => fixture.find((c) => c.slug === slug)!;

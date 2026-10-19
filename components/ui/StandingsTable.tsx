@@ -69,7 +69,7 @@ export type StandingsColumn = 'gp' | 'left' | 'max';
 
 export interface StandingsTableProps {
   division: DivisionId;
-  /** Already sorted and ranked by lib/standings.ts. */
+  /** Already sorted and ranked by lib/engine/standings.ts. */
   rows: StandingsRowData[];
   /** max |gd| for THIS division — never global (R-2). */
   gdDomain: number;

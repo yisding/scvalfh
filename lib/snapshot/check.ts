@@ -7,10 +7,10 @@
 
 import type { z } from 'zod';
 
-import { classifyGame } from '@/lib/classify';
 import {
   CCS, CCS_LEAGUE_IDS, LEAGUES, SECTIONS, findDivision, findLeague, getSection, statusesOf,
 } from '@/lib/config/leagues';
+import { classifyGame } from '@/lib/engine/classify';
 import { type DivisionId } from '@/lib/model/ids';
 import { type Snapshot } from '@/lib/model/snapshot';
 import { type TiebreakStage } from '@/lib/model/standings';

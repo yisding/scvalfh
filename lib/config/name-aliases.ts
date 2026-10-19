@@ -1,6 +1,6 @@
 /**
  * Player names written one way in free text and listed another way on the MaxPreps roster, per
- * team: the spellings lib/note-stats.ts needs to credit a coach's game note to a roster player.
+ * team: the spellings lib/engine/note-stats.ts needs to credit a coach's game note to a roster player.
  *
  * Most need no entry: resolveName already matches a common nickname ("Gabby" for Gabrielle) and a
  * name one letter off ("Molly" for Moll). An entry is for what those rules cannot decide alone, or

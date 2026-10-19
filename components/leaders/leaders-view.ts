@@ -18,9 +18,10 @@
  * 12 league games, the Sunset has no fixed schedule, and Metro South Bay's first league game is Oct 7.
  */
 
-import { computeAdjustedScoring, getAdjustedScoring, type AdjustedScoring } from '@/lib/adjusted-scoring';
 import { REGIONS, regionOf } from '@/lib/config/leagues';
 import { getSnapshot } from '@/lib/data';
+import { type AdjustedScoring, computeAdjustedScoring } from '@/lib/engine/adjusted-scoring';
+import { computeRatings } from '@/lib/engine/ratings';
 import { shortDate } from '@/lib/format/dates';
 import type { Game } from '@/lib/model/game';
 import type { RegionId, TeamId } from '@/lib/model/ids';
@@ -28,8 +29,8 @@ import type { Standing } from '@/lib/model/standings';
 import type { Team } from '@/lib/model/team';
 import { getAllPlayerStatsWithNotes } from '@/lib/player-stats';
 import { getPriorSeason } from '@/lib/prior-season';
+import { getAdjustedScoring, getRatings } from '@/lib/queries/ratings';
 import { getAllEnrichedRosters } from '@/lib/rosters';
-import { computeRatings, getRatings } from '@/lib/ratings';
 import type { TeamPlayerStats } from '@/lib/schema/player-stats';
 import { buildEloBoard, crossRegionFinals, getCrossRegionFinals, getEloBoard, type EloBoardView } from './elo-board';
 import { buildPlayerBoards } from './player-boards';
@@ -65,7 +66,7 @@ interface RegionInput {
   games: readonly Game[];
   rosters: readonly RosterSource[];
   elo: EloBoardView;
-  /** lib/adjusted-scoring.ts over the same one Elo table, by team id. */
+  /** lib/engine/adjusted-scoring.ts over the same one Elo table, by team id. */
   adjusted: ReadonlyMap<TeamId, AdjustedScoring>;
 }
 

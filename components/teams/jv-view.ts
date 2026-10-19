@@ -2,7 +2,7 @@
  * The JV lists' view model: a team page's "JV games" section and a day page's JV block.
  *
  * Every game comes from lib/jv.ts (MaxPreps' JV schedules, supplemented by si.com under
- * lib/jv-merge.ts), classified by lib/jv-standings.ts: a JV league game is one whose varsity
+ * lib/engine/jv/merge.ts), classified by lib/engine/jv/standings.ts: a JV league game is one whose varsity
  * counterpart counts. JV games stay apart from varsity: these views feed no varsity record, form
  * strip, margin chart or table, so a JV result is never mistaken for a varsity one.
  *

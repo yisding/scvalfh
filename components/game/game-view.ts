@@ -35,6 +35,7 @@ import {
   getTeamForm,
   getTeams,
 } from '@/lib/data';
+import { SHOOTOUT_NOTE } from '@/lib/engine/postseason';
 import { dateWithYear, monthDay, shortDate, timeOfDayPT } from '@/lib/format/dates';
 import { recordString } from '@/lib/format/numbers';
 import { matchupJoiner, renderScore, shootoutPhrases } from '@/lib/format/score';
@@ -45,7 +46,6 @@ import { type LeagueConfig } from '@/lib/model/league-config';
 import type { TournamentGame } from '@/lib/model/postseason';
 import type { Standing, TiebreakStage } from '@/lib/model/standings';
 import type { Team } from '@/lib/model/team';
-import { SHOOTOUT_NOTE } from '@/lib/postseason';
 import type { FormEntry } from '@/components/ui/FormStrip';
 import {
   describeGame,
@@ -277,7 +277,7 @@ export interface RecordAsOf {
  * league, so the caption says "to date" (`recordsCaptionFor`).
  *
  * Only results with an outcome count (a played game with no published score is neither a W nor an
- * L) — the rule `lib/standings.ts` tallies `computed` by — so for a team's latest league final this
+ * L) — the rule `lib/engine/standings.ts` tallies `computed` by — so for a team's latest league final this
  * equals `standing.computed` (tests/ui/game-view-asof.test.ts holds that).
  *
  * `undefined` for a side outside the team registry.
@@ -691,7 +691,7 @@ function postseasonView(game: Game, league: LeagueConfig | null): PostseasonView
   if (tag.kind === 'section-playoffs') {
     // The San Diego Section's playoffs (Green Book 2026-27 Bylaw 2000.1): one tournament across the City,
     // North County and Metro conferences, so one label whether or not the two sides share a conference
-    // (lib/classify.ts tags it; its leagueId is null across conferences, so the name comes from the sides).
+    // (lib/engine/classify.ts tags it; its leagueId is null across conferences, so the name comes from the sides).
     const name = postseasonTagOf(game);
     if (name) {
       const sentence = `${name} game — it does not count in the league table.`;

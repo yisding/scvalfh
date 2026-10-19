@@ -1,22 +1,16 @@
 import { describe, expect, it } from 'vitest';
 
-import { classifyGames } from '@/lib/classify';
 import { ALL_DIVISIONS, divisionsOf } from '@/lib/config/leagues';
+import { classifyGames } from '@/lib/engine/classify';
+import {
+  computeStandings, divisionGames, leaguePairings, missingOfficialResults, outcomesFor, playoffOutcomeLabel,
+  playoffOutcomes, playoffStatusFor,
+} from '@/lib/engine/standings';
 import type { Game } from '@/lib/model/game';
 import type { Standing } from '@/lib/model/standings';
 import { normalizeGames } from '@/lib/normalize';
 import { resolveTeam } from '@/lib/registry/resolve';
 import { TEAMS, teamsInLeague } from '@/lib/registry/teams';
-import {
-  computeStandings,
-  divisionGames,
-  leaguePairings,
-  missingOfficialResults,
-  outcomesFor,
-  playoffOutcomeLabel,
-  playoffOutcomes,
-  playoffStatusFor,
-} from '@/lib/standings';
 import { game } from './support/game-builder';
 import { allScheduleRows } from './support/corpus';
 

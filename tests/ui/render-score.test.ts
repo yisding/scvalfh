@@ -435,7 +435,7 @@ describe('chips — league, postseason and source (SPEC §10.4)', () => {
     expect(tag('ccs', null).postseasonTag).toBe('CCS');
     expect(tag('ccs', null).isNonLeague).toBe(false);
     expect(tag('other', null).postseasonTag).toBeNull();
-    // A league kind always carries its league (lib/classify.ts); the chip never derives one from the kind string.
+    // A league kind always carries its league (lib/engine/classify.ts); the chip never derives one from the kind string.
     expect(tag('scval-crossover', null).postseasonTag).toBeNull();
   });
   it('marks a score published from si.com, and only that', () => {
@@ -509,7 +509,7 @@ describe('every league’s games in the bundled snapshot (invariants)', () => {
     // A game MaxPreps flags between an independent and a Sunset team (Bonita at Great Oak, Aug 27) counts for neither.
     const crossover = games.filter((g) => g.isLeague && [g.home.slug, g.away.slug].includes('bonita') && [g.home.slug, g.away.slug].includes('great-oak'));
     expect(crossover.length, 'the snapshot has Bonita at Great Oak').toBeGreaterThan(0);
-    for (const g of crossover) expect(g.countsFor, `lib/classify.ts: ${g.contestId}`).toBeNull();
+    for (const g of crossover) expect(g.countsFor, `lib/engine/classify.ts: ${g.contestId}`).toBeNull();
   });
   it('never renders a missing score as 0-0, and renders every real score as published', () => {
     const offenders: string[] = [];

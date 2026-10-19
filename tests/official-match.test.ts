@@ -2,7 +2,7 @@
  * lib/official/match.ts and lib/pipeline/steps/official.ts (SPEC §7.8).
  *
  *  - the two-phase matcher on the all-2026-10-02 corpus (43 raw schedules normalized with
- *    lib/normalize.ts, classified with lib/classify.ts): BVAL 60/60, PCAL 34/42 with the CAT/STE
+ *    lib/normalize.ts, classified with lib/engine/classify.ts): BVAL 60/60, PCAL 34/42 with the CAT/STE
  *    and MON/CAR legs uncrossed and every moved leg 1-13 days, MCAL 72/72;
  *  - pass 3 assigns globally by smallest |Δdays|;
  *  - postseason and excludeContestTypes contests are never candidates (the published ct-2 reason);
@@ -17,9 +17,9 @@ import path from 'node:path';
 
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { classifyGames, postseasonTag } from '@/lib/classify';
 import { DATA_QUALITY, LEAGUES, getLeague } from '@/lib/config/leagues';
 import { officialDocumentOf } from '@/lib/config/leagues/official';
+import { classifyGames, postseasonTag } from '@/lib/engine/classify';
 import type { OfficialFixture } from '@/lib/model/fixture';
 import type { Game } from '@/lib/model/game';
 import type { LeagueRunState, SourceStatus } from '@/lib/model/health';

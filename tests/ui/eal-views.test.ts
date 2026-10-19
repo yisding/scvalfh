@@ -103,14 +103,14 @@ describe('/standings/eal', () => {
     const claims = /ranks no table|set no other order|only a champion|publishes no table/;
     expect(textOf(standingsHtml), 'app/standings/[league]/page.tsx eal').not.toMatch(claims);
     // The San Diego Section's Valley has, in fact, no MaxPreps table, and its health card says so in
-    // lib/standings.ts crossCheckSkipReason's words; that sentence is about Valley, not the EAL.
+    // lib/engine/standings/maxpreps-crosscheck.ts crossCheckSkipReason's words; that sentence is about Valley, not the EAL.
     expect(textOf(aboutHtml).replaceAll('MaxPreps publishes no table for this division', ''), 'app/about/page.tsx').not.toMatch(claims);
     const order = m.leagues.getLeague(LEAGUE).rules.citations.order;
     expect(order, 'lib/config/leagues/eal.ts EAL citations.order').toContain('§III.E.1 Super Regional seeding criteria are not applied here');
     expect(textOf(aboutHtml), 'app/about/page.tsx rules').toContain(`${order}.`);
     const alone = m.data.getStandings(LEAGUE).filter((r) => r.hasReportedResults && !r.tiebreak.shared);
     expect(alone.length, 'the EAL corpus has teams placed on points alone').toBeGreaterThan(0);
-    for (const s of alone) expect(s.tiebreak.note, 'lib/standings.ts EAL tiebreak note').toContain(order);
+    for (const s of alone) expect(s.tiebreak.note, 'lib/engine/standings.ts EAL tiebreak note').toContain(order);
     expect(m.view.rankRuleText(m.leagues.getLeague('mcal')), 'table-scope leagues unchanged').toBe(
       'MCAL ranks by points (MCAL Handbook §7a), and so do we.',
     );

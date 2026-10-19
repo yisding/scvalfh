@@ -19,6 +19,11 @@ import {
   findDivision, findLeague, getDivision, getLeague, leagueOfDivision, leaguePlayEnds, leaguesInRegion,
 } from './config/leagues';
 import { divisionHeading } from './config/leagues/labels';
+import { buildLeagueTournament } from './engine/postseason';
+import {
+  divisionGames, leaguePairings, missingOfficialResults, outcomesFor, playoffOutcomeLabel, sortStandings,
+} from './engine/standings';
+import type { MissingOfficialRow } from './engine/standings';
 import { dateSpan, leagueClock, shortDate } from './format/dates';
 import { ordinalWord, recordString } from './format/numbers';
 import { numberWord } from './format/words';
@@ -37,22 +42,12 @@ import type { SeasonPhase } from './model/season';
 import type { ContentRemoval, Snapshot } from './model/snapshot';
 import type { Standing } from './model/standings';
 import type { Team } from './model/team';
-import { buildLeagueTournament } from './postseason';
 import { getTeamById, getTeamBySlug, teamOfSide } from './registry/teams';
 import { isoDateKey, localDateKey } from './shared/dates';
 import { sideOutcome } from './shared/game';
 import { buildSearchIndex } from './shared/search';
 import type { SearchIndex } from './shared/search';
 import { loadSnapshot } from './snapshot/load';
-import {
-  divisionGames,
-  leaguePairings,
-  missingOfficialResults,
-  outcomesFor,
-  playoffOutcomeLabel,
-  sortStandings,
-} from './standings';
-import type { MissingOfficialRow } from './standings';
 
 /**
  * data/snapshot.json is IMPORTED, so every toolchain bundles it into the server code at build time:
@@ -570,7 +565,7 @@ export interface StandingContext {
   remaining: number | null;
   /** pts + points.win × remaining. A ceiling, not a projection. null with `scheduled`. */
   maxPts: number | null;
-  /** Rows of kind 'missing' from missingOfficialResults() (lib/standings.ts) that involve this team. */
+  /** Rows of kind 'missing' from missingOfficialResults() (lib/engine/standings/missing.ts) that involve this team. */
   missingPast: number;
   /** Counted games whose score came from si.com (provenance.scores === 'sblive'). */
   backfilled: number;
@@ -664,13 +659,13 @@ export function getMissingOfficialResults(division: DivisionId, asOf?: string): 
 
 /**
  * Spread of games played across EVERY member of a division (uneven-GP footnote when max − min ≥ 2;
- * lib/standings.ts unevenGamesSentence words it). `scheduled` is null for a league with no fixed schedule
+ * lib/engine/standings/uneven.ts unevenGamesSentence words it). `scheduled` is null for a league with no fixed schedule
  * (the Sunset), whose sentence then has no "of N".
  *
  * A member with no counted game is in the spread at 0. The sentence says "Teams have played between {min}
  * and {max}", and the table it sits under lists that member with GP 0: leaving it out printed "between 1 and
  * 5" over a Sunset table whose Newport Harbor row reads 0 (its four finals against Sunset teams, Aug 26 –
- * Sep 30, are none of them marked league games). hasReportedResults is exactly gp > 0 (lib/standings.ts),
+ * Sep 30, are none of them marked league games). hasReportedResults is exactly gp > 0 (lib/engine/standings.ts),
  * so the old filter only ever dropped zeros.
  */
 export function getGamesPlayedSpread(division: DivisionId): { min: number; max: number; scheduled: number | null } {

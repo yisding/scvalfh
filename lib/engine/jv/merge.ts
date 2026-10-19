@@ -19,18 +19,18 @@
  * not matched: there is no id to match it by.
  *
  * Nothing here decides a table: the merged games are unclassified (countsFor and postseason stay
- * null); lib/jv-standings.ts classifies them for the JV tables, and no varsity table or postseason
+ * null); lib/engine/jv/standings.ts classifies them for the JV tables, and no varsity table or postseason
  * ever reads them. Pure: no I/O, no clock — `today` is an input.
  */
 
-import { datesOf } from './backfill';
-import type { BackfillProvenance, Game, GameSide, Outcome } from './model/game';
-import type { ContestId, TeamSlug } from './model/ids';
-import type { Team } from './model/team';
-import { getTeamBySlug } from './registry/teams';
-import type { JvSbliveRow } from './schema/jv';
-import { dayDiff } from './shared/dates';
-import { byDateThenId } from './shared/game';
+import { datesOf } from '@/lib/engine/sblive-dates';
+import type { BackfillProvenance, Game, GameSide, Outcome } from '@/lib/model/game';
+import type { ContestId, TeamSlug } from '@/lib/model/ids';
+import type { Team } from '@/lib/model/team';
+import { getTeamBySlug } from '@/lib/registry/teams';
+import type { JvSbliveRow } from '@/lib/schema/jv';
+import { dayDiff } from '@/lib/shared/dates';
+import { byDateThenId } from '@/lib/shared/game';
 
 /** Rules 1-2: a si.com final within ±1 day of the MaxPreps date. */
 export const JV_SBLIVE_DATE_TOLERANCE_DAYS = 1;

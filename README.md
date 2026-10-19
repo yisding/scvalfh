@@ -475,7 +475,7 @@ place when its table is shown and links it.
 
 #### JV standings
 
-`lib/jv-standings.ts` builds one JV table per division, in three steps, and `/jv` prints them, one
+`lib/engine/jv/standings.ts` builds one JV table per division, in three steps, and `/jv` prints them, one
 section per league (`app/jv/page.tsx`, `components/standings/JvStandings.tsx`, built by
 `components/standings/jv-standings-view.ts`). They are a page of their own, linked from each
 `/standings/<league>` page and from team pages, because the SCVAL standings page is at its weight
@@ -520,7 +520,7 @@ each said:
   scored finals only. A JV side is one of ours only by its si.com JV team id (`lib/registry/jv-teams.ts`,
   read from each varsity page's level switcher), never by name.
 
-What the pages show is `mergeJv` (`lib/jv-merge.ts`) over the two, decided again on every build
+What the pages show is `mergeJv` (`lib/engine/jv/merge.ts`) over the two, decided again on every build
 from the file's own `fetchedAt`. **MaxPreps comes first**; si.com only supplements it, for a game
 between two registry schools matched by pair and date (±1 day): it fills a past game MaxPreps has no
 score for, and adds a game MaxPreps does not list when MaxPreps has no JV game of that pair within
@@ -1029,14 +1029,14 @@ points rule, no standings and no table order that we could find, so the order is
 can end a league game in a tie; the EAL and the San Diego Section decide a level varsity game by
 1 v 1s or a shootout. They differ in the tiebreak chain, in how a tie among three or more
 teams is worked through and in the postseason, so every rule is data in `lib/config/leagues.ts` (with the
-by-law citation next to it) and one engine in `lib/standings.ts` runs them. Only games that count
+by-law citation next to it) and one engine in `lib/engine/standings.ts` runs them. Only games that count
 toward a division table count: a team's non-league and postseason games never do. The full rules,
 with citations, are in `docs/LEAGUE-RULES.md`; the site prints them on `/about#rules-<league>`.
 
 ### SCVAL
 
 Per the **SCVAL Field Hockey By-Laws 2026-27, Article VI** (verified copy in
-`docs/BYLAWS-2026-27.md`; implementation in `lib/standings.ts`):
+`docs/BYLAWS-2026-27.md`; implementation in `lib/engine/standings.ts`):
 
 - **§1** — double round robin; only games between two members of the *same* division count
   toward the division record.
@@ -1260,7 +1260,7 @@ page becomes a link to it. `--no-sblive` turns the whole thing off. The exact ru
 
 ## How Elo ratings are computed
 
-Each team's Elo rating (`lib/ratings.ts`, DESIGN §20) is on its team page behind a closed "Elo
+Each team's Elo rating (`lib/engine/ratings.ts`, DESIGN §20) is on its team page behind a closed "Elo
 rating" disclosure under the stat tiles (`#elo`), kept low on purpose so a family checking its
 team meets the record first, and the ten highest in each region are a board on `/leaders`
 (`#elo-rating` for NorCal, `#elo-rating-socal` for SoCal). The ratings are on one scale across all
@@ -1325,7 +1325,7 @@ at once, at every build, starting from last season's:
 ## Elo-adjusted goals and points
 
 Two `/leaders` boards per region weigh scoring by the defenses it came against
-(`lib/adjusted-scoring.ts`, DESIGN §27), with the one Elo table at the core:
+(`lib/engine/adjusted-scoring.ts`, DESIGN §27), with the one Elo table at the core:
 
 - **The defenses.** A Poisson goal model over every counted final: a side's expected goals are
   `exp(μ + h·host + a·s_team + u_team − (d·s_opp + v_opp))`, where `s` is a team's Elo strength in
@@ -1376,7 +1376,7 @@ Two `/leaders` boards per region weigh scoring by the defenses it came against
   on the one Elo table the site already shows, which links the leagues' few cross-league games and
   carries last season over. On the board's teams, standard deviations of 0.25-0.4 and 0.5-2 games
   of shrinkage scored within 0.01 of the chosen pair; capping each game's weight at 3, 5 or 8 games scored worse. The
-  Elo constants (`lib/ratings.ts`) were tuned on these same two seasons, which flatters every Elo
+  Elo constants (`lib/engine/ratings.ts`) were tuned on these same two seasons, which flatters every Elo
   row a little.
 - **What it does not know.** Ratings and defenses are today's, from every counted game, the one
   being weighed included: taking each top team's own games out of both fits keeps every board's top

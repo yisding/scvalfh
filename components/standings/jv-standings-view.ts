@@ -2,7 +2,7 @@
  * The JV tables' view model: one block per division on `/jv` (`#<division>`), and a team's JV
  * place for its team page.
  *
- * Every number comes from lib/jv.ts (lib/jv-standings.ts: JV league games take their varsity
+ * Every number comes from lib/jv.ts (lib/engine/jv/standings.ts: JV league games take their varsity
  * counterpart's classification; tables order on points; a table is shown only once enough of the
  * played JV league games have a score). The copy says which of those it is, in words.
  *
@@ -11,16 +11,13 @@
 
 import { getDivision, getLeague, isSingleDivision } from '@/lib/config/leagues';
 import { divisionHeading } from '@/lib/config/leagues/labels';
+import {
+  JV_STANDINGS_MIN_REPORTED_SHARE, type JvClassification, type JvDivisionTable, type JvStandingRow,
+} from '@/lib/engine/jv/standings';
 import { monthDay } from '@/lib/format/dates';
 import { ordinal, recordString } from '@/lib/format/numbers';
 import { listWords, plural } from '@/lib/format/words';
 import { getJvClassification, getJvTable, getJvTables } from '@/lib/jv';
-import {
-  JV_STANDINGS_MIN_REPORTED_SHARE,
-  type JvClassification,
-  type JvDivisionTable,
-  type JvStandingRow,
-} from '@/lib/jv-standings';
 import type { DivisionId, LeagueId, TeamSlug } from '@/lib/model/ids';
 import type { Team } from '@/lib/model/team';
 import { getTeamBySlug } from '@/lib/registry/teams';
@@ -45,7 +42,7 @@ export interface JvTableView {
   uncountedNote: string | null;
 }
 
-/** Why an uncounted JV game is not counted, in words, for each reason lib/jv-standings.ts gives. */
+/** Why an uncounted JV game is not counted, in words, for each reason lib/engine/jv/standings.ts gives. */
 export const UNCOUNTED_REASON_WORDS: Readonly<Record<UncountedReason, string>> = {
   'no-varsity-counterpart': 'no varsity game matches it',
   ambiguous: 'two varsity games are equally near it',

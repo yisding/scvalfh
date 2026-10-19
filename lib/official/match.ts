@@ -15,9 +15,9 @@
  * Pure: no I/O, no clock (`today` is an option).
  */
 
-import { postseasonTag } from '@/lib/classify';
 import { getDivision, leagueOfDivision } from '@/lib/config/leagues';
 import { divisionLabel } from '@/lib/config/leagues/labels';
+import { postseasonTag } from '@/lib/engine/classify';
 import { monthDay, shortDate } from '@/lib/format/dates';
 import type { OfficialFixture } from '@/lib/model/fixture';
 import type { Game, GameSide, OfficialStamp } from '@/lib/model/game';

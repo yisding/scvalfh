@@ -1,5 +1,5 @@
 /**
- * lib/note-stats.ts — goals, assists and saves a coach wrote in MaxPreps' game note, added to the
+ * lib/engine/note-stats.ts — goals, assists and saves a coach wrote in MaxPreps' game note, added to the
  * MaxPreps numbers for any team — lib/config/name-aliases.ts, and the per-game totals that keep a noted
  * stat from counting twice (lib/sources/maxpreps-game-stats.ts).
  *
@@ -17,19 +17,12 @@ import { buildLeadersView } from '@/components/leaders/leaders-view';
 import { buildPlayerStatsView } from '@/components/teams/player-stats-view';
 import { NAME_ALIASES } from '@/lib/config/name-aliases';
 import { getSnapshot } from '@/lib/data';
+import {
+  type NoteRosterPlayer, type NoteSources, type ParsedNote, noteStatsFor, notedKinds, parseStatNote,
+  resolveName, teamsCreditedByNotes, withNoteStats,
+} from '@/lib/engine/note-stats';
 import type { Game } from '@/lib/model/game';
 import type { TeamSlug } from '@/lib/model/ids';
-import {
-  notedKinds,
-  noteStatsFor,
-  parseStatNote,
-  resolveName,
-  teamsCreditedByNotes,
-  withNoteStats,
-  type NoteRosterPlayer,
-  type NoteSources,
-  type ParsedNote,
-} from '@/lib/note-stats';
 import { getAllPlayerStatsWithNotes, getPlayerStats } from '@/lib/player-stats';
 import { getTeamBySlug } from '@/lib/registry/teams';
 import { getTeamRoster } from '@/lib/rosters';

@@ -16,12 +16,12 @@ import path from 'node:path';
 import { beforeAll, describe, expect, it } from 'vitest';
 
 import { divisionsOf } from '@/lib/config/leagues';
+import { buildCrossCheck, divisionGames } from '@/lib/engine/standings';
 import type { DivisionId } from '@/lib/model/ids';
 import type { Snapshot } from '@/lib/model/snapshot';
 import type { Standing } from '@/lib/model/standings';
 import { stableStringify } from '@/lib/shared/stable-json';
 import { loadSnapshot } from '@/lib/snapshot/load';
-import { buildCrossCheck, divisionGames } from '@/lib/standings';
 import { corpusSnapshotPath } from './support/corpus-snapshot';
 import { REPO } from './support/repo';
 
@@ -57,24 +57,24 @@ describe('golden item 3: the SCVAL corpus through the pipeline', () => {
 
   it('SCVAL Standing rows are byte-identical to the golden rows', () => {
     const rows = snapshot.standings.filter(isScval);
-    expect(rows.map((r) => r.slug), 'lib/standings.ts computeStandings: SCVAL row order').toEqual(
+    expect(rows.map((r) => r.slug), 'lib/engine/standings.ts computeStandings: SCVAL row order').toEqual(
       golden.standings.map((r) => r.slug),
     );
-    expect(stableStringify(rows), 'lib/standings.ts computeStandings (via lib/pipeline/steps/standings.ts): SCVAL rows').toBe(
+    expect(stableStringify(rows), 'lib/engine/standings.ts computeStandings (via lib/pipeline/steps/standings.ts): SCVAL rows').toBe(
       stableStringify(golden.standings),
     );
   });
 
   it('the SCVAL cross-check rows equal the golden ones', () => {
-    expect(snapshot.crossCheck, 'lib/standings.ts buildCrossCheck (via lib/pipeline/steps/standings.ts)').toEqual(golden.crossCheck);
-    expect(buildCrossCheck(snapshot.standings.filter(isScval)), 'lib/standings.ts buildCrossCheck').toEqual(golden.crossCheck);
+    expect(snapshot.crossCheck, 'lib/engine/standings.ts buildCrossCheck (via lib/pipeline/steps/standings.ts)').toEqual(golden.crossCheck);
+    expect(buildCrossCheck(snapshot.standings.filter(isScval)), 'lib/engine/standings.ts buildCrossCheck').toEqual(golden.crossCheck);
   });
 
   it('the counted division games are the golden contests', () => {
     for (const d of SCVAL) {
       expect(
         divisionGames(snapshot.games, d).map((g) => g.contestId).sort(),
-        `lib/classify.ts classifyGames (via lib/pipeline/steps/classify.ts): ${d} division games`,
+        `lib/engine/classify.ts classifyGames (via lib/pipeline/steps/classify.ts): ${d} division games`,
       ).toEqual([...golden.divisionGames[d]].sort());
     }
   });

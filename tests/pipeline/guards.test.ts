@@ -10,8 +10,9 @@ import path from 'node:path';
 
 import { beforeAll, describe, expect, it } from 'vitest';
 
-import { classifyGame } from '@/lib/classify';
 import { divisionsOf, getLeague } from '@/lib/config/leagues';
+import { classifyGame } from '@/lib/engine/classify';
+import { divisionGames } from '@/lib/engine/standings';
 import type { Game } from '@/lib/model/game';
 import type { LeagueId } from '@/lib/model/ids';
 import type { Snapshot } from '@/lib/model/snapshot';
@@ -27,7 +28,6 @@ import {
 } from '@/lib/pipeline/steps/guards';
 import { teamsInLeague } from '@/lib/registry/teams';
 import { loadSnapshot } from '@/lib/snapshot/load';
-import { divisionGames } from '@/lib/standings';
 import { variantDir } from '@/tests/support/corpus';
 import { REGRESSED_FINALS } from '@/tests/support/pipeline/finals-regression';
 import { naiveBvalOfficial, noopSblive } from '@/tests/support/pipeline/noop-steps';

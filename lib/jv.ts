@@ -1,6 +1,6 @@
 /**
  * The read API for data/jv.json — every registry school's JV games (MaxPreps, supplemented by
- * si.com: lib/jv-merge.ts).
+ * si.com: lib/engine/jv/merge.ts).
  *
  * Built by `scripts/fetch-jv.ts`. Imported so the build bundles it, for the reason lib/rosters.ts
  * gives: a Worker has no project filesystem. Validated and merged once at module scope, so a bad
@@ -11,7 +11,7 @@
  * so a given commit builds the same pages whenever it is built.
  *
  * JV games stay apart from varsity: nothing here feeds a varsity standings table, a leader board,
- * a rating or a postseason picture. The JV tables are their own (lib/jv-standings.ts): a JV game is
+ * a rating or a postseason picture. The JV tables are their own (lib/engine/jv/standings.ts): a JV game is
  * a league game when its varsity counterpart is, read from the snapshot (lib/data.ts), and the
  * games this module serves carry that classification as `countsFor`.
  */
@@ -20,14 +20,10 @@ import { readFileSync } from 'node:fs';
 
 import bundled from '@/data/jv.json';
 import { getOfficialFixtures, getSnapshot } from './data';
-import { mergeJv, type JvMergeResult } from './jv-merge';
+import { type JvMergeResult, mergeJv } from './engine/jv/merge';
 import {
-  classifyJvGames,
-  computeJvStandings,
-  withJvClassification,
-  type JvClassification,
-  type JvDivisionTable,
-} from './jv-standings';
+  type JvClassification, type JvDivisionTable, classifyJvGames, computeJvStandings, withJvClassification,
+} from './engine/jv/standings';
 import type { Game } from './model/game';
 import type { ContestId, DivisionId, LeagueId, TeamSlug } from './model/ids';
 import { type JvFile, JvFileSchema, type JvTeam } from './schema/jv';
@@ -92,7 +88,7 @@ export function getJvGamesOn(dateKey: string): Game[] {
   return games.filter((g) => g.dateKey === dateKey);
 }
 
-/** How one JV game was classified (lib/jv-standings.ts). */
+/** How one JV game was classified (lib/engine/jv/standings.ts). */
 export function getJvClassification(contestId: ContestId): JvClassification | undefined {
   return classes.get(contestId);
 }

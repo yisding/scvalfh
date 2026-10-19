@@ -1,6 +1,6 @@
 /**
  * MaxPreps ↔ cifsshome.org score comparison (docs/DATA-SOURCES.md §1.2a). The third cross-check,
- * beside MaxPreps' own tables (lib/standings.ts buildCrossCheck) and si.com (lib/crosscheck.ts).
+ * beside MaxPreps' own tables (lib/engine/standings/maxpreps-crosscheck.ts buildCrossCheck) and si.com (lib/crosscheck.ts).
  *
  * MaxPreps is primary and nothing here changes a game: `compareCifss` only builds the report /about
  * prints. Schools enter their own rows on the widget, so most of what it lacks says nothing about

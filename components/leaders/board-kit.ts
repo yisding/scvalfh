@@ -28,7 +28,7 @@ export const num = (v: number | null): LeaderCell => ({ text: statText(v) });
 export const names = (teams: readonly Team[]) => teams.map((t) => t.name);
 
 /**
- * Said on both adjusted boards when lib/adjusted-scoring.ts's goal model did not converge and so adjusted
+ * Said on both adjusted boards when lib/engine/adjusted-scoring.ts's goal model did not converge and so adjusted
  * nothing (it has converged on every day replayed): a board titled "Elo-adjusted" must not then read as if
  * it had been.
  */

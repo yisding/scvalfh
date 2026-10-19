@@ -14,8 +14,8 @@ import DivisionTabs from '@/components/standings/DivisionTabs';
 /**
  * `/leaders` (DESIGN §16, §23, §28) — "Who leads the whole site?" Leaderboards across every covered
  * league and the independents: the schools with the best records, the most goals per game (raw and
- * Elo-adjusted), the fewest allowed, the most clean sheets and the highest Elo rating (lib/ratings.ts,
- * DESIGN §20), and the players with the most points (raw and Elo-adjusted: lib/adjusted-scoring.ts),
+ * Elo-adjusted), the fewest allowed, the most clean sheets and the highest Elo rating (lib/engine/ratings.ts,
+ * DESIGN §20), and the players with the most points (raw and Elo-adjusted: lib/engine/adjusted-scoring.ts),
  * assists, saves and clean sheets.
  *
  * One static page, built by components/leaders/leaders-view.ts from the two files every other page

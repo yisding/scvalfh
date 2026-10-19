@@ -281,7 +281,7 @@ describe('the cross-check paragraph under Elsewhere (components/game/GameSources
 
   it('on a counted EAL final: "a league game", never "official", plus the 1 v 1 exception', async () => {
     const game = gameOn(eal, 'chico', 'davis', '2026-09-28');
-    expect(game.countsFor, 'lib/classify.ts: the game counts').not.toBeNull();
+    expect(game.countsFor, 'lib/engine/classify.ts: the game counts').not.toBeNull();
     expect(eal.l.getDivision(game.countsFor!).official.mode, 'lib/config/leagues.ts official.mode').toBe('none');
     const league = eal.l.leagueOfDivision(game.countsFor!);
     expect(league.rules.leagueOvertime, 'lib/config/leagues.ts leagueOvertime').toBe('shootout');

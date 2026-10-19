@@ -2,7 +2,7 @@
  * The `#elo-rating` board (DESIGN §20; `#elo-rating-socal` for SoCal), the last school board on /leaders
  * and the one each team page reads its place from, so the two cannot disagree.
  *
- * Elo is ONE fit over every registry team (lib/ratings.ts computeRatings, unchanged): each region's board
+ * Elo is ONE fit over every registry team (lib/engine/ratings.ts computeRatings, unchanged): each region's board
  * shows its own teams' numbers from that one table, so a NorCal and a SoCal rating are on one scale. What
  * links the two regions is the finals between them, few so far, so the board's method says how many (this
  * season's from the snapshot, last season's from data/prior-season.json, both counted at build time, never
@@ -14,20 +14,15 @@
 
 import { regionOf } from '@/lib/config/leagues';
 import { getSnapshot } from '@/lib/data';
+import {
+  ELO_BASE, ELO_PER_GOAL, MARGIN_CAP, type RatingTable, type TeamRating, ratingGames,
+} from '@/lib/engine/ratings';
 import { plural } from '@/lib/format/words';
 import type { Game } from '@/lib/model/game';
 import type { RegionId, TeamSlug } from '@/lib/model/ids';
 import type { Team } from '@/lib/model/team';
 import { getPriorSeason } from '@/lib/prior-season';
-import {
-  ELO_BASE,
-  ELO_PER_GOAL,
-  MARGIN_CAP,
-  getRatings,
-  ratingGames,
-  type RatingTable,
-  type TeamRating,
-} from '@/lib/ratings';
+import { getRatings } from '@/lib/queries/ratings';
 import type { PriorSeason } from '@/lib/schema/prior-season';
 import { num, schoolBoard } from './board-kit';
 import { byName, qualifyingMinimum } from './ranking';
@@ -55,7 +50,7 @@ export interface EloBoardView {
 
 /**
  * The finals that link the two regions on the Elo scale: this season's that the fit counts
- * (lib/ratings.ts ratingGames: finals with a score between two registry teams, forfeits left out) between
+ * (lib/engine/ratings.ts ratingGames: finals with a score between two registry teams, forfeits left out) between
  * a NorCal and a SoCal team, and last season's (data/prior-season.json) between two registry teams of
  * different regions, as the fit's starts read them. Teams outside the configured leagues have no region
  * and count in neither.
@@ -167,7 +162,7 @@ export function getCrossRegionFinals(): CrossRegionFinals {
 }
 
 /**
- * One region's Elo board over the bundled snapshot and prior season (lib/ratings.ts getRatings: the one
+ * One region's Elo board over the bundled snapshot and prior season (lib/queries/ratings.ts getRatings: the one
  * fit over every team), built once per process: what /leaders prints for the region and what each of its
  * team pages reads its place from. Defaults to NorCal, the board `/leaders#elo-rating` has always been.
  */

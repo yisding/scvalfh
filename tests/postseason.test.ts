@@ -1,14 +1,14 @@
-/** lib/postseason.ts — the MCAL tournament (SPEC §6.2): every sixthPlaceRule branch, the builders and status. */
+/** lib/engine/postseason.ts — the MCAL tournament (SPEC §6.2): every sixthPlaceRule branch, the builders and status. */
 
 import { describe, expect, it } from 'vitest';
 
 import { getLeague } from '@/lib/config/leagues';
-import type { Game } from '@/lib/model/game';
-import type { Standing, TiebreakStage } from '@/lib/model/standings';
 import {
   EARLIER_MEETING_NOTE, SHOOTOUT_NOTE, buildLeagueTournament, finalGame, matchTournamentGames, quarterfinals,
   seedsFromStandings, semifinals, sixthPlaceRule,
-} from '@/lib/postseason';
+} from '@/lib/engine/postseason';
+import type { Game } from '@/lib/model/game';
+import type { Standing, TiebreakStage } from '@/lib/model/standings';
 import { getTeamBySlug } from '@/lib/registry/teams';
 
 const MCAL = getLeague('mcal');

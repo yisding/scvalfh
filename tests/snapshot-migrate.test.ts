@@ -10,6 +10,7 @@ import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 import { LEAGUES, leaguesInRegion } from '@/lib/config/leagues';
+import { buildCrossCheck, computeStandings, divisionGames } from '@/lib/engine/standings';
 import type { Game } from '@/lib/model/game';
 import type { TeamId } from '@/lib/model/ids';
 import type { Snapshot } from '@/lib/model/snapshot';
@@ -21,7 +22,6 @@ import {
   addConfiguredLeagues, countsOf, isSnapshotV1, lacksConfiguredLeagues, migrateV1ToV2, needsReclassification,
   reclassify,
 } from '@/lib/snapshot/migrate';
-import { buildCrossCheck, computeStandings, divisionGames } from '@/lib/standings';
 import { VARIANTS_DIR } from './support/corpus';
 import { REPO, goldenPath, readJson } from './support/repo';
 
@@ -73,7 +73,7 @@ describe('migrateV1ToV2 on the committed v1 golden', () => {
       expect(s.hasReportedResults, s.slug).toBe(false);
       expect(s.computed.gp, s.slug).toBe(0);
       expect(s.reported).toBeNull();
-      // NorCal rows say 'results reported'; a 'site'-ordered SoCal row says 'games counted' (lib/standings.ts
+      // NorCal rows say 'results reported'; a 'site'-ordered SoCal row says 'games counted' (lib/engine/standings.ts
       // tiebreakNote: SoCal copy avoids the word 'results').
       expect(s.tiebreak.note, s.slug).toMatch(
         /^No (division|league) (results reported|games counted) for /,

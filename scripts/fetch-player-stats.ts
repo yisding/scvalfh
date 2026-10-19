@@ -29,13 +29,13 @@
  * new file differs from the previous one only in its `fetchedAt` stamps, the previous file is left
  * exactly as it was (`playerStatsContentKey`), so there is nothing to commit.
  *
- * Game notes (lib/note-stats.ts). For a team a game note on one of its finals in data/snapshot.json
+ * Game notes (lib/engine/note-stats.ts). For a team a game note on one of its finals in data/snapshot.json
  * credits with goals, assists or saves (teamsCreditedByNotes), the run also reads MaxPreps'
  * per-game team totals (lib/sources/maxpreps-game-stats.ts) into `gameTotals`, so a noted stat the
  * coach has also entered is not counted twice: one more small call per such team (one, Homestead,
  * on 2026-10-06). Offline it reads `game-stats-<slug>.json` beside the rollup captures; a missing
  * capture, or a failed call, leaves `gameTotals` out with a warning and never fails the team; its
- * noted stats are then not counted (lib/note-stats.ts counts only what it can check). The previous
+ * noted stats are then not counted (lib/engine/note-stats.ts counts only what it can check). The previous
  * run's totals are not carried forward for this: they may predate what the coach has entered since.
  *
  * A partial run still publishes, and failures are scoped to the team (lib/fetch-scope.ts): a team
@@ -58,6 +58,7 @@ import path from 'node:path';
 
 import { INDEPENDENT_LEAGUES, LEAGUES_PROPER, seasonWindowBounds } from '@/lib/config/leagues';
 import { SEASON_YEAR } from '@/lib/config/season';
+import { teamsCreditedByNotes } from '@/lib/engine/note-stats';
 import { monthDay } from '@/lib/format/dates';
 import {
   describePrevious,
@@ -72,7 +73,6 @@ import {
   type PreviousFile,
 } from '@/lib/fetch-scope';
 import type { LeagueId } from '@/lib/model/ids';
-import { teamsCreditedByNotes } from '@/lib/note-stats';
 import { inSeasonWindow } from '@/lib/pipeline/steps/window';
 import { TEAMS } from '@/lib/registry/teams';
 import {
@@ -170,7 +170,7 @@ const NOTES = [
 
 /**
  * A noted team's per-game totals, or undefined with a warning when they cannot be had: its note
- * credits are then withheld (lib/note-stats.ts counts only what it can check), and the team itself
+ * credits are then withheld (lib/engine/note-stats.ts counts only what it can check), and the team itself
  * never fails.
  */
 async function readGameTotals(

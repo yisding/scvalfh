@@ -1,5 +1,5 @@
 /**
- * lib/content-dates.ts — the sitemap's per-page `lastmod` (app/sitemap.ts): MaxPreps' contest stamp
+ * lib/engine/content-dates.ts — the sitemap's per-page `lastmod` (app/sitemap.ts): MaxPreps' contest stamp
  * read as UTC and clamped to the fetch, the snapshot stamp where the page's version of the game is
  * not MaxPreps', the pipeline's own `contentChangedAt` over both, and the sets of games a game page
  * and a score-day page are built from.
@@ -7,15 +7,9 @@
 import { describe, expect, it } from 'vitest';
 
 import {
-  contentRemovalsOf,
-  gameContentStamp,
-  gamePageInputs,
-  latestContentDate,
-  removalsForGame,
-  removalsOnDay,
-  scoreDayInputs,
-  stampContentChanges,
-} from '@/lib/content-dates';
+  contentRemovalsOf, gameContentStamp, gamePageInputs, latestContentDate, removalsForGame, removalsOnDay,
+  scoreDayInputs, stampContentChanges,
+} from '@/lib/engine/content-dates';
 import type { Game } from '@/lib/model/game';
 import { game } from './support/game-builder';
 

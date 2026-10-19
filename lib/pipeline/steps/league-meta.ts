@@ -128,7 +128,7 @@ async function readMeta(ctx: PipelineContext, state: RunState, leagueId: LeagueI
  * division MaxPreps publishes no table for (the San Diego Section's Valley division in 2026-27: none
  * of its six members carries a MaxPreps league, DESIGN-socal §1). Steps 03 and 04 make no request for
  * it (never `/leagues/null/v1`), record its meta and reported table as 'skipped', and log this sentence;
- * the division's cross-check reads the same fact from config (lib/standings.ts buildCrossCheck).
+ * the division's cross-check reads the same fact from config (lib/engine/standings/maxpreps-crosscheck.ts buildCrossCheck).
  */
 export const NO_MAXPREPS_TABLE_REASON = 'MaxPreps publishes no table for this division';
 

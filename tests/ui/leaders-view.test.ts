@@ -28,20 +28,21 @@ import { statText } from '@/components/teams/player-stats-view';
 import { positionWords } from '@/components/ui/position-words';
 import { regionOf } from '@/lib/config/leagues';
 import { getGames, getStandingFor, getTeams } from '@/lib/data';
+import { computeAdjustedScoring } from '@/lib/engine/adjusted-scoring';
+import { computeRatings } from '@/lib/engine/ratings';
+import { computeStandings } from '@/lib/engine/standings';
 import { recordString } from '@/lib/format/numbers';
 import { gradeWord } from '@/lib/format/words';
-import { computeAdjustedScoring, getAdjustedScoring } from '@/lib/adjusted-scoring';
 import type { Game } from '@/lib/model/game';
 import { getAllPlayerStatsWithNotes } from '@/lib/player-stats';
 import { getPriorSeason } from '@/lib/prior-season';
+import { getAdjustedScoring, getRatings } from '@/lib/queries/ratings';
 import { TEAMS, getTeamBySlug } from '@/lib/registry/teams';
 import { getEnrichedTeamRoster } from '@/lib/rosters';
-import { computeRatings, getRatings } from '@/lib/ratings';
 import {
   FIELD_STAT_KEYS, type FieldStatKey, type FieldStats, GOALIE_STAT_KEYS, type GoalieStatKey, type GoalieStats,
   type TeamPlayerStats,
 } from '@/lib/schema/player-stats';
-import { computeStandings } from '@/lib/standings';
 import { game } from '@/tests/support/game-builder';
 import { textOf } from '@/tests/support/html-text';
 
@@ -96,7 +97,7 @@ function expectRanked(board: LeaderBoard): void {
 
 describe('buildLeadersView — rules, over the committed data', () => {
   const view = buildLeadersView();
-  // What the boards read: MaxPreps' numbers with the coaches' game notes added (lib/note-stats.ts).
+  // What the boards read: MaxPreps' numbers with the coaches' game notes added (lib/engine/note-stats.ts).
   const stats = getAllPlayerStatsWithNotes();
   /** A board's id without its region suffix: the same board in either region. */
   const unsuffixed = (id: string) => id.replace(/-socal$/, '');

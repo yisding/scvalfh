@@ -49,16 +49,14 @@
  * finals without a score, and games against schools outside the nine leagues and the five independents: a one-game opponent
  * nothing else connects to says nothing about the strength of the team it played.
  *
- * Pure: `computeRatings` reads only its arguments; `getRatings` is it over the bundled snapshot
- * and prior season.
+ * Pure: `computeRatings` reads only its arguments; `getRatings` (lib/queries/ratings.ts) is it over the
+ * bundled snapshot and prior season.
  */
 
-import { getSnapshot } from './data';
-import type { Game } from './model/game';
-import type { TeamId, TeamSlug } from './model/ids';
-import type { Team } from './model/team';
-import { getPriorSeason } from './prior-season';
-import type { PriorSeason } from './schema/prior-season';
+import type { Game } from '@/lib/model/game';
+import type { TeamId, TeamSlug } from '@/lib/model/ids';
+import type { Team } from '@/lib/model/team';
+import type { PriorSeason } from '@/lib/schema/prior-season';
 
 /** The average rated team. */
 export const ELO_BASE = 1500;
@@ -246,15 +244,4 @@ export function computeRatings(
     seededFrom: start.size > 0 ? prior!.season : null,
     priorGames: prior ? prior.games.length : 0,
   };
-}
-
-let bundled: RatingTable | null = null;
-
-/** The ratings over the bundled snapshot and prior season, computed once per process. */
-export function getRatings(): RatingTable {
-  if (!bundled) {
-    const snapshot = getSnapshot();
-    bundled = computeRatings(snapshot.teams, snapshot.games, getPriorSeason());
-  }
-  return bundled;
 }

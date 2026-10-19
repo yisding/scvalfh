@@ -81,7 +81,7 @@ export const INDEPENDENTS: LeagueConfig = {
   ],
   rules: {
     points: { win: 3, tie: 1, loss: 0 }, orderBy: 'points', orderScope: 'site', gamesWord: 'league',
-    // Every game between two of the five counts (lib/classify.ts 'membership'); tournament (2) and postseason (4)
+    // Every game between two of the five counts (lib/engine/classify.ts 'membership'); tournament (2) and postseason (4)
     // rows never do.
     classification: 'membership', excludeContestTypes: [2, 4],
     postseasonFrom: null, leagueGameOverrides: [],

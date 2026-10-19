@@ -1917,7 +1917,7 @@ every section on every page. This is the entire brand.
 type StandingsVariant = 'phone' | 'desktop' | 'mini' | 'archive';
 interface StandingsTableProps {
   division: Division;
-  rows: StandingsRow[];            // already sorted & ranked by lib/standings.ts
+  rows: StandingsRow[];            // already sorted & ranked by lib/engine/standings.ts
   gdDomain: number;                // max |gd| for THIS division — never global
   variant: StandingsVariant;       // phone 2-line, desktop 13-col, mini top-4, archive final
   caption: string;                 // "De Anza Division league standings through Sep 24"
@@ -2412,7 +2412,7 @@ source at all** — not "0-0-0", not last place: *absent*. Official 2026-27 memb
 eight. Any design that derives its rows from the feed array silently drops a school from the
 league, which is the worst bug this site could ship.
 
-**Resolution:** `lib/registry/teams.ts` holds a hand-maintained membership constant. `lib/standings.ts`
+**Resolution:** `lib/registry/teams.ts` holds a hand-maintained membership constant. `lib/engine/standings.ts`
 **left-joins** it against the feed, so the table always has 16 rows across two divisions and a
 missing school lands in the designed no-results state (§8) rather than vanishing. A Zod
 invariant asserts `snapshot.teams.length === 16` and CI asserts it again.
@@ -3158,7 +3158,7 @@ Every team gets an Elo rating: on its own page, and the ten highest on `/leaders
 wins where §1-§19 disagree. Everything else stands: static rendering, "today" from the snapshot,
 no new hue (§6.4, §15.5) and no new chart (decision 8: the rating is a card and a table). It is the
 first number on the site that comes from a model, so it keeps §19.2: computed from the snapshot's
-results by a documented model (`lib/ratings.ts`; README "How Elo ratings are computed"), read as
+results by a documented model (`lib/engine/ratings.ts`; README "How Elo ratings are computed"), read as
 an estimate, linked to its method, and never a status: it orders no table, berth or seed.
 
 ### 20.1 The rating
@@ -4006,7 +4006,7 @@ disagree.
 | Earlier decision | Now | Why |
 |---|---|---|
 | The three appear only as opponents (24.1 scope note, 24.8) | **A group, not a league**: `LeagueId` `'independents'` (name "Southern Section independents", short name "Independent", section `ss`), after Metro in `LEAGUES`, with one division `independents` (3 teams, `gamesPerTeam` null, `maxprepsLeagueId` null, `official.mode` 'none'). Its registry is `lib/registry/independents.ts`, transcribed from `tests/fixtures/seeds/registry-seed-ss.json`. | They have a 2026 varsity schedule and the Southern Section rules, but no league. Shown only as opponents, their 37 games were invisible except from the other side. |
-| Three classifications (`contest-type`, `official-fixtures`, `membership`) | A fourth, **`independent`**: `lib/classify.ts` returns null for every game of the group, so `countsFor` is always null; `DivisionHealth.classification` and the snapshot schema take the value. | A game between two independents (Harvard-Westlake 5, Glendora 0 on Sep 8) is not a league game: they share no league. |
+| Three classifications (`contest-type`, `official-fixtures`, `membership`) | A fourth, **`independent`**: `lib/engine/classify.ts` returns null for every game of the group, so `countsFor` is always null; `DivisionHealth.classification` and the snapshot schema take the value. | A game between two independents (Harvard-Westlake 5, Glendora 0 on Sep 8) is not a league game: they share no league. |
 | "Nine leagues" is `LEAGUES.length` | **`LEAGUES_WITH_TABLES`** (9; renamed `LEAGUES_PROPER` in §24.10) and **`INDEPENDENT_LEAGUES`** (1) in `lib/config/leagues.ts`; every count of leagues uses the first and names the independents apart: "nine leagues and the Southern Section's three independents", "all four SoCal leagues and three independents", `coveredLeagueWords()`, `independentsWords()`. The site never prints "ten leagues" (a `leaders-view` test checks). | They are not a league, and a tenth "league" with no games would be a false count. |
 | Scope note: "Teams outside these nine leagues, including … Glendora, Harvard-Westlake and Thousand Oaks, appear only as opponents." | "Covers the CIF Central Coast Section (SCVAL, BVAL, PCAL), the North Coast Section’s MCAL, the Northern Section’s EAL, the Southern Section’s Sunset field hockey league and the San Diego Section’s City, North and Metro conferences, plus the Southern Section’s three independents (Glendora, Harvard-Westlake and Thousand Oaks), which play no league games. Other teams appear only as opponents." `SITE_DESCRIPTION` says "… for the 53 Southern California teams in Sunset (Southern Section), City, North and Metro (San Diego Section) and three Southern Section independents." | The old note's exception is now covered. |
 | North County's short name "North County" | **"North"** (owner decision, 2026-10-06: "North County" made the chip too wide). The name ("North County Conference") and search are unchanged: search keys are the short name and the name, so "North County" still finds it. Where the short name would stand alone as a control's target or a sentence's subject, a new `LeagueConfig.standaloneName` is used through `standaloneName(id)`: "Jump to North County ↓", "Show North County here", "(North County publishes no schedule)". Every other league's is its short name, except the independents' ("Jump to the independents ↓", "Show the independents here"). The scope note's noun is the shared last word: "City, North and Metro conferences". | "Jump to North ↓", alone on a pill, reads as a direction; "Show Independent here" names nothing. In a list ("City, North and Metro"), a label ("North · Palomar") or a row tag ("Poway · North") the context makes it the league. |
@@ -4394,7 +4394,7 @@ The owner asked for two more rankings: Elo-adjusted points for players and Elo-a
 teams. This section wins where §16, §20 and §23 disagree. Everything else stands: the boards are
 tables ranked 1, 2, 2, 4, once per region with suffixed ids (§24), and the page ships no client
 component. Like the Elo rating (§19.2, §20), both are estimates from a documented model
-(`lib/adjusted-scoring.ts`; README "Elo-adjusted goals and points"), never a status.
+(`lib/engine/adjusted-scoring.ts`; README "Elo-adjusted goals and points"), never a status.
 
 - **The model.** A Poisson attack-defense model anchored on Elo (Maher 1982; Dixon-Coles 1997;
   shrinkage as Baio-Blangiardo 2010): log expected goals = μ + h·host + a·s_team + u_team −

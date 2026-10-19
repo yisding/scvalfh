@@ -98,7 +98,7 @@ export const TeamPlayerStatsStatus = z.enum(['ok', 'none', 'carried-forward', 'e
 
 /**
  * One game of MaxPreps' per-game TEAM totals (`team-season-game-stats/rollup/v1`): what the coach
- * entered for that game, 0 where nothing was. lib/note-stats.ts reads it to tell whether a goal,
+ * entered for that game, 0 where nothing was. lib/engine/note-stats.ts reads it to tell whether a goal,
  * assist or save a game note names is already on the stats sheet.
  */
 export const GameTotalSchema = z.object({
@@ -135,7 +135,7 @@ export const TeamPlayerStatsSchema = z
     }),
     players: z.array(PlayerStatLineSchema),
     /**
-     * Per-game team totals, read only for a team a game note credits with stats (lib/note-stats.ts
+     * Per-game team totals, read only for a team a game note credits with stats (lib/engine/note-stats.ts
      * teamsCreditedByNotes); absent when not read, or when the read failed.
      */
     gameTotals: z.array(GameTotalSchema).optional(),

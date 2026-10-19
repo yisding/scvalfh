@@ -1,20 +1,16 @@
 /**
- * lib/adjusted-scoring.ts: the Elo-anchored Poisson goal model and the adjustment read off it, over
+ * lib/engine/adjusted-scoring.ts: the Elo-anchored Poisson goal model and the adjustment read off it, over
  * synthetic games and synthetic rating tables, and its invariants over the bundled data. Nothing here
  * asserts a particular team's number on the committed data, which a data refresh changes.
  */
 
 import { describe, expect, it } from 'vitest';
 
-import {
-  SHRINK_GAMES,
-  computeAdjustedScoring,
-  fitGoalModel,
-  getAdjustedScoring,
-} from '@/lib/adjusted-scoring';
 import { getSnapshot } from '@/lib/data';
+import { SHRINK_GAMES, computeAdjustedScoring, fitGoalModel } from '@/lib/engine/adjusted-scoring';
+import { type RatingTable, computeRatings, ratingGames } from '@/lib/engine/ratings';
 import type { Game } from '@/lib/model/game';
-import { computeRatings, getRatings, ratingGames, type RatingTable } from '@/lib/ratings';
+import { getAdjustedScoring, getRatings } from '@/lib/queries/ratings';
 import { TEAMS, getTeamBySlug } from '@/lib/registry/teams';
 import { game, type GameSpec } from './support/game-builder';
 

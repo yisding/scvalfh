@@ -6,14 +6,14 @@
  */
 
 import { CCS, getLeague } from '@/lib/config/leagues';
-import { contentRemovalsOf, stampContentChanges } from '@/lib/content-dates';
+import { contentRemovalsOf, stampContentChanges } from '@/lib/engine/content-dates';
+import { buildSeason } from '@/lib/engine/season-record';
 import type { OfficialFixture } from '@/lib/model/fixture';
 import type { Game } from '@/lib/model/game';
 import type { LeagueHealth } from '@/lib/model/health';
 import type { ContestId } from '@/lib/model/ids';
 import type { Snapshot } from '@/lib/model/snapshot';
 import { TEAMS } from '@/lib/registry/teams';
-import { buildSeason } from '@/lib/season-build';
 import { byDateThenId } from '@/lib/shared/game';
 import { stableStringify } from '@/lib/shared/stable-json';
 import { snapshotContentHash } from '@/lib/pipeline/content-hash';
@@ -109,9 +109,9 @@ export function stepAssemble(
   ctx: PipelineContext,
   { state, table, requests }: AssembleInput,
 ): { snapshot: Snapshot; meta: SnapshotMeta } {
-  // Each game's contentChangedAt, against the previous snapshot's copy (lib/content-dates.ts).
+  // Each game's contentChangedAt, against the previous snapshot's copy (lib/engine/content-dates.ts).
   const games = stampContentChanges([...state.games].sort(byDateThenId), ctx.previous?.games ?? null, ctx.fetchedAt);
-  // …and the contests that left a date since, which no game left on it records (lib/content-dates.ts).
+  // …and the contests that left a date since, which no game left on it records (lib/engine/content-dates.ts).
   const contentRemovals = contentRemovalsOf(games, ctx.previous, ctx.fetchedAt);
   const sources = ctx.sources.ordered();
   const official = state.official;

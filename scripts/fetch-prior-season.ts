@@ -2,7 +2,7 @@
 /**
  * Read last season's results into data/prior-season.json (DESIGN §20.1): every final between two
  * registry teams, from each team's MaxPreps schedule for that season. The Elo rating starts each
- * team from the rating these games give it (lib/ratings.ts); nothing else reads them.
+ * team from the rating these games give it (lib/engine/ratings.ts); nothing else reads them.
  *
  *   pnpm fetch-prior-season                    the season before lib/config/season.ts' (26-27 → 25-26)
  *   pnpm fetch-prior-season --year 24-25       another MaxPreps season year

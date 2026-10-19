@@ -20,10 +20,10 @@
  * (they are local and classification depends on them), SCVAL is carried from the previous run.
  */
 
-import { postseasonTag } from '@/lib/classify';
 import { LEAGUES } from '@/lib/config/leagues';
 import { divisionDisplay, divisionHeading } from '@/lib/config/leagues/labels';
 import { type DocumentDivision, hasOfficialDocument } from '@/lib/config/leagues/official';
+import { postseasonTag } from '@/lib/engine/classify';
 import type { OfficialFixture } from '@/lib/model/fixture';
 import type { Game } from '@/lib/model/game';
 import type { SourceStatus } from '@/lib/model/health';

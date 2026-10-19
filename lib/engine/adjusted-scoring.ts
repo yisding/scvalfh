@@ -1,6 +1,6 @@
 /**
  * Elo-adjusted scoring: goals and points weighed by how hard the defenses they came against are,
- * with the Elo table (lib/ratings.ts, DESIGN §20) at the core of that measure. Two /leaders boards use
+ * with the Elo table (lib/engine/ratings.ts, DESIGN §20) at the core of that measure. Two /leaders boards use
  * it (components/leaders/school-boards.ts, player-boards.ts): a school's Elo-adjusted goals per game, and a player's
  * Elo-adjusted points. DESIGN §27 and the README's "Elo-adjusted goals and points" say how it was chosen.
  *
@@ -62,24 +62,23 @@
  * site already shows, which links the leagues' few cross-league games and carries last season over.
  * On the board's teams, standard deviations 0.25-0.4 and 0.5-2 games of shrinkage scored within 0.01
  * of the chosen pair (on every side in 2026, two games scored 0.014 worse). The Elo constants
- * themselves (lib/ratings.ts) were tuned on these same two seasons, which flatters every Elo row a little.
+ * themselves (lib/engine/ratings.ts) were tuned on these same two seasons, which flatters every Elo row a little.
  *
- * Counted: the finals the Elo fit counts (lib/ratings.ts ratingGames: between two registry teams, with
+ * Counted: the finals the Elo fit counts (lib/engine/ratings.ts ratingGames: between two registry teams, with
  * a score, no forfeit). Ratings and defenses are today's, from every counted game, the one being
  * weighed included: taking each top team's own games out of both fits keeps every board's top two,
  * and can reorder teams close behind (on 2026-10-15 it swapped NorCal's 3rd and 5th, 0.06 apart).
  * A game against a school outside the nine leagues and the five independents has no rating and is left
  * out.
  *
- * Pure: `computeAdjustedScoring` and `fitGoalModel` read only their arguments; `getAdjustedScoring` is
- * them over the bundled snapshot and the bundled Elo table.
+ * Pure: `computeAdjustedScoring` and `fitGoalModel` read only their arguments; `getAdjustedScoring`
+ * (lib/queries/ratings.ts) is them over the bundled snapshot and the bundled Elo table.
  */
 
-import { getSnapshot } from './data';
-import type { Game } from './model/game';
-import type { TeamId, TeamSlug } from './model/ids';
-import type { Team } from './model/team';
-import { ELO_BASE, ELO_PER_GOAL, getRatings, ratingGames, type RatingTable } from './ratings';
+import type { Game } from '@/lib/model/game';
+import type { TeamId, TeamSlug } from '@/lib/model/ids';
+import type { Team } from '@/lib/model/team';
+import { ELO_BASE, ELO_PER_GOAL, type RatingTable, ratingGames } from './ratings';
 
 /** The prior standard deviation of a team's attack and defense corrections to its Elo, in log goals. */
 export const RIDGE_SIGMA = 0.3;
@@ -367,15 +366,4 @@ export function computeAdjustedScoring(
       ];
     }),
   );
-}
-
-let bundled: ReadonlyMap<TeamId, AdjustedScoring> | null = null;
-
-/** The adjusted scoring over the bundled snapshot and Elo table, computed once per process; read-only, as it is shared. */
-export function getAdjustedScoring(): ReadonlyMap<TeamId, AdjustedScoring> {
-  if (!bundled) {
-    const snapshot = getSnapshot();
-    bundled = computeAdjustedScoring(snapshot.teams, snapshot.games, getRatings());
-  }
-  return bundled;
 }

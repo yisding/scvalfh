@@ -1461,7 +1461,7 @@ Gotchas, all **[V]**:
   out of 46 notes in the snapshot (and every note in its git history and the corpus captures):
   "Lacey played 3Q had 7 saves. Noa played last…" (Sep 28 at Saint Francis; MaxPreps cut it at 50
   characters), "goals scored Gabby Molly, Emry Borges" (Sep 30 vs Fremont) and "tied in OT 1:1  goal
-  scored by Emery Borges" (Oct 5 vs Cupertino). `lib/note-stats.ts` reads such notes on **every**
+  scored by Emery Borges" (Oct 5 vs Cupertino). `lib/engine/note-stats.ts` reads such notes on **every**
   team's finals and adds what they credit to the MaxPreps numbers the team page and /leaders read:
   - **What it reads:** goals, assists and saves, in the forms coaches write them: a list after a
     lead-in ("goals scored (by) A, B", "goals: A (2), B", "scorers: …", "assists: …", a goal with its
@@ -1867,7 +1867,7 @@ Vista on 2026-10-14 is the same date in the grid, both MaxPreps feeds and the um
 sheet.
 
 Without fixtures, "a league result is missing" has its own definition (`missingOfficialResults`
-in `lib/standings.ts`, the single definition the pipeline and the pages share): a game MaxPreps
+in `lib/engine/standings/missing.ts`, the single definition the pipeline and the pages share): a game MaxPreps
 counts for the division, dated before today, that is `scheduled`, `live` or `score-pending` is
 **missing**, and one that is `postponed` is listed as postponed. On 2026-10-04 there were two: the
 2026-09-29 Pleasant Valley at Corning game (`a0350ae9-…`) and the 2026-10-01 Corning at Chico game
@@ -1965,7 +1965,7 @@ are not used for JV.
 Built by `pnpm fetch-jv` (`scripts/fetch-jv.ts`), twice a day in season after the player stats
 (`update-data.yml`, allowed to fail). Listed on team pages (`#jv`) and day pages (`#jv`), **kept apart
 from varsity**: no varsity table, record, leader board, rating or postseason picture reads them. JV
-tables of their own are computed (`lib/jv-standings.ts`, last bullet). Read 2026-10-05 **[V]**.
+tables of their own are computed (`lib/engine/jv/standings.ts`, last bullet). Read 2026-10-05 **[V]**.
 
 - **MaxPreps.** The JV season has its own id: `__NEXT_DATA__.query` of
   `https://www.maxpreps.com/ca/field-hockey/jv/` gives `ssid` `fae4fc22-6de6-47ae-972d-e290b0ec31ef`,
@@ -1998,7 +1998,7 @@ tables of their own are computed (`lib/jv-standings.ts`, last bullet). Read 2026
   2026-10-05: 68 scored JV finals; no EAL JV page has a score. Matched against MaxPreps by pair and
   date, si.com agreed on 38 of 41 finals; the 3 disagreements include a reversed result
   (Los Altos–Homestead, Sep 14).
-- **The merge** (`lib/jv-merge.ts`, run at build time from the file): MaxPreps first. A si.com final
+- **The merge** (`lib/engine/jv/merge.ts`, run at build time from the file): MaxPreps first. A si.com final
   of the same registry pair within ±1 day fills a MaxPreps game dated today or earlier that has no
   score (`provenance.scores: 'sblive'`, backfill rule `score-pending`, the †), and is recorded beside
   a MaxPreps final it disagrees with (`provenance.scoreConflict`; MaxPreps' score is shown). A si.com
@@ -2023,7 +2023,7 @@ tables of their own are computed (`lib/jv-standings.ts`, last bullet). Read 2026
   outside the run to `pending`; now a team outside the run loses its games only when its own row is
   dropped (the run then exits 1).
 
-- **JV standings** (`lib/jv-standings.ts`, computed at build time from the file and the snapshot).
+- **JV standings** (`lib/engine/jv/standings.ts`, computed at build time from the file and the snapshot).
   A JV game takes its varsity counterpart's classification: the varsity game of the same pair within
   ±3 days, nearest (two equally near decide nothing), counts it for its division when the varsity game
   counts (`countsFor`), makes it non-league when the varsity game is, and leaves it uncounted when the
@@ -2410,7 +2410,7 @@ varsity team in 2026, and the two Sac-Joaquin Section schools among them (Davis,
 members because they play the EAL schedule, whatever their CIF section. A game belongs to a division's table
 (`Game.countsFor`) only when both teams are members of that same division **and** the league's
 classification evidence says it is a league game. This is decided once, in the pipeline
-(`lib/classify.ts`), and stored on the game.
+(`lib/engine/classify.ts`), and stored on the game.
 
 | League | Evidence for "league game" | Excluded |
 |---|---|---|
@@ -2439,7 +2439,7 @@ classification evidence says it is a league game. This is decided once, in the p
   SCVAL opponents appear in the schedule but never in a table.
 - **San Diego membership.** No San Diego Section league publishes a schedule, and MaxPreps' league
   flag misses many of their games (Patrick Henry 0 of 10 flagged), so these seven divisions count every
-  game between two members inside league play (`lib/classify.ts`). The divisions are scheduled as a
+  game between two members inside league play (`lib/engine/classify.ts`). The divisions are scheduled as a
   double round robin, but not every pair is: on 2026-10-05 (Pacific) MaxPreps shows **Metro Mesa with 19 of its
   20 meetings**, Bonita Vista and Helix meeting once (Oct 23, `b9d43b5d-5000-4bdc-a50e-00c22f1544c4`)
   **[V]: the 2026-10-06 SoCal corpus**. Whether the second meeting is missing from MaxPreps or was never
@@ -2483,7 +2483,7 @@ Load-bearing rules baked into it:
 - `Game.home`/`.away` carry `teamId: null` + a bare `name` for non-member opponents — every
   fixture is renderable without inventing a Team record.
 - `Game.countsFor` is the division whose table the game belongs to (or `null`), set once by
-  `lib/classify.ts`; `Game.postseason` tags CCS, SCVAL crossover, BVAL play-in, MCAL tournament and
+  `lib/engine/classify.ts`; `Game.postseason` tags CCS, SCVAL crossover, BVAL play-in, MCAL tournament and
   EAL Super Regional (`league-postseason`) games, which never count in a league table.
 - A level EAL final that MaxPreps flags `W` for one team and `L` for the other is a 1 v 1 win:
   `decider: 'SO'`, `shootout: null` (no tally is stored, §1.1b), and the flags decide the result in

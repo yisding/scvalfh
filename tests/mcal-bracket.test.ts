@@ -1,7 +1,7 @@
 /**
  * The research reference cases (tests/fixtures/mcal/reference/mcal-bracket.test.ts.txt, 7 cases) ported onto
  * the 2025 MCAL bracket fixture (tests/fixtures/mcal/bracket-2025.json, MaxPreps season 25-26) and
- * lib/postseason.ts. The 2025 bracket is the regression test for the semifinal re-seeding rule:
+ * lib/engine/postseason.ts. The 2025 bracket is the regression test for the semifinal re-seeding rule:
  *  - QF 2025-10-28: University 1, Lick-Wilmerding 0; Marin Catholic 4, Convent of the Sacred Heart 1.
  *  - SF 2025-10-29: University 1 at Redwood 4; Marin Catholic 0 at Tamalpais 1.
  *  - F  2025-10-31: Redwood v Tamalpais at Tamalpais (MaxPreps 2-1; actually 0-0, Tam won the shootout).
@@ -11,13 +11,13 @@ import { describe, expect, it } from 'vitest';
 
 import bracket2025 from './fixtures/mcal/bracket-2025.json';
 import { getLeague } from '@/lib/config/leagues';
+import {
+  SHOOTOUT_NOTE, buildLeagueTournament, finalGame, quarterfinals, seedsFromStandings, semifinals,
+} from '@/lib/engine/postseason';
 import type { Game } from '@/lib/model/game';
 import { type LeagueConfig } from '@/lib/model/league-config';
 import type { TournamentSlot } from '@/lib/model/postseason';
 import type { Standing } from '@/lib/model/standings';
-import {
-  SHOOTOUT_NOTE, buildLeagueTournament, finalGame, quarterfinals, seedsFromStandings, semifinals,
-} from '@/lib/postseason';
 import { getTeamById } from '@/lib/registry/teams';
 
 const MCAL = getLeague('mcal');

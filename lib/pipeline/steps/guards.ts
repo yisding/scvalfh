@@ -18,15 +18,15 @@
  * OR ≥60% of the feeds attempted this run failed, OR every league in the run ended frozen.
  */
 
-import { classifyGames } from '@/lib/classify';
 import { LEAGUES, getLeague } from '@/lib/config/leagues';
+import { classifyGames } from '@/lib/engine/classify';
+import { divisionGames } from '@/lib/engine/standings';
 import type { Game } from '@/lib/model/game';
 import type { DivisionHealth } from '@/lib/model/health';
 import type { DivisionId, LeagueId } from '@/lib/model/ids';
 import { type LeagueConfig } from '@/lib/model/league-config';
 import { teamsInLeague } from '@/lib/registry/teams';
 import { byDateThenId } from '@/lib/shared/game';
-import { divisionGames } from '@/lib/standings';
 import { RunAbort } from '@/lib/pipeline/contract';
 import {
   hasPreviousData,

@@ -19,7 +19,7 @@
  * varsity row does (lib/normalize.ts normalizeGames), except that no JV game is read as a shootout
  * win (`level: 'jv'`: the sections' shootout rules are varsity rules). si.com pages go through the si.com client's
  * own gate (one at a time, 1 s apart, the browser User-Agent si.com requires). The file keeps what
- * each source said; lib/jv-merge.ts decides what the site shows, MaxPreps first.
+ * each source said; lib/engine/jv/merge.ts decides what the site shows, MaxPreps first.
  *
  * .github/workflows/update-data.yml runs this after `pnpm fetch-data` and `pnpm fetch-player-stats`,
  * twice a day in season, and a failure here never costs the day's snapshot. The guards are the
@@ -52,6 +52,7 @@ import type { ZodType } from 'zod';
 
 import { INDEPENDENT_LEAGUES, LEAGUES_PROPER, seasonWindowBounds } from '@/lib/config/leagues';
 import { JV_SPORT_SEASON_ID, SEASON_YEAR } from '@/lib/config/season';
+import { mergeJv } from '@/lib/engine/jv/merge';
 import {
   describePrevious,
   formatLeagueSummary,
@@ -65,7 +66,6 @@ import {
   type PreviousRows,
 } from '@/lib/fetch-scope';
 import { monthDay } from '@/lib/format/dates';
-import { mergeJv } from '@/lib/jv-merge';
 import type { Game } from '@/lib/model/game';
 import type { LeagueId } from '@/lib/model/ids';
 import type { Team } from '@/lib/model/team';

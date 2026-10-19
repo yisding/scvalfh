@@ -1,5 +1,5 @@
 /**
- * JV standings (lib/jv-standings.ts): which JV games are league games (by their varsity
+ * JV standings (lib/engine/jv/standings.ts): which JV games are league games (by their varsity
  * counterpart, else an unmatched official fixture), how a JV table is ordered (points, level teams
  * share a place), when it is shown (the reported-share gate), and what the read API and the views
  * serve from the committed files.
@@ -16,14 +16,11 @@ import {
 import { buildTeamJvView } from '@/components/teams/jv-view';
 import { LEAGUES } from '@/lib/config/leagues';
 import { getSnapshot } from '@/lib/data';
-import { getJvClassification, getJvGamesForTeam, getJvMerge, getJvTables } from '@/lib/jv';
 import {
-  JV_COUNTERPART_WINDOW_DAYS,
-  JV_STANDINGS_MIN_REPORTED_SHARE,
-  classifyJvGames,
-  computeJvStandings,
+  JV_COUNTERPART_WINDOW_DAYS, JV_STANDINGS_MIN_REPORTED_SHARE, classifyJvGames, computeJvStandings,
   withJvClassification,
-} from '@/lib/jv-standings';
+} from '@/lib/engine/jv/standings';
+import { getJvClassification, getJvGamesForTeam, getJvMerge, getJvTables } from '@/lib/jv';
 import type { OfficialFixture } from '@/lib/model/fixture';
 import type { Game } from '@/lib/model/game';
 import { TEAMS, teamsInDivision } from '@/lib/registry/teams';

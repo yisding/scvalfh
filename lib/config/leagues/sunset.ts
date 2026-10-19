@@ -89,7 +89,7 @@ export const SUNSET: LeagueConfig = {
   ],
   rules: {
     points: { win: 3, tie: 1, loss: 0 }, orderBy: 'points', orderScope: 'site', gamesWord: 'league',
-    // Every game between two of the eight inside leaguePlay counts (lib/classify.ts 'membership', as the San Diego
+    // Every game between two of the eight inside leaguePlay counts (lib/engine/classify.ts 'membership', as the San Diego
     // divisions and the LA independents); tournament (2) and postseason (4) rows never do.
     classification: 'membership', excludeContestTypes: [2, 4],
     postseasonFrom: null, leagueGameOverrides: [],

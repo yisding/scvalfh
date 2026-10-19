@@ -20,13 +20,13 @@
 
 import { getLeague } from '@/lib/config/leagues';
 import { divisionLabel } from '@/lib/config/leagues/labels';
+import { toReportedRecord } from '@/lib/engine/standings';
 import type { SourceStatus } from '@/lib/model/health';
 import type { LeagueId } from '@/lib/model/ids';
 import type { DivisionConfig } from '@/lib/model/league-config';
 import { resolveTeam } from '@/lib/registry/resolve';
 import { teamsInDivision } from '@/lib/registry/teams';
 import { StandingsResponseSchema, type StandingsRow } from '@/lib/sources/maxpreps';
-import { toReportedRecord } from '@/lib/standings';
 import { asOfDay, carriedFromOf, type PipelineContext, type RunState } from '@/lib/pipeline/ledger';
 import { classifyFetchError, parseJsonBody } from '@/lib/pipeline/read';
 import { resourceUrl } from '@/lib/pipeline/transport';

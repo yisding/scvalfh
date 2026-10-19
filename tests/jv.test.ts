@@ -1,6 +1,6 @@
 /**
  * JV games: the si.com JV id map, the si.com JV page parser, the MaxPreps-first merge
- * (lib/jv-merge.ts), the committed data/jv.json, the views, and scripts/fetch-jv.ts run offline
+ * (lib/engine/jv/merge.ts), the committed data/jv.json, the views, and scripts/fetch-jv.ts run offline
  * over the PCAL captures in tests/fixtures/jv (README there).
  *
  * The scheduled refresh runs this suite over the file it just wrote, so the checks on the
@@ -14,8 +14,8 @@ import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 import { buildDayJvView, buildTeamJvView, jvDiffersNote } from '@/components/teams/jv-view';
+import { JV_FILL_NOTE, mergeJv } from '@/lib/engine/jv/merge';
 import { getJvFile, getJvGamesForTeam, getJvMerge, getJvTeam } from '@/lib/jv';
-import { JV_FILL_NOTE, mergeJv } from '@/lib/jv-merge';
 import type { Game } from '@/lib/model/game';
 import {
   JV_SBLIVE_PATHS, JV_SLUG_BY_SBLIVE_ID, jvMaxprepsScheduleUrl, jvSbliveGamesUrl, jvSbliveTeamId,
