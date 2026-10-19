@@ -3,8 +3,8 @@ import Link from 'next/link';
 import { type HistoryRow, historySchoolName } from '@/lib/datasets/history';
 import { ordinal } from '@/lib/format/numbers';
 import { getTeamBySlug } from '@/lib/registry/teams';
+import { TeamNameCell } from '@/components/standings/table/parts';
 import MissingValue from '@/components/ui/MissingValue';
-import TeamMonogram from '@/components/ui/TeamMonogram';
 
 /**
  * The 2025-26 archive standings table (DESIGN §3.9) — final records only, no GD bar, no form
@@ -121,7 +121,7 @@ export function HistoryStandingsTable({ rows, caption, emptyLabel, hasOverall }:
                 <td className="sx-num pl-4 pr-2 text-cell">{ordinal(row.place)}</td>
                 <th scope="row" className="text-left font-normal">
                   {/* `prefetch={false}` for the reason the nav and the standings rows carry it
-                      (components/layout/NavLink.tsx, components/ui/StandingsTable.tsx): every route
+                      (components/layout/NavLink.tsx, components/standings/table/parts.tsx): every route
                       here is STATIC, so Next 16's `auto` downloads the whole linked route the
                       moment the link scrolls into view, and /history/2025-26 stacks one of these
                       tables per division and level of every league with standings — dozens of
@@ -132,7 +132,6 @@ export function HistoryStandingsTable({ rows, caption, emptyLabel, hasOverall }:
                       prefetch={false}
                       className="flex items-center gap-2 no-underline hover:underline after:absolute after:inset-0 after:content-['']"
                     >
-                      <TeamMonogram team={team} size={24} />
                       {/* Wraps rather than truncating: at 320px a nowrap name once set the
                           column's minimum to 143px and pushed the table past its 320px clip box
                           with no way to scroll (DESIGN R-8). The fixed layout now gives Team
@@ -140,7 +139,9 @@ export function HistoryStandingsTable({ rows, caption, emptyLabel, hasOverall }:
                           second line, never a clipped record; `overflow-wrap: anywhere` breaks a
                           single long word under a large browser font rather than let it run
                           under the record. */}
-                      <span className="min-w-0 text-body text-ink [overflow-wrap:anywhere]">{name}</span>
+                      <TeamNameCell team={team} size={24} nameClass="min-w-0 text-body text-ink [overflow-wrap:anywhere]">
+                        {name}
+                      </TeamNameCell>
                     </Link>
                   ) : (
                     <span className="flex items-center gap-2 text-body text-ink [overflow-wrap:anywhere]">

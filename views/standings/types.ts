@@ -1,6 +1,6 @@
 /**
  * The shapes the standings views share: one table row (`StandingsRowData`, which
- * components/ui/StandingsTable.tsx renders), the status band's groups, the cross-check and
+ * components/standings/table/StandingsTable.tsx renders), the status band's groups, the cross-check and
  * missing-result notes, and the full division view (`DivisionView`) that
  * views/standings/division.ts builds. Apart from the builders, so the overview
  * (views/standings/overview.ts) and the components can name a row without importing them.
@@ -12,7 +12,7 @@ import type { Team } from '@/lib/model/team';
 import type { StandingContext } from '@/lib/queries/standings';
 
 /**
- * One row of a standings table (components/ui/StandingsTable.tsx renders it): the standing, its
+ * One row of a standings table (components/standings/table/StandingsTable.tsx renders it): the standing, its
  * team and the row's link. Declared with the view models that build the rows, so a view never
  * imports a component.
  */

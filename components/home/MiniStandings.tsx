@@ -1,14 +1,11 @@
-import Link from 'next/link';
-
+import { NoGoalDiff } from '@/components/standings/table/cells';
+import { LadderLineRow, TeamNameCell, TeamRowLink } from '@/components/standings/table/parts';
 import { GoalDiffCell } from '@/components/ui/GoalDiffBar';
 import PlaceMark from '@/components/ui/PlaceMark';
 import SectionHeader from '@/components/ui/SectionHeader';
-import { NoGoalDiff } from '@/components/ui/StandingsTable';
-import TeamMonogram from '@/components/ui/TeamMonogram';
 import { getDivision, getLeague, isDefaultRegion, regionOf } from '@/lib/config/leagues';
 import { monthDay } from '@/lib/format/dates';
-import { placeWords } from '@/lib/format/numbers';
-import { EM_DASH, plural } from '@/lib/format/words';
+import { EM_DASH } from '@/lib/format/words';
 import type { MiniDivisionView, MiniRow } from '@/views/home/mini-standings';
 import { ladderLineAfter } from '@/views/standings/division';
 import { biggestGoalDiff } from '@/views/standings/goal-diff';
@@ -51,12 +48,6 @@ export interface MiniStandingsProps {
   /** The league's `PTS: <citation>.` sentence; pass it under the league's LAST table only. */
   legend?: string;
   className?: string;
-}
-
-function rowLabel(row: MiniRow, where: string): string {
-  if (!row.hasResults) return `${row.name}: no results reported yet`;
-  // The record in words, as on the standings table: "4-1-0" read aloud is a subtraction or a date.
-  return `${row.name}, ${placeWords(row.place, row.shared)} in ${where}, ${row.recordWords}, ${plural(row.pts, 'point')}`;
 }
 
 const COLS = 6;
@@ -145,7 +136,6 @@ export function MiniStandings({ division, legend, className }: MiniStandingsProp
               <MiniRowView
                 key={row.slug}
                 row={row}
-                where={where}
                 gdDomain={division.gdDomain}
                 line={index === lineAt ? home.lineLabel : null}
               />
@@ -189,12 +179,10 @@ export function MiniStandings({ division, legend, className }: MiniStandingsProp
 
 function MiniRowView({
   row,
-  where,
   gdDomain,
   line,
 }: {
   row: MiniRow;
-  where: string;
   gdDomain: number;
   line: string | null;
 }) {
@@ -207,19 +195,19 @@ function MiniRowView({
         </td>
         <th scope="row" className="max-w-0 text-left font-normal">
           {/* The stretched row link (prefetch off: a static team route is downloaded in full on
-              viewport entry otherwise). Only the pinned row's sr-only note is displayed. */}
-          <Link href={`/teams/${row.slug}`} prefetch={false} className="absolute inset-0">
-            <span className="sr-only">
-              <span className="sx-pin-note" hidden>Your team. </span>
-              {rowLabel(row, where)}
-            </span>
-          </Link>
+              viewport entry otherwise). Only the pinned row's sr-only note is displayed. Its
+              sentence is the standings tables' (views/standings/table-notes.ts), built in the view. */}
+          <TeamRowLink href={`/teams/${row.slug}`} label={row.label} />
           <span className="flex items-center gap-2">
-            <TeamMonogram team={row} size={24} className="@max-[18rem]:hidden" />
             {/* Up to two lines, broken between words only: a name never loses its second word
                 to an ellipsis and never breaks per letter; a single word too long for the cell
                 ends in an ellipsis. */}
-            <span className="min-w-0 line-clamp-2 text-ellipsis text-body text-ink">{row.shortName}</span>
+            <TeamNameCell
+              team={row}
+              size={24}
+              monogramClass="@max-[18rem]:hidden"
+              nameClass="min-w-0 line-clamp-2 text-ellipsis text-body text-ink"
+            />
           </span>
         </th>
         <td className="sx-num w-8 text-right text-[11px] text-ink-2 @max-[20rem]:hidden">{has ? row.gp : EM_DASH}</td>
@@ -240,13 +228,7 @@ function MiniRowView({
           )}
         </td>
       </tr>
-      {line ? (
-        <tr>
-          <td colSpan={COLS} className="border-t-2 border-rule py-1 pl-gutter text-micro text-ink-3">
-            {line}
-          </td>
-        </tr>
-      ) : null}
+      {line ? <LadderLineRow colSpan={COLS} label={line} /> : null}
     </>
   );
 }

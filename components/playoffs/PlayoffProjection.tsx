@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { Fragment } from 'react';
 
+import { LadderLineRow, TeamRowLink } from '@/components/standings/table/parts';
 import BerthMeter from '@/components/ui/BerthMeter';
 import PlaceMark from '@/components/ui/PlaceMark';
 import SectionHeader from '@/components/ui/SectionHeader';
@@ -50,7 +51,7 @@ import { articleFor, membershipSource } from '@/views/shared/words/membership';
  *  - **A team with nothing reported is never 0-0-0**: place `—`, record `—`, and the
  *    written status "No results reported". It is still a link to its team page.
  *  - The whole row is one block link whose hit area is exactly the row (WCAG 2.5.8), the same
- *    mechanism `StandingsTable` uses. Its sentence carries the place and the record; the status
+ *    `TeamRowLink` the standings tables use. Its sentence carries the place and the record; the status
  *    cell is real text beside it, so nothing is announced twice.
  */
 export interface PlayoffProjectionProps {
@@ -239,22 +240,11 @@ export function PlayoffProjection({
                 </td>
                 <th scope="row" className="pr-gutter font-normal md:pr-0">
                   {/* `prefetch={false}` for the reason the nav and the standings rows carry it
-                      (components/layout/NavLink.tsx, components/ui/StandingsTable.tsx): every route
+                      (components/layout/NavLink.tsx, components/standings/table/parts.tsx): every route
                       here is STATIC, so Next 16's `auto` downloads the whole linked route the
                       moment the link scrolls into view, and every projection table is a column of
                       stretched row links. Navigation still fetches on click. */}
-                  <Link
-                    href={`/teams/${row.team.slug}`}
-                    prefetch={false}
-                    className="absolute inset-0"
-                  >
-                    <span className="sr-only">
-                      {/* Only the pinned row's copy is displayed (app/globals.css), so the
-                          accent rule is never the only thing saying "this is your team". */}
-                      <span className="sx-pin-note" hidden>Your team. </span>
-                      {projectionRowLabel(row, divisionLabel)}
-                    </span>
-                  </Link>
+                  <TeamRowLink href={`/teams/${row.team.slug}`} label={projectionRowLabel(row, divisionLabel)} />
                   {/* The monogram shows from sm, except md-lg: there the fixed Team column is
                       117px at 768, and the 28px monogram and its 12px gap left a name 77px, so
                       eleven names truncated ("Saint Francis" needs 95, "Valley Christian" 113).
@@ -322,16 +312,7 @@ export function PlayoffProjection({
                 </td>
               </tr>
               {lineLabel && index + 1 === lineAfter && index + 1 < rows.length ? (
-                // The ladder line (SPEC §10.3): a labelled separator row, so the 2px rule is never
-                // the only cue. Not a data row: its one cell spans the table.
-                <tr>
-                  <td
-                    colSpan={3}
-                    className="border-t-2 border-rule py-1 pl-gutter text-micro text-ink-3"
-                  >
-                    {lineLabel}
-                  </td>
-                </tr>
+                <LadderLineRow colSpan={3} label={lineLabel} />
               ) : null}
               </Fragment>
             ))}

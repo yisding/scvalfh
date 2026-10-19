@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { Fragment } from 'react';
 
+import { PinNote } from '@/components/standings/table/parts';
 import MissingValue from '@/components/ui/MissingValue';
 import PlaceMark from '@/components/ui/PlaceMark';
 import SectionHeader from '@/components/ui/SectionHeader';
@@ -97,8 +98,8 @@ function TeamName({ name, shortName }: { name: string; shortName: string }) {
 function NameCell({ board, row }: { board: LeaderBoard; row: LeaderRow }) {
   const { team } = row;
   // `prefetch={false}` for the reason every team link on the site carries it (NavLink.tsx,
-  // StandingsTable.tsx): the routes are static, and `auto` would download every linked team page
-  // the moment a board scrolled into view.
+  // components/standings/table/parts.tsx): the routes are static, and `auto` would download every
+  // linked team page the moment a board scrolled into view.
   if (board.kind === 'player') {
     return (
       <>
@@ -216,9 +217,7 @@ function BoardTable({
                 {/* Only the pinned team's rows display this (app/globals.css), so the accent
                     rule is never the only thing saying "your team". */}
                 <span className="sr-only">
-                  <span className="sx-pin-note" hidden>
-                    {board.kind === 'player' ? 'Your team’s player. ' : 'Your team. '}
-                  </span>
+                  <PinNote>{board.kind === 'player' ? 'Your team’s player. ' : 'Your team. '}</PinNote>
                 </span>
                 <NameCell board={board} row={row} />
               </th>

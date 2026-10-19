@@ -105,7 +105,7 @@ export function PlayoffStatusBand({
             <dd className="m-0 flex flex-wrap content-start gap-2">
               {group.teams.map((team) => (
                 /* `prefetch={false}` for the reason the nav and the standings rows carry it
-                   (components/layout/NavLink.tsx, components/ui/StandingsTable.tsx): every route
+                   (components/layout/NavLink.tsx, components/standings/table/parts.tsx): every route
                    here is STATIC, so Next 16's `auto` downloads the whole linked route the moment
                    the link scrolls into view, and this band names every team in the division. */
                 <Link

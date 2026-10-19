@@ -1,7 +1,7 @@
 /**
  * Every `<Link>` this site renders ONCE PER DATA ROW carries `prefetch={false}`.
  *
- * The reason is written out in components/layout/NavLink.tsx and components/ui/StandingsTable.tsx:
+ * The reason is written out in components/layout/NavLink.tsx and components/standings/table/parts.tsx:
  * every route here is STATIC, and Next 16's default `auto` downloads a static route IN FULL — data
  * included — the moment the link enters the viewport
  * (node_modules/next/dist/docs/01-app/03-api-reference/02-components/link.md, "`prefetch`"). The
@@ -104,7 +104,7 @@ describe('prefetch policy: a link that repeats per row never prefetches', () => 
       }
     }
     // The `.map()` shape only catches a link written INLINE in the list. A per-row link that lives
-    // in its own component — `RowLink`, `GameLogRow`, `SectionHeader`, `DateHeader` —
+    // in its own component — `TeamRowLink`, `GameLogRow`, `SectionHeader`, `DateHeader` —
     // is a row link all the same, and the `WANT` table below is what holds those. The floor is a
     // scanner guard, not a target.
     expectAtLeast(11, checked, '<Link> tags inside a .map() callback');
@@ -118,9 +118,9 @@ describe('prefetch policy: a link that repeats per row never prefetches', () => 
     // `/game/${…}` template in app/, components/ and views/, so the old form cannot come back.
     const GAME_LINK = /gameHref\(game\.contestId\)|\/game\/\$\{game\.contestId\}/;
     const WANT: [string, string | RegExp][] = [
-      ['components/ui/StandingsTable.tsx', 'href={href}'],
+      // TeamRowLink: the stretched row link of the standings, mini, tournament and projection tables.
+      ['components/standings/table/parts.tsx', 'href={href}'],
       ['components/standings/PlayoffStatusBand.tsx', '/teams/${team.slug}'],
-      ['components/playoffs/PlayoffProjection.tsx', '/teams/${row.team.slug}'],
       ['components/playoffs/PlayoffBracket.tsx', GAME_LINK],
       ['components/standings/CompactStandingsTable.tsx', '/teams/${row.team.slug}'],
       // The /standings and /teams overviews render one block per division, each with its

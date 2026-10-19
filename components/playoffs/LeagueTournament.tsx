@@ -1,9 +1,9 @@
 import Link from 'next/link';
 import { Fragment } from 'react';
 
+import { LadderLineRow, TeamNameCell, TeamRowLink } from '@/components/standings/table/parts';
 import PlaceMark from '@/components/ui/PlaceMark';
 import SectionHeader from '@/components/ui/SectionHeader';
-import TeamMonogram from '@/components/ui/TeamMonogram';
 import { placeWords } from '@/lib/format/numbers';
 import { scoreSentence } from '@/lib/format/score';
 import { plural } from '@/lib/format/words';
@@ -120,18 +120,11 @@ function SeedsTable({ view, leagueShort }: { view: TournamentView; leagueShort: 
                 </td>
                 <th scope="row" className="pr-3 font-normal sm:pr-4 md:pr-0">
                   {/* One stretched row link per team; `prefetch={false}` like every per-row link
-                      (components/layout/NavLink.tsx has the reasoning). */}
-                  <Link href={`/teams/${row.team.slug}`} prefetch={false} className="absolute inset-0">
-                    <span className="sr-only">
-                      {/* Marked like every other team list: only the pinned row's note is
-                          displayed (app/globals.css), so the accent rule never speaks alone. */}
-                      <span className="sx-pin-note" hidden>Your team. </span>
-                      {rowSentence(row, leagueShort)}
-                    </span>
-                  </Link>
+                      (components/layout/NavLink.tsx has the reasoning), and marked like every
+                      other team list (components/standings/table/parts.tsx TeamRowLink). */}
+                  <TeamRowLink href={`/teams/${row.team.slug}`} label={rowSentence(row, leagueShort)} />
                   <span className="flex items-center gap-3">
-                    <TeamMonogram team={row.team} size={28} />
-                    <span className="min-w-0 flex-1">
+                    <TeamNameCell team={row.team} size={28} nameClass="min-w-0 flex-1">
                       <span className="block truncate text-body text-ink" aria-hidden="true">
                         {row.team.shortName}
                       </span>
@@ -139,7 +132,7 @@ function SeedsTable({ view, leagueShort }: { view: TournamentView; leagueShort: 
                         <span className="sx-num whitespace-nowrap text-cell text-ink-2 sm:hidden">{row.gpText}</span>
                         <span className="text-micro text-ink-2 md:hidden">{row.label}</span>
                       </span>
-                    </span>
+                    </TeamNameCell>
                   </span>
                 </th>
                 <td
@@ -154,11 +147,7 @@ function SeedsTable({ view, leagueShort }: { view: TournamentView; leagueShort: 
                 <td className="hidden pr-3 pl-3 align-middle text-micro text-ink-2 sm:pr-4 md:table-cell">{row.label}</td>
               </tr>
               {lineLabel && index + 1 === lineAfter && index + 1 < seedRows.length ? (
-                <tr>
-                  <td colSpan={5} className="border-t-2 border-rule py-1 pl-gutter text-micro text-ink-3">
-                    {lineLabel}
-                  </td>
-                </tr>
+                <LadderLineRow colSpan={5} label={lineLabel} />
               ) : null}
             </Fragment>
           ))}

@@ -1,9 +1,9 @@
 import Link from 'next/link';
 
+import { PinNote, TeamNameCell } from '@/components/standings/table/parts';
 import EmptyState from '@/components/ui/EmptyState';
 import PlaceMark from '@/components/ui/PlaceMark';
 import SectionHeader from '@/components/ui/SectionHeader';
-import TeamMonogram from '@/components/ui/TeamMonogram';
 import { recordString } from '@/lib/format/numbers';
 import { EM_DASH } from '@/lib/format/words';
 import type { JvTableView } from '@/views/standings/jv';
@@ -89,10 +89,9 @@ function JvTable({ view }: { view: JvTableView }) {
                   >
                     {/* As in CompactStandingsTable: only the pinned team's row displays this. */}
                     <span className="sr-only">
-                      <span className="sx-pin-note" hidden>Your team. </span>
+                      <PinNote />
                     </span>
-                    <TeamMonogram team={team} size={24} />
-                    <span className="min-w-0 line-clamp-2 text-ellipsis text-body">{team.shortName}</span>
+                    <TeamNameCell team={team} size={24} nameClass="min-w-0 line-clamp-2 text-ellipsis text-body" />
                   </Link>
                 </th>
                 <td className="sx-num w-10 text-right text-ink-2">{row.record.gp}</td>

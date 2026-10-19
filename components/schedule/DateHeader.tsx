@@ -65,7 +65,7 @@ export function DateHeader({ date, count, dayHref, sticky = false, className }: 
         {count} {gameWord(count)}
       </span>
       {/* `prefetch={false}` for the reason the nav and the standings rows carry it
-          (components/layout/NavLink.tsx, components/ui/StandingsTable.tsx): every route here is
+          (components/layout/NavLink.tsx, components/standings/table/parts.tsx): every route here is
           STATIC, so Next 16's `auto` downloads the whole linked route the moment the link scrolls
           into view, and /schedule/<league> renders one of these per date group, so one whole day
           page per group. Navigation still fetches on click. */}

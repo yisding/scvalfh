@@ -71,7 +71,7 @@ function OpponentRow({ opponent, leagueShort, fixed }: { opponent: UnbeatenOppon
   return (
     <li>
       {/* `prefetch={false}` for the reason the nav and the standings rows carry it
-          (components/layout/NavLink.tsx, components/ui/StandingsTable.tsx): every route here is
+          (components/layout/NavLink.tsx, components/standings/table/parts.tsx): every route here is
           STATIC, so Next 16's `auto` downloads the whole linked route the moment the link scrolls
           into view, and this list is one team page per opponent still to play. Navigation still
           fetches on click. */}

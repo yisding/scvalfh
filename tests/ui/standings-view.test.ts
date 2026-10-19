@@ -140,7 +140,7 @@ describe('single-division leagues have no division label', () => {
     expect(rows.every((s) => !s.hasReportedResults), 'the EAL has no data in this corpus').toBe(true);
     const eal = textOf(await renderLeague('eal'));
     for (const team of m.data.getTeams('eal')) {
-      expect(eal, 'components/ui/StandingsTable.tsx collectStandingsNotes').toContain(
+      expect(eal, 'views/standings/table-notes.ts collectStandingsNotes').toContain(
         `${team.name} is in the EAL table as MaxPreps lists it but has no results in the source table — no record is invented for them.`,
       );
     }
@@ -148,18 +148,16 @@ describe('single-division leagues have no division label', () => {
     expect(textOf(renderOverview()), 'app/standings/page.tsx').not.toMatch(/\bofficial EAL/i);
 
     // A league with a schedule document keeps its wording.
-    const { collectStandingsNotes } = await import('@/components/ui/StandingsTable');
+    const { collectStandingsNotes } = await import('@/views/standings/table-notes');
     const [first] = m.data.getStandings('pcal');
     const team = getTeamById(first.teamId)!;
-    const { specific } = collectStandingsNotes({
-      division: 'pcal',
+    const notes = collectStandingsNotes({
       rows: [{ team, standing: { ...first, hasReportedResults: false } }],
-      gdDomain: 1,
-      variant: 'desktop',
     });
-    expect(specific, 'components/ui/StandingsTable.tsx collectStandingsNotes (pcal)').toContain(
-      `${team.name} is in the official PCAL alignment but has no results in the source table — no record is invented for them.`,
-    );
+    expect(notes, 'views/standings/table-notes.ts collectStandingsNotes (pcal)').toContainEqual({
+      kind: 'no-results',
+      text: `${team.name} is in the official PCAL alignment but has no results in the source table — no record is invented for them.`,
+    });
   });
 
   it('multi-division leagues keep their anchors and tabs', async () => {
@@ -229,14 +227,14 @@ describe('missing official results and postponed rows', () => {
 describe('GP, LEFT and MAX', () => {
   it('render from the standing context on the desktop table, GP on the phone row', async () => {
     const html = await renderLeague('mcal');
-    expect(html, 'components/ui/StandingsTable.tsx head').toMatch(/>GP<\/th>/);
+    expect(html, 'components/standings/table/DesktopStandingsTable.tsx head').toMatch(/>GP<\/th>/);
     expect(html).toMatch(/>Left<\/th>/);
     expect(html).toMatch(/>Max<\/th>/);
     const ctx = m.data.getStandingContext('marin-county');
     for (const c of ctx.values()) {
       expect(c.scheduled, 'lib/queries/standings.ts getStandingContext: MCAL has a fixed schedule').not.toBeNull();
       expect(c.remaining, 'lib/queries/standings.ts getStandingContext').toBe(Math.max(0, c.scheduled! - c.counted));
-      expect(html, 'components/ui/StandingsTable.tsx GP').toContain(`${c.counted}/${c.scheduled}`);
+      expect(html, 'components/standings/table/StandingsTable.tsx GP').toContain(`${c.counted}/${c.scheduled}`);
     }
   });
 
@@ -261,7 +259,7 @@ describe('GP, LEFT and MAX', () => {
       '† Includes 1 result from High School on SI (si.com) that MaxPreps does not have, counted under the site’s rules for missing or wrong scores (About → Sources).',
     );
     const html = await renderLeague('pcal');
-    expect(html, 'components/ui/StandingsTable.tsx †').toContain('score via si.com');
+    expect(html, 'components/standings/table/cells.tsx LeagueRecord †').toContain('score via si.com');
   });
 
   it('never claims agreement for Santa Teresa or PCAL', () => {

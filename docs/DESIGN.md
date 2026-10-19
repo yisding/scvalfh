@@ -828,7 +828,7 @@ Nov 2**: a skeleton bracket reads as real data (`editorial`).
 
 ### 3.9 History — `/history/2025-26`
 
-Two `StandingsTable`s in `variant="archive"` (final records only, no GD bars, no form — the
+Two `HistoryStandingsTable`s (final records only, no GD bars, no form — the
 PDF has no game-level data), then the all-league awards as two `<dl>`s (First Team / Second
 Team) and the overall award lines. Every award line names the player, then school · grade ·
 position, the way the roster and `/leaders` print a player (the grade a word: "Senior"); a part no
@@ -1914,12 +1914,12 @@ every section on every page. This is the entire brand.
 ### 7.3 `StandingsTable`
 
 ```ts
-type StandingsVariant = 'phone' | 'desktop' | 'mini' | 'archive';
+type StandingsVariant = 'phone' | 'desktop';  // the mini table is MiniStandings, the archive HistoryStandingsTable
 interface StandingsTableProps {
   division: Division;
   rows: StandingsRow[];            // already sorted & ranked by lib/engine/standings.ts
   gdDomain: number;                // max |gd| for THIS division — never global
-  variant: StandingsVariant;       // phone 2-line, desktop 13-col, mini top-4, archive final
+  variant: StandingsVariant;       // phone 2-line, desktop 13-col
   caption: string;                 // "De Anza Division league standings through Sep 24"
   berthRuleAfter?: number;         // draw a 2px rule after row N (the 7th auto berth)
   footnotes?: string[];            // rendered under the table, 13px --sx-text-3
@@ -2618,8 +2618,8 @@ final and the shootout whose goal score stays level.
 `ExternalLink` · `LastUpdated` · `ThemeToggle`. *Done when:* a bare page at 390px has exactly
 100px of chrome and the kicker reads right in both themes.
 
-**6 — Standings.** `GoalDiffBar` → `StandingsTable` (`phone` first, then `desktop`, `mini`,
-`archive`) → `/standings`. This is the hardest layout on the site. *Done when:* **rows 1–7 of
+**6 — Standings.** `GoalDiffBar` → `StandingsTable` (`phone` first, then `desktop`; the mini
+table is `MiniStandings`, the archive table `HistoryStandingsTable`) → `/standings`. This is the hardest layout on the site. *Done when:* **rows 1–7 of
 8 are above the fold at 390×664 with zero horizontal scroll**, the per-division domain is in
 the footnote, Wilcox renders in the no-results state, and the `⚑` footnote is live. If seven
 rows don't fit, the type scale is wrong and everything after this inherits the mistake.

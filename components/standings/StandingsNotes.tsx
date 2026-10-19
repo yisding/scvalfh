@@ -3,7 +3,10 @@ import Link from 'next/link';
 import ExternalLink from '@/components/ui/ExternalLink';
 import { ordinal } from '@/lib/format/numbers';
 import type { Standing } from '@/lib/model/standings';
+import type { NoteItem as TableNote } from '@/views/standings/table-notes';
 import type { ComparisonView, MismatchNote, MissingRowView, StandingsRowData } from '@/views/standings/types';
+
+import StandingsNoteItem from './table/StandingsNoteItem';
 
 /**
  * The division's Notes block (DESIGN §9, §8; SPEC §10.3): an inset under the table that holds
@@ -52,8 +55,8 @@ export interface StandingsNotesProps {
    * percentages differ). Without them the sentences make no win-percentage claim.
    */
   rows?: readonly StandingsRowData[];
-  /** `collectStandingsNotes(...).specific` without the footnotes. */
-  tableNotes?: React.ReactNode[];
+  /** `collectStandingsNotes(...)` (views/standings/table-notes.ts) without the footnotes. */
+  tableNotes?: readonly TableNote[];
   mismatches: MismatchNote[];
   comparison: ComparisonView;
   missingId: string;
@@ -334,7 +337,9 @@ export function StandingsNotes({
       </h3>
       <ul className="mt-3 mb-0 max-w-prose list-none space-y-2 p-0">
         {tableNotes.map((note, i) => (
-          <li key={`table-${i}`}>{note}</li>
+          <li key={`table-${i}`}>
+            <StandingsNoteItem item={note} />
+          </li>
         ))}
         {missing.length + postponed.length > 0 ? (
           <li id={missingId}>

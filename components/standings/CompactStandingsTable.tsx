@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
+import { LadderLineRow, PinNote, TeamNameCell } from '@/components/standings/table/parts';
 import PlaceMark from '@/components/ui/PlaceMark';
-import TeamMonogram from '@/components/ui/TeamMonogram';
 import { recordString } from '@/lib/format/numbers';
 import { EM_DASH } from '@/lib/format/words';
 import { ladderLineAfter, ladderRow } from '@/views/standings/division';
@@ -21,7 +21,8 @@ import type { StandingsRowData } from '@/views/standings/types';
  *
  * The whole row is the team link: the link's `::after` stretches over the `relative` row (no cell
  * is `relative`, so the hit area is exactly the row), and a tap on the place, the record or the
- * points opens the team page too, as on the full standings tables (StandingsTable's RowLink).
+ * points opens the team page too, as on the full standings tables (TeamRowLink,
+ * components/standings/table/parts.tsx).
  * From lg the card is capped at 48rem, left-aligned, so the numbers stay within reach of the name.
  *
  * No sticky head (a short table on a long page), no GD bars, no form strips, no disclosures.
@@ -95,17 +96,13 @@ export function CompactStandingsTable({
                     prefetch={false}
                     className="flex min-h-11 items-center gap-2 text-ink no-underline hover:underline after:absolute after:inset-0 after:content-['']"
                   >
-                    {/* Only the pinned team's row displays this (app/globals.css: the row's
-                        `data-team-slug` gets `data-pinned`), so the accent rule is never the only
-                        thing saying "this is your team"; it is the link's name, before the school. */}
                     <span className="sr-only">
-                      <span className="sx-pin-note" hidden>Your team. </span>
+                      <PinNote />
                     </span>
-                    <TeamMonogram team={row.team} size={24} />
                     {/* Up to two lines, broken between words only: a name never loses its second word
                         to an ellipsis and never breaks per letter; a single word too long for the
                         cell ends in an ellipsis. */}
-                    <span className="min-w-0 line-clamp-2 text-ellipsis text-body">{row.team.shortName}</span>
+                    <TeamNameCell team={row.team} size={24} nameClass="min-w-0 line-clamp-2 text-ellipsis text-body" />
                   </Link>
                 </th>
                 <td className="sx-num w-10 text-right text-ink-2">{s.computed.gp}</td>
@@ -117,11 +114,13 @@ export function CompactStandingsTable({
                 </td>
               </tr>,
               lineAfter !== null && index + 1 === lineAfter ? (
-                <tr key={`${row.team.id}-line`} data-hide-while-searching={filterable ? '' : undefined}>
-                  <td colSpan={5} className="border-t-2 border-rule px-gutter text-micro text-ink-3">
-                    {ladderLine?.label}
-                  </td>
-                </tr>
+                <LadderLineRow
+                  key={`${row.team.id}-line`}
+                  colSpan={5}
+                  label={ladderLine?.label}
+                  className="border-t-2 border-rule px-gutter text-micro text-ink-3"
+                  hideWhileSearching={filterable}
+                />
               ) : null,
             ];
           })}

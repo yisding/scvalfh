@@ -62,7 +62,7 @@ export function CrossCheckTable({ groups, teamCount, emptyText = null }: CrossCh
             <div className="flex min-w-0 flex-1 flex-wrap items-baseline gap-x-3 gap-y-1">
               <span className="min-w-0 text-body font-semibold text-ink">
                 {/* `prefetch={false}` for the reason the nav and the standings rows carry it
-                    (components/layout/NavLink.tsx, components/ui/StandingsTable.tsx): every route
+                    (components/layout/NavLink.tsx, components/standings/table/parts.tsx): every route
                     here is STATIC, so Next 16's `auto` downloads the whole linked route the moment
                     the link scrolls into view, and the table is one link per cross-checked row.
                     Navigation still fetches on click. */}

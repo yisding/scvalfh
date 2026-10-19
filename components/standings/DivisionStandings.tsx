@@ -3,15 +3,16 @@ import Link from 'next/link';
 import ExternalLink from '@/components/ui/ExternalLink';
 import LeagueHealthNote from '@/components/ui/LeagueHealthNote';
 import SectionHeader from '@/components/ui/SectionHeader';
-import StandingsTable, { collectStandingsNotes, type StandingsTableProps } from '@/components/ui/StandingsTable';
 import { leagueOfDivision } from '@/lib/config/leagues';
 import { ordinal } from '@/lib/format/numbers';
 import { biggestGoalDiff } from '@/views/standings/goal-diff';
+import { collectStandingsNotes } from '@/views/standings/table-notes';
 import type { DivisionView } from '@/views/standings/types';
 
 import MissingResultsBanner from './MissingResultsBanner';
 import PlayoffStatusBand from './PlayoffStatusBand';
 import StandingsNotes from './StandingsNotes';
+import StandingsTable, { type StandingsTableProps } from './table/StandingsTable';
 
 /**
  * One division's whole section (SPEC §10.3), in this order: the heading (the division heading,
@@ -26,8 +27,9 @@ import StandingsNotes from './StandingsNotes';
  * reflow: DESIGN §10.8 requires 400% zoom at 320px to reflow with no scrollable data table. The
  * swap is at `lg`.
  *
- * Both tables pass `notes="none"`; their division-specific notes are collected here once and go
- * into the Notes inset, and the generic legend is printed once per page by the page.
+ * Neither table prints notes: their division-specific notes are collected here once
+ * (views/standings/table-notes.ts) and go into the Notes inset, and the generic legend is printed
+ * once per page by the page.
  *
  * From `lg` the Notes inset and the postseason card share a row and STRETCH to the taller of the
  * two; each is a flex column whose link row is pushed to the bottom (`mt-auto`), so the two panels
@@ -50,9 +52,6 @@ export function DivisionStandings({
     rows: view.rows,
     gdDomain: view.gdDomain,
     caption: view.caption,
-    footnotes: view.footnotes,
-    ...(view.sourceUrl ? { sourceUrl: view.sourceUrl } : {}),
-    notes: 'none',
     context: view.context,
     // LEFT and MAX need a fixed number of league games; the Sunset has none (gamesPerTeam null), so its
     // table shows GP as a bare count and neither column (DESIGN-socal §2.1.7).
@@ -65,10 +64,8 @@ export function DivisionStandings({
   // `footnotes` go last in the Notes block, so they are left out of the table's own list here.
   // A team the comparison list below already names (it prints its items unless MaxPreps agrees)
   // keeps only that sentence: the ⚑ line would repeat it in other words.
-  const { specific } = collectStandingsNotes({
-    ...table,
-    variant: 'phone',
-    footnotes: [],
+  const tableNotes = collectStandingsNotes({
+    rows: view.rows,
     statedElsewhere: view.comparison.agreement ? [] : view.mismatches.map((m) => m.slug),
   });
   const points = leagueOfDivision(view.division).rules.citations.points;
@@ -106,7 +103,7 @@ export function DivisionStandings({
         <StandingsNotes
           divisionLabel={view.label}
           rows={view.rows}
-          tableNotes={specific}
+          tableNotes={tableNotes}
           mismatches={view.mismatches}
           comparison={view.comparison}
           missingId={view.missingId}

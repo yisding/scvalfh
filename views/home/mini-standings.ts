@@ -1,6 +1,7 @@
 /**
  * The home panel's mini standings (components/home/MiniStandings.tsx): one division's table rows,
- * as plain strings and numbers, with the division's last result day and its standings link.
+ * as plain strings and numbers (each row's link sentence included), with the division's last
+ * result day and its standings link.
  */
 
 import { divisionHeading } from '@/lib/config/leagues/labels';
@@ -10,6 +11,7 @@ import type { DivisionConfig, LeagueConfig } from '@/lib/model/league-config';
 import { getLastLeagueResultDate } from '@/lib/queries/games';
 import { getGoalDiffDomain, getStandings } from '@/lib/queries/standings';
 import { getTeamById } from '@/lib/registry/teams';
+import { standingRowLabel, tableName } from '@/views/standings/table-notes';
 
 export interface MiniRow {
   slug: string;
@@ -24,6 +26,8 @@ export interface MiniRow {
   recordWords: string;
   pts: number;
   gd: number;
+  /** The row link's accessible name, as on the standings tables (`standingRowLabel`). */
+  label: string;
 }
 
 export interface MiniDivisionView {
@@ -44,9 +48,10 @@ export interface MiniDivisionView {
 }
 
 export function miniDivision(league: LeagueConfig, division: DivisionConfig): MiniDivisionView {
+  const where = tableName(division.id);
   const rows = getStandings(division.id).map((s): MiniRow => {
     const team = getTeamById(s.teamId);
-    return {
+    const row = {
       slug: s.slug,
       name: team?.name ?? s.slug,
       shortName: team?.shortName ?? s.slug,
@@ -59,6 +64,7 @@ export function miniDivision(league: LeagueConfig, division: DivisionConfig): Mi
       pts: s.computed.pts,
       gd: s.computed.gd,
     };
+    return { ...row, label: standingRowLabel(row, where) };
   });
   return {
     id: division.id,
