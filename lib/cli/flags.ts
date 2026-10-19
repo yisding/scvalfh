@@ -1,5 +1,5 @@
 /**
- * One declarative flag parser for the argv loops of lib/pipeline/run.ts and the scripts
+ * One declarative flag parser for the argv loops of lib/pipeline/cli.ts and the scripts
  * (fetch-rosters, fetch-player-stats, fetch-jv, build-history, build-official-fixtures,
  * discover-season, fetch-prior-season, fetch-mascots). Each used to carry its own copy of the same
  * loop (an index, a `next()` that refuses a missing value, an if/else chain, an `unknown flag`

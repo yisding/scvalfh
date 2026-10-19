@@ -5,7 +5,7 @@ import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 import { type FlagOptions, type FlagSpec, parseFetchedAtFlag, parseFlags, parseLeaguesFlag } from '@/lib/cli/flags';
-import { parseRunArgs } from '@/lib/pipeline/run';
+import { parseRunArgs } from '@/lib/pipeline/cli';
 
 describe('parseLeaguesFlag', () => {
   it('reads a comma list, drops blanks and repeats', () => {

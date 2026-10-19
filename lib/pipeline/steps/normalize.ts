@@ -20,7 +20,7 @@ import { DATA_QUALITY } from '@/lib/config/leagues';
 import type { Game } from '@/lib/model/game';
 import { applyExclusions, dedupePhantomPairs, normalizeGames } from '@/lib/pipeline/reconcile/normalize';
 import type { RunContext } from '@/lib/pipeline/contract';
-import type { RunState } from '@/lib/pipeline/ledger';
+import type { RunState } from '@/lib/pipeline/state';
 import { hasSbliveContestPrefix } from '@/lib/shared/contest-id';
 import { byDateThenId } from '@/lib/shared/game';
 

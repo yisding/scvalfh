@@ -5,7 +5,7 @@
  */
 
 import type { RunArgs } from '@/lib/pipeline/contract';
-import { parseRunArgs } from '@/lib/pipeline/run';
+import { parseRunArgs } from '@/lib/pipeline/cli';
 import { REPO } from '@/tests/support/repo';
 
 /** The pinned clock: a live run's default `fetchedAt` (2026-10-02, 8 AM Pacific). */

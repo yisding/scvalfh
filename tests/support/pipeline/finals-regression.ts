@@ -14,8 +14,9 @@ import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 
 import type { OfficialStep, SbliveStep } from '@/lib/pipeline/contract';
-import { SILENT_SINK } from '@/lib/pipeline/ledger';
-import { parseRunArgs, prepareRun, runPipeline } from '@/lib/pipeline/run';
+import { SILENT_SINK } from '@/lib/pipeline/context';
+import { runPipeline } from '@/lib/pipeline/run';
+import { parseRunArgs, prepareRun } from '@/lib/pipeline/cli';
 import { stableStringify } from '@/lib/shared/stable-json';
 import { VARIANTS_DIR, corpusDir } from '@/tests/support/corpus';
 import { REPO, tempDir, tempFile } from '@/tests/support/repo';

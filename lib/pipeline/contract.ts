@@ -67,7 +67,7 @@ export interface RunLog {
   warn(line: string, scope?: SourceStatus['scope']): void;
 }
 
-/** What steps may read and record. The pipeline core implements it in lib/pipeline/ledger.ts (PipelineContext). */
+/** What steps may read and record. The pipeline core implements it in lib/pipeline/context.ts (PipelineContext). */
 export interface RunContext extends RunLog {
   args: RunArgs;
   fetchedAt: string;
@@ -92,7 +92,7 @@ export interface RunContext extends RunLog {
  * What the built-in steps that read the run's ledgers may ask of it, beyond a RunContext: a league's
  * current state (guards), the contests dropped so far (cifss), and the relabelling of this run's
  * failed source rows (cifss, secondary). The injectable official and si.com steps get only
- * RunContext. PipelineContext (lib/pipeline/ledger.ts) implements both.
+ * RunContext. PipelineContext (lib/pipeline/context.ts) implements both.
  */
 export interface StepContext extends RunContext {
   /** Where a league stands now (fresh → partial → degraded | frozen). */

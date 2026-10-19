@@ -41,7 +41,7 @@ import {
   type OfficialStepResult,
   type RunContext,
 } from '@/lib/pipeline/contract';
-import { carriedFromOf } from '@/lib/pipeline/ledger';
+import { carriedFromOf } from '@/lib/pipeline/previous';
 import { classifyFetchError, readResource, sourceBase, warnIfError, type FetchFailure } from '@/lib/pipeline/read';
 
 const RESCHEDULE_WINDOW_DAYS = 14;

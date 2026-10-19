@@ -25,7 +25,8 @@ import {
   type CifssSectionKey,
 } from '@/lib/sources/cifss';
 import type { StepContext } from '@/lib/pipeline/contract';
-import { carriedFromOf, type RunState } from '@/lib/pipeline/ledger';
+import type { RunState } from '@/lib/pipeline/state';
+import { carriedFromOf } from '@/lib/pipeline/previous';
 import { classifyFetchError, sourceBase, warnIfError } from '@/lib/pipeline/read';
 
 /** A Section listing longer than this many pages is read no further (and warned about). */

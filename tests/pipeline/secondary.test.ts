@@ -13,7 +13,7 @@ import type { SourceStatus } from '@/lib/model/health';
 import type { Snapshot } from '@/lib/model/snapshot';
 import { TransportError, resourcePath, type Transport } from '@/lib/pipeline/contract';
 import type { ResourceKey } from '@/lib/pipeline/resources';
-import { PipelineContext, SILENT_SINK } from '@/lib/pipeline/ledger';
+import { PipelineContext, SILENT_SINK } from '@/lib/pipeline/context';
 import { stepSecondary } from '@/lib/pipeline/steps/secondary';
 import { game } from '@/tests/support/game-builder';
 import { testRunArgs } from '@/tests/support/pipeline/run-args';

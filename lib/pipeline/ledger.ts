@@ -1,5 +1,5 @@
 /**
- * The run's ledgers (SPEC §7.2 RunContext, §7.5, §7.11) and the RunContext implementation:
+ * The run's three ledgers (SPEC §7.2 RunContext, §7.5, §7.11):
  *
  *  - SourceLedger   every SourceStatus row, returned in the deterministic §7.11 order however the
  *                   steps interleaved their requests;
@@ -7,25 +7,15 @@
  *                   never back) with its reason sentences;
  *  - DroppedLedger  contests removed on purpose, deduped on (contestId, reason).
  *
- * No clock: `today` is localDateKey(fetchedAt), never Date.now().
+ * PipelineContext (lib/pipeline/context.ts) holds one of each; the previous run's reads are in
+ * lib/pipeline/previous.ts and the run's working state in lib/pipeline/state.ts.
  */
 
 import { LEAGUES, findDivision } from '@/lib/config/leagues';
-import { shortDate, timeOfDay } from '@/lib/format/dates';
-import type { CifssCrossCheck, SbliveCrossCheck } from '@/lib/model/crosscheck';
-import type { OfficialFixture } from '@/lib/model/fixture';
-import type { Game } from '@/lib/model/game';
-import type {
-  DivisionHealth, DroppedContest, LeagueHealth, LeagueRunState, SourceStatus,
-} from '@/lib/model/health';
-import type { DivisionId, LeagueId, TeamId, TeamSlug } from '@/lib/model/ids';
-import type { Snapshot } from '@/lib/model/snapshot';
-import type { ReportedRecord } from '@/lib/model/standings';
+import type { DroppedContest, LeagueRunState, SourceStatus } from '@/lib/model/health';
+import type { LeagueId } from '@/lib/model/ids';
 import { TEAMS, getTeamBySlug } from '@/lib/registry/teams';
-import { localDateKey, toLocalTimestamp } from '@/lib/shared/dates';
 import { cifssSectionIndexOfUrl } from '@/lib/sources/cifss';
-import type { ScheduleRow } from '@/lib/sources/maxpreps/schemas';
-import type { OfficialStepResult, RunArgs, SecondaryStepResult, StepContext, Transport } from './contract';
 
 // ---------------------------------------------------------------- sources
 
@@ -215,214 +205,4 @@ export class DroppedLedger {
       return a.reason < b.reason ? -1 : a.reason > b.reason ? 1 : 0;
     });
   }
-}
-
-// ---------------------------------------------------------------- the run context
-
-export interface LogSink {
-  log(line: string): void;
-  warn(line: string): void;
-}
-
-/** console.log / console.warn. */
-export const CONSOLE_SINK: LogSink = {
-  log: (line) => console.log(line),
-  warn: (line) => console.warn(line),
-};
-
-export const SILENT_SINK: LogSink = { log: () => {}, warn: () => {} };
-
-export interface RunContextInit {
-  args: RunArgs;
-  transport: Transport;
-  previous: Snapshot | null;
-  sink?: LogSink;
-}
-
-/** The pipeline core's RunContext and StepContext: what steps may read and record (SPEC §7.2). */
-export class PipelineContext implements StepContext {
-  readonly args: RunArgs;
-  readonly fetchedAt: string;
-  readonly today: string;
-  readonly previous: Snapshot | null;
-  readonly transport: Transport;
-  readonly sources = new SourceLedger();
-  readonly leagues = new LeagueLedger();
-  readonly droppedLedger = new DroppedLedger();
-  readonly logLines: string[] = [];
-  private readonly sink: LogSink;
-  private readonly inRun: readonly LeagueId[];
-
-  constructor(init: RunContextInit) {
-    this.args = init.args;
-    this.fetchedAt = init.args.fetchedAt;
-    this.today = localDateKey(init.args.fetchedAt);
-    this.previous = init.previous;
-    this.transport = init.transport;
-    this.sink = init.sink ?? CONSOLE_SINK;
-    const wanted = init.args.leagues;
-    // Config order, whatever order the flag listed them in.
-    this.inRun = LEAGUES.map((l) => l.id).filter((id) => wanted === null || wanted.includes(id));
-  }
-
-  log(line: string): void {
-    this.logLines.push(line);
-    this.sink.log(line);
-  }
-
-  warn(line: string, scope?: SourceStatus['scope']): void {
-    const where = scope ? ` [${[scope.league, scope.division, scope.team].filter(Boolean).join('/')}]` : '';
-    const text = `WARN ${line}${where}`;
-    this.logLines.push(text);
-    this.sink.warn(text);
-  }
-
-  source(row: SourceStatus): void {
-    this.sources.add(row);
-  }
-
-  degrade(leagueId: LeagueId, state: Exclude<LeagueRunState, 'fresh'>, reason: string, cause?: string): void {
-    this.leagues.degrade(leagueId, state, reason, cause);
-  }
-
-  drop(row: DroppedContest): void {
-    this.droppedLedger.add(row);
-  }
-
-  dropped(): DroppedContest[] {
-    return this.droppedLedger.all();
-  }
-
-  leagueState(leagueId: LeagueId): LeagueRunState {
-    return this.leagues.state(leagueId);
-  }
-
-  markStale(pick: (row: SourceStatus) => boolean, note: string, carriedFrom?: string): number {
-    return this.sources.markStale(pick, note, carriedFrom);
-  }
-
-  leaguesInRun(): readonly LeagueId[] {
-    return this.inRun;
-  }
-}
-
-// ---------------------------------------------------------------- the previous run
-
-/** 'Tue Sep 29, 7:02 AM' (Pacific) for an ISO UTC stamp — the "shown as of" stamp in reasons. */
-export function asOfStamp(iso: string): string {
-  const local = toLocalTimestamp(iso);
-  return `${shortDate(local)}, ${timeOfDay(local)}`;
-}
-
-/** 'Tue Sep 29' (Pacific) for an ISO UTC stamp. */
-export function asOfDay(iso: string): string {
-  return shortDate(toLocalTimestamp(iso));
-}
-
-export function previousLeagueHealth(previous: Snapshot | null, leagueId: LeagueId): LeagueHealth | null {
-  return previous?.leagueHealth.find((h) => h.leagueId === leagueId) ?? null;
-}
-
-export function previousDivisionHealth(previous: Snapshot | null, division: DivisionId): DivisionHealth | null {
-  for (const h of previous?.leagueHealth ?? []) {
-    const d = h.divisions.find((x) => x.divisionId === division);
-    if (d) return d;
-  }
-  return null;
-}
-
-/**
- * The previous snapshot holds this league's data: it has a health row whose `lastFreshAt` is set
- * (the league was fresh or partial in some earlier run, and a frozen run carries those rows). A
- * v1-migrated snapshot's BVAL/PCAL/MCAL rows (lastFreshAt null), and the EAL row a pre-EAL v2 file
- * gains on load (lib/snapshot/migrate.ts addConfiguredLeagues, lastFreshAt null), hold nothing to carry.
- */
-export function hasPreviousData(previous: Snapshot | null, leagueId: LeagueId): boolean {
-  return previousLeagueHealth(previous, leagueId)?.lastFreshAt != null;
-}
-
-/**
- * The "shown as of" stamp of a league's previous data (asOfStamp of its lastFreshAt), or null when the
- * previous snapshot holds nothing to carry for it (hasPreviousData).
- */
-export function lastFreshStamp(previous: Snapshot | null, leagueId: LeagueId): string | null {
-  const lastFresh = previousLeagueHealth(previous, leagueId)?.lastFreshAt ?? null;
-  return lastFresh === null ? null : asOfStamp(lastFresh);
-}
-
-/** When a carried source's data was last fresh: the previous row's own stamp, else the previous run's. */
-export function carriedFromOf(previous: Snapshot | null, pick: (row: SourceStatus) => boolean): string | undefined {
-  if (!previous) return undefined;
-  const prev = previous.sources.find(pick);
-  if (prev?.status === 'ok') return prev.fetchedAt;
-  if (prev?.carriedFrom) return prev.carriedFrom;
-  return previous.fetchedAt;
-}
-
-// ---------------------------------------------------------------- the run's working state
-
-export interface DivisionRunInfo {
-  meta: DivisionHealth['meta'];
-  reportedTable: DivisionHealth['reportedTable'];
-  reportedRows: number | null;
-}
-
-export interface TeamFeedInfo {
-  slug: TeamSlug;
-  teamId: TeamId;
-  league: LeagueId;
-  /** 'skipped' = not in the corpus / no data source; 'not-fetched' = its league is not in this run. */
-  status: 'ok' | 'failed' | 'skipped' | 'not-fetched';
-  /** Its games were carried from the previous snapshot. */
-  carried: boolean;
-}
-
-/**
- * What the built-in steps (lib/pipeline/steps/*) share through run.ts. The injectable official and
- * si.com steps (PipelineSteps) never see it: they get only RunContext and their step input.
- */
-export interface RunState {
-  divisions: Map<DivisionId, DivisionRunInfo>;
-  /** MaxPreps' reported rows, keyed on schoolId (cross-check only). */
-  reported: Map<TeamId, ReportedRecord>;
-  feeds: Map<TeamSlug, TeamFeedInfo>;
-  /** Raw schedule rows of the feeds read this run, TBA rows split off, registry order. */
-  rows: ScheduleRow[];
-  /** One per TBA row split off a feed. */
-  tbaDropped: DroppedContest[];
-  games: Game[];
-  unmatched: OfficialFixture[];
-  /** The official step's flags and sets; its games and fixtures moved into `games` / `unmatched`. */
-  official: Omit<OfficialStepResult, 'games' | 'unmatched'>;
-  sbliveCrossCheck: SbliveCrossCheck | undefined;
-  /** Step 11b's cifsshome.org report (undefined: none this run and none to carry). */
-  cifssCrossCheck: CifssCrossCheck | undefined;
-  /** The secondary step's CCS state; its games moved into `games`. */
-  secondary: Omit<SecondaryStepResult, 'games'>;
-  /** Leagues whose intra-league games and fixtures were substituted from the previous snapshot. */
-  frozenFromPrevious: Set<LeagueId>;
-  /** DivisionHealth.classification per division (a frozen league's is copied from the previous health). */
-  classification: Map<DivisionId, DivisionHealth['classification']>;
-}
-
-export function emptyRunState(): RunState {
-  return {
-    divisions: new Map(),
-    reported: new Map(),
-    feeds: new Map(),
-    rows: [],
-    tbaDropped: [],
-    games: [],
-    unmatched: [],
-    official: {
-      degradedDivisions: new Set(),
-      revisedUpstream: new Set(),
-      carriedDivisions: new Set(),
-    },
-    sbliveCrossCheck: undefined,
-    cifssCrossCheck: undefined,
-    secondary: { bracketPublished: false },
-    frozenFromPrevious: new Set(),
-    classification: new Map(),
-  };
 }

@@ -2,7 +2,7 @@
  * What scripts/fetch-rosters.ts, scripts/fetch-player-stats.ts and scripts/fetch-jv.ts share:
  * which registry teams a run covers, and how a run reports its teams league by league. The flag
  * parsers for `--leagues` and `--fetched-at` (lib/cli/flags.ts) are shared with fetch-data too
- * (lib/pipeline/run.ts parseRunArgs), so all four CLIs read those flags by one rule.
+ * (lib/pipeline/cli.ts parseRunArgs), so all four CLIs read those flags by one rule.
  *
  * Each script walks the whole registry. `--leagues scval,bval` narrows a run to those
  * leagues, exactly as `fetch-data --leagues` does: a team of any other league is not fetched and

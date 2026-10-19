@@ -15,7 +15,8 @@ import { SEASON_YEAR, SPORT_SEASON_ID } from '@/lib/config/season';
 import type { DivisionId, LeagueId } from '@/lib/model/ids';
 import { LeagueMetaSchema } from '@/lib/sources/maxpreps/schemas';
 import type { RunContext } from '@/lib/pipeline/contract';
-import { lastFreshStamp, type RunState } from '@/lib/pipeline/ledger';
+import type { RunState } from '@/lib/pipeline/state';
+import { lastFreshStamp } from '@/lib/pipeline/previous';
 import { parseJsonBody, readResource, sourceBase, warnIfError } from '@/lib/pipeline/read';
 import { resourceUrl } from '@/lib/pipeline/transport';
 

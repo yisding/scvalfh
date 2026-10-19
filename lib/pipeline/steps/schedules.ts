@@ -21,7 +21,8 @@ import { FETCHABLE_TEAMS, TEAMS } from '@/lib/registry/teams';
 import { splitTbaRows } from '@/lib/sources/maxpreps/schedule';
 import { ScheduleResponseSchema, type ScheduleRow } from '@/lib/sources/maxpreps/schemas';
 import type { RunContext } from '@/lib/pipeline/contract';
-import { asOfStamp, carriedFromOf, hasPreviousData, lastFreshStamp, type RunState } from '@/lib/pipeline/ledger';
+import type { RunState } from '@/lib/pipeline/state';
+import { asOfStamp, carriedFromOf, hasPreviousData, lastFreshStamp } from '@/lib/pipeline/previous';
 import {
   classifyFetchError,
   parseJsonBody,
