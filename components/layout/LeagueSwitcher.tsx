@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { ALL_LEAGUES } from '@/components/head/prefs-script';
 import { setLeague, setRegion, useEffectiveLeague, useEffectiveRegion } from '@/components/hooks/use-league';
 import type { LeagueId, RegionId } from '@/lib/model/ids';
-import type { SectionConfig } from '@/lib/model/league-config';
+import { REGION_WORDS, SECTION_NAMES } from '@/lib/shared/region-words';
 import type { LeagueChip } from '@/views/site/league-chips';
 
 /**
@@ -63,26 +63,10 @@ export interface LeagueSwitcherProps {
 }
 
 /**
- * Spelled out rather than read from SECTIONS: this is a client component, and the league config
- * stays out of client bundles. The `Record` type makes a new section a compile error here.
+ * The section and region words come from lib/shared/region-words.ts, the import-free file the league
+ * config (lib/config/leagues/regions.ts) builds SECTIONS and REGIONS from: this is a client component,
+ * so it cannot read the config itself. NorCal first: the default view and the JS-free reading order.
  */
-const SECTION_NAMES: Readonly<Record<SectionConfig['shortName'], string>> = {
-  CCS: 'Central Coast Section',
-  NCS: 'North Coast Section',
-  NS: 'Northern Section',
-  SS: 'Southern Section',
-  SDS: 'San Diego Section',
-};
-
-/**
- * The two regions' words, spelled out for the same reason (lib/config/leagues.ts REGIONS: `shortName` on the
- * buttons, `name` in the live-region sentence). `Record<RegionId, …>` makes a new region a compile
- * error here. NorCal first: the default view and the JS-free reading order.
- */
-const REGION_WORDS: Readonly<Record<RegionId, { shortName: string; name: string }>> = {
-  norcal: { shortName: 'NorCal', name: 'Northern California' },
-  socal: { shortName: 'SoCal', name: 'Southern California' },
-};
 const REGION_ORDER: readonly RegionId[] = ['norcal', 'socal'];
 
 const CHIP = 'sx-league-chip';

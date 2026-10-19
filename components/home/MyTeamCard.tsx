@@ -2,7 +2,8 @@
 
 import Link from 'next/link';
 
-import { isNearViewport, unpinFallbackTarget, usePinnedTeam } from '@/components/hooks/use-pinned-team';
+import { UNPIN_ID, focusUnpin, unpinFocusTarget } from '@/components/hooks/pinned-focus';
+import { usePinnedTeam } from '@/components/hooks/use-pinned-team';
 import TeamFinder from '@/components/search/TeamFinder';
 import ExternalLink from '@/components/ui/ExternalLink';
 import FormStrip from '@/components/ui/FormStrip';
@@ -364,32 +365,6 @@ function StalePin({ onUnpin }: { onUnpin: () => void }) {
       </p>
     </div>
   );
-}
-
-const UNPIN_ID = 'my-team-unpin';
-
-/** Focus the pinned card's Unpin button once it has rendered. */
-export function focusUnpin(): void {
-  const run = () => document.getElementById(UNPIN_ID)?.focus();
-  if (typeof requestAnimationFrame === 'function') requestAnimationFrame(run);
-  else run();
-}
-
-/**
- * Focus target after an unpin: the team's own tile when rendered and on screen (`isNearViewport` —
- * a tile far below the card is skipped, so the page does not jump), else `unpinFallbackTarget()` —
- * the slot's finder field, or, when the whole slot hides (a pin with "All" remembered), the
- * first-visit finder or its heading. Never `<body>` (WCAG 2.4.3).
- */
-export function unpinFocusTarget(slug: string | null): HTMLElement | null {
-  const rendered = (el: Element) => el.getClientRects().length > 0;
-  if (slug && /^[a-z0-9-]+$/.test(slug)) {
-    const tile = [...document.querySelectorAll<HTMLElement>(`[data-pin-tile="${slug}"]`)].find(
-      (el) => rendered(el) && isNearViewport(el),
-    );
-    if (tile) return tile;
-  }
-  return unpinFallbackTarget();
 }
 
 export function MyTeamCard({ views, index }: MyTeamCardProps) {

@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
 import { longDate } from '@/lib/format/dates';
-import { parseLocal, weekdayIndex } from '@/lib/shared/dates';
+import { MONTHS_LONG, pad2, parseLocal, weekdayIndex } from '@/lib/shared/dates';
 import { scoresHref } from '@/lib/shared/routes';
 
 /**
@@ -33,11 +33,6 @@ export interface SeasonCalendarProps {
   className?: string;
 }
 
-const MONTHS_LONG = [
-  'January', 'February', 'March', 'April', 'May', 'June',
-  'July', 'August', 'September', 'October', 'November', 'December',
-] as const;
-
 /** Monday first: the letter on screen and the name a screen reader announces. */
 const WEEKDAY_HEADS = [
   ['M', 'Monday'],
@@ -54,10 +49,6 @@ function daysInMonth(year: number, month: number): number {
   return [4, 6, 9, 11].includes(month) ? 30 : 31;
 }
 
-function pad(n: number): string {
-  return n < 10 ? `0${n}` : String(n);
-}
-
 interface Month {
   key: string;
   caption: string;
@@ -72,7 +63,7 @@ function buildMonths(dates: readonly string[]): Month[] {
     // weekdayIndex is 0 = Sunday; shifted so 0 = Monday.
     const lead = (weekdayIndex(`${key}-01`) + 6) % 7;
     const cells: (string | null)[] = Array.from({ length: lead }, () => null);
-    for (let day = 1; day <= daysInMonth(year, month); day += 1) cells.push(`${key}-${pad(day)}`);
+    for (let day = 1; day <= daysInMonth(year, month); day += 1) cells.push(`${key}-${pad2(day)}`);
     while (cells.length % 7 !== 0) cells.push(null);
     const weeks: (string | null)[][] = [];
     for (let i = 0; i < cells.length; i += 7) weeks.push(cells.slice(i, i + 7));

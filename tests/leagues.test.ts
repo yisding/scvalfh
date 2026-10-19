@@ -25,6 +25,7 @@ import { CCS_BRACKET_URL } from '@/lib/config/season';
 import type { RegionId } from '@/lib/model/ids';
 import { type LeagueConfig, type SectionConfig } from '@/lib/model/league-config';
 import type { PlayoffStatus, TiebreakStage } from '@/lib/model/standings';
+import { REGION_WORDS, SECTION_NAMES } from '@/lib/shared/region-words';
 import { getTeamById } from '@/lib/registry/teams';
 import { SEED_CLAIM, umpireOfficialClaims } from '@/scripts/ci/copy/copy-rules';
 
@@ -122,6 +123,14 @@ describe('leagues: ids and helpers (SPEC §2.3)', () => {
     expect(SECTIONS.map((s) => s.briefLabel)).toEqual(['CCS', 'NCS', 'Northern Section', 'Southern Section', 'San Diego Section']);
     // Sixteen divisions' worth of teams: 49 NorCal + 53 SoCal (the 48 league teams and the five independents) = 102.
     expect(ALL_DIVISIONS.reduce((n, d) => n + d.expectedTeams, 0)).toBe(102);
+  });
+
+  it('builds REGIONS and SECTIONS names from lib/shared/region-words.ts, the words the client switcher prints', () => {
+    for (const r of REGIONS) expect(REGION_WORDS[r.id]).toEqual({ shortName: r.shortName, name: r.name });
+    for (const s of SECTIONS) expect(SECTION_NAMES[s.shortName], s.id).toBe(s.name);
+    expect(Object.keys(SECTION_NAMES)).toEqual(SECTIONS.map((s) => s.shortName));
+    // Key order is part of any serialized region: name before shortName, as it always was.
+    expect(Object.keys(REGIONS[0])).toEqual(['id', 'name', 'shortName']);
   });
 
   it('splits the sections into two regions, NorCal first and by default; a league’s region is its section’s', () => {

@@ -72,6 +72,30 @@ export interface GameFilterAttrs {
   'data-state': ScheduleState;
 }
 
+/**
+ * The `data-*` attributes of a game's list item that a filter reads (a `DOMStringMap` fits, so the
+ * browser passes `row.dataset` and a unit test passes a plain object). Absent attributes read as
+ * empty, which matches nothing.
+ */
+export interface GameFilterDataset {
+  slugs?: string;
+  divisions?: string;
+  league?: string;
+  state?: string;
+}
+
+/** Whether a game's list item shows under `f`: every active filter must accept it. */
+export function matchesFilter(attrs: GameFilterDataset, f: FilterState): boolean {
+  if (f.team !== 'all' && !(attrs.slugs ?? '').includes(` ${f.team} `)) return false;
+  if (f.division !== 'all' && !(attrs.divisions ?? '').includes(` ${f.division} `)) {
+    return false;
+  }
+  if (f.type === 'league' && attrs.league !== '1') return false;
+  if (f.type === 'non-league' && attrs.league !== '0') return false;
+  if (f.state !== 'all' && attrs.state !== f.state) return false;
+  return true;
+}
+
 export interface ScheduleCounts {
   total: number;
   final: number;

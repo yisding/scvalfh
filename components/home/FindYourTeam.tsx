@@ -1,10 +1,9 @@
 'use client';
 
+import { focusUnpin } from '@/components/hooks/pinned-focus';
 import TeamFinder from '@/components/search/TeamFinder';
 import SectionHeader from '@/components/ui/SectionHeader';
 import type { SearchIndex } from '@/lib/shared/search';
-
-import { focusUnpin } from './MyTeamCard';
 
 /**
  * The first-visit view (SPEC §10.1): shown when no league is remembered (`data-scope="none"`), and

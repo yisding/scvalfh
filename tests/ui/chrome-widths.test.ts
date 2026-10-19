@@ -48,7 +48,7 @@ describe('weight without width', () => {
     const nav = readRepoFile('components/layout/NavLink.tsx');
     expect(nav).toContain('data-label={label}');
     expect(nav).toMatch(/className=\{`sx-indicator sx-weight-hold /);
-    expect(readRepoFile('components/schedule/ScheduleFilters.tsx')).toContain('<span className="sx-weight-hold" data-label={option.label}>');
+    expect(readRepoFile('components/ui/PillGroup.tsx')).toContain('<span className="sx-weight-hold" data-label={option.label}>');
   });
 });
 

@@ -4,7 +4,7 @@ import Arrow from '@/components/ui/Arrow';
 import { CCS, getLeague } from '@/lib/config/leagues';
 import { dateSpan, longDate, monthDay } from '@/lib/format/dates';
 import type { LeagueId } from '@/lib/model/ids';
-import { parseLocal } from '@/lib/shared/dates';
+import { MONTHS, MONTHS_LONG, parseLocal } from '@/lib/shared/dates';
 import { playoffsHref } from '@/lib/shared/routes';
 import type { RailKind } from '@/views/schedule/rail-client';
 
@@ -24,22 +24,13 @@ import type { RailKind } from '@/views/schedule/rail-client';
  * part of the reproducible build rather than something that drifts between build and view. On a
  * day with no game the chip reads `● Next` and jumps to the next game day; it is left out only once
  * the season has no game day left. Its `data-rail-date` stays today either way (the href carries
- * the target), which is what rail-targets.ts's `today` rule measures from under a filter.
+ * the target), which is what rail-client.ts's `today` rule measures from under a filter.
  *
  * Under a filter: each date chip carries `data-rail-date` and `data-rail-kind`, its date label
- * `data-rail-label` and its screen-reader name `data-rail-sr`, so ScheduleFilters can re-aim it at
- * a group that is still shown (rail-targets.ts) and put the server's version back afterwards. The
+ * `data-rail-label` and its screen-reader name `data-rail-sr`, so components/hooks/schedule-filter-dom.ts can re-aim it at
+ * a group that is still shown (views/schedule/rail-client.ts) and put the server's version back afterwards. The
  * HTML as served is the whole-season rail, which is all a reader without JavaScript ever sees.
  */
-const MONTH_NAMES = [
-  'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
-] as const;
-
-const MONTH_NAMES_LONG = [
-  'January', 'February', 'March', 'April', 'May', 'June',
-  'July', 'August', 'September', 'October', 'November', 'December',
-] as const;
-
 export interface TimelineRailProps {
   /** Every date with a contest, ascending. */
   dates: readonly string[];
@@ -55,7 +46,7 @@ interface Marker {
   date: string;
   /** Where the chip jumps when it is not `date`: the today chip's next game day. */
   target?: string;
-  /** What the chip means, so a filter can re-aim it (rail-targets.ts). */
+  /** What the chip means, so a filter can re-aim it (views/schedule/rail-client.ts). */
   kind: RailKind;
   label: string;
   /** A leading glyph: `↑` for the season's first day, `↓` for its last, `●` for today or next. */
@@ -114,8 +105,8 @@ function buildMarkers(dates: readonly string[], today: string): Marker[] {
     candidates.push({
       date,
       kind: 'month',
-      label: MONTH_NAMES[month - 1],
-      sr: `Jump to ${MONTH_NAMES_LONG[month - 1]}, starting ${longDate(date)}`,
+      label: MONTHS[month - 1],
+      sr: `Jump to ${MONTHS_LONG[month - 1]}, starting ${longDate(date)}`,
     });
   }
   if (last !== first) {

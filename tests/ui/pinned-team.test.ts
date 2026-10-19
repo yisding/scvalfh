@@ -10,7 +10,7 @@
  */
 import { afterEach, describe, expect, it } from 'vitest';
 
-import { unpinFocusTarget } from '@/components/home/MyTeamCard';
+import { unpinFocusTarget } from '@/components/hooks/pinned-focus';
 import { pinTeam, unpinFallbackTarget } from '@/components/hooks/use-pinned-team';
 
 type Attrs = Map<string, string>;

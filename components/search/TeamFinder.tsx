@@ -57,7 +57,7 @@ export interface TeamFinderProps {
   label?: string;
   /** pin mode default 8. */
   limit?: number;
-  /** pin mode: called after a result is pinned (the caller manages focus: both MyTeamCard and FindYourTeam pass MyTeamCard's `focusUnpin`, which moves it to #my-team-unpin). */
+  /** pin mode: called after a result is pinned (the caller manages focus: both MyTeamCard and FindYourTeam pass components/hooks/pinned-focus.ts's `focusUnpin`, which moves it to #my-team-unpin). */
   onPin?: (slug: string, leagueId: string) => void;
   className?: string;
 }
@@ -82,6 +82,11 @@ export function pinResultDetail(entry: TeamSearchEntry): string {
  * bundle). A SoCal league's short name ('City', 'Metro', 'Valley') reads like a place, not a league, to a
  * NorCal reader searching all 102 teams, so its result line names the section too (DESIGN-socal §2.4).
  * NorCal results keep today's line.
+ *
+ * The words are `SECTION_NAMES.SS` and `.SDS` of lib/shared/region-words.ts, spelled out here a second time
+ * on purpose: LeagueSwitcher is that module's only client importer, and a second one stops the bundler
+ * folding it into its importer's chunk. Measured on `/teams` at item 51 (+135 B of first-load JS) against
+ * 42 B of headroom under assert:budgets, so the page cannot afford it.
  */
 const SOCAL_SECTION_WORDS: Readonly<Partial<Record<TeamSearchEntry['sectionShort'], string>>> = {
   SS: 'Southern Section',

@@ -19,6 +19,7 @@ import {
 
 import { getTeamSearchIndex } from '@/lib/queries/teams';
 import { pinLabel } from '@/lib/shared/pin-label';
+import { SECTION_NAMES } from '@/lib/shared/region-words';
 import { searchTeams } from '@/lib/shared/search';
 import { textOfSrOnly } from '@/tests/support/html-text';
 
@@ -194,6 +195,13 @@ describe('pin-mode result buttons', () => {
     // A Southern Section independent: the group's short name, as a league's (DESIGN §24.10).
     const bonita = index.teams.find((t) => t.slug === 'bonita')!;
     expect(resultDetail(bonita)).toBe('LA · Southern Section');
+  });
+
+  it('names the SoCal sections with lib/shared/region-words.ts\'s words (TeamFinder spells them out itself)', () => {
+    const edison = index.teams.find((t) => t.slug === 'edison')!;
+    const palomar = index.teams.find((t) => t.slug === 'poway')!;
+    expect(resultDetail(edison).endsWith(` · ${SECTION_NAMES.SS}`)).toBe(true);
+    expect(resultDetail(palomar).endsWith(` · ${SECTION_NAMES.SDS}`)).toBe(true);
   });
 });
 

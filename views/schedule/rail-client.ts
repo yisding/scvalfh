@@ -4,19 +4,23 @@
  * The rail (TimelineRail.tsx) is server-rendered for the WHOLE season: `↑ Aug 24` is the first
  * contest, `Sep` the first day of September, `● Today` the snapshot's day (`● Next` when that day
  * has no game), `↓ Oct 28` the last contest. Once a filter hides date groups those anchors can
- * point at a hidden section, and a jump to a `hidden` element goes nowhere. ScheduleFilters
+ * point at a hidden section, and a jump to a `hidden` element goes nowhere. components/hooks/schedule-filter-dom.ts
  * therefore re-aims each chip at a group that is still shown, using the pure mapping below, and
  * restores the server's hrefs and text once every group is shown again. Without JavaScript none
  * of this runs and the rail is unchanged.
  *
- * Pure and dependency-free on purpose: it is bundled into `/schedule/<league>`'s one client module,
+ * Pure and nearly dependency-free on purpose: it is bundled into `/schedule/<league>`'s client modules,
  * whose first-load JS is held to a budget (scripts/ci/assert-budgets.ts). Turbopack tree-shakes
- * `lib/format/` per export (ScheduleFilters already pulls its `gameWord` in from lib/format/words.ts),
- * so this module formats its own two date strings to keep `monthDay`/`shortDate`, `parseLocal`,
- * `weekdayIndex` and the name tables out of that chunk, and it never reads a clock.
+ * `lib/shared/` and `lib/format/` per export (components/hooks/schedule-filter-dom.ts already pulls its
+ * `gameWord` in from lib/format/words.ts), so the month and weekday NAME TABLES are the shared ones from
+ * lib/shared/dates.ts (a build with them and a build with local copies produced the same chunk, byte for
+ * byte). The module still formats its own two date strings, to keep `monthDay`/`shortDate`, `parseLocal`
+ * and `weekdayIndex` out of that chunk, and it never reads a clock.
  * tests/ui/rail-targets.test.ts holds the formatting to `lib/format/dates.ts`'s output for every date in the
  * snapshot.
  */
+
+import { MONTHS, MONTHS_LONG, WEEKDAYS } from '@/lib/shared/dates';
 
 export type RailKind = 'up' | 'month' | 'today' | 'down';
 
@@ -58,14 +62,6 @@ export function railTargets(
   });
 }
 
-const WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] as const;
-const MONTHS = [
-  'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
-] as const;
-const MONTHS_LONG = [
-  'January', 'February', 'March', 'April', 'May', 'June',
-  'July', 'August', 'September', 'October', 'November', 'December',
-] as const;
 /** Sakamoto's month offsets: the weekday of a Gregorian date in integer arithmetic alone. */
 const SAKAMOTO = [0, 3, 2, 5, 0, 3, 5, 1, 4, 6, 2, 4] as const;
 

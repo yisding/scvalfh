@@ -5,6 +5,7 @@
 
 import type { RegionId } from '@/lib/model/ids';
 import type { RegionConfig, SectionConfig } from '@/lib/model/league-config';
+import { REGION_WORDS, SECTION_NAMES } from '@/lib/shared/region-words';
 
 import {
   CCS_BYLAWS_URL, NS_GUIDELINES_URL, SDS_FIELD_HOCKEY_URL, SDS_GREEN_BOOK_URL, SS_BLUE_BOOK_FH_URL, SS_FIELD_HOCKEY_URL,
@@ -12,8 +13,8 @@ import {
 
 /** NorCal first: it is the default view (DEFAULT_REGION) and the reading order with JavaScript off. */
 export const REGIONS = [
-  { id: 'norcal', name: 'Northern California', shortName: 'NorCal' },
-  { id: 'socal', name: 'Southern California', shortName: 'SoCal' },
+  { id: 'norcal', name: REGION_WORDS.norcal.name, shortName: REGION_WORDS.norcal.shortName },
+  { id: 'socal', name: REGION_WORDS.socal.name, shortName: REGION_WORDS.socal.shortName },
 ] as const satisfies readonly RegionConfig[];
 
 /** The view a first visit gets, and the one a page renders before any stored preference is read. */
@@ -46,7 +47,7 @@ export function byRegion<T>(
 
 export const SECTIONS = [
   {
-    id: 'ccs', name: 'Central Coast Section', shortName: 'CCS', briefLabel: 'CCS', region: 'norcal',
+    id: 'ccs', name: SECTION_NAMES.CCS, shortName: 'CCS', briefLabel: 'CCS', region: 'norcal',
     maxprepsSectionId: 'd9a9ef9c-db12-4669-888b-40ac8462a575',
     holdsFieldHockeyChampionship: true,
     officialUrl: 'https://cifccs.org/sports/fh/index',
@@ -56,7 +57,7 @@ export const SECTIONS = [
     noChampionshipNote: null,
   },
   {
-    id: 'ncs', name: 'North Coast Section', shortName: 'NCS', briefLabel: 'NCS', region: 'norcal',
+    id: 'ncs', name: SECTION_NAMES.NCS, shortName: 'NCS', briefLabel: 'NCS', region: 'norcal',
     maxprepsSectionId: '89ae2e0f-e108-4054-9df3-329f0579f86d',
     holdsFieldHockeyChampionship: false,
     officialUrl: 'https://www.cifncs.org/',
@@ -69,7 +70,7 @@ export const SECTIONS = [
       'The North Coast Section and CIF hold no field hockey championship. MCAL’s own six-team tournament is the postseason.',
   },
   {
-    id: 'ns', name: 'Northern Section', shortName: 'NS', briefLabel: 'Northern Section', region: 'norcal',
+    id: 'ns', name: SECTION_NAMES.NS, shortName: 'NS', briefLabel: 'Northern Section', region: 'norcal',
     maxprepsSectionId: '6249819d-12de-4bff-b0ab-38156006b001',
     // The "NSCIF Post Season Tournament" (the EAL's Super Regional, Oct 30-31) is on the Section's "Championship
     // Playoff Calendar": https://www.cifns.org/meetings-calendars/calendars/26-27_Playoff_Schedule.pdf
@@ -97,7 +98,7 @@ export const SECTIONS = [
     // when less than 20% of the membership field teams in that sport"; the 2026-27 Sports Calendar lists CIF-SS
     // Preliminaries and Finals "N/A" and the last allowable contest Sat Oct 31; cifstate.org: no CIF regional or
     // state championship. MaxPreps sectionId from the Southern Section field hockey hub.
-    id: 'ss', name: 'Southern Section', shortName: 'SS', briefLabel: 'Southern Section', region: 'socal',
+    id: 'ss', name: SECTION_NAMES.SS, shortName: 'SS', briefLabel: 'Southern Section', region: 'socal',
     maxprepsSectionId: '8e11e7d4-d3fa-4e6f-827f-652c29439d27',
     holdsFieldHockeyChampionship: false,
     officialUrl: SS_FIELD_HOCKEY_URL,
@@ -116,7 +117,7 @@ export const SECTIONS = [
     // research-cifsds.md §0-§5 [V]: Green Book 2026-27 Bylaw 2000.1 (Open 8, Division I 12, Division II 12);
     // Master Calendar 2026-27 (last contest Oct 30, playoffs Nov 2–12, finals Nov 14); MaxPreps sectionId
     // from the San Diego Section field hockey hub.
-    id: 'sds', name: 'San Diego Section', shortName: 'SDS', briefLabel: 'San Diego Section', region: 'socal',
+    id: 'sds', name: SECTION_NAMES.SDS, shortName: 'SDS', briefLabel: 'San Diego Section', region: 'socal',
     maxprepsSectionId: 'bab8c451-e991-413d-93ac-ee77067952a3',
     holdsFieldHockeyChampionship: true,
     officialUrl: SDS_FIELD_HOCKEY_URL,
