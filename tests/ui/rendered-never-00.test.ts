@@ -36,7 +36,8 @@ import { EAL_CORPUS, type CorpusName } from '@/tests/support/corpus';
 import { useCorpusModules } from '@/tests/support/corpus-modules';
 import { textFoldingDashes } from '@/tests/support/html-text';
 import { loadQueries } from '@/tests/support/queries';
-import { buildGameView, gameDescription, gameKicker, gameTitle } from '@/views/game/game-view';
+import { buildGameView } from '@/views/game/game-view';
+import { gameDescription, gameKicker, gameTitle } from '@/views/game/titles';
 
 interface Rendered {
   games: Game[];
@@ -192,14 +193,15 @@ function defineCorpus(title: string, corpusName: CorpusName, proof: boolean) {
     const m = useCorpusModules(corpusName, {
       data: loadQueries,
       model: () => import('@/views/game/game-view'),
+      titles: () => import('@/views/game/titles'),
       row: () => import('@/components/ui/GameRow'),
     });
     const corpus = (): Rendered => ({
       games: m.data.getGames(),
       buildGameView: m.model.buildGameView,
-      gameTitle: m.model.gameTitle,
-      gameDescription: m.model.gameDescription,
-      gameKicker: m.model.gameKicker,
+      gameTitle: m.titles.gameTitle,
+      gameDescription: m.titles.gameDescription,
+      gameKicker: m.titles.gameKicker,
       GameRow: m.row.GameRow,
       GameCard: m.row.GameCard,
       GameLine: m.row.GameLine,

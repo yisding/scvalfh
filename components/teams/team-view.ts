@@ -10,4 +10,5 @@
  * those routes anyway deletes it. eslint.config.mjs refuses any other import of it.
  */
 
-export { buildTeamPageView, gameHeadline, nextOfficialFixture, officialFixtureHeadline, placeScope } from '@/views/teams/team-view';
+export { buildTeamPageView, gameHeadline, officialFixtureHeadline, placeScope } from '@/views/teams/team-view';
+export { nextOfficialFixture } from '@/views/shared/official-fixtures';

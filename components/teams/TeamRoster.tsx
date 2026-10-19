@@ -41,7 +41,7 @@ import type { RosterFact, RosterRow, RosterView } from '@/views/teams/roster';
  * internal, to the club's page on this site, which cites a source for every tie: no arrow, the
  * `sx-action` box, and an accessible name that leads with the player ("Storey Lewis’s club: SF
  * Hawks"), the visible label hidden from assistive technology so it is not read twice. The words
- * are views/clubs/club-view.ts', shared with the club pages. A footnote explains the line, and
+ * are views/clubs/club-line.ts', shared with the club pages. A footnote explains the line, and
  * says recall is partial, wherever one appears.
  *
  * A player a public page says has committed to play a college sport gets a commitment line

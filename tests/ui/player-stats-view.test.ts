@@ -23,11 +23,10 @@ import { getAllPlayerStatsWithNotes } from '@/lib/queries/player-stats';
 import { TEAMS, teamsInLeague } from '@/lib/registry/teams';
 import type { GoalieStatKey, PlayerStatLine, TeamPlayerStats as TeamStats } from '@/lib/schema/player-stats';
 import { buildFixturePlayerStats } from '@/tests/support/cli';
+import { savePercent, statText } from '@/views/shared/stat-format';
 import {
   buildPlayerStatsView,
   goalieFiguresDisagree,
-  savePercent,
-  statText,
   type PlayerStatsView,
 } from '@/views/teams/player-stats';
 import { buildTeamPageView } from '@/views/teams/team-view';

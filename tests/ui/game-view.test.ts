@@ -29,6 +29,7 @@ import { tempDir, tempFile } from '@/tests/support/repo';
 const loaders = {
   d: loadQueries,
   m: () => import('@/views/game/game-view'),
+  titles: () => import('@/views/game/titles'),
   ids: () => import('@/lib/shared/game-id'),
   page: () => import('@/app/game/[id]/page'),
   og: () => import('@/app/game/[id]/opengraph-image'),
@@ -38,6 +39,7 @@ type Modules = CorpusModules<typeof loaders>;
 interface Loaded {
   d: Modules['d'];
   m: Modules['m'];
+  titles: Modules['titles'];
   ids: Modules['ids'];
   pageParams: () => Array<{ id: string }>;
   ogParams: () => Array<{ id: string }>;
@@ -46,10 +48,11 @@ interface Loaded {
 }
 
 /** The modules of one loaded graph with the game page's renderers over them. */
-function loadedOf({ d, m, ids, page, og }: Modules): Loaded {
+function loadedOf({ d, m, titles, ids, page, og }: Modules): Loaded {
   return {
     d,
     m,
+    titles,
     ids,
     pageParams: page.generateStaticParams,
     ogParams: og.generateStaticParams,
@@ -140,7 +143,7 @@ describe('sub-lines, kicker and context (views/game/game-view.ts)', () => {
 
   it('the kicker names the league (BVAL · Santa Teresa, MCAL, Non-league)', () => {
     const bval = L.m.buildGameView(counted('bval').contestId)!;
-    expect(L.m.gameKicker(bval), 'views/game/game-view.ts BVAL kicker').toMatch(
+    expect(L.titles.gameKicker(bval), 'views/game/titles.ts BVAL kicker').toMatch(
       /^FINAL( · \S+)? · BVAL · (Mt\. Hamilton|Santa Teresa)$/,
     );
     const mcal = L.m.buildGameView(counted('mcal').contestId)!;
@@ -154,18 +157,18 @@ describe('sub-lines, kicker and context (views/game/game-view.ts)', () => {
     const nonLeague = L.d.getGames().find((g) => g.countsFor === null && g.postseason === null)!;
     const nl = L.m.buildGameView(nonLeague.contestId)!;
     expect(nl.contextLabel, 'views/game/game-view.ts non-league').toBe('Non-league');
-    expect(L.m.gameKicker(nl).endsWith(' · Non-league'), 'views/game/game-view.ts non-league kicker').toBe(true);
+    expect(L.titles.gameKicker(nl).endsWith(' · Non-league'), 'views/game/titles.ts non-league kicker').toBe(true);
   });
 
   it('the meta description names the league; the head-to-head note cites its own league', () => {
     const mcal = L.m.buildGameView(counted('mcal').contestId)!;
-    expect(L.m.gameDescription(mcal), 'views/game/game-view.ts MCAL description').toContain(
+    expect(L.titles.gameDescription(mcal), 'views/game/titles.ts MCAL description').toContain(
       'Marin County Athletic League girls varsity field hockey, Fall 2026',
     );
     expect(mcal.series.tiebreakNote, 'views/game/game-view.ts MCAL h2h').toContain('MCAL Tie-Breaking Criteria (rev. 3/26) step 1');
     const scval = L.m.buildGameView(counted('scval').contestId)!;
     expect(scval.series.tiebreakNote, 'views/game/game-view.ts SCVAL h2h').toContain('Article VI §3');
-    expect(L.m.gameDescription(scval), 'views/game/game-view.ts SCVAL description').toContain(
+    expect(L.titles.gameDescription(scval), 'views/game/titles.ts SCVAL description').toContain(
       'Santa Clara Valley Athletic League girls varsity field hockey, Fall 2026',
     );
   });
@@ -185,7 +188,7 @@ describe('si.com source line and the conflict block (components/game/GameSources
     expect(text, 'components/game/GameSources.tsx source line').toContain(`Score via High School on SI (si.com): ${note}.`);
     expect(text, 'components/ui/ScoreBoard.tsx † mark').toContain('† Score via si.com');
     expect(html, 'app/game/[id]/page.tsx').not.toContain('sblive:');
-    expect(L.m.gameDescription(model), 'views/game/game-view.ts PCAL description').toContain(
+    expect(L.titles.gameDescription(model), 'views/game/titles.ts PCAL description').toContain(
       'Pacific Coast Athletic League girls varsity field hockey, Fall 2026',
     );
   });
@@ -415,8 +418,8 @@ describe('Southern California games (corpus copy with synthetic SoCal games, DES
       'MaxPreps lists 0–0 with no tally and marks Eastlake the winner; a level San Diego Section varsity game outside a tournament goes to a sudden-victory period and then a shootout (San Diego Field Hockey Officials Association 2026 Mercy & Overtime Procedures), so this site counts it as Eastlake’s win. si.com and the Section’s power rankings record some of these games with a decisive score (Mt. Carmel–Poway, Sep 11: 2-0).',
     );
     expect(model.scoreNote).not.toMatch(/decided it|1 v 1s/);
-    expect(C.m.gameTitle(model)).not.toContain('(SO)');
-    expect(C.m.gameKicker(model)).not.toContain('SO');
+    expect(C.titles.gameTitle(model)).not.toContain('(SO)');
+    expect(C.titles.gameKicker(model)).not.toContain('SO');
   });
 
   it('the D24 sentence names the San Diego Section and its shootout (components/game/GameSources.tsx)', async () => {
@@ -480,7 +483,7 @@ describe('Southern California games (corpus copy with synthetic SoCal games, DES
     expect(model.countsAs.detail).toBe(
       'Counts toward the City Western standings — this site’s 3-1-0 points (the league publishes no points rule).',
     );
-    expect(C.m.gameDescription(model)).toMatch(/ City Western league game against .+\. City Conference girls varsity field hockey/);
-    expect(C.m.gameDescription(model)).not.toMatch(/City Western Division/);
+    expect(C.titles.gameDescription(model)).toMatch(/ City Western league game against .+\. City Conference girls varsity field hockey/);
+    expect(C.titles.gameDescription(model)).not.toMatch(/City Western Division/);
   });
 });

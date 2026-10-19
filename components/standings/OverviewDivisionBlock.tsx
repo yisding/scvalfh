@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
 import Arrow from '@/components/ui/Arrow';
-import type { OverviewDivision } from '@/views/standings/division';
+import type { OverviewDivision } from '@/views/standings/overview';
 
 import CompactStandingsTable from './CompactStandingsTable';
 

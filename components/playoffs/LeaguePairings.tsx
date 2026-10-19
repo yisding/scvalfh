@@ -1,4 +1,4 @@
-import { pairingSentence, type PairingView, type SeatView } from '@/views/playoffs/playoff-view';
+import { pairingSentence, type PairingView, type SeatView } from '@/views/playoffs/pairings';
 
 import PlayInCard, { type PlayInSide } from './PlayInCard';
 

@@ -3,7 +3,7 @@ import ExternalLink from '@/components/ui/ExternalLink';
 import MissingValue from '@/components/ui/MissingValue';
 import SectionHeader from '@/components/ui/SectionHeader';
 import { plural } from '@/lib/format/words';
-import { statText } from '@/views/teams/player-stats';
+import { statText } from '@/views/shared/stat-format';
 import type { GoalieCard, PlayerStatsView, StatTable } from '@/views/teams/player-stats';
 
 /**

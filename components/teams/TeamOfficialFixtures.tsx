@@ -6,7 +6,7 @@ import { getDivision, leagueOfDivision } from '@/lib/config/leagues';
 import { monthDay } from '@/lib/format/dates';
 import type { OfficialFixture } from '@/lib/model/fixture';
 import type { DivisionId, TeamSlug } from '@/lib/model/ids';
-import { fixtureOpponent } from '@/views/teams/team-view';
+import { fixtureOpponent } from '@/views/shared/official-fixtures';
 
 /**
  * Fixtures that exist in the league's official schedule and in NO data source (SPEC §1.3, §7.8).

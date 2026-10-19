@@ -4,7 +4,7 @@ import EmptyState from '@/components/ui/EmptyState';
 import ExternalLink from '@/components/ui/ExternalLink';
 import GridRowFiller from '@/components/ui/GridRowFiller';
 import SectionHeader from '@/components/ui/SectionHeader';
-import type { ClubPageView, ClubPlayerRow } from '@/views/clubs/club-view';
+import type { ClubPageView, ClubPlayerRow } from '@/views/clubs/club-page';
 
 /**
  * A club page's players (DESIGN §17.1): only players on the tracked varsity rosters, each with the
@@ -15,7 +15,7 @@ import type { ClubPageView, ClubPlayerRow } from '@/views/clubs/club-view';
  * Privacy (DESIGN §17.2): a row is a roster row of this site, by its own spelling, and shows what
  * the team page already shows (name, school, grade) plus the club team, the status in words and
  * the links. The quotes, the basis and the confidence the data file keeps are not in the view at
- * all (views/clubs/club-view.ts), so nothing here can print them.
+ * all (views/clubs/club-page.ts), so nothing here can print them.
  *
  * Each row is the team roster's row (components/teams/TeamRoster.tsx), the same card and grid:
  *   - the name;

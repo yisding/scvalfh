@@ -10,5 +10,6 @@
  * those routes anyway deletes it. eslint.config.mjs refuses any other import of it.
  */
 
-export { buildGameView, buildSupersededStub, gameKicker } from '@/views/game/game-view';
+export { buildGameView, buildSupersededStub } from '@/views/game/game-view';
+export { gameKicker } from '@/views/game/titles';
 export { gameStaticParams } from '@/views/game/game-route';

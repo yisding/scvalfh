@@ -13,7 +13,7 @@ import type {
   TournamentGameView,
   TournamentSlotView,
   TournamentView,
-} from '@/views/playoffs/playoff-view';
+} from '@/views/playoffs/tournament';
 
 import PlayInCard, { type PlayInSide } from './PlayInCard';
 

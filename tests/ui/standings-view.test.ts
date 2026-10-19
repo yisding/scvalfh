@@ -27,6 +27,8 @@ const m = useCorpusModules('all-2026-10-02', {
   data: loadQueries,
   sd: () => import('@/views/standings/standings-view'),
   view: () => import('@/views/standings/division'),
+  footnotes: () => import('@/views/standings/footnotes'),
+  leaderLines: () => import('@/views/standings/leader-lines'),
   leaguePage: () => import('@/app/standings/[league]/page'),
   overviewPage: () => import('@/app/standings/page'),
 });
@@ -240,13 +242,13 @@ describe('GP, LEFT and MAX', () => {
 
   it('prints the uneven-GP footnote verbatim when the spread is two or more (MCAL adds its rule)', () => {
     const spread = m.data.getGamesPlayedSpread('marin-county');
-    const note = m.view.unevenGpFootnote('mcal', spread);
+    const note = m.footnotes.unevenGpFootnote('mcal', spread);
     if (spread.max - spread.min >= 2) {
-      expect(note, 'views/standings/division.ts uneven-GP').toBe(
+      expect(note, 'views/standings/footnotes.ts uneven-GP').toBe(
         `Teams have played between ${spread.min} and ${spread.max} of ${spread.scheduled} league games, so points favour teams that have played more. LEFT is league games with no counted result yet — still to play, or played and not reported. MAX is the most points a team could reach if it won all of them. The order is points, as MCAL rules require. If the season ends with games unplayed, MCAL General Rules (with an incomplete schedule, winning percentage replaces points); we will show that order then.`,
       );
     }
-    expect(m.view.unevenGpFootnote('scval', { min: 5, max: 6, scheduled: 12 })).toBeNull();
+    expect(m.footnotes.unevenGpFootnote('scval', { min: 5, max: 6, scheduled: 12 })).toBeNull();
   });
 
   it('marks si.com-backfilled records with † and the footnote (PCAL corpus: three backfills)', async () => {
@@ -281,10 +283,10 @@ describe('GP, LEFT and MAX', () => {
   });
 
   it('writes the rules footnote with the league’s own points citation', () => {
-    expect(m.view.rulesFootnote('scval'), 'views/standings/division.ts rules').toBe(
+    expect(m.footnotes.rulesFootnote('scval'), 'views/standings/footnotes.ts rules').toBe(
       'PTS: SCVAL Field Hockey By-Laws 2026-27, Article VI §2 (3 points for a win, 1 for a tie). Ties: head-to-head, then division wins, then fewest goals given up between the tied teams, then head-to-head goal differential, then a coin flip (Article VI §3, §4, §5, §6, §7).',
     );
-    expect(m.view.rulesFootnote('pcal')).toMatch(/^PTS: PCAL Sports Rules — Field Hockey \(Jan 2022\) §1\.7/);
+    expect(m.footnotes.rulesFootnote('pcal')).toMatch(/^PTS: PCAL Sports Rules — Field Hockey \(Jan 2022\) §1\.7/);
   });
 });
 
@@ -422,12 +424,12 @@ describe('status chips, rank rule and level reason (UI pass, from config)', () =
 });
 
 describe('OG card rows (standings-view.ts leaderClause over standings-page-view.ts leaderLine: the root and /standings cards)', () => {
-  const SV = 'views/standings/division.ts leaderClause';
+  const SV = 'views/standings/leader-lines.ts leaderClause';
   it('names each division leader with points, co-leaders capped at two', () => {
     const row = (id: string) => {
       const league = m.data.getLeagueSummary(id as Parameters<typeof m.data.getLeagueSummary>[0]);
       if (!league) throw new Error(`no league ${id}`);
-      return m.view.leaderClause(league.divisions.map((d) => m.sd.leaderLine(d.id, d.heading)));
+      return m.leaderLines.leaderClause(league.divisions.map((d) => m.sd.leaderLine(d.id, d.heading)));
     };
     expect(row('scval'), `${SV}: OG SCVAL`).toBe('De Anza: Saint Francis 12 pts · El Camino: Mitty 15 pts');
     expect(row('bval'), `${SV}: OG BVAL`).toBe('Mt. Hamilton: Christopher 6 pts · Santa Teresa: Prospect & Westmont 6 pts');
@@ -438,9 +440,9 @@ describe('OG card rows (standings-view.ts leaderClause over standings-page-view.
       teams: names.map((name) => ({ name, record: '4-0-0', pts: 12 })),
       tiedAtTop: names.length > 1,
     });
-    expect(m.view.leaderClause([line(['A', 'B', 'C', 'D'])]), `${SV}: OG co-leaders`).toBe('A & B +2 12 pts');
-    expect(m.view.leaderClause([line(['A', 'B'])]), `${SV}: OG co-leaders`).toBe('A & B 12 pts');
-    expect(m.view.leaderClause([line([])]), `${SV}: before any result`).toBe('No league results yet');
+    expect(m.leaderLines.leaderClause([line(['A', 'B', 'C', 'D'])]), `${SV}: OG co-leaders`).toBe('A & B +2 12 pts');
+    expect(m.leaderLines.leaderClause([line(['A', 'B'])]), `${SV}: OG co-leaders`).toBe('A & B 12 pts');
+    expect(m.leaderLines.leaderClause([line([])]), `${SV}: before any result`).toBe('No league results yet');
   });
 });
 
@@ -503,8 +505,8 @@ describe('Southern California tables (standings-view.ts, DESIGN-socal §2.1.7)',
         );
       }
     }
-    const uneven = m.view.unevenGpFootnote('city', { min: 2, max: 6, scheduled: 10 })!;
-    expect(uneven, `${SV} unevenGpFootnote city`).toContain('The order is this site’s 3-1-0 points; no City rule orders the table.');
+    const uneven = m.footnotes.unevenGpFootnote('city', { min: 2, max: 6, scheduled: 10 })!;
+    expect(uneven, 'views/standings/footnotes.ts unevenGpFootnote city').toContain('The order is this site’s 3-1-0 points; no City rule orders the table.');
     expect(uneven).toContain('LEFT is league games');
     expect(uneven).not.toMatch(/rules require/);
   });
@@ -517,8 +519,8 @@ describe('Southern California tables (standings-view.ts, DESIGN-socal §2.1.7)',
     expect(sunset.noPostseason?.note).toMatch(/^The CIF Southern Section holds no field hockey playoffs/);
     expect(sunset.playoffsHref).toBe('/playoffs#sunset');
     expect(sunset.statusIntro).toBeNull();
-    const uneven = m.view.unevenGpFootnote('sunset', { min: 2, max: 7, scheduled: null });
-    expect(uneven, `${SV} unevenGpFootnote sunset`).toBe(
+    const uneven = m.footnotes.unevenGpFootnote('sunset', { min: 2, max: 7, scheduled: null });
+    expect(uneven, 'views/standings/footnotes.ts unevenGpFootnote sunset').toBe(
       'Teams have played between 2 and 7 games against other Sunset teams, and there is no fixed league schedule, so points favour teams that have played more. The order is this site’s 3-1-0 points; no Sunset rule orders the table.',
     );
     const html = await renderLeague('sunset');

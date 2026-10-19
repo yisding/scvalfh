@@ -31,17 +31,11 @@ import {
 } from '@/lib/queries/standings';
 import { getTeams } from '@/lib/queries/teams';
 
-import {
-  buildDivisionView,
-  buildOverviewDivision,
-  coLeadersLine,
-  overviewOutline,
-  rulesFootnote,
-  unevenGpFootnote,
-  type DivisionView,
-  type LeaderLine,
-  type OverviewSection,
-} from './division';
+import { buildDivisionView } from './division';
+import { coLeadersLine, rulesFootnote, unevenGpFootnote } from './footnotes';
+import type { LeaderLine } from './leader-lines';
+import { buildOverviewDivision, overviewOutline, type OverviewSection } from './overview';
+import type { DivisionView } from './types';
 
 export interface StandingsPageView {
   asOf: string;

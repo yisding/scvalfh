@@ -15,7 +15,7 @@
  *     has claimed) are linked from that player's row;
  *   - a player a public page ties to a club gets a club line linking that club's page on this site
  *     (DESIGN §17.4), current clubs first; a club a source only lists, with no date that makes it
- *     current, is never worded as current. The words are views/clubs/club-view.ts'
+ *     current, is never worded as current. The words are views/clubs/club-line.ts'
  *     (`playerClubGroups`), so the team page and the club pages say the same thing;
  *   - a player a public page says has committed to play a college sport (field hockey or another,
  *     which the line names) gets a commitment line linking that player's row on /commits (DESIGN
@@ -32,7 +32,7 @@ import { dateWithYear, shortDate } from '@/lib/format/dates';
 import { gradeWord } from '@/lib/format/words';
 import type { TeamSlug } from '@/lib/model/ids';
 import { toLocalTimestamp } from '@/lib/shared/dates';
-import { playerClubGroups, type RosterClubGroup } from '@/views/clubs/club-view';
+import { playerClubGroups, type RosterClubGroup } from '@/views/clubs/club-line';
 import { SPORT_WORDS, playerCommitLine, sportLabel, type RosterCommitLine } from '@/views/commits/commit-view';
 import { positionWords } from '@/views/shared/words/position';
 

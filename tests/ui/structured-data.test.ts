@@ -16,6 +16,7 @@ import { loadQueries } from '@/tests/support/queries';
 const m = useCorpusModules('all-2026-10-02', {
   sd: () => import('@/views/site/structured-data'),
   gv: () => import('@/views/game/game-view'),
+  titles: () => import('@/views/game/titles'),
   gr: () => import('@/views/game/game-route'),
   data: loadQueries,
 });
@@ -81,7 +82,7 @@ describe('gameJsonLd', () => {
       const node = m.sd.gameJsonLd(model);
       const where = `views/site/structured-data.ts gameJsonLd ${id}`;
       expect(node['@type'], where).toBe('SportsEvent');
-      expect(node.name, where).toBe(m.gv.gameTitle(model));
+      expect(node.name, where).toBe(m.titles.gameTitle(model));
       expect(node.startDate, where).toBe(game.isDateTba ? undefined : dateTimeAttr(game));
       expect(node.eventStatus, where).not.toBe('https://schema.org/EventCancelled');
       if (game.status === 'postponed') expect(node.eventStatus, where).toBe('https://schema.org/EventPostponed');

@@ -31,8 +31,8 @@ import { isIndependentLeague } from '@/lib/config/leagues';
 import { dateTimeAttr } from '@/lib/format/dates';
 import type { LeagueConfig } from '@/lib/model/league-config';
 import type { Team } from '@/lib/model/team';
-import { gameDescription, gameTitle } from '@/views/game/game-view';
 import type { GameView } from '@/views/game/game-view';
+import { gameDescription, gameTitle } from '@/views/game/titles';
 
 import { SITE_DESCRIPTION, SITE_NAME, SITE_SHORT_NAME, SITE_URL, SITE_WORDMARK } from './site';
 

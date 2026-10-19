@@ -1,6 +1,6 @@
 import ExternalLink from '@/components/ui/ExternalLink';
 import GridRowFiller from '@/components/ui/GridRowFiller';
-import type { ClubProgramRow, ClubProgramsSource } from '@/views/clubs/club-view';
+import type { ClubProgramRow, ClubProgramsSource } from '@/views/clubs/club-page';
 
 /**
  * A club page's "Teams and programs" (DESIGN §17.1): what the club lists on its own pages, each
@@ -10,7 +10,7 @@ import type { ClubProgramRow, ClubProgramsSource } from '@/views/clubs/club-view
  * The players' row pattern (components/clubs/ClubPlayers.tsx): the name, the detail when the club
  * gives one, then the source link on its own line. Most clubs list several programs on one page,
  * so that page is linked once, under the list ("Listed on the club’s site: Programs overview"), and
- * a row keeps a link only when it was read from another page (views/clubs/club-view.ts
+ * a row keeps a link only when it was read from another page (views/clubs/club-page.ts
  * `programsSource`). A row's link says what it opens ("club site"); its accessible name says which
  * program ("U19 Hawks Blue: SportsRecruits team page"), and the shared link's says which section
  * ("Teams and programs: Program overview"), so each link in the section has a name of its own and

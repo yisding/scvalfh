@@ -6,7 +6,7 @@
 
 import { getLeague } from '@/lib/config/leagues';
 import type { Team } from '@/lib/model/team';
-import { statText } from '@/views/teams/player-stats';
+import { statText } from '@/views/shared/stat-format';
 
 import { rankBoard } from './ranking';
 import type { BoardScope } from './scope';

@@ -3,7 +3,7 @@
  * contract: views/site/route-contract.ts): which params the route prerenders, and the league plus
  * its tournament config for one of them.
  *
- * It reads `lib/queries/`, so it sits beside the pure `playoff-view.ts` rather than in it, the way
+ * It reads `lib/queries/`, so it sits beside the pure `tournament.ts` rather than in it, the way
  * `views/standings/standings-view.ts` sits beside `division.ts`. The page and the
  * OG route both call these, so the OG card's params and its 404 guard cannot drift from the page's.
  * They are not exported from the page itself because a page file may only export the route's own

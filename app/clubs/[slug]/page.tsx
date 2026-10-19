@@ -28,7 +28,7 @@ import { OG_BASE, ROOT_OG_IMAGE } from '@/views/site/site';
  *
  * Privacy (DESIGN §17.2). Only players already on the tracked varsity rosters are named, each by
  * the roster's own spelling. A source's verbatim quote, an affiliation's basis and its confidence
- * are never rendered (they are not in the view, views/clubs/club-view.ts), and the metadata
+ * are never rendered (they are not in the view, views/clubs/club-page.ts), and the metadata
  * names no player at all: a title or description travels further than the page. The club record
  * itself names no individual.
  *

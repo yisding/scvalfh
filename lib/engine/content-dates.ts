@@ -152,7 +152,7 @@ function sideSlugs(game: Game): string[] {
 export function gamePageInputs(game: Game, all: readonly Game[]): Game[] {
   const sides = sideSlugs(game);
   const recordsToDate = game.status === 'postponed' || (game.countsFor === null && game.postseason === null);
-  // views/game/game-view.ts seriesGames' key: the slug, else the name, trimmed and lower-cased.
+  // views/game/series.ts seriesGames' key: the slug, else the name, trimmed and lower-cased.
   const key = (side: Game['home']) => side.slug ?? `name:${side.name.trim().toLowerCase()}`;
   const pair = [key(game.home), key(game.away)];
   return all.filter((g) => {

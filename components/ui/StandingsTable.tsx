@@ -8,7 +8,7 @@ import type { DivisionId, TeamId, TeamSlug } from '@/lib/model/ids';
 import type { Standing } from '@/lib/model/standings';
 import type { StandingContext } from '@/lib/queries/standings';
 import { articleFor, membershipSource } from '@/views/shared/words/membership';
-import type { StandingsRowData } from '@/views/standings/division';
+import type { StandingsRowData } from '@/views/standings/types';
 
 import ExternalLink from './ExternalLink';
 import FormStrip, { toFormEntries } from './FormStrip';

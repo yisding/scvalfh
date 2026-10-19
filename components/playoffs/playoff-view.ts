@@ -1,5 +1,5 @@
 /**
- * NOT a module to import: the code lives in views/playoffs/playoff-view.ts. This file re-exports
+ * NOT a module to import: the code lives in views/playoffs/tournament.ts. This file re-exports
  * only the names the metadata image route still imports through its relative specifier:
  * app/playoffs/[league]/opengraph-image.tsx.
  *
@@ -10,5 +10,5 @@
  * those routes anyway deletes it. eslint.config.mjs refuses any other import of it.
  */
 
-export { ROUND_TITLES } from '@/views/playoffs/playoff-view';
-export type { TournamentRoundView } from '@/views/playoffs/playoff-view';
+export { ROUND_TITLES } from '@/views/playoffs/tournament';
+export type { TournamentRoundView } from '@/views/playoffs/tournament';

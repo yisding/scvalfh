@@ -31,14 +31,9 @@ import { getStandingFor } from '@/lib/queries/standings';
 import { getTeams } from '@/lib/queries/teams';
 import { getTeamById } from '@/lib/registry/teams';
 import { buildBrackets, ccsDivisionLabels, pendingRounds } from '@/views/playoffs/bracket';
-import {
-  buildDivisionProjection,
-  buildPairingView,
-  ladderFactsFor,
-  pairingNotesFor,
-  type LeagueKeyDate,
-  type ProjectionRow,
-} from '@/views/playoffs/playoff-view';
+import type { LeagueKeyDate } from '@/views/playoffs/key-dates';
+import { buildPairingView, pairingNotesFor } from '@/views/playoffs/pairings';
+import { buildDivisionProjection, ladderFactsFor, type ProjectionRow } from '@/views/playoffs/projection';
 import { leagueChips } from '@/views/site/league-chips';
 import { OG_BASE, ROOT_OG_IMAGE } from '@/views/site/site';
 import { leaderLine } from '@/views/standings/standings-view';

@@ -18,6 +18,7 @@ import { POSTSEASON_LEAD, postseasonCardLine, rungCardText } from '@/views/home/
 
 const m = useCorpusModules('all-2026-10-02', {
   home: () => import('@/views/home/home-view'),
+  phaseLead: () => import('@/views/home/phase-lead'),
   leagues: () => import('@/lib/config/leagues'),
   labels: () => import('@/lib/config/leagues/labels'),
   homePage: () => import('@/app/page'),
@@ -29,6 +30,7 @@ const panelHtml = new Map<string, string>();
 let renderPanel: (id: string) => string;
 
 const HV = 'views/home/home-view.ts';
+const PL = 'views/home/phase-lead.ts';
 
 beforeAll(() => {
   data = m.home.buildHomeView();
@@ -244,25 +246,25 @@ describe('home panels (views/home/home-view.ts → LeaguePanel)', () => {
   });
 
   it('writes the phase copy per league (dates from config)', () => {
-    const lead = (id: string, phase: Parameters<typeof m.home.phaseLead>[1], today: string) =>
-      m.home.phaseLead(m.leagues.getLeague(id), phase, today);
-    expect(lead('mcal', 'regular', '2026-10-02'), `${HV}: regular renders nothing`).toBeNull();
+    const lead = (id: string, phase: Parameters<typeof m.phaseLead.phaseLead>[1], today: string) =>
+      m.phaseLead.phaseLead(m.leagues.getLeague(id), phase, today);
+    expect(lead('mcal', 'regular', '2026-10-02'), `${PL}: regular renders nothing`).toBeNull();
     // The independents (DESIGN §24.10): the lead names the first game between two of them, never "Independent
     // league play", and the body says the table counts only games between them.
-    expect(lead('independents', 'regular', '2026-08-10'), `${HV}: independents before their first game`).toEqual({
+    expect(lead('independents', 'regular', '2026-08-10'), `${PL}: independents before their first game`).toEqual({
       lead: 'The first game between two of the LA independents is Tue Sep 8.',
       body: 'No games have been played yet, so every record below is empty on purpose.',
       link: { href: '/schedule/independents', label: 'Full schedule' },
     });
-    expect(lead('independents', 'regular', '2026-09-08'), `${HV}: independents in season`).toBeNull();
+    expect(lead('independents', 'regular', '2026-09-08'), `${PL}: independents in season`).toBeNull();
     // Before the first league date (config's, lib/config/leagues leaguePlayStarts), counting the
     // non-league finals played by that day only (lib/queries/games getNonLeagueFinalsPlayed).
-    expect(lead('scval', 'regular', '2026-09-01'), `${HV}: SCVAL before league play`).toEqual({
+    expect(lead('scval', 'regular', '2026-09-01'), `${PL}: SCVAL before league play`).toEqual({
       lead: 'SCVAL league play starts Wed Sep 9.',
       body: 'These tables count league games only, so the 15 non-league games played so far are on the schedule and in the overall records, not in the standings.',
       link: { href: '/schedule/scval', label: 'Full schedule' },
     });
-    expect(lead('mcal', 'tournament', '2026-10-24'), `${HV}: MCAL tournament`).toEqual({
+    expect(lead('mcal', 'tournament', '2026-10-24'), `${PL}: MCAL tournament`).toEqual({
       lead: 'MCAL league play is over.',
       body: 'Quarterfinals are Mon Oct 26 (a play-in Fri Oct 23 only if needed); the final is Fri Oct 30 at Tamalpais.',
       link: { href: '/playoffs/mcal', label: 'Bracket' },
@@ -280,29 +282,29 @@ describe('home panels (views/home/home-view.ts → LeaguePanel)', () => {
     expect(`${pcal?.lead} ${pcal?.body}`, `${HV}: PCAL playoffs`).toBe(
       'PCAL league play is over. CCS seeds the 16-team field on Mon Nov 2; quarterfinals are Sat Nov 7.',
     );
-    expect(lead('pcal', 'complete', '2026-11-20')?.link, `${HV}: no last-season link: PCAL history is unavailable`).toBeNull();
+    expect(lead('pcal', 'complete', '2026-11-20')?.link, `${PL}: no last-season link: PCAL history is unavailable`).toBeNull();
     expect(lead('mcal', 'complete', '2026-11-20')?.link).toBeNull();
     expect(lead('scval', 'complete', '2026-11-20')?.link?.href).toBe('/history/2025-26#scval');
     expect(lead('bval', 'complete', '2026-11-20')?.link?.href).toBe('/history/2025-26#bval');
     // The EAL: no bracket, so the tournament phase says what is (and is not) published, and the
     // CCS-ladder 'playoffs' copy never reaches it.
-    expect(lead('eal', 'tournament', '2026-10-30'), `${HV}: EAL tournament`).toEqual({
+    expect(lead('eal', 'tournament', '2026-10-30'), `${PL}: EAL tournament`).toEqual({
       lead: 'The Super Regional is Oct 30–31; its format and site are not published yet.',
       body: '',
       link: { href: '/playoffs#eal', label: 'Postseason' },
     });
-    expect(lead('eal', 'playoffs', '2026-11-03'), `${HV}: EAL never gets the CCS copy`).toBeNull();
-    expect(lead('eal', 'complete', '2026-11-20')?.link, `${HV}: no last-season link: EAL history is unavailable`).toBeNull();
+    expect(lead('eal', 'playoffs', '2026-11-03'), `${PL}: EAL never gets the CCS copy`).toBeNull();
+    expect(lead('eal', 'complete', '2026-11-20')?.link, `${PL}: no last-season link: EAL history is unavailable`).toBeNull();
     // The San Diego leagues: the Section's playoffs, dates from config, no bracket and no "top N".
-    expect(lead('city', 'tournament', '2026-11-03'), `${HV}: City in the Section playoffs`).toEqual({
+    expect(lead('city', 'tournament', '2026-11-03'), `${PL}: City in the Section playoffs`).toEqual({
       lead: 'City league play is over.',
       body: 'The San Diego Section playoffs are Nov 2–14; the Section publishes its brackets after its Sat Oct 31 seeding meeting.',
       link: { href: '/playoffs#city', label: 'Postseason' },
     });
-    expect(lead('metro', 'playoffs', '2026-11-03'), `${HV}: SDS never gets the CCS copy`).toBeNull();
+    expect(lead('metro', 'playoffs', '2026-11-03'), `${PL}: SDS never gets the CCS copy`).toBeNull();
     // A 'site' league's final table is this site's, never "the final league standings".
     expect(lead('sunset', 'complete', '2026-11-20')?.body).toBe('The tables below are this site’s final tables, ordered by its own points.');
-    expect(lead('sunset', 'complete', '2026-11-20')?.link, `${HV}: no Sunset history`).toBeNull();
+    expect(lead('sunset', 'complete', '2026-11-20')?.link, `${PL}: no Sunset history`).toBeNull();
     expect(lead('scval', 'complete', '2026-11-20')?.body).toBe('The tables below are the final league standings.');
   });
 

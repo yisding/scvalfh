@@ -4,9 +4,10 @@
  *
  * Every number here comes through `describeGame()` (views/shared/describe-game.ts), which is the one
  * implementation of the DESIGN §5.2 table, or straight from `renderScore()` (the season-series
- * sentence's `ended 2-2`). Nothing in this module PRINTS `game.home.score` / `game.away.score`;
- * the two null-guarded reads only decide which sentence is shown (`resultConflictNoteFor`'s level
- * check, and `isOneGoalFinal`, the MCAL shootout caveat), so a missing score cannot become `0-0`
+ * sentence's `ended 2-2`). Nothing in this module or the topic modules beside it (series, postseason,
+ * notes, links, titles) PRINTS `game.home.score` / `game.away.score`; the two null-guarded reads
+ * only decide which sentence is shown (`resultConflictNoteFor`'s level check, and postseason.ts's
+ * `isOneGoalFinal`, the MCAL shootout caveat), so a missing score cannot become `0-0`
  * in a page title, an OG card or a `<meta name="description">` any more than it can in the body
  * (DESIGN §5.3, §10.9e).
  *
@@ -22,126 +23,33 @@
  */
 
 import { findDivision, findLeague, getLeague, leagueOfDivision } from '@/lib/config/leagues';
-import { divisionDisplay, divisionHeading, leagueSportWords } from '@/lib/config/leagues/labels';
-import { SEASON_DISPLAY } from '@/lib/config/season';
-import { SHOOTOUT_NOTE } from '@/lib/engine/postseason';
+import { divisionDisplay, divisionHeading } from '@/lib/config/leagues/labels';
 import { dateWithYear, monthDay, shortDate, timeOfDayPT } from '@/lib/format/dates';
 import { recordString } from '@/lib/format/numbers';
-import { matchupJoiner, renderScore, shootoutPhrases } from '@/lib/format/score';
 import type { ScoreConflictRow } from '@/lib/model/crosscheck';
-import type { BackfillProvenance, Game, GameSide, Outcome } from '@/lib/model/game';
+import type { Game, GameSide, Outcome } from '@/lib/model/game';
 import type { DivisionId } from '@/lib/model/ids';
 import type { LeagueConfig } from '@/lib/model/league-config';
-import type { TournamentGame } from '@/lib/model/postseason';
-import type { Standing, TiebreakStage } from '@/lib/model/standings';
+import type { Standing } from '@/lib/model/standings';
 import type { Team } from '@/lib/model/team';
-import { getGames } from '@/lib/queries/games';
-import { getLeagueTournament } from '@/lib/queries/postseason';
 import { getSbliveCrossCheck, getSupersededGames } from '@/lib/queries/provenance';
 import { getStandingFor } from '@/lib/queries/standings';
 import { getTeamForm, getTeams } from '@/lib/queries/teams';
 import { getTeamBySlug } from '@/lib/registry/teams';
 import { isSbliveContestId } from '@/lib/shared/contest-id';
-import { byDateLocal, sideOutcome } from '@/lib/shared/game';
 import { gameHref, gameIdToParam, paramToGameId } from '@/lib/shared/game-id';
-import {
-  describeGame,
-  gameContextNoun,
-  overtimeInDoubt,
-  postseasonTagOf,
-  resultSentence,
-  shootoutCitationParts,
-  shootoutGroupName,
-  shootoutSectionOf,
-} from '@/views/shared/describe-game';
+import { describeGame } from '@/views/shared/describe-game';
 import type { FormEntry } from '@/views/shared/form-entry';
 import type { GameDisplay, SideView } from '@/views/shared/game-display-client';
 
 import { gameParam } from './game-route';
+import { resultLinksFor } from './links';
+import { countsAsFor, scoreNoteFor, tiebreakNoteFor } from './notes';
+import { postseasonView } from './postseason';
+import { hasResultConflict, seriesGames, seriesSummary } from './series';
+import type { CountsAs, GameConflict, GameLink, GameSideModel, GameSourceLine, SeriesModel } from './types';
 
 // ---------------------------------------------------------------- types
-
-export interface GameSideModel {
-  /** The display name, from the snapshot. */
-  name: string;
-  /**
-   * The name for a `<title>` and an OG card: the full name, or `shortName` when the full one is
-   * too long for a link preview (over 24 characters: "Convent of the Sacred Heart" is 27 and would
-   * eat a whole title on its own). The page body uses `name`, except the season-series sentence,
-   * which uses the team's short name to match the meeting rows above it.
-   */
-  label: string;
-  /** Present only for one of the teams this site follows; anyone else is a name (DESIGN §8). */
-  team: Team | undefined;
-  standing: Standing | undefined;
-  /**
-   * "4-1-0 De Anza" / "10-1-1 MCAL" — the LEAGUE record as of this contest (`recordAsOf`), not
-   * today's — or the honest no-results line. `null` for a non-member.
-   */
-  sub: string | null;
-  /** Up to five LEAGUE results BEFORE this contest, oldest first (DESIGN §5.5). */
-  formBefore: FormEntry[];
-  /** How many league games this side had played before this one — the form caption's subject. */
-  playedBefore: number;
-  /** This game's result from this side, when it is a final. */
-  outcome: Outcome | null;
-  /** The side's own page on si.com, when the slug was verified upstream. */
-  sbliveUrl: string | undefined;
-  /** The DESIGN §5.2 view of this side: glyph, weight, chip. */
-  view: SideView;
-}
-
-export interface SeriesMeeting {
-  game: Game;
-  isThisGame: boolean;
-}
-
-export interface SeriesModel {
-  meetings: SeriesMeeting[];
-  /** One sentence naming the leader, or saying they have not played (DESIGN §3.5). */
-  summary: string;
-  /** The league's own head-to-head citation, when this is a counted game and the league breaks ties on it. */
-  tiebreakNote: string | null;
-  /** The perspective the rows are oriented from: this game's home side where possible. */
-  perspective: GameSideModel;
-}
-
-/** An off-site link for this contest. `accent` marks the one primary pill. */
-export interface GameLink {
-  href: string;
-  label: string;
-  accent?: boolean;
-}
-
-export interface GameConflict {
-  /** The ready-to-render sentence written by the pipeline (both numbers are in it). */
-  note: string;
-  /** What MaxPreps published, when it published anything. */
-  maxpreps: { home: number; away: number } | null;
-  /** What si.com published. */
-  sblive: { home: number; away: number };
-  sbliveUrl: string | null;
-  maxprepsUrl: string | null;
-}
-
-/** The si.com source line (owner decision D2): shown whenever the published score is si.com's. */
-export interface GameSourceLine {
-  /** `Score via High School on SI (si.com): <rule note>.` */
-  text: string;
-  rule: BackfillProvenance['rule'] | null;
-  sbliveUrl: string | null;
-  maxprepsUrl: string | null;
-}
-
-/** How the game counts, in words (GameDetails "Counts as"). */
-export interface CountsAs {
-  /** `League game · De Anza Division` | `League game · MCAL` | `MCAL semifinal` | `Non-league game` */
-  label: string;
-  /** The sentence under it: the points citation, the postseason sentence, or the non-league rule. */
-  detail: string;
-  /** The classifier's own note when a same-division game does not count (verbatim). */
-  classificationNote: string | null;
-}
 
 export interface GameView {
   game: Game;
@@ -225,21 +133,11 @@ export interface SupersededStub {
 
 // ---------------------------------------------------------------- helpers
 
-/** A stable key for one side of a contest: our slug, or the opponent's name. */
-function sideKey(side: GameSide): string {
-  return side.slug ?? `name:${side.name.trim().toLowerCase()}`;
-}
-
 /** Longer than this and a school name crowds out everything else in a link preview. */
 const TITLE_NAME_LIMIT = 24;
 
 function labelFor(name: string, team: Team | undefined): string {
   return team && name.length > TITLE_NAME_LIMIT ? team.shortName : name;
-}
-
-/** 'a' or 'an', so "an MCAL tournament game" reads like English (acronyms by their letter name). */
-function article(noun: string): string {
-  return /^([aeiou]|MCAL|SCVAL)/i.test(noun) ? 'an' : 'a';
 }
 
 /** `De Anza` | `MCAL`: the division heading, or the league short name for a single-division league. */
@@ -349,30 +247,6 @@ function recordsCaptionFor(
 }
 
 /**
- * A final's result links (`GameView.resultLinks`). The accent pill is the source the score came
- * from: si.com's game page when the published score is si.com's (D2), else the MaxPreps box score.
- */
-function resultLinksFor(game: Game): GameLink[] {
-  if (game.status !== 'final') return [];
-  const links: GameLink[] = [];
-  const sbliveScored = game.provenance.scores === 'sblive';
-  if (sbliveScored && game.urls.sblive) {
-    links.push({ href: game.urls.sblive, label: 'si.com game', accent: true });
-  }
-  if (game.urls.maxpreps) {
-    // Beside a si.com score, MaxPreps' contest page may carry no score (or a wrong one): it is the
-    // contest page, not "the box score", and never the accent pill.
-    links.push(
-      sbliveScored
-        ? { href: game.urls.maxpreps, label: 'MaxPreps game' }
-        : { href: game.urls.maxpreps, label: 'MaxPreps box score', accent: true },
-    );
-  }
-  if (game.urls.nfhsStream) links.push({ href: game.urls.nfhsStream, label: 'NFHS stream' });
-  return links;
-}
-
-/**
  * The last five LEAGUE results a side carried into this contest.
  *
  * League games are found by position in the team's own league list, so a same-day doubleheader
@@ -425,25 +299,6 @@ function sideModel(game: Game, side: GameSide, view: SideView, display: GameDisp
   };
 }
 
-/** Every contest between these two schools this season, in date order. */
-function seriesGames(game: Game): Game[] {
-  const anchor = game.home.slug ?? game.away.slug;
-  if (!anchor) return [game];
-  const keyHome = sideKey(game.home);
-  const keyAway = sideKey(game.away);
-  return getGames({ teamId: anchor })
-    .filter((g) => {
-      const keys = [sideKey(g.home), sideKey(g.away)];
-      return keys.includes(keyHome) && keys.includes(keyAway);
-    })
-    .sort(byDateLocal);
-}
-
-/** A final whose published score MaxPreps' own result flags contradict, with no si.com score over it. */
-function hasResultConflict(g: Game): boolean {
-  return !!g.provenance.resultConflict && !g.provenance.backfill;
-}
-
 /**
  * The game page's sentence for `provenance.resultConflict`: the pipeline's note, then what this
  * site publishes — a level score counts as a tie (DESIGN §5.2: the score is the record).
@@ -462,115 +317,6 @@ function resultConflictNoteFor(game: Game): string | null {
   return level
     ? `${note}. The score is level, so this site counts it as a tie.`
     : `${note}. This site goes by the published score.`;
-}
-
-function seriesSummary(game: Game, games: Game[], homeName: string, awayName: string): string {
-  let homeWins = 0;
-  let awayWins = 0;
-  let ties = 0;
-  let played = 0;
-  let pending = 0;
-  /** Level finals MaxPreps flags with a winner (a shootout, most likely): counted as ties, said so. */
-  const flaggedTies: Game[] = [];
-  const keyHome = sideKey(game.home);
-  for (const g of games) {
-    const display = describeGame(g);
-    if (display.kind === 'unreported') {
-      // Played, but no score published. It is neither a result nor a fixture (DESIGN §5.2).
-      pending += 1;
-      continue;
-    }
-    if (display.kind !== 'final') continue;
-    played += 1;
-    // The legs are home-and-away, so align every row on THIS game's home side. `sideOutcome`
-    // is the one W/L/T rule, so a shootout win is a win here, not a tie.
-    const outcome = sideOutcome(g, sideKey(g.home) === keyHome ? 'home' : 'away');
-    if (outcome === 'T') {
-      ties += 1;
-      if (hasResultConflict(g)) flaggedTies.push(g);
-    } else if (outcome === 'W') {
-      homeWins += 1;
-    } else {
-      awayWins += 1;
-    }
-  }
-  // The contest being viewed is in this list. Its own RESULT belongs in the series record, but it
-  // is not news to the reader that it is scheduled, so the "still to play" count excludes it.
-  const selfKind = describeGame(game).kind;
-  const selfIsUpcoming = selfKind !== 'final' && selfKind !== 'unreported';
-  const upcoming = games.length - played - pending - (selfIsUpcoming ? 1 : 0);
-  const pendingOthers = pending - (selfKind === 'unreported' ? 1 : 0);
-
-  const sentences: string[] = [];
-  if (played === 0) {
-    sentences.push(
-      pending > 0
-        ? `${awayName} and ${homeName} have met ${
-            pending === 1 ? 'once' : `${pending} times`
-          } this season with no score published.`
-        : `${awayName} and ${homeName} have not played yet this season.`,
-    );
-  } else if (homeWins > awayWins) {
-    sentences.push(
-      `${homeName} leads the season series ${record(homeWins, awayWins, ties)}.`,
-    );
-  } else if (awayWins > homeWins) {
-    sentences.push(
-      `${awayName} leads the season series ${record(awayWins, homeWins, ties)}.`,
-    );
-  } else if (ties === played && flaggedTies.length > 0) {
-    // MaxPreps marks a winner on a level score: "a draw" alone would contradict the recap.
-    if (played === 1) {
-      const g = flaggedTies[0];
-      const flagged = g.home.result === 'W' ? g.home : g.away.result === 'W' ? g.away : null;
-      const winner = flagged ? (sideKey(flagged) === keyHome ? homeName : awayName) : null;
-      // A flagged tie is a final with both scores (sideOutcome read 'T' off them), so the view is
-      // always 'final' here; the fallback only keeps the type honest.
-      const meeting = renderScore(g);
-      const ended = meeting.kind === 'final' ? `${meeting.home}-${meeting.away}` : 'level';
-      sentences.push(
-        `Their only meeting this season ended ${ended}, which this site counts as a draw; ${
-          winner ? `MaxPreps lists ${winner} as the winner.` : 'MaxPreps’ result flags for it disagree.'
-        }`,
-      );
-    } else {
-      sentences.push(
-        `All ${played} meetings this season ended level, which this site counts as draws; MaxPreps lists a winner for ${
-          flaggedTies.length === 1 ? 'one of them' : `${flaggedTies.length} of them`
-        }.`,
-      );
-    }
-  } else if (ties === played) {
-    // "level at 0-0-1" is true but unreadable; say what happened instead.
-    sentences.push(
-      played === 1
-        ? 'Their only meeting this season was a draw.'
-        : `All ${played} meetings this season were drawn.`,
-    );
-  } else {
-    sentences.push(`The season series is level at ${record(homeWins, awayWins, ties)}.`);
-  }
-
-  if (upcoming > 0) {
-    sentences.push(
-      upcoming === 1
-        ? 'One other meeting is still to play.'
-        : `${upcoming} other meetings are still to play.`,
-    );
-  }
-  if (pendingOthers > 0 && played > 0) {
-    sentences.push(
-      pendingOthers === 1
-        ? 'One other meeting has no published score.'
-        : `${pendingOthers} other meetings have no published score.`,
-    );
-  }
-  return sentences.join(' ');
-}
-
-/** 'W-L' or 'W-L-T' — ties are only printed when there are some. */
-function record(wins: number, losses: number, ties: number): string {
-  return ties > 0 ? `${wins}-${losses}-${ties}` : `${wins}-${losses}`;
 }
 
 function conflictFor(game: Game): GameConflict | null {
@@ -617,215 +363,6 @@ function leagueOfGame(game: Game, away: Team | undefined, home: Team | undefined
   }
   const member = home ?? away;
   return member ? (findLeague(member.league) ?? null) : null;
-}
-
-const ROUND_WORD: Readonly<Record<TournamentGame['round'], string>> = {
-  'play-in': 'play-in',
-  quarterfinal: 'quarterfinal',
-  semifinal: 'semifinal',
-  final: 'final',
-};
-
-/** The MCAL bracket slot this contest filled, when `getLeagueTournament` matched it. */
-function tournamentSlot(game: Game, league: LeagueConfig): TournamentGame | null {
-  if (league.postseason.kind !== 'league-tournament') return null;
-  const t = getLeagueTournament(league.id);
-  const all = [...(t.playIn ? [t.playIn] : []), ...t.games];
-  return all.find((tg) => tg.game?.contestId === game.contestId) ?? null;
-}
-
-/** A one-goal final: a tournament shootout may be hiding in it (SPEC §6.2). */
-function isOneGoalFinal(game: Game): boolean {
-  return (
-    game.status === 'final' &&
-    game.home.score !== null &&
-    game.away.score !== null &&
-    Math.abs(game.home.score - game.away.score) === 1
-  );
-}
-
-interface PostseasonView {
-  contextLabel: string;
-  countsAs: CountsAs;
-  notes: string[];
-}
-
-function postseasonView(game: Game, league: LeagueConfig | null): PostseasonView | null {
-  const tag = game.postseason;
-  if (!tag) return null;
-  if (tag.kind === 'mcal-tournament' && league && league.postseason.kind === 'league-tournament') {
-    const slot = tournamentSlot(game, league);
-    const label = slot ? `${league.shortName} ${ROUND_WORD[slot.round]}` : league.postseason.name;
-    const sentence = `${league.postseason.name} game — it does not count in the league table.`;
-    const notes = [sentence];
-    const shootout = slot?.note ?? (isOneGoalFinal(game) ? SHOOTOUT_NOTE : null);
-    if (shootout) notes.push(shootout);
-    return {
-      contextLabel: label,
-      countsAs: { label, detail: sentence, classificationNote: null },
-      notes,
-    };
-  }
-  if (tag.kind === 'league-postseason' && league && league.postseason.kind === 'unbracketed-tournament') {
-    // The EAL Super Regional: a counted-nowhere game with no bracket slot to name.
-    const sentence = `${league.postseason.name} game — it does not count in the league table.`;
-    const label = `${league.shortName} ${league.postseason.name}`;
-    return {
-      contextLabel: label,
-      countsAs: { label, detail: sentence, classificationNote: null },
-      notes: [sentence],
-    };
-  }
-  if ((tag.kind === 'scval-crossover' || tag.kind === 'bval-play-in') && league) {
-    const label = `${league.shortName} ${tag.kind === 'scval-crossover' ? 'crossover' : 'play-in'}`;
-    const sentence = `${league.shortName} postseason game — it does not count in the league table.`;
-    return {
-      contextLabel: label,
-      countsAs: { label, detail: sentence, classificationNote: null },
-      notes: [sentence],
-    };
-  }
-  if (tag.kind === 'section-playoffs') {
-    // The San Diego Section's playoffs (Green Book 2026-27 Bylaw 2000.1): one tournament across the City,
-    // North County and Metro conferences, so one label whether or not the two sides share a conference
-    // (lib/engine/classify.ts tags it; its leagueId is null across conferences, so the name comes from the sides).
-    const name = postseasonTagOf(game);
-    if (name) {
-      const sentence = `${name} game — it does not count in the league table.`;
-      return {
-        contextLabel: name,
-        countsAs: { label: name, detail: sentence, classificationNote: null },
-        notes: [sentence],
-      };
-    }
-  }
-  if (tag.kind === 'ccs') {
-    const sentence = 'CCS playoff game — it does not count in any league table.';
-    return {
-      contextLabel: 'CCS',
-      countsAs: { label: 'CCS playoff game', detail: sentence, classificationNote: null },
-      notes: [sentence],
-    };
-  }
-  const sentence = 'Postseason game — it does not count in any league table.';
-  return {
-    contextLabel: 'Postseason',
-    countsAs: { label: 'Postseason game', detail: sentence, classificationNote: null },
-    notes: [sentence],
-  };
-}
-
-/**
- * `scoreNote` (D7): what this site does with a score the feed cannot state plainly. The rule it
- * cites is the section's (SectionConfig.shootout, keyed on the section as lib/pipeline/reconcile/normalize.ts keys decider
- * 'SO'): the Northern Section's Guidelines for the EAL (a 10-minute sudden-victory period, then 1 v 1s)
- * and the San Diego Field Hockey Officials Association's procedures for the San Diego Section (a
- * 10-minute 7 v 7 sudden-victory period, then 1 v 1 shootouts), whose rule covers a game between two of
- * its conferences too. The EAL's sentences are unchanged, word for word. Goals come from the view's
- * glyphs, never from the score fields.
- */
-function scoreNoteFor(
-  game: Game,
-  display: GameDisplay,
-  away: GameSideModel,
-  home: GameSideModel,
-): string | null {
-  const section = shootoutSectionOf(game);
-  if (!section?.shootout) return null;
-  const group = shootoutGroupName(section);
-  const phrases = shootoutPhrases(section.shootout.words);
-  const { source, procedure } = shootoutCitationParts(section.shootout.citation);
-  const notes: string[] = [];
-  if (display.kind === 'final' && game.decider === 'SO' && game.shootout === null) {
-    const outcome = sideOutcome(game, 'home');
-    if (outcome === 'W' || outcome === 'L') {
-      const winner = outcome === 'W' ? home.name : away.name;
-      if (section.shootout.inference === 'unverified') {
-        // The San Diego Section (SectionConfig.shootout.inference): the rule is cited, the shootout is not
-        // asserted. si.com and the Section's power rankings record Mt. Carmel–Poway (Sep 11) as 2-0 where
-        // MaxPreps has 0-0 marked W/L, so this note says what MaxPreps lists and why the win counts, then
-        // what the other sources record (`disagreement`). "Outside a tournament": the SDFHOA procedures do
-        // not cover invitational tournaments (coversTournaments false), and lib/pipeline/reconcile/normalize.ts reads no 'SO'
-        // from a tournament row.
-        const scope = section.shootout.coversTournaments ? '' : ' outside a tournament';
-        notes.push(
-          `MaxPreps lists ${display.home.glyph}\u2013${display.away.glyph} with no tally and marks ${winner} the winner; a level ${group} varsity game${scope} goes to a sudden-victory period and then ${section.shootout.words} (${source}), so this site counts it as ${winner}\u2019s win.${
-            section.shootout.disagreement ? ` ${section.shootout.disagreement}` : ''
-          }`,
-        );
-      } else {
-        const rule = procedure ? `a level varsity game goes to ${procedure}: ${source}` : source;
-        notes.push(
-          `Level at ${display.home.glyph}\u2013${display.away.glyph}; MaxPreps marks ${winner} the winner, which under the ${group}\u2019s rules means ${phrases.decidedIt} (${rule}). This site counts it as ${winner}\u2019s win and does not show ${phrases.tally}.`,
-        );
-      }
-    }
-  }
-  if (overtimeInDoubt(game)) {
-    // Both sections with a shootout rule play one 10-minute overtime period before it (NS Guidelines
-    // §VII.E.4; SDFHOA 2026 procedures), so the count is the same words for both. overtimeInDoubt leaves out
-    // postseason games and, where the rule does not reach them, tournament rows; the San Diego sentence
-    // says so ("in a regular-season game outside a tournament": the SDFHOA playoff procedure plays two
-    // 10-minute periods). The EAL's sentence is unchanged.
-    const scope = section.shootout.coversTournaments ? '' : ' in a regular-season game outside a tournament';
-    notes.push(
-      `MaxPreps records ${game.otPeriods} overtime periods for this game, but the ${group} plays one 10-minute overtime period and then ${section.shootout.words}${scope} (${source}), so MaxPreps may have recorded ${phrases.win} as a goal. The score is shown as MaxPreps has it.`,
-    );
-  }
-  return notes.length > 0 ? notes.join(' ') : null;
-}
-
-const H2H_STAGES: readonly TiebreakStage[] = ['head-to-head', 'h2h-win-pct'];
-
-/**
- * The head-to-head note for a counted game, citing THIS league's stage: SCVAL Article VI §3, BVAL
- * §6b, MCAL's head-to-head winning percentage, PCAL §23.3 (which applies to its top two places
- * only). null when the league's chains have no head-to-head stage.
- */
-function tiebreakNoteFor(division: DivisionId): string | null {
-  const league = leagueOfDivision(division);
-  const { tiebreaks, citations } = league.rules;
-  const first = tiebreaks.default.find((s) => s !== 'points');
-  if (first && H2H_STAGES.includes(first) && citations.stages[first]) {
-    return `Head-to-head is the first tiebreak when two teams finish level on points — ${citations.stages[first]}.`;
-  }
-  for (const chain of Object.values(tiebreaks.byBucketStart ?? {})) {
-    const stage = chain?.find((s) => H2H_STAGES.includes(s));
-    if (stage && citations.stages[stage]) {
-      return `Head-to-head breaks a tie for the top places — ${citations.stages[stage]}.`;
-    }
-  }
-  return null;
-}
-
-/**
- * A division heading as a noun: 'De Anza Division', 'Mt. Hamilton Division'; a San Diego division's label
- * alone ('City Western', 'Avocado'), because there "Division" names the Section's PLAYOFF divisions (Open,
- * Division I, Division II: Green Book 2000.1) and the Section calls these leagues, not divisions. null for a
- * single-division league, which has no heading.
- */
-function divisionNoun(division: DivisionId): string | null {
-  const heading = divisionHeading(division);
-  if (heading === null) return null;
-  return leagueOfDivision(division).postseason.kind === 'section-playoffs' ? heading : `${heading} Division`;
-}
-
-function countsAsFor(game: Game): CountsAs {
-  if (game.countsFor !== null) {
-    const league = leagueOfDivision(game.countsFor);
-    const heading = divisionHeading(game.countsFor);
-    const noun = divisionNoun(game.countsFor);
-    return {
-      label: noun ? `League game · ${noun}` : `League game · ${league.shortName}`,
-      detail: `Counts toward the ${heading ?? league.shortName} standings — ${league.rules.citations.points}.`,
-      classificationNote: null,
-    };
-  }
-  return {
-    label: 'Non-league game',
-    detail: 'Counts in the overall record only, never in a league table.',
-    classificationNote: game.provenance.classificationNote ?? null,
-  };
 }
 
 // ---------------------------------------------------------------- the model
@@ -912,85 +449,4 @@ export function buildSupersededStub(param: string): SupersededStub | null {
     sentence: `${short ? `${short} game` : 'Game'} — this result is now on MaxPreps.`,
     targetModel,
   };
-}
-
-// ---------------------------------------------------------------- shared strings
-
-/**
- * The page title, the OG title and the `<h1>` — one composer, so they cannot drift.
- *
- * A final names the WINNER first, because that is the headline a reader pastes into a group chat;
- * every other state keeps the site's away-then-home order. The numbers are `SideView.glyph`, so an
- * unreported game reads `—` and never `0`.
- *
- * It names the sport, once, inside the first ~60 characters a search result shows: "Canyon Hills 3,
- * Bishop's 2 — field hockey, Sep 29, 2026", "Helix vs Sage Creek field hockey — Oct 17, 2026, 4:00 PM
- * PT". People search a matchup as "<school> <school> field hockey", and the site-name suffix that
- * used to be the only "field hockey" in the title was the part a result cut off.
- */
-export function gameTitle(model: GameView): string {
-  const { display, game, away, home } = model;
-  const date = dateWithYear(game.dateLocal);
-  if (display.kind === 'final') {
-    // Winner first on a decided game; a draw keeps the site's away-then-home order.
-    const [first, second] = home.view.weight === 'winner' ? [home, away] : [away, home];
-    const decider = display.deciderTag ? ` (${display.deciderTag})` : '';
-    return `${first.label} ${first.view.glyph}, ${second.label} ${second.view.glyph}${decider} — field hockey, ${date}`;
-  }
-  const joiner = matchupJoiner(game);
-  const suffix =
-    display.kind === 'scheduled'
-      ? game.isTimeTba
-        ? 'time TBA'
-        : timeOfDayPT(game.dateLocal)
-      : display.statusLabel.toLowerCase();
-  return `${away.label} ${joiner} ${home.label} field hockey — ${date}, ${suffix}`;
-}
-
-/** `De Anza Division league game` | `MCAL league game` | `MCAL semifinal` | `non-league game`. */
-function contextNoun(model: GameView): string {
-  // The postseason's round label ('MCAL semifinal'); 'Postseason' is the label of an independents'
-  // postseason game, a common noun mid-sentence.
-  return gameContextNoun(model.game, model.contextLabel === 'Postseason' ? 'postseason' : model.contextLabel);
-}
-
-/**
- * The page's result sentence, winner first ('Point Loma won their home non-league game against Helix
- * 7–1.'), with the page's own context noun (`resultSentence`); null for anything but a final.
- */
-export function gameRecap(model: GameView): string | null {
-  return resultSentence(model.game, contextNoun(model));
-}
-
-/** The `<meta name="description">` and the OG description: `… in <League name> girls varsity field hockey, Fall 2026` (SEASON_DISPLAY). */
-export function gameDescription(model: GameView): string {
-  const { game, display, away, home, league } = model;
-  const context = contextNoun(model);
-  const where = `${league ? leagueSportWords(league.id) : 'girls varsity field hockey'}, ${SEASON_DISPLAY}`;
-  const recap = gameRecap(model);
-  if (recap) {
-    // Dated: the sentence carries no date, so a rematch with the same score would have the same
-    // description as the first meeting. It already names the context, so the tail names the league.
-    return `${dateWithYear(game.dateLocal)}: ${recap} ${where.charAt(0).toUpperCase()}${where.slice(1)} — ${
-      model.source ? 'score via High School on SI (si.com); unofficial.' : 'unofficial, rebuilt twice daily from MaxPreps.'
-    }`;
-  }
-  const joiner = matchupJoiner(game);
-  return `${away.name} ${joiner} ${home.name}, ${model.whenLabel} — ${article(
-    context,
-  )} ${context} in ${where}. ${
-    display.kind === 'unreported'
-      ? 'Played; no score reported yet.'
-      : model.source
-        ? 'Score via High School on SI (si.com); standings rebuilt twice daily. Unofficial.'
-        : 'Scores and standings rebuilt twice daily from MaxPreps. Unofficial.'
-  }`;
-}
-
-/** The kicker line on the OG card: `FINAL · BVAL · Santa Teresa`, `FINAL · Non-league`, `FINAL · MCAL semifinal`. */
-export function gameKicker(model: GameView): string {
-  const parts = [model.display.statusLabel];
-  if (model.display.deciderTag) parts.push(model.display.deciderTag);
-  parts.push(model.contextLabel);
-  return parts.join(' · ');
 }

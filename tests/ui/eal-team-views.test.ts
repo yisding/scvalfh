@@ -44,6 +44,7 @@ const loaders = {
   l: () => import('@/lib/config/leagues'),
   v: () => import('@/views/teams/team-view'),
   gm: () => import('@/views/game/game-view'),
+  gt: () => import('@/views/game/titles'),
   teamPage: () => import('@/app/teams/[slug]/page'),
   gamePage: () => import('@/app/game/[id]/page'),
   indexPage: () => import('@/app/teams/page'),
@@ -55,6 +56,7 @@ interface Loaded {
   l: Modules['l'];
   v: Modules['v'];
   gm: Modules['gm'];
+  gt: Modules['gt'];
   renderTeam: (slug: string) => Promise<string>;
   renderGame: (contestId: string) => Promise<string>;
   renderIndex: () => string;
@@ -62,12 +64,13 @@ interface Loaded {
 }
 
 /** The modules of one loaded graph with the team, game and index page renderers over them. */
-function loadedOf({ d, l, v, gm, teamPage, gamePage, indexPage }: Modules): Loaded {
+function loadedOf({ d, l, v, gm, gt, teamPage, gamePage, indexPage }: Modules): Loaded {
   return {
     d,
     l,
     v,
     gm,
+    gt,
     renderTeam: async (slug) =>
       renderToStaticMarkup((await teamPage.default({ params: Promise.resolve({ slug }) } as never)) as ReactElement),
     renderGame: async (contestId) =>
@@ -205,9 +208,9 @@ describe('the 9/28 Chico-Davis game page (decider SO, no stored tally)', () => {
     expect(game.decider, 'lib/pipeline/reconcile/normalize.ts decider').toBe('SO');
     expect(game.shootout, 'lib/pipeline/reconcile/normalize.ts shootout').toBeNull();
     const model = eal.gm.buildGameView(game.contestId)!;
-    const title = eal.gm.gameTitle(model);
-    expect(title.startsWith('Chico 1, Davis 1 (SO)'), `views/game/game-view.ts gameTitle: ${title}`).toBe(true);
-    expect(eal.gm.gameKicker(model), 'views/game/game-view.ts gameKicker').toContain('SO');
+    const title = eal.gt.gameTitle(model);
+    expect(title.startsWith('Chico 1, Davis 1 (SO)'), `views/game/titles.ts gameTitle: ${title}`).toBe(true);
+    expect(eal.gt.gameKicker(model), 'views/game/titles.ts gameKicker').toContain('SO');
     const rule = `${eal.l.getSection('ns').name} Field Hockey Guidelines §VII.E.4`;
     expect(model.scoreNote, 'views/game/game-view.ts scoreNote').toBe(
       `Level at 1–1; MaxPreps marks Chico the winner, which under the EAL’s rules means 1 v 1s decided it (a level varsity game goes to a 10-minute sudden-victory period, then 1 v 1s: ${rule}). This site counts it as Chico’s win and does not show the 1 v 1 tally.`,
@@ -244,8 +247,8 @@ describe('the 9/2 Pleasant Valley at Chico game page (3 overtime periods, imposs
     expect(game.otPeriods, 'lib/pipeline/reconcile/normalize.ts otPeriods as MaxPreps has it').toBe(3);
     const model = eal.gm.buildGameView(game.contestId)!;
     expect(model.display.deciderTag, 'views/shared/describe-game.ts deciderTag').toBeNull();
-    expect(eal.gm.gameTitle(model), 'views/game/game-view.ts gameTitle').not.toMatch(/\bOT\b|overtime/i);
-    expect(eal.gm.gameKicker(model), 'views/game/game-view.ts gameKicker').not.toMatch(/\bOT\b/);
+    expect(eal.gt.gameTitle(model), 'views/game/titles.ts gameTitle').not.toMatch(/\bOT\b|overtime/i);
+    expect(eal.gt.gameKicker(model), 'views/game/titles.ts gameKicker').not.toMatch(/\bOT\b/);
     expect(model.display.sentence, 'views/shared/describe-game.ts sentence').toBe(
       'Chico 0, Pleasant Valley 1, final.',
     );
@@ -341,7 +344,7 @@ describe('a Super Regional game (tag league-postseason)', () => {
     const text = textOf(await withTag.renderGame(tagged.contestId));
     expect(text, 'app/game/[id]/page.tsx').toContain('Super Regional game — it does not count in the league table.');
     expect(text, 'app/game/[id]/page.tsx').not.toMatch(/\bCCS\b/);
-    expect(withTag.gm.gameDescription(model), 'views/game/game-view.ts gameDescription').toContain(
+    expect(withTag.gt.gameDescription(model), 'views/game/titles.ts gameDescription').toContain(
       'an EAL Super Regional game',
     );
   });

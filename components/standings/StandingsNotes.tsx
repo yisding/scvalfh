@@ -3,7 +3,7 @@ import Link from 'next/link';
 import ExternalLink from '@/components/ui/ExternalLink';
 import { ordinal } from '@/lib/format/numbers';
 import type { Standing } from '@/lib/model/standings';
-import type { ComparisonView, MismatchNote, MissingRowView, StandingsRowData } from '@/views/standings/division';
+import type { ComparisonView, MismatchNote, MissingRowView, StandingsRowData } from '@/views/standings/types';
 
 /**
  * The division's Notes block (DESIGN §9, §8; SPEC §10.3): an inset under the table that holds

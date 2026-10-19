@@ -5,7 +5,7 @@ import EmptyState from '@/components/ui/EmptyState';
 import ExternalLink from '@/components/ui/ExternalLink';
 import StatusChip from '@/components/ui/StatusChip';
 import { CCS } from '@/lib/config/leagues';
-import { splitStatusLabel } from '@/views/playoffs/playoff-view';
+import { splitStatusLabel } from '@/views/playoffs/projection';
 import type { TeamPageView } from '@/views/teams/team-view';
 
 /**

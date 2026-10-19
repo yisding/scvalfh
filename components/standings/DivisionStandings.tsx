@@ -6,7 +6,7 @@ import SectionHeader from '@/components/ui/SectionHeader';
 import StandingsTable, { biggestGoalDiff, collectStandingsNotes, type StandingsTableProps } from '@/components/ui/StandingsTable';
 import { leagueOfDivision } from '@/lib/config/leagues';
 import { ordinal } from '@/lib/format/numbers';
-import type { DivisionView } from '@/views/standings/division';
+import type { DivisionView } from '@/views/standings/types';
 
 import MissingResultsBanner from './MissingResultsBanner';
 import PlayoffStatusBand from './PlayoffStatusBand';

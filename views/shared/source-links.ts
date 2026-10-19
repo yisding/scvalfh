@@ -4,7 +4,7 @@
  * " (2)" numbering that keeps two links from reading the same, and a school's registry name.
  *
  * One OUTLETS table, so a host gets the same name on /clubs and on /commits. Each view keeps its
- * own platform table and its own fallbacks (views/clubs/club-view.ts,
+ * own platform table and its own fallbacks (views/clubs/words.ts,
  * views/commits/commit-view.ts). Server-only: it reads the registry.
  */
 

@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
 import Arrow from '@/components/ui/Arrow';
-import type { PhaseLeadView } from '@/views/home/home-view';
+import type { PhaseLeadView } from '@/views/home/phase-lead';
 
 /**
  * The one sentence at the top of a league panel that says where THAT league's season is

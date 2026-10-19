@@ -1,6 +1,6 @@
 /**
  * The league-tournament view (SPEC §6.2, §10.7 `/playoffs/<league>`; MCAL):
- * `buildTournamentView` in views/playoffs/playoff-view.ts over the ENGINE's output
+ * `buildTournamentView` in views/playoffs/tournament.ts over the ENGINE's output
  * (lib/engine/standings computeStandings → lib/engine/postseason buildLeagueTournament), and the rendered page.
  *
  * The synthetic seasons run through the real standings engine, so the shared 6th the table shows
@@ -25,9 +25,9 @@ import { getTeamBySlug } from '@/lib/registry/teams';
 import { useCorpusModules } from '@/tests/support/corpus-modules';
 import { game } from '@/tests/support/game-builder';
 import { textOf } from '@/tests/support/html-text';
-import { buildTournamentView, type TournamentView } from '@/views/playoffs/playoff-view';
+import { buildTournamentView, type TournamentView } from '@/views/playoffs/tournament';
 
-const VIEW = 'views/playoffs/playoff-view.ts';
+const VIEW = 'views/playoffs/tournament.ts';
 const PAGE = 'app/playoffs/[league]/page.tsx';
 const OG = 'app/playoffs/[league]/opengraph-image.tsx';
 const LEAGUE = 'views/playoffs/tournament-route.ts';

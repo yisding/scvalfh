@@ -34,16 +34,10 @@ import { getTeamBySlug } from '@/lib/registry/teams';
 import { affiliationLeaks } from '@/scripts/ci/copy/copy-rules';
 import { PUBLIC_TERMS } from '@/scripts/ci/copy/public-terms';
 import { textOf } from '@/tests/support/html-text';
-import {
-  REGION_WORDS,
-  buildClubPageView,
-  buildClubsIndexView,
-  countLine,
-  sourceLabel,
-  sourceName,
-  statusWords,
-  type ClubPageView,
-} from '@/views/clubs/club-view';
+import type { ClubPageView } from '@/views/clubs/club-page';
+import { buildClubPageView, buildClubsIndexView } from '@/views/clubs/club-view';
+import { countLine } from '@/views/clubs/clubs-index';
+import { REGION_WORDS, sourceLabel, sourceName, statusWords } from '@/views/clubs/words';
 
 const file = getClubsFile();
 const club = (slug: string): Club => getClub(slug)!;

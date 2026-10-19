@@ -664,8 +664,8 @@ automatically.
 `lib/datasets/clubs.ts` is the read API: `getClubs()` and `getClubSlugs()` in display order (region, then
 most tied players, then name), `getClub(slug)`, `getClubAffiliations(slug)`
 and `getPlayerClubs(team, athleteId)` (current, then listed, then
-earlier). `views/clubs/club-view.ts` builds every view and chooses every word the pages say
-about a tie. The gates know the pages: `assert:prerender` and `assert-vinext-prerender.ts` expect
+earlier). `views/clubs/club-view.ts` builds every view, and the modules beside it (`views/clubs/words.ts`
+first) choose every word the pages say about a tie. The gates know the pages: `assert:prerender` and `assert-vinext-prerender.ts` expect
 `clubs/<slug>` for exactly the file's slugs, `smoke-server.sh` counts them in the sitemap and
 expects `/clubs/nope` to be a 404, and `a11y-axe.mjs` checks `/clubs`, the first club page and the
 first club page with no tied player.

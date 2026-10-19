@@ -5,7 +5,7 @@ import TeamMonogram from '@/components/ui/TeamMonogram';
 import { recordString } from '@/lib/format/numbers';
 import { EM_DASH } from '@/lib/format/words';
 import { ladderLineAfter, ladderRow } from '@/views/standings/division';
-import type { StandingsRowData } from '@/views/standings/division';
+import type { StandingsRowData } from '@/views/standings/types';
 
 /**
  * The COMPACT full table of the all-league `/standings` overview (SPEC §10.3): place, team

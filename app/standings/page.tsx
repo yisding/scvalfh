@@ -13,7 +13,7 @@ import { listWords } from '@/lib/format/words';
 import type { LeagueId } from '@/lib/model/ids';
 import { leagueChips, leagueHrefs } from '@/views/site/league-chips';
 import { OG_BASE } from '@/views/site/site';
-import { leaderClause } from '@/views/standings/division';
+import { leaderClause } from '@/views/standings/leader-lines';
 import { buildStandingsOverviewView } from '@/views/standings/standings-view';
 
 /**

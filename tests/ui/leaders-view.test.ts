@@ -45,8 +45,8 @@ import { buildEloBoard, crossRegionFinals, getEloBoard, getEloBoardForTeam } fro
 import { buildLeadersView } from '@/views/leaders/leaders-view';
 import { BOARD_PLACES, EXPANDED_PLACES, qualifyingMinimum, rankBoard } from '@/views/leaders/ranking';
 import type { LeaderBoard, LeaderSources, LeadersView, RegionLeadersView } from '@/views/leaders/types';
+import { statText } from '@/views/shared/stat-format';
 import { positionWords } from '@/views/shared/words/position';
-import { statText } from '@/views/teams/player-stats';
 
 const PLAYER_IDS = ['most-points', 'adjusted-points', 'most-assists', 'most-saves', 'most-clean-sheets'];
 const SCHOOL_IDS = [

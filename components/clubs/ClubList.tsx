@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 import GridRowFiller from '@/components/ui/GridRowFiller';
 import { listWords } from '@/lib/format/words';
-import type { ClubIndexRow } from '@/views/clubs/club-view';
+import type { ClubIndexRow } from '@/views/clubs/clubs-index';
 
 /**
  * One region's clubs on /clubs (DESIGN §17.5): the display name linking the club's page, then the

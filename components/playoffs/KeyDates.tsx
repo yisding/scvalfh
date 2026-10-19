@@ -1,5 +1,5 @@
 import type { CcsKeyDates } from '@/lib/model/postseason';
-import { keyDateRows, type KeyDateRow, type LeagueKeyDate } from '@/views/playoffs/playoff-view';
+import { keyDateRows, type KeyDateRow, type LeagueKeyDate } from '@/views/playoffs/key-dates';
 
 /**
  * Every published CCS key date, plus each CCS league's own postseason date (the SCVAL crossover and

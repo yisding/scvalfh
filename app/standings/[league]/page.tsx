@@ -16,7 +16,7 @@ import { shortDate } from '@/lib/format/dates';
 import { leagueChips, leagueHrefs } from '@/views/site/league-chips';
 import { leagueParam, leagueStaticParams } from '@/views/site/league-route';
 import { OG_BASE } from '@/views/site/site';
-import { leaderClause } from '@/views/standings/division';
+import { leaderClause } from '@/views/standings/leader-lines';
 import { buildStandingsPageView } from '@/views/standings/standings-view';
 
 /**

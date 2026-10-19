@@ -9,7 +9,7 @@ import { getDivision, getLeague, isDefaultRegion, regionOf } from '@/lib/config/
 import { monthDay } from '@/lib/format/dates';
 import { placeWords } from '@/lib/format/numbers';
 import { EM_DASH, plural } from '@/lib/format/words';
-import type { MiniDivisionView, MiniRow } from '@/views/home/home-view';
+import type { MiniDivisionView, MiniRow } from '@/views/home/mini-standings';
 import { ladderLineAfter } from '@/views/standings/division';
 
 /**

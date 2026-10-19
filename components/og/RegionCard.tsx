@@ -7,7 +7,7 @@ import { getLeagueSummaries } from '@/lib/queries/leagues';
 import { getTeams } from '@/lib/queries/teams';
 import { OG, OG_SIZE } from '@/views/site/og-theme';
 import { SITE_WORDMARK } from '@/views/site/site';
-import { leaderClause, type LeaderLine } from '@/views/standings/division';
+import { leaderClause, type LeaderLine } from '@/views/standings/leader-lines';
 import { buildStandingsOverviewView, leaderLine } from '@/views/standings/standings-view';
 
 /**

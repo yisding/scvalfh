@@ -13,7 +13,7 @@ import {
   splitStatusLabel,
   type DivisionProjection,
   type ProjectionRow,
-} from '@/views/playoffs/playoff-view';
+} from '@/views/playoffs/projection';
 import { articleFor, membershipSource } from '@/views/shared/words/membership';
 
 /**

@@ -31,6 +31,7 @@ const loaders = {
   leagues: () => import('@/lib/config/leagues'),
   labels: () => import('@/lib/config/leagues/labels'),
   view: () => import('@/views/teams/team-view'),
+  fixtures: () => import('@/views/shared/official-fixtures'),
   teamPage: () => import('@/app/teams/[slug]/page'),
   indexPage: () => import('@/app/teams/page'),
 };
@@ -835,7 +836,7 @@ describe('buildNextCard (views/teams/team-view.ts)', () => {
   });
 });
 
-describe('fixtureOpponent (views/teams/team-view.ts)', () => {
+describe('fixtureOpponent (views/shared/official-fixtures.ts)', () => {
   it('names a registered opponent by short name and title-cases a grid name outside the registry', () => {
     const team = m.data.getTeams()[0];
     const base = {
@@ -848,13 +849,13 @@ describe('fixtureOpponent (views/teams/team-view.ts)', () => {
       homeSlug: team.slug,
       source: 'scval-pdf' as const,
     };
-    const outside = m.view.fixtureOpponent({ ...base, awayName: 'VALLEY CHRISTIAN', awaySlug: null }, team);
+    const outside = m.fixtures.fixtureOpponent({ ...base, awayName: 'VALLEY CHRISTIAN', awaySlug: null }, team);
     expect(outside).toMatchObject({ mineIsHome: true, versus: 'vs', opponent: undefined, opponentName: 'Valley Christian' });
     expect(m.view.officialFixtureHeadline({ ...base, awayName: 'VALLEY CHRISTIAN', awaySlug: null }, team)).toMatch(
       /^vs Valley Christian · /,
     );
     const rival = m.data.getTeams().find((t) => t.slug !== team.slug)!;
-    const away = m.view.fixtureOpponent({ ...base, awayName: 'X', awaySlug: rival.slug }, rival);
+    const away = m.fixtures.fixtureOpponent({ ...base, awayName: 'X', awaySlug: rival.slug }, rival);
     expect(away).toMatchObject({ mineIsHome: false, versus: 'at', opponentName: team.shortName });
   });
 });

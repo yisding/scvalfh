@@ -3,7 +3,7 @@ import LeagueHealthNote from '@/components/ui/LeagueHealthNote';
 import SectionHeader from '@/components/ui/SectionHeader';
 import { isIndependentLeague } from '@/lib/config/leagues';
 import { longDate } from '@/lib/format/dates';
-import type { HomeLeaguePanel } from '@/views/home/home-view';
+import type { HomeLeaguePanel } from '@/views/home/league-panel';
 
 import LatestScores from './LatestScores';
 import LeagueTeams from './LeagueTeams';

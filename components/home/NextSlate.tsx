@@ -6,7 +6,7 @@ import SectionHeader from '@/components/ui/SectionHeader';
 import { shortDate } from '@/lib/format/dates';
 import { plural } from '@/lib/format/words';
 import type { Game } from '@/lib/model/game';
-import type { NextLeagueDay } from '@/views/home/home-view';
+import type { NextLeagueDay } from '@/views/home/days';
 import { gameKind } from '@/views/shared/describe-game';
 
 /**

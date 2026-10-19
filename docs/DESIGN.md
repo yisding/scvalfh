@@ -3002,7 +3002,7 @@ The players are minors, so the pages are narrower than the data:
   and shown under the roster's own spelling; JV rows are out. A club's own roster names many more
   players: the club page links it and names none of them.
 - **A source's verbatim quote, an affiliation's `basis` and its `confidence` are never rendered.**
-  They are not in the view types (`views/clubs/club-view.ts`), and `scripts/ci/assert-copy.ts`
+  They are not in the view types (`views/clubs/`), and `scripts/ci/assert-copy.ts`
   fails the build on any page whose text, entities decoded and RSC payload included, contains a
   basis, a whole fragment of a quote of 40 or more letters and digits, or an excerpt of one that long
   in which at least 20 letters and digits are not public names (schools, clubs, colleges, cities,
@@ -3605,7 +3605,7 @@ from 13 pages to 16.
   own site" is now `clubSiteKey`: the host, or on a shared host the host plus the site's path
   segments (two on `sites.google.com`, one on `leagues.teamlinkt.com`). Davis High's Google Site and
   other TeamLinkt leagues are therefore never labelled a club's own site
-  (`views/clubs/club-view.ts`, `views/commits/commit-view.ts`).
+  (`views/clubs/words.ts`, `views/commits/commit-view.ts`).
 - **Sitemap dates.** `/clubs` and every club page carry `getClubsLastChecked()`, as `/commits` does:
   the file's `capturedAt`, or a later record's `checkedOn` (2026-10-04).
 - **Not built.** The Sacramento Hockey Academy (a 2025 club on one Davis player's NCSA profile) was

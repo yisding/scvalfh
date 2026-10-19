@@ -16,7 +16,7 @@ import type { LeagueSummary } from '@/lib/queries/leagues';
 import { getCcsField, getLeagueTournament } from '@/lib/queries/postseason';
 import { getStandingContext, getStandings } from '@/lib/queries/standings';
 import { getTeamById, getTeamBySlug } from '@/lib/registry/teams';
-import { buildTournamentView, type TournamentView } from '@/views/playoffs/playoff-view';
+import { buildTournamentView, type TournamentView } from '@/views/playoffs/tournament';
 import {
   tournamentParam,
   tournamentStaticParams,

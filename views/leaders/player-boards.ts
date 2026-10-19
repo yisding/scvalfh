@@ -21,8 +21,8 @@ import type { Game } from '@/lib/model/game';
 import type { TeamId } from '@/lib/model/ids';
 import type { Team } from '@/lib/model/team';
 import type { FieldStatKey, GoalieStatKey, PlayerStatLine, TeamPlayerStats } from '@/lib/schema/player-stats';
+import { gamesSinceUpdate, savePercent } from '@/views/shared/stat-format';
 import { positionWords } from '@/views/shared/words/position';
-import { gamesSinceUpdate, savePercent } from '@/views/teams/player-stats';
 
 import { UNADJUSTED_NOTE, names, num, teamRef } from './board';
 import { BOARD_PLACES, EXPANDED_PLACES, byName, rankBoard } from './ranking';
