@@ -135,3 +135,16 @@ export function localDateKey(instantIso: string): string {
 export function hoursBetween(aIso: string, bIso: string): number {
   return Math.abs(new Date(bIso).getTime() - new Date(aIso).getTime()) / 3_600_000;
 }
+
+/**
+ * The latest of a list of date keys ('YYYY-MM-DD', or ISO instants in one zone), null when the list
+ * is empty. A key sorts as it reads, so the lexicographic maximum is the latest day.
+ */
+export function latestDateKey(keys: readonly string[]): string | null {
+  return keys.length === 0 ? null : keys.reduce((a, b) => (b > a ? b : a));
+}
+
+/** The earliest of a list of date keys (see latestDateKey), null when the list is empty. */
+export function earliestDateKey(keys: readonly string[]): string | null {
+  return keys.length === 0 ? null : keys.reduce((a, b) => (b < a ? b : a));
+}

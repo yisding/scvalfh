@@ -33,12 +33,12 @@
 import bundled from '@/data/commits.json';
 import type { TeamSlug } from '@/lib/model/ids';
 import { getTeamBySlug } from '@/lib/registry/teams';
-import { joinToRoster, playerKey } from './roster-join';
+import { loadRosterJoined, playerKey, rosterJoin } from './roster-join';
 import { classOf, getAllEnrichedRosters, getRosters, type MergedPlayer, type MergedTeamRoster } from './rosters';
 import {
   COLLEGE_DIVISIONS, type College, type CollegeProgram, type Commitment, type CommitsFile, CommitsFileSchema,
 } from '@/lib/schema/commits';
-import { failValidation } from '@/lib/schema/primitives';
+import { latestDateKey } from '@/lib/shared/dates';
 
 export type {
   College,
@@ -74,16 +74,10 @@ function loadAndJoin(
   teams: readonly MergedTeamRoster[],
   season: string,
 ): { file: CommitsFile; rows: Map<string, MergedPlayer> } {
-  const parsed = CommitsFileSchema.safeParse(raw);
-  if (!parsed.success) failValidation('commits', parsed.error.issues);
-  const file = parsed.data;
-  if (file.season !== season) {
-    throw new Error(`commits.json is for season ${file.season}, rosters for ${season}`);
-  }
-  const rows = joinToRoster(file.commitments, teams, season, {
+  const { file, rows } = loadRosterJoined(raw, teams, season, {
     label: 'commits',
-    noun: 'commitments',
-    subject: (c) => c.college,
+    schema: CommitsFileSchema,
+    joins: (f) => [rosterJoin(f.commitments, { noun: 'commitments', subject: (c) => c.college })],
   });
   // Step 3 for a row with no grade (lib/datasets/roster-join.ts checked the rest): the sources must settle
   // on one class year a high school roster of the season can hold, which commitClassOf shows.
@@ -185,7 +179,7 @@ export function getCommitsFile(): CommitsFile {
  * The sitemap's `lastModified` for /commits, so the page never claims to predate what it shows.
  */
 export function getCommitsLastChecked(): string {
-  return [file.capturedAt, ...file.colleges.map((c) => c.checkedOn)].sort().at(-1)!;
+  return latestDateKey([file.capturedAt, ...file.colleges.map((c) => c.checkedOn)])!;
 }
 
 /** Every commitment, in display order (DESIGN §21.1). */

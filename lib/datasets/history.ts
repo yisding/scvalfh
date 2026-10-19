@@ -13,8 +13,6 @@
  * way), so a bad file fails at import time rather than half-way through a render.
  */
 
-import { readFileSync } from 'node:fs';
-
 import bundledBrackets from '@/data/history-brackets-2025-26.json';
 import bundledHistory from '@/data/history-2025-26.json';
 import { LEAGUE_IDS, getLeague, getSection } from '@/lib/config/leagues';
@@ -28,7 +26,8 @@ import {
   BRACKET_SECTION_IDS, type BracketSectionId, type HistoryBracketGame, type HistoryBracketSide,
   HistoryBracketsSchema, type SectionBracket,
 } from '@/lib/schema/history-brackets';
-import { failValidation } from '@/lib/schema/primitives';
+import { latestDateKey } from '@/lib/shared/dates';
+import { readDataset } from './read';
 
 export type {
   AvailableLeagueHistory,
@@ -57,26 +56,14 @@ export type {
  * before the cache read). A missing file is a build error: run `pnpm build-history`. SCVAL_HISTORY
  * still swaps in another file through node:fs (Node only; never set it on a Worker).
  */
-function load(): History {
-  const override = process.env.SCVAL_HISTORY;
-  let raw: unknown = bundledHistory;
-  if (override) {
-    let text: string;
-    try {
-      text = readFileSync(override, 'utf8');
-    } catch (err) {
-      throw new Error(
-        `lib/datasets/history.ts: cannot read SCVAL_HISTORY=${override} (${(err as Error).message})`,
-      );
-    }
-    raw = JSON.parse(text) as unknown;
-  }
-  const parsed = HistorySchema.safeParse(raw);
-  if (!parsed.success) failValidation('history', parsed.error.issues);
-  return parsed.data;
-}
-
-const history = load();
+const history: History = readDataset({
+  env: 'SCVAL_HISTORY',
+  bundled: bundledHistory,
+  owner: 'lib/datasets/history.ts',
+  malformedOverride: 'propagate',
+  label: 'history',
+  schema: HistorySchema,
+});
 
 export function getHistorySeason(): string {
   return history.season;
@@ -121,7 +108,7 @@ export function getHistoryLastChecked(): string {
   );
   const bracketDays = getHistoryBrackets().map((b) => b.bracket.retrievedOn);
   // Every section bracket has a `retrievedOn` (the schema requires one), so the list is never empty.
-  return [...leagueDays, ...bracketDays].sort().at(-1)!;
+  return latestDateKey([...leagueDays, ...bracketDays])!;
 }
 
 /** The source credit of an available league (SCVAL's two PDFs, BVAL's sheet and documents). */
@@ -222,13 +209,12 @@ export function getHistoryUnpublishedTies(leagueId: LeagueId): HistoryRow[] {
  * hand from each section's own documents (lib/schema/history-brackets.ts). Bundled and validated at
  * module scope, like the standings above.
  */
-function loadBrackets() {
-  const parsed = HistoryBracketsSchema.safeParse(bundledBrackets);
-  if (!parsed.success) failValidation('history brackets', parsed.error.issues);
-  return parsed.data;
-}
-
-const brackets = loadBrackets();
+const brackets = readDataset({
+  bundled: bundledBrackets,
+  owner: 'lib/datasets/history.ts',
+  label: 'history brackets',
+  schema: HistoryBracketsSchema,
+});
 
 /**
  * Each section with a 2025 bracket, with the league its block follows on /history/2025-26: the

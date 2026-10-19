@@ -8,16 +8,15 @@
  */
 
 import bundled from '@/data/prior-season.json';
-import { failValidation } from '@/lib/schema/primitives';
 import { type PriorSeason, PriorSeasonSchema } from '@/lib/schema/prior-season';
+import { readDataset } from './read';
 
-function load(): PriorSeason {
-  const parsed = PriorSeasonSchema.safeParse(bundled);
-  if (!parsed.success) failValidation('prior-season', parsed.error.issues);
-  return parsed.data;
-}
-
-const priorSeason = load();
+const priorSeason = readDataset({
+  bundled,
+  owner: 'lib/datasets/prior-season.ts',
+  label: 'prior-season',
+  schema: PriorSeasonSchema,
+});
 
 /** Last season's results, as data/prior-season.json holds them. */
 export function getPriorSeason(): PriorSeason {

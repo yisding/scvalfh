@@ -9,31 +9,21 @@
  * file through node:fs (Node only; never set it on a Worker).
  */
 
-import { readFileSync } from 'node:fs';
-
 import bundled from '@/data/jv.json';
 import type { TeamSlug } from '@/lib/model/ids';
 import { type JvFile, JvFileSchema, type JvTeam } from '@/lib/schema/jv';
-import { failValidation } from '@/lib/schema/primitives';
+import { readDataset } from './read';
 
 export type { JvFile, JvTeam } from '@/lib/schema/jv';
 
-function load(): JvFile {
-  const override = process.env.SCVAL_JV;
-  let raw: unknown = bundled;
-  if (override) {
-    try {
-      raw = JSON.parse(readFileSync(override, 'utf8')) as unknown;
-    } catch (err) {
-      throw new Error(`lib/datasets/jv.ts: cannot read SCVAL_JV=${override} (${(err as Error).message})`);
-    }
-  }
-  const parsed = JvFileSchema.safeParse(raw);
-  if (!parsed.success) failValidation('jv', parsed.error.issues);
-  return parsed.data;
-}
-
-const file = load();
+const file = readDataset({
+  env: 'SCVAL_JV',
+  bundled,
+  owner: 'lib/datasets/jv.ts',
+  malformedOverride: 'cannot-read',
+  label: 'jv',
+  schema: JvFileSchema,
+});
 const TEAM_BY_SLUG = new Map<string, JvTeam>(file.teams.map((t) => [t.slug, t]));
 
 export function getJvFile(): JvFile {

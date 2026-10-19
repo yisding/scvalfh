@@ -13,7 +13,8 @@ import {
   EM_DASH, EN_DASH, MINUS, formStripLabel, gradeWord, listWords, numberWord,
 } from '@/lib/format/words';
 import {
-  dayDiff, dayNumber, hoursBetween, isoDateKey, localDateKey, shiftDateKey, toLocalTimestamp, weekdayName,
+  dayDiff, dayNumber, earliestDateKey, hoursBetween, isoDateKey, latestDateKey, localDateKey, shiftDateKey,
+  toLocalTimestamp, weekdayName,
 } from '@/lib/shared/dates';
 import type { PairingConfig } from '@/lib/model/league-config';
 import { sideOutcome } from '@/lib/shared/game';
@@ -448,5 +449,15 @@ describe('playInWords: the BVAL-style play-in clause (lib/queries/postseason.ts 
     expect(playInWords({ leagueShortName: 'BVAL', autoBerths: 5, playIn: { ...playIn, time: null }, championDivisionLabel: 'Santa Teresa' })).toBe(
       'Mt. Hamilton #4 plays at the Santa Teresa champion Sat Oct 31, for BVAL’s fifth automatic CCS berth',
     );
+  });
+});
+
+describe('shared dates: latestDateKey / earliestDateKey', () => {
+  it('pick the lexicographic extreme of date keys and ISO instants, null for none', () => {
+    expect(latestDateKey(['2026-10-02', '2026-11-01', '2026-09-30'])).toBe('2026-11-01');
+    expect(earliestDateKey(['2026-10-02', '2026-11-01', '2026-09-30'])).toBe('2026-09-30');
+    expect(latestDateKey(['2026-10-02T09:00:00Z', '2026-10-02T17:30:00Z'])).toBe('2026-10-02T17:30:00Z');
+    expect(latestDateKey([])).toBeNull();
+    expect(earliestDateKey([])).toBeNull();
   });
 });

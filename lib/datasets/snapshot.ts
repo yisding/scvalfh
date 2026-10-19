@@ -11,12 +11,11 @@
  * Date.now() — so a build is reproducible and every "as of" label is honest (BUILD-BRIEF).
  */
 
-import { readFileSync } from 'node:fs';
-
 import bundledSnapshot from '@/data/snapshot.json';
 import type { Snapshot } from '@/lib/model/snapshot';
 import { localDateKey } from '@/lib/shared/dates';
 import { loadSnapshot } from '@/lib/snapshot/load';
+import { readDatasetRaw } from './read';
 
 /**
  * data/snapshot.json is IMPORTED, so every toolchain bundles it into the server code at build time:
@@ -33,17 +32,14 @@ import { loadSnapshot } from '@/lib/snapshot/load';
  * Worker. Both paths go through `loadSnapshot`, so a v1 file is migrated in memory (SPEC §4.3).
  */
 function load(): Snapshot {
-  const override = process.env.SCVAL_SNAPSHOT;
-  if (!override) return loadSnapshot(bundledSnapshot as unknown);
-  let raw: string;
-  try {
-    raw = readFileSync(override, 'utf8');
-  } catch (err) {
-    throw new Error(
-      `lib/datasets/snapshot.ts: cannot read SCVAL_SNAPSHOT=${override} (${(err as Error).message})`,
-    );
-  }
-  return loadSnapshot(JSON.parse(raw) as unknown);
+  return loadSnapshot(
+    readDatasetRaw({
+      env: 'SCVAL_SNAPSHOT',
+      bundled: bundledSnapshot,
+      owner: 'lib/datasets/snapshot.ts',
+      malformedOverride: 'propagate',
+    }),
+  );
 }
 
 const snapshot = load();

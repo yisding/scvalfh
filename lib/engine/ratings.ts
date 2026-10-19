@@ -57,6 +57,7 @@ import type { Game } from '@/lib/model/game';
 import type { TeamId, TeamSlug } from '@/lib/model/ids';
 import type { Team } from '@/lib/model/team';
 import type { PriorSeason } from '@/lib/schema/prior-season';
+import { latestDateKey } from '@/lib/shared/dates';
 
 /** The average rated team. */
 export const ELO_BASE = 1500;
@@ -240,7 +241,7 @@ export function computeRatings(
     ratings,
     homeEdge: Math.round(ELO_PER_GOAL * homeEdge),
     games: counted.length,
-    through: counted.length > 0 ? counted.map((g) => g.dateKey).sort()[counted.length - 1] : null,
+    through: latestDateKey(counted.map((g) => g.dateKey)),
     seededFrom: start.size > 0 ? prior!.season : null,
     priorGames: prior ? prior.games.length : 0,
   };

@@ -15,6 +15,7 @@ import { getGameDates, getGames, getOfficialFixtures } from '@/lib/queries/games
 import { getJvGamesOn } from '@/lib/queries/jv';
 import { getContentRemovals } from '@/lib/queries/provenance';
 import { getTeams } from '@/lib/queries/teams';
+import { latestDateKey } from '@/lib/shared/dates';
 import { gameHref } from '@/lib/shared/game-id';
 
 /**
@@ -54,7 +55,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const clubsStamp = new Date(getClubsLastChecked());
   const commitsStamp = new Date(getCommitsLastChecked());
   const recruitingStamp = new Date(
-    [getClubsLastChecked(), getCommitsLastChecked(), getRosterEnrichment().capturedAt].sort().at(-1)!,
+    latestDateKey([getClubsLastChecked(), getCommitsLastChecked(), getRosterEnrichment().capturedAt])!,
   );
   const url = (path: string) => `${SITE_URL}${path}`;
 

@@ -12,25 +12,20 @@ import type { Game, GameSide } from '@/lib/model/game';
 import type { LeagueId } from '@/lib/model/ids';
 import type { Season, SeasonLeague, SeasonWindow } from '@/lib/model/season';
 import { teamOfSide } from '@/lib/registry/teams';
+import { earliestDateKey, latestDateKey } from '@/lib/shared/dates';
 
 /** The registry league of one side, by MaxPreps GUID first, then by slug; null for a non-member. */
 function leagueOfSide(side: GameSide): LeagueId | null {
   return teamOfSide(side)?.league ?? null;
 }
 
-const maxOf = (dates: readonly string[]): string | null =>
-  dates.length === 0 ? null : dates.reduce((a, b) => (b > a ? b : a));
-const minOf = (dates: readonly string[]): string | null =>
-  dates.length === 0 ? null : dates.reduce((a, b) => (b < a ? b : a));
-
 /** The season window, computed from the games and never hardcoded (SPEC §5.8). */
 export function seasonWindowOf(games: readonly Game[]): SeasonWindow {
-  const dates = games.map((g) => g.dateLocal).sort();
-  const leagueDates = games.filter((g) => g.isLeague).map((g) => g.dateLocal).sort();
+  const dates = games.map((g) => g.dateLocal);
   return {
-    firstGame: dates[0] ?? null,
-    lastGame: dates[dates.length - 1] ?? null,
-    lastLeagueGame: leagueDates[leagueDates.length - 1] ?? null,
+    firstGame: earliestDateKey(dates),
+    lastGame: latestDateKey(dates),
+    lastLeagueGame: latestDateKey(games.filter((g) => g.isLeague).map((g) => g.dateLocal)),
   };
 }
 
@@ -50,9 +45,9 @@ export function leagueWindowOf(games: readonly Game[], leagueId: LeagueId): Seas
   const dates = inScope.map((g) => g.dateLocal);
   // Same key order as seasonWindowOf.
   return {
-    firstGame: minOf(dates),
-    lastGame: maxOf(dates),
-    lastLeagueGame: maxOf(
+    firstGame: earliestDateKey(dates),
+    lastGame: latestDateKey(dates),
+    lastLeagueGame: latestDateKey(
       inScope.filter((g) => g.countsFor !== null && divisions.has(g.countsFor)).map((g) => g.dateLocal),
     ),
   };

@@ -22,6 +22,7 @@ import type {
   DivisionConfig, LadderRung, LeagueConfig, LeagueRules, RegionConfig, SectionConfig,
 } from '@/lib/model/league-config';
 import type { PlayoffStatus, TiebreakStage } from '@/lib/model/standings';
+import { earliestDateKey, latestDateKey } from '@/lib/shared/dates';
 
 import { failInvariant } from './invariant';
 import { MAXPREPS_WEB } from './source-urls';
@@ -240,16 +241,12 @@ export function statusesOf(leagueId: LeagueId): readonly PlayoffStatus[] {
  * PhaseLead and the /standings preseason notice both say league play starts.
  */
 export function leaguePlayStarts(leagueId: LeagueId): string {
-  return getLeague(leagueId)
-    .divisions.map((d) => d.leaguePlay.first)
-    .reduce((a, b) => (b < a ? b : a));
+  return earliestDateKey(getLeague(leagueId).divisions.map((d) => d.leaguePlay.first))!;
 }
 
 /** The last official league date of the league (max over its divisions). */
 export function leaguePlayEnds(leagueId: LeagueId): string {
-  return getLeague(leagueId)
-    .divisions.map((d) => d.leaguePlay.last)
-    .reduce((a, b) => (b > a ? b : a));
+  return latestDateKey(getLeague(leagueId).divisions.map((d) => d.leaguePlay.last))!;
 }
 
 /** Union of every section's season window (the fetch season-window guard). */

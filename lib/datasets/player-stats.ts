@@ -13,12 +13,10 @@
  * status 'pending'; one whose coach entered nothing is status 'none'.
  */
 
-import { readFileSync } from 'node:fs';
-
 import bundled from '@/data/player-stats.json';
 import type { TeamSlug } from '@/lib/model/ids';
 import { type PlayerStatsFile, PlayerStatsFileSchema, type TeamPlayerStats } from '@/lib/schema/player-stats';
-import { failValidation } from '@/lib/schema/primitives';
+import { readDataset } from './read';
 
 export type {
   FieldStatKey,
@@ -30,24 +28,14 @@ export type {
   TeamPlayerStats,
 } from '@/lib/schema/player-stats';
 
-function load(): PlayerStatsFile {
-  const override = process.env.SCVAL_PLAYER_STATS;
-  let raw: unknown = bundled;
-  if (override) {
-    try {
-      raw = JSON.parse(readFileSync(override, 'utf8')) as unknown;
-    } catch (err) {
-      throw new Error(
-        `lib/datasets/player-stats.ts: cannot read SCVAL_PLAYER_STATS=${override} (${(err as Error).message})`,
-      );
-    }
-  }
-  const parsed = PlayerStatsFileSchema.safeParse(raw);
-  if (!parsed.success) failValidation('player-stats', parsed.error.issues);
-  return parsed.data;
-}
-
-const file = load();
+const file = readDataset({
+  env: 'SCVAL_PLAYER_STATS',
+  bundled,
+  owner: 'lib/datasets/player-stats.ts',
+  malformedOverride: 'cannot-read',
+  label: 'player-stats',
+  schema: PlayerStatsFileSchema,
+});
 const BY_SLUG = new Map<string, TeamPlayerStats>(file.teams.map((t) => [t.slug, t]));
 
 export function getPlayerStats(): PlayerStatsFile {

@@ -33,12 +33,12 @@
 
 import bundled from '@/data/clubs.json';
 import type { TeamSlug } from '@/lib/model/ids';
-import { joinToRoster, playerKey } from './roster-join';
+import { loadRosterJoined, playerKey, rosterJoin } from './roster-join';
 import { getAllEnrichedRosters, getRosters, type MergedPlayer, type MergedTeamRoster } from './rosters';
 import {
   CLUB_REGIONS, type Club, type ClubAffiliation, type ClubRegion, type ClubsFile, ClubsFileSchema,
 } from '@/lib/schema/clubs';
-import { failValidation } from '@/lib/schema/primitives';
+import { latestDateKey } from '@/lib/shared/dates';
 
 export type {
   AffiliationConfidence,
@@ -73,22 +73,14 @@ function loadAndJoin(
   teams: readonly MergedTeamRoster[],
   season: string,
 ): { file: ClubsFile; rows: Map<string, MergedPlayer> } {
-  const parsed = ClubsFileSchema.safeParse(raw);
-  if (!parsed.success) failValidation('clubs', parsed.error.issues);
-  const file = parsed.data;
-  if (file.season !== season) {
-    throw new Error(`clubs.json is for season ${file.season}, rosters for ${season}`);
-  }
-  const rows = joinToRoster(file.affiliations, teams, season, { label: 'clubs', noun: 'clubs', subject: (a) => a.club });
-  const jvRows = joinToRoster(file.jvAffiliations, teams, season, {
+  return loadRosterJoined(raw, teams, season, {
     label: 'clubs',
-    noun: 'jvAffiliations',
-    subject: (a) => a.club,
-    level: 'jv',
+    schema: ClubsFileSchema,
+    joins: (file) => [
+      rosterJoin(file.affiliations, { noun: 'clubs', subject: (a) => a.club }),
+      rosterJoin(file.jvAffiliations, { noun: 'jvAffiliations', subject: (a) => a.club, level: 'jv' }),
+    ],
   });
-  // The schema keeps a player out of both lists, so the two maps never share a key.
-  for (const [key, row] of jvRows) rows.set(key, row);
-  return { file, rows };
 }
 
 /** The file, and the merged roster row each tied player joined to at load time, by `playerKey`. */
@@ -145,7 +137,7 @@ export function getClubsFile(): ClubsFile {
  * checkedOn. The sitemap's date for the clubs pages (lib/datasets/commits.ts getCommitsLastChecked's pattern).
  */
 export function getClubsLastChecked(): string {
-  return [file.capturedAt, ...file.clubs.map((c) => c.checkedOn)].sort().at(-1)!;
+  return latestDateKey([file.capturedAt, ...file.clubs.map((c) => c.checkedOn)])!;
 }
 
 /** Every club, in display order (DESIGN §17.5). */

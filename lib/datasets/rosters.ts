@@ -22,19 +22,18 @@
  * only; never set them on a Worker).
  */
 
-import { readFileSync } from 'node:fs';
-
 import { z } from 'zod';
 import bundledEnrichment from '@/data/rosters-enrichment.json';
 import bundledRosters from '@/data/rosters.json';
 import type { TeamSlug } from '@/lib/model/ids';
-import { dateKey, failValidation, httpsUrl } from '@/lib/schema/primitives';
+import { dateKey, httpsUrl } from '@/lib/schema/primitives';
 import {
   type EnrichedGrade, type EnrichedHeight, type EnrichedJersey, type EnrichedPlayer, type EnrichedPositions,
   type EnrichedTeam, type EnrichmentSource, type PlayerProfile, type RosterCoach, type RosterConflict,
   type RosterEnrichment, RosterEnrichmentSchema, type RosterPlayer, type Rosters, RostersSchema,
   type TeamRoster,
 } from '@/lib/schema/rosters';
+import { readDataset } from './read';
 
 export type {
   EnrichedGrade,
@@ -54,17 +53,13 @@ export type {
   TeamRoster,
 } from '@/lib/schema/rosters';
 
-function readOverride(envName: string, bundled: unknown): unknown {
-  const override = process.env[envName];
-  if (!override) return bundled;
-  let text: string;
-  try {
-    text = readFileSync(override, 'utf8');
-  } catch (err) {
-    throw new Error(`lib/datasets/rosters.ts: cannot read ${envName}=${override} (${(err as Error).message})`);
-  }
-  return JSON.parse(text) as unknown;
-}
+/** Both rosters files are read through readDataset with this env, owner and mode. */
+const rostersSource = (env: string, bundled: unknown) => ({
+  env,
+  bundled,
+  owner: 'lib/datasets/rosters.ts',
+  malformedOverride: 'propagate' as const,
+});
 
 /**
  * What other public sources showed for a team's CURRENT roster — the one claim a team page with
@@ -93,15 +88,16 @@ const OtherRostersFileSchema = z.object({
 });
 
 function loadOtherRosters(): Map<string, OtherRosters> {
-  const parsed = OtherRostersFileSchema.safeParse(readOverride('SCVAL_ROSTERS_ENRICHMENT', bundledEnrichment));
-  if (!parsed.success) failValidation('rosters-enrichment otherRosters', parsed.error.issues);
-  return new Map(parsed.data.teams.map((t) => [t.slug, t.otherRosters ?? NOT_CHECKED]));
+  const file = readDataset({
+    ...rostersSource('SCVAL_ROSTERS_ENRICHMENT', bundledEnrichment),
+    label: 'rosters-enrichment otherRosters',
+    schema: OtherRostersFileSchema,
+  });
+  return new Map(file.teams.map((t) => [t.slug, t.otherRosters ?? NOT_CHECKED]));
 }
 
 function loadRosters(): Rosters {
-  const parsed = RostersSchema.safeParse(readOverride('SCVAL_ROSTERS', bundledRosters));
-  if (!parsed.success) failValidation('rosters', parsed.error.issues);
-  return parsed.data;
+  return readDataset({ ...rostersSource('SCVAL_ROSTERS', bundledRosters), label: 'rosters', schema: RostersSchema });
 }
 
 /**
@@ -112,11 +108,11 @@ function loadRosters(): Rosters {
  * row's own career page.
  */
 function loadEnrichment(base: Rosters): RosterEnrichment {
-  const parsed = RosterEnrichmentSchema.safeParse(
-    readOverride('SCVAL_ROSTERS_ENRICHMENT', bundledEnrichment),
-  );
-  if (!parsed.success) failValidation('rosters-enrichment', parsed.error.issues);
-  const enrichment = parsed.data;
+  const enrichment = readDataset({
+    ...rostersSource('SCVAL_ROSTERS_ENRICHMENT', bundledEnrichment),
+    label: 'rosters-enrichment',
+    schema: RosterEnrichmentSchema,
+  });
   if (enrichment.season !== base.season) {
     throw new Error(`rosters-enrichment is for season ${enrichment.season}, rosters for ${base.season}`);
   }
