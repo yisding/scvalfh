@@ -1,13 +1,13 @@
 {
   "cifssCrossCheck": {
-    "agreements": 592,
+    "agreements": 593,
     "cifssOnlyScored": 0,
-    "compared": 599,
-    "conflicts": 7,
+    "compared": 601,
+    "conflicts": 8,
     "notOnMaxPreps": 2
   },
-  "commitSummary": "SCVAL +0 finals · BVAL +0 · PCAL +0 · MCAL +0 · EAL +0 · Sunset +1 · City +0 · North +0 · Metro +0 · LA +0",
-  "contentHash": "da4a76b1eb073ca9923ad8aae0b76ad771722bd50f0f6edb2e960ae412111ddd",
+  "commitSummary": "SCVAL +1 finals · BVAL +0 · PCAL +0 · MCAL +0 · EAL +0 · Sunset +0 · City +0 · North +0 · Metro +0 · LA +0",
+  "contentHash": "9d5b2902945a2d9aeb6becf30feda7294d81763d041c4cace58d266ee455dbb2",
   "counts": {
     "byLeague": {
       "bval": {
@@ -34,8 +34,8 @@
       "independents": {
         "backfilled": 0,
         "finals": 54,
-        "games": 56,
-        "leagueGames": 21,
+        "games": 57,
+        "leagueGames": 22,
         "teams": 5
       },
       "mcal": {
@@ -47,14 +47,14 @@
       },
       "metro": {
         "backfilled": 0,
-        "finals": 83,
+        "finals": 84,
         "games": 102,
         "leagueGames": 30,
         "teams": 9
       },
       "north-county": {
         "backfilled": 1,
-        "finals": 210,
+        "finals": 211,
         "games": 257,
         "leagueGames": 103,
         "teams": 19
@@ -68,7 +68,7 @@
       },
       "scval": {
         "backfilled": 0,
-        "finals": 132,
+        "finals": 133,
         "games": 160,
         "leagueGames": 97,
         "teams": 15
@@ -81,28 +81,28 @@
         "teams": 8
       }
     },
-    "finals": 735,
-    "games": 903,
-    "leagueGames": 548,
+    "finals": 737,
+    "games": 904,
+    "leagueGames": 549,
     "mismatches": 26,
-    "pending": 8,
+    "pending": 6,
     "teams": 102
   },
   "crossCheck": {
-    "agreements": 206,
+    "agreements": 207,
     "backfilled": 3,
-    "compared": 256,
-    "conflicts": 6,
+    "compared": 258,
+    "conflicts": 7,
     "sbliveOnlyScored": 8
   },
-  "fetchedAt": "2026-10-19T10:24:48.331Z",
+  "fetchedAt": "2026-10-19T19:39:00.311Z",
   "leagues": [
     {
       "backfilled": 0,
-      "countedFinals": 74,
-      "finalsDelta": 0,
+      "countedFinals": 75,
+      "finalsDelta": 1,
       "id": "scval",
-      "missingPast": 3,
+      "missingPast": 2,
       "reasons": [],
       "state": "fresh"
     },
@@ -145,7 +145,7 @@
     {
       "backfilled": 0,
       "countedFinals": 33,
-      "finalsDelta": 1,
+      "finalsDelta": 0,
       "id": "sunset",
       "missingPast": 0,
       "reasons": [],
@@ -893,7 +893,7 @@
     },
     {
       "label": "chaminade schedule",
-      "rowCount": 16,
+      "rowCount": 17,
       "status": "ok"
     },
     {
@@ -903,7 +903,7 @@
     },
     {
       "label": "harvard-westlake schedule",
-      "rowCount": 21,
+      "rowCount": 22,
       "status": "ok"
     },
     {
@@ -968,7 +968,7 @@
     },
     {
       "label": "sblive scoreboard 2026-10-17",
-      "rowCount": 13,
+      "rowCount": 15,
       "status": "ok"
     },
     {
@@ -1048,12 +1048,12 @@
     },
     {
       "label": "cifsshome.org Southern Section field hockey",
-      "rowCount": 189,
+      "rowCount": 190,
       "status": "ok"
     },
     {
       "label": "cifsshome.org San Diego Section field hockey",
-      "rowCount": 574,
+      "rowCount": 579,
       "status": "ok"
     },
     {
@@ -1068,7 +1068,7 @@
     }
   ],
   "today": "2026-10-19",
-  "warnings": 43,
+  "warnings": 44,
   "window": {
     "firstGame": "2026-08-12T17:15:00",
     "lastGame": "2026-10-30T19:00:00",
