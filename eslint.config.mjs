@@ -41,8 +41,9 @@ const eslintConfig = defineConfig([
   // The top-level dependency directions, as editor feedback (tests/arch/layers.test.ts owns the full
   // rule, including the ranks inside lib/): lib imports none of views, components, app, scripts or
   // tests; views never import components, app or scripts; components never import app or scripts;
-  // and nothing outside tests/ imports tests/. The typescript resolver reads tsconfig.json's
-  // `paths`, so '@/' specifiers resolve.
+  // app never imports scripts; only lib/ imports data/ (the layers test narrows that to
+  // lib/datasets/); and nothing outside tests/ imports tests/. The typescript resolver reads
+  // tsconfig.json's `paths`, so '@/' specifiers resolve.
   {
     files: ["**/*.{ts,tsx,mts}"],
     settings: {
@@ -69,6 +70,16 @@ const eslintConfig = defineConfig([
               message: "components/ never import route files or scripts (tests/arch/layers.test.ts).",
             },
             {
+              target: "./app",
+              from: ["./scripts"],
+              message: "app/ never imports scripts (tests/arch/layers.test.ts rule b).",
+            },
+            {
+              target: ["./app", "./components", "./views", "./scripts"],
+              from: ["./data"],
+              message: "Only lib/datasets/ imports data/** (tests/arch/layers.test.ts rule e).",
+            },
+            {
               target: "./components",
               from: ["./lib/queries", "./lib/datasets"],
               message:
@@ -84,10 +95,10 @@ const eslintConfig = defineConfig([
       ],
     },
   },
-  // Import cycles inside lib/ and views/ (rule (g) of tests/arch/layers.test.ts, which also counts
-  // type-only imports; this rule skips them).
+  // Import cycles inside lib/, views/ and components/ (rule (g) of tests/arch/layers.test.ts, which
+  // also counts type-only imports; this rule skips them).
   {
-    files: ["lib/**/*.{ts,tsx}", "views/**/*.{ts,tsx}"],
+    files: ["lib/**/*.{ts,tsx}", "views/**/*.{ts,tsx}", "components/**/*.{ts,tsx}"],
     rules: { "import/no-cycle": ["error", { ignoreExternal: true }] },
   },
   // tests/support/corpus-modules.ts names its vitest hook registrars useCorpusModules and

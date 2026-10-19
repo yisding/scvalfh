@@ -32,7 +32,7 @@
  *   (e) only lib/datasets/** imports data/** (tests exempt)
  *   (f) package doors: a part of lib/config/leagues/, lib/registry/ or lib/engine/standings/ is
  *       imported only through its door or from inside its directory (tests exempt)
- *   (g) no import cycle inside lib/
+ *   (g) no import cycle inside lib/, views/ or components/
  *   (h) a views/**\/*-client.ts module imports only ranks 0-1, LEAVES and other *-client modules
  *   (i) scripts and app never import tests
  *   (j) components never import lib/queries/** or lib/datasets/** (app/** may): a component renders
@@ -242,7 +242,12 @@ const EDGES: readonly Edge[] = FILES.flatMap((file) =>
   }),
 );
 
-const LIB_EDGES = EDGES.filter(({ file, to }) => file.startsWith('lib/') && to.startsWith('lib/')).map(
+/** The roots rule (g) checks for cycles (an edge between two of them can only point down, rule a). */
+const CYCLE_ROOTS: readonly string[] = ['lib/', 'views/', 'components/'];
+
+const inCycleRoots = (mod: string): boolean => CYCLE_ROOTS.some((root) => mod.startsWith(root));
+
+const CYCLE_EDGES = EDGES.filter(({ file, to }) => inCycleRoots(file) && inCycleRoots(to)).map(
   ({ file, to }) => [moduleOf(file), to] as const,
 );
 
@@ -251,7 +256,7 @@ const lineOf = ({ file, line, to }: Edge, rule: string) => `${file}:${line} → 
 describe('layers: the dependency rule', () => {
   it('reads the whole import graph', () => {
     expectAtLeast(500, EDGES, 'import edges');
-    expectAtLeast(500, LIB_EDGES, 'lib/ → lib/ import edges');
+    expectAtLeast(1000, CYCLE_EDGES, 'lib/, views/ and components/ import edges');
   });
 
   it('every lib/, views/, components/ and app/ module has a layer', () => {
@@ -283,8 +288,8 @@ describe('layers: the dependency rule', () => {
     expect(reexports, 'import the name where it is used; only DOORS re-export').toEqual([]);
   });
 
-  it('no import cycle inside lib/ (rule g)', () => {
-    const cycles = cyclesOf(LIB_EDGES).map((cycle) => `${cycle.join(' → ')} (rule g)`);
+  it('no import cycle inside lib/, views/ or components/ (rule g)', () => {
+    const cycles = cyclesOf(CYCLE_EDGES).map((cycle) => `${cycle.join(' → ')} (rule g)`);
     expect(cycles).toEqual([]);
   });
 

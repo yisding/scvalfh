@@ -70,7 +70,7 @@ The rules, as `tests/arch/layers.test.ts` prints them in a failure line:
 - (e) only `lib/datasets/` imports `data/**` (tests exempt);
 - (f) a part inside a package door's directory is imported only through its door or from inside the
   directory (see "Package doors");
-- (g) no import cycle inside `lib/`;
+- (g) no import cycle inside `lib/`, `views/` or `components/`;
 - (h) a `views/**/*-client.ts` slice imports only ranks 0-1, the LEAVES and other client slices;
 - (i) `scripts/` and `app/` never import `tests/`;
 - (j) `components/` never import `lib/queries/` or `lib/datasets/`: the snapshot is read in exactly two
@@ -90,7 +90,7 @@ The other structural checks, each a test under `tests/arch/` unless named otherw
 | Every top-level source directory is scanned by the rules above | `tests/arch/source-roots.test.ts` |
 | Per-row links do not prefetch; class strings keep Tailwind candidates whole | `tests/arch/prefetch-policy.test.ts`, `tests/arch/class-join.test.ts` |
 | The cron and the deploy workflow agree on what a data commit is | `tests/arch/workflows.test.ts` |
-| The top-level directions and `lib/`/`views/` cycles, in the editor | ESLint `import/no-restricted-paths`, `import/no-cycle` (`eslint.config.mjs`) |
+| The top-level directions and the rule (g) cycles, in the editor | ESLint `import/no-restricted-paths`, `import/no-cycle` (`eslint.config.mjs`) |
 | No server module leaks into a page's browser bundle | `scripts/ci/assert-budgets.ts` (first-load JS per route) |
 
 ## Package doors
