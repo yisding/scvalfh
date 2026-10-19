@@ -24,33 +24,34 @@
 
 import { runCli } from './lib/cli';
 
+/**
+ * How a throw is reported (runCli's onError), once main() has loaded it: until then a throw is the
+ * plain `FAILED: <message>` line.
+ */
+let describeRunFailure: ((err: unknown) => { line: string }) | null = null;
+
 async function main(argv: readonly string[]): Promise<number> {
-  const { describeRunFailure } = await import('@/lib/pipeline/run-failure');
-  try {
-    const cli = await import('@/lib/pipeline/cli');
-    const run = await import('@/lib/pipeline/run');
-    const args = cli.parseRunArgs(argv, { cwd: process.cwd(), now: new Date().toISOString() });
-    if (args.help) {
-      console.log(cli.USAGE);
-      return 0;
-    }
-    const { stepOfficial } = await import('@/lib/pipeline/steps/official');
-    const { stepSblive } = await import('@/lib/pipeline/steps/sblive');
-    const { args: resolved, ctx } = cli.prepareRun(args);
-    const result = await run.runPipeline(ctx, { official: stepOfficial, sblive: stepSblive });
-    if (result === null) return 0; // out of season: nothing fetched, nothing written
-    if (resolved.dryRun) {
-      ctx.log('dry run: nothing written');
-      return 0;
-    }
-    const metaPath = cli.writeOutputs(resolved.out, result);
-    const rel = (p: string) => p.replace(`${process.cwd()}/`, '');
-    ctx.log(`wrote ${rel(resolved.out)} and ${rel(metaPath)}`);
+  ({ describeRunFailure } = await import('@/lib/pipeline/run-failure'));
+  const cli = await import('@/lib/pipeline/cli');
+  const run = await import('@/lib/pipeline/run');
+  const args = cli.parseRunArgs(argv, { cwd: process.cwd(), now: new Date().toISOString() });
+  if (args.help) {
+    console.log(cli.USAGE);
     return 0;
-  } catch (err) {
-    console.error(describeRunFailure(err).line);
-    return 1;
   }
+  const { stepOfficial } = await import('@/lib/pipeline/steps/official');
+  const { stepSblive } = await import('@/lib/pipeline/steps/sblive');
+  const { args: resolved, ctx } = cli.prepareRun(args);
+  const result = await run.runPipeline(ctx, { official: stepOfficial, sblive: stepSblive });
+  if (result === null) return 0; // out of season: nothing fetched, nothing written
+  if (resolved.dryRun) {
+    ctx.log('dry run: nothing written');
+    return 0;
+  }
+  const metaPath = cli.writeOutputs(resolved.out, result);
+  const rel = (p: string) => p.replace(`${process.cwd()}/`, '');
+  ctx.log(`wrote ${rel(resolved.out)} and ${rel(metaPath)}`);
+  return 0;
 }
 
-runCli(main);
+runCli(main, { onError: (err) => describeRunFailure?.(err).line ?? null });

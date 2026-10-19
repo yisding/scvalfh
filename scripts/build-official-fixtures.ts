@@ -23,7 +23,6 @@
 
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import path from 'node:path';
-import { pathToFileURL } from 'node:url';
 
 import { type FlagSpec, parseFlags } from '@/lib/cli/flags';
 import { getDivision, getLeague } from '@/lib/config/leagues';
@@ -44,7 +43,7 @@ import { assertDoubleRoundRobin } from '@/lib/official/validate';
 import { resolveOfficialName } from '@/lib/registry/resolve';
 import { officialFixtureId } from '@/lib/shared/official-id';
 import { parseBvalScheduleText } from '@/lib/sources/bval/schedule-text';
-import { runCli } from './lib/cli';
+import { runCliIfMain } from './lib/cli';
 
 const REPO = path.resolve(import.meta.dirname, '..');
 const DEFAULT_SOURCE_DIR = path.join(REPO, 'tests', 'fixtures', 'official', 'source');
@@ -340,5 +339,4 @@ function main(argv: readonly string[]): number {
   return differs > 0 ? 1 : 0;
 }
 
-const invokedDirectly = process.argv[1] !== undefined && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href;
-if (invokedDirectly) runCli(main);
+runCliIfMain(import.meta.url, main);

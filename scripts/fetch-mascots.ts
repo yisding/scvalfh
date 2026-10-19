@@ -265,4 +265,4 @@ async function main(argv: readonly string[]): Promise<number> {
   return 0;
 }
 
-void runCli(main);
+runCli(main);

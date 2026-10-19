@@ -10,10 +10,12 @@ import { z } from 'zod';
 import { SEASON_YEAR } from '@/lib/config/season';
 import {
   describePrevious,
+  droppedTeamSlugs,
   formatLeagueSummary,
   inScope,
   readPreviousFile,
   runExitCode,
+  runTotals,
   salvageRows,
   summarizeByLeague,
   teamsInScope,
@@ -171,8 +173,10 @@ describe('readPreviousFile: the previous file, salvaged row by row', () => {
     );
     // An SCVAL-only run must not report Del Mar (BVAL) as kept: it lost its row.
     const teams = TEAMS.map((t) => ({ slug: t.slug, status: t.slug === 'del-mar' ? 'pending' : 'ok' }));
-    const byLeague = summarizeByLeague(teams, ['scval'], new Set(p.dropped.flatMap((d) => (d.team ? [d.team] : []))));
+    expect(droppedTeamSlugs(p)).toEqual(new Set(['del-mar']));
+    const byLeague = summarizeByLeague(teams, ['scval'], droppedTeamSlugs(p));
     expect(byLeague.find((l) => l.league === 'bval')!.dropped).toEqual(['del-mar']);
+    expect(runTotals(byLeague)).toEqual({ failed: 0, lost: 1 });
     expect(runExitCode(byLeague, p.dropped)).toBe(1);
   });
 
@@ -185,8 +189,10 @@ describe('readPreviousFile: the previous file, salvaged row by row', () => {
     expect(p.dropped).toEqual([expect.objectContaining({ slug: `teams[${i}]`, team: null })]);
     expect(describePrevious(p, 'data/rosters.json').some((l) => /names no registry team; the run fails/.test(l))).toBe(true);
     // No league can claim the lost team, so only the unattributed drop fails the run.
+    expect(droppedTeamSlugs(p)).toEqual(new Set());
+    expect(droppedTeamSlugs(null)).toEqual(new Set());
     const teams = TEAMS.map((t) => ({ slug: t.slug, status: t.slug === 'del-mar' ? 'pending' : 'ok' }));
-    const byLeague = summarizeByLeague(teams, ['scval'], new Set());
+    const byLeague = summarizeByLeague(teams, ['scval'], droppedTeamSlugs(p));
     expect(runExitCode(byLeague)).toBe(0);
     expect(runExitCode(byLeague, p.dropped)).toBe(1);
   });

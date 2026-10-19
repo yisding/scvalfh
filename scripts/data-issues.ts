@@ -14,14 +14,13 @@
 
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
-import { pathToFileURL } from 'node:url';
 
 import { TIME_ZONE } from '@/lib/config/season';
 import { plural } from '@/lib/format/words';
 import type { Snapshot } from '@/lib/model/snapshot';
 import type { SnapshotMeta } from '@/lib/pipeline/contract';
 import { loadSnapshot } from '@/lib/snapshot/load';
-import { runCli } from './lib/cli';
+import { runCliIfMain } from './lib/cli';
 
 const REPO = path.resolve(import.meta.dirname, '..');
 
@@ -114,5 +113,4 @@ function main(argv: readonly string[]): number {
   return 0;
 }
 
-const invokedDirectly = process.argv[1] !== undefined && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href;
-if (invokedDirectly) runCli(main);
+runCliIfMain(import.meta.url, main);

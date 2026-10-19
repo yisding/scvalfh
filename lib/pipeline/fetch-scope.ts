@@ -16,7 +16,9 @@
  * season is ignored as if absent. Only a file that is not JSON at all (or holds no teams[]) stops
  * the run, before anything is written.
  *
- * Pure (no fs, no network), so tests can hold it to that.
+ * Pure (no fs, no network), so tests can hold it to that. The I/O the three scripts share around
+ * these rules (reading the previous file, the capture directory, the report, the write) is the
+ * scoped-fetch kernel, scripts/lib/fetch-job.ts.
  */
 
 import type { ZodType } from 'zod';
@@ -87,8 +89,9 @@ const isRecord = (v: unknown): v is Record<string, unknown> =>
 
 /**
  * A row's schema failure as one line: the first three issues, `path: message` joined with '; ' (`(row)`
- * for an empty path). The previous-file salvage here, scripts/fetch-jv.ts and the scoped-fetch kernel
- * (item 33) report every dropped row this way.
+ * for an empty path). The previous-file salvage here (which the scoped-fetch kernel,
+ * scripts/lib/fetch-job.ts loadPreviousFile, runs for all three scripts) and scripts/fetch-jv.ts's
+ * game lists report every dropped row this way.
  */
 export function describeRowIssues(issues: ReadonlyArray<{ path: readonly PropertyKey[]; message: string }>): string {
   return describeIssues(issues, { limit: 3, empty: '(row)', separator: '; ' });
@@ -228,6 +231,15 @@ export function readPreviousFile<Row extends { slug: string }, Whole>(
   return { readable: true, rows, dropped, otherSeason: null, whole, problems, ...withJson };
 }
 
+/**
+ * The registry teams whose previous row was dropped (DroppedRow.team; a row that names no registry
+ * team has no slug to put here): nothing of theirs is carried forward, and one outside the run is
+ * 'pending' now (summarizeByLeague's `dropped`). Empty when there is no previous file.
+ */
+export function droppedTeamSlugs(previous: Pick<PreviousRows<unknown, unknown>, 'dropped'> | null | undefined): Set<string> {
+  return new Set(previous?.dropped.flatMap((d) => (d.team ? [d.team] : [])) ?? []);
+}
+
 /** The loud log of what readPreviousFile did not keep: one line per dropped row, by name. */
 export function describePrevious(previous: PreviousRows<unknown, unknown>, label: string): string[] {
   const lines: string[] = [];
@@ -308,6 +320,17 @@ export function runExitCode(
   dropped: ReadonlyArray<Pick<DroppedRow, 'team'>> = [],
 ): 0 | 1 {
   return byLeague.some((l) => l.failed > 0 || l.dropped.length > 0) || dropped.some((d) => d.team === null) ? 1 : 0;
+}
+
+/**
+ * The run's totals for its closing line: `failed` covered teams (carried-forward or error) and
+ * `lost` uncovered teams now pending because their previous row was dropped.
+ */
+export function runTotals(byLeague: readonly LeagueRunSummary[]): { failed: number; lost: number } {
+  return {
+    failed: byLeague.reduce((n, l) => n + l.failed, 0),
+    lost: byLeague.reduce((n, l) => n + l.dropped.length, 0),
+  };
 }
 
 /**
