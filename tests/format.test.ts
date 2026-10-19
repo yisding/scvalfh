@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
 
 import {
-  clockTime, dateSpan, dateWithYear, gameWhen, leagueClock, leagueClockPT, longDate, monthDay, partialDate,
+  dateSpan, dateWithYear, gameWhen, leagueClock, leagueClockPT, longDate, monthDay, partialDate,
   partialDateKind, shortDate, timeOfDay, timeOfDayPT,
 } from '@/lib/format/dates';
 import {
-  ordinal, ordinalPlace, ordinalWord, perGame, recordString, recordWords, signedGd, streakString, winPct,
+  ordinal, ordinalWord, perGame, recordString, recordWords, signedGd, streakString, winPct,
 } from '@/lib/format/numbers';
 import { playInWords } from '@/lib/format/postseason';
 import { matchupJoiner, renderScore, scoreGlyph, scoreSentence, shootoutPhrases } from '@/lib/format/score';
@@ -14,7 +14,7 @@ import {
 } from '@/lib/format/words';
 import {
   dayDiff, dayNumber, earliestDateKey, hoursBetween, isoDateKey, latestDateKey, localDateKey, shiftDateKey,
-  toLocalTimestamp, weekdayName,
+  toLocalTimestamp,
 } from '@/lib/shared/dates';
 import type { PairingConfig } from '@/lib/model/league-config';
 import { sideOutcome } from '@/lib/shared/game';
@@ -103,12 +103,10 @@ describe('format: records and numbers', () => {
     expect(perGame(3, 0)).toBe(EM_DASH);
   });
 
-  it('writes ordinals and an em dash for a team with no results', () => {
+  it('writes ordinals', () => {
     expect([1, 2, 3, 4, 11, 12, 13, 21].map(ordinal)).toEqual([
       '1st', '2nd', '3rd', '4th', '11th', '12th', '13th', '21st',
     ]);
-    expect(ordinalPlace(3)).toBe('3rd');
-    expect(ordinalPlace(8, false)).toBe(EM_DASH);
   });
 
   it('tells a real 0 apart from a missing score', () => {
@@ -325,11 +323,6 @@ describe('numberWord and dateSpan', () => {
     expect([11, 21, 22, 23].map(ordinalWord)).toEqual(['11th', '21st', '22nd', '23rd']);
   });
 
-  it('names the weekday of a date key or a local timestamp', () => {
-    expect(weekdayName('2026-10-31')).toBe('Saturday');
-    expect(weekdayName('2026-09-29T16:00:00')).toBe('Tuesday');
-  });
-
   it('spans two dates with an en dash, naming the month once within a month', () => {
     expect(dateSpan('2026-10-30', '2026-10-31')).toBe('Oct 30–31');
     expect(dateSpan('2026-10-30', '2026-11-01')).toBe('Oct 30–Nov 1');
@@ -345,17 +338,6 @@ describe('leagueClock', () => {
     expect(leagueClock('12:05')).toBe('12:05 PM');
     expect(leagueClock('00:00')).toBe('12 AM');
     expect(leagueClockPT('11:00')).toBe('11 AM PT');
-  });
-});
-
-describe('clockTime', () => {
-  it('drops the meridiem for the dense row’s narrow leading column', () => {
-    expect(clockTime('2026-09-24T17:30:00')).toBe('5:30');
-    expect(clockTime('2026-09-24T16:00:00')).toBe('4:00');
-    expect(clockTime('2026-09-24T12:05:00')).toBe('12:05');
-    expect(clockTime('2026-09-24T00:15:00')).toBe('12:15');
-    // The full time is still what every accessible sentence carries.
-    expect(timeOfDayPT('2026-09-24T17:30:00')).toBe('5:30 PM PT');
   });
 });
 

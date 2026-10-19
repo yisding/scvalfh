@@ -375,9 +375,12 @@ describe('history: the read API', () => {
 
   it('exposes the awards and the two source PDFs for the page credit', async () => {
     const h = await import('@/lib/datasets/history');
-    expect(h.getHistoryAwards('de-anza')?.overall).toHaveLength(7);
-    expect(h.getHistoryAwards('el-camino', 'jv')?.overall).toEqual([]);
-    const sources = h.getHistoryProvenance('scval');
+    const scval = h.getAvailableHistoryLeagues().find((l) => l.id === 'scval')!.entry;
+    const awards = (division: string, level: 'varsity' | 'jv' = 'varsity') =>
+      scval.divisions.find((d) => d.division === division)?.awards[level];
+    expect(awards('de-anza')?.overall).toHaveLength(7);
+    expect(awards('el-camino', 'jv')?.overall).toEqual([]);
+    const sources = scval.provenance;
     if (sources?.source !== 'scval-pdf') throw new Error('scval provenance should be scval-pdf');
     expect(sources.standingsPdf).toMatch(/scval\.com/);
     expect(sources.allLeaguePdf).toMatch(/all%20league\.pdf$/);
@@ -662,7 +665,6 @@ describe('history: the league-aware read API', () => {
     expect(h.getHistoryChampions('eal')).toEqual([]);
     expect(h.hasHistory('bval')).toBe(true);
     expect(h.hasHistory('pcal')).toBe(false);
-    expect(h.getHistoryProvenance('mcal')).toBeNull();
     expect(h.getHistoryChampions('pcal')).toEqual([]);
   });
 
@@ -727,8 +729,11 @@ describe('history: the league-aware read API', () => {
       ['mt-hamilton', 'leigh', '8-1-1'],
       ['santa-teresa', 'leland', '8-1-1'],
     ]);
-    expect(h.getHistoryAwards('santa-teresa')?.overall).toHaveLength(6);
-    expect(h.getHistoryAwards('mt-hamilton', 'jv')).toBeNull();
+    const bval = h.getAvailableHistoryLeagues().find((l) => l.id === 'bval')!.entry;
+    const awards = (division: string, level: 'varsity' | 'jv' = 'varsity') =>
+      bval.divisions.find((d) => d.division === division)?.awards[level] ?? null;
+    expect(awards('santa-teresa')?.overall).toHaveLength(6);
+    expect(awards('mt-hamilton', 'jv')).toBeNull();
     expect(h.getHistoryFor('leland').map((x) => [x.division, x.level, x.row.place])).toEqual([
       ['santa-teresa', 'varsity', 1],
     ]);

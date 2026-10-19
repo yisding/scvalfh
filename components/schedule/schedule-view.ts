@@ -11,6 +11,7 @@
  * carries one count line per region (`byRegion`), which the page scopes.
  */
 
+import { regionIdSuffix } from '@/lib/config/leagues';
 import type { Game } from '@/lib/model/game';
 import type { LeagueId, RegionId } from '@/lib/model/ids';
 import { byDateLocal } from '@/lib/shared/game';
@@ -135,7 +136,7 @@ export function buildScheduleIndex(input: {
       const mine = [...new Set(tagged.filter((t) => inRegion(t, region)).map((t) => t.game.dateKey))].sort();
       return {
         id: region,
-        idSuffix: region === 'norcal' ? ('' as const) : ('-socal' as const),
+        idSuffix: regionIdSuffix(region),
         recent: mine.filter((d) => d <= input.today).slice(-n).map((d) => dayOf(d, region)),
         next: mine.filter((d) => d > input.today).slice(0, n).map((d) => dayOf(d, region)),
       };

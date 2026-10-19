@@ -17,7 +17,7 @@ import { describe, expect, it } from 'vitest';
 import { LEAGUES } from '@/lib/config/leagues';
 import {
   SEARCHED_REGIONS, clubDisplayName, getAffiliatedPlayer, getClub, getClubAffiliations, getClubSlugs,
-  getClubs, getClubsFile, getClubsLastChecked, getJvClubAffiliations, getPlayerClubs, getTeamClubAffiliations,
+  getClubs, getClubsFile, getClubsLastChecked, getPlayerClubs,
   loadClubs,
 } from '@/lib/datasets/clubs';
 import { classOf, getAllEnrichedRosters, getRosters } from '@/lib/datasets/rosters';
@@ -504,7 +504,7 @@ describe('data/clubs.json: jvAffiliations', () => {
   });
 
   it('resolves each JV tie to its JV roster row', () => {
-    for (const a of getJvClubAffiliations()) {
+    for (const a of raw.jvAffiliations) {
       const row = getAffiliatedPlayer(a);
       expect(row.fullName, a.fullName).toBe(a.fullName);
       expect(row.level, a.fullName).toBe('jv');
@@ -512,14 +512,12 @@ describe('data/clubs.json: jvAffiliations', () => {
   });
 
   it('keeps them out of everything that lists varsity ties', () => {
-    expect(getJvClubAffiliations()).toEqual(raw.jvAffiliations);
     const jvPlayers = new Set(raw.jvAffiliations.map((a) => `${a.teamSlug} ${a.athleteId}`));
     const served = getClubSlugs().flatMap((slug) => getClubAffiliations(slug));
     expect(served).toHaveLength(raw.affiliations.length);
     expect(served.filter((a) => jvPlayers.has(`${a.teamSlug} ${a.athleteId}`))).toEqual([]);
     for (const a of raw.jvAffiliations) {
       expect(getPlayerClubs(a.teamSlug, a.athleteId)).toEqual([]);
-      expect(getTeamClubAffiliations(a.teamSlug)).not.toContainEqual(a);
     }
   });
 });
@@ -592,10 +590,10 @@ describe('lib/datasets/clubs.ts', () => {
   });
 
   it('serves a team\'s affiliations', () => {
-    const si = getTeamClubAffiliations('st-ignatius');
-    expect(si).toHaveLength(16);
-    expect(si.every((a) => a.teamSlug === 'st-ignatius')).toBe(true);
-    expect(getTeamClubAffiliations('valley-christian')).toEqual([]);
+    const ofTeam = (teamSlug: string) =>
+      getClubSlugs().flatMap((slug) => getClubAffiliations(slug)).filter((a) => a.teamSlug === teamSlug);
+    expect(ofTeam('st-ignatius')).toHaveLength(16);
+    expect(ofTeam('valley-christian')).toEqual([]);
   });
 
   it('serves a player\'s clubs current first, then unknown, then past', () => {

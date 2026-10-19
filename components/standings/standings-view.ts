@@ -38,7 +38,7 @@
  */
 
 import {
-  getDivision, getLeague, ladderFor, leagueStandingsUrl, regionOf, sectionOf, statusesOf,
+  getDivision, getLeague, isDefaultRegion, ladderFor, leagueStandingsUrl, regionOf, sectionOf, statusesOf,
 } from '@/lib/config/leagues';
 import { divisionHeading, standaloneName } from '@/lib/config/leagues/labels';
 import {
@@ -537,9 +537,9 @@ export function buildDivisionView(input: DivisionViewInput): DivisionView {
   // A group of independents is named in full: 'LA independents standings', never 'Independent
   // league standings' (DESIGN §24.10).
   const tableWords = heading
-    ? regionOf(league.id) === 'socal'
-      ? `${heading} league standings`
-      : `${heading} Division league standings`
+    ? isDefaultRegion(regionOf(league.id))
+      ? `${heading} Division league standings`
+      : `${heading} league standings`
     : league.independents
       ? `${league.name} standings`
       : `${league.shortName} league standings`;

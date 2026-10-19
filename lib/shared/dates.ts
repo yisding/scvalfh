@@ -54,11 +54,6 @@ export function weekdayIndex(value: string): number {
   return new Date(Date.UTC(year, month - 1, day)).getUTCDay();
 }
 
-/** 'Saturday' for a local date or timestamp. */
-export function weekdayName(value: string): string {
-  return WEEKDAYS_LONG[weekdayIndex(value)];
-}
-
 /**
  * Whole days since 1970-01-01 for a date key (a time suffix is ignored): integer arithmetic through
  * Date.UTC, so no local zone can shift it.

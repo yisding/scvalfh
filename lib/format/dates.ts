@@ -83,18 +83,6 @@ export function timeOfDay(value: string): string {
   return `${h12}:${pad2(minute)} ${suffix}`;
 }
 
-/**
- * '5:30' — the clock face alone, for the narrow leading column of a dense row (DESIGN §3.3's
- * wireframe writes `5:30`, not `5:30 PM`). Every such row also carries the full `4:00 PM PT` in
- * its screen-reader sentence, and a scheduled game repeats it in the status label beside the
- * score, so the meridiem is never the only place the reader can find it.
- */
-export function clockTime(value: string): string {
-  const { hour, minute } = parseLocal(value);
-  const h12 = hour % 12 === 0 ? 12 : hour % 12;
-  return `${h12}:${pad2(minute)}`;
-}
-
 /** '4:00 PM PT' — every time on the site is labelled PT (DESIGN §10.11). */
 export function timeOfDayPT(value: string): string {
   return `${timeOfDay(value)} PT`;

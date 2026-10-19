@@ -16,9 +16,9 @@ import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 import {
-  collegeDisplayName, commitClassOf, commitProgram, getCollege, getCollegeCommitments, getColleges,
+  collegeDisplayName, commitClassOf, commitProgram, getColleges,
   getCommitments, getCommitsFile, getCommitsLastChecked, getCommittedPlayer, getPlayerCommitment,
-  getTeamCommitments, loadCommits,
+  loadCommits,
 } from '@/lib/datasets/commits';
 import { type MergedPlayer, classOf, getAllEnrichedRosters, getRosters } from '@/lib/datasets/rosters';
 import { getTeamBySlug } from '@/lib/registry/teams';
@@ -32,6 +32,10 @@ import { REPO } from './support/repo';
 const raw = JSON.parse(readFileSync(path.join(REPO, 'data', 'commits.json'), 'utf8')) as CommitsFile;
 const teams = getAllEnrichedRosters();
 const season = getRosters().season;
+
+/** One college by slug, and the commitments to it, over the lists the module serves. */
+const collegeOf = (slug: string) => getColleges().find((c) => c.slug === slug);
+const committedTo = (slug: string) => getCommitments().filter((c) => c.college === slug);
 
 /** The first varsity row (by roster order) that has an athleteId and matches `pick`. */
 function findRow(pick: (p: MergedPlayer) => boolean): { teamSlug: string; row: MergedPlayer } {
@@ -148,7 +152,7 @@ describe('the committed data/commits.json', () => {
 
   it('holds only colleges and programs somebody committed to, each program with its level', () => {
     for (const college of raw.colleges) {
-      expect(getCollegeCommitments(college.slug).length, college.slug).toBeGreaterThan(0);
+      expect(committedTo(college.slug).length, college.slug).toBeGreaterThan(0);
       for (const p of college.programs) {
         expect(COLLEGE_DIVISIONS).toContain(p.division);
         expect(raw.commitments.some((c) => c.college === college.slug && c.sport === p.sport), `${college.slug} ${p.sport}`).toBe(true);
@@ -217,15 +221,15 @@ describe('the research of 2026-10-03, 2026-10-04, 2026-10-06 and 2026-10-12 (the
     expect([sport('field-hockey', socal), sport('lacrosse', socal)]).toEqual([10, 3]);
     // Three colleges hold two programs: UC Davis (field hockey in the MPSF, lacrosse in the Big 12),
     // Cal (field hockey and lacrosse, both ACC) and Harvard (both Ivy League).
-    expect(getCollege('uc-davis')!.programs.map((p) => [p.sport, p.conference])).toEqual([
+    expect(collegeOf('uc-davis')!.programs.map((p) => [p.sport, p.conference])).toEqual([
       ['field-hockey', 'MPSF'],
       ['lacrosse', 'Big 12'],
     ]);
-    expect(getCollege('cal')!.programs.map((p) => [p.sport, p.conference])).toEqual([
+    expect(collegeOf('cal')!.programs.map((p) => [p.sport, p.conference])).toEqual([
       ['field-hockey', 'ACC'],
       ['lacrosse', 'ACC'],
     ]);
-    expect(getCollege('harvard')!.programs.map((p) => [p.sport, p.conference])).toEqual([
+    expect(collegeOf('harvard')!.programs.map((p) => [p.sport, p.conference])).toEqual([
       ['field-hockey', 'Ivy League'],
       ['lacrosse', 'Ivy League'],
     ]);
@@ -332,7 +336,7 @@ describe('lib/datasets/commits.ts read API', () => {
   });
 
   it('serves colleges with the most players first', () => {
-    const counts = getColleges().map((c) => getCollegeCommitments(c.slug).length);
+    const counts = getColleges().map((c) => committedTo(c.slug).length);
     expect(counts).toEqual([...counts].sort((a, b) => b - a));
     expect(getColleges()).toHaveLength(raw.colleges.length);
   });
@@ -341,8 +345,8 @@ describe('lib/datasets/commits.ts read API', () => {
     for (const c of raw.commitments) {
       // By value: lib/datasets/commits.ts serves the objects its own parse produced, not this file's.
       expect(getPlayerCommitment(c.teamSlug as never, c.athleteId)).toEqual(c);
-      expect(getTeamCommitments(c.teamSlug as never)).toContainEqual(c);
-      expect(getCollege(c.college)).toBeDefined();
+      expect(getCommitments().filter((x) => x.teamSlug === c.teamSlug)).toContainEqual(c);
+      expect(collegeOf(c.college)).toBeDefined();
     }
     const committed = new Set(raw.commitments.map((c) => `${c.teamSlug} ${c.athleteId}`));
     const free = teams.flatMap((t) => t.players.map((p) => ({ t: t.slug, p }))).find(

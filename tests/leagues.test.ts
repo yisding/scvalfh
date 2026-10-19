@@ -15,7 +15,7 @@ import {
   findLeague, getDivision, getLeague, getRegion, getSection, isIndependentDivision, isIndependentLeague,
   isLeagueId, isSingleDivision, ladderFor, ladderRung, leagueOfDivision, leaguePlayEnds, leaguePlayStarts,
   leagueStandingsUrl, leaguesInRegion, regionOf, seasonWindowBounds, sectionOf, sectionsInRegion, statusesOf,
-  tiebreakChainFor,
+  PLACE_VS_STAGES, UNCOMPUTABLE_STAGES, byRegion, isDefaultRegion, regionIdSuffix, tiebreakChainFor, tiebreakChains,
 } from '@/lib/config/leagues';
 import { divisionDisplay, divisionHeading, divisionLabel, standingsLabel } from '@/lib/config/leagues/labels';
 import { RESERVED_SEGMENTS } from '@/lib/config/routes';
@@ -1397,5 +1397,38 @@ describe('leagues: the LA independents (DESIGN §24.9, §24.10)', () => {
       r.classification = 'contest-type';
       return () => { r.classification = 'membership'; };
     }, /independents: a group of independents needs classification 'membership'/);
+  });
+});
+
+describe('leagues: the shared region and tiebreak-stage helpers', () => {
+  it('suffixes the ids of a region\'s repeated blocks: nothing for the default region, -socal for SoCal', () => {
+    expect(REGIONS.map((r) => [r.id, isDefaultRegion(r.id), regionIdSuffix(r.id)])).toEqual([
+      ['norcal', true, ''],
+      ['socal', false, '-socal'],
+    ]);
+    expect(isDefaultRegion(DEFAULT_REGION)).toBe(true);
+  });
+
+  it('groups items by region in REGIONS order, each region present, each group in the items\' order', () => {
+    const groups = byRegion(LEAGUES, (l) => regionOf(l.id));
+    expect(groups.map((g) => g.region.id)).toEqual(REGIONS.map((r) => r.id));
+    expect(groups.flatMap((g) => g.items.map((l) => l.id)).sort()).toEqual(LEAGUE_IDS.slice().sort());
+    for (const { region, items } of groups) {
+      expect(items.map((l) => l.id)).toEqual(LEAGUES.filter((l) => regionOf(l.id) === region.id).map((l) => l.id));
+    }
+    expect(byRegion([], () => 'norcal').map((g) => g.items)).toEqual([[], []]);
+  });
+
+  it('lists a league\'s tiebreak chains: the default first, then each byBucketStart key', () => {
+    for (const l of LEAGUES) {
+      const chains = tiebreakChains(l);
+      expect(chains[0]).toEqual({ start: null, chain: l.rules.tiebreaks.default });
+      expect(chains.slice(1).map((c) => c.start)).toEqual(Object.keys(l.rules.tiebreaks.byBucketStart ?? {}).map(Number));
+    }
+  });
+
+  it('names the uncomputable and the place-relative stages once', () => {
+    expect([...UNCOMPUTABLE_STAGES].sort()).toEqual([...UNCOMPUTABLE].sort());
+    expect([...PLACE_VS_STAGES].sort()).toEqual(['record-vs-higher-placed', 'record-vs-lower-placed']);
   });
 });

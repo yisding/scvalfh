@@ -12,7 +12,7 @@
  */
 
 import {
-  REGIONS, getLeague, isIndependentLeague, leagueOfDivision, leaguePlayStarts,
+  byRegion, getLeague, isIndependentLeague, leagueOfDivision, leaguePlayStarts,
 } from '@/lib/config/leagues';
 import { standaloneName } from '@/lib/config/leagues/labels';
 import { getFetchedAt } from '@/lib/datasets/snapshot';
@@ -206,8 +206,7 @@ export function buildStandingsOverviewView(): StandingsOverviewView {
     asOf: getFetchedAt(),
     leagues,
     sections,
-    regions: REGIONS.map((region) => {
-      const mine = leagues.filter((l) => l.region === region.id);
+    regions: byRegion(leagues, (l) => l.region).map(({ region, items: mine }) => {
       const ids = new Set<string>(mine.map((l) => l.section.id));
       return {
         id: region.id,

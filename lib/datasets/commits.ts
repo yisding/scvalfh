@@ -192,10 +192,6 @@ export function getColleges(): readonly College[] {
   return COLLEGES_ORDERED;
 }
 
-export function getCollege(slug: string): College | undefined {
-  return BY_SLUG.get(slug);
-}
-
 /**
  * The college team a commitment is to: its college's program in the commitment's sport, which
  * carries the level and conference of that sport. Every commitment has one (the schema checked).
@@ -205,16 +201,6 @@ export function commitProgram(c: Pick<Commitment, 'college' | 'sport'>): { colle
   const program = college?.programs.find((p) => p.sport === c.sport);
   if (!college || !program) throw new Error(`lib/datasets/commits.ts: no ${c.sport} program at ${c.college}`);
   return { college, program };
-}
-
-/** The commitments to one college, in display order; [] for an unknown slug. */
-export function getCollegeCommitments(slug: string): readonly Commitment[] {
-  return ORDERED.filter((c) => c.college === slug);
-}
-
-/** Every commitment of one team's players, in display order. */
-export function getTeamCommitments(teamSlug: TeamSlug): readonly Commitment[] {
-  return ORDERED.filter((c) => c.teamSlug === teamSlug);
 }
 
 /** One player's commitment, or null for a player no source says has committed — most rows. */

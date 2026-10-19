@@ -65,11 +65,6 @@ export function resolveOfficialName(leagueId: LeagueId, token: string): Team | u
   return t && t.league === league.id ? t : undefined;
 }
 
-/** True for a MaxPreps GUID of any registry team (replaces isScvalTeamId). */
-export function isRegistryTeamId(id: string | null | undefined): boolean {
-  return !!id && getTeamById(id) !== undefined;
-}
-
 const WITHDRAWN_KEYS: ReadonlyMap<LeagueId, ReadonlySet<string>> = new Map(
   LEAGUES.map((l) => [l.id, new Set(l.withdrawnNames.map(normalizeTeamKey))]),
 );

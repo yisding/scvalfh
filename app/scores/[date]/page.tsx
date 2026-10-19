@@ -21,7 +21,7 @@ import SectionHeader from '@/components/ui/SectionHeader';
 import { RegionSwitcher } from '@/components/layout/LeagueSwitcher';
 import PageHeader from '@/components/layout/PageHeader';
 import { OG_BASE } from '@/components/layout/site';
-import { REGIONS, regionOf } from '@/lib/config/leagues';
+import { REGIONS, regionIdSuffix, regionOf } from '@/lib/config/leagues';
 import { getToday } from '@/lib/datasets/snapshot';
 import { longDate, monthDay, shortDate } from '@/lib/format/dates';
 import { gameWord, plural } from '@/lib/format/words';
@@ -123,7 +123,7 @@ export default async function ScoresByDatePage({ params }: PageProps<'/scores/[d
   const jvBlocks = REGIONS.map((region) => ({
     region: region.id,
     shortName: region.shortName,
-    idSuffix: region.id === 'norcal' ? '' : '-socal',
+    idSuffix: regionIdSuffix(region.id),
     view: buildDayJvView(date, region.id),
   })).filter((block) => block.view.rows.length > 0);
   /* The leagues whose /schedule/<league> lists this date: every league with a side in one of the

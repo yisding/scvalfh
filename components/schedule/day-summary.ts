@@ -8,7 +8,7 @@
  * code path that could render `0-0` for a game that was never played.
  */
 
-import { DEFAULT_REGION, LEAGUES, REGIONS, findDivision, regionOf } from '@/lib/config/leagues';
+import { DEFAULT_REGION, LEAGUES, REGIONS, findDivision, regionIdSuffix, regionOf } from '@/lib/config/leagues';
 import { matchupJoiner } from '@/lib/format/score';
 import { gameWord, plural } from '@/lib/format/words';
 import type { Game } from '@/lib/model/game';
@@ -240,7 +240,7 @@ export function dayRegions(games: readonly Game[]): DayRegions {
   const between = games.filter((g) => place.get(g.contestId) === 'between-regions');
   const regions = REGIONS.map((region): DayRegion => {
     const mine = games.filter((g) => place.get(g.contestId) === region.id);
-    const idSuffix = region.id === 'norcal' ? ('' as const) : ('-socal' as const);
+    const idSuffix = regionIdSuffix(region.id);
     return {
       id: region.id,
       name: region.name,

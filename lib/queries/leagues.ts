@@ -4,7 +4,7 @@
  * league's data health.
  */
 
-import { LEAGUES, REGIONS, SECTIONS, getSection } from '@/lib/config/leagues';
+import { LEAGUES, SECTIONS, byRegion, getSection } from '@/lib/config/leagues';
 import { divisionHeading } from '@/lib/config/leagues/labels';
 import { getSnapshot } from '@/lib/datasets/snapshot';
 import type { LeagueHealth } from '@/lib/model/health';
@@ -80,8 +80,8 @@ export interface RegionSummary {
  * league (lib/config/leagues.ts asserts both), so nothing here is empty.
  */
 export function getRegionSummaries(): RegionSummary[] {
-  return REGIONS.map((region) => {
-    const sections = SECTIONS.filter((s) => s.region === region.id).map((section) => ({
+  return byRegion(SECTIONS, (s) => s.region).map(({ region, items }) => {
+    const sections = items.map((section) => ({
       section: section as SectionConfig,
       leagues: SUMMARIES.filter((l) => l.section.id === section.id),
     }));

@@ -5,7 +5,7 @@
  * reads `lastSpotOutcome` through the door.
  */
 
-import { drawNumberOf, tiebreakChainFor } from '@/lib/config/leagues';
+import { UNCOMPUTABLE_STAGES, drawNumberOf, tiebreakChainFor } from '@/lib/config/leagues';
 import type { Game } from '@/lib/model/game';
 import type { TeamId } from '@/lib/model/ids';
 import type { LeagueConfig } from '@/lib/model/league-config';
@@ -13,7 +13,7 @@ import type { Standing, TiebreakStage } from '@/lib/model/standings';
 import { sideView } from '@/lib/shared/game';
 
 import { divisionGames } from './record';
-import { HALT, UNCOMPUTABLE, allEqual, nameOf, slugOfId, stageKeys, type DivisionCtx } from './tiebreak';
+import { HALT, allEqual, nameOf, slugOfId, stageKeys, type DivisionCtx } from './tiebreak';
 
 // ---------------------------------------------------------------- seed-one-restart (BVAL, MCAL)
 
@@ -51,13 +51,13 @@ function pickFirst(
   narrow: (best: TeamId[]) => TeamId[],
 ): { cluster: TeamId[]; terminal: boolean } {
   for (const stage of chain) {
-    if (UNCOMPUTABLE.has(stage)) {
+    if (UNCOMPUTABLE_STAGES.has(stage)) {
       for (const id of group) ctx.resolvedBy.set(id, stage);
       return { cluster: byName(group), terminal: true };
     }
     const keys = stageKeys(stage, group, above, ctx.below, ctx);
     if (keys === HALT) {
-      const terminal = chain.find((st) => UNCOMPUTABLE.has(st)) ?? 'coin-flip';
+      const terminal = chain.find((st) => UNCOMPUTABLE_STAGES.has(st)) ?? 'coin-flip';
       for (const id of group) ctx.resolvedBy.set(id, terminal);
       return { cluster: byName(group), terminal: true };
     }

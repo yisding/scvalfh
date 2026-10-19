@@ -20,7 +20,7 @@
  */
 
 import {
-  CCS, REGIONS, getDivision, getLeague, isIndependentLeague, isSingleDivision, leaguePlayStarts, sectionOf,
+  CCS, byRegion, getDivision, getLeague, isIndependentLeague, isSingleDivision, leaguePlayStarts, regionIdSuffix, sectionOf,
 } from '@/lib/config/leagues';
 import { divisionHeading, standaloneName, standingsLabel } from '@/lib/config/leagues/labels';
 import { hasHistory } from '@/lib/datasets/history';
@@ -996,8 +996,7 @@ export function buildHomeView(): HomeView {
     leagueChips: leagueChips(),
     leagueCards,
     panels: summaries.map((s) => buildPanel(s, summaries, today)),
-    regions: REGIONS.map((region) => {
-      const mine = summaries.filter((s) => s.region === region.id);
+    regions: byRegion(summaries, (s) => s.region).map(({ region, items: mine }) => {
       const ids = mine.map((s) => s.id);
       return {
         id: region.id,
@@ -1010,7 +1009,7 @@ export function buildHomeView(): HomeView {
         },
         leagueCards: leagueCards.filter((c) => c.regionId === region.id),
         latest: crossLeagueLatest(ids, leagueIds),
-        idSuffix: region.id === 'norcal' ? '' : '-socal',
+        idSuffix: regionIdSuffix(region.id),
       };
     }),
   };

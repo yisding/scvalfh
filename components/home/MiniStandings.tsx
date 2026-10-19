@@ -5,7 +5,7 @@ import PlaceMark from '@/components/ui/PlaceMark';
 import SectionHeader from '@/components/ui/SectionHeader';
 import { NoGoalDiff, biggestGoalDiff } from '@/components/ui/StandingsTable';
 import TeamMonogram from '@/components/ui/TeamMonogram';
-import { getDivision, getLeague, regionOf } from '@/lib/config/leagues';
+import { getDivision, getLeague, isDefaultRegion, regionOf } from '@/lib/config/leagues';
 import { monthDay } from '@/lib/format/dates';
 import { placeWords } from '@/lib/format/numbers';
 import { EM_DASH, plural } from '@/lib/format/words';
@@ -99,9 +99,9 @@ export function MiniStandings({ division, legend, className }: MiniStandingsProp
   // "Division" only for NorCal: the San Diego Section calls Palomar or Metro Mesa a league, and its
   // "Division I" / "Division II" are playoff tiers (standings-view.ts tableWords, review 2026-10-06).
   const subject = showDivisionLabel && division.heading
-    ? regionOf(league.id) === 'socal'
-      ? `${division.heading} league standings`
-      : `${division.heading} Division league standings`
+    ? isDefaultRegion(regionOf(league.id))
+      ? `${division.heading} Division league standings`
+      : `${division.heading} league standings`
     : league.independents
       ? `${league.name} standings`
       : `${division.leagueShort} league standings`;

@@ -8,7 +8,7 @@
 import type { Metadata } from 'next';
 
 import {
-  INDEPENDENT_LEAGUES, LEAGUES_PROPER, REGIONS, SECTIONS, getSection, regionOf, sectionsInRegion,
+  INDEPENDENT_LEAGUES, LEAGUES_PROPER, SECTIONS, byRegion, getSection, regionOf, sectionsInRegion,
 } from '@/lib/config/leagues';
 import { SEASON_CALENDAR_YEAR } from '@/lib/config/season';
 import { listWords, numberWord } from '@/lib/format/words';
@@ -130,8 +130,8 @@ function sectionCoverage(section: SectionConfig, leagues: readonly LeagueConfig[
  * second names its region in full, as the owner's wording of the sentence does.
  */
 export const SITE_DESCRIPTION = (() => {
-  const clauses = REGIONS.map((region, i) => {
-    const count = TEAMS.filter((t) => regionOf(t.league) === region.id).length;
+  const clauses = byRegion(TEAMS, (t) => regionOf(t.league)).map(({ region, items }, i) => {
+    const count = items.length;
     const noun = i === 0 ? `${region.shortName} girls varsity field hockey teams` : `${region.name} teams`;
     return `the ${count} ${noun} in ${leaguesBySectionWords('short', region.id)}`;
   });

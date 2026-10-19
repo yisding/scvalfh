@@ -1,6 +1,6 @@
 import { buildStandingsOverviewView, leaderLine } from '@/components/standings/standings-page-view';
 import { leaderClause, type LeaderLine } from '@/components/standings/standings-view';
-import { INDEPENDENT_LEAGUES, LEAGUES_PROPER, REGIONS, isIndependentLeague } from '@/lib/config/leagues';
+import { INDEPENDENT_LEAGUES, LEAGUES_PROPER, byRegion, isIndependentLeague } from '@/lib/config/leagues';
 import { SEASON_CALENDAR_YEAR } from '@/lib/config/season';
 import { shortDate } from '@/lib/format/dates';
 import type { LeagueId, RegionId } from '@/lib/model/ids';
@@ -74,13 +74,12 @@ export function regionCardColumns(
   },
 ): RegionCardColumn[] {
   const leagues = getLeagueSummaries();
-  return REGIONS.map((region) => ({
+  return byRegion(leagues, (l) => l.region).map(({ region, items }) => ({
     region: region.id,
     heading: region.name,
     // Every table of the region, the LA independents' included (DESIGN §24.10); the group's row is
     // labelled by its division ('Independents'), since its short name is an adjective.
-    rows: leagues
-      .filter((l) => l.region === region.id)
+    rows: items
       .map((l) => ({
         id: l.id,
         shortName: isIndependentLeague(l.id) ? (l.divisions[0]?.label ?? l.shortName) : l.shortName,

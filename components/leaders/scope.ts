@@ -5,7 +5,7 @@
  */
 
 import {
-  INDEPENDENT_LEAGUES, LEAGUES_PROPER, REGIONS, getSection, leaguesInRegion,
+  INDEPENDENT_LEAGUES, LEAGUES_PROPER, REGIONS, getSection, leaguesInRegion, regionIdSuffix,
 } from '@/lib/config/leagues';
 import { numberWord } from '@/lib/format/words';
 import type { RegionId } from '@/lib/model/ids';
@@ -33,11 +33,6 @@ export const AND_INDEPENDENTS = INDEPENDENT_LEAGUES.map(
 export const AND_INDEPENDENTS_SHORT = INDEPENDENT_LEAGUES.map(
   (g) => ` and ${numberWord(independentTeams(g))} independents`,
 ).join('');
-
-/** The id suffix of a region's boards and sections: '' for NorCal (today's anchors), '-socal' for SoCal. */
-export function regionIdSuffix(region: RegionId): '' | '-socal' {
-  return region === 'norcal' ? '' : '-socal';
-}
 
 /** What a board needs to know about the region it ranks: its id suffix and the words for its leagues. */
 export interface BoardScope {

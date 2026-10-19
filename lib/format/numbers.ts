@@ -55,11 +55,6 @@ export function ordinal(n: number): string {
   }
 }
 
-/** The rank cell: '1st', or an em dash for a team with no reported results (DESIGN §8). */
-export function ordinalPlace(place: number, hasResults = true): string {
-  return hasResults ? ordinal(place) : EM_DASH;
-}
-
 /**
  * A place in words, as a sentence or a screen reader says it: '7th', or 'tied for 7th' for a
  * shared place (a level place the league's tiebreakers do not settle).

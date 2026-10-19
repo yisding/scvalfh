@@ -44,8 +44,8 @@ import { SEASON_YEAR } from './season';
 
 export { CCS } from './leagues/ccs';
 export { DATA_QUALITY } from './leagues/data-quality';
-export { DEFAULT_REGION, REGIONS, SECTIONS } from './leagues/regions';
-export { PLACE_VS_STAGES, UNCOMPUTABLE_STAGES } from './leagues/tiebreak-stages';
+export { DEFAULT_REGION, REGIONS, SECTIONS, byRegion, isDefaultRegion, regionIdSuffix } from './leagues/regions';
+export { PLACE_VS_STAGES, UNCOMPUTABLE_STAGES, tiebreakChains } from './leagues/tiebreak-stages';
 
 // ---------- values (SPEC §2.2, verbatim; each in its part) ----------
 

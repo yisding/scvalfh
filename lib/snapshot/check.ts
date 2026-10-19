@@ -8,7 +8,7 @@
 import type { z } from 'zod';
 
 import {
-  CCS, CCS_LEAGUE_IDS, LEAGUES, SECTIONS, findDivision, findLeague, getSection, statusesOf,
+  CCS, CCS_LEAGUE_IDS, LEAGUES, SECTIONS, findDivision, findLeague, getSection, statusesOf, tiebreakChains,
 } from '@/lib/config/leagues';
 import { classifyGame } from '@/lib/engine/classify';
 import { type DivisionId } from '@/lib/model/ids';
@@ -26,9 +26,8 @@ function allowedStages(leagueId: string): ReadonlySet<TiebreakStage> {
   const league = findLeague(leagueId);
   const out = new Set<TiebreakStage>(['points']);
   if (!league) return out;
-  for (const s of league.rules.tiebreaks.default) out.add(s);
-  for (const chain of Object.values(league.rules.tiebreaks.byBucketStart ?? {})) {
-    for (const s of chain ?? []) out.add(s);
+  for (const { chain } of tiebreakChains(league)) {
+    for (const s of chain) out.add(s);
   }
   if (league.postseason.kind === 'league-tournament') out.add('play-in');
   return out;

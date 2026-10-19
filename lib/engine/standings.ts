@@ -34,7 +34,7 @@
  * badge) are lib/format/standings.ts.
  */
 
-import { LEAGUES, tiebreakChainFor } from '@/lib/config/leagues';
+import { LEAGUES, PLACE_VS_STAGES, UNCOMPUTABLE_STAGES, tiebreakChainFor } from '@/lib/config/leagues';
 import { divisionLabel } from '@/lib/config/leagues/labels';
 import type { Game } from '@/lib/model/game';
 import type { DivisionId, TeamId } from '@/lib/model/ids';
@@ -50,7 +50,7 @@ import { playoffStatusFor } from './standings/ladder';
 import { compareToReported } from './standings/maxpreps-crosscheck';
 import { type Tally, accumulate, divisionGames, emptyTally, toComputed } from './standings/record';
 import { seedOne } from './standings/seed-one';
-import { type DivisionCtx, UNCOMPUTABLE, nameOf, resolveGroup } from './standings/tiebreak';
+import { type DivisionCtx, nameOf, resolveGroup } from './standings/tiebreak';
 
 export {
   outcomesFor, playoffOutcomeLabel, playoffOutcomes, playoffStatusFor, statusBadge, statusLegend,
@@ -100,11 +100,6 @@ export interface ComputeOptions {
   /** MaxPreps' reported rows, keyed on schoolId. */
   reported?: ReadonlyMap<TeamId, ReportedRecord>;
 }
-
-const PLACE_VS_STAGES: ReadonlySet<TiebreakStage> = new Set<TiebreakStage>([
-  'record-vs-higher-placed',
-  'record-vs-lower-placed',
-]);
 
 /** Loops LEAGUES → divisions → teamsInDivision; per division: the SCVAL procedure, with rules from config. */
 export function computeStandings(
@@ -290,7 +285,7 @@ function tiebreakNote(
   if (stage === 'play-in') {
     return `Tied on ${record.pts} points${tiedWith} for the last tournament place — ${citations.stages['play-in'] ?? ''}. We show them level.`;
   }
-  if (UNCOMPUTABLE.has(stage)) {
+  if (UNCOMPUTABLE_STAGES.has(stage)) {
     return `Tied on ${record.pts} points${tiedWith} and unresolved by every criterion — ${citations.stages[stage] ?? ''}. We show them level.`;
   }
   return `Tied on ${record.pts} points; separated by ${citations.stages[stage] ?? stage}.`;

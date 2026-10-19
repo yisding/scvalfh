@@ -19,7 +19,7 @@ import { LEAGUE_IDS, getLeague, getSection } from '@/lib/config/leagues';
 import type { DivisionId, LeagueId, SectionId, TeamSlug } from '@/lib/model/ids';
 import { getTeamBySlug } from '@/lib/registry/teams';
 import {
-  type AvailableLeagueHistory, type History, type HistoryAwards, type HistoryDivision, type HistoryLevel,
+  type AvailableLeagueHistory, type History, type HistoryDivision, type HistoryLevel,
   type HistoryRow, HistorySchema, type LeagueHistory, type UnavailableLeagueHistory,
 } from '@/lib/schema/history';
 import {
@@ -111,12 +111,6 @@ export function getHistoryLastChecked(): string {
   return latestDateKey([...leagueDays, ...bracketDays])!;
 }
 
-/** The source credit of an available league (SCVAL's two PDFs, BVAL's sheet and documents). */
-export function getHistoryProvenance(leagueId: LeagueId): AvailableLeagueHistory['provenance'] | null {
-  const entry = history.leagues[leagueId];
-  return entry?.status === 'available' ? entry.provenance : null;
-}
-
 /**
  * The name the page prints for a school in the archive: the registry's canonical `name`, the one
  * every other page uses. The file keeps each source's own spelling ("Saint Ignatius" in the team
@@ -137,13 +131,6 @@ function divisionEntry(division: DivisionId): HistoryDivision | undefined {
 
 export function getHistoryStandings(division: DivisionId, level: HistoryLevel = 'varsity'): HistoryRow[] {
   return divisionEntry(division)?.standings[level] ?? [];
-}
-
-export function getHistoryAwards(
-  division: DivisionId,
-  level: HistoryLevel = 'varsity',
-): HistoryAwards | null {
-  return divisionEntry(division)?.awards[level] ?? null;
 }
 
 /** Every 2025-26 row for one school, across divisions and levels. */

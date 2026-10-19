@@ -15,7 +15,7 @@ import SectionHeader from '@/components/ui/SectionHeader';
 import { DATA_CORRECTIONS_URL, OG_BASE, ROOT_OG_IMAGE, SITE_SCOPE_NOTE, independentsWords } from '@/components/layout/site';
 import {
   CCS, SECTIONS, TOURNAMENT_LEAGUE_IDS, UNBRACKETED_LEAGUE_IDS, getLeague, getSection, isIndependentLeague,
-  leagueStandingsUrl, regionOf,
+  isDefaultRegion, leagueStandingsUrl, regionOf,
 } from '@/lib/config/leagues';
 import { SOURCE_LINKS } from '@/lib/config/source-urls';
 import { getClubs } from '@/lib/datasets/clubs';
@@ -535,7 +535,7 @@ export default function AboutPage() {
   const shootoutTeamsWho = (g: (typeof shootoutSections)[number]) =>
     g.leagues.length === 1 ? g.leagues[0].shortName : g.section.name;
   // Every section with no unbracketed league but a SoCal league in it gets its own rules card.
-  const socalSections = sections.filter((s) => s.region === 'socal' && leagues.some((l) => l.section.id === s.id));
+  const socalSections = sections.filter((s) => !isDefaultRegion(s.region) && leagues.some((l) => l.section.id === s.id));
 
   const perLeague = leagues.map((summary) => {
     const config = getLeague(summary.id);
@@ -606,7 +606,7 @@ export default function AboutPage() {
   const noDocumentGuidelines = `${listWords([...new Set(noDocumentLeagues.map((l) => `the ${l.section.name}’s`))])} Field Hockey Guidelines`;
   // Leagues only: the independents publish nothing because there is no league to publish it (their card says so).
   const socalNoDocument = perLeague
-    .filter((p) => p.noDocument && regionOf(p.summary.id) === 'socal' && !isIndependentLeague(p.summary.id))
+    .filter((p) => p.noDocument && !isDefaultRegion(regionOf(p.summary.id)) && !isIndependentLeague(p.summary.id))
     .map((p) => p.summary);
   const socalNoDocumentWho = listWords(socalNoDocument.map(leagueRef));
   const socalRulesDocuments = listWords([

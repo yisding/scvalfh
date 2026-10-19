@@ -4,7 +4,7 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { postseasonTagOf } from '@/components/ui/describe-game';
 import {
-  classifyGame, classifyGames, crossDivisionNote, isLeagueGame, leaguesOf, postseasonTag,
+  classifyGame, classifyGames, crossDivisionNote, postseasonTag,
 } from '@/lib/engine/classify';
 import type { Game } from '@/lib/model/game';
 import { game } from './support/game-builder';
@@ -388,22 +388,10 @@ describe('classify: Sunset (membership, no postseason; DESIGN §24.11)', () => {
 });
 
 describe('classify: helpers', () => {
-  it('lists the leagues of the registry sides', () => {
-    expect(leaguesOf(game({ home: 'leigh', away: 'cupertino' }))).toEqual(['bval', 'scval']);
-    expect(leaguesOf(game({ home: 'tamalpais', away: 'redwood' }))).toEqual(['mcal']);
-    const g = game({ home: 'leigh', away: 'cupertino' });
-    expect(leaguesOf({ ...g, away: { ...g.away, teamId: null, slug: null, name: 'Scripps Ranch' } })).toEqual(['bval']);
-  });
-
   it('keeps an existing postseason tag and computes a missing one', () => {
     const g = game({ home: 'saint-francis', away: 'st-ignatius', hs: 1, as: 0, date: '2026-10-01' });
     const tagged = classifyGames([{ ...g, postseason: { kind: 'other', leagueId: null, via: 'contest-type-4' } }]);
     expect(tagged[0].postseason?.kind).toBe('other');
     expect(postseasonTag(g)).toBeNull();
-  });
-
-  it('isLeagueGame reads countsFor only', () => {
-    expect(isLeagueGame({ countsFor: 'de-anza' })).toBe(true);
-    expect(isLeagueGame({ countsFor: null })).toBe(false);
   });
 });

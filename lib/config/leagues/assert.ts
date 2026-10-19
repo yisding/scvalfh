@@ -21,7 +21,7 @@ import { SHOOTOUT_INFERENCES } from '@/lib/model/league-config';
 import { GUID_RE } from '@/lib/shared/contest-id';
 import { DATE_PATTERN, SLUG_PATTERN } from '@/lib/shared/patterns';
 
-import { PLACE_VS_STAGES, UNCOMPUTABLE_STAGES } from './tiebreak-stages';
+import { PLACE_VS_STAGES, UNCOMPUTABLE_STAGES, tiebreakChains } from './tiebreak-stages';
 
 const CCS_LADDER_STATUSES: ReadonlySet<PlayoffStatus> = new Set<PlayoffStatus>([
   'aq', 'play-in', 'at-large', 'out', 'no-aq-route',
@@ -42,17 +42,6 @@ function allowedStatuses(kind: PostseasonConfig['kind']): ReadonlySet<PlayoffSta
     case 'no-postseason': return NO_POSTSEASON_STATUSES;
     case 'section-playoffs': return SECTION_PLAYOFFS_STATUSES;
   }
-}
-
-/** Every chain of a league with where it comes from: `null` = default, a number = byBucketStart key. */
-function chainsOf(league: LeagueConfig): Array<{ start: number | null; chain: readonly TiebreakStage[] }> {
-  const out: Array<{ start: number | null; chain: readonly TiebreakStage[] }> = [
-    { start: null, chain: league.rules.tiebreaks.default },
-  ];
-  for (const [key, chain] of Object.entries(league.rules.tiebreaks.byBucketStart ?? {})) {
-    if (chain) out.push({ start: Number(key), chain });
-  }
-  return out;
 }
 
 /** The whole configuration, as the door exports it (the same objects, so a test's mutation is seen here). */
@@ -251,7 +240,7 @@ export function checkLeagueConfig({ leagues, regions, sections, ccs, dataQuality
 
     // 4. chains
     const rules = l.rules;
-    const chains = chainsOf(l);
+    const chains = tiebreakChains(l);
     const usedStages = new Set<TiebreakStage>();
     for (const { start, chain } of chains) {
       const where = start === null ? `${l.id} default chain` : `${l.id} chain for bucket start ${start}`;

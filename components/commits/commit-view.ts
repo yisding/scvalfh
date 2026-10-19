@@ -20,7 +20,7 @@
  *   - every row links the pages it rests on, each URL once.
  */
 
-import { REGIONS, regionOf } from '@/lib/config/leagues';
+import { byRegion, regionOf } from '@/lib/config/leagues';
 import { clubDisplayName, getClubs } from '@/lib/datasets/clubs';
 import {
   type College, type CollegeDivision, type CollegeProgram, type CommitSource, type CommitSport,
@@ -443,8 +443,7 @@ export function buildCommitsView(): CommitsView {
   const commitments = getCommitments();
   const trackedTeams = getRosters().teams.length;
 
-  const regions: CommitRegionView[] = REGIONS.map((region) => {
-    const here = commitments.filter((c) => commitRegion(c) === region.id);
+  const regions: CommitRegionView[] = byRegion(commitments, commitRegion).map(({ region, items: here }) => {
     return {
       id: region.id,
       name: region.name,

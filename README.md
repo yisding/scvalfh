@@ -662,8 +662,8 @@ drop it by hand (on a rollover, redo the research for the new season). Never pru
 automatically.
 
 `lib/datasets/clubs.ts` is the read API: `getClubs()` and `getClubSlugs()` in display order (region, then
-most tied players, then name), `getClub(slug)`, `getClubAffiliations(slug)`,
-`getTeamClubAffiliations(team)` and `getPlayerClubs(team, athleteId)` (current, then listed, then
+most tied players, then name), `getClub(slug)`, `getClubAffiliations(slug)`
+and `getPlayerClubs(team, athleteId)` (current, then listed, then
 earlier). `components/clubs/club-view.ts` builds every view and chooses every word the pages say
 about a tie. The gates know the pages: `assert:prerender` and `assert-vinext-prerender.ts` expect
 `clubs/<slug>` for exactly the file's slugs, `smoke-server.sh` counts them in the sitemap and
@@ -794,9 +794,9 @@ with `commits: <team> / <player> (<college>): <what>`. Re-check the commitment's
 or drop it by hand. On a rollover the seniors graduate: redo the research for the new season.
 
 `lib/datasets/commits.ts` is the read API: `getCommitments()` in display order (class, then school, then
-name), `getColleges()` (most players first), `getCollege(slug)`, `commitProgram(commitment)` (its
-college's team in its sport, with that team's level), `getCollegeCommitments(slug)`,
-`getTeamCommitments(team)`, `getPlayerCommitment(team, athleteId)` and `commitClassOf(commitment)`.
+name), `getColleges()` (most players first), `commitProgram(commitment)` (its
+college's team in its sport, with that team's level),
+`getPlayerCommitment(team, athleteId)` and `commitClassOf(commitment)`.
 `components/commits/commit-view.ts` builds the page and the roster line and chooses every word they
 say. `/commits` is one static page (DESIGN §21): one section per class year, then the colleges, then
 how commitments are matched; every team page with a committed player shows a commitment line under

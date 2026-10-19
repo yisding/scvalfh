@@ -1,12 +1,12 @@
 /**
- * The season phase (SPEC §5.9) of one league, of one region and of the whole site, on the day of a
- * timestamp (default: the snapshot stamp).
+ * The season phase (SPEC §5.9) of one league and of the whole site, on the day of a timestamp
+ * (default: the snapshot stamp). A region's phase is `combinedPhase` (lib/engine/phase.ts) over its leagues' phases.
  */
 
-import { LEAGUES, getLeague, leaguesInRegion } from '@/lib/config/leagues';
+import { LEAGUES, getLeague } from '@/lib/config/leagues';
 import { getFetchedAt, getSnapshot } from '@/lib/datasets/snapshot';
 import { combinedPhase, seasonPhase } from '@/lib/engine/phase';
-import type { LeagueId, RegionId } from '@/lib/model/ids';
+import type { LeagueId } from '@/lib/model/ids';
 import type { LeagueConfig } from '@/lib/model/league-config';
 import type { SeasonPhase } from '@/lib/model/season';
 
@@ -28,9 +28,4 @@ function phaseOf(leagues: readonly LeagueConfig[], asOf: string): SeasonPhase {
 /** The whole site's phase (`combinedPhase` over every league). */
 export function getSitePhase(asOf: string = getFetchedAt()): SeasonPhase {
   return phaseOf(LEAGUES, asOf);
-}
-
-/** One region's phase (`combinedPhase` over the region's leagues): NorCal and SoCal run on different calendars. */
-export function getRegionPhase(region: RegionId, asOf: string = getFetchedAt()): SeasonPhase {
-  return phaseOf(leaguesInRegion(region), asOf);
 }

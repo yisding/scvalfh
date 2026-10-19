@@ -95,11 +95,9 @@ function push<V>(map: Map<string, V[]>, key: string, value: V): void {
 const BY_SLUG = new Map<string, Club>(file.clubs.map((c) => [c.slug, c]));
 /** Every club has an entry, an empty one when no tracked player is tied to it. File order. */
 const BY_CLUB = new Map<string, ClubAffiliation[]>(file.clubs.map((c) => [c.slug, []]));
-const BY_TEAM = new Map<string, ClubAffiliation[]>();
 const BY_PLAYER = new Map<string, ClubAffiliation[]>();
 for (const a of file.affiliations) {
   push(BY_CLUB, a.club, a);
-  push(BY_TEAM, a.teamSlug, a);
   push(BY_PLAYER, playerKey(a.teamSlug, a.athleteId), a);
 }
 
@@ -154,23 +152,9 @@ export function getClubSlugs(): string[] {
   return ORDERED.map((c) => c.slug);
 }
 
-/**
- * The ties for players on JV rows, in file order. They are kept out of every other listing here
- * (the club pages, the club counts, the roster's club lines), which list varsity rows only;
- * getAffiliatedPlayer resolves their rows like any other tie's.
- */
-export function getJvClubAffiliations(): readonly ClubAffiliation[] {
-  return file.jvAffiliations;
-}
-
 /** The affiliations tied to one club, in file order (the view sorts); [] for an unknown slug. */
 export function getClubAffiliations(slug: string): readonly ClubAffiliation[] {
   return BY_CLUB.get(slug) ?? [];
-}
-
-/** Every affiliation of one team's players, in file order. */
-export function getTeamClubAffiliations(teamSlug: TeamSlug): readonly ClubAffiliation[] {
-  return BY_TEAM.get(teamSlug) ?? [];
 }
 
 /** One player's clubs: current, then unknown, then past. [] for a player no source ties to a club. */

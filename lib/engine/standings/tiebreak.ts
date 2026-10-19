@@ -4,7 +4,7 @@
  * ./record.ts; seed-one-restart (./seed-one.ts) walks the same stage keys one team at a time.
  */
 
-import { drawNumberOf } from '@/lib/config/leagues';
+import { UNCOMPUTABLE_STAGES, drawNumberOf } from '@/lib/config/leagues';
 import type { Game } from '@/lib/model/game';
 import type { DivisionId, TeamId, TeamSlug } from '@/lib/model/ids';
 import type { LeagueConfig, LeagueRules } from '@/lib/model/league-config';
@@ -49,13 +49,6 @@ function headToHead(group: readonly TeamId[], games: readonly Game[]): Map<TeamI
   }
   return out;
 }
-
-/** Stages the interpreter cannot compute: the teams stay level with the league's citation. */
-export const UNCOMPUTABLE: ReadonlySet<TiebreakStage> = new Set<TiebreakStage>([
-  'coin-flip',
-  'ccs-points',
-  'no-rule',
-]);
 
 /** Everything a stage key may read for one division. */
 export interface DivisionCtx {
@@ -224,7 +217,7 @@ function splitChain(chain: readonly TiebreakStage[]): {
   terminal: TiebreakStage | null;
 } {
   const last = chain[chain.length - 1];
-  if (last !== undefined && UNCOMPUTABLE.has(last)) {
+  if (last !== undefined && UNCOMPUTABLE_STAGES.has(last)) {
     return { stages: chain.slice(0, -1), terminal: last };
   }
   return { stages: [...chain], terminal: null };

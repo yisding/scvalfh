@@ -2,7 +2,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { ALL_DIVISIONS, LEAGUES } from '@/lib/config/leagues';
 import {
-  isRegistryTeamId, isWithdrawnSchool, resolveOfficialName, resolveTeam, sideJoinKey, unorderedPairKey,
+  isWithdrawnSchool, resolveOfficialName, resolveTeam, sideJoinKey, unorderedPairKey,
 } from '@/lib/registry/resolve';
 import {
   ACRONYM_COLLISIONS, FETCHABLE_TEAMS, TEAMS, getTeamById, getTeamBySlug, normalizeTeamKey, onPrimaryInk,
@@ -154,9 +154,8 @@ describe('teams: the registry is the nine leagues and the LA independents', () =
     expect(resolveTeam('Ann Sobrato')?.slug).toBe('sobrato');
     expect(resolveTeam('San Benito')?.slug).toBe('hollister');
     expect(resolveTeam('Tamalpais High School')?.slug).toBe('tamalpais');
-    expect(isRegistryTeamId('bd6662e8-a2ee-45ca-b0e8-dd03dec005c9')).toBe(true);
-    expect(isRegistryTeamId('8396a0d3-8021-458d-b592-a5cb2c4a366d')).toBe(false);
-    expect(isRegistryTeamId(null)).toBe(false);
+    expect(getTeamById('bd6662e8-a2ee-45ca-b0e8-dd03dec005c9')).toBeDefined();
+    expect(getTeamById('8396a0d3-8021-458d-b592-a5cb2c4a366d')).toBeUndefined();
   });
 
   it('resolves the EAL teams, including MaxPreps’ "Davis Sr." spelling', () => {
@@ -218,8 +217,8 @@ describe('teams: the registry is the nine leagues and the LA independents', () =
     expect(resolveTeam('Bella Vista')?.slug).toBe('bella-vista');
     expect(resolveTeam('Monta Vista')?.slug).toBe('monta-vista');
     // The San Diego Del Norte is a member; the Crescent City ghost is not.
-    expect(isRegistryTeamId(getTeamBySlug('del-norte')!.id)).toBe(true);
-    expect(isRegistryTeamId('8396a0d3-8021-458d-b592-a5cb2c4a366d')).toBe(false);
+    expect(getTeamById(getTeamBySlug('del-norte')!.id)).toBeDefined();
+    expect(getTeamById('8396a0d3-8021-458d-b592-a5cb2c4a366d')).toBeUndefined();
     // Partial words shared by several teams, and statewide namesakes, are never keys.
     for (const name of ['Cathedral', 'Mission', 'Canyon', 'Country Day', 'Serra', 'University', 'HB', 'SD']) {
       expect(resolveTeam(name), name).toBeUndefined();
@@ -262,7 +261,7 @@ describe('teams: the registry is the nine leagues and the LA independents', () =
     expect(isWithdrawnSchool('Red Bluff')).toBe(true);
     expect(isWithdrawnSchool('Red Bluff Union High School', 'eal')).toBe(true);
     expect(isWithdrawnSchool('Red Bluff', 'mcal')).toBe(false);
-    expect(isRegistryTeamId('4d3da788-bbe2-4ab9-b854-d95aa9786cda')).toBe(false);
+    expect(getTeamById('4d3da788-bbe2-4ab9-b854-d95aa9786cda')).toBeUndefined();
     expect(isWithdrawnSchool('Fremont')).toBe(false);
     expect(isWithdrawnSchool(null)).toBe(false);
     // MaxPreps lists Madison (City Eastern) and Santana (its "Grossmont" table) with no 2026 varsity game.

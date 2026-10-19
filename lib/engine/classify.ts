@@ -48,16 +48,6 @@ function leagueOfDivisionId(id: DivisionId): LeagueConfig | undefined {
   return LEAGUES.find((l) => l.divisions.some((d) => d.id === id));
 }
 
-/** Leagues of the registry sides (0, 1 or 2 distinct), home side first. */
-export function leaguesOf(game: Pick<Game, 'home' | 'away'>): LeagueId[] {
-  const out: LeagueId[] = [];
-  for (const side of [game.home, game.away]) {
-    const team = teamOfSide(side);
-    if (team && !out.includes(team.league)) out.push(team.league);
-  }
-  return out;
-}
-
 /** The one league both sides are registry members of, or null. */
 function sharedLeague(game: Pick<Game, 'home' | 'away'>): LeagueConfig | null {
   const home = teamOfSide(game.home);
@@ -258,9 +248,4 @@ export function classifyGames(games: readonly Game[], opts: ClassifyOptions = {}
     const note = counted.provenance.classificationNote ? null : crossDivisionNote(counted);
     return note ? { ...counted, provenance: { ...counted.provenance, classificationNote: note } } : counted;
   });
-}
-
-/** The UI's league / non-league tag: game.countsFor !== null. */
-export function isLeagueGame(game: Pick<Game, 'countsFor'>): boolean {
-  return game.countsFor !== null;
 }

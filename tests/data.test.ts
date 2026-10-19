@@ -10,9 +10,11 @@ import { writeFileSync } from 'node:fs';
 
 import { beforeAll, describe, expect, it } from 'vitest';
 
-import { LEAGUE_IDS, SECTIONS, TOURNAMENT_LEAGUE_IDS, getLeague } from '@/lib/config/leagues';
+import { LEAGUE_IDS, SECTIONS, TOURNAMENT_LEAGUE_IDS, getLeague, leaguesInRegion } from '@/lib/config/leagues';
+import { combinedPhase } from '@/lib/engine/phase';
 import { buildSeason } from '@/lib/engine/season-record';
 import { computeStandings } from '@/lib/engine/standings';
+import type { RegionId } from '@/lib/model/ids';
 import type { Game } from '@/lib/model/game';
 import type { Snapshot } from '@/lib/model/snapshot';
 import { getTeamById, getTeamBySlug } from '@/lib/registry/teams';
@@ -32,6 +34,10 @@ const m = useSnapshotModules(
   },
   { data: loadQueries },
 );
+
+/** One region's phase on the day of `asOf`: `combinedPhase` over the phases of the region's leagues (NorCal and SoCal run on different calendars). */
+const regionPhase = (q: Pick<typeof m.data, 'getSeasonPhase'>, region: RegionId, asOf: string) =>
+  combinedPhase(leaguesInRegion(region).map((league) => q.getSeasonPhase(league.id, asOf)));
 
 describe('data: identity and freshness', () => {
   it('loads the snapshot once and exposes it', () => {
@@ -370,10 +376,10 @@ describe('data: season phase per league', () => {
     expect(m.data.getSitePhase('2026-08-01T19:00:00.000Z')).toBe('preseason');
     // NorCal is over by Christmas; the Sunset and Metro never started here, so neither SoCal nor the site
     // is complete: every started league is, so the next thing to happen is a league's first game.
-    expect(m.data.getRegionPhase('norcal', '2026-12-25T19:00:00.000Z')).toBe('complete');
-    expect(m.data.getRegionPhase('socal', '2026-12-25T19:00:00.000Z')).toBe('preseason');
+    expect(regionPhase(m.data, 'norcal', '2026-12-25T19:00:00.000Z')).toBe('complete');
+    expect(regionPhase(m.data, 'socal', '2026-12-25T19:00:00.000Z')).toBe('preseason');
     expect(m.data.getSitePhase('2026-12-25T19:00:00.000Z')).toBe('preseason');
-    expect(m.data.getRegionPhase('norcal', '2026-10-30T19:00:00.000Z')).toBe('regular');
+    expect(regionPhase(m.data, 'norcal', '2026-10-30T19:00:00.000Z')).toBe('regular');
   });
 });
 
@@ -755,11 +761,11 @@ describe('data: Southern California tables with results', () => {
     // Metro's first game is Oct 7 (Metro South Bay): on Oct 2 Metro is preseason and the rest are not.
     expect(socal.getSeasonPhase('metro', '2026-10-02T19:00:00.000Z')).toBe('preseason');
     expect(socal.getSitePhase('2026-10-02T19:00:00.000Z')).toBe('regular');
-    expect(socal.getRegionPhase('socal', '2026-10-02T19:00:00.000Z')).toBe('regular');
+    expect(regionPhase(socal, 'socal', '2026-10-02T19:00:00.000Z')).toBe('regular');
     // The San Diego Section playoffs (Nov 2-14) are its leagues' tournament phase; the Sunset is done Oct 31.
     expect(socal.getSeasonPhase('city', '2026-11-05T19:00:00.000Z')).toBe('tournament');
     expect(socal.getSeasonPhase('sunset', '2026-11-05T19:00:00.000Z')).toBe('complete');
-    expect(socal.getRegionPhase('socal', '2026-11-05T19:00:00.000Z')).toBe('tournament');
+    expect(regionPhase(socal, 'socal', '2026-11-05T19:00:00.000Z')).toBe('tournament');
     expect(socal.getSitePhase('2026-12-25T19:00:00.000Z')).toBe('complete');
   });
 });

@@ -974,7 +974,7 @@ automatically.
 list varsity rows only and are all the club pages, the club counts and the roster's club lines
 show. They are the same records under the same rules, except that each must join to a row the
 overlay marks JV (`lib/datasets/clubs.ts` refuses the file otherwise, and a player is in one list or the
-other, never both); `getJvClubAffiliations()` serves them, and nothing renders them yet. They were
+other, never both); `getClubsFile()` holds them, and nothing renders them yet. They were
 recorded on 2026-10-05 from the recruiting-profile re-read (a SportsRecruits page's CLUB and TEAMS
 blocks, read in a browser because they are rendered by script): four ties for three Los Gatos JV
 players, Casey Moorehouse (NorCal Impact and SF Hawks), Beatrix Monk (NorCal Impact U16) and Colette

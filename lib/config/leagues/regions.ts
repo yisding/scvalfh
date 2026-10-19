@@ -19,6 +19,31 @@ export const REGIONS = [
 /** The view a first visit gets, and the one a page renders before any stored preference is read. */
 export const DEFAULT_REGION: RegionId = 'norcal';
 
+/** Whether `region` is the default view (NorCal): the one whose anchors and ids carry no region suffix. */
+export function isDefaultRegion(region: RegionId): boolean {
+  return region === DEFAULT_REGION;
+}
+
+/**
+ * The id suffix of a region's repeated blocks (DESIGN-socal §2.4 id rule): '' for the default region (today's
+ * anchors, from before there were regions), '-socal' for SoCal (`#elo-rating-socal`, `#non-league-socal`).
+ */
+export function regionIdSuffix(region: RegionId): '' | '-socal' {
+  return isDefaultRegion(region) ? '' : (`-${region}` as '-socal');
+}
+
+/**
+ * `items` grouped by the region `regionOf` names, in REGIONS order (NorCal first), each region present even when
+ * it holds none; each group keeps the items' own order. The one filter every "one wrapper per region" page ran
+ * by hand over REGIONS.
+ */
+export function byRegion<T>(
+  items: readonly T[],
+  regionOf: (item: T) => RegionId,
+): Array<{ region: (typeof REGIONS)[number]; items: T[] }> {
+  return REGIONS.map((region) => ({ region, items: items.filter((item) => regionOf(item) === region.id) }));
+}
+
 export const SECTIONS = [
   {
     id: 'ccs', name: 'Central Coast Section', shortName: 'CCS', briefLabel: 'CCS', region: 'norcal',

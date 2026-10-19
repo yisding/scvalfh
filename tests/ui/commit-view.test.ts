@@ -43,7 +43,7 @@ import {
 import { buildRosterView } from '@/components/teams/roster-view';
 import { REGIONS, regionOf } from '@/lib/config/leagues';
 import {
-  type College, collegeDisplayName, commitClassOf, commitProgram, getCollege, getColleges, getCommitments,
+  type College, collegeDisplayName, commitClassOf, commitProgram, getColleges, getCommitments,
   getCommitsFile, getCommittedPlayer,
 } from '@/lib/datasets/commits';
 import { getRosters } from '@/lib/datasets/rosters';
@@ -293,7 +293,7 @@ describe('buildCommitsView (/commits)', () => {
       const counts = slugs.map(count);
       expect(counts).toEqual([...counts].sort((a, b) => b - a));
       for (const row of region.colleges) {
-        const college = getCollege(row.slug)!;
+        const college = getColleges().find((c) => c.slug === row.slug)!;
         const sports = new Set(mine.filter((c) => c.college === row.slug).map((c) => c.sport));
         const programs = college.programs.filter((p) => sports.has(p.sport));
         expect(row.anchor).toBe(collegeAnchor(region.id, row.slug));
