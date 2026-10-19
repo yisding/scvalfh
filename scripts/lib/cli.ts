@@ -13,9 +13,10 @@
  * a11y-axe's exit 2 ('not run: dependencies missing') is deliberate.
  *
  * The entry idiom is one bare line at the end of the script: `runCli(main)`, or
- * `runCliIfMain(import.meta.url, main)` for a script whose module tests also import (data-issues,
- * build-official-fixtures), so that importing it runs nothing. A script that words a throw its own
- * way (fetch-data's `ABORT (previous snapshot kept): …`) passes `onError`.
+ * `runCliIfMain(import.meta.url, main)` for a script that must stay importable without running
+ * (data-issues and build-official-fixtures, whose builders live in lib/pipeline/data-issues.ts and
+ * lib/official/build.ts). A script that words a throw its own way (fetch-data's
+ * `ABORT (previous snapshot kept): …`) passes `onError`.
  */
 
 import path from 'node:path';
