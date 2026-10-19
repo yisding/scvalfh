@@ -2,6 +2,7 @@ import Link from 'next/link';
 
 import GridRowFiller from '@/components/ui/GridRowFiller';
 import { gradeWord } from '@/lib/format/words';
+import { teamHref } from '@/lib/shared/routes';
 import type { AwardLine, AwardsView } from '@/views/history/history-view';
 
 /**
@@ -33,7 +34,7 @@ function AwardMeta({ line }: { line: AwardLine }) {
           linked route the moment the link scrolls into view, and every award names a school, so
           one block is dozens of these. Navigation still fetches on click. */}
       {team ? (
-        <Link href={`/teams/${team.slug}`} prefetch={false} className="text-accent hover:underline">
+        <Link href={teamHref(team.slug)} prefetch={false} className="text-accent hover:underline">
           {line.school}
         </Link>
       ) : (

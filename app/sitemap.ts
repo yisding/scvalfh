@@ -14,6 +14,7 @@ import { getJvGamesOn } from '@/lib/queries/jv';
 import { getContentRemovals } from '@/lib/queries/provenance';
 import { latestDateKey } from '@/lib/shared/dates';
 import { gameHref } from '@/lib/shared/game-id';
+import { clubHref, playoffsHref, scheduleHref, scoresHref, standingsHref, teamHref } from '@/lib/shared/routes';
 import { clubStaticParams } from '@/views/clubs/club-route';
 import { tournamentStaticParams } from '@/views/playoffs/tournament-route';
 import { scoresStaticParams } from '@/views/scores/scores-route';
@@ -90,26 +91,26 @@ export default function sitemap(): MetadataRoute.Sitemap {
   ];
 
   const leagueRoutes: MetadataRoute.Sitemap = leagueStaticParams().flatMap(({ league: id }) => [
-    { url: url(`/standings/${id}`), lastModified, changeFrequency: 'daily' as const, priority: 0.9 },
-    { url: url(`/schedule/${id}`), lastModified, changeFrequency: 'daily' as const, priority: 0.8 },
+    { url: url(standingsHref(id)), lastModified, changeFrequency: 'daily' as const, priority: 0.9 },
+    { url: url(scheduleHref(id)), lastModified, changeFrequency: 'daily' as const, priority: 0.8 },
   ]);
 
   const tournamentRoutes: MetadataRoute.Sitemap = tournamentStaticParams().map(({ league: id }) => ({
-    url: url(`/playoffs/${id}`),
+    url: url(playoffsHref(id)),
     lastModified,
     changeFrequency: 'weekly',
     priority: 0.7,
   }));
 
   const teamRoutes: MetadataRoute.Sitemap = teamStaticParams().map(({ slug }) => ({
-    url: url(`/teams/${slug}`),
+    url: url(teamHref(slug)),
     lastModified,
     changeFrequency: 'daily',
     priority: 0.6,
   }));
 
   const clubRoutes: MetadataRoute.Sitemap = clubStaticParams().map(({ slug }) => ({
-    url: url(`/clubs/${slug}`),
+    url: url(clubHref(slug)),
     lastModified: clubsStamp,
     changeFrequency: 'monthly',
     priority: 0.3,
@@ -124,7 +125,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   // takes the snapshot's: it can change with any fetch.
   const fixtureDays = new Set(getOfficialFixtures().map((f) => f.dateKey));
   const dateRoutes: MetadataRoute.Sitemap = scoresStaticParams().map(({ date }) => ({
-    url: url(`/scores/${date}`),
+    url: url(scoresHref(date)),
     lastModified: fixtureDays.has(date)
       ? lastModified
       : latestContentDate(

@@ -5,6 +5,7 @@ import { CCS, getLeague } from '@/lib/config/leagues';
 import { dateSpan, longDate, monthDay } from '@/lib/format/dates';
 import type { LeagueId } from '@/lib/model/ids';
 import { parseLocal } from '@/lib/shared/dates';
+import { playoffsHref } from '@/lib/shared/routes';
 import type { RailKind } from '@/views/schedule/rail-client';
 
 /**
@@ -180,7 +181,7 @@ function postseasonChip(leagueId: LeagueId): { label: string; href: string; sr: 
       const last = rounds[rounds.length - 1];
       return {
         label: `${ps.name} ${span(first, last)}`,
-        href: `/playoffs/${league.id}`,
+        href: playoffsHref(league.id),
         sr: `${ps.name}, ${longDate(first)} to ${longDate(last)}`,
       };
     }

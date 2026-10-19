@@ -10,6 +10,7 @@ import ExternalLink from '@/components/ui/ExternalLink';
 import SectionHeader from '@/components/ui/SectionHeader';
 import { clubDisplayName, getClubAffiliations } from '@/lib/datasets/clubs';
 import { plural } from '@/lib/format/words';
+import { clubHref } from '@/lib/shared/routes';
 import { clubParam, clubStaticParams } from '@/views/clubs/club-route';
 import { buildClubPageView } from '@/views/clubs/club-view';
 import { missingMetadata, pageMetadata } from '@/views/site/page-metadata';
@@ -56,7 +57,7 @@ export async function generateMetadata({ params }: PageProps<'/clubs/[slug]'>): 
     : 'No player on this site’s varsity rosters is tied to it by a public page we found.';
   const description = `${club.name}${club.city ? `, ${club.city}` : ''}. ${club.description} ${tied} Unofficial and incomplete.`;
   return pageMetadata({
-    path: `/clubs/${club.slug}`,
+    path: clubHref(club.slug),
     // The full name, never "<short name> club field hockey": "Lions club field hockey" reads as the
     // service club, and "Performance Field Hockey field hockey" repeats itself.
     title: club.name,

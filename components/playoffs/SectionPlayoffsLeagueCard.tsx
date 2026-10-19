@@ -3,6 +3,7 @@ import Link from 'next/link';
 import Arrow from '@/components/ui/Arrow';
 import { leagueTitle } from '@/lib/config/leagues/labels';
 import { listWords } from '@/lib/format/words';
+import { standingsHref } from '@/lib/shared/routes';
 import type { SectionLeagueCardData } from '@/views/playoffs/playoffs-view';
 
 /**
@@ -24,7 +25,7 @@ export default function SectionPlayoffsLeagueCard({ card }: { card: SectionLeagu
               {d.leaders.length > 0
                 ? `${listWords(d.leaders.map((t) => t.name), '&')} ${d.leaders.length === 1 ? 'leads' : 'lead'} the table, ${d.leaders[0].pts} pts.`
                 : 'No league results yet.'}{' '}
-              <Link href={`/standings/${summary.id}#${d.id}`} prefetch={false} className="text-accent hover:underline">
+              <Link href={standingsHref(summary.id, d.id)} prefetch={false} className="text-accent hover:underline">
                 Table <Arrow />
               </Link>
             </p>

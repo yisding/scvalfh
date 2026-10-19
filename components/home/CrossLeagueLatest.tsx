@@ -4,6 +4,7 @@ import Arrow from '@/components/ui/Arrow';
 import EmptyState from '@/components/ui/EmptyState';
 import SectionHeader from '@/components/ui/SectionHeader';
 import { shortDate } from '@/lib/format/dates';
+import { scoresHref } from '@/lib/shared/routes';
 import type { CrossLeagueLatest as CrossLeagueLatestView } from '@/views/home/cross-league';
 
 import { ResultRow } from './LatestScores';
@@ -35,7 +36,7 @@ export function CrossLeagueLatest({ view, region, className }: CrossLeagueLatest
         id={headingId}
         kicker={`Latest from every ${region.shortName} league`}
         meta={view ? shortDate(view.date) : undefined}
-        action={view ? { href: `/scores/${view.date}`, label: `All ${view.total}` } : undefined}
+        action={view ? { href: scoresHref(view.date), label: `All ${view.total}` } : undefined}
         className={single ? 'md:max-w-3xl' : undefined}
       />
       {view && view.groups.length > 0 ? (
@@ -55,7 +56,7 @@ export function CrossLeagueLatest({ view, region, className }: CrossLeagueLatest
               </div>
               {group.total > group.games.length ? (
                 <p className="mt-2 mb-0 text-meta">
-                  <Link href={`/scores/${view.date}`} prefetch={false} className="sx-action text-accent hover:underline">
+                  <Link href={scoresHref(view.date)} prefetch={false} className="sx-action text-accent hover:underline">
                     {group.total - group.games.length} more {group.shortName}{' '}
                     {group.total - group.games.length === 1 ? 'game' : 'games'} that day{' '}
                     <Arrow />

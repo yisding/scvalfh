@@ -14,6 +14,7 @@ import type { LeagueConfig } from '@/lib/model/league-config';
 import type { SeasonPhase } from '@/lib/model/season';
 import { getNonLeagueFinalsPlayed } from '@/lib/queries/games';
 import { playInClause } from '@/lib/queries/postseason';
+import { playoffsHref, scheduleHref } from '@/lib/shared/routes';
 
 export interface PhaseLeadView {
   /** The bold opening sentence. */
@@ -46,7 +47,7 @@ export function phaseLead(league: LeagueConfig, phase: SeasonPhase, today: strin
                 agree(nonLeague, 'is', 'are')
               } on the schedule and in the overall records, not in the standings.`
             : 'No games have been played yet, so every record below is empty on purpose.',
-        link: { href: `/schedule/${league.id}`, label: 'Full schedule' },
+        link: { href: scheduleHref(league.id), label: 'Full schedule' },
       };
     }
     return {
@@ -57,7 +58,7 @@ export function phaseLead(league: LeagueConfig, phase: SeasonPhase, today: strin
               agree(nonLeague, 'is', 'are')
             } on the schedule and in the overall records, not in the standings.`
           : 'No games have been played yet, so every record below is empty on purpose.',
-      link: { href: `/schedule/${league.id}`, label: 'Full schedule' },
+      link: { href: scheduleHref(league.id), label: 'Full schedule' },
     };
   }
 
@@ -95,7 +96,7 @@ export function phaseLead(league: LeagueConfig, phase: SeasonPhase, today: strin
       body: `Quarterfinals are ${qf ? shortDate(qf.date) : 'to be set'}${
         playIn ? ` (a play-in ${shortDate(playIn.date)} only if needed)` : ''
       }; the final is ${final ? shortDate(final.date) : 'to be set'} at ${ps.finalSite.label}.`,
-      link: { href: `/playoffs/${league.id}`, label: 'Bracket' },
+      link: { href: playoffsHref(league.id), label: 'Bracket' },
     };
   }
 

@@ -5,6 +5,7 @@ import ExternalLink from '@/components/ui/ExternalLink';
 import { statusLegend } from '@/lib/engine/standings';
 import { ordinal } from '@/lib/format/numbers';
 import type { LeagueConfig } from '@/lib/model/league-config';
+import { playoffsHref } from '@/lib/shared/routes';
 import { MULTI_TEAM_WORDS, chainItems, ruleCountSentence } from '@/views/about/about-view';
 
 /**
@@ -128,7 +129,7 @@ function GeneratedPostseason({ league }: { league: LeagueConfig }) {
           <p>{postseason.citations.qualifiersConflict}</p>
           <p>{postseason.titleNote}</p>
           <p>
-            <Link href={`/playoffs/${league.id}`} prefetch={false} className="sx-action min-h-11 text-accent hover:underline">
+            <Link href={playoffsHref(league.id)} prefetch={false} className="sx-action min-h-11 text-accent hover:underline">
               {postseason.name} <Arrow />
             </Link>
           </p>

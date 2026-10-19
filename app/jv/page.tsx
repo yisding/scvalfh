@@ -8,6 +8,7 @@ import Arrow from '@/components/ui/Arrow';
 import SectionHeader from '@/components/ui/SectionHeader';
 import { LEAGUES, LEAGUES_PROPER, leaguesInRegion, regionOf } from '@/lib/config/leagues';
 import { listWords } from '@/lib/format/words';
+import { standingsHref } from '@/lib/shared/routes';
 import { pageMetadata } from '@/views/site/page-metadata';
 import { buildJvTablesView } from '@/views/standings/jv';
 
@@ -75,7 +76,7 @@ export default function JvStandingsPage() {
             <SectionHeader
               id={`${league.id}-heading`}
               kicker={`${league.shortName} JV`}
-              action={{ href: `/standings/${league.id}`, label: 'Varsity table' }}
+              action={{ href: standingsHref(league.id), label: 'Varsity table' }}
               // Capped like the tables below (48rem from lg), so the action sits over them.
               className="lg:max-w-3xl"
             />

@@ -7,6 +7,7 @@ import { REGIONS } from '@/lib/config/leagues';
 import { longDate, shortDate } from '@/lib/format/dates';
 import { gameWord, plural } from '@/lib/format/words';
 import type { RegionId } from '@/lib/model/ids';
+import { scheduleHref, scoresHref } from '@/lib/shared/routes';
 import type { IndexDay, LeagueCardData, ScheduleIndexView } from '@/views/schedule/schedule-view';
 
 /**
@@ -97,7 +98,7 @@ function DayBlock({
           {day.total} {gameWord(day.total)}
         </span>
         <Link
-          href={`/scores/${day.date}`}
+          href={scoresHref(day.date)}
           prefetch={false}
           className="sx-action ml-auto shrink-0 text-meta font-medium text-accent no-underline hover:underline"
         >
@@ -119,7 +120,7 @@ function DayBlock({
             {more > 0 ? (
               <p className="m-0 mt-1">
                 <Link
-                  href={`/scores/${day.date}`}
+                  href={scoresHref(day.date)}
                   prefetch={false}
                   className="sx-action text-meta font-medium text-accent hover:underline"
                 >
@@ -143,7 +144,7 @@ export function ScheduleIndex({ cards, regions, days, perLeague = 3 }: ScheduleI
             {cards.filter((card) => card.region === region.id).map((card) => (
               <li key={card.id} id={card.id} className="flex">
                 <Link
-                  href={`/schedule/${card.id}`}
+                  href={scheduleHref(card.id)}
                   prefetch={false}
                   className="sx-card sx-lift flex w-full flex-col gap-1 p-4 no-underline md:p-5"
                 >
@@ -203,7 +204,7 @@ export function ScheduleIndex({ cards, regions, days, perLeague = 3 }: ScheduleI
           {days.map((day) => (
             <li key={day.date} id={day.date}>
               <Link
-                href={`/scores/${day.date}`}
+                href={scoresHref(day.date)}
                 prefetch={false}
                 className="sx-tap flex min-h-row-1 items-center gap-3 px-gutter py-2 text-body text-ink no-underline hover:underline"
               >

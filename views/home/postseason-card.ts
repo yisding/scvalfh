@@ -11,6 +11,7 @@ import type { LeagueId } from '@/lib/model/ids';
 import type { LeagueConfig, PostseasonConfig } from '@/lib/model/league-config';
 import type { SeasonPhase } from '@/lib/model/season';
 import { getPlayoffs } from '@/lib/queries/postseason';
+import { playoffsHref } from '@/lib/shared/routes';
 
 export type PostseasonView =
   | {
@@ -109,7 +110,7 @@ function leagueTournamentView(
     leagueId: league.id,
     line: parts.join(' · '),
     note: sectionNote,
-    link: { href: `/playoffs/${league.id}`, label: 'Bracket' },
+    link: { href: playoffsHref(league.id), label: 'Bracket' },
   };
 }
 

@@ -8,7 +8,10 @@
  *  1. no league or division id as a string literal ('scval', 'bval', 'pcal', 'mcal', 'de-anza',
  *     'el-camino', 'mt-hamilton', 'santa-teresa', 'marin-county', …): ids come from lib/config/leagues.ts or
  *     lib/queries/leagues.ts (lib/datasets/history.ts for which leagues have a 2025-26 archive);
- *  2. no `/game/${…}` template literal: game links go through gameHref (a `sblive:` id would 404).
+ *  2. no `/game/${…}`, `/teams/${…}`, `/standings/${…}`, `/schedule/${…}`, `/scores/${…}`, `/playoffs/${…}` or
+ *     `/clubs/${…}` template literal: every routed URL goes through a helper (gameHref from lib/shared/game-id.ts;
+ *     teamHref, standingsHref, scheduleHref, scoresHref, playoffsHref, clubHref from lib/shared/routes.ts); a
+ *     `sblive:` game id would 404 raw, and a route that moves is then edited in one place.
  *
  * And over every SOURCE_ROOTS file: no `SOURCE_LINKS.scval*` access (the league links moved to
  * lib/config/leagues.ts). Each failure names the file and line, so it routes to that file's owner
@@ -19,6 +22,27 @@ import ts from 'typescript';
 import { describe, expect, it } from 'vitest';
 
 import { PAGE_CODE_ROOTS, SOURCE_ROOTS, expectAtLeast, nodeLine, parse, parseText, sourceFiles } from '@/tests/support/source-tree';
+
+/** Route prefixes whose URLs have one builder each (lib/shared/routes.ts; gameHref in lib/shared/game-id.ts). */
+const ROUTE_HELPERS: Record<string, string> = {
+  game: 'gameHref',
+  teams: 'teamHref',
+  standings: 'standingsHref',
+  schedule: 'scheduleHref',
+  scores: 'scoresHref',
+  playoffs: 'playoffsHref',
+  clubs: 'clubHref',
+};
+/** Where each helper lives: `gameHref` keeps the sblive grammar it needs out of the import-free routes module. */
+const ROUTE_MODULES: Record<string, string> = { gameHref: 'lib/shared/game-id.ts' };
+/**
+ * The one file allowed a route template: TeamFinder is a client module of /teams, whose first-load JS
+ * budget (scripts/ci/assert-budgets.ts) has 42 B of headroom, and the separate lib/shared/routes module
+ * that teamHref needs costs 94 B there. Each entry names the prefix it may spell; the test below fails
+ * if the exemption stops being needed (the template gone) so it cannot outlive its reason.
+ */
+const TEMPLATE_EXEMPT: Record<string, string> = { 'components/search/TeamFinder.tsx': 'teams' };
+const ROUTE_TEMPLATE = new RegExp(`/(${Object.keys(ROUTE_HELPERS).join('|')})/\\$\\{`);
 
 const ID_LITERALS = new Set([
   'scval',
@@ -76,8 +100,11 @@ function scan(file: string, sf: ts.SourceFile = parse(file)): Finding[] {
           at(node, `league/division id literal '${node.text}' (read ids from lib/config/leagues.ts or lib/queries/leagues.ts)`);
         }
       }
-      if (ts.isTemplateExpression(node) && /\/game\/\$\{/.test(node.getText(sf))) {
-        at(node, 'builds a `/game/${…}` URL by hand (use gameHref from lib/shared/game-id.ts)');
+      if (ts.isTemplateExpression(node)) {
+        const route = ROUTE_TEMPLATE.exec(node.getText(sf));
+        if (route && TEMPLATE_EXEMPT[file] !== route[1]) {
+          at(node, `builds a \`/${route[1]}/\${…}\` URL by hand (use ${ROUTE_HELPERS[route[1]]} from ${ROUTE_MODULES[ROUTE_HELPERS[route[1]]] ?? 'lib/shared/routes.ts'})`);
+        }
       }
     }
     ts.forEachChild(node, visit);
@@ -106,12 +133,14 @@ describe('page code reads ids from config (SPEC §12.2)', () => {
       "const s = { league: 'north-county' };",
     ].join('\n');
     expect(scanText('components/probe.tsx', bad).map((f) => f.line)).toEqual([1, 2, 3, 4, 5]);
-    // Allowed: ids in comments, a literal type, an unrelated template; a non-page directory's literals.
+    // Allowed: ids in comments, a literal type, a route built by its helper, a static path; a non-page
+    // directory's literals.
     const good = [
       "// 'scval' in a comment, and `/game/${id}` too",
       "import { gameHref } from '../lib/shared/game-id';",
       "type Where = Pick<Team, 'city' | 'division'>;",
-      'const t = `/teams/${slug}`;',
+      'const t = teamHref(slug);',
+      "const p = '/teams';",
     ].join('\n');
     expect(scanText('components/probe.tsx', good)).toEqual([]);
     expect(scanText('tests/probe.test.ts', "const l = 'scval';")).toEqual([]);
@@ -120,8 +149,39 @@ describe('page code reads ids from config (SPEC §12.2)', () => {
     expect(scanText('tests/probe.test.ts', 'const u = SOURCE_LINKS.scvalDeAnza;').map((f) => f.line)).toEqual([1]);
   });
 
+  // One positive and one negative probe per routed prefix (lib/shared/routes.ts has a helper for each).
+  describe.each(Object.entries(ROUTE_HELPERS))('/%s/${…} template (use %s)', (prefix, helper) => {
+    it('flags it in page code, naming the helper', () => {
+      const found = scanText('components/probe.tsx', `const u = \`/${prefix}/\${id}\`;`);
+      expect(found.map((f) => f.line)).toEqual([1]);
+      expect(found[0].what).toContain(`${helper} from ${ROUTE_MODULES[helper] ?? 'lib/shared/routes.ts'}`);
+    });
+
+    it('flags it with a fragment or an inner expression, and passes the helper call, the bare path and non-page code', () => {
+      expect(scanText('components/probe.tsx', `const u = \`/${prefix}/\${a.b}#\${c}\`;`).map((f) => f.line)).toEqual([1]);
+      expect(scanText('components/probe.tsx', `const u = ${helper}(id);`)).toEqual([]);
+      expect(scanText('components/probe.tsx', `const u = \`\${${helper}(id)}#x\`;`)).toEqual([]);
+      expect(scanText('components/probe.tsx', `const u = '/${prefix}';`)).toEqual([]);
+      expect(scanText('components/probe.tsx', `const u = \`/${prefix}\`;`)).toEqual([]);
+      expect(scanText('tests/probe.test.ts', `const u = \`/${prefix}/\${id}\`;`)).toEqual([]);
+    });
+  });
+
+  it('every exempted route template is still spelled in its file (the exemption cannot go stale)', () => {
+    for (const [file, prefix] of Object.entries(TEMPLATE_EXEMPT)) {
+      const sf = parse(file);
+      const spelled: string[] = [];
+      const visit = (node: ts.Node): void => {
+        if (ts.isTemplateExpression(node) && node.getText(sf).includes(`/${prefix}/\${`)) spelled.push(node.getText(sf));
+        ts.forEachChild(node, visit);
+      };
+      visit(sf);
+      expect(spelled, `${file} spells /${prefix}/\${…}`).not.toEqual([]);
+    }
+  });
+
   for (const root of SOURCE_ROOTS) {
-    it(`${root}/: no SOURCE_LINKS.scval*${PAGE_CODE_ROOTS.includes(root) ? ', no id literal, no /game/${…} template' : ''}`, () => {
+    it(`${root}/: no SOURCE_LINKS.scval*${PAGE_CODE_ROOTS.includes(root) ? ', no id literal, no route template' : ''}`, () => {
       const findings = FILES.filter((f) => f.startsWith(`${root}/`)).flatMap((f) => scan(f));
       expect(findings.map((f) => `${f.file}:${f.line}: ${f.what}`)).toEqual([]);
     });

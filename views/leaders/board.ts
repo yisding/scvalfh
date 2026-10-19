@@ -6,6 +6,7 @@
 
 import { getLeague } from '@/lib/config/leagues';
 import type { Team } from '@/lib/model/team';
+import { teamHref } from '@/lib/shared/routes';
 import { statText } from '@/views/shared/stat-format';
 
 import { rankBoard } from './ranking';
@@ -18,7 +19,7 @@ export function teamRef(team: Team, anchor = ''): LeaderTeamRef {
     name: team.name,
     shortName: team.shortName,
     leagueShort: getLeague(team.league).shortName,
-    href: `/teams/${team.slug}${anchor}`,
+    href: `${teamHref(team.slug)}${anchor}`,
   };
 }
 

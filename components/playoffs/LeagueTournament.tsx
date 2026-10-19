@@ -8,6 +8,7 @@ import { placeWords } from '@/lib/format/numbers';
 import { scoreSentence } from '@/lib/format/score';
 import { plural } from '@/lib/format/words';
 import { gameHref } from '@/lib/shared/game-id';
+import { teamHref } from '@/lib/shared/routes';
 import type {
   SeedRowView,
   TournamentGameView,
@@ -122,7 +123,7 @@ function SeedsTable({ view, leagueShort }: { view: TournamentView; leagueShort: 
                   {/* One stretched row link per team; `prefetch={false}` like every per-row link
                       (components/layout/NavLink.tsx has the reasoning), and marked like every
                       other team list (components/standings/table/parts.tsx TeamRowLink). */}
-                  <TeamRowLink href={`/teams/${row.team.slug}`} label={rowSentence(row, leagueShort)} />
+                  <TeamRowLink href={teamHref(row.team.slug)} label={rowSentence(row, leagueShort)} />
                   <span className="flex items-center gap-3">
                     <TeamNameCell team={row.team} size={28} nameClass="min-w-0 flex-1">
                       <span className="block truncate text-body text-ink" aria-hidden="true">

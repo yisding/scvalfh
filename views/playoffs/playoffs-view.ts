@@ -34,6 +34,7 @@ import { areKeyDatesConfirmed } from '@/lib/queries/provenance';
 import { getStandingFor } from '@/lib/queries/standings';
 import { getTeams } from '@/lib/queries/teams';
 import { getTeamById } from '@/lib/registry/teams';
+import { playoffsHref } from '@/lib/shared/routes';
 import { buildBrackets, ccsDivisionLabels, pendingRounds } from '@/views/playoffs/bracket';
 import type { LeagueKeyDate } from '@/views/playoffs/key-dates';
 import { buildPairingView, pairingNotesFor } from '@/views/playoffs/pairings';
@@ -294,7 +295,7 @@ function tournamentPointer(league: LeagueSummary): TournamentPointerData {
   return {
     id: league.id,
     lead: `Following ${indefiniteArticle(league.shortName, { mode: 'letter-name' })} ${league.shortName} team? The ${league.section.name} holds no field hockey championship. `,
-    href: `/playoffs/${league.id}`,
+    href: playoffsHref(league.id),
     name: ps.kind === 'league-tournament' ? ps.name : `${league.shortName} postseason`,
   };
 }
@@ -349,7 +350,7 @@ export function buildPlayoffsPageView(): PlayoffsPageView {
     .filter((d): d is LeagueKeyDate => d !== null);
 
   const hrefs: Record<string, string> = Object.fromEntries(
-    summaries.map((s) => [s.id, tournamentIds.has(s.id) ? `/playoffs/${s.id}` : `#${s.id}`]),
+    summaries.map((s) => [s.id, tournamentIds.has(s.id) ? playoffsHref(s.id) : `#${s.id}`]),
   );
   const fieldMeta = `${ccsSection?.name ?? 'Central Coast Section'} · ${field.total} teams · ${field.byLeague
     .map((l) => `${l.shortName} ${l.auto}`)

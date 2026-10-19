@@ -3,6 +3,7 @@ import Link from 'next/link';
 import PlaceMark from '@/components/ui/PlaceMark';
 import StatusChip from '@/components/ui/StatusChip';
 import { agree } from '@/lib/format/words';
+import { teamHref } from '@/lib/shared/routes';
 import type { StatusGroup } from '@/views/standings/types';
 
 /**
@@ -111,7 +112,7 @@ export function PlayoffStatusBand({
                    the link scrolls into view, and this band names every team in the division. */
                 <Link
                   key={team.slug}
-                  href={`/teams/${team.slug}`}
+                  href={teamHref(team.slug)}
                   prefetch={false}
                   className="inline-flex h-8 items-center gap-1.5 rounded-chip bg-surface-2 px-3 text-meta text-ink no-underline hover:bg-surface-3 forced-colors:border"
                 >

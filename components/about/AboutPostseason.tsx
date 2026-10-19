@@ -5,6 +5,7 @@ import SectionHeader from '@/components/ui/SectionHeader';
 import { CCS, getLeague, isIndependentLeague } from '@/lib/config/leagues';
 import { SOURCE_LINKS } from '@/lib/config/source-urls';
 import { dateWithYear, timeOfDayPT } from '@/lib/format/dates';
+import { playoffsHref } from '@/lib/shared/routes';
 import type { AboutView } from '@/views/about/about-view';
 import { postseasonSourceLink } from '@/views/shared/postseason-source';
 
@@ -48,7 +49,7 @@ export function AboutPostseason({
           return (
             <p key={l.id}>
               {l.section.name}: {sections.find((s) => s.id === l.section.id)?.noChampionshipNote ?? ''}{' '}
-              <Link href={`/playoffs/${l.id}`} prefetch={false} className="sx-action text-accent hover:underline">
+              <Link href={playoffsHref(l.id)} prefetch={false} className="sx-action text-accent hover:underline">
                 {ps.kind === 'league-tournament' ? ps.name : `${l.shortName} postseason`}
               </Link>
             </p>

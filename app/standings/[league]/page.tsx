@@ -12,6 +12,7 @@ import { getLeague } from '@/lib/config/leagues';
 import { leagueSportWords, standingsLabel } from '@/lib/config/leagues/labels';
 import { hasHistory } from '@/lib/datasets/history';
 import { shortDate } from '@/lib/format/dates';
+import { standingsHref } from '@/lib/shared/routes';
 import { leagueChips, leagueHrefs } from '@/views/site/league-chips';
 import { leagueParam, leagueStaticParams } from '@/views/site/league-route';
 import { missingMetadata, pageMetadata } from '@/views/site/page-metadata';
@@ -62,7 +63,7 @@ export async function generateMetadata({ params }: PageProps<'/standings/[league
     through ? ` League games through ${shortDate(through)}.` : ''
   } Computed from published results; unofficial.`;
   return pageMetadata({
-    path: `/standings/${summary.id}`,
+    path: standingsHref(summary.id),
     title,
     description,
     ogTitle: title,

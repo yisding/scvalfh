@@ -11,6 +11,7 @@ import {
 import { getAvailableHistoryLeagues } from '@/lib/datasets/history';
 import { listWords, numberWord } from '@/lib/format/words';
 import type { LeagueId } from '@/lib/model/ids';
+import { playoffsHref, scheduleHref } from '@/lib/shared/routes';
 
 /**
  * 'the nine leagues', from the config (never a literal count). It named every league ('SCVAL, BVAL, PCAL,
@@ -89,11 +90,11 @@ export function navLeagueHrefs(): Readonly<Record<string, Readonly<Record<League
       }),
     );
   return {
-    '/schedule': per((id) => `/schedule/${id}`),
+    '/schedule': per((id) => scheduleHref(id)),
     '/teams': per((id) => `/teams#${id}`),
     '/playoffs': per((id) =>
       TOURNAMENT_LEAGUE_IDS.includes(id)
-        ? `/playoffs/${id}`
+        ? playoffsHref(id)
         : CCS_LEAGUE_IDS.includes(id) ||
             UNBRACKETED_LEAGUE_IDS.includes(id) ||
             SECTION_PLAYOFFS_LEAGUE_IDS.includes(id) ||

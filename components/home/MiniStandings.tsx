@@ -5,6 +5,7 @@ import PlaceMark from '@/components/ui/PlaceMark';
 import SectionHeader from '@/components/ui/SectionHeader';
 import { monthDay } from '@/lib/format/dates';
 import { EM_DASH } from '@/lib/format/words';
+import { teamHref } from '@/lib/shared/routes';
 import type { MiniDivisionView, MiniRow } from '@/views/home/mini-standings';
 import { ladderLineAfter } from '@/views/standings/division';
 import { biggestGoalDiff } from '@/views/standings/goal-diff';
@@ -169,7 +170,7 @@ function MiniRowView({
           {/* The stretched row link (prefetch off: a static team route is downloaded in full on
               viewport entry otherwise). Only the pinned row's sr-only note is displayed. Its
               sentence is the standings tables' (views/standings/table-notes.ts), built in the view. */}
-          <TeamRowLink href={`/teams/${row.slug}`} label={row.label} />
+          <TeamRowLink href={teamHref(row.slug)} label={row.label} />
           <span className="flex items-center gap-2">
             {/* Up to two lines, broken between words only: a name never loses its second word
                 to an ellipsis and never breaks per letter; a single word too long for the cell

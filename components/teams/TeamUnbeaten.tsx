@@ -6,6 +6,7 @@ import { monthDay } from '@/lib/format/dates';
 import { recordString } from '@/lib/format/numbers';
 import { plural } from '@/lib/format/words';
 import { getTeamBySlug } from '@/lib/registry/teams';
+import { teamHref } from '@/lib/shared/routes';
 import type { TeamPageView, UnbeatenOpponent } from '@/views/teams/team-view';
 
 /**
@@ -76,7 +77,7 @@ function OpponentRow({ opponent, leagueShort, fixed }: { opponent: UnbeatenOppon
           into view, and this list is one team page per opponent still to play. Navigation still
           fetches on click. */}
       <Link
-        href={`/teams/${opponent.slug}`}
+        href={teamHref(opponent.slug)}
         prefetch={false}
         aria-label={sentenceFor(opponent, leagueShort, fixed)}
         className="sx-tap flex min-h-12 items-center gap-3 px-gutter py-2 text-meta no-underline"

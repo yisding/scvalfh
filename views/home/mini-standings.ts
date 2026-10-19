@@ -11,6 +11,7 @@ import type { DivisionConfig, LeagueConfig } from '@/lib/model/league-config';
 import { getLastLeagueResultDate } from '@/lib/queries/games';
 import { getGoalDiffDomain, getStandings } from '@/lib/queries/standings';
 import { getTeamById } from '@/lib/registry/teams';
+import { standingsHref } from '@/lib/shared/routes';
 import { tableSubject } from '@/views/standings/division';
 import { standingRowLabel, tableName } from '@/views/standings/table-notes';
 
@@ -111,7 +112,7 @@ export function miniDivision(league: LeagueConfig, division: DivisionConfig): Mi
     total: rows.length,
     gdDomain: getGoalDiffDomain(division.id),
     throughDate: getLastLeagueResultDate({ division: division.id }),
-    href: `/standings/${league.id}#${division.id}`,
+    href: standingsHref(league.id, division.id),
     home: division.home,
   };
 }

@@ -12,6 +12,7 @@ import SectionHeader from '@/components/ui/SectionHeader';
 import StatusLabel from '@/components/ui/StatusLabel';
 import TeamMonogram from '@/components/ui/TeamMonogram';
 import { formStripName } from '@/lib/format/words';
+import { teamHref } from '@/lib/shared/routes';
 import type { SearchIndex } from '@/lib/shared/search';
 import {
   postseasonCardLine,
@@ -164,7 +165,7 @@ export function PinnedCard({
       <div className="flex h-11 shrink-0 items-center gap-2">
         <TeamMonogram team={team} size={24} />
         <Link
-          href={`/teams/${team.slug}`}
+          href={teamHref(team.slug)}
           prefetch={false}
           className="min-w-0 flex-1 truncate text-lead font-semibold text-ink no-underline hover:underline"
         >

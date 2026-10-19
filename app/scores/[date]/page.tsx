@@ -13,6 +13,7 @@ import RegionDayBlock from '@/components/scores/RegionDayBlock';
 import EmptyState from '@/components/ui/EmptyState';
 import { shortDate } from '@/lib/format/dates';
 import { agree, gameWord } from '@/lib/format/words';
+import { scoresHref } from '@/lib/shared/routes';
 import { scoresStaticParams } from '@/views/scores/scores-route';
 import { buildScoresDayView } from '@/views/scores/scores-view';
 import { missingMetadata, pageMetadata } from '@/views/site/page-metadata';
@@ -67,7 +68,7 @@ export async function generateMetadata({
   const view = buildScoresDayView(date);
   if (!view) return missingMetadata('Day not found');
   return pageMetadata({
-    path: `/scores/${date}`,
+    path: scoresHref(date),
     title: view.title,
     description: view.description,
     ogTitle: view.title,

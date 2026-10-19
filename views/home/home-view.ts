@@ -34,6 +34,7 @@ import { getSeasonPhase } from '@/lib/queries/phase';
 import { getTeamPostseasonLine } from '@/lib/queries/postseason';
 import { getStandingContext, getStandingFor } from '@/lib/queries/standings';
 import { getTeamSearchIndex, getTeams } from '@/lib/queries/teams';
+import { standingsHref } from '@/lib/shared/routes';
 import type { SearchIndex } from '@/lib/shared/search';
 import { leagueChips } from '@/views/site/league-chips';
 import type { LeagueChip } from '@/views/site/league-chips';
@@ -119,7 +120,7 @@ export function buildTeamViews(): HomeTeamView[] {
               : null,
       postseason: line ? `${lead.full} ${line.label}` : null,
       ...(shortLabel ? { postseasonShort: `${lead.short} ${shortLabel}` } : {}),
-      tableHref: `/standings/${league.id}#${team.division}`,
+      tableHref: standingsHref(league.id, team.division),
       hasResults,
       leagueRecord: hasResults && standing ? recordString(standing.computed) : EM_DASH,
       overallRecord: standing && standing.overall.gp > 0 ? recordString(standing.overall) : EM_DASH,
@@ -181,7 +182,7 @@ function leagueCardView(s: LeagueSummary): LeagueCardView {
     cities: s.cities,
     teamsLine: plural(s.teamCount, 'team', 'teams'),
     divisions: s.singleDivision ? [] : s.divisions.map((d) => d.label),
-    standingsHref: `/standings/${s.id}`,
+    standingsHref: standingsHref(s.id),
     standingsLabel: standingsLabel(s.id),
     showName: standaloneName(s.id),
   };

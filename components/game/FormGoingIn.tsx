@@ -5,6 +5,7 @@ import FormStrip from '@/components/ui/FormStrip';
 import ResultChip, { CHIP_LABEL } from '@/components/ui/ResultChip';
 import SectionHeader from '@/components/ui/SectionHeader';
 import SideMonogram from '@/components/ui/SideMonogram';
+import { teamHref } from '@/lib/shared/routes';
 import type { GameView } from '@/views/game/game-view';
 import type { GameSideModel } from '@/views/game/types';
 
@@ -41,7 +42,7 @@ function FormRow({ side, memberCount }: { side: GameSideModel; memberCount: numb
         <span className="flex min-w-0 max-w-full items-center gap-2.5">
           <SideMonogram slug={side.team.slug} name={side.name} size={24} />
           <Link
-            href={`/teams/${side.team.slug}`}
+            href={teamHref(side.team.slug)}
             prefetch={false}
             className="sx-action min-w-0 gap-1 text-body text-accent no-underline hover:underline"
           >

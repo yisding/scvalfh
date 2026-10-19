@@ -2,6 +2,7 @@ import Link from 'next/link';
 
 import ExternalLink from '@/components/ui/ExternalLink';
 import TeamMonogram from '@/components/ui/TeamMonogram';
+import { teamHref } from '@/lib/shared/routes';
 import type { CrossCheckGroup } from '@/views/about/about-view';
 
 /**
@@ -69,7 +70,7 @@ export function CrossCheckTable({ groups, teamCount, emptyText = null }: CrossCh
                 {/* `py-0.5` on the inline link: its box is the font's 21px content area, and the
                     2px above and below bring the hit area to the 24px minimum (WCAG 2.5.8)
                     without moving the line. */}
-                <Link href={`/teams/${team.slug}`} prefetch={false} className="py-0.5 hover:underline">
+                <Link href={teamHref(team.slug)} prefetch={false} className="py-0.5 hover:underline">
                   {team.name}
                 </Link>
                 {'\u00a0'}

@@ -16,6 +16,7 @@ import JsonLd from '@/components/layout/JsonLd';
 import Arrow from '@/components/ui/Arrow';
 import ExternalLink from '@/components/ui/ExternalLink';
 import ScoreBoard from '@/components/game/ScoreBoard';
+import { scoresHref, teamHref } from '@/lib/shared/routes';
 import { gameStaticParams } from '@/views/game/game-route';
 import { buildGameView, buildSupersededStub, hasLeadRow } from '@/views/game/game-view';
 import { gameDescription, gameRecap, gameTitle } from '@/views/game/titles';
@@ -129,7 +130,7 @@ export default async function GamePage({ params }: PageProps<'/game/[id]'>) {
           pill alone. */}
       <p className="m-0 mt-4 flex flex-wrap items-center gap-2">
         <Link
-          href={`/scores/${game.dateKey}`}
+          href={scoresHref(game.dateKey)}
           className="sx-action -ml-3 min-h-11 rounded-chip px-3 text-meta font-medium text-accent no-underline hover:bg-surface-2"
         >
           <Arrow dir="left" />
@@ -140,7 +141,7 @@ export default async function GamePage({ params }: PageProps<'/game/[id]'>) {
             {teamLinks.map((team) => (
               <Link
                 key={team.slug}
-                href={`/teams/${team.slug}`}
+                href={teamHref(team.slug)}
                 prefetch={false}
                 className="sx-pill sx-pill-ring min-h-11 px-3"
               >

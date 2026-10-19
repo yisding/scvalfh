@@ -27,6 +27,7 @@ import { getRosters } from '@/lib/datasets/rosters';
 import { dateWithYear } from '@/lib/format/dates';
 import { plural } from '@/lib/format/words';
 import { CLUB_REGIONS, CLUB_REGION_SITE_REGION } from '@/lib/schema/clubs';
+import { clubHref } from '@/lib/shared/routes';
 import { hostOf, numbered, schoolName } from '@/views/shared/source-links';
 
 import { playerRow, programSourceLabel, rosterPageLabel, sharedProgramSource } from './club-page';
@@ -51,7 +52,7 @@ export function buildClubsIndexView(): ClubsIndexView {
       club,
       row: {
         slug: club.slug,
-        href: `/clubs/${club.slug}`,
+        href: clubHref(club.slug),
         name: clubDisplayName(club),
         subline: [club.shortName !== null ? club.name : null, club.city].filter(Boolean).join(' · ') || null,
         current,

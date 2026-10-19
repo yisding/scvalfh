@@ -112,24 +112,24 @@ describe('prefetch policy: a link that repeats per row never prefetches', () => 
   });
 
   it('keeps the prop on the call sites a measurement named, by href', () => {
-    // A string matches as a substring of the tag; a RegExp with `.test()`. The two game links take
-    // either form because their owners switch them to `gameHref` only in Stage C (SPEC §10.2), and
-    // this test has to pass before that; tests/arch/page-code-literals.test.ts then bans the raw
-    // `/game/${…}` template in app/, components/ and views/, so the old form cannot come back.
-    const GAME_LINK = /gameHref\(game\.contestId\)|\/game\/\$\{game\.contestId\}/;
+    // A string matches as a substring of the tag; a RegExp with `.test()`. Every link spells its href
+    // through a helper (gameHref from lib/shared/game-id.ts, teamHref from lib/shared/routes.ts), and
+    // tests/arch/page-code-literals.test.ts bans the raw `/game/${…}` and `/teams/${…}` templates in app/,
+    // components/ and views/, so the old form cannot come back.
+    const GAME_LINK = 'gameHref(game.contestId)';
     const WANT: [string, string | RegExp][] = [
       // TeamRowLink: the stretched row link of the standings, mini, tournament and projection tables.
       ['components/standings/table/parts.tsx', 'href={href}'],
-      ['components/standings/PlayoffStatusBand.tsx', '/teams/${team.slug}'],
+      ['components/standings/PlayoffStatusBand.tsx', 'teamHref(team.slug)'],
       ['components/playoffs/PlayoffBracket.tsx', GAME_LINK],
-      ['components/standings/CompactStandingsTable.tsx', '/teams/${row.team.slug}'],
+      ['components/standings/CompactStandingsTable.tsx', 'teamHref(row.team.slug)'],
       // The /standings and /teams overviews render one block per division, each with its
       // `Full <division> table` link.
       ['components/standings/OverviewDivisionBlock.tsx', 'href={division.fullHref}'],
-      ['components/teams/TeamUnbeaten.tsx', '/teams/${opponent.slug}'],
-      ['components/history/HistoryStandingsTable.tsx', '/teams/${team.slug}'],
-      ['components/history/AwardsBlock.tsx', '/teams/${team.slug}'],
-      ['components/about/CrossCheckTable.tsx', '/teams/${team.slug}'],
+      ['components/teams/TeamUnbeaten.tsx', 'teamHref(opponent.slug)'],
+      ['components/history/HistoryStandingsTable.tsx', 'teamHref(team.slug)'],
+      ['components/history/AwardsBlock.tsx', 'teamHref(team.slug)'],
+      ['components/about/CrossCheckTable.tsx', 'teamHref(team.slug)'],
       ['components/game/SeasonSeries.tsx', GAME_LINK],
       // The game-row family (components/game-row/): one game-page link per row, card or log line
       // in every game list, each in its own face (the row's in its expanded panel's pills).

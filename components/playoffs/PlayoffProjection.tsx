@@ -8,6 +8,7 @@ import SectionHeader from '@/components/ui/SectionHeader';
 import StatusChip from '@/components/ui/StatusChip';
 import TeamMonogram from '@/components/ui/TeamMonogram';
 import { indefiniteArticle, listWords } from '@/lib/format/words';
+import { teamHref } from '@/lib/shared/routes';
 import {
   projectionRowLabel,
   recordLine,
@@ -244,7 +245,7 @@ export function PlayoffProjection({
                       here is STATIC, so Next 16's `auto` downloads the whole linked route the
                       moment the link scrolls into view, and every projection table is a column of
                       stretched row links. Navigation still fetches on click. */}
-                  <TeamRowLink href={`/teams/${row.team.slug}`} label={projectionRowLabel(row, divisionLabel)} />
+                  <TeamRowLink href={teamHref(row.team.slug)} label={projectionRowLabel(row, divisionLabel)} />
                   {/* The monogram shows from sm, except md-lg: there the fixed Team column is
                       117px at 768, and the 28px monogram and its 12px gap left a name 77px, so
                       eleven names truncated ("Saint Francis" needs 95, "Valley Christian" 113).

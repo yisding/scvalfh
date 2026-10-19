@@ -17,6 +17,7 @@ import { getToday } from '@/lib/datasets/snapshot';
 import { plural } from '@/lib/format/words';
 import { getGamesByDate, getOfficialFixtures } from '@/lib/queries/games';
 import { getTeams } from '@/lib/queries/teams';
+import { scheduleHref } from '@/lib/shared/routes';
 import { scheduleFilterProps } from '@/views/schedule/filters';
 import { buildLeagueSchedulePageView } from '@/views/schedule/schedule-view';
 import { leagueChips, leagueHrefs } from '@/views/site/league-chips';
@@ -59,7 +60,7 @@ export async function generateMetadata({ params }: PageProps<'/schedule/[league]
   const { title, counts, involving } = buildLeagueSchedulePageView(summary.id);
   const description = `All ${plural(counts.total, 'girls varsity field hockey game')} involving ${involving} for ${SEASON_DISPLAY}, grouped by date: ${plural(counts.final, 'final score')}, ${counts.upcoming} still to come. Filter by team, game type or status.`;
   return pageMetadata({
-    path: `/schedule/${summary.id}`,
+    path: scheduleHref(summary.id),
     title,
     description,
     ogTitle: title,

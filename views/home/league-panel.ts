@@ -14,6 +14,7 @@ import { getGameDates, getLatestResultsDate, getUpcoming } from '@/lib/queries/g
 import { type LeagueSummary, getLeagueHealth } from '@/lib/queries/leagues';
 import { getSeasonPhase } from '@/lib/queries/phase';
 import { getTeams } from '@/lib/queries/teams';
+import { playoffsHref, standingsHref } from '@/lib/shared/routes';
 
 import { leagueDay, nextLeagueDay, unreportedDay } from './days';
 import type { HomeDay, NextLeagueDay } from './days';
@@ -106,7 +107,7 @@ export function buildPanel(summary: LeagueSummary, all: readonly LeagueSummary[]
       .map((s) => ({
         id: s.id,
         shortName: s.shortName,
-        href: `/standings/${s.id}`,
+        href: standingsHref(s.id),
         text: leagueLeadersLine(getLeague(s.id)),
       })),
     afterSchedule: afterScheduleOf(league),
@@ -118,7 +119,7 @@ function afterScheduleOf(league: LeagueConfig): HomeLeaguePanel['afterSchedule']
   const ps = league.postseason;
   switch (ps.kind) {
     case 'league-tournament':
-      return { href: `/playoffs/${league.id}`, label: ps.name };
+      return { href: playoffsHref(league.id), label: ps.name };
     case 'unbracketed-tournament':
       return { href: `/playoffs#${league.id}`, label: ps.name };
     case 'ccs-ladder':

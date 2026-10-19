@@ -12,6 +12,7 @@ import {
 } from '@/lib/datasets/clubs';
 import { partialDateKind } from '@/lib/format/dates';
 import type { TeamSlug } from '@/lib/model/ids';
+import { clubHref } from '@/lib/shared/routes';
 
 /** The last year an `asOf` covers (a range's or a season's end), for "latest first"; null last. */
 function endYear(asOf: string | null): number {
@@ -31,7 +32,7 @@ export interface ClubLink {
 }
 
 function clubLink(club: Club): ClubLink {
-  return { slug: club.slug, name: clubDisplayName(club), href: `/clubs/${club.slug}` };
+  return { slug: club.slug, name: clubDisplayName(club), href: clubHref(club.slug) };
 }
 
 /** One status's clubs on a roster row: "Club: SF Hawks", "Earlier clubs: Fly FHC, Lightning". */

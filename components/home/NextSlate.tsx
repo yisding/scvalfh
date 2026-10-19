@@ -6,6 +6,7 @@ import SectionHeader from '@/components/ui/SectionHeader';
 import { shortDate } from '@/lib/format/dates';
 import { plural } from '@/lib/format/words';
 import type { Game } from '@/lib/model/game';
+import { scoresHref } from '@/lib/shared/routes';
 import type { NextLeagueDay } from '@/views/home/days';
 import { gameKind } from '@/views/shared/describe-game';
 
@@ -87,7 +88,7 @@ export function NextSlate({
         as="h3"
         kicker={kicker ?? (isToday ? 'Still to play today' : 'Next up')}
         meta={has ? (isToday && !kicker ? counts : `${shortDate(date)} · ${counts}`) : undefined}
-        action={has ? { href: `/scores/${date}`, label: `All ${total} on ${shortDate(date)}` } : undefined}
+        action={has ? { href: scoresHref(date), label: `All ${total} on ${shortDate(date)}` } : undefined}
         // Capped like the card below (DESIGN §26.5 "Measures"), so the action sits over the list.
         className="md:max-w-3xl"
       />
@@ -115,7 +116,7 @@ export function NextSlate({
                     the same words as the card's meta: "2 league, 1 non-league". */}
                 <p className="m-0">
                   <Link
-                    href={`/scores/${resume.date}`}
+                    href={scoresHref(resume.date)}
                     prefetch={false}
                     className="sx-action text-meta text-ink-2"
                   >

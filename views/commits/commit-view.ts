@@ -34,6 +34,7 @@ import type { RegionId, TeamSlug } from '@/lib/model/ids';
 import { getTeamBySlug } from '@/lib/registry/teams';
 import { clubSiteKey } from '@/lib/schema/clubs';
 import { COLLEGE_DIVISIONS, COMMIT_SPORTS, type SocialPlatform } from '@/lib/schema/commits';
+import { teamHref } from '@/lib/shared/routes';
 import { OUTLETS, PLATFORMS, clubBySite, hostOf, numbered, pathOf, schoolName, sportsRecruitsLabel } from '@/views/shared/source-links';
 
 // ---------------------------------------------------------------- wording tables
@@ -332,7 +333,7 @@ function commitRow(c: Commitment): CommitRow {
     key: commitAnchor(c),
     anchor: commitAnchor(c),
     name: row.fullName,
-    school: { name: schoolName(c.teamSlug), href: `/teams/${c.teamSlug}#roster` },
+    school: { name: schoolName(c.teamSlug), href: `${teamHref(c.teamSlug)}#roster` },
     facts: row.grade !== null ? [gradeWord(row.grade)] : [],
     college: {
       name: collegeDisplayName(college),

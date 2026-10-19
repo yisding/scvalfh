@@ -7,6 +7,7 @@ import { shortDate } from '@/lib/format/dates';
 import type { Game } from '@/lib/model/game';
 import type { LeagueId } from '@/lib/model/ids';
 import { gameHref } from '@/lib/shared/game-id';
+import { scoresHref } from '@/lib/shared/routes';
 import { describeGame } from '@/views/shared/describe-game';
 
 /**
@@ -67,7 +68,7 @@ export function LatestScores({
         as="h3"
         kicker={kicker}
         meta={shortDate(date)}
-        action={{ href: `/scores/${date}`, label: `All ${total} on ${shortDate(date)}` }}
+        action={{ href: scoresHref(date), label: `All ${total} on ${shortDate(date)}` }}
         // Capped like the card below (DESIGN §26.5 "Measures"), so the action sits over the list.
         className="md:max-w-3xl"
       />

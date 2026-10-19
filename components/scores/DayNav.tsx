@@ -2,6 +2,7 @@ import Link from 'next/link';
 
 import { regionOf } from '@/lib/config/leagues';
 import { shortDate } from '@/lib/format/dates';
+import { scheduleHref, scoresHref } from '@/lib/shared/routes';
 import type { ScoresDayView } from '@/views/scores/scores-view';
 
 /** This is the only way to walk the season day by day on a phone, so the steppers are 44px
@@ -22,7 +23,7 @@ export default function DayNav({
     <nav aria-label="Other days" className="sx-print-hide flex flex-wrap items-center gap-2">
       {previous ? (
         <Link
-          href={`/scores/${previous}`}
+          href={scoresHref(previous)}
           className="sx-pill sx-pill-ring min-h-11"
         >
           <span aria-hidden="true">&lsaquo;</span>
@@ -36,7 +37,7 @@ export default function DayNav({
       )}
       {next ? (
         <Link
-          href={`/scores/${next}`}
+          href={scoresHref(next)}
           className="sx-pill sx-pill-ring min-h-11"
         >
           {shortDate(next)}
@@ -61,7 +62,7 @@ export default function DayNav({
           first without JS, config order). */}
       {seasonLeagues.length <= 1 ? (
         <a
-          href={seasonLeagues[0] ? `/schedule/${seasonLeagues[0].id}#${date}` : `/schedule#${date}`}
+          href={seasonLeagues[0] ? `${scheduleHref(seasonLeagues[0].id)}#${date}` : `/schedule#${date}`}
           className="sx-action min-h-11 rounded-chip px-3 text-meta font-medium text-accent no-underline hover:bg-surface-2"
         >
           Full season
@@ -82,7 +83,7 @@ export default function DayNav({
               <a
                 key={league.id}
                 data-region-scope={twoRegions ? regionOf(league.id) : undefined}
-                href={`/schedule/${league.id}#${date}`}
+                href={`${scheduleHref(league.id)}#${date}`}
                 className="sx-action min-h-11 rounded-chip px-1.5 text-meta font-medium text-accent no-underline hover:bg-surface-2"
               >
                 {league.shortName}

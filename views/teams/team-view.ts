@@ -34,6 +34,7 @@ import { getHeadToHead, getTeamForm, getTeams } from '@/lib/queries/teams';
 import { getTeamBySlug, sideShortName } from '@/lib/registry/teams';
 import { byDateLocal, sideOutcome } from '@/lib/shared/game';
 import { pinLabel } from '@/lib/shared/pin-label';
+import { standingsHref } from '@/lib/shared/routes';
 import { getEloBoardForTeam } from '@/views/leaders/elo-board';
 import { describeGame, shootoutSectionOf } from '@/views/shared/describe-game';
 import type { FormEntry } from '@/views/shared/form-entry';
@@ -677,7 +678,7 @@ export function buildTeamPageView(slug: string): TeamPageView | null {
       divisionHeading: heading,
       leagueShort: league.shortName,
     }),
-    standingsHref: `/standings/${league.id}#${team.division}`,
+    standingsHref: standingsHref(league.id, team.division),
     standingsLabel: standingsLabel(league.id),
     officialScheduleUrl: division.official.mode === 'none' ? null : division.official.scheduleUrl,
     hasResults,
@@ -839,7 +840,7 @@ export function buildTeamsByLeague(region?: RegionId): TeamsSectionGroup[] {
         title: leagueTitle(league.id),
         meta: plural(league.teamCount, 'team'),
         membershipNote: getLeague(league.id).membershipNote,
-        standingsHref: `/standings/${league.id}`,
+        standingsHref: standingsHref(league.id),
         standingsLabel: standingsLabel(league.id),
         divisions: divisions.map((d) =>
           buildOverviewDivision({

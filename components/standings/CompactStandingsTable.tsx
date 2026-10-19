@@ -4,6 +4,7 @@ import { LadderLineRow, PinNote, TeamNameCell } from '@/components/standings/tab
 import PlaceMark from '@/components/ui/PlaceMark';
 import { recordString } from '@/lib/format/numbers';
 import { EM_DASH } from '@/lib/format/words';
+import { teamHref } from '@/lib/shared/routes';
 import { ladderLineAfter, ladderRow } from '@/views/standings/division';
 import type { StandingsRowData } from '@/views/standings/types';
 
@@ -92,7 +93,7 @@ export function CompactStandingsTable({
                 </td>
                 <th scope="row" className="max-w-0 text-left font-normal">
                   <Link
-                    href={`/teams/${row.team.slug}`}
+                    href={teamHref(row.team.slug)}
                     prefetch={false}
                     className="flex min-h-11 items-center gap-2 text-ink no-underline hover:underline after:absolute after:inset-0 after:content-['']"
                   >

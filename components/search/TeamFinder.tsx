@@ -212,6 +212,9 @@ export function PinResult({ entry, onPick }: { entry: TeamSearchEntry; onPick: (
 export function TeamResultLink({ entry }: { entry: TeamSearchEntry }) {
   return (
     <Link
+      // Spelled out, not teamHref(): this is the one page-code template tests/arch/page-code-literals.test.ts
+      // allows (TEMPLATE_EXEMPT). A separate lib/shared/routes module in the /teams client graph costs 94 B and
+      // the first-load JS budget of /teams (assert:budgets) has 42 B of headroom.
       href={`/teams/${entry.slug}`}
       prefetch={false}
       className="flex min-h-11 w-full flex-col items-start justify-center rounded-card px-3 py-2 text-left no-underline"

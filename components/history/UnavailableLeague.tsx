@@ -3,6 +3,7 @@ import Link from 'next/link';
 import ExternalLink from '@/components/ui/ExternalLink';
 import SectionHeader from '@/components/ui/SectionHeader';
 import { getLeague, getSection, isIndependentLeague, regionOf } from '@/lib/config/leagues';
+import { standingsHref } from '@/lib/shared/routes';
 import type { UnavailableLeagueView } from '@/views/history/history-view';
 
 /** A league marked unavailable (views/history/history-view.ts `UnavailableLeagueView`). */
@@ -64,7 +65,7 @@ export default function UnavailableLeague({
           {isIndependentLeague(leagueId) ? (
             <>
               Checked {entry.checkedOn}: {entry.checked.join('; ')}. This season&rsquo;s table of the {league.name} is on{' '}
-              <Link href={`/standings/${leagueId}`} prefetch={false} className="text-accent hover:underline">
+              <Link href={standingsHref(leagueId)} prefetch={false} className="text-accent hover:underline">
                 the {league.name} page
               </Link>{' '}
               and their section&rsquo;s field hockey page is{' '}
@@ -72,7 +73,7 @@ export default function UnavailableLeague({
           ) : (
             <>
               Checked {entry.checkedOn}: {entry.checked.join('; ')}. Current-season {league.shortName} standings are on{' '}
-              <Link href={`/standings/${leagueId}`} prefetch={false} className="text-accent hover:underline">
+              <Link href={standingsHref(leagueId)} prefetch={false} className="text-accent hover:underline">
                 the {league.shortName} standings page
               </Link>{' '}
               and {ownSite ? 'its official site is' : `its section’s field hockey page is`}{' '}

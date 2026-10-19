@@ -1,5 +1,6 @@
 import { LEAGUE_IDS } from '@/lib/config/leagues';
 import type { LeagueId, TeamSlug } from '@/lib/model/ids';
+import { scheduleHref } from '@/lib/shared/routes';
 import type { ChromeView } from '@/views/site/chrome-view';
 import { navLeagueHrefs } from '@/views/site/nav-targets';
 
@@ -63,7 +64,7 @@ function scoresHrefs(landing: ChromeView['scoresLandingDate']): {
 } {
   return {
     href: withDate('/schedule', landing.all),
-    leagueHrefs: Object.fromEntries(LEAGUE_IDS.map((id) => [id, withDate(`/schedule/${id}`, landing.byLeague[id])])),
+    leagueHrefs: Object.fromEntries(LEAGUE_IDS.map((id) => [id, withDate(scheduleHref(id), landing.byLeague[id])])),
   };
 }
 

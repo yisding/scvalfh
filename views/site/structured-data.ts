@@ -31,6 +31,7 @@ import { isIndependentLeague } from '@/lib/config/leagues';
 import { dateTimeAttr } from '@/lib/format/dates';
 import type { LeagueConfig } from '@/lib/model/league-config';
 import type { Team } from '@/lib/model/team';
+import { teamHref } from '@/lib/shared/routes';
 import type { GameView } from '@/views/game/game-view';
 import { gameDescription, gameTitle } from '@/views/game/titles';
 
@@ -49,7 +50,7 @@ const absolute = (path: string) => `${SITE_URL}${path}`;
 
 /** The `@id` of a team, shared by its page and every game that names it. */
 export function teamNodeId(slug: string): string {
-  return absolute(`/teams/${slug}#team`);
+  return absolute(`${teamHref(slug)}#team`);
 }
 
 /** `/`: the site's name, which feeds the site name a search result shows. No SearchAction: Google retired the sitelinks search box. */
@@ -96,7 +97,7 @@ export function teamJsonLd(team: Team, league: LeagueConfig): JsonLdNode {
     '@id': teamNodeId(team.slug),
     name: team.name,
     ...(alternateName.length > 0 ? { alternateName } : {}),
-    url: absolute(`/teams/${team.slug}`),
+    url: absolute(teamHref(team.slug)),
     sport: SPORT,
     gender: FEMALE,
     location: { '@type': 'Place', address: cityAddress(team.city) },
@@ -112,7 +113,7 @@ function sideNode(side: GameView['home']): JsonLdNode {
         '@type': 'SportsTeam',
         '@id': teamNodeId(side.team.slug),
         name: side.name,
-        url: absolute(`/teams/${side.team.slug}`),
+        url: absolute(teamHref(side.team.slug)),
         sport: SPORT,
         gender: FEMALE,
       }

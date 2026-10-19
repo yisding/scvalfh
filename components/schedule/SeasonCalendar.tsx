@@ -2,6 +2,7 @@ import Link from 'next/link';
 
 import { longDate } from '@/lib/format/dates';
 import { parseLocal, weekdayIndex } from '@/lib/shared/dates';
+import { scoresHref } from '@/lib/shared/routes';
 
 /**
  * "Pick a date" on a day page (F-34): the season as month grids, every day with a contest a link
@@ -121,7 +122,7 @@ export function SeasonCalendar({ dates, current, className }: SeasonCalendarProp
                         // (the reason TimelineRail's chips carry it). A contest day is filled and
                         // in accent so it reads as a link without colour alone (weight + fill).
                         <Link
-                          href={`/scores/${date}`}
+                          href={scoresHref(date)}
                           prefetch={false}
                           aria-current={date === current ? 'date' : undefined}
                           className={`sx-num relative flex h-11 w-full items-center justify-center rounded-chip text-cell font-semibold no-underline ${

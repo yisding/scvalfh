@@ -33,6 +33,7 @@ import { dateWithYear } from '@/lib/format/dates';
 import { agree, listWords, plural } from '@/lib/format/words';
 import type { RegionId, TeamSlug } from '@/lib/model/ids';
 import { getTeamsGrouped } from '@/lib/queries/leagues';
+import { teamHref } from '@/lib/shared/routes';
 import { buildRosterView, type RosterRow } from '@/views/teams/roster';
 
 /** A roster row with something to show here: its commitment, clubs and profiles, as the team page has them. */
@@ -181,7 +182,7 @@ export function buildRecruitingView(): RecruitingView {
         for (const team of teams) {
           const rows = (buildRosterView(team.slug)?.rows ?? []).filter(hasAny).map(recruitingRow);
           if (rows.length === 0) continue;
-          const href = `/teams/${team.slug}#roster`;
+          const href = `${teamHref(team.slug)}#roster`;
           schools.push({ slug: team.slug, id: team.slug, name: team.name, href, meta: schoolMeta(rows), rows });
           schoolsWithRows.add(team.slug);
           regionRows.push(...rows);

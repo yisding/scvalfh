@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { ordinal } from '@/lib/format/numbers';
 import { TeamNameCell } from '@/components/standings/table/parts';
 import MissingValue from '@/components/ui/MissingValue';
+import { teamHref } from '@/lib/shared/routes';
 import type { HistoryRowView } from '@/views/history/history-view';
 
 /**
@@ -121,7 +122,7 @@ export function HistoryStandingsTable({ rows, caption, emptyLabel, hasOverall }:
                       whole team pages. Navigation still fetches on click. */}
                   {team ? (
                     <Link
-                      href={`/teams/${team.slug}`}
+                      href={teamHref(team.slug)}
                       prefetch={false}
                       className="flex items-center gap-2 no-underline hover:underline after:absolute after:inset-0 after:content-['']"
                     >

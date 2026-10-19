@@ -11,6 +11,7 @@ import { recordString } from '@/lib/format/numbers';
 import { plural } from '@/lib/format/words';
 import { getLeagueHealth } from '@/lib/queries/leagues';
 import { getTeamSlugs } from '@/lib/queries/teams';
+import { teamHref } from '@/lib/shared/routes';
 import { missingMetadata, pageMetadata } from '@/views/site/page-metadata';
 import { teamJsonLd } from '@/views/site/structured-data';
 import { buildTeamPageBundle, teamPageLayout } from '@/views/teams/team-page';
@@ -45,7 +46,7 @@ export async function generateMetadata({ params }: PageProps<'/teams/[slug]'>): 
       : `${view.scopeLabel} — no results reported`;
   const extras = rosterExtras(playerStats, roster);
   return pageMetadata({
-    path: `/teams/${team.slug}`,
+    path: teamHref(team.slug),
     // With the mascot, as the school's teams are known and searched ("Fremont Firebirds"): the bare
     // name is ambiguous for a school named for its city (Fremont, Christopher, Prospect).
     title: `${team.name} ${team.mascot} field hockey`,

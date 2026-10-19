@@ -11,6 +11,7 @@ import {
   getAffiliatedPlayer,
 } from '@/lib/datasets/clubs';
 import { gradeWord } from '@/lib/format/words';
+import { teamHref } from '@/lib/shared/routes';
 import { hostOf, isSportsRecruits, numbered, pathOf, schoolName } from '@/views/shared/source-links';
 
 import { isOwnSite, sourceLabel, statusWords } from './words';
@@ -164,7 +165,7 @@ export function playerRow(a: ClubAffiliation, club: Club): ClubPlayerRow {
   return {
     key: `${a.teamSlug}-${a.athleteId}`,
     name: row.fullName,
-    school: { name: schoolName(a.teamSlug), href: `/teams/${a.teamSlug}#roster` },
+    school: { name: schoolName(a.teamSlug), href: `${teamHref(a.teamSlug)}#roster` },
     facts: [row.grade !== null ? gradeWord(row.grade) : null, a.clubTeam].filter((f): f is string => f !== null),
     status: statusWords(a, club),
     statusKind: a.status,

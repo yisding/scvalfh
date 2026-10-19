@@ -4,6 +4,7 @@ import Link from 'next/link';
 
 import { usePinnedTeam } from '@/components/hooks/use-pinned-team';
 import TeamMonogram from '@/components/ui/TeamMonogram';
+import { teamHref } from '@/lib/shared/routes';
 import type { PinTileView } from '@/views/home/home-client';
 
 /**
@@ -58,7 +59,7 @@ export function PinTile({ tile }: PinTileProps) {
     );
   }
   return (
-    <Link href={`/teams/${tile.slug}`} prefetch={false} data-pin-tile={tile.slug} className={`${TILE} no-underline`}>
+    <Link href={teamHref(tile.slug)} prefetch={false} data-pin-tile={tile.slug} className={`${TILE} no-underline`}>
       {face}
       {/* The pin label's tail (`Mt. Hamilton · BVAL`, `MCAL`) after the visible name. */}
       <span className="sr-only">, {tile.pinLabel.slice(tile.pinLabel.lastIndexOf(', ') + 2)}</span>

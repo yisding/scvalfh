@@ -5,6 +5,7 @@ import SectionHeader from '@/components/ui/SectionHeader';
 import { standingsLabel } from '@/lib/config/leagues/labels';
 import { dateTimeAttr, longDate, monthDay, timeOfDayPT } from '@/lib/format/dates';
 import { parseLocal } from '@/lib/shared/dates';
+import { standingsHref } from '@/lib/shared/routes';
 import type { GameView } from '@/views/game/game-view';
 import { gameExternalLinks } from '@/views/shared/game-links';
 
@@ -147,7 +148,7 @@ export function GameDetails({ model, className }: GameDetailsProps) {
                 standings", rather than a generic "standings". */}
             {model.division && model.league ? (
               <Link
-                href={`/standings/${model.league.id}#${model.division}`}
+                href={standingsHref(model.league.id, model.division)}
                 prefetch={false}
                 className="sx-action gap-1 text-accent no-underline hover:underline"
               >

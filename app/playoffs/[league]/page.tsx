@@ -11,6 +11,7 @@ import SectionHeader from '@/components/ui/SectionHeader';
 import { SECTIONS } from '@/lib/config/leagues';
 import { getLeagueHealth } from '@/lib/queries/leagues';
 import { getCcsField } from '@/lib/queries/postseason';
+import { playoffsHref, standingsHref } from '@/lib/shared/routes';
 import {
   tournamentHeaderMeta,
   tournamentPageView,
@@ -47,7 +48,7 @@ export async function generateMetadata({ params }: PageProps<'/playoffs/[league]
   const title = ps.name;
   const description = `${tournamentHeaderMeta(summary, ps)}. Seeds from the ${summary.shortName} table, the play-in rule and the bracket, computed from published results; unofficial.`;
   return pageMetadata({
-    path: `/playoffs/${summary.id}`,
+    path: playoffsHref(summary.id),
     title,
     description,
     ogTitle: title,
@@ -90,7 +91,7 @@ export default async function LeagueTournamentPage({ params }: PageProps<'/playo
       <LeagueTournament
         view={view}
         leagueShort={summary.shortName}
-        standingsHref={`/standings/${summary.id}`}
+        standingsHref={standingsHref(summary.id)}
         beforeSeeds={<LeagueHealthNote health={getLeagueHealth(summary.id)} className="mb-4" />}
         playInRule={playInRound ? `${playInRound.pairing}.` : null}
       />

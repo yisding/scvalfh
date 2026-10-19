@@ -10,6 +10,7 @@ import { shortDate } from '@/lib/format/dates';
 import type { DivisionId, LeagueId } from '@/lib/model/ids';
 import type { Standing } from '@/lib/model/standings';
 import type { Team } from '@/lib/model/team';
+import { standingsHref } from '@/lib/shared/routes';
 
 import type { StandingsRowData } from './types';
 
@@ -73,7 +74,7 @@ export function buildOverviewDivision(input: {
     rows,
     ladderLine: config.ladderLine,
     fullLabel: `Full ${heading ?? league.shortName} table`,
-    fullHref: `/standings/${league.id}#${config.id}`,
+    fullHref: standingsHref(league.id, config.id),
     caption: `${heading ? `${league.shortName} ${heading}` : league.shortName} standings, league games only${through}.`,
   };
 }

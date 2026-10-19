@@ -5,6 +5,7 @@ import PlaceMark from '@/components/ui/PlaceMark';
 import { EM_DASH, formStripName } from '@/lib/format/words';
 import type { DivisionId } from '@/lib/model/ids';
 import type { Standing, StandingContext } from '@/lib/model/standings';
+import { teamHref } from '@/lib/shared/routes';
 import type { StandingsRowData } from '@/views/standings/types';
 
 import type { StandingsColumn } from './desktop-columns';
@@ -34,7 +35,7 @@ export interface StandingsVariantProps {
 
 /** The row's link target: the view's `href`, else the team page. */
 export function rowHref(row: StandingsRowData): string {
-  return row.href ?? `/teams/${row.team.slug}`;
+  return row.href ?? teamHref(row.team.slug);
 }
 
 /** The form strip's accessible name for the row. */

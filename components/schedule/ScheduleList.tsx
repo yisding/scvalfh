@@ -1,6 +1,7 @@
 import type { Game } from '@/lib/model/game';
 import type { LeagueId } from '@/lib/model/ids';
 import { dayNumber } from '@/lib/shared/dates';
+import { scoresHref } from '@/lib/shared/routes';
 import type { RecordsByGame } from '@/views/shared/game-records';
 
 import DateHeader from './DateHeader';
@@ -135,7 +136,7 @@ export function ScheduleList({ groups, scopeLeague = null, records, landingDate,
           <DateHeader
             date={group.date}
             count={group.games.length}
-            dayHref={`/scores/${group.date}`}
+            dayHref={scoresHref(group.date)}
             sticky
           />
           <GameList games={group.games} variant="grouped" scopeLeague={scopeLeague} records={records} />

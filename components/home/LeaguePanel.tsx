@@ -3,6 +3,7 @@ import LeagueHealthNote from '@/components/ui/LeagueHealthNote';
 import SectionHeader from '@/components/ui/SectionHeader';
 import { isIndependentLeague } from '@/lib/config/leagues';
 import { longDate } from '@/lib/format/dates';
+import { scheduleHref } from '@/lib/shared/routes';
 import type { HomeLeaguePanel } from '@/views/home/league-panel';
 
 import LatestScores from './LatestScores';
@@ -68,7 +69,7 @@ export function LeaguePanel({ panel }: LeaguePanelProps) {
       ) : (
         <section>
           <SectionHeader as="h3" kicker="Latest scores" />
-          <EmptyState heading="No results yet." action={{ href: `/schedule/${panel.id}`, label: 'Full schedule' }}>
+          <EmptyState heading="No results yet." action={{ href: scheduleHref(panel.id), label: 'Full schedule' }}>
             {panel.firstGame
               ? `${independent ? 'The independents’ first games' : `The first ${panel.shortName} games`} are ${longDate(panel.firstGame)}. Scores appear here the morning after they are played.`
               : 'Scores appear here the morning after a game is played.'}

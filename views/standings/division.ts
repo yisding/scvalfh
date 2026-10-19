@@ -53,6 +53,7 @@ import type { DivisionConfig, LeagueConfig } from '@/lib/model/league-config';
 import type { Standing, StandingContext } from '@/lib/model/standings';
 import type { Team } from '@/lib/model/team';
 import type { MissingOfficialResult } from '@/lib/queries/standings';
+import { playoffsHref } from '@/lib/shared/routes';
 
 import { mismatchItems, pointsWords } from './footnotes';
 import { collectStandingsNotes } from './table-notes';
@@ -216,7 +217,7 @@ function postseasonLinks(league: LeagueConfig): { heading: string; href: string;
   const ps = league.postseason;
   switch (ps.kind) {
     case 'league-tournament':
-      return { heading: `${ps.name}, as things stand`, href: `/playoffs/${league.id}`, linkText: 'Tournament bracket' };
+      return { heading: `${ps.name}, as things stand`, href: playoffsHref(league.id), linkText: 'Tournament bracket' };
     case 'unbracketed-tournament':
       return { heading: `${ps.name}, as things stand`, href: `/playoffs#${league.id}`, linkText: 'Postseason' };
     case 'ccs-ladder':
