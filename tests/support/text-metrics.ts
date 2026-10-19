@@ -1,6 +1,6 @@
 /**
  * Static text metrics for Geist Sans at 12 px, weight 500 (the home picker tile and the phone tab labels).
- * NOT a test file: tests import `width()` read-only (tests/ui/pin-label.test.ts, B4's tab-labels test).
+ * NOT a test file: tests import `width()` read-only (tests/lib/shared/pin-label.test.ts, B4's tab-labels test).
  * Nothing is measured at test time — the tables below were computed ONCE and committed.
  *
  * Method (2026-10-02, agent A3): no local Playwright/Chromium was available (no /tmp/axe, no

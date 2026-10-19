@@ -41,7 +41,7 @@ import { pageMetadata } from '@/views/site/page-metadata';
  * Section's Blue Book, the San Diego Section's Green Book), their tables are ordered by this site's own
  * 3-1-0 points and every sentence says so, and their postseason is the Sunset's "no playoffs" note or the
  * San Diego Section's playoffs as the Green Book writes them. The EAL's sentences, which name the Northern
- * Section's Guidelines, are unchanged word for word (tests/ui/eal-views.test.ts pins them); a sentence
+ * Section's Guidelines, are unchanged word for word (tests/views/standings/eal-views.test.ts pins them); a sentence
  * that names a section's rules document reads it from `rulesSource` (`rulesDocument`,
  * views/about/about-view.ts).
  *

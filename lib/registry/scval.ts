@@ -1,7 +1,7 @@
 /**
  * The 15 SCVAL seeds, moved verbatim from lib/registry/teams.ts (plus `section`, `league` and the si.com
  * school ids observed on logo URLs). The 15 slugs, abbrs, ids, names and divisions are frozen
- * (tests/teams.test.ts).
+ * (tests/lib/registry/teams.test.ts).
  *
  * Division membership comes exclusively from the two official SCVAL PDFs:
  *   De Anza  : https://scval.com/fallSports/26-27%20SCVAL%20FH%20DA%20Final.pdf

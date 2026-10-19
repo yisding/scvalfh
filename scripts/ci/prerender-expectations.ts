@@ -7,7 +7,7 @@
  * The expectations come from the build's INPUT, never from its output: the snapshot (as lib/datasets/snapshot.ts
  * loads it), the league config (`lib/config/leagues.ts`), the team registry (`lib/registry/teams.ts`) and the clubs
  * file (through lib/datasets/clubs.ts). Games take `gameIdToParam` (`sblive:N` → `sblive-N`), which
- * tests/game-id.test.ts holds and both gates' ':' check backs up.
+ * tests/lib/shared/game-id.test.ts holds and both gates' ':' check backs up.
  *
  * Three other places list routes and stay as they are, on purpose: app/sitemap.ts is the subject a
  * gate checks, never its oracle; scripts/ci/a11y-axe.mjs runs a curated one-page-per-family sample,

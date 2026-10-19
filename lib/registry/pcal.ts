@@ -1,6 +1,6 @@
 /**
  * The 7 PCAL seeds, transcribed from tests/fixtures/seeds/registry-seed.json (verified 2026-10-02;
- * checked field by field by tests/registry-seeds.test.ts). PCAL plays one division. York (grid slot
+ * checked field by field by tests/lib/registry/seeds.test.ts). PCAL plays one division. York (grid slot
  * CAT/YOR) is JV only and is not a member. The PDF grid codes (CAR, GRE, HOL, MON, SAL, CAT, SCAT,
  * CAT/YOR, STE) live in LEAGUES pcal.officialCodes, never in aliases.
  */

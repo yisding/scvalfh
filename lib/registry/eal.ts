@@ -1,7 +1,7 @@
 /**
  * The 6 EAL seeds (Northern Section's Eastern Athletic League), transcribed from
  * tests/fixtures/seeds/registry-seed-ns.json (verified 2026-10-04; checked field by field by
- * tests/registry-seeds.test.ts). Seed order is alphabetical. Davis and Bella Vista are Sac-Joaquin
+ * tests/lib/registry/seeds.test.ts). Seed order is alphabetical. Davis and Bella Vista are Sac-Joaquin
  * Section schools; Red Bluff is not fielding a varsity team in 2026 (LEAGUES eal.withdrawnNames,
  * maxprepsExtraRows). Mascot and city come from MaxPreps' team-context payload, not from standings.
  */

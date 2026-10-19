@@ -17,12 +17,12 @@ import { OgFooter, OgRule } from './primitives';
  * 1.3, 6px row padding, 48px padding) were MEASURED too tall: with every leader line at its longest the
  * root card needed 716px. The sizes below (REGION_CARD) measure 538px for the root card and 567px for the
  * /standings card (its eyebrow line) at the longest lines, rendered by satori/resvg on 2026-10-06
- * (tests/ui/region-card.test.ts, which fails above 630). The SoCal column is the taller one: North
+ * (tests/components/og/RegionCard.test.ts, which fails above 630). The SoCal column is the taller one: North
  * County's three divisions wrap to four lines. Columns are (1200 − 2 × 56 − 40) / 2 = 524px wide.
  *
  * The words (rows, titles, footers) are views/site/region-card.ts's. A test renders both cards with
  * every division's leader line forced to its longest (the division's two longest short names as
- * co-leaders, "+n", two-digit points) and measures the rendered height (tests/ui/region-card.test.ts).
+ * co-leaders, "+n", two-digit points) and measures the rendered height (tests/components/og/RegionCard.test.ts).
  *
  * TEXT ONLY, like every card on this site: no logo file, no school colors, no third-party image request
  * (DESIGN §12.4), and no league or region hue.

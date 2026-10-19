@@ -1,7 +1,7 @@
 /**
  * The /leaders page (DESIGN §16, §23, §28): leaderboards over every covered league and the independents,
  * built once per region (NorCal, then SoCal: DESIGN-socal §2.3, §2.4), derived from the two files the rest
- * of the site already reads. Pure, so tests/ui/leaders-view.test.ts can assert it over the committed data
+ * of the site already reads. Pure, so tests/views/leaders/leaders-view.test.ts can assert it over the committed data
  * and over synthetic games.
  *
  * This module only assembles; each part lives in its own:

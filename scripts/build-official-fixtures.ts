@@ -14,7 +14,7 @@
  *   pnpm build-official-fixtures --check               exit 1 if a file differs
  *   pnpm build-official-fixtures --bval-text A.txt B.txt
  *        BVAL fixtures/events parsed from the two docx texts (Mt. Hamilton, Santa Teresa) instead of
- *        the research JSON — the result must be identical (tests/bval-text.test.ts).
+ *        the research JSON — the result must be identical (tests/scripts/bval-text.test.ts).
  *   --source-dir <dir>   (default tests/fixtures/official/source)
  *   --out-dir <dir>      (default data/official)
  *

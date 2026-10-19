@@ -1,7 +1,7 @@
 /**
  * The self-hosted mascot tiles in public/mascots/ (DESIGN §7.1, §12.4): which sizes exist and what
  * each file is called. Shared by `TeamMonogram`, which picks a file, scripts/fetch-mascots.ts,
- * which writes them, and tests/mascots.test.ts, which checks they are all there.
+ * which writes them, and tests/data/mascots.test.ts, which checks they are all there.
  *
  * Every tile size has a file drawn at exactly its pixel size, at 1× and at 2× density, so the
  * browser shows the pixels as drawn instead of resampling a larger file down (which blurred a 24px

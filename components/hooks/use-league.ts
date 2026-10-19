@@ -201,7 +201,7 @@ function restamp(): void {
  * choice, and the prefs script treats a stored `'all'` as "never derive a league from the pin". With
  * the key removed, the stored region decides, and the pinned team's league comes back as soon as the
  * reader returns to its region: pin Leigh (BVAL), tap SoCal, tap NorCal, and the BVAL panel is back,
- * also after a reload (review 2026-10-06; tests/ui/use-league-region.test.ts). A league of the chosen
+ * also after a reload (review 2026-10-06; tests/components/hooks/use-league.test.ts). A league of the chosen
  * region is kept, and an explicit `'all'` is never touched (it stamps no league, so nothing is
  * dropped).
  *

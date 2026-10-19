@@ -6,20 +6,20 @@ import { defineConfig } from 'vitest/config';
  * process-bound files, kept in their own project so `vitest run --project spawn` runs just them.
  */
 const SPAWN = [
-  'tests/fetch-data.test.ts',
-  'tests/fetch-scope.test.ts',
-  'tests/history.test.ts',
-  'tests/jv.test.ts',
-  'tests/maxpreps-leagues.test.ts',
-  'tests/note-stats.test.ts',
-  'tests/official-files.test.ts',
-  'tests/pipeline/eal.test.ts',
-  'tests/pipeline/end-to-end.test.ts',
-  'tests/pipeline/socal.test.ts',
-  'tests/player-stats-file.test.ts',
-  'tests/rosters-enrichment.test.ts',
-  'tests/rosters-file.test.ts',
-  'tests/ui/player-stats-view.test.ts',
+  'tests/data/official-files.test.ts',
+  'tests/data/player-stats.test.ts',
+  'tests/data/rosters-enrichment.test.ts',
+  'tests/data/rosters.test.ts',
+  'tests/integration/eal.test.ts',
+  'tests/integration/end-to-end.test.ts',
+  'tests/integration/socal.test.ts',
+  'tests/lib/datasets/history.test.ts',
+  'tests/lib/datasets/jv.test.ts',
+  'tests/lib/engine/note-stats.test.ts',
+  'tests/lib/pipeline/fetch-scope.test.ts',
+  'tests/scripts/fetch-data.test.ts',
+  'tests/scripts/maxpreps-leagues.test.ts',
+  'tests/views/teams/player-stats.test.ts',
 ];
 
 export default defineConfig({

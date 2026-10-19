@@ -305,7 +305,7 @@ run". `tests/fixtures/corpus/eal-2026-10-04/` is a second corpus, captured live 
 tests and a second copy-honesty pass (`EAL_CORPUS` in `tests/support/corpus.ts`).
 `tests/fixtures/corpus/socal-2026-10-06/` is a third, captured live on 2026-10-06 with `--leagues
 sunset,city,north-county,metro --no-official --no-ccs --no-vnn` (65 MaxPreps requests: 1 + 2 × 7 + 50;
-8.2 MB), that drives `tests/pipeline/socal.test.ts`: Valley's skipped table, the membership counts per
+8.2 MB), that drives `tests/integration/socal.test.ts`: Valley's skipped table, the membership counts per
 division, Mission Bay's cross-division games and the eight San Diego shootout finals. Tests that assert
 league-specific values read the snapshot a corpus produces
 (`corpusSnapshotPath('all-2026-10-02')` in `tests/support/corpus-snapshot.ts`, built once per test run by
@@ -917,13 +917,24 @@ to the single-league site's), the si.com backfill rules, the official-schedule m
 parsing,
 the "never render a missing score as 0-0" rule across every `GameRow` variant and every non-final
 game page, and playoff-projection edge cases (shared 3rd, the Oct 30 play-in/crossover, unnamed
-rounds). Beside those, `tests/pipeline/` runs the fetch pipeline over the recorded corpora (end to
-end and every variant), `tests/ui/` covers the view models and rendered pages, the data-file
-validators check `data/rosters.json`, `data/player-stats.json`, `data/jv.json` (with the JV merge
-rules and an offline `fetch-jv` run over `tests/fixtures/jv`), `data/clubs.json` and
-`data/commits.json`, and further suites pin the copy rules, the workflow files and the
-update-data issue builder, the scoped typecheck's globs and the legacy-import guard. Fixtures
+rounds). Beside those, `tests/integration/` runs the fetch pipeline over the recorded corpora (end to
+end and every variant), `tests/views/`, `tests/components/` and `tests/app/` cover the view models,
+the rendered components and the pages, the data-file validators in `tests/data/` check
+`data/rosters.json`, `data/player-stats.json`, `data/jv.json` (with the JV merge rules and an
+offline `fetch-jv` run over `tests/fixtures/jv`), `data/clubs.json` and `data/commits.json`, and
+further suites pin the copy rules (`tests/scripts/ci/copy/`), the workflow files and the architecture
+rules (`tests/arch/`), the update-data issue builder, and the scoped typecheck's globs. Fixtures
 captured from real (offline) MaxPreps/SCVAL responses live under `tests/fixtures/`.
+
+The tree mirrors the source: the test of a module `X` lives at `tests/<directory of X>/<basename of
+X>.test.ts` (`lib/engine/standings.ts` is tested by `tests/lib/engine/standings.test.ts`,
+`components/layout/NavLink.tsx` by `tests/components/layout/NavLink.test.ts`). Suites that cut across
+modules are grouped by what they prove: `tests/data/` (the committed data files), `tests/integration/`
+(the pipeline end to end), `tests/regression/` (the SCVAL goldens), `tests/app/` (whole pages),
+`tests/scripts/` (the CLIs); `tests/support/` holds the helpers and is not a test directory. The
+three Vitest projects are `arch` (`tests/arch/`), `spawn` (the files that run a repo script under
+tsx, listed in `vitest.config.ts`) and `unit` (the rest); `pnpm test:arch` and `pnpm test:unit` run
+the first and the last.
 
 Tests that render against a corpus do not build it themselves. Vitest's `globalSetup`
 (`tests/support/global-setup.ts`) runs the real `scripts/fetch-data.ts --fixtures …` once per
@@ -1008,7 +1019,7 @@ mascot is a 68px gif), Lassen, Mira Mesa, Redwood and Saratoga, plus Patrick Hen
 emblem the school uses on its site and social media), and SBLive/SI for Rancho Bernardo, La Costa
 Canyon, Marina, Live Oak and Huntington Beach.
 The files are committed, not refreshed by the cron. Run `pnpm fetch-mascots` when a team joins the
-registry (`tests/mascots.test.ts` fails until its tiles exist) or a school changes its logo:
+registry (`tests/data/mascots.test.ts` fails until its tiles exist) or a school changes its logo:
 
 ```bash
 pnpm fetch-mascots                       # all 102 teams

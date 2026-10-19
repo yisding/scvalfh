@@ -148,7 +148,7 @@ unchanged: 5 teams ok (95 players: Bella Vista 19, Chico 20, Davis 19, Lassen 15
 (Davis 2, Lassen 4, Pleasant Valley 1). The file then held 49 teams and 840 players (538 with a
 grade, 47 captains). Seven of the 28 new pages are kept as fixtures
 (`tests/fixtures/maxpreps/roster-{leigh,greenfield,del-mar,stevenson,monterey,
-university-sf,marin-catholic}.html`, tested by `tests/maxpreps-leagues.test.ts`). The adapter throws
+university-sf,marin-catholic}.html`, tested by `tests/scripts/maxpreps-leagues.test.ts`). The adapter throws
 on any positional drift (a failed team keeps its previous rows or is `error`, never a guessed row).
 A team's `status` says what its `players[]` are: `ok` (read this run), `empty` (page read, MaxPreps
 lists nobody), `carried-forward` (this run failed; the previous file's rows, with their own
@@ -1814,7 +1814,7 @@ checked as one: every ordered pair a@b exactly once (n·(n−1) fixtures), each 
 - **BVAL:** 60 fixtures (30 per division, each team 10 games, 5 home). The Oct 31 CCS play-in line
   in the document is an *event* in the file, never a fixture. Default varsity start 5:00 PM with
   five override forms; `lib/sources/bval/schedule-text.ts` parses the two document texts and
-  `tests/bval-text.test.ts` proves the parse reproduces the bundled file. `WG` = Willow Glen.
+  `tests/scripts/bval-text.test.ts` proves the parse reproduces the bundled file. `WG` = Willow Glen.
 - **PCAL:** 42 fixtures; the grid uses codes (`STE CAR HOL MON SAL GRE CAT`; `CAT/YOR` and `SCAT`
   are Santa Catalina; York plays JV only). Start time 4:00 PM.
 - **MCAL:** 72 fixtures using the dates after the league's two approved changes (Marin Catholic v
@@ -2767,7 +2767,7 @@ si.com requests (1 bootstrap, 1 league meta, 1 standings, 6 schedules; 7 si.com 
 75 schedule rows become 40 contests and 40 games, 30 of them league games. A replay over it asks for
 nothing the capture lacks (no `FixtureMissing`). The pipeline asks only for scoreboard dates on which
 MaxPreps or a fixture has a game, so the corpus has no 2026-09-30 scoreboard. It drives
-`tests/pipeline/eal.test.ts`, the EAL view tests and a second copy-honesty pass, and
+`tests/integration/eal.test.ts`, the EAL view tests and a second copy-honesty pass, and
 `tests/support/corpus.ts` exports its name as `EAL_CORPUS`. `tests/fixtures/maxpreps/manifest.json` is the
 older SCVAL-only corpus; and `tests/fixtures/corpus/variants/` holds overlays for failure cases
 (`pcal-standings-empty`, `bval-meta-wrong-season`, `leland-feed-503`, `mcal-postseason`,
@@ -2797,7 +2797,7 @@ Diego), `a05bedf5`. `tests/fixtures/sblive/pcal-1002/` is the research record fo
 fills of 2026-10-02: `fill-candidates.json` (how the pages were captured, the si.com team ids, the
 fills, the rows dropped and the cross-check against MaxPreps) and `games-verified.json` (what each
 game page shows), with the team and game pages they cite. No test, script or manifest reads these
-files except `team-456851-york-falcons.html`, which `tests/backfill.test.ts` parses (York is JV
+files except `team-456851-york-falcons.html`, which `tests/lib/pipeline/reconcile/backfill.test.ts` parses (York is JV
 only, `DATA_QUALITY.sbliveIgnoredTeamIds`). Keep them when fixtures are refreshed.
 
 ### 5.6 Playoff polling from Oct 25
@@ -2862,7 +2862,7 @@ because it has no league document: its rules come from the Section's Guidelines,
 the Section's field hockey page. The independents have no league, so the footer's lists of leagues
 (the rules clause, "not affiliated with") name the nine leagues only. The SoCal leagues publish no rules we could find, so each is named
 under its section's rules source, linked to the document they are in: the Southern Section's Blue Book
-Article 200 and the San Diego Section's Green Book Bylaw 2000.1. tests/ui/attribution.test.ts pins the
+Article 200 and the San Diego Section's Green Book Bylaw 2000.1. tests/app/attribution.test.ts pins the
 rules clause.)
 
 ## 7. Known open risks (carried into README "Known limitations")

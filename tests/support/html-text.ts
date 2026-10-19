@@ -1,6 +1,6 @@
 /**
  * Visible text of server-rendered markup, for assertions on `renderToStaticMarkup` output.
- * NOT a test file: the tests/ui view tests import it read-only.
+ * NOT a test file: the view, component and app tests import it read-only.
  *
  * Two steps, in this order, so neither undoes the other:
  *  1. `stripTags` drops every tag (`<` to the next `>`) with a character scan, not a regex, so a

@@ -38,7 +38,7 @@ export interface PageMetadataInput {
    * Whose card the page shows. `'root'`: the page has NO `opengraph-image.tsx` in its own segment, so
    * it names the site's root card (ROOT_OG_IMAGE). `'own'`: its segment has an `opengraph-image.tsx`,
    * and naming the root card would swap that file-based image for the generic one (OG_BASE and
-   * ROOT_OG_IMAGE explain why). tests/ui/page-metadata.test.ts checks the choice against the
+   * ROOT_OG_IMAGE explain why). tests/app/page-metadata.test.ts checks the choice against the
    * filesystem for every route.
    */
   card: 'root' | 'own';

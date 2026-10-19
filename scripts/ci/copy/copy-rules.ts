@@ -1,5 +1,5 @@
 /**
- * Copy rules shared by scripts/ci/assert-copy.ts and its test (tests/copy-rules.test.ts): pure, so a
+ * Copy rules shared by scripts/ci/assert-copy.ts and its test (tests/scripts/ci/copy/copy-rules.test.ts): pure, so a
  * test can import them without running the script's scan of the built site.
  */
 

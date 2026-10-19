@@ -16,7 +16,7 @@
  * lib/shared/dates.ts (a build with them and a build with local copies produced the same chunk, byte for
  * byte). The module still formats its own two date strings, to keep `monthDay`/`shortDate`, `parseLocal`
  * and `weekdayIndex` out of that chunk, and it never reads a clock.
- * tests/ui/rail-targets.test.ts holds the formatting to `lib/format/dates.ts`'s output for every date in the
+ * tests/views/schedule/rail-client.test.ts holds the formatting to `lib/format/dates.ts`'s output for every date in the
  * snapshot.
  */
 

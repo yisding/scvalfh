@@ -122,7 +122,7 @@ export function buildPrefsScript({ leagueIds, slugLeague, leagueRegion, defaultR
   }
   // The map is shipped grouped by league, slugs space-joined, which is about half the bytes of a
   // flat {slug: league} object (102 entries) and keeps the whole script within its 3 KB line
-  // (2,454 B measured 2026-10-06; tests/ui/prefs-script.test.ts).
+  // (2,454 B measured 2026-10-06; tests/components/head/prefs-script.test.ts).
   const grouped: Record<string, string[]> = {};
   for (const [slug, league] of Object.entries(slugLeague)) {
     if (!ID.test(slug) || !leagueIds.includes(league)) {

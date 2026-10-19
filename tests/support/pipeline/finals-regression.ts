@@ -7,7 +7,7 @@
  *
  * Built by running the real pipeline over the corpus plus a temporary overlay that turns those
  * three contests into finals, with the real official (steps/official.ts) and si.com
- * (steps/sblive.ts) steps. Rebuild with `B1_REBUILD_VARIANTS=1 pnpm exec vitest run tests/pipeline/variants.test.ts`.
+ * (steps/sblive.ts) steps. Rebuild with `B1_REBUILD_VARIANTS=1 pnpm exec vitest run tests/integration/variants.test.ts`.
  */
 
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';

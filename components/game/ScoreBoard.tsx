@@ -20,7 +20,7 @@ import { NON_MEMBER_NOTE } from '@/views/shared/words/membership';
  *   reversed so both scores sit against the centre dash (monogram 56).
  *
  * Each ScoreGlyph is wrapped in `.sx-board-score`, whose unlayered rule in globals.css sets it at
- * `--text-display`: ScoreGlyph's own class string is frozen (tests/ui/rendered-never-00.test.ts).
+ * `--text-display`: ScoreGlyph's own class string is frozen (tests/components/game-row/rendered-never-00.test.ts).
  *
  * `sub` is whatever the page wants under each name — normally "4-1-0 De Anza" or "10-1-1 MCAL". A
  * school outside the registry has no record to show (game-view gives it no sub), so its side gets

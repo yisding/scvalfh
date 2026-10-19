@@ -41,7 +41,7 @@ const WEIGHT_CLASS: Record<SideView['weight'], string> = {
  * upcoming slate look as if everyone had lost. Only a loser steps down to ink-2 at 400.
  *
  * Kept as its own table rather than reusing WEIGHT_CLASS: ScoreGlyph's class string is frozen by
- * tests/ui/rendered-never-00.test.ts, and a name may need to diverge from a numeral one day
+ * tests/components/game-row/rendered-never-00.test.ts, and a name may need to diverge from a numeral one day
  * without dragging the glyph with it. Lives here, in the client-safe module, so a client
  * component (the home My-team card) can weigh a name without reaching lib/registry/teams.
  */

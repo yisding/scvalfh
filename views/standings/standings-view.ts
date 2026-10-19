@@ -179,7 +179,7 @@ function standingsLegend(league: LeagueSummary, views: readonly DivisionView[]):
  * Before league play has produced a published result the tables are structurally complete but
  * numerically empty, and a reader deserves to be told why in a full sentence rather than left to
  * infer it from a table of em dashes (DESIGN §8, rows 1 and 2). Exported for
- * tests/ui/standings-view.test.ts, which pins the copy no league's live tables reach today.
+ * tests/views/standings/standings-view.test.ts, which pins the copy no league's live tables reach today.
  */
 export function buildNotice(leagueId: LeagueId, views: DivisionView[]): StandingsPageView['notice'] {
   if (views.some((v) => v.leagueFinals > 0)) return null;

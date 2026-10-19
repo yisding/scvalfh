@@ -3,7 +3,7 @@
  * tests/fixtures/official/source/ (or the two BVAL docx texts) to the three OfficialBundle values
  * data/official/{bval,pcal,mcal}-2026.json serialize. Deterministic, and every division is checked
  * with assertDoubleRoundRobin before a bundle is returned. scripts/build-official-fixtures.ts is
- * the argv and file-writing layer; tests/official-files.test.ts and tests/bval-text.test.ts import
+ * the argv and file-writing layer; tests/data/official-files.test.ts and tests/scripts/bval-text.test.ts import
  * the builders from here.
  */
 

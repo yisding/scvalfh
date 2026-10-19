@@ -1,6 +1,6 @@
 /**
  * The 12 BVAL seeds, transcribed from tests/fixtures/seeds/registry-seed.json (verified 2026-10-02;
- * checked field by field by tests/registry-seeds.test.ts). Membership: the CCS 2026-27 league
+ * checked field by field by tests/lib/registry/seeds.test.ts). Membership: the CCS 2026-27 league
  * alignment and bval.org/field-hockey. The BVAL docx grid code 'WG' lives in
  * LEAGUES bval.officialCodes, never in aliases.
  */

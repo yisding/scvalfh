@@ -1,6 +1,6 @@
 /**
  * The 9 MCAL seeds (North Coast Section), transcribed from tests/fixtures/seeds/registry-seed-ncs.json
- * (verified 2026-10-02; checked field by field by tests/registry-seeds.test.ts). Seed order is the
+ * (verified 2026-10-02; checked field by field by tests/lib/registry/seeds.test.ts). Seed order is the
  * MCAL spring draw order (AW 1 … MA 9). The schedule-PDF codes live in LEAGUES mcal.officialCodes;
  * University (San Francisco) carries no bare "University" alias, which is ambiguous statewide.
  */

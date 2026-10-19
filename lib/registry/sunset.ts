@@ -1,7 +1,7 @@
 /**
  * The 8 Sunset seeds (the CIF Southern Section's field hockey Sunset), transcribed by script from
  * tests/fixtures/seeds/registry-seed-ss.json (verified 2026-10-06; checked field by field by
- * tests/registry-seeds.test.ts). Seed order is alphabetical.
+ * tests/lib/registry/seeds.test.ts). Seed order is alphabetical.
  *
  * The Sunset here is a field-hockey-only grouping of eight Southern Section schools in Orange and
  * Riverside counties, not the all-sports Sunset League. No Sunset document (site, bylaws, schedule

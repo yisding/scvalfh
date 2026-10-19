@@ -29,7 +29,7 @@ export const EAL_CORPUS: CorpusName = 'eal-2026-10-04';
  * The Southern California live capture (2026-10-06T02:33Z, the evening of Oct 5 Pacific): the Sunset
  * and the San Diego Section's City, North County and Metro conferences, read with `--leagues
  * sunset,city,north-county,metro`, so the five NorCal leagues are "not fetched in this run"
- * (tests/pipeline/socal.test.ts).
+ * (tests/integration/socal.test.ts).
  */
 export const SOCAL_CORPUS: CorpusName = 'socal-2026-10-06';
 

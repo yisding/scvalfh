@@ -12,7 +12,7 @@
  *
  * Self-hosted, never hotlinked: the site makes no third-party image request. The files are
  * committed, so a page never depends on MaxPreps being up. Run it when a team joins the registry
- * (tests/mascots.test.ts fails until its tiles exist) or a school changes its logo; the twice-daily
+ * (tests/data/mascots.test.ts fails until its tiles exist) or a school changes its logo; the twice-daily
  * cron never runs it.
  *
  * The source URL is MaxPreps' own: `image.maxpreps.io/school-mascot/{a}/{b}/{c}/{id}.gif`, where

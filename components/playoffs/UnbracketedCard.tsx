@@ -4,7 +4,7 @@ import type { UnbracketedCardData } from '@/views/playoffs/playoffs-view';
 /**
  * One card per unbracketed league (EAL): the rule, its dates and its source, never a bracket or a
  * seed. Its id is the EAL chip's and jump link's target. The link words are today's, byte for byte
- * (tests/ui/eal-views.test.ts), from postseasonSourceLink: the EAL's rules document is the Northern
+ * (tests/views/standings/eal-views.test.ts), from postseasonSourceLink: the EAL's rules document is the Northern
  * Section's Guidelines, which `SectionConfig.rulesSource.name` names with its years.
  */
 export default function UnbracketedCard({ card }: { card: UnbracketedCardData }) {

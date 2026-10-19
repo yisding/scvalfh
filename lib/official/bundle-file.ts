@@ -2,7 +2,7 @@
  * The bundled official-fixture files on disk (SPEC §7.8): which file a league's bundled divisions
  * share, and the loader the cron and the tests read them through. Parsing and the config checks are
  * lib/official/bundle.ts; this module only finds and reads the file. lib/pipeline/steps/official.ts
- * imports loadBundledFixtures from HERE, which is the seam tests/official-match.test.ts mocks to
+ * imports loadBundledFixtures from HERE, which is the seam tests/lib/official/match.test.ts mocks to
  * break a bundle at load.
  */
 

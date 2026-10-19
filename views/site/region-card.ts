@@ -10,7 +10,7 @@
  * Kept out of the route files: an `opengraph-image` route exports only its image function and
  * `alt` / `size` / `contentType` (node_modules/next/dist/docs/01-app/03-api-reference/
  * 03-file-conventions/01-metadata/opengraph-image.md, "Config exports"), and the test
- * (tests/ui/region-card.test.ts) needs these too.
+ * (tests/components/og/RegionCard.test.ts) needs these too.
  */
 
 import { INDEPENDENT_LEAGUES, LEAGUES_PROPER, byRegion, isIndependentLeague } from '@/lib/config/leagues';

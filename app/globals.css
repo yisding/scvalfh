@@ -11,7 +11,7 @@
    NorCal High School Field Hockey — design tokens (DESIGN §4.1 / §4.2)
 
    Every hex below is measured output from the contrast validator, not an
-   assertion. tests/ui/contrast.test.ts parses THIS FILE and re-measures every
+   assertion. tests/app/contrast.test.ts parses THIS FILE and re-measures every
    documented pair, so editing a token here fails `pnpm test` if it breaks a
    floor (DESIGN §10.9d).
 
@@ -1134,7 +1134,7 @@
 }
 
 /* ── Unlayered on purpose: the game-page hero score must beat ScoreGlyph's `text-[2rem]` utility
-      WITHOUT changing that class string (tests/ui/rendered-never-00.test.ts matches it literally).
+      WITHOUT changing that class string (tests/components/game-row/rendered-never-00.test.ts matches it literally).
       An unlayered rule outranks every @layer, utilities included. ScoreBoard wraps each of its
       two glyphs in `<span class="sx-board-score">`; nothing else on the site uses that class. ── */
 .sx-board-score > .sx-num {

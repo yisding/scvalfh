@@ -1,6 +1,6 @@
 /**
  * The recruiting page (/recruiting), derived from the team rosters' own rows. Pure, so
- * tests/ui/recruiting-view.test.ts can assert it over the real files.
+ * tests/views/recruiting/recruiting-view.test.ts can assert it over the real files.
  *
  * One page for every school's recruiting data: the players' own recruiting profiles (the roster
  * overlay, data/rosters-enrichment.json), the youth clubs a public page ties them to

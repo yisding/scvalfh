@@ -1,7 +1,7 @@
 /**
  * `assertDoubleRoundRobin` (SPEC §7.8): the structural proof that a division's official fixture
  * list is the league's double round robin. Used by the build script before it writes a bundle, by
- * tests/official-files.test.ts, and by the cron at load (a failure there degrades the file's
+ * tests/data/official-files.test.ts, and by the cron at load (a failure there degrades the file's
  * divisions to contest-type classification; it never aborts the run).
  */
 

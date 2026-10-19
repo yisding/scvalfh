@@ -1,6 +1,6 @@
 /**
  * BVAL schedule docx TEXT → bundle fixtures (SPEC §7.8). Used ONLY by
- * `scripts/build-official-fixtures.ts --bval-text <A> <B>` and by tests/bval-text.test.ts, which
+ * `scripts/build-official-fixtures.ts --bval-text <A> <B>` and by tests/scripts/bval-text.test.ts, which
  * proves that the two division texts (tests/fixtures/official/bval-sched-{A,B}.txt) reproduce the
  * fixtures of data/official/bval-2026.json exactly. The cron never parses a docx: it reads the
  * bundle and only hashes the upstream document to notice a revision.

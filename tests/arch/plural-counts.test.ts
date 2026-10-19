@@ -1,7 +1,7 @@
 /**
  * No count template ignores n === 1 (SPEC §0.4): a source guard against the '1 league games' /
  * '1 games' templates that lib/format/words.ts's helpers replaced (StandingsTable, MyTeamCard, the team
- * page, TeamStatTiles). The unit cases of the plural helpers are tests/ui/plural.test.ts.
+ * page, TeamStatTiles). The unit cases of the plural helpers are tests/lib/format/words.test.ts.
  */
 import { describe, expect, it } from 'vitest';
 

@@ -57,7 +57,7 @@
  *
  * What it does not cover: §10.9(b) grayscale and (c) forced-colors are visual comparisons that a
  * machine cannot judge for us. The token-contrast half of the gate is a unit test
- * (tests/ui/contrast.test.ts) and the never-0-0 half is tests/ui/rendered-never-00.test.ts.
+ * (tests/app/contrast.test.ts) and the never-0-0 half is tests/components/game-row/rendered-never-00.test.ts.
  */
 
 import { createRequire } from 'node:module';
@@ -88,7 +88,7 @@ const LEAGUES = snapshot
   : ['scval', 'bval', 'pcal', 'mcal', 'eal', 'sunset', 'city', 'north-county', 'metro', 'independents'];
 /**
  * The SoCal leagues (DESIGN-socal §2.1.5), for the expected `data-region` stamp. Spelled out: this
- * script runs on plain node and reads no TypeScript config; tests/ui/prefs-script.test.ts holds the
+ * script runs on plain node and reads no TypeScript config; tests/components/head/prefs-script.test.ts holds the
  * prefs script's own map to lib/config/leagues.ts.
  */
 const SOCAL_LEAGUES = new Set(['sunset', 'city', 'north-county', 'metro', 'independents']);

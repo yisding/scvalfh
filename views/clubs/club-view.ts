@@ -1,6 +1,6 @@
 /**
  * The club pages (/clubs, /clubs/[slug]) and the team roster's club line (SPEC §1.1j2, DESIGN §17),
- * derived from lib/datasets/clubs.ts. Pure, so tests/ui/club-view.test.ts can assert it over the real files;
+ * derived from lib/datasets/clubs.ts. Pure, so tests/views/clubs/club-view.test.ts can assert it over the real files;
  * every word a club page or a club line prints about a club tie is chosen here, in views/clubs/: this
  * module builds the two pages, and the modules beside it hold the wording tables (words.ts), the
  * roster's club line (club-line.ts) and each page's shapes and rows (clubs-index.ts, club-page.ts).

@@ -7,7 +7,7 @@ import type { Team } from '@/lib/model/team';
  * The mascot is MaxPreps' own school logo, downloaded once by `pnpm fetch-mascots` into
  * public/mascots/ and served from this site, so no page makes a third-party image request and
  * none depends on MaxPreps being up. Every registry team has a file for every tile size at 1× and
- * 2× (lib/config/mascots.ts, tests/mascots.test.ts), so the browser never resamples one: `src` is the 1×
+ * 2× (lib/config/mascots.ts, tests/data/mascots.test.ts), so the browser never resamples one: `src` is the 1×
  * file and `srcSet` the 2× one. Each is an opaque logo on white with the art inset clear of the
  * rounded corners, so it reads the same on the light and the dark theme; the hairline is
  * `img.sx-monogram`'s inset outline, which unlike a border leaves the image its full size.

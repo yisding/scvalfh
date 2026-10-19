@@ -1,6 +1,6 @@
 /**
  * The college commitments page (/commits) and the team roster's commitment line (SPEC §1.1j3,
- * DESIGN §21), derived from lib/datasets/commits.ts. Pure, so tests/ui/commit-view.test.ts can assert it
+ * DESIGN §21), derived from lib/datasets/commits.ts. Pure, so tests/views/commits/commit-view.test.ts can assert it
  * over the real files; every word the page or a roster line prints about a commitment is chosen
  * here, in one module.
  *

@@ -1,7 +1,7 @@
 /**
  * The 12 City Conference seeds (CIF San Diego Section: City Western 6, City Eastern 6), transcribed
  * by script from tests/fixtures/seeds/registry-seed-sds.json (verified 2026-10-06; checked field by
- * field by tests/registry-seeds.test.ts). Seed order is alphabetical within each division.
+ * field by tests/lib/registry/seeds.test.ts). Seed order is alphabetical within each division.
  *
  * Membership is the Section's 2026-27 League Alignment workbook. MaxPreps' City - Eastern table
  * omits Patrick Henry, whose City Eastern games MaxPreps does not mark as league games, and lists

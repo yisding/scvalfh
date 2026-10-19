@@ -1,7 +1,7 @@
 /**
  * The 5 LA independents (Bonita, Chaminade, Glendora, Harvard-Westlake, Thousand Oaks),
  * transcribed by script from tests/fixtures/seeds/registry-seed-ss.json (verified 2026-10-06; checked field
- * by field by tests/registry-seeds.test.ts). Seed order is alphabetical.
+ * by field by tests/lib/registry/seeds.test.ts). Seed order is alphabetical.
  *
  * Five Southern Section schools in no field hockey league, grouped by this site (LEAGUES 'independents',
  * `independents: true`, classification 'membership': the table counts their games against each other).

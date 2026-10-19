@@ -1,0 +1,303 @@
+/** lib/pipeline/fetch-scope.ts — which teams a rosters / player-stats / JV run covers, and how it reports them. */
+
+import { readFileSync } from 'node:fs';
+import path from 'node:path';
+
+import { describe, expect, it } from 'vitest';
+
+import { z } from 'zod';
+
+import { SEASON_YEAR } from '@/lib/config/season';
+import {
+  describePrevious,
+  droppedTeamSlugs,
+  formatLeagueSummary,
+  inScope,
+  readPreviousFile,
+  runExitCode,
+  runTotals,
+  salvageRows,
+  summarizeByLeague,
+  teamsInScope,
+} from '@/lib/pipeline/fetch-scope';
+import { TEAMS, teamsInLeague } from '@/lib/registry/teams';
+import { type Rosters, RostersPartialSchema, TeamRosterSchema, countRosters } from '@/lib/schema/rosters';
+import { stableStringify } from '@/lib/shared/stable-json';
+import { runRepoScript, type ScriptName } from '@/tests/support/cli';
+import { REPO } from '@/tests/support/repo';
+
+describe('the fetch-scope CLIs read flags by fetch-data\'s rules', () => {
+  const run = (script: ScriptName, ...args: string[]) => runRepoScript(script, { extra: args });
+
+  for (const script of ['fetch-rosters', 'fetch-player-stats'] as const) {
+    it(`${script}.ts: a bad --fetched-at and a flag where a value belongs both fail before anything runs`, () => {
+      // --fixtures keeps a regression offline: a script that accepted the stamp would read no network.
+      const bad = run(script, '--fixtures', path.join(REPO, 'tests', 'fixtures', 'no-such-dir'), '--fetched-at', 'yesterday', '--dry-run');
+      expect(bad.status).not.toBe(0);
+      expect(bad.stderr).toMatch(/--fetched-at: not an ISO timestamp: yesterday/);
+      const flag = run(script, '--out', '--dry-run');
+      expect(flag.status).not.toBe(0);
+      expect(flag.stderr).toMatch(/--out needs a value/);
+    });
+  }
+});
+
+describe('scope', () => {
+  it('covers every registry team, in registry order, by default', () => {
+    expect(teamsInScope(null)).toEqual(TEAMS);
+    expect(TEAMS.every((t) => inScope(t, null))).toBe(true);
+  });
+
+  it('narrows to the leagues named, keeping registry order', () => {
+    const only = teamsInScope(['pcal', 'scval']);
+    expect(only.map((t) => t.slug)).toEqual(TEAMS.filter((t) => t.league === 'scval' || t.league === 'pcal').map((t) => t.slug));
+    expect(only).toHaveLength(teamsInLeague('scval').length + teamsInLeague('pcal').length);
+  });
+});
+
+describe('summarizeByLeague', () => {
+  const teams = TEAMS.map((t) => ({ slug: t.slug, status: t.league === 'bval' ? 'error' : 'ok' }));
+
+  it('counts a covered league\'s failures, and none for a league left out of the run', () => {
+    const all = summarizeByLeague(teams, null);
+    expect(all.map((s) => [s.league, s.teams, s.failed])).toEqual([
+      ['scval', 15, 0],
+      ['bval', 12, 12],
+      ['pcal', 7, 0],
+      ['mcal', 9, 0],
+      ['eal', 6, 0],
+      ['sunset', 8, 0],
+      ['city', 12, 0],
+      ['north-county', 19, 0],
+      ['metro', 9, 0],
+      ['independents', 5, 0],
+    ]);
+    // BVAL's rows are failures in the file, but a run that did not cover BVAL did not fail them.
+    const scoped = summarizeByLeague(teams, ['scval']);
+    expect(scoped.map((s) => s.failed)).toEqual([0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+    expect(scoped.map((s) => s.outOfScope)).toEqual([0, 12, 7, 9, 6, 8, 12, 19, 9, 5]);
+    // A Southern California run (the leagues WP3 fetched rosters, stats and JV for on 2026-10-06).
+    const socal = summarizeByLeague(teams, ['sunset', 'city', 'north-county', 'metro']);
+    expect(socal.map((s) => s.outOfScope)).toEqual([15, 12, 7, 9, 6, 0, 0, 0, 0, 5]);
+    expect(runExitCode(socal)).toBe(0);
+    // The independents' own run (2026-10-06, when the group joined the registry): the other 99 kept.
+    const independents = summarizeByLeague(teams, ['independents']);
+    expect(independents.map((s) => s.outOfScope)).toEqual([15, 12, 7, 9, 6, 8, 12, 19, 9, 0]);
+    expect(runExitCode(independents)).toBe(0);
+  });
+
+  it('formats one line per league', () => {
+    const [scval, bval] = summarizeByLeague(teams, ['scval']);
+    expect(formatLeagueSummary(scval)).toBe('SCVAL 15 teams · 15 ok');
+    expect(formatLeagueSummary(bval)).toBe('BVAL  12 teams · not in this run (kept as they were)');
+    expect(runExitCode(summarizeByLeague(teams, ['scval']))).toBe(0);
+    expect(runExitCode(summarizeByLeague(teams, null))).toBe(1);
+  });
+
+  it('never calls a team kept as it was when its previous row was dropped, and exits 1 for it', () => {
+    const [leigh, delMar] = teamsInLeague('bval');
+    const dropped = new Set([leigh.slug, delMar.slug, 'st-ignatius']);
+    const byLeague = summarizeByLeague(teams, ['scval'], dropped);
+    // A covered team's dropped row is the fetch's business (re-read, or an error): not listed here.
+    expect(byLeague.map((s) => s.dropped)).toEqual([[], [leigh.slug, delMar.slug], [], [], [], [], [], [], [], []]);
+    expect(formatLeagueSummary(byLeague[1])).toBe(
+      `BVAL  12 teams · not in this run · 10 kept as they were · 2 pending, previous row dropped (${leigh.slug}, ${delMar.slug})`,
+    );
+    expect(formatLeagueSummary(byLeague[2])).toBe('PCAL   7 teams · not in this run (kept as they were)');
+    expect(formatLeagueSummary(byLeague[4])).toBe('EAL    6 teams · not in this run (kept as they were)');
+    expect(runExitCode(byLeague)).toBe(1);
+    // Every row dropped: nothing is said to be kept.
+    const all = summarizeByLeague(teams, ['scval'], new Set(teamsInLeague('pcal').map((t) => t.slug)));
+    expect(formatLeagueSummary(all[2])).not.toContain('kept as they were');
+  });
+});
+
+describe('readPreviousFile: the previous file, salvaged row by row', () => {
+  const committed = readFileSync(path.join(REPO, 'data', 'rosters.json'), 'utf8');
+  const raw = JSON.parse(committed) as Rosters;
+  const read = (file: unknown) =>
+    readPreviousFile(typeof file === 'string' ? file : JSON.stringify(file), {
+      season: SEASON_YEAR,
+      row: TeamRosterSchema,
+      file: RostersPartialSchema,
+    });
+  const rowsOf = (p: ReturnType<typeof read>) => {
+    if (!p.readable) throw new Error(p.reason);
+    return p;
+  };
+
+  it('keeps every row of a valid file, and the whole file for the no-change check', () => {
+    const p = rowsOf(read(committed));
+    expect(p.dropped).toEqual([]);
+    expect(p.problems).toEqual([]);
+    expect(p.otherSeason).toBeNull();
+    expect([...p.rows.keys()]).toEqual(TEAMS.map((t) => t.slug));
+    expect(p.rows.get('leigh')).toEqual(raw.teams.find((t) => t.slug === 'leigh'));
+    expect(p.whole).toEqual(raw);
+    expect(describePrevious(p, 'data/rosters.json')).toEqual([]);
+  });
+
+  it('drops only the rows that fail on their own, naming each, and keeps the rest', () => {
+    const file = structuredClone(raw);
+    const at = (slug: string) => file.teams.findIndex((t) => t.slug === slug);
+    // A BVAL team whose division no longer matches the registry, a slug no longer in it, a team
+    // under another team's id, and a status that breaks its own invariant.
+    file.teams[at('leigh')].division = 'de-anza';
+    file.teams[at('del-mar')].slug = 'not-a-school';
+    file.teams[at('greenfield')].teamId = TEAMS[0].id;
+    Object.assign(file.teams[at('stevenson')], { status: 'carried-forward', error: null });
+    const p = rowsOf(read(file));
+    expect(p.dropped.map((d) => d.slug)).toEqual(['leigh', 'not-a-school', 'greenfield', 'stevenson']);
+    expect(p.dropped.find((d) => d.slug === 'leigh')!.reason).toMatch(/registry/);
+    expect(p.dropped.find((d) => d.slug === 'not-a-school')!.reason).toMatch(/not a registry team slug/);
+    expect(p.dropped.find((d) => d.slug === 'stevenson')!.reason).toMatch(/error is set exactly when/);
+    expect(p.rows.size).toBe(TEAMS.length - 4);
+    for (const slug of ['leigh', 'del-mar', 'greenfield', 'stevenson']) expect(p.rows.has(slug), slug).toBe(false);
+    expect(p.rows.get('st-ignatius')).toEqual(raw.teams.find((t) => t.slug === 'st-ignatius'));
+    // A file that lost a row is never "unchanged".
+    expect(p.whole).toBeNull();
+    const log = describePrevious(p, 'data/rosters.json');
+    expect(log[0]).toMatch(/^WARN previous data\/rosters\.json: 4 row\(s\) do not validate and are dropped/);
+    for (const slug of ['leigh', 'not-a-school', 'greenfield', 'stevenson']) {
+      expect(log.some((l) => l.startsWith(`WARN   ${slug}`)), slug).toBe(true);
+    }
+  });
+
+  it('ties a dropped row to its registry team by MaxPreps id when its slug is broken', () => {
+    const file = structuredClone(raw);
+    file.teams[file.teams.findIndex((t) => t.slug === 'del-mar')].slug = 'not-a-school';
+    const p = rowsOf(read(file));
+    expect(p.dropped).toEqual([expect.objectContaining({ slug: 'not-a-school', team: 'del-mar' })]);
+    expect(describePrevious(p, 'data/rosters.json')).toContain(
+      `WARN   not-a-school (del-mar): ${p.dropped[0].reason}`,
+    );
+    // An SCVAL-only run must not report Del Mar (BVAL) as kept: it lost its row.
+    const teams = TEAMS.map((t) => ({ slug: t.slug, status: t.slug === 'del-mar' ? 'pending' : 'ok' }));
+    expect(droppedTeamSlugs(p)).toEqual(new Set(['del-mar']));
+    const byLeague = summarizeByLeague(teams, ['scval'], droppedTeamSlugs(p));
+    expect(byLeague.find((l) => l.league === 'bval')!.dropped).toEqual(['del-mar']);
+    expect(runTotals(byLeague)).toEqual({ failed: 0, lost: 1 });
+    expect(runExitCode(byLeague, p.dropped)).toBe(1);
+  });
+
+  it('fails the run when a dropped row names no registry team at all', () => {
+    const file = structuredClone(raw) as unknown as { teams: Array<Record<string, unknown>> };
+    const i = file.teams.findIndex((t) => t.slug === 'del-mar');
+    delete file.teams[i].slug;
+    file.teams[i].teamId = 'not-a-maxpreps-id';
+    const p = rowsOf(read(file));
+    expect(p.dropped).toEqual([expect.objectContaining({ slug: `teams[${i}]`, team: null })]);
+    expect(describePrevious(p, 'data/rosters.json').some((l) => /names no registry team; the run fails/.test(l))).toBe(true);
+    // No league can claim the lost team, so only the unattributed drop fails the run.
+    expect(droppedTeamSlugs(p)).toEqual(new Set());
+    expect(droppedTeamSlugs(null)).toEqual(new Set());
+    const teams = TEAMS.map((t) => ({ slug: t.slug, status: t.slug === 'del-mar' ? 'pending' : 'ok' }));
+    const byLeague = summarizeByLeague(teams, ['scval'], droppedTeamSlugs(p));
+    expect(runExitCode(byLeague)).toBe(0);
+    expect(runExitCode(byLeague, p.dropped)).toBe(1);
+  });
+
+  it('keeps every row when only the counts lie, and says the file is not valid whole', () => {
+    const file = structuredClone(raw);
+    file.counts.players += 1;
+    const p = rowsOf(read(file));
+    expect(p.dropped).toEqual([]);
+    expect(p.rows.size).toBe(TEAMS.length);
+    expect(p.whole).toBeNull();
+    expect(p.problems).toEqual([expect.stringMatching(/counts do not match the rows/)]);
+    expect(describePrevious(p, 'x.json')).toEqual([expect.stringMatching(/^WARN previous x\.json does not validate as a whole/)]);
+  });
+
+  it('drops both rows of a team that appears twice', () => {
+    const file = structuredClone(raw);
+    file.teams.push(structuredClone(file.teams[0]));
+    file.counts = countRosters(file.teams);
+    const p = rowsOf(read(file));
+    expect(p.dropped).toEqual([{ slug: raw.teams[0].slug, team: raw.teams[0].slug, reason: '2 rows claim this team; none is kept' }]);
+    expect(p.rows.has(raw.teams[0].slug)).toBe(false);
+    expect(p.rows.size).toBe(TEAMS.length - 1);
+  });
+
+  it('names a row with no slug by its index', () => {
+    const file = structuredClone(raw) as unknown as { teams: unknown[] };
+    file.teams[2] = 42;
+    const p = rowsOf(read(file));
+    expect(p.dropped.map((d) => d.slug)).toEqual(['teams[2]']);
+  });
+
+  it('ignores every row of a file from another season, as if absent', () => {
+    for (const season of ['25-26', undefined]) {
+      const file = { ...structuredClone(raw), season };
+      const p = rowsOf(read(file));
+      expect(p.rows.size).toBe(0);
+      expect(p.whole).toBeNull();
+      expect(p.otherSeason).toBe(season ?? '(none)');
+      expect(p.dropped).toHaveLength(TEAMS.length);
+      expect(p.dropped[0]).toEqual({ slug: raw.teams[0].slug, team: raw.teams[0].slug, reason: `season ${season ?? '(none)'}, not ${SEASON_YEAR}` });
+      const log = describePrevious(p, 'data/rosters.json');
+      expect(log).toHaveLength(1);
+      expect(log[0].startsWith(`WARN previous data/rosters.json is season ${season ?? '(none)'}: its ${TEAMS.length} row(s) are ignored, as if absent`)).toBe(true);
+    }
+  });
+
+  it('is unreadable only when the text is not JSON or holds no teams[]', () => {
+    for (const text of ['', '{"teams": [', 'not json at all']) {
+      const p = read(text);
+      expect(p.readable, text).toBe(false);
+      if (!p.readable) expect(p.reason, text).toMatch(/^not JSON/);
+    }
+    for (const value of [null, [], {}, { teams: 'x' }]) {
+      const p = read(JSON.stringify(value));
+      expect(p.readable, JSON.stringify(value)).toBe(false);
+      if (!p.readable) expect(p.reason).toBe('no teams[] array');
+    }
+    // An empty teams[] is a readable file with nothing in it.
+    const empty = rowsOf(read({ ...raw, teams: [], counts: countRosters([]) }));
+    expect(empty.rows.size).toBe(0);
+    expect(empty.dropped).toEqual([]);
+  });
+});
+
+describe('stableStringify', () => {
+  it('sorts keys at every level and ends with a newline', () => {
+    expect(stableStringify({ b: [{ z: 1, a: 2 }], a: undefined, c: null })).toBe(
+      '{\n  "b": [\n    {\n      "a": 2,\n      "z": 1\n    }\n  ],\n  "c": null\n}\n',
+    );
+  });
+});
+
+describe('salvageRows', () => {
+  const Row = z.object({ id: z.string(), n: z.number() });
+  const list = [{ id: 'a', n: 1 }, { id: 'b', n: 'x' }, { id: 'a', n: 2 }, { id: 'c', n: 3 }, { id: 'b', n: 4 }, null];
+
+  it("'all' counts every entry's id, valid or not, and names each invalid entry", () => {
+    const idOf = (entry: unknown, i: number) =>
+      typeof entry === 'object' && entry !== null && 'id' in entry ? String((entry as { id: string }).id) : `teams[${i}]`;
+    const out = salvageRows(list, Row, idOf, { duplicatesAmong: 'all' });
+    expect(out.kept).toEqual([{ id: 'c', row: { id: 'c', n: 3 } }]);
+    expect(out.invalid.map((r) => [r.index, r.id])).toEqual([[1, 'b'], [5, 'teams[5]']]);
+    expect(out.invalid[0]?.reason).toMatch(/^n: /);
+    expect(out.invalid[1]?.reason).toMatch(/^\(row\): /);
+    expect(out.duplicates).toEqual([{ id: 'a', n: 2 }, { id: 'b', n: 2 }]);
+  });
+
+  it("'valid' counts the rows that validated only, so an invalid entry claims nothing", () => {
+    const out = salvageRows(list, Row, (row) => row.id, { duplicatesAmong: 'valid' });
+    expect(out.kept.map((k) => k.id)).toEqual(['c', 'b']);
+    expect(out.invalid.map((r) => [r.index, r.id])).toEqual([[1, null], [5, null]]);
+    expect(out.duplicates).toEqual([{ id: 'a', n: 2 }]);
+  });
+});
+
+describe('readPreviousFile keepJson', () => {
+  it('hands back the parsed file only when asked', () => {
+    const text = JSON.stringify({ season: SEASON_YEAR, teams: [], extra: 7 });
+    const opts = { season: SEASON_YEAR, row: z.object({ slug: z.string() }), file: z.unknown() };
+    const plain = readPreviousFile(text, opts);
+    const kept = readPreviousFile(text, { ...opts, keepJson: true });
+    expect(plain.readable && plain.json).toBeUndefined();
+    expect(kept.readable && kept.json).toEqual({ season: SEASON_YEAR, teams: [], extra: 7 });
+    const other = readPreviousFile(JSON.stringify({ season: '1999', teams: [] }), { ...opts, keepJson: true });
+    expect(other.readable && other.json).toEqual({ season: '1999', teams: [] });
+  });
+});

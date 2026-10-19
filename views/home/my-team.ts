@@ -1,7 +1,7 @@
 /**
  * The pieces of one pinned team's card (components/home/MyTeamCard.tsx): its last game, its next
  * game and its next official-schedule fixture, slimmed to what the card draws, because every team's
- * view is serialized for the client (budget: tests/ui/home-weight.test.ts). `buildTeamViews`
+ * view is serialized for the client (budget: tests/arch/home-weight.test.ts). `buildTeamViews`
  * (views/home/home-view.ts) assembles them.
  */
 
@@ -24,7 +24,7 @@ function homeSide(side: SideView): HomeLastDisplay['home'] {
   return { name: side.shortName || side.name, glyph: side.glyph, hasScore: side.hasScore, weight: side.weight, chip: side.chip };
 }
 
-/** `describeGame()`'s decision, slimmed to what the card draws (the team-views budget, tests/ui/home-weight.test.ts). */
+/** `describeGame()`'s decision, slimmed to what the card draws (the team-views budget, tests/arch/home-weight.test.ts). */
 function slimDisplay(display: GameDisplay): HomeLastDisplay {
   const marks: NonNullable<HomeLastDisplay['marks']> = {};
   if (display.strikeTime) marks.strikeTime = true;
@@ -61,7 +61,7 @@ export function nextGameView(game: Game, slug: string): HomeNextGame {
   const mineIsHome = game.home.slug === slug;
   const theirs = mineIsHome ? game.away : game.home;
   // Directions, Stream, Tickets (views/shared/game-links.ts), re-keyed label-first: the serialized
-  // team views keep their shape (tests/ui/home-weight.test.ts budgets them).
+  // team views keep their shape (tests/arch/home-weight.test.ts budgets them).
   const links: HomeNextGame['links'] = gameExternalLinks(game, {
     streamLabel: 'Stream',
     include: ['directions', 'stream', 'tickets'],

@@ -1,7 +1,7 @@
 /**
  * The 9 Metro Conference seeds (CIF San Diego Section: Metro Mesa 5, Metro South Bay 4),
  * transcribed by script from tests/fixtures/seeds/registry-seed-sds.json (verified 2026-10-06;
- * checked field by field by tests/registry-seeds.test.ts). Seed order is alphabetical within each
+ * checked field by field by tests/lib/registry/seeds.test.ts). Seed order is alphabetical within each
  * division.
  *
  * Membership is the Section's 2026-27 League Alignment workbook. MaxPreps' table names do not match

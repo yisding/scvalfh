@@ -1,7 +1,7 @@
 /**
  * Synthetic si.com (ex-SBLive) pages for the parser tests: a `data-react-props` snippet HTML-escaped
  * exactly the way si.com escapes it, so the unescape → raw_decode → zod path is exercised end to end.
- * Field names and shapes are copied from the live captures (tests/sblive.test.ts header).
+ * Field names and shapes are copied from the live captures (tests/lib/sources/sblive/games.test.ts header).
  */
 
 /** The escaping si.com actually applies to the attribute value. */

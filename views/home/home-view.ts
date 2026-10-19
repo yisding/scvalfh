@@ -10,7 +10,7 @@
  * paint by `<html data-league>`, `<html data-region>` and the scope stylesheet (SPEC §8.2,
  * DESIGN-socal §2.4). So every view below is built for all nine leagues and the independents, and all 102 pinned-card views
  * are serialized for the client (the pin, and therefore the league, is known only in the browser).
- * Budget: serialized `teamViews` (tests/ui/home-weight.test.ts) — each view is a handful of strings,
+ * Budget: serialized `teamViews` (tests/arch/home-weight.test.ts) — each view is a handful of strings,
  * never a `Game`.
  *
  * Region (DESIGN-socal §2.4): the first-visit blocks that summarise "every league" (the status line's

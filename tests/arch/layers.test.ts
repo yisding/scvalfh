@@ -322,7 +322,7 @@ describe('layers: the dependency rule', () => {
       expect(broken('lib/pipeline/run.ts', 'data/snapshot.json')).toEqual(['e']);
       expect(broken('scripts/fetch-data.ts', 'data/snapshot.json')).toEqual(['e']);
       expect(broken('lib/datasets/snapshot.ts', 'data/snapshot.json')).toEqual([]);
-      expect(broken('tests/data.test.ts', 'data/snapshot.json')).toEqual([]);
+      expect(broken('tests/lib/queries/data.test.ts', 'data/snapshot.json')).toEqual([]);
     });
 
     it('(f) package parts only through their doors', () => {
@@ -334,7 +334,7 @@ describe('layers: the dependency rule', () => {
       expect(broken('lib/config/leagues.ts', 'lib/config/leagues/scval')).toEqual([]);
       expect(broken('lib/queries/standings.ts', 'lib/config/leagues/labels')).toEqual([]);
       expect(broken('lib/sources/cifss.ts', 'lib/registry/resolve')).toEqual([]);
-      expect(broken('tests/teams.test.ts', 'lib/registry/scval')).toEqual([]);
+      expect(broken('tests/lib/registry/teams.test.ts', 'lib/registry/scval')).toEqual([]);
     });
 
     it('(g) a cycle is found, with its path', () => {
@@ -361,7 +361,7 @@ describe('layers: the dependency rule', () => {
     it('(i) scripts and app never import tests', () => {
       expect(broken('scripts/fetch-data.ts', 'tests/support/repo')).toEqual(['i']);
       expect(broken('app/page.tsx', 'tests/support/repo')).toEqual(['b', 'i']);
-      expect(broken('tests/data.test.ts', 'scripts/lib/cli')).toEqual([]);
+      expect(broken('tests/lib/queries/data.test.ts', 'scripts/lib/cli')).toEqual([]);
     });
 
     it('(j) components never read the snapshot; views and app do', () => {

@@ -4,7 +4,7 @@
  * time "so the league config stays out of the client bundle"; now lib/config/leagues/regions.ts builds
  * REGIONS and SECTIONS from this file, which is the one place the words live. Pure data, ZERO imports
  * (`as const`, so the config keeps its literal types). `TeamFinder` prints two of the section names
- * itself, for a bundle-size reason its comment gives; tests/ui/team-finder.test.ts holds it to these.
+ * itself, for a bundle-size reason its comment gives; tests/components/search/TeamFinder.test.ts holds it to these.
  */
 
 /**

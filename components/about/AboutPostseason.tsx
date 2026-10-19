@@ -61,7 +61,7 @@ export function AboutPostseason({
           if (ps.kind !== 'unbracketed-tournament' || !source) return null;
           return (
             <p key={l.id}>
-              {/* The EAL's link words, byte for byte (tests/ui/eal-views.test.ts), from postseasonSourceLink.
+              {/* The EAL's link words, byte for byte (tests/views/standings/eal-views.test.ts), from postseasonSourceLink.
                   The section's name stays a text node of its own, as this paragraph has always rendered it
                   (the built HTML separates the two with an empty comment). */}
               {l.section.name}: {ps.note}{' '}

@@ -375,7 +375,7 @@ export type PostseasonConfig =
        * Each member's 2026 playoff division, 'I' or 'II' (the Section's 2026 Divisions sheet, dated
        * 2025-12-23). Open Division teams are drawn from Division I at the end of the regular season, so no
        * team is 'Open' here. Keys are exactly the league's slugs: lib/registry/teams.ts cannot be imported here, so
-       * assertLeagues checks the count and the values and tests/teams.test.ts checks the keys.
+       * assertLeagues checks the count and the values and tests/lib/registry/teams.test.ts checks the keys.
        */
       playoffDivisionOf: Readonly<Record<TeamSlug, 'I' | 'II'>>;
       ladder: readonly LadderRung[];

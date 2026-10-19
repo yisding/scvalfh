@@ -68,16 +68,18 @@ const ALLOWED_SYNTHETIC: Record<string, string> = {
   'tests/probe.test.ts': 'tests/arch/page-code-literals.test.ts: a planted test file',
   'app/x.tsx': 'tests/arch/deleted-names.test.ts: the importer of a resolveModule probe',
   'app/layout.js': 'views/site/site.ts: a quotation from the Next.js docs (the route file here is app/layout.tsx)',
-  'scripts/lib/x.ts': 'tests/typecheck-scope.test.ts: a path the glob must not match',
-  'lib/dat/.ts': 'tests/typecheck-scope.test.ts: a path the glob must not match',
+  'scripts/lib/x.ts': 'tests/scripts/typecheck-scope.test.ts: a path the glob must not match',
+  'lib/dat/.ts': 'tests/scripts/typecheck-scope.test.ts: a path the glob must not match',
   'components/home/x.ts': 'tests/arch/deleted-names.test.ts: the importer of a resolveModule probe',
   'tests/ui/a.test.ts': 'tests/arch/deleted-names.test.ts: the importer of a resolveModule probe',
-  'data/official/x.json': 'tests/leagues.test.ts: a bundledFile in an invented document config',
-  'scripts/lib/data.ts': 'tests/typecheck-scope.test.ts: a path the glob must not match',
+  'data/official/x.json': 'tests/lib/config/leagues.test.ts: a bundledFile in an invented document config',
+  'scripts/lib/data.ts': 'tests/scripts/typecheck-scope.test.ts: a path the glob must not match',
   'lib/data.ts':
-    'tests/typecheck-scope.test.ts: the sample path its globs and tsc diagnostics name (tests/support/source-tree.ts quotes one); the module itself was deleted',
-  'components/teams/TeamHero.tsx': 'tests/typecheck-scope.test.ts: a path the glob must not match',
-  'lib/dataXts': 'tests/typecheck-scope.test.ts: proof that the dot in a glob is escaped',
+    'tests/scripts/typecheck-scope.test.ts: the sample path its globs and tsc diagnostics name (tests/support/source-tree.ts quotes one); the module itself was deleted',
+  'components/teams/TeamHero.tsx': 'tests/scripts/typecheck-scope.test.ts: a path the glob must not match',
+  'lib/dataXts': 'tests/scripts/typecheck-scope.test.ts: proof that the dot in a glob is escaped',
+  'tests/ui/region-card.test.ts':
+    'app/opengraph-image.tsx: its own source bytes feed the content hash in every page\'s og:image URL, so the comment keeps the test\'s old path (now tests/components/og/RegionCard.test.ts) until the owner accepts one hash change',
   'docs/01-app/03-api-reference/03-file-conventions/page.md':
     'components/schedule/ScheduleFilters.tsx: a page of the Next.js docs installed at node_modules/next/dist/docs, cited relative to it',
 };

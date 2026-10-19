@@ -9,7 +9,7 @@ import { getTeamBySlug } from '@/lib/registry/teams';
 
 /**
  * The words of a 2025 section bracket on /history/2025-26 (components/history/HistoryBracket.tsx):
- * pure, so tests/history-brackets.test.ts can read every sentence the page prints; and the bracket
+ * pure, so tests/data/history-brackets.test.ts can read every sentence the page prints; and the bracket
  * block's view (`sectionBracketView`), every school already resolved, which
  * components/history/SectionBracketBlock.tsx and HistoryBracket.tsx render.
  *

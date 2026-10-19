@@ -2447,7 +2447,7 @@ mark at all: Los Altos and Valley Christian are both 2-1-1, separated by 9 goals
 > hotlinked and no page makes a third-party request; every tile is the same size and inset; the
 > requests are same-origin, under 1 KB on average for a row tile and lazy below the fold; and each logo sits on its own
 > white square with the hairline ring, which reads on the dark theme too. `Team.mascotUrl` stays
-> null in the snapshot. tests/mascots.test.ts fails for a registry team without its tiles.
+> null in the snapshot. tests/data/mascots.test.ts fails for a registry team without its tiles.
 > A school whose MaxPreps mascot does not hold up as a tile (too small, or squeezed out of
 > proportion) takes the same mark from a better source instead (`SOURCE_OVERRIDES` in the script):
 > the school's own site for Monta Vista (a 68×68 MaxPreps gif), Lassen, Mira Mesa, Redwood and
@@ -3007,7 +3007,7 @@ The players are minors, so the pages are narrower than the data:
   basis, a whole fragment of a quote of 40 or more letters and digits, or an excerpt of one that long
   in which at least 20 letters and digits are not public names (schools, clubs, colleges, cities,
   rostered players: `scripts/ci/copy/public-terms.ts`), so a truncated quote is caught too while a school
-  printed beside its city is not (`affiliationLeaks`, also run by `tests/ui/club-view.test.ts` over
+  printed beside its city is not (`affiliationLeaks`, also run by `tests/views/clubs/club-view.test.ts` over
   the rendered routes). Both can name people who are not on the rosters. The one thing excused is a coincidence: a page not built from the clubs file that prints
   and cites the very document a quote copies (`/history/2025-26` prints the SCVAL all-league PDF,
   which four quotes cite) is not leaking it.
@@ -3247,7 +3247,7 @@ what "Committed", "Signed" and the "as of" date mean, and that recall is partial
   in the view types (`views/commits/commit-view.ts`), and `scripts/ci/assert-copy.ts` fails the
   build on any page that shows a basis, a quote fragment or an excerpt of one (`commitmentLeaks` in
   `scripts/ci/copy/copy-rules.ts`, the clubs rule with the same thresholds, public names and `printsItself`
-  excuse), also run by `tests/ui/commit-view.test.ts` over /commits, the team pages and /about.
+  excuse), also run by `tests/views/commits/commit-view.test.ts` over /commits, the team pages and /about.
 - **Metadata names no player**, and **link labels are never read from a URL path** beyond the
   page-type tests (`/athlete/`, `/athletes/`, `/athletic-scholarships/`).
 - **Social media only from an official account** (revised 2026-10-12): a post by a college's
@@ -3416,7 +3416,7 @@ Measured on the home page with no stored league, identical on `next start` and `
 When the switcher wraps, the Northern Section's list (EAL) moves to row 2 on its own. The hairline
 in front of a section is drawn by that section's list (a `::before` on its `<ul>`), not as a
 separate flex item, so it moves with the list and starts row 2. It is never left at the end of
-row 1 (`tests/ui/league-switcher.test.ts`). Row positions and heights do not change.
+row 1 (`tests/components/layout/LeagueSwitcher.test.ts`). Row positions and heights do not change.
 
 The §15.6 fold targets, read from the same run: with a team pinned (Tamalpais) at 390 × 664 the
 My-team slot ends at 604 px against a fold of 608 px, so that target is met. With a team pinned at
@@ -3450,7 +3450,7 @@ MCAL link) inside any non-CCS league's page and the `/playoffs` EAL card. No div
 EAL pages. Five more rules (`scripts/ci/copy/copy-rules.ts`, run by `scripts/ci/assert-copy.ts` over the visible
 text of every built page and over its `<title>`, description metas and `title`, `aria-label` and `alt`
 attributes (`attributeText`: what a link preview prints and assistive technology reads), and by
-`tests/ui/copy-honesty.test.ts` over every view model, which also runs a second pass over the EAL
+`tests/app/copy-honesty.test.ts` over every view model, which also runs a second pass over the EAL
 corpus):
 
 1. **The umpire grid is never "official".** A sentence that mentions an umpire and "official" fails.
@@ -3521,7 +3521,7 @@ The `dist/server/prerendered-routes` folder is 163,011,433 bytes (537 `.html`, 5
   fetched in this run", as BVAL, PCAL and MCAL are under the `scval` corpus. A new corpus,
   `tests/fixtures/corpus/eal-2026-10-04` (19 files: the manifest, 1 bootstrap, the league meta and standings, 6
   schedules, 7 si.com scoreboards, 2 si.com team-games pages), was captured live and replays with no
-  missing resource; it drives `tests/pipeline/eal.test.ts`, the EAL view tests and the second
+  missing resource; it drives `tests/integration/eal.test.ts`, the EAL view tests and the second
   copy-honesty pass.
 - **History 2025-26: `unavailable`** (`data/history-2025-26.json`, `leagues.eal`, checked 2026-10-04).
   The EAL published no 2025-26 final standings of its own, the Section's field hockey page and Playoff
@@ -3807,7 +3807,7 @@ README "Known limitations").
 
 §22.5 is extended for Southern California. The new rules live in `scripts/ci/copy/copy-rules.ts`. They run in
 `scripts/ci/assert-copy.ts` over every built page's visible and attribute text, and in
-`tests/ui/copy-honesty.test.ts` over the view models.
+`tests/app/copy-honesty.test.ts` over the view models.
 
 1. **Never "Sunset League"**, except in a sentence that also says "all-sports" (`SUNSET_LEAGUE_CLAIM`).
    The rule is case-sensitive, so "Sunset league games" (MaxPreps' flag) passes.
@@ -3899,7 +3899,7 @@ addition there will cross it.
   2,400,000; 63% used). It has 165 source rows against a cap of 280 (59%). Both caps were raised
   from 1.6 MB / 1.2 MB and 140 sources (`lib/pipeline/steps/assemble.ts`).
 - **Home team views.** The serialized views are 107,545 bytes for 99 teams (52,868 NorCal, 54,577
-  SoCal). The budget in `tests/ui/home-weight.test.ts` is 118 KiB = 120,832 (89% used). On the
+  SoCal). The budget in `tests/arch/home-weight.test.ts` is 118 KiB = 120,832 (89% used). On the
   offline corpus they are 65,819.
 - **Prefs script.** It is 2,454 bytes against a line of 2,816 (87% used). The design had proposed
   3,072.
@@ -3931,7 +3931,7 @@ addition there will cross it.
 - **Corpus.** `tests/fixtures/corpus/socal-2026-10-06` (8.2 MB) was captured live with `--leagues
   sunset,city,north-county,metro --no-official --no-ccs --no-vnn`. That was 65 MaxPreps requests
   (1 + 2 × 7 + 50) and 78 source rows, all ok. Its manifest id is `capture-2026-10-05`, the run's
-  Pacific day. `tests/pipeline/socal.test.ts` replays it and pins:
+  Pacific day. `tests/integration/socal.test.ts` replays it and pins:
   - Valley's skip;
   - the membership counts per division (Patrick Henry's 10 games count, though MaxPreps flags none);
   - every division a full double round robin except Metro Mesa, which has 19 of 20 meetings (Bonita

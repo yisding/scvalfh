@@ -23,7 +23,7 @@ import type { PinTileView } from '@/views/home/home-client';
  * press colour IS surface-2, so it showed nothing). Below 360px (22.5rem, so a larger browser text
  * size keeps the narrow padding longer) the tile's own padding drops to 4px,
  * which hands the NAME back the pixels it needs at 320px: every short name fits whole or breaks at
- * its space or soft hyphen (`pickerName`, measured in tests/ui/pin-label.test.ts). Two lines, never
+ * its space or soft hyphen (`pickerName`, measured in tests/lib/shared/pin-label.test.ts). Two lines, never
  * `truncate`: names in a picker have to be distinguishable.
  */
 const TILE =

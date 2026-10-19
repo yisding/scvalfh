@@ -210,7 +210,7 @@ function TabFace({
   // stops there: a px cap, because a rem cap would scale with it. At 200% text the 24px "Leaders"
   // and "Playoffs" were wider than a 72-78px tab and ran together; at 18px they still overflowed a
   // 320px phone's 64px tab by 4-5px. At 15px they fit the 64px tab with room to spare
-  // (tests/ui/tab-labels.test.ts, whose width table runs a little wide). Nothing truncates.
+  // (tests/app/tab-labels.test.ts, whose width table runs a little wide). Nothing truncates.
   return (
     <>
       <span

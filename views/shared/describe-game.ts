@@ -2,7 +2,7 @@
  * The pure display helper behind StatusLabel, GameRow, GameCard, GameLogRow and ScoreBoard.
  *
  * DESIGN §5.2 is a table of eleven rows; this module is the single place that table is
- * implemented, and tests/ui/render-score.test.ts walks every row of it. Nothing in
+ * implemented, and tests/components/game-row/GameRow.test.ts walks every row of it. Nothing in
  * components/ PRINTS `game.home.score` / `game.away.score`: every printed score comes from
  * `renderScore()` in lib/format/score.ts (directly, or through `describeGame()`), and every glyph from
  * `scoreGlyph()`. The raw reads that remain are null-guarded comparisons and arithmetic that

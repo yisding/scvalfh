@@ -119,7 +119,7 @@ export interface FinderView {
   message: string;
 }
 
-/** Everything the finder renders for `query`, as data (unit-tested in tests/ui/team-finder.test.ts). */
+/** Everything the finder renders for `query`, as data (unit-tested in tests/components/search/TeamFinder.test.ts). */
 export function finderView(
   index: SearchIndex,
   query: string,

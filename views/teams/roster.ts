@@ -1,6 +1,6 @@
 /**
  * The team page's roster section (SPEC §1.1j), derived from the merged MaxPreps + enrichment
- * view in lib/datasets/rosters.ts, for every team of every league. Pure, so tests/ui/roster-view.test.ts
+ * view in lib/datasets/rosters.ts, for every team of every league. Pure, so tests/views/teams/roster.test.ts
  * can assert it over the real files.
  *
  * What the page promises, and this module enforces:
