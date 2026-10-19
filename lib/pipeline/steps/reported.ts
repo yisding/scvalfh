@@ -27,8 +27,10 @@ import type { DivisionConfig } from '@/lib/model/league-config';
 import { resolveTeam } from '@/lib/registry/resolve';
 import { teamsInDivision } from '@/lib/registry/teams';
 import { StandingsResponseSchema, type StandingsRow } from '@/lib/sources/maxpreps/schemas';
-import { asOfDay, carriedFromOf, type PipelineContext, type RunState } from '@/lib/pipeline/ledger';
-import { classifyFetchError, parseJsonBody } from '@/lib/pipeline/read';
+import type { RunContext } from '@/lib/pipeline/contract';
+import type { ResourceKey } from '@/lib/pipeline/resources';
+import { asOfDay, carriedFromOf, type RunState } from '@/lib/pipeline/ledger';
+import { classifyFetchError, parseJsonBody, readResource, sourceBase, warnIfError, type FetchFailure } from '@/lib/pipeline/read';
 import { resourceUrl } from '@/lib/pipeline/transport';
 import { NO_MAXPREPS_TABLE_REASON } from './league-meta';
 
@@ -39,38 +41,46 @@ function readFailedReason(division: DivisionConfig, carriedFrom: string | null):
     : `${head}, and there is no earlier copy to compare against. Scores and our computed table are current.`;
 }
 
-async function readTable(ctx: PipelineContext, state: RunState, leagueId: LeagueId, division: DivisionConfig): Promise<void> {
+/** The division's table as read, or its failure: an HTTP error, a body that does not parse, or no rows. */
+async function fetchTable(
+  ctx: RunContext,
+  key: Extract<ResourceKey, { kind: 'maxpreps-standings' }>,
+): Promise<{ rows: StandingsRow[]; httpStatus: number } | { failed: FetchFailure }> {
+  const res = await readResource(ctx, key);
+  if ('failed' in res) return res;
+  try {
+    const rows = parseJsonBody(res.ok.body, StandingsResponseSchema).data;
+    if (rows.length === 0) throw new Error('standings returned 0 rows');
+    return { rows, httpStatus: res.ok.httpStatus };
+  } catch (err) {
+    // The HTTP status is the one the transport answered with, even when its body was no table.
+    return { failed: { ...classifyFetchError(err), httpStatus: res.ok.httpStatus } };
+  }
+}
+
+async function readTable(ctx: RunContext, state: RunState, leagueId: LeagueId, division: DivisionConfig): Promise<void> {
   const key = { kind: 'maxpreps-standings', division: division.id } as const;
-  const url = resourceUrl(key);
   const scope = { league: leagueId, division: division.id };
-  const base = {
-    id: 'maxpreps-api' as const,
-    kind: 'reported-standings' as const,
+  const base = sourceBase(ctx, {
+    id: 'maxpreps-api',
+    kind: 'reported-standings',
     scope,
     label: `${division.id} reported standings`,
-    url,
-    fetchedAt: ctx.fetchedAt,
-  };
+    url: resourceUrl(key),
+  });
   const info = state.divisions.get(division.id);
 
-  let rows: StandingsRow[];
-  let httpStatus: number | undefined;
-  try {
-    const res = await ctx.transport.get(key);
-    httpStatus = res.httpStatus;
-    rows = parseJsonBody(res.body, StandingsResponseSchema).data;
-    if (rows.length === 0) throw new Error('standings returned 0 rows');
-  } catch (err) {
-    const failed = classifyFetchError(err);
-    if (failed.status === 'skipped') {
-      ctx.source({ ...base, ...failed });
+  const table = await fetchTable(ctx, key);
+  if ('failed' in table) {
+    if (table.failed.status === 'skipped') {
+      ctx.source({ ...base, ...table.failed });
       if (info) info.reportedTable = 'skipped';
       return;
     }
-    if (failed.httpStatus !== undefined) httpStatus = failed.httpStatus;
-    carryReported(ctx, state, leagueId, division, base, failed.error, httpStatus);
+    carryReported(ctx, state, leagueId, division, base, table.failed);
     return;
   }
+  const { rows, httpStatus } = table;
 
   // Rows resolve by GUID, then by name, against THIS division's members only.
   const members = teamsInDivision(division.id);
@@ -111,17 +121,17 @@ async function readTable(ctx: PipelineContext, state: RunState, leagueId: League
 }
 
 function carryReported(
-  ctx: PipelineContext,
+  ctx: RunContext,
   state: RunState,
   leagueId: LeagueId,
   division: DivisionConfig,
   base: Omit<SourceStatus, 'status'>,
-  message: string,
-  httpStatus: number | undefined,
+  failed: FetchFailure,
 ): void {
+  const { error: message, httpStatus } = failed;
   const info = state.divisions.get(division.id);
   const prevRows = (ctx.previous?.standings ?? []).filter((s) => s.division === division.id && s.reported);
-  ctx.warn(`${division.id} standings failed: ${message}`, base.scope);
+  warnIfError(ctx, failed, `${division.id} standings failed`, base.scope);
   if (prevRows.length > 0) {
     const carriedFrom =
       carriedFromOf(
@@ -140,7 +150,7 @@ function carryReported(
       ...(carriedFrom ? { carriedFrom } : {}),
       error: `${message}; carried forward from the previous snapshot`,
     });
-    ctx.leagues.degrade(leagueId, 'partial', readFailedReason(division, carriedFrom), 'reported table carried');
+    ctx.degrade(leagueId, 'partial', readFailedReason(division, carriedFrom), 'reported table carried');
     return;
   }
   if (info) {
@@ -148,10 +158,10 @@ function carryReported(
     info.reportedRows = null;
   }
   ctx.source({ ...base, status: 'error', ...(httpStatus !== undefined ? { httpStatus } : {}), error: message });
-  ctx.leagues.degrade(leagueId, 'partial', readFailedReason(division, null), 'reported table missing');
+  ctx.degrade(leagueId, 'partial', readFailedReason(division, null), 'reported table missing');
 }
 
-export async function stepReported(ctx: PipelineContext, state: RunState): Promise<void> {
+export async function stepReported(ctx: RunContext, state: RunState): Promise<void> {
   for (const leagueId of ctx.leaguesInRun()) {
     for (const division of getLeague(leagueId).divisions) {
       if (division.maxprepsLeagueId === null) {

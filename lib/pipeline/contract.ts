@@ -88,6 +88,21 @@ export interface RunContext extends RunLog {
   leaguesInRun(): readonly LeagueId[];
 }
 
+/**
+ * What the built-in steps that read the run's ledgers may ask of it, beyond a RunContext: a league's
+ * current state (guards), the contests dropped so far (cifss), and the relabelling of this run's
+ * failed source rows (cifss, secondary). The injectable official and si.com steps get only
+ * RunContext. PipelineContext (lib/pipeline/ledger.ts) implements both.
+ */
+export interface StepContext extends RunContext {
+  /** Where a league stands now (fresh → partial → degraded | frozen). */
+  leagueState(leagueId: LeagueId): LeagueRunState;
+  /** The contests dropped so far, sorted by date then contest id. */
+  dropped(): DroppedContest[];
+  /** Relabel this run's rows matching `pick` that did not succeed (status 'stale', `note` appended); returns how many. */
+  markStale(pick: (row: SourceStatus) => boolean, note: string, carriedFrom?: string): number;
+}
+
 export interface OfficialStepResult {
   games: Game[];
   /** Official fixtures, all leagues, that matched no game. */

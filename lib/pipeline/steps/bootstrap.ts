@@ -8,33 +8,22 @@
 import { ALL_SEASON_ID, BOOTSTRAP_URL, SPORT_SEASON_ID } from '@/lib/config/season';
 import { parseBootstrap } from '@/lib/sources/maxpreps/bootstrap';
 import { RunAbort, type RunContext } from '@/lib/pipeline/contract';
-import { classifyFetchError } from '@/lib/pipeline/read';
+import { readResource, sourceBase, warnIfError } from '@/lib/pipeline/read';
 
 export async function stepBootstrap(ctx: RunContext): Promise<void> {
-  const base = {
-    id: 'maxpreps-html' as const,
-    kind: 'bootstrap' as const,
-    label: 'season bootstrap',
-    url: BOOTSTRAP_URL,
-    fetchedAt: ctx.fetchedAt,
-  };
-  let body: string;
-  let httpStatus: number;
-  try {
-    const res = await ctx.transport.get({ kind: 'maxpreps-bootstrap' });
-    body = res.body;
-    httpStatus = res.httpStatus;
-  } catch (err) {
-    const failed = classifyFetchError(err);
-    if (failed.status === 'skipped') {
-      ctx.source({ ...base, ...failed });
+  const base = sourceBase(ctx, { id: 'maxpreps-html', kind: 'bootstrap', label: 'season bootstrap', url: BOOTSTRAP_URL });
+  const res = await readResource(ctx, { kind: 'maxpreps-bootstrap' });
+  if ('failed' in res) {
+    if (res.failed.status === 'skipped') {
+      ctx.source({ ...base, ...res.failed });
       ctx.log('  bootstrap: skipped (not in corpus)');
       return;
     }
-    ctx.warn(`bootstrap unreadable: ${failed.error}`);
-    ctx.source({ ...base, ...failed });
+    warnIfError(ctx, res.failed, 'bootstrap unreadable');
+    ctx.source({ ...base, ...res.failed });
     return;
   }
+  const { body, httpStatus } = res.ok;
 
   let boot: ReturnType<typeof parseBootstrap>;
   try {

@@ -24,8 +24,9 @@ import {
   type CifssRow,
   type CifssSectionKey,
 } from '@/lib/sources/cifss';
-import { carriedFromOf, type PipelineContext, type RunState } from '@/lib/pipeline/ledger';
-import { classifyFetchError } from '@/lib/pipeline/read';
+import type { StepContext } from '@/lib/pipeline/contract';
+import { carriedFromOf, type RunState } from '@/lib/pipeline/ledger';
+import { classifyFetchError, sourceBase, warnIfError } from '@/lib/pipeline/read';
 
 /** A Section listing longer than this many pages is read no further (and warned about). */
 export const CIFSS_MAX_PAGES = 60;
@@ -41,7 +42,7 @@ interface SectionRead {
   error?: string;
 }
 
-async function readSection(ctx: PipelineContext, section: CifssSectionKey): Promise<SectionRead> {
+async function readSection(ctx: StepContext, section: CifssSectionKey): Promise<SectionRead> {
   const rows: CifssRow[] = [];
   let lastPage = 1;
   let httpStatus: number | undefined;
@@ -62,7 +63,7 @@ async function readSection(ctx: PipelineContext, section: CifssSectionKey): Prom
     } catch (err) {
       const failed = classifyFetchError(err);
       const where = page === 1 ? '' : ` (page ${page} of ${lastPage})`;
-      if (failed.status === 'error') ctx.warn(`${label(section)} failed${where}: ${failed.error}`);
+      warnIfError(ctx, failed, `${label(section)} failed${where}`);
       return { section, outcome: failed.status, rows: [], httpStatus: failed.httpStatus, error: `${failed.error}${where}` };
     }
   }
@@ -70,7 +71,7 @@ async function readSection(ctx: PipelineContext, section: CifssSectionKey): Prom
 }
 
 /** MaxPreps contests that are not games: reported Deleted this run, or dropped by the pipeline. */
-function nonGamesOf(ctx: PipelineContext, state: RunState): NonGame[] {
+function nonGamesOf(ctx: StepContext, state: RunState): NonGame[] {
   const out: NonGame[] = [];
   for (const r of state.rows) {
     if (r.calculatedFields.contestState !== 1 || r.contest.teams.length !== 2) continue;
@@ -79,7 +80,7 @@ function nonGamesOf(ctx: PipelineContext, state: RunState): NonGame[] {
     );
     out.push({ dateKey: dateKeyOf(r.contest.date), pairKey: unorderedPairKey(a, b) });
   }
-  for (const d of ctx.dropped.all()) {
+  for (const d of ctx.dropped()) {
     if (d.dateKey === null || d.teams.length !== 2) continue;
     const [a, b] = d.teams.map((name) => sideJoinKey({ slug: resolveTeam(name)?.slug ?? null, name }));
     out.push({ dateKey: d.dateKey, pairKey: unorderedPairKey(a, b) });
@@ -87,13 +88,13 @@ function nonGamesOf(ctx: PipelineContext, state: RunState): NonGame[] {
   return out;
 }
 
-function carry(ctx: PipelineContext, state: RunState, why: string): CifssCrossCheck | undefined {
+function carry(ctx: StepContext, state: RunState, why: string): CifssCrossCheck | undefined {
   const prior = ctx.previous?.cifssCrossCheck;
   ctx.log(`  cifss: ${why} — ${prior ? 'carried the previous cross-check' : 'no earlier cross-check to carry'}`);
   return prior ? carryCifssCrossCheck(prior, state.games) : undefined;
 }
 
-export async function stepCifss(ctx: PipelineContext, state: RunState): Promise<CifssCrossCheck | undefined> {
+export async function stepCifss(ctx: StepContext, state: RunState): Promise<CifssCrossCheck | undefined> {
   if (!ctx.args.cifss) return carry(ctx, state, 'skipped (--no-cifss)');
 
   const reads: SectionRead[] = [];
@@ -102,13 +103,12 @@ export async function stepCifss(ctx: PipelineContext, state: RunState): Promise<
   const failed = reads.some((r) => r.outcome === 'error');
   const complete = reads.every((r) => r.outcome === 'ok');
   for (const r of reads) {
-    const base: Omit<SourceStatus, 'status'> = {
+    const base = sourceBase(ctx, {
       id: 'cifss',
       kind: 'cifss-scores',
       label: label(r.section),
       url: cifssListingUrl(r.section, { from: CIFSS_SEASON_FROM, to: ctx.today }),
-      fetchedAt: ctx.fetchedAt,
-    };
+    });
     const httpStatus = r.httpStatus !== undefined ? { httpStatus: r.httpStatus } : {};
     if (r.outcome === 'ok') ctx.source({ ...base, status: 'ok', ...httpStatus, rowCount: r.rows.length });
     else ctx.source({ ...base, status: r.outcome, ...httpStatus, error: r.error });
@@ -119,7 +119,7 @@ export async function stepCifss(ctx: PipelineContext, state: RunState): Promise<
     if (failed && result) {
       for (const r of reads.filter((x) => x.outcome === 'error')) {
         const pick = (row: SourceStatus) => row.id === 'cifss' && row.label === label(r.section);
-        ctx.sources.markStale(pick, 'previous cifsshome.org cross-check carried forward', carriedFromOf(ctx.previous, pick));
+        ctx.markStale(pick, 'previous cifsshome.org cross-check carried forward', carriedFromOf(ctx.previous, pick));
       }
     }
     return result;

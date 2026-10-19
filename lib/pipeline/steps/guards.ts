@@ -27,14 +27,8 @@ import type { DivisionId, LeagueId } from '@/lib/model/ids';
 import { type LeagueConfig } from '@/lib/model/league-config';
 import { teamsInLeague } from '@/lib/registry/teams';
 import { byDateThenId } from '@/lib/shared/game';
-import { RunAbort } from '@/lib/pipeline/contract';
-import {
-  hasPreviousData,
-  lastFreshStamp,
-  previousDivisionHealth,
-  type PipelineContext,
-  type RunState,
-} from '@/lib/pipeline/ledger';
+import { RunAbort, type RunContext, type StepContext } from '@/lib/pipeline/contract';
+import { hasPreviousData, lastFreshStamp, previousDivisionHealth, type RunState } from '@/lib/pipeline/ledger';
 
 /** §7.5 (c): a division whose counted finals dropped by this many freezes its league. */
 export const FINALS_REGRESSION_FREEZE = 3;
@@ -44,7 +38,7 @@ export const SYSTEMIC_MIN_GAMES_SHARE = 0.8;
 export const SYSTEMIC_FAILED_FEEDS_SHARE = 0.6;
 
 /** §7.5 trigger d. */
-export function notInRunReason(previous: PipelineContext['previous'], leagueId: LeagueId): string {
+export function notInRunReason(previous: RunContext['previous'], leagueId: LeagueId): string {
   const league = getLeague(leagueId);
   // A group of independents is not a league, and its short name ('LA') alone names a place: the
   // sentence names the group and takes a plural verb (DESIGN §24.9). Every league's sentence is unchanged.
@@ -56,11 +50,11 @@ export function notInRunReason(previous: PipelineContext['previous'], leagueId: 
 }
 
 /** Freeze every configured league that is not in this run (§7.5 trigger d). */
-export function markLeaguesNotInRun(ctx: PipelineContext): void {
+export function markLeaguesNotInRun(ctx: RunContext): void {
   const inRun = new Set(ctx.leaguesInRun());
   for (const league of LEAGUES) {
     if (inRun.has(league.id)) continue;
-    ctx.leagues.degrade(league.id, 'frozen', notInRunReason(ctx.previous, league.id), 'not fetched');
+    ctx.degrade(league.id, 'frozen', notInRunReason(ctx.previous, league.id), 'not fetched');
   }
 }
 
@@ -70,7 +64,7 @@ function finalsHead(short: string, n: number): string {
 }
 
 /** §7.5 trigger c reason (n ≥ 3). */
-export function finalsRegressionReason(previous: PipelineContext['previous'], leagueId: LeagueId, n: number): string {
+export function finalsRegressionReason(previous: RunContext['previous'], leagueId: LeagueId, n: number): string {
   const short = getLeague(leagueId).shortName;
   const head = finalsHead(short, n);
   const stamp = lastFreshStamp(previous, leagueId);
@@ -85,7 +79,7 @@ export function finalsMissingReason(leagueId: LeagueId, n: number, ids: readonly
   return `${finalsHead(getLeague(leagueId).shortName, n)}${listed}; the table is computed without ${n === 1 ? 'it' : 'them'}.`;
 }
 
-function vanishedFinals(ctx: PipelineContext, games: readonly Game[], division: DivisionId): Game[] {
+function vanishedFinals(ctx: StepContext, games: readonly Game[], division: DivisionId): Game[] {
   const now = new Set(divisionGames(games, division).map((g) => g.contestId));
   return (ctx.previous?.games ?? []).filter(
     (g) => g.countsFor === division && g.status === 'final' && !now.has(g.contestId),
@@ -97,9 +91,9 @@ function describe(g: Game): string {
 }
 
 /** §7.5 trigger c, per league in the run that is not already frozen. */
-export function checkFinalsRegression(ctx: PipelineContext, state: RunState): void {
+export function checkFinalsRegression(ctx: StepContext, state: RunState): void {
   for (const leagueId of ctx.leaguesInRun()) {
-    if (ctx.leagues.state(leagueId) === 'frozen') continue;
+    if (ctx.leagueState(leagueId) === 'frozen') continue;
     const league = getLeague(leagueId);
     const accepted = ctx.args.acceptRegression.includes(leagueId);
     let freezeDrop = 0;
@@ -131,26 +125,26 @@ export function checkFinalsRegression(ctx: PipelineContext, state: RunState): vo
     }
     if (freezeDrop > 0) {
       const frozen = hasPreviousData(ctx.previous, leagueId);
-      ctx.leagues.degrade(
+      ctx.degrade(
         leagueId,
         frozen ? 'frozen' : 'degraded',
         finalsRegressionReason(ctx.previous, leagueId, freezeDrop),
         'finals regression',
       );
     } else if (smallDrop > 0) {
-      ctx.leagues.degrade(leagueId, 'partial', finalsMissingReason(leagueId, smallDrop, smallIds), 'finals missing');
+      ctx.degrade(leagueId, 'partial', finalsMissingReason(leagueId, smallDrop, smallIds), 'finals missing');
     }
   }
 }
 
-function previousClassification(ctx: PipelineContext, division: DivisionId): DivisionHealth['classification'] | null {
+function previousClassification(ctx: StepContext, division: DivisionId): DivisionHealth['classification'] | null {
   return previousDivisionHealth(ctx.previous, division)?.classification ?? null;
 }
 
 /** Replace (or, with no previous data, remove) every frozen league's intra-league games and fixtures. */
-export function applyFrozenLeagues(ctx: PipelineContext, state: RunState): void {
+export function applyFrozenLeagues(ctx: StepContext, state: RunState): void {
   for (const league of LEAGUES) {
-    if (ctx.leagues.state(league.id) !== 'frozen') continue;
+    if (ctx.leagueState(league.id) !== 'frozen') continue;
     const members = new Set(teamsInLeague(league.id).map((t) => t.id));
     const intra = (g: Game) =>
       g.home.teamId !== null && g.away.teamId !== null && members.has(g.home.teamId) && members.has(g.away.teamId);
@@ -197,7 +191,7 @@ export function applyFrozenLeagues(ctx: PipelineContext, state: RunState): void 
 }
 
 /** Run-abort trigger 4 (systemic outage). */
-export function checkSystemic(ctx: PipelineContext, state: RunState): void {
+export function checkSystemic(ctx: StepContext, state: RunState): void {
   const previousGames = ctx.previous?.games.length ?? 0;
   if (previousGames > 0 && state.games.length < SYSTEMIC_MIN_GAMES_SHARE * previousGames) {
     throw new RunAbort(
@@ -210,7 +204,7 @@ export function checkSystemic(ctx: PipelineContext, state: RunState): void {
     throw new RunAbort(`systemic outage: ${failed} of ${attempted.length} team schedule feeds failed this run`);
   }
   const inRun = ctx.leaguesInRun();
-  if (inRun.length > 0 && inRun.every((id) => ctx.leagues.state(id) === 'frozen')) {
+  if (inRun.length > 0 && inRun.every((id) => ctx.leagueState(id) === 'frozen')) {
     throw new RunAbort(`systemic outage: every league in this run is frozen (${inRun.join(', ')})`);
   }
 }
@@ -243,7 +237,7 @@ export function fillClassification(state: RunState): void {
   }
 }
 
-export function stepGuards(ctx: PipelineContext, state: RunState): void {
+export function stepGuards(ctx: StepContext, state: RunState): void {
   checkFinalsRegression(ctx, state);
   applyFrozenLeagues(ctx, state);
   fillClassification(state);

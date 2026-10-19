@@ -33,7 +33,7 @@ import {
   type SbliveStepResult,
 } from '@/lib/pipeline/contract';
 import type { ResourceKey } from '@/lib/pipeline/resources';
-import { classifyFetchError } from '@/lib/pipeline/read';
+import { classifyFetchError, readResource, sourceBase, warnIfError, type FetchFailure } from '@/lib/pipeline/read';
 
 /** The scoreboard window (SPEC §7.7: ≤ 15 scoreboards). */
 export const SBLIVE_SCOREBOARD_DAYS = 14;
@@ -60,19 +60,25 @@ async function read(
   base: Omit<SourceStatus, 'status'>,
   parse: (body: string, url: string) => SbliveGame[],
 ): Promise<{ attempt: Attempt; games: SbliveGame[] }> {
-  try {
-    const res = await ctx.transport.get(key);
-    const games = parse(res.body, res.url);
-    return {
-      attempt: { row: { ...base, url: res.url || base.url }, outcome: 'ok', httpStatus: res.httpStatus, rowCount: games.length },
-      games,
-    };
-  } catch (err) {
-    const { status, ...failed } = classifyFetchError(err);
-    if (status === 'skipped') return { attempt: { row: base, outcome: 'skipped', error: failed.error }, games: [] };
-    ctx.warn(`${base.label} failed: ${failed.error}`, base.scope);
-    return { attempt: { row: base, outcome: 'error', ...failed }, games: [] };
+  const res = await readResource(ctx, key);
+  let failed: FetchFailure;
+  if ('ok' in res) {
+    try {
+      const games = parse(res.ok.body, res.ok.url);
+      return {
+        attempt: { row: { ...base, url: res.ok.url || base.url }, outcome: 'ok', httpStatus: res.ok.httpStatus, rowCount: games.length },
+        games,
+      };
+    } catch (err) {
+      failed = classifyFetchError(err);
+    }
+  } else {
+    failed = res.failed;
   }
+  const { status, ...rest } = failed;
+  if (status === 'skipped') return { attempt: { row: base, outcome: 'skipped', error: rest.error }, games: [] };
+  warnIfError(ctx, failed, `${base.label} failed`, base.scope);
+  return { attempt: { row: base, outcome: 'error', ...rest }, games: [] };
 }
 
 /**
@@ -112,14 +118,13 @@ function teamPageBase(ctx: RunContext, slug: TeamSlug): Omit<SourceStatus, 'stat
   const team = getTeamBySlug(slug);
   const url = team?.external.sbliveGamesUrl;
   if (!team || !url) return null;
-  return {
+  return sourceBase(ctx, {
     id: 'sblive',
     kind: 'sblive-team-games',
     scope: { league: team.league, team: slug },
     label: `sblive ${slug} games`,
     url,
-    fetchedAt: ctx.fetchedAt,
-  };
+  });
 }
 
 /**
@@ -163,13 +168,12 @@ export const stepSblive: SbliveStep = async (ctx, input): Promise<SbliveStepResu
 
   // 1. statewide scoreboards
   for (const date of scoreboardDates(games, unmatched.map((f) => f.dateKey), ctx.today)) {
-    const base: Omit<SourceStatus, 'status'> = {
+    const base = sourceBase(ctx, {
       id: 'sblive',
       kind: 'sblive-scoreboard',
       label: `sblive scoreboard ${date}`,
       url: sbliveScoresUrl(date),
-      fetchedAt: ctx.fetchedAt,
-    };
+    });
     const res = await read(ctx, { kind: 'sblive-scores', date }, base, (body, url) =>
       parseScoresPage(body, url, (m) => ctx.warn(`sblive: ${m}`, base.scope)),
     );

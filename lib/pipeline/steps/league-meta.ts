@@ -14,15 +14,16 @@ import { divisionLabel } from '@/lib/config/leagues/labels';
 import { SEASON_YEAR, SPORT_SEASON_ID } from '@/lib/config/season';
 import type { DivisionId, LeagueId } from '@/lib/model/ids';
 import { LeagueMetaSchema } from '@/lib/sources/maxpreps/schemas';
-import { lastFreshStamp, type PipelineContext, type RunState } from '@/lib/pipeline/ledger';
-import { classifyFetchError, parseJsonBody } from '@/lib/pipeline/read';
+import type { RunContext } from '@/lib/pipeline/contract';
+import { lastFreshStamp, type RunState } from '@/lib/pipeline/ledger';
+import { parseJsonBody, readResource, sourceBase, warnIfError } from '@/lib/pipeline/read';
 import { resourceUrl } from '@/lib/pipeline/transport';
 
 const MetaEnvelope = z.looseObject({ data: LeagueMetaSchema });
 
 /** The reason sentence for a league frozen by a mismatched division meta (§7.5 trigger a). */
 export function metaMismatchReason(
-  previous: PipelineContext['previous'],
+  previous: RunContext['previous'],
   division: DivisionId,
   what: 'season' | 'section',
 ): string {
@@ -40,40 +41,33 @@ export function canonicalLeagueSlug(url: string | null | undefined): string | nu
   return m ? m[1] : null;
 }
 
-async function readMeta(ctx: PipelineContext, state: RunState, leagueId: LeagueId, division: DivisionId): Promise<void> {
+async function readMeta(ctx: RunContext, state: RunState, leagueId: LeagueId, division: DivisionId): Promise<void> {
   const key = { kind: 'maxpreps-league-meta', division } as const;
-  const url = resourceUrl(key);
-  const base = {
-    id: 'maxpreps-api' as const,
-    kind: 'league-meta' as const,
+  const base = sourceBase(ctx, {
+    id: 'maxpreps-api',
+    kind: 'league-meta',
     scope: { league: leagueId, division },
     label: `${division} league metadata`,
-    url,
-    fetchedAt: ctx.fetchedAt,
-  };
+    url: resourceUrl(key),
+  });
   const info = state.divisions.get(division);
   const setMeta = (meta: 'ok' | 'error' | 'mismatch' | 'skipped') => {
     if (info) info.meta = meta;
   };
 
-  let body: string;
-  let httpStatus: number;
-  try {
-    const res = await ctx.transport.get(key);
-    body = res.body;
-    httpStatus = res.httpStatus;
-  } catch (err) {
-    const failed = classifyFetchError(err);
-    if (failed.status === 'skipped') {
-      ctx.source({ ...base, ...failed });
+  const res = await readResource(ctx, key);
+  if ('failed' in res) {
+    if (res.failed.status === 'skipped') {
+      ctx.source({ ...base, ...res.failed });
       setMeta('skipped');
       return;
     }
-    ctx.warn(`${division} league metadata unreadable: ${failed.error}`, base.scope);
-    ctx.source({ ...base, ...failed });
+    warnIfError(ctx, res.failed, `${division} league metadata unreadable`, base.scope);
+    ctx.source({ ...base, ...res.failed });
     setMeta('error');
     return;
   }
+  const { body, httpStatus } = res.ok;
 
   let meta: z.infer<typeof LeagueMetaSchema>;
   try {
@@ -111,7 +105,7 @@ async function readMeta(ctx: PipelineContext, state: RunState, leagueId: LeagueI
     ctx.warn(`league metadata mismatch — ${message}`, base.scope);
     ctx.source({ ...base, status: 'error', httpStatus, error: `mismatch: ${problems.join('; ')}` });
     setMeta('mismatch');
-    ctx.leagues.degrade(
+    ctx.degrade(
       leagueId,
       'frozen',
       metaMismatchReason(ctx.previous, division, what),
@@ -132,7 +126,7 @@ async function readMeta(ctx: PipelineContext, state: RunState, leagueId: LeagueI
  */
 export const NO_MAXPREPS_TABLE_REASON = 'MaxPreps publishes no table for this division';
 
-export async function stepLeagueMeta(ctx: PipelineContext, state: RunState): Promise<void> {
+export async function stepLeagueMeta(ctx: RunContext, state: RunState): Promise<void> {
   for (const leagueId of ctx.leaguesInRun()) {
     for (const division of getLeague(leagueId).divisions) {
       if (division.maxprepsLeagueId === null) {

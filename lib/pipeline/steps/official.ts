@@ -33,7 +33,6 @@ import { carryOfficialForward } from '@/lib/official/carry';
 import { exclusionFor, matchOfficialFixtures } from '@/lib/official/match';
 import { diffMembership } from '@/lib/official/membership';
 import { assertDoubleRoundRobin } from '@/lib/official/validate';
-import type { RawResponse } from '@/lib/sources/http/raw-response';
 import { parseSchedulePdfText } from '@/lib/sources/scval/grid';
 import { PdftotextMissingError } from '@/lib/sources/scval/pdftotext';
 import { SCVAL_STANDINGS_INDEX, findStandingsPdfLink, listFieldHockeyLinks } from '@/lib/sources/scval/standings-index';
@@ -42,24 +41,15 @@ import {
   type OfficialStepResult,
   type RunContext,
 } from '@/lib/pipeline/contract';
-import type { ResourceKey } from '@/lib/pipeline/resources';
 import { carriedFromOf } from '@/lib/pipeline/ledger';
-import { classifyFetchError, type FetchFailure } from '@/lib/pipeline/read';
+import { classifyFetchError, readResource, sourceBase, warnIfError, type FetchFailure } from '@/lib/pipeline/read';
 
 const RESCHEDULE_WINDOW_DAYS = 14;
 
-/** classifyFetchError, plus this step's own skip: a machine with no pdftotext cannot read a grid. */
+/** classifyFetchError, plus this step's own skip: a machine with no pdftotext cannot read a grid (readResource's `failureOf`). */
 function failureOf(err: unknown): FetchFailure {
   if (err instanceof PdftotextMissingError) return { status: 'skipped', error: err.message };
   return classifyFetchError(err);
-}
-
-async function fetchResource(ctx: RunContext, key: ResourceKey): Promise<{ ok: RawResponse } | { failed: FetchFailure }> {
-  try {
-    return { ok: await ctx.transport.get(key) };
-  } catch (err) {
-    return { failed: failureOf(err) };
-  }
 }
 
 /** `The official BVAL schedule file failed validation; …` (SPEC §7.8, verbatim). */
@@ -130,22 +120,21 @@ async function runLivePdfLeague(ctx: RunContext, league: LeagueConfig, divisions
   const rows = new Map<DivisionId, SourceStatus>();
 
   for (const d of divisions) {
-    const base = {
+    const base = sourceBase(ctx, {
       id: d.official.source,
-      kind: 'official-schedule' as const,
+      kind: 'official-schedule',
       scope: { league: league.id, division: d.id },
       label: `${divisionDisplay(d.id)} official schedule (PDF)`,
       url: d.official.scheduleUrl,
-      fetchedAt: ctx.fetchedAt,
-    };
+    });
     if (!ctx.args.official) {
       rows.set(d.id, { ...base, status: 'skipped', error: 'disabled (--no-official)' });
       continue;
     }
-    const res = await fetchResource(ctx, { kind: 'scval-pdf-text', division: d.id });
+    const res = await readResource(ctx, { kind: 'scval-pdf-text', division: d.id }, { failureOf });
     if ('failed' in res) {
-      if (res.failed.status === 'error') ctx.warn(`${d.id} official schedule PDF failed: ${res.failed.error}`, base.scope);
-      else ctx.log(`  ${d.id} official schedule PDF skipped: ${res.failed.error}`);
+      if (res.failed.status === 'skipped') ctx.log(`  ${d.id} official schedule PDF skipped: ${res.failed.error}`);
+      else warnIfError(ctx, res.failed, `${d.id} official schedule PDF failed`, base.scope);
       rows.set(d.id, { ...base, ...res.failed });
       continue;
     }
@@ -196,21 +185,20 @@ async function runLivePdfLeague(ctx: RunContext, league: LeagueConfig, divisions
   }
 
   // The standings-index poll (a 2026-27 standings PDF, none yet).
-  const indexBase = {
+  const indexBase = sourceBase(ctx, {
     id: divisions[0]?.official.source ?? 'scval-pdf',
-    kind: 'standings-index' as const,
+    kind: 'standings-index',
     scope: { league: league.id },
     label: `${league.shortName} standings index`,
     url: SCVAL_STANDINGS_INDEX,
-    fetchedAt: ctx.fetchedAt,
-  };
+  });
   if (!ctx.args.official) {
     ctx.source({ ...indexBase, status: 'skipped', error: 'disabled (--no-official)' });
     return;
   }
-  const idx = await fetchResource(ctx, { kind: 'scval-standings-index' });
+  const idx = await readResource(ctx, { kind: 'scval-standings-index' });
   if ('failed' in idx) {
-    if (idx.failed.status === 'error') ctx.warn(`${league.shortName.toLowerCase()} standings index failed: ${idx.failed.error}`, indexBase.scope);
+    warnIfError(ctx, idx.failed, `${league.shortName.toLowerCase()} standings index failed`, indexBase.scope);
     ctx.source({ ...indexBase, ...idx.failed });
     return;
   }
@@ -236,14 +224,13 @@ async function runBundledLeague(ctx: RunContext, league: LeagueConfig, divisions
     failure = err instanceof Error ? err.message : String(err);
   }
   for (const d of divisions) {
-    const base = {
+    const base = sourceBase(ctx, {
       id: d.official.source,
-      kind: 'official-schedule' as const,
+      kind: 'official-schedule',
       scope: scopeOf(d),
       label: `${divisionDisplay(d.id)} official schedule (bundled copy)`,
       url: d.official.scheduleUrl,
-      fetchedAt: ctx.fetchedAt,
-    };
+    });
     ctx.source(
       failure === null
         ? { ...base, status: 'ok', rowCount: fixtures.filter((f) => f.division === d.id).length }
@@ -261,21 +248,20 @@ async function runBundledLeague(ctx: RunContext, league: LeagueConfig, divisions
 
   // 2. Revision checks (never change which fixtures are used).
   for (const d of divisions) {
-    const base = {
+    const base = sourceBase(ctx, {
       id: d.official.source,
-      kind: 'official-revision-check' as const,
+      kind: 'official-revision-check',
       scope: scopeOf(d),
       label: `${divisionDisplay(d.id)} official schedule revision check`,
       url: d.official.revisionCheckUrl ?? d.official.scheduleUrl,
-      fetchedAt: ctx.fetchedAt,
-    };
+    });
     if (!ctx.args.official) {
       ctx.source({ ...base, status: 'skipped', error: 'disabled (--no-official)' });
       continue;
     }
-    const res = await fetchResource(ctx, { kind: 'official-revision', division: d.id });
+    const res = await readResource(ctx, { kind: 'official-revision', division: d.id });
     if ('failed' in res) {
-      if (res.failed.status === 'error') ctx.warn(`${d.id} revision check failed: ${res.failed.error}`, base.scope);
+      warnIfError(ctx, res.failed, `${d.id} revision check failed`, base.scope);
       ctx.source({ ...base, ...res.failed });
       continue;
     }
@@ -294,20 +280,19 @@ async function runBundledLeague(ctx: RunContext, league: LeagueConfig, divisions
   // 3. The league's posted-changes page (MCAL Schedir.htm).
   if (league.officialChanges !== null) {
     const changes = league.officialChanges;
-    const base = {
+    const base = sourceBase(ctx, {
       id: divisions[0].official.source,
-      kind: 'official-revision-check' as const,
+      kind: 'official-revision-check',
       scope: { league: league.id },
       label: `${league.shortName} schedule changes`,
       url: changes.url,
-      fetchedAt: ctx.fetchedAt,
-    };
+    });
     if (!ctx.args.official) {
       ctx.source({ ...base, status: 'skipped', error: 'disabled (--no-official)' });
     } else {
-      const res = await fetchResource(ctx, { kind: 'official-changes', league: league.id });
+      const res = await readResource(ctx, { kind: 'official-changes', league: league.id });
       if ('failed' in res) {
-        if (res.failed.status === 'error') ctx.warn(`${league.id} changes check failed: ${res.failed.error}`, base.scope);
+        warnIfError(ctx, res.failed, `${league.id} changes check failed`, base.scope);
         ctx.source({ ...base, ...res.failed });
       } else if (res.ok.body.trim().toLowerCase() === changes.sha256) {
         ctx.source({ ...base, status: 'ok', httpStatus: res.ok.httpStatus });

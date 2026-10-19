@@ -20,21 +20,22 @@ import type { Team } from '@/lib/model/team';
 import { FETCHABLE_TEAMS, TEAMS } from '@/lib/registry/teams';
 import { splitTbaRows } from '@/lib/sources/maxpreps/schedule';
 import { ScheduleResponseSchema, type ScheduleRow } from '@/lib/sources/maxpreps/schemas';
+import type { RunContext } from '@/lib/pipeline/contract';
+import { asOfStamp, carriedFromOf, hasPreviousData, lastFreshStamp, type RunState } from '@/lib/pipeline/ledger';
 import {
-  asOfStamp,
-  carriedFromOf,
-  hasPreviousData,
-  lastFreshStamp,
-  type PipelineContext,
-  type RunState,
-} from '@/lib/pipeline/ledger';
-import { classifyFetchError, parseJsonBody } from '@/lib/pipeline/read';
+  classifyFetchError,
+  parseJsonBody,
+  readResource,
+  sourceBase,
+  warnIfError,
+  type FetchFailure,
+} from '@/lib/pipeline/read';
 import { resourceUrl } from '@/lib/pipeline/transport';
 
 /** §7.5 trigger b: this share (or more) of a league's attempted feeds failed. */
 export const LEAGUE_FEED_FREEZE_SHARE = 0.5;
 
-function previousGameCount(ctx: PipelineContext, team: Team): number {
+function previousGameCount(ctx: RunContext, team: Team): number {
   return (ctx.previous?.games ?? []).filter((g) => g.home.teamId === team.id || g.away.teamId === team.id).length;
 }
 
@@ -44,62 +45,65 @@ interface FeedOutcome {
   status: 'ok' | 'failed' | 'skipped';
 }
 
-async function readFeed(ctx: PipelineContext, state: RunState, team: Team): Promise<FeedOutcome> {
+async function readFeed(ctx: RunContext, state: RunState, team: Team): Promise<FeedOutcome> {
   const key = { kind: 'maxpreps-schedule', team: team.slug } as const;
-  const url = resourceUrl(key);
-  const base = {
-    id: 'maxpreps-api' as const,
-    kind: 'team-schedule' as const,
+  const base = sourceBase(ctx, {
+    id: 'maxpreps-api',
+    kind: 'team-schedule',
     scope: { league: team.league, division: team.division, team: team.slug },
     label: `${team.slug} schedule`,
-    url,
-    fetchedAt: ctx.fetchedAt,
-  };
+    url: resourceUrl(key),
+  });
+  const res = await readResource(ctx, key);
   let httpStatus: number | undefined;
-  try {
-    const res = await ctx.transport.get(key);
-    httpStatus = res.httpStatus;
-    const feed = parseJsonBody(res.body, ScheduleResponseSchema).data;
-    const split = splitTbaRows(feed);
-    state.tbaDropped.push(...split.dropped);
-    const rows = split.rows;
-    // The feed must contain its own team (an empty feed is a legitimate answer, checked below).
-    if (rows.length > 0 && !rows.some((row) => row.contest.teams.some((t) => t.teamId === team.id))) {
-      throw new Error(`feed for ${team.id} contains no row for that teamId`);
+  let failed: FetchFailure;
+  if ('ok' in res) {
+    httpStatus = res.ok.httpStatus;
+    try {
+      const feed = parseJsonBody(res.ok.body, ScheduleResponseSchema).data;
+      const split = splitTbaRows(feed);
+      state.tbaDropped.push(...split.dropped);
+      const rows = split.rows;
+      // The feed must contain its own team (an empty feed is a legitimate answer, checked below).
+      if (rows.length > 0 && !rows.some((row) => row.contest.teams.some((t) => t.teamId === team.id))) {
+        throw new Error(`feed for ${team.id} contains no row for that teamId`);
+      }
+      // A 200 with no rows for a team we ALREADY hold games for is indistinguishable from an upstream
+      // blip; taking it at face value would delete that team's non-league games with no warning.
+      const had = previousGameCount(ctx, team);
+      if (rows.length === 0 && split.dropped.length === 0 && had > 0) {
+        throw new Error(`schedule feed returned 0 rows but the previous snapshot has ${had} ${had === 1 ? 'game' : 'games'} for this team`);
+      }
+      return {
+        rows,
+        status: 'ok',
+        source: { ...base, status: 'ok', httpStatus, rowCount: feed.length },
+      };
+    } catch (err) {
+      failed = classifyFetchError(err);
     }
-    // A 200 with no rows for a team we ALREADY hold games for is indistinguishable from an upstream
-    // blip; taking it at face value would delete that team's non-league games with no warning.
-    const had = previousGameCount(ctx, team);
-    if (rows.length === 0 && split.dropped.length === 0 && had > 0) {
-      throw new Error(`schedule feed returned 0 rows but the previous snapshot has ${had} ${had === 1 ? 'game' : 'games'} for this team`);
-    }
-    return {
-      rows,
-      status: 'ok',
-      source: { ...base, status: 'ok', httpStatus, rowCount: feed.length },
-    };
-  } catch (err) {
-    const failed = classifyFetchError(err);
-    if (failed.status === 'skipped') return { rows: [], status: 'skipped', source: { ...base, ...failed } };
-    if (failed.httpStatus !== undefined) httpStatus = failed.httpStatus;
-    const message = failed.error;
-    ctx.warn(`${team.slug} schedule failed: ${message}`, base.scope);
-    const carry = previousGameCount(ctx, team) > 0;
-    const carriedFrom = carry
-      ? carriedFromOf(ctx.previous, (r) => r.label === base.label || (r.kind === 'team-schedule' && r.scope?.team === team.slug))
-      : undefined;
-    return {
-      rows: [],
-      status: 'failed',
-      source: {
-        ...base,
-        status: carry ? 'stale' : 'error',
-        ...(httpStatus !== undefined ? { httpStatus } : {}),
-        ...(carriedFrom ? { carriedFrom } : {}),
-        error: carry ? `${message}; its games are carried forward from the previous snapshot` : message,
-      },
-    };
+  } else {
+    failed = res.failed;
   }
+  if (failed.status === 'skipped') return { rows: [], status: 'skipped', source: { ...base, ...failed } };
+  if (failed.httpStatus !== undefined) httpStatus = failed.httpStatus;
+  const message = failed.error;
+  warnIfError(ctx, failed, `${team.slug} schedule failed`, base.scope);
+  const carry = previousGameCount(ctx, team) > 0;
+  const carriedFrom = carry
+    ? carriedFromOf(ctx.previous, (r) => r.label === base.label || (r.kind === 'team-schedule' && r.scope?.team === team.slug))
+    : undefined;
+  return {
+    rows: [],
+    status: 'failed',
+    source: {
+      ...base,
+      status: carry ? 'stale' : 'error',
+      ...(httpStatus !== undefined ? { httpStatus } : {}),
+      ...(carriedFrom ? { carriedFrom } : {}),
+      error: carry ? `${message}; its games are carried forward from the previous snapshot` : message,
+    },
+  };
 }
 
 function teamFailedReason(team: Team, carriedFrom: string | undefined): string {
@@ -110,7 +114,7 @@ function teamFailedReason(team: Team, carriedFrom: string | undefined): string {
 
 /** §7.5 trigger b reason. */
 export function feedsFailedReason(
-  previous: PipelineContext['previous'],
+  previous: RunContext['previous'],
   leagueId: LeagueId,
   failed: number,
   attempted: number,
@@ -123,7 +127,7 @@ export function feedsFailedReason(
     : `${head}; ${short} is shown from the schedules that did answer.`;
 }
 
-export async function stepSchedules(ctx: PipelineContext, state: RunState): Promise<void> {
+export async function stepSchedules(ctx: RunContext, state: RunState): Promise<void> {
   const inRun = new Set(ctx.leaguesInRun());
 
   for (const team of TEAMS) {
@@ -146,7 +150,7 @@ export async function stepSchedules(ctx: PipelineContext, state: RunState): Prom
     const feed = state.feeds.get(team.slug);
     if (feed) feed.status = out.status;
     if (out.status === 'failed') {
-      ctx.leagues.degrade(team.league, 'partial', teamFailedReason(team, out.source.carriedFrom), 'team feed carried');
+      ctx.degrade(team.league, 'partial', teamFailedReason(team, out.source.carriedFrom), 'team feed carried');
     }
   }
 
@@ -171,7 +175,7 @@ export async function stepSchedules(ctx: PipelineContext, state: RunState): Prom
     const failed = attempted.filter((t) => state.feeds.get(t.slug)?.status === 'failed').length;
     if (attempted.length === 0 || failed / attempted.length < LEAGUE_FEED_FREEZE_SHARE) continue;
     const frozen = hasPreviousData(ctx.previous, leagueId);
-    ctx.leagues.degrade(
+    ctx.degrade(
       leagueId,
       frozen ? 'frozen' : 'degraded',
       feedsFailedReason(ctx.previous, leagueId, failed, attempted.length),

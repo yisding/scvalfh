@@ -25,7 +25,7 @@ import { TEAMS, getTeamBySlug } from '@/lib/registry/teams';
 import { localDateKey, toLocalTimestamp } from '@/lib/shared/dates';
 import { cifssSectionIndexOfUrl } from '@/lib/sources/cifss';
 import type { ScheduleRow } from '@/lib/sources/maxpreps/schemas';
-import type { OfficialStepResult, RunArgs, RunContext, SecondaryStepResult, Transport } from './contract';
+import type { OfficialStepResult, RunArgs, SecondaryStepResult, StepContext, Transport } from './contract';
 
 // ---------------------------------------------------------------- sources
 
@@ -239,8 +239,8 @@ export interface RunContextInit {
   sink?: LogSink;
 }
 
-/** The pipeline core's RunContext: what steps may read and record (SPEC §7.2). */
-export class PipelineContext implements RunContext {
+/** The pipeline core's RunContext and StepContext: what steps may read and record (SPEC §7.2). */
+export class PipelineContext implements StepContext {
   readonly args: RunArgs;
   readonly fetchedAt: string;
   readonly today: string;
@@ -248,7 +248,7 @@ export class PipelineContext implements RunContext {
   readonly transport: Transport;
   readonly sources = new SourceLedger();
   readonly leagues = new LeagueLedger();
-  readonly dropped = new DroppedLedger();
+  readonly droppedLedger = new DroppedLedger();
   readonly logLines: string[] = [];
   private readonly sink: LogSink;
   private readonly inRun: readonly LeagueId[];
@@ -286,7 +286,19 @@ export class PipelineContext implements RunContext {
   }
 
   drop(row: DroppedContest): void {
-    this.dropped.add(row);
+    this.droppedLedger.add(row);
+  }
+
+  dropped(): DroppedContest[] {
+    return this.droppedLedger.all();
+  }
+
+  leagueState(leagueId: LeagueId): LeagueRunState {
+    return this.leagues.state(leagueId);
+  }
+
+  markStale(pick: (row: SourceStatus) => boolean, note: string, carriedFrom?: string): number {
+    return this.sources.markStale(pick, note, carriedFrom);
   }
 
   leaguesInRun(): readonly LeagueId[] {

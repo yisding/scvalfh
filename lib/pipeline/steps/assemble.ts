@@ -146,7 +146,7 @@ export function stepAssemble(
     },
     sources,
     leagueHealth: table.leagueHealth,
-    dropped: ctx.dropped.all(),
+    dropped: ctx.dropped(),
     crossCheck: table.crossCheck,
     ...(state.sbliveCrossCheck ? { sbliveCrossCheck: state.sbliveCrossCheck } : {}),
     ...(state.cifssCrossCheck ? { cifssCrossCheck: state.cifssCrossCheck } : {}),

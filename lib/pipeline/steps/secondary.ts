@@ -22,14 +22,14 @@ import type { Game } from '@/lib/model/game';
 import { getTeamBySlug } from '@/lib/registry/teams';
 import { CCS_ICAL_URL, parseCcsIcal, readBracketPublished } from '@/lib/sources/ccs';
 import { VNN_SITE_IDS, parseVnnIcs, type VnnEvent } from '@/lib/sources/vnn-ics';
-import type { SecondaryStepResult } from '@/lib/pipeline/contract';
-import { carriedFromOf, type PipelineContext } from '@/lib/pipeline/ledger';
+import type { SecondaryStepResult, StepContext } from '@/lib/pipeline/contract';
+import { carriedFromOf } from '@/lib/pipeline/ledger';
 import { ccsPollingOpen, confirmKeyDates } from '@/lib/pipeline/merge/ccs';
 import { applyVnnEvents, carryVnnForward } from '@/lib/pipeline/merge/vnn';
-import { classifyFetchError } from '@/lib/pipeline/read';
+import { classifyFetchError, sourceBase, warnIfError } from '@/lib/pipeline/read';
 import { resourceUrl } from '@/lib/pipeline/transport';
 
-async function stepVnn(ctx: PipelineContext, input: readonly Game[]): Promise<Game[]> {
+async function stepVnn(ctx: StepContext, input: readonly Game[]): Promise<Game[]> {
   let games = [...input];
   if (!ctx.args.vnn) {
     ctx.log('  vnn: skipped (--no-vnn)');
@@ -46,14 +46,13 @@ async function stepVnn(ctx: PipelineContext, input: readonly Game[]): Promise<Ga
   for (const site of sites) {
     const key = { kind: 'vnn-ics', team: site.slug } as const;
     const team = getTeamBySlug(site.slug);
-    const base = {
-      id: 'vnn-ics' as const,
-      kind: 'school-calendar' as const,
+    const base = sourceBase(ctx, {
+      id: 'vnn-ics',
+      kind: 'school-calendar',
       scope: { league: team?.league, team: site.slug },
       label: `${site.slug} school calendar`,
       url: resourceUrl(key),
-      fetchedAt: ctx.fetchedAt,
-    };
+    });
     try {
       const res = await ctx.transport.get(key);
       const parsed = parseVnnIcs(res.body, site.slug);
@@ -62,7 +61,7 @@ async function stepVnn(ctx: PipelineContext, input: readonly Game[]): Promise<Ga
       ctx.source({ ...base, status: 'ok', httpStatus: res.httpStatus, rowCount: parsed.length });
     } catch (err) {
       const failed = classifyFetchError(err);
-      if (failed.status === 'error') ctx.warn(`vnn ${site.slug} calendar failed: ${failed.error}`);
+      warnIfError(ctx, failed, `vnn ${site.slug} calendar failed`);
       ctx.source({ ...base, ...failed });
     }
   }
@@ -88,7 +87,7 @@ async function stepVnn(ctx: PipelineContext, input: readonly Game[]): Promise<Ga
           ctx.previous,
           (r) => r.id === 'vnn-ics' && (r.scope?.team === slug || r.label === label),
         );
-        ctx.sources.markStale(
+        ctx.markStale(
           (r) => r.id === 'vnn-ics' && r.label === label,
           'carried forward from the previous snapshot',
           carriedFrom,
@@ -116,7 +115,7 @@ interface CcsRead {
  * previous snapshot (calendar and bracket independently), and with no previous snapshot today's
  * empty state (bracket not published, no calendar). `why` names what was not read, for the log.
  */
-function ccsState(ctx: PipelineContext, read: CcsRead, why: string): CcsState {
+function ccsState(ctx: StepContext, read: CcsRead, why: string): CcsState {
   const prev = ctx.previous?.playoffs;
   const carried: string[] = [];
   let bracketPublished = read.bracketPublished ?? false;
@@ -140,25 +139,23 @@ function ccsState(ctx: PipelineContext, read: CcsRead, why: string): CcsState {
   return { ...calendar, bracketPublished };
 }
 
-async function stepCcs(ctx: PipelineContext): Promise<CcsState> {
+async function stepCcs(ctx: StepContext): Promise<CcsState> {
   const nothingRead: CcsRead = { calendar: null, bracketPublished: null };
   if (!ctx.args.ccs) return ccsState(ctx, nothingRead, 'skipped (--no-ccs)');
-  const calendarBase = {
-    id: 'ccs-ical' as const,
-    kind: 'ccs-calendar' as const,
-    scope: { section: 'ccs' as const },
+  const calendarBase = sourceBase(ctx, {
+    id: 'ccs-ical',
+    kind: 'ccs-calendar',
+    scope: { section: 'ccs' },
     label: 'ccs calendar',
     url: CCS_ICAL_URL,
-    fetchedAt: ctx.fetchedAt,
-  };
-  const bracketBase = {
-    id: 'maxpreps-html' as const,
-    kind: 'ccs-bracket' as const,
-    scope: { section: 'ccs' as const },
+  });
+  const bracketBase = sourceBase(ctx, {
+    id: 'maxpreps-html',
+    kind: 'ccs-bracket',
+    scope: { section: 'ccs' },
     label: 'ccs bracket',
     url: CCS.bracketUrl,
-    fetchedAt: ctx.fetchedAt,
-  };
+  });
   // No CCS league in the run, or the season gate is closed: nothing to poll.
   const ccsInRun = ctx.leaguesInRun().some((id) => getLeague(id).sectionId === 'ccs');
   if (!ccsInRun || !ccsPollingOpen(ctx.today)) {
@@ -182,7 +179,7 @@ async function stepCcs(ctx: PipelineContext): Promise<CcsState> {
     ctx.log(`  ccs calendar: ${events.length} events · key dates ${check.confirmed ? 'confirmed' : 'DIFFER'}`);
   } catch (err) {
     const failed = classifyFetchError(err);
-    if (failed.status === 'error') ctx.warn(`ccs calendar failed: ${failed.error}`);
+    warnIfError(ctx, failed, 'ccs calendar failed');
     ctx.source({ ...calendarBase, ...failed });
     missed.push(failed.status === 'skipped' ? 'calendar not in corpus' : 'calendar failed');
   }
@@ -194,14 +191,14 @@ async function stepCcs(ctx: PipelineContext): Promise<CcsState> {
     ctx.log(`  ccs bracket: ${state.published ? 'PUBLISHED' : 'not published'} (${state.reason})`);
   } catch (err) {
     const failed = classifyFetchError(err);
-    if (failed.status === 'error') ctx.warn(`ccs bracket page failed: ${failed.error}`);
+    warnIfError(ctx, failed, 'ccs bracket page failed');
     ctx.source({ ...bracketBase, ...failed });
     missed.push(failed.status === 'skipped' ? 'bracket not in corpus' : 'bracket page failed');
   }
   return ccsState(ctx, read, missed.join(', '));
 }
 
-export async function stepSecondary(ctx: PipelineContext, games: readonly Game[]): Promise<SecondaryStepResult> {
+export async function stepSecondary(ctx: StepContext, games: readonly Game[]): Promise<SecondaryStepResult> {
   const withVnn = await stepVnn(ctx, games);
   const ccs = await stepCcs(ctx);
   return { games: withVnn, ...ccs };

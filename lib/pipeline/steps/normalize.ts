@@ -19,7 +19,8 @@
 import { DATA_QUALITY } from '@/lib/config/leagues';
 import type { Game } from '@/lib/model/game';
 import { applyExclusions, dedupePhantomPairs, normalizeGames } from '@/lib/pipeline/reconcile/normalize';
-import type { PipelineContext, RunState } from '@/lib/pipeline/ledger';
+import type { RunContext } from '@/lib/pipeline/contract';
+import type { RunState } from '@/lib/pipeline/ledger';
 import { hasSbliveContestPrefix } from '@/lib/shared/contest-id';
 import { byDateThenId } from '@/lib/shared/game';
 
@@ -34,7 +35,7 @@ function unclassified(g: Game): Game {
   return { ...rest, countsFor: null, postseason: null, provenance };
 }
 
-export function stepNormalize(ctx: PipelineContext, state: RunState): void {
+export function stepNormalize(ctx: RunContext, state: RunState): void {
   const norm = normalizeGames(state.rows, { fetchedAt: ctx.fetchedAt });
   for (const w of norm.warnings) ctx.warn(w);
 
