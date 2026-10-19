@@ -11,7 +11,7 @@ import { TEAMS } from '@/lib/registry/teams';
  * leaves out (`maxprepsMissing`), and MaxPreps' table carries this division's name — its label or a
  * search alias, compared without case, spaces or punctuation, so MaxPreps' 'Eastern Athletic' is the
  * EAL's table, 'City - Western' is City Western's and 'Palomar' is Palomar's. That is the EAL case,
- * whose wording tests/views/standings/standings-view.test.ts pins byte for byte.
+ * whose wording tests/views/standings/division.test.ts pins byte for byte.
  *
  * The 2026-10-06 review found it printed where it is false: Newport Harbor is not in MaxPreps'
  * 2026-27 Sunset table (Sunset maxprepsMissing), Hilltop and Southwest are in no MaxPreps table for

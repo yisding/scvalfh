@@ -24,7 +24,7 @@ export interface PhaseLeadView {
   link: { href: string; label: string } | null;
 }
 
-/** The PhaseLead copy for a league in a phase on a day (exported for tests/views/home/home-view.test.ts). */
+/** The PhaseLead copy for a league in a phase on a day (exported for tests/views/home/league-panel.test.ts). */
 export function phaseLead(league: LeagueConfig, phase: SeasonPhase, today: string): PhaseLeadView | null {
   const short = league.shortName;
   const firstLeague = leaguePlayStarts(league.id);

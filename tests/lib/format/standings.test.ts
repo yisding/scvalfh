@@ -1,7 +1,7 @@
 /**
  * lib/format/standings.ts: the standings engine's copy, pinned on literal inputs. The engine wrappers
- * (lib/engine/standings/uneven.ts, ladder.ts) only look the values up in config, so tests/lib/engine/standings.test.ts
- * and tests/lib/engine/standings-engine.test.ts pin what the pages print through them.
+ * (lib/engine/standings/uneven.ts, ladder.ts) only look the values up in config, so tests/lib/engine/standings/ladder.test.ts
+ * and tests/lib/engine/standings/uneven.test.ts pin what the pages print through them.
  */
 import { describe, expect, it } from 'vitest';
 

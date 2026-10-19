@@ -322,7 +322,7 @@ describe('layers: the dependency rule', () => {
       expect(broken('lib/pipeline/run.ts', 'data/snapshot.json')).toEqual(['e']);
       expect(broken('scripts/fetch-data.ts', 'data/snapshot.json')).toEqual(['e']);
       expect(broken('lib/datasets/snapshot.ts', 'data/snapshot.json')).toEqual([]);
-      expect(broken('tests/lib/queries/data.test.ts', 'data/snapshot.json')).toEqual([]);
+      expect(broken('tests/lib/queries/standings.test.ts', 'data/snapshot.json')).toEqual([]);
     });
 
     it('(f) package parts only through their doors', () => {
@@ -361,7 +361,7 @@ describe('layers: the dependency rule', () => {
     it('(i) scripts and app never import tests', () => {
       expect(broken('scripts/fetch-data.ts', 'tests/support/repo')).toEqual(['i']);
       expect(broken('app/page.tsx', 'tests/support/repo')).toEqual(['b', 'i']);
-      expect(broken('tests/lib/queries/data.test.ts', 'scripts/lib/cli')).toEqual([]);
+      expect(broken('tests/lib/queries/standings.test.ts', 'scripts/lib/cli')).toEqual([]);
     });
 
     it('(j) components never read the snapshot; views and app do', () => {

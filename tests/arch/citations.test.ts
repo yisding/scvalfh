@@ -72,7 +72,7 @@ const ALLOWED_SYNTHETIC: Record<string, string> = {
   'lib/dat/.ts': 'tests/scripts/typecheck-scope.test.ts: a path the glob must not match',
   'components/home/x.ts': 'tests/arch/deleted-names.test.ts: the importer of a resolveModule probe',
   'tests/ui/a.test.ts': 'tests/arch/deleted-names.test.ts: the importer of a resolveModule probe',
-  'data/official/x.json': 'tests/lib/config/leagues.test.ts: a bundledFile in an invented document config',
+  'data/official/x.json': 'tests/lib/config/leagues/assert.test.ts: a bundledFile in an invented document config',
   'scripts/lib/data.ts': 'tests/scripts/typecheck-scope.test.ts: a path the glob must not match',
   'lib/data.ts':
     'tests/scripts/typecheck-scope.test.ts: the sample path its globs and tsc diagnostics name (tests/support/source-tree.ts quotes one); the module itself was deleted',

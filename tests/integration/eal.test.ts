@@ -221,7 +221,7 @@ describe('the EAL through the site read API (lib/queries/)', () => {
 
   it('names no co-leaders on this corpus (Pleasant Valley is alone at the top)', () => {
     // The gating rule (co-leaders are never final while an EAL league result is missing) is tested on a
-    // level-top table in tests/lib/queries/data.test.ts ("never calls co-leaders final while an EAL league result is missing").
+    // level-top table in tests/lib/queries/standings.test.ts ("never calls co-leaders final while an EAL league result is missing").
     expect(m.data.getCoLeaders(DIVISION), 'lib/queries/standings.ts getCoLeaders').toBeNull();
   });
 });

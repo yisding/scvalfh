@@ -1,20 +1,18 @@
 /**
- * `views/clubs/club-view.ts` and the clubs routes (/clubs, /clubs/[slug]) over the committed
- * data/clubs.json, data/rosters.json and data/rosters-enrichment.json (SPEC §1.1j2, DESIGN §17).
+ * views/clubs/club-view.ts and the clubs routes (/clubs, /clubs/[slug]), rendered (SPEC §1.1j2, DESIGN §17).
  *
  * The pages make promises a test can hold them to:
- *   - privacy: only players on the tracked varsity rosters are named, by the roster's spelling, and
- *     nothing the data file keeps but never renders (a quote, a basis, a confidence) reaches a
- *     page — checked with scripts/ci/copy/copy-rules.ts `affiliationLeaks`, the rule assert-copy applies
- *     to the build;
- *   - honesty: a tie that is only listed is never worded as current, and every row links the
- *     pages it rests on, each labelled by its kind and host, never by its path;
- *   - order: regions in CLUB_REGIONS order, clubs in lib/datasets/clubs.ts' display order (DESIGN §17.5),
- *     players current first, then by school and name.
+ *   - privacy: only players on the tracked varsity rosters are named, by the roster's spelling, and nothing the data file
+ *     keeps but never renders (a quote, a basis, a confidence) reaches a page: checked with scripts/ci/copy/copy-rules.ts
+ *     `affiliationLeaks`, the rule assert-copy applies to the build;
+ *   - honesty: a tie that is only listed is never worded as current, and every row links the pages it rests on, each
+ *     labelled by its kind and host, never by its path;
+ *   - order: regions in CLUB_REGIONS order, clubs in lib/datasets/clubs.ts' display order (DESIGN §17.5), players current
+ *     first, then by school and name.
  *
- * The data is hand research that changes only with a new sweep (tests/data/clubs.test.ts), so the
- * words pinned below (status lines, link labels, counts) are pinned to it: when a sweep lands,
- * re-read the pages and update them together.
+ * The data is hand research that changes only with a new sweep (tests/data/clubs.test.ts), so the words pinned here are
+ * pinned to it: when a sweep lands, re-read the pages and update them together. The suites share
+ * tests/support/clubs-view.ts.
  */
 
 import { createElement } from 'react';
@@ -25,37 +23,20 @@ import AboutPage from '@/app/about/page';
 import ClubPage, { generateMetadata, generateStaticParams } from '@/app/clubs/[slug]/page';
 import ClubsPage, { metadata as clubsMetadata } from '@/app/clubs/page';
 import TeamPage from '@/app/teams/[slug]/page';
-import {
-  type Club, type ClubAffiliation, clubDisplayName, getClub, getClubAffiliations, getClubSlugs, getClubs,
-  getClubsFile,
-} from '@/lib/datasets/clubs';
-import { getEnrichedTeamRoster, getRosters } from '@/lib/datasets/rosters';
-import { getTeamBySlug } from '@/lib/registry/teams';
+import { getClubSlugs, getClubs } from '@/lib/datasets/clubs';
 import { affiliationLeaks } from '@/scripts/ci/copy/copy-rules';
 import { PUBLIC_TERMS } from '@/scripts/ci/copy/public-terms';
 import { textOf } from '@/tests/support/html-text';
-import type { ClubPageView } from '@/views/clubs/club-page';
-import { buildClubPageView, buildClubsIndexView } from '@/views/clubs/club-view';
-import { countLine } from '@/views/clubs/clubs-index';
-import { REGION_WORDS, sourceLabel, sourceName, statusWords } from '@/views/clubs/words';
-
-const file = getClubsFile();
-const club = (slug: string): Club => getClub(slug)!;
-/** The affiliation for `name` at `slug`. */
-const tie = (name: string, slug: string): ClubAffiliation =>
-  file.affiliations.find((a) => a.fullName === name && a.club === slug)!;
-const views: Array<{ slug: string; view: ClubPageView }> = getClubSlugs().map((slug) => ({
-  slug,
-  view: buildClubPageView(slug)!,
-}));
-const viewOf = (slug: string) => views.find((v) => v.slug === slug)!.view;
+import { file, club, views } from '@/tests/support/clubs-view';
 
 async function renderClub(slug: string): Promise<string> {
   return renderToStaticMarkup(await ClubPage({ params: Promise.resolve({ slug }) } as never));
 }
+
 async function renderTeam(slug: string): Promise<string> {
   return renderToStaticMarkup(await TeamPage({ params: Promise.resolve({ slug }) } as never));
 }
+
 const renderIndex = () => renderToStaticMarkup(createElement(ClubsPage));
 
 /** Heading levels in document order. */
@@ -70,405 +51,8 @@ function sectionOf(html: string, id: string): string {
 }
 
 const esc = (t: string) => t.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#x27;');
+
 const squashWs = (t: string) => t.replace(/\s+/g, '');
-
-describe('status words (DESIGN §17.3)', () => {
-  it('words every pinned tie as the table says', () => {
-    const PINS: Array<[string, string, string]> = [
-      ['Storey Lewis', 'sf-hawks', 'Current, as of Aug 27, 2026'],
-      ['Caitlyn Hughes', 'sf-hawks', 'Current, as of Aug 27, 2026'],
-      ['Clara Brunello', 'sf-hawks', 'Current, as of Jul 8, 2026'],
-      ['Isabella Bjork', 'fly-fhc', 'Current, as of 2026'],
-      ['Gigi Colant', 'sf-hawks', 'Current, 2025-26 season'],
-      ['Dylan Powell', 'sf-hawks', 'Current'],
-      ['Melanie Henderson', 'fly-fhc', 'Earlier, 2019–2022'],
-      ['Melanie Henderson', 'lightning', 'Earlier, 2015–2018'],
-      ['Alex Pires', 'infinity', 'Earlier, Jul 18, 2025'],
-      ['Hailey Moncada', 'infinity', 'Earlier, 2024-25 season'],
-      ['Riya Mehrotra', 'fly-fhc', 'Listed by NCSA, 2025'],
-      // Her NCSA page and one of her two MaxPreps URLs are undated; the other is dated Oct 19, 2025.
-      ['Gabrielle Moll', 'fly-fhc', 'Listed by MaxPreps, Oct 19, 2025'],
-      ['Emma Traverso', 'fly-fhc', 'Listed by NCSA, 2025'],
-      // No source is dated "2025", so the first one (NCSA) lists it, not the dated Stick Together page.
-      ['Brooklyn Barnard', 'fly-fhc', 'Listed by NCSA, 2025'],
-      ['Colette Boyd', 'infinity', 'Listed by the Gilroy Dispatch, Jul 18, 2025'],
-      ['Ruhee Bhatnagar', 'lightning', 'Listed by NCSA, 2024-25 season'],
-      ['Kira Kelly', 'd-city', 'Listed by the NFHCA, Aug 28, 2025'],
-      ['Amelia Zedonis', 'd-city', 'Listed by the NFHCA, Aug 28, 2025'],
-      ['Kate Loscutoff', 'd-city', 'Earlier, 2024'],
-      ['Lilah Letcher', 'chico-hotshots', 'Current, as of Sep 29, 2026'],
-      ['Kate Panighetti', 'chico-hotshots', 'Current, as of May 20, 2026'],
-    ];
-    for (const [name, slug, words] of PINS) expect(statusWords(tie(name, slug), club(slug)), `${name} @ ${slug}`).toBe(words);
-  });
-
-  it('covers the shapes the data does not use yet: a month, a current range, an undated listing', () => {
-    const base = tie('Riya Mehrotra', 'fly-fhc');
-    const fly = club('fly-fhc');
-    expect(statusWords({ ...base, status: 'current', asOf: '2025-10' }, fly)).toBe('Current, as of Oct 2025');
-    expect(statusWords({ ...base, status: 'current', asOf: '2025-2026' }, fly)).toBe('Current, 2025–2026');
-    expect(statusWords({ ...base, status: 'past', asOf: null }, fly)).toBe('Earlier');
-    expect(statusWords({ ...base, status: 'unknown', asOf: null }, fly)).toBe('Listed by NCSA; no date given');
-  });
-
-  it('never words a listed or earlier tie as current, nor a current one as listed', () => {
-    for (const a of file.affiliations) {
-      const words = statusWords(a, club(a.club));
-      if (a.status === 'current') expect(words, a.fullName).not.toMatch(/listed|not/i);
-      else expect(words, `${a.fullName} @ ${a.club}`).not.toMatch(/^Current/);
-      if (a.status === 'unknown') expect(words, a.fullName).toMatch(/^Listed by /);
-      if (a.status === 'past') expect(words, a.fullName).toMatch(/^Earlier/);
-    }
-  });
-});
-
-describe('source labels: the kind and the host, never the path', () => {
-  it('names a page by whose site it is on', () => {
-    // Bridget Schilb's earlier Fly club rests on NorCal Impact's page for her.
-    const page = tie('Bridget Schilb', 'fly-fhc').sources[0];
-    expect(sourceLabel(page, club('fly-fhc'))).toBe('NorCal Impact site');
-    // The same page on NorCal Impact's own club page is "club site".
-    const bridget = tie('Bridget Schilb', 'norcal-impact').sources.find((s) => s.url === page.url)!;
-    expect(sourceLabel(bridget, club('norcal-impact'))).toBe('club site');
-    // Ruhee Bhatnagar's Lightning roster (an older sub-season than the club's rosterPages).
-    const ruhee = tie('Ruhee Bhatnagar', 'lightning').sources.find((s) => s.kind === 'club-site')!;
-    expect(sourceLabel(ruhee, club('lightning'))).toBe('club roster');
-    // A host no club record names is printed as it is. No tie in the file rests on such a page any
-    // more (Fly's old about page on sanjosefly.com named no player and was dropped), so the rule is
-    // held on a source built here.
-    const oldFly = { url: 'https://sanjosefly.com/about-fly/', kind: 'club-site' } as const;
-    expect(sourceLabel(oldFly, club('fly-fhc'))).toBe('sanjosefly.com');
-    expect(sourceName(oldFly, club('fly-fhc'))).toBe('sanjosefly.com');
-  });
-
-  it('labels the EAL-area ties, and reads a shared host (Google Sites, TeamLinkt) by its site, not its host', () => {
-    const labels = (slug: string) => viewOf(slug).groups.flatMap((g) => g.rows).map((r) => [r.name, r.sources.map((s) => s.label)]);
-    expect(labels('d-city')).toEqual([
-      ['Kira Kelly', ['NFHCA']],
-      ['Kate Loscutoff', ['NCSA profile']],
-      ['Maisy Martin', ['NCSA profile']],
-      ['Amelia Zedonis', ['NFHCA']],
-    ]);
-    expect(labels('chico-hotshots')).toEqual([
-      ['Quinn Karolyi', ['NCSA profile']],
-      ['Evie Nielsen', ['SportsRecruits profile']],
-      ['Lilah Letcher', ['MaxPreps profile']],
-      ['Kate Panighetti', ['MaxPreps profile']],
-      ['Olivia Council', ['NCSA profile']],
-    ]);
-    // Davis High's Google Site is on D-City's host but not on D-City's site.
-    const dcity = club('d-city');
-    expect(sourceLabel({ url: 'https://sites.google.com/djusd.net/dhsfieldhockey/home', kind: 'club-site' }, dcity)).toBe('sites.google.com');
-    expect(sourceLabel({ url: 'https://sites.google.com/view/dcityhockeyclub/home', kind: 'club-site' }, dcity)).toBe('club site');
-    // Another TeamLinkt league, or a TeamLinkt page outside the club's slug, is not Chico Hotshots' site.
-    const chico = club('chico-hotshots');
-    expect(sourceLabel({ url: 'https://leagues.teamlinkt.com/chicohotshotsfieldhockey/Divisions', kind: 'club-site' }, chico)).toBe('club site');
-    expect(sourceLabel({ url: 'https://leagues.teamlinkt.com/someotherleague/Divisions', kind: 'club-site' }, chico)).toBe('leagues.teamlinkt.com');
-    expect(sourceLabel({ url: 'https://leagues.teamlinkt.com/leagues/NewsItem/34623/39251', kind: 'club-site' }, chico)).toBe('leagues.teamlinkt.com');
-  });
-
-  it('names the NFHCA watchlists and MAX Field Hockey pages by their outlet', () => {
-    const hughes = tie('Caitlyn Hughes', 'sf-hawks');
-    const label = (host: string) => sourceLabel(hughes.sources.find((s) => s.url.includes(host))!, club('sf-hawks'));
-    expect(label('nfhca.org/')).toBe('NFHCA');
-    expect(label('maxfh.longstreth.com')).toBe('MAX Field Hockey');
-    // Two watchlists (2025 and 2026) on one row read apart.
-    const hazel = viewOf('sf-hawks').groups[0].rows.find((r) => r.name === 'Hazel Stang')!;
-    expect(hazel.sources.map((s) => s.label).filter((l) => l.startsWith('NFHCA'))).toEqual(['NFHCA', 'NFHCA (2)']);
-  });
-
-  it('every label on every club page is a closed-set word, another club’s site, or the bare host', () => {
-    const fixed = new Set([
-      'SportsRecruits profile',
-      'SportsRecruits team page',
-      'NCSA profile',
-      'Hudl profile',
-      'FieldLevel profile',
-      'MaxPreps profile',
-      'MaxPreps roster',
-      'MaxPreps page',
-      'club roster',
-      'club site',
-      'Stick Together',
-      'Gilroy Dispatch',
-      'SCVAL',
-      'NFHCA',
-      'MAX Field Hockey',
-      'Saint Francis athletics',
-      ...getClubs().flatMap((c) => [`${clubDisplayName(c)} site`, `${clubDisplayName(c)} roster`]),
-    ]);
-    let checked = 0;
-    for (const { slug, view } of views) {
-      for (const row of view.groups.flatMap((g) => g.rows)) {
-        for (const s of row.sources) {
-          const label = s.label.replace(/ \(\d+\)$/, '');
-          const host = new URL(s.url).hostname.replace(/^www\./, '');
-          expect(fixed.has(label) || label === host, `${slug} / ${row.name}: ${s.label} (${s.url})`).toBe(true);
-          // A label is never read from a path, so no name in a slug (a coach's bio page) reaches one.
-          expect(s.label, `${slug} / ${row.name}`).not.toMatch(/leaf|huynh/i);
-          checked += 1;
-        }
-      }
-    }
-    expect(checked).toBe(file.affiliations.reduce((n, a) => n + new Set(a.sources.map((s) => s.url)).size, 0));
-  });
-});
-
-describe('buildClubsIndexView (/clubs)', () => {
-  const index = buildClubsIndexView();
-  const rows = index.regions.flatMap((r) => r.clubs);
-
-  it('groups the clubs by region, in CLUB_REGIONS order, each club once in display order', () => {
-    expect(index.regions.map((r) => r.id)).toEqual([
-      'san-francisco', 'south-bay', 'east-bay', 'marin', 'sacramento', 'north-state',
-      'ventura', 'los-angeles', 'orange-county', 'san-diego',
-    ]);
-    expect(index.regions.map((r) => r.heading)).toEqual([
-      'San Francisco', 'South Bay', 'East Bay', 'Marin', 'Sacramento area', 'North State',
-      'Ventura County', 'Los Angeles', 'Orange County', 'San Diego',
-    ]);
-    expect(index.regions.map((r) => r.meta)).toEqual(['2 clubs', '7 clubs', '2 clubs', '1 club', '2 clubs', '1 club', '2 clubs', '2 clubs', '4 clubs', '5 clubs']);
-    // Each region's section is scoped to its half of the site (the NorCal/SoCal toggle).
-    expect(index.regions.map((r) => r.siteRegion)).toEqual([...Array(6).fill('norcal'), ...Array(4).fill('socal')]);
-    expect(rows.map((r) => r.slug)).toEqual(getClubSlugs());
-    expect(rows.map((r) => r.slug)).toEqual(getClubs().map((c) => c.slug));
-    for (const r of index.regions) for (const c of r.clubs) expect(club(c.slug).region, c.slug).toBe(r.id);
-  });
-
-  it('names the searched areas that hold no club', () => {
-    expect(index.regionsWithoutClubs).toEqual(['Peninsula', 'Central Coast', 'Inland Empire']);
-    expect(index.regionsWithoutClubsSentence).toBe('This list has no club based on the Peninsula, the Central Coast or in the Inland Empire.');
-    expect(REGION_WORDS.marin.label).toBe('Marin');
-    expect(index.regionsNotSearched).toEqual(['Sacramento area', 'North State']);
-    expect(index.regionsNotSearchedSentence).toBe('The Sacramento area and the North State were not searched for every club, so other clubs may be based there.');
-    expect(index.regionsWithoutClubsSentence).not.toMatch(/Sacramento|North State/);
-    expect(REGION_WORDS.sacramento.label).toBe('Sacramento area');
-    expect(REGION_WORDS['north-state'].label).toBe('North State');
-  });
-
-  it('counts each club’s tied players, current apart from the rest, and lists their schools', () => {
-    for (const r of rows) {
-      const ties = getClubAffiliations(r.slug);
-      expect(r.current + r.other, r.slug).toBe(ties.length);
-      expect(r.current, r.slug).toBe(ties.filter((a) => a.status === 'current').length);
-      expect(r.href, r.slug).toBe(`/clubs/${r.slug}`);
-      expect(r.schools, r.slug).toEqual([...new Set(ties.map((a) => getTeamBySlug(a.teamSlug)!.name))].sort((a, b) => a.localeCompare(b)));
-    }
-    const line = (slug: string) => rows.find((r) => r.slug === slug)!.countLine;
-    expect(line('sf-hawks')).toBe('32 current players');
-    expect(line('norcal-impact')).toBe('25 current players');
-    expect(line('fly-fhc')).toBe('14 players: 5 current, 9 earlier or not known to be current');
-    expect(line('infinity')).toBe('9 players: 2 current, 7 earlier or not known to be current');
-    expect(line('lightning')).toBe('3 players: 1 current, 2 earlier or not known to be current');
-    expect(line('htc')).toBe('30 players: 26 current, 4 earlier or not known to be current');
-    expect(line('rush')).toBe('16 players: 14 current, 2 earlier or not known to be current');
-    expect(line('myto')).toBe('15 players: 13 current, 2 earlier or not known to be current');
-    expect(line('vcrd')).toBe('6 current players');
-    expect(line('bulldogs')).toBe('No player from these rosters found');
-    expect(rows.find((r) => r.slug === 'htc')!.subline).toBe('HTC Field Hockey Club · La Jolla, CA (HTC California)');
-    expect(rows.find((r) => r.slug === 'la-tigers')!.subline).toBe('LA Tigers Sports Club');
-    expect(line('pac-heights')).toBe('No player from these rosters found');
-    expect(line('d-city')).toBe('4 players, all earlier or not known to be current');
-    expect(line('roseville-fhc')).toBe('No player from these rosters found');
-    expect(line('chico-hotshots')).toBe('5 players: 4 current, 1 earlier or not known to be current');
-    expect(rows.find((r) => r.slug === 'd-city')!.subline).toBe('D-City Field Hockey Club · Davis');
-    expect(rows.find((r) => r.slug === 'd-city')!.schools).toEqual(['Davis']);
-    expect(rows.find((r) => r.slug === 'chico-hotshots')!.subline).toBe('Chico Hotshots Field Hockey Club · Chico');
-    expect(rows.find((r) => r.slug === 'chico-hotshots')!.schools).toEqual(['Chico', 'Pleasant Valley']);
-    expect(rows.find((r) => r.slug === 'performance-fh')!.subline).toBe('Los Gatos');
-    expect(rows.find((r) => r.slug === 'sf-hawks')!.subline).toBe('San Francisco Youth Field Hockey Club · San Francisco');
-  });
-
-  it('countLine says "earlier" alone when nothing is merely listed, and words a lone tie', () => {
-    expect(countLine([{ status: 'current' }, { status: 'past' }])).toBe('2 players: 1 current, 1 earlier');
-    expect(countLine([{ status: 'past' }, { status: 'past' }])).toBe('2 players, all earlier');
-    expect(countLine([{ status: 'unknown' }])).toBe('1 player, earlier or not known to be current');
-    expect(countLine([])).toBe('No player from these rosters found');
-  });
-
-  it('answers the page’s question in its lede, counted from the files', () => {
-    expect(index.trackedTeams).toBe(getRosters().teams.length);
-    expect([index.playerCount, index.schoolCount, index.clubCount, index.clubsWithPlayers]).toEqual([149, 48, 28, 15]);
-    expect(index.lede).toBe(
-      `Which youth clubs players on this site’s ${getRosters().teams.length} varsity rosters play for, or played for, according to public pages that name both. 149 players from 48 schools are tied to 15 of these 28 clubs, the most to SF Hawks (32) and HTC (30).`,
-    );
-    expect(index.capturedOn).toBe('Oct 3, 2026');
-    expect(index.currentSeasons).toBe('2025-26 or 2026-27');
-  });
-});
-
-describe('buildClubPageView (/clubs/[slug])', () => {
-  it('is null for a slug the file does not hold', () => {
-    expect(buildClubPageView('nope')).toBeNull();
-  });
-
-  it('lists current ties first, then the rest, each by school, then the roster’s name order', () => {
-    for (const { slug, view } of views) {
-      expect(view.groups.map((g) => g.id), slug).toEqual(
-        [view.groups.some((g) => g.id === 'current') ? 'current' : null, view.groups.some((g) => g.id === 'other') ? 'other' : null].filter(Boolean),
-      );
-      for (const g of view.groups) {
-        expect(g.rows.every((r) => (g.id === 'current') === (r.statusKind === 'current')), `${slug} ${g.id}`).toBe(true);
-        const schools = g.rows.map((r) => r.school.name);
-        expect(schools, `${slug} ${g.id}`).toEqual([...schools].sort((a, b) => a.localeCompare(b)));
-      }
-    }
-    expect(viewOf('fly-fhc').groups.map((g) => g.heading)).toEqual(['Current', 'Earlier, or not known to be current']);
-    expect(viewOf('sf-hawks').groups.map((g) => g.heading)).toEqual(['Current']);
-    // Within St. Ignatius on the SF Hawks page: by last name.
-    const si = viewOf('sf-hawks').groups[0].rows.filter((r) => r.school.name.startsWith('St. Ignatius')).map((r) => r.name);
-    expect(si.slice(0, 4)).toEqual(['Clara Brunello', 'Samantha Brunsell', 'Gigi Colant', 'Scarlett Gammack']);
-  });
-
-  it('names exactly the club’s tied players, each a non-JV row of that team, by the roster’s spelling', () => {
-    for (const { slug, view } of views) {
-      const rows = view.groups.flatMap((g) => g.rows);
-      const ties = getClubAffiliations(slug);
-      expect(rows.map((r) => r.key).sort(), slug).toEqual(ties.map((a) => `${a.teamSlug}-${a.athleteId}`).sort());
-      expect(view.playerCount, slug).toBe(ties.length);
-      for (const a of ties) {
-        const row = rows.find((r) => r.key === `${a.teamSlug}-${a.athleteId}`)!;
-        const merged = getEnrichedTeamRoster(a.teamSlug)!.players.find((p) => p.athleteId === a.athleteId)!;
-        expect(merged.level, `${slug} / ${a.fullName}`).not.toBe('jv');
-        expect(row.name, slug).toBe(merged.fullName);
-        expect(row.school.href, slug).toBe(`/teams/${a.teamSlug}#roster`);
-        expect(row.school.name, slug).toBe(getTeamBySlug(a.teamSlug)!.name);
-      }
-    }
-  });
-
-  it('prints only the facts that exist, and links each source once under a distinct label', () => {
-    const riya = viewOf('fly-fhc').groups.flatMap((g) => g.rows).find((r) => r.name === 'Riya Mehrotra')!;
-    // Her grade comes from the overlay (the Talon, 2026-10-12): the club page prints it before the team.
-    expect(riya.facts).toEqual(['Senior', 'Black - Advanced']);
-    const storey = viewOf('sf-hawks').groups[0].rows.find((r) => r.name === 'Storey Lewis')!;
-    expect(storey.facts).toEqual(['Senior', 'U19 Hawks Blue']);
-    expect(storey.sources.map((s) => s.label)).toEqual(['SportsRecruits profile', 'NFHCA', 'SportsRecruits team page', 'NCSA profile', 'club roster']);
-    const roxana = viewOf('norcal-impact').groups[0].rows.find((r) => r.name === 'Roxana Jafarpur')!;
-    expect(roxana.sources.map((s) => s.label)).toEqual(['NCSA profile', 'NCSA profile (2)']);
-    const frankie = viewOf('sf-hawks').groups[0].rows.find((r) => r.name === 'Frankie Lemieux')!;
-    expect(frankie.sources.map((s) => s.label).filter((l) => l.startsWith('Stick Together'))).toEqual(['Stick Together', 'Stick Together (2)']);
-    for (const { slug, view } of views) {
-      for (const row of view.groups.flatMap((g) => g.rows)) {
-        const urls = row.sources.map((s) => s.url);
-        const labels = row.sources.map((s) => s.label);
-        expect(new Set(urls).size, `${slug} / ${row.name}`).toBe(urls.length);
-        expect(new Set(labels).size, `${slug} / ${row.name}`).toBe(labels.length);
-        expect(row.sources.length, `${slug} / ${row.name}`).toBeGreaterThan(0);
-      }
-    }
-  });
-
-  it('gives an empty club its page with no groups, and words the identity honestly', () => {
-    expect(viewOf('pac-heights').groups).toEqual([]);
-    expect(viewOf('pac-heights').playerCount).toBe(0);
-    expect(viewOf('performance-fh').fullName).toBeNull();
-    expect(viewOf('sf-hawks').fullName).toBe('San Francisco Youth Field Hockey Club');
-    expect(viewOf('sf-hawks').regionLabel).toBeNull(); // it would only repeat the city
-    expect(viewOf('htc').regionLabel).toBe('San Diego'); // HTC California trains in La Jolla and Chula Vista
-    expect(viewOf('rush').regionLabel).toBe('San Diego'); // Encinitas, in San Diego County
-    expect(viewOf('la-tigers').regionLabel).toBe('Los Angeles'); // no city given
-    expect(viewOf('fly-fhc').regionLabel).toBe('South Bay');
-    expect(viewOf('fly-fhc').facts).toEqual(['Los Altos', 'Founded 2001']);
-    expect(viewOf('lightning').facts).toEqual(['Los Altos Hills']);
-    expect(viewOf('sf-hawks').checkedOn).toBe('Oct 3, 2026');
-    expect(viewOf('d-city').regionLabel).toBe('Sacramento area');
-    expect(viewOf('d-city').facts).toEqual(['Davis', 'Founded 2019']);
-    expect(viewOf('d-city').checkedOn).toBe('Oct 4, 2026');
-    expect(viewOf('d-city').groups.map((g) => g.heading)).toEqual(['Earlier, or not known to be current']);
-    expect(viewOf('roseville-fhc').facts).toEqual(['Roseville', 'Founded 2024']);
-    expect(viewOf('chico-hotshots').regionLabel).toBe('North State');
-    expect(viewOf('chico-hotshots').facts).toEqual(['Chico']); // no founding year posted
-    expect(viewOf('chico-hotshots').fullName).toBe('Chico Hotshots Field Hockey Club');
-    expect(viewOf('chico-hotshots').checkedOn).toBe('Oct 4, 2026');
-    expect(viewOf('chico-hotshots').groups.map((g) => g.heading)).toEqual(['Current', 'Earlier, or not known to be current']);
-    expect(viewOf('chico-hotshots').groups[0].rows.map((r) => [r.name, r.facts, r.status])).toEqual([
-      ['Quinn Karolyi', ['Junior', 'U16'], 'Current'],
-      ['Evie Nielsen', ['Junior', 'Hotshots u19'], 'Current'],
-      ['Lilah Letcher', ['Junior', 'U19'], 'Current, as of Sep 29, 2026'],
-      ['Kate Panighetti', ['Senior', 'U19'], 'Current, as of May 20, 2026'],
-    ]);
-  });
-
-  it('labels roster pages by what they are, and lists each of the club’s pages once', () => {
-    const roster = (slug: string) => viewOf(slug).rosterPages.map((p) => p.label);
-    expect(roster('sf-hawks')).toEqual(['Current players', 'SportsRecruits club page', 'U19 Hawks Blue roster', 'U16 Hawks Blue roster']);
-    expect(roster('lightning')).toEqual(['U16/U19 girls roster, Fall 2025', 'U14/U16 girls roster, Fall 2025']);
-    expect(roster('norcal-impact')).toEqual(['Club roster page', 'Club roster page (2)']);
-    expect(roster('htc')).toEqual(['SportsRecruits club page', 'SportsRecruits team page', 'SportsRecruits team page (2)']);
-    expect(roster('pac-heights')).toEqual([]);
-    expect(roster('roseville-fhc')).toEqual(['Fall 2026 League roster', 'USA Gold Cup 2026 team rosters', 'UC Davis 7v7 Tournament roster']);
-    expect(roster('d-city')).toEqual([]);
-    expect(roster('chico-hotshots')).toEqual([]);
-    expect(viewOf('chico-hotshots').sources.map((s) => [s.label, s.host])).toEqual([
-      ['Club home page', 'leagues.teamlinkt.com'],
-      ['Spring 2026 divisions and teams', 'leagues.teamlinkt.com'],
-      ['Spring 2026 locations', 'leagues.teamlinkt.com'],
-      ['Club news (Feb 2026)', 'leagues.teamlinkt.com'],
-    ]);
-    expect(viewOf('sf-hawks').rosterPages[0].host).toBe('sfyouthfieldhockey.com');
-    // "Pages about the club" is the club's sources less the roster pages listed just above it.
-    expect(viewOf('sf-hawks').sources.map((s) => s.label)).toEqual(['Club home page', 'Program overview', 'Winter 2026-27 teams', 'Club history']);
-    expect(viewOf('lightning').sources.map((s) => s.label)).toEqual(['Club home page', 'U16/U19 girls team page', 'NCFHA youth club directory']);
-    for (const { slug, view } of views) {
-      const c = club(slug);
-      expect(view.sources.map((s) => s.label), slug).toEqual(c.sources.filter((s) => !c.rosterPages.includes(s.url)).map((s) => s.what));
-      // Nothing is lost: every source is under one heading or the other, and no URL under both.
-      const urls = [...view.rosterPages, ...view.sources].map((l) => l.url);
-      expect(new Set(urls).size, slug).toBe(urls.length);
-      for (const src of c.sources) expect(urls, `${slug} ${src.url}`).toContain(src.url);
-      const names = [...view.rosterPages, ...view.sources].map((l) => l.label);
-      expect(new Set(names).size, slug).toBe(names.length);
-    }
-  });
-
-  it('links the page most programs were read from once, under the list, and keeps a row’s own link only when it differs', () => {
-    // Fly lists all eight on one page: no row has a link of its own.
-    const fly = viewOf('fly-fhc');
-    expect(fly.programs.every((p) => p.source === null)).toBe(true);
-    expect(fly.programsSource).toEqual({ label: 'Programs overview', url: 'https://flyfhc.com/programs/', lead: 'Listed on the club’s site' });
-    // SF Hawks lists five age groups on its program overview; the other five rows keep their links.
-    const hawks = viewOf('sf-hawks');
-    expect(hawks.programsSource).toEqual({
-      label: 'Program overview',
-      url: 'https://sfyouthfieldhockey.com/program-overview/',
-      lead: 'Programs without a link of their own are listed on the club’s site',
-    });
-    expect(hawks.programs.filter((p) => p.source === null).map((p) => p.name)).toEqual(['U19', 'U16', 'U14', 'U12', 'U06, U08 and U10']);
-    expect(new Set(hawks.programs.flatMap((p) => (p.source ? [p.source.label] : [])))).toEqual(new Set(['club site', 'SportsRecruits team page']));
-    expect(viewOf('roseville-fhc').programsSource).toEqual({
-      label: 'Fall 2026 programs',
-      url: 'https://rosevillefhc.org/programs',
-      lead: 'Programs without a link of their own are listed on the club’s site',
-    });
-    expect(viewOf('chico-hotshots').programsSource).toEqual({
-      label: 'Spring 2026 divisions and teams',
-      url: 'https://leagues.teamlinkt.com/chicohotshotsfieldhockey/Divisions',
-      lead: 'Listed on the club’s site',
-    });
-    // Every program page is its own: nothing to share.
-    expect(viewOf('lightning').programsSource).toBeNull();
-    expect(viewOf('lightning').programs.every((p) => p.source?.label === 'club site')).toBe(true);
-    // The rule over every club: the shared page is the one most programs cite (two or more), and a
-    // row has a link exactly when its page is another.
-    for (const { slug, view } of views) {
-      const c = club(slug);
-      expect(view.programs.map((p) => p.name), slug).toEqual(c.programs.map((p) => p.name));
-      const counts = c.programs.map((p) => c.programs.filter((q) => q.source === p.source).length);
-      const most = Math.max(0, ...counts);
-      if (most < 2) expect(view.programsSource, slug).toBeNull();
-      else expect(c.programs.filter((p) => p.source === view.programsSource?.url), slug).toHaveLength(most);
-      view.programs.forEach((p, i) => {
-        const own = c.programs[i].source !== view.programsSource?.url;
-        expect(p.source === null ? null : p.source.url, `${slug} / ${p.name}`).toBe(own ? c.programs[i].source : null);
-      });
-      if (view.programsSource) {
-        const all = view.programs.every((p) => p.source === null);
-        expect(view.programsSource.lead.startsWith(all ? 'Listed on ' : 'Programs without a link of their own are listed on '), slug).toBe(true);
-      }
-    }
-  });
-});
 
 describe('the clubs routes, rendered', () => {
   it('prerenders exactly the clubs of the file, and 404s anything else at no metadata cost', async () => {
