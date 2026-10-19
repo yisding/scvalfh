@@ -184,7 +184,8 @@ export const ROOT_OG_ALT = `${SITE_NAME} — ${SEASON_CALENDAR_YEAR} standings, 
  * generate-metadata.md, "Overwriting fields" (#overwriting-fields): "All `openGraph` fields from
  * `app/layout.js` are **replaced** …"). A page that declared nothing but `url` therefore shipped
  * with no og:type, no og:site_name and no og:locale at all, which is eight of the ten route
- * families. Spread this first and override what differs (/game/[id] is `type: 'article'`).
+ * families. pageMetadata (views/site/page-metadata.ts) spreads this first and overrides what differs
+ * (/game/[id] is `type: 'article'`); layout.tsx spreads it for the root default.
  *
  * og:title never carries the site-name suffix: `siteName` (og:site_name) names the site on every
  * page, so the title is the page's own (`Season leaders`, `MCAL tournament`, a team's record; the

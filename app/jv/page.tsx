@@ -8,7 +8,7 @@ import Arrow from '@/components/ui/Arrow';
 import SectionHeader from '@/components/ui/SectionHeader';
 import { LEAGUES, LEAGUES_PROPER, leaguesInRegion, regionOf } from '@/lib/config/leagues';
 import { listWords } from '@/lib/format/words';
-import { OG_BASE, ROOT_OG_IMAGE } from '@/views/site/site';
+import { pageMetadata } from '@/views/site/page-metadata';
 import { buildJvTablesView } from '@/views/standings/jv';
 
 /**
@@ -32,12 +32,13 @@ import { buildJvTablesView } from '@/views/standings/jv';
 const SHORT_NAMES = listWords(LEAGUES_PROPER.map((l) => l.shortName));
 const PAGE_TITLE = 'JV standings';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
+  path: '/jv',
   title: PAGE_TITLE,
   description: `Girls junior varsity field hockey standings for ${SHORT_NAMES}, unofficial: computed from MaxPreps’ JV results (si.com filling gaps), shown for each division once enough of its JV league games have a score.`,
-  alternates: { canonical: '/jv' },
-  openGraph: { ...OG_BASE, ...ROOT_OG_IMAGE, title: PAGE_TITLE, url: '/jv' },
-};
+  ogTitle: PAGE_TITLE,
+  card: 'root',
+});
 
 export default function JvStandingsPage() {
   return (

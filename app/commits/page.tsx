@@ -10,9 +10,8 @@ import SectionHeader from '@/components/ui/SectionHeader';
 import { getRosters } from '@/lib/datasets/rosters';
 import { plural } from '@/lib/format/words';
 import { buildCommitsView } from '@/views/commits/commit-view';
-import { OG_BASE, ROOT_OG_IMAGE } from '@/views/site/site';
+import { pageMetadata } from '@/views/site/page-metadata';
 
-/** The page's title, and its og:title too: og:title never carries the site-name suffix (OG_BASE). */
 const PAGE_TITLE = 'College commitments';
 
 /**
@@ -39,12 +38,13 @@ const PAGE_TITLE = 'College commitments';
  * page's roster footnote where a player has a commitment, and /about link it. It takes the root OG
  * card: there is no commitments card. Neither the title nor the description names a player.
  */
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
+  path: '/commits',
   title: PAGE_TITLE,
   description: `The colleges that players on the ${getRosters().teams.length} varsity rosters here have committed to play for, in field hockey and other sports, with a public source for every one. Unofficial and incomplete.`,
-  alternates: { canonical: '/commits' },
-  openGraph: { ...OG_BASE, ...ROOT_OG_IMAGE, title: PAGE_TITLE, url: '/commits' },
-};
+  ogTitle: PAGE_TITLE,
+  card: 'root',
+});
 
 export default function CommitsPage() {
   const view = buildCommitsView();

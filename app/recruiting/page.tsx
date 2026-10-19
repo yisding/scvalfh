@@ -8,9 +8,8 @@ import SectionHeader from '@/components/ui/SectionHeader';
 import { getRosters } from '@/lib/datasets/rosters';
 import { buildRecruitingView } from '@/views/recruiting/recruiting-view';
 import { leagueChips, leagueHrefs } from '@/views/site/league-chips';
-import { OG_BASE, ROOT_OG_IMAGE } from '@/views/site/site';
+import { pageMetadata } from '@/views/site/page-metadata';
 
-/** The page's title, and its og:title too: og:title never carries the site-name suffix (OG_BASE). */
 const PAGE_TITLE = 'Recruiting';
 
 /**
@@ -36,12 +35,13 @@ const PAGE_TITLE = 'Recruiting';
  * Lists, not tables (DESIGN §10.8). Not in the nav: /teams, the team rosters, /clubs and /commits
  * link it. It takes the root OG card. Neither the title nor the description names a player.
  */
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
+  path: '/recruiting',
   title: PAGE_TITLE,
   description: `The recruiting profiles, youth clubs and college commitments of players on the ${getRosters().teams.length} varsity rosters here, school by school, with a public source for every one. Unofficial and incomplete.`,
-  alternates: { canonical: '/recruiting' },
-  openGraph: { ...OG_BASE, ...ROOT_OG_IMAGE, title: PAGE_TITLE, url: '/recruiting' },
-};
+  ogTitle: PAGE_TITLE,
+  card: 'root',
+});
 
 export default function RecruitingPage() {
   const view = buildRecruitingView();

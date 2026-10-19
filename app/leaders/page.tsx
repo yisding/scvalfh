@@ -9,7 +9,8 @@ import DivisionTabs from '@/components/standings/DivisionTabs';
 import { buildLeadersView } from '@/views/leaders/leaders-view';
 import { AND_INDEPENDENTS_SHORT, LEAGUE_COUNT } from '@/views/leaders/scope';
 import type { RegionLeadersView } from '@/views/leaders/types';
-import { OG_BASE, ROOT_OG_IMAGE, coveredLeagueWords } from '@/views/site/site';
+import { pageMetadata } from '@/views/site/page-metadata';
+import { coveredLeagueWords } from '@/views/site/site';
 
 /**
  * `/leaders` (DESIGN §16, §23, §28) — "Who leads the whole site?" Leaderboards across every covered
@@ -33,15 +34,15 @@ import { OG_BASE, ROOT_OG_IMAGE, coveredLeagueWords } from '@/views/site/site';
 
 const SHORT_NAMES = coveredLeagueWords();
 
-/** The page's title, and its og:title too: og:title never carries the site-name suffix (OG_BASE). */
 const PAGE_TITLE = 'Season leaders';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
+  path: '/leaders',
   title: PAGE_TITLE,
   description: `Girls varsity field hockey leaders across ${SHORT_NAMES}, unofficial: the schools with the best records, the most goals per game (raw and Elo-adjusted) and the highest Elo ratings, and the players with the most points (raw and Elo-adjusted), assists, saves and clean sheets.`,
-  alternates: { canonical: '/leaders' },
-  openGraph: { ...OG_BASE, ...ROOT_OG_IMAGE, title: PAGE_TITLE, url: '/leaders' },
-};
+  ogTitle: PAGE_TITLE,
+  card: 'root',
+});
 
 export default function LeadersPage() {
   const view = buildLeadersView();

@@ -18,7 +18,7 @@ import ScoreBoard from '@/components/ui/ScoreBoard';
 import { gameStaticParams } from '@/views/game/game-route';
 import { buildGameView, buildSupersededStub } from '@/views/game/game-view';
 import { gameDescription, gameRecap, gameTitle } from '@/views/game/titles';
-import { OG_BASE } from '@/views/site/site';
+import { missingMetadata, pageMetadata } from '@/views/site/page-metadata';
 import { gameJsonLd } from '@/views/site/structured-data';
 
 /**
@@ -57,42 +57,38 @@ export async function generateMetadata({ params }: PageProps<'/game/[id]'>): Pro
     const stub = buildSupersededStub(id);
     if (stub) {
       const title = stub.targetModel ? gameTitle(stub.targetModel) : 'Game moved to MaxPreps';
-      return {
-        // Absolute when it is the target game's title, which names the sport (as on the game page below).
-        title: stub.targetModel ? { absolute: title } : title,
-        description: stub.sentence,
+      return pageMetadata({
+        // No path: the stub has no og:url, and its canonical is the MaxPreps game's.
+        path: null,
         // The canonical alone says "index the MaxPreps game instead". It used to come with
         // `noindex, follow`, and the two contradict each other: Google's duplicate-URL guidance is
         // not to noindex a page whose canonical points elsewhere, since the noindex can be carried
         // over to the target. The stub stays out of the sitemap (app/sitemap.ts).
-        alternates: { canonical: stub.targetHref },
-        // The title stated, not inherited with the site-name suffix (views/site/site.ts OG_BASE).
-        openGraph: { ...OG_BASE, title },
-      };
+        canonical: stub.targetHref,
+        // Absolute when it is the target game's title, which names the sport (as on the game page below).
+        title: stub.targetModel ? { absolute: title } : title,
+        description: stub.sentence,
+        ogTitle: title,
+        card: 'own',
+      });
     }
-    return { title: 'Game not found', robots: { index: false, follow: false } };
+    return missingMetadata('Game not found', { robots: { index: false, follow: false } });
   }
   const title = gameTitle(model);
   const description = gameDescription(model);
-  return {
+  return pageMetadata({
+    path: model.canonical,
     // Absolute: the title already names the sport (gameTitle), and the layout's "— NorCal HS Field
     // Hockey" would repeat it and push a matchup's title to ~80 characters; og:site_name and the
     // WebSite markup on / carry the brand.
     title: { absolute: title },
     description,
-    alternates: { canonical: model.canonical },
-    openGraph: {
-      // `openGraph` is REPLACED, not merged, by the nearest segment that defines it
-      // (node_modules/next/dist/docs/01-app/03-api-reference/04-functions/generate-metadata.md:1348),
-      // so the shared fields are spread in here rather than inherited. `type` is the one override:
-      // a single game is an article, not the site.
-      ...OG_BASE,
-      type: 'article',
-      title,
-      description,
-      url: model.canonical,
-    },
-  };
+    ogTitle: title,
+    ogDescription: description,
+    // A single game is an article, not the site.
+    ogType: 'article',
+    card: 'own',
+  });
 }
 
 export default async function GamePage({ params }: PageProps<'/game/[id]'>) {

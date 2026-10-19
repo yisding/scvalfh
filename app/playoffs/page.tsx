@@ -35,7 +35,7 @@ import type { LeagueKeyDate } from '@/views/playoffs/key-dates';
 import { buildPairingView, pairingNotesFor } from '@/views/playoffs/pairings';
 import { buildDivisionProjection, ladderFactsFor, type ProjectionRow } from '@/views/playoffs/projection';
 import { leagueChips } from '@/views/site/league-chips';
-import { OG_BASE, ROOT_OG_IMAGE } from '@/views/site/site';
+import { pageMetadata } from '@/views/site/page-metadata';
 import { leaderLine } from '@/views/standings/standings-view';
 
 /**
@@ -238,12 +238,14 @@ export async function generateMetadata(): Promise<Metadata> {
         keyDates.finals,
       )}. Projected from league results ${asOfPhrase(getLastLeagueResultDate())} — unofficial.`;
   const all = `${description} Every league’s postseason: ${postseasonWords()}.`;
-  return {
+  return pageMetadata({
+    path: '/playoffs',
     title: PAGE_TITLE,
     description: all,
-    alternates: { canonical: '/playoffs' },
-    openGraph: { ...OG_BASE, ...ROOT_OG_IMAGE, title: PAGE_TITLE, description: all, url: '/playoffs' },
-  };
+    ogTitle: PAGE_TITLE,
+    ogDescription: all,
+    card: 'root',
+  });
 }
 
 export default function PlayoffsPage() {

@@ -11,10 +11,10 @@ import { listWords } from '@/lib/format/words';
 import { getCounts } from '@/lib/queries/provenance';
 import { getTeamSearchIndex } from '@/lib/queries/teams';
 import { leagueChips, leagueHrefs } from '@/views/site/league-chips';
-import { OG_BASE, ROOT_OG_IMAGE, leaguesBySectionWords } from '@/views/site/site';
+import { pageMetadata } from '@/views/site/page-metadata';
+import { leaguesBySectionWords } from '@/views/site/site';
 import { alignmentSentence, buildTeamsByRegion } from '@/views/teams/team-view';
 
-/** The page's title, and its og:title too: og:title never carries the site-name suffix (OG_BASE). */
 const PAGE_TITLE = 'Teams and standings';
 
 /**
@@ -58,12 +58,13 @@ const PAGE_TITLE = 'Teams and standings';
 /** Where the teams are listed: each in its division's table, the LA independents' included (DESIGN §24.10). */
 const WHERE_LISTED = 'each in its division’s standings table';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
+  path: '/teams',
   title: PAGE_TITLE,
   description: `All ${getCounts().teams} girls varsity field hockey teams in ${leaguesBySectionWords('name')}, ${WHERE_LISTED}. Find your school.`,
-  alternates: { canonical: '/teams' },
-  openGraph: { ...OG_BASE, ...ROOT_OG_IMAGE, title: PAGE_TITLE, url: '/teams' },
-};
+  ogTitle: PAGE_TITLE,
+  card: 'root',
+});
 
 export default function TeamsPage() {
   const counts = getCounts();

@@ -7,9 +7,8 @@ import PageHeader from '@/components/layout/PageHeader';
 import SectionHeader from '@/components/ui/SectionHeader';
 import { getRosters } from '@/lib/datasets/rosters';
 import { buildClubsIndexView } from '@/views/clubs/club-view';
-import { OG_BASE, ROOT_OG_IMAGE } from '@/views/site/site';
+import { pageMetadata } from '@/views/site/page-metadata';
 
-/** The page's title, and its og:title too: og:title never carries the site-name suffix (OG_BASE). */
 const PAGE_TITLE = 'Club teams';
 
 /**
@@ -41,12 +40,13 @@ const PAGE_TITLE = 'Club teams';
  * (the spec keeps the navigation unchanged); /teams, every team page's roster and /about link it.
  * It takes the root OG card: there is no clubs card (DESIGN §17.6).
  */
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
+  path: '/clubs',
   title: PAGE_TITLE,
   description: `The youth field hockey clubs that players on the ${getRosters().teams.length} varsity rosters here play for, or played for, with a public source for every tie. Unofficial and incomplete.`,
-  alternates: { canonical: '/clubs' },
-  openGraph: { ...OG_BASE, ...ROOT_OG_IMAGE, title: PAGE_TITLE, url: '/clubs' },
-};
+  ogTitle: PAGE_TITLE,
+  card: 'root',
+});
 
 export default function ClubsPage() {
   const view = buildClubsIndexView();

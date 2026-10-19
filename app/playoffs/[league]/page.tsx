@@ -22,7 +22,7 @@ import {
   tournamentStaticParams,
   type TournamentConfig,
 } from '@/views/playoffs/tournament-route';
-import { OG_BASE } from '@/views/site/site';
+import { missingMetadata, pageMetadata } from '@/views/site/page-metadata';
 
 /**
  * /playoffs/<league> — a league's own tournament (SPEC §6.2, §6.3, §10.7): "MCAL tournament — who
@@ -63,16 +63,18 @@ function headerMeta(summary: LeagueSummary, ps: TournamentConfig): string {
 export async function generateMetadata({ params }: PageProps<'/playoffs/[league]'>): Promise<Metadata> {
   const { league } = await params;
   const found = tournamentParam(league);
-  if (!found) return { title: 'Page not found' };
+  if (!found) return missingMetadata('Page not found');
   const { summary, ps } = found;
   const title = ps.name;
   const description = `${headerMeta(summary, ps)}. Seeds from the ${summary.shortName} table, the play-in rule and the bracket, computed from published results; unofficial.`;
-  return {
+  return pageMetadata({
+    path: `/playoffs/${summary.id}`,
     title,
     description,
-    alternates: { canonical: `/playoffs/${summary.id}` },
-    openGraph: { ...OG_BASE, title, description, url: `/playoffs/${summary.id}` },
-  };
+    ogTitle: title,
+    ogDescription: description,
+    card: 'own',
+  });
 }
 
 function viewFor(summary: LeagueSummary, ps: TournamentConfig): TournamentView {

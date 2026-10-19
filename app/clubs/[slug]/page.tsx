@@ -12,7 +12,7 @@ import { clubDisplayName, getClubAffiliations } from '@/lib/datasets/clubs';
 import { plural } from '@/lib/format/words';
 import { clubParam, clubStaticParams } from '@/views/clubs/club-route';
 import { buildClubPageView } from '@/views/clubs/club-view';
-import { OG_BASE, ROOT_OG_IMAGE } from '@/views/site/site';
+import { missingMetadata, pageMetadata } from '@/views/site/page-metadata';
 
 /**
  * /clubs/[slug] — "Who here plays for this club, and how do we know?" (DESIGN §17.1, SPEC §1.1j2).
@@ -49,26 +49,22 @@ export async function generateMetadata({ params }: PageProps<'/clubs/[slug]'>): 
   const club = clubParam(slug);
   // No notFound() here: the page itself 404s, and a metadata pass must not cost an unknown slug
   // anything (the team page's pattern).
-  if (!club) return { title: 'Club not found' };
+  if (!club) return missingMetadata('Club not found');
   const n = getClubAffiliations(slug).length;
   const tied = n
     ? `${plural(n, 'player')} on this site’s varsity rosters ${n === 1 ? 'is tied to it, with a source' : 'are tied to it, each with a source'}.`
     : 'No player on this site’s varsity rosters is tied to it by a public page we found.';
   const description = `${club.name}${club.city ? `, ${club.city}` : ''}. ${club.description} ${tied} Unofficial and incomplete.`;
-  return {
+  return pageMetadata({
+    path: `/clubs/${club.slug}`,
     // The full name, never "<short name> club field hockey": "Lions club field hockey" reads as the
     // service club, and "Performance Field Hockey field hockey" repeats itself.
     title: club.name,
     description,
-    alternates: { canonical: `/clubs/${club.slug}` },
-    openGraph: {
-      ...OG_BASE,
-      ...ROOT_OG_IMAGE,
-      title: clubDisplayName(club),
-      description,
-      url: `/clubs/${club.slug}`,
-    },
-  };
+    ogTitle: clubDisplayName(club),
+    ogDescription: description,
+    card: 'root',
+  });
 }
 
 export default async function ClubPage({ params }: PageProps<'/clubs/[slug]'>) {

@@ -15,7 +15,7 @@ import { hasHistory } from '@/lib/datasets/history';
 import { shortDate } from '@/lib/format/dates';
 import { leagueChips, leagueHrefs } from '@/views/site/league-chips';
 import { leagueParam, leagueStaticParams } from '@/views/site/league-route';
-import { OG_BASE } from '@/views/site/site';
+import { missingMetadata, pageMetadata } from '@/views/site/page-metadata';
 import { leaderClause } from '@/views/standings/leader-lines';
 import { buildStandingsPageView } from '@/views/standings/standings-view';
 
@@ -52,7 +52,7 @@ export function generateStaticParams(): { league: string }[] {
 export async function generateMetadata({ params }: PageProps<'/standings/[league]'>): Promise<Metadata> {
   const { league } = await params;
   const summary = leagueParam(league);
-  if (!summary) return { title: 'League not found' };
+  if (!summary) return missingMetadata('League not found');
   const { leaders, views } = buildStandingsPageView(league);
   const through = views
     .map((v) => v.throughDate)
@@ -67,12 +67,14 @@ export async function generateMetadata({ params }: PageProps<'/standings/[league
   const description = `${leagueSportWords(summary.id)} standings, ordered on ${site ? 'this site’s ' : ''}points (3 a win, 1 a tie). ${leaderClause(leaders)}.${
     through ? ` League games through ${shortDate(through)}.` : ''
   } Computed from published results; unofficial.`;
-  return {
+  return pageMetadata({
+    path: `/standings/${summary.id}`,
     title,
     description,
-    alternates: { canonical: `/standings/${summary.id}` },
-    openGraph: { ...OG_BASE, title, description, url: `/standings/${summary.id}` },
-  };
+    ogTitle: title,
+    ogDescription: description,
+    card: 'own',
+  });
 }
 
 export default async function LeagueStandingsPage({ params }: PageProps<'/standings/[league]'>) {

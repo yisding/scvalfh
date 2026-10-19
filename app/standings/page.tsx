@@ -12,7 +12,7 @@ import { shortDate } from '@/lib/format/dates';
 import { listWords } from '@/lib/format/words';
 import type { LeagueId } from '@/lib/model/ids';
 import { leagueChips, leagueHrefs } from '@/views/site/league-chips';
-import { OG_BASE } from '@/views/site/site';
+import { pageMetadata } from '@/views/site/page-metadata';
 import { leaderClause } from '@/views/standings/leader-lines';
 import { buildStandingsOverviewView } from '@/views/standings/standings-view';
 
@@ -43,12 +43,14 @@ export function generateMetadata(): Metadata {
   const description = `Every division, ordered on points (3 a win, 1 a tie). ${summary}.${
     throughDate ? ` League games through ${shortDate(throughDate)}.` : ''
   } Computed from published results; unofficial.`;
-  return {
+  return pageMetadata({
+    path: '/standings',
     title: 'Standings',
     description,
-    alternates: { canonical: '/standings' },
-    openGraph: { ...OG_BASE, title: 'Standings — every league', description, url: '/standings' },
-  };
+    ogTitle: 'Standings — every league',
+    ogDescription: description,
+    card: 'own',
+  });
 }
 
 /**

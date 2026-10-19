@@ -23,7 +23,7 @@ import { scheduleFilterProps } from '@/views/schedule/filters';
 import { countGames } from '@/views/schedule/filters-client';
 import { leagueChips, leagueHrefs } from '@/views/site/league-chips';
 import { leagueParam, leagueStaticParams } from '@/views/site/league-route';
-import { OG_BASE } from '@/views/site/site';
+import { missingMetadata, pageMetadata } from '@/views/site/page-metadata';
 
 /**
  * `/schedule/<league>` — "My league's whole season" (SPEC §8.1, §10.4): every game with at least
@@ -63,19 +63,21 @@ export function generateStaticParams(): { league: string }[] {
 export async function generateMetadata({ params }: PageProps<'/schedule/[league]'>): Promise<Metadata> {
   const { league } = await params;
   const summary = leagueParam(league);
-  if (!summary) return { title: 'League not found' };
+  if (!summary) return missingMetadata('League not found');
   const counts = countGames(getGamesByDate({ league: summary.id }).flatMap((group) => group.games));
   // The h1 is scheduleTitle; the <title> adds the sport, which a search result has no other way to show.
   const title = scheduleTitle(summary).replace('schedule and results', 'field hockey schedule and results');
   // 'involving SCVAL teams'; the LA independents are named by their standaloneName: 'involving the LA independents'.
   const involving = isIndependentLeague(summary.id) ? standaloneName(summary.id) : `${summary.shortName} teams`;
   const description = `All ${plural(counts.total, 'girls varsity field hockey game')} involving ${involving} for ${SEASON_DISPLAY}, grouped by date: ${plural(counts.final, 'final score')}, ${counts.upcoming} still to come. Filter by team, game type or status.`;
-  return {
+  return pageMetadata({
+    path: `/schedule/${summary.id}`,
     title,
     description,
-    alternates: { canonical: `/schedule/${summary.id}` },
-    openGraph: { ...OG_BASE, title, description, url: `/schedule/${summary.id}` },
-  };
+    ogTitle: title,
+    ogDescription: description,
+    card: 'own',
+  });
 }
 
 export default async function LeagueSchedulePage({ params }: PageProps<'/schedule/[league]'>) {

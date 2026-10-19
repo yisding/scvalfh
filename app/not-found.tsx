@@ -5,14 +5,15 @@ import PageHeader from '@/components/layout/PageHeader';
 import { LEAGUES_PROPER, getLeague } from '@/lib/config/leagues';
 import { getAvailableHistoryLeagues } from '@/lib/datasets/history';
 import { listWords, numberWord } from '@/lib/format/words';
-import { OG_BASE } from '@/views/site/site';
+import { pageMetadata } from '@/views/site/page-metadata';
 
-export const metadata: Metadata = {
+// No path: a 404 page has no canonical and no og:url of its own.
+export const metadata: Metadata = pageMetadata({
+  path: null,
   title: 'Page not found',
-  // Stated, not inherited: an inherited og:title is the templated one, with the site-name suffix
-  // that no og:title carries (views/site/site.ts OG_BASE).
-  openGraph: { ...OG_BASE, title: 'Page not found' },
-};
+  ogTitle: 'Page not found',
+  card: 'own',
+});
 
 /**
  * 'the nine leagues', from the config (never a literal count). It named every league ('SCVAL, BVAL, PCAL,

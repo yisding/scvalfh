@@ -33,7 +33,8 @@ import { formStripName, plural } from '@/lib/format/words';
 import type { DivisionId, LeagueId } from '@/lib/model/ids';
 import { getTeamSlugs } from '@/lib/queries/teams';
 import { gameKindLabel } from '@/views/shared/describe-game';
-import { DATA_CORRECTIONS_URL, OG_BASE } from '@/views/site/site';
+import { missingMetadata, pageMetadata } from '@/views/site/page-metadata';
+import { DATA_CORRECTIONS_URL } from '@/views/site/site';
 import { teamJsonLd } from '@/views/site/structured-data';
 import { teamJvStanding } from '@/views/standings/jv';
 import { buildTeamJvView } from '@/views/teams/jv';
@@ -138,7 +139,7 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: PageProps<'/teams/[slug]'>): Promise<Metadata> {
   const { slug } = await params;
   const view = buildTeamPageView(slug);
-  if (!view) return { title: 'Team not found' };
+  if (!view) return missingMetadata('Team not found');
   const { team, standing, hasResults } = view;
   const record =
     hasResults && standing
@@ -148,19 +149,16 @@ export async function generateMetadata({ params }: PageProps<'/teams/[slug]'>): 
     buildPlayerStatsView(team.slug, [...view.leagueLog, ...view.nonLeagueLog]),
     buildRosterView(team.slug),
   );
-  return {
+  return pageMetadata({
+    path: `/teams/${team.slug}`,
     // With the mascot, as the school's teams are known and searched ("Fremont Firebirds"): the bare
     // name is ambiguous for a school named for its city (Fremont, Christopher, Prospect).
     title: `${team.name} ${team.mascot} field hockey`,
     description: `${team.name} ${team.mascot} girls varsity field hockey (${view.league.shortName}), unofficial: ${record}. Schedule, results, ${extras}goal margins and ${postseasonDescription(view)}.`,
-    alternates: { canonical: `/teams/${team.slug}` },
-    openGraph: {
-      ...OG_BASE,
-      title: `${team.name} — ${record}`,
-      description: `Scores, schedule and standings for ${team.name} girls varsity field hockey.`,
-      url: `/teams/${team.slug}`,
-    },
-  };
+    ogTitle: `${team.name} — ${record}`,
+    ogDescription: `Scores, schedule and standings for ${team.name} girls varsity field hockey.`,
+    card: 'own',
+  });
 }
 
 /**

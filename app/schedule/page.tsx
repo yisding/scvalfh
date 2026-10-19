@@ -12,7 +12,8 @@ import { getLeagueSummaries } from '@/lib/queries/leagues';
 import { getTeamBySlug } from '@/lib/registry/teams';
 import { countGames } from '@/views/schedule/filters-client';
 import { buildScheduleIndex } from '@/views/schedule/schedule-view';
-import { OG_BASE, ROOT_OG_IMAGE, coveredLeagueWords } from '@/views/site/site';
+import { pageMetadata } from '@/views/site/page-metadata';
+import { coveredLeagueWords } from '@/views/site/site';
 
 /**
  * `/schedule` — "What's on across the leagues?" (SPEC §8.1, §10.4): a LIGHT index. One page of
@@ -43,18 +44,14 @@ export function generateMetadata(): Metadata {
   const counts = countGames(getGames());
   const list = coveredLeagueWords();
   const description = `${counts.total} girls varsity field hockey games in ${list} for ${SEASON_DISPLAY}: ${plural(counts.final, 'final score')}, ${counts.upcoming} still to come. Each league's full schedule, plus every game day.`;
-  return {
+  return pageMetadata({
+    path: '/schedule',
     title: 'Schedule & results',
     description,
-    alternates: { canonical: '/schedule' },
-    openGraph: {
-      ...OG_BASE,
-      ...ROOT_OG_IMAGE,
-      url: '/schedule',
-      title: 'Schedule & results — every league',
-      description,
-    },
-  };
+    ogTitle: 'Schedule & results — every league',
+    ogDescription: description,
+    card: 'root',
+  });
 }
 
 export default function SchedulePage() {

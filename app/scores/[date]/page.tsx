@@ -30,7 +30,7 @@ import {
 } from '@/views/schedule/day-summary';
 import { countGames } from '@/views/schedule/filters-client';
 import { scoresParam, scoresStaticParams } from '@/views/scores/scores-route';
-import { OG_BASE } from '@/views/site/site';
+import { missingMetadata, pageMetadata } from '@/views/site/page-metadata';
 import { buildDayJvView } from '@/views/teams/jv';
 
 /**
@@ -86,18 +86,20 @@ export async function generateMetadata({
   params,
 }: PageProps<'/scores/[date]'>): Promise<Metadata> {
   const { date } = await params;
-  if (!scoresParam(date)) return { title: 'Day not found' };
+  if (!scoresParam(date)) return missingMetadata('Day not found');
   const games = getGames({ date });
   const year = parseLocal(date).year;
   const description = dayDescription(games, `${longDate(date)}, ${year}`);
   // The sport first: "Scores for Thu Sep 24" alone could be any sport's scores page.
   const title = `Field hockey scores — ${shortDate(date)}, ${year}`;
-  return {
+  return pageMetadata({
+    path: `/scores/${date}`,
     title,
     description,
-    alternates: { canonical: `/scores/${date}` },
-    openGraph: { ...OG_BASE, title, description, url: `/scores/${date}` },
-  };
+    ogTitle: title,
+    ogDescription: description,
+    card: 'own',
+  });
 }
 
 export default async function ScoresByDatePage({ params }: PageProps<'/scores/[date]'>) {

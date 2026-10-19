@@ -22,7 +22,7 @@ import { listWords } from '@/lib/format/words';
 import type { LeagueId } from '@/lib/model/ids';
 import { getTeamBySlug } from '@/lib/registry/teams';
 import { divisionChampion, finalLine, sideName } from '@/views/history/bracket';
-import { OG_BASE, ROOT_OG_IMAGE } from '@/views/site/site';
+import { pageMetadata } from '@/views/site/page-metadata';
 
 /**
  * `/history/2025-26` (DESIGN §1.1, §3.9; SPEC §10.8) — last season's final standings, one section
@@ -71,10 +71,10 @@ const GROUPS_SENTENCE = UNAVAILABLE_GROUPS.length
   ? `${listWords(UNAVAILABLE_GROUPS.map((l) => `the ${getLeague(l.id).name}`)).replace(/^t/, 'T')} are this site’s grouping, so no table of them was published.`
   : null;
 
-/** The page's title, and its og:title too: og:title never carries the site-name suffix (OG_BASE). */
 const PAGE_TITLE = `${SEASON} final standings`;
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
+  path: '/history/2025-26',
   title: PAGE_TITLE,
   description:
     `Final ${listWords(AVAILABLE.map((l) => short(l.id)))} girls field hockey standings` +
@@ -84,9 +84,9 @@ export const metadata: Metadata = {
       ? ` ${UNAVAILABLE_SUBJECT} marked unavailable: we found no official ${SEASON} final standings.`
       : '') +
     (GROUPS_SENTENCE ? ` ${GROUPS_SENTENCE}` : ''),
-  alternates: { canonical: '/history/2025-26' },
-  openGraph: { ...OG_BASE, ...ROOT_OG_IMAGE, title: PAGE_TITLE, url: '/history/2025-26' },
-};
+  ogTitle: PAGE_TITLE,
+  card: 'root',
+});
 
 /** `lg:grid-rows-[repeat(N,auto)]` for the subgrid, spelled out so Tailwind can see each class. */
 const ROWS_CLASS: Record<number, string> = {

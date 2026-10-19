@@ -14,7 +14,8 @@ import { shortDate } from '@/lib/format/dates';
 import { listWords } from '@/lib/format/words';
 import { TEAMS } from '@/lib/registry/teams';
 import { buildHomeView } from '@/views/home/home-view';
-import { OG_BASE, SITE_NAME, leaguesBySectionWords } from '@/views/site/site';
+import { pageMetadata } from '@/views/site/page-metadata';
+import { SITE_NAME, leaguesBySectionWords } from '@/views/site/site';
 import { websiteJsonLd } from '@/views/site/structured-data';
 
 /**
@@ -36,14 +37,15 @@ import { websiteJsonLd } from '@/views/site/structured-data';
  * the sr-only league list read config (`lib/registry/teams`, `lib/config/leagues`) directly. No page calls `Date.now()`, and
  * there is no `searchParams` in this signature, which is what keeps the route static.
  */
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
+  path: '/',
   // Absolute, so the layout's suffix does not repeat the brand; the brand alone ("NorCal High School
   // Field Hockey", the layout's default) said nothing about what the page has.
   title: { absolute: `${SITE_NAME} Scores & Standings` },
   description: `Scores, standings and playoff pictures for the ${TEAMS.length} girls varsity field hockey teams in ${leaguesBySectionWords('name')}. Unofficial, updated twice daily.`,
-  alternates: { canonical: '/' },
-  openGraph: { ...OG_BASE, title: SITE_NAME, url: '/' },
-};
+  ogTitle: SITE_NAME,
+  card: 'own',
+});
 
 /**
  * 'SCVAL, BVAL, PCAL, MCAL, EAL, Sunset, City, North, Metro and the LA independents', from the

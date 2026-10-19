@@ -45,7 +45,8 @@ import {
 import { getAllStandings } from '@/lib/queries/standings';
 import { getTeams } from '@/lib/queries/teams';
 import { getTeamBySlug } from '@/lib/registry/teams';
-import { DATA_CORRECTIONS_URL, OG_BASE, ROOT_OG_IMAGE, SITE_SCOPE_NOTE, independentsWords } from '@/views/site/site';
+import { pageMetadata } from '@/views/site/page-metadata';
+import { DATA_CORRECTIONS_URL, SITE_SCOPE_NOTE, independentsWords } from '@/views/site/site';
 import { jvTableTitle } from '@/views/standings/jv';
 
 /**
@@ -98,15 +99,15 @@ function leagueRef(summary: Pick<LeagueSummary, 'id' | 'name' | 'shortName' | 's
 const DESCRIPTION =
   'How each league’s standings are computed, where the data comes from, and every disagreement with the sources.';
 
-/** The page's title, and its og:title too: og:title never carries the site-name suffix (OG_BASE). */
 const PAGE_TITLE = 'About & sources';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
+  path: '/about',
   title: PAGE_TITLE,
   description: DESCRIPTION,
-  alternates: { canonical: '/about' },
-  openGraph: { ...OG_BASE, ...ROOT_OG_IMAGE, title: PAGE_TITLE, url: '/about' },
-};
+  ogTitle: PAGE_TITLE,
+  card: 'root',
+});
 
 /**
  * A quoted by-law: a card with a straight 3px rule down its left edge. The rule is a pseudo-element
