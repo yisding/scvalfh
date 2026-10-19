@@ -50,6 +50,7 @@ import {
   FIELD_STAT_KEYS, type FieldStats, GOALIE_STAT_KEYS, type GoalieStats, type PlayerStatLine,
   type TeamPlayerStats,
 } from '@/lib/schema/player-stats';
+import { byDateLocal } from '@/lib/shared/game';
 
 // ---------------------------------------------------------------- parsing
 
@@ -413,7 +414,7 @@ export function noteStatsFor(slug: TeamSlug, sources: NoteSources): TeamNoteStat
 
   const games = sources.games
     .filter((g) => g.home.slug === slug || g.away.slug === slug)
-    .sort((a, b) => a.dateLocal.localeCompare(b.dateLocal));
+    .sort(byDateLocal);
 
   for (const g of games) {
     const side = g.home.slug === slug ? 'home' : 'away';

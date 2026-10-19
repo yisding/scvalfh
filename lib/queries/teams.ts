@@ -1,17 +1,18 @@
 /**
- * Teams in the snapshot (SPEC §13.3): the team list, a slug-or-GUID lookup, the search index and the
- * head-to-head record of two teams.
+ * Teams in the snapshot (SPEC §13.3): the team list, a slug-or-GUID lookup, the search index, and the
+ * head-to-head record and form line of teams (the pure engines lib/engine/head-to-head.ts and form.ts).
  */
 
 import { DATA_QUALITY, LEAGUES, getSection } from '@/lib/config/leagues';
 import { divisionHeading } from '@/lib/config/leagues/labels';
 import { getSnapshot } from '@/lib/datasets/snapshot';
-import { recordString } from '@/lib/format/numbers';
-import type { Game, Record3 } from '@/lib/model/game';
+import { teamForm } from '@/lib/engine/form';
+import type { TeamForm } from '@/lib/engine/form';
+import { headToHead } from '@/lib/engine/head-to-head';
+import type { HeadToHead } from '@/lib/engine/head-to-head';
 import type { DivisionId, LeagueId, TeamSlug } from '@/lib/model/ids';
 import type { Team } from '@/lib/model/team';
 import { getTeamById, getTeamBySlug } from '@/lib/registry/teams';
-import { sideOutcome } from '@/lib/shared/game';
 import { buildSearchIndex } from '@/lib/shared/search';
 import type { SearchIndex } from '@/lib/shared/search';
 
@@ -72,65 +73,18 @@ export function getTeamSearchIndex(): SearchIndex {
   return searchIndex;
 }
 
-// ---------------------------------------------------------------- head to head
+// ---------------------------------------------------------------- head to head and form
 
-export interface HeadToHead {
-  a: Team;
-  b: Team;
-  games: Game[];
-  /** Record from A's point of view. */
-  aRecord: Record3;
-  bRecord: Record3;
-  aGoals: number;
-  bGoals: number;
-  summary: string;
-}
-
+/** Two teams' meetings and record (lib/engine/head-to-head.ts); undefined for an unknown reference or one team twice. */
 export function getHeadToHead(aRef: string, bRef: string): HeadToHead | undefined {
   const a = resolveTeamRef(aRef);
   const b = resolveTeamRef(bRef);
   if (!a || !b || a.id === b.id) return undefined;
-  const games = snapshot.games
-    .filter((g) => {
-      const ids = [g.home.teamId, g.away.teamId];
-      return ids.includes(a.id) && ids.includes(b.id);
-    })
-    .sort((x, y) => x.dateLocal.localeCompare(y.dateLocal));
+  return headToHead(snapshot.games, a, b);
+}
 
-  const aRecord: Record3 = { w: 0, l: 0, t: 0 };
-  const bRecord: Record3 = { w: 0, l: 0, t: 0 };
-  let aGoals = 0;
-  let bGoals = 0;
-  for (const g of games) {
-    if (g.status !== 'final' || g.home.score === null || g.away.score === null) continue;
-    const aIsHome = g.home.teamId === a.id;
-    const aScore = aIsHome ? g.home.score : g.away.score;
-    const bScore = aIsHome ? g.away.score : g.home.score;
-    if (!g.isForfeit) {
-      aGoals += aScore;
-      bGoals += bScore;
-    }
-    // sideOutcome: a shootout win (decider 'SO', level on goals: an EAL 1 v 1 win, a San Diego shootout) is the flagged side's win.
-    const outcome = sideOutcome(g, aIsHome ? 'home' : 'away');
-    if (outcome === 'W') {
-      aRecord.w += 1;
-      bRecord.l += 1;
-    } else if (outcome === 'L') {
-      aRecord.l += 1;
-      bRecord.w += 1;
-    } else {
-      aRecord.t += 1;
-      bRecord.t += 1;
-    }
-  }
-  return {
-    a,
-    b,
-    games,
-    aRecord,
-    bRecord,
-    aGoals,
-    bGoals,
-    summary: `${a.shortName} ${recordString(aRecord)} vs ${b.shortName}`,
-  };
+/** One team's form line (lib/engine/form.ts); undefined for an unknown reference. */
+export function getTeamForm(ref: string): TeamForm | undefined {
+  const team = resolveTeamRef(ref);
+  return team ? teamForm(snapshot.games, team) : undefined;
 }

@@ -21,6 +21,7 @@ import type { Game } from '@/lib/model/game';
 import type { TeamId } from '@/lib/model/ids';
 import type { ComputedRecord, Standing } from '@/lib/model/standings';
 import type { Team } from '@/lib/model/team';
+import { sideView } from '@/lib/shared/game';
 import { UNADJUSTED_NOTE, num, schoolBoard } from './board-kit';
 import type { EloBoardView } from './elo-board';
 import { byName, qualifyingMinimum } from './ranking';
@@ -45,15 +46,12 @@ function schoolLine(team: Team, standing: Standing, games: readonly Game[]): Sch
   let cleanSheets = 0;
   for (const g of games) {
     if (g.status !== 'final' || g.isForfeit) continue;
-    const isHome = g.home.teamId === team.id;
-    if (!isHome && g.away.teamId !== team.id) continue;
-    const mine = isHome ? g.home : g.away;
-    const theirs = isHome ? g.away : g.home;
-    if (mine.score === null || theirs.score === null) continue;
+    const view = sideView(g, team.id);
+    if (!view) continue;
     goalGames += 1;
-    gf += mine.score;
-    ga += theirs.score;
-    if (theirs.score === 0) cleanSheets += 1;
+    gf += view.for;
+    ga += view.against;
+    if (view.against === 0) cleanSheets += 1;
   }
   return { team, overall: standing.overall, league: standing.computed, goalGames, gf, ga, cleanSheets };
 }

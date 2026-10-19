@@ -10,8 +10,9 @@ import type { Game } from '@/lib/model/game';
 import type { TeamId } from '@/lib/model/ids';
 import type { LeagueConfig } from '@/lib/model/league-config';
 import type { Standing, TiebreakStage } from '@/lib/model/standings';
+import { sideView } from '@/lib/shared/game';
 
-import { divisionGames, perspective } from './record';
+import { divisionGames } from './record';
 import { HALT, UNCOMPUTABLE, allEqual, nameOf, slugOfId, stageKeys, type DivisionCtx } from './tiebreak';
 
 // ---------------------------------------------------------------- seed-one-restart (BVAL, MCAL)
@@ -136,8 +137,8 @@ function lastSpotSeed(group: readonly TeamId[], place: number, above: readonly T
       const ids = [g.home.teamId, g.away.teamId];
       return ids.includes(a) && ids.includes(b);
     });
-    const aWins = meetings.filter((g) => perspective(g, a)?.outcome === 'W').length;
-    const bWins = meetings.filter((g) => perspective(g, b)?.outcome === 'W').length;
+    const aWins = meetings.filter((g) => sideView(g, a)?.outcome === 'W').length;
+    const bWins = meetings.filter((g) => sideView(g, b)?.outcome === 'W').length;
     if (meetings.length >= 2 && (aWins === meetings.length || bWins === meetings.length)) {
       const winner = aWins === meetings.length ? a : b;
       const loser = winner === a ? b : a;

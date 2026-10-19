@@ -13,6 +13,7 @@
 
 import type { Game } from '@/lib/model/game';
 import type { LeagueId, RegionId } from '@/lib/model/ids';
+import { byDateLocal } from '@/lib/shared/game';
 
 export interface LeagueCardData {
   id: LeagueId;
@@ -84,7 +85,7 @@ export function buildScheduleIndex(input: {
   days?: number;
 }): ScheduleIndexView {
   const n = input.days ?? 3;
-  const sorted = [...input.games].sort((a, b) => a.dateLocal.localeCompare(b.dateLocal));
+  const sorted = [...input.games].sort(byDateLocal);
   const tagged = sorted.map((game) => ({ game, leagues: sideLeagues(game, input.leagueOf) }));
   const dates = [...new Set(sorted.map((g) => g.dateKey))].sort();
 

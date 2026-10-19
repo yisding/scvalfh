@@ -35,11 +35,11 @@ import { type LeagueConfig } from '@/lib/model/league-config';
 import type { TournamentGame } from '@/lib/model/postseason';
 import type { Standing, TiebreakStage } from '@/lib/model/standings';
 import type { Team } from '@/lib/model/team';
-import { getGameById, getGames, getTeamForm } from '@/lib/queries/games';
+import { getGameById, getGames } from '@/lib/queries/games';
 import { getLeagueTournament } from '@/lib/queries/postseason';
 import { getSbliveCrossCheck, getSupersededGames } from '@/lib/queries/provenance';
 import { getStandingFor } from '@/lib/queries/standings';
-import { getTeams } from '@/lib/queries/teams';
+import { getTeamForm, getTeams } from '@/lib/queries/teams';
 import type { FormEntry } from '@/components/ui/FormStrip';
 import {
   describeGame,
@@ -55,7 +55,7 @@ import {
 } from '@/components/ui/describe-game';
 import { getTeamBySlug } from '@/lib/registry/teams';
 import { isSbliveContestId } from '@/lib/shared/contest-id';
-import { sideOutcome } from '@/lib/shared/game';
+import { byDateLocal, sideOutcome } from '@/lib/shared/game';
 import { gameHref, gameIdToParam, paramToGameId } from '@/lib/shared/game-id';
 
 // ---------------------------------------------------------------- types
@@ -435,7 +435,7 @@ function seriesGames(game: Game): Game[] {
       const keys = [sideKey(g.home), sideKey(g.away)];
       return keys.includes(keyHome) && keys.includes(keyAway);
     })
-    .sort((a, b) => a.dateLocal.localeCompare(b.dateLocal));
+    .sort(byDateLocal);
 }
 
 /** A final whose published score MaxPreps' own result flags contradict, with no si.com score over it. */

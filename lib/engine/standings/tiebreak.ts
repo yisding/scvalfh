@@ -10,8 +10,9 @@ import type { DivisionId, TeamId, TeamSlug } from '@/lib/model/ids';
 import type { LeagueConfig, LeagueRules } from '@/lib/model/league-config';
 import type { ComputedRecord, TiebreakStage } from '@/lib/model/standings';
 import { getTeamById } from '@/lib/registry/teams';
+import { bumpRecord, sideView } from '@/lib/shared/game';
 
-import { bump, emptyRecord3, perspective, winPct } from './record';
+import { emptyRecord3, winPct } from './record';
 
 // ---------------------------------------------------------------- tiebreakers
 
@@ -35,11 +36,11 @@ function headToHead(group: readonly TeamId[], games: readonly Game[]): Map<TeamI
     const a = game.away.teamId;
     if (!h || !a || !set.has(h) || !set.has(a)) continue;
     for (const id of [h, a]) {
-      const view = perspective(game, id);
+      const view = sideView(game, id);
       const row = out.get(id);
       if (!view || !row) continue;
       row.gp += 1;
-      bump(row, view.outcome);
+      bumpRecord(row, view.outcome);
       if (!game.isForfeit) {
         row.gf += view.for;
         row.ga += view.against;
@@ -76,7 +77,7 @@ function pointsVs(ctx: DivisionCtx, id: TeamId, other: TeamId): { pts: number; g
   for (const g of ctx.games) {
     const ids = [g.home.teamId, g.away.teamId];
     if (!ids.includes(id) || !ids.includes(other)) continue;
-    const view = perspective(g, id);
+    const view = sideView(g, id);
     if (!view) continue;
     gp += 1;
     if (view.outcome === 'W') pts += ctx.rules.points.win;
@@ -166,10 +167,10 @@ export function stageKeys(
           if (!ids.includes(id)) continue;
           const other = g.home.teamId === id ? g.away.teamId : g.home.teamId;
           if (!other || !above.includes(other)) continue;
-          const view = perspective(g, id);
+          const view = sideView(g, id);
           if (!view) continue;
           rec.gp += 1;
-          bump(rec, view.outcome);
+          bumpRecord(rec, view.outcome);
         }
         if (rec.gp === 0) return null;
         out.set(id, winPct(rec));

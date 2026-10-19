@@ -1,18 +1,17 @@
 /**
  * The snapshot's contests (SPEC §13.3): filtered lists, one game, the dates with games, the landing
- * dates the Scores tab and the home page aim at, the official fixtures nobody has reported, and one
- * team's form line.
+ * dates the Scores tab and the home page aim at, and the official fixtures nobody has reported.
  */
 
 import { getLeague } from '@/lib/config/leagues';
 import { getFetchedAt, getSnapshot, getToday } from '@/lib/datasets/snapshot';
 import type { OfficialFixture } from '@/lib/model/fixture';
-import type { Game, GameStatus, Outcome } from '@/lib/model/game';
-import type { ContestId, DivisionId, LeagueId, TeamSlug } from '@/lib/model/ids';
+import type { Game, GameStatus } from '@/lib/model/game';
+import type { ContestId, DivisionId, LeagueId } from '@/lib/model/ids';
 import type { Team } from '@/lib/model/team';
 import { teamOfSide } from '@/lib/registry/teams';
 import { localDateKey } from '@/lib/shared/dates';
-import { sideOutcome } from '@/lib/shared/game';
+import { byDateLocal, involvesTeam } from '@/lib/shared/game';
 import { resolveTeamRef } from './teams';
 
 const snapshot = getSnapshot();
@@ -33,15 +32,6 @@ export interface GameFilter {
   status?: GameStatus | GameStatus[];
   /** 'YYYY-MM-DD' */
   date?: string;
-}
-
-function involvesTeam(game: Game, team: Team): boolean {
-  return (
-    game.home.teamId === team.id ||
-    game.away.teamId === team.id ||
-    game.home.slug === team.slug ||
-    game.away.slug === team.slug
-  );
 }
 
 function hasSideIn(game: Game, pred: (t: Team) => boolean): boolean {
@@ -134,7 +124,7 @@ export function getUpcoming(n = 5, filter: { league?: LeagueId } = {}, asOf: str
   const today = localDateKey(asOf);
   return scoped(filter)
     .filter((g) => PLAYABLE.includes(g.status) && g.dateKey >= today)
-    .sort((a, b) => a.dateLocal.localeCompare(b.dateLocal))
+    .sort(byDateLocal)
     .slice(0, n);
 }
 
@@ -178,55 +168,4 @@ export function getOfficialFixtures(
     rows = rows.filter((f) => f.awaySlug === team.slug || f.homeSlug === team.slug);
   }
   return [...rows];
-}
-
-// ---------------------------------------------------------------- team form
-
-export interface FormGame {
-  contestId: ContestId;
-  date: string;
-  opponent: string;
-  opponentSlug: TeamSlug | null;
-  site: Game['site'];
-  status: GameStatus;
-  /** goals for − goals against; null unless the game is a counted final. */
-  margin: number | null;
-  outcome: Outcome | null;
-  /** Forfeits have no goal margin and are excluded from MarginStrip (DESIGN §5.7). */
-  excludedFromMargin: boolean;
-}
-
-export interface TeamForm {
-  /** Every counted-division contest in date order, played or not, for the MarginStrip axis. */
-  leagueGames: FormGame[];
-}
-
-export function getTeamForm(ref: string): TeamForm | undefined {
-  const team = resolveTeamRef(ref);
-  if (!team) return undefined;
-  const all = getGames({ teamId: team.id }).sort((a, b) =>
-    a.dateLocal.localeCompare(b.dateLocal),
-  );
-  const allGames: FormGame[] = all.map((g) => {
-    const isHome = g.home.teamId === team.id;
-    const mine = isHome ? g.home : g.away;
-    const theirs = isHome ? g.away : g.home;
-    const counted =
-      g.status === 'final' && mine.score !== null && theirs.score !== null && !g.isForfeit;
-    // sideOutcome: a shootout win (decider 'SO', level on goals: an EAL 1 v 1 win, a San Diego shootout) is the flagged side's win.
-    const outcome: Outcome | null = sideOutcome(g, isHome ? 'home' : 'away');
-    return {
-      contestId: g.contestId,
-      date: g.dateKey,
-      opponent: theirs.name,
-      opponentSlug: theirs.slug,
-      site: g.site === 'neutral' ? 'neutral' : isHome ? 'home' : 'away',
-      status: g.status,
-      margin: counted ? (mine.score as number) - (theirs.score as number) : null,
-      outcome,
-      excludedFromMargin: g.isForfeit,
-    };
-  });
-  const leagueGames = allGames.filter((_, i) => all[i].countsFor !== null);
-  return { leagueGames };
 }

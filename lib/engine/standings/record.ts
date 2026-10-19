@@ -8,7 +8,7 @@ import type { Game, Outcome, Record3 } from '@/lib/model/game';
 import type { DivisionId, TeamId } from '@/lib/model/ids';
 import type { LeagueRules } from '@/lib/model/league-config';
 import type { ComputedRecord } from '@/lib/model/standings';
-import { byDateThenId, sideOutcome } from '@/lib/shared/game';
+import { bumpRecord, byDateThenId, sideView } from '@/lib/shared/game';
 
 // ---------------------------------------------------------------- accumulation
 
@@ -41,52 +41,20 @@ export const emptyTally = (): Tally => ({
   results: [],
 });
 
-export function bump(rec: { w: number; l: number; t: number }, outcome: Outcome): void {
-  if (outcome === 'W') rec.w += 1;
-  else if (outcome === 'L') rec.l += 1;
-  else rec.t += 1;
-}
-
 /** CIF convention: a tie is half a win. Asserted against MaxPreps' own pct (SPEC §5.6). */
 export const winPct = (r: { w: number; t: number; gp: number }): number => (r.gp > 0 ? (r.w + r.t / 2) / r.gp : 0);
 
-/**
- * A completed game as seen from one team. Returns null when the team is not in it. The outcome is
- * `sideOutcome`'s (lib/shared/game.ts), so a shootout win (decider 'SO', level on goals: an EAL 1 v 1 win, a San
- * Diego Section shootout MaxPreps records as a level score marked W and L) counts as the
- * flagged side's win while its goals stay as recorded.
- */
-export function perspective(
-  game: Game,
-  teamId: TeamId,
-): { for: number; against: number; outcome: Outcome; site: Game['site'] } | null {
-  const isHome = game.home.teamId === teamId;
-  const isAway = game.away.teamId === teamId;
-  if (!isHome && !isAway) return null;
-  const mine = isHome ? game.home : game.away;
-  const theirs = isHome ? game.away : game.home;
-  if (mine.score === null || theirs.score === null) return null;
-  const outcome = sideOutcome(game, isHome ? 'home' : 'away');
-  if (outcome === null) return null;
-  return {
-    for: mine.score,
-    against: theirs.score,
-    outcome,
-    site: game.site === 'neutral' ? 'neutral' : isHome ? 'home' : 'away',
-  };
-}
-
 export function accumulate(tally: Tally, game: Game, teamId: TeamId): void {
-  const view = perspective(game, teamId);
+  const view = sideView(game, teamId);
   if (!view) return;
   tally.gp += 1;
-  bump(tally, view.outcome);
-  // Forfeits count in W-L-T but NOT in goals (DESIGN §11.6).
+  bumpRecord(tally, view.outcome);
+  // Forfeits count in W-L-T but NOT in goals (DESIGN §11.6); sideView returns the recorded goals either way.
   if (!game.isForfeit) {
     tally.gf += view.for;
     tally.ga += view.against;
   }
-  bump(
+  bumpRecord(
     view.site === 'home' ? tally.home : view.site === 'away' ? tally.away : tally.neutral,
     view.outcome,
   );

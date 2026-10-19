@@ -14,6 +14,7 @@ import {
 } from '@/lib/config/leagues';
 import { divisionHeading, standingsLabel } from '@/lib/config/leagues/labels';
 import { getToday } from '@/lib/datasets/snapshot';
+import type { FormGame } from '@/lib/engine/form';
 import { outcomesFor } from '@/lib/engine/standings';
 import { dateSpan, gameWhen, monthDay, shortDate, timeOfDayPT } from '@/lib/format/dates';
 import { ordinal, recordString } from '@/lib/format/numbers';
@@ -25,17 +26,15 @@ import type { DivisionId, LeagueId, RegionId, SectionId, TeamSlug } from '@/lib/
 import { type LeagueRules, type PostseasonConfig } from '@/lib/model/league-config';
 import type { Standing } from '@/lib/model/standings';
 import type { Team } from '@/lib/model/team';
-import {
-  type FormGame, getGames, getLastLeagueResultDate, getOfficialFixtures, getTeamForm,
-} from '@/lib/queries/games';
+import { getGames, getLastLeagueResultDate, getOfficialFixtures } from '@/lib/queries/games';
 import { type LeagueSummary, getTeamsGrouped } from '@/lib/queries/leagues';
 import { type TeamPostseasonLine, getTeamPostseasonLine } from '@/lib/queries/postseason';
 import {
   type StandingContext, getStandingContext, getStandingFor, getStandings,
 } from '@/lib/queries/standings';
-import { getHeadToHead, getTeams } from '@/lib/queries/teams';
+import { getHeadToHead, getTeamForm, getTeams } from '@/lib/queries/teams';
 import { getTeamBySlug } from '@/lib/registry/teams';
-import { sideOutcome } from '@/lib/shared/game';
+import { byDateLocal, sideOutcome } from '@/lib/shared/game';
 import { pinLabel } from '@/lib/shared/pin-label';
 import { getEloBoardForTeam } from '@/components/leaders/elo-board';
 import { buildOverviewDivision, type OverviewDivision } from '@/components/standings/standings-view';
@@ -387,10 +386,6 @@ export function leagueCopy(leagueId: LeagueId): TeamLeagueCopy {
   }
 }
 
-function byDate(a: Game, b: Game): number {
-  return a.dateLocal.localeCompare(b.dateLocal);
-}
-
 function outcomeFor(game: Game, teamId: string): Outcome | null {
   return sideOutcome(game, game.home.teamId === teamId ? 'home' : 'away');
 }
@@ -683,7 +678,7 @@ export function buildTeamPageView(slug: string): TeamPageView | undefined {
   const league = leagueCopy(team.league);
   const division = getDivision(team.division);
   const heading = divisionHeading(team.division);
-  const all = getGames({ teamId: team.slug }).sort(byDate);
+  const all = getGames({ teamId: team.slug }).sort(byDateLocal);
   const leagueLog = all.filter((g) => g.countsFor !== null);
   const nonLeagueLog = all.filter((g) => g.countsFor === null);
   const standing = getStandingFor(team.slug);
