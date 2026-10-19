@@ -186,26 +186,11 @@ jobs:
         with:
           ref: ${{ steps.gate.outputs.sha }}
 
-      # pnpm BEFORE setup-node: `cache: pnpm` resolves the store path by running pnpm, and the
-      # corepack shims installed for the runner's default Node are not guaranteed to still be on
-      # PATH once setup-node switches to the .nvmrc Node. action-setup reads packageManager from
-      # package.json, so the pnpm version is still pinned by the repo.
-      - name: Set up pnpm
-        if: steps.gate.outputs.ready == 'true'
-        uses: pnpm/action-setup@v4
-
-      - name: Set up Node
-        if: steps.gate.outputs.ready == 'true'
-        uses: actions/setup-node@v4
-        with:
-          node-version-file: '.nvmrc'
-          cache: pnpm
-
-      # Applies both patches (pnpm-workspace.yaml); the build below depends on them as ci's
+      # The install in this setup applies both patches (pnpm-workspace.yaml); the build below depends on them as ci's
       # cloudflare job does.
-      - name: Install dependencies
+      - name: Set up pnpm, Node and dependencies
         if: steps.gate.outputs.ready == 'true'
-        run: pnpm install --frozen-lockfile
+        uses: ./.github/actions/setup
 
       # Build, prerender and upload in one: `vinext-cloudflare deploy --env cloudflare` builds in
       # mode `cloudflare`, which `cf deploy` requires of the output it uploads. Through `pnpm run`

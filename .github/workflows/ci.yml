@@ -35,7 +35,9 @@
 # the home-page fold measurements.
 #
 # scripts/ci/run-all.sh (`pnpm gate:all`) runs this whole job list on one machine, against all three
-# servers in turn.
+# servers in turn. It mirrors the job list below, so a job added or changed here is added or changed
+# there too. Every job opens with checkout and .github/actions/setup (pnpm, the .nvmrc Node and a
+# frozen-lockfile install).
 
 name: ci
 
@@ -63,21 +65,8 @@ jobs:
       - name: Check out
         uses: actions/checkout@v4
 
-      # pnpm BEFORE setup-node: `cache: pnpm` resolves the store path by running pnpm, and the
-      # corepack shims installed for the runner's default Node are not guaranteed to still be on
-      # PATH once setup-node switches to the .nvmrc Node. action-setup reads packageManager from
-      # package.json, so the pnpm version is still pinned by the repo.
-      - name: Set up pnpm
-        uses: pnpm/action-setup@v4
-
-      - name: Set up Node
-        uses: actions/setup-node@v4
-        with:
-          node-version-file: '.nvmrc'
-          cache: pnpm
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+      - name: Set up pnpm, Node and dependencies
+        uses: ./.github/actions/setup
 
       - name: Typecheck
         run: pnpm typecheck
@@ -136,21 +125,8 @@ jobs:
       - name: Check out
         uses: actions/checkout@v4
 
-      # pnpm BEFORE setup-node: `cache: pnpm` resolves the store path by running pnpm, and the
-      # corepack shims installed for the runner's default Node are not guaranteed to still be on
-      # PATH once setup-node switches to the .nvmrc Node. action-setup reads packageManager from
-      # package.json, so the pnpm version is still pinned by the repo.
-      - name: Set up pnpm
-        uses: pnpm/action-setup@v4
-
-      - name: Set up Node
-        uses: actions/setup-node@v4
-        with:
-          node-version-file: '.nvmrc'
-          cache: pnpm
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+      - name: Set up pnpm, Node and dependencies
+        uses: ./.github/actions/setup
 
       # The build gates asserts on, made again here (pinned the same way) so this job need not wait.
       - name: Build
@@ -190,27 +166,14 @@ jobs:
       - name: Check out
         uses: actions/checkout@v4
 
-      # pnpm BEFORE setup-node: `cache: pnpm` resolves the store path by running pnpm, and the
-      # corepack shims installed for the runner's default Node are not guaranteed to still be on
-      # PATH once setup-node switches to the .nvmrc Node. action-setup reads packageManager from
-      # package.json, so the pnpm version is still pinned by the repo.
-      - name: Set up pnpm
-        uses: pnpm/action-setup@v4
-
-      - name: Set up Node
-        uses: actions/setup-node@v4
-        with:
-          node-version-file: '.nvmrc'
-          cache: pnpm
-
-      # This also applies patches/vinext@1.0.0.patch (patchedDependencies in pnpm-workspace.yaml,
-      # which lists the gaps it closes). Without it the build below is refused outright: stock
-      # vinext stops any build that lacks the cloudflare() plugin while cloudflare.config.ts
-      # exists. A patch that applies only in part is caught after the build: the assertions fail
-      # on pages that revalidate after five minutes, and the smoke on icons, OG images and Route
-      # Handlers rendered on every request.
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+      # The install in this setup also applies patches/vinext@1.0.0.patch (patchedDependencies in
+      # pnpm-workspace.yaml, which lists the gaps it closes). Without it the build below is refused
+      # outright: stock vinext stops any build that lacks the cloudflare() plugin while
+      # cloudflare.config.ts exists. A patch that applies only in part is caught after the build:
+      # the assertions fail on pages that revalidate after five minutes, and the smoke on icons,
+      # OG images and Route Handlers rendered on every request.
+      - name: Set up pnpm, Node and dependencies
+        uses: ./.github/actions/setup
 
       # Same pin as the Next build (views/site/build-instant.ts): the instant the "stale
       # snapshot" warning is measured against comes from the event payload, not the runner's
@@ -274,25 +237,13 @@ jobs:
       - name: Check out
         uses: actions/checkout@v4
 
-      # pnpm BEFORE setup-node: `cache: pnpm` resolves the store path by running pnpm, and the
-      # corepack shims installed for the runner's default Node are not guaranteed to still be on
-      # PATH once setup-node switches to the .nvmrc Node. action-setup reads packageManager from
-      # package.json, so the pnpm version is still pinned by the repo.
-      - name: Set up pnpm
-        uses: pnpm/action-setup@v4
-
-      - name: Set up Node
-        uses: actions/setup-node@v4
-        with:
-          node-version-file: '.nvmrc'
-          cache: pnpm
-
-      # This applies both patches (patchedDependencies in pnpm-workspace.yaml): vinext's, as in
-      # the vinext job, and @vinext/cloudflare's, without which the Worker renders /icon-192 and
-      # /icon-512 on every request. It also runs workerd's postinstall (allowBuilds), which checks
-      # the platform binary `vite preview` runs the Worker in below.
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+      # The install in this setup applies both patches (patchedDependencies in
+      # pnpm-workspace.yaml): vinext's, as in the vinext job, and @vinext/cloudflare's, without
+      # which the Worker renders /icon-192 and /icon-512 on every request. It also runs workerd's
+      # postinstall (allowBuilds), which checks the platform binary `vite preview` runs the Worker
+      # in below.
+      - name: Set up pnpm, Node and dependencies
+        uses: ./.github/actions/setup
 
       # What `pnpm deploy:cloudflare` checks before it builds or uploads anything, all of it by
       # existence or text scan: cloudflare.config.ts is there, the deploy dependencies (cf,

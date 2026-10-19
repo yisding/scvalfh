@@ -104,23 +104,8 @@ jobs:
           sudo apt-get install -y --no-install-recommends poppler-utils
           pdftotext -v
 
-      # pnpm BEFORE setup-node: `cache: pnpm` resolves the store path by running pnpm, and the
-      # corepack shims installed for the runner's default Node are not guaranteed to still be on
-      # PATH once setup-node switches to the .nvmrc Node. action-setup reads packageManager from
-      # package.json, so the pnpm version is still pinned by the repo.
-      - name: Set up pnpm
-        uses: pnpm/action-setup@v4
-
-      # Pinned in .nvmrc to the version this repo is developed and tested on, so a CI-only Node
-      # difference cannot be the reason a snapshot fails to build.
-      - name: Set up Node
-        uses: actions/setup-node@v4
-        with:
-          node-version-file: '.nvmrc'
-          cache: pnpm
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+      - name: Set up pnpm, Node and dependencies
+        uses: ./.github/actions/setup
 
       # Exit 1 only on a run abort (nothing written, the previous snapshot stays); a frozen or
       # degraded league is a published state, not a failure. Inputs reach the command through env,

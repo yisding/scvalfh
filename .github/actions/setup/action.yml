@@ -1,0 +1,30 @@
+# pnpm, the .nvmrc Node and a frozen-lockfile install: the preamble every job in ci.yml,
+# deploy-cloudflare.yml and update-data.yml shares. Call it right after actions/checkout.
+#
+# pnpm BEFORE setup-node: `cache: pnpm` resolves the store path by running pnpm, and the
+# corepack shims installed for the runner's default Node are not guaranteed to still be on
+# PATH once setup-node switches to the .nvmrc Node. action-setup reads packageManager from
+# package.json, so the pnpm version is still pinned by the repo. Node comes from .nvmrc, the
+# version this repo is developed and tested on, so a CI-only Node difference cannot be the
+# reason a build or a snapshot fails.
+#
+# The install applies patchedDependencies (pnpm-workspace.yaml) and runs the allowBuilds
+# postinstalls, which the vinext and cloudflare jobs and the Cloudflare deploy depend on.
+name: Set up pnpm, Node and dependencies
+description: Installs the repo-pinned pnpm, the Node version in .nvmrc (with the pnpm store cached) and the dependencies from the frozen lockfile.
+
+runs:
+  using: composite
+  steps:
+    - name: Set up pnpm
+      uses: pnpm/action-setup@v4
+
+    - name: Set up Node
+      uses: actions/setup-node@v4
+      with:
+        node-version-file: '.nvmrc'
+        cache: pnpm
+
+    - name: Install dependencies
+      shell: bash
+      run: pnpm install --frozen-lockfile
