@@ -10,8 +10,8 @@ import { LETTER_SIZE, monogramRadius, type TeamMonogramProps } from './TeamMonog
  * the pinned-team card's client bundle) does not import it back, so it costs the client nothing.
  *
  * Decorative and aria-hidden: the school's name always sits beside it. `title` (optional) is the
- * hover note callers attach to say why the tile is plain (GameRow and ScoreBoard pass
- * NON_MEMBER_NOTE); it is a tooltip only, so the tile stays aria-hidden.
+ * hover note callers attach to say why the tile is plain (SideMonogram, which the game rows and the
+ * ScoreBoard draw, passes NON_MEMBER_NOTE); it is a tooltip only, so the tile stays aria-hidden.
  */
 export interface GhostMonogramProps {
   /** The source name, as the snapshot spells it. */

@@ -2,10 +2,9 @@ import Link from 'next/link';
 
 import Arrow from '@/components/ui/Arrow';
 import FormStrip from '@/components/ui/FormStrip';
-import GhostMonogram from '@/components/ui/GhostMonogram';
 import ResultChip, { CHIP_LABEL } from '@/components/ui/ResultChip';
 import SectionHeader from '@/components/ui/SectionHeader';
-import TeamMonogram from '@/components/ui/TeamMonogram';
+import SideMonogram from '@/components/ui/SideMonogram';
 import type { GameView } from '@/views/game/game-view';
 import type { GameSideModel } from '@/views/game/types';
 
@@ -19,7 +18,8 @@ import type { GameSideModel } from '@/views/game/types';
  * instead of an empty row of boxes.
  *
  * An opponent outside the teams this site follows has no record here at all (DESIGN §8), so its
- * row says so in words (SPEC §10.6), beside the same GhostMonogram tile its game rows use.
+ * row says so in words (SPEC §10.6), beside the same GhostMonogram tile its game rows use
+ * (SideMonogram).
  *
  * A member side's name is a link to its team page — the natural next step from "how were they
  * playing coming in" is "show me their season". It is a standalone link, so it carries
@@ -39,7 +39,7 @@ function FormRow({ side, memberCount }: { side: GameSideModel; memberCount: numb
         // `prefetch={false}`: one link per form row, the policy for every per-row link
         // (tests/arch/prefetch-policy.test.ts).
         <span className="flex min-w-0 max-w-full items-center gap-2.5">
-          <TeamMonogram team={side.team} size={24} />
+          <SideMonogram slug={side.team.slug} name={side.name} size={24} />
           <Link
             href={`/teams/${side.team.slug}`}
             prefetch={false}
@@ -53,7 +53,8 @@ function FormRow({ side, memberCount }: { side: GameSideModel; memberCount: numb
         </span>
       ) : (
         <span className="flex min-w-0 shrink-0 items-center gap-2.5">
-          <GhostMonogram name={side.name} size={24} />
+          {/* No hover note on the ghost tile: the row says the same in words beside it. */}
+          <SideMonogram slug={null} name={side.name} size={24} ghostTitle={null} />
           <span className="truncate text-body text-ink">{side.name}</span>
         </span>
       )}

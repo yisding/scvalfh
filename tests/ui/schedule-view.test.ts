@@ -414,7 +414,8 @@ describe('fixture status and slate records (UI pass, league-aware)', () => {
   });
 
   it('an upcoming league game on a slate names both sides’ league records in words, never 0-0-0', async () => {
-    const { GameRow } = await import('@/components/ui/GameRow');
+    const { GameRow } = await import('@/components/game-row/GameRow');
+    const { recordsFor } = await import('@/views/shared/game-records');
     const { recordWords } = await import('@/lib/format/numbers');
     const today = m.data.getToday();
     const upcoming = m.data
@@ -422,13 +423,15 @@ describe('fixture status and slate records (UI pass, league-aware)', () => {
       .filter((g) => g.status === 'scheduled' && g.dateKey >= today);
     const league = upcoming.find((g) => g.countsFor !== null);
     expect(league, 'corpus has an upcoming league game').toBeDefined();
-    const text = textOf(renderToStaticMarkup(createElement(GameRow, { game: league!, showRecords: true })));
+    const text = textOf(
+      renderToStaticMarkup(createElement(GameRow, { game: league!, records: recordsFor(league!) })),
+    );
     let checked = 0;
     for (const side of [league!.away, league!.home]) {
       const standing = side.slug ? m.data.getStandingFor(side.slug) : undefined;
       if (standing?.hasReportedResults) {
         checked += 1;
-        expect(text, `components/ui/GameRow.tsx records: ${side.slug}`).toContain(
+        expect(text, `components/game-row/GameRow.tsx records: ${side.slug}`).toContain(
           `${recordWords(standing.computed)} in league`,
         );
       }
@@ -437,8 +440,10 @@ describe('fixture status and slate records (UI pass, league-aware)', () => {
     expect(text).not.toContain('0-0-0');
     const nonLeague = upcoming.find((g) => g.countsFor === null);
     if (nonLeague) {
-      const nl = textOf(renderToStaticMarkup(createElement(GameRow, { game: nonLeague, showRecords: true })));
-      expect(nl, 'components/ui/GameRow.tsx: no records on a non-league game').not.toContain(' in league');
+      const nl = textOf(
+        renderToStaticMarkup(createElement(GameRow, { game: nonLeague, records: recordsFor(nonLeague) })),
+      );
+      expect(nl, 'components/game-row/GameRow.tsx: no records on a non-league game').not.toContain(' in league');
     }
   });
 });

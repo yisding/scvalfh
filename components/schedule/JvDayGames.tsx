@@ -1,9 +1,8 @@
+import { GameClock, GameClockOrStatus } from '@/components/game-row/parts/GameClockOrStatus';
+import { TeamLine } from '@/components/game-row/parts/TeamLine';
 import { JvFootnote } from '@/components/teams/TeamJvGames';
-import { ScoreGlyph, nameClass } from '@/components/ui/ScoreGlyph';
-import StatusLabel, { GameChips } from '@/components/ui/StatusLabel';
-import { timeOfDay } from '@/lib/format/dates';
-import { describeGame, statusLabelIsTime } from '@/views/shared/describe-game';
-import type { SideView } from '@/views/shared/game-display-client';
+import { GameChips } from '@/components/ui/StatusLabel';
+import { describeGame } from '@/views/shared/describe-game';
 import type { JvListSummary, JvRowView } from '@/views/teams/jv';
 
 /**
@@ -12,7 +11,9 @@ import type { JvListSummary, JvRowView } from '@/views/teams/jv';
  * mixed into it. Rows are not links: a JV game has no page of its own. A JV league game carries
  * its league chip and a non-league one the NL chip and rule (lib/engine/jv/standings.ts); a same-division
  * game no varsity game matched carries neither. A score from si.com carries the † (StatusLabel), and
- * a MaxPreps score si.com reports differently gets one line under its row.
+ * a MaxPreps score si.com reports differently gets one line under its row. The clock-or-status slot
+ * and the team lines are the game rows' own parts (components/game-row/parts/: GameClockOrStatus,
+ * TeamLine's `compact` mode).
  */
 export function JvDayGames({ view }: { view: JvListSummary & { rows: JvRowView[] } }) {
   return (
@@ -21,7 +22,6 @@ export function JvDayGames({ view }: { view: JvListSummary & { rows: JvRowView[]
         <ol className="sx-list">
           {view.rows.map(({ game, differsNote, chips, nonLeague }) => {
             const display = describeGame(game);
-            const isTime = statusLabelIsTime(game, display.statusLabel);
             return (
               <li key={game.contestId}>
                 <div
@@ -42,21 +42,23 @@ export function JvDayGames({ view }: { view: JvListSummary & { rows: JvRowView[]
                       rows in one list. */}
                   <span className="flex min-w-0 flex-col" aria-hidden="true">
                     <span className="flex min-h-6 items-center">
-                      {isTime ? (
-                        <span className="sx-num whitespace-nowrap text-cell text-ink-2">
-                          {game.isTimeTba ? 'TBA' : timeOfDay(game.dateLocal)}
-                        </span>
-                      ) : (
-                        <StatusLabel display={display} showChips={false} className="leading-3" />
-                      )}
+                      <GameClockOrStatus
+                        game={game}
+                        display={display}
+                        showChips={false}
+                        className="leading-3"
+                        clock={
+                          <GameClock game={game} tba="TBA" className="sx-num whitespace-nowrap text-cell text-ink-2" />
+                        }
+                      />
                     </span>
                     <span className="flex min-h-5 items-center">
                       {chips ? <GameChips display={display} /> : null}
                     </span>
                   </span>
                   <span className="flex min-w-0 flex-col gap-0.5" aria-hidden="true">
-                    <JvSide side={display.away} showScore={display.showScores} />
-                    <JvSide side={display.home} showScore={display.showScores} />
+                    <TeamLine compact side={display.away} showScore={display.showScores} />
+                    <TeamLine compact side={display.home} showScore={display.showScores} />
                   </span>
                 </div>
                 {differsNote ? <p className="m-0 px-gutter pb-2 text-meta text-ink-3">{differsNote}</p> : null}
@@ -67,15 +69,6 @@ export function JvDayGames({ view }: { view: JvListSummary & { rows: JvRowView[]
       </div>
       <JvFootnote summary={view} />
     </>
-  );
-}
-
-function JvSide({ side, showScore }: { side: SideView; showScore: boolean }) {
-  return (
-    <span className="flex min-w-0 items-center justify-between gap-3">
-      <span className={`min-w-0 truncate ${nameClass(side)}`}>{side.shortName}</span>
-      {showScore ? <ScoreGlyph side={side} size="meta" className="shrink-0" /> : null}
-    </span>
   );
 }
 

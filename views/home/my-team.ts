@@ -14,6 +14,7 @@ import { getTeamBySlug } from '@/lib/registry/teams';
 import { gameHref } from '@/lib/shared/game-id';
 import { describeGame, gameKind, postseasonTagOf } from '@/views/shared/describe-game';
 import type { GameDisplay, SideView } from '@/views/shared/game-display-client';
+import { gameExternalLinks } from '@/views/shared/game-links';
 import { fixtureOpponent, nextOfficialFixture } from '@/views/shared/official-fixtures';
 
 import type { HomeLastDisplay, HomeLastGame, HomeNextGame, HomeOfficialFixture } from './home-client';
@@ -63,18 +64,12 @@ export function lastGameView(game: Game, slug: string): HomeLastGame {
 export function nextGameView(game: Game, slug: string): HomeNextGame {
   const mineIsHome = game.home.slug === slug;
   const theirs = mineIsHome ? game.away : game.home;
-  const links: HomeNextGame['links'] = [];
-  const address = game.venue.address;
-  if (address) {
-    links.push({
-      label: 'Directions',
-      href: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-        `${address.street}, ${address.city}, ${address.region} ${address.postalCode}`,
-      )}`,
-    });
-  }
-  if (game.urls.nfhsStream) links.push({ label: 'Stream', href: game.urls.nfhsStream });
-  if (game.urls.goFan) links.push({ label: 'Tickets', href: game.urls.goFan });
+  // Directions, Stream, Tickets (views/shared/game-links.ts), re-keyed label-first: the serialized
+  // team views keep their shape (tests/ui/home-weight.test.ts budgets them).
+  const links: HomeNextGame['links'] = gameExternalLinks(game, {
+    streamLabel: 'Stream',
+    include: ['directions', 'stream', 'tickets'],
+  }).map(({ href, label }) => ({ label, href }));
   return {
     dateLabel: shortDate(game.dateLocal),
     dateTime: dateTimeAttr(game),

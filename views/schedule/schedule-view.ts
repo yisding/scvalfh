@@ -21,6 +21,7 @@ import type { LeagueId, RegionId } from '@/lib/model/ids';
 import { getGamesByDate } from '@/lib/queries/games';
 import { getLeagueSummary } from '@/lib/queries/leagues';
 import { byDateLocal } from '@/lib/shared/game';
+import { type RecordsByGame, recordsByGame } from '@/views/shared/game-records';
 
 import { countGames, type ScheduleCounts } from './filters-client';
 
@@ -179,6 +180,8 @@ export interface LeagueSchedulePageView {
   counts: ScheduleCounts;
   /** 'Aug 28 – Nov 8' over the league's game days, or null before any game is on the schedule. */
   span: string | null;
+  /** The current league records each upcoming league game of the list prints (GameList `records`). */
+  records: RecordsByGame;
 }
 
 /** The league's schedule page, from its id (the page's metadata and body ask for the same facts). */
@@ -198,5 +201,6 @@ export function buildLeagueSchedulePageView(id: LeagueId): LeagueSchedulePageVie
     involving: isIndependentLeague(id) ? standaloneName(id) : `${summary.shortName} teams`,
     counts: countGames(groups.flatMap((group) => group.games)),
     span: first && last ? `${monthDay(first.date)} – ${monthDay(last.date)}` : null,
+    records: recordsByGame(groups.flatMap((group) => group.games)),
   };
 }

@@ -7,7 +7,7 @@ import { standingsLabel } from '@/lib/config/leagues/labels';
 import { dateTimeAttr, longDate, monthDay, timeOfDayPT } from '@/lib/format/dates';
 import { parseLocal } from '@/lib/shared/dates';
 import type { GameView } from '@/views/game/game-view';
-import { maxPrepsLabel } from '@/views/shared/words/maxpreps-label';
+import { gameExternalLinks } from '@/views/shared/game-links';
 
 /**
  * The DETAILS card of DESIGN §3.5 — when, where, and the off-site links that are not the result's.
@@ -49,11 +49,6 @@ export interface GameDetailsProps {
   className?: string;
 }
 
-function mapsHref(address: NonNullable<GameView['game']['venue']['address']>): string {
-  const query = `${address.street}, ${address.city}, ${address.region} ${address.postalCode}`;
-  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
-}
-
 export function GameDetails({ model, className }: GameDetailsProps) {
   const { game, home, countsAs } = model;
   const officialLeague = game.official
@@ -69,13 +64,11 @@ export function GameDetails({ model, className }: GameDetailsProps) {
   // Whatever the page already printed under the recap (a final's result links) is skipped, so no
   // link appears twice on the page.
   const elsewhere = new Set(model.resultLinks.map((link) => link.href));
-  const links: Array<{ href: string; label: string }> = [];
-  if (address) links.push({ href: mapsHref(address), label: 'Directions' });
-  if (game.urls.nfhsStream) links.push({ href: game.urls.nfhsStream, label: 'NFHS stream' });
-  if (game.urls.goFan) links.push({ href: game.urls.goFan, label: 'Tickets' });
-  if (game.urls.maxpreps) links.push({ href: game.urls.maxpreps, label: maxPrepsLabel(game.status) });
-  if (game.urls.sblive) links.push({ href: game.urls.sblive, label: 'si.com game' });
-  const ownLinks = links.filter((link) => !elsewhere.has(link.href));
+  // The game's off-site links (views/shared/game-links.ts), with the si.com game page last: this
+  // card is the page's one home for it when the score is not si.com's.
+  const ownLinks = gameExternalLinks(game, { sblive: true }).filter(
+    (link) => !elsewhere.has(link.href),
+  );
 
   return (
     <section

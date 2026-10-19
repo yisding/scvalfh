@@ -1,7 +1,5 @@
 import ExternalLink from '@/components/ui/ExternalLink';
-import { NON_MEMBER_NOTE } from '@/components/ui/GameRow';
-import GhostMonogram from '@/components/ui/GhostMonogram';
-import TeamMonogram from '@/components/ui/TeamMonogram';
+import SideMonogram from '@/components/ui/SideMonogram';
 import { getDivision, leagueOfDivision } from '@/lib/config/leagues';
 import { monthDay } from '@/lib/format/dates';
 import type { OfficialFixture } from '@/lib/model/fixture';
@@ -64,13 +62,9 @@ export function TeamOfficialFixtures({
                 <span className="sx-num w-14 shrink-0 text-cell text-ink-2" aria-hidden="true">
                   {monthDay(fixture.dateKey)}
                 </span>
-                {/* A school outside the registry gets GameRow's ghost tile, so every name starts
-                    at one x; with no tile its name started 36px left of the others. */}
-                {opponent ? (
-                  <TeamMonogram team={opponent} size={24} />
-                ) : (
-                  <GhostMonogram name={opponentName} size={24} title={NON_MEMBER_NOTE} />
-                )}
+                {/* A school outside the registry gets GameRow's ghost tile (SideMonogram), so every
+                    name starts at one x; with no tile its name started 36px left of the others. */}
+                <SideMonogram slug={opponent?.slug} name={opponentName} size={24} />
                 {/* Two lines rather than an ellipsis: at 320px the name has ~96px and "vs
                     Homestead" was cut. No `break-words`: a school name breaks between words. */}
                 <span className="line-clamp-2 min-w-0 flex-1 text-body text-ink" aria-hidden="true">

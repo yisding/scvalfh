@@ -1,6 +1,7 @@
 import Link from 'next/link';
 
-import { GameLogRowBody, gameLogRowClass } from '@/components/ui/GameRow';
+import { gameLogRowClass } from '@/components/game-row/game-log-grid';
+import { GameLogRowBody } from '@/components/game-row/GameLogRow';
 import SectionHeader from '@/components/ui/SectionHeader';
 import { plural } from '@/lib/format/words';
 import { gameHref } from '@/lib/shared/game-id';

@@ -80,7 +80,7 @@ export default async function ScoresByDatePage({ params }: PageProps<'/scores/[d
   const { date } = await params;
   const view = buildScoresDayView(date);
   if (!view) notFound();
-  const { games, summary, today, dates, between, regionBlocks, jvBlocks, year } = view;
+  const { games, summary, today, dates, between, regionBlocks, records, jvBlocks, year } = view;
 
   return (
     <div className="pb-section-lg">
@@ -132,7 +132,7 @@ export default async function ScoresByDatePage({ params }: PageProps<'/scores/[d
             <Fragment key={block.region.id}>
               {/* The NorCal vs SoCal block sits between the two regions: after NorCal's, before SoCal's. */}
               {i === 1 && between.length > 0 ? <BetweenRegions {...view} /> : null}
-              <RegionDayBlock {...block} date={date} today={today} />
+              <RegionDayBlock {...block} records={records} date={date} today={today} />
             </Fragment>
           ))}
         </>

@@ -1,6 +1,7 @@
 import Link from 'next/link';
 
-import { SummaryLead, SummaryTeams } from '@/components/ui/GameRow';
+import { SummaryLead } from '@/components/game-row/parts/SummaryLead';
+import { SummaryTeams } from '@/components/game-row/parts/SummaryTeams';
 import SectionHeader from '@/components/ui/SectionHeader';
 import { shortDate } from '@/lib/format/dates';
 import type { Game } from '@/lib/model/game';

@@ -15,7 +15,7 @@ import SupersededStub from '@/components/game/SupersededStub';
 import JsonLd from '@/components/layout/JsonLd';
 import Arrow from '@/components/ui/Arrow';
 import ExternalLink from '@/components/ui/ExternalLink';
-import ScoreBoard from '@/components/ui/ScoreBoard';
+import ScoreBoard from '@/components/game/ScoreBoard';
 import { gameStaticParams } from '@/views/game/game-route';
 import { buildGameView, buildSupersededStub, hasLeadRow } from '@/views/game/game-view';
 import { gameDescription, gameRecap, gameTitle } from '@/views/game/titles';

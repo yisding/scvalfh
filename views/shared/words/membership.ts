@@ -1,5 +1,6 @@
 import { getDivision, leagueOfDivision } from '@/lib/config/leagues';
 import type { DivisionId, TeamSlug } from '@/lib/model/ids';
+import { TEAMS } from '@/lib/registry/teams';
 
 /**
  * Where a division's membership comes from, in the words the no-results notes print (the standings
@@ -47,3 +48,10 @@ export function membershipSource(division: DivisionId, slugs: readonly TeamSlug[
 export function articleFor(word: string): 'a' | 'an' {
   return /^[aeiou]/i.test(word) ? 'an' : 'a';
 }
+
+/**
+ * The ghost monogram's words (a tooltip; the monogram itself is decorative) for a side that is not
+ * one of the registry's teams (DESIGN §8): components/ui/SideMonogram.tsx titles the tile with it, and
+ * the game page's ScoreBoard (components/game/ScoreBoard.tsx) prints it as that side's sub line.
+ */
+export const NON_MEMBER_NOTE = `Not one of the ${TEAMS.length} teams this site follows`;

@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
 import EmptyState from '@/components/ui/EmptyState';
-import { GameLine } from '@/components/ui/GameRow';
+import { GameLine } from '@/components/game-row/GameLine';
 import SectionHeader from '@/components/ui/SectionHeader';
 import { shortDate } from '@/lib/format/dates';
 import { plural } from '@/lib/format/words';

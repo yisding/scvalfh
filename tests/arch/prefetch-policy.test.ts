@@ -131,6 +131,12 @@ describe('prefetch policy: a link that repeats per row never prefetches', () => 
       ['components/history/AwardsBlock.tsx', '/teams/${team.slug}'],
       ['components/about/CrossCheckTable.tsx', '/teams/${team.slug}'],
       ['components/game/SeasonSeries.tsx', GAME_LINK],
+      // The game-row family (components/game-row/): one game-page link per row, card or log line
+      // in every game list, each in its own face (the row's in its expanded panel's pills).
+      ['components/game-row/parts/GameLinks.tsx', GAME_LINK],
+      ['components/game-row/GameCard.tsx', GAME_LINK],
+      ['components/game-row/GameLine.tsx', GAME_LINK],
+      ['components/game-row/GameLogRow.tsx', GAME_LINK],
       ['components/schedule/DateHeader.tsx', 'href={dayHref}'],
       ['components/ui/SectionHeader.tsx', 'href={action.href}'],
       // EmptyState's internal action: the home page's LeaguePanel renders one per league inside

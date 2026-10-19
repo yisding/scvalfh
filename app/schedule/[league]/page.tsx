@@ -75,7 +75,7 @@ export default async function LeagueSchedulePage({ params }: PageProps<'/schedul
 
   const groups = getGamesByDate({ league: summary.id });
   const dates = groups.map((group) => group.date);
-  const { h1, counts, involving, span } = buildLeagueSchedulePageView(summary.id);
+  const { h1, counts, involving, span, records } = buildLeagueSchedulePageView(summary.id);
   const today = getToday();
   const { teams, divisions } = scheduleFilterProps(summary, getTeams({ league: summary.id }));
   const fixtures = getOfficialFixtures({ league: summary.id });
@@ -131,7 +131,7 @@ export default async function LeagueSchedulePage({ params }: PageProps<'/schedul
           own padding inside; 4px of room at desktop so no ring or focus outline is clipped. */}
       <TimelineRail dates={dates} today={today} leagueId={summary.id} className="mt-4 -mx-gutter md:-mx-1" />
 
-      <ScheduleList id="schedule-list" groups={groups} scopeLeague={summary.id} />
+      <ScheduleList id="schedule-list" groups={groups} scopeLeague={summary.id} records={records} />
 
       {fixtures.length > 0 ? (
         <section className="mt-section md:mt-section-lg">

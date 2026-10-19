@@ -27,7 +27,10 @@ import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 
-import { GameCard, GameLine, GameLogRow, GameRow } from '@/components/ui/GameRow';
+import { GameCard } from '@/components/game-row/GameCard';
+import { GameLine } from '@/components/game-row/GameLine';
+import { GameLogRow } from '@/components/game-row/GameLogRow';
+import { GameRow } from '@/components/game-row/GameRow';
 import type { Game } from '@/lib/model/game';
 import { getGames } from '@/lib/queries/games';
 import { getLeagueSummaries } from '@/lib/queries/leagues';
@@ -194,7 +197,10 @@ function defineCorpus(title: string, corpusName: CorpusName, proof: boolean) {
       data: loadQueries,
       model: () => import('@/views/game/game-view'),
       titles: () => import('@/views/game/titles'),
-      row: () => import('@/components/ui/GameRow'),
+      row: () => import('@/components/game-row/GameRow'),
+      card: () => import('@/components/game-row/GameCard'),
+      line: () => import('@/components/game-row/GameLine'),
+      log: () => import('@/components/game-row/GameLogRow'),
     });
     const corpus = (): Rendered => ({
       games: m.data.getGames(),
@@ -203,9 +209,9 @@ function defineCorpus(title: string, corpusName: CorpusName, proof: boolean) {
       gameDescription: m.titles.gameDescription,
       gameKicker: m.titles.gameKicker,
       GameRow: m.row.GameRow,
-      GameCard: m.row.GameCard,
-      GameLine: m.row.GameLine,
-      GameLogRow: m.row.GameLogRow,
+      GameCard: m.card.GameCard,
+      GameLine: m.line.GameLine,
+      GameLogRow: m.log.GameLogRow,
     });
 
     defineRule(`corpus ${corpusName}`, corpus, proof);
@@ -243,9 +249,9 @@ describe('every league, rendered', () => {
     for (const game of games) {
       const text = textFoldingDashes(renderToStaticMarkup(createElement(GameRow, { game })));
       if (game.countsFor === null && game.postseason === null) {
-        expect(text, `components/ui/GameRow.tsx NL ${game.contestId}`).toContain('non-league');
+        expect(text, `components/game-row/GameRow.tsx NL ${game.contestId}`).toContain('non-league');
       } else if (game.countsFor !== null) {
-        expect(text, `components/ui/GameRow.tsx league chip ${game.contestId}`).toContain('league game');
+        expect(text, `components/game-row/GameRow.tsx league chip ${game.contestId}`).toContain('league game');
       }
     }
   });
@@ -260,15 +266,15 @@ describe('every league, rendered', () => {
     const homeLeague = getTeamBySlug(cross.home.slug!)!.league;
     const awayShort = getLeagueSummaries().find((l) => l.id === getTeamBySlug(cross.away.slug!)!.league)!.shortName;
     const scoped = textFoldingDashes(renderToStaticMarkup(createElement(GameRow, { game: cross, scopeLeague: homeLeague })));
-    expect(scoped, 'components/ui/GameRow.tsx scopeLeague').toContain(`· ${awayShort}`);
+    expect(scoped, 'components/game-row/GameRow.tsx scopeLeague').toContain(`· ${awayShort}`);
     const plain = textFoldingDashes(renderToStaticMarkup(createElement(GameRow, { game: cross })));
-    expect(plain, 'components/ui/GameRow.tsx without scopeLeague').not.toContain(`· ${awayShort}`);
+    expect(plain, 'components/game-row/GameRow.tsx without scopeLeague').not.toContain(`· ${awayShort}`);
   });
 
   it('links every game through gameHref (sblive ids become sblive-<n>)', () => {
     for (const game of games) {
       const html = renderToStaticMarkup(createElement(GameCard, { game }));
-      expect(html, `components/ui/GameRow.tsx ${game.contestId}`).toContain(
+      expect(html, `components/game-row/GameRow.tsx ${game.contestId}`).toContain(
         `href="/game/${game.contestId.replace(/^sblive:/, 'sblive-')}"`,
       );
     }

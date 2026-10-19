@@ -39,8 +39,8 @@ import { pinLabel } from '@/lib/shared/pin-label';
 import { getEloBoardForTeam } from '@/views/leaders/elo-board';
 import { describeGame, shootoutSectionOf } from '@/views/shared/describe-game';
 import type { FormEntry } from '@/views/shared/form-entry';
+import { type ExternalGameLink, gameExternalLinks } from '@/views/shared/game-links';
 import { fixtureOpponent, nextOfficialFixture } from '@/views/shared/official-fixtures';
-import { maxPrepsLabel } from '@/views/shared/words/maxpreps-label';
 import { buildOverviewDivision, type OverviewDivision } from '@/views/standings/overview';
 import type { PlayerStatsView } from '@/views/teams/player-stats';
 import type { RosterView } from '@/views/teams/roster';
@@ -241,11 +241,8 @@ export interface EarlierMeeting {
   text: string;
 }
 
-/** One external link pill on the NEXT card. */
-export interface NextChip {
-  href: string;
-  label: string;
-}
+/** One external link pill on the NEXT card (views/shared/game-links.ts builds them). */
+export type NextChip = ExternalGameLink;
 
 /** The opponent half of the NEXT card, shared by the contest and the official-fixture branches. */
 interface NextOpponent {
@@ -562,25 +559,6 @@ function placeLine(game: Game, team: Team): string | null {
   return host ? `${host.city}, CA` : null;
 }
 
-/** The NEXT card's external pills (named apart from describe-game's private `chipsFor`). */
-function nextChips(game: Game): NextChip[] {
-  const chips: NextChip[] = [];
-  const address = game.venue.address;
-  if (address) {
-    chips.push({
-      href: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-        `${address.street}, ${address.city}, ${address.region} ${address.postalCode}`,
-      )}`,
-      label: 'Directions',
-    });
-  }
-  // Named for what is behind them: 'Stream' and 'MaxPreps' did not say which stream or which page.
-  if (game.urls.nfhsStream) chips.push({ href: game.urls.nfhsStream, label: 'NFHS stream' });
-  if (game.urls.goFan) chips.push({ href: game.urls.goFan, label: 'Tickets' });
-  if (game.urls.maxpreps) chips.push({ href: game.urls.maxpreps, label: maxPrepsLabel(game.status) });
-  return chips;
-}
-
 /**
  * The NEXT card: the next contest, else the next official-only fixture, else nothing left. `league`
  * is the page's league copy: an opponent's record line is scoped against it (opponentRecordLine).
@@ -617,7 +595,8 @@ export function buildNextCard(
       record: opponentRecordLine(opponent, league.id),
       place: placeLine(next, team),
       earlier: earlierMeeting(team, opponent, next.dateLocal),
-      chips: nextChips(next),
+      // The NEXT card's external pills: views/shared/game-links.ts, in its default words.
+      chips: gameExternalLinks(next),
       officialBefore,
     };
   }

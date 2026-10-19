@@ -1,7 +1,9 @@
-import { GameCard, GameRow } from '@/components/ui/GameRow';
+import { GameCard } from '@/components/game-row/GameCard';
+import { GameRow } from '@/components/game-row/GameRow';
 import type { Game } from '@/lib/model/game';
 import type { LeagueId } from '@/lib/model/ids';
 import { gameFilterAttrs } from '@/views/schedule/filters';
+import type { RecordsByGame } from '@/views/shared/game-records';
 
 /**
  * One day's contests as a list (DESIGN §3.3, §3.4, §7.4).
@@ -20,13 +22,16 @@ import { gameFilterAttrs } from '@/views/schedule/filters';
  *
  * GameList is only ever a slate nobody is following one team through: /schedule/<league> and
  * /scores/[date]. (The team page lists its games with GameLogRow, through TeamGameLog.) So every
- * upcoming league game prints both sides' league records beside their names (`showRecords`), which
- * is what a reader sizing up a game before kickoff wants, and every game shows its recap.
+ * upcoming league game prints both sides' league records beside their names (`records`, which
+ * those pages' views resolve: views/shared/game-records.ts), which is what a reader sizing up a game
+ * before kickoff wants, and every game shows its recap.
  */
 export interface GameListProps {
   games: readonly Game[];
   /** A league-scoped list: a side from another league carries its league's short name. */
   scopeLeague?: LeagueId | null;
+  /** The games' current league records by `contestId` (`recordsByGame`); a game missing prints none. */
+  records?: RecordsByGame;
   /**
    * `bleed` (default): the phone band pulls itself out to the screen edge (`.sx-bleed`) and draws
    * its own line above and below. `grouped`: the HOST is already full-bleed (a /schedule date
@@ -46,6 +51,7 @@ export interface GameListProps {
 export function GameList({
   games,
   scopeLeague = null,
+  records,
   variant = 'bleed',
   tracks = 'fill',
   className,
@@ -72,10 +78,15 @@ export function GameList({
         // class would beat the attribute and leave a hole in the grid.
         <li key={game.contestId} {...gameFilterAttrs(game)} className="md:border-b-0">
           <div data-twin className="md:hidden">
-            <GameRow game={game} scopeLeague={scopeLeague} showRecords />
+            <GameRow game={game} scopeLeague={scopeLeague} records={records?.[game.contestId]} />
           </div>
           <div data-twin className="hidden h-full md:block">
-            <GameCard game={game} scopeLeague={scopeLeague} showRecords className="h-full" />
+            <GameCard
+              game={game}
+              scopeLeague={scopeLeague}
+              records={records?.[game.contestId]}
+              className="h-full"
+            />
           </div>
         </li>
       ))}

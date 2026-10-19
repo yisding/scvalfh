@@ -1,8 +1,9 @@
 import Link from 'next/link';
 
+import { GAME_LOG_ROW_GRID } from '@/components/game-row/game-log-grid';
+import { GameLogRowBody } from '@/components/game-row/GameLogRow';
 import EmptyState from '@/components/ui/EmptyState';
 import ExternalLink from '@/components/ui/ExternalLink';
-import { GAME_LOG_ROW_GRID, GameLogRowBody } from '@/components/ui/GameRow';
 import type { TeamSlug } from '@/lib/model/ids';
 import type { JvListSummary, TeamJvView } from '@/views/teams/jv';
 

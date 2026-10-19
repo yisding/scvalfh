@@ -21,6 +21,7 @@ import { getLeagueSummaries } from '@/lib/queries/leagues';
 import { getTeamBySlug } from '@/lib/registry/teams';
 import { parseLocal } from '@/lib/shared/dates';
 import { countGames } from '@/views/schedule/filters-client';
+import { type RecordsByGame, recordsByGame } from '@/views/shared/game-records';
 import { buildDayJvView } from '@/views/teams/jv';
 
 import { type DayRegion, type DaySummary, dayDescription, dayRegions, daySummary, leaguesInvolved } from './day-summary';
@@ -91,6 +92,8 @@ export interface ScoresDayView {
   /** The NorCal vs SoCal games that moved. */
   betweenMoved: MovedGame[];
   regionBlocks: RegionBlockData[];
+  /** The current league records the day's upcoming league games print (GameList `records`). */
+  records: RecordsByGame;
   jvBlocks: JvBlock[];
   /** The day has arrived and not one score has been published. */
   nothingReportedYet: boolean;
@@ -259,6 +262,7 @@ export function buildScoresDayView(date: string): ScoresDayView | null {
     between,
     betweenMoved: movedGames(between, date),
     regionBlocks,
+    records: recordsByGame(games),
     jvBlocks,
     nothingReportedYet,
     badges,

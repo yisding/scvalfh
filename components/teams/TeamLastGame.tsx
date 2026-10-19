@@ -1,5 +1,6 @@
+import { GameCard } from '@/components/game-row/GameCard';
+import { GameRow } from '@/components/game-row/GameRow';
 import EmptyState from '@/components/ui/EmptyState';
-import { GameCard, GameRow } from '@/components/ui/GameRow';
 import SectionHeader from '@/components/ui/SectionHeader';
 import { shortDate } from '@/lib/format/dates';
 import { gameKindLabel } from '@/views/shared/describe-game';

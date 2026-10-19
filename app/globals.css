@@ -825,7 +825,7 @@
   }
   .sx-chips { display: inline-flex; max-width: 100%; flex-wrap: wrap; align-items: center; gap: 0.25rem; }
 
-  /* ── Game rows and cards (components/ui/GameRow.tsx, DESIGN §7.4). /schedule/<league> renders
+  /* ── Game rows and cards (components/game-row/GameRow.tsx, DESIGN §7.4). /schedule/<league> renders
         every game of the season twice, a phone GameRow and a ≥768px GameCard (GameList), and each
         of these utility sets used to be repeated on every one of them: on North County's page
         (~250 games) the class strings were ~1 MB of the markup, and the same strings went out a

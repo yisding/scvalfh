@@ -1,14 +1,13 @@
-import { shortDate, timeOfDayPT } from '@/lib/format/dates';
+import { GameClockOrStatus, clockWords } from '@/components/game-row/parts/GameClockOrStatus';
+import { ScoreGlyph, nameClass } from '@/components/ui/ScoreGlyph';
+import SideMonogram from '@/components/ui/SideMonogram';
+import { GameChips } from '@/components/ui/StatusLabel';
+import { shortDate } from '@/lib/format/dates';
 import type { Game } from '@/lib/model/game';
 import { getTeamBySlug } from '@/lib/registry/teams';
-import { describeGame, statusLabelIsTime } from '@/views/shared/describe-game';
+import { describeGame } from '@/views/shared/describe-game';
 import type { SideView } from '@/views/shared/game-display-client';
-
-import { NON_MEMBER_NOTE } from './GameRow';
-import GhostMonogram from './GhostMonogram';
-import { ScoreGlyph, nameClass } from './ScoreGlyph';
-import StatusLabel, { GameChips } from './StatusLabel';
-import TeamMonogram from './TeamMonogram';
+import { NON_MEMBER_NOTE } from '@/views/shared/words/membership';
 
 /**
  * The /game/[id] hero (DESIGN §3.5, §7.4; modernization brief §4.16). A final score is the
@@ -25,9 +24,9 @@ import TeamMonogram from './TeamMonogram';
  *
  * `sub` is whatever the page wants under each name — normally "4-1-0 De Anza" or "10-1-1 MCAL". A
  * school outside the registry has no record to show (game-view gives it no sub), so its side gets
- * a GhostMonogram tile (the same tile its rows use) and the sub line NON_MEMBER_NOTE ("Not one of
- * the N teams this site follows", from GameRow), written here rather than in game-view so the
- * page title and OG card, which share that model, are untouched.
+ * a GhostMonogram tile (SideMonogram, the same tile its rows use) and the sub line NON_MEMBER_NOTE
+ * ("Not one of the N teams this site follows", views/shared/words/membership.ts), written here
+ * rather than in game-view so the page title and OG card, which share that model, are untouched.
  *
  * A score published from si.com (owner decision D2, `display.sourceMark === 'si.com'`) carries a
  * `†` with the words `Score via si.com`, never the mark alone (SPEC §10.6): StatusLabel prints the
@@ -78,18 +77,10 @@ function BoardSide({
     >
       {/* Two decorative monograms, one per breakpoint: 40 on a phone row, 56 on the wide board. */}
       <span className="inline-flex shrink-0 md:hidden">
-        {team ? (
-          <TeamMonogram team={team} size={40} />
-        ) : (
-          <GhostMonogram name={side.name} size={40} title={NON_MEMBER_NOTE} />
-        )}
+        <SideMonogram slug={side.slug} name={side.name} size={40} />
       </span>
       <span className="hidden shrink-0 md:inline-flex">
-        {team ? (
-          <TeamMonogram team={team} size={56} />
-        ) : (
-          <GhostMonogram name={side.name} size={56} title={NON_MEMBER_NOTE} />
-        )}
+        <SideMonogram slug={side.slug} name={side.name} size={56} />
       </span>
       <div className="min-w-0 flex-1 md:flex-initial">
         {/* A long name (swapShort) gets two copies, one per band, both aria-hidden (the
@@ -157,14 +148,10 @@ export function ScoreBoard({ game, home, away, className }: ScoreBoardProps) {
             time again with its zone: the board read "3:30 PM NL Fri Oct 2, 3:30 PM PT". Only the
             chips (league / NL / postseason) are kept from the label then, as GameRow and GameCard
             do. */}
-        {statusLabelIsTime(game, display.statusLabel) ? (
-          <GameChips display={display} />
-        ) : (
-          <StatusLabel display={display} />
-        )}
+        <GameClockOrStatus game={game} display={display} clock={<GameChips display={display} />} />
         <span>
           {shortDate(game.dateLocal)}
-          {game.isTimeTba ? ', time TBA' : `, ${timeOfDayPT(game.dateLocal)}`}
+          {clockWords(game, ', time TBA')}
         </span>
         {game.venue.name ? (
           <>

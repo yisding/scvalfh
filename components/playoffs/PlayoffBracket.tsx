@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-import { GameRow } from '@/components/ui/GameRow';
+import { GameRow } from '@/components/game-row/GameRow';
 import { ScoreGlyph, nameClass } from '@/components/ui/ScoreGlyph';
 import StatusLabel from '@/components/ui/StatusLabel';
 import TeamMonogram from '@/components/ui/TeamMonogram';

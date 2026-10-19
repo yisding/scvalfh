@@ -2,7 +2,7 @@ import GameList from '@/components/schedule/GameList';
 import OfficialFixtures from '@/components/schedule/OfficialFixtures';
 import EmptyState from '@/components/ui/EmptyState';
 import SectionHeader from '@/components/ui/SectionHeader';
-import type { RegionBlockData } from '@/views/scores/scores-view';
+import type { RegionBlockData, ScoresDayView } from '@/views/scores/scores-view';
 
 import MovedNote from './MovedNote';
 
@@ -26,12 +26,14 @@ export default function RegionDayBlock({
   moved,
   fixtureLeagues,
   empty,
+  records,
   date,
   today,
-}: Pick<RegionBlockData, 'region' | 'first' | 'moved' | 'fixtureLeagues' | 'empty'> & {
-  date: string;
-  today: string;
-}) {
+}: Pick<RegionBlockData, 'region' | 'first' | 'moved' | 'fixtureLeagues' | 'empty'> &
+  Pick<ScoresDayView, 'records'> & {
+    date: string;
+    today: string;
+  }) {
   const headingId = `${region.id}-heading`;
   const labelledBy = (groupId: string) =>
     region.idSuffix === '' ? `${groupId}-heading` : `${groupId}-heading ${headingId}`;
@@ -70,7 +72,11 @@ export default function RegionDayBlock({
             <SectionHeader as="h3" id={`${group.id}-heading`} kicker={group.kicker} />
             {/* Two or more cards fill the row, so they end where the pager, the fixtures card
                 and the disclosure below end; a lone card stays card-sized rather than 1200px wide. */}
-            <GameList games={group.games} tracks={group.games.length > 1 ? 'fit' : 'fill'} />
+            <GameList
+              games={group.games}
+              records={records}
+              tracks={group.games.length > 1 ? 'fit' : 'fill'}
+            />
           </section>
         ))
       )}

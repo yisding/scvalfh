@@ -1,6 +1,6 @@
 /**
  * The /game/[id] view model and route params (SPEC §10.6, §8.1, §8.4):
- * `views/game/game-view.ts`, `components/game/*`, `components/ui/ScoreBoard.tsx`,
+ * `views/game/game-view.ts`, `components/game/*`, `components/game/ScoreBoard.tsx`,
  * `app/game/[id]/page.tsx` and `app/game/[id]/opengraph-image.tsx`.
  *
  * League-specific values are asserted on the all-2026-10-02 CORPUS snapshot (SPEC §13.6; it holds
@@ -186,7 +186,7 @@ describe('si.com source line and the conflict block (components/game/GameSources
     const html = await L.renderPage(L.ids.gameIdToParam(g.contestId));
     const text = textOf(html);
     expect(text, 'components/game/GameSources.tsx source line').toContain(`Score via High School on SI (si.com): ${note}.`);
-    expect(text, 'components/ui/ScoreBoard.tsx † mark').toContain('† Score via si.com');
+    expect(text, 'components/game/ScoreBoard.tsx † mark').toContain('† Score via si.com');
     expect(html, 'app/game/[id]/page.tsx').not.toContain('sblive:');
     expect(L.titles.gameDescription(model), 'views/game/titles.ts PCAL description').toContain(
       'Pacific Coast Athletic League girls varsity field hockey, Fall 2026',
@@ -210,7 +210,7 @@ describe('si.com source line and the conflict block (components/game/GameSources
     expect(model.conflict?.sblive, 'views/game/game-view.ts conflict si.com value').toEqual(g!.provenance.scoreConflict!.sblive);
     const text = textOf(await L.renderPage(g!.contestId));
     expect(text, 'components/game/GameSources.tsx conflict').toContain(g!.provenance.scoreConflict!.note);
-    expect(text, 'components/ui/ScoreBoard.tsx no † on a MaxPreps score').not.toContain('Score via si.com');
+    expect(text, 'components/game/ScoreBoard.tsx no † on a MaxPreps score').not.toContain('Score via si.com');
   });
 });
 

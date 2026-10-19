@@ -1,5 +1,5 @@
 import EmptyState from '@/components/ui/EmptyState';
-import { GameLogRow } from '@/components/ui/GameRow';
+import { GameLogRow } from '@/components/game-row/GameLogRow';
 import type { Game } from '@/lib/model/game';
 import type { TeamSlug } from '@/lib/model/ids';
 

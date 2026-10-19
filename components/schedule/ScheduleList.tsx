@@ -2,6 +2,7 @@ import type { Game } from '@/lib/model/game';
 import type { LeagueId } from '@/lib/model/ids';
 import { getScoresLandingDate } from '@/lib/queries/games';
 import { dayNumber } from '@/lib/shared/dates';
+import type { RecordsByGame } from '@/views/shared/game-records';
 
 import DateHeader from './DateHeader';
 import GameList from './GameList';
@@ -37,6 +38,8 @@ export interface ScheduleListProps {
   groups: readonly { date: string; games: Game[] }[];
   /** A league-scoped list (`/schedule/<league>`): other leagues' sides carry their league's name. */
   scopeLeague?: LeagueId | null;
+  /** The league records the games print before kickoff (GameList `records`), from the page's view. */
+  records?: RecordsByGame;
   className?: string;
   id?: string;
 }
@@ -65,7 +68,7 @@ function cardEstimate(games: readonly Game[]): string {
   return games.some((g) => g.status === 'final') ? '15rem' : '11rem';
 }
 
-export function ScheduleList({ groups, scopeLeague = null, className, id }: ScheduleListProps) {
+export function ScheduleList({ groups, scopeLeague = null, records, className, id }: ScheduleListProps) {
   // The date BottomTabBar's Scores tab aims at on this league's list (F-1a): one helper for both.
   const landing = getScoresLandingDate(scopeLeague ? { league: scopeLeague } : {});
   const landingDay = landing ? dayNumber(landing) : null;
@@ -131,7 +134,7 @@ export function ScheduleList({ groups, scopeLeague = null, className, id }: Sche
             dayHref={`/scores/${group.date}`}
             sticky
           />
-          <GameList games={group.games} variant="grouped" scopeLeague={scopeLeague} />
+          <GameList games={group.games} variant="grouped" scopeLeague={scopeLeague} records={records} />
         </section>
       ))}
     </div>

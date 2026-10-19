@@ -284,21 +284,21 @@ describe('layers: the dependency rule', () => {
       expect(broken('lib/model/game.ts', 'lib/model/ids')).toEqual([]);
       expect(broken('lib/shared/game-id.ts', 'lib/config/season')).toEqual([]);
       expect(broken('lib/queries/games.ts', 'lib/engine/classify')).toEqual([]);
-      expect(broken('components/ui/GameRow.tsx', 'lib/queries/games')).toEqual([]);
-      expect(broken('components/ui/GameRow.tsx', 'app/page')).toEqual(['a']);
+      expect(broken('components/game-row/GameRow.tsx', 'lib/queries/games')).toEqual([]);
+      expect(broken('components/game-row/GameRow.tsx', 'app/page')).toEqual(['a']);
     });
 
     it('(b) ranked modules never reach ingestion, scripts or tests', () => {
       expect(broken('lib/registry/resolve.ts', 'lib/sources/cifss')).toEqual(['b']);
       expect(broken('lib/engine/classify.ts', 'lib/pipeline/contract')).toEqual(['b']);
       expect(broken('app/page.tsx', 'scripts/lib/cli')).toEqual(['b']);
-      expect(broken('components/ui/GameRow.tsx', 'tests/support/repo')).toEqual(['b']);
+      expect(broken('components/game-row/GameRow.tsx', 'tests/support/repo')).toEqual(['b']);
     });
 
     it('(c) ingestion stays below the read side', () => {
       expect(broken('lib/pipeline/run.ts', 'lib/queries/games')).toEqual(['c']);
       expect(broken('lib/pipeline/run.ts', 'lib/datasets/snapshot')).toEqual(['c']);
-      expect(broken('lib/official/match.ts', 'components/ui/GameRow')).toEqual(['c']);
+      expect(broken('lib/official/match.ts', 'components/game-row/GameRow')).toEqual(['c']);
       expect(broken('lib/pipeline/run.ts', 'scripts/lib/cli')).toEqual(['c']);
       expect(broken('lib/pipeline/run.ts', 'lib/snapshot/check')).toEqual([]);
       expect(broken('lib/pipeline/run.ts', 'lib/sources/http/client')).toEqual([]);
@@ -319,7 +319,7 @@ describe('layers: the dependency rule', () => {
     });
 
     it('(f) package parts only through their doors', () => {
-      expect(broken('components/ui/GameRow.tsx', 'lib/registry/team-list')).toEqual(['f']);
+      expect(broken('components/game-row/GameRow.tsx', 'lib/registry/team-list')).toEqual(['f']);
       expect(broken('lib/queries/standings.ts', 'lib/engine/standings/ladder')).toEqual(['f']);
       expect(broken('lib/registry/resolve.ts', 'lib/config/leagues/scval')).toEqual(['f']);
       expect(broken('lib/registry/teams.ts', 'lib/registry/team-list')).toEqual([]);
