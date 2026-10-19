@@ -15,8 +15,8 @@ cifsshome.org         ──┘  (cross-check only)
    schedules, at most 3 at a time and at least 500 ms apart. There are 15 divisions, but North
    County's Valley division has no MaxPreps table, so its metadata and table are never requested
    (never a `/leagues/null/v1` URL) and its cross-check is reported as skipped; the Southern Section
-   independents have no table either, so only their three schedules are read. Failures are scoped, so one league
-   never blocks the others:
+   independents have no MaxPreps table either, so only their five schedules are read. Failures are
+   scoped, so one league never blocks the others:
    - **Run abort** (exit 1, nothing written, the previous snapshot stays): the season ids changed,
      the league or team registry is inconsistent, the assembled snapshot fails validation, or
      there is a systemic outage (under 80% of the previous game count, 60% or more of the feeds
@@ -38,9 +38,11 @@ cifsshome.org         ──┘  (cross-check only)
    cross-check only and is never called official). The four Southern California leagues have none
    either: a Sunset league game is one MaxPreps marks as a league game, and a San Diego division game
    is one between two members of the division (the Section's 2026-27 League Alignment), whatever
-   MaxPreps' flag says. No game counts for the independents (`classification: 'independent'`): every game
-   they play is non-league. Secondary sources (si.com, the two VNN
-   `.ics` feeds, the CCS calendar and bracket poll) are optional and failure-tolerant. So is the
+   MaxPreps' flag says. The LA independents, five schools in no league, are counted the same way
+   (`classification: 'membership'`): their table counts every game between two of the five from
+   Sep 8 to Oct 31, tournament and postseason rows left out, and they have no postseason. Secondary
+   sources (si.com, the two VNN `.ics` feeds, the CCS calendar and bracket poll) are optional and
+   failure-tolerant. So is the
    third score cross-check, cifsshome.org (the CIF Southern Section's schedule-and-score widget, which
    carries every Section our teams play in): schools enter their own rows there, so it never
    changes a score; each run compares its scored rows with MaxPreps and lists every disagreement, every
