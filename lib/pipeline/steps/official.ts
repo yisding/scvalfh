@@ -32,6 +32,7 @@ import { type DivisionConfig, type LeagueConfig } from '@/lib/model/league-confi
 import { matchOfficialFixtures } from '@/lib/official/match';
 import { loadBundledFixtures } from '@/lib/official/schema';
 import { assertDoubleRoundRobin } from '@/lib/official/validate';
+import type { RawResponse } from '@/lib/sources/http/raw-response';
 import {
   PdftotextMissingError,
   SCVAL_STANDINGS_INDEX,
@@ -44,7 +45,6 @@ import {
 import {
   type OfficialStep,
   type OfficialStepResult,
-  type RawResponse,
   type ResourceKey,
   type RunContext,
 } from '@/lib/pipeline/contract';

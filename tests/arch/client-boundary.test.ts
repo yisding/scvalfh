@@ -22,6 +22,7 @@ import { builtinModules } from 'node:module';
 import { describe, expect, it } from 'vitest';
 
 import {
+  LEAVES,
   PAGE_CODE_ROOTS,
   expectAtLeast,
   importsOf,
@@ -36,8 +37,10 @@ import {
 /**
  * Repo-relative module paths (no extension, no trailing /index) a client module may import from
  * outside components/ and app/. An entry ending in '/' is a prefix: it admits everything under it.
+ * The client-safe tier is three whole directories (the bottom two ranks of tests/arch/layers.test.ts)
+ * plus the import-free LEAVES of lib/config.
  */
-const CLIENT_SAFE: readonly string[] = ['lib/model/', 'lib/shared/', 'lib/format/', 'lib/config/season', 'lib/config/mascots'];
+const CLIENT_SAFE: readonly string[] = ['lib/model/', 'lib/shared/', 'lib/format/', ...LEAVES];
 
 const NODE_BUILTINS = new Set(builtinModules);
 

@@ -35,6 +35,15 @@ export const EXCLUDED: readonly string[] = ['tests/fixtures/', 'tests/golden/'];
 export const PAGE_CODE_ROOTS: readonly string[] = ['app', 'components'];
 
 /**
+ * The import-free leaves of lib/config (module paths, no extension): the season constants, the
+ * third-party base URLs, the invariant error and the mascot table. Any layer may import them and
+ * they import nothing but each other (lib/config/season.ts reads MAXPREPS_WEB from
+ * lib/config/source-urls.ts), so they are client-safe as well (tests/arch/layers.test.ts,
+ * tests/arch/client-boundary.test.ts).
+ */
+export const LEAVES: readonly string[] = ['lib/config/season', 'lib/config/source-urls', 'lib/config/invariant', 'lib/config/mascots'];
+
+/**
  * Top-level directories that hold no source of ours (data, docs, vendored code, build output,
  * tooling state). Every other top-level directory containing a .ts/.tsx/.mjs file must be in
  * SOURCE_ROOTS (tests/arch/source-roots.test.ts). `.git` is listed too: it is never scanned.
@@ -247,6 +256,11 @@ export function resolveModule(fromFile: string, spec: string): string | null {
   else if (spec.startsWith('.')) target = path.posix.normalize(path.posix.join(path.posix.dirname(fromFile), spec));
   else return null;
   return target.replace(CODE_EXT, '').replace(/\/index$/, '');
+}
+
+/** The module path of a repo-relative file: its code extension and a trailing `/index` dropped. */
+export function moduleOf(file: string): string {
+  return file.replace(CODE_EXT, '').replace(/\/index$/, '');
 }
 
 /** The repo-relative file a module path (from resolveModule) names on disk, or null. */

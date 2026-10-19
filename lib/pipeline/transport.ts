@@ -31,6 +31,7 @@ import { getTeamBySlug } from '@/lib/registry/teams';
 import { CCS_ICAL_URL } from '@/lib/sources/ccs';
 import { CIFSS_SEASON_FROM, cifssListingUrl } from '@/lib/sources/cifss';
 import { HttpClient, HttpError, type HttpClientOptions } from '@/lib/sources/http';
+import type { RawResponse } from '@/lib/sources/http/raw-response';
 import { MaxPrepsClient, MaxPrepsError } from '@/lib/sources/maxpreps';
 import { SBLIVE_HTTP_OPTIONS, sbliveScoresUrl } from '@/lib/sources/sblive';
 import { SCVAL_STANDINGS_INDEX, pdfToText, scvalScheduleUrl } from '@/lib/sources/scval-pdf';
@@ -39,7 +40,6 @@ import {
   FixtureMissing,
   TransportError,
   resourcePath,
-  type RawResponse,
   type ResourceKey,
   type Transport,
 } from './contract';

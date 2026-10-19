@@ -6,7 +6,7 @@ import path from 'node:path';
 import { describe, expect, it, vi } from 'vitest';
 
 import { BOOTSTRAP_URL, SPORT_SEASON_ID } from '@/lib/config/season';
-import type { RawResponse } from '@/lib/pipeline/contract';
+import type { RawResponse } from '@/lib/sources/http/raw-response';
 import { getTeamBySlug } from '@/lib/registry/teams';
 import {
   DEFAULT_USER_AGENT,

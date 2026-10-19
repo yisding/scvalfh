@@ -13,6 +13,7 @@ import type { CcsCalendarEvent } from '@/lib/model/postseason';
 import type { SeasonWindow } from '@/lib/model/season';
 import type { Snapshot } from '@/lib/model/snapshot';
 import type { CifssSectionKey } from '@/lib/sources/cifss';
+import type { RawResponse } from '@/lib/sources/http/raw-response';
 
 /** One upstream resource. `resourcePath(key)` is its manifest key and its corpus file stem. */
 export type ResourceKey =
@@ -69,13 +70,6 @@ export function resourcePath(key: ResourceKey): string {
     case 'cifss-scores':
       return `cifss/${key.section}/${key.page}`;
   }
-}
-
-export interface RawResponse {
-  url: string;
-  httpStatus: number;
-  body: string;
-  upstreamModifiedOn?: string;
 }
 
 export interface Transport {

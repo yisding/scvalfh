@@ -26,6 +26,7 @@ import {
 } from '@/lib/model/ids';
 import { resolveOfficialName } from '@/lib/registry/resolve';
 import { dateKey } from '@/lib/schema/primitives';
+import { officialFixtureId } from '@/lib/shared/official-id';
 
 export const OFFICIAL_BUNDLE_SCHEMA = 'scvalfh-official-fixtures/1';
 
@@ -78,16 +79,6 @@ export type BundleDocument = z.infer<typeof BundleDocumentSchema>;
 export type BundleFixture = z.infer<typeof BundleFixtureSchema>;
 export type BundleEvent = z.infer<typeof BundleEventSchema>;
 export type OfficialBundle = z.infer<typeof OfficialBundleSchema>;
-
-/** THE OfficialFixture id rule (lib/model/fixture.ts): `${division}:${dateKey}:${awaySlug ?? awayName}@${homeSlug ?? homeName}`. */
-export function officialFixtureId(
-  division: DivisionId,
-  dateKey: string,
-  away: { slug: TeamSlug | null; name: string },
-  home: { slug: TeamSlug | null; name: string },
-): string {
-  return `${division}:${dateKey}:${away.slug ?? away.name}@${home.slug ?? home.name}`;
-}
 
 /** The one bundle file a league's bundled divisions share (repo-relative), or null when it has none. */
 export function bundleFileOf(leagueId: LeagueId): string | null {

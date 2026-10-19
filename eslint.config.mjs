@@ -45,6 +45,52 @@ const eslintConfig = defineConfig([
       ],
     },
   },
+  // The top-level dependency directions, as editor feedback (tests/arch/layers.test.ts owns the full
+  // rule, including the ranks inside lib/): lib imports none of views, components, app, scripts or
+  // tests; views never import components, app or scripts; components never import app or scripts;
+  // and nothing outside tests/ imports tests/. The typescript resolver reads tsconfig.json's
+  // `paths`, so '@/' specifiers resolve.
+  {
+    files: ["**/*.{ts,tsx,mts}"],
+    settings: {
+      "import/resolver": { typescript: { project: "./tsconfig.json" } },
+    },
+    rules: {
+      "import/no-restricted-paths": [
+        "error",
+        {
+          zones: [
+            {
+              target: "./lib",
+              from: ["./views", "./components", "./app", "./scripts", "./tests"],
+              message: "lib/ sits below views, components, app, scripts and tests (tests/arch/layers.test.ts).",
+            },
+            {
+              target: "./views",
+              from: ["./components", "./app", "./scripts"],
+              message: "views/ hold view models: they never import components, app or scripts (tests/arch/layers.test.ts).",
+            },
+            {
+              target: "./components",
+              from: ["./app", "./scripts"],
+              message: "components/ never import route files or scripts (tests/arch/layers.test.ts).",
+            },
+            {
+              target: ["./app", "./components", "./lib", "./scripts", "./views", "./*.{ts,mts,mjs}"],
+              from: "./tests",
+              message: "Only tests import tests/ (tests/arch/layers.test.ts).",
+            },
+          ],
+        },
+      ],
+    },
+  },
+  // Import cycles inside lib/ and views/ (rule (g) of tests/arch/layers.test.ts, which also counts
+  // type-only imports; this rule skips them).
+  {
+    files: ["lib/**/*.{ts,tsx}", "views/**/*.{ts,tsx}"],
+    rules: { "import/no-cycle": ["error", { ignoreExternal: true }] },
+  },
   // tests/support/corpus-modules.ts names its vitest hook registrars useCorpusModules and
   // useSnapshotModules; they are not React hooks, and the rules-of-hooks rule would reject calling
   // them at the top of a test file (the only place they belong).

@@ -15,7 +15,8 @@
 import { getDivision } from '@/lib/config/leagues';
 import type { DivisionId, TeamSlug } from '@/lib/model/ids';
 import { resolveOfficialName } from '@/lib/registry/resolve';
-import { officialFixtureId, type BundleEvent, type BundleFixture } from './schema';
+import { officialFixtureId } from '@/lib/shared/official-id';
+import type { BundleEvent, BundleFixture } from './schema';
 
 /** The default varsity start ("GAME TIMES: VARSITY – 5:00pm"). */
 export const BVAL_DEFAULT_VARSITY = '17:00';

@@ -15,7 +15,7 @@ import { MAX_RETRY_AFTER_MS, POLITE_USER_AGENT } from './http';
 import { BOOTSTRAP_URL, SPORT_SEASON_ID } from '@/lib/config/season';
 import { MAXPREPS_API } from '@/lib/config/source-urls';
 import type { DroppedContest } from '@/lib/model/health';
-import type { RawResponse } from '@/lib/pipeline/contract';
+import type { RawResponse } from './http/raw-response';
 
 // ---------------------------------------------------------------- schemas
 

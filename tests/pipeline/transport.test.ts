@@ -16,7 +16,6 @@ import {
   FixtureMissing,
   TransportError,
   resourcePath,
-  type RawResponse,
   type ResourceKey,
   type Transport,
 } from '@/lib/pipeline/contract';
@@ -33,6 +32,7 @@ import {
 import { officialChangesCellText, sha256Hex, tdCellBodies } from '@/lib/official/validate';
 import { TEAMS, getTeamBySlug } from '@/lib/registry/teams';
 import { HttpError, type HttpResponse } from '@/lib/sources/http';
+import type { RawResponse } from '@/lib/sources/http/raw-response';
 import { MaxPrepsError } from '@/lib/sources/maxpreps';
 import { corpusDir, variantDir } from '@/tests/support/corpus';
 import { REPO, tempDir } from '@/tests/support/repo';

@@ -34,7 +34,6 @@ import {
   OFFICIAL_BUNDLE_SCHEMA,
   bundleToFixtures,
   compareBundleFixtures,
-  officialFixtureId,
   parseOfficialBundle,
   serializeBundle,
   type BundleDocument,
@@ -44,6 +43,7 @@ import {
 } from '@/lib/official/schema';
 import { assertDoubleRoundRobin } from '@/lib/official/validate';
 import { resolveOfficialName } from '@/lib/registry/resolve';
+import { officialFixtureId } from '@/lib/shared/official-id';
 import { runCli } from './cli';
 
 const REPO = path.resolve(import.meta.dirname, '..');
