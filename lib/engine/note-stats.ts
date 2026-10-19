@@ -2,7 +2,7 @@
  * Player stats a coach wrote in MaxPreps' game note instead of the stats sheet (SPEC §1.1k), for
  * every registry team.
  *
- * MaxPreps' `contest.location` is a 50-character free-text note (lib/normalize.ts splitLocation),
+ * MaxPreps' `contest.location` is a 50-character free-text note (lib/pipeline/reconcile/normalize.ts splitLocation),
  * and some coaches use it as a box score: Homestead's read "goals scored Gabby Molly, Emry Borges"
  * (Sep 30), "tied in OT 1:1  goal scored by Emery Borges" (Oct 5) and "Lacey played 3Q had 7
  * saves. Noa played last…" (Sep 28). This module reads those notes on any team's finals and adds
@@ -360,7 +360,7 @@ export interface NoteCredit {
   opponent: string;
   /** Where the credited team played: 'home', 'away' or 'neutral'. */
   site: 'home' | 'away' | 'neutral';
-  /** The note as published (lib/normalize.ts may have marked a cut-off note with "…"). */
+  /** The note as published (lib/pipeline/reconcile/normalize.ts may have marked a cut-off note with "…"). */
   note: string;
   written: string;
   via: NameMatch;

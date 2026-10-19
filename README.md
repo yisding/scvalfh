@@ -509,7 +509,7 @@ each said:
 
 - **MaxPreps** (`games`): the same `schedule-calculated` call as the varsity feed, with the JV
   season id (`JV_SPORT_SEASON_ID` in `lib/config/season.ts`, read from `maxpreps.com/ca/field-hockey/jv/`)
-  and the school's own registry id; each row becomes a `Game` through `lib/normalize.ts`, exactly
+  and the school's own registry id; each row becomes a `Game` through `lib/pipeline/reconcile/normalize.ts`, exactly
   as a varsity row does, except that a level JV final is never read as a shootout win (the San
   Diego shootout procedure is varsity only). On 2026-10-05: 260 games for 45 of the 49 schools, 91
   with a score (Del Mar, Live Oak, Sobrato and Silver Creek have none). On 2026-10-06, with the

@@ -17,7 +17,7 @@ import { classifyGames } from '@/lib/engine/classify';
 import { buildCrossCheck, computeStandings, toReportedRecord } from '@/lib/engine/standings';
 import type { TeamId } from '@/lib/model/ids';
 import type { ReportedRecord } from '@/lib/model/standings';
-import { normalizeGames } from '@/lib/normalize';
+import { normalizeGames } from '@/lib/pipeline/reconcile/normalize';
 import { readManifest } from '@/lib/pipeline/corpus';
 import { resolveTeam } from '@/lib/registry/resolve';
 import { getTeamById, teamsInDivision } from '@/lib/registry/teams';

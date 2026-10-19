@@ -17,7 +17,7 @@
  */
 
 import { divisionsOf } from '@/lib/config/leagues';
-import { BASIC_NAMED, decodeEntities } from '@/lib/html-entities';
+import { BASIC_NAMED, decodeEntities } from './text/html-entities';
 import type { DivisionId, TeamSlug } from '@/lib/model/ids';
 import { resolveOfficialName } from '@/lib/registry/resolve';
 import { teamsInLeague } from '@/lib/registry/teams';

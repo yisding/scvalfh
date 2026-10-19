@@ -17,7 +17,7 @@
  * so this runs by hand or from a weekly schedule. The budget is the MaxPreps client's own
  * (concurrency <= 3, 500 ms between request starts, 15 s timeout, retry 429/5xx only).
  *
- * A partial run still publishes, and failures are scoped to the team (lib/fetch-scope.ts): a team
+ * A partial run still publishes, and failures are scoped to the team (lib/pipeline/fetch-scope.ts): a team
  * whose page fails to fetch or to parse keeps the previous file's rows with status
  * 'carried-forward' (or 'error' when there is nothing to carry), and never stops another team or
  * another league from being read. A team outside a `--leagues` run keeps the previous file's row
@@ -50,7 +50,7 @@ import {
   summarizeByLeague,
   teamsInScope,
   type PreviousFile,
-} from '@/lib/fetch-scope';
+} from '@/lib/pipeline/fetch-scope';
 import type { LeagueId } from '@/lib/model/ids';
 import { TEAMS } from '@/lib/registry/teams';
 import { formatIssues } from '@/lib/schema/primitives';
@@ -102,7 +102,7 @@ function parseArgs(argv: readonly string[]): Args {
 }
 
 /**
- * The previous file, if it exists, salvaged row by row (lib/fetch-scope.ts readPreviousFile): its
+ * The previous file, if it exists, salvaged row by row (lib/pipeline/fetch-scope.ts readPreviousFile): its
  * valid rows of this season are what a failed or out-of-scope team keeps. A file written before
  * every team was in the registry (the 15 SCVAL teams) still counts: the teams it lacks are simply
  * pending.

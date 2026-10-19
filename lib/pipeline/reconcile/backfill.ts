@@ -11,7 +11,7 @@
  *                        date while si.com has the game on the official date, or (c) a 0-0 tie in a league with
  *                        no overtime while si.com has a decided Final the same day: si.com's score is published
  *                        and MaxPreps' value is kept as the conflict.
- *   5. plain disagreement — MaxPreps stays (lib/crosscheck.ts publishes the conflict row).
+ *   5. plain disagreement — MaxPreps stays (lib/pipeline/reconcile/sblive-crosscheck.ts publishes the conflict row).
  *   6. never from si.com: membership, leagueRecord, gameTypeLabel, standings order.
  *   7. junk-row guards: non-`/california/field-hockey/games/` rows, duplicate ids, JV-only/withdrawn sides,
  *                        and every side not resolved BY SI.COM ID are ignored.
@@ -28,27 +28,27 @@
  * Final, integer scores, and a non-junk row. Pure: no I/O, no clock — `today` is an input.
  */
 
-import { LEAGUES, getLeague, getSection, leagueOfDivision } from './config/leagues';
-import { datesOf } from './engine/sblive-dates';
-import { monthDay } from './format/dates';
-import { shootoutPhrases } from './format/score';
-import type { BackfillRow, SbliveOnlyRow } from './model/crosscheck';
-import type { OfficialFixture } from './model/fixture';
-import type { BackfillProvenance, Decider, Game, GameSide, Outcome } from './model/game';
-import type { ContestId, TeamSlug } from './model/ids';
-import { type SectionConfig } from './model/league-config';
-import type { Snapshot } from './model/snapshot';
-import type { Team } from './model/team';
-import { unorderedPairKey } from './registry/resolve';
-import { getTeamBySlug } from './registry/teams';
-import { dayDiff } from './shared/dates';
+import { LEAGUES, getLeague, getSection, leagueOfDivision } from '@/lib/config/leagues';
+import { datesOf } from '@/lib/engine/sblive-dates';
+import { monthDay } from '@/lib/format/dates';
+import { shootoutPhrases } from '@/lib/format/score';
+import type { BackfillRow, SbliveOnlyRow } from '@/lib/model/crosscheck';
+import type { OfficialFixture } from '@/lib/model/fixture';
+import type { BackfillProvenance, Decider, Game, GameSide, Outcome } from '@/lib/model/game';
+import type { ContestId, TeamSlug } from '@/lib/model/ids';
+import { type SectionConfig } from '@/lib/model/league-config';
+import type { Snapshot } from '@/lib/model/snapshot';
+import type { Team } from '@/lib/model/team';
+import { unorderedPairKey } from '@/lib/registry/resolve';
+import { getTeamBySlug } from '@/lib/registry/teams';
+import { dayDiff } from '@/lib/shared/dates';
 import {
   isCaliforniaGameRow,
   isIgnoredSbliveSide,
   sblivePairKey,
   type SbliveGame,
   type SbliveSide,
-} from './sources/sblive';
+} from '@/lib/sources/sblive';
 
 // ---------------------------------------------------------------- constants
 
@@ -290,7 +290,7 @@ function sameLeagueOf(g: Pick<Game, 'home' | 'away'>): string | null {
 /**
  * The section `g`'s two sides are both teams of when it ends a level varsity game with a shootout
  * (SectionConfig.shootout set: the Northern Section, the San Diego Section), else null. Keyed on the section
- * as lib/normalize.ts keys decider 'SO', so a San Diego game between two conferences is covered too, and with
+ * as lib/pipeline/reconcile/normalize.ts keys decider 'SO', so a San Diego game between two conferences is covered too, and with
  * the same tournament exception: a row MaxPreps marks contestType 2 on either side, in a section whose rule
  * does not reach tournaments (`shootout.coversTournaments` false: the SDFHOA procedures cover the regular
  * season and the playoffs, not invitational tournaments), is governed by no shootout rule, so normalize
@@ -532,7 +532,7 @@ function absentFixtureGame(
   };
 }
 
-/** The decider of a final decided in play, from MaxPreps' overtime count (lib/normalize.ts). */
+/** The decider of a final decided in play, from MaxPreps' overtime count (lib/pipeline/reconcile/normalize.ts). */
 function overtimeDecider(otPeriods: number): Decider {
   return otPeriods >= 2 ? '2OT' : otPeriods === 1 ? 'OT' : 'REG';
 }

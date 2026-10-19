@@ -17,7 +17,7 @@ import {
   overtimeFromNote,
   splitLocation,
   toUtcIso,
-} from '@/lib/normalize';
+} from '@/lib/pipeline/reconcile/normalize';
 import { resolveTeam } from '@/lib/registry/resolve';
 import { getTeamBySlug } from '@/lib/registry/teams';
 import { sideOutcome } from '@/lib/shared/game';
@@ -434,7 +434,7 @@ describe('normalize: provenance.resultConflict (D2 rule 4a evidence)', () => {
     const flagged = corpus.games.filter((g) => g.provenance.resultConflict);
     expect(flagged.map((g) => g.contestId)).toEqual(['747082fd-259d-4fb8-8837-ece21a945993']);
     expect(flagged[0].provenance.resultConflict).toMatch(/W and Gilroy L on a 0-0 score/);
-    // The score is still published as MaxPreps has it; lib/backfill decides whether si.com overrides.
+    // The score is still published as MaxPreps has it; lib/pipeline/reconcile/backfill decides whether si.com overrides.
     expect(flagged[0].status).toBe('final');
     expect([flagged[0].home.score, flagged[0].away.score]).toEqual([0, 0]);
   });
@@ -694,7 +694,7 @@ describe('normalize: a level final in a 1 v 1 league (EAL)', () => {
     const id = 'eeeeeeee-0000-4000-8000-0000000000a9';
     const res = jv([pairRow(id, ['clairemont', 0, 'L'], ['eastlake', 0, 'W'])]);
     const [g] = res.games;
-    expect(g.decider, 'lib/normalize.ts level jv').toBe('REG');
+    expect(g.decider, 'lib/pipeline/reconcile/normalize.ts level jv').toBe('REG');
     expect(g.provenance.resultConflict).toBe('MaxPreps marks Clairemont L and Eastlake W on a 0-0 score.');
     expect(sideOutcome(g, 'home'), 'a JV tie stands').toBe('T');
     expect(res.warnings.filter((w) => w.startsWith(`contest ${id}`))).toEqual([

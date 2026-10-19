@@ -3,7 +3,7 @@
  * test can import them without running the script's scan of the built site.
  */
 
-import { decodeEntities as decodeWith } from '@/lib/html-entities';
+import { decodeEntities as decodeWith } from '@/lib/sources/text/html-entities';
 import type { LeagueHistory } from '@/lib/schema/history';
 
 /**

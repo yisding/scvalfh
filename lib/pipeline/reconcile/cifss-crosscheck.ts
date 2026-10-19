@@ -1,6 +1,6 @@
 /**
  * MaxPreps ↔ cifsshome.org score comparison (docs/DATA-SOURCES.md §1.2a). The third cross-check,
- * beside MaxPreps' own tables (lib/engine/standings/maxpreps-crosscheck.ts buildCrossCheck) and si.com (lib/crosscheck.ts).
+ * beside MaxPreps' own tables (lib/engine/standings/maxpreps-crosscheck.ts buildCrossCheck) and si.com (lib/pipeline/reconcile/sblive-crosscheck.ts).
  *
  * MaxPreps is primary and nothing here changes a game: `compareCifss` only builds the report /about
  * prints. Schools enter their own rows on the widget, so most of what it lacks says nothing about
@@ -19,13 +19,14 @@
  * either matches MaxPreps and is set aside otherwise (`ambiguous`).
  */
 
-import { gamePairKey } from './crosscheck';
-import type { CifssConflictRow, CifssCrossCheck, CifssOnlyRow } from './model/crosscheck';
-import type { Game } from './model/game';
-import { sideJoinKey, unorderedPairKey } from './registry/resolve';
-import { getTeamBySlug } from './registry/teams';
-import { dayNumber } from './shared/dates';
-import { cifssListingUrl, type CifssRow, type CifssSide } from './sources/cifss';
+import { CIFSS_NOTES } from '@/lib/format/crosscheck-notes';
+import { gamePairKey } from './sblive-crosscheck';
+import type { CifssConflictRow, CifssCrossCheck, CifssOnlyRow } from '@/lib/model/crosscheck';
+import type { Game } from '@/lib/model/game';
+import { sideJoinKey, unorderedPairKey } from '@/lib/registry/resolve';
+import { getTeamBySlug } from '@/lib/registry/teams';
+import { dayNumber } from '@/lib/shared/dates';
+import { cifssListingUrl, type CifssRow, type CifssSide } from '@/lib/sources/cifss';
 
 /** How far apart the widget's date and MaxPreps' may be and still be one game. */
 export const CIFSS_DATE_TOLERANCE_DAYS = 3;
@@ -50,13 +51,6 @@ export interface CompareCifssResult {
   /** Scored widget games with no MaxPreps contest that match a Deleted or dropped one (not reported). */
   nonGameMatches: number;
 }
-
-export const CIFSS_NOTES = {
-  pending: 'MaxPreps lists the game with no score yet, so it stays unreported here.',
-  postponed: 'MaxPreps lists the game as postponed, so it stays unreported here.',
-  notOnMaxPreps:
-    'MaxPreps has no game between these teams within three days of this date. Schools enter their own rows on cifsshome.org, so this may be a scrimmage or a game played on another date; nothing is published from it.',
-} as const;
 
 const sidePairKey = (r: Pick<CifssRow, 'home' | 'away'>): string =>
   unorderedPairKey(sideJoinKey(r.home), sideJoinKey(r.away));

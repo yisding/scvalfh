@@ -24,8 +24,8 @@ import { copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from
 import path from 'node:path';
 
 import { ALL_DIVISIONS, LEAGUES, LEAGUE_IDS, isLeagueId } from '@/lib/config/leagues';
-import { carryCrossCheck } from '@/lib/crosscheck';
-import { parseFetchedAtFlag, parseLeaguesFlag } from '@/lib/fetch-scope';
+import { carryCrossCheck } from './reconcile/sblive-crosscheck';
+import { parseFetchedAtFlag, parseLeaguesFlag } from './fetch-scope';
 import type { OfficialFixture } from '@/lib/model/fixture';
 import type { Game } from '@/lib/model/game';
 import type { Snapshot } from '@/lib/model/snapshot';

@@ -80,7 +80,7 @@ export function renderScore(g: Game): ScoreView {
  * noun, win, tally and pronoun do not describe what happened in a game ('no shootout winner flagged', 'may
  * have recorded a shootout win as a goal'), so they stay the rule's words. A sentence that states the RULE
  * ('a varsity game there outside a tournament is decided by a shootout', components/game/GameSources.tsx;
- * lib/backfill.ts's D24 note) calls this with the default: the rule is sourced whatever MaxPreps recorded.
+ * lib/pipeline/reconcile/backfill.ts's D24 note) calls this with the default: the rule is sourced whatever MaxPreps recorded.
  */
 export interface ShootoutPhrases {
   /** '1 v 1' | 'shootout': the thing itself, singular, no article ('no 1 v 1 winner flagged'). */

@@ -1,8 +1,8 @@
 /**
- * lib/crosscheck.ts — MaxPreps ↔ si.com score reconciliation (SPEC §7.9, owner decision D2).
+ * lib/pipeline/reconcile/sblive-crosscheck.ts — MaxPreps ↔ si.com score reconciliation (SPEC §7.9, owner decision D2).
  *
  * The rules under test, in the order they matter:
- *   1. reconcile never writes a si.com score onto a game: publishing one is lib/backfill.ts's job
+ *   1. reconcile never writes a si.com score onto a game: publishing one is lib/pipeline/reconcile/backfill.ts's job
  *      (D2 rules 2-4, tests/backfill.test.ts), and a game it already published is not compared again.
  *   2. A plain disagreement (D2 rule 5) is published, never averaged and never silently resolved: MaxPreps stays.
  *   3. A si.com score D2 did not publish is listed with a note naming why; the game stays unreported.
@@ -12,8 +12,8 @@
 
 import { describe, expect, it } from 'vitest';
 
-import { applyBackfill } from '@/lib/backfill';
-import { NOT_PUBLISHED, carryCrossCheck, emptyCrossCheck, gameJoinKey, gamePairKey, reconcile, withBackfill } from '@/lib/crosscheck';
+import { applyBackfill } from '@/lib/pipeline/reconcile/backfill';
+import { NOT_PUBLISHED, carryCrossCheck, emptyCrossCheck, gameJoinKey, gamePairKey, reconcile, withBackfill } from '@/lib/pipeline/reconcile/sblive-crosscheck';
 import type { BackfillRow, SbliveCrossCheck, SbliveOnlyRow } from '@/lib/model/crosscheck';
 import type { Game } from '@/lib/model/game';
 import { resolveTeam } from '@/lib/registry/resolve';
@@ -149,7 +149,7 @@ describe('crosscheck: disagreement', () => {
 
 describe('crosscheck: si.com scores D2 did not publish', () => {
   it('lists a si.com score on a contest MaxPreps left unscored, says why, and fills nothing', () => {
-    // Resolved by name only: D2 never fills from such a row (lib/backfill.ts did not), so reconcile reports it.
+    // Resolved by name only: D2 never fills from such a row (lib/pipeline/reconcile/backfill.ts did not), so reconcile reports it.
     const g = game({ home: 'los-gatos', away: 'saratoga', status: 'score-pending', date: '2026-09-28' });
     const res = reconcile(
       [g],

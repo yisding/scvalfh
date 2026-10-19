@@ -1,7 +1,7 @@
 /**
  * cifsshome.org's schedule-and-score widget (the CIF Southern Section's HomeCampus site), read as a
  * score CROSS-CHECK only (docs/DATA-SOURCES.md §1.2a). Nothing it says reaches a published score,
- * record or standings order: lib/cifss-crosscheck.ts compares it with MaxPreps and lists the
+ * record or standings order: lib/pipeline/reconcile/cifss-crosscheck.ts compares it with MaxPreps and lists the
  * differences on /about.
  *
  * The widget is one server-rendered HTML table per (Section, school year, sport), 20 rows a page:

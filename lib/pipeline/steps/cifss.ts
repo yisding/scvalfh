@@ -1,7 +1,7 @@
 /**
  * Step 11b (docs/DATA-SOURCES.md §1.2a): the cifsshome.org score cross-check. It runs after the
  * guards, so it compares the games the snapshot will publish, and it never changes one: its only
- * output is `Snapshot.cifssCrossCheck` (lib/cifss-crosscheck.ts).
+ * output is `Snapshot.cifssCrossCheck` (lib/pipeline/reconcile/cifss-crosscheck.ts).
  *
  * Every Section our teams play in is read season to date (CIFSS_SECTIONS: one listing each, every
  * page of it), one SourceStatus row per Section. The report is all or nothing, so it never flaps
@@ -10,10 +10,10 @@
  * is marked stale. A Section the corpus lacks is 'skipped', which is how an offline run skips it.
  */
 
-import { carryCifssCrossCheck, compareCifss, type NonGame } from '@/lib/cifss-crosscheck';
+import { carryCifssCrossCheck, compareCifss, type NonGame } from '@/lib/pipeline/reconcile/cifss-crosscheck';
 import type { CifssCrossCheck } from '@/lib/model/crosscheck';
 import type { SourceStatus } from '@/lib/model/health';
-import { dateKeyOf } from '@/lib/normalize';
+import { dateKeyOf } from '@/lib/pipeline/reconcile/normalize';
 import { resolveTeam, sideJoinKey, unorderedPairKey } from '@/lib/registry/resolve';
 import { getTeamById } from '@/lib/registry/teams';
 import {

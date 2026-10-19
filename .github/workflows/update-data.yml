@@ -21,7 +21,7 @@
 # Player stats ride the same run because they move after every game, as the scores do, and the
 # same commit, so a refresh is still one deploy. They cover every registry team of the nine
 # leagues (99 small JSON calls through the MaxPreps client's politeness gate); a failure is scoped
-# to the team, which keeps its previous rows (lib/fetch-scope.ts), so one league's outage never
+# to the team, which keeps its previous rows (lib/pipeline/fetch-scope.ts), so one league's outage never
 # blocks another's stats. Their fetch is allowed to fail: a MaxPreps hiccup on the stats endpoint
 # must never cost the day's scores. Nor may the stats file the fetch wrote: when the tests fail
 # and data/player-stats.json changed in this run, the Test step restores the committed one and runs

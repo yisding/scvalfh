@@ -60,7 +60,7 @@ export interface SectionConfig {
   /**
    * How the section ends a level varsity game when it is not settled in overtime, or null when no section
    * rule does (the game may end level). Set where a level final that MaxPreps marks W and L is a shootout
-   * win, decider 'SO' (lib/normalize.ts): the Northern Section (one 10-minute sudden-victory period, then
+   * win, decider 'SO' (lib/pipeline/reconcile/normalize.ts): the Northern Section (one 10-minute sudden-victory period, then
    * 1 v 1s: NS Guidelines §VII.E.4) and the San Diego Section (a 10-minute 7 v 7 sudden-victory period,
    * then 1 v 1 shootouts, the winner credited one goal: SDFHOA 2026 Mercy & Overtime Procedures; MaxPreps
    * nonetheless records many such wins as a level score marked W and L, e.g. Mt. Carmel 0-0 Poway, Sep 11).
@@ -82,7 +82,7 @@ export interface SectionConfig {
    * true (the Northern Section): §VII.E.4 governs a varsity game, with no exception for tournaments. false
    * (the San Diego Section): the SDFHOA procedures have a "Varsity Overtime (regular season)" and a
    * "(Playoffs)" heading and do not cover invitational tournaments, where seven games between two San Diego
-   * teams (Aug 21, Aug 22, Sep 12) are recorded 0-0, T and T. lib/normalize.ts then reads no 'SO' from a
+   * teams (Aug 21, Aug 22, Sep 12) are recorded 0-0, T and T. lib/pipeline/reconcile/normalize.ts then reads no 'SO' from a
    * tournament row and raises no level-final warning for one, and copy that states the rule says "outside a
    * tournament".
    * assertLeagues: set exactly when every league of the section has `leagueOvertime` 'shootout', and every
@@ -464,7 +464,7 @@ export interface DataQualityConfig {
   /** Documented and asserted never requested. */
   ignoredMaxprepsLeagueIds: Readonly<Record<string, string>>;
   /**
-   * A contest whose MaxPreps date a better source contradicts, moved to that source's date in lib/normalize.ts
+   * A contest whose MaxPreps date a better source contradicts, moved to that source's date in lib/pipeline/reconcile/normalize.ts
    * (before the date key is taken and the games are sorted, so schedules, last-5 and streaks read the corrected
    * order). `timeTba` true: the source gives no start time, so none is invented and the game reads "time TBA".
    * `source` is one sentence naming the source, what it says, and what MaxPreps says; the game page prints it

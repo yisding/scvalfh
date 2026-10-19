@@ -7,7 +7,7 @@ import { toLocalTimestamp } from '@/lib/shared/dates';
 
 /**
  * si.com's instant → our naive local timestamp and UTC instant; 16:00 local when si.com gives no time.
- * lib/backfill.ts builds a si.com-only varsity game with it, and lib/engine/jv/merge.ts a si.com-only JV game
+ * lib/pipeline/reconcile/backfill.ts builds a si.com-only varsity game with it, and lib/engine/jv/merge.ts a si.com-only JV game
  * the same way.
  */
 export function datesOf(row: { dateIso: string; dateKey: string }): { dateLocal: string; dateUtc: string; dateKey: string; isTimeTba: boolean } {

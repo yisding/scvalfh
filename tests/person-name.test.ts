@@ -1,5 +1,5 @@
 /**
- * lib/person-name.ts: an all-caps or all-lowercase name is recased, everything a school already cased is kept, and
+ * lib/sources/text/person-name.ts: an all-caps or all-lowercase name is recased, everything a school already cased is kept, and
  * no committed roster or stats sheet still carries a shouted name.
  */
 
@@ -8,7 +8,7 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { recaseName, recaseNameParts } from '@/lib/person-name';
+import { recaseName, recaseNameParts } from '@/lib/sources/text/person-name';
 import { REPO } from './support/repo';
 
 describe('recaseName', () => {

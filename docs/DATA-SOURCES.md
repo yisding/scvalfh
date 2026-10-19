@@ -100,7 +100,7 @@ sportSeasonId/year/season/level/stateCode`, plus freshness probes
 | `calculatedFields.contestState` | `0` | unknown | **[U]** not observed |
 | | `1` | **Deleted** — `canonicalUrl` null, may still carry a real score (observed: a scrimmage with a 0-4 score) — **must be dropped before constructing a `Game`** | **[V]** |
 | | `2` | Pregame / scheduled | **[V]** |
-| | `3` | ContestInProgress (live): observed on three Southern California contests dated 2026-10-05, read that evening (~17:05 PT) while they were being played or had just ended: Otay Ranch at Eastlake `601ffe30-7e13-4bac-92f0-d03c53bac7ea`, Chaparral at Temecula Valley `37865d67-1dd6-480f-b1ca-e36d2bb275e9`, University City at Point Loma `c65dd446-70ac-4df9-9859-b6c62a81b091`. `lib/normalize.ts` reads it as `live` | **[V]** 3 contests, 2026-10-05 |
+| | `3` | ContestInProgress (live): observed on three Southern California contests dated 2026-10-05, read that evening (~17:05 PT) while they were being played or had just ended: Otay Ranch at Eastlake `601ffe30-7e13-4bac-92f0-d03c53bac7ea`, Chaparral at Temecula Valley `37865d67-1dd6-480f-b1ca-e36d2bb275e9`, University City at Point Loma `c65dd446-70ac-4df9-9859-b6c62a81b091`. `lib/pipeline/reconcile/normalize.ts` reads it as `live` | **[V]** 3 contests, 2026-10-05 |
 | | `4` | Boxscore / final | **[V]** |
 | | `5` | ScoreNotReported | **[V]** |
 | `contest.dateCode` | `0` | date+time known | **[V]** |
@@ -170,7 +170,7 @@ earlier rosters put her in the class of 2028 (MaxPreps kept, as the overlay rule
 other leagues the same day (not written) found no player added, removed or changed. The file holds 1,702 players on
 88 of the 102 teams.
 
-The previous file is salvaged row by row (`readPreviousFile` in `lib/fetch-scope.ts`): each row is
+The previous file is salvaged row by row (`readPreviousFile` in `lib/pipeline/fetch-scope.ts`): each row is
 held to the team schema on its own, and a row that no longer validates (a slug gone from the
 registry, a changed id or division, a broken status, or two rows claiming one team) is dropped and
 named in the log. That team alone has nothing to keep: it is `pending` if the run does not cover it
@@ -1493,7 +1493,7 @@ Gotchas, all **[V]**:
     shots-on-goal check: the note's game is not in the goals against and shots the coach entered.
   - **Overtime.** A final MaxPreps records with 0 overtime periods counts as one period of
     overtime (two for "double OT" / "2OT") when its note says so: "OT" in capitals as a word of
-    its own, or "overtime", never right after "no", "not", "without" or "never" (`overtimeFromNote` in `lib/normalize.ts`, the same
+    its own, or "overtime", never right after "no", "not", "without" or "never" (`overtimeFromNote` in `lib/pipeline/reconcile/normalize.ts`, the same
     place the "reschedul…" note already marks a postponement). Only a level score or a one-goal
     margin can come out of sudden victory, so a note on any other score is reported, not read. The
     game keeps the note in `provenance.overtimeNote`, and its page says the OT is the note's.
@@ -1620,7 +1620,7 @@ team}`, `gameTypeLabel`, `statusId`/`shortStatusText` (`3`/`"F"` = final, `1` = 
    Southern California teams a busy day passes 24, so `parseScoresPage` warns ("si.com scoreboard
    lists 24 of 29 games; the rest load in the browser and are not read") and the day is never taken
    for the whole day: a truncated scoreboard only lowers coverage (a game it does not list is planned
-   for a team page or waits for a later run; `lib/backfill.ts` `scoreboardCoverage` is positive-only),
+   for a team page or waits for a later run; `lib/pipeline/reconcile/backfill.ts` `scoreboardCoverage` is positive-only),
    never a conclusion. **[V]** 2026-10-06.
 
 **Role in this project (owner decision D2, §5.2):** a cross-check, a same-day scoreboard with
@@ -1659,7 +1659,7 @@ Aug 25, is a 0-4 Non-League row there and a Deleted scrimmage on MaxPreps (§1.1
 Diego Section rows record some level shootout games with the shootout goal added, as si.com does.
 
 **Role in this project:** a score **cross-check only** (`lib/sources/cifss.ts`,
-`lib/cifss-crosscheck.ts`, pipeline step 11b `lib/pipeline/steps/cifss.ts`, `/about#cross-check`).
+`lib/pipeline/reconcile/cifss-crosscheck.ts`, pipeline step 11b `lib/pipeline/steps/cifss.ts`, `/about#cross-check`).
 Nothing it says reaches a published score, record, classification or standings order. Each run reads
 every page of the six Sections' listings, season start (Aug 1) through the run's date, and
 compares only the widget's SCORED rows with at least one of our teams:
@@ -2604,7 +2604,7 @@ identity by GUID, display name by the alias table.
 **Owner decision D2: MaxPreps is the primary source; si.com may backfill it, under rules that are
 mechanical so the site never guesses.** This replaces the earlier rule that si.com
 scores were only recorded and never published, everywhere. The rules are implemented as pure
-functions in `lib/backfill.ts`; match games across sources on `(date, unordered pair of teams)`.
+functions in `lib/pipeline/reconcile/backfill.ts`; match games across sources on `(date, unordered pair of teams)`.
 **Every rule needs both teams resolved by si.com id (§5.3), a si.com status of Final with integer
 scores, and a si.com game that is not a junk row (rule 7).**
 
@@ -2677,7 +2677,7 @@ scores, and a si.com game that is not a junk row (rule 7).**
     the previous snapshot's si.com game or override for it is re-applied where still eligible, and
     each failed page's source row is `stale` (rather than an error) when something was carried in
     its place. When no si.com page was read at all, the previous cross-check is carried too, keeping
-    only the rows still true of this run's games (`carryCrossCheck` in `lib/crosscheck.ts`): a
+    only the rows still true of this run's games (`carryCrossCheck` in `lib/pipeline/reconcile/sblive-crosscheck.ts`): a
     conflict whose game is gone or whose MaxPreps score has since changed, an si.com-only row whose
     game is now published or has changed status, and a fill that is no longer eligible all drop out.
     Separately, the step-06 team-feed carry never carries an `sblive:` game, so a fill always goes

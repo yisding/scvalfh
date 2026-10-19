@@ -138,7 +138,7 @@ export function getSbliveCrossCheck(): SbliveCrossCheck | undefined {
 }
 
 /**
- * The cifsshome.org SCORE cross-check (lib/cifss-crosscheck.ts). Undefined until a run has read it.
+ * The cifsshome.org SCORE cross-check (lib/pipeline/reconcile/cifss-crosscheck.ts). Undefined until a run has read it.
  * It never changes a published score: `conflicts` keep MaxPreps' score, and the other two lists are
  * widget scores MaxPreps lacks, none of them published as results.
  */

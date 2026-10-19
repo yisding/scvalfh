@@ -376,7 +376,7 @@ export function addConfiguredLeagues(raw: unknown): unknown {
 
 // ---------------------------------------------------------------- "rules changed" (v2 → v2)
 
-/** The registry's `leagueDivision` of a game: set only when BOTH sides are members of one division (lib/normalize). */
+/** The registry's `leagueDivision` of a game: set only when BOTH sides are members of one division (lib/pipeline/reconcile/normalize). */
 function registryDivision(g: Game): DivisionId | null {
   const home = teamOfSide(g.home);
   const away = teamOfSide(g.away);

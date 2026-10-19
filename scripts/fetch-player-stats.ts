@@ -38,7 +38,7 @@
  * noted stats are then not counted (lib/engine/note-stats.ts counts only what it can check). The previous
  * run's totals are not carried forward for this: they may predate what the coach has entered since.
  *
- * A partial run still publishes, and failures are scoped to the team (lib/fetch-scope.ts): a team
+ * A partial run still publishes, and failures are scoped to the team (lib/pipeline/fetch-scope.ts): a team
  * whose call fails or does not parse keeps the previous file's rows with status 'carried-forward'
  * (or 'error' when there is nothing to carry), and never stops another team or another league from
  * being read. A team outside a `--leagues` run keeps the previous file's row untouched (or is
@@ -71,7 +71,7 @@ import {
   summarizeByLeague,
   teamsInScope,
   type PreviousFile,
-} from '@/lib/fetch-scope';
+} from '@/lib/pipeline/fetch-scope';
 import type { LeagueId } from '@/lib/model/ids';
 import { inSeasonWindow } from '@/lib/pipeline/steps/window';
 import { TEAMS } from '@/lib/registry/teams';
@@ -145,7 +145,7 @@ function parseArgs(argv: readonly string[]): Args {
 }
 
 /**
- * The previous file, if it exists, salvaged row by row (lib/fetch-scope.ts readPreviousFile): its
+ * The previous file, if it exists, salvaged row by row (lib/pipeline/fetch-scope.ts readPreviousFile): its
  * valid rows of this season are what a failed or out-of-scope team keeps. A file written before
  * every team was in the registry (the 15 SCVAL teams) still counts: the teams it lacks are simply
  * pending.

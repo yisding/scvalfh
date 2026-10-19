@@ -493,7 +493,7 @@ decided it (`SectionConfig.shootout.inference: 'unverified'`; the EAL's 'verifie
 box score's "SO Win" column). How each source encodes a shootout in general is [U]. The rule is a varsity rule: the same procedures say "JV—No overtime", and the officials'
 association's game format says of JV and frosh games "Teams tied at the end of regulation, game over"
 [V], so a level JV final stays a tie, and the JV pipeline (`pnpm fetch-jv`, `level: 'jv'` in
-`lib/normalize.ts`) never reads one as a shootout win, whatever MaxPreps flags.
+`lib/pipeline/reconcile/normalize.ts`) never reads one as a shootout win, whatever MaxPreps flags.
 
 **Chain** (multi-team procedure: `partition-restart`):
 

@@ -453,7 +453,7 @@ function hasResultConflict(g: Game): boolean {
  */
 function resultConflictNoteFor(game: Game): string | null {
   if (!hasResultConflict(game)) return null;
-  // The stored note (lib/crosscheck.ts, lib/cifss-crosscheck.ts) spells "MaxPreps' " with a straight
+  // The stored note (lib/pipeline/reconcile/sblive-crosscheck.ts, lib/pipeline/reconcile/cifss-crosscheck.ts) spells "MaxPreps' " with a straight
   // apostrophe; the page's copy is curly, notes already in the snapshot included.
   const note = (game.provenance.resultConflict as string)
     .trim()
@@ -720,7 +720,7 @@ function postseasonView(game: Game, league: LeagueConfig | null): PostseasonView
 
 /**
  * `scoreNote` (D7): what this site does with a score the feed cannot state plainly. The rule it
- * cites is the section's (SectionConfig.shootout, keyed on the section as lib/normalize.ts keys decider
+ * cites is the section's (SectionConfig.shootout, keyed on the section as lib/pipeline/reconcile/normalize.ts keys decider
  * 'SO'): the Northern Section's Guidelines for the EAL (a 10-minute sudden-victory period, then 1 v 1s)
  * and the San Diego Field Hockey Officials Association's procedures for the San Diego Section (a
  * 10-minute 7 v 7 sudden-victory period, then 1 v 1 shootouts), whose rule covers a game between two of
@@ -748,7 +748,7 @@ function scoreNoteFor(
         // asserted. si.com and the Section's power rankings record Mt. Carmel–Poway (Sep 11) as 2-0 where
         // MaxPreps has 0-0 marked W/L, so this note says what MaxPreps lists and why the win counts, then
         // what the other sources record (`disagreement`). "Outside a tournament": the SDFHOA procedures do
-        // not cover invitational tournaments (coversTournaments false), and lib/normalize.ts reads no 'SO'
+        // not cover invitational tournaments (coversTournaments false), and lib/pipeline/reconcile/normalize.ts reads no 'SO'
         // from a tournament row.
         const scope = section.shootout.coversTournaments ? '' : ' outside a tournament';
         notes.push(

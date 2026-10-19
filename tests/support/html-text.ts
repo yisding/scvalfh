@@ -9,7 +9,7 @@
  *     another entity (`&amp;quot;` is the text `&quot;`, never `"`).
  */
 
-import { BASIC_NAMED, decodeEntities as decodeWith } from '@/lib/html-entities';
+import { BASIC_NAMED, decodeEntities as decodeWith } from '@/lib/sources/text/html-entities';
 
 /**
  * `html` with every tag replaced by `replacement`. A tag is a `<`, at least one character, and the
@@ -36,7 +36,7 @@ export function stripTags(html: string, replacement = ' '): string {
 }
 
 /**
- * One-pass decode (lib/html-entities.ts) of the named entities React and the pages emit (BASIC_NAMED;
+ * One-pass decode (lib/sources/text/html-entities.ts) of the named entities React and the pages emit (BASIC_NAMED;
  * any other name is left as written) and of decimal / hex character references.
  */
 export function decodeEntities(s: string): string {

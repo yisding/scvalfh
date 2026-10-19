@@ -7,7 +7,7 @@
  * split as lib/schema/player-stats.ts / lib/player-stats.ts.
  *
  * The file stores what each source said, not a blend: `games` are MaxPreps' JV contests exactly as
- * lib/normalize.ts builds a varsity game from a schedule row, and `sblive` are si.com's scored JV
+ * lib/pipeline/reconcile/normalize.ts builds a varsity game from a schedule row, and `sblive` are si.com's scored JV
  * finals. What the site shows is `mergeJv(games, sblive, today)`, a pure function of the file, so
  * a failed feed's rows can be carried forward per source and the merge is decided again on every
  * load.

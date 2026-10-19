@@ -1,8 +1,8 @@
 /**
  * SECONDARY source: SBLive / Scorebook Live, now hosted at si.com/high-school/stats (SPEC §1.2).
  *
- * Role: a SCORE CROSS-CHECK against MaxPreps (lib/crosscheck.ts) and, under owner decision D2's
- * mechanical rules only, a BACKFILL for a missing or clearly wrong MaxPreps score (lib/backfill.ts,
+ * Role: a SCORE CROSS-CHECK against MaxPreps (lib/pipeline/reconcile/sblive-crosscheck.ts) and, under owner decision D2's
+ * mechanical rules only, a BACKFILL for a missing or clearly wrong MaxPreps score (lib/pipeline/reconcile/backfill.ts,
  * SPEC §7.9). Three things are never taken from here, because they are demonstrably wrong for 2026-27:
  *   - division membership (its "De Anza" bucket holds 5 teams, two of them El Camino)
  *   - `standing.leagueRecord`
@@ -548,7 +548,7 @@ export function parseScoresPage(html: string, url = sbliveScoresUrl(''), warn?: 
   // `&page=2` and `&cursor=` all return the same first 24), so a later page cannot be read from here.
   // With the Southern California teams a busy day passes 24, so a truncated day is said, never silently
   // taken for the whole day: it only lowers coverage (an uncovered game is planned for a team page, or
-  // waits for a later run; lib/backfill.ts scoreboardCoverage is positive-only), never a conclusion.
+  // waits for a later run; lib/pipeline/reconcile/backfill.ts scoreboardCoverage is positive-only), never a conclusion.
   const total = games.totalCount ?? null;
   if (games.pageInfo?.hasNextPage || (total !== null && total > games.nodes.length)) {
     warn?.(

@@ -147,7 +147,7 @@ function checkAgainstConfig(s: z.infer<typeof SnapshotObject>, ctx: Ctx): void {
     }
     // 'SO' only between two teams of a section that decides a level varsity game by shootout (SectionConfig.
     // shootout: the Northern Section's 1 v 1s, the San Diego Section's shootout, which covers games between its
-    // conferences too); without a tally, a level score flagged W/L. Keyed on the section, as lib/normalize.ts is.
+    // conferences too); without a tally, a level score flagged W/L. Keyed on the section, as lib/pipeline/reconcile/normalize.ts is.
     if (g.decider === 'SO') {
       const home = g.home.slug ? getTeamBySlug(g.home.slug) : undefined;
       const away = g.away.slug ? getTeamBySlug(g.away.slug) : undefined;
@@ -155,7 +155,7 @@ function checkAgainstConfig(s: z.infer<typeof SnapshotObject>, ctx: Ctx): void {
       if (!section?.shootout) {
         issue(ctx, ['games', i, 'decider'], `decider SO but the sides are not two teams of a section that decides level games by shootout (${g.contestId})`);
       } else if (!section.shootout.coversTournaments && (g.contestTypes?.home === 2 || g.contestTypes?.away === 2)) {
-        // The San Diego procedures do not cover invitational tournaments; lib/normalize.ts reads no 'SO' there.
+        // The San Diego procedures do not cover invitational tournaments; lib/pipeline/reconcile/normalize.ts reads no 'SO' there.
         issue(ctx, ['games', i, 'decider'], `decider SO on a tournament row, which the ${section.name}'s shootout rule does not cover (${g.contestId})`);
       }
       if (g.shootout === null) {

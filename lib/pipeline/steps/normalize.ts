@@ -1,5 +1,5 @@
 /**
- * Step 06 (SPEC §7.4, §7.6): schedule rows → games, through lib/normalize.ts's pure functions in
+ * Step 06 (SPEC §7.4, §7.6): schedule rows → games, through lib/pipeline/reconcile/normalize.ts's pure functions in
  * order: `normalizeGames` (TBA rows were already split off per feed in step 05), `applyExclusions`
  * (DATA_QUALITY ghosts and excluded contests; an exclusion that no longer matches is logged once),
  * `dedupePhantomPairs` (same-division pairs only). Every removed contest goes to the published
@@ -18,7 +18,7 @@
 
 import { DATA_QUALITY } from '@/lib/config/leagues';
 import type { Game } from '@/lib/model/game';
-import { applyExclusions, dedupePhantomPairs, normalizeGames } from '@/lib/normalize';
+import { applyExclusions, dedupePhantomPairs, normalizeGames } from '@/lib/pipeline/reconcile/normalize';
 import type { PipelineContext, RunState } from '@/lib/pipeline/ledger';
 import { byDateThenId } from '@/lib/shared/game';
 

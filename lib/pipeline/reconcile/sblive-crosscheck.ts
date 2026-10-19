@@ -1,8 +1,12 @@
 /**
  * MaxPreps ↔ si.com (ex-SBLive) score reconciliation (SPEC §7.9, owner decision D2).
  *
+ * One of the pipeline's three cross-checks, hence the file's name: this one compares scores with si.com's
+ * (the other two are lib/engine/standings/maxpreps-crosscheck.ts, MaxPreps' own tables, and
+ * lib/pipeline/reconcile/cifss-crosscheck.ts, cifsshome.org's widget).
+ *
  * MaxPreps is primary. si.com values reach a published score ONLY through D2's mechanical rules 2-4,
- * which live in lib/backfill.ts and run BEFORE this join. What this module does with what is left:
+ * which live in lib/pipeline/reconcile/backfill.ts and run BEFORE this join. What this module does with what is left:
  *   - rule 5, plain disagreement: both sources scored and no rule-4 condition held → MaxPreps stays and
  *     a `ScoreConflictRow` is published (never averaged, never silently resolved);
  *   - a si.com score that D2 did NOT publish (a MaxPreps contest without a score, or a si.com Final MaxPreps
@@ -25,12 +29,12 @@
  * Nothing here mutates its input: `reconcile()` returns a new `Game[]`.
  */
 
-import type { BackfillRow, SbliveCrossCheck, SbliveOnlyRow, ScoreConflictRow } from './model/crosscheck';
-import type { Game } from './model/game';
-import { sideJoinKey, unorderedPairKey } from './registry/resolve';
-import { getTeamBySlug } from './registry/teams';
-import { dayNumber } from './shared/dates';
-import { sblivePairKey, type SbliveGame, type SbliveSide } from './sources/sblive';
+import type { BackfillRow, SbliveCrossCheck, SbliveOnlyRow, ScoreConflictRow } from '@/lib/model/crosscheck';
+import type { Game } from '@/lib/model/game';
+import { sideJoinKey, unorderedPairKey } from '@/lib/registry/resolve';
+import { getTeamBySlug } from '@/lib/registry/teams';
+import { dayNumber } from '@/lib/shared/dates';
+import { sblivePairKey, type SbliveGame, type SbliveSide } from '@/lib/sources/sblive';
 
 /** The same key `sblivePairKey` gives (lib/registry/resolve.ts sideJoinKey), so the two halves of the join agree exactly. */
 export function gamePairKey(game: Pick<Game, 'home' | 'away'>): string {
@@ -51,7 +55,7 @@ export interface ReconcileOptions {
   /** The run's local date; a game dated today or later is never backfilled. */
   today?: string;
   /**
-   * The rows D2 (lib/backfill.ts) explained instead of publishing (`applyBackfill().skipped`). A game
+   * The rows D2 (lib/pipeline/reconcile/backfill.ts) explained instead of publishing (`applyBackfill().skipped`). A game
    * one is keyed on carries that row's note, so its own note and the si.com-only row withBackfill
    * publishes give the same reason.
    */
@@ -141,7 +145,7 @@ export function reconcile(
     const match = bySbliveKey.get(key);
     if (!match) return game;
     matchedKeys.add(key);
-    // D2 already published si.com's value here (lib/backfill.ts): it is reported in `backfilled`.
+    // D2 already published si.com's value here (lib/pipeline/reconcile/backfill.ts): it is reported in `backfilled`.
     if (game.provenance.backfill) return game;
     // The JOIN, not the comparison: a si.com row can match on date and teams and still carry no
     // numbers. Those rows fall out below and land in neither `agreements` nor `conflicts`, so
@@ -159,7 +163,7 @@ export function reconcile(
     const ourHome = game.home.score;
     const ourAway = game.away.score;
 
-    // --- MaxPreps has no score and D2 did not publish si.com's (lib/backfill.ts ran first): record
+    // --- MaxPreps has no score and D2 did not publish si.com's (lib/pipeline/reconcile/backfill.ts ran first): record
     //     why, and leave the game unreported. A missing score is never shown as 0-0.
     if (ourHome === null || ourAway === null) {
       const reason = skipNote.get(game.contestId) ?? whyNotPublished(game, match, opts.today);
@@ -271,7 +275,7 @@ export function reconcile(
 }
 
 /**
- * Fold D2's outcome (lib/backfill.ts `applyBackfill`) into a reconcile report: every published si.com
+ * Fold D2's outcome (lib/pipeline/reconcile/backfill.ts `applyBackfill`) into a reconcile report: every published si.com
  * value becomes a `backfilled` row; D2's own "not published" rows (with their precise reasons) replace
  * reconcile's row for the same contest; nothing D2 published stays listed as unpublished.
  */

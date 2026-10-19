@@ -366,7 +366,7 @@ describe('scripts/fetch-jv.ts, offline over the PCAL captures', () => {
 
   // The whole-file schema wants one row per registry team, in registry order, so it fails whenever the
   // registry grows. A `--leagues` run must still carry every team outside it from that file, row by
-  // row (lib/fetch-scope.ts readPreviousFile), as fetch-rosters and fetch-player-stats do; it once
+  // row (lib/pipeline/fetch-scope.ts readPreviousFile), as fetch-rosters and fetch-player-stats do; it once
   // dropped every such team to 'pending' with no games.
   it('salvages a previous file that fails the whole-file schema row by row, carrying the teams outside the run', () => {
     const dir = tempDir('jv');

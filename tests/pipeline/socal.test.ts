@@ -256,7 +256,7 @@ describe('the membership classification (the San Diego divisions)', () => {
     const eastern = new Set(teamsInDivision('city-eastern').map((t) => t.slug));
     const games = snapshot.games.filter((g) => g.home.slug === ph.slug || g.away.slug === ph.slug);
     const divisionGamesOfPh = games.filter((g) => eastern.has(g.home.slug!) && eastern.has(g.away.slug!));
-    expect(divisionGamesOfPh, 'lib/normalize.ts').toHaveLength(10);
+    expect(divisionGamesOfPh, 'lib/pipeline/reconcile/normalize.ts').toHaveLength(10);
     for (const g of divisionGamesOfPh) {
       expect(g.isLeague, `MaxPreps' flag: ${g.contestId}`).toBe(false);
       expect(g.countsFor, `lib/engine/classify.ts: ${g.contestId}`).toBe('city-eastern');
@@ -277,7 +277,7 @@ describe('the membership classification (the San Diego divisions)', () => {
         [g.home.slug, g.away.slug].some((s) => getTeamBySlug(s ?? '')?.division === 'city-eastern'),
     );
     const flagged = mb.filter((g) => g.isLeague);
-    expect(flagged, 'lib/normalize.ts: Mission Bay’s league-flagged City Eastern games').toHaveLength(5);
+    expect(flagged, 'lib/pipeline/reconcile/normalize.ts: Mission Bay’s league-flagged City Eastern games').toHaveLength(5);
     for (const g of flagged) {
       expect(g.countsFor, `lib/engine/classify.ts: ${g.contestId}`).toBeNull();
       expect(g.provenance.classificationNote, `lib/engine/classify.ts crossDivisionNote: ${g.contestId}`).toBe(note);
@@ -305,13 +305,13 @@ describe('the section shootout and level games', () => {
     expect(getSection('sds').shootout, 'lib/config/leagues.ts').not.toBeNull();
     const games = levelWithResult();
     // The eight in the design inventory (Clairemont–Eastlake 9/1 … Westview–San Pasqual 10/2).
-    expect(games.map((g) => g.contestId.slice(0, 8)).sort(), 'lib/normalize.ts').toEqual(
+    expect(games.map((g) => g.contestId.slice(0, 8)).sort(), 'lib/pipeline/reconcile/normalize.ts').toEqual(
       ['f99ce5ed', '7551a71d', 'ce29e835', 'd8aad805', 'ae312fa8', 'e6488575', '829af66a', 'fb944ba7'].sort(),
     );
     for (const g of games) {
-      expect(g.decider, `lib/normalize.ts: ${g.contestId}`).toBe('SO');
-      expect(g.shootout, `lib/normalize.ts: no tally stored: ${g.contestId}`).toBeNull();
-      expect(g.provenance.resultConflict, `lib/normalize.ts: ${g.contestId}`).toBeUndefined();
+      expect(g.decider, `lib/pipeline/reconcile/normalize.ts: ${g.contestId}`).toBe('SO');
+      expect(g.shootout, `lib/pipeline/reconcile/normalize.ts: no tally stored: ${g.contestId}`).toBeNull();
+      expect(g.provenance.resultConflict, `lib/pipeline/reconcile/normalize.ts: ${g.contestId}`).toBeUndefined();
       const winner = g.home.result === 'W' ? 'home' : 'away';
       expect(sideOutcome(g, winner), `lib/shared/game.ts sideOutcome: ${g.contestId}`).toBe('W');
       expect(sideOutcome(g, winner === 'home' ? 'away' : 'home'), `lib/shared/game.ts sideOutcome: ${g.contestId}`).toBe('L');
@@ -332,7 +332,7 @@ describe('the section shootout and level games', () => {
       (g) => g.status === 'final' && sunset.has(g.home.slug ?? '') && sunset.has(g.away.slug ?? '') && g.home.score === g.away.score,
     );
     expect(level.length, 'the corpus: Sunset games that ended level').toBeGreaterThan(0);
-    for (const g of level) expect(g.decider, `lib/normalize.ts: ${g.contestId}`).not.toBe('SO');
+    for (const g of level) expect(g.decider, `lib/pipeline/reconcile/normalize.ts: ${g.contestId}`).not.toBe('SO');
   });
 });
 

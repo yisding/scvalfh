@@ -1,5 +1,5 @@
 /**
- * lib/backfill.ts — owner decision D2 (SPEC §7.9): si.com backfills MaxPreps exactly when rules 2-4
+ * lib/pipeline/reconcile/backfill.ts — owner decision D2 (SPEC §7.9): si.com backfills MaxPreps exactly when rules 2-4
  * say, and never otherwise. Every rule needs both si.com sides resolved by si.com id, a si.com Final,
  * integer scores and a non-junk row. Fixtures here are hand-built OfficialFixture objects; the corpus
  * si.com pages are used only as parser/resolver facts (the end-to-end PCAL fills are asserted in the
@@ -21,7 +21,7 @@ import {
   scoreboardCoverage,
   supersededGamesOf,
   type BackfillInput,
-} from '@/lib/backfill';
+} from '@/lib/pipeline/reconcile/backfill';
 import { getDivision } from '@/lib/config/leagues';
 import { scoreSentence } from '@/lib/format/score';
 import type { OfficialFixture } from '@/lib/model/fixture';

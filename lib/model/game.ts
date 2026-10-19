@@ -184,7 +184,7 @@ export interface Game {
     dateCorrection?: { maxprepsDateLocal: string; maxprepsTimeTba: boolean; source: string };
     /**
      * NEW. Set when MaxPreps records no overtime but the coach's game note says the game went to it
-     * (lib/normalize.ts overtimeFromNote): the note, so the game page can say where the OT came from.
+     * (lib/pipeline/reconcile/normalize.ts overtimeFromNote): the note, so the game page can say where the OT came from.
      */
     overtimeNote?: string;
   };

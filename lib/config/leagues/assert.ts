@@ -115,7 +115,7 @@ export function checkLeagueConfig({ leagues, regions, sections, ccs, dataQuality
       fail(`${s.id}: shootout.coversTournaments must say whether the rule reaches a tournament game`);
     }
     // The level-W/L → 'SO' rule is the section's: every league in it must decide level games the same way,
-    // and a league that does must sit in a section that says how (lib/normalize.ts keys on the section).
+    // and a league that does must sit in a section that says how (lib/pipeline/reconcile/normalize.ts keys on the section).
     for (const l of leagues) {
       if (l.sectionId !== s.id) continue;
       if ((s.shootout !== null) !== (l.rules.leagueOvertime === 'shootout')) {

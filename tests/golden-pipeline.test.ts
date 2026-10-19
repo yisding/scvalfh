@@ -95,7 +95,7 @@ describe('golden item 3: the SCVAL corpus through the pipeline', () => {
   it('publishes no si.com score for SCVAL (the golden inputs contain none)', () => {
     expect(
       snapshot.games.filter((g) => g.provenance.scores === 'sblive').map((g) => g.contestId),
-      'lib/backfill.ts: SCVAL fills on the SCVAL corpus',
+      'lib/pipeline/reconcile/backfill.ts: SCVAL fills on the SCVAL corpus',
     ).toEqual([]);
   });
 });

@@ -22,17 +22,17 @@
  *   4. `dedupePhantomPairs` — same-division phantom duplicates only
  */
 
-import { DATA_QUALITY, getLeague, getSection } from './config/leagues';
-import { shootoutPhrases } from './format/score';
-import type { Decider, Game, GameSide, GameStatus, Outcome } from './model/game';
-import type { DroppedContest } from './model/health';
-import type { ContestId, DivisionId, SourceId } from './model/ids';
-import { type DataQualityConfig, type SectionConfig } from './model/league-config';
-import { resolveTeam } from './registry/resolve';
-import { getTeamById } from './registry/teams';
-import { toLocalTimestamp } from './shared/dates';
-import { byDateThenId } from './shared/game';
-import { splitTbaRows, type ContestTeam, type ScheduleRow } from './sources/maxpreps';
+import { DATA_QUALITY, getLeague, getSection } from '@/lib/config/leagues';
+import { shootoutPhrases } from '@/lib/format/score';
+import type { Decider, Game, GameSide, GameStatus, Outcome } from '@/lib/model/game';
+import type { DroppedContest } from '@/lib/model/health';
+import type { ContestId, DivisionId, SourceId } from '@/lib/model/ids';
+import { type DataQualityConfig, type SectionConfig } from '@/lib/model/league-config';
+import { resolveTeam } from '@/lib/registry/resolve';
+import { getTeamById } from '@/lib/registry/teams';
+import { toLocalTimestamp } from '@/lib/shared/dates';
+import { byDateThenId } from '@/lib/shared/game';
+import { splitTbaRows, type ContestTeam, type ScheduleRow } from '@/lib/sources/maxpreps';
 
 export interface NormalizeOptions {
   /** ISO UTC stamp written into every Game.provenance.fetchedAt. */

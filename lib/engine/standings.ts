@@ -113,7 +113,7 @@ export function computeStandings(
 ): Standing[] {
   const out: Standing[] = [];
   // Sorted like divisionGames: the overall record's last5 and streak read the order (si.com-only games
-  // lib/backfill.ts builds are appended to the array, not placed by date).
+  // lib/pipeline/reconcile/backfill.ts builds are appended to the array, not placed by date).
   const allFinals = games.filter((g) => g.status === 'final').sort(byDateThenId);
   for (const league of LEAGUES) {
     for (const div of league.divisions) {

@@ -42,7 +42,7 @@ import { careerIdFromUrl } from './maxpreps-roster';
 import { SPORT_SEASON_ID } from '@/lib/config/season';
 import { MAXPREPS_API } from '@/lib/config/source-urls';
 import type { Team } from '@/lib/model/team';
-import { recaseName } from '@/lib/person-name';
+import { recaseName } from './text/person-name';
 import {
   FIELD_STAT_KEYS, type FieldStatKey, type FieldStats, GOALIE_STAT_KEYS, type GoalieStatKey, type GoalieStats,
   type TeamPlayerStats,
