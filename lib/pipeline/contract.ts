@@ -1,8 +1,8 @@
 /**
  * The pipeline contract (SPEC §7.2): transports, run arguments, the run context and the step
- * signatures every pipeline module codes against. Types plus `resourcePath` and three error
- * classes; no I/O. The resource keys (ResourceKey) and what is known per kind live in the table of
- * lib/pipeline/resources.ts.
+ * signatures every pipeline module codes against. Types plus `resourcePath` and two error
+ * classes (the third, RunAbort, is the leaf lib/pipeline/abort.ts); no I/O. The resource keys
+ * (ResourceKey) and what is known per kind live in the table of lib/pipeline/resources.ts.
  */
 
 import type { SbliveCrossCheck } from '@/lib/model/crosscheck';
@@ -35,9 +35,6 @@ export class FixtureMissing extends Error {
 export class TransportError extends Error {
   constructor(message: string, public readonly url: string, public readonly httpStatus: number | null) { super(message); }
 }
-
-/** Nothing is written; the previous snapshot stays. Only §7.5 run-abort triggers throw this. */
-export class RunAbort extends Error {}
 
 export interface RunArgs {
   /** Corpus directory (manifest-driven) or null for live. */

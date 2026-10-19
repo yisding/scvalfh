@@ -27,7 +27,8 @@ import type { DivisionId, LeagueId } from '@/lib/model/ids';
 import { type LeagueConfig } from '@/lib/model/league-config';
 import { teamsInLeague } from '@/lib/registry/teams';
 import { byDateThenId } from '@/lib/shared/game';
-import { RunAbort, type RunContext, type StepContext } from '@/lib/pipeline/contract';
+import { RunAbort } from '@/lib/pipeline/abort';
+import type { RunContext, StepContext } from '@/lib/pipeline/contract';
 import type { RunState } from '@/lib/pipeline/state';
 import { hasPreviousData, lastFreshStamp, previousDivisionHealth } from '@/lib/pipeline/previous';
 

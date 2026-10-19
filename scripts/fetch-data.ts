@@ -17,21 +17,17 @@
  *   pnpm fetch-data --out <path> · --dry-run · --fetched-at <iso> · --force
  *   pnpm fetch-data --no-sblive · --sblive-full · --no-official (alias --no-scval) · --no-ccs · --no-vnn
  *
- * Modules load inside main() so that a config or registry invariant failing at import
+ * The pipeline modules load inside main() so that a config or registry invariant failing at import
  * (assertLeagues / assertRegistry, §7.5 run-abort trigger 2) is reported as an abort, not a crash:
- * lib/pipeline/run-failure.ts classifies the throw (a RunAbort or a ConfigInvariantError, lib/config/invariant.ts).
+ * lib/pipeline/run-failure.ts classifies the throw (a RunAbort, lib/pipeline/abort.ts, or a
+ * ConfigInvariantError, lib/config/invariant.ts). That describer is a leaf imported up front, so an
+ * invariant thrown by any of the dynamic imports is still reported as an abort.
  */
 
+import { describeRunFailure } from '@/lib/pipeline/run-failure';
 import { runCli } from './lib/cli';
 
-/**
- * How a throw is reported (runCli's onError), once main() has loaded it: until then a throw is the
- * plain `FAILED: <message>` line.
- */
-let describeRunFailure: ((err: unknown) => { line: string }) | null = null;
-
 async function main(argv: readonly string[]): Promise<number> {
-  ({ describeRunFailure } = await import('@/lib/pipeline/run-failure'));
   const cli = await import('@/lib/pipeline/cli');
   const run = await import('@/lib/pipeline/run');
   const args = cli.parseRunArgs(argv, { cwd: process.cwd(), now: new Date().toISOString() });
@@ -54,4 +50,4 @@ async function main(argv: readonly string[]): Promise<number> {
   return 0;
 }
 
-runCli(main, { onError: (err) => describeRunFailure?.(err).line ?? null });
+runCli(main, { onError: (err) => describeRunFailure(err).line });
