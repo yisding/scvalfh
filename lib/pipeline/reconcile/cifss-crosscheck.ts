@@ -20,13 +20,14 @@
  */
 
 import { CIFSS_NOTES } from '@/lib/format/crosscheck-notes';
-import { gamePairKey } from './sblive-crosscheck';
 import type { CifssConflictRow, CifssCrossCheck, CifssOnlyRow } from '@/lib/model/crosscheck';
 import type { Game } from '@/lib/model/game';
 import { sideJoinKey, unorderedPairKey } from '@/lib/registry/resolve';
 import { getTeamBySlug } from '@/lib/registry/teams';
 import { dayNumber } from '@/lib/shared/dates';
 import { cifssListingUrl, type CifssRow, type CifssSide } from '@/lib/sources/cifss';
+
+import { gamePairKey } from './sblive-crosscheck';
 
 /** How far apart the widget's date and MaxPreps' may be and still be one game. */
 export const CIFSS_DATE_TOLERANCE_DAYS = 3;
