@@ -9,6 +9,7 @@
  * the globals use-league.ts reads, then drive `setRegion` the way the region switcher does.
  */
 import vm from 'node:vm';
+
 import { afterEach, describe, expect, it } from 'vitest';
 
 import { PINNED_TEAM_KEY } from '@/components/head/pinned-team-script';

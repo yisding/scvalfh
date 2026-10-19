@@ -3,9 +3,10 @@
  */
 
 import { divisionsOf } from '@/lib/config/leagues';
-import { computeStandings } from '@/lib/engine/standings';
 import { classifyGames } from '@/lib/engine/classify';
+import { computeStandings } from '@/lib/engine/standings';
 import { normalizeGames } from '@/lib/pipeline/reconcile/normalize';
+
 import { allScheduleRows } from './corpus';
 
 /** The SCVAL corpus (15 schedules, 2026-09-29), classified exactly as the pipeline does. */

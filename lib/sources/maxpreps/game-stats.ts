@@ -19,6 +19,7 @@ import { z } from 'zod';
 import { SPORT_SEASON_ID } from '@/lib/config/season';
 import { MAXPREPS_API } from '@/lib/config/source-urls';
 import type { GameTotal } from '@/lib/schema/player-stats';
+
 import type { MaxPrepsClient } from './client';
 import { MaxPrepsError } from './error';
 import { fetchRollupBody } from './rollup';

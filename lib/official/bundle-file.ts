@@ -12,6 +12,7 @@ import path from 'node:path';
 import { bundledDivisions } from '@/lib/config/leagues/official';
 import type { OfficialFixture } from '@/lib/model/fixture';
 import type { LeagueId } from '@/lib/model/ids';
+
 import { type OfficialBundle, bundleToFixtures, parseOfficialBundle } from './bundle';
 
 /** The one bundle file a league's bundled divisions share (repo-relative), or null when it has none. */

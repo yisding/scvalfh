@@ -1,11 +1,12 @@
-import LeaguePairings from './LeaguePairings';
-import PlayoffProjection, { ProjectionKey } from './PlayoffProjection';
 import LeagueHealthNote from '@/components/ui/LeagueHealthNote';
 import SectionHeader from '@/components/ui/SectionHeader';
 import { leagueTitle } from '@/lib/config/leagues/labels';
 import { shortDate } from '@/lib/format/dates';
 import { standingsHref } from '@/lib/shared/routes';
 import type { LeagueBlock, PlayoffsPageView } from '@/views/playoffs/playoffs-view';
+
+import LeaguePairings from './LeaguePairings';
+import PlayoffProjection, { ProjectionKey } from './PlayoffProjection';
 
 /** One CCS league's section, config order: its divisions' projections, its pairings, its qualification line. */
 export default function CcsLeagueSection({

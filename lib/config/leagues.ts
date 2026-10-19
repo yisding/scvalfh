@@ -25,7 +25,6 @@ import type { PlayoffStatus, TiebreakStage } from '@/lib/model/standings';
 import { earliestDateKey, latestDateKey } from '@/lib/shared/dates';
 
 import { failInvariant } from './invariant';
-import { MAXPREPS_WEB } from './source-urls';
 import { checkLeagueConfig } from './leagues/assert';
 import { BVAL } from './leagues/bval';
 import { CCS } from './leagues/ccs';
@@ -41,6 +40,7 @@ import { REGIONS, SECTIONS } from './leagues/regions';
 import { SCVAL } from './leagues/scval';
 import { SUNSET } from './leagues/sunset';
 import { SEASON_YEAR } from './season';
+import { MAXPREPS_WEB } from './source-urls';
 
 export { CCS } from './leagues/ccs';
 export { DATA_QUALITY } from './leagues/data-quality';

@@ -33,12 +33,13 @@
 
 import bundled from '@/data/clubs.json';
 import type { TeamSlug } from '@/lib/model/ids';
-import { loadRosterJoined, playerKey, rosterJoin } from './roster-join';
-import { getAllEnrichedRosters, getRosters, type MergedPlayer, type MergedTeamRoster } from './rosters';
 import {
   CLUB_REGIONS, type Club, type ClubAffiliation, type ClubRegion, type ClubsFile, ClubsFileSchema,
 } from '@/lib/schema/clubs';
 import { latestDateKey } from '@/lib/shared/dates';
+
+import { loadRosterJoined, playerKey, rosterJoin } from './roster-join';
+import { getAllEnrichedRosters, getRosters, type MergedPlayer, type MergedTeamRoster } from './rosters';
 
 /**
  * Parse `raw` against the contract, then check the join the schema cannot see (see the header).

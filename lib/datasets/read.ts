@@ -21,6 +21,7 @@
 import { readFileSync } from 'node:fs';
 
 import type { ZodType } from 'zod';
+
 import { failValidation } from '@/lib/schema/primitives';
 
 /** How an override file that is not valid JSON fails (see the header). */

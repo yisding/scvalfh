@@ -6,6 +6,7 @@
 
 import { type Snapshot } from '@/lib/model/snapshot';
 import { formatIssues } from '@/lib/schema/primitives';
+
 import { SnapshotSchema } from './check';
 import {
   addConfiguredLeagues,

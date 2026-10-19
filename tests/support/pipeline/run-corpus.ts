@@ -8,14 +8,15 @@ import { mkdirSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 
 import type { Snapshot } from '@/lib/model/snapshot';
+import { parseRunArgs } from '@/lib/pipeline/cli';
+import { SILENT_SINK, type PipelineContext, createPipelineContext } from '@/lib/pipeline/context';
 import type { PipelineResult, PipelineSteps, RunArgs, Transport } from '@/lib/pipeline/contract';
 import { loadCorpus } from '@/lib/pipeline/corpus';
-import { SILENT_SINK, type PipelineContext, createPipelineContext } from '@/lib/pipeline/context';
 import { runPipeline } from '@/lib/pipeline/run';
-import { parseRunArgs } from '@/lib/pipeline/cli';
 import { FixtureTransport } from '@/lib/pipeline/transport';
 import { corpusDir, variantDir, type CorpusName } from '@/tests/support/corpus';
 import { REPO, tempDir, tempFile } from '@/tests/support/repo';
+
 import { NOOP_STEPS } from './noop-steps';
 
 export interface RunCorpusOptions {

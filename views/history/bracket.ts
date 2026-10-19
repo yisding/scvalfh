@@ -1,12 +1,12 @@
 import { bracketSectionName, bracketSides, historySchoolName } from '@/lib/datasets/history';
-import type {
-  BracketSectionId, HistoryBracketDivision, HistoryBracketGame, HistoryBracketRound,
-  HistoryBracketSide, SectionBracket,
-} from '@/lib/schema/history-brackets';
 import { monthDay } from '@/lib/format/dates';
 import type { LeagueId } from '@/lib/model/ids';
 import type { Team } from '@/lib/model/team';
 import { getTeamBySlug } from '@/lib/registry/teams';
+import type {
+  BracketSectionId, HistoryBracketDivision, HistoryBracketGame, HistoryBracketRound,
+  HistoryBracketSide, SectionBracket,
+} from '@/lib/schema/history-brackets';
 
 /**
  * The words of a 2025 section bracket on /history/2025-26 (components/history/HistoryBracket.tsx):

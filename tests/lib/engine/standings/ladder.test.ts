@@ -11,8 +11,8 @@ import {
 } from '@/lib/engine/standings';
 import type { Game } from '@/lib/model/game';
 import { game } from '@/tests/support/game-builder';
-import { finals, row } from '@/tests/support/standings';
 import { live, liveStandings } from '@/tests/support/scval-standings';
+import { finals, row } from '@/tests/support/standings';
 
 describe('standings: Article VII projections', () => {
   it('maps place to a qualification status', () => {

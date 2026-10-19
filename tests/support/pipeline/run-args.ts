@@ -4,8 +4,8 @@
  * field gets its default here from the parser, not from a hand-written literal per test.
  */
 
-import type { RunArgs } from '@/lib/pipeline/contract';
 import { parseRunArgs } from '@/lib/pipeline/cli';
+import type { RunArgs } from '@/lib/pipeline/contract';
 import { REPO } from '@/tests/support/repo';
 
 /** The pinned clock: a live run's default `fetchedAt` (2026-10-02, 8 AM Pacific). */

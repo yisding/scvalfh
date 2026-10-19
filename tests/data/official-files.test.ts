@@ -13,6 +13,7 @@ import { describe, expect, it } from 'vitest';
 import { getLeague } from '@/lib/config/leagues';
 import { officialDocumentOf } from '@/lib/config/leagues/official';
 import type { OfficialFixture } from '@/lib/model/fixture';
+import { BUNDLED_LEAGUES, buildBundles, outputFileOf } from '@/lib/official/build';
 import {
   OfficialBundleSchema,
   bundleToFixtures,
@@ -24,7 +25,6 @@ import { OfficialValidationError, assertDoubleRoundRobin } from '@/lib/official/
 import { isWithdrawnSchool, resolveOfficialName, resolveTeam } from '@/lib/registry/resolve';
 import { teamsInDivision } from '@/lib/registry/teams';
 import { officialFixtureId } from '@/lib/shared/official-id';
-import { BUNDLED_LEAGUES, buildBundles, outputFileOf } from '@/lib/official/build';
 import { runRepoScript } from '@/tests/support/cli';
 import { REPO, tempDir } from '@/tests/support/repo';
 

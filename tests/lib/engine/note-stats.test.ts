@@ -10,6 +10,7 @@
 
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
+
 import { describe, expect, it } from 'vitest';
 
 import { NAME_ALIASES } from '@/lib/config/name-aliases';
@@ -28,12 +29,11 @@ import {
   FIELD_STAT_KEYS, GOALIE_STAT_KEYS, type PlayerStatLine, type TeamPlayerStats,
 } from '@/lib/schema/player-stats';
 import { contestIdFromUrl, parseGameStats } from '@/lib/sources/maxpreps/game-stats';
-import { buildLeadersView } from '@/views/leaders/leaders-view';
-import { buildPlayerStatsView } from '@/views/teams/player-stats';
-
 import { buildFixturePlayerStats } from '@/tests/support/cli';
 import { FIXTURE_DIR } from '@/tests/support/corpus';
 import { game } from '@/tests/support/game-builder';
+import { buildLeadersView } from '@/views/leaders/leaders-view';
+import { buildPlayerStatsView } from '@/views/teams/player-stats';
 
 // ---------------------------------------------------------------- fixtures
 

@@ -31,11 +31,11 @@ import { readManifest } from '@/lib/pipeline/corpus';
 import { describeRunFailure } from '@/lib/pipeline/run-failure';
 import { FETCHABLE_TEAMS, TEAMS } from '@/lib/registry/teams';
 import { loadSnapshot, parseSnapshot } from '@/lib/snapshot/load';
-import { corpusSnapshotPath } from '@/tests/support/corpus-snapshot';
-import { corpusDir } from '@/tests/support/corpus';
 import { expectOk, runFixtureCli, type CliRun } from '@/tests/support/cli';
-import { REPO } from '@/tests/support/repo';
+import { corpusDir } from '@/tests/support/corpus';
+import { corpusSnapshotPath } from '@/tests/support/corpus-snapshot';
 import { writeTempVariant } from '@/tests/support/pipeline/run-corpus';
+import { REPO } from '@/tests/support/repo';
 
 /**
  * The freeze reason of a league not in this run (lib/pipeline/steps/guards.ts notInRunReason): '<SHORT> was

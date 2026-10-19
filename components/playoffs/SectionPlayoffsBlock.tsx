@@ -1,8 +1,9 @@
-import SectionPlayoffsLeagueCard from './SectionPlayoffsLeagueCard';
 import ExternalLink from '@/components/ui/ExternalLink';
 import SectionHeader from '@/components/ui/SectionHeader';
 import { dateSpan, shortDate } from '@/lib/format/dates';
 import type { SectionPlayoffsData } from '@/views/playoffs/playoffs-view';
+
+import SectionPlayoffsLeagueCard from './SectionPlayoffsLeagueCard';
 
 /**
  * The San Diego Section's playoffs (DESIGN-socal §2.4): the Section's rule from config, where its

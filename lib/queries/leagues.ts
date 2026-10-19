@@ -11,6 +11,7 @@ import type { LeagueHealth } from '@/lib/model/health';
 import type { DivisionId, LeagueId, RegionId, SectionId } from '@/lib/model/ids';
 import type { LeagueConfig, RegionConfig, SectionConfig } from '@/lib/model/league-config';
 import type { Team } from '@/lib/model/team';
+
 import { getTeams } from './teams';
 
 const snapshot = getSnapshot();

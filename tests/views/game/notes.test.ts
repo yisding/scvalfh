@@ -9,6 +9,7 @@
 
 import { readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
+
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { beforeAll, describe, expect, it } from 'vitest';
@@ -16,9 +17,9 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import type { Game } from '@/lib/model/game';
 import type { Snapshot } from '@/lib/model/snapshot';
 import { CORPUS_HOOK_TIMEOUT } from '@/tests/support/corpus-modules';
+import { type Loaded, loadFrom, corpusPath } from '@/tests/support/game-view';
 import { textOf } from '@/tests/support/html-text';
 import { tempDir, tempFile } from '@/tests/support/repo';
-import { type Loaded, loadFrom, corpusPath } from '@/tests/support/game-view';
 
 describe('MCAL postseason note and superseded stubs (corpus copy)', () => {
   let S: Loaded;

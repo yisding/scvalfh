@@ -22,7 +22,9 @@
 import { ALL_DIVISIONS, LEAGUES } from '@/lib/config/leagues';
 import type { OfficialFixture } from '@/lib/model/fixture';
 import type { Game } from '@/lib/model/game';
+
 import { RunAbort } from './abort';
+import type { PipelineContext } from './context';
 import type {
   OfficialStepResult,
   PipelineResult,
@@ -30,8 +32,8 @@ import type {
   SbliveStepResult,
   Transport,
 } from './contract';
-import type { PipelineContext } from './context';
 import { carryCrossCheck } from './reconcile/sblive-crosscheck';
+import { emptyRunState } from './state';
 import { stepAssemble } from './steps/assemble';
 import { stepBootstrap } from './steps/bootstrap';
 import { stepCifss } from './steps/cifss';
@@ -45,7 +47,6 @@ import { stepSchedules } from './steps/schedules';
 import { stepSecondary } from './steps/secondary';
 import { stepStandings } from './steps/standings';
 import { stepWindow } from './steps/window';
-import { emptyRunState } from './state';
 import { MeteredTransport, type RequestCounts } from './transport';
 
 function requestCounts(transport: Transport): RequestCounts {

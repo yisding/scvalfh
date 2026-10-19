@@ -9,6 +9,7 @@
  */
 
 import { TEAMS } from '@/lib/registry/teams';
+
 import { slugId } from './primitives';
 
 const REGISTRY_SLUGS: ReadonlySet<string> = new Set(TEAMS.map((t) => t.slug));

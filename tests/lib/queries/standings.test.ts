@@ -5,6 +5,7 @@
  */
 
 import { writeFileSync } from 'node:fs';
+
 import { beforeAll, describe, expect, it } from 'vitest';
 
 import { getLeague } from '@/lib/config/leagues';
@@ -17,9 +18,9 @@ import { loadSnapshot } from '@/lib/snapshot/load';
 import { countsOf } from '@/lib/snapshot/migrate';
 import { withSnapshotModules } from '@/tests/support/corpus-modules';
 import { game } from '@/tests/support/game-builder';
+import { goldenQueries, regionPhase } from '@/tests/support/golden-queries';
 import { loadQueries } from '@/tests/support/queries';
 import { tempFile, goldenPath, readJson } from '@/tests/support/repo';
-import { goldenQueries, regionPhase } from '@/tests/support/golden-queries';
 
 describe('lib/queries/standings: standings and derived facts', () => {
   it('returns a division table in finishing order', () => {

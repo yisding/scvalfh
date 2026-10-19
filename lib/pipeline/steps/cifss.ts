@@ -10,10 +10,14 @@
  * is marked stale. A Section the corpus lacks is 'skipped', which is how an offline run skips it.
  */
 
-import { carryCifssCrossCheck, compareCifss, type NonGame } from '@/lib/pipeline/reconcile/cifss-crosscheck';
 import type { CifssCrossCheck } from '@/lib/model/crosscheck';
 import type { SourceStatus } from '@/lib/model/health';
+import type { StepContext } from '@/lib/pipeline/contract';
+import { carriedFromOf } from '@/lib/pipeline/previous';
+import { classifyFetchError, sourceBase, warnIfError } from '@/lib/pipeline/read';
+import { carryCifssCrossCheck, compareCifss, type NonGame } from '@/lib/pipeline/reconcile/cifss-crosscheck';
 import { dateKeyOf } from '@/lib/pipeline/reconcile/normalize';
+import type { RunState } from '@/lib/pipeline/state';
 import { resolveTeam, sideJoinKey, unorderedPairKey } from '@/lib/registry/resolve';
 import { getTeamById } from '@/lib/registry/teams';
 import {
@@ -24,10 +28,6 @@ import {
   type CifssRow,
   type CifssSectionKey,
 } from '@/lib/sources/cifss';
-import type { StepContext } from '@/lib/pipeline/contract';
-import type { RunState } from '@/lib/pipeline/state';
-import { carriedFromOf } from '@/lib/pipeline/previous';
-import { classifyFetchError, sourceBase, warnIfError } from '@/lib/pipeline/read';
 
 /** A Section listing longer than this many pages is read no further (and warned about). */
 export const CIFSS_MAX_PAGES = 60;

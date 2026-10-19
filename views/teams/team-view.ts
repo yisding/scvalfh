@@ -41,9 +41,9 @@ import type { FormEntry } from '@/views/shared/form-entry';
 import { type ExternalGameLink, gameExternalLinks } from '@/views/shared/game-links';
 import { fixtureOpponent, nextOfficialFixture } from '@/views/shared/official-fixtures';
 import { buildOverviewDivision, type OverviewDivision } from '@/views/standings/overview';
+
 import type { PlayerStatsView } from './player-stats';
 import type { RosterView } from './roster';
-
 import { teamParam } from './team-route';
 
 /** One opponent in this team's table that it has not beaten yet (DESIGN §3.7). */

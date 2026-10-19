@@ -14,8 +14,8 @@ let mockPath = '/';
 vi.mock('next/navigation', () => ({ usePathname: () => mockPath }));
 
 import { NavLink, isActive, navTarget, pageLeagueOf } from '@/components/layout/NavLink';
-import { navLeagueHrefs } from '@/views/site/nav-targets';
 import { TEAMS } from '@/lib/registry/teams';
+import { navLeagueHrefs } from '@/views/site/nav-targets';
 
 const HREFS = navLeagueHrefs();
 const SLUG_LEAGUE = Object.fromEntries(TEAMS.map((t) => [t.slug, t.league]));

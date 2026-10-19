@@ -28,7 +28,6 @@ import { type FlagSpec, parseFlags } from '@/lib/cli/flags';
 import { getDivision, getLeague } from '@/lib/config/leagues';
 import { bundledDivisions } from '@/lib/config/leagues/official';
 import { plural } from '@/lib/format/words';
-import { serializeBundle } from '@/lib/official/bundle';
 import {
   BUNDLED_LEAGUES,
   DEFAULT_OUT_DIR,
@@ -36,6 +35,8 @@ import {
   buildBundles,
   outputFileOf,
 } from '@/lib/official/build';
+import { serializeBundle } from '@/lib/official/bundle';
+
 import { runCliIfMain } from './lib/cli';
 
 const REPO = path.resolve(import.meta.dirname, '..');

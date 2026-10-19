@@ -1,6 +1,7 @@
 /** The season bootstrap: parsing https://www.maxpreps.com/ca/field-hockey/ for its season ids (SPEC §1.1h). */
 
 import { BOOTSTRAP_URL } from '@/lib/config/season';
+
 import { MaxPrepsError } from './error';
 import { BootstrapNextDataSchema } from './schemas';
 

@@ -12,7 +12,9 @@
  */
 
 import type { ZodType } from 'zod';
+
 import { failValidation } from '@/lib/schema/primitives';
+
 import { classOf, type MergedPlayer, type MergedTeamRoster } from './rosters';
 
 /** The files that join to the rosters, as their error messages name them. */

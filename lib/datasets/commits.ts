@@ -33,12 +33,13 @@
 import bundled from '@/data/commits.json';
 import type { TeamSlug } from '@/lib/model/ids';
 import { getTeamBySlug } from '@/lib/registry/teams';
-import { loadRosterJoined, playerKey, rosterJoin } from './roster-join';
-import { classOf, getAllEnrichedRosters, getRosters, type MergedPlayer, type MergedTeamRoster } from './rosters';
 import {
   COLLEGE_DIVISIONS, type College, type CollegeProgram, type Commitment, type CommitsFile, CommitsFileSchema,
 } from '@/lib/schema/commits';
 import { latestDateKey } from '@/lib/shared/dates';
+
+import { loadRosterJoined, playerKey, rosterJoin } from './roster-join';
+import { classOf, getAllEnrichedRosters, getRosters, type MergedPlayer, type MergedTeamRoster } from './rosters';
 
 /**
  * Parse `raw` against the contract, then check the join the schema cannot see (see the header).

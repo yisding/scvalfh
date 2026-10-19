@@ -11,19 +11,20 @@ import { buildSeason } from '@/lib/engine/season-record';
 import type { OfficialFixture } from '@/lib/model/fixture';
 import type { LeagueHealth } from '@/lib/model/health';
 import type { Snapshot } from '@/lib/model/snapshot';
-import { TEAMS } from '@/lib/registry/teams';
-import { byDateThenId } from '@/lib/shared/game';
-import { stableStringify } from '@/lib/shared/stable-json';
+import { RunAbort } from '@/lib/pipeline/abort';
 import { SNAPSHOT_MAX_BYTES, SNAPSHOT_WARN_BYTES, SOURCES_MAX, budgetLabel } from '@/lib/pipeline/budgets';
 import { snapshotContentHash } from '@/lib/pipeline/content-hash';
-import { RunAbort } from '@/lib/pipeline/abort';
+import type { PipelineContext } from '@/lib/pipeline/context';
 import type { SnapshotMeta } from '@/lib/pipeline/contract';
 import { supersededGamesOf } from '@/lib/pipeline/reconcile/superseded';
 import type { RunState } from '@/lib/pipeline/state';
-import type { PipelineContext } from '@/lib/pipeline/context';
 import type { RequestCounts } from '@/lib/pipeline/transport';
+import { TEAMS } from '@/lib/registry/teams';
+import { byDateThenId } from '@/lib/shared/game';
+import { stableStringify } from '@/lib/shared/stable-json';
 import { parseSnapshot } from '@/lib/snapshot/load';
 import { countsOf } from '@/lib/snapshot/migrate';
+
 import type { StandingsStepResult } from './standings';
 
 function sortFixtures(fixtures: readonly OfficialFixture[]): OfficialFixture[] {

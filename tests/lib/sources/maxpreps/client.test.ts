@@ -6,9 +6,9 @@ import path from 'node:path';
 import { describe, expect, it, vi } from 'vitest';
 
 import { BOOTSTRAP_URL, SPORT_SEASON_ID } from '@/lib/config/season';
-import type { RawResponse } from '@/lib/sources/http/raw-response';
 import { getTeamBySlug } from '@/lib/registry/teams';
 import { MAX_RETRY_AFTER_MS, POLITE_USER_AGENT } from '@/lib/sources/http/client';
+import type { RawResponse } from '@/lib/sources/http/raw-response';
 import { NEXT_DATA_RE, parseBootstrap } from '@/lib/sources/maxpreps/bootstrap';
 import { MaxPrepsClient } from '@/lib/sources/maxpreps/client';
 import { MaxPrepsError } from '@/lib/sources/maxpreps/error';

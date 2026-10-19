@@ -20,8 +20,8 @@ import type { LeagueHealth } from '@/lib/model/health';
 import type { LeagueId } from '@/lib/model/ids';
 import type { Snapshot } from '@/lib/model/snapshot';
 import { loadSnapshot, parseSnapshot } from '@/lib/snapshot/load';
-import { corpusSnapshotPath } from '@/tests/support/corpus-snapshot';
 import { runFixtureCli, type BuildOptions, type CliRun } from '@/tests/support/cli';
+import { corpusSnapshotPath } from '@/tests/support/corpus-snapshot';
 import { REGRESSED_FINALS } from '@/tests/support/pipeline/finals-regression';
 
 const CORPUS = 'all-2026-10-02' as const;

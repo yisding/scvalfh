@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
-import Arrow from '@/components/ui/Arrow';
 import { GameRow } from '@/components/game-row/GameRow';
+import Arrow from '@/components/ui/Arrow';
 import SectionHeader from '@/components/ui/SectionHeader';
 import { REGIONS } from '@/lib/config/leagues';
 import { longDate, shortDate } from '@/lib/format/dates';

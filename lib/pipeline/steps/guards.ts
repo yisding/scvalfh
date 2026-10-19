@@ -25,12 +25,12 @@ import type { Game } from '@/lib/model/game';
 import type { DivisionHealth } from '@/lib/model/health';
 import type { DivisionId, LeagueId } from '@/lib/model/ids';
 import { type LeagueConfig } from '@/lib/model/league-config';
-import { teamsInLeague } from '@/lib/registry/teams';
-import { byDateThenId } from '@/lib/shared/game';
 import { RunAbort } from '@/lib/pipeline/abort';
 import type { RunContext, StepContext } from '@/lib/pipeline/contract';
-import type { RunState } from '@/lib/pipeline/state';
 import { hasPreviousData, lastFreshStamp, previousDivisionHealth } from '@/lib/pipeline/previous';
+import type { RunState } from '@/lib/pipeline/state';
+import { teamsInLeague } from '@/lib/registry/teams';
+import { byDateThenId } from '@/lib/shared/game';
 
 /** §7.5 (c): a division whose counted finals dropped by this many freezes its league. */
 export const FINALS_REGRESSION_FREEZE = 3;

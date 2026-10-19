@@ -1,12 +1,13 @@
 import Link from 'next/link';
 
-import { LadderLineRow, PinNote, TeamNameCell } from './table/parts';
 import PlaceMark from '@/components/ui/PlaceMark';
 import { recordString } from '@/lib/format/numbers';
 import { EM_DASH } from '@/lib/format/words';
 import { teamHref } from '@/lib/shared/routes';
 import { ladderLineAfter, ladderRow } from '@/views/standings/division';
 import type { StandingsRowData } from '@/views/standings/types';
+
+import { LadderLineRow, PinNote, TeamNameCell } from './table/parts';
 
 /**
  * The COMPACT full table of the all-league `/standings` overview (SPEC §10.3): place, team

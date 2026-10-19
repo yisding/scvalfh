@@ -1,6 +1,5 @@
 import Link from 'next/link';
 
-import { PinNote, TeamNameCell } from './table/parts';
 import EmptyState from '@/components/ui/EmptyState';
 import PlaceMark from '@/components/ui/PlaceMark';
 import SectionHeader from '@/components/ui/SectionHeader';
@@ -8,6 +7,8 @@ import { recordString } from '@/lib/format/numbers';
 import { EM_DASH } from '@/lib/format/words';
 import { teamHref } from '@/lib/shared/routes';
 import type { JvTableView } from '@/views/standings/jv';
+
+import { PinNote, TeamNameCell } from './table/parts';
 
 /**
  * One league's JV tables on `/jv` (`#<division>` each): its divisions' blocks, in config order.

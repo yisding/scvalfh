@@ -10,6 +10,7 @@
 
 import { readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
+
 import { describe, expect, it } from 'vitest';
 
 import { getJvFile, getJvTeam } from '@/lib/datasets/jv';
@@ -24,11 +25,10 @@ import {
   JV_TEAM_COUNT, type JvFile, JvFileSchema, type JvSbliveRow, countJv, jvContentKey,
 } from '@/lib/schema/jv';
 import { combineJvCopies, parseJvTeamGamesPage, type JvSbliveCopy } from '@/lib/sources/sblive/jv';
-import { buildDayJvView, buildTeamJvView, jvDiffersNote } from '@/views/teams/jv';
-
 import { expectOk, runRepoScript } from '@/tests/support/cli';
 import { game } from '@/tests/support/game-builder';
 import { REPO, tempDir, tempFile } from '@/tests/support/repo';
+import { buildDayJvView, buildTeamJvView, jvDiffersNote } from '@/views/teams/jv';
 
 const FIXTURES = path.join(REPO, 'tests', 'fixtures', 'jv');
 const PCAL = TEAMS.filter((t) => t.league === 'pcal').map((t) => t.slug);

@@ -11,8 +11,8 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 
 import type { Game } from '@/lib/model/game';
-import { textOf } from '@/tests/support/html-text';
 import { L, counted } from '@/tests/support/game-view';
+import { textOf } from '@/tests/support/html-text';
 
 describe('sub-lines, kicker and context (views/game/game-view.ts)', () => {
   it('sub-line is "<record> <division heading ?? league short>"', () => {

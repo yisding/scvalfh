@@ -38,6 +38,7 @@ import type { Team } from '@/lib/model/team';
 import { TEAMS, teamsInDivision } from '@/lib/registry/teams';
 import { MaxPrepsClient } from '@/lib/sources/maxpreps/client';
 import { MaxPrepsError } from '@/lib/sources/maxpreps/error';
+
 import { runCli } from './lib/cli';
 
 const USAGE = `Usage: pnpm discover-season [--ssid <sportSeasonId>] [--teams <slug,slug,...>] [--help]

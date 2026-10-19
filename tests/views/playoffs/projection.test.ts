@@ -15,8 +15,8 @@ import { listWords } from '@/lib/format/words';
 import type { PlayoffStatus } from '@/lib/model/standings';
 import { getTeamById } from '@/lib/registry/teams';
 import { textOf } from '@/tests/support/html-text';
-import type { ProjectionRow } from '@/views/playoffs/projection';
 import { VIEW, m, liveRows, withStatuses, withOutcomes, build } from '@/tests/support/playoffs-view';
+import type { ProjectionRow } from '@/views/playoffs/projection';
 
 describe('ladderFactsFor (config → the ladder facts the notes use)', () => {
   it('reads each division’s ladder from config', () => {

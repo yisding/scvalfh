@@ -41,6 +41,7 @@ import type { SeasonPhase } from '@/lib/model/season';
 import type { Standing } from '@/lib/model/standings';
 import { getTeamById, getTeamBySlug } from '@/lib/registry/teams';
 import { byDateThenId, sideOutcome } from '@/lib/shared/game';
+
 import { lastSpotOutcome } from './standings';
 
 export interface SixthPlaceDecision {

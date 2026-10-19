@@ -14,9 +14,9 @@ import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 import { CIFSS_NOTES } from '@/lib/format/crosscheck-notes';
+import type { Game } from '@/lib/model/game';
 import { carryCifssCrossCheck, compareCifss } from '@/lib/pipeline/reconcile/cifss-crosscheck';
 import { gamePairKey } from '@/lib/pipeline/reconcile/sblive-crosscheck';
-import type { Game } from '@/lib/model/game';
 import { getTeamBySlug } from '@/lib/registry/teams';
 import {
   CIFSS_NO_SECTION_TEAMS,

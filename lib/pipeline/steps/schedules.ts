@@ -17,11 +17,7 @@ import { getLeague } from '@/lib/config/leagues';
 import type { SourceStatus } from '@/lib/model/health';
 import type { LeagueId } from '@/lib/model/ids';
 import type { Team } from '@/lib/model/team';
-import { FETCHABLE_TEAMS, TEAMS } from '@/lib/registry/teams';
-import { assertFeedHasTeam, emptyFeedBlip, splitTbaRows } from '@/lib/sources/maxpreps/schedule';
-import { ScheduleResponseSchema, type ScheduleRow } from '@/lib/sources/maxpreps/schemas';
 import type { RunContext } from '@/lib/pipeline/contract';
-import type { RunState } from '@/lib/pipeline/state';
 import { asOfStamp, carriedFromOf, hasPreviousData, lastFreshStamp } from '@/lib/pipeline/previous';
 import {
   classifyFetchError,
@@ -31,7 +27,11 @@ import {
   warnIfError,
   type FetchFailure,
 } from '@/lib/pipeline/read';
+import type { RunState } from '@/lib/pipeline/state';
 import { resourceUrl } from '@/lib/pipeline/transport';
+import { FETCHABLE_TEAMS, TEAMS } from '@/lib/registry/teams';
+import { assertFeedHasTeam, emptyFeedBlip, splitTbaRows } from '@/lib/sources/maxpreps/schedule';
+import { ScheduleResponseSchema, type ScheduleRow } from '@/lib/sources/maxpreps/schemas';
 
 /** §7.5 trigger b: this share (or more) of a league's attempted feeds failed. */
 export const LEAGUE_FEED_FREEZE_SHARE = 0.5;

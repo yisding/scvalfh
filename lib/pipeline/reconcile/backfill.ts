@@ -39,7 +39,6 @@ import type { ContestId, TeamSlug } from '@/lib/model/ids';
 import { type SectionConfig } from '@/lib/model/league-config';
 import type { Snapshot } from '@/lib/model/snapshot';
 import type { Team } from '@/lib/model/team';
-import { supersededGamesOf } from './superseded';
 import { unorderedPairKey } from '@/lib/registry/resolve';
 import { getTeamBySlug } from '@/lib/registry/teams';
 import { hasSbliveContestPrefix, sbliveContestId } from '@/lib/shared/contest-id';
@@ -51,6 +50,8 @@ import {
   type SbliveGame,
   type SbliveSide,
 } from '@/lib/sources/sblive/games';
+
+import { supersededGamesOf } from './superseded';
 
 // ---------------------------------------------------------------- constants
 

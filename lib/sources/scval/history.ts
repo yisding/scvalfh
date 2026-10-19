@@ -7,6 +7,7 @@
 import type { DivisionId, TeamSlug } from '@/lib/model/ids';
 import { resolveTeam } from '@/lib/registry/resolve';
 import { HttpClient, type HttpClientOptions } from '@/lib/sources/http/client';
+
 import { pdfToText } from './pdftotext';
 
 /**

@@ -157,6 +157,9 @@ The rules below are enforced where a test or a lint rule can enforce them; each 
   Vitest through `resolve.tsconfigPaths` (`vitest.config.ts`), and tsx from the `tsconfig.json` of its
   working directory, so a script run from anywhere but the repo root needs
   `tsx --tsconfig <repo>/tsconfig.json …` (`runScript` in `tests/support/cli.ts` always passes it).
+- Import blocks are ordered: Node built-ins, packages, `@/` modules, then `./` modules, a blank line
+  between groups and each group sorted by path (ESLint `import/order`; the metadata image routes are
+  exempt, because their bytes feed the `og:image`/icon URL hashes).
 - A type-only import is written as one (`import type { … }`, or `import { type X }` beside values;
   ESLint `consistent-type-imports`): the client boundary (`tests/arch/client-boundary.test.ts`) ignores
   type imports because they vanish at compile time, so a value import of a server module from a

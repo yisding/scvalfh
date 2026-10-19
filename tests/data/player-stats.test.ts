@@ -26,8 +26,8 @@ import {
 import { type Rosters, RostersSchema, countRosters } from '@/lib/schema/rosters';
 import { pendingPlayerStats } from '@/lib/sources/maxpreps/player-stats';
 import { pendingRoster } from '@/lib/sources/maxpreps/roster';
-import { FIXTURE_DIR } from '@/tests/support/corpus';
 import { expectOk, runRepoScript } from '@/tests/support/cli';
+import { FIXTURE_DIR } from '@/tests/support/corpus';
 import { REPO, tempFile } from '@/tests/support/repo';
 
 const raw = JSON.parse(readFileSync(path.join(REPO, 'data', 'player-stats.json'), 'utf8')) as PlayerStatsFile;

@@ -10,12 +10,12 @@ import {
   ResultFlagConflict,
   SourceDisagreement,
 } from '@/components/game/GameSources';
+import ScoreBoard from '@/components/game/ScoreBoard';
 import SeasonSeries from '@/components/game/SeasonSeries';
 import SupersededStub from '@/components/game/SupersededStub';
 import JsonLd from '@/components/layout/JsonLd';
 import Arrow from '@/components/ui/Arrow';
 import ExternalLink from '@/components/ui/ExternalLink';
-import ScoreBoard from '@/components/game/ScoreBoard';
 import { scoresHref, teamHref } from '@/lib/shared/routes';
 import { gameStaticParams } from '@/views/game/game-route';
 import { buildGameView, buildSupersededStub, hasLeadRow } from '@/views/game/game-view';

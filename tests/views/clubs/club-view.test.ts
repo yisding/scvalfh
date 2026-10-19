@@ -26,8 +26,8 @@ import TeamPage from '@/app/teams/[slug]/page';
 import { getClubSlugs, getClubs } from '@/lib/datasets/clubs';
 import { affiliationLeaks } from '@/scripts/ci/copy/copy-rules';
 import { PUBLIC_TERMS } from '@/scripts/ci/copy/public-terms';
-import { textOf } from '@/tests/support/html-text';
 import { file, club, views } from '@/tests/support/clubs-view';
+import { textOf } from '@/tests/support/html-text';
 
 async function renderClub(slug: string): Promise<string> {
   return renderToStaticMarkup(await ClubPage({ params: Promise.resolve({ slug }) } as never));

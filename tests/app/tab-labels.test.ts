@@ -15,9 +15,8 @@
 import { describe, expect, it } from 'vitest';
 
 import { TABS } from '@/components/layout/BottomTabBar';
-
-import { width } from '@/tests/support/text-metrics';
 import { readRepoFile } from '@/tests/support/repo';
+import { width } from '@/tests/support/text-metrics';
 
 const MAX_LABEL_PX = 56;
 /** One fifth of a 320px phone's bar, less 2px of margin for the semibold active label. */

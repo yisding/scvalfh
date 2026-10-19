@@ -14,6 +14,7 @@ import { describeIssues } from '@/lib/schema/primitives';
 import { MAX_RETRY_AFTER_MS, POLITE_USER_AGENT } from '@/lib/sources/http/client';
 import { PoliteFetchError, PoliteFetcher } from '@/lib/sources/http/polite-fetcher';
 import type { RawResponse } from '@/lib/sources/http/raw-response';
+
 import { type Bootstrap, parseBootstrap } from './bootstrap';
 import { MaxPrepsError } from './error';
 import { assertFeedHasTeam } from './schedule';

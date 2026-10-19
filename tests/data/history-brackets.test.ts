@@ -10,10 +10,12 @@
 
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
+
 import { describe, expect, it } from 'vitest';
 
 import { getHistoryBracketFor, getHistoryBrackets } from '@/lib/datasets/history';
 import { type HistoryBrackets, HistoryBracketsSchema } from '@/lib/schema/history-brackets';
+import { REPO } from '@/tests/support/repo';
 import {
   divisionChampion,
   finalLine,
@@ -24,7 +26,6 @@ import {
   sideName,
 } from '@/views/history/bracket';
 
-import { REPO } from '@/tests/support/repo';
 
 const raw = JSON.parse(readFileSync(path.join(REPO, 'data', 'history-brackets-2025-26.json'), 'utf8')) as HistoryBrackets;
 const brackets = HistoryBracketsSchema.parse(raw);

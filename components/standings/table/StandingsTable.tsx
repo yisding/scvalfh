@@ -3,8 +3,8 @@ import type { StandingContext } from '@/lib/model/standings';
 import type { StandingsRowData } from '@/views/standings/types';
 
 import type { StandingsVariantProps } from './cells';
-import DesktopStandingsTable from './DesktopStandingsTable';
 import type { StandingsColumn } from './desktop-columns';
+import DesktopStandingsTable from './DesktopStandingsTable';
 import PhoneStandingsTable from './PhoneStandingsTable';
 
 /**

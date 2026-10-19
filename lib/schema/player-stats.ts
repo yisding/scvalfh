@@ -23,9 +23,10 @@
 import { z } from 'zod';
 
 import { getTeamBySlug } from '@/lib/registry/teams';
+import { contentKey } from '@/lib/shared/stable-json';
+
 import { httpUrl } from './primitives';
 import { REGISTRY_TEAM_COUNT, registryTeamSlug } from './registry-primitives';
-import { contentKey } from '@/lib/shared/stable-json';
 
 /** Player stats cover every registry team, all nine leagues and the five independents: one entry per team of TEAMS. */
 export const PLAYER_STATS_TEAM_COUNT = REGISTRY_TEAM_COUNT;

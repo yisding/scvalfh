@@ -9,8 +9,8 @@
  * Every assertion message names the module that produced the value.
  */
 
-import { renderToStaticMarkup } from 'react-dom/server';
 import type { ReactElement } from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
 import { beforeAll, describe, expect, it } from 'vitest';
 
 import { getDivision, getLeague } from '@/lib/config/leagues';

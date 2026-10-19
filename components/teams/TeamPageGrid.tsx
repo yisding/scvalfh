@@ -1,15 +1,5 @@
 import Link from 'next/link';
 
-import TeamElo from './TeamElo';
-import TeamJvGames from './TeamJvGames';
-import TeamNextGame from './TeamNextGame';
-import TeamOfficialFixtures from './TeamOfficialFixtures';
-import TeamPlayerStats from './TeamPlayerStats';
-import TeamPlayoffLine from './TeamPlayoffLine';
-import TeamRoster from './TeamRoster';
-import TeamSplits from './TeamSplits';
-import TeamStatTiles from './TeamStatTiles';
-import TeamUnbeaten from './TeamUnbeaten';
 import Arrow from '@/components/ui/Arrow';
 import ExternalLink from '@/components/ui/ExternalLink';
 import SectionHeader from '@/components/ui/SectionHeader';
@@ -21,11 +11,21 @@ import type { RosterView } from '@/views/teams/roster';
 import type { TeamLastSeason, TeamPageBundle, TeamPageLayout } from '@/views/teams/team-page';
 import { postseasonKicker, type TeamPageView } from '@/views/teams/team-view';
 
+import TeamElo from './TeamElo';
 import TeamElsewhere from './TeamElsewhere';
 import TeamFormAndMargin from './TeamFormAndMargin';
+import TeamJvGames from './TeamJvGames';
 import TeamLastGame from './TeamLastGame';
 import TeamLeagueLog from './TeamLeagueLog';
+import TeamNextGame from './TeamNextGame';
 import TeamNonLeague from './TeamNonLeague';
+import TeamOfficialFixtures from './TeamOfficialFixtures';
+import TeamPlayerStats from './TeamPlayerStats';
+import TeamPlayoffLine from './TeamPlayoffLine';
+import TeamRoster from './TeamRoster';
+import TeamSplits from './TeamSplits';
+import TeamStatTiles from './TeamStatTiles';
+import TeamUnbeaten from './TeamUnbeaten';
 
 /**
  * /teams/[slug] — "How is MY team doing?" (DESIGN §3.7).

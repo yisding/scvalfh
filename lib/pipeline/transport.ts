@@ -31,14 +31,15 @@ import { MaxPrepsClient } from '@/lib/sources/maxpreps/client';
 import { MaxPrepsError } from '@/lib/sources/maxpreps/error';
 import { SBLIVE_HTTP_OPTIONS } from '@/lib/sources/sblive/urls';
 import { pdfToText } from '@/lib/sources/scval/pdftotext';
+
 import {
   FixtureMissing,
   TransportError,
   resourcePath,
   type Transport,
 } from './contract';
-import type { ResourceKey } from './resources';
 import type { Corpus } from './corpus';
+import type { ResourceKey } from './resources';
 import { specOf, type RequestHost } from './resources';
 
 // ---------------------------------------------------------------- the resource map

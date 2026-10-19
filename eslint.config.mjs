@@ -38,6 +38,26 @@ const eslintConfig = defineConfig([
       "@typescript-eslint/consistent-type-imports": ["error", { fixStyle: "inline-type-imports", disallowTypeAnnotations: false }],
     },
   },
+  // Import order (docs/DEVELOPMENT.md "Imports"): Node built-ins, then packages, then '@/' repo
+  // modules, then './' siblings and children, one blank line between groups, each group sorted by
+  // module path. The ten metadata image routes are left out: Next hashes each one's source into the
+  // og:image/icon URL of every page that points at it, so their bytes change only on purpose.
+  {
+    files: ["**/*.{ts,tsx,mts}"],
+    ignores: ["tests/fixtures/**", "app/**/opengraph-image.tsx", "app/icon.tsx", "app/apple-icon.tsx"],
+    rules: {
+      "import/order": [
+        "error",
+        {
+          groups: ["builtin", "external", "internal", ["parent", "sibling", "index"]],
+          pathGroups: [{ pattern: "@/**", group: "internal" }],
+          pathGroupsExcludedImportTypes: ["builtin", "external"],
+          "newlines-between": "always",
+          alphabetize: { order: "asc", caseInsensitive: true },
+        },
+      ],
+    },
+  },
   // The top-level dependency directions, as editor feedback (tests/arch/layers.test.ts owns the full
   // rule, including the ranks inside lib/): lib imports none of views, components, app, scripts or
   // tests; views never import components, app or scripts; components never import app or scripts;

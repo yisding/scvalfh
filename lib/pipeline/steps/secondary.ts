@@ -19,15 +19,15 @@
 
 import { CCS, getLeague } from '@/lib/config/leagues';
 import type { Game } from '@/lib/model/game';
+import type { SecondaryStepResult, StepContext } from '@/lib/pipeline/contract';
+import { ccsPollingOpen, confirmKeyDates } from '@/lib/pipeline/merge/ccs';
+import { applyVnnEvents, carryVnnForward } from '@/lib/pipeline/merge/vnn';
+import { carriedFromOf } from '@/lib/pipeline/previous';
+import { classifyFetchError, sourceBase, warnIfError } from '@/lib/pipeline/read';
+import { resourceUrl } from '@/lib/pipeline/transport';
 import { getTeamBySlug } from '@/lib/registry/teams';
 import { CCS_ICAL_URL, parseCcsIcal, readBracketPublished } from '@/lib/sources/ccs';
 import { VNN_SITE_IDS, parseVnnIcs, type VnnEvent } from '@/lib/sources/vnn-ics';
-import type { SecondaryStepResult, StepContext } from '@/lib/pipeline/contract';
-import { carriedFromOf } from '@/lib/pipeline/previous';
-import { ccsPollingOpen, confirmKeyDates } from '@/lib/pipeline/merge/ccs';
-import { applyVnnEvents, carryVnnForward } from '@/lib/pipeline/merge/vnn';
-import { classifyFetchError, sourceBase, warnIfError } from '@/lib/pipeline/read';
-import { resourceUrl } from '@/lib/pipeline/transport';
 
 async function stepVnn(ctx: StepContext, input: readonly Game[]): Promise<Game[]> {
   let games = [...input];

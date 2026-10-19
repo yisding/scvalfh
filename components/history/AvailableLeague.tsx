@@ -1,11 +1,12 @@
-import AwardsBlock from './AwardsBlock';
-import HistoryStandingsTable from './HistoryStandingsTable';
 import ExternalLink from '@/components/ui/ExternalLink';
 import SectionHeader from '@/components/ui/SectionHeader';
 import TeamMonogram from '@/components/ui/TeamMonogram';
 import { getDivision, getLeague, regionOf } from '@/lib/config/leagues';
 import { listWords } from '@/lib/format/words';
 import type { AvailableLeagueView } from '@/views/history/history-view';
+
+import AwardsBlock from './AwardsBlock';
+import HistoryStandingsTable from './HistoryStandingsTable';
 
 /** `lg:grid-rows-[repeat(N,auto)]` for the subgrid, spelled out so Tailwind can see each class. */
 const ROWS_CLASS: Record<number, string> = {

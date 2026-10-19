@@ -17,6 +17,7 @@ import type { OfficialFixture } from '@/lib/model/fixture';
 import type { Game } from '@/lib/model/game';
 import { getJvClassification, getJvGamesForTeam, getJvMerge, getJvTables } from '@/lib/queries/jv';
 import { TEAMS, teamsInDivision } from '@/lib/registry/teams';
+import { game } from '@/tests/support/game-builder';
 import {
   UNCOUNTED_REASON_WORDS,
   buildJvTablesView,
@@ -25,7 +26,6 @@ import {
 } from '@/views/standings/jv';
 import { buildTeamJvView } from '@/views/teams/jv';
 
-import { game } from '@/tests/support/game-builder';
 
 /** A JV game as lib/queries/jv.ts receives it from the merge: unclassified. */
 function jv(spec: Parameters<typeof game>[0]): Game {

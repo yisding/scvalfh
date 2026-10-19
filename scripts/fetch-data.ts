@@ -27,6 +27,7 @@
  */
 
 import { describeRunFailure } from '@/lib/pipeline/run-failure';
+
 import { runCli } from './lib/cli';
 
 async function main(argv: readonly string[]): Promise<number> {

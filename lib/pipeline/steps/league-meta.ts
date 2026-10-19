@@ -13,12 +13,12 @@ import { divisionsOf, getLeague, leagueOfDivision, sectionOf } from '@/lib/confi
 import { divisionLabel } from '@/lib/config/leagues/labels';
 import { SEASON_YEAR, SPORT_SEASON_ID } from '@/lib/config/season';
 import type { DivisionId, LeagueId } from '@/lib/model/ids';
-import { LeagueMetaSchema } from '@/lib/sources/maxpreps/schemas';
 import type { RunContext } from '@/lib/pipeline/contract';
-import type { RunState } from '@/lib/pipeline/state';
 import { lastFreshStamp } from '@/lib/pipeline/previous';
 import { parseJsonBody, readResource, sourceBase, warnIfError } from '@/lib/pipeline/read';
+import type { RunState } from '@/lib/pipeline/state';
 import { resourceUrl } from '@/lib/pipeline/transport';
+import { LeagueMetaSchema } from '@/lib/sources/maxpreps/schemas';
 
 const MetaEnvelope = z.looseObject({ data: LeagueMetaSchema });
 

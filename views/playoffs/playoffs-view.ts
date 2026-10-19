@@ -35,13 +35,14 @@ import { getStandingFor } from '@/lib/queries/standings';
 import { getTeams } from '@/lib/queries/teams';
 import { getTeamById } from '@/lib/registry/teams';
 import { playoffsHref } from '@/lib/shared/routes';
+import { postseasonSourceLink, type SourceLink } from '@/views/shared/postseason-source';
+import { leagueChips } from '@/views/site/league-chips';
+import { leaderLine } from '@/views/standings/standings-view';
+
 import { buildBrackets, ccsDivisionLabels, pendingRounds } from './bracket';
 import type { LeagueKeyDate } from './key-dates';
 import { buildPairingView, pairingNotesFor } from './pairings';
 import { buildDivisionProjection, ladderFactsFor, type ProjectionRow } from './projection';
-import { postseasonSourceLink, type SourceLink } from '@/views/shared/postseason-source';
-import { leagueChips } from '@/views/site/league-chips';
-import { leaderLine } from '@/views/standings/standings-view';
 
 /** SPEC §10.7 item 8, verbatim. */
 export const AT_LARGE_PARAGRAPH =

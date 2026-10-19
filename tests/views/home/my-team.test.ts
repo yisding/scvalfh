@@ -10,11 +10,11 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 
 import { getTeamBySlug } from '@/lib/registry/teams';
+import { m, data, HV } from '@/tests/support/home-view';
 import { textOf } from '@/tests/support/html-text';
 import { loadQueries } from '@/tests/support/queries';
 import { width } from '@/tests/support/text-metrics';
 import { POSTSEASON_LEAD, postseasonCardLine, rungCardText } from '@/views/home/home-client';
-import { m, data, HV } from '@/tests/support/home-view';
 
 describe('the pinned card (components/home/MyTeamCard.tsx ← home-view.ts team views)', () => {
   /** The card's identity: the search index entry its view joins to on `slug` (MyTeamCard.tsx). */

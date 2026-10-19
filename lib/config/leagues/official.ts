@@ -6,10 +6,10 @@
  * door; the door never imports it.
  */
 
+import { getDivision, getLeague } from '@/lib/config/leagues';
 import type { DivisionId, LeagueId } from '@/lib/model/ids';
 import type { DivisionConfig } from '@/lib/model/league-config';
 
-import { getDivision, getLeague } from '@/lib/config/leagues';
 
 /** A division's own schedule document: the 'live-pdf' and 'bundled' arm of `DivisionConfig.official`. */
 export type OfficialDocumentConfig = Extract<DivisionConfig['official'], { mode: 'live-pdf' | 'bundled' }>;

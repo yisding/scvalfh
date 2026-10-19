@@ -1,10 +1,11 @@
-import HistoryBracket from './HistoryBracket';
 import ExternalLink from '@/components/ui/ExternalLink';
 import SectionHeader from '@/components/ui/SectionHeader';
 import TeamMonogram from '@/components/ui/TeamMonogram';
 import { getSection } from '@/lib/config/leagues';
 import { dateWithYear } from '@/lib/format/dates';
 import type { SectionBracketView } from '@/views/history/bracket';
+
+import HistoryBracket from './HistoryBracket';
 
 /** The source line of a section's bracket block, in that section's words. */
 function BracketSources({ id, bracket }: Pick<SectionBracketView, 'id' | 'bracket'>) {

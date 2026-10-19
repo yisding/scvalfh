@@ -9,8 +9,8 @@ import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 
-import { textOf } from '@/tests/support/html-text';
 import { m, data, renderPanel, HV, PL } from '@/tests/support/home-view';
+import { textOf } from '@/tests/support/html-text';
 
 describe('home panels (views/home/home-view.ts → LeaguePanel)', () => {
   it('builds one panel per league, config order', () => {

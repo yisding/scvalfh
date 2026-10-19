@@ -4,6 +4,7 @@
  * `document.documentElement` and `window`.
  */
 import vm from 'node:vm';
+
 import { describe, expect, it } from 'vitest';
 
 import { PINNED_TEAM_KEY, PINNED_TEAM_SCRIPT } from '@/components/head/pinned-team-script';

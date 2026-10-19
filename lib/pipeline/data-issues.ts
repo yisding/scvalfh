@@ -9,6 +9,7 @@ import { readFileSync } from 'node:fs';
 
 import { TIME_ZONE } from '@/lib/config/season';
 import type { Snapshot } from '@/lib/model/snapshot';
+
 import type { SnapshotMeta } from './contract';
 
 export interface DataIssue {

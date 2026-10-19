@@ -16,8 +16,8 @@ import {
   ROSTER_TEAM_COUNT, type Rosters, RostersPartialSchema, RostersSchema, countRosters, rostersContentKey,
 } from '@/lib/schema/rosters';
 import { pendingRoster } from '@/lib/sources/maxpreps/roster';
-import { FIXTURE_DIR } from '@/tests/support/corpus';
 import { expectOk, runRepoScript } from '@/tests/support/cli';
+import { FIXTURE_DIR } from '@/tests/support/corpus';
 import { REPO, tempDir, tempFile } from '@/tests/support/repo';
 
 const FILE = path.join(REPO, 'data', 'rosters.json');

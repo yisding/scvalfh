@@ -2,6 +2,7 @@
 
 import { LEAGUES } from '@/lib/config/leagues';
 import type { TeamSlug } from '@/lib/model/ids';
+
 import { type SbliveResolution, resolveSbliveSide, sbliveIdFromWebPath } from './identity';
 import { requireBlock } from './props';
 import { StandingsPropsSchema, TeamGamesPropsSchema } from './schemas';

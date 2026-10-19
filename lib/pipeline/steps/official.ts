@@ -33,9 +33,6 @@ import { carryOfficialForward } from '@/lib/official/carry';
 import { exclusionFor, matchOfficialFixtures } from '@/lib/official/match';
 import { diffMembership } from '@/lib/official/membership';
 import { assertDoubleRoundRobin } from '@/lib/official/validate';
-import { parseSchedulePdfText } from '@/lib/sources/scval/grid';
-import { PdftotextMissingError } from '@/lib/sources/scval/pdftotext';
-import { SCVAL_STANDINGS_INDEX, findStandingsPdfLink, listFieldHockeyLinks } from '@/lib/sources/scval/standings-index';
 import {
   type OfficialStep,
   type OfficialStepResult,
@@ -43,6 +40,9 @@ import {
 } from '@/lib/pipeline/contract';
 import { carriedFromOf } from '@/lib/pipeline/previous';
 import { classifyFetchError, readResource, sourceBase, warnIfError, type FetchFailure } from '@/lib/pipeline/read';
+import { parseSchedulePdfText } from '@/lib/sources/scval/grid';
+import { PdftotextMissingError } from '@/lib/sources/scval/pdftotext';
+import { SCVAL_STANDINGS_INDEX, findStandingsPdfLink, listFieldHockeyLinks } from '@/lib/sources/scval/standings-index';
 
 const RESCHEDULE_WINDOW_DAYS = 14;
 

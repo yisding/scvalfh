@@ -11,8 +11,8 @@ import { describe, expect, it } from 'vitest';
 
 import AwardsBlock from '@/components/history/AwardsBlock';
 import { getAvailableHistoryLeagues } from '@/lib/datasets/history';
-import type { HistoryAwards } from '@/lib/schema/history';
 import { getTeamBySlug } from '@/lib/registry/teams';
+import type { HistoryAwards } from '@/lib/schema/history';
 import { sectionById } from '@/scripts/ci/copy/copy-rules';
 import { textOf } from '@/tests/support/html-text';
 import {

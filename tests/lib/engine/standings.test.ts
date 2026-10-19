@@ -7,11 +7,11 @@ import { describe, expect, it } from 'vitest';
 
 import { ALL_DIVISIONS } from '@/lib/config/leagues';
 import { computeStandings, divisionGames } from '@/lib/engine/standings';
-import { game } from '@/tests/support/game-builder';
 import { resolveTeam } from '@/lib/registry/resolve';
 import { TEAMS, teamsInLeague } from '@/lib/registry/teams';
-import { row, order } from '@/tests/support/standings';
+import { game } from '@/tests/support/game-builder';
 import { live, liveStandings, scvalStandings } from '@/tests/support/scval-standings';
+import { row, order } from '@/tests/support/standings';
 
 describe('standings: Article VI §1-2 (division games only, 3 pts a win, 1 a tie)', () => {
   it('includes every registry team once, and all 15 SCVAL teams', () => {

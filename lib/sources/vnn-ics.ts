@@ -23,6 +23,7 @@
 import type { TeamSlug } from '@/lib/model/ids';
 import { resolveTeam } from '@/lib/registry/resolve';
 import { localDateKey, toLocalTimestamp } from '@/lib/shared/dates';
+
 import { icsLine, unfoldIcs } from './ics';
 
 /** [V] the only two verified siteIds (SPEC §1.5). */

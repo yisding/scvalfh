@@ -11,6 +11,7 @@
 
 import { shortDate } from '@/lib/format/dates';
 import { getGames } from '@/lib/queries/games';
+
 import { type DayLine, dayCardTitle, dayLines, headlineGame, orderedForPreview } from './day-summary';
 
 /** The most game lines the card has room for. */

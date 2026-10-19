@@ -36,11 +36,12 @@
 import { z } from 'zod';
 
 import type { RegionId } from '@/lib/model/ids';
+import { partialDateKind } from '@/lib/shared/partial-date';
+import { isCalendarDate } from '@/lib/shared/patterns';
+
 import { customIssue, slugId } from './primitives';
 import { registryTeamSlug } from './registry-primitives';
 import { dateOnly, httpsSourceUrl, text } from './source-url';
-import { partialDateKind } from '@/lib/shared/partial-date';
-import { isCalendarDate } from '@/lib/shared/patterns';
 
 /**
  * Where a club is based. Also the display order of /clubs' regions: Northern California's (DESIGN

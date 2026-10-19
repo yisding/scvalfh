@@ -13,8 +13,9 @@ import type { Snapshot } from '@/lib/model/snapshot';
 import { localDateKey } from '@/lib/shared/dates';
 import { stableStringify } from '@/lib/shared/stable-json';
 import { loadSnapshot } from '@/lib/snapshot/load';
-import type { PipelineResult, RunArgs, Transport } from './contract';
+
 import { CONSOLE_SINK, createPipelineContext, type LogSink, type PipelineContext } from './context';
+import type { PipelineResult, RunArgs, Transport } from './contract';
 import { loadCorpus, type Corpus } from './corpus';
 import { FixtureTransport, LiveTransport, RecordingTransport } from './transport';
 

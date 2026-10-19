@@ -9,6 +9,7 @@
 
 import bundled from '@/data/prior-season.json';
 import { type PriorSeason, PriorSeasonSchema } from '@/lib/schema/prior-season';
+
 import { readDataset } from './read';
 
 const priorSeason = readDataset({

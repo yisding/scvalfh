@@ -37,15 +37,15 @@ import {
   getHistoryChampions, getHistoryDivisionChanges, getHistoryLeagues, getHistorySeason,
   getHistoryUnpublishedTies, getUnavailableHistoryLeagues, historySchoolName,
 } from '@/lib/datasets/history';
-import type {
-  AvailableLeagueHistory, HistoryAwards, HistoryPlayer, HistoryRow, UnavailableLeagueHistory,
-} from '@/lib/schema/history';
-import type { BracketSectionId } from '@/lib/schema/history-brackets';
 import { getEnrichedTeamRoster, getRosters } from '@/lib/datasets/rosters';
 import { agree, listWords } from '@/lib/format/words';
 import type { DivisionId, LeagueId, TeamSlug } from '@/lib/model/ids';
 import type { Team } from '@/lib/model/team';
 import { getTeamBySlug, teamsInLeague } from '@/lib/registry/teams';
+import type {
+  AvailableLeagueHistory, HistoryAwards, HistoryPlayer, HistoryRow, UnavailableLeagueHistory,
+} from '@/lib/schema/history';
+import type { BracketSectionId } from '@/lib/schema/history-brackets';
 import { positionFromText } from '@/views/shared/words/position';
 import type { PageMetadataInput } from '@/views/site/page-metadata';
 

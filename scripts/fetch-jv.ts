@@ -54,6 +54,8 @@ import type { FlagSpec } from '@/lib/cli/flags';
 import { INDEPENDENT_LEAGUES, LEAGUES_PROPER } from '@/lib/config/leagues';
 import { JV_SPORT_SEASON_ID, SEASON_YEAR } from '@/lib/config/season';
 import { mergeJv } from '@/lib/engine/jv/merge';
+import type { Game } from '@/lib/model/game';
+import type { Team } from '@/lib/model/team';
 import {
   describePrevious,
   droppedTeamSlugs,
@@ -62,8 +64,6 @@ import {
   teamsInScope,
   type PreviousRows,
 } from '@/lib/pipeline/fetch-scope';
-import type { Game } from '@/lib/model/game';
-import type { Team } from '@/lib/model/team';
 import { normalizeGames } from '@/lib/pipeline/reconcile/normalize';
 import { jvMaxprepsScheduleUrl, jvSbliveGamesUrl, jvSbliveTeamId } from '@/lib/registry/jv-teams';
 import { TEAMS } from '@/lib/registry/teams';
@@ -80,6 +80,7 @@ import { ScheduleResponseSchema, type ScheduleRow } from '@/lib/sources/maxpreps
 import { scheduleUrl } from '@/lib/sources/maxpreps/urls';
 import { combineJvCopies, parseJvTeamGamesPage, type JvSbliveCopy } from '@/lib/sources/sblive/jv';
 import { SBLIVE_HTTP_OPTIONS } from '@/lib/sources/sblive/urls';
+
 import { runCli } from './lib/cli';
 import {
   type ScopedFetchArgs,

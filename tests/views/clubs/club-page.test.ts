@@ -10,8 +10,8 @@ import { describe, expect, it } from 'vitest';
 import { getClubAffiliations } from '@/lib/datasets/clubs';
 import { getEnrichedTeamRoster } from '@/lib/datasets/rosters';
 import { getTeamBySlug } from '@/lib/registry/teams';
-import { buildClubPageView } from '@/views/clubs/club-view';
 import { club, views, viewOf } from '@/tests/support/clubs-view';
+import { buildClubPageView } from '@/views/clubs/club-view';
 
 describe('buildClubPageView (/clubs/[slug])', () => {
   it('is null for a slug the file does not hold', () => {

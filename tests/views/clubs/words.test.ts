@@ -8,8 +8,8 @@
 import { describe, expect, it } from 'vitest';
 
 import { clubDisplayName, getClubs } from '@/lib/datasets/clubs';
-import { sourceLabel, sourceName, statusWords } from '@/views/clubs/words';
 import { file, club, tie, views, viewOf } from '@/tests/support/clubs-view';
+import { sourceLabel, sourceName, statusWords } from '@/views/clubs/words';
 
 describe('status words (DESIGN §17.3)', () => {
   it('words every pinned tie as the table says', () => {

@@ -14,6 +14,7 @@ import type { CcsCalendarEvent } from '@/lib/model/postseason';
 import type { SeasonWindow } from '@/lib/model/season';
 import type { Snapshot } from '@/lib/model/snapshot';
 import type { RawResponse } from '@/lib/sources/http/raw-response';
+
 import { specOf, type ResourceKey } from './resources';
 
 /** The manifest key and corpus file stem of a resource: its row of the table in lib/pipeline/resources.ts (the path shapes are listed there). */

@@ -11,6 +11,14 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
+import { getDivision } from '@/lib/config/leagues';
+import { scoreSentence } from '@/lib/format/score';
+import type { OfficialFixture } from '@/lib/model/fixture';
+import type { Game } from '@/lib/model/game';
+import type { SourceStatus } from '@/lib/model/health';
+import type { DivisionId } from '@/lib/model/ids';
+import type { Snapshot } from '@/lib/model/snapshot';
+import { FixtureMissing, TransportError, resourcePath, type RunContext } from '@/lib/pipeline/contract';
 import {
   BACKFILL_TEAM_PAGE_CAP,
   applyBackfill,
@@ -22,24 +30,16 @@ import {
   type BackfillInput,
 } from '@/lib/pipeline/reconcile/backfill';
 import { supersededGamesOf } from '@/lib/pipeline/reconcile/superseded';
-import { getDivision } from '@/lib/config/leagues';
-import { scoreSentence } from '@/lib/format/score';
-import type { OfficialFixture } from '@/lib/model/fixture';
-import type { Game } from '@/lib/model/game';
-import type { SourceStatus } from '@/lib/model/health';
-import type { DivisionId } from '@/lib/model/ids';
-import type { Snapshot } from '@/lib/model/snapshot';
-import { FixtureMissing, TransportError, resourcePath, type RunContext } from '@/lib/pipeline/contract';
 import type { ResourceKey } from '@/lib/pipeline/resources';
 import { scoreboardDates, stepSblive } from '@/lib/pipeline/steps/sblive';
 import { getTeamBySlug } from '@/lib/registry/teams';
 import { dayDiff, shiftDateKey } from '@/lib/shared/dates';
 import { loadSnapshot, parseSnapshot } from '@/lib/snapshot/load';
 import { parseScoresPage, parseTeamGamesPage, type SbliveGame, type SbliveSide } from '@/lib/sources/sblive/games';
-import { game } from '@/tests/support/game-builder';
 import { corpusDir } from '@/tests/support/corpus';
-import { REPO, goldenPath, readJson } from '@/tests/support/repo';
+import { game } from '@/tests/support/game-builder';
 import { testRunArgs } from '@/tests/support/pipeline/run-args';
+import { REPO, goldenPath, readJson } from '@/tests/support/repo';
 
 const TODAY = '2026-10-02';
 const AT = '2026-10-02T15:00:00.000Z';

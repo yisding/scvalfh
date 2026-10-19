@@ -1,8 +1,8 @@
 import Link from 'next/link';
 
+import TeamMonogram from '@/components/ui/TeamMonogram';
 import { recordString } from '@/lib/format/numbers';
 import { scoreSentence } from '@/lib/format/score';
-import TeamMonogram from '@/components/ui/TeamMonogram';
 import type { Game } from '@/lib/model/game';
 import type { Standing } from '@/lib/model/standings';
 import type { Team } from '@/lib/model/team';

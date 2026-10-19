@@ -11,6 +11,7 @@ import { beforeAll } from 'vitest';
 
 import type { Game } from '@/lib/model/game';
 import { getTeamBySlug } from '@/lib/registry/teams';
+
 import { useCorpusModules, withSnapshotModules, type CorpusModules } from './corpus-modules';
 import { corpusSnapshotPath } from './corpus-snapshot';
 import { loadQueries } from './queries';

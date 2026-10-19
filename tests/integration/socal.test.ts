@@ -30,10 +30,10 @@ import { localDateKey } from '@/lib/shared/dates';
 import { sideOutcome } from '@/lib/shared/game';
 import type { ScheduleRow } from '@/lib/sources/maxpreps/schemas';
 import { parseScoresPage, parseTeamGamesPage } from '@/lib/sources/sblive/games';
+import { expectOk, runFixtureCli } from '@/tests/support/cli';
+import { CorpusReader, SOCAL_CORPUS, gameOf } from '@/tests/support/corpus';
 import { useCorpusModules } from '@/tests/support/corpus-modules';
 import { corpusSnapshotPath } from '@/tests/support/corpus-snapshot';
-import { CorpusReader, SOCAL_CORPUS, gameOf } from '@/tests/support/corpus';
-import { expectOk, runFixtureCli } from '@/tests/support/cli';
 import { loadQueries } from '@/tests/support/queries';
 import { readSnapshot } from '@/tests/support/repo';
 

@@ -12,6 +12,7 @@ import type { Team } from '@/lib/model/team';
 import { teamOfSide } from '@/lib/registry/teams';
 import { localDateKey } from '@/lib/shared/dates';
 import { byDateLocal, involvesTeam } from '@/lib/shared/game';
+
 import { resolveTeamRef } from './teams';
 
 const snapshot = getSnapshot();

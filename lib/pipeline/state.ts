@@ -11,6 +11,7 @@ import type { DivisionHealth, DroppedContest } from '@/lib/model/health';
 import type { DivisionId, LeagueId, TeamId, TeamSlug } from '@/lib/model/ids';
 import type { ReportedRecord } from '@/lib/model/standings';
 import type { ScheduleRow } from '@/lib/sources/maxpreps/schemas';
+
 import type { OfficialStepResult, SecondaryStepResult } from './contract';
 
 export interface DivisionRunInfo {

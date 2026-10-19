@@ -6,10 +6,10 @@
  */
 
 import { ALL_SEASON_ID, BOOTSTRAP_URL, SPORT_SEASON_ID } from '@/lib/config/season';
-import { parseBootstrap } from '@/lib/sources/maxpreps/bootstrap';
 import { RunAbort } from '@/lib/pipeline/abort';
 import type { RunContext } from '@/lib/pipeline/contract';
 import { readResource, sourceBase, warnIfError } from '@/lib/pipeline/read';
+import { parseBootstrap } from '@/lib/sources/maxpreps/bootstrap';
 
 export async function stepBootstrap(ctx: RunContext): Promise<void> {
   const base = sourceBase(ctx, { id: 'maxpreps-html', kind: 'bootstrap', label: 'season bootstrap', url: BOOTSTRAP_URL });

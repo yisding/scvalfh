@@ -5,9 +5,9 @@
  * the door never imports it.
  */
 
+import { getDivision, getLeague, isIndependentLeague, isSingleDivision, leagueOfDivision } from '@/lib/config/leagues';
 import type { DivisionId, LeagueId } from '@/lib/model/ids';
 
-import { getDivision, getLeague, isIndependentLeague, isSingleDivision, leagueOfDivision } from '@/lib/config/leagues';
 
 /**
  * A league's words where its short name would stand alone as a control's target ('Jump to … ↓',

@@ -10,10 +10,10 @@ import { describe, expect, it } from 'vitest';
 import { getClubAffiliations, getClubSlugs, getClubs } from '@/lib/datasets/clubs';
 import { getRosters } from '@/lib/datasets/rosters';
 import { getTeamBySlug } from '@/lib/registry/teams';
+import { club } from '@/tests/support/clubs-view';
 import { buildClubsIndexView } from '@/views/clubs/club-view';
 import { countLine } from '@/views/clubs/clubs-index';
 import { REGION_WORDS } from '@/views/clubs/words';
-import { club } from '@/tests/support/clubs-view';
 
 describe('buildClubsIndexView (/clubs)', () => {
   const index = buildClubsIndexView();

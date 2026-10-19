@@ -1,8 +1,8 @@
 import Link from 'next/link';
 
-import { ordinal } from '@/lib/format/numbers';
 import { TeamNameCell } from '@/components/standings/table/parts';
 import MissingValue from '@/components/ui/MissingValue';
+import { ordinal } from '@/lib/format/numbers';
 import { teamHref } from '@/lib/shared/routes';
 import type { HistoryRowView } from '@/views/history/history-view';
 

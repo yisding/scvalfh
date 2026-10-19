@@ -19,12 +19,14 @@
 
 import { z } from 'zod';
 
-import { COMMIT_SPORTS } from './commits';
 import { ALL_DIVISIONS } from '@/lib/config/leagues';
 import { getTeamBySlug } from '@/lib/registry/teams';
+import { contentKey } from '@/lib/shared/stable-json';
+
+import { COMMIT_SPORTS } from './commits';
 import { dateKey, httpUrl, httpsUrl, slugId } from './primitives';
 import { REGISTRY_TEAM_COUNT, registryTeamSlug } from './registry-primitives';
-import { contentKey } from '@/lib/shared/stable-json';
+
 
 /** Rosters cover every registry team, all nine leagues and the five independents: one entry per team of TEAMS. */
 export const ROSTER_TEAM_COUNT = REGISTRY_TEAM_COUNT;

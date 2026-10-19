@@ -13,8 +13,8 @@
  * way), so a bad file fails at import time rather than half-way through a render.
  */
 
-import bundledBrackets from '@/data/history-brackets-2025-26.json';
 import bundledHistory from '@/data/history-2025-26.json';
+import bundledBrackets from '@/data/history-brackets-2025-26.json';
 import { LEAGUE_IDS, getLeague, getSection } from '@/lib/config/leagues';
 import type { DivisionId, LeagueId, SectionId, TeamSlug } from '@/lib/model/ids';
 import { getTeamBySlug } from '@/lib/registry/teams';
@@ -27,6 +27,7 @@ import {
   HistoryBracketsSchema, type SectionBracket,
 } from '@/lib/schema/history-brackets';
 import { latestDateKey } from '@/lib/shared/dates';
+
 import { readDataset } from './read';
 
 /**

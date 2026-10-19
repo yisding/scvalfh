@@ -4,9 +4,9 @@
  */
 
 import { clubDisplayName, getClub, getPlayerClubs } from '@/lib/datasets/clubs';
-import type { AffiliationStatus, Club } from '@/lib/schema/clubs';
 import { requirePartialDateKind } from '@/lib/format/dates';
 import type { TeamSlug } from '@/lib/model/ids';
+import type { AffiliationStatus, Club } from '@/lib/schema/clubs';
 import { clubHref } from '@/lib/shared/routes';
 
 /** The last year an `asOf` covers (a range's or a season's end), for "latest first"; null last. */

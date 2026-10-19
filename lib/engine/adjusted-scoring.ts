@@ -78,6 +78,7 @@
 import type { Game } from '@/lib/model/game';
 import type { TeamId, TeamSlug } from '@/lib/model/ids';
 import type { Team } from '@/lib/model/team';
+
 import { ELO_BASE, ELO_PER_GOAL, type RatingTable, ratingGames } from './ratings';
 
 /** The prior standard deviation of a team's attack and defense corrections to its Elo, in log goals. */

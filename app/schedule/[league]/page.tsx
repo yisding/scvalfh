@@ -5,8 +5,8 @@ import { Suspense } from 'react';
 
 import LeagueSwitcher from '@/components/layout/LeagueSwitcher';
 import PageHeader from '@/components/layout/PageHeader';
-import OfficialFixtures from '@/components/schedule/OfficialFixtures';
 import { ScheduleFiltersFallback } from '@/components/schedule/FiltersPanel';
+import OfficialFixtures from '@/components/schedule/OfficialFixtures';
 import ScheduleFilters from '@/components/schedule/ScheduleFilters';
 import ScheduleList from '@/components/schedule/ScheduleList';
 import TimelineRail from '@/components/schedule/TimelineRail';

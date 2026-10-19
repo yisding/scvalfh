@@ -12,14 +12,15 @@ import { describe, expect, it } from 'vitest';
 import { ALL_DIVISIONS, DATA_QUALITY, LEAGUES, getDivision, getLeague } from '@/lib/config/leagues';
 import { officialDocumentOf } from '@/lib/config/leagues/official';
 import { BOOTSTRAP_URL } from '@/lib/config/season';
+import { officialChangesCellText, sha256Hex, tdCellBodies } from '@/lib/official/changes-page';
 import {
   FixtureMissing,
   TransportError,
   resourcePath,
   type Transport,
 } from '@/lib/pipeline/contract';
-import type { ResourceKey } from '@/lib/pipeline/resources';
 import { loadCorpus, readManifest } from '@/lib/pipeline/corpus';
+import type { ResourceKey } from '@/lib/pipeline/resources';
 import {
   FixtureTransport,
   LiveTransport,
@@ -29,7 +30,6 @@ import {
   requestHostOf,
   resourceUrl,
 } from '@/lib/pipeline/transport';
-import { officialChangesCellText, sha256Hex, tdCellBodies } from '@/lib/official/changes-page';
 import { TEAMS, getTeamBySlug } from '@/lib/registry/teams';
 import { HttpError, type HttpResponse } from '@/lib/sources/http/client';
 import type { RawResponse } from '@/lib/sources/http/raw-response';

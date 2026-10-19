@@ -16,7 +16,6 @@ import {
   pinResultDetail,
   resultDetail,
 } from '@/components/search/TeamFinder';
-
 import { getTeamSearchIndex } from '@/lib/queries/teams';
 import { pinLabel } from '@/lib/shared/pin-label';
 import { SECTION_NAMES } from '@/lib/shared/region-words';

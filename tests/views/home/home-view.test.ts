@@ -9,8 +9,8 @@ import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 
-import { textOf } from '@/tests/support/html-text';
 import { m, data, pageHtml, HV } from '@/tests/support/home-view';
+import { textOf } from '@/tests/support/html-text';
 
 describe('first visit (components/home/FindYourTeam.tsx, LeagueCard.tsx)', () => {
   it('has a card per league with its facts and both ways on', async () => {

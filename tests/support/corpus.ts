@@ -13,6 +13,7 @@ import type { Snapshot } from '@/lib/model/snapshot';
 import { readManifest, type Manifest } from '@/lib/pipeline/corpus';
 import { TEAMS } from '@/lib/registry/teams';
 import { ScheduleResponseSchema, type ScheduleRow } from '@/lib/sources/maxpreps/schemas';
+
 import { FIXTURES_ROOT, fixturePath, readJson } from './repo';
 
 /** The original SCVAL capture directory (2026-09-29), now also the `scval` corpus (its manifest.json). */

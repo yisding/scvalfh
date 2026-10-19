@@ -17,10 +17,11 @@ import type { CrossCheckRow } from '@/lib/model/crosscheck';
 import type { DivisionHealth, LeagueHealth } from '@/lib/model/health';
 import type { LeagueConfig } from '@/lib/model/league-config';
 import type { Standing } from '@/lib/model/standings';
-import { teamsInLeague } from '@/lib/registry/teams';
-import type { RunState } from '@/lib/pipeline/state';
-import { previousDivisionHealth, previousLeagueHealth } from '@/lib/pipeline/previous';
 import type { PipelineContext } from '@/lib/pipeline/context';
+import { previousDivisionHealth, previousLeagueHealth } from '@/lib/pipeline/previous';
+import type { RunState } from '@/lib/pipeline/state';
+import { teamsInLeague } from '@/lib/registry/teams';
+
 import { divisionClassification } from './guards';
 
 export interface StandingsStepResult {

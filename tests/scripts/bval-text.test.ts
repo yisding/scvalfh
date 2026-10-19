@@ -10,10 +10,10 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
+import { buildBval, buildBvalFromText } from '@/lib/official/build';
 import { compareBundleFixtures, serializeBundle } from '@/lib/official/bundle';
 import { readOfficialBundle } from '@/lib/official/bundle-file';
 import { BVAL_DEFAULT_VARSITY, BVAL_TIME_OVERRIDES, parseBvalScheduleText } from '@/lib/sources/bval/schedule-text';
-import { buildBval, buildBvalFromText } from '@/lib/official/build';
 import { REPO } from '@/tests/support/repo';
 
 const FIX = path.join(REPO, 'tests', 'fixtures', 'official');

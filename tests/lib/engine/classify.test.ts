@@ -6,10 +6,9 @@ import {
   classifyGame, classifyGames, crossDivisionNote, postseasonTag,
 } from '@/lib/engine/classify';
 import type { Game } from '@/lib/model/game';
-import { postseasonTagOf } from '@/views/shared/describe-game';
-
 import { game } from '@/tests/support/game-builder';
 import { goldenPath, readJson } from '@/tests/support/repo';
+import { postseasonTagOf } from '@/views/shared/describe-game';
 
 /** A contest MCAL has declared a league game despite its Oct 23 postseason window. */
 const { OVERRIDE_ID } = vi.hoisted(() => ({ OVERRIDE_ID: '00000000-0000-4000-8000-0000000c0de1' }));

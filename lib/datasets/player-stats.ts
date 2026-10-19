@@ -16,6 +16,7 @@
 import bundled from '@/data/player-stats.json';
 import type { TeamSlug } from '@/lib/model/ids';
 import { type PlayerStatsFile, PlayerStatsFileSchema, type TeamPlayerStats } from '@/lib/schema/player-stats';
+
 import { readDataset } from './read';
 
 const file = readDataset({

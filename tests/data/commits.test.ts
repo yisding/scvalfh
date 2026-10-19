@@ -22,11 +22,11 @@ import {
 } from '@/lib/datasets/commits';
 import { type MergedPlayer, classOf, getAllEnrichedRosters, getRosters } from '@/lib/datasets/rosters';
 import { getTeamBySlug } from '@/lib/registry/teams';
-import { BANNED_HOSTS } from '@/lib/schema/source-url';
 import {
   COLLEGE_DIVISIONS, COMMIT_SPORTS, type College, type Commitment, type CommitsFile, CommitsFileSchema,
   isCommitDate, isPostBy,
 } from '@/lib/schema/commits';
+import { BANNED_HOSTS } from '@/lib/schema/source-url';
 import { REPO } from '@/tests/support/repo';
 
 const raw = JSON.parse(readFileSync(path.join(REPO, 'data', 'commits.json'), 'utf8')) as CommitsFile;

@@ -14,9 +14,9 @@ import { gameWord, plural } from '@/lib/format/words';
 import type { Game } from '@/lib/model/game';
 import type { LeagueId, RegionId } from '@/lib/model/ids';
 import { getTeamBySlug, sideShortName } from '@/lib/registry/teams';
+import { countGames, type ScheduleCounts } from '@/views/schedule/filters-client';
 import { describeGame } from '@/views/shared/describe-game';
 
-import { countGames, type ScheduleCounts } from '@/views/schedule/filters-client';
 
 export interface DayLine {
   contestId: string;

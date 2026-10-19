@@ -25,10 +25,9 @@ import type { Game } from '@/lib/model/game';
 import type { LeagueRunState, SourceStatus } from '@/lib/model/health';
 import type { LeagueId } from '@/lib/model/ids';
 import type { Snapshot } from '@/lib/model/snapshot';
-import { applyExclusions, normalizeGames } from '@/lib/pipeline/reconcile/normalize';
-import { exclusionFor, matchOfficialFixtures, type MatchOptions, type MatchResult } from '@/lib/official/match';
 import { loadBundledFixtures } from '@/lib/official/bundle-file';
 import { officialChangesCellText, officialChangesHash, sha256Hex } from '@/lib/official/changes-page';
+import { exclusionFor, matchOfficialFixtures, type MatchOptions, type MatchResult } from '@/lib/official/match';
 import {
   FixtureMissing,
   TransportError,
@@ -36,14 +35,15 @@ import {
   type RunContext,
   type Transport,
 } from '@/lib/pipeline/contract';
+import { applyExclusions, normalizeGames } from '@/lib/pipeline/reconcile/normalize';
 import type { ResourceKey } from '@/lib/pipeline/resources';
 import { stepOfficial } from '@/lib/pipeline/steps/official';
 import { ScheduleResponseSchema } from '@/lib/sources/maxpreps/schemas';
 import { parseSchedulePdfText } from '@/lib/sources/scval/grid';
-import { game } from '@/tests/support/game-builder';
 import { allScheduleRows, corpusDir } from '@/tests/support/corpus';
-import { REPO } from '@/tests/support/repo';
+import { game } from '@/tests/support/game-builder';
 import { testRunArgs } from '@/tests/support/pipeline/run-args';
+import { REPO } from '@/tests/support/repo';
 
 /** Lets one test break a bundle at load (the step's validation-failure path). */
 const breakBundle = vi.hoisted(() => ({ league: null as string | null }));

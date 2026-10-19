@@ -13,14 +13,14 @@ import path from 'node:path';
 import { beforeAll, describe, expect, it } from 'vitest';
 
 import type { Snapshot } from '@/lib/model/snapshot';
+import type { PipelineSteps } from '@/lib/pipeline/contract';
 import { stepOfficial } from '@/lib/pipeline/steps/official';
 import { stepSblive } from '@/lib/pipeline/steps/sblive';
-import type { PipelineSteps } from '@/lib/pipeline/contract';
 import { loadSnapshot, parseSnapshot } from '@/lib/snapshot/load';
-import { corpusSnapshotPath } from '@/tests/support/corpus-snapshot';
 import { corpusDir } from '@/tests/support/corpus';
-import { REPO } from '@/tests/support/repo';
+import { corpusSnapshotPath } from '@/tests/support/corpus-snapshot';
 import { snapshotOf, writeTempVariant } from '@/tests/support/pipeline/run-corpus';
+import { REPO } from '@/tests/support/repo';
 
 const STEPS: PipelineSteps = { official: stepOfficial, sblive: stepSblive };
 const CORPUS = corpusDir('all-2026-10-02');

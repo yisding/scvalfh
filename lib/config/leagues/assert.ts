@@ -10,15 +10,14 @@
  * and slug RegExps) and ./tiebreak-stages.ts.
  */
 
+import { failInvariant } from '@/lib/config/invariant';
+import { RESERVED_SEGMENTS } from '@/lib/config/reserved-segments';
 import type { LeagueId } from '@/lib/model/ids';
 import type {
   CcsConfig, DataQualityConfig, LeagueConfig, PostseasonConfig, RegionConfig, SectionConfig,
 } from '@/lib/model/league-config';
-import type { PlayoffStatus, TiebreakStage } from '@/lib/model/standings';
-
-import { failInvariant } from '@/lib/config/invariant';
-import { RESERVED_SEGMENTS } from '@/lib/config/reserved-segments';
 import { SHOOTOUT_INFERENCES } from '@/lib/model/league-config';
+import type { PlayoffStatus, TiebreakStage } from '@/lib/model/standings';
 import { GUID_RE } from '@/lib/shared/contest-id';
 import { DATE_PATTERN, SLUG_PATTERN } from '@/lib/shared/patterns';
 

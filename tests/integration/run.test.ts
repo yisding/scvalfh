@@ -15,23 +15,23 @@ import { ALL_DIVISIONS, DATA_QUALITY, LEAGUES, getDivision } from '@/lib/config/
 import { ALL_SEASON_ID, SPORT_SEASON_ID } from '@/lib/config/season';
 import type { Snapshot } from '@/lib/model/snapshot';
 import { RunAbort } from '@/lib/pipeline/abort';
+import { metaPathOf, parseRunArgs, prepareRun, readPrevious, writeOutputs } from '@/lib/pipeline/cli';
+import { SILENT_SINK, createPipelineContext } from '@/lib/pipeline/context';
 import { resourcePath, type SnapshotMeta, type Transport } from '@/lib/pipeline/contract';
 import { loadCorpus } from '@/lib/pipeline/corpus';
-import { emptyRunState } from '@/lib/pipeline/state';
-import { SILENT_SINK, createPipelineContext } from '@/lib/pipeline/context';
 import { runPipeline } from '@/lib/pipeline/run';
-import { metaPathOf, parseRunArgs, prepareRun, readPrevious, writeOutputs } from '@/lib/pipeline/cli';
+import { emptyRunState } from '@/lib/pipeline/state';
 import { stepStandings } from '@/lib/pipeline/steps/standings';
 import { FixtureTransport } from '@/lib/pipeline/transport';
 import { FETCHABLE_TEAMS, TEAMS } from '@/lib/registry/teams';
 import { stableStringify } from '@/lib/shared/stable-json';
 import { loadSnapshot } from '@/lib/snapshot/load';
 import { CIFSS_SECTIONS } from '@/lib/sources/cifss';
-import { game } from '@/tests/support/game-builder';
 import { corpusDir, variantDir } from '@/tests/support/corpus';
-import { REPO, tempFile } from '@/tests/support/repo';
+import { game } from '@/tests/support/game-builder';
 import { NOOP_STEPS } from '@/tests/support/pipeline/noop-steps';
 import { runCorpus, snapshotOf, writeTempVariant } from '@/tests/support/pipeline/run-corpus';
+import { REPO, tempFile } from '@/tests/support/repo';
 
 const MISSION = Object.keys(DATA_QUALITY.ignoredMaxprepsLeagueIds)[0];
 const opts = { cwd: REPO, now: '2026-10-02T15:00:00.000Z' };

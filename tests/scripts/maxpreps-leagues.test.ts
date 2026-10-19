@@ -32,8 +32,8 @@ import { type PlayerStatsFile, PlayerStatsFileSchema } from '@/lib/schema/player
 import { type Rosters, RostersSchema } from '@/lib/schema/rosters';
 import { parsePlayerStats, joinToRoster } from '@/lib/sources/maxpreps/player-stats';
 import { parseRosterPage, parseRosterTable } from '@/lib/sources/maxpreps/roster';
-import { FIXTURE_DIR } from '@/tests/support/corpus';
 import { runRepoScript } from '@/tests/support/cli';
+import { FIXTURE_DIR } from '@/tests/support/corpus';
 import { REPO, tempDir, tempFile } from '@/tests/support/repo';
 
 const ROSTER_SAMPLE = ['leigh', 'greenfield', 'del-mar', 'stevenson', 'monterey', 'university-sf', 'marin-catholic'];

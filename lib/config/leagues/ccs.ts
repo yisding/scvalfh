@@ -3,9 +3,9 @@
  * This file: the CCS section block (section data, not league data).
  */
 
+import { CCS_BRACKET_URL } from '@/lib/config/season';
 import type { CcsConfig } from '@/lib/model/league-config';
 
-import { CCS_BRACKET_URL } from '@/lib/config/season';
 
 import { CCS_BYLAWS_URL } from './documents';
 

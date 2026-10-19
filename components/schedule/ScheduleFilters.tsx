@@ -3,12 +3,6 @@
 import { useEffect, useRef, useState } from 'react';
 
 import { applyFilters } from '@/components/hooks/schedule-filter-dom';
-import {
-  FiltersPanel,
-  STATE_OPTIONS,
-  type FilterDivisions,
-  type FilterTeams,
-} from './FiltersPanel';
 import EmptyState from '@/components/ui/EmptyState';
 import { gameWord } from '@/lib/format/words';
 import {
@@ -18,6 +12,13 @@ import {
   type FilterState,
   type ScheduleCounts,
 } from '@/views/schedule/filters-client';
+
+import {
+  FiltersPanel,
+  STATE_OPTIONS,
+  type FilterDivisions,
+  type FilterTeams,
+} from './FiltersPanel';
 
 /**
  * `/schedule/<league>`'s filters — the state half (DESIGN §7, §7.13): filter state, the removable

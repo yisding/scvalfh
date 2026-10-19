@@ -17,14 +17,14 @@ import { classifyGames } from '@/lib/engine/classify';
 import { buildCrossCheck, computeStandings, toReportedRecord } from '@/lib/engine/standings';
 import type { TeamId } from '@/lib/model/ids';
 import type { ReportedRecord } from '@/lib/model/standings';
-import { normalizeGames } from '@/lib/pipeline/reconcile/normalize';
 import { readManifest } from '@/lib/pipeline/corpus';
+import { normalizeGames } from '@/lib/pipeline/reconcile/normalize';
 import { resolveTeam } from '@/lib/registry/resolve';
 import { getTeamById, teamsInDivision } from '@/lib/registry/teams';
 import { StandingsResponseSchema } from '@/lib/sources/maxpreps/schemas';
 import { allScheduleRows, corpusDir, standingsFixture } from '@/tests/support/corpus';
-import { REPO } from '@/tests/support/repo';
 import { runCorpus, writeTempVariant } from '@/tests/support/pipeline/run-corpus';
+import { REPO } from '@/tests/support/repo';
 
 const reported = new Map<TeamId, ReportedRecord>();
 for (const which of ['da', 'ec'] as const) {

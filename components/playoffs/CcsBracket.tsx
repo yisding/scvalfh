@@ -1,9 +1,10 @@
-import PlayoffBracket from './PlayoffBracket';
 import ExternalLink from '@/components/ui/ExternalLink';
 import SectionHeader from '@/components/ui/SectionHeader';
 import { shortDate } from '@/lib/format/dates';
 import { agree, listWords } from '@/lib/format/words';
 import type { PlayoffsPageView } from '@/views/playoffs/playoffs-view';
+
+import PlayoffBracket from './PlayoffBracket';
 
 /** The bracket, once published; before that, the one sentence that says when it will be. */
 export default function CcsBracket({

@@ -39,6 +39,7 @@ import { TEAMS } from '@/lib/registry/teams';
 import { type PriorSeason, PriorSeasonSchema, seasonWindow } from '@/lib/schema/prior-season';
 import { MaxPrepsClient } from '@/lib/sources/maxpreps/client';
 import { SchoolSportSeasonsSchema, type ScheduleRow } from '@/lib/sources/maxpreps/schemas';
+
 import { runCli } from './lib/cli';
 
 const USAGE =

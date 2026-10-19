@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
-import { shortDate } from '@/lib/format/dates';
 import ExternalLink from '@/components/ui/ExternalLink';
+import { shortDate } from '@/lib/format/dates';
 import type { BackfillRow } from '@/lib/model/crosscheck';
 import { gameHref } from '@/lib/shared/game-id';
 

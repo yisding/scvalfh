@@ -5,8 +5,8 @@
  */
 
 import { getAffiliatedPlayer } from '@/lib/datasets/clubs';
-import type { AffiliationStatus, Club, ClubAffiliation } from '@/lib/schema/clubs';
 import { gradeWord } from '@/lib/format/words';
+import type { AffiliationStatus, Club, ClubAffiliation } from '@/lib/schema/clubs';
 import { teamHref } from '@/lib/shared/routes';
 import { hostOf, isSportsRecruits, numbered, pathOf, schoolName } from '@/views/shared/source-links';
 

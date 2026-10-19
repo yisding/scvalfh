@@ -29,6 +29,7 @@ import type { Team } from '@/lib/model/team';
 import { GRADE_CLASSES, type RosterPlayer, type TeamRoster } from '@/lib/schema/rosters';
 import { htmlUnescape } from '@/lib/sources/html';
 import { recaseNameParts } from '@/lib/sources/text/person-name';
+
 import { NEXT_DATA_RE } from './bootstrap';
 import { MaxPrepsError } from './error';
 

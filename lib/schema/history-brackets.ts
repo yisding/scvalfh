@@ -15,6 +15,7 @@ import { z } from 'zod';
 import { LEAGUE_IDS, getLeague } from '@/lib/config/leagues';
 import type { SectionId } from '@/lib/model/ids';
 import { teamsInLeague } from '@/lib/registry/teams';
+
 import { dateKey, slugId } from './primitives';
 
 /** The sections with a 2025 bracket. The NCS, Northern Section and Southern Section held none. */
