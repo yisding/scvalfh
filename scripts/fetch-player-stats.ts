@@ -93,7 +93,7 @@ import {
   teamStatsPageUrl,
   type PlayerStatsPage,
 } from '@/lib/sources/maxpreps/player-stats';
-import { runCli } from './cli';
+import { runCli } from './lib/cli';
 
 interface Args {
   fixtures: string | null;

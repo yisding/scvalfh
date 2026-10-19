@@ -1,5 +1,5 @@
 /**
- * scripts/copy-rules.ts: the rules scripts/assert-copy.ts holds every built page to — nothing
+ * scripts/ci/copy/copy-rules.ts: the rules scripts/ci/assert-copy.ts holds every built page to — nothing
  * claims rosters or player stats are SCVAL-only now that they cover every league, no page shows
  * what data/clubs.json or data/commits.json keeps but never renders (a record's basis, a source's
  * quote), and the five EAL claims no page makes (the umpires' grid called official, Davis or Bella
@@ -38,7 +38,7 @@ import {
   umpireOfficialClaims,
   visibleText,
   withoutLink,
-} from '@/scripts/copy-rules';
+} from '@/scripts/ci/copy/copy-rules';
 
 describe('SCVAL_ONLY_CLAIM', () => {
   it.each([

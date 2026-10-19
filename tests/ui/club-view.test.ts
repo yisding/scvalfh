@@ -5,7 +5,7 @@
  * The pages make promises a test can hold them to:
  *   - privacy: only players on the tracked varsity rosters are named, by the roster's spelling, and
  *     nothing the data file keeps but never renders (a quote, a basis, a confidence) reaches a
- *     page — checked with scripts/copy-rules.ts `affiliationLeaks`, the rule assert-copy applies
+ *     page — checked with scripts/ci/copy/copy-rules.ts `affiliationLeaks`, the rule assert-copy applies
  *     to the build;
  *   - honesty: a tie that is only listed is never worded as current, and every row links the
  *     pages it rests on, each labelled by its kind and host, never by its path;
@@ -41,8 +41,8 @@ import {
 } from '@/lib/datasets/clubs';
 import { getEnrichedTeamRoster, getRosters } from '@/lib/datasets/rosters';
 import { getTeamBySlug } from '@/lib/registry/teams';
-import { affiliationLeaks } from '@/scripts/copy-rules';
-import { PUBLIC_TERMS } from '@/scripts/public-terms';
+import { affiliationLeaks } from '@/scripts/ci/copy/copy-rules';
+import { PUBLIC_TERMS } from '@/scripts/ci/copy/public-terms';
 import { textOf } from '@/tests/support/html-text';
 
 const file = getClubsFile();

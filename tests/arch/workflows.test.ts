@@ -334,14 +334,14 @@ describe('the manual fetch inputs', () => {
   });
 });
 
-describe('the Stage D gate runs the cloudflare job’s checks', () => {
+describe('the full local gate (pnpm gate:all) runs the cloudflare job’s checks', () => {
   const ci = read('ci.yml');
-  const gate = readFileSync(path.join(REPO, 'scripts', 'stage-gate-d.sh'), 'utf8');
+  const gate = readFileSync(path.join(REPO, 'scripts', 'ci', 'run-all.sh'), 'utf8');
 
   it('requires the Build Output config and fails on an env file in the Worker output', () => {
     for (const text of [ci, gate]) {
-      expect(text).toContain('pnpm exec tsx scripts/assert-vinext-prerender.ts --cloudflare');
-      expect(text).toContain('pnpm exec tsx scripts/assert-budgets.ts --worker-only');
+      expect(text).toContain('pnpm assert:vinext --cloudflare');
+      expect(text).toContain('pnpm assert:budgets --worker-only');
       expect(text).toContain('test -f .cloudflare/output/v0/config.json');
       expect(text).toContain(`find .cloudflare/output \\( -name '.dev.vars*' -o -name '.env*' \\) -print`);
     }
@@ -349,7 +349,7 @@ describe('the Stage D gate runs the cloudflare job’s checks', () => {
 });
 
 /**
- * scripts/assert-prerender.ts over a synthetic `.next/server/app` that holds exactly what the
+ * scripts/ci/assert-prerender.ts over a synthetic `.next/server/app` that holds exactly what the
  * build prerenders for data/snapshot.json and data/clubs.json, plus whatever a case adds. `next
  * start` caches the 404 of an unknown param's opengraph-image there (a 0-byte `.body` + a `.meta`
  * with status 404), so the assertion must still pass on a `.next` that has served the smoke script
@@ -465,7 +465,7 @@ describe('assert:prerender on a .next that has served traffic', () => {
 });
 
 /**
- * scripts/assert-vinext-prerender.ts reports like the other build-output gates: a missing build is
+ * scripts/ci/assert-vinext-prerender.ts reports like the other build-output gates: a missing build is
  * one line and exit 1, never a stack trace.
  */
 describe('assert-vinext-prerender before a vinext build', () => {

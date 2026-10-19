@@ -6,13 +6,13 @@
 # Exits non-zero after listing every mismatch, and every request that fails or times out.
 #
 #   pnpm build && pnpm exec next start -p 3117 &
-#   bash scripts/smoke-server.sh http://127.0.0.1:3117 next
+#   bash scripts/ci/smoke-server.sh http://127.0.0.1:3117 next
 #
 #   pnpm build:vinext && pnpm exec vinext start --port 3118 &
-#   bash scripts/smoke-server.sh http://127.0.0.1:3118 node
+#   bash scripts/ci/smoke-server.sh http://127.0.0.1:3118 node
 #
 #   pnpm build:cloudflare && pnpm exec vite preview --mode cloudflare --port 3119 --host 127.0.0.1 &
-#   bash scripts/smoke-server.sh http://127.0.0.1:3119 workers
+#   bash scripts/ci/smoke-server.sh http://127.0.0.1:3119 workers
 #
 # What it checks: the sitemap lists the fixed pages, a few per-league pages by name, and EXACTLY
 # the snapshot's count of every generateStaticParams family (game, scores, teams, standings,
@@ -160,7 +160,7 @@ stubs=$(sed -n '3,$p' <<< "$facts")
 
 # Every page the sitemap lists: the fixed routes (plus a few per-league pages by name), and each
 # generateStaticParams family with EXACTLY the snapshot's count, or data/clubs.json's for /clubs/
-# (scripts/assert-vinext-prerender.ts also matches the sitemap against the prerendered pages one
+# (scripts/ci/assert-vinext-prerender.ts also matches the sitemap against the prerendered pages one
 # for one).
 expect /sitemap.xml 200 application/xml "$public"
 from_build /sitemap.xml

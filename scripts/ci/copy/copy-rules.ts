@@ -1,5 +1,5 @@
 /**
- * Copy rules shared by scripts/assert-copy.ts and its test (tests/copy-rules.test.ts): pure, so a
+ * Copy rules shared by scripts/ci/assert-copy.ts and its test (tests/copy-rules.test.ts): pure, so a
  * test can import them without running the script's scan of the built site.
  */
 
@@ -232,7 +232,7 @@ export const SEED_CLAIM =
 // schools, NOT the all-sports Sunset League (an Orange County league with other members:
 // research-cifss.md §2a; si.com's Sunset table even carries a Los Alamitos 0-0 phantom), and no SoCal
 // league publishes the rules this site orders its tables by (orderScope 'site'). The non-CCS ban on
-// "at-large" / "automatic qualifier" (scripts/assert-copy.ts forbidCcs) and SEED_CLAIM also cover
+// "at-large" / "automatic qualifier" (scripts/ci/assert-copy.ts forbidCcs) and SEED_CLAIM also cover
 // the SoCal pages: assert-copy applies them by postseason kind.
 
 /**
@@ -384,7 +384,7 @@ export interface LeakOptions {
    */
   printsItself?: ReadonlySet<string>;
   /**
-   * Names and places the site prints in its own right (scripts/public-terms.ts): they do not count
+   * Names and places the site prints in its own right (scripts/ci/copy/public-terms.ts): they do not count
    * towards LEAK_MIN_PRIVATE. Without them every letter of an excerpt counts as private.
    */
   publicTerms?: readonly string[];
@@ -394,8 +394,8 @@ export interface LeakOptions {
    * one line's terms alone, in any order and with the player among them, only restates that line
    * ("Freshman of the Year - Quinley McCarroll, Los Altos" restates SCVAL's "Freshman of the Year:
    * Los Altos- Quinley McCarroll"), so it is not reported. Anything else in the fragment (a
-   * teammate, a coach, a club) keeps it a leak, and a basis is always one. scripts/assert-copy.ts
-   * passes the archive's award lines (scripts/public-terms.ts ARCHIVE_LINES) for
+   * teammate, a coach, a club) keeps it a leak, and a basis is always one. scripts/ci/assert-copy.ts
+   * passes the archive's award lines (scripts/ci/copy/public-terms.ts ARCHIVE_LINES) for
    * /history/2025-26 alone.
    */
   restatedLines?: ReadonlyArray<ArchiveLine>;
@@ -438,7 +438,7 @@ function squash(text: string): string {
  * verbatim public text, so a page built from another of the site's sources can show the same words:
  * /history/2025-26 prints the SCVAL 2025-26 all-league PDF, which four quotes copy a line of. A
  * quote from one of these URLs is not reported; a basis — the researchers' own prose, which no
- * other source can print — always is. scripts/assert-copy.ts passes it only for a page that is not
+ * other source can print — always is. scripts/ci/assert-copy.ts passes it only for a page that is not
  * built from data/clubs.json and that cites the document itself.
  */
 export function affiliationLeaks(

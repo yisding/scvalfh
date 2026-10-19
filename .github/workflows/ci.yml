@@ -26,15 +26,15 @@
 # deploy-cloudflare.yml's job, and needs the account's secrets.
 #
 # All three servers — `next start` in a11y, `vinext start` in vinext, workerd in cloudflare — are
-# held to one response contract by the same script, scripts/smoke-server.sh, which names the few
+# held to one response contract by the same script, scripts/ci/smoke-server.sh, which names the few
 # checks that differ by deploy and why (route families with exact counts from the snapshot, the
 # unknown-param 404s of every dynamic family and their OG images, the old anchors).
-# scripts/assert-vinext-prerender.ts is the prerender check both vinext builds share;
-# scripts/assert-prerender.ts is the `next build` one. scripts/a11y-axe.mjs also runs `/` once per
+# scripts/ci/assert-vinext-prerender.ts is the prerender check both vinext builds share;
+# scripts/ci/assert-prerender.ts is the `next build` one. scripts/ci/a11y-axe.mjs also runs `/` once per
 # remembered league and with a pin, /teams with a query typed, a keyboard focus probe, and prints
 # the home-page fold measurements.
 #
-# scripts/stage-gate-d.sh (`pnpm gate:d`) runs this whole job list on one machine, against all three
+# scripts/ci/run-all.sh (`pnpm gate:all`) runs this whole job list on one machine, against all three
 # servers in turn.
 
 name: ci
@@ -177,10 +177,10 @@ jobs:
       # The response contract the two vinext servers below are held to, checked against Next
       # itself: the reference they are compared with must pass it too.
       - name: Smoke the production server
-        run: bash scripts/smoke-server.sh http://127.0.0.1:3117 next
+        run: bash scripts/ci/smoke-server.sh http://127.0.0.1:3117 next
 
       - name: axe (serious and critical only)
-        run: node scripts/a11y-axe.mjs
+        run: node scripts/ci/a11y-axe.mjs
 
   vinext:
     runs-on: ubuntu-latest
@@ -228,7 +228,7 @@ jobs:
       # revalidate lifetime, would be rendered on demand by the server instead; and the prerendered
       # sitemap must list exactly the prerendered pages.
       - name: Assert every route is prerendered
-        run: pnpm exec tsx scripts/assert-vinext-prerender.ts
+        run: pnpm assert:vinext
 
       # Installed outside the checkout, as in the a11y job: here a reshaped node_modules could
       # swap the patched vinext for a stock one under the server (see .github/actions/install-axe).
@@ -259,10 +259,10 @@ jobs:
       # 304; poweredByHeader stays off, and vinext's internal cache marker never leaks. Every
       # mismatch, and every request that fails or times out, is listed before the step fails.
       - name: Smoke the vinext server
-        run: bash scripts/smoke-server.sh http://127.0.0.1:3118 node
+        run: bash scripts/ci/smoke-server.sh http://127.0.0.1:3118 node
 
       - name: axe (serious and critical only)
-        run: node scripts/a11y-axe.mjs
+        run: node scripts/ci/a11y-axe.mjs
         env:
           SCVAL_BASE_URL: http://127.0.0.1:3118
 
@@ -328,8 +328,8 @@ jobs:
       - name: Assert every route is prerendered and packaged
         run: |
           set -euo pipefail
-          pnpm exec tsx scripts/assert-vinext-prerender.ts --cloudflare
-          pnpm exec tsx scripts/assert-budgets.ts --worker-only
+          pnpm assert:vinext --cloudflare
+          pnpm assert:budgets --worker-only
           test -f .cloudflare/output/v0/config.json || { echo "no Build Output config in .cloudflare/output"; exit 1; }
           leaked=$(find .cloudflare/output \( -name '.dev.vars*' -o -name '.env*' \) -print)
           if [ -n "$leaked" ]; then echo "env files in the Worker output:"; echo "$leaked"; exit 1; fi
@@ -352,7 +352,7 @@ jobs:
           done
           echo "Worker did not come up"; cat "$RUNNER_TEMP/preview.log"; exit 1
 
-      # The contract the other two servers pass, held to the Worker. scripts/smoke-server.sh names
+      # The contract the other two servers pass, held to the Worker. scripts/ci/smoke-server.sh names
       # the checks that differ on `workers` and why: no gzip on the CSS (workerd preview compresses
       # nothing; in production Cloudflare's edge does, after the Worker), and the bare
       # If-None-Match 304 (`vite preview` forwards a conditional request with Cache-Control:
@@ -360,9 +360,9 @@ jobs:
       # the static cache's raw files are not public and that the emitted Worker config is the one
       # cloudflare.config.ts declares.
       - name: Smoke the Worker
-        run: bash scripts/smoke-server.sh http://127.0.0.1:3119 workers
+        run: bash scripts/ci/smoke-server.sh http://127.0.0.1:3119 workers
 
       - name: axe (serious and critical only)
-        run: node scripts/a11y-axe.mjs
+        run: node scripts/ci/a11y-axe.mjs
         env:
           SCVAL_BASE_URL: http://127.0.0.1:3119

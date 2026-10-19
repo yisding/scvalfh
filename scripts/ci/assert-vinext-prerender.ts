@@ -2,7 +2,7 @@
  * The vinext counterpart of CI's "Assert every route is static" (the `next build` check): every
  * route of a vinext build was prerendered, so the server answers from the build and never renders
  * a page, metadata route or Route Handler on demand. Collects every problem and prints each as a
- * `FAIL …` line before exiting 1, as scripts/assert-prerender.ts does; prints
+ * `FAIL …` line before exiting 1, as scripts/ci/assert-prerender.ts does; prints
  * `assert-vinext-prerender: ok` otherwise.
  *
  * Run it from the repo root after a build:
@@ -17,8 +17,8 @@
  * rendered on demand by the server instead.
  *
  * The page families are EXACT, derived from the build's input, never from its output (the built
- * sitemap would make the check circular), by scripts/lib/prerender-expectations.ts, which
- * scripts/assert-prerender.ts uses too: the snapshot as lib/datasets/snapshot.ts loads it (data/snapshot.json or
+ * sitemap would make the check circular), by scripts/ci/prerender-expectations.ts, which
+ * scripts/ci/assert-prerender.ts uses too: the snapshot as lib/datasets/snapshot.ts loads it (data/snapshot.json or
  * SCVAL_SNAPSHOT), cross-checked against lib/config/leagues.ts and the team registry, gives
  * `standings/<id>` and `schedule/<id>` for each league, `playoffs/<id>` for each league
  * tournament, `game/<param>` for every game plus one stub per `supersededGames` key (param =
@@ -52,7 +52,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 import { getSnapshot } from '@/lib/datasets/snapshot';
-import { FIXED_PAGES, expectedFamilies, makeFamilyChecker, sample } from './lib/prerender-expectations';
+import { FIXED_PAGES, expectedFamilies, makeFamilyChecker, sample } from './prerender-expectations';
 
 interface PrerenderRoute {
   route: string;

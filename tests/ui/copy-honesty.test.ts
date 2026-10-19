@@ -1,7 +1,7 @@
 /**
  * The copy-honesty checklist (SPEC §10.9) over every league's VIEW MODELS, i.e. the values the
  * Stage C builders hand to the pages (the built HTML is checked separately by
- * scripts/assert-copy.ts):
+ * scripts/ci/assert-copy.ts):
  *
  *   components/home/home-view.ts                  buildHomeView(): league panels, league cards, the
  *                                                 team views (one per registry team)
@@ -24,7 +24,7 @@
  *     "Marin County Division", "EAL Division");
  *  6. "co-champion(s)" only once that league is past its regular phase (a config rule quoted in a
  *     builder's string, "a tie for first means co-champions", states the rule and is not checked);
- *  7. the EAL claims of scripts/copy-rules.ts (DESIGN §22.5), in every view: the umpires' grid is
+ *  7. the EAL claims of scripts/ci/copy/copy-rules.ts (DESIGN §22.5), in every view: the umpires' grid is
  *     never official, Davis and Bella Vista are never Northern Section schools, Red Bluff is only
  *     "not fielding a varsity team in 2026", never "EAL school(s)"; and no seed word in a view of an
  *     unbracketed league (EAL), whose seeding is quoted, never applied;
@@ -62,7 +62,7 @@ import {
   sunsetLeagueClaims,
   umpireOfficialClaims,
   visibleText,
-} from '@/scripts/copy-rules';
+} from '@/scripts/ci/copy/copy-rules';
 import { EAL_CORPUS } from '@/tests/support/corpus';
 import { CORPUS_HOOK_TIMEOUT, useCorpusModules, withCorpusModules } from '@/tests/support/corpus-modules';
 import { loadQueries } from '@/tests/support/queries';

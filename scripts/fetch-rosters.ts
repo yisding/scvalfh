@@ -60,7 +60,7 @@ import {
 import { stableStringify } from '@/lib/shared/stable-json';
 import { MaxPrepsClient } from '@/lib/sources/maxpreps/client';
 import { parseRosterPage, pendingRoster, rosterUrl } from '@/lib/sources/maxpreps/roster';
-import { runCli } from './cli';
+import { runCli } from './lib/cli';
 
 interface Args {
   fixtures: string | null;

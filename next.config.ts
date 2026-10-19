@@ -27,7 +27,7 @@ const nextConfig: NextConfig = {
    * reads this key from next.config too; `next start` serves the same pages from disk). When the
    * prerender outgrows it, the handler evicts the earliest-seeded routes (/about, /schedule, every
    * /game page, …) while seeding, and their first request renders on demand instead of serving the
-   * build, which scripts/smoke-server.sh catches as `x-nextjs-cache: MISS`.
+   * build, which scripts/ci/smoke-server.sh catches as `x-nextjs-cache: MISS`.
    *
    * Measured after `pnpm build:vinext` on 2026-10-06 (the Southern California amendment, DESIGN §24:
    * 99 teams in nine leagues, 871 games, 64 game days; SPEC §12.3): dist/server/prerendered-routes
@@ -42,7 +42,7 @@ const nextConfig: NextConfig = {
    *
    * Earlier measurements, same method: 163,011,433 bytes on 2026-10-04 (49 teams in five leagues,
    * 396 games, 57 game days: 537 .html, 536 .rsc, 522 .route; 384 MB was 2.47 ×) and 127,990,691
-   * bytes on 2026-10-02 (43 teams, 364 games). scripts/smoke-server.sh (`x-nextjs-cache: MISS`) is
+   * bytes on 2026-10-02 (43 teams, 364 games). scripts/ci/smoke-server.sh (`x-nextjs-cache: MISS`) is
    * the check that the setting is enough.
    */
   cacheMaxMemorySize: 768 * 1024 * 1024,
@@ -66,7 +66,7 @@ const nextConfig: NextConfig = {
    *
    * This is also Next's and Vercel's own default for a page that must revalidate, and vinext does not
    * read it as non-cacheable (no `no-store`, `no-cache` or `private`), so its prerendered pages are
-   * still served from the build (`x-nextjs-cache: HIT`, scripts/smoke-server.sh).
+   * still served from the build (`x-nextjs-cache: HIT`, scripts/ci/smoke-server.sh).
    *
    * The open-tab half of freshness is not this header's: the client router reuses a prefetched
    * static page for `x-nextjs-stale-time` (five minutes) without a request.

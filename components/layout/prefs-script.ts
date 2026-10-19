@@ -52,7 +52,7 @@
  * link opens the region the reader chose. The next fragment navigation (a jump link, back, forward)
  * is a new deep link and removes the attribute (`hashchange`, and `popstate` for Back or Forward
  * across paths, which restores a `:target` without a hashchange). It lives here, not in the switcher's client module,
- * because /teams has no first-load JS to spare (scripts/assert-budgets.ts) and every page already
+ * because /teams has no first-load JS to spare (scripts/ci/assert-budgets.ts) and every page already
  * runs this script.
  *
  * The stamp function is also kept on `window[PREFS_RESTAMP]`, so a `storage` event from another tab

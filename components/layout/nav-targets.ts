@@ -20,7 +20,7 @@ import type { LeagueId } from '@/lib/model/ids';
  * own). The SoCal leagues have no page of their own either (DESIGN-socal §2.4): a San Diego league
  * ('section-playoffs': City, North County, Metro) and the Sunset ('no-postseason': the Southern
  * Section holds no playoffs) each go to their card in the SoCal block of /playoffs (`/playoffs#<id>`),
- * which the page renders and scripts/assert-copy.ts checks. Every other entry keeps its one href.
+ * which the page renders and scripts/ci/assert-copy.ts checks. Every other entry keeps its one href.
  */
 export function navLeagueHrefs(): Readonly<Record<string, Readonly<Record<LeagueId, string>>>> {
   const per = (f: (id: LeagueId) => string | null) =>

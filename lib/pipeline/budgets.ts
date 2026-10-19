@@ -1,4 +1,4 @@
-/** The snapshot's size and source-row budgets (SPEC §7.11), shared by the assemble step, scripts/assert-budgets.ts and tests/snapshot-file.test.ts. */
+/** The snapshot's size and source-row budgets (SPEC §7.11), shared by the assemble step, scripts/ci/assert-budgets.ts and tests/snapshot-file.test.ts. */
 
 /**
  * SPEC §7.11 budgets, raised deliberately for the Southern California amendment (DESIGN-socal §2.2):

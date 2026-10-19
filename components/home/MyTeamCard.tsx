@@ -62,7 +62,7 @@ import {
  * carries `data-searching` and the box drops its fixed height (min-height stays 9rem), so up to
  * eight results and "Search all 49 on Teams →" show unclipped — a user-initiated
  * shift, excluded from CLS. (Arithmetic from the fixed row heights; re-measure with Playwright in
- * scripts/a11y-axe.mjs, SPEC §10.1 "Fold".)
+ * scripts/ci/a11y-axe.mjs, SPEC §10.1 "Fold".)
  */
 const BOX = [
   // `*:flex-1`: the state inside stretches to the box, so the pinned card fills its floor.

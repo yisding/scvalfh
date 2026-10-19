@@ -1,11 +1,11 @@
 /**
- * scripts/typecheck-scope.mjs (`pnpm typecheck:scope`): the glob syntax it filters tsc's
+ * scripts/dev/typecheck-scope.mjs (`pnpm typecheck:scope`): the glob syntax it filters tsc's
  * diagnostics with, and how it splits `tsc --pretty false` output into one diagnostic per error.
  */
 
 import { describe, expect, it } from 'vitest';
 
-import { globToRegExp, parseDiagnostics } from '@/scripts/typecheck-scope.mjs';
+import { globToRegExp, parseDiagnostics } from '@/scripts/dev/typecheck-scope.mjs';
 
 describe('globToRegExp', () => {
   it('reads ** as any number of segments, none included', () => {
@@ -17,7 +17,7 @@ describe('globToRegExp', () => {
   });
 
   it('keeps * and ? inside one segment', () => {
-    expect(globToRegExp('scripts/*.ts').test('scripts/cli.ts')).toBe(true);
+    expect(globToRegExp('scripts/*.ts').test('scripts/fetch-data.ts')).toBe(true);
     expect(globToRegExp('scripts/*.ts').test('scripts/lib/x.ts')).toBe(false);
     expect(globToRegExp('lib/dat?.ts').test('lib/data.ts')).toBe(true);
     expect(globToRegExp('lib/dat?.ts').test('lib/dat/.ts')).toBe(false);
@@ -42,7 +42,7 @@ describe('parseDiagnostics', () => {
     const out = [
       "lib/data.ts(12,3): error TS2322: Type 'string' is not assignable to type 'number'.",
       "  The expected type comes from property 'n'.",
-      "scripts/cli.ts(1,1): error TS1005: ';' expected.",
+      "scripts/fetch-data.ts(1,1): error TS1005: ';' expected.",
       'error TS5083: Cannot read file tsconfig.base.json.',
       '',
     ].join('\n');
@@ -54,7 +54,7 @@ describe('parseDiagnostics', () => {
           "  The expected type comes from property 'n'.",
         ],
       },
-      { file: 'scripts/cli.ts', lines: ["scripts/cli.ts(1,1): error TS1005: ';' expected."] },
+      { file: 'scripts/fetch-data.ts', lines: ["scripts/fetch-data.ts(1,1): error TS1005: ';' expected."] },
       { file: null, lines: ['error TS5083: Cannot read file tsconfig.base.json.'] },
     ]);
   });

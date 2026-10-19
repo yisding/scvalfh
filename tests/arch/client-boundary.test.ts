@@ -134,7 +134,7 @@ describe('client boundary: no "use client" module reaches a server-only module',
     const from = PROBE;
     // A module nobody listed is banned, wherever it lives: this is what makes the list an allowlist.
     // (lib/format.ts, beside the client-safe lib/format/ directory, serves only the metadata image routes.)
-    for (const spec of ['@/lib/config/leagues/labels', '@/lib/config/leagues', '@/lib/format', '@/lib/brand-new-module', '@/scripts/cli']) {
+    for (const spec of ['@/lib/config/leagues/labels', '@/lib/config/leagues', '@/lib/format', '@/lib/brand-new-module', '@/scripts/lib/cli']) {
       expect(classify(spec, from), spec).toEqual({ kind: 'banned', name: spec.slice(2) });
     }
     // A listed one passes (and is walked), a trailing /index is the same module, and the client's own tree is free.

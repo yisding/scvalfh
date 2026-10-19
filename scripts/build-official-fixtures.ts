@@ -44,7 +44,7 @@ import { assertDoubleRoundRobin } from '@/lib/official/validate';
 import { resolveOfficialName } from '@/lib/registry/resolve';
 import { officialFixtureId } from '@/lib/shared/official-id';
 import { parseBvalScheduleText } from '@/lib/sources/bval/schedule-text';
-import { runCli } from './cli';
+import { runCli } from './lib/cli';
 
 const REPO = path.resolve(import.meta.dirname, '..');
 const DEFAULT_SOURCE_DIR = path.join(REPO, 'tests', 'fixtures', 'official', 'source');

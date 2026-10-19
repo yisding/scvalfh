@@ -1,6 +1,6 @@
 /**
- * What the two prerender gates expect of a build, in one place: scripts/assert-prerender.ts holds
- * `next build`'s `.next/server/app` to it, scripts/assert-vinext-prerender.ts the vinext builds'
+ * What the two prerender gates expect of a build, in one place: scripts/ci/assert-prerender.ts holds
+ * `next build`'s `.next/server/app` to it, scripts/ci/assert-vinext-prerender.ts the vinext builds'
  * `dist/server/prerendered-routes` (Node and Workers alike). Both must agree page for page, so the
  * fixed pages, the families' expected params and the per-family check live here once.
  *
@@ -10,8 +10,8 @@
  * tests/game-id.test.ts holds and both gates' ':' check backs up.
  *
  * Three other places list routes and stay as they are, on purpose: app/sitemap.ts is the subject a
- * gate checks, never its oracle; scripts/a11y-axe.mjs runs a curated one-page-per-family sample,
- * with fallbacks for running outside the repo; scripts/smoke-server.sh is a self-contained HTTP
+ * gate checks, never its oracle; scripts/ci/a11y-axe.mjs runs a curated one-page-per-family sample,
+ * with fallbacks for running outside the repo; scripts/ci/smoke-server.sh is a self-contained HTTP
  * contract read by plain bash against any of the three servers.
  */
 

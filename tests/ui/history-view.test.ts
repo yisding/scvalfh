@@ -20,7 +20,7 @@ import {
 import { positionFromText } from '@/components/ui/position-words';
 import { type HistoryAwards, getAvailableHistoryLeagues } from '@/lib/datasets/history';
 import { getTeamBySlug } from '@/lib/registry/teams';
-import { sectionById } from '@/scripts/copy-rules';
+import { sectionById } from '@/scripts/ci/copy/copy-rules';
 import { textOf } from '@/tests/support/html-text';
 
 const blocks: Array<{ leagueId: string; division: string; awards: HistoryAwards }> = getAvailableHistoryLeagues()

@@ -34,8 +34,8 @@
  *    and the same for `standings/<id>`, `schedule/<id>`, `playoffs/<id>`, `teams/<slug>` and
  *    `scores/<date>` — never by count, so one missing card and one extra card cannot cancel out.
  *
- * The fixed pages, the families' params and the cross-checks are scripts/lib/prerender-expectations.ts,
- * shared with the vinext gate (scripts/assert-vinext-prerender.ts), so the two cannot drift apart.
+ * The fixed pages, the families' params and the cross-checks are scripts/ci/prerender-expectations.ts,
+ * shared with the vinext gate (scripts/ci/assert-vinext-prerender.ts), so the two cannot drift apart.
  *
  * `next build` writes a prerendered page as `<path>.html` (+ `.rsc`, `.meta`) and a prerendered
  * metadata route as `<path>.body` (+ `.meta`) under `.next/server/app`.
@@ -51,7 +51,7 @@ import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import path from 'node:path';
 
 import { getSnapshot } from '@/lib/datasets/snapshot';
-import { FIXED_PAGES, expectedFamilies, makeFamilyChecker, sample } from './lib/prerender-expectations';
+import { FIXED_PAGES, expectedFamilies, makeFamilyChecker, sample } from './prerender-expectations';
 
 const APP = '.next/server/app';
 

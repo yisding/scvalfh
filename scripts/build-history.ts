@@ -59,7 +59,7 @@ import {
   type HistoryStandingsBlock,
 } from '@/lib/sources/scval/history';
 import { hasPdftotext } from '@/lib/sources/scval/pdftotext';
-import { runCli } from './cli';
+import { runCli } from './lib/cli';
 
 interface Args {
   from: string | null;

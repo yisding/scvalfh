@@ -66,7 +66,7 @@ describe('buildPrefsScript', () => {
   // slugs and one more league id, in L, G and R) took it to 2,537 B the same day; by the same rule
   // 2,537 × 1.12 = 2,842 → 3,072 B, 83 % used. The region pick's two listeners (a jump link's
   // `:target` no longer holds the other region open) took it to 3,018 B on 2026-10-18, 98 % used:
-  // they live here because /teams had no first-load JS left for them (scripts/assert-budgets.ts).
+  // they live here because /teams had no first-load JS left for them (scripts/ci/assert-budgets.ts).
   // Clearing it on popstate as well took it to 3,052 B, 99 % used.
   it('stays within 3,072 B including the 102-entry slug map', () => {
     expect(TEAMS.length).toBe(102);

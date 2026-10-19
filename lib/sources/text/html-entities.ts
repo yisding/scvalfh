@@ -4,7 +4,7 @@
  *
  * Each caller passes its own named-entity table, because what a name should become depends on why
  * the text is read: lib/sources/bval/sheet.ts folds the typographic quotes to a straight apostrophe
- * so a name matches the registry's spelling, while scripts/copy-rules.ts keeps them typographic to
+ * so a name matches the registry's spelling, while scripts/ci/copy/copy-rules.ts keeps them typographic to
  * check visible copy. Decimal and hex references are always decoded (up to U+10FFFF); a name the
  * table does not hold is left as written.
  *

@@ -40,8 +40,8 @@ export const SCRIPT_PATHS = {
   'fetch-jv': 'scripts/fetch-jv.ts',
   'build-history': 'scripts/build-history.ts',
   'build-official-fixtures': 'scripts/build-official-fixtures.ts',
-  'assert-prerender': 'scripts/assert-prerender.ts',
-  'assert-vinext-prerender': 'scripts/assert-vinext-prerender.ts',
+  'assert-prerender': 'scripts/ci/assert-prerender.ts',
+  'assert-vinext-prerender': 'scripts/ci/assert-vinext-prerender.ts',
   // Not a CLI: a module whose import-time checks exit the process, spawned once to prove that.
   'rosters-module': 'lib/datasets/rosters.ts',
 } as const;

@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 #
-# The Stage D gate (SPEC §12.3, §13.6), runnable on one machine: the CI job list of
+# The full gate (SPEC §12.3, §13.6; `pnpm gate:all`), runnable on one machine: the CI job list of
 # .github/workflows/ci.yml in one script, against all three deploys of the site.
 #
 #   pnpm typecheck && pnpm lint && pnpm test   # first (the gate assumes them)
-#   bash scripts/stage-gate-d.sh               # = pnpm gate:d
+#   bash scripts/ci/run-all.sh               # = pnpm gate:all
 #
 #  1. `pnpm build`, then the build assertions: assert:prerender (exact route counts, ':' check,
 #     OG/page parity by name), assert:budgets (§12.4), assert:copy (§10.9 over the built HTML).
@@ -18,7 +18,7 @@
 #     `vinext-cloudflare deploy --env cloudflare --dry-run` → stop.
 #  5. Every server it started is killed on exit (trap), success or not.
 #
-# Each axe run points SCVAL_BASE_URL at its own server (scripts/a11y-axe.mjs defaults to :3117).
+# Each axe run points SCVAL_BASE_URL at its own server (scripts/ci/a11y-axe.mjs defaults to :3117).
 # axe-core, Playwright and Chromium are not repo dependencies: when NODE_PATH does not already
 # resolve them, they are installed into /tmp/axe (as .github/actions/install-axe does in CI) and
 # NODE_PATH is pointed there. If that install fails, the script prints `A11Y SKIPPED: <reason>`
@@ -35,7 +35,7 @@
 
 set -euo pipefail
 
-cd "$(dirname "$0")/.."
+cd "$(dirname "$0")/../.."
 
 export SCVAL_BUILD_AT=${SCVAL_BUILD_AT:-$(date -u +%Y-%m-%dT%H:%M:%S.000Z)}
 AXE_DIR=${AXE_DIR:-/tmp/axe}
@@ -64,7 +64,7 @@ cleanup() {
     kill -KILL -- "-$pgid" 2>/dev/null || true
   done
   rm -rf "$LOG_DIR"
-  if [ "$code" -eq 0 ]; then echo; echo "stage-gate-d: PASS"; else echo; echo "stage-gate-d: FAIL (exit $code)" >&2; fi
+  if [ "$code" -eq 0 ]; then echo; echo "gate:all: PASS"; else echo; echo "gate:all: FAIL (exit $code)" >&2; fi
 }
 trap cleanup EXIT
 trap 'exit 130' INT TERM
@@ -140,7 +140,7 @@ fi
 a11y() {
   local base=$1
   if [ "$a11y_ready" = 1 ]; then
-    SCVAL_BASE_URL=$base node scripts/a11y-axe.mjs
+    SCVAL_BASE_URL=$base node scripts/ci/a11y-axe.mjs
   else
     echo "A11Y SKIPPED: $a11y_skip_reason"
   fi
@@ -159,25 +159,25 @@ pnpm assert:copy
 # ------------------------------------------------------------------ 2. next start
 step "2. next start -p 3117"
 start next 3117 pnpm exec next start -p 3117
-check 'smoke next start' bash scripts/smoke-server.sh http://127.0.0.1:3117 next
+check 'smoke next start' bash scripts/ci/smoke-server.sh http://127.0.0.1:3117 next
 check 'axe next start' a11y http://127.0.0.1:3117
 stop 3117
 
 # ------------------------------------------------------------------ 3. vinext (Node)
 step "3. pnpm build:vinext"
 pnpm build:vinext
-pnpm exec tsx scripts/assert-vinext-prerender.ts
+pnpm assert:vinext
 step "3. vinext start --port 3118"
 start vinext 3118 pnpm exec vinext start --port 3118
-check 'smoke vinext start' bash scripts/smoke-server.sh http://127.0.0.1:3118 node
+check 'smoke vinext start' bash scripts/ci/smoke-server.sh http://127.0.0.1:3118 node
 check 'axe vinext start' a11y http://127.0.0.1:3118
 stop 3118
 
 # ------------------------------------------------------------------ 4. vinext (Cloudflare Workers)
 step "4. pnpm build:cloudflare"
 SITE_URL=https://scvalfh.example.invalid pnpm build:cloudflare
-pnpm exec tsx scripts/assert-vinext-prerender.ts --cloudflare
-pnpm exec tsx scripts/assert-budgets.ts --worker-only
+pnpm assert:vinext --cloudflare
+pnpm assert:budgets --worker-only
 # As ci.yml's cloudflare job: the Build Output config is there, and nothing that can hold a secret
 # is: the plugin reads .dev.vars and .env* for local runs only, and all of .cloudflare/output is
 # uploaded with the Worker.
@@ -194,7 +194,7 @@ ms=$(awk -v s="$secs" 'BEGIN { printf "%d", s * 1000 }')
 echo "first 404 (/standings/nope) on the fresh Worker isolate: HTTP $code in ${ms} ms"
 check 'first 404 on the Worker is a 404' test "$code" = 404
 check 'first 404 on the Worker within 500 ms' test "$ms" -le 500
-check 'smoke vite preview (workers)' bash scripts/smoke-server.sh http://127.0.0.1:3119 workers
+check 'smoke vite preview (workers)' bash scripts/ci/smoke-server.sh http://127.0.0.1:3119 workers
 check 'axe vite preview (workers)' a11y http://127.0.0.1:3119
 step "4. vinext-cloudflare deploy --env cloudflare --dry-run"
 pnpm exec vinext-cloudflare deploy --env cloudflare --dry-run

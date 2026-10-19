@@ -5,7 +5,7 @@
  * `firstLoadUncompressedJsBytes` from .next/diagnostics/route-bundle-stats.json).
  *
  *   pnpm build && pnpm assert:budgets                 # every Next budget, + the Worker when built
- *   pnpm build:cloudflare && pnpm exec tsx scripts/assert-budgets.ts --worker-only
+ *   pnpm build:cloudflare && pnpm exec tsx scripts/ci/assert-budgets.ts --worker-only
  *
  * | Measure                                                        | Limit                              |
  * |----------------------------------------------------------------|------------------------------------|

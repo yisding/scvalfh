@@ -1,4 +1,4 @@
-# axe-core and a Chromium for scripts/a11y-axe.mjs, shared by the a11y, vinext and cloudflare jobs in ci.yml.
+# axe-core and a Chromium for scripts/ci/a11y-axe.mjs, shared by the a11y, vinext and cloudflare jobs in ci.yml.
 #
 # Not repo dependencies: they are needed by CI, not by the site, and the BUILD-BRIEF's
 # no-new-dependency rule is about what ships. They go in a directory of their own, not the
@@ -8,7 +8,7 @@
 # The axe script resolves both packages with require(), which honours NODE_PATH; writing it to
 # GITHUB_ENV exports it to every later step of the calling job.
 name: Install axe-core and Chromium
-description: Installs axe-core and Playwright Chromium outside the checkout and exports NODE_PATH for scripts/a11y-axe.mjs.
+description: Installs axe-core and Playwright Chromium outside the checkout and exports NODE_PATH for scripts/ci/a11y-axe.mjs.
 
 runs:
   using: composite

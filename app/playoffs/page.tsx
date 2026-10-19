@@ -365,7 +365,7 @@ export default function PlayoffsPage() {
 
         {/* 4. The field: numbers only, ink only (no league hue). Each label names its unit, "berths"
             (not "places", which on this page means league-table places). It keeps the "holds <n> of 16"
-            shape that scripts/assert-copy.ts and the copy-honesty test match, so a meter that ever
+            shape that scripts/ci/assert-copy.ts and the copy-honesty test match, so a meter that ever
             reached an MCAL page would still be caught. */}
         <section id="field" className="mt-section md:mt-section-lg">
           <SectionHeader kicker="The field" meta={`${field.total} teams`} />

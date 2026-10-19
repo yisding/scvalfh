@@ -39,7 +39,7 @@ import { TEAMS } from '@/lib/registry/teams';
 import { type PriorSeason, PriorSeasonSchema, seasonWindow } from '@/lib/schema/prior-season';
 import { MaxPrepsClient } from '@/lib/sources/maxpreps/client';
 import { SchoolSportSeasonsSchema, type ScheduleRow } from '@/lib/sources/maxpreps/schemas';
-import { runCli } from './cli';
+import { runCli } from './lib/cli';
 
 const USAGE =
   'Usage: pnpm fetch-prior-season [--year <yy-yy>] [--ssid <sportSeasonId>] [--out <path>] [--dry-run]';

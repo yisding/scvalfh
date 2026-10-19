@@ -1,6 +1,6 @@
 /**
  * The names and places the site prints in its own right, for the leak rules' excerpt check
- * (scripts/copy-rules.ts LeakOptions.publicTerms): every registry school's name, short name, aliases,
+ * (scripts/ci/copy/copy-rules.ts LeakOptions.publicTerms): every registry school's name, short name, aliases,
  * mascot and city; every club's and college's names, aliases, city and conference (a college's for
  * each of its programs); every rostered player's name; every player the 2025-26 archive names and
  * every award title it prints (/history/2025-26: the all-league documents are official); and the
@@ -8,7 +8,7 @@
  * College Preparatory" + "San Francisco") is something the pages say anyway, not a leak; what is left
  * once they are set aside (a teammate's or a coach's name, a watchlist's labels) is.
  *
- * Kept apart from copy-rules.ts, which stays pure (no data imports), and read by scripts/assert-copy.ts
+ * Kept apart from copy-rules.ts, which stays pure (no data imports), and read by scripts/ci/assert-copy.ts
  * and by the tests that run the leak rules over rendered pages.
  */
 
@@ -95,7 +95,7 @@ for (const { id, entry } of getAvailableHistoryLeagues()) {
 
 /**
  * Every all-league award line /history/2025-26 prints, as the terms it is written with, for the
- * leak rules' `restatedLines` (scripts/copy-rules.ts): an overall award (its title as the document
+ * leak rules' `restatedLines` (scripts/ci/copy/copy-rules.ts): an overall award (its title as the document
  * and the page write it, the player, the school, a position and a grade), and a team-list line (the
  * team's title, the player, the school, the position, the grade). A club's or a college's quote
  * that only restates one of these is the archive's own official line in other words, not a leak

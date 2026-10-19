@@ -637,8 +637,8 @@ of at most 300 characters, with several quotes from one page joined by " … ", 
 year and date the page states); every source names the player or is the player's own profile, and
 `basis` says what the match rests on. The quotes and bases are for maintainers and are never
 rendered: they can name people who are not on the rosters (teammates, a club's director), and
-`scripts/assert-copy.ts` fails the build on any page that shows one (`affiliationLeaks` in
-`scripts/copy-rules.ts`). Aliases (`aliases[]`, e.g. San Jose Fly for Fly FHC) are kept for
+`scripts/ci/assert-copy.ts` fails the build on any page that shows one (`affiliationLeaks` in
+`scripts/ci/copy/copy-rules.ts`). Aliases (`aliases[]`, e.g. San Jose Fly for Fly FHC) are kept for
 matching and not shown, since they mix team names into club names.
 
 *Sources.* The clubs were found in the NCFHA youth club directory (`ncfha.org/youth`) and BAFHA's
@@ -1000,7 +1000,7 @@ kind, a verbatim quote of at most 300 characters, the school, class year and dat
 and state, one `programs` entry per sport a player here committed to it in (that team's division and
 conference, which can differ from the college's other teams, and its page on the college's athletics
 site), and the pages each fact came from. Quotes and bases are for maintainers and never rendered
-(`commitmentLeaks` in `scripts/copy-rules.ts`, run by `scripts/assert-copy.ts`): a commitment list
+(`commitmentLeaks` in `scripts/ci/copy/copy-rules.ts`, run by `scripts/ci/assert-copy.ts`): a commitment list
 or a news story names teammates and other recruits who are not on the rosters.
 
 | School | Player (class) | Sport | College | Level | Rests on |

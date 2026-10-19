@@ -13,7 +13,7 @@ import TeamPage from '@/app/teams/[slug]/page';
 import { getPlayerStats } from '@/lib/datasets/player-stats';
 import { getRosters } from '@/lib/datasets/rosters';
 import { TEAMS } from '@/lib/registry/teams';
-import { SCVAL_ONLY_CLAIM } from '@/scripts/copy-rules';
+import { SCVAL_ONLY_CLAIM } from '@/scripts/ci/copy/copy-rules';
 
 async function render(slug: string): Promise<string> {
   const element = await TeamPage({ params: Promise.resolve({ slug }) } as never);

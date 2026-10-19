@@ -22,7 +22,7 @@
  * lib/pipeline/run-failure.ts classifies the throw (a RunAbort or a ConfigInvariantError, lib/config/invariant.ts).
  */
 
-import { runCli } from './cli';
+import { runCli } from './lib/cli';
 
 async function main(argv: readonly string[]): Promise<number> {
   const { describeRunFailure } = await import('@/lib/pipeline/run-failure');

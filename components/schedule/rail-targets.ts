@@ -10,7 +10,7 @@
  * of this runs and the rail is unchanged.
  *
  * Pure and dependency-free on purpose: it is bundled into `/schedule/<league>`'s one client module,
- * whose first-load JS is held to a budget (scripts/assert-budgets.ts). Turbopack tree-shakes
+ * whose first-load JS is held to a budget (scripts/ci/assert-budgets.ts). Turbopack tree-shakes
  * `lib/format/` per export (ScheduleFilters already pulls its `gameWord` in from lib/format/words.ts),
  * so this module formats its own two date strings to keep `monthDay`/`shortDate`, `parseLocal`,
  * `weekdayIndex` and the name tables out of that chunk, and it never reads a clock.

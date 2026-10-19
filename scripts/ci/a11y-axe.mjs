@@ -5,17 +5,17 @@
  * Run it against a server you started yourself:
  *
  *   pnpm build && pnpm exec next start -p 3117 &
- *   node scripts/a11y-axe.mjs                       # SCVAL_BASE_URL defaults to http://127.0.0.1:3117
+ *   node scripts/ci/a11y-axe.mjs                       # SCVAL_BASE_URL defaults to http://127.0.0.1:3117
  *
  * `axe-core` and `playwright` are intentionally NOT repo dependencies — they are needed to check
  * the site, not to build or ship it — so this script resolves them at run time and says plainly
  * what to install when they are missing. Install them in a directory of their own and point
  * NODE_PATH at it, which `require` honours; npm cannot install into the tree pnpm wrote here (CI
- * does the same in $RUNNER_TEMP/axe, scripts/stage-gate-d.sh in /tmp/axe):
+ * does the same in $RUNNER_TEMP/axe, scripts/ci/run-all.sh in /tmp/axe):
  *
  *   (mkdir -p /tmp/axe && cd /tmp/axe && npm init -y >/dev/null &&
  *     npm install --no-save axe-core playwright && npx playwright install --with-deps chromium)
- *   NODE_PATH=/tmp/axe/node_modules node scripts/a11y-axe.mjs
+ *   NODE_PATH=/tmp/axe/node_modules node scripts/ci/a11y-axe.mjs
  *
  * What runs (every run is mandatory: `page.addInitScript` always exists, so nothing is skipped):
  *  1. Every route below × light/dark × 390/1280: the fixed pages (/clubs, /commits and /recruiting among them), the
@@ -152,11 +152,11 @@ function load() {
     };
   } catch {
     console.error(
-      'scripts/a11y-axe.mjs needs axe-core and playwright. Install them outside this pnpm tree\n' +
+      'scripts/ci/a11y-axe.mjs needs axe-core and playwright. Install them outside this pnpm tree\n' +
         'and point NODE_PATH at them:\n' +
         '  (mkdir -p /tmp/axe && cd /tmp/axe && npm init -y >/dev/null &&\n' +
         '    npm install --no-save axe-core playwright && npx playwright install --with-deps chromium)\n' +
-        '  NODE_PATH=/tmp/axe/node_modules node scripts/a11y-axe.mjs',
+        '  NODE_PATH=/tmp/axe/node_modules node scripts/ci/a11y-axe.mjs',
     );
     process.exit(2);
   }

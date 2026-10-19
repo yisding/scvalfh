@@ -6,7 +6,7 @@
  * The page makes promises a test can hold it to:
  *   - privacy: only players on the tracked varsity rosters are named, by the roster's spelling, and
  *     nothing the data file keeps but never renders (a quote, a basis, a confidence) reaches a
- *     page — checked with scripts/copy-rules.ts `commitmentLeaks`, the rule assert-copy applies to
+ *     page — checked with scripts/ci/copy/copy-rules.ts `commitmentLeaks`, the rule assert-copy applies to
  *     the build; no title or description names a player;
  *   - honesty: "Signed" only where the file says signed, a date only "as of", and every row links
  *     the pages it rests on, labelled by kind and host, never by path;
@@ -49,8 +49,8 @@ import {
 import { getRosters } from '@/lib/datasets/rosters';
 import { TEAMS, getTeamBySlug } from '@/lib/registry/teams';
 import { COLLEGE_DIVISIONS, COMMIT_SPORTS } from '@/lib/schema/commits';
-import { commitmentLeaks } from '@/scripts/copy-rules';
-import { PUBLIC_TERMS } from '@/scripts/public-terms';
+import { commitmentLeaks } from '@/scripts/ci/copy/copy-rules';
+import { PUBLIC_TERMS } from '@/scripts/ci/copy/public-terms';
 import { textOf } from '@/tests/support/html-text';
 
 const file = getCommitsFile();

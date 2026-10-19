@@ -20,7 +20,7 @@
  * The visible text of every page (`visibleText`: no scripts, so not the RSC payload; the footer
  * included), and its `<title>`, description metas and `title`, `aria-label` and `alt` attributes
  * (`attributeText`: what a link preview prints and assistive technology reads), make none of the
- * EAL claims of scripts/copy-rules.ts (DESIGN §22.5): no sentence calls the umpires' grid
+ * EAL claims of scripts/ci/copy/copy-rules.ts (DESIGN §22.5): no sentence calls the umpires' grid
  * official, no clause calls Davis or Bella Vista a Northern Section school, Red Bluff is never
  * cancelled, withdrawn, dropped or without a program, and nothing says "EAL school(s)" or "EAL
  * member(s)". The EAL's pages (`standings/eal`, `schedule/eal`, its team pages and the `/playoffs`
@@ -40,7 +40,7 @@
  * league), e.g. "rosters are SCVAL-only" or "player stats (SCVAL only)".
  * On every page, too: nothing data/clubs.json keeps but never renders (DESIGN §17.2, SPEC §1.1j2) —
  * no affiliation's `basis` and no fragment of a source's verbatim `quote`, whole or excerpted, beyond
- * the public names scripts/public-terms.ts lists (`affiliationLeaks` in scripts/copy-rules.ts, which
+ * the public names scripts/ci/copy/public-terms.ts lists (`affiliationLeaks` in scripts/ci/copy/copy-rules.ts, which
  * reads past tags, entities and the RSC payload's JSON escapes). Both
  * can name people who are not on the tracked rosters, so a hit is a privacy failure; the line
  * names the page and whose record leaked. One coincidence is not a leak: a quote is verbatim public
@@ -111,8 +111,8 @@ import {
   umpireOfficialClaims,
   visibleText,
   withoutLink,
-} from './copy-rules';
-import { ARCHIVE_LINES, PUBLIC_TERMS } from './public-terms';
+} from './copy/copy-rules';
+import { ARCHIVE_LINES, PUBLIC_TERMS } from './copy/public-terms';
 
 const APP = '.next/server/app';
 

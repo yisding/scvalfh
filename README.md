@@ -583,8 +583,8 @@ The rules:
 - **Quotes and bases are kept, never rendered.** A page shows each source as a link labelled by
   its kind and host ("SportsRecruits profile", "club roster", "Gilroy Dispatch").
   `pnpm assert:copy` fails the build if any built page shows a basis, a quote fragment, or an
-  excerpt of one whose text is not just public names (`affiliationLeaks` in `scripts/copy-rules.ts`,
-  with `scripts/public-terms.ts`), because both can name people who are not on the rosters.
+  excerpt of one whose text is not just public names (`affiliationLeaks` in `scripts/ci/copy/copy-rules.ts`,
+  with `scripts/ci/copy/public-terms.ts`), because both can name people who are not on the rosters.
 - **No social media**: no source or website on Instagram, Facebook, TikTok, X (Twitter), Threads,
   YouTube, Snapchat or LinkedIn, or their short links (`BANNED_HOSTS` in `lib/schema/source-url.ts`),
   and every URL is https.
@@ -689,7 +689,7 @@ The rules are the clubs' (see "Clubs"): the same linking rule (the page names th
 college in the context of one sport, and either the high school, or a class year that agrees with the
 roster grade plus a location in the school's half of the state), the same privacy posture (only tracked varsity
 rows, by the roster's spelling; quotes and bases kept, never rendered, and `pnpm assert:copy` fails
-on a leak through `commitmentLeaks` in `scripts/copy-rules.ts`). Unlike the clubs, a social-media
+on a leak through `commitmentLeaks` in `scripts/ci/copy/copy-rules.ts`). Unlike the clubs, a social-media
 post counts when an official account posted it (since 2026-10-12): a college's athletics or team
 account, the player's high school's, or a club's, cited as an `official-social` source naming that
 account and a non-social page proving it is the owner's. A player's own post never counts, which
@@ -833,7 +833,7 @@ pnpm assert:budgets      # after a build: snapshot, page-weight and first-load J
 pnpm assert:copy         # after a build: copy-honesty scan of the built HTML
 pnpm assert:vinext       # after build:vinext (or build:cloudflare, with --cloudflare): the same route families
 pnpm build-official-fixtures   # rewrite data/official/*.json (never hand-edit them; --check verifies)
-pnpm gate:d              # the full gate: Next, vinext and Cloudflare builds, smoke and axe on each
+pnpm gate:all            # the full gate: Next, vinext and Cloudflare builds, smoke and axe on each
 ```
 
 `pnpm build` and `next dev` both read the snapshot already checked into `data/`, so you can
@@ -892,15 +892,15 @@ dynamic rendering — `generateStaticParams` covers every `/game/[id]`, `/scores
 league config and `data/clubs.json`), then
 checks the page-weight and first-load JS budgets and a copy-honesty scan of the built HTML. A second
 job, beside it, makes the same pinned build, starts `next start` on it, holds it to the response
-contract with `scripts/smoke-server.sh` (see "vinext" under "Deploy notes") and runs `axe-core`
-against it (`scripts/a11y-axe.mjs`, one page per core at a time) across every route family, both
+contract with `scripts/ci/smoke-server.sh` (see "vinext" under "Deploy notes") and runs `axe-core`
+against it (`scripts/ci/a11y-axe.mjs`, one page per core at a time) across every route family, both
 themes, both a phone and a desktop viewport, failing on any serious/critical accessibility
 violation. Two more jobs, one per vinext target, run beside them (not after `gates`, so a vinext
 regression shows even when Next is red).
 `vinext` builds with `pnpm build:vinext`; `cloudflare` first validates the deploy setup with
 `vinext-cloudflare deploy --env cloudflare --dry-run`, which needs no credentials, then builds with
 `pnpm build:cloudflare` and a non-localhost `SITE_URL`. Each asserts with
-`scripts/assert-vinext-prerender.ts` that every route rendered with `revalidate: false`, that the
+`scripts/ci/assert-vinext-prerender.ts` that every route rendered with `revalidate: false`, that the
 static pages, metadata routes and Route Handlers are on disk, that the page families and their OG
 images are exactly the ones the Next build's assertion expects (standings, schedule, playoffs, game,
 date and team, with OG/page parity by name, plus the clubs pages, which have no OG card) and that
@@ -909,7 +909,7 @@ every one of them is packaged into the static-assets cache and every file its in
 that `_headers` is there, and that nothing else ships: no precompressed copy, and nothing at the
 top level of the upload but `_headers`, `_next/` and `_vinext/` unless `.assetsignore` keeps it
 out. Then each starts its server (`vinext start`, or the Worker in workerd through `vite preview`)
-and runs the same `scripts/smoke-server.sh` and axe passes against it. Uploading the Worker is
+and runs the same `scripts/ci/smoke-server.sh` and axe passes against it. Uploading the Worker is
 `.github/workflows/deploy-cloudflare.yml`'s job (see "Cloudflare Workers").
 
 ## Tests
@@ -1668,7 +1668,7 @@ there), so after `pnpm build:cloudflare` run `pnpm build:vinext` again before `p
 `vite.config.ts` sets `prerender: { routes: '*' }`, so `pnpm build:vinext` prerenders everything
 `next build` does — about 539 pages plus a 404 with the current snapshot, clubs and commitments
 files (540 .html on 2026-10-04, 17 of them the clubs pages and one `/commits`; the exact counts are
-derived from `data/snapshot.json` and `data/clubs.json` by `scripts/assert-vinext-prerender.ts`),
+derived from `data/snapshot.json` and `data/clubs.json` by `scripts/ci/assert-vinext-prerender.ts`),
 all `revalidate: false` in `dist/server/vinext-prerender.json`: every page (HTML and RSC payload)
 plus a 404 page, and every icon, apple-icon, `/icon-192`, `/icon-512`, OG image (root,
 `/standings`, one per league, game, date and team), `manifest.webmanifest`, `sitemap.xml` and
@@ -1685,7 +1685,7 @@ unchanged page a 304; see `next.config.ts`); hashed `/_next/static/**` assets ke
 `vinext start`, `precompress: true` in `vite.config.ts`, because it does not compress them on the
 fly); 404 pages are `private, no-cache, no-store, max-age=0, must-revalidate`, so no shared cache
 keeps one; HTML pages carry an ETag and answer a matching `If-None-Match` with 304; and no server
-sends `X-Powered-By`. `scripts/smoke-server.sh <base-url> <next|node|workers>` checks all of it,
+sends `X-Powered-By`. `scripts/ci/smoke-server.sh <base-url> <next|node|workers>` checks all of it,
 on every page the sitemap lists, against whichever server you started (its header shows the three
 commands), and names the few checks that differ by target; CI runs it on all three. One known
 difference: `OPTIONS` on a Route Handler (`/icon-192`, `/icon-512`) is a 204 under vinext and a

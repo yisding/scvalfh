@@ -42,7 +42,7 @@ export function membershipSource(division: DivisionId, slugs: readonly TeamSlug[
 
 /**
  * 'a' or 'an' before a division name: "an Avocado team", "a Metro South Bay team". The callers say
- * "team", never "member": the copy rules (scripts/assert-copy.ts) forbid "Sunset member(s)".
+ * "team", never "member": the copy rules (scripts/ci/assert-copy.ts) forbid "Sunset member(s)".
  */
 export function articleFor(word: string): 'a' | 'an' {
   return /^[aeiou]/i.test(word) ? 'an' : 'a';

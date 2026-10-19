@@ -4,7 +4,7 @@
  * Server-only: it reads the site constants and the league config.
  *
  * Every property is something the page itself shows, because Google's structured-data guidelines
- * require markup to describe the visible content, and this site's copy rules (scripts/assert-copy.ts,
+ * require markup to describe the visible content, and this site's copy rules (scripts/ci/assert-copy.ts,
  * DESIGN §22.5) apply to it as much as to the prose. So:
  *
  * - No score property. schema.org has none for a SportsEvent, and an invented `homeScore` would be

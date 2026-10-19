@@ -21,7 +21,7 @@ import { plural } from '@/lib/format/words';
 import type { Snapshot } from '@/lib/model/snapshot';
 import type { SnapshotMeta } from '@/lib/pipeline/contract';
 import { loadSnapshot } from '@/lib/snapshot/load';
-import { runCli } from './cli';
+import { runCli } from './lib/cli';
 
 const REPO = path.resolve(import.meta.dirname, '..');
 

@@ -87,7 +87,7 @@ import { ScheduleResponseSchema, type ScheduleRow } from '@/lib/sources/maxpreps
 import { scheduleUrl } from '@/lib/sources/maxpreps/urls';
 import { combineJvCopies, parseJvTeamGamesPage, type JvSbliveCopy } from '@/lib/sources/sblive/jv';
 import { SBLIVE_HTTP_OPTIONS } from '@/lib/sources/sblive/urls';
-import { runCli } from './cli';
+import { runCli } from './lib/cli';
 
 interface Args {
   fixtures: string | null;

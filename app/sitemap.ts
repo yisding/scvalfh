@@ -23,7 +23,7 @@ import { gameHref } from '@/lib/shared/game-id';
  * `/schedule/<id>` per league, `/playoffs/<id>` per league-tournament league, the team pages (one per registry team),
  * `/clubs/<slug>` per club of data/clubs.json (DESIGN §17.1), one page per date with a contest, and
  * one per game. The clubs come in lib/datasets/clubs.ts' display order, so the first club page listed is the
- * fullest one (scripts/a11y-axe.mjs samples it).
+ * fullest one (scripts/ci/a11y-axe.mjs samples it).
  *
  * Game URLs go through `gameHref`, so a si.com-only game (`sblive:<id>`) is listed at its real
  * route (`/game/sblive-<id>`). The `supersededGames` stub pages are NOT listed: they are not in

@@ -3,7 +3,7 @@
  * Scoped typecheck for agents working concurrently in one tree (README, "Local development"): a
  * dev-only aid, not part of the CI gate, which is `pnpm typecheck`.
  *
- *   pnpm typecheck:scope <glob> [<glob>…]      (node scripts/typecheck-scope.mjs <glob> [<glob>…])
+ *   pnpm typecheck:scope <glob> [<glob>…]      (node scripts/dev/typecheck-scope.mjs <glob> [<glob>…])
  *
  * Runs `pnpm exec next typegen`, then `pnpm exec tsc --noEmit -p tsconfig.json --pretty false`
  * once over the whole project, and keeps only the diagnostics whose file path (relative to the
@@ -22,7 +22,7 @@ import { spawnSync } from 'node:child_process';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
 
 /** Translate one glob into an anchored RegExp source. */
 export function globToRegExpSource(glob) {
@@ -114,7 +114,7 @@ function run(cmd, args) {
 function main(argv) {
   const globs = argv.filter((a) => a.length > 0);
   if (globs.length === 0 || globs.includes('--help') || globs.includes('-h')) {
-    console.error('usage: node scripts/typecheck-scope.mjs <glob> [<glob>…]');
+    console.error('usage: node scripts/dev/typecheck-scope.mjs <glob> [<glob>…]');
     return 2;
   }
   const matchers = globs.map(globToRegExp);

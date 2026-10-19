@@ -30,8 +30,8 @@ import { getClubsFile } from '@/lib/datasets/clubs';
 import { getCommitsFile } from '@/lib/datasets/commits';
 import { getTeamsGrouped } from '@/lib/queries/leagues';
 import { TEAMS } from '@/lib/registry/teams';
-import { affiliationLeaks, commitmentLeaks } from '@/scripts/copy-rules';
-import { PUBLIC_TERMS } from '@/scripts/public-terms';
+import { affiliationLeaks, commitmentLeaks } from '@/scripts/ci/copy/copy-rules';
+import { PUBLIC_TERMS } from '@/scripts/ci/copy/public-terms';
 import { textOf } from '@/tests/support/html-text';
 
 const view = buildRecruitingView();

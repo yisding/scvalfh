@@ -2779,7 +2779,7 @@ with a "Play-in host" line after 1; PCAL 7 rows with an "AQ line" after 2; MCAL 
 "Tournament line" after 6. The line is a labelled separator row, never only a rule (WCAG 1.3.1).
 MCAL's postseason card has no berth meter and no CCS date: NCS pages describe no CCS concept.
 
-**Fold targets** (phone, measured in a real browser by `scripts/a11y-axe.mjs`, which prints the
+**Fold targets** (phone, measured in a real browser by `scripts/ci/a11y-axe.mjs`, which prints the
 measured values in CI; this section states the targets, never a measurement):
 
 - pinned team, 390 x 664: the whole pinned card is above the fold;
@@ -2828,7 +2828,7 @@ BVAL's co-champion label appears only after the league's regular phase.
 - "Co-champions" appears only after that league's regular phase.
 - Branding: `NorCal High School Field Hockey` (header wordmark `NorCal HS Field Hockey`, `NorCal HS FH`
   below 1280px; no FH badge), with a scope note naming exactly the
-  four leagues. `scripts/assert-copy.ts` scans the built HTML for the rules above.
+  four leagues. `scripts/ci/assert-copy.ts` scans the built HTML for the rules above.
 
 ### 15.9 si.com and the source line
 
@@ -2841,7 +2841,7 @@ On a game row the † is StatusLabel's SourceMark, a sans footnote mark, not a `
 
 ### 15.10 Budgets
 
-Fail CI (`scripts/assert-budgets.ts`), against baselines captured from `main` before the change:
+Fail CI (`scripts/ci/assert-budgets.ts`), against baselines captured from `main` before the change:
 `data/snapshot.json` at most 1.6 MB raw (warn above 1.2 MB); `/` HTML gzip and RSC gzip each at
 most 2.2 x baseline (2.0 x until 2026-10-03; see §16.4); first-load client JS for `/`, `/schedule/<league>`, `/teams` and
 `/standings/<league>` each at most baseline + 20 KB (this catches the config, registry or zod
@@ -3002,11 +3002,11 @@ The players are minors, so the pages are narrower than the data:
   and shown under the roster's own spelling; JV rows are out. A club's own roster names many more
   players: the club page links it and names none of them.
 - **A source's verbatim quote, an affiliation's `basis` and its `confidence` are never rendered.**
-  They are not in the view types (`components/clubs/club-view.ts`), and `scripts/assert-copy.ts`
+  They are not in the view types (`components/clubs/club-view.ts`), and `scripts/ci/assert-copy.ts`
   fails the build on any page whose text, entities decoded and RSC payload included, contains a
   basis, a whole fragment of a quote of 40 or more letters and digits, or an excerpt of one that long
   in which at least 20 letters and digits are not public names (schools, clubs, colleges, cities,
-  rostered players: `scripts/public-terms.ts`), so a truncated quote is caught too while a school
+  rostered players: `scripts/ci/copy/public-terms.ts`), so a truncated quote is caught too while a school
   printed beside its city is not (`affiliationLeaks`, also run by `tests/ui/club-view.test.ts` over
   the rendered routes). Both can name people who are not on the rosters. The one thing excused is a coincidence: a page not built from the clubs file that prints
   and cites the very document a quote copies (`/history/2025-26` prints the SCVAL all-league PDF,
@@ -3057,7 +3057,7 @@ carries `sx-action`. Each section is a `<section aria-labelledby>` with a `Secti
 heading level is skipped. Regions follow the fixed order of §17.1 and, within a region, the clubs
 with the most tied players come first, then by name: a reader meets the clubs that answer the
 question first, and the first club page in the sitemap is the longest (`/clubs/sf-hawks`).
-`scripts/a11y-axe.mjs` checks `/clubs`, that page and the first club page with no tied player
+`scripts/ci/a11y-axe.mjs` checks `/clubs`, that page and the first club page with no tied player
 (`/clubs/pac-heights`) in both themes at both widths. Nothing on these pages is a client component.
 
 ### 17.6 Not built, and deviations
@@ -3244,9 +3244,9 @@ what "Committed", "Signed" and the "as of" date mean, and that recall is partial
   and shown under the roster's own spelling; JV rows and graduates are out. A commitment list or a
   news story names many more people; none of them appears.
 - **A source's quote, a commitment's `basis` and its `confidence` are never rendered.** They are not
-  in the view types (`components/commits/commit-view.ts`), and `scripts/assert-copy.ts` fails the
+  in the view types (`components/commits/commit-view.ts`), and `scripts/ci/assert-copy.ts` fails the
   build on any page that shows a basis, a quote fragment or an excerpt of one (`commitmentLeaks` in
-  `scripts/copy-rules.ts`, the clubs rule with the same thresholds, public names and `printsItself`
+  `scripts/ci/copy/copy-rules.ts`, the clubs rule with the same thresholds, public names and `printsItself`
   excuse), also run by `tests/ui/commit-view.test.ts` over /commits, the team pages and /about.
 - **Metadata names no player**, and **link labels are never read from a URL path** beyond the
   page-type tests (`/athlete/`, `/athletes/`, `/athletic-scholarships/`).
@@ -3405,7 +3405,7 @@ five cards the last one spans both columns (`min-[390px]:col-span-2`, applied wh
 odd), so the grid reads 2 + 2 + 1, never an orphan half-card.
 
 Measured on the home page with no stored league, identical on `next start` and `vinext start`
-(`scripts/a11y-axe.mjs`, 2026-10-04; wrapping is accepted):
+(`scripts/ci/a11y-axe.mjs`, 2026-10-04; wrapping is accepted):
 
 | Viewport | Switcher | Cards | Wholly above the fold |
 |---|---|---|---|
@@ -3447,7 +3447,7 @@ applied**: no seeding projection, no seeded bracket and no seed word anywhere fo
 §15.8's "no CCS concept inside an MCAL page's `<main>`" becomes: no CCS concept (no "automatic
 qualifier", "at-large", "CCS Division", "CCS picture", "holds N of 16", bare "CCS" outside the allowed
 MCAL link) inside any non-CCS league's page and the `/playoffs` EAL card. No division label appears on
-EAL pages. Five more rules (`scripts/copy-rules.ts`, run by `scripts/assert-copy.ts` over the visible
+EAL pages. Five more rules (`scripts/ci/copy/copy-rules.ts`, run by `scripts/ci/assert-copy.ts` over the visible
 text of every built page and over its `<title>`, description metas and `title`, `aria-label` and `alt`
 attributes (`attributeText`: what a link preview prints and assistive technology reads), and by
 `tests/ui/copy-honesty.test.ts` over every view model, which also runs a second pass over the EAL
@@ -3618,7 +3618,7 @@ section wins where §16 and §20 disagree. Everything else stands: the boards ar
 2, 4 as §16.2 says, and the page ships no client component.
 
 - **Schools first.** `#schools` comes before `#players`, and the jump links follow ("Schools",
-  "Players"). The intro names the schools first. `scripts/assert-copy.ts` fails the build when the
+  "Players"). The intro names the schools first. `scripts/ci/assert-copy.ts` fails the build when the
   Players section comes first, since the check that every team without player stats is named reads
   from `#players` to the end of `<main>`.
 - **The Elo board is the last school board.** Best record, best league record, most goals per game,
@@ -3715,7 +3715,7 @@ The snapshot has 99 teams, 871 games and 64 game days. The sitemap lists **1,080
 - 871 `/game/`, 64 `/scores/` and 99 `/teams/` pages
 - 16 `/clubs/` pages
 
-After `pnpm build:vinext`, `scripts/assert-vinext-prerender.ts` reports 2,143 prerendered routes. That is those 1,080 pages plus their OG images and the metadata routes, and the sitemap matches the prerendered pages exactly.
+After `pnpm build:vinext`, `scripts/ci/assert-vinext-prerender.ts` reports 2,143 prerendered routes. That is those 1,080 pages plus their OG images and the metadata routes, and the sitemap matches the prerendered pages exactly.
 
 ### 24.3 The region toggle
 
@@ -3764,7 +3764,7 @@ odd-count column span is computed per region. League cards are now h4. The statu
 region's teams ("49 NorCal teams", "50 SoCal teams"). A Southern California league card shows the
 short form "1st, at least a play-in" because the full rung label is too wide for the 288 px card line.
 
-**Measured** (2026-10-06, Chromium 141 through `scripts/a11y-axe.mjs` and a Playwright probe
+**Measured** (2026-10-06, Chromium 141 through `scripts/ci/a11y-axe.mjs` and a Playwright probe
 against `next start` of this build; the stamp that day read "Updated Oct 5 8:19 PM", 137 px on a
 phone and 166 px with its weekday, narrower than the widest stamp §22.3 and SiteHeader.tsx were
 measured with):
@@ -3805,8 +3805,8 @@ README "Known limitations").
 
 ### 24.5 Copy rules
 
-§22.5 is extended for Southern California. The new rules live in `scripts/copy-rules.ts`. They run in
-`scripts/assert-copy.ts` over every built page's visible and attribute text, and in
+§22.5 is extended for Southern California. The new rules live in `scripts/ci/copy/copy-rules.ts`. They run in
+`scripts/ci/assert-copy.ts` over every built page's visible and attribute text, and in
 `tests/ui/copy-honesty.test.ts` over the view models.
 
 1. **Never "Sunset League"**, except in a sentence that also says "all-sports" (`SUNSET_LEAGUE_CLAIM`).
@@ -3913,7 +3913,7 @@ addition there will cross it.
   over 236 files, and §22.6 recorded 1805.5 KB. The old line was baseline + 600 KB = 2,040,051, so
   the allowance became **baseline + 1000 KB = 2,449,651 (92% used)**: the measurement plus about
   10%, rounded to 100 KB. Of the +328,401 bytes, 323,888 are the nine bundled data files: 728,330
-  bytes gzip -9 against 404,442. The breakdown is in `scripts/assert-budgets.ts`.
+  bytes gzip -9 against 404,442. The breakdown is in `scripts/ci/assert-budgets.ts`.
 - **Cloudflare's own limit.** Its Workers limits page (developers.cloudflare.com/workers/platform/limits/,
   read 2026-10-06) sets 64 MiB uncompressed on both the Free and Paid plans, and says there is no
   compressed size limit. The Worker's 8.0 MiB raw is 13% of that.

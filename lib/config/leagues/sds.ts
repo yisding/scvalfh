@@ -47,7 +47,7 @@ export function sdsRules(shortName: string): LeagueRules {
       doubleRoundRobin: 'members play each other home and away (MaxPreps schedules and the CIF-SDS 2026-27 League Alignment; on Oct 5 one Metro Mesa pair, Bonita Vista and Helix, was listed once); the league publishes no schedule',
       overtime: 'San Diego Field Hockey Officials Association 2026 procedures: a 10-minute 7 v 7 sudden-victory period, then 1 v 1 shootouts; the shootout winner is credited one goal, so a league, non-league or playoff varsity game does not end level (the procedures do not cover invitational tournaments, and several tournament games this season have ended level). MaxPreps records such a game as a level score marked W and L with no tally, and this site counts it as the flagged team’s win',
       // Paraphrased: the Green Book's own words name the champion an "automatic qualifier", a phrase no
-      // non-CCS page may print (scripts/assert-copy.ts forbidCcs).
+      // non-CCS page may print (scripts/ci/assert-copy.ts forbidCcs).
       coChampions: 'the league designates its champion (CIF-SDS Green Book: with a tie for first place, the league designates which team goes forward); this table shows teams level on points as level',
       stages: {
         'no-rule': 'The CIF-SDS Green Book (Bylaw 2000.1, special rule 3) leaves the tiebreak procedure to the Section’s preseason minutes, which we could not read, so this tie is left as it is',

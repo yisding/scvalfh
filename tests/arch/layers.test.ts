@@ -308,7 +308,7 @@ describe('layers: the dependency rule', () => {
     it('(b) ranked modules never reach ingestion, scripts or tests', () => {
       expect(broken('lib/registry/resolve.ts', 'lib/sources/cifss')).toEqual(['b']);
       expect(broken('lib/engine/classify.ts', 'lib/pipeline/contract')).toEqual(['b']);
-      expect(broken('app/page.tsx', 'scripts/cli')).toEqual(['b']);
+      expect(broken('app/page.tsx', 'scripts/lib/cli')).toEqual(['b']);
       expect(broken('components/ui/GameRow.tsx', 'tests/support/repo')).toEqual(['b']);
     });
 
@@ -316,7 +316,7 @@ describe('layers: the dependency rule', () => {
       expect(broken('lib/pipeline/run.ts', 'lib/queries/games')).toEqual(['c']);
       expect(broken('lib/pipeline/run.ts', 'lib/datasets/snapshot')).toEqual(['c']);
       expect(broken('lib/official/match.ts', 'components/ui/GameRow')).toEqual(['c']);
-      expect(broken('lib/pipeline/run.ts', 'scripts/cli')).toEqual(['c']);
+      expect(broken('lib/pipeline/run.ts', 'scripts/lib/cli')).toEqual(['c']);
       expect(broken('lib/pipeline/run.ts', 'lib/snapshot/check')).toEqual([]);
       expect(broken('lib/pipeline/run.ts', 'lib/sources/http/client')).toEqual([]);
     });
@@ -372,7 +372,7 @@ describe('layers: the dependency rule', () => {
     it('(i) scripts and app never import tests', () => {
       expect(broken('scripts/fetch-data.ts', 'tests/support/repo')).toEqual(['i']);
       expect(broken('app/page.tsx', 'tests/support/repo')).toEqual(['b', 'i']);
-      expect(broken('tests/data.test.ts', 'scripts/cli')).toEqual([]);
+      expect(broken('tests/data.test.ts', 'scripts/lib/cli')).toEqual([]);
     });
 
     it('the LEAVES are importable from every rank', () => {
