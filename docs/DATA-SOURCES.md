@@ -1763,7 +1763,7 @@ redirects.
     EAL table exists (7 teams, league `7ed47346-7496-472a-b778-74f097b4d629`, and it ordered
     6-4 Pleasant Valley above 7-5 Bella Vista, i.e. by win percentage) but is not a league document, and the
     site does not show standings from newspapers or third-party sites. No `alsoPublished`.
-  - To change an `unavailable` entry to `available`: add a source reader like `lib/sources/bval-sheet.ts`,
+  - To change an `unavailable` entry to `available`: add a source reader like `lib/sources/bval/sheet.ts`,
     extend `scripts/build-history.ts`, and the schema (`lib/schema/history.ts`) already validates it against
     the league's own registry slugs and divisions (PCAL, MCAL and EAL are single-division).
 - **2025 section playoff brackets** (`data/history-brackets-2025-26.json`, validated by
@@ -1813,7 +1813,7 @@ checked as one: every ordered pair a@b exactly once (n·(n−1) fixtures), each 
 
 - **BVAL:** 60 fixtures (30 per division, each team 10 games, 5 home). The Oct 31 CCS play-in line
   in the document is an *event* in the file, never a fixture. Default varsity start 5:00 PM with
-  five override forms; `lib/official/bval-text.ts` parses the two document texts and
+  five override forms; `lib/sources/bval/schedule-text.ts` parses the two document texts and
   `tests/bval-text.test.ts` proves the parse reproduces the bundled file. `WG` = Willow Glen.
 - **PCAL:** 42 fixtures; the grid uses codes (`STE CAR HOL MON SAL GRE CAT`; `CAT/YOR` and `SCAT`
   are Santa Catalina; York plays JV only). Start time 4:00 PM.

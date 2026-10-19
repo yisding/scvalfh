@@ -11,6 +11,12 @@
  *
  * Budget, same courtesy ceiling as the primary client (SPEC §5.2, §5.3):
  *   concurrency <= 3 · >= 500 ms between request starts · 15 s timeout · retry 429/5xx only.
+ *
+ * The source rule, for every module under lib/sources/: a source exports URL builders, response
+ * schemas, pure parsers and an optional client; it never reads a Snapshot or merges into Game[].
+ * Applying a source to the games and carrying it forward when a read fails belong to the ingestion
+ * side (lib/pipeline/merge/, lib/official/); tests/arch/layers.test.ts rule (d) keeps lib/sources
+ * from importing either.
  */
 
 import { PoliteFetchError, PoliteFetcher } from './polite-fetcher';

@@ -29,7 +29,7 @@ import {
   recordedExtension,
   resourceUrl,
 } from '@/lib/pipeline/transport';
-import { officialChangesCellText, sha256Hex, tdCellBodies } from '@/lib/official/validate';
+import { officialChangesCellText, sha256Hex, tdCellBodies } from '@/lib/official/changes-page';
 import { TEAMS, getTeamBySlug } from '@/lib/registry/teams';
 import { HttpError, type HttpResponse } from '@/lib/sources/http/client';
 import type { RawResponse } from '@/lib/sources/http/raw-response';

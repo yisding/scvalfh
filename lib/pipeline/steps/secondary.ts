@@ -20,10 +20,12 @@
 import { CCS, getLeague } from '@/lib/config/leagues';
 import type { Game } from '@/lib/model/game';
 import { getTeamBySlug } from '@/lib/registry/teams';
-import { CCS_ICAL_URL, ccsPollingOpen, confirmKeyDates, parseCcsIcal, readBracketPublished } from '@/lib/sources/ccs';
-import { VNN_SITE_IDS, applyVnnEvents, carryVnnForward, parseVnnIcs, type VnnEvent } from '@/lib/sources/vnn-ics';
+import { CCS_ICAL_URL, parseCcsIcal, readBracketPublished } from '@/lib/sources/ccs';
+import { VNN_SITE_IDS, parseVnnIcs, type VnnEvent } from '@/lib/sources/vnn-ics';
 import type { SecondaryStepResult } from '@/lib/pipeline/contract';
 import { carriedFromOf, type PipelineContext } from '@/lib/pipeline/ledger';
+import { ccsPollingOpen, confirmKeyDates } from '@/lib/pipeline/merge/ccs';
+import { applyVnnEvents, carryVnnForward } from '@/lib/pipeline/merge/vnn';
 import { classifyFetchError } from '@/lib/pipeline/read';
 import { resourceUrl } from '@/lib/pipeline/transport';
 

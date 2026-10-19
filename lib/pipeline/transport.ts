@@ -26,7 +26,7 @@ import path from 'node:path';
 import { CCS, getDivision, getLeague } from '@/lib/config/leagues';
 import { BOOTSTRAP_URL } from '@/lib/config/season';
 import type { DivisionId, TeamSlug } from '@/lib/model/ids';
-import { officialChangesCellText, sha256Hex } from '@/lib/official/validate';
+import { officialChangesHash, sha256Hex } from '@/lib/official/changes-page';
 import { getTeamBySlug } from '@/lib/registry/teams';
 import { CCS_ICAL_URL } from '@/lib/sources/ccs';
 import { CIFSS_SEASON_FROM, cifssListingUrl } from '@/lib/sources/cifss';
@@ -36,7 +36,9 @@ import { MaxPrepsClient } from '@/lib/sources/maxpreps/client';
 import { MaxPrepsError } from '@/lib/sources/maxpreps/error';
 import { leagueMetaUrl, scheduleUrl, standingsUrl } from '@/lib/sources/maxpreps/urls';
 import { SBLIVE_HTTP_OPTIONS, sbliveScoresUrl } from '@/lib/sources/sblive/urls';
-import { SCVAL_STANDINGS_INDEX, pdfToText, scvalScheduleUrl } from '@/lib/sources/scval-pdf';
+import { scvalScheduleUrl } from '@/lib/sources/scval/grid';
+import { pdfToText } from '@/lib/sources/scval/pdftotext';
+import { SCVAL_STANDINGS_INDEX } from '@/lib/sources/scval/standings-index';
 import { VNN_SITE_IDS, vnnIcsUrl } from '@/lib/sources/vnn-ics';
 import {
   FixtureMissing,
@@ -224,11 +226,11 @@ export class LiveTransport implements Transport {
         case 'official-changes': {
           const res = await this.http.text(url);
           const marker = getLeague(key.league).officialChanges?.cellMarker ?? '';
-          const cell = officialChangesCellText(res.body, marker);
-          if (cell === null) {
+          const hash = officialChangesHash(res.body, marker);
+          if (hash === null) {
             throw new TransportError(`no <td> containing "${marker}" on the page`, url, res.httpStatus);
           }
-          return { url: res.url, httpStatus: res.httpStatus, body: sha256Hex(cell) };
+          return { url: res.url, httpStatus: res.httpStatus, body: hash };
         }
         case 'sblive-scores':
         case 'sblive-team-games': {

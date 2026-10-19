@@ -1,5 +1,6 @@
 /**
- * lib/sources/vnn-ics.ts — the VNN / PlayOn "Mascot Media Bolt" school calendars (SPEC §1.5).
+ * lib/sources/vnn-ics.ts and lib/pipeline/merge/vnn.ts — the VNN / PlayOn "Mascot Media Bolt"
+ * school calendars (SPEC §1.5).
  *
  * `tests/fixtures/vnn/palo-alto-excerpt.ics` is a trimmed excerpt of the REAL Palo Alto feed
  * (siteId 2635290): four Varsity and two JV field-hockey VEVENTs plus the real VCALENDAR header.
@@ -11,11 +12,10 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
+import { applyVnnEvents, carryVnnForward } from '@/lib/pipeline/merge/vnn';
 import {
   VNN_SITE_IDS,
   VNN_SUMMARY_RE,
-  applyVnnEvents,
-  carryVnnForward,
   icsInstant,
   parseVnnIcs,
   vnnIcsUrl,

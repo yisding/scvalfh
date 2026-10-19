@@ -1,10 +1,11 @@
 /**
  * Official fixtures → MaxPreps contests (SPEC §7.8). Two matchers:
  *
- *  - 'legacy' (SCVAL): the former `applyOfficialFixtures` of lib/sources/scval-pdf.ts, moved here
- *    byte for byte — same pass order, same ordered tier 3 (league games first, then nearest date,
- *    non-league candidates capped at ±14 days) — now stamping the widened OfficialStamp
- *    (`division`, `fixtureId`, `pass`). Golden-gated (tests/golden/scval-corpus.json officialStamps).
+ *  - 'legacy' (SCVAL): the former `applyOfficialFixtures` of the SCVAL grid source (the grid parser
+ *    is lib/sources/scval/grid.ts), moved here byte for byte — same pass order, same ordered tier 3
+ *    (league games first, then nearest date, non-league candidates capped at ±14 days) — now
+ *    stamping the widened OfficialStamp (`division`, `fixtureId`, `pass`). Golden-gated
+ *    (tests/golden/scval-corpus.json officialStamps).
  *  - 'two-phase' (BVAL, PCAL, MCAL): pass 1 same-date ordered for ALL fixtures, pass 2 same-date
  *    unordered for all remaining (host conflict published), pass 3 rescheduled legs assigned
  *    GLOBALLY by smallest |Δdays| (ties: fixture date, fixture id, contestId), so an early unplayed
@@ -12,6 +13,7 @@
  *
  * Both ignore every contest `isExcluded` returns true for (postseason, MCAL tournament window,
  * contestType 2/4 in a league that excludes them): such a contest never consumes a fixture.
+ * `exclusionFor(league)` builds that predicate from the league's rules.
  * Pure: no I/O, no clock (`today` is an option).
  */
 
@@ -22,6 +24,7 @@ import { monthDay, shortDate } from '@/lib/format/dates';
 import type { OfficialFixture } from '@/lib/model/fixture';
 import type { Game, GameSide, OfficialStamp } from '@/lib/model/game';
 import type { DivisionId, TeamSlug } from '@/lib/model/ids';
+import type { LeagueConfig } from '@/lib/model/league-config';
 import { resolveTeam, sideJoinKey, unorderedPairKey } from '@/lib/registry/resolve';
 import { getTeamBySlug, teamOfSide } from '@/lib/registry/teams';
 import { dayDiff, shiftDateKey } from '@/lib/shared/dates';
@@ -55,6 +58,23 @@ export interface MatchResult {
   matched: number;
   /** Matched contests MaxPreps does NOT flag as league games: `<contestId> (<away> @ <home>) — <note>`. */
   leagueDisagreements: string[];
+}
+
+/**
+ * Contests that are never candidates for a league's fixtures (MatchOptions.isExcluded): postseason
+ * games, games on/after the league's postseason cut-off (unless listed in leagueGameOverrides), and
+ * any row whose contestType the league excludes.
+ */
+export function exclusionFor(league: LeagueConfig): (game: Game) => boolean {
+  const { postseasonFrom, leagueGameOverrides, excludeContestTypes } = league.rules;
+  return (game) => {
+    if (postseasonTag(game) !== null) return true;
+    if (postseasonFrom !== null && game.dateKey >= postseasonFrom && !leagueGameOverrides.includes(game.contestId)) {
+      return true;
+    }
+    const types = game.contestTypes ?? { home: null, away: null };
+    return [types.home, types.away].some((t) => t !== null && excludeContestTypes.includes(t));
+  };
 }
 
 type Pass = OfficialStamp['pass'];

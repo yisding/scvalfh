@@ -1,5 +1,6 @@
 /**
- * lib/sources/scval-pdf.ts — the two official SCVAL schedule-grid PDFs (SPEC §1.3).
+ * lib/sources/scval/ (grid.ts, standings-index.ts) with lib/official/membership.ts and
+ * lib/official/carry.ts — the two official SCVAL schedule-grid PDFs (SPEC §1.3).
  *
  * `tests/fixtures/scval/{da,ec}-pdftotext.txt` are the REAL `pdftotext -layout` output of
  * https://scval.com/fallSports/26-27%20SCVAL%20FH%20{DA,EC}%20Final.pdf, and
@@ -15,17 +16,12 @@ import { describe, expect, it } from 'vitest';
 
 import type { OfficialFixture } from '@/lib/model/fixture';
 import type { Game, OfficialStamp } from '@/lib/model/game';
+import { carryOfficialForward } from '@/lib/official/carry';
 import { matchOfficialFixtures } from '@/lib/official/match';
+import { diffMembership } from '@/lib/official/membership';
 import { teamsInDivision } from '@/lib/registry/teams';
-import {
-  carryOfficialForward,
-  diffMembership,
-  findStandingsPdfLink,
-  listFieldHockeyLinks,
-  parseSchedulePdfText,
-  scvalPdfDivisions,
-  scvalScheduleUrl,
-} from '@/lib/sources/scval-pdf';
+import { parseSchedulePdfText, scvalScheduleUrl } from '@/lib/sources/scval/grid';
+import { findStandingsPdfLink, listFieldHockeyLinks } from '@/lib/sources/scval/standings-index';
 import { game } from './support/game-builder';
 import { REPO } from './support/repo';
 
@@ -60,10 +56,6 @@ describe('scval-pdf: urls', () => {
   it('uses https, because http 302s', () => {
     expect(scvalScheduleUrl('de-anza')).toMatch(/^https:\/\/scval\.com\//);
     expect(scvalScheduleUrl('el-camino')).toMatch(/^https:\/\/scval\.com\//);
-  });
-
-  it('parses only the live-PDF (SCVAL) divisions', () => {
-    expect(scvalPdfDivisions()).toEqual(['de-anza', 'el-camino']);
   });
 });
 

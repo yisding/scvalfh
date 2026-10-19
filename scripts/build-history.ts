@@ -48,17 +48,17 @@ import {
   parseStandingsCsv,
   type BvalAllLeagueBlock,
   type BvalStandingsBlock,
-} from '@/lib/sources/bval-sheet';
+} from '@/lib/sources/bval/sheet';
 import { HttpClient } from '@/lib/sources/http/client';
 import {
   SCVAL_HISTORY_PDFS,
   ScvalClient,
-  hasPdftotext,
   parseAllLeaguePdfText,
   parseStandingsPdfText,
   type AllLeagueBlock,
   type HistoryStandingsBlock,
-} from '@/lib/sources/scval-pdf';
+} from '@/lib/sources/scval/history';
+import { hasPdftotext } from '@/lib/sources/scval/pdftotext';
 import { runCli } from './cli';
 
 interface Args {

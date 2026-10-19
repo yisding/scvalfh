@@ -9,6 +9,9 @@
  *   2. the MaxPreps CCS tournament page — `bracketPublished` flips when
  *      `<div class="not-published">` disappears.
  *
+ * Gating the reads (`ccsPollingOpen`) and checking the calendar against config (`confirmKeyDates`)
+ * is lib/pipeline/merge/ccs.ts.
+ *
  * Deliberately NOT here: cifccs.org document paths (every one returns a 31 KB SPA shell, and the
  * real files sit behind CloudFront hashes that change on re-upload) and the PrestoSports bracket
  * pages (rendered client-side; no bracket content in the server HTML at all).
@@ -27,10 +30,6 @@ export const CCS_ICAL_URL = 'https://cifccs.org/calendar/Field_Hockey?print=ical
  * play-in (Oct 31) and CCS entries (Nov 2).
  */
 export const CCS_POLL_FROM: string = CCS.pollFrom;
-
-export function ccsPollingOpen(todayKey: string, from = CCS_POLL_FROM): boolean {
-  return todayKey >= from;
-}
 
 // ---------------------------------------------------------------- ical
 
@@ -103,39 +102,6 @@ export function parseCcsIcal(text: string): CcsCalendarEvent[] {
     else if (field.name === 'UID') current.uid = field.value;
   }
   return events.sort((a, b) => (a.date === b.date ? a.summary.localeCompare(b.summary) : a.date.localeCompare(b.date)));
-}
-
-export interface KeyDateCheck {
-  /** true when every date we publish is corroborated by the calendar. */
-  confirmed: boolean;
-  /** One line per date that differs, ready for the run log and /about. */
-  differences: string[];
-  events: CcsCalendarEvent[];
-}
-
-/** Compare the calendar against `CCS.keyDates` — confirmation only, never a rewrite. */
-export function confirmKeyDates(
-  events: readonly CcsCalendarEvent[],
-  expected = CCS.keyDates,
-): KeyDateCheck {
-  const byKind = new Map<CcsEventKind, string>();
-  for (const e of events) if (!byKind.has(e.kind)) byKind.set(e.kind, e.date);
-
-  const pairs: Array<[CcsEventKind, string, string]> = [
-    ['entries-due', expected.entriesDue.slice(0, 10), 'entries due'],
-    ['quarterfinals', expected.quarterfinals, 'quarterfinals'],
-    ['semifinals', expected.semifinals, 'semifinals'],
-    ['finals', expected.finals, 'finals'],
-    ['evaluation', expected.evaluationMeeting.slice(0, 10), 'evaluation meeting'],
-  ];
-
-  const differences: string[] = [];
-  for (const [kind, ours, label] of pairs) {
-    const theirs = byKind.get(kind);
-    if (!theirs) differences.push(`CCS calendar has no ${label} event`);
-    else if (theirs !== ours) differences.push(`${label}: we publish ${ours}, CCS calendar says ${theirs}`);
-  }
-  return { confirmed: differences.length === 0, differences, events: [...events] };
 }
 
 // ---------------------------------------------------------------- bracket page

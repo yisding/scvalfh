@@ -17,10 +17,10 @@
  */
 
 import { divisionsOf } from '@/lib/config/leagues';
-import { BASIC_NAMED, decodeEntities } from './text/html-entities';
 import type { DivisionId, TeamSlug } from '@/lib/model/ids';
 import { resolveOfficialName } from '@/lib/registry/resolve';
 import { teamsInLeague } from '@/lib/registry/teams';
+import { BASIC_NAMED, decodeEntities } from '@/lib/sources/text/html-entities';
 
 export const BVAL_HISTORY_SOURCES = {
   standingsIndex: 'https://bval.org/standings/',

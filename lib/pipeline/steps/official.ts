@@ -23,25 +23,20 @@
 import { LEAGUES } from '@/lib/config/leagues';
 import { divisionDisplay, divisionHeading } from '@/lib/config/leagues/labels';
 import { type DocumentDivision, hasOfficialDocument } from '@/lib/config/leagues/official';
-import { postseasonTag } from '@/lib/engine/classify';
 import type { OfficialFixture } from '@/lib/model/fixture';
 import type { Game } from '@/lib/model/game';
 import type { SourceStatus } from '@/lib/model/health';
 import type { DivisionId, LeagueId } from '@/lib/model/ids';
 import { type DivisionConfig, type LeagueConfig } from '@/lib/model/league-config';
-import { matchOfficialFixtures } from '@/lib/official/match';
-import { loadBundledFixtures } from '@/lib/official/schema';
+import { loadBundledFixtures } from '@/lib/official/bundle-file';
+import { carryOfficialForward } from '@/lib/official/carry';
+import { exclusionFor, matchOfficialFixtures } from '@/lib/official/match';
+import { diffMembership } from '@/lib/official/membership';
 import { assertDoubleRoundRobin } from '@/lib/official/validate';
 import type { RawResponse } from '@/lib/sources/http/raw-response';
-import {
-  PdftotextMissingError,
-  SCVAL_STANDINGS_INDEX,
-  carryOfficialForward,
-  diffMembership,
-  findStandingsPdfLink,
-  listFieldHockeyLinks,
-  parseSchedulePdfText,
-} from '@/lib/sources/scval-pdf';
+import { parseSchedulePdfText } from '@/lib/sources/scval/grid';
+import { PdftotextMissingError } from '@/lib/sources/scval/pdftotext';
+import { SCVAL_STANDINGS_INDEX, findStandingsPdfLink, listFieldHockeyLinks } from '@/lib/sources/scval/standings-index';
 import {
   type OfficialStep,
   type OfficialStepResult,
@@ -65,23 +60,6 @@ async function fetchResource(ctx: RunContext, key: ResourceKey): Promise<{ ok: R
   } catch (err) {
     return { failed: failureOf(err) };
   }
-}
-
-/**
- * Contests that are never candidates for a league's fixtures (MatchOptions.isExcluded): postseason
- * games, games on/after the league's postseason cut-off (unless listed in leagueGameOverrides), and
- * any row whose contestType the league excludes.
- */
-export function isExcludedFor(league: LeagueConfig): (game: Game) => boolean {
-  const { postseasonFrom, leagueGameOverrides, excludeContestTypes } = league.rules;
-  return (game) => {
-    if (postseasonTag(game) !== null) return true;
-    if (postseasonFrom !== null && game.dateKey >= postseasonFrom && !leagueGameOverrides.includes(game.contestId)) {
-      return true;
-    }
-    const types = game.contestTypes ?? { home: null, away: null };
-    return [types.home, types.away].some((t) => t !== null && excludeContestTypes.includes(t));
-  };
 }
 
 /** `The official BVAL schedule file failed validation; …` (SPEC §7.8, verbatim). */
@@ -190,7 +168,7 @@ async function runLivePdfLeague(ctx: RunContext, league: LeagueConfig, divisions
   if (fixtures.length > 0) {
     const result = matchOfficialFixtures(state.games, fixtures, {
       matcher: league.rules.matcher,
-      isExcluded: isExcludedFor(league),
+      isExcluded: exclusionFor(league),
       rescheduleWindowDays: RESCHEDULE_WINDOW_DAYS,
       today: ctx.today,
     });
@@ -346,7 +324,7 @@ async function runBundledLeague(ctx: RunContext, league: LeagueConfig, divisions
   if (failure !== null) return;
   const result = matchOfficialFixtures(state.games, fixtures, {
     matcher: league.rules.matcher,
-    isExcluded: isExcludedFor(league),
+    isExcluded: exclusionFor(league),
     rescheduleWindowDays: RESCHEDULE_WINDOW_DAYS,
     today: ctx.today,
   });

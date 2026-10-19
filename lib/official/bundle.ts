@@ -1,7 +1,8 @@
 /**
  * The bundled official-fixture files `data/official/{bval,pcal,mcal}-2026.json` (SPEC §7.8): their
- * Zod schema, the deterministic serializer the build script writes them with, and the loader the
- * cron and the tests read them through.
+ * Zod schema, the deterministic serializer the build script writes them with, and the parser that
+ * checks a file against config. The loader the cron and the tests read them through is
+ * lib/official/bundle-file.ts.
  *
  * A bundle is a faithful transcription of the league's own document: `away`/`home` hold the
  * source's tokens (BVAL: registry slugs; PCAL: grid codes such as `STE`; MCAL: legend codes such
@@ -13,14 +14,11 @@
  * Never edit the JSON by hand: `pnpm build-official-fixtures` writes it.
  */
 
-import { readFileSync } from 'node:fs';
-import path from 'node:path';
-
 import { z } from 'zod';
 
 import { leagueOfDivision } from '@/lib/config/leagues';
 import { bundledDivisions } from '@/lib/config/leagues/official';
-import { type OfficialFixture } from '@/lib/model/fixture';
+import type { BundleEvent, BundleFixture, OfficialFixture } from '@/lib/model/fixture';
 import {
   type DivisionId, type LeagueId, OFFICIAL_SOURCE_IDS, type OfficialSourceId, type TeamSlug,
 } from '@/lib/model/ids';
@@ -56,14 +54,14 @@ export const BundleFixtureSchema = z.strictObject({
   /** Source spelling, verbatim. */
   awayName: z.string().min(1),
   homeName: z.string().min(1),
-});
+}) satisfies z.ZodType<BundleFixture>;
 
 export const BundleEventSchema = z.strictObject({
   kind: z.literal('play-in'),
   date: dateKey,
   time: HHMM.nullable(),
   verbatim: z.string().min(1),
-});
+}) satisfies z.ZodType<BundleEvent>;
 
 export const OfficialBundleSchema = z.strictObject({
   schema: z.literal(OFFICIAL_BUNDLE_SCHEMA),
@@ -76,19 +74,7 @@ export const OfficialBundleSchema = z.strictObject({
 });
 
 export type BundleDocument = z.infer<typeof BundleDocumentSchema>;
-export type BundleFixture = z.infer<typeof BundleFixtureSchema>;
-export type BundleEvent = z.infer<typeof BundleEventSchema>;
 export type OfficialBundle = z.infer<typeof OfficialBundleSchema>;
-
-/** The one bundle file a league's bundled divisions share (repo-relative), or null when it has none. */
-export function bundleFileOf(leagueId: LeagueId): string | null {
-  const files = [...new Set(bundledDivisions(leagueId).map((d) => d.official.bundledFile))];
-  if (files.length === 0) return null;
-  if (files.length > 1 || files[0] === null) {
-    throw new Error(`lib/official/schema.ts: ${leagueId} bundled divisions do not share one bundledFile`);
-  }
-  return files[0];
-}
 
 /** Canonical bundle order: division (config order), then date, then id. */
 export function compareBundleFixtures(a: BundleFixture, b: BundleFixture): number {
@@ -203,29 +189,4 @@ export function bundleToFixtures(bundle: OfficialBundle): OfficialFixture[] {
       source,
     };
   });
-}
-
-/** Repo root, from this module's location (lib/official/). */
-const REPO_ROOT = path.resolve(import.meta.dirname, '..', '..');
-
-/** Read and validate a league's bundle file (schema + config checks). Throws on any problem. */
-export function readOfficialBundle(leagueId: LeagueId, root: string = REPO_ROOT): OfficialBundle {
-  const file = bundleFileOf(leagueId);
-  if (file === null) throw new Error(`official bundle for ${leagueId}: the league has no bundled division`);
-  let raw: unknown;
-  try {
-    raw = JSON.parse(readFileSync(path.join(root, file), 'utf8')) as unknown;
-  } catch (err) {
-    throw new Error(`official bundle for ${leagueId}: cannot read ${file}: ${(err as Error).message}`);
-  }
-  return parseOfficialBundle(raw, leagueId);
-}
-
-/**
- * The league's bundled official fixtures, validated at load (schema and config checks; the
- * double-round-robin checks are `assertDoubleRoundRobin`). Throws when the file is missing or
- * invalid — the cron turns that into degraded divisions, never an abort.
- */
-export function loadBundledFixtures(leagueId: LeagueId, root?: string): OfficialFixture[] {
-  return bundleToFixtures(readOfficialBundle(leagueId, root));
 }

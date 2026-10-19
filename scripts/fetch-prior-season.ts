@@ -31,8 +31,6 @@
 import { writeFileSync } from 'node:fs';
 import path from 'node:path';
 
-import { z } from 'zod';
-
 import { type FlagSpec, parseFlags } from '@/lib/cli/flags';
 import { SEASON_YEAR, SPORT_SEASON_ID } from '@/lib/config/season';
 import type { TeamSlug } from '@/lib/model/ids';
@@ -40,7 +38,7 @@ import { previousMaxprepsYear, priorGamesFromFeeds, seasonLabel } from '@/lib/pi
 import { TEAMS } from '@/lib/registry/teams';
 import { type PriorSeason, PriorSeasonSchema, seasonWindow } from '@/lib/schema/prior-season';
 import { MaxPrepsClient } from '@/lib/sources/maxpreps/client';
-import { type ScheduleRow } from '@/lib/sources/maxpreps/schemas';
+import { SchoolSportSeasonsSchema, type ScheduleRow } from '@/lib/sources/maxpreps/schemas';
 import { runCli } from './cli';
 
 const USAGE =
@@ -80,21 +78,11 @@ function parseArgs(argv: readonly string[]): Args {
   return args;
 }
 
-const SportSeasonsSchema = z.array(
-  z.looseObject({
-    sportSeasonId: z.string(),
-    sport: z.string().nullable().optional(),
-    gender: z.string().nullable().optional(),
-    level: z.string().nullable().optional(),
-    year: z.string().nullable().optional(),
-  }),
-);
-
 /** Girls varsity field hockey's sportSeasonId for `year`, from one team's season list. */
 async function findSeasonId(client: MaxPrepsClient, year: string): Promise<string> {
   const probe = TEAMS[0];
   const res = await client.getTeamContext(probe.id, SPORT_SEASON_ID);
-  const seasons = SportSeasonsSchema.parse((res.data as Record<string, unknown>).schoolSportSeasonsData);
+  const seasons = SchoolSportSeasonsSchema.parse(res.data.schoolSportSeasonsData);
   const match = seasons.filter(
     (s) => s.sport === 'Field Hockey' && s.gender === 'Girls' && s.level === 'Varsity' && s.year === year,
   );

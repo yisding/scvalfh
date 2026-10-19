@@ -1,5 +1,5 @@
 /**
- * lib/official/bval-text.ts (SPEC §7.8): the two BVAL docx texts reproduce the fixtures of
+ * lib/sources/bval/schedule-text.ts (SPEC §7.8): the two BVAL docx texts reproduce the fixtures of
  * data/official/bval-2026.json exactly; the five time-override forms and their varsity times; any
  * other override throws; the `BVAL MEETINGS` lines (which contain `@`) are ignored; the play-in
  * line is an event.
@@ -10,8 +10,9 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { BVAL_DEFAULT_VARSITY, BVAL_TIME_OVERRIDES, parseBvalScheduleText } from '@/lib/official/bval-text';
-import { compareBundleFixtures, readOfficialBundle, serializeBundle } from '@/lib/official/schema';
+import { compareBundleFixtures, serializeBundle } from '@/lib/official/bundle';
+import { readOfficialBundle } from '@/lib/official/bundle-file';
+import { BVAL_DEFAULT_VARSITY, BVAL_TIME_OVERRIDES, parseBvalScheduleText } from '@/lib/sources/bval/schedule-text';
 import { buildBval, buildBvalFromText } from '@/scripts/build-official-fixtures';
 import { REPO } from './support/repo';
 

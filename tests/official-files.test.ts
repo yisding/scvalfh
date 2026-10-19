@@ -16,11 +16,10 @@ import type { OfficialFixture } from '@/lib/model/fixture';
 import {
   OfficialBundleSchema,
   bundleToFixtures,
-  loadBundledFixtures,
   parseOfficialBundle,
-  readOfficialBundle,
   serializeBundle,
-} from '@/lib/official/schema';
+} from '@/lib/official/bundle';
+import { loadBundledFixtures, readOfficialBundle } from '@/lib/official/bundle-file';
 import { OfficialValidationError, assertDoubleRoundRobin } from '@/lib/official/validate';
 import { isWithdrawnSchool, resolveOfficialName, resolveTeam } from '@/lib/registry/resolve';
 import { teamsInDivision } from '@/lib/registry/teams';

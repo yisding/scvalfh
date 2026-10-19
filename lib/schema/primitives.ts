@@ -7,7 +7,7 @@
  * One declaration each, so a dataset's validation messages and strictness never depend on which
  * file declared it: lib/schema/snapshot.ts, lib/schema/rosters.ts, lib/schema/player-stats.ts,
  * lib/schema/clubs.ts, lib/schema/commits.ts, lib/schema/history.ts, lib/schema/prior-season.ts and
- * lib/official/schema.ts all import from here. Two companions hold what is not general: the
+ * lib/official/bundle.ts all import from here. Two companions hold what is not general: the
  * registry-bound ones (a registry team slug, the team count) in lib/schema/registry-primitives.ts,
  * and the research files' calendar-strict day, social-media-free https URL and host list in
  * lib/schema/source-url.ts. The plain RegExps and checks under them (SLUG_PATTERN, DATE_PATTERN, isCalendarDate,

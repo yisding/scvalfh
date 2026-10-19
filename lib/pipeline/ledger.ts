@@ -23,7 +23,7 @@ import type { Snapshot } from '@/lib/model/snapshot';
 import type { ReportedRecord } from '@/lib/model/standings';
 import { TEAMS, getTeamBySlug } from '@/lib/registry/teams';
 import { localDateKey, toLocalTimestamp } from '@/lib/shared/dates';
-import { CIFSS_SECTIONS } from '@/lib/sources/cifss';
+import { cifssSectionIndexOfUrl } from '@/lib/sources/cifss';
 import type { ScheduleRow } from '@/lib/sources/maxpreps/schemas';
 import type { OfficialStepResult, RunArgs, RunContext, SecondaryStepResult, Transport } from './contract';
 
@@ -74,17 +74,10 @@ function sortKey(row: SourceStatus, seq: number): SortKey {
   if (kind === 'sblive-scoreboard') return [2, 0, 0, 0, row.url, seq];
   if (kind === 'sblive-team-games') return [2, 1, 0, 0, row.scope?.team ?? row.url, seq];
   if (kind === 'school-calendar') return [3, 0, TEAM_INDEX.get(row.scope?.team ?? '') ?? TEAMS.length, 0, '', seq];
-  if (kind === 'cifss-scores') return [3, 1, cifssSectionIndex(row.url), 0, '', seq];
+  if (kind === 'cifss-scores') return [3, 1, cifssSectionIndexOfUrl(row.url), 0, '', seq];
   if (kind === 'ccs-calendar') return [4, 0, 0, 0, '', seq];
   if (kind === 'ccs-bracket') return [4, 1, 0, 0, '', seq];
   return [5, 0, 0, 0, '', seq];
-}
-
-/** A cifsshome.org row's Section in CIFSS_SECTIONS order, read from its listing URL's section_id. */
-function cifssSectionIndex(url: string): number {
-  const id = /[?&]section_id=(\d+)/.exec(url)?.[1];
-  const i = CIFSS_SECTIONS.findIndex((s) => String(s.sectionId) === id);
-  return i === -1 ? CIFSS_SECTIONS.length : i;
 }
 
 function compareKeys(a: SortKey, b: SortKey): number {

@@ -92,6 +92,17 @@ export function cifssListingUrl(section: CifssSectionKey, opts: { from: string; 
   return `${CIFSS_WIDGET_URL}?${params.toString()}`;
 }
 
+/**
+ * A listing URL's Section, as its index in CIFSS_SECTIONS order (read from `section_id`);
+ * CIFSS_SECTIONS.length when the URL names none of them. The run ledger sorts the cifsshome.org
+ * rows by it.
+ */
+export function cifssSectionIndexOfUrl(url: string): number {
+  const id = /[?&]section_id=(\d+)/.exec(url)?.[1];
+  const i = CIFSS_SECTIONS.findIndex((s) => String(s.sectionId) === id);
+  return i === -1 ? CIFSS_SECTIONS.length : i;
+}
+
 /** One side of a widget row: the name as printed (Section suffix removed), our team if it resolves, its score. */
 export interface CifssSide {
   name: string;

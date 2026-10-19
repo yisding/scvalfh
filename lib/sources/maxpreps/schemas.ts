@@ -175,9 +175,12 @@ export const ScheduleResponseSchema = envelope(z.array(ScheduleRowSchema));
  *
  * ⚠️ ~738 KB per team, almost all of it `schoolSportSeasonsData` (844 entries). Never in the daily
  * cron — this is the once-per-season league-resolution read that scripts/discover-season.ts uses.
+ * `schoolSportSeasonsData` is declared but not validated here: only scripts/fetch-prior-season.ts
+ * reads it (through SchoolSportSeasonsSchema), so a drift in it never fails discover-season.
  */
 export const TeamContextSchema = envelope(
   z.looseObject({
+    schoolSportSeasonsData: z.unknown().optional(),
     teamData: z.looseObject({
       leagueId: z.string().nullable().optional(),
       leagueName: z.string().nullable().optional(),
@@ -202,6 +205,17 @@ export const TeamContextSchema = envelope(
   }),
 );
 export type TeamContext = z.infer<typeof TeamContextSchema>['data'];
+
+/** team-context's `schoolSportSeasonsData[]`: every season a team has played, with its `sportSeasonId`. */
+export const SchoolSportSeasonsSchema = z.array(
+  z.looseObject({
+    sportSeasonId: z.string(),
+    sport: z.string().nullable().optional(),
+    gender: z.string().nullable().optional(),
+    level: z.string().nullable().optional(),
+    year: z.string().nullable().optional(),
+  }),
+);
 
 /**
  * The bootstrap read of https://www.maxpreps.com/ca/field-hockey/ (SPEC §1.1h).

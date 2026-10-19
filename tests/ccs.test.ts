@@ -1,5 +1,6 @@
 /**
- * lib/sources/ccs.ts — the CIF-CCS calendar and the MaxPreps bracket-state probe (SPEC §1.4, §5.9).
+ * lib/sources/ccs.ts and lib/pipeline/merge/ccs.ts — the CIF-CCS calendar and the MaxPreps
+ * bracket-state probe (SPEC §1.4, §5.9).
  *
  * `tests/fixtures/ccs/field-hockey.ics` is the REAL feed from
  * https://cifccs.org/calendar/Field_Hockey?print=ical — including its "CCS Semfinals" typo, which
@@ -12,13 +13,12 @@ import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 import { CCS } from '@/lib/config/leagues';
+import { ccsPollingOpen, confirmKeyDates } from '@/lib/pipeline/merge/ccs';
 import { CcsCalendarEventSchema } from '@/lib/schema/snapshot';
 import {
   CCS_POLL_FROM,
-  ccsPollingOpen,
   classifyCcsSummary,
   cleanCcsSummary,
-  confirmKeyDates,
   parseCcsIcal,
   readBracketPublished,
 } from '@/lib/sources/ccs';

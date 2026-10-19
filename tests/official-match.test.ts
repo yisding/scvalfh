@@ -26,9 +26,9 @@ import type { LeagueRunState, SourceStatus } from '@/lib/model/health';
 import type { LeagueId } from '@/lib/model/ids';
 import type { Snapshot } from '@/lib/model/snapshot';
 import { applyExclusions, normalizeGames } from '@/lib/pipeline/reconcile/normalize';
-import { matchOfficialFixtures, type MatchOptions, type MatchResult } from '@/lib/official/match';
-import { loadBundledFixtures } from '@/lib/official/schema';
-import { officialChangesCellText, officialChangesHash, sha256Hex } from '@/lib/official/validate';
+import { exclusionFor, matchOfficialFixtures, type MatchOptions, type MatchResult } from '@/lib/official/match';
+import { loadBundledFixtures } from '@/lib/official/bundle-file';
+import { officialChangesCellText, officialChangesHash, sha256Hex } from '@/lib/official/changes-page';
 import {
   FixtureMissing,
   TransportError,
@@ -37,9 +37,9 @@ import {
   type RunContext,
   type Transport,
 } from '@/lib/pipeline/contract';
-import { isExcludedFor, stepOfficial } from '@/lib/pipeline/steps/official';
+import { stepOfficial } from '@/lib/pipeline/steps/official';
 import { ScheduleResponseSchema } from '@/lib/sources/maxpreps/schemas';
-import { parseSchedulePdfText } from '@/lib/sources/scval-pdf';
+import { parseSchedulePdfText } from '@/lib/sources/scval/grid';
 import { game } from './support/game-builder';
 import { allScheduleRows, corpusDir } from './support/corpus';
 import { REPO } from './support/repo';
@@ -47,8 +47,8 @@ import { testRunArgs } from './support/pipeline/run-args';
 
 /** Lets one test break a bundle at load (the step's validation-failure path). */
 const breakBundle = vi.hoisted(() => ({ league: null as string | null }));
-vi.mock('@/lib/official/schema', async (importOriginal) => {
-  const mod = await importOriginal<typeof import('@/lib/official/schema')>();
+vi.mock('@/lib/official/bundle-file', async (importOriginal) => {
+  const mod = await importOriginal<typeof import('@/lib/official/bundle-file')>();
   return {
     ...mod,
     loadBundledFixtures: (league: string, root?: string) => {
@@ -73,7 +73,7 @@ function corpusGames(): Game[] {
 
 const optionsFor = (league: LeagueId, today: string | undefined = TODAY): MatchOptions => ({
   matcher: getLeague(league).rules.matcher,
-  isExcluded: isExcludedFor(getLeague(league)),
+  isExcluded: exclusionFor(getLeague(league)),
   rescheduleWindowDays: 14,
   ...(today !== undefined ? { today } : {}),
 });

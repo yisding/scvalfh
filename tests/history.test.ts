@@ -27,12 +27,12 @@ import {
   parseCsv,
   parseGradeYear,
   parseStandingsCsv,
-} from '@/lib/sources/bval-sheet';
+} from '@/lib/sources/bval/sheet';
 import {
   parseAllLeaguePdfText,
   parseStandingsPdfText,
   SCVAL_HISTORY_PDFS,
-} from '@/lib/sources/scval-pdf';
+} from '@/lib/sources/scval/history';
 import { expectOk, runRepoScript } from './support/cli';
 import { REPO, tempDir, tempFile } from './support/repo';
 

@@ -29,8 +29,8 @@ import { type FlagSpec, parseFlags } from '@/lib/cli/flags';
 import { getDivision, getLeague } from '@/lib/config/leagues';
 import { bundledDivisions } from '@/lib/config/leagues/official';
 import { plural } from '@/lib/format/words';
+import type { BundleEvent, BundleFixture } from '@/lib/model/fixture';
 import type { LeagueId } from '@/lib/model/ids';
-import { parseBvalScheduleText } from '@/lib/official/bval-text';
 import {
   OFFICIAL_BUNDLE_SCHEMA,
   bundleToFixtures,
@@ -38,13 +38,12 @@ import {
   parseOfficialBundle,
   serializeBundle,
   type BundleDocument,
-  type BundleEvent,
-  type BundleFixture,
   type OfficialBundle,
-} from '@/lib/official/schema';
+} from '@/lib/official/bundle';
 import { assertDoubleRoundRobin } from '@/lib/official/validate';
 import { resolveOfficialName } from '@/lib/registry/resolve';
 import { officialFixtureId } from '@/lib/shared/official-id';
+import { parseBvalScheduleText } from '@/lib/sources/bval/schedule-text';
 import { runCli } from './cli';
 
 const REPO = path.resolve(import.meta.dirname, '..');

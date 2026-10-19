@@ -323,7 +323,7 @@ describe('layers: the dependency rule', () => {
 
     it('(d) sources import neither the pipeline nor lib/official', () => {
       expect(broken('lib/sources/maxpreps/client.ts', 'lib/pipeline/contract')).toEqual(['d']);
-      expect(broken('lib/sources/scval-pdf.ts', 'lib/official/schema')).toEqual(['d']);
+      expect(broken('lib/sources/scval/grid.ts', 'lib/official/bundle')).toEqual(['d']);
       expect(broken('lib/pipeline/contract.ts', 'lib/sources/http/raw-response')).toEqual([]);
     });
 
