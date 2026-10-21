@@ -1,18 +1,18 @@
 {
   "cifssCrossCheck": {
-    "agreements": 621,
+    "agreements": 622,
     "cifssOnlyScored": 0,
-    "compared": 629,
+    "compared": 630,
     "conflicts": 8,
     "notOnMaxPreps": 2
   },
-  "commitSummary": "SCVAL +4 finals · BVAL +4 · PCAL +2 · MCAL +1 · EAL +0 · Sunset +2 · City +5 · North +5 · Metro +0 · LA +0",
-  "contentHash": "d69e3cbad386997967732e61241a800d35d8ed2091d3c5e158a4e0202913b329",
+  "commitSummary": "SCVAL +0 finals · BVAL +2 · PCAL +0 · MCAL +0 · EAL +0 · Sunset +0 · City +0 · North +0 · Metro +0 · LA +0",
+  "contentHash": "9124b0c5ddbc4c4043cf42dcce2d042ba26945831846b4065ca8dd787609ebb7",
   "counts": {
     "byLeague": {
       "bval": {
         "backfilled": 0,
-        "finals": 98,
+        "finals": 100,
         "games": 118,
         "leagueGames": 60,
         "teams": 12
@@ -34,14 +34,14 @@
       "independents": {
         "backfilled": 0,
         "finals": 55,
-        "games": 56,
+        "games": 57,
         "leagueGames": 21,
         "teams": 5
       },
       "mcal": {
         "backfilled": 0,
         "finals": 85,
-        "games": 90,
+        "games": 91,
         "leagueGames": 72,
         "teams": 9
       },
@@ -76,31 +76,31 @@
       "sunset": {
         "backfilled": 0,
         "finals": 99,
-        "games": 103,
+        "games": 104,
         "leagueGames": 36,
         "teams": 8
       }
     },
-    "finals": 774,
-    "games": 906,
+    "finals": 776,
+    "games": 908,
     "leagueGames": 549,
     "mismatches": 26,
-    "pending": 7,
+    "pending": 5,
     "teams": 102
   },
   "crossCheck": {
-    "agreements": 218,
+    "agreements": 219,
     "backfilled": 3,
-    "compared": 273,
+    "compared": 274,
     "conflicts": 5,
     "sbliveOnlyScored": 6
   },
-  "fetchedAt": "2026-10-21T09:45:26.315Z",
+  "fetchedAt": "2026-10-21T18:22:49.948Z",
   "leagues": [
     {
       "backfilled": 0,
       "countedFinals": 82,
-      "finalsDelta": 4,
+      "finalsDelta": 0,
       "id": "scval",
       "missingPast": 2,
       "reasons": [],
@@ -108,17 +108,17 @@
     },
     {
       "backfilled": 0,
-      "countedFinals": 41,
-      "finalsDelta": 4,
+      "countedFinals": 43,
+      "finalsDelta": 2,
       "id": "bval",
-      "missingPast": 2,
+      "missingPast": 0,
       "reasons": [],
       "state": "fresh"
     },
     {
       "backfilled": 2,
       "countedFinals": 33,
-      "finalsDelta": 2,
+      "finalsDelta": 0,
       "id": "pcal",
       "missingPast": 1,
       "reasons": [],
@@ -127,7 +127,7 @@
     {
       "backfilled": 0,
       "countedFinals": 68,
-      "finalsDelta": 1,
+      "finalsDelta": 0,
       "id": "mcal",
       "missingPast": 1,
       "reasons": [],
@@ -145,7 +145,7 @@
     {
       "backfilled": 0,
       "countedFinals": 35,
-      "finalsDelta": 2,
+      "finalsDelta": 0,
       "id": "sunset",
       "missingPast": 0,
       "reasons": [],
@@ -154,7 +154,7 @@
     {
       "backfilled": 0,
       "countedFinals": 42,
-      "finalsDelta": 5,
+      "finalsDelta": 0,
       "id": "city",
       "missingPast": 0,
       "reasons": [],
@@ -163,7 +163,7 @@
     {
       "backfilled": 0,
       "countedFinals": 67,
-      "finalsDelta": 5,
+      "finalsDelta": 0,
       "id": "north-county",
       "missingPast": 1,
       "reasons": [],
@@ -498,7 +498,7 @@
     },
     {
       "label": "lick-wilmerding schedule",
-      "rowCount": 17,
+      "rowCount": 18,
       "status": "ok"
     },
     {
@@ -508,7 +508,7 @@
     },
     {
       "label": "marin-catholic schedule",
-      "rowCount": 18,
+      "rowCount": 19,
       "status": "ok"
     },
     {
@@ -618,7 +618,7 @@
     },
     {
       "label": "newport-harbor schedule",
-      "rowCount": 18,
+      "rowCount": 19,
       "status": "ok"
     },
     {
@@ -898,7 +898,7 @@
     },
     {
       "label": "glendora schedule",
-      "rowCount": 14,
+      "rowCount": 15,
       "status": "ok"
     },
     {
@@ -1008,7 +1008,7 @@
     },
     {
       "label": "sblive marin-catholic games",
-      "rowCount": 17,
+      "rowCount": 19,
       "status": "ok"
     },
     {
