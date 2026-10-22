@@ -1962,6 +1962,27 @@
         }
       ],
       "basis": "MAX Field Hockey's player page for her (served as HTML since MAX moved to WordPress; earlier rounds could read MAX only through a script and used it as a lead) names her, class of 2027, hometown Temecula, CA, high school Temecula Valley, club Myto, and 'Committed to Barton', linking MAX's college page for Barton College (Wilson, NC, Division II, South Atlantic Conference); its California commitments table lists the same row first. Rule (a): the page names the player, the college and the school in field hockey; class 2027 agrees with roster grade 12, and Myto is the club data/clubs.json ties her to. Medium, not high: MAX takes commitments its users report, and nothing else confirms it; her own SportsRecruits and NCSA profiles (2027, Temecula Valley, Myto) show no commitment, nor do FH College Path, Barton's site or Myto's. No date: the profile page's metadata says it was published 2026-10-14, which dates the page, not the commitment. Found by the 2026-10-22 list sweep; a checker and an independent refuter both re-read it and kept it as medium."
+    },
+    {
+      "teamSlug": "st-ignatius",
+      "athleteId": "a32d08b2-dc29-485c-9287-a4da168f5cdd",
+      "fullName": "Kaye Zilinskas",
+      "college": "uc-davis",
+      "sport": "lacrosse",
+      "status": "committed",
+      "asOf": null,
+      "confidence": "high",
+      "sources": [
+        {
+          "url": "https://iwlca.sportsrecruits.com/athlete/kaye_zilinskas",
+          "kind": "sportsrecruits",
+          "quote": "Watch Kaye's recruiting video • 2028 • Defense, Midfield • The Tenacity Project • San Francisco, CA • Committed to University of California - Davis • … I play both lacrosse and field hockey for St. Ignatius College Prep",
+          "statedSchool": "St. Ignatius College Prep",
+          "statedClassYear": 2028,
+          "sourceDate": null
+        }
+      ],
+      "basis": "Her own SportsRecruits lacrosse profile (class of 2028, defense and midfield, The Tenacity Project, San Francisco, CA) says committed to University of California - Davis, and its bio says she plays lacrosse and field hockey for St. Ignatius College Prep: the player, the college and the school, so rule (a), high. Class 2028 agrees with the roster's grade 11. The Tenacity Project's SportsRecruits commitments page lists the same line with her school, but it draws its list with a script, so it is not cited. Earlier probes read only her field hockey profile (kaye_zilinskas3), which shows no commitment; found by the 2026-10-22 web-search sweep. No date."
     }
   ]
 }

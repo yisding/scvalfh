@@ -181,15 +181,15 @@ describe('the committed data/commits.json', () => {
   });
 });
 
-describe('the research of 2026-10-03, 2026-10-04, 2026-10-06, 2026-10-12 and 2026-10-22 (the EAL sweeps found no row; the Southern California round twelve; the 2026-10-12 round three; the 2026-10-22 round one), as counted in README "College commitments" and DATA-SOURCES §1.1j3', () => {
+describe('the research of 2026-10-03, 2026-10-04, 2026-10-06, 2026-10-12 and 2026-10-22 (the EAL sweeps found no row; the Southern California round twelve; the 2026-10-12 round three; the 2026-10-22 round two), as counted in README "College commitments" and DATA-SOURCES §1.1j3', () => {
   // Pinned: change these only with a new sweep, together with those two documents.
   const SOCAL = new Set(['sunset', 'city', 'north-county', 'metro', 'independents']);
   const socal = raw.commitments.filter((c) => SOCAL.has(getTeamBySlug(c.teamSlug)!.league));
   const norcal = raw.commitments.filter((c) => !SOCAL.has(getTeamBySlug(c.teamSlug)!.league));
 
-  it('holds 32 commitments from 19 schools to 25 colleges (28 programs), all "committed", 27 high and 5 medium', () => {
+  it('holds 33 commitments from 19 schools to 25 colleges (28 programs), all "committed", 28 high and 5 medium', () => {
     expect(raw.capturedAt).toBe('2026-10-22');
-    expect(raw.commitments).toHaveLength(32);
+    expect(raw.commitments).toHaveLength(33);
     expect(raw.colleges).toHaveLength(25);
     expect(raw.colleges.flatMap((c) => c.programs)).toHaveLength(28);
     expect(new Set(norcal.map((c) => c.teamSlug))).toEqual(
@@ -207,7 +207,7 @@ describe('the research of 2026-10-03, 2026-10-04, 2026-10-06, 2026-10-12 and 202
         'valley-christian',
       ]),
     );
-    expect(norcal).toHaveLength(18);
+    expect(norcal).toHaveLength(19);
     expect(new Set(socal.map((c) => c.teamSlug))).toEqual(
       new Set(['bishops', 'canyon-hills', 'cathedral-catholic', 'harvard-westlake', 'san-dieguito-academy', 'scripps-ranch', 'temecula-valley', 'torrey-pines']),
     );
@@ -229,9 +229,9 @@ describe('the research of 2026-10-03, 2026-10-04, 2026-10-06, 2026-10-12 and 202
     expect(raw.commitments.filter((c) => ealSlugs.has(c.teamSlug))).toEqual([]);
   });
 
-  it('by sport: 18 field hockey, 11 lacrosse, 1 soccer, 1 basketball, 1 softball (SoCal: 11 field hockey, 3 lacrosse)', () => {
+  it('by sport: 18 field hockey, 12 lacrosse, 1 soccer, 1 basketball, 1 softball (SoCal: 11 field hockey, 3 lacrosse)', () => {
     const sport = (s: string, list = raw.commitments) => list.filter((c) => c.sport === s).length;
-    expect([sport('field-hockey'), sport('lacrosse'), sport('soccer'), sport('basketball'), sport('softball')]).toEqual([18, 11, 1, 1, 1]);
+    expect([sport('field-hockey'), sport('lacrosse'), sport('soccer'), sport('basketball'), sport('softball')]).toEqual([18, 12, 1, 1, 1]);
     expect([sport('field-hockey', socal), sport('lacrosse', socal)]).toEqual([11, 3]);
     // Three colleges hold two programs: UC Davis (field hockey in the MPSF, lacrosse in the Big 12),
     // Cal (field hockey and lacrosse, both ACC) and Harvard (both Ivy League).
@@ -249,18 +249,18 @@ describe('the research of 2026-10-03, 2026-10-04, 2026-10-06, 2026-10-12 and 202
     ]);
   });
 
-  it('by class: 21 from 2027 and 11 from 2028; by level: 21 Division I, 3 Division II, 8 Division III', () => {
+  it('by class: 21 from 2027 and 12 from 2028; by level: 22 Division I, 3 Division II, 8 Division III', () => {
     const classes = getCommitments().map((c) => commitClassOf(c));
     expect(classes.filter((y) => y === 2027)).toHaveLength(21);
-    expect(classes.filter((y) => y === 2028)).toHaveLength(11);
+    expect(classes.filter((y) => y === 2028)).toHaveLength(12);
     const level = (d: string) => raw.commitments.filter((c) => commitProgram(c).program.division === d).length;
-    expect([level('ncaa-d1'), level('ncaa-d2'), level('ncaa-d3'), level('naia')]).toEqual([21, 3, 8, 0]);
+    expect([level('ncaa-d1'), level('ncaa-d2'), level('ncaa-d3'), level('naia')]).toEqual([22, 3, 8, 0]);
   });
 
-  it('rests on 90 source entries on 72 distinct URLs (SoCal: 41 on 34), and 12 commitments carry a date', () => {
+  it('rests on 91 source entries on 73 distinct URLs (SoCal: 41 on 34), and 12 commitments carry a date', () => {
     const entries = raw.commitments.flatMap((c) => c.sources);
-    expect(entries).toHaveLength(90);
-    expect(new Set(entries.map((s) => s.url)).size).toBe(72);
+    expect(entries).toHaveLength(91);
+    expect(new Set(entries.map((s) => s.url)).size).toBe(73);
     const socalEntries = socal.flatMap((c) => c.sources);
     expect(socalEntries).toHaveLength(41);
     expect(new Set(socalEntries.map((s) => s.url)).size).toBe(34);
@@ -313,6 +313,7 @@ describe('the research of 2026-10-03, 2026-10-04, 2026-10-06, 2026-10-12 and 202
       'Ryan Hemeon',
       'Gianna Rinaldi',
       'Olivia Van De Braak',
+      'Kaye Zilinskas',
       'Shyla Paredes',
     ]);
     expect(getColleges().map((c) => c.slug)).toEqual([
@@ -376,7 +377,7 @@ describe('lib/commits.ts read API', () => {
     const latest = [raw.capturedAt, ...raw.colleges.map((c) => c.checkedOn)].sort().at(-1);
     expect(getCommitsLastChecked()).toBe(latest);
     expect(getCommitsLastChecked() >= raw.capturedAt).toBe(true);
-    // The 2026-10-22 round added Kendall Gann and Barton.
+    // The 2026-10-22 round added Kendall Gann (and Barton) and Kaye Zilinskas.
     expect(getCommitsLastChecked()).toBe('2026-10-22');
   });
 
