@@ -1367,8 +1367,10 @@ and SCNG papers' high school sections since August, other local papers, Patch, t
 and school athletics sites that answered, and the West Coast college programs' news. Four
 player-by-player sweeps ran one extended web search for each of the 1,375 class-of-2027,
 class-of-2028 and ungraded rows not already in the file (standard-mode results missed known
-commitments, so rows first searched that way were searched again in extended mode); the 309
-sophomores and freshmen got none. Two commitments were found: Kendall Gann, Temecula Valley, class of
+commitments, so rows first searched that way were searched again in extended mode). The class years here are
+`data/rosters.json`'s grades (1,406 + 267 = 1,673), so the 267 rows it grades as sophomores or
+freshmen got none; the 2026-10-12 round's 309 also counted rows graded only by other pages, which
+this round searched as ungraded. Two commitments were found: Kendall Gann, Temecula Valley, class of
 2027, to Barton College (NCAA Division II; its field hockey team plays in the South Atlantic
 Conference, its other teams in Conference Carolinas) in field hockey, on MAX's player page and
 California table, which name her school and Myto (medium: MAX takes the commitments its users
