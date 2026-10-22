@@ -987,9 +987,10 @@ so other JV players may have club ties no page here records.
 roster, DESIGN §21). Research on 2026-10-03 (field hockey) and 2026-10-04 (every sport, and a second
 field hockey pass; and, for the six EAL teams' schools, a field hockey sweep and then the every-sport
 round; and, on 2026-10-06, the every-sport round for the 53 Southern California teams' schools; and, on
-2026-10-12, a round over every row with each player's other sports, partial: see below), not
-a script: nothing fetches or refreshes it. It holds 31 commitments (17 in field hockey, 11 in lacrosse,
-1 in soccer, 1 in basketball, 1 in softball) and the 24 colleges they are to, with 27 programs (UC Davis, Cal and
+2026-10-12, a round over every row with each player's other sports, partial: see below; and, on
+2026-10-22, another round over every row: see below), not
+a script: nothing fetches or refreshes it. It holds 33 commitments (18 in field hockey, 12 in lacrosse,
+1 in soccer, 1 in basketball, 1 in softball) and the 25 colleges they are to, with 28 programs (UC Davis, Cal and
 Harvard hold two each: field hockey and lacrosse), each commitment a player on the tracked varsity
 rosters (43 teams in both NorCal rounds; 49 with the EAL; 102 with Southern California), joined to `data/rosters.json` on team slug + MaxPreps
 athleteId as the clubs are. A commitment has the college, the `sport` (field hockey, or any other:
@@ -1349,9 +1350,9 @@ the school, backs (high). Still to run: web searches for the 309 sophomores and 
 official accounts' posts themselves (X lists none without a login; Instagram cannot be read from the
 research environment).
 
-*Recall is partial.* On 2026-10-12, 31 of the 1,673 varsity rows have a commitment, at 18 of the 102
-schools (Valley Christian and Archbishop Mitty added on 2026-10-12): Southern California's 13 at 7 (Torrey Pines 2, Canyon Hills 4, Bishop's 2, Cathedral Catholic 2 with Campbell Trocha of 2026-10-12, Harvard-Westlake,
-Scripps Ranch and San Dieguito Academy 1 each). Every one of the 842 rows had a
+*Recall is partial.* On 2026-10-22, 33 of the 1,673 varsity rows have a commitment, at 19 of the 102
+schools (Valley Christian and Archbishop Mitty added on 2026-10-12, Temecula Valley on 2026-10-22): Southern California's 14 at 8 (Torrey Pines 2, Canyon Hills 4, Bishop's 2, Cathedral Catholic 2 with Campbell Trocha of 2026-10-12, Harvard-Westlake,
+Scripps Ranch, San Dieguito Academy and Temecula Valley 1 each); Northern California's 19 include St. Ignatius' seventh, Kaye Zilinskas, of 2026-10-22. Every one of the 842 rows had a
 SportsRecruits probe in every sport, and 840 at least one web search (the two others are already
 committed players); juniors and ungraded rows of the first pass got one search, the rest two; no row
 had a SportsRecruits athlete search. On 2026-10-04, 16 of the 811 varsity rows had a commitment, at 9 of the 49
@@ -2941,7 +2942,7 @@ rules clause.)
   without SportsRecruits' athlete search or web searches for freshmen and sophomores) and, for the 53
   Southern California teams' schools, on 2026-10-06 (twelve found, one under the revised nickname rule;
   web searches for 840 of the 842 rows, no SportsRecruits athlete search), and nothing refreshes them:
-  recall is partial (31 of the 1,673 varsity rows, at 18 of the 102 schools, on 2026-10-12; social
+  recall is partial (33 of the 1,673 varsity rows, at 19 of the 102 schools, on 2026-10-22; social
   media, where most are announced, counts only from an official account), a signing or decommitment after that date is not
   shown, and a roster refetch that drops or respells a committed row fails the build until it is
   re-checked by hand.
