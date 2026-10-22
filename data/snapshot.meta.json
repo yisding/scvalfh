@@ -1,13 +1,13 @@
 {
   "cifssCrossCheck": {
-    "agreements": 631,
-    "cifssOnlyScored": 0,
-    "compared": 639,
-    "conflicts": 8,
+    "agreements": 637,
+    "cifssOnlyScored": 1,
+    "compared": 644,
+    "conflicts": 7,
     "notOnMaxPreps": 2
   },
-  "commitSummary": "SCVAL +1 finals · BVAL +0 · PCAL +0 · MCAL +0 · EAL +0 · Sunset +0 · City +0 · North +0 · Metro +0 · LA +0",
-  "contentHash": "09ca7f6484d4dd473bc502924f7ba4c4070988d79efcca57130f6e7d8d78fb1d",
+  "commitSummary": "SCVAL +0 finals · BVAL +0 · PCAL +0 · MCAL +0 · EAL +1 · Sunset +0 · City +0 · North +1 · Metro +0 · LA +0",
+  "contentHash": "93acbb342de792af4127d4611b3b377de1f10ab08c3cde9370bf1ebf0aca521a",
   "counts": {
     "byLeague": {
       "bval": {
@@ -26,7 +26,7 @@
       },
       "eal": {
         "backfilled": 0,
-        "finals": 37,
+        "finals": 38,
         "games": 44,
         "leagueGames": 30,
         "teams": 6
@@ -48,14 +48,14 @@
       "metro": {
         "backfilled": 0,
         "finals": 86,
-        "games": 101,
+        "games": 103,
         "leagueGames": 29,
         "teams": 9
       },
       "north-county": {
         "backfilled": 1,
-        "finals": 220,
-        "games": 257,
+        "finals": 221,
+        "games": 262,
         "leagueGames": 103,
         "teams": 19
       },
@@ -76,31 +76,31 @@
       "sunset": {
         "backfilled": 0,
         "finals": 100,
-        "games": 104,
+        "games": 105,
         "leagueGames": 36,
         "teams": 8
       }
     },
-    "finals": 787,
-    "games": 908,
+    "finals": 789,
+    "games": 913,
     "leagueGames": 549,
     "mismatches": 27,
-    "pending": 9,
+    "pending": 10,
     "teams": 102
   },
   "crossCheck": {
-    "agreements": 217,
+    "agreements": 216,
     "backfilled": 4,
-    "compared": 276,
-    "conflicts": 5,
-    "sbliveOnlyScored": 7
+    "compared": 280,
+    "conflicts": 6,
+    "sbliveOnlyScored": 9
   },
-  "fetchedAt": "2026-10-22T14:45:12.908Z",
+  "fetchedAt": "2026-10-22T18:16:53.741Z",
   "leagues": [
     {
       "backfilled": 1,
       "countedFinals": 85,
-      "finalsDelta": 1,
+      "finalsDelta": 0,
       "id": "scval",
       "missingPast": 2,
       "reasons": [],
@@ -135,10 +135,10 @@
     },
     {
       "backfilled": 0,
-      "countedFinals": 25,
-      "finalsDelta": 0,
+      "countedFinals": 26,
+      "finalsDelta": 1,
       "id": "eal",
-      "missingPast": 3,
+      "missingPast": 2,
       "reasons": [],
       "state": "fresh"
     },
@@ -162,10 +162,10 @@
     },
     {
       "backfilled": 0,
-      "countedFinals": 68,
-      "finalsDelta": 0,
+      "countedFinals": 69,
+      "finalsDelta": 1,
       "id": "north-county",
-      "missingPast": 2,
+      "missingPast": 1,
       "reasons": [],
       "state": "fresh"
     },
@@ -193,7 +193,7 @@
   "requests": {
     "maxpreps": 131,
     "official": 8,
-    "sblive": 21
+    "sblive": 22
   },
   "sources": [
     {
@@ -598,7 +598,7 @@
     },
     {
       "label": "fountain-valley schedule",
-      "rowCount": 16,
+      "rowCount": 17,
       "status": "ok"
     },
     {
@@ -768,7 +768,7 @@
     },
     {
       "label": "mission-vista schedule",
-      "rowCount": 25,
+      "rowCount": 26,
       "status": "ok"
     },
     {
@@ -798,7 +798,7 @@
     },
     {
       "label": "mission-hills schedule",
-      "rowCount": 27,
+      "rowCount": 32,
       "status": "ok"
     },
     {
@@ -818,7 +818,7 @@
     },
     {
       "label": "westview schedule",
-      "rowCount": 29,
+      "rowCount": 30,
       "status": "ok"
     },
     {
@@ -848,12 +848,12 @@
     },
     {
       "label": "eastlake schedule",
-      "rowCount": 18,
+      "rowCount": 19,
       "status": "ok"
     },
     {
       "label": "helix schedule",
-      "rowCount": 27,
+      "rowCount": 28,
       "status": "ok"
     },
     {
@@ -957,6 +957,11 @@
       "status": "ok"
     },
     {
+      "label": "sblive scoreboard 2026-10-18",
+      "rowCount": 15,
+      "status": "ok"
+    },
+    {
       "label": "sblive scoreboard 2026-10-19",
       "rowCount": 11,
       "status": "ok"
@@ -1007,13 +1012,13 @@
       "status": "ok"
     },
     {
-      "label": "sblive lick-wilmerding games",
-      "rowCount": 17,
+      "label": "sblive marin-catholic games",
+      "rowCount": 19,
       "status": "ok"
     },
     {
-      "label": "sblive marin-catholic games",
-      "rowCount": 19,
+      "label": "sblive mission-hills games",
+      "rowCount": 22,
       "status": "ok"
     },
     {
@@ -1048,12 +1053,12 @@
     },
     {
       "label": "cifsshome.org Southern Section field hockey",
-      "rowCount": 199,
+      "rowCount": 200,
       "status": "ok"
     },
     {
       "label": "cifsshome.org San Diego Section field hockey",
-      "rowCount": 632,
+      "rowCount": 647,
       "status": "ok"
     },
     {
@@ -1068,7 +1073,7 @@
     }
   ],
   "today": "2026-10-22",
-  "warnings": 42,
+  "warnings": 43,
   "window": {
     "firstGame": "2026-08-12T17:15:00",
     "lastGame": "2026-10-30T19:00:00",
