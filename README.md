@@ -706,8 +706,14 @@ program has a commitment, a college has one program per sport, one commitment pe
 `fullName`; every stated class year agrees with the row's grade, or, for a row with no grade, the
 sources agree with each other on a class a high school roster of the season can hold.
 
-Coverage on 2026-10-12, counted from the file: **31 commitments, 31 players at 18 of the 102 schools, to
-24 colleges (27 programs).** The 2026-10-12 round (see below) added three. Two are from Northern California:
+Coverage on 2026-10-22, counted from the file: **33 commitments, 33 players at 19 of the 102 schools, to
+25 colleges (28 programs).** The 2026-10-22 round (see below) added two: Kendall Gann, Temecula
+Valley, class of 2027, to Barton College (NCAA Division II, South Atlantic Conference) in field hockey
+(medium: MAX Field Hockey's player page, now served as HTML, names her school and the college, but MAX
+takes the commitments its users report and nothing else confirms it), and Kaye Zilinskas, St. Ignatius,
+class of 2028, to UC Davis in lacrosse (high: her own SportsRecruits lacrosse profile names her school;
+the earlier probes read only her field hockey one). It also raised Ryan Hemeon (Christopher, UC Davis)
+from medium to high: Stick Together's issue of Oct 6, 2026 names her school. The 2026-10-12 round added three. Two are from Northern California:
 Shyla Paredes, Valley Christian, to Cal Baptist in softball (medium: her travel club Cal Nuggets'
 commitment list and roster, tied to her by her own MaxPreps page naming the club), and Molly Waltz,
 Archbishop Mitty, to UC Davis in lacrosse (high: ADVNC Lacrosse's commits page names her school, and
@@ -785,6 +791,15 @@ and an independent refuter re-opened each of the eleven it found, and both kept 
 the revised nickname rule, a twelfth: Sami Lee to Columbia, kept by a fresh checker and refuter);
 SportsRecruits' athlete search was not run for these rows. Recall is partial: see `docs/DATA-SOURCES.md` §1.1j3
 for the sources, what was rejected and why, and the gaps.
+The round of 2026-10-22 went over every row again: SportsRecruits' commits feed for every college
+program (87,015 records in every sport, matched to the rosters by name, every match's profile opened)
+and a profile-address probe in every sport for the 1,406 class-of-2027, class-of-2028 and ungraded
+rows; the field hockey and other-sport lists and club commitment pages, read whole and matched
+against every row; local, student and school news since August; and one extended web search for each
+of the 1,375 class-of-2027, class-of-2028 and ungraded rows not already in the file. It found Kendall
+Gann (re-read by hand and by an independent refuter, who kept it as medium) and Kaye Zilinskas (found
+separately by a web search and by the SportsRecruits sweep, and re-read by hand), and no signing or
+decommitment.
 
 **When a roster refetch breaks it.** `lib/commits.ts` throws at import, as `lib/clubs.ts` does, if
 `pnpm fetch-rosters` drops or respells a committed player's row, if the overlay marks it JV, or if a
@@ -1527,16 +1542,18 @@ Two `/leaders` boards per region weigh scoring by the defenses it came against
   players; the 21 rows MaxPreps added to Marin Academy and Westmont on 2026-10-07, one tie), and nothing
   refreshes them. See `docs/DATA-SOURCES.md` §1.1j2.
 - **Commitment recall is partial, and the list does not update itself.** A commitment is listed
-  only when a public page meets the linking rule, and social media counts only from an official account, so on 2026-10-12 31 of
-  the 1,673 varsity rows have a commitment line (in any sport) and 84 of the 102 schools have none; a player with no
+  only when a public page meets the linking rule, and social media counts only from an official account, so on 2026-10-22 33 of
+  the 1,673 varsity rows have a commitment line (in any sport) and 83 of the 102 schools have none; a player with no
   line may still have committed. It was researched on 2026-10-03 and 2026-10-04 (the six EAL teams'
   schools on 2026-10-04, for field hockey and then every sport, with none found, though without
   SportsRecruits' athlete search or web searches for freshmen and sophomores): a later signing,
   decommitment or new commitment (the class of 2027's signing period is in November) is not shown
   until someone redoes it by hand. The 53 Southern California teams' schools were swept on 2026-10-06,
   in every sport, with at least one web search for 840 of the 842 rows (the other two are players whose
-  commitments were already found) but without SportsRecruits' athlete search. See
-  `docs/DATA-SOURCES.md` §1.1j3.
+  commitments were already found) but without SportsRecruits' athlete search. The latest round, on
+  2026-10-22, gave each of the 1,375 class-of-2027, class-of-2028 and ungraded rows not already in the
+  file an extended web search, and none to the 267 rows the roster grades as sophomores or freshmen
+  (Southern California's had theirs on 2026-10-06). See `docs/DATA-SOURCES.md` §1.1j3.
 - JV tables are unofficial and computed: no league publishes JV standings in season, a JV league game
   is identified by its varsity counterpart, and a table is shown only once 60% of its division's played
   JV league games have a score (on 2026-10-05: El Camino, MCAL and the EAL). There are no JV leaders or

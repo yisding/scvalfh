@@ -987,9 +987,10 @@ so other JV players may have club ties no page here records.
 roster, DESIGN §21). Research on 2026-10-03 (field hockey) and 2026-10-04 (every sport, and a second
 field hockey pass; and, for the six EAL teams' schools, a field hockey sweep and then the every-sport
 round; and, on 2026-10-06, the every-sport round for the 53 Southern California teams' schools; and, on
-2026-10-12, a round over every row with each player's other sports, partial: see below), not
-a script: nothing fetches or refreshes it. It holds 31 commitments (17 in field hockey, 11 in lacrosse,
-1 in soccer, 1 in basketball, 1 in softball) and the 24 colleges they are to, with 27 programs (UC Davis, Cal and
+2026-10-12, a round over every row with each player's other sports, partial: see below; and, on
+2026-10-22, another round over every row: see below), not
+a script: nothing fetches or refreshes it. It holds 33 commitments (18 in field hockey, 12 in lacrosse,
+1 in soccer, 1 in basketball, 1 in softball) and the 25 colleges they are to, with 28 programs (UC Davis, Cal and
 Harvard hold two each: field hockey and lacrosse), each commitment a player on the tracked varsity
 rosters (43 teams in both NorCal rounds; 49 with the EAL; 102 with Southern California), joined to `data/rosters.json` on team slug + MaxPreps
 athleteId as the clubs are. A commitment has the college, the `sport` (field hockey, or any other:
@@ -1349,9 +1350,42 @@ the school, backs (high). Still to run: web searches for the 309 sophomores and 
 official accounts' posts themselves (X lists none without a login; Instagram cannot be read from the
 research environment).
 
-*Recall is partial.* On 2026-10-12, 31 of the 1,673 varsity rows have a commitment, at 18 of the 102
-schools (Valley Christian and Archbishop Mitty added on 2026-10-12): Southern California's 13 at 7 (Torrey Pines 2, Canyon Hills 4, Bishop's 2, Cathedral Catholic 2 with Campbell Trocha of 2026-10-12, Harvard-Westlake,
-Scripps Ranch and San Dieguito Academy 1 each). Every one of the 842 rows had a
+*The 2026-10-22 round.* Another pass over every row, ten days on. A SportsRecruits sweep read its
+commits feed (`api.sportsrecruits.com/api/v1/program/commits/<id>/<offset>`, ten records a page; the
+id is the college's, so one feed carries every sport, men's included: ids 1 to 3,299, 87,015 records
+over 1,549 programs), matched it to the rosters by full name and by surname, initial and class, and
+opened every match's profile (425); it ran the profile-address probe in every sport for the 1,406
+class-of-2027, class-of-2028 and ungraded rows (15,052 addresses; a live one answers 307 to its
+sport's subdomain; 1,322 live pages read) and re-read every SportsRecruits profile already linked.
+NCSA's public pages show no commitment even for committed players, so loading the 89 linked ones
+proved nothing. A list sweep re-read FH College Path (classes 2026 to 2031), Play College Field
+Hockey's sheet, MAX Field Hockey's whole commitments table, which MAX now serves as HTML (its player
+pages too, so a MAX page can be cited where before it was a lead), Stick Together, the clubs in
+`data/clubs.json`, and the lacrosse, soccer, softball, volleyball, water polo, basketball and track
+lists of earlier rounds, matching each against every row. A news sweep read the Bay Area News Group
+and SCNG papers' high school sections since August, other local papers, Patch, the student papers
+and school athletics sites that answered, and the West Coast college programs' news. Four
+player-by-player sweeps ran one extended web search for each of the 1,375 class-of-2027,
+class-of-2028 and ungraded rows not already in the file (standard-mode results missed known
+commitments, so rows first searched that way were searched again in extended mode). The class years here are
+`data/rosters.json`'s grades (1,406 + 267 = 1,673), so the 267 rows it grades as sophomores or
+freshmen got none; the 2026-10-12 round's 309 also counted rows graded only by other pages, which
+this round searched as ungraded. Two commitments were found: Kendall Gann, Temecula Valley, class of
+2027, to Barton College (NCAA Division II; its field hockey team plays in the South Atlantic
+Conference, its other teams in Conference Carolinas) in field hockey, on MAX's player page and
+California table, which name her school and Myto (medium: MAX takes the commitments its users
+report, her own profiles show none, and a refuter kept it at medium); and Kaye Zilinskas, St.
+Ignatius, class of 2028, to UC Davis in lacrosse, on her own SportsRecruits lacrosse profile, which
+names the school, and SportsRecruits' UC Davis page (high; earlier probes read only her field hockey
+profile). Stick Together's Oct 6 issue names Ryan Hemeon's school, so hers is now high, and backs
+Olivia Van De Braak's. No source said any player had signed or decommitted; the class of 2027's
+signing period is in November. Not reached: ClubLax (its certificate does not match its host), Mad
+Dog West, SoCal Express and NorCal Starz (proxy errors), The Tenacity Project's site, Cal's athletics
+site, and X and Instagram.
+
+*Recall is partial.* On 2026-10-22, 33 of the 1,673 varsity rows have a commitment, at 19 of the 102
+schools (Valley Christian and Archbishop Mitty added on 2026-10-12, Temecula Valley on 2026-10-22): Southern California's 14 at 8 (Torrey Pines 2, Canyon Hills 4, Bishop's 2, Cathedral Catholic 2 with Campbell Trocha of 2026-10-12, Harvard-Westlake,
+Scripps Ranch, San Dieguito Academy and Temecula Valley 1 each); Northern California's 19 include St. Ignatius' seventh, Kaye Zilinskas, of 2026-10-22. Every one of the 842 rows had a
 SportsRecruits probe in every sport, and 840 at least one web search (the two others are already
 committed players); juniors and ungraded rows of the first pass got one search, the rest two; no row
 had a SportsRecruits athlete search. On 2026-10-04, 16 of the 811 varsity rows had a commitment, at 9 of the 49
@@ -2941,7 +2975,7 @@ rules clause.)
   without SportsRecruits' athlete search or web searches for freshmen and sophomores) and, for the 53
   Southern California teams' schools, on 2026-10-06 (twelve found, one under the revised nickname rule;
   web searches for 840 of the 842 rows, no SportsRecruits athlete search), and nothing refreshes them:
-  recall is partial (31 of the 1,673 varsity rows, at 18 of the 102 schools, on 2026-10-12; social
+  recall is partial (33 of the 1,673 varsity rows, at 19 of the 102 schools, on 2026-10-22; social
   media, where most are announced, counts only from an official account), a signing or decommitment after that date is not
   shown, and a roster refetch that drops or respells a committed row fails the build until it is
   re-checked by hand.
