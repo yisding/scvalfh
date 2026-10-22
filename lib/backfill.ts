@@ -29,7 +29,7 @@
  */
 
 import { dayDiff, monthDay, shiftDateKey, shootoutPhrases, toLocalTimestamp } from './format';
-import { LEAGUES, getLeague, getSection, leagueOfDivision, type SectionConfig } from './leagues';
+import { DATA_QUALITY, LEAGUES, getLeague, getSection, leagueOfDivision, type SectionConfig } from './leagues';
 import {
   isCaliforniaGameRow,
   isIgnoredSbliveSide,
@@ -137,6 +137,22 @@ function gamePair(g: Pick<Game, 'home' | 'away'>): string | null {
 
 function fixturePair(f: OfficialFixture): string | null {
   return f.homeSlug && f.awaySlug && f.homeSlug !== f.awaySlug ? unorderedPairKey(f.homeSlug, f.awaySlug) : null;
+}
+
+/**
+ * When and where a fixture was played: the official date and sides, unless DATA_QUALITY.fixtureMoves moves it (a
+ * league game played on another date, maybe at the other school). Rule 2 searches MaxPreps and si.com on this date.
+ */
+export function playedFixture(f: OfficialFixture): { dateKey: string; homeSlug: TeamSlug | null; awaySlug: TeamSlug | null; source: string | null } {
+  const move = DATA_QUALITY.fixtureMoves[f.id];
+  if (!move) return { dateKey: f.dateKey, homeSlug: f.homeSlug, awaySlug: f.awaySlug, source: null };
+  const swapped = move.home === f.awaySlug;
+  return {
+    dateKey: move.dateKey,
+    homeSlug: swapped ? f.awaySlug : f.homeSlug,
+    awaySlug: swapped ? f.homeSlug : f.awaySlug,
+    source: move.source,
+  };
 }
 
 const isSbliveContest = (id: string) => id.startsWith('sblive:');
@@ -411,9 +427,10 @@ export function eligibleItems(
   }
   for (const f of unmatched) {
     const pairKey = fixturePair(f);
-    if (!pairKey || f.dateKey >= today) continue;
-    if (hasPairContestNear(games, pairKey, f.dateKey, MAXPREPS_PAIR_WINDOW_DAYS, f.id).length) continue;
-    out.push({ kind: 'absent-fixture', pairKey, date: f.dateKey, fixture: f, contestId: null });
+    const date = playedFixture(f).dateKey;
+    if (!pairKey || date >= today) continue;
+    if (hasPairContestNear(games, pairKey, date, MAXPREPS_PAIR_WINDOW_DAYS, f.id).length) continue;
+    out.push({ kind: 'absent-fixture', pairKey, date, fixture: f, contestId: null });
   }
   return out;
 }
@@ -527,7 +544,8 @@ function absentFixtureGame(
 ): Game {
   const dates = datesOf(row);
   const short = leagueOfDivision(f.division).shortName;
-  const note = `MaxPreps has no contest for this ${short} fixture (official date ${monthDay(f.dateKey)}), so the score is si.com’s.`;
+  const moved = playedFixture(f).source;
+  const note = `MaxPreps has no contest for this ${short} fixture (official date ${monthDay(f.dateKey)}), so the score is si.com’s.${moved ? ` ${moved}` : ''}`;
   const backfill: BackfillProvenance = { rule: 'absent-fixture', sbliveGameId: row.sbliveGameId, maxpreps: null, note };
   return {
     contestId: `sblive:${row.sbliveGameId}`,
@@ -787,29 +805,31 @@ export function applyBackfill(input: BackfillInput): BackfillResult {
     const added: Game[] = [];
     for (const f of unmatched) {
       const pairKey = fixturePair(f);
-      if (!pairKey || f.dateKey >= input.today || !f.homeSlug || !f.awaySlug) {
+      const played = playedFixture(f);
+      const date = played.dateKey;
+      if (!pairKey || date >= input.today || !played.homeSlug || !played.awaySlug) {
         stillUnmatched.push(f);
         continue;
       }
-      const home = getTeamBySlug(f.homeSlug);
-      const away = getTeamBySlug(f.awaySlug);
+      const home = getTeamBySlug(played.homeSlug);
+      const away = getTeamBySlug(played.awaySlug);
       if (!home || !away) {
         stillUnmatched.push(f);
         continue;
       }
       const label = `${away.name} at ${home.name}`;
-      const near = hasPairContestNear(input.games, pairKey, f.dateKey, MAXPREPS_PAIR_WINDOW_DAYS, f.id);
+      const near = hasPairContestNear(input.games, pairKey, date, MAXPREPS_PAIR_WINDOW_DAYS, f.id);
       if (near.length) {
-        const pick = pickCandidate(finals, pairKey, f.dateKey, used);
+        const pick = pickCandidate(finals, pairKey, date, used);
         // MaxPreps has the pair within ±14 days: never fill; say why its contest does not count.
         stillUnmatched.push(f);
         if (pick.kind === 'none') continue;
         const row = pick.kind === 'one' ? pick.row : pick.rows[0];
         const c = [...near].sort(
-          (a, b) => Math.abs(dayDiff(a.dateKey, f.dateKey)) - Math.abs(dayDiff(b.dateKey, f.dateKey)) || a.contestId.localeCompare(b.contestId),
+          (a, b) => Math.abs(dayDiff(a.dateKey, date)) - Math.abs(dayDiff(b.dateKey, date)) || a.contestId.localeCompare(b.contestId),
         )[0];
         if (touched.has(c.contestId)) continue;
-        const s = scoreFor(row, f.homeSlug, f.awaySlug);
+        const s = scoreFor(row, played.homeSlug, played.awaySlug);
         if (!s) continue;
         skipped.push(
           skippedRow(c.contestId, c.dateKey, label, s, row.url, c.urls.maxpreps, c.status, `MaxPreps has this game (${c.contestId}) but it is not counted: ${notCountedReason(c, f)}.`),
@@ -817,28 +837,28 @@ export function applyBackfill(input: BackfillInput): BackfillResult {
         continue;
       }
       // Never a si.com row that is the same game as a MaxPreps contest (the pair's other leg, days away).
-      const pick = pickCandidate(rule2Finals, pairKey, f.dateKey, used);
+      const pick = pickCandidate(rule2Finals, pairKey, date, used);
       if (pick.kind === 'conflict') {
         stillUnmatched.push(f);
-        warnings.push(`si.com has ${pick.rows.length} different scores for the ${f.dateKey} fixture ${label}; not filled`);
-        const s = scoreFor(pick.rows[0], f.homeSlug, f.awaySlug);
-        if (s) skipped.push(skippedRow(`sblive:${pick.rows[0].sbliveGameId}`, f.dateKey, label, s, pick.rows[0].url, null, 'scheduled', CONFLICT_NOTE));
+        warnings.push(`si.com has ${pick.rows.length} different scores for the ${date} fixture ${label}; not filled`);
+        const s = scoreFor(pick.rows[0], played.homeSlug, played.awaySlug);
+        if (s) skipped.push(skippedRow(`sblive:${pick.rows[0].sbliveGameId}`, date, label, s, pick.rows[0].url, null, 'scheduled', CONFLICT_NOTE));
         continue;
       }
       if (pick.kind === 'none') {
         stillUnmatched.push(f);
-        const loose = nameOnlyNear(pairKey, f.dateKey);
+        const loose = nameOnlyNear(pairKey, date);
         const outside = loose
           ? null
-          : rule2Finals.find((g) => !used.has(g.sbliveGameId) && sblivePairKey(g.sides) === pairKey && within(g.dateKey, f.dateKey, OFF_SCHEDULE_DAYS));
+          : rule2Finals.find((g) => !used.has(g.sbliveGameId) && sblivePairKey(g.sides) === pairKey && within(g.dateKey, date, OFF_SCHEDULE_DAYS));
         const row = loose ?? outside;
-        const s = row ? scoreFor(row, f.homeSlug, f.awaySlug) : null;
+        const s = row ? scoreFor(row, played.homeSlug, played.awaySlug) : null;
         if (row && s) {
           skipped.push(skippedRow(`sblive:${row.sbliveGameId}`, row.dateKey, label, s, row.url, null, 'scheduled', loose ? NAME_ONLY_NOTE : OUTSIDE_NOTE));
         }
         continue;
       }
-      const s = scoreFor(pick.row, f.homeSlug, f.awaySlug);
+      const s = scoreFor(pick.row, played.homeSlug, played.awaySlug);
       if (!s || !pick.row.url) {
         stillUnmatched.push(f);
         continue;
@@ -986,9 +1006,10 @@ function carryForward(
     if (have.has(prev.contestId)) continue;
     const f = byFixtureId.get(prev.official.fixtureId);
     const pairKey = f ? fixturePair(f) : null;
-    if (!f || !pairKey || f.dateKey >= today || filled.has(f.id)) continue;
-    if (!carry(pairKey, f.dateKey, prev.contestId)) continue;
-    if (hasPairContestNear(games, pairKey, f.dateKey, MAXPREPS_PAIR_WINDOW_DAYS, f.id).length) continue;
+    const date = f ? playedFixture(f).dateKey : null;
+    if (!f || !pairKey || !date || date >= today || filled.has(f.id)) continue;
+    if (!carry(pairKey, date, prev.contestId)) continue;
+    if (hasPairContestNear(games, pairKey, date, MAXPREPS_PAIR_WINDOW_DAYS, f.id).length) continue;
     filled.add(f.id);
     touched.push(prev.contestId);
     added.push(prev);
