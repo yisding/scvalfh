@@ -1551,8 +1551,9 @@ Two `/leaders` boards per region weigh scoring by the defenses it came against
   until someone redoes it by hand. The 53 Southern California teams' schools were swept on 2026-10-06,
   in every sport, with at least one web search for 840 of the 842 rows (the other two are players whose
   commitments were already found) but without SportsRecruits' athlete search. The latest round, on
-  2026-10-22, gave every class-of-2027, class-of-2028 and ungraded row an extended web search; the
-  267 rows the roster grades as sophomores or freshmen still have had none. See `docs/DATA-SOURCES.md` §1.1j3.
+  2026-10-22, gave each of the 1,375 class-of-2027, class-of-2028 and ungraded rows not already in the
+  file an extended web search, and none to the 267 rows the roster grades as sophomores or freshmen
+  (Southern California's had theirs on 2026-10-06). See `docs/DATA-SOURCES.md` §1.1j3.
 - JV tables are unofficial and computed: no league publishes JV standings in season, a JV league game
   is identified by its varsity counterpart, and a table is shown only once 60% of its division's played
   JV league games have a score (on 2026-10-05: El Camino, MCAL and the EAL). There are no JV leaders or
