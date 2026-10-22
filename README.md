@@ -791,6 +791,15 @@ and an independent refuter re-opened each of the eleven it found, and both kept 
 the revised nickname rule, a twelfth: Sami Lee to Columbia, kept by a fresh checker and refuter);
 SportsRecruits' athlete search was not run for these rows. Recall is partial: see `docs/DATA-SOURCES.md` §1.1j3
 for the sources, what was rejected and why, and the gaps.
+The round of 2026-10-22 went over every row again: SportsRecruits' commits feed for every college
+program (87,015 records in every sport, matched to the rosters by name, every match's profile opened)
+and a profile-address probe in every sport for the 1,406 class-of-2027, class-of-2028 and ungraded
+rows; the field hockey and other-sport lists and club commitment pages, read whole and matched
+against every row; local, student and school news since August; and one extended web search for each
+of the 1,375 class-of-2027, class-of-2028 and ungraded rows not already in the file. It found Kendall
+Gann (re-read by hand and by an independent refuter, who kept it as medium) and Kaye Zilinskas (found
+separately by a web search and by the SportsRecruits sweep, and re-read by hand), and no signing or
+decommitment.
 
 **When a roster refetch breaks it.** `lib/commits.ts` throws at import, as `lib/clubs.ts` does, if
 `pnpm fetch-rosters` drops or respells a committed player's row, if the overlay marks it JV, or if a

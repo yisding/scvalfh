@@ -1350,6 +1350,37 @@ the school, backs (high). Still to run: web searches for the 309 sophomores and 
 official accounts' posts themselves (X lists none without a login; Instagram cannot be read from the
 research environment).
 
+*The 2026-10-22 round.* Another pass over every row, ten days on. A SportsRecruits sweep read its
+commits feed (`api.sportsrecruits.com/api/v1/program/commits/<id>/<offset>`, ten records a page; the
+id is the college's, so one feed carries every sport, men's included: ids 1 to 3,299, 87,015 records
+over 1,549 programs), matched it to the rosters by full name and by surname, initial and class, and
+opened every match's profile (425); it ran the profile-address probe in every sport for the 1,406
+class-of-2027, class-of-2028 and ungraded rows (15,052 addresses; a live one answers 307 to its
+sport's subdomain; 1,322 live pages read) and re-read every SportsRecruits profile already linked.
+NCSA's public pages show no commitment even for committed players, so loading the 89 linked ones
+proved nothing. A list sweep re-read FH College Path (classes 2026 to 2031), Play College Field
+Hockey's sheet, MAX Field Hockey's whole commitments table, which MAX now serves as HTML (its player
+pages too, so a MAX page can be cited where before it was a lead), Stick Together, the clubs in
+`data/clubs.json`, and the lacrosse, soccer, softball, volleyball, water polo, basketball and track
+lists of earlier rounds, matching each against every row. A news sweep read the Bay Area News Group
+and SCNG papers' high school sections since August, other local papers, Patch, the student papers
+and school athletics sites that answered, and the West Coast college programs' news. Four
+player-by-player sweeps ran one extended web search for each of the 1,375 class-of-2027,
+class-of-2028 and ungraded rows not already in the file (standard-mode results missed known
+commitments, so rows first searched that way were searched again in extended mode); the 309
+sophomores and freshmen got none. Two commitments were found: Kendall Gann, Temecula Valley, class of
+2027, to Barton College (NCAA Division II; its field hockey team plays in the South Atlantic
+Conference, its other teams in Conference Carolinas) in field hockey, on MAX's player page and
+California table, which name her school and Myto (medium: MAX takes the commitments its users
+report, her own profiles show none, and a refuter kept it at medium); and Kaye Zilinskas, St.
+Ignatius, class of 2028, to UC Davis in lacrosse, on her own SportsRecruits lacrosse profile, which
+names the school, and SportsRecruits' UC Davis page (high; earlier probes read only her field hockey
+profile). Stick Together's Oct 6 issue names Ryan Hemeon's school, so hers is now high, and backs
+Olivia Van De Braak's. No source said any player had signed or decommitted; the class of 2027's
+signing period is in November. Not reached: ClubLax (its certificate does not match its host), Mad
+Dog West, SoCal Express and NorCal Starz (proxy errors), The Tenacity Project's site, Cal's athletics
+site, and X and Instagram.
+
 *Recall is partial.* On 2026-10-22, 33 of the 1,673 varsity rows have a commitment, at 19 of the 102
 schools (Valley Christian and Archbishop Mitty added on 2026-10-12, Temecula Valley on 2026-10-22): Southern California's 14 at 8 (Torrey Pines 2, Canyon Hills 4, Bishop's 2, Cathedral Catholic 2 with Campbell Trocha of 2026-10-12, Harvard-Westlake,
 Scripps Ranch, San Dieguito Academy and Temecula Valley 1 each); Northern California's 19 include St. Ignatius' seventh, Kaye Zilinskas, of 2026-10-22. Every one of the 842 rows had a
