@@ -2616,7 +2616,12 @@ scores, and a si.com game that is not a junk row (rule 7).**
    fixture date: **publish si.com's score** as a
    new game with `contestId: 'sblive:<si.com game id>'`, `provenance.scores: 'sblive'`, no MaxPreps
    URL, the si.com URL, counted in the league table exactly like a MaxPreps final, with home/away
-   and `official` taken from the fixture. A si.com row that is the same game as an existing
+   and `official` taken from the fixture. A fixture listed in `DATA_QUALITY.fixtureMoves`
+   (`lib/leagues.ts`: a league game that another source, named in the entry, shows was played on another date
+   and maybe at the other school) is searched on its played date instead, for both windows, and published with
+   the entry's host; `official.scheduledDate` keeps the league's date and the entry's source sentence is added to
+   the backfill note (2026-10-22: SCVAL's Sep 9 Homestead at Cupertino, played Oct 13 at Homestead, 3-0,
+   per si.com and the NFHS Network). A si.com row that is the same game as an existing
    MaxPreps contest (same date, same pair: the cross-check's join) is never used to fill. If two
    or more candidates remain with different scores, nothing is filled and a warning is logged. (If MaxPreps *does* have the game but it is not
    counted, for example an MCAL league game it moved to Oct 23 or typed as a tournament game, the

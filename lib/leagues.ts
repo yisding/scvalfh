@@ -478,6 +478,14 @@ export interface DataQualityConfig {
    */
   contestDateOverrides: Readonly<Record<ContestId, { dateKey: string; timeTba: true; source: string }>>;
   /**
+   * An official league fixture that MaxPreps has no contest for and that was played on another date, and maybe at the
+   * other school, than its league's document says. D2 rule 2 (lib/backfill.ts) looks for si.com's Final of the pair
+   * on `dateKey` (±1 day) instead of the official date and publishes it with `home` as the host; the game keeps the
+   * official date as `official.scheduledDate`. `source` is one sentence naming the sources and what they say; the
+   * game page and /about print it in the backfill note. Keys are OfficialFixture ids (assertLeagues).
+   */
+  fixtureMoves: Readonly<Record<string, { dateKey: string; home: TeamSlug; source: string }>>;
+  /**
    * Search "not covered" entries (exact-key matches only). `reason` is printed verbatim as a whole sentence
    * (components/search/TeamFinder.tsx), so each is one: never 'inactive', 'withdrew', 'dropped' or
    * 'cancelled' for a school whose only fact is that it has no games.
@@ -1804,6 +1812,17 @@ export const DATA_QUALITY: DataQualityConfig = {
       source: 'CIF-SDS power-rankings details, school_id 662 (Fallbrook) and 746 (Valley Center): both list the game on 09/29/2026 with no time; MaxPreps dates it 09/25 at 4:00 PM, the same slot as Fallbrook’s game against Rancho Buena Vista',
     },
   },
+  fixtureMoves: {
+    // SCVAL De Anza: the PDF has Homestead at Cupertino on Wed Sep 9; it was not played then (no MaxPreps contest of
+    // the pair until their Oct 5 meeting). si.com (6575658) and the NFHS Network (game82e9fefce, on Homestead's
+    // channel) both have it on Tue Oct 13 at 4:45 PM at Homestead, Homestead 3-0, read 2026-10-22; MaxPreps still
+    // has no contest for it. si.com's 5-5 Sep 11 row of the pair (6762239) has no recap and is not this game.
+    'de-anza:2026-09-09:homestead@cupertino': {
+      dateKey: '2026-10-13',
+      home: 'homestead',
+      source: 'si.com and the NFHS Network both have it on Oct 13 at Homestead.',
+    },
+  },
   notCovered: [
     { name: 'York', keys: ['York', 'York School', 'York Falcons'], reason: 'York plays JV field hockey only, so it has no varsity results here.' },
     { name: 'Wilcox', keys: ['Wilcox', 'Adrian Wilcox'], reason: 'Wilcox is not fielding a varsity team in 2026.' },
@@ -2558,6 +2577,26 @@ export function assertLeagues(): void {
     if (o.timeTba !== true) fail(`contestDateOverrides ${id}: timeTba must be true (no source gives a time)`);
     if (!o.source.trim()) fail(`contestDateOverrides ${id}: needs a source`);
     if (id in DATA_QUALITY.excludedContestIds) fail(`contestDateOverrides ${id}: the contest is excluded`);
+  }
+  // A moved fixture names an official fixture (`division:date:away@home`), a real date inside its section's
+  // season window and other than the official one, one of its two teams as host, and its source.
+  for (const [id, m] of Object.entries(DATA_QUALITY.fixtureMoves)) {
+    const parts = /^([a-z0-9-]+):(\d{4}-\d{2}-\d{2}):([a-z0-9-]+)@([a-z0-9-]+)$/.exec(id);
+    const division = parts ? DIVISION_BY_ID.get(parts[1]) : undefined;
+    if (!parts || !division) {
+      fail(`fixtureMoves: ${id} is not an official fixture id of a configured division`);
+      continue;
+    }
+    const valid = DATE_PATTERN.test(m.dateKey) && !Number.isNaN(Date.parse(`${m.dateKey}T12:00:00Z`)) &&
+      new Date(`${m.dateKey}T12:00:00Z`).toISOString().slice(0, 10) === m.dateKey;
+    if (!valid) fail(`fixtureMoves ${id}: dateKey ${m.dateKey} is not a valid YYYY-MM-DD date`);
+    else {
+      const window = SECTION_BY_ID.get(leagueOfDivision(division.id).sectionId)?.seasonWindow;
+      if (window && (m.dateKey < window.start || m.dateKey > window.end)) fail(`fixtureMoves ${id}: ${m.dateKey} is outside its section's season window`);
+    }
+    if (m.dateKey === parts[2]) fail(`fixtureMoves ${id}: dateKey is the official date`);
+    if (m.home !== parts[3] && m.home !== parts[4]) fail(`fixtureMoves ${id}: home ${m.home} is neither side of the fixture`);
+    if (!m.source.trim()) fail(`fixtureMoves ${id}: needs a source`);
   }
 }
 

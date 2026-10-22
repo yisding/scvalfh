@@ -27,6 +27,7 @@ import {
 import { scoreSentence } from '../lib/format';
 import { getDivision } from '../lib/leagues';
 import { FixtureMissing, TransportError, resourcePath, type ResourceKey, type RunContext } from '../lib/pipeline/contract';
+import { unknownFixtureMoves } from '../lib/pipeline/steps/official';
 import { scoreboardDates, stepSblive } from '../lib/pipeline/steps/sblive';
 import { parseScoresPage, parseTeamGamesPage, type SbliveGame, type SbliveSide } from '../lib/sources/sblive';
 import { loadSnapshot, parseSnapshot } from '../lib/snapshot-schema';
@@ -343,6 +344,46 @@ describe('backfill rule 2: an official fixture MaxPreps has no contest for', () 
     const res = applyBackfill(input({ unmatched: [GRE_AT_CAT, twin], sblive: [sb('2026-09-04', ['greenfield', 0], ['santa-catalina', 1])] }));
     expect(res.games).toHaveLength(1);
     expect(res.unmatched).toEqual([twin]);
+  });
+
+  it('looks for a moved fixture (DATA_QUALITY.fixtureMoves) on its played date, with its played host', () => {
+    // Homestead at Cupertino, officially Sep 9, played Oct 13 at Homestead; their Oct 5 meeting is the other leg.
+    const today = '2026-10-22';
+    const f = fixture('de-anza', '2026-09-09', 'homestead', 'cupertino');
+    const leg2 = game({ home: 'homestead', away: 'cupertino', date: '2026-10-05', hs: 1, as: 1, official: { fixtureId: 'de-anza:2026-10-05:cupertino@homestead' } });
+    const junk = sb('2026-09-11', ['homestead', 5], ['cupertino', 5], { sbliveGameId: '6762239' });
+    const row = sb('2026-10-13', ['cupertino', 0], ['homestead', 3], { sbliveGameId: '6575658', dateIso: '2026-10-13T16:45:00.000-07:00' });
+    expect(eligibleItems([leg2], [f], today).map((i) => `${i.kind} ${i.date}`)).toEqual(['absent-fixture 2026-10-13']);
+
+    const res = applyBackfill(input({ games: [leg2], unmatched: [f], sblive: [junk, row], today }));
+    expect(res.unmatched).toEqual([]);
+    const g = res.games.find((x) => x.contestId === 'sblive:6575658')!;
+    expect(g).toMatchObject({
+      dateKey: '2026-10-13',
+      dateLocal: '2026-10-13T16:45:00',
+      official: { scheduledDate: '2026-09-09', fixtureId: f.id, pass: 'rescheduled' },
+    });
+    expect(g.home).toMatchObject({ slug: 'homestead', score: 3, result: 'W' });
+    expect(g.away).toMatchObject({ slug: 'cupertino', score: 0, result: 'L' });
+    expect(g.provenance.backfill?.note).toBe(
+      'MaxPreps has no contest for this SCVAL fixture (official date Sep 9), so the score is si.com’s. si.com and the NFHS Network both have it on Oct 13 at Homestead.',
+    );
+    expect(res.rows.map((r) => r.label)).toEqual(['Cupertino at Homestead']);
+
+    // Carried on a run that read no si.com data.
+    const carried = applyBackfill(input({ games: [leg2], unmatched: [f], today, previous: previousWith([g]), sbliveFailed: true }));
+    expect(carried.games.map((x) => x.contestId)).toEqual([leg2.contestId, 'sblive:6575658']);
+    expect(carried.unmatched).toEqual([]);
+  });
+
+  it('flags a fixtureMoves key that names no fixture of a division that was read (a typo moves nothing)', () => {
+    const moved = fixture('de-anza', '2026-09-09', 'homestead', 'cupertino');
+    const other = fixture('de-anza', '2026-09-14', 'los-altos', 'homestead');
+    expect(unknownFixtureMoves([moved, other])).toEqual([]);
+    expect(unknownFixtureMoves([other])).toEqual([moved.id]);
+    // A division not read this run (its PDF failed) is not judged.
+    expect(unknownFixtureMoves([fixture('el-camino', '2026-09-10', 'saratoga', 'mitty')])).toEqual([]);
+    expect(unknownFixtureMoves([other], { 'de-anza:2026-09-09:homestead@cupertin': {} })).toEqual(['de-anza:2026-09-09:homestead@cupertin']);
   });
 });
 
