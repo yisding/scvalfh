@@ -36,6 +36,8 @@
  *                          grid list must not hold an anchor target (wrap it in a div that does).
  *                          Off while `html[data-region-picked]` (prefs-script.ts REGION_PICKED): once
  *                          the reader picks a region, the stamp alone decides, until the next jump.
+ *                          A client-side navigation never sets `:target`, so for it the prefs script
+ *                          marks the target's blocks `data-region-open` (REGION_OPEN) instead.
  * - the /teams lift: while the finder on /teams is searching (`search[data-searching]`, a sibling of
  *                          `#team-list`, components/search/TeamFinder.tsx), both regions' team lists
  *                          show, so a match the live region announces is never a hidden tile
@@ -48,7 +50,7 @@
  * visual order (WCAG 1.3.2 / 2.4.3).
  */
 
-import { REGION_PICKED } from './prefs-script';
+import { REGION_OPEN, REGION_PICKED } from './prefs-script';
 
 const ID = /^[a-z0-9-]+$/;
 
@@ -106,6 +108,10 @@ export function buildLeagueScopeCss(leagueIds: readonly string[]): string {
   // Not in the design's list: `:has()` never matches the element itself, so a link to the region
   // wrapper's own id (`/standings#socal`, the jump links) needs its own rule to open that region.
   rules.push(`html:not([${REGION_PICKED}]) [data-region-scope]:target{display:block!important}`);
+  // The same for a client-side navigation to a fragment, which never sets `:target`: the prefs
+  // script marks the hidden target's region blocks REGION_OPEN once the new page is in. No pick
+  // gate: the script clears the marks on a pick itself.
+  rules.push(`[data-region-scope][${REGION_OPEN}]{display:block!important}`);
   rules.push('[data-teams-page]:has(search[data-searching]) #team-list [data-region-scope]{display:block}');
   return rules.join('\n');
 }
