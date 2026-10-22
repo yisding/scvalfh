@@ -70,8 +70,8 @@ describe('buildPrefsScript', () => {
   // they live here because /teams had no first-load JS left for them (scripts/assert-budgets.ts).
   // Clearing it on popstate as well took it to 3,052 B, 99 % used. The client-side deep link (a
   // `<Link>` to another page's fragment in the hidden region: the link-tap wait and the
-  // data-region-open marks) took it to 3,581 B on 2026-10-18; by the same rule 3,581 × 1.12 =
-  // 4,011 → 4,096 B, 87 % used.
+  // data-region-open marks) took it to 3,613 B on 2026-10-22; by the same rule 3,613 × 1.12 =
+  // 4,047 → 4,096 B, 88 % used.
   it('stays within 4,096 B including the 102-entry slug map', () => {
     expect(TEAMS.length).toBe(102);
     expect(Buffer.byteLength(SCRIPT, 'utf8')).toBeLessThanOrEqual(4096);
@@ -443,17 +443,25 @@ describe('the client-side deep link (data-region-open)', () => {
     const click = (target: unknown) => on['document:click']!({ target });
     return {
       scrolled,
-      /** A tap on a link; `hash` is the anchor's `.hash`. */
+      /** A tap on a link to `/leaders<hash>`. */
       tapLink: (hash: string) => {
-        const a = { hash };
+        const a = { hash, pathname: '/leaders' };
         click({ closest: (sel: string) => (sel === 'a[href*="#"]' ? a : null) });
       },
       tapRegion: () => {
         const b = { disabled: false, dataset: { regionOption: 'norcal' } };
         click({ closest: (sel: string) => (sel === '[data-region-option]' ? b : null) });
       },
-      /** The router commits /leaders#players-socal. */
+      /** The page the tap is made on already carries #players-socal, visible (a tab of its own). */
+      sameFragmentHere: () => {
+        location.hash = '#players-socal';
+        const own = new FakeElement('players-socal', null);
+        own.visible = true;
+        all.push(own);
+      },
+      /** The router commits /leaders#players-socal, replacing the page. */
       arrive: (visible = false) => {
+        all.length = 0;
         location.pathname = '/leaders';
         location.hash = '#players-socal';
         const section = new FakeElement('socal-section', null, 'socal');
@@ -486,6 +494,20 @@ describe('the client-side deep link (data-region-open)', () => {
     expect(p.open()).toEqual(['socal-section', '(inner)']);
     expect(p.scrolled).toEqual(['players-socal']);
     expect(p.pending()).toBe(0);
+  });
+
+  // Codex on #80: /standings/eal after its #eal tab, then its /playoffs#eal link. The wait must not
+  // settle on the page it leaves, whose own #eal is visible.
+  it('waits for the link’s own path when the page it leaves carries the same fragment', () => {
+    const p = page();
+    p.sameFragmentHere();
+    p.tapLink('#players-socal');
+    p.frame();
+    expect(p.pending()).toBe(1);
+    p.arrive();
+    p.frame();
+    expect(p.open()).toEqual(['socal-section', '(inner)']);
+    expect(p.scrolled).toEqual(['players-socal']);
   });
 
   it('a visible target (native :target, or the reader’s own region) is left alone', () => {

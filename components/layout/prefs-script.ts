@@ -61,8 +61,9 @@
  * deep-link rule cannot open the target's region, and the router's own scroll misses the hidden
  * target (next calls `scrollIntoView` on it, a no-op; vinext skips a 0×0 element and scrolls to its
  * next visible sibling). So on a tap on any link with a fragment the script waits, one animation
- * frame at a time for up to 10 s, until the URL carries that fragment and its target exists (after
- * the router's commit and its scroll attempt, whichever router built the page). Then, only if the
+ * frame at a time for up to 10 s, until the URL carries that link's path and fragment and its
+ * target exists (after the router's commit and its scroll attempt, whichever router built the
+ * page; the path too, because the page the tap left may carry the same fragment). Then, only if the
  * target is hidden, it stamps every `[data-region-scope]` block around it `data-region-open`, which
  * the stylesheet shows like `:has(:target)`, and scrolls to it. A visible target (a same-page jump
  * that native `:target` already opened, a target in the reader's own region) is left alone, and a
@@ -194,13 +195,15 @@ export function buildPrefsScript({ leagueIds, slugLeague, leagueRegion, defaultR
     // hash is not decoded (decodeURIComponent throws on a stray %).
     // The client-side deep link (REGION_OPEN): a the tapped link, F its fragment, I this tap's number
     // (any later tap stops the wait), T when it began; w() waits a frame at a time, up to 10 s, for
-    // the URL to carry #F and the target t to exist, and opens and scrolls to t only if it is hidden.
+    // the URL to carry the link's path and #F (the page the tap left may carry #F too: /standings/eal
+    // after its #eal tab, tapping /playoffs#eal) and the target t to exist, and opens and scrolls to
+    // t only if it is hidden.
     // z() clears every mark: a region pick, an in-page jump, Back or Forward.
     `try{var P='${REGION_PICKED}',O='${REGION_OPEN}',N=0;` +
     `function z(){var s=document.querySelectorAll('['+O+']'),i;for(i=s.length;i--;)s[i].removeAttribute(O)}` +
     `document.addEventListener('click',function(e){var b=e.target,a,k,F,I=++N,T=Date.now();if(!b||!b.closest)return;` +
     `a=b.closest('a[href*="#"]');if(a){F=(a.hash||'').slice(1);if(F)(function w(){var t;if(I!==N)return;` +
-    `t=location.hash==='#'+F&&document.getElementById(F);if(!t){if(1e4>Date.now()-T)requestAnimationFrame(w);return}` +
+    `t=location.hash==='#'+F&&location.pathname===a.pathname&&document.getElementById(F);if(!t){if(1e4>Date.now()-T)requestAnimationFrame(w);return}` +
     `if(!t.getClientRects().length){for(k=t;k;k=k.parentElement)if(k.hasAttribute('data-region-scope'))k.setAttribute(O,'');` +
     `t.scrollIntoView()}})();return}` +
     `b=b.closest('[data-region-option]');if(!b||b.disabled)return;d.setAttribute(P,'');z();` +
