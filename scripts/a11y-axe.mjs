@@ -51,6 +51,10 @@
  *     the region switcher sits, how many rows the scope row wraps to, where each card sits and ends,
  *     and what is above the fold at 664 and 844 px tall. Reported, never failed.
  *
+ * The page loads of 1-3 run side by side, one per core (SCVAL_A11Y_CONCURRENCY overrides it; 1 runs
+ * them one at a time), and each prints in the order listed. 4-6 run one at a time after them: the
+ * keyboard probes wait on timeouts and the measurements are best taken on a quiet machine.
+ *
  * What it does not cover: §10.9(b) grayscale and (c) forced-colors are visual comparisons that a
  * machine cannot judge for us. The token-contrast half of the gate is a unit test
  * (tests/ui/contrast.test.ts) and the never-0-0 half is tests/ui/rendered-never-00.test.ts.
@@ -58,9 +62,16 @@
 
 import { createRequire } from 'node:module';
 import { existsSync, readFileSync } from 'node:fs';
+import { availableParallelism } from 'node:os';
 
 const require = createRequire(import.meta.url);
 const BASE = process.env.SCVAL_BASE_URL ?? 'http://127.0.0.1:3117';
+/**
+ * How many page loads of 1-3 run at once. axe's own run (color-contrast above all) is most of each
+ * load's time and it is browser CPU, so one page per core: on a 4-core machine 16 loads took 12.4 s
+ * four at a time against 28.8 s one at a time. SCVAL_A11Y_CONCURRENCY=1 runs them one by one.
+ */
+const CONCURRENCY = Math.max(1, Number(process.env.SCVAL_A11Y_CONCURRENCY) || availableParallelism());
 
 /**
  * League ids in config order, from the snapshot this tree holds (the server was built from it);
@@ -226,11 +237,14 @@ async function newContext({ theme = 'light', width = 390, height = 900, storage 
   return context;
 }
 
-async function open(context, route) {
+/** Where a check prints: straight to the console, or into a job's buffer (runPool). */
+const direct = { out: (line) => console.log(line), err: (line) => console.error(line) };
+
+async function open(context, route, log = direct) {
   const page = await context.newPage();
   const response = await page.goto(BASE + route, { waitUntil: 'networkidle' });
   if (!response || response.status() !== 200) {
-    console.error(`FAIL ${route}: HTTP ${response ? response.status() : '??'}`);
+    log.err(`FAIL ${route}: HTTP ${response ? response.status() : '??'}`);
     serious += 1;
     await page.close();
     return null;
@@ -239,7 +253,7 @@ async function open(context, route) {
 }
 
 /** axe (serious/critical) and the standalone-target probe on the page as it is now. */
-async function check(page, label) {
+async function check(page, label, log = direct) {
   await page.addScriptTag({ content: axeSource });
   await page.addScriptTag({ content: STANDALONE_TARGET_PROBE });
   const violations = await page.evaluate(async () => {
@@ -265,60 +279,112 @@ async function check(page, label) {
   const bad = violations.filter((v) => v.impact === 'serious' || v.impact === 'critical');
   serious += bad.length;
   if (violations.length) {
-    console.log(`${label}: ${violations.length} violation(s)`);
+    log.out(`${label}: ${violations.length} violation(s)`);
     for (const v of violations) {
-      console.log(`   [${v.impact}] ${v.id} — ${v.help}`);
-      for (const n of v.nodes) console.log(`        ${n.target} :: ${n.summary}`);
+      log.out(`   [${v.impact}] ${v.id} — ${v.help}`);
+      for (const n of v.nodes) log.out(`        ${n.target} :: ${n.summary}`);
     }
   }
   const undersized = await page.evaluate(() => findUndersizedStandaloneTargets());
   serious += undersized.length;
   if (undersized.length) {
-    console.log(`${label}: ${undersized.length} standalone target(s) under 24px`);
-    for (const t of undersized) console.log(`   ${t.size} ${t.tag} ${JSON.stringify(t.text)} in <${t.block}>`);
+    log.out(`${label}: ${undersized.length} standalone target(s) under 24px`);
+    for (const t of undersized) log.out(`   ${t.size} ${t.tag} ${JSON.stringify(t.text)} in <${t.block}>`);
   }
 }
 
-function failRun(label, why) {
-  console.error(`FAIL ${label}: ${why}`);
+function failRun(label, why, log = direct) {
+  log.err(`FAIL ${label}: ${why}`);
   serious += 1;
 }
 
+/**
+ * Types `query` into a finder and waits for its live region to announce the result (it is debounced
+ * 250 ms, components/search/TeamFinder.tsx), so axe sees the filtered list and the announcement
+ * rather than whatever a fixed wait happened to catch while other pages hold the CPU. False, and a
+ * failure, when nothing is announced.
+ */
+async function typeIntoFinder(page, input, query, label, log) {
+  await input.fill(query);
+  const announced = await page
+    .waitForFunction(() => document.querySelector('search[data-searching] [role="status"]')?.textContent.trim(), null, { timeout: 5000 })
+    .then(() => true, () => false);
+  if (!announced) failRun(label, `typed "${query}", the finder's live region announced nothing within 5 s`, log);
+  return announced;
+}
+
+/**
+ * Runs `jobs` ({ label, run }, run an async function of a log) CONCURRENCY at a time. A job's lines are held and printed
+ * whole, in the order the jobs were queued, once every job before it has finished, so the output
+ * reads as a one-at-a-time run's would. A job that throws is a failure; the others still run.
+ */
+async function runPool(jobs) {
+  const logs = jobs.map(() => []);
+  const done = jobs.map(() => false);
+  let next = 0;
+  let printed = 0;
+  async function worker() {
+    while (next < jobs.length) {
+      const i = next++;
+      const lines = logs[i];
+      const log = { out: (line) => lines.push(['out', line]), err: (line) => lines.push(['err', line]) };
+      try {
+        await jobs[i].run(log);
+      } catch (error) {
+        failRun(jobs[i].label, error?.stack ?? String(error), log);
+      }
+      done[i] = true;
+      for (; printed < jobs.length && done[printed]; printed += 1) {
+        for (const [stream, line] of logs[printed]) direct[stream](line);
+      }
+    }
+  }
+  await Promise.all(Array.from({ length: Math.min(CONCURRENCY, jobs.length) }, worker));
+}
+
 // ---------------------------------------------------------------- 1-3: the route families
+// Queued in the order a one-at-a-time run checks them, and printed in that order (runPool). The
+// route checks of one theme and width share a context, as they did run one after another: nothing
+// they do writes storage (only the theme toggle, a league or pin choice does), so sharing it is safe
+// while they run side by side, and the shared HTTP cache saves refetching the CSS and JS.
+const jobs = [];
+const sharedContexts = [];
 for (const theme of ['light', 'dark']) {
   for (const width of [390, 1280]) {
     const tag = `${width} ${theme}`;
     const context = await newContext({ theme, width });
+    sharedContexts.push(context);
     for (const route of routes) {
-      const page = await open(context, route);
-      if (!page) continue;
-      await check(page, `${route} ${tag}`);
-      await page.close();
+      const label = `${route} ${tag}`;
+      jobs.push({ label, run: async (log) => {
+        const page = await open(context, route, log);
+        if (!page) return;
+        await check(page, label, log);
+        await page.close();
+      } });
     }
 
     // /teams with "mar" typed: the in-place filter, its result chips and the live region.
-    const teams = await open(context, '/teams');
-    if (teams) {
+    const typed = `/teams (typed "mar") ${tag}`;
+    jobs.push({ label: typed, run: async (log) => {
+      const teams = await open(context, '/teams', log);
+      if (!teams) return;
       const input = teams.locator('input[type="search"]').first();
-      if ((await input.count()) === 0) failRun(`/teams ${tag}`, 'no search field');
-      else {
-        await input.fill('mar');
-        await teams.waitForTimeout(400);
-        await check(teams, `/teams (typed "mar") ${tag}`);
-      }
+      if ((await input.count()) === 0) failRun(`/teams ${tag}`, 'no search field', log);
+      else if (await typeIntoFinder(teams, input, 'mar', typed, log)) await check(teams, typed, log);
       await teams.close();
-    }
+    } });
 
     // /teams with a SoCal team typed under the default (NorCal) region: the lift
     // (`[data-teams-page]:has(search[data-searching]) #team-list [data-region-scope]`) must show the
     // SoCal list, so the tile the finder's live region announces is rendered, not display:none.
-    const lift = await open(context, '/teams');
-    if (lift) {
+    const lifted = `/teams (typed "${SOCAL_QUERY}") ${tag}`;
+    jobs.push({ label: lifted, run: async (log) => {
+      const lift = await open(context, '/teams', log);
+      if (!lift) return;
       const input = lift.locator('input[type="search"]').first();
-      if ((await input.count()) === 0) failRun(`/teams (typed "${SOCAL_QUERY}") ${tag}`, 'no search field');
-      else {
-        await input.fill(SOCAL_QUERY);
-        await lift.waitForTimeout(400);
+      if ((await input.count()) === 0) failRun(lifted, 'no search field', log);
+      else if (await typeIntoFinder(lift, input, SOCAL_QUERY, lifted, log)) {
         const shown = await lift.evaluate(() => {
           const scope = document.querySelector('#team-list [data-region-scope="socal"]');
           const tile = document.querySelector('#team-list [data-team-slug="la-jolla"]');
@@ -328,18 +394,17 @@ for (const theme of ['light', 'dark']) {
             tile: tile ? tile.getClientRects().length > 0 : null,
           };
         });
-        if (shown.region !== null) failRun(`/teams (typed "${SOCAL_QUERY}") ${tag}`, `stamped data-region=${shown.region}, expected none (NorCal)`);
-        if (shown.scope === null) failRun(`/teams (typed "${SOCAL_QUERY}") ${tag}`, 'no [data-region-scope="socal"] list in #team-list');
-        else if (shown.scope === 'none') failRun(`/teams (typed "${SOCAL_QUERY}") ${tag}`, 'the SoCal list stays display:none while the finder searches');
-        if (shown.tile === false) failRun(`/teams (typed "${SOCAL_QUERY}") ${tag}`, 'the la-jolla tile is not rendered');
-        await check(lift, `/teams (typed "${SOCAL_QUERY}", NorCal region) ${tag}`);
+        if (shown.region !== null) failRun(lifted, `stamped data-region=${shown.region}, expected none (NorCal)`, log);
+        if (shown.scope === null) failRun(lifted, 'no [data-region-scope="socal"] list in #team-list', log);
+        else if (shown.scope === 'none') failRun(lifted, 'the SoCal list stays display:none while the finder searches', log);
+        if (shown.tile === false) failRun(lifted, 'the la-jolla tile is not rendered', log);
+        await check(lift, `/teams (typed "${SOCAL_QUERY}", NorCal region) ${tag}`, log);
       }
       await lift.close();
-    }
-    await context.close();
+    } });
 
     // `/` under each remembered league, 'all', a pin alone (the prefs script derives the league), and
-    // the region runs (DESIGN-socal §2.4).
+    // the region runs (DESIGN-socal §2.4). Each has a context of its own: its storage is the point.
     const runs = [
       ...[...new Set([...LEAGUES, 'city'])].map((id) => ({
         label: `league=${id}`, storage: { 'scvalfh.league': id }, league: id, pin: null, region: regionStampOf(id),
@@ -358,28 +423,33 @@ for (const theme of ['light', 'dark']) {
       },
     ];
     for (const run of runs) {
-      const ctx = await newContext({ theme, width, storage: run.storage });
-      const page = await open(ctx, '/');
-      if (page) {
-        const stamp = await page.evaluate(() => ({
-          league: document.documentElement.getAttribute('data-league'),
-          pin: document.documentElement.getAttribute('data-pin'),
-          region: document.documentElement.getAttribute('data-region'),
-        }));
-        if (stamp.league !== run.league || stamp.pin !== run.pin || stamp.region !== run.region) {
-          failRun(
-            `/ (${run.label}) ${tag}`,
-            `stamped data-league=${stamp.league} data-pin=${stamp.pin} data-region=${stamp.region}, ` +
-              `expected ${run.league} / ${run.pin} / ${run.region}`,
-          );
+      jobs.push({ label: `/ (${run.label}) ${tag}`, run: async (log) => {
+        const ctx = await newContext({ theme, width, storage: run.storage });
+        const page = await open(ctx, '/', log);
+        if (page) {
+          const stamp = await page.evaluate(() => ({
+            league: document.documentElement.getAttribute('data-league'),
+            pin: document.documentElement.getAttribute('data-pin'),
+            region: document.documentElement.getAttribute('data-region'),
+          }));
+          if (stamp.league !== run.league || stamp.pin !== run.pin || stamp.region !== run.region) {
+            failRun(
+              `/ (${run.label}) ${tag}`,
+              `stamped data-league=${stamp.league} data-pin=${stamp.pin} data-region=${stamp.region}, ` +
+                `expected ${run.league} / ${run.pin} / ${run.region}`,
+              log,
+            );
+          }
+          await check(page, `/ (${run.label}) ${tag}`, log);
+          await page.close();
         }
-        await check(page, `/ (${run.label}) ${tag}`);
-        await page.close();
-      }
-      await ctx.close();
+        await ctx.close();
+      } });
     }
   }
 }
+await runPool(jobs);
+for (const context of sharedContexts) await context.close();
 
 // ---------------------------------------------------------------- 4: keyboard focus after "Show BVAL here"
 {

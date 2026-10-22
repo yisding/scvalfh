@@ -21,7 +21,7 @@
  */
 
 import { postseasonTag } from '../../classify';
-import { LEAGUES, divisionDisplay, divisionHeading, type DivisionConfig, type LeagueConfig } from '../../leagues';
+import { DATA_QUALITY, LEAGUES, divisionDisplay, divisionHeading, type DivisionConfig, type LeagueConfig } from '../../leagues';
 import { matchOfficialFixtures } from '../../official/match';
 import { hasOfficialDocument, loadBundledFixtures, type DocumentDivision } from '../../official/schema';
 import { assertDoubleRoundRobin } from '../../official/validate';
@@ -126,9 +126,24 @@ function carryDivision(ctx: RunContext, state: StepState, leagueId: LeagueId, di
   return true;
 }
 
-function logMatch(ctx: RunContext, league: LeagueConfig, result: ReturnType<typeof matchOfficialFixtures>, total: number): void {
+/**
+ * The DATA_QUALITY.fixtureMoves keys, in the divisions these fixtures were read for, that name none of them: a
+ * mistyped key (date or slug) passes assertLeagues' shape check but would never move anything.
+ */
+export function unknownFixtureMoves(
+  fixtures: readonly OfficialFixture[],
+  moves: Readonly<Record<string, unknown>> = DATA_QUALITY.fixtureMoves,
+): string[] {
+  const ids = new Set(fixtures.map((f) => f.id));
+  const divisions = new Set(fixtures.map((f) => f.division));
+  return Object.keys(moves).filter((id) => divisions.has(id.split(':')[0] as DivisionId) && !ids.has(id));
+}
+
+function logMatch(ctx: RunContext, league: LeagueConfig, result: ReturnType<typeof matchOfficialFixtures>, fixtures: readonly OfficialFixture[]): void {
   const scope = { league: league.id };
   const tag = league.shortName.toLowerCase();
+  const total = fixtures.length;
+  for (const id of unknownFixtureMoves(fixtures)) ctx.warn(`${tag} fixtureMoves: ${id} names no official fixture, so it moves nothing`, scope);
   for (const w of result.warnings) ctx.warn(`${tag} fixture: ${w}`, scope);
   for (const d of result.leagueDisagreements) ctx.warn(`${tag} league flag: ${d}`, scope);
   for (const r of result.reasons) ctx.degrade(league.id, 'partial', r, 'official fixture not counted');
@@ -190,7 +205,7 @@ async function runLivePdfLeague(ctx: RunContext, league: LeagueConfig, divisions
     });
     state.games = result.games;
     state.unmatched.push(...result.unmatched);
-    logMatch(ctx, league, result, fixtures.length);
+    logMatch(ctx, league, result, fixtures);
   }
 
   // Per division: a grid that was not read gets its previous annotations back, stamped with when
@@ -346,7 +361,7 @@ async function runBundledLeague(ctx: RunContext, league: LeagueConfig, divisions
   });
   state.games = result.games;
   state.unmatched.push(...result.unmatched);
-  logMatch(ctx, league, result, fixtures.length);
+  logMatch(ctx, league, result, fixtures);
 }
 
 /** Step 07 (SPEC §7.4, §7.8). */

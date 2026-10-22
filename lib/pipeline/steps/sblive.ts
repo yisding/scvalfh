@@ -16,7 +16,7 @@
  * still true of this run's games (lib/crosscheck.ts `carryCrossCheck`).
  */
 
-import { applyBackfill, cleanSbliveRows, planBackfill, scoreboardCoverage, shiftDateKey } from '../../backfill';
+import { applyBackfill, cleanSbliveRows, planBackfill, playedFixture, scoreboardCoverage, shiftDateKey } from '../../backfill';
 import { carryCrossCheck, emptyCrossCheck, reconcile, withBackfill } from '../../crosscheck';
 import {
   dedupeSbliveGames,
@@ -162,7 +162,7 @@ export const stepSblive: SbliveStep = async (ctx, input): Promise<SbliveStepResu
   const teamRows: SbliveGame[] = [];
 
   // 1. statewide scoreboards
-  for (const date of scoreboardDates(games, unmatched.map((f) => f.dateKey), ctx.today)) {
+  for (const date of scoreboardDates(games, unmatched.map((f) => playedFixture(f).dateKey), ctx.today)) {
     const base: Omit<SourceStatus, 'status'> = {
       id: 'sblive',
       kind: 'sblive-scoreboard',

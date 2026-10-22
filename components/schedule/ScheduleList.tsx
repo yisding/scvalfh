@@ -61,7 +61,7 @@ function rowEstimate(games: readonly Game[]): string {
   return games.some((g) => g.status !== 'final' && g.status !== 'scheduled') ? '5.75rem' : '5rem';
 }
 function cardEstimate(games: readonly Game[]): string {
-  return games.some((g) => g.status === 'final' || g.recap) ? '15rem' : '11rem';
+  return games.some((g) => g.status === 'final') ? '15rem' : '11rem';
 }
 
 export function ScheduleList({ groups, scopeLeague = null, className, id }: ScheduleListProps) {
@@ -87,19 +87,23 @@ export function ScheduleList({ groups, scopeLeague = null, className, id }: Sche
           // real size once the group has rendered. Counting the right cards per row keeps the
           // desktop placeholder close to the real page height, so the scrollbar does not lie.
           //
-          // Full-bleed on a phone (`max-md:-mx-gutter`): `content-visibility: auto` implies paint
+          // Full-bleed on a phone (a negative gutter margin): `content-visibility: auto` implies paint
           // containment, so a band that pulled itself out of a gutter-inset group was clipped back
           // to the gutter — no side padding left, and the 2px non-league rule clipped away.
           //
-          // No gap between days on a phone (`mt-0`): the date header draws a rule above and below
+          // No gap between days on a phone (no top margin): the date header draws a rule above and below
           // itself (DateHeader), and the 32px gaps that used to sit here cost a whole row of the
           // fold. From 768px the cards float on the canvas, and the 48px gap is what groups them.
           //
           // Landing: html's scroll-padding-top clears the top bar plus a 48px header, and
           // `.sx-dategroup`'s `scroll-margin-top: -3rem` (globals.css, F-80) hands those 48px
           // back, because the group's own header is what should sit under the bar.
+          //
+          // The estimate, the bleed and the margins are one class, `.sx-dategroup-est`
+          // (app/globals.css): as nine utilities they were ~350 bytes on every group, once in the
+          // markup and again in the RSC payload.
           className={[
-            'sx-dategroup mt-0 [contain-intrinsic-size:auto_calc(var(--sx-n)*var(--sx-rh)+3.5rem)] max-md:-mx-gutter md:mt-12 md:first:mt-8 md:[contain-intrinsic-size:auto_calc(var(--sx-r)*var(--sx-ch)+3.5rem)] lg:[contain-intrinsic-size:auto_calc(var(--sx-r3)*var(--sx-ch)+3.5rem)] xl:[contain-intrinsic-size:auto_calc(var(--sx-r4)*var(--sx-ch)+3.5rem)]',
+            'sx-dategroup sx-dategroup-est',
             // Within a week of the landing date: always laid out (see the docblock), so a client
             // navigation's single scroll lands where a hard load does.
             landingDay !== null &&

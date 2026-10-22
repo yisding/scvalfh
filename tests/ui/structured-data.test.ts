@@ -82,7 +82,6 @@ describe('teamJsonLd', () => {
 describe('gameJsonLd', () => {
   it('describes every corpus game as the page does: title, start, status, sides and only a published place', async () => {
     const { dateTimeAttr } = await import('../../lib/format');
-    let recaps = 0;
     for (const { id } of gv.gameStaticParams()) {
       const model = gv.buildGameView(id);
       if (!model) continue; // a superseded stub: no event of its own
@@ -103,13 +102,7 @@ describe('gameJsonLd', () => {
       expect(JSON.stringify(node), where).not.toMatch(/"(home|away)Score"/);
       if (game.site === 'neutral' && !game.venue.name) expect(node, where).not.toHaveProperty('location');
       if (game.venue.text) expect(JSON.stringify(node.location ?? null), where).not.toContain(JSON.stringify(game.venue.text));
-      // The page no longer prints MaxPreps' recap sentence, so the description leaves it out too.
-      if (game.recap) {
-        recaps++;
-        expect(node.description, where).not.toContain(game.recap);
-      }
     }
-    expect(recaps, 'corpus games with a recap').toBeGreaterThan(0);
     expect(data.getGames().length).toBeGreaterThan(0);
   });
 });

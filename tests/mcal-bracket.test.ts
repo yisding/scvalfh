@@ -137,7 +137,7 @@ describe('MCAL 2025 bracket, end to end with the 2025 results', () => {
       countsFor: null, postseason: { kind: 'mcal-tournament', leagueId: 'mcal', via: 'league-postseason-window' },
       otPeriods: c.overtimePeriodsPlayed, isOt: c.overtimePeriodsPlayed > 0, isForfeit: false, forfeitBy: null,
       decider: c.overtimePeriodsPlayed > 0 ? 'OT' : 'REG', shootout: null, venue: { text: c.location || null },
-      recap: null, urls: { maxpreps: c.url, nfhsStream: null, goFan: null },
+      urls: { maxpreps: c.url, nfhsStream: null, goFan: null },
       provenance: { scores: 'maxpreps-api', schedule: 'maxpreps-api', fetchedAt: '2025-11-01T00:00:00Z' },
     };
   });

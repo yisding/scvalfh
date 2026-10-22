@@ -157,7 +157,6 @@ export function game(spec: GameSpec): Game {
     shootout: null,
     venue: { text: null },
     ...(official ? { official } : {}),
-    recap: null,
     urls: { maxpreps: null, nfhsStream: null, goFan: null },
     provenance: {
       scores: 'derived',

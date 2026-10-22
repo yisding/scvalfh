@@ -62,6 +62,7 @@ import type {
   CcsCalendarEvent,
   CcsPlayoffs,
   CifssCrossCheck,
+  ContentRemoval,
   ContestId,
   CrossCheckRow,
   DivisionId,
@@ -200,6 +201,11 @@ export function getCcsCalendar(): readonly CcsCalendarEvent[] | undefined {
 /** true when the CCS calendar corroborated every published key date. undefined if not yet polled. */
 export function areKeyDatesConfirmed(): boolean | undefined {
   return snapshot.playoffs.keyDatesConfirmed;
+}
+
+/** Contests that left a date this season (Snapshot.contentRemovals), for the sitemap's `lastmod`. */
+export function getContentRemovals(): readonly ContentRemoval[] {
+  return snapshot.contentRemovals ?? [];
 }
 
 /** 'sblive:<id>' games a MaxPreps contest has since superseded → that contest (D2 rule 10). */

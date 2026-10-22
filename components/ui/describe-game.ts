@@ -17,7 +17,16 @@
  */
 
 import { EN_DASH, MINUS, renderScore, scoreGlyph, scoreSentence, shootoutPhrases, timeOfDay } from '../../lib/format';
-import { LEAGUES, findDivision, findLeague, getSection, type SectionConfig, type ShootoutInference } from '../../lib/leagues';
+import {
+  LEAGUES,
+  divisionHeading,
+  findDivision,
+  findLeague,
+  getSection,
+  leagueOfDivision,
+  type SectionConfig,
+  type ShootoutInference,
+} from '../../lib/leagues';
 import { getTeamBySlug } from '../../lib/teams';
 import type { Game, LeagueId, Outcome, PostseasonTag, ScoreView, TeamSlug } from '../../lib/types';
 
@@ -487,4 +496,73 @@ export function statusLabelIsTime(game: Game, statusLabel: string): boolean {
 export function signedMargin(margin: number): string {
   if (margin === 0) return '0';
   return margin > 0 ? `+${margin}` : `${MINUS}${Math.abs(margin)}`;
+}
+
+/**
+ * What the game was, as the noun of the result sentence: `De Anza Division league game`, `MCAL
+ * league game`, `CCS playoff game`, `MCAL tournament game`, `non-league game`. `postseasonLabel` is
+ * the postseason's own name (`postseasonTagOf` by default; the game page passes its round label,
+ * `MCAL semifinal`). A postseason game is named as one even when it also counts for a table.
+ */
+export function gameContextNoun(game: Game, postseasonLabel: string | null = postseasonTagOf(game)): string {
+  if (game.postseason) {
+    const label = postseasonLabel ?? 'postseason';
+    return label === 'CCS' ? 'CCS playoff game' : `${label} game`;
+  }
+  if (game.countsFor !== null) {
+    const heading = divisionHeading(game.countsFor);
+    const league = leagueOfDivision(game.countsFor);
+    if (heading === null) return `${league.shortName} league game`;
+    // The San Diego conferences' divisions are named as they are ('City Western'), never '… Division'.
+    return league.postseason.kind === 'section-playoffs' ? `${heading} league game` : `${heading} Division league game`;
+  }
+  return 'non-league game';
+}
+
+/**
+ * The site's own one-sentence account of a final, winner first, written from the score, the venue
+ * and the site's own classification (never MaxPreps' recap, which the site no longer stores):
+ *
+ *   'Point Loma won their home non-league game against Helix 7–1.'
+ *   'Chico won their away MCAL league game against Davis 2–1 in overtime.'
+ *   'Bonita tied their home non-league game against Marina 1–1.'   (a tie leads with the home team)
+ *   'Del Norte won their home North County Valley league game against Valley Center by forfeit.'
+ *
+ * A neutral-site game is 'their neutral-site …'. A shootout win with no stored tally says it in the
+ * section's words (`shootoutPhrases`); in a section whose shootouts are unverified it says only that
+ * MaxPreps credits the win. Overtime is left out when MaxPreps' count cannot be right for the league
+ * (`overtimeInDoubt`), as the score sentence does. null for anything but a final with both scores.
+ */
+export function resultSentence(game: Game, noun: string = gameContextNoun(game)): string | null {
+  const view = renderScore(game);
+  if (view.kind !== 'final') return null;
+  const neutral = game.site === 'neutral';
+  if (view.outcome === 'T') {
+    return `${game.home.name} tied their ${neutral ? 'neutral-site' : 'home'} ${noun} against ${game.away.name} ${view.home}${EN_DASH}${view.away}.`;
+  }
+  const homeWon = view.outcome === 'W';
+  const [winner, loser] = homeWon ? [game.home, game.away] : [game.away, game.home];
+  const where = neutral ? 'neutral-site' : homeWon ? 'home' : 'away';
+  const against = `their ${where} ${noun} against ${loser.name}`;
+  if (game.isForfeit || view.decider === 'FORFEIT') return `${winner.name} won ${against} by forfeit.`;
+  const [w, l] = homeWon ? [view.home, view.away] : [view.away, view.home];
+  const score = `${w}${EN_DASH}${l}`;
+  if (view.decider === 'SO' || view.shootout) {
+    const rule = shootoutSectionOf(game)?.shootout;
+    if (rule?.inference === 'unverified' && !view.shootout) {
+      return `MaxPreps credits ${winner.name} with the win in ${against}, level at ${score}.`;
+    }
+    const { onPhrase } = shootoutPhrases(rule?.words ?? 'a shootout');
+    const tally = view.shootout
+      ? ` (${Math.max(view.shootout.home, view.shootout.away)}${EN_DASH}${Math.min(view.shootout.home, view.shootout.away)})`
+      : '';
+    return `${winner.name} won ${against} ${onPhrase}${tally} after a ${score} tie.`;
+  }
+  const overtime =
+    overtimeInDoubt(game) || (view.decider !== 'OT' && view.decider !== '2OT')
+      ? ''
+      : view.decider === '2OT'
+        ? ' in double overtime'
+        : ' in overtime';
+  return `${winner.name} won ${against} ${score}${overtime}.`;
 }
