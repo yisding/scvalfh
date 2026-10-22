@@ -12,6 +12,7 @@ import {
   PREFS_RESTAMP,
   REGION_KEY,
   REGION_OF,
+  REGION_OPEN,
   REGION_PICKED,
   buildPrefsScript,
 } from '../../components/layout/prefs-script';
@@ -67,10 +68,13 @@ describe('buildPrefsScript', () => {
   // 2,537 × 1.12 = 2,842 → 3,072 B, 83 % used. The region pick's two listeners (a jump link's
   // `:target` no longer holds the other region open) took it to 3,018 B on 2026-10-18, 98 % used:
   // they live here because /teams had no first-load JS left for them (scripts/assert-budgets.ts).
-  // Clearing it on popstate as well took it to 3,052 B, 99 % used.
-  it('stays within 3,072 B including the 102-entry slug map', () => {
+  // Clearing it on popstate as well took it to 3,052 B, 99 % used. The client-side deep link (a
+  // `<Link>` to another page's fragment in the hidden region: the link-tap wait and the
+  // data-region-open marks) took it to 3,613 B on 2026-10-22; by the same rule 3,613 × 1.12 =
+  // 4,047 → 4,096 B, 88 % used.
+  it('stays within 4,096 B including the 102-entry slug map', () => {
     expect(TEAMS.length).toBe(102);
-    expect(Buffer.byteLength(SCRIPT, 'utf8')).toBeLessThanOrEqual(3072);
+    expect(Buffer.byteLength(SCRIPT, 'utf8')).toBeLessThanOrEqual(4096);
   });
 
   it('ships the region map once, non-default regions only: R={"socal":"sunset city north-county metro independents"}', () => {
@@ -314,6 +318,7 @@ describe('the region pick (data-region-picked)', () => {
         documentElement: html,
         addEventListener: (type: string, fn: (e?: unknown) => void) => void (on[`document:${type}`] = fn),
         getElementById: (id: string) => (id !== '' && id === hash.slice(1) ? { closest: () => block } : null),
+        querySelectorAll: () => [],
       },
       localStorage: { getItem: () => null },
       location: { pathname: '/leaders', search: '', hash },
@@ -368,4 +373,181 @@ describe('the region pick (data-region-picked)', () => {
     expect(p.replaced).toEqual([]);
   });
 
+});
+
+describe('the client-side deep link (data-region-open)', () => {
+  /**
+   * A NorCal reader taps `<Link href="/leaders#players-socal">` on a team page. The router then
+   * pushes the URL and renders /leaders, where `#players-socal` sits in `section[data-region-scope=
+   * socal] > div[data-region-scope=socal]`, hidden (no client rects) unless `visible`. Frames and the
+   * clock are driven by hand: `frame()` runs the pending animation-frame callbacks, `advance(ms)`.
+   */
+  function page() {
+    const all: FakeElement[] = [];
+    const scrolled: string[] = [];
+    class FakeElement {
+      attrs = new Map<string, string>();
+      visible = false;
+      constructor(
+        public id: string,
+        public parentElement: FakeElement | null,
+        scope?: string,
+      ) {
+        if (scope) this.attrs.set('data-region-scope', scope);
+      }
+      hasAttribute(k: string) {
+        return this.attrs.has(k);
+      }
+      setAttribute(k: string, v: string) {
+        this.attrs.set(k, v);
+      }
+      removeAttribute(k: string) {
+        this.attrs.delete(k);
+      }
+      getClientRects() {
+        return this.visible ? [{}] : [];
+      }
+      get dataset() {
+        return { regionScope: this.attrs.get('data-region-scope') };
+      }
+      /** Only the one selector the region pick asks for: `[data-region-scope]`. */
+      closest(sel: string): FakeElement | null {
+        if (sel === '[data-region-scope]' && this.hasAttribute('data-region-scope')) return this;
+        return this.parentElement ? this.parentElement.closest(sel) : null;
+      }
+      scrollIntoView() {
+        scrolled.push(this.id);
+      }
+    }
+    const location = { pathname: '/teams/canyon-hills', search: '', hash: '' };
+    let frames: (() => void)[] = [];
+    let now = 0;
+    const on: Record<string, (e?: unknown) => void> = {};
+    const context: Record<string, unknown> = {
+      document: {
+        documentElement: new FakeHtml(),
+        addEventListener: (type: string, fn: (e?: unknown) => void) => void (on[`document:${type}`] = fn),
+        getElementById: (id: string) => all.find((e) => e.id === id) ?? null,
+        // Only the one selector the script asks for: `[data-region-open]`.
+        querySelectorAll: (sel: string) => all.filter((e) => sel === `[${REGION_OPEN}]` && e.hasAttribute(REGION_OPEN)),
+      },
+      localStorage: { getItem: () => null },
+      location,
+      history: { state: null, replaceState: () => {} },
+      addEventListener: (type: string, fn: () => void) => void (on[`window:${type}`] = fn),
+      requestAnimationFrame: (fn: () => void) => void frames.push(fn),
+      Date: { now: () => now },
+    };
+    context.window = context;
+    vm.runInNewContext(SCRIPT, context);
+    const click = (target: unknown) => on['document:click']!({ target });
+    return {
+      scrolled,
+      /** A tap on a link to `/leaders<hash>`. */
+      tapLink: (hash: string) => {
+        const a = { hash, pathname: '/leaders' };
+        click({ closest: (sel: string) => (sel === 'a[href*="#"]' ? a : null) });
+      },
+      tapRegion: () => {
+        const b = { disabled: false, dataset: { regionOption: 'norcal' } };
+        click({ closest: (sel: string) => (sel === '[data-region-option]' ? b : null) });
+      },
+      /** The page the tap is made on already carries #players-socal, visible (a tab of its own). */
+      sameFragmentHere: () => {
+        location.hash = '#players-socal';
+        const own = new FakeElement('players-socal', null);
+        own.visible = true;
+        all.push(own);
+      },
+      /** The router commits /leaders#players-socal, replacing the page. */
+      arrive: (visible = false) => {
+        all.length = 0;
+        location.pathname = '/leaders';
+        location.hash = '#players-socal';
+        const section = new FakeElement('socal-section', null, 'socal');
+        const inner = new FakeElement('', section, 'socal');
+        const target = new FakeElement('players-socal', inner);
+        target.visible = visible;
+        all.push(section, inner, target, new FakeElement('norcal-section', null, 'norcal'));
+      },
+      frame: () => {
+        const run = frames;
+        frames = [];
+        for (const fn of run) fn();
+      },
+      pending: () => frames.length,
+      advance: (ms: number) => void (now += ms),
+      open: () => all.filter((e) => e.hasAttribute(REGION_OPEN)).map((e) => e.id || '(inner)'),
+      on,
+    };
+  }
+
+  it('waits for the new page, then opens every region block around the hidden target and scrolls to it', () => {
+    const p = page();
+    p.tapLink('#players-socal');
+    p.frame();
+    p.frame();
+    expect(p.open()).toEqual([]);
+    expect(p.pending()).toBe(1);
+    p.arrive();
+    p.frame();
+    expect(p.open()).toEqual(['socal-section', '(inner)']);
+    expect(p.scrolled).toEqual(['players-socal']);
+    expect(p.pending()).toBe(0);
+  });
+
+  // Codex on #80: /standings/eal after its #eal tab, then its /playoffs#eal link. The wait must not
+  // settle on the page it leaves, whose own #eal is visible.
+  it('waits for the link’s own path when the page it leaves carries the same fragment', () => {
+    const p = page();
+    p.sameFragmentHere();
+    p.tapLink('#players-socal');
+    p.frame();
+    expect(p.pending()).toBe(1);
+    p.arrive();
+    p.frame();
+    expect(p.open()).toEqual(['socal-section', '(inner)']);
+    expect(p.scrolled).toEqual(['players-socal']);
+  });
+
+  it('a visible target (native :target, or the reader’s own region) is left alone', () => {
+    const p = page();
+    p.tapLink('#players-socal');
+    p.arrive(true);
+    p.frame();
+    expect(p.open()).toEqual([]);
+    expect(p.scrolled).toEqual([]);
+  });
+
+  it('gives up after 10 s, and a later tap stops the wait', () => {
+    const slow = page();
+    slow.tapLink('#players-socal');
+    slow.advance(10_000);
+    slow.frame();
+    expect(slow.pending()).toBe(0);
+    const p = page();
+    p.tapLink('#players-socal');
+    p.tapLink('');
+    p.arrive();
+    p.frame();
+    expect(p.open()).toEqual([]);
+  });
+
+  it('a region pick, an in-page jump, Back and Forward clear every mark', () => {
+    const p = page();
+    p.tapLink('#players-socal');
+    p.arrive();
+    p.frame();
+    p.tapRegion();
+    expect(p.open()).toEqual([]);
+    for (const event of ['hashchange', 'popstate']) {
+      const q = page();
+      q.tapLink('#players-socal');
+      q.arrive();
+      q.frame();
+      expect(q.open()).toHaveLength(2);
+      q.on[`window:${event}`]!();
+      expect(q.open()).toEqual([]);
+    }
+  });
 });
