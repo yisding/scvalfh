@@ -1,19 +1,19 @@
 {
   "cifssCrossCheck": {
-    "agreements": 660,
+    "agreements": 664,
     "cifssOnlyScored": 0,
-    "compared": 666,
+    "compared": 670,
     "conflicts": 6,
     "notOnMaxPreps": 2
   },
-  "commitSummary": "SCVAL +3 finals · BVAL +2 · PCAL +1 · MCAL +1 · EAL +2 · Sunset +1 · City +4 · North +5 · Metro +1 · LA +0",
-  "contentHash": "02d963e9cb8b9e623273589380de855811bca05081be4a016a19d89c171ff13a",
+  "commitSummary": "SCVAL +1 finals · BVAL +1 · PCAL +0 · MCAL +1 · EAL +0 · Sunset +0 · City +0 · North +1 · Metro +1 · LA +0",
+  "contentHash": "c90bc1f43b79890ae4967a4fcf4af244b5f3d775d34ef5004fb284c8618243bd",
   "counts": {
     "byLeague": {
       "bval": {
         "backfilled": 0,
-        "finals": 102,
-        "games": 118,
+        "finals": 103,
+        "games": 121,
         "leagueGames": 60,
         "teams": 12
       },
@@ -33,14 +33,14 @@
       },
       "independents": {
         "backfilled": 0,
-        "finals": 56,
-        "games": 58,
+        "finals": 57,
+        "games": 59,
         "leagueGames": 21,
         "teams": 5
       },
       "mcal": {
         "backfilled": 0,
-        "finals": 88,
+        "finals": 89,
         "games": 91,
         "leagueGames": 72,
         "teams": 9
@@ -49,18 +49,18 @@
         "backfilled": 0,
         "finals": 88,
         "games": 103,
-        "leagueGames": 29,
+        "leagueGames": 30,
         "teams": 9
       },
       "north-county": {
         "backfilled": 1,
         "finals": 228,
-        "games": 261,
+        "games": 260,
         "leagueGames": 103,
         "teams": 19
       },
       "pcal": {
-        "backfilled": 3,
+        "backfilled": 2,
         "finals": 57,
         "games": 62,
         "leagueGames": 40,
@@ -68,57 +68,57 @@
       },
       "scval": {
         "backfilled": 1,
-        "finals": 149,
-        "games": 161,
+        "finals": 150,
+        "games": 162,
         "leagueGames": 98,
         "teams": 15
       },
       "sunset": {
         "backfilled": 0,
-        "finals": 103,
-        "games": 106,
+        "finals": 104,
+        "games": 107,
         "leagueGames": 36,
         "teams": 8
       }
     },
-    "finals": 814,
-    "games": 913,
-    "leagueGames": 549,
-    "mismatches": 28,
-    "pending": 16,
+    "finals": 819,
+    "games": 917,
+    "leagueGames": 550,
+    "mismatches": 27,
+    "pending": 12,
     "teams": 102
   },
   "crossCheck": {
-    "agreements": 229,
-    "backfilled": 5,
-    "compared": 279,
-    "conflicts": 5,
-    "sbliveOnlyScored": 10
+    "agreements": 223,
+    "backfilled": 4,
+    "compared": 274,
+    "conflicts": 4,
+    "sbliveOnlyScored": 9
   },
-  "fetchedAt": "2026-10-23T09:41:12.504Z",
+  "fetchedAt": "2026-10-23T18:05:29.674Z",
   "leagues": [
     {
       "backfilled": 1,
-      "countedFinals": 88,
-      "finalsDelta": 3,
+      "countedFinals": 89,
+      "finalsDelta": 1,
       "id": "scval",
-      "missingPast": 3,
-      "reasons": [],
-      "state": "fresh"
-    },
-    {
-      "backfilled": 0,
-      "countedFinals": 45,
-      "finalsDelta": 2,
-      "id": "bval",
       "missingPast": 2,
       "reasons": [],
       "state": "fresh"
     },
     {
-      "backfilled": 3,
-      "countedFinals": 35,
+      "backfilled": 0,
+      "countedFinals": 46,
       "finalsDelta": 1,
+      "id": "bval",
+      "missingPast": 1,
+      "reasons": [],
+      "state": "fresh"
+    },
+    {
+      "backfilled": 2,
+      "countedFinals": 35,
+      "finalsDelta": 0,
       "id": "pcal",
       "missingPast": 2,
       "reasons": [],
@@ -126,17 +126,17 @@
     },
     {
       "backfilled": 0,
-      "countedFinals": 71,
+      "countedFinals": 72,
       "finalsDelta": 1,
       "id": "mcal",
-      "missingPast": 1,
+      "missingPast": 0,
       "reasons": [],
       "state": "fresh"
     },
     {
       "backfilled": 0,
       "countedFinals": 28,
-      "finalsDelta": 2,
+      "finalsDelta": 0,
       "id": "eal",
       "missingPast": 0,
       "reasons": [],
@@ -145,7 +145,7 @@
     {
       "backfilled": 0,
       "countedFinals": 36,
-      "finalsDelta": 1,
+      "finalsDelta": 0,
       "id": "sunset",
       "missingPast": 0,
       "reasons": [],
@@ -154,7 +154,7 @@
     {
       "backfilled": 0,
       "countedFinals": 46,
-      "finalsDelta": 4,
+      "finalsDelta": 0,
       "id": "city",
       "missingPast": 2,
       "reasons": [],
@@ -162,19 +162,19 @@
     },
     {
       "backfilled": 0,
-      "countedFinals": 74,
-      "finalsDelta": 5,
+      "countedFinals": 75,
+      "finalsDelta": 1,
       "id": "north-county",
-      "missingPast": 2,
+      "missingPast": 1,
       "reasons": [],
       "state": "fresh"
     },
     {
       "backfilled": 0,
-      "countedFinals": 17,
+      "countedFinals": 18,
       "finalsDelta": 1,
       "id": "metro",
-      "missingPast": 1,
+      "missingPast": 0,
       "reasons": [],
       "state": "fresh"
     },
@@ -253,7 +253,7 @@
     },
     {
       "label": "homestead schedule",
-      "rowCount": 20,
+      "rowCount": 21,
       "status": "ok"
     },
     {
@@ -358,7 +358,7 @@
     },
     {
       "label": "willow-glen schedule",
-      "rowCount": 17,
+      "rowCount": 18,
       "status": "ok"
     },
     {
@@ -373,7 +373,7 @@
     },
     {
       "label": "prospect schedule",
-      "rowCount": 18,
+      "rowCount": 19,
       "status": "ok"
     },
     {
@@ -383,7 +383,7 @@
     },
     {
       "label": "sobrato schedule",
-      "rowCount": 16,
+      "rowCount": 19,
       "status": "ok"
     },
     {
@@ -618,7 +618,7 @@
     },
     {
       "label": "newport-harbor schedule",
-      "rowCount": 19,
+      "rowCount": 20,
       "status": "ok"
     },
     {
@@ -873,12 +873,12 @@
     },
     {
       "label": "granite-hills schedule",
-      "rowCount": 16,
+      "rowCount": 17,
       "status": "ok"
     },
     {
       "label": "hilltop schedule",
-      "rowCount": 19,
+      "rowCount": 20,
       "status": "ok"
     },
     {
@@ -898,7 +898,7 @@
     },
     {
       "label": "glendora schedule",
-      "rowCount": 15,
+      "rowCount": 16,
       "status": "ok"
     },
     {
@@ -982,6 +982,16 @@
       "status": "ok"
     },
     {
+      "label": "sblive canyon-hills games",
+      "rowCount": 25,
+      "status": "ok"
+    },
+    {
+      "label": "sblive carmel games",
+      "rowCount": 18,
+      "status": "ok"
+    },
+    {
       "label": "sblive convent-sacred-heart games",
       "rowCount": 16,
       "status": "ok"
@@ -993,7 +1003,7 @@
     },
     {
       "label": "sblive glendora games",
-      "rowCount": 18,
+      "rowCount": 19,
       "status": "ok"
     },
     {
@@ -1002,23 +1012,13 @@
       "status": "ok"
     },
     {
-      "label": "sblive helix games",
-      "rowCount": 27,
-      "status": "ok"
-    },
-    {
-      "label": "sblive la-costa-canyon games",
-      "rowCount": 30,
-      "status": "ok"
-    },
-    {
       "label": "sblive marin-catholic games",
       "rowCount": 19,
       "status": "ok"
     },
     {
-      "label": "sblive monterey games",
-      "rowCount": 12,
+      "label": "sblive sobrato games",
+      "rowCount": 13,
       "status": "ok"
     },
     {
@@ -1033,7 +1033,7 @@
     },
     {
       "label": "cifsshome.org Central Coast Section field hockey",
-      "rowCount": 178,
+      "rowCount": 188,
       "status": "ok"
     },
     {
@@ -1053,7 +1053,7 @@
     },
     {
       "label": "cifsshome.org Southern Section field hockey",
-      "rowCount": 202,
+      "rowCount": 201,
       "status": "ok"
     },
     {
