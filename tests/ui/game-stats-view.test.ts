@@ -217,6 +217,29 @@ describe('game notes on the game page', () => {
     expect(home.scoring!.rows.map((r) => [r.name, r.values, r.noted])).toEqual([['E. Borges', [1, 1], true]]);
   });
 
+  it('never gives a credit to a different player on the same jersey and last name', () => {
+    const b = box([
+      { name: 'Alice Smith', jersey: '7', field: { assists: 1 }, goalkeeping: null },
+      { name: 'B. Smith', jersey: '8', field: { assists: 1 }, goalkeeping: null },
+    ], { field: ['assists'] });
+    const home = homeSide(notedModel(), withNote(b, [credit('Bella Smith', '7', { goals: 1 })]));
+    expect(home.scoring!.rows.map((r) => [r.name, r.values, r.noted])).toEqual([
+      ['Bella Smith', [1, null], true],
+      ['Alice Smith', [null, 1], false],
+      ['B. Smith', [null, 1], false],
+    ]);
+  });
+
+  it('marks only the table the note added to, for a player in both', () => {
+    const b = box(
+      [{ name: 'Keeper Field', jersey: '1', field: { assists: 1 }, goalkeeping: { saves: 3 } }],
+      { field: ['assists'], goalkeeping: ['saves'] },
+    );
+    const home = homeSide(notedModel(), withNote(b, [credit('Keeper Field', '1', { goals: 1 })]));
+    expect(home.scoring!.rows.map((r) => [r.name, r.noted])).toEqual([['Keeper Field', true]]);
+    expect(home.goalies!.rows.map((r) => [r.name, r.values, r.noted])).toEqual([['Keeper Field', [3], false]]);
+  });
+
   it('gives a side with no box score tables from its note alone, saves included', () => {
     const credits = [
       credit('Gabrielle Moll', '9', { goals: 1 }),

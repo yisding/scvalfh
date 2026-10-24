@@ -96,8 +96,8 @@ export interface GameStatsView {
 /** Where a side's entries come from: data/player-stats.json, or a test's own. */
 export type GameStatsLookup = (contestId: string, slug: TeamSlug) => GameStatsEntry;
 
-/** A box score line, with whether a game note added to it. */
-type Line = BoxScoreLine & { noted: boolean };
+/** A box score line, with whether a game note added to its field stats and to its goalkeeping. */
+type Line = BoxScoreLine & { noted: { field: boolean; goalkeeping: boolean } };
 /** A side's box score with its note credits added: what the tables are built from. */
 interface Entries {
   tracked: BoxScore['tracked'];
@@ -105,11 +105,25 @@ interface Entries {
 }
 
 const lastWord = (name: string) => name.trim().split(/\s+/).pop()!.toLowerCase();
+/** "E. Borges": the stats sheet's short form, which a line keeps when the roster join missed. */
+const SHORT_NAME = /^(\p{L})\.\s/u;
+
+/** The line is the credited player: the roster's name, or the sheet's short form of it on the same jersey. */
+function samePlayer(line: BoxScoreLine, c: NoteCredit): boolean {
+  if (line.name === c.fullName) return true;
+  const initial = SHORT_NAME.exec(line.name)?.[1];
+  return (
+    initial !== undefined &&
+    c.jersey !== null &&
+    line.jersey === c.jersey &&
+    initial.toLowerCase() === c.fullName.trim()[0]?.toLowerCase() &&
+    lastWord(line.name) === lastWord(c.fullName)
+  );
+}
 
 /**
- * `box` (if any) with `credits` added: a credit goes to the line the roster join named for the same
- * player (or, for a line under the sheet's short name, the same jersey and last name), else to a
- * line of its own. null when there is neither.
+ * `box` (if any) with `credits` added: a credit goes to the credited player's line (samePlayer),
+ * else to a line of its own. null when there is neither.
  */
 function withCredits(box: BoxScore | undefined, credits: readonly NoteCredit[]): Entries | null {
   if (!box && !credits.length) return null;
@@ -119,28 +133,30 @@ function withCredits(box: BoxScore | undefined, credits: readonly NoteCredit[]):
     ...p,
     field: p.field ? { ...p.field } : null,
     goalkeeping: p.goalkeeping ? { ...p.goalkeeping } : null,
-    noted: false,
+    noted: { field: false, goalkeeping: false },
   }));
   for (const c of credits) {
-    let line = players.find(
-      (p) =>
-        p.name === c.fullName ||
-        (c.jersey !== null && p.jersey === c.jersey && lastWord(p.name) === lastWord(c.fullName)),
-    );
+    let line = players.find((p) => samePlayer(p, c));
     if (!line) {
-      line = { name: c.fullName, jersey: c.jersey, field: null, goalkeeping: null, noted: false };
+      line = {
+        name: c.fullName,
+        jersey: c.jersey,
+        field: null,
+        goalkeeping: null,
+        noted: { field: false, goalkeeping: false },
+      };
       players.push(line);
     }
     for (const kind of ['goals', 'assists'] as const) {
       if (c[kind] === 0) continue;
       field.add(kind);
       line.field = { ...line.field, [kind]: (line.field?.[kind] ?? 0) + c[kind] };
-      line.noted = true;
+      line.noted.field = true;
     }
     if (c.saves > 0) {
       goalie.add('saves');
       line.goalkeeping = { ...line.goalkeeping, saves: (line.goalkeeping?.saves ?? 0) + c.saves };
-      line.noted = true;
+      line.noted.goalkeeping = true;
     }
   }
   return { tracked: { field: [...field], goalkeeping: [...goalie] }, players };
@@ -161,7 +177,7 @@ function scoringTable(box: Entries): StatTable | null {
       }
       return a.i - b.i;
     })
-    .map(({ p, i, values }) => ({ key: `${i}`, name: p.name, jersey: p.jersey, values, noted: p.noted }));
+    .map(({ p, i, values }) => ({ key: `${i}`, name: p.name, jersey: p.jersey, values, noted: p.noted.field }));
   return rows.length ? { columns, rows } : null;
 }
 
@@ -179,7 +195,7 @@ function goalieTable(box: Entries): StatTable | null {
     .map((p, i) => ({ p, i, values: columns.map((c) => p.goalkeeping?.[c.key] ?? null) }))
     .filter(({ values }) => values.some((v) => v !== null))
     .sort((a, b) => byTimeInGoal(a.p, b.p) || a.i - b.i)
-    .map(({ p, i, values }) => ({ key: `${i}`, name: p.name, jersey: p.jersey, values, noted: p.noted }));
+    .map(({ p, i, values }) => ({ key: `${i}`, name: p.name, jersey: p.jersey, values, noted: p.noted.goalkeeping }));
   return rows.length ? { columns, rows } : null;
 }
 
