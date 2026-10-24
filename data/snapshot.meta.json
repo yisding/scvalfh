@@ -1,13 +1,13 @@
 {
   "cifssCrossCheck": {
-    "agreements": 674,
+    "agreements": 676,
     "cifssOnlyScored": 0,
-    "compared": 680,
+    "compared": 682,
     "conflicts": 6,
     "notOnMaxPreps": 2
   },
-  "commitSummary": "SCVAL +0 finals · BVAL +1 · PCAL +0 · MCAL +0 · EAL +0 · Sunset +0 · City +1 · North +4 · Metro +2 · LA +0",
-  "contentHash": "f27c88481a66a31aba19504c8560b54fe6b4fbd3272c6236f2905e22cc02e202",
+  "commitSummary": "SCVAL +0 finals · BVAL +0 · PCAL +0 · MCAL +0 · EAL +0 · Sunset +0 · City +1 · North +1 · Metro +0 · LA +0",
+  "contentHash": "351809f61101f38ad98056b89a83021cca6c4a87de6662272b9c8c90b3a683cd",
   "counts": {
     "byLeague": {
       "bval": {
@@ -19,7 +19,7 @@
       },
       "city": {
         "backfilled": 0,
-        "finals": 157,
+        "finals": 158,
         "games": 170,
         "leagueGames": 60,
         "teams": 12
@@ -54,7 +54,7 @@
       },
       "north-county": {
         "backfilled": 1,
-        "finals": 232,
+        "finals": 233,
         "games": 258,
         "leagueGames": 103,
         "teams": 19
@@ -81,21 +81,21 @@
         "teams": 8
       }
     },
-    "finals": 829,
+    "finals": 831,
     "games": 912,
     "leagueGames": 550,
     "mismatches": 28,
-    "pending": 6,
+    "pending": 4,
     "teams": 102
   },
   "crossCheck": {
-    "agreements": 235,
+    "agreements": 236,
     "backfilled": 5,
-    "compared": 266,
+    "compared": 265,
     "conflicts": 4,
     "sbliveOnlyScored": 7
   },
-  "fetchedAt": "2026-10-24T09:13:44.499Z",
+  "fetchedAt": "2026-10-24T17:11:55.031Z",
   "leagues": [
     {
       "backfilled": 1,
@@ -109,7 +109,7 @@
     {
       "backfilled": 0,
       "countedFinals": 47,
-      "finalsDelta": 1,
+      "finalsDelta": 0,
       "id": "bval",
       "missingPast": 1,
       "reasons": [],
@@ -153,26 +153,26 @@
     },
     {
       "backfilled": 0,
-      "countedFinals": 47,
+      "countedFinals": 48,
       "finalsDelta": 1,
       "id": "city",
-      "missingPast": 1,
+      "missingPast": 0,
       "reasons": [],
       "state": "fresh"
     },
     {
       "backfilled": 0,
-      "countedFinals": 79,
-      "finalsDelta": 4,
+      "countedFinals": 80,
+      "finalsDelta": 1,
       "id": "north-county",
-      "missingPast": 1,
+      "missingPast": 0,
       "reasons": [],
       "state": "fresh"
     },
     {
       "backfilled": 0,
       "countedFinals": 20,
-      "finalsDelta": 2,
+      "finalsDelta": 0,
       "id": "metro",
       "missingPast": 0,
       "reasons": [],
@@ -977,11 +977,6 @@
       "status": "ok"
     },
     {
-      "label": "sblive canyon-hills games",
-      "rowCount": 25,
-      "status": "ok"
-    },
-    {
       "label": "sblive carmel games",
       "rowCount": 18,
       "status": "ok"
@@ -1009,6 +1004,11 @@
     {
       "label": "sblive lick-wilmerding games",
       "rowCount": 17,
+      "status": "ok"
+    },
+    {
+      "label": "sblive lynbrook games",
+      "rowCount": 21,
       "status": "ok"
     },
     {
