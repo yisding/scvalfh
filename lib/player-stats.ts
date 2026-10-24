@@ -19,6 +19,7 @@ import { getSnapshot } from './data';
 import { noteStatsFor, withNoteStats, type NoteSources, type NotedTeamPlayerStats } from './note-stats';
 import {
   PlayerStatsFileSchema,
+  type BoxScore,
   type PlayerStatsFile,
   type TeamPlayerStats,
 } from './player-stats-schema';
@@ -28,6 +29,8 @@ import type { TeamSlug } from './types';
 
 export type { NotedTeamPlayerStats } from './note-stats';
 export type {
+  BoxScore,
+  BoxScoreLine,
   FieldStatKey,
   FieldStats,
   GoalieStatKey,
@@ -56,6 +59,15 @@ function load(): PlayerStatsFile {
 
 const file = load();
 const BY_SLUG = new Map<string, TeamPlayerStats>(file.teams.map((t) => [t.slug, t]));
+/** contest id → team slug → that team's box score for the game. */
+const BOX_SCORES = new Map<string, Map<string, BoxScore>>();
+for (const t of file.teams) {
+  for (const box of t.games ?? []) {
+    const bySlug = BOX_SCORES.get(box.contestId) ?? new Map<string, BoxScore>();
+    bySlug.set(t.slug, box);
+    BOX_SCORES.set(box.contestId, bySlug);
+  }
+}
 
 export function getPlayerStats(): PlayerStatsFile {
   return file;
@@ -63,6 +75,14 @@ export function getPlayerStats(): PlayerStatsFile {
 
 export function getTeamPlayerStats(slug: TeamSlug): TeamPlayerStats | undefined {
   return BY_SLUG.get(slug);
+}
+
+/**
+ * `slug`'s box score for the game `contestId`, as its coach entered it on MaxPreps (the game page's
+ * Game stats section), or undefined when the file has none.
+ */
+export function getBoxScore(contestId: string, slug: TeamSlug): BoxScore | undefined {
+  return BOX_SCORES.get(contestId)?.get(slug);
 }
 
 /** The committed snapshot's games and rosters, for lib/note-stats.ts. */

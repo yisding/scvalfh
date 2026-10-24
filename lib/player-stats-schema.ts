@@ -18,6 +18,7 @@
  *      forward after a failure, nothing at all after a failure, or nothing yet because no run
  *      has covered the team ('pending')
  *   4. counts are recomputed from the rows, never trusted from the file
+ *   5. a team's box scores (`games`) are one per contest, each holding only the stats it tracks
  */
 
 import { z } from 'zod';
@@ -108,6 +109,55 @@ export const GameTotalSchema = z.object({
   saves: z.number().int().min(0),
 });
 
+const boxStat = z.number().min(0);
+
+/**
+ * One player's line in one game's box score. Unlike a season line, a stat is present only when the
+ * player has a number for it: a box score lists dozens of games, and a key for every untracked stat
+ * would be most of the file.
+ */
+export const BoxScoreLineSchema = z.object({
+  /** The roster's spelling when joined on the career id, else the stats sheet's short form. */
+  name: z.string().min(1),
+  jersey: z.string().min(1).nullable(),
+  field: z.partialRecord(fieldKey, boxStat).nullable(),
+  goalkeeping: z.partialRecord(goalieKey, boxStat).nullable(),
+});
+
+/**
+ * One game's box score for the team, as the coach entered it on MaxPreps
+ * (`team-contest-player-stats/v1`, the season rollup's shape for a single game): what the game page
+ * shows. Read only for a final in the snapshot whose row in the team's per-game table has a count
+ * above zero.
+ */
+export const BoxScoreSchema = z
+  .object({
+    /** The MaxPreps contest id: the snapshot game's `contestId`. */
+    contestId: z.string().min(1),
+    /**
+     * The digest of the team's per-game row this box score was read against
+     * (lib/sources/maxpreps-game-stats.ts): the next run reads the box score again only when the
+     * row's digest has changed, so a run makes one call per changed game, not one per game.
+     */
+    rowKey: z.string().min(1),
+    tracked: z.object({ field: z.array(fieldKey), goalkeeping: z.array(goalieKey) }),
+    totals: z.object({
+      field: z.partialRecord(fieldKey, z.number().min(0)),
+      goalkeeping: z.partialRecord(goalieKey, z.number().min(0)),
+    }),
+    players: z.array(BoxScoreLineSchema).min(1),
+    warnings: z.array(z.string()),
+  })
+  .refine((b) => {
+    const field = new Set<string>(b.tracked.field);
+    const goalie = new Set<string>(b.tracked.goalkeeping);
+    return b.players.every(
+      (p) =>
+        Object.keys(p.field ?? {}).every((k) => field.has(k)) &&
+        Object.keys(p.goalkeeping ?? {}).every((k) => goalie.has(k)),
+    );
+  }, 'a box score holds only the stats it tracks');
+
 export const TeamPlayerStatsSchema = z
   .object({
     slug: teamSlug,
@@ -139,6 +189,11 @@ export const TeamPlayerStatsSchema = z
      * teamsCreditedByNotes); absent when not read, or when the read failed.
      */
     gameTotals: z.array(GameTotalSchema).optional(),
+    /**
+     * The team's box scores, one per final the coach entered stats for (BoxScoreSchema); absent
+     * when the team has none.
+     */
+    games: z.array(BoxScoreSchema).optional(),
     warnings: z.array(z.string()),
     /** When THESE rows were read — older than the file's stamp when carried forward. */
     fetchedAt: z.string().nullable(),
@@ -152,6 +207,14 @@ export const TeamPlayerStatsSchema = z
   .refine(
     (t) => t.status !== 'pending' || (t.fetchedAt === null && t.maxprepsTeamId === null && t.lastUpdated === null),
     'status pending means nothing was read: no fetchedAt, no page id, no last-updated stamp',
+  )
+  .refine(
+    (t) => !t.games || (t.status !== 'none' && t.status !== 'error' && t.status !== 'pending'),
+    'status none / error / pending cannot have box scores',
+  )
+  .refine(
+    (t) => !t.games || new Set(t.games.map((g) => g.contestId)).size === t.games.length,
+    'one box score per contest',
   )
   .refine((t) => getTeamBySlug(t.slug)?.id === t.teamId, "teamId is not the registry team's")
   .refine(
@@ -212,6 +275,8 @@ export const PlayerStatsFileSchema = PlayerStatsPartialSchema.refine(
 );
 
 export type GameTotal = z.infer<typeof GameTotalSchema>;
+export type BoxScore = z.infer<typeof BoxScoreSchema>;
+export type BoxScoreLine = z.infer<typeof BoxScoreLineSchema>;
 export type PlayerStatLine = z.infer<typeof PlayerStatLineSchema>;
 export type TeamPlayerStats = z.infer<typeof TeamPlayerStatsSchema>;
 export type PlayerStatsCounts = z.infer<typeof PlayerStatsCountsSchema>;

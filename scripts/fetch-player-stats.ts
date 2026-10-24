@@ -5,8 +5,11 @@
  *
  *   pnpm fetch-player-stats                     live: one small JSON call per registry team (102)
  *   pnpm fetch-player-stats --leagues scval,bval  only these leagues; the others keep their previous rows
- *   pnpm fetch-player-stats --fixtures <dir>    offline: read stats-<slug>.json captures
+ *   pnpm fetch-player-stats --fixtures <dir>    offline: read stats-<slug>.json captures (and
+ *                                               game-stats-<slug>.json, box-<slug>-<contest id>.json)
  *   pnpm fetch-player-stats --capture <dir>     live, and save each response as <dir>/stats-<slug>.json
+ *                                               (game-stats-<slug>.json, box-<slug>-<contest id>.json)
+ *   pnpm fetch-player-stats --all-box-scores    read every box score again, whatever its row says
  *   pnpm fetch-player-stats --rosters <path>    join against another rosters file
  *   pnpm fetch-player-stats --snapshot <path>   read game notes from another snapshot file
  *   pnpm fetch-player-stats --out <path>        write somewhere else
@@ -29,14 +32,24 @@
  * new file differs from the previous one only in its `fetchedAt` stamps, the previous file is left
  * exactly as it was (`playerStatsContentKey`), so there is nothing to commit.
  *
+ * Box scores (lib/sources/maxpreps-box-score.ts), for the game pages. For every team with stats the
+ * run also reads MaxPreps' per-game team table (lib/sources/maxpreps-game-stats.ts): one more small
+ * call per team. Each final of the team's in data/snapshot.json whose row there has a count above
+ * zero gets the team's box score for that game in `games`, read again only when the row's digest
+ * (`rowKey`) differs from the one the stored box score was read against, so a run reads the games a
+ * coach entered or edited since the last run, not every game (`--all-box-scores` reads them all,
+ * about 700 calls). A failed table or box score call never fails the team: the previous box scores
+ * are kept, with a warning, and a box score kept that way is read again on the next run. A box
+ * score the coach changed without changing any of the game's team totals (a goal moved from one
+ * player to another) is not noticed until something in the row moves.
+ *
  * Game notes (lib/note-stats.ts). For a team a game note on one of its finals in data/snapshot.json
- * credits with goals, assists or saves (teamsCreditedByNotes), the run also reads MaxPreps'
- * per-game team totals (lib/sources/maxpreps-game-stats.ts) into `gameTotals`, so a noted stat the
- * coach has also entered is not counted twice: one more small call per such team (one, Homestead,
- * on 2026-10-06). Offline it reads `game-stats-<slug>.json` beside the rollup captures; a missing
- * capture, or a failed call, leaves `gameTotals` out with a warning and never fails the team; its
- * noted stats are then not counted (lib/note-stats.ts counts only what it can check). The previous
- * run's totals are not carried forward for this: they may predate what the coach has entered since.
+ * credits with goals, assists or saves (teamsCreditedByNotes), the same per-game table's totals are
+ * also kept in `gameTotals`, so a noted stat the coach has also entered is not counted twice.
+ * Offline it reads `game-stats-<slug>.json` beside the rollup captures; a missing capture, or a
+ * failed call, leaves `gameTotals` out with a warning and never fails the team; its noted stats
+ * are then not counted (lib/note-stats.ts counts only what it can check). The previous run's
+ * totals are not carried forward for this: they may predate what the coach has entered since.
  *
  * A partial run still publishes, and failures are scoped to the team (lib/fetch-scope.ts): a team
  * whose call fails or does not parse keeps the previous file's rows with status 'carried-forward'
@@ -78,13 +91,14 @@ import {
   TeamPlayerStatsSchema,
   countPlayerStats,
   playerStatsContentKey,
-  type GameTotal,
+  type BoxScore,
   type PlayerStatsFile,
   type TeamPlayerStats,
 } from '../lib/player-stats-schema';
 import { RostersSchema } from '../lib/rosters-schema';
 import { MaxPrepsClient } from '../lib/sources/maxpreps';
-import { fetchGameStats, gameStatsUrl, parseGameStats } from '../lib/sources/maxpreps-game-stats';
+import { boxScoreUrl, fetchBoxScore, toBoxScore } from '../lib/sources/maxpreps-box-score';
+import { fetchGameRows, gameStatsUrl, parseGameRows, type GameRow } from '../lib/sources/maxpreps-game-stats';
 import {
   fetchPlayerStats,
   joinToRoster,
@@ -93,13 +107,14 @@ import {
   playerStatsUrl,
   teamStatsPageUrl,
   type PlayerStatsPage,
+  type RosterJoinPlayer,
 } from '../lib/sources/maxpreps-player-stats';
 import { formatIssues } from '../lib/schema-primitives';
 import { SEASON_YEAR } from '../lib/season';
 import { loadSnapshot } from '../lib/snapshot-schema';
 import { stableStringify } from '../lib/stable-json';
 import { TEAMS } from '../lib/teams';
-import type { LeagueId } from '../lib/types';
+import type { Game, LeagueId } from '../lib/types';
 import { runCli } from './cli';
 
 interface Args {
@@ -112,6 +127,7 @@ interface Args {
   dryRun: boolean;
   fetchedAt: string | null;
   force: boolean;
+  allBoxScores: boolean;
 }
 
 function parseArgs(argv: readonly string[]): Args {
@@ -125,6 +141,7 @@ function parseArgs(argv: readonly string[]): Args {
     dryRun: false,
     fetchedAt: null,
     force: false,
+    allBoxScores: false,
   };
   for (let i = 0; i < argv.length; i += 1) {
     const arg = argv[i];
@@ -143,6 +160,7 @@ function parseArgs(argv: readonly string[]): Args {
     else if (arg === '--dry-run') out.dryRun = true;
     else if (arg === '--fetched-at') out.fetchedAt = parseFetchedAtFlag(next(), arg);
     else if (arg === '--force') out.force = true;
+    else if (arg === '--all-box-scores') out.allBoxScores = true;
     else throw new Error(`unknown flag: ${arg}`);
   }
   if (out.fixtures && out.capture) throw new Error('--capture records live responses; it cannot be combined with --fixtures');
@@ -170,46 +188,123 @@ const NOTES = [
   'Every number is what the coach entered on MaxPreps, for all of this season\'s varsity games, league and non-league alike. Coverage is the coach\'s choice: a team MaxPreps has no stats for is status none.',
   "A stat is tracked for a team when the team's own total is above zero and at least one player holds some of it; only then are its cells read, so a tracked 0 is a real zero and an untracked stat is null for every player. A total no player holds any of is dropped with a warning; rows adding up to more than a team total are kept as published and warned about. Per-game and percentage columns are dropped: they are arithmetic on the counts.",
   "A team with status carried-forward keeps the previous file's rows after a failed fetch; its own fetchedAt says when those rows were read.",
-  "gameTotals, where present, are MaxPreps' per-game team totals (team-season-game-stats rollup), read only for a team a game note on one of its finals credits with goals, assists or saves (lib/note-stats.ts), so a noted stat the coach also entered is not counted twice.",
+  "gameTotals, where present, are MaxPreps' per-game team totals (team-season-game-stats rollup), kept only for a team a game note on one of its finals credits with goals, assists or saves (lib/note-stats.ts), so a noted stat the coach also entered is not counted twice.",
+  "games, where present, are the team's box scores (team-contest-player-stats), one per final in data/snapshot.json whose row in the team's per-game table has a count above zero, read the same way as the season rows: a stat is tracked when the game's team total is above zero and some player holds it, and a player's line holds only the stats they have a number for. rowKey is a digest of the per-game row the box score was read against; a box score is read again when its row changes.",
 ];
 
+/** Writes a captured body as received, with a final newline. */
+function saveCapture(capture: string, name: string): (body: string) => void {
+  return (body) => writeFileSync(path.join(capture, name), body.endsWith('\n') ? body : `${body}\n`, 'utf8');
+}
+
 /**
- * A noted team's per-game totals, or undefined with a warning when they cannot be had: its note
- * credits are then withheld (lib/note-stats.ts counts only what it can check), and the team itself
- * never fails.
+ * The team's per-game table (lib/sources/maxpreps-game-stats.ts), or the reason it could not be
+ * had. Offline, a team with no `game-stats-<slug>.json` capture has none (`missing`): the captures
+ * cover a few teams, so that is not a failure.
  */
-async function readGameTotals(
+async function readGameRows(
   args: Args,
   client: MaxPrepsClient,
   capture: string | null,
   slug: string,
   maxprepsTeamId: string,
-  warnings: string[],
-): Promise<GameTotal[] | undefined> {
+): Promise<{ rows: GameRow[] } | { error: string; missing?: boolean }> {
   try {
     if (args.fixtures) {
       const file = path.join(args.fixtures, `game-stats-${slug}.json`);
-      if (!existsSync(file)) {
-        warnings.push(`game notes: no per-game capture ${path.basename(file)}; its noted stats are not counted until a read succeeds`);
-        return undefined;
-      }
-      return parseGameStats(JSON.parse(readFileSync(file, 'utf8')) as unknown, {
-        expectedTeamId: maxprepsTeamId,
-        url: gameStatsUrl(maxprepsTeamId),
-      });
+      if (!existsSync(file)) return { error: `no per-game capture ${path.basename(file)}`, missing: true };
+      return {
+        rows: parseGameRows(JSON.parse(readFileSync(file, 'utf8')) as unknown, {
+          expectedTeamId: maxprepsTeamId,
+          url: gameStatsUrl(maxprepsTeamId),
+        }),
+      };
     }
-    return await fetchGameStats(
-      client,
-      maxprepsTeamId,
-      capture
-        ? (body) =>
-            writeFileSync(path.join(capture, `game-stats-${slug}.json`), body.endsWith('\n') ? body : `${body}\n`, 'utf8')
-        : undefined,
-    );
+    return {
+      rows: await fetchGameRows(client, maxprepsTeamId, capture ? saveCapture(capture, `game-stats-${slug}.json`) : undefined),
+    };
   } catch (err) {
-    warnings.push(`game notes: per-game totals not read (${err instanceof Error ? err.message : String(err)}); its noted stats are not counted until a read succeeds`);
-    return undefined;
+    return { error: err instanceof Error ? err.message : String(err) };
   }
+}
+
+/**
+ * The team's box scores for its finals in the snapshot (`finals`, contest ids) whose per-game row
+ * has a count above zero. A stored box score whose row has not changed is kept without a call; any
+ * other is read. A box score that cannot be read keeps the stored one, if any, with a warning:
+ * its old `rowKey` no longer matches the row, so the next run reads it again.
+ */
+async function readBoxScores(
+  args: Args,
+  client: MaxPrepsClient,
+  capture: string | null,
+  slug: string,
+  maxprepsTeamId: string,
+  rows: readonly GameRow[],
+  finals: ReadonlySet<string>,
+  roster: readonly RosterJoinPlayer[],
+  previous: readonly BoxScore[],
+  warnings: string[],
+): Promise<{ games: BoxScore[]; read: number }> {
+  const stored = new Map(previous.map((b) => [b.contestId, b]));
+  let read = 0;
+  const games = await Promise.all(
+    rows
+      .filter((r) => r.entered && finals.has(r.total.contestId))
+      .map(async (row): Promise<BoxScore | null> => {
+        const { contestId } = row.total;
+        const prior = stored.get(contestId);
+        if (prior && prior.rowKey === row.rowKey && !args.allBoxScores) return prior;
+        try {
+          let page: PlayerStatsPage | null;
+          if (args.fixtures) {
+            const file = path.join(args.fixtures, `box-${slug}-${contestId}.json`);
+            // The captures hold a few box scores, not every one: the rest are simply not read.
+            if (!existsSync(file)) return prior ?? null;
+            page = parsePlayerStats(JSON.parse(readFileSync(file, 'utf8')) as unknown, {
+              expectedTeamId: maxprepsTeamId,
+              url: boxScoreUrl(maxprepsTeamId, contestId),
+            });
+          } else {
+            page = await fetchBoxScore(
+              client,
+              maxprepsTeamId,
+              contestId,
+              capture ? saveCapture(capture, `box-${slug}-${contestId}.json`) : undefined,
+            );
+          }
+          read += 1;
+          const box = page ? toBoxScore(page, roster, contestId, row.rowKey) : null;
+          if (!box) warnings.push(`box score ${contestId}: its per-game row has stats but MaxPreps lists no player for the game`);
+          return box;
+        } catch (err) {
+          warnings.push(
+            `box score ${contestId} not read (${err instanceof Error ? err.message : String(err)})` +
+              (prior ? '; the previous one is kept' : ''),
+          );
+          return prior ?? null;
+        }
+      }),
+  );
+  return {
+    games: games.filter((g): g is BoxScore => g !== null).sort((a, b) => a.contestId.localeCompare(b.contestId)),
+    read,
+  };
+}
+
+/** Each registry team's MaxPreps finals in the snapshot, by slug: the games a box score is read for. */
+function finalsBySlug(games: readonly Game[]): Map<string, Set<string>> {
+  const out = new Map<string, Set<string>>();
+  for (const g of games) {
+    if (g.status !== 'final' || g.contestId.startsWith('sblive:')) continue;
+    for (const side of [g.home, g.away]) {
+      if (!side.slug) continue;
+      const set = out.get(side.slug) ?? new Set<string>();
+      set.add(g.contestId);
+      out.set(side.slug, set);
+    }
+  }
+  return out;
 }
 
 async function main(argv: readonly string[]): Promise<number> {
@@ -239,13 +334,16 @@ async function main(argv: readonly string[]): Promise<number> {
   const dropped = new Set(previous?.dropped.flatMap((d) => (d.team ? [d.team] : [])) ?? []);
   const rosters = RostersSchema.parse(JSON.parse(readFileSync(args.rosters, 'utf8')) as unknown);
   const client = new MaxPrepsClient({ onLog: (l) => console.log(`  ${l}`) });
-  // The teams a game note credits with stats: their per-game totals are read too.
-  const noted: ReadonlySet<string> = existsSync(args.snapshot)
-    ? teamsCreditedByNotes({
-        games: loadSnapshot(JSON.parse(readFileSync(args.snapshot, 'utf8')) as unknown).games,
-        roster: (slug) => rosters.teams.find((t) => t.slug === slug)?.players,
-      })
-    : new Set();
+  const snapshotGames = existsSync(args.snapshot)
+    ? loadSnapshot(JSON.parse(readFileSync(args.snapshot, 'utf8')) as unknown).games
+    : [];
+  // The teams a game note credits with stats: their per-game totals are kept too.
+  const noted: ReadonlySet<string> = teamsCreditedByNotes({
+    games: snapshotGames,
+    roster: (slug) => rosters.teams.find((t) => t.slug === slug)?.players,
+  });
+  const finals = finalsBySlug(snapshotGames);
+  let boxScoresRead = 0;
   if (noted.size) console.log(`game notes with stats: ${[...noted].join(', ')}`);
 
   console.log(
@@ -316,9 +414,39 @@ async function main(argv: readonly string[]): Promise<number> {
           };
         }
         const { lines, warnings } = joinToRoster(page, roster?.players ?? []);
-        const gameTotals = noted.has(team.slug) && lines.length
-          ? await readGameTotals(args, client, capture, team.slug, maxprepsTeamId, warnings)
-          : undefined;
+        const priorGames = previous?.rows.get(team.slug)?.games ?? [];
+        let gameTotals: GameRow['total'][] | undefined;
+        let games: BoxScore[] = [];
+        if (lines.length) {
+          const table = await readGameRows(args, client, capture, team.slug, maxprepsTeamId);
+          if ('rows' in table) {
+            if (noted.has(team.slug)) gameTotals = table.rows.map((r) => r.total);
+            const box = await readBoxScores(
+              args,
+              client,
+              capture,
+              team.slug,
+              maxprepsTeamId,
+              table.rows,
+              finals.get(team.slug) ?? new Set(),
+              roster?.players ?? [],
+              priorGames,
+              warnings,
+            );
+            games = box.games;
+            boxScoresRead += box.read;
+          } else {
+            if (noted.has(team.slug)) {
+              warnings.push(`game notes: per-game totals not read (${table.error}); its noted stats are not counted until a read succeeds`);
+            }
+            // Offline, a team with no capture simply has no box scores; live, a failed table keeps
+            // the previous ones.
+            if (!table.missing) {
+              games = [...priorGames];
+              warnings.push(`box scores: per-game table not read (${table.error})` + (games.length ? '; the previous box scores are kept' : ''));
+            }
+          }
+        }
         return {
           ...base,
           // A rollup with tables but no rows is the same as no stats at all.
@@ -338,6 +466,7 @@ async function main(argv: readonly string[]): Promise<number> {
             goalkeeping: l.goalkeeping,
           })),
           ...(gameTotals ? { gameTotals } : {}),
+          ...(games.length ? { games } : {}),
           warnings: [...page.warnings, ...warnings],
           fetchedAt,
           error: null,
@@ -394,6 +523,7 @@ async function main(argv: readonly string[]): Promise<number> {
         (t.tracked.goalkeeping.length > 1 ? ` · goalies ${t.tracked.goalkeeping.join(', ')}` : '') +
         (t.lastUpdated ? ` · MaxPreps ${t.lastUpdated}` : '') +
         (t.gameTotals ? ` · per-game totals of ${t.gameTotals.length} games, for its game notes` : '') +
+        (t.games ? ` · ${t.games.length} box scores` : '') +
         (t.warnings.length ? ` · ${t.warnings.join('; ')}` : '') +
         (t.error ? ` · ERROR ${t.error}` : ''),
     );
@@ -409,7 +539,8 @@ async function main(argv: readonly string[]): Promise<number> {
   const c = file.counts;
   console.log(
     `\n${c.players} player stat lines on ${c.teamsWithStats} of ${c.teams} teams · ` +
-      `${c.goalkeepers} goalkeepers · ${failed} team(s) failed this run` +
+      `${c.goalkeepers} goalkeepers · ${teams.reduce((n, t) => n + (t.games?.length ?? 0), 0)} box scores ` +
+      `(${boxScoresRead} read this run) · ${failed} team(s) failed this run` +
       (lost ? ` · ${lost} team(s) outside it now pending: previous row dropped` : ''),
   );
 
