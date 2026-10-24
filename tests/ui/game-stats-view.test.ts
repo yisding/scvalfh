@@ -10,7 +10,12 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 
 import GameStats from '../../components/game/GameStats';
-import { TIEBREAK_CAVEAT, buildGameStatsView, type GameStatsLookup } from '../../components/game/game-stats-view';
+import {
+  TIEBREAK_CAVEAT,
+  UNREAD_WITH_NOTE,
+  buildGameStatsView,
+  type GameStatsLookup,
+} from '../../components/game/game-stats-view';
 import { buildGameView, type GameModel } from '../../components/game/game-view';
 import { getSnapshot } from '../../lib/data';
 import { gameIdToParam } from '../../lib/game-id';
@@ -230,6 +235,16 @@ describe('game notes on the game page', () => {
     expect(home.notes).toEqual(score === 2 ? [] : [`Scorers are entered for 2 of the ${score} goals.`]);
   });
 
+  it('says a table from the note alone is not all the coach entered when the box score could not be read', () => {
+    const lookup: GameStatsLookup = (_id, s) =>
+      s === HOME
+        ? { box: undefined, unread: true, credits: [credit('Emry Borges', null, { goals: 1 })] }
+        : { box: undefined, unread: false, credits: [] };
+    const home = homeSide(notedModel(), lookup);
+    expect(home.scoring!.rows.map((r) => [r.name, r.values, r.noted])).toEqual([['Emry Borges', [1], true]]);
+    expect(home.notes).toEqual([UNREAD_WITH_NOTE]);
+  });
+
   it('quotes no note when nothing was added from one', () => {
     expect(buildGameStatsView(notedModel(), withNote(scorer(1), []))!.notedFrom).toBeNull();
   });
@@ -246,12 +261,22 @@ describe('game notes on the game page', () => {
   it("adds on each game page exactly what the team page adds from that game's note", () => {
     for (const team of getAllPlayerStatsWithNotes()) {
       for (const c of team.noteCredits) {
+        const where = `${team.slug} ${c.contestId} ${c.fullName}`;
         const view = buildGameStatsView(buildGameView(gameIdToParam(c.contestId))!)!;
-        expect(view, `${team.slug} ${c.contestId}`).not.toBeNull();
+        expect(view, where).not.toBeNull();
         expect(view.notedFrom).toBe(c.note);
         const side = view.sides.find((s) => s.key === team.slug)!;
-        const rows = [...(side.scoring?.rows ?? []), ...(side.goalies?.rows ?? [])].filter((r) => r.noted);
-        expect(rows.length, `${team.slug} ${c.contestId} ${c.fullName}`).toBeGreaterThan(0);
+        // Each credited stat is on the player's marked row, at the credited count: a noted stat is
+        // added only where the coach entered none of it for the game, so the cell is the note's alone.
+        const cell = (table: typeof side.scoring, label: string) => {
+          const at = table?.columns.findIndex((col) => col.label === label) ?? -1;
+          const row = table?.rows.find((r) => r.name === c.fullName || (c.jersey !== null && r.jersey === c.jersey));
+          expect(row?.noted, `${where}: ${label} row marked`).toBe(true);
+          return at >= 0 ? row?.values[at] : undefined;
+        };
+        if (c.goals) expect(cell(side.scoring, 'G'), `${where}: goals`).toBe(c.goals);
+        if (c.assists) expect(cell(side.scoring, 'A'), `${where}: assists`).toBe(c.assists);
+        if (c.saves) expect(cell(side.goalies, 'Sv'), `${where}: saves`).toBe(c.saves);
       }
     }
   });

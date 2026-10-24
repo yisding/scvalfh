@@ -67,6 +67,10 @@ const GOALIE_COLUMNS: Array<StatColumn & { key: GoalieStatKey }> = [
 export const TIEBREAK_CAVEAT =
   'This game’s score may leave out or include how a tie was broken, so the goals entered here need not add up to it.';
 
+/** Under a side whose table is from the game note alone because its box score could not be read. */
+export const UNREAD_WITH_NOTE =
+  'The coach’s entries for this game could not be read in the latest update, so only what the game note adds is shown.';
+
 export interface GameStatsSide {
   key: string;
   /** The display name, as the page prints it. */
@@ -221,6 +225,11 @@ function sideView(
   const goalies = goalieTable(box);
   if (!scoring && !goalies) {
     return { ...base, scoring, goalies, empty: 'No goals, assists or saves entered for this game.', notes: [] };
+  }
+  // A table from the note alone, for a side whose box score could not be read, says so: it is not
+  // all the coach may have entered, so no goals note is worked out from it either.
+  if (!entered && unread) {
+    return { ...base, scoring, goalies, empty: null, notes: [UNREAD_WITH_NOTE] };
   }
   const note = model.game.forfeitBy || caveat ? null : goalsNote(box, model.game[which].score);
   return { ...base, scoring, goalies, empty: null, notes: note ? [note] : [] };
