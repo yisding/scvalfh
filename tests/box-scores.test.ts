@@ -49,7 +49,7 @@ describe('parseGameRows', () => {
     const rows = parseGameRows(capture, { expectedTeamId: PALO_ALTO });
     expect(rows.length).toBeGreaterThan(10);
     expect(new Set(rows.map((r) => r.total.contestId)).size).toBe(rows.length);
-    for (const r of rows) expect(r.rowKey).toMatch(/^[0-9a-f]{16}$/);
+    for (const r of rows) expect(r.rowKey).toMatch(/^[0-9a-f]{8}$/);
     expect(parseGameRows(capture).map((r) => r.rowKey)).toEqual(rows.map((r) => r.rowKey));
     for (const id of PALO_ALTO_BOXES) expect(rows.find((r) => r.total.contestId === id)?.entered, id).toBe(true);
   });
@@ -83,11 +83,11 @@ describe('a box score', () => {
   })!;
   const box = toBoxScore(page, getTeamRoster('davis')?.players ?? [], DAVIS_GAME, 'abc')!;
 
-  it("reads with the season rollup's rules: tracked stats, the game's own totals, no per-game columns", () => {
+  it("reads with the season rollup's rules: tracked stats, the game's own counts, no per-game columns", () => {
     expect(box.tracked.field).toEqual(['goals', 'assists', 'points', 'shots', 'shotsOnGoal', 'steals']);
     expect(box.tracked.goalkeeping).toEqual(['opponentShotsOnGoal', 'saves', 'goalsAgainst', 'shutouts', 'wins']);
-    expect(box.totals.field.goals).toBe(7);
-    expect(box.totals.goalkeeping.saves).toBe(4);
+    expect(box.players.reduce((n, p) => n + (p.field?.goals ?? 0), 0)).toBe(7);
+    expect(box.players.reduce((n, p) => n + (p.goalkeeping?.saves ?? 0), 0)).toBe(4);
     expect(BoxScoreSchema.parse(box)).toEqual(box);
   });
 
@@ -168,9 +168,10 @@ describe('scripts/fetch-player-stats.ts and box scores', () => {
     // The box score changes upstream but its row does not: the stored one is kept, with no call.
     const id = PALO_ALTO_BOXES[2];
     const boxFile = path.join(fixtures, `box-palo-alto-${id}.json`);
-    const doubled = readFileSync(boxFile, 'utf8').replaceAll('"overallValue":"3"', '"overallValue":"30"');
-    expect(doubled).not.toBe(readFileSync(boxFile, 'utf8'));
-    writeFileSync(boxFile, doubled);
+    // E. Rainey's number 15 becomes 51 on the sheet.
+    const renumbered = readFileSync(boxFile, 'utf8').replaceAll('{"value":"15","href":null', '{"value":"51","href":null');
+    expect(renumbered).not.toBe(readFileSync(boxFile, 'utf8'));
+    writeFileSync(boxFile, renumbered);
     const kept = paloAlto(build(fixtures, out, '2026-10-24T22:00:00.000Z')).games!;
     expect(kept).toEqual(first);
 
@@ -186,7 +187,8 @@ describe('scripts/fetch-player-stats.ts and box scores', () => {
     const before = first.find((g) => g.contestId === id)!;
     const after = reread.find((g) => g.contestId === id)!;
     expect(after.rowKey).not.toBe(before.rowKey);
-    expect(after.totals).not.toEqual(before.totals);
+    expect(after.players.map((l) => l.jersey)).toContain('51');
+    expect(before.players.map((l) => l.jersey)).not.toContain('51');
     // The others were left alone.
     expect(reread.filter((g) => g.contestId !== id)).toEqual(first.filter((g) => g.contestId !== id));
 

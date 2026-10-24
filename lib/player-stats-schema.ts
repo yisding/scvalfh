@@ -113,8 +113,9 @@ const boxStat = z.number().min(0);
 
 /**
  * One player's line in one game's box score. Unlike a season line, a stat is present only when the
- * player has a number for it: a box score lists dozens of games, and a key for every untracked stat
- * would be most of the file.
+ * player has a number for it: the file holds hundreds of box scores, all bundled into the Worker
+ * (scripts/assert-budgets.ts), and a key for every untracked stat would be most of them. For the
+ * same reason a box score keeps no team totals: the game page adds up the lines it shows.
  */
 export const BoxScoreLineSchema = z.object({
   /** The roster's spelling when joined on the career id, else the stats sheet's short form. */
@@ -141,10 +142,6 @@ export const BoxScoreSchema = z
      */
     rowKey: z.string().min(1),
     tracked: z.object({ field: z.array(fieldKey), goalkeeping: z.array(goalieKey) }),
-    totals: z.object({
-      field: z.partialRecord(fieldKey, z.number().min(0)),
-      goalkeeping: z.partialRecord(goalieKey, z.number().min(0)),
-    }),
     players: z.array(BoxScoreLineSchema).min(1),
     warnings: z.array(z.string()),
   })

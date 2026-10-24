@@ -80,7 +80,8 @@ export interface GameRow {
   total: GameTotal;
   /**
    * A digest of every cell MaxPreps printed for the game, in every table: any edit the coach makes
-   * to the game's numbers (or its result) changes it.
+   * to the game's numbers (or its result) changes it. Eight hex digits: it is only ever compared
+   * with the same game's previous digest, and every box score carries one into the Worker bundle.
    */
   rowKey: string;
   /** Some count in the row is above zero: the coach entered stats for this game. */
@@ -139,7 +140,7 @@ export function parseGameRows(raw: unknown, opts: ParseGameStatsOptions = {}): G
   }
   return [...byGame.values()].map(({ total, cells, entered }) => ({
     total,
-    rowKey: createHash('sha256').update(cells.join('\n')).digest('hex').slice(0, 16),
+    rowKey: createHash('sha256').update(cells.join('\n')).digest('hex').slice(0, 8),
     entered,
   }));
 }

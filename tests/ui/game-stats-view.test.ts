@@ -39,7 +39,6 @@ function box(players: BoxScore['players'], tracked: Partial<BoxScore['tracked']>
     contestId: GAME.contestId,
     rowKey: 'test',
     tracked: { field: tracked.field ?? ['goals', 'assists', 'points'], goalkeeping: tracked.goalkeeping ?? [] },
-    totals: { field: {}, goalkeeping: {} },
     players,
     warnings: [],
   };

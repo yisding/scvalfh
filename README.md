@@ -450,7 +450,7 @@ seven minutes to read all 846 box scores (`--all-box-scores`). A failed table or
 fails the team: the stored box scores are kept, and one kept that way is read again on the next run.
 A coach's edit that moves a goal from one player to another without changing any of the game's
 team totals is not noticed until something else in the row changes. On 2026-10-24: 846 box scores,
-4,811 player lines on 69 teams, about 69 KB gzipped.
+4,811 player lines on 69 teams, about 58 KB of gzip JSON in the Worker bundle (which moved the Worker budget, DESIGN §24.6).
 
 The same file feeds the player boards on `/leaders` (`components/leaders/player-boards.ts`): most
 points, Elo-adjusted points (see "Elo-adjusted goals and points"), assists, saves and clean sheets
