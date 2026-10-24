@@ -10,26 +10,33 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 
 import GameStats from '../../components/game/GameStats';
-import { buildGameStatsView, type BoxScoreLookup } from '../../components/game/game-stats-view';
+import { TIEBREAK_CAVEAT, buildGameStatsView, type GameStatsLookup } from '../../components/game/game-stats-view';
 import { buildGameView, type GameModel } from '../../components/game/game-view';
 import { getSnapshot } from '../../lib/data';
 import { gameIdToParam } from '../../lib/game-id';
-import { getPlayerStats } from '../../lib/player-stats';
+import { getGameStatsEntry, getPlayerStats } from '../../lib/player-stats';
 import type { BoxScore } from '../../lib/player-stats-schema';
-import type { Game } from '../../lib/types';
+import { SHOOTOUT_NOTE } from '../../lib/postseason';
+import type { Game, TeamSlug } from '../../lib/types';
 import { textOf } from './html-text';
 
 /** A final between two followed teams, both sides scoring, on MaxPreps: the synthetic box scores' game. */
-const GAME: Game = getSnapshot().games.find(
-  (g) =>
-    g.status === 'final' &&
-    !g.forfeitBy &&
-    !g.contestId.startsWith('sblive:') &&
-    g.home.slug &&
-    g.away.slug &&
-    (g.home.score ?? 0) >= 2 &&
-    (g.away.score ?? 0) >= 1,
-)!;
+function pickGame(): Game {
+  const game = getSnapshot().games.find(
+    (g) =>
+      g.status === 'final' &&
+      !g.forfeitBy &&
+      g.decider === 'REG' &&
+      !g.contestId.startsWith('sblive:') &&
+      g.home.slug &&
+      g.away.slug &&
+      (g.home.score ?? 0) >= 2 &&
+      (g.away.score ?? 0) >= 1,
+  );
+  if (!game) throw new Error('tests/ui/game-stats-view: the snapshot has no final between two followed teams with goals on both sides');
+  return game;
+}
+const GAME = pickGame();
 const model = (): GameModel => buildGameView(gameIdToParam(GAME.contestId))!;
 const AWAY = GAME.away.slug!;
 const HOME = GAME.home.slug!;
@@ -43,7 +50,14 @@ function box(players: BoxScore['players'], tracked: Partial<BoxScore['tracked']>
     warnings: [],
   };
 }
-const only = (slug: string, b: BoxScore): BoxScoreLookup => (id, s) => (id === GAME.contestId && s === slug ? b : undefined);
+/** `slug` has `b`; the other side entered nothing. */
+const only =
+  (slug: string, b: BoxScore): GameStatsLookup =>
+  (id, s) => ({ box: id === GAME.contestId && s === slug ? b : undefined, unread: false });
+const nothing: GameStatsLookup = () => ({ box: undefined, unread: false });
+const scorer = (goals: number) => box([{ name: 'X', jersey: null, field: { goals }, goalkeeping: null }]);
+const lineup = () => box([{ name: 'X', jersey: '3', field: {}, goalkeeping: null }], { field: [], goalkeeping: [] });
+const homeSide = (m: GameModel, lookup: GameStatsLookup) => buildGameStatsView(m, lookup)!.sides.find((s) => s.key === HOME)!;
 
 describe('buildGameStatsView', () => {
   it('lists the scorers, most goals first, and leaves out a player with nothing to show', () => {
@@ -63,52 +77,81 @@ describe('buildGameStatsView', () => {
         : [['One Goal', [1, 1]], ['Top Scorer', [goals - 1, null]], ['Assist Only', [null, 1]]];
     expect(home.scoring!.rows.map((r) => [r.name, r.values])).toEqual(expected);
     expect(home.notes).toEqual([]);
+    expect(view.caveat).toBeNull();
     expect(view.legend).toEqual(['G goals', 'A assists']);
   });
 
   it('lists away first, and says when a followed side entered nothing', () => {
-    const view = buildGameStatsView(model(), only(HOME, box([{ name: 'X', jersey: null, field: { goals: 1 }, goalkeeping: null }])))!;
+    const view = buildGameStatsView(model(), only(HOME, scorer(1)))!;
     expect(view.sides.map((s) => s.key)).toEqual([AWAY, HOME]);
-    expect(view.sides[0]).toMatchObject({ entered: false, scoring: null, goalies: null });
+    expect(view.sides[0]).toMatchObject({ scoring: null, goalies: null, empty: 'No stats entered on MaxPreps for this game.' });
   });
 
-  it('shows a goalkeeper with a 0 in a tracked column, and only the columns tracked', () => {
+  it('never says a side entered nothing when its stats could not be read', () => {
+    const lookup: GameStatsLookup = (_id, s) =>
+      s === HOME ? { box: scorer(GAME.home.score!), unread: false } : { box: undefined, unread: true };
+    const away = buildGameStatsView(model(), lookup)!.sides.find((s) => s.key === AWAY)!;
+    expect(away.empty).toBe('Stats for this game could not be read in the latest update.');
+  });
+
+  it('lists the goalkeeping table longest in goal first, a 0 included, and only the columns tracked', () => {
     const b = box(
       [
-        { name: 'Keeper', jersey: '1', field: null, goalkeeping: { saves: 0, goalsAgainst: GAME.away.score! } },
+        { name: 'Field Player', jersey: '5', field: null, goalkeeping: { saves: 1 } },
+        { name: 'Keeper', jersey: '1', field: null, goalkeeping: { saves: 0, goalsAgainst: GAME.away.score!, minutes: 60 } },
         { name: 'Wins Only', jersey: '2', field: null, goalkeeping: { wins: 1 } },
       ],
-      { field: [], goalkeeping: ['saves', 'goalsAgainst', 'wins'] },
+      { field: [], goalkeeping: ['saves', 'goalsAgainst', 'minutes', 'wins'] },
     );
-    const view = buildGameStatsView(model(), only(HOME, b))!;
-    const home = view.sides.find((s) => s.key === HOME)!;
+    const home = homeSide(model(), only(HOME, b));
     expect(home.scoring).toBeNull();
-    expect(home.goalies!.columns.map((c) => c.label)).toEqual(['Sv', 'GA']);
-    expect(home.goalies!.rows.map((r) => [r.name, r.values])).toEqual([['Keeper', [0, GAME.away.score]]]);
+    expect(home.goalies!.columns.map((c) => c.label)).toEqual(['Sv', 'GA', 'Min']);
+    expect(home.goalies!.rows.map((r) => [r.name, r.values])).toEqual([
+      ['Keeper', [0, GAME.away.score, 60]],
+      ['Field Player', [1, null, null]],
+    ]);
     // No goal is credited to a player, so the side's score is not accounted for.
-    expect(home.notes).toEqual([`${model().home.name}'s entries name no scorer for its ${GAME.home.score} goals.`]);
+    expect(home.notes).toEqual([`No scorer is entered for the ${GAME.home.score} goals.`]);
   });
 
   it('says where the goals credited and the score disagree', () => {
-    const credit = (n: number) =>
-      buildGameStatsView(model(), only(HOME, box([{ name: 'X', jersey: null, field: { goals: n }, goalkeeping: null }])))!
-        .sides.find((s) => s.key === HOME)!.notes;
-    const name = model().home.name;
+    const notes = (n: number) => homeSide(model(), only(HOME, scorer(n))).notes;
     const score = GAME.home.score!;
-    expect(credit(score)).toEqual([]);
-    expect(credit(score - 1)).toEqual([`${name}'s entries credit ${score - 1} of its ${score} goals to a player.`]);
-    expect(credit(score + 1)).toEqual([`${name}'s entries credit ${score + 1} goals, more than the ${score} on the scoreboard.`]);
+    expect(notes(score)).toEqual([]);
+    expect(notes(score - 1)).toEqual([`Scorers are entered for ${score - 1} of the ${score} goals.`]);
+    expect(notes(score + 1)).toEqual([`The entries credit ${score + 1} goals, more than the ${score} on the scoreboard.`]);
     // A forfeit's score is not a game's goals.
     const forfeit = { ...model(), game: { ...GAME, forfeitBy: 'away' as const } };
-    const view = buildGameStatsView(forfeit, only(HOME, box([{ name: 'X', jersey: null, field: { goals: 1 }, goalkeeping: null }])))!;
-    expect(view.sides.find((s) => s.key === HOME)!.notes).toEqual([]);
+    expect(homeSide(forfeit, only(HOME, scorer(1))).notes).toEqual([]);
   });
 
-  it('shows nothing for a game with no entries, or one that is not a final', () => {
-    expect(buildGameStatsView(model(), () => undefined)).toBeNull();
-    const b = box([{ name: 'X', jersey: null, field: { goals: 1 }, goalkeeping: null }]);
+  it('on a game whose score may leave out or include a tiebreak, says so once instead of per side', () => {
+    const shootout = { ...model(), game: { ...GAME, decider: 'SO' as const } };
+    const view = buildGameStatsView(shootout, only(HOME, scorer(GAME.home.score! + 1)))!;
+    expect(view.caveat).toBe(TIEBREAK_CAVEAT);
+    expect(view.sides.find((s) => s.key === HOME)!.notes).toEqual([]);
+    const mcal = { ...model(), postseasonNotes: [SHOOTOUT_NOTE] };
+    expect(buildGameStatsView(mcal, only(HOME, scorer(1)))!.caveat).toBe(TIEBREAK_CAVEAT);
+    // The caveat never says a shootout was played.
+    expect(TIEBREAK_CAVEAT).not.toMatch(/shootout|1 v 1/i);
+  });
+
+  it('shows nothing for a game with no table to show, or one that is not a final', () => {
+    expect(buildGameStatsView(model(), nothing)).toBeNull();
+    // A box score that lists a lineup and tracks nothing has no table.
+    expect(buildGameStatsView(model(), only(HOME, lineup()))).toBeNull();
     const upcoming = { ...model(), game: { ...GAME, status: 'scheduled' as const } };
-    expect(buildGameStatsView(upcoming, only(HOME, b))).toBeNull();
+    expect(buildGameStatsView(upcoming, only(HOME, scorer(1)))).toBeNull();
+  });
+
+  it('says a side with a box score but no table entered no goals, assists or saves, with no note on its score', () => {
+    const lookup: GameStatsLookup = (_id, s) => ({ box: s === HOME ? lineup() : scorer(GAME.away.score!), unread: false });
+    expect(homeSide(model(), lookup)).toMatchObject({
+      scoring: null,
+      goalies: null,
+      empty: 'No goals, assists or saves entered for this game.',
+      notes: [],
+    });
   });
 });
 
@@ -121,32 +164,45 @@ describe('GameStats', () => {
       ],
       { field: ['goals'], goalkeeping: ['saves'] },
     );
-    const html = renderToStaticMarkup(createElement(GameStats, { model: model(), lookup: only(HOME, b) }));
-    const text = textOf(html);
     const m = model();
+    const html = renderToStaticMarkup(createElement(GameStats, { model: m, lookup: only(HOME, b) }));
+    const text = textOf(html);
     expect(html).toContain('id="game-stats-kicker"');
     expect(text).toContain('Game stats');
-    expect(html).toContain(`<caption class="sr-only">${m.home.name} scoring in this game</caption>`);
-    expect(html).toContain(`<caption class="sr-only">${m.home.name} goalkeeping in this game</caption>`);
-    expect(text).toContain('Goalkeeper');
+    expect(text).toContain(`${m.home.name} scoring in this game`);
+    expect(text).toContain(`${m.home.name} goalkeeping in this game`);
     expect(text).toContain('No stats entered on MaxPreps for this game.');
     expect(text).toContain('G goals · Sv saves.');
-    expect(renderToStaticMarkup(createElement(GameStats, { model: m, lookup: () => undefined }))).toBe('');
+    expect(text).not.toContain(TIEBREAK_CAVEAT);
+    expect(renderToStaticMarkup(createElement(GameStats, { model: m, lookup: nothing }))).toBe('');
   });
 });
 
 describe('every box score in data/player-stats.json', () => {
-  it('gives its game a Game stats section with no row of zeros', () => {
-    const games = new Map(getSnapshot().games.map((g) => [g.contestId, g]));
-    for (const t of getPlayerStats().teams) {
-      for (const b of t.games ?? []) {
-        const game = games.get(b.contestId);
-        if (!game || game.status !== 'final') continue;
-        const view = buildGameStatsView(buildGameView(gameIdToParam(game.contestId))!);
-        expect(view, b.contestId).not.toBeNull();
-        const side = view!.sides.find((s) => s.key === t.slug)!;
-        expect(side.entered).toBe(true);
+  const games = new Map(getSnapshot().games.map((g) => [g.contestId, g]));
+  const finals = [...new Set(getPlayerStats().teams.flatMap((t) => (t.games ?? []).map((b) => b.contestId)))]
+    .map((id) => games.get(id))
+    .filter((g): g is Game => g?.status === 'final');
+
+  it('gives a game a section only with a table in it, and no scoring row of zeros', () => {
+    for (const game of finals) {
+      const view = buildGameStatsView(buildGameView(gameIdToParam(game.contestId))!);
+      if (!view) continue;
+      expect(view.sides.some((s) => s.scoring || s.goalies), game.contestId).toBe(true);
+      for (const side of view.sides) {
+        expect(Boolean(side.empty), `${game.contestId} ${side.key}`).toBe(!side.scoring && !side.goalies);
         for (const row of side.scoring?.rows ?? []) expect(row.values.some((v) => (v ?? 0) > 0), row.name).toBe(true);
+      }
+    }
+  });
+
+  it('never says a team whose latest read failed entered nothing', () => {
+    for (const t of getPlayerStats().teams) {
+      if (t.status === 'ok' || t.status === 'none') continue;
+      for (const g of getSnapshot().games) {
+        if (g.home.slug !== t.slug && g.away.slug !== t.slug) continue;
+        const entry = getGameStatsEntry(g.contestId, t.slug as TeamSlug);
+        if (!entry.box) expect(entry.unread, `${t.slug} ${g.contestId}`).toBe(true);
       }
     }
   });

@@ -34,16 +34,7 @@ function NotedMark() {
 }
 
 /** A stat table of the team page's shape; the game page's Game stats section uses it too. */
-export function StatsTable({
-  table,
-  caption,
-  rowHeader = 'Player',
-}: {
-  table: StatTable;
-  caption: string;
-  /** The head of the name column. */
-  rowHeader?: string;
-}) {
+export function StatsTable({ table, caption }: { table: StatTable; caption: string }) {
   // The number slot is the table's, not the row's: when any row has a number, every row keeps the
   // box (a dash where none is listed, as on the roster), so every name starts at x=48. Drawn only
   // for the rows that had one, Marin Catholic's names started at 48 or 16 down one column. Two
@@ -57,7 +48,7 @@ export function StatsTable({
         <thead>
           <tr>
             <th scope="col" className="pl-4">
-              {rowHeader}
+              Player
             </th>
             {table.columns.map((c, i) => (
               <th

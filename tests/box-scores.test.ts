@@ -199,6 +199,12 @@ describe('scripts/fetch-player-stats.ts and box scores', () => {
     const failed = paloAlto(build(fixtures, out, '2026-10-25T00:00:00.000Z'));
     expect(failed.games!.find((g) => g.contestId === id)).toEqual(after);
     expect(failed.warnings.some((w) => w.startsWith(`box score ${id} not read`) && w.endsWith('the previous one is kept'))).toBe(true);
+
+    // A per-game table answering "No data" for a team with season stats keeps every box score.
+    writeFileSync(tableFile, '{"status":400,"message":"No data was found for this request.","data":null}');
+    const emptied = paloAlto(build(fixtures, out, '2026-10-25T01:00:00.000Z'));
+    expect(emptied.games).toEqual(failed.games);
+    expect(emptied.warnings).toContain('box scores: per-game table not read (the per-game table lists no game); the previous box scores are kept');
     rmSync(dir, { recursive: true, force: true });
   });
 });

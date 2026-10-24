@@ -38,8 +38,10 @@
  * zero gets the team's box score for that game in `games`, read again only when the row's digest
  * (`rowKey`) differs from the one the stored box score was read against, so a run reads the games a
  * coach entered or edited since the last run, not every game (`--all-box-scores` reads them all,
- * about 700 calls). A failed table or box score call never fails the team: the previous box scores
- * are kept, with a warning, and a box score kept that way is read again on the next run. A box
+ * about 850 calls). A failed table or box score call never fails the team: the previous box scores
+ * are kept, with a warning (a table that lists no game counts as failed), and a box score kept after
+ * its own read failed is read again on the next run. After a `pnpm fetch-rosters` that renamed or
+ * added players, run with `--all-box-scores`: a kept box score keeps the names it was read with. A
  * score the coach changed without changing any of the game's team totals (a goal moved from one
  * player to another) is not noticed until something in the row moves.
  *
@@ -248,19 +250,22 @@ async function readBoxScores(
 ): Promise<{ games: BoxScore[]; read: number }> {
   const stored = new Map(previous.map((b) => [b.contestId, b]));
   let read = 0;
-  const games = await Promise.all(
+  // Each game's warning comes back with it and is added in row order, not in the order the calls
+  // finish: warnings are part of the file's content key, so a run over unchanged data must word and
+  // order them the same.
+  const results = await Promise.all(
     rows
       .filter((r) => r.entered && finals.has(r.total.contestId))
-      .map(async (row): Promise<BoxScore | null> => {
+      .map(async (row): Promise<{ box: BoxScore | null; warning?: string }> => {
         const { contestId } = row.total;
-        const prior = stored.get(contestId);
-        if (prior && prior.rowKey === row.rowKey && !args.allBoxScores) return prior;
+        const prior = stored.get(contestId) ?? null;
+        if (prior && prior.rowKey === row.rowKey && !args.allBoxScores) return { box: prior };
         try {
           let page: PlayerStatsPage | null;
           if (args.fixtures) {
             const file = path.join(args.fixtures, `box-${slug}-${contestId}.json`);
             // The captures hold a few box scores, not every one: the rest are simply not read.
-            if (!existsSync(file)) return prior ?? null;
+            if (!existsSync(file)) return { box: prior };
             page = parsePlayerStats(JSON.parse(readFileSync(file, 'utf8')) as unknown, {
               expectedTeamId: maxprepsTeamId,
               url: boxScoreUrl(maxprepsTeamId, contestId),
@@ -275,19 +280,24 @@ async function readBoxScores(
           }
           read += 1;
           const box = page ? toBoxScore(page, roster, contestId, row.rowKey) : null;
-          if (!box) warnings.push(`box score ${contestId}: its per-game row has stats but MaxPreps lists no player for the game`);
-          return box;
+          return box
+            ? { box }
+            : { box: null, warning: `box score ${contestId}: its per-game row has stats but MaxPreps lists no player for the game` };
         } catch (err) {
-          warnings.push(
-            `box score ${contestId} not read (${err instanceof Error ? err.message : String(err)})` +
+          return {
+            box: prior,
+            warning:
+              `box score ${contestId} not read (${err instanceof Error ? err.message : String(err)})` +
               (prior ? '; the previous one is kept' : ''),
-          );
-          return prior ?? null;
+          };
         }
       }),
   );
+  for (const r of results) if (r.warning) warnings.push(r.warning);
   return {
-    games: games.filter((g): g is BoxScore => g !== null).sort((a, b) => a.contestId.localeCompare(b.contestId)),
+    games: results
+      .flatMap((r) => (r.box ? [r.box] : []))
+      .sort((a, b) => a.contestId.localeCompare(b.contestId)),
     read,
   };
 }
@@ -418,9 +428,12 @@ async function main(argv: readonly string[]): Promise<number> {
         let gameTotals: GameRow['total'][] | undefined;
         let games: BoxScore[] = [];
         if (lines.length) {
-          const table = await readGameRows(args, client, capture, team.slug, maxprepsTeamId);
+          const read = await readGameRows(args, client, capture, team.slug, maxprepsTeamId);
+          if ('rows' in read && noted.has(team.slug)) gameTotals = read.rows.map((r) => r.total);
+          // A team with season stats whose per-game table lists no game (MaxPreps' "No data" answer)
+          // has not had its games read: its box scores are kept, never dropped as if none existed.
+          const table = 'rows' in read && read.rows.length === 0 ? { error: 'the per-game table lists no game' } : read;
           if ('rows' in table) {
-            if (noted.has(team.slug)) gameTotals = table.rows.map((r) => r.total);
             const box = await readBoxScores(
               args,
               client,
@@ -436,12 +449,12 @@ async function main(argv: readonly string[]): Promise<number> {
             games = box.games;
             boxScoresRead += box.read;
           } else {
-            if (noted.has(team.slug)) {
-              warnings.push(`game notes: per-game totals not read (${table.error}); its noted stats are not counted until a read succeeds`);
+            if (noted.has(team.slug) && !('rows' in read)) {
+              warnings.push(`game notes: per-game totals not read (${read.error}); its noted stats are not counted until a read succeeds`);
             }
             // Offline, a team with no capture simply has no box scores; live, a failed table keeps
             // the previous ones.
-            if (!table.missing) {
+            if (!('missing' in table && table.missing)) {
               games = [...priorGames];
               warnings.push(`box scores: per-game table not read (${table.error})` + (games.length ? '; the previous box scores are kept' : ''));
             }

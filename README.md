@@ -438,7 +438,10 @@ shot on goal or steal in the game, most goals first, and the goalkeepers' saves,
 shots on goal against and minutes, only the columns that game's entries track, a dash where a
 tracked stat has no entry. Points and game-winning goals are left out (in one game they repeat the
 goals beside them), and where the goals a coach credits to players do not add up to the side's score
-the section says so; the score stays the site's. For each team with stats, `fetch-player-stats` also
+the section says so; the score stays the site's (a game whose score may leave out or include a
+tiebreak gets one sentence saying the two need not agree instead). A followed side with nothing to
+show says whether its coach entered nothing or its stats could not be read, and a game with no table
+on either side (a box score can list a lineup alone) gets no section. For each team with stats, `fetch-player-stats` also
 reads MaxPreps' per-game team table (`team-season-game-stats/rollup/v1`, one call) and, for each
 final of the team's in the snapshot whose row there has a count above zero, the team's box score
 for that game (`team-contest-player-stats/v1?teamId=&contestId=`, `lib/sources/maxpreps-box-score.ts`),
@@ -447,7 +450,10 @@ a player holds some of it). Each stored box score keeps a digest of the row it w
 (`rowKey`), and is read again only when the row changes, so a run reads the games coaches entered or
 edited since the last one: about 170 calls and 30 seconds on 2026-10-24, against about 850 calls and
 seven minutes to read all 846 box scores (`--all-box-scores`). A failed table or box score call never
-fails the team: the stored box scores are kept, and one kept that way is read again on the next run.
+fails the team: the stored box scores are kept (a table that lists no game counts as failed), and one
+kept after its own read failed is read again on the next run. A kept box score keeps the names it
+was read with, so after a `pnpm fetch-rosters` that renamed or added players, run
+`pnpm fetch-player-stats --all-box-scores`.
 A coach's edit that moves a goal from one player to another without changing any of the game's
 team totals is not noticed until something else in the row changes. On 2026-10-24: 846 box scores,
 4,811 player lines on 69 teams, about 58 KB of gzip JSON in the Worker bundle (which moved the Worker budget, DESIGN §24.6).

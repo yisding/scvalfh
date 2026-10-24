@@ -85,6 +85,29 @@ export function getBoxScore(contestId: string, slug: TeamSlug): BoxScore | undef
   return BOX_SCORES.get(contestId)?.get(slug);
 }
 
+/** What the file can say about one side of one game: its box score, or why there is none. */
+export interface GameStatsEntry {
+  box: BoxScore | undefined;
+  /**
+   * No box score, and none can be claimed absent: the team's latest read failed or has not run
+   * (status carried-forward, error or pending), or its per-game table or this game's box score
+   * could not be read (a warning names it). Otherwise no box score means the coach entered none.
+   */
+  unread: boolean;
+}
+
+export function getGameStatsEntry(contestId: string, slug: TeamSlug): GameStatsEntry {
+  const box = getBoxScore(contestId, slug);
+  if (box) return { box, unread: false };
+  const team = BY_SLUG.get(slug);
+  if (!team) return { box, unread: true };
+  if (team.status !== 'ok' && team.status !== 'none') return { box, unread: true };
+  const unread = team.warnings.some(
+    (w) => w.startsWith('box scores: per-game table not read') || w.startsWith(`box score ${contestId} not read`),
+  );
+  return { box, unread };
+}
+
 /** The committed snapshot's games and rosters, for lib/note-stats.ts. */
 function noteSources(): NoteSources {
   return { games: getSnapshot().games, roster: (slug) => getTeamRoster(slug)?.players };

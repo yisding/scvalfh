@@ -86,9 +86,10 @@ jobs:
     runs-on: ubuntu-latest
     # The fetch step alone may take 20 minutes (128 MaxPreps requests at ≥500 ms apart plus the
     # official, si.com, VNN and CCS sources, with retries), the stats step up to 15 and the JV step
-    # up to 10; install and test come on top. The job's limit stays above the three together, so a
-    # slow day still reaches the commit step.
-    timeout-minutes: 50
+    # up to 10; install and the tests (up to four passes, about two minutes each) come on top. The
+    # job's limit leaves room for all of it beyond the three steps' 45 minutes, so a slow day still
+    # reaches the commit step.
+    timeout-minutes: 60
 
     steps:
       - name: Check out

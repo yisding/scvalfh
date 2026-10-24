@@ -4,28 +4,36 @@
  * scripts/fetch-player-stats.ts). Pure, so tests/ui/game-stats-view.test.ts can assert it over the
  * real file and over synthetic box scores.
  *
- * Shown only for a final where at least one side's coach entered something. Away first, like the
- * scoreboard; a side outside the teams this site follows has no box score to read and is not
- * listed, and a followed side whose coach entered nothing for the game says so in one line.
+ * Shown only for a final where at least one side's entries give a table to show (a box score can
+ * list a lineup and nothing else). Away first, like the scoreboard; a side outside the teams this
+ * site follows has no box score to read and is not listed, and a followed side with nothing to show
+ * says why in one line: its coach entered nothing for the game, or its stats could not be read
+ * (lib/player-stats.ts getGameStatsEntry), which is never passed off as nothing entered.
  *
  * Per side, two tables of the team page's shape (components/teams/TeamPlayerStats.tsx StatsTable):
  *   - Scoring: goals, assists, shots, shots on goal and steals, only the ones this game's entries
  *     track, and only the players with at least one of them above zero, most goals first;
  *   - Goalkeeping: saves, goals against, opponent shots on goal and minutes, the tracked ones, for
- *     every goalkeeper with a number in any of them.
+ *     every player in MaxPreps' goalkeeping table with a number in any of them, longest in goal
+ *     first (the team page's order: coaches list field players there too, with a save each).
  * Points (2 per goal, 1 per assist) and game-winning goals are left out: in one game they repeat
  * the goals beside them. A tracked stat a player has no number for prints as a dash, never as 0.
  *
  * The entries are the coach's, not the score's: where the goals they credit do not add up to the
  * side's score on the board, a note under the side's tables says so, and the score stays the
- * site's (a forfeit's score is not a game's goals, so no note is made there).
+ * site's. Two kinds of game get no such note. A forfeit's score is not a game's goals. And a game
+ * whose score may leave out or include a tiebreak (a shootout decider, an overtime count the
+ * section's rules rule out, an MCAL tournament game whose shootout MaxPreps may record as goals)
+ * gets one sentence for the section instead, which says the two need not agree without saying a
+ * shootout was played (the San Diego Section's are inferred, never asserted: lib/leagues.ts).
  */
 
-import { getBoxScore } from '../../lib/player-stats';
-import type { BoxScore, FieldStatKey, GoalieStatKey } from '../../lib/player-stats-schema';
-import { plural } from '../../lib/format';
+import { getGameStatsEntry, type GameStatsEntry } from '../../lib/player-stats';
+import type { BoxScore, BoxScoreLine, FieldStatKey, GoalieStatKey } from '../../lib/player-stats-schema';
+import { SHOOTOUT_NOTE } from '../../lib/postseason';
 import type { TeamSlug } from '../../lib/types';
 import type { StatColumn, StatRow, StatTable } from '../teams/player-stats-view';
+import { overtimeInDoubt } from '../ui/describe-game';
 import type { GameModel, GameSideModel } from './game-view';
 
 /** The field stats a box score can show, in column order. */
@@ -45,24 +53,32 @@ const GOALIE_COLUMNS: Array<StatColumn & { key: GoalieStatKey }> = [
   { key: 'minutes', label: 'Min', title: 'Minutes' },
 ];
 
+/** The sentence a section gets when the score may leave out or include a tiebreak. */
+export const TIEBREAK_CAVEAT =
+  'This game’s score may leave out or include how a tie was broken, so the goals entered here need not add up to it.';
+
 export interface GameStatsSide {
   key: string;
   /** The display name, as the page prints it. */
   name: string;
-  /** null when the coach entered nothing for this game. */
   scoring: StatTable | null;
   goalies: StatTable | null;
-  /** The coach entered stats for this game (some table may still be empty). */
-  entered: boolean;
+  /** Why there is no table, when there is none; null when there is one. */
+  empty: string | null;
   /** Where the entries and the score disagree, in a sentence; otherwise empty. */
   notes: string[];
 }
 
 export interface GameStatsView {
   sides: GameStatsSide[];
+  /** TIEBREAK_CAVEAT, on a game whose score may not count the goals as entered; else null. */
+  caveat: string | null;
   /** "G goals", "Sv saves" … for every column any side shows. */
   legend: string[];
 }
+
+/** Where a side's entries come from: data/player-stats.json, or a test's own. */
+export type GameStatsLookup = (contestId: string, slug: TeamSlug) => GameStatsEntry;
 
 function scoringTable(box: BoxScore): StatTable | null {
   const tracked = new Set<string>(box.tracked.field);
@@ -83,6 +99,12 @@ function scoringTable(box: BoxScore): StatTable | null {
   return rows.length ? { columns, rows } : null;
 }
 
+/** Longest in goal first: minutes, then saves, then goals against (the team page's byTimeInGoal). */
+function byTimeInGoal(a: BoxScoreLine, b: BoxScoreLine): number {
+  const n = (p: BoxScoreLine, k: GoalieStatKey) => p.goalkeeping?.[k] ?? -1;
+  return n(b, 'minutes') - n(a, 'minutes') || n(b, 'saves') - n(a, 'saves') || n(b, 'goalsAgainst') - n(a, 'goalsAgainst');
+}
+
 function goalieTable(box: BoxScore): StatTable | null {
   const tracked = new Set<string>(box.tracked.goalkeeping);
   const columns = GOALIE_COLUMNS.filter((c) => tracked.has(c.key));
@@ -90,54 +112,69 @@ function goalieTable(box: BoxScore): StatTable | null {
   const rows: StatRow[] = box.players
     .map((p, i) => ({ p, i, values: columns.map((c) => p.goalkeeping?.[c.key] ?? null) }))
     .filter(({ values }) => values.some((v) => v !== null))
+    .sort((a, b) => byTimeInGoal(a.p, b.p) || a.i - b.i)
     .map(({ p, i, values }) => ({ key: `${i}`, name: p.name, jersey: p.jersey, values, noted: false }));
   return rows.length ? { columns, rows } : null;
 }
 
 /** The note under a side whose entered goals are not its score, or null. */
-function goalsNote(name: string, box: BoxScore, score: number | null): string | null {
+function goalsNote(box: BoxScore, score: number | null): string | null {
   if (score === null) return null;
   const credited = box.players.reduce((n, p) => n + (p.field?.goals ?? 0), 0);
   if (credited === score) return null;
-  const its = score === 1 ? 'its goal' : `its ${score} goals`;
-  if (credited === 0) return `${name}'s entries name no scorer for ${its}.`;
-  if (credited < score) return `${name}'s entries credit ${credited} of ${its} to a player.`;
-  return `${name}'s entries credit ${plural(credited, 'goal')}, more than the ${score} on the scoreboard.`;
+  const goals = score === 1 ? 'the goal' : `the ${score} goals`;
+  if (credited === 0) return `No scorer is entered for ${goals}.`;
+  if (credited < score) return `Scorers are entered for ${credited} of ${goals}.`;
+  return `The entries credit ${credited} goals, more than the ${score} on the scoreboard.`;
 }
 
-/** Where a side's box score comes from: data/player-stats.json, or a test's own. */
-export type BoxScoreLookup = (contestId: string, slug: TeamSlug) => BoxScore | undefined;
+/** A game whose score may leave out or include a tiebreak (see the header). */
+function tiebreakInDoubt(model: GameModel): boolean {
+  return model.game.decider === 'SO' || overtimeInDoubt(model.game) || model.postseasonNotes.includes(SHOOTOUT_NOTE);
+}
 
 function sideView(
   model: GameModel,
   side: GameSideModel,
   which: 'home' | 'away',
-  lookup: BoxScoreLookup,
+  lookup: GameStatsLookup,
+  caveat: boolean,
 ): GameStatsSide | null {
   if (!side.team) return null;
-  const box = lookup(model.game.contestId, side.team.slug);
+  const { box, unread } = lookup(model.game.contestId, side.team.slug);
   const base = { key: side.team.slug, name: side.name };
-  if (!box) return { ...base, scoring: null, goalies: null, entered: false, notes: [] };
-  const note = model.game.forfeitBy ? null : goalsNote(side.name, box, model.game[which].score);
-  return {
-    ...base,
-    scoring: scoringTable(box),
-    goalies: goalieTable(box),
-    entered: true,
-    notes: note ? [note] : [],
-  };
+  if (!box) {
+    return {
+      ...base,
+      scoring: null,
+      goalies: null,
+      empty: unread
+        ? 'Stats for this game could not be read in the latest update.'
+        : 'No stats entered on MaxPreps for this game.',
+      notes: [],
+    };
+  }
+  const scoring = scoringTable(box);
+  const goalies = goalieTable(box);
+  if (!scoring && !goalies) {
+    return { ...base, scoring, goalies, empty: 'No goals, assists or saves entered for this game.', notes: [] };
+  }
+  const note = model.game.forfeitBy || caveat ? null : goalsNote(box, model.game[which].score);
+  return { ...base, scoring, goalies, empty: null, notes: note ? [note] : [] };
 }
 
-/** The section's model, or null when there is nothing to show: not a final, or no side's entries. */
-export function buildGameStatsView(model: GameModel, lookup: BoxScoreLookup = getBoxScore): GameStatsView | null {
+/** The section's model, or null when there is nothing to show: not a final, or no table on either side. */
+export function buildGameStatsView(model: GameModel, lookup: GameStatsLookup = getGameStatsEntry): GameStatsView | null {
   if (model.game.status !== 'final') return null;
-  const sides = [sideView(model, model.away, 'away', lookup), sideView(model, model.home, 'home', lookup)].filter(
-    (s): s is GameStatsSide => s !== null,
-  );
-  if (!sides.some((s) => s.entered)) return null;
+  const caveat = tiebreakInDoubt(model);
+  const sides = [
+    sideView(model, model.away, 'away', lookup, caveat),
+    sideView(model, model.home, 'home', lookup, caveat),
+  ].filter((s): s is GameStatsSide => s !== null);
+  if (!sides.some((s) => s.scoring || s.goalies)) return null;
   const shown = new Set(sides.flatMap((s) => [...(s.scoring?.columns ?? []), ...(s.goalies?.columns ?? [])]).map((c) => c.label));
   const legend = [...FIELD_COLUMNS, ...GOALIE_COLUMNS]
     .filter((c) => shown.has(c.label))
     .map((c) => `${c.label} ${c.title.toLowerCase()}`);
-  return { sides, legend };
+  return { sides, caveat: caveat ? TIEBREAK_CAVEAT : null, legend };
 }
