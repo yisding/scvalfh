@@ -14,7 +14,8 @@ import { TIEBREAK_CAVEAT, buildGameStatsView, type GameStatsLookup } from '../..
 import { buildGameView, type GameModel } from '../../components/game/game-view';
 import { getSnapshot } from '../../lib/data';
 import { gameIdToParam } from '../../lib/game-id';
-import { getGameStatsEntry, getPlayerStats } from '../../lib/player-stats';
+import type { NoteCredit } from '../../lib/note-stats';
+import { getAllPlayerStatsWithNotes, getGameStatsEntry, getPlayerStats } from '../../lib/player-stats';
 import type { BoxScore } from '../../lib/player-stats-schema';
 import { SHOOTOUT_NOTE } from '../../lib/postseason';
 import type { Game, TeamSlug } from '../../lib/types';
@@ -53,10 +54,40 @@ function box(players: BoxScore['players'], tracked: Partial<BoxScore['tracked']>
 /** `slug` has `b`; the other side entered nothing. */
 const only =
   (slug: string, b: BoxScore): GameStatsLookup =>
-  (id, s) => ({ box: id === GAME.contestId && s === slug ? b : undefined, unread: false });
-const nothing: GameStatsLookup = () => ({ box: undefined, unread: false });
+  (id, s) => ({ box: id === GAME.contestId && s === slug ? b : undefined, unread: false, credits: [] });
+const nothing: GameStatsLookup = () => ({ box: undefined, unread: false, credits: [] });
 const scorer = (goals: number) => box([{ name: 'X', jersey: null, field: { goals }, goalkeeping: null }]);
 const lineup = () => box([{ name: 'X', jersey: '3', field: {}, goalkeeping: null }], { field: [], goalkeeping: [] });
+const NOTE = 'goals scored Gabby Molly, Emry Borges';
+/** A credit from GAME's note for a HOME player. */
+function credit(fullName: string, jersey: string | null, stats: Partial<Pick<NoteCredit, 'goals' | 'assists' | 'saves'>>): NoteCredit {
+  return {
+    contestId: GAME.contestId,
+    dateKey: GAME.dateKey,
+    opponent: GAME.away.name,
+    site: 'home',
+    note: NOTE,
+    written: fullName,
+    via: 'roster',
+    athleteId: null,
+    careerId: null,
+    careerUrl: null,
+    fullName,
+    jersey,
+    goals: 0,
+    assists: 0,
+    saves: 0,
+    ...stats,
+  };
+}
+/** GAME with NOTE as its note. */
+const notedModel = (): GameModel => {
+  const m = model();
+  return { ...m, game: { ...m.game, venue: { ...m.game.venue, text: NOTE } } };
+};
+const withNote =
+  (b: BoxScore | undefined, credits: NoteCredit[]): GameStatsLookup =>
+  (_id, s) => (s === HOME ? { box: b, unread: false, credits } : { box: undefined, unread: false, credits: [] });
 const homeSide = (m: GameModel, lookup: GameStatsLookup) => buildGameStatsView(m, lookup)!.sides.find((s) => s.key === HOME)!;
 
 describe('buildGameStatsView', () => {
@@ -89,7 +120,7 @@ describe('buildGameStatsView', () => {
 
   it('never says a side entered nothing when its stats could not be read', () => {
     const lookup: GameStatsLookup = (_id, s) =>
-      s === HOME ? { box: scorer(GAME.home.score!), unread: false } : { box: undefined, unread: true };
+      s === HOME ? { box: scorer(GAME.home.score!), unread: false, credits: [] } : { box: undefined, unread: true, credits: [] };
     const away = buildGameStatsView(model(), lookup)!.sides.find((s) => s.key === AWAY)!;
     expect(away.empty).toBe('Stats for this game could not be read in the latest update.');
   });
@@ -145,13 +176,84 @@ describe('buildGameStatsView', () => {
   });
 
   it('says a side with a box score but no table entered no goals, assists or saves, with no note on its score', () => {
-    const lookup: GameStatsLookup = (_id, s) => ({ box: s === HOME ? lineup() : scorer(GAME.away.score!), unread: false });
+    const lookup: GameStatsLookup = (_id, s) => ({
+      box: s === HOME ? lineup() : scorer(GAME.away.score!),
+      unread: false,
+      credits: [],
+    });
     expect(homeSide(model(), lookup)).toMatchObject({
       scoring: null,
       goalies: null,
       empty: 'No goals, assists or saves entered for this game.',
       notes: [],
     });
+  });
+});
+
+describe('game notes on the game page', () => {
+  it("adds a note's goals to the box score line of the same player, and marks the row", () => {
+    const b = box([
+      { name: 'Gabrielle Moll', jersey: '9', field: { assists: 1 }, goalkeeping: null },
+      { name: 'Sarah Anton', jersey: '4', field: { assists: 1 }, goalkeeping: null },
+    ], { field: ['assists'] });
+    const view = buildGameStatsView(notedModel(), withNote(b, [credit('Gabrielle Moll', '9', { goals: 1 })]))!;
+    const home = view.sides.find((s) => s.key === HOME)!;
+    expect(home.scoring!.columns.map((c) => c.label)).toEqual(['G', 'A']);
+    expect(home.scoring!.rows.map((r) => [r.name, r.values, r.noted])).toEqual([
+      ['Gabrielle Moll', [1, 1], true],
+      ['Sarah Anton', [null, 1], false],
+    ]);
+    expect(view.notedFrom).toBe(NOTE);
+  });
+
+  it('matches a line under the stats sheet\'s short name on the jersey and last name', () => {
+    const b = box([{ name: 'E. Borges', jersey: '11', field: { goals: 0, assists: 1 }, goalkeeping: null }]);
+    const home = homeSide(notedModel(), withNote(b, [credit('Emry Borges', '11', { goals: 1 })]));
+    expect(home.scoring!.rows.map((r) => [r.name, r.values, r.noted])).toEqual([['E. Borges', [1, 1], true]]);
+  });
+
+  it('gives a side with no box score tables from its note alone, saves included', () => {
+    const credits = [
+      credit('Gabrielle Moll', '9', { goals: 1 }),
+      credit('Emry Borges', null, { goals: 1 }),
+      credit('Lacey Sebastian Carattini', '1', { saves: 7 }),
+    ];
+    const home = homeSide(notedModel(), withNote(undefined, credits));
+    expect(home.empty).toBeNull();
+    expect(home.scoring!.rows.map((r) => [r.name, r.values, r.noted])).toEqual([
+      ['Gabrielle Moll', [1], true],
+      ['Emry Borges', [1], true],
+    ]);
+    expect(home.goalies!.rows.map((r) => [r.name, r.values, r.noted])).toEqual([['Lacey Sebastian Carattini', [7], true]]);
+    // The noted goals count toward the side's score like entered ones.
+    const score = GAME.home.score!;
+    expect(home.notes).toEqual(score === 2 ? [] : [`Scorers are entered for 2 of the ${score} goals.`]);
+  });
+
+  it('quotes no note when nothing was added from one', () => {
+    expect(buildGameStatsView(notedModel(), withNote(scorer(1), []))!.notedFrom).toBeNull();
+  });
+
+  it('renders the mark on a noted row and quotes the note under the tables', () => {
+    const html = renderToStaticMarkup(
+      createElement(GameStats, { model: notedModel(), lookup: withNote(undefined, [credit('Emry Borges', '11', { goals: 1 })]) }),
+    );
+    const text = textOf(html);
+    expect(text).toContain('Emry Borges * (includes a game note)');
+    expect(text).toContain(`* Also counts what was written in MaxPreps’ note for this game but not entered as stats: “${NOTE}”.`);
+  });
+
+  it("adds on each game page exactly what the team page adds from that game's note", () => {
+    for (const team of getAllPlayerStatsWithNotes()) {
+      for (const c of team.noteCredits) {
+        const view = buildGameStatsView(buildGameView(gameIdToParam(c.contestId))!)!;
+        expect(view, `${team.slug} ${c.contestId}`).not.toBeNull();
+        expect(view.notedFrom).toBe(c.note);
+        const side = view.sides.find((s) => s.key === team.slug)!;
+        const rows = [...(side.scoring?.rows ?? []), ...(side.goalies?.rows ?? [])].filter((r) => r.noted);
+        expect(rows.length, `${team.slug} ${c.contestId} ${c.fullName}`).toBeGreaterThan(0);
+      }
+    }
   });
 });
 

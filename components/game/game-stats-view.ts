@@ -26,9 +26,19 @@
  * section's rules rule out, an MCAL tournament game whose shootout MaxPreps may record as goals)
  * gets one sentence for the section instead, which says the two need not agree without saying a
  * shootout was played (the San Diego Section's are inferred, never asserted: lib/leagues.ts).
+ *
+ * Game notes. Some coaches write goals, assists and saves in MaxPreps' note for the game instead
+ * (Homestead's "goals scored Gabby Molly, Emry Borges"). The game page adds what the team page adds,
+ * exactly: the credits lib/note-stats.ts keeps after its guards (a name on one roster only, no more
+ * goals or assists than the side scored, nothing the coach also entered for the game, nothing that
+ * cannot be checked, and no noted goal at all for a team whose entries and notes together pass its
+ * goals scored). Each is added to the player's line in the box score, or to a line of its own (a side
+ * with no box score can have a table from its note alone), the row is marked, and the section quotes
+ * the note under the tables, so a reader can tell the two sources apart.
  */
 
 import { getGameStatsEntry, type GameStatsEntry } from '../../lib/player-stats';
+import type { NoteCredit } from '../../lib/note-stats';
 import type { BoxScore, BoxScoreLine, FieldStatKey, GoalieStatKey } from '../../lib/player-stats-schema';
 import { SHOOTOUT_NOTE } from '../../lib/postseason';
 import type { TeamSlug } from '../../lib/types';
@@ -71,6 +81,8 @@ export interface GameStatsSide {
 
 export interface GameStatsView {
   sides: GameStatsSide[];
+  /** The game's note as published, when it added to a shown side's numbers (the rows marked); else null. */
+  notedFrom: string | null;
   /** TIEBREAK_CAVEAT, on a game whose score may not count the goals as entered; else null. */
   caveat: string | null;
   /** "G goals", "Sv saves" … for every column any side shows. */
@@ -80,7 +92,57 @@ export interface GameStatsView {
 /** Where a side's entries come from: data/player-stats.json, or a test's own. */
 export type GameStatsLookup = (contestId: string, slug: TeamSlug) => GameStatsEntry;
 
-function scoringTable(box: BoxScore): StatTable | null {
+/** A box score line, with whether a game note added to it. */
+type Line = BoxScoreLine & { noted: boolean };
+/** A side's box score with its note credits added: what the tables are built from. */
+interface Entries {
+  tracked: BoxScore['tracked'];
+  players: Line[];
+}
+
+const lastWord = (name: string) => name.trim().split(/\s+/).pop()!.toLowerCase();
+
+/**
+ * `box` (if any) with `credits` added: a credit goes to the line the roster join named for the same
+ * player (or, for a line under the sheet's short name, the same jersey and last name), else to a
+ * line of its own. null when there is neither.
+ */
+function withCredits(box: BoxScore | undefined, credits: readonly NoteCredit[]): Entries | null {
+  if (!box && !credits.length) return null;
+  const field = new Set<FieldStatKey>(box?.tracked.field ?? []);
+  const goalie = new Set<GoalieStatKey>(box?.tracked.goalkeeping ?? []);
+  const players: Line[] = (box?.players ?? []).map((p) => ({
+    ...p,
+    field: p.field ? { ...p.field } : null,
+    goalkeeping: p.goalkeeping ? { ...p.goalkeeping } : null,
+    noted: false,
+  }));
+  for (const c of credits) {
+    let line = players.find(
+      (p) =>
+        p.name === c.fullName ||
+        (c.jersey !== null && p.jersey === c.jersey && lastWord(p.name) === lastWord(c.fullName)),
+    );
+    if (!line) {
+      line = { name: c.fullName, jersey: c.jersey, field: null, goalkeeping: null, noted: false };
+      players.push(line);
+    }
+    for (const kind of ['goals', 'assists'] as const) {
+      if (c[kind] === 0) continue;
+      field.add(kind);
+      line.field = { ...line.field, [kind]: (line.field?.[kind] ?? 0) + c[kind] };
+      line.noted = true;
+    }
+    if (c.saves > 0) {
+      goalie.add('saves');
+      line.goalkeeping = { ...line.goalkeeping, saves: (line.goalkeeping?.saves ?? 0) + c.saves };
+      line.noted = true;
+    }
+  }
+  return { tracked: { field: [...field], goalkeeping: [...goalie] }, players };
+}
+
+function scoringTable(box: Entries): StatTable | null {
   const tracked = new Set<string>(box.tracked.field);
   const columns = FIELD_COLUMNS.filter((c) => tracked.has(c.key));
   if (!columns.length) return null;
@@ -95,7 +157,7 @@ function scoringTable(box: BoxScore): StatTable | null {
       }
       return a.i - b.i;
     })
-    .map(({ p, i, values }) => ({ key: `${i}`, name: p.name, jersey: p.jersey, values, noted: false }));
+    .map(({ p, i, values }) => ({ key: `${i}`, name: p.name, jersey: p.jersey, values, noted: p.noted }));
   return rows.length ? { columns, rows } : null;
 }
 
@@ -105,7 +167,7 @@ function byTimeInGoal(a: BoxScoreLine, b: BoxScoreLine): number {
   return n(b, 'minutes') - n(a, 'minutes') || n(b, 'saves') - n(a, 'saves') || n(b, 'goalsAgainst') - n(a, 'goalsAgainst');
 }
 
-function goalieTable(box: BoxScore): StatTable | null {
+function goalieTable(box: Entries): StatTable | null {
   const tracked = new Set<string>(box.tracked.goalkeeping);
   const columns = GOALIE_COLUMNS.filter((c) => tracked.has(c.key));
   if (!columns.length) return null;
@@ -113,12 +175,12 @@ function goalieTable(box: BoxScore): StatTable | null {
     .map((p, i) => ({ p, i, values: columns.map((c) => p.goalkeeping?.[c.key] ?? null) }))
     .filter(({ values }) => values.some((v) => v !== null))
     .sort((a, b) => byTimeInGoal(a.p, b.p) || a.i - b.i)
-    .map(({ p, i, values }) => ({ key: `${i}`, name: p.name, jersey: p.jersey, values, noted: false }));
+    .map(({ p, i, values }) => ({ key: `${i}`, name: p.name, jersey: p.jersey, values, noted: p.noted }));
   return rows.length ? { columns, rows } : null;
 }
 
 /** The note under a side whose entered goals are not its score, or null. */
-function goalsNote(box: BoxScore, score: number | null): string | null {
+function goalsNote(box: Entries, score: number | null): string | null {
   if (score === null) return null;
   const credited = box.players.reduce((n, p) => n + (p.field?.goals ?? 0), 0);
   if (credited === score) return null;
@@ -141,7 +203,8 @@ function sideView(
   caveat: boolean,
 ): GameStatsSide | null {
   if (!side.team) return null;
-  const { box, unread } = lookup(model.game.contestId, side.team.slug);
+  const { box: entered, unread, credits } = lookup(model.game.contestId, side.team.slug);
+  const box = withCredits(entered, credits);
   const base = { key: side.team.slug, name: side.name };
   if (!box) {
     return {
@@ -172,9 +235,15 @@ export function buildGameStatsView(model: GameModel, lookup: GameStatsLookup = g
     sideView(model, model.home, 'home', lookup, caveat),
   ].filter((s): s is GameStatsSide => s !== null);
   if (!sides.some((s) => s.scoring || s.goalies)) return null;
+  const marked = sides.some((s) => [...(s.scoring?.rows ?? []), ...(s.goalies?.rows ?? [])].some((r) => r.noted));
   const shown = new Set(sides.flatMap((s) => [...(s.scoring?.columns ?? []), ...(s.goalies?.columns ?? [])]).map((c) => c.label));
   const legend = [...FIELD_COLUMNS, ...GOALIE_COLUMNS]
     .filter((c) => shown.has(c.label))
     .map((c) => `${c.label} ${c.title.toLowerCase()}`);
-  return { sides, caveat: caveat ? TIEBREAK_CAVEAT : null, legend };
+  return {
+    sides,
+    notedFrom: marked ? model.game.venue.text : null,
+    caveat: caveat ? TIEBREAK_CAVEAT : null,
+    legend,
+  };
 }

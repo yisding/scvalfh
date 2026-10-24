@@ -1538,6 +1538,9 @@ Gotchas, all **[V]**:
   - The team page marks each changed row and card and lists every noted game with its note. A
     keeper whose saves include a note's gets no Save % (team page or /leaders) and no
     shots-on-goal check: the note's game is not in the goals against and shots the coach entered.
+  - The game page's Game stats section adds the same credits, the ones kept after every guard
+    above, to that game's box score (or to lines of their own when the team has none for the game),
+    marks each changed row and quotes the note (`components/game/game-stats-view.ts`).
   - **Overtime.** A final MaxPreps records with 0 overtime periods counts as one period of
     overtime (two for "double OT" / "2OT") when its note says so: "OT" in capitals as a word of
     its own, or "overtime", never right after "no", "not", "without" or "never" (`overtimeFromNote` in `lib/normalize.ts`, the same

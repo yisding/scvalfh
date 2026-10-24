@@ -13,7 +13,9 @@ import { buildGameStatsView, type GameStatsLookup } from './game-stats-view';
  * numeric columns, so they fit 320px without a scroller (DESIGN §10.8), each head an abbreviation
  * a screen reader hears in full and the legend spells out. The goalkeeping table's name column says
  * "Player", as every one does: coaches list field players in MaxPreps' goalkeeping table too. The
- * two sides sit side by side from 768px, away first, like the scoreboard.
+ * two sides sit side by side from 768px, away first, like the scoreboard. A row a game note added
+ * to carries the team page's mark (an asterisk, "includes a game note" to a screen reader), and the
+ * note itself is quoted under the tables.
  */
 export interface GameStatsProps {
   model: GameModel;
@@ -55,6 +57,12 @@ export function GameStats({ model, className, lookup }: GameStatsProps) {
           Each coach&rsquo;s own entries for this game on MaxPreps. A dash is a stat the coach tracked in
           this game but entered nothing for.
         </p>
+        {view.notedFrom ? (
+          <p className="mt-1 mb-0 text-ink-2">
+            * Also counts what was written in MaxPreps&rsquo; note for this game but not entered as stats:
+            &ldquo;{view.notedFrom}&rdquo;.
+          </p>
+        ) : null}
         {view.caveat ? <p className="mt-1 mb-0 text-ink-2">{view.caveat}</p> : null}
         {view.legend.length > 0 ? <p className="mt-1 mb-0">{view.legend.join(' · ')}.</p> : null}
       </div>

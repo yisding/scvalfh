@@ -16,7 +16,13 @@ import { readFileSync } from 'node:fs';
 
 import bundled from '../data/player-stats.json';
 import { getSnapshot } from './data';
-import { noteStatsFor, withNoteStats, type NoteSources, type NotedTeamPlayerStats } from './note-stats';
+import {
+  noteStatsFor,
+  withNoteStats,
+  type NoteCredit,
+  type NoteSources,
+  type NotedTeamPlayerStats,
+} from './note-stats';
 import {
   PlayerStatsFileSchema,
   type BoxScore,
@@ -94,18 +100,40 @@ export interface GameStatsEntry {
    * could not be read (a warning names it). Otherwise no box score means the coach entered none.
    */
   unread: boolean;
+  /**
+   * What the game's note credits this side's players with and the team page counts too: the
+   * credits lib/note-stats.ts keeps after every guard (one roster only, no more goals than scored,
+   * nothing the coach also entered for the game, nothing unverifiable). Empty when there are none.
+   */
+  credits: NoteCredit[];
+}
+
+/** Each team's note credits, by contest id, built once per team (a game page asks for two sides). */
+const CREDITS = new Map<string, Map<string, NoteCredit[]>>();
+
+function noteCreditsFor(contestId: string, slug: TeamSlug): NoteCredit[] {
+  let byGame = CREDITS.get(slug);
+  if (!byGame) {
+    byGame = new Map();
+    for (const c of getTeamPlayerStatsWithNotes(slug)?.noteCredits ?? []) {
+      byGame.set(c.contestId, [...(byGame.get(c.contestId) ?? []), c]);
+    }
+    CREDITS.set(slug, byGame);
+  }
+  return byGame.get(contestId) ?? [];
 }
 
 export function getGameStatsEntry(contestId: string, slug: TeamSlug): GameStatsEntry {
+  const credits = noteCreditsFor(contestId, slug);
   const box = getBoxScore(contestId, slug);
-  if (box) return { box, unread: false };
+  if (box) return { box, unread: false, credits };
   const team = BY_SLUG.get(slug);
-  if (!team) return { box, unread: true };
-  if (team.status !== 'ok' && team.status !== 'none') return { box, unread: true };
+  if (!team) return { box, unread: true, credits };
+  if (team.status !== 'ok' && team.status !== 'none') return { box, unread: true, credits };
   const unread = team.warnings.some(
     (w) => w.startsWith('box scores: per-game table not read') || w.startsWith(`box score ${contestId} not read`),
   );
-  return { box, unread };
+  return { box, unread, credits };
 }
 
 /** The committed snapshot's games and rosters, for lib/note-stats.ts. */

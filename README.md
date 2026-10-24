@@ -441,7 +441,11 @@ goals beside them), and where the goals a coach credits to players do not add up
 the section says so; the score stays the site's (a game whose score may leave out or include a
 tiebreak gets one sentence saying the two need not agree instead). A followed side with nothing to
 show says whether its coach entered nothing or its stats could not be read, and a game with no table
-on either side (a box score can list a lineup alone) gets no section. For each team with stats, `fetch-player-stats` also
+on either side (a box score can list a lineup alone) gets no section. Goals, assists and saves a
+coach wrote in the game's note instead (see "Stats in the game note" in `docs/DATA-SOURCES.md`) are
+added on the game page exactly as on the team page: the credits `lib/note-stats.ts` keeps after its
+guards go into the player's line (or a line of their own, so a side with no box score can have a
+table from its note alone), each such row is marked, and the note is quoted under the tables. For each team with stats, `fetch-player-stats` also
 reads MaxPreps' per-game team table (`team-season-game-stats/rollup/v1`, one call) and, for each
 final of the team's in the snapshot whose row there has a count above zero, the team's box score
 for that game (`team-contest-player-stats/v1?teamId=&contestId=`, `lib/sources/maxpreps-box-score.ts`),
