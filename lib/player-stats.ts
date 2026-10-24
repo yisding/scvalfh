@@ -19,6 +19,7 @@ import { getSnapshot } from './data';
 import { noteStatsFor, withNoteStats, type NoteSources, type NotedTeamPlayerStats } from './note-stats';
 import {
   PlayerStatsFileSchema,
+  type BoxScore,
   type PlayerStatsFile,
   type TeamPlayerStats,
 } from './player-stats-schema';
@@ -28,6 +29,8 @@ import type { TeamSlug } from './types';
 
 export type { NotedTeamPlayerStats } from './note-stats';
 export type {
+  BoxScore,
+  BoxScoreLine,
   FieldStatKey,
   FieldStats,
   GoalieStatKey,
@@ -56,6 +59,15 @@ function load(): PlayerStatsFile {
 
 const file = load();
 const BY_SLUG = new Map<string, TeamPlayerStats>(file.teams.map((t) => [t.slug, t]));
+/** contest id → team slug → that team's box score for the game. */
+const BOX_SCORES = new Map<string, Map<string, BoxScore>>();
+for (const t of file.teams) {
+  for (const box of t.games ?? []) {
+    const bySlug = BOX_SCORES.get(box.contestId) ?? new Map<string, BoxScore>();
+    bySlug.set(t.slug, box);
+    BOX_SCORES.set(box.contestId, bySlug);
+  }
+}
 
 export function getPlayerStats(): PlayerStatsFile {
   return file;
@@ -63,6 +75,37 @@ export function getPlayerStats(): PlayerStatsFile {
 
 export function getTeamPlayerStats(slug: TeamSlug): TeamPlayerStats | undefined {
   return BY_SLUG.get(slug);
+}
+
+/**
+ * `slug`'s box score for the game `contestId`, as its coach entered it on MaxPreps (the game page's
+ * Game stats section), or undefined when the file has none.
+ */
+export function getBoxScore(contestId: string, slug: TeamSlug): BoxScore | undefined {
+  return BOX_SCORES.get(contestId)?.get(slug);
+}
+
+/** What the file can say about one side of one game: its box score, or why there is none. */
+export interface GameStatsEntry {
+  box: BoxScore | undefined;
+  /**
+   * No box score, and none can be claimed absent: the team's latest read failed or has not run
+   * (status carried-forward, error or pending), or its per-game table or this game's box score
+   * could not be read (a warning names it). Otherwise no box score means the coach entered none.
+   */
+  unread: boolean;
+}
+
+export function getGameStatsEntry(contestId: string, slug: TeamSlug): GameStatsEntry {
+  const box = getBoxScore(contestId, slug);
+  if (box) return { box, unread: false };
+  const team = BY_SLUG.get(slug);
+  if (!team) return { box, unread: true };
+  if (team.status !== 'ok' && team.status !== 'none') return { box, unread: true };
+  const unread = team.warnings.some(
+    (w) => w.startsWith('box scores: per-game table not read') || w.startsWith(`box score ${contestId} not read`),
+  );
+  return { box, unread };
 }
 
 /** The committed snapshot's games and rosters, for lib/note-stats.ts. */

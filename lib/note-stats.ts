@@ -28,7 +28,7 @@
  *   - only finals count, and never a forfeit;
  *   - a game's note cannot credit a team with more goals than it scored in that game;
  *   - a noted game whose goals, assists or saves the coach has ALSO entered on MaxPreps (the
- *     team's per-game totals, `gameTotals`, read by scripts/fetch-player-stats.ts for every team
+ *     team's per-game totals, `gameTotals`, kept by scripts/fetch-player-stats.ts for every team
  *     a note credits: teamsCreditedByNotes) adds none of that stat: it is on the sheet already;
  *   - a noted game whose entries cannot be checked (the per-game read failed or does not list the
  *     game) adds nothing: unverified is not counted. A team with no MaxPreps stats at all (status

@@ -3,9 +3,11 @@
  * ?teamId=&sportSeasonId=` on the ghost API (SPEC §1.1k), the sibling of the player stats rollup
  * (lib/sources/maxpreps-player-stats.ts) in the same page chunk.
  *
- * Read only for a team a game note credits with stats (lib/note-stats.ts): it says what
- * the coach has ALREADY entered on the stats sheet for each game, so a goal, assist or save the
- * note names is not counted twice.
+ * Read for every team with stats, for two jobs. It says which games the coach has entered stats
+ * for, and a digest of each game's row (`rowKey`) tells scripts/fetch-player-stats.ts when a game's
+ * box score (lib/sources/maxpreps-box-score.ts) needs reading again. For a team a game note credits
+ * with stats (lib/note-stats.ts), its totals also say what the coach has ALREADY entered on the
+ * stats sheet for each game, so a goal, assist or save the note names is not counted twice.
  *
  * Shape [V] 2026-10-06 (Homestead): the same `data.groups[]` → `subgroups[]` → `stats.columns[]` /
  * `stats.rows[].columns[i]` tables as the player rollup, one row per game instead of per player.
@@ -13,6 +15,8 @@
  * and `Saves` are the team's counts for that game, "0" when nothing was entered. A team whose coach
  * has entered no stats answers the same HTTP 400 "No data was found" as the rollup.
  */
+
+import { createHash } from 'node:crypto';
 
 import { z } from 'zod';
 
@@ -67,6 +71,23 @@ export function contestIdFromUrl(href: string | null | undefined): string | null
   }
 }
 
+/** The columns that place a row rather than count anything. */
+const PLACING_COLUMNS = new Set(['Date', 'Result', 'Opponent']);
+
+/** One game of the team's per-game table. */
+export interface GameRow {
+  /** The team's goals, assists and saves in the game, 0 where nothing was entered. */
+  total: GameTotal;
+  /**
+   * A digest of every cell MaxPreps printed for the game, in every table: any edit the coach makes
+   * to the game's numbers (or its result) changes it. Eight hex digits: it is only ever compared
+   * with the same game's previous digest, and every box score carries one into the Worker bundle.
+   */
+  rowKey: string;
+  /** Some count in the row is above zero: the coach entered stats for this game. */
+  entered: boolean;
+}
+
 export interface ParseGameStatsOptions {
   expectedTeamId?: string;
   url?: string;
@@ -77,7 +98,7 @@ export interface ParseGameStatsOptions {
  * (the 400 "No data was found" envelope: nothing entered for any game). Throws on anything it
  * cannot read with certainty.
  */
-export function parseGameStats(raw: unknown, opts: ParseGameStatsOptions = {}): GameTotal[] {
+export function parseGameRows(raw: unknown, opts: ParseGameStatsOptions = {}): GameRow[] {
   const url = opts.url ?? '(game stats)';
   const parsed = ResponseSchema.safeParse(raw);
   if (!parsed.success) fail(`schema drift: ${parsed.error.issues[0]?.message ?? 'unknown'}`, url);
@@ -91,7 +112,7 @@ export function parseGameStats(raw: unknown, opts: ParseGameStatsOptions = {}): 
     fail(`teamId ${data.teamId}, expected ${opts.expectedTeamId}`, url);
   }
 
-  const byGame = new Map<string, GameTotal>();
+  const byGame = new Map<string, { total: GameTotal; cells: string[]; entered: boolean }>();
   for (const group of data.groups) {
     for (const sub of group.subgroups) {
       const cols = sub.stats.columns.map((c) => c.name);
@@ -101,29 +122,40 @@ export function parseGameStats(raw: unknown, opts: ParseGameStatsOptions = {}): 
         if (row.columns.length !== cols.length) fail(`${group.name}: a row has ${row.columns.length} cells for ${cols.length} columns`, url);
         const contestId = contestIdFromUrl(row.columns[resultAt].href);
         if (!contestId) continue; // a game with no page has no id to match a note to
-        const game = byGame.get(contestId) ?? { contestId, goals: 0, assists: 0, saves: 0 };
+        const game = byGame.get(contestId) ?? { total: { contestId, goals: 0, assists: 0, saves: 0 }, cells: [], entered: false };
         cols.forEach((name, at) => {
+          const v = row.columns[at].value?.trim() ?? '';
+          game.cells.push(`${group.name}/${name}=${v}`);
+          if (!PLACING_COLUMNS.has(name) && Number(v) > 0) game.entered = true;
           const key = COLUMNS[name as keyof typeof COLUMNS];
           if (!key) return;
-          const v = row.columns[at].value?.trim() ?? '';
           const n = v === '' ? 0 : Number(v);
           if (!Number.isInteger(n) || n < 0) fail(`${group.name}: ${name} is "${v}", not a count`, url);
           // Goals appear in both field subgroups; the larger is what was entered.
-          game[key] = Math.max(game[key], n);
+          game.total[key] = Math.max(game.total[key], n);
         });
         byGame.set(contestId, game);
       }
     }
   }
-  return [...byGame.values()];
+  return [...byGame.values()].map(({ total, cells, entered }) => ({
+    total,
+    rowKey: createHash('sha256').update(cells.join('\n')).digest('hex').slice(0, 8),
+    entered,
+  }));
 }
 
-export async function fetchGameStats(
+/** The team's goals, assists and saves game by game: what lib/note-stats.ts checks a note against. */
+export function parseGameStats(raw: unknown, opts: ParseGameStatsOptions = {}): GameTotal[] {
+  return parseGameRows(raw, opts).map((r) => r.total);
+}
+
+export async function fetchGameRows(
   client: MaxPrepsClient,
   teamId: string,
   /** Sees the raw body before anything reads it — scripts/fetch-player-stats.ts --capture. */
   onRaw?: (body: string) => void,
-): Promise<GameTotal[]> {
+): Promise<GameRow[]> {
   const url = gameStatsUrl(teamId);
   let body: string;
   try {
@@ -139,5 +171,5 @@ export async function fetchGameStats(
   } catch (err) {
     throw new MaxPrepsError(`game stats: invalid JSON: ${(err as Error).message}`, { url });
   }
-  return parseGameStats(raw, { expectedTeamId: teamId, url });
+  return parseGameRows(raw, { expectedTeamId: teamId, url });
 }

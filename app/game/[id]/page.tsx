@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 
 import FormGoingIn from '../../../components/game/FormGoingIn';
 import GameDetails from '../../../components/game/GameDetails';
+import GameStats from '../../../components/game/GameStats';
 import {
   GameElsewhere,
   GameSourceLine,
@@ -33,7 +34,8 @@ import ScoreBoard from '../../../components/ui/ScoreBoard';
  * date page has no URL, no OG card and nothing to land on. So every contest gets a page: both
  * monograms and their league records as of that game (to date on a non-league game), the line score with its decider, the
  * result sentence (`gameRecap`) with the result links under it, the venue, the real off-site links, routes to both team
- * pages, both sides' form going in, the season series between these two schools, and the source
+ * pages, each followed side's box score as its coach entered it on MaxPreps (Game stats, a final
+ * with entries only), both sides' form going in, the season series between these two schools, and the source
  * deep links — plus a text-only OG card so a link pasted into a group text previews the score
  * itself.
  *
@@ -186,7 +188,7 @@ export default async function GamePage({ params }: PageProps<'/game/[id]'>) {
 
       {/*
         From 1024px the DETAILS card sits in a right rail beside the main column, and the DOM keeps
-        the PHONE order — scoreboard, recap, details, form, series, sources (DESIGN §10.5). Explicit
+        the PHONE order — scoreboard, recap, details, game stats, form, series, sources (DESIGN §10.5). Explicit
         row placement, not two wrapper columns, is what makes those two facts compatible: a section
         that renders nothing collapses its row to zero height, and vertical rhythm comes from
         margins rather than a row gap so a collapsed row leaves no ghost space.
@@ -259,22 +261,26 @@ export default async function GamePage({ params }: PageProps<'/game/[id]'>) {
           model={model}
           className={
             leadRow
-              ? 'mt-section lg:col-start-2 lg:row-span-4 lg:row-start-2 lg:mt-6 lg:self-start [@media(min-width:1024px)_and_(min-height:40rem)]:sticky [@media(min-width:1024px)_and_(min-height:40rem)]:top-[5rem]'
-              : 'mt-section lg:col-start-2 lg:row-span-4 lg:row-start-2 lg:mt-section-lg lg:self-start [@media(min-width:1024px)_and_(min-height:40rem)]:sticky [@media(min-width:1024px)_and_(min-height:40rem)]:top-[5rem]'
+              ? 'mt-section lg:col-start-2 lg:row-span-5 lg:row-start-2 lg:mt-6 lg:self-start [@media(min-width:1024px)_and_(min-height:40rem)]:sticky [@media(min-width:1024px)_and_(min-height:40rem)]:top-[5rem]'
+              : 'mt-section lg:col-start-2 lg:row-span-5 lg:row-start-2 lg:mt-section-lg lg:self-start [@media(min-width:1024px)_and_(min-height:40rem)]:sticky [@media(min-width:1024px)_and_(min-height:40rem)]:top-[5rem]'
           }
         />
 
-        <FormGoingIn
+        <GameStats
           model={model}
           className="mt-section md:mt-section-lg lg:col-start-1 lg:row-start-3"
         />
-        <SeasonSeries
+        <FormGoingIn
           model={model}
           className="mt-section md:mt-section-lg lg:col-start-1 lg:row-start-4"
         />
-        <GameElsewhere
+        <SeasonSeries
           model={model}
           className="mt-section md:mt-section-lg lg:col-start-1 lg:row-start-5"
+        />
+        <GameElsewhere
+          model={model}
+          className="mt-section md:mt-section-lg lg:col-start-1 lg:row-start-6"
         />
       </div>
     </div>

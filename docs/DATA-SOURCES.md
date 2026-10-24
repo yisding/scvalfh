@@ -1428,12 +1428,24 @@ as `<dir>/stats-<slug>.json`, so a drifted or non-JSON answer is captured too an
 page makes from the browser (page `/team/stats`, function `eM` in that build); the page itself
 server-renders only a top-3 `playerStatLeadersData` card, and the legacy print view
 (`/print/team_stats.aspx?schoolid=&ssid=`) has the full table but **no career links**. Siblings in
-the same chunk: `team-season-game-stats/rollup/v1` (the team's stats game by game, read only for a
-team a game note credits; see "Stats in the game note" below), and, not used,
+the same chunk: `team-season-game-stats/rollup/v1` (the team's stats game by game, read for every
+team with stats: it says which games a box score is read for, and keeps its totals for a team a
+game note credits; see "Box scores" and "Stats in the game note" below), and, not used,
 `team-season-stats/rollup/v1` and `team-leaderboard-leaders/v2`; a `leagueId=` parameter limits the
 rollup to league games.
 `lib/sources/maxpreps-player-stats.ts`, written by `scripts/fetch-player-stats.ts` to
 `data/player-stats.json`.
+
+**Box scores [V] 2026-10-24.** `GET /gatewayweb/react/team-contest-player-stats/v1?teamId=&contestId=`
+(no `rollup/` segment; that path is a 404) answers one team's player stats for one game in the
+season rollup's shape below, with no GamesPlayed column, each column's `overallValue` the team's
+total for the game, and only the players the coach entered something for; a game with nothing
+entered answers the same 400 "No data was found" envelope. `lib/sources/maxpreps-box-score.ts` reads
+it with `parsePlayerStats`, unchanged. `scripts/fetch-player-stats.ts` reads it for each final of
+the team's in the snapshot whose row in the per-game table has a count above zero, and stores a
+digest of that row (`rowKey`) with it, so the next run reads the box score again only when the row
+changes (846 box scores on 2026-10-24, read in about seven minutes; a later run reads the changed
+ones). The game page's Game stats section shows them (`components/game/game-stats-view.ts`).
 
 Shape **[V]**: `data.groups[]` = "Field Stats" and "Goaltending Stats", each with `subgroups[]` (a
 second "… (2)" subgroup carries the overflow columns), each a table: `stats.columns[]`
@@ -1513,8 +1525,9 @@ Gotchas, all **[V]**:
     `team-season-game-stats/rollup/v1` (same parameters) gives the TEAM's stats game by game **[V]**
     2026-10-06: Homestead's four sheet goals are entered on Lynbrook (3) and Los Altos (1, in a game
     Homestead lost 0-1), and Sep 28, Sep 30 and Oct 5 have 0 goals and 0 saves.
-    `scripts/fetch-player-stats.ts` reads it (`lib/sources/maxpreps-game-stats.ts`, into the team's
-    `gameTotals`) for each team a note credits — one call on 2026-10-06 — and a noted game whose
+    `scripts/fetch-player-stats.ts` reads it (`lib/sources/maxpreps-game-stats.ts`) for every team
+    with stats, for the box scores, and keeps its totals in the team's `gameTotals` for each team a
+    note credits (one, Homestead, on 2026-10-06), and a noted game whose
     goals, assists or saves the coach also entered adds none of that stat. A note never credits more
     goals or assists in a game than the team scored, and no noted goal is added where MaxPreps' goals
     plus the noted ones would pass the team's goals scored. A noted game whose entries cannot be

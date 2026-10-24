@@ -1,5 +1,5 @@
 {
-  "note": "Provenance of the roster-<slug>.html, stats-<slug>.json and game-stats-<slug>.json captures. The fifteen SCVAL teams were captured 2026-10-02; a deliberate sample of the other three leagues 2026-10-03. Every roster page is trimmed the same way (see the comment at the top of each file); each stats file is the rollup response as served.",
+  "note": "Provenance of the roster-<slug>.html, stats-<slug>.json, game-stats-<slug>.json and box-<slug>-<contest id>.json captures. The fifteen SCVAL teams were captured 2026-10-02; a deliberate sample of the other three leagues 2026-10-03. Every roster page is trimmed the same way (see the comment at the top of each file); each stats file is the rollup response as served.",
   "scval": {
     "capturedAt": "2026-10-02T04:55:55Z (rosters), 2026-10-02T18:58:27Z (stats)",
     "teams": "all 15 SCVAL teams"
@@ -28,7 +28,17 @@
   "gameStats": {
     "capturedAt": "2026-10-06T13:50:00Z",
     "teams": {
-      "homestead": "SCVAL, the per-game team totals (team-season-game-stats rollup) as served: four goals on Lynbrook and Los Altos, none on the three games its notes name"
+      "homestead": "SCVAL, the per-game team totals (team-season-game-stats rollup) as served: four goals on Lynbrook and Los Altos, none on the three games its notes name",
+      "palo-alto": "SCVAL, the per-game team totals as served 2026-10-24T20:35Z, every row a game the coach entered: the box-palo-alto captures are three of its finals, and its other finals have no capture, so are not read offline"
+    }
+  },
+  "boxScores": {
+    "capturedAt": "2026-10-24T20:35:00Z",
+    "files": {
+      "box-palo-alto-0e514547-6fda-4d35-a6ee-98c47c3a0e34.json": "SCVAL, Palo Alto's box score for its 4-1 win over Homestead (Aug 27), as served",
+      "box-palo-alto-47015ab4-f9d2-4366-a8f6-cdcd8e131df2.json": "SCVAL, Palo Alto's box score for its 0-4 loss at Los Gatos, as served",
+      "box-palo-alto-80175ec7-ea39-42d1-a0ab-399100dc1925.json": "SCVAL, Palo Alto's box score for its 3-0 win at Santa Clara, as served",
+      "box-davis-3630239d-6398-4033-a398-69af5675f6b5.json": "EAL, a Davis box score with both field subgroups and two goalkeepers, as served"
     }
   }
 }

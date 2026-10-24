@@ -123,7 +123,7 @@ Per-league pages show their own region's league chips.
 | `/schedule` | A light index: league cards, recent and next game days per region, and one "every game day" list (its game rows region-scoped) whose `#YYYY-MM-DD` rows keep old date links working |
 | `/schedule/[league]` | One league's whole season, filterable client-side (10 pages; `/schedule/independents` is "LA teams: schedule and results", every contest involving the independents, all of them non-league games) |
 | `/scores/[date]` | One day's scoreboard (one static page per date with a game; OG card per date), the regions kept apart: `#norcal` ("Northern California": its leagues in config order, then its Non-league games), then, on a day that has one, `#between-regions` ("NorCal vs SoCal", shown in both views), then `#socal` (its repeated ids suffixed, `#non-league-socal`); a region with no game says so in one sentence. Then the day's JV games, one block per region (`#jv`, `#jv-socal`), kept apart from the varsity counts. The header counts each region when both have a game ("NorCal: 6 games" … "SoCal: 9 games") |
-| `/game/[id]` | One game's detail page (one static page per game; OG card per game). A game whose score came from si.com has an id like `sblive-123`; one that MaxPreps later published is a stub that links to it |
+| `/game/[id]` | One game's detail page (one static page per game; OG card per game). On a final, a Game stats section (`#game-stats-kicker`) shows each followed side's box score as its coach entered it on MaxPreps, where one did: scorers, assists, shots and goalkeeping (see "Player stats"). A game whose score came from si.com has an id like `sblive-123`; one that MaxPreps later published is a stub that links to it |
 | `/teams` | Teams and standings: all 102 teams, a search box, and each division's compact standings table (the independents: their group's note and team links, no table) (place, team, GP, W-L-T, PTS, the ladder line, a link to the full league table), grouped region → section → league → division. The search filters the tables' rows in place and searches both regions |
 | `/teams/[slug]` | One team's record, Elo rating (collapsed, `#elo`, with its place on its own region's board), schedule, results, splits and postseason line, then the school's JV games (`#jv`, kept apart from the varsity counts), its player stats and roster (102 pages, all nine leagues and the three independents; an independent's page counts every figure over all its games, with no place, league record, GP or ladder); a player a public page ties to a club gets a club line linking that club's page |
 | `/clubs` | "Which clubs do players here play for?" The 28 youth field hockey clubs by region, each region's section scoped to its half of the site under the NorCal/SoCal switcher; for each, how many players on the tracked varsity rosters a public page ties to it (current and earlier counted separately) and from which schools, then how a player is matched (`#how-matched`). All 102 teams' schools have been swept for clubs |
@@ -431,6 +431,33 @@ renders it in a Player stats section (`components/teams/TeamPlayerStats.tsx`, bu
 `components/teams/player-stats-view.ts`), which says when MaxPreps last updated and how many games
 the team has played since. See `docs/DATA-SOURCES.md` §1.1k.
 
+The same file holds each team's **box scores**, one per final its coach entered stats for, which the
+game page shows in its Game stats section (`components/game/GameStats.tsx`, built by
+`components/game/game-stats-view.ts`): per followed side, the players with a goal, assist, shot,
+shot on goal or steal in the game, most goals first, and the goalkeepers' saves, goals against,
+shots on goal against and minutes, only the columns that game's entries track, a dash where a
+tracked stat has no entry. Points and game-winning goals are left out (in one game they repeat the
+goals beside them), and where the goals a coach credits to players do not add up to the side's score
+the section says so; the score stays the site's (a game whose score may leave out or include a
+tiebreak gets one sentence saying the two need not agree instead). A followed side with nothing to
+show says whether its coach entered nothing or its stats could not be read, and a game with no table
+on either side (a box score can list a lineup alone) gets no section. For each team with stats, `fetch-player-stats` also
+reads MaxPreps' per-game team table (`team-season-game-stats/rollup/v1`, one call) and, for each
+final of the team's in the snapshot whose row there has a count above zero, the team's box score
+for that game (`team-contest-player-stats/v1?teamId=&contestId=`, `lib/sources/maxpreps-box-score.ts`),
+read with the season rollup's rules (a stat is tracked when the game's team total is above zero and
+a player holds some of it). Each stored box score keeps a digest of the row it was read against
+(`rowKey`), and is read again only when the row changes, so a run reads the games coaches entered or
+edited since the last one: about 170 calls and 30 seconds on 2026-10-24, against about 850 calls and
+seven minutes to read all 846 box scores (`--all-box-scores`). A failed table or box score call never
+fails the team: the stored box scores are kept (a table that lists no game counts as failed), and one
+kept after its own read failed is read again on the next run. A kept box score keeps the names it
+was read with, so after a `pnpm fetch-rosters` that renamed or added players, run
+`pnpm fetch-player-stats --all-box-scores`.
+A coach's edit that moves a goal from one player to another without changing any of the game's
+team totals is not noticed until something else in the row changes. On 2026-10-24: 846 box scores,
+4,811 player lines on 69 teams, about 58 KB of gzip JSON in the Worker bundle (which moved the Worker budget, DESIGN §24.6).
+
 The same file feeds the player boards on `/leaders` (`components/leaders/player-boards.ts`): most
 points, Elo-adjusted points (see "Elo-adjusted goals and points"), assists, saves and clean sheets
 (MaxPreps' goalkeeper "shutouts"), one set of boards per region.
@@ -461,6 +488,7 @@ pnpm fetch-player-stats                                      # live: 102 rollups
 pnpm fetch-player-stats --leagues bval,pcal                  # only these leagues; the others keep their rows
 pnpm fetch-player-stats --fixtures tests/fixtures/maxpreps   # offline, from the captured JSON (SCVAL's: add --leagues scval)
 pnpm fetch-player-stats --capture <dir>                      # live, and save each response body, as received, as <dir>/stats-<slug>.json
+pnpm fetch-player-stats --all-box-scores                     # live, reading every box score again (about 850 calls)
 pnpm fetch-player-stats --dry-run                            # parse and report, write nothing
 ```
 
@@ -1383,7 +1411,8 @@ Two `/leaders` boards per region weigh scoring by the defenses it came against
   games is credited with the team's schedule; the factor covers every counted game even where a
   coach's totals lag behind them; and points from games against schools outside the covered leagues
   (no rating, so left out of the factor) are multiplied by it too.
-- **Per-game box scores were tested, and are not used.** MaxPreps publishes each team's box score
+- **Per-game box scores were tested for this board, and are not used here.** (The game pages show
+  them since 2026-10-24; see "Player stats".) MaxPreps publishes each team's box score
   for each game whose stats a coach entered (an undocumented `team-contest-player-stats` endpoint,
   `?teamId=&contestId=`, the season rollup's shape, listing only players who recorded a stat). On
   2026-10-15 all 518 of them were read (63 teams, 1,846 scoring lines; 481 add up to their game's
@@ -1405,8 +1434,7 @@ Two `/leaders` boards per region weigh scoring by the defenses it came against
   scorer-less box scores left out). So players' scoring is not measurably concentrated against easy
   or hard opponents beyond what their team's schedule says, and the board keeps the team's schedule
   factor: the box scores would cost about 100 more MaxPreps calls a run and 0.5 MB of data for no
-  better number. The endpoint is recorded here in case they are wanted for something else, such as
-  player game logs.
+  better number.
 
 ## Known limitations
 

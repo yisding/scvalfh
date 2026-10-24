@@ -3916,6 +3916,13 @@ addition there will cross it.
 - **Cloudflare's own limit.** Its Workers limits page (developers.cloudflare.com/workers/platform/limits/,
   read 2026-10-06) sets 64 MiB uncompressed on both the Free and Paid plans, and says there is no
   compressed size limit. The Worker's 8.0 MiB raw is 13% of that.
+- **Game box scores (2026-10-24).** The game pages' box scores ride in `data/player-stats.json`
+  (`games`: 846 box scores, 4,811 player lines, 57,945 bytes of gzip -9 JSON), which the Worker
+  bundles. After `pnpm build:cloudflare` the Worker was 2,486,508 bytes gzip over 246 files, over
+  the 2,449,651 line; without the box scores it would have been about 2,428,000 (99%), since the
+  data had grown since 2026-10-06. The box scores were trimmed first (no team totals, 8-digit row
+  digests), then by the same rule the allowance became **baseline + 1300 KB = 2,756,851 (90%
+  used)**. Every other line is unchanged.
 
 ### 24.7 Data and history
 

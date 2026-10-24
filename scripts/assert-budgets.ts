@@ -20,7 +20,7 @@
  * | `/playoffs` HTML gzip                                          | ≤ 2.3 × baseline `playoffs`        |
  * | each `/teams/<slug>` HTML gzip (Roster + Player stats sections)  | ≤ 6.0 × baseline `teams`           |
  * | `/leaders` HTML gzip                                           | ≤ 2.7 × baseline `standings`       |
- * | Worker gzip (`build:cloudflare`)                               | ≤ baseline + 1000 KB               |
+ * | Worker gzip (`build:cloudflare`)                               | ≤ baseline + 1300 KB               |
  *
  * THE SOUTHERN CALIFORNIA AMENDMENT (DESIGN §24), measured 2026-10-06. The 99-team, nine-league
  * build crossed nine lines of this table (the Worker among them) and came within 1 % of a tenth
@@ -54,6 +54,11 @@
  *      first-load JS line (the region switcher added no client module; the deltas are in the
  *      first-load comment below).
  *   3. The same numbers are in each check()'s comment below, in this table, and in DESIGN §24.6.
+ *
+ * THE GAME BOX SCORE AMENDMENT (2026-10-24, DESIGN §24.6): the Worker line alone, by the same rule
+ * as the amendment above (measured bytes plus about 10 %, rounded to 100 KB). The box scores the game
+ * pages show (data/player-stats.json `games`) are bundled with the rest of that file; see the
+ * Worker check's comment for the measurement.
  *   The design review's estimates (`/` 3.3–3.5 ×, `/teams` 6.5 ×, `/standings` 1.5 ×, `/schedule`
  *   0.75 ×, `/leaders` 2.4 ×) were estimates; the multipliers above are from the measurement.
  *
@@ -233,7 +238,18 @@ if (existsSync(WORKER_BUNDLE)) {
   if (baseline.workerGzip == null) {
     rows.push(`info Worker gzip ${fmt(total)} over ${count} files (no baseline: reported only)`);
   } else {
-    // baseline + 1000 KB since 2026-10-06 (it was + 600 KB; DESIGN §24.6). `pnpm build:cloudflare`
+    // baseline + 1300 KB since 2026-10-24 (it was + 1000 KB; DESIGN §24.6). The game pages' box
+    // scores (846 of them, 4,811 player lines, in data/player-stats.json `games`) are 57,945 B of
+    // gzip -9 JSON, and the player-stats chunk of `pnpm build:cloudflare` (bundle/_next/static/
+    // player-stats-view-*.js) measured 147,806 B with them. The Worker measured 2,486,508 B over 246
+    // files, over the old 2,449,651 B line, and without them it would have been about 2,428,000 B
+    // (99 %): ordinary data growth since 2026-10-06 (that chunk was 74,707 B of player stats then)
+    // had all but used the old allowance. Before the line moved, the box scores were made smaller
+    // (no team totals, 8-hex-digit row digests: 158,233 B → 147,806 B for the chunk). The new
+    // allowance is the measured bytes plus about 10 %, rounded to 100 KB: baseline + 1300 KB =
+    // 2,756,851 B (90 % used).
+    //
+    // baseline + 1000 KB from 2026-10-06 (it was + 600 KB; DESIGN §24.6). `pnpm build:cloudflare`
     // measured 2,245,128 B gzip over 237 files (8,417,439 B raw), over the old 2,040,051 B line. The
     // five-league tree (commit 43807a3) built the same way the same day measured 1,916,727 B over 236
     // files (94 % of the old line; 1805.5 KB on 2026-10-04), so the amendment added 328,401 B, and
@@ -247,7 +263,7 @@ if (existsSync(WORKER_BUNDLE)) {
     // limits/, read 2026-10-06) is 64 MiB UNCOMPRESSED on both the Free and the Paid plan, and the
     // page says there is no compressed size limit (gzip is shown for reference only), so this line is
     // our own guard against bundle growth, not the platform's: 8.0 MiB raw is 13 % of 64 MiB.
-    check(`Worker gzip (${count} files)`, total, baseline.workerGzip + 1000 * KB, 'baseline + 1000 KB');
+    check(`Worker gzip (${count} files)`, total, baseline.workerGzip + 1300 * KB, 'baseline + 1300 KB');
   }
 } else if (workerOnly) {
   failures.push(`${WORKER_BUNDLE} missing — run \`pnpm build:cloudflare\` first`);
