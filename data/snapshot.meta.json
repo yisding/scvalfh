@@ -1,13 +1,13 @@
 {
   "cifssCrossCheck": {
-    "agreements": 677,
+    "agreements": 678,
     "cifssOnlyScored": 0,
-    "compared": 683,
+    "compared": 684,
     "conflicts": 6,
-    "notOnMaxPreps": 2
+    "notOnMaxPreps": 3
   },
   "commitSummary": "SCVAL +0 finals · BVAL +0 · PCAL +0 · MCAL +0 · EAL +0 · Sunset +0 · City +0 · North +0 · Metro +0 · LA +0",
-  "contentHash": "00b1195381f812bc3b849b95fb3ab4fba8b3abf8c4abb53e379783abb0ae58b1",
+  "contentHash": "a7df947f54db24cfe234a420cc36c7c840ba586270ad3bf0c636330368a59d1d",
   "counts": {
     "byLeague": {
       "bval": {
@@ -95,7 +95,7 @@
     "conflicts": 4,
     "sbliveOnlyScored": 8
   },
-  "fetchedAt": "2026-10-25T09:30:36.850Z",
+  "fetchedAt": "2026-10-25T17:24:25.698Z",
   "leagues": [
     {
       "backfilled": 1,
@@ -1048,7 +1048,7 @@
     },
     {
       "label": "cifsshome.org San Diego Section field hockey",
-      "rowCount": 660,
+      "rowCount": 670,
       "status": "ok"
     },
     {
