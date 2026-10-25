@@ -1,13 +1,13 @@
 {
   "cifssCrossCheck": {
-    "agreements": 676,
+    "agreements": 677,
     "cifssOnlyScored": 0,
-    "compared": 682,
+    "compared": 683,
     "conflicts": 6,
     "notOnMaxPreps": 2
   },
-  "commitSummary": "SCVAL +0 finals · BVAL +0 · PCAL +0 · MCAL +0 · EAL +0 · Sunset +0 · City +1 · North +1 · Metro +0 · LA +0",
-  "contentHash": "351809f61101f38ad98056b89a83021cca6c4a87de6662272b9c8c90b3a683cd",
+  "commitSummary": "SCVAL +0 finals · BVAL +0 · PCAL +0 · MCAL +0 · EAL +0 · Sunset +0 · City +0 · North +0 · Metro +0 · LA +0",
+  "contentHash": "00b1195381f812bc3b849b95fb3ab4fba8b3abf8c4abb53e379783abb0ae58b1",
   "counts": {
     "byLeague": {
       "bval": {
@@ -26,22 +26,22 @@
       },
       "eal": {
         "backfilled": 0,
-        "finals": 41,
+        "finals": 42,
         "games": 44,
         "leagueGames": 30,
         "teams": 6
       },
       "independents": {
         "backfilled": 0,
-        "finals": 57,
+        "finals": 58,
         "games": 59,
         "leagueGames": 21,
         "teams": 5
       },
       "mcal": {
         "backfilled": 0,
-        "finals": 89,
-        "games": 91,
+        "finals": 90,
+        "games": 92,
         "leagueGames": 72,
         "teams": 9
       },
@@ -67,7 +67,7 @@
         "teams": 7
       },
       "scval": {
-        "backfilled": 2,
+        "backfilled": 1,
         "finals": 152,
         "games": 161,
         "leagueGames": 98,
@@ -75,27 +75,27 @@
       },
       "sunset": {
         "backfilled": 0,
-        "finals": 104,
+        "finals": 105,
         "games": 107,
         "leagueGames": 36,
         "teams": 8
       }
     },
-    "finals": 831,
-    "games": 912,
+    "finals": 833,
+    "games": 913,
     "leagueGames": 550,
-    "mismatches": 28,
+    "mismatches": 27,
     "pending": 4,
     "teams": 102
   },
   "crossCheck": {
-    "agreements": 236,
-    "backfilled": 5,
-    "compared": 265,
+    "agreements": 237,
+    "backfilled": 4,
+    "compared": 263,
     "conflicts": 4,
-    "sbliveOnlyScored": 7
+    "sbliveOnlyScored": 8
   },
-  "fetchedAt": "2026-10-24T17:11:55.031Z",
+  "fetchedAt": "2026-10-25T09:30:36.850Z",
   "leagues": [
     {
       "backfilled": 1,
@@ -154,7 +154,7 @@
     {
       "backfilled": 0,
       "countedFinals": 48,
-      "finalsDelta": 1,
+      "finalsDelta": 0,
       "id": "city",
       "missingPast": 0,
       "reasons": [],
@@ -163,7 +163,7 @@
     {
       "backfilled": 0,
       "countedFinals": 80,
-      "finalsDelta": 1,
+      "finalsDelta": 0,
       "id": "north-county",
       "missingPast": 0,
       "reasons": [],
@@ -193,7 +193,7 @@
   "requests": {
     "maxpreps": 131,
     "official": 8,
-    "sblive": 21
+    "sblive": 20
   },
   "sources": [
     {
@@ -483,7 +483,7 @@
     },
     {
       "label": "redwood schedule",
-      "rowCount": 25,
+      "rowCount": 26,
       "status": "ok"
     },
     {
@@ -513,7 +513,7 @@
     },
     {
       "label": "convent-sacred-heart schedule",
-      "rowCount": 19,
+      "rowCount": 20,
       "status": "ok"
     },
     {
@@ -912,11 +912,6 @@
       "status": "ok"
     },
     {
-      "label": "sblive scoreboard 2026-10-10",
-      "rowCount": 1,
-      "status": "ok"
-    },
-    {
       "label": "sblive scoreboard 2026-10-12",
       "rowCount": 9,
       "status": "ok"
@@ -948,7 +943,7 @@
     },
     {
       "label": "sblive scoreboard 2026-10-19",
-      "rowCount": 8,
+      "rowCount": 9,
       "status": "ok"
     },
     {
@@ -958,7 +953,7 @@
     },
     {
       "label": "sblive scoreboard 2026-10-21",
-      "rowCount": 15,
+      "rowCount": 12,
       "status": "ok"
     },
     {
@@ -993,7 +988,7 @@
     },
     {
       "label": "sblive glendora games",
-      "rowCount": 19,
+      "rowCount": 18,
       "status": "ok"
     },
     {
@@ -1058,16 +1053,16 @@
     },
     {
       "label": "ccs calendar",
-      "rowCount": null,
-      "status": "skipped"
+      "rowCount": 5,
+      "status": "ok"
     },
     {
       "label": "ccs bracket",
       "rowCount": null,
-      "status": "skipped"
+      "status": "ok"
     }
   ],
-  "today": "2026-10-24",
+  "today": "2026-10-25",
   "warnings": 40,
   "window": {
     "firstGame": "2026-08-12T17:15:00",
