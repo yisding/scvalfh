@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 import { shortDate, timeOfDayPT } from '../../lib/format';
 import { getTeamBySlug } from '../../lib/teams';
 import type { Game } from '../../lib/types';
@@ -69,12 +71,11 @@ function BoardSide({
   // outside the registry has its name as its shortName, so it never swaps.
   const swapShort = fullName.length > 27 && side.shortName !== fullName;
   const subLine = sub ?? (team ? null : NON_MEMBER_NOTE);
-  return (
-    <div
-      className={`flex min-w-0 items-center gap-3 py-3 md:gap-4 md:py-0 ${
-        align === 'away' ? 'md:justify-end md:text-right' : 'md:flex-row-reverse md:justify-end md:text-left'
-      }`}
-    >
+  const sideClass = `flex min-w-0 items-center gap-3 py-3 md:gap-4 md:py-0 ${
+    align === 'away' ? 'md:justify-end md:text-right' : 'md:flex-row-reverse md:justify-end md:text-left'
+  }`;
+  const body = (
+    <>
       {/* Two decorative monograms, one per breakpoint: 40 on a phone row, 56 on the wide board. */}
       <span className="inline-flex shrink-0 md:hidden">
         {team ? (
@@ -131,8 +132,27 @@ function BoardSide({
           <ScoreGlyph side={side} size="board" />
         </span>
       ) : null}
-    </div>
+    </>
   );
+  // A registry side is a tap target to its team page, like a team's tile or row everywhere else
+  // on the site; a school outside the registry has no page here (DESIGN §8) and stays inert. The
+  // board is aria-hidden (its sr-only sentence speaks for it), so the link is a pointer-only
+  // duplicate kept out of the tab order: the keyboard and screen-reader route to each team page
+  // is the pill row above the board (app/game/[id]/page.tsx), and a focusable link inside an
+  // aria-hidden subtree would be announced as nothing.
+  if (team) {
+    return (
+      <Link
+        href={`/teams/${team.slug}`}
+        prefetch={false}
+        tabIndex={-1}
+        className={`${sideClass} group -mx-2 rounded-chip px-2 text-inherit no-underline hover:bg-surface-2 md:-my-2 md:py-2`}
+      >
+        {body}
+      </Link>
+    );
+  }
+  return <div className={sideClass}>{body}</div>;
 }
 
 export function ScoreBoard({ game, home, away, className }: ScoreBoardProps) {
