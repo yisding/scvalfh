@@ -1,3 +1,4 @@
+import { getTeamPlayerStatsWithNotes } from '../../lib/player-stats';
 import SectionHeader from '../ui/SectionHeader';
 import { StatsTable } from '../teams/TeamPlayerStats';
 
@@ -35,11 +36,17 @@ export function GameStats({ model, className, lookup }: GameStatsProps) {
         {view.sides.map((side) => (
           <div key={side.key} className="min-w-0">
             {/* `side.key` is the team's slug (game-stats-view.ts): every side here is a registry
-                team, so its heading carries the route to that team's season stats. */}
+                team, so its heading carries the route to that team's page — to its season stats
+                when the team page has that section (it renders one exactly when the player-stats
+                file has the team, app/teams/[slug]/page.tsx), else to the page itself. */}
             <SectionHeader
               as="h3"
               kicker={side.name}
-              action={{ href: `/teams/${side.key}#player-stats`, label: 'Season stats' }}
+              action={
+                getTeamPlayerStatsWithNotes(side.key)
+                  ? { href: `/teams/${side.key}#player-stats`, label: 'Season stats' }
+                  : { href: `/teams/${side.key}`, label: 'Team page' }
+              }
             />
             {side.scoring ? (
               <StatsTable table={side.scoring} caption={`${side.name} scoring in this game`} />

@@ -478,8 +478,13 @@ describe('rendered rows and the scoreboard (GameRow, ScoreBoard: UI pass, league
     expect(html).toMatch(/<a[^>]*href="\/teams\/homestead"[^>]*tabindex="-1"|<a[^>]*tabindex="-1"[^>]*href="\/teams\/homestead"/);
     expect(html.match(/<a\b/g)?.length, 'only the registry side links').toBe(1);
     const both = renderToStaticMarkup(createElement(ScoreBoard, { game: final(2, 1) }));
-    expect(both).toContain('href="/teams/saint-francis"');
-    expect(both).toContain('href="/teams/homestead"');
+    const anchors = both.match(/<a\b[^>]*>/g) ?? [];
+    expect(anchors.map((a) => a.match(/href="([^"]+)"/)?.[1]).sort()).toEqual([
+      '/teams/homestead',
+      '/teams/saint-francis',
+    ]);
+    // Both sides, not just one, stay out of the tab order.
+    for (const a of anchors) expect(a).toContain('tabindex="-1"');
   });
 
   it('the game-log rule follows display.isNonLeague: a postseason game takes no NL rule', async () => {
