@@ -32,7 +32,7 @@ import {
 } from '../../../lib/history';
 import { dateWithYear, listWords } from '../../../lib/format';
 import { getDivision, getLeague, getSection, isIndependentLeague, regionOf } from '../../../lib/leagues';
-import type { LeagueId } from '../../../lib/types';
+import type { LeagueId, Team } from '../../../lib/types';
 
 /**
  * `/history/2025-26` (DESIGN §1.1, §3.9; SPEC §10.8) — last season's final standings, one section
@@ -112,6 +112,29 @@ const SPAN_CLASS: Record<number, string> = {
   8: 'lg:row-span-8',
 };
 
+const CHAMPION_CARD = 'sx-card grid grid-cols-[auto_minmax(0,1fr)] items-center gap-x-3 p-4 sm:p-5';
+
+/**
+ * A champion's card. A registry champion's whole card is a link to its team page, as the same
+ * school's row is in the standings table and the awards below (HistoryStandingsTable,
+ * AwardsBlock); a champion outside the registry has no page here, so its card stays inert.
+ */
+function ChampionCard({ team, children }: { team: Team | undefined; children: React.ReactNode }) {
+  const body = (
+    <>
+      {team ? <TeamMonogram team={team} size={40} /> : null}
+      <div className="col-start-2 min-w-0">{children}</div>
+    </>
+  );
+  return team ? (
+    <Link href={`/teams/${team.slug}`} prefetch={false} className={`${CHAMPION_CARD} sx-lift no-underline`}>
+      {body}
+    </Link>
+  ) : (
+    <div className={CHAMPION_CARD}>{body}</div>
+  );
+}
+
 function Champions({ leagueId }: { leagueId: LeagueId }) {
   const champions = getHistoryChampions(leagueId);
   if (champions.length === 0) return null;
@@ -122,19 +145,13 @@ function Champions({ leagueId }: { leagueId: LeagueId }) {
         return (
           // Monogram on the left spanning three short lines, so the pair is ~190px tall on a
           // phone instead of ~300 and the first standings row stays near the first screen.
-          <div
-            key={division}
-            className="sx-card grid grid-cols-[auto_minmax(0,1fr)] items-center gap-x-3 p-4 sm:p-5"
-          >
-            {team ? <TeamMonogram team={team} size={40} /> : null}
-            <div className="col-start-2 min-w-0">
-              <p className="m-0 text-micro font-medium text-ink-3">
-                {getDivision(division)?.label ?? division} champion
-              </p>
-              <p className="m-0 mt-0.5 text-lead text-ink sm:text-title">{historySchoolName(row.slug, row.name)}</p>
-              <p className="m-0 mt-0.5 text-meta text-ink-2">{row.leagueRecord} league record</p>
-            </div>
-          </div>
+          <ChampionCard key={division} team={team}>
+            <p className="m-0 text-micro font-medium text-ink-3">
+              {getDivision(division)?.label ?? division} champion
+            </p>
+            <p className="m-0 mt-0.5 text-lead text-ink sm:text-title">{historySchoolName(row.slug, row.name)}</p>
+            <p className="m-0 mt-0.5 text-meta text-ink-2">{row.leagueRecord} league record</p>
+          </ChampionCard>
         );
       })}
     </div>
@@ -320,14 +337,11 @@ function SectionBracketBlock({ id, bracket }: { id: BracketSectionId; bracket: S
           const { champion, final } = divisionChampion(d);
           const team = getTeamBySlug(champion.slug);
           return (
-            <div key={d.id} className="sx-card grid grid-cols-[auto_minmax(0,1fr)] items-center gap-x-3 p-4 sm:p-5">
-              {team ? <TeamMonogram team={team} size={40} /> : null}
-              <div className="col-start-2 min-w-0">
-                <p className="m-0 text-micro font-medium text-ink-3">{d.label} champion</p>
-                <p className="m-0 mt-0.5 text-lead text-ink sm:text-title">{sideName(champion)}</p>
-                <p className="m-0 mt-0.5 text-meta text-ink-2">{finalLine(final)}</p>
-              </div>
-            </div>
+            <ChampionCard key={d.id} team={team}>
+              <p className="m-0 text-micro font-medium text-ink-3">{d.label} champion</p>
+              <p className="m-0 mt-0.5 text-lead text-ink sm:text-title">{sideName(champion)}</p>
+              <p className="m-0 mt-0.5 text-meta text-ink-2">{finalLine(final)}</p>
+            </ChampionCard>
           );
         })}
       </div>

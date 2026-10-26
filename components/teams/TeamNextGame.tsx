@@ -55,7 +55,20 @@ function Opponent({ card }: { card: Exclude<NextCard, { kind: 'none' }> }) {
         {/* The space sits OUTSIDE the span: Chrome drops a trailing space inside an inline child
             when it builds an accessible name, which read "atSt. Ignatius…". */}
         <span className="block text-body text-ink">
-          <span className="text-ink-2">{card.versus}</span> {card.opponentName}
+          <span className="text-ink-2">{card.versus}</span>{' '}
+          {/* A registry opponent's name goes to its team page, like an opponent in the unbeaten list
+              (TeamUnbeaten); a school outside the registry has no page here. */}
+          {card.opponent ? (
+            <Link
+              href={`/teams/${card.opponent.slug}`}
+              prefetch={false}
+              className="text-ink no-underline hover:underline"
+            >
+              {card.opponentName}
+            </Link>
+          ) : (
+            card.opponentName
+          )}
         </span>
         {card.record ? (
           <span className="block text-meta text-ink-2">

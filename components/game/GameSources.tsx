@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 import { shootoutPhrases } from '../../lib/format';
 import { findDivision, findLeague } from '../../lib/leagues';
 import { shootoutGroupName, shootoutSectionOf } from '../ui/describe-game';
@@ -213,7 +215,18 @@ export function GameElsewhere({ model, className }: GameElsewhereProps) {
                 key={side.slug}
                 className="flex min-h-row-1 flex-wrap items-center gap-x-3 gap-y-2 px-4 py-2"
               >
-                <span className="mr-auto min-w-0 text-body text-ink">{side.shortName}</span>
+                {/* The school's name links to its team page, as the same short name does in FORM
+                    GOING IN above (FormGoingIn) and on every other team row. */}
+                <Link
+                  href={`/teams/${side.slug}`}
+                  prefetch={false}
+                  className="sx-action mr-auto min-w-0 gap-1 text-body text-accent no-underline hover:underline"
+                >
+                  <span className="truncate">{side.shortName}</span>
+                  <span aria-hidden="true" className="shrink-0 text-micro">
+                    &rsaquo;
+                  </span>
+                </Link>
                 <span className="flex flex-wrap gap-2">
                   {side.maxprepsUrl ? (
                     <ExternalLink

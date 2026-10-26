@@ -34,7 +34,13 @@ export function GameStats({ model, className, lookup }: GameStatsProps) {
       <div className="grid gap-6 md:grid-cols-2 md:gap-x-6">
         {view.sides.map((side) => (
           <div key={side.key} className="min-w-0">
-            <SectionHeader as="h3" kicker={side.name} />
+            {/* `side.key` is the team's slug (game-stats-view.ts): every side here is a registry
+                team, so its heading carries the route to that team's season stats. */}
+            <SectionHeader
+              as="h3"
+              kicker={side.name}
+              action={{ href: `/teams/${side.key}#player-stats`, label: 'Season stats' }}
+            />
             {side.scoring ? (
               <StatsTable table={side.scoring} caption={`${side.name} scoring in this game`} />
             ) : null}
