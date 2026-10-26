@@ -39,6 +39,7 @@
 
 import type { MissingOfficialResult, StandingContext } from '../../lib/data';
 import { monthDay, officialSourceFormat, ordinal, shortDate } from '../../lib/format';
+import { gameHref } from '../../lib/game-id';
 import {
   divisionHeading,
   getDivision,
@@ -124,6 +125,12 @@ export interface MissingRowView {
   text: string;
   /** `si.com reports A x-y B; not counted: <note>` when si.com has a score D2 did not publish. */
   sbliveNote: string | null;
+  /**
+   * The game page when a contest exists (score pending, live, postponed, or any row of a league with
+   * no official schedule), so the matchup links there as a listed game does everywhere else; null
+   * for a fixture no source has published.
+   */
+  href: string | null;
 }
 
 /** What the notes say about MaxPreps' own table for this division (SPEC §5.8, §10.3). */
@@ -415,6 +422,7 @@ function missingRowView(row: MissingOfficialResult, teams: readonly Team[], inde
       row.kind === 'missing' && row.sblive
         ? `si.com reports ${away} ${row.sblive.away}-${row.sblive.home} ${home}; not counted: ${row.sblive.note}`
         : null,
+    href: row.game ? gameHref(row.game.contestId) : null,
   };
 }
 
@@ -865,7 +873,8 @@ export interface LeaderLine {
   division: DivisionId;
   /** Division heading, or null for a single-division league. */
   heading: string | null;
-  teams: Array<{ name: string; record: string; pts: number }>;
+  /** `slug`: the team's page, for a caller that links the name (the /playoffs San Diego card). */
+  teams: Array<{ name: string; record: string; pts: number; slug?: TeamSlug }>;
   /** A tie at the top. */
   tiedAtTop: boolean;
 }

@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 import { getTeamBySlug } from '../../lib/data';
 import type {
   HistoryBracketDivision,
@@ -32,11 +34,10 @@ export interface HistoryBracketProps {
 function Line({ side, goals, won }: { side: HistoryBracketSide; goals: number | null; won: boolean }) {
   const team = getTeamBySlug(side.slug);
   const weight = won ? 'font-semibold text-ink' : 'font-normal text-ink-2';
-  return (
-    <span
-      className="flex items-center gap-2 py-1 pr-3 pl-2"
-      style={won ? { boxShadow: 'inset 2px 0 0 var(--sx-text)' } : undefined}
-    >
+  const lineClass = 'flex items-center gap-2 py-1 pr-3 pl-2';
+  const style = won ? { boxShadow: 'inset 2px 0 0 var(--sx-text)' } : undefined;
+  const body = (
+    <>
       <span className="sx-num w-5 shrink-0 text-right text-meta text-ink-3">{side.seed}</span>
       {team ? <TeamMonogram team={team} size={20} /> : <span className="inline-block w-5 shrink-0" />}
       {/* The registry's short name, as the live bracket draws it ("RBV", "San Dieguito"): five round
@@ -45,6 +46,25 @@ function Line({ side, goals, won }: { side: HistoryBracketSide; goals: number | 
       <span className={`sx-num shrink-0 text-meta ${weight}`}>
         {goals === null ? <MissingValue words="score not posted" /> : goals}
       </span>
+    </>
+  );
+  // The archive has no game pages, so a registry side's line is a tap target to its team page, as
+  // the same school's row is in the standings table and awards on this page. The card's lines are
+  // aria-hidden (its sr-only sentence speaks for it), so the link is a pointer-only duplicate kept
+  // out of the tab order; the keyboard route is the standings table's rows.
+  return team ? (
+    <Link
+      href={`/teams/${team.slug}`}
+      prefetch={false}
+      tabIndex={-1}
+      className={`${lineClass} sx-tap no-underline`}
+      style={style}
+    >
+      {body}
+    </Link>
+  ) : (
+    <span className={lineClass} style={style}>
+      {body}
     </span>
   );
 }

@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 import { monthDay } from '../../lib/format';
 import { getDivision, leagueOfDivision } from '../../lib/leagues';
 import type { DivisionId, OfficialFixture, TeamSlug } from '../../lib/types';
@@ -31,6 +33,28 @@ export interface TeamOfficialFixturesProps {
   today: string;
 }
 
+const ROW = 'flex min-h-row-1 items-center gap-3 px-gutter py-2 text-meta';
+
+/**
+ * One fixture row. A registry opponent's row is a link to its team page, as each row of the
+ * unbeaten list on the same page is (TeamUnbeaten); the row's sr-only sentence is the link's name.
+ * A fixture is not a game, so there is no game link for the team link to sit inside. A school
+ * outside the registry has no page here, so its row stays plain.
+ */
+function FixtureRow({ opponentSlug, children }: { opponentSlug: TeamSlug | null; children: React.ReactNode }) {
+  return (
+    <li className={opponentSlug ? undefined : ROW}>
+      {opponentSlug ? (
+        <Link href={`/teams/${opponentSlug}`} prefetch={false} className={`${ROW} sx-tap no-underline`}>
+          {children}
+        </Link>
+      ) : (
+        children
+      )}
+    </li>
+  );
+}
+
 export function TeamOfficialFixtures({
   fixtures,
   slug,
@@ -51,9 +75,9 @@ export function TeamOfficialFixtures({
             const { mineIsHome, versus, opponent, opponentName } = fixtureOpponent(fixture, { slug });
             const past = fixture.dateKey < today;
             return (
-              <li
+              <FixtureRow
                 key={`${fixture.dateKey}-${fixture.awayName}-${fixture.homeName}`}
-                className="flex min-h-row-1 items-center gap-3 px-gutter py-2 text-meta"
+                opponentSlug={opponent?.slug ?? null}
               >
                 <span className="sr-only">
                   {mineIsHome ? 'Home' : 'Away'} against{' '}
@@ -86,7 +110,7 @@ export function TeamOfficialFixtures({
                 >
                   {past ? 'No result' : 'Upcoming'}
                 </span>
-              </li>
+              </FixtureRow>
             );
           })}
         </ul>

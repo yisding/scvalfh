@@ -163,13 +163,15 @@ export function PinnedCard({
       aria-label={`My team: ${team.name}`}
     >
       <div className="flex h-11 shrink-0 items-center gap-2">
-        <TeamMonogram team={team} size={24} />
+        {/* The monogram is inside the link, as it is on every other team row and tile, so a tap
+            on the tile goes to the team page too. */}
         <Link
           href={`/teams/${team.slug}`}
           prefetch={false}
-          className="min-w-0 flex-1 truncate text-lead font-semibold text-ink no-underline hover:underline"
+          className="group flex min-w-0 flex-1 items-center gap-2 text-lead font-semibold text-ink no-underline"
         >
-          {team.name}
+          <TeamMonogram team={team} size={24} />
+          <span className="min-w-0 truncate group-hover:underline">{team.name}</span>
         </Link>
         <button id={UNPIN_ID} type="button" onClick={onUnpin} className="sx-pill shrink-0">
           Unpin<span className="sr-only"> {team.name}</span>

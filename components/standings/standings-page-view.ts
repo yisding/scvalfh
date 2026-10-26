@@ -104,6 +104,7 @@ export function leaderLine(division: DivisionId, heading: string | null): Leader
       name: teams.find((t) => t.id === s.teamId)?.shortName ?? s.slug,
       record: recordString(s.computed),
       pts: s.computed.pts,
+      slug: s.slug,
     })),
     tiedAtTop: top.length > 1,
   };
