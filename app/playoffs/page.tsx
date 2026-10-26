@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { Fragment } from 'react';
 
 import LeagueJumpLinks from '../../components/layout/LeagueJumpLinks';
 import LeagueSwitcher, { RegionSwitcher } from '../../components/layout/LeagueSwitcher';
@@ -567,6 +568,26 @@ function SectionPlayoffsBlock({
 }
 
 /**
+ * Team names as `listWords` words them ("A, B and C"), each one a link to its team page, as the
+ * same teams are in the NorCal leagues' rows on this page (PlayoffProjection) and the standings
+ * tables. A name with no slug prints as text.
+ */
+function TeamNames({ teams, conj }: { teams: ReadonlyArray<{ name: string; slug?: string }>; conj: 'and' | '&' }) {
+  return teams.map((team, i) => (
+    <Fragment key={team.slug ?? team.name}>
+      {i === 0 ? null : i === teams.length - 1 ? ` ${conj} ` : ', '}
+      {team.slug ? (
+        <Link href={`/teams/${team.slug}`} prefetch={false} className="text-inherit hover:underline">
+          {team.name}
+        </Link>
+      ) : (
+        team.name
+      )}
+    </Fragment>
+  ));
+}
+
+/**
  * One San Diego conference's card (`id=<league>`, the target of its chip and jump link): per division,
  * the table's leaders as things stand, and each team's playoff division from the Section's 2026 Divisions
  * sheet. Open Division teams are drawn from Division I at the end of the regular season, so the card
@@ -583,14 +604,21 @@ function SectionPlayoffsLeagueCard({ summary }: { summary: LeagueSummary }) {
           const leaders = leaderLine(d.id, d.heading);
           const teams = getTeams(d.id);
           const byDivision = (which: 'I' | 'II') =>
-            teams.filter((t) => ps.playoffDivisionOf[t.slug] === which).map((t) => t.shortName);
+            teams
+              .filter((t) => ps.playoffDivisionOf[t.slug] === which)
+              .map((t) => ({ name: t.shortName, slug: t.slug }));
           return (
             <div key={d.id} className="min-w-0">
               {d.heading ? <h4 className="m-0 text-body font-semibold text-ink">{d.heading}</h4> : null}
               <p className="mt-1 mb-0 text-meta text-ink-2">
-                {leaders.teams.length > 0
-                  ? `${listWords(leaders.teams.map((t) => t.name), '&')} ${leaders.teams.length === 1 ? 'leads' : 'lead'} the table, ${leaders.teams[0].pts} pts.`
-                  : 'No league results yet.'}{' '}
+                {leaders.teams.length > 0 ? (
+                  <>
+                    <TeamNames teams={leaders.teams} conj="&" />
+                    {` ${leaders.teams.length === 1 ? 'leads' : 'lead'} the table, ${leaders.teams[0].pts} pts.`}
+                  </>
+                ) : (
+                  'No league results yet.'
+                )}{' '}
                 <Link href={`/standings/${summary.id}#${d.id}`} prefetch={false} className="text-accent hover:underline">
                   Table <Arrow />
                 </Link>
@@ -600,7 +628,9 @@ function SectionPlayoffsLeagueCard({ summary }: { summary: LeagueSummary }) {
                   byDivision(which).length > 0 ? (
                     <div key={which} className="mt-1 flex flex-wrap gap-x-2">
                       <dt className="font-semibold text-ink">{`Division ${which}:`}</dt>
-                      <dd className="m-0 text-ink-2">{listWords(byDivision(which))}</dd>
+                      <dd className="m-0 text-ink-2">
+                        <TeamNames teams={byDivision(which)} conj="and" />
+                      </dd>
                     </div>
                   ) : null,
                 )}

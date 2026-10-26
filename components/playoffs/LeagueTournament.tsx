@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { Fragment } from 'react';
 
-import { placeWords, plural, scoreSentence } from '../../lib/format';
+import { listWords, placeWords, plural, scoreSentence } from '../../lib/format';
 import { gameHref } from '../../lib/game-id';
 import PlaceMark from '../ui/PlaceMark';
 import SectionHeader from '../ui/SectionHeader';
@@ -167,10 +167,33 @@ function SeedsTable({ view, leagueShort }: { view: TournamentView; leagueShort: 
 }
 
 function SlotText({ slot }: { slot: TournamentSlotView }) {
+  // A seat that names its team(s) prints exactly `listWords(shortNames, 'or')` (playoff-view
+  // slotView); each name then taps through to its team page, as the same teams do in the seeds
+  // table above. The line is aria-hidden (the game's sr-only sentence speaks for it), so these are
+  // pointer-only duplicates kept out of the tab order; the keyboard route is the seeds table's rows.
+  // Any other text (a rule, "Play-in winner (A or B)") stays plain.
+  const names = slot.teams.map((team) => team.shortName);
+  const linked = names.length > 0 && slot.text === listWords(names, 'or');
   return (
     <span className="min-w-0">
       {slot.seed !== null ? <span className="sx-num mr-1.5 text-meta text-ink-3">{slot.seed}</span> : null}
-      <span className={slot.tbd || slot.teams.length === 0 ? 'text-ink-2' : 'text-ink'}>{slot.text}</span>
+      <span className={slot.tbd || slot.teams.length === 0 ? 'text-ink-2' : 'text-ink'}>
+        {linked
+          ? slot.teams.map((team, i) => (
+              <Fragment key={team.slug}>
+                {i === 0 ? null : i === slot.teams.length - 1 ? ' or ' : ', '}
+                <Link
+                  href={`/teams/${team.slug}`}
+                  prefetch={false}
+                  tabIndex={-1}
+                  className="text-ink no-underline hover:underline"
+                >
+                  {team.shortName}
+                </Link>
+              </Fragment>
+            ))
+          : slot.text}
+      </span>
     </span>
   );
 }

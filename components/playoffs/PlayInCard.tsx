@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { Fragment } from 'react';
 
 import { recordString, scoreSentence } from '../../lib/format';
 import { gameHref } from '../../lib/game-id';
@@ -71,16 +72,30 @@ function Side({ side, align }: { side: PlayInSide; align: 'start' | 'end' }) {
       </span>
     );
   }
-  return (
-    <span className={row}>
+  const body = (
+    <>
       {rest.length === 0 ? (
         <TeamMonogram team={first.team} size={28} />
       ) : (
         <span className="inline-block size-7 shrink-0" aria-hidden="true" />
       )}
       <span className="min-w-0">
-        <span className="block text-body text-ink md:truncate">
-          {side.contenders.map((c) => c.team.shortName).join(' or ')}
+        <span className="block text-body text-ink group-hover/side:underline md:truncate">
+          {rest.length === 0
+            ? first.team.shortName
+            : side.contenders.map((c, i) => (
+                <Fragment key={c.team.slug}>
+                  {i > 0 ? ' or ' : null}
+                  <Link
+                    href={`/teams/${c.team.slug}`}
+                    prefetch={false}
+                    tabIndex={-1}
+                    className="text-ink no-underline hover:underline"
+                  >
+                    {c.team.shortName}
+                  </Link>
+                </Fragment>
+              ))}
         </span>
         <span className="block text-meta text-ink-2">
           {seat}
@@ -102,7 +117,25 @@ function Side({ side, align }: { side: PlayInSide; align: 'start' | 'end' }) {
           ) : null}
         </span>
       </span>
-    </span>
+    </>
+  );
+  // Each contender taps through to its team page, as the same teams do in the projection and
+  // tournament tables on these pages. The pairing is aria-hidden (the card's sr-only sentence speaks
+  // for it), so these links are pointer-only duplicates kept out of the tab order; the keyboard
+  // route to each team page is those tables' rows. A settled seat is one target, the whole side
+  // (tile, name and seat line, at least 24px tall per WCAG 2.5.8); a level seat links each name
+  // inside its "A or B" line.
+  return rest.length === 0 ? (
+    <Link
+      href={`/teams/${first.team.slug}`}
+      prefetch={false}
+      tabIndex={-1}
+      className={`${row} group/side text-ink no-underline`}
+    >
+      {body}
+    </Link>
+  ) : (
+    <span className={row}>{body}</span>
   );
 }
 

@@ -347,7 +347,13 @@ export function StandingsNotes({
                   <time dateTime={row.dateKey} className="sx-num text-ink">
                     {row.dateLabel}
                   </time>{' '}
-                  {row.matchup}
+                  {row.href ? (
+                    <Link href={row.href} prefetch={false} className="text-accent hover:underline">
+                      {row.matchup}
+                    </Link>
+                  ) : (
+                    row.matchup
+                  )}
                   {row.sbliveNote ? <span className="block text-meta text-ink-3">{row.sbliveNote}</span> : null}
                 </li>
               ))}

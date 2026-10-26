@@ -470,6 +470,23 @@ describe('rendered rows and the scoreboard (GameRow, ScoreBoard: UI pass, league
     expect(html).not.toMatch(/SCVAL school/);
   });
 
+  it('each registry side of the scoreboard taps through to its team page; a non-member side stays inert', async () => {
+    const { ScoreBoard } = await import('../../components/ui/ScoreBoard');
+    const html = renderToStaticMarkup(createElement(ScoreBoard, { game: nonMember() }));
+    expect(html, 'components/ui/ScoreBoard.tsx home side').toContain('href="/teams/homestead"');
+    // Out of the tab order: the board is aria-hidden, and the page's pill row is the keyboard route.
+    expect(html).toMatch(/<a[^>]*href="\/teams\/homestead"[^>]*tabindex="-1"|<a[^>]*tabindex="-1"[^>]*href="\/teams\/homestead"/);
+    expect(html.match(/<a\b/g)?.length, 'only the registry side links').toBe(1);
+    const both = renderToStaticMarkup(createElement(ScoreBoard, { game: final(2, 1) }));
+    const anchors = both.match(/<a\b[^>]*>/g) ?? [];
+    expect(anchors.map((a) => a.match(/href="([^"]+)"/)?.[1]).sort()).toEqual([
+      '/teams/homestead',
+      '/teams/saint-francis',
+    ]);
+    // Both sides, not just one, stay out of the tab order.
+    for (const a of anchors) expect(a).toContain('tabindex="-1"');
+  });
+
   it('the game-log rule follows display.isNonLeague: a postseason game takes no NL rule', async () => {
     const { gameLogRowClass } = await import('../../components/ui/GameRow');
     expect(gameLogRowClass(final(2, 1)), 'components/ui/GameRow.tsx league').not.toContain('sx-nonleague');
