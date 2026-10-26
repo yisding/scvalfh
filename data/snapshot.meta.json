@@ -7,7 +7,7 @@
     "notOnMaxPreps": 2
   },
   "commitSummary": "SCVAL +0 finals · BVAL +0 · PCAL +0 · MCAL +0 · EAL +0 · Sunset +0 · City +0 · North +0 · Metro +0 · LA +0",
-  "contentHash": "607171ec116c6211df168e36acd9b1d3cacc4d1c06b56c529951fbc6b43cd0b6",
+  "contentHash": "5fbf969add406fe7f6579814e0622242938bd91e99877d680fa506e2384b2349",
   "counts": {
     "byLeague": {
       "bval": {
@@ -34,7 +34,7 @@
       "independents": {
         "backfilled": 0,
         "finals": 59,
-        "games": 60,
+        "games": 61,
         "leagueGames": 21,
         "teams": 5
       },
@@ -47,15 +47,15 @@
       },
       "metro": {
         "backfilled": 0,
-        "finals": 90,
-        "games": 103,
-        "leagueGames": 31,
+        "finals": 91,
+        "games": 105,
+        "leagueGames": 32,
         "teams": 9
       },
       "north-county": {
         "backfilled": 1,
-        "finals": 233,
-        "games": 258,
+        "finals": 234,
+        "games": 259,
         "leagueGames": 103,
         "teams": 19
       },
@@ -69,21 +69,21 @@
       "scval": {
         "backfilled": 1,
         "finals": 152,
-        "games": 161,
+        "games": 162,
         "leagueGames": 98,
         "teams": 15
       },
       "sunset": {
         "backfilled": 0,
         "finals": 106,
-        "games": 108,
-        "leagueGames": 36,
+        "games": 110,
+        "leagueGames": 37,
         "teams": 8
       }
     },
-    "finals": 834,
-    "games": 915,
-    "leagueGames": 551,
+    "finals": 835,
+    "games": 920,
+    "leagueGames": 553,
     "mismatches": 27,
     "pending": 5,
     "teams": 102
@@ -95,7 +95,7 @@
     "conflicts": 4,
     "sbliveOnlyScored": 8
   },
-  "fetchedAt": "2026-10-26T10:39:30.810Z",
+  "fetchedAt": "2026-10-26T19:44:35.210Z",
   "leagues": [
     {
       "backfilled": 1,
@@ -238,7 +238,7 @@
     },
     {
       "label": "valley-christian schedule",
-      "rowCount": 22,
+      "rowCount": 23,
       "status": "ok"
     },
     {
@@ -268,7 +268,7 @@
     },
     {
       "label": "palo-alto schedule",
-      "rowCount": 20,
+      "rowCount": 21,
       "status": "ok"
     },
     {
@@ -593,7 +593,7 @@
     },
     {
       "label": "edison schedule",
-      "rowCount": 20,
+      "rowCount": 21,
       "status": "ok"
     },
     {
@@ -608,7 +608,7 @@
     },
     {
       "label": "huntington-beach schedule",
-      "rowCount": 25,
+      "rowCount": 26,
       "status": "ok"
     },
     {
@@ -618,7 +618,7 @@
     },
     {
       "label": "newport-harbor schedule",
-      "rowCount": 20,
+      "rowCount": 21,
       "status": "ok"
     },
     {
@@ -803,7 +803,7 @@
     },
     {
       "label": "sage-creek schedule",
-      "rowCount": 23,
+      "rowCount": 24,
       "status": "ok"
     },
     {
@@ -868,12 +868,12 @@
     },
     {
       "label": "el-capitan schedule",
-      "rowCount": 17,
+      "rowCount": 18,
       "status": "ok"
     },
     {
       "label": "granite-hills schedule",
-      "rowCount": 17,
+      "rowCount": 18,
       "status": "ok"
     },
     {
@@ -883,7 +883,7 @@
     },
     {
       "label": "southwest schedule",
-      "rowCount": 10,
+      "rowCount": 11,
       "status": "ok"
     },
     {
@@ -903,7 +903,7 @@
     },
     {
       "label": "harvard-westlake schedule",
-      "rowCount": 23,
+      "rowCount": 24,
       "status": "ok"
     },
     {
