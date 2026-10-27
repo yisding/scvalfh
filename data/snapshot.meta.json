@@ -1,13 +1,13 @@
 {
   "cifssCrossCheck": {
-    "agreements": 686,
+    "agreements": 687,
     "cifssOnlyScored": 1,
-    "compared": 692,
+    "compared": 693,
     "conflicts": 6,
     "notOnMaxPreps": 2
   },
-  "commitSummary": "SCVAL +2 finals · BVAL +0 · PCAL +2 · MCAL +0 · EAL +0 · Sunset +0 · City +0 · North +2 · Metro +1 · LA +0",
-  "contentHash": "4aa4b5896b1fbc2afa43c205df6a6f9a9a0c54517741a943747a82087dcae460",
+  "commitSummary": "SCVAL +0 finals · BVAL +0 · PCAL +0 · MCAL +0 · EAL +0 · Sunset +0 · City +0 · North +1 · Metro +0 · LA +0",
+  "contentHash": "48b6c500a7b8d915338e72f5004cf5c18a7d89e646f662a6986561abcfaecebc",
   "counts": {
     "byLeague": {
       "bval": {
@@ -41,7 +41,7 @@
       "mcal": {
         "backfilled": 0,
         "finals": 92,
-        "games": 92,
+        "games": 93,
         "leagueGames": 72,
         "teams": 9
       },
@@ -54,7 +54,7 @@
       },
       "north-county": {
         "backfilled": 1,
-        "finals": 237,
+        "finals": 238,
         "games": 259,
         "leagueGames": 103,
         "teams": 19
@@ -81,26 +81,26 @@
         "teams": 8
       }
     },
-    "finals": 847,
-    "games": 922,
+    "finals": 848,
+    "games": 923,
     "leagueGames": 554,
     "mismatches": 29,
-    "pending": 6,
+    "pending": 5,
     "teams": 102
   },
   "crossCheck": {
-    "agreements": 237,
+    "agreements": 238,
     "backfilled": 5,
-    "compared": 291,
+    "compared": 292,
     "conflicts": 3,
     "sbliveOnlyScored": 8
   },
-  "fetchedAt": "2026-10-27T10:08:16.816Z",
+  "fetchedAt": "2026-10-27T19:13:17.272Z",
   "leagues": [
     {
       "backfilled": 1,
       "countedFinals": 91,
-      "finalsDelta": 2,
+      "finalsDelta": 0,
       "id": "scval",
       "missingPast": 3,
       "reasons": [],
@@ -118,7 +118,7 @@
     {
       "backfilled": 3,
       "countedFinals": 37,
-      "finalsDelta": 2,
+      "finalsDelta": 0,
       "id": "pcal",
       "missingPast": 1,
       "reasons": [],
@@ -162,17 +162,17 @@
     },
     {
       "backfilled": 0,
-      "countedFinals": 82,
-      "finalsDelta": 2,
+      "countedFinals": 83,
+      "finalsDelta": 1,
       "id": "north-county",
-      "missingPast": 2,
+      "missingPast": 1,
       "reasons": [],
       "state": "fresh"
     },
     {
       "backfilled": 0,
       "countedFinals": 21,
-      "finalsDelta": 1,
+      "finalsDelta": 0,
       "id": "metro",
       "missingPast": 1,
       "reasons": [],
@@ -488,7 +488,7 @@
     },
     {
       "label": "tamalpais schedule",
-      "rowCount": 20,
+      "rowCount": 21,
       "status": "ok"
     },
     {
@@ -508,7 +508,7 @@
     },
     {
       "label": "marin-catholic schedule",
-      "rowCount": 19,
+      "rowCount": 20,
       "status": "ok"
     },
     {
@@ -1053,7 +1053,7 @@
     },
     {
       "label": "cifsshome.org San Diego Section field hockey",
-      "rowCount": 704,
+      "rowCount": 703,
       "status": "ok"
     },
     {
