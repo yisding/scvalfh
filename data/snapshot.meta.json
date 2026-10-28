@@ -1,32 +1,32 @@
 {
   "cifssCrossCheck": {
-    "agreements": 704,
-    "cifssOnlyScored": 1,
-    "compared": 710,
+    "agreements": 710,
+    "cifssOnlyScored": 3,
+    "compared": 716,
     "conflicts": 6,
     "notOnMaxPreps": 2
   },
-  "commitSummary": "SCVAL +4 finals · BVAL +4 · PCAL +1 · MCAL +0 · EAL +0 · Sunset +1 · City +4 · North +6 · Metro +0 · LA +0",
-  "contentHash": "2ab962e872718aec7c6abf9e0942a9fd7ca3e9c359cfb25634eeff6410e48a08",
+  "commitSummary": "SCVAL +0 finals · BVAL +2 · PCAL +0 · MCAL +0 · EAL +1 · Sunset -1 · City +2 · North +0 · Metro +0 · LA +0",
+  "contentHash": "b4513453b4faade5d79e2cb335611c505867bc163465975991b79d688b7cab6c",
   "counts": {
     "byLeague": {
       "bval": {
         "backfilled": 0,
-        "finals": 109,
+        "finals": 111,
         "games": 118,
         "leagueGames": 60,
         "teams": 12
       },
       "city": {
         "backfilled": 0,
-        "finals": 162,
+        "finals": 164,
         "games": 170,
         "leagueGames": 60,
         "teams": 12
       },
       "eal": {
         "backfilled": 0,
-        "finals": 42,
+        "finals": 43,
         "games": 44,
         "leagueGames": 30,
         "teams": 6
@@ -60,7 +60,7 @@
         "teams": 19
       },
       "pcal": {
-        "backfilled": 4,
+        "backfilled": 3,
         "finals": 60,
         "games": 63,
         "leagueGames": 41,
@@ -77,30 +77,30 @@
         "backfilled": 0,
         "finals": 108,
         "games": 110,
-        "leagueGames": 37,
+        "leagueGames": 36,
         "teams": 8
       }
     },
-    "finals": 868,
+    "finals": 873,
     "games": 922,
-    "leagueGames": 554,
-    "mismatches": 31,
-    "pending": 11,
+    "leagueGames": 553,
+    "mismatches": 29,
+    "pending": 6,
     "teams": 102
   },
   "crossCheck": {
-    "agreements": 226,
-    "backfilled": 6,
-    "compared": 284,
-    "conflicts": 3,
+    "agreements": 237,
+    "backfilled": 5,
+    "compared": 286,
+    "conflicts": 4,
     "sbliveOnlyScored": 6
   },
-  "fetchedAt": "2026-10-28T10:55:13.716Z",
+  "fetchedAt": "2026-10-28T19:19:51.721Z",
   "leagues": [
     {
       "backfilled": 1,
       "countedFinals": 95,
-      "finalsDelta": 4,
+      "finalsDelta": 0,
       "id": "scval",
       "missingPast": 3,
       "reasons": [],
@@ -108,17 +108,17 @@
     },
     {
       "backfilled": 0,
-      "countedFinals": 51,
-      "finalsDelta": 4,
+      "countedFinals": 53,
+      "finalsDelta": 2,
       "id": "bval",
-      "missingPast": 3,
+      "missingPast": 1,
       "reasons": [],
       "state": "fresh"
     },
     {
-      "backfilled": 4,
+      "backfilled": 3,
       "countedFinals": 38,
-      "finalsDelta": 1,
+      "finalsDelta": 0,
       "id": "pcal",
       "missingPast": 1,
       "reasons": [],
@@ -135,35 +135,37 @@
     },
     {
       "backfilled": 0,
-      "countedFinals": 28,
-      "finalsDelta": 0,
-      "id": "eal",
-      "missingPast": 1,
-      "reasons": [],
-      "state": "fresh"
-    },
-    {
-      "backfilled": 0,
-      "countedFinals": 37,
+      "countedFinals": 29,
       "finalsDelta": 1,
-      "id": "sunset",
+      "id": "eal",
       "missingPast": 0,
       "reasons": [],
       "state": "fresh"
     },
     {
       "backfilled": 0,
-      "countedFinals": 52,
-      "finalsDelta": 4,
+      "countedFinals": 36,
+      "finalsDelta": -1,
+      "id": "sunset",
+      "missingPast": 0,
+      "reasons": [
+        "1 Sunset result that was final in the last update is missing from MaxPreps now (1f555407-8f04-4f4c-b450-a966082727af); the table is computed without it."
+      ],
+      "state": "partial"
+    },
+    {
+      "backfilled": 0,
+      "countedFinals": 54,
+      "finalsDelta": 2,
       "id": "city",
-      "missingPast": 2,
+      "missingPast": 0,
       "reasons": [],
       "state": "fresh"
     },
     {
       "backfilled": 0,
       "countedFinals": 89,
-      "finalsDelta": 6,
+      "finalsDelta": 0,
       "id": "north-county",
       "missingPast": 1,
       "reasons": [],
@@ -992,8 +994,8 @@
       "status": "ok"
     },
     {
-      "label": "sblive del-mar games",
-      "rowCount": 10,
+      "label": "sblive el-capitan games",
+      "rowCount": 18,
       "status": "ok"
     },
     {
@@ -1018,7 +1020,7 @@
     },
     {
       "label": "los-gatos school calendar",
-      "rowCount": 0,
+      "rowCount": 1,
       "status": "ok"
     },
     {
@@ -1053,7 +1055,7 @@
     },
     {
       "label": "cifsshome.org San Diego Section field hockey",
-      "rowCount": 715,
+      "rowCount": 717,
       "status": "ok"
     },
     {
@@ -1068,7 +1070,7 @@
     }
   ],
   "today": "2026-10-28",
-  "warnings": 39,
+  "warnings": 41,
   "window": {
     "firstGame": "2026-08-12T17:15:00",
     "lastGame": "2026-10-30T19:00:00",
