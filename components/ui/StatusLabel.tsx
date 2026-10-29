@@ -66,9 +66,6 @@ function SourceMark({ display }: { display: Pick<GameDisplay, 'sourceMark'> }) {
  */
 const CHIP_WORD: Readonly<Record<string, string>> = { tournament: 'tourney' };
 
-/** The longest word, in letters, that one line of the lead column's postseason capsule holds. */
-export const CHIP_WORD_MAX = 9;
-
 /** The chip's printed words: `MCAL tournament` is `MCAL tourney`; every other tag is itself. */
 export function postseasonChipText(tag: string): string {
   return tag

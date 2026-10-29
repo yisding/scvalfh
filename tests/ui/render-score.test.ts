@@ -24,7 +24,7 @@ import {
   postseasonTagOf,
   signedMargin,
 } from '../../components/ui/describe-game';
-import { CHIP_WORD_MAX, GameChips, postseasonChipText } from '../../components/ui/StatusLabel';
+import { GameChips, postseasonChipText } from '../../components/ui/StatusLabel';
 import { getGames, getLeagueSummaries } from '../../lib/data';
 import { EN_DASH } from '../../lib/format';
 import { LEAGUES, findDivision, findLeague } from '../../lib/leagues';
@@ -442,8 +442,11 @@ describe('chips — league, postseason and source (SPEC §10.4)', () => {
   });
   it('prints no postseason chip word wider than one line of the 80px lead column (StatusLabel)', () => {
     // Every tag a league's games can carry (lib/classify.ts postseasonTag): its pairings', its own
-    // postseason's and the CCS chip. A word over CHIP_WORD_MAX letters broke inside itself there
-    // (MCAL / TOURNAMEN / T).
+    // postseason's and the CCS chip. One line of the capsule is the 80px column less 4px of padding
+    // a side, at 12px mono caps of 0.6em advance plus 0.06em tracking: nine letters. A longer word
+    // broke inside itself there (MCAL / TOURNAMEN / T).
+    const maxLetters = Math.floor((80 - 2 * 4) / (12 * (0.6 + 0.06)));
+    expect(maxLetters).toBe(9);
     const kindsOf = (league: (typeof LEAGUES)[number]): NonNullable<Game['postseason']>['kind'][] => {
       const ps = league.postseason;
       switch (ps.kind) {
@@ -465,7 +468,7 @@ describe('chips — league, postseason and source (SPEC §10.4)', () => {
     expect(tags).toContain('San Diego Section playoffs');
     for (const t of tags) {
       for (const word of postseasonChipText(t).split(' ')) {
-        expect(word.length, `"${word}" of the ${t} chip`).toBeLessThanOrEqual(CHIP_WORD_MAX);
+        expect(word.length, `"${word}" of the ${t} chip`).toBeLessThanOrEqual(maxLetters);
       }
     }
     expect(postseasonChipText('MCAL tournament')).toBe('MCAL tourney');
