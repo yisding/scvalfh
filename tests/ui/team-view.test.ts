@@ -669,6 +669,26 @@ describe('the NEXT card and the identity place line (UI pass, league-aware)', ()
     expect(checked).toBeGreaterThan(0);
   });
 
+  it('the Max tile reads as a total: final points with no games left, never points "still" to win', async () => {
+    const { TeamStatTiles } = await import('../../components/teams/TeamStatTiles');
+    // The corpus is mid-season, so every branch is forced on one team's view: a finished team
+    // (Cupertino, 12/12 on 2026-10-29), one with games left, and a league with no fixed schedule.
+    const base = data.getTeams()
+      .map((team) => view.buildTeamPageView(team.slug)!)
+      .find((v) => v.hasResults && v.context?.scheduled != null)!;
+    const ctx = base.context!;
+    const render = (context: typeof ctx) =>
+      textOf(renderToStaticMarkup(createElement(TeamStatTiles, { view: { ...base, context } })));
+    const finished = render({ ...ctx, counted: ctx.scheduled!, remaining: 0, maxPts: 2 });
+    expect(finished, 'components/teams/TeamStatTiles.tsx finished').toMatch(/Max\s*2\s*final league points/);
+    expect(finished, 'components/teams/TeamStatTiles.tsx finished').toContain('no league games left');
+    const open = render({ ...ctx, counted: ctx.scheduled! - 2, remaining: 2, maxPts: 8 });
+    expect(open, 'components/teams/TeamStatTiles.tsx games left').toMatch(/Max\s*8\s*most points possible/);
+    const unscheduled = render({ ...ctx, scheduled: null, remaining: null, maxPts: null });
+    expect(unscheduled, 'components/teams/TeamStatTiles.tsx no schedule').toContain('no fixed league schedule');
+    for (const text of [finished, open, unscheduled]) expect(text).not.toMatch(/still reachable/);
+  });
+
   it('the Splits card never prints 0-0-0 for a venue with no league games', async () => {
     const { TeamSplits } = await import('../../components/teams/TeamSplits');
     let empty = 0;
