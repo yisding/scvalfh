@@ -170,7 +170,7 @@ describe('identity lines (components/teams/team-view.ts identityLine)', () => {
 describe('league copy (components/teams/team-view.ts leagueCopy)', () => {
   it('end-of-season and bracket sentences by league', () => {
     const scval = view.leagueCopy('scval');
-    expect(scval.seasonEndSentence).toBe('The SCVAL league season ends Wed Oct 28 and the SCVAL crossover is Fri Oct 30.');
+    expect(scval.seasonEndSentence).toBe('The SCVAL league season ends Wed Oct 28 and the SCVAL crossover is Thu Oct 29 and Fri Oct 30.');
     expect(scval.bracketSentence).toBe('We will list a playoff game as soon as CCS publishes the bracket.');
     expect(view.leagueCopy('bval').seasonEndSentence).toBe(
       'The BVAL league season ends Fri Oct 30 and the BVAL play-in is Sat Oct 31.',
@@ -236,7 +236,7 @@ describe('postseason lines per kind (lib/data.ts getTeamPostseasonLine via team-
     }
     const si = view.buildTeamPageView('st-ignatius')!;
     expect(si.postseasonLine?.sentence, 'lib/data.ts SCVAL sentence').toBe(
-      'The SCVAL crossover and the 4th-place play-in are Fri Oct 30.',
+      'The SCVAL crossover and the 4th-place play-in are Thu Oct 29 and Fri Oct 30.',
     );
   });
 

@@ -18,6 +18,7 @@ import {
   ladderFactsFor,
   pairingNotesFor,
   type LeagueKeyDate,
+  type PairingView,
   type ProjectionRow,
 } from '../../components/playoffs/playoff-view';
 import Arrow from '../../components/ui/Arrow';
@@ -116,8 +117,12 @@ function resolveSeat(teamId: string) {
   return team ? { team, standing: getStandingFor(teamId) } : undefined;
 }
 
-/** One CCS league's dates on the CCS calendar: its crossover / play-in, from config pairings. */
-function leagueKeyDate(league: LeagueConfig): LeagueKeyDate | null {
+/**
+ * One CCS league's dates on the CCS calendar: its crossover / play-in, from config pairings. The row sits
+ * on the schedule's day (`date`); when a game the pairings matched is dated off that day (the 2026 SCVAL
+ * crossovers #1 and #3, Thu Oct 29), the detail says which, by seat labels, so the row stays true.
+ */
+function leagueKeyDate(league: LeagueConfig, played: readonly PairingView[]): LeagueKeyDate | null {
   if (league.postseason.kind !== 'ccs-ladder' || league.postseason.pairings.length === 0) return null;
   const pairings = league.postseason.pairings;
   const first = pairings[0];
@@ -128,7 +133,18 @@ function leagueKeyDate(league: LeagueConfig): LeagueKeyDate | null {
     const tail = at < 0 ? p.label : p.label.slice(at + 3);
     return `${tail[0].toUpperCase()}${tail.slice(1)}`;
   }))];
-  const detail = pairings.length === 1 ? `${first.label}.` : `${purposes.join('. ')}.`;
+  const moved = new Map<string, string[]>();
+  for (const p of played) {
+    const configured = pairings.find((c) => c.id === p.id);
+    if (!p.game || !configured || p.dateKey === configured.date) continue;
+    const seats = `${p.seats[0].label} v ${p.seats[1].label}`;
+    moved.set(p.dateKey, [...(moved.get(p.dateKey) ?? []), seats]);
+  }
+  const movedWords = [...moved.entries()]
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([dateKey, seats]) => ` ${listWords(seats)} ${seats.length === 1 ? 'is' : 'are'} ${shortDate(dateKey)}.`)
+    .join('');
+  const detail = `${pairings.length === 1 ? `${first.label}.` : `${purposes.join('. ')}.`}${movedWords}`;
   return { id: league.id, leagueShort: league.shortName, date: first.date, time: first.time, label, detail };
 }
 
@@ -275,8 +291,8 @@ export default function PlayoffsPage() {
   const seeded = bracketPublished && paths.length > 0;
   const pending = seeded ? pendingRounds(playoffs, paths) : [];
   const blocks = ccsLeagues.map(leagueBlock);
-  const leagueDates = ccsLeagues
-    .map((s) => leagueKeyDate(getLeague(s.id)))
+  const leagueDates = blocks
+    .map((b) => leagueKeyDate(b.config, b.pairings))
     .filter((d): d is LeagueKeyDate => d !== null);
 
   const chips = leagueChips();

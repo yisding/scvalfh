@@ -1763,7 +1763,11 @@ redirects.
   that. ⚠️ Special-case the Oct 30 crossover row (`DE ANZA #4 VS EL CAMINO #4`, `#1 v. #1` — `VS`/
   `v.` as alternate separators). Grid names are UPPERCASE/abbreviated; the prose Teams line uses
   mixed case (`Saint Ignatius`) — a normalization map is required. Windows: DA Mon/Wed Sep 9 →
-  Oct 26; EC Tue/Thu Sep 10 → Oct 27; plus the Fri Oct 30 crossover.
+  Oct 26; EC Tue/Thu Sep 10 → Oct 27; plus the Fri Oct 30 crossover. ⚠️ The crossover's MaxPreps
+  rows do not all sit on the grid's day: on 2026-10-29 MaxPreps had #1 v #1 (St. Ignatius at Mitty,
+  contestType 5) and #3 v #3 (Palo Alto at Valley Christian, contestType 4, venue "SCVAL Crossover
+  Game") on Thu Oct 29 and the other two on Fri Oct 30, so the pairings carry a `window` of Oct
+  29–30 (`PairingConfig.window`, lib/leagues.ts) and the tagger reads the window, not the day.
 - **Standings PDF:** 4 stacked blocks (DeAnza V, El Camino V, DeAnza JV, El Camino JV), row regex
   `/([A-Za-z .]+?)\s{2,}(\d+-\d+(?:-\d+)?)\s*$/`. ⚠️ The "Overall record" column is empty in the
   25-26 file. 2025-26 varsity final: DA — St. Ignatius 11-0-1, St. Francis 10-1-1, Los Altos
@@ -2524,7 +2528,8 @@ The normalized TypeScript model (`Team`, `Game`, `Standing`, `Snapshot`, `League
 `SourceId` etc.) lives in `lib/types.ts`; the snapshot is Zod-validated in
 `lib/snapshot-schema.ts` (schema version 2; a version-1 single-league file migrates in memory, a
 version-2 file written before a configured league existed gains that league on load, DESIGN §22.7, and a
-version-2 file whose games no longer classify under the current rules or registry is reclassified on load,
+version-2 file whose games no longer classify under the current rules or registry (a `countsFor`, a
+`leagueDivision` or a `postseason` tag that differs from what the config gives today) is reclassified on load,
 DESIGN §24.11).
 Load-bearing rules baked into it:
 

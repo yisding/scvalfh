@@ -56,7 +56,7 @@ import {
   standingsLabel,
 } from '../../lib/leagues';
 import { pinLabel } from '../../lib/pin-label';
-import { outcomesFor } from '../../lib/standings';
+import { outcomesFor, pairingDatesLabel } from '../../lib/standings';
 import type {
   DivisionId,
   Game,
@@ -361,7 +361,8 @@ export function leagueCopy(leagueId: LeagueId): TeamLeagueCopy {
     case 'ccs-ladder': {
       const first = ps.pairings[0];
       let after = '';
-      if (first?.tag === 'scval-crossover') after = ` and the ${league.shortName} crossover is ${shortDate(first.date)}`;
+      // 'is Thu Oct 29 and Fri Oct 30' when a crossover moved off the schedule's day (the pairings' window).
+      if (first?.tag === 'scval-crossover') after = ` and the ${league.shortName} crossover is ${pairingDatesLabel(ps.pairings)}`;
       else if (first?.tag === 'bval-play-in') after = ` and the ${league.shortName} play-in is ${shortDate(first.date)}`;
       return {
         ...base,

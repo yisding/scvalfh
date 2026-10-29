@@ -442,7 +442,7 @@ describe('data: postseason', () => {
   it('writes a team postseason line, and none for a team without results', () => {
     const sf = data.getTeamPostseasonLine('saint-francis')!;
     expect(sf.label).toBe('Automatic qualifier');
-    expect(sf.sentence).toBe('The SCVAL crossover and the 4th-place play-in are Fri Oct 30.');
+    expect(sf.sentence).toBe('The SCVAL crossover and the 4th-place play-in are Thu Oct 29 and Fri Oct 30.');
     expect(sf.href).toBe('/playoffs#scval');
     expect(sf.linkText).toBe('CCS playoffs');
     expect(data.getTeamPostseasonLine('leigh')).toBeNull();

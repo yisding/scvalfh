@@ -4172,7 +4172,8 @@ existing final as newly added: "SCVAL +50 finals"). The regenerated file was com
 but a transient feed failure during such a run would have dropped a league's published data. `loadSnapshot`
 now has a third upgrade beside v1 → v2 and "league added" (`needsReclassification` / `reclassify`,
 lib/snapshot-migrate.ts): when a v2 file's games no longer classify as written (a rule changed, or a team moved
-between divisions, as Bonita and Chaminade did in §24.10), every game is re-resolved and reclassified under the
+between divisions, as Bonita and Chaminade did in §24.10; since 2026-10-29 also a `postseason` tag that differs
+from the config's, as the SCVAL crossovers played Oct 29 did before their pairings had a window), every game is re-resolved and reclassified under the
 current config and the affected divisions' standings rows, cross-check rows, health counts, season windows and
 counts are recomputed by the pipeline's own engine; the other divisions' rows stay byte-identical, and the
 counts that need a clock or a feed (`previousCountedFinals`, `missingLeaguePast`, the feed and table states)

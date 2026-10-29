@@ -485,6 +485,22 @@ describe('the "rules changed" upgrade (a v2 file written under the flag-based Su
     );
   });
 
+  it('re-tags a game whose postseason tag is stale (a crossover played inside a widened pairing window)', () => {
+    // Before the SCVAL pairings had a window, a crossover played on Oct 29 was written with no tag (Mitty v
+    // St. Ignatius) or with MaxPreps' playoff flag read as a CCS game (Valley Christian v Palo Alto).
+    const crossovers = COMMITTED.games.filter((g) => g.postseason?.kind === 'scval-crossover');
+    expect(crossovers.length).toBeGreaterThan(0);
+    const [untagged, ...rest] = crossovers;
+    const games = COMMITTED.games.map((g): Game => {
+      if (g.contestId === untagged.contestId) return { ...g, postseason: null };
+      if (rest[0] && g.contestId === rest[0].contestId) return { ...g, postseason: { kind: 'ccs', leagueId: 'scval', via: 'contest-type-4' } };
+      return g;
+    });
+    const stale = { ...COMMITTED, games };
+    expect(needsReclassification(stale)).toBe(true);
+    expect(stableStringify(loadSnapshot(stale))).toBe(stableStringify(loadSnapshot(COMMITTED)));
+  });
+
   it('moves a game whose teams changed division (Bonita and Chaminade, Sunset → the LA independents)', () => {
     // Before DESIGN §24.10 the file held Bonita–Chaminade as a Sunset game.
     const games = COMMITTED.games.map((g): Game => (g.leagueDivision === 'independents' && g.postseason === null

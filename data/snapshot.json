@@ -51504,7 +51504,11 @@
       "isTimeTba": false,
       "leagueDivision": null,
       "otPeriods": 0,
-      "postseason": null,
+      "postseason": {
+        "kind": "scval-crossover",
+        "leagueId": "scval",
+        "via": "config-pairing"
+      },
       "provenance": {
         "contentChangedAt": "2026-10-29T11:12:20.383Z",
         "fetchedAt": "2026-10-29T19:25:26.511Z",
@@ -52007,9 +52011,9 @@
       "leagueDivision": null,
       "otPeriods": 0,
       "postseason": {
-        "kind": "ccs",
+        "kind": "scval-crossover",
         "leagueId": "scval",
-        "via": "contest-type-4"
+        "via": "config-pairing"
       },
       "provenance": {
         "contentChangedAt": "2026-10-26T19:44:35.210Z",
@@ -53932,7 +53936,7 @@
         "shortName": "SCVAL",
         "window": {
           "firstGame": "2026-08-24T16:00:00",
-          "lastGame": "2026-10-29T16:00:00",
+          "lastGame": "2026-10-28T18:00:00",
           "lastLeagueGame": "2026-10-28T18:00:00"
         }
       },

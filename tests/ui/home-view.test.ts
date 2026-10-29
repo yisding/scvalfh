@@ -276,7 +276,8 @@ describe('home panels (components/home/home-view.ts → LeaguePanel)', () => {
     expect(bval?.link?.href).toBe('/playoffs#bval');
     const scval = lead('scval', 'crossover', '2026-10-29');
     expect(`${scval?.lead} ${scval?.body}`, `${HV}: SCVAL crossover`).toBe(
-      'League play is over. The crossover games and the fourth-place play-in for SCVAL’s seventh automatic CCS berth are Fri Oct 30; the CCS seeding meeting is Mon Nov 2.',
+      // The pairings' window (lib/leagues.ts): two 2026 crossovers moved to Thu Oct 29, so both days are named.
+      'League play is over. The crossover games and the fourth-place play-in for SCVAL’s seventh automatic CCS berth are Thu Oct 29 and Fri Oct 30; the CCS seeding meeting is Mon Nov 2.',
     );
     const pcal = lead('pcal', 'playoffs', '2026-11-03');
     expect(`${pcal?.lead} ${pcal?.body}`, `${HV}: PCAL playoffs`).toBe(

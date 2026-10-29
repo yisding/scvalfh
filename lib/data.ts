@@ -53,6 +53,7 @@ import {
   leaguePairings,
   missingOfficialResults,
   outcomesFor,
+  pairingDatesLabel,
   playoffOutcomeLabel,
   sortStandings,
 } from './standings';
@@ -1064,7 +1065,8 @@ export function getTeamPostseasonLine(ref: string): TeamPostseasonLine | null {
       const playIn = ps.pairings.find((p) => p.tag === 'bval-play-in');
       let sentence: string;
       if (crossover) {
-        sentence = `The SCVAL crossover and the 4th-place play-in are ${shortDate(crossover.date)}.`;
+        // 'Thu Oct 29 and Fri Oct 30' in 2026: two of the four crossovers moved a day ahead of the schedule.
+        sentence = `The SCVAL crossover and the 4th-place play-in are ${pairingDatesLabel(ps.pairings)}.`;
       } else if (playIn && statuses.includes('play-in')) {
         sentence = `${playInClause(league, ps, playIn)}.`;
       } else if (statuses[0] === 'no-aq-route') {

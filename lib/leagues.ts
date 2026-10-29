@@ -290,7 +290,17 @@ export interface LadderRung {
 
 export interface PairingConfig {
   id: string;
+  /** The league's published date (SCVAL's schedule: Fri Oct 30; BVAL's: Sat Oct 31), YYYY-MM-DD. */
   date: string;
+  /**
+   * The dates, inclusive, a contest for this pairing may actually be played on when schools move it off
+   * `date` (SCVAL 2026: MaxPreps lists #1 Mitty v St. Ignatius and #3 Valley Christian v Palo Alto on Thu Oct 29
+   * and #2 and #4 on Fri Oct 30). A De Anza–El Camino game dated inside the window is this pairing's kind
+   * (lib/classify.ts rule 1) and seats the pairing (lib/standings.ts leaguePairings). Omitted ⇒ `date` alone.
+   * The copy that names the pairings' day ("The SCVAL crossover and the 4th-place play-in are …") reads the
+   * whole window (`pairingDatesLabel`); `date` stays the written schedule's day for the key-dates row.
+   */
+  window?: { readonly first: string; readonly last: string };
   time: string | null;
   seats: readonly [{ division: DivisionId; place: number }, { division: DivisionId; place: number }];
   seatLabels: readonly [string, string];
@@ -727,8 +737,13 @@ const SCVAL: LeagueConfig = {
       { divisions: '*', places: [6, 99], status: 'out', label: 'No automatic path',
         phrase: 'no automatic path', badge: 'No AQ', legend: '6th or lower — no automatic path' },
     ],
+    // The schedule's crossover day is Fri Oct 30. On 2026-10-29 MaxPreps had two of the four a day early:
+    // #1 Mitty v St. Ignatius and #3 Valley Christian v Palo Alto (the latter marked a playoff, contestType 4)
+    // on Thu Oct 29, #2 Los Gatos v Saint Francis and the #4 play-in Los Altos v Santa Clara on Fri Oct 30.
+    // The window takes either day; `date` stays the schedule's.
     pairings: [1, 2, 3, 4].map((seed) => ({
-      id: `scval-crossover-${seed}`, date: '2026-10-30', time: null, tag: 'scval-crossover' as const,
+      id: `scval-crossover-${seed}`, date: '2026-10-30', window: { first: '2026-10-29', last: '2026-10-30' },
+      time: null, tag: 'scval-crossover' as const,
       seats: [{ division: 'de-anza', place: seed }, { division: 'el-camino', place: seed }] as const,
       seatLabels: [`De Anza #${seed}`, `El Camino #${seed}`] as const, host: null,
       isPlayIn: seed === 4,
@@ -2103,6 +2118,17 @@ export function drawNumberOf(rules: LeagueRules, slug: TeamSlug): number {
   return n;
 }
 
+/** The dates a pairing's contest may be played on, inclusive: its `window`, else its `date` alone. */
+export function pairingWindow(p: PairingConfig): { first: string; last: string } {
+  return p.window ? { first: p.window.first, last: p.window.last } : { first: p.date, last: p.date };
+}
+
+/** true when a game dated `dateKey` (YYYY-MM-DD) falls inside the pairing's window. */
+export function inPairingWindow(p: PairingConfig, dateKey: string): boolean {
+  const w = pairingWindow(p);
+  return dateKey >= w.first && dateKey <= w.last;
+}
+
 /** Every status the league's ladder can give, in ladder order, deduped. */
 export function statusesOf(leagueId: LeagueId): readonly PlayoffStatus[] {
   return [...new Set(getLeague(leagueId).postseason.ladder.map((r) => r.status))];
@@ -2521,7 +2547,15 @@ export function assertLeagues(): void {
     }
     switch (ps.kind) {
       case 'ccs-ladder':
-        for (const p of ps.pairings) inWindow(p.date, `${p.id} date`);
+        for (const p of ps.pairings) {
+          inWindow(p.date, `${p.id} date`);
+          if (p.window) {
+            inWindow(p.window.first, `${p.id} window.first`);
+            inWindow(p.window.last, `${p.id} window.last`);
+            if (p.window.first > p.window.last) fail(`${p.id}: window.first is after window.last`);
+            if (p.date < p.window.first || p.date > p.window.last) fail(`${p.id}: date is outside its window`);
+          }
+        }
         break;
       case 'league-tournament':
         for (const r of ps.rounds) inWindow(r.date, `${l.id} round ${r.id}`);

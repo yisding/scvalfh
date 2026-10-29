@@ -140,6 +140,22 @@ describe('classify: SCVAL (contest-type evidence)', () => {
     expect(g.countsFor).toBeNull();
   });
 
+  it('tags a De Anza–El Camino game inside the crossover window (Oct 29) as the crossover, even when MaxPreps marks it a playoff', () => {
+    // 2026: Mitty v St. Ignatius (#1 v #1) was played Thu Oct 29, a day ahead of the schedule's Fri Oct 30.
+    const moved = game({ home: 'mitty', away: 'st-ignatius', hs: 1, as: 0, date: '2026-10-29', league: false });
+    expect(moved.postseason).toEqual({ kind: 'scval-crossover', leagueId: 'scval', via: 'config-pairing' });
+    expect(moved.countsFor).toBeNull();
+    // Valley Christian v Palo Alto (#3 v #3), also Oct 29, carries MaxPreps' playoff type: rule 1 still wins.
+    const flagged = game({
+      home: 'valley-christian', away: 'palo-alto', hs: 2, as: 1, date: '2026-10-29', league: false,
+      contestTypes: { home: 4, away: 4 },
+    });
+    expect(flagged.postseason).toEqual({ kind: 'scval-crossover', leagueId: 'scval', via: 'config-pairing' });
+    // A day before the window is not a crossover.
+    const early = game({ home: 'mitty', away: 'st-ignatius', hs: 1, as: 0, date: '2026-10-28', league: false });
+    expect(early.postseason).toBeNull();
+  });
+
   it('tags an Oct 31 Santa Teresa–Mt. Hamilton game as the BVAL play-in', () => {
     const g = game({ home: 'live-oak', away: 'gilroy', hs: 1, as: 0, date: '2026-10-31' });
     expect(g.postseason).toEqual({ kind: 'bval-play-in', leagueId: 'bval', via: 'config-pairing' });

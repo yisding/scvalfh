@@ -27,7 +27,7 @@
  *    sides share a conference.
  */
 
-import { CCS, LEAGUES } from './leagues';
+import { CCS, LEAGUES, inPairingWindow } from './leagues';
 import type { LeagueConfig } from './leagues';
 import { teamOfSide } from './teams';
 import type { DivisionId, Game, LeagueId, PostseasonTag, Team } from './types';
@@ -82,8 +82,10 @@ function sectionPlayoffsPair(
 
 /**
  * In order; first match wins:
- *  1. CONFIG PAIRING: game.dateKey === pairing.date, one side in each pairing division (any places), both sides
- *     in the pairing's league → { kind: pairing.tag, leagueId, via: 'config-pairing' }.
+ *  1. CONFIG PAIRING: game.dateKey inside the pairing's window (`PairingConfig.window`, else its `date`: SCVAL's
+ *     four crossovers Oct 29-30, BVAL's play-in Oct 31), one side in each pairing division (any places), both
+ *     sides in the pairing's league → { kind: pairing.tag, leagueId, via: 'config-pairing' }. Ahead of rule 2, so
+ *     a crossover MaxPreps marks as a playoff (Valley Christian v Palo Alto, Oct 29) is still the crossover.
  *  2. contestType 4 on either row → { kind, leagueId: the shared league or null, via: 'contest-type-4' }, where kind
  *     is 'mcal-tournament' when both sides are in one league whose postseason.kind is 'league-tournament';
  *     'league-postseason' when it is 'unbracketed-tournament' (the EAL's Super Regional); else 'ccs' when at least
@@ -112,7 +114,7 @@ export function postseasonTag(game: Game): PostseasonTag | null {
   // 1. a configured pairing (SCVAL crossover ×4, BVAL play-in)
   if (league && home && away && league.postseason.kind === 'ccs-ladder') {
     for (const pairing of league.postseason.pairings) {
-      if (pairing.date !== game.dateKey) continue;
+      if (!inPairingWindow(pairing, game.dateKey)) continue;
       const [a, b] = pairing.seats;
       const oneEach =
         (home.division === a.division && away.division === b.division) ||

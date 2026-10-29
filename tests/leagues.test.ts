@@ -400,12 +400,12 @@ describe('leagues: SCVAL strings are today’s, verbatim', () => {
     ]);
   });
 
-  it('keeps the Oct 30 crossover pairings and their labels', () => {
+  it('keeps the Oct 30 crossover pairings and their labels, played Oct 29 or 30', () => {
     if (scval.postseason.kind !== 'ccs-ladder') throw new Error('scval is a CCS ladder league');
     expect(
-      scval.postseason.pairings.map((p) => [p.id, p.date, p.seats, p.seatLabels, p.host, p.isPlayIn, p.label, p.tag]),
+      scval.postseason.pairings.map((p) => [p.id, p.date, p.window, p.seats, p.seatLabels, p.host, p.isPlayIn, p.label, p.tag]),
     ).toEqual([1, 2, 3, 4].map((seed) => [
-      `scval-crossover-${seed}`, '2026-10-30',
+      `scval-crossover-${seed}`, '2026-10-30', { first: '2026-10-29', last: '2026-10-30' },
       [{ division: 'de-anza', place: seed }, { division: 'el-camino', place: seed }],
       [`De Anza #${seed}`, `El Camino #${seed}`], null, seed === 4,
       seed === 4

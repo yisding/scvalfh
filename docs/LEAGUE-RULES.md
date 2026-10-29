@@ -76,7 +76,14 @@ label is "Co-champions".
 in each division are automatic qualifiers; fourth place plays in; the play-in loser and both
 fifth-place teams are submitted for at-large consideration; 6th and below have no automatic path.
 On **Fri Oct 30** the four De Anza places meet the four El Camino places (#1 v #1 … #4 v #4);
-#1 to #3 help CCS ordering and #4 v #4 is the play-in for the 7th automatic berth. The CCS
+#1 to #3 help CCS ordering and #4 v #4 is the play-in for the 7th automatic berth. In 2026 the
+schools played two of the four a day early: #1 St. Ignatius at Mitty and #3 Palo Alto at Valley
+Christian (MaxPreps' venue field reads "SCVAL Crossover Game", and it marks the game a playoff) are
+Thu Oct 29, #2 Saint Francis at Los Gatos and the #4 play-in Fri Oct 30. So each pairing in
+`lib/leagues.ts` keeps the schedule's `date` (Oct 30) and carries a `window` (Oct 29–30): a De Anza–El
+Camino game dated inside it is the crossover (`lib/classify.ts` rule 1, ahead of MaxPreps' playoff
+flag), the pairing card takes the game's own date, and a seat two level teams spanned (Mitty and
+Los Gatos, co-leaders of El Camino) narrows to the one the league paired. The CCS
 championship follows (entries due Nov 2, quarterfinals Nov 7, semifinals Nov 11, final Nov 14).
 
 **Official sources.** The two schedule grids as PDFs (De Anza and El Camino), read live every run and

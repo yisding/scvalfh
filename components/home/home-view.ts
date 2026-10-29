@@ -60,7 +60,7 @@ import {
 } from '../../lib/format';
 import { gameHref } from '../../lib/game-id';
 import { hasHistory } from '../../lib/history';
-import { outcomesFor, playoffOutcomeLabel, statusBadge } from '../../lib/standings';
+import { outcomesFor, pairingDatesLabel, playoffOutcomeLabel, statusBadge } from '../../lib/standings';
 import {
   CCS,
   REGIONS,
@@ -265,12 +265,11 @@ export function phaseLead(league: LeagueConfig, phase: SeasonPhase, today: strin
   if (phase === 'regular') return null;
 
   if (phase === 'crossover' && ps.kind === 'ccs-ladder') {
-    const crossover = ps.pairings[0];
+    // The pairings' day(s): 'Thu Oct 29 and Fri Oct 30' when a crossover moved off the schedule's day.
+    const when = pairingDatesLabel(ps.pairings) || shortDate(keyDates.endOfLeagueSeason);
     return {
       lead: 'League play is over.',
-      body: `The crossover games and the fourth-place play-in for ${short}’s ${ordinalWord(ps.autoBerths)} automatic CCS berth are ${shortDate(
-        crossover?.date ?? keyDates.endOfLeagueSeason,
-      )}; the CCS seeding meeting is ${shortDate(keyDates.seedingMeeting)}.`,
+      body: `The crossover games and the fourth-place play-in for ${short}’s ${ordinalWord(ps.autoBerths)} automatic CCS berth are ${when}; the CCS seeding meeting is ${shortDate(keyDates.seedingMeeting)}.`,
       link: { href: `/playoffs#${league.id}`, label: 'Who is in' },
     };
   }
@@ -559,9 +558,9 @@ function ccsLadderView(
   const beforeLeagueGames = phase === 'preseason' || phase === 'regular';
   let intro: string;
   if (crossover && beforeLeagueGames) {
-    intro = `Crossover and the 4-vs-4 play-in ${shortDate(crossover.date)}. Seeding meeting ${seeding}.`;
+    intro = `Crossover and the 4-vs-4 play-in ${pairingDatesLabel(ps.pairings)}. Seeding meeting ${seeding}.`;
   } else if (crossover && phase === 'crossover') {
-    intro = `League play is done. Crossover and the play-in are ${shortDate(crossover.date)}; the seeding meeting is ${seeding}.`;
+    intro = `League play is done. Crossover and the play-in are ${pairingDatesLabel(ps.pairings)}; the seeding meeting is ${seeding}.`;
   } else if (playIn && (beforeLeagueGames || phase === 'play-in')) {
     intro = `Play-in ${shortDate(playIn.date)}${playIn.time ? `, ${leagueClock(playIn.time)}` : ''}. Seeding meeting ${seeding}.`;
   } else {
