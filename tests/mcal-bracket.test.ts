@@ -150,7 +150,10 @@ describe('MCAL 2025 bracket, end to end with the 2025 results', () => {
     expect(p.games.map((g) => [slugsIn(g.away), slugsIn(g.home)])).toEqual([
       [[UN], [LW]], [[CS], [MC]], [[UN], [RW]], [[MC], [TM]], [[TM], [RW]],
     ]);
-    // One-goal results (University 1-0, Tamalpais 1-0, the 2-1 final that was really a shootout) carry the caveat.
-    expect(p.games.map((g) => g.note === SHOOTOUT_NOTE)).toEqual([true, false, false, true, true]);
+    // The caveat goes on a one-goal result MaxPreps does not mark as overtime (Tamalpais 1-0, and the 2-1 final
+    // that was really a shootout); University's 1-0 quarterfinal carries MaxPreps' overtime mark (an overtime
+    // goal), so it gets none (mayHideShootout).
+    expect(p.games.map((g) => g.game?.decider)).toEqual(['OT', 'REG', 'REG', 'REG', 'REG']);
+    expect(p.games.map((g) => g.note === SHOOTOUT_NOTE)).toEqual([false, false, false, true, true]);
   });
 });

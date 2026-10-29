@@ -56,9 +56,25 @@ export interface SixthPlaceDecision {
 type TournamentConfig = Extract<LeagueConfig['postseason'], { kind: 'league-tournament' }>;
 type Seeds = ReadonlyArray<{ seed: number; seat: CrossoverSeat }>;
 
-/** Rendered verbatim on every one-goal tournament result (SPEC §6.2). */
+/**
+ * Rendered on a one-goal tournament result MaxPreps does not mark as overtime (SPEC §6.2; `mayHideShootout`): a
+ * shootout after two overtimes is recorded by MaxPreps as a regulation score with the tally as the goals (Tamalpais
+ * 3-1 Marin Catholic, Oct 28, 2026, was 0-0; the 2025 final likewise), while a real overtime goal carries the OT
+ * decider. A game the league config names in `resultNotes` prints that sourced sentence instead.
+ */
 export const SHOOTOUT_NOTE =
   'MCAL tournament games tied after overtime are decided by a shootout, and MaxPreps may record the shootout as goals.';
+
+/**
+ * A final whose score may hide a shootout: decided by one goal and not marked overtime by MaxPreps (an overtime
+ * goal is a real goal; a shootout is entered as a regulation result). The margin rule misses a 3-1 shootout, which
+ * is what `resultNotes` is for.
+ */
+export function mayHideShootout(game: Pick<Game, 'status' | 'home' | 'away' | 'decider'>): boolean {
+  if (game.status !== 'final' || game.home.score === null || game.away.score === null) return false;
+  if (game.decider === 'OT' || game.decider === '2OT' || game.decider === 'SO' || game.decider === 'FORFEIT') return false;
+  return Math.abs(game.home.score - game.away.score) === 1;
+}
 /** Three-way tie for 5th whose two play-in teams' earlier meeting produced no winner (SPEC §6.2, verbatim). */
 export const EARLIER_MEETING_NOTE =
   'The higher draw number hosts because their earlier meeting did not produce a winner (MCAL Tie-Breaking Criteria: "or # if needed").';
@@ -248,10 +264,15 @@ const hasResult = (g: Game | null): g is Game =>
 
 /**
  * Attaches each bracket game's contest: an MCAL game tagged 'mcal-tournament' between the slot teams (unordered
- * pair), dated on or after the round date; the earliest such contest wins and is used once. A one-goal result
- * carries the shootout caveat.
+ * pair), dated on or after the round date; the earliest such contest wins and is used once. A result the league
+ * config sources in `resultNotes` carries that sentence; otherwise a one-goal result MaxPreps does not mark as
+ * overtime carries the shootout caveat (`mayHideShootout`).
  */
-export function matchTournamentGames(games: readonly Game[], bracket: readonly TournamentGame[]): TournamentGame[] {
+export function matchTournamentGames(
+  games: readonly Game[],
+  bracket: readonly TournamentGame[],
+  resultNotes: Readonly<Record<string, string>> = {},
+): TournamentGame[] {
   const used = new Set<string>();
   const candidates = games
     .filter((g) => g.postseason?.kind === 'mcal-tournament')
@@ -267,8 +288,8 @@ export function matchTournamentGames(games: readonly Game[], bracket: readonly T
     });
     if (!match) return { ...tg };
     used.add(match.contestId);
-    const oneGoal = hasResult(match) && Math.abs((match.home.score as number) - (match.away.score as number)) === 1;
-    return { ...tg, game: match, note: oneGoal ? SHOOTOUT_NOTE : tg.note };
+    const sourced = resultNotes[match.contestId];
+    return { ...tg, game: match, note: sourced ?? (mayHideShootout(match) ? SHOOTOUT_NOTE : tg.note) };
   });
 }
 
@@ -322,7 +343,7 @@ export function buildLeagueTournament(
       { kind: 'seed', seed: L, seat: [refOf(visitor, seeds)] },
       null,
     );
-    [playIn] = matchTournamentGames(games, [playIn]);
+    [playIn] = matchTournamentGames(games, [playIn], ps.resultNotes);
     const winner = winnerOf(playIn);
     if (winner !== null) {
       const idx = seeds.findIndex((s) => s.seed === L);
@@ -330,16 +351,18 @@ export function buildLeagueTournament(
     }
   }
 
-  const qfs = matchTournamentGames(games, quarterfinals(seeds, league));
+  const qfs = matchTournamentGames(games, quarterfinals(seeds, league), ps.resultNotes);
   const qfWinners = qfs.map(winnerWithSeed);
   const sfs = matchTournamentGames(
     games,
     semifinals(seeds, qfWinners.every((w) => w !== null) ? (qfWinners as Array<{ seed: number; slug: TeamSlug }>) : null, league),
+    ps.resultNotes,
   );
   const sfWinners = sfs.map(winnerWithSeed);
   const [final] = matchTournamentGames(
     games,
     [finalGame(sfWinners.every((w) => w !== null) ? (sfWinners as Array<{ seed: number; slug: TeamSlug }>) : null, league)],
+    ps.resultNotes,
   );
 
   const all = [...(playIn ? [playIn] : []), ...qfs, ...sfs, final];

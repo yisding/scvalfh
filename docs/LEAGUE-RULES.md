@@ -213,7 +213,8 @@ label; the table is "League table".
 
 **Points and order.** 3 for a win, 1 for a tie (MCAL Field Hockey Handbook, rev. 10/19/24, §7a);
 "the MCAL placement will be the order of team points" (§7a). There is no regular-season overtime
-(MCAL General Rules), so ties stand. If the season ends with games unplayed, the General Rules
+(Field Hockey Handbook §9, "there is no overtime in regular season play"; the General Rules have no
+overtime text), so ties stand. If the season ends with games unplayed, the General Rules
 replace points with winning percentage; the standings page notes this and will show that order if it
 happens.
 
@@ -260,8 +261,17 @@ sheet and the 2025 tournament use six, so the site follows the sheet and says so
 
 Play-in (only if needed) Fri Oct 23; quarterfinals Mon Oct 26; semifinals Wed Oct 28 (the
 lowest-ranked remaining seed at #1, the highest-ranked remaining of seeds 3-6 at #2, confirmed by the
-2025 bracket); final Fri Oct 30 at Tamalpais, all at 4:00 PM. A one-goal result of a tournament game
-carries the shootout caveat. Games dated **Oct 23 or later** between MCAL teams are tournament play
+2025 bracket); final Fri Oct 30 at Tamalpais, all at 4:00 PM. Tournament games tied after two
+overtimes go to a shootout (Handbook §9), and MaxPreps records the shootout tally as the score of a
+regulation game: a one-goal result MaxPreps does not mark as overtime carries the shootout caveat
+(`mayHideShootout`, lib/postseason.ts), an overtime goal (decider OT) carries none, and a result the
+config sources in `resultNotes` prints that sentence instead. 2026: Tamalpais 3-1 Marin Catholic
+(Wed Oct 28 semifinal) was 0-0 after two overtimes and a 3-1 shootout (Marin Independent Journal,
+Oct 28, 2026); the two overtime wins (Marin Catholic 2-1 Lick-Wilmerding, Redwood 1-0 at
+University) were overtime goals [V: Marin IJ]. The title rule's source is the MCAL General Rules,
+Pennants 1–3 (`https://www.mcalsports.org/Gen_rules/GeneralRules.pdf`): "If the winner of the playoffs
+is different than the regular season winner, they will also be awarded a pennant."
+Games dated **Oct 23 or later** between MCAL teams are tournament play
 and never count in the league table, unless a maintainer lists a rescheduled league game as an
 override.
 

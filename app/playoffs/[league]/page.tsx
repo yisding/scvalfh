@@ -160,7 +160,7 @@ export default async function LeagueTournamentPage({ params }: PageProps<'/playo
             <li>Last place: {ps.citations.lastSpot}.</li>
           </ul>
           <p>{ps.citations.qualifiersConflict}</p>
-          <p>{ps.titleNote}</p>
+          <p>{`${ps.titleNote} Source: ${ps.citations.pennant}.`}</p>
           {config.rules.citations.incomplete ? (
             <p className="text-meta text-ink-2">
               If the season ends with games unplayed: {config.rules.citations.incomplete}. The seeds above

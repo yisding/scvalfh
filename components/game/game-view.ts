@@ -6,7 +6,7 @@
  * implementation of the DESIGN §5.2 table, or straight from `renderScore()` (the season-series
  * sentence's `ended 2-2`). Nothing in this module PRINTS `game.home.score` / `game.away.score`;
  * the two null-guarded reads only decide which sentence is shown (`resultConflictNoteFor`'s level
- * check, and `isOneGoalFinal`, the MCAL shootout caveat), so a missing score cannot become `0-0`
+ * check, and `mayHideShootout`, the MCAL shootout caveat), so a missing score cannot become `0-0`
  * in a page title, an OG card or a `<meta name="description">` any more than it can in the body
  * (DESIGN §5.3, §10.9e).
  *
@@ -55,7 +55,7 @@ import {
   leagueSportWords,
   type LeagueConfig,
 } from '../../lib/leagues';
-import { SHOOTOUT_NOTE } from '../../lib/postseason';
+import { SHOOTOUT_NOTE, mayHideShootout } from '../../lib/postseason';
 import { SEASON_DISPLAY } from '../../lib/season';
 import type {
   BackfillProvenance,
@@ -658,15 +658,6 @@ function tournamentSlot(game: Game, league: LeagueConfig): TournamentGame | null
   return all.find((tg) => tg.game?.contestId === game.contestId) ?? null;
 }
 
-/** A one-goal final: a tournament shootout may be hiding in it (SPEC §6.2). */
-function isOneGoalFinal(game: Game): boolean {
-  return (
-    game.status === 'final' &&
-    game.home.score !== null &&
-    game.away.score !== null &&
-    Math.abs(game.home.score - game.away.score) === 1
-  );
-}
 
 interface PostseasonView {
   contextLabel: string;
@@ -682,7 +673,7 @@ function postseasonView(game: Game, league: LeagueConfig | null): PostseasonView
     const label = slot ? `${league.shortName} ${ROUND_WORD[slot.round]}` : league.postseason.name;
     const sentence = `${league.postseason.name} game — it does not count in the league table.`;
     const notes = [sentence];
-    const shootout = slot?.note ?? (isOneGoalFinal(game) ? SHOOTOUT_NOTE : null);
+    const shootout = slot?.note ?? (mayHideShootout(game) ? SHOOTOUT_NOTE : null);
     if (shootout) notes.push(shootout);
     return {
       contextLabel: label,

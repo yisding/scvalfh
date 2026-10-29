@@ -373,8 +373,15 @@ export type PostseasonConfig =
       rounds: readonly TournamentRoundConfig[];
       finalSite: { slug: TeamSlug; label: string };
       lastSpot: { place: number; rule: 'play-in-unless-h2h-sweep'; host: 'highest-draw-number' };
-      citations: { format: string; seeding: string; semifinal: string; lastSpot: string; qualifiersConflict: string };
+      citations: { format: string; seeding: string; semifinal: string; lastSpot: string; qualifiersConflict: string; pennant: string };
       titleNote: string;
+      /**
+       * A sourced sentence for one tournament game's result, by contest GUID, printed where the game's
+       * result is (the bracket row, the game page) in place of the generic shootout caveat: MaxPreps records
+       * a shootout's tally as the score and marks it a regulation result, so a press report is the only
+       * source that says a 3-1 was 0-0 after two overtimes (Tamalpais v Marin Catholic, Oct 28, 2026).
+       */
+      resultNotes: Readonly<Record<ContestId, string>>;
       sourceUrl: string;
     }
   | {
@@ -1122,7 +1129,7 @@ const MCAL: LeagueConfig = {
       pointsShort: 'MCAL Handbook §7a',
       order: `${MCAL_HB} §7a (“The MCAL placement will be the order of team points”)`,
       doubleRoundRobin: `${MCAL_HB} §8a (double round robin, 16 league games each)`,
-      overtime: 'MCAL General Rules (no regular-season overtime; ties stand)',
+      overtime: 'MCAL Field Hockey Handbook §9 (“there is no overtime in regular season play”; ties stand)',
       coChampions: `${MCAL_HB} §7a (equal points: co-MCAL Champions)`,
       stages: {
         'h2h-win-pct': `${MCAL_TB} step 1 (head-to-head winning percentage)`,
@@ -1162,8 +1169,16 @@ const MCAL: LeagueConfig = {
       semifinal: 'MCAL 2026 Play-off sheet (lowest-ranked remaining seed at #1, highest-ranked remaining of 3-6 at #2; confirmed by the 2025 bracket)',
       lastSpot: `${MCAL_TB} (6th place: a play-in unless one team won the head-to-head 2-0; the higher draw number hosts. A three-way tie for 5th: draw numbers place the 5th seed and the other two play in, hosted by the winner of their earlier meeting)`,
       qualifiersConflict: `${MCAL_HB} §8b says the top four qualify; the 2026 play-off sheet (and the 2025 tournament) use six. This site follows the 2026 sheet.`,
+      pennant: 'MCAL General Rules, Pennants 1–3 (“Pennants for varsity league champions will be presented at the conclusion of the playoffs … If the winner of the playoffs is different than the regular season winner, they will also be awarded a pennant.”)',
     },
     titleNote: 'The regular-season points leader is MCAL Champion. If a different team wins the tournament, it also receives a pennant.',
+    // Marin Independent Journal, Oct 28, 2026 ("The game was scoreless after regulation and two overtimes"; Tam "won 3-1 in
+    // the shootout"): MaxPreps, and so the snapshot, record the shootout tally as the score and the game as a regulation
+    // result (decider REG, no overtime), which the one-goal caveat cannot catch. The sentence stands in for the caveat.
+    resultNotes: {
+      '7bb048ba-9e33-4ad1-a743-2348c6637602':
+        'Level 0–0 after two overtimes; Tamalpais won the shootout 3–1, which MaxPreps records as the score (Marin Independent Journal, Oct 28, 2026).',
+    },
     sourceUrl: 'https://www.mcalsports.org/Playoffs/FieldHockeyPlayoffs_26.pdf',
   },
   phases: [
@@ -2668,6 +2683,11 @@ export function assertLeagues(): void {
         break;
       case 'league-tournament':
         for (const r of ps.rounds) inWindow(r.date, `${l.id} round ${r.id}`);
+        for (const [id, note] of Object.entries(ps.resultNotes)) {
+          if (!GUID_RE.test(id)) fail(`${l.id} resultNotes key ${id} is not a contest GUID`);
+          if (!note.trim() || !/\.$/.test(note.trim())) fail(`${l.id} resultNotes ${id}: a sourced sentence ending in a period`);
+        }
+        if (!ps.citations.pennant.trim()) fail(`${l.id}: citations.pennant names the title rule's source`);
         break;
       case 'unbracketed-tournament':
       case 'section-playoffs':

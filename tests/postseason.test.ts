@@ -6,6 +6,7 @@ import { getLeague } from '../lib/leagues';
 import {
   EARLIER_MEETING_NOTE, SHOOTOUT_NOTE, buildLeagueTournament, finalGame, matchTournamentGames, quarterfinals,
   seedsFromStandings, semifinals, sixthPlaceRule,
+  mayHideShootout,
 } from '../lib/postseason';
 import { getTeamBySlug } from '../lib/teams';
 import type { Game, Standing, TiebreakStage } from '../lib/types';
@@ -361,6 +362,29 @@ describe('buildLeagueTournament', () => {
     expect(p.status).toBe('complete');
     expect(p.games[4].game?.contestId).toBe(fin.contestId);
     expect(p.games[4].note).toBe(SHOOTOUT_NOTE);
+  });
+
+  it('attaches the shootout caveat only where a shootout may hide, and a sourced result note where config has one', () => {
+    // A one-goal regulation result may be a shootout MaxPreps entered as goals: the caveat.
+    const reg = game(TM, AW, 2, 1, '2026-10-30', { postseason: true });
+    expect(mayHideShootout(reg)).toBe(true);
+    // A one-goal result MaxPreps marks as overtime is an overtime goal (Redwood 1-0 at University, Oct 28, 2026): no caveat.
+    const ot: Game = { ...game(TM, AW, 1, 0, '2026-10-30', { postseason: true }), otPeriods: 1, isOt: true, decider: 'OT' };
+    expect(mayHideShootout(ot)).toBe(false);
+    // A two-goal result never carries the generic caveat, which is why config can source one.
+    const two = game(TM, AW, 3, 1, '2026-10-30', { postseason: true });
+    expect(mayHideShootout(two)).toBe(false);
+    const sourced: Game = { ...two, contestId: '7bb048ba-9e33-4ad1-a743-2348c6637602' };
+    const ps = MCAL.postseason;
+    if (ps.kind !== 'league-tournament') throw new Error('MCAL runs a tournament');
+    expect(ps.resultNotes[sourced.contestId]).toMatch(/^Level 0–0 after two overtimes; Tamalpais won the shootout 3–1/);
+    const seeds = seedsFromStandings(rows, MCAL);
+    const bracket = [finalGame([{ seed: 1, slug: TM }, { seed: 3, slug: AW }], MCAL)];
+    expect(matchTournamentGames([reg], bracket)[0].note).toBe(SHOOTOUT_NOTE);
+    expect(matchTournamentGames([ot], bracket)[0].note).toBeNull();
+    expect(matchTournamentGames([two], bracket)[0].note).toBeNull();
+    expect(matchTournamentGames([sourced], bracket, ps.resultNotes)[0].note).toBe(ps.resultNotes[sourced.contestId]);
+    expect(seeds).toHaveLength(6);
   });
 
   it('notes a 2-0 sweep that settles 6th', () => {

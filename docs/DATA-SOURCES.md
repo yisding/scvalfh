@@ -1807,7 +1807,15 @@ redirects.
     `FieldHockeyPlayoff_25.pdf` both return 404 (checked 2026-10-03). The league **does** publish an
     official 2025 all-league list: "2025 All-MCAL Field Hockey Team" at
     `https://www.mcalsports.org/FieldHockey.htm#FH25`. The MCAL card links it (`alsoPublished`) and
-    does not ingest it, because the schema has no awards-only state. No champion is stated.
+    does not ingest it, because the schema has no awards-only state. No champion is stated. In the
+    2026 tournament `FieldHockey.htm` fills its bracket in with W/L marks and some scores (it marks
+    "OT", never a shootout); the MCAL General Rules PDF
+    (`https://www.mcalsports.org/Gen_rules/GeneralRules.pdf`, modified 2026-10-13, read 2026-10-29)
+    is the source of the pennant rule (`citations.pennant`) and of playoff admission (Adults $10;
+    students, children and seniors $5; pre-sale on GoFan), and the Field Hockey Handbook §9 of the
+    no-regular-season-overtime rule and the tournament's two-overtimes-then-shootout format. MaxPreps
+    records a tournament shootout as a regulation score with the tally as goals (Tamalpais 3-1 Marin
+    Catholic, Oct 28, 2026, was 0-0 after two overtimes: Marin IJ), hence `resultNotes`.
   - **EAL** — `unavailable` (checked 2026-10-04). The EAL published no 2025-26 final standings of
     its own, and we found no EAL league website. The CIF Northern Section's field hockey page
     (`https://www.cifns.org/sports/fh/index`: guidelines and announcements; its standings panel is
