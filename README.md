@@ -1512,10 +1512,13 @@ Two `/leaders` boards per region weigh scoring by the defenses it came against
   matched only by si.com's own ids.
 - **The CCS playoff bracket doesn't exist until after entries close on Nov 2.** Before then,
   `/playoffs` shows a projection built from the by-laws' auto-qualifier rules and the standings
-  as they stand. From Nov 2 the site polls the CCS calendar and MaxPreps' tournament page for a
+  as they stand. From Oct 25 the site polls the CCS calendar and MaxPreps' tournament page for a
   published bracket; until CCS actually publishes one, the bracket section stays in its seeded
   projection state (it has never been exercised against a real published bracket — only against
-  synthetic test data).
+  synthetic test data). The page never promises a same-evening bracket: the data refresh runs twice
+  a day, so it says the games appear "after the next update". Where a round is played comes from
+  the CCS calendar's own words (quarterfinals at home sites, semifinals and finals at neutral
+  sites), which `confirmKeyDates` checks against the config every run.
 - **Roster detail depends on the coach.** As of 2026-10-02 (SCVAL) five programs publish grade, position
   and number on MaxPreps, three publish grade and number only, seven publish names only (Los
   Gatos' 58 names are the whole program, varsity and JV).

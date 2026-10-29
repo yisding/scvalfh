@@ -545,7 +545,14 @@ export interface CcsConfig {
   autoQualifiers: CcsAutoQualifiers;
   ccsDivisions: readonly { name: CcsDivisionName; seeds: readonly [number, number] }[];
   keyDates: CcsKeyDates;
-  highSeedHostsThrough: 'semifinals';
+  /**
+   * The last round the higher seed hosts; later rounds are at neutral sites CCS sets. From the CIF-CCS field
+   * hockey calendar (playoffs.ccsCalendar): 'CCS Quarterfinals at Home Sites', 'CCS Semfinals at Neutral Sites'
+   * [sic], 'CCS Finals at Neutral Site' (read 2026-10-29). In 2025 the semifinals were in fact played at the
+   * higher seed's field, so copy quotes the calendar and shows each game's own site once MaxPreps lists it;
+   * lib/sources/ccs.ts confirmKeyDates reports a calendar whose site words disagree with this value.
+   */
+  highSeedHostsThrough: 'quarterfinals' | 'semifinals';
   bracketUrl: string;
   tournament: { id: string; division1BracketId: string; division2BracketId: string };
   pollFrom: string;
@@ -1840,7 +1847,7 @@ export const CCS: CcsConfig = {
     quarterfinals: '2026-11-07', semifinals: '2026-11-11', finals: '2026-11-14',
     evaluationMeeting: '2026-11-19T16:00:00', endOfLeagueSeason: '2026-10-31',
   },
-  highSeedHostsThrough: 'semifinals',
+  highSeedHostsThrough: 'quarterfinals',
   // CCS_BRACKET_URL is imported from lib/season.ts, which keeps it as a literal (season stays a dependency-free leaf).
   bracketUrl: CCS_BRACKET_URL,
   tournament: {

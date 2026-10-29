@@ -348,7 +348,7 @@ export default function PlayoffsPage() {
                 <time dateTime={keyDates.seedingMeeting.slice(0, 10)}>
                   {shortDate(keyDates.seedingMeeting)}
                 </time>
-                , and it appears here that evening.
+                ; the games appear here as MaxPreps lists them, after the next update.
               </>
             )}
           </p>
@@ -518,8 +518,10 @@ export default function PlayoffsPage() {
           ) : (
             <p className="m-0 max-w-prose text-body text-ink-2">
               CCS seeds {listWords(ccsDivisionLabels(playoffs))} at the {shortDate(keyDates.seedingMeeting)} meeting;
-              the bracket appears here that evening.{' '}
-              <ExternalLink href={bracketUrl}>Official CCS bracket</ExternalLink> &mdash; not yet posted.
+              the games appear here as MaxPreps lists them, after the next update.{' '}
+              <ExternalLink href={bracketUrl}>Official CCS bracket</ExternalLink>
+              {/* "not yet posted" only while the MaxPreps tournament page still says so (playoffs.bracketPublished). */}
+              {bracketPublished ? null : <> &mdash; not yet posted.</>}
             </p>
           )}
         </section>

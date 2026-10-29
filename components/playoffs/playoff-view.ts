@@ -40,8 +40,8 @@ import {
   shortDate,
   timeOfDayPT,
 } from '../../lib/format';
-import { divisionHeading, getDivision, getLeague, ladderFor, leagueOfDivision } from '../../lib/leagues';
-import type { LeagueConfig, OutsideTournamentConfig } from '../../lib/leagues';
+import { CCS, divisionHeading, getDivision, getLeague, ladderFor, leagueOfDivision } from '../../lib/leagues';
+import type { CcsConfig, LeagueConfig, OutsideTournamentConfig } from '../../lib/leagues';
 import type {
   CcsKeyDates,
   CrossoverSeat,
@@ -109,12 +109,51 @@ export interface LeagueKeyDate {
   detail: string;
 }
 
+type CcsRound = 'quarterfinals' | 'semifinals' | 'finals';
+const CCS_ROUNDS: readonly CcsRound[] = ['quarterfinals', 'semifinals', 'finals'];
+
+/** Where a CCS round is played, from config: the higher seed's field through `highSeedHostsThrough`, neutral after. */
+export function ccsRoundSite(round: CcsRound, hostsThrough: CcsConfig['highSeedHostsThrough'] = CCS.highSeedHostsThrough): 'home' | 'neutral' {
+  return CCS_ROUNDS.indexOf(round) <= CCS_ROUNDS.indexOf(hostsThrough) ? 'home' : 'neutral';
+}
+
+/**
+ * The round's detail line: who hosts, with the calendar's own words, and for a neutral round that each game's
+ * site appears once MaxPreps lists it (the calendar names no venue).
+ */
+function roundSiteDetail(round: CcsRound, hostsThrough: CcsConfig['highSeedHostsThrough']): string {
+  if (ccsRoundSite(round, hostsThrough) === 'home') return 'At the higher seed’s field (CCS calendar: “at Home Sites”).';
+  return round === 'finals'
+    ? 'At a neutral site set by CCS (CCS calendar: “at Neutral Site”); the site appears here once MaxPreps lists the game.'
+    : 'At neutral sites set by CCS (CCS calendar: “at Neutral Sites”); each game’s site appears here once MaxPreps lists it.';
+}
+
+/**
+ * The key-dates footer's first sentence, from config: 'Quarterfinals are at the higher seed’s field; the semifinals
+ * and the final are at neutral sites set by CCS (the CIF-CCS field hockey calendar).' In 2025 the semifinals were in
+ * fact at the higher seed's field, so the sentence says what the calendar says and no more.
+ */
+export function ccsHostingSentence(hostsThrough: CcsConfig['highSeedHostsThrough'] = CCS.highSeedHostsThrough): string {
+  const home = CCS_ROUNDS.filter((r) => ccsRoundSite(r, hostsThrough) === 'home');
+  const neutral = CCS_ROUNDS.filter((r) => ccsRoundSite(r, hostsThrough) === 'neutral');
+  const words = (rounds: readonly CcsRound[]) => listWords(rounds.map((r) => (r === 'finals' ? 'the final' : `the ${r}`)));
+  if (neutral.length === 0) return 'Every round is at the higher seed’s field (the CIF-CCS field hockey calendar).';
+  const homeWords = words(home);
+  const homePart = home.length > 0 ? `${homeWords[0].toUpperCase()}${homeWords.slice(1)} are at the higher seed’s field; ` : '';
+  return `${homePart}${words(neutral)} ${neutral.length === 1 ? 'is' : 'are'} at neutral sites set by CCS (the CIF-CCS field hockey calendar).`;
+}
+
 /**
  * Every CCS key date plus each CCS league's own postseason date, in date order. The CCS dates come
  * from the CCS playoff-dates release (cross-confirmed by the CCS iCal feed once it is polled); the
- * league dates come from the official league schedules and by-laws (config pairings).
+ * league dates come from the official league schedules and by-laws (config pairings). Round details
+ * say where each round is played, from `CCS.highSeedHostsThrough`.
  */
-export function keyDateRows(k: CcsKeyDates, leagueDates: readonly LeagueKeyDate[] = []): KeyDateRow[] {
+export function keyDateRows(
+  k: CcsKeyDates,
+  leagueDates: readonly LeagueKeyDate[] = [],
+  hostsThrough: CcsConfig['highSeedHostsThrough'] = CCS.highSeedHostsThrough,
+): KeyDateRow[] {
   const ccs = (
     key: KeyDateKey,
     iso: string,
@@ -134,10 +173,10 @@ export function keyDateRows(k: CcsKeyDates, leagueDates: readonly LeagueKeyDate[
   const rows: KeyDateRow[] = [
     ccs('end-of-league-season', k.endOfLeagueSeason, 'CCS end of league season', 'The last day a league game or league postseason game may be played.'),
     ccs('entries', k.entriesDue, 'CCS entries due', 'Leagues submit their qualifiers and at-large candidates.', { time: true }),
-    ccs('seeding', k.seedingMeeting, 'CCS seeding meeting', 'The committee seeds both CCS divisions. This page fills in that evening.', { time: true }),
-    ccs('quarterfinals', k.quarterfinals, 'Quarterfinals', 'Higher seed hosts.', { isRound: true }),
-    ccs('semifinals', k.semifinals, 'Semifinals', 'Higher seed hosts.', { isRound: true }),
-    ccs('finals', k.finals, 'Finals', 'Site set by CCS.', { isRound: true }),
+    ccs('seeding', k.seedingMeeting, 'CCS seeding meeting', 'The committee seeds both CCS divisions; the games appear here as MaxPreps lists them, after the next update.', { time: true }),
+    ccs('quarterfinals', k.quarterfinals, 'Quarterfinals', roundSiteDetail('quarterfinals', hostsThrough), { isRound: true }),
+    ccs('semifinals', k.semifinals, 'Semifinals', roundSiteDetail('semifinals', hostsThrough), { isRound: true }),
+    ccs('finals', k.finals, 'Finals', roundSiteDetail('finals', hostsThrough), { isRound: true }),
     ccs('evaluation', k.evaluationMeeting, 'CCS evaluation meeting', 'The season review that closes the tournament.', { time: true }),
     ...leagueDates.map(
       (d): KeyDateRow => ({

@@ -411,7 +411,7 @@ export const PlayoffsSchema = z.object({
     autoQualifiers: z
       .object({ atLarge: z.number().int().min(0), total: z.number().int().min(0) })
       .catchall(z.number().int().min(0)),
-    highSeedHostsThrough: z.literal('semifinals'),
+    highSeedHostsThrough: z.enum(['quarterfinals', 'semifinals']),
   }),
   bracketPublished: z.boolean(),
   bracketUrl: httpUrl,

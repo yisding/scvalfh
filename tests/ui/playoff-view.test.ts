@@ -392,6 +392,25 @@ describe('splitStatusLabel', () => {
 });
 
 describe('keyDateRows', () => {
+  it('says where each round is played, from config, in the calendar’s own words, and promises no evening', () => {
+    const rows = view.keyDateRows(data.getPlayoffs().keyDates);
+    const detail = (key: string) => rows.find((r) => r.key === key)?.detail ?? '';
+    expect(detail('quarterfinals'), VIEW).toBe('At the higher seed’s field (CCS calendar: “at Home Sites”).');
+    expect(detail('semifinals'), VIEW).toBe('At neutral sites set by CCS (CCS calendar: “at Neutral Sites”); each game’s site appears here once MaxPreps lists it.');
+    expect(detail('finals'), VIEW).toBe('At a neutral site set by CCS (CCS calendar: “at Neutral Site”); the site appears here once MaxPreps lists the game.');
+    expect(detail('seeding'), VIEW).toBe('The committee seeds both CCS divisions; the games appear here as MaxPreps lists them, after the next update.');
+    expect(rows.map((r) => r.detail).join(' '), VIEW).not.toMatch(/that evening|Higher seed hosts\./);
+    // The footer sentence follows the same config value.
+    expect(view.ccsHostingSentence(), VIEW).toBe(
+      'The quarterfinals are at the higher seed’s field; the semifinals and the final are at neutral sites set by CCS (the CIF-CCS field hockey calendar).',
+    );
+    expect(view.ccsHostingSentence('semifinals'), VIEW).toBe(
+      'The quarterfinals and the semifinals are at the higher seed’s field; the final is at neutral sites set by CCS (the CIF-CCS field hockey calendar).',
+    );
+    expect(view.keyDateRows(data.getPlayoffs().keyDates, [], 'semifinals').find((r) => r.key === 'semifinals')?.detail, VIEW)
+      .toBe('At the higher seed’s field (CCS calendar: “at Home Sites”).');
+  });
+
   it('lists the CCS dates and each league’s own date, labelled with its league, in date order', () => {
     const rows = view.keyDateRows(data.getPlayoffs().keyDates, [
       { id: 'bval', leagueShort: 'BVAL', date: '2026-10-31', time: '11:00', label: 'BVAL play-in', detail: 'x' },
@@ -460,6 +479,8 @@ describe('/playoffs (rendered)', () => {
       'Three at-large berths are the CCS committee’s call. SCVAL submits its play-in loser and both fifth-place teams (Article VII §2); PCAL teams placed 3rd or lower may apply (PCAL By-laws §23.4); BVAL’s by-laws do not say whom it submits.',
     );
     expect(text, PAGE).toContain('SCVAL crossover and 4th-place play-in');
+    expect(text, PAGE).not.toMatch(/that evening|higher seed hosts through the semifinals/i);
+    expect(text, PAGE).toContain('the semifinals and the final are at neutral sites set by CCS');
     expect(text, PAGE).toContain('BVAL play-in');
     expect(text, PAGE).toContain('11 AM PT');
     expect(text, PAGE).toContain('(host)');

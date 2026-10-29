@@ -16,6 +16,8 @@ import {
   ccsPollingOpen,
   classifyCcsSummary,
   cleanCcsSummary,
+  calendarSiteOf,
+  configSiteOf,
   confirmKeyDates,
   parseCcsIcal,
   readBracketPublished,
@@ -135,6 +137,21 @@ describe('ccs: key-date confirmation', () => {
   it('reports a missing event', () => {
     const check = confirmKeyDates(events.filter((e) => e.kind !== 'evaluation'));
     expect(check.differences).toEqual(['CCS calendar has no evaluation meeting event']);
+  });
+
+  it('checks where each round is played against the calendar’s own words (home sites through the quarterfinals, neutral after)', () => {
+    expect(CCS.highSeedHostsThrough).toBe('quarterfinals');
+    expect(events.filter((e) => e.kind === 'quarterfinals' || e.kind === 'semifinals' || e.kind === 'finals').map((e) => calendarSiteOf(e.summary)))
+      .toEqual(['home', 'neutral', 'neutral']);
+    expect(['quarterfinals', 'semifinals', 'finals'].map((r) => configSiteOf(r as 'quarterfinals', 'quarterfinals'))).toEqual(['home', 'neutral', 'neutral']);
+    // The site's former wording, "the higher seed hosts through the semifinals", would now be reported as a difference.
+    const check = confirmKeyDates(events, CCS.keyDates, 'semifinals');
+    expect(check.confirmed).toBe(false);
+    expect(check.differences).toEqual(['semifinals: we say the higher seed hosts, CCS calendar says "CCS Semfinals at Neutral Sites"']);
+    // A summary that names no site (a future rewording) is not a difference.
+    const silent = events.map((e) => (e.kind === 'semifinals' ? { ...e, summary: 'CCS Semifinals' } : e));
+    expect(calendarSiteOf('CCS Semifinals')).toBeNull();
+    expect(confirmKeyDates(silent).confirmed).toBe(true);
   });
 });
 

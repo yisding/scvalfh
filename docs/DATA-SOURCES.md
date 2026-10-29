@@ -1954,7 +1954,12 @@ Human-facing paths: `https://www.cifccs.org/calendar/2026-27/2026-27_CCS_Playoff
 **Verified playoff facts:** entries due Mon Nov 2 2026 noon; seeding meeting 1:00pm same day;
 Quarterfinals Sat Nov 7; Semifinals Wed Nov 11; Finals Sat Nov 14; evaluation meeting Thu Nov 19
 4:00pm. Single-elimination, two divisions of 8 (1-8 → D1, 9-16 → D2). Auto-qualifier allocation:
-SCVAL 7, BVAL 4, PCAL 2, at-large 3 = 16 total. High seed hosts through semifinals. (Selection
+SCVAL 7, BVAL 4, PCAL 2, at-large 3 = 16 total. Sites per the 2026 CCS calendar: quarterfinals "at Home
+Sites", semifinals "at Neutral Sites" [sic "Semfinals"], finals "at Neutral Site" (`CCS.highSeedHostsThrough:
+'quarterfinals'`; in 2025 the semifinals were in fact at the higher seed's field, Los Gatos, St. Ignatius's
+Fairmont Field in Pacifica and Los Altos, and the finals at Los Altos HS and Gilroy HS, so the site prints the
+calendar's words and each game's own site, and `confirmKeyDates` logs a calendar whose site words disagree with
+the config). (Selection
 committee and at-large criteria are the **playoff** tiebreak, distinct from the league-standings
 tiebreak in `docs/BYLAWS-2026-27.md`.)
 

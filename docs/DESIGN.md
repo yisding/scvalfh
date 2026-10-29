@@ -755,8 +755,8 @@ PHONE 390px  —  /playoffs   (BEFORE Nov 2 — not seeded)
 │ ← CCS Playoffs                            [◐] │ 44
 ├────────────────────────────────────────────────┤
 │ NOT SEEDED YET                                 │ 11px mono, --ink-3
-│ The CCS seeding meeting is Mon Nov 2. This      │ 76
-│ page fills in that evening.                     │
+│ The CCS seeding meeting is Mon Nov 2. The games │ 76
+│ appear here as MaxPreps lists them.            │
 ├────────────────────────────────────────────────┤
 │ ──── SCVAL's SHARE OF THE FIELD ─────────────  │
 │ ▮▮▮▮▮▮▮░░░░░░░░░                    7 / 16     │ 88  BerthMeter, 8px tall

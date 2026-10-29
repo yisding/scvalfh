@@ -1,4 +1,4 @@
-import { keyDateRows, type KeyDateRow, type LeagueKeyDate } from './playoff-view';
+import { ccsHostingSentence, keyDateRows, type KeyDateRow, type LeagueKeyDate } from './playoff-view';
 import type { CcsKeyDates } from '../../lib/types';
 
 /**
@@ -60,10 +60,14 @@ export function KeyDates({ keyDates, leagueDates = [], confirmed, className }: K
           <DateItem key={row.key} row={row} />
         ))}
       </ol>
+      {/* Who hosts comes from config (CCS.highSeedHostsThrough), worded by ccsHostingSentence, so the footer can
+          never contradict the calendar the page cites. The calendar carries the entries deadline, the three rounds
+          and the evaluation meeting, not the seeding meeting or the end of league play, so "corroborated" names
+          exactly those. */}
       <p className="mt-3 mb-0 max-w-prose text-meta text-ink-2">
-        The higher seed hosts through the semifinals.{' '}
+        {ccsHostingSentence()}{' '}
         {confirmed
-          ? 'Every CCS date above is corroborated by the CIF-CCS field hockey calendar; league dates come from the official league schedules.'
+          ? 'The entries deadline, the three round dates and their sites above are corroborated by that calendar; league dates come from the official league schedules.'
           : 'Dates from the CIF-CCS playoff-dates release and the official league schedules. All times Pacific.'}
       </p>
     </div>

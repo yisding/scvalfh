@@ -546,7 +546,8 @@ export interface CcsPlayoffs {
     /** RENAMED from `divisions`. */
     ccsDivisions: Array<{ name: CcsDivisionName; seeds: [number, number] }>;
     autoQualifiers: CcsAutoQualifiers;
-    highSeedHostsThrough: 'semifinals';
+    /** The last round the higher seed hosts (CCS config; 'semifinals' in files written before 2026-10-29). */
+    highSeedHostsThrough: 'quarterfinals' | 'semifinals';
   };
   bracketPublished: boolean;
   bracketUrl: string;

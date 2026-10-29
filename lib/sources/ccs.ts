@@ -106,20 +106,46 @@ export function parseCcsIcal(text: string): CcsCalendarEvent[] {
 }
 
 export interface KeyDateCheck {
-  /** true when every date we publish is corroborated by the calendar. */
+  /** true when every date we publish, and the site of every round, is corroborated by the calendar. */
   confirmed: boolean;
-  /** One line per date that differs, ready for the run log and /about. */
+  /** One line per date or site that differs, ready for the run log and /about. */
   differences: string[];
   events: CcsCalendarEvent[];
 }
 
-/** Compare the calendar against `CCS.keyDates` — confirmation only, never a rewrite. */
+const ROUND_KINDS = ['quarterfinals', 'semifinals', 'finals'] as const;
+
+/**
+ * Where the calendar says a round is played, from its SUMMARY ('… at Home Sites' / '… at Neutral Site(s)'); null
+ * when the words say neither.
+ */
+export function calendarSiteOf(summary: string): 'home' | 'neutral' | null {
+  if (/\bhome sites?\b/i.test(summary)) return 'home';
+  if (/\bneutral sites?\b/i.test(summary)) return 'neutral';
+  return null;
+}
+
+/** Where config says a round is played: the higher seed's field through `highSeedHostsThrough`, neutral after. */
+export function configSiteOf(round: (typeof ROUND_KINDS)[number], hostsThrough = CCS.highSeedHostsThrough): 'home' | 'neutral' {
+  return ROUND_KINDS.indexOf(round) <= ROUND_KINDS.indexOf(hostsThrough) ? 'home' : 'neutral';
+}
+
+/**
+ * Compare the calendar against `CCS.keyDates` and `CCS.highSeedHostsThrough` — confirmation only, never a rewrite.
+ * A round whose calendar words name a site the config does not (the 2026 feed says 'Semfinals at Neutral Sites')
+ * is a difference too, so a copy line about who hosts is never left contradicting the feed the page cites.
+ */
 export function confirmKeyDates(
   events: readonly CcsCalendarEvent[],
   expected = CCS.keyDates,
+  hostsThrough = CCS.highSeedHostsThrough,
 ): KeyDateCheck {
   const byKind = new Map<CcsEventKind, string>();
-  for (const e of events) if (!byKind.has(e.kind)) byKind.set(e.kind, e.date);
+  const summaryByKind = new Map<CcsEventKind, string>();
+  for (const e of events) {
+    if (!byKind.has(e.kind)) byKind.set(e.kind, e.date);
+    if (!summaryByKind.has(e.kind)) summaryByKind.set(e.kind, e.summary);
+  }
 
   const pairs: Array<[CcsEventKind, string, string]> = [
     ['entries-due', expected.entriesDue.slice(0, 10), 'entries due'],
@@ -134,6 +160,14 @@ export function confirmKeyDates(
     const theirs = byKind.get(kind);
     if (!theirs) differences.push(`CCS calendar has no ${label} event`);
     else if (theirs !== ours) differences.push(`${label}: we publish ${ours}, CCS calendar says ${theirs}`);
+  }
+  for (const round of ROUND_KINDS) {
+    const summary = summaryByKind.get(round);
+    const theirs = summary ? calendarSiteOf(summary) : null;
+    const ours = configSiteOf(round, hostsThrough);
+    if (theirs !== null && theirs !== ours) {
+      differences.push(`${round}: we say ${ours === 'home' ? 'the higher seed hosts' : 'a neutral site'}, CCS calendar says "${summary}"`);
+    }
   }
   return { confirmed: differences.length === 0, differences, events: [...events] };
 }
