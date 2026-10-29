@@ -99,7 +99,7 @@ export default async function LeagueStandingsPage({ params }: PageProps<'/standi
     `GD = league goals for minus goals against. ${gdScale} A real 0 shows as 0; a score we do not have shows as an em dash. Forfeits count in the win-loss-tie record, not in the goal columns.`,
     // A league with no fixed schedule (the Sunset, gamesPerTeam null) has no "of N", LEFT or MAX.
     data.views.every((view) => view.fixedSchedule)
-      ? 'GP is league games counted of those scheduled. LEFT is league games with no counted result yet — still to play, or played and not reported. MAX is the most points a team could reach if it won all of them: a ceiling, not a projection.'
+      ? 'GP is league games counted of those scheduled. LEFT is league games with no counted result yet — still to play, or played and not reported. MAX is the most points a team can finish with if it wins all of them (its final total once none are left): a ceiling, not a projection.'
       : `GP is league games counted. ${summary.shortName} has no fixed league schedule, so there is no LEFT or MAX column.`,
     ...new Set(data.views.flatMap((view) => view.legendNotes)),
   ];

@@ -366,6 +366,15 @@ describe('/teams/[slug] pages (app/teams/[slug]/page.tsx)', () => {
       } else expect(text, `components/teams/TeamStatTiles.tsx ${team.slug} GP`).toContain(
         `${v.context!.counted}/${v.context!.scheduled}`,
       );
+      // MAX is a total: a team with no league games left shows its final points, never points "still" to win.
+      expect(text, `components/teams/TeamStatTiles.tsx ${team.slug} MAX`).not.toMatch(/still reachable/);
+      if (v.context!.remaining === 0) {
+        expect(text, `components/teams/TeamStatTiles.tsx ${team.slug} MAX`).toMatch(
+          new RegExp(`Max\\s*${v.context!.maxPts}\\s*final league points`),
+        );
+      } else if (v.context!.remaining !== null) {
+        expect(text, `components/teams/TeamStatTiles.tsx ${team.slug} MAX`).toContain('most points possible');
+      }
       expect(html, `app/teams/[slug]/page.tsx ${team.slug}`).not.toContain('Gabilan');
       expect(html, `app/teams/[slug]/page.tsx ${team.slug} game links`).not.toMatch(/href="\/game\/sblive:/);
       if (team.league === 'pcal' || team.league === 'mcal') {

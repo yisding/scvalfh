@@ -414,7 +414,7 @@ const DESKTOP_HEAD: Record<DesktopCol, { label: string; right: boolean; title?: 
   gp: { label: 'GP', right: true, title: 'League games counted of those scheduled' },
   pts: { label: 'Pts', right: true, long: 'Points' },
   left: { label: 'Left', right: true, title: 'League games with no counted result yet' },
-  max: { label: 'Max', right: true, title: 'The most points still reachable' },
+  max: { label: 'Max', right: true, title: 'The most points a team can finish with' },
   league: { label: 'League', right: true },
   pct: { label: 'Pct', right: true, long: 'Win percentage' },
   overall: { label: 'Overall', right: true },
