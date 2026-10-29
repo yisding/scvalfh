@@ -759,7 +759,7 @@ export function unevenGpFootnote(
   const columns =
     spread.scheduled === null
       ? ''
-      : ' LEFT is league games with no counted result yet — still to play, or played and not reported. MAX is the most points a team could reach if it won all of them.';
+      : ' LEFT is league games with no counted result yet — still to play, or played and not reported. MAX is the most points a team can finish with if it wins all of them (its final total once none are left).';
   const base = `${games}${columns} ${unevenOrderSentence(league)}`;
   const incomplete = league.rules.citations.incomplete;
   return incomplete
