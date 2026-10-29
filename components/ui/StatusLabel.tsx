@@ -58,18 +58,38 @@ function SourceMark({ display }: { display: Pick<GameDisplay, 'sourceMark'> }) {
 }
 
 /**
+ * The 12px mono caps of the chip run 7.92px a letter (Geist Mono's 0.6em advance plus 0.06em of
+ * tracking), and the 80px lead column of GameRow and Home's ResultRow leaves 72px inside the
+ * capsule's 4px padding: nine letters. `TOURNAMENT` (ten, 79.2px) broke inside the word there, as
+ * MCAL / TOURNAMEN / T, so the chip PRINTS the shorter word the sports pages use; the full name is
+ * still what a screen reader hears, and every sentence and title keeps it (`postseasonTag`).
+ */
+const CHIP_WORD: Readonly<Record<string, string>> = { tournament: 'tourney' };
+
+/** The longest word, in letters, that one line of the lead column's postseason capsule holds. */
+export const CHIP_WORD_MAX = 9;
+
+/** The chip's printed words: `MCAL tournament` is `MCAL tourney`; every other tag is itself. */
+export function postseasonChipText(tag: string): string {
+  return tag
+    .split(' ')
+    .map((word) => CHIP_WORD[word.toLowerCase()] ?? word)
+    .join(' ');
+}
+
+/**
  * The postseason chip. A league or NL chip is a code of at most six letters (SUNSET, 59.5px), but
  * a postseason chip is a phrase — `SCVAL crossover` is 131px, `San Diego Section playoffs` 218px —
  * wider than a row's 80px lead column or a fixed tag track. As a nowrap `Tag` it ran out of its
  * column over the team lines beside it, so it is Tag's face (mono caps on surface-3, 20px for one
  * line) on an `inline-block` capsule, as StatusChip is: a phrase too wide for its column grows into
- * ONE taller capsule, and `break-words` breaks a single word wider than the column (`TOURNAMENT`,
- * 91px) rather than letting it overflow.
+ * ONE taller capsule, broken between its words (no printed word is wider than the lead column:
+ * `postseasonChipText`). `break-words` stays only as the last resort for a host narrower still.
  */
 function PostseasonChip({ tag }: { tag: string }) {
   return (
     <span className="inline-block min-w-0 max-w-full break-words rounded-tag bg-surface-3 px-1.5 py-0.5 font-mono text-kicker uppercase text-ink-2">
-      <span aria-hidden="true">{tag}</span>
+      <span aria-hidden="true">{postseasonChipText(tag)}</span>
       <span className="sr-only">{tag}</span>
     </span>
   );

@@ -21,11 +21,13 @@ import {
   gameKindLabel,
   otherLeagueSuffix,
   overtimeInDoubt,
+  postseasonTagOf,
   signedMargin,
 } from '../../components/ui/describe-game';
+import { CHIP_WORD_MAX, GameChips, postseasonChipText } from '../../components/ui/StatusLabel';
 import { getGames, getLeagueSummaries } from '../../lib/data';
 import { EN_DASH } from '../../lib/format';
-import { findDivision, findLeague } from '../../lib/leagues';
+import { LEAGUES, findDivision, findLeague } from '../../lib/leagues';
 import type { Game, GameStatus } from '../../lib/types';
 
 function game(overrides: Partial<Game> = {}): Game {
@@ -437,6 +439,46 @@ describe('chips — league, postseason and source (SPEC §10.4)', () => {
     expect(tag('other', null).postseasonTag).toBeNull();
     // A league kind always carries its league (lib/classify.ts); the chip never derives one from the kind string.
     expect(tag('scval-crossover', null).postseasonTag).toBeNull();
+  });
+  it('prints no postseason chip word wider than one line of the 80px lead column (StatusLabel)', () => {
+    // Every tag a league's games can carry (lib/classify.ts postseasonTag): its pairings', its own
+    // postseason's and the CCS chip. A word over CHIP_WORD_MAX letters broke inside itself there
+    // (MCAL / TOURNAMEN / T).
+    const kindsOf = (league: (typeof LEAGUES)[number]): NonNullable<Game['postseason']>['kind'][] => {
+      const ps = league.postseason;
+      switch (ps.kind) {
+        case 'ccs-ladder': return ['ccs', ...ps.pairings.map((p) => p.tag)];
+        case 'league-tournament': return ['mcal-tournament'];
+        case 'unbracketed-tournament': return ['league-postseason'];
+        case 'section-playoffs': return ['section-playoffs'];
+        default: return [];
+      }
+    };
+    const tags = new Set<string>();
+    for (const league of LEAGUES) {
+      for (const kind of kindsOf(league)) {
+        const t = postseasonTagOf({ postseason: { kind, leagueId: league.id, via: 'config-pairing' } });
+        if (t) tags.add(t);
+      }
+    }
+    expect(tags).toContain('MCAL tournament');
+    expect(tags).toContain('San Diego Section playoffs');
+    for (const t of tags) {
+      for (const word of postseasonChipText(t).split(' ')) {
+        expect(word.length, `"${word}" of the ${t} chip`).toBeLessThanOrEqual(CHIP_WORD_MAX);
+      }
+    }
+    expect(postseasonChipText('MCAL tournament')).toBe('MCAL tourney');
+    expect(postseasonChipText('SCVAL crossover')).toBe('SCVAL crossover');
+  });
+  it('prints the short chip word but reads the full name to a screen reader', () => {
+    const html = renderToStaticMarkup(
+      createElement(GameChips, {
+        display: { leagueTag: null, isNonLeague: false, postseasonTag: 'MCAL tournament' },
+      }),
+    );
+    expect(html).toContain('<span aria-hidden="true">MCAL tourney</span>');
+    expect(html).toContain('<span class="sr-only">MCAL tournament</span>');
   });
   it('marks a score published from si.com, and only that', () => {
     const sb = final(3, 1, {
