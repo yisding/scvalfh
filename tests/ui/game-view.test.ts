@@ -259,7 +259,10 @@ describe('MCAL postseason note and superseded stubs (corpus copy)', () => {
         g.status === 'final' &&
         Math.abs((g.home.score ?? 0) - (g.away.score ?? 0)) === 1,
     )!;
-    oneGoal.postseason = { kind: 'mcal-tournament', leagueId: 'mcal', via: 'league-postseason-window' };
+    // MaxPreps' playoff type (4) on the row, so the tag is the one the config derives: a snapshot whose
+    // tags differ from the current config is reclassified on load (lib/snapshot-migrate.ts).
+    oneGoal.contestTypes = { home: 4, away: 4 };
+    oneGoal.postseason = { kind: 'mcal-tournament', leagueId: 'mcal', via: 'contest-type-4' };
     oneGoal.countsFor = null;
     tournament = oneGoal;
     target = snap.games.find((g) => g.countsFor !== null && !g.contestId.startsWith('sblive:') && mcalIds.has(g.home.teamId ?? ''))!;

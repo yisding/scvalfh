@@ -94,8 +94,9 @@ beforeAll(async () => {
   eal = await load(path0);
 
   // A copy of the corpus in which one scheduled EAL league game is tagged a Super Regional game:
-  // no league game is that late in the capture, so the tag is written by hand (the pipeline writes
-  // it for a contest type 4 or a date on or after the league's `postseasonFrom`).
+  // no league game is that late in the capture, so the row is given MaxPreps' playoff type (4) and the
+  // tag the pipeline writes for it. The tag has to be the config's own: a snapshot whose tags differ
+  // from the current config is reclassified on load (lib/snapshot-migrate.ts needsReclassification).
   const snap = JSON.parse(readFileSync(path0, 'utf8')) as Snapshot;
   const target = snap.games.find(
     (g) => g.status === 'scheduled' && g.countsFor !== null && g.home.slug === 'chico' && g.away.slug === 'lassen',
@@ -103,13 +104,15 @@ beforeAll(async () => {
   if (!target) throw new Error('the EAL corpus has no scheduled Lassen at Chico game to tag');
   target.countsFor = null;
   target.leagueDivision = null;
-  target.postseason = { kind: 'league-postseason', leagueId: 'eal', via: 'league-postseason-window' };
+  target.contestTypes = { home: 4, away: 4 };
+  target.postseason = { kind: 'league-postseason', leagueId: 'eal', via: 'contest-type-4' };
   // And one counted final between two members, so a Super Regional game page has a score to cross-check.
   const final = snap.games.find((g) => g.status === 'final' && g.countsFor !== null);
   if (!final) throw new Error('the EAL corpus has no counted final to tag');
   final.countsFor = null;
   final.leagueDivision = null;
-  final.postseason = { kind: 'league-postseason', leagueId: 'eal', via: 'league-postseason-window' };
+  final.contestTypes = { home: 4, away: 4 };
+  final.postseason = { kind: 'league-postseason', leagueId: 'eal', via: 'contest-type-4' };
   const dir = mkdtempSync(path.join(tmpdir(), 'scvalfh-eal-team-views-'));
   const file = path.join(dir, 'snapshot.json');
   writeFileSync(file, JSON.stringify(snap));
