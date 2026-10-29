@@ -299,7 +299,7 @@ describe('home panels (components/home/home-view.ts → LeaguePanel)', () => {
     // The San Diego leagues: the Section's playoffs, dates from config, no bracket and no "top N".
     expect(lead('city', 'tournament', '2026-11-03'), `${HV}: City in the Section playoffs`).toEqual({
       lead: 'City league play is over.',
-      body: 'The San Diego Section playoffs are Nov 2–14; the Section publishes its brackets after its Sat Oct 31 seeding meeting.',
+      body: 'The San Diego Section playoffs are Nov 2–14; the Section posts its brackets on its field hockey page after its Sat Oct 31 seeding meeting.',
       link: { href: '/playoffs#city', label: 'Postseason' },
     });
     expect(lead('metro', 'playoffs', '2026-11-03'), `${HV}: SDS never gets the CCS copy`).toBeNull();

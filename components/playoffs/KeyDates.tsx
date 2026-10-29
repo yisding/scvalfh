@@ -1,4 +1,5 @@
-import { ccsHostingSentence, keyDateRows, type KeyDateRow, type LeagueKeyDate } from './playoff-view';
+import DateList from './DateList';
+import { ccsHostingSentence, keyDateRows, type LeagueKeyDate } from './playoff-view';
 import type { CcsKeyDates } from '../../lib/types';
 
 /**
@@ -29,37 +30,12 @@ export interface KeyDatesProps {
   className?: string;
 }
 
-function DateItem({ row }: { row: KeyDateRow }) {
-  return (
-    <li className="grid grid-cols-[5.5rem_minmax(0,1fr)] items-baseline gap-3 px-gutter py-3 md:grid-cols-[6.5rem_minmax(0,1fr)] md:px-5">
-      <span className={`sx-num text-cell ${row.isRound ? 'font-medium text-ink' : 'text-ink-2'}`}>
-        <time dateTime={row.dateKey}>{row.dateLabel}</time>
-        {row.time ? <span className="block whitespace-nowrap text-ink-2">{row.time}</span> : null}
-      </span>
-      <span className="min-w-0">
-        <span className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
-          <span className={['text-body text-ink', row.isRound ? 'font-semibold' : null].filter(Boolean).join(' ')}>
-            {row.label}
-          </span>
-          {row.leagueShort ? <span className="sx-badge">{row.leagueShort}</span> : null}
-        </span>
-        {row.detail ? <span className="mt-0.5 block text-meta text-ink-2">{row.detail}</span> : null}
-      </span>
-    </li>
-  );
-}
-
 export function KeyDates({ keyDates, leagueDates = [], confirmed, className }: KeyDatesProps) {
   const rows = keyDateRows(keyDates, leagueDates);
 
   return (
     <div className={className}>
-      {/* `my-0`, not `m-0`: a margin shorthand would cancel `sx-bleed`'s negative inline margin. */}
-      <ol className="sx-card sx-flush sx-bleed my-0 list-none divide-y divide-divider p-0">
-        {rows.map((row) => (
-          <DateItem key={row.key} row={row} />
-        ))}
-      </ol>
+      <DateList rows={rows} />
       {/* Who hosts comes from config (CCS.highSeedHostsThrough), worded by ccsHostingSentence, so the footer can
           never contradict the calendar the page cites. The calendar carries the entries deadline, the three rounds
           and the evaluation meeting, not the seeding meeting or the end of league play, so "corroborated" names

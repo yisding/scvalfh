@@ -1992,6 +1992,23 @@ publish, playoff games should surface in each qualifying team's `schedule-calcul
 tournamentCanonicalUrl` (untested — those fields are null in the regular season; verify on Nov 7).
 Poll both from Nov 2. Fallback: CCS posts results as plain text on X/Twitter.
 
+**The San Diego Section's playoffs** (read 2026-10-29): the round calendar is the San Diego Field Hockey
+Officials Association's (`https://sdfhoa.weebly.com/calendar.html`, config `rounds`; unchanged since the
+preseason); the Section posts its brackets on `https://www.cifsds.org/sports/fh/index` (config `bracketsPageUrl`),
+in 2025 the link-shared Google Sheet "2025 CIFSDS Field Hockey Championships" (tabs Open Division, Division I,
+Division II; `export?format=csv&gid=` answers without a login; the same template as the Section's 2026 flag
+football brackets). The 2026 sheet's id is unknown until published and cifsds.org returns a CloudFront 403 from
+the research sandbox, so the owner pastes it into `bracketSheetUrl` (null until then) and the site links it; no
+bracket is drawn. MaxPreps' 2026 SDS tournament page (`AkXf4_tRkUCSmOSRZxp7DQ` = `e3df4502-51fb-4091-9298-e491671a7b0d`,
+Open `494a605b-…`, Division I `a4ab20c1-…`, Division II `826dea99-…`) is an empty shell with no `not-published`
+marker, and the 2025 pages never went live, so it is not read (and `readBracketPublished` must never be pointed
+at it). The 2026-27 power rankings are plain HTML at
+`https://www.cifsdshome.org/widget/power-rankings?sort-points-desc=1&year_id=176&sport_id=30` (divisions
+`783` Division 1, `784` Division 2, `789` Open, empty until seeding); the Division 1 and 2 lists match
+`playoffDivisionOf` school for school. The HomeCampus schedule-score widget's `game_type_id=5` rows carry a playoff
+game's facility and time. Playoff overtime differs from the regular season (all goals in a first 10-minute
+period count, then sudden victory, then a shootout; the 2025 sheet writes "1-1 (2-1 SO)").
+
 **The EAL Super Regional's site and streams** (read 2026-10-29): the NFHS Network's CIFNS field hockey
 page (`https://www.nfhsnetwork.com/associations/cifns/field-hockey`) lists two events at Pleasant Valley
 High School, Chico, on Sat Oct 31: "2026 CIFNS Field Hockey Postseason Tournament - Part 1"

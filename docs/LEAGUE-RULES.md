@@ -568,7 +568,12 @@ places for its 20. Dates: Master Calendar playoffs Nov 2–12, finals Nov 14 [V]
 [V page, not a Section document]: play-ins (if necessary) Mon Nov 2; first round Tue Nov 3 (Division II)
 and Wed Nov 4 (Division I); quarterfinals Thu Nov 5 (Open), Fri Nov 6 (II), Sat Nov 7 (I); semifinals Tue
 Nov 10 (Open and II), Wed Nov 11 (I); finals Sat Nov 14 at La Jolla HS, 1:00 (II), 3:30 (I), 6:00 (Open).
-The site attributes them to the association in the same sentence. The ladder: 1st, "1st: at least a play-in if
+The site attributes them to the association in the same sentence and, since 2026-10-29, prints them as the
+block's "Round dates" list on `/playoffs` (config `rounds`, the CCS key-dates list's markup), with links to the
+association's calendar, to the Section's field hockey page (where the brackets are posted) and, once the owner
+pastes it into `bracketSheetUrl`, to the Section's published brackets sheet; the block's sentence is dated
+(before the meeting, when the Section seeds; from it on, where it posts) and the "bulletin is not reachable"
+clause lives here and in DATA-SOURCES, not in fan copy. The ladder: 1st, "1st: at least a play-in if
 named league champion" (the designated champion, which the league names, not this table); 2nd or lower, "No
 league route" (badge "Selection only"). No CIF regional or state path [V: Master Calendar "N/A"].
 

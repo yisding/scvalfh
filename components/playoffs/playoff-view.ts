@@ -576,6 +576,43 @@ export function pairingSentence(view: PairingView): string {
   return `${view.title}, ${view.dateLabel}${view.timeLabel ? `, ${view.timeLabel}` : ''}: ${pair}.`;
 }
 
+// ---------------------------------------------------------------- section playoffs (the San Diego Section)
+
+type SectionPlayoffsConfig = Extract<LeagueConfig['postseason'], { kind: 'section-playoffs' }>;
+
+/**
+ * The Section's round calendar as DateList rows: a round's label, its league clock time where published (the
+ * finals) and its site as the detail (La Jolla High School). Rounds and finals are set in ink (`isRound`), the
+ * play-in row is not. No row names a host: the Section's bulletin is unreadable and a seed word is banned here.
+ */
+export function sectionRoundRows(ps: SectionPlayoffsConfig): KeyDateRow[] {
+  return ps.rounds.map((r) => ({
+    key: `league:${r.id}`,
+    dateKey: r.date,
+    dateLabel: shortDate(r.date),
+    time: r.time ? leagueClockPT(r.time) : null,
+    leagueShort: null,
+    label: r.label,
+    detail: r.site ?? '',
+    isRound: /^(First round|Quarterfinals|Semifinals|Final)\b/.test(r.label),
+  }));
+}
+
+/**
+ * The San Diego block's bracket sentence, true on every day: before the seeding meeting, when the Section seeds
+ * and where it posts; from the meeting on, that it posts its brackets on its field hockey page (and, once the
+ * owner has pasted the sheet's URL, that they are published); always that this site draws none and projects no
+ * places, since the Section places teams.
+ */
+export function sectionBracketSentence(ps: SectionPlayoffsConfig, seedingDate: string | null, today: string): string {
+  const seeding = seedingDate ? shortDate(seedingDate) : null;
+  if (ps.bracketSheetUrl) return 'The Section has published its brackets; this site draws no bracket and projects no places.';
+  if (seedingDate && today < seedingDate) {
+    return `The Section seeds at its ${seeding} meeting and posts its brackets on its field hockey page afterwards; this site draws no bracket and projects no places.`;
+  }
+  return `The Section posts its brackets on its field hockey page${seeding ? ` after its ${seeding} seeding meeting` : ''}; this site draws no bracket and projects no places. Its playoff games appear on team pages and schedules as MaxPreps lists them.`;
+}
+
 // ---------------------------------------------------------------- outside tournament (the Tournament of Champions)
 
 export interface OutsideTournamentRoundView {

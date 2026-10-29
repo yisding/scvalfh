@@ -263,7 +263,7 @@ describe('Southern California team pages (DESIGN-socal §2.4)', () => {
     expect(city.postseasonKind).toBe('section-playoffs');
     expect(city.postseasonName).toBe('San Diego Section playoffs');
     expect(city.seasonEndSentence).toBe('The City league season ends Fri Oct 30; the San Diego Section playoffs follow, Nov 2–14.');
-    expect(city.bracketSentence).toBe('We will list a playoff game as soon as the Section publishes its brackets after its Sat Oct 31 seeding meeting.');
+    expect(city.bracketSentence).toBe('We will list a playoff game as soon as it is on the schedule; the Section posts its brackets on its field hockey page after its Sat Oct 31 seeding meeting.');
     expect(city.classification).toBe('membership');
   });
 

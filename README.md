@@ -1489,6 +1489,11 @@ Two `/leaders` boards per region weigh scoring by the defenses it came against
   games. San Diego tiebreaks are in the Section's preseason minutes, which are not published in a form
   we could read, so teams level on points share a place; the Sunset publishes none either. Both orders
   are this site's own 3-1-0 points.
+- **The San Diego brackets are the Section's Google Sheet, linked by hand.** The Section posts its
+  brackets on its field hockey page after the Sat Oct 31 seeding meeting (in 2025 a link-shared Google
+  Sheet, readable as CSV without a login). `/playoffs` prints the officials' association's round calendar
+  and links that page; the owner pastes the sheet's URL into `bracketSheetUrl` (`sdsPostseason` in
+  `lib/leagues.ts`) and the block links it as the official brackets. The site draws no San Diego bracket.
 - **The San Diego playoff divisions can go stale.** Each team's Division I or II on `/playoffs` and its
   team page comes from the Section's 2026 Divisions sheet (dated 2025-12-23), kept in config; nothing
   re-checks it, so a re-sheet before the Oct 31 seeding meeting would not show until someone edits

@@ -419,7 +419,7 @@ export function leagueCopy(leagueId: LeagueId): TeamLeagueCopy {
         postseasonKind: ps.kind,
         postseasonName: ps.name,
         seasonEndSentence: `${ended}; the ${ps.name} follow, ${dateSpan(ps.dates.first, ps.dates.last)}.`,
-        bracketSentence: `We will list a playoff game as soon as the Section publishes its brackets${when}.`,
+        bracketSentence: `We will list a playoff game as soon as it is on the schedule; the Section posts its brackets on its field hockey page${when}.`,
       };
     }
   }

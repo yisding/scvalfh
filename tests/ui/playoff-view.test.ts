@@ -544,8 +544,23 @@ describe('/playoffs by region (DESIGN-socal §2.4)', () => {
     if (city.kind !== 'section-playoffs') throw new Error('city: section-playoffs');
     expect(text, PAGE).toContain(city.qualificationLine);
     expect(text, PAGE).toContain(city.citations.roundDates);
-    expect(text, PAGE).toContain('The Section publishes its brackets after its Sat Oct 31 seeding meeting; until then this site draws no bracket and projects no places.');
+    // The corpus is from Oct 2, before the seeding meeting: the pre-meeting sentence, then the round calendar.
+    expect(text, PAGE).toContain('The Section seeds at its Sat Oct 31 meeting and posts its brackets on its field hockey page afterwards; this site draws no bracket and projects no places.');
     expect(socal, PAGE).toContain(`href="${city.powerRankingsUrl}"`);
+    expect(socal, PAGE).toContain(`href="${city.calendarUrl}"`);
+    expect(socal, PAGE).toContain(`href="${city.bracketsPageUrl}"`);
+    expect(socal, PAGE).toContain('id="sds-round-dates"');
+    for (const line of ['Round dates', 'Quarterfinals, Division II', 'Fri Nov 6', 'Final, Open Division', 'Sat Nov 14', '6 PM PT', '3:30 PM PT', 'La Jolla High School']) {
+      expect(text, PAGE).toContain(line);
+    }
+    // The sentence chooser on each day of the Section's week.
+    expect(view.sectionBracketSentence(city, '2026-10-31', '2026-11-03'), VIEW).toBe(
+      'The Section posts its brackets on its field hockey page after its Sat Oct 31 seeding meeting; this site draws no bracket and projects no places. Its playoff games appear on team pages and schedules as MaxPreps lists them.',
+    );
+    expect(view.sectionBracketSentence({ ...city, bracketSheetUrl: 'https://docs.google.com/spreadsheets/d/x' }, '2026-10-31', '2026-11-03'), VIEW).toBe(
+      'The Section has published its brackets; this site draws no bracket and projects no places.',
+    );
+    expect(`${view.sectionRoundRows(city).map((r) => r.label).join(' ')} ${view.sectionBracketSentence(city, '2026-10-31', '2026-11-03')}`, VIEW).not.toMatch(/\bseed\b|top \w+ qualify/i);
     expect(text, PAGE).toContain(city.sourceLabel);
     // Each team's playoff division, per division, from config.
     expect(text, PAGE).toMatch(/City Western[\s\S]*Division I:/);

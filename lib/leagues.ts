@@ -462,6 +462,23 @@ export type PostseasonConfig =
       ladder: readonly LadderRung[];
       /** `seeding` is paraphrased: no reader may quote Bylaw 2000.1's play-in sentence (SEED_CLAIM). */
       citations: { qualification: string; seeding: string; format: string; roundDates: string };
+      /**
+       * The Section's round calendar (the officials' association's calendar; the Section's bulletin is unreadable),
+       * one row per round and division, in date order: a label a fan reads ('Quarterfinals, Division II'), a league
+       * clock time where one is published (the finals) and a site where one is (La Jolla High School). Rendered on
+       * /playoffs as the Section's "Round dates" list; a 'final' id marks a final.
+       */
+      rounds: readonly { id: string; date: string; label: string; time: string | null; site: string | null }[];
+      /** The calendar the rounds come from (sdfhoa.weebly.com), linked beside them. */
+      calendarUrl: string;
+      /** Where the Section posts its brackets (its field hockey page), linked as such. */
+      bracketsPageUrl: string;
+      /**
+       * The Section's published brackets (a Google Sheet, '2026 CIFSDS Field Hockey Championships'), once it is
+       * linked from bracketsPageUrl after the seeding meeting; null until the owner pastes it. The page then links
+       * it as the official brackets; the site still draws none.
+       */
+      bracketSheetUrl: string | null;
       /** One paragraph, rendered wherever a reader would look for a bracket. */
       note: string;
       sourceLabel: string;
@@ -1542,8 +1559,29 @@ function sdsPostseason(playoffDivisionOf: Readonly<Record<TeamSlug, 'I' | 'II'>>
       // Paraphrased on purpose: the bylaw's play-in sentence names a seed position, which SEED_CLAIM bans.
       seeding: 'CIF-SDS Green Book 2026-27, Bylaw 2000.1 (the Commissioner places teams from the Section’s approved power rankings, with input from the coaches’ advisory committee, and there is no appeal; a designated league champion left out of its division’s bracket hosts a play-in game) and the Green Book’s division-placement bylaw (the eight Open Division teams are drawn from Division I at the end of the regular season)',
       format: 'CIF-SDS Green Book 2026-27, Bylaw 2000.1 (Open 8, Division I 12, Division II 12) and the CIF-SDS 2026-27 Master Calendar (playoffs Nov 2–12, finals Nov 14)',
-      roundDates: 'Round dates and the finals site (La Jolla HS) are from the San Diego Field Hockey Officials Association’s calendar; the Section’s own bulletin is not reachable.',
+      roundDates: 'Round dates and the finals site (La Jolla HS) are from the San Diego Field Hockey Officials Association’s calendar.',
     },
+    // The SDFHOA calendar (https://sdfhoa.weebly.com/calendar.html, read 2026-10-29, unchanged since the preseason):
+    // play-ins Mon Nov 2; first round Tue Nov 3 (Division II) and Wed Nov 4 (Division I); quarterfinals Thu Nov 5
+    // (Open), Fri Nov 6 (II), Sat Nov 7 (I); semifinals Tue Nov 10 (Open and II), Wed Nov 11 (I); finals Sat Nov 14 at
+    // La Jolla High School, 1:00 PM (II), 3:30 PM (I), 6:00 PM (Open). The Section's bulletin says where earlier
+    // rounds are played; it is unreadable, so no row names a host (and "higher seed" would trip SEED_CLAIM).
+    rounds: [
+      { id: 'play-in', date: '2026-11-02', label: 'Play-in games (only if needed)', time: null, site: null },
+      { id: 'r1-ii', date: '2026-11-03', label: 'First round, Division II', time: null, site: null },
+      { id: 'r1-i', date: '2026-11-04', label: 'First round, Division I', time: null, site: null },
+      { id: 'qf-open', date: '2026-11-05', label: 'Quarterfinals, Open Division', time: null, site: null },
+      { id: 'qf-ii', date: '2026-11-06', label: 'Quarterfinals, Division II', time: null, site: null },
+      { id: 'qf-i', date: '2026-11-07', label: 'Quarterfinals, Division I', time: null, site: null },
+      { id: 'sf-open-ii', date: '2026-11-10', label: 'Semifinals, Open Division and Division II', time: null, site: null },
+      { id: 'sf-i', date: '2026-11-11', label: 'Semifinals, Division I', time: null, site: null },
+      { id: 'final-ii', date: '2026-11-14', label: 'Final, Division II', time: '13:00', site: 'La Jolla High School' },
+      { id: 'final-i', date: '2026-11-14', label: 'Final, Division I', time: '15:30', site: 'La Jolla High School' },
+      { id: 'final-open', date: '2026-11-14', label: 'Final, Open Division', time: '18:00', site: 'La Jolla High School' },
+    ],
+    calendarUrl: 'https://sdfhoa.weebly.com/calendar.html',
+    bracketsPageUrl: SDS_FIELD_HOCKEY_URL,
+    bracketSheetUrl: null,
     note: 'The San Diego Section’s field hockey playoffs run Nov 2–14, with the finals on Nov 14 at La Jolla HS: Open 8, Division I 12, Division II 12. The Section places teams from its power rankings at its Oct 31 seeding meeting; until it publishes its brackets, this site draws none and projects no places. A designated league champion is guaranteed at least a play-in game; the league names its champion, not this table.',
     sourceLabel: 'CIF-SDS Green Book 2026-27, Bylaw 2000.1',
     sourceUrl: SDS_GREEN_BOOK_URL,
@@ -2759,6 +2797,23 @@ export function assertLeagues(): void {
       case 'section-playoffs':
         inWindow(ps.dates.first, `${l.id} postseason dates.first`);
         inWindow(ps.dates.last, `${l.id} postseason dates.last`);
+        {
+          const ids = new Set<string>();
+          let last = '';
+          for (const r of ps.rounds) {
+            if (ids.has(r.id)) fail(`${l.id} round ${r.id} is listed twice`);
+            ids.add(r.id);
+            if (r.date < ps.dates.first || r.date > ps.dates.last) fail(`${l.id} round ${r.id} is outside the playoffs' dates`);
+            if (r.date < last) fail(`${l.id} round ${r.id} is out of date order`);
+            last = r.date;
+            if (!r.label.trim()) fail(`${l.id} round ${r.id} needs a label`);
+            if (r.time !== null && !/^\d{2}:\d{2}$/.test(r.time)) fail(`${l.id} round ${r.id}: time is a league clock 'HH:MM'`);
+            if (r.id.startsWith('final') && !r.site) fail(`${l.id} round ${r.id}: a final names its site`);
+          }
+          for (const url of [ps.calendarUrl, ps.bracketsPageUrl, ...(ps.bracketSheetUrl ? [ps.bracketSheetUrl] : [])]) {
+            if (!url.startsWith('https://')) fail(`${l.id}: a postseason URL must start with https:// (${url})`);
+          }
+        }
         break;
       case 'no-postseason':
         break;

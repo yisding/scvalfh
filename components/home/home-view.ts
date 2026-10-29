@@ -320,7 +320,7 @@ export function phaseLead(league: LeagueConfig, phase: SeasonPhase, today: strin
     return {
       lead: `${short} league play is over.`,
       body: `The ${ps.name} are ${dateSpan(ps.dates.first, ps.dates.last)}${
-        seeding ? `; the Section publishes its brackets after its ${shortDate(seeding.date)} seeding meeting` : ''
+        seeding ? `; the Section posts its brackets on its field hockey page after its ${shortDate(seeding.date)} seeding meeting` : ''
       }.`,
       link: { href: `/playoffs#${league.id}`, label: 'Postseason' },
     };

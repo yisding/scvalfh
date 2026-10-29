@@ -3977,7 +3977,9 @@ addition there will cross it.
 - **Independents.** Harvard-Westlake, Thousand Oaks and Glendora appear only as opponents (built
   later the same day, §24.9). So do Madison, Santana, Castle Park, Chula Vista, Montgomery and
   Sweetwater (no 2026 varsity game), and Mayfair. Search prints a sentence for each.
-- **No San Diego bracket, seed projection or power-ranking replication.** The site states the rule,
+- **No San Diego bracket, seed projection or power-ranking replication.** (Since 2026-10-29 the block also prints
+  the Section's round calendar and links its field hockey page and, once published, its brackets sheet; a link
+  is not a bracket, and the site still draws none, DESIGN §24.13.) The site states the rule,
   the dates and each team's playoff division. The Section seeds at its Oct 31 meeting.
 - **No club or commitment sweep for Southern California.** The 50 teams' rosters have no club or
   commitment lines, and `/clubs` and `/commits` cover the 49 NorCal teams' schools. (Built later, for

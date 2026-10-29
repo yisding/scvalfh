@@ -7,6 +7,7 @@ import LeagueSwitcher, { RegionSwitcher } from '../../components/layout/LeagueSw
 import PageHeader from '../../components/layout/PageHeader';
 import { leagueChips } from '../../components/layout/league-chips';
 import { OG_BASE, ROOT_OG_IMAGE } from '../../components/layout/site';
+import DateList from '../../components/playoffs/DateList';
 import KeyDates from '../../components/playoffs/KeyDates';
 import LeaguePairings from '../../components/playoffs/LeaguePairings';
 import OutsideTournament from '../../components/playoffs/OutsideTournament';
@@ -19,6 +20,8 @@ import {
   buildPairingView,
   ladderFactsFor,
   pairingNotesFor,
+  sectionBracketSentence,
+  sectionRoundRows,
   type LeagueKeyDate,
   type PairingView,
   type ProjectionRow,
@@ -41,6 +44,7 @@ import {
   getStandingFor,
   getTeamById,
   getTeams,
+  getToday,
   getTournamentLeagueIds,
 } from '../../lib/data';
 import type { LeagueSummary } from '../../lib/data';
@@ -587,13 +591,24 @@ function SectionPlayoffsBlock({
       />
       <div className="max-w-prose text-body text-ink-2">
         <p className="m-0">{ps.qualificationLine}</p>
+        {/* Date-aware (getToday, never Date.now): the "until then" of Oct 29 would read as if the Section had not
+            published from Nov 1 on. The brackets' own link appears once the owner pastes the sheet's URL. */}
         <p className="mb-0">
-          {seeding
-            ? `The Section publishes its brackets after its ${shortDate(seeding)} seeding meeting; until then this site draws no bracket and projects no places.`
-            : 'The Section publishes its brackets after its seeding meeting; until then this site draws no bracket and projects no places.'}{' '}
+          {sectionBracketSentence(ps, seeding, getToday())}{' '}
           {ps.citations.roundDates}
         </p>
         <p className="mb-0 flex flex-wrap gap-x-4 gap-y-1 text-meta">
+          {ps.bracketSheetUrl ? (
+            <ExternalLink href={ps.bracketSheetUrl} className="sx-action gap-1">
+              Official CIF-SDS brackets (Google Sheet)
+            </ExternalLink>
+          ) : null}
+          <ExternalLink href={ps.bracketsPageUrl} className="sx-action gap-1">
+            CIF-SDS field hockey page (brackets are posted here)
+          </ExternalLink>
+          <ExternalLink href={ps.calendarUrl} className="sx-action gap-1">
+            SDFHOA playoff calendar
+          </ExternalLink>
           <ExternalLink href={ps.sourceUrl} className="sx-action gap-1">
             {ps.sourceLabel}
           </ExternalLink>
@@ -602,6 +617,13 @@ function SectionPlayoffsBlock({
           </ExternalLink>
         </p>
       </div>
+      {/* The Section's round calendar (config `rounds`, the officials' association's), the SoCal counterpart of
+          the CCS key dates: a fan reads "Quarterfinals, Division II · Fri Nov 6" and the finals' times and site
+          here instead of in the docs. */}
+      <section id="sds-round-dates" className="mt-section">
+        <SectionHeader as="h3" kicker="Round dates" meta="all times PT" />
+        <DateList rows={sectionRoundRows(ps)} className="max-w-3xl" />
+      </section>
       {leagues.map((league) => (
         <SectionPlayoffsLeagueCard key={league.id} summary={league} />
       ))}

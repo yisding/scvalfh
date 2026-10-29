@@ -1067,8 +1067,25 @@ describe('leagues: the San Diego Section (City, North County, Metro)', () => {
           '2nd or lower — no league route; the Section places Division I teams in the Open or Division I bracket and picks 12 Division II teams, from its power rankings (Green Book 2000.1)'],
       ]);
       expect(ps.citations.roundDates).toBe(
-        'Round dates and the finals site (La Jolla HS) are from the San Diego Field Hockey Officials Association’s calendar; the Section’s own bulletin is not reachable.',
+        'Round dates and the finals site (La Jolla HS) are from the San Diego Field Hockey Officials Association’s calendar.',
       );
+      // The round calendar (SDFHOA), the links, and the bracket-sheet switch (null until the Section publishes).
+      expect(ps.rounds.map((r) => [r.date, r.label, r.time, r.site])).toEqual([
+        ['2026-11-02', 'Play-in games (only if needed)', null, null],
+        ['2026-11-03', 'First round, Division II', null, null],
+        ['2026-11-04', 'First round, Division I', null, null],
+        ['2026-11-05', 'Quarterfinals, Open Division', null, null],
+        ['2026-11-06', 'Quarterfinals, Division II', null, null],
+        ['2026-11-07', 'Quarterfinals, Division I', null, null],
+        ['2026-11-10', 'Semifinals, Open Division and Division II', null, null],
+        ['2026-11-11', 'Semifinals, Division I', null, null],
+        ['2026-11-14', 'Final, Division II', '13:00', 'La Jolla High School'],
+        ['2026-11-14', 'Final, Division I', '15:30', 'La Jolla High School'],
+        ['2026-11-14', 'Final, Open Division', '18:00', 'La Jolla High School'],
+      ]);
+      expect(ps.calendarUrl).toBe('https://sdfhoa.weebly.com/calendar.html');
+      expect(ps.bracketsPageUrl).toBe('https://www.cifsds.org/sports/fh/index');
+      expect(ps.bracketSheetUrl).toBeNull();
       expect(Object.keys(ps.playoffDivisionOf)).toHaveLength(l.divisions.reduce((n, d) => n + d.expectedTeams, 0));
       expect(l.phases).toEqual([{ phase: 'regular', through: 'league-play' }, { phase: 'tournament', through: '2026-11-14' }]);
       expect(l.keyDates.map((k) => [k.id, k.date])).toEqual([
