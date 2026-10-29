@@ -1120,7 +1120,9 @@ place (6th) is decided on the field instead: a play-in on Fri Oct 23 unless one 
 head-to-head 2-0, so the site leaves it shared until then. MCAL has no regular-season overtime. The
 top six make the MCAL tournament (seeds 1-2 get a bye to the Oct 28 semifinals, quarterfinals Mon
 Oct 26, final Fri Oct 30, 4 PM, at Tamalpais High School, 700 Miller Ave, Mill Valley; adults $10,
-students $5, pre-sale on GoFan, from the league's play-off sheet). The North Coast Section holds no field hockey
+students $5, pre-sale on GoFan, from the league's play-off sheet). Once it is under way the site reads the
+results: who is in the final, who lost where, and the champion, with the regular-season points leader
+named MCAL Champion and a different tournament winner also receiving a pennant. The North Coast Section holds no field hockey
 championship, so this is not a section playoff and no MCAL page describes CCS berths. With an
 incomplete schedule MCAL's General Rules rank by winning percentage instead of points; the
 standings page notes that.

@@ -629,6 +629,8 @@ export interface LeagueTournamentProjection {
   playIn: TournamentGame | null;
   games: TournamentGame[];             // qf-1, qf-2, sf-1, sf-2, final (play-in is separate)
   notes: string[];
+  /** The final's winner once it has a result (status 'complete'); null before. */
+  champion: { slug: TeamSlug; teamId: TeamId; seed: number } | null;
 }
 
 // ---------- fixtures ----------

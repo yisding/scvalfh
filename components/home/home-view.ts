@@ -26,6 +26,7 @@ import {
   getLastLeagueResultDate,
   getLatestResultsDate,
   getLeagueSummaries,
+  getLeagueTournament,
   getNonLeagueFinalsPlayed,
   getOfficialFixtures,
   getPlayoffs,
@@ -60,6 +61,7 @@ import {
 } from '../../lib/format';
 import { gameHref } from '../../lib/game-id';
 import { hasHistory } from '../../lib/history';
+import { tournamentHeadline } from '../../lib/postseason';
 import { outcomesFor, pairingDatesLabel, playoffOutcomeLabel, statusBadge } from '../../lib/standings';
 import {
   CCS,
@@ -286,6 +288,15 @@ export function phaseLead(league: LeagueConfig, phase: SeasonPhase, today: strin
   }
 
   if (phase === 'tournament' && ps.kind === 'league-tournament') {
+    // Results first (DESIGN §24.13): the champion once the final has a winner, else the next round's matchups
+    // (lib/postseason.ts tournamentHeadline); the static round list only while the picture is projected.
+    const headline = tournamentHeadline(getLeagueTournament(league.id), league);
+    if (headline.champion) {
+      return { lead: headline.champion, body: '', link: { href: `/playoffs/${league.id}`, label: 'Bracket' } };
+    }
+    if (headline.next) {
+      return { lead: `${short} league play is over.`, body: `${headline.next}.`, link: { href: `/playoffs/${league.id}`, label: 'Bracket' } };
+    }
     const round = (id: string) => ps.rounds.find((r) => r.id === id);
     const qf = round('qf-1');
     const playIn = round('play-in');
@@ -522,15 +533,23 @@ function leagueTournamentView(
   ps: Extract<PostseasonConfig, { kind: 'league-tournament' }>,
   sectionNote: string | null,
 ): PostseasonView {
+  // Results first (DESIGN §24.13): 'MCAL tournament · Champion: Tamalpais won the MCAL tournament, beating …' or
+  // 'MCAL tournament · Final Fri Oct 30, 4 PM PT at Tamalpais: 1 Tamalpais vs 3 Redwood'; the static round list
+  // only while the picture is projected from the table.
+  const headline = tournamentHeadline(getLeagueTournament(league.id), league);
+  const live = headline.champion ? `Champion: ${headline.champion}` : headline.next;
   const round = (id: string) => ps.rounds.find((r) => r.id === id);
   const qf = round('qf-1');
   const sf = round('sf-1');
   const final = round('final');
   const playIn = round('play-in');
   const parts = [ps.name];
-  if (qf) parts.push(`Quarterfinals ${shortDate(qf.date)}${playIn ? ` (a play-in ${shortDate(playIn.date)} only if needed)` : ''}`);
-  if (sf) parts.push(`Semifinals ${shortDate(sf.date)}`);
-  if (final) parts.push(`Final ${shortDate(final.date)} at ${ps.finalSite.label}`);
+  if (live) parts.push(live);
+  else {
+    if (qf) parts.push(`Quarterfinals ${shortDate(qf.date)}${playIn ? ` (a play-in ${shortDate(playIn.date)} only if needed)` : ''}`);
+    if (sf) parts.push(`Semifinals ${shortDate(sf.date)}`);
+    if (final) parts.push(`Final ${shortDate(final.date)} at ${ps.finalSite.label}`);
+  }
   return {
     kind: 'league-tournament',
     leagueId: league.id,
@@ -869,6 +888,10 @@ export function buildTeamViews(): HomeTeamView[] {
     const line = getTeamPostseasonLine(team.slug);
     const projected = LATER_PHASES.has(getSeasonPhase(league.id));
     const lead = projected ? POSTSEASON_LEAD.projected : POSTSEASON_LEAD.final;
+    // A league tournament under way: the line is the team's outcome ('In the MCAL final', 'Lost in the
+    // semifinal'), its own sentence, not a 'Final place:' ladder rung (DESIGN §24.13).
+    const outcomeLine =
+      league.postseason.kind === 'league-tournament' && getLeagueTournament(league.id).status !== 'projected';
     // The card's one visible line must show the STATUS at 320px (288px of text): a short lead, and
     // for a place shared across two rungs the rungs' badges ('Play-in or No AQ route (tied)')
     // instead of the full label with its tiebreak citation, which the team page carries.
@@ -900,8 +923,8 @@ export function buildTeamViews(): HomeTeamView[] {
             : context.remaining > 0
               ? `${context.counted} of ${context.scheduled} played`
               : null,
-      postseason: line ? `${lead.full} ${line.label}` : null,
-      ...(shortLabel ? { postseasonShort: `${lead.short} ${shortLabel}` } : {}),
+      postseason: line ? (outcomeLine ? line.label : `${lead.full} ${line.label}`) : null,
+      ...(shortLabel && !outcomeLine ? { postseasonShort: `${lead.short} ${shortLabel}` } : {}),
       tableHref: `/standings/${league.id}#${team.division}`,
       hasResults,
       leagueRecord: hasResults && standing ? recordString(standing.computed) : EM_DASH,

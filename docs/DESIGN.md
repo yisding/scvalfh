@@ -4262,6 +4262,22 @@ by the Los Angeles Field Hockey Association, not by CIF."). A game page reads "T
 kicker and "Tournament of Champions game (Los Angeles Field Hockey Association, not a CIF event) — it does not
 count in any league table." as its note; the chip in every list is "Tournament of Champions".
 
+**MCAL copy reads the results (2026-10-29).** `LeagueTournamentProjection.champion` is the final's winner once it
+has one (a level final with no W flag completes nothing); `tournamentOutcome(projection, slug)` is one team's
+standing in the bracket (champion, runner-up, in the final, lost in a round, alive, below the line, or projected),
+and `tournamentOutcomeCopy` its label and sentence ("In the MCAL tournament final" / "Redwood plays Tamalpais in the
+MCAL tournament final, Fri Oct 30, 4 PM PT at Tamalpais."; "Lost in the semifinal" / "University lost its MCAL
+tournament semifinal to Redwood, 1–0 in overtime, on Wed Oct 28."; "MCAL tournament champion" / "Tamalpais won the
+MCAL tournament, beating Redwood 3–1 in the final on Fri Oct 30."; never "eliminat…"). `tournamentHeadline` is the
+champion's sentence or the next round's matchups ("Final Fri Oct 30, 4 PM PT at Tamalpais: 1 Tamalpais vs 3
+Redwood"). They feed the team postseason line and the pinned card (the outcome label, no "Final place:" lead), the
+home phase lead and Postseason card (the headline in place of the static round list), `/playoffs/mcal` (a
+"Champion" or "Next" block above the seeds, the header meta, the seeds table's status column and the OG card) and,
+after the final, the title rule applied: the seed-1 points leader is the regular-season MCAL Champion; a different
+tournament winner "also receives a pennant" (General Rules, Pennants 3). The static round list and the ladder
+labels remain while the picture is only projected from the table; the optional play-in clause drops once its day
+has passed.
+
 **The honesty line is the accessor's.** `TeamPostseasonLine.caveat` (lib/data.ts) replaces the component's
 unconditional "Projected from the table today; nothing here is official.": a CCS ladder prints it, a league
 tournament prints it while its picture is still read from the table and "From the results as posted; nothing

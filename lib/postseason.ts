@@ -30,7 +30,7 @@
  * Imports the standings engine (lib/standings.ts), lib/format.ts, lib/leagues.ts, lib/teams.ts and types.
  */
 
-import { byDateThenId, sideOutcome } from './format';
+import { EN_DASH, byDateThenId, leagueClockPT, numberWord, shortDate, sideOutcome } from './format';
 import { drawNumberOf, type LeagueConfig } from './leagues';
 import { lastSpotOutcome } from './standings';
 import { getTeamById, getTeamBySlug } from './teams';
@@ -367,8 +367,10 @@ export function buildLeagueTournament(
 
   const all = [...(playIn ? [playIn] : []), ...qfs, ...sfs, final];
   let status: LeagueTournamentProjection['status'];
+  // A final with a result but no winner (level, no W flag) is not complete: nobody has won it.
+  const finalWinner = winnerWithSeed(final);
   if (phase === 'preseason' || phase === 'regular') status = 'projected';
-  else if (hasResult(final.game)) status = 'complete';
+  else if (finalWinner !== null) status = 'complete';
   else if (all.some((tg) => hasResult(tg.game))) status = 'in-progress';
   else status = 'seeded';
 
@@ -381,5 +383,169 @@ export function buildLeagueTournament(
     playIn,
     games: [...qfs, ...sfs, final],
     notes: decision.note === null ? [] : [decision.note],
+    champion: finalWinner ? { ...refOf(finalWinner.slug, seeds), seed: finalWinner.seed } : null,
   };
 }
+
+// ---------------------------------------------------------------- a team's outcome (SPEC §6.2; DESIGN §24.13)
+
+/**
+ * Where one team stands in the tournament, read from the matched results: the champion or the runner-up once
+ * the final has a winner; in the final, or alive before a next game, while it has not lost; the round it lost
+ * in; below the line when it holds no seed; 'projected' while the whole picture is still read from the table.
+ */
+export type TournamentOutcome =
+  | { kind: 'projected' }
+  | { kind: 'below-line' }
+  | { kind: 'champion'; game: Game; opponent: TeamSlug }
+  | { kind: 'runner-up'; game: Game; opponent: TeamSlug }
+  | { kind: 'in-final'; next: TournamentGame; opponent: TeamSlug | null }
+  | { kind: 'lost'; round: TournamentGame['round']; game: Game; opponent: TeamSlug }
+  | { kind: 'alive'; next: TournamentGame | null };
+
+const slotNames = (slot: TournamentSlot): TeamSlug[] => (slot.kind === 'seed' ? slot.seat.map((s) => s.slug) : []);
+const inSlot = (slot: TournamentSlot, slug: TeamSlug): boolean => slotNames(slot).includes(slug);
+
+/** The other side's slug when the slot names exactly one team, else null. */
+function opponentIn(tg: TournamentGame, slug: TeamSlug): TeamSlug | null {
+  const other = inSlot(tg.home, slug) ? tg.away : tg.home;
+  const names = slotNames(other);
+  return names.length === 1 ? names[0] : null;
+}
+
+export function tournamentOutcome(p: LeagueTournamentProjection, slug: TeamSlug): TournamentOutcome {
+  if (p.status === 'projected') return { kind: 'projected' };
+  const all = [...(p.playIn ? [p.playIn] : []), ...p.games];
+  // The latest decided game this team played, by round order (play-in, quarterfinal, semifinal, final). Read
+  // before the seat check: a play-in loser holds no seat afterwards, and still "lost the play-in".
+  const played = all.filter((tg) => hasResult(tg.game) && (tg.game.home.slug === slug || tg.game.away.slug === slug));
+  const last = played[played.length - 1];
+  if (last && last.game) {
+    const g = last.game;
+    const won = winnerOf(last) === slug;
+    const opponent = (g.home.slug === slug ? g.away.slug : g.home.slug) ?? '';
+    if (last.round === 'final') return won ? { kind: 'champion', game: g, opponent } : { kind: 'runner-up', game: g, opponent };
+    if (!won) return { kind: 'lost', round: last.round, game: g, opponent };
+  }
+  if (!p.seeds.some((s) => s.seat.some((x) => x.slug === slug))) return { kind: 'below-line' };
+  // Not out: the next game whose slot names this team and has no result yet.
+  const next = all.find((tg) => !hasResult(tg.game) && (inSlot(tg.home, slug) || inSlot(tg.away, slug))) ?? null;
+  if (next && next.round === 'final') return { kind: 'in-final', next, opponent: opponentIn(next, slug) };
+  return { kind: 'alive', next };
+}
+
+const ROUND_WORDS: Readonly<Record<TournamentGame['round'], string>> = {
+  'play-in': 'play-in', quarterfinal: 'quarterfinal', semifinal: 'semifinal', final: 'final',
+};
+
+/** '3–1' winner first, with ' in overtime' when MaxPreps marks it so. */
+function scoreWords(g: Game, winner: TeamSlug): string {
+  const w = g.home.slug === winner ? g.home.score : g.away.score;
+  const l = g.home.slug === winner ? g.away.score : g.home.score;
+  const ot = g.decider === 'OT' || g.decider === '2OT' ? ' in overtime' : '';
+  return `${w}${EN_DASH}${l}${ot}`;
+}
+
+/** 'Fri Oct 30, 4 PM PT at Tamalpais' / 'Mon Oct 26, 4 PM PT at <host>' for an unplayed bracket game. */
+function whenWhere(tg: TournamentGame, slug: TeamSlug): string {
+  const time = leagueClockPT(tg.time);
+  if (tg.site) return `${shortDate(tg.date)}, ${time} at ${tg.site}`;
+  const hostSlug = slotNames(tg.home);
+  const host = hostSlug.length === 1 ? hostSlug[0] : null;
+  if (host === slug) return `${shortDate(tg.date)}, ${time} at home`;
+  return host ? `${shortDate(tg.date)}, ${time} at ${nameOfSlug(host)}` : `${shortDate(tg.date)}, ${time}`;
+}
+
+/**
+ * The outcome in words for a team's postseason line and pinned card (DESIGN §24.13): a written label (never
+ * "eliminat…") and one sentence that reads the results. `ladderLabel` and `ladderSentence` are the table-based
+ * words for the two cases that are not about results ('projected', 'below-line').
+ */
+export function tournamentOutcomeCopy(
+  outcome: TournamentOutcome, slug: TeamSlug, league: LeagueConfig, ladder: { label: string; sentence: string },
+): { label: string; sentence: string } {
+  const ps = tournamentOf(league);
+  const team = nameOfSlug(slug);
+  switch (outcome.kind) {
+    case 'projected':
+      return ladder;
+    case 'below-line':
+      return { label: ladder.label, sentence: `The ${numberWord(ps.qualifiers)}-team ${ps.name} is under way without ${team}; its season ended with its last league game.` };
+    case 'champion':
+      return {
+        label: `${ps.name} champion`,
+        sentence: `${team} won the ${ps.name}, beating ${nameOfSlug(outcome.opponent)} ${scoreWords(outcome.game, slug)} in the final on ${shortDate(outcome.game.dateKey)}.`,
+      };
+    case 'runner-up':
+      return {
+        label: `${ps.name} runner-up`,
+        sentence: `${team} lost the ${ps.name} final to ${nameOfSlug(outcome.opponent)}, ${scoreWords(outcome.game, outcome.opponent)}, on ${shortDate(outcome.game.dateKey)}.`,
+      };
+    case 'in-final':
+      return {
+        label: `In the ${ps.name} final`,
+        sentence: outcome.opponent
+          ? `${team} plays ${nameOfSlug(outcome.opponent)} in the ${ps.name} final, ${whenWhere(outcome.next, slug)}.`
+          : `${team} is in the ${ps.name} final, ${whenWhere(outcome.next, slug)}; its opponent is not decided yet.`,
+      };
+    case 'lost':
+      return {
+        label: `Lost in the ${ROUND_WORDS[outcome.round]}`,
+        sentence: `${team} lost its ${ps.name} ${ROUND_WORDS[outcome.round]} to ${nameOfSlug(outcome.opponent)}, ${scoreWords(outcome.game, outcome.opponent)}, on ${shortDate(outcome.game.dateKey)}.`,
+      };
+    case 'alive': {
+      const next = outcome.next;
+      if (!next) return { label: `In the ${ps.name}`, sentence: `${team} is in the ${ps.name}; its next game is listed as MaxPreps posts it.` };
+      const opponent = opponentIn(next, slug);
+      const vs = opponent ? nameOfSlug(opponent) : `the ${slotText(next, slug)}`;
+      return { label: `In the ${ps.name}`, sentence: `${team} plays ${vs} in the ${ps.name} ${ROUND_WORDS[next.round]}, ${whenWhere(next, slug)}.` };
+    }
+  }
+}
+
+/** '3 Redwood at 1 Tamalpais' / '1 Tamalpais vs 3 Redwood' (a fixed site lists the better seed first); TBD for an empty seat. */
+export function tournamentGameLine(tg: TournamentGame): string {
+  const label = (slot: TournamentSlot): string => {
+    if (slot.kind === 'rule') return slot.text;
+    if (slot.kind === 'winner-of') return slot.label;
+    const names = slot.seat.map((s) => getTeamBySlug(s.slug)?.shortName ?? s.slug);
+    return `${slot.seed} ${names.length ? names.join(' or ') : 'TBD'}`;
+  };
+  return tg.site ? `${label(tg.home)} vs ${label(tg.away)}` : `${label(tg.away)} at ${label(tg.home)}`;
+}
+
+/**
+ * What the home lead, the home card, the page header and the OG card lead with (DESIGN §24.13): the champion's
+ * sentence once the final has a winner, else the next round with an unplayed game ('Final Fri Oct 30, 4 PM PT at
+ * Tamalpais: 1 Tamalpais vs 3 Redwood'), else null (every game played but the final undecided, or no round left).
+ * Null too while the picture is only projected: the static round list serves then.
+ */
+export function tournamentHeadline(p: LeagueTournamentProjection, league: LeagueConfig): { champion: string | null; next: string | null } {
+  const ps = tournamentOf(league);
+  if (p.status === 'projected') return { champion: null, next: null };
+  if (p.champion) {
+    const final = p.games.find((tg) => tg.round === 'final');
+    const g = final?.game;
+    const opp = g ? (g.home.slug === p.champion.slug ? g.away.slug : g.home.slug) : null;
+    const name = nameOfSlug(p.champion.slug);
+    const detail = g && opp ? `, beating ${nameOfSlug(opp)} ${scoreWords(g, p.champion.slug)} in the final on ${shortDate(g.dateKey)}` : '';
+    return { champion: `${name} won the ${ps.name}${detail}.`, next: null };
+  }
+  const all = [...(p.playIn ? [p.playIn] : []), ...p.games];
+  const nextGame = all.find((tg) => !hasResult(tg.game));
+  if (!nextGame) return { champion: null, next: null };
+  const round = all.filter((tg) => tg.round === nextGame.round && !hasResult(tg.game));
+  const title = nextGame.round === 'play-in' ? 'Play-in' : nextGame.round === 'final' ? 'Final' : `${ROUND_WORDS[nextGame.round][0].toUpperCase()}${ROUND_WORDS[nextGame.round].slice(1)}s`;
+  const where = nextGame.site ? ` at ${nextGame.site}` : '';
+  return { champion: null, next: `${title} ${shortDate(nextGame.date)}, ${leagueClockPT(nextGame.time)}${where}: ${round.map(tournamentGameLine).join('; ')}` };
+}
+
+/** The other slot's written rule or contenders ('winner of the play-in', 'lowest-ranked remaining seed'). */
+function slotText(tg: TournamentGame, slug: TeamSlug): string {
+  const other = inSlot(tg.home, slug) ? tg.away : tg.home;
+  if (other.kind === 'rule') return other.text.toLowerCase();
+  if (other.kind === 'winner-of') return other.label.toLowerCase();
+  const names = other.seat.map((s) => nameOfSlug(s.slug));
+  return names.length ? `winner between ${names.join(' and ')}` : 'team to be decided';
+}
+

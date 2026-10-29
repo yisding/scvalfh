@@ -44,7 +44,7 @@ import {
   leaguesInRegion,
 } from './leagues';
 import type { LeagueConfig, PairingConfig, PostseasonConfig, RegionConfig, SectionConfig } from './leagues';
-import { buildLeagueTournament } from './postseason';
+import { buildLeagueTournament, tournamentOutcome, tournamentOutcomeCopy } from './postseason';
 import { buildSearchIndex } from './search';
 import type { SearchIndex } from './search';
 import { loadSnapshot } from './snapshot-schema';
@@ -1061,16 +1061,25 @@ export function getTeamPostseasonLine(ref: string): TeamPostseasonLine | null {
       const final = round('final');
       const qualifiers = numberWord(ps.qualifiers);
       const byes = ps.byes.length === 2 ? `${ps.byes[0]}-${ps.byes[1]}` : ps.byes.join(', ');
-      return {
+      // The table's words while the picture is projected from it; once the tournament is seeded or under way, the
+      // team's own outcome from the results (lib/postseason.ts tournamentOutcome: in the final, lost in the
+      // semifinal, champion…, DESIGN §24.13). The optional play-in clause is dropped once its day has passed.
+      const projection = getLeagueTournament(league.id);
+      const playInClause = playIn && getToday() <= playIn.date ? ` (a play-in ${shortDate(playIn.date)} only if needed)` : '';
+      const ladder = {
         label,
         sentence:
           `Top ${qualifiers} make the ${ps.name}: quarterfinals ${qf ? shortDate(qf.date) : ''}` +
-          `${playIn ? ` (a play-in ${shortDate(playIn.date)} only if needed)` : ''}, final ` +
+          `${playInClause}, final ` +
           `${final ? shortDate(final.date) : ''} at ${ps.finalSite.label}; seeds ${byes} get byes to the semifinals.`,
+      };
+      const words = tournamentOutcomeCopy(tournamentOutcome(projection, team.slug), team.slug, league, ladder);
+      return {
+        ...words,
         href: `/playoffs/${league.id}`,
         linkText: ps.name,
         // A projection only until the first tournament result is in; then the picture is the results'.
-        caveat: getLeagueTournament(league.id).status === 'projected' ? PROJECTED_CAVEAT : RESULTS_CAVEAT,
+        caveat: projection.status === 'projected' ? PROJECTED_CAVEAT : RESULTS_CAVEAT,
       };
     }
     case 'unbracketed-tournament':

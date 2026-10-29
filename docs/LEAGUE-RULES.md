@@ -279,6 +279,10 @@ Oct 28, 2026); the two overtime wins (Marin Catholic 2-1 Lick-Wilmerding, Redwoo
 University) were overtime goals [V: Marin IJ]. The title rule's source is the MCAL General Rules,
 Pennants 1–3 (`https://www.mcalsports.org/Gen_rules/GeneralRules.pdf`): "If the winner of the playoffs
 is different than the regular season winner, they will also be awarded a pennant."
+Once the tournament is under way the site reads its results: each team's line says it is in the final, lost in a
+round, or is the champion or runner-up (`tournamentOutcome`, lib/postseason.ts), the home card and the page lead
+with the next round's matchups or the champion, and after the final the title rule is applied in words (the seed-1
+points leader is the regular-season MCAL Champion; a different tournament winner also receives a pennant).
 Games dated **Oct 23 or later** between MCAL teams are tournament play
 and never count in the league table, unless a maintainer lists a rescheduled league game as an
 override.

@@ -6,7 +6,7 @@ import { getLeague } from '../lib/leagues';
 import {
   EARLIER_MEETING_NOTE, SHOOTOUT_NOTE, buildLeagueTournament, finalGame, matchTournamentGames, quarterfinals,
   seedsFromStandings, semifinals, sixthPlaceRule,
-  mayHideShootout,
+  mayHideShootout, tournamentHeadline, tournamentOutcome, tournamentOutcomeCopy,
 } from '../lib/postseason';
 import { getTeamBySlug } from '../lib/teams';
 import type { Game, Standing, TiebreakStage } from '../lib/types';
@@ -362,6 +362,77 @@ describe('buildLeagueTournament', () => {
     expect(p.status).toBe('complete');
     expect(p.games[4].game?.contestId).toBe(fin.contestId);
     expect(p.games[4].note).toBe(SHOOTOUT_NOTE);
+  });
+
+  it('names the champion and each team’s outcome from the results, with the headline a fan reads first', () => {
+    const playIn = game(MC, UN, 1, 2, '2026-10-23', { postseason: true });
+    const qfs = [game(BK, LW, 0, 2, '2026-10-26', { postseason: true }), game(TM, UN, 3, 0, '2026-10-26', { postseason: true })];
+    const sfs = [game(AW, LW, 2, 0, '2026-10-28', { postseason: true }), game(RW, TM, 0, 1, '2026-10-28', { postseason: true })];
+    const name = (slug: string) => getTeamBySlug(slug)!.name;
+    const copy = (p: ReturnType<typeof buildLeagueTournament>, slug: string) =>
+      tournamentOutcomeCopy(tournamentOutcome(p, slug), slug, MCAL, { label: 'ladder', sentence: 'ladder sentence' });
+
+    // Projected from the table: the ladder's own words, no headline.
+    const projected = buildLeagueTournament(MCAL, rows, league, 'regular', '2026-10-02');
+    expect(projected.champion).toBeNull();
+    expect(tournamentOutcome(projected, TM)).toEqual({ kind: 'projected' });
+    expect(copy(projected, TM)).toEqual({ label: 'ladder', sentence: 'ladder sentence' });
+    expect(tournamentHeadline(projected, MCAL)).toEqual({ champion: null, next: null });
+
+    // Semifinals in, the final to come: the finalists are "in the final", the losers say where they lost.
+    const before = buildLeagueTournament(MCAL, rows, [...league, playIn, ...qfs, ...sfs], 'tournament', '2026-10-29');
+    expect(before.champion).toBeNull();
+    expect(tournamentOutcome(before, AW)).toMatchObject({ kind: 'in-final', opponent: TM });
+    expect(copy(before, AW)).toEqual({
+      label: 'In the MCAL tournament final',
+      sentence: `${name(AW)} plays ${name(TM)} in the MCAL tournament final, Fri Oct 30, 4 PM PT at Tamalpais.`,
+    });
+    expect(copy(before, LW)).toEqual({
+      label: 'Lost in the semifinal',
+      sentence: `${name(LW)} lost its MCAL tournament semifinal to ${name(AW)}, 2–0, on Wed Oct 28.`,
+    });
+    expect(copy(before, BK).label).toBe('Lost in the quarterfinal');
+    expect(copy(before, MC).label).toBe('Lost in the play-in');
+    expect(copy(before, CS)).toEqual({
+      label: 'ladder',
+      sentence: `The six-team MCAL tournament is under way without ${name(CS)}; its season ended with its last league game.`,
+    });
+    expect(tournamentHeadline(before, MCAL)).toEqual({
+      champion: null,
+      next: `Final Fri Oct 30, 4 PM PT at Tamalpais: 1 ${getTeamBySlug(AW)!.shortName} vs 3 ${getTeamBySlug(TM)!.shortName}`,
+    });
+
+    // Quarterfinals in, semifinals to come: the next round's two matchups.
+    const mid = buildLeagueTournament(MCAL, rows, [...league, playIn, ...qfs], 'tournament', '2026-10-27');
+    expect(tournamentHeadline(mid, MCAL).next).toMatch(/^Semifinals Wed Oct 28, 4 PM PT: 5 .* at 1 .*; 3 .* at 2 .*$/);
+    expect(copy(mid, AW).label).toBe('In the MCAL tournament');
+    expect(copy(mid, AW).sentence).toMatch(/plays .* in the MCAL tournament semifinal, Wed Oct 28, 4 PM PT at home\.$/);
+
+    // The final decided: a champion, a runner-up, and the title sentence's inputs.
+    const fin = game(TM, AW, 2, 1, '2026-10-30', { postseason: true });
+    const done = buildLeagueTournament(MCAL, rows, [...league, playIn, ...qfs, ...sfs, fin], 'complete', '2026-10-31');
+    expect(done.status).toBe('complete');
+    expect(done.champion).toEqual({ slug: TM, teamId: getTeamBySlug(TM)!.id, seed: 3 });
+    expect(copy(done, TM)).toEqual({
+      label: 'MCAL tournament champion',
+      sentence: `${name(TM)} won the MCAL tournament, beating ${name(AW)} 2–1 in the final on Fri Oct 30.`,
+    });
+    expect(copy(done, AW)).toEqual({
+      label: 'MCAL tournament runner-up',
+      sentence: `${name(AW)} lost the MCAL tournament final to ${name(TM)}, 2–1, on Fri Oct 30.`,
+    });
+    expect(tournamentHeadline(done, MCAL)).toEqual({
+      champion: `${name(TM)} won the MCAL tournament, beating ${name(AW)} 2–1 in the final on Fri Oct 30.`,
+      next: null,
+    });
+    // A level final with no winner flag completes nothing: no champion, still in progress.
+    const level: Game = { ...game(TM, AW, 1, 1, '2026-10-30', { postseason: true }) };
+    const undecided = buildLeagueTournament(MCAL, rows, [...league, playIn, ...qfs, ...sfs, level], 'complete', '2026-10-31');
+    expect(undecided.status).toBe('in-progress');
+    expect(undecided.champion).toBeNull();
+    for (const slug of [TM, AW, LW, RW, BK, UN, MC, CS]) {
+      expect(`${copy(done, slug).label} ${copy(done, slug).sentence}`).not.toMatch(/eliminat/i);
+    }
   });
 
   it('attaches the shootout caveat only where a shootout may hide, and a sourced result note where config has one', () => {
