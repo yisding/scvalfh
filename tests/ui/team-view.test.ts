@@ -267,6 +267,14 @@ describe('Southern California team pages (DESIGN-socal §2.4)', () => {
     expect(city.classification).toBe('membership');
   });
 
+  it('the honesty line is the accessor’s: a CCS ladder is projected, a tournament still read from the table too', async () => {
+    expect(data.getTeamPostseasonLine('saint-francis')!.caveat).toBe('Projected from the table today; nothing here is official.');
+    expect(textOf(await renderTeam('saint-francis'))).toContain('Projected from the table today; nothing here is official.');
+    // The corpus snapshot predates the MCAL tournament, so its picture is still a projection from the table.
+    expect(data.getLeagueTournament('mcal').status).toBe('projected');
+    expect(data.getTeamPostseasonLine('redwood')!.caveat).toBe('Projected from the table today; nothing here is official.');
+  });
+
   it('a Sunset page: kicker "Postseason", the league note whatever it has played, no projection, GP bare', async () => {
     const v = view.buildTeamPageView('huntington-beach')!;
     expect(v.leagueScheduled, 'components/teams/team-view.ts no fixed schedule').toBeNull();

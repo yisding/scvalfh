@@ -462,6 +462,7 @@ describe('data: postseason', () => {
       sentence: `${sunset.postseason.note} Edison is one of the eight teams in the Tournament of Champions, Oct 22–29, run by the Los Angeles Field Hockey Association, not by CIF.`,
       href: '/playoffs#sunset',
       linkText: 'Postseason',
+      caveat: null,
     });
     expect(data.getTeamPostseasonLine('edison')!.sentence).not.toMatch(/\btop\b/i);
   });
@@ -635,6 +636,7 @@ describe('data: an EAL table with results', () => {
       sentence: 'The top six schools play the Super Regional, Oct 30–31, and every EAL team is one of the six; the NFHS Network’s CIFNS listing has the games at Pleasant Valley High School, Chico on Sat Oct 31.',
       href: '/playoffs#eal',
       linkText: 'Postseason',
+      caveat: null,
     });
     expect(eal.getTeamPostseasonLine('bella-vista')).toBeNull();
   });

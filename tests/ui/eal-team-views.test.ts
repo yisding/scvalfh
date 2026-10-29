@@ -138,6 +138,9 @@ describe('an EAL team page (/teams/davis)', () => {
     expect(text, 'app/teams/[slug]/page.tsx kicker').toContain('Super Regional picture');
     const line = eal.d.getTeamPostseasonLine('davis');
     expect(line, 'lib/data.ts getTeamPostseasonLine').not.toBeNull();
+    // Nothing is projected for the EAL (every team is in the six), so the card carries no "Projected" line.
+    expect(line?.caveat, 'lib/data.ts caveat').toBeNull();
+    expect(text, 'components/teams/TeamPlayoffLine.tsx').not.toContain('Projected from the table today');
     expect(text, 'components/teams/TeamPlayoffLine.tsx sentence').toContain(
       'The top six schools play the Super Regional, Oct 30–31, and every EAL team is one of the six; the NFHS Network’s CIFNS listing has the games at Pleasant Valley High School, Chico on Sat Oct 31.',
     );

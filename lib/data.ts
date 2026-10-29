@@ -989,7 +989,17 @@ export interface TeamPostseasonLine {
   sentence: string;
   href: string;
   linkText: string;
+  /**
+   * The honesty line under the card, or null where nothing is projected: 'Projected from the table today;
+   * nothing here is official.' for a CCS ladder and for a league tournament still projected from the table;
+   * 'From the results as posted; nothing here is official.' once that tournament has results; null for the
+   * EAL (every team is in; nothing is projected), a San Diego league (the Section places teams) and the Sunset.
+   */
+  caveat: string | null;
 }
+
+const PROJECTED_CAVEAT = 'Projected from the table today; nothing here is official.';
+const RESULTS_CAVEAT = 'From the results as posted; nothing here is official.';
 
 /**
  * §10.5 copy; null for an unknown ref AND for a team with gp 0 (never placed by merit), except in a league
@@ -1019,6 +1029,7 @@ export function getTeamPostseasonLine(ref: string): TeamPostseasonLine | null {
       sentence,
       href: `/playoffs#${league.id}`,
       linkText: 'Postseason',
+      caveat: null,
     };
   }
   if (row.computed.gp === 0) return null;
@@ -1040,6 +1051,7 @@ export function getTeamPostseasonLine(ref: string): TeamPostseasonLine | null {
         sentence: `${ps.qualificationLine}${divisionSentence}`,
         href: `/playoffs#${league.id}`,
         linkText: ps.name,
+        caveat: null,
       };
     }
     case 'league-tournament': {
@@ -1057,6 +1069,8 @@ export function getTeamPostseasonLine(ref: string): TeamPostseasonLine | null {
           `${final ? shortDate(final.date) : ''} at ${ps.finalSite.label}; seeds ${byes} get byes to the semifinals.`,
         href: `/playoffs/${league.id}`,
         linkText: ps.name,
+        // A projection only until the first tournament result is in; then the picture is the results'.
+        caveat: getLeagueTournament(league.id).status === 'projected' ? PROJECTED_CAVEAT : RESULTS_CAVEAT,
       };
     }
     case 'unbracketed-tournament':
@@ -1068,6 +1082,7 @@ export function getTeamPostseasonLine(ref: string): TeamPostseasonLine | null {
           : `The top ${numberWord(ps.qualifiers)} schools play the ${ps.name}, ${dateSpan(ps.dates.first, ps.dates.last)}; its format and site are not published yet.`,
         href: `/playoffs#${league.id}`,
         linkText: 'Postseason',
+        caveat: null,
       };
     case 'ccs-ladder': {
       const crossover = ps.pairings.find((p) => p.tag === 'scval-crossover');
@@ -1084,7 +1099,7 @@ export function getTeamPostseasonLine(ref: string): TeamPostseasonLine | null {
         // An automatic-berth place (BVAL Mt. Hamilton 1-3, PCAL 1-2): the spec gives no league sentence.
         sentence = `${league.shortName}’s automatic CCS berths go by final place; CCS seeds the field on ${shortDate(CCS.keyDates.seedingMeeting)}.`;
       }
-      return { label, sentence, href: `/playoffs#${league.id}`, linkText: 'CCS playoffs' };
+      return { label, sentence, href: `/playoffs#${league.id}`, linkText: 'CCS playoffs', caveat: PROJECTED_CAVEAT };
     }
   }
 }

@@ -4260,6 +4260,13 @@ by the Los Angeles Field Hockey Association, not by CIF."). A game page reads "T
 kicker and "Tournament of Champions game (Los Angeles Field Hockey Association, not a CIF event) — it does not
 count in any league table." as its note; the chip in every list is "Tournament of Champions".
 
+**The honesty line is the accessor's.** `TeamPostseasonLine.caveat` (lib/data.ts) replaces the component's
+unconditional "Projected from the table today; nothing here is official.": a CCS ladder prints it, a league
+tournament prints it while its picture is still read from the table and "From the results as posted; nothing
+here is official." once a tournament result is in, and the EAL (every team is in the six), a San Diego league (the
+Section places teams) and the Sunset print none. Before 2026-10-29 the line sat under a San Diego card that had
+just said the Section places teams, and under Redwood's card two tournament wins into the MCAL bracket.
+
 **Data.** Two rows the event exposed are excluded by config: a second Harvard-Westlake 6-0 Temecula Valley on
 Oct 23 and a scoreless Newport Harbor at Glendora on Oct 22 (the game moved to Oct 24). The third-place game is
 not on MaxPreps. Not built: a bracket (none is published), a champion line (the final is tonight), the 2025
