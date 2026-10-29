@@ -287,7 +287,12 @@ const corpusById = new Map(corpus.games.map((g) => [g.contestId, g]));
  * Fallbrook Oct 30: lib/leagues.ts), in config order. Neither is in the 2026-10-02 NorCal corpus, so
  * applyExclusions reports both as unused there.
  */
-const SDS_DUPLICATE_ROWS = ['c7dbdbcc-5f41-4192-b8b2-eb79cca2523a', '9c027452-e21e-4e47-9eac-d2e800bfb42c'];
+/** Exclusions for Southern California rows, which this NorCal corpus never holds: the two duplicate Palomar rows
+ * (San Diego, inventory 2026-10-06) and the two Tournament of Champions duplicates (Southern Section, 2026-10-29). */
+const SOCAL_EXCLUDED_ROWS = [
+  'c7dbdbcc-5f41-4192-b8b2-eb79cca2523a', '9c027452-e21e-4e47-9eac-d2e800bfb42c',
+  '0017b5bb-5319-4742-84df-e6585dcb7056', '3702e126-9414-4c0b-a13c-61e78ead2ed9',
+];
 
 const TBA_CONTESTS = [
   '64c8188b-db94-44ff-8477-d60b4e3db218', // Ann Sobrato, 2026-09-12
@@ -493,8 +498,9 @@ describe('applyExclusions (SPEC §7.6 step 3)', () => {
     expect(res.dropped).toHaveLength(2);
     expect(res.games).toHaveLength(corpus.games.length - 2);
     expect(res.games).toEqual(corpus.games.filter((g) => !res.dropped.some((d) => d.contestId === g.contestId)));
-    // The two duplicate Palomar rows (San Diego, inventory 2026-10-06) are not in this NorCal corpus.
-    expect(res.unused).toEqual(SDS_DUPLICATE_ROWS);
+    // The Southern California exclusions (San Diego's Palomar duplicates, the Tournament of Champions duplicates)
+    // are not in this NorCal corpus.
+    expect(res.unused).toEqual(SOCAL_EXCLUDED_ROWS);
   });
 
   it('reports an excluded id that no longer appears, and leaves the input alone', () => {
@@ -505,8 +511,8 @@ describe('applyExclusions (SPEC §7.6 step 3)', () => {
     };
     const before = corpus.games.length;
     const r = applyExclusions(corpus.games, dq);
-    // Config order: the San Diego duplicates (absent from this NorCal corpus), then the added id.
-    expect(r.unused).toEqual([...SDS_DUPLICATE_ROWS, 'gone-0000']);
+    // Config order: the Southern California exclusions (absent from this NorCal corpus), then the added id.
+    expect(r.unused).toEqual([...SOCAL_EXCLUDED_ROWS, 'gone-0000']);
     // Without the ghost list, 5b9ff911 is caught by its own exclusion entry.
     expect(r.dropped.map((d) => [d.contestId.slice(0, 8), d.reason])).toEqual([
       ['5cf5e3df', 'excluded-by-config'],
