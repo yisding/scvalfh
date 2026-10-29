@@ -105,6 +105,40 @@ export interface SectionConfig {
   seasonWindow: { start: string; end: string };
   /** An NCS-style reader note, shown wherever a reader would otherwise look for a section bracket; null where the section holds the postseason. */
   noChampionshipNote: string | null;
+  /**
+   * A postseason tournament the section does not run but its teams play (the Southern Section's Tournament of
+   * Champions); null everywhere else. Its games are tagged 'outside-tournament' (lib/classify.ts rule 1b),
+   * leave every table, and are listed on /playoffs under the section's no-postseason cards.
+   */
+  outsideTournament: OutsideTournamentConfig | null;
+}
+
+/**
+ * A non-CIF postseason tournament (DESIGN §24.13): the Los Angeles Field Hockey Association's Tournament of
+ * Champions, eight Southern Section teams, Oct 22–29, 2026. Nothing official publishes it: the organizer's name
+ * comes from a school newspaper, the rounds and sites from two schools' own schedules, the games from MaxPreps
+ * (only Huntington Beach's rows carry its playoff type). So the site names the event and lists its games, and
+ * never a seed or a bracket it has not seen (copy rule: no seed word on a Sunset or LA page).
+ */
+export interface OutsideTournamentConfig {
+  id: string;                           // 'toc'
+  name: string;                         // 'Tournament of Champions'
+  shortName: string;                    // 'TOC'
+  organizer: string;                    // 'Los Angeles Field Hockey Association'
+  /**
+   * Inclusive local dates: a game between two teams of this section's no-postseason leagues dated inside the
+   * window is a tournament game, whatever MaxPreps' type (contestType 4 on two of the 2026 rows, 1 on the rest).
+   */
+  window: { first: string; last: string };
+  /** The rounds, by date, as the schools' schedules name them ('Round 1', 'Semifinals', 'Final and third-place game'). */
+  rounds: readonly { date: string; label: string }[];
+  /** The entrants, registry slugs (lib/teams.ts asserts each is a team of this section). */
+  entrants: readonly TeamSlug[];
+  /** 'Huntington Beach High School' — where the final is played. */
+  finalSite: string;
+  /** One paragraph for /playoffs, the home card and a team's postseason line. Says it is not a CIF event. */
+  note: string;
+  sources: readonly { label: string; href: string }[];
 }
 
 export interface DivisionConfig {
@@ -552,6 +586,41 @@ const SDS_ALIGNMENT_URL = 'https://docs.google.com/spreadsheets/d/1nGxmrWBpD1-Ms
 /** [V] the Section's power-rankings page (it embeds the cifsdshome.org widget the Commissioner places teams from). */
 const SDS_POWER_RANKINGS_URL = 'https://www.cifsds.org/school-resources/CIFSDS_Power_Rankings';
 
+/**
+ * The Tournament of Champions (DESIGN §24.13; research of 2026-10-29). Eight Southern Section teams, five
+ * Sunset (Huntington Beach, Newport Harbor, Edison, Great Oak, Temecula Valley) and three LA independents
+ * (Harvard-Westlake, Bonita, Glendora): round 1 Thu Oct 22, semifinals Tue Oct 27, the final and a third-place
+ * game Thu Oct 29 at Huntington Beach High School (Miller Field for the third-place game). Harvard-Westlake's
+ * student paper names the organizer ("the Los Angeles Field Hockey Association (LAFHA) Tournament of Champions",
+ * Aug 25, 2026) and the 2025 final (Harvard-Westlake 4-0 Newport Harbor, Oct 25, 2025); Bonita's schedule lists
+ * "TOC Round 1 / Round 2 / Championship Game" and Huntington Beach's program site "TOC Playoff - Round 1 / Round
+ * 2 / Championship (HBHS) / 3rd Playoff (Miller)". No organizer site, bracket or seeding is published, so the
+ * site lists the games and never a seed. Every game between two Southern Section registry teams dated Oct 22-29
+ * is a tournament game (the 2026-10-29 snapshot has no other such game); MaxPreps marks only Huntington Beach's
+ * rows as playoffs (contestType 4), the rest as non-league (1).
+ */
+export const TOC: OutsideTournamentConfig = {
+  id: 'toc',
+  name: 'Tournament of Champions',
+  shortName: 'TOC',
+  organizer: 'Los Angeles Field Hockey Association',
+  window: { first: '2026-10-22', last: '2026-10-29' },
+  rounds: [
+    { date: '2026-10-22', label: 'Round 1' },
+    { date: '2026-10-27', label: 'Semifinals' },
+    { date: '2026-10-29', label: 'Final and third-place game' },
+  ],
+  entrants: ['huntington-beach', 'newport-harbor', 'edison', 'great-oak', 'temecula-valley', 'harvard-westlake', 'bonita', 'glendora'],
+  finalSite: 'Huntington Beach High School',
+  note:
+    'Eight Southern Section teams play the Tournament of Champions, Oct 22–29, run by the Los Angeles Field Hockey Association, not by CIF: round 1 Thu Oct 22, semifinals Tue Oct 27, the final Thu Oct 29 at Huntington Beach High School. Its games count in no league table. Nothing official publishes its pairings; the games below are as MaxPreps lists them.',
+  sources: [
+    { label: 'Harvard-Westlake Chronicle on the 2026 Tournament of Champions', href: 'https://hwchronicle.com/114175/sports/field-hockey-concentrates-as-a-group/' },
+    { label: 'Huntington Beach field hockey: TOC events', href: 'https://www.hbfieldhockey.com/events' },
+    { label: 'Bonita athletics: 2026 schedule', href: 'https://www.bonitaathletics.org/sport/field%20hockey/girls/' },
+  ],
+};
+
 export const SECTIONS = [
   {
     id: 'ccs', name: 'Central Coast Section', shortName: 'CCS', briefLabel: 'CCS', region: 'norcal',
@@ -562,6 +631,7 @@ export const SECTIONS = [
     shootout: null,
     seasonWindow: { start: '2026-08-01', end: '2026-11-30' },
     noChampionshipNote: null,
+    outsideTournament: null,
   },
   {
     id: 'ncs', name: 'North Coast Section', shortName: 'NCS', briefLabel: 'NCS', region: 'norcal',
@@ -575,6 +645,7 @@ export const SECTIONS = [
     seasonWindow: { start: '2026-08-01', end: '2026-11-28' },
     noChampionshipNote:
       'The North Coast Section and CIF hold no field hockey championship. MCAL’s own six-team tournament is the postseason.',
+    outsideTournament: null,
   },
   {
     id: 'ns', name: 'Northern Section', shortName: 'NS', briefLabel: 'Northern Section', region: 'norcal',
@@ -598,6 +669,7 @@ export const SECTIONS = [
     // Regional's last day (Oct 31), so a late result still lands.
     seasonWindow: { start: '2026-08-01', end: '2026-11-07' },
     noChampionshipNote: null,
+    outsideTournament: null,
   },
   {
     // research-cifss.md §0-§1 [V]: Blue Book 2026-27 Bylaw 2011.1 "GIRL'S TEAM FIELD HOCKEY CHAMPIONSHIPS (No
@@ -619,6 +691,7 @@ export const SECTIONS = [
     seasonWindow: { start: '2026-08-01', end: '2026-11-07' },
     noChampionshipNote:
       'The CIF Southern Section holds no field hockey playoffs (Blue Book Bylaw 2011.1 and 3500.2) and CIF holds no state championship: a Sunset team’s season ends with its last game, Oct 31 at the latest.',
+    outsideTournament: TOC,
   },
   {
     // research-cifsds.md §0-§5 [V]: Green Book 2026-27 Bylaw 2000.1 (Open 8, Division I 12, Division II 12);
@@ -650,6 +723,7 @@ export const SECTIONS = [
     // The start matches the other windows; the end is one week after the Nov 14 finals (OUR choice).
     seasonWindow: { start: '2026-08-01', end: '2026-11-21' },
     noChampionshipNote: null,
+    outsideTournament: null,
   },
 ] as const satisfies readonly SectionConfig[];
 
@@ -1802,6 +1876,12 @@ export const DATA_QUALITY: DataQualityConfig = {
     // 9c027452 (Oct 30) has Mission Vista at home, as in 5067646d (Oct 29), one day earlier.
     'c7dbdbcc-5f41-4192-b8b2-eb79cca2523a': 'Poway vs Fallbrook, Oct 9 with no time: a third MaxPreps row for the pair, which already has both of its Palomar meetings on the schedule (Sep 15, 67865f1e; Oct 13, 0b3cfb7d)',
     '9c027452-e21e-4e47-9eac-d2e800bfb42c': 'Mission Vista vs Fallbrook, Oct 30 with no time: a second MaxPreps row for their Palomar game on Oct 29 (5067646d); both of the pair’s meetings are on the schedule',
+    // Two Tournament of Champions rows (research of 2026-10-29): MaxPreps, si.com and the CIF-SS widget all carry
+    // Harvard-Westlake 6-0 Temecula Valley twice, on Thu Oct 22 (b5fbcc70) and Fri Oct 23; the other round-1
+    // games were Thu Oct 22, so the Oct 23 row is the duplicate. Newport Harbor at Glendora was moved from Thu
+    // Oct 22 to Sat Oct 24 (45732090, 3-0); the Oct 22 row stayed behind without a score.
+    '0017b5bb-5319-4742-84df-e6585dcb7056': 'Temecula Valley at Harvard-Westlake, Oct 23: a second MaxPreps row for their Tournament of Champions round-1 game of Oct 22 (b5fbcc70), both 6-0',
+    '3702e126-9414-4c0b-a13c-61e78ead2ed9': 'Newport Harbor at Glendora, Oct 22 with no score: the Tournament of Champions round-1 game was played Sat Oct 24 (45732090, Newport Harbor 3-0)',
   },
   sbliveIgnoredTeamIds: {
     '456851': 'York (PCAL): JV only',
@@ -2248,6 +2328,28 @@ export function assertLeagues(): void {
     }
     if (s.shootout !== null && typeof s.shootout.coversTournaments !== 'boolean') {
       fail(`${s.id}: shootout.coversTournaments must say whether the rule reaches a tournament game`);
+    }
+    // An outside tournament sits inside the section's season, its rounds inside its window, and it belongs to a
+    // section whose leagues have no postseason of their own (its games are tagged ahead of MaxPreps' flag).
+    const event = s.outsideTournament;
+    if (event !== null) {
+      const inSeason = (d: string) => d >= s.seasonWindow.start && d <= s.seasonWindow.end;
+      if (!inSeason(event.window.first) || !inSeason(event.window.last)) fail(`${s.id}.outsideTournament ${event.id}: window outside the season window`);
+      if (event.window.first > event.window.last) fail(`${s.id}.outsideTournament ${event.id}: window.first is after window.last`);
+      for (const r of event.rounds) {
+        if (r.date < event.window.first || r.date > event.window.last) fail(`${s.id}.outsideTournament ${event.id}: round ${r.label} outside the window`);
+        if (!r.label.trim()) fail(`${s.id}.outsideTournament ${event.id}: a round needs a label`);
+      }
+      if (event.entrants.length < 2) fail(`${s.id}.outsideTournament ${event.id}: needs at least two entrants`);
+      if (new Set(event.entrants).size !== event.entrants.length) fail(`${s.id}.outsideTournament ${event.id}: an entrant is listed twice`);
+      if (!event.name.trim() || !event.note.trim() || !event.organizer.trim()) fail(`${s.id}.outsideTournament ${event.id}: needs a name, an organizer and a note`);
+      if (s.holdsFieldHockeyChampionship) fail(`${s.id}: an outside tournament belongs to a section with no championship of its own`);
+      for (const l of LEAGUES) {
+        if (l.sectionId === s.id && l.postseason.kind !== 'no-postseason') {
+          fail(`${s.id}.outsideTournament ${event.id}: ${l.id} has a postseason of its own, so its games cannot be read as the tournament's`);
+        }
+      }
+      for (const src of event.sources) if (!src.href.startsWith('https://') || !src.label.trim()) fail(`${s.id}.outsideTournament ${event.id}: a source needs a label and an https URL`);
     }
     // The level-W/L → 'SO' rule is the section's: every league in it must decide level games the same way,
     // and a league that does must sit in a section that says how (lib/normalize.ts keys on the section).

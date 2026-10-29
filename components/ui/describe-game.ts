@@ -124,9 +124,22 @@ const POSTSEASON_WORD: Readonly<Record<PostseasonTag['kind'], string | null>> = 
   // Never prefixed by a league: the San Diego Section's playoffs are one tournament across its three
   // conferences, so the chip is the event's own name ('San Diego Section playoffs', postseasonTagOf).
   'section-playoffs': 'playoffs',
+  // Never prefixed by a league either: the event has its own name (SectionConfig.outsideTournament.name,
+  // 'Tournament of Champions'), found from the sides' section (postseasonTagOf).
+  'outside-tournament': null,
   ccs: null,
   other: null,
 };
+
+/** The outside tournament of a registry side's section ('Tournament of Champions'), or null. */
+function outsideTournamentName(game: Partial<Pick<Game, 'home' | 'away'>>): string | null {
+  for (const side of [game.home, game.away]) {
+    const team = side?.slug ? getTeamBySlug(side.slug) : undefined;
+    const event = team ? getSection(team.section).outsideTournament : null;
+    if (event) return event.name;
+  }
+  return null;
+}
 
 /**
  * ` · SCVAL` after a side from a league other than the list's own (`scopeLeague`); '' otherwise,
@@ -177,6 +190,7 @@ export function postseasonTagOf(game: Pick<Game, 'postseason'> & Partial<Pick<Ga
   if (!tag) return null;
   if (tag.kind === 'ccs') return 'CCS';
   if (tag.kind === 'section-playoffs') return sectionPlayoffsName(tag, game);
+  if (tag.kind === 'outside-tournament') return outsideTournamentName(game);
   const word = POSTSEASON_WORD[tag.kind];
   if (!word) return null;
   // Every league kind carries its league (lib/classify.ts postseasonTag); only 'ccs', 'other' and

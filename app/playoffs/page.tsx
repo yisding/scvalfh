@@ -9,11 +9,13 @@ import { leagueChips } from '../../components/layout/league-chips';
 import { OG_BASE, ROOT_OG_IMAGE } from '../../components/layout/site';
 import KeyDates from '../../components/playoffs/KeyDates';
 import LeaguePairings from '../../components/playoffs/LeaguePairings';
+import OutsideTournament from '../../components/playoffs/OutsideTournament';
 import PlayoffBracket from '../../components/playoffs/PlayoffBracket';
 import PlayoffProjection, { ProjectionKey } from '../../components/playoffs/PlayoffProjection';
 import { buildBrackets, ccsDivisionLabels, pendingRounds } from '../../components/playoffs/bracket-model';
 import {
   buildDivisionProjection,
+  buildOutsideTournamentView,
   buildPairingView,
   ladderFactsFor,
   pairingNotesFor,
@@ -30,6 +32,7 @@ import { leaderLine } from '../../components/standings/standings-page-view';
 import {
   areKeyDatesConfirmed,
   getCcsField,
+  getGames,
   getLastLeagueResultDate,
   getLeaguePairings,
   getLeagueSummaries,
@@ -48,6 +51,7 @@ import {
   UNBRACKETED_LEAGUE_IDS,
   getLeague,
   isIndependentLeague,
+  sectionOf,
 } from '../../lib/leagues';
 import type { LeagueConfig } from '../../lib/leagues';
 import type { LeagueId, PlayoffProjection as Projection } from '../../lib/types';
@@ -529,8 +533,13 @@ export default function PlayoffsPage() {
 
       <div id="socal" data-region-scope="socal">
         {sds ? <SectionPlayoffsBlock {...sds} /> : null}
-        {noPostseasonLeagues.map((league) => (
-          <NoPostseasonCard key={league.id} summary={league} />
+        {/* The section's outside tournament is listed under the first of its no-postseason cards (the Sunset's). */}
+        {noPostseasonLeagues.map((league, i) => (
+          <NoPostseasonCard
+            key={league.id}
+            summary={league}
+            hostsOutsideTournament={noPostseasonLeagues.findIndex((l) => sectionOf(l.id).id === sectionOf(league.id).id) === i}
+          />
         ))}
       </div>
     </div>
@@ -670,13 +679,20 @@ function SectionPlayoffsLeagueCard({ summary }: { summary: LeagueSummary }) {
  * project. The LA independents' card (`#independents`) is headed by the group's name and
  * opens with the group's own note (schools in no league, whose table is their games against each other),
  * then the Section's.
+ *
+ * The section's outside tournament (the Tournament of Champions, DESIGN §24.13), when it has one, is listed
+ * ONCE, under the section's first no-postseason card (the Sunset's, `#toc`): its note, its games by round and
+ * its sources. The other card (the LA independents') points to it in one sentence, since three of the eight
+ * entrants are independents. No seed and no bracket, on either card.
  */
-function NoPostseasonCard({ summary }: { summary: LeagueSummary }) {
+function NoPostseasonCard({ summary, hostsOutsideTournament }: { summary: LeagueSummary; hostsOutsideTournament: boolean }) {
   const league = getLeague(summary.id);
   const ps = league.postseason;
   if (ps.kind !== 'no-postseason') return null;
   const independent = isIndependentLeague(summary.id);
   const groupNote = independent && league.divisions[0]?.official.mode === 'none' ? league.divisions[0].official.note : null;
+  const event = sectionOf(summary.id).outsideTournament;
+  const tournament = event && hostsOutsideTournament ? buildOutsideTournamentView(event, getGames()) : null;
   return (
     <section id={summary.id} aria-labelledby={`${summary.id}-heading`} className="mt-section md:mt-section-lg">
       <SectionHeader
@@ -690,7 +706,18 @@ function NoPostseasonCard({ summary }: { summary: LeagueSummary }) {
           {`${ps.citations.noPlayoffs}.`}{' '}
           <ExternalLink href={ps.sourceUrl}>{ps.sourceLabel}</ExternalLink>
         </p>
+        {event && !hostsOutsideTournament ? (
+          <p className="mb-0 text-meta">
+            {`Three of the five play the ${event.name} (${dateSpan(event.window.first, event.window.last)}), which the ${event.organizer} runs, not CIF. `}
+            <Link href={`#${event.id}`} prefetch={false} className="sx-action text-accent hover:underline">
+              {event.name} <Arrow />
+            </Link>
+          </p>
+        ) : null}
       </div>
+      {tournament && event ? (
+        <OutsideTournament id={event.id} view={tournament} className="mt-6 sx-card p-5 md:p-6" />
+      ) : null}
     </section>
   );
 }

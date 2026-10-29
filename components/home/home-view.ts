@@ -454,11 +454,14 @@ export type PostseasonView =
       link: { href: string; label: string };
     }
   | {
-      /** The Sunset: no playoffs (CIF-SS Blue Book 2011.1, 3500.2). The line is the config's note. */
+      /**
+       * The Sunset: no playoffs (CIF-SS Blue Book 2011.1, 3500.2). The line is the config's note; the note is
+       * the section's outside tournament (the Tournament of Champions, DESIGN §24.13), or null without one.
+       */
       kind: 'no-postseason';
       leagueId: LeagueId;
       line: string;
-      note: null;
+      note: string | null;
       link: { href: string; label: string };
     }
   | {
@@ -490,7 +493,15 @@ function postseasonView(league: LeagueConfig, phase: SeasonPhase, sectionNote: s
     case 'ccs-ladder':
       return ccsLadderView(league, ps, phase);
     case 'no-postseason':
-      return { kind: 'no-postseason', leagueId: league.id, line: ps.note, note: null, link: { href: `/playoffs#${league.id}`, label: 'Postseason' } };
+      // The section's outside tournament, when it has one (the Southern Section's Tournament of Champions,
+      // DESIGN §24.13): the note names the event, its dates and that CIF does not run it.
+      return {
+        kind: 'no-postseason',
+        leagueId: league.id,
+        line: ps.note,
+        note: sectionOf(league.id).outsideTournament?.note ?? null,
+        link: { href: `/playoffs#${league.id}`, label: 'Postseason' },
+      };
     case 'section-playoffs':
       return {
         kind: 'section-playoffs',

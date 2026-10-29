@@ -14,7 +14,7 @@
  * munging. `assertRegistry()` runs at module load and throws `lib/teams.ts: …` on any violation.
  */
 
-import { LEAGUES, findLeague, getLeague } from './leagues';
+import { LEAGUES, SECTIONS, findLeague, getLeague } from './leagues';
 import { BVAL_SEEDS } from './registry/bval';
 import { CITY_SEEDS } from './registry/city';
 import { EAL_SEEDS } from './registry/eal';
@@ -371,6 +371,19 @@ function assertRegistry(): void {
       for (const id of Object.keys(d.maxprepsExtraRows)) {
         const team = BY_ID.get(id);
         if (team && team.division === d.id) fail(`${d.id}.maxprepsExtraRows: ${id} is a member (${team.slug})`);
+      }
+    }
+  }
+
+  // 4b. a section's outside tournament names entrants by slug: each is a team of that section in a no-postseason league
+  for (const s of SECTIONS) {
+    const event = s.outsideTournament;
+    if (!event) continue;
+    for (const slug of event.entrants) {
+      const team = BY_SLUG.get(slug);
+      if (!team || team.section !== s.id) fail(`${s.id}.outsideTournament ${event.id}: entrant ${slug} is not a ${s.name} team`);
+      else if (getLeague(team.league).postseason.kind !== 'no-postseason') {
+        fail(`${s.id}.outsideTournament ${event.id}: entrant ${slug} is in ${team.league}, which has a postseason of its own`);
       }
     }
   }

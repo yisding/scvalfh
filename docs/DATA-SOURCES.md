@@ -2091,6 +2091,32 @@ tables of their own are computed (`lib/jv-standings.ts`, last bullet). Read 2026
   uncounted; shown: El Camino (12 of 18), MCAL (36 of 45), EAL (13 of 16); not shown: De Anza (8 of
   16), Mt. Hamilton (0 of 4), PCAL (7 of 15, all from si.com); Santa Teresa has no JV league game.
 
+### 1.8 OUTSIDE TOURNAMENT — the Tournament of Champions (Southern Section, not CIF)
+
+Found 2026-10-29 while asking what MaxPreps' two contestType-4 Huntington Beach games were. The Los Angeles
+Field Hockey Association's Tournament of Champions ("TOC") is an eight-team end-of-season bracket for Southern
+Section teams that CIF does not run: 2026 round 1 Thu Oct 22, semifinals Tue Oct 27, final and third-place game
+Thu Oct 29 at Huntington Beach High School (third place at Miller Field). Config: `TOC` /
+`SectionConfig.outsideTournament` in `lib/leagues.ts`; tag `outside-tournament` (`lib/classify.ts` rule 1b, a
+window Oct 22–29 over every game between two Southern Section registry teams, ahead of the contestType rule);
+listed on `/playoffs#toc` under the Sunset card. Sources, none official:
+- `https://hwchronicle.com/114175/sports/field-hockey-concentrates-as-a-group/` (Aug 25 2026: "defending their
+  title of the Los Angeles Field Hockey Association (LAFHA) Tournament of Champions") and
+  `https://hwchronicle.com/112272/sports/field-hockey-wins-tournament-of-champions-2/` (Nov 15 2025: the 2025
+  final, 4-0 over Newport Harbor, Oct 25). A 2023 story called it the "Sunset League Tournament of Champions".
+- `https://www.hbfieldhockey.com/events` (Huntington Beach's program site): "TOC Playoff - Round 1" Oct 22,
+  "Round 2" Oct 27, "Championship (HBHS)" and "3rd Playoff (Miller)" Oct 29.
+- `https://www.bonitaathletics.org/sport/field%20hockey/girls/`: "TOC Round 1" Oct 22, "TOC Round 2" Oct 27,
+  "Championship Game" Oct 29.
+- MaxPreps carries no event name (`contest.name` null, empty tournament id, bracket fields null); only Huntington
+  Beach's rows are contestType 4, the rest 1. si.com labels every TOC game "Playoffs" (`gameTypeLabel`), as does
+  the CIF-SS widget's Game Type column (§1.2a); both stay cross-check only.
+- No LAFHA website, bracket or seeding was found; the pairings are never inferred into seed copy (copy rule 5).
+Data consequences: the two duplicate rows the event exposed are in `DATA_QUALITY.excludedContestIds` (a second
+Harvard-Westlake 6-0 Temecula Valley on Oct 23; a scoreless Newport Harbor at Glendora on Oct 22, the game having
+moved to Oct 24). The third-place game (Newport Harbor v Edison, Oct 29) is not on MaxPreps. A Nov 7 all-star
+game at Chaparral (hbfieldhockey.com) may surface as team rows inside the Southern Section's season window.
+
 ### 1.6 Rejected sources (one line each)
 
 - MaxPreps statewide/league legacy scoreboard (`?leagueid=` silently ignored; grouped by CIF
@@ -2470,9 +2496,9 @@ classification evidence says it is a league game. This is decided once, in the p
 |---|---|---|
 | SCVAL, EAL | MaxPreps `contestType === 0` (SCVAL: corroborated against the live PDF grid, any disagreement is logged; EAL: no official document exists to check against, and the umpire grid of §1.3a equalled it on 2026-10-04) | SCVAL: CCS section games only (postseason tag `ccs`). EAL: `contestType` 2, 4 and 5, and every game between two EAL teams on or after 2026-10-30 (postseason tag `league-postseason`, the Super Regional) |
 | BVAL, PCAL, MCAL | the game matches a fixture on the league's **official schedule** for that division | `contestType` 2 and 4 (tournament / neutral), and every postseason game |
-| Sunset | **membership** (`classification: 'membership'`, DESIGN §24.11): both sides are two of the eight Sunset teams and the game is dated Aug 25 to Oct 31, whatever MaxPreps' league flag says (the flag follows whichever scorekeeper entered the game) | `contestType` 2 and 4 on either row, and every game against a team outside the eight (Bonita at Great Oak, Aug 27, which MaxPreps flags) |
+| Sunset | **membership** (`classification: 'membership'`, DESIGN §24.11): both sides are two of the eight Sunset teams and the game is dated Aug 25 to Oct 31, whatever MaxPreps' league flag says (the flag follows whichever scorekeeper entered the game) | `contestType` 2 and 4 on either row, every game against a team outside the eight (Bonita at Great Oak, Aug 27, which MaxPreps flags), and every Tournament of Champions game (postseason tag `outside-tournament`: any game between two Southern Section teams dated Oct 22–29, §1.8) |
 | City, North County, Metro | **membership** (`classification: 'membership'`): both sides are members of the division (the CIF-SDS 2026-27 League Alignment) and the game is dated inside its league play, whatever MaxPreps' league flag says | `contestType` 2 and 4 on either row, every San Diego Section playoff game (on or after Nov 2, or `contestType` 4), and every game outside the division's league-play dates |
-| LA independents | **membership** (`classification: 'membership'`): both sides are two of the five independents (Bonita, Chaminade, Glendora, Harvard-Westlake, Thousand Oaks; this site's grouping, DESIGN §24.10) and the game is dated Sep 8 to Oct 31, whatever MaxPreps' league flag says (it flags only Bonita–Chaminade) | `contestType` 2 and 4 on either row, and every game against a team outside the five (Bonita's Aug 27 game at Great Oak, which MaxPreps flags as a league game, counts for neither table) |
+| LA independents | **membership** (`classification: 'membership'`): both sides are two of the five independents (Bonita, Chaminade, Glendora, Harvard-Westlake, Thousand Oaks; this site's grouping, DESIGN §24.10) and the game is dated Sep 8 to Oct 31, whatever MaxPreps' league flag says (it flags only Bonita–Chaminade) | `contestType` 2 and 4 on either row, every game against a team outside the five (Bonita's Aug 27 game at Great Oak, which MaxPreps flags as a league game, counts for neither table), and every Tournament of Champions game (`outside-tournament`, §1.8) |
 
 - The official-schedule matcher for BVAL, PCAL and MCAL runs three passes: same date and
   home/away order; same date, either order (records a host conflict); then **rescheduled** games
@@ -2923,6 +2949,11 @@ Article 200 and the San Diego Section's Green Book Bylaw 2000.1. tests/ui/attrib
 rules clause.)
 
 ## 7. Known open risks (carried into README "Known limitations")
+
+- **The Tournament of Champions is read from a date window, not from a source.** Nothing publishes its
+  bracket; a game between two Southern Section teams dated Oct 22–29 is taken to be a tournament game
+  (§1.8). A non-tournament game between two of those teams in that week would be mis-tagged, and the
+  third-place game is listed only if MaxPreps adds it.
 
 - MaxPreps' own De Anza standings arithmetic looked internally inconsistent at capture time
   (e.g. two teams reporting zero league goals scored *and* against across a full slate) — this

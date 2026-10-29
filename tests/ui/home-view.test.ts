@@ -316,7 +316,8 @@ describe('home panels (components/home/home-view.ts → LeaguePanel)', () => {
       kind: 'no-postseason',
       leagueId: 'sunset',
       line: sunsetPs.kind === 'no-postseason' ? sunsetPs.note : '',
-      note: null,
+      // The section's outside tournament (the Tournament of Champions), from SectionConfig, never a seed or a "top N".
+      note: leagues.getSection('ss').outsideTournament?.note ?? null,
       link: { href: '/playoffs#sunset', label: 'Postseason' },
     });
     expect(sunset.afterSchedule).toEqual({ href: '/playoffs#sunset', label: 'Postseason' });

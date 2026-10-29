@@ -155,9 +155,9 @@ const gameSide = z.object({
 });
 
 export const PostseasonTagSchema = z.object({
-  kind: z.enum(['scval-crossover', 'bval-play-in', 'mcal-tournament', 'league-postseason', 'section-playoffs', 'ccs', 'other']),
+  kind: z.enum(['scval-crossover', 'bval-play-in', 'mcal-tournament', 'league-postseason', 'section-playoffs', 'outside-tournament', 'ccs', 'other']),
   leagueId: id.nullable(),
-  via: z.enum(['config-pairing', 'contest-type-4', 'league-postseason-window', 'section-postseason-window', 'ccs-window']),
+  via: z.enum(['config-pairing', 'contest-type-4', 'league-postseason-window', 'section-postseason-window', 'outside-tournament-window', 'ccs-window']),
 });
 
 export const OfficialStampSchema = z.object({

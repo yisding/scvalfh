@@ -265,18 +265,24 @@ export interface PostseasonTag {
    * teams of a section whose leagues' postseason.kind is 'section-playoffs', dated on or after the
    * leagues' `postseasonFrom` (Nov 2) or carrying contestType 4, whether or not the two share a conference;
    * one label for the whole tournament, never 'league-postseason'.
+   * 'outside-tournament' is a postseason event no CIF section runs (the Southern Section's Tournament of
+   * Champions, SectionConfig.outsideTournament): any game between two teams of that section's no-postseason
+   * leagues dated inside the event's window, whatever MaxPreps' type says; the label is the event's name.
    */
-  kind: 'scval-crossover' | 'bval-play-in' | 'mcal-tournament' | 'league-postseason' | 'section-playoffs' | 'ccs' | 'other';
+  kind: 'scval-crossover' | 'bval-play-in' | 'mcal-tournament' | 'league-postseason' | 'section-playoffs' | 'outside-tournament' | 'ccs' | 'other';
   /**
-   * Set for every league-scoped kind. 'ccs', 'other' and 'section-playoffs' may be null: no shared registry
-   * league (a San Diego playoff game between two conferences has none).
+   * Set for every league-scoped kind. 'ccs', 'other', 'section-playoffs' and 'outside-tournament' may be
+   * null: no shared registry league (a San Diego playoff game between two conferences has none; a Tournament
+   * of Champions game between a Sunset team and an LA independent has none).
    */
   leagueId: LeagueId | null;
   /**
    * 'section-postseason-window' = dated on or after the section-playoffs leagues' `postseasonFrom` (the
-   * section-wide counterpart of 'league-postseason-window'); a contestType-4 row stays 'contest-type-4'.
+   * section-wide counterpart of 'league-postseason-window'); 'outside-tournament-window' = dated inside a
+   * section's outside tournament (lib/classify.ts rule 1b, ahead of MaxPreps' flag); a contestType-4 row
+   * elsewhere stays 'contest-type-4'.
    */
-  via: 'config-pairing' | 'contest-type-4' | 'league-postseason-window' | 'section-postseason-window' | 'ccs-window';
+  via: 'config-pairing' | 'contest-type-4' | 'league-postseason-window' | 'section-postseason-window' | 'outside-tournament-window' | 'ccs-window';
 }
 
 /** Set when a contest matched a fixture in a league's official schedule. */

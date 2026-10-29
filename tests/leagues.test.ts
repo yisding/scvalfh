@@ -227,6 +227,31 @@ describe('leagues: ids and helpers (SPEC §2.3)', () => {
     expect(leagueOfDivision('pcal').id).toBe('pcal');
     expect(divisionsOf('scval').map((d) => d.id)).toEqual(['de-anza', 'el-camino']);
     expect(getSection('ncs').holdsFieldHockeyChampionship).toBe(false);
+  });
+
+  it('the Southern Section carries the Tournament of Champions as its outside tournament, and no other section has one', () => {
+    const toc = getSection('ss').outsideTournament;
+    expect(toc).not.toBeNull();
+    expect(toc).toMatchObject({
+      id: 'toc',
+      name: 'Tournament of Champions',
+      organizer: 'Los Angeles Field Hockey Association',
+      window: { first: '2026-10-22', last: '2026-10-29' },
+      finalSite: 'Huntington Beach High School',
+    });
+    expect(toc!.rounds.map((r) => [r.date, r.label])).toEqual([
+      ['2026-10-22', 'Round 1'],
+      ['2026-10-27', 'Semifinals'],
+      ['2026-10-29', 'Final and third-place game'],
+    ]);
+    expect([...toc!.entrants].sort()).toEqual([
+      'bonita', 'edison', 'glendora', 'great-oak', 'harvard-westlake', 'huntington-beach', 'newport-harbor', 'temecula-valley',
+    ]);
+    // The note says who runs it and that CIF does not; it never names a seed or a bracket (copy rule 5).
+    expect(toc!.note).toContain('not by CIF');
+    expect(toc!.note).not.toMatch(/\bseed/i);
+    expect(toc!.sources.length).toBeGreaterThan(0);
+    for (const id of ['ccs', 'ncs', 'ns', 'sds'] as const) expect(getSection(id).outsideTournament, id).toBeNull();
     expect(sectionOf('mcal').id).toBe('ncs');
     expect(sectionOf('pcal').id).toBe('ccs');
     expect(sectionOf('eal').id).toBe('ns');

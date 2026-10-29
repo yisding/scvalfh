@@ -1006,10 +1006,17 @@ export function getTeamPostseasonLine(ref: string): TeamPostseasonLine | null {
   const ps = league.postseason;
   if (ps.kind === 'no-postseason') {
     // The Sunset: CIF-SS Blue Book 2026-27 Bylaws 2011.1 and 3500.2. One rung covers every place, so the
-    // label is the rung's ('No section playoffs') and the sentence is the config note, never a "top N".
+    // label is the rung's ('No section playoffs') and the sentence is the config note, never a "top N". An
+    // entrant in the section's outside tournament (the Tournament of Champions, DESIGN §24.13) gets one more
+    // sentence naming it; a team that is not in it gets none (its season does end with its last game).
+    const event = SECTIONS.find((s) => s.id === league.sectionId)?.outsideTournament ?? null;
+    const entrant = event !== null && event.entrants.includes(team.slug);
+    const sentence = entrant
+      ? `${ps.note} ${team.name} is one of the ${numberWord(event.entrants.length)} teams in the ${event.name}, ${dateSpan(event.window.first, event.window.last)}, run by the ${event.organizer}, not by CIF.`
+      : ps.note;
     return {
       label: playoffOutcomeLabel(row.division, outcomesFor(row)),
-      sentence: ps.note,
+      sentence,
       href: `/playoffs#${league.id}`,
       linkText: 'Postseason',
     };

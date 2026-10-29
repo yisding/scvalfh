@@ -342,6 +342,44 @@ describe('buildPairingView — the BVAL play-in card', () => {
   });
 });
 
+describe('buildOutsideTournamentView — the Tournament of Champions (SectionConfig.outsideTournament)', () => {
+  it('groups the tagged games by day with the config’s round labels, counts finals and games to come, and names no seed', async () => {
+    const { game } = await import('../game-builder');
+    const toc = leagues.getSection('ss').outsideTournament!;
+    // Round 1 (one row MaxPreps marks a playoff, one it does not), a semifinal, the final to come, and a moved game.
+    const r1a = game({ home: 'huntington-beach', away: 'bonita', hs: 3, as: 0, date: '2026-10-22', league: false, contestTypes: { home: 4, away: 4 } });
+    const r1b = game({ home: 'edison', away: 'great-oak', hs: 3, as: 0, date: '2026-10-22', league: false });
+    const moved = game({ home: 'glendora', away: 'newport-harbor', hs: 0, as: 3, date: '2026-10-24', league: false });
+    const sf = game({ home: 'huntington-beach', away: 'newport-harbor', hs: 2, as: 0, date: '2026-10-27', league: false });
+    const final = game({ home: 'huntington-beach', away: 'harvard-westlake', date: '2026-10-29', league: false });
+    // A Sunset league game before the window is not the tournament's and is left out.
+    const league = game({ home: 'edison', away: 'marina', hs: 1, as: 0, date: '2026-10-20' });
+    const v = view.buildOutsideTournamentView(toc, [final, sf, league, moved, r1b, r1a]);
+    expect(v.name, VIEW).toBe('Tournament of Champions');
+    expect(v.dates, VIEW).toBe('Oct 22–29');
+    expect(v.rounds.map((r) => [r.dateLabel, r.label, r.games.map((g) => g.contestId)]), VIEW).toEqual([
+      ['Thu Oct 22', 'Round 1', [r1b.contestId, r1a.contestId].sort((a, b) => a.localeCompare(b))],
+      ['Sat Oct 24', null, [moved.contestId]],
+      ['Tue Oct 27', 'Semifinals', [sf.contestId]],
+      ['Thu Oct 29', 'Final and third-place game', [final.contestId]],
+    ]);
+    expect([v.finals, v.toCome], VIEW).toEqual([4, 1]);
+    expect(`${v.note} ${v.rounds.map((r) => r.label ?? '').join(' ')}`, VIEW).not.toMatch(/\bseed/i);
+    // The corpus of Oct 2 has no tournament game yet: an empty list, never an invented one.
+    expect(view.buildOutsideTournamentView(toc, data.getGames()).rounds, VIEW).toEqual([]);
+  });
+
+  it('/playoffs lists the tournament once, under the Sunset card, and the LA card points to it', () => {
+    const text = textOf(html);
+    expect(html, PAGE).toContain('id="toc"');
+    expect(html.match(/id="toc"/g)?.length, PAGE).toBe(1);
+    expect(text, PAGE).toContain('Tournament of Champions · Oct 22–29');
+    expect(text, PAGE).toContain('run by the Los Angeles Field Hockey Association, not by CIF');
+    expect(text, PAGE).toContain('Three of the five play the Tournament of Champions');
+    expect(html, PAGE).toContain('href="#toc"');
+  });
+});
+
 describe('splitStatusLabel', () => {
   it('splits a status label into the chip head and the " — " tail', () => {
     expect(view.splitStatusLabel('Automatic qualifier'), VIEW).toEqual({ head: 'Automatic qualifier', tail: null });

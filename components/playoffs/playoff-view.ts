@@ -25,6 +25,8 @@
 
 import {
   EM_DASH,
+  byDateThenId,
+  dateSpan,
   leagueClockPT,
   listWords,
   monthDay,
@@ -39,7 +41,7 @@ import {
   timeOfDayPT,
 } from '../../lib/format';
 import { divisionHeading, getDivision, getLeague, ladderFor, leagueOfDivision } from '../../lib/leagues';
-import type { LeagueConfig } from '../../lib/leagues';
+import type { LeagueConfig, OutsideTournamentConfig } from '../../lib/leagues';
 import type {
   CcsKeyDates,
   CrossoverSeat,
@@ -532,6 +534,66 @@ export function pairingSentence(view: PairingView): string {
         : `${name(a)} at ${name(b)}`
       : `${name(a)} versus ${name(b)}`;
   return `${view.title}, ${view.dateLabel}${view.timeLabel ? `, ${view.timeLabel}` : ''}: ${pair}.`;
+}
+
+// ---------------------------------------------------------------- outside tournament (the Tournament of Champions)
+
+export interface OutsideTournamentRoundView {
+  dateKey: string;
+  /** 'Thu Oct 22' */
+  dateLabel: string;
+  /** The round's name from config ('Round 1', 'Semifinals'), or null for a game on a day config names no round for. */
+  label: string | null;
+  games: Game[];
+}
+
+export interface OutsideTournamentView {
+  name: string;
+  /** 'Oct 22–29' */
+  dates: string;
+  note: string;
+  rounds: OutsideTournamentRoundView[];
+  /** How many of the listed games have a final score. */
+  finals: number;
+  /** How many are still to be played. */
+  toCome: number;
+  sources: readonly { label: string; href: string }[];
+}
+
+/**
+ * The games of a section's outside tournament (DESIGN §24.13), the ones tagged 'outside-tournament' among
+ * `games`, grouped by day in date order with the config's round label for that day. No seed, no bracket: the
+ * tournament publishes neither, so the view lists what MaxPreps lists. A day the config names no round for
+ * (a moved game) is shown under its date alone, never forced into a round.
+ */
+export function buildOutsideTournamentView(event: OutsideTournamentConfig, games: readonly Game[]): OutsideTournamentView {
+  const own = games
+    .filter((g) => g.postseason?.kind === 'outside-tournament')
+    .sort(byDateThenId);
+  const rounds: OutsideTournamentRoundView[] = [];
+  for (const g of own) {
+    let round = rounds.find((r) => r.dateKey === g.dateKey);
+    if (!round) {
+      round = {
+        dateKey: g.dateKey,
+        dateLabel: shortDate(g.dateKey),
+        label: event.rounds.find((r) => r.date === g.dateKey)?.label ?? null,
+        games: [],
+      };
+      rounds.push(round);
+    }
+    round.games.push(g);
+  }
+  const finals = own.filter((g) => g.status === 'final').length;
+  return {
+    name: event.name,
+    dates: dateSpan(event.window.first, event.window.last),
+    note: event.note,
+    rounds,
+    finals,
+    toCome: own.filter((g) => g.status === 'scheduled').length,
+    sources: event.sources,
+  };
 }
 
 // ---------------------------------------------------------------- league tournament (MCAL)

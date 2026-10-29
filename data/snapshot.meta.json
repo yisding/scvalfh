@@ -7,7 +7,7 @@
     "notOnMaxPreps": 2
   },
   "commitSummary": "SCVAL +0 finals · BVAL +0 · PCAL +0 · MCAL +0 · EAL +0 · Sunset +0 · City +0 · North +1 · Metro +0 · LA +0",
-  "contentHash": "55b4821c8101ab910b675548791f069f76c92f809cbf921193914de14d28c9be",
+  "contentHash": "fe70a7bd346b808ffbb0bdd71fcc1aa6e6ee418d09b40739fbfb4cabab09a9da",
   "counts": {
     "byLeague": {
       "bval": {
@@ -33,8 +33,8 @@
       },
       "independents": {
         "backfilled": 0,
-        "finals": 60,
-        "games": 62,
+        "finals": 59,
+        "games": 60,
         "leagueGames": 21,
         "teams": 5
       },
@@ -75,17 +75,17 @@
       },
       "sunset": {
         "backfilled": 0,
-        "finals": 109,
-        "games": 111,
-        "leagueGames": 36,
+        "finals": 108,
+        "games": 109,
+        "leagueGames": 35,
         "teams": 8
       }
     },
-    "finals": 890,
-    "games": 928,
-    "leagueGames": 553,
+    "finals": 889,
+    "games": 926,
+    "leagueGames": 552,
     "mismatches": 29,
-    "pending": 4,
+    "pending": 3,
     "teams": 102
   },
   "crossCheck": {

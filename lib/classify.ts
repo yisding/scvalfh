@@ -27,8 +27,8 @@
  *    sides share a conference.
  */
 
-import { CCS, LEAGUES, inPairingWindow } from './leagues';
-import type { LeagueConfig } from './leagues';
+import { CCS, LEAGUES, SECTIONS, inPairingWindow } from './leagues';
+import type { LeagueConfig, OutsideTournamentConfig } from './leagues';
 import { teamOfSide } from './teams';
 import type { DivisionId, Game, LeagueId, PostseasonTag, Team } from './types';
 
@@ -81,11 +81,30 @@ function sectionPlayoffsPair(
 }
 
 /**
+ * The section's outside tournament (SectionConfig.outsideTournament) when both sides are registry teams of one
+ * section, both their leagues have no postseason of their own ('no-postseason': the Sunset, the LA independents)
+ * and the game is dated inside the event's window; else null.
+ */
+function outsideTournamentPair(home: Team | undefined, away: Team | undefined, dateKey: string): OutsideTournamentConfig | null {
+  if (!home || !away || home.section !== away.section) return null;
+  const event = SECTIONS.find((s) => s.id === home.section)?.outsideTournament ?? null;
+  if (!event || dateKey < event.window.first || dateKey > event.window.last) return null;
+  const h = leagueById(home.league);
+  const a = leagueById(away.league);
+  if (!h || !a || h.postseason.kind !== 'no-postseason' || a.postseason.kind !== 'no-postseason') return null;
+  return event;
+}
+
+/**
  * In order; first match wins:
  *  1. CONFIG PAIRING: game.dateKey inside the pairing's window (`PairingConfig.window`, else its `date`: SCVAL's
  *     four crossovers Oct 29-30, BVAL's play-in Oct 31), one side in each pairing division (any places), both
  *     sides in the pairing's league → { kind: pairing.tag, leagueId, via: 'config-pairing' }. Ahead of rule 2, so
  *     a crossover MaxPreps marks as a playoff (Valley Christian v Palo Alto, Oct 29) is still the crossover.
+ *  1b. OUTSIDE TOURNAMENT: both sides teams of one section whose `outsideTournament` is set, both in a
+ *     'no-postseason' league, game.dateKey inside its window (the Southern Section's Tournament of Champions, Oct
+ *     22-29) → { kind: 'outside-tournament', leagueId: the shared league or null, via: 'outside-tournament-window' }.
+ *     Ahead of rule 2 for the same reason: MaxPreps marks two of its rows as playoffs and the rest as non-league.
  *  2. contestType 4 on either row → { kind, leagueId: the shared league or null, via: 'contest-type-4' }, where kind
  *     is 'mcal-tournament' when both sides are in one league whose postseason.kind is 'league-tournament';
  *     'league-postseason' when it is 'unbracketed-tournament' (the EAL's Super Regional); else 'ccs' when at least
@@ -122,6 +141,12 @@ export function postseasonTag(game: Game): PostseasonTag | null {
       if (oneEach) return { kind: pairing.tag, leagueId: league.id, via: 'config-pairing' };
     }
   }
+
+  // 1b. a section's outside tournament (the Southern Section's Tournament of Champions): both sides teams of the
+  //     section's no-postseason leagues, dated inside the event's window. Ahead of MaxPreps' flag, which marks
+  //     only some of the rows (Huntington Beach's) as playoffs and the rest as non-league.
+  const outside = outsideTournamentPair(home, away, game.dateKey);
+  if (outside) return { kind: 'outside-tournament', leagueId: league ? league.id : null, via: 'outside-tournament-window' };
 
   const sectionPlayoffs = sectionPlayoffsPair(home, away);
 

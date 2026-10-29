@@ -410,6 +410,25 @@ describe('classify: Sunset (membership, no postseason; DESIGN §24.11)', () => {
     expect(g.postseason).toEqual({ kind: 'other', leagueId: 'sunset', via: 'contest-type-4' });
     expect(g.countsFor).toBeNull();
   });
+
+  it('tags a Southern Section game inside the Tournament of Champions window as the tournament’s, whatever MaxPreps’ type', () => {
+    // Round 1, Thu Oct 22: MaxPreps marks Huntington Beach's row a playoff (4) and Edison's a non-league game (1).
+    const flagged = game({ home: 'huntington-beach', away: 'bonita', hs: 3, as: 0, date: '2026-10-22', league: false, contestTypes: { home: 4, away: 4 } });
+    expect(flagged.postseason).toEqual({ kind: 'outside-tournament', leagueId: null, via: 'outside-tournament-window' });
+    const plain = game({ home: 'edison', away: 'great-oak', hs: 3, as: 0, date: '2026-10-22', league: false });
+    expect(plain.postseason).toEqual({ kind: 'outside-tournament', leagueId: 'sunset', via: 'outside-tournament-window' });
+    // A tournament game never counts for the Sunset table, even inside its league play.
+    expect(plain.countsFor).toBeNull();
+    // The final, Thu Oct 29, a Sunset team against an LA independent: no shared league.
+    const final = game({ home: 'huntington-beach', away: 'harvard-westlake', date: '2026-10-29', league: false });
+    expect(final.postseason).toEqual({ kind: 'outside-tournament', leagueId: null, via: 'outside-tournament-window' });
+    // Before the window a Sunset game is a Sunset game; a San Diego Section game inside it is not the tournament's.
+    const earlier = game({ home: 'edison', away: 'great-oak', hs: 1, as: 0, date: '2026-10-20' });
+    expect(earlier.postseason).toBeNull();
+    expect(earlier.countsFor).toBe('sunset');
+    const sds = game({ home: 'la-jolla', away: 'poway', hs: 1, as: 0, date: '2026-10-22', league: false });
+    expect(sds.postseason).toBeNull();
+  });
 });
 
 describe('classify: helpers', () => {

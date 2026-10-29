@@ -50,6 +50,7 @@ import {
   findDivision,
   findLeague,
   getLeague,
+  getSection,
   leagueOfDivision,
   leagueSportWords,
   type LeagueConfig,
@@ -729,6 +730,23 @@ function postseasonView(game: Game, league: LeagueConfig | null): PostseasonView
       countsAs: { label: 'CCS playoff game', detail: sentence, classificationNote: null },
       notes: [sentence],
     };
+  }
+  if (tag.kind === 'outside-tournament') {
+    // The Southern Section's Tournament of Champions (SectionConfig.outsideTournament): the event's own name,
+    // its organizer, and that no CIF section runs it (DESIGN §24.13). The sides' section carries the event.
+    const event = [game.home, game.away]
+      .map((side) => (side.slug ? getTeamBySlug(side.slug) : undefined))
+      .map((team) => (team ? getSection(team.section).outsideTournament : null))
+      .find((e) => e !== null) ?? null;
+    if (event) {
+      const label = `${event.name} game`;
+      const sentence = `${event.name} game (${event.organizer}, not a CIF event) — it does not count in any league table.`;
+      return {
+        contextLabel: event.name,
+        countsAs: { label, detail: sentence, classificationNote: null },
+        notes: [sentence],
+      };
+    }
   }
   const sentence = 'Postseason game — it does not count in any league table.';
   return {

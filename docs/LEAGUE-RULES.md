@@ -410,6 +410,19 @@ Southern Section has no shootout rule (`SectionConfig.shootout` null).
 **Co-champions.** No published rule names a champion; teams level on points at the top are shown level,
 labelled "Sunset co-leaders" once league play is over.
 
+**Tournament of Champions (not CIF).** Eight Southern Section teams, five Sunset (Huntington Beach, Newport
+Harbor, Edison, Great Oak, Temecula Valley) and three LA independents (Harvard-Westlake, Bonita, Glendora),
+play the Los Angeles Field Hockey Association's Tournament of Champions in the last full week of the season:
+in 2026 round 1 Thu Oct 22, semifinals Tue Oct 27, the final and a third-place game Thu Oct 29 at Huntington
+Beach High School [V: Harvard-Westlake Chronicle, Aug 25 2026 ("the Los Angeles Field Hockey Association
+(LAFHA) Tournament of Champions"); Bonita's and Huntington Beach's own schedules name the rounds and sites;
+MaxPreps, si.com and the CIF-SS widget carry the games]. No organizer publishes a site, a bracket or seeds,
+so the site lists the games and never a seed. It is `SectionConfig.outsideTournament` (`TOC` in
+`lib/leagues.ts`, window Oct 22–29): every game between two Southern Section teams dated inside the window
+is tagged `outside-tournament` (ahead of MaxPreps' flag, which marks only Huntington Beach's rows as
+playoffs) and counts in no table, so Edison's 3-0 over Great Oak on Oct 22 (round 1) is not a Sunset game.
+Harvard-Westlake won the 2025 edition, 4-0 over Newport Harbor on Oct 25, 2025 [V: Chronicle, Nov 15 2025].
+
 **Postseason.** None. "GIRL'S TEAM FIELD HOCKEY CHAMPIONSHIPS (No playoffs - See Bylaw 3500.2)" (Blue Book
 2026-27 Bylaw 2011.1) and "No playoffs will be conducted by the CIF Southern Section Office when less than
 20% of the membership field teams in that sport" (Bylaw 3500.2) [V]; the 2026-27 Sports Calendar lists
@@ -600,7 +613,9 @@ been decided in overtime (Glendora 2-1 Chaminade, Sep 24) [V].
 **Postseason.** None, for the Sunset's reason: the CIF Southern Section holds no field hockey playoffs
 (Blue Book 2026-27 Bylaws 2011.1 and 3500.2) and CIF holds no regional or state championship [V], so each
 independent's season ends with its last game, Oct 31 at the latest (the Section's last allowable
-contest). The config's postseason kind is `no-postseason`, with the one "No section playoffs" rung.
+contest). The config's postseason kind is `no-postseason`, with the one "No section playoffs" rung. Three
+of the five (Harvard-Westlake, Bonita, Glendora) play the Tournament of Champions, the non-CIF event
+described under the Sunset; its games carry the `outside-tournament` tag and count in no table.
 
 **Official sources.** The Blue Book 2026-27 Field Hockey excerpt (Article 200) and cifss.org/sports/field-hockey/,
 as for the Sunset. The Season Preview's list of participating schools names Bonita, Glendora and Thousand

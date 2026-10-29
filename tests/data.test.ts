@@ -453,12 +453,13 @@ describe('data: postseason', () => {
     expect(data.getTeamPostseasonLine('la-jolla')).toBeNull();
   });
 
-  it('writes the Sunset’s no-postseason note for every Sunset team, played or not', () => {
+  it('writes the Sunset’s no-postseason note for every Sunset team, played or not, plus the Tournament of Champions for an entrant', () => {
     const sunset = getLeague('sunset');
     if (sunset.postseason.kind !== 'no-postseason') throw new Error('the Sunset has no postseason');
+    // Edison is one of the eight in the Tournament of Champions (SectionConfig.outsideTournament, DESIGN §24.12).
     expect(data.getTeamPostseasonLine('edison')).toEqual({
       label: 'No section playoffs',
-      sentence: sunset.postseason.note,
+      sentence: `${sunset.postseason.note} Edison is one of the eight teams in the Tournament of Champions, Oct 22–29, run by the Los Angeles Field Hockey Association, not by CIF.`,
       href: '/playoffs#sunset',
       linkText: 'Postseason',
     });

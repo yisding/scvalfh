@@ -1168,7 +1168,10 @@ NFHS rules and says nothing on overtime. A game between Sunset teams has ended l
 decided in overtime (Great Oak 2-1 Temecula Valley, Oct 2), so each game is recorded as reported. **Tiebreaks:** none is published, so teams level on points share a place; teams
 level at the top read "Sunset co-leaders" once league play is over. **Postseason:** none. The Southern
 Section holds no field hockey playoffs (Blue Book 2026-27 Bylaws 2011.1 and 3500.2) and CIF holds no
-regional or state championship, so a Sunset team's season ends with its last game. MaxPreps' 2026-27
+regional or state championship, so a Sunset team's season ends with its last game. Eight Southern Section
+teams (five Sunset, three LA independents) do play the Los Angeles Field Hockey Association's Tournament of
+Champions, Oct 22–29, which CIF does not run: the site names it, lists its games on `/playoffs#toc`, tags them
+`outside-tournament` and counts them in no table (`TOC` in `lib/leagues.ts`, DESIGN §24.13). MaxPreps' 2026-27
 Sunset table lists three of the eight with Bonita and Chaminade, ordered by winning percentage, and
 si.com's lists six of the eight with Bonita, Chaminade and two 0-0 rows; both are shown as informational
 only, and Great Oak's Aug 27 win over Bonita, which MaxPreps marks as a league game, is not counted
@@ -1195,7 +1198,7 @@ site's own 3-1-0 and teams level on points share a place ("LA co-leaders" at the
 season is over). Every page that shows the table says it is this site's count of the five's games
 against each other (the division's note). **Postseason:** none, for the Sunset's reason (Blue Book
 2026-27 Bylaws 2011.1 and 3500.2), so each independent's season ends with its last game, Oct 31 at the
-latest. No MaxPreps or si.com table groups the five; the site reads their team schedules, and si.com's
+latest; Harvard-Westlake, Bonita and Glendora play the Tournament of Champions (above). No MaxPreps or si.com table groups the five; the site reads their team schedules, and si.com's
 Sunset page and one-school league pages for backfill only. Their games count in the Elo fit and on the
 SoCal school boards, the league-record board included: their table's games are their league record.
 

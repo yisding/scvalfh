@@ -4229,6 +4229,43 @@ Not built: the school-athletics roster sweep for the 53 teams (grades, heights, 
 coaches), SportsRecruits' athlete search for their rows, and a club record for Poway Mystix, whose site
 could not be reached.
 
+### 24.13 The Tournament of Champions, a postseason no CIF section runs (2026-10-29)
+
+Owner request, 2026-10-29: "Can we add the tournament of champions to our postseason page?"
+
+**What it is.** The Los Angeles Field Hockey Association's Tournament of Champions: eight Southern Section teams,
+five Sunset and three LA independents, in the last full week of the season (2026: round 1 Thu Oct 22, semifinals
+Tue Oct 27, the final and a third-place game Thu Oct 29 at Huntington Beach High School). CIF does not run it,
+publishes nothing about it, and the Blue Book's "no playoffs" (2011.1, 3500.2) stands; so does the site's copy
+that a Sunset team's season ends with its last game, which is true for the five that are not in it. Sources are
+a school newspaper and two schools' own schedules (DATA-SOURCES §1.8); no organizer site, bracket or seeding
+exists, so the site never prints a seed (copy rule 5 already bans a seed word on these pages).
+
+**Model.** `SectionConfig.outsideTournament: OutsideTournamentConfig | null` (`TOC` on the Southern Section,
+null elsewhere): name, short name, organizer, a date window, the rounds by date with the schools' labels, the
+eight entrants by slug (lib/teams.ts asserts each is a Southern Section team in a no-postseason league), the
+final's site, a note and the sources. A new postseason tag kind, `outside-tournament` (via
+`outside-tournament-window`), goes on every game between two registry teams of that section's no-postseason
+leagues dated inside the window (lib/classify.ts rule 1b, ahead of MaxPreps' contestType, which marks only
+Huntington Beach's rows). The membership classifier already leaves a tagged game out of every table, so
+Edison's round-1 win over Great Oak no longer counts as a Sunset game (Edison 9-1, 27 points, not 10-1, 30).
+
+**Surfaces.** `/playoffs#toc`: one block under the Sunset card (`OutsideTournament.tsx` over
+`buildOutsideTournamentView`): the note, the games by day with the round label (`GameList`, so each game
+carries its chips, directions, stream and tickets and links its page; a day config names no round for shows
+its date alone), a finals / to-come count and the sources; the LA card points to it in one sentence. The home
+Postseason card of the Sunset and the LA independents carries the event's note. A team's postseason line adds
+one sentence for an entrant ("Edison is one of the eight teams in the Tournament of Champions, Oct 22–29, run
+by the Los Angeles Field Hockey Association, not by CIF."). A game page reads "Tournament of Champions" as its
+kicker and "Tournament of Champions game (Los Angeles Field Hockey Association, not a CIF event) — it does not
+count in any league table." as its note; the chip in every list is "Tournament of Champions".
+
+**Data.** Two rows the event exposed are excluded by config: a second Harvard-Westlake 6-0 Temecula Valley on
+Oct 23 and a scoreless Newport Harbor at Glendora on Oct 22 (the game moved to Oct 24). The third-place game is
+not on MaxPreps. Not built: a bracket (none is published), a champion line (the final is tonight), the 2025
+edition on /history (its games are in data/prior-season.json, but the Sunset is "unavailable" there and the
+copy rules forbid naming a winner in an unavailable league's section).
+
 ## 25. Recruiting amendment (2026-10)
 
 The site's recruiting data lived in three places: each team page's roster (a player's recruiting
