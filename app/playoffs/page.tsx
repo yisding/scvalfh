@@ -383,6 +383,21 @@ export default function PlayoffsPage() {
               <p className="m-0">
                 {`Following ${article(league.shortName)} ${league.shortName} team? ${ps.note}`}
               </p>
+              {/* How to watch: the listing's streams and the listing itself (config `streams`, `site.url`). */}
+              {ps.streams.length > 0 || ps.site ? (
+                <p className="mb-0 flex flex-wrap gap-x-4 gap-y-1 text-meta">
+                  {ps.streams.map((s) => (
+                    <ExternalLink key={s.href} href={s.href} className="sx-action gap-1">
+                      {`Stream: ${s.label}`}
+                    </ExternalLink>
+                  ))}
+                  {ps.site ? (
+                    <ExternalLink href={ps.site.url} className="sx-action gap-1">
+                      {`${league.section.shortName === 'NS' ? 'CIFNS' : league.section.shortName} field hockey on the NFHS Network`}
+                    </ExternalLink>
+                  ) : null}
+                </p>
+              ) : null}
               <p className="mb-0 text-meta">
                 {`${ps.citations.qualification}.`}{' '}
                 <ExternalLink href={ps.sourceUrl}>{`${league.section.name} Field Hockey Guidelines (PDF)`}</ExternalLink>

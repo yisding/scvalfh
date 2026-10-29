@@ -193,7 +193,7 @@ describe('league copy (components/teams/team-view.ts leagueCopy)', () => {
         'The EAL league season ends Wed Oct 28; the Super Regional follows, Oct 30–31.',
       );
       expect(copy.bracketSentence, 'components/teams/team-view.ts bracketSentence').toBe(
-        'We will not guess a bracket: the Super Regional’s format and site are not published yet.',
+        'No pairings are published; we list each Super Regional game as MaxPreps posts it.',
       );
     }
     for (const id of ['scval', 'bval', 'pcal']) {
@@ -218,7 +218,7 @@ describe('postseason lines per kind (lib/data.ts getTeamPostseasonLine via team-
         expect(line.href, `lib/data.ts ${team.slug} href`).toBe(`/playoffs#${team.league}`);
         expect(line.linkText, `lib/data.ts ${team.slug} link`).toBe('Postseason');
         expect(line.sentence, `lib/data.ts ${team.slug} sentence`).toBe(
-          'The top six schools play the Super Regional, Oct 30–31; its format and site are not published yet.',
+          'The top six schools play the Super Regional, Oct 30–31, and every EAL team is one of the six; the NFHS Network’s CIFNS listing has the games at Pleasant Valley High School, Chico on Sat Oct 31.',
         );
         expect(`${line.label} ${line.sentence}`, `lib/data.ts ${team.slug}`).not.toMatch(/CCS|at-large|automatic qualifier|seed/i);
       } else if (v.league.postseasonKind === 'no-postseason' || v.league.postseasonKind === 'section-playoffs') {

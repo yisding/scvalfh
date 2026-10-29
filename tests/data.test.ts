@@ -632,7 +632,7 @@ describe('data: an EAL table with results', () => {
   it('writes the Super Regional line for a placed EAL team, and none for one without results', () => {
     expect(eal.getTeamPostseasonLine('chico')).toEqual({
       label: 'Super Regional place',
-      sentence: 'The top six schools play the Super Regional, Oct 30–31; its format and site are not published yet.',
+      sentence: 'The top six schools play the Super Regional, Oct 30–31, and every EAL team is one of the six; the NFHS Network’s CIFNS listing has the games at Pleasant Valley High School, Chico on Sat Oct 31.',
       href: '/playoffs#eal',
       linkText: 'Postseason',
     });

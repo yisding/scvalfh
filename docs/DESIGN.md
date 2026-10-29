@@ -3433,9 +3433,9 @@ applied**: no seeding projection, no seeded bracket and no seed word anywhere fo
 | Surface | What it says |
 |---|---|
 | Home `PostseasonCard` | kicker "Postseason"; "Super Regional, Oct 30–31 — the top six qualify"; the league's note; link "Postseason →" to `/playoffs#eal`. No berth meter and no CCS date. |
-| Home phase lead, tournament phase | "The Super Regional is Oct 30–31; its format and site are not published yet." (the "playoffs" lead is for CCS leagues only) |
-| `/playoffs` EAL card | "Following an EAL team?" and the league's note, the qualification citation, and a link to the Guidelines PDF |
-| Team page | kicker "Super Regional picture"; "The top six schools play the Super Regional, Oct 30–31; its format and site are not published yet."; with no result yet, "in the Super Regional picture" |
+| Home phase lead, tournament phase | "The Super Regional is Oct 30–31; the NFHS Network’s CIFNS listing has its games at Pleasant Valley High School, Chico on Sat Oct 31." + "Pairings are not published; results appear here as MaxPreps posts them." (config `site`, 2026-10-29; before a listing names a site: "its format and site are not published yet") (the "playoffs" lead is for CCS leagues only) |
+| `/playoffs` EAL card | "Following an EAL team?" and the league's note (which names the listed site, the stream times and the free admission), a row of stream links and the NFHS Network's CIFNS page (config `streams`, `site.url`), the qualification citation, and a link to the Guidelines PDF |
+| Team page | kicker "Super Regional picture"; "The top six schools play the Super Regional, Oct 30–31, and every EAL team is one of the six; the NFHS Network’s CIFNS listing has the games at Pleasant Valley High School, Chico on Sat Oct 31."; the Next card's bracket sentence "No pairings are published; we list each Super Regional game as MaxPreps posts it."; with no result yet, "in the Super Regional picture" |
 | `/standings/eal` band | heading "Super Regional, as things stand", link "Postseason" to `/playoffs#eal`, legend the qualification citation; no 2 px rule, since there is no line |
 | `/schedule/eal` rail chip | "Super Regional Oct 30–31" (to a screen reader "Super Regional, Oct 30 to 31") |
 | Game page, a game between two EAL teams on or after Oct 30 | "Super Regional game — it does not count in the league table."; the tag reads "EAL Super Regional" |

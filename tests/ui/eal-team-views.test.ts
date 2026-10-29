@@ -139,7 +139,7 @@ describe('an EAL team page (/teams/davis)', () => {
     const line = eal.d.getTeamPostseasonLine('davis');
     expect(line, 'lib/data.ts getTeamPostseasonLine').not.toBeNull();
     expect(text, 'components/teams/TeamPlayoffLine.tsx sentence').toContain(
-      'The top six schools play the Super Regional, Oct 30–31; its format and site are not published yet.',
+      'The top six schools play the Super Regional, Oct 30–31, and every EAL team is one of the six; the NFHS Network’s CIFNS listing has the games at Pleasant Valley High School, Chico on Sat Oct 31.',
     );
     expect(html, 'components/teams/TeamPlayoffLine.tsx link').toContain('href="/playoffs#eal"');
     expect(text, 'app/teams/[slug]/page.tsx').not.toMatch(BANNED);
@@ -164,7 +164,7 @@ describe('an EAL team page (/teams/davis)', () => {
     const copy = eal.v.leagueCopy('eal');
     expect(copy.seasonEndSentence).toBe('The EAL league season ends Wed Oct 28; the Super Regional follows, Oct 30–31.');
     expect(copy.bracketSentence).toBe(
-      'We will not guess a bracket: the Super Regional’s format and site are not published yet.',
+      'No pairings are published; we list each Super Regional game as MaxPreps posts it.',
     );
   });
 

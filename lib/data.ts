@@ -1063,7 +1063,9 @@ export function getTeamPostseasonLine(ref: string): TeamPostseasonLine | null {
       // The EAL's Super Regional: the rule and the dates, never a bracket or a seed (DESIGN §22).
       return {
         label,
-        sentence: `The top ${numberWord(ps.qualifiers)} schools play the ${ps.name}, ${dateSpan(ps.dates.first, ps.dates.last)}; its format and site are not published yet.`,
+        sentence: ps.site
+          ? `The top ${numberWord(ps.qualifiers)} schools play the ${ps.name}, ${dateSpan(ps.dates.first, ps.dates.last)}, and every ${league.shortName} team is one of the ${numberWord(ps.qualifiers)}; ${ps.site.basis} has the games at ${ps.site.label} on ${shortDate(ps.site.day)}.`
+          : `The top ${numberWord(ps.qualifiers)} schools play the ${ps.name}, ${dateSpan(ps.dates.first, ps.dates.last)}; its format and site are not published yet.`,
         href: `/playoffs#${league.id}`,
         linkText: 'Postseason',
       };

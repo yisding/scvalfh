@@ -1992,6 +1992,18 @@ publish, playoff games should surface in each qualifying team's `schedule-calcul
 tournamentCanonicalUrl` (untested — those fields are null in the regular season; verify on Nov 7).
 Poll both from Nov 2. Fallback: CCS posts results as plain text on X/Twitter.
 
+**The EAL Super Regional's site and streams** (read 2026-10-29): the NFHS Network's CIFNS field hockey
+page (`https://www.nfhsnetwork.com/associations/cifns/field-hockey`) lists two events at Pleasant Valley
+High School, Chico, on Sat Oct 31: "2026 CIFNS Field Hockey Postseason Tournament - Part 1"
+(`/events/pleasant-valley-high-school-chico-ca/gam320ba3745d`, 15:30Z = 8:30 AM PDT) and "- Part 2"
+(`…/gamf48300713a`, 20:30Z = 1:30 PM PDT), both created 2026-10-27. Every cifns.org URL returned a
+CloudFront 403 from the research sandbox, and fieldhockeyumpires.org's TLS certificate had expired, so
+the site is attributed to the listing, not to the Section. The umpires' grid (cross-check only, §1.3a)
+reads "Oct 31 Sat Super Regional — Top 6 teams only" and "Oct 30 Last day for games". si.com carries
+placeholder "TBA" rows for Pleasant Valley (Oct 31) and Davis (Oct 30 and 31) at 23:59 that must never
+become games. 2025's two MaxPreps rows (Davis 6-0 Bella Vista "Semi Final", Davis 2-1 Chico OT
+"Championship Final", Nov 1 2025, contestType 5, homeAwayType 2) were entered the day after.
+
 **The North Coast Section (MCAL) is not part of any of this.** The NCS and CIF hold no field hockey
 championship, so MCAL has no CCS poll, no bracket page and no berths. MCAL's own six-team
 tournament is published on its play-off sheet

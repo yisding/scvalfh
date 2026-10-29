@@ -342,7 +342,15 @@ EAL league result is missing.
 
 **Postseason** (the Super Regional, a Section-sanctioned, league-run tournament; the site draws no
 bracket). "The top six (6) EAL/SRL schools will compete" (§III.E.1, §IV), Oct 30-31, 2026 (Fri-Sat), at
-"an alternative site" (§III.E.1); the Section's playoff calendar lists the same dates with the site "TBA". With six teams, every team is inside
+"an alternative site" (§III.E.1); the Section's playoff calendar lists the same dates with the site "TBA".
+On 2026-10-29 the NFHS Network's CIFNS field hockey page listed "2026 CIFNS Field Hockey Postseason
+Tournament - Part 1" (8:30 AM PDT) and "- Part 2" (1:30 PM PDT) at Pleasant Valley High School, Chico,
+on Sat Oct 31, and nothing on Fri Oct 30; the Section's own pages were unreachable (CloudFront 403), so
+the site keeps the official Oct 30–31 window and names the listing as the source of the site and the
+streams (config `site`, `streams`; `/playoffs#eal` links both). There is no admission fee (Game
+Management §VII). 2025's was at Pleasant Valley on Sat Nov 1 (NFHS "2025 CIFNS Field Hockey Regional");
+Davis won it, 6-0 over Bella Vista in a semifinal and 2-1 in overtime over Chico in the final (MaxPreps,
+contestType 5, the round in the row's location). With six teams, every team is inside
 the top six, which is our application of the rule, not a Guidelines statement. The Guidelines' seeding
 text is quoted verbatim and **not applied here**: "Seeding will be based on League record, Head-to-Head
 Goal differential (Capped at six (6) per game, Goal against, Coin flip." Its punctuation does not say
@@ -659,7 +667,7 @@ it was published.
 | Multi-team ties | partition, restart | one place at a time | partition, restart | one place at a time | — |
 | League evidence | MaxPreps league flag + PDF grid | official schedule | official schedule | official schedule | MaxPreps league flag |
 | Last resort | coin flip | coin flip | CCS points, coin flip or blind draw | draw number; 6th place by play-in | teams share a place |
-| Postseason | CCS: 7 berths (top 3 per division + play-in) | CCS: 4 berths | CCS: 2 berths | MCAL tournament: top 6, byes 1-2 | Super Regional: top 6, Oct 30-31, no bracket published |
+| Postseason | CCS: 7 berths (top 3 per division + play-in) | CCS: 4 berths | CCS: 2 berths | MCAL tournament: top 6, byes 1-2 | Super Regional: top 6, Oct 30-31; games listed Sat Oct 31 at Pleasant Valley, Chico (NFHS Network); no pairings published |
 | MaxPreps' table is trusted for | everything | everything (Santa Teresa: records only) | league record only | records and goals only | records and goals only |
 
 | | Sunset | City | North County | Metro | Independents |

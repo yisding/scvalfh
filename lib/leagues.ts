@@ -407,6 +407,16 @@ export type PostseasonConfig =
       /** The event's published dates, inclusive. */
       dates: { first: string; last: string };
       citations: { qualification: string; format: string; seeding: string; eligibility: string; noFurtherPath: string };
+      /**
+       * Where the games are listed, with the listing that says so (the NFHS Network's CIFNS page, read 2026-10-29:
+       * Pleasant Valley High School, Chico, Sat Oct 31); null until a listing names a site. `basis` is printed with
+       * the site, because the Section itself publishes none.
+       */
+      site: { label: string; day: string; basis: string; url: string } | null;
+      /** Live streams the listing gives, in order; each label names the part and its start. */
+      streams: readonly { label: string; href: string }[];
+      /** The admission sentence, from the Guidelines (Game Management §VII: no admission fee), or null. */
+      admission: string | null;
       /** One paragraph, rendered wherever a reader would look for a bracket. */
       note: string;
       sourceUrl: string;
@@ -1308,7 +1318,23 @@ const EAL: LeagueConfig = {
       eligibility: `${NS_FH} §VII.J (a school without all its scores reported by noon the day after the last contest of the season is not eligible for the playoffs)`,
       noFurtherPath: `${NS_FH} §V and §VI (NorCal and State qualification: “Not Applicable”)`,
     },
-    note: 'The Northern Section’s field hockey postseason is the Super Regional, Oct 30–31: the top six schools qualify. The coaches set its format and seeding, its site is to be announced, and no bracket is published yet. There is no NorCal or State path.',
+    // The Section's page is unreachable (CloudFront 403, 2026-10-29); the NFHS Network's CIFNS field hockey page lists
+    // "2026 CIFNS Field Hockey Postseason Tournament - Part 1" (8:30 AM PDT) and "- Part 2" (1:30 PM PDT) at Pleasant
+    // Valley High School, Chico, on Sat Oct 31, both created 2026-10-27; nothing lists a game on Fri Oct 30, so the
+    // official Oct 30-31 window stays and the site is attributed to the listing. The umpires' grid (not official) says
+    // "Oct 31 Sat Super Regional". 2025's was at Pleasant Valley on Sat Nov 1 (NFHS "2025 CIFNS Field Hockey Regional").
+    site: {
+      label: 'Pleasant Valley High School, Chico',
+      day: '2026-10-31',
+      basis: 'the NFHS Network’s CIFNS listing',
+      url: 'https://www.nfhsnetwork.com/associations/cifns/field-hockey',
+    },
+    streams: [
+      { label: 'Part 1, Sat Oct 31, 8:30 AM PT', href: 'https://www.nfhsnetwork.com/events/pleasant-valley-high-school-chico-ca/gam320ba3745d' },
+      { label: 'Part 2, Sat Oct 31, 1:30 PM PT', href: 'https://www.nfhsnetwork.com/events/pleasant-valley-high-school-chico-ca/gamf48300713a' },
+    ],
+    admission: `There is no admission fee (${NS_FH}, Game Management §VII).`,
+    note: 'The Northern Section’s field hockey postseason is the Super Regional, Oct 30–31: the top six schools qualify, and all six EAL teams are in it. The coaches set its format and seeding, and no pairings are published. The NFHS Network lists its games at Pleasant Valley High School, Chico, on Sat Oct 31, with streams at 8:30 AM and 1:30 PM PT. There is no admission fee. There is no NorCal or State path.',
     sourceUrl: NS_GUIDELINES_URL,
   },
   phases: [
@@ -1317,7 +1343,7 @@ const EAL: LeagueConfig = {
   ],
   keyDates: [
     { id: 'league-play-ends', date: '2026-10-28', label: 'Last EAL league games' },
-    { id: 'super-regional', date: '2026-10-30', label: 'Super Regional, Oct 30–31 (site to be announced)' },
+    { id: 'super-regional', date: '2026-10-30', label: 'Super Regional, Oct 30–31 (games listed Sat Oct 31 at Pleasant Valley, Chico)' },
   ],
   officialChanges: null,
 };
@@ -2721,6 +2747,15 @@ export function assertLeagues(): void {
         }
         break;
       case 'unbracketed-tournament':
+        if (ps.site !== null) {
+          if (!ps.site.label.trim() || !ps.site.basis.trim()) fail(`${l.id}: postseason site needs a label and a basis`);
+          if (!ps.site.url.startsWith('https://')) fail(`${l.id}: postseason site.url must start with https://`);
+          if (ps.site.day < ps.dates.first || ps.site.day > ps.dates.last) fail(`${l.id}: postseason site.day is outside the event's dates`);
+        }
+        for (const s of ps.streams) if (!s.label.trim() || !s.href.startsWith('https://')) fail(`${l.id}: a stream needs a label and an https URL`);
+        inWindow(ps.dates.first, `${l.id} postseason dates.first`);
+        inWindow(ps.dates.last, `${l.id} postseason dates.last`);
+        break;
       case 'section-playoffs':
         inWindow(ps.dates.first, `${l.id} postseason dates.first`);
         inWindow(ps.dates.last, `${l.id} postseason dates.last`);

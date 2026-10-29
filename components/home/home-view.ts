@@ -302,9 +302,13 @@ export function phaseLead(league: LeagueConfig, phase: SeasonPhase, today: strin
   if (phase === 'tournament' && ps.kind === 'unbracketed-tournament') {
     // No bracket and no page of its own: the dates and what is not published yet, linking to the
     // league's pointer card on /playoffs.
+    // The site comes from a listing (config `site`, the NFHS Network), named as such; the pairings are not published.
+    const where = ps.site
+      ? `${ps.site.basis} has its games at ${ps.site.label} on ${shortDate(ps.site.day)}`
+      : 'its format and site are not published yet';
     return {
-      lead: `The ${ps.name} is ${dateSpan(ps.dates.first, ps.dates.last)}; its format and site are not published yet.`,
-      body: '',
+      lead: `The ${ps.name} is ${dateSpan(ps.dates.first, ps.dates.last)}; ${where}.`,
+      body: ps.site ? 'Pairings are not published; results appear here as MaxPreps posts them.' : '',
       link: { href: `/playoffs#${league.id}`, label: 'Postseason' },
     };
   }

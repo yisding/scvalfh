@@ -392,7 +392,9 @@ export function leagueCopy(leagueId: LeagueId): TeamLeagueCopy {
         postseasonKind: ps.kind,
         postseasonName: ps.name,
         seasonEndSentence: `${ended}; the ${ps.name} follows, ${dateSpan(ps.dates.first, ps.dates.last)}.`,
-        bracketSentence: `We will not guess a bracket: the ${ps.name}\u2019s format and site are not published yet.`,
+        bracketSentence: ps.site
+          ? `No pairings are published; we list each ${ps.name} game as MaxPreps posts it.`
+          : `We will not guess a bracket: the ${ps.name}\u2019s format and site are not published yet.`,
       };
     case 'no-postseason': {
       // The Sunset and the LA independents (CIF-SS Blue Book 2011.1, 3500.2): no playoff game

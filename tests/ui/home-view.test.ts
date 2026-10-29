@@ -290,8 +290,8 @@ describe('home panels (components/home/home-view.ts → LeaguePanel)', () => {
     // The EAL: no bracket, so the tournament phase says what is (and is not) published, and the
     // CCS-ladder 'playoffs' copy never reaches it.
     expect(lead('eal', 'tournament', '2026-10-30'), `${HV}: EAL tournament`).toEqual({
-      lead: 'The Super Regional is Oct 30–31; its format and site are not published yet.',
-      body: '',
+      lead: 'The Super Regional is Oct 30–31; the NFHS Network’s CIFNS listing has its games at Pleasant Valley High School, Chico on Sat Oct 31.',
+      body: 'Pairings are not published; results appear here as MaxPreps posts them.',
       link: { href: '/playoffs#eal', label: 'Postseason' },
     });
     expect(lead('eal', 'playoffs', '2026-11-03'), `${HV}: EAL never gets the CCS copy`).toBeNull();
