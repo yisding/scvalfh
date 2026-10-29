@@ -29,6 +29,7 @@ import {
   dateSpan,
   leagueClockPT,
   listWords,
+  mapsSearchHref,
   monthDay,
   numberWord,
   ordinal,
@@ -671,8 +672,15 @@ export interface TournamentRoundView {
   /** 'Quarterfinals' | 'Semifinals' | 'Final' */
   title: string;
   dateKey: string;
-  /** 'Mon Oct 26' / 'Fri Oct 30 · at Tamalpais' */
+  /** 'Mon Oct 26 · 4 PM PT' / 'Fri Oct 30 · 4 PM PT · at Tamalpais' */
   meta: string;
+  /** The round's start time from config ('4 PM PT'), every game of a round sharing it. */
+  time: string;
+  /**
+   * The fixed site's where and how much (the final at Tamalpais): the venue, one address line, the Directions
+   * link and the league's admission sentence with its source; null for a round at the higher seed's field.
+   */
+  venue: { name: string; addressLine: string; directionsHref: string; admission: string | null; admissionSource: string | null } | null;
   games: TournamentGameView[];
 }
 
@@ -722,6 +730,8 @@ export interface TournamentInput {
    * the type is config's, where null means "no line" (only an unbracketed league, which has no bracket).
    */
   ladderLine: { after: number; label: string } | null;
+  /** The final's fixed site from config (venue, address, admission); omitted ⇒ the round shows no venue block. */
+  finalSite?: { venue: string; address: { street: string; city: string; region: string; postalCode: string }; admission: string | null; admissionSource: string | null };
 }
 
 /** A bracket round's title, for the page's round headers and the OG card's round line alike. */
@@ -798,7 +808,7 @@ export function tournamentGameView(
  * play-in spelled out, and the bracket as vertical rounds (quarterfinals, semifinals, final).
  */
 export function buildTournamentView(input: TournamentInput): TournamentView {
-  const { projection: p, rows, teamOf, lastPlace, ladderLine } = input;
+  const { projection: p, rows, teamOf, lastPlace, ladderLine, finalSite } = input;
   const seedRows: SeedRowView[] = rows.map(({ team, standing, counted, scheduled, label }) => ({
     team,
     standing,
@@ -835,11 +845,24 @@ export function buildTournamentView(input: TournamentInput): TournamentView {
     if (g.round === 'play-in') continue;
     let round = rounds.find((r) => r.round === g.round);
     if (!round) {
+      // A fixed site (the final) gets its venue block; the time is the round's, from config, printed once here
+      // rather than on each row (every game of a round starts together).
+      const venue = g.site && finalSite
+        ? {
+            name: finalSite.venue,
+            addressLine: `${finalSite.address.street}, ${finalSite.address.city}, ${finalSite.address.region} ${finalSite.address.postalCode}`,
+            directionsHref: mapsSearchHref(finalSite.address),
+            admission: finalSite.admission,
+            admissionSource: finalSite.admissionSource,
+          }
+        : null;
       round = {
         round: g.round,
         title: ROUND_TITLES[g.round],
         dateKey: g.dateKey,
-        meta: g.site ? `${g.dateLabel} · at ${g.site}` : g.dateLabel,
+        meta: g.site ? `${g.dateLabel} · ${g.timeLabel} · at ${g.site}` : `${g.dateLabel} · ${g.timeLabel}`,
+        time: g.timeLabel,
+        venue,
         games: [],
       };
       rounds.push(round);

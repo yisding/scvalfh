@@ -229,6 +229,20 @@ describe('leagues: ids and helpers (SPEC §2.3)', () => {
     expect(getSection('ncs').holdsFieldHockeyChampionship).toBe(false);
   });
 
+  it('the MCAL final has a venue, an address and the league’s admission line', () => {
+    const mcal = getLeague('mcal');
+    if (mcal.postseason.kind !== 'league-tournament') throw new Error('MCAL runs a tournament');
+    expect(mcal.postseason.finalSite).toEqual({
+      slug: 'tamalpais', label: 'Tamalpais', venue: 'Tamalpais High School',
+      address: { street: '700 Miller Ave', city: 'Mill Valley', region: 'CA', postalCode: '94941' },
+      admission: 'Adults $10; students, children and seniors $5; pre-sale on GoFan. No booster passes or student body cards; lifetime MCAL, NCS and CIF passes are honored.',
+      admissionSource: 'MCAL 2026 Field Hockey Play-off sheet',
+    });
+    expect(mcal.postseason.resultNotes['7bb048ba-9e33-4ad1-a743-2348c6637602']).toContain('Marin Independent Journal');
+    expect(mcal.postseason.citations.pennant).toMatch(/^MCAL General Rules, Pennants 1–3/);
+    expect(mcal.rules.citations.overtime).toMatch(/^MCAL Field Hockey Handbook §9/);
+  });
+
   it('the Southern Section carries the Tournament of Champions as its outside tournament, and no other section has one', () => {
     const toc = getSection('ss').outsideTournament;
     expect(toc).not.toBeNull();

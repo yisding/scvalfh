@@ -3,6 +3,7 @@ import { Fragment } from 'react';
 
 import { listWords, placeWords, plural, scoreSentence } from '../../lib/format';
 import { gameHref } from '../../lib/game-id';
+import ExternalLink from '../ui/ExternalLink';
 import PlaceMark from '../ui/PlaceMark';
 import SectionHeader from '../ui/SectionHeader';
 import TeamMonogram from '../ui/TeamMonogram';
@@ -294,6 +295,23 @@ export function LeagueTournament({ view, leagueShort, standingsHref, beforeSeeds
           {view.rounds.map((round) => (
             <li key={round.round}>
               <SectionHeader as="h3" kicker={round.title} meta={round.meta} />
+              {/* The final's where and how much (config finalSite): the venue and address as one sentence with a
+                  Directions link, then admission with its source. Whole sentences as single text nodes. */}
+              {round.venue ? (
+                <div className="mb-3 max-w-prose text-meta text-ink-2">
+                  <p className="m-0">
+                    {`${round.venue.name}, ${round.venue.addressLine}.`}{' '}
+                    <ExternalLink href={round.venue.directionsHref} className="sx-action gap-1">
+                      Directions
+                    </ExternalLink>
+                  </p>
+                  {round.venue.admission ? (
+                    <p className="mt-1 mb-0">
+                      {`Admission: ${round.venue.admission}${round.venue.admissionSource ? ` (${round.venue.admissionSource})` : ''}`}
+                    </p>
+                  ) : null}
+                </div>
+              ) : null}
               {/* `my-0`, not `m-0`: a margin shorthand would cancel `sx-bleed`'s negative inline margin. */}
               <ol className="sx-list sx-card sx-flush sx-bleed my-0 list-none p-0">
                 {round.games.map((game) => (

@@ -1812,7 +1812,11 @@ redirects.
     "OT", never a shootout); the MCAL General Rules PDF
     (`https://www.mcalsports.org/Gen_rules/GeneralRules.pdf`, modified 2026-10-13, read 2026-10-29)
     is the source of the pennant rule (`citations.pennant`) and of playoff admission (Adults $10;
-    students, children and seniors $5; pre-sale on GoFan), and the Field Hockey Handbook §9 of the
+    students, children and seniors $5; pre-sale on GoFan); the final's street address (700 Miller Ave, Mill
+    Valley, CA 94941) comes from the schools' HomeCampus calendars (`cifncshome.org/widget/calendar?school_id=…
+    &ajax=1&start=…&end=…`, a JSON feed with facility, address, game type, ticket and streaming links; Tam
+    1550, Redwood 1517; the NCS counterpart of the cifsshome.org widget of §1.2a, read 2026-10-29, not polled);
+    the Field Hockey Handbook §9 is the source of the
     no-regular-season-overtime rule and the tournament's two-overtimes-then-shootout format. MaxPreps
     records a tournament shootout as a regulation score with the tally as goals (Tamalpais 3-1 Marin
     Catholic, Oct 28, 2026, was 0-0 after two overtimes: Marin IJ), hence `resultNotes`.

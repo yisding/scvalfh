@@ -127,9 +127,9 @@ describe('buildTournamentView — the engine’s shared 6th (a play-in is needed
 
   it('builds vertical rounds with their dates; unresolved slots are named, never blank', () => {
     expect(v.rounds.map((r) => `${r.title} · ${r.meta}`), VIEW).toEqual([
-      'Quarterfinals · Mon Oct 26',
-      'Semifinals · Wed Oct 28',
-      'Final · Fri Oct 30 · at Tamalpais',
+      'Quarterfinals · Mon Oct 26 · 4 PM PT',
+      'Semifinals · Wed Oct 28 · 4 PM PT',
+      'Final · Fri Oct 30 · 4 PM PT · at Tamalpais',
     ]);
     expect(lines(v), VIEW).toEqual([
       `5 ${short(LW)} at 4 ${short(BK)}`,
@@ -190,7 +190,7 @@ describe('buildTournamentView — results re-seed the semifinals; the final is a
     let { v } = view([...season, playIn, ...qfs, ...sfs], 'tournament');
     expect(lines(v)[4], VIEW).toBe(`1 ${short(AW)} vs 3 ${short(TM)}`);
     const final = v.rounds.find((r) => r.round === 'final')!;
-    expect(final.meta, VIEW).toBe('Fri Oct 30 · at Tamalpais');
+    expect(final.meta, VIEW).toBe('Fri Oct 30 · 4 PM PT · at Tamalpais');
     expect(final.games[0].site, VIEW).toBe('Tamalpais');
     expect(final.games[0].connector, VIEW).toBe('vs');
 
@@ -264,7 +264,13 @@ describe('/playoffs/mcal (rendered on the corpus snapshot)', () => {
     expect(t, PAGE).toContain(`6 ${short(LW)} at 3 ${short(RW)}`);
     expect(t, PAGE).toContain('Lowest-ranked remaining seed');
     expect(t, PAGE).toContain('Highest-ranked remaining seed of 3-6');
-    expect(t, PAGE).toContain('Fri Oct 30 · at Tamalpais');
+    expect(t, PAGE).toContain('Fri Oct 30 · 4 PM PT · at Tamalpais');
+    // The final's where and how much, from config finalSite (DESIGN §3.8): venue, address, Directions, admission.
+    expect(t, PAGE).toContain('Tamalpais High School, 700 Miller Ave, Mill Valley, CA 94941.');
+    expect(html, PAGE).toContain('href="https://www.google.com/maps/search/?api=1&amp;query=700%20Miller%20Ave%2C%20Mill%20Valley%2C%20CA%2094941"');
+    expect(t, PAGE).toContain('Admission: Adults $10; students, children and seniors $5; pre-sale on GoFan.');
+    expect(t, PAGE).toContain('(MCAL 2026 Field Hockey Play-off sheet)');
+    expect(t, PAGE).toContain('Source: MCAL General Rules, Pennants 1–3');
     expect(t, PAGE).toContain('How it works');
     expect(t, PAGE).toContain('This site follows the 2026 sheet.');
   });

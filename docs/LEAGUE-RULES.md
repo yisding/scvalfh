@@ -261,7 +261,15 @@ sheet and the 2025 tournament use six, so the site follows the sheet and says so
 
 Play-in (only if needed) Fri Oct 23; quarterfinals Mon Oct 26; semifinals Wed Oct 28 (the
 lowest-ranked remaining seed at #1, the highest-ranked remaining of seeds 3-6 at #2, confirmed by the
-2025 bracket); final Fri Oct 30 at Tamalpais, all at 4:00 PM. Tournament games tied after two
+2025 bracket); final Fri Oct 30 at Tamalpais, all at 4:00 PM. The final's site is Tamalpais High
+School, 700 Miller Ave, Mill Valley, CA 94941 (the schools' HomeCampus calendars name the turf "Tam
+Turf at Bruce Grant Field/Sam Chapman Stadium"); admission is adults $10, students, children and
+seniors $5, pre-sale on GoFan, no booster passes or student body cards, lifetime MCAL, NCS and CIF
+passes honored (the 2026 play-off sheet and the General Rules admission table); the General Rules add
+that a playoff game at a higher seed's site "should not be considered" a home contest. The bracket
+prints the venue, a Directions link and the admission line under the final (`finalSite`, lib/leagues.ts),
+and a finalist's Next card gets the Directions pill from the same address, since MaxPreps gives none.
+Tournament games tied after two
 overtimes go to a shootout (Handbook §9), and MaxPreps records the shootout tally as the score of a
 regulation game: a one-goal result MaxPreps does not mark as overtime carries the shootout caveat
 (`mayHideShootout`, lib/postseason.ts), an overtime goal (decider OT) carries none, and a result the

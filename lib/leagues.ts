@@ -371,7 +371,21 @@ export type PostseasonConfig =
       byes: readonly number[];            // [1, 2]
       ladder: readonly LadderRung[];
       rounds: readonly TournamentRoundConfig[];
-      finalSite: { slug: TeamSlug; label: string };
+      /**
+       * The final's fixed site: the host school's slug and short label (the bracket's "at Tamalpais"), the venue's
+       * name and street address (the Directions link on the bracket and on a finalist's Next card, since MaxPreps
+       * gives no address), and the league's admission sentence with its source, or null when the league publishes
+       * none. MCAL: the play-off sheet and the General Rules admission table; the address from the schools'
+       * HomeCampus calendars (cifncshome.org).
+       */
+      finalSite: {
+        slug: TeamSlug;
+        label: string;
+        venue: string;
+        address: { street: string; city: string; region: string; postalCode: string };
+        admission: string | null;
+        admissionSource: string | null;
+      };
       lastSpot: { place: number; rule: 'play-in-unless-h2h-sweep'; host: 'highest-draw-number' };
       citations: { format: string; seeding: string; semifinal: string; lastSpot: string; qualifiersConflict: string; pennant: string };
       titleNote: string;
@@ -1161,7 +1175,16 @@ const MCAL: LeagueConfig = {
       { id: 'sf-2', round: 'semifinal', date: '2026-10-28', time: '16:00', optional: false, pairing: 'Highest-ranked remaining seed of 3-6 at 2' },
       { id: 'final', round: 'final', date: '2026-10-30', time: '16:00', optional: false, pairing: 'Semifinal winners, at Tamalpais' },
     ],
-    finalSite: { slug: 'tamalpais', label: 'Tamalpais' },
+    finalSite: {
+      slug: 'tamalpais', label: 'Tamalpais',
+      venue: 'Tamalpais High School',
+      // The schools' HomeCampus calendars (cifncshome.org; Redwood's Oct 30 event "MCAL Championship Game", facility
+      // Tamalpais, 700 Miller Ave, Mill Valley, California, 94941; Tam's Oct 28 semifinal names the turf: "Tam Turf at
+      // Bruce Grant Field/Sam Chapman Stadium"). Research of 2026-10-29.
+      address: { street: '700 Miller Ave', city: 'Mill Valley', region: 'CA', postalCode: '94941' },
+      admission: 'Adults $10; students, children and seniors $5; pre-sale on GoFan. No booster passes or student body cards; lifetime MCAL, NCS and CIF passes are honored.',
+      admissionSource: 'MCAL 2026 Field Hockey Play-off sheet',
+    },
     lastSpot: { place: 6, rule: 'play-in-unless-h2h-sweep', host: 'highest-draw-number' },
     citations: {
       format: 'MCAL 2026 Field Hockey Play-off sheet (six schools; seeds 1 and 2 have byes)',
@@ -2688,6 +2711,14 @@ export function assertLeagues(): void {
           if (!note.trim() || !/\.$/.test(note.trim())) fail(`${l.id} resultNotes ${id}: a sourced sentence ending in a period`);
         }
         if (!ps.citations.pennant.trim()) fail(`${l.id}: citations.pennant names the title rule's source`);
+        {
+          const site = ps.finalSite;
+          const a = site.address;
+          if (!site.venue.trim() || !a.street.trim() || !a.city.trim() || !a.region.trim() || !a.postalCode.trim()) {
+            fail(`${l.id}: finalSite needs a venue and a four-part address`);
+          }
+          if ((site.admission === null) !== (site.admissionSource === null)) fail(`${l.id}: finalSite admission and admissionSource are set together or not at all`);
+        }
         break;
       case 'unbracketed-tournament':
       case 'section-playoffs':

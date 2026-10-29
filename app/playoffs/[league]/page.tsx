@@ -108,6 +108,7 @@ function viewFor(summary: LeagueSummary, ps: TournamentConfig): TournamentView {
     teamOf: (slug): Team | undefined => getTeamBySlug(slug),
     lastPlace: ps.lastSpot.place,
     ladderLine: division.ladderLine,
+    finalSite: ps.finalSite,
   });
 }
 
