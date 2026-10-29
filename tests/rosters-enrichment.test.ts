@@ -234,7 +234,7 @@ describe('data/rosters-enrichment.json', () => {
       'redwood/Eloise Tonderys',
       'salinas/Ana Garcia',
       'salinas/Kaylah Arriola',
-      'salinas/Mireille Gonzalez-morales',
+      'salinas/Mireille Gonzalez-Morales',
       'salinas/Teagan Dickison Elias',
     ]);
   });

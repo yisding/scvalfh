@@ -1,6 +1,6 @@
 /**
- * lib/person-name.ts: an all-caps or all-lowercase name is recased, everything a school already cased is kept, and
- * no committed roster or stats sheet still carries a shouted name.
+ * lib/person-name.ts: an all-caps or all-lowercase name is recased, a cased name is kept apart from a lowercase letter
+ * after a hyphen, "O'", "D'" or "Mc", and no committed roster or stats sheet still carries a name to recase.
  */
 
 import { readFileSync } from 'node:fs';
@@ -24,11 +24,32 @@ describe('recaseName', () => {
     ['addie dawson', 'Addie Dawson'],
     ['A. dawson', 'A. Dawson'],
     ["mary o'brien-mcdonald", "Mary O'Brien-McDonald"],
+    ['Allison Wright-lopez', 'Allison Wright-Lopez'],
+    ['Dylan-marie Nicholas', 'Dylan-Marie Nicholas'],
+    ['Verenice Villa-de Jesus', 'Verenice Villa-De Jesus'],
+    ['L. Oneil-dunne', 'L. Oneil-Dunne'],
+    ["Valentina D'angelo", "Valentina D'Angelo"],
+    ["Sean O’brien", "Sean O’Brien"],
+    ['Lydia Mcdonald', 'Lydia McDonald'],
+    ['Mckenna Matson', 'McKenna Matson'],
+    ['Harmony Cooks-mcdonald', 'Harmony Cooks-McDonald'],
   ])('%s → %s', (name, cased) => {
     expect(recaseName(name)).toBe(cased);
   });
 
-  it.each(['AJ Smith', 'TJ', 'Olivia Van De Braak', "Valentina D'angelo", 'McKenna Lee', 'Anna van der Berg', 'A.', 'Q'])(
+  it.each([
+    'AJ Smith',
+    'TJ',
+    'Olivia Van De Braak',
+    'McKenna Lee',
+    'Anna van der Berg',
+    'Harmony Cooks-Macdonald',
+    'Amelia Macias',
+    'Mackenzie Nitti',
+    'Mc',
+    'A.',
+    'Q',
+  ])(
     'keeps %s',
     (name) => {
       expect(recaseName(name)).toBe(name);
@@ -42,6 +63,7 @@ describe('recaseNameParts', () => {
     expect(recaseNameParts(parts('Anna', 'de la cruz'))).toEqual(parts('Anna', 'de la cruz'));
     expect(recaseNameParts(parts('addie', 'dawson'))).toEqual(parts('Addie', 'Dawson'));
     expect(recaseNameParts(parts('McKAELA', 'DANZE'))).toEqual(parts('McKaela', 'Danze'));
+    expect(recaseNameParts(parts('Brooke', 'Pearce-percy'))).toEqual(parts('Brooke', 'Pearce-Percy'));
     expect(recaseNameParts({ firstName: null, lastName: null, fullName: 'MIA VEGA' })).toEqual({
       firstName: null,
       lastName: null,
@@ -51,7 +73,7 @@ describe('recaseNameParts', () => {
 });
 
 describe('committed names', () => {
-  it.each(['rosters.json', 'player-stats.json', 'rosters-enrichment.json'])('%s has no all-caps or all-lowercase name', (file) => {
+  it.each(['rosters.json', 'player-stats.json', 'rosters-enrichment.json'])('%s has no name left to recase', (file) => {
     const raw = JSON.parse(readFileSync(path.join(REPO, 'data', file), 'utf8')) as {
       teams: { slug: string; players: Record<string, unknown>[] }[];
     };

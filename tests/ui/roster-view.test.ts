@@ -78,12 +78,18 @@ describe('buildRosterView', () => {
 
   it('marks exactly the values that came from somewhere other than MaxPreps', () => {
     for (const { slug, view } of views) {
-      const merged = new Map(getEnrichedTeamRoster(slug)!.players.map((p) => [p.fullName, p]));
+      // By name, every player of that name, as above (Huntington Beach's Valentina D'Angelo is listed twice).
+      const merged = new Map<string, NonNullable<ReturnType<typeof getEnrichedTeamRoster>>['players'][number][]>();
+      for (const p of getEnrichedTeamRoster(slug)!.players) merged.set(p.fullName, [...(merged.get(p.fullName) ?? []), p]);
       for (const row of view.rows) {
-        const p = merged.get(row.name)!;
+        const same = merged.get(row.name)!;
         const grade = row.facts.find((f) => /^(Freshman|Sophomore|Junior|Senior)$/.test(f.text));
-        if (grade) expect(grade.elsewhere, `${slug} / ${row.name}`).toBe(p.provenance.grade !== 'maxpreps');
-        if (row.jersey) expect(row.jersey.elsewhere, `${slug} / ${row.name}`).toBe(p.provenance.jersey !== 'maxpreps');
+        if (grade) {
+          expect(same.map((p) => p.provenance.grade !== 'maxpreps'), `${slug} / ${row.name}`).toContain(grade.elsewhere);
+        }
+        if (row.jersey) {
+          expect(same.map((p) => p.provenance.jersey !== 'maxpreps'), `${slug} / ${row.name}`).toContain(row.jersey.elsewhere);
+        }
       }
       expect(view.hasElsewhere, slug).toBe(
         view.rows.some((r) => r.jersey?.elsewhere || r.facts.some((f) => f.elsewhere)),

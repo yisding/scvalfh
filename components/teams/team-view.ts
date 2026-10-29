@@ -681,11 +681,14 @@ export function buildNextCard(
   return { kind: 'none' };
 }
 
-/** 'VALLEY CHRISTIAN' → 'Valley Christian', for a grid name with no registry row behind it. */
+/**
+ * 'VALLEY CHRISTIAN' → 'Valley Christian', 'LICK-WILMERDING' → 'Lick-Wilmerding', for a grid name
+ * with no registry row behind it.
+ */
 function titleCase(name: string): string {
   return name
     .toLowerCase()
-    .replace(/(^|[\s.])([a-z])/g, (_, lead: string, ch: string) => `${lead}${ch.toUpperCase()}`);
+    .replace(/(^|[\s.\-/(])([a-z])/g, (_, lead: string, ch: string) => `${lead}${ch.toUpperCase()}`);
 }
 
 /**

@@ -1868,7 +1868,7 @@
         {
           "athleteId": "070c8f03-6154-4689-9a56-14a4b47699a1",
           "conflicts": [],
-          "fullName": "Claudia Espitia-alvarez",
+          "fullName": "Claudia Espitia-Alvarez",
           "grade": {
             "confidence": "high",
             "derived": false,
@@ -1931,7 +1931,7 @@
         {
           "athleteId": "2403af52-6f4e-4594-b1a6-13f81926ab5d",
           "conflicts": [],
-          "fullName": "Momoka Hattori-roels",
+          "fullName": "Momoka Hattori-Roels",
           "grade": {
             "confidence": "high",
             "derived": false,
@@ -3008,7 +3008,7 @@
         {
           "athleteId": "c6319238-de98-4ba8-ba31-f7132b071425",
           "conflicts": [],
-          "fullName": "Adriana Lopez-corpas",
+          "fullName": "Adriana Lopez-Corpas",
           "grade": {
             "confidence": "high",
             "derived": false,
@@ -3713,7 +3713,7 @@
         {
           "athleteId": "a3320200-e8a3-4e9b-8f82-78388c2d5e50",
           "conflicts": [],
-          "fullName": "Brooke Pearce-percy",
+          "fullName": "Brooke Pearce-Percy",
           "grade": {
             "confidence": "high",
             "derived": false,
@@ -8022,7 +8022,7 @@
         }
       ],
       "notes": [
-        "The school's Home Campus roster lists the same 21 names as MaxPreps and nothing else; grade comes from each player's own page there (17 filled, medium). Four are left blank on purpose. Three disagree with MaxPreps' own data, recorded under each player's conflicts: Kaylah Arriola and Ana Garcia (page grade 11; MaxPreps' 2025-26 roster Jr., so 12 now) and Mireille Gonzalez-morales (page 12; a MaxPreps 2025-26 JV soccer entry as a Sophomore, so 11 now). The fourth, Teagan Dickison Elias, has no second source: her page merges two profiles with grades 11 and 10.",
+        "The school's Home Campus roster lists the same 21 names as MaxPreps and nothing else; grade comes from each player's own page there (17 filled, medium). Four are left blank on purpose. Three disagree with MaxPreps' own data, recorded under each player's conflicts: Kaylah Arriola and Ana Garcia (page grade 11; MaxPreps' 2025-26 roster Jr., so 12 now) and Mireille Gonzalez-Morales (page 12; a MaxPreps 2025-26 JV soccer entry as a Sophomore, so 11 now). The fourth, Teagan Dickison Elias, has no second source: her page merges two profiles with grades 11 and 10.",
         "Jersey numbers and positions are blank on every Home Campus page. MaxPreps' 2025-26 roster (same career ids) lists a position for 8 returning players; it is a different season, so none was filled, and 2025-26 numbers are not carried forward.",
         "Coaches: the school's directory lists Stan Marple for Field Hockey, but MaxPreps' team page names L. Prevatt as head coach and C. Babcock as assistant. The directory is undated, so the two were not reconciled.",
         "No SportsRecruits, Hudl or NCSA field hockey profile was found for any current Salinas player (the Salinas NCSA field hockey profiles that exist are class of 2020 and earlier, and North Salinas).",
@@ -8095,7 +8095,7 @@
         {
           "athleteId": "20b7216b-de05-410a-8ce3-7d5a9910564c",
           "conflicts": [],
-          "fullName": "Emily Aleah Chavez-plancarte",
+          "fullName": "Emily Aleah Chavez-Plancarte",
           "grade": {
             "confidence": "medium",
             "derived": false,
@@ -8116,7 +8116,7 @@
         {
           "athleteId": "1020eb6c-749d-4090-ace0-7ea54a8de9c8",
           "conflicts": [],
-          "fullName": "Rosemary Marquez-aza",
+          "fullName": "Rosemary Marquez-Aza",
           "grade": {
             "confidence": "medium",
             "derived": false,
@@ -8475,7 +8475,7 @@
               "source": "https://www.maxpreps.com/ca/salinas/salinas-cowboys/athletes/mireille-gonzalez-morales/?careerid=hrut1f53qvun7"
             }
           ],
-          "fullName": "Mireille Gonzalez-morales",
+          "fullName": "Mireille Gonzalez-Morales",
           "grade": null,
           "height": null,
           "jersey": null,
@@ -10881,7 +10881,7 @@
         {
           "athleteId": "dd627352-81e7-4615-8f3d-2ba6c80216fc",
           "conflicts": [],
-          "fullName": "Isabella Alioto-solomou",
+          "fullName": "Isabella Alioto-Solomou",
           "grade": {
             "confidence": "high",
             "derived": false,
@@ -11418,7 +11418,7 @@
       "coaches": [],
       "notes": [
         "Recruiting pages swept 2026-10-04 by the rule in docs/DATA-SOURCES.md: none linked for any of the 19 players. SportsRecruits was looked up directly for every player (name variants and numbered slugs); NCSA, FieldLevel and Hudl were looked up too, with no page that names Bella Vista field hockey or shows a roster class year with a California hometown.",
-        "Not linked: Rosy Johnson's near match (SportsRecruits rose_johnson2: Rose, class of 2030 against grade 11 = 2028, no school or hometown); lacrosse pages, a different sport, for Rylee Tabor, Mckenna Matson and Morgan Cimino (SportsRecruits) and for Audrey Janeway, Morgan Cimino and Rylee Tabor (Hudl, Bella Vista lacrosse teams). Hudl's Bella Vista varsity field hockey team has only a 2025 season and an empty roster.",
+        "Not linked: Rosy Johnson's near match (SportsRecruits rose_johnson2: Rose, class of 2030 against grade 11 = 2028, no school or hometown); lacrosse pages, a different sport, for Rylee Tabor, McKenna Matson and Morgan Cimino (SportsRecruits) and for Audrey Janeway, Morgan Cimino and Rylee Tabor (Hudl, Bella Vista lacrosse teams). Hudl's Bella Vista varsity field hockey team has only a 2025 season and an empty roster.",
         "The school-athletics roster sweep (grade, height, number, position, coaches) has still not been done, so nothing else is filled."
       ],
       "players": [
@@ -11468,7 +11468,7 @@
         {
           "athleteId": "2132b215-2786-4dfa-86e5-054fa9cb1cb1",
           "conflicts": [],
-          "fullName": "Mckenna Matson",
+          "fullName": "McKenna Matson",
           "grade": null,
           "height": null,
           "jersey": null,
@@ -14065,7 +14065,7 @@
         {
           "athleteId": "beb9b241-ab5f-4b9b-9b4c-298739321d8e",
           "conflicts": [],
-          "fullName": "Lydia Mcdonald",
+          "fullName": "Lydia McDonald",
           "grade": null,
           "height": null,
           "jersey": null,
@@ -22568,7 +22568,7 @@
         {
           "athleteId": "b87e434f-5d2e-4948-a52c-a274fb964363",
           "conflicts": [],
-          "fullName": "Allison Wright-lopez",
+          "fullName": "Allison Wright-Lopez",
           "grade": {
             "confidence": "high",
             "derived": false,
@@ -23474,7 +23474,7 @@
         {
           "athleteId": "3aef083a-799e-41c9-bbdb-fe738fc219ed",
           "conflicts": [],
-          "fullName": "Leslie Hernandez-flores",
+          "fullName": "Leslie Hernandez-Flores",
           "grade": {
             "confidence": "high",
             "derived": false,
@@ -24377,7 +24377,7 @@
         {
           "athleteId": "ad9d4e34-6caf-4568-98ca-3140d553c99d",
           "conflicts": [],
-          "fullName": "Luciene Oneil-dunne",
+          "fullName": "Luciene Oneil-Dunne",
           "grade": null,
           "height": null,
           "jersey": null,

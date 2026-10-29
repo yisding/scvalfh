@@ -28,6 +28,7 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
+import { recaseName } from '../lib/person-name';
 import { PlayerStatsFileSchema, type PlayerStatsFile } from '../lib/player-stats-schema';
 import { RostersSchema, type Rosters } from '../lib/rosters-schema';
 import { parsePlayerStats, joinToRoster } from '../lib/sources/maxpreps-player-stats';
@@ -147,7 +148,8 @@ describe('roster pages of BVAL, PCAL and MCAL teams', () => {
       const page = parseRoster(slug);
       if (!page.players.length) continue;
       const table = parseRosterTable(html(slug))!;
-      expect(table.map((r) => r.name).sort(), slug).toEqual(page.players.map((p) => p.fullName).sort());
+      // The table shows MaxPreps' own spelling; the page's names come back recased (lib/person-name.ts).
+      expect(table.map((r) => recaseName(r.name)).sort(), slug).toEqual(page.players.map((p) => p.fullName).sort());
     }
   });
 

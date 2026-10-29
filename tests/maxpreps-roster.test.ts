@@ -310,14 +310,15 @@ describe('maxpreps roster: one career link on two rows (Huntington Beach, 2026-1
   // MaxPreps lists Valentina D'Angelo twice: one row "D'Angelo" (Sr., F) and one "D'angelo" with no
   // grade, both linking the same career page, both rendered in the table. Each athleteData row takes
   // its own table row (exact name first), the field checks pass, and the duplicate is a warning: the
-  // page is read as MaxPreps publishes it, never merged and never dropped.
+  // page is read as MaxPreps publishes it, never merged and never dropped. The warning quotes
+  // MaxPreps' own spelling; the rows come back recased, so both read "D'Angelo".
   it('reads both rows and warns about the duplicate career id', () => {
     const roster = parse('huntington-beach');
     expect(roster.players).toHaveLength(17);
     expect(roster.athleteCount).toBe(17);
     expect(roster.players.filter((p) => p.careerId === 'k0qcpr2eeq0n7').map((p) => [p.fullName, p.gradeClass, p.position])).toEqual([
       ["Valentina D'Angelo", 'Sr.', 'F'],
-      ["Valentina D'angelo", null, null],
+      ["Valentina D'Angelo", null, null],
     ]);
     expect(roster.warnings).toEqual([
       `duplicate career id 2a9d3bf3-fc27-42cd-8a79-97cb3c3d4bb2: "Valentina D'Angelo" and "Valentina D'angelo"`,
