@@ -256,7 +256,7 @@ describe('GP, LEFT and MAX', () => {
     const note = view.unevenGpFootnote('mcal', spread);
     if (spread.max - spread.min >= 2) {
       expect(note, 'components/standings/standings-view.ts uneven-GP').toBe(
-        `Teams have played between ${spread.min} and ${spread.max} of ${spread.scheduled} league games, so points favour teams that have played more. LEFT is league games with no counted result yet — still to play, or played and not reported. MAX is the most points a team could reach if it won all of them. The order is points, as MCAL rules require. If the season ends with games unplayed, MCAL General Rules (with an incomplete schedule, winning percentage replaces points); we will show that order then.`,
+        `Teams have played between ${spread.min} and ${spread.max} of ${spread.scheduled} league games, so points favour teams that have played more. LEFT is league games with no counted result yet — still to play, or played and not reported. MAX is the most points a team can finish with if it wins all of them (its final total once none are left). The order is points, as MCAL rules require. If the season ends with games unplayed, MCAL General Rules (with an incomplete schedule, winning percentage replaces points); we will show that order then.`,
       );
     }
     expect(view.unevenGpFootnote('scval', { min: 5, max: 6, scheduled: 12 })).toBeNull();
