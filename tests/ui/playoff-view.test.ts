@@ -545,7 +545,8 @@ describe('/playoffs by region (DESIGN-socal §2.4)', () => {
     expect(text, PAGE).toContain(city.qualificationLine);
     expect(text, PAGE).toContain(city.citations.roundDates);
     // The corpus is from Oct 2, before the seeding meeting: the pre-meeting sentence, then the round calendar.
-    expect(text, PAGE).toContain('The Section seeds at its Sat Oct 31 meeting and posts its brackets on its field hockey page afterwards; this site draws no bracket and projects no places.');
+    expect(text, PAGE).toContain('The Section places teams at its Sat Oct 31 seeding meeting and posts its brackets on its field hockey page afterwards; this site draws no bracket and projects no places.');
+    expect(view.sectionBracketSentence(city, '2026-10-31', '2026-10-29'), VIEW).not.toMatch(/\bseed(ed|s)?\b(?! ?ing meeting)/i);
     expect(socal, PAGE).toContain(`href="${city.powerRankingsUrl}"`);
     expect(socal, PAGE).toContain(`href="${city.calendarUrl}"`);
     expect(socal, PAGE).toContain(`href="${city.bracketsPageUrl}"`);

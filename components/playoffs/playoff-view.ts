@@ -599,8 +599,8 @@ export function sectionRoundRows(ps: SectionPlayoffsConfig): KeyDateRow[] {
 }
 
 /**
- * The San Diego block's bracket sentence, true on every day: before the seeding meeting, when the Section seeds
- * and where it posts; from the meeting on, that it posts its brackets on its field hockey page (and, once the
+ * The San Diego block's bracket sentence, true on every day: before the seeding meeting, when the Section places
+ * teams and where it posts (never the word "seeds": SEED_CLAIM bans a seed word on a San Diego card); from the meeting on, that it posts its brackets on its field hockey page (and, once the
  * owner has pasted the sheet's URL, that they are published); always that this site draws none and projects no
  * places, since the Section places teams.
  */
@@ -608,7 +608,7 @@ export function sectionBracketSentence(ps: SectionPlayoffsConfig, seedingDate: s
   const seeding = seedingDate ? shortDate(seedingDate) : null;
   if (ps.bracketSheetUrl) return 'The Section has published its brackets; this site draws no bracket and projects no places.';
   if (seedingDate && today < seedingDate) {
-    return `The Section seeds at its ${seeding} meeting and posts its brackets on its field hockey page afterwards; this site draws no bracket and projects no places.`;
+    return `The Section places teams at its ${seeding} seeding meeting and posts its brackets on its field hockey page afterwards; this site draws no bracket and projects no places.`;
   }
   return `The Section posts its brackets on its field hockey page${seeding ? ` after its ${seeding} seeding meeting` : ''}; this site draws no bracket and projects no places. Its playoff games appear on team pages and schedules as MaxPreps lists them.`;
 }
