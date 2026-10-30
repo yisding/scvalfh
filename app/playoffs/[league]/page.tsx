@@ -80,7 +80,7 @@ function titleSentence(projection: LeagueTournamentProjection, ps: TournamentCon
 /**
  * 'Marin County Athletic League · 6 teams · Quarterfinals Mon Oct 26 · Final Fri Oct 30' while the picture is
  * projected; once the tournament is under way, the next round's matchups ('… · Final Fri Oct 30, 4 PM PT at
- * Tamalpais: 1 Tamalpais vs 3 Redwood') and, after the final, the champion (lib/postseason.ts tournamentHeadline).
+ * Tamalpais: 3 Redwood at 1 Tamalpais') and, after the final, the champion (lib/postseason.ts tournamentHeadline).
  */
 function headerMeta(summary: LeagueSummary, ps: TournamentConfig, config: LeagueConfig): string {
   const headline = tournamentHeadline(getLeagueTournament(summary.id), config);
