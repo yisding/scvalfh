@@ -167,7 +167,10 @@ function SeedsTable({ view, leagueShort }: { view: TournamentView; leagueShort: 
   );
 }
 
-function SlotText({ slot }: { slot: TournamentSlotView }) {
+/** The site's winner rule (DESIGN §8: a winner row is 600 weight AND a 2px `--sx-text` left rule), as HistoryBracket and PlayoffBracket draw it. */
+const WINNER_RULE = { boxShadow: 'inset 2px 0 0 var(--sx-text)' } as const;
+
+function SlotText({ slot, decided = false, won = false }: { slot: TournamentSlotView; decided?: boolean; won?: boolean }) {
   // A seat that names its team(s) prints exactly `listWords(shortNames, 'or')` (playoff-view
   // slotView); each name then taps through to its team page, as the same teams do in the seeds
   // table above. The line is aria-hidden (the game's sr-only sentence speaks for it), so these are
@@ -175,10 +178,13 @@ function SlotText({ slot }: { slot: TournamentSlotView }) {
   // Any other text (a rule, "Play-in winner (A or B)") stays plain.
   const names = slot.teams.map((team) => team.shortName);
   const linked = names.length > 0 && slot.text === listWords(names, 'or');
+  // Once a game is decided both sides take the rule's inset (pl-2), so the two names still line up; only the
+  // winner's side draws the rule and the 600 weight. A second cue, never the only one: the result link under the
+  // line says who won in words, and the sr-only sentence says who advances.
   return (
-    <span className="min-w-0">
+    <span className={decided ? 'min-w-0 pl-2' : 'min-w-0'} style={won ? WINNER_RULE : undefined}>
       {slot.seed !== null ? <span className="sx-num mr-1.5 text-meta text-ink-3">{slot.seed}</span> : null}
-      <span className={slot.tbd || slot.teams.length === 0 ? 'text-ink-2' : 'text-ink'}>
+      <span className={won ? 'font-semibold text-ink' : slot.tbd || slot.teams.length === 0 ? 'text-ink-2' : 'text-ink'}>
         {linked
           ? slot.teams.map((team, i) => (
               <Fragment key={team.slug}>
@@ -200,7 +206,9 @@ function SlotText({ slot }: { slot: TournamentSlotView }) {
 }
 
 /**
- * One bracket game: 'away at home' (or 'vs' at a fixed site), the result link once it exists.
+ * One bracket game: 'away at home' (or 'vs' at a fixed site neither team calls home), the result link once it
+ * exists, and the winner's side marked with the site's winner rule; the sr-only sentence adds who advances
+ * ('Redwood won and advances to the final.') or who wins the tournament.
  *
  * From md the line is three columns, like the play-in card's pairing (PlayInCard): the first side,
  * a 2rem connector column, the second side. As a wrapped sentence the connector sat wherever the
@@ -210,19 +218,22 @@ function SlotText({ slot }: { slot: TournamentSlotView }) {
  * never ends on "at": at 390 two games did.
  */
 function BracketGame({ game }: { game: TournamentGameView }) {
-  const first = game.connector === 'vs' ? game.home : game.away;
-  const second = game.connector === 'vs' ? game.away : game.home;
+  const firstSide = game.connector === 'vs' ? 'home' : 'away';
+  const secondSide = firstSide === 'home' ? 'away' : 'home';
+  const first = game[firstSide];
+  const second = game[secondSide];
+  const decided = game.winner !== null;
   return (
     <div className="px-4 py-3">
-      <span className="sr-only">{game.line}.</span>
+      <span className="sr-only">{game.outcome ? `${game.line}. ${game.outcome}` : `${game.line}.`}</span>
       <p
         className="m-0 flex flex-wrap items-baseline gap-x-2 text-body md:grid md:grid-cols-[minmax(0,1fr)_2rem_minmax(0,1fr)]"
         aria-hidden="true"
       >
-        <SlotText slot={first} />
+        <SlotText slot={first} decided={decided} won={game.winner === firstSide} />
         <span className="flex min-w-0 items-baseline gap-x-2 md:contents">
           <span className="shrink-0 text-meta text-ink-3 md:text-center">{game.connector}</span>
-          <SlotText slot={second} />
+          <SlotText slot={second} decided={decided} won={game.winner === secondSide} />
         </span>
       </p>
       {game.game ? (

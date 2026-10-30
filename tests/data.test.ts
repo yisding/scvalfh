@@ -445,6 +445,15 @@ describe('data: postseason', () => {
     expect(sf.sentence).toBe('The SCVAL crossover and the 4th-place play-in are Thu Oct 29 and Fri Oct 30.');
     expect(sf.href).toBe('/playoffs#scval');
     expect(sf.linkText).toBe('CCS playoffs');
+    // The crossover sentence is for the teams those games are about: the 5th-place at-large candidate keeps it…
+    const fremont = data.getTeamPostseasonLine('fremont')!;
+    expect(fremont.label).toBe('At-large consideration');
+    expect(fremont.sentence).toBe('The SCVAL crossover and the 4th-place play-in are Thu Oct 29 and Fri Oct 30.');
+    // …a team 6th or lower (Cupertino, 7th in De Anza) gets the ladder's own words, never the crossover's.
+    const cupertino = data.getTeamPostseasonLine('cupertino')!;
+    expect(cupertino.label).toBe('No automatic path');
+    expect(cupertino.sentence).toBe('No automatic path; at-large berths are the CCS committee’s call.');
+    expect(cupertino.sentence).not.toMatch(/crossover|eliminat/i);
     expect(data.getTeamPostseasonLine('leigh')).toBeNull();
     expect(data.getTeamPostseasonLine('tamalpais')).toBeNull();
     expect(data.getTeamPostseasonLine('chico')).toBeNull();
@@ -756,14 +765,14 @@ describe('data: Southern California tables with results', () => {
     if (city.postseason.kind !== 'section-playoffs') throw new Error('City plays the San Diego Section playoffs');
     const first = socal.getTeamPostseasonLine('la-jolla')!;
     // Two teams are level on 3 points at the top, so the first place spans 1st and 2nd.
-    expect(first.label).toBe('1st: at least a play-in if named league champion or no league route into the playoffs');
+    expect(first.label).toBe('1st: at least a play-in if named league champion or placed by the Section from its power rankings');
     expect(first.sentence).toBe(
       `${city.postseason.qualificationLine} The Section lists La Jolla in Division I; Open Division teams are drawn from Division I at the end of the regular season.`,
     );
     expect(first.href).toBe('/playoffs#city');
     expect(first.linkText).toBe('San Diego Section playoffs');
     const below = socal.getTeamPostseasonLine('canyon-hills')!;
-    expect(below.label).toBe('No league route');
+    expect(below.label).toBe('Placed by the Section');
     expect(below.sentence).not.toMatch(/\btop (six|\d)/i);
     expect(socal.getTeamPostseasonLine('mission-bay')).toBeNull();
     expect(socal.getTeamPostseasonLine('marina')!.label).toBe('No section playoffs');

@@ -7,6 +7,7 @@ import {
   EARLIER_MEETING_NOTE, SHOOTOUT_NOTE, buildLeagueTournament, finalGame, matchTournamentGames, quarterfinals,
   seedsFromStandings, semifinals, sixthPlaceRule,
   mayHideShootout, tournamentHeadline, tournamentOutcome, tournamentOutcomeCopy,
+  fixedSiteHost, tournamentGameLine, winnerOf,
 } from '../lib/postseason';
 import { getTeamBySlug } from '../lib/teams';
 import type { Game, Standing, TiebreakStage } from '../lib/types';
@@ -399,7 +400,8 @@ describe('buildLeagueTournament', () => {
     });
     expect(tournamentHeadline(before, MCAL)).toEqual({
       champion: null,
-      next: `Final Fri Oct 30, 4 PM PT at Tamalpais: 1 ${getTeamBySlug(AW)!.shortName} vs 3 ${getTeamBySlug(TM)!.shortName}`,
+      // Tamalpais hosts the final at Tamalpais (config finalSite.slug): visitor at host, as the game page says it.
+      next: `Final Fri Oct 30, 4 PM PT at Tamalpais: 1 ${getTeamBySlug(AW)!.shortName} at 3 ${getTeamBySlug(TM)!.shortName}`,
     });
 
     // Quarterfinals in, semifinals to come: the next round's two matchups.
@@ -433,6 +435,42 @@ describe('buildLeagueTournament', () => {
     for (const slug of [TM, AW, LW, RW, BK, UN, MC, CS]) {
       expect(`${copy(done, slug).label} ${copy(done, slug).sentence}`).not.toMatch(/eliminat/i);
     }
+  });
+
+  it('reads the final "at" when the site team is a finalist and "vs" only when neither is (fixedSiteHost, tournamentGameLine)', () => {
+    const ps = MCAL.postseason;
+    if (ps.kind !== 'league-tournament') throw new Error('MCAL runs a tournament');
+    const short = (slug: string) => getTeamBySlug(slug)!.shortName;
+    // 2026: 1 Tamalpais (home slot) and 3 Redwood, at Tamalpais — the game page's "Redwood at Tamalpais".
+    const tamHome = finalGame([{ seed: 1, slug: TM }, { seed: 3, slug: RW }], MCAL);
+    expect(fixedSiteHost(tamHome, ps.finalSite.slug)).toBe('home');
+    expect(tournamentGameLine(tamHome, ps.finalSite.slug)).toBe(`3 ${short(RW)} at 1 ${short(TM)}`);
+    // The site team as the worse seed still hosts: it is listed last.
+    const tamAway = finalGame([{ seed: 1, slug: AW }, { seed: 3, slug: TM }], MCAL);
+    expect(fixedSiteHost(tamAway, ps.finalSite.slug)).toBe('away');
+    expect(tournamentGameLine(tamAway, ps.finalSite.slug)).toBe(`1 ${short(AW)} at 3 ${short(TM)}`);
+    // Neither finalist is the host: a neutral fixed site, better seed first, "vs".
+    const neutral = finalGame([{ seed: 1, slug: AW }, { seed: 2, slug: RW }], MCAL);
+    expect(fixedSiteHost(neutral, ps.finalSite.slug)).toBeNull();
+    expect(tournamentGameLine(neutral, ps.finalSite.slug)).toBe(`1 ${short(AW)} vs 2 ${short(RW)}`);
+    // Finalists not known yet: the written slots, "vs"; no site slug passed: "vs" as well (no host known).
+    expect(tournamentGameLine(finalGame(null, MCAL), ps.finalSite.slug)).toBe('Semifinal 1 winner vs Semifinal 2 winner');
+    expect(tournamentGameLine(tamHome)).toBe(`1 ${short(TM)} vs 3 ${short(RW)}`);
+    // A round at the higher seed's field has no fixed site: visitor at host whatever the slug.
+    const [qf1] = quarterfinals(seedsFromStandings(rows, MCAL), MCAL);
+    expect(fixedSiteHost(qf1, ps.finalSite.slug)).toBeNull();
+    expect(tournamentGameLine(qf1, ps.finalSite.slug)).toMatch(/^5 .+ at 4 .+$/);
+  });
+
+  it('names the winner of a matched game by score, else by the W flag MaxPreps sets (winnerOf)', () => {
+    const bracket = [finalGame([{ seed: 1, slug: TM }, { seed: 3, slug: RW }], MCAL)];
+    const [won] = matchTournamentGames([game(TM, RW, 1, 3, '2026-10-30', { postseason: true })], bracket);
+    expect(winnerOf(won)).toBe(RW);
+    const levelFlag: Game = { ...game(TM, RW, 1, 1, '2026-10-30', { postseason: true }) };
+    levelFlag.home = { ...levelFlag.home, result: 'W' };
+    expect(winnerOf(matchTournamentGames([levelFlag], bracket)[0])).toBe(TM);
+    expect(winnerOf(matchTournamentGames([game(TM, RW, 1, 1, '2026-10-30', { postseason: true })], bracket)[0])).toBeNull();
+    expect(winnerOf(bracket[0])).toBeNull();
   });
 
   it('attaches the shootout caveat only where a shootout may hide, and a sourced result note where config has one', () => {

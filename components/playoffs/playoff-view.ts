@@ -42,6 +42,7 @@ import {
   timeOfDayPT,
 } from '../../lib/format';
 import { CCS, divisionHeading, getDivision, getLeague, ladderFor, leagueOfDivision } from '../../lib/leagues';
+import { fixedSiteHost, winnerOf } from '../../lib/postseason';
 import type { CcsConfig, LeagueConfig, OutsideTournamentConfig } from '../../lib/leagues';
 import type {
   CcsKeyDates,
@@ -692,12 +693,30 @@ export interface TournamentGameView {
   dateKey: string;
   dateLabel: string;
   timeLabel: string;
+  /**
+   * The host side: the higher seed's field, or at a fixed site the slot whose team IS the site team (the 2026 final:
+   * 1 Tamalpais, at Tamalpais). At a fixed site neither team calls home, the better seed.
+   */
   home: TournamentSlotView;
   away: TournamentSlotView;
-  /** 'at' (the higher seed's field) or 'vs' (a fixed site such as Tamalpais). */
+  /**
+   * 'at' (the higher seed's field, or a fixed site that is one finalist's own: lib/postseason.ts fixedSiteHost) or
+   * 'vs' (a fixed site neither finalist calls home). The final reads '3 Redwood at 1 Tamalpais', the game page's words.
+   */
   connector: 'at' | 'vs';
   /** '5 Convent at 4 Marin Catholic' — what the page prints. */
   line: string;
+  /**
+   * The side that won the matched game (lib/postseason.ts winnerOf: the higher score, else the side MaxPreps marks
+   * W), as this view's `home`/`away`; null with no result or a level game with no W flag. The bracket marks it with
+   * the site's winner rule (600 weight and the 2px left rule, DESIGN §8 accessibility).
+   */
+  winner: 'home' | 'away' | null;
+  /**
+   * The result for the game's sr-only sentence: 'Redwood won and advances to the final.' / 'Tamalpais wins the MCAL
+   * tournament.'; null with no winner.
+   */
+  outcome: string | null;
   /** 'Tamalpais' for a fixed site; null = the home seed's field. */
   site: string | null;
   note: string | null;
@@ -767,8 +786,12 @@ export interface TournamentInput {
    * the type is config's, where null means "no line" (only an unbracketed league, which has no bracket).
    */
   ladderLine: { after: number; label: string } | null;
-  /** The final's fixed site from config (venue, address, admission); omitted ⇒ the round shows no venue block. */
-  finalSite?: { venue: string; address: { street: string; city: string; region: string; postalCode: string }; admission: string | null; admissionSource: string | null };
+  /**
+   * The final's fixed site from config (the host school's slug, venue, address, admission); omitted ⇒ the round
+   * shows no venue block and the final reads 'vs' (no host known). The slug makes the final 'at' when the site team
+   * is a finalist (lib/postseason.ts fixedSiteHost).
+   */
+  finalSite?: { slug?: TeamSlug; venue: string; address: { street: string; city: string; region: string; postalCode: string }; admission: string | null; admissionSource: string | null };
 }
 
 /** A bracket round's title, for the page's round headers and the OG card's round line alike. */
@@ -815,14 +838,43 @@ function slotLabel(v: TournamentSlotView): string {
   return v.seed !== null ? `${v.seed} ${v.text}` : v.text;
 }
 
+/** The round a game's winner goes on to; null after the final. */
+const NEXT_ROUND: Readonly<Record<TournamentGame['round'], TournamentRoundView['round'] | null>> = {
+  'play-in': 'quarterfinal',
+  quarterfinal: 'semifinal',
+  semifinal: 'final',
+  final: null,
+};
+
+/**
+ * One bracket game in words. `siteSlug` is the fixed site's own team (config `finalSite.slug`): when that team is in
+ * the game the line is visitor at host, as at any other round and on the game page ('3 Redwood at 1 Tamalpais');
+ * a fixed site neither finalist calls home lists the better seed first with 'vs'. `tournamentName` ('MCAL
+ * tournament') names what the final's winner wins in the sr-only sentence.
+ */
 export function tournamentGameView(
   tg: TournamentGame,
   teamOf: TournamentInput['teamOf'],
   seeds: LeagueTournamentProjection['seeds'] = [],
+  siteSlug: TeamSlug | null = null,
+  tournamentName: string | null = null,
 ): TournamentGameView {
-  const home = slotView(tg.home, teamOf, seeds);
-  const away = slotView(tg.away, teamOf, seeds);
-  const connector = tg.site !== null ? 'vs' : 'at';
+  const host = fixedSiteHost(tg, siteSlug);
+  // The view's `home` is the host: at a fixed site the site team's slot, whichever seed it holds.
+  const [homeSlot, awaySlot] = host === 'away' ? [tg.away, tg.home] : [tg.home, tg.away];
+  const home = slotView(homeSlot, teamOf, seeds);
+  const away = slotView(awaySlot, teamOf, seeds);
+  const connector = tg.site !== null && host === null ? 'vs' : 'at';
+  const winnerSlug = winnerOf(tg);
+  const holds = (v: TournamentSlotView) => winnerSlug !== null && v.teams.length === 1 && v.teams[0].slug === winnerSlug;
+  const winner = holds(home) ? 'home' : holds(away) ? 'away' : null;
+  let outcome: string | null = null;
+  if (winner !== null) {
+    const name = (winner === 'home' ? home : away).teams[0].shortName;
+    const next = NEXT_ROUND[tg.round];
+    if (next !== null) outcome = `${name} won and advances to the ${ROUND_TITLES[next].toLowerCase()}.`;
+    else if (tournamentName) outcome = `${name} wins the ${tournamentName}.`;
+  }
   return {
     id: tg.id,
     round: tg.round,
@@ -832,8 +884,10 @@ export function tournamentGameView(
     home,
     away,
     connector,
-    // A fixed site lists the better seed first ('1 Tamalpais vs 3 Redwood'); otherwise visitor at host.
+    // A neutral fixed site lists the better seed first ('1 Archie Williams vs 2 Redwood'); otherwise visitor at host.
     line: connector === 'vs' ? `${slotLabel(home)} vs ${slotLabel(away)}` : `${slotLabel(away)} at ${slotLabel(home)}`,
+    winner,
+    outcome,
     site: tg.site,
     note: tg.note,
     game: tg.game,
@@ -876,7 +930,10 @@ export function buildTournamentView(input: TournamentInput): TournamentView {
       `points and neither won both meetings. ${name(contenders[0])} hosts.`;
   }
 
-  const games = p.games.map((tg) => tournamentGameView(tg, teamOf, p.seeds));
+  const siteSlug = finalSite?.slug ?? null;
+  const ps = getLeague(p.leagueId).postseason;
+  const tournamentName = ps.kind === 'league-tournament' ? ps.name : null;
+  const games = p.games.map((tg) => tournamentGameView(tg, teamOf, p.seeds, siteSlug, tournamentName));
   const rounds: TournamentRoundView[] = [];
   for (const g of games) {
     if (g.round === 'play-in') continue;
@@ -919,7 +976,7 @@ export function buildTournamentView(input: TournamentInput): TournamentView {
     lineAfter,
     lineLabel: lineAfter > 0 && ladderLine ? ladderLine.label : null,
     playInSentence,
-    playIn: p.playIn ? tournamentGameView(p.playIn, teamOf, p.seeds) : null,
+    playIn: p.playIn ? tournamentGameView(p.playIn, teamOf, p.seeds, siteSlug, tournamentName) : null,
     rounds,
     notes,
   };

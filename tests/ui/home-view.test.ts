@@ -120,7 +120,24 @@ describe('home panels (components/home/home-view.ts → LeaguePanel)', () => {
       const html = renderPanel(id);
       expect(html, `components/home/PostseasonCard.tsx: ${id} CCS link`).toContain(`href="/playoffs#${id}"`);
       expect(textOf(html), `components/home/PostseasonCard.tsx: ${id} dates`).toContain('Quarterfinals');
+      // The footer is the view's dated sentence (ccsLadderView `official`); the corpus day is before the meeting.
+      const panel = data.panels.find((p) => p.id === id)!;
+      if (panel.postseason.kind !== 'ccs-ladder') throw new Error(`${HV}: ${id} is a CCS ladder`);
+      expect(panel.postseason.official, `${HV}: ${id} footer`).toBe(
+        'Berths are assigned by the CCS committee. Nothing here is official until the seeding meeting.',
+      );
+      expect(textOf(html), `components/home/PostseasonCard.tsx: ${id} footer`).toContain(panel.postseason.official);
     }
+  });
+
+  it('the CCS card footer changes tense the day after the seeding meeting (ccsOfficialSentence)', () => {
+    const before = 'Berths are assigned by the CCS committee. Nothing here is official until the seeding meeting.';
+    expect(home.ccsOfficialSentence('2026-10-29'), HV).toBe(before);
+    // On Nov 2 itself the updates land before the 1 PM meeting: still the present tense.
+    expect(home.ccsOfficialSentence('2026-11-02'), HV).toBe(before);
+    expect(home.ccsOfficialSentence('2026-11-03'), HV).toBe(
+      'Berths were assigned by the CCS committee on Mon Nov 2; results update twice a day.',
+    );
   });
 
   it('PCAL and MCAL mini tables carry no division label', () => {

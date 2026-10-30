@@ -448,6 +448,12 @@ export type PostseasonView =
       meter: { claimed: number; total: number; label: string };
       dates: Array<{ term: string; date: string }>;
       bracket: { published: boolean; url: string };
+      /**
+       * The card's footer sentence, dated: 'Berths are assigned by the CCS committee. Nothing here is official until
+       * the seeding meeting.' through the seeding meeting's day; from the day after, 'Berths were assigned by the CCS
+       * committee on Mon Nov 2; results update twice a day.'
+       */
+      official: string;
       link: { href: string; label: string };
     }
   | {
@@ -534,7 +540,7 @@ function leagueTournamentView(
   sectionNote: string | null,
 ): PostseasonView {
   // Results first (DESIGN §24.13): 'MCAL tournament · Champion: Tamalpais won the MCAL tournament, beating …' or
-  // 'MCAL tournament · Final Fri Oct 30, 4 PM PT at Tamalpais: 1 Tamalpais vs 3 Redwood'; the static round list
+  // 'MCAL tournament · Final Fri Oct 30, 4 PM PT at Tamalpais: 3 Redwood at 1 Tamalpais'; the static round list
   // only while the picture is projected from the table.
   const headline = tournamentHeadline(getLeagueTournament(league.id), league);
   const live = headline.champion ? `Champion: ${headline.champion}` : headline.next;
@@ -557,6 +563,20 @@ function leagueTournamentView(
     note: sectionNote,
     link: { href: `/playoffs/${league.id}`, label: 'Bracket' },
   };
+}
+
+/**
+ * The CCS card's footer sentence, in the day's tense (DESIGN §8 "say what is true, say when it changes"): the CCS
+ * committee assigns the berths at its seeding meeting (CCS.keyDates.seedingMeeting, Mon Nov 2, 1 PM, 2026). The past
+ * tense starts the day AFTER the meeting, not on its day: an update that lands on Nov 2 runs before 1 PM Pacific
+ * (the crons are 5:00 and 14:00 UTC, 9 PM and 6 AM PST after Nov 1, and run 3-6 hours late), when nothing has been
+ * assigned yet. `today` is getToday(), never Date.now().
+ */
+export function ccsOfficialSentence(today: string): string {
+  const seedingDay = CCS.keyDates.seedingMeeting.slice(0, 10);
+  return today > seedingDay
+    ? `Berths were assigned by the CCS committee on ${shortDate(CCS.keyDates.seedingMeeting)}; results update twice a day.`
+    : 'Berths are assigned by the CCS committee. Nothing here is official until the seeding meeting.';
 }
 
 function ccsLadderView(
@@ -601,6 +621,8 @@ function ccsLadderView(
     intro = `Seeding meeting ${seeding}.`;
   }
 
+  const official = ccsOfficialSentence(getToday());
+
   const playoffs = getPlayoffs();
   return {
     kind: 'ccs-ladder',
@@ -613,6 +635,7 @@ function ccsLadderView(
       { term: 'Final', date: CCS.keyDates.finals },
     ],
     bracket: { published: playoffs.bracketPublished, url: playoffs.bracketUrl },
+    official,
     link: { href: `/playoffs#${league.id}`, label: 'CCS playoffs' },
   };
 }

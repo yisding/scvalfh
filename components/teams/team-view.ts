@@ -63,6 +63,7 @@ import type {
   DivisionId,
   Game,
   LeagueId,
+  LeagueTournamentProjection,
   OfficialFixture,
   Outcome,
   Record3,
@@ -343,11 +344,25 @@ export function identityLine(team: Pick<Team, 'mascot' | 'city' | 'division'>, l
     .join(' · ');
 }
 
-/** The league copy for a team page, from config only. */
-export function leagueCopy(leagueId: LeagueId): TeamLeagueCopy {
+/**
+ * The league copy for a team page, from config, the day and (for a league tournament) how far it has got.
+ *
+ * `today` (getToday(), never Date.now()) sets the tense: "The MCAL league season ended Thu Oct 22" once the last
+ * league date has passed, "ends" until then, and "the MCAL tournament started Mon Oct 26" from its first round's
+ * day. `tournamentStatus` (lib/data.ts getLeagueTournament(...).status) turns
+ * the MCAL promise "We will list a playoff game as soon as MCAL posts the bracket." into a pointer once the bracket
+ * is seeded or under way. Both are optional: without them the sentences are the timeless ones (present tense, the
+ * promise), which is what a caller with no day in hand gets.
+ */
+export function leagueCopy(
+  leagueId: LeagueId,
+  today?: string,
+  tournamentStatus?: LeagueTournamentProjection['status'],
+): TeamLeagueCopy {
   const league = getLeague(leagueId);
   const ps = league.postseason;
   const ends = leaguePlayEnds(league.id);
+  const past = today !== undefined && today > ends;
   const base = {
     id: league.id,
     shortName: league.shortName,
@@ -358,7 +373,7 @@ export function leagueCopy(leagueId: LeagueId): TeamLeagueCopy {
     doubleRoundRobin: league.rules.citations.doubleRoundRobin,
     leaguePlayEnds: ends,
   };
-  const ended = `The ${league.shortName} league season ends ${shortDate(ends)}`;
+  const ended = `The ${league.shortName} league season ${past ? 'ended' : 'ends'} ${shortDate(ends)}`;
   switch (ps.kind) {
     case 'ccs-ladder': {
       const first = ps.pairings[0];
@@ -375,14 +390,23 @@ export function leagueCopy(leagueId: LeagueId): TeamLeagueCopy {
       };
     }
     case 'league-tournament': {
-      const firstRound = [...ps.rounds].sort((a, b) => a.date.localeCompare(b.date))[0];
-      const after = firstRound ? ` and the ${ps.name} starts ${shortDate(firstRound.date)}` : '';
+      // The tournament starts with its first round that is always played: MCAL's 6th-place play-in (Fri Oct 23) is
+      // `optional` (only when two teams are level and neither swept the other), so the start is the quarterfinals,
+      // Mon Oct 26 (2026 play-off sheet). In 2026 no play-in was needed.
+      const firstRound = [...ps.rounds].filter((r) => !r.optional).sort((a, b) => a.date.localeCompare(b.date))[0];
+      // Its tense follows the day like the league season's: "started" from the first round's day.
+      const started = firstRound !== undefined && today !== undefined && today >= firstRound.date;
+      const after = firstRound ? ` and the ${ps.name} ${started ? 'started' : 'starts'} ${shortDate(firstRound.date)}` : '';
+      // Once the seeds are set the bracket is drawn on the tournament page with every result (DESIGN §24.13).
+      const drawn = tournamentStatus === 'seeded' || tournamentStatus === 'in-progress' || tournamentStatus === 'complete';
       return {
         ...base,
         postseasonKind: ps.kind,
         postseasonName: ps.name,
         seasonEndSentence: `${ended}${after}.`,
-        bracketSentence: `We will list a playoff game as soon as ${league.shortName} posts the bracket.`,
+        bracketSentence: drawn
+          ? `The bracket and results are on the ${ps.name} page.`
+          : `We will list a playoff game as soon as ${league.shortName} posts the bracket.`,
       };
     }
     case 'unbracketed-tournament':
@@ -404,8 +428,8 @@ export function leagueCopy(leagueId: LeagueId): TeamLeagueCopy {
         postseasonKind: ps.kind,
         postseasonName: null,
         seasonEndSentence: league.independents
-          ? `The independents’ season ends ${shortDate(ends)}, the Southern Section’s last allowable contest.`
-          : `The ${league.shortName} season ends ${shortDate(ends)}.`,
+          ? `The independents’ season ${past ? 'ended' : 'ends'} ${shortDate(ends)}, the Southern Section’s last allowable contest.`
+          : `The ${league.shortName} season ${past ? 'ended' : 'ends'} ${shortDate(ends)}.`,
         bracketSentence: ps.note,
       };
     }
@@ -725,7 +749,12 @@ export function buildTeamPageView(slug: string): TeamPageView | undefined {
   if (!team) return undefined;
 
   const today = getToday();
-  const league = leagueCopy(team.league);
+  const leagueConfig = getLeague(team.league);
+  const league = leagueCopy(
+    team.league,
+    today,
+    leagueConfig.postseason.kind === 'league-tournament' ? getLeagueTournament(leagueConfig.id).status : undefined,
+  );
   const division = getDivision(team.division);
   const heading = divisionHeading(team.division);
   const all = getGames({ teamId: team.slug }).sort(byDate);

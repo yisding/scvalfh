@@ -1096,14 +1096,21 @@ export function getTeamPostseasonLine(ref: string): TeamPostseasonLine | null {
     case 'ccs-ladder': {
       const crossover = ps.pairings.find((p) => p.tag === 'scval-crossover');
       const playIn = ps.pairings.find((p) => p.tag === 'bval-play-in');
+      // The crossover sentence is for a team those games are about: an automatic berth (the crossover orders
+      // them), the 4th-place play-in, or the 5th-place at-large candidate. A team below that (SCVAL 'out', 6th or
+      // lower: Cupertino, 7th in De Anza on 2026-10-29) has no game left that changes its place, so it reads the
+      // ladder's own words instead (lib/leagues.ts SCVAL rung 'No automatic path'; DESIGN §15.8 "never eliminat…").
+      const candidate = statuses.some((s) => s === 'aq' || s === 'play-in' || s === 'at-large');
       let sentence: string;
-      if (crossover) {
+      if (crossover && candidate) {
         // 'Thu Oct 29 and Fri Oct 30' in 2026: two of the four crossovers moved a day ahead of the schedule.
         sentence = `The SCVAL crossover and the 4th-place play-in are ${pairingDatesLabel(ps.pairings)}.`;
       } else if (playIn && statuses.includes('play-in')) {
         sentence = `${playInClause(league, ps, playIn)}.`;
       } else if (statuses[0] === 'no-aq-route') {
         sentence = 'No automatic-berth route; at-large berths are the CCS committee’s call.';
+      } else if (statuses[0] === 'out') {
+        sentence = 'No automatic path; at-large berths are the CCS committee’s call.';
       } else {
         // An automatic-berth place (BVAL Mt. Hamilton 1-3, PCAL 1-2): the spec gives no league sentence.
         sentence = `${league.shortName}’s automatic CCS berths go by final place; CCS seeds the field on ${shortDate(CCS.keyDates.seedingMeeting)}.`;

@@ -293,8 +293,12 @@ export function matchTournamentGames(
   });
 }
 
-/** The winner of a matched tournament game: the higher score, else the side MaxPreps marks 'W'. */
-function winnerOf(tg: TournamentGame): TeamSlug | null {
+/**
+ * The winner of a matched tournament game: the higher score, else the side MaxPreps marks 'W'. Exported for the
+ * bracket's winner mark (components/playoffs/playoff-view.ts tournamentGameView), so the page and the engine
+ * never disagree on who advanced.
+ */
+export function winnerOf(tg: TournamentGame): TeamSlug | null {
   const g = tg.game;
   if (!hasResult(g)) return null;
   const h = g.home.score as number;
@@ -503,21 +507,44 @@ export function tournamentOutcomeCopy(
   }
 }
 
-/** '3 Redwood at 1 Tamalpais' / '1 Tamalpais vs 3 Redwood' (a fixed site lists the better seed first); TBD for an empty seat. */
-export function tournamentGameLine(tg: TournamentGame): string {
+/**
+ * Which side of a fixed-site game is the host, by the site team's slug (config `finalSite.slug`): the slot whose one
+ * settled team IS the site team. Null for a game at the higher seed's field (no `site`), while the slots are not
+ * settled (the winner-of labels), or when neither finalist is the host, the one case a fixed site is neutral.
+ * 2026: the final is Redwood (3) at Tamalpais (1) on Tam's own turf, and MaxPreps (contest 8f8d3fe5, read
+ * 2026-10-29) lists it as a Tamalpais home game, so the bracket says "at" like the game page, never "vs"; the
+ * General Rules (Playoffs 5) say such a game "should not be considered" a home contest, which is about gate and
+ * scheduling, not about who plays on its own field.
+ */
+export function fixedSiteHost(tg: TournamentGame, siteSlug: TeamSlug | null | undefined): 'home' | 'away' | null {
+  if (!tg.site || !siteSlug) return null;
+  if (slugOfSlot(tg.home) === siteSlug) return 'home';
+  if (slugOfSlot(tg.away) === siteSlug) return 'away';
+  return null;
+}
+
+/**
+ * '3 Redwood at 1 Tamalpais' (visitor at host: the higher seed's field, or a fixed site whose own team is in the
+ * game, `fixedSiteHost`) / '1 Archie Williams vs 2 Redwood' (a fixed site neither team calls home lists the better
+ * seed first); TBD for an empty seat. The same words as the bracket row (playoff-view.ts tournamentGameView).
+ */
+export function tournamentGameLine(tg: TournamentGame, siteSlug: TeamSlug | null = null): string {
   const label = (slot: TournamentSlot): string => {
     if (slot.kind === 'rule') return slot.text;
     if (slot.kind === 'winner-of') return slot.label;
     const names = slot.seat.map((s) => getTeamBySlug(s.slug)?.shortName ?? s.slug);
     return `${slot.seed} ${names.length ? names.join(' or ') : 'TBD'}`;
   };
-  return tg.site ? `${label(tg.home)} vs ${label(tg.away)}` : `${label(tg.away)} at ${label(tg.home)}`;
+  const host = fixedSiteHost(tg, siteSlug);
+  if (host === 'away') return `${label(tg.home)} at ${label(tg.away)}`;
+  if (tg.site && host === null) return `${label(tg.home)} vs ${label(tg.away)}`;
+  return `${label(tg.away)} at ${label(tg.home)}`;
 }
 
 /**
  * What the home lead, the home card, the page header and the OG card lead with (DESIGN §24.13): the champion's
  * sentence once the final has a winner, else the next round with an unplayed game ('Final Fri Oct 30, 4 PM PT at
- * Tamalpais: 1 Tamalpais vs 3 Redwood'), else null (every game played but the final undecided, or no round left).
+ * Tamalpais: 3 Redwood at 1 Tamalpais', `tournamentGameLine` with the site team's slug), else null (every game played but the final undecided, or no round left).
  * Null too while the picture is only projected: the static round list serves then.
  */
 export function tournamentHeadline(p: LeagueTournamentProjection, league: LeagueConfig): { champion: string | null; next: string | null } {
@@ -537,7 +564,7 @@ export function tournamentHeadline(p: LeagueTournamentProjection, league: League
   const round = all.filter((tg) => tg.round === nextGame.round && !hasResult(tg.game));
   const title = nextGame.round === 'play-in' ? 'Play-in' : nextGame.round === 'final' ? 'Final' : `${ROUND_WORDS[nextGame.round][0].toUpperCase()}${ROUND_WORDS[nextGame.round].slice(1)}s`;
   const where = nextGame.site ? ` at ${nextGame.site}` : '';
-  return { champion: null, next: `${title} ${shortDate(nextGame.date)}, ${leagueClockPT(nextGame.time)}${where}: ${round.map(tournamentGameLine).join('; ')}` };
+  return { champion: null, next: `${title} ${shortDate(nextGame.date)}, ${leagueClockPT(nextGame.time)}${where}: ${round.map((tg) => tournamentGameLine(tg, ps.finalSite.slug)).join('; ')}` };
 }
 
 /** The other slot's written rule or contenders ('winner of the play-in', 'lowest-ranked remaining seed'). */
