@@ -78,9 +78,12 @@ describe('buildRosterView', () => {
 
   it('marks exactly the values that came from somewhere other than MaxPreps', () => {
     for (const { slug, view } of views) {
-      const merged = new Map(getEnrichedTeamRoster(slug)!.players.map((p) => [p.fullName, p]));
+      // By the row's key, the athlete id: a name can sit on two rows (Huntington Beach's Valentina D'Angelo).
+      const players = getEnrichedTeamRoster(slug)!.players;
+      const byId = new Map(players.filter((p) => p.athleteId !== null).map((p) => [p.athleteId, p]));
+      const byName = new Map(players.map((p) => [p.fullName, p]));
       for (const row of view.rows) {
-        const p = merged.get(row.name)!;
+        const p = byId.get(row.key) ?? byName.get(row.name)!;
         const grade = row.facts.find((f) => /^(Freshman|Sophomore|Junior|Senior)$/.test(f.text));
         if (grade) expect(grade.elsewhere, `${slug} / ${row.name}`).toBe(p.provenance.grade !== 'maxpreps');
         if (row.jersey) expect(row.jersey.elsewhere, `${slug} / ${row.name}`).toBe(p.provenance.jersey !== 'maxpreps');

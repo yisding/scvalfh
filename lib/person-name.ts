@@ -11,6 +11,11 @@
  * name, not word by word: a lowercase word inside a cased name is the school's choice ("Anna van
  * der Berg"), but a name with no capital anywhere was never cased. An initial does not count: the
  * stats sheet abbreviates "addie dawson" as "A. dawson", capitalizing the initial itself.
+ *
+ * A cased name keeps its case, except for a lowercase letter where a capital was almost certainly
+ * lost: after a hyphen ("Wright-lopez", "Dylan-marie"), after a leading "O'" or "D'" ("D'angelo")
+ * and after a leading "Mc" ("Mcdonald"), each the school capitalizing only the word's first letter.
+ * "Mac" is left alone: "Macias" and "Mackenzie" are not "MacIas" and "MacKenzie".
  */
 
 const SHOUTED = /^(Mc)?(\P{Ll}*)$/u;
@@ -22,6 +27,14 @@ function capitalize(lower: string): string {
   return lower
     .replace(/(^|[-'’])(\p{Ll})/gu, (_, lead: string, ch: string) => `${lead}${ch.toUpperCase()}`)
     .replace(/(^|[-'’])Mc(\p{Ll})/gu, (_, lead: string, ch: string) => `${lead}Mc${ch.toUpperCase()}`);
+}
+
+/** "Wright-lopez" → "Wright-Lopez", "D'angelo" → "D'Angelo", "Mcdonald" → "McDonald". */
+function fixCased(word: string): string {
+  return word
+    .replace(/-(\p{Ll})/gu, (_, ch: string) => `-${ch.toUpperCase()}`)
+    .replace(/(^|-)([OD]['’])(\p{Ll})/gu, (_, lead: string, pre: string, ch: string) => `${lead}${pre}${ch.toUpperCase()}`)
+    .replace(/(^|-)Mc(\p{Ll})(?=\p{Ll})/gu, (_, lead: string, ch: string) => `${lead}Mc${ch.toUpperCase()}`);
 }
 
 function recaseShouted(word: string): string {
@@ -40,12 +53,12 @@ function isUncased(name: string): boolean {
 }
 
 function recaseAs(name: string, uncased: boolean): string {
-  return name.replace(/\S+/g, uncased ? capitalize : recaseShouted);
+  return name.replace(/\S+/g, uncased ? capitalize : (w) => fixCased(recaseShouted(w)));
 }
 
 /**
  * "PAIGE PIERSON" → "Paige Pierson", "McKAELA" → "McKaela", "O'BRIEN-SMITH" → "O'Brien-Smith",
- * "addie dawson" → "Addie Dawson", "A. dawson" → "A. Dawson".
+ * "addie dawson" → "Addie Dawson", "A. dawson" → "A. Dawson", "Wright-lopez" → "Wright-Lopez".
  */
 export function recaseName(name: string): string {
   return recaseAs(name, isUncased(name));

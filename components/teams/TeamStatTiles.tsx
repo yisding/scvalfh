@@ -82,7 +82,15 @@ export function TeamStatTiles({ view, className }: TeamStatTilesProps) {
         <StatTile
           label="Max"
           value={context ? context.maxPts : null}
-          sub={context && context.maxPts === null ? 'no fixed league schedule' : 'points still reachable'}
+          // MAX is a total, not points on offer: with no games left it is simply the final total, so
+          // "still reachable" would read as that many points still to win (Cupertino's 2, review 2026-10-29).
+          sub={
+            context && context.maxPts === null
+              ? 'no fixed league schedule'
+              : left === 0
+                ? 'final league points'
+                : 'most points possible'
+          }
         />
         <StatTile
           label="Overall"
