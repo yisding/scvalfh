@@ -12,13 +12,18 @@
  * module that produced the value.
  */
 
+import { mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import path from 'node:path';
+
 import { renderToStaticMarkup } from 'react-dom/server';
 import type { ReactElement } from 'react';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
 import type { ProjectionRow } from '../../components/playoffs/playoff-view';
 import { listWords } from '../../lib/format';
-import type { PlayoffStatus } from '../../lib/types';
+import type { PlayoffStatus, Snapshot } from '../../lib/types';
+import { ccsGames2025, ccsSeeds2025 } from '../fixtures/ccs/bracket-2025';
 import { corpusSnapshotPath } from '../helpers';
 import { textOf } from './html-text';
 
@@ -589,5 +594,88 @@ describe('/playoffs by region (DESIGN-socal §2.4)', () => {
       expect(sentence).not.toMatch(/\bSunset (school|member)s?\b/);
     }
     expect(socal, PAGE).not.toMatch(/PlayoffBracket|sx-bracket/);
+  });
+});
+
+describe('/playoffs seeded (a stubbed snapshot: the 2025 championship on 2026’s dates, with 2025’s seeds)', () => {
+  // The Oct 2 corpus with the fourteen 2025 CCS games on 2026's dates added (tests/fixtures/ccs/bracket-2025.ts),
+  // the MaxPreps page's answer set to both divisions posted, and the snapshot's day moved to Tue Nov 3, the day
+  // after the seeding meeting. `playoffs.games` rebuilds itself on load (lib/snapshot-migrate.ts
+  // needsPlayoffGames). The seeds come through lib/ccs-bracket.ts getCcsSeeds, mocked to the 2025 field the
+  // way a filled owner file would answer; the committed file is the placeholder and must stay so.
+  let seededHtml = '';
+  let seededDescription = '';
+  const seeds = ccsSeeds2025();
+  const games = ccsGames2025();
+
+  beforeAll(async () => {
+    const snap = JSON.parse(readFileSync(corpusSnapshotPath('all-2026-10-02'), 'utf8')) as Snapshot;
+    snap.games.push(...games);
+    snap.counts = { ...snap.counts, games: snap.games.length };
+    snap.playoffs.bracketPublished = true;
+    snap.playoffs.divisionsPublished = { 'Division 1': true, 'Division 2': true };
+    snap.playoffs.games = [];
+    snap.fetchedAt = '2026-11-03T12:00:00.000Z';
+    const dir = mkdtempSync(path.join(tmpdir(), 'scvalfh-playoffs-seeded-'));
+    const file = path.join(dir, 'snapshot.json');
+    writeFileSync(file, JSON.stringify(snap));
+    process.env.SCVAL_SNAPSHOT = file;
+    vi.resetModules();
+    vi.doMock('../../lib/ccs-bracket', async (importOriginal) => {
+      const actual = await importOriginal<typeof import('../../lib/ccs-bracket')>();
+      return { ...actual, getCcsSeeds: () => seeds };
+    });
+    const page = await import('../../app/playoffs/page');
+    seededHtml = renderToStaticMarkup(page.default() as ReactElement);
+    const meta = await page.generateMetadata();
+    seededDescription = typeof meta.description === 'string' ? meta.description : '';
+  }, 600_000);
+
+  afterAll(() => {
+    vi.doUnmock('../../lib/ccs-bracket');
+    process.env.SCVAL_SNAPSHOT = corpusSnapshotPath('all-2026-10-02');
+    vi.resetModules();
+  });
+
+  it('draws two CCS division paths under their own h3s, with seeds, and drops the not-seeded sentences', () => {
+    const bracket = seededHtml.slice(seededHtml.indexOf('id="bracket"'), seededHtml.indexOf('id="at-large"'));
+    const text = textOf(bracket);
+    expect(bracket.match(/<h3[^>]*>CCS Division 1<\/h3>/g)?.length, PAGE).toBe(1);
+    expect(bracket.match(/<h3[^>]*>CCS Division 2<\/h3>/g)?.length, PAGE).toBe(1);
+    expect(text, PAGE).toContain('seeded Mon Nov 2');
+    expect(text, PAGE).toContain('CCS numbers each division’s eight teams 1-8; CCS Division 2 holds the committee’s overall seeds 9-16.');
+    expect(text, PAGE).not.toContain('Our data does not say which division');
+    expect(text, PAGE).not.toContain('no games posted yet');
+    expect(text, PAGE).not.toContain('CCS has posted');
+    // Every game card links its game page; the seed digits are on the cards.
+    for (const g of games) expect(bracket, `${PAGE}: ${g.contestId}`).toContain(`href="/game/${g.contestId}"`);
+    expect(bracket, PAGE).toMatch(/<span class="sx-num[^"]*">8<\/span>/);
+    const whole = textOf(seededHtml);
+    expect(whole, PAGE).not.toContain('Not seeded yet');
+    expect(whole, PAGE).not.toContain('not yet posted');
+    expect(whole, PAGE).not.toContain('every status below is a written word');
+    // The day after the meeting, the league intros say so.
+    expect(whole, PAGE).toContain('SCVAL holds 7 of the 16 CCS berths. Ordered by league points. CCS seeded the field on Mon Nov 2; results update twice a day.');
+    expect(whole, PAGE).not.toContain('nothing here is official');
+    expect(seededDescription, `${PAGE}: generateMetadata`).toContain('The CCS field hockey bracket: quarterfinals Sat Nov 7');
+  });
+
+  it('keeps "CCS Division" inside the NorCal block only, and the SoCal block free of any bracket', () => {
+    const socalAt = seededHtml.indexOf('<div id="socal" data-region-scope="socal">');
+    expect(socalAt, PAGE).toBeGreaterThan(0);
+    expect(textOf(seededHtml.slice(socalAt)), PAGE).not.toMatch(/CCS Division/i);
+    expect(textOf(seededHtml.slice(0, seededHtml.indexOf('<div id="norcal"'))), PAGE).not.toMatch(/CCS Division/i);
+    expect(seededHtml.slice(socalAt), PAGE).not.toMatch(/PlayoffBracket|sx-bracket|href="\/game\//);
+    expect(seededHtml, PAGE).not.toMatch(/eliminat/i);
+  });
+
+  it('the Oct 2 corpus page is unchanged: not seeded, the bracket "not yet posted", nothing official until the meeting', () => {
+    const text = textOf(html);
+    expect(text, PAGE).toContain('Not seeded yet:');
+    expect(text, PAGE).toContain('CCS seeds CCS Division 1 and CCS Division 2 at the Mon Nov 2 meeting; the games appear here as MaxPreps lists them, after the next update. Official CCS bracket ↗ (opens in a new tab) — not yet posted.');
+    expect(text, PAGE).toContain('SCVAL holds 7 of the 16 CCS berths. Ordered by league points; nothing here is official until Mon Nov 2.');
+    expect(text, PAGE).not.toContain('every status below is a written word');
+    expect(text, PAGE).not.toContain('CCS has posted');
+    expect(html, PAGE).not.toContain('<h3 class="m-0 mb-3 text-lead text-ink">CCS Division');
   });
 });
