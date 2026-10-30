@@ -25,6 +25,7 @@ import {
   getGoalDiffDomain,
   getLastLeagueResultDate,
   getLatestResultsDate,
+  getLeaguePairings,
   getLeagueSummaries,
   getLeagueTournament,
   getNonLeagueFinalsPlayed,
@@ -62,6 +63,7 @@ import {
 import { gameHref } from '../../lib/game-id';
 import { hasHistory } from '../../lib/history';
 import { tournamentHeadline } from '../../lib/postseason';
+import { ccsOutcomeFor } from '../../lib/postseason-outcomes';
 import { outcomesFor, pairingDatesLabel, playoffOutcomeLabel, statusBadge } from '../../lib/standings';
 import {
   CCS,
@@ -883,6 +885,7 @@ const LATER_PHASES: ReadonlySet<SeasonPhase> = new Set<SeasonPhase>(['preseason'
 export function buildTeamViews(): HomeTeamView[] {
   const today = getToday();
   const contexts = new Map<DivisionId, ReturnType<typeof getStandingContext>>();
+  const pairingsByLeague = new Map<string, ReturnType<typeof getLeaguePairings>>();
   return getTeams().map((team) => {
     const league = getLeague(team.league);
     const heading = divisionHeading(team.division);
@@ -912,9 +915,17 @@ export function buildTeamViews(): HomeTeamView[] {
     const projected = LATER_PHASES.has(getSeasonPhase(league.id));
     const lead = projected ? POSTSEASON_LEAD.projected : POSTSEASON_LEAD.final;
     // A league tournament under way: the line is the team's outcome ('In the MCAL final', 'Lost in the
-    // semifinal'), its own sentence, not a 'Final place:' ladder rung (DESIGN §24.13).
+    // semifinal'), its own sentence, not a 'Final place:' ladder rung (DESIGN §24.13). The same for a CCS ladder
+    // team whose play-in is final ('Won the play-in', 'Lost the play-in'; lib/postseason-outcomes.ts, plan
+    // final-10, 2026-10-30); a crossover result changes no label, so its team keeps the 'Final place:' rung.
+    let pairings = pairingsByLeague.get(league.id);
+    if (league.postseason.kind === 'ccs-ladder' && !pairings) {
+      pairings = getLeaguePairings(league.id);
+      pairingsByLeague.set(league.id, pairings);
+    }
     const outcomeLine =
-      league.postseason.kind === 'league-tournament' && getLeagueTournament(league.id).status !== 'projected';
+      (league.postseason.kind === 'league-tournament' && getLeagueTournament(league.id).status !== 'projected') ||
+      (pairings !== undefined && (ccsOutcomeFor(team.slug, { pairings })?.label ?? null) !== null);
     // The card's one visible line must show the STATUS at 320px (288px of text): a short lead, and
     // for a place shared across two rungs the rungs' badges ('Play-in or No AQ route (tied)')
     // instead of the full label with its tiebreak citation, which the team page carries.

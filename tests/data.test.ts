@@ -790,3 +790,98 @@ describe('data: Southern California tables with results', () => {
     expect(socal.getSitePhase('2026-12-25T19:00:00.000Z')).toBe('complete');
   });
 });
+
+// ---------------------------------------------------------------- CCS ladder play-in and crossover results
+
+/**
+ * The committed 2026-10-29 snapshot (data/snapshot.json: SCVAL and BVAL league play over, so every pairing seat is
+ * settled) with the league's own postseason games played (plan final-10, 2026-10-30): Archbishop Mitty 2-0
+ * St. Ignatius in the #1 v #1 crossover (Thu Oct 29), Los Altos 2-1 Santa Clara in the SCVAL 4th-place play-in
+ * (Fri Oct 30) and Westmont 3-0 Willow Glen in the BVAL play-in (Sat Oct 31), stamped Sat Oct 31. Any copy of those
+ * games a later refresh carries is replaced, so the scores here are the test's own.
+ */
+describe('data: CCS ladder lines after the play-ins', () => {
+  let after: DataModule;
+  const CCS_RESULTS = 'From the results as posted; CCS’s bracket is the official record.';
+
+  beforeAll(async () => {
+    const base = loadSnapshot(
+      JSON.parse(readFileSync(path.join(import.meta.dirname, '..', 'data', 'snapshot.json'), 'utf8')) as unknown,
+    );
+    const crossover = { kind: 'scval-crossover', leagueId: 'scval', via: 'config-pairing' } as const;
+    const bval = { kind: 'bval-play-in', leagueId: 'bval', via: 'config-pairing' } as const;
+    const played = [
+      game({ home: 'mitty', away: 'st-ignatius', hs: 2, as: 0, date: '2026-10-29', league: false, postseason: crossover, official: null }),
+      game({ home: 'los-altos', away: 'santa-clara', hs: 2, as: 1, date: '2026-10-30', league: false, postseason: crossover, official: null }),
+      game({ home: 'westmont', away: 'willow-glen', hs: 3, as: 0, date: '2026-10-31', league: false, postseason: bval, official: null }),
+    ];
+    const pairs = new Set(played.map((g) => [g.home.slug, g.away.slug].sort().join('|')));
+    const games = [
+      ...base.games.filter(
+        (g) =>
+          !(
+            (g.postseason?.kind === 'scval-crossover' || g.postseason?.kind === 'bval-play-in') &&
+            pairs.has([g.home.slug, g.away.slug].sort().join('|'))
+          ),
+      ),
+      ...played,
+    ];
+    const next: Snapshot = { ...base, fetchedAt: '2026-10-31T19:00:00.000Z', games, counts: countsOf(games, base.standings) };
+    const file = path.join(mkdtempSync(path.join(tmpdir(), 'scvalfh-data-play-in-')), 'snapshot.json');
+    writeFileSync(file, JSON.stringify(loadSnapshot(next)));
+    process.env.SCVAL_SNAPSHOT = file;
+    vi.resetModules();
+    after = await import('../lib/data');
+  }, 600_000);
+
+  it('the SCVAL play-in: Los Altos won it, Santa Clara goes to CCS for at-large consideration', () => {
+    expect(after.getTeamPostseasonLine('los-altos')).toEqual({
+      label: 'Won the play-in',
+      sentence: 'Won the 4th-place play-in: an automatic CCS qualifier.',
+      href: '/playoffs#scval',
+      linkText: 'CCS playoffs',
+      caveat: CCS_RESULTS,
+    });
+    expect(after.getTeamPostseasonLine('santa-clara')).toMatchObject({
+      label: 'Lost the play-in',
+      sentence: 'Lost the play-in; SCVAL submits the loser for at-large consideration.',
+      caveat: CCS_RESULTS,
+    });
+  });
+
+  it('a crossover result joins the team’s sentence; the ladder label stands', () => {
+    const result = 'Archbishop Mitty beat St. Ignatius 2–0 in the #1 v #1 crossover on Thu Oct 29; CCS uses it when it seeds.';
+    for (const slug of ['mitty', 'st-ignatius']) {
+      expect(after.getTeamPostseasonLine(slug), slug).toMatchObject({
+        label: 'Automatic qualifier',
+        sentence: `The SCVAL crossover and the 4th-place play-in are Thu Oct 29 and Fri Oct 30. ${result}`,
+        caveat: CCS_RESULTS,
+      });
+    }
+    // Los Gatos' crossover is not in: the projected words and caveat, unchanged.
+    expect(after.getTeamPostseasonLine('los-gatos')).toMatchObject({
+      sentence: 'The SCVAL crossover and the 4th-place play-in are Thu Oct 29 and Fri Oct 30.',
+      caveat: 'Projected from the table today; nothing here is official.',
+    });
+    // The Cupertino rule holds: a team 6th or lower gets the ladder's own words, never a crossover sentence.
+    const cupertino = after.getTeamPostseasonLine('cupertino')!;
+    expect(cupertino.sentence).toBe('No automatic path; at-large berths are the CCS committee’s call.');
+  });
+
+  it('the BVAL play-in: Westmont took the fourth berth, Willow Glen has no automatic-berth route left', () => {
+    expect(after.getTeamPostseasonLine('westmont')).toMatchObject({
+      label: 'Won the play-in',
+      sentence: 'Won the play-in: BVAL’s fourth automatic CCS berth.',
+      caveat: CCS_RESULTS,
+    });
+    expect(after.getTeamPostseasonLine('willow-glen')).toMatchObject({
+      label: 'Lost the play-in',
+      sentence: 'Lost the play-in; no automatic-berth route remains, and at-large berths are the CCS committee’s call.',
+      caveat: CCS_RESULTS,
+    });
+    for (const slug of ['los-altos', 'santa-clara', 'westmont', 'willow-glen', 'mitty']) {
+      const line = after.getTeamPostseasonLine(slug)!;
+      expect(`${line.label} ${line.sentence}`, slug).not.toMatch(/eliminat/i);
+    }
+  });
+});

@@ -45,6 +45,7 @@ import {
 } from './leagues';
 import type { LeagueConfig, PairingConfig, PostseasonConfig, RegionConfig, SectionConfig } from './leagues';
 import { buildLeagueTournament, tournamentOutcome, tournamentOutcomeCopy } from './postseason';
+import { ccsOutcomeFor } from './postseason-outcomes';
 import { buildSearchIndex } from './search';
 import type { SearchIndex } from './search';
 import { loadSnapshot } from './snapshot-schema';
@@ -992,14 +993,19 @@ export interface TeamPostseasonLine {
   /**
    * The honesty line under the card, or null where nothing is projected: 'Projected from the table today;
    * nothing here is official.' for a CCS ladder and for a league tournament still projected from the table;
-   * 'From the results as posted; nothing here is official.' once that tournament has results; null for the
-   * EAL (every team is in; nothing is projected), a San Diego league (the Section places teams) and the Sunset.
+   * 'From the results as posted; nothing here is official.' once that tournament has results; for a CCS ladder
+   * team whose play-in or crossover is final, 'From the results as posted; CCS’s bracket is the official record.'
+   * (lib/postseason-outcomes.ts, plan final-10, 2026-10-30); null for the EAL (every team is in; nothing is
+   * projected), a San Diego league (the Section places teams) and the Sunset.
    */
   caveat: string | null;
 }
 
 const PROJECTED_CAVEAT = 'Projected from the table today; nothing here is official.';
 const RESULTS_CAVEAT = 'From the results as posted; nothing here is official.';
+// A CCS league's own play-in or crossover result is a fact, not a projection; the berth it leads to is still the
+// CCS committee's to record, and its bracket is where that record is (plan final-10, 2026-10-30).
+const CCS_RESULTS_CAVEAT = 'From the results as posted; CCS’s bracket is the official record.';
 
 /**
  * §10.5 copy; null for an unknown ref AND for a team with gp 0 (never placed by merit), except in a league
@@ -1094,6 +1100,18 @@ export function getTeamPostseasonLine(ref: string): TeamPostseasonLine | null {
         caveat: null,
       };
     case 'ccs-ladder': {
+      // A final play-in is the team's outcome, its own label and sentence ('Won the play-in', 'Lost the play-in';
+      // lib/postseason-outcomes.ts); a final crossover keeps the ladder's label and adds its result to the sentence.
+      const outcome = ccsOutcomeFor(team.slug, { pairings: getLeaguePairings(league.id) });
+      if (outcome?.kind === 'play-in' && outcome.label) {
+        return {
+          label: outcome.label,
+          sentence: outcome.sentence,
+          href: `/playoffs#${league.id}`,
+          linkText: 'CCS playoffs',
+          caveat: CCS_RESULTS_CAVEAT,
+        };
+      }
       const crossover = ps.pairings.find((p) => p.tag === 'scval-crossover');
       const playIn = ps.pairings.find((p) => p.tag === 'bval-play-in');
       // The crossover sentence is for a team those games are about: an automatic berth (the crossover orders
@@ -1105,6 +1123,8 @@ export function getTeamPostseasonLine(ref: string): TeamPostseasonLine | null {
       if (crossover && candidate) {
         // 'Thu Oct 29 and Fri Oct 30' in 2026: two of the four crossovers moved a day ahead of the schedule.
         sentence = `The SCVAL crossover and the 4th-place play-in are ${pairingDatesLabel(ps.pairings)}.`;
+        // 'Archbishop Mitty beat St. Ignatius 2–0 in the #1 v #1 crossover on Thu Oct 29; CCS uses it when it seeds.'
+        if (outcome?.kind === 'crossover') sentence = `${sentence} ${outcome.sentence}`;
       } else if (playIn && statuses.includes('play-in')) {
         sentence = `${playInClause(league, ps, playIn)}.`;
       } else if (statuses[0] === 'no-aq-route') {
@@ -1115,7 +1135,13 @@ export function getTeamPostseasonLine(ref: string): TeamPostseasonLine | null {
         // An automatic-berth place (BVAL Mt. Hamilton 1-3, PCAL 1-2): the spec gives no league sentence.
         sentence = `${league.shortName}’s automatic CCS berths go by final place; CCS seeds the field on ${shortDate(CCS.keyDates.seedingMeeting)}.`;
       }
-      return { label, sentence, href: `/playoffs#${league.id}`, linkText: 'CCS playoffs', caveat: PROJECTED_CAVEAT };
+      return {
+        label,
+        sentence,
+        href: `/playoffs#${league.id}`,
+        linkText: 'CCS playoffs',
+        caveat: outcome ? CCS_RESULTS_CAVEAT : PROJECTED_CAVEAT,
+      };
     }
   }
 }

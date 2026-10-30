@@ -5,10 +5,18 @@
  * Every assertion names the module that produced the value (the repair policy routes on it).
  */
 
+import { mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import path from 'node:path';
+
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { beforeAll, describe, expect, it } from 'vitest';
+import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
+import { countsOf } from '../../lib/snapshot-migrate';
+import { loadSnapshot } from '../../lib/snapshot-schema';
+import type { Snapshot } from '../../lib/types';
+import { game } from '../game-builder';
 import { corpusSnapshotPath } from '../helpers';
 
 import { POSTSEASON_LEAD, postseasonCardLine, rungCardText } from '../../components/home/home-types';
@@ -583,6 +591,62 @@ describe('the pinned card (components/home/MyTeamCard.tsx ← home-view.ts team 
           }
         }
       }
+    }
+  });
+});
+
+/**
+ * The pinned card after the SCVAL play-in (plan final-10, 2026-10-30): the committed 2026-10-29 snapshot
+ * (data/snapshot.json, SCVAL league play over: Los Altos is De Anza #4, Santa Clara El Camino #4) with Los Altos 2-1
+ * Santa Clara played Fri Oct 30, stamped Sat Oct 31. The outcome label replaces the 'Final place:' lead, as an MCAL
+ * tournament outcome does, and fits the card's one 288px line. A fresh module instance; the corpus views above are
+ * already built.
+ */
+describe('the pinned card after the SCVAL play-in (home-view.ts ← lib/postseason-outcomes.ts)', () => {
+  let views: ReturnType<HomeView['buildTeamViews']>;
+  const prior = process.env.SCVAL_SNAPSHOT;
+
+  beforeAll(async () => {
+    const base = loadSnapshot(
+      JSON.parse(readFileSync(path.join(import.meta.dirname, '..', '..', 'data', 'snapshot.json'), 'utf8')) as unknown,
+    );
+    const crossover = { kind: 'scval-crossover', leagueId: 'scval', via: 'config-pairing' } as const;
+    const playIn = game({
+      home: 'los-altos', away: 'santa-clara', hs: 2, as: 1, date: '2026-10-30', league: false, postseason: crossover, official: null,
+    });
+    const games = [
+      ...base.games.filter(
+        (g) =>
+          !(g.postseason?.kind === 'scval-crossover' && [g.home.slug, g.away.slug].sort().join('|') === 'los-altos|santa-clara'),
+      ),
+      playIn,
+    ];
+    const next: Snapshot = { ...base, fetchedAt: '2026-10-31T19:00:00.000Z', games, counts: countsOf(games, base.standings) };
+    const file = path.join(mkdtempSync(path.join(tmpdir(), 'scvalfh-home-play-in-')), 'snapshot.json');
+    writeFileSync(file, JSON.stringify(loadSnapshot(next)));
+    process.env.SCVAL_SNAPSHOT = file;
+    vi.resetModules();
+    const fresh = (await import('../../components/home/home-view')) as HomeView;
+    views = fresh.buildTeamViews();
+  }, 600_000);
+
+  afterAll(() => {
+    if (prior === undefined) delete process.env.SCVAL_SNAPSHOT;
+    else process.env.SCVAL_SNAPSHOT = prior;
+  });
+
+  it('a pinned Los Altos reads "Won the play-in", Santa Clara "Lost the play-in", with no "Final place:" lead', () => {
+    const view = (slug: string) => views.find((v) => v.slug === slug)!;
+    expect(view('los-altos').postseason, `${HV}: los-altos`).toBe('Won the play-in');
+    expect(postseasonCardLine(view('los-altos')), `${HV}: los-altos card line`).toBe('Won the play-in');
+    expect(view('los-altos').postseasonShort, `${HV}: los-altos short`).toBeUndefined();
+    expect(view('santa-clara').postseason, `${HV}: santa-clara`).toBe('Lost the play-in');
+    // A team with no final pairing keeps its ladder rung behind the lead.
+    expect(view('cupertino').postseason, `${HV}: cupertino`).toMatch(/^Final place: /);
+    for (const slug of ['los-altos', 'santa-clara']) {
+      const card = postseasonCardLine(view(slug))!;
+      expect((width(card) * 14) / 12, `${HV}: ${slug} "${card}" fits 288px`).toBeLessThanOrEqual(288);
+      expect(card).not.toMatch(/eliminat/i);
     }
   });
 });
