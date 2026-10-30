@@ -465,6 +465,16 @@ describe('/playoffs (rendered)', () => {
     expect(new Set(ids).size, `${PAGE}: unique ids`).toBe(ids.length);
   });
 
+  it('renders no "This week" strip and no Super Regional results block on Oct 2, far from any postseason game', () => {
+    // components/playoffs/this-week.ts: the window (two days back, a week ahead) holds no tagged game and no
+    // config event on the corpus's day, so neither strip renders (no empty box); the EAL card's results block
+    // waits for the Super Regional's first day (Oct 30).
+    expect(html, PAGE).not.toContain('id="this-week-norcal"');
+    expect(html, PAGE).not.toContain('id="this-week-socal"');
+    expect(textOf(html), PAGE).not.toContain('This week in the postseason');
+    expect(textOf(html), PAGE).not.toContain('No Super Regional game is on MaxPreps yet');
+  });
+
   it('carries the NCS pointer card, the field and the verbatim at-large paragraph', () => {
     const text = textOf(html);
     expect(text, PAGE).toContain(

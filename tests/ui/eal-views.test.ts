@@ -214,6 +214,21 @@ describe('/standings, the EAL block', () => {
   });
 });
 
+describe('/playoffs#eal on the EAL corpus', () => {
+  it('is one card with no seed word, and its Super Regional results block waits for the event’s first day', async () => {
+    const playoffs = (await import('../../app/playoffs/page')).default;
+    const html = renderToStaticMarkup(createElement(playoffs));
+    expect([...html.matchAll(/\sid="eal"/g)], 'app/playoffs/page.tsx #eal').toHaveLength(1);
+    const card = textOf(byId(html, LEAGUE));
+    expect(card, 'app/playoffs/page.tsx #eal').toContain('Super Regional');
+    expect(card, 'app/playoffs/page.tsx #eal').not.toMatch(BANNED);
+    // The corpus is Oct 4: no Super Regional game can exist yet, and the card does not say so weeks early
+    // (components/playoffs/unbracketed-view.ts; the sentence prints from Oct 30, the first day).
+    expect(card, 'components/playoffs/UnbracketedResults.tsx').not.toContain('No Super Regional game is on MaxPreps yet');
+    expect(html, 'components/playoffs/ThisWeek.tsx').not.toContain('id="this-week-norcal"');
+  });
+});
+
 describe('/schedule/eal', () => {
   it('ends the rail with the Super Regional chip, never a CCS one', () => {
     expect(scheduleHtml, 'components/schedule/TimelineRail.tsx').toContain(`href="/playoffs#${LEAGUE}"`);

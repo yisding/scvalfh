@@ -449,7 +449,7 @@ describe('leagues: SCVAL strings are today’s, verbatim', () => {
       [`De Anza #${seed}`, `El Camino #${seed}`], null, seed === 4,
       seed === 4
         ? 'De Anza #4 vs El Camino #4 — play-in for the SCVAL 7th automatic qualifier'
-        : `De Anza #${seed} vs El Camino #${seed} — crossover (helps CCS ordering)`,
+        : `De Anza #${seed} vs El Camino #${seed} — crossover (for CCS seeding, not qualification)`,
       'scval-crossover',
     ]));
   });
@@ -1063,7 +1063,7 @@ describe('leagues: the San Diego Section (City, North County, Metro)', () => {
       expect(ps.ladder.map((r) => [r.places, r.status, r.label, r.phrase, r.badge, r.legend])).toEqual([
         [[1, 1], 'tournament', '1st: at least a play-in if named league champion', 'at least a play-in if named league champion', '1st',
           '1st — the league’s designated champion (not co-champions) is guaranteed at least a play-in game (Green Book 2000.1). The league names its champion; this table does not'],
-        [[2, 99], 'selection', 'No league route', 'no league route into the playoffs', 'Selection only',
+        [[2, 99], 'selection', 'Placed by the Section', 'placed by the Section from its power rankings', 'By selection',
           '2nd or lower — no league route; the Section places Division I teams in the Open or Division I bracket and picks 12 Division II teams, from its power rankings (Green Book 2000.1)'],
       ]);
       expect(ps.citations.roundDates).toBe(

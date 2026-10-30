@@ -56,6 +56,7 @@ import {
   type LeagueConfig,
 } from '../../lib/leagues';
 import { SHOOTOUT_NOTE, mayHideShootout } from '../../lib/postseason';
+import { withLocationRound } from '../../lib/postseason-rounds';
 import { SEASON_DISPLAY } from '../../lib/season';
 import type {
   BackfillProvenance,
@@ -643,7 +644,8 @@ function leagueOfGame(game: Game, away: Team | undefined, home: Team | undefined
   return member ? (findLeague(member.league) ?? null) : null;
 }
 
-const ROUND_WORD: Readonly<Record<TournamentGame['round'], string>> = {
+/** A league tournament's round as a label word ('MCAL semifinal'); /playoffs' "This week" strip says it the same way. */
+export const ROUND_WORD: Readonly<Record<TournamentGame['round'], string>> = {
   'play-in': 'play-in',
   quarterfinal: 'quarterfinal',
   semifinal: 'semifinal',
@@ -682,9 +684,11 @@ function postseasonView(game: Game, league: LeagueConfig | null): PostseasonView
     };
   }
   if (tag.kind === 'league-postseason' && league && league.postseason.kind === 'unbracketed-tournament') {
-    // The EAL Super Regional: a counted-nowhere game with no bracket slot to name.
+    // The EAL Super Regional: a counted-nowhere game with no bracket slot to name. The round, when the row's own
+    // location field names one ('Semi Final', 'Championship Final': MaxPreps' 2025 rows, lib/postseason-rounds.ts),
+    // joins the label, 'EAL Super Regional semifinal', as an MCAL slot's does; with none, the event's name alone.
     const sentence = `${league.postseason.name} game — it does not count in the league table.`;
-    const label = `${league.shortName} ${league.postseason.name}`;
+    const label = withLocationRound(`${league.shortName} ${league.postseason.name}`, game.venue.text);
     return {
       contextLabel: label,
       countsAs: { label, detail: sentence, classificationNote: null },

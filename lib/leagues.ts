@@ -876,10 +876,12 @@ const SCVAL: LeagueConfig = {
       seats: [{ division: 'de-anza', place: seed }, { division: 'el-camino', place: seed }] as const,
       seatLabels: [`De Anza #${seed}`, `El Camino #${seed}`] as const, host: null,
       isPlayIn: seed === 4,
-      // ↓ VERBATIM from the original crossoverPairings()
+      // ↓ The play-in label is VERBATIM from the original crossoverPairings(). The crossover tail was "helps CCS
+      // ordering" until 2026-10-29 (plan final-04): it now says what the game is for and what it is not, so a parent
+      // does not read a crossover as a qualifying game. CCS surfaces may say "seeding"; SEED_CLAIM covers EAL/SoCal pages.
       label: seed === 4
         ? 'De Anza #4 vs El Camino #4 — play-in for the SCVAL 7th automatic qualifier'
-        : `De Anza #${seed} vs El Camino #${seed} — crossover (helps CCS ordering)`,
+        : `De Anza #${seed} vs El Camino #${seed} — crossover (for CCS seeding, not qualification)`,
     })),
   },
   phases: [
@@ -1550,8 +1552,10 @@ function sdsPostseason(playoffDivisionOf: Readonly<Record<TeamSlug, 'I' | 'II'>>
       { divisions: '*', places: [1, 1], status: 'tournament', label: '1st: at least a play-in if named league champion',
         phrase: 'at least a play-in if named league champion', badge: '1st',
         legend: '1st — the league’s designated champion (not co-champions) is guaranteed at least a play-in game (Green Book 2000.1). The league names its champion; this table does not' },
-      { divisions: '*', places: [2, 99], status: 'selection', label: 'No league route',
-        phrase: 'no league route into the playoffs', badge: 'Selection only',
+      // "No league route" / "Selection only" until 2026-10-29: read on a team page as "out", which a team the Section
+      // places from its power rankings is not. The legend keeps the rule's words.
+      { divisions: '*', places: [2, 99], status: 'selection', label: 'Placed by the Section',
+        phrase: 'placed by the Section from its power rankings', badge: 'By selection',
         legend: '2nd or lower — no league route; the Section places Division I teams in the Open or Division I bracket and picks 12 Division II teams, from its power rankings (Green Book 2000.1)' },
     ],
     citations: {
