@@ -13,6 +13,7 @@ import LeaguePairings from '../../components/playoffs/LeaguePairings';
 import OutsideTournament from '../../components/playoffs/OutsideTournament';
 import PlayoffBracket from '../../components/playoffs/PlayoffBracket';
 import PlayoffProjection, { ProjectionKey } from '../../components/playoffs/PlayoffProjection';
+import SdsBracket from '../../components/playoffs/SdsBracket';
 import ThisWeek from '../../components/playoffs/ThisWeek';
 import UnbracketedResults from '../../components/playoffs/UnbracketedResults';
 import { buildBrackets, ccsDivisionLabels, pendingRounds } from '../../components/playoffs/bracket-model';
@@ -51,6 +52,7 @@ import {
 } from '../../lib/data';
 import type { LeagueSummary } from '../../lib/data';
 import { getCcsSeeds } from '../../lib/ccs-bracket';
+import { getSdsBrackets, getSdsBracketsSource } from '../../lib/sds-bracket';
 import { dateSpan, listWords, monthDay, shortDate } from '../../lib/format';
 import {
   NO_POSTSEASON_LEAGUE_IDS,
@@ -77,8 +79,10 @@ import type { LeagueId, PlayoffProjection as Projection } from '../../lib/types'
  * SoCal (`<div id="socal" data-region-scope>`): the San Diego Section's playoffs (Green Book 2026-27
  * Bylaw 2000.1), as the config states them: the qualification line, where the round dates come from,
  * the power rankings the Section places teams from, and that the Section publishes its brackets after
- * its seeding meeting. No bracket is drawn and no seed is projected: the Section, not a league table,
- * places teams. One card per conference (`#city`, `#north-county`, `#metro`) gives each division's table
+ * its seeding meeting. No seed is projected: the Section, not a league table, places teams. Once the owner
+ * has transcribed the Section's published brackets (data/sds-brackets-2026.json; 2026-10-30, plan final-08),
+ * they are drawn under `#sds-bracket`, after the round dates and before the conference cards
+ * (components/playoffs/SdsBracket.tsx), with MaxPreps' results; on the placeholder nothing is drawn. One card per conference (`#city`, `#north-county`, `#metro`) gives each division's table
  * leaders and each team's playoff division (I or II, the Section's 2026 Divisions sheet). Then the
  * Sunset's card (`#sunset`): the Southern Section holds no field hockey playoffs (Blue Book 2011.1,
  * 3500.2), with its source; and the LA independents' card (`#independents`, DESIGN §24.9):
@@ -609,8 +613,10 @@ export default function PlayoffsPage() {
 /**
  * The San Diego Section's playoffs (DESIGN-socal §2.4): the Section's rule from config, where its
  * dates come from, its power rankings and when its brackets come, then one card per conference. No
- * bracket, no seed and no projection: the Section places teams from its power rankings, and the one
- * place a league table decides (a designated champion's play-in) is the league's to designate.
+ * seed and no projection: the Section places teams from its power rankings, and the one place a
+ * league table decides (a designated champion's play-in) is the league's to designate. The Section's
+ * own brackets, once transcribed (lib/sds-bracket.ts getSdsBrackets, null on the placeholder), are drawn
+ * between the round dates and the cards (plan final-08, 2026-10-30).
  */
 function SectionPlayoffsBlock({
   ps,
@@ -621,6 +627,9 @@ function SectionPlayoffsBlock({
   seeding: string | null;
   leagues: LeagueSummary[];
 }) {
+  const brackets = getSdsBrackets();
+  const bracketSource = getSdsBracketsSource();
+  const drawn = brackets !== null && bracketSource !== null;
   return (
     <section aria-labelledby="sds-playoffs" className="mt-section md:mt-section-lg">
       <SectionHeader
@@ -633,7 +642,7 @@ function SectionPlayoffsBlock({
         {/* Date-aware (getToday, never Date.now): the "until then" of Oct 29 would read as if the Section had not
             published from Nov 1 on. The brackets' own link appears once the owner pastes the sheet's URL. */}
         <p className="mb-0">
-          {sectionBracketSentence(ps, seeding, getToday())}{' '}
+          {sectionBracketSentence(ps, seeding, getToday(), drawn)}{' '}
           {ps.citations.roundDates}
         </p>
         <p className="mb-0 flex flex-wrap gap-x-4 gap-y-1 text-meta">
@@ -663,6 +672,9 @@ function SectionPlayoffsBlock({
         <SectionHeader as="h3" kicker="Round dates" meta="all times PT" />
         <DateList rows={sectionRoundRows(ps)} className="max-w-3xl" />
       </section>
+      {/* The Section's published brackets with MaxPreps' results, once the owner has transcribed its sheet; nothing on
+          the placeholder file. */}
+      {drawn ? <SdsBracket divisions={brackets} source={bracketSource} today={getToday()} className="mt-section" /> : null}
       {leagues.map((league) => (
         <SectionPlayoffsLeagueCard key={league.id} summary={league} />
       ))}

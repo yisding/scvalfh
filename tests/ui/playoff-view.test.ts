@@ -576,6 +576,11 @@ describe('/playoffs by region (DESIGN-socal §2.4)', () => {
     expect(view.sectionBracketSentence({ ...city, bracketSheetUrl: 'https://docs.google.com/spreadsheets/d/x' }, '2026-10-31', '2026-11-03'), VIEW).toBe(
       'The Section has published its brackets; this site draws no bracket and projects no places.',
     );
+    // The third state (plan final-08): the owner has transcribed the Section's published brackets, so the page
+    // draws them under #sds-bracket (tests/ui/sds-bracket.test.ts renders it).
+    const drawn = view.sectionBracketSentence(city, '2026-10-31', '2026-11-03', true);
+    expect(drawn, VIEW).toBe('The Section has published its brackets; the brackets below are the Section’s, with results as MaxPreps posts them.');
+    expect(drawn, VIEW).not.toMatch(/\bseed(ed|s)?\b(?! ?ing meeting)|eliminat/i);
     expect(`${view.sectionRoundRows(city).map((r) => r.label).join(' ')} ${view.sectionBracketSentence(city, '2026-10-31', '2026-11-03')}`, VIEW).not.toMatch(/\bseed\b|top \w+ qualify/i);
     expect(text, PAGE).toContain(city.sourceLabel);
     // Each team's playoff division, per division, from config.

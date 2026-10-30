@@ -36,6 +36,11 @@
  * ('no-postseason'); each card gets the non-CCS bans, and it and its league's pages the seed-word
  * ban. The pages and card of a league whose table order is this site's own (`orderScope 'site'`:
  * every SoCal league) never say "rules require".
+ * The San Diego Section's own brackets (`#sds-bracket`, drawn inside the `#sds-playoffs` block once
+ * data/sds-brackets-2026.json is filled; plan final-08, 2026-10-30) sit outside the three conference
+ * cards, so this script's card checks do not read them: tests/ui/sds-bracket.test.ts holds them to the
+ * same rules over the rendered section (SEED_CLAIM and no seed word at all, no "eliminat", no champion
+ * named, no CCS word), and on the committed placeholder nothing is drawn.
  * On every page: no claim that rosters or player stats are SCVAL-only (both now cover every
  * league), e.g. "rosters are SCVAL-only" or "player stats (SCVAL only)".
  * On every page, too: nothing data/clubs.json keeps but never renders (DESIGN §17.2, SPEC §1.1j2) —

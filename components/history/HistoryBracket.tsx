@@ -1,16 +1,17 @@
 import Link from 'next/link';
 
 import { getTeamBySlug } from '../../lib/data';
-import type {
-  HistoryBracketDivision,
-  HistoryBracketGame,
-  HistoryBracketRound,
-  HistoryBracketSide,
-} from '../../lib/history';
+import type { HistoryBracketDivision } from '../../lib/history';
 import MissingValue from '../ui/MissingValue';
 import TeamMonogram from '../ui/TeamMonogram';
 
-import { gameNote, gameSentence, gameSentenceTail, roundByes, roundDate, sideName } from './bracket-view';
+import {
+  historyBracketView,
+  isTbdSide,
+  type BracketCardView,
+  type BracketDivisionView,
+  type BracketSideView,
+} from './bracket-view';
 
 /**
  * One division of a 2025 section bracket on /history/2025-26 (DESIGN §3.9), drawn the way the live
@@ -24,6 +25,14 @@ import { gameNote, gameSentence, gameSentenceTail, roundByes, roundDate, sideNam
  * stubs as the live bracket. The winner's line is 600 weight with a 2px ink rule on its left, never
  * colour alone. Each card is one sentence for a screen reader ("Los Gatos beat Saint Francis 3-0.");
  * the two drawn lines are hidden from it.
+ *
+ * Shared since 2026-10-30 (plan final-08): `BracketView` draws any BracketDivisionView
+ * (components/history/bracket-view.ts), and `HistoryBracket` is the archive's door into it, so
+ * /history/2025-26 renders exactly as before. The live San Diego bracket on /playoffs
+ * (components/playoffs/SdsBracket.tsx) uses the same drawer with three things the archive never has: a
+ * side still to be decided ("Winner of 8 v 9", in ink-3, no number), an unplayed card (no score column;
+ * its day, time and site on the note row), and a joined card, which is one link to its game page (the
+ * team lines inside it are then plain text, since an anchor cannot hold another anchor).
  */
 export interface HistoryBracketProps {
   division: HistoryBracketDivision;
@@ -31,10 +40,40 @@ export interface HistoryBracketProps {
   label: string;
 }
 
-function Line({ side, goals, won }: { side: HistoryBracketSide; goals: number | null; won: boolean }) {
+export interface BracketViewProps {
+  division: BracketDivisionView;
+  /** Names the list for a screen reader: "CCS Division 1 bracket, 2025". */
+  label: string;
+}
+
+function Line({
+  side,
+  goals,
+  won,
+  final,
+  linkTeam,
+}: {
+  side: BracketSideView;
+  goals: number | null;
+  won: boolean;
+  /** A decided card prints a goals column (a number or the missing-score dash); an unplayed one prints none. */
+  final: boolean;
+  /** False inside a card that is itself a link (its game page). */
+  linkTeam: boolean;
+}) {
+  const lineClass = 'flex items-center gap-2 py-1 pr-3 pl-2';
+  if (isTbdSide(side)) {
+    // A place still to be decided: no number and no school, its words in ink-3, never a blank box.
+    return (
+      <span className={lineClass}>
+        <span className="sx-num w-5 shrink-0 text-right text-meta text-ink-3" />
+        <span className="inline-block w-5 shrink-0" />
+        <span className="min-w-0 flex-1 truncate text-meta font-normal text-ink-3">{side.tbd}</span>
+      </span>
+    );
+  }
   const team = getTeamBySlug(side.slug);
   const weight = won ? 'font-semibold text-ink' : 'font-normal text-ink-2';
-  const lineClass = 'flex items-center gap-2 py-1 pr-3 pl-2';
   const style = won ? { boxShadow: 'inset 2px 0 0 var(--sx-text)' } : undefined;
   const body = (
     <>
@@ -42,17 +81,19 @@ function Line({ side, goals, won }: { side: HistoryBracketSide; goals: number | 
       {team ? <TeamMonogram team={team} size={20} /> : <span className="inline-block w-5 shrink-0" />}
       {/* The registry's short name, as the live bracket draws it ("RBV", "San Dieguito"): five round
           columns leave a line little room. The screen-reader sentence keeps the full name. */}
-      <span className={`min-w-0 flex-1 truncate text-meta ${weight}`}>{team?.shortName ?? sideName(side)}</span>
-      <span className={`sx-num shrink-0 text-meta ${weight}`}>
-        {goals === null ? <MissingValue words="score not posted" /> : goals}
-      </span>
+      <span className={`min-w-0 flex-1 truncate text-meta ${weight}`}>{team?.shortName ?? side.name}</span>
+      {final ? (
+        <span className={`sx-num shrink-0 text-meta ${weight}`}>
+          {goals === null ? <MissingValue words="score not posted" /> : goals}
+        </span>
+      ) : null}
     </>
   );
   // The archive has no game pages, so a registry side's line is a tap target to its team page, as
   // the same school's row is in the standings table and awards on this page. The card's lines are
   // aria-hidden (its sr-only sentence speaks for it), so the link is a pointer-only duplicate kept
   // out of the tab order; the keyboard route is the standings table's rows.
-  return team ? (
+  return team && linkTeam ? (
     <Link
       href={`/teams/${team.slug}`}
       prefetch={false}
@@ -77,23 +118,38 @@ function Line({ side, goals, won }: { side: HistoryBracketSide; goals: number | 
  * above it (gameSentence says how the game was decided and that no score was posted,
  * gameSentenceTail a moved date and the site), and in the `title` for a pointer.
  */
-function Card({ game, round, noted }: { game: HistoryBracketGame; round: HistoryBracketRound; noted: boolean }) {
-  const note = gameNote(game, round);
+function Card({ card, noted }: { card: BracketCardView; noted: boolean }) {
+  const { note } = card;
+  const final = card.status === 'final';
+  const lines = (linkTeam: boolean) => (
+    <>
+      <Line side={card.top} goals={card.score?.[0] ?? null} won={card.winner === 'top'} final={final} linkTeam={linkTeam} />
+      <Line side={card.bottom} goals={card.score?.[1] ?? null} won={card.winner === 'bottom'} final={final} linkTeam={linkTeam} />
+      {noted ? (
+        <span className="block h-[1.375rem] truncate px-2 pt-0.5 text-micro text-ink-3" title={note ?? undefined}>
+          {note}
+        </span>
+      ) : null}
+    </>
+  );
+  // A joined live card is one link to its game page, its sentence the link's name, as the CCS bracket's game
+  // cards are (components/playoffs/PlayoffBracket.tsx). `prefetch={false}` for the reason they carry it: every
+  // route is static, and Next 16's `auto` would download each linked game page as the bracket scrolls into view.
   return (
     <div className="sx-card min-w-0 flex-1 py-1">
-      <p className="sr-only">
-        {gameSentence(game)}
-        {gameSentenceTail(game, round)}
-      </p>
-      <div aria-hidden="true">
-        <Line side={game.top} goals={game.score?.[0] ?? null} won={game.winner === 'top'} />
-        <Line side={game.bottom} goals={game.score?.[1] ?? null} won={game.winner === 'bottom'} />
-        {noted ? (
-          <span className="block h-[1.375rem] truncate px-2 pt-0.5 text-micro text-ink-3" title={note ?? undefined}>
-            {note}
+      {card.href ? (
+        <Link href={card.href} prefetch={false} className="block no-underline">
+          <span className="sr-only">{card.sentence}</span>
+          <span className="block" aria-hidden="true">
+            {lines(false)}
           </span>
-        ) : null}
-      </div>
+        </Link>
+      ) : (
+        <>
+          <p className="sr-only">{card.sentence}</p>
+          <div aria-hidden="true">{lines(true)}</div>
+        </>
+      )}
     </div>
   );
 }
@@ -132,10 +188,10 @@ const COLUMNS = {
 
 const cx = (...parts: (string | null | false)[]) => parts.filter(Boolean).join(' ');
 
-export function HistoryBracket({ division, label }: HistoryBracketProps) {
+export function BracketView({ division, label }: BracketViewProps) {
   const { rounds } = division;
   const at = COLUMNS[rounds.length >= 4 ? 'lg' : 'md'];
-  const noted = rounds.some((round) => round.games.some((game) => gameNote(game, round) !== null));
+  const noted = rounds.some((round) => round.cards.some((card) => card.note !== null));
   return (
     <ol
       aria-label={label}
@@ -143,11 +199,11 @@ export function HistoryBracket({ division, label }: HistoryBracketProps) {
       style={{ '--sx-rounds': `repeat(${rounds.length}, minmax(0, 1fr))` } as React.CSSProperties}
     >
       {rounds.map((round, roundIndex) => {
-        const byes = roundByes(division, roundIndex);
+        const { byes } = round;
         return (
-          <li key={round.name} className={cx('flex min-w-0 flex-col', at.round)}>
+          <li key={round.key} className={cx('flex min-w-0 flex-col', at.round)}>
             <h4 className={cx('m-0 mb-3 text-meta font-semibold text-ink', roundIndex > 0 && at.heading)}>
-              {round.name} <span className="font-normal text-ink-2">&middot; {roundDate(round)}</span>
+              {round.name} <span className="font-normal text-ink-2">&middot; {round.dateLabel}</span>
             </h4>
             <ol
               className={cx(
@@ -156,28 +212,29 @@ export function HistoryBracket({ division, label }: HistoryBracketProps) {
                 roundIndex > 0 && at.rail,
               )}
             >
-              {round.games.map((game) => (
-                <li key={`${game.top.slug}-${game.bottom.slug}`} className="flex min-w-0 items-center">
+              {round.cards.map((card) => (
+                <li key={card.key} className="flex min-w-0 items-center">
                   {roundIndex > 0 ? (
                     <span className={cx('hidden w-4 shrink-0 border-t border-divider', at.stub)} aria-hidden="true" />
                   ) : null}
-                  <Card game={game} round={round} noted={noted} />
+                  <Card card={card} noted={noted} />
                   {roundIndex < rounds.length - 1 ? (
                     <span className={cx('hidden w-4 shrink-0 border-t border-divider', at.stub)} aria-hidden="true" />
                   ) : null}
                 </li>
               ))}
             </ol>
-            {byes.length > 0 ? (
-              <p className={cx('m-0 mt-2 text-micro text-ink-3', at.byes)}>
-                Byes: {byes.map((s) => `${sideName(s)} (${s.seed})`).join(', ')}
-              </p>
-            ) : null}
+            {byes !== null ? <p className={cx('m-0 mt-2 text-micro text-ink-3', at.byes)}>Byes: {byes}</p> : null}
           </li>
         );
       })}
     </ol>
   );
+}
+
+/** A 2025 archive division (/history/2025-26), through the shared model. */
+export function HistoryBracket({ division, label }: HistoryBracketProps) {
+  return <BracketView division={historyBracketView(division)} label={label} />;
 }
 
 export default HistoryBracket;
