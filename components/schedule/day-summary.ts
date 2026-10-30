@@ -3,6 +3,13 @@
  * need, and its grouping (by region, then league). Shared by the page and the image so a link preview
  * can never disagree with the page.
  *
+ * Grouping (`dayGroups`, 2026-10-29): a league's group counts its league games and its postseason games
+ * apart (`MCAL · 1 postseason game`, `SCVAL · 2 league games · 1 postseason game`; the league clause is
+ * dropped at zero), and a postseason game no league owns (a San Diego playoff game across conferences, a
+ * CCS game across leagues, a Tournament of Champions game) is filed under its event, named by
+ * `postseasonTagOf(game)` ("Tournament of Champions · 1"), after the league groups and before
+ * "Non-league · N". Never "N league games" for a game that counts for no table.
+ *
  * Every score here comes from `describeGame()` — the one implementation of DESIGN §5.2 — so a
  * missing score is an en dash in the OG card exactly as it is in the HTML. There is no second
  * code path that could render `0-0` for a game that was never played.
@@ -12,7 +19,7 @@ import { matchupJoiner } from '../../lib/format';
 import { DEFAULT_REGION, LEAGUES, REGIONS, findDivision, regionOf } from '../../lib/leagues';
 import { getTeamBySlug } from '../../lib/teams';
 import type { Game, LeagueId, RegionId } from '../../lib/types';
-import { describeGame } from '../ui/describe-game';
+import { describeGame, postseasonTagOf } from '../ui/describe-game';
 import { gameWord, plural } from '../ui/plural';
 
 import { countGames, type ScheduleCounts } from './filter-data';
@@ -123,40 +130,99 @@ export function dayDescription(games: readonly Game[], longDateText: string): st
 
 // ---------------------------------------------------------------- league groups (/scores/[date])
 
-/** The league a game belongs to on a day page: its counted division's league, else its postseason league. */
-function gameLeague(game: Pick<Game, 'countsFor' | 'postseason'>): LeagueId | null {
+/**
+ * The postseason event a game is filed under on a day page when no league's table or postseason owns it,
+ * else null. Only a game that counts for no table (`countsFor` null) can be one: an `outside-tournament`
+ * game (the Southern Section's Tournament of Champions) is the event's even when both sides share a league
+ * (Huntington Beach v Newport Harbor, Oct 27: the tag carries `sunset`, and "Sunset · 1 league game" was
+ * wrong twice over, it is neither a Sunset game nor counted), and any tag with no league is the event's
+ * (`section-playoffs` between two San Diego conferences, `ccs` between two leagues; lib/classify.ts).
+ * The name is `postseasonTagOf(game)`, the chip's own words, so the heading and the chip cannot disagree;
+ * a tag with no name ('other') has no event and falls to Non-league as before.
+ */
+function eventOf(game: Game): string | null {
+  const tag = game.postseason;
+  if (game.countsFor !== null || !tag) return null;
+  if (tag.kind !== 'outside-tournament' && tag.leagueId !== null) return null;
+  return postseasonTagOf(game);
+}
+
+/** The league a game belongs to on a day page: its counted division's league, else its postseason league (never an event's). */
+function gameLeague(game: Game): LeagueId | null {
   if (game.countsFor !== null) return findDivision(game.countsFor)?.leagueId ?? null;
+  if (eventOf(game) !== null) return null;
   return game.postseason?.leagueId ?? null;
 }
 
 export interface DayGroup {
-  /** A league id, or 'non-league'. */
+  /** A league id, a `postseason-<event>` id, or 'non-league'. */
   id: string;
-  /** `SCVAL · 1 league game` / `SCVAL · 5 league games` / `Non-league · 3` */
+  /**
+   * `SCVAL · 1 league game` / `SCVAL · 5 league games` / `MCAL · 1 postseason game` /
+   * `SCVAL · 2 league games · 1 postseason game` / `CCS · 4` / `Non-league · 3`
+   */
   kicker: string;
+  /** The league's id; null for an event's group and for Non-league. */
   leagueId: LeagueId | null;
   games: Game[];
 }
 
+/** `tournament-of-champions`, for a `postseason-` group id (the anchor the pills link to). */
+function slugOf(name: string): string {
+  return name
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
+}
+
+/** Where an event's group sits when a day has several: the CCS, the San Diego Section, the outside tournament. */
+const EVENT_RANK: Readonly<Record<string, number>> = { ccs: 0, 'section-playoffs': 1, 'outside-tournament': 2 };
+
 /**
- * One day's games grouped by league (SPEC §10.4), config order, then `Non-league · <n>` for the
- * rest. A game appears exactly once: in the league whose table it counts for (or whose
- * postseason it is), otherwise under Non-league. The day page calls it once per region
- * (dayRegions), over that region's games.
+ * One day's games grouped by league (SPEC §10.4), config order, then one group per postseason event no
+ * league owns (`CCS · 4`, `San Diego Section playoffs · 3`, `Tournament of Champions · 1`), then
+ * `Non-league · <n>` for the rest. A game appears exactly once: in the league whose table it counts for (or
+ * whose postseason it is), in its event's group, otherwise under Non-league.
+ *
+ * A league's group counts its two kinds of game apart, because a postseason game is not a league game
+ * (it counts for no table: Game.countsFor is null): `MCAL · 1 postseason game` on the tournament's day,
+ * `SCVAL · 2 league games · 1 postseason game` on a day with both, the league clause dropped when it is
+ * zero. (The postseason clause was once folded into "N league games": 2026-10-28 read "MCAL · 2 league
+ * games" for the two semifinals.) The day page calls it once per region (dayRegions), over that region's
+ * games.
  */
 export function dayGroups(games: readonly Game[]): DayGroup[] {
   const groups: DayGroup[] = [];
   for (const league of LEAGUES) {
     const mine = games.filter((g) => gameLeague(g) === league.id);
     if (mine.length === 0) continue;
+    const played = mine.filter((g) => g.countsFor !== null).length;
+    const post = mine.length - played;
+    const clauses = [
+      ...(played > 0 ? [plural(played, 'league game')] : []),
+      ...(post > 0 ? [plural(post, 'postseason game')] : []),
+    ];
+    groups.push({ id: league.id, leagueId: league.id, kicker: [league.shortName, ...clauses].join(' · '), games: mine });
+  }
+
+  const events = new Map<string, { rank: number; games: Game[] }>();
+  for (const game of games) {
+    const name = eventOf(game);
+    if (name === null) continue;
+    const event = events.get(name) ?? { rank: EVENT_RANK[game.postseason?.kind ?? ''] ?? 3, games: [] };
+    event.games.push(game);
+    events.set(name, event);
+  }
+  for (const [name, event] of [...events].sort(([a, x], [b, y]) => x.rank - y.rank || a.localeCompare(b))) {
     groups.push({
-      id: league.id,
-      leagueId: league.id,
-      kicker: `${league.shortName} · ${plural(mine.length, 'league game')}`,
-      games: mine,
+      id: `postseason-${slugOf(name)}`,
+      leagueId: null,
+      kicker: `${name} · ${event.games.length}`,
+      games: event.games,
     });
   }
-  const rest = games.filter((g) => gameLeague(g) === null);
+
+  const rest = games.filter((g) => gameLeague(g) === null && eventOf(g) === null);
   if (rest.length > 0) {
     groups.push({ id: 'non-league', leagueId: null, kicker: `Non-league · ${rest.length}`, games: rest });
   }
