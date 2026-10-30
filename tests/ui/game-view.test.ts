@@ -259,7 +259,10 @@ describe('MCAL postseason note and superseded stubs (corpus copy)', () => {
         g.status === 'final' &&
         Math.abs((g.home.score ?? 0) - (g.away.score ?? 0)) === 1,
     )!;
-    oneGoal.postseason = { kind: 'mcal-tournament', leagueId: 'mcal', via: 'league-postseason-window' };
+    // MaxPreps' playoff type (4) on the row, so the tag is the one the config derives: a snapshot whose
+    // tags differ from the current config is reclassified on load (lib/snapshot-migrate.ts).
+    oneGoal.contestTypes = { home: 4, away: 4 };
+    oneGoal.postseason = { kind: 'mcal-tournament', leagueId: 'mcal', via: 'contest-type-4' };
     oneGoal.countsFor = null;
     tournament = oneGoal;
     target = snap.games.find((g) => g.countsFor !== null && !g.contestId.startsWith('sblive:') && mcalIds.has(g.home.teamId ?? ''))!;
@@ -372,6 +375,7 @@ describe('Southern California games (corpus copy with synthetic SoCal games, DES
   let crossDivision: Game;
   let counted: Game;
   let sunsetTie: Game;
+  let toc: Game;
 
   beforeAll(async () => {
     const { game } = await import('../game-builder');
@@ -389,7 +393,10 @@ describe('Southern California games (corpus copy with synthetic SoCal games, DES
     crossDivision = game({ home: 'clairemont', away: 'mission-bay', hs: 2, as: 1, date: '2026-09-16' });
     counted = game({ home: 'la-jolla', away: 'scripps-ranch', hs: 2, as: 1, date: '2026-09-15', league: false });
     sunsetTie = game({ home: 'bonita', away: 'marina', hs: 1, as: 1, date: '2026-08-18' });
-    const games = [...base.games, shootoutWin, playoff, crossDivision, counted, sunsetTie];
+    // Round 1 of the Tournament of Champions (SectionConfig.outsideTournament): a Sunset team against an LA
+    // independent, so no shared league; MaxPreps marks Huntington Beach's row a playoff.
+    toc = game({ home: 'huntington-beach', away: 'bonita', hs: 3, as: 0, date: '2026-10-22', league: false, contestTypes: { home: 4, away: 4 } });
+    const games = [...base.games, shootoutWin, playoff, crossDivision, counted, sunsetTie, toc];
     const socal = new Set(['sunset', 'city', 'north-county', 'metro'].flatMap((id) => getLeague(id).divisions.map((d) => d.id)));
     const rows = new Map(computeStandings(games).filter((r) => socal.has(r.division)).map((r) => [r.teamId, r]));
     const standings = base.standings.map((r) => rows.get(r.teamId) ?? r);
@@ -462,6 +469,17 @@ describe('Southern California games (corpus copy with synthetic SoCal games, DES
       classificationNote: null,
     });
     expect(model.display.postseasonTag, 'components/ui/describe-game.ts postseasonTagOf').toBe('San Diego Section playoffs');
+  });
+
+  it('a Tournament of Champions game: the event’s name, its organizer, not a CIF event, counted nowhere', () => {
+    const model = C.m.buildGameView(toc.contestId)!;
+    expect(model.game.postseason).toEqual({ kind: 'outside-tournament', leagueId: null, via: 'outside-tournament-window' });
+    expect(model.contextLabel).toBe('Tournament of Champions');
+    expect(model.postseasonNotes).toEqual([
+      'Tournament of Champions game (Los Angeles Field Hockey Association, not a CIF event) — it does not count in any league table.',
+    ]);
+    expect(model.countsAs.label).toBe('Tournament of Champions game');
+    expect(model.display.postseasonTag, 'components/ui/describe-game.ts postseasonTagOf').toBe('Tournament of Champions');
   });
 
   it('a game MaxPreps flags between two City divisions: non-league, with the classifier’s note', () => {

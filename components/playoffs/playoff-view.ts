@@ -25,8 +25,11 @@
 
 import {
   EM_DASH,
+  byDateThenId,
+  dateSpan,
   leagueClockPT,
   listWords,
+  mapsSearchHref,
   monthDay,
   numberWord,
   ordinal,
@@ -38,8 +41,9 @@ import {
   shortDate,
   timeOfDayPT,
 } from '../../lib/format';
-import { divisionHeading, getDivision, getLeague, ladderFor, leagueOfDivision } from '../../lib/leagues';
-import type { LeagueConfig } from '../../lib/leagues';
+import { CCS, divisionHeading, getDivision, getLeague, ladderFor, leagueOfDivision } from '../../lib/leagues';
+import { fixedSiteHost, winnerOf } from '../../lib/postseason';
+import type { CcsConfig, LeagueConfig, OutsideTournamentConfig } from '../../lib/leagues';
 import type {
   CcsKeyDates,
   CrossoverSeat,
@@ -107,12 +111,51 @@ export interface LeagueKeyDate {
   detail: string;
 }
 
+type CcsRound = 'quarterfinals' | 'semifinals' | 'finals';
+const CCS_ROUNDS: readonly CcsRound[] = ['quarterfinals', 'semifinals', 'finals'];
+
+/** Where a CCS round is played, from config: the higher seed's field through `highSeedHostsThrough`, neutral after. */
+export function ccsRoundSite(round: CcsRound, hostsThrough: CcsConfig['highSeedHostsThrough'] = CCS.highSeedHostsThrough): 'home' | 'neutral' {
+  return CCS_ROUNDS.indexOf(round) <= CCS_ROUNDS.indexOf(hostsThrough) ? 'home' : 'neutral';
+}
+
+/**
+ * The round's detail line: who hosts, with the calendar's own words, and for a neutral round that each game's
+ * site appears once MaxPreps lists it (the calendar names no venue).
+ */
+function roundSiteDetail(round: CcsRound, hostsThrough: CcsConfig['highSeedHostsThrough']): string {
+  if (ccsRoundSite(round, hostsThrough) === 'home') return 'At the higher seed’s field (CCS calendar: “at Home Sites”).';
+  return round === 'finals'
+    ? 'At a neutral site set by CCS (CCS calendar: “at Neutral Site”); the site appears here once MaxPreps lists the game.'
+    : 'At neutral sites set by CCS (CCS calendar: “at Neutral Sites”); each game’s site appears here once MaxPreps lists it.';
+}
+
+/**
+ * The key-dates footer's first sentence, from config: 'Quarterfinals are at the higher seed’s field; the semifinals
+ * and the final are at neutral sites set by CCS (the CIF-CCS field hockey calendar).' In 2025 the semifinals were in
+ * fact at the higher seed's field, so the sentence says what the calendar says and no more.
+ */
+export function ccsHostingSentence(hostsThrough: CcsConfig['highSeedHostsThrough'] = CCS.highSeedHostsThrough): string {
+  const home = CCS_ROUNDS.filter((r) => ccsRoundSite(r, hostsThrough) === 'home');
+  const neutral = CCS_ROUNDS.filter((r) => ccsRoundSite(r, hostsThrough) === 'neutral');
+  const words = (rounds: readonly CcsRound[]) => listWords(rounds.map((r) => (r === 'finals' ? 'the final' : `the ${r}`)));
+  if (neutral.length === 0) return 'Every round is at the higher seed’s field (the CIF-CCS field hockey calendar).';
+  const homeWords = words(home);
+  const homePart = home.length > 0 ? `${homeWords[0].toUpperCase()}${homeWords.slice(1)} are at the higher seed’s field; ` : '';
+  return `${homePart}${words(neutral)} ${neutral.length === 1 ? 'is' : 'are'} at neutral sites set by CCS (the CIF-CCS field hockey calendar).`;
+}
+
 /**
  * Every CCS key date plus each CCS league's own postseason date, in date order. The CCS dates come
  * from the CCS playoff-dates release (cross-confirmed by the CCS iCal feed once it is polled); the
- * league dates come from the official league schedules and by-laws (config pairings).
+ * league dates come from the official league schedules and by-laws (config pairings). Round details
+ * say where each round is played, from `CCS.highSeedHostsThrough`.
  */
-export function keyDateRows(k: CcsKeyDates, leagueDates: readonly LeagueKeyDate[] = []): KeyDateRow[] {
+export function keyDateRows(
+  k: CcsKeyDates,
+  leagueDates: readonly LeagueKeyDate[] = [],
+  hostsThrough: CcsConfig['highSeedHostsThrough'] = CCS.highSeedHostsThrough,
+): KeyDateRow[] {
   const ccs = (
     key: KeyDateKey,
     iso: string,
@@ -132,10 +175,10 @@ export function keyDateRows(k: CcsKeyDates, leagueDates: readonly LeagueKeyDate[
   const rows: KeyDateRow[] = [
     ccs('end-of-league-season', k.endOfLeagueSeason, 'CCS end of league season', 'The last day a league game or league postseason game may be played.'),
     ccs('entries', k.entriesDue, 'CCS entries due', 'Leagues submit their qualifiers and at-large candidates.', { time: true }),
-    ccs('seeding', k.seedingMeeting, 'CCS seeding meeting', 'The committee seeds both CCS divisions. This page fills in that evening.', { time: true }),
-    ccs('quarterfinals', k.quarterfinals, 'Quarterfinals', 'Higher seed hosts.', { isRound: true }),
-    ccs('semifinals', k.semifinals, 'Semifinals', 'Higher seed hosts.', { isRound: true }),
-    ccs('finals', k.finals, 'Finals', 'Site set by CCS.', { isRound: true }),
+    ccs('seeding', k.seedingMeeting, 'CCS seeding meeting', 'The committee seeds both CCS divisions; the games appear here as MaxPreps lists them, after the next update.', { time: true }),
+    ccs('quarterfinals', k.quarterfinals, 'Quarterfinals', roundSiteDetail('quarterfinals', hostsThrough), { isRound: true }),
+    ccs('semifinals', k.semifinals, 'Semifinals', roundSiteDetail('semifinals', hostsThrough), { isRound: true }),
+    ccs('finals', k.finals, 'Finals', roundSiteDetail('finals', hostsThrough), { isRound: true }),
     ccs('evaluation', k.evaluationMeeting, 'CCS evaluation meeting', 'The season review that closes the tournament.', { time: true }),
     ...leagueDates.map(
       (d): KeyDateRow => ({
@@ -534,6 +577,109 @@ export function pairingSentence(view: PairingView): string {
   return `${view.title}, ${view.dateLabel}${view.timeLabel ? `, ${view.timeLabel}` : ''}: ${pair}.`;
 }
 
+// ---------------------------------------------------------------- section playoffs (the San Diego Section)
+
+type SectionPlayoffsConfig = Extract<LeagueConfig['postseason'], { kind: 'section-playoffs' }>;
+
+/**
+ * The Section's round calendar as DateList rows: a round's label, its league clock time where published (the
+ * finals) and its site as the detail (La Jolla High School). Rounds and finals are set in ink (`isRound`), the
+ * play-in row is not. No row names a host: the Section's bulletin is unreadable and a seed word is banned here.
+ */
+export function sectionRoundRows(ps: SectionPlayoffsConfig): KeyDateRow[] {
+  return ps.rounds.map((r) => ({
+    key: `league:${r.id}`,
+    dateKey: r.date,
+    dateLabel: shortDate(r.date),
+    time: r.time ? leagueClockPT(r.time) : null,
+    leagueShort: null,
+    label: r.label,
+    detail: r.site ?? '',
+    isRound: /^(First round|Quarterfinals|Semifinals|Final)\b/.test(r.label),
+  }));
+}
+
+/**
+ * The San Diego block's bracket sentence, true on every day: before the seeding meeting, when the Section places
+ * teams and where it posts (never the word "seeds": SEED_CLAIM bans a seed word on a San Diego card); from the meeting on, that it posts its brackets on its field hockey page (and, once the
+ * owner has pasted the sheet's URL, that they are published); always that this site draws none and projects no
+ * places, since the Section places teams.
+ *
+ * The third state (2026-10-30, plan final-08): once the owner has transcribed the Section's published brackets
+ * (data/sds-brackets-2026.json, so lib/sds-bracket.ts getSdsBrackets() is non-null and the page draws them under
+ * `#sds-bracket`), `drawn` is true and the sentence says the brackets below are the Section's, with MaxPreps'
+ * results. Still no place is projected: the brackets are the Section's own.
+ */
+export function sectionBracketSentence(ps: SectionPlayoffsConfig, seedingDate: string | null, today: string, drawn = false): string {
+  const seeding = seedingDate ? shortDate(seedingDate) : null;
+  if (drawn) return 'The Section has published its brackets; the brackets below are the Section’s, with results as MaxPreps posts them.';
+  if (ps.bracketSheetUrl) return 'The Section has published its brackets; this site draws no bracket and projects no places.';
+  if (seedingDate && today < seedingDate) {
+    return `The Section places teams at its ${seeding} seeding meeting and posts its brackets on its field hockey page afterwards; this site draws no bracket and projects no places.`;
+  }
+  return `The Section posts its brackets on its field hockey page${seeding ? ` after its ${seeding} seeding meeting` : ''}; this site draws no bracket and projects no places. Its playoff games appear on team pages and schedules as MaxPreps lists them.`;
+}
+
+// ---------------------------------------------------------------- outside tournament (the Tournament of Champions)
+
+export interface OutsideTournamentRoundView {
+  dateKey: string;
+  /** 'Thu Oct 22' */
+  dateLabel: string;
+  /** The round's name from config ('Round 1', 'Semifinals'), or null for a game on a day config names no round for. */
+  label: string | null;
+  games: Game[];
+}
+
+export interface OutsideTournamentView {
+  name: string;
+  /** 'Oct 22–29' */
+  dates: string;
+  note: string;
+  rounds: OutsideTournamentRoundView[];
+  /** How many of the listed games have a final score. */
+  finals: number;
+  /** How many are still to be played. */
+  toCome: number;
+  sources: readonly { label: string; href: string }[];
+}
+
+/**
+ * The games of a section's outside tournament (DESIGN §24.13), the ones tagged 'outside-tournament' among
+ * `games`, grouped by day in date order with the config's round label for that day. No seed, no bracket: the
+ * tournament publishes neither, so the view lists what MaxPreps lists. A day the config names no round for
+ * (a moved game) is shown under its date alone, never forced into a round.
+ */
+export function buildOutsideTournamentView(event: OutsideTournamentConfig, games: readonly Game[]): OutsideTournamentView {
+  const own = games
+    .filter((g) => g.postseason?.kind === 'outside-tournament')
+    .sort(byDateThenId);
+  const rounds: OutsideTournamentRoundView[] = [];
+  for (const g of own) {
+    let round = rounds.find((r) => r.dateKey === g.dateKey);
+    if (!round) {
+      round = {
+        dateKey: g.dateKey,
+        dateLabel: shortDate(g.dateKey),
+        label: event.rounds.find((r) => r.date === g.dateKey)?.label ?? null,
+        games: [],
+      };
+      rounds.push(round);
+    }
+    round.games.push(g);
+  }
+  const finals = own.filter((g) => g.status === 'final').length;
+  return {
+    name: event.name,
+    dates: dateSpan(event.window.first, event.window.last),
+    note: event.note,
+    rounds,
+    finals,
+    toCome: own.filter((g) => g.status === 'scheduled').length,
+    sources: event.sources,
+  };
+}
+
 // ---------------------------------------------------------------- league tournament (MCAL)
 
 export interface TournamentSlotView {
@@ -553,12 +699,30 @@ export interface TournamentGameView {
   dateKey: string;
   dateLabel: string;
   timeLabel: string;
+  /**
+   * The host side: the higher seed's field, or at a fixed site the slot whose team IS the site team (the 2026 final:
+   * 1 Tamalpais, at Tamalpais). At a fixed site neither team calls home, the better seed.
+   */
   home: TournamentSlotView;
   away: TournamentSlotView;
-  /** 'at' (the higher seed's field) or 'vs' (a fixed site such as Tamalpais). */
+  /**
+   * 'at' (the higher seed's field, or a fixed site that is one finalist's own: lib/postseason.ts fixedSiteHost) or
+   * 'vs' (a fixed site neither finalist calls home). The final reads '3 Redwood at 1 Tamalpais', the game page's words.
+   */
   connector: 'at' | 'vs';
   /** '5 Convent at 4 Marin Catholic' — what the page prints. */
   line: string;
+  /**
+   * The side that won the matched game (lib/postseason.ts winnerOf: the higher score, else the side MaxPreps marks
+   * W), as this view's `home`/`away`; null with no result or a level game with no W flag. The bracket marks it with
+   * the site's winner rule (600 weight and the 2px left rule, DESIGN §8 accessibility).
+   */
+  winner: 'home' | 'away' | null;
+  /**
+   * The result for the game's sr-only sentence: 'Redwood won and advances to the final.' / 'Tamalpais wins the MCAL
+   * tournament.'; null with no winner.
+   */
+  outcome: string | null;
   /** 'Tamalpais' for a fixed site; null = the home seed's field. */
   site: string | null;
   note: string | null;
@@ -570,8 +734,15 @@ export interface TournamentRoundView {
   /** 'Quarterfinals' | 'Semifinals' | 'Final' */
   title: string;
   dateKey: string;
-  /** 'Mon Oct 26' / 'Fri Oct 30 · at Tamalpais' */
+  /** 'Mon Oct 26 · 4 PM PT' / 'Fri Oct 30 · 4 PM PT · at Tamalpais' */
   meta: string;
+  /** The round's start time from config ('4 PM PT'), every game of a round sharing it. */
+  time: string;
+  /**
+   * The fixed site's where and how much (the final at Tamalpais): the venue, one address line, the Directions
+   * link and the league's admission sentence with its source; null for a round at the higher seed's field.
+   */
+  venue: { name: string; addressLine: string; directionsHref: string; admission: string | null; admissionSource: string | null } | null;
   games: TournamentGameView[];
 }
 
@@ -621,6 +792,12 @@ export interface TournamentInput {
    * the type is config's, where null means "no line" (only an unbracketed league, which has no bracket).
    */
   ladderLine: { after: number; label: string } | null;
+  /**
+   * The final's fixed site from config (the host school's slug, venue, address, admission); omitted ⇒ the round
+   * shows no venue block and the final reads 'vs' (no host known). The slug makes the final 'at' when the site team
+   * is a finalist (lib/postseason.ts fixedSiteHost).
+   */
+  finalSite?: { slug?: TeamSlug; venue: string; address: { street: string; city: string; region: string; postalCode: string }; admission: string | null; admissionSource: string | null };
 }
 
 /** A bracket round's title, for the page's round headers and the OG card's round line alike. */
@@ -667,14 +844,43 @@ function slotLabel(v: TournamentSlotView): string {
   return v.seed !== null ? `${v.seed} ${v.text}` : v.text;
 }
 
+/** The round a game's winner goes on to; null after the final. */
+const NEXT_ROUND: Readonly<Record<TournamentGame['round'], TournamentRoundView['round'] | null>> = {
+  'play-in': 'quarterfinal',
+  quarterfinal: 'semifinal',
+  semifinal: 'final',
+  final: null,
+};
+
+/**
+ * One bracket game in words. `siteSlug` is the fixed site's own team (config `finalSite.slug`): when that team is in
+ * the game the line is visitor at host, as at any other round and on the game page ('3 Redwood at 1 Tamalpais');
+ * a fixed site neither finalist calls home lists the better seed first with 'vs'. `tournamentName` ('MCAL
+ * tournament') names what the final's winner wins in the sr-only sentence.
+ */
 export function tournamentGameView(
   tg: TournamentGame,
   teamOf: TournamentInput['teamOf'],
   seeds: LeagueTournamentProjection['seeds'] = [],
+  siteSlug: TeamSlug | null = null,
+  tournamentName: string | null = null,
 ): TournamentGameView {
-  const home = slotView(tg.home, teamOf, seeds);
-  const away = slotView(tg.away, teamOf, seeds);
-  const connector = tg.site !== null ? 'vs' : 'at';
+  const host = fixedSiteHost(tg, siteSlug);
+  // The view's `home` is the host: at a fixed site the site team's slot, whichever seed it holds.
+  const [homeSlot, awaySlot] = host === 'away' ? [tg.away, tg.home] : [tg.home, tg.away];
+  const home = slotView(homeSlot, teamOf, seeds);
+  const away = slotView(awaySlot, teamOf, seeds);
+  const connector = tg.site !== null && host === null ? 'vs' : 'at';
+  const winnerSlug = winnerOf(tg);
+  const holds = (v: TournamentSlotView) => winnerSlug !== null && v.teams.length === 1 && v.teams[0].slug === winnerSlug;
+  const winner = holds(home) ? 'home' : holds(away) ? 'away' : null;
+  let outcome: string | null = null;
+  if (winner !== null) {
+    const name = (winner === 'home' ? home : away).teams[0].shortName;
+    const next = NEXT_ROUND[tg.round];
+    if (next !== null) outcome = `${name} won and advances to the ${ROUND_TITLES[next].toLowerCase()}.`;
+    else if (tournamentName) outcome = `${name} wins the ${tournamentName}.`;
+  }
   return {
     id: tg.id,
     round: tg.round,
@@ -684,8 +890,10 @@ export function tournamentGameView(
     home,
     away,
     connector,
-    // A fixed site lists the better seed first ('1 Tamalpais vs 3 Redwood'); otherwise visitor at host.
+    // A neutral fixed site lists the better seed first ('1 Archie Williams vs 2 Redwood'); otherwise visitor at host.
     line: connector === 'vs' ? `${slotLabel(home)} vs ${slotLabel(away)}` : `${slotLabel(away)} at ${slotLabel(home)}`,
+    winner,
+    outcome,
     site: tg.site,
     note: tg.note,
     game: tg.game,
@@ -697,7 +905,7 @@ export function tournamentGameView(
  * play-in spelled out, and the bracket as vertical rounds (quarterfinals, semifinals, final).
  */
 export function buildTournamentView(input: TournamentInput): TournamentView {
-  const { projection: p, rows, teamOf, lastPlace, ladderLine } = input;
+  const { projection: p, rows, teamOf, lastPlace, ladderLine, finalSite } = input;
   const seedRows: SeedRowView[] = rows.map(({ team, standing, counted, scheduled, label }) => ({
     team,
     standing,
@@ -728,17 +936,33 @@ export function buildTournamentView(input: TournamentInput): TournamentView {
       `points and neither won both meetings. ${name(contenders[0])} hosts.`;
   }
 
-  const games = p.games.map((tg) => tournamentGameView(tg, teamOf, p.seeds));
+  const siteSlug = finalSite?.slug ?? null;
+  const ps = getLeague(p.leagueId).postseason;
+  const tournamentName = ps.kind === 'league-tournament' ? ps.name : null;
+  const games = p.games.map((tg) => tournamentGameView(tg, teamOf, p.seeds, siteSlug, tournamentName));
   const rounds: TournamentRoundView[] = [];
   for (const g of games) {
     if (g.round === 'play-in') continue;
     let round = rounds.find((r) => r.round === g.round);
     if (!round) {
+      // A fixed site (the final) gets its venue block; the time is the round's, from config, printed once here
+      // rather than on each row (every game of a round starts together).
+      const venue = g.site && finalSite
+        ? {
+            name: finalSite.venue,
+            addressLine: `${finalSite.address.street}, ${finalSite.address.city}, ${finalSite.address.region} ${finalSite.address.postalCode}`,
+            directionsHref: mapsSearchHref(finalSite.address),
+            admission: finalSite.admission,
+            admissionSource: finalSite.admissionSource,
+          }
+        : null;
       round = {
         round: g.round,
         title: ROUND_TITLES[g.round],
         dateKey: g.dateKey,
-        meta: g.site ? `${g.dateLabel} · at ${g.site}` : g.dateLabel,
+        meta: g.site ? `${g.dateLabel} · ${g.timeLabel} · at ${g.site}` : `${g.dateLabel} · ${g.timeLabel}`,
+        time: g.timeLabel,
+        venue,
         games: [],
       };
       rounds.push(round);
@@ -758,7 +982,7 @@ export function buildTournamentView(input: TournamentInput): TournamentView {
     lineAfter,
     lineLabel: lineAfter > 0 && ladderLine ? ladderLine.label : null,
     playInSentence,
-    playIn: p.playIn ? tournamentGameView(p.playIn, teamOf, p.seeds) : null,
+    playIn: p.playIn ? tournamentGameView(p.playIn, teamOf, p.seeds, siteSlug, tournamentName) : null,
     rounds,
     notes,
   };

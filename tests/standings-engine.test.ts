@@ -864,9 +864,9 @@ describe('Southern California: ladders, the cross-check skip, uneven games (DESI
       expect(playoffStatusFor(d, 7), d).toBe('selection');
     }
     expect(statusBadge('sunset', 'no-postseason')).toBe('No playoffs');
-    expect(statusBadge('palomar', 'selection')).toBe('Selection only');
+    expect(statusBadge('palomar', 'selection')).toBe('By selection');
     expect(playoffOutcomeLabel('valley', ['tournament', 'selection'])).toBe(
-      '1st: at least a play-in if named league champion or no league route into the playoffs',
+      '1st: at least a play-in if named league champion or placed by the Section from its power rankings',
     );
     expect(statusLegend('sunset', 'no-postseason')).toBe('The CIF Southern Section holds no field hockey playoffs (Blue Book 2011.1, 3500.2)');
   });

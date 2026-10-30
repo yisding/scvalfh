@@ -61,6 +61,15 @@ describe('San Diego team pages (socal corpus)', () => {
     }
   });
 
+  it('a San Diego team’s postseason card never says "Projected from the table today": the Section places teams', async () => {
+    const placed = data.getStandings('palomar').find((r) => r.computed.gp > 0)!;
+    const line = data.getTeamPostseasonLine(placed.slug)!;
+    expect(line.caveat, 'lib/data.ts caveat').toBeNull();
+    const text = textOf(await renderTeam(placed.slug));
+    expect(text, 'components/teams/TeamPlayoffLine.tsx').toContain('San Diego Section playoffs');
+    expect(text, 'components/teams/TeamPlayoffLine.tsx').not.toContain('Projected from the table today');
+  });
+
   it('a team with no league game yet names its first one', async () => {
     const hilltop = textOf(await renderTeam('hilltop'));
     expect(hilltop).toContain('Hilltop has not played a Metro South Bay game yet.');

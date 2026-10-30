@@ -5,12 +5,21 @@
  * Every assertion names the module that produced the value (the repair policy routes on it).
  */
 
+import { mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import path from 'node:path';
+
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { beforeAll, describe, expect, it } from 'vitest';
+import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
+import { countsOf } from '../../lib/snapshot-migrate';
+import { loadSnapshot } from '../../lib/snapshot-schema';
+import type { Snapshot } from '../../lib/types';
+import { game } from '../game-builder';
 import { corpusSnapshotPath } from '../helpers';
 
+import { SEED_CLAIM } from '../../scripts/copy-rules';
 import { POSTSEASON_LEAD, postseasonCardLine, rungCardText } from '../../components/home/home-types';
 
 import { textOf } from './html-text';
@@ -120,7 +129,24 @@ describe('home panels (components/home/home-view.ts → LeaguePanel)', () => {
       const html = renderPanel(id);
       expect(html, `components/home/PostseasonCard.tsx: ${id} CCS link`).toContain(`href="/playoffs#${id}"`);
       expect(textOf(html), `components/home/PostseasonCard.tsx: ${id} dates`).toContain('Quarterfinals');
+      // The footer is the view's dated sentence (ccsLadderView `official`); the corpus day is before the meeting.
+      const panel = data.panels.find((p) => p.id === id)!;
+      if (panel.postseason.kind !== 'ccs-ladder') throw new Error(`${HV}: ${id} is a CCS ladder`);
+      expect(panel.postseason.official, `${HV}: ${id} footer`).toBe(
+        'Berths are assigned by the CCS committee. Nothing here is official until the seeding meeting.',
+      );
+      expect(textOf(html), `components/home/PostseasonCard.tsx: ${id} footer`).toContain(panel.postseason.official);
     }
+  });
+
+  it('the CCS card footer changes tense the day after the seeding meeting (ccsOfficialSentence)', () => {
+    const before = 'Berths are assigned by the CCS committee. Nothing here is official until the seeding meeting.';
+    expect(home.ccsOfficialSentence('2026-10-29'), HV).toBe(before);
+    // On Nov 2 itself the updates land before the 1 PM meeting: still the present tense.
+    expect(home.ccsOfficialSentence('2026-11-02'), HV).toBe(before);
+    expect(home.ccsOfficialSentence('2026-11-03'), HV).toBe(
+      'Berths were assigned by the CCS committee on Mon Nov 2; results update twice a day.',
+    );
   });
 
   it('PCAL and MCAL mini tables carry no division label', () => {
@@ -276,7 +302,8 @@ describe('home panels (components/home/home-view.ts → LeaguePanel)', () => {
     expect(bval?.link?.href).toBe('/playoffs#bval');
     const scval = lead('scval', 'crossover', '2026-10-29');
     expect(`${scval?.lead} ${scval?.body}`, `${HV}: SCVAL crossover`).toBe(
-      'League play is over. The crossover games and the fourth-place play-in for SCVAL’s seventh automatic CCS berth are Fri Oct 30; the CCS seeding meeting is Mon Nov 2.',
+      // The pairings' window (lib/leagues.ts): two 2026 crossovers moved to Thu Oct 29, so both days are named.
+      'League play is over. The crossover games and the fourth-place play-in for SCVAL’s seventh automatic CCS berth are Thu Oct 29 and Fri Oct 30; the CCS seeding meeting is Mon Nov 2.',
     );
     const pcal = lead('pcal', 'playoffs', '2026-11-03');
     expect(`${pcal?.lead} ${pcal?.body}`, `${HV}: PCAL playoffs`).toBe(
@@ -289,8 +316,8 @@ describe('home panels (components/home/home-view.ts → LeaguePanel)', () => {
     // The EAL: no bracket, so the tournament phase says what is (and is not) published, and the
     // CCS-ladder 'playoffs' copy never reaches it.
     expect(lead('eal', 'tournament', '2026-10-30'), `${HV}: EAL tournament`).toEqual({
-      lead: 'The Super Regional is Oct 30–31; its format and site are not published yet.',
-      body: '',
+      lead: 'The Super Regional is Oct 30–31; the NFHS Network’s CIFNS listing has its games at Pleasant Valley High School, Chico on Sat Oct 31.',
+      body: 'Pairings are not published; results appear here as MaxPreps posts them.',
       link: { href: '/playoffs#eal', label: 'Postseason' },
     });
     expect(lead('eal', 'playoffs', '2026-11-03'), `${HV}: EAL never gets the CCS copy`).toBeNull();
@@ -298,7 +325,7 @@ describe('home panels (components/home/home-view.ts → LeaguePanel)', () => {
     // The San Diego leagues: the Section's playoffs, dates from config, no bracket and no "top N".
     expect(lead('city', 'tournament', '2026-11-03'), `${HV}: City in the Section playoffs`).toEqual({
       lead: 'City league play is over.',
-      body: 'The San Diego Section playoffs are Nov 2–14; the Section publishes its brackets after its Sat Oct 31 seeding meeting.',
+      body: 'The San Diego Section playoffs are Nov 2–14; the Section posts its brackets on its field hockey page after its Sat Oct 31 seeding meeting.',
       link: { href: '/playoffs#city', label: 'Postseason' },
     });
     expect(lead('metro', 'playoffs', '2026-11-03'), `${HV}: SDS never gets the CCS copy`).toBeNull();
@@ -315,7 +342,8 @@ describe('home panels (components/home/home-view.ts → LeaguePanel)', () => {
       kind: 'no-postseason',
       leagueId: 'sunset',
       line: sunsetPs.kind === 'no-postseason' ? sunsetPs.note : '',
-      note: null,
+      // The section's outside tournament (the Tournament of Champions), from SectionConfig, never a seed or a "top N".
+      note: leagues.getSection('ss').outsideTournament?.note ?? null,
       link: { href: '/playoffs#sunset', label: 'Postseason' },
     });
     expect(sunset.afterSchedule).toEqual({ href: '/playoffs#sunset', label: 'Postseason' });
@@ -455,6 +483,14 @@ describe('the rendered home page (app/page.tsx)', () => {
     }
   });
 
+  it('prints no "This week in the postseason" strip in the regular season (the Oct 2 corpus)', () => {
+    // No postseason game and no dated postseason event is within two days back and a week ahead of the corpus's
+    // day, so HomeThisWeek renders nothing (DESIGN §8: no empty-state box) and the view model is empty.
+    expect(data.thisWeek.norcal.days, `${HV}: thisWeek.norcal`).toEqual([]);
+    expect(data.thisWeek.socal.days, `${HV}: thisWeek.socal`).toEqual([]);
+    expect(pageHtml, 'components/home/HomeThisWeek.tsx').not.toMatch(/id="this-week|This week in the postseason/);
+  });
+
   it('never renders Gabilan, "eliminated", a league hue or a game link that skips gameHref', () => {
     const text = textOf(pageHtml);
     expect(text, 'app/page.tsx').not.toMatch(/Gabilan/i);
@@ -565,5 +601,183 @@ describe('the pinned card (components/home/MyTeamCard.tsx ← home-view.ts team 
         }
       }
     }
+  });
+});
+
+/**
+ * The pinned card after the SCVAL play-in (plan final-10, 2026-10-30): the committed 2026-10-29 snapshot
+ * (data/snapshot.json, SCVAL league play over: Los Altos is De Anza #4, Santa Clara El Camino #4) with Los Altos 2-1
+ * Santa Clara played Fri Oct 30, stamped Sat Oct 31. The outcome label replaces the 'Final place:' lead, as an MCAL
+ * tournament outcome does, and fits the card's one 288px line. A fresh module instance; the corpus views above are
+ * already built.
+ */
+describe('the pinned card after the SCVAL play-in (home-view.ts ← lib/postseason-outcomes.ts)', () => {
+  let views: ReturnType<HomeView['buildTeamViews']>;
+  const prior = process.env.SCVAL_SNAPSHOT;
+
+  beforeAll(async () => {
+    const base = loadSnapshot(
+      JSON.parse(readFileSync(path.join(import.meta.dirname, '..', '..', 'data', 'snapshot.json'), 'utf8')) as unknown,
+    );
+    const crossover = { kind: 'scval-crossover', leagueId: 'scval', via: 'config-pairing' } as const;
+    const playIn = game({
+      home: 'los-altos', away: 'santa-clara', hs: 2, as: 1, date: '2026-10-30', league: false, postseason: crossover, official: null,
+    });
+    const games = [
+      ...base.games.filter(
+        (g) =>
+          !(g.postseason?.kind === 'scval-crossover' && [g.home.slug, g.away.slug].sort().join('|') === 'los-altos|santa-clara'),
+      ),
+      playIn,
+    ];
+    const next: Snapshot = { ...base, fetchedAt: '2026-10-31T19:00:00.000Z', games, counts: countsOf(games, base.standings) };
+    const file = path.join(mkdtempSync(path.join(tmpdir(), 'scvalfh-home-play-in-')), 'snapshot.json');
+    writeFileSync(file, JSON.stringify(loadSnapshot(next)));
+    process.env.SCVAL_SNAPSHOT = file;
+    vi.resetModules();
+    const fresh = (await import('../../components/home/home-view')) as HomeView;
+    views = fresh.buildTeamViews();
+  }, 600_000);
+
+  afterAll(() => {
+    if (prior === undefined) delete process.env.SCVAL_SNAPSHOT;
+    else process.env.SCVAL_SNAPSHOT = prior;
+  });
+
+  it('a pinned Los Altos reads "Won the play-in", Santa Clara "Lost the play-in", with no "Final place:" lead', () => {
+    const view = (slug: string) => views.find((v) => v.slug === slug)!;
+    expect(view('los-altos').postseason, `${HV}: los-altos`).toBe('Won the play-in');
+    expect(postseasonCardLine(view('los-altos')), `${HV}: los-altos card line`).toBe('Won the play-in');
+    expect(view('los-altos').postseasonShort, `${HV}: los-altos short`).toBeUndefined();
+    expect(view('santa-clara').postseason, `${HV}: santa-clara`).toBe('Lost the play-in');
+    // A team with no final pairing keeps its ladder rung behind the lead.
+    expect(view('cupertino').postseason, `${HV}: cupertino`).toMatch(/^Final place: /);
+    for (const slug of ['los-altos', 'santa-clara']) {
+      const card = postseasonCardLine(view(slug))!;
+      expect((width(card) * 14) / 12, `${HV}: ${slug} "${card}" fits 288px`).toBeLessThanOrEqual(288);
+      expect(card).not.toMatch(/eliminat/i);
+    }
+  });
+});
+
+/**
+ * "This week in the postseason" on the home page (home-view.ts `thisWeek` -> HomeThisWeek, plan final-11,
+ * 2026-10-30): built from the committed snapshot with every postseason-tagged game replaced by synthetic ones
+ * from the shared builder (so a data refresh cannot move the assertions), stamped Thu Oct 29 at noon Pacific,
+ * the day the 2026 week looked like this. Config supplies the events (the BVAL play-in Sat Oct 31, the EAL's
+ * Super Regional, the CCS and San Diego seeding meetings and the San Diego round calendar). A fresh module
+ * instance; the corpus views above are already built.
+ */
+describe('the home page "This week in the postseason" (home-view.ts <- playoffs/this-week-inputs.ts)', () => {
+  let week: ReturnType<HomeView['buildHomeView']>['thisWeek'];
+  let html = '';
+  const prior = process.env.SCVAL_SNAPSHOT;
+
+  const at = (date: string, time: string, g: ReturnType<typeof game>) => ({ ...g, dateLocal: `${date}T${time}:00` });
+  const crossover = { kind: 'scval-crossover', leagueId: 'scval', via: 'config-pairing' } as const;
+  const mcal = { kind: 'mcal-tournament', leagueId: 'mcal', via: 'league-postseason-window' } as const;
+  const toc = { kind: 'outside-tournament', leagueId: null, via: 'outside-tournament-window' } as const;
+  const post = (home: string, away: string, date: string, time: string, tag: typeof crossover | typeof mcal | typeof toc, score?: [number, number]) =>
+    at(date, time, game({ home, away, date, league: false, postseason: tag, official: null, ...(score ? { as: score[0], hs: score[1] } : {}) }));
+
+  beforeAll(async () => {
+    const base = loadSnapshot(
+      JSON.parse(readFileSync(path.join(import.meta.dirname, '..', '..', 'data', 'snapshot.json'), 'utf8')) as unknown,
+    );
+    const games = [
+      ...base.games.filter((g) => g.postseason === null),
+      post('tamalpais', 'marin-catholic', '2026-10-28', '16:00', mcal, [1, 3]),
+      post('mitty', 'st-ignatius', '2026-10-29', '16:00', crossover),
+      post('valley-christian', 'palo-alto', '2026-10-29', '18:00', crossover),
+      post('los-gatos', 'saint-francis', '2026-10-30', '15:30', crossover),
+      post('los-altos', 'santa-clara', '2026-10-30', '16:00', crossover),
+      post('tamalpais', 'redwood', '2026-10-30', '16:00', mcal),
+      post('huntington-beach', 'harvard-westlake', '2026-10-29', '18:00', toc),
+    ];
+    const next: Snapshot = { ...base, fetchedAt: '2026-10-29T19:00:00.000Z', games, counts: countsOf(games, base.standings) };
+    const file = path.join(mkdtempSync(path.join(tmpdir(), 'scvalfh-home-week-')), 'snapshot.json');
+    writeFileSync(file, JSON.stringify(loadSnapshot(next)));
+    process.env.SCVAL_SNAPSHOT = file;
+    vi.resetModules();
+    const fresh = (await import('../../components/home/home-view')) as HomeView;
+    week = fresh.buildHomeView().thisWeek;
+    const { default: HomePage } = await import('../../app/page');
+    html = renderToStaticMarkup(createElement(HomePage));
+  }, 600_000);
+
+  afterAll(() => {
+    if (prior === undefined) delete process.env.SCVAL_SNAPSHOT;
+    else process.env.SCVAL_SNAPSHOT = prior;
+  });
+
+  const rows = (region: 'norcal' | 'socal') => week[region].days.flatMap((d) => d.rows);
+
+  it('holds the cap of 8 rows a region, drops the oldest result first and says how many more', () => {
+    expect(rows('norcal').length, `${HV}: thisWeek.norcal rows`).toBe(8);
+    expect(week.norcal.more, `${HV}: thisWeek.norcal more`).toBe(1);
+    // Nine rows from Wed Oct 28 to Mon Nov 2 (the semifinal result, five games, the EAL's Super Regional, the BVAL
+    // play-in and the CCS seeding meeting); one over the cap, and the oldest, the result, is the one to go.
+    expect(week.norcal.days[0].dateLabel, `${HV}: first day`).toBe('Today · Thu Oct 29');
+    expect(rows('norcal').map((r) => r.text), `${HV}: NorCal texts`).not.toContain('Tamalpais 3, Marin Catholic 1, final.');
+    expect(week.socal.more, `${HV}: thisWeek.socal more`).toBeGreaterThanOrEqual(0);
+    expect(rows('socal').length, `${HV}: thisWeek.socal rows`).toBeLessThanOrEqual(8);
+  });
+
+  it('keeps each region to its own sides: the Tournament of Champions game is SoCal, the crossovers NorCal', () => {
+    const north = rows('norcal').map((r) => r.text).join(' | ');
+    const south = rows('socal').map((r) => r.text).join(' | ');
+    expect(north, `${HV}: NorCal`).toContain('St. Ignatius at Mitty');
+    expect(north, `${HV}: NorCal`).toContain('Redwood at Tamalpais');
+    expect(north, `${HV}: NorCal has no SoCal game`).not.toMatch(/Huntington Beach|Harvard-Westlake/);
+    expect(south, `${HV}: SoCal`).toContain('Harvard-Westlake at Huntington Beach');
+    expect(south, `${HV}: SoCal has no NorCal game`).not.toMatch(/Mitty|Tamalpais/);
+  });
+
+  it('renders each strip once, in its region block, above that region\'s latest results and every league panel', () => {
+    for (const [id, region, latest] of [
+      ['this-week', 'norcal', 'latest-every-league'],
+      ['this-week-socal', 'socal', 'latest-every-league-socal'],
+    ] as const) {
+      expect(html.split(`<section id="${id}"`).length - 1, `components/home/HomeThisWeek.tsx: #${id}`).toBe(1);
+      expect(html, `components/home/HomeThisWeek.tsx: #${id}`).toContain(
+        `<div data-scope="all" data-region-scope="${region}"><section id="${id}" aria-labelledby="${id}-heading"`,
+      );
+      expect(html.indexOf(`id="${id}"`), `app/page.tsx: #${id} before the latest results`).toBeLessThan(
+        html.indexOf(`aria-labelledby="${latest}"`),
+      );
+    }
+    expect(html.indexOf('id="this-week-socal"'), 'app/page.tsx: the strips before any league panel').toBeLessThan(
+      html.indexOf('<section data-scope="scval"'),
+    );
+    const ids = [...html.matchAll(/\sid="([^"]+)"/g)].map((m) => m[1]);
+    expect(ids.filter((id, i) => ids.indexOf(id) !== i), 'app/page.tsx: duplicate ids').toEqual([]);
+  });
+
+  it('prints whole sentences as single link text, no GameRow, no seed word and no "eliminat"', () => {
+    const strip = (id: string) => {
+      const at = html.indexOf(`<section id="${id}"`);
+      return html.slice(at, html.indexOf('</section>', at));
+    };
+    const north = strip('this-week');
+    const south = strip('this-week-socal');
+    expect(textOf(north), 'components/home/HomeThisWeek.tsx').toContain('St. Ignatius at Mitty');
+    expect(textOf(north), 'components/home/HomeThisWeek.tsx').toContain('+1 more on the schedule');
+    expect(north, 'components/home/HomeThisWeek.tsx: no GameRow').not.toMatch(/<details|aria-expanded/);
+    for (const text of [textOf(north), textOf(south)]) {
+      expect(text).not.toMatch(SEED_CLAIM);
+      expect(text).not.toMatch(/eliminat/i);
+    }
+    expect(textOf(south), 'components/home/HomeThisWeek.tsx: SoCal strip has no CCS word').not.toMatch(/\bCCS\b/);
+    expect(textOf(south)).toContain('Tournament of Champions');
+  });
+
+  it('is the same view /playoffs prints, at 8 rows instead of 12', async () => {
+    const { thisWeekByRegion } = await import('../../components/playoffs/this-week-inputs');
+    const { getGames, getToday } = await import('../../lib/data');
+    const twelve = thisWeekByRegion({ games: getGames(), today: getToday() });
+    expect(twelve.norcal.days.flatMap((d) => d.rows).length, 'components/playoffs/this-week-inputs.ts').toBe(9);
+    expect(twelve.norcal.more).toBe(0);
+    expect(twelve.norcal.from).toBe(week.norcal.from);
+    expect(twelve.norcal.to).toBe(week.norcal.to);
   });
 });

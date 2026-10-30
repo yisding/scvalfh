@@ -174,7 +174,11 @@ describe('golden item 1: the committed snapshot, migrated and parsed', () => {
       golden.projection.crossover.pairings.forEach((g, i) => {
         expect(pairings[i].seats[0], `seat ${g.seed}`).toEqual(g.deAnza);
         expect(pairings[i].seats[1], `seat ${g.seed}`).toEqual(g.elCamino);
-        expect(pairings[i].label).toBe(g.label);
+        // The one deliberate copy change since the golden was captured (2026-10-29, plan final-04): the crossover
+        // tail now says what the game is for. The engine's seats and dates are unchanged; the golden is not edited.
+        expect(pairings[i].label).toBe(
+          g.label.replace('crossover (helps CCS ordering)', 'crossover (for CCS seeding, not qualification)'),
+        );
         expect(pairings[i].isPlayIn).toBe(g.isPlayIn);
         expect(pairings[i].date).toBe(golden.projection.crossover.date);
       });

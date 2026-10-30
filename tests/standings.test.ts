@@ -318,6 +318,33 @@ describe('standings: Article VII projections', () => {
     expect(pairings[3].label).toMatch(/7th automatic qualifier/);
   });
 
+  it('seats a crossover played inside the pairing window, takes its date, and settles a level seat by who played', () => {
+    const before = leaguePairings(liveStandings, live, 'scval');
+    // #1 v #1 a day ahead of the schedule (2026: Mitty v St. Ignatius, Thu Oct 29).
+    const [da1] = before[0].seats[0];
+    const [ec1] = before[0].seats[1];
+    const moved = game({ home: ec1.slug, away: da1.slug, hs: 1, as: 0, date: '2026-10-29', league: false });
+    expect(moved.postseason?.kind).toBe('scval-crossover');
+    const after = leaguePairings(liveStandings, [...live, moved], 'scval');
+    expect(after[0].game?.contestId).toBe(moved.contestId);
+    expect(after[0].date).toBe('2026-10-29');
+    expect(after[1].game).toBeNull();
+    // A seat two level teams span (the fixture's #4 play-in) narrows to the contender that played.
+    const wide = before.find((p) => p.seats.some((s) => s.length > 1));
+    if (wide) {
+      const i = wide.seats.findIndex((s) => s.length > 1);
+      const other = wide.seats[i === 0 ? 1 : 0][0];
+      const pick = wide.seats[i][0];
+      const played = game({ home: pick.slug, away: other.slug, hs: 2, as: 1, date: wide.date, league: false });
+      const settled = leaguePairings(liveStandings, [...live, played], 'scval').find((p) => p.id === wide.id)!;
+      expect(settled.game?.contestId).toBe(played.contestId);
+      expect(settled.seats[i]).toEqual([pick]);
+    }
+    // Outside the window (the day before) nothing attaches.
+    const early = game({ home: ec1.slug, away: da1.slug, hs: 1, as: 0, date: '2026-10-28', league: false });
+    expect(leaguePairings(liveStandings, [...live, early], 'scval')[0].game).toBeNull();
+  });
+
   it('spreads a level place across every slot it occupies', () => {
     expect(playoffOutcomes('de-anza', 1)).toEqual(['aq']);
     expect(playoffOutcomes('de-anza', 3, 2)).toEqual(['aq', 'play-in']);

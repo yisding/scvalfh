@@ -45,7 +45,9 @@ export function gameContentStamp(game: Game): number {
 /**
  * What a reader can see of a game: every field but the stamps that move without the game changing —
  * when it was read (`fetchedAt`), MaxPreps' own edit stamp (a re-save that changes nothing a page
- * prints), and `contentChangedAt` itself.
+ * prints), and `contentChangedAt` itself. `Game.bracket` (added 2026-10-29) is content: a CCS game
+ * whose `bracket.published` flips, or whose `bracket.name` moves it between divisions, restamps the
+ * game and so the bracket page's `lastmod`.
  */
 const UNSEEN = ['fetchedAt', 'maxprepsModifiedOn', 'contentChangedAt'] as const;
 

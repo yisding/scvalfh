@@ -105,6 +105,40 @@ export interface SectionConfig {
   seasonWindow: { start: string; end: string };
   /** An NCS-style reader note, shown wherever a reader would otherwise look for a section bracket; null where the section holds the postseason. */
   noChampionshipNote: string | null;
+  /**
+   * A postseason tournament the section does not run but its teams play (the Southern Section's Tournament of
+   * Champions); null everywhere else. Its games are tagged 'outside-tournament' (lib/classify.ts rule 1b),
+   * leave every table, and are listed on /playoffs under the section's no-postseason cards.
+   */
+  outsideTournament: OutsideTournamentConfig | null;
+}
+
+/**
+ * A non-CIF postseason tournament (DESIGN §24.13): the Los Angeles Field Hockey Association's Tournament of
+ * Champions, eight Southern Section teams, Oct 22–29, 2026. Nothing official publishes it: the organizer's name
+ * comes from a school newspaper, the rounds and sites from two schools' own schedules, the games from MaxPreps
+ * (only Huntington Beach's rows carry its playoff type). So the site names the event and lists its games, and
+ * never a seed or a bracket it has not seen (copy rule: no seed word on a Sunset or LA page).
+ */
+export interface OutsideTournamentConfig {
+  id: string;                           // 'toc'
+  name: string;                         // 'Tournament of Champions'
+  shortName: string;                    // 'TOC'
+  organizer: string;                    // 'Los Angeles Field Hockey Association'
+  /**
+   * Inclusive local dates: a game between two teams of this section's no-postseason leagues dated inside the
+   * window is a tournament game, whatever MaxPreps' type (contestType 4 on two of the 2026 rows, 1 on the rest).
+   */
+  window: { first: string; last: string };
+  /** The rounds, by date, as the schools' schedules name them ('Round 1', 'Semifinals', 'Final and third-place game'). */
+  rounds: readonly { date: string; label: string }[];
+  /** The entrants, registry slugs (lib/teams.ts asserts each is a team of this section). */
+  entrants: readonly TeamSlug[];
+  /** 'Huntington Beach High School' — where the final is played. */
+  finalSite: string;
+  /** One paragraph for /playoffs, the home card and a team's postseason line. Says it is not a CIF event. */
+  note: string;
+  sources: readonly { label: string; href: string }[];
 }
 
 export interface DivisionConfig {
@@ -290,7 +324,17 @@ export interface LadderRung {
 
 export interface PairingConfig {
   id: string;
+  /** The league's published date (SCVAL's schedule: Fri Oct 30; BVAL's: Sat Oct 31), YYYY-MM-DD. */
   date: string;
+  /**
+   * The dates, inclusive, a contest for this pairing may actually be played on when schools move it off
+   * `date` (SCVAL 2026: MaxPreps lists #1 Mitty v St. Ignatius and #3 Valley Christian v Palo Alto on Thu Oct 29
+   * and #2 and #4 on Fri Oct 30). A De Anza–El Camino game dated inside the window is this pairing's kind
+   * (lib/classify.ts rule 1) and seats the pairing (lib/standings.ts leaguePairings). Omitted ⇒ `date` alone.
+   * The copy that names the pairings' day ("The SCVAL crossover and the 4th-place play-in are …") reads the
+   * whole window (`pairingDatesLabel`); `date` stays the written schedule's day for the key-dates row.
+   */
+  window?: { readonly first: string; readonly last: string };
   time: string | null;
   seats: readonly [{ division: DivisionId; place: number }, { division: DivisionId; place: number }];
   seatLabels: readonly [string, string];
@@ -327,10 +371,31 @@ export type PostseasonConfig =
       byes: readonly number[];            // [1, 2]
       ladder: readonly LadderRung[];
       rounds: readonly TournamentRoundConfig[];
-      finalSite: { slug: TeamSlug; label: string };
+      /**
+       * The final's fixed site: the host school's slug and short label (the bracket's "at Tamalpais"), the venue's
+       * name and street address (the Directions link on the bracket and on a finalist's Next card, since MaxPreps
+       * gives no address), and the league's admission sentence with its source, or null when the league publishes
+       * none. MCAL: the play-off sheet and the General Rules admission table; the address from the schools'
+       * HomeCampus calendars (cifncshome.org).
+       */
+      finalSite: {
+        slug: TeamSlug;
+        label: string;
+        venue: string;
+        address: { street: string; city: string; region: string; postalCode: string };
+        admission: string | null;
+        admissionSource: string | null;
+      };
       lastSpot: { place: number; rule: 'play-in-unless-h2h-sweep'; host: 'highest-draw-number' };
-      citations: { format: string; seeding: string; semifinal: string; lastSpot: string; qualifiersConflict: string };
+      citations: { format: string; seeding: string; semifinal: string; lastSpot: string; qualifiersConflict: string; pennant: string };
       titleNote: string;
+      /**
+       * A sourced sentence for one tournament game's result, by contest GUID, printed where the game's
+       * result is (the bracket row, the game page) in place of the generic shootout caveat: MaxPreps records
+       * a shootout's tally as the score and marks it a regulation result, so a press report is the only
+       * source that says a 3-1 was 0-0 after two overtimes (Tamalpais v Marin Catholic, Oct 28, 2026).
+       */
+      resultNotes: Readonly<Record<ContestId, string>>;
       sourceUrl: string;
     }
   | {
@@ -342,6 +407,16 @@ export type PostseasonConfig =
       /** The event's published dates, inclusive. */
       dates: { first: string; last: string };
       citations: { qualification: string; format: string; seeding: string; eligibility: string; noFurtherPath: string };
+      /**
+       * Where the games are listed, with the listing that says so (the NFHS Network's CIFNS page, read 2026-10-29:
+       * Pleasant Valley High School, Chico, Sat Oct 31); null until a listing names a site. `basis` is printed with
+       * the site, because the Section itself publishes none.
+       */
+      site: { label: string; day: string; basis: string; url: string } | null;
+      /** Live streams the listing gives, in order; each label names the part and its start. */
+      streams: readonly { label: string; href: string }[];
+      /** The admission sentence, from the Guidelines (Game Management §VII: no admission fee), or null. */
+      admission: string | null;
       /** One paragraph, rendered wherever a reader would look for a bracket. */
       note: string;
       sourceUrl: string;
@@ -387,6 +462,23 @@ export type PostseasonConfig =
       ladder: readonly LadderRung[];
       /** `seeding` is paraphrased: no reader may quote Bylaw 2000.1's play-in sentence (SEED_CLAIM). */
       citations: { qualification: string; seeding: string; format: string; roundDates: string };
+      /**
+       * The Section's round calendar (the officials' association's calendar; the Section's bulletin is unreadable),
+       * one row per round and division, in date order: a label a fan reads ('Quarterfinals, Division II'), a league
+       * clock time where one is published (the finals) and a site where one is (La Jolla High School). Rendered on
+       * /playoffs as the Section's "Round dates" list; a 'final' id marks a final.
+       */
+      rounds: readonly { id: string; date: string; label: string; time: string | null; site: string | null }[];
+      /** The calendar the rounds come from (sdfhoa.weebly.com), linked beside them. */
+      calendarUrl: string;
+      /** Where the Section posts its brackets (its field hockey page), linked as such. */
+      bracketsPageUrl: string;
+      /**
+       * The Section's published brackets (a Google Sheet, '2026 CIFSDS Field Hockey Championships'), once it is
+       * linked from bracketsPageUrl after the seeding meeting; null until the owner pastes it. The page then links
+       * it as the official brackets; the site still draws none.
+       */
+      bracketSheetUrl: string | null;
       /** One paragraph, rendered wherever a reader would look for a bracket. */
       note: string;
       sourceLabel: string;
@@ -501,7 +593,14 @@ export interface CcsConfig {
   autoQualifiers: CcsAutoQualifiers;
   ccsDivisions: readonly { name: CcsDivisionName; seeds: readonly [number, number] }[];
   keyDates: CcsKeyDates;
-  highSeedHostsThrough: 'semifinals';
+  /**
+   * The last round the higher seed hosts; later rounds are at neutral sites CCS sets. From the CIF-CCS field
+   * hockey calendar (playoffs.ccsCalendar): 'CCS Quarterfinals at Home Sites', 'CCS Semfinals at Neutral Sites'
+   * [sic], 'CCS Finals at Neutral Site' (read 2026-10-29). In 2025 the semifinals were in fact played at the
+   * higher seed's field, so copy quotes the calendar and shows each game's own site once MaxPreps lists it;
+   * lib/sources/ccs.ts confirmKeyDates reports a calendar whose site words disagree with this value.
+   */
+  highSeedHostsThrough: 'quarterfinals' | 'semifinals';
   bracketUrl: string;
   tournament: { id: string; division1BracketId: string; division2BracketId: string };
   pollFrom: string;
@@ -542,6 +641,41 @@ const SDS_ALIGNMENT_URL = 'https://docs.google.com/spreadsheets/d/1nGxmrWBpD1-Ms
 /** [V] the Section's power-rankings page (it embeds the cifsdshome.org widget the Commissioner places teams from). */
 const SDS_POWER_RANKINGS_URL = 'https://www.cifsds.org/school-resources/CIFSDS_Power_Rankings';
 
+/**
+ * The Tournament of Champions (DESIGN §24.13; research of 2026-10-29). Eight Southern Section teams, five
+ * Sunset (Huntington Beach, Newport Harbor, Edison, Great Oak, Temecula Valley) and three LA independents
+ * (Harvard-Westlake, Bonita, Glendora): round 1 Thu Oct 22, semifinals Tue Oct 27, the final and a third-place
+ * game Thu Oct 29 at Huntington Beach High School (Miller Field for the third-place game). Harvard-Westlake's
+ * student paper names the organizer ("the Los Angeles Field Hockey Association (LAFHA) Tournament of Champions",
+ * Aug 25, 2026) and the 2025 final (Harvard-Westlake 4-0 Newport Harbor, Oct 25, 2025); Bonita's schedule lists
+ * "TOC Round 1 / Round 2 / Championship Game" and Huntington Beach's program site "TOC Playoff - Round 1 / Round
+ * 2 / Championship (HBHS) / 3rd Playoff (Miller)". No organizer site, bracket or seeding is published, so the
+ * site lists the games and never a seed. Every game between two Southern Section registry teams dated Oct 22-29
+ * is a tournament game (the 2026-10-29 snapshot has no other such game); MaxPreps marks only Huntington Beach's
+ * rows as playoffs (contestType 4), the rest as non-league (1).
+ */
+export const TOC: OutsideTournamentConfig = {
+  id: 'toc',
+  name: 'Tournament of Champions',
+  shortName: 'TOC',
+  organizer: 'Los Angeles Field Hockey Association',
+  window: { first: '2026-10-22', last: '2026-10-29' },
+  rounds: [
+    { date: '2026-10-22', label: 'Round 1' },
+    { date: '2026-10-27', label: 'Semifinals' },
+    { date: '2026-10-29', label: 'Final and third-place game' },
+  ],
+  entrants: ['huntington-beach', 'newport-harbor', 'edison', 'great-oak', 'temecula-valley', 'harvard-westlake', 'bonita', 'glendora'],
+  finalSite: 'Huntington Beach High School',
+  note:
+    'Eight Southern Section teams play the Tournament of Champions, Oct 22–29, run by the Los Angeles Field Hockey Association, not by CIF: round 1 Thu Oct 22, semifinals Tue Oct 27, the final Thu Oct 29 at Huntington Beach High School. Its games count in no league table. Nothing official publishes its pairings; the games below are as MaxPreps lists them.',
+  sources: [
+    { label: 'Harvard-Westlake Chronicle on the 2026 Tournament of Champions', href: 'https://hwchronicle.com/114175/sports/field-hockey-concentrates-as-a-group/' },
+    { label: 'Huntington Beach field hockey: TOC events', href: 'https://www.hbfieldhockey.com/events' },
+    { label: 'Bonita athletics: 2026 schedule', href: 'https://www.bonitaathletics.org/sport/field%20hockey/girls/' },
+  ],
+};
+
 export const SECTIONS = [
   {
     id: 'ccs', name: 'Central Coast Section', shortName: 'CCS', briefLabel: 'CCS', region: 'norcal',
@@ -552,6 +686,7 @@ export const SECTIONS = [
     shootout: null,
     seasonWindow: { start: '2026-08-01', end: '2026-11-30' },
     noChampionshipNote: null,
+    outsideTournament: null,
   },
   {
     id: 'ncs', name: 'North Coast Section', shortName: 'NCS', briefLabel: 'NCS', region: 'norcal',
@@ -565,6 +700,7 @@ export const SECTIONS = [
     seasonWindow: { start: '2026-08-01', end: '2026-11-28' },
     noChampionshipNote:
       'The North Coast Section and CIF hold no field hockey championship. MCAL’s own six-team tournament is the postseason.',
+    outsideTournament: null,
   },
   {
     id: 'ns', name: 'Northern Section', shortName: 'NS', briefLabel: 'Northern Section', region: 'norcal',
@@ -588,6 +724,7 @@ export const SECTIONS = [
     // Regional's last day (Oct 31), so a late result still lands.
     seasonWindow: { start: '2026-08-01', end: '2026-11-07' },
     noChampionshipNote: null,
+    outsideTournament: null,
   },
   {
     // research-cifss.md §0-§1 [V]: Blue Book 2026-27 Bylaw 2011.1 "GIRL'S TEAM FIELD HOCKEY CHAMPIONSHIPS (No
@@ -609,6 +746,7 @@ export const SECTIONS = [
     seasonWindow: { start: '2026-08-01', end: '2026-11-07' },
     noChampionshipNote:
       'The CIF Southern Section holds no field hockey playoffs (Blue Book Bylaw 2011.1 and 3500.2) and CIF holds no state championship: a Sunset team’s season ends with its last game, Oct 31 at the latest.',
+    outsideTournament: TOC,
   },
   {
     // research-cifsds.md §0-§5 [V]: Green Book 2026-27 Bylaw 2000.1 (Open 8, Division I 12, Division II 12);
@@ -640,6 +778,7 @@ export const SECTIONS = [
     // The start matches the other windows; the end is one week after the Nov 14 finals (OUR choice).
     seasonWindow: { start: '2026-08-01', end: '2026-11-21' },
     noChampionshipNote: null,
+    outsideTournament: null,
   },
 ] as const satisfies readonly SectionConfig[];
 
@@ -727,15 +866,22 @@ const SCVAL: LeagueConfig = {
       { divisions: '*', places: [6, 99], status: 'out', label: 'No automatic path',
         phrase: 'no automatic path', badge: 'No AQ', legend: '6th or lower — no automatic path' },
     ],
+    // The schedule's crossover day is Fri Oct 30. On 2026-10-29 MaxPreps had two of the four a day early:
+    // #1 Mitty v St. Ignatius and #3 Valley Christian v Palo Alto (the latter marked a playoff, contestType 4)
+    // on Thu Oct 29, #2 Los Gatos v Saint Francis and the #4 play-in Los Altos v Santa Clara on Fri Oct 30.
+    // The window takes either day; `date` stays the schedule's.
     pairings: [1, 2, 3, 4].map((seed) => ({
-      id: `scval-crossover-${seed}`, date: '2026-10-30', time: null, tag: 'scval-crossover' as const,
+      id: `scval-crossover-${seed}`, date: '2026-10-30', window: { first: '2026-10-29', last: '2026-10-30' },
+      time: null, tag: 'scval-crossover' as const,
       seats: [{ division: 'de-anza', place: seed }, { division: 'el-camino', place: seed }] as const,
       seatLabels: [`De Anza #${seed}`, `El Camino #${seed}`] as const, host: null,
       isPlayIn: seed === 4,
-      // ↓ VERBATIM from the original crossoverPairings()
+      // ↓ The play-in label is VERBATIM from the original crossoverPairings(). The crossover tail was "helps CCS
+      // ordering" until 2026-10-29 (plan final-04): it now says what the game is for and what it is not, so a parent
+      // does not read a crossover as a qualifying game. CCS surfaces may say "seeding"; SEED_CLAIM covers EAL/SoCal pages.
       label: seed === 4
         ? 'De Anza #4 vs El Camino #4 — play-in for the SCVAL 7th automatic qualifier'
-        : `De Anza #${seed} vs El Camino #${seed} — crossover (helps CCS ordering)`,
+        : `De Anza #${seed} vs El Camino #${seed} — crossover (for CCS seeding, not qualification)`,
     })),
   },
   phases: [
@@ -1026,7 +1172,7 @@ const MCAL: LeagueConfig = {
       pointsShort: 'MCAL Handbook §7a',
       order: `${MCAL_HB} §7a (“The MCAL placement will be the order of team points”)`,
       doubleRoundRobin: `${MCAL_HB} §8a (double round robin, 16 league games each)`,
-      overtime: 'MCAL General Rules (no regular-season overtime; ties stand)',
+      overtime: 'MCAL Field Hockey Handbook §9 (“there is no overtime in regular season play”; ties stand)',
       coChampions: `${MCAL_HB} §7a (equal points: co-MCAL Champions)`,
       stages: {
         'h2h-win-pct': `${MCAL_TB} step 1 (head-to-head winning percentage)`,
@@ -1058,7 +1204,16 @@ const MCAL: LeagueConfig = {
       { id: 'sf-2', round: 'semifinal', date: '2026-10-28', time: '16:00', optional: false, pairing: 'Highest-ranked remaining seed of 3-6 at 2' },
       { id: 'final', round: 'final', date: '2026-10-30', time: '16:00', optional: false, pairing: 'Semifinal winners, at Tamalpais' },
     ],
-    finalSite: { slug: 'tamalpais', label: 'Tamalpais' },
+    finalSite: {
+      slug: 'tamalpais', label: 'Tamalpais',
+      venue: 'Tamalpais High School',
+      // The schools' HomeCampus calendars (cifncshome.org; Redwood's Oct 30 event "MCAL Championship Game", facility
+      // Tamalpais, 700 Miller Ave, Mill Valley, California, 94941; Tam's Oct 28 semifinal names the turf: "Tam Turf at
+      // Bruce Grant Field/Sam Chapman Stadium"). Research of 2026-10-29.
+      address: { street: '700 Miller Ave', city: 'Mill Valley', region: 'CA', postalCode: '94941' },
+      admission: 'Adults $10; students, children and seniors $5; pre-sale on GoFan. No booster passes or student body cards; lifetime MCAL, NCS and CIF passes are honored.',
+      admissionSource: 'MCAL 2026 Field Hockey Play-off sheet',
+    },
     lastSpot: { place: 6, rule: 'play-in-unless-h2h-sweep', host: 'highest-draw-number' },
     citations: {
       format: 'MCAL 2026 Field Hockey Play-off sheet (six schools; seeds 1 and 2 have byes)',
@@ -1066,8 +1221,16 @@ const MCAL: LeagueConfig = {
       semifinal: 'MCAL 2026 Play-off sheet (lowest-ranked remaining seed at #1, highest-ranked remaining of 3-6 at #2; confirmed by the 2025 bracket)',
       lastSpot: `${MCAL_TB} (6th place: a play-in unless one team won the head-to-head 2-0; the higher draw number hosts. A three-way tie for 5th: draw numbers place the 5th seed and the other two play in, hosted by the winner of their earlier meeting)`,
       qualifiersConflict: `${MCAL_HB} §8b says the top four qualify; the 2026 play-off sheet (and the 2025 tournament) use six. This site follows the 2026 sheet.`,
+      pennant: 'MCAL General Rules, Pennants 1–3 (“Pennants for varsity league champions will be presented at the conclusion of the playoffs … If the winner of the playoffs is different than the regular season winner, they will also be awarded a pennant.”)',
     },
     titleNote: 'The regular-season points leader is MCAL Champion. If a different team wins the tournament, it also receives a pennant.',
+    // Marin Independent Journal, Oct 28, 2026 ("The game was scoreless after regulation and two overtimes"; Tam "won 3-1 in
+    // the shootout"): MaxPreps, and so the snapshot, record the shootout tally as the score and the game as a regulation
+    // result (decider REG, no overtime), which the one-goal caveat cannot catch. The sentence stands in for the caveat.
+    resultNotes: {
+      '7bb048ba-9e33-4ad1-a743-2348c6637602':
+        'Level 0–0 after two overtimes; Tamalpais won the shootout 3–1, which MaxPreps records as the score (Marin Independent Journal, Oct 28, 2026).',
+    },
     sourceUrl: 'https://www.mcalsports.org/Playoffs/FieldHockeyPlayoffs_26.pdf',
   },
   phases: [
@@ -1174,7 +1337,23 @@ const EAL: LeagueConfig = {
       eligibility: `${NS_FH} §VII.J (a school without all its scores reported by noon the day after the last contest of the season is not eligible for the playoffs)`,
       noFurtherPath: `${NS_FH} §V and §VI (NorCal and State qualification: “Not Applicable”)`,
     },
-    note: 'The Northern Section’s field hockey postseason is the Super Regional, Oct 30–31: the top six schools qualify. The coaches set its format and seeding, its site is to be announced, and no bracket is published yet. There is no NorCal or State path.',
+    // The Section's page is unreachable (CloudFront 403, 2026-10-29); the NFHS Network's CIFNS field hockey page lists
+    // "2026 CIFNS Field Hockey Postseason Tournament - Part 1" (8:30 AM PDT) and "- Part 2" (1:30 PM PDT) at Pleasant
+    // Valley High School, Chico, on Sat Oct 31, both created 2026-10-27; nothing lists a game on Fri Oct 30, so the
+    // official Oct 30-31 window stays and the site is attributed to the listing. The umpires' grid (not official) says
+    // "Oct 31 Sat Super Regional". 2025's was at Pleasant Valley on Sat Nov 1 (NFHS "2025 CIFNS Field Hockey Regional").
+    site: {
+      label: 'Pleasant Valley High School, Chico',
+      day: '2026-10-31',
+      basis: 'the NFHS Network’s CIFNS listing',
+      url: 'https://www.nfhsnetwork.com/associations/cifns/field-hockey',
+    },
+    streams: [
+      { label: 'Part 1, Sat Oct 31, 8:30 AM PT', href: 'https://www.nfhsnetwork.com/events/pleasant-valley-high-school-chico-ca/gam320ba3745d' },
+      { label: 'Part 2, Sat Oct 31, 1:30 PM PT', href: 'https://www.nfhsnetwork.com/events/pleasant-valley-high-school-chico-ca/gamf48300713a' },
+    ],
+    admission: `There is no admission fee (${NS_FH}, Game Management §VII).`,
+    note: 'The Northern Section’s field hockey postseason is the Super Regional, Oct 30–31: the top six schools qualify, and all six EAL teams are in it. The coaches set its format and seeding, and no pairings are published. The NFHS Network lists its games at Pleasant Valley High School, Chico, on Sat Oct 31, with streams at 8:30 AM and 1:30 PM PT. There is no admission fee. There is no NorCal or State path.',
     sourceUrl: NS_GUIDELINES_URL,
   },
   phases: [
@@ -1183,7 +1362,7 @@ const EAL: LeagueConfig = {
   ],
   keyDates: [
     { id: 'league-play-ends', date: '2026-10-28', label: 'Last EAL league games' },
-    { id: 'super-regional', date: '2026-10-30', label: 'Super Regional, Oct 30–31 (site to be announced)' },
+    { id: 'super-regional', date: '2026-10-30', label: 'Super Regional, Oct 30–31 (games listed Sat Oct 31 at Pleasant Valley, Chico)' },
   ],
   officialChanges: null,
 };
@@ -1373,8 +1552,10 @@ function sdsPostseason(playoffDivisionOf: Readonly<Record<TeamSlug, 'I' | 'II'>>
       { divisions: '*', places: [1, 1], status: 'tournament', label: '1st: at least a play-in if named league champion',
         phrase: 'at least a play-in if named league champion', badge: '1st',
         legend: '1st — the league’s designated champion (not co-champions) is guaranteed at least a play-in game (Green Book 2000.1). The league names its champion; this table does not' },
-      { divisions: '*', places: [2, 99], status: 'selection', label: 'No league route',
-        phrase: 'no league route into the playoffs', badge: 'Selection only',
+      // "No league route" / "Selection only" until 2026-10-29: read on a team page as "out", which a team the Section
+      // places from its power rankings is not. The legend keeps the rule's words.
+      { divisions: '*', places: [2, 99], status: 'selection', label: 'Placed by the Section',
+        phrase: 'placed by the Section from its power rankings', badge: 'By selection',
         legend: '2nd or lower — no league route; the Section places Division I teams in the Open or Division I bracket and picks 12 Division II teams, from its power rankings (Green Book 2000.1)' },
     ],
     citations: {
@@ -1382,8 +1563,29 @@ function sdsPostseason(playoffDivisionOf: Readonly<Record<TeamSlug, 'I' | 'II'>>
       // Paraphrased on purpose: the bylaw's play-in sentence names a seed position, which SEED_CLAIM bans.
       seeding: 'CIF-SDS Green Book 2026-27, Bylaw 2000.1 (the Commissioner places teams from the Section’s approved power rankings, with input from the coaches’ advisory committee, and there is no appeal; a designated league champion left out of its division’s bracket hosts a play-in game) and the Green Book’s division-placement bylaw (the eight Open Division teams are drawn from Division I at the end of the regular season)',
       format: 'CIF-SDS Green Book 2026-27, Bylaw 2000.1 (Open 8, Division I 12, Division II 12) and the CIF-SDS 2026-27 Master Calendar (playoffs Nov 2–12, finals Nov 14)',
-      roundDates: 'Round dates and the finals site (La Jolla HS) are from the San Diego Field Hockey Officials Association’s calendar; the Section’s own bulletin is not reachable.',
+      roundDates: 'Round dates and the finals site (La Jolla HS) are from the San Diego Field Hockey Officials Association’s calendar.',
     },
+    // The SDFHOA calendar (https://sdfhoa.weebly.com/calendar.html, read 2026-10-29, unchanged since the preseason):
+    // play-ins Mon Nov 2; first round Tue Nov 3 (Division II) and Wed Nov 4 (Division I); quarterfinals Thu Nov 5
+    // (Open), Fri Nov 6 (II), Sat Nov 7 (I); semifinals Tue Nov 10 (Open and II), Wed Nov 11 (I); finals Sat Nov 14 at
+    // La Jolla High School, 1:00 PM (II), 3:30 PM (I), 6:00 PM (Open). The Section's bulletin says where earlier
+    // rounds are played; it is unreadable, so no row names a host (and "higher seed" would trip SEED_CLAIM).
+    rounds: [
+      { id: 'play-in', date: '2026-11-02', label: 'Play-in games (only if needed)', time: null, site: null },
+      { id: 'r1-ii', date: '2026-11-03', label: 'First round, Division II', time: null, site: null },
+      { id: 'r1-i', date: '2026-11-04', label: 'First round, Division I', time: null, site: null },
+      { id: 'qf-open', date: '2026-11-05', label: 'Quarterfinals, Open Division', time: null, site: null },
+      { id: 'qf-ii', date: '2026-11-06', label: 'Quarterfinals, Division II', time: null, site: null },
+      { id: 'qf-i', date: '2026-11-07', label: 'Quarterfinals, Division I', time: null, site: null },
+      { id: 'sf-open-ii', date: '2026-11-10', label: 'Semifinals, Open Division and Division II', time: null, site: null },
+      { id: 'sf-i', date: '2026-11-11', label: 'Semifinals, Division I', time: null, site: null },
+      { id: 'final-ii', date: '2026-11-14', label: 'Final, Division II', time: '13:00', site: 'La Jolla High School' },
+      { id: 'final-i', date: '2026-11-14', label: 'Final, Division I', time: '15:30', site: 'La Jolla High School' },
+      { id: 'final-open', date: '2026-11-14', label: 'Final, Open Division', time: '18:00', site: 'La Jolla High School' },
+    ],
+    calendarUrl: 'https://sdfhoa.weebly.com/calendar.html',
+    bracketsPageUrl: SDS_FIELD_HOCKEY_URL,
+    bracketSheetUrl: null,
     note: 'The San Diego Section’s field hockey playoffs run Nov 2–14, with the finals on Nov 14 at La Jolla HS: Open 8, Division I 12, Division II 12. The Section places teams from its power rankings at its Oct 31 seeding meeting; until it publishes its brackets, this site draws none and projects no places. A designated league champion is guaranteed at least a play-in game; the league names its champion, not this table.',
     sourceLabel: 'CIF-SDS Green Book 2026-27, Bylaw 2000.1',
     sourceUrl: SDS_GREEN_BOOK_URL,
@@ -1751,7 +1953,7 @@ export const CCS: CcsConfig = {
     quarterfinals: '2026-11-07', semifinals: '2026-11-11', finals: '2026-11-14',
     evaluationMeeting: '2026-11-19T16:00:00', endOfLeagueSeason: '2026-10-31',
   },
-  highSeedHostsThrough: 'semifinals',
+  highSeedHostsThrough: 'quarterfinals',
   // CCS_BRACKET_URL is imported from lib/season.ts, which keeps it as a literal (season stays a dependency-free leaf).
   bracketUrl: CCS_BRACKET_URL,
   tournament: {
@@ -1787,6 +1989,12 @@ export const DATA_QUALITY: DataQualityConfig = {
     // 9c027452 (Oct 30) has Mission Vista at home, as in 5067646d (Oct 29), one day earlier.
     'c7dbdbcc-5f41-4192-b8b2-eb79cca2523a': 'Poway vs Fallbrook, Oct 9 with no time: a third MaxPreps row for the pair, which already has both of its Palomar meetings on the schedule (Sep 15, 67865f1e; Oct 13, 0b3cfb7d)',
     '9c027452-e21e-4e47-9eac-d2e800bfb42c': 'Mission Vista vs Fallbrook, Oct 30 with no time: a second MaxPreps row for their Palomar game on Oct 29 (5067646d); both of the pair’s meetings are on the schedule',
+    // Two Tournament of Champions rows (research of 2026-10-29): MaxPreps, si.com and the CIF-SS widget all carry
+    // Harvard-Westlake 6-0 Temecula Valley twice, on Thu Oct 22 (b5fbcc70) and Fri Oct 23; the other round-1
+    // games were Thu Oct 22, so the Oct 23 row is the duplicate. Newport Harbor at Glendora was moved from Thu
+    // Oct 22 to Sat Oct 24 (45732090, 3-0); the Oct 22 row stayed behind without a score.
+    '0017b5bb-5319-4742-84df-e6585dcb7056': 'Temecula Valley at Harvard-Westlake, Oct 23: a second MaxPreps row for their Tournament of Champions round-1 game of Oct 22 (b5fbcc70), both 6-0',
+    '3702e126-9414-4c0b-a13c-61e78ead2ed9': 'Newport Harbor at Glendora, Oct 22 with no score: the Tournament of Champions round-1 game was played Sat Oct 24 (45732090, Newport Harbor 3-0)',
   },
   sbliveIgnoredTeamIds: {
     '456851': 'York (PCAL): JV only',
@@ -2103,6 +2311,17 @@ export function drawNumberOf(rules: LeagueRules, slug: TeamSlug): number {
   return n;
 }
 
+/** The dates a pairing's contest may be played on, inclusive: its `window`, else its `date` alone. */
+export function pairingWindow(p: PairingConfig): { first: string; last: string } {
+  return p.window ? { first: p.window.first, last: p.window.last } : { first: p.date, last: p.date };
+}
+
+/** true when a game dated `dateKey` (YYYY-MM-DD) falls inside the pairing's window. */
+export function inPairingWindow(p: PairingConfig, dateKey: string): boolean {
+  const w = pairingWindow(p);
+  return dateKey >= w.first && dateKey <= w.last;
+}
+
 /** Every status the league's ladder can give, in ladder order, deduped. */
 export function statusesOf(leagueId: LeagueId): readonly PlayoffStatus[] {
   return [...new Set(getLeague(leagueId).postseason.ladder.map((r) => r.status))];
@@ -2222,6 +2441,28 @@ export function assertLeagues(): void {
     }
     if (s.shootout !== null && typeof s.shootout.coversTournaments !== 'boolean') {
       fail(`${s.id}: shootout.coversTournaments must say whether the rule reaches a tournament game`);
+    }
+    // An outside tournament sits inside the section's season, its rounds inside its window, and it belongs to a
+    // section whose leagues have no postseason of their own (its games are tagged ahead of MaxPreps' flag).
+    const event = s.outsideTournament;
+    if (event !== null) {
+      const inSeason = (d: string) => d >= s.seasonWindow.start && d <= s.seasonWindow.end;
+      if (!inSeason(event.window.first) || !inSeason(event.window.last)) fail(`${s.id}.outsideTournament ${event.id}: window outside the season window`);
+      if (event.window.first > event.window.last) fail(`${s.id}.outsideTournament ${event.id}: window.first is after window.last`);
+      for (const r of event.rounds) {
+        if (r.date < event.window.first || r.date > event.window.last) fail(`${s.id}.outsideTournament ${event.id}: round ${r.label} outside the window`);
+        if (!r.label.trim()) fail(`${s.id}.outsideTournament ${event.id}: a round needs a label`);
+      }
+      if (event.entrants.length < 2) fail(`${s.id}.outsideTournament ${event.id}: needs at least two entrants`);
+      if (new Set(event.entrants).size !== event.entrants.length) fail(`${s.id}.outsideTournament ${event.id}: an entrant is listed twice`);
+      if (!event.name.trim() || !event.note.trim() || !event.organizer.trim()) fail(`${s.id}.outsideTournament ${event.id}: needs a name, an organizer and a note`);
+      if (s.holdsFieldHockeyChampionship) fail(`${s.id}: an outside tournament belongs to a section with no championship of its own`);
+      for (const l of LEAGUES) {
+        if (l.sectionId === s.id && l.postseason.kind !== 'no-postseason') {
+          fail(`${s.id}.outsideTournament ${event.id}: ${l.id} has a postseason of its own, so its games cannot be read as the tournament's`);
+        }
+      }
+      for (const src of event.sources) if (!src.href.startsWith('https://') || !src.label.trim()) fail(`${s.id}.outsideTournament ${event.id}: a source needs a label and an https URL`);
     }
     // The level-W/L → 'SO' rule is the section's: every league in it must decide level games the same way,
     // and a league that does must sit in a section that says how (lib/normalize.ts keys on the section).
@@ -2521,15 +2762,62 @@ export function assertLeagues(): void {
     }
     switch (ps.kind) {
       case 'ccs-ladder':
-        for (const p of ps.pairings) inWindow(p.date, `${p.id} date`);
+        for (const p of ps.pairings) {
+          inWindow(p.date, `${p.id} date`);
+          if (p.window) {
+            inWindow(p.window.first, `${p.id} window.first`);
+            inWindow(p.window.last, `${p.id} window.last`);
+            if (p.window.first > p.window.last) fail(`${p.id}: window.first is after window.last`);
+            if (p.date < p.window.first || p.date > p.window.last) fail(`${p.id}: date is outside its window`);
+          }
+        }
         break;
       case 'league-tournament':
         for (const r of ps.rounds) inWindow(r.date, `${l.id} round ${r.id}`);
+        for (const [id, note] of Object.entries(ps.resultNotes)) {
+          if (!GUID_RE.test(id)) fail(`${l.id} resultNotes key ${id} is not a contest GUID`);
+          if (!note.trim() || !/\.$/.test(note.trim())) fail(`${l.id} resultNotes ${id}: a sourced sentence ending in a period`);
+        }
+        if (!ps.citations.pennant.trim()) fail(`${l.id}: citations.pennant names the title rule's source`);
+        {
+          const site = ps.finalSite;
+          const a = site.address;
+          if (!site.venue.trim() || !a.street.trim() || !a.city.trim() || !a.region.trim() || !a.postalCode.trim()) {
+            fail(`${l.id}: finalSite needs a venue and a four-part address`);
+          }
+          if ((site.admission === null) !== (site.admissionSource === null)) fail(`${l.id}: finalSite admission and admissionSource are set together or not at all`);
+        }
         break;
       case 'unbracketed-tournament':
+        if (ps.site !== null) {
+          if (!ps.site.label.trim() || !ps.site.basis.trim()) fail(`${l.id}: postseason site needs a label and a basis`);
+          if (!ps.site.url.startsWith('https://')) fail(`${l.id}: postseason site.url must start with https://`);
+          if (ps.site.day < ps.dates.first || ps.site.day > ps.dates.last) fail(`${l.id}: postseason site.day is outside the event's dates`);
+        }
+        for (const s of ps.streams) if (!s.label.trim() || !s.href.startsWith('https://')) fail(`${l.id}: a stream needs a label and an https URL`);
+        inWindow(ps.dates.first, `${l.id} postseason dates.first`);
+        inWindow(ps.dates.last, `${l.id} postseason dates.last`);
+        break;
       case 'section-playoffs':
         inWindow(ps.dates.first, `${l.id} postseason dates.first`);
         inWindow(ps.dates.last, `${l.id} postseason dates.last`);
+        {
+          const ids = new Set<string>();
+          let last = '';
+          for (const r of ps.rounds) {
+            if (ids.has(r.id)) fail(`${l.id} round ${r.id} is listed twice`);
+            ids.add(r.id);
+            if (r.date < ps.dates.first || r.date > ps.dates.last) fail(`${l.id} round ${r.id} is outside the playoffs' dates`);
+            if (r.date < last) fail(`${l.id} round ${r.id} is out of date order`);
+            last = r.date;
+            if (!r.label.trim()) fail(`${l.id} round ${r.id} needs a label`);
+            if (r.time !== null && !/^\d{2}:\d{2}$/.test(r.time)) fail(`${l.id} round ${r.id}: time is a league clock 'HH:MM'`);
+            if (r.id.startsWith('final') && !r.site) fail(`${l.id} round ${r.id}: a final names its site`);
+          }
+          for (const url of [ps.calendarUrl, ps.bracketsPageUrl, ...(ps.bracketSheetUrl ? [ps.bracketSheetUrl] : [])]) {
+            if (!url.startsWith('https://')) fail(`${l.id}: a postseason URL must start with https:// (${url})`);
+          }
+        }
         break;
       case 'no-postseason':
         break;

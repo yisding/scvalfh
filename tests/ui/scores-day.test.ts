@@ -13,6 +13,10 @@
  * refresh cannot move a number under the test; the cases it needs are past days (NorCal vs SoCal games
  * on Sep 18, Sep 19, Oct 2 and Oct 3; SoCal-only days in August), which a later snapshot still holds. A
  * case the data loses fails naming it.
+ *
+ * The groups themselves (final-09, 2026-10-29): a league's group counts league games and postseason
+ * games apart, and a postseason game no league owns is filed under its event, never under
+ * "<league> · N league games" (the dayGroups describe at the end).
  */
 
 import type { ReactElement } from 'react';
@@ -227,5 +231,145 @@ describe('/scores/[date] by region (app/scores/[date]/page.tsx, components/sched
       expect(one).not.toContain('id="jv"');
       expect(one).toContain('id="jv-socal"');
     }
+  });
+});
+
+// ---------------------------------------------------------------- dayGroups: league games vs postseason games
+
+/** A final between two registry teams, on `dateKey`, counted for no table: the shape of every postseason game. */
+function postseasonGame(
+  id: string,
+  dateKey: string,
+  homeSlug: string,
+  awaySlug: string,
+  postseason: NonNullable<Game['postseason']>,
+): Game {
+  const side = (slug: string, score: number) => ({ teamId: `${slug}-id`, slug, name: slug, score, result: null }) as Game['home'];
+  return {
+    contestId: id,
+    dateLocal: `${dateKey}T16:00:00`,
+    dateUtc: `${dateKey}T23:00:00Z`,
+    dateKey,
+    isDateTba: false,
+    isTimeTba: false,
+    home: side(homeSlug, 2),
+    away: side(awaySlug, 1),
+    site: 'home',
+    status: 'final',
+    isLeague: false,
+    leagueDivision: null,
+    contestTypes: { home: 4, away: 4 },
+    countsFor: null,
+    postseason,
+    otPeriods: 0,
+    isOt: false,
+    isForfeit: false,
+    forfeitBy: null,
+    decider: 'REG',
+    shootout: null,
+    venue: { text: null },
+    urls: { maxpreps: null, nfhsStream: null, goFan: null },
+    provenance: { scores: 'maxpreps-api', schedule: 'maxpreps-api', fetchedAt: '2026-10-29T00:00:00.000Z' },
+  };
+}
+
+const kickers = (games: readonly Game[]) => day.dayGroups(games).map((g) => g.kicker);
+
+describe('dayGroups: a postseason game is never a "league game" (components/schedule/day-summary.ts)', () => {
+  it('files the Oct 27 Huntington Beach game under the Tournament of Champions, not "Sunset · 1 league game"', async () => {
+    const games = data.getGames({ date: '2026-10-27' });
+    const hb = games.find((g) => g.contestId.startsWith('1f555407'));
+    expect(hb, 'data/snapshot.json: the Oct 27 Huntington Beach v Newport Harbor game').toBeDefined();
+    // The tag names the shared league (sunset), so it is the kind, not a null leagueId, that routes it.
+    expect(hb!.postseason).toMatchObject({ kind: 'outside-tournament' });
+    const groups = day.dayGroups(games);
+    expect(groups.map((g) => g.kicker)).toContain('Tournament of Champions · 2');
+    expect(groups.some((g) => g.kicker.startsWith('Sunset'))).toBe(false);
+    const toc = groups.find((g) => g.kicker.startsWith('Tournament of Champions'))!;
+    expect(toc.leagueId).toBeNull();
+    expect(toc.id).toBe('postseason-tournament-of-champions');
+    expect(toc.games.map((g) => g.contestId)).toContain(hb!.contestId);
+    // The page renders the group as its own h3 and keeps every id unique.
+    const html = await renderDay('2026-10-27');
+    expect(html).toContain(`<h3 class="m-0 text-lead text-ink">${toc.kicker}</h3>`);
+    expect(html).not.toMatch(/Sunset · \d+ league games?/);
+    const ids = [...html.matchAll(/\sid="([^"]+)"/g)].map((m) => m[1]);
+    expect(new Set(ids).size, 'unique ids').toBe(ids.length);
+  });
+
+  it('counts one MCAL tournament day as postseason games, not league games', () => {
+    const games = data.getGames({ date: '2026-10-28' });
+    expect(games.filter((g) => g.postseason?.kind === 'mcal-tournament')).toHaveLength(2);
+    expect(kickers(games)).toContain('MCAL · 2 postseason games');
+    expect(kickers(games.filter((g) => g.contestId.startsWith('7bb048ba')))).toEqual(['MCAL · 1 postseason game']);
+    expect(kickers(games).join('|')).not.toMatch(/MCAL · \d+ league game/);
+  });
+
+  it('says both when a league has both on one day, league clause first, and drops either at zero', () => {
+    const date = data.getGameDates().find((d) =>
+      data.getGames({ date: d }).filter((g) => g.countsFor !== null && g.countsFor.startsWith('de-anza')).length > 0,
+    );
+    expect(date, 'data/snapshot.json: a date with a De Anza league game').toBeDefined();
+    const league = data.getGames({ date: date! }).filter((g) => g.countsFor !== null && day.dayGroups([g])[0]?.leagueId === 'scval');
+    expect(league.length).toBeGreaterThan(0);
+    const crossover = postseasonGame('synthetic-crossover', date!, 'los-gatos', 'saint-francis', {
+      kind: 'scval-crossover',
+      leagueId: 'scval',
+      via: 'config-pairing',
+    });
+    const n = league.length;
+    expect(kickers([...league, crossover])).toEqual([`SCVAL · ${n} league ${n === 1 ? 'game' : 'games'} · 1 postseason game`]);
+    expect(kickers(league)).toEqual([`SCVAL · ${n} league ${n === 1 ? 'game' : 'games'}`]);
+    expect(kickers([crossover])).toEqual(['SCVAL · 1 postseason game']);
+  });
+
+  it('files a synthetic Nov 5 City v Metro section-playoffs game under the San Diego Section playoffs', () => {
+    const game = postseasonGame('synthetic-sds', '2026-11-05', 'bishops', 'helix', {
+      kind: 'section-playoffs',
+      leagueId: null,
+      via: 'section-postseason-window',
+    });
+    expect(kickers([game])).toEqual(['San Diego Section playoffs · 1']);
+    const [group] = day.dayGroups([game]);
+    expect(group.id).toBe('postseason-san-diego-section-playoffs');
+    expect(group.leagueId).toBeNull();
+    const socal = day.dayRegions([game]).regions[1];
+    expect(socal.groups.map((g) => g.kicker)).toEqual(['San Diego Section playoffs · 1']);
+    expect(socal.groups[0].id).toBe('postseason-san-diego-section-playoffs-socal');
+    expect(day.dayRegions([game]).regions[0].groups).toEqual([]);
+  });
+
+  it('files a Nov 7 ccs SCVAL v BVAL game under CCS, in the NorCal block', () => {
+    const game = postseasonGame('synthetic-ccs', '2026-11-07', 'los-gatos', 'gilroy', {
+      kind: 'ccs',
+      leagueId: null,
+      via: 'ccs-window',
+    });
+    expect(kickers([game])).toEqual(['CCS · 1']);
+    const { regions } = day.dayRegions([game]);
+    expect(regions[0].groups.map((g) => g.kicker)).toEqual(['CCS · 1']);
+    expect(regions[1].groups).toEqual([]);
+  });
+
+  it('puts the events after the league groups and before Non-league, the CCS first', () => {
+    const league = postseasonGame('synthetic-mcal', '2026-11-07', 'tamalpais', 'redwood', {
+      kind: 'mcal-tournament',
+      leagueId: 'mcal',
+      via: 'league-postseason-window',
+    });
+    const ccs = (id: string) =>
+      postseasonGame(id, '2026-11-07', 'los-gatos', 'gilroy', { kind: 'ccs', leagueId: null, via: 'ccs-window' });
+    const nonLeague = { ...postseasonGame('synthetic-nl', '2026-11-07', 'los-gatos', 'gilroy', { kind: 'other', leagueId: null, via: 'contest-type-4' }) };
+    const sds = postseasonGame('synthetic-sds', '2026-11-07', 'bishops', 'helix', {
+      kind: 'section-playoffs',
+      leagueId: null,
+      via: 'section-postseason-window',
+    });
+    expect(kickers([nonLeague, sds, ccs('a'), ccs('b'), league])).toEqual([
+      'MCAL · 1 postseason game',
+      'CCS · 2',
+      'San Diego Section playoffs · 1',
+      'Non-league · 1',
+    ]);
   });
 });

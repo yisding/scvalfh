@@ -76,8 +76,24 @@ label is "Co-champions".
 in each division are automatic qualifiers; fourth place plays in; the play-in loser and both
 fifth-place teams are submitted for at-large consideration; 6th and below have no automatic path.
 On **Fri Oct 30** the four De Anza places meet the four El Camino places (#1 v #1 … #4 v #4);
-#1 to #3 help CCS ordering and #4 v #4 is the play-in for the 7th automatic berth. The CCS
+#1 to #3 are for CCS seeding, not qualification, and #4 v #4 is the play-in for the 7th automatic berth. In 2026 the
+schools played two of the four a day early: #1 St. Ignatius at Mitty and #3 Palo Alto at Valley
+Christian (MaxPreps' venue field reads "SCVAL Crossover Game", and it marks the game a playoff) are
+Thu Oct 29, #2 Saint Francis at Los Gatos and the #4 play-in Fri Oct 30. So each pairing in
+`lib/leagues.ts` keeps the schedule's `date` (Oct 30) and carries a `window` (Oct 29–30): a De Anza–El
+Camino game dated inside it is the crossover (`lib/classify.ts` rule 1, ahead of MaxPreps' playoff
+flag), the pairing card takes the game's own date, and a seat two level teams spanned (Mitty and
+Los Gatos, co-leaders of El Camino) narrows to the one the league paired. The CCS
 championship follows (entries due Nov 2, quarterfinals Nov 7, semifinals Nov 11, final Nov 14).
+The site's words (2026-10-29/30, `lib/postseason-outcomes.ts`, `lib/data.ts`): a crossover card reads "For CCS
+seeding, not qualification."; only a team with an automatic berth, the play-in or at-large consideration gets the
+crossover sentence on its team line, and 6th and lower read "No automatic path; at-large berths are the CCS
+committee’s call."; once the play-in is final its winner reads "Won the play-in" ("Won the 4th-place play-in: an
+automatic CCS qualifier.") and its loser "Lost the play-in" ("Lost the play-in; SCVAL submits the loser for at-large
+consideration.", Article VII §2), and a final crossover adds "<winner> beat <loser> <score> in the #n v #n crossover on
+<date>; CCS uses it when it seeds." Never "eliminated". The CCS seeds are the committee's: the site prints them only
+from `data/ccs-bracket-2026.json`, which the owner fills from the published MaxPreps bracket after the Nov 2 meeting
+(each CCS division numbered 1-8; DESIGN §31.3).
 
 **Official sources.** The two schedule grids as PDFs (De Anza and El Camino), read live every run and
 parsed with `pdftotext`; the by-laws PDF; the standings index (polled for a 2026-27 standings
@@ -125,7 +141,10 @@ label is "Division co-champions".
 | Santa Teresa | 2nd and lower | no automatic-berth route |
 
 BVAL's by-laws do not say whom it submits for at-large berths. The site never writes "eliminated";
-places off the ladder read "No automatic-berth route".
+places off the ladder read "No automatic-berth route". Once the play-in is final (2026-10-30,
+`lib/postseason-outcomes.ts`) its winner reads "Won the play-in" ("Won the play-in: BVAL’s fourth automatic CCS
+berth.") and its loser "Lost the play-in" ("Lost the play-in; no automatic-berth route remains, and at-large berths
+are the CCS committee’s call."), and the play-in card adds "Winner: <team> — BVAL’s 4th automatic CCS berth".
 
 **Official sources.** The two division schedules, Google Docs revised 9/20/26 (Mt. Hamilton) and
 9/22/26 (Santa Teresa); 60 fixtures bundled in `data/official/bval-2026.json` and hash-checked every
@@ -206,7 +225,8 @@ label; the table is "League table".
 
 **Points and order.** 3 for a win, 1 for a tie (MCAL Field Hockey Handbook, rev. 10/19/24, §7a);
 "the MCAL placement will be the order of team points" (§7a). There is no regular-season overtime
-(MCAL General Rules), so ties stand. If the season ends with games unplayed, the General Rules
+(Field Hockey Handbook §9, "there is no overtime in regular season play"; the General Rules have no
+overtime text), so ties stand. If the season ends with games unplayed, the General Rules
 replace points with winning percentage; the standings page notes this and will show that order if it
 happens.
 
@@ -253,8 +273,33 @@ sheet and the 2025 tournament use six, so the site follows the sheet and says so
 
 Play-in (only if needed) Fri Oct 23; quarterfinals Mon Oct 26; semifinals Wed Oct 28 (the
 lowest-ranked remaining seed at #1, the highest-ranked remaining of seeds 3-6 at #2, confirmed by the
-2025 bracket); final Fri Oct 30 at Tamalpais, all at 4:00 PM. A one-goal result of a tournament game
-carries the shootout caveat. Games dated **Oct 23 or later** between MCAL teams are tournament play
+2025 bracket); final Fri Oct 30 at Tamalpais, all at 4:00 PM. The final's site is Tamalpais High
+School, 700 Miller Ave, Mill Valley, CA 94941 (the schools' HomeCampus calendars name the turf "Tam
+Turf at Bruce Grant Field/Sam Chapman Stadium"); admission is adults $10, students, children and
+seniors $5, pre-sale on GoFan, no booster passes or student body cards, lifetime MCAL, NCS and CIF
+passes honored (the 2026 play-off sheet and the General Rules admission table); the General Rules add
+that a playoff game at a higher seed's site "should not be considered" a home contest. The bracket
+prints the venue, a Directions link and the admission line under the final (`finalSite`, lib/leagues.ts),
+and a finalist's Next card gets the Directions pill from the same address, since MaxPreps gives none.
+Tournament games tied after two
+overtimes go to a shootout (Handbook §9), and MaxPreps records the shootout tally as the score of a
+regulation game: a one-goal result MaxPreps does not mark as overtime carries the shootout caveat
+(`mayHideShootout`, lib/postseason.ts), an overtime goal (decider OT) carries none, and a result the
+config sources in `resultNotes` prints that sentence instead. 2026: Tamalpais 3-1 Marin Catholic
+(Wed Oct 28 semifinal) was 0-0 after two overtimes and a 3-1 shootout (Marin Independent Journal,
+Oct 28, 2026); the two overtime wins (Marin Catholic 2-1 Lick-Wilmerding, Redwood 1-0 at
+University) were overtime goals [V: Marin IJ]. The title rule's source is the MCAL General Rules,
+Pennants 1–3 (`https://www.mcalsports.org/Gen_rules/GeneralRules.pdf`): "If the winner of the playoffs
+is different than the regular season winner, they will also be awarded a pennant."
+Once the tournament is under way the site reads its results: each team's line says it is in the final, lost in a
+round, or is the champion or runner-up (`tournamentOutcome`, lib/postseason.ts: "In the MCAL tournament final",
+"Lost in the semifinal", "MCAL tournament champion"; a team lost, it is never "eliminated"), the home card and the
+page lead with the next round's matchups or the champion, and after the final the title rule is applied in words
+(the seed-1 points leader is the regular-season MCAL Champion; a different tournament winner also receives a
+pennant). A level final MaxPreps does not flag W for one side decides nothing: the tournament stays in progress and
+no champion is named until a winner is recorded. The final reads "3 Redwood at 1 Tamalpais", the game page's words:
+the connector is "at" when the fixed site's own team is a finalist (2026-10-29).
+Games dated **Oct 23 or later** between MCAL teams are tournament play
 and never count in the league table, unless a maintainer lists a rescheduled league game as an
 override.
 
@@ -317,7 +362,17 @@ EAL league result is missing.
 
 **Postseason** (the Super Regional, a Section-sanctioned, league-run tournament; the site draws no
 bracket). "The top six (6) EAL/SRL schools will compete" (§III.E.1, §IV), Oct 30-31, 2026 (Fri-Sat), at
-"an alternative site" (§III.E.1); the Section's playoff calendar lists the same dates with the site "TBA". With six teams, every team is inside
+"an alternative site" (§III.E.1); the Section's playoff calendar lists the same dates with the site "TBA".
+On 2026-10-29 the NFHS Network's CIFNS field hockey page listed "2026 CIFNS Field Hockey Postseason
+Tournament - Part 1" (8:30 AM PDT) and "- Part 2" (1:30 PM PDT) at Pleasant Valley High School, Chico,
+on Sat Oct 31, and nothing on Fri Oct 30; the Section's own pages were unreachable (CloudFront 403), so
+the site keeps the official Oct 30–31 window and names the listing as the source of the site and the
+streams (config `site`, `streams`; `/playoffs#eal` links both). There is no admission fee (Game
+Management §VII). The `/playoffs#eal` card lists the Super Regional's games by day once MaxPreps has them, each
+day headed by the round its rows' location names (2026-10-29); it is a results list, never a bracket or pairings.
+2025's was at Pleasant Valley on Sat Nov 1 (NFHS "2025 CIFNS Field Hockey Regional");
+Davis won it, 6-0 over Bella Vista in a semifinal and 2-1 in overtime over Chico in the final (MaxPreps,
+contestType 5, the round in the row's location). With six teams, every team is inside
 the top six, which is our application of the rule, not a Guidelines statement. The Guidelines' seeding
 text is quoted verbatim and **not applied here**: "Seeding will be based on League record, Head-to-Head
 Goal differential (Capped at six (6) per game, Goal against, Coin flip." Its punctuation does not say
@@ -402,6 +457,19 @@ Southern Section has no shootout rule (`SectionConfig.shootout` null).
 
 **Co-champions.** No published rule names a champion; teams level on points at the top are shown level,
 labelled "Sunset co-leaders" once league play is over.
+
+**Tournament of Champions (not CIF).** Eight Southern Section teams, five Sunset (Huntington Beach, Newport
+Harbor, Edison, Great Oak, Temecula Valley) and three LA independents (Harvard-Westlake, Bonita, Glendora),
+play the Los Angeles Field Hockey Association's Tournament of Champions in the last full week of the season:
+in 2026 round 1 Thu Oct 22, semifinals Tue Oct 27, the final and a third-place game Thu Oct 29 at Huntington
+Beach High School [V: Harvard-Westlake Chronicle, Aug 25 2026 ("the Los Angeles Field Hockey Association
+(LAFHA) Tournament of Champions"); Bonita's and Huntington Beach's own schedules name the rounds and sites;
+MaxPreps, si.com and the CIF-SS widget carry the games]. No organizer publishes a site, a bracket or seeds,
+so the site lists the games and never a seed. It is `SectionConfig.outsideTournament` (`TOC` in
+`lib/leagues.ts`, window Oct 22–29): every game between two Southern Section teams dated inside the window
+is tagged `outside-tournament` (ahead of MaxPreps' flag, which marks only Huntington Beach's rows as
+playoffs) and counts in no table, so Edison's 3-0 over Great Oak on Oct 22 (round 1) is not a Sunset game.
+Harvard-Westlake won the 2025 edition, 4-0 over Newport Harbor on Oct 25, 2025 [V: Chronicle, Nov 15 2025].
 
 **Postseason.** None. "GIRL'S TEAM FIELD HOCKEY CHAMPIONSHIPS (No playoffs - See Bylaw 3500.2)" (Blue Book
 2026-27 Bylaw 2011.1) and "No playoffs will be conducted by the CIF Southern Section Office when less than
@@ -506,7 +574,8 @@ designate its automatic qualifier" (Green Book, general playoff bylaws) [V]. The
 points as level and labels them "{conference} co-leaders" once league play is over; it never names the
 champion.
 
-**Postseason** (`section-playoffs`; no bracket drawn, no place projected). Green Book 2026-27 Bylaw 2000.1
+**Postseason** (`section-playoffs`; no place projected; since 2026-10-30 the Section's PUBLISHED bracket is drawn
+from the owner file, below). Green Book 2026-27 Bylaw 2000.1
 [V]: "There will be 3 competitive divisions with 8 teams in the Open Division and 12 teams in Divisions I
 and II qualifying for the playoffs. Designated league champions (not co-champions or tri-champions) will
 be guaranteed entry into a play-in game in the CIFSDS playoffs." The Commissioner places teams from the
@@ -522,9 +591,26 @@ places for its 20. Dates: Master Calendar playoffs Nov 2–12, finals Nov 14 [V]
 [V page, not a Section document]: play-ins (if necessary) Mon Nov 2; first round Tue Nov 3 (Division II)
 and Wed Nov 4 (Division I); quarterfinals Thu Nov 5 (Open), Fri Nov 6 (II), Sat Nov 7 (I); semifinals Tue
 Nov 10 (Open and II), Wed Nov 11 (I); finals Sat Nov 14 at La Jolla HS, 1:00 (II), 3:30 (I), 6:00 (Open).
-The site attributes them to the association in the same sentence. The ladder: 1st, "1st: at least a play-in if
-named league champion" (the designated champion, which the league names, not this table); 2nd or lower, "No
-league route" (badge "Selection only"). No CIF regional or state path [V: Master Calendar "N/A"].
+The site attributes them to the association in the same sentence and, since 2026-10-29, prints them as the
+block's "Round dates" list on `/playoffs` (config `rounds`, the CCS key-dates list's markup), with links to the
+association's calendar, to the Section's field hockey page (where the brackets are posted) and, once the owner
+pastes it into `bracketSheetUrl`, to the Section's published brackets sheet; the block's sentence is dated
+(before the meeting, when the Section seeds; from it on, where it posts) and the "bulletin is not reachable"
+clause lives here and in DATA-SOURCES, not in fan copy. The ladder: 1st, "1st: at least a play-in if
+named league champion" (the designated champion, which the league names, not this table); 2nd or lower, "Placed
+by the Section" (badge "By selection"; the historical label until 2026-10-29 was "No league route", badge
+"Selection only"). No CIF regional or state path [V: Master Calendar "N/A"].
+**The brackets** (2026-10-30). After the Sat Oct 31 meeting the owner transcribes the Section's published sheet into
+`data/sds-brackets-2026.json` (the three divisions' sizes, places, a play-in if any and the round dates, which
+default to the officials' calendar and follow the sheet where it differs; the 2025 sheet put Division II's play-in on
+Mon Nov 3 and its first round on Thu Nov 5) and runs `pnpm test` before committing it. The schema
+(`lib/sds-brackets-schema.ts`) refuses a school outside the San Diego registry or listed twice, a field size other
+than Open 8 / Division I 12 / Division II 12, a play-in on an 8-team field, rounds outside Nov 2–14, and an Open
+Division school the Divisions sheet does not put in Division I. The site then draws those brackets on `/playoffs`
+with MaxPreps' results joined to them, places as bare numerals and never the word "seed" (the pairings are the
+Section's fixed template, 8 v 9, 5 v 12, 6 v 11, 7 v 10 then 1, 4, 3, 2, which the 2025 sheet confirms). Until then
+the file is a placeholder and no San Diego bracket is drawn; each team's division still comes from
+`playoffDivisionOf`.
 
 **Official sources.** cifsds.org/sports/fh/index links the 2026 Divisions sheet, the League Alignment
 workbook, the Green Book (a Google Doc, "Revised June 16, 2026"), the 2025 Championship Brackets sheet and
@@ -593,7 +679,9 @@ been decided in overtime (Glendora 2-1 Chaminade, Sep 24) [V].
 **Postseason.** None, for the Sunset's reason: the CIF Southern Section holds no field hockey playoffs
 (Blue Book 2026-27 Bylaws 2011.1 and 3500.2) and CIF holds no regional or state championship [V], so each
 independent's season ends with its last game, Oct 31 at the latest (the Section's last allowable
-contest). The config's postseason kind is `no-postseason`, with the one "No section playoffs" rung.
+contest). The config's postseason kind is `no-postseason`, with the one "No section playoffs" rung. Three
+of the five (Harvard-Westlake, Bonita, Glendora) play the Tournament of Champions, the non-CIF event
+described under the Sunset; its games carry the `outside-tournament` tag and count in no table.
 
 **Official sources.** The Blue Book 2026-27 Field Hockey excerpt (Article 200) and cifss.org/sports/field-hockey/,
 as for the Sunset. The Season Preview's list of participating schools names Bonita, Glendora and Thousand
@@ -619,7 +707,7 @@ it was published.
 | Multi-team ties | partition, restart | one place at a time | partition, restart | one place at a time | — |
 | League evidence | MaxPreps league flag + PDF grid | official schedule | official schedule | official schedule | MaxPreps league flag |
 | Last resort | coin flip | coin flip | CCS points, coin flip or blind draw | draw number; 6th place by play-in | teams share a place |
-| Postseason | CCS: 7 berths (top 3 per division + play-in) | CCS: 4 berths | CCS: 2 berths | MCAL tournament: top 6, byes 1-2 | Super Regional: top 6, Oct 30-31, no bracket published |
+| Postseason | CCS: 7 berths (top 3 per division + the #4 v #4 play-in, Fri Oct 30; crossovers #1-#3, Oct 29–30, for CCS seeding, not qualification); CCS QF Nov 7, SF Nov 11, F Nov 14 | CCS: 4 berths (Mt. Hamilton 1-3 + the play-in at the Santa Teresa champion, Sat Oct 31) | CCS: 2 berths (top 2) | MCAL tournament: top 6, byes 1-2; final Fri Oct 30, 4 PM at Tamalpais; results read as posted | Super Regional: top 6, Oct 30-31; games listed Sat Oct 31 at Pleasant Valley, Chico (NFHS Network); no pairings published; results listed by day |
 | MaxPreps' table is trusted for | everything | everything (Santa Teresa: records only) | league record only | records and goals only | records and goals only |
 
 | | Sunset | City | North County | Metro | Independents |
@@ -631,5 +719,5 @@ it was published.
 | First tiebreak | none (no rule) | none (no rule) | none (no rule) | none (no rule) | — |
 | League evidence | MaxPreps league flag | division membership | division membership | division membership | none: every game is non-league |
 | Level games | stand as reported | Section shootout (a win) | Section shootout (a win) | Section shootout (a win) | stand as reported |
-| Postseason | none (Blue Book 2011.1, 3500.2) | Section playoffs Nov 2–14: Open 8, I 12, II 12 | same | same | none (Blue Book 2011.1, 3500.2) |
+| Postseason | none (Blue Book 2011.1, 3500.2); five teams play the non-CIF Tournament of Champions, Oct 22–29 | Section playoffs Nov 2–14 (seeding meeting Oct 31; finals Nov 14 at La Jolla HS): Open 8, I 12, II 12, placed by the Section; the published bracket is drawn once the owner file is filled | same | same | none (Blue Book 2011.1, 3500.2); three teams play the Tournament of Champions |
 | MaxPreps' table is trusted for | informational only | informational only | informational only (Valley: no table) | informational only | no table |

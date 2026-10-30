@@ -250,7 +250,9 @@ describe('two-phase matcher: excluded contests are never candidates', () => {
   it('never lets a postseason (contestType 4) contest consume a fixture', () => {
     const f = fx('mt-hamilton', '2026-09-17', 'leigh', 'gilroy');
     const ccs = game({ home: 'gilroy', away: 'leigh', hs: 2, as: 0, date: '2026-09-17', contestTypes: { home: 4, away: 4 }, official: null });
-    expect(postseasonTag(ccs)).not.toBeNull();
+    // Before the CCS quarterfinals MaxPreps' playoff flag alone is no CCS tag (lib/classify.ts rule 2's date gate),
+    // so the row is untagged here; the matcher still excludes it by its contestType (BVAL excludes 2 and 4).
+    expect(postseasonTag(ccs)).toBeNull();
     const res = matchOfficialFixtures([ccs], [f], optionsFor('bval'));
     expect(res.matched).toBe(0);
     expect(res.games[0].official).toBeUndefined();

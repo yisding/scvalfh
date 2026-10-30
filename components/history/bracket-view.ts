@@ -14,6 +14,12 @@ import {
  *
  * Schools print by their registry name (historySchoolName), as everywhere else on the page: the file
  * keeps the source's "Mt. Carmel HS" and "The Bishop's School" as provenance only.
+ *
+ * The card model is shared (2026-10-30, plan final-08): HistoryBracket.tsx draws a BracketDivisionView,
+ * which this archive maps into with historyBracketView (every game final, no game page, so no `href`, and
+ * the very words and markup it printed before), and the live San Diego bracket on /playoffs maps into
+ * from lib/sds-bracket.ts (components/playoffs/sds-bracket-view.ts: a card can be unplayed, a side can be
+ * a place still to be decided, and a joined card links its game page). One bracket drawer, two sources.
  */
 
 export const sideName = (side: HistoryBracketSide): string => historySchoolName(side.slug, side.name);
@@ -133,3 +139,89 @@ export function finalLine(final: HistoryBracketGame): string {
 
 /** A round's heading date: "Nov 5". */
 export const roundDate = (round: HistoryBracketRound): string => monthDay(round.date);
+
+// ---------------------------------------------------------------- the shared card model (plan final-08)
+
+/**
+ * One side of a card: a placed team with its number in the bracket (a bare numeral: the San Diego copy never
+ * says "seed", scripts/copy-rules.ts SEED_CLAIM), or a place still to be decided, in words ("Winner of 8 v 9").
+ * `name` is the full name the screen-reader sentence uses; the drawn line prints the registry's short name.
+ */
+export type BracketSideView = { seed: number; slug: string; name: string } | { tbd: string };
+
+export const isTbdSide = (side: BracketSideView): side is { tbd: string } => 'tbd' in side;
+
+export interface BracketCardView {
+  /** Unique in its round (a React key, never printed). */
+  key: string;
+  top: BracketSideView;
+  bottom: BracketSideView;
+  /** The side that went through, drawn 600 weight with the 2px rule; null until a result says. */
+  winner: 'top' | 'bottom' | null;
+  /** Goals, top then bottom; null when no score is posted (a decided card then prints "score not posted"). */
+  score: readonly [number, number] | null;
+  /**
+   * 'final': decided (a result, or a later game that shows who came through), so each line prints its goals
+   * or the missing-score dash; 'scheduled': still to come; 'unreported': its day is past (or MaxPreps marks
+   * the score pending) and no result is posted yet. Only a final card prints a score column.
+   */
+  status: 'final' | 'scheduled' | 'unreported';
+  /** A scheduled card's day and time as the card prints them ('Thu Nov 5 · 4 PM PT'); null on the archive. */
+  time: string | null;
+  /** The site the source names (the finals' neutral field), or null. */
+  site: string | null;
+  /** The game page (lib/game-id.ts gameHref) when a game is joined; null on the archive and before a game is listed. */
+  href: string | null;
+  /**
+   * The card's screen-reader text, as the text nodes it renders: the archive's sentence and its tail (kept as
+   * two nodes so /history/2025-26 renders byte for byte as before), a live card's one whole sentence.
+   */
+  sentence: readonly string[];
+  /** The one-line note under the two lines ("Overtime", "Thu Nov 5 · 4 PM PT"), or null. */
+  note: string | null;
+}
+
+export interface BracketRoundView {
+  /** Unique in the division (a React key). */
+  key: string;
+  /** "Quarterfinals", "Play-in". */
+  name: string;
+  /** "Nov 5", after the round's name. */
+  dateLabel: string;
+  cards: BracketCardView[];
+  /** "Mt. Carmel (1), Rancho Bernardo (2)": the teams that skip this round, or null. */
+  byes: string | null;
+}
+
+export interface BracketDivisionView {
+  rounds: BracketRoundView[];
+}
+
+/** A 2025 archive division as the shared model: what /history/2025-26 has always printed, unchanged. */
+export function historyBracketView(division: HistoryBracketDivision): BracketDivisionView {
+  const side = (s: HistoryBracketSide): BracketSideView => ({ seed: s.seed, slug: s.slug, name: sideName(s) });
+  return {
+    rounds: division.rounds.map((round, roundIndex) => {
+      const byes = roundByes(division, roundIndex);
+      return {
+        key: round.name,
+        name: round.name,
+        dateLabel: roundDate(round),
+        byes: byes.length > 0 ? byes.map((s) => `${sideName(s)} (${s.seed})`).join(', ') : null,
+        cards: round.games.map((game) => ({
+          key: `${game.top.slug}-${game.bottom.slug}`,
+          top: side(game.top),
+          bottom: side(game.bottom),
+          winner: game.winner,
+          score: game.score ?? null,
+          status: 'final' as const,
+          time: null,
+          site: game.site ?? null,
+          href: null,
+          sentence: [gameSentence(game), gameSentenceTail(game, round)],
+          note: gameNote(game, round),
+        })),
+      };
+    }),
+  };
+}

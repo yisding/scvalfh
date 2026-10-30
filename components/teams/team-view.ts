@@ -27,6 +27,7 @@ import {
   type LeagueSummary,
   type StandingContext,
   type TeamPostseasonLine,
+  getLeagueTournament,
 } from '../../lib/data';
 import {
   dateSpan,
@@ -41,6 +42,7 @@ import {
   shootoutPhrases,
   sideOutcome,
   timeOfDayPT,
+  mapsSearchHref,
 } from '../../lib/format';
 import {
   divisionHeading,
@@ -56,11 +58,12 @@ import {
   standingsLabel,
 } from '../../lib/leagues';
 import { pinLabel } from '../../lib/pin-label';
-import { outcomesFor } from '../../lib/standings';
+import { outcomesFor, pairingDatesLabel } from '../../lib/standings';
 import type {
   DivisionId,
   Game,
   LeagueId,
+  LeagueTournamentProjection,
   OfficialFixture,
   Outcome,
   Record3,
@@ -341,11 +344,25 @@ export function identityLine(team: Pick<Team, 'mascot' | 'city' | 'division'>, l
     .join(' · ');
 }
 
-/** The league copy for a team page, from config only. */
-export function leagueCopy(leagueId: LeagueId): TeamLeagueCopy {
+/**
+ * The league copy for a team page, from config, the day and (for a league tournament) how far it has got.
+ *
+ * `today` (getToday(), never Date.now()) sets the tense: "The MCAL league season ended Thu Oct 22" once the last
+ * league date has passed, "ends" until then, and "the MCAL tournament started Mon Oct 26" from its first round's
+ * day. `tournamentStatus` (lib/data.ts getLeagueTournament(...).status) turns
+ * the MCAL promise "We will list a playoff game as soon as MCAL posts the bracket." into a pointer once the bracket
+ * is seeded or under way. Both are optional: without them the sentences are the timeless ones (present tense, the
+ * promise), which is what a caller with no day in hand gets.
+ */
+export function leagueCopy(
+  leagueId: LeagueId,
+  today?: string,
+  tournamentStatus?: LeagueTournamentProjection['status'],
+): TeamLeagueCopy {
   const league = getLeague(leagueId);
   const ps = league.postseason;
   const ends = leaguePlayEnds(league.id);
+  const past = today !== undefined && today > ends;
   const base = {
     id: league.id,
     shortName: league.shortName,
@@ -356,12 +373,13 @@ export function leagueCopy(leagueId: LeagueId): TeamLeagueCopy {
     doubleRoundRobin: league.rules.citations.doubleRoundRobin,
     leaguePlayEnds: ends,
   };
-  const ended = `The ${league.shortName} league season ends ${shortDate(ends)}`;
+  const ended = `The ${league.shortName} league season ${past ? 'ended' : 'ends'} ${shortDate(ends)}`;
   switch (ps.kind) {
     case 'ccs-ladder': {
       const first = ps.pairings[0];
       let after = '';
-      if (first?.tag === 'scval-crossover') after = ` and the ${league.shortName} crossover is ${shortDate(first.date)}`;
+      // 'is Thu Oct 29 and Fri Oct 30' when a crossover moved off the schedule's day (the pairings' window).
+      if (first?.tag === 'scval-crossover') after = ` and the ${league.shortName} crossover is ${pairingDatesLabel(ps.pairings)}`;
       else if (first?.tag === 'bval-play-in') after = ` and the ${league.shortName} play-in is ${shortDate(first.date)}`;
       return {
         ...base,
@@ -372,14 +390,23 @@ export function leagueCopy(leagueId: LeagueId): TeamLeagueCopy {
       };
     }
     case 'league-tournament': {
-      const firstRound = [...ps.rounds].sort((a, b) => a.date.localeCompare(b.date))[0];
-      const after = firstRound ? ` and the ${ps.name} starts ${shortDate(firstRound.date)}` : '';
+      // The tournament starts with its first round that is always played: MCAL's 6th-place play-in (Fri Oct 23) is
+      // `optional` (only when two teams are level and neither swept the other), so the start is the quarterfinals,
+      // Mon Oct 26 (2026 play-off sheet). In 2026 no play-in was needed.
+      const firstRound = [...ps.rounds].filter((r) => !r.optional).sort((a, b) => a.date.localeCompare(b.date))[0];
+      // Its tense follows the day like the league season's: "started" from the first round's day.
+      const started = firstRound !== undefined && today !== undefined && today >= firstRound.date;
+      const after = firstRound ? ` and the ${ps.name} ${started ? 'started' : 'starts'} ${shortDate(firstRound.date)}` : '';
+      // Once the seeds are set the bracket is drawn on the tournament page with every result (DESIGN §24.13).
+      const drawn = tournamentStatus === 'seeded' || tournamentStatus === 'in-progress' || tournamentStatus === 'complete';
       return {
         ...base,
         postseasonKind: ps.kind,
         postseasonName: ps.name,
         seasonEndSentence: `${ended}${after}.`,
-        bracketSentence: `We will list a playoff game as soon as ${league.shortName} posts the bracket.`,
+        bracketSentence: drawn
+          ? `The bracket and results are on the ${ps.name} page.`
+          : `We will list a playoff game as soon as ${league.shortName} posts the bracket.`,
       };
     }
     case 'unbracketed-tournament':
@@ -389,7 +416,9 @@ export function leagueCopy(leagueId: LeagueId): TeamLeagueCopy {
         postseasonKind: ps.kind,
         postseasonName: ps.name,
         seasonEndSentence: `${ended}; the ${ps.name} follows, ${dateSpan(ps.dates.first, ps.dates.last)}.`,
-        bracketSentence: `We will not guess a bracket: the ${ps.name}\u2019s format and site are not published yet.`,
+        bracketSentence: ps.site
+          ? `No pairings are published; we list each ${ps.name} game as MaxPreps posts it.`
+          : `We will not guess a bracket: the ${ps.name}\u2019s format and site are not published yet.`,
       };
     case 'no-postseason': {
       // The Sunset and the LA independents (CIF-SS Blue Book 2011.1, 3500.2): no playoff game
@@ -399,8 +428,8 @@ export function leagueCopy(leagueId: LeagueId): TeamLeagueCopy {
         postseasonKind: ps.kind,
         postseasonName: null,
         seasonEndSentence: league.independents
-          ? `The independents’ season ends ${shortDate(ends)}, the Southern Section’s last allowable contest.`
-          : `The ${league.shortName} season ends ${shortDate(ends)}.`,
+          ? `The independents’ season ${past ? 'ended' : 'ends'} ${shortDate(ends)}, the Southern Section’s last allowable contest.`
+          : `The ${league.shortName} season ${past ? 'ended' : 'ends'} ${shortDate(ends)}.`,
         bracketSentence: ps.note,
       };
     }
@@ -414,7 +443,7 @@ export function leagueCopy(leagueId: LeagueId): TeamLeagueCopy {
         postseasonKind: ps.kind,
         postseasonName: ps.name,
         seasonEndSentence: `${ended}; the ${ps.name} follow, ${dateSpan(ps.dates.first, ps.dates.last)}.`,
-        bracketSentence: `We will list a playoff game as soon as the Section publishes its brackets${when}.`,
+        bracketSentence: `We will list a playoff game as soon as it is on the schedule; the Section posts its brackets on its field hockey page${when}.`,
       };
     }
   }
@@ -606,18 +635,25 @@ function placeLine(game: Game, team: Team): string | null {
   return host ? `${host.city}, CA` : null;
 }
 
+/**
+ * The address a Directions pill points at: the game's own (MaxPreps' game-page Place, fetched lazily), else, for a
+ * league tournament's final at its fixed site (the MCAL final at Tamalpais), the site's address from config: a
+ * fan going to the final needs it and MaxPreps gives none (0 of 928 games carry one on 2026-10-29).
+ */
+function directionsAddress(game: Game): { street: string; city: string; region: string; postalCode: string } | null {
+  if (game.venue.address) return game.venue.address;
+  if (game.postseason?.kind !== 'mcal-tournament' || !game.postseason.leagueId) return null;
+  const league = getLeague(game.postseason.leagueId);
+  if (league.postseason.kind !== 'league-tournament') return null;
+  const final = getLeagueTournament(league.id).games.find((tg) => tg.round === 'final');
+  return final?.game?.contestId === game.contestId ? league.postseason.finalSite.address : null;
+}
+
 /** The NEXT card's external pills (named apart from describe-game's private `chipsFor`). */
 function nextChips(game: Game): NextChip[] {
   const chips: NextChip[] = [];
-  const address = game.venue.address;
-  if (address) {
-    chips.push({
-      href: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-        `${address.street}, ${address.city}, ${address.region} ${address.postalCode}`,
-      )}`,
-      label: 'Directions',
-    });
-  }
+  const address = directionsAddress(game);
+  if (address) chips.push({ href: mapsSearchHref(address), label: 'Directions' });
   // Named for what is behind them: 'Stream' and 'MaxPreps' did not say which stream or which page.
   if (game.urls.nfhsStream) chips.push({ href: game.urls.nfhsStream, label: 'NFHS stream' });
   if (game.urls.goFan) chips.push({ href: game.urls.goFan, label: 'Tickets' });
@@ -716,7 +752,12 @@ export function buildTeamPageView(slug: string): TeamPageView | undefined {
   if (!team) return undefined;
 
   const today = getToday();
-  const league = leagueCopy(team.league);
+  const leagueConfig = getLeague(team.league);
+  const league = leagueCopy(
+    team.league,
+    today,
+    leagueConfig.postseason.kind === 'league-tournament' ? getLeagueTournament(leagueConfig.id).status : undefined,
+  );
   const division = getDivision(team.division);
   const heading = divisionHeading(team.division);
   const all = getGames({ teamId: team.slug }).sort(byDate);

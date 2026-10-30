@@ -1,12 +1,14 @@
 /**
  * Step 09's CCS carry (lib/pipeline/steps/secondary.ts `stepCcs`): a run that does not read CCS —
  * `--leagues mcal` (no CCS league in the run), `--no-ccs`, the season gate, a corpus without the
- * resources, or a failed request — keeps the previous snapshot's `bracketPublished`, `ccsCalendar`
- * and `keyDatesConfirmed`, per part, instead of unpublishing a live bracket. With no previous
- * snapshot it publishes today's empty state; a run that reads CCS publishes what it read.
+ * resources, a failed request, or a tournament page `readTournamentPage` does not recognise (the 403
+ * body MaxPreps' WAF serves) — keeps the previous snapshot's `bracketPublished`, `divisionsPublished`,
+ * `ccsCalendar` and `keyDatesConfirmed`, per part, instead of unpublishing a live bracket. With no
+ * previous snapshot it publishes today's empty state; a run that reads a recognised page publishes
+ * what it read, per division.
  *
- * The previous snapshot is the corpus run's own output with the three fields set, so it stays
- * schema-valid.
+ * The previous snapshot is the corpus run's own output with the four fields set, so it stays
+ * schema-valid. The unpublished page is the REAL capture of 2026-10-29 (tests/fixtures/ccs/).
  */
 
 import { readFileSync } from 'node:fs';
@@ -34,7 +36,11 @@ const EVENT: CcsCalendarEvent = {
 const POLL_OPEN = '2026-11-08T15:00:00.000Z';
 
 const ICS = readFileSync(path.join(REPO, 'tests', 'fixtures', 'ccs', 'field-hockey.ics'), 'utf8');
-const UNPUBLISHED = `<html><body>${'x'.repeat(3000)}<div class="Tournament-styles__notPublished not-published" >This tournament bracket will go live when published.</div></body></html>`;
+/** The live MaxPreps tournament page of 2026-10-29: both divisions still carry the not-published marker. */
+const UNPUBLISHED = readFileSync(path.join(REPO, 'tests', 'fixtures', 'ccs', 'tournament-2026-10-29-unpublished.html'), 'utf8');
+/** MaxPreps' WAF body: 200 to the transport, but not the bracket page. */
+const FORBIDDEN = readFileSync(path.join(REPO, 'tests', 'fixtures', 'ccs', 'tournament-403.html'), 'utf8');
+const PREVIOUS_DIVISIONS = { 'Division 1': true, 'Division 2': false } as const;
 
 let previous: Snapshot;
 
@@ -42,7 +48,13 @@ beforeAll(async () => {
   const { snapshot } = await snapshotOf();
   previous = {
     ...snapshot,
-    playoffs: { ...snapshot.playoffs, bracketPublished: true, ccsCalendar: [EVENT], keyDatesConfirmed: true },
+    playoffs: {
+      ...snapshot.playoffs,
+      bracketPublished: true,
+      divisionsPublished: { ...PREVIOUS_DIVISIONS },
+      ccsCalendar: [EVENT],
+      keyDatesConfirmed: true,
+    },
   };
   expect(SnapshotSchema.safeParse(previous).success, 'the shaped previous snapshot is schema-valid').toBe(true);
 }, 600_000);
@@ -53,6 +65,7 @@ describe('CCS not read this run: the previous snapshot’s bracket and calendar 
   it('--leagues mcal (no CCS league in the run) keeps a published bracket and the confirmed calendar', async () => {
     const { snapshot, run } = await snapshotOf({ extraArgs: ['--leagues', 'mcal'], previous });
     expect(snapshot.playoffs.bracketPublished, STEP).toBe(true);
+    expect(snapshot.playoffs.divisionsPublished, STEP).toEqual(PREVIOUS_DIVISIONS);
     expect(snapshot.playoffs.ccsCalendar, STEP).toEqual([EVENT]);
     expect(snapshot.playoffs.keyDatesConfirmed, STEP).toBe(true);
     expect(ccsLog(run.result?.logLines), STEP).toEqual([
@@ -68,6 +81,7 @@ describe('CCS not read this run: the previous snapshot’s bracket and calendar 
   it('--leagues mcal with no previous snapshot: bracket not published, no calendar', async () => {
     const { snapshot, run } = await snapshotOf({ extraArgs: ['--leagues', 'mcal'] });
     expect(snapshot.playoffs.bracketPublished, STEP).toBe(false);
+    expect(snapshot.playoffs.divisionsPublished, STEP).toBeUndefined();
     expect(snapshot.playoffs.ccsCalendar, STEP).toBeUndefined();
     expect(snapshot.playoffs.keyDatesConfirmed, STEP).toBeUndefined();
     expect(ccsLog(run.result?.logLines), STEP).toEqual(['  ccs: skipped (no CCS league in this run) — nothing to carry']);
@@ -107,7 +121,9 @@ describe('CCS read this run: what was read is published', () => {
       'ccs/bracket': { rel: 'ccs/bracket.html', body: UNPUBLISHED },
     });
     const { snapshot, run } = await snapshotOf({ variants: [variant], previous, fetchedAt: POLL_OPEN });
+    // The previous snapshot said Division 1 was published; a recognised page that says neither is flips it back.
     expect(snapshot.playoffs.bracketPublished, STEP).toBe(false);
+    expect(snapshot.playoffs.divisionsPublished, STEP).toEqual({ 'Division 1': false, 'Division 2': false });
     expect(snapshot.playoffs.ccsCalendar?.map((e) => e.date), STEP).toEqual([
       '2026-11-02',
       '2026-11-07',
@@ -116,14 +132,45 @@ describe('CCS read this run: what was read is published', () => {
       '2026-11-19',
     ]);
     expect(snapshot.playoffs.keyDatesConfirmed, STEP).toBe(true);
-    expect(snapshot.sources.filter((s) => s.scope?.section === 'ccs').map((s) => [s.label, s.status])).toEqual([
-      ['ccs calendar', 'ok'],
-      ['ccs bracket', 'ok'],
+    expect(snapshot.sources.filter((s) => s.scope?.section === 'ccs').map((s) => [s.label, s.status, s.rowCount])).toEqual([
+      ['ccs calendar', 'ok', 5],
+      ['ccs bracket', 'ok', 0],
     ]);
     const lines = ccsLog(run.result?.logLines);
     expect(lines.some((l) => l.startsWith('  ccs calendar: 5 events')), STEP).toBe(true);
-    expect(lines.some((l) => l.startsWith('  ccs bracket: not published')), STEP).toBe(true);
+    expect(lines, STEP).toContain('  ccs bracket: Division 1 not published · Division 2 not published');
     expect(lines.some((l) => l.includes('carried')), STEP).toBe(false);
+  });
+
+  it('a page with Division 1’s marker gone publishes Division 1 only, and counts it on the source row', async () => {
+    const MARKER = '<div class="not-published" >This tournament bracket will go live when published.</div>';
+    const variant = writeTempVariant({
+      'ccs/ical': { rel: 'ccs/ical.ics', body: ICS },
+      'ccs/bracket': { rel: 'ccs/bracket.html', body: UNPUBLISHED.replace(MARKER, '') },
+    });
+    const unpublished = { ...previous, playoffs: { ...previous.playoffs, bracketPublished: false, divisionsPublished: { 'Division 1': false, 'Division 2': false } } };
+    const { snapshot, run } = await snapshotOf({ variants: [variant], previous: unpublished, fetchedAt: POLL_OPEN });
+    expect(snapshot.playoffs.bracketPublished, STEP).toBe(true);
+    expect(snapshot.playoffs.divisionsPublished, STEP).toEqual({ 'Division 1': true, 'Division 2': false });
+    expect(snapshot.sources.find((s) => s.label === 'ccs bracket')?.rowCount, STEP).toBe(1);
+    expect(ccsLog(run.result?.logLines), STEP).toContain('  ccs bracket: Division 1 PUBLISHED · Division 2 not published');
+  });
+
+  it('a 403 body (200 to the transport, not the bracket page) carries the previous bracket state and says so', async () => {
+    const variant = writeTempVariant({
+      'ccs/ical': { rel: 'ccs/ical.ics', body: ICS },
+      'ccs/bracket': { rel: 'ccs/bracket.html', body: FORBIDDEN },
+    });
+    const { snapshot, run } = await snapshotOf({ variants: [variant], previous, fetchedAt: POLL_OPEN });
+    expect(snapshot.playoffs.bracketPublished, STEP).toBe(true);
+    expect(snapshot.playoffs.divisionsPublished, STEP).toEqual(PREVIOUS_DIVISIONS);
+    expect(snapshot.playoffs.ccsCalendar?.length, STEP).toBe(5);
+    const bracket = snapshot.sources.find((s) => s.label === 'ccs bracket');
+    expect(bracket?.status).toBe('error');
+    expect(bracket?.error).toMatch(/^page not recognised: /);
+    const lines = ccsLog(run.result?.logLines);
+    expect(lines.some((l) => l.startsWith('  ccs bracket: page not recognised (') && l.endsWith(') — carried bracket state from the previous snapshot')), STEP).toBe(true);
+    expect(lines, STEP).toContain('  ccs: bracket page not recognised — carried bracket state from the previous snapshot');
   });
 
   it('a failed bracket page carries only the bracket; the calendar read this run wins', async () => {

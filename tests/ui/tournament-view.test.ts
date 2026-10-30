@@ -10,7 +10,7 @@
  */
 
 import { renderToStaticMarkup } from 'react-dom/server';
-import type { ReactElement } from 'react';
+import { createElement, type ReactElement } from 'react';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
 import { buildTournamentView, type TournamentView } from '../../components/playoffs/playoff-view';
@@ -87,6 +87,8 @@ function view(games: readonly Game[], phase: SeasonPhase = 'regular'): { v: Tour
     teamOf: (slug) => getTeamBySlug(slug),
     lastPlace: ps.lastSpot.place,
     ladderLine: getDivision(DIV).ladderLine,
+    // As the page passes it (app/playoffs/[league]/page.tsx): the slug makes the final "at" when Tamalpais is in it.
+    finalSite: ps.finalSite,
   });
   return { v, p, rows };
 }
@@ -127,9 +129,9 @@ describe('buildTournamentView — the engine’s shared 6th (a play-in is needed
 
   it('builds vertical rounds with their dates; unresolved slots are named, never blank', () => {
     expect(v.rounds.map((r) => `${r.title} · ${r.meta}`), VIEW).toEqual([
-      'Quarterfinals · Mon Oct 26',
-      'Semifinals · Wed Oct 28',
-      'Final · Fri Oct 30 · at Tamalpais',
+      'Quarterfinals · Mon Oct 26 · 4 PM PT',
+      'Semifinals · Wed Oct 28 · 4 PM PT',
+      'Final · Fri Oct 30 · 4 PM PT · at Tamalpais',
     ]);
     expect(lines(v), VIEW).toEqual([
       `5 ${short(LW)} at 4 ${short(BK)}`,
@@ -186,18 +188,62 @@ describe('buildTournamentView — results re-seed the semifinals; the final is a
     expect(lines(v).slice(2, 4), VIEW).toEqual([`5 ${short(LW)} at 1 ${short(AW)}`, `3 ${short(TM)} at 2 ${short(RW)}`]);
   });
 
-  it('the final is listed better seed first, vs, at Tamalpais; its result completes the tournament', () => {
+  it('the final at Tamalpais with Tamalpais in it reads visitor at host, as the game page does; its result completes the tournament', () => {
     let { v } = view([...season, playIn, ...qfs, ...sfs], 'tournament');
-    expect(lines(v)[4], VIEW).toBe(`1 ${short(AW)} vs 3 ${short(TM)}`);
+    // 1 Archie Williams v 3 Tamalpais at Tamalpais: Tamalpais is the host, so it is listed last with "at".
+    expect(lines(v)[4], VIEW).toBe(`1 ${short(AW)} at 3 ${short(TM)}`);
     const final = v.rounds.find((r) => r.round === 'final')!;
-    expect(final.meta, VIEW).toBe('Fri Oct 30 · at Tamalpais');
+    expect(final.meta, VIEW).toBe('Fri Oct 30 · 4 PM PT · at Tamalpais');
     expect(final.games[0].site, VIEW).toBe('Tamalpais');
-    expect(final.games[0].connector, VIEW).toBe('vs');
+    expect(final.games[0].connector, VIEW).toBe('at');
+    expect(final.games[0].home.teams.map((t) => t.slug), VIEW).toEqual([TM]);
+    expect(final.games[0].winner, VIEW).toBeNull();
+    expect(final.games[0].outcome, VIEW).toBeNull();
 
     ({ v } = view([...season, playIn, ...qfs, ...sfs, fin], 'complete'));
     expect(v.status, VIEW).toBe('complete');
-    expect(v.rounds.find((r) => r.round === 'final')!.games[0].game?.contestId, VIEW).toBe(fin.contestId);
-    expect(v.rounds.find((r) => r.round === 'final')!.games[0].note, VIEW).toBe(SHOOTOUT_NOTE);
+    const done = v.rounds.find((r) => r.round === 'final')!.games[0];
+    expect(done.game?.contestId, VIEW).toBe(fin.contestId);
+    expect(done.note, VIEW).toBe(SHOOTOUT_NOTE);
+    // Tamalpais 2-1: the winner is the view's host side, and the sr-only sentence says what it won.
+    expect(done.winner, VIEW).toBe('home');
+    expect(done.outcome, VIEW).toBe(`${short(TM)} wins the MCAL tournament.`);
+  });
+
+  it('marks each decided game’s winner and says where it advances (winner, outcome)', () => {
+    const { v } = view([...season, playIn, ...qfs, ...sfs], 'tournament');
+    // The play-in: University 2-1 at Marin Catholic (the host is home).
+    expect(v.playIn!.winner, VIEW).toBe('away');
+    expect(v.playIn!.outcome, VIEW).toBe(`${short(UN)} won and advances to the quarterfinals.`);
+    const [qf1, qf2, sf1, sf2] = v.rounds.flatMap((r) => r.games);
+    // qf-1: 5 Lick-Wilmerding 2-0 at 4 Berkeley; qf-2: 3 Tamalpais 3-0 over 6 University.
+    expect([qf1.winner, qf1.outcome], VIEW).toEqual(['away', `${short(LW)} won and advances to the semifinals.`]);
+    expect([qf2.winner, qf2.outcome], VIEW).toEqual(['home', `${short(TM)} won and advances to the semifinals.`]);
+    expect([sf1.winner, sf1.outcome], VIEW).toEqual(['home', `${short(AW)} won and advances to the final.`]);
+    expect([sf2.winner, sf2.outcome], VIEW).toEqual(['away', `${short(TM)} won and advances to the final.`]);
+  });
+
+  it('a fixed site neither finalist calls home stays "vs", better seed first', () => {
+    // sf-2 goes to 2 Redwood instead: the final is 1 Archie Williams v 2 Redwood at Tamalpais.
+    const redwood = [tournament(AW, LW, 2, 0, '2026-10-28'), tournament(RW, TM, 1, 0, '2026-10-28')];
+    const { v } = view([...season, playIn, ...qfs, ...redwood], 'tournament');
+    const final = v.rounds.find((r) => r.round === 'final')!.games[0];
+    expect(final.connector, VIEW).toBe('vs');
+    expect(final.line, VIEW).toBe(`1 ${short(AW)} vs 2 ${short(RW)}`);
+  });
+
+  it('BracketGame draws the winner rule on the winner’s side only and speaks the outcome (LeagueTournament.tsx)', async () => {
+    const { LeagueTournament } = await import('../../components/playoffs/LeagueTournament');
+    const { v } = view([...season, playIn, ...qfs, ...sfs, fin], 'complete');
+    const html = renderToStaticMarkup(createElement(LeagueTournament, { view: v, leagueShort: 'MCAL', standingsHref: '/standings/mcal' }));
+    const COMPONENT = 'components/playoffs/LeagueTournament.tsx';
+    // Five decided bracket games, one rule each (the play-in card is PlayInCard’s, which draws none).
+    expect(html.match(/box-shadow:inset 2px 0 0 var\(--sx-text\)/g)?.length, COMPONENT).toBe(5);
+    expect(textOf(html), COMPONENT).toContain(`1 ${short(AW)} at 3 ${short(TM)}. ${short(TM)} wins the MCAL tournament.`);
+    expect(textOf(html), COMPONENT).toContain(`3 ${short(TM)} at 2 ${short(RW)}. ${short(TM)} won and advances to the final.`);
+    // The winner's name carries the 600 weight.
+    expect(html, COMPONENT).toMatch(/style="box-shadow:inset 2px 0 0 var\(--sx-text\)"><span class="sx-num[^"]*">3<\/span><span class="font-semibold text-ink">/);
+    expect(html, COMPONENT).not.toMatch(/eliminat/i);
   });
 
   it('a seat nobody holds yet reads TBD (preseason: no results at all)', () => {
@@ -264,7 +310,13 @@ describe('/playoffs/mcal (rendered on the corpus snapshot)', () => {
     expect(t, PAGE).toContain(`6 ${short(LW)} at 3 ${short(RW)}`);
     expect(t, PAGE).toContain('Lowest-ranked remaining seed');
     expect(t, PAGE).toContain('Highest-ranked remaining seed of 3-6');
-    expect(t, PAGE).toContain('Fri Oct 30 · at Tamalpais');
+    expect(t, PAGE).toContain('Fri Oct 30 · 4 PM PT · at Tamalpais');
+    // The final's where and how much, from config finalSite (DESIGN §3.8): venue, address, Directions, admission.
+    expect(t, PAGE).toContain('Tamalpais High School, 700 Miller Ave, Mill Valley, CA 94941.');
+    expect(html, PAGE).toContain('href="https://www.google.com/maps/search/?api=1&amp;query=700%20Miller%20Ave%2C%20Mill%20Valley%2C%20CA%2094941"');
+    expect(t, PAGE).toContain('Admission: Adults $10; students, children and seniors $5; pre-sale on GoFan.');
+    expect(t, PAGE).toContain('(MCAL 2026 Field Hockey Play-off sheet)');
+    expect(t, PAGE).toContain('Source: MCAL General Rules, Pennants 1–3');
     expect(t, PAGE).toContain('How it works');
     expect(t, PAGE).toContain('This site follows the 2026 sheet.');
   });

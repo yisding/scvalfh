@@ -25,7 +25,9 @@ import {
   getGoalDiffDomain,
   getLastLeagueResultDate,
   getLatestResultsDate,
+  getLeaguePairings,
   getLeagueSummaries,
+  getLeagueTournament,
   getNonLeagueFinalsPlayed,
   getOfficialFixtures,
   getPlayoffs,
@@ -60,7 +62,9 @@ import {
 } from '../../lib/format';
 import { gameHref } from '../../lib/game-id';
 import { hasHistory } from '../../lib/history';
-import { outcomesFor, playoffOutcomeLabel, statusBadge } from '../../lib/standings';
+import { tournamentHeadline } from '../../lib/postseason';
+import { ccsOutcomeFor } from '../../lib/postseason-outcomes';
+import { outcomesFor, pairingDatesLabel, playoffOutcomeLabel, statusBadge } from '../../lib/standings';
 import {
   CCS,
   REGIONS,
@@ -84,6 +88,8 @@ import { teamOfSide } from '../../lib/teams';
 import type { DivisionId, Game, LeagueId, RegionId, SeasonPhase, Team } from '../../lib/types';
 import type { LeagueChip } from '../layout/LeagueSwitcher';
 import { leagueChips } from '../layout/league-chips';
+import { thisWeekByRegion } from '../playoffs/this-week-inputs';
+import type { ThisWeekView } from '../playoffs/this-week';
 import { fixtureOpponent, nextOfficialFixture } from '../teams/team-view';
 import { describeGame, gameKind, postseasonTagOf, type GameDisplay, type SideView } from '../ui/describe-game';
 import { plural } from '../ui/plural';
@@ -265,12 +271,11 @@ export function phaseLead(league: LeagueConfig, phase: SeasonPhase, today: strin
   if (phase === 'regular') return null;
 
   if (phase === 'crossover' && ps.kind === 'ccs-ladder') {
-    const crossover = ps.pairings[0];
+    // The pairings' day(s): 'Thu Oct 29 and Fri Oct 30' when a crossover moved off the schedule's day.
+    const when = pairingDatesLabel(ps.pairings) || shortDate(keyDates.endOfLeagueSeason);
     return {
       lead: 'League play is over.',
-      body: `The crossover games and the fourth-place play-in for ${short}’s ${ordinalWord(ps.autoBerths)} automatic CCS berth are ${shortDate(
-        crossover?.date ?? keyDates.endOfLeagueSeason,
-      )}; the CCS seeding meeting is ${shortDate(keyDates.seedingMeeting)}.`,
+      body: `The crossover games and the fourth-place play-in for ${short}’s ${ordinalWord(ps.autoBerths)} automatic CCS berth are ${when}; the CCS seeding meeting is ${shortDate(keyDates.seedingMeeting)}.`,
       link: { href: `/playoffs#${league.id}`, label: 'Who is in' },
     };
   }
@@ -287,6 +292,15 @@ export function phaseLead(league: LeagueConfig, phase: SeasonPhase, today: strin
   }
 
   if (phase === 'tournament' && ps.kind === 'league-tournament') {
+    // Results first (DESIGN §24.13): the champion once the final has a winner, else the next round's matchups
+    // (lib/postseason.ts tournamentHeadline); the static round list only while the picture is projected.
+    const headline = tournamentHeadline(getLeagueTournament(league.id), league);
+    if (headline.champion) {
+      return { lead: headline.champion, body: '', link: { href: `/playoffs/${league.id}`, label: 'Bracket' } };
+    }
+    if (headline.next) {
+      return { lead: `${short} league play is over.`, body: `${headline.next}.`, link: { href: `/playoffs/${league.id}`, label: 'Bracket' } };
+    }
     const round = (id: string) => ps.rounds.find((r) => r.id === id);
     const qf = round('qf-1');
     const playIn = round('play-in');
@@ -303,9 +317,13 @@ export function phaseLead(league: LeagueConfig, phase: SeasonPhase, today: strin
   if (phase === 'tournament' && ps.kind === 'unbracketed-tournament') {
     // No bracket and no page of its own: the dates and what is not published yet, linking to the
     // league's pointer card on /playoffs.
+    // The site comes from a listing (config `site`, the NFHS Network), named as such; the pairings are not published.
+    const where = ps.site
+      ? `${ps.site.basis} has its games at ${ps.site.label} on ${shortDate(ps.site.day)}`
+      : 'its format and site are not published yet';
     return {
-      lead: `The ${ps.name} is ${dateSpan(ps.dates.first, ps.dates.last)}; its format and site are not published yet.`,
-      body: '',
+      lead: `The ${ps.name} is ${dateSpan(ps.dates.first, ps.dates.last)}; ${where}.`,
+      body: ps.site ? 'Pairings are not published; results appear here as MaxPreps posts them.' : '',
       link: { href: `/playoffs#${league.id}`, label: 'Postseason' },
     };
   }
@@ -317,7 +335,7 @@ export function phaseLead(league: LeagueConfig, phase: SeasonPhase, today: strin
     return {
       lead: `${short} league play is over.`,
       body: `The ${ps.name} are ${dateSpan(ps.dates.first, ps.dates.last)}${
-        seeding ? `; the Section publishes its brackets after its ${shortDate(seeding.date)} seeding meeting` : ''
+        seeding ? `; the Section posts its brackets on its field hockey page after its ${shortDate(seeding.date)} seeding meeting` : ''
       }.`,
       link: { href: `/playoffs#${league.id}`, label: 'Postseason' },
     };
@@ -434,6 +452,12 @@ export type PostseasonView =
       meter: { claimed: number; total: number; label: string };
       dates: Array<{ term: string; date: string }>;
       bracket: { published: boolean; url: string };
+      /**
+       * The card's footer sentence, dated: 'Berths are assigned by the CCS committee. Nothing here is official until
+       * the seeding meeting.' through the seeding meeting's day; from the day after, 'Berths were assigned by the CCS
+       * committee on Mon Nov 2; results update twice a day.'
+       */
+      official: string;
       link: { href: string; label: string };
     }
   | {
@@ -455,11 +479,14 @@ export type PostseasonView =
       link: { href: string; label: string };
     }
   | {
-      /** The Sunset: no playoffs (CIF-SS Blue Book 2011.1, 3500.2). The line is the config's note. */
+      /**
+       * The Sunset: no playoffs (CIF-SS Blue Book 2011.1, 3500.2). The line is the config's note; the note is
+       * the section's outside tournament (the Tournament of Champions, DESIGN §24.13), or null without one.
+       */
       kind: 'no-postseason';
       leagueId: LeagueId;
       line: string;
-      note: null;
+      note: string | null;
       link: { href: string; label: string };
     }
   | {
@@ -491,7 +518,15 @@ function postseasonView(league: LeagueConfig, phase: SeasonPhase, sectionNote: s
     case 'ccs-ladder':
       return ccsLadderView(league, ps, phase);
     case 'no-postseason':
-      return { kind: 'no-postseason', leagueId: league.id, line: ps.note, note: null, link: { href: `/playoffs#${league.id}`, label: 'Postseason' } };
+      // The section's outside tournament, when it has one (the Southern Section's Tournament of Champions,
+      // DESIGN §24.13): the note names the event, its dates and that CIF does not run it.
+      return {
+        kind: 'no-postseason',
+        leagueId: league.id,
+        line: ps.note,
+        note: sectionOf(league.id).outsideTournament?.note ?? null,
+        link: { href: `/playoffs#${league.id}`, label: 'Postseason' },
+      };
     case 'section-playoffs':
       return {
         kind: 'section-playoffs',
@@ -508,15 +543,23 @@ function leagueTournamentView(
   ps: Extract<PostseasonConfig, { kind: 'league-tournament' }>,
   sectionNote: string | null,
 ): PostseasonView {
+  // Results first (DESIGN §24.13): 'MCAL tournament · Champion: Tamalpais won the MCAL tournament, beating …' or
+  // 'MCAL tournament · Final Fri Oct 30, 4 PM PT at Tamalpais: 3 Redwood at 1 Tamalpais'; the static round list
+  // only while the picture is projected from the table.
+  const headline = tournamentHeadline(getLeagueTournament(league.id), league);
+  const live = headline.champion ? `Champion: ${headline.champion}` : headline.next;
   const round = (id: string) => ps.rounds.find((r) => r.id === id);
   const qf = round('qf-1');
   const sf = round('sf-1');
   const final = round('final');
   const playIn = round('play-in');
   const parts = [ps.name];
-  if (qf) parts.push(`Quarterfinals ${shortDate(qf.date)}${playIn ? ` (a play-in ${shortDate(playIn.date)} only if needed)` : ''}`);
-  if (sf) parts.push(`Semifinals ${shortDate(sf.date)}`);
-  if (final) parts.push(`Final ${shortDate(final.date)} at ${ps.finalSite.label}`);
+  if (live) parts.push(live);
+  else {
+    if (qf) parts.push(`Quarterfinals ${shortDate(qf.date)}${playIn ? ` (a play-in ${shortDate(playIn.date)} only if needed)` : ''}`);
+    if (sf) parts.push(`Semifinals ${shortDate(sf.date)}`);
+    if (final) parts.push(`Final ${shortDate(final.date)} at ${ps.finalSite.label}`);
+  }
   return {
     kind: 'league-tournament',
     leagueId: league.id,
@@ -524,6 +567,20 @@ function leagueTournamentView(
     note: sectionNote,
     link: { href: `/playoffs/${league.id}`, label: 'Bracket' },
   };
+}
+
+/**
+ * The CCS card's footer sentence, in the day's tense (DESIGN §8 "say what is true, say when it changes"): the CCS
+ * committee assigns the berths at its seeding meeting (CCS.keyDates.seedingMeeting, Mon Nov 2, 1 PM, 2026). The past
+ * tense starts the day AFTER the meeting, not on its day: an update that lands on Nov 2 runs before 1 PM Pacific
+ * (the crons are 5:00 and 14:00 UTC, 9 PM and 6 AM PST after Nov 1, and run 3-6 hours late), when nothing has been
+ * assigned yet. `today` is getToday(), never Date.now().
+ */
+export function ccsOfficialSentence(today: string): string {
+  const seedingDay = CCS.keyDates.seedingMeeting.slice(0, 10);
+  return today > seedingDay
+    ? `Berths were assigned by the CCS committee on ${shortDate(CCS.keyDates.seedingMeeting)}; results update twice a day.`
+    : 'Berths are assigned by the CCS committee. Nothing here is official until the seeding meeting.';
 }
 
 function ccsLadderView(
@@ -559,14 +616,16 @@ function ccsLadderView(
   const beforeLeagueGames = phase === 'preseason' || phase === 'regular';
   let intro: string;
   if (crossover && beforeLeagueGames) {
-    intro = `Crossover and the 4-vs-4 play-in ${shortDate(crossover.date)}. Seeding meeting ${seeding}.`;
+    intro = `Crossover and the 4-vs-4 play-in ${pairingDatesLabel(ps.pairings)}. Seeding meeting ${seeding}.`;
   } else if (crossover && phase === 'crossover') {
-    intro = `League play is done. Crossover and the play-in are ${shortDate(crossover.date)}; the seeding meeting is ${seeding}.`;
+    intro = `League play is done. Crossover and the play-in are ${pairingDatesLabel(ps.pairings)}; the seeding meeting is ${seeding}.`;
   } else if (playIn && (beforeLeagueGames || phase === 'play-in')) {
     intro = `Play-in ${shortDate(playIn.date)}${playIn.time ? `, ${leagueClock(playIn.time)}` : ''}. Seeding meeting ${seeding}.`;
   } else {
     intro = `Seeding meeting ${seeding}.`;
   }
+
+  const official = ccsOfficialSentence(getToday());
 
   const playoffs = getPlayoffs();
   return {
@@ -580,6 +639,7 @@ function ccsLadderView(
       { term: 'Final', date: CCS.keyDates.finals },
     ],
     bracket: { published: playoffs.bracketPublished, url: playoffs.bracketUrl },
+    official,
     link: { href: `/playoffs#${league.id}`, label: 'CCS playoffs' },
   };
 }
@@ -827,6 +887,7 @@ const LATER_PHASES: ReadonlySet<SeasonPhase> = new Set<SeasonPhase>(['preseason'
 export function buildTeamViews(): HomeTeamView[] {
   const today = getToday();
   const contexts = new Map<DivisionId, ReturnType<typeof getStandingContext>>();
+  const pairingsByLeague = new Map<string, ReturnType<typeof getLeaguePairings>>();
   return getTeams().map((team) => {
     const league = getLeague(team.league);
     const heading = divisionHeading(team.division);
@@ -855,6 +916,18 @@ export function buildTeamViews(): HomeTeamView[] {
     const line = getTeamPostseasonLine(team.slug);
     const projected = LATER_PHASES.has(getSeasonPhase(league.id));
     const lead = projected ? POSTSEASON_LEAD.projected : POSTSEASON_LEAD.final;
+    // A league tournament under way: the line is the team's outcome ('In the MCAL final', 'Lost in the
+    // semifinal'), its own sentence, not a 'Final place:' ladder rung (DESIGN §24.13). The same for a CCS ladder
+    // team whose play-in is final ('Won the play-in', 'Lost the play-in'; lib/postseason-outcomes.ts, plan
+    // final-10, 2026-10-30); a crossover result changes no label, so its team keeps the 'Final place:' rung.
+    let pairings = pairingsByLeague.get(league.id);
+    if (league.postseason.kind === 'ccs-ladder' && !pairings) {
+      pairings = getLeaguePairings(league.id);
+      pairingsByLeague.set(league.id, pairings);
+    }
+    const outcomeLine =
+      (league.postseason.kind === 'league-tournament' && getLeagueTournament(league.id).status !== 'projected') ||
+      (pairings !== undefined && (ccsOutcomeFor(team.slug, { pairings })?.label ?? null) !== null);
     // The card's one visible line must show the STATUS at 320px (288px of text): a short lead, and
     // for a place shared across two rungs the rungs' badges ('Play-in or No AQ route (tied)')
     // instead of the full label with its tiebreak citation, which the team page carries.
@@ -886,8 +959,8 @@ export function buildTeamViews(): HomeTeamView[] {
             : context.remaining > 0
               ? `${context.counted} of ${context.scheduled} played`
               : null,
-      postseason: line ? `${lead.full} ${line.label}` : null,
-      ...(shortLabel ? { postseasonShort: `${lead.short} ${shortLabel}` } : {}),
+      postseason: line ? (outcomeLine ? line.label : `${lead.full} ${line.label}`) : null,
+      ...(shortLabel && !outcomeLine ? { postseasonShort: `${lead.short} ${shortLabel}` } : {}),
       tableHref: `/standings/${league.id}#${team.division}`,
       hasResults,
       leagueRecord: hasResults && standing ? recordString(standing.computed) : EM_DASH,
@@ -984,7 +1057,23 @@ export interface HomeView {
   panels: HomeLeaguePanel[];
   /** NorCal, then SoCal (REGIONS order). */
   regions: HomeRegion[];
+  /**
+   * "This week in the postseason" per region (HomeThisWeek, `#this-week` / `#this-week-socal`): the same view
+   * model as /playoffs' strip (components/playoffs/this-week.ts, inputs shared through this-week-inputs.ts), at
+   * `HOME_THIS_WEEK_CAP` rows. `days` is empty when the window holds no postseason game or event (the whole
+   * regular season, the Oct 2 corpus), and the component then renders nothing. The plan (final-11) typed this
+   * `ThisWeekDay[]`; the view also carries the window's ends and the "+N more" count the strip prints.
+   */
+  thisWeek: Record<RegionId, ThisWeekView>;
 }
+
+/**
+ * Rows per region on the home page. The strip is a pointer to /playoffs (12 rows there), not the postseason
+ * page; every region's copy is in the home HTML and RSC payload at once (both regions ship, the scope
+ * stylesheet hides one), and that payload is weighed against a budget (scripts/assert-budgets.ts). A row is
+ * one link and one badge, no GameRow, so 8 rows a region add under 1.5 KB gzip. Added 2026-10-30 (plan final-11).
+ */
+export const HOME_THIS_WEEK_CAP = 8;
 
 /** A league's card in "Find your team" (`LeagueCard`). */
 function leagueCardView(s: LeagueSummary): LeagueCardView {
@@ -1018,8 +1107,10 @@ export function buildHomeView(): HomeView {
   const leagueIds = summaries.map((s) => s.id);
   const teams = getTeams();
   const leagueCards = summaries.map(leagueCardView);
+  const thisWeek = thisWeekByRegion({ games: getGames(), today, cap: HOME_THIS_WEEK_CAP });
   return {
     today,
+    thisWeek,
     status: {
       resultsThrough: getLatestResultsDate(),
       teamCount: teams.length,

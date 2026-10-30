@@ -48,7 +48,9 @@ function postseasonPhrase(league: TeamPageView['league']): string {
  *
  * A team with no results is never placed by merit: the accessor returns null and the block reads
  * `No results reported yet.` Every status is a WRITTEN WORD (DESIGN §7.11). Nothing here is
- * official.
+ * official, and the line that says so (`caveat`) prints only where something is projected: under a
+ * CCS ladder and a league tournament still read from the table, never under a San Diego card (the
+ * Section places teams), an EAL card (all six are in) or the Sunset's.
  */
 export interface TeamPlayoffLineProps {
   view: TeamPageView;
@@ -75,9 +77,9 @@ export function TeamPlayoffLine({ view }: TeamPlayoffLineProps) {
       {standing?.tiebreak.shared && standing.tiebreak.note ? (
         <p className="mt-2 mb-0 text-ink-2">{standing.tiebreak.note}</p>
       ) : null}
-      {league.postseasonKind === 'no-postseason' ? null : (
-        <p className="mt-2 mb-0 text-ink-2">Projected from the table today; nothing here is official.</p>
-      )}
+      {/* The honesty line is the accessor's (`caveat`): a projection says so; a tournament with results says it
+          reads them; the EAL, a San Diego league and the Sunset, which project nothing, print none. */}
+      {line.caveat ? <p className="mt-2 mb-0 text-ink-2">{line.caveat}</p> : null}
       <p className="mt-3 mb-0 flex flex-wrap gap-2">
         <Link href={line.href} prefetch={false} className="sx-pill">
           {line.linkText} <Arrow />

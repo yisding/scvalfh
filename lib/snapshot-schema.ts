@@ -37,7 +37,9 @@ import {
   isSnapshotV1,
   lacksConfiguredLeagues,
   migrateV1ToV2,
+  needsPlayoffGames,
   needsReclassification,
+  rebuildPlayoffGames,
   reclassify,
 } from './snapshot-migrate';
 import { stableStringify } from './stable-json';
@@ -155,9 +157,21 @@ const gameSide = z.object({
 });
 
 export const PostseasonTagSchema = z.object({
-  kind: z.enum(['scval-crossover', 'bval-play-in', 'mcal-tournament', 'league-postseason', 'section-playoffs', 'ccs', 'other']),
+  kind: z.enum(['scval-crossover', 'bval-play-in', 'mcal-tournament', 'league-postseason', 'section-playoffs', 'outside-tournament', 'ccs', 'other']),
   leagueId: id.nullable(),
-  via: z.enum(['config-pairing', 'contest-type-4', 'league-postseason-window', 'section-postseason-window', 'ccs-window']),
+  via: z.enum(['config-pairing', 'contest-type-4', 'league-postseason-window', 'section-postseason-window', 'outside-tournament-window', 'ccs-window', 'maxpreps-bracket']),
+});
+
+/** MaxPreps' bracket fields on a tournament game (lib/types.ts GameBracket); optional on GameSchema, else parseSnapshot strips it. */
+const guid = z.string().regex(GUID_RE, 'expected a GUID');
+export const GameBracketSchema = z.object({
+  tournamentId: guid,
+  bracketId: guid.nullable(),
+  tournament: z.string().min(1).nullable(),
+  name: z.string().min(1).nullable(),
+  published: z.boolean(),
+  matchupId: guid.nullable(),
+  url: httpUrl.nullable(),
 });
 
 export const OfficialStampSchema = z.object({
@@ -201,6 +215,7 @@ export const GameSchema = z
     forfeitBy: z.enum(['home', 'away']).nullable(),
     decider: decider.nullable(),
     shootout: z.object({ home: z.number().int(), away: z.number().int() }).nullable(),
+    bracket: GameBracketSchema.optional(),
     venue: z.object({
       text: z.string().nullable(),
       name: z.string().optional(),
@@ -411,9 +426,11 @@ export const PlayoffsSchema = z.object({
     autoQualifiers: z
       .object({ atLarge: z.number().int().min(0), total: z.number().int().min(0) })
       .catchall(z.number().int().min(0)),
-    highSeedHostsThrough: z.literal('semifinals'),
+    highSeedHostsThrough: z.enum(['quarterfinals', 'semifinals']),
   }),
   bracketPublished: z.boolean(),
+  // Per CCS division, when the run read a recognised tournament page or carried one (lib/sources/ccs.ts readTournamentPage).
+  divisionsPublished: z.object({ 'Division 1': z.boolean(), 'Division 2': z.boolean() }).optional(),
   bracketUrl: httpUrl,
   games: z.array(GameSchema),
 });
@@ -946,7 +963,9 @@ export function parseSnapshot(raw: unknown): Snapshot {
 export function loadSnapshot(raw: unknown): Snapshot {
   const v2 = isSnapshotV1(raw) ? migrateV1ToV2(raw) : raw;
   const complete = lacksConfiguredLeagues(v2) ? addConfiguredLeagues(v2) : v2;
-  return parseSnapshot(needsReclassification(complete) ? reclassify(complete) : complete);
+  const classified = needsReclassification(complete) ? reclassify(complete) : complete;
+  // Then `playoffs.games` from the (now current) tags: lib/ccs-bracket.ts is its one derivation.
+  return parseSnapshot(needsPlayoffGames(classified) ? rebuildPlayoffGames(classified) : classified);
 }
 
 // ---------------------------------------------------------------- canonical form

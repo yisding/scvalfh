@@ -170,15 +170,45 @@ describe('identity lines (components/teams/team-view.ts identityLine)', () => {
 describe('league copy (components/teams/team-view.ts leagueCopy)', () => {
   it('end-of-season and bracket sentences by league', () => {
     const scval = view.leagueCopy('scval');
-    expect(scval.seasonEndSentence).toBe('The SCVAL league season ends Wed Oct 28 and the SCVAL crossover is Fri Oct 30.');
+    expect(scval.seasonEndSentence).toBe('The SCVAL league season ends Wed Oct 28 and the SCVAL crossover is Thu Oct 29 and Fri Oct 30.');
     expect(scval.bracketSentence).toBe('We will list a playoff game as soon as CCS publishes the bracket.');
     expect(view.leagueCopy('bval').seasonEndSentence).toBe(
       'The BVAL league season ends Fri Oct 30 and the BVAL play-in is Sat Oct 31.',
     );
     const mcal = view.leagueCopy('mcal');
-    expect(mcal.seasonEndSentence).toBe('The MCAL league season ends Thu Oct 22 and the MCAL tournament starts Fri Oct 23.');
+    // The tournament starts with its first round that is always played: the quarterfinals, not the optional play-in.
+    expect(mcal.seasonEndSentence).toBe('The MCAL league season ends Thu Oct 22 and the MCAL tournament starts Mon Oct 26.');
     expect(mcal.bracketSentence).toBe('We will list a playoff game as soon as MCAL posts the bracket.');
     expect(view.leagueCopy('pcal').bracketSentence).toBe('We will list a playoff game as soon as CCS publishes the bracket.');
+  });
+
+  it('reads the day: "ended" after the last league date, "started" from the first round, and the bracket page once seeded', () => {
+    // Before the last league date: the timeless words, whatever the status.
+    expect(view.leagueCopy('mcal', '2026-10-22', 'projected').seasonEndSentence).toBe(
+      'The MCAL league season ends Thu Oct 22 and the MCAL tournament starts Mon Oct 26.',
+    );
+    expect(view.leagueCopy('mcal', '2026-10-24', 'seeded')).toMatchObject({
+      seasonEndSentence: 'The MCAL league season ended Thu Oct 22 and the MCAL tournament starts Mon Oct 26.',
+      bracketSentence: 'The bracket and results are on the MCAL tournament page.',
+    });
+    const live = view.leagueCopy('mcal', '2026-10-29', 'in-progress');
+    expect(live.seasonEndSentence).toBe('The MCAL league season ended Thu Oct 22 and the MCAL tournament started Mon Oct 26.');
+    expect(live.bracketSentence).toBe('The bracket and results are on the MCAL tournament page.');
+    expect(view.leagueCopy('mcal', '2026-10-31', 'complete').bracketSentence).toBe('The bracket and results are on the MCAL tournament page.');
+    // Still projected from the table (no seeds yet): the promise stands.
+    expect(view.leagueCopy('mcal', '2026-10-23', 'projected').bracketSentence).toBe('We will list a playoff game as soon as MCAL posts the bracket.');
+    // The tense rule is every league's.
+    expect(view.leagueCopy('scval', '2026-10-29').seasonEndSentence).toBe(
+      'The SCVAL league season ended Wed Oct 28 and the SCVAL crossover is Thu Oct 29 and Fri Oct 30.',
+    );
+    expect(view.leagueCopy('sunset', '2026-11-01').seasonEndSentence).toBe('The Sunset season ended Sat Oct 31.');
+    // The page passes the snapshot's day and the tournament's status: the corpus (Oct 2) is before both.
+    const page = view.buildTeamPageView('tamalpais')!;
+    expect(page.league.seasonEndSentence).toBe('The MCAL league season ends Thu Oct 22 and the MCAL tournament starts Mon Oct 26.');
+    expect(page.league.bracketSentence).toBe('We will list a playoff game as soon as MCAL posts the bracket.');
+    for (const copy of [live, view.leagueCopy('mcal', '2026-10-31', 'complete')]) {
+      expect(`${copy.seasonEndSentence} ${copy.bracketSentence}`).not.toMatch(/\bCCS\b|eliminat/i);
+    }
   });
 
   it('an unbracketed league (the Super Regional) states its dates and promises no bracket', () => {
@@ -193,7 +223,7 @@ describe('league copy (components/teams/team-view.ts leagueCopy)', () => {
         'The EAL league season ends Wed Oct 28; the Super Regional follows, Oct 30–31.',
       );
       expect(copy.bracketSentence, 'components/teams/team-view.ts bracketSentence').toBe(
-        'We will not guess a bracket: the Super Regional’s format and site are not published yet.',
+        'No pairings are published; we list each Super Regional game as MaxPreps posts it.',
       );
     }
     for (const id of ['scval', 'bval', 'pcal']) {
@@ -218,7 +248,7 @@ describe('postseason lines per kind (lib/data.ts getTeamPostseasonLine via team-
         expect(line.href, `lib/data.ts ${team.slug} href`).toBe(`/playoffs#${team.league}`);
         expect(line.linkText, `lib/data.ts ${team.slug} link`).toBe('Postseason');
         expect(line.sentence, `lib/data.ts ${team.slug} sentence`).toBe(
-          'The top six schools play the Super Regional, Oct 30–31; its format and site are not published yet.',
+          'The top six schools play the Super Regional, Oct 30–31, and every EAL team is one of the six; the NFHS Network’s CIFNS listing has the games at Pleasant Valley High School, Chico on Sat Oct 31.',
         );
         expect(`${line.label} ${line.sentence}`, `lib/data.ts ${team.slug}`).not.toMatch(/CCS|at-large|automatic qualifier|seed/i);
       } else if (v.league.postseasonKind === 'no-postseason' || v.league.postseasonKind === 'section-playoffs') {
@@ -236,7 +266,7 @@ describe('postseason lines per kind (lib/data.ts getTeamPostseasonLine via team-
     }
     const si = view.buildTeamPageView('st-ignatius')!;
     expect(si.postseasonLine?.sentence, 'lib/data.ts SCVAL sentence').toBe(
-      'The SCVAL crossover and the 4th-place play-in are Fri Oct 30.',
+      'The SCVAL crossover and the 4th-place play-in are Thu Oct 29 and Fri Oct 30.',
     );
   });
 
@@ -263,8 +293,16 @@ describe('Southern California team pages (DESIGN-socal §2.4)', () => {
     expect(city.postseasonKind).toBe('section-playoffs');
     expect(city.postseasonName).toBe('San Diego Section playoffs');
     expect(city.seasonEndSentence).toBe('The City league season ends Fri Oct 30; the San Diego Section playoffs follow, Nov 2–14.');
-    expect(city.bracketSentence).toBe('We will list a playoff game as soon as the Section publishes its brackets after its Sat Oct 31 seeding meeting.');
+    expect(city.bracketSentence).toBe('We will list a playoff game as soon as it is on the schedule; the Section posts its brackets on its field hockey page after its Sat Oct 31 seeding meeting.');
     expect(city.classification).toBe('membership');
+  });
+
+  it('the honesty line is the accessor’s: a CCS ladder is projected, a tournament still read from the table too', async () => {
+    expect(data.getTeamPostseasonLine('saint-francis')!.caveat).toBe('Projected from the table today; nothing here is official.');
+    expect(textOf(await renderTeam('saint-francis'))).toContain('Projected from the table today; nothing here is official.');
+    // The corpus snapshot predates the MCAL tournament, so its picture is still a projection from the table.
+    expect(data.getLeagueTournament('mcal').status).toBe('projected');
+    expect(data.getTeamPostseasonLine('redwood')!.caveat).toBe('Projected from the table today; nothing here is official.');
   });
 
   it('a Sunset page: kicker "Postseason", the league note whatever it has played, no projection, GP bare', async () => {

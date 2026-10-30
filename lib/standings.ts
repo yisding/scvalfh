@@ -33,13 +33,15 @@ import {
   drawNumberOf,
   getDivision,
   getLeague,
+  inPairingWindow,
   ladderFor,
   ladderRung,
   leagueOfDivision,
   leagueStandingsUrl,
+  pairingWindow,
   tiebreakChainFor,
 } from './leagues';
-import type { LadderRung, LeagueConfig, LeagueRules } from './leagues';
+import type { LadderRung, LeagueConfig, LeagueRules, PairingConfig } from './leagues';
 import { TEAMS, getTeamById, teamsInDivision } from './teams';
 import type {
   ComputedRecord,
@@ -1213,6 +1215,23 @@ function firstPairingDate(league: LeagueConfig): string | null {
   return league.postseason.kind === 'ccs-ladder' ? (league.postseason.pairings[0]?.date ?? null) : null;
 }
 
+/**
+ * The day, or days, a league's pairings are played, for a sentence ("The SCVAL crossover and the 4th-place
+ * play-in are …"): 'Fri Oct 30' when every pairing's window is that one day; 'Thu Oct 29 and Fri Oct 30'
+ * across two consecutive days; 'Thu Oct 29 to Sat Oct 31' across more. '' for a league with no pairings.
+ */
+export function pairingDatesLabel(pairings: readonly PairingConfig[]): string {
+  if (pairings.length === 0) return '';
+  const windows = pairings.map(pairingWindow);
+  const first = [...windows.map((w) => w.first)].sort()[0];
+  const last = [...windows.map((w) => w.last)].sort().reverse()[0];
+  if (first === last) return shortDate(first);
+  const [fy, fm, fd] = first.split('-').map(Number);
+  const [ly, lm, ld] = last.split('-').map(Number);
+  const days = Math.round((Date.UTC(ly, lm - 1, ld) - Date.UTC(fy, fm - 1, fd)) / 86_400_000);
+  return days === 1 ? `${shortDate(first)} and ${shortDate(last)}` : `${shortDate(first)} to ${shortDate(last)}`;
+}
+
 /** The rung's legend with '{date}' replaced by shortDate(first pairing date of the league). */
 export function statusLegend(division: DivisionId, status: PlayoffStatus): string {
   const legend = rungFor(division, status).legend;
@@ -1231,7 +1250,12 @@ export function statusBadge(division: DivisionId, status: PlayoffStatus): string
  * each seat filled by the team whose cluster COVERS that slot, not by an exact `place ===` match:
  * with two teams level on 3rd nobody carries place 4, and an exact match would quietly render the
  * play-in pairing as empty. Such a seat returns every contender for it, and the UI says in words
- * that the tie has not been decided. `game` is the matched contest once MaxPreps has it.
+ * that the tie has not been decided. `game` is the matched contest once MaxPreps has it: a game
+ * carrying the pairing's tag, dated inside the pairing's window (`PairingConfig.window`, else its
+ * date), with one seat's contender on each side. A matched game SETTLES its seats: the league has
+ * paired the teams, so a seat two level teams spanned narrows to the one that played (El Camino
+ * co-leaders Mitty and Los Gatos: Mitty v St. Ignatius is #1 v #1, Los Gatos v Saint Francis #2 v
+ * #2), and `date` becomes the day the game is actually played (two 2026 crossovers moved to Oct 29).
  */
 export function leaguePairings(
   standings: readonly Standing[],
@@ -1259,17 +1283,24 @@ export function leaguePairings(
     const ids1 = new Set(seats[1].map((s) => s.teamId));
     const game =
       games.find((g) => {
-        if (g.postseason?.kind !== p.tag || g.dateKey !== p.date) return false;
+        if (g.postseason?.kind !== p.tag || !inPairingWindow(p, g.dateKey)) return false;
         const h = g.home.teamId ?? '';
         const a = g.away.teamId ?? '';
         return (ids0.has(h) && ids1.has(a)) || (ids0.has(a) && ids1.has(h));
       }) ?? null;
+    // The league's own pairing settles a seat the table left level: keep the contender that played.
+    const played = game ? new Set([game.home.teamId ?? '', game.away.teamId ?? '']) : null;
+    const settled = (seat: CrossoverSeat): CrossoverSeat => {
+      if (!played || seat.length < 2) return seat;
+      const hit = seat.filter((s) => played.has(s.teamId));
+      return hit.length === 1 ? hit : seat;
+    };
     return {
       id: p.id,
       leagueId,
-      date: p.date,
+      date: game ? game.dateKey : p.date,
       time: p.time,
-      seats,
+      seats: [settled(seats[0]), settled(seats[1])],
       seatLabels: [p.seatLabels[0], p.seatLabels[1]],
       host: p.host,
       isPlayIn: p.isPlayIn,

@@ -27,8 +27,8 @@
  *    sides share a conference.
  */
 
-import { CCS, LEAGUES } from './leagues';
-import type { LeagueConfig } from './leagues';
+import { CCS, LEAGUES, SECTIONS, inPairingWindow } from './leagues';
+import type { LeagueConfig, OutsideTournamentConfig } from './leagues';
 import { teamOfSide } from './teams';
 import type { DivisionId, Game, LeagueId, PostseasonTag, Team } from './types';
 
@@ -81,19 +81,52 @@ function sectionPlayoffsPair(
 }
 
 /**
+ * The section's outside tournament (SectionConfig.outsideTournament) when both sides are registry teams of one
+ * section, both their leagues have no postseason of their own ('no-postseason': the Sunset, the LA independents)
+ * and the game is dated inside the event's window; else null.
+ */
+function outsideTournamentPair(home: Team | undefined, away: Team | undefined, dateKey: string): OutsideTournamentConfig | null {
+  if (!home || !away || home.section !== away.section) return null;
+  const event = SECTIONS.find((s) => s.id === home.section)?.outsideTournament ?? null;
+  if (!event || dateKey < event.window.first || dateKey > event.window.last) return null;
+  const h = leagueById(home.league);
+  const a = leagueById(away.league);
+  if (!h || !a || h.postseason.kind !== 'no-postseason' || a.postseason.kind !== 'no-postseason') return null;
+  return event;
+}
+
+/**
  * In order; first match wins:
- *  1. CONFIG PAIRING: game.dateKey === pairing.date, one side in each pairing division (any places), both sides
- *     in the pairing's league → { kind: pairing.tag, leagueId, via: 'config-pairing' }.
+ *  1. CONFIG PAIRING: game.dateKey inside the pairing's window (`PairingConfig.window`, else its `date`: SCVAL's
+ *     four crossovers Oct 29-30, BVAL's play-in Oct 31), one side in each pairing division (any places), both
+ *     sides in the pairing's league → { kind: pairing.tag, leagueId, via: 'config-pairing' }. Ahead of rule 2, so
+ *     a crossover MaxPreps marks as a playoff (Valley Christian v Palo Alto, Oct 29) is still the crossover.
+ *  1b. OUTSIDE TOURNAMENT: both sides teams of one section whose `outsideTournament` is set, both in a
+ *     'no-postseason' league, game.dateKey inside its window (the Southern Section's Tournament of Champions, Oct
+ *     22-29) → { kind: 'outside-tournament', leagueId: the shared league or null, via: 'outside-tournament-window' }.
+ *     Ahead of rule 2 for the same reason: MaxPreps marks two of its rows as playoffs and the rest as non-league.
+ *  1c. MAXPREPS BRACKET (added 2026-10-29): `game.bracket` is set (lib/normalize.ts: the row's tournamentId is a
+ *     real GUID) and names the CCS championship — `bracket.tournamentId === CCS.tournament.id`, the exact test,
+ *     or a `tournament` name containing "Central Coast Section", the fallback should MaxPreps re-create the
+ *     tournament under a new id — and at least one side is a registry team, every registry side in a CCS league
+ *     → { kind: 'ccs', leagueId: the shared league or null, via: 'maxpreps-bracket' }. The 2025 Los Gatos rows
+ *     (tests/fixtures/maxpreps/postseason-2025/) are the evidence: every CCS round, quarterfinal to final, carried
+ *     the championship's id, 'Division 1' and `bracketIsPublished true`, while every crossover row carries the
+ *     all-zero id. After rule 1, so a crossover MaxPreps ever filed under the tournament stays the crossover.
  *  2. contestType 4 on either row → { kind, leagueId: the shared league or null, via: 'contest-type-4' }, where kind
  *     is 'mcal-tournament' when both sides are in one league whose postseason.kind is 'league-tournament';
  *     'league-postseason' when it is 'unbracketed-tournament' (the EAL's Super Regional); else 'ccs' when at least
  *     one registry side is in a CCS league and no registry side is in a league of another section (a CCS game is
- *     between CCS teams); else 'other' (an MCAL or EAL team against a non-registry team or a team of another
- *     section or league, or no registry side at all).
+ *     between CCS teams) AND game.dateKey >= CCS.keyDates.quarterfinals — before Nov 7 MaxPreps' playoff flag on a
+ *     CCS pair proves nothing (it typed the 2026 Valley Christian v Palo Alto crossover 4/4 and the other
+ *     crossovers 5, 1 and 1; the 2025 SCVAL play-in was typed 1), so such a game falls through to the rules below
+ *     (today: null); else 'other' (an MCAL or EAL team against a non-registry team or a team of another section
+ *     or league, or no registry side at all).
  *     Before that: both sides teams of ONE section whose leagues' postseason.kind is 'section-playoffs' (the San
  *     Diego Section) → { kind: 'section-playoffs', leagueId: the shared league or null, via: 'contest-type-4' }.
- *  2b. both sides members of one CCS league (postseason.kind 'ccs-ladder') and game.dateKey >=
- *     CCS.keyDates.quarterfinals → { kind: 'ccs', leagueId: that league, via: 'ccs-window' }.
+ *  2b. both sides registry teams of leagues with `sectionId === 'ccs'` (any two CCS leagues: 2025's rounds included
+ *     Mitty @ Leigh, Monterey @ Los Altos and Willow Glen @ Carmel, each across two leagues) and game.dateKey >=
+ *     CCS.keyDates.quarterfinals → { kind: 'ccs', leagueId: the shared league or null, via: 'ccs-window' }.
  *  2c. both sides teams of one section whose leagues' postseason.kind is 'section-playoffs', game.dateKey >= both
  *     leagues' rules.postseasonFrom (Nov 2, the play-ins), and contestId in neither league's leagueGameOverrides →
  *     { kind: 'section-playoffs', leagueId: the shared league or null, via: 'section-postseason-window' }. Ahead of
@@ -112,7 +145,7 @@ export function postseasonTag(game: Game): PostseasonTag | null {
   // 1. a configured pairing (SCVAL crossover ×4, BVAL play-in)
   if (league && home && away && league.postseason.kind === 'ccs-ladder') {
     for (const pairing of league.postseason.pairings) {
-      if (pairing.date !== game.dateKey) continue;
+      if (!inPairingWindow(pairing, game.dateKey)) continue;
       const [a, b] = pairing.seats;
       const oneEach =
         (home.division === a.division && away.division === b.division) ||
@@ -121,27 +154,50 @@ export function postseasonTag(game: Game): PostseasonTag | null {
     }
   }
 
+  // 1b. a section's outside tournament (the Southern Section's Tournament of Champions): both sides teams of the
+  //     section's no-postseason leagues, dated inside the event's window. Ahead of MaxPreps' flag, which marks
+  //     only some of the rows (Huntington Beach's) as playoffs and the rest as non-league.
+  const outside = outsideTournamentPair(home, away, game.dateKey);
+  if (outside) return { kind: 'outside-tournament', leagueId: league ? league.id : null, via: 'outside-tournament-window' };
+
+  // The sections of the registry sides (0, 1 or 2 entries); a CCS game is between CCS teams.
+  const sections = [home, away]
+    .filter((t): t is Team => t !== undefined)
+    .map((t) => leagueById(t.league)?.sectionId ?? null);
+  const ccsPair = sections.length > 0 && sections.every((s) => s === 'ccs');
+  const inCcsWindow = game.dateKey >= CCS.keyDates.quarterfinals;
+
+  // 1c. MaxPreps' own bracket fields name the CCS championship (the GUID is the exact test; the name is the
+  //     fallback for a re-created tournament). Ahead of the flag: the feed says which bracket, not just "playoff".
+  const bracket = game.bracket;
+  if (
+    bracket &&
+    ccsPair &&
+    (bracket.tournamentId === CCS.tournament.id || /central coast section/i.test(bracket.tournament ?? ''))
+  ) {
+    return { kind: 'ccs', leagueId: league ? league.id : null, via: 'maxpreps-bracket' };
+  }
+
   const sectionPlayoffs = sectionPlayoffsPair(home, away);
 
   // 2. MaxPreps' own postseason flag on either row
   const types = game.contestTypes ?? { home: null, away: null };
   if (types.home === 4 || types.away === 4) {
     if (sectionPlayoffs) return { kind: 'section-playoffs', leagueId: league ? league.id : null, via: 'contest-type-4' };
-    let kind: PostseasonTag['kind'];
+    let kind: PostseasonTag['kind'] | null;
     if (league?.postseason.kind === 'league-tournament') kind = 'mcal-tournament';
     else if (league?.postseason.kind === 'unbracketed-tournament') kind = 'league-postseason';
-    else {
-      const sections = [home, away]
-        .filter((t): t is Team => t !== undefined)
-        .map((t) => leagueById(t.league)?.sectionId ?? null);
-      kind = sections.length > 0 && sections.every((s) => s === 'ccs') ? 'ccs' : 'other';
-    }
-    return { kind, leagueId: league ? league.id : null, via: 'contest-type-4' };
+    // A CCS pair's playoff flag counts only from the quarterfinals (Nov 7): before that MaxPreps has typed
+    // crossovers 4 (Valley Christian v Palo Alto, 2026-10-29), so the flag alone is no CCS game. Fall through.
+    else if (ccsPair) kind = inCcsWindow ? 'ccs' : null;
+    else kind = 'other';
+    if (kind !== null) return { kind, leagueId: league ? league.id : null, via: 'contest-type-4' };
   }
 
-  // 2b. the CCS bracket window
-  if (league && league.postseason.kind === 'ccs-ladder' && game.dateKey >= CCS.keyDates.quarterfinals) {
-    return { kind: 'ccs', leagueId: league.id, via: 'ccs-window' };
+  // 2b. the CCS bracket window: two registry teams of CCS leagues, the same league or not (2025 had cross-league
+  //     rounds), dated on or after the quarterfinals.
+  if (home && away && ccsPair && inCcsWindow) {
+    return { kind: 'ccs', leagueId: league ? league.id : null, via: 'ccs-window' };
   }
 
   // 2c. the section's own playoffs window (the San Diego Section from Nov 2), across conferences

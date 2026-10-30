@@ -7,10 +7,11 @@ North County and Metro conferences in the San Diego Section, and the Southern Se
 independents, Bonita, Chaminade, Glendora, Harvard-Westlake and Thousand Oaks, schools in no field hockey
 league whose games against each other are the group's table (102 teams; DESIGN §24, §24.9, §24.10).
 Confidence tags: **[V]** independently verified against a live response or document; **[U]**
-claimed but not independently re-verified; **[TODO]** open item. Values below were
-captured/verified 2026-09-28 to 2026-10-04; the EAL's captures, and every EAL line below, are
-2026-10-04; the Southern California captures, and every Sunset and San Diego line below, are
-2026-10-06 unless dated otherwise.
+claimed but not independently re-verified; **[L]** likely: read only in search snippets or a
+secondary source, because the page itself was unreachable (added 2026-10-29); **[TODO]** open item.
+Values below were captured/verified 2026-09-28 to 2026-10-04; the EAL's captures, and every EAL line
+below, are 2026-10-04; the Southern California captures, and every Sunset and San Diego line below, are
+2026-10-06 unless dated otherwise; the postseason lines of §1.4, §5.5 and §5.6 were re-read on 2026-10-29.
 
 See also `docs/LEAGUE-RULES.md` (each league's points, tiebreak chain, postseason and the by-law
 citations), `docs/BYLAWS-2026-27.md` (the verified SCVAL by-laws, which override anything below
@@ -94,7 +95,7 @@ sportSeasonId/year/season/level/stateCode`, plus freshness probes
 |---|---|---|---|
 | `teams[].homeAwayType` | `0` | home | **[V]** |
 | | `1` | away | **[V]** |
-| | `2` | neutral | **[U]** never observed |
+| | `2` | neutral (both sides `2`; `lib/normalize.ts` reads it as `site: 'neutral'`) | **[V]** observed 2026-10-29 on 2025 postseason rows: both rows of the 2025 EAL Super Regional (Nov 1 2025; a real capture, `tests/fixtures/maxpreps/postseason-2025/sched-davis-2025-super-regional.json`) and both sides of the 2025 CCS Division 1 final at Los Altos HS (`e6091e07`, Los Gatos's feed, transcribed; §1.4). Not seen on a regular-season row |
 | `teams[].contestType` | `0` | league/conference game | **[V]** 21/21 agreement with prose |
 | | `1` | non-conference | **[V]** |
 | `calculatedFields.contestState` | `0` | unknown | **[U]** not observed |
@@ -1763,7 +1764,11 @@ redirects.
   that. ⚠️ Special-case the Oct 30 crossover row (`DE ANZA #4 VS EL CAMINO #4`, `#1 v. #1` — `VS`/
   `v.` as alternate separators). Grid names are UPPERCASE/abbreviated; the prose Teams line uses
   mixed case (`Saint Ignatius`) — a normalization map is required. Windows: DA Mon/Wed Sep 9 →
-  Oct 26; EC Tue/Thu Sep 10 → Oct 27; plus the Fri Oct 30 crossover.
+  Oct 26; EC Tue/Thu Sep 10 → Oct 27; plus the Fri Oct 30 crossover. ⚠️ The crossover's MaxPreps
+  rows do not all sit on the grid's day: on 2026-10-29 MaxPreps had #1 v #1 (St. Ignatius at Mitty,
+  contestType 5) and #3 v #3 (Palo Alto at Valley Christian, contestType 4, venue "SCVAL Crossover
+  Game") on Thu Oct 29 and the other two on Fri Oct 30, so the pairings carry a `window` of Oct
+  29–30 (`PairingConfig.window`, lib/leagues.ts) and the tagger reads the window, not the day.
 - **Standings PDF:** 4 stacked blocks (DeAnza V, El Camino V, DeAnza JV, El Camino JV), row regex
   `/([A-Za-z .]+?)\s{2,}(\d+-\d+(?:-\d+)?)\s*$/`. ⚠️ The "Overall record" column is empty in the
   25-26 file. 2025-26 varsity final: DA — St. Ignatius 11-0-1, St. Francis 10-1-1, Los Altos
@@ -1803,7 +1808,19 @@ redirects.
     `FieldHockeyPlayoff_25.pdf` both return 404 (checked 2026-10-03). The league **does** publish an
     official 2025 all-league list: "2025 All-MCAL Field Hockey Team" at
     `https://www.mcalsports.org/FieldHockey.htm#FH25`. The MCAL card links it (`alsoPublished`) and
-    does not ingest it, because the schema has no awards-only state. No champion is stated.
+    does not ingest it, because the schema has no awards-only state. No champion is stated. In the
+    2026 tournament `FieldHockey.htm` fills its bracket in with W/L marks and some scores (it marks
+    "OT", never a shootout); the MCAL General Rules PDF
+    (`https://www.mcalsports.org/Gen_rules/GeneralRules.pdf`, modified 2026-10-13, read 2026-10-29)
+    is the source of the pennant rule (`citations.pennant`) and of playoff admission (Adults $10;
+    students, children and seniors $5; pre-sale on GoFan); the final's street address (700 Miller Ave, Mill
+    Valley, CA 94941) comes from the schools' HomeCampus calendars (`cifncshome.org/widget/calendar?school_id=…
+    &ajax=1&start=…&end=…`, a JSON feed with facility, address, game type, ticket and streaming links; Tam
+    1550, Redwood 1517; the NCS counterpart of the cifsshome.org widget of §1.2a, read 2026-10-29, not polled);
+    the Field Hockey Handbook §9 is the source of the
+    no-regular-season-overtime rule and the tournament's two-overtimes-then-shootout format. MaxPreps
+    records a tournament shootout as a regulation score with the tally as goals (Tamalpais 3-1 Marin
+    Catholic, Oct 28, 2026, was 0-0 after two overtimes: Marin IJ), hence `resultNotes`.
   - **EAL** — `unavailable` (checked 2026-10-04). The EAL published no 2025-26 final standings of
     its own, and we found no EAL league website. The CIF Northern Section's field hockey page
     (`https://www.cifns.org/sports/fh/index`: guidelines and announcements; its standings panel is
@@ -1950,7 +1967,12 @@ Human-facing paths: `https://www.cifccs.org/calendar/2026-27/2026-27_CCS_Playoff
 **Verified playoff facts:** entries due Mon Nov 2 2026 noon; seeding meeting 1:00pm same day;
 Quarterfinals Sat Nov 7; Semifinals Wed Nov 11; Finals Sat Nov 14; evaluation meeting Thu Nov 19
 4:00pm. Single-elimination, two divisions of 8 (1-8 → D1, 9-16 → D2). Auto-qualifier allocation:
-SCVAL 7, BVAL 4, PCAL 2, at-large 3 = 16 total. High seed hosts through semifinals. (Selection
+SCVAL 7, BVAL 4, PCAL 2, at-large 3 = 16 total. Sites per the 2026 CCS calendar: quarterfinals "at Home
+Sites", semifinals "at Neutral Sites" [sic "Semfinals"], finals "at Neutral Site" (`CCS.highSeedHostsThrough:
+'quarterfinals'`; in 2025 the semifinals were in fact at the higher seed's field, Los Gatos, St. Ignatius's
+Fairmont Field in Pacifica and Los Altos, and the finals at Los Altos HS and Gilroy HS, so the site prints the
+calendar's words and each game's own site, and `confirmKeyDates` logs a calendar whose site words disagree with
+the config). (Selection
 committee and at-large criteria are the **playoff** tiebreak, distinct from the league-standings
 tiebreak in `docs/BYLAWS-2026-27.md`.)
 
@@ -1961,15 +1983,127 @@ the misspelling. RSS twin at `?print=rss`.
 
 ⚠️ **CCS bracket pages are not programmatically usable** — 0 `__NEXT_DATA__`, 0 ld+json, no API
 URL; the page is rendered client-side by PrestoSports' RequireJS bundle. A headless browser would
-be required.
+be required. (Still true of cifccs.org on 2026-10-29; MaxPreps' tournament page, below, is the bracket
+source, and its published form is server HTML.)
 
-**Preferred playoff bracket source once published:** MaxPreps' tournament page
-(`https://www.maxpreps.com/tournament/3jB4uWWtwk20vrdggAkzMA/field-hockey-26/2026-central-coast-section-field-hockey-championship.htm`),
-which currently shows `<div class="not-published">…`. **Best-supported plan:** once brackets
-publish, playoff games should surface in each qualifying team's `schedule-calculated` feed via
-`calculatedFields.bracketName/bracketGameIndex/bracketIsPublished/tournamentName/
-tournamentCanonicalUrl` (untested — those fields are null in the regular season; verify on Nov 7).
-Poll both from Nov 2. Fallback: CCS posts results as plain text on X/Twitter.
+**The bracket source: MaxPreps' tournament page and the team feeds** (re-read 2026-10-29; this replaces
+the untested plan the paragraph carried since the preseason).
+- **The page.** `https://www.maxpreps.com/tournament/3jB4uWWtwk20vrdggAkzMA/field-hockey-26/2026-central-coast-section-field-hockey-championship.htm`
+  (`CCS.bracketUrl`; tournament `b97830de-ad65-4dc2-b4be-b76080093330`, `CCS.tournament.id`), with one page per
+  division: `…/3jB4uWWtwk20vrdggAkzMA/d4lAMGtGHkSsGhilz0g6pg/…division-1.htm` (bracket
+  `30408977-466b-441e-ac1a-18a5cf483aa6`, `CCS.tournament.division1BracketId`) and
+  `…/3jB4uWWtwk20vrdggAkzMA/h3nCud40WkG1mT2-yPHiPQ/…division-2.htm` (`b9c27987-34de-415a-b599-3dbec8f1e23d`,
+  `division2BracketId`). A URL key is the base64url (no padding) of the GUID's sixteen bytes in .NET
+  little-endian order; checked on the three 2026 ids and on the 2025 tournament (`864e7271-…` =
+  `cXJOhk70iEqs2xGvKy8KNw`) **[V]**.
+- **Unpublished today, read positively per division.** The page captured 2026-10-29 21:41Z (111,799 bytes,
+  `tests/fixtures/ccs/tournament-2026-10-29-unpublished.html`) is one `<ul class="tournament-brackets">` holding
+  TWO `<li id="bracket_<GUID>" data-size="8">` blocks, each an `<h2 class="bracket-name">` and a
+  `<div class="not-published">` **[V]**. `readTournamentPage` (lib/sources/ccs.ts) calls a division published
+  when its own block carries no `not-published`; a block runs to the next bracket `<li id>` or to the `</ul>`
+  that closes the list, because each block's header holds its own `<ul class="links">` ahead of the marker
+  (cutting at the first `</ul>` would have called Division 1 published on the unpublished page; a test pins
+  it). A body under 2,000 bytes, or one with neither configured id (a WAF 403 body, an interstitial, a
+  redesign, MaxPreps' San Diego shell), is not recognised: the bracket part is NOT READ, and the previous
+  snapshot's `bracketPublished` and `divisionsPublished` are carried (log: `ccs bracket: page not recognised
+  (<reason>) — carried bracket state from the previous snapshot`). The old absence test, `readBracketPublished`
+  ("published when the marker is gone"), read every one of those as published and is gone.
+- **The published page** is server-rendered HTML: round headers with dates, each team's seed numbered 1-8
+  within its division, the score, `?c=<contestId>` links and the champion (MaxPreps' renderer,
+  `asset.maxpreps.io/includes/js/tournament_renderer.compressed.20191017.js`, and its live pages for other
+  sports) **[V selectors]**. No published field hockey page has been captured, so nothing parses it: the
+  seeds come from the owner file below, and a parser is a follow-up.
+- **The team feeds** carry the games. The 2025 Los Gatos `schedule-calculated` rows, read 2026-10-29 (quoted
+  through WebFetch, since the sandbox's own GET was a 403, so
+  `tests/fixtures/maxpreps/postseason-2025/sched-los-gatos-2025-ccs.json` is a transcription), carry on every
+  CCS round, quarterfinal to final: `contest.tournamentId` `864e7271-f44e-4a88-acdb-11af2b2f0a37` (the 2025
+  championship), `contest.tournamentBracketId` (`ba9db9fb-…`, Division 1), `calculatedFields.bracketName`
+  `'Division 1'`, `bracketIsPublished` true, `tournamentName` "2025 Central Coast Section Field Hockey
+  Championship", `tournamentCanonicalUrl`, `bracketMatchupID` (read on the quarterfinal), `contest.location`
+  "@ Los Gatos HS", `goFanUrl` on the home-site games and `nfhsStreamUrl` on the final
+  (`https://www.nfhsnetwork.com/events/cifccs/gamd457a295b4`) **[V]**. `bracketGameIndex` is 0 on every row
+  and says nothing about the slot. Every 2026 crossover, Tournament of Champions and EAL row carries the
+  all-zero GUID as `tournamentId` **[V]**.
+- **What the pipeline does with them** (since 2026-10-29). `lib/normalize.ts` sets `Game.bracket` only for a
+  real `tournamentId` (`isRealGuid` refuses null and the all-zero id); when two feeds disagree on
+  `bracketName` it warns and keeps the copy with `bracketIsPublished` true. `lib/classify.ts` rule 1c tags a
+  game whose `bracket.tournamentId` is `CCS.tournament.id` (or whose tournament name says "Central Coast
+  Section", in case MaxPreps re-creates the tournament) between CCS teams `{ kind: 'ccs', via:
+  'maxpreps-bracket' }`. MaxPreps' contestType 4 makes a CCS game only from the quarterfinals' date (Nov 7):
+  before it the flag proves nothing (MaxPreps typed the 2026 Valley Christian v Palo Alto crossover 4/4 and
+  the 2025 SCVAL play-in 1). Rule 2b tags any two CCS-league teams from Nov 7 (`via: 'ccs-window'`), across
+  leagues too, since 2025's rounds paired teams of two leagues. `playoffs.games` is derived, never kept by
+  hand (`lib/ccs-bracket.ts ccsBracketGames`: tagged `ccs` and dated from the quarterfinals, or marked
+  published by the feed, which is how the bracket's games show between the Nov 2 meeting and Nov 7).
+- **Seeds** are in no feed field. After the Mon Nov 2 seeding meeting the owner copies the sixteen from the
+  published MaxPreps page into `data/ccs-bracket-2026.json` (each division numbered 1-8; contract and
+  rationale in `lib/ccs-bracket-schema.ts`; placeholder `{ "season": "2026-27", "retrievedOn": null, "source":
+  null, "divisions": [] }`, so `getCcsSeeds()` is null and no seed is printed) and runs `pnpm test` before
+  committing it: `tests/ccs-bracket-file.test.ts` refuses a wrong count, a repeated or non-CCS team, seeds
+  9-16 or the divisions out of order, and the data cron's own Test step gates its commit on the suite.
+The poll opened on `CCS.pollFrom`, Oct 25, and runs on every cron run (§5.6). Fallback: CCS posts results as
+plain text on X/Twitter.
+
+**Tickets** **[L]**: "GoFan will be used exclusively for mobile ticketing for ALL playoff contests … No
+physical tickets will be sold at playoff venues" (CCS Athletics News, `https://cifccs.org/landing/headlines-featured`,
+2026-04-29; `https://cifccs.org/Playoffs/fall_playoff_brackets_-_info`) is known from search snippets only: both
+pages returned a CloudFront 403 to the research sandbox on 2026-10-29, so the site prints no "GoFan only"
+sentence (plan item final-13, skipped until a person reads the page). A game's own GoFan link (MaxPreps
+`goFanUrl`) is still its Tickets chip. GoFan's robots.txt is `Disallow: /`, so it is linked, never read. Its
+public JSON (`https://api.gofan.co/v2/events/search?schoolId=<id>`; MCAL `CA23031`, Tamalpais `CA68035`; no MCAL
+field hockey final was listed at 2026-10-29T21:48Z) is recorded here and not polled.
+
+**Streams**: the NFHS Network's association pages `https://www.nfhsnetwork.com/associations/cifccs/field-hockey`
+and `https://www.nfhsnetwork.com/associations/cifsds/field-hockey` (read 2026-10-29; section-hosted games stream
+under the association slug, as the 2025 CCS final did) are recorded as link targets, not read. A game's own
+`nfhsStreamUrl` is what the site prints.
+
+**Access from the research sandbox on 2026-10-29**: cifccs.org, cifns.org and cifsds.org returned CloudFront
+403s; MaxPreps' web pages answered once and then 403 (its WAF; the API was unaffected); fieldhockeyumpires.org's
+TLS certificate had expired. The Actions runner is not blocked: its 2026-10-29 19:25Z run read the CCS calendar
+and the MaxPreps tournament page `ok`/200 (the snapshot's source rows `ccs-ical` and `maxpreps-html`).
+
+**The San Diego Section's playoffs** (read 2026-10-29): the round calendar is the San Diego Field Hockey
+Officials Association's (`https://sdfhoa.weebly.com/calendar.html`, config `rounds`; unchanged since the
+preseason); the Section posts its brackets on `https://www.cifsds.org/sports/fh/index` (config `bracketsPageUrl`),
+in 2025 the link-shared Google Sheet "2025 CIFSDS Field Hockey Championships" (tabs Open Division, Division I,
+Division II; `export?format=csv&gid=` answers without a login). The 2025 sheet is
+`https://docs.google.com/spreadsheets/d/1P9J_VFYljarF0IxnE4SP8zHey9T6y97IHz6NZZbaBWg/htmlview` (tabs Open Division
+`gid=53658003`, Division I `1795050195`, Division II `742825713`) **[V, 2026-10-29]**; its template is the one the
+Section's 2026 flag football brackets use (`https://docs.google.com/spreadsheets/d/1-DdMsDTXiLZF3NIy5sE9PucJmp0eW8VoDZey6wvEqJ4/htmlview`,
+"2026 CIFSDS Flag Football Championship Brackets", read 2026-10-29) **[V]**. The 2026 sheet's id is unknown until
+published and cifsds.org returns a CloudFront 403 from the research sandbox, so the owner pastes it into
+`bracketSheetUrl` (null until then) and the site links it. Since 2026-10-30 the owner also transcribes the placed
+teams and round dates into `data/sds-brackets-2026.json` (about 20 minutes; contract and rationale in
+`lib/sds-brackets-schema.ts`, which checks every school against the registry and the field sizes, the play-in,
+the rounds inside Nov 2–14 and every Open Division school against `playoffDivisionOf`) and runs `pnpm test` before
+committing it; the site then draws that published bracket with MaxPreps' results joined to it (`lib/sds-bracket.ts`,
+DESIGN §31). There is no sheet parser: the 2026 layout is inferred from 2025's and docs.google.com has never been
+read from the Actions runner. MaxPreps' 2026 SDS tournament page (`AkXf4_tRkUCSmOSRZxp7DQ` = `e3df4502-51fb-4091-9298-e491671a7b0d`,
+Open `494a605b-…`, Division I `a4ab20c1-…`, Division II `826dea99-…`) is an empty shell with no `not-published`
+marker, and the 2025 pages never went live, so it is not read (`readTournamentPage` reports it not recognised:
+it carries no CCS bracket id). The 2026-27 power rankings are plain HTML at
+`https://www.cifsdshome.org/widget/power-rankings?sort-points-desc=1&year_id=176&sport_id=30` (divisions
+`783` Division 1, `784` Division 2, `789` Open, empty until seeding); the Division 1 and 2 lists match
+`playoffDivisionOf` school for school. The HomeCampus schedule-score widget's `game_type_id=5` rows carry a playoff
+game's facility and time. Playoff overtime differs from the regular season (all goals in a first 10-minute
+period count, then sudden victory, then a shootout; the 2025 sheet writes "1-1 (2-1 SO)").
+
+**The EAL Super Regional's site and streams** (read 2026-10-29): the NFHS Network's CIFNS field hockey
+page (`https://www.nfhsnetwork.com/associations/cifns/field-hockey`) lists two events at Pleasant Valley
+High School, Chico, on Sat Oct 31: "2026 CIFNS Field Hockey Postseason Tournament - Part 1"
+(`/events/pleasant-valley-high-school-chico-ca/gam320ba3745d`, 15:30Z = 8:30 AM PDT) and "- Part 2"
+(`…/gamf48300713a`, 20:30Z = 1:30 PM PDT), both created 2026-10-27. Every cifns.org URL returned a
+CloudFront 403 from the research sandbox, and fieldhockeyumpires.org's TLS certificate had expired, so
+the site is attributed to the listing, not to the Section. The umpires' grid (cross-check only, §1.3a)
+reads "Oct 31 Sat Super Regional — Top 6 teams only" and "Oct 30 Last day for games". si.com carries
+placeholder "TBA" rows for Pleasant Valley (Oct 31) and Davis (Oct 30 and 31) at 23:59 that must never
+become games. 2025's two MaxPreps rows (Davis 6-0 Bella Vista "Semi Final", Davis 2-1 Chico OT
+"Championship Final", Nov 1 2025, contestType 5, homeAwayType 2, the all-zero tournament id, every bracket
+field null) were entered the day after; they are a real capture in
+`tests/fixtures/maxpreps/postseason-2025/sched-davis-2025-super-regional.json`. Since 2026-10-29 the
+`/playoffs#eal` card lists the Super Regional's games by day once MaxPreps has them (the `league-postseason`
+tag from the date window; the round word from `contest.location`, `lib/postseason-rounds.ts roundFromLocation`).
 
 **The North Coast Section (MCAL) is not part of any of this.** The NCS and CIF hold no field hockey
 championship, so MCAL has no CCS poll, no bracket page and no berths. MCAL's own six-team
@@ -2087,6 +2221,32 @@ tables of their own are computed (`lib/jv-standings.ts`, last bullet). Read 2026
   uncounted; shown: El Camino (12 of 18), MCAL (36 of 45), EAL (13 of 16); not shown: De Anza (8 of
   16), Mt. Hamilton (0 of 4), PCAL (7 of 15, all from si.com); Santa Teresa has no JV league game.
 
+### 1.8 OUTSIDE TOURNAMENT — the Tournament of Champions (Southern Section, not CIF)
+
+Found 2026-10-29 while asking what MaxPreps' two contestType-4 Huntington Beach games were. The Los Angeles
+Field Hockey Association's Tournament of Champions ("TOC") is an eight-team end-of-season bracket for Southern
+Section teams that CIF does not run: 2026 round 1 Thu Oct 22, semifinals Tue Oct 27, final and third-place game
+Thu Oct 29 at Huntington Beach High School (third place at Miller Field). Config: `TOC` /
+`SectionConfig.outsideTournament` in `lib/leagues.ts`; tag `outside-tournament` (`lib/classify.ts` rule 1b, a
+window Oct 22–29 over every game between two Southern Section registry teams, ahead of the contestType rule);
+listed on `/playoffs#toc` under the Sunset card. Sources, none official:
+- `https://hwchronicle.com/114175/sports/field-hockey-concentrates-as-a-group/` (Aug 25 2026: "defending their
+  title of the Los Angeles Field Hockey Association (LAFHA) Tournament of Champions") and
+  `https://hwchronicle.com/112272/sports/field-hockey-wins-tournament-of-champions-2/` (Nov 15 2025: the 2025
+  final, 4-0 over Newport Harbor, Oct 25). A 2023 story called it the "Sunset League Tournament of Champions".
+- `https://www.hbfieldhockey.com/events` (Huntington Beach's program site): "TOC Playoff - Round 1" Oct 22,
+  "Round 2" Oct 27, "Championship (HBHS)" and "3rd Playoff (Miller)" Oct 29.
+- `https://www.bonitaathletics.org/sport/field%20hockey/girls/`: "TOC Round 1" Oct 22, "TOC Round 2" Oct 27,
+  "Championship Game" Oct 29.
+- MaxPreps carries no event name (`contest.name` null, empty tournament id, bracket fields null); only Huntington
+  Beach's rows are contestType 4, the rest 1. si.com labels every TOC game "Playoffs" (`gameTypeLabel`), as does
+  the CIF-SS widget's Game Type column (§1.2a); both stay cross-check only.
+- No LAFHA website, bracket or seeding was found; the pairings are never inferred into seed copy (copy rule 5).
+Data consequences: the two duplicate rows the event exposed are in `DATA_QUALITY.excludedContestIds` (a second
+Harvard-Westlake 6-0 Temecula Valley on Oct 23; a scoreless Newport Harbor at Glendora on Oct 22, the game having
+moved to Oct 24). The third-place game (Newport Harbor v Edison, Oct 29) is not on MaxPreps. A Nov 7 all-star
+game at Chaparral (hbfieldhockey.com) may surface as team rows inside the Southern Section's season window.
+
 ### 1.6 Rejected sources (one line each)
 
 - MaxPreps statewide/league legacy scoreboard (`?leagueid=` silently ignored; grouped by CIF
@@ -2097,7 +2257,8 @@ tables of their own are computed (`lib/jv-standings.ts`, last bullet). Read 2026
 - SBLive league-scoped scoreboard — inherits the wrong league membership.
 - SCVAL DigitalSports site (`78929.digitalsports.com`) — populated with nothing, all AJAX
   endpoints return empty state; SCVAL never used it for field hockey.
-- CCS bracket pages — client-rendered, no server-side data at all.
+- CCS bracket pages (cifccs.org) — client-rendered, no server-side data at all. The bracket is read
+  from MaxPreps' tournament page and the team feeds instead (§1.4).
 - ArbiterLive — real API, but no valid entity id exists for any SCVAL school; carries no scores
   anyway.
 - rSchoolToday / Monta Vista, newer Los Altos PlayOn build, assorted one-off school sites
@@ -2466,9 +2627,9 @@ classification evidence says it is a league game. This is decided once, in the p
 |---|---|---|
 | SCVAL, EAL | MaxPreps `contestType === 0` (SCVAL: corroborated against the live PDF grid, any disagreement is logged; EAL: no official document exists to check against, and the umpire grid of §1.3a equalled it on 2026-10-04) | SCVAL: CCS section games only (postseason tag `ccs`). EAL: `contestType` 2, 4 and 5, and every game between two EAL teams on or after 2026-10-30 (postseason tag `league-postseason`, the Super Regional) |
 | BVAL, PCAL, MCAL | the game matches a fixture on the league's **official schedule** for that division | `contestType` 2 and 4 (tournament / neutral), and every postseason game |
-| Sunset | **membership** (`classification: 'membership'`, DESIGN §24.11): both sides are two of the eight Sunset teams and the game is dated Aug 25 to Oct 31, whatever MaxPreps' league flag says (the flag follows whichever scorekeeper entered the game) | `contestType` 2 and 4 on either row, and every game against a team outside the eight (Bonita at Great Oak, Aug 27, which MaxPreps flags) |
+| Sunset | **membership** (`classification: 'membership'`, DESIGN §24.11): both sides are two of the eight Sunset teams and the game is dated Aug 25 to Oct 31, whatever MaxPreps' league flag says (the flag follows whichever scorekeeper entered the game) | `contestType` 2 and 4 on either row, every game against a team outside the eight (Bonita at Great Oak, Aug 27, which MaxPreps flags), and every Tournament of Champions game (postseason tag `outside-tournament`: any game between two Southern Section teams dated Oct 22–29, §1.8) |
 | City, North County, Metro | **membership** (`classification: 'membership'`): both sides are members of the division (the CIF-SDS 2026-27 League Alignment) and the game is dated inside its league play, whatever MaxPreps' league flag says | `contestType` 2 and 4 on either row, every San Diego Section playoff game (on or after Nov 2, or `contestType` 4), and every game outside the division's league-play dates |
-| LA independents | **membership** (`classification: 'membership'`): both sides are two of the five independents (Bonita, Chaminade, Glendora, Harvard-Westlake, Thousand Oaks; this site's grouping, DESIGN §24.10) and the game is dated Sep 8 to Oct 31, whatever MaxPreps' league flag says (it flags only Bonita–Chaminade) | `contestType` 2 and 4 on either row, and every game against a team outside the five (Bonita's Aug 27 game at Great Oak, which MaxPreps flags as a league game, counts for neither table) |
+| LA independents | **membership** (`classification: 'membership'`): both sides are two of the five independents (Bonita, Chaminade, Glendora, Harvard-Westlake, Thousand Oaks; this site's grouping, DESIGN §24.10) and the game is dated Sep 8 to Oct 31, whatever MaxPreps' league flag says (it flags only Bonita–Chaminade) | `contestType` 2 and 4 on either row, every game against a team outside the five (Bonita's Aug 27 game at Great Oak, which MaxPreps flags as a league game, counts for neither table), and every Tournament of Champions game (`outside-tournament`, §1.8) |
 
 - The official-schedule matcher for BVAL, PCAL and MCAL runs three passes: same date and
   home/away order; same date, either order (records a host conflict); then **rescheduled** games
@@ -2524,15 +2685,32 @@ The normalized TypeScript model (`Team`, `Game`, `Standing`, `Snapshot`, `League
 `SourceId` etc.) lives in `lib/types.ts`; the snapshot is Zod-validated in
 `lib/snapshot-schema.ts` (schema version 2; a version-1 single-league file migrates in memory, a
 version-2 file written before a configured league existed gains that league on load, DESIGN §22.7, and a
-version-2 file whose games no longer classify under the current rules or registry is reclassified on load,
-DESIGN §24.11).
+version-2 file whose games no longer classify under the current rules or registry (a `countsFor`, a
+`leagueDivision` or a `postseason` tag that differs from what the config gives today) is reclassified on load,
+DESIGN §24.11, and a file whose `playoffs.games` differs from what `lib/ccs-bracket.ts` derives is rebuilt on load,
+`needsPlayoffGames`, 2026-10-29).
 Load-bearing rules baked into it:
 
 - `Game.home`/`.away` carry `teamId: null` + a bare `name` for non-member opponents — every
   fixture is renderable without inventing a Team record.
 - `Game.countsFor` is the division whose table the game belongs to (or `null`), set once by
-  `lib/classify.ts`; `Game.postseason` tags CCS, SCVAL crossover, BVAL play-in, MCAL tournament and
-  EAL Super Regional (`league-postseason`) games, which never count in a league table.
+  `lib/classify.ts`; `Game.postseason` tags CCS, SCVAL crossover, BVAL play-in, MCAL tournament,
+  EAL Super Regional (`league-postseason`), San Diego Section playoff and Tournament of Champions
+  (`outside-tournament`) games, which never count in a league table.
+- `Game.bracket` (optional, since 2026-10-29) is MaxPreps' bracket context, set only when the row's
+  `contest.tournamentId` is a real GUID: `{ tournamentId, bracketId, tournament, name, published, matchupId,
+  url }` from `tournamentId`, `tournamentBracketId`, `tournamentName`, `bracketName` ('Division 1' /
+  'Division 2' for the CCS), `bracketIsPublished`, `bracketMatchupID` and `tournamentCanonicalUrl` (§1.4).
+  An ordinary row (the all-zero id) has none, so every file written before it stays valid.
+- `snapshot.playoffs.games` is derived, never kept by hand: the same `Game` objects as `snapshot.games`
+  that are tagged `ccs` and dated from the quarterfinals or marked published by the feed (`ccsBracketGames`).
+  `playoffs.bracketPublished` is true when either division of the MaxPreps page is published, and
+  `playoffs.divisionsPublished` (optional, since 2026-10-29) holds the per-division answer; both are
+  carried from the previous snapshot when the page is not recognised (§1.4).
+- The CCS seeds and the San Diego brackets are not in the snapshot: they are the owner files
+  `data/ccs-bracket-2026.json` (`lib/ccs-bracket-schema.ts`) and `data/sds-brackets-2026.json`
+  (`lib/sds-brackets-schema.ts`), bundled and validated at build time (a slip in either fails the build
+  and `pnpm test`), placeholders until the sections publish.
 - A level EAL final that MaxPreps flags `W` for one team and `L` for the other is a 1 v 1 win:
   `decider: 'SO'`, `shootout: null` (no tally is stored, §1.1b), and the flags decide the result in
   every W/L/T count. Shootout data exists only when the decider is `SO`. A level San Diego final
@@ -2634,7 +2812,7 @@ as immutable.
 
 **Conditional extras:** the two SCVAL schedule PDFs + `Fall_index.html`; the `scval.com/standings/`
 poll; the two VNN `.ics` feeds (start times/venues/JV); CCS calendar + MaxPreps tournament page
-(**daily from Oct 25**, twice daily on Nov 7/11/14). Game venue addresses are fetched lazily, one
+(on every run from Oct 25, which is the cron's two runs a day: there is no extra game-day run, §5.6). Game venue addresses are fetched lazily, one
 request per game, only from a game-detail route — never in the sweep.
 
 **Normalization rules:** dedupe on `contest.contestId`; drop `contestState === 1` before anything
@@ -2852,22 +3030,62 @@ game page shows), with the team and game pages they cite. No test, script or man
 files except `team-456851-york-falcons.html`, which `tests/backfill.test.ts` parses (York is JV
 only, `DATA_QUALITY.sbliveIgnoredTeamIds`). Keep them when fixtures are refreshed.
 
+**Postseason fixtures (2026-10-29/30).** No real 2026 bracket exists yet, so the CCS and San Diego bracket code is
+held to 2025's:
+- `tests/fixtures/ccs/tournament-2026-10-29-unpublished.html` (111,799 B, the live MaxPreps tournament page captured
+  2026-10-29 21:41Z, both divisions `not-published`) and `tests/fixtures/ccs/tournament-403.html` (6,967 B, the WAF
+  body the sandbox got on a later request): `tests/ccs.test.ts` and `tests/pipeline/ccs-carry.test.ts` read them.
+- `tests/fixtures/maxpreps/postseason-2025/sched-los-gatos-2025-ccs.json`: Los Gatos's three 2025 CCS rows
+  (`0de6848f` quarterfinal, `84992c1e` semifinal, `e6091e07` final), **transcribed, not captured** (values quoted
+  through WebFetch on 2026-10-29; the envelope and row shape copied from the real Davis capture; its `_note` lists
+  every transcribed and every nulled field). `sched-davis-2025-super-regional.json` beside it is the two real
+  2025-11-01 Super Regional rows of Davis's feed, bytes unchanged. They live in the `postseason-2025/`
+  subfolder because `tests/helpers.ts allScheduleRows()` sweeps every `sched-*.json` directly under
+  `tests/fixtures/maxpreps/` into the SCVAL corpus (293 rows from 15 feeds, pinned).
+- `tests/fixtures/ccs/bracket-2025.ts`: the 14 CCS games of `data/prior-season.json` rebuilt with the `game()`
+  builder on Nov 7/11/14 2026, with `bracket` and the `ccs` tag, the sixteen 2025 seeds from
+  `data/history-brackets-2025-26.json` (`seedsFromHistory`), the Stevenson–Willow Glen 1-1 (`4e75d107`) given Willow
+  Glen's W as the history file records, and the finals' venue text from the history sites (`@ Los Altos HS`, `@
+  Gilroy HS`). `tests/ui/bracket-model.test.ts`, `tests/ui/playoff-bracket.test.ts` and `tests/ui/playoff-view.test.ts`
+  use it.
+- `tests/fixtures/sds/brackets-2025.ts`: the 2025 San Diego brackets as an owner file (`seedsFromHistory('sds')`,
+  window Nov 2–15 2025), the 26 SDS playoff rows of `data/prior-season.json` rebuilt with `game()` and tagged
+  `section-playoffs` (three level rows given the W/L the sheet's winners imply) and a synthetic Helix 2-1 Granite
+  Hills play-in (not on MaxPreps). 26 of the 30 bracket games have a MaxPreps row, so the join is asserted only
+  where one exists. `tests/sds-bracket.test.ts` and `tests/ui/sds-bracket.test.ts` use it.
+
 ### 5.6 Playoff polling from Oct 25
 
-Before the CCS poll window, render the postseason sections from the by-laws-derived dates and each
+Before the CCS poll window, the postseason sections render from the by-laws-derived dates and each
 league's ladder, with no polling. From `CCS.pollFrom` (Oct 25, before BVAL's last league games on
-Oct 30, its Oct 31 play-in and the Nov 2 entries deadline) daily (twice daily on Nov 7/11/14):
-fetch the CCS `?print=ical` calendar (match the `"CCS Semfinals"` typo), poll the MaxPreps
-tournament page for `bracketPublished` flipping true, and continue the team `schedule-calculated`
-calls, watching for populated `bracketName`/`bracketGameIndex`/`tournamentName` fields (untested —
-verify live on Nov 7). Re-derive the CCS CloudFront PDF URLs each time; never poll the CCS bracket
-page itself expecting data. **MCAL has no section playoff**: its tournament (play-in Fri Oct 23 if
-needed, quarterfinals Mon Oct 26, semifinals Wed Oct 28, final Fri Oct 30 at Tamalpais) is read
-from MaxPreps games dated on or after Oct 23 between MCAL teams. **The EAL's Super Regional (Oct
-30-31) is not polled either**: no source is read for it and the site draws no bracket (§1.4). A game
-between two EAL teams on or after 2026-10-30, or typed `contestType` 4 between them, is tagged
-`league-postseason` and never counts in the league table; nothing of the kind had been observed
-by 2026-10-04.
+Oct 30, its Oct 31 play-in and the Nov 2 entries deadline) every run fetches the CCS `?print=ical`
+calendar (match the `"CCS Semfinals"` typo; `confirmKeyDates` also compares each round's site words with
+the config) and reads the MaxPreps tournament page division by division (`readTournamentPage`, §1.4: an
+unrecognised page is not read and the previous bracket state is carried), and the team
+`schedule-calculated` calls read the bracket fields into `Game.bracket` (verified on 2025 rows read
+2026-10-29, §1.4; `bracketGameIndex` is 0 and unused). Re-derive the CCS CloudFront PDF URLs each time;
+never poll the CCS bracket page itself expecting data.
+
+**Cadence (observed 2026-10-29).** There is no extra run on game days: the two crons (`0 14 * 8-12 *` and
+`0 5 * 8-12 *`, 7 AM and 10 PM Pacific during PDT, 6 AM and 9 PM after Nov 1) are the only schedule, and
+GitHub started them late every day of Oct 21–29 (the git log of `data/snapshot.meta.json`: the 05:00 UTC run
+4.2–6.2 h late, the 14:00 UTC run 3.2–5.7 h late). In PST that is about 1–3 AM and 9–11:45 AM Pacific, so
+nothing lands between about noon and 1 AM: a game played in the afternoon or evening is first on the site
+the next night or morning, the Nov 2 1 PM seeding is first detectable on the early Nov 3 run, and fan copy
+says "after the next update", never "that evening". Extra Nov 2–15 runs are an owner decision, not made
+(`tests/workflows.test.ts` does not pin the cron).
+
+**MCAL has no section playoff**: its tournament (play-in Fri Oct 23 if needed, quarterfinals Mon Oct 26,
+semifinals Wed Oct 28, final Fri Oct 30 at Tamalpais) is read from MaxPreps games dated on or after Oct 23
+between MCAL teams. **The EAL's Super Regional (Oct 30-31) is not polled either**: no source is read for it
+and the site draws no bracket (§1.4). A game between two EAL teams on or after 2026-10-30, or typed
+`contestType` 4 between them, is tagged `league-postseason` and never counts in the league table. 2025's two
+Super Regional rows (Nov 1 2025, `contestType` 5 and `homeAwayType` 2 on both sides, the round in
+`contest.location`, the all-zero tournament id, entered the day after; a real capture in
+`tests/fixtures/maxpreps/postseason-2025/`) are what the window and the `/playoffs#eal` results list are
+tested against. **The San Diego Section's brackets are not polled**: the owner transcribes the published sheet
+into `data/sds-brackets-2026.json` (§1.4), and the Section's playoff games arrive in the team feeds like any
+other, tagged `section-playoffs` from Nov 2.
 
 ## 6. Legal / robots posture and attribution
 
@@ -2919,6 +3137,11 @@ rules clause.)
 
 ## 7. Known open risks (carried into README "Known limitations")
 
+- **The Tournament of Champions is read from a date window, not from a source.** Nothing publishes its
+  bracket; a game between two Southern Section teams dated Oct 22–29 is taken to be a tournament game
+  (§1.8). A non-tournament game between two of those teams in that week would be mis-tagged, and the
+  third-place game is listed only if MaxPreps adds it.
+
 - MaxPreps' own De Anza standings arithmetic looked internally inconsistent at capture time
   (e.g. two teams reporting zero league goals scored *and* against across a full slate) — this
   project recomputes independently from game rows and prefers the computed values; `reported` is
@@ -2929,8 +3152,22 @@ rules clause.)
 - MaxPreps' coverage of PCAL and Santa Teresa is incomplete (§2), so those tables depend on the
   official schedule and on si.com backfills; a si.com page change or outage degrades them to
   "missing result" lines, never to guesses.
-- `dateCode` nonzero semantics, `contestState` 0/3, and `homeAwayType === 2` (neutral) were never
-  observed in the wild — treat any future occurrence as unverified territory.
+- `dateCode` nonzero semantics and `contestState` 0 were never observed — treat any future occurrence
+  as unverified territory. (`contestState` 3 was observed on 2026-10-05, and `homeAwayType` 2 (neutral)
+  on both sides of 2025's EAL Super Regional rows and CCS Division 1 final, read 2026-10-29; §1.1(g).)
+- **The CCS seeds and the San Diego brackets are typed in by hand.** `data/ccs-bracket-2026.json` (after the
+  Mon Nov 2 seeding meeting, from the MaxPreps tournament page) and `data/sds-brackets-2026.json` (after the Sat
+  Oct 31 meeting, from the Section's sheet) are transcriptions: the schemas refuse a wrong count, a repeated or
+  out-of-league school, an impossible play-in or a round outside the playoffs' dates, but not a team typed into
+  the wrong numbered place. Run `pnpm test` before committing either. No parser exists for the published MaxPreps
+  page (never captured) or the Section's sheet (2026 id unknown, docs.google.com unproven from Actions) (§1.4).
+- **The CCS bracket path is proven on 2025's rows, not on a live 2026 bracket.** The feed fields were read from
+  Los Gatos's 2025 rows through WebFetch (a transcription, §5.5), and the tag and model tests run on 2025's games
+  moved to 2026's dates. If MaxPreps names the 2026 divisions differently, a game whose division neither
+  `bracketName` nor the seed file proves is drawn without a division name (`Bracket 1` / `Bracket 2`, or one
+  `CCS bracket`) rather than guessed.
+- **CCS tickets: GoFan-only is unverified.** The CCS pages that say so are unreachable from the research sandbox,
+  so the site does not say it (§1.4, [L]).
 - `scoreboard-contests-by-ids`' `teams[0]`-is-home assumption is unverified — never relied on.
 - CCS CloudFront PDF hashes change on every re-upload — always re-derive at fetch time, never
   hardcode.

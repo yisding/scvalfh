@@ -1,8 +1,9 @@
 import Link from 'next/link';
 import { Fragment } from 'react';
 
-import { recordString, scoreSentence } from '../../lib/format';
+import { EM_DASH, recordString, scoreSentence } from '../../lib/format';
 import { gameHref } from '../../lib/game-id';
+import { playInWinnerPurpose, winningSide } from '../../lib/postseason-outcomes';
 import type { Game, Standing, Team } from '../../lib/types';
 import TeamMonogram from '../ui/TeamMonogram';
 
@@ -18,6 +19,13 @@ import TeamMonogram from '../ui/TeamMonogram';
  * place spans it, and the card's notes say why in words. The hosting side is marked `(host)` in
  * text — never by position or colour alone. Once the contest exists, the card links to it with
  * `gameHref`, and the link text is the score sentence (never a 0-0 for a missing score).
+ *
+ * Under a FINAL play-in for an automatic berth the card also names the winner and what it won, one sentence:
+ * 'Winner: Los Altos — SCVAL’s 7th automatic qualifier', 'Winner: Westmont — BVAL’s 4th automatic CCS berth'
+ * (plan final-10, 2026-10-30). The berth words come from the purpose prop, which is the pairing's config label
+ * (lib/postseason-outcomes.ts playInWinnerPurpose), so a crossover ('For CCS seeding, not qualification.') and the
+ * MCAL play-in (its rule) print none: no CCS concept reaches the NCS page. The winner is the higher score, else the
+ * side MaxPreps marks 'W'; a level final with no flag names nobody.
  */
 export interface PlayInSide {
   /** 'Santa Teresa #1' — from config. */
@@ -139,6 +147,17 @@ function Side({ side, align }: { side: PlayInSide; align: 'start' | 'end' }) {
   );
 }
 
+/** 'Winner: Los Altos — SCVAL’s 7th automatic qualifier' for a final play-in, else null. */
+function winnerLine(game: Game | null | undefined, sides: [PlayInSide, PlayInSide], purpose: string | null | undefined): string | null {
+  if (!game || !purpose) return null;
+  const won = playInWinnerPurpose(purpose);
+  const at = winningSide(game);
+  if (!won || !at) return null;
+  const side = game[at];
+  const contender = sides.flatMap((s) => s.contenders).find((c) => c.team.id === side.teamId);
+  return `Winner: ${contender ? contender.team.shortName : side.name} ${EM_DASH} ${won}`;
+}
+
 export function PlayInCard({
   title,
   when,
@@ -151,6 +170,7 @@ export function PlayInCard({
   emphasis = false,
   className,
 }: PlayInCardProps) {
+  const winner = winnerLine(game, sides, purpose);
   return (
     <div
       className={['sx-card p-4', className].filter(Boolean).join(' ')}
@@ -202,6 +222,7 @@ export function PlayInCard({
           </Link>
         </p>
       ) : null}
+      {winner ? <p className="mt-1 mb-0 text-meta font-semibold text-ink">{winner}</p> : null}
     </div>
   );
 }

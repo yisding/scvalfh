@@ -361,8 +361,8 @@
       },
       "independents": {
         "backfilled": 0,
-        "finals": 60,
-        "games": 62,
+        "finals": 59,
+        "games": 60,
         "leagueGames": 21,
         "teams": 5
       },
@@ -403,17 +403,17 @@
       },
       "sunset": {
         "backfilled": 0,
-        "finals": 109,
-        "games": 111,
-        "leagueGames": 36,
+        "finals": 108,
+        "games": 109,
+        "leagueGames": 35,
         "teams": 8
       }
     },
-    "finals": 890,
-    "games": 928,
-    "leagueGames": 553,
+    "finals": 889,
+    "games": 926,
+    "leagueGames": 552,
     "mismatches": 29,
-    "pending": 4,
+    "pending": 3,
     "teams": 102
   },
   "crossCheck": [
@@ -559,7 +559,7 @@
     {
       "field": "league record",
       "knownCause": "MaxPreps’ Sunset table lists three of the eight teams, with Bonita and Chaminade, counts only the games its scorekeepers flagged as league games, and orders them by winning percentage. This site counts every game between two of the eight, orders all eight by 3-1-0 points, and lists Bonita and Chaminade with the LA independents, so Great Oak’s Aug 27 win over Bonita, which MaxPreps counts, is not counted here. si.com uses its own league labels, so its Sunset records differ from both.",
-      "ours": "6-4-0",
+      "ours": "6-3-0",
       "slug": "great-oak",
       "theirs": "4-2-0",
       "url": "https://www.maxpreps.com/ca/field-hockey/26-27/league/sunset/?leagueid=aa46adc4-c188-4e3b-b5fd-857064176297"
@@ -795,6 +795,26 @@
       "reason": "tba-opponent",
       "teams": [
         "Sage Creek"
+      ]
+    },
+    {
+      "contestId": "3702e126-9414-4c0b-a13c-61e78ead2ed9",
+      "dateKey": "2026-10-22",
+      "note": "Newport Harbor at Glendora, Oct 22 with no score: the Tournament of Champions round-1 game was played Sat Oct 24 (45732090, Newport Harbor 3-0)",
+      "reason": "excluded-by-config",
+      "teams": [
+        "Glendora",
+        "Newport Harbor"
+      ]
+    },
+    {
+      "contestId": "0017b5bb-5319-4742-84df-e6585dcb7056",
+      "dateKey": "2026-10-23",
+      "note": "Temecula Valley at Harvard-Westlake, Oct 23: a second MaxPreps row for their Tournament of Champions round-1 game of Oct 22 (b5fbcc70), both 6-0",
+      "reason": "excluded-by-config",
+      "teams": [
+        "Harvard-Westlake",
+        "Temecula Valley"
       ]
     }
   ],
@@ -45959,7 +45979,7 @@
         "away": 1,
         "home": 1
       },
-      "countsFor": "sunset",
+      "countsFor": null,
       "dateKey": "2026-10-22",
       "dateLocal": "2026-10-22T15:30:00",
       "dateUtc": "2026-10-22T22:30:00Z",
@@ -45980,7 +46000,11 @@
       "isTimeTba": false,
       "leagueDivision": "sunset",
       "otPeriods": 0,
-      "postseason": null,
+      "postseason": {
+        "kind": "outside-tournament",
+        "leagueId": "sunset",
+        "via": "outside-tournament-window"
+      },
       "provenance": {
         "contentChangedAt": "2026-10-23T09:41:12.504Z",
         "fetchedAt": "2026-10-29T19:25:26.511Z",
@@ -46105,61 +46129,6 @@
         "goFan": null,
         "maxpreps": "https://www.maxpreps.com/ca/field-hockey/game/clairemont-san-diego-vs-mira-mesa-san-diego/10-22-2026/?c=125039d0-5915-41bb-ad10-838bf415b73a",
         "nfhsStream": "https://www.nfhsnetwork.com/events/clairemont-high-school-san-diego-ca/gambc5c71a78e?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=post"
-      },
-      "venue": {
-        "text": null
-      }
-    },
-    {
-      "away": {
-        "city": "Newport Beach",
-        "name": "Newport Harbor",
-        "result": null,
-        "score": null,
-        "slug": "newport-harbor",
-        "teamId": "86009247-6ae1-40e1-acfa-58c200528743"
-      },
-      "contestId": "3702e126-9414-4c0b-a13c-61e78ead2ed9",
-      "contestTypes": {
-        "away": 1,
-        "home": 1
-      },
-      "countsFor": null,
-      "dateKey": "2026-10-22",
-      "dateLocal": "2026-10-22T16:00:00",
-      "dateUtc": "2026-10-22T23:00:00Z",
-      "decider": null,
-      "forfeitBy": null,
-      "home": {
-        "city": "Glendora",
-        "name": "Glendora",
-        "result": null,
-        "score": null,
-        "slug": "glendora",
-        "teamId": "1228375e-e4c0-453e-aed4-d0b0693b3c52"
-      },
-      "isDateTba": false,
-      "isForfeit": false,
-      "isLeague": false,
-      "isOt": false,
-      "isTimeTba": false,
-      "leagueDivision": null,
-      "otPeriods": 0,
-      "postseason": null,
-      "provenance": {
-        "contentChangedAt": "2026-10-23T09:41:12.504Z",
-        "fetchedAt": "2026-10-29T19:25:26.511Z",
-        "maxprepsModifiedOn": "2026-10-21T17:46:51",
-        "schedule": "maxpreps-api",
-        "scores": "maxpreps-api"
-      },
-      "shootout": null,
-      "site": "home",
-      "status": "score-pending",
-      "urls": {
-        "goFan": null,
-        "maxpreps": "https://www.maxpreps.com/ca/field-hockey/game/glendora-vs-newport-harbor-newport-beach/10-22-2026/?c=3702e126-9414-4c0b-a13c-61e78ead2ed9",
-        "nfhsStream": null
       },
       "venue": {
         "text": null
@@ -46606,7 +46575,11 @@
       "isTimeTba": false,
       "leagueDivision": null,
       "otPeriods": 0,
-      "postseason": null,
+      "postseason": {
+        "kind": "outside-tournament",
+        "leagueId": null,
+        "via": "outside-tournament-window"
+      },
       "provenance": {
         "contentChangedAt": "2026-10-23T18:05:29.674Z",
         "fetchedAt": "2026-10-29T19:25:26.511Z",
@@ -46662,9 +46635,9 @@
       "leagueDivision": null,
       "otPeriods": 0,
       "postseason": {
-        "kind": "other",
+        "kind": "outside-tournament",
         "leagueId": null,
-        "via": "contest-type-4"
+        "via": "outside-tournament-window"
       },
       "provenance": {
         "contentChangedAt": "2026-10-28T19:19:51.721Z",
@@ -47492,61 +47465,6 @@
     },
     {
       "away": {
-        "city": "Temecula",
-        "name": "Temecula Valley",
-        "result": "L",
-        "score": 0,
-        "slug": "temecula-valley",
-        "teamId": "8f350275-199e-4549-b574-2257e718069f"
-      },
-      "contestId": "0017b5bb-5319-4742-84df-e6585dcb7056",
-      "contestTypes": {
-        "away": 1,
-        "home": 1
-      },
-      "countsFor": null,
-      "dateKey": "2026-10-23",
-      "dateLocal": "2026-10-23T16:00:00",
-      "dateUtc": "2026-10-23T23:00:00Z",
-      "decider": "REG",
-      "forfeitBy": null,
-      "home": {
-        "city": "Studio City",
-        "name": "Harvard-Westlake",
-        "result": "W",
-        "score": 6,
-        "slug": "harvard-westlake",
-        "teamId": "9dc04c54-8c9d-4b30-a1d2-fcc167363342"
-      },
-      "isDateTba": false,
-      "isForfeit": false,
-      "isLeague": false,
-      "isOt": false,
-      "isTimeTba": false,
-      "leagueDivision": null,
-      "otPeriods": 0,
-      "postseason": null,
-      "provenance": {
-        "contentChangedAt": "2026-10-26T10:39:30.810Z",
-        "fetchedAt": "2026-10-29T19:25:26.511Z",
-        "maxprepsModifiedOn": "2026-10-27T20:24:22",
-        "schedule": "maxpreps-api",
-        "scores": "maxpreps-api"
-      },
-      "shootout": null,
-      "site": "home",
-      "status": "final",
-      "urls": {
-        "goFan": null,
-        "maxpreps": "https://www.maxpreps.com/ca/field-hockey/game/harvard-westlake-studio-city-vs-temecula-valley/10-23-2026/?c=0017b5bb-5319-4742-84df-e6585dcb7056",
-        "nfhsStream": "https://www.nfhsnetwork.com/events/cifss/gam743971fe57?maxpreps=maxpreps&utm_campaign=team-schedule-list&utm_medium=referral&utm_source=maxpreps&utm_content=post"
-      },
-      "venue": {
-        "text": null
-      }
-    },
-    {
-      "away": {
         "city": "Carlsbad",
         "name": "Sage Creek",
         "result": "L",
@@ -48027,7 +47945,11 @@
       "isTimeTba": false,
       "leagueDivision": null,
       "otPeriods": 0,
-      "postseason": null,
+      "postseason": {
+        "kind": "outside-tournament",
+        "leagueId": null,
+        "via": "outside-tournament-window"
+      },
       "provenance": {
         "contentChangedAt": "2026-10-25T09:30:36.850Z",
         "fetchedAt": "2026-10-29T19:25:26.511Z",
@@ -48900,9 +48822,9 @@
       "leagueDivision": "sunset",
       "otPeriods": 0,
       "postseason": {
-        "kind": "other",
+        "kind": "outside-tournament",
         "leagueId": "sunset",
-        "via": "contest-type-4"
+        "via": "outside-tournament-window"
       },
       "provenance": {
         "contentChangedAt": "2026-10-28T19:19:51.721Z",
@@ -49997,7 +49919,11 @@
       "isTimeTba": false,
       "leagueDivision": null,
       "otPeriods": 0,
-      "postseason": null,
+      "postseason": {
+        "kind": "outside-tournament",
+        "leagueId": null,
+        "via": "outside-tournament-window"
+      },
       "provenance": {
         "contentChangedAt": "2026-10-28T10:55:13.716Z",
         "fetchedAt": "2026-10-29T19:25:26.511Z",
@@ -51504,7 +51430,11 @@
       "isTimeTba": false,
       "leagueDivision": null,
       "otPeriods": 0,
-      "postseason": null,
+      "postseason": {
+        "kind": "scval-crossover",
+        "leagueId": "scval",
+        "via": "config-pairing"
+      },
       "provenance": {
         "contentChangedAt": "2026-10-29T11:12:20.383Z",
         "fetchedAt": "2026-10-29T19:25:26.511Z",
@@ -52007,9 +51937,9 @@
       "leagueDivision": null,
       "otPeriods": 0,
       "postseason": {
-        "kind": "ccs",
+        "kind": "scval-crossover",
         "leagueId": "scval",
-        "via": "contest-type-4"
+        "via": "config-pairing"
       },
       "provenance": {
         "contentChangedAt": "2026-10-26T19:44:35.210Z",
@@ -52065,7 +51995,11 @@
       "isTimeTba": false,
       "leagueDivision": null,
       "otPeriods": 0,
-      "postseason": null,
+      "postseason": {
+        "kind": "outside-tournament",
+        "leagueId": null,
+        "via": "outside-tournament-window"
+      },
       "provenance": {
         "contentChangedAt": "2026-10-29T19:25:26.511Z",
         "fetchedAt": "2026-10-29T19:25:26.511Z",
@@ -53354,7 +53288,7 @@
         {
           "backfilled": 0,
           "classification": "membership",
-          "countedFinals": 36,
+          "countedFinals": 35,
           "divisionId": "sunset",
           "meta": "ok",
           "missingLeaguePast": 0,
@@ -53608,7 +53542,7 @@
         }
       ],
       "elimination": "single",
-      "highSeedHostsThrough": "semifinals"
+      "highSeedHostsThrough": "quarterfinals"
     },
     "games": [],
     "keyDates": {
@@ -53932,7 +53866,7 @@
         "shortName": "SCVAL",
         "window": {
           "firstGame": "2026-08-24T16:00:00",
-          "lastGame": "2026-10-29T16:00:00",
+          "lastGame": "2026-10-28T18:00:00",
           "lastLeagueGame": "2026-10-28T18:00:00"
         }
       },
@@ -54032,8 +53966,8 @@
         "shortName": "Sunset",
         "window": {
           "firstGame": "2026-08-18T15:30:00",
-          "lastGame": "2026-10-29T18:00:00",
-          "lastLeagueGame": "2026-10-22T15:30:00"
+          "lastGame": "2026-10-28T18:30:00",
+          "lastLeagueGame": "2026-10-20T15:30:00"
         }
       },
       {
@@ -54128,7 +54062,7 @@
         "shortName": "LA",
         "window": {
           "firstGame": "2026-08-18T15:30:00",
-          "lastGame": "2026-10-29T18:00:00",
+          "lastGame": "2026-10-19T19:00:00",
           "lastLeagueGame": "2026-10-19T19:00:00"
         }
       }
@@ -62473,18 +62407,18 @@
           "w": 4
         },
         "ga": 3,
-        "gd": 58,
-        "gf": 61,
-        "gp": 11,
+        "gd": 55,
+        "gf": 58,
+        "gp": 10,
         "homeRecord": {
           "l": 1,
           "t": 0,
-          "w": 6
+          "w": 5
         },
         "l": 1,
         "last5": [
-          "L",
           "W",
+          "L",
           "W",
           "W",
           "W"
@@ -62495,14 +62429,14 @@
           "w": 0
         },
         "place": 1,
-        "pts": 30,
+        "pts": 27,
         "streak": {
-          "count": 4,
+          "count": 3,
           "result": "W"
         },
         "t": 0,
-        "w": 10,
-        "winPct": 0.9090909090909091
+        "w": 9,
+        "winPct": 0.9
       },
       "division": "sunset",
       "hasReportedResults": true,
@@ -62550,7 +62484,7 @@
       "slug": "edison",
       "teamId": "c5a36b71-74a5-431f-94a3-8337d66dfbbb",
       "tiebreak": {
-        "note": "30 points (3 per win, 1 per tie) — placed on points alone, no league document orders the table; this site orders it by its own 3-1-0 points.",
+        "note": "27 points (3 per win, 1 per tie) — placed on points alone, no league document orders the table; this site orders it by its own 3-1-0 points.",
         "resolvedBy": "points",
         "shared": false,
         "tiedWith": []
@@ -62650,25 +62584,25 @@
     {
       "computed": {
         "awayRecord": {
-          "l": 3,
+          "l": 2,
           "t": 0,
           "w": 3
         },
-        "ga": 13,
-        "gd": 5,
+        "ga": 10,
+        "gd": 8,
         "gf": 18,
-        "gp": 10,
+        "gp": 9,
         "homeRecord": {
           "l": 1,
           "t": 0,
           "w": 3
         },
-        "l": 4,
+        "l": 3,
         "last5": [
           "W",
           "W",
           "W",
-          "L",
+          "W",
           "L"
         ],
         "neutralRecord": {
@@ -62679,17 +62613,17 @@
         "place": 3,
         "pts": 18,
         "streak": {
-          "count": 2,
+          "count": 1,
           "result": "L"
         },
         "t": 0,
         "w": 6,
-        "winPct": 0.6
+        "winPct": 0.6666666666666666
       },
       "division": "sunset",
       "hasReportedResults": true,
       "mismatch": true,
-      "mismatchDetail": "league record 6-4-0 vs MaxPreps 4-2-0; overall record 8-11-2 vs MaxPreps 8-12-2; league goals 18-13 vs MaxPreps 11-6",
+      "mismatchDetail": "league record 6-3-0 vs MaxPreps 4-2-0; overall record 8-11-2 vs MaxPreps 8-12-2; league goals 18-10 vs MaxPreps 11-6",
       "overall": {
         "awayRecord": {
           "l": 4,
@@ -62900,26 +62834,26 @@
       "division": "sunset",
       "hasReportedResults": true,
       "mismatch": true,
-      "mismatchDetail": "league record 4-5-0 vs MaxPreps 3-4-0; league goals 25-18 vs MaxPreps 21-16",
+      "mismatchDetail": "league record 4-5-0 vs MaxPreps 3-4-0; overall record 6-10-0 vs MaxPreps 6-11-0; league goals 25-18 vs MaxPreps 21-16",
       "overall": {
         "awayRecord": {
-          "l": 6,
+          "l": 5,
           "t": 0,
           "w": 4
         },
-        "ga": 39,
-        "gd": -8,
+        "ga": 33,
+        "gd": -2,
         "gf": 31,
-        "gp": 17,
+        "gp": 16,
         "homeRecord": {
           "l": 2,
           "t": 0,
           "w": 2
         },
-        "l": 11,
+        "l": 10,
         "last5": [
-          "W",
           "L",
+          "W",
           "L",
           "L",
           "L"
@@ -62932,12 +62866,12 @@
         "place": 5,
         "pts": 18,
         "streak": {
-          "count": 4,
+          "count": 3,
           "result": "L"
         },
         "t": 0,
         "w": 6,
-        "winPct": 0.35294117647058826
+        "winPct": 0.375
       },
       "playoffStatus": "no-postseason",
       "reported": {
@@ -67811,13 +67745,13 @@
           "w": 7
         },
         "ga": 13,
-        "gd": 104,
-        "gf": 117,
-        "gp": 22,
+        "gd": 98,
+        "gf": 111,
+        "gp": 21,
         "homeRecord": {
           "l": 0,
           "t": 1,
-          "w": 10
+          "w": 9
         },
         "l": 3,
         "last5": [
@@ -67833,14 +67767,14 @@
           "w": 1
         },
         "place": 1,
-        "pts": 55,
+        "pts": 52,
         "streak": {
-          "count": 14,
+          "count": 13,
           "result": "W"
         },
         "t": 1,
-        "w": 18,
-        "winPct": 0.8409090909090909
+        "w": 17,
+        "winPct": 0.8333333333333334
       },
       "playoffStatus": "no-postseason",
       "reported": null,

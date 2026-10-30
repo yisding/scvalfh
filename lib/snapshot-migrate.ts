@@ -22,10 +22,17 @@
  * reject the file on its `countsFor` check and run with NO previous snapshot: no carry-forward, no finals
  * regression guard, and a meta file that reports every existing final as newly added.
  *
- * All three return v2 JSON, NOT yet parsed: the caller (`loadSnapshot`) runs it through `parseSnapshot`.
+ * "Bracket games" (v2 → v2, 2026-10-29). `playoffs.games` is derived from `games` (lib/ccs-bracket.ts
+ * ccsBracketGames: the 'ccs'-tagged games on or after the quarterfinals or marked published by MaxPreps' feed).
+ * A file whose `playoffs.games` is not that derivation — written before it existed, or before a tag changed
+ * (reclassified above) — gets it rebuilt on load (`needsPlayoffGames` / `rebuildPlayoffGames`), so the
+ * committed file heals itself the way stale tags do. Today's file has no bracket game: a no-op.
+ *
+ * All four return v2 JSON, NOT yet parsed: the caller (`loadSnapshot`) runs it through `parseSnapshot`.
  */
 
-import { classifyGame, classifyGames } from './classify';
+import { ccsBracketGames, playoffGamesStale } from './ccs-bracket';
+import { classifyGame, classifyGames, postseasonTag } from './classify';
 import { CCS, LEAGUES, LEAGUE_IDS, findDivision, leagueOfDivision } from './leagues';
 import { buildSeason, leagueWindowOf } from './season-build';
 import { assertFullTable, buildCrossCheck, computeStandings, divisionGames } from './standings';
@@ -36,6 +43,7 @@ import type {
   Game,
   GameSide,
   LeagueHealth,
+  LeagueId,
   OfficialFixture,
   OfficialStamp,
   ReportedRecord,
@@ -406,11 +414,18 @@ function reassign(g: Game): Game {
   return { ...g, home, away, leagueDivision: registryDivision({ ...g, home, away }) };
 }
 
+/** Two postseason tags (or nulls) that say the same thing. */
+function sameTag(a: Game['postseason'], b: Game['postseason']): boolean {
+  if (!a || !b) return !a && !b;
+  return a.kind === b.kind && a.leagueId === b.leagueId && a.via === b.via;
+}
+
 /**
  * A v2 object with at least one game that no longer classifies as written: its `leagueDivision` is not what
- * the registry says now, or its `countsFor` is not what `classifyGame` returns under the current rules (with the
- * file's own degraded set). False for anything else, including a file `parseSnapshot` would reject for another
- * reason: that error is the caller's to report.
+ * the registry says now, its `postseason` tag is not what `postseasonTag` gives under the current config (a
+ * pairing window widened, a postseason date moved), or its `countsFor` is not what `classifyGame` returns under
+ * the current rules (with the file's own degraded set). False for anything else, including a file
+ * `parseSnapshot` would reject for another reason: that error is the caller's to report.
  */
 export function needsReclassification(raw: unknown): boolean {
   if (!isObject(raw) || raw.schemaVersion !== 2 || !Array.isArray(raw.games) || !Array.isArray(raw.leagueHealth)) return false;
@@ -418,7 +433,10 @@ export function needsReclassification(raw: unknown): boolean {
     const degraded = degradedDivisionsOf(raw.leagueHealth as LeagueHealth[]);
     return (raw.games as Game[]).some((g) => {
       const division = registryDivision(g);
-      return division !== g.leagueDivision || classifyGame({ ...g, leagueDivision: division }, { degradedDivisions: degraded }) !== g.countsFor;
+      if (division !== g.leagueDivision) return true;
+      const tag = postseasonTag({ ...g, leagueDivision: division });
+      if (!sameTag(tag, g.postseason)) return true;
+      return classifyGame({ ...g, leagueDivision: division, postseason: tag }, { degradedDivisions: degraded }) !== g.countsFor;
     });
   } catch {
     return false;
@@ -440,15 +458,25 @@ export function reclassify(raw: unknown): unknown {
   const v2 = raw as unknown as Snapshot;
   const degraded = degradedDivisionsOf(v2.leagueHealth);
 
-  // 1. games
-  const games = classifyGames(v2.games.map(reassign), { degradedDivisions: degraded });
+  // 1. games — tags cleared first, so `classifyGames` re-derives `postseason` as well as `countsFor` (it keeps a
+  //    tag that is already set, which is right for the pipeline's own pass and wrong for a file whose tags are stale).
+  const games = classifyGames(v2.games.map((g) => ({ ...reassign(g), postseason: null })), { degradedDivisions: degraded });
   const changed = new Set<DivisionId>();
+  // A tag that changed moves no table, but it moves the league's season window (a postseason game never
+  // extends it, lib/season-build.ts leagueWindowOf), so its league's window is recomputed in step 5.
+  const retaggedLeagues = new Set<LeagueId>();
   v2.games.forEach((before, i) => {
     const after = games[i];
+    if (!sameTag(before.postseason, after.postseason)) {
+      for (const side of [after.home, after.away]) {
+        const team = side.teamId ? getTeamById(side.teamId) : undefined;
+        if (team) retaggedLeagues.add(team.league);
+      }
+    }
     if (before.leagueDivision === after.leagueDivision && before.countsFor === after.countsFor) return;
     for (const d of [before.leagueDivision, after.leagueDivision, before.countsFor, after.countsFor]) if (d !== null) changed.add(d);
   });
-  const changedLeagues = new Set([...changed].map((d) => leagueOfDivision(d).id));
+  const changedLeagues = new Set([...[...changed].map((d) => leagueOfDivision(d).id), ...retaggedLeagues]);
 
   // 2. standings: the changed divisions' rows from the engine, the rest as written, in config order
   const reported = new Map<TeamId, ReportedRecord>();
@@ -496,4 +524,32 @@ export function reclassify(raw: unknown): unknown {
     counts: countsOf(games, standings),
   };
   return out;
+}
+
+// ---------------------------------------------------------------- "bracket games" (v2 → v2)
+
+/**
+ * A v2 object whose `playoffs.games` (by contestId, in order) is not what lib/ccs-bracket.ts `ccsBracketGames`
+ * derives from its `games` under the current config: a file written before the derivation existed, or whose
+ * tags have just been reclassified. False for anything else, including a file `parseSnapshot` would reject for
+ * another reason. Runs AFTER `reclassify`, so it reads the current tags.
+ */
+export function needsPlayoffGames(raw: unknown): boolean {
+  if (!isObject(raw) || raw.schemaVersion !== 2 || !Array.isArray(raw.games) || !isObject(raw.playoffs) || !Array.isArray(raw.playoffs.games)) return false;
+  try {
+    return playoffGamesStale(raw.games as Game[], raw.playoffs.games as Game[], CCS.keyDates);
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * The same file with `playoffs.games` rebuilt from `games` (the same objects, in `byDateThenId` order). Nothing
+ * else moves: a bracket game is already in `games`, its tags and counts are already right. Throws on input that
+ * `needsPlayoffGames` rejects.
+ */
+export function rebuildPlayoffGames(raw: unknown): unknown {
+  if (!needsPlayoffGames(raw)) throw new Error('lib/snapshot-migrate.ts: not a v2 snapshot whose playoffs.games need rebuilding');
+  const v2 = raw as unknown as Snapshot;
+  return { ...v2, playoffs: { ...v2.playoffs, games: ccsBracketGames(v2.games, CCS.keyDates) } };
 }

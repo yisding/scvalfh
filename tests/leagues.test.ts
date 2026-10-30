@@ -227,6 +227,45 @@ describe('leagues: ids and helpers (SPEC §2.3)', () => {
     expect(leagueOfDivision('pcal').id).toBe('pcal');
     expect(divisionsOf('scval').map((d) => d.id)).toEqual(['de-anza', 'el-camino']);
     expect(getSection('ncs').holdsFieldHockeyChampionship).toBe(false);
+  });
+
+  it('the MCAL final has a venue, an address and the league’s admission line', () => {
+    const mcal = getLeague('mcal');
+    if (mcal.postseason.kind !== 'league-tournament') throw new Error('MCAL runs a tournament');
+    expect(mcal.postseason.finalSite).toEqual({
+      slug: 'tamalpais', label: 'Tamalpais', venue: 'Tamalpais High School',
+      address: { street: '700 Miller Ave', city: 'Mill Valley', region: 'CA', postalCode: '94941' },
+      admission: 'Adults $10; students, children and seniors $5; pre-sale on GoFan. No booster passes or student body cards; lifetime MCAL, NCS and CIF passes are honored.',
+      admissionSource: 'MCAL 2026 Field Hockey Play-off sheet',
+    });
+    expect(mcal.postseason.resultNotes['7bb048ba-9e33-4ad1-a743-2348c6637602']).toContain('Marin Independent Journal');
+    expect(mcal.postseason.citations.pennant).toMatch(/^MCAL General Rules, Pennants 1–3/);
+    expect(mcal.rules.citations.overtime).toMatch(/^MCAL Field Hockey Handbook §9/);
+  });
+
+  it('the Southern Section carries the Tournament of Champions as its outside tournament, and no other section has one', () => {
+    const toc = getSection('ss').outsideTournament;
+    expect(toc).not.toBeNull();
+    expect(toc).toMatchObject({
+      id: 'toc',
+      name: 'Tournament of Champions',
+      organizer: 'Los Angeles Field Hockey Association',
+      window: { first: '2026-10-22', last: '2026-10-29' },
+      finalSite: 'Huntington Beach High School',
+    });
+    expect(toc!.rounds.map((r) => [r.date, r.label])).toEqual([
+      ['2026-10-22', 'Round 1'],
+      ['2026-10-27', 'Semifinals'],
+      ['2026-10-29', 'Final and third-place game'],
+    ]);
+    expect([...toc!.entrants].sort()).toEqual([
+      'bonita', 'edison', 'glendora', 'great-oak', 'harvard-westlake', 'huntington-beach', 'newport-harbor', 'temecula-valley',
+    ]);
+    // The note says who runs it and that CIF does not; it never names a seed or a bracket (copy rule 5).
+    expect(toc!.note).toContain('not by CIF');
+    expect(toc!.note).not.toMatch(/\bseed/i);
+    expect(toc!.sources.length).toBeGreaterThan(0);
+    for (const id of ['ccs', 'ncs', 'ns', 'sds'] as const) expect(getSection(id).outsideTournament, id).toBeNull();
     expect(sectionOf('mcal').id).toBe('ncs');
     expect(sectionOf('pcal').id).toBe('ccs');
     expect(sectionOf('eal').id).toBe('ns');
@@ -400,17 +439,17 @@ describe('leagues: SCVAL strings are today’s, verbatim', () => {
     ]);
   });
 
-  it('keeps the Oct 30 crossover pairings and their labels', () => {
+  it('keeps the Oct 30 crossover pairings and their labels, played Oct 29 or 30', () => {
     if (scval.postseason.kind !== 'ccs-ladder') throw new Error('scval is a CCS ladder league');
     expect(
-      scval.postseason.pairings.map((p) => [p.id, p.date, p.seats, p.seatLabels, p.host, p.isPlayIn, p.label, p.tag]),
+      scval.postseason.pairings.map((p) => [p.id, p.date, p.window, p.seats, p.seatLabels, p.host, p.isPlayIn, p.label, p.tag]),
     ).toEqual([1, 2, 3, 4].map((seed) => [
-      `scval-crossover-${seed}`, '2026-10-30',
+      `scval-crossover-${seed}`, '2026-10-30', { first: '2026-10-29', last: '2026-10-30' },
       [{ division: 'de-anza', place: seed }, { division: 'el-camino', place: seed }],
       [`De Anza #${seed}`, `El Camino #${seed}`], null, seed === 4,
       seed === 4
         ? 'De Anza #4 vs El Camino #4 — play-in for the SCVAL 7th automatic qualifier'
-        : `De Anza #${seed} vs El Camino #${seed} — crossover (helps CCS ordering)`,
+        : `De Anza #${seed} vs El Camino #${seed} — crossover (for CCS seeding, not qualification)`,
       'scval-crossover',
     ]));
   });
@@ -1024,12 +1063,29 @@ describe('leagues: the San Diego Section (City, North County, Metro)', () => {
       expect(ps.ladder.map((r) => [r.places, r.status, r.label, r.phrase, r.badge, r.legend])).toEqual([
         [[1, 1], 'tournament', '1st: at least a play-in if named league champion', 'at least a play-in if named league champion', '1st',
           '1st — the league’s designated champion (not co-champions) is guaranteed at least a play-in game (Green Book 2000.1). The league names its champion; this table does not'],
-        [[2, 99], 'selection', 'No league route', 'no league route into the playoffs', 'Selection only',
+        [[2, 99], 'selection', 'Placed by the Section', 'placed by the Section from its power rankings', 'By selection',
           '2nd or lower — no league route; the Section places Division I teams in the Open or Division I bracket and picks 12 Division II teams, from its power rankings (Green Book 2000.1)'],
       ]);
       expect(ps.citations.roundDates).toBe(
-        'Round dates and the finals site (La Jolla HS) are from the San Diego Field Hockey Officials Association’s calendar; the Section’s own bulletin is not reachable.',
+        'Round dates and the finals site (La Jolla HS) are from the San Diego Field Hockey Officials Association’s calendar.',
       );
+      // The round calendar (SDFHOA), the links, and the bracket-sheet switch (null until the Section publishes).
+      expect(ps.rounds.map((r) => [r.date, r.label, r.time, r.site])).toEqual([
+        ['2026-11-02', 'Play-in games (only if needed)', null, null],
+        ['2026-11-03', 'First round, Division II', null, null],
+        ['2026-11-04', 'First round, Division I', null, null],
+        ['2026-11-05', 'Quarterfinals, Open Division', null, null],
+        ['2026-11-06', 'Quarterfinals, Division II', null, null],
+        ['2026-11-07', 'Quarterfinals, Division I', null, null],
+        ['2026-11-10', 'Semifinals, Open Division and Division II', null, null],
+        ['2026-11-11', 'Semifinals, Division I', null, null],
+        ['2026-11-14', 'Final, Division II', '13:00', 'La Jolla High School'],
+        ['2026-11-14', 'Final, Division I', '15:30', 'La Jolla High School'],
+        ['2026-11-14', 'Final, Open Division', '18:00', 'La Jolla High School'],
+      ]);
+      expect(ps.calendarUrl).toBe('https://sdfhoa.weebly.com/calendar.html');
+      expect(ps.bracketsPageUrl).toBe('https://www.cifsds.org/sports/fh/index');
+      expect(ps.bracketSheetUrl).toBeNull();
       expect(Object.keys(ps.playoffDivisionOf)).toHaveLength(l.divisions.reduce((n, d) => n + d.expectedTeams, 0));
       expect(l.phases).toEqual([{ phase: 'regular', through: 'league-play' }, { phase: 'tournament', through: '2026-11-14' }]);
       expect(l.keyDates.map((k) => [k.id, k.date])).toEqual([

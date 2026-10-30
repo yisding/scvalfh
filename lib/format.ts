@@ -637,3 +637,8 @@ export function listWords(words: readonly string[], conj: 'and' | 'or' | '&' = '
   if (words.length <= 1) return words[0] ?? '';
   return `${words.slice(0, -1).join(', ')} ${conj} ${words[words.length - 1]}`;
 }
+
+/** A Google Maps search link for a street address, the Directions pill's target (GameRow, the team page, a bracket). */
+export function mapsSearchHref(a: { street: string; city: string; region: string; postalCode: string }): string {
+  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${a.street}, ${a.city}, ${a.region} ${a.postalCode}`)}`;
+}

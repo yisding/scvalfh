@@ -265,18 +265,52 @@ export interface PostseasonTag {
    * teams of a section whose leagues' postseason.kind is 'section-playoffs', dated on or after the
    * leagues' `postseasonFrom` (Nov 2) or carrying contestType 4, whether or not the two share a conference;
    * one label for the whole tournament, never 'league-postseason'.
+   * 'outside-tournament' is a postseason event no CIF section runs (the Southern Section's Tournament of
+   * Champions, SectionConfig.outsideTournament): any game between two teams of that section's no-postseason
+   * leagues dated inside the event's window, whatever MaxPreps' type says; the label is the event's name.
    */
-  kind: 'scval-crossover' | 'bval-play-in' | 'mcal-tournament' | 'league-postseason' | 'section-playoffs' | 'ccs' | 'other';
+  kind: 'scval-crossover' | 'bval-play-in' | 'mcal-tournament' | 'league-postseason' | 'section-playoffs' | 'outside-tournament' | 'ccs' | 'other';
   /**
-   * Set for every league-scoped kind. 'ccs', 'other' and 'section-playoffs' may be null: no shared registry
-   * league (a San Diego playoff game between two conferences has none).
+   * Set for every league-scoped kind. 'ccs', 'other', 'section-playoffs' and 'outside-tournament' may be
+   * null: no shared registry league (a San Diego playoff game between two conferences has none; a Tournament
+   * of Champions game between a Sunset team and an LA independent has none).
    */
   leagueId: LeagueId | null;
   /**
    * 'section-postseason-window' = dated on or after the section-playoffs leagues' `postseasonFrom` (the
-   * section-wide counterpart of 'league-postseason-window'); a contestType-4 row stays 'contest-type-4'.
+   * section-wide counterpart of 'league-postseason-window'); 'outside-tournament-window' = dated inside a
+   * section's outside tournament (lib/classify.ts rule 1b, ahead of MaxPreps' flag); a contestType-4 row
+   * elsewhere stays 'contest-type-4'. 'maxpreps-bracket' = the row's `contest.tournamentId` is the CCS
+   * championship's GUID (CCS.tournament.id; `Game.bracket`), the exact test MaxPreps' own feed gives for a
+   * bracket game (lib/classify.ts rule 1c, added 2026-10-29 from the 2025 Los Gatos rows).
    */
-  via: 'config-pairing' | 'contest-type-4' | 'league-postseason-window' | 'section-postseason-window' | 'ccs-window';
+  via: 'config-pairing' | 'contest-type-4' | 'league-postseason-window' | 'section-postseason-window' | 'outside-tournament-window' | 'ccs-window' | 'maxpreps-bracket';
+}
+
+/**
+ * What MaxPreps' schedule-calculated feed says about the tournament bracket a game belongs to, copied from the
+ * row's `contest.tournamentId` / `tournamentBracketId` and `calculatedFields.bracketName` / `bracketIsPublished` /
+ * `bracketMatchupID` / `tournamentName` / `tournamentCanonicalUrl`. Set by lib/normalize.ts only when the
+ * tournamentId is a real GUID: every 2026 crossover, Tournament of Champions and EAL row, and 2025's Super
+ * Regional rows, carry the all-zero GUID with every bracket field null (read 2026-10-29), while the 2025 CCS
+ * rows of Los Gatos carry the CCS championship's id, `bracketName 'Division 1'`, `bracketIsPublished true`.
+ * `bracketGameIndex` is NOT copied: it was 0 on every 2025 row, so it says nothing (DATA-SOURCES §1.4).
+ */
+export interface GameBracket {
+  /** MaxPreps' tournament GUID (`CCS.tournament.id` for the CCS championship). */
+  tournamentId: string;
+  /** MaxPreps' bracket GUID within the tournament (one per CCS division), when it is a real GUID. */
+  bracketId: string | null;
+  /** `tournamentName`: '2025 Central Coast Section Field Hockey Championship'. */
+  tournament: string | null;
+  /** `bracketName`: MaxPreps' name for the bracket ('Division 1' / 'Division 2' for the CCS). */
+  name: string | null;
+  /** `bracketIsPublished === true`. */
+  published: boolean;
+  /** `bracketMatchupID`: the matchup's GUID on the published bracket page. */
+  matchupId: string | null;
+  /** `tournamentCanonicalUrl`, when it is an http(s) URL. */
+  url: string | null;
 }
 
 /** Set when a contest matched a fixture in a league's official schedule. */
@@ -336,6 +370,12 @@ export interface Game {
    * shootouts are stored by MaxPreps as goals (see caveat copy).
    */
   shootout: { home: number; away: number } | null;
+  /**
+   * MaxPreps' bracket fields for a tournament game (GameBracket); absent when the row's tournamentId is null or
+   * the all-zero GUID. lib/classify.ts rule 1c reads it; lib/ccs-bracket.ts ccsBracketGames puts a published
+   * CCS bracket game into `playoffs.games` before the quarterfinal date.
+   */
+  bracket?: GameBracket;
   venue: GameVenue;
   timeConfirmed?: boolean;
   /** WIDENED: any league's official schedule. */
@@ -540,10 +580,26 @@ export interface CcsPlayoffs {
     /** RENAMED from `divisions`. */
     ccsDivisions: Array<{ name: CcsDivisionName; seeds: [number, number] }>;
     autoQualifiers: CcsAutoQualifiers;
-    highSeedHostsThrough: 'semifinals';
+    /** The last round the higher seed hosts (CCS config; 'semifinals' in files written before 2026-10-29). */
+    highSeedHostsThrough: 'quarterfinals' | 'semifinals';
   };
+  /**
+   * Some CCS division's bracket is published on the MaxPreps tournament page (lib/sources/ccs.ts
+   * readTournamentPage: a division is published when its `<li id="bracket_<GUID>">` block carries no
+   * `not-published` marker). Carried from the previous snapshot when the page was not read or not recognised.
+   */
   bracketPublished: boolean;
+  /**
+   * The per-division answer behind `bracketPublished`, by CCS division name (added 2026-10-29; absent in files
+   * written before and in a run that never read a recognised page with no previous value to carry).
+   */
+  divisionsPublished?: Record<CcsDivisionName, boolean>;
   bracketUrl: string;
+  /**
+   * The CCS bracket games: lib/ccs-bracket.ts ccsBracketGames over `games` — every game tagged 'ccs' that is
+   * dated on or after the quarterfinals or that MaxPreps' feed marks published (`Game.bracket.published`), the
+   * same objects as in `games`. Empty until the bracket is published (the committed file of 2026-10-29).
+   */
   games: Game[];
 }
 
@@ -622,6 +678,8 @@ export interface LeagueTournamentProjection {
   playIn: TournamentGame | null;
   games: TournamentGame[];             // qf-1, qf-2, sf-1, sf-2, final (play-in is separate)
   notes: string[];
+  /** The final's winner once it has a result (status 'complete'); null before. */
+  champion: { slug: TeamSlug; teamId: TeamId; seed: number } | null;
 }
 
 // ---------- fixtures ----------

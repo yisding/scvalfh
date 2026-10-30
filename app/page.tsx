@@ -3,6 +3,7 @@ import { Fragment } from 'react';
 
 import CrossLeagueLatest from '../components/home/CrossLeagueLatest';
 import FindYourTeam from '../components/home/FindYourTeam';
+import HomeThisWeek from '../components/home/HomeThisWeek';
 import LeagueCard from '../components/home/LeagueCard';
 import LeaguePanel from '../components/home/LeaguePanel';
 import MyTeamCard from '../components/home/MyTeamCard';
@@ -32,6 +33,11 @@ import { TEAMS } from '../lib/teams';
  *
  * Imports are relative, never `@/` (README, "Local development"): tests/ui/home-view.test.ts renders
  * this page with `react-dom/server` under Vitest, which has no path alias.
+ *
+ * In the postseason weeks each region's "This week in the postseason" (`#this-week`, `#this-week-socal`,
+ * components/home/HomeThisWeek.tsx, the strip /playoffs prints, capped at 8 rows) sits above the latest
+ * results, in the same `data-scope="none"` first-visit scope and the region's `data-region-scope`; it
+ * renders nothing when the window holds no postseason game or event (plan final-11, 2026-10-30).
  *
  * The page body is read through `components/home/home-view.ts` (which reads only `lib/data.ts`) and
  * formatted in America/Los_Angeles from `snapshot.fetchedAt`; only the metadata description and
@@ -106,6 +112,16 @@ export default function HomePage() {
           just happened?" is the question this page answers first (SPEC §10.1), and the league cards
           below are a directory, not news; with the finder first, a phone's first screen held no
           score at all. */}
+      {/* Above the latest results: in the postseason weeks, what is played and decided this week comes
+          first (components/home/HomeThisWeek.tsx; nothing renders outside them). */}
+      {data.regions.map((region) => (
+        <HomeThisWeek
+          key={region.id}
+          view={data.thisWeek[region.id]}
+          region={{ id: region.id, idSuffix: region.idSuffix }}
+          className="mt-8 md:mt-10"
+        />
+      ))}
       {data.regions.map((region) => (
         <CrossLeagueLatest
           key={region.id}

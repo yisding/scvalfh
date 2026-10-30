@@ -6,6 +6,8 @@ import { SITE_NAME } from '../../../components/layout/site';
 import { ROUND_TITLES, type TournamentRoundView } from '../../../components/playoffs/playoff-view';
 import { tournamentLeague, tournamentStaticParams } from '../../../components/playoffs/tournament-league';
 import { getLeagueTournament, getTeamBySlug } from '../../../lib/data';
+import { getLeague } from '../../../lib/leagues';
+import { tournamentHeadline } from '../../../lib/postseason';
 import { listWords, shortDate } from '../../../lib/format';
 
 /**
@@ -48,7 +50,11 @@ export default async function Image({ params }: PageProps<'/playoffs/[league]'>)
       return out;
     }, [])
     .map((r) => `${ROUND_TITLES[r.round]} ${shortDate(r.date)}${r.round === 'final' ? ` at ${ps.finalSite.label}` : ''}`);
-  const sub = projection.status === 'projected' ? 'Seeds if the season ended today' : 'Seeds';
+  // The champion or the next round first (lib/postseason.ts tournamentHeadline), else the seeds' caption.
+  const headline = tournamentHeadline(projection, getLeague(summary.id));
+  const sub = headline.champion
+    ? `Champion: ${headline.champion.replace(/\.$/, '')}`
+    : headline.next ?? (projection.status === 'projected' ? 'Seeds if the season ended today' : 'Seeds');
 
   return new ImageResponse(
     (

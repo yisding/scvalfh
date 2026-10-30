@@ -12,13 +12,18 @@
  * module that produced the value.
  */
 
+import { mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import path from 'node:path';
+
 import { renderToStaticMarkup } from 'react-dom/server';
 import type { ReactElement } from 'react';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
 import type { ProjectionRow } from '../../components/playoffs/playoff-view';
 import { listWords } from '../../lib/format';
-import type { PlayoffStatus } from '../../lib/types';
+import type { PlayoffStatus, Snapshot } from '../../lib/types';
+import { ccsGames2025, ccsSeeds2025 } from '../fixtures/ccs/bracket-2025';
 import { corpusSnapshotPath } from '../helpers';
 import { textOf } from './html-text';
 
@@ -342,6 +347,44 @@ describe('buildPairingView — the BVAL play-in card', () => {
   });
 });
 
+describe('buildOutsideTournamentView — the Tournament of Champions (SectionConfig.outsideTournament)', () => {
+  it('groups the tagged games by day with the config’s round labels, counts finals and games to come, and names no seed', async () => {
+    const { game } = await import('../game-builder');
+    const toc = leagues.getSection('ss').outsideTournament!;
+    // Round 1 (one row MaxPreps marks a playoff, one it does not), a semifinal, the final to come, and a moved game.
+    const r1a = game({ home: 'huntington-beach', away: 'bonita', hs: 3, as: 0, date: '2026-10-22', league: false, contestTypes: { home: 4, away: 4 } });
+    const r1b = game({ home: 'edison', away: 'great-oak', hs: 3, as: 0, date: '2026-10-22', league: false });
+    const moved = game({ home: 'glendora', away: 'newport-harbor', hs: 0, as: 3, date: '2026-10-24', league: false });
+    const sf = game({ home: 'huntington-beach', away: 'newport-harbor', hs: 2, as: 0, date: '2026-10-27', league: false });
+    const final = game({ home: 'huntington-beach', away: 'harvard-westlake', date: '2026-10-29', league: false });
+    // A Sunset league game before the window is not the tournament's and is left out.
+    const league = game({ home: 'edison', away: 'marina', hs: 1, as: 0, date: '2026-10-20' });
+    const v = view.buildOutsideTournamentView(toc, [final, sf, league, moved, r1b, r1a]);
+    expect(v.name, VIEW).toBe('Tournament of Champions');
+    expect(v.dates, VIEW).toBe('Oct 22–29');
+    expect(v.rounds.map((r) => [r.dateLabel, r.label, r.games.map((g) => g.contestId)]), VIEW).toEqual([
+      ['Thu Oct 22', 'Round 1', [r1b.contestId, r1a.contestId].sort((a, b) => a.localeCompare(b))],
+      ['Sat Oct 24', null, [moved.contestId]],
+      ['Tue Oct 27', 'Semifinals', [sf.contestId]],
+      ['Thu Oct 29', 'Final and third-place game', [final.contestId]],
+    ]);
+    expect([v.finals, v.toCome], VIEW).toEqual([4, 1]);
+    expect(`${v.note} ${v.rounds.map((r) => r.label ?? '').join(' ')}`, VIEW).not.toMatch(/\bseed/i);
+    // The corpus of Oct 2 has no tournament game yet: an empty list, never an invented one.
+    expect(view.buildOutsideTournamentView(toc, data.getGames()).rounds, VIEW).toEqual([]);
+  });
+
+  it('/playoffs lists the tournament once, under the Sunset card, and the LA card points to it', () => {
+    const text = textOf(html);
+    expect(html, PAGE).toContain('id="toc"');
+    expect(html.match(/id="toc"/g)?.length, PAGE).toBe(1);
+    expect(text, PAGE).toContain('Tournament of Champions · Oct 22–29');
+    expect(text, PAGE).toContain('run by the Los Angeles Field Hockey Association, not by CIF');
+    expect(text, PAGE).toContain('Three of the five play the Tournament of Champions');
+    expect(html, PAGE).toContain('href="#toc"');
+  });
+});
+
 describe('splitStatusLabel', () => {
   it('splits a status label into the chip head and the " — " tail', () => {
     expect(view.splitStatusLabel('Automatic qualifier'), VIEW).toEqual({ head: 'Automatic qualifier', tail: null });
@@ -354,6 +397,25 @@ describe('splitStatusLabel', () => {
 });
 
 describe('keyDateRows', () => {
+  it('says where each round is played, from config, in the calendar’s own words, and promises no evening', () => {
+    const rows = view.keyDateRows(data.getPlayoffs().keyDates);
+    const detail = (key: string) => rows.find((r) => r.key === key)?.detail ?? '';
+    expect(detail('quarterfinals'), VIEW).toBe('At the higher seed’s field (CCS calendar: “at Home Sites”).');
+    expect(detail('semifinals'), VIEW).toBe('At neutral sites set by CCS (CCS calendar: “at Neutral Sites”); each game’s site appears here once MaxPreps lists it.');
+    expect(detail('finals'), VIEW).toBe('At a neutral site set by CCS (CCS calendar: “at Neutral Site”); the site appears here once MaxPreps lists the game.');
+    expect(detail('seeding'), VIEW).toBe('The committee seeds both CCS divisions; the games appear here as MaxPreps lists them, after the next update.');
+    expect(rows.map((r) => r.detail).join(' '), VIEW).not.toMatch(/that evening|Higher seed hosts\./);
+    // The footer sentence follows the same config value.
+    expect(view.ccsHostingSentence(), VIEW).toBe(
+      'The quarterfinals are at the higher seed’s field; the semifinals and the final are at neutral sites set by CCS (the CIF-CCS field hockey calendar).',
+    );
+    expect(view.ccsHostingSentence('semifinals'), VIEW).toBe(
+      'The quarterfinals and the semifinals are at the higher seed’s field; the final is at neutral sites set by CCS (the CIF-CCS field hockey calendar).',
+    );
+    expect(view.keyDateRows(data.getPlayoffs().keyDates, [], 'semifinals').find((r) => r.key === 'semifinals')?.detail, VIEW)
+      .toBe('At the higher seed’s field (CCS calendar: “at Home Sites”).');
+  });
+
   it('lists the CCS dates and each league’s own date, labelled with its league, in date order', () => {
     const rows = view.keyDateRows(data.getPlayoffs().keyDates, [
       { id: 'bval', leagueShort: 'BVAL', date: '2026-10-31', time: '11:00', label: 'BVAL play-in', detail: 'x' },
@@ -408,6 +470,16 @@ describe('/playoffs (rendered)', () => {
     expect(new Set(ids).size, `${PAGE}: unique ids`).toBe(ids.length);
   });
 
+  it('renders no "This week" strip and no Super Regional results block on Oct 2, far from any postseason game', () => {
+    // components/playoffs/this-week.ts: the window (two days back, a week ahead) holds no tagged game and no
+    // config event on the corpus's day, so neither strip renders (no empty box); the EAL card's results block
+    // waits for the Super Regional's first day (Oct 30).
+    expect(html, PAGE).not.toContain('id="this-week-norcal"');
+    expect(html, PAGE).not.toContain('id="this-week-socal"');
+    expect(textOf(html), PAGE).not.toContain('This week in the postseason');
+    expect(textOf(html), PAGE).not.toContain('No Super Regional game is on MaxPreps yet');
+  });
+
   it('carries the NCS pointer card, the field and the verbatim at-large paragraph', () => {
     const text = textOf(html);
     expect(text, PAGE).toContain(
@@ -422,6 +494,8 @@ describe('/playoffs (rendered)', () => {
       'Three at-large berths are the CCS committee’s call. SCVAL submits its play-in loser and both fifth-place teams (Article VII §2); PCAL teams placed 3rd or lower may apply (PCAL By-laws §23.4); BVAL’s by-laws do not say whom it submits.',
     );
     expect(text, PAGE).toContain('SCVAL crossover and 4th-place play-in');
+    expect(text, PAGE).not.toMatch(/that evening|higher seed hosts through the semifinals/i);
+    expect(text, PAGE).toContain('the semifinals and the final are at neutral sites set by CCS');
     expect(text, PAGE).toContain('BVAL play-in');
     expect(text, PAGE).toContain('11 AM PT');
     expect(text, PAGE).toContain('(host)');
@@ -433,7 +507,7 @@ describe('/playoffs (rendered)', () => {
   it('carries the EAL card: the Super Regional note, its rule and the Guidelines, the #eal target once', () => {
     const text = textOf(html);
     expect(text, PAGE).toContain(
-      'Following an EAL team? The Northern Section’s field hockey postseason is the Super Regional, Oct 30–31: the top six schools qualify. The coaches set its format and seeding, its site is to be announced, and no bracket is published yet. There is no NorCal or State path.',
+      'Following an EAL team? The Northern Section’s field hockey postseason is the Super Regional, Oct 30–31: the top six schools qualify, and all six EAL teams are in it. The coaches set its format and seeding, and no pairings are published. The NFHS Network lists its games at Pleasant Valley High School, Chico, on Sat Oct 31, with streams at 8:30 AM and 1:30 PM PT. There is no admission fee. There is no NorCal or State path.',
     );
     expect(text, PAGE).toContain(
       'CIF Northern Section Field Hockey Guidelines 2026-28 §III.E.1 and §IV (the top six EAL/SRL schools compete; varsity only). Northern Section Field Hockey Guidelines (PDF)',
@@ -485,8 +559,29 @@ describe('/playoffs by region (DESIGN-socal §2.4)', () => {
     if (city.kind !== 'section-playoffs') throw new Error('city: section-playoffs');
     expect(text, PAGE).toContain(city.qualificationLine);
     expect(text, PAGE).toContain(city.citations.roundDates);
-    expect(text, PAGE).toContain('The Section publishes its brackets after its Sat Oct 31 seeding meeting; until then this site draws no bracket and projects no places.');
+    // The corpus is from Oct 2, before the seeding meeting: the pre-meeting sentence, then the round calendar.
+    expect(text, PAGE).toContain('The Section places teams at its Sat Oct 31 seeding meeting and posts its brackets on its field hockey page afterwards; this site draws no bracket and projects no places.');
+    expect(view.sectionBracketSentence(city, '2026-10-31', '2026-10-29'), VIEW).not.toMatch(/\bseed(ed|s)?\b(?! ?ing meeting)/i);
     expect(socal, PAGE).toContain(`href="${city.powerRankingsUrl}"`);
+    expect(socal, PAGE).toContain(`href="${city.calendarUrl}"`);
+    expect(socal, PAGE).toContain(`href="${city.bracketsPageUrl}"`);
+    expect(socal, PAGE).toContain('id="sds-round-dates"');
+    for (const line of ['Round dates', 'Quarterfinals, Division II', 'Fri Nov 6', 'Final, Open Division', 'Sat Nov 14', '6 PM PT', '3:30 PM PT', 'La Jolla High School']) {
+      expect(text, PAGE).toContain(line);
+    }
+    // The sentence chooser on each day of the Section's week.
+    expect(view.sectionBracketSentence(city, '2026-10-31', '2026-11-03'), VIEW).toBe(
+      'The Section posts its brackets on its field hockey page after its Sat Oct 31 seeding meeting; this site draws no bracket and projects no places. Its playoff games appear on team pages and schedules as MaxPreps lists them.',
+    );
+    expect(view.sectionBracketSentence({ ...city, bracketSheetUrl: 'https://docs.google.com/spreadsheets/d/x' }, '2026-10-31', '2026-11-03'), VIEW).toBe(
+      'The Section has published its brackets; this site draws no bracket and projects no places.',
+    );
+    // The third state (plan final-08): the owner has transcribed the Section's published brackets, so the page
+    // draws them under #sds-bracket (tests/ui/sds-bracket.test.ts renders it).
+    const drawn = view.sectionBracketSentence(city, '2026-10-31', '2026-11-03', true);
+    expect(drawn, VIEW).toBe('The Section has published its brackets; the brackets below are the Section’s, with results as MaxPreps posts them.');
+    expect(drawn, VIEW).not.toMatch(/\bseed(ed|s)?\b(?! ?ing meeting)|eliminat/i);
+    expect(`${view.sectionRoundRows(city).map((r) => r.label).join(' ')} ${view.sectionBracketSentence(city, '2026-10-31', '2026-11-03')}`, VIEW).not.toMatch(/\bseed\b|top \w+ qualify/i);
     expect(text, PAGE).toContain(city.sourceLabel);
     // Each team's playoff division, per division, from config.
     expect(text, PAGE).toMatch(/City Western[\s\S]*Division I:/);
@@ -504,5 +599,88 @@ describe('/playoffs by region (DESIGN-socal §2.4)', () => {
       expect(sentence).not.toMatch(/\bSunset (school|member)s?\b/);
     }
     expect(socal, PAGE).not.toMatch(/PlayoffBracket|sx-bracket/);
+  });
+});
+
+describe('/playoffs seeded (a stubbed snapshot: the 2025 championship on 2026’s dates, with 2025’s seeds)', () => {
+  // The Oct 2 corpus with the fourteen 2025 CCS games on 2026's dates added (tests/fixtures/ccs/bracket-2025.ts),
+  // the MaxPreps page's answer set to both divisions posted, and the snapshot's day moved to Tue Nov 3, the day
+  // after the seeding meeting. `playoffs.games` rebuilds itself on load (lib/snapshot-migrate.ts
+  // needsPlayoffGames). The seeds come through lib/ccs-bracket.ts getCcsSeeds, mocked to the 2025 field the
+  // way a filled owner file would answer; the committed file is the placeholder and must stay so.
+  let seededHtml = '';
+  let seededDescription = '';
+  const seeds = ccsSeeds2025();
+  const games = ccsGames2025();
+
+  beforeAll(async () => {
+    const snap = JSON.parse(readFileSync(corpusSnapshotPath('all-2026-10-02'), 'utf8')) as Snapshot;
+    snap.games.push(...games);
+    snap.counts = { ...snap.counts, games: snap.games.length };
+    snap.playoffs.bracketPublished = true;
+    snap.playoffs.divisionsPublished = { 'Division 1': true, 'Division 2': true };
+    snap.playoffs.games = [];
+    snap.fetchedAt = '2026-11-03T12:00:00.000Z';
+    const dir = mkdtempSync(path.join(tmpdir(), 'scvalfh-playoffs-seeded-'));
+    const file = path.join(dir, 'snapshot.json');
+    writeFileSync(file, JSON.stringify(snap));
+    process.env.SCVAL_SNAPSHOT = file;
+    vi.resetModules();
+    vi.doMock('../../lib/ccs-bracket', async (importOriginal) => {
+      const actual = await importOriginal<typeof import('../../lib/ccs-bracket')>();
+      return { ...actual, getCcsSeeds: () => seeds };
+    });
+    const page = await import('../../app/playoffs/page');
+    seededHtml = renderToStaticMarkup(page.default() as ReactElement);
+    const meta = await page.generateMetadata();
+    seededDescription = typeof meta.description === 'string' ? meta.description : '';
+  }, 600_000);
+
+  afterAll(() => {
+    vi.doUnmock('../../lib/ccs-bracket');
+    process.env.SCVAL_SNAPSHOT = corpusSnapshotPath('all-2026-10-02');
+    vi.resetModules();
+  });
+
+  it('draws two CCS division paths under their own h3s, with seeds, and drops the not-seeded sentences', () => {
+    const bracket = seededHtml.slice(seededHtml.indexOf('id="bracket"'), seededHtml.indexOf('id="at-large"'));
+    const text = textOf(bracket);
+    expect(bracket.match(/<h3[^>]*>CCS Division 1<\/h3>/g)?.length, PAGE).toBe(1);
+    expect(bracket.match(/<h3[^>]*>CCS Division 2<\/h3>/g)?.length, PAGE).toBe(1);
+    expect(text, PAGE).toContain('seeded Mon Nov 2');
+    expect(text, PAGE).toContain('CCS numbers each division’s eight teams 1-8; CCS Division 2 holds the committee’s overall seeds 9-16.');
+    expect(text, PAGE).not.toContain('Our data does not say which division');
+    expect(text, PAGE).not.toContain('no games posted yet');
+    expect(text, PAGE).not.toContain('CCS has posted');
+    // Every game card links its game page; the seed digits are on the cards.
+    for (const g of games) expect(bracket, `${PAGE}: ${g.contestId}`).toContain(`href="/game/${g.contestId}"`);
+    expect(bracket, PAGE).toMatch(/<span class="sx-num[^"]*">8<\/span>/);
+    const whole = textOf(seededHtml);
+    expect(whole, PAGE).not.toContain('Not seeded yet');
+    expect(whole, PAGE).not.toContain('not yet posted');
+    expect(whole, PAGE).not.toContain('every status below is a written word');
+    // The day after the meeting, the league intros say so.
+    expect(whole, PAGE).toContain('SCVAL holds 7 of the 16 CCS berths. Ordered by league points. CCS seeded the field on Mon Nov 2; results update twice a day.');
+    expect(whole, PAGE).not.toContain('nothing here is official');
+    expect(seededDescription, `${PAGE}: generateMetadata`).toContain('The CCS field hockey bracket: quarterfinals Sat Nov 7');
+  });
+
+  it('keeps "CCS Division" inside the NorCal block only, and the SoCal block free of any bracket', () => {
+    const socalAt = seededHtml.indexOf('<div id="socal" data-region-scope="socal">');
+    expect(socalAt, PAGE).toBeGreaterThan(0);
+    expect(textOf(seededHtml.slice(socalAt)), PAGE).not.toMatch(/CCS Division/i);
+    expect(textOf(seededHtml.slice(0, seededHtml.indexOf('<div id="norcal"'))), PAGE).not.toMatch(/CCS Division/i);
+    expect(seededHtml.slice(socalAt), PAGE).not.toMatch(/PlayoffBracket|sx-bracket|href="\/game\//);
+    expect(seededHtml, PAGE).not.toMatch(/eliminat/i);
+  });
+
+  it('the Oct 2 corpus page is unchanged: not seeded, the bracket "not yet posted", nothing official until the meeting', () => {
+    const text = textOf(html);
+    expect(text, PAGE).toContain('Not seeded yet:');
+    expect(text, PAGE).toContain('CCS seeds CCS Division 1 and CCS Division 2 at the Mon Nov 2 meeting; the games appear here as MaxPreps lists them, after the next update. Official CCS bracket ↗ (opens in a new tab) — not yet posted.');
+    expect(text, PAGE).toContain('SCVAL holds 7 of the 16 CCS berths. Ordered by league points; nothing here is official until Mon Nov 2.');
+    expect(text, PAGE).not.toContain('every status below is a written word');
+    expect(text, PAGE).not.toContain('CCS has posted');
+    expect(html, PAGE).not.toContain('<h3 class="m-0 mb-3 text-lead text-ink">CCS Division');
   });
 });

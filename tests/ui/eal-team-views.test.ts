@@ -94,8 +94,9 @@ beforeAll(async () => {
   eal = await load(path0);
 
   // A copy of the corpus in which one scheduled EAL league game is tagged a Super Regional game:
-  // no league game is that late in the capture, so the tag is written by hand (the pipeline writes
-  // it for a contest type 4 or a date on or after the league's `postseasonFrom`).
+  // no league game is that late in the capture, so the row is given MaxPreps' playoff type (4) and the
+  // tag the pipeline writes for it. The tag has to be the config's own: a snapshot whose tags differ
+  // from the current config is reclassified on load (lib/snapshot-migrate.ts needsReclassification).
   const snap = JSON.parse(readFileSync(path0, 'utf8')) as Snapshot;
   const target = snap.games.find(
     (g) => g.status === 'scheduled' && g.countsFor !== null && g.home.slug === 'chico' && g.away.slug === 'lassen',
@@ -103,13 +104,15 @@ beforeAll(async () => {
   if (!target) throw new Error('the EAL corpus has no scheduled Lassen at Chico game to tag');
   target.countsFor = null;
   target.leagueDivision = null;
-  target.postseason = { kind: 'league-postseason', leagueId: 'eal', via: 'league-postseason-window' };
+  target.contestTypes = { home: 4, away: 4 };
+  target.postseason = { kind: 'league-postseason', leagueId: 'eal', via: 'contest-type-4' };
   // And one counted final between two members, so a Super Regional game page has a score to cross-check.
   const final = snap.games.find((g) => g.status === 'final' && g.countsFor !== null);
   if (!final) throw new Error('the EAL corpus has no counted final to tag');
   final.countsFor = null;
   final.leagueDivision = null;
-  final.postseason = { kind: 'league-postseason', leagueId: 'eal', via: 'league-postseason-window' };
+  final.contestTypes = { home: 4, away: 4 };
+  final.postseason = { kind: 'league-postseason', leagueId: 'eal', via: 'contest-type-4' };
   const dir = mkdtempSync(path.join(tmpdir(), 'scvalfh-eal-team-views-'));
   const file = path.join(dir, 'snapshot.json');
   writeFileSync(file, JSON.stringify(snap));
@@ -135,8 +138,11 @@ describe('an EAL team page (/teams/davis)', () => {
     expect(text, 'app/teams/[slug]/page.tsx kicker').toContain('Super Regional picture');
     const line = eal.d.getTeamPostseasonLine('davis');
     expect(line, 'lib/data.ts getTeamPostseasonLine').not.toBeNull();
+    // Nothing is projected for the EAL (every team is in the six), so the card carries no "Projected" line.
+    expect(line?.caveat, 'lib/data.ts caveat').toBeNull();
+    expect(text, 'components/teams/TeamPlayoffLine.tsx').not.toContain('Projected from the table today');
     expect(text, 'components/teams/TeamPlayoffLine.tsx sentence').toContain(
-      'The top six schools play the Super Regional, Oct 30–31; its format and site are not published yet.',
+      'The top six schools play the Super Regional, Oct 30–31, and every EAL team is one of the six; the NFHS Network’s CIFNS listing has the games at Pleasant Valley High School, Chico on Sat Oct 31.',
     );
     expect(html, 'components/teams/TeamPlayoffLine.tsx link').toContain('href="/playoffs#eal"');
     expect(text, 'app/teams/[slug]/page.tsx').not.toMatch(BANNED);
@@ -161,7 +167,7 @@ describe('an EAL team page (/teams/davis)', () => {
     const copy = eal.v.leagueCopy('eal');
     expect(copy.seasonEndSentence).toBe('The EAL league season ends Wed Oct 28; the Super Regional follows, Oct 30–31.');
     expect(copy.bracketSentence).toBe(
-      'We will not guess a bracket: the Super Regional’s format and site are not published yet.',
+      'No pairings are published; we list each Super Regional game as MaxPreps posts it.',
     );
   });
 
