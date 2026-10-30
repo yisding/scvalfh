@@ -17,7 +17,7 @@
  * | each `/schedule/<league>` HTML gzip                            | ≤ 2.0 × baseline `schedule`        |
  * | `/schedule` (index) HTML gzip                                  | ≤ 0.6 × baseline `schedule`        |
  * | `/teams` HTML gzip                                             | ≤ 5.2 × baseline `teams`           |
- * | `/playoffs` HTML gzip                                          | ≤ 2.3 × baseline `playoffs`        |
+ * | `/playoffs` HTML gzip                                          | ≤ 3.3 × baseline `playoffs`        |
  * | each `/teams/<slug>` HTML gzip (Roster + Player stats sections)  | ≤ 6.0 × baseline `teams`           |
  * | `/leaders` HTML gzip                                           | ≤ 2.7 × baseline `standings`       |
  * | Worker gzip (`build:cloudflare`)                               | ≤ baseline + 1300 KB               |
@@ -61,6 +61,16 @@
  * Worker check's comment for the measurement.
  *   The design review's estimates (`/` 3.3–3.5 ×, `/teams` 6.5 ×, `/standings` 1.5 ×, `/schedule`
  *   0.75 ×, `/leaders` 2.4 ×) were estimates; the multipliers above are from the measurement.
+ *
+ * THE POSTSEASON WEEK AMENDMENT (2026-10-30, DESIGN §24.6): the `/playoffs` line alone, by the same
+ * rule (measured × 1.12 / baseline, rounded up to one decimal), 2.3 → 3.3 ×. The page now lists the
+ * postseason's games in the site's game rows (the "This week" strip per region, the Tournament of
+ * Champions' seven games, the SCVAL crossovers, the EAL Super Regional's results, the SDS round dates),
+ * each row the twin phone/desktop markup every list uses: built on the committed snapshot (fetched
+ * 2026-10-29, "today" Oct 30) at 54,338 B against the 43,224 B line (126 %), so the line is 62,017 B
+ * (88 %). The two brackets add about 8 KB gzip when their owner files are filled (the 2025 CCS and
+ * SDS fixtures render 3.8 and 4.2 KB): whoever commits a filled data/ccs-bracket-2026.json or
+ * data/sds-brackets-2026.json re-measures this line in the same PR.
  *
  * The first-load JS budget is what catches config, the registry or zod leaking into the browser
  * through a 'use client' import. The Worker check reads .cloudflare/output when it exists (it is
@@ -163,7 +173,10 @@ if (!workerOnly) {
   // 2.3 × since 2026-10-06 (it was 2.0 ×): the San Diego Section block with its City, North County
   // and Metro cards (each team's playoff division) and the Sunset card, 37,375 B (29,970 before),
   // 99.4 % of the old line and 86 % of 43,224 B.
-  check('/playoffs HTML gzip', gz(file('playoffs.html')), 2.3 * baseline.playoffs.htmlGzip, '2.3 × playoffs');
+  // 3.3 × since 2026-10-30 (it was 2.3 ×): the postseason's games listed in game rows (the two "This
+  // week" strips, the Tournament of Champions, the SCVAL crossovers, the EAL results), 54,338 B,
+  // 126 % of the old line and 88 % of 62,017 B. The drawn brackets add about 8 KB more (header comment).
+  check('/playoffs HTML gzip', gz(file('playoffs.html')), 3.3 * baseline.playoffs.htmlGzip, '3.3 × playoffs');
   // Six school boards of 10 places and four player boards of 25 (seven and five since DESIGN §27), 15 of them behind "Show N more"
   // (components/leaders/leaders-view.ts): ~28 KB on 2026-10-03. The player boards' places to 25th
   // (DESIGN §23) took it from 29,328 to 34,664 B on 2026-10-04 (51 more rows), over the 1.0 × line,
