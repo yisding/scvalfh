@@ -118,13 +118,31 @@ describe('buildThisWeek — NorCal on Thu Oct 29', () => {
     expect(texts, VIEW).not.toMatch(/Los Gatos at Mitty|Westmont|Bonita|Huntington Beach|Harvard-Westlake/);
   });
 
-  it('drops the BVAL play-in event once MaxPreps lists the game on its day', () => {
-    const listed = game('silver-creek', 'prospect', '2026-10-31', '11:00', { kind: 'bval-play-in', leagueId: 'bval', via: 'config-pairing' });
-    const sat = norcal({ games: [listed] }).days.find((d) => d.dateKey === '2026-10-31')!;
-    expect(sat.rows.map((r) => [r.kind, r.label]), VIEW).toEqual([
-      ['event', 'EAL Super Regional'],
-      ['game', 'BVAL play-in'],
+  it('an event gives way to an unclaimed game of its league on its day, never to a game another slot claims', () => {
+    // Saturday: MaxPreps lists the BVAL play-in (no pairing joined it yet) and a Super Regional game: both config
+    // events go. Friday: the #2 crossover is listed and claimed by its pairing while the play-in is not listed, so
+    // the play-in's event stands beside it (a pairing's event exists only while no game matches it).
+    const bvalListed = game('silver-creek', 'prospect', '2026-10-31', '11:00', { kind: 'bval-play-in', leagueId: 'bval', via: 'config-pairing' });
+    const ealListed = game('chico', 'pleasant-valley', '2026-10-31', '08:30', { kind: 'league-postseason', leagueId: 'eal', via: 'league-postseason-window' });
+    const playInEvent: ThisWeekEvent = {
+      dateKey: '2026-10-30', time: '6 PM PT', title: 'SCVAL play-in', detail: 'Santa Clara at Los Altos.', href: '/playoffs#scval', leagueId: 'scval',
+    };
+    const claimed = new Set([sf, x1, x3, x2, final].map((g) => g.contestId));
+    const view = buildThisWeek({
+      games: [...games.filter((g) => g !== playIn), bvalListed, ealListed], today: TODAY, region: 'norcal', labels,
+      events: [bvalEvent, ealEvent, playInEvent], claimed,
+    });
+    const fri = view.days.find((d) => d.dateKey === '2026-10-30')!;
+    expect(fri.rows.map((r) => [r.kind, r.label]), VIEW).toEqual([
+      ['game', 'SCVAL crossover · #2 v #2'],
+      ['game', 'MCAL final'],
+      ['event', 'SCVAL play-in'],
     ]);
+    const sat = view.days.find((d) => d.dateKey === '2026-10-31')!;
+    expect(sat.rows.map((r) => r.kind), VIEW).toEqual(['game', 'game']);
+    // Without the claimed set, every game of the league counts (the strip's older behaviour, still the default).
+    const loose = buildThisWeek({ games: [...games, bvalListed], today: TODAY, region: 'norcal', labels, events: [bvalEvent, ealEvent, playInEvent] });
+    expect(loose.days.find((d) => d.dateKey === '2026-10-30')!.rows.map((r) => r.kind), VIEW).toEqual(['game', 'game', 'game']);
   });
 
   it('caps the strip: the oldest results go first, and the rest is counted', () => {

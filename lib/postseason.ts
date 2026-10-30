@@ -397,6 +397,8 @@ export function buildLeagueTournament(
  * Where one team stands in the tournament, read from the matched results: the champion or the runner-up once
  * the final has a winner; in the final, or alive before a next game, while it has not lost; the round it lost
  * in; below the line when it holds no seed; 'projected' while the whole picture is still read from the table.
+ * A game MaxPreps posts level with no winner flag (a shootout before the flag arrives) decides nothing: it names
+ * no loser, and it is still the team's next game (2026-10-30; buildLeagueTournament names no champion from it).
  */
 export type TournamentOutcome =
   | { kind: 'projected' }
@@ -422,7 +424,9 @@ export function tournamentOutcome(p: LeagueTournamentProjection, slug: TeamSlug)
   const all = [...(p.playIn ? [p.playIn] : []), ...p.games];
   // The latest decided game this team played, by round order (play-in, quarterfinal, semifinal, final). Read
   // before the seat check: a play-in loser holds no seat afterwards, and still "lost the play-in".
-  const played = all.filter((tg) => hasResult(tg.game) && (tg.game.home.slug === slug || tg.game.away.slug === slug));
+  const played = all.filter(
+    (tg) => tg.game !== null && winnerOf(tg) !== null && (tg.game.home.slug === slug || tg.game.away.slug === slug),
+  );
   const last = played[played.length - 1];
   if (last && last.game) {
     const g = last.game;
@@ -432,8 +436,8 @@ export function tournamentOutcome(p: LeagueTournamentProjection, slug: TeamSlug)
     if (!won) return { kind: 'lost', round: last.round, game: g, opponent };
   }
   if (!p.seeds.some((s) => s.seat.some((x) => x.slug === slug))) return { kind: 'below-line' };
-  // Not out: the next game whose slot names this team and has no result yet.
-  const next = all.find((tg) => !hasResult(tg.game) && (inSlot(tg.home, slug) || inSlot(tg.away, slug))) ?? null;
+  // Not out: the next game whose slot names this team and has no winner yet (unplayed, or posted level).
+  const next = all.find((tg) => winnerOf(tg) === null && (inSlot(tg.home, slug) || inSlot(tg.away, slug))) ?? null;
   if (next && next.round === 'final') return { kind: 'in-final', next, opponent: opponentIn(next, slug) };
   return { kind: 'alive', next };
 }

@@ -245,8 +245,16 @@ export function thisWeekByRegion(input: {
     new Map(field.byLeague.map((l) => [l.leagueId, l.auto])),
   );
   const sds = sectionPlayoffs();
+  // The games a pairing or a bracket slot has joined: an event gives way only to a game of its league no slot claims.
+  const claimed = new Set<ContestId>([
+    ...blocks.flatMap((b) => b.pairings.flatMap((p) => (p.game ? [p.game.contestId] : []))),
+    ...getTournamentLeagueIds().flatMap((id) => {
+      const t = getLeagueTournament(id);
+      return [...(t.playIn ? [t.playIn] : []), ...t.games].flatMap((tg) => (tg.game ? [tg.game.contestId] : []));
+    }),
+  ]);
   return {
-    norcal: buildThisWeek({ games, today, region: 'norcal', labels, events: norcalEvents(blocks, playoffs, today), cap }),
-    socal: buildThisWeek({ games, today, region: 'socal', labels, events: sds ? socalEvents(sds) : [], cap }),
+    norcal: buildThisWeek({ games, today, region: 'norcal', labels, events: norcalEvents(blocks, playoffs, today), claimed, cap }),
+    socal: buildThisWeek({ games, today, region: 'socal', labels, events: sds ? socalEvents(sds) : [], claimed, cap }),
   };
 }

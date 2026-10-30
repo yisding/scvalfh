@@ -63,7 +63,7 @@ describe('the 2025 brackets, drawn (SdsBracket over sds-bracket-view)', () => {
   const playedText = textOf(played);
 
   it('renders three divisions under their own h3, the Section’s labels, with one sentence and the sheet’s link above', () => {
-    expect(played.match(/<h3[^>]*>[^<]*<\/h3>/g)?.map((h) => h.replace(/<[^>]+>/g, '')), COMPONENT).toEqual([
+    expect([...played.matchAll(/<h3[^>]*>([^<]*)<\/h3>/g)].map((m) => m[1]), COMPONENT).toEqual([
       'Open Division',
       'Division I',
       'Division II',

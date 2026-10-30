@@ -65,7 +65,7 @@ export interface ThisWeekEvent {
   /** 'Prospect or Westmont (Santa Teresa #1, host) …', 'Quarterfinals, Division II', or null. */
   detail: string | null;
   href: string;
-  /** The league whose game replaces the event on its day; null for an event no single league owns. */
+  /** The league whose unclaimed game replaces the event on its day (`ThisWeekInput.claimed`); null for an event no single league owns. */
   leagueId: LeagueId | null;
 }
 
@@ -76,6 +76,14 @@ export interface ThisWeekInput {
   /** Round words the page computes, by contest ('MCAL final', 'SCVAL crossover · #2 v #2'). */
   labels: ReadonlyMap<ContestId, string>;
   events: readonly ThisWeekEvent[];
+  /**
+   * The games a pairing or a bracket slot already accounts for (this-week-inputs.ts). A league's event gives way
+   * only to an UNCLAIMED game of its league on its day: the game MaxPreps lists for the slot the event stands in
+   * for (the BVAL play-in, a Super Regional game, an MCAL final the bracket could not join yet). A claimed game
+   * is some other slot's, so the SCVAL #2 crossover listed on Oct 30 leaves the unlisted play-in's row standing
+   * (2026-10-30). Without the set every game counts, as before.
+   */
+  claimed?: ReadonlySet<ContestId>;
   /** Rows per region; default 12. */
   cap?: number;
 }
@@ -173,8 +181,12 @@ export function buildThisWeek(input: ThisWeekInput): ThisWeekView {
       inWindow(g.dateKey) &&
       inRegion(g, region),
   );
-  // A league's event gives way to its game on the same day (the BVAL play-in once MaxPreps lists it).
-  const played = new Set(games.flatMap((g) => (g.postseason?.leagueId ? [`${g.postseason.leagueId}:${g.dateKey}`] : [])));
+  // A league's event gives way to an unclaimed game of its league on the same day (the BVAL play-in once MaxPreps
+  // lists it); a game another pairing or slot claims never displaces it (ThisWeekInput.claimed).
+  const claimed = input.claimed ?? new Set<ContestId>();
+  const played = new Set(
+    games.flatMap((g) => (g.postseason?.leagueId && !claimed.has(g.contestId) ? [`${g.postseason.leagueId}:${g.dateKey}`] : [])),
+  );
   const events = input.events.filter(
     (e) => inWindow(e.dateKey) && !(e.leagueId !== null && played.has(`${e.leagueId}:${e.dateKey}`)),
   );

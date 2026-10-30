@@ -74,7 +74,7 @@ describe('PlayoffBracket on the 2025 championship', () => {
   it('marks the winner’s line with the 2px inset rule and nothing on the loser’s', () => {
     const d = desktop(html);
     // Seven games, one winner each in the desktop twin.
-    expect(d.match(new RegExp(WINNER_RULE.replace(/[()]/g, '\\$&'), 'g'))?.length, COMPONENT).toBe(7);
+    expect(d.split(WINNER_RULE).length - 1, COMPONENT).toBe(7);
     // The final: Los Gatos 3-0 Saint Francis — Los Gatos' line carries the rule, Saint Francis' does not.
     const final = d.slice(d.lastIndexOf('<li class="flex min-w-0 items-center">'));
     const lines = [...final.matchAll(/<span class="flex items-center gap-2 py-1 pr-2 pl-2"( style="[^"]*")?>/g)];
@@ -147,6 +147,6 @@ describe('PlayoffBracket before the games exist', () => {
     // Both unplayed cards still link their game page and show no winner rule or score.
     expect(d, COMPONENT).toContain(`href="${gameHref(ticketed.contestId)}"`);
     expect(d, COMPONENT).toContain(`href="${gameHref(tba.contestId)}"`);
-    expect(d.match(new RegExp(WINNER_RULE.replace(/[()]/g, '\\$&'), 'g'))?.length ?? 0, COMPONENT).toBe(2);
+    expect(d.split(WINNER_RULE).length - 1, COMPONENT).toBe(2);
   });
 });

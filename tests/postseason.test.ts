@@ -502,3 +502,27 @@ describe('buildLeagueTournament', () => {
     expect(p.notes).toEqual(['San Francisco University won both meetings with Marin Catholic, so no play-in is needed.']);
   });
 });
+
+describe('tournamentOutcome — a level result decides nothing', () => {
+  const rows = [...TOP5, row(UN, 20, 6, { tiedWith: [MC], resolvedBy: 'play-in' }), row(MC, 20, 6, { tiedWith: [UN], resolvedBy: 'play-in' }), row(CS, 10, 8), row(MA, 0, 9)];
+  const league = pair(UN, MC, [2, 1], [3, 0]);
+  const playIn = game(MC, UN, 1, 2, '2026-10-23', { postseason: true });
+  const qfs = [game(BK, LW, 0, 2, '2026-10-26', { postseason: true }), game(TM, UN, 3, 0, '2026-10-26', { postseason: true })];
+
+  it('keeps both finalists in the final while MaxPreps posts it level with no winner flag, naming no runner-up', () => {
+    const sfs = [game(AW, LW, 2, 0, '2026-10-28', { postseason: true }), game(RW, TM, 0, 1, '2026-10-28', { postseason: true })];
+    const level = game(TM, AW, 2, 2, '2026-10-30', { postseason: true });
+    const p = buildLeagueTournament(MCAL, rows, [...league, playIn, ...qfs, ...sfs, level], 'complete', '2026-10-31');
+    expect(p.champion).toBeNull();
+    expect(tournamentOutcome(p, AW)).toMatchObject({ kind: 'in-final', opponent: TM });
+    expect(tournamentOutcome(p, TM)).toMatchObject({ kind: 'in-final', opponent: AW });
+  });
+
+  it('names no loser of a level semifinal: both sides stay alive, with that game still their next', () => {
+    const sfs = [game(AW, LW, 2, 0, '2026-10-28', { postseason: true }), game(RW, TM, 1, 1, '2026-10-28', { postseason: true })];
+    const p = buildLeagueTournament(MCAL, rows, [...league, playIn, ...qfs, ...sfs], 'tournament', '2026-10-29');
+    expect(tournamentOutcome(p, RW)).toMatchObject({ kind: 'alive', next: { id: 'sf-2' } });
+    expect(tournamentOutcome(p, TM)).toMatchObject({ kind: 'alive', next: { id: 'sf-2' } });
+    expect(tournamentOutcome(p, LW)).toMatchObject({ kind: 'lost', round: 'semifinal' });
+  });
+});
