@@ -6,8 +6,9 @@
  *      authoritative dates. ⚠️ The live feed contains a TYPO: the semifinal SUMMARY reads
  *      "CCS Semfinals", not "CCS Semifinals". Matching the correct spelling finds nothing.
  *      Every SUMMARY is also prefixed "(Field Hockey) ".
- *   2. the MaxPreps CCS tournament page — `bracketPublished` flips when
- *      `<div class="not-published">` disappears.
+ *   2. the MaxPreps CCS tournament page (CCS.bracketUrl) — one `<li id="bracket_<GUID>">` block per CCS
+ *      division (CCS.tournament.division1BracketId / division2BracketId), each carrying
+ *      `<div class="not-published">` until that division's bracket is published (`readTournamentPage`).
  *
  * Deliberately NOT here: cifccs.org document paths (every one returns a 31 KB SPA shell, and the
  * real files sit behind CloudFront hashes that change on re-upload) and the PrestoSports bracket
@@ -15,7 +16,7 @@
  */
 
 import { CCS } from '../leagues';
-import type { CcsCalendarEvent, CcsEventKind } from '../types';
+import type { CcsCalendarEvent, CcsDivisionName, CcsEventKind } from '../types';
 import { icsLine, unfoldIcs } from './http';
 
 export const CCS_ICAL_URL = 'https://cifccs.org/calendar/Field_Hockey?print=ical';
@@ -174,17 +175,77 @@ export function confirmKeyDates(
 
 // ---------------------------------------------------------------- bracket page
 
+export interface TournamentPageRead {
+  /** true when the page carried at least one of the configured CCS bracket blocks; false = NOT READ, carry the previous state. */
+  recognised: boolean;
+  /** One entry per CCS division whose `<li id="bracket_<GUID>">` block the page carried, in config order. */
+  divisions: Array<{ name: CcsDivisionName; bracketId: string; published: boolean }>;
+  /** One line for the run log. */
+  reason: string;
+}
+
 /**
- * `<div class="not-published">This tournament bracket will go live when published.</div>` is the
- * unpublished state. Its DISAPPEARANCE is the signal, so an empty or truncated body must NOT read
- * as published — hence the length guard.
+ * The published state of each CCS division's bracket on the MaxPreps tournament page, read POSITIVELY
+ * (replaces `readBracketPublished`, 2026-10-29).
+ *
+ * The live page (captured 2026-10-29 21:41Z, tests/fixtures/ccs/tournament-2026-10-29-unpublished.html) is
+ * `<ul class="tournament-brackets">` holding one `<li id="bracket_<GUID>" …>` per division, each with
+ * `<h2 class="bracket-name">Division N</h2>` and, while unpublished, `<div class="not-published">This tournament
+ * bracket will go live when published.</div>`. The `<li id>` is what MaxPreps' own widget script keys on
+ * (asset.maxpreps.io tournament_renderer…js reads `.bracket-container[data-id]`), the most stable hook there is.
+ *
+ * A division is published when its block carries no `not-published` substring. The block runs from its `<li id>`
+ * to the next bracket `<li id>` or to the `</ul>` that CLOSES THE LIST: the header inside each block holds its
+ * own `<ul class="links">…</ul>` ("Add to My Site") ahead of the marker, so cutting at the first `</ul>` would
+ * have called Division 1 published on the unpublished page.
+ *
+ * Why positive: the old rule ("published when the marker is gone") read a 403 body, an interstitial, a redesign
+ * or the wrong tournament (MaxPreps' 2026 San Diego Section shell has no CCS block and no marker) as PUBLISHED.
+ * Here a body under 2000 bytes, or one with none of the configured bracket ids, is `recognised: false`, and the
+ * pipeline (lib/pipeline/steps/secondary.ts) treats the bracket part as not read and carries the previous
+ * snapshot's state.
  */
-export function readBracketPublished(html: string): { published: boolean; reason: string } {
+export function readTournamentPage(html: string, tournament = CCS.tournament): TournamentPageRead {
   if (html.length < 2000) {
-    return { published: false, reason: `page body is only ${html.length} bytes — treated as unpublished` };
+    return { recognised: false, divisions: [], reason: `page body is only ${html.length} bytes — not recognised` };
   }
-  if (/not-published/.test(html)) {
-    return { published: false, reason: 'page still carries class="not-published"' };
+  const configured: Array<[CcsDivisionName, string]> = [
+    ['Division 1', tournament.division1BracketId],
+    ['Division 2', tournament.division2BracketId],
+  ];
+  const divisions: TournamentPageRead['divisions'] = [];
+  for (const [name, bracketId] of configured) {
+    const start = html.indexOf(`<li id="bracket_${bracketId}"`);
+    if (start < 0) continue;
+    const block = html.slice(start, bracketBlockEnd(html, start));
+    divisions.push({ name, bracketId, published: !/not-published/.test(block) });
   }
-  return { published: true, reason: 'the not-published marker is gone' };
+  if (divisions.length === 0) {
+    return { recognised: false, divisions, reason: 'no CCS bracket <li id="bracket_…"> block on the page — not recognised' };
+  }
+  const missing = configured.filter(([name]) => !divisions.some((d) => d.name === name)).map(([name]) => name);
+  const words = divisions.map((d) => `${d.name} ${d.published ? 'PUBLISHED' : 'not published'}`);
+  if (missing.length) words.push(`${missing.join(', ')} block missing`);
+  return { recognised: true, divisions, reason: words.join(' · ') };
+}
+
+/**
+ * Where the bracket block that starts at `start` ends: the next `<li id="bracket_` or the `</ul>` that closes
+ * the enclosing list, counting the `<ul>`s opened inside the block (the header's links list) so an inner
+ * `</ul>` does not end it. The end of the document when neither is found.
+ */
+function bracketBlockEnd(html: string, start: number): number {
+  const re = /<ul\b|<\/ul>|<li id="bracket_/g;
+  re.lastIndex = start + 1;
+  let depth = 0;
+  for (let m = re.exec(html); m; m = re.exec(html)) {
+    if (m[0] === '<li id="bracket_') return m.index;
+    if (m[0] === '</ul>') {
+      if (depth === 0) return m.index;
+      depth -= 1;
+    } else {
+      depth += 1;
+    }
+  }
+  return html.length;
 }

@@ -31,13 +31,14 @@ import type {
   DivisionId,
   DroppedContest,
   Game,
+  GameBracket,
   GameSide,
   GameStatus,
   Outcome,
   SeasonWindow,
   SourceId,
 } from './types';
-import { splitTbaRows, type ContestTeam, type ScheduleRow } from './sources/maxpreps';
+import { TBA_TEAM_ID, splitTbaRows, type ContestTeam, type ScheduleRow } from './sources/maxpreps';
 
 export interface NormalizeOptions {
   /** ISO UTC stamp written into every Game.provenance.fetchedAt. */
@@ -557,6 +558,8 @@ function toGame(
     }
   }
 
+  const bracket = bracketOf(row, copies, warnings);
+
   const game: Game = {
     contestId: c.contestId,
     dateLocal: c.date,
@@ -581,6 +584,7 @@ function toGame(
     forfeitBy,
     decider,
     shootout: null,
+    ...(bracket ? { bracket } : {}),
     venue: { text: location.text, ...(location.name ? { name: location.name } : {}) },
     urls: {
       maxpreps: httpUrlOrNull(cf.canonicalUrl, c.contestId, 'canonicalUrl', warnings),
@@ -598,6 +602,44 @@ function toGame(
     },
   };
   return game;
+}
+
+const GUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+/**
+ * A MaxPreps GUID that names something: not null, not the all-zero GUID (TBA_TEAM_ID), which the feed puts in
+ * `contest.tournamentId` and `tournamentBracketId` on every row outside a bracket (every 2026 crossover,
+ * Tournament of Champions and EAL row, and 2025's Super Regional rows, read 2026-10-29).
+ */
+export function isRealGuid(value: string | null | undefined): value is string {
+  return typeof value === 'string' && value !== TBA_TEAM_ID && GUID_RE.test(value);
+}
+
+/**
+ * `Game.bracket` from the row's tournament fields (lib/types.ts GameBracket), or undefined when the contest is
+ * in no bracket. The two team feeds carry one copy each; they agreed on every 2025 CCS row read, but should
+ * they disagree the copy that says `bracketIsPublished true` wins (a bracket is published once, for both
+ * teams), else the first copy, and the run log says which names differed.
+ */
+function bracketOf(row: ScheduleRow, copies: readonly ScheduleRow[], warnings: string[]): GameBracket | undefined {
+  const withBracket = [row, ...copies.filter((r) => r !== row)].filter((r) => isRealGuid(r.contest.tournamentId));
+  if (withBracket.length === 0) return undefined;
+  const chosen = withBracket.find((r) => r.calculatedFields.bracketIsPublished === true) ?? withBracket[0];
+  const names = new Set(withBracket.map((r) => r.calculatedFields.bracketName?.trim() || null));
+  if (names.size > 1) {
+    warnings.push(`contest ${row.contest.contestId}: feeds disagree on bracketName (${[...names].join(' vs ')})`);
+  }
+  const c = chosen.contest;
+  const cf = chosen.calculatedFields;
+  return {
+    tournamentId: c.tournamentId as string,
+    bracketId: isRealGuid(c.tournamentBracketId) ? c.tournamentBracketId : null,
+    tournament: cf.tournamentName?.trim() || null,
+    name: cf.bracketName?.trim() || null,
+    published: cf.bracketIsPublished === true,
+    matchupId: isRealGuid(cf.bracketMatchupID) ? cf.bracketMatchupID : null,
+    url: httpUrlOrNull(cf.tournamentCanonicalUrl ?? null, c.contestId, 'tournamentCanonicalUrl', warnings),
+  };
 }
 
 /**

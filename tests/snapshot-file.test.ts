@@ -14,6 +14,7 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
+import { ccsBracketGames } from '../lib/ccs-bracket';
 import { LEAGUES } from '../lib/leagues';
 import { officialDocumentOf } from '../lib/official/schema';
 import { SNAPSHOT_MAX_BYTES, SNAPSHOT_WARN_BYTES, SOURCES_MAX, budgetLabel } from '../lib/pipeline/steps/assemble';
@@ -259,7 +260,18 @@ describeIfPresent('the committed snapshot: CCS playoffs', () => {
     expect(snapshot.playoffs.keyDates.endOfLeagueSeason).toBe('2026-10-31');
     expect(snapshot.playoffs.format.autoQualifiers.scval).toBe(7);
     expect(snapshot.playoffs.format.autoQualifiers.total).toBe(16);
-    if (!snapshot.playoffs.bracketPublished) expect(snapshot.playoffs.games).toEqual([]);
+    // `divisionsPublished`, when the file carries it, is the per-division answer behind `bracketPublished`.
+    if (snapshot.playoffs.divisionsPublished) {
+      expect(Object.values(snapshot.playoffs.divisionsPublished).some(Boolean)).toBe(snapshot.playoffs.bracketPublished);
+    }
+  });
+
+  it('holds playoffs.games to its one derivation (lib/ccs-bracket.ts), every entry a game of the snapshot', () => {
+    // Empty today (2026-10-29): no game is tagged 'ccs' before the committee enters the bracket.
+    const derived = ccsBracketGames(snapshot.games, snapshot.playoffs.keyDates).map((g) => g.contestId);
+    expect(snapshot.playoffs.games.map((g) => g.contestId)).toEqual(derived);
+    const ids = new Set(snapshot.games.map((g) => g.contestId));
+    for (const g of snapshot.playoffs.games) expect(ids.has(g.contestId), g.contestId).toBe(true);
   });
 
   it('only carries a CCS calendar once the season gate has opened', () => {

@@ -7,21 +7,24 @@
  *    source row is stamped with when that school's own calendar was last fresh.
  *  - CCS calendar + bracket poll, season-gated from CCS.pollFrom. PER PART carry-forward: a part
  *    not read this run (`--no-ccs`, no CCS league in `--leagues`, the season gate, not in the
- *    corpus, a failed request) keeps the previous snapshot's value — the calendar its
- *    `ccsCalendar` + `keyDatesConfirmed`, the bracket its `bracketPublished` — so a run that never
- *    queried CCS (an MCAL-only refresh) cannot unpublish a live bracket or drop a confirmed
- *    calendar. With no previous snapshot the bracket is unpublished and there is no calendar. The
- *    source rows are unchanged ('skipped' / 'error'): the carry only shows in the run log.
+ *    corpus, a failed request, or a tournament page `readTournamentPage` does not recognise: a 403
+ *    body, an interstitial, a redesign, the wrong tournament) keeps the previous snapshot's value —
+ *    the calendar its `ccsCalendar` + `keyDatesConfirmed`, the bracket its `bracketPublished` +
+ *    `divisionsPublished` — so a run that never queried CCS (an MCAL-only refresh) cannot unpublish
+ *    a live bracket or drop a confirmed calendar, and a page that is not the bracket page cannot
+ *    publish one (2026-10-29: the old "marker gone" rule would have). With no previous snapshot the
+ *    bracket is unpublished and there is no calendar. The source rows are unchanged ('skipped' /
+ *    'error'): the carry only shows in the run log.
  *
  * Every failure becomes a SourceStatus row; a resource the corpus lacks is 'skipped' ('not in
  * corpus'), which is how an offline run skips these steps.
  */
 
 import { CCS, getLeague } from '../../leagues';
-import { CCS_ICAL_URL, ccsPollingOpen, confirmKeyDates, parseCcsIcal, readBracketPublished } from '../../sources/ccs';
+import { CCS_ICAL_URL, ccsPollingOpen, confirmKeyDates, parseCcsIcal, readTournamentPage } from '../../sources/ccs';
 import { VNN_SITE_IDS, applyVnnEvents, carryVnnForward, parseVnnIcs, type VnnEvent } from '../../sources/vnn-ics';
 import { getTeamBySlug } from '../../teams';
-import type { Game } from '../../types';
+import type { CcsDivisionName, Game } from '../../types';
 import type { SecondaryStepResult } from '../contract';
 import { carriedFromOf, type PipelineContext } from '../ledger';
 import { classifyFetchError } from '../read';
@@ -103,10 +106,12 @@ async function stepVnn(ctx: PipelineContext, input: readonly Game[]): Promise<Ga
 
 type CcsState = Omit<SecondaryStepResult, 'games'>;
 
-/** What this run read from CCS. A `null` part was not read: skipped, not in the corpus, or failed. */
+type CcsBracketState = Pick<CcsState, 'bracketPublished' | 'divisionsPublished'>;
+
+/** What this run read from CCS. A `null` part was not read: skipped, not in the corpus, failed, or (the bracket) a page not recognised. */
 interface CcsRead {
   calendar: Pick<CcsState, 'ccsCalendar' | 'keyDatesConfirmed'> | null;
-  bracketPublished: boolean | null;
+  bracket: CcsBracketState | null;
 }
 
 /**
@@ -117,9 +122,12 @@ interface CcsRead {
 function ccsState(ctx: PipelineContext, read: CcsRead, why: string): CcsState {
   const prev = ctx.previous?.playoffs;
   const carried: string[] = [];
-  let bracketPublished = read.bracketPublished ?? false;
-  if (read.bracketPublished === null && prev) {
-    bracketPublished = prev.bracketPublished;
+  let bracket: CcsBracketState = read.bracket ?? { bracketPublished: false };
+  if (read.bracket === null && prev) {
+    bracket = {
+      bracketPublished: prev.bracketPublished,
+      ...(prev.divisionsPublished ? { divisionsPublished: { ...prev.divisionsPublished } } : {}),
+    };
     carried.push('bracket');
   }
   let calendar = read.calendar ?? {};
@@ -130,16 +138,16 @@ function ccsState(ctx: PipelineContext, read: CcsRead, why: string): CcsState {
     };
     carried.push('calendar');
   }
-  if (read.calendar === null || read.bracketPublished === null) {
+  if (read.calendar === null || read.bracket === null) {
     ctx.log(
       `  ccs: ${why} — ${carried.length ? `carried ${carried.join('/')} state from the previous snapshot` : 'nothing to carry'}`,
     );
   }
-  return { ...calendar, bracketPublished };
+  return { ...calendar, ...bracket };
 }
 
 async function stepCcs(ctx: PipelineContext): Promise<CcsState> {
-  const nothingRead: CcsRead = { calendar: null, bracketPublished: null };
+  const nothingRead: CcsRead = { calendar: null, bracket: null };
   if (!ctx.args.ccs) return ccsState(ctx, nothingRead, 'skipped (--no-ccs)');
   const calendarBase = {
     id: 'ccs-ical' as const,
@@ -168,7 +176,7 @@ async function stepCcs(ctx: PipelineContext): Promise<CcsState> {
     return ccsState(ctx, nothingRead, `skipped (${reason})`);
   }
 
-  const read: CcsRead = { calendar: null, bracketPublished: null };
+  const read: CcsRead = { calendar: null, bracket: null };
   const missed: string[] = [];
   try {
     const res = await ctx.transport.get({ kind: 'ccs-ical' });
@@ -186,10 +194,24 @@ async function stepCcs(ctx: PipelineContext): Promise<CcsState> {
   }
   try {
     const res = await ctx.transport.get({ kind: 'ccs-bracket' });
-    const state = readBracketPublished(res.body);
-    read.bracketPublished = state.published;
-    ctx.source({ ...bracketBase, status: 'ok', httpStatus: res.httpStatus });
-    ctx.log(`  ccs bracket: ${state.published ? 'PUBLISHED' : 'not published'} (${state.reason})`);
+    const page = readTournamentPage(res.body);
+    if (!page.recognised) {
+      // Not the bracket page we know (a WAF body, an interstitial, a redesign, another tournament): the bracket
+      // part was NOT READ. The previous state is carried, never flipped, and the row says why.
+      ctx.warn(`ccs bracket: page not recognised (${page.reason})`);
+      ctx.source({ ...bracketBase, status: 'error', httpStatus: res.httpStatus, error: `page not recognised: ${page.reason}` });
+      ctx.log(`  ccs bracket: page not recognised (${page.reason}) — carried bracket state from the previous snapshot`);
+      missed.push('bracket page not recognised');
+    } else {
+      // A division whose block is missing from an otherwise recognised page keeps its previous answer, else false.
+      const prev = ctx.previous?.playoffs.divisionsPublished;
+      const divisionsPublished = Object.fromEntries(
+        CCS.ccsDivisions.map((d) => [d.name, page.divisions.find((p) => p.name === d.name)?.published ?? prev?.[d.name] ?? false]),
+      ) as Record<CcsDivisionName, boolean>;
+      read.bracket = { bracketPublished: Object.values(divisionsPublished).some(Boolean), divisionsPublished };
+      ctx.source({ ...bracketBase, status: 'ok', httpStatus: res.httpStatus, rowCount: page.divisions.filter((d) => d.published).length });
+      ctx.log(`  ccs bracket: ${page.reason}`);
+    }
   } catch (err) {
     const failed = classifyFetchError(err);
     if (failed.status === 'error') ctx.warn(`ccs bracket page failed: ${failed.error}`);

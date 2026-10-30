@@ -22,9 +22,16 @@
  * reject the file on its `countsFor` check and run with NO previous snapshot: no carry-forward, no finals
  * regression guard, and a meta file that reports every existing final as newly added.
  *
- * All three return v2 JSON, NOT yet parsed: the caller (`loadSnapshot`) runs it through `parseSnapshot`.
+ * "Bracket games" (v2 → v2, 2026-10-29). `playoffs.games` is derived from `games` (lib/ccs-bracket.ts
+ * ccsBracketGames: the 'ccs'-tagged games on or after the quarterfinals or marked published by MaxPreps' feed).
+ * A file whose `playoffs.games` is not that derivation — written before it existed, or before a tag changed
+ * (reclassified above) — gets it rebuilt on load (`needsPlayoffGames` / `rebuildPlayoffGames`), so the
+ * committed file heals itself the way stale tags do. Today's file has no bracket game: a no-op.
+ *
+ * All four return v2 JSON, NOT yet parsed: the caller (`loadSnapshot`) runs it through `parseSnapshot`.
  */
 
+import { ccsBracketGames, playoffGamesStale } from './ccs-bracket';
 import { classifyGame, classifyGames, postseasonTag } from './classify';
 import { CCS, LEAGUES, LEAGUE_IDS, findDivision, leagueOfDivision } from './leagues';
 import { buildSeason, leagueWindowOf } from './season-build';
@@ -517,4 +524,32 @@ export function reclassify(raw: unknown): unknown {
     counts: countsOf(games, standings),
   };
   return out;
+}
+
+// ---------------------------------------------------------------- "bracket games" (v2 → v2)
+
+/**
+ * A v2 object whose `playoffs.games` (by contestId, in order) is not what lib/ccs-bracket.ts `ccsBracketGames`
+ * derives from its `games` under the current config: a file written before the derivation existed, or whose
+ * tags have just been reclassified. False for anything else, including a file `parseSnapshot` would reject for
+ * another reason. Runs AFTER `reclassify`, so it reads the current tags.
+ */
+export function needsPlayoffGames(raw: unknown): boolean {
+  if (!isObject(raw) || raw.schemaVersion !== 2 || !Array.isArray(raw.games) || !isObject(raw.playoffs) || !Array.isArray(raw.playoffs.games)) return false;
+  try {
+    return playoffGamesStale(raw.games as Game[], raw.playoffs.games as Game[], CCS.keyDates);
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * The same file with `playoffs.games` rebuilt from `games` (the same objects, in `byDateThenId` order). Nothing
+ * else moves: a bracket game is already in `games`, its tags and counts are already right. Throws on input that
+ * `needsPlayoffGames` rejects.
+ */
+export function rebuildPlayoffGames(raw: unknown): unknown {
+  if (!needsPlayoffGames(raw)) throw new Error('lib/snapshot-migrate.ts: not a v2 snapshot whose playoffs.games need rebuilding');
+  const v2 = raw as unknown as Snapshot;
+  return { ...v2, playoffs: { ...v2.playoffs, games: ccsBracketGames(v2.games, CCS.keyDates) } };
 }

@@ -9,14 +9,18 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { LEAGUES, leaguesInRegion } from '../lib/leagues';
+import { ccsBracketGames } from '../lib/ccs-bracket';
+import { CCS, LEAGUES, leaguesInRegion } from '../lib/leagues';
+import { buildSeason } from '../lib/season-build';
 import {
   addConfiguredLeagues,
   countsOf,
   isSnapshotV1,
   lacksConfiguredLeagues,
   migrateV1ToV2,
+  needsPlayoffGames,
   needsReclassification,
+  rebuildPlayoffGames,
   reclassify,
 } from '../lib/snapshot-migrate';
 import { loadSnapshot, parseSnapshot } from '../lib/snapshot-schema';
@@ -24,6 +28,7 @@ import { stableStringify } from '../lib/stable-json';
 import { buildCrossCheck, computeStandings, divisionGames } from '../lib/standings';
 import { TEAMS, teamsInLeague } from '../lib/teams';
 import type { Game, ReportedRecord, Snapshot, TeamId } from '../lib/types';
+import { game } from './game-builder';
 import { VARIANTS_DIR } from './helpers';
 
 const GOLDEN = path.join(import.meta.dirname, 'golden');
@@ -511,5 +516,51 @@ describe('the "rules changed" upgrade (a v2 file written under the flag-based Su
     expect(() => parseSnapshot(stale)).toThrow(/leagueDivision sunset but a side is not a member/);
     expect(needsReclassification(stale)).toBe(true);
     expect(stableStringify(loadSnapshot(stale))).toBe(stableStringify(loadSnapshot(COMMITTED)));
+  });
+});
+
+describe('the "bracket games" upgrade (playoffs.games derived from the tags, 2026-10-29)', () => {
+  /** The committed file with one Saint Francis (SCVAL) v Leigh (BVAL) quarterfinal added to `games` and nothing in `playoffs.games`. */
+  function withQuarterfinal(): { stale: Snapshot; extra: Game } {
+    const extra = game({ home: 'leigh', away: 'saint-francis', date: '2026-11-07', league: false, contestTypes: { home: 1, away: 1 } });
+    expect(extra.postseason).toEqual({ kind: 'ccs', leagueId: null, via: 'ccs-window' });
+    const games = [...COMMITTED.games, extra];
+    const stale: Snapshot = {
+      ...COMMITTED,
+      games,
+      season: buildSeason(games),
+      playoffs: { ...COMMITTED.playoffs, games: [] },
+      counts: countsOf(games, COMMITTED.standings),
+    };
+    return { stale, extra };
+  }
+
+  it('recognises a file whose playoffs.games is not the derivation, and nothing else', () => {
+    const { stale } = withQuarterfinal();
+    expect(needsPlayoffGames(stale)).toBe(true);
+    expect(needsPlayoffGames(COMMITTED)).toBe(false);
+    expect(needsPlayoffGames(readV1())).toBe(false);
+    expect(needsPlayoffGames(null)).toBe(false);
+    expect(needsPlayoffGames({ ...COMMITTED, playoffs: 'nope' })).toBe(false);
+    expect(() => rebuildPlayoffGames(COMMITTED)).toThrow(/need rebuilding/);
+  });
+
+  it('rebuilds playoffs.games on load with the SAME game object, and moves nothing else', () => {
+    const { stale, extra } = withQuarterfinal();
+    const before = JSON.stringify(stale);
+    const rebuilt = rebuildPlayoffGames(stale) as Snapshot;
+    expect(JSON.stringify(stale)).toBe(before);
+    expect(rebuilt.playoffs.games).toHaveLength(1);
+    expect(rebuilt.playoffs.games[0]).toBe(rebuilt.games[rebuilt.games.length - 1]);
+    expect(rebuilt.playoffs.games[0].contestId).toBe(extra.contestId);
+    expect(stableStringify({ ...rebuilt, playoffs: { ...rebuilt.playoffs, games: [] } })).toBe(stableStringify(stale));
+    const loaded = loadSnapshot(stale);
+    expect(loaded.playoffs.games.map((g) => g.contestId)).toEqual([extra.contestId]);
+    expect(ccsBracketGames(loaded.games, CCS.keyDates).map((g) => g.contestId)).toEqual([extra.contestId]);
+  });
+
+  it('leaves the committed file alone: no bracket game today, so loadSnapshot is a round trip', () => {
+    expect(COMMITTED.playoffs.games).toEqual([]);
+    expect(stableStringify(loadSnapshot(COMMITTED))).toBe(stableStringify(COMMITTED));
   });
 });

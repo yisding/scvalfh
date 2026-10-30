@@ -6,6 +6,7 @@ import path from 'node:path';
 import { describe, expect, it, vi } from 'vitest';
 
 import { postseasonTagOf } from '../components/ui/describe-game';
+import { CCS } from '../lib/leagues';
 import {
   classifyGame,
   classifyGames,
@@ -66,9 +67,10 @@ describe('classify: official-fixtures leagues (BVAL, PCAL, MCAL)', () => {
   it('tags a contestType 4 game: MCAL tournament inside MCAL, CCS elsewhere', () => {
     const mcal = game({ home: 'tamalpais', away: 'redwood', hs: 1, as: 0, contestTypes: { home: 4, away: 4 } });
     expect(mcal.postseason).toEqual({ kind: 'mcal-tournament', leagueId: 'mcal', via: 'contest-type-4' });
-    const bval = game({ home: 'leigh', away: 'leland', hs: 1, as: 0, contestTypes: { home: 4, away: 0 } });
+    // CCS from the quarterfinal date (Nov 7): before it, MaxPreps' flag on a CCS pair is no CCS game (see the CCS bracket cases).
+    const bval = game({ home: 'leigh', away: 'leland', hs: 1, as: 0, date: '2026-11-07', contestTypes: { home: 4, away: 0 } });
     expect(bval.postseason).toEqual({ kind: 'ccs', leagueId: 'bval', via: 'contest-type-4' });
-    const cross = game({ home: 'leigh', away: 'cupertino', hs: 1, as: 0, contestTypes: { home: 4, away: 4 } });
+    const cross = game({ home: 'leigh', away: 'cupertino', hs: 1, as: 0, date: '2026-11-07', contestTypes: { home: 4, away: 4 } });
     expect(cross.postseason).toEqual({ kind: 'ccs', leagueId: null, via: 'contest-type-4' });
   });
 
@@ -89,7 +91,7 @@ describe('classify: official-fixtures leagues (BVAL, PCAL, MCAL)', () => {
     expect(vsCcs.postseason).toEqual({ kind: 'other', leagueId: null, via: 'contest-type-4' });
     expect(postseasonTagOf(vsCcs)).toBeNull();
     // A CCS team against a non-registry opponent is still CCS.
-    const ccsBase = game({ home: 'leigh', away: 'leland', hs: 1, as: 0, contestTypes: { home: 4, away: 4 } });
+    const ccsBase = game({ home: 'leigh', away: 'leland', hs: 1, as: 0, date: '2026-11-07', contestTypes: { home: 4, away: 4 } });
     const ccsOutside: Game = {
       ...ccsBase,
       away: { ...ccsBase.away, teamId: '11111111-2222-4333-8444-555555555555', slug: null, name: 'Outside Prep' },
@@ -250,7 +252,7 @@ describe('classify: EAL (contest-type evidence, no official schedule)', () => {
     const late = game({ home: 'saint-francis', away: 'st-ignatius', hs: 1, as: 0, date: '2026-10-31' });
     expect(late.postseason).toBeNull();
     expect(late.countsFor).toBe('de-anza');
-    const ct4 = game({ home: 'saint-francis', away: 'st-ignatius', hs: 1, as: 0, contestTypes: { home: 4, away: 0 } });
+    const ct4 = game({ home: 'saint-francis', away: 'st-ignatius', hs: 1, as: 0, date: '2026-11-07', contestTypes: { home: 4, away: 0 } });
     expect(ct4.postseason).toEqual({ kind: 'ccs', leagueId: 'scval', via: 'contest-type-4' });
     expect(ct4.countsFor).toBeNull();
     // SCVAL excludes no contest type: a contestType 2 row MaxPreps also flags 0 still counts.
@@ -449,5 +451,72 @@ describe('classify: helpers', () => {
   it('isLeagueGame reads countsFor only', () => {
     expect(isLeagueGame({ countsFor: 'de-anza' })).toBe(true);
     expect(isLeagueGame({ countsFor: null })).toBe(false);
+  });
+});
+
+describe('classify: the CCS bracket (rule 1c, the rule-2 gate and the widened 2b; 2026-10-29)', () => {
+  const BRACKET: Game['bracket'] = {
+    tournamentId: CCS.tournament.id,
+    bracketId: CCS.tournament.division1BracketId,
+    tournament: '2026 Central Coast Section Field Hockey Championship',
+    name: 'Division 1',
+    published: true,
+    matchupId: null,
+    url: CCS.bracketUrl,
+  };
+
+  it('(a) tags a game whose MaxPreps row names the CCS tournament as the bracket, across two CCS leagues', () => {
+    // Saint Francis (SCVAL) at Leigh (BVAL) on the quarterfinal date, typed non-league by MaxPreps.
+    const g: Game = { ...game({ home: 'leigh', away: 'saint-francis', date: '2026-11-07', league: false }), bracket: BRACKET };
+    expect(postseasonTag(g)).toEqual({ kind: 'ccs', leagueId: null, via: 'maxpreps-bracket' });
+    // The name is the fallback for a re-created tournament under a new id; another tournament's row is not CCS.
+    const renamed: Game = { ...g, bracket: { ...BRACKET, tournamentId: '11111111-2222-4333-8444-555555555555' } };
+    expect(postseasonTag(renamed)).toEqual({ kind: 'ccs', leagueId: null, via: 'maxpreps-bracket' });
+    const other: Game = { ...renamed, bracket: { ...renamed.bracket!, tournament: 'Some Invitational' } };
+    expect(postseasonTag(other)).toEqual({ kind: 'ccs', leagueId: null, via: 'ccs-window' }); // the date rule, not the feed
+    expect(postseasonTag({ ...other, dateKey: '2026-11-03', dateLocal: '2026-11-03T16:00:00' })).toBeNull();
+    // Before the quarterfinals too: the feed says which bracket, so the date is not needed.
+    const early: Game = { ...game({ home: 'leigh', away: 'saint-francis', date: '2026-11-03', league: false }), bracket: BRACKET };
+    expect(postseasonTag(early)).toEqual({ kind: 'ccs', leagueId: null, via: 'maxpreps-bracket' });
+    for (const x of [g, renamed, early]) expect(classifyGames([{ ...x, postseason: null }])[0].countsFor, x.contestId).toBeNull();
+  });
+
+  it('(b) keeps a crossover the crossover even when MaxPreps files it under the CCS tournament (rule 1 first)', () => {
+    const g: Game = { ...game({ home: 'saint-francis', away: 'mitty', hs: 1, as: 0, date: '2026-10-29', league: false }), bracket: BRACKET };
+    expect(postseasonTag(g)).toEqual({ kind: 'scval-crossover', leagueId: 'scval', via: 'config-pairing' });
+    expect(classifyGames([{ ...g, postseason: null }])[0].countsFor).toBeNull();
+  });
+
+  it('(c) tags two CCS teams of different leagues inside the bracket window as CCS by date (2b widened)', () => {
+    // 2025 had cross-league rounds (Mitty @ Leigh, Monterey @ Los Altos, Willow Glen @ Carmel).
+    const g = game({ home: 'carmel', away: 'saint-francis', hs: 1, as: 0, date: '2026-11-11', league: false, contestTypes: { home: 1, away: 1 } });
+    expect(g.postseason).toEqual({ kind: 'ccs', leagueId: null, via: 'ccs-window' });
+    expect(g.countsFor).toBeNull();
+    const today = game({ home: 'carmel', away: 'saint-francis', hs: 1, as: 0, date: '2026-10-29', league: false, contestTypes: { home: 1, away: 1 } });
+    expect(today.postseason).toBeNull();
+    expect(today.countsFor).toBeNull();
+  });
+
+  it('(d) does not read MaxPreps’ playoff flag on two CCS teams as a CCS game before the quarterfinals', () => {
+    // MaxPreps typed the 2026 Valley Christian v Palo Alto crossover 4/4; a flag alone proves no bracket game.
+    const g = game({ home: 'leigh', away: 'cupertino', hs: 1, as: 0, date: '2026-11-03', league: false, contestTypes: { home: 4, away: 4 } });
+    expect(g.postseason).toBeNull();
+    expect(g.countsFor).toBeNull();
+    const inWindow = game({ home: 'leigh', away: 'cupertino', hs: 1, as: 0, date: '2026-11-07', league: false, contestTypes: { home: 4, away: 4 } });
+    expect(inWindow.postseason).toEqual({ kind: 'ccs', leagueId: null, via: 'contest-type-4' });
+    // The gate is for CCS pairs only: an MCAL team's flagged game against a CCS team stays 'other' on any date.
+    const mixed = game({ home: 'tamalpais', away: 'leigh', hs: 1, as: 0, date: '2026-11-03', contestTypes: { home: 4, away: 4 } });
+    expect(mixed.postseason).toEqual({ kind: 'other', leagueId: null, via: 'contest-type-4' });
+  });
+
+  it('(e) tags a contestType-5 neutral pair of EAL teams on Oct 31 as the Super Regional, and on Oct 29 as nothing', () => {
+    // 2025's Super Regional rows: contestType 5, homeAwayType 2, the round in contest.location.
+    const base = game({ home: 'davis', away: 'chico', hs: 2, as: 1, date: '2026-10-31', league: false, contestTypes: { home: 5, away: 5 } });
+    const neutral: Game = { ...base, site: 'neutral', venue: { text: 'Championship Final' } };
+    expect(postseasonTag(neutral)).toEqual({ kind: 'league-postseason', leagueId: 'eal', via: 'league-postseason-window' });
+    expect(classifyGames([{ ...neutral, postseason: null }])[0].countsFor).toBeNull();
+    const before = { ...neutral, dateKey: '2026-10-29', dateLocal: '2026-10-29T12:00:00' };
+    expect(postseasonTag(before)).toBeNull();
+    expect(classifyGames([{ ...before, postseason: null }])[0].countsFor).toBeNull();
   });
 });

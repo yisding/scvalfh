@@ -984,3 +984,80 @@ describe('normalize: overtime a game note states (Homestead, Oct 5)', () => {
     expect([plain.otPeriods, plain.decider, plain.provenance.overtimeNote]).toEqual([0, 'REG', undefined]);
   });
 });
+
+describe('normalize: MaxPreps’ bracket fields (Game.bracket) on the 2025 postseason fixtures', () => {
+  const POSTSEASON_DIR = path.join(import.meta.dirname, 'fixtures', 'maxpreps', 'postseason-2025');
+  const feed = (file: string): ScheduleRow[] =>
+    ScheduleResponseSchema.parse(JSON.parse(readFileSync(path.join(POSTSEASON_DIR, file), 'utf8')) as unknown).data;
+  // Los Gatos's three 2025 CCS rows, transcribed (the fixture's _note says which fields, from where).
+  const losGatos = normalizeGames(feed('sched-los-gatos-2025-ccs.json'), { fetchedAt: '2026-10-29T21:00:00.000Z' });
+  // Davis's two 2025 EAL Super Regional rows, a real capture.
+  const davis = normalizeGames(feed('sched-davis-2025-super-regional.json'), { fetchedAt: '2026-10-29T21:00:00.000Z' });
+
+  it('copies the CCS quarterfinal’s tournament, bracket and matchup ids, name, published flag and page URL', () => {
+    const qf = losGatos.games.find((g) => g.contestId === '0de6848f-9bef-409c-ab2e-681d0bea9e32')!;
+    expect(qf.home.name).toBe('Los Gatos');
+    expect(qf.away.name).toBe('Christopher');
+    expect([qf.home.score, qf.away.score, qf.site]).toEqual([2, 0, 'home']);
+    expect(qf.bracket).toEqual({
+      tournamentId: '864e7271-f44e-4a88-acdb-11af2b2f0a37',
+      bracketId: 'ba9db9fb-2047-42c2-af2d-373b1b738900',
+      tournament: '2025 Central Coast Section Field Hockey Championship',
+      name: 'Division 1',
+      published: true,
+      matchupId: 'a00fc167-80a7-41ee-8c8f-1f3499deceb8',
+      url: 'https://www.maxpreps.com/tournament/cXJOhk70iEqs2xGvKy8KNw/field-hockey-25/2025-central-coast-section-field-hockey-championship.htm',
+    });
+    expect(qf.contestTypes).toEqual({ home: 4, away: 4 });
+    expect(qf.urls.goFan).toMatch(/^https:\/\/gofan\.co\//);
+  });
+
+  it('reads every round of the Los Gatos run as the same bracket; the final is neutral with the NFHS stream', () => {
+    expect(losGatos.games).toHaveLength(3);
+    for (const g of losGatos.games) {
+      expect(g.bracket?.tournamentId, g.contestId).toBe('864e7271-f44e-4a88-acdb-11af2b2f0a37');
+      expect(g.bracket?.name, g.contestId).toBe('Division 1');
+      expect(g.bracket?.published, g.contestId).toBe(true);
+    }
+    const final = losGatos.games.find((g) => g.contestId === 'e6091e07-0e91-4940-b3e0-5bb538c784bf')!;
+    expect(final.site).toBe('neutral');
+    expect(final.bracket?.matchupId).toBeNull();
+    expect(final.urls.nfhsStream).toBe('https://www.nfhsnetwork.com/events/cifccs/gamd457a295b4');
+    expect(losGatos.warnings.filter((w) => /bracket/.test(w))).toEqual([]);
+  });
+
+  it('sets no bracket on a regular-season row, nor on the all-zero tournamentId every ordinary row carries', () => {
+    const regular = games.find((g) => g.status === 'final')!;
+    expect(regular.bracket).toBeUndefined();
+    // The 2026-09-29 corpus: not one row names a tournament.
+    expect(games.every((g) => g.bracket === undefined)).toBe(true);
+  });
+
+  it('reads the 2025 EAL Super Regional rows as two neutral games with the round in the note and no bracket', () => {
+    expect(davis.games).toHaveLength(2);
+    const semi = davis.games.find((g) => g.contestId === '5064685d-2b27-4d59-8029-e0b5fb3db1c7')!;
+    const final = davis.games.find((g) => g.contestId === '6d66e88f-608b-4648-afe4-2258c0837f17')!;
+    for (const g of [semi, final]) {
+      expect(g.bracket, g.contestId).toBeUndefined();
+      expect(g.site, g.contestId).toBe('neutral');
+      expect(g.contestTypes, g.contestId).toEqual({ home: 5, away: 5 });
+    }
+    expect(semi.venue.text).toBe('Semi Final');
+    expect(final.venue.text).toBe('Championship Final');
+    expect([semi.home.score, semi.away.score, semi.decider]).toEqual([6, 0, 'REG']);
+    expect([final.home.score, final.away.score, final.decider]).toEqual([2, 1, 'OT']);
+  });
+
+  it('prefers the feed copy that says the bracket is published, and logs two copies that name different brackets', () => {
+    const [row] = feed('sched-los-gatos-2025-ccs.json');
+    const other: ScheduleRow = {
+      ...row,
+      calculatedFields: { ...row.calculatedFields, bracketName: 'Division 2', bracketIsPublished: false },
+    };
+    const res = normalizeGames([other, row], { fetchedAt: '2026-10-29T21:00:00.000Z' });
+    expect(res.games).toHaveLength(1);
+    expect(res.games[0].bracket?.name).toBe('Division 1');
+    expect(res.games[0].bracket?.published).toBe(true);
+    expect(res.warnings).toContain(`contest ${row.contest.contestId}: feeds disagree on bracketName (Division 2 vs Division 1)`);
+  });
+});

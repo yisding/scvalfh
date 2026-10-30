@@ -6,7 +6,7 @@
 
 import type { CifssSectionKey } from '../sources/cifss';
 import type {
-  CcsCalendarEvent, DivisionId, DroppedContest, Game, LeagueId, LeagueRunState, OfficialFixture,
+  CcsCalendarEvent, CcsDivisionName, DivisionId, DroppedContest, Game, LeagueId, LeagueRunState, OfficialFixture,
   SbliveCrossCheck, SeasonWindow, Snapshot, SourceStatus, TeamSlug,
 } from '../types';
 
@@ -167,7 +167,15 @@ export interface SbliveStepResult {
 }
 export type SbliveStep = (ctx: RunContext, input: { games: Game[]; unmatched: OfficialFixture[] }) => Promise<SbliveStepResult>;
 
-export interface SecondaryStepResult { games: Game[]; ccsCalendar?: CcsCalendarEvent[]; keyDatesConfirmed?: boolean; bracketPublished: boolean }
+export interface SecondaryStepResult {
+  games: Game[];
+  ccsCalendar?: CcsCalendarEvent[];
+  keyDatesConfirmed?: boolean;
+  /** Some CCS division's bracket is published (lib/sources/ccs.ts readTournamentPage), or the previous value when carried. */
+  bracketPublished: boolean;
+  /** The per-division answer, when a recognised page was read or a previous one carried (lib/types.ts CcsPlayoffs). */
+  divisionsPublished?: Record<CcsDivisionName, boolean>;
+}
 
 export interface PipelineSteps { official: OfficialStep; sblive: SbliveStep }
 

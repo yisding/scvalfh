@@ -1,9 +1,14 @@
 /**
- * lib/sources/ccs.ts — the CIF-CCS calendar and the MaxPreps bracket-state probe (SPEC §1.4, §5.9).
+ * lib/sources/ccs.ts — the CIF-CCS calendar and the MaxPreps tournament-page read (SPEC §1.4, §5.9).
  *
  * `tests/fixtures/ccs/field-hockey.ics` is the REAL feed from
  * https://cifccs.org/calendar/Field_Hockey?print=ical — including its "CCS Semfinals" typo, which
  * is the whole reason the classifier matches `sem[i]?final`.
+ *
+ * `tests/fixtures/ccs/tournament-2026-10-29-unpublished.html` is the REAL MaxPreps tournament page
+ * (CCS.bracketUrl, GET 2026-10-29 21:41Z, 111,799 bytes): two `<li id="bracket_<GUID>">` blocks, one per
+ * CCS division, each still carrying `<div class="not-published">`. `tournament-403.html` is MaxPreps'
+ * WAF body (6,967 bytes), which the same URL answered a minute later from this sandbox.
  */
 
 import { readFileSync } from 'node:fs';
@@ -20,7 +25,7 @@ import {
   configSiteOf,
   confirmKeyDates,
   parseCcsIcal,
-  readBracketPublished,
+  readTournamentPage,
 } from '../lib/sources/ccs';
 import { CCS } from '../lib/leagues';
 import { CcsCalendarEventSchema } from '../lib/snapshot-schema';
@@ -155,22 +160,75 @@ describe('ccs: key-date confirmation', () => {
   });
 });
 
-describe('ccs: bracket state', () => {
+describe('ccs: the tournament page, read per division and positively', () => {
+  const live = readFileSync(path.join(REPO, 'tests', 'fixtures', 'ccs', 'tournament-2026-10-29-unpublished.html'), 'utf8');
+  const forbidden = readFileSync(path.join(REPO, 'tests', 'fixtures', 'ccs', 'tournament-403.html'), 'utf8');
+  const MARKER = '<div class="not-published" >This tournament bracket will go live when published.</div>';
   const body = (extra: string) => `<html><body>${'x'.repeat(3000)}${extra}</body></html>`;
 
-  it('reads the live unpublished marker as NOT published', () => {
-    const html = body('<div class="Tournament-styles__notPublished not-published" >This tournament bracket will go live when published.</div>');
-    expect(readBracketPublished(html).published).toBe(false);
+  it('recognises the live page and reads both divisions as not published', () => {
+    expect(live.length).toBe(111_799);
+    const read = readTournamentPage(live);
+    expect(read.recognised).toBe(true);
+    expect(read.divisions).toEqual([
+      { name: 'Division 1', bracketId: CCS.tournament.division1BracketId, published: false },
+      { name: 'Division 2', bracketId: CCS.tournament.division2BracketId, published: false },
+    ]);
+    expect(read.reason).toBe('Division 1 not published · Division 2 not published');
   });
 
-  it('flips only when the marker is gone', () => {
-    expect(readBracketPublished(body('<ol class="bracket"></ol>')).published).toBe(true);
+  it('reads a division as published only when ITS block has lost the marker', () => {
+    // The first marker on the page is Division 1's; String.replace with a string replaces the first occurrence.
+    expect(live.split(MARKER).length - 1).toBe(2);
+    const read = readTournamentPage(live.replace(MARKER, ''));
+    expect(read.divisions.map((d) => [d.name, d.published])).toEqual([['Division 1', true], ['Division 2', false]]);
+    expect(read.reason).toBe('Division 1 PUBLISHED · Division 2 not published');
   });
 
-  it('treats a truncated or empty body as unpublished, never as published', () => {
-    const res = readBracketPublished('');
-    expect(res.published).toBe(false);
-    expect(res.reason).toMatch(/0 bytes/);
+  it('is not fooled by the links list inside each block’s header (the first </ul> is not the block’s end)', () => {
+    // Division 1's block holds `<ul class="links">…</ul>` ahead of its marker: cutting there would call it published.
+    const start = live.indexOf(`<li id="bracket_${CCS.tournament.division1BracketId}"`);
+    const firstUlClose = live.indexOf('</ul>', start);
+    const marker = live.indexOf('not-published', start);
+    expect(firstUlClose).toBeLessThan(marker);
+    expect(readTournamentPage(live).divisions[0].published).toBe(false);
+  });
+
+  it('does not recognise MaxPreps’ 403 body, so the pipeline carries the previous state instead of flipping it', () => {
+    expect(forbidden.length).toBe(6967);
+    expect(forbidden).toMatch(/403 - Forbidden/);
+    const read = readTournamentPage(forbidden);
+    expect(read.recognised).toBe(false);
+    expect(read.divisions).toEqual([]);
+    expect(read.reason).toMatch(/no CCS bracket <li id="bracket_…"> block/);
+  });
+
+  it('does not recognise an empty or truncated body, with the byte count in the reason', () => {
+    const read = readTournamentPage('');
+    expect(read.recognised).toBe(false);
+    expect(read.reason).toMatch(/0 bytes/);
+  });
+
+  it('does not recognise another tournament’s page (the 2026 San Diego Section shell: a bracket list, no CCS ids, no marker)', () => {
+    const shell = body('<ul class="tournament-brackets" ><li id="bracket_494a605b-0000-4000-8000-000000000000" data-size="8" class="bracket-container"></li></ul>');
+    const read = readTournamentPage(shell);
+    expect(read.recognised).toBe(false);
+    // The old absence test would have called this PUBLISHED.
+    expect(/not-published/.test(shell)).toBe(false);
+  });
+
+  it('does not recognise the old single-marker page shape with no <li id> (what the previous probe matched)', () => {
+    const old = body('<div class="Tournament-styles__notPublished not-published" >This tournament bracket will go live when published.</div>');
+    expect(readTournamentPage(old).recognised).toBe(false);
+  });
+
+  it('reports a division whose block is missing as missing, and still recognises the page', () => {
+    const d2 = live.indexOf(`<li id="bracket_${CCS.tournament.division2BracketId}"`);
+    const withoutD2 = live.slice(0, d2) + live.slice(live.indexOf('</ul>', live.indexOf('</li>', d2)));
+    const read = readTournamentPage(withoutD2);
+    expect(read.recognised).toBe(true);
+    expect(read.divisions.map((d) => d.name)).toEqual(['Division 1']);
+    expect(read.reason).toBe('Division 1 not published · Division 2 block missing');
   });
 });
 

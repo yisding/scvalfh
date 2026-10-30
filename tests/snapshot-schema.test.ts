@@ -159,6 +159,26 @@ describe('snapshot schema: game invariants (DESIGN §5.1)', () => {
     expect(GameSchema.safeParse(g).success).toBe(true);
   });
 
+  it('round-trips MaxPreps’ bracket fields on a game (Game.bracket) and refuses a tournamentId that is no GUID', () => {
+    const base = game({ home: 'los-gatos', away: 'leigh', date: '2026-11-07', league: false });
+    const bracket: Game['bracket'] = {
+      tournamentId: 'b97830de-ad65-4dc2-b4be-b76080093330',
+      bracketId: '30408977-466b-441e-ac1a-18a5cf483aa6',
+      tournament: '2026 Central Coast Section Field Hockey Championship',
+      name: 'Division 1',
+      published: true,
+      matchupId: null,
+      url: 'https://www.maxpreps.com/tournament/3jB4uWWtwk20vrdggAkzMA/field-hockey-26/2026-central-coast-section-field-hockey-championship.htm',
+    };
+    const parsed = GameSchema.parse({ ...base, bracket });
+    expect(parsed.bracket).toEqual(bracket);
+    // Absent stays absent: nothing invents a bracket.
+    expect('bracket' in GameSchema.parse(base)).toBe(false);
+    expect(GameSchema.safeParse({ ...base, bracket: { ...bracket, tournamentId: 'not-a-guid' } }).success).toBe(false);
+    expect(GameSchema.safeParse({ ...base, bracket: { ...bracket, url: 'javascript:alert(1)' } }).success).toBe(false);
+    expect(PostseasonTagSchema.safeParse({ kind: 'ccs', leagueId: null, via: 'maxpreps-bracket' }).success).toBe(true);
+  });
+
   it('rejects a dateKey that disagrees with dateLocal', () => {
     const g = game({ home: 'cupertino', away: 'fremont', hs: 1, as: 0, date: '2026-09-09' });
     const result = GameSchema.safeParse({ ...g, dateKey: '2026-09-10' });

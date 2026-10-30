@@ -132,6 +132,14 @@ export const ContestSchema = z.looseObject({
   isDeleted: z.boolean().nullable().optional(),
   hasResult: z.boolean().nullable().optional(),
   sportSeasonId: z.string().nullable().optional(),
+  /**
+   * The tournament and bracket GUIDs of a bracket game, else the all-zero GUID (TBA_TEAM_ID) on every ordinary
+   * row read 2026-10-29, including the crossovers and 2025's EAL Super Regional rows; the 2025 CCS rows carry
+   * the championship's id (CCS.tournament.id's 2025 counterpart). lib/normalize.ts copies a real GUID into
+   * Game.bracket; lib/classify.ts rule 1c tags on it.
+   */
+  tournamentId: z.string().nullable().optional(),
+  tournamentBracketId: z.string().nullable().optional(),
   teams: z.array(ContestTeamSchema),
 });
 
@@ -161,9 +169,12 @@ export const CalculatedFieldsSchema = z.looseObject({
   contestDateInGMT: z.string(),
   endsOn: z.string().nullable().optional(),
   contestLength: z.number().nullable().optional(),
+  // Bracket fields (null on every non-bracket row; 'Division 1' / true / the matchup's GUID on the 2025 CCS rows).
+  // bracketGameIndex was 0 on every 2025 row read 2026-10-29, so nothing reads it.
   bracketName: z.string().nullable().optional(),
   bracketIsPublished: z.boolean().nullable().optional(),
   bracketGameIndex: z.number().nullable().optional(),
+  bracketMatchupID: z.string().nullable().optional(),
   tournamentName: z.string().nullable().optional(),
   tournamentCanonicalUrl: z.string().nullable().optional(),
   teamsCalculated: z.array(TeamCalculatedSchema),
