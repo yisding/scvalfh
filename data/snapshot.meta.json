@@ -1,25 +1,25 @@
 {
   "cifssCrossCheck": {
-    "agreements": 723,
-    "cifssOnlyScored": 1,
-    "compared": 729,
-    "conflicts": 6,
+    "agreements": 737,
+    "cifssOnlyScored": 2,
+    "compared": 744,
+    "conflicts": 7,
     "notOnMaxPreps": 2
   },
-  "commitSummary": "SCVAL +0 finals · BVAL +0 · PCAL +0 · MCAL +0 · EAL +0 · Sunset +0 · City +0 · North +1 · Metro +0 · LA +0",
-  "contentHash": "364cb552df44e69d9a43423e1c6e882a2adbb35867f51fa20ada41e1f99f17f3",
+  "commitSummary": "SCVAL +0 finals · BVAL +4 · PCAL +0 · MCAL +0 · EAL +0 · Sunset +0 · City +5 · North +5 · Metro +1 · LA +0",
+  "contentHash": "37ffb71f86286343100f0a501c1799bfd1dc2fdeb60f7aa84cb729a0e084b230",
   "counts": {
     "byLeague": {
       "bval": {
         "backfilled": 0,
-        "finals": 111,
+        "finals": 115,
         "games": 118,
         "leagueGames": 60,
         "teams": 12
       },
       "city": {
         "backfilled": 0,
-        "finals": 164,
+        "finals": 169,
         "games": 170,
         "leagueGames": 60,
         "teams": 12
@@ -33,7 +33,7 @@
       },
       "independents": {
         "backfilled": 0,
-        "finals": 59,
+        "finals": 60,
         "games": 60,
         "leagueGames": 21,
         "teams": 5
@@ -47,14 +47,14 @@
       },
       "metro": {
         "backfilled": 0,
-        "finals": 99,
+        "finals": 100,
         "games": 105,
         "leagueGames": 32,
         "teams": 9
       },
       "north-county": {
         "backfilled": 1,
-        "finals": 248,
+        "finals": 253,
         "games": 259,
         "leagueGames": 103,
         "teams": 19
@@ -68,34 +68,34 @@
       },
       "scval": {
         "backfilled": 0,
-        "finals": 161,
+        "finals": 163,
         "games": 165,
         "leagueGames": 98,
         "teams": 15
       },
       "sunset": {
         "backfilled": 0,
-        "finals": 108,
+        "finals": 109,
         "games": 109,
         "leagueGames": 35,
         "teams": 8
       }
     },
-    "finals": 889,
+    "finals": 907,
     "games": 926,
     "leagueGames": 552,
-    "mismatches": 29,
-    "pending": 3,
+    "mismatches": 30,
+    "pending": 6,
     "teams": 102
   },
   "crossCheck": {
-    "agreements": 239,
+    "agreements": 233,
     "backfilled": 4,
-    "compared": 292,
-    "conflicts": 6,
-    "sbliveOnlyScored": 8
+    "compared": 286,
+    "conflicts": 10,
+    "sbliveOnlyScored": 7
   },
-  "fetchedAt": "2026-10-29T19:25:26.511Z",
+  "fetchedAt": "2026-10-30T11:06:48.156Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -108,8 +108,8 @@
     },
     {
       "backfilled": 0,
-      "countedFinals": 53,
-      "finalsDelta": 0,
+      "countedFinals": 57,
+      "finalsDelta": 4,
       "id": "bval",
       "missingPast": 1,
       "reasons": [],
@@ -120,7 +120,7 @@
       "countedFinals": 40,
       "finalsDelta": 0,
       "id": "pcal",
-      "missingPast": 1,
+      "missingPast": 2,
       "reasons": [],
       "state": "fresh"
     },
@@ -144,7 +144,7 @@
     },
     {
       "backfilled": 0,
-      "countedFinals": 36,
+      "countedFinals": 35,
       "finalsDelta": 0,
       "id": "sunset",
       "missingPast": 0,
@@ -153,26 +153,26 @@
     },
     {
       "backfilled": 0,
-      "countedFinals": 54,
-      "finalsDelta": 0,
+      "countedFinals": 59,
+      "finalsDelta": 5,
       "id": "city",
-      "missingPast": 0,
-      "reasons": [],
-      "state": "fresh"
-    },
-    {
-      "backfilled": 0,
-      "countedFinals": 92,
-      "finalsDelta": 1,
-      "id": "north-county",
       "missingPast": 1,
       "reasons": [],
       "state": "fresh"
     },
     {
       "backfilled": 0,
-      "countedFinals": 26,
-      "finalsDelta": 0,
+      "countedFinals": 97,
+      "finalsDelta": 5,
+      "id": "north-county",
+      "missingPast": 2,
+      "reasons": [],
+      "state": "fresh"
+    },
+    {
+      "backfilled": 0,
+      "countedFinals": 27,
+      "finalsDelta": 1,
       "id": "metro",
       "missingPast": 1,
       "reasons": [],
@@ -912,11 +912,6 @@
       "status": "ok"
     },
     {
-      "label": "sblive scoreboard 2026-10-15",
-      "rowCount": 23,
-      "status": "ok"
-    },
-    {
       "label": "sblive scoreboard 2026-10-16",
       "rowCount": 21,
       "status": "ok"
@@ -958,7 +953,7 @@
     },
     {
       "label": "sblive scoreboard 2026-10-26",
-      "rowCount": 14,
+      "rowCount": 9,
       "status": "ok"
     },
     {
@@ -977,6 +972,11 @@
       "status": "ok"
     },
     {
+      "label": "sblive scoreboard 2026-10-30",
+      "rowCount": 14,
+      "status": "ok"
+    },
+    {
       "label": "sblive bonita-vista games",
       "rowCount": 22,
       "status": "ok"
@@ -987,18 +987,13 @@
       "status": "ok"
     },
     {
-      "label": "sblive gilroy games",
+      "label": "sblive escondido games",
       "rowCount": 17,
       "status": "ok"
     },
     {
-      "label": "sblive glendora games",
-      "rowCount": 18,
-      "status": "ok"
-    },
-    {
-      "label": "sblive greenfield games",
-      "rowCount": 14,
+      "label": "sblive gilroy games",
+      "rowCount": 17,
       "status": "ok"
     },
     {
@@ -1017,6 +1012,11 @@
       "status": "ok"
     },
     {
+      "label": "sblive santa-catalina games",
+      "rowCount": 12,
+      "status": "ok"
+    },
+    {
       "label": "los-gatos school calendar",
       "rowCount": 1,
       "status": "ok"
@@ -1028,12 +1028,12 @@
     },
     {
       "label": "cifsshome.org Central Coast Section field hockey",
-      "rowCount": 205,
+      "rowCount": 207,
       "status": "ok"
     },
     {
       "label": "cifsshome.org North Coast Section field hockey",
-      "rowCount": 142,
+      "rowCount": 144,
       "status": "ok"
     },
     {
@@ -1048,12 +1048,12 @@
     },
     {
       "label": "cifsshome.org Southern Section field hockey",
-      "rowCount": 209,
+      "rowCount": 210,
       "status": "ok"
     },
     {
       "label": "cifsshome.org San Diego Section field hockey",
-      "rowCount": 743,
+      "rowCount": 760,
       "status": "ok"
     },
     {
@@ -1063,12 +1063,12 @@
     },
     {
       "label": "ccs bracket",
-      "rowCount": null,
+      "rowCount": 0,
       "status": "ok"
     }
   ],
-  "today": "2026-10-29",
-  "warnings": 42,
+  "today": "2026-10-30",
+  "warnings": 46,
   "window": {
     "firstGame": "2026-08-12T17:15:00",
     "lastGame": "2026-10-30T19:00:00",
