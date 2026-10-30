@@ -88,6 +88,8 @@ import { teamOfSide } from '../../lib/teams';
 import type { DivisionId, Game, LeagueId, RegionId, SeasonPhase, Team } from '../../lib/types';
 import type { LeagueChip } from '../layout/LeagueSwitcher';
 import { leagueChips } from '../layout/league-chips';
+import { thisWeekByRegion } from '../playoffs/this-week-inputs';
+import type { ThisWeekView } from '../playoffs/this-week';
 import { fixtureOpponent, nextOfficialFixture } from '../teams/team-view';
 import { describeGame, gameKind, postseasonTagOf, type GameDisplay, type SideView } from '../ui/describe-game';
 import { plural } from '../ui/plural';
@@ -1055,7 +1057,23 @@ export interface HomeView {
   panels: HomeLeaguePanel[];
   /** NorCal, then SoCal (REGIONS order). */
   regions: HomeRegion[];
+  /**
+   * "This week in the postseason" per region (HomeThisWeek, `#this-week` / `#this-week-socal`): the same view
+   * model as /playoffs' strip (components/playoffs/this-week.ts, inputs shared through this-week-inputs.ts), at
+   * `HOME_THIS_WEEK_CAP` rows. `days` is empty when the window holds no postseason game or event (the whole
+   * regular season, the Oct 2 corpus), and the component then renders nothing. The plan (final-11) typed this
+   * `ThisWeekDay[]`; the view also carries the window's ends and the "+N more" count the strip prints.
+   */
+  thisWeek: Record<RegionId, ThisWeekView>;
 }
+
+/**
+ * Rows per region on the home page. The strip is a pointer to /playoffs (12 rows there), not the postseason
+ * page; every region's copy is in the home HTML and RSC payload at once (both regions ship, the scope
+ * stylesheet hides one), and that payload is weighed against a budget (scripts/assert-budgets.ts). A row is
+ * one link and one badge, no GameRow, so 8 rows a region add under 1.5 KB gzip. Added 2026-10-30 (plan final-11).
+ */
+export const HOME_THIS_WEEK_CAP = 8;
 
 /** A league's card in "Find your team" (`LeagueCard`). */
 function leagueCardView(s: LeagueSummary): LeagueCardView {
@@ -1089,8 +1107,10 @@ export function buildHomeView(): HomeView {
   const leagueIds = summaries.map((s) => s.id);
   const teams = getTeams();
   const leagueCards = summaries.map(leagueCardView);
+  const thisWeek = thisWeekByRegion({ games: getGames(), today, cap: HOME_THIS_WEEK_CAP });
   return {
     today,
+    thisWeek,
     status: {
       resultsThrough: getLatestResultsDate(),
       teamCount: teams.length,

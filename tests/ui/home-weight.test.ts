@@ -83,3 +83,48 @@ describe('home team views weight (components/home/home-view.ts)', () => {
     expect(liveBudgetGates({ CI_GATE: '' })).toBe(false);
   });
 });
+
+/**
+ * "This week in the postseason" on the home page (plan final-11, 2026-10-30) is a per-region view on
+ * `HomeView.thisWeek`, not a field of any pinned-team view: the 102 team views that every phone downloads are
+ * untouched, and the strip is held to 8 rows a region (HOME_THIS_WEEK_CAP) with no GameRow. Measured
+ * 2026-10-30 on the bundled snapshot (fetched 2026-10-29): NorCal 8 rows, 2,171 bytes serialized, SoCal 8 rows,
+ * 2,258; 4,429 together, x 1.12 = 4,960, so 5 KiB = 5,120. Like the live team-view check, the bundled-snapshot
+ * size fails only under CI_GATE (a postseason week's data must never stop the cron's commit).
+ */
+describe('the home "This week" strip weight (components/home/home-view.ts thisWeek)', () => {
+  const STRIP_BUDGET = 5 * 1024;
+
+  async function homeView(snapshotPath: string | undefined) {
+    vi.resetModules();
+    if (snapshotPath) process.env.SCVAL_SNAPSHOT = snapshotPath;
+    else delete process.env.SCVAL_SNAPSHOT;
+    const { buildHomeView, HOME_THIS_WEEK_CAP } = await import('../../components/home/home-view');
+    return { view: buildHomeView(), cap: HOME_THIS_WEEK_CAP };
+  }
+
+  it('leaves the pinned-team views alone: no strip field, text or key in any of the 102', async () => {
+    const { view } = await homeView(corpusSnapshotPath('all-2026-10-02'));
+    expect(view.teamViews.length, 'components/home/home-view.ts: one view per team').toBe(102);
+    const json = JSON.stringify(view.teamViews);
+    expect(json, 'components/home/home-view.ts: teamViews carry no strip').not.toMatch(/thisWeek|This week in the postseason/);
+    for (const v of view.teamViews) expect(Object.keys(v), `${v.slug}`).not.toContain('thisWeek');
+    // The regular season: no strip at all.
+    expect(view.thisWeek.norcal.days).toEqual([]);
+    expect(view.thisWeek.socal.days).toEqual([]);
+  }, 600_000);
+
+  it('holds each region to the cap on the bundled snapshot and within 5 KiB (fails only under CI_GATE)', async () => {
+    const { view, cap } = await homeView(undefined);
+    expect(cap, 'components/home/home-view.ts: HOME_THIS_WEEK_CAP').toBe(8);
+    for (const region of ['norcal', 'socal'] as const) {
+      const rows = view.thisWeek[region].days.flatMap((d) => d.rows);
+      expect(rows.length, `components/home/home-view.ts: thisWeek.${region} rows`).toBeLessThanOrEqual(cap);
+    }
+    const bytes = Buffer.byteLength(JSON.stringify(view.thisWeek), 'utf8');
+    const message = `components/home/home-view.ts: serialized thisWeek is ${bytes} bytes on the bundled snapshot (budget ${STRIP_BUDGET})`;
+    if (liveBudgetGates(process.env)) expect(bytes, message).toBeLessThanOrEqual(STRIP_BUDGET);
+    else if (bytes > STRIP_BUDGET * WARN_AT) console.warn(`warning: ${message}`);
+  });
+});
+
