@@ -8,7 +8,7 @@
  * - The SCVAL play-in reads "SCVAL play-in" (chip, game page), the crossover "SCVAL crossover"
  *   (lib/postseason-round-label.ts through describe-game postseasonTagOf).
  * - A team seated in a play-in MaxPreps has not listed gets that game as Next (team page and home card), never "no
- *   more games"; the empty state names the seeding meeting's day and the team's own played crossover.
+ *   more games", even with a later game listed (the test gives Willow Glen a non-league game on Tue Nov 3); the empty state names the seeding meeting's day and the team's own played crossover.
  * - The team page's "CCS playoffs →" goes to `/playoffs#<league>-pairings` while the team has a pairing to play.
  */
 import { mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
@@ -37,6 +37,7 @@ let gameView: GameView;
 
 const PLAY_IN_ID = '0000feed-0000-4000-8000-00000000a1a1';
 const CROSSOVER_ID = '0000feed-0000-4000-8000-00000000c1c1';
+const LATER_ID = '0000feed-0000-4000-8000-00000000d1d1';
 
 beforeAll(async () => {
   const base = loadSnapshot(
@@ -46,6 +47,8 @@ beforeAll(async () => {
   const set = [
     game({ contestId: CROSSOVER_ID, home: 'mitty', away: 'st-ignatius', hs: 2, as: 0, date: '2026-10-29', league: false, postseason: crossover, official: null }),
     game({ contestId: PLAY_IN_ID, home: 'los-altos', away: 'santa-clara', date: '2026-10-30', status: 'scheduled', league: false, postseason: crossover, official: null }),
+    // A non-league game AFTER Willow Glen's unlisted Oct 31 play-in: the play-in must still be its Next.
+    game({ contestId: LATER_ID, home: 'willow-glen', away: 'carmel', date: '2026-11-03', status: 'scheduled', league: false, official: null }),
   ];
   const pairs = new Set(set.map((g) => [g.home.slug, g.away.slug].sort().join('|')));
   const games = [
@@ -101,7 +104,7 @@ describe('Next for a team seated in a play-in MaxPreps has not listed', () => {
       kindLabel: 'BVAL play-in',
       purpose: 'Play-in for BVAL’s 4th automatic CCS berth',
       dateKey: '2026-10-31',
-      timeLabel: '11:00 AM PT',
+      timeLabel: '11 AM PT',
       versus: 'at',
       seats: 'Mt. Hamilton #4 at Santa Teresa #1',
       href: '/playoffs#bval-pairings',
@@ -116,11 +119,11 @@ describe('Next for a team seated in a play-in MaxPreps has not listed', () => {
     const wg = views.find((v) => v.slug === 'willow-glen')!;
     expect(wg.next).toBeNull();
     expect(wg.pairingNext).toMatchObject({
-      when: 'Sat Oct 31 · 11:00 AM PT · BVAL play-in',
+      when: 'Sat Oct 31 · 11 AM PT',
       note: 'From the BVAL tables today; MaxPreps has not listed this game yet.',
       href: '/playoffs#bval-pairings',
     });
-    expect(wg.pairingNext!.title).toMatch(/^at .*Westmont/);
+    expect(wg.pairingNext!.title).toMatch(/^BVAL play-in at .*Westmont/);
     expect(views.find((v) => v.slug === 'mitty')!.pairingNext).toBeUndefined();
     expect(views.filter((v) => v.pairingNext).length).toBeLessThanOrEqual(2);
   });

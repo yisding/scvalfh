@@ -942,15 +942,23 @@ export function buildTeamViews(): HomeTeamView[] {
         ? rungCardText(playoffOutcomeLabel(team.division, outcomes), statusBadge(team.division, outcomes[0]))
         : null;
     const shortLabel = tieBadges ?? (oneRung !== null && oneRung !== line?.label ? oneRung : null);
-    const officialNext = next ? null : officialNextView(team, today, league.shortName);
+    const officialFixture = next ? null : officialNextView(team, today, league.shortName);
     // The play-in or crossover the team is seated in that MaxPreps has not listed yet: the card never says "no game
-    // left" the day before it (the team page's `pairing` Next card, the same words).
-    const pending = next || officialNext ? null : pendingPairingFor(team, today);
+    // left" the day before it, and it comes before a later game or fixture (the team page's `pairing` Next card).
+    const pendingAny = pendingPairingFor(team, today);
+    const pending =
+      pendingAny &&
+      (next === null || next.isDateTba || pendingAny.dateKey < next.dateKey) &&
+      (officialFixture === null || pendingAny.dateKey <= officialFixture.dateKey)
+        ? pendingAny
+        : null;
+    const officialNext = pending ? null : officialFixture;
     const pairingNext: HomePairingNext | null = pending
       ? {
           dateKey: pending.dateKey,
-          when: [shortDate(pending.dateKey), pending.timeLabel, pending.kindLabel].filter(Boolean).join(' · '),
-          title: `${pending.versus} ${pending.opponentName}`,
+          when: [shortDate(pending.dateKey), pending.timeLabel].filter(Boolean).join(' · '),
+          // The link says what it is and where it leads, the pairing card: 'BVAL play-in at Westmont'.
+          title: `${pending.kindLabel} ${pending.versus} ${pending.opponentName}`,
           note: `From the ${league.shortName} tables today; MaxPreps has not listed this game yet.`,
           href: pending.href,
         }
@@ -981,7 +989,7 @@ export function buildTeamViews(): HomeTeamView[] {
       overallRecord: standing && standing.overall.gp > 0 ? recordString(standing.overall) : EM_DASH,
       form: hasResults && standing ? [...standing.computed.last5] : [],
       last: last ? lastGameView(last, team.slug) : null,
-      next: next ? nextGameView(next, team.slug) : null,
+      next: next && !pending ? nextGameView(next, team.slug) : null,
       officialNext,
       ...(pairingNext ? { pairingNext } : {}),
     };

@@ -46,7 +46,6 @@ import {
   getLeagueSummaries,
   getPlayoffProjection,
   getPlayoffs,
-  getSeasonPhase,
   getStandingFor,
   getTeamById,
   getTeams,
@@ -139,6 +138,17 @@ function projectionRows(projection: Projection, division: string): ProjectionRow
     if (!team || !standing) return [];
     return [{ team, standing, status: row.status, statuses: row.statuses, label: row.label, shared: row.shared }];
   });
+}
+
+/**
+ * Whether the league still has a league game to play (a game of one of its divisions' tables, not final, dated today
+ * or later): the pairings follow the tables only until then. Read from the games, not the phase window, which a
+ * team's late non-league game can stretch.
+ */
+function leagueGamesAhead(summary: LeagueSummary): boolean {
+  const today = getToday();
+  const divisions = new Set<string>(summary.divisions.map((d) => d.id));
+  return getGames().some((g) => g.countsFor !== null && divisions.has(g.countsFor) && g.status !== 'final' && g.dateKey >= today);
 }
 
 /**
@@ -379,7 +389,7 @@ export default function PlayoffsPage() {
       <LeagueJumpLinks leagues={summaries} hrefs={hrefs} arrow={() => 'down'} />
       <LeagueSwitcher mode="anchor" label="Leagues" leagues={chips} hrefs={hrefs} className="mt-4" />
 
-      <div id="norcal" data-region-scope="norcal">
+      <div id="norcal" data-region-scope="norcal" role="region" aria-label="Northern California">
         {/* 1. Where every league stands (board-view.ts): one row per league, in this block's order. */}
         <PostseasonBoard id="board-norcal" rows={board.norcal} className="mt-section md:mt-section-lg" />
 
@@ -473,7 +483,7 @@ export default function PlayoffsPage() {
                   />
                   <LeaguePairings pairings={pairings} />
                   {/* An unsettled card already says it moves with the table; say it once, and only while league play can still move it. */}
-                  {pairings.some((p) => p.unsettled) || getSeasonPhase(summary.id) !== 'regular' ? null : (
+                  {pairings.some((p) => p.unsettled) || !leagueGamesAhead(summary) ? null : (
                     <p className="mt-4 mb-0 max-w-prose text-meta text-ink-2">
                       Pairings follow the current league tables, so they move with every result.
                     </p>
@@ -593,7 +603,7 @@ export default function PlayoffsPage() {
         })}
       </div>
 
-      <div id="socal" data-region-scope="socal">
+      <div id="socal" data-region-scope="socal" role="region" aria-label="Southern California">
         <PostseasonBoard id="board-socal" rows={board.socal} className="mt-section md:mt-section-lg" />
         {/* This week in SoCal's postseason, ahead of the San Diego block (the same strip as NorCal's). */}
         <ThisWeek id="this-week-socal" view={week.socal} className="mt-section md:mt-section-lg" />

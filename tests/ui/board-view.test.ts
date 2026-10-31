@@ -48,40 +48,36 @@ describe('buildBoard', () => {
   const today = '2026-10-30';
   const rows: ThisWeekRow[] = [
     row({ dateKey: '2026-10-29', text: 'Archbishop Mitty 0, St. Ignatius 3, final.', final: true, leagueIds: ['scval'], href: '/game/a' }),
+    row({ dateKey: '2026-10-30', time: '3:30 PM PT', text: 'Saint Francis at Los Gatos', label: 'SCVAL crossover · #2 v #2', leagueIds: ['scval'], href: '/game/c' }),
     row({ dateKey: '2026-10-30', time: '4:00 PM PT', text: 'Santa Clara at Los Altos', label: 'SCVAL play-in', leagueIds: ['scval'], href: '/game/b' }),
-    row({ dateKey: '2026-10-31', time: '11 AM PT', text: 'Willow Glen at Westmont', kind: 'event', leagueIds: ['bval'], href: '/playoffs#bval' }),
-    row({ dateKey: '2026-11-02', time: '1:00 PM PT', text: 'CCS Division 1 and CCS Division 2', kind: 'event', leagueIds: ['scval', 'bval', 'pcal'] }),
+    row({ dateKey: '2026-10-31', time: '11 AM PT', text: 'Willow Glen at Westmont.', label: 'BVAL play-in', kind: 'event', leagueIds: ['bval'], href: '/playoffs#bval-pairings' }),
+    row({ dateKey: '2026-11-02', time: '1:00 PM PT', text: 'CCS Division 1 and CCS Division 2', label: 'CCS seeding meeting', kind: 'event', leagueIds: ['scval', 'bval', 'pcal'], href: '/playoffs#key-dates' }),
   ];
 
-  it('gives each league its latest final and its next row, in the order the leagues are given', () => {
+  it('dates every Next (never "Today"), names the round, and counts a day of several rows', () => {
     const board = buildBoard([input('scval'), input('bval'), input('pcal'), input('eal')], rows, today);
-    expect(board.map((b) => b.leagueId), VIEW).toEqual(['scval', 'bval', 'pcal', 'eal']);
+    expect(board.map((b) => b.key), VIEW).toEqual(['scval', 'bval', 'pcal', 'eal']);
     const [scval, bval, pcal, eal] = board;
     expect(scval.href, VIEW).toBe('#scval');
-    expect(scval.latest, VIEW).toEqual({ when: 'Thu Oct 29', text: 'Archbishop Mitty 0, St. Ignatius 3, final.', label: '', href: '/game/a' });
-    expect(scval.next, VIEW).toEqual([{ when: 'Today · 4:00 PM PT', text: 'Santa Clara at Los Altos', label: 'SCVAL play-in', href: '/game/b' }]);
-    expect(bval.latest, VIEW).toBeNull();
-    expect(bval.next.map((l) => l.when), VIEW).toEqual(['Tomorrow · 11 AM PT']);
-    // An event a league shares (the CCS seeding meeting) is every one of its leagues' next item.
-    expect(pcal.next[0]?.text, VIEW).toBe('CCS Division 1 and CCS Division 2');
-    expect(pcal.next[0]?.when, VIEW).toBe('Mon Nov 2 · 1:00 PM PT');
-    expect(eal.latest, VIEW).toBeNull();
-    expect(eal.next, VIEW).toEqual([]);
+    expect(scval.next, VIEW).toEqual({ term: 'Next', text: 'Fri Oct 30 · 2 games', href: '#scval' });
+    expect(bval.next, VIEW).toEqual({ term: 'Next', text: 'Sat Oct 31 · 11 AM PT · BVAL play-in', href: '/playoffs#bval-pairings' });
+    // An event leagues share (the CCS seeding meeting) is each one's next item.
+    expect(pcal.next, VIEW).toEqual({ term: 'Next', text: 'Mon Nov 2 · 1:00 PM PT · CCS seeding meeting', href: '/playoffs#key-dates' });
+    expect(eal.next, VIEW).toBeNull();
+    for (const b of board) expect(b.next?.text ?? '', VIEW).not.toMatch(/Today|Tomorrow/);
   });
 
-  it('lists every row of the league’s next day, and only that day', () => {
-    const more = [
-      ...rows,
-      row({ dateKey: '2026-10-30', time: '3:30 PM PT', text: 'Saint Francis at Los Gatos', leagueIds: ['scval'] }),
-    ].sort((a, b) => a.dateKey.localeCompare(b.dateKey) || (a.time ?? '').localeCompare(b.time ?? ''));
-    const [scval] = buildBoard([input('scval')], more, today);
-    expect(scval.next.map((l) => l.text), VIEW).toEqual(['Saint Francis at Los Gatos', 'Santa Clara at Los Altos']);
+  it('says a league tournament’s champion instead of a next item once it is decided', () => {
+    const [mcal] = buildBoard([input('mcal', { champion: 'Tamalpais won the MCAL tournament.' })], [], today);
+    expect(mcal.next, VIEW).toEqual({ term: 'Result', text: 'Tamalpais won the MCAL tournament.', href: '#mcal' });
   });
 
-  it('says a league tournament’s champion and nothing next once it is decided', () => {
-    const final = row({ dateKey: '2026-10-30', text: 'Redwood 1, Tamalpais 3, final.', final: true, leagueIds: ['mcal'], href: '/game/f' });
-    const [mcal] = buildBoard([input('mcal', { champion: 'Tamalpais won the MCAL tournament.' })], [final], today);
-    expect(mcal.latest, VIEW).toEqual({ when: 'Champion', text: 'Tamalpais won the MCAL tournament.', label: '', href: '/game/f' });
-    expect(mcal.next, VIEW).toEqual([]);
+  it('gives the San Diego Section playoffs one row for its three leagues, linking the Section’s block', () => {
+    const sds = row({ dateKey: '2026-10-31', text: 'Section seeding meeting', label: 'San Diego Section playoffs', kind: 'event', leagueIds: ['city', 'north-county', 'metro'], href: '/playoffs#sds-playoffs' });
+    const board = buildBoard([input('city'), input('north-county'), input('metro'), input('sunset')], [sds], today);
+    expect(board.map((b) => b.names), VIEW).toEqual(['City · North · Metro', 'Sunset']);
+    expect(board[0].href, VIEW).toBe('#sds-playoffs');
+    expect(board[0].next?.text, VIEW).toBe('Sat Oct 31 · Section seeding meeting');
+    expect(board[1].next, VIEW).toBeNull();
   });
 });

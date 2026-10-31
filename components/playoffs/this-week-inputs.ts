@@ -148,7 +148,8 @@ export function norcalEvents(blocks: readonly CcsPairingBlock[], playoffs: CcsPl
         title: `${block.summary.shortName} ${p.isPlayIn ? 'play-in' : 'crossover'}`,
         // The pairing sentence without its "Play-in, Sat Oct 31, 11 AM PT:" head: the strip prints the day and time.
         detail: pairingSentence(p).replace(/^[^:]*:\s*/, ''),
-        href: `/playoffs#${block.summary.id}`,
+        // The league's pairing cards, where the team pages' postseason link lands too (DESIGN §32.5).
+        href: `/playoffs#${block.summary.id}-pairings`,
         leagueId: block.summary.id,
       });
     }

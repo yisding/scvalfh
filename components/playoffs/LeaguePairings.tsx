@@ -42,6 +42,28 @@ function purposeOf(label: string, title: string): string | null {
   return tail ? `${tail[0].toUpperCase()}${tail.slice(1)}.` : null;
 }
 
+/**
+ * The pairing as MaxPreps lists its game, when it does and one seat holds the home team: seats in visitor-home order,
+ * the game's joiner, and the host mark only where the config's host seat is the home side. Unchanged otherwise.
+ */
+export function asListed(p: PairingView): PairingView {
+  const homeSlug = p.game?.home.slug ?? null;
+  if (!p.game || homeSlug === null) return p;
+  const holdsHome = (seat: SeatView) => seat.contenders.some((c) => c.team.slug === homeSlug);
+  const [a, b] = p.seats;
+  if (!holdsHome(a) && !holdsHome(b)) return p;
+  const [away, home] = holdsHome(a) ? [b, a] : [a, b];
+  const connector = matchupJoiner(p.game);
+  return {
+    ...p,
+    connector,
+    seats: [
+      { ...away, host: false },
+      { ...home, host: home.host && connector === 'at' },
+    ],
+  };
+}
+
 export function LeaguePairings({ pairings, className }: LeaguePairingsProps) {
   if (pairings.length === 0) return null;
   const single = pairings.length === 1;
@@ -57,20 +79,14 @@ export function LeaguePairings({ pairings, className }: LeaguePairingsProps) {
     >
       {pairings.map((p) => {
         // Once the game exists the card reads as the game does (DESIGN §32.4): visitor first, then 'at' the home side
-        // ('vs' at a neutral site), so "Santa Clara at Los Altos" on the card matches its own link. Before that, with a
-        // host, "visitor at host"; with none, the config's seat order and 'vs'.
-        const [a, b] = p.seats;
-        const homeSlug = p.game?.home.slug ?? null;
-        const holdsHome = (seat: SeatView) => homeSlug !== null && seat.contenders.some((c) => c.team.slug === homeSlug);
-        const fromGame = p.game !== null && (holdsHome(a) || holdsHome(b));
-        const sides: [PlayInSide, PlayInSide] = fromGame
-          ? holdsHome(a)
-            ? [toSide(b), toSide(a)]
-            : [toSide(a), toSide(b)]
-          : p.connector === 'at' && a.host
-            ? [toSide(b), toSide(a)]
-            : [toSide(a), toSide(b)];
-        const connector = fromGame && p.game ? matchupJoiner(p.game) : p.connector;
+        // ('vs' at a neutral site), so "Santa Clara at Los Altos" on the card matches its own link, and its screen-reader
+        // sentence says the same. "(host)" stays only on a config host seat the game also has at home: a game listed
+        // the other way round never marks its visitor the host. Before the game, a host seat reads "visitor at host";
+        // with no host, the config's seat order and 'vs'.
+        const view = asListed(p);
+        const [a, b] = view.seats;
+        const sides: [PlayInSide, PlayInSide] =
+          view.connector === 'at' && a.host ? [toSide(b), toSide(a)] : [toSide(a), toSide(b)];
         return (
           <li key={p.id} className={single ? 'max-w-3xl' : undefined}>
             {/* A lone play-in sits under a section header that already names it ('Play-in'), so
@@ -81,8 +97,8 @@ export function LeaguePairings({ pairings, className }: LeaguePairingsProps) {
               title={single && p.isPlayIn ? null : p.title}
               when={{ dateKey: p.dateKey, dateLabel: p.dateLabel, timeLabel: p.timeLabel }}
               sides={sides}
-              connector={connector}
-              sentence={pairingSentence(p)}
+              connector={view.connector}
+              sentence={pairingSentence(view)}
               purpose={purposeOf(p.label, p.title)}
               notes={p.notes}
               game={p.game}

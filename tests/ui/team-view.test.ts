@@ -183,9 +183,13 @@ describe('league copy (components/teams/team-view.ts leagueCopy)', () => {
     expect(view.leagueCopy('pcal').bracketSentence).toBe('CCS seeds the field on Mon Nov 2; we list each CCS game as MaxPreps posts it.');
   });
 
-  it('a CCS league reads the day: the crossover "was" once its window is over, and CCS "seeded" from the meeting', () => {
-    expect(view.leagueCopy('scval', '2026-10-30').seasonEndSentence).toBe(
+  it('a CCS league reads the day: the crossover "runs" while under way, "was" once its window is over, and CCS "seeded" from the meeting', () => {
+    // On its first day it "is"; once a day of it has passed it "runs" (never told as all to come).
+    expect(view.leagueCopy('scval', '2026-10-29').seasonEndSentence).toBe(
       'The SCVAL league season ended Wed Oct 28 and the SCVAL crossover is Thu Oct 29 and Fri Oct 30.',
+    );
+    expect(view.leagueCopy('scval', '2026-10-30').seasonEndSentence).toBe(
+      'The SCVAL league season ended Wed Oct 28 and the SCVAL crossover runs Thu Oct 29 and Fri Oct 30.',
     );
     expect(view.leagueCopy('scval', '2026-10-31').seasonEndSentence).toBe(
       'The SCVAL league season ended Wed Oct 28 and the SCVAL crossover was Thu Oct 29 and Fri Oct 30.',

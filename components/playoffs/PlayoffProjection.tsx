@@ -223,8 +223,8 @@ export function PlayoffProjection({
               <th scope="col" className="pr-gutter md:pr-0">Team</th>
               {/* 55% from md to lg, 13rem from lg. From md two divisions may sit side by side,
                   and a fixed 13rem status column in a ~350px half would truncate the team names;
-                  55% (191px of a 348px table at 768) holds the widest capsule, "No
-                  automatic-berth route", on one line and leaves Team 117px, which is why the
+                  55% (191px of a 348px table at 768) holds the widest capsule, "At-large
+                  consideration", on one line and leaves Team 117px, which is why the
                   monogram is not drawn from md to lg (below). */}
               <th data-twin scope="col" className="hidden pl-3 pr-4 md:table-cell md:w-[55%] lg:w-52">
                 Status

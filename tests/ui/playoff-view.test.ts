@@ -572,8 +572,8 @@ describe('/playoffs by region (DESIGN-socal §2.4)', () => {
   it('a neutral header, then the NorCal block (CCS, MCAL pointer, EAL card) and the SoCal block', () => {
     expect(html, PAGE).toMatch(/<h1[^>]*>Playoffs<\/h1>/);
     expect(html, PAGE).toContain('data-region-option="socal"');
-    const norcal = html.indexOf('<div id="norcal" data-region-scope="norcal">');
-    const socal = html.indexOf('<div id="socal" data-region-scope="socal">');
+    const norcal = html.indexOf('<div id="norcal" data-region-scope="norcal"');
+    const socal = html.indexOf('<div id="socal" data-region-scope="socal"');
     expect(norcal, PAGE).toBeGreaterThan(0);
     expect(socal, PAGE).toBeGreaterThan(norcal);
     for (const id of ['scval', 'eal', 'bracket', 'at-large']) {
@@ -590,7 +590,7 @@ describe('/playoffs by region (DESIGN-socal §2.4)', () => {
   });
 
   it('the San Diego block states the Section’s rule from config and draws no bracket or seed', () => {
-    const socal = html.slice(html.indexOf('<div id="socal" data-region-scope="socal">'));
+    const socal = html.slice(html.indexOf('<div id="socal" data-region-scope="socal"'));
     const text = textOf(socal);
     const city = leagues.getLeague('city').postseason;
     if (city.kind !== 'section-playoffs') throw new Error('city: section-playoffs');
@@ -703,7 +703,7 @@ describe('/playoffs seeded (a stubbed snapshot: the 2025 championship on 2026’
   });
 
   it('keeps "CCS Division" inside the NorCal block only, and the SoCal block free of any bracket', () => {
-    const socalAt = seededHtml.indexOf('<div id="socal" data-region-scope="socal">');
+    const socalAt = seededHtml.indexOf('<div id="socal" data-region-scope="socal"');
     expect(socalAt, PAGE).toBeGreaterThan(0);
     expect(textOf(seededHtml.slice(socalAt)), PAGE).not.toMatch(/CCS Division/i);
     expect(textOf(seededHtml.slice(0, seededHtml.indexOf('<div id="norcal"'))), PAGE).not.toMatch(/CCS Division/i);

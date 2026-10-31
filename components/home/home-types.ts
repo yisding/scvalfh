@@ -142,8 +142,8 @@ export interface HomeTeamView {
   /** Used only when `next` is null — the official schedule still has a fixture (DESIGN §8). */
   officialNext: HomeOfficialFixture | null;
   /**
-   * Used only when `next` and `officialNext` are null: the crossover or play-in the team is seated in that MaxPreps
-   * has not listed yet (team-view.ts pendingPairingFor). Absent for every other team, so 99 views do not ship it.
+   * The crossover or play-in the team is seated in that MaxPreps has not listed yet (team-view.ts pendingPairingFor),
+   * when it comes before any listed game or fixture (`next` and `officialNext` are then null). Absent for every other team, so 99 views do not ship it.
    */
   pairingNext?: HomePairingNext;
 }
@@ -154,9 +154,9 @@ export interface HomeTeamView {
  */
 export interface HomePairingNext {
   dateKey: string;
-  /** 'Sat Oct 31 · 11:00 AM PT · BVAL play-in' */
+  /** 'Sat Oct 31 · 11 AM PT' */
   when: string;
-  /** 'at Westmont', 'vs Prospect or Westmont', or the seat's label. */
+  /** 'BVAL play-in at Westmont', 'SCVAL crossover vs Prospect or Westmont', or with the seat's label. */
   title: string;
   /** 'From the BVAL tables today; MaxPreps has not listed this game yet.' */
   note: string;

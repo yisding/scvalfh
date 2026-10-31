@@ -33,6 +33,7 @@ import {
 import {
   dateSpan,
   gameWhen,
+  leagueClockPT,
   listWords,
   monthDay,
   ordinal,
@@ -386,7 +387,8 @@ export function pendingPairingFor(team: Team, today: string): PendingPairing | n
       kindLabel: `${league.shortName} ${p.isPlayIn ? 'play-in' : 'crossover'}`,
       purpose: `${tail[0].toUpperCase()}${tail.slice(1)}`,
       dateKey: p.date,
-      timeLabel: p.time ? timeOfDayPT(`${p.date}T${p.time}`) : null,
+      // The league's own clock words ('11 AM PT'), as the pairing card and the strip on /playoffs print it.
+      timeLabel: p.time ? leagueClockPT(p.time) : null,
       versus: p.host !== null && p.host === theirs ? 'at' : 'vs',
       opponent,
       opponentName: opponent
@@ -439,7 +441,7 @@ function noneCard(team: Team, league: TeamLeagueCopy): Extract<NextCard, { kind:
   const played = league.postseasonKind === 'ccs-ladder' ? playedPairing(team) : null;
   if (played) {
     // 'The SCVAL league season ended Wed Oct 28 and Archbishop Mitty played the SCVAL crossover Thu Oct 29.'
-    const cut = seasonEnd.search(/ and the \S+ (crossover|play-in) (is|was) /);
+    const cut = seasonEnd.search(/ and the \S+ (crossover|play-in) (is|runs|was) /);
     const ended = cut < 0 ? seasonEnd.replace(/\.$/, '') : seasonEnd.slice(0, cut);
     seasonEnd = `${ended} and ${team.name} played ${played.word} ${shortDate(played.dateKey)}.`;
   }
@@ -510,7 +512,9 @@ export function leagueCopy(
       // (the pairings' window: two 2026 SCVAL crossovers moved a day ahead of the schedule).
       const pairingsOver =
         today !== undefined && ps.pairings.length > 0 && ps.pairings.every((p) => today > pairingWindow(p).last);
-      const be = pairingsOver ? 'was' : 'is';
+      // Under way (its first day has passed, its last not): 'runs', so a day already played is not told as to come.
+      const started = today !== undefined && ps.pairings.some((p) => today > pairingWindow(p).first);
+      const be = pairingsOver ? 'was' : started ? 'runs' : 'is';
       let after = '';
       // 'is Thu Oct 29 and Fri Oct 30' when a crossover moved off the schedule's day (the pairings' window).
       if (first?.tag === 'scval-crossover') after = ` and the ${league.shortName} crossover ${be} ${pairingDatesLabel(ps.pairings)}`;
@@ -801,7 +805,8 @@ function nextChips(game: Game): NextChip[] {
 
 /**
  * The NEXT card: the next contest, else the next official-only fixture, else the crossover or play-in the team is
- * seated in that MaxPreps has not listed yet (pendingPairingFor), else nothing left. `league`
+ * seated in that MaxPreps has not listed yet (pendingPairingFor), else nothing left; the pairing comes first when it is
+ * earlier than the game or fixture. `league`
  * is the page's league copy: an opponent's record line is scoped against it (opponentRecordLine).
  */
 export function buildNextCard(
@@ -811,6 +816,24 @@ export function buildNextCard(
   today: string,
   league: TeamLeagueCopy,
 ): NextCard {
+  // An unlisted crossover or play-in comes before a later game or fixture (a non-league game after the play-in).
+  const pairing = pendingPairingFor(team, today);
+  const fixtureFirst = nextOfficialFixture(officialFixtures, today);
+  const pairingFirst =
+    pairing !== null &&
+    (next === null || next.isDateTba || pairing.dateKey < next.dateKey) &&
+    (fixtureFirst === null || pairing.dateKey <= fixtureFirst.dateKey);
+  if (pairing && pairingFirst) {
+    return {
+      kind: 'pairing',
+      pairing,
+      dateLabel: dateLabelFor(pairing.dateKey, pairing.dateKey, today),
+      versus: pairing.versus,
+      opponent: pairing.opponent,
+      opponentName: pairing.opponentName,
+      record: opponentRecordLine(pairing.opponent, league.id),
+    };
+  }
   if (next) {
     const mineIsHome = next.home.slug === team.slug;
     const side = mineIsHome ? next.away : next.home;
@@ -851,18 +874,6 @@ export function buildNextCard(
       opponent,
       opponentName,
       record: opponentRecordLine(opponent, league.id),
-    };
-  }
-  const pairing = pendingPairingFor(team, today);
-  if (pairing) {
-    return {
-      kind: 'pairing',
-      pairing,
-      dateLabel: dateLabelFor(pairing.dateKey, pairing.dateKey, today),
-      versus: pairing.versus,
-      opponent: pairing.opponent,
-      opponentName: pairing.opponentName,
-      record: opponentRecordLine(pairing.opponent, league.id),
     };
   }
   return noneCard(team, league);
