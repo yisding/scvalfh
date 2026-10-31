@@ -279,6 +279,10 @@ export function PinnedCard({
             <time dateTime={view.officialNext.dateKey} className="sx-num text-meta text-ink-3">
               {view.officialNext.dateLabel} &middot; per {view.officialNext.leagueShort}
             </time>
+          ) : view.pairingNext ? (
+            <time dateTime={view.pairingNext.dateKey} className="sx-num truncate text-meta text-ink-3">
+              {view.pairingNext.when}
+            </time>
           ) : null}
         </div>
         {next ? (
@@ -311,8 +315,19 @@ export function PinnedCard({
               no contest for it yet. <ExternalLink href={view.officialNext.scheduleUrl}>Official schedule</ExternalLink>
             </p>
           </>
+        ) : view.pairingNext ? (
+          <>
+            <Link
+              href={view.pairingNext.href}
+              prefetch={false}
+              className="block truncate text-lead font-semibold text-ink no-underline hover:underline"
+            >
+              {view.pairingNext.title}
+            </Link>
+            <p className="mt-0.5 mb-1 text-meta text-ink-3">{view.pairingNext.note}</p>
+          </>
         ) : (
-          <p className="mt-0.5 mb-1 text-meta text-ink-2">No game left on the schedule for {team.shortName}.</p>
+          <p className="mt-0.5 mb-1 text-meta text-ink-2">No more games on {team.shortName}&rsquo;s published schedule.</p>
         )}
       </div>
 

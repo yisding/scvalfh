@@ -167,9 +167,9 @@ describe('home panels (components/home/home-view.ts → LeaguePanel)', () => {
     const expected: Record<string, { rows: number; line: string | null }> = {
       'de-anza': { rows: 4, line: null },
       'el-camino': { rows: 4, line: null },
-      'mt-hamilton': { rows: 4, line: 'AQ line' },
+      'mt-hamilton': { rows: 4, line: 'Automatic-berth line' },
       'santa-teresa': { rows: 3, line: 'Play-in host' },
-      pcal: { rows: 7, line: 'AQ line' },
+      pcal: { rows: 7, line: 'Automatic-berth line' },
       'marin-county': { rows: 7, line: 'Tournament line' },
       eal: { rows: 6, line: null },
       // Southern California: every row, and no line (`home.lineAfter` null): no league table is a route.

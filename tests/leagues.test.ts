@@ -435,7 +435,7 @@ describe('leagues: SCVAL strings are today’s, verbatim', () => {
       [[1, 3], 'aq', 'Automatic qualifier', 'automatic qualifier', 'AQ', 'Places 1-3 — automatic CCS qualifier'],
       [[4, 4], 'play-in', 'Play-in game Oct 30', 'the Oct 30 play-in', 'Play-in', '4th place — play-in {date} for the SCVAL 7th berth'],
       [[5, 5], 'at-large', 'At-large consideration', 'at-large consideration', 'At-large', '5th place — submitted to CCS for at-large consideration'],
-      [[6, 99], 'out', 'No automatic path', 'no automatic path', 'No AQ', '6th or lower — no automatic path'],
+      [[6, 99], 'out', 'No automatic berth', 'no automatic berth', 'No AQ', '6th or lower — no automatic berth'],
     ]);
   });
 

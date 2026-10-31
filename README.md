@@ -1114,7 +1114,7 @@ from a two-day window because the schools moved two of them a day early) are for
 qualification. Once a play-in or crossover is final the site reads it (2026-10-30): the play-in's winner
 "Won the play-in" ("an automatic CCS qualifier"), its loser "Lost the play-in" ("SCVAL submits the loser for
 at-large consideration"), a crossover's result appended to both teams' lines; a team of 6th or lower reads "No
-automatic path; at-large berths are the CCS committee’s call." and no crossover sentence.
+automatic berth; at-large berths are the CCS committee’s call." and no crossover sentence.
 
 ### BVAL
 
@@ -1128,7 +1128,7 @@ teams share a place. A multi-team tie is resolved one place at a time: the first
 then the chain restarts among the rest. The CCS ladder (§7a): Mt. Hamilton 1st-3rd are BVAL #1-#3;
 Mt. Hamilton 4th plays at the Santa Teresa champion on Sat Oct 31 for BVAL's 4th berth; BVAL holds
 4 of the 16 CCS berths. Once that play-in is final its winner reads "Won the play-in" (BVAL's fourth
-automatic CCS berth) and its loser "Lost the play-in" (no automatic-berth route remains; BVAL's by-laws submit
+automatic CCS berth) and its loser "Lost the play-in" (no automatic berth remains; BVAL's by-laws submit
 no one for at-large), and the play-in card names the winner (2026-10-30). Which games count comes from BVAL's
 official schedule, not from MaxPreps' league flag.
 

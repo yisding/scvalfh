@@ -48,10 +48,12 @@ export function PostseasonBoard({ rows, id, className }: PostseasonBoardProps) {
               </Link>
               <p className="m-0 text-meta text-ink-2">{row.path}</p>
             </div>
-            {row.latest || row.next ? (
+            {row.latest || row.next.length > 0 ? (
               <div className="mt-2 flex min-w-0 flex-col gap-1 md:mt-0">
                 {row.latest ? <Line term="Latest" line={row.latest} /> : null}
-                {row.next ? <Line term="Next" line={row.next} /> : null}
+                {row.next.map((line, i) => (
+                  <Line key={`${line.when}:${line.text}`} term={i === 0 ? 'Next' : ''} line={line} />
+                ))}
               </div>
             ) : null}
           </li>

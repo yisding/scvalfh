@@ -1,6 +1,6 @@
 /**
  * The postseason status chip: one tinted capsule in 12px SANS, sentence case ("Automatic
- * qualifier", "At-large consideration or no automatic path"). It is the sentence-case sibling of
+ * qualifier", "At-large consideration or no automatic berth"). It is the sentence-case sibling of
  * `Tag`: a status is a phrase, and mono caps are kept for the 1–2 word codes a Tag is for
  * (brief §1, DESIGN §7.16), so this is a component of its own rather than a mode of Tag.
  *

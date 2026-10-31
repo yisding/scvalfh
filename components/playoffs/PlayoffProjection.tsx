@@ -25,7 +25,7 @@ import {
  *  - **Every status is a written word.** `label` comes from the league's ladder in config —
  *    "Automatic qualifier", "Play-in game Oct 30", "Hosts the play-in Oct 31", "No automatic-berth
  *    route", "No results reported".
- *  - **The ladder line is a labelled separator row** ("AQ line", "Play-in host"), as on /standings:
+ *  - **The ladder line is a labelled separator row** ("Automatic-berth line", "Play-in host"), as on /standings:
  *    a 2px rule AND words, so the rule is never the only cue (WCAG 1.3.1).
  *  - **Shared places render level** — `T6`, the US tie mark, with an sr-only "tied for 6th" — and
  *    every tied group gets `tiebreak.note` verbatim in the footnotes, which already carries its
@@ -40,7 +40,7 @@ import {
  *    and last cells take the 16px gutter themselves, which buys the width the status capsule needs
  *    to sit beside the record instead of wrapping under it. The record-to-capsule gap is `gap-x-1.5`,
  *    and below sm the 28px monogram is hidden (the name beside it already says who it is): BVAL's
- *    and PCAL's "No automatic-berth route" needs 248/256px beside the record, and with the
+ *    and PCAL's "No automatic berth" needs 248/256px beside the record, and with the
  *    monogram the line had 231/236px at 320, so those rows were 89px with the capsule under the
  *    record. Without it the line has ~272px and every single-status row, in every league, is one
  *    line at 320. A tied coin-flip row still wraps by design; when anything wraps, it wraps under
@@ -274,7 +274,7 @@ export function PlayoffProjection({
                           of the dot; a wider gap cost the 320px row the width its status capsule
                           needs to stay on this line. For the same reason the record-to-capsule gap
                           is `gap-x-1.5`, and the monogram above is hidden below sm: without it,
-                          BVAL's and PCAL's "No automatic-berth route" wrapped under the record at
+                          BVAL's and PCAL's "No automatic berth" wrapped under the record at
                           320 (see the docblock). Digits are mono,
                           the word "pts" is sans (DESIGN §4.3: mono is for digits that stack).
                           Below md the status capsule follows them on the same line (it wraps under

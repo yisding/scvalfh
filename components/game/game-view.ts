@@ -696,7 +696,8 @@ function postseasonView(game: Game, league: LeagueConfig | null): PostseasonView
     };
   }
   if ((tag.kind === 'scval-crossover' || tag.kind === 'bval-play-in') && league) {
-    const label = `${league.shortName} ${tag.kind === 'scval-crossover' ? 'crossover' : 'play-in'}`;
+    // 'SCVAL play-in' for the 4th-place play-in, which carries the crossover's tag (lib/postseason-round-label.ts).
+    const label = postseasonTagOf(game) ?? `${league.shortName} ${tag.kind === 'scval-crossover' ? 'crossover' : 'play-in'}`;
     const sentence = `${league.shortName} postseason game — it does not count in the league table.`;
     return {
       contextLabel: label,

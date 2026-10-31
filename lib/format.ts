@@ -633,6 +633,14 @@ export function dateSpan(first: string, last: string): string {
  * 'A', 'A and B', 'A, B and C'; with `conj` 'or' every contender for one seat ('A, B or C'), and
  * with '&' the compact leader line ('A, B & C'). An empty list is ''.
  */
+/**
+ * The Next card's empty state, one wording for the team page (TeamNextGame) and the home page's pinned card
+ * (MyTeamCard): 'No more games on Archbishop Mitty’s published schedule.' Client-safe, like the rest of this file.
+ */
+export function noMoreGamesSentence(name: string): string {
+  return `No more games on ${name}\u2019s published schedule.`;
+}
+
 export function listWords(words: readonly string[], conj: 'and' | 'or' | '&' = 'and'): string {
   if (words.length <= 1) return words[0] ?? '';
   return `${words.slice(0, -1).join(', ')} ${conj} ${words[words.length - 1]}`;

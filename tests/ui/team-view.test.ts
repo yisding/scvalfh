@@ -171,7 +171,8 @@ describe('league copy (components/teams/team-view.ts leagueCopy)', () => {
   it('end-of-season and bracket sentences by league', () => {
     const scval = view.leagueCopy('scval');
     expect(scval.seasonEndSentence).toBe('The SCVAL league season ends Wed Oct 28 and the SCVAL crossover is Thu Oct 29 and Fri Oct 30.');
-    expect(scval.bracketSentence).toBe('We will list a playoff game as soon as CCS publishes the bracket.');
+    // The timeless words name the seeding meeting's day; never "as soon as CCS publishes the bracket".
+    expect(scval.bracketSentence).toBe('CCS seeds the field on Mon Nov 2; we list each CCS game as MaxPreps posts it.');
     expect(view.leagueCopy('bval').seasonEndSentence).toBe(
       'The BVAL league season ends Fri Oct 30 and the BVAL play-in is Sat Oct 31.',
     );
@@ -179,7 +180,25 @@ describe('league copy (components/teams/team-view.ts leagueCopy)', () => {
     // The tournament starts with its first round that is always played: the quarterfinals, not the optional play-in.
     expect(mcal.seasonEndSentence).toBe('The MCAL league season ends Thu Oct 22 and the MCAL tournament starts Mon Oct 26.');
     expect(mcal.bracketSentence).toBe('We will list a playoff game as soon as MCAL posts the bracket.');
-    expect(view.leagueCopy('pcal').bracketSentence).toBe('We will list a playoff game as soon as CCS publishes the bracket.');
+    expect(view.leagueCopy('pcal').bracketSentence).toBe('CCS seeds the field on Mon Nov 2; we list each CCS game as MaxPreps posts it.');
+  });
+
+  it('a CCS league reads the day: the crossover "was" once its window is over, and CCS "seeded" from the meeting', () => {
+    expect(view.leagueCopy('scval', '2026-10-30').seasonEndSentence).toBe(
+      'The SCVAL league season ended Wed Oct 28 and the SCVAL crossover is Thu Oct 29 and Fri Oct 30.',
+    );
+    expect(view.leagueCopy('scval', '2026-10-31').seasonEndSentence).toBe(
+      'The SCVAL league season ended Wed Oct 28 and the SCVAL crossover was Thu Oct 29 and Fri Oct 30.',
+    );
+    expect(view.leagueCopy('bval', '2026-11-01').seasonEndSentence).toBe(
+      'The BVAL league season ended Fri Oct 30 and the BVAL play-in was Sat Oct 31.',
+    );
+    expect(view.leagueCopy('pcal', '2026-11-01').bracketSentence).toBe(
+      'CCS seeds the field on Mon Nov 2; we list each CCS game as MaxPreps posts it.',
+    );
+    expect(view.leagueCopy('pcal', '2026-11-02').bracketSentence).toBe(
+      'CCS seeded the field on Mon Nov 2; we list each CCS game as MaxPreps posts it.',
+    );
   });
 
   it('reads the day: "ended" after the last league date, "started" from the first round, and the bracket page once seeded', () => {
@@ -242,7 +261,10 @@ describe('postseason lines per kind (lib/data.ts getTeamPostseasonLine via team-
       expect(line, `lib/data.ts getTeamPostseasonLine ${team.slug}`).not.toBeNull();
       if (!line) continue;
       if (v.league.postseasonKind === 'ccs-ladder') {
-        expect(line.href, `lib/data.ts ${team.slug} href`).toBe(`/playoffs#${team.league}`);
+        // A team with a crossover or play-in still to play goes straight to its league's pairing cards.
+        expect(line.href, `lib/data.ts ${team.slug} href`).toBe(
+          view.inOpenPairing(team, v.today) ? `/playoffs#${team.league}-pairings` : `/playoffs#${team.league}`,
+        );
         expect(line.linkText, `lib/data.ts ${team.slug} link`).toBe('CCS playoffs');
       } else if (v.league.postseasonKind === 'unbracketed-tournament') {
         expect(line.href, `lib/data.ts ${team.slug} href`).toBe(`/playoffs#${team.league}`);

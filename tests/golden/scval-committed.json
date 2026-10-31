@@ -88,21 +88,21 @@
     "legends": {
       "aq": "Places 1-3 — automatic CCS qualifier",
       "at-large": "5th place — submitted to CCS for at-large consideration",
-      "out": "6th or lower — no automatic path",
+      "out": "6th or lower — no automatic berth",
       "play-in": "4th place — play-in Fri Oct 30 for the SCVAL 7th berth"
     },
     "statusLabels": {
       "aq": "Automatic qualifier",
       "at-large": "At-large consideration",
-      "out": "No automatic path",
+      "out": "No automatic berth",
       "play-in": "Play-in game Oct 30"
     },
     "unions": {
       "aq|play-in": "Automatic qualifier or the Oct 30 play-in — Article VI §7 decides it with a coin flip",
       "aq|play-in|at-large": "Automatic qualifier or the Oct 30 play-in or at-large consideration — Article VI §7 decides it with a coin flip",
-      "at-large|out": "At-large consideration or no automatic path — Article VI §7 decides it with a coin flip",
+      "at-large|out": "At-large consideration or no automatic berth — Article VI §7 decides it with a coin flip",
       "play-in|at-large": "Play-in game Oct 30 or at-large consideration — Article VI §7 decides it with a coin flip",
-      "play-in|at-large|out": "Play-in game Oct 30 or at-large consideration or no automatic path — Article VI §7 decides it with a coin flip"
+      "play-in|at-large|out": "Play-in game Oct 30 or at-large consideration or no automatic berth — Article VI §7 decides it with a coin flip"
     }
   },
   "phases": {
@@ -293,7 +293,7 @@
           "teamId": "a97c219c-2fbe-4fa4-9a0c-cc18502a8d24"
         },
         {
-          "label": "No automatic path",
+          "label": "No automatic berth",
           "place": 6,
           "shared": false,
           "slug": "homestead",
@@ -304,7 +304,7 @@
           "teamId": "738a2432-7acb-4ad6-b041-115ec0f331c2"
         },
         {
-          "label": "No automatic path",
+          "label": "No automatic berth",
           "place": 7,
           "shared": false,
           "slug": "cupertino",
@@ -372,7 +372,7 @@
           "teamId": "12a470ab-e17d-4e5a-b74b-055d1f46d46b"
         },
         {
-          "label": "No automatic path",
+          "label": "No automatic berth",
           "place": 6,
           "shared": false,
           "slug": "presentation",
@@ -383,7 +383,7 @@
           "teamId": "e1db3a4f-3bcf-4281-a574-d313212296a1"
         },
         {
-          "label": "No automatic path",
+          "label": "No automatic berth",
           "place": 7,
           "shared": true,
           "slug": "lynbrook",
@@ -394,7 +394,7 @@
           "teamId": "d7c7f7a1-06be-44fb-a4a2-64599519aa4c"
         },
         {
-          "label": "No automatic path",
+          "label": "No automatic berth",
           "place": 7,
           "shared": true,
           "slug": "monta-vista",

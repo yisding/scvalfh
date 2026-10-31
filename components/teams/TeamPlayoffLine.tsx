@@ -32,7 +32,7 @@ function postseasonPhrase(league: TeamPageView['league']): string {
  * lib/data.ts — the same accessor the home page's pinned card uses — so the two cannot disagree:
  *
  * - a CCS league: the ladder label, then the league's sentence (the SCVAL crossover date, BVAL's
- *   Oct 31 play-in, or "No automatic-berth route; …"), and `CCS playoffs →`;
+ *   Oct 31 play-in, or "No automatic berth; …"), and `CCS playoffs →`;
  * - MCAL: the ladder label and the tournament format, `MCAL tournament →`. No CCS sentence, no
  *   berth meter and no CCS bracket link: the North Coast Section holds no field hockey
  *   championship, so a CCS concept on an MCAL page would be false (SPEC §10.9);

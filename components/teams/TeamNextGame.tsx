@@ -32,8 +32,11 @@ import type { NextCard, TeamLeagueCopy } from './team-view';
  *   dead affordance is worse than an absent one, so a game with no stream has no stream chip.
  *
  * The league copy comes from config (`league`): the official-fixture card names the league's own
- * schedule, and the empty state is the league's end-of-season and bracket sentences — an MCAL page
- * never mentions CCS (SPEC §10.5). The heading's meta is League / Postseason / Non-league from
+ * schedule, and the empty state is the league's end-of-season and bracket sentences (built in
+ * team-view.ts noneCard, its heading shared with home's MyTeamCard) — an MCAL page never mentions CCS
+ * (SPEC §10.5). A CCS team seated in a crossover or play-in MaxPreps has not listed yet gets that game
+ * instead of the empty state (`pairing`: date, purpose, opponent or the seat's contenders, and one pill
+ * to its pairing card on /playoffs), so the card never says "no more games" the day before a play-in. The heading's meta is League / Postseason / Non-league from
  * `countsFor` and `postseason` (SPEC §10.4).
  *
  * There is no score here and never a `0-0`: a scheduled game's score slot does not exist, the
@@ -41,7 +44,8 @@ import type { NextCard, TeamLeagueCopy } from './team-view';
  */
 export interface TeamNextGameProps {
   card: NextCard;
-  teamName: string;
+  /** Unused since the empty state's words moved into the card (team-view.ts noneCard); kept so callers need not change. */
+  teamName?: string;
   /** The team's league copy (config): the end-of-season and bracket sentences, the short name. */
   league: TeamLeagueCopy;
 }
@@ -81,7 +85,7 @@ function Opponent({ card }: { card: Exclude<NextCard, { kind: 'none' }> }) {
   );
 }
 
-export function TeamNextGame({ card, teamName, league }: TeamNextGameProps) {
+export function TeamNextGame({ card, league }: TeamNextGameProps) {
   if (card.kind === 'official') {
     return (
       <section className="flex min-w-0 flex-col">
@@ -104,13 +108,41 @@ export function TeamNextGame({ card, teamName, league }: TeamNextGameProps) {
     );
   }
 
+  if (card.kind === 'pairing') {
+    const { pairing } = card;
+    return (
+      <section className="flex min-w-0 flex-col">
+        <SectionHeader kicker="Next" meta="Postseason" />
+        <div className="sx-card flex flex-1 flex-col p-5">
+          <p className="m-0 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+            <time dateTime={pairing.dateKey} className="text-lead text-ink">
+              {card.dateLabel}
+            </time>
+            <span className="text-cell text-ink-2 tabular-nums">
+              {pairing.timeLabel ?? 'No start time published'}
+            </span>
+          </p>
+          <p className="mt-1 mb-0 text-meta text-ink-2">{pairing.purpose}</p>
+          <Opponent card={card} />
+          <p className="mt-3 mb-0 max-w-prose text-meta text-ink-3">
+            {/* Whole sentences as single text nodes, so the built HTML carries them verbatim. */}
+            {`${pairing.seats}, from the ${league.shortName} tables today${pairing.settled ? '' : '; the pairing can still change'}. MaxPreps has not listed this game yet, so it has no game page here.`}
+          </p>
+          <p className="mt-auto mb-0 flex flex-wrap gap-2 pt-4">
+            <Link href={pairing.href} prefetch={false} className="sx-pill sx-pill-accent min-h-11">
+              The pairing<span className="sr-only">: {pairing.kindLabel} on the playoffs page</span>
+            </Link>
+          </p>
+        </div>
+      </section>
+    );
+  }
+
   if (card.kind === 'none') {
     return (
       <section className="min-w-0">
         <SectionHeader kicker="Next" />
-        <EmptyState heading={`No more games on ${teamName}'s published schedule.`}>
-          {`${league.seasonEndSentence} ${league.bracketSentence}`}
-        </EmptyState>
+        <EmptyState heading={card.heading}>{card.body}</EmptyState>
       </section>
     );
   }

@@ -95,8 +95,7 @@ export function DivisionStandings({
         {view.berthRuleAfter && view.ladderLineLabel ? (
           <>
             {' '}
-            &middot; the heavier line under {ordinal(view.berthRuleAfter)} marks the{' '}
-            {view.ladderLineLabel}
+            &middot; the heavier line under {ordinal(view.berthRuleAfter)} is labelled &ldquo;{view.ladderLineLabel}&rdquo;
           </>
         ) : null}
       </p>

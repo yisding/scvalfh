@@ -59,20 +59,29 @@ describe('buildBoard', () => {
     const [scval, bval, pcal, eal] = board;
     expect(scval.href, VIEW).toBe('#scval');
     expect(scval.latest, VIEW).toEqual({ when: 'Thu Oct 29', text: 'Archbishop Mitty 0, St. Ignatius 3, final.', label: '', href: '/game/a' });
-    expect(scval.next, VIEW).toEqual({ when: 'Today · 4:00 PM PT', text: 'Santa Clara at Los Altos', label: 'SCVAL play-in', href: '/game/b' });
+    expect(scval.next, VIEW).toEqual([{ when: 'Today · 4:00 PM PT', text: 'Santa Clara at Los Altos', label: 'SCVAL play-in', href: '/game/b' }]);
     expect(bval.latest, VIEW).toBeNull();
-    expect(bval.next?.when, VIEW).toBe('Tomorrow · 11 AM PT');
+    expect(bval.next.map((l) => l.when), VIEW).toEqual(['Tomorrow · 11 AM PT']);
     // An event a league shares (the CCS seeding meeting) is every one of its leagues' next item.
-    expect(pcal.next?.text, VIEW).toBe('CCS Division 1 and CCS Division 2');
-    expect(pcal.next?.when, VIEW).toBe('Mon Nov 2 · 1:00 PM PT');
+    expect(pcal.next[0]?.text, VIEW).toBe('CCS Division 1 and CCS Division 2');
+    expect(pcal.next[0]?.when, VIEW).toBe('Mon Nov 2 · 1:00 PM PT');
     expect(eal.latest, VIEW).toBeNull();
-    expect(eal.next, VIEW).toBeNull();
+    expect(eal.next, VIEW).toEqual([]);
+  });
+
+  it('lists every row of the league’s next day, and only that day', () => {
+    const more = [
+      ...rows,
+      row({ dateKey: '2026-10-30', time: '3:30 PM PT', text: 'Saint Francis at Los Gatos', leagueIds: ['scval'] }),
+    ].sort((a, b) => a.dateKey.localeCompare(b.dateKey) || (a.time ?? '').localeCompare(b.time ?? ''));
+    const [scval] = buildBoard([input('scval')], more, today);
+    expect(scval.next.map((l) => l.text), VIEW).toEqual(['Saint Francis at Los Gatos', 'Santa Clara at Los Altos']);
   });
 
   it('says a league tournament’s champion and nothing next once it is decided', () => {
     const final = row({ dateKey: '2026-10-30', text: 'Redwood 1, Tamalpais 3, final.', final: true, leagueIds: ['mcal'], href: '/game/f' });
     const [mcal] = buildBoard([input('mcal', { champion: 'Tamalpais won the MCAL tournament.' })], [final], today);
     expect(mcal.latest, VIEW).toEqual({ when: 'Champion', text: 'Tamalpais won the MCAL tournament.', label: '', href: '/game/f' });
-    expect(mcal.next, VIEW).toBeNull();
+    expect(mcal.next, VIEW).toEqual([]);
   });
 });

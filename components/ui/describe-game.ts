@@ -27,6 +27,7 @@ import {
   type SectionConfig,
   type ShootoutInference,
 } from '../../lib/leagues';
+import { pairingRoundOf } from '../../lib/postseason-round-label';
 import { getTeamBySlug } from '../../lib/teams';
 import type { Game, LeagueId, Outcome, PostseasonTag, ScoreView, TeamSlug } from '../../lib/types';
 
@@ -181,16 +182,23 @@ function sectionPlayoffsName(
 }
 
 /**
- * `SCVAL crossover`, `BVAL play-in`, `MCAL tournament`, `EAL Super Regional`, `San Diego Section
+ * `SCVAL crossover` (`SCVAL play-in` for the game the pairings call the play-in), `BVAL play-in`, `MCAL tournament`, `EAL Super Regional`, `San Diego Section
  * playoffs`, `CCS`; null for no or an unnamed postseason. Pass the sides too (a whole Game does): a San
  * Diego playoff game between two conferences carries no league on its tag, and its sides name the event.
  */
-export function postseasonTagOf(game: Pick<Game, 'postseason'> & Partial<Pick<Game, 'home' | 'away'>>): string | null {
+export function postseasonTagOf(
+  game: Pick<Game, 'postseason'> & Partial<Pick<Game, 'home' | 'away' | 'contestId'>>,
+): string | null {
   const tag = game.postseason;
   if (!tag) return null;
   if (tag.kind === 'ccs') return 'CCS';
   if (tag.kind === 'section-playoffs') return sectionPlayoffsName(tag, game);
   if (tag.kind === 'outside-tournament') return outsideTournamentName(game);
+  // A CCS league's crossover-day game is a crossover or the play-in; the pairings say which ('SCVAL play-in').
+  if (game.contestId !== undefined) {
+    const pairing = pairingRoundOf({ contestId: game.contestId, postseason: tag });
+    if (pairing) return pairing.label;
+  }
   const word = POSTSEASON_WORD[tag.kind];
   if (!word) return null;
   // Every league kind carries its league (lib/classify.ts postseasonTag); only 'ccs', 'other' and

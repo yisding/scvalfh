@@ -42,6 +42,7 @@ import {
   leagueOfDivision,
   leaguePlayEnds,
   leaguesInRegion,
+  pairingWindow,
 } from './leagues';
 import type { LeagueConfig, PairingConfig, PostseasonConfig, RegionConfig, SectionConfig } from './leagues';
 import { buildLeagueTournament, tournamentOutcome, tournamentOutcomeCopy } from './postseason';
@@ -1117,20 +1118,22 @@ export function getTeamPostseasonLine(ref: string): TeamPostseasonLine | null {
       // The crossover sentence is for a team those games are about: an automatic berth (the crossover orders
       // them), the 4th-place play-in, or the 5th-place at-large candidate. A team below that (SCVAL 'out', 6th or
       // lower: Cupertino, 7th in De Anza on 2026-10-29) has no game left that changes its place, so it reads the
-      // ladder's own words instead (lib/leagues.ts SCVAL rung 'No automatic path'; DESIGN §15.8 "never eliminat…").
+      // ladder's own words instead (lib/leagues.ts SCVAL rung 'No automatic berth'; DESIGN §15.8 "never eliminat…").
       const candidate = statuses.some((s) => s === 'aq' || s === 'play-in' || s === 'at-large');
       let sentence: string;
       if (crossover && candidate) {
         // 'Thu Oct 29 and Fri Oct 30' in 2026: two of the four crossovers moved a day ahead of the schedule.
-        sentence = `The SCVAL crossover and the 4th-place play-in are ${pairingDatesLabel(ps.pairings)}.`;
+        // 'were' once the last day of the window has passed (the tense rule of the team page's league copy).
+        const over = ps.pairings.every((p) => getToday() > pairingWindow(p).last);
+        sentence = `The SCVAL crossover and the 4th-place play-in ${over ? 'were' : 'are'} ${pairingDatesLabel(ps.pairings)}.`;
         // 'Archbishop Mitty beat St. Ignatius 2–0 in the #1 v #1 crossover on Thu Oct 29; CCS uses it when it seeds.'
         if (outcome?.kind === 'crossover') sentence = `${sentence} ${outcome.sentence}`;
       } else if (playIn && statuses.includes('play-in')) {
         sentence = `${playInClause(league, ps, playIn)}.`;
       } else if (statuses[0] === 'no-aq-route') {
-        sentence = 'No automatic-berth route; at-large berths are the CCS committee’s call.';
+        sentence = 'No automatic berth; at-large berths are the CCS committee’s call.';
       } else if (statuses[0] === 'out') {
-        sentence = 'No automatic path; at-large berths are the CCS committee’s call.';
+        sentence = 'No automatic berth; at-large berths are the CCS committee’s call.';
       } else {
         // An automatic-berth place (BVAL Mt. Hamilton 1-3, PCAL 1-2): the spec gives no league sentence.
         sentence = `${league.shortName}’s automatic CCS berths go by final place; CCS seeds the field on ${shortDate(CCS.keyDates.seedingMeeting)}.`;

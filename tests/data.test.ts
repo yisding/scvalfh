@@ -451,8 +451,8 @@ describe('data: postseason', () => {
     expect(fremont.sentence).toBe('The SCVAL crossover and the 4th-place play-in are Thu Oct 29 and Fri Oct 30.');
     // …a team 6th or lower (Cupertino, 7th in De Anza) gets the ladder's own words, never the crossover's.
     const cupertino = data.getTeamPostseasonLine('cupertino')!;
-    expect(cupertino.label).toBe('No automatic path');
-    expect(cupertino.sentence).toBe('No automatic path; at-large berths are the CCS committee’s call.');
+    expect(cupertino.label).toBe('No automatic berth');
+    expect(cupertino.sentence).toBe('No automatic berth; at-large berths are the CCS committee’s call.');
     expect(cupertino.sentence).not.toMatch(/crossover|eliminat/i);
     expect(data.getTeamPostseasonLine('leigh')).toBeNull();
     expect(data.getTeamPostseasonLine('tamalpais')).toBeNull();
@@ -850,25 +850,26 @@ describe('data: CCS ladder lines after the play-ins', () => {
   });
 
   it('a crossover result joins the team’s sentence; the ladder label stands', () => {
+    // This snapshot is Sat Oct 31: the window is over, so the sentence is in the past tense.
     const result = 'Archbishop Mitty beat St. Ignatius 2–0 in the #1 v #1 crossover on Thu Oct 29; CCS uses it when it seeds.';
     for (const slug of ['mitty', 'st-ignatius']) {
       expect(after.getTeamPostseasonLine(slug), slug).toMatchObject({
         label: 'Automatic qualifier',
-        sentence: `The SCVAL crossover and the 4th-place play-in are Thu Oct 29 and Fri Oct 30. ${result}`,
+        sentence: `The SCVAL crossover and the 4th-place play-in were Thu Oct 29 and Fri Oct 30. ${result}`,
         caveat: CCS_RESULTS,
       });
     }
     // Los Gatos' crossover is not in: the projected words and caveat, unchanged.
     expect(after.getTeamPostseasonLine('los-gatos')).toMatchObject({
-      sentence: 'The SCVAL crossover and the 4th-place play-in are Thu Oct 29 and Fri Oct 30.',
+      sentence: 'The SCVAL crossover and the 4th-place play-in were Thu Oct 29 and Fri Oct 30.',
       caveat: 'Projected from the table today; nothing here is official.',
     });
     // The Cupertino rule holds: a team 6th or lower gets the ladder's own words, never a crossover sentence.
     const cupertino = after.getTeamPostseasonLine('cupertino')!;
-    expect(cupertino.sentence).toBe('No automatic path; at-large berths are the CCS committee’s call.');
+    expect(cupertino.sentence).toBe('No automatic berth; at-large berths are the CCS committee’s call.');
   });
 
-  it('the BVAL play-in: Westmont took the fourth berth, Willow Glen has no automatic-berth route left', () => {
+  it('the BVAL play-in: Westmont took the fourth berth, Willow Glen has no automatic berth left', () => {
     expect(after.getTeamPostseasonLine('westmont')).toMatchObject({
       label: 'Won the play-in',
       sentence: 'Won the play-in: BVAL’s fourth automatic CCS berth.',
@@ -876,7 +877,7 @@ describe('data: CCS ladder lines after the play-ins', () => {
     });
     expect(after.getTeamPostseasonLine('willow-glen')).toMatchObject({
       label: 'Lost the play-in',
-      sentence: 'Lost the play-in; no automatic-berth route remains, and at-large berths are the CCS committee’s call.',
+      sentence: 'Lost the play-in; no automatic berth remains, and at-large berths are the CCS committee’s call.',
       caveat: CCS_RESULTS,
     });
     for (const slug of ['los-altos', 'santa-clara', 'westmont', 'willow-glen', 'mitty']) {

@@ -90,7 +90,7 @@ import type { LeagueChip } from '../layout/LeagueSwitcher';
 import { leagueChips } from '../layout/league-chips';
 import { thisWeekByRegion } from '../playoffs/this-week-inputs';
 import type { ThisWeekView } from '../playoffs/this-week';
-import { fixtureOpponent, nextOfficialFixture } from '../teams/team-view';
+import { fixtureOpponent, nextOfficialFixture, pendingPairingFor } from '../teams/team-view';
 import { describeGame, gameKind, postseasonTagOf, type GameDisplay, type SideView } from '../ui/describe-game';
 import { plural } from '../ui/plural';
 
@@ -98,6 +98,7 @@ import type {
   HomeLastDisplay,
   HomeLastGame,
   HomeNextGame,
+  HomePairingNext,
   HomeOfficialFixture,
   HomeTeamView,
   LeagueCardView,
@@ -929,7 +930,7 @@ export function buildTeamViews(): HomeTeamView[] {
       (league.postseason.kind === 'league-tournament' && getLeagueTournament(league.id).status !== 'projected') ||
       (pairings !== undefined && (ccsOutcomeFor(team.slug, { pairings })?.label ?? null) !== null);
     // The card's one visible line must show the STATUS at 320px (288px of text): a short lead, and
-    // for a place shared across two rungs the rungs' badges ('Play-in or No AQ route (tied)')
+    // for a place shared across two rungs the rungs' badges ('Play-in or No AQ (tied)')
     // instead of the full label with its tiebreak citation, which the team page carries.
     const outcomes = standing ? outcomesFor(standing) : [];
     const tieBadges =
@@ -941,6 +942,19 @@ export function buildTeamViews(): HomeTeamView[] {
         ? rungCardText(playoffOutcomeLabel(team.division, outcomes), statusBadge(team.division, outcomes[0]))
         : null;
     const shortLabel = tieBadges ?? (oneRung !== null && oneRung !== line?.label ? oneRung : null);
+    const officialNext = next ? null : officialNextView(team, today, league.shortName);
+    // The play-in or crossover the team is seated in that MaxPreps has not listed yet: the card never says "no game
+    // left" the day before it (the team page's `pairing` Next card, the same words).
+    const pending = next || officialNext ? null : pendingPairingFor(team, today);
+    const pairingNext: HomePairingNext | null = pending
+      ? {
+          dateKey: pending.dateKey,
+          when: [shortDate(pending.dateKey), pending.timeLabel, pending.kindLabel].filter(Boolean).join(' · '),
+          title: `${pending.versus} ${pending.opponentName}`,
+          note: `From the ${league.shortName} tables today; MaxPreps has not listed this game yet.`,
+          href: pending.href,
+        }
+      : null;
     return {
       // The identity the card draws is the search index's entry for this slug (HomeCardTeam).
       slug: team.slug,
@@ -968,7 +982,8 @@ export function buildTeamViews(): HomeTeamView[] {
       form: hasResults && standing ? [...standing.computed.last5] : [],
       last: last ? lastGameView(last, team.slug) : null,
       next: next ? nextGameView(next, team.slug) : null,
-      officialNext: next ? null : officialNextView(team, today, league.shortName),
+      officialNext,
+      ...(pairingNext ? { pairingNext } : {}),
     };
   });
 }
