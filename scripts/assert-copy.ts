@@ -296,6 +296,14 @@ for (const id of CARD_LEAGUE_IDS) {
   }
 }
 
+// A league tournament's section on /playoffs (MCAL, DESIGN §32.2): its chip lands there, so it must exist, and it
+// is that league's copy, so it gets the non-CCS bans. Seeds are the tournament's own, so no seed-word ban.
+for (const id of TOURNAMENT_LEAGUE_IDS) {
+  const card = elementById(playoffsMain, id, 'section');
+  if (!card) fail('playoffs.html', `no <section id="${id}"> (the /playoffs#${id} chip and jump link resolve to it)`);
+  forbidCcs('playoffs.html', card, `the #${id} section`);
+}
+
 // ---------------------------------------------------------------- orderScope 'site': no "rules require"
 // The Sunset and the San Diego leagues publish no rule that orders their tables; this site orders them
 // by its own 3-1-0 points (DESIGN-socal §2.1.7). So none of their pages, nor their /playoffs card, may

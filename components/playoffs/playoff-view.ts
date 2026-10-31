@@ -285,7 +285,7 @@ export interface DivisionProjection {
   atLargeRows: ProjectionRow[];
   /** 1-based row index after which the labelled ladder line is drawn. 0 ⇒ no line. */
   lineAfter: number;
-  /** 'AQ line' / 'Play-in host'; null when no line is drawn. */
+  /** 'Automatic-berth line' / 'Play-in host'; null when no line is drawn. */
   lineLabel: string | null;
   /** One sentence per tied group, and one per by-law consequence of a tie. */
   notes: string[];

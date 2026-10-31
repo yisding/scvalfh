@@ -82,9 +82,12 @@ function titleSentence(projection: LeagueTournamentProjection, ps: TournamentCon
  * projected; once the tournament is under way, the next round's matchups ('… · Final Fri Oct 30, 4 PM PT at
  * Tamalpais: 3 Redwood at 1 Tamalpais') and, after the final, the champion (lib/postseason.ts tournamentHeadline).
  */
-function headerMeta(summary: LeagueSummary, ps: TournamentConfig, config: LeagueConfig): string {
+function headerMeta(summary: LeagueSummary, ps: TournamentConfig, config: LeagueConfig, opts: { live?: boolean } = {}): string {
   const headline = tournamentHeadline(getLeagueTournament(summary.id), config);
-  const live = headline.champion ? `Champion: ${headline.champion.replace(/\.$/, '')}` : headline.next;
+  // The page header leaves the live line to the headline section right under it (said once, DESIGN §32.3); the
+  // metadata description, read alone in a search result or a link preview, keeps it.
+  const live =
+    opts.live === false ? null : headline.champion ? `Champion: ${headline.champion.replace(/\.$/, '')}` : headline.next;
   const qf = roundDate(ps, 'quarterfinal');
   const final = roundDate(ps, 'final');
   return [
@@ -160,7 +163,7 @@ export default async function LeagueTournamentPage({ params }: PageProps<'/playo
     <div className="pb-section-lg">
       <PageHeader
         title={ps.name}
-        description={headerMeta(summary, ps, config)}
+        description={headerMeta(summary, ps, config, { live: false })}
         meta={
           ccsLeagues.length > 0 ? (
             <Link href="/playoffs" className="sx-action text-meta text-accent hover:underline">
@@ -183,13 +186,6 @@ export default async function LeagueTournamentPage({ params }: PageProps<'/playo
         </section>
       ) : null}
 
-      {section?.noChampionshipNote ? (
-        <section id="section" className="mt-8 md:mt-10">
-          <SectionHeader kicker="Not a section playoff" />
-          <p className="m-0 max-w-prose text-body text-ink-2">{section.noChampionshipNote}</p>
-        </section>
-      ) : null}
-
       <LeagueTournament
         view={view}
         leagueShort={summary.shortName}
@@ -197,6 +193,14 @@ export default async function LeagueTournamentPage({ params }: PageProps<'/playo
         beforeSeeds={<LeagueHealthNote leagueId={summary.id} className="mb-4" />}
         playInRule={playInRound ? `${playInRound.pairing}.` : null}
       />
+
+      {/* Why there is no section bracket, under the league's own (it used to sit above the seeds and the bracket). */}
+      {section?.noChampionshipNote ? (
+        <section id="section" className="mt-section md:mt-section-lg">
+          <SectionHeader kicker="Not a section playoff" />
+          <p className="m-0 max-w-prose text-body text-ink-2">{section.noChampionshipNote}</p>
+        </section>
+      ) : null}
 
       <section id="how-it-works" className="mt-section md:mt-section-lg">
         <SectionHeader kicker="How it works" />

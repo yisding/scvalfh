@@ -259,8 +259,11 @@ function playInSides(game: TournamentGameView): [PlayInSide, PlayInSide] {
 }
 
 export function LeagueTournament({ view, leagueShort, standingsHref, beforeSeeds, playInRule = null }: LeagueTournamentProps) {
-  return (
-    <>
+  // Phase order (DESIGN §32.3): while the picture is projected the seeds lead, since they are the news; once the
+  // tournament is seeded or under way the games do, and the seeds table sits under the bracket it fed. The data-health
+  // note (`beforeSeeds`) always comes first, above whatever leads, since it qualifies everything below it.
+  const projected = view.status === 'projected';
+  const seeds = (
       <section id="seeds" className="mt-section md:mt-section-lg">
         <SectionHeader
           kicker="Seeds"
@@ -269,7 +272,7 @@ export function LeagueTournament({ view, leagueShort, standingsHref, beforeSeeds
           // Capped like the seeds table below, so "Full table" sits over it.
           className="lg:max-w-3xl"
         />
-        {beforeSeeds}
+        {projected ? beforeSeeds : null}
         <SeedsTable view={view} leagueShort={leagueShort} />
         {view.playInSentence || view.notes.length > 0 ? (
           <ul className="mt-3 mb-0 max-w-prose list-none space-y-1 pl-0 text-meta text-ink-2">
@@ -280,7 +283,9 @@ export function LeagueTournament({ view, leagueShort, standingsHref, beforeSeeds
           </ul>
         ) : null}
       </section>
-
+  );
+  const games = (
+    <>
       {view.playIn ? (
         <section id="play-in" className="mt-section md:mt-section-lg">
           <SectionHeader kicker="Play-in" meta={view.playIn.dateLabel} />
@@ -335,6 +340,18 @@ export function LeagueTournament({ view, leagueShort, standingsHref, beforeSeeds
           ))}
         </ol>
       </section>
+    </>
+  );
+  return projected ? (
+    <>
+      {seeds}
+      {games}
+    </>
+  ) : (
+    <>
+      {beforeSeeds ? <div className="mt-section md:mt-section-lg">{beforeSeeds}</div> : null}
+      {games}
+      {seeds}
     </>
   );
 }

@@ -15,8 +15,8 @@ import type { MiniDivisionView, MiniRow } from './home-view';
  * One division's top of the table inside a league panel (SPEC §10.1, DESIGN §3.1).
  *
  * How many rows, and where the labelled line falls, come from the division's own `home` config
- * (`getDivision(d).home`: SCVAL 4 rows and no line; Mt. Hamilton 4, `AQ line` after 3; Santa Teresa
- * 3, `Play-in host` after 1; PCAL 7, `AQ line` after 2; MCAL 7, `Tournament line` after 6; EAL 6
+ * (`getDivision(d).home`: SCVAL 4 rows and no line; Mt. Hamilton 4, `Automatic-berth line` after 3; Santa Teresa
+ * 3, `Play-in host` after 1; PCAL 7, `Automatic-berth line` after 2; MCAL 7, `Tournament line` after 6; EAL 6
  * and no line, `lineAfter` null: its Super Regional takes the top six of six) — never
  * from a map keyed by division id here. The line is a labelled separator ROW, so the rule is never
  * the only cue (WCAG 1.3.1).

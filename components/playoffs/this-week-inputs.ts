@@ -148,7 +148,8 @@ export function norcalEvents(blocks: readonly CcsPairingBlock[], playoffs: CcsPl
         title: `${block.summary.shortName} ${p.isPlayIn ? 'play-in' : 'crossover'}`,
         // The pairing sentence without its "Play-in, Sat Oct 31, 11 AM PT:" head: the strip prints the day and time.
         detail: pairingSentence(p).replace(/^[^:]*:\s*/, ''),
-        href: `/playoffs#${block.summary.id}`,
+        // The league's pairing cards, where the team pages' postseason link lands too (DESIGN §32.5).
+        href: `/playoffs#${block.summary.id}-pairings`,
         leagueId: block.summary.id,
       });
     }
@@ -176,6 +177,7 @@ export function norcalEvents(blocks: readonly CcsPairingBlock[], playoffs: CcsPl
     detail: listWords(playoffs.format.ccsDivisions.map((d) => `CCS ${d.name}`)),
     href: '/playoffs#key-dates',
     leagueId: null,
+    scope: blocks.map((b) => b.summary.id),
   });
   for (const id of getTournamentLeagueIds()) {
     const league = getLeague(id);
@@ -206,9 +208,10 @@ export function norcalEvents(blocks: readonly CcsPairingBlock[], playoffs: CcsPl
 export function socalEvents(sds: NonNullable<ReturnType<typeof sectionPlayoffs>>): ThisWeekEvent[] {
   const { ps, seeding } = sds;
   const href = '/playoffs#sds-playoffs';
+  const scope = sds.leagues.map((l) => l.id);
   return [
     ...(seeding
-      ? [{ dateKey: seeding, time: null, title: ps.name, detail: 'Section seeding meeting', href, leagueId: null }]
+      ? [{ dateKey: seeding, time: null, title: ps.name, detail: 'Section seeding meeting', href, leagueId: null, scope }]
       : []),
     ...ps.rounds.map((r) => ({
       dateKey: r.date,
@@ -217,6 +220,7 @@ export function socalEvents(sds: NonNullable<ReturnType<typeof sectionPlayoffs>>
       detail: r.site ? `${r.label}, ${r.site}` : r.label,
       href,
       leagueId: null,
+      scope,
     })),
   ];
 }

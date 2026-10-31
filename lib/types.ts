@@ -449,8 +449,8 @@ export type PlayoffStatus =
   | 'aq'           // automatic CCS berth by place
   | 'play-in'      // SCVAL 4th (Oct 30); BVAL Mt. Hamilton 4th and Santa Teresa 1st (Oct 31)
   | 'at-large'     // SCVAL 5th: submitted to CCS for at-large consideration
-  | 'out'          // SCVAL 6th+: "No automatic path" (the original SCVAL wording)
-  | 'no-aq-route'  // BVAL/PCAL off the ladder: "No automatic-berth route" — never "eliminated"
+  | 'out'          // SCVAL 6th+: "No automatic berth" (the original SCVAL wording)
+  | 'no-aq-route'  // BVAL/PCAL off the ladder: "No automatic berth" — never "eliminated"
   | 'bye'          // MCAL seeds 1-2
   | 'tournament'   // MCAL seeds 3-6; EAL places 1-6 (Super Regional); San Diego 1st (a designated league
                    //   champion is guaranteed at least a play-in, Green Book 2000.1)

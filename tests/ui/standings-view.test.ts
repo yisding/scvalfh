@@ -88,15 +88,15 @@ describe('ladder badges and legends, per league (verbatim from config)', () => {
     expect(l['santa-teresa:Play-in host'], 'components/standings/standings-view.ts BVAL').toBe(
       'Champion — hosts Mt. Hamilton #4 Sat Oct 31, 11 AM, for BVAL’s 4th berth',
     );
-    expect(l['santa-teresa:No AQ route'], 'components/standings/standings-view.ts BVAL').toBe(
-      '2nd or lower — no automatic-berth route (at-large is the CCS committee’s call)',
+    expect(l['santa-teresa:No AQ'], 'components/standings/standings-view.ts BVAL').toBe(
+      '2nd or lower — no automatic berth (at-large is the CCS committee’s call)',
     );
   });
 
   it('PCAL: two automatic berths', () => {
     const l = legends('pcal');
     expect(l['pcal:AQ'], 'components/standings/standings-view.ts PCAL').toBe('Places 1-2 — automatic CCS qualifier');
-    expect(l['pcal:No AQ route']).toBe('3rd or lower — no automatic-berth route; may apply for at-large (PCAL By-laws §23.4)');
+    expect(l['pcal:No AQ']).toBe('3rd or lower — no automatic berth; may apply for at-large (PCAL By-laws §23.4)');
   });
 
   it('MCAL: the tournament ladder and no CCS concept', () => {
@@ -372,7 +372,7 @@ describe('the /standings overview', () => {
   it('draws the labelled ladder line, links each full table, and has no sticky head', () => {
     const html = renderOverview();
     const text = textOf(html);
-    for (const label of ['AQ line', 'Play-in host', 'Tournament line']) {
+    for (const label of ['Automatic-berth line', 'Play-in host', 'Tournament line']) {
       expect(text, `components/standings/CompactStandingsTable.tsx ${label}`).toContain(label);
     }
     expect(html).toContain('href="/standings/scval#de-anza"');
@@ -395,13 +395,13 @@ describe('status chips, rank rule and level reason (UI pass, from config)', () =
       'Automatic qualifier',
       'Play-in game Oct 30',
       'At-large consideration',
-      'No automatic path',
+      'No automatic berth',
     ]);
     expect(texts('bval')['santa-teresa'], 'components/standings/standings-view.ts BVAL statusText').toEqual([
       'Hosts the play-in Oct 31',
-      'No automatic-berth route',
+      'No automatic berth',
     ]);
-    expect(texts('pcal').pcal).toEqual(['Automatic qualifier', 'No automatic-berth route']);
+    expect(texts('pcal').pcal).toEqual(['Automatic qualifier', 'No automatic berth']);
     const mcal = texts('mcal')['marin-county'];
     expect(mcal, 'components/standings/standings-view.ts MCAL statusText').toEqual([
       'Semifinal bye',

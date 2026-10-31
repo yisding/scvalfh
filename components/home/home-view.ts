@@ -90,7 +90,7 @@ import type { LeagueChip } from '../layout/LeagueSwitcher';
 import { leagueChips } from '../layout/league-chips';
 import { thisWeekByRegion } from '../playoffs/this-week-inputs';
 import type { ThisWeekView } from '../playoffs/this-week';
-import { fixtureOpponent, nextOfficialFixture } from '../teams/team-view';
+import { fixtureOpponent, nextOfficialFixture, pendingPairingFor } from '../teams/team-view';
 import { describeGame, gameKind, postseasonTagOf, type GameDisplay, type SideView } from '../ui/describe-game';
 import { plural } from '../ui/plural';
 
@@ -98,6 +98,7 @@ import type {
   HomeLastDisplay,
   HomeLastGame,
   HomeNextGame,
+  HomePairingNext,
   HomeOfficialFixture,
   HomeTeamView,
   LeagueCardView,
@@ -929,7 +930,7 @@ export function buildTeamViews(): HomeTeamView[] {
       (league.postseason.kind === 'league-tournament' && getLeagueTournament(league.id).status !== 'projected') ||
       (pairings !== undefined && (ccsOutcomeFor(team.slug, { pairings })?.label ?? null) !== null);
     // The card's one visible line must show the STATUS at 320px (288px of text): a short lead, and
-    // for a place shared across two rungs the rungs' badges ('Play-in or No AQ route (tied)')
+    // for a place shared across two rungs the rungs' badges ('Play-in or No AQ (tied)')
     // instead of the full label with its tiebreak citation, which the team page carries.
     const outcomes = standing ? outcomesFor(standing) : [];
     const tieBadges =
@@ -941,6 +942,27 @@ export function buildTeamViews(): HomeTeamView[] {
         ? rungCardText(playoffOutcomeLabel(team.division, outcomes), statusBadge(team.division, outcomes[0]))
         : null;
     const shortLabel = tieBadges ?? (oneRung !== null && oneRung !== line?.label ? oneRung : null);
+    const officialFixture = next ? null : officialNextView(team, today, league.shortName);
+    // The play-in or crossover the team is seated in that MaxPreps has not listed yet: the card never says "no game
+    // left" the day before it, and it comes before a later game or fixture (the team page's `pairing` Next card).
+    const pendingAny = pendingPairingFor(team, today);
+    const pending =
+      pendingAny &&
+      (next === null || next.isDateTba || pendingAny.dateKey < next.dateKey) &&
+      (officialFixture === null || pendingAny.dateKey <= officialFixture.dateKey)
+        ? pendingAny
+        : null;
+    const officialNext = pending ? null : officialFixture;
+    const pairingNext: HomePairingNext | null = pending
+      ? {
+          dateKey: pending.dateKey,
+          when: [shortDate(pending.dateKey), pending.timeLabel].filter(Boolean).join(' · '),
+          // The link says what it is and where it leads, the pairing card: 'BVAL play-in at Westmont'.
+          title: `${pending.kindLabel} ${pending.versus} ${pending.opponentName}`,
+          note: `From the ${league.shortName} tables today; MaxPreps has not listed this game yet.`,
+          href: pending.href,
+        }
+      : null;
     return {
       // The identity the card draws is the search index's entry for this slug (HomeCardTeam).
       slug: team.slug,
@@ -967,8 +989,9 @@ export function buildTeamViews(): HomeTeamView[] {
       overallRecord: standing && standing.overall.gp > 0 ? recordString(standing.overall) : EM_DASH,
       form: hasResults && standing ? [...standing.computed.last5] : [],
       last: last ? lastGameView(last, team.slug) : null,
-      next: next ? nextGameView(next, team.slug) : null,
-      officialNext: next ? null : officialNextView(team, today, league.shortName),
+      next: next && !pending ? nextGameView(next, team.slug) : null,
+      officialNext,
+      ...(pairingNext ? { pairingNext } : {}),
     };
   });
 }

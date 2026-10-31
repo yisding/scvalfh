@@ -28,10 +28,12 @@ import {
   type StandingContext,
   type TeamPostseasonLine,
   getLeagueTournament,
+  getLeaguePairings,
 } from '../../lib/data';
 import {
   dateSpan,
   gameWhen,
+  leagueClockPT,
   listWords,
   monthDay,
   ordinal,
@@ -43,11 +45,14 @@ import {
   sideOutcome,
   timeOfDayPT,
   mapsSearchHref,
+  noMoreGamesSentence,
 } from '../../lib/format';
 import {
+  CCS,
   divisionHeading,
   getDivision,
   getLeague,
+  pairingWindow,
   REGIONS,
   getRegion,
   leaguePlayEnds,
@@ -201,7 +206,7 @@ export interface TeamLeagueCopy {
    */
   seasonEndSentence: string;
   /**
-   * `We will list a playoff game as soon as CCS publishes the bracket.` | `… as soon as MCAL posts the
+   * `CCS seeds the field on Mon Nov 2; we list each CCS game as MaxPreps posts it.` | `We will list a playoff game as soon as MCAL posts the
    * bracket.` | `We will not guess a bracket: the Super Regional’s format and site are not published yet.`
    */
   bracketSentence: string;
@@ -315,7 +320,133 @@ export type NextCard =
       } | null;
     })
   | (NextOpponent & { kind: 'official'; fixture: OfficialFixture })
-  | { kind: 'none' };
+  /** A CCS league's crossover or play-in the team is seated in that MaxPreps has not listed yet (pendingPairingFor). */
+  | (NextOpponent & { kind: 'pairing'; pairing: PendingPairing })
+  | {
+      kind: 'none';
+      /** 'No more games on Archbishop Mitty’s published schedule.' (noMoreGamesSentence; MyTeamCard prints the same words inline, keeping lib/format out of its bundle). */
+      heading: string;
+      /** The league's end-of-season sentence (the team's own crossover or play-in, once played) and when the next game comes. */
+      body: string;
+    };
+
+/**
+ * A crossover or play-in a team is seated in, by the league table today, that MaxPreps has not listed as a game
+ * yet (lib/data.ts getLeaguePairings: `game` null). Its date is today or later. The team must hold its seat alone
+ * and have played every league game of its own; a seat other teams' games can still move (`settled` false) is
+ * shown as the table has it today, and the card says the pairing can still change.
+ */
+export interface PendingPairing {
+  leagueId: LeagueId;
+  /** 'BVAL play-in' | 'SCVAL crossover' — the chip's words (lib/postseason-round-label.ts). */
+  kindLabel: string;
+  /** 'Play-in for BVAL’s 4th automatic CCS berth': the config label's purpose. */
+  purpose: string;
+  dateKey: string;
+  /** '11:00 AM PT', or null when the league publishes no start time (SCVAL). */
+  timeLabel: string | null;
+  versus: 'vs' | 'at';
+  /** The opponent when one team holds its seat today. */
+  opponent: Team | undefined;
+  /** Its short name; 'Prospect or Westmont' when level teams share the seat; the seat's label when nobody holds it. */
+  opponentName: string;
+  /** 'Mt. Hamilton #4 at Santa Teresa #1' (a host is named) | 'De Anza #4 v El Camino #4'. */
+  seats: string;
+  /** false while either seat can still change: level teams share one, or either division has league games left. */
+  settled: boolean;
+  /** `/playoffs#<league>-pairings`: the league's pairing cards on /playoffs. */
+  href: string;
+}
+
+function divisionDone(division: DivisionId): boolean {
+  return [...getStandingContext(division).values()].every((c) => c.remaining === null || c.remaining === 0);
+}
+
+export function pendingPairingFor(team: Team, today: string): PendingPairing | null {
+  const league = getLeague(team.league);
+  if (league.postseason.kind !== 'ccs-ladder') return null;
+  for (const p of getLeaguePairings(league.id)) {
+    if (p.game || p.date < today) continue;
+    const mine = p.seats.findIndex((seat) => seat.length === 1 && seat[0].teamId === team.id);
+    // The team has played every league game, so no game of its own can move it; others in its division still may.
+    if (mine < 0 || getStandingContext(team.division).get(team.id)?.remaining !== 0) continue;
+    const theirs = mine === 0 ? 1 : 0;
+    const others = p.seats[theirs].flatMap((ref) => {
+      const t = getTeamBySlug(ref.slug);
+      return t ? [t] : [];
+    });
+    const opponent = others.length === 1 ? others[0] : undefined;
+    const at = p.label.indexOf(' \u2014 ');
+    const tail = at < 0 ? (p.isPlayIn ? 'play-in' : 'crossover') : p.label.slice(at + 3);
+    const seats =
+      p.host === null
+        ? `${p.seatLabels[0]} v ${p.seatLabels[1]}`
+        : `${p.seatLabels[p.host === 0 ? 1 : 0]} at ${p.seatLabels[p.host]}`;
+    return {
+      leagueId: league.id,
+      kindLabel: `${league.shortName} ${p.isPlayIn ? 'play-in' : 'crossover'}`,
+      purpose: `${tail[0].toUpperCase()}${tail.slice(1)}`,
+      dateKey: p.date,
+      // The league's own clock words ('11 AM PT'), as the pairing card and the strip on /playoffs print it.
+      timeLabel: p.time ? leagueClockPT(p.time) : null,
+      versus: p.host !== null && p.host === theirs ? 'at' : 'vs',
+      opponent,
+      opponentName: opponent
+        ? opponent.shortName
+        : others.length > 1
+          ? listWords(others.map((t) => t.shortName), 'or')
+          : `the ${p.seatLabels[theirs]} team`,
+      seats,
+      settled: opponent !== undefined && divisionDone(team.division) && divisionDone(opponent.division),
+      href: `/playoffs#${league.id}-pairings`,
+    };
+  }
+  return null;
+}
+
+/**
+ * True when the team is in a crossover or play-in not played yet: a listed game that is not final, or a seat the team
+ * holds alone in one MaxPreps has not listed. The team page's "CCS playoffs →" then goes straight to the league's
+ * pairing cards on /playoffs (`#<league>-pairings`), not the top of its section.
+ */
+export function inOpenPairing(team: Team, today: string): boolean {
+  if (getLeague(team.league).postseason.kind !== 'ccs-ladder') return false;
+  return getLeaguePairings(team.league).some((p) => {
+    if (p.game) {
+      const mine = p.game.home.slug === team.slug || p.game.away.slug === team.slug;
+      return mine && p.game.status !== 'final' && p.game.dateKey >= today;
+    }
+    return p.date >= today && p.seats.some((seat) => seat.length === 1 && seat[0].teamId === team.id);
+  });
+}
+
+/**
+ * The team's own crossover or play-in once it is final ('the SCVAL crossover', Thu Oct 29), for the empty Next
+ * card: the league's 'the SCVAL crossover is Thu Oct 29 and Fri Oct 30' would describe a game this team has played.
+ */
+function playedPairing(team: Team): { word: string; dateKey: string } | null {
+  const league = getLeague(team.league);
+  if (league.postseason.kind !== 'ccs-ladder') return null;
+  for (const p of getLeaguePairings(league.id)) {
+    if (p.game?.status !== 'final') continue;
+    if (p.game.home.slug !== team.slug && p.game.away.slug !== team.slug) continue;
+    return { word: `the ${league.shortName} ${p.isPlayIn ? 'play-in' : 'crossover'}`, dateKey: p.game.dateKey };
+  }
+  return null;
+}
+
+/** The empty Next card's sentences (TeamNextGame), from the league copy and the team's own played pairing. */
+function noneCard(team: Team, league: TeamLeagueCopy): Extract<NextCard, { kind: 'none' }> {
+  let seasonEnd = league.seasonEndSentence;
+  const played = league.postseasonKind === 'ccs-ladder' ? playedPairing(team) : null;
+  if (played) {
+    // 'The SCVAL league season ended Wed Oct 28 and Archbishop Mitty played the SCVAL crossover Thu Oct 29.'
+    const cut = seasonEnd.search(/ and the \S+ (crossover|play-in) (is|runs|was) /);
+    const ended = cut < 0 ? seasonEnd.replace(/\.$/, '') : seasonEnd.slice(0, cut);
+    seasonEnd = `${ended} and ${team.name} played ${played.word} ${shortDate(played.dateKey)}.`;
+  }
+  return { kind: 'none', heading: noMoreGamesSentence(team.name), body: `${seasonEnd} ${league.bracketSentence}` };
+}
 
 /** `of 8 in De Anza` | `of 9 in MCAL` — the words after the place ordinal. */
 export function placeScope(divisionSize: number, scopeLabel: string): string {
@@ -377,16 +508,27 @@ export function leagueCopy(
   switch (ps.kind) {
     case 'ccs-ladder': {
       const first = ps.pairings[0];
+      // The crossover / play-in's tense follows the day like the league season's: 'was' once its last day has passed
+      // (the pairings' window: two 2026 SCVAL crossovers moved a day ahead of the schedule).
+      const pairingsOver =
+        today !== undefined && ps.pairings.length > 0 && ps.pairings.every((p) => today > pairingWindow(p).last);
+      // Under way (its first day has passed, its last not): 'runs', so a day already played is not told as to come.
+      const started = today !== undefined && ps.pairings.some((p) => today > pairingWindow(p).first);
+      const be = pairingsOver ? 'was' : started ? 'runs' : 'is';
       let after = '';
       // 'is Thu Oct 29 and Fri Oct 30' when a crossover moved off the schedule's day (the pairings' window).
-      if (first?.tag === 'scval-crossover') after = ` and the ${league.shortName} crossover is ${pairingDatesLabel(ps.pairings)}`;
-      else if (first?.tag === 'bval-play-in') after = ` and the ${league.shortName} play-in is ${shortDate(first.date)}`;
+      if (first?.tag === 'scval-crossover') after = ` and the ${league.shortName} crossover ${be} ${pairingDatesLabel(ps.pairings)}`;
+      else if (first?.tag === 'bval-play-in') after = ` and the ${league.shortName} play-in ${be} ${shortDate(first.date)}`;
+      // When the next game comes: the CCS seeding meeting's date, in the day's tense (never "as soon as CCS publishes
+      // the bracket", which named no day).
+      const seeding = CCS.keyDates.seedingMeeting.slice(0, 10);
+      const seeded = today !== undefined && today >= seeding;
       return {
         ...base,
         postseasonKind: ps.kind,
         postseasonName: null,
         seasonEndSentence: `${ended}${after}.`,
-        bracketSentence: 'We will list a playoff game as soon as CCS publishes the bracket.',
+        bracketSentence: `CCS ${seeded ? 'seeded' : 'seeds'} the field on ${shortDate(seeding)}; we list each CCS game as MaxPreps posts it.`,
       };
     }
     case 'league-tournament': {
@@ -662,7 +804,9 @@ function nextChips(game: Game): NextChip[] {
 }
 
 /**
- * The NEXT card: the next contest, else the next official-only fixture, else nothing left. `league`
+ * The NEXT card: the next contest, else the next official-only fixture, else the crossover or play-in the team is
+ * seated in that MaxPreps has not listed yet (pendingPairingFor), else nothing left; the pairing comes first when it is
+ * earlier than the game or fixture. `league`
  * is the page's league copy: an opponent's record line is scoped against it (opponentRecordLine).
  */
 export function buildNextCard(
@@ -672,6 +816,24 @@ export function buildNextCard(
   today: string,
   league: TeamLeagueCopy,
 ): NextCard {
+  // An unlisted crossover or play-in comes before a later game or fixture (a non-league game after the play-in).
+  const pairing = pendingPairingFor(team, today);
+  const fixtureFirst = nextOfficialFixture(officialFixtures, today);
+  const pairingFirst =
+    pairing !== null &&
+    (next === null || next.isDateTba || pairing.dateKey < next.dateKey) &&
+    (fixtureFirst === null || pairing.dateKey <= fixtureFirst.dateKey);
+  if (pairing && pairingFirst) {
+    return {
+      kind: 'pairing',
+      pairing,
+      dateLabel: dateLabelFor(pairing.dateKey, pairing.dateKey, today),
+      versus: pairing.versus,
+      opponent: pairing.opponent,
+      opponentName: pairing.opponentName,
+      record: opponentRecordLine(pairing.opponent, league.id),
+    };
+  }
   if (next) {
     const mineIsHome = next.home.slug === team.slug;
     const side = mineIsHome ? next.away : next.home;
@@ -714,7 +876,7 @@ export function buildNextCard(
       record: opponentRecordLine(opponent, league.id),
     };
   }
-  return { kind: 'none' };
+  return noneCard(team, league);
 }
 
 /**
@@ -745,6 +907,12 @@ export function fixtureOpponent(
     opponent,
     opponentName: opponent ? opponent.shortName : titleCase(mineIsHome ? fixture.awayName : fixture.homeName),
   };
+}
+
+/** The postseason line, its link pointed at the pairing cards while the team has a crossover or play-in to play. */
+function pairingAwareLine(line: TeamPostseasonLine | null, team: Team, today: string): TeamPostseasonLine | null {
+  if (!line || !inOpenPairing(team, today)) return line;
+  return { ...line, href: `/playoffs#${team.league}-pairings` };
 }
 
 export function buildTeamPageView(slug: string): TeamPageView | undefined {
@@ -820,7 +988,7 @@ export function buildTeamPageView(slug: string): TeamPageView | undefined {
     officialScheduleUrl: division.official.mode === 'none' ? null : division.official.scheduleUrl,
     hasResults,
     context,
-    postseasonLine: getTeamPostseasonLine(team.slug),
+    postseasonLine: pairingAwareLine(getTeamPostseasonLine(team.slug), team, today),
     postseasonAccent: outcomes.length === 1 && (outcomes[0] === 'aq' || outcomes[0] === 'bye'),
     leagueLog,
     nonLeagueLog,

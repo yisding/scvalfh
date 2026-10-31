@@ -12,8 +12,8 @@ import { ladderLineAfter, ladderRow } from './standings-view';
  * (monogram + short name, a link to the team page), GP, W-L-T, PTS. Every team of the division,
  * in the engine's order — a full table, just narrow.
  *
- * After the league's ladder line (`DivisionConfig.ladderLine`: SCVAL 3 `AQ line`, Mt. Hamilton 3
- * `AQ line`, Santa Teresa 1 `Play-in host`, PCAL 2 `AQ line`, MCAL 6 `Tournament line`) a
+ * After the league's ladder line (`DivisionConfig.ladderLine`: SCVAL 3 `Automatic-berth line`, Mt. Hamilton 3
+ * `Automatic-berth line`, Santa Teresa 1 `Play-in host`, PCAL 2 `Automatic-berth line`, MCAL 6 `Tournament line`) a
  * LABELLED separator row: the heavier rule is never the only cue (WCAG 1.3.1). With shared places
  * the line is drawn after every row at or above it, and not at all before any result. A null
  * `ladderLine` draws no rule and no label: the EAL, whose Super Regional takes the top six of its

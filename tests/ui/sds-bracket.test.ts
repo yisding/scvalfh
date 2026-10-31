@@ -177,7 +177,7 @@ describe('/playoffs with the Section’s brackets (lib/sds-bracket mocked to the
 
   it('draws #sds-bracket once, in the SoCal block, after the round dates and outside the three conference cards', () => {
     expect(html.match(/id="sds-bracket"/g)?.length, PAGE).toBe(1);
-    const socal = html.indexOf('<div id="socal" data-region-scope="socal">');
+    const socal = html.indexOf('<div id="socal" data-region-scope="socal"');
     const at = html.indexOf('id="sds-bracket"');
     expect(socal, PAGE).toBeGreaterThan(0);
     expect(at, PAGE).toBeGreaterThan(socal);
@@ -195,7 +195,7 @@ describe('/playoffs with the Section’s brackets (lib/sds-bracket mocked to the
   });
 
   it('says the brackets below are the Section’s, and keeps the SoCal copy rules', () => {
-    const socal = html.slice(html.indexOf('<div id="socal" data-region-scope="socal">'));
+    const socal = html.slice(html.indexOf('<div id="socal" data-region-scope="socal"'));
     const text = textOf(socal);
     expect(text, PAGE).toContain('The Section has published its brackets; the brackets below are the Section’s, with results as MaxPreps posts them.');
     expect(text, PAGE).not.toContain('this site draws no bracket');

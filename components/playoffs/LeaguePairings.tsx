@@ -1,3 +1,5 @@
+import { matchupJoiner } from '../../lib/format';
+
 import PlayInCard, { type PlayInSide } from './PlayInCard';
 import { pairingSentence, type PairingView, type SeatView } from './playoff-view';
 
@@ -40,6 +42,28 @@ function purposeOf(label: string, title: string): string | null {
   return tail ? `${tail[0].toUpperCase()}${tail.slice(1)}.` : null;
 }
 
+/**
+ * The pairing as MaxPreps lists its game, when it does and one seat holds the home team: seats in visitor-home order,
+ * the game's joiner, and the host mark only where the config's host seat is the home side. Unchanged otherwise.
+ */
+export function asListed(p: PairingView): PairingView {
+  const homeSlug = p.game?.home.slug ?? null;
+  if (!p.game || homeSlug === null) return p;
+  const holdsHome = (seat: SeatView) => seat.contenders.some((c) => c.team.slug === homeSlug);
+  const [a, b] = p.seats;
+  if (!holdsHome(a) && !holdsHome(b)) return p;
+  const [away, home] = holdsHome(a) ? [b, a] : [a, b];
+  const connector = matchupJoiner(p.game);
+  return {
+    ...p,
+    connector,
+    seats: [
+      { ...away, host: false },
+      { ...home, host: home.host && connector === 'at' },
+    ],
+  };
+}
+
 export function LeaguePairings({ pairings, className }: LeaguePairingsProps) {
   if (pairings.length === 0) return null;
   const single = pairings.length === 1;
@@ -54,10 +78,15 @@ export function LeaguePairings({ pairings, className }: LeaguePairingsProps) {
         .join(' ')}
     >
       {pairings.map((p) => {
-        // With a host, read "visitor at host": the visitor is listed first.
-        const [a, b] = p.seats;
+        // Once the game exists the card reads as the game does (DESIGN §32.4): visitor first, then 'at' the home side
+        // ('vs' at a neutral site), so "Santa Clara at Los Altos" on the card matches its own link, and its screen-reader
+        // sentence says the same. "(host)" stays only on a config host seat the game also has at home: a game listed
+        // the other way round never marks its visitor the host. Before the game, a host seat reads "visitor at host";
+        // with no host, the config's seat order and 'vs'.
+        const view = asListed(p);
+        const [a, b] = view.seats;
         const sides: [PlayInSide, PlayInSide] =
-          p.connector === 'at' && a.host ? [toSide(b), toSide(a)] : [toSide(a), toSide(b)];
+          view.connector === 'at' && a.host ? [toSide(b), toSide(a)] : [toSide(a), toSide(b)];
         return (
           <li key={p.id} className={single ? 'max-w-3xl' : undefined}>
             {/* A lone play-in sits under a section header that already names it ('Play-in'), so
@@ -68,8 +97,8 @@ export function LeaguePairings({ pairings, className }: LeaguePairingsProps) {
               title={single && p.isPlayIn ? null : p.title}
               when={{ dateKey: p.dateKey, dateLabel: p.dateLabel, timeLabel: p.timeLabel }}
               sides={sides}
-              connector={p.connector}
-              sentence={pairingSentence(p)}
+              connector={view.connector}
+              sentence={pairingSentence(view)}
               purpose={purposeOf(p.label, p.title)}
               notes={p.notes}
               game={p.game}

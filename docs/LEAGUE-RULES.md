@@ -74,7 +74,7 @@ label is "Co-champions".
 
 **Postseason** (CCS ladder; SCVAL holds 7 of the 16 CCS berths): Article VII §2 — the first three
 in each division are automatic qualifiers; fourth place plays in; the play-in loser and both
-fifth-place teams are submitted for at-large consideration; 6th and below have no automatic path.
+fifth-place teams are submitted for at-large consideration; 6th and below have no automatic berth.
 On **Fri Oct 30** the four De Anza places meet the four El Camino places (#1 v #1 … #4 v #4);
 #1 to #3 are for CCS seeding, not qualification, and #4 v #4 is the play-in for the 7th automatic berth. In 2026 the
 schools played two of the four a day early: #1 St. Ignatius at Mitty and #3 Palo Alto at Valley
@@ -87,7 +87,7 @@ Los Gatos, co-leaders of El Camino) narrows to the one the league paired. The CC
 championship follows (entries due Nov 2, quarterfinals Nov 7, semifinals Nov 11, final Nov 14).
 The site's words (2026-10-29/30, `lib/postseason-outcomes.ts`, `lib/data.ts`): a crossover card reads "For CCS
 seeding, not qualification."; only a team with an automatic berth, the play-in or at-large consideration gets the
-crossover sentence on its team line, and 6th and lower read "No automatic path; at-large berths are the CCS
+crossover sentence on its team line, and 6th and lower read "No automatic berth; at-large berths are the CCS
 committee’s call."; once the play-in is final its winner reads "Won the play-in" ("Won the 4th-place play-in: an
 automatic CCS qualifier.") and its loser "Lost the play-in" ("Lost the play-in; SCVAL submits the loser for at-large
 consideration.", Article VII §2), and a final crossover adds "<winner> beat <loser> <score> in the #n v #n crossover on
@@ -136,14 +136,14 @@ label is "Division co-champions".
 |---|---|---|
 | Mt. Hamilton | 1st-3rd | BVAL #1-#3, automatic CCS qualifiers |
 | Mt. Hamilton | 4th | plays at the Santa Teresa champion Sat Oct 31, 11 AM, for BVAL's 4th berth |
-| Mt. Hamilton | 5th and lower | no automatic-berth route (at-large is the CCS committee's call) |
+| Mt. Hamilton | 5th and lower | no automatic berth (at-large is the CCS committee's call) |
 | Santa Teresa | 1st (the champion) | hosts Mt. Hamilton #4 on Oct 31 |
-| Santa Teresa | 2nd and lower | no automatic-berth route |
+| Santa Teresa | 2nd and lower | no automatic berth |
 
 BVAL's by-laws do not say whom it submits for at-large berths. The site never writes "eliminated";
-places off the ladder read "No automatic-berth route". Once the play-in is final (2026-10-30,
+places off the ladder read "No automatic berth". Once the play-in is final (2026-10-30,
 `lib/postseason-outcomes.ts`) its winner reads "Won the play-in" ("Won the play-in: BVAL’s fourth automatic CCS
-berth.") and its loser "Lost the play-in" ("Lost the play-in; no automatic-berth route remains, and at-large berths
+berth.") and its loser "Lost the play-in" ("Lost the play-in; no automatic berth remains, and at-large berths
 are the CCS committee’s call."), and the play-in card adds "Winner: <team> — BVAL’s 4th automatic CCS berth".
 
 **Official sources.** The two division schedules, Google Docs revised 9/20/26 (Mt. Hamilton) and
@@ -201,7 +201,7 @@ chain instead (above).
 
 **Postseason** (CCS ladder; PCAL holds 2 of the 16 CCS berths, down from 3 by the CCS Field Hockey
 Committee report of 2025-11-20 §IV) — Rules §1.8.1: the top two of the final standings are
-automatic CCS qualifiers. 3rd and lower have no automatic-berth route and may apply for an at-large
+automatic CCS qualifiers. 3rd and lower have no automatic berth and may apply for an at-large
 berth (By-laws §23.4). There are no PCAL pairings; the next game is the CCS bracket.
 
 **Official sources.** One PDF schedule (2026 FINAL); 42 fixtures bundled in

@@ -124,7 +124,7 @@ export interface HomeTeamView {
   postseason: string | null;
   /**
    * Only for a place shared across two rungs, whose full label carries a tiebreak citation: the
-   * card line as the rungs' badges ('Today: Play-in or No AQ route (tied)'). Absent otherwise (the
+   * card line as the rungs' badges ('Today: Play-in or No AQ (tied)'). Absent otherwise (the
    * card derives its line with `postseasonCardLine`), so 99 views do not ship the line twice.
    */
   postseasonShort?: string;
@@ -141,6 +141,27 @@ export interface HomeTeamView {
   next: HomeNextGame | null;
   /** Used only when `next` is null — the official schedule still has a fixture (DESIGN §8). */
   officialNext: HomeOfficialFixture | null;
+  /**
+   * The crossover or play-in the team is seated in that MaxPreps has not listed yet (team-view.ts pendingPairingFor),
+   * when it comes before any listed game or fixture (`next` and `officialNext` are then null). Absent for every other team, so 99 views do not ship it.
+   */
+  pairingNext?: HomePairingNext;
+}
+
+/**
+ * A CCS league's unlisted crossover or play-in, from the pinned team's side (the team page's `pairing` Next card).
+ * Whole strings, composed on the server, so the client card only prints them (the /teams first-load JS budget).
+ */
+export interface HomePairingNext {
+  dateKey: string;
+  /** 'Sat Oct 31 · 11 AM PT' */
+  when: string;
+  /** 'BVAL play-in at Westmont', 'SCVAL crossover vs Prospect or Westmont', or with the seat's label. */
+  title: string;
+  /** 'From the BVAL tables today; MaxPreps has not listed this game yet.' */
+  note: string;
+  /** `/playoffs#<league>-pairings` */
+  href: string;
 }
 
 /** One tile of a league panel's "Teams in <SHORT>" grid (`PinTile`). */

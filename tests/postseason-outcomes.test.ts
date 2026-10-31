@@ -136,7 +136,7 @@ describe('ccsOutcomeFor — the BVAL play-in', () => {
     });
     expect(ccsOutcomeFor('willow-glen', { pairings }), MOD).toMatchObject({
       kind: 'play-in', result: 'lost', label: 'Lost the play-in',
-      sentence: 'Lost the play-in; no automatic-berth route remains, and at-large berths are the CCS committee’s call.',
+      sentence: 'Lost the play-in; no automatic berth remains, and at-large berths are the CCS committee’s call.',
     });
     expect(ccsOutcomeFor('leigh', { pairings }), MOD).toBeNull();
     expect(ccsOutcomeFor('westmont', { pairings: bvalPairing(null) }), MOD).toBeNull();

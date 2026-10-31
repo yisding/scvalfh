@@ -13,7 +13,7 @@
  *   BVAL 'Won the play-in: BVAL’s fourth automatic CCS berth.';
  * - a play-in loser: label 'Lost the play-in'; SCVAL 'Lost the play-in; SCVAL submits the loser for at-large
  *   consideration.' (By-Laws Article VII §2: the play-in loser and both fifth-place teams go to CCS for at-large
- *   consideration), BVAL 'Lost the play-in; no automatic-berth route remains, and at-large berths are the CCS
+ *   consideration), BVAL 'Lost the play-in; no automatic berth remains, and at-large berths are the CCS
  *   committee’s call.' (the BVAL By-Laws submit no one);
  * - a crossover (#1–#3, for CCS seeding, not qualification): no label of its own (the ladder's 'Automatic
  *   qualifier' stands), and a sentence the team line appends: 'Archbishop Mitty beat St. Ignatius 2–0 in the #1 v #1
@@ -99,7 +99,7 @@ function playInWords(
     label: 'Lost the play-in',
     sentence: submitsLoser
       ? `Lost the play-in; ${league.shortName} submits the loser for at-large consideration.`
-      : 'Lost the play-in; no automatic-berth route remains, and at-large berths are the CCS committee’s call.',
+      : 'Lost the play-in; no automatic berth remains, and at-large berths are the CCS committee’s call.',
   };
 }
 

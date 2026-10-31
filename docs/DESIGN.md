@@ -88,6 +88,12 @@
 > surface, and the EAL's results listed: §31 records them and wins where it disagrees with §3.8, §7.11, §8,
 > §22.4 or §24.4-§24.8.
 >
+> **One shape for every league's postseason (§32, 2026-10-31).** A "Where every league stands" board leads each
+> region of `/playoffs`; every league has a headed section of the same shape, MCAL's and the EAL's included; the
+> CCS bracket sits under the CCS intro; the deciding games come before the tables; one status vocabulary ("No
+> automatic berth", "Automatic-berth line"); a crossover-day game is named by its pairing; a team's Next card
+> shows its unlisted play-in. §32 wins where it disagrees with §3.8, §15.8, §31.1 or §31.2.
+>
 > Everything else below (routes, tokens, component signatures, rendering rules, empty states,
 > a11y, build checklist) reflects what was built.
 
@@ -2809,8 +2815,9 @@ the league's team tiles, the postseason card and a one-line strip of the other l
 and a cross-league "latest" block shown on the first visit.
 
 Mini standings are driven by each division's config, never by a map keyed by division id in the
-component: SCVAL 4 rows, no line; Mt. Hamilton 4 rows with an "AQ line" after 3; Santa Teresa 3 rows
-with a "Play-in host" line after 1; PCAL 7 rows with an "AQ line" after 2; MCAL 7 rows with a
+component: SCVAL 4 rows, no line; Mt. Hamilton 4 rows with an "Automatic-berth line" after 3 (the "AQ line"
+before §32.4); Santa Teresa 3 rows with a "Play-in host" line after 1; PCAL 7 rows with an "Automatic-berth line"
+after 2; MCAL 7 rows with a
 "Tournament line" after 6. The line is a labelled separator row, never only a rule (WCAG 1.3.1).
 MCAL's postseason card has no berth meter and no CCS date: NCS pages describe no CCS concept.
 
@@ -2851,8 +2858,9 @@ BVAL's co-champion label appears only after the league's regular phase.
 
 - **Kickers are sentence case and rendered as written** (`SectionHeader` does not transform case):
   `Central Coast Section`, `League table`, never an upper-cased label.
-- **No "eliminated"**, anywhere, in any case. BVAL and PCAL places off the ladder read "No
-  automatic-berth route"; SCVAL's read "No automatic path".
+- **No "eliminated"**, anywhere, in any case. Places off the ladder read "No automatic berth" in all
+  three CCS leagues (§32.4, 2026-10-31; before it BVAL and PCAL read "No automatic-berth route" and SCVAL
+  "No automatic path").
 - **MaxPreps' internal label for PCAL's table is never shown.** It is data only (see
   `docs/DATA-SOURCES.md` §2); the site says "PCAL". The one lowercase slug inside a MaxPreps link
   is the only allowed occurrence of it in built output.
@@ -4736,13 +4744,13 @@ One strip per region: on `/playoffs` `#this-week-norcal` after the CCS intro and
   the card reads "For CCS seeding, not qualification." and the key-dates detail "Crossover (for CCS seeding, not
   qualification). Play-in for the SCVAL 7th automatic qualifier." CCS surfaces are outside SEED_CLAIM.
 - **Who gets the crossover sentence.** Only a team whose ladder status is an automatic berth, the play-in or
-  at-large consideration; SCVAL 6th and lower ('out') read "No automatic path; at-large berths are the CCS
-  committee’s call." (Cupertino, 7th, no longer reads that it plays a crossover).
+  at-large consideration; SCVAL 6th and lower ('out') read "No automatic berth; at-large berths are the CCS
+  committee’s call." (§32.4) (Cupertino, 7th, no longer reads that it plays a crossover).
 - **Play-in and crossover results** (`lib/postseason-outcomes.ts ccsOutcomeFor`, from the pairing's matched,
   final game): the winner's label "Won the play-in" with "Won the 4th-place play-in: an automatic CCS qualifier."
   (SCVAL) or "Won the play-in: BVAL’s fourth automatic CCS berth."; the loser's "Lost the play-in" with "Lost the
   play-in; SCVAL submits the loser for at-large consideration." (Article VII §2) or "Lost the play-in; no
-  automatic-berth route remains, and at-large berths are the CCS committee’s call." (BVAL). A final crossover
+  automatic berth remains, and at-large berths are the CCS committee’s call." (BVAL; §32.4). A final crossover
   keeps the ladder label and appends "Archbishop Mitty beat St. Ignatius 2–0 in the #1 v #1 crossover on Thu Oct
   29; CCS uses it when it seeds." The pinned card shows the play-in label alone (no "Final place:" lead); the
   play-in card adds "Winner: <team> — <purpose>" under a final play-in for an automatic berth; the team line's
@@ -4905,3 +4913,110 @@ Champions (`components/schedule/day-summary.ts`; ids `postseason-<slug>`, `-soca
 - From the plan, not built in this round: the San Diego team line's own division's round dates and a link to the
   sheet; the EAL team line's result sentence; muting past rows in the date lists; the CCS rounds' outcome labels
   ("Won a quarterfinal", "In the CCS field").
+
+## 32. One shape for every league's postseason (2026-10-31)
+
+A review of every postseason surface (three passes: the page's architecture, the components and words, and a
+parent's tasks on a 390px phone) found the same facts in up to five places on `/playoffs`, the CCS bracket at the
+very bottom whatever the phase, MCAL and the EAL as grey boxes under "This week" while their chips promised
+sections, two words for one status ("No automatic path" in SCVAL, "No automatic-berth route" in BVAL and PCAL),
+the SCVAL play-in called a "crossover" on its game page and chips, and a team page telling Willow Glen "No more
+games… we will list a playoff game as soon as CCS publishes the bracket" the day before its play-in. This section
+records the fix. Every rule of §15.8 (as amended below), §22.5, §24.5 and §31 stands.
+
+### 32.1 The principle
+
+Every league's postseason is told the same way, in the same order, in the same words: what the postseason is, where
+the league stands, what is next, then the detail. The phase decides what leads: before a bracket exists the deciding
+games and the tables; once it exists the bracket.
+
+### 32.2 `/playoffs`: the board and one section per league
+
+- **"Where every league stands"** (`#board-norcal`, `#board-socal`; `components/playoffs/board-view.ts`,
+  `PostseasonBoard.tsx`) is each region's first block: one row per league, in the order its sections follow. A row
+  is the league's name (a link to its section), its postseason in a phrase from config (`CCS championship · 7 of 16
+  berths`, `MCAL tournament · 6 teams`, `Super Regional, Oct 30–31 · the top six qualify`, `San Diego Section
+  playoffs, Nov 2–14 · placed by the Section`, `No section playoffs`) and its next dated item, or the
+  tournament's champion once it is decided (§32.3). Next is read from the same rows as "This week" (each row now carries its
+  `leagueIds`; the CCS seeding meeting is scoped to the CCS leagues, the San Diego calendar to the three San Diego
+  leagues), so the board never names a game or date the strip does not. No phrase carries a CCS word outside the CCS
+  rows or a seed word anywhere.
+- **Every league has a section headed `<SHORT> — <name>`**, MCAL's (`#mcal`: the tournament's champion or next
+  round, that the North Coast Section holds no championship, and `MCAL tournament: bracket and seeds →`) and the
+  EAL's (`#eal`, a `<section>` now, its rule, streams, results and Guidelines unchanged) included. Every league chip
+  and jump link lands on its section (`#mcal` too, with a down arrow). `scripts/assert-copy.ts` holds `#mcal` to the
+  non-CCS bans.
+
+### 32.3 Order, and what was cut
+
+NorCal: board → This week → CCS playoffs (intro) → Bracket → SCVAL, BVAL, PCAL → At-large berths → Key dates → MCAL
+→ EAL. SoCal: board → This week → San Diego Section playoffs → Sunset → LA independents.
+
+- **The board is a status list, not a second "This week"**: each row is one line on a desktop and two or three on a
+  phone (about 450px for NorCal's five at 390px): the names, the path and one dated Next, never "Today" (the page is
+  a snapshot read on later days): `Sat Oct 31 · 11 AM PT · BVAL play-in`, or `Fri Oct 30 · 2 games` linking the
+  league's section when the day holds several rows; a decided tournament reads `Result:` and its champion. The San
+  Diego Section's three leagues share one row (`City · North · Metro`, linking `#sds-playoffs`). Results stay in the
+  strip under it.
+- **The bracket sits under the CCS intro in every phase**: before seeding it is the one "Not seeded yet:" sentence
+  (moved there from the intro, so it is said once), after seeding the drawn bracket.
+- **Inside a CCS league the deciding games come first** (`#<league>-pairings`: the crossover and play-in cards), then
+  the division tables, then "How to read the projection". The pairings' meta gives their full span (`Thu Oct 29 –
+  Fri Oct 30`). "Pairings follow the current league tables, so they move with every result" prints only while the
+  league is in its regular phase.
+- **"The field" and its three berth meters are gone**: the CCS header's meta (`SCVAL 7, BVAL 4, PCAL 2, 3
+  at-large`) and each league's intro (`SCVAL holds 7 of the 16 CCS berths`) already said it.
+- **At-large berths** sits under the tables whose "At-large consideration" it explains; Key dates, the full
+  calendar, follows (this week's dates are in the board and the strip).
+- **The two region blocks are labelled regions** ("Northern California", "Southern California"), so a screen reader
+  tells the two "Where every league stands" apart when both render (no JavaScript).
+- **Every link to a pairing lands on its cards**: the BVAL play-in's row in "This week" and on the board goes to
+  `#bval-pairings`, as the team pages' postseason link does.
+- **`/playoffs/mcal`**: the header's description no longer repeats the live line (the metadata description keeps
+  it); "Not a section playoff" moves under the bracket; once the tournament is seeded or under way the play-in and
+  bracket come before the seeds (`LeagueTournament`: seeds first only while `status === 'projected'`); the
+  data-health note stays first either way.
+
+### 32.4 One vocabulary, one matchup order
+
+- **Statuses** (amends §15.8): a place off the ladder reads **"No automatic berth"** in all three CCS leagues (the
+  badge `No AQ`); the divider after the automatic places reads **"Automatic-berth line"**. Kept: "Automatic
+  qualifier", "At-large consideration", "Play-in game Oct 30", "Hosts the play-in Oct 31", "Play-in host",
+  "Tournament line". Never "eliminat…".
+- **A crossover-day game is named by its pairing** (`lib/postseason-round-label.ts pairingRoundOf`): the SCVAL #4 v
+  #4 game is "SCVAL play-in" on its game page, its chip, `/scores` and the home card; the others "SCVAL crossover".
+- **A matchup card reads as its game** once MaxPreps lists it: visitor first, then `at` the home side (`vs` at a
+  neutral site), so the card, its screen-reader sentence and its own link agree ("Santa Clara at Los Altos"); "(host)"
+  stays only on a config host seat the game also has at home (`LeaguePairings.tsx asListed`). Before that, a host
+  seat is read "visitor at host" and a pairing with no host keeps the config's seat order and `vs`.
+- **"Pairings follow the current league tables"** prints only while a league game of the league is still to play
+  (read from the games, not the phase window, which a late non-league game stretches).
+- **The /standings legend** reads `the heavier line under 3rd marks the automatic-berth line` (the full table draws
+  the line as a border with no label).
+
+### 32.5 A team's Next, and the links in
+
+- **An unlisted pairing is a team's Next** (`team-view.ts pendingPairingFor`): a team holding a crossover or play-in
+  seat alone, with no league game left, sees it on its page's Next card (date, time, purpose, opponent or seat words,
+  host, and that the pairing follows today's tables while it can still change) and on the pinned home card
+  (`pairingNext`, composed on the server so the client card only prints strings), each linking
+  `/playoffs#<league>-pairings`.
+- **The empty state's heading is one sentence on both surfaces**: "No more games on <name>’s published schedule.";
+  the team page follows it with the seeding meeting's day ("CCS seeds the field on Mon Nov 2; we list each CCS game
+  as MaxPreps posts it.", "seeded" from that day), which the pinned card has no room for. The crossover window is
+  told as "is" before its first day, "runs" while it is under way and "was" after; a team's own played crossover or
+  play-in in the past tense.
+- **A pairing comes before a later game**: when the team also has a game or fixture listed after its unlisted
+  play-in, both surfaces show the play-in.
+- **The team page's postseason link** goes to `#<league>-pairings` while the team's pairing is still to play, else
+  `#<league>`.
+
+### 32.6 Not built
+
+- No per-team "your postseason" strip on `/playoffs` (the pinned home card and the team page carry it); no sticky
+  in-page nav; no folding of the CCS tables into `<details>` after seeding (the content would still weigh the same).
+- The SoCal chips' order (Sunset, LA, then the San Diego leagues) still differs from the sections' (San Diego, then
+  Sunset and LA); one play-in purpose phrasing ("for SCVAL's 7th automatic CCS berth") across the strip, the card and
+  the team page.
+- One time format site-wide ("11 AM PT" from `leagueClockPT` beside "4:00 PM PT" from `timeOfDayPT`) and one
+  matchup component for the MCAL, CCS and San Diego brackets are left for a later pass.

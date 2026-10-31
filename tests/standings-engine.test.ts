@@ -165,10 +165,10 @@ describe('PCAL: partition-restart by the bucket-start chain', () => {
       expect(s.tiebreak.note).toMatch(/unresolved by every criterion — PCAL By-laws \(rev\. May 2025\) §23\.3 \(the CCS-points step/);
       expect(s.tiebreak.note).toMatch(/We show them level\.$/);
     }
-    // A level place straddling the AQ line carries both outcomes.
+    // A level place straddling the automatic-berth line carries both outcomes.
     expect(outcomesFor(a)).toEqual(['aq', 'no-aq-route']);
     expect(playoffOutcomeLabel('pcal', outcomesFor(a))).toBe(
-      'Automatic qualifier or no automatic-berth route — PCAL By-laws §23.3 ends in a coin flip or blind draw by the Commissioner',
+      'Automatic qualifier or no automatic berth — PCAL By-laws §23.3 ends in a coin flip or blind draw by the Commissioner',
     );
   });
 
@@ -775,8 +775,8 @@ describe('ladders and pairings by league', () => {
     );
     expect(statusLegend('marin-county', 'bye')).toBe('Places 1-2 — bye to the semifinals, Wed Oct 28');
     expect(statusBadge('santa-teresa', 'play-in')).toBe('Play-in host');
-    expect(statusBadge('pcal', 'no-aq-route')).toBe('No AQ route');
-    expect(playoffOutcomeLabel('pcal', [])).toBe('No automatic-berth route');
+    expect(statusBadge('pcal', 'no-aq-route')).toBe('No AQ');
+    expect(playoffOutcomeLabel('pcal', [])).toBe('No automatic berth');
   });
 
   it('builds the BVAL play-in pairing and attaches the contest once it exists', () => {

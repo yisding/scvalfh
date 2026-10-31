@@ -168,7 +168,7 @@ export interface DivisionView {
   legendNotes: string[];
   /** 1-based row index to draw the 2px ladder line after (`DivisionConfig.ladderLine`). */
   berthRuleAfter?: number;
-  /** `AQ line`, `Play-in host`, `Tournament line`; null when the division draws no line (EAL). */
+  /** `Automatic-berth line`, `Play-in host`, `Tournament line`; null when the division draws no line (EAL). */
   ladderLineLabel: string | null;
   statusGroups: StatusGroup[];
   /** `CCS qualifying, as things stand` / `MCAL tournament, as things stand` / `Super Regional, as things stand`. */
