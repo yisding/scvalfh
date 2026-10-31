@@ -95,7 +95,7 @@ describe('ladderFactsFor (config → the ladder facts the notes use)', () => {
       playInPlace: 4,
       playInDate: 'Oct 30',
       atLargePlace: 5,
-      line: { status: 'aq', label: 'AQ line' },
+      line: { status: 'aq', label: 'Automatic-berth line' },
       unresolved: 'Article VI §7 decides it with a coin flip',
     });
     expect(view.ladderFactsFor('santa-teresa'), VIEW).toMatchObject({
@@ -110,7 +110,7 @@ describe('ladderFactsFor (config → the ladder facts the notes use)', () => {
       playInPlace: null,
       playInDate: null,
       atLargePlace: null,
-      line: { status: 'aq', label: 'AQ line' },
+      line: { status: 'aq', label: 'Automatic-berth line' },
     });
   });
 });
@@ -119,7 +119,7 @@ describe('buildDivisionProjection — SCVAL', () => {
   it('draws the ladder line after the LAST automatic qualifier, not after a hardcoded 3', () => {
     const clean = build('de-anza', withStatuses('de-anza', ['aq', 'aq', 'aq', 'play-in', 'at-large']));
     expect(clean.lineAfter, VIEW).toBe(3);
-    expect(clean.lineLabel, VIEW).toBe('AQ line');
+    expect(clean.lineLabel, VIEW).toBe('Automatic-berth line');
 
     // A shared 3rd place: four teams hold three berths, so the line lands after row 4.
     const sharedThird = build('de-anza', withStatuses('de-anza', ['aq', 'aq', 'aq', 'aq', 'play-in', 'at-large']));
@@ -274,14 +274,14 @@ describe('buildDivisionProjection — BVAL and PCAL ladders', () => {
     expect(st.notes.join(' '), VIEW).not.toMatch(/automatic berths/);
   });
 
-  it('PCAL: two automatic places, no play-in note, the AQ line after 2nd', () => {
+  it('PCAL: two automatic places, no play-in note, the automatic-berth line after 2nd', () => {
     const p = build('pcal', liveRows('pcal'));
     expect(p.autoRows.map((r) => r.team.slug), VIEW).toEqual(['stevenson', 'hollister']);
     expect(p.lineAfter, VIEW).toBe(2);
-    expect(p.lineLabel, VIEW).toBe('AQ line');
+    expect(p.lineLabel, VIEW).toBe('Automatic-berth line');
     expect(p.playInRows, VIEW).toHaveLength(0);
     expect(p.notes.join(' '), VIEW).not.toMatch(/play-in/);
-    expect(p.rows.slice(2).every((r) => r.label === 'No automatic-berth route'), VIEW).toBe(true);
+    expect(p.rows.slice(2).every((r) => r.label === 'No automatic berth'), VIEW).toBe(true);
   });
 
   it('PCAL: a level 2nd past two berths says PCAL has only two', () => {
@@ -470,6 +470,36 @@ describe('/playoffs (rendered)', () => {
     expect(new Set(ids).size, `${PAGE}: unique ids`).toBe(ids.length);
   });
 
+  it('orders the NorCal block as DESIGN §32.3 says: board, CCS intro, bracket, leagues, at-large, key dates, MCAL, EAL', () => {
+    const at = (id: string) => {
+      const i = html.indexOf(` id="${id}"`);
+      expect(i, `${PAGE}: #${id}`).toBeGreaterThan(-1);
+      return i;
+    };
+    const order = ['board-norcal', 'ccs-playoffs', 'bracket', 'scval', 'bval', 'pcal', 'at-large', 'key-dates', 'mcal', 'eal', 'socal', 'board-socal'];
+    const positions = order.map(at);
+    expect(positions, PAGE).toEqual([...positions].sort((a, b) => a - b));
+    // Inside a CCS league, the deciding games come before the tables.
+    expect(at('scval-pairings'), PAGE).toBeLessThan(at('de-anza'));
+    expect(at('bval-pairings'), PAGE).toBeLessThan(at('mt-hamilton'));
+    // Every league section is headed the same way.
+    for (const heading of ['SCVAL — Santa Clara Valley Athletic League', 'MCAL — Marin County Athletic League', 'EAL — Eastern Athletic League']) {
+      expect(textOf(html), PAGE).toContain(heading);
+    }
+  });
+
+  it('opens each region with "Where every league stands", one row per league linking to its section', () => {
+    const text = textOf(html);
+    expect(text.match(/Where every league stands/g) ?? [], PAGE).toHaveLength(2);
+    expect(text, PAGE).toContain('CCS championship · 7 of 16 berths');
+    expect(text, PAGE).toContain('MCAL tournament · 6 teams');
+    expect(text, PAGE).toContain('Super Regional, Oct 30–31 · the top six qualify');
+    expect(text, PAGE).toContain('San Diego Section playoffs, Nov 2–14 · placed by the Section');
+    expect(text, PAGE).toContain('No section playoffs');
+    const board = /<section[^>]*\sid="board-norcal"[^>]*>([\s\S]*?)<\/section>/.exec(html)?.[1] ?? '';
+    for (const id of ['scval', 'bval', 'pcal', 'mcal', 'eal']) expect(board, PAGE).toContain(`href="#${id}"`);
+  });
+
   it('renders no "This week" strip and no Super Regional results block on Oct 2, far from any postseason game', () => {
     // components/playoffs/this-week.ts: the window (two days back, a week ahead) holds no tagged game and no
     // config event on the corpus's day, so neither strip renders (no empty box); the EAL card's results block
@@ -480,14 +510,19 @@ describe('/playoffs (rendered)', () => {
     expect(textOf(html), PAGE).not.toContain('No Super Regional game is on MaxPreps yet');
   });
 
-  it('carries the NCS pointer card, the field and the verbatim at-large paragraph', () => {
+  it('carries the MCAL section, the field and the verbatim at-large paragraph', () => {
     const text = textOf(html);
+    // The league tournament has its own section like every other league (DESIGN §32.2), which links on to its page.
+    expect(html, PAGE).toMatch(/<section[^>]*\sid="mcal"/);
     expect(text, PAGE).toContain(
-      'Following an MCAL team? The North Coast Section holds no field hockey championship. MCAL tournament →',
+      'The North Coast Section holds no field hockey championship, so the MCAL tournament is the MCAL postseason. MCAL tournament: bracket and seeds →',
     );
     expect(html, PAGE).toContain('href="/playoffs/mcal"');
+    expect(html, PAGE).toContain('href="#mcal"');
     expect(text, PAGE).toContain('Central Coast Section · 16 teams · SCVAL 7, BVAL 4, PCAL 2, 3 at-large');
-    for (const line of ['SCVAL holds 7 of 16', 'BVAL holds 4 of 16', 'PCAL holds 2 of 16', '3 at-large berths, chosen by the CCS committee']) {
+    // The field is said once, in the CCS header's meta and each league's intro; no berth meters (DESIGN §32.3).
+    expect(html, PAGE).not.toContain('id="field"');
+    for (const line of ['SCVAL holds 7 of the 16 CCS berths', 'BVAL holds 4 of the 16 CCS berths', 'PCAL holds 2 of the 16 CCS berths']) {
       expect(text, PAGE).toContain(line);
     }
     expect(text, PAGE).toContain(
@@ -500,14 +535,15 @@ describe('/playoffs (rendered)', () => {
     expect(text, PAGE).toContain('11 AM PT');
     expect(text, PAGE).toContain('(host)');
     expect(text, PAGE).toContain('Santa Teresa co-champions: BVAL By-Laws §6b-f decide who hosts.');
-    expect(text, PAGE).toContain('AQ line');
+    expect(text, PAGE).toContain('Automatic-berth line');
     expect(text, PAGE).toContain('Play-in host');
   });
 
-  it('carries the EAL card: the Super Regional note, its rule and the Guidelines, the #eal target once', () => {
+  it('carries the EAL section: the Super Regional note, its rule and the Guidelines, the #eal target once', () => {
     const text = textOf(html);
+    expect(text, PAGE).toContain('EAL — Eastern Athletic League');
     expect(text, PAGE).toContain(
-      'Following an EAL team? The Northern Section’s field hockey postseason is the Super Regional, Oct 30–31: the top six schools qualify, and all six EAL teams are in it. The coaches set its format and seeding, and no pairings are published. The NFHS Network lists its games at Pleasant Valley High School, Chico, on Sat Oct 31, with streams at 8:30 AM and 1:30 PM PT. There is no admission fee. There is no NorCal or State path.',
+      'The Northern Section’s field hockey postseason is the Super Regional, Oct 30–31: the top six schools qualify, and all six EAL teams are in it. The coaches set its format and seeding, and no pairings are published. The NFHS Network lists its games at Pleasant Valley High School, Chico, on Sat Oct 31, with streams at 8:30 AM and 1:30 PM PT. There is no admission fee. There is no NorCal or State path.',
     );
     expect(text, PAGE).toContain(
       'CIF Northern Section Field Hockey Guidelines 2026-28 §III.E.1 and §IV (the top six EAL/SRL schools compete; varsity only). Northern Section Field Hockey Guidelines (PDF)',
@@ -520,7 +556,8 @@ describe('/playoffs (rendered)', () => {
     expect(html, PAGE).toContain('href="#eal"');
     expect(html, PAGE).not.toContain('href="/playoffs/eal"');
     // The card carries no CCS concept and no seed word.
-    const card = /<div[^>]*\sid="eal"[^>]*>([\s\S]*?)<\/div>/.exec(html)?.[1] ?? '';
+    const card = /<section[^>]*\sid="eal"[^>]*>([\s\S]*?)<\/section>/.exec(html)?.[1] ?? '';
+    expect(card, PAGE).not.toBe('');
     expect(textOf(card), PAGE).not.toMatch(/\bCCS\b|at-large|automatic qualifier|\b(\d+(st|nd|rd|th)|No\. ?\d+|top|first|second) seed(ed)?\b/i);
   });
 

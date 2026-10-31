@@ -259,8 +259,9 @@ function playInSides(game: TournamentGameView): [PlayInSide, PlayInSide] {
 }
 
 export function LeagueTournament({ view, leagueShort, standingsHref, beforeSeeds, playInRule = null }: LeagueTournamentProps) {
-  return (
-    <>
+  // Phase order (DESIGN §32.3): while the picture is projected the seeds lead, since they are the news; once the
+  // tournament is seeded or under way the games do, and the seeds table sits under the bracket it fed.
+  const seeds = (
       <section id="seeds" className="mt-section md:mt-section-lg">
         <SectionHeader
           kicker="Seeds"
@@ -280,7 +281,9 @@ export function LeagueTournament({ view, leagueShort, standingsHref, beforeSeeds
           </ul>
         ) : null}
       </section>
-
+  );
+  const games = (
+    <>
       {view.playIn ? (
         <section id="play-in" className="mt-section md:mt-section-lg">
           <SectionHeader kicker="Play-in" meta={view.playIn.dateLabel} />
@@ -335,6 +338,17 @@ export function LeagueTournament({ view, leagueShort, standingsHref, beforeSeeds
           ))}
         </ol>
       </section>
+    </>
+  );
+  return view.status === 'projected' ? (
+    <>
+      {seeds}
+      {games}
+    </>
+  ) : (
+    <>
+      {games}
+      {seeds}
     </>
   );
 }

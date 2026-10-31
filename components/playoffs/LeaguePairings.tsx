@@ -1,3 +1,5 @@
+import { matchupJoiner } from '../../lib/format';
+
 import PlayInCard, { type PlayInSide } from './PlayInCard';
 import { pairingSentence, type PairingView, type SeatView } from './playoff-view';
 
@@ -54,10 +56,21 @@ export function LeaguePairings({ pairings, className }: LeaguePairingsProps) {
         .join(' ')}
     >
       {pairings.map((p) => {
-        // With a host, read "visitor at host": the visitor is listed first.
+        // Once the game exists the card reads as the game does (DESIGN §32.4): visitor first, then 'at' the home side
+        // ('vs' at a neutral site), so "Santa Clara at Los Altos" on the card matches its own link. Before that, with a
+        // host, "visitor at host"; with none, the config's seat order and 'vs'.
         const [a, b] = p.seats;
-        const sides: [PlayInSide, PlayInSide] =
-          p.connector === 'at' && a.host ? [toSide(b), toSide(a)] : [toSide(a), toSide(b)];
+        const homeSlug = p.game?.home.slug ?? null;
+        const holdsHome = (seat: SeatView) => homeSlug !== null && seat.contenders.some((c) => c.team.slug === homeSlug);
+        const fromGame = p.game !== null && (holdsHome(a) || holdsHome(b));
+        const sides: [PlayInSide, PlayInSide] = fromGame
+          ? holdsHome(a)
+            ? [toSide(b), toSide(a)]
+            : [toSide(a), toSide(b)]
+          : p.connector === 'at' && a.host
+            ? [toSide(b), toSide(a)]
+            : [toSide(a), toSide(b)];
+        const connector = fromGame && p.game ? matchupJoiner(p.game) : p.connector;
         return (
           <li key={p.id} className={single ? 'max-w-3xl' : undefined}>
             {/* A lone play-in sits under a section header that already names it ('Play-in'), so
@@ -68,7 +81,7 @@ export function LeaguePairings({ pairings, className }: LeaguePairingsProps) {
               title={single && p.isPlayIn ? null : p.title}
               when={{ dateKey: p.dateKey, dateLabel: p.dateLabel, timeLabel: p.timeLabel }}
               sides={sides}
-              connector={p.connector}
+              connector={connector}
               sentence={pairingSentence(p)}
               purpose={purposeOf(p.label, p.title)}
               notes={p.notes}

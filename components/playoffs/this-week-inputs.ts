@@ -176,6 +176,7 @@ export function norcalEvents(blocks: readonly CcsPairingBlock[], playoffs: CcsPl
     detail: listWords(playoffs.format.ccsDivisions.map((d) => `CCS ${d.name}`)),
     href: '/playoffs#key-dates',
     leagueId: null,
+    scope: blocks.map((b) => b.summary.id),
   });
   for (const id of getTournamentLeagueIds()) {
     const league = getLeague(id);
@@ -206,9 +207,10 @@ export function norcalEvents(blocks: readonly CcsPairingBlock[], playoffs: CcsPl
 export function socalEvents(sds: NonNullable<ReturnType<typeof sectionPlayoffs>>): ThisWeekEvent[] {
   const { ps, seeding } = sds;
   const href = '/playoffs#sds-playoffs';
+  const scope = sds.leagues.map((l) => l.id);
   return [
     ...(seeding
-      ? [{ dateKey: seeding, time: null, title: ps.name, detail: 'Section seeding meeting', href, leagueId: null }]
+      ? [{ dateKey: seeding, time: null, title: ps.name, detail: 'Section seeding meeting', href, leagueId: null, scope }]
       : []),
     ...ps.rounds.map((r) => ({
       dateKey: r.date,
@@ -217,6 +219,7 @@ export function socalEvents(sds: NonNullable<ReturnType<typeof sectionPlayoffs>>
       detail: r.site ? `${r.label}, ${r.site}` : r.label,
       href,
       leagueId: null,
+      scope,
     })),
   ];
 }

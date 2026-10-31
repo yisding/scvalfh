@@ -47,6 +47,11 @@ export interface ThisWeekRow {
   kind: 'game' | 'event';
   /** Sort key inside a day: the contest id, or the event's title. */
   key: string;
+  /**
+   * The leagues the row is about: a game's registry sides' leagues and its tag's league; an event's `scope` or its
+   * league. The /playoffs status board reads each league's next and latest row by it (board-view.ts).
+   */
+  leagueIds: LeagueId[];
 }
 
 export interface ThisWeekDay {
@@ -67,6 +72,8 @@ export interface ThisWeekEvent {
   href: string;
   /** The league whose unclaimed game replaces the event on its day (`ThisWeekInput.claimed`); null for an event no single league owns. */
   leagueId: LeagueId | null;
+  /** The leagues an event no single league owns is about (the CCS seeding meeting: the CCS leagues); default `[leagueId]`. */
+  scope?: readonly LeagueId[];
 }
 
 export interface ThisWeekInput {
@@ -132,6 +139,15 @@ function gameRow(game: Game, labels: ReadonlyMap<ContestId, string>): ThisWeekRo
     final: view.kind === 'final',
     kind: 'game',
     key: game.contestId,
+    leagueIds: [
+      ...new Set([
+        ...(game.postseason?.leagueId ? [game.postseason.leagueId] : []),
+        ...[game.away, game.home].flatMap((side) => {
+          const team = registryTeam(side);
+          return team ? [team.league] : [];
+        }),
+      ]),
+    ],
   };
 }
 
@@ -145,6 +161,7 @@ function eventRow(event: ThisWeekEvent): ThisWeekRow {
     final: false,
     kind: 'event',
     key: event.title,
+    leagueIds: [...(event.scope ?? (event.leagueId ? [event.leagueId] : []))],
   };
 }
 
