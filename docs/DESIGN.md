@@ -4936,8 +4936,8 @@ games and the tables; once it exists the bracket.
   `PostseasonBoard.tsx`) is each region's first block: one row per league, in the order its sections follow. A row
   is the league's name (a link to its section), its postseason in a phrase from config (`CCS championship · 7 of 16
   berths`, `MCAL tournament · 6 teams`, `Super Regional, Oct 30–31 · the top six qualify`, `San Diego Section
-  playoffs, Nov 2–14 · placed by the Section`, `No section playoffs`), its latest result (or the tournament's
-  champion) and its next dated item (§32.3). Next is read from the same rows as "This week" (each row now carries its
+  playoffs, Nov 2–14 · placed by the Section`, `No section playoffs`) and its next dated item, or the
+  tournament's champion once it is decided (§32.3). Next is read from the same rows as "This week" (each row now carries its
   `leagueIds`; the CCS seeding meeting is scoped to the CCS leagues, the San Diego calendar to the three San Diego
   leagues), so the board never names a game or date the strip does not. No phrase carries a CCS word outside the CCS
   rows or a seed word anywhere.
@@ -4991,7 +4991,8 @@ NorCal: board → This week → CCS playoffs (intro) → Bracket → SCVAL, BVAL
   seat is read "visitor at host" and a pairing with no host keeps the config's seat order and `vs`.
 - **"Pairings follow the current league tables"** prints only while a league game of the league is still to play
   (read from the games, not the phase window, which a late non-league game stretches).
-- **The /standings legend** reads `the heavier line under 3rd is labelled "Automatic-berth line"`.
+- **The /standings legend** reads `the heavier line under 3rd marks the automatic-berth line` (the full table draws
+  the line as a border with no label).
 
 ### 32.5 A team's Next, and the links in
 

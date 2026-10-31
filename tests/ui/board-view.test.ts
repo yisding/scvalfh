@@ -1,6 +1,7 @@
 /**
  * components/playoffs/board-view.ts — "Where every league stands" (DESIGN §32.2): each league's postseason in a
- * phrase from config, and its latest result and next item read from the same rows as the "This week" strip.
+ * phrase from config, and its next dated item (or a decided tournament's champion) read from the same rows as the
+ * "This week" strip.
  */
 import { describe, expect, it } from 'vitest';
 

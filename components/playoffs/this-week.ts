@@ -49,7 +49,7 @@ export interface ThisWeekRow {
   key: string;
   /**
    * The leagues the row is about: a game's registry sides' leagues and its tag's league; an event's `scope` or its
-   * league. The /playoffs status board reads each league's next and latest row by it (board-view.ts).
+   * league. The /playoffs status board reads each league's next row by it (board-view.ts).
    */
   leagueIds: LeagueId[];
 }

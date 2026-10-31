@@ -95,7 +95,10 @@ export function DivisionStandings({
         {view.berthRuleAfter && view.ladderLineLabel ? (
           <>
             {' '}
-            &middot; the heavier line under {ordinal(view.berthRuleAfter)} is labelled &ldquo;{view.ladderLineLabel}&rdquo;
+            {/* The full table draws the line as a border with no label, so the legend names what it marks, in the
+                sentence's own case ('marks the automatic-berth line', 'marks the play-in host'). */}
+            &middot; the heavier line under {ordinal(view.berthRuleAfter)} marks the{' '}
+            {`${view.ladderLineLabel[0].toLowerCase()}${view.ladderLineLabel.slice(1)}`}
           </>
         ) : null}
       </p>
