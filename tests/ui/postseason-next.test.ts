@@ -2,8 +2,9 @@
  * The postseason consistency pass (2026-10-31), on the committed snapshot pinned to Fri Oct 30 with the CCS
  * leagues' own postseason games set by the test: Archbishop Mitty 2-0 St. Ignatius in the #1 v #1 crossover (final,
  * Thu Oct 29), Santa Clara at Los Altos in the SCVAL 4th-place play-in (scheduled, Fri Oct 30), and no BVAL play-in
- * game listed (MaxPreps had none on Oct 30). Any copy of those games, and any CCS game, a later refresh carries is
- * replaced, so the cases here are the test's own.
+ * game listed (MaxPreps had none on Oct 30). Any copy of those games, any CCS game and any game dated after Oct 30 a
+ * later refresh carries is dropped, and the BVAL play-in host is whoever the standings seat, so the cases here are
+ * the test's own.
  *
  * - The SCVAL play-in reads "SCVAL play-in" (chip, game page), the crossover "SCVAL crossover"
  *   (lib/postseason-round-label.ts through describe-game postseasonTagOf).
@@ -38,11 +39,20 @@ let gameView: GameView;
 const PLAY_IN_ID = '0000feed-0000-4000-8000-00000000a1a1';
 const CROSSOVER_ID = '0000feed-0000-4000-8000-00000000c1c1';
 const LATER_ID = '0000feed-0000-4000-8000-00000000d1d1';
+/**
+ * The Santa Teresa champion the standings seat as the BVAL play-in host: read from the snapshot, never named, since
+ * the daily refresh runs this file against the snapshot it has just fetched (Westmont until the Santa Teresa decider
+ * of Fri Oct 30, Westmont v Prospect, was posted). Level co-champions leave the seat empty and fail loudly here.
+ */
+let bvalHost = '';
 
 beforeAll(async () => {
   const base = loadSnapshot(
     JSON.parse(readFileSync(path.join(import.meta.dirname, '..', '..', 'data', 'snapshot.json'), 'utf8')) as unknown,
   );
+  const champions = base.standings.filter((r) => r.division === 'santa-teresa' && r.computed.place === 1);
+  if (champions.length !== 1) throw new Error(`santa-teresa #1: ${champions.length} teams hold the seat, not one`);
+  bvalHost = base.teams.find((t) => t.slug === champions[0]!.slug)!.name;
   const crossover = { kind: 'scval-crossover', leagueId: 'scval', via: 'config-pairing' } as const;
   const set = [
     game({ contestId: CROSSOVER_ID, home: 'mitty', away: 'st-ignatius', hs: 2, as: 0, date: '2026-10-29', league: false, postseason: crossover, official: null }),
@@ -51,9 +61,12 @@ beforeAll(async () => {
     game({ contestId: LATER_ID, home: 'willow-glen', away: 'carmel', date: '2026-11-03', status: 'scheduled', league: false, official: null }),
   ];
   const pairs = new Set(set.map((g) => [g.home.slug, g.away.slug].sort().join('|')));
+  // A game dated after the Fri Oct 30 stamp goes too: the daily refresh runs this file against the snapshot it has
+  // just fetched, and a later game MaxPreps lists (a CCS round under any tag) would become a team's Next here.
   const games = [
     ...base.games.filter(
       (g) =>
+        g.dateKey <= '2026-10-30' &&
         g.postseason?.kind !== 'bval-play-in' &&
         g.postseason?.kind !== 'ccs' &&
         !(g.postseason?.kind === 'scval-crossover' && pairs.has([g.home.slug, g.away.slug].sort().join('|'))),
@@ -111,7 +124,7 @@ describe('Next for a team seated in a play-in MaxPreps has not listed', () => {
     });
     expect(v.nextCard.dateLabel).toBe('Sat Oct 31');
     // The Santa Teresa champion today (alone, or level co-champions named with "or").
-    expect(v.nextCard.opponentName).toMatch(/Westmont/);
+    expect(v.nextCard.opponentName).toContain(bvalHost);
   });
 
   it('the home card shows it too, and only teams with one carry the field', () => {
@@ -123,7 +136,8 @@ describe('Next for a team seated in a play-in MaxPreps has not listed', () => {
       note: 'From the BVAL tables today; MaxPreps has not listed this game yet.',
       href: '/playoffs#bval-pairings',
     });
-    expect(wg.pairingNext!.title).toMatch(/^BVAL play-in at .*Westmont/);
+    expect(wg.pairingNext!.title).toMatch(/^BVAL play-in at /);
+    expect(wg.pairingNext!.title).toContain(bvalHost);
     expect(views.find((v) => v.slug === 'mitty')!.pairingNext).toBeUndefined();
     expect(views.filter((v) => v.pairingNext).length).toBeLessThanOrEqual(2);
   });

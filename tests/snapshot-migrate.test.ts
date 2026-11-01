@@ -520,17 +520,32 @@ describe('the "rules changed" upgrade (a v2 file written under the flag-based Su
 });
 
 describe('the "bracket games" upgrade (playoffs.games derived from the tags, 2026-10-29)', () => {
-  /** The committed file with one Saint Francis (SCVAL) v Leigh (BVAL) quarterfinal added to `games` and nothing in `playoffs.games`. */
-  function withQuarterfinal(): { stale: Snapshot; extra: Game } {
-    const extra = game({ home: 'leigh', away: 'saint-francis', date: '2026-11-07', league: false, contestTypes: { home: 1, away: 1 } });
-    expect(extra.postseason).toEqual({ kind: 'ccs', leagueId: null, via: 'ccs-window' });
-    const games = [...COMMITTED.games, extra];
-    const stale: Snapshot = {
+  /**
+   * The committed file with every CCS game it carries taken out, so `playoffs.games` derives to nothing: the daily
+   * refresh runs this suite against the snapshot it has just fetched, and from CCS seeding (Mon Nov 2) on that file
+   * lists the real bracket games, which must not move the counts these cases read.
+   */
+  const UNBRACKETED: Snapshot = (() => {
+    const games = COMMITTED.games.filter((g) => g.postseason?.kind !== 'ccs');
+    return {
       ...COMMITTED,
       games,
       season: buildSeason(games),
       playoffs: { ...COMMITTED.playoffs, games: [] },
       counts: countsOf(games, COMMITTED.standings),
+    };
+  })();
+
+  /** That file with one Saint Francis (SCVAL) v Leigh (BVAL) quarterfinal added to `games` and nothing in `playoffs.games`. */
+  function withQuarterfinal(): { stale: Snapshot; extra: Game } {
+    const extra = game({ home: 'leigh', away: 'saint-francis', date: '2026-11-07', league: false, contestTypes: { home: 1, away: 1 } });
+    expect(extra.postseason).toEqual({ kind: 'ccs', leagueId: null, via: 'ccs-window' });
+    const games = [...UNBRACKETED.games, extra];
+    const stale: Snapshot = {
+      ...UNBRACKETED,
+      games,
+      season: buildSeason(games),
+      counts: countsOf(games, UNBRACKETED.standings),
     };
     return { stale, extra };
   }
@@ -559,8 +574,11 @@ describe('the "bracket games" upgrade (playoffs.games derived from the tags, 202
     expect(ccsBracketGames(loaded.games, CCS.keyDates).map((g) => g.contestId)).toEqual([extra.contestId]);
   });
 
-  it('leaves the committed file alone: no bracket game today, so loadSnapshot is a round trip', () => {
-    expect(COMMITTED.playoffs.games).toEqual([]);
+  it('leaves a file with no bracket game alone, and the committed file too: loadSnapshot is a round trip', () => {
+    expect(UNBRACKETED.playoffs.games).toEqual([]);
+    expect(needsPlayoffGames(UNBRACKETED)).toBe(false);
+    expect(stableStringify(loadSnapshot(UNBRACKETED))).toBe(stableStringify(UNBRACKETED));
+    // The committed file's playoffs.games is already the derivation, whatever bracket games it lists.
     expect(stableStringify(loadSnapshot(COMMITTED))).toBe(stableStringify(COMMITTED));
   });
 });
