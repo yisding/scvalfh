@@ -6,8 +6,8 @@
     "conflicts": 6,
     "notOnMaxPreps": 2
   },
-  "commitSummary": "SCVAL +0 finals · BVAL +2 · PCAL +0 · MCAL +0 · EAL +0 · Sunset +0 · City +0 · North +4 · Metro +3 · LA +0",
-  "contentHash": "38253b51e7244f133d56be35b4cc798bb155969f06a5a04f182e51b4397f881a",
+  "commitSummary": "SCVAL +0 finals · BVAL +0 · PCAL +0 · MCAL +0 · EAL +0 · Sunset +0 · City +0 · North +0 · Metro +0 · LA +0",
+  "contentHash": "80924e55e765561c685fd5ef00530d9b6aeaa62b393768c3ec9e6745cb354b55",
   "counts": {
     "byLeague": {
       "bval": {
@@ -89,13 +89,13 @@
     "teams": 102
   },
   "crossCheck": {
-    "agreements": 228,
+    "agreements": 213,
     "backfilled": 4,
-    "compared": 266,
-    "conflicts": 9,
+    "compared": 250,
+    "conflicts": 8,
     "sbliveOnlyScored": 8
   },
-  "fetchedAt": "2026-11-01T02:18:08.676Z",
+  "fetchedAt": "2026-11-01T11:35:43.073Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -109,7 +109,7 @@
     {
       "backfilled": 0,
       "countedFinals": 60,
-      "finalsDelta": 2,
+      "finalsDelta": 0,
       "id": "bval",
       "missingPast": 0,
       "reasons": [],
@@ -163,7 +163,7 @@
     {
       "backfilled": 0,
       "countedFinals": 103,
-      "finalsDelta": 4,
+      "finalsDelta": 0,
       "id": "north-county",
       "missingPast": 0,
       "reasons": [],
@@ -172,7 +172,7 @@
     {
       "backfilled": 0,
       "countedFinals": 30,
-      "finalsDelta": 3,
+      "finalsDelta": 0,
       "id": "metro",
       "missingPast": 2,
       "reasons": [],
@@ -193,7 +193,7 @@
   "requests": {
     "maxpreps": 131,
     "official": 8,
-    "sblive": 21
+    "sblive": 20
   },
   "sources": [
     {
@@ -912,11 +912,6 @@
       "status": "ok"
     },
     {
-      "label": "sblive scoreboard 2026-10-17",
-      "rowCount": 20,
-      "status": "ok"
-    },
-    {
       "label": "sblive scoreboard 2026-10-19",
       "rowCount": 9,
       "status": "ok"
@@ -958,7 +953,7 @@
     },
     {
       "label": "sblive scoreboard 2026-10-28",
-      "rowCount": 14,
+      "rowCount": 13,
       "status": "ok"
     },
     {
@@ -1067,7 +1062,7 @@
       "status": "ok"
     }
   ],
-  "today": "2026-10-31",
+  "today": "2026-11-01",
   "warnings": 44,
   "window": {
     "firstGame": "2026-08-12T17:15:00",
