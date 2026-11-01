@@ -527,9 +527,13 @@ describe('the "bracket games" upgrade (playoffs.games derived from the tags, 202
    */
   const UNBRACKETED: Snapshot = (() => {
     const games = COMMITTED.games.filter((g) => g.postseason?.kind !== 'ccs');
+    // A superseded id that now points at a CCS game would point at nothing: keep only the mappings still in `games`.
+    const kept = new Set(games.map((g) => g.contestId));
+    const supersededGames = Object.fromEntries(Object.entries(COMMITTED.supersededGames).filter(([, to]) => kept.has(to)));
     return {
       ...COMMITTED,
       games,
+      supersededGames,
       season: buildSeason(games),
       playoffs: { ...COMMITTED.playoffs, games: [] },
       counts: countsOf(games, COMMITTED.standings),

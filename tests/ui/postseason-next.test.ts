@@ -20,7 +20,8 @@ import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
 import { countsOf } from '../../lib/snapshot-migrate';
 import { loadSnapshot } from '../../lib/snapshot-schema';
-import type { Snapshot } from '../../lib/types';
+import { leaguePairings, playoffStatusFor } from '../../lib/standings';
+import type { Snapshot, Standing } from '../../lib/types';
 import { game } from '../game-builder';
 
 type Data = typeof import('../../lib/data');
@@ -41,26 +42,48 @@ const CROSSOVER_ID = '0000feed-0000-4000-8000-00000000c1c1';
 const LATER_ID = '0000feed-0000-4000-8000-00000000d1d1';
 /**
  * The BVAL play-in's two seats, Santa Teresa #1 (the host, by the short name the views print) and Mt. Hamilton #4
- * (the visitor, by slug): read from the snapshot, never named, since the daily refresh runs this file against the
- * snapshot it has just fetched (the host was Westmont until the Santa Teresa decider of Fri Oct 30, Westmont v
- * Prospect, was posted).
- * A seat two teams share (BVAL §6f's coin flip, which we cannot compute) fails loudly here.
+ * (the visitor, by slug), from `leaguePairings`, the site's own reading of the table: never named, since the daily
+ * refresh runs this file against the snapshot it has just fetched (the host was Westmont until the Santa Teresa
+ * decider of Fri Oct 30, Westmont v Prospect, was posted).
  */
 let bvalHost = '';
 let bvalVisitor = '';
+
+/**
+ * `standings` with the level teams contending for one BVAL play-in seat (0: Santa Teresa #1, 1: Mt. Hamilton #4, at
+ * `place`) given one slot each, the first contender in `place`: the table these cases need, where each seat has one
+ * team. A refreshed table can leave a seat level (co-champions, or two teams level on 3rd spanning 4th), and the
+ * views then rightly treat the seat as undecided, which is not what these cases are about. A seat one team holds is
+ * left as it is.
+ */
+function settleSeat(standings: readonly Standing[], seat: 0 | 1, place: number): Standing[] {
+  const contenders = leaguePairings(standings, [], 'bval').find((p) => p.id === 'bval-play-in')!.seats[seat];
+  if (contenders.length < 2) return [...standings];
+  const rows = contenders.map((c) => standings.find((r) => r.teamId === c.teamId)!);
+  const start = Math.min(...rows.map((r) => r.computed.place));
+  const others = rows.map((_, i) => start + i).filter((slot) => slot !== place);
+  const placeOf = new Map(rows.map((r, i) => [r.teamId, i === 0 ? place : others[i - 1]!]));
+  return standings.map((r) => {
+    const at = placeOf.get(r.teamId);
+    if (at === undefined) return r;
+    return {
+      ...r,
+      computed: { ...r.computed, place: at },
+      playoffStatus: playoffStatusFor(r.division, at),
+      tiebreak: { ...r.tiebreak, shared: false, tiedWith: [] },
+    };
+  });
+}
 
 beforeAll(async () => {
   const base = loadSnapshot(
     JSON.parse(readFileSync(path.join(import.meta.dirname, '..', '..', 'data', 'snapshot.json'), 'utf8')) as unknown,
   );
-  const seat = (division: string, place: number): string => {
-    const rows = base.standings.filter((r) => r.division === division && r.computed.place === place);
-    if (rows.length !== 1) throw new Error(`${division} #${place}: ${rows.length} teams hold the seat, not one`);
-    return rows[0]!.slug;
-  };
-  const hostSlug = seat('santa-teresa', 1);
-  bvalHost = base.teams.find((t) => t.slug === hostSlug)!.shortName;
-  bvalVisitor = seat('mt-hamilton', 4);
+  const standings = settleSeat(settleSeat(base.standings, 0, 1), 1, 4);
+  const [hosts, visitors] = leaguePairings(standings, [], 'bval').find((p) => p.id === 'bval-play-in')!.seats;
+  if (hosts.length !== 1 || visitors.length !== 1) throw new Error('bval-play-in: settleSeat left a seat without one team');
+  bvalHost = base.teams.find((t) => t.slug === hosts[0]!.slug)!.shortName;
+  bvalVisitor = visitors[0]!.slug;
   const crossover = { kind: 'scval-crossover', leagueId: 'scval', via: 'config-pairing' } as const;
   const set = [
     game({ contestId: CROSSOVER_ID, home: 'mitty', away: 'st-ignatius', hs: 2, as: 0, date: '2026-10-29', league: false, postseason: crossover, official: null }),
@@ -81,7 +104,7 @@ beforeAll(async () => {
     ),
     ...set,
   ];
-  const next: Snapshot = { ...base, fetchedAt: '2026-10-30T19:00:00.000Z', games, counts: countsOf(games, base.standings) };
+  const next: Snapshot = { ...base, fetchedAt: '2026-10-30T19:00:00.000Z', games, standings, counts: countsOf(games, standings) };
   const file = path.join(mkdtempSync(path.join(tmpdir(), 'scvalfh-postseason-next-')), 'snapshot.json');
   writeFileSync(file, JSON.stringify(loadSnapshot(next)));
   process.env.SCVAL_SNAPSHOT = file;

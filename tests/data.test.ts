@@ -16,7 +16,7 @@ import { getLeague } from '../lib/leagues';
 import { buildSeason } from '../lib/season-build';
 import { countsOf } from '../lib/snapshot-migrate';
 import { loadSnapshot } from '../lib/snapshot-schema';
-import { computeStandings } from '../lib/standings';
+import { computeStandings, leaguePairings } from '../lib/standings';
 import type { Game, Snapshot } from '../lib/types';
 import { game } from './game-builder';
 
@@ -803,17 +803,13 @@ describe('data: Southern California tables with results', () => {
  * feed has posted since: every crossover and play-in game the snapshot carries is dropped, so these three are the
  * only ones played (Los Gatos' #2 v #2 crossover stays unplayed whatever MaxPreps says), and the BVAL play-in's
  * teams are whoever the standings seat, never named (Westmont v Willow Glen until the Santa Teresa decider of
- * Fri Oct 30, Westmont v Prospect, was posted).
+ * Fri Oct 30, Westmont v Prospect, was posted). The seats come from `leaguePairings`, the site's own reading of the
+ * table: a seat two level teams share has every contender, and the test's game, between the first contender of each
+ * seat, settles it to the team that played, as a listed play-in does on the site.
  */
 describe('data: CCS ladder lines after the play-ins', () => {
   let after: DataModule;
   const CCS_RESULTS = 'From the results as posted; CCS’s bracket is the official record.';
-  /** The one team the standings put at `place` in `division`: a pairing seat the BVAL play-in is played from. */
-  const seat = (snapshot: Snapshot, division: string, place: number): string => {
-    const rows = snapshot.standings.filter((r) => r.division === division && r.computed.place === place);
-    if (rows.length !== 1) throw new Error(`${division} #${place}: ${rows.length} teams hold the seat, not one`);
-    return rows[0]!.slug;
-  };
   let bvalHost = '';
   let bvalVisitor = '';
 
@@ -821,8 +817,10 @@ describe('data: CCS ladder lines after the play-ins', () => {
     const base = loadSnapshot(
       JSON.parse(readFileSync(path.join(import.meta.dirname, '..', 'data', 'snapshot.json'), 'utf8')) as unknown,
     );
-    bvalHost = seat(base, 'santa-teresa', 1);
-    bvalVisitor = seat(base, 'mt-hamilton', 4);
+    const [hosts, visitors] = leaguePairings(base.standings, [], 'bval').find((p) => p.id === 'bval-play-in')!.seats;
+    if (!hosts[0]?.slug || !visitors[0]?.slug) throw new Error('bval-play-in: a seat has no team with results');
+    bvalHost = hosts[0].slug;
+    bvalVisitor = visitors[0].slug;
     const crossover = { kind: 'scval-crossover', leagueId: 'scval', via: 'config-pairing' } as const;
     const bval = { kind: 'bval-play-in', leagueId: 'bval', via: 'config-pairing' } as const;
     const played = [
