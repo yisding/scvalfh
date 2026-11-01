@@ -424,6 +424,12 @@ describe('classify: Sunset (membership, no postseason; DESIGN §24.11)', () => {
     // The final, Thu Oct 29, a Sunset team against an LA independent: no shared league.
     const final = game({ home: 'huntington-beach', away: 'harvard-westlake', date: '2026-10-29', league: false });
     expect(final.postseason).toEqual({ kind: 'outside-tournament', leagueId: null, via: 'outside-tournament-window' });
+    // Inside the window, a game with a side not in the tournament (Marina, Fountain Valley) is not the tournament's.
+    const nonEntrant = game({ home: 'marina', away: 'fountain-valley', hs: 1, as: 0, date: '2026-10-23' });
+    expect(nonEntrant.postseason).toBeNull();
+    expect(nonEntrant.countsFor).toBe('sunset');
+    const mixed = game({ home: 'edison', away: 'marina', hs: 2, as: 0, date: '2026-10-23' });
+    expect(mixed.postseason).toBeNull();
     // Before the window a Sunset game is a Sunset game; a San Diego Section game inside it is not the tournament's.
     const earlier = game({ home: 'edison', away: 'great-oak', hs: 1, as: 0, date: '2026-10-20' });
     expect(earlier.postseason).toBeNull();

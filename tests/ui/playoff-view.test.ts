@@ -393,7 +393,7 @@ describe('buildOutsideTournamentView — the Tournament of Champions (SectionCon
     expect(text, PAGE).toContain(sunsetNote.note);
     expect(text, PAGE).toContain(laNote.note);
     expect(text, PAGE).toContain('Five of the eight Sunset teams play in it: Edison, Great Oak, Huntington Beach, Newport Harbor and Temecula Valley. Not in it: Chaparral, Fountain Valley and Marina.');
-    expect(text, PAGE).toMatch(/Three of the five LA independents play in it: [^.]*Harvard-Westlake/);
+    expect(text, PAGE).toContain('Three of the five LA independents play in it: Bonita, Glendora and Harvard-Westlake. Not in it: Chaminade and Thousand Oaks.');
     expect(html.match(/href="#toc-games"/g)?.length, PAGE).toBe(2);
     expect(text, PAGE).not.toMatch(/No section playoffs|No playoffs -/);
   });

@@ -57,13 +57,13 @@ and three at-large berths; the NCS holds no field hockey championship, so MCAL's
 tournament is its postseason; the Northern Section's EAL postseason is the Super Regional (Oct
 30-31, the top six qualify, no format published; the NFHS Network lists its games at Pleasant Valley,
 Chico on Sat Oct 31), which the site describes, lists the results of and never draws a bracket for. The
-Southern Section holds no field hockey playoffs, so a Sunset team's season
-ends with its last game (Oct 31 at the latest); the San Diego Section playoffs (Nov 2-14, Open 8,
+Sunset and the LA independents share one postseason, the Tournament of Champions (Oct 22-29), which the
+Los Angeles Field Hockey Association runs because the Southern Section holds no field hockey championship;
+the San Diego Section playoffs (Nov 2-14, Open 8,
 Division I 12, Division II 12) are placed by the Section from its power rankings, a designated league
 champion is guaranteed at least a play-in, and the site states that rule and never projects a seed; once
 the Section publishes its brackets, the owner transcribes them into `data/sds-brackets-2026.json` and the
 site draws them (see "Postseason bracket files").
-The independents have no postseason either, for the same Southern Section reason.
 The 2025-26 history covers SCVAL (official PDFs) and BVAL (official
 Google Sheet and all-league documents); PCAL, MCAL, EAL, the Sunset, City, North County and Metro are
 marked unavailable on the page, with the reason (we found no official 2025-26 final standings: PCAL's
