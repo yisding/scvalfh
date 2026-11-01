@@ -623,11 +623,11 @@ describe('the pinned card after the SCVAL play-in (home-view.ts ← lib/postseas
     const playIn = game({
       home: 'los-altos', away: 'santa-clara', hs: 2, as: 1, date: '2026-10-30', league: false, postseason: crossover, official: null,
     });
+    // Every crossover and play-in the snapshot carries goes, not only this pair's: the daily refresh runs this file
+    // against the snapshot it has just fetched, and a result posted since (the other crossovers, the BVAL play-in)
+    // must not reach the cards these cases read.
     const games = [
-      ...base.games.filter(
-        (g) =>
-          !(g.postseason?.kind === 'scval-crossover' && [g.home.slug, g.away.slug].sort().join('|') === 'los-altos|santa-clara'),
-      ),
+      ...base.games.filter((g) => g.postseason?.kind !== 'scval-crossover' && g.postseason?.kind !== 'bval-play-in'),
       playIn,
     ];
     const next: Snapshot = { ...base, fetchedAt: '2026-10-31T19:00:00.000Z', games, counts: countsOf(games, base.standings) };

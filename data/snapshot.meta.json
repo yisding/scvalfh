@@ -1,26 +1,26 @@
 {
   "cifssCrossCheck": {
-    "agreements": 741,
+    "agreements": 752,
     "cifssOnlyScored": 1,
-    "compared": 748,
-    "conflicts": 7,
-    "notOnMaxPreps": 3
+    "compared": 758,
+    "conflicts": 6,
+    "notOnMaxPreps": 2
   },
-  "commitSummary": "SCVAL +0 finals · BVAL +1 · PCAL +0 · MCAL +0 · EAL +0 · Sunset +0 · City +1 · North +2 · Metro +0 · LA +0",
-  "contentHash": "ed398a0ec5a678f2f46f77a0b811711c0d9908c4ea2f3961a1da14c24ae71a8b",
+  "commitSummary": "SCVAL +0 finals · BVAL +2 · PCAL +0 · MCAL +0 · EAL +0 · Sunset +0 · City +0 · North +4 · Metro +3 · LA +0",
+  "contentHash": "38253b51e7244f133d56be35b4cc798bb155969f06a5a04f182e51b4397f881a",
   "counts": {
     "byLeague": {
       "bval": {
         "backfilled": 0,
-        "finals": 116,
-        "games": 118,
+        "finals": 119,
+        "games": 119,
         "leagueGames": 60,
         "teams": 12
       },
       "city": {
         "backfilled": 0,
         "finals": 170,
-        "games": 170,
+        "games": 171,
         "leagueGames": 60,
         "teams": 12
       },
@@ -40,21 +40,21 @@
       },
       "mcal": {
         "backfilled": 0,
-        "finals": 94,
-        "games": 95,
+        "finals": 96,
+        "games": 96,
         "leagueGames": 72,
         "teams": 9
       },
       "metro": {
         "backfilled": 0,
-        "finals": 100,
-        "games": 105,
+        "finals": 104,
+        "games": 107,
         "leagueGames": 32,
         "teams": 9
       },
       "north-county": {
         "backfilled": 1,
-        "finals": 254,
+        "finals": 258,
         "games": 258,
         "leagueGames": 103,
         "teams": 19
@@ -68,34 +68,34 @@
       },
       "scval": {
         "backfilled": 0,
-        "finals": 163,
-        "games": 165,
+        "finals": 166,
+        "games": 166,
         "leagueGames": 98,
         "teams": 15
       },
       "sunset": {
         "backfilled": 0,
-        "finals": 108,
-        "games": 108,
+        "finals": 109,
+        "games": 109,
         "leagueGames": 35,
         "teams": 8
       }
     },
-    "finals": 910,
-    "games": 925,
+    "finals": 925,
+    "games": 930,
     "leagueGames": 552,
-    "mismatches": 28,
+    "mismatches": 29,
     "pending": 3,
     "teams": 102
   },
   "crossCheck": {
-    "agreements": 233,
+    "agreements": 228,
     "backfilled": 4,
-    "compared": 285,
+    "compared": 266,
     "conflicts": 9,
-    "sbliveOnlyScored": 7
+    "sbliveOnlyScored": 8
   },
-  "fetchedAt": "2026-10-30T18:59:06.232Z",
+  "fetchedAt": "2026-11-01T02:18:08.676Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -108,8 +108,8 @@
     },
     {
       "backfilled": 0,
-      "countedFinals": 58,
-      "finalsDelta": 1,
+      "countedFinals": 60,
+      "finalsDelta": 2,
       "id": "bval",
       "missingPast": 0,
       "reasons": [],
@@ -154,7 +154,7 @@
     {
       "backfilled": 0,
       "countedFinals": 60,
-      "finalsDelta": 1,
+      "finalsDelta": 0,
       "id": "city",
       "missingPast": 0,
       "reasons": [],
@@ -162,19 +162,19 @@
     },
     {
       "backfilled": 0,
-      "countedFinals": 99,
-      "finalsDelta": 2,
+      "countedFinals": 103,
+      "finalsDelta": 4,
       "id": "north-county",
-      "missingPast": 1,
+      "missingPast": 0,
       "reasons": [],
       "state": "fresh"
     },
     {
       "backfilled": 0,
-      "countedFinals": 27,
-      "finalsDelta": 0,
+      "countedFinals": 30,
+      "finalsDelta": 3,
       "id": "metro",
-      "missingPast": 1,
+      "missingPast": 2,
       "reasons": [],
       "state": "fresh"
     },
@@ -228,7 +228,7 @@
     },
     {
       "label": "saint-francis schedule",
-      "rowCount": 24,
+      "rowCount": 25,
       "status": "ok"
     },
     {
@@ -358,7 +358,7 @@
     },
     {
       "label": "willow-glen schedule",
-      "rowCount": 18,
+      "rowCount": 19,
       "status": "ok"
     },
     {
@@ -373,7 +373,7 @@
     },
     {
       "label": "prospect schedule",
-      "rowCount": 19,
+      "rowCount": 20,
       "status": "ok"
     },
     {
@@ -498,7 +498,7 @@
     },
     {
       "label": "lick-wilmerding schedule",
-      "rowCount": 18,
+      "rowCount": 19,
       "status": "ok"
     },
     {
@@ -598,7 +598,7 @@
     },
     {
       "label": "fountain-valley schedule",
-      "rowCount": 17,
+      "rowCount": 18,
       "status": "ok"
     },
     {
@@ -663,7 +663,7 @@
     },
     {
       "label": "la-jolla schedule",
-      "rowCount": 25,
+      "rowCount": 26,
       "status": "ok"
     },
     {
@@ -673,7 +673,7 @@
     },
     {
       "label": "scripps-ranch schedule",
-      "rowCount": 30,
+      "rowCount": 31,
       "status": "ok"
     },
     {
@@ -848,12 +848,12 @@
     },
     {
       "label": "eastlake schedule",
-      "rowCount": 19,
+      "rowCount": 20,
       "status": "ok"
     },
     {
       "label": "helix schedule",
-      "rowCount": 29,
+      "rowCount": 30,
       "status": "ok"
     },
     {
@@ -878,7 +878,7 @@
     },
     {
       "label": "hilltop schedule",
-      "rowCount": 20,
+      "rowCount": 21,
       "status": "ok"
     },
     {
@@ -912,13 +912,8 @@
       "status": "ok"
     },
     {
-      "label": "sblive scoreboard 2026-10-16",
-      "rowCount": 21,
-      "status": "ok"
-    },
-    {
       "label": "sblive scoreboard 2026-10-17",
-      "rowCount": 19,
+      "rowCount": 20,
       "status": "ok"
     },
     {
@@ -953,7 +948,7 @@
     },
     {
       "label": "sblive scoreboard 2026-10-26",
-      "rowCount": 9,
+      "rowCount": 10,
       "status": "ok"
     },
     {
@@ -963,7 +958,7 @@
     },
     {
       "label": "sblive scoreboard 2026-10-28",
-      "rowCount": 18,
+      "rowCount": 14,
       "status": "ok"
     },
     {
@@ -977,17 +972,17 @@
       "status": "ok"
     },
     {
+      "label": "sblive scoreboard 2026-10-31",
+      "rowCount": 1,
+      "status": "ok"
+    },
+    {
       "label": "sblive bonita-vista games",
       "rowCount": 22,
       "status": "ok"
     },
     {
       "label": "sblive convent-sacred-heart games",
-      "rowCount": 17,
-      "status": "ok"
-    },
-    {
-      "label": "sblive escondido games",
       "rowCount": 17,
       "status": "ok"
     },
@@ -999,6 +994,11 @@
     {
       "label": "sblive lick-wilmerding games",
       "rowCount": 17,
+      "status": "ok"
+    },
+    {
+      "label": "sblive los-altos games",
+      "rowCount": 24,
       "status": "ok"
     },
     {
@@ -1018,7 +1018,7 @@
     },
     {
       "label": "los-gatos school calendar",
-      "rowCount": 1,
+      "rowCount": 0,
       "status": "ok"
     },
     {
@@ -1053,7 +1053,7 @@
     },
     {
       "label": "cifsshome.org San Diego Section field hockey",
-      "rowCount": 762,
+      "rowCount": 766,
       "status": "ok"
     },
     {
@@ -1067,11 +1067,11 @@
       "status": "ok"
     }
   ],
-  "today": "2026-10-30",
-  "warnings": 45,
+  "today": "2026-10-31",
+  "warnings": 44,
   "window": {
     "firstGame": "2026-08-12T17:15:00",
-    "lastGame": "2026-10-30T19:00:00",
-    "lastLeagueGame": "2026-10-30T19:00:00"
+    "lastGame": "2026-11-05T18:00:00",
+    "lastLeagueGame": "2026-11-05T18:00:00"
   }
 }
