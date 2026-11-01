@@ -794,36 +794,44 @@ describe('data: Southern California tables with results', () => {
 // ---------------------------------------------------------------- CCS ladder play-in and crossover results
 
 /**
- * The committed 2026-10-29 snapshot (data/snapshot.json: SCVAL and BVAL league play over, so every pairing seat is
- * settled) with the league's own postseason games played (plan final-10, 2026-10-30): Archbishop Mitty 2-0
- * St. Ignatius in the #1 v #1 crossover (Thu Oct 29), Los Altos 2-1 Santa Clara in the SCVAL 4th-place play-in
- * (Fri Oct 30) and Westmont 3-0 Willow Glen in the BVAL play-in (Sat Oct 31), stamped Sat Oct 31. Any copy of those
- * games a later refresh carries is replaced, so the scores here are the test's own.
+ * The committed snapshot (data/snapshot.json: SCVAL and BVAL league play over, so every pairing seat is settled)
+ * with the league's own postseason games played (plan final-10, 2026-10-30): Archbishop Mitty 2-0 St. Ignatius in
+ * the #1 v #1 crossover (Thu Oct 29), Los Altos 2-1 Santa Clara in the SCVAL 4th-place play-in (Fri Oct 30) and the
+ * Santa Teresa champion 3-0 over Mt. Hamilton #4 in the BVAL play-in (Sat Oct 31), stamped Sat Oct 31.
+ *
+ * The daily refresh runs this suite against the snapshot it has just fetched, so nothing here may lean on what the
+ * feed has posted since: every crossover and play-in game the snapshot carries is dropped, so these three are the
+ * only ones played (Los Gatos' #2 v #2 crossover stays unplayed whatever MaxPreps says), and the BVAL play-in's
+ * teams are whoever the standings seat, never named (Westmont v Willow Glen until the Santa Teresa decider of
+ * Fri Oct 30, Westmont v Prospect, was posted).
  */
 describe('data: CCS ladder lines after the play-ins', () => {
   let after: DataModule;
   const CCS_RESULTS = 'From the results as posted; CCS’s bracket is the official record.';
+  /** The one team the standings put at `place` in `division`: a pairing seat the BVAL play-in is played from. */
+  const seat = (snapshot: Snapshot, division: string, place: number): string => {
+    const rows = snapshot.standings.filter((r) => r.division === division && r.computed.place === place);
+    if (rows.length !== 1) throw new Error(`${division} #${place}: ${rows.length} teams hold the seat, not one`);
+    return rows[0]!.slug;
+  };
+  let bvalHost = '';
+  let bvalVisitor = '';
 
   beforeAll(async () => {
     const base = loadSnapshot(
       JSON.parse(readFileSync(path.join(import.meta.dirname, '..', 'data', 'snapshot.json'), 'utf8')) as unknown,
     );
+    bvalHost = seat(base, 'santa-teresa', 1);
+    bvalVisitor = seat(base, 'mt-hamilton', 4);
     const crossover = { kind: 'scval-crossover', leagueId: 'scval', via: 'config-pairing' } as const;
     const bval = { kind: 'bval-play-in', leagueId: 'bval', via: 'config-pairing' } as const;
     const played = [
       game({ home: 'mitty', away: 'st-ignatius', hs: 2, as: 0, date: '2026-10-29', league: false, postseason: crossover, official: null }),
       game({ home: 'los-altos', away: 'santa-clara', hs: 2, as: 1, date: '2026-10-30', league: false, postseason: crossover, official: null }),
-      game({ home: 'westmont', away: 'willow-glen', hs: 3, as: 0, date: '2026-10-31', league: false, postseason: bval, official: null }),
+      game({ home: bvalHost, away: bvalVisitor, hs: 3, as: 0, date: '2026-10-31', league: false, postseason: bval, official: null }),
     ];
-    const pairs = new Set(played.map((g) => [g.home.slug, g.away.slug].sort().join('|')));
     const games = [
-      ...base.games.filter(
-        (g) =>
-          !(
-            (g.postseason?.kind === 'scval-crossover' || g.postseason?.kind === 'bval-play-in') &&
-            pairs.has([g.home.slug, g.away.slug].sort().join('|'))
-          ),
-      ),
+      ...base.games.filter((g) => g.postseason?.kind !== 'scval-crossover' && g.postseason?.kind !== 'bval-play-in'),
       ...played,
     ];
     const next: Snapshot = { ...base, fetchedAt: '2026-10-31T19:00:00.000Z', games, counts: countsOf(games, base.standings) };
@@ -869,18 +877,18 @@ describe('data: CCS ladder lines after the play-ins', () => {
     expect(cupertino.sentence).toBe('No automatic berth; at-large berths are the CCS committee’s call.');
   });
 
-  it('the BVAL play-in: Westmont took the fourth berth, Willow Glen has no automatic berth left', () => {
-    expect(after.getTeamPostseasonLine('westmont')).toMatchObject({
+  it('the BVAL play-in: the Santa Teresa champion took the fourth berth, Mt. Hamilton #4 has no automatic berth left', () => {
+    expect(after.getTeamPostseasonLine(bvalHost), bvalHost).toMatchObject({
       label: 'Won the play-in',
       sentence: 'Won the play-in: BVAL’s fourth automatic CCS berth.',
       caveat: CCS_RESULTS,
     });
-    expect(after.getTeamPostseasonLine('willow-glen')).toMatchObject({
+    expect(after.getTeamPostseasonLine(bvalVisitor), bvalVisitor).toMatchObject({
       label: 'Lost the play-in',
       sentence: 'Lost the play-in; no automatic berth remains, and at-large berths are the CCS committee’s call.',
       caveat: CCS_RESULTS,
     });
-    for (const slug of ['los-altos', 'santa-clara', 'westmont', 'willow-glen', 'mitty']) {
+    for (const slug of ['los-altos', 'santa-clara', bvalHost, bvalVisitor, 'mitty']) {
       const line = after.getTeamPostseasonLine(slug)!;
       expect(`${line.label} ${line.sentence}`, slug).not.toMatch(/eliminat/i);
     }
