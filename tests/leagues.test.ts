@@ -950,7 +950,7 @@ describe('leagues: the Sunset (Southern Section)', () => {
         'The Tournament of Champions, run by the Los Angeles Field Hockey Association, is the postseason for the Sunset and the LA independents (CIF-SS holds none: Blue Book 2011.1, 3500.2)'],
     ]);
     expect(sunset.postseason.note).toBe(
-      'The Tournament of Champions, Oct 22–29, is the postseason for the Sunset and the LA independents. The Los Angeles Field Hockey Association runs it, since the CIF Southern Section holds no field hockey championship (Blue Book Bylaws 2011.1 and 3500.2) and CIF no regional or state one; a Sunset team not in it ends its season with its last game, Oct 31 at the latest.',
+      'The Sunset’s postseason is the Tournament of Champions, Oct 22–29, which it shares with the LA independents. The Los Angeles Field Hockey Association runs it, since the CIF Southern Section holds no field hockey championship (Blue Book Bylaws 2011.1 and 3500.2) and CIF no regional or state one; a Sunset team not in it ends its season with its last game, Oct 31 at the latest.',
     );
     expect(sunset.postseason.citations.noPlayoffs).toMatch(/^CIF-SS Blue Book 2026-27, Bylaw 2011\.1 .* and Bylaw 3500\.2 /);
     expect([sunset.postseason.sourceLabel, sunset.postseason.sourceUrl]).toEqual([

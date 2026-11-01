@@ -527,7 +527,7 @@ describe('Southern California tables (standings-view.ts, DESIGN-socal §2.1.7)',
     expect(sunset.fixedSchedule, `${SV} fixedSchedule`).toBe(false);
     expect(sunset.statusGroups, `${SV} no band groups`).toEqual([]);
     expect(sunset.noPostseason?.sourceLabel).toBe('CIF-SS Blue Book 2026-27');
-    expect(sunset.noPostseason?.note).toMatch(/^The Tournament of Champions, Oct 22–29, is the postseason for the Sunset and the LA independents\./);
+    expect(sunset.noPostseason?.note).toMatch(/^The Sunset’s postseason is the Tournament of Champions, Oct 22–29, which it shares with the LA independents\./);
     expect(sunset.playoffsHref).toBe('/playoffs#sunset');
     expect(sunset.statusIntro).toBeNull();
     const uneven = view.unevenGpFootnote('sunset', { min: 2, max: 7, scheduled: null });

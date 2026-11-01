@@ -684,7 +684,7 @@ independent's season ends with its last game, Oct 31 at the latest (the Section'
 contest). The config's postseason kind is `no-postseason`, with the one "Tournament of Champions" rung: the
 tournament is the postseason the independents share with the Sunset. Three
 of the five (Harvard-Westlake, Bonita, Glendora) play the Tournament of Champions, the non-CIF event
-described under the Sunset; its games carry the `outside-tournament` tag and count in no table.
+described under the Sunset and listed on `/playoffs#toc` with both groups' cards; its games carry the `outside-tournament` tag and count in no table.
 
 **Official sources.** The Blue Book 2026-27 Field Hockey excerpt (Article 200) and cifss.org/sports/field-hockey/,
 as for the Sunset. The Season Preview's list of participating schools names Bonita, Glendora and Thousand

@@ -4305,13 +4305,17 @@ leagues dated inside the window (lib/classify.ts rule 1b, ahead of MaxPreps' con
 Huntington Beach's rows). The membership classifier already leaves a tagged game out of every table, so
 Edison's round-1 win over Great Oak no longer counts as a Sunset game (Edison 9-1, 27 points, not 10-1, 30).
 
-**Surfaces.** `/playoffs#toc`: one block under the Sunset card (`OutsideTournament.tsx` over
-`buildOutsideTournamentView`): the note, the games by day with the round label (`GameList`, so each game
-carries its chips, directions, stream and tickets and links its page; a day config names no round for shows
-its date alone), a finals / to-come count and the sources; the LA card points to it in one sentence. The home
-Postseason card of the Sunset and the LA independents carries the event's note. A team's postseason line adds
-one sentence for an entrant ("Edison is one of the eight teams in the Tournament of Champions, Oct 22–29, run
-by the Los Angeles Field Hockey Association, not by CIF."). A game page reads "Tournament of Champions" as its
+**Surfaces.** `/playoffs#toc`: since 2026-11-01 a section of its own, the postseason the Sunset and the LA
+independents share (`OutsideTournament.tsx` over `buildOutsideTournamentView`; until then a block under the
+Sunset card, which the LA card pointed to). It opens with its heading ("Tournament of Champions · Oct 22–29 ·
+the postseason for the Sunset and the LA independents") and the note, then the two leagues' cards side by side
+(`#sunset`, `#independents`: each league's note naming the tournament as its postseason, which of its teams
+play in it and which do not, the Blue Book link for why CIF runs none), then, under both, the games
+(`#toc-games`) by day with the round label (`GameList`, so each game carries its chips, directions, stream and
+tickets and links its page; a day config names no round for shows its date alone), a finals / to-come count
+and the sources. The home Postseason card of the Sunset and the LA independents carries the event's note. A
+team's postseason chip reads "In the Tournament of Champions" or "Not in the Tournament of Champions", and its
+sentence adds "Edison is one of its eight teams." (or "is not"). A game page reads "Tournament of Champions" as its
 kicker and "Tournament of Champions game (Los Angeles Field Hockey Association, not a CIF event) — it does not
 count in any league table." as its note; the chip in every list is "Tournament of Champions".
 

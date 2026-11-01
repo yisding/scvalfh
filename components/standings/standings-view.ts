@@ -366,7 +366,7 @@ export function backfillFootnoteText(n: number): string {
 /**
  * The postseason block's heading and link, from the league's postseason kind (no CCS for NCS or NS).
  * An unbracketed tournament (the EAL's Super Regional) has no bracket page: it links its card on
- * /playoffs, as do the two Southern California kinds (the Sunset's card says there are no playoffs; a
+ * /playoffs, as do the two Southern California kinds (the Sunset's card, inside the Tournament of Champions section, names it as the postseason; a
  * San Diego league's card sits in the Section's block). A 'no-postseason' league draws no band, so its
  * heading is only the card's link words.
  */

@@ -2229,7 +2229,7 @@ Section teams that CIF does not run: 2026 round 1 Thu Oct 22, semifinals Tue Oct
 Thu Oct 29 at Huntington Beach High School (third place at Miller Field). Config: `TOC` /
 `SectionConfig.outsideTournament` in `lib/leagues.ts`; tag `outside-tournament` (`lib/classify.ts` rule 1b, a
 window Oct 22–29 over every game between two Southern Section registry teams, ahead of the contestType rule);
-listed on `/playoffs#toc` under the Sunset card. Sources, none official:
+listed on `/playoffs#toc`, the tournament's own section, which holds the Sunset and LA independents cards. Sources, none official:
 - `https://hwchronicle.com/114175/sports/field-hockey-concentrates-as-a-group/` (Aug 25 2026: "defending their
   title of the Los Angeles Field Hockey Association (LAFHA) Tournament of Champions") and
   `https://hwchronicle.com/112272/sports/field-hockey-wins-tournament-of-champions-2/` (Nov 15 2025: the 2025

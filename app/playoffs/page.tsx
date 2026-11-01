@@ -56,7 +56,7 @@ import type { LeagueSummary } from '../../lib/data';
 import { getCcsSeeds } from '../../lib/ccs-bracket';
 import { tournamentHeadline } from '../../lib/postseason';
 import { getSdsBrackets, getSdsBracketsSource } from '../../lib/sds-bracket';
-import { dateSpan, listWords, monthDay, shortDate } from '../../lib/format';
+import { dateSpan, listWords, monthDay, numberWord, shortDate } from '../../lib/format';
 import {
   NO_POSTSEASON_LEAGUE_IDS,
   UNBRACKETED_LEAGUE_IDS,
@@ -87,9 +87,10 @@ import type { LeagueId, PlayoffProjection as Projection } from '../../lib/types'
  * they are drawn under `#sds-bracket`, after the round dates and before the conference cards
  * (components/playoffs/SdsBracket.tsx), with MaxPreps' results; on the placeholder nothing is drawn. One card per conference (`#city`, `#north-county`, `#metro`) gives each division's table
  * leaders and each team's playoff division (I or II, the Section's 2026 Divisions sheet). Then the
- * Sunset's card (`#sunset`): the Tournament of Champions is its postseason and the LA independents' (the
- * Southern Section holds none, Blue Book 2011.1, 3500.2), with its source; and the LA independents' card
- * (`#independents`, DESIGN §24.9): they play as independents (the group's note), and the same postseason. No SoCal sentence
+ * Tournament of Champions (`#toc`), the postseason the Sunset and the LA independents share, as a section of its
+ * own: its note, then the Sunset's card (`#sunset`) and the LA independents' card (`#independents`, DESIGN §24.9)
+ * side by side, each naming it as the league's postseason and which of its teams play in it, then its games
+ * (`#toc-games`) under both. No SoCal sentence
  * says "at-large", "automatic qualifier" or "seed". SoCal's own "This week" strip (`#this-week-socal`: the
  * Tournament of Champions' games, the Section's seeding meeting and round calendar) opens the block, and the
  * conference cards' shared footnote (where the divisions come from; a league names its champion) is printed
@@ -615,14 +616,27 @@ export default function PlayoffsPage() {
         {/* This week in SoCal's postseason, ahead of the San Diego block (the same strip as NorCal's). */}
         <ThisWeek id="this-week-socal" view={week.socal} className="mt-section md:mt-section-lg" />
         {sds ? <SectionPlayoffsBlock {...sds} /> : null}
-        {/* The section's outside tournament is listed under the first of its no-postseason cards (the Sunset's). */}
-        {noPostseasonLeagues.map((league, i) => (
-          <NoPostseasonCard
-            key={league.id}
-            summary={league}
-            hostsOutsideTournament={noPostseasonLeagues.findIndex((l) => sectionOf(l.id).id === sectionOf(league.id).id) === i}
-          />
-        ))}
+        {/* A section's outside tournament (the Tournament of Champions) is the postseason its no-postseason
+            leagues share (the Sunset and the LA independents): one section of its own, with their cards inside it
+            side by side and its games under both. A no-postseason league with no such tournament gets its card alone. */}
+        {[...new Set(noPostseasonLeagues.map((l) => sectionOf(l.id).id))].map((sectionId) => {
+          const leaguesOf = noPostseasonLeagues.filter((l) => sectionOf(l.id).id === sectionId);
+          const event = sectionOf(leaguesOf[0].id).outsideTournament;
+          if (!event) return leaguesOf.map((league) => <NoPostseasonCard key={league.id} summary={league} />);
+          return (
+            <OutsideTournament
+              key={event.id}
+              id={event.id}
+              view={buildOutsideTournamentView(event, games)}
+              whose={listWords(leaguesOf.map((l) => `the ${isIndependentLeague(l.id) ? l.name : l.shortName}`))}
+              className="mt-section md:mt-section-lg"
+            >
+              {leaguesOf.map((league) => (
+                <NoPostseasonCard key={league.id} summary={league} />
+              ))}
+            </OutsideTournament>
+          );
+        })}
       </div>
     </div>
   );
@@ -782,49 +796,68 @@ function SectionPlayoffsLeagueCard({ summary }: { summary: LeagueSummary }) {
 }
 
 /**
- * A league with no postseason (the Sunset, `id=<league>`): the config's note and its source, nothing to
- * project. The LA independents' card (`#independents`) is headed by the group's name and
- * opens with the group's own note (schools in no league, whose table is their games against each other),
- * then the Section's.
- *
- * The section's outside tournament (the Tournament of Champions, DESIGN §24.13), when it has one, is listed
- * ONCE, under the section's first no-postseason card (the Sunset's, `#toc`): its note, its games by round and
- * its sources. The other card (the LA independents') points to it in one sentence, since three of the eight
- * entrants are independents. No seed and no bracket, on either card.
+ * A league whose section runs no field hockey championship (the Sunset, the LA independents; `id=<league>`, the
+ * target of the nav and the league chips). With the section's outside tournament (the Tournament of Champions,
+ * DESIGN §24.13) the card sits inside that tournament's section (OutsideTournament.tsx), beside the other
+ * league's: it names the tournament as the league's postseason (the config's note), says which of its teams play
+ * in it and which do not, and links the Blue Book for why CIF runs none. The LA independents' card adds the
+ * group's own note (schools in no league, whose table is their games against each other). No seed and no
+ * bracket. Without such a tournament the card is the note and its source alone.
  */
-function NoPostseasonCard({ summary, hostsOutsideTournament }: { summary: LeagueSummary; hostsOutsideTournament: boolean }) {
+function NoPostseasonCard({ summary }: { summary: LeagueSummary }) {
   const league = getLeague(summary.id);
   const ps = league.postseason;
   if (ps.kind !== 'no-postseason') return null;
   const independent = isIndependentLeague(summary.id);
   const groupNote = independent && league.divisions[0]?.official.mode === 'none' ? league.divisions[0].official.note : null;
   const event = sectionOf(summary.id).outsideTournament;
-  const tournament = event && hostsOutsideTournament ? buildOutsideTournamentView(event, getGames()) : null;
+  const teams = getTeams({ league: summary.id });
+  const inIt = event ? teams.filter((t) => event.entrants.includes(t.slug)) : [];
+  const notInIt = event ? teams.filter((t) => !event.entrants.includes(t.slug)) : [];
+  const who = independent ? summary.name : `${summary.shortName} teams`;
+  const heading = independent ? summary.name : `${summary.shortName} — ${summary.name}`;
+  const body = (
+    <>
+      <p className="m-0">{ps.note}</p>
+      {event && inIt.length > 0 ? (
+        <p className="mt-2 mb-0">
+          {`${capitalized(numberWord(inIt.length))} of the ${numberWord(teams.length)} ${who} play in it: ${listWords(inIt.map((t) => t.name))}.`}
+          {notInIt.length > 0 ? ` Not in it: ${listWords(notInIt.map((t) => t.name))}.` : null}
+        </p>
+      ) : null}
+      {groupNote ? <p className="mt-2 mb-0 text-meta">{groupNote}</p> : null}
+      <p className="mt-2 mb-0 text-meta">
+        {event ? 'Why CIF does not run it: ' : `${ps.citations.noPlayoffs}. `}
+        <ExternalLink href={ps.sourceUrl}>{ps.sourceLabel}</ExternalLink>
+      </p>
+      {event ? (
+        <p className="mt-2 mb-0 text-meta">
+          <Link href={`#${event.id}-games`} prefetch={false} className="sx-action text-accent hover:underline">
+            {`${event.name} games`} <Arrow />
+          </Link>
+        </p>
+      ) : null}
+    </>
+  );
+  if (event) {
+    return (
+      <section id={summary.id} aria-labelledby={`${summary.id}-heading`} className="sx-card flex flex-col p-5 md:p-6">
+        <h3 id={`${summary.id}-heading`} className="m-0 text-lead text-ink">
+          {heading}
+        </h3>
+        <div className="mt-2 text-body text-ink-2">{body}</div>
+      </section>
+    );
+  }
   return (
     <section id={summary.id} aria-labelledby={`${summary.id}-heading`} className="mt-section md:mt-section-lg">
-      <SectionHeader
-        id={`${summary.id}-heading`}
-        kicker={independent ? summary.name : `${summary.shortName} — ${summary.name}`}
-      />
-      <div className="sx-inset max-w-3xl text-body text-ink-2">
-        {groupNote ? <p className="m-0 mb-2">{groupNote}</p> : null}
-        <p className="m-0">{ps.note}</p>
-        <p className="mb-0 text-meta">
-          {`${ps.citations.noPlayoffs}.`}{' '}
-          <ExternalLink href={ps.sourceUrl}>{ps.sourceLabel}</ExternalLink>
-        </p>
-        {event && !hostsOutsideTournament ? (
-          <p className="mb-0 text-meta">
-            {`Three of the five play the ${event.name} (${dateSpan(event.window.first, event.window.last)}), which the ${event.organizer} runs, not CIF. `}
-            <Link href={`#${event.id}`} prefetch={false} className="sx-action text-accent hover:underline">
-              {event.name} <Arrow />
-            </Link>
-          </p>
-        ) : null}
-      </div>
-      {tournament && event ? (
-        <OutsideTournament id={event.id} view={tournament} className="mt-6 sx-card p-5 md:p-6" />
-      ) : null}
+      <SectionHeader id={`${summary.id}-heading`} kicker={heading} />
+      <div className="sx-inset max-w-3xl text-body text-ink-2">{body}</div>
     </section>
   );
+}
+
+/** 'Five' from 'five'. */
+function capitalized(word: string): string {
+  return word.charAt(0).toUpperCase() + word.slice(1);
 }
