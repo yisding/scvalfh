@@ -7,7 +7,7 @@
     "notOnMaxPreps": 2
   },
   "commitSummary": "SCVAL +0 finals · BVAL +0 · PCAL +0 · MCAL +0 · EAL +0 · Sunset +0 · City +0 · North +0 · Metro +0 · LA +0",
-  "contentHash": "80924e55e765561c685fd5ef00530d9b6aeaa62b393768c3ec9e6745cb354b55",
+  "contentHash": "9eef5f13598d6a5b52ca03018bdfdec7ebc5bc859d4d921347f3da05f42c5943",
   "counts": {
     "byLeague": {
       "bval": {
@@ -20,14 +20,14 @@
       "city": {
         "backfilled": 0,
         "finals": 170,
-        "games": 171,
+        "games": 172,
         "leagueGames": 60,
         "teams": 12
       },
       "eal": {
         "backfilled": 0,
-        "finals": 44,
-        "games": 44,
+        "finals": 46,
+        "games": 46,
         "leagueGames": 30,
         "teams": 6
       },
@@ -55,7 +55,7 @@
       "north-county": {
         "backfilled": 1,
         "finals": 258,
-        "games": 258,
+        "games": 259,
         "leagueGames": 103,
         "teams": 19
       },
@@ -81,8 +81,8 @@
         "teams": 8
       }
     },
-    "finals": 925,
-    "games": 930,
+    "finals": 927,
+    "games": 933,
     "leagueGames": 552,
     "mismatches": 29,
     "pending": 3,
@@ -95,7 +95,7 @@
     "conflicts": 8,
     "sbliveOnlyScored": 8
   },
-  "fetchedAt": "2026-11-01T11:35:43.073Z",
+  "fetchedAt": "2026-11-01T18:44:53.136Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -548,12 +548,12 @@
     },
     {
       "label": "bella-vista schedule",
-      "rowCount": 13,
+      "rowCount": 14,
       "status": "ok"
     },
     {
       "label": "chico schedule",
-      "rowCount": 16,
+      "rowCount": 17,
       "status": "ok"
     },
     {
@@ -573,7 +573,7 @@
     },
     {
       "label": "pleasant-valley schedule",
-      "rowCount": 13,
+      "rowCount": 15,
       "status": "ok"
     },
     {
@@ -693,7 +693,7 @@
     },
     {
       "label": "patrick-henry schedule",
-      "rowCount": 22,
+      "rowCount": 23,
       "status": "ok"
     },
     {
@@ -818,7 +818,7 @@
     },
     {
       "label": "westview schedule",
-      "rowCount": 30,
+      "rowCount": 31,
       "status": "ok"
     },
     {
