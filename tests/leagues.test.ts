@@ -188,7 +188,7 @@ describe('leagues: ids and helpers (SPEC §2.3)', () => {
       maxprepsSectionId: '8e11e7d4-d3fa-4e6f-827f-652c29439d27',
       officialUrl: 'https://cifss.org/sports/field-hockey/',
       seasonWindow: { start: '2026-08-01', end: '2026-11-07' },
-      noChampionshipNote: 'The CIF Southern Section holds no field hockey playoffs (Blue Book Bylaw 2011.1 and 3500.2) and CIF holds no state championship: a Sunset team’s season ends with its last game, Oct 31 at the latest.',
+      noChampionshipNote: 'The Tournament of Champions, run by the Los Angeles Field Hockey Association, is the postseason for the Sunset and the LA independents; the CIF Southern Section and CIF hold no field hockey championship (Blue Book Bylaw 2011.1 and 3500.2).',
     });
     expect(getSection('sds')).toMatchObject({
       name: 'San Diego Section', shortName: 'SDS', holdsFieldHockeyChampionship: true,
@@ -323,7 +323,7 @@ describe('leagues: ids and helpers (SPEC §2.3)', () => {
     expect(statusesOf('eal')).toEqual(['tournament', 'below-line']);
     expect(statusesOf('sunset')).toEqual(['no-postseason']);
     for (const id of ['city', 'north-county', 'metro']) expect(statusesOf(id), id).toEqual(['tournament', 'selection']);
-    expect(ladderRung('sunset', 1).label).toBe('No section playoffs');
+    expect(ladderRung('sunset', 1).label).toBe('Tournament of Champions');
     expect(ladderRung('sunset', 10).status).toBe('no-postseason');
     expect(ladderRung('city-western', 1).badge).toBe('1st');
     expect(ladderRung('valley', 2).status).toBe('selection');
@@ -946,11 +946,11 @@ describe('leagues: the Sunset (Southern Section)', () => {
   it('has no postseason: one rung for every place, a note, the Blue Book as its source', () => {
     if (sunset.postseason.kind !== 'no-postseason') throw new Error('sunset has no postseason');
     expect(sunset.postseason.ladder.map((r) => [r.divisions, r.places, r.status, r.label, r.phrase, r.badge, r.legend])).toEqual([
-      ['*', [1, 99], 'no-postseason', 'No section playoffs', 'no postseason', 'No playoffs',
-        'The CIF Southern Section holds no field hockey playoffs (Blue Book 2011.1, 3500.2)'],
+      ['*', [1, 99], 'no-postseason', 'Tournament of Champions', 'the Tournament of Champions', 'TOC',
+        'The Tournament of Champions, run by the Los Angeles Field Hockey Association, is the postseason for the Sunset and the LA independents (CIF-SS holds none: Blue Book 2011.1, 3500.2)'],
     ]);
     expect(sunset.postseason.note).toBe(
-      'The CIF Southern Section holds no field hockey playoffs (Blue Book Bylaws 2011.1 and 3500.2), and CIF holds no regional or state championship, so a Sunset team’s season ends with its last game, Oct 31 at the latest.',
+      'The Tournament of Champions, Oct 22–29, is the postseason for the Sunset and the LA independents. The Los Angeles Field Hockey Association runs it, since the CIF Southern Section holds no field hockey championship (Blue Book Bylaws 2011.1 and 3500.2) and CIF no regional or state one; a Sunset team not in it ends its season with its last game, Oct 31 at the latest.',
     );
     expect(sunset.postseason.citations.noPlayoffs).toMatch(/^CIF-SS Blue Book 2026-27, Bylaw 2011\.1 .* and Bylaw 3500\.2 /);
     expect([sunset.postseason.sourceLabel, sunset.postseason.sourceUrl]).toEqual([

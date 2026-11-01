@@ -563,8 +563,8 @@ export function leagueCopy(
           : `We will not guess a bracket: the ${ps.name}\u2019s format and site are not published yet.`,
       };
     case 'no-postseason': {
-      // The Sunset and the LA independents (CIF-SS Blue Book 2011.1, 3500.2): no playoff game
-      // follows, and the note says why. Both end with the Section's last allowable contest (leaguePlay.last).
+      // The Sunset and the LA independents: their postseason is the Tournament of Champions (CIF-SS holds
+      // none, Blue Book 2011.1, 3500.2), and the note says so. Both end with the Section's last allowable contest (leaguePlay.last).
       return {
         ...base,
         postseasonKind: ps.kind,

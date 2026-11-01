@@ -495,7 +495,8 @@ describe('/playoffs (rendered)', () => {
     expect(text, PAGE).toContain('MCAL tournament · 6 teams');
     expect(text, PAGE).toContain('Super Regional, Oct 30–31 · the top six qualify');
     expect(text, PAGE).toContain('San Diego Section playoffs, Nov 2–14 · placed by the Section');
-    expect(text, PAGE).toContain('No section playoffs');
+    expect(text, PAGE).toContain('Tournament of Champions, Oct 22–29 · eight teams');
+    expect(text, PAGE).not.toContain('No section playoffs');
     const board = /<section[^>]*\sid="board-norcal"[^>]*>([\s\S]*?)<\/section>/.exec(html)?.[1] ?? '';
     for (const id of ['scval', 'bval', 'pcal', 'mcal', 'eal']) expect(board, PAGE).toContain(`href="#${id}"`);
   });
@@ -585,7 +586,7 @@ describe('/playoffs by region (DESIGN-socal §2.4)', () => {
     }
     // The CCS description moved into its block; the header names every league's postseason.
     expect(textOf(html), PAGE).toContain(
-      'Where each league’s season leads: the CCS championships (SCVAL, BVAL and PCAL), the MCAL tournament, the EAL’s Super Regional, no playoffs for the Sunset or the LA independents and the San Diego Section playoffs (City, North and Metro).',
+      'Where each league’s season leads: the CCS championships (SCVAL, BVAL and PCAL), the MCAL tournament, the EAL’s Super Regional, the Tournament of Champions (the Sunset and the LA independents) and the San Diego Section playoffs (City, North and Metro).',
     );
   });
 

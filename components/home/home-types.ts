@@ -201,7 +201,7 @@ export interface LeagueCardView {
 
 /**
  * A ladder rung as the pinned card's one 320px line shows it. Most labels fit whole ('Automatic
- * qualifier', 'No section playoffs'). A label written "<who>: <what>" is shown as its badge and its
+ * qualifier', 'Placed by the Section'). A label written "<who>: <what>" is shown as its badge and its
  * <what>; the full label stays the line's accessible text and title.
  *
  * The San Diego Section's first rung is '1st: at least a play-in if named league champion' (the

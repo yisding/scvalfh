@@ -926,7 +926,10 @@ export function buildTeamViews(): HomeTeamView[] {
       pairings = getLeaguePairings(league.id);
       pairingsByLeague.set(league.id, pairings);
     }
+    // A Sunset or LA independent team's line is whether it is in the Tournament of Champions, not a place: no
+    // 'Final place:' lead and no short rung form (lib/data.ts getTeamPostseasonLine).
     const outcomeLine =
+      league.postseason.kind === 'no-postseason' ||
       (league.postseason.kind === 'league-tournament' && getLeagueTournament(league.id).status !== 'projected') ||
       (pairings !== undefined && (ccsOutcomeFor(team.slug, { pairings })?.label ?? null) !== null);
     // The card's one visible line must show the STATUS at 320px (288px of text): a short lead, and

@@ -1022,20 +1022,23 @@ export function getTeamPostseasonLine(ref: string): TeamPostseasonLine | null {
   if (!league) return null;
   const ps = league.postseason;
   if (ps.kind === 'no-postseason') {
-    // The Sunset: CIF-SS Blue Book 2026-27 Bylaws 2011.1 and 3500.2. One rung covers every place, so the
-    // label is the rung's ('No section playoffs') and the sentence is the config note, never a "top N". An
-    // entrant in the section's outside tournament (the Tournament of Champions, DESIGN §24.13) gets one more
-    // sentence naming it; a team that is not in it gets none (its season does end with its last game).
+    // The Sunset and the LA independents: the CIF Southern Section holds no field hockey championship
+    // (Blue Book 2026-27 Bylaws 2011.1 and 3500.2), so their postseason is the section's outside tournament (the
+    // Tournament of Champions, DESIGN §24.13). One rung covers every place; the label says whether this team is
+    // one of the tournament's entrants, and the sentence is the config note (which names the event) plus one
+    // sentence saying so. Never a "top N": the field is the organizer's, not a table's.
     const event = SECTIONS.find((s) => s.id === league.sectionId)?.outsideTournament ?? null;
     const entrant = event !== null && event.entrants.includes(team.slug);
-    const sentence = entrant
-      ? `${ps.note} ${team.name} is one of the ${numberWord(event.entrants.length)} teams in the ${event.name}, ${dateSpan(event.window.first, event.window.last)}, run by the ${event.organizer}, not by CIF.`
-      : ps.note;
+    const count = event ? numberWord(event.entrants.length) : '';
     return {
-      label: playoffOutcomeLabel(row.division, outcomesFor(row)),
-      sentence,
-      href: `/playoffs#${league.id}`,
-      linkText: 'Postseason',
+      label: event
+        ? `${entrant ? 'In' : 'Not in'} the ${event.name}`
+        : playoffOutcomeLabel(row.division, outcomesFor(row)),
+      sentence: event
+        ? `${ps.note} ${team.name} ${entrant ? 'is' : 'is not'} one of its ${count} teams.`
+        : ps.note,
+      href: event ? `/playoffs#${event.id}` : `/playoffs#${league.id}`,
+      linkText: event ? event.name : 'Postseason',
       caveat: null,
     };
   }

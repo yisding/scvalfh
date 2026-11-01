@@ -863,12 +863,12 @@ describe('Southern California: ladders, the cross-check skip, uneven games (DESI
       expect(playoffStatusFor(d, 2), d).toBe('selection');
       expect(playoffStatusFor(d, 7), d).toBe('selection');
     }
-    expect(statusBadge('sunset', 'no-postseason')).toBe('No playoffs');
+    expect(statusBadge('sunset', 'no-postseason')).toBe('TOC');
     expect(statusBadge('palomar', 'selection')).toBe('By selection');
     expect(playoffOutcomeLabel('valley', ['tournament', 'selection'])).toBe(
       '1st: at least a play-in if named league champion or placed by the Section from its power rankings',
     );
-    expect(statusLegend('sunset', 'no-postseason')).toBe('The CIF Southern Section holds no field hockey playoffs (Blue Book 2011.1, 3500.2)');
+    expect(statusLegend('sunset', 'no-postseason')).toBe('The Tournament of Champions, run by the Los Angeles Field Hockey Association, is the postseason for the Sunset and the LA independents (CIF-SS holds none: Blue Book 2011.1, 3500.2)');
   });
 
   it('places a Sunset or San Diego table on site points, and never says the rules require it', () => {

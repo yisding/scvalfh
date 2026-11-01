@@ -87,9 +87,9 @@ import type { LeagueId, PlayoffProjection as Projection } from '../../lib/types'
  * they are drawn under `#sds-bracket`, after the round dates and before the conference cards
  * (components/playoffs/SdsBracket.tsx), with MaxPreps' results; on the placeholder nothing is drawn. One card per conference (`#city`, `#north-county`, `#metro`) gives each division's table
  * leaders and each team's playoff division (I or II, the Section's 2026 Divisions sheet). Then the
- * Sunset's card (`#sunset`): the Southern Section holds no field hockey playoffs (Blue Book 2011.1,
- * 3500.2), with its source; and the LA independents' card (`#independents`, DESIGN §24.9):
- * the three play as independents (the group's note) and the Section holds no playoffs. No SoCal sentence
+ * Sunset's card (`#sunset`): the Tournament of Champions is its postseason and the LA independents' (the
+ * Southern Section holds none, Blue Book 2011.1, 3500.2), with its source; and the LA independents' card
+ * (`#independents`, DESIGN §24.9): they play as independents (the group's note), and the same postseason. No SoCal sentence
  * says "at-large", "automatic qualifier" or "seed". SoCal's own "This week" strip (`#this-week-socal`: the
  * Tournament of Champions' games, the Section's seeding meeting and round calendar) opens the block, and the
  * conference cards' shared footnote (where the divisions come from; a league names its champion) is printed
@@ -235,8 +235,8 @@ function leagueBlock(summary: LeagueSummary): LeagueBlock {
 
 /**
  * Where each league's season leads, from config, in config order: 'the CCS championships (SCVAL, BVAL
- * and PCAL), the MCAL tournament, the EAL’s Super Regional, no playoffs for the Sunset or the Southern
- * Section independents and the San Diego Section playoffs (City, North and Metro)'. A group with no table
+ * and PCAL), the MCAL tournament, the EAL’s Super Regional, the Tournament of Champions (the Sunset and the
+ * LA independents) and the San Diego Section playoffs (City, North and Metro)'. A group with no table
  * is named in full (its short name, 'LA', alone names a place).
  */
 function postseasonWords(): string {
@@ -258,13 +258,20 @@ function postseasonWords(): string {
       case 'unbracketed-tournament':
         add(summary.id, summary.shortName, () => `the ${summary.shortName}’s ${ps.name}`);
         break;
-      case 'no-postseason':
+      case 'no-postseason': {
+        // The section's outside tournament is their postseason (the Tournament of Champions: the Sunset and the
+        // LA independents).
+        const event = sectionOf(summary.id).outsideTournament;
         add(
-          'no-postseason',
+          event ? `outside:${event.id}` : 'no-postseason',
           isIndependentLeague(summary.id) ? summary.name : summary.shortName,
-          (shorts) => `no playoffs for ${listWords(shorts.map((s) => `the ${s}`), 'or')}`,
+          (shorts) =>
+            event
+              ? `the ${event.name} (${listWords(shorts.map((s) => `the ${s}`))})`
+              : `no playoffs for ${listWords(shorts.map((s) => `the ${s}`), 'or')}`,
         );
         break;
+      }
       case 'section-playoffs':
         add(ps.name, summary.shortName, (shorts) => `the ${ps.name} (${listWords(shorts)})`);
         break;
