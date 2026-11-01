@@ -9,7 +9,7 @@
  * - The SCVAL play-in reads "SCVAL play-in" (chip, game page), the crossover "SCVAL crossover"
  *   (lib/postseason-round-label.ts through describe-game postseasonTagOf).
  * - A team seated in a play-in MaxPreps has not listed gets that game as Next (team page and home card), never "no
- *   more games", even with a later game listed (the test gives Willow Glen a non-league game on Tue Nov 3); the empty state names the seeding meeting's day and the team's own played crossover.
+ *   more games", even with a later game listed (the test gives the Mt. Hamilton #4 visitor, Willow Glen in 2026, a non-league game on Tue Nov 3); the empty state names the seeding meeting's day and the team's own played crossover.
  * - The team page's "CCS playoffs →" goes to `/playoffs#<league>-pairings` while the team has a pairing to play.
  */
 import { mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
@@ -40,25 +40,33 @@ const PLAY_IN_ID = '0000feed-0000-4000-8000-00000000a1a1';
 const CROSSOVER_ID = '0000feed-0000-4000-8000-00000000c1c1';
 const LATER_ID = '0000feed-0000-4000-8000-00000000d1d1';
 /**
- * The Santa Teresa champion the standings seat as the BVAL play-in host: read from the snapshot, never named, since
- * the daily refresh runs this file against the snapshot it has just fetched (Westmont until the Santa Teresa decider
- * of Fri Oct 30, Westmont v Prospect, was posted). Level co-champions leave the seat empty and fail loudly here.
+ * The BVAL play-in's two seats, Santa Teresa #1 (the host, by the short name the views print) and Mt. Hamilton #4
+ * (the visitor, by slug): read from the snapshot, never named, since the daily refresh runs this file against the
+ * snapshot it has just fetched (the host was Westmont until the Santa Teresa decider of Fri Oct 30, Westmont v
+ * Prospect, was posted).
+ * A seat two teams share (BVAL §6f's coin flip, which we cannot compute) fails loudly here.
  */
 let bvalHost = '';
+let bvalVisitor = '';
 
 beforeAll(async () => {
   const base = loadSnapshot(
     JSON.parse(readFileSync(path.join(import.meta.dirname, '..', '..', 'data', 'snapshot.json'), 'utf8')) as unknown,
   );
-  const champions = base.standings.filter((r) => r.division === 'santa-teresa' && r.computed.place === 1);
-  if (champions.length !== 1) throw new Error(`santa-teresa #1: ${champions.length} teams hold the seat, not one`);
-  bvalHost = base.teams.find((t) => t.slug === champions[0]!.slug)!.name;
+  const seat = (division: string, place: number): string => {
+    const rows = base.standings.filter((r) => r.division === division && r.computed.place === place);
+    if (rows.length !== 1) throw new Error(`${division} #${place}: ${rows.length} teams hold the seat, not one`);
+    return rows[0]!.slug;
+  };
+  const hostSlug = seat('santa-teresa', 1);
+  bvalHost = base.teams.find((t) => t.slug === hostSlug)!.shortName;
+  bvalVisitor = seat('mt-hamilton', 4);
   const crossover = { kind: 'scval-crossover', leagueId: 'scval', via: 'config-pairing' } as const;
   const set = [
     game({ contestId: CROSSOVER_ID, home: 'mitty', away: 'st-ignatius', hs: 2, as: 0, date: '2026-10-29', league: false, postseason: crossover, official: null }),
     game({ contestId: PLAY_IN_ID, home: 'los-altos', away: 'santa-clara', date: '2026-10-30', status: 'scheduled', league: false, postseason: crossover, official: null }),
-    // A non-league game AFTER Willow Glen's unlisted Oct 31 play-in: the play-in must still be its Next.
-    game({ contestId: LATER_ID, home: 'willow-glen', away: 'carmel', date: '2026-11-03', status: 'scheduled', league: false, official: null }),
+    // A non-league game AFTER the visitor's unlisted Oct 31 play-in: the play-in must still be its Next.
+    game({ contestId: LATER_ID, home: bvalVisitor, away: 'carmel', date: '2026-11-03', status: 'scheduled', league: false, official: null }),
   ];
   const pairs = new Set(set.map((g) => [g.home.slug, g.away.slug].sort().join('|')));
   // A game dated after the Fri Oct 30 stamp goes too: the daily refresh runs this file against the snapshot it has
@@ -110,7 +118,7 @@ describe('the round label of a CCS league crossover-day game', () => {
 
 describe('Next for a team seated in a play-in MaxPreps has not listed', () => {
   it('the team page shows the BVAL play-in, not "no more games"', () => {
-    const v = teamView.buildTeamPageView('willow-glen')!;
+    const v = teamView.buildTeamPageView(bvalVisitor)!;
     expect(v.nextCard.kind, 'components/teams/team-view.ts buildNextCard').toBe('pairing');
     if (v.nextCard.kind !== 'pairing') return;
     expect(v.nextCard.pairing).toMatchObject({
@@ -124,20 +132,19 @@ describe('Next for a team seated in a play-in MaxPreps has not listed', () => {
     });
     expect(v.nextCard.dateLabel).toBe('Sat Oct 31');
     // The Santa Teresa champion today (alone, or level co-champions named with "or").
-    expect(v.nextCard.opponentName).toContain(bvalHost);
+    expect(v.nextCard.opponentName).toBe(bvalHost);
   });
 
   it('the home card shows it too, and only teams with one carry the field', () => {
     const views = homeView.buildTeamViews();
-    const wg = views.find((v) => v.slug === 'willow-glen')!;
+    const wg = views.find((v) => v.slug === bvalVisitor)!;
     expect(wg.next).toBeNull();
     expect(wg.pairingNext).toMatchObject({
       when: 'Sat Oct 31 · 11 AM PT',
       note: 'From the BVAL tables today; MaxPreps has not listed this game yet.',
       href: '/playoffs#bval-pairings',
     });
-    expect(wg.pairingNext!.title).toMatch(/^BVAL play-in at /);
-    expect(wg.pairingNext!.title).toContain(bvalHost);
+    expect(wg.pairingNext!.title).toBe(`BVAL play-in at ${bvalHost}`);
     expect(views.find((v) => v.slug === 'mitty')!.pairingNext).toBeUndefined();
     expect(views.filter((v) => v.pairingNext).length).toBeLessThanOrEqual(2);
   });
@@ -159,7 +166,7 @@ describe('Next for a team seated in a play-in MaxPreps has not listed', () => {
 describe('the team page’s CCS playoffs link', () => {
   it('goes to the pairing cards while the team has a crossover or play-in to play', () => {
     const href = (slug: string) => teamView.buildTeamPageView(slug)!.postseasonLine?.href;
-    expect(href('willow-glen')).toBe('/playoffs#bval-pairings');
+    expect(href(bvalVisitor)).toBe('/playoffs#bval-pairings');
     expect(href('los-altos')).toBe('/playoffs#scval-pairings');
     expect(href('santa-clara')).toBe('/playoffs#scval-pairings');
     // Mitty's crossover is final; Cupertino has no pairing.
