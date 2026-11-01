@@ -35,7 +35,8 @@ describe('pathPhrase', () => {
     expect(pathPhrase(input('mcal')), VIEW).toBe('MCAL tournament · 6 teams');
     expect(pathPhrase(input('eal')), VIEW).toBe('Super Regional, Oct 30–31 · the top six qualify');
     expect(pathPhrase(input('city')), VIEW).toBe('San Diego Section playoffs, Nov 2–14 · placed by the Section');
-    expect(pathPhrase(input('sunset')), VIEW).toBe('No section playoffs');
+    expect(pathPhrase(input('sunset')), VIEW).toBe('Tournament of Champions, Oct 22–29 · eight teams');
+    expect(pathPhrase(input('independents')), VIEW).toBe('Tournament of Champions, Oct 22–29 · eight teams');
   });
 
   it('puts no CCS word, seed word or "eliminated" on a league outside the CCS', () => {

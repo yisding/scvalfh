@@ -314,7 +314,7 @@ describe('Southern California team pages (DESIGN-socal §2.4)', () => {
     expect(sunset.postseasonKind).toBe('no-postseason');
     expect(sunset.postseasonName).toBeNull();
     expect(sunset.seasonEndSentence).toBe('The Sunset season ends Sat Oct 31.');
-    expect(sunset.bracketSentence).toMatch(/^The CIF Southern Section holds no field hockey playoffs/);
+    expect(sunset.bracketSentence).toMatch(/^The Sunset’s postseason is the Tournament of Champions, Oct 22–29, which it shares with the LA independents\./);
     const city = view.leagueCopy('city');
     expect(city.postseasonKind).toBe('section-playoffs');
     expect(city.postseasonName).toBe('San Diego Section playoffs');
@@ -334,10 +334,12 @@ describe('Southern California team pages (DESIGN-socal §2.4)', () => {
   it('a Sunset page: kicker "Postseason", the league note whatever it has played, no projection, GP bare', async () => {
     const v = view.buildTeamPageView('huntington-beach')!;
     expect(v.leagueScheduled, 'components/teams/team-view.ts no fixed schedule').toBeNull();
-    expect(v.postseasonLine?.href).toBe('/playoffs#sunset');
+    expect(v.postseasonLine?.href).toBe('/playoffs#toc');
     const text = textOf(await renderTeam('huntington-beach'));
     expect(text).toContain('Postseason');
-    expect(text).toContain('The CIF Southern Section holds no field hockey playoffs');
+    expect(text).toContain('In the Tournament of Champions');
+    expect(text).toContain('The Sunset’s postseason is the Tournament of Champions');
+    expect(text).not.toContain('No section playoffs');
     expect(text, 'components/teams/TeamPlayoffLine.tsx').not.toContain('Projected from the table today');
     expect(text).not.toMatch(/\bof null\b|\/null|CCS|at-large|automatic qualifier|eliminat/i);
     expect(text, 'components/teams/TeamElo.tsx: one fit').toMatch(/Elo rating/);

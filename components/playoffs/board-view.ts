@@ -6,10 +6,10 @@
  *
  * A row is:
  * - `names`: the league's short name, or the leagues one postseason shares ('City · North · Metro', the San Diego
- *   Section playoffs, which place teams across the three);
+ *   Section playoffs, which place teams across the three; 'Sunset · LA', the Tournament of Champions);
  * - `path`: the postseason in a phrase, from config ('CCS championship · 7 of 16 berths', 'MCAL tournament · 6
  *   teams', 'Super Regional, Oct 30–31 · the top six qualify', 'San Diego Section playoffs, Nov 2–14 · placed by the
- *   Section', 'No section playoffs');
+ *   Section', 'Tournament of Champions, Oct 22–29 · eight teams');
  * - `next`: the first day from today on that holds one of its rows that is not final, always dated ('Fri Oct 30 ·
  *   4:00 PM PT · SCVAL play-in for the 7th CCS berth', or 'Fri Oct 30 · 2 games' when the day holds more than one);
  *   a decided league tournament's champion sentence instead. Never "Today": the page is a snapshot, read on later
@@ -22,7 +22,7 @@
  */
 
 import { dateSpan, numberWord, shortDate } from '../../lib/format';
-import type { LeagueConfig } from '../../lib/leagues';
+import { getSection, type LeagueConfig } from '../../lib/leagues';
 import type { LeagueId } from '../../lib/types';
 
 import type { ThisWeekRow } from './this-week';
@@ -69,8 +69,14 @@ export function pathPhrase(input: BoardLeagueInput): string {
       return `${ps.name}, ${dateSpan(ps.dates.first, ps.dates.last)} · the top ${numberWord(ps.qualifiers)} qualify`;
     case 'section-playoffs':
       return `${ps.name}, ${dateSpan(ps.dates.first, ps.dates.last)} · placed by the Section`;
-    case 'no-postseason':
-      return 'No section playoffs';
+    case 'no-postseason': {
+      // The section's outside tournament is the postseason (the Sunset and the LA independents' Tournament of
+      // Champions, DESIGN §24.13): its name, dates and field.
+      const event = getSection(input.config.sectionId).outsideTournament;
+      return event
+        ? `${event.name}, ${dateSpan(event.window.first, event.window.last)} · ${numberWord(event.entrants.length)} teams`
+        : 'Postseason';
+    }
   }
 }
 
@@ -90,15 +96,31 @@ function countWords(rows: readonly ThisWeekRow[]): string {
 }
 
 /**
+ * The key of a postseason several leagues share, or null: the San Diego Section playoffs ('section-playoffs'), and
+ * a section's outside tournament for its no-postseason leagues (the Tournament of Champions: the Sunset and the LA
+ * independents).
+ */
+function sharedKey(input: BoardLeagueInput): string | null {
+  const ps = input.config.postseason;
+  if (ps.kind === 'section-playoffs') return 'section-playoffs';
+  if (ps.kind === 'no-postseason') {
+    const event = getSection(input.config.sectionId).outsideTournament;
+    return event ? `outside:${event.id}` : null;
+  }
+  return null;
+}
+
+/**
  * The board's rows, in the order given. `rows` are the region's "This week" rows, uncapped and in time order
  * (buildThisWeek). Leagues whose postseason is the San Diego Section's share one row (the Section places teams
- * across them; their rows and dates are the same).
+ * across them; their rows and dates are the same), as do the Sunset and the LA independents (the Tournament of
+ * Champions, `#toc`).
  */
 export function buildBoard(leagues: readonly BoardLeagueInput[], rows: readonly ThisWeekRow[], today: string): BoardRow[] {
   const groups: BoardLeagueInput[][] = [];
   for (const input of leagues) {
-    const shared = input.config.postseason.kind === 'section-playoffs';
-    const group = shared ? groups.find((g) => g[0].config.postseason.kind === 'section-playoffs') : undefined;
+    const key = sharedKey(input);
+    const group = key ? groups.find((g) => sharedKey(g[0]) === key) : undefined;
     if (group) group.push(input);
     else groups.push([input]);
   }
@@ -106,7 +128,8 @@ export function buildBoard(leagues: readonly BoardLeagueInput[], rows: readonly 
     const [first] = group;
     const ids = new Set<LeagueId>(group.map((g) => g.leagueId));
     const shared = group.length > 1;
-    const href = shared ? '#sds-playoffs' : `#${first.leagueId}`;
+    const event = first.config.postseason.kind === 'no-postseason' ? getSection(first.config.sectionId).outsideTournament : null;
+    const href = !shared ? `#${first.leagueId}` : event ? `#${event.id}` : '#sds-playoffs';
     const path = pathPhrase(first);
     const ahead = rows.filter((r) => !r.final && r.dateKey >= today && r.leagueIds.some((id) => ids.has(id)));
     const day = ahead.filter((r) => r.dateKey === ahead[0]?.dateKey);

@@ -477,7 +477,9 @@ Harvard-Westlake won the 2025 edition, 4-0 over Newport Harbor on Oct 25, 2025 [
 CIF-SS Preliminaries and Finals "N/A" and scores.cifss.org shows "No Brackets Found" [V]; CIF holds no
 regional or state field hockey championship [V: cifstate.org]. The last Southern Section field hockey
 championship was in 1984 [V: CIF-SS History #134]. The config's postseason kind is `no-postseason`: one
-ladder rung for every place ("No section playoffs"), no ladder line and no band.
+ladder rung for every place ("Tournament of Champions": the non-CIF Tournament of Champions is the postseason
+for the Sunset and the LA independents; a team page says "In the Tournament of Champions" or "Not in the
+Tournament of Champions"), no ladder line and no band.
 
 **Official sources.** The Blue Book 2026-27 Field Hockey excerpt (Article 200, PDF), the 2026-27 Sports
 Calendar and the Season Preview, all linked from cifss.org/sports/field-hockey/ [V]. The Season Preview's
@@ -679,9 +681,10 @@ been decided in overtime (Glendora 2-1 Chaminade, Sep 24) [V].
 **Postseason.** None, for the Sunset's reason: the CIF Southern Section holds no field hockey playoffs
 (Blue Book 2026-27 Bylaws 2011.1 and 3500.2) and CIF holds no regional or state championship [V], so each
 independent's season ends with its last game, Oct 31 at the latest (the Section's last allowable
-contest). The config's postseason kind is `no-postseason`, with the one "No section playoffs" rung. Three
+contest). The config's postseason kind is `no-postseason`, with the one "Tournament of Champions" rung: the
+tournament is the postseason the independents share with the Sunset. Three
 of the five (Harvard-Westlake, Bonita, Glendora) play the Tournament of Champions, the non-CIF event
-described under the Sunset; its games carry the `outside-tournament` tag and count in no table.
+described under the Sunset and listed on `/playoffs#toc` with both groups' cards; its games carry the `outside-tournament` tag and count in no table.
 
 **Official sources.** The Blue Book 2026-27 Field Hockey excerpt (Article 200) and cifss.org/sports/field-hockey/,
 as for the Sunset. The Season Preview's list of participating schools names Bonita, Glendora and Thousand

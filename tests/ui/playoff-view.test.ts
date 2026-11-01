@@ -374,14 +374,28 @@ describe('buildOutsideTournamentView — the Tournament of Champions (SectionCon
     expect(view.buildOutsideTournamentView(toc, data.getGames()).rounds, VIEW).toEqual([]);
   });
 
-  it('/playoffs lists the tournament once, under the Sunset card, and the LA card points to it', () => {
+  it('/playoffs gives the tournament its own section, holding both the Sunset’s and the LA independents’ cards, its games under both', () => {
     const text = textOf(html);
-    expect(html, PAGE).toContain('id="toc"');
     expect(html.match(/id="toc"/g)?.length, PAGE).toBe(1);
-    expect(text, PAGE).toContain('Tournament of Champions · Oct 22–29');
+    expect(html.match(/id="toc-games"/g)?.length, PAGE).toBe(1);
+    expect(text, PAGE).toContain('Tournament of Champions Oct 22–29 · the postseason for the Sunset and the LA independents');
     expect(text, PAGE).toContain('run by the Los Angeles Field Hockey Association, not by CIF');
-    expect(text, PAGE).toContain('Three of the five play the Tournament of Champions');
-    expect(html, PAGE).toContain('href="#toc"');
+    // The section opens on its heading, then both leagues' cards, then the games: neither league owns it.
+    const toc = html.indexOf('id="toc"');
+    const sunset = html.indexOf('id="sunset"');
+    const la = html.indexOf('id="independents"');
+    const games = html.indexOf('id="toc-games"');
+    expect(toc, PAGE).toBeGreaterThan(0);
+    expect([toc < sunset, sunset < la, la < games], PAGE).toEqual([true, true, true]);
+    const sunsetNote = leagues.getLeague('sunset').postseason;
+    const laNote = leagues.getLeague('independents').postseason;
+    if (sunsetNote.kind !== 'no-postseason' || laNote.kind !== 'no-postseason') throw new Error('no-postseason');
+    expect(text, PAGE).toContain(sunsetNote.note);
+    expect(text, PAGE).toContain(laNote.note);
+    expect(text, PAGE).toContain('Five of the eight Sunset teams play in it: Edison, Great Oak, Huntington Beach, Newport Harbor and Temecula Valley. Not in it: Chaparral, Fountain Valley and Marina.');
+    expect(text, PAGE).toContain('Three of the five LA independents play in it: Bonita, Glendora and Harvard-Westlake. Not in it: Chaminade and Thousand Oaks.');
+    expect(html.match(/href="#toc-games"/g)?.length, PAGE).toBe(2);
+    expect(text, PAGE).not.toMatch(/No section playoffs|No playoffs -/);
   });
 });
 
@@ -495,7 +509,8 @@ describe('/playoffs (rendered)', () => {
     expect(text, PAGE).toContain('MCAL tournament · 6 teams');
     expect(text, PAGE).toContain('Super Regional, Oct 30–31 · the top six qualify');
     expect(text, PAGE).toContain('San Diego Section playoffs, Nov 2–14 · placed by the Section');
-    expect(text, PAGE).toContain('No section playoffs');
+    expect(text, PAGE).toContain('Tournament of Champions, Oct 22–29 · eight teams');
+    expect(text, PAGE).not.toContain('No section playoffs');
     const board = /<section[^>]*\sid="board-norcal"[^>]*>([\s\S]*?)<\/section>/.exec(html)?.[1] ?? '';
     for (const id of ['scval', 'bval', 'pcal', 'mcal', 'eal']) expect(board, PAGE).toContain(`href="#${id}"`);
   });
@@ -585,7 +600,7 @@ describe('/playoffs by region (DESIGN-socal §2.4)', () => {
     }
     // The CCS description moved into its block; the header names every league's postseason.
     expect(textOf(html), PAGE).toContain(
-      'Where each league’s season leads: the CCS championships (SCVAL, BVAL and PCAL), the MCAL tournament, the EAL’s Super Regional, no playoffs for the Sunset or the LA independents and the San Diego Section playoffs (City, North and Metro).',
+      'Where each league’s season leads: the CCS championships (SCVAL, BVAL and PCAL), the MCAL tournament, the EAL’s Super Regional, the Tournament of Champions (the Sunset and the LA independents) and the San Diego Section playoffs (City, North and Metro).',
     );
   });
 

@@ -462,15 +462,15 @@ describe('data: postseason', () => {
     expect(data.getTeamPostseasonLine('la-jolla')).toBeNull();
   });
 
-  it('writes the Sunset’s no-postseason note for every Sunset team, played or not, plus the Tournament of Champions for an entrant', () => {
+  it('writes the Sunset’s Tournament of Champions note for every Sunset team, played or not, and whether it is one of the eight', () => {
     const sunset = getLeague('sunset');
     if (sunset.postseason.kind !== 'no-postseason') throw new Error('the Sunset has no postseason');
     // Edison is one of the eight in the Tournament of Champions (SectionConfig.outsideTournament, DESIGN §24.12).
     expect(data.getTeamPostseasonLine('edison')).toEqual({
-      label: 'No section playoffs',
-      sentence: `${sunset.postseason.note} Edison is one of the eight teams in the Tournament of Champions, Oct 22–29, run by the Los Angeles Field Hockey Association, not by CIF.`,
-      href: '/playoffs#sunset',
-      linkText: 'Postseason',
+      label: 'In the Tournament of Champions',
+      sentence: `${sunset.postseason.note} Edison is one of its eight teams.`,
+      href: '/playoffs#toc',
+      linkText: 'Tournament of Champions',
       caveat: null,
     });
     expect(data.getTeamPostseasonLine('edison')!.sentence).not.toMatch(/\btop\b/i);
@@ -775,7 +775,8 @@ describe('data: Southern California tables with results', () => {
     expect(below.label).toBe('Placed by the Section');
     expect(below.sentence).not.toMatch(/\btop (six|\d)/i);
     expect(socal.getTeamPostseasonLine('mission-bay')).toBeNull();
-    expect(socal.getTeamPostseasonLine('marina')!.label).toBe('No section playoffs');
+    expect(socal.getTeamPostseasonLine('marina')!.label).toBe('Not in the Tournament of Champions');
+    expect(socal.getTeamPostseasonLine('marina')!.sentence).toMatch(/Marina is not one of its eight teams\.$/);
   });
 
   it('holds the site in its regular season while Metro has not started, and completes once every league has', () => {

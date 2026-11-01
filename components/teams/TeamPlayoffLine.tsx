@@ -39,9 +39,10 @@ function postseasonPhrase(league: TeamPageView['league']): string {
  * - the EAL: the status chip (a Super Regional place or outside the top six) and the Super
  *   Regional's dates and what is not published, from lib/data.ts. No CCS sentence, no CCS link and
  *   no bracket, because none is published.
- * - the Sunset ('no-postseason'): the chip 'No section playoffs' and the league's note (CIF-SS Blue
- *   Book 2011.1, 3500.2), for every team whatever it has played; no "projected" line, because no place
- *   leads anywhere.
+ * - the Sunset and the LA independents ('no-postseason'): the chip 'In the Tournament of Champions' or
+ *   'Not in the Tournament of Champions' and the league's note (the tournament is their postseason; CIF-SS
+ *   holds none, Blue Book 2011.1, 3500.2), for every team whatever it has played; no "projected" line,
+ *   because no table place leads into it.
  * - a San Diego league ('section-playoffs'): the ladder label (1st: the designated champion's play-in;
  *   below it: no league route), the Section's qualification line and the team's own playoff division
  *   (I or II, the Section's 2026 Divisions sheet), and `San Diego Section playoffs →`. No seed.

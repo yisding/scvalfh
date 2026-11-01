@@ -108,7 +108,8 @@ export interface SectionConfig {
   /**
    * A postseason tournament the section does not run but its teams play (the Southern Section's Tournament of
    * Champions); null everywhere else. Its games are tagged 'outside-tournament' (lib/classify.ts rule 1b),
-   * leave every table, and are listed on /playoffs under the section's no-postseason cards.
+   * leave every table, and are listed on /playoffs in the tournament's own section, which holds the section's
+   * no-postseason leagues' cards (`#toc`: the Sunset's and the LA independents').
    */
   outsideTournament: OutsideTournamentConfig | null;
 }
@@ -668,7 +669,7 @@ export const TOC: OutsideTournamentConfig = {
   entrants: ['huntington-beach', 'newport-harbor', 'edison', 'great-oak', 'temecula-valley', 'harvard-westlake', 'bonita', 'glendora'],
   finalSite: 'Huntington Beach High School',
   note:
-    'Eight Southern Section teams play the Tournament of Champions, Oct 22–29, run by the Los Angeles Field Hockey Association, not by CIF: round 1 Thu Oct 22, semifinals Tue Oct 27, the final Thu Oct 29 at Huntington Beach High School. Its games count in no league table. Nothing official publishes its pairings; the games below are as MaxPreps lists them.',
+    'The Tournament of Champions is the postseason for the Sunset and the LA independents: eight teams, five from the Sunset and three LA independents, Oct 22–29, run by the Los Angeles Field Hockey Association, not by CIF. Round 1 Thu Oct 22, semifinals Tue Oct 27, the final Thu Oct 29 at Huntington Beach High School. Its games count in no league table. Nothing official publishes its pairings; the games below are as MaxPreps lists them.',
   sources: [
     { label: 'Harvard-Westlake Chronicle on the 2026 Tournament of Champions', href: 'https://hwchronicle.com/114175/sports/field-hockey-concentrates-as-a-group/' },
     { label: 'Huntington Beach field hockey: TOC events', href: 'https://www.hbfieldhockey.com/events' },
@@ -745,7 +746,7 @@ export const SECTIONS = [
     // the Section's last allowable contest (Oct 31), so a late result still lands.
     seasonWindow: { start: '2026-08-01', end: '2026-11-07' },
     noChampionshipNote:
-      'The CIF Southern Section holds no field hockey playoffs (Blue Book Bylaw 2011.1 and 3500.2) and CIF holds no state championship: a Sunset team’s season ends with its last game, Oct 31 at the latest.',
+      'The Tournament of Champions, run by the Los Angeles Field Hockey Association, is the postseason for the Sunset and the LA independents; the CIF Southern Section and CIF hold no field hockey championship (Blue Book Bylaw 2011.1 and 3500.2).',
     outsideTournament: TOC,
   },
   {
@@ -1471,11 +1472,11 @@ const SUNSET: LeagueConfig = {
   postseason: {
     kind: 'no-postseason',
     ladder: [
-      { divisions: '*', places: [1, 99], status: 'no-postseason', label: 'No section playoffs',
-        phrase: 'no postseason', badge: 'No playoffs',
-        legend: 'The CIF Southern Section holds no field hockey playoffs (Blue Book 2011.1, 3500.2)' },
+      { divisions: '*', places: [1, 99], status: 'no-postseason', label: 'Tournament of Champions',
+        phrase: 'the Tournament of Champions', badge: 'TOC',
+        legend: 'The Tournament of Champions, run by the Los Angeles Field Hockey Association, is the postseason for the Sunset and the LA independents (CIF-SS holds none: Blue Book 2011.1, 3500.2)' },
     ],
-    note: 'The CIF Southern Section holds no field hockey playoffs (Blue Book Bylaws 2011.1 and 3500.2), and CIF holds no regional or state championship, so a Sunset team’s season ends with its last game, Oct 31 at the latest.',
+    note: 'The Sunset’s postseason is the Tournament of Champions, Oct 22–29, which it shares with the LA independents. The Los Angeles Field Hockey Association runs it, since the CIF Southern Section holds no field hockey championship (Blue Book Bylaws 2011.1 and 3500.2) and CIF no regional or state one; a Sunset team not in it ends its season with its last game, Oct 31 at the latest.',
     citations: {
       noPlayoffs: 'CIF-SS Blue Book 2026-27, Bylaw 2011.1 (“No playoffs - See Bylaw 3500.2”) and Bylaw 3500.2 (“No playoffs will be conducted by the CIF Southern Section Office when less than 20% of the membership field teams in that sport”)',
     },
@@ -1919,11 +1920,11 @@ const INDEPENDENTS: LeagueConfig = {
   postseason: {
     kind: 'no-postseason',
     ladder: [
-      { divisions: '*', places: [1, 99], status: 'no-postseason', label: 'No section playoffs',
-        phrase: 'no postseason', badge: 'No playoffs',
-        legend: 'The CIF Southern Section holds no field hockey playoffs (Blue Book 2011.1, 3500.2)' },
+      { divisions: '*', places: [1, 99], status: 'no-postseason', label: 'Tournament of Champions',
+        phrase: 'the Tournament of Champions', badge: 'TOC',
+        legend: 'The Tournament of Champions, run by the Los Angeles Field Hockey Association, is the postseason for the Sunset and the LA independents (CIF-SS holds none: Blue Book 2011.1, 3500.2)' },
     ],
-    note: 'The CIF Southern Section holds no field hockey playoffs (Blue Book Bylaws 2011.1 and 3500.2), and CIF holds no regional or state championship, so each independent’s season ends with its last game, Oct 31 at the latest.',
+    note: 'The LA independents’ postseason is the Tournament of Champions, Oct 22–29, which they share with the Sunset. The Los Angeles Field Hockey Association runs it, since the CIF Southern Section holds no field hockey championship (Blue Book Bylaws 2011.1 and 3500.2) and CIF no regional or state one; an independent not in it ends its season with its last game, Oct 31 at the latest.',
     citations: {
       noPlayoffs: 'CIF-SS Blue Book 2026-27, Bylaw 2011.1 (“No playoffs - See Bylaw 3500.2”) and Bylaw 3500.2 (“No playoffs will be conducted by the CIF Southern Section Office when less than 20% of the membership field teams in that sport”)',
     },

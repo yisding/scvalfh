@@ -175,8 +175,9 @@ function rosterExtras(stats: PlayerStatsView | null, roster: RosterView | null):
 
 /**
  * `CCS picture` (SCVAL, BVAL, PCAL) | `MCAL tournament picture` | `Super Regional picture` (EAL) |
- * `San Diego Section playoffs picture` (City, North County, Metro) | `Postseason` (the Sunset, which has
- * none: CIF-SS Blue Book 2011.1, 3500.2, so there is no picture to draw), by `postseason.kind`.
+ * `San Diego Section playoffs picture` (City, North County, Metro) | `Postseason` (the Sunset and the LA
+ * independents, whose postseason is the Tournament of Champions: no table place leads into it, so there is no
+ * picture to draw), by `postseason.kind`.
  */
 function postseasonKicker(view: TeamPageView): string {
   const { postseasonKind, postseasonName, shortName } = view.league;
@@ -193,9 +194,9 @@ function postseasonKicker(view: TeamPageView): string {
   }
 }
 
-/** The meta description's last words: the kicker, except where there is no postseason to picture. */
+/** The meta description's last words: the kicker, except for the Sunset and the LA independents, whose postseason is the Tournament of Champions. */
 function postseasonDescription(view: TeamPageView): string {
-  return view.league.postseasonKind === 'no-postseason' ? 'why there are no playoffs' : postseasonKicker(view);
+  return view.league.postseasonKind === 'no-postseason' ? 'the Tournament of Champions' : postseasonKicker(view);
 }
 
 /**
