@@ -1,26 +1,26 @@
 {
   "cifssCrossCheck": {
-    "agreements": 756,
+    "agreements": 757,
     "cifssOnlyScored": 1,
-    "compared": 762,
+    "compared": 763,
     "conflicts": 6,
     "notOnMaxPreps": 2
   },
   "commitSummary": "SCVAL +0 finals · BVAL +0 · PCAL +0 · MCAL +0 · EAL +0 · Sunset +0 · City +0 · North +0 · Metro +0 · LA +0",
-  "contentHash": "55a4da27f06daaab1c5d9a696b8048f72c502d0ffe8d0a956aaf649e238c86da",
+  "contentHash": "7e5536b1ba9b27968362f6d89b03215b552aeac16c5ab2570a2166630464e4bd",
   "counts": {
     "byLeague": {
       "bval": {
         "backfilled": 0,
         "finals": 119,
-        "games": 119,
+        "games": 124,
         "leagueGames": 60,
         "teams": 12
       },
       "city": {
         "backfilled": 0,
         "finals": 170,
-        "games": 173,
+        "games": 174,
         "leagueGames": 60,
         "teams": 12
       },
@@ -48,7 +48,7 @@
       "metro": {
         "backfilled": 0,
         "finals": 104,
-        "games": 108,
+        "games": 109,
         "leagueGames": 32,
         "teams": 9
       },
@@ -62,14 +62,14 @@
       "pcal": {
         "backfilled": 3,
         "finals": 62,
-        "games": 63,
+        "games": 65,
         "leagueGames": 41,
         "teams": 7
       },
       "scval": {
         "backfilled": 0,
         "finals": 166,
-        "games": 166,
+        "games": 174,
         "leagueGames": 98,
         "teams": 15
       },
@@ -82,20 +82,20 @@
       }
     },
     "finals": 927,
-    "games": 936,
+    "games": 945,
     "leagueGames": 552,
-    "mismatches": 29,
+    "mismatches": 30,
     "pending": 3,
     "teams": 102
   },
   "crossCheck": {
-    "agreements": 214,
+    "agreements": 215,
     "backfilled": 4,
     "compared": 248,
     "conflicts": 7,
     "sbliveOnlyScored": 8
   },
-  "fetchedAt": "2026-11-02T12:58:32.614Z",
+  "fetchedAt": "2026-11-02T22:35:31.434Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -223,22 +223,22 @@
     },
     {
       "label": "st-ignatius schedule",
-      "rowCount": 20,
+      "rowCount": 21,
       "status": "ok"
     },
     {
       "label": "saint-francis schedule",
-      "rowCount": 25,
+      "rowCount": 26,
       "status": "ok"
     },
     {
       "label": "los-altos schedule",
-      "rowCount": 23,
+      "rowCount": 24,
       "status": "ok"
     },
     {
       "label": "valley-christian schedule",
-      "rowCount": 23,
+      "rowCount": 24,
       "status": "ok"
     },
     {
@@ -253,22 +253,22 @@
     },
     {
       "label": "homestead schedule",
-      "rowCount": 22,
+      "rowCount": 23,
       "status": "ok"
     },
     {
       "label": "mitty schedule",
-      "rowCount": 22,
+      "rowCount": 23,
       "status": "ok"
     },
     {
       "label": "los-gatos schedule",
-      "rowCount": 20,
+      "rowCount": 21,
       "status": "ok"
     },
     {
       "label": "palo-alto schedule",
-      "rowCount": 21,
+      "rowCount": 22,
       "status": "ok"
     },
     {
@@ -278,7 +278,7 @@
     },
     {
       "label": "santa-clara schedule",
-      "rowCount": 21,
+      "rowCount": 22,
       "status": "ok"
     },
     {
@@ -338,17 +338,17 @@
     },
     {
       "label": "christopher schedule",
-      "rowCount": 21,
-      "status": "ok"
-    },
-    {
-      "label": "gilroy schedule",
       "rowCount": 22,
       "status": "ok"
     },
     {
+      "label": "gilroy schedule",
+      "rowCount": 23,
+      "status": "ok"
+    },
+    {
       "label": "leigh schedule",
-      "rowCount": 24,
+      "rowCount": 25,
       "status": "ok"
     },
     {
@@ -358,7 +358,7 @@
     },
     {
       "label": "willow-glen schedule",
-      "rowCount": 19,
+      "rowCount": 20,
       "status": "ok"
     },
     {
@@ -373,7 +373,7 @@
     },
     {
       "label": "prospect schedule",
-      "rowCount": 20,
+      "rowCount": 21,
       "status": "ok"
     },
     {
@@ -433,7 +433,7 @@
     },
     {
       "label": "hollister schedule",
-      "rowCount": 16,
+      "rowCount": 17,
       "status": "ok"
     },
     {
@@ -453,7 +453,7 @@
     },
     {
       "label": "stevenson schedule",
-      "rowCount": 25,
+      "rowCount": 26,
       "status": "ok"
     },
     {
@@ -648,7 +648,7 @@
     },
     {
       "label": "bishops schedule",
-      "rowCount": 23,
+      "rowCount": 24,
       "status": "ok"
     },
     {
@@ -848,7 +848,7 @@
     },
     {
       "label": "eastlake schedule",
-      "rowCount": 20,
+      "rowCount": 21,
       "status": "ok"
     },
     {
@@ -1063,7 +1063,7 @@
     },
     {
       "label": "ccs bracket",
-      "rowCount": 0,
+      "rowCount": 2,
       "status": "ok"
     }
   ],
@@ -1071,7 +1071,7 @@
   "warnings": 44,
   "window": {
     "firstGame": "2026-08-12T17:15:00",
-    "lastGame": "2026-11-05T18:00:00",
+    "lastGame": "2026-11-07T13:00:00",
     "lastLeagueGame": "2026-11-05T18:00:00"
   }
 }
