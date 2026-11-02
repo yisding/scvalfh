@@ -1,13 +1,13 @@
 {
   "cifssCrossCheck": {
-    "agreements": 752,
+    "agreements": 756,
     "cifssOnlyScored": 1,
-    "compared": 758,
+    "compared": 762,
     "conflicts": 6,
     "notOnMaxPreps": 2
   },
   "commitSummary": "SCVAL +0 finals · BVAL +0 · PCAL +0 · MCAL +0 · EAL +0 · Sunset +0 · City +0 · North +0 · Metro +0 · LA +0",
-  "contentHash": "9eef5f13598d6a5b52ca03018bdfdec7ebc5bc859d4d921347f3da05f42c5943",
+  "contentHash": "55a4da27f06daaab1c5d9a696b8048f72c502d0ffe8d0a956aaf649e238c86da",
   "counts": {
     "byLeague": {
       "bval": {
@@ -20,7 +20,7 @@
       "city": {
         "backfilled": 0,
         "finals": 170,
-        "games": 172,
+        "games": 173,
         "leagueGames": 60,
         "teams": 12
       },
@@ -48,14 +48,14 @@
       "metro": {
         "backfilled": 0,
         "finals": 104,
-        "games": 107,
+        "games": 108,
         "leagueGames": 32,
         "teams": 9
       },
       "north-county": {
         "backfilled": 1,
         "finals": 258,
-        "games": 259,
+        "games": 262,
         "leagueGames": 103,
         "teams": 19
       },
@@ -82,20 +82,20 @@
       }
     },
     "finals": 927,
-    "games": 933,
+    "games": 936,
     "leagueGames": 552,
     "mismatches": 29,
     "pending": 3,
     "teams": 102
   },
   "crossCheck": {
-    "agreements": 213,
+    "agreements": 214,
     "backfilled": 4,
-    "compared": 250,
-    "conflicts": 8,
+    "compared": 248,
+    "conflicts": 7,
     "sbliveOnlyScored": 8
   },
-  "fetchedAt": "2026-11-01T18:44:53.136Z",
+  "fetchedAt": "2026-11-02T12:58:32.614Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -193,7 +193,7 @@
   "requests": {
     "maxpreps": 131,
     "official": 8,
-    "sblive": 20
+    "sblive": 21
   },
   "sources": [
     {
@@ -658,7 +658,7 @@
     },
     {
       "label": "cathedral-catholic schedule",
-      "rowCount": 18,
+      "rowCount": 19,
       "status": "ok"
     },
     {
@@ -728,7 +728,7 @@
     },
     {
       "label": "canyon-crest-academy schedule",
-      "rowCount": 22,
+      "rowCount": 23,
       "status": "ok"
     },
     {
@@ -743,7 +743,7 @@
     },
     {
       "label": "rancho-bernardo schedule",
-      "rowCount": 27,
+      "rowCount": 28,
       "status": "ok"
     },
     {
@@ -773,7 +773,7 @@
     },
     {
       "label": "poway schedule",
-      "rowCount": 28,
+      "rowCount": 29,
       "status": "ok"
     },
     {
@@ -803,7 +803,7 @@
     },
     {
       "label": "sage-creek schedule",
-      "rowCount": 24,
+      "rowCount": 25,
       "status": "ok"
     },
     {
@@ -873,7 +873,7 @@
     },
     {
       "label": "granite-hills schedule",
-      "rowCount": 18,
+      "rowCount": 19,
       "status": "ok"
     },
     {
@@ -958,7 +958,7 @@
     },
     {
       "label": "sblive scoreboard 2026-10-29",
-      "rowCount": 20,
+      "rowCount": 17,
       "status": "ok"
     },
     {
@@ -968,6 +968,11 @@
     },
     {
       "label": "sblive scoreboard 2026-10-31",
+      "rowCount": 1,
+      "status": "ok"
+    },
+    {
+      "label": "sblive scoreboard 2026-11-02",
       "rowCount": 1,
       "status": "ok"
     },
@@ -1023,7 +1028,7 @@
     },
     {
       "label": "cifsshome.org Central Coast Section field hockey",
-      "rowCount": 207,
+      "rowCount": 222,
       "status": "ok"
     },
     {
@@ -1062,7 +1067,7 @@
       "status": "ok"
     }
   ],
-  "today": "2026-11-01",
+  "today": "2026-11-02",
   "warnings": 44,
   "window": {
     "firstGame": "2026-08-12T17:15:00",
