@@ -59,7 +59,7 @@ export function OutsideTournament({ view, id, whose, children, className }: Outs
                   {round.label ? `${round.label} · ` : ''}
                   {round.dateLabel}
                 </h4>
-                <GameList games={round.games} tracks="fit" />
+                <GameList games={round.games} tracks="fit" bracket={false} />
               </section>
             ))}
           </>

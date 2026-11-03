@@ -40,6 +40,8 @@ export interface GameListProps {
    * three cards run to the same right edge as everything else under its h1.
    */
   tracks?: 'fill' | 'fit';
+  /** false where the list IS the games' place on /playoffs (the Tournament of Champions, the Super Regional). */
+  bracket?: boolean;
   className?: string;
 }
 
@@ -48,6 +50,7 @@ export function GameList({
   scopeLeague = null,
   variant = 'bleed',
   tracks = 'fill',
+  bracket = true,
   className,
 }: GameListProps) {
   return (
@@ -72,10 +75,10 @@ export function GameList({
         // class would beat the attribute and leave a hole in the grid.
         <li key={game.contestId} {...gameFilterAttrs(game)} className="md:border-b-0">
           <div data-twin className="md:hidden">
-            <GameRow game={game} scopeLeague={scopeLeague} showRecords />
+            <GameRow game={game} scopeLeague={scopeLeague} showRecords bracket={bracket} />
           </div>
           <div data-twin className="hidden h-full md:block">
-            <GameCard game={game} scopeLeague={scopeLeague} showRecords className="h-full" />
+            <GameCard game={game} scopeLeague={scopeLeague} showRecords bracket={bracket} className="h-full" />
           </div>
         </li>
       ))}

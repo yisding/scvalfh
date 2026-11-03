@@ -41,6 +41,12 @@ export interface ThisWeekRow {
   label: string;
   /** The game page, or the event's anchor on /playoffs. */
   href: string | null;
+  /**
+   * A game's place on /playoffs, the fragment only ('ccs-division-2', for `/playoffs#ccs-division-2`), which the badge
+   * links; absent for an event or a game with none. A fragment and no null: the home page's strip is serialized into
+   * its RSC payload and held to 5 KiB (tests/ui/home-weight.test.ts).
+   */
+  bracket?: string;
   /** A game with a final score. */
   final: boolean;
   /** A game row or an event row (an event with no time prints no "Time TBA"). */
@@ -98,6 +104,8 @@ export interface ThisWeekInput {
   claimed?: ReadonlySet<ContestId>;
   /** Rows per region; default 12. */
   cap?: number;
+  /** A game's place on /playoffs as a fragment (components/playoffs/bracket-link.ts), passed in so this module stays pure. */
+  bracketOf?: (game: Game) => string | null;
 }
 
 export interface ThisWeekView {
@@ -129,7 +137,8 @@ function shortNameOf(side: Game['home']): string {
   return registryTeam(side)?.shortName ?? side.name;
 }
 
-function gameRow(game: Game, labels: ReadonlyMap<ContestId, string>): ThisWeekRow {
+function gameRow(game: Game, labels: ReadonlyMap<ContestId, string>, bracketOf: (game: Game) => string | null): ThisWeekRow {
+  const bracket = bracketOf(game);
   const view = renderScore(game);
   const text =
     view.kind === 'scheduled'
@@ -141,6 +150,7 @@ function gameRow(game: Game, labels: ReadonlyMap<ContestId, string>): ThisWeekRo
     text,
     label: labels.get(game.contestId) ?? postseasonTagOf(game) ?? '',
     href: gameHref(game.contestId),
+    ...(bracket ? { bracket } : {}),
     final: view.kind === 'final',
     kind: 'game',
     key: game.contestId,
@@ -213,7 +223,8 @@ export function buildThisWeek(input: ThisWeekInput): ThisWeekView {
     (e) => inWindow(e.dateKey) && !(e.leagueId !== null && played.has(`${e.leagueId}:${e.dateKey}`)),
   );
 
-  let rows = [...games.map((g) => gameRow(g, labels)), ...events.map(eventRow)].sort(byWhen);
+  const bracketOf = input.bracketOf ?? (() => null);
+  let rows = [...games.map((g) => gameRow(g, labels, bracketOf)), ...events.map(eventRow)].sort(byWhen);
   let more = 0;
   // A cap that would hide a single row hides none: "+1 more on the schedule" takes a line to say what the row
   // itself would (2026-11-03), so one row over the cap is shown.

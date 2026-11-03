@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { getStandingFor } from '../../lib/data';
 import { EM_DASH, mapsSearchHref, matchupJoiner, monthDay, recordString, recordWords, shortDate, timeOfDay } from '../../lib/format';
 import { gameHref } from '../../lib/game-id';
+import { getBracketLink } from '../playoffs/bracket-link';
 import { TEAMS, getTeamBySlug } from '../../lib/teams';
 import type { Game, LeagueId, Record3, TeamSlug } from '../../lib/types';
 import { gameAddress } from '../../lib/venue';
@@ -98,6 +99,12 @@ export interface GameViewProps {
    * it (components/playoffs/PlayoffBracket.tsx). Only the CCS bracket passes it, and only once the seeds are known.
    */
   seeds?: { away: number | null; home: number | null };
+  /**
+   * GameRow / GameCard: a postseason game links its place on /playoffs ("CCS bracket", "Section bracket", "MCAL
+   * bracket", components/playoffs/bracket-link.ts) beside the game page link. False where the row IS that place: the
+   * brackets, the Tournament of Champions' and the Super Regional's game lists on /playoffs.
+   */
+  bracket?: boolean;
   className?: string;
 }
 
@@ -368,7 +375,8 @@ export function SummaryTeams({
 }
 
 /** The pills in an expanded panel: real links only, never a dead affordance. */
-function GameLinks({ game }: { game: Game }) {
+function GameLinks({ game, bracket }: { game: Game; bracket: boolean }) {
+  const place = bracket ? getBracketLink(game) : null;
   // lib/venue.ts: the game's own address, else the venue's or host's school (data/schools.json).
   const address = gameAddress(game)?.address;
   const directions = address ? mapsSearchHref(address) : null;
@@ -387,6 +395,12 @@ function GameLinks({ game }: { game: Game }) {
       >
         Full game page
       </Link>
+      {/* Where the game sits in its bracket, an internal page, so a plain Link in the card pill's face. */}
+      {place ? (
+        <Link href={place.href} prefetch={false} className="sx-pill sx-pill-card">
+          {place.label}
+        </Link>
+      ) : null}
       {/* The open panel is surface-2, the pill's own fill, so these pills take the card
           surface instead or they would read as bare text links. A press steps them to surface-3,
           the same as a hover, so a tap on a phone (no hover) still answers. */}
@@ -403,7 +417,7 @@ function GameLinks({ game }: { game: Game }) {
   );
 }
 
-function GameDetailBody({ game, showRecap }: { game: Game; showRecap: boolean }) {
+function GameDetailBody({ game, showRecap, bracket }: { game: Game; showRecap: boolean; bracket: boolean }) {
   const recap = showRecap ? resultSentence(game) : null;
   return (
     // From 768px (the team page's Last card) the panel is indented to the team column — gutter +
@@ -420,7 +434,7 @@ function GameDetailBody({ game, showRecap }: { game: Game; showRecap: boolean })
       {/* `contest.location` is a NOTE field, not a venue field — live values include
           "Senior Night" and a coach's scoring note — so it is never labelled "Venue". */}
       {game.venue.text ? <p className="m-0 text-ink-3">Note: {game.venue.text}</p> : null}
-      <GameLinks game={game} />
+      <GameLinks game={game} bracket={bracket} />
     </div>
   );
 }
@@ -436,6 +450,7 @@ export function GameRow({
   showRecords = false,
   defaultExpanded = false,
   seeds,
+  bracket = true,
   className,
 }: GameViewProps) {
   const display = describeGame(game, perspective);
@@ -493,7 +508,7 @@ export function GameRow({
           <path d="m4 6 4 4 4-4" />
         </svg>
       </summary>
-      <GameDetailBody game={game} showRecap={showRecap} />
+      <GameDetailBody game={game} showRecap={showRecap} bracket={bracket} />
     </details>
   );
 }
@@ -514,11 +529,13 @@ export function GameCard({
   showRecords = false,
   showStream = false,
   linkStyle = 'text',
+  bracket = true,
   className,
 }: GameViewProps) {
   const display = describeGame(game, perspective);
   const withRecords = recordsApply(game, display, showRecords);
   const pills = linkStyle === 'pills';
+  const place = bracket ? getBracketLink(game) : null;
   // The links' names end in the matchup, so a links list (VoiceOver rotor, NVDA Insert+F7)
   // reads "Game page: Carmel at Fremont" rather than nine identical "Game page"s. Full names, as
   // the card's sr-only sentence speaks them: this tail is sr-only, so it need not match the
@@ -621,6 +638,13 @@ export function GameCard({
           >
             NFHS stream<span className="sr-only">: {matchup}</span>
           </ExternalLink>
+        ) : null}
+        {/* Where the game sits in its bracket (bracket-link.ts), above the stretched link like the others. */}
+        {place ? (
+          <Link href={place.href} prefetch={false} className={pills ? 'sx-pill relative z-10 min-h-11' : textLinkClass}>
+            {place.label}
+            <span className="sr-only">: {matchup}</span>
+          </Link>
         ) : null}
       </div>
     </div>

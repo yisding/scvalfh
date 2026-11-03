@@ -88,7 +88,8 @@ export function LeaguePairings({ pairings, className }: LeaguePairingsProps) {
         const sides: [PlayInSide, PlayInSide] =
           view.connector === 'at' && a.host ? [toSide(b), toSide(a)] : [toSide(a), toSide(b)];
         return (
-          <li key={p.id} className={single ? 'max-w-3xl' : undefined}>
+          // The pairing's id ('scval-crossover-1', 'bval-play-in') is the anchor its game links to (bracket-link.ts).
+          <li key={p.id} id={p.id} className={single ? 'sx-target max-w-3xl' : 'sx-target'}>
             {/* A lone play-in sits under a section header that already names it ('Play-in'), so
                 it shows only its date and time. A lone crossover sits under 'Crossover and
                 play-in', which does not, so it keeps its title (and its seeds); a set keeps every

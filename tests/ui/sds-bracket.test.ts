@@ -116,11 +116,13 @@ describe('the 2025 brackets before a game is played', () => {
   const html = render(divisions, BEFORE);
   const text = textOf(html);
 
-  it('prints a place still to be decided as "Winner of 8 v 9", never a blank box', () => {
-    expect(text, COMPONENT).toContain('Winner of 8 v 9');
-    expect(text, VIEW).toContain('Mt. Carmel (1) plays the winner of 8 v 9, Fri Nov 7.');
+  it('prints a place still to be decided by its two schools ("Poway or University City"), else its places, never a blank box', () => {
+    expect(text, COMPONENT).toContain('Poway or University City');
+    expect(text, VIEW).toContain('Mt. Carmel (1) plays the winner of Poway v University City, Fri Nov 7.');
     expect(text, VIEW).toContain('Torrey Pines (1) plays Canyon Crest Academy (8), Thu Nov 6.');
-    expect(text, COMPONENT).toContain('Winner of the play-in');
+    // The play-in's place names its two schools; a place two results away keeps its numbers.
+    expect(text, COMPONENT).toContain('Helix or Granite Hills');
+    expect(text, COMPONENT).toContain('Winner of 1 v 8/9');
   });
 
   it('gives an unplayed card its day, time and site, no score column and no game link', () => {

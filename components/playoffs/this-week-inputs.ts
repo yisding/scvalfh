@@ -39,6 +39,7 @@ import { tournamentGameLine } from '../../lib/postseason';
 import { withLocationRound } from '../../lib/postseason-rounds';
 import type { CcsPlayoffs, ContestId, Game, LeagueId, RegionId } from '../../lib/types';
 
+import { getBracketLink } from './bracket-link';
 import { buildBrackets, roundKeyFor } from './bracket-model';
 import { buildPairingView, pairingNotesFor, pairingSentence, type PairingView } from './playoff-view';
 import { buildThisWeek, type ThisWeekEvent, type ThisWeekView } from './this-week';
@@ -256,8 +257,14 @@ export function thisWeekByRegion(input: {
   games: readonly Game[];
   today: string;
   cap?: number;
+  /**
+   * Link each game's badge to its place on /playoffs (default true). The home page passes false: its strip is a
+   * pointer to /playoffs, serialized into its RSC payload and held to 5 KiB (tests/ui/home-weight.test.ts), and the
+   * links cost about 23 bytes a row.
+   */
+  bracketLinks?: boolean;
 }): Record<RegionId, ThisWeekView> {
-  const { games, today, cap } = input;
+  const { games, today, cap, bracketLinks = true } = input;
   const playoffs = getPlayoffs();
   const field = getCcsField();
   const ccsIds = new Set<LeagueId>(field.byLeague.map((l) => l.leagueId));
@@ -271,6 +278,8 @@ export function thisWeekByRegion(input: {
     new Map(field.byLeague.map((l) => [l.leagueId, l.auto])),
   );
   const sds = sectionPlayoffs();
+  // Each game row's badge links its place on /playoffs (bracket-link.ts).
+  const bracketOf = (game: Game) => (bracketLinks ? (getBracketLink(game)?.href.replace(/^\/playoffs#/, '') ?? null) : null);
   // The page's own test for "seeded": a CCS bracket path to draw, from the bracket games or the seed file.
   const seeded = buildBrackets(playoffs, getCcsSeeds()).length > 0;
   // The games a pairing or a bracket slot has joined: an event gives way only to a game of its league no slot claims.
@@ -282,7 +291,7 @@ export function thisWeekByRegion(input: {
     }),
   ]);
   return {
-    norcal: buildThisWeek({ games, today, region: 'norcal', labels, events: norcalEvents(blocks, playoffs, today, seeded), claimed, cap }),
-    socal: buildThisWeek({ games, today, region: 'socal', labels, events: sds ? socalEvents(sds, today) : [], claimed, cap }),
+    norcal: buildThisWeek({ games, today, region: 'norcal', labels, events: norcalEvents(blocks, playoffs, today, seeded), claimed, cap, bracketOf }),
+    socal: buildThisWeek({ games, today, region: 'socal', labels, events: sds ? socalEvents(sds, today) : [], claimed, cap, bracketOf }),
   };
 }

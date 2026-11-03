@@ -63,26 +63,34 @@ function sideLabel(side: SideView): string {
   return name || 'TBD';
 }
 
-/** 'Palo Alto', 'Winner of 1 v 8', 'TBD'. */
+/**
+ * 'Palo Alto', 'Willow Glen or Homestead', 'TBD'. A place a game will fill names its two teams (2026-11-03): "Winner of
+ * 4 v 5" sent the reader back up the bracket to turn numbers into schools.
+ */
 function pairingSideLabel(side: PairingSide): string {
   if (isSeedSide(side)) return side.name;
-  if (isWinnerOf(side)) return `Winner of ${side.winnerOf[0].seed} v ${side.winnerOf[1].seed}`;
+  if (isWinnerOf(side)) return `${side.winnerOf[0].name} or ${side.winnerOf[1].name}`;
   return 'TBD';
 }
 
-/** '8 Palo Alto', 'the winner of 1 v 8', 'a team to be decided' — for the card's sentence. */
+/** '8 Palo Alto', 'the winner of 5 Willow Glen v 4 Homestead', 'a team to be decided' — for the card's sentence. */
 function pairingSideWords(side: PairingSide): string {
   if (isSeedSide(side)) return `${side.seed} ${side.name}`;
-  if (isWinnerOf(side)) return `the winner of ${side.winnerOf[0].seed} v ${side.winnerOf[1].seed}`;
+  if (isWinnerOf(side)) {
+    const [a, b] = side.winnerOf;
+    return `the winner of ${a.seed} ${a.name} v ${b.seed} ${b.name}`;
+  }
   return 'a team to be decided';
 }
 
 function BracketLine({ side, seed, showScore }: { side: SideView; seed: number | null; showScore: boolean }) {
   const team = side.slug ? getTeamBySlug(side.slug) : undefined;
   return (
+    // `data-team-slug`: the pinned team's line is tinted (app/globals.css .sx-pinnable, the pin script's mark).
     <span
-      className="flex items-center gap-2 py-1 pr-2 pl-2"
+      className="sx-pinnable flex items-center gap-2 py-1 pr-2 pl-2"
       style={side.weight === 'winner' ? { boxShadow: 'inset 2px 0 0 var(--sx-text)' } : undefined}
+      data-team-slug={team?.slug}
     >
       {/* A seed is information before a score (DESIGN §7.11): it prints as soon as the owner file names
           it (lib/ccs-bracket.ts getCcsSeeds), and nothing is printed in its place before that. */}
@@ -97,7 +105,7 @@ function BracketLine({ side, seed, showScore }: { side: SideView; seed: number |
 function PairingLine({ side }: { side: PairingSide }) {
   const team = isSeedSide(side) && side.slug ? getTeamBySlug(side.slug) : undefined;
   return (
-    <span className="flex items-center gap-2 py-1 pr-2 pl-2">
+    <span className="sx-pinnable flex items-center gap-2 py-1 pr-2 pl-2" data-team-slug={team?.slug}>
       {isSeedSide(side) ? <span className="sx-num w-4 shrink-0 text-meta text-ink-3">{side.seed}</span> : null}
       {team ? <TeamMonogram team={team} size={20} /> : <span className="inline-block shrink-0" style={{ width: 20 }} />}
       <span className={`min-w-0 flex-1 truncate text-meta ${isSeedSide(side) ? 'font-normal text-ink' : 'font-normal text-ink-2'}`}>
@@ -212,7 +220,7 @@ export function PlayoffBracket({ path, headingLevel: RoundHeading = 'h4', classN
                   {/* Every CCS game is a postseason game, so the NL tag would mark the whole
                       bracket — marking the majority is noise (DESIGN §5.4). */}
                   {card.kind === 'game' ? (
-                    <GameRow game={card.game} showRecap={false} showChips={false} seeds={card.seeds} />
+                    <GameRow game={card.game} showRecap={false} showChips={false} seeds={card.seeds} bracket={false} />
                   ) : (
                     <PairingCard card={card} round={round} flush />
                   )}

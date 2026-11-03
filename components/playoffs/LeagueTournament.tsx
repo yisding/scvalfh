@@ -351,7 +351,8 @@ export function LeagueTournament({
               {/* `my-0`, not `m-0`: a margin shorthand would cancel `sx-bleed`'s negative inline margin. */}
               <ol className="sx-list sx-card sx-flush sx-bleed my-0 list-none p-0">
                 {round.games.map((game) => (
-                  <li key={game.id}>
+                  // The slot's id is the anchor its game links to (bracket-link.ts): `mcal-qf-1` on /playoffs.
+                  <li key={game.id} id={`${idPrefix}${game.id}`} className="sx-target">
                     <BracketGame game={game} />
                   </li>
                 ))}

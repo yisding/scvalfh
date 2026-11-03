@@ -40,6 +40,7 @@ import {
   plural,
   recordString,
   renderScore,
+  scoreSentence,
   shortDate,
   shootoutPhrases,
   sideOutcome,
@@ -80,6 +81,7 @@ import type {
 } from '../../lib/types';
 import { gameAddress } from '../../lib/venue';
 import { getEloBoardForTeam } from '../leaders/elo-board';
+import { getBracketPlace } from '../playoffs/bracket-place';
 import { buildOverviewDivision, type OverviewDivision } from '../standings/standings-view';
 import type { FormEntry } from '../ui/FormStrip';
 import { describeGame, shootoutSectionOf } from '../ui/describe-game';
@@ -552,17 +554,22 @@ export function leagueCopy(
           : `We will list a playoff game as soon as ${league.shortName} posts the bracket.`,
       };
     }
-    case 'unbracketed-tournament':
-      // No bracket will be drawn: the sentences state the published dates and say the rest is not known.
+    case 'unbracketed-tournament': {
+      // No bracket will be drawn: the sentences state the published dates and say the rest is not known. Past tense
+      // once the event's last day has passed (2026-11-03: Pleasant Valley's page still said it "follows").
+      const over = today !== undefined && today > ps.dates.last;
       return {
         ...base,
         postseasonKind: ps.kind,
         postseasonName: ps.name,
-        seasonEndSentence: `${ended}; the ${ps.name} follows, ${dateSpan(ps.dates.first, ps.dates.last)}.`,
-        bracketSentence: ps.site
-          ? `No pairings are published; we list each ${ps.name} game as MaxPreps posts it.`
-          : `We will not guess a bracket: the ${ps.name}\u2019s format and site are not published yet.`,
+        seasonEndSentence: `${ended}; the ${ps.name} ${over ? 'followed' : 'follows'}, ${dateSpan(ps.dates.first, ps.dates.last)}.`,
+        bracketSentence: over
+          ? `Its games and results, as MaxPreps posts them, are on the playoffs page.`
+          : ps.site
+            ? `No pairings are published; we list each ${ps.name} game as MaxPreps posts it.`
+            : `We will not guess a bracket: the ${ps.name}\u2019s format and site are not published yet.`,
       };
+    }
     case 'no-postseason': {
       // The Sunset and the LA independents: their postseason is the Tournament of Champions (CIF-SS holds
       // none, Blue Book 2011.1, 3500.2), and the note says so. Both end with the Section's last allowable contest (leaguePlay.last).
@@ -897,6 +904,36 @@ export function fixtureOpponent(
   };
 }
 
+/**
+ * The postseason line once the team is in a drawn bracket (2026-11-03): a CCS or San Diego Section game of its, the
+ * next one still to play or else its latest, names the round, the game and what comes next, and the link goes to the
+ * team's card (components/playoffs/bracket-place.ts): "CCS Division 2 quarterfinal · 5 v 4: at Homestead, Sat Nov 7,
+ * 10:00 AM PT. The winner plays Leigh or Santa Clara in the semifinal, Wed Nov 11." Before a bracket exists, or for
+ * any other postseason, the line is the accessor's.
+ */
+function bracketAwareLine(line: TeamPostseasonLine | null, team: Team, games: readonly Game[], today: string): TeamPostseasonLine | null {
+  if (!line) return line;
+  const bracketGames = games.filter((g) => g.postseason?.kind === 'ccs' || g.postseason?.kind === 'section-playoffs');
+  const upcoming = bracketGames.find((g) => g.status === 'scheduled' && !g.isDateTba && g.dateKey >= today);
+  const game = upcoming ?? bracketGames.at(-1);
+  if (!game) return line;
+  const place = getBracketPlace(game);
+  if (!place?.round) return line;
+  const mineIsHome = game.home.slug === team.slug;
+  const other = mineIsHome ? game.away : game.home;
+  const opponent = (other.slug ? getTeamBySlug(other.slug)?.shortName : undefined) ?? other.name;
+  const what = upcoming
+    ? `${game.site === 'neutral' || mineIsHome ? 'vs' : 'at'} ${opponent}, ${shortDate(game.dateKey)}${game.isTimeTba ? '' : `, ${timeOfDayPT(game.dateLocal)}`}.`
+    : scoreSentence(game);
+  return {
+    label: place.round.split(' · ')[0],
+    sentence: [`${place.round}: ${what}`, place.next].filter(Boolean).join(' '),
+    href: place.link.href,
+    linkText: `${team.shortName} in the ${place.link.label}`,
+    caveat: null,
+  };
+}
+
 /** The postseason line, its link pointed at the pairing cards while the team has a crossover or play-in to play. */
 function pairingAwareLine(line: TeamPostseasonLine | null, team: Team, today: string): TeamPostseasonLine | null {
   if (!line || !inOpenPairing(team, today)) return line;
@@ -976,7 +1013,7 @@ export function buildTeamPageView(slug: string): TeamPageView | undefined {
     officialScheduleUrl: division.official.mode === 'none' ? null : division.official.scheduleUrl,
     hasResults,
     context,
-    postseasonLine: pairingAwareLine(getTeamPostseasonLine(team.slug), team, today),
+    postseasonLine: bracketAwareLine(pairingAwareLine(getTeamPostseasonLine(team.slug), team, today), team, all, today),
     postseasonAccent: outcomes.length === 1 && (outcomes[0] === 'aq' || outcomes[0] === 'bye'),
     leagueLog,
     nonLeagueLog,

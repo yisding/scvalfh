@@ -43,10 +43,15 @@ function sideView(slot: LiveBracketSlot): BracketSideView {
   return { seed: slot.seed, slug: slot.slug, name: getTeamBySlug(slot.slug)?.name ?? slot.slug };
 }
 
-/** "Torrey Pines (1)", "the winner of 8 v 9", "a team to be decided": a side inside a sentence. */
+/**
+ * "Torrey Pines (1)", "the winner of Poway v Canyon Crest", "the winner of 1 v 8/9", "a team to be decided": a side
+ * inside a sentence. A place named by its two schools (lib/sds-bracket.ts tbdText: "Poway or Canyon Crest") reads as
+ * the winner of their game.
+ */
 function sideWords(side: BracketSideView): string {
   if (!isTbdSide(side)) return `${side.name} (${side.seed})`;
   if (side.tbd === 'TBD') return 'a team to be decided';
+  if (!/^Winner\b/.test(side.tbd)) return `the winner of ${side.tbd.replace(' or ', ' v ')}`;
   return `the ${side.tbd.charAt(0).toLowerCase()}${side.tbd.slice(1)}`;
 }
 

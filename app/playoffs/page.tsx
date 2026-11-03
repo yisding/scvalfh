@@ -437,7 +437,9 @@ export default function PlayoffsPage() {
             <>
               <div className="space-y-stack">
                 {paths.map((path) => (
-                  <div key={path.id}>
+                  // The path's id is the anchor a CCS game links to (components/playoffs/bracket-link.ts): the cards are
+                  // drawn twice, once per breakpoint, so the one element drawn once is the division's.
+                  <div key={path.id} id={path.id} className="sx-target">
                     {paths.length > 1 ? <h3 className="m-0 mb-3 text-lead text-ink">{path.name}</h3> : null}
                     <PlayoffBracket path={path} headingLevel={paths.length > 1 ? 'h4' : 'h3'} />
                   </div>

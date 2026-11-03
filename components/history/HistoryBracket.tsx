@@ -44,6 +44,11 @@ export interface BracketViewProps {
   division: BracketDivisionView;
   /** Names the list for a screen reader: "CCS Division 1 bracket, 2025". */
   label: string;
+  /**
+   * Gives each card an id, this prefix plus its key (`sds-division-2-0-1`): the San Diego bracket's cards are the
+   * targets of its games' links (components/playoffs/bracket-link.ts). The archive passes none.
+   */
+  anchorPrefix?: string;
 }
 
 function Line({
@@ -98,13 +103,15 @@ function Line({
       href={`/teams/${team.slug}`}
       prefetch={false}
       tabIndex={-1}
-      className={`${lineClass} sx-tap no-underline`}
+      className={`${lineClass} sx-pinnable sx-tap no-underline`}
       style={style}
+      data-team-slug={team.slug}
     >
       {body}
     </Link>
   ) : (
-    <span className={lineClass} style={style}>
+    // `data-team-slug`: the pinned team's line is tinted (app/globals.css .sx-pinnable, the pin script's mark).
+    <span className={`${lineClass} sx-pinnable`} style={style} data-team-slug={team?.slug}>
       {body}
     </span>
   );
@@ -188,7 +195,7 @@ const COLUMNS = {
 
 const cx = (...parts: (string | null | false)[]) => parts.filter(Boolean).join(' ');
 
-export function BracketView({ division, label }: BracketViewProps) {
+export function BracketView({ division, label, anchorPrefix }: BracketViewProps) {
   const { rounds } = division;
   const at = COLUMNS[rounds.length >= 4 ? 'lg' : 'md'];
   const noted = rounds.some((round) => round.cards.some((card) => card.note !== null));
@@ -213,7 +220,11 @@ export function BracketView({ division, label }: BracketViewProps) {
               )}
             >
               {round.cards.map((card) => (
-                <li key={card.key} className="flex min-w-0 items-center">
+                <li
+                  key={card.key}
+                  id={anchorPrefix ? `${anchorPrefix}${card.key}` : undefined}
+                  className={cx('flex min-w-0 items-center', anchorPrefix ? 'sx-target' : null)}
+                >
                   {roundIndex > 0 ? (
                     <span className={cx('hidden w-4 shrink-0 border-t border-divider', at.stub)} aria-hidden="true" />
                   ) : null}
