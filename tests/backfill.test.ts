@@ -24,7 +24,6 @@ import {
 import { dayDiff, scoreSentence, shiftDateKey } from '../lib/format';
 import { getDivision } from '../lib/leagues';
 import { FixtureMissing, TransportError, resourcePath, type ResourceKey, type RunContext } from '../lib/pipeline/contract';
-import { supersededGamesOf } from '../lib/pipeline/steps/assemble';
 import { unknownFixtureMoves } from '../lib/pipeline/steps/official';
 import { scoreboardDates, stepSblive } from '../lib/pipeline/steps/sblive';
 import { parseScoresPage, parseTeamGamesPage, type SbliveGame, type SbliveSide } from '../lib/sources/sblive';
@@ -92,7 +91,7 @@ function input(over: Partial<BackfillInput>): BackfillInput {
   return { games: [], unmatched: [], sblive: [], today: TODAY, previous: null, sbliveFailed: false, fetchedAt: AT, ...over };
 }
 
-/** A snapshot carrying only what applyBackfill and supersededGamesOf read (games, supersededGames). */
+/** A snapshot carrying only what applyBackfill reads (games, supersededGames). */
 function previousWith(games: Game[], supersededGames: Record<string, string> = {}): Snapshot {
   return { games, supersededGames } as unknown as Snapshot;
 }
@@ -791,20 +790,14 @@ describe('backfill rule 8: planBackfill', () => {
 describe('backfill rule 10: supersede and carry-forward', () => {
   const filled = applyBackfill(input({ unmatched: [GRE_AT_CAT], sblive: [sb('2026-09-04', ['greenfield', 0], ['santa-catalina', 1], { sbliveGameId: '6541425' })] })).games[0];
 
-  it('a MaxPreps contest that now matches the filled fixture wins; the sblive: id maps to it', () => {
+  // The sblive: id's map to the contest that superseded it is the snapshot's (tests/pipeline/assemble.test.ts).
+  it('a MaxPreps contest that now matches the filled fixture wins', () => {
     const contest = game({ home: 'santa-catalina', away: 'greenfield', date: '2026-09-04', hs: 1, as: 0, official: { fixtureId: GRE_AT_CAT.id } });
     const res = applyBackfill(
       input({ games: [contest], unmatched: [], sblive: [sb('2026-09-04', ['greenfield', 0], ['santa-catalina', 1], { sbliveGameId: '6541425' })], previous: previousWith([filled]) }),
     );
     expect(res.games).toEqual([contest]);
     expect(res.rows).toEqual([]);
-    expect(supersededGamesOf(res.games, previousWith([filled]))).toEqual({ 'sblive:6541425': contest.contestId });
-  });
-
-  it('carries the previous map while both ends hold', () => {
-    const contest = game({ home: 'santa-catalina', away: 'greenfield', date: '2026-09-04', hs: 1, as: 0 });
-    const prev = previousWith([], { 'sblive:6541425': contest.contestId, 'sblive:1': 'gone' });
-    expect(supersededGamesOf(applyBackfill(input({ games: [contest], previous: prev })).games, prev)).toEqual({ 'sblive:6541425': contest.contestId });
   });
 
   it('when every si.com request failed, re-applies earlier fills that are still eligible', () => {
