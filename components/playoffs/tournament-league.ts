@@ -23,6 +23,7 @@ import {
 } from '../../lib/data';
 import { getDivision, getLeague, type LeagueConfig } from '../../lib/leagues';
 import { tournamentOutcome, tournamentOutcomeCopy } from '../../lib/postseason';
+import { schoolAddress } from '../../lib/schools';
 import { outcomesFor, playoffOutcomeLabel } from '../../lib/standings';
 import type { LeagueTournamentProjection, Team } from '../../lib/types';
 
@@ -106,7 +107,8 @@ export function tournamentView(summary: LeagueSummary, ps: TournamentConfig, con
     teamOf: (slug): Team | undefined => getTeamBySlug(slug),
     lastPlace: ps.lastSpot.place,
     ladderLine: division.ladderLine,
-    finalSite: ps.finalSite,
+    // The site school's own address (data/schools.json); lib/teams.ts checks the slug is a member.
+    finalSite: { ...ps.finalSite, address: schoolAddress(ps.finalSite.slug) },
   });
 }
 
