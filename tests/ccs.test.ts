@@ -28,7 +28,7 @@ import {
   readTournamentPage,
 } from '../lib/sources/ccs';
 import { CCS } from '../lib/leagues';
-import { CcsCalendarEventSchema } from '../lib/snapshot-schema';
+import { CcsCalendarEventSchema } from '../lib/snapshot/snapshot-schema';
 import { REPO } from './helpers';
 
 const ics = readFileSync(path.join(REPO, 'tests', 'fixtures', 'ccs', 'field-hockey.ics'), 'utf8');

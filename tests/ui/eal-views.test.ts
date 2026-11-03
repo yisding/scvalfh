@@ -359,7 +359,7 @@ describe('/about, the EAL parts', () => {
 
 describe('/history/2025-26#eal', () => {
   it('renders the EAL as unavailable, with its reason and no claim of a league site', async () => {
-    const { getHistorySeason } = await import('../../lib/history');
+    const { getHistorySeason } = await import('../../lib/history/history');
     expect(getHistorySeason()).toBe('2025-26');
     const section = byId(historyHtml, LEAGUE);
     const text = textOf(section);

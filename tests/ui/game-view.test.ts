@@ -260,7 +260,7 @@ describe('MCAL postseason note and superseded stubs (corpus copy)', () => {
         Math.abs((g.home.score ?? 0) - (g.away.score ?? 0)) === 1,
     )!;
     // MaxPreps' playoff type (4) on the row, so the tag is the one the config derives: a snapshot whose
-    // tags differ from the current config is reclassified on load (lib/snapshot-migrate.ts).
+    // tags differ from the current config is reclassified on load (lib/snapshot/snapshot-migrate.ts).
     oneGoal.contestTypes = { home: 4, away: 4 };
     oneGoal.postseason = { kind: 'mcal-tournament', leagueId: 'mcal', via: 'contest-type-4' };
     oneGoal.countsFor = null;
@@ -323,7 +323,7 @@ describe('MCAL postseason note and superseded stubs (corpus copy)', () => {
 
   it('an MCAL tournament game: the not-counted sentence and the shootout caveat', async () => {
     const model = S.m.buildGameView(tournament.contestId)!;
-    const { SHOOTOUT_NOTE } = await import('../../lib/postseason');
+    const { SHOOTOUT_NOTE } = await import('../../lib/postseason/postseason');
     expect(model.postseasonNotes, 'components/game/game-view.ts MCAL postseason notes').toEqual([
       'MCAL tournament game — it does not count in the league table.',
       SHOOTOUT_NOTE,
@@ -379,9 +379,9 @@ describe('Southern California games (corpus copy with synthetic SoCal games, DES
 
   beforeAll(async () => {
     const { game } = await import('../game-builder');
-    const { loadSnapshot } = await import('../../lib/snapshot-schema');
+    const { loadSnapshot } = await import('../../lib/snapshot/snapshot-schema');
     const { computeStandings } = await import('../../lib/standings');
-    const { countsOf } = await import('../../lib/snapshot-migrate');
+    const { countsOf } = await import('../../lib/snapshot/snapshot-migrate');
     const { getLeague } = await import('../../lib/leagues');
     const base = loadSnapshot(JSON.parse(readFileSync(corpusPath, 'utf8')) as unknown);
     // Clairemont (City Eastern) 0, Eastlake (Metro Mesa) 0, flagged W/L, Sep 1: a San Diego shootout win

@@ -1,7 +1,7 @@
 /**
  * Box scores (SPEC §1.1k): MaxPreps' per-game team table (lib/sources/maxpreps-game-stats.ts), one
  * team's box score for one game (lib/sources/maxpreps-box-score.ts), their place in
- * data/player-stats.json (lib/player-stats-schema.ts BoxScoreSchema) and how
+ * data/player-stats.json (lib/players/player-stats-schema.ts BoxScoreSchema) and how
  * scripts/fetch-player-stats.ts reads them: only for the team's finals, and again only when the
  * game's row changes.
  *
@@ -16,14 +16,14 @@ import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 import { getSnapshot } from '../lib/data';
-import { getBoxScore, getPlayerStats } from '../lib/player-stats';
+import { getBoxScore, getPlayerStats } from '../lib/players/player-stats';
 import {
   BoxScoreSchema,
   PlayerStatsFileSchema,
   TeamPlayerStatsSchema,
   type PlayerStatsFile,
-} from '../lib/player-stats-schema';
-import { getTeamRoster } from '../lib/rosters';
+} from '../lib/players/player-stats-schema';
+import { getTeamRoster } from '../lib/players/rosters';
 import { boxScoreUrl, toBoxScore } from '../lib/sources/maxpreps-box-score';
 import { parseGameRows } from '../lib/sources/maxpreps-game-stats';
 import { parsePlayerStats } from '../lib/sources/maxpreps-player-stats';

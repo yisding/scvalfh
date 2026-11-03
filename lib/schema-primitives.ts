@@ -5,8 +5,8 @@
  * ten issues, each as `path: message`).
  *
  * One declaration each, so a dataset's validation messages and strictness never depend on which
- * file declared it: lib/snapshot-schema.ts, lib/rosters-schema.ts, lib/player-stats-schema.ts,
- * lib/clubs-schema.ts, lib/commits-schema.ts, lib/history-schema.ts, lib/prior-season-schema.ts and
+ * file declared it: lib/snapshot/snapshot-schema.ts, lib/players/rosters-schema.ts, lib/players/player-stats-schema.ts,
+ * lib/players/clubs-schema.ts, lib/players/commits-schema.ts, lib/history/history-schema.ts, lib/history/prior-season-schema.ts and
  * lib/official/schema.ts all import from here. A schema that deliberately differs keeps its own
  * declaration (commits' and clubs' calendar-strict `asOf` shapes, their https-without-social-media
  * URLs). SLUG_PATTERN and DATE_PATTERN are plain RegExps for the config and registry asserts

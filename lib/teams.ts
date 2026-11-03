@@ -27,7 +27,7 @@ import { SCVAL_SEEDS } from './registry/scval';
 import type { Seed } from './registry/seed';
 import { SUNSET_SEEDS } from './registry/sunset';
 import { SLUG_PATTERN } from './schema-primitives';
-import { SCHOOL_ADDRESSES } from './schools';
+import { SCHOOL_ADDRESSES } from './schools/schools';
 import type { DivisionId, GameSide, LeagueId, Team, TeamId } from './types';
 
 const MP = 'https://www.maxpreps.com';
@@ -127,7 +127,7 @@ export function normalizeTeamKey(input: string): string {
 /**
  * One side of a game as the cross-source join key (SPEC §5.7): its registry slug, else `name:` and
  * the name lower-cased with everything but a-z and 0-9 removed. Every source joined to MaxPreps
- * (si.com in lib/crosscheck.ts and lib/sources/sblive.ts, the official schedules in
+ * (si.com in lib/crosscheck/crosscheck.ts and lib/sources/sblive.ts, the official schedules in
  * lib/official/match.ts, the school calendars in lib/sources/vnn-ics.ts) keys a side with this, so
  * the two halves of a join agree exactly.
  */

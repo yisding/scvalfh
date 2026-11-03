@@ -25,10 +25,10 @@
  * components/ui or components/game, so GameRow and the game page may call it without a cycle.
  */
 
-import { getCcsSeeds } from '../../lib/ccs-bracket';
+import { getCcsSeeds } from '../../lib/postseason/ccs-bracket';
 import { getLeaguePairings, getLeagueTournament, getPlayoffs, getTournamentLeagueIds } from '../../lib/data';
 import { CCS_LEAGUE_IDS, getLeague, getSection } from '../../lib/leagues';
-import { getSdsBrackets } from '../../lib/sds-bracket';
+import { getSdsBrackets } from '../../lib/postseason/sds-bracket';
 import { getTeamBySlug } from '../../lib/teams';
 import type { ContestId, Game } from '../../lib/types';
 

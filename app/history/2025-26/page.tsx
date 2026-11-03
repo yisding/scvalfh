@@ -32,7 +32,7 @@ import {
   type SectionBracket,
   type TournamentBracket,
   type UnavailableLeagueHistory,
-} from '../../../lib/history';
+} from '../../../lib/history/history';
 import { dateWithYear, listWords } from '../../../lib/format';
 import { TOC, getDivision, getLeague, getSection, isIndependentLeague, regionOf } from '../../../lib/leagues';
 import type { LeagueId, Team } from '../../../lib/types';

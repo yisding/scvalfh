@@ -29,11 +29,11 @@ import { positionWords } from '../../components/ui/position-words';
 import { getGames, getStandingFor, getTeams } from '../../lib/data';
 import { gradeWord, recordString } from '../../lib/format';
 import { regionOf } from '../../lib/leagues';
-import { computeAdjustedScoring, getAdjustedScoring } from '../../lib/adjusted-scoring';
-import { getAllPlayerStatsWithNotes } from '../../lib/player-stats';
-import { getPriorSeason } from '../../lib/prior-season';
-import { getEnrichedTeamRoster } from '../../lib/rosters';
-import { computeRatings, getRatings } from '../../lib/ratings';
+import { computeAdjustedScoring, getAdjustedScoring } from '../../lib/ratings/adjusted-scoring';
+import { getAllPlayerStatsWithNotes } from '../../lib/players/player-stats';
+import { getPriorSeason } from '../../lib/history/prior-season';
+import { getEnrichedTeamRoster } from '../../lib/players/rosters';
+import { computeRatings, getRatings } from '../../lib/ratings/ratings';
 import {
   FIELD_STAT_KEYS,
   GOALIE_STAT_KEYS,
@@ -42,7 +42,7 @@ import {
   type GoalieStatKey,
   type GoalieStats,
   type TeamPlayerStats,
-} from '../../lib/player-stats-schema';
+} from '../../lib/players/player-stats-schema';
 import { computeStandings } from '../../lib/standings';
 import { TEAMS, getTeamBySlug } from '../../lib/teams';
 import type { Game } from '../../lib/types';
@@ -100,7 +100,7 @@ function expectRanked(board: LeaderBoard): void {
 
 describe('buildLeadersView — rules, over the committed data', () => {
   const view = buildLeadersView();
-  // What the boards read: MaxPreps' numbers with the coaches' game notes added (lib/note-stats.ts).
+  // What the boards read: MaxPreps' numbers with the coaches' game notes added (lib/players/note-stats.ts).
   const stats = getAllPlayerStatsWithNotes();
   /** A board's id without its region suffix: the same board in either region. */
   const unsuffixed = (id: string) => id.replace(/-socal$/, '');

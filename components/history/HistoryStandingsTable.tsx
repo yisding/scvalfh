@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 import { getTeamBySlug } from '../../lib/data';
 import { ordinal } from '../../lib/format';
-import { historySchoolName, type HistoryRow } from '../../lib/history';
+import { historySchoolName, type HistoryRow } from '../../lib/history/history';
 import MissingValue from '../ui/MissingValue';
 import TeamMonogram from '../ui/TeamMonogram';
 

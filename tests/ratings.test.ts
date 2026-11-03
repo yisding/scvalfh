@@ -1,5 +1,5 @@
 /**
- * lib/ratings.ts (DESIGN §20): the Elo-scale fit over synthetic games, the start from a synthetic
+ * lib/ratings/ratings.ts (DESIGN §20): the Elo-scale fit over synthetic games, the start from a synthetic
  * last season, and its invariants over the bundled snapshot and prior season. Nothing here asserts
  * a particular team's number on the committed data, which a data refresh changes.
  */
@@ -7,8 +7,8 @@
 import { describe, expect, it } from 'vitest';
 
 import { getSnapshot } from '../lib/data';
-import { getPriorSeason } from '../lib/prior-season';
-import type { PriorGame, PriorSeason } from '../lib/prior-season-schema';
+import { getPriorSeason } from '../lib/history/prior-season';
+import type { PriorGame, PriorSeason } from '../lib/history/prior-season-schema';
 import {
   ELO_BASE,
   ELO_PER_GOAL,
@@ -17,7 +17,7 @@ import {
   getRatings,
   ratingGames,
   type RatingTable,
-} from '../lib/ratings';
+} from '../lib/ratings/ratings';
 import { TEAMS, getTeamBySlug } from '../lib/teams';
 import type { Game } from '../lib/types';
 import { game, type GameSpec } from './game-builder';

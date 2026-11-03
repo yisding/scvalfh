@@ -1,7 +1,7 @@
 #!/usr/bin/env tsx
 /**
  * Fetch every registry school's JV games into data/jv.json: MaxPreps' JV schedule feed for all 102
- * schools, and si.com's JV team page for the 101 that have one (lib/jv-teams.ts).
+ * schools, and si.com's JV team page for the 101 that have one (lib/jv/jv-teams.ts).
  *
  *   pnpm fetch-jv                       live: 102 MaxPreps JSON calls + up to 101 si.com pages
  *   pnpm fetch-jv --leagues scval,bval  only these leagues; the others keep their previous rows
@@ -19,7 +19,7 @@
  * varsity row does (lib/normalize.ts normalizeGames), except that no JV game is read as a shootout
  * win (`level: 'jv'`: the sections' shootout rules are varsity rules). si.com pages go through the si.com client's
  * own gate (one at a time, 1 s apart, the browser User-Agent si.com requires). The file keeps what
- * each source said; lib/jv-merge.ts decides what the site shows, MaxPreps first.
+ * each source said; lib/jv/jv-merge.ts decides what the site shows, MaxPreps first.
  *
  * .github/workflows/update-data.yml runs this after `pnpm fetch-data` and `pnpm fetch-player-stats`,
  * twice a day in season, and a failure here never costs the day's snapshot. The guards are the
@@ -35,7 +35,7 @@
  * written.
  *
  * The previous file is salvaged row by row, as fetch-rosters and fetch-player-stats salvage theirs
- * (lib/fetch-scope.ts readPreviousFile): each team row, each game and each si.com row is held to its
+ * (lib/pipeline/fetch-scope.ts readPreviousFile): each team row, each game and each si.com row is held to its
  * own schema, and one that fails costs only itself, named in the log. The whole-file schema fails
  * whenever the registry grows (it wants one row per registry team, in registry order), and before
  * this salvage a `--leagues` run over such a file carried nothing: every team outside the run went
@@ -61,9 +61,9 @@ import {
   summarizeByLeague,
   teamsInScope,
   type PreviousRows,
-} from '../lib/fetch-scope';
+} from '../lib/pipeline/fetch-scope';
 import { byDateThenId, localDateKey, monthDay } from '../lib/format';
-import { mergeJv } from '../lib/jv-merge';
+import { mergeJv } from '../lib/jv/jv-merge';
 import {
   JvFileSchema,
   JvGameSchema,
@@ -75,8 +75,8 @@ import {
   type JvSbliveRow,
   type JvSourceState,
   type JvTeam,
-} from '../lib/jv-schema';
-import { jvMaxprepsScheduleUrl, jvSbliveGamesUrl, jvSbliveTeamId } from '../lib/jv-teams';
+} from '../lib/jv/jv-schema';
+import { jvMaxprepsScheduleUrl, jvSbliveGamesUrl, jvSbliveTeamId } from '../lib/jv/jv-teams';
 import { INDEPENDENT_LEAGUES, LEAGUES_PROPER, seasonWindowBounds } from '../lib/leagues';
 import { normalizeGames } from '../lib/normalize';
 import { inSeasonWindow } from '../lib/pipeline/steps/window';
@@ -137,9 +137,9 @@ function parseArgs(argv: readonly string[]): Args {
 
 const NOTES = [
   `One entry per registry school, all ${LEAGUES_PROPER.length} leagues and the ${INDEPENDENT_LEAGUES.map((l) => l.name).join(', ')}. games are MaxPreps’ JV contests (the schedule feed read with the JV season id), built exactly as a varsity game is; sblive are si.com’s scored JV finals from each school’s JV team page.`,
-  'The site shows lib/jv-merge.ts over these two lists: MaxPreps first; si.com fills a score MaxPreps lacks, adds a game MaxPreps does not list, and is noted beside a MaxPreps score it disagrees with.',
-  'A si.com JV side is one of ours only by its si.com JV team id (lib/jv-teams.ts), never by name.',
-  'JV games are kept apart from varsity: no varsity standings, leaders, ratings or postseason read them. games are stored unclassified; lib/jv-standings.ts decides at load which JV table each counts for, from its varsity counterpart.',
+  'The site shows lib/jv/jv-merge.ts over these two lists: MaxPreps first; si.com fills a score MaxPreps lacks, adds a game MaxPreps does not list, and is noted beside a MaxPreps score it disagrees with.',
+  'A si.com JV side is one of ours only by its si.com JV team id (lib/jv/jv-teams.ts), never by name.',
+  'JV games are kept apart from varsity: no varsity standings, leaders, ratings or postseason read them. games are stored unclassified; lib/jv/jv-standings.ts decides at load which JV table each counts for, from its varsity counterpart.',
   'A source with status carried-forward kept the previous file’s rows after a failed fetch; its own fetchedAt says when those rows were read.',
 ];
 

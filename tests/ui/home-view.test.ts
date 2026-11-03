@@ -13,8 +13,8 @@ import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
-import { countsOf } from '../../lib/snapshot-migrate';
-import { loadSnapshot } from '../../lib/snapshot-schema';
+import { countsOf } from '../../lib/snapshot/snapshot-migrate';
+import { loadSnapshot } from '../../lib/snapshot/snapshot-schema';
 import type { Snapshot } from '../../lib/types';
 import { game } from '../game-builder';
 import { corpusSnapshotPath } from '../helpers';
@@ -611,7 +611,7 @@ describe('the pinned card (components/home/MyTeamCard.tsx ← home-view.ts team 
  * tournament outcome does, and fits the card's one 288px line. A fresh module instance; the corpus views above are
  * already built.
  */
-describe('the pinned card after the SCVAL play-in (home-view.ts ← lib/postseason-outcomes.ts)', () => {
+describe('the pinned card after the SCVAL play-in (home-view.ts ← lib/postseason/postseason-outcomes.ts)', () => {
   let views: ReturnType<HomeView['buildTeamViews']>;
   const prior = process.env.SCVAL_SNAPSHOT;
 

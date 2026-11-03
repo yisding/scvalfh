@@ -13,8 +13,8 @@ import EmptyState from '../../components/ui/EmptyState';
 import ExternalLink from '../../components/ui/ExternalLink';
 import SectionHeader from '../../components/ui/SectionHeader';
 import { DATA_CORRECTIONS_URL, OG_BASE, ROOT_OG_IMAGE, SITE_SCOPE_NOTE, independentsWords } from '../../components/layout/site';
-import { getClubs } from '../../lib/clubs';
-import { getCommitsFile } from '../../lib/commits';
+import { getClubs } from '../../lib/players/clubs';
+import { getCommitsFile } from '../../lib/players/commits';
 import {
   areKeyDatesConfirmed,
   getAllStandings,
@@ -39,11 +39,11 @@ import {
 } from '../../lib/data';
 import type { LeagueSummary } from '../../lib/data';
 import { dateWithYear, formatStamp, listWords, numberWord, ordinal, plural, shortDate, timeOfDayPT } from '../../lib/format';
-import { getAvailableHistoryLeagues, getHistorySeason, getUnavailableHistoryLeagues } from '../../lib/history';
+import { getAvailableHistoryLeagues, getHistorySeason, getUnavailableHistoryLeagues } from '../../lib/history/history';
 import { jvTableTitle } from '../../components/standings/jv-standings-view';
-import { getJvCorrections, getJvFile, getJvMerge, getJvSchoolSiteMerge, getJvTables } from '../../lib/jv';
-import { JV_SCHOOL_SITES } from '../../lib/jv-school-sites';
-import { JV_STANDINGS_MIN_REPORTED_SHARE } from '../../lib/jv-standings';
+import { getJvCorrections, getJvFile, getJvMerge, getJvSchoolSiteMerge, getJvTables } from '../../lib/jv/jv';
+import { JV_SCHOOL_SITES } from '../../lib/jv/jv-school-sites';
+import { JV_STANDINGS_MIN_REPORTED_SHARE } from '../../lib/jv/jv-standings';
 import {
   CCS,
   UNBRACKETED_LEAGUE_IDS,

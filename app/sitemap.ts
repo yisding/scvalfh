@@ -1,16 +1,16 @@
 import type { MetadataRoute } from 'next';
 
 import { SITE_URL } from '../components/layout/site';
-import { getClubSlugs, getClubsLastChecked } from '../lib/clubs';
-import { getCommitsLastChecked } from '../lib/commits';
+import { getClubSlugs, getClubsLastChecked } from '../lib/players/clubs';
+import { getCommitsLastChecked } from '../lib/players/commits';
 import {
   gamePageInputs,
   latestContentDate,
   removalsForGame,
   removalsOnDay,
   scoreDayInputs,
-} from '../lib/content-dates';
-import { getRosterEnrichment } from '../lib/rosters';
+} from '../lib/snapshot/content-dates';
+import { getRosterEnrichment } from '../lib/players/rosters';
 import {
   getContentRemovals,
   getFetchedAt,
@@ -22,14 +22,14 @@ import {
   getTournamentLeagueIds,
 } from '../lib/data';
 import { gameHref } from '../lib/game-id';
-import { getHistoryLastChecked } from '../lib/history';
-import { getJvFetchedAt, getJvGamesOn } from '../lib/jv';
+import { getHistoryLastChecked } from '../lib/history/history';
+import { getJvFetchedAt, getJvGamesOn } from '../lib/jv/jv';
 
 /**
  * /sitemap.xml — every route family (SPEC §8.1): the fixed pages, `/standings/<id>` and
  * `/schedule/<id>` per league, `/playoffs/<id>` per league-tournament league, the team pages (one per registry team),
  * `/clubs/<slug>` per club of data/clubs.json (DESIGN §17.1), one page per date with a contest, and
- * one per game. The clubs come in lib/clubs.ts' display order, so the first club page listed is the
+ * one per game. The clubs come in lib/players/clubs.ts' display order, so the first club page listed is the
  * fullest one (scripts/a11y-axe.mjs samples it).
  *
  * Game URLs go through `gameHref`, so a si.com-only game (`sblive:<id>`) is listed at its real
@@ -39,7 +39,7 @@ import { getJvFetchedAt, getJvGamesOn } from '../lib/jv';
  * `lastModified` is never `Date.now()`, so a rebuild with unchanged data does not churn every
  * entry's date, and it is as close to when THAT page's content changed as the data can say, because
  * Google trusts `lastmod` only from a sitemap where it is consistently right. A game page and a
- * date page take the latest content stamp of the games they are built from (lib/content-dates.ts):
+ * date page take the latest content stamp of the games they are built from (lib/snapshot/content-dates.ts):
  * the pipeline's own `contentChangedAt` where it is set, else MaxPreps' stamp, and of the contests
  * that left them (`contentRemovals`: a deleted or moved game changes the pages it leaves). A game page is built
  * from the game, the sides' games behind the records it prints and the season series; a date page
@@ -73,7 +73,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: url('/teams'), lastModified, changeFrequency: 'weekly', priority: 0.7 },
     { url: url('/playoffs'), lastModified, changeFrequency: 'weekly', priority: 0.7 },
     { url: url('/leaders'), lastModified, changeFrequency: 'daily', priority: 0.6 },
-    // The later of the JV file and the snapshot: lib/jv.ts classifies the JV games against the varsity
+    // The later of the JV file and the snapshot: lib/jv/jv.ts classifies the JV games against the varsity
     // snapshot's games and official fixtures, so either can change the page.
     {
       url: url('/jv'),

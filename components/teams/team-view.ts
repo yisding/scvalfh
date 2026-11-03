@@ -79,7 +79,7 @@ import type {
   Team,
   TeamSlug,
 } from '../../lib/types';
-import { gameAddress } from '../../lib/venue';
+import { gameAddress } from '../../lib/schools/venue';
 import { getEloBoardForTeam } from '../leaders/elo-board';
 import { getBracketPlace } from '../playoffs/bracket-place';
 import { buildOverviewDivision, type OverviewDivision } from '../standings/standings-view';
@@ -114,7 +114,7 @@ export interface UnbeatenOpponent {
 }
 
 /**
- * The team page's Elo card (DESIGN §20): this team's rating from lib/ratings.ts, and its place on
+ * The team page's Elo card (DESIGN §20): this team's rating from lib/ratings/ratings.ts, and its place on
  * /leaders' Elo board when the board lists it, read off that board so the two cannot disagree.
  */
 export interface TeamEloView {
@@ -341,7 +341,7 @@ export type NextCard =
  */
 export interface PendingPairing {
   leagueId: LeagueId;
-  /** 'BVAL play-in' | 'SCVAL crossover' — the chip's words (lib/postseason-round-label.ts). */
+  /** 'BVAL play-in' | 'SCVAL crossover' — the chip's words (lib/postseason/postseason-round-label.ts). */
   kindLabel: string;
   /** 'Play-in for BVAL’s 4th automatic CCS berth': the config label's purpose. */
   purpose: string;
@@ -788,7 +788,7 @@ function placeLine(game: Game, team: Team): string | null {
 /** The NEXT card's external pills (named apart from describe-game's private `chipsFor`). */
 function nextChips(game: Game): NextChip[] {
   const chips: NextChip[] = [];
-  // lib/venue.ts: the game's own address, else the final's fixed site or the venue's or host's school.
+  // lib/schools/venue.ts: the game's own address, else the final's fixed site or the venue's or host's school.
   const address = gameAddress(game)?.address;
   if (address) chips.push({ href: mapsSearchHref(address), label: 'Directions' });
   // Named for what is behind them: 'Stream' and 'MaxPreps' did not say which stream or which page.

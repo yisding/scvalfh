@@ -27,7 +27,7 @@ import {
   type SectionConfig,
   type ShootoutInference,
 } from '../../lib/leagues';
-import { pairingRoundOf } from '../../lib/postseason-round-label';
+import { pairingRoundOf } from '../../lib/postseason/postseason-round-label';
 import { getTeamBySlug } from '../../lib/teams';
 import type { Game, LeagueId, Outcome, PostseasonTag, ScoreView, TeamSlug } from '../../lib/types';
 
@@ -97,7 +97,7 @@ export interface GameDisplay {
   postseasonTag: string | null;
   /**
    * 'si.com' when D2 published si.com's score (`provenance.scores === 'sblive'`): the † marker. 'school site'
-   * for a JV score from a school's own athletics site (lib/jv-school-sites.ts), marked † with its own words.
+   * for a JV score from a school's own athletics site (lib/jv/jv-school-sites.ts), marked † with its own words.
    */
   sourceMark: 'si.com' | 'school site' | null;
   /** A forfeit is excluded from GF/GA/GD and from MarginStrip; the row prints a dagger. */
@@ -271,7 +271,7 @@ export function shootoutSectionOf(game: Pick<Game, 'home' | 'away'>): SectionCon
  * What shootout copy calls the teams a section's rule covers: the section's one covered league when it
  * has just one ('EAL': every EAL string has always said "the EAL’s rules", "two EAL teams"), else the
  * section ('San Diego Section': its rule covers the City, North County and Metro conferences alike, and
- * a game between two of them). lib/backfill.ts words its D24 note by the same rule.
+ * a game between two of them). lib/crosscheck/backfill.ts words its D24 note by the same rule.
  */
 export function shootoutGroupName(section: Pick<SectionConfig, 'id' | 'name'>): string {
   const leagues = LEAGUES.filter((l) => l.sectionId === section.id);

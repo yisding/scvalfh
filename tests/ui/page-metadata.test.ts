@@ -34,7 +34,7 @@ stubCorpusSnapshot('all-2026-10-02');
 beforeAll(async () => {
   ({ SITE_NAME, SITE_WORDMARK } = await import('../../components/layout/site'));
   const data = await import('../../lib/data');
-  const { getClubSlugs } = await import('../../lib/clubs');
+  const { getClubSlugs } = await import('../../lib/players/clubs');
   const { gameStaticParams } = await import('../../components/game/game-view');
   const page = (path: string, mod: () => Promise<PageModule>, params?: Record<string, string>) => ({
     path,

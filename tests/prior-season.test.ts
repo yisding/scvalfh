@@ -1,12 +1,12 @@
 /**
- * Last season's results (lib/prior-season-schema.ts, data/prior-season.json; DESIGN §20.1): the committed
+ * Last season's results (lib/history/prior-season-schema.ts, data/prior-season.json; DESIGN §20.1): the committed
  * file's promises, the schema that holds it to them, and the normalization scripts/fetch-prior-season.ts
  * runs over each team's MaxPreps feed, on synthetic rows.
  */
 
 import { describe, expect, it } from 'vitest';
 
-import { getPriorSeason } from '../lib/prior-season';
+import { getPriorSeason } from '../lib/history/prior-season';
 import {
   PRIOR_EXCLUDED_CONTEST_IDS,
   PriorSeasonSchema,
@@ -15,7 +15,7 @@ import {
   seasonLabel,
   seasonWindow,
   type PriorSeason,
-} from '../lib/prior-season-schema';
+} from '../lib/history/prior-season-schema';
 import { SEASON_YEAR } from '../lib/season';
 import { ScheduleRowSchema, type ScheduleRow } from '../lib/sources/maxpreps';
 import { TEAMS, getTeamBySlug } from '../lib/teams';

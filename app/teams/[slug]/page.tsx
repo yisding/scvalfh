@@ -38,7 +38,7 @@ import { DATA_CORRECTIONS_URL, OG_BASE } from '../../../components/layout/site';
 import { teamJsonLd } from '../../../components/layout/structured-data';
 import { getTeamSlugs, getToday } from '../../../lib/data';
 import { ordinal, recordString, shortDate } from '../../../lib/format';
-import { getHistoryFor, getHistorySeason, getHistoryStandings } from '../../../lib/history';
+import { getHistoryFor, getHistorySeason, getHistoryStandings } from '../../../lib/history/history';
 import { divisionHeading, getLeague, leagueOfDivision, regionOf } from '../../../lib/leagues';
 import type { DivisionId, LeagueId } from '../../../lib/types';
 
@@ -239,7 +239,7 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
   const roster = buildRosterView(team.slug);
   // The school's JV games (MaxPreps, supplemented by si.com): listed apart from every varsity count.
   const jv = buildTeamJvView(team.slug);
-  // Its JV place, when its division's JV table is shown (lib/jv-standings.ts), and that table's anchor.
+  // Its JV place, when its division's JV table is shown (lib/jv/jv-standings.ts), and that table's anchor.
   const jvStanding = teamJvStanding(team.slug);
   const playerStats = buildPlayerStatsView(team.slug, [...leagueLog, ...nonLeagueLog]);
   const rosterCount = roster && roster.status !== 'error' ? roster.rows.length : 0;

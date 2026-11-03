@@ -18,7 +18,7 @@ import {
   seasonWindowBounds, sectionOf, sectionsInRegion, standingsLabel, statusesOf, tiebreakChainFor,
   type LeagueConfig, type SectionConfig,
 } from '../lib/leagues';
-import { schoolAddress } from '../lib/schools';
+import { schoolAddress } from '../lib/schools/schools';
 import { getTeamById } from '../lib/teams';
 import { CCS_BRACKET_URL } from '../lib/season';
 import type { PlayoffStatus, RegionId, TiebreakStage } from '../lib/types';

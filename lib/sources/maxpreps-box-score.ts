@@ -23,7 +23,7 @@ import {
   type PlayerStatsPage,
   type RosterJoinPlayer,
 } from './maxpreps-player-stats';
-import type { BoxScore, BoxScoreLine } from '../player-stats-schema';
+import type { BoxScore, BoxScoreLine } from '../players/player-stats-schema';
 import { MAXPREPS_API } from '../season';
 
 export function boxScoreUrl(teamId: string, contestId: string): string {
@@ -33,7 +33,7 @@ export function boxScoreUrl(teamId: string, contestId: string): string {
 /**
  * A parsed box score → what data/player-stats.json keeps: each line joined to the roster for its
  * name, and only the numbers the player has (a stat with no number for the player is left out
- * rather than stored as null). The game's team totals are not kept (lib/player-stats-schema.ts says
+ * rather than stored as null). The game's team totals are not kept (lib/players/player-stats-schema.ts says
  * why).
  */
 export function toBoxScore(

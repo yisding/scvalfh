@@ -1,14 +1,14 @@
 /**
  * The San Diego Section's brackets on /playoffs (plan final-08, 2026-10-30): components/playoffs/sds-bracket-view.ts
- * (lib/sds-bracket.ts LiveBracketDivision → the shared BracketDivisionView), components/playoffs/SdsBracket.tsx (the
+ * (lib/postseason/sds-bracket.ts LiveBracketDivision → the shared BracketDivisionView), components/playoffs/SdsBracket.tsx (the
  * archive's drawer, HistoryBracket.tsx BracketView) and the `#sds-bracket` section of app/playoffs/page.tsx.
  *
  * Run against last season: the 2025 brackets in this season's file shape and the 26 San Diego playoff rows MaxPreps
  * posted (tests/fixtures/sds/brackets-2025.ts). The copy rules are checked on what renders: no seed word at all (the
  * Section's places print as bare numerals; scripts/copy-rules.ts SEED_CLAIM covers every San Diego surface), no
- * "eliminat", no champion named, no CCS word. The page is rendered with lib/sds-bracket mocked to the 2025 file (the
+ * "eliminat", no champion named, no CCS word. The page is rendered with lib/postseason/sds-bracket mocked to the 2025 file (the
  * committed data/sds-brackets-2026.json is the placeholder and must stay so), the way tests/ui/playoff-view.test.ts
- * mocks lib/ccs-bracket; on the placeholder nothing is drawn.
+ * mocks lib/postseason/ccs-bracket; on the placeholder nothing is drawn.
  */
 
 import { readFileSync, mkdtempSync, writeFileSync } from 'node:fs';
@@ -22,7 +22,7 @@ import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import SdsBracket from '../../components/playoffs/SdsBracket';
 import { sdsBracketIntro, sdsBracketView } from '../../components/playoffs/sds-bracket-view';
 import { gameHref } from '../../lib/game-id';
-import { buildSdsBrackets, getSdsBrackets, getSdsBracketsSource } from '../../lib/sds-bracket';
+import { buildSdsBrackets, getSdsBrackets, getSdsBracketsSource } from '../../lib/postseason/sds-bracket';
 import type { Snapshot } from '../../lib/types';
 import { SEED_CLAIM, attributeText, elementById, visibleText } from '../../scripts/copy-rules';
 import { sdsGames2025, seedsFromHistory } from '../fixtures/sds/brackets-2025';
@@ -146,7 +146,7 @@ describe('the 2025 brackets before a game is played', () => {
   });
 });
 
-describe('/playoffs with the Section’s brackets (lib/sds-bracket mocked to the 2025 file)', () => {
+describe('/playoffs with the Section’s brackets (lib/postseason/sds-bracket mocked to the 2025 file)', () => {
   // The Oct 2 corpus with the snapshot's day moved to Tue Nov 3, after the seeding meeting; the brackets come
   // through getSdsBrackets/getSdsBracketsSource, mocked to the 2025 file joined to its MaxPreps rows the way a
   // filled data/sds-brackets-2026.json would answer.
@@ -162,8 +162,8 @@ describe('/playoffs with the Section’s brackets (lib/sds-bracket mocked to the
     writeFileSync(snapFile, JSON.stringify(snap));
     process.env.SCVAL_SNAPSHOT = snapFile;
     vi.resetModules();
-    vi.doMock('../../lib/sds-bracket', async (importOriginal) => {
-      const actual = await importOriginal<typeof import('../../lib/sds-bracket')>();
+    vi.doMock('../../lib/postseason/sds-bracket', async (importOriginal) => {
+      const actual = await importOriginal<typeof import('../../lib/postseason/sds-bracket')>();
       return { ...actual, getSdsBrackets: () => brackets, getSdsBracketsSource: () => source };
     });
     const page = await import('../../app/playoffs/page');
@@ -171,7 +171,7 @@ describe('/playoffs with the Section’s brackets (lib/sds-bracket mocked to the
   }, 600_000);
 
   afterAll(() => {
-    vi.doUnmock('../../lib/sds-bracket');
+    vi.doUnmock('../../lib/postseason/sds-bracket');
     if (priorEnv === undefined) delete process.env.SCVAL_SNAPSHOT;
     else process.env.SCVAL_SNAPSHOT = priorEnv;
     vi.resetModules();
@@ -226,8 +226,8 @@ describe('the committed 2026 brackets: drawn under #sds-bracket', () => {
   });
 
   it('draws the three brackets with their source, and the sentence says they are the Section’s', () => {
-    expect(getSdsBrackets()?.length, 'lib/sds-bracket.ts').toBe(3);
-    expect(getSdsBracketsSource(), 'lib/sds-bracket.ts').not.toBeNull();
+    expect(getSdsBrackets()?.length, 'lib/postseason/sds-bracket.ts').toBe(3);
+    expect(getSdsBracketsSource(), 'lib/postseason/sds-bracket.ts').not.toBeNull();
     expect(html, PAGE).toContain('id="sds-bracket"');
     expect(textOf(html), PAGE).toContain(
       'The Section has published its brackets; the brackets below are the Section’s, with results as MaxPreps posts them.',

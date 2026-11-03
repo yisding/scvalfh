@@ -45,15 +45,15 @@
  * score the coach changed without changing any of the game's team totals (a goal moved from one
  * player to another) is not noticed until something in the row moves.
  *
- * Game notes (lib/note-stats.ts). For a team a game note on one of its finals in data/snapshot.json
+ * Game notes (lib/players/note-stats.ts). For a team a game note on one of its finals in data/snapshot.json
  * credits with goals, assists or saves (teamsCreditedByNotes), the same per-game table's totals are
  * also kept in `gameTotals`, so a noted stat the coach has also entered is not counted twice.
  * Offline it reads `game-stats-<slug>.json` beside the rollup captures; a missing capture, or a
  * failed call, leaves `gameTotals` out with a warning and never fails the team; its noted stats
- * are then not counted (lib/note-stats.ts counts only what it can check). The previous run's
+ * are then not counted (lib/players/note-stats.ts counts only what it can check). The previous run's
  * totals are not carried forward for this: they may predate what the coach has entered since.
  *
- * A partial run still publishes, and failures are scoped to the team (lib/fetch-scope.ts): a team
+ * A partial run still publishes, and failures are scoped to the team (lib/pipeline/fetch-scope.ts): a team
  * whose call fails or does not parse keeps the previous file's rows with status 'carried-forward'
  * (or 'error' when there is nothing to carry), and never stops another team or another league from
  * being read. A team outside a `--leagues` run keeps the previous file's row untouched (or is
@@ -83,9 +83,9 @@ import {
   summarizeByLeague,
   teamsInScope,
   type PreviousFile,
-} from '../lib/fetch-scope';
+} from '../lib/pipeline/fetch-scope';
 import { INDEPENDENT_LEAGUES, LEAGUES_PROPER, seasonWindowBounds } from '../lib/leagues';
-import { teamsCreditedByNotes } from '../lib/note-stats';
+import { teamsCreditedByNotes } from '../lib/players/note-stats';
 import { inSeasonWindow } from '../lib/pipeline/steps/window';
 import {
   PlayerStatsFileSchema,
@@ -96,8 +96,8 @@ import {
   type BoxScore,
   type PlayerStatsFile,
   type TeamPlayerStats,
-} from '../lib/player-stats-schema';
-import { RostersSchema } from '../lib/rosters-schema';
+} from '../lib/players/player-stats-schema';
+import { RostersSchema } from '../lib/players/rosters-schema';
 import { MaxPrepsClient } from '../lib/sources/maxpreps';
 import { boxScoreUrl, fetchBoxScore, toBoxScore } from '../lib/sources/maxpreps-box-score';
 import { fetchGameRows, gameStatsUrl, parseGameRows, type GameRow } from '../lib/sources/maxpreps-game-stats';
@@ -113,7 +113,7 @@ import {
 } from '../lib/sources/maxpreps-player-stats';
 import { formatIssues } from '../lib/schema-primitives';
 import { SEASON_YEAR } from '../lib/season';
-import { loadSnapshot } from '../lib/snapshot-schema';
+import { loadSnapshot } from '../lib/snapshot/snapshot-schema';
 import { stableStringify } from '../lib/stable-json';
 import { TEAMS } from '../lib/teams';
 import type { Game, LeagueId } from '../lib/types';
@@ -170,7 +170,7 @@ function parseArgs(argv: readonly string[]): Args {
 }
 
 /**
- * The previous file, if it exists, salvaged row by row (lib/fetch-scope.ts readPreviousFile): its
+ * The previous file, if it exists, salvaged row by row (lib/pipeline/fetch-scope.ts readPreviousFile): its
  * valid rows of this season are what a failed or out-of-scope team keeps. A file written before
  * every team was in the registry (the 15 SCVAL teams) still counts: the teams it lacks are simply
  * pending.
@@ -190,7 +190,7 @@ const NOTES = [
   'Every number is what the coach entered on MaxPreps, for all of this season\'s varsity games, league and non-league alike. Coverage is the coach\'s choice: a team MaxPreps has no stats for is status none.',
   "A stat is tracked for a team when the team's own total is above zero and at least one player holds some of it; only then are its cells read, so a tracked 0 is a real zero and an untracked stat is null for every player. A total no player holds any of is dropped with a warning; rows adding up to more than a team total are kept as published and warned about. Per-game and percentage columns are dropped: they are arithmetic on the counts.",
   "A team with status carried-forward keeps the previous file's rows after a failed fetch; its own fetchedAt says when those rows were read.",
-  "gameTotals, where present, are MaxPreps' per-game team totals (team-season-game-stats rollup), kept only for a team a game note on one of its finals credits with goals, assists or saves (lib/note-stats.ts), so a noted stat the coach also entered is not counted twice.",
+  "gameTotals, where present, are MaxPreps' per-game team totals (team-season-game-stats rollup), kept only for a team a game note on one of its finals credits with goals, assists or saves (lib/players/note-stats.ts), so a noted stat the coach also entered is not counted twice.",
   "games, where present, are the team's box scores (team-contest-player-stats), one per final in data/snapshot.json whose row in the team's per-game table has a count above zero, read the same way as the season rows: a stat is tracked when the game's team total is above zero and some player holds it, and a player's line holds only the stats they have a number for. rowKey is a digest of the per-game row the box score was read against; a box score is read again when its row changes.",
 ];
 

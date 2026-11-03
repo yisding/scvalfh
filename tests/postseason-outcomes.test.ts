@@ -1,5 +1,5 @@
 /**
- * `lib/postseason-outcomes.ts` ccsOutcomeFor and playInWinnerPurpose, and the play-in card's winner line
+ * `lib/postseason/postseason-outcomes.ts` ccsOutcomeFor and playInWinnerPurpose, and the play-in card's winner line
  * (components/playoffs/PlayInCard.tsx), plan final-10 (2026-10-30). The pairings are written out as
  * lib/standings.ts leaguePairings returns them on the 2026-10-29 snapshot (SCVAL #1 St. Ignatius v Mitty, #2 Saint
  * Francis v Los Gatos, #3 Valley Christian v Palo Alto, #4 Los Altos v Santa Clara; BVAL Westmont, the Santa Teresa
@@ -12,13 +12,13 @@ import { describe, expect, it } from 'vitest';
 
 import PlayInCard, { type PlayInSide } from '../components/playoffs/PlayInCard';
 import { getLeague } from '../lib/leagues';
-import { ccsOutcomeFor, playInWinnerPurpose } from '../lib/postseason-outcomes';
+import { ccsOutcomeFor, playInWinnerPurpose } from '../lib/postseason/postseason-outcomes';
 import { TEAMS, getTeamBySlug } from '../lib/teams';
 import type { Game, LeaguePairing, PostseasonTag } from '../lib/types';
 import { game } from './game-builder';
 import { textOf } from './ui/html-text';
 
-const MOD = 'lib/postseason-outcomes.ts';
+const MOD = 'lib/postseason/postseason-outcomes.ts';
 
 const seat = (slug: string) => {
   const team = getTeamBySlug(slug);

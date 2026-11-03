@@ -55,8 +55,8 @@ import {
   leagueSportWords,
   type LeagueConfig,
 } from '../../lib/leagues';
-import { SHOOTOUT_NOTE, mayHideShootout } from '../../lib/postseason';
-import { withLocationRound } from '../../lib/postseason-rounds';
+import { SHOOTOUT_NOTE, mayHideShootout } from '../../lib/postseason/postseason';
+import { withLocationRound } from '../../lib/postseason/postseason-rounds';
 import { SEASON_DISPLAY } from '../../lib/season';
 import type {
   BackfillProvenance,
@@ -475,7 +475,7 @@ function hasResultConflict(g: Game): boolean {
  */
 function resultConflictNoteFor(game: Game): string | null {
   if (!hasResultConflict(game)) return null;
-  // The stored note (lib/crosscheck.ts, lib/cifss-crosscheck.ts) spells "MaxPreps' " with a straight
+  // The stored note (lib/crosscheck/crosscheck.ts, lib/crosscheck/cifss-crosscheck.ts) spells "MaxPreps' " with a straight
   // apostrophe; the page's copy is curly, notes already in the snapshot included.
   const note = (game.provenance.resultConflict as string)
     .trim()
@@ -685,7 +685,7 @@ function postseasonView(game: Game, league: LeagueConfig | null): PostseasonView
   }
   if (tag.kind === 'league-postseason' && league && league.postseason.kind === 'unbracketed-tournament') {
     // The EAL Super Regional: a counted-nowhere game with no bracket slot to name. The round, when the row's own
-    // location field names one ('Semi Final', 'Championship Final': MaxPreps' 2025 rows, lib/postseason-rounds.ts),
+    // location field names one ('Semi Final', 'Championship Final': MaxPreps' 2025 rows, lib/postseason/postseason-rounds.ts),
     // joins the label, 'EAL Super Regional semifinal', as an MCAL slot's does; with none, the event's name alone.
     const sentence = `${league.postseason.name} game — it does not count in the league table.`;
     const label = withLocationRound(`${league.shortName} ${league.postseason.name}`, game.venue.text);
@@ -696,7 +696,7 @@ function postseasonView(game: Game, league: LeagueConfig | null): PostseasonView
     };
   }
   if ((tag.kind === 'scval-crossover' || tag.kind === 'bval-play-in') && league) {
-    // 'SCVAL play-in' for the 4th-place play-in, which carries the crossover's tag (lib/postseason-round-label.ts).
+    // 'SCVAL play-in' for the 4th-place play-in, which carries the crossover's tag (lib/postseason/postseason-round-label.ts).
     const label = postseasonTagOf(game) ?? `${league.shortName} ${tag.kind === 'scval-crossover' ? 'crossover' : 'play-in'}`;
     const sentence = `${league.shortName} postseason game — it does not count in the league table.`;
     return {

@@ -62,9 +62,9 @@ import {
   timeOfDayPT,
 } from '../../lib/format';
 import { gameHref } from '../../lib/game-id';
-import { hasHistory } from '../../lib/history';
-import { tournamentHeadline } from '../../lib/postseason';
-import { ccsOutcomeFor } from '../../lib/postseason-outcomes';
+import { hasHistory } from '../../lib/history/history';
+import { tournamentHeadline } from '../../lib/postseason/postseason';
+import { ccsOutcomeFor } from '../../lib/postseason/postseason-outcomes';
 import { outcomesFor, pairingDatesLabel, playoffOutcomeLabel, statusBadge } from '../../lib/standings';
 import {
   CCS,
@@ -87,7 +87,7 @@ import { pickerName, pinLabel } from '../../lib/pin-label';
 import type { SearchIndex } from '../../lib/search';
 import { teamOfSide } from '../../lib/teams';
 import type { DivisionId, Game, LeagueId, RegionId, SeasonPhase, Team } from '../../lib/types';
-import { gameAddress } from '../../lib/venue';
+import { gameAddress } from '../../lib/schools/venue';
 import type { LeagueChip } from '../layout/LeagueSwitcher';
 import { leagueChips } from '../layout/league-chips';
 import { thisWeekByRegion } from '../playoffs/this-week-inputs';
@@ -296,7 +296,7 @@ export function phaseLead(league: LeagueConfig, phase: SeasonPhase, today: strin
 
   if (phase === 'tournament' && ps.kind === 'league-tournament') {
     // Results first (DESIGN §24.13): the champion once the final has a winner, else the next round's matchups
-    // (lib/postseason.ts tournamentHeadline); the static round list only while the picture is projected.
+    // (lib/postseason/postseason.ts tournamentHeadline); the static round list only while the picture is projected.
     const headline = tournamentHeadline(getLeagueTournament(league.id), league);
     if (headline.champion) {
       return { lead: headline.champion, body: '', link: { href: `/playoffs/${league.id}`, label: 'Bracket' } };
@@ -838,7 +838,7 @@ function nextGameView(game: Game, slug: string): HomeNextGame {
   const mineIsHome = game.home.slug === slug;
   const theirs = mineIsHome ? game.away : game.home;
   const links: HomeNextGame['links'] = [];
-  // lib/venue.ts: the game's own address, else the venue's or host's school (data/schools.json).
+  // lib/schools/venue.ts: the game's own address, else the venue's or host's school (data/schools.json).
   const address = gameAddress(game)?.address;
   if (address) links.push({ label: 'Directions', href: mapsSearchHref(address) });
   if (game.urls.nfhsStream) links.push({ label: 'Stream', href: game.urls.nfhsStream });
@@ -915,7 +915,7 @@ export function buildTeamViews(): HomeTeamView[] {
     const lead = projected ? POSTSEASON_LEAD.projected : POSTSEASON_LEAD.final;
     // A league tournament under way: the line is the team's outcome ('In the MCAL final', 'Lost in the
     // semifinal'), its own sentence, not a 'Final place:' ladder rung (DESIGN §24.13). The same for a CCS ladder
-    // team whose play-in is final ('Won the play-in', 'Lost the play-in'; lib/postseason-outcomes.ts, plan
+    // team whose play-in is final ('Won the play-in', 'Lost the play-in'; lib/postseason/postseason-outcomes.ts, plan
     // final-10, 2026-10-30); a crossover result changes no label, so its team keeps the 'Final place:' rung.
     let pairings = pairingsByLeague.get(league.id);
     if (league.postseason.kind === 'ccs-ladder' && !pairings) {

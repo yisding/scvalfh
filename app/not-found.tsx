@@ -4,7 +4,7 @@ import Link from 'next/link';
 import PageHeader from '../components/layout/PageHeader';
 import { OG_BASE } from '../components/layout/site';
 import { listWords, numberWord } from '../lib/format';
-import { getAvailableHistoryLeagues } from '../lib/history';
+import { getAvailableHistoryLeagues } from '../lib/history/history';
 import { LEAGUES_PROPER, getLeague } from '../lib/leagues';
 
 export const metadata: Metadata = {

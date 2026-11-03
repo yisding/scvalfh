@@ -8,7 +8,7 @@
  * list a lineup and nothing else). Away first, like the scoreboard; a side outside the teams this
  * site follows has no box score to read and is not listed, and a followed side with nothing to show
  * says why in one line: its coach entered nothing for the game, or its stats could not be read
- * (lib/player-stats.ts getGameStatsEntry), which is never passed off as nothing entered.
+ * (lib/players/player-stats.ts getGameStatsEntry), which is never passed off as nothing entered.
  *
  * Per side, two tables of the team page's shape (components/teams/TeamPlayerStats.tsx StatsTable):
  *   - Scoring: goals, assists, shots, shots on goal and steals, only the ones this game's entries
@@ -29,7 +29,7 @@
  *
  * Game notes. Some coaches write goals, assists and saves in MaxPreps' note for the game instead
  * (Homestead's "goals scored Gabby Molly, Emry Borges"). The game page adds what the team page adds,
- * exactly: the credits lib/note-stats.ts keeps after its guards (a name on one roster only, no more
+ * exactly: the credits lib/players/note-stats.ts keeps after its guards (a name on one roster only, no more
  * goals or assists than the side scored, nothing the coach also entered for the game, nothing that
  * cannot be checked, and no noted goal at all for a team whose entries and notes together pass its
  * goals scored). Each is added to the player's line in the box score, or to a line of its own (a side
@@ -37,10 +37,10 @@
  * the note under the tables, so a reader can tell the two sources apart.
  */
 
-import { getGameStatsEntry, type GameStatsEntry } from '../../lib/player-stats';
-import type { NoteCredit } from '../../lib/note-stats';
-import type { BoxScore, BoxScoreLine, FieldStatKey, GoalieStatKey } from '../../lib/player-stats-schema';
-import { SHOOTOUT_NOTE } from '../../lib/postseason';
+import { getGameStatsEntry, type GameStatsEntry } from '../../lib/players/player-stats';
+import type { NoteCredit } from '../../lib/players/note-stats';
+import type { BoxScore, BoxScoreLine, FieldStatKey, GoalieStatKey } from '../../lib/players/player-stats-schema';
+import { SHOOTOUT_NOTE } from '../../lib/postseason/postseason';
 import type { TeamSlug } from '../../lib/types';
 import type { StatColumn, StatRow, StatTable } from '../teams/player-stats-view';
 import { overtimeInDoubt } from '../ui/describe-game';

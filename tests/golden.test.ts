@@ -13,7 +13,7 @@ import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
 import { classifyGames } from '../lib/classify';
 import { divisionsOf } from '../lib/leagues';
-import { buildSeason } from '../lib/season-build';
+import { buildSeason } from '../lib/snapshot/season-build';
 import {
   buildCrossCheck,
   computeStandings,
@@ -22,8 +22,8 @@ import {
   statusBadge,
   statusLegend,
 } from '../lib/standings';
-import { countsOf, migrateV1ToV2 } from '../lib/snapshot-migrate';
-import { parseSnapshot } from '../lib/snapshot-schema';
+import { countsOf, migrateV1ToV2 } from '../lib/snapshot/snapshot-migrate';
+import { parseSnapshot } from '../lib/snapshot/snapshot-schema';
 import { stableStringify } from '../lib/stable-json';
 import type {
   Game,

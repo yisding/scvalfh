@@ -6,7 +6,7 @@
  * Read for every team with stats, for two jobs. It says which games the coach has entered stats
  * for, and a digest of each game's row (`rowKey`) tells scripts/fetch-player-stats.ts when a game's
  * box score (lib/sources/maxpreps-box-score.ts) needs reading again. For a team a game note credits
- * with stats (lib/note-stats.ts), its totals also say what the coach has ALREADY entered on the
+ * with stats (lib/players/note-stats.ts), its totals also say what the coach has ALREADY entered on the
  * stats sheet for each game, so a goal, assist or save the note names is not counted twice.
  *
  * Shape [V] 2026-10-06 (Homestead): the same `data.groups[]` → `subgroups[]` → `stats.columns[]` /
@@ -21,7 +21,7 @@ import { createHash } from 'node:crypto';
 import { z } from 'zod';
 
 import { MaxPrepsError, type MaxPrepsClient } from './maxpreps';
-import type { GameTotal } from '../player-stats-schema';
+import type { GameTotal } from '../players/player-stats-schema';
 import { MAXPREPS_API, SPORT_SEASON_ID } from '../season';
 
 export function gameStatsUrl(teamId: string, sportSeasonId = SPORT_SEASON_ID): string {
@@ -145,7 +145,7 @@ export function parseGameRows(raw: unknown, opts: ParseGameStatsOptions = {}): G
   }));
 }
 
-/** The team's goals, assists and saves game by game: what lib/note-stats.ts checks a note against. */
+/** The team's goals, assists and saves game by game: what lib/players/note-stats.ts checks a note against. */
 export function parseGameStats(raw: unknown, opts: ParseGameStatsOptions = {}): GameTotal[] {
   return parseGameRows(raw, opts).map((r) => r.total);
 }

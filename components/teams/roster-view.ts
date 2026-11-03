@@ -1,6 +1,6 @@
 /**
  * The team page's roster section (SPEC §1.1j), derived from the merged MaxPreps + enrichment
- * view in lib/rosters.ts, for every team of all five leagues. Pure, so tests/ui/roster-view.test.ts
+ * view in lib/players/rosters.ts, for every team of all five leagues. Pure, so tests/ui/roster-view.test.ts
  * can assert it over the real files.
  *
  * What the page promises, and this module enforces:
@@ -23,7 +23,7 @@
  *     components/commits/commit-view.ts' (`playerCommitLine`), shared with /commits.
  */
 
-import { getCommitsFile } from '../../lib/commits';
+import { getCommitsFile } from '../../lib/players/commits';
 import { dateWithYear, gradeWord, shortDate, toLocalTimestamp } from '../../lib/format';
 import {
   getEnrichedTeamRoster,
@@ -36,7 +36,7 @@ import {
   type PlayerProfile,
   type ProfilePlatform,
   type RosterConflict,
-} from '../../lib/rosters';
+} from '../../lib/players/rosters';
 import type { TeamSlug } from '../../lib/types';
 import { playerClubGroups, type RosterClubGroup } from '../clubs/club-view';
 import { SPORT_WORDS, playerCommitLine, sportLabel, type RosterCommitLine } from '../commits/commit-view';
@@ -229,7 +229,7 @@ export interface RosterView {
   elsewhereSources: string[];
   /**
    * What other public sources showed for the current roster, as the enrichment file records it
-   * per team (lib/rosters.ts `OtherRosters`). The empty state says only what this says: "none" is
+   * per team (lib/players/rosters.ts `OtherRosters`). The empty state says only what this says: "none" is
    * the one case that may claim no other source has a roster.
    */
   otherRosters: OtherRosters;
@@ -478,7 +478,7 @@ function elsewhereSources(players: MergedPlayer[]): string[] {
 }
 
 /**
- * The roster section for any registry team, in every league. null only for a slug lib/rosters.ts
+ * The roster section for any registry team, in every league. null only for a slug lib/players/rosters.ts
  * does not hold (not a registry team), so the team page never prints an empty state for something
  * that does not exist. A team no run has covered yet has status 'pending' and says so; one whose
  * fetch failed with nothing to fall back on has status 'error'; one MaxPreps lists no players for

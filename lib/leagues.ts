@@ -571,7 +571,7 @@ export interface DataQualityConfig {
   contestDateOverrides: Readonly<Record<ContestId, { dateKey: string; timeTba: true; source: string }>>;
   /**
    * An official league fixture that MaxPreps has no contest for and that was played on another date, and maybe at the
-   * other school, than its league's document says. D2 rule 2 (lib/backfill.ts) looks for si.com's Final of the pair
+   * other school, than its league's document says. D2 rule 2 (lib/crosscheck/backfill.ts) looks for si.com's Final of the pair
    * on `dateKey` (±1 day) instead of the official date and publishes it with `home` as the host; the game keeps the
    * official date as `official.scheduledDate`. `source` is one sentence naming the sources and what they say; the
    * game page and /about print it in the backfill note. Keys are OfficialFixture ids (assertLeagues).

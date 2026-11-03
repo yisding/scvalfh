@@ -14,18 +14,18 @@
  *   final's `site` is 'neutral' (Los Altos HS), the Division 2 final's 'home' (Gilroy HS), as prior-season.json
  *   has them. The finals' `venue.text` is the history file's site in MaxPreps' '@ ' form; the other rows carry
  *   none (prior-season.json keeps no location).
- * - `ccsSeeds2025()` is the 2025 field's sixteen seeds as lib/ccs-bracket.ts getCcsSeeds would return them
- *   from a filled owner file: lib/ccs-bracket.ts seedsFromHistory over the history file.
+ * - `ccsSeeds2025()` is the 2025 field's sixteen seeds as lib/postseason/ccs-bracket.ts getCcsSeeds would return them
+ *   from a filled owner file: lib/postseason/ccs-bracket.ts seedsFromHistory over the history file.
  * - `unplayed(game, …)` is the same game before it was played: scheduled, no score, with the location, ticket
  *   and stream links a MaxPreps row carries before the day (the 2025 Los Gatos rows: '@ Los Gatos HS', a GoFan
  *   url on home-site games, an NFHS url on the finals).
  */
 
-import { getCcsSeeds, seedsFromHistory } from '../../../lib/ccs-bracket';
-import type { CcsSeeds } from '../../../lib/ccs-bracket-schema';
-import { getHistoryBrackets } from '../../../lib/history';
+import { getCcsSeeds, seedsFromHistory } from '../../../lib/postseason/ccs-bracket';
+import type { CcsSeeds } from '../../../lib/postseason/ccs-bracket-schema';
+import { getHistoryBrackets } from '../../../lib/history/history';
 import { CCS, LEAGUE_IDS, getLeague } from '../../../lib/leagues';
-import { getPriorSeason } from '../../../lib/prior-season';
+import { getPriorSeason } from '../../../lib/history/prior-season';
 import { getTeamBySlug, teamsInLeague } from '../../../lib/teams';
 import type { CcsDivisionName, Game, GameBracket } from '../../../lib/types';
 import { game } from '../../game-builder';
@@ -119,7 +119,7 @@ export function ccsGames2025(): Game[] {
     });
 }
 
-/** The 2025 field's seeds as the owner file would give them (lib/ccs-bracket.ts getCcsSeeds over seedsFromHistory). */
+/** The 2025 field's seeds as the owner file would give them (lib/postseason/ccs-bracket.ts getCcsSeeds over seedsFromHistory). */
 export function ccsSeeds2025(): CcsSeeds {
   const seeds = getCcsSeeds(seedsFromHistory(ccsHistory(), '2025-26'));
   if (!seeds) throw new Error('the 2025 history bracket gave no seeds');

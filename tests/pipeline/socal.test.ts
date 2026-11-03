@@ -27,7 +27,7 @@ import { localDateKey, sideOutcome } from '../../lib/format';
 import { DATA_QUALITY, LEAGUES, getDivision, getLeague, getSection } from '../../lib/leagues';
 import { readManifest } from '../../lib/pipeline/corpus';
 import { NO_MAXPREPS_TABLE_REASON } from '../../lib/pipeline/steps/league-meta';
-import { loadSnapshot } from '../../lib/snapshot-schema';
+import { loadSnapshot } from '../../lib/snapshot/snapshot-schema';
 import { ScheduleResponseSchema, type ScheduleRow } from '../../lib/sources/maxpreps';
 import { parseScoresPage, parseTeamGamesPage } from '../../lib/sources/sblive';
 import { divisionGames } from '../../lib/standings';
@@ -164,7 +164,7 @@ describeIfCaptured('the SoCal corpus run', () => {
   });
 
   it('publishes per-league counts (the frozen NorCal leagues hold only the SoCal feeds’ games against them)', () => {
-    expect(snapshot.counts.byLeague, 'lib/snapshot-migrate.ts countsOf').toEqual({
+    expect(snapshot.counts.byLeague, 'lib/snapshot/snapshot-migrate.ts countsOf').toEqual({
       scval: { teams: 15, games: 10, leagueGames: 0, finals: 5, backfilled: 0 },
       bval: { teams: 12, games: 0, leagueGames: 0, finals: 0, backfilled: 0 },
       pcal: { teams: 7, games: 0, leagueGames: 0, finals: 0, backfilled: 0 },

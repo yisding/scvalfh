@@ -21,7 +21,7 @@ import { stepStandings } from '../../lib/pipeline/steps/standings';
 import { FixtureTransport } from '../../lib/pipeline/transport';
 import { ALL_SEASON_ID, SPORT_SEASON_ID } from '../../lib/season';
 import { CIFSS_SECTIONS } from '../../lib/sources/cifss';
-import { loadSnapshot } from '../../lib/snapshot-schema';
+import { loadSnapshot } from '../../lib/snapshot/snapshot-schema';
 import { stableStringify } from '../../lib/stable-json';
 import { FETCHABLE_TEAMS, TEAMS } from '../../lib/teams';
 import type { Snapshot } from '../../lib/types';

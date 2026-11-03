@@ -24,12 +24,12 @@
  *     each school's heading links, says where each came from.
  */
 
-import { getClubsFile } from '../../lib/clubs';
-import { getCommitsFile } from '../../lib/commits';
+import { getClubsFile } from '../../lib/players/clubs';
+import { getCommitsFile } from '../../lib/players/commits';
 import { getTeamsGrouped, type LeagueSummary } from '../../lib/data';
 import { dateWithYear, listWords } from '../../lib/format';
 import { REGIONS, getLeague } from '../../lib/leagues';
-import { getRosterEnrichment, getRosters } from '../../lib/rosters';
+import { getRosterEnrichment, getRosters } from '../../lib/players/rosters';
 import type { RegionId, TeamSlug } from '../../lib/types';
 import { buildRosterView, type RosterRow } from '../teams/roster-view';
 import { plural } from '../ui/plural';

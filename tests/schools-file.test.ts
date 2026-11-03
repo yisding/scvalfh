@@ -1,6 +1,6 @@
 /**
- * data/schools.json (lib/schools.ts): one campus address per registry school, keyed by slug, and the
- * game-address rules every Directions link and the game page's WHERE line share (lib/venue.ts).
+ * data/schools.json (lib/schools/schools.ts): one campus address per registry school, keyed by slug, and the
+ * game-address rules every Directions link and the game page's WHERE line share (lib/schools/venue.ts).
  */
 
 import { readFileSync } from 'node:fs';
@@ -9,10 +9,10 @@ import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 import { getLeagueTournament } from '../lib/data';
-import { SCHOOL_ADDRESSES, loadSchools, schoolAddress } from '../lib/schools';
+import { SCHOOL_ADDRESSES, loadSchools, schoolAddress } from '../lib/schools/schools';
 import { TEAMS } from '../lib/teams';
 import type { Game } from '../lib/types';
-import { addressLine, gameAddress } from '../lib/venue';
+import { addressLine, gameAddress } from '../lib/schools/venue';
 import { game } from './game-builder';
 import { REPO } from './helpers';
 
@@ -42,7 +42,7 @@ describe('data/schools.json', () => {
   });
 });
 
-describe('gameAddress (lib/venue.ts)', () => {
+describe('gameAddress (lib/schools/venue.ts)', () => {
   it('a home game is at the host school', () => {
     const g = game({ home: 'fremont', away: 'cupertino' });
     expect(gameAddress(g)).toMatchObject({ source: 'host-school', address: schoolAddress('fremont') });

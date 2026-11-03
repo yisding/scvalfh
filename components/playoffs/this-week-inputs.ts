@@ -34,9 +34,9 @@ import {
   getLeague,
 } from '../../lib/leagues';
 import type { LeagueConfig } from '../../lib/leagues';
-import { getCcsSeeds } from '../../lib/ccs-bracket';
-import { tournamentGameLine } from '../../lib/postseason';
-import { withLocationRound } from '../../lib/postseason-rounds';
+import { getCcsSeeds } from '../../lib/postseason/ccs-bracket';
+import { tournamentGameLine } from '../../lib/postseason/postseason';
+import { withLocationRound } from '../../lib/postseason/postseason-rounds';
 import type { CcsPlayoffs, ContestId, Game, LeagueId, RegionId } from '../../lib/types';
 
 import { getBracketLink } from './bracket-link';
@@ -84,7 +84,7 @@ const CCS_ROUND_WORD = { quarterfinals: 'quarterfinal', semifinals: 'semifinal',
 /**
  * The round word of every postseason contest the page can name, for the strip's labels: a CCS game by its date
  * against the CCS key dates ('CCS semifinal'); an unbracketed league's game by the round its own row names
- * ('EAL Super Regional semifinal', lib/postseason-rounds.ts); a league tournament's game by its bracket slot
+ * ('EAL Super Regional semifinal', lib/postseason/postseason-rounds.ts); a league tournament's game by its bracket slot
  * ('MCAL final'); a CCS league's crossover or play-in by its pairing ('SCVAL crossover · #2 v #2', 'SCVAL play-in
  * for the 7th CCS berth', the berth's number from the CCS field). Anything else takes its tag's own words in
  * buildThisWeek (postseasonTagOf). The pairings come last, so a crossover MaxPreps marked a playoff (the Oct 29

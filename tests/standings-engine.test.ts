@@ -7,7 +7,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { getLeague } from '../lib/leagues';
-import { sixthPlaceRule } from '../lib/postseason';
+import { sixthPlaceRule } from '../lib/postseason/postseason';
 import {
   buildCrossCheck,
   computeStandings,
@@ -609,7 +609,7 @@ describe('MCAL: the last tournament place (§5.4b)', () => {
   });
 });
 
-describe('MCAL: lib/postseason sixthPlaceRule agrees with the engine (§5.4b ⇄ §6.2)', () => {
+describe('MCAL: lib/postseason/postseason sixthPlaceRule agrees with the engine (§5.4b ⇄ §6.2)', () => {
   // sixthPlaceRule takes its play-in pair from the engine's lastSpotOutcome; this keeps the bracket's
   // play-in pair and the table's shared 6th (resolvedBy 'play-in') in lockstep over many random seasons.
   const MCAL_SLUGS = Object.keys(getLeague('mcal').rules.drawNumbers ?? {});

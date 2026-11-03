@@ -437,7 +437,7 @@ describe('normalize: provenance.resultConflict (D2 rule 4a evidence)', () => {
     const flagged = corpus.games.filter((g) => g.provenance.resultConflict);
     expect(flagged.map((g) => g.contestId)).toEqual(['747082fd-259d-4fb8-8837-ece21a945993']);
     expect(flagged[0].provenance.resultConflict).toMatch(/W and Gilroy L on a 0-0 score/);
-    // The score is still published as MaxPreps has it; lib/backfill decides whether si.com overrides.
+    // The score is still published as MaxPreps has it; lib/crosscheck/backfill decides whether si.com overrides.
     expect(flagged[0].status).toBe('final');
     expect([flagged[0].home.score, flagged[0].away.score]).toEqual([0, 0]);
   });

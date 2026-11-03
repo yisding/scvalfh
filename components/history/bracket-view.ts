@@ -6,7 +6,7 @@ import {
   type HistoryBracketGame,
   type HistoryBracketRound,
   type HistoryBracketSide,
-} from '../../lib/history';
+} from '../../lib/history/history';
 
 /**
  * The words of a 2025 section bracket on /history/2025-26 (components/history/HistoryBracket.tsx):
@@ -18,7 +18,7 @@ import {
  * The card model is shared (2026-10-30, plan final-08): HistoryBracket.tsx draws a BracketDivisionView,
  * which this archive maps into with historyBracketView (every game final, no game page, so no `href`, and
  * the very words and markup it printed before), and the live San Diego bracket on /playoffs maps into
- * from lib/sds-bracket.ts (components/playoffs/sds-bracket-view.ts: a card can be unplayed, a side can be
+ * from lib/postseason/sds-bracket.ts (components/playoffs/sds-bracket-view.ts: a card can be unplayed, a side can be
  * a place still to be decided, and a joined card links its game page). One bracket drawer, two sources.
  */
 

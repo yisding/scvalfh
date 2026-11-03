@@ -1,12 +1,12 @@
 /**
  * The JV lists' view model: a team page's "JV games" section and a day page's JV block.
  *
- * Every game comes from lib/jv.ts (MaxPreps' JV schedules, supplemented by si.com under
- * lib/jv-merge.ts), classified by lib/jv-standings.ts: a JV league game is one whose varsity
+ * Every game comes from lib/jv/jv.ts (MaxPreps' JV schedules, supplemented by si.com under
+ * lib/jv/jv-merge.ts), classified by lib/jv/jv-standings.ts: a JV league game is one whose varsity
  * counterpart counts. JV games stay apart from varsity: these views feed no varsity record, form
  * strip, margin chart or table, so a JV result is never mistaken for a varsity one.
  *
- * SERVER-ONLY: reads lib/jv, which imports data/jv.json.
+ * SERVER-ONLY: reads lib/jv/jv, which imports data/jv.json.
  */
 
 import { localDateKey } from '../../lib/format';
@@ -17,8 +17,8 @@ import {
   getJvGamesOn,
   getJvSchoolSiteDiffersNote,
   getJvTeam,
-} from '../../lib/jv';
-import { jvSlotTeamFor } from '../../lib/jv-teams';
+} from '../../lib/jv/jv';
+import { jvSlotTeamFor } from '../../lib/jv/jv-teams';
 import { regionOf } from '../../lib/leagues';
 import { getTeamBySlug } from '../../lib/teams';
 import type { Game, GameSide, RegionId, TeamSlug } from '../../lib/types';
@@ -36,7 +36,7 @@ export interface JvRowView {
 export interface JvListSummary {
   /** Games with a score from si.com (the † rows). */
   sbliveScores: number;
-  /** Games with a score from a school's own athletics site (also †; lib/jv-school-sites.ts). */
+  /** Games with a score from a school's own athletics site (also †; lib/jv/jv-school-sites.ts). */
   schoolSiteScores: number;
   /** MaxPreps finals si.com reports differently. */
   differs: number;

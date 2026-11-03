@@ -13,7 +13,7 @@ import { getBracketLink } from '../../components/playoffs/bracket-link';
 import { getBracketPlace } from '../../components/playoffs/bracket-place';
 import { buildTeamPageView, leagueCopy } from '../../components/teams/team-view';
 import { getGames } from '../../lib/data';
-import { getSdsBrackets } from '../../lib/sds-bracket';
+import { getSdsBrackets } from '../../lib/postseason/sds-bracket';
 import type { Game } from '../../lib/types';
 import { SEED_CLAIM } from '../../scripts/copy-rules';
 
@@ -137,15 +137,15 @@ describe('getBracketPlace on a decided CCS quarterfinal (Codex review, 2026-11-0
       return { ...actual, getPlayoffs: () => ({ ...playoffs, games: [decided, ...rest] }) };
     });
     if (!seeded) {
-      vi.doMock('../../lib/ccs-bracket', async (importOriginal) => {
-        const actual = await importOriginal<typeof import('../../lib/ccs-bracket')>();
+      vi.doMock('../../lib/postseason/ccs-bracket', async (importOriginal) => {
+        const actual = await importOriginal<typeof import('../../lib/postseason/ccs-bracket')>();
         return { ...actual, getCcsSeeds: () => null };
       });
     }
     const { getBracketPlace: place } = await import('../../components/playoffs/bracket-place');
     const result = place(decided);
     vi.doUnmock('../../lib/data');
-    vi.doUnmock('../../lib/ccs-bracket');
+    vi.doUnmock('../../lib/postseason/ccs-bracket');
     vi.resetModules();
     return { result, home: data.getTeamBySlug(decided.home.slug!)!.name };
   }

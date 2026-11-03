@@ -2,7 +2,7 @@
 /**
  * Download every registry school's MaxPreps mascot and write it to public/mascots/ as the square
  * WebP tiles `TeamMonogram` draws (DESIGN §12.4): `<slug>-<px>.webp` for every px in
- * lib/mascots.ts' MASCOT_FILE_SIZES, i.e. each tile size (20–64px) at 1× and 2×, so the browser
+ * lib/schools/mascots.ts' MASCOT_FILE_SIZES, i.e. each tile size (20–64px) at 1× and 2×, so the browser
  * shows each file pixel for pixel. Each size is resized from the full source, then lightly
  * sharpened, since a downscale to 20–48px softens every edge.
  *
@@ -28,7 +28,7 @@
  * tile's rounded corners never clip it. A logo on a solid colour block (Leigh, Del Mar, Westview)
  * or a full-bleed square (Bishop's, Canyon Crest) is drawn to the edge instead; see `framing`.
  *
- * A JV slot team (lib/jv-teams.ts JV_OUTSIDE_TEAMS: York, which plays Santa Catalina's PCAL JV games)
+ * A JV slot team (lib/jv/jv-teams.ts JV_OUTSIDE_TEAMS: York, which plays Santa Catalina's PCAL JV games)
  * has no registry row or MaxPreps mascot; its tiles (`<mascot>-<px>.webp`) are drawn the same way from
  * the logo it names (`--only york`).
  *
@@ -40,8 +40,8 @@ import path from 'node:path';
 
 import sharp, { type Sharp } from 'sharp';
 
-import { JV_OUTSIDE_TEAMS } from '../lib/jv-teams';
-import { MASCOT_FILE_SIZES } from '../lib/mascots';
+import { JV_OUTSIDE_TEAMS } from '../lib/jv/jv-teams';
+import { MASCOT_FILE_SIZES } from '../lib/schools/mascots';
 import { CHROME_USER_AGENT, HttpClient } from '../lib/sources/http';
 import { TEAMS } from '../lib/teams';
 import type { Team } from '../lib/types';
@@ -227,7 +227,7 @@ async function main(argv: readonly string[]): Promise<number> {
     return 0;
   }
   // Every registry team, then each JV slot team (York), which has no MaxPreps mascot of its own: its tiles
-  // are drawn from the logo lib/jv-teams.ts names.
+  // are drawn from the logo lib/jv/jv-teams.ts names.
   const targets: ReadonlyArray<{ slug: string; url: string }> = [
     ...TEAMS.map((t) => ({ slug: t.slug, url: mascotUrl(t) })),
     ...Object.values(JV_OUTSIDE_TEAMS).map((t) => ({ slug: t.mascot, url: t.mascotSource })),

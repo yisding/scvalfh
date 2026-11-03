@@ -45,11 +45,11 @@ import {
   pairingWindow,
 } from './leagues';
 import type { LeagueConfig, PairingConfig, PostseasonConfig, RegionConfig, SectionConfig } from './leagues';
-import { buildLeagueTournament, tournamentOutcome, tournamentOutcomeCopy } from './postseason';
-import { ccsOutcomeFor } from './postseason-outcomes';
+import { buildLeagueTournament, tournamentOutcome, tournamentOutcomeCopy } from './postseason/postseason';
+import { ccsOutcomeFor } from './postseason/postseason-outcomes';
 import { buildSearchIndex } from './search';
 import type { SearchIndex } from './search';
-import { loadSnapshot } from './snapshot-schema';
+import { loadSnapshot } from './snapshot/snapshot-schema';
 import {
   divisionGames,
   leaguePairings,
@@ -183,7 +183,7 @@ export function getSbliveCrossCheck(): SbliveCrossCheck | undefined {
 }
 
 /**
- * The cifsshome.org SCORE cross-check (lib/cifss-crosscheck.ts). Undefined until a run has read it.
+ * The cifsshome.org SCORE cross-check (lib/crosscheck/cifss-crosscheck.ts). Undefined until a run has read it.
  * It never changes a published score: `conflicts` keep MaxPreps' score, and the other two lists are
  * widget scores MaxPreps lacks, none of them published as results.
  */
@@ -996,7 +996,7 @@ export interface TeamPostseasonLine {
    * nothing here is official.' for a CCS ladder and for a league tournament still projected from the table;
    * 'From the results as posted; nothing here is official.' once that tournament has results; for a CCS ladder
    * team whose play-in or crossover is final, 'From the results as posted; CCS’s bracket is the official record.'
-   * (lib/postseason-outcomes.ts, plan final-10, 2026-10-30); null for the EAL (every team is in; nothing is
+   * (lib/postseason/postseason-outcomes.ts, plan final-10, 2026-10-30); null for the EAL (every team is in; nothing is
    * projected), a San Diego league (the Section places teams) and the Sunset.
    */
   caveat: string | null;
@@ -1072,7 +1072,7 @@ export function getTeamPostseasonLine(ref: string): TeamPostseasonLine | null {
       const qualifiers = numberWord(ps.qualifiers);
       const byes = ps.byes.length === 2 ? `${ps.byes[0]}-${ps.byes[1]}` : ps.byes.join(', ');
       // The table's words while the picture is projected from it; once the tournament is seeded or under way, the
-      // team's own outcome from the results (lib/postseason.ts tournamentOutcome: in the final, lost in the
+      // team's own outcome from the results (lib/postseason/postseason.ts tournamentOutcome: in the final, lost in the
       // semifinal, champion…, DESIGN §24.13). The optional play-in clause is dropped once its day has passed.
       const projection = getLeagueTournament(league.id);
       const playInClause = playIn && getToday() <= playIn.date ? ` (a play-in ${shortDate(playIn.date)} only if needed)` : '';
@@ -1105,7 +1105,7 @@ export function getTeamPostseasonLine(ref: string): TeamPostseasonLine | null {
       };
     case 'ccs-ladder': {
       // A final play-in is the team's outcome, its own label and sentence ('Won the play-in', 'Lost the play-in';
-      // lib/postseason-outcomes.ts); a final crossover keeps the ladder's label and adds its result to the sentence.
+      // lib/postseason/postseason-outcomes.ts); a final crossover keeps the ladder's label and adds its result to the sentence.
       const outcome = ccsOutcomeFor(team.slug, { pairings: getLeaguePairings(league.id) });
       if (outcome?.kind === 'play-in' && outcome.label) {
         return {
@@ -1169,6 +1169,3 @@ export function playInClause(
     `${ordinalWord(ps.autoBerths)} automatic CCS berth`
   );
 }
-
-/** Re-exported so a page never has to import two modules to name a team id. */
-export type { DivisionId, Game, LeagueId, Standing, Team, TeamId, TeamSlug };

@@ -22,8 +22,8 @@ import {
   type LeagueSummary,
 } from '../../lib/data';
 import { getDivision, getLeague, type LeagueConfig } from '../../lib/leagues';
-import { tournamentOutcome, tournamentOutcomeCopy } from '../../lib/postseason';
-import { schoolAddress } from '../../lib/schools';
+import { tournamentOutcome, tournamentOutcomeCopy } from '../../lib/postseason/postseason';
+import { schoolAddress } from '../../lib/schools/schools';
 import { outcomesFor, playoffOutcomeLabel } from '../../lib/standings';
 import type { LeagueTournamentProjection, Team } from '../../lib/types';
 

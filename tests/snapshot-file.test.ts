@@ -14,11 +14,11 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { ccsBracketGames } from '../lib/ccs-bracket';
+import { ccsBracketGames } from '../lib/postseason/ccs-bracket';
 import { LEAGUES } from '../lib/leagues';
 import { officialDocumentOf } from '../lib/official/schema';
 import { SNAPSHOT_MAX_BYTES, SNAPSHOT_WARN_BYTES, SOURCES_MAX, budgetLabel } from '../lib/pipeline/steps/assemble';
-import { loadSnapshot, snapshotContentHash } from '../lib/snapshot-schema';
+import { loadSnapshot, snapshotContentHash } from '../lib/snapshot/snapshot-schema';
 import { TEAMS, getTeamBySlug } from '../lib/teams';
 import type { Snapshot } from '../lib/types';
 import { REPO } from './helpers';
@@ -266,7 +266,7 @@ describeIfPresent('the committed snapshot: CCS playoffs', () => {
     }
   });
 
-  it('holds playoffs.games to its one derivation (lib/ccs-bracket.ts), every entry a game of the snapshot', () => {
+  it('holds playoffs.games to its one derivation (lib/postseason/ccs-bracket.ts), every entry a game of the snapshot', () => {
     // Empty today (2026-10-29): no game is tagged 'ccs' before the committee enters the bracket.
     const derived = ccsBracketGames(snapshot.games, snapshot.playoffs.keyDates).map((g) => g.contestId);
     expect(snapshot.playoffs.games.map((g) => g.contestId)).toEqual(derived);

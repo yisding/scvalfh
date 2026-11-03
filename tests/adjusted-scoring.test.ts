@@ -1,5 +1,5 @@
 /**
- * lib/adjusted-scoring.ts: the Elo-anchored Poisson goal model and the adjustment read off it, over
+ * lib/ratings/adjusted-scoring.ts: the Elo-anchored Poisson goal model and the adjustment read off it, over
  * synthetic games and synthetic rating tables, and its invariants over the bundled data. Nothing here
  * asserts a particular team's number on the committed data, which a data refresh changes.
  */
@@ -11,9 +11,9 @@ import {
   computeAdjustedScoring,
   fitGoalModel,
   getAdjustedScoring,
-} from '../lib/adjusted-scoring';
+} from '../lib/ratings/adjusted-scoring';
 import { getSnapshot } from '../lib/data';
-import { computeRatings, getRatings, ratingGames, type RatingTable } from '../lib/ratings';
+import { computeRatings, getRatings, ratingGames, type RatingTable } from '../lib/ratings/ratings';
 import { TEAMS, getTeamBySlug } from '../lib/teams';
 import type { Game } from '../lib/types';
 import { game, type GameSpec } from './game-builder';

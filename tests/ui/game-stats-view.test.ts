@@ -19,10 +19,10 @@ import {
 import { buildGameView, type GameModel } from '../../components/game/game-view';
 import { getSnapshot } from '../../lib/data';
 import { gameIdToParam } from '../../lib/game-id';
-import type { NoteCredit } from '../../lib/note-stats';
-import { getAllPlayerStatsWithNotes, getGameStatsEntry, getPlayerStats } from '../../lib/player-stats';
-import type { BoxScore } from '../../lib/player-stats-schema';
-import { SHOOTOUT_NOTE } from '../../lib/postseason';
+import type { NoteCredit } from '../../lib/players/note-stats';
+import { getAllPlayerStatsWithNotes, getGameStatsEntry, getPlayerStats } from '../../lib/players/player-stats';
+import type { BoxScore } from '../../lib/players/player-stats-schema';
+import { SHOOTOUT_NOTE } from '../../lib/postseason/postseason';
 import type { Game, TeamSlug } from '../../lib/types';
 import { textOf } from './html-text';
 

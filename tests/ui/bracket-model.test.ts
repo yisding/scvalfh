@@ -1,6 +1,6 @@
 /**
  * `components/playoffs/bracket-model.ts` — the CCS bracket from `playoffs.games` (which carries MaxPreps'
- * bracket name since 2026-10-29) and the seeds of the owner file (lib/ccs-bracket.ts getCcsSeeds).
+ * bracket name since 2026-10-29) and the seeds of the owner file (lib/postseason/ccs-bracket.ts getCcsSeeds).
  *
  * Two corpora. The first is the real one: the 2025 CCS championship's fourteen rows rebuilt on 2026's dates
  * with 2025's sixteen seeds (tests/fixtures/ccs/bracket-2025.ts) — the first bracket this model has ever been

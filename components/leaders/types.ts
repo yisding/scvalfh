@@ -4,9 +4,9 @@
  * them without importing the page's assembly.
  */
 
-import type { PriorSeason } from '../../lib/prior-season-schema';
-import type { MergedPlayer } from '../../lib/rosters';
-import type { TeamPlayerStats } from '../../lib/player-stats-schema';
+import type { PriorSeason } from '../../lib/history/prior-season-schema';
+import type { MergedPlayer } from '../../lib/players/rosters';
+import type { TeamPlayerStats } from '../../lib/players/player-stats-schema';
 import type { Game, RegionId, Standing, Team } from '../../lib/types';
 import type { RegionConfig } from '../../lib/leagues';
 
@@ -213,6 +213,6 @@ export interface LeaderSources {
    * team page shows; left out, no row has either.
    */
   rosters?: readonly RosterSource[];
-  /** The goal model's Newton iterations (lib/adjusted-scoring.ts), 100 if left out: a test caps it to see the fallback. */
+  /** The goal model's Newton iterations (lib/ratings/adjusted-scoring.ts), 100 if left out: a test caps it to see the fallback. */
   goalModelIterations?: number;
 }

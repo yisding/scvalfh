@@ -15,7 +15,7 @@ import {
   countRosters,
   type RosterEnrichment,
   type Rosters,
-} from '../lib/rosters-schema';
+} from '../lib/players/rosters-schema';
 import {
   classOf,
   getAllEnrichedRosters,
@@ -23,7 +23,7 @@ import {
   getRosterEnrichment,
   getRosters,
   getTeamRoster,
-} from '../lib/rosters';
+} from '../lib/players/rosters';
 import { TEAMS, getTeamBySlug, teamsInLeague } from '../lib/teams';
 import { REPO, runScript } from './helpers';
 
@@ -96,7 +96,7 @@ const pre: RosterEnrichment = {
 };
 
 /**
- * Load lib/rosters.ts in a child process with `enrichment` swapped in, and return what it printed
+ * Load lib/players/rosters.ts in a child process with `enrichment` swapped in, and return what it printed
  * to stderr ('' when it loaded). The load-time checks need both files, so only a real load shows them.
  */
 function loadError(enrichment: RosterEnrichment, rosters?: Rosters): string {
@@ -108,7 +108,7 @@ function loadError(enrichment: RosterEnrichment, rosters?: Rosters): string {
     env.SCVAL_ROSTERS = path.join(dir, 'rosters.json');
     writeFileSync(env.SCVAL_ROSTERS, JSON.stringify(rosters));
   }
-  const run = runScript('lib/rosters.ts', [], { env });
+  const run = runScript('lib/players/rosters.ts', [], { env });
   return run.status === 0 ? '' : run.stderr;
 }
 
@@ -325,7 +325,7 @@ describe('data/rosters-enrichment.json', () => {
     record.grade = { value: 11, derived: false, kind: 'school-site', source: 'https://example.com/', confidence: 'high', note: null };
     // The schema alone accepts it (it cannot see the base file)...
     expect(RosterEnrichmentSchema.safeParse(bad).success).toBe(true);
-    // ...which is why lib/rosters.ts re-checks the join at load. Exercise that check in a child
+    // ...which is why lib/players/rosters.ts re-checks the join at load. Exercise that check in a child
     // process with the bad file swapped in.
     expect(loadError(bad)).toMatch(/grade would overwrite a MaxPreps value/);
   });
@@ -851,7 +851,7 @@ describe('the load-time rules hold for every league, not just SCVAL', () => {
   });
 });
 
-describe('lib/rosters.ts merged view', () => {
+describe('lib/players/rosters.ts merged view', () => {
   it('fills blanks from the overlay and says where each value came from', () => {
     const cup = getEnrichedTeamRoster('cupertino')!;
     expect(getTeamRoster('cupertino')!.players.every((p) => p.grade === null)).toBe(true);

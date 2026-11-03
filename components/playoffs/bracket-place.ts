@@ -3,16 +3,16 @@
  * Division 2 quarterfinal', 'Division II first round'), what comes of it ('The winner plays Willow Glen or Homestead
  * in the semifinal, Wed Nov 11.'; once it is decided, 'Leigh plays …'), and the link to its card
  * (bracket-link.ts). The CCS bracket (components/playoffs/bracket-model.ts) and the San Diego Section's
- * (lib/sds-bracket.ts) are read; every other postseason game gets its link alone.
+ * (lib/postseason/sds-bracket.ts) are read; every other postseason game gets its link alone.
  *
  * Copy: no seed word (SEED_CLAIM; the San Diego places print as nothing at all here, the CCS ones as a bare "8 v 1"),
  * never "eliminat", and a CCS word only on a CCS game. Reads lib/data, like bracket-link.ts.
  */
 
-import { getCcsSeeds } from '../../lib/ccs-bracket';
+import { getCcsSeeds } from '../../lib/postseason/ccs-bracket';
 import { getPlayoffs } from '../../lib/data';
 import { shortDate } from '../../lib/format';
-import { getSdsBrackets, winnerOf, type LiveBracketSlot } from '../../lib/sds-bracket';
+import { getSdsBrackets, winnerOf, type LiveBracketSlot } from '../../lib/postseason/sds-bracket';
 import { getTeamBySlug } from '../../lib/teams';
 import type { Game, TeamSlug } from '../../lib/types';
 

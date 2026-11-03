@@ -18,8 +18,8 @@ import {
   countRosters,
   rostersContentKey,
   type Rosters,
-} from '../lib/rosters-schema';
-import { getRosters, getTeamRoster, sortedPlayers } from '../lib/rosters';
+} from '../lib/players/rosters-schema';
+import { getRosters, getTeamRoster, sortedPlayers } from '../lib/players/rosters';
 import { pendingRoster } from '../lib/sources/maxpreps-roster';
 import { TEAMS, teamsInLeague } from '../lib/teams';
 import { FIXTURE_DIR, REPO, runScript } from './helpers';
@@ -457,7 +457,7 @@ describe('scripts/fetch-rosters.ts over a previous file that is not valid whole'
   });
 });
 
-describe('lib/rosters.ts', () => {
+describe('lib/players/rosters.ts', () => {
   it('serves the bundled file', () => {
     expect(getRosters().counts).toEqual(raw.counts);
     expect(getTeamRoster('st-ignatius')!.players.length).toBe(23);

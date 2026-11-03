@@ -11,21 +11,21 @@ export type TeamId = string;
 
 /**
  * MaxPreps `contestId` GUID, or `sblive:<digits>` for a game that only si.com has and that D2 rule 2
- * published (lib/backfill.ts). URL params map ':' to '-' (lib/game-id.ts).
+ * published (lib/crosscheck/backfill.ts). URL params map ':' to '-' (lib/game-id.ts).
  */
 export type ContestId = string;
 
 /**
  * The five CIF sections with a covered league: three in Northern California (CCS, NCS, NS) and two in
  * Southern California (the Southern Section's 'ss' and the San Diego Section's 'sds'). The snapshot
- * schema's `sectionId` enum is this list (lib/snapshot-schema.ts proves the two agree at compile time).
+ * schema's `sectionId` enum is this list (lib/snapshot/snapshot-schema.ts proves the two agree at compile time).
  */
 export type SectionId = 'ccs' | 'ncs' | 'ns' | 'ss' | 'sds';
 
 /**
  * The site's two halves, the NorCal/SoCal toggle (DESIGN-socal §2.1.1). A property of a SECTION
  * (SectionConfig.region in lib/leagues.ts), so a league's or a team's region is always derived from its
- * section and never stored in the snapshot. Not the clubs' CLUB_REGIONS (lib/clubs-schema.ts) and not a
+ * section and never stored in the snapshot. Not the clubs' CLUB_REGIONS (lib/players/clubs-schema.ts) and not a
  * venue's `address.region` (a state code): those are separate concepts that happen to share the word.
  */
 export type RegionId = 'norcal' | 'socal';
@@ -59,7 +59,7 @@ export type OfficialSourceId = (typeof OFFICIAL_SOURCE_IDS)[number];
 export type SourceId =
   | 'maxpreps-api' | 'maxpreps-html' | 'sblive' | OfficialSourceId
   | 'ccs-pdf' | 'ccs-ical' | 'vnn-ics' | 'cifss' | 'derived'
-  /** A JV result transcribed from a school's own athletics site (lib/jv-school-sites.ts); JV only. */
+  /** A JV result transcribed from a school's own athletics site (lib/jv/jv-school-sites.ts); JV only. */
   | 'school-site';
 
 // ---------- season ----------
@@ -271,7 +271,7 @@ export interface GameVenue {
 export interface PostseasonTag {
   /**
    * 'mcal-tournament' is the tag of any league whose postseason.kind is 'league-tournament' (MCAL today); the
-   * literal is kept for snapshot stability (lib/snapshot-schema.ts PostseasonTagSchema). lib/classify.ts assigns.
+   * literal is kept for snapshot stability (lib/snapshot/snapshot-schema.ts PostseasonTagSchema). lib/classify.ts assigns.
    * 'section-playoffs' is the San Diego Section's playoffs (DESIGN-socal §2.1.7): any game between two
    * teams of a section whose leagues' postseason.kind is 'section-playoffs', dated on or after the
    * leagues' `postseasonFrom` (Nov 2) or carrying contestType 4, whether or not the two share a conference;
@@ -383,7 +383,7 @@ export interface Game {
   shootout: { home: number; away: number } | null;
   /**
    * MaxPreps' bracket fields for a tournament game (GameBracket); absent when the row's tournamentId is null or
-   * the all-zero GUID. lib/classify.ts rule 1c reads it; lib/ccs-bracket.ts ccsBracketGames puts a published
+   * the all-zero GUID. lib/classify.ts rule 1c reads it; lib/postseason/ccs-bracket.ts ccsBracketGames puts a published
    * CCS bracket game into `playoffs.games` before the quarterfinal date.
    */
   bracket?: GameBracket;
@@ -394,7 +394,7 @@ export interface Game {
   urls: {
     maxpreps: string | null;
     sblive?: string;
-    /** The school athletics page a JV score came from (lib/jv-school-sites.ts). */
+    /** The school athletics page a JV score came from (lib/jv/jv-school-sites.ts). */
     school?: string;
     nfhsStream: string | null;
     goFan: string | null;
@@ -412,7 +412,7 @@ export interface Game {
     /**
      * When the pipeline last saw this game's published content change (ISO UTC, a run's `fetchedAt`):
      * set by lib/pipeline/steps/assemble.ts against the previous snapshot's copy of the game, every
-     * field compared but the fetch stamps and MaxPreps' own `maxprepsModifiedOn` (lib/content-dates.ts
+     * field compared but the fetch stamps and MaxPreps' own `maxprepsModifiedOn` (lib/snapshot/content-dates.ts
      * stampContentChanges). Absent on a game unchanged since the stamp was introduced. Read by the
      * sitemap's `lastmod`, never shown.
      */
@@ -609,7 +609,7 @@ export interface CcsPlayoffs {
   divisionsPublished?: Record<CcsDivisionName, boolean>;
   bracketUrl: string;
   /**
-   * The CCS bracket games: lib/ccs-bracket.ts ccsBracketGames over `games` — every game tagged 'ccs' that is
+   * The CCS bracket games: lib/postseason/ccs-bracket.ts ccsBracketGames over `games` — every game tagged 'ccs' that is
    * dated on or after the quarterfinals or that MaxPreps' feed marks published (`Game.bracket.published`), the
    * same objects as in `games`. Empty until the bracket is published (the committed file of 2026-10-29).
    */
@@ -935,7 +935,7 @@ export interface ContentRemoval {
 }
 
 export interface Snapshot {
-  /** NEW. v1 files (no field) are upgraded in memory by lib/snapshot-migrate.ts. */
+  /** NEW. v1 files (no field) are upgraded in memory by lib/snapshot/snapshot-migrate.ts. */
   schemaVersion: 2;
   /** ISO UTC, when the run started. 'today' everywhere is derived from this. */
   fetchedAt: string;
@@ -967,7 +967,7 @@ export interface Snapshot {
    */
   supersededGames: Record<ContestId, ContestId>;
   /**
-   * Contests that left a date: deleted, superseded, or moved to another day (lib/content-dates.ts
+   * Contests that left a date: deleted, superseded, or moved to another day (lib/snapshot/content-dates.ts
    * contentRemovalsOf). The pages that showed one still changed when it went, though no game left on
    * them did, so the sitemap's `lastmod` counts these too. Carried for the season; never shown.
    */

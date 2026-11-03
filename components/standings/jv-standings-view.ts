@@ -2,23 +2,23 @@
  * The JV tables' view model: one block per division on `/jv` (`#<division>`), and a team's JV
  * place for its team page.
  *
- * Every number comes from lib/jv.ts (lib/jv-standings.ts: JV league games take their varsity
+ * Every number comes from lib/jv/jv.ts (lib/jv/jv-standings.ts: JV league games take their varsity
  * counterpart's classification; tables order on points; a table is shown only once enough of the
  * played JV league games have a score). The copy says which of those it is, in words.
  *
- * SERVER-ONLY: reads lib/jv, which imports data/jv.json and the snapshot.
+ * SERVER-ONLY: reads lib/jv/jv, which imports data/jv.json and the snapshot.
  */
 
 import { listWords, monthDay, ordinal, plural, recordString } from '../../lib/format';
-import { getJvClassification, getJvTable, getJvTables } from '../../lib/jv';
+import { getJvClassification, getJvTable, getJvTables } from '../../lib/jv/jv';
 import {
   JV_STANDINGS_MIN_REPORTED_SHARE,
   type JvClassification,
   type JvDivisionTable,
   type JvStandingRow,
-} from '../../lib/jv-standings';
+} from '../../lib/jv/jv-standings';
 import { divisionHeading, getDivision, getLeague, isSingleDivision } from '../../lib/leagues';
-import { jvSlotTeamFor } from '../../lib/jv-teams';
+import { jvSlotTeamFor } from '../../lib/jv/jv-teams';
 import { getTeamBySlug, teamsInDivision } from '../../lib/teams';
 import type { DivisionId, LeagueId, Team, TeamSlug } from '../../lib/types';
 
@@ -45,7 +45,7 @@ export interface JvTableView {
   uncountedNote: string | null;
 }
 
-/** Why an uncounted JV game is not counted, in words, for each reason lib/jv-standings.ts gives. */
+/** Why an uncounted JV game is not counted, in words, for each reason lib/jv/jv-standings.ts gives. */
 export const UNCOUNTED_REASON_WORDS: Readonly<Record<UncountedReason, string>> = {
   'no-varsity-counterpart': 'no varsity game matches it',
   ambiguous: 'two varsity games are equally near it',

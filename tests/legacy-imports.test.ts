@@ -11,7 +11,7 @@
  * and under app/ and components/ only:
  *  2. no league or division id as a string literal ('scval', 'bval', 'pcal', 'mcal', 'de-anza',
  *     'el-camino', 'mt-hamilton', 'santa-teresa', 'marin-county'): ids come from lib/leagues.ts or
- *     lib/data.ts (lib/history.ts for which leagues have a 2025-26 archive);
+ *     lib/data.ts (lib/history/history.ts for which leagues have a 2025-26 archive);
  *  3. no `/game/${…}` template literal: game links go through gameHref (a `sblive:` id would 404).
  *
  * Each failure names the file and line, so it routes to that file's owner (SPEC §13.2).

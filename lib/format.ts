@@ -122,7 +122,7 @@ export function dateWithYear(value: string): string {
 
 /**
  * The five shapes a partial date takes in the hand-researched files (data/clubs.json's `asOf`,
- * lib/clubs-schema.ts `isAsOf`): a day, a month, a year, a season ("2025-26": the second year is
+ * lib/players/clubs-schema.ts `isAsOf`): a day, a month, a year, a season ("2025-26": the second year is
  * the first + 1) or a range of years ("2015-2018"). `YYYY-MM` is a month when MM is 01-12 and a
  * season otherwise, the order isAsOf reads it in; the two can only collide before 2012.
  */
@@ -484,7 +484,7 @@ export function renderScore(g: Game): ScoreView {
  * noun, win, tally and pronoun do not describe what happened in a game ('no shootout winner flagged', 'may
  * have recorded a shootout win as a goal'), so they stay the rule's words. A sentence that states the RULE
  * ('a varsity game there outside a tournament is decided by a shootout', components/game/GameSources.tsx;
- * lib/backfill.ts's D24 note) calls this with the default: the rule is sourced whatever MaxPreps recorded.
+ * lib/crosscheck/backfill.ts's D24 note) calls this with the default: the rule is sourced whatever MaxPreps recorded.
  */
 export interface ShootoutPhrases {
   /** '1 v 1' | 'shootout': the thing itself, singular, no article ('no 1 v 1 winner flagged'). */

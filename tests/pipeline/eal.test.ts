@@ -15,7 +15,7 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import { localDateKey, sideOutcome } from '../../lib/format';
 import { DATA_QUALITY, LEAGUES } from '../../lib/leagues';
 import { readManifest } from '../../lib/pipeline/corpus';
-import { loadSnapshot } from '../../lib/snapshot-schema';
+import { loadSnapshot } from '../../lib/snapshot/snapshot-schema';
 import type { ScheduleRow } from '../../lib/sources/maxpreps';
 import { parseScoresPage, parseTeamGamesPage, type SbliveGame } from '../../lib/sources/sblive';
 import { divisionGames } from '../../lib/standings';
@@ -88,8 +88,8 @@ describe('the EAL corpus run', () => {
   });
 
   it('publishes nine leagues and the independents: the EAL fresh, the other nine frozen "not fetched in this run"', () => {
-    expect(snapshot.season.leagues.map((l) => l.id), 'lib/season-build.ts').toEqual(LEAGUES.map((l) => l.id));
-    expect(snapshot.season.leagues, 'lib/season-build.ts').toHaveLength(10);
+    expect(snapshot.season.leagues.map((l) => l.id), 'lib/snapshot/season-build.ts').toEqual(LEAGUES.map((l) => l.id));
+    expect(snapshot.season.leagues, 'lib/snapshot/season-build.ts').toHaveLength(10);
     for (const h of snapshot.leagueHealth) {
       if (h.leagueId === LEAGUE) {
         expect(h.state, 'lib/pipeline/steps/standings.ts: EAL health').toBe('fresh');
@@ -221,7 +221,7 @@ describe('the EAL games', () => {
       expect(s.slug, `lib/sources/sblive.ts: ${s.sbliveTeamId}`).toBeNull();
       expect(s.refused, `lib/sources/sblive.ts: ${s.sbliveTeamId}`).toBe('ignored-team');
     }
-    expect(JSON.stringify(snapshot.sbliveCrossCheck ?? null), 'lib/backfill.ts: cross-check rows').not.toMatch(
+    expect(JSON.stringify(snapshot.sbliveCrossCheck ?? null), 'lib/crosscheck/backfill.ts: cross-check rows').not.toMatch(
       /Red Bluff|Educational Outreach/,
     );
     expect(

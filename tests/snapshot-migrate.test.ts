@@ -9,9 +9,9 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { ccsBracketGames } from '../lib/ccs-bracket';
+import { ccsBracketGames } from '../lib/postseason/ccs-bracket';
 import { CCS, LEAGUES, leaguesInRegion } from '../lib/leagues';
-import { buildSeason } from '../lib/season-build';
+import { buildSeason } from '../lib/snapshot/season-build';
 import {
   addConfiguredLeagues,
   countsOf,
@@ -22,8 +22,8 @@ import {
   needsReclassification,
   rebuildPlayoffGames,
   reclassify,
-} from '../lib/snapshot-migrate';
-import { loadSnapshot, parseSnapshot } from '../lib/snapshot-schema';
+} from '../lib/snapshot/snapshot-migrate';
+import { loadSnapshot, parseSnapshot } from '../lib/snapshot/snapshot-schema';
 import { stableStringify } from '../lib/stable-json';
 import { buildCrossCheck, computeStandings, divisionGames } from '../lib/standings';
 import { TEAMS, teamsInLeague } from '../lib/teams';

@@ -1,4 +1,4 @@
-import type { LiveBracketDivision } from '../../lib/sds-bracket';
+import type { LiveBracketDivision } from '../../lib/postseason/sds-bracket';
 import { SEASON_CALENDAR_YEAR } from '../../lib/season';
 import { BracketView } from '../history/HistoryBracket';
 import ExternalLink from '../ui/ExternalLink';
@@ -11,7 +11,7 @@ import { sdsBracketIntro, sdsBracketView } from './sds-bracket-view';
  * "Round dates" list and the three conference cards; plan final-08, 2026-10-30).
  *
  * Drawn only from the Section's PUBLISHED bracket (data/sds-brackets-2026.json, transcribed from its
- * Championship Brackets sheet after the Sat Oct 31 seeding meeting; lib/sds-bracket.ts joins MaxPreps' results
+ * Championship Brackets sheet after the Sat Oct 31 seeding meeting; lib/postseason/sds-bracket.ts joins MaxPreps' results
  * to it). This reverses DESIGN §24.8's "no San Diego bracket" for that case only: the site still projects no
  * place, and while the file is the placeholder the page never renders this component, so nothing is drawn and
  * /playoffs weighs what it did.

@@ -55,9 +55,9 @@ import {
   getTournamentLeagueIds,
 } from '../../lib/data';
 import type { LeagueSummary } from '../../lib/data';
-import { getCcsSeeds } from '../../lib/ccs-bracket';
-import { tournamentHeadline } from '../../lib/postseason';
-import { getSdsBrackets, getSdsBracketsSource } from '../../lib/sds-bracket';
+import { getCcsSeeds } from '../../lib/postseason/ccs-bracket';
+import { tournamentHeadline } from '../../lib/postseason/postseason';
+import { getSdsBrackets, getSdsBracketsSource } from '../../lib/postseason/sds-bracket';
 import { dateSpan, listWords, monthDay, numberWord, shortDate } from '../../lib/format';
 import {
   NO_POSTSEASON_LEAGUE_IDS,
@@ -109,7 +109,7 @@ import type { LeagueId, PlayoffProjection as Projection } from '../../lib/types'
  * control and the league chips sit above both blocks.
  *
  * The bracket (2026-10-30, plan final-06): `seeded` is "the model has a path to draw" — a bracket game in
- * `playoffs.games` or a division in the owner seed file (lib/ccs-bracket.ts getCcsSeeds) — never
+ * `playoffs.games` or a division in the owner seed file (lib/postseason/ccs-bracket.ts getCcsSeeds) — never
  * `bracketPublished` alone, which says only that the MaxPreps page has a division posted. One path per CCS
  * division when the feed's bracket name or the seed file proves it (components/playoffs/bracket-model.ts),
  * each under its own h3; the footnote says how CCS numbers the two divisions when they are known, and only
@@ -634,7 +634,7 @@ export default function PlayoffsPage() {
                 </p>
               ) : null}
               {/* What happened: the Super Regional's games by day as MaxPreps lists them, each day headed by the round
-                  its rows name (lib/postseason-rounds.ts); from its first day, one sentence while none is listed. */}
+                  its rows name (lib/postseason/postseason-rounds.ts); from its first day, one sentence while none is listed. */}
               {results.empty === null || today >= ps.dates.first ? (
                 <UnbracketedResults view={results} idPrefix={league.id} className="mt-3" />
               ) : null}
@@ -684,7 +684,7 @@ export default function PlayoffsPage() {
  * dates come from, its power rankings and when its brackets come, then one card per conference. No
  * seed and no projection: the Section places teams from its power rankings, and the one place a
  * league table decides (a designated champion's play-in) is the league's to designate. The Section's
- * own brackets, once transcribed (lib/sds-bracket.ts getSdsBrackets, null on the placeholder), are drawn
+ * own brackets, once transcribed (lib/postseason/sds-bracket.ts getSdsBrackets, null on the placeholder), are drawn
  * between the round dates and the cards (plan final-08, 2026-10-30).
  */
 function SectionPlayoffsBlock({

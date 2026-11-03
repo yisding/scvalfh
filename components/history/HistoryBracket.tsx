@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
 import { getTeamBySlug } from '../../lib/data';
-import type { HistoryBracketDivision } from '../../lib/history';
+import type { HistoryBracketDivision } from '../../lib/history/history';
 import MissingValue from '../ui/MissingValue';
 import TeamMonogram from '../ui/TeamMonogram';
 

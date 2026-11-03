@@ -1,5 +1,5 @@
 /**
- * lib/backfill.ts — owner decision D2 (SPEC §7.9): si.com backfills MaxPreps exactly when rules 2-4
+ * lib/crosscheck/backfill.ts — owner decision D2 (SPEC §7.9): si.com backfills MaxPreps exactly when rules 2-4
  * say, and never otherwise. Every rule needs both si.com sides resolved by si.com id, a si.com Final,
  * integer scores and a non-junk row. Fixtures here are hand-built OfficialFixture objects; the corpus
  * si.com pages are used only as parser/resolver facts (the end-to-end PCAL fills are asserted in the
@@ -23,14 +23,14 @@ import {
   shiftDateKey,
   supersededGamesOf,
   type BackfillInput,
-} from '../lib/backfill';
+} from '../lib/crosscheck/backfill';
 import { scoreSentence } from '../lib/format';
 import { getDivision } from '../lib/leagues';
 import { FixtureMissing, TransportError, resourcePath, type ResourceKey, type RunContext } from '../lib/pipeline/contract';
 import { unknownFixtureMoves } from '../lib/pipeline/steps/official';
 import { scoreboardDates, stepSblive } from '../lib/pipeline/steps/sblive';
 import { parseScoresPage, parseTeamGamesPage, type SbliveGame, type SbliveSide } from '../lib/sources/sblive';
-import { loadSnapshot, parseSnapshot } from '../lib/snapshot-schema';
+import { loadSnapshot, parseSnapshot } from '../lib/snapshot/snapshot-schema';
 import { getTeamBySlug } from '../lib/teams';
 import type { DivisionId, Game, OfficialFixture, Snapshot, SourceStatus } from '../lib/types';
 import { game } from './game-builder';

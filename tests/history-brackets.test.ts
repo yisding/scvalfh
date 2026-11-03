@@ -1,6 +1,6 @@
 /**
  * data/history-brackets-2025-26.json — the 2025 CCS and San Diego Section brackets and the 2025
- * Tournament of Champions on /history/2025-26 — and its contract, lib/history-brackets-schema.ts.
+ * Tournament of Champions on /history/2025-26 — and its contract, lib/history/history-brackets-schema.ts.
  *
  * The file is a hand transcription, so the results it must reproduce are asserted literally from
  * the sources its `notes` name (read 2026-10-07): the CCS bracket pages on cifccs.org and the CCS
@@ -26,16 +26,16 @@ import {
   sideName,
   thirdPlaceLine,
 } from '../components/history/bracket-view';
-import { HistoryBracketsSchema, type HistoryBrackets } from '../lib/history-brackets-schema';
+import { HistoryBracketsSchema, type HistoryBrackets } from '../lib/history/history-brackets-schema';
 import {
   getHistoryBracketFor,
   getHistoryBrackets,
   getHistoryLastChecked,
   getHistoryTournamentFor,
   getHistoryTournaments,
-} from '../lib/history';
+} from '../lib/history/history';
 import { TOC } from '../lib/leagues';
-import { getPriorSeason } from '../lib/prior-season';
+import { getPriorSeason } from '../lib/history/prior-season';
 import { teamsInLeague } from '../lib/teams';
 import { SEED_CLAIM } from '../scripts/copy-rules';
 import { REPO } from './helpers';
@@ -244,7 +244,7 @@ describe('the 2025 Tournament of Champions', () => {
   });
 });
 
-describe('lib/history bracket reads', () => {
+describe('lib/history/history bracket reads', () => {
   it('places the CCS bracket after PCAL and the San Diego Section’s after Metro', () => {
     expect(getHistoryBrackets().map((b) => `${b.id}:${b.afterLeague}`)).toEqual(['ccs:pcal', 'sds:metro']);
   });

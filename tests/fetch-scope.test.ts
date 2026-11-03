@@ -1,4 +1,4 @@
-/** lib/fetch-scope.ts — which teams a rosters / player-stats run covers, and how it reports them. */
+/** lib/pipeline/fetch-scope.ts — which teams a rosters / player-stats run covers, and how it reports them. */
 
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
@@ -15,13 +15,13 @@ import {
   runExitCode,
   summarizeByLeague,
   teamsInScope,
-} from '../lib/fetch-scope';
+} from '../lib/pipeline/fetch-scope';
 import {
   RostersPartialSchema,
   TeamRosterSchema,
   countRosters,
   type Rosters,
-} from '../lib/rosters-schema';
+} from '../lib/players/rosters-schema';
 import { SEASON_YEAR } from '../lib/season';
 import { stableStringify } from '../lib/stable-json';
 import { TEAMS, teamsInLeague } from '../lib/teams';

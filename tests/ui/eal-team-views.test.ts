@@ -96,7 +96,7 @@ beforeAll(async () => {
   // A copy of the corpus in which one scheduled EAL league game is tagged a Super Regional game:
   // no league game is that late in the capture, so the row is given MaxPreps' playoff type (4) and the
   // tag the pipeline writes for it. The tag has to be the config's own: a snapshot whose tags differ
-  // from the current config is reclassified on load (lib/snapshot-migrate.ts needsReclassification).
+  // from the current config is reclassified on load (lib/snapshot/snapshot-migrate.ts needsReclassification).
   const snap = JSON.parse(readFileSync(path0, 'utf8')) as Snapshot;
   const target = snap.games.find(
     (g) => g.status === 'scheduled' && g.countsFor !== null && g.home.slug === 'chico' && g.away.slug === 'lassen',

@@ -1,6 +1,6 @@
 /**
- * lib/note-stats.ts — goals, assists and saves a coach wrote in MaxPreps' game note, added to the
- * MaxPreps numbers for any team — lib/name-aliases.ts, and the per-game totals that keep a noted
+ * lib/players/note-stats.ts — goals, assists and saves a coach wrote in MaxPreps' game note, added to the
+ * MaxPreps numbers for any team — lib/players/name-aliases.ts, and the per-game totals that keep a noted
  * stat from counting twice (lib/sources/maxpreps-game-stats.ts).
  *
  * The rules are asserted on synthetic games, Homestead's real notes among them (Sep 28 – Oct 5),
@@ -16,7 +16,7 @@ import { describe, expect, it } from 'vitest';
 import { buildLeadersView } from '../components/leaders/leaders-view';
 import { buildPlayerStatsView } from '../components/teams/player-stats-view';
 import { getSnapshot } from '../lib/data';
-import { NAME_ALIASES } from '../lib/name-aliases';
+import { NAME_ALIASES } from '../lib/players/name-aliases';
 import {
   notedKinds,
   noteStatsFor,
@@ -27,10 +27,10 @@ import {
   type NoteRosterPlayer,
   type NoteSources,
   type ParsedNote,
-} from '../lib/note-stats';
-import { getAllPlayerStatsWithNotes, getPlayerStats } from '../lib/player-stats';
-import { FIELD_STAT_KEYS, GOALIE_STAT_KEYS, type PlayerStatLine, type TeamPlayerStats } from '../lib/player-stats-schema';
-import { getTeamRoster } from '../lib/rosters';
+} from '../lib/players/note-stats';
+import { getAllPlayerStatsWithNotes, getPlayerStats } from '../lib/players/player-stats';
+import { FIELD_STAT_KEYS, GOALIE_STAT_KEYS, type PlayerStatLine, type TeamPlayerStats } from '../lib/players/player-stats-schema';
+import { getTeamRoster } from '../lib/players/rosters';
 import { contestIdFromUrl, parseGameStats } from '../lib/sources/maxpreps-game-stats';
 import { getTeamBySlug } from '../lib/teams';
 import type { Game, TeamSlug } from '../lib/types';

@@ -1,6 +1,6 @@
 /**
  * JV games: the si.com JV id map, the si.com JV page parser, the MaxPreps-first merge
- * (lib/jv-merge.ts), the committed data/jv.json, the views, and scripts/fetch-jv.ts run offline
+ * (lib/jv/jv-merge.ts), the committed data/jv.json, the views, and scripts/fetch-jv.ts run offline
  * over the PCAL captures in tests/fixtures/jv (README there).
  *
  * The scheduled refresh runs this suite over the file it just wrote, so the checks on the
@@ -15,11 +15,11 @@ import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 import { buildDayJvView, buildTeamJvView, jvDiffersNote } from '../components/teams/jv-view';
-import { getJvCorrections, getJvFile, getJvGamesForTeam, getJvMerge, getJvTeam } from '../lib/jv';
-import { JV_CORRECTIONS, applyJvCorrections } from '../lib/jv-corrections';
-import { JV_FILL_NOTE, mergeJv } from '../lib/jv-merge';
-import { JV_SCHOOL_SITES, mergeJvSchoolSites, schoolSiteResults, type JvSchoolSite } from '../lib/jv-school-sites';
-import { JV_TEAM_COUNT, JvFileSchema, countJv, jvContentKey, type JvFile, type JvSbliveRow } from '../lib/jv-schema';
+import { getJvCorrections, getJvFile, getJvGamesForTeam, getJvMerge, getJvTeam } from '../lib/jv/jv';
+import { JV_CORRECTIONS, applyJvCorrections } from '../lib/jv/jv-corrections';
+import { JV_FILL_NOTE, mergeJv } from '../lib/jv/jv-merge';
+import { JV_SCHOOL_SITES, mergeJvSchoolSites, schoolSiteResults, type JvSchoolSite } from '../lib/jv/jv-school-sites';
+import { JV_TEAM_COUNT, JvFileSchema, countJv, jvContentKey, type JvFile, type JvSbliveRow } from '../lib/jv/jv-schema';
 import {
   JV_OUTSIDE_TEAMS,
   JV_SBLIVE_PATHS,
@@ -27,7 +27,7 @@ import {
   jvMaxprepsScheduleUrl,
   jvSbliveGamesUrl,
   jvSbliveTeamId,
-} from '../lib/jv-teams';
+} from '../lib/jv/jv-teams';
 import { combineJvCopies, parseJvTeamGamesPage, type JvSbliveCopy } from '../lib/sources/sblive-jv';
 import { TEAMS, getTeamBySlug } from '../lib/teams';
 import type { Game } from '../lib/types';
@@ -589,7 +589,7 @@ describe('scripts/fetch-jv.ts, offline over the PCAL captures', () => {
 
   // The whole-file schema wants one row per registry team, in registry order, so it fails whenever the
   // registry grows. A `--leagues` run must still carry every team outside it from that file, row by
-  // row (lib/fetch-scope.ts readPreviousFile), as fetch-rosters and fetch-player-stats do; it once
+  // row (lib/pipeline/fetch-scope.ts readPreviousFile), as fetch-rosters and fetch-player-stats do; it once
   // dropped every such team to 'pending' with no games.
   it('salvages a previous file that fails the whole-file schema row by row, carrying the teams outside the run', () => {
     const dir = mkdtempSync(path.join(tmpdir(), 'scvalfh-jv-'));

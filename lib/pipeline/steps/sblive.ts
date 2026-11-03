@@ -1,6 +1,6 @@
 /**
  * Step 08 (SPEC §7.4, §7.9): si.com — the statewide scoreboards, the few targeted team pages D2
- * needs, owner decision D2's backfill (lib/backfill.ts) and the score cross-check (lib/crosscheck.ts).
+ * needs, owner decision D2's backfill (lib/crosscheck/backfill.ts) and the score cross-check (lib/crosscheck/crosscheck.ts).
  *
  *   1. scoreboards for every date in the trailing 14 days that has a game (`sblive-scoreboard` rows);
  *   2. planBackfill → team-games pages only for eligible items the scoreboards did not cover (cap 8;
@@ -13,11 +13,11 @@
  * team-page cap, or si.com was not read at all: every request failed, `--no-sblive`, nothing to read),
  * the fill is re-applied while still eligible (rule 10) and the failed pages' rows are marked stale.
  * When no si.com page was read, the previous cross-check is carried, keeping only the rows that are
- * still true of this run's games (lib/crosscheck.ts `carryCrossCheck`).
+ * still true of this run's games (lib/crosscheck/crosscheck.ts `carryCrossCheck`).
  */
 
-import { applyBackfill, cleanSbliveRows, planBackfill, playedFixture, scoreboardCoverage, shiftDateKey } from '../../backfill';
-import { carryCrossCheck, emptyCrossCheck, reconcile, withBackfill } from '../../crosscheck';
+import { applyBackfill, cleanSbliveRows, planBackfill, playedFixture, scoreboardCoverage, shiftDateKey } from '../../crosscheck/backfill';
+import { carryCrossCheck, emptyCrossCheck, reconcile, withBackfill } from '../../crosscheck/crosscheck';
 import {
   dedupeSbliveGames,
   parseScoresPage,

@@ -15,11 +15,11 @@
 import { SPORT_WORDS } from '../components/commits/commit-view';
 import { overallAwards, splitOverallValue } from '../components/history/history-view';
 import { positionFromText } from '../components/ui/position-words';
-import { getClubs } from '../lib/clubs';
-import { getColleges } from '../lib/commits';
-import { getAvailableHistoryLeagues } from '../lib/history';
+import { getClubs } from '../lib/players/clubs';
+import { getColleges } from '../lib/players/commits';
+import { getAvailableHistoryLeagues } from '../lib/history/history';
 import { gradeWord } from '../lib/format';
-import { getAllEnrichedRosters } from '../lib/rosters';
+import { getAllEnrichedRosters } from '../lib/players/rosters';
 import { TEAMS, getTeamBySlug } from '../lib/teams';
 import type { ArchiveLine } from './copy-rules';
 import type { TeamSlug } from '../lib/types';

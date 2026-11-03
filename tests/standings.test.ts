@@ -116,7 +116,7 @@ describe('standings: Article VI §1-2 (division games only, 3 pts a win, 1 a tie
   });
 
   it('reads last 5 and streak in date order, whatever order the games arrive in', () => {
-    // Santa Catalina's season as of 2026-10-02: a si.com-only 9/4 win (appended by lib/backfill.ts,
+    // Santa Catalina's season as of 2026-10-02: a si.com-only 9/4 win (appended by lib/crosscheck/backfill.ts,
     // after every MaxPreps contest), then five losses.
     const losses = ['2026-09-10', '2026-09-14', '2026-09-23', '2026-09-24', '2026-09-30'].map((date) =>
       game({ home: 'santa-catalina', away: 'carmel', hs: 0, as: 3, date }),

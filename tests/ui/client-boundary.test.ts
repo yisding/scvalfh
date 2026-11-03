@@ -11,7 +11,8 @@
  * fails with the chain that reached a banned module. Anything under data/ is banned outright.
  *
  * Client-safe: lib/types (types), lib/season (a constants leaf), lib/format, lib/game-id,
- * lib/search, lib/pin-label.
+ * lib/search, lib/pin-label, lib/schools/mascots (the mascot tile sizes, a constants leaf); every
+ * other lib/ module is banned (CLIENT_SAFE_LIB below).
  */
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { builtinModules } from 'node:module';
@@ -21,24 +22,21 @@ import { describe, expect, it } from 'vitest';
 
 import { REPO as ROOT } from '../helpers';
 
-/** Repo-relative module paths (no extension) that a client module must never reach. */
-const BANNED_LIB: RegExp[] = [
-  /^lib\/data$/,
-  /^lib\/teams$/,
-  /^lib\/leagues$/,
-  /^lib\/registry\//,
-  /^lib\/standings$/,
-  /^lib\/classify$/,
-  /^lib\/snapshot-[^/]+$/,
-  /^lib\/postseason$/,
-  /^lib\/season-build$/,
-  /^lib\/normalize$/,
-  /^lib\/pipeline\//,
-  /^lib\/official\//,
-  /^lib\/backfill$/,
-  /^lib\/crosscheck$/,
-  /^lib\/sources\//,
-];
+/**
+ * The only lib/ modules (repo-relative, no extension) a client module may reach. Everything else
+ * under lib/ — the snapshot, the registry, the league config, the engines, the pipeline, the
+ * scrapers — is banned. An allowlist, so a module added or moved under lib/ is server-only until
+ * someone decides otherwise here.
+ */
+const CLIENT_SAFE_LIB = new Set([
+  'lib/types',
+  'lib/season',
+  'lib/format',
+  'lib/game-id',
+  'lib/search',
+  'lib/pin-label',
+  'lib/schools/mascots',
+]);
 const NODE_BUILTINS = new Set(builtinModules);
 
 function walk(dir: string): string[] {
@@ -111,7 +109,7 @@ function resolve(spec: string, fromFile: string): Target {
   // Anything under data/ (the snapshot, the official fixtures, the history) is server-only.
   if (relPath === 'data' || relPath.startsWith('data/')) return { kind: 'banned', name: relPath };
   const rel = relPath.replace(/\.(ts|tsx|js|mjs|jsx)$/, '');
-  if (BANNED_LIB.some((re) => re.test(rel))) return { kind: 'banned', name: rel };
+  if (rel.startsWith('lib/') && !CLIENT_SAFE_LIB.has(rel)) return { kind: 'banned', name: rel };
   const file = resolveFile(base);
   return file ? { kind: 'file', file } : { kind: 'external' };
 }

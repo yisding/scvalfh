@@ -13,7 +13,7 @@ import {
   loadSnapshot,
   parseSnapshot,
   snapshotContentHash,
-} from '../lib/snapshot-schema';
+} from '../lib/snapshot/snapshot-schema';
 import { TEAMS } from '../lib/teams';
 import type { Game, Snapshot } from '../lib/types';
 import { game } from './game-builder';

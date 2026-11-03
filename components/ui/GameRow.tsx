@@ -6,7 +6,7 @@ import { gameHref } from '../../lib/game-id';
 import { getBracketLink } from '../playoffs/bracket-link';
 import { TEAMS, getTeamBySlug } from '../../lib/teams';
 import type { Game, LeagueId, Record3, TeamSlug } from '../../lib/types';
-import { gameAddress } from '../../lib/venue';
+import { gameAddress } from '../../lib/schools/venue';
 
 import ExternalLink from './ExternalLink';
 import GhostMonogram from './GhostMonogram';
@@ -377,7 +377,7 @@ export function SummaryTeams({
 /** The pills in an expanded panel: real links only, never a dead affordance. */
 function GameLinks({ game, bracket }: { game: Game; bracket: boolean }) {
   const place = bracket ? getBracketLink(game) : null;
-  // lib/venue.ts: the game's own address, else the venue's or host's school (data/schools.json).
+  // lib/schools/venue.ts: the game's own address, else the venue's or host's school (data/schools.json).
   const address = gameAddress(game)?.address;
   const directions = address ? mapsSearchHref(address) : null;
   const links: Array<{ href: string; label: string }> = [];

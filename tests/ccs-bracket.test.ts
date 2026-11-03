@@ -1,8 +1,8 @@
 /**
- * lib/ccs-bracket.ts — which games are the CCS bracket (`playoffs.games`), and the seed switch.
+ * lib/postseason/ccs-bracket.ts — which games are the CCS bracket (`playoffs.games`), and the seed switch.
  *
  * `ccsBracketGames` is the one derivation of `playoffs.games`: lib/pipeline/steps/assemble.ts writes it,
- * lib/snapshot-migrate.ts rebuilds a committed file with it, tests/snapshot-file.test.ts holds the committed
+ * lib/snapshot/snapshot-migrate.ts rebuilds a committed file with it, tests/snapshot-file.test.ts holds the committed
  * file to it. A game is in the bracket when it is tagged 'ccs' and either falls on or after the quarterfinal
  * date or MaxPreps' feed marks it published (`Game.bracket.published`); a crossover or play-in never is.
  */
@@ -10,7 +10,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { CCS } from '../lib/leagues';
-import { ccsBracketGames, ccsSeedOf, getCcsSeeds, playoffGamesStale } from '../lib/ccs-bracket';
+import { ccsBracketGames, ccsSeedOf, getCcsSeeds, playoffGamesStale } from '../lib/postseason/ccs-bracket';
 import type { Game, GameBracket } from '../lib/types';
 import { game } from './game-builder';
 

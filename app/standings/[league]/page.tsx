@@ -15,7 +15,7 @@ import ExternalLink from '../../../components/ui/ExternalLink';
 import { biggestGoalDiff } from '../../../components/ui/StandingsTable';
 import { getLeagueIds, getLeagueSummary } from '../../../lib/data';
 import { shortDate } from '../../../lib/format';
-import { hasHistory } from '../../../lib/history';
+import { hasHistory } from '../../../lib/history/history';
 import { getLeague, leagueSportWords, standingsLabel } from '../../../lib/leagues';
 
 /**

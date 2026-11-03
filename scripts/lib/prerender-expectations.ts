@@ -6,7 +6,7 @@
  *
  * The expectations come from the build's INPUT, never from its output: the snapshot (as lib/data.ts
  * loads it), the league config (`lib/leagues.ts`), the team registry (`lib/teams.ts`) and the clubs
- * file (through lib/clubs.ts). Games take `gameIdToParam` (`sblive:N` → `sblive-N`), which
+ * file (through lib/players/clubs.ts). Games take `gameIdToParam` (`sblive:N` → `sblive-N`), which
  * tests/game-id.test.ts holds and both gates' ':' check backs up.
  *
  * Three other places list routes and stay as they are, on purpose: app/sitemap.ts is the subject a
@@ -15,7 +15,7 @@
  * contract read by plain bash against any of the three servers.
  */
 
-import { getClubSlugs } from '../../lib/clubs';
+import { getClubSlugs } from '../../lib/players/clubs';
 import { gameIdToParam } from '../../lib/game-id';
 import { LEAGUE_IDS, TOURNAMENT_LEAGUE_IDS } from '../../lib/leagues';
 import { TEAMS } from '../../lib/teams';

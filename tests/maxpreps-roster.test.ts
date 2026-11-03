@@ -20,7 +20,7 @@ import {
   parseRosterTable,
   rosterUrl,
 } from '../lib/sources/maxpreps-roster';
-import { RostersSchema, countRosters } from '../lib/rosters-schema';
+import { RostersSchema, countRosters } from '../lib/players/rosters-schema';
 import { SPORT_SEASON_ID } from '../lib/season';
 import { TEAMS, getTeamBySlug, teamsInLeague } from '../lib/teams';
 import { FIXTURE_DIR } from './helpers';

@@ -42,7 +42,7 @@ import {
   timeOfDayPT,
 } from '../../lib/format';
 import { CCS, divisionHeading, getDivision, getLeague, ladderFor, leagueOfDivision } from '../../lib/leagues';
-import { fixedSiteHost, winnerOf } from '../../lib/postseason';
+import { fixedSiteHost, winnerOf } from '../../lib/postseason/postseason';
 import type { CcsConfig, LeagueConfig, OutsideTournamentConfig } from '../../lib/leagues';
 import type {
   CcsKeyDates,
@@ -613,7 +613,7 @@ export function sectionRoundRows(ps: SectionPlayoffsConfig): KeyDateRow[] {
  * places, since the Section places teams.
  *
  * The third state (2026-10-30, plan final-08): once the owner has transcribed the Section's published brackets
- * (data/sds-brackets-2026.json, so lib/sds-bracket.ts getSdsBrackets() is non-null and the page draws them under
+ * (data/sds-brackets-2026.json, so lib/postseason/sds-bracket.ts getSdsBrackets() is non-null and the page draws them under
  * `#sds-bracket`), `drawn` is true and the sentence says the brackets below are the Section's, with MaxPreps'
  * results. Still no place is projected: the brackets are the Section's own.
  */
@@ -717,14 +717,14 @@ export interface TournamentGameView {
   home: TournamentSlotView;
   away: TournamentSlotView;
   /**
-   * 'at' (the higher seed's field, or a fixed site that is one finalist's own: lib/postseason.ts fixedSiteHost) or
+   * 'at' (the higher seed's field, or a fixed site that is one finalist's own: lib/postseason/postseason.ts fixedSiteHost) or
    * 'vs' (a fixed site neither finalist calls home). The final reads '3 Redwood at 1 Tamalpais', the game page's words.
    */
   connector: 'at' | 'vs';
   /** '5 Convent at 4 Marin Catholic' — what the page prints. */
   line: string;
   /**
-   * The side that won the matched game (lib/postseason.ts winnerOf: the higher score, else the side MaxPreps marks
+   * The side that won the matched game (lib/postseason/postseason.ts winnerOf: the higher score, else the side MaxPreps marks
    * W), as this view's `home`/`away`; null with no result or a level game with no W flag. The bracket marks it with
    * the site's winner rule (600 weight and the 2px left rule, DESIGN §8 accessibility).
    */
@@ -807,7 +807,7 @@ export interface TournamentInput {
    * The final's fixed site from config (the host school's slug, venue, admission) with the site school's address
    * from data/schools.json; omitted ⇒ the round
    * shows no venue block and the final reads 'vs' (no host known). The slug makes the final 'at' when the site team
-   * is a finalist (lib/postseason.ts fixedSiteHost).
+   * is a finalist (lib/postseason/postseason.ts fixedSiteHost).
    */
   finalSite?: { slug?: TeamSlug; venue: string; address: StreetAddress; admission: string | null; admissionSource: string | null };
 }
