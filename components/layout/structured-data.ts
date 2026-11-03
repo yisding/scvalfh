@@ -10,18 +10,18 @@
  * - No score property. schema.org has none for a SportsEvent, and an invented `homeScore` would be
  *   noise; the score is already in the event's `name` (gameTitle) and `description`.
  * - `location` is only what the DETAILS card prints (components/game/GameDetails.tsx): the venue's
- *   name and street address when the school's calendar gave one; otherwise the host school, with
- *   its city when it is a registry team ("Hosted by Fremont, Sunnyvale, CA"); nothing on a neutral
- *   site, whose venue is not published. `venue.text` is MaxPreps' NOTE field ("Senior Night"), never
- *   a place.
+ *   name when the school's calendar gave one, a league final's fixed site, or the host school, each
+ *   with lib/venue.ts `gameAddress`'s street address (a school's campus from data/schools.json) when
+ *   there is one, else the host's city; nothing on a neutral site, whose venue is not published.
+ *   `venue.text` is MaxPreps' NOTE field ("Senior Night"), never a place.
  * - `eventStatus` is never EventCancelled: the data has no cancelled state (a deleted MaxPreps row is
  *   dropped, lib/types.ts GameStatus). A game the official schedule has on another day is
  *   EventRescheduled with that day as `previousStartDate`, the "Moved —" line the page prints.
  * - No roster `athlete` entries: the players are minors, and the visible roster is enough.
  * - A group of independents is not a league (DESIGN §24.9), so its teams carry no `memberOf`.
  *
- * Nothing here is eligible for a Google rich result (Event results need a street address and an
- * upcoming event; there is no SportsTeam result). The point is entity understanding: which school,
+ * Rich results are not the aim (there is no SportsTeam result, and the street address is the
+ * school's campus, which may not be the field). The point is entity understanding: which school,
  * which league, which sport, which day.
  *
  * `metadataBase` does not reach inside JSON-LD, so every URL is built absolute from SITE_URL, and a
@@ -32,6 +32,7 @@ import { gameDescription, gameTitle } from '../game/game-view';
 import { dateTimeAttr } from '../../lib/format';
 import { isIndependentLeague, type LeagueConfig } from '../../lib/leagues';
 import type { Team } from '../../lib/types';
+import { gameAddress } from '../../lib/venue';
 
 import { SITE_DESCRIPTION, SITE_NAME, SITE_SHORT_NAME, SITE_URL, SITE_WORDMARK } from './site';
 
@@ -121,7 +122,8 @@ function sideNode(side: GameModel['home']): JsonLdNode {
 /** Where the game is, exactly as the DETAILS card says it (see the header); null on a neutral site. */
 function locationNode(model: GameModel): JsonLdNode | null {
   const { game, home } = model;
-  const { address } = game.venue;
+  const where = gameAddress(game);
+  const address = where?.address;
   const street: JsonLdNode | null = address
     ? {
         '@type': 'PostalAddress',
@@ -133,6 +135,9 @@ function locationNode(model: GameModel): JsonLdNode | null {
       }
     : null;
   if (game.venue.name) return { '@type': 'Place', name: game.venue.name, ...(street ? { address: street } : {}) };
+  if (where?.source === 'final-site' && where.school && where.school.slug !== home.team?.slug) {
+    return { '@type': 'Place', name: where.school.name, ...(street ? { address: street } : {}) };
+  }
   if (game.site === 'neutral') return null;
   const city = home.team ? cityAddress(home.team.city) : null;
   const place = street ?? city;

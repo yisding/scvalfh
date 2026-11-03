@@ -53,6 +53,7 @@ import type {
   LeagueTournamentProjection,
   PlayoffStatus,
   Standing,
+  StreetAddress,
   Team,
   TeamSlug,
   TiebreakStage,
@@ -803,11 +804,12 @@ export interface TournamentInput {
    */
   ladderLine: { after: number; label: string } | null;
   /**
-   * The final's fixed site from config (the host school's slug, venue, address, admission); omitted ⇒ the round
+   * The final's fixed site from config (the host school's slug, venue, admission) with the site school's address
+   * from data/schools.json; omitted ⇒ the round
    * shows no venue block and the final reads 'vs' (no host known). The slug makes the final 'at' when the site team
    * is a finalist (lib/postseason.ts fixedSiteHost).
    */
-  finalSite?: { slug?: TeamSlug; venue: string; address: { street: string; city: string; region: string; postalCode: string }; admission: string | null; admissionSource: string | null };
+  finalSite?: { slug?: TeamSlug; venue: string; address: StreetAddress; admission: string | null; admissionSource: string | null };
 }
 
 /** A bracket round's title, for the page's round headers and the OG card's round line alike. */

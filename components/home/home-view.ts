@@ -51,6 +51,7 @@ import {
   dateTimeAttr,
   leagueClock,
   listWords,
+  mapsSearchHref,
   monthDay,
   numberWord,
   ordinal,
@@ -86,6 +87,7 @@ import { pickerName, pinLabel } from '../../lib/pin-label';
 import type { SearchIndex } from '../../lib/search';
 import { teamOfSide } from '../../lib/teams';
 import type { DivisionId, Game, LeagueId, RegionId, SeasonPhase, Team } from '../../lib/types';
+import { gameAddress } from '../../lib/venue';
 import type { LeagueChip } from '../layout/LeagueSwitcher';
 import { leagueChips } from '../layout/league-chips';
 import { thisWeekByRegion } from '../playoffs/this-week-inputs';
@@ -836,15 +838,9 @@ function nextGameView(game: Game, slug: string): HomeNextGame {
   const mineIsHome = game.home.slug === slug;
   const theirs = mineIsHome ? game.away : game.home;
   const links: HomeNextGame['links'] = [];
-  const address = game.venue.address;
-  if (address) {
-    links.push({
-      label: 'Directions',
-      href: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-        `${address.street}, ${address.city}, ${address.region} ${address.postalCode}`,
-      )}`,
-    });
-  }
+  // lib/venue.ts: the game's own address, else the venue's or host's school (data/schools.json).
+  const address = gameAddress(game)?.address;
+  if (address) links.push({ label: 'Directions', href: mapsSearchHref(address) });
   if (game.urls.nfhsStream) links.push({ label: 'Stream', href: game.urls.nfhsStream });
   if (game.urls.goFan) links.push({ label: 'Tickets', href: game.urls.goFan });
   return {
