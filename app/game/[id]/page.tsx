@@ -23,6 +23,7 @@ import {
 import JsonLd from '../../../components/layout/JsonLd';
 import { OG_BASE } from '../../../components/layout/site';
 import { gameJsonLd } from '../../../components/layout/structured-data';
+import { getBracketPlace } from '../../../components/playoffs/bracket-place';
 import Arrow from '../../../components/ui/Arrow';
 import ExternalLink from '../../../components/ui/ExternalLink';
 import ScoreBoard from '../../../components/ui/ScoreBoard';
@@ -132,6 +133,17 @@ export default async function GamePage({ params }: PageProps<'/game/[id]'>) {
   // (DESIGN §8).
   const teamLinks = [away, home].flatMap((side) => (side.team ? [side.team] : []));
   const recap = gameRecap(model);
+  // A postseason game's place in its bracket (components/playoffs/bracket-place.ts): its round in words, what its
+  // winner plays next, and the link to its card on /playoffs.
+  const place = getBracketPlace(game);
+  // The kicker names the round where the bracket knows it: 'CCS Division 2 quarterfinal · 8 v 1' for the bare 'CCS',
+  // 'San Diego Section playoffs · Division II first round'.
+  const contextLabel =
+    place?.round && game.postseason?.kind === 'ccs'
+      ? place.round
+      : place?.round
+        ? `${model.contextLabel} · ${place.round}`
+        : model.contextLabel;
   // Does the main column's row 2 (recap · result links · source line · postseason notes · source
   // disagreement · result-flag conflict) render anything? The DETAILS rail starts in that row, so
   // it takes the recap's 24px top margin when the row is there and the section margin when it is
@@ -144,7 +156,8 @@ export default async function GamePage({ params }: PageProps<'/game/[id]'>) {
     model.postseasonNotes.length > 0 ||
     Boolean(model.scoreNote) ||
     Boolean(model.conflict) ||
-    Boolean(model.resultConflictNote);
+    Boolean(model.resultConflictNote) ||
+    place !== null;
 
   return (
     <div className="pb-section-lg">
@@ -202,7 +215,7 @@ export default async function GamePage({ params }: PageProps<'/game/[id]'>) {
       <div className="mt-3 lg:grid lg:grid-cols-[minmax(0,1fr)_22rem] lg:gap-x-10">
         <div className="lg:col-span-2 lg:row-start-1">
           <h1 className="sr-only">{gameTitle(model)}</h1>
-          <p className="m-0 mb-2 text-meta font-medium text-ink-3">{model.contextLabel}</p>
+          <p className="m-0 mb-2 text-meta font-medium text-ink-3">{contextLabel}</p>
           <ScoreBoard game={game} away={{ sub: away.sub }} home={{ sub: home.sub }} />
           {/* The records on the board are AS OF this game (G-1), so say which moment they are
               from: on a September final, today's record would sit beside a score it already
@@ -238,6 +251,23 @@ export default async function GamePage({ params }: PageProps<'/game/[id]'>) {
                 </ExternalLink>
               ))}
             </p>
+          ) : null}
+          {/* Where the game stands in its postseason (2026-11-03): its round, what its winner plays next, and its card
+              on /playoffs. "Where it stands", not "In the bracket": the EAL's and the Tournament of Champions' games
+              have no published bracket, and their links go to the day's games instead. */}
+          {place ? (
+            <section aria-labelledby="where-it-stands" className={recap || resultLinks.length > 0 ? 'mt-4 max-w-prose' : 'mt-6 max-w-prose'}>
+              <h2 id="where-it-stands" className="m-0 text-micro font-semibold text-ink-3">
+                Where it stands
+              </h2>
+              {place.round ? <p className="mt-1 mb-0 text-body text-ink">{place.round}</p> : null}
+              {place.next ? <p className="mt-1 mb-0 text-body text-ink-2">{place.next}</p> : null}
+              <p className="mt-2 mb-0">
+                <Link href={place.link.href} prefetch={false} className="sx-pill sx-pill-ring min-h-11">
+                  {place.link.label} <Arrow />
+                </Link>
+              </p>
+            </section>
           ) : null}
           <GameSourceLine model={model} className="mt-4" />
           {model.postseasonNotes.length > 0 || model.scoreNote ? (

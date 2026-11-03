@@ -107,7 +107,8 @@ describe('the 2025 brackets joined to the 26 MaxPreps rows', () => {
     // shows Rancho Buena Vista came through both of its earlier cards.
     expect(cardWinner(bvWestview)).toBe('bonita-vista');
     expect(cardWinner(rbvPlayIn)).toBe('rancho-buena-vista');
-    expect(rbvPlayIn.bottom).toEqual({ tbd: true, text: 'Winner of the play-in' });
+    // A place the play-in fills names its two schools (2026-11-03), not "Winner of the play-in".
+    expect(rbvPlayIn.bottom).toEqual({ tbd: true, text: 'Helix or Granite Hills' });
     expect(cardWinner(olympianRbv)).toBe('rancho-buena-vista');
     for (const c of [bvWestview, olympianRbv]) expect(cardWinner(c)).toBe(historyWinner.get(cardPair(c)!));
   });
@@ -158,8 +159,9 @@ describe('before any game is posted', () => {
     const open = division(empty, 'open');
     expect(open.rounds[0].cards.map((c) => [slugOf(c.top), slugOf(c.bottom)].every(Boolean))).toEqual([true, true, true, true]);
     expect(open.rounds[1].cards.map((c) => [c.top, c.bottom])).toEqual([
-      [{ tbd: true, text: 'Winner of 1 v 8' }, { tbd: true, text: 'Winner of 4 v 5' }],
-      [{ tbd: true, text: 'Winner of 3 v 6' }, { tbd: true, text: 'Winner of 2 v 7' }],
+      // A place whose card's two schools are known names them (2026-11-03); one two results away keeps its places.
+      [{ tbd: true, text: 'Torrey Pines or Canyon Crest' }, { tbd: true, text: 'Canyon Hills or La Jolla' }],
+      [{ tbd: true, text: 'Scripps Ranch or San Marcos' }, { tbd: true, text: "Bishop's or Mission Bay" }],
     ]);
     expect([open.rounds[2].cards[0].top, open.rounds[2].cards[0].bottom]).toEqual([
       { tbd: true, text: 'Winner of 1/8 v 4/5' },
@@ -167,12 +169,13 @@ describe('before any game is posted', () => {
     ]);
 
     const d2 = division(empty, 'division-2');
-    expect(d2.rounds[1].cards[2].bottom).toEqual({ tbd: true, text: 'Winner of the play-in' });
+    expect(d2.rounds[1].cards[2].bottom).toEqual({ tbd: true, text: 'Helix or Granite Hills' });
+    // The 6 v 11 card waits on the play-in, so its winner's place keeps its numbers.
     expect(d2.rounds[2].cards.map((c) => c.bottom)).toEqual([
-      { tbd: true, text: 'Winner of 8 v 9' },
-      { tbd: true, text: 'Winner of 5 v 12' },
+      { tbd: true, text: 'Bonita Vista or Westview' },
+      { tbd: true, text: 'Mira Mesa or Mission Hills' },
       { tbd: true, text: 'Winner of 6 v 11' },
-      { tbd: true, text: 'Winner of 7 v 10' },
+      { tbd: true, text: 'Point Loma or Otay Ranch' },
     ]);
     expect([d2.rounds[3].cards[0].top, d2.rounds[3].cards[0].bottom]).toEqual([
       { tbd: true, text: 'Winner of 1 v 8/9' },
@@ -222,7 +225,7 @@ describe('what never joins', () => {
     expect(card.winner).toBeNull();
     expect(card.time).toBe('16:00');
     // Its winner's place in the next round is still open.
-    expect(division(buildSdsBrackets(file, [g]), 'division-1').rounds[1].cards[1].bottom).toEqual({ tbd: true, text: 'Winner of 5 v 12' });
+    expect(division(buildSdsBrackets(file, [g]), 'division-1').rounds[1].cards[1].bottom).toEqual({ tbd: true, text: 'Fallbrook or Valley Center' });
   });
 });
 

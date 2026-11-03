@@ -35,6 +35,7 @@
 import bundledFile from '../data/sds-brackets-2026.json';
 import { getGames } from './data';
 import { shiftDateKey } from './format';
+import { getTeamBySlug } from './teams';
 import { failValidation } from './schema-primitives';
 import { SdsBracketsSchema, type SdsBracketsDivision, type SdsBracketsFile, type SdsDivisionId } from './sds-brackets-schema';
 import type { Game, TeamSlug } from './types';
@@ -57,6 +58,8 @@ export interface LiveBracketCard {
   time: string | null;
   /** The round's neutral site from the file (the finals), else null. */
   site: string | null;
+  /** The card this one's winner goes to and the side it fills there; null for the final. */
+  next: { id: string; side: 'top' | 'bottom' } | null;
 }
 
 export interface LiveBracketRound {
@@ -288,8 +291,22 @@ function placeLabel(c: Node, s: Side): string | null {
   return seeds.length <= 2 ? seeds.join('/') : null;
 }
 
-/** The words for a place a card's winner will fill: "Winner of 8 v 9", "Winner of 1 v 8/9", "Winner of the play-in". */
+/** The school on one side of a card when exactly one can stand there, by its short name; else null. */
+function nameOn(c: Node, s: Side): string | null {
+  const feed = c.feeds[s];
+  const entry = c.resolved[s] ?? (feed.kind === 'placed' ? feed.entry : null);
+  return entry ? (getTeamBySlug(entry.slug)?.shortName ?? entry.slug) : null;
+}
+
+/**
+ * The words for a place a card's winner will fill. When both of the card's sides are known schools, their names
+ * ("Poway or Canyon Crest", "Granite Hills or Sage Creek", 2026-11-03: numbers sent the reader back up the bracket);
+ * else the places: "Winner of 1 v 8/9", "Winner of the top half".
+ */
 function tbdText(c: Node, roundSize: number): string {
+  const topName = nameOn(c, 'top');
+  const bottomName = nameOn(c, 'bottom');
+  if (topName !== null && bottomName !== null) return `${topName} or ${bottomName}`;
   if (c.playIn) return 'Winner of the play-in';
   const top = placeLabel(c, 'top');
   const bottom = placeLabel(c, 'bottom');
@@ -327,6 +344,17 @@ export function buildSdsBrackets(file: SdsBracketsFile, games: readonly Game[]):
       return { tbd: true, text: feed.kind === 'winner' ? tbdText(feed.card, roundSizeOf(feed.card)) : 'TBD' };
     };
 
+    // Which card each card's winner goes to: the card that takes it as a feed.
+    const next = new Map<Node, { id: string; side: Side }>();
+    for (const r of rounds) {
+      for (const n of r.nodes) {
+        for (const s of SIDES) {
+          const feed = n.feeds[s];
+          if (feed.kind === 'winner') next.set(feed.card, { id: n.id, side: s });
+        }
+      }
+    }
+
     return {
       id: div.id,
       label: div.label,
@@ -344,6 +372,7 @@ export function buildSdsBrackets(file: SdsBracketsFile, games: readonly Game[]):
           dateKey: n.game?.dateKey ?? n.date,
           time: (n.game ? gameClock(n.game) : null) ?? n.time,
           site: n.site,
+          next: next.get(n) ?? null,
         })),
       })),
     };

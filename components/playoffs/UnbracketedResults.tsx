@@ -35,7 +35,7 @@ export function UnbracketedResults({ view, idPrefix, className }: UnbracketedRes
           <h3 id={`${idPrefix}-results-${day.dateKey}`} className="m-0 mb-2 text-body font-semibold text-ink">
             {day.label ? `${day.label} · ${day.dateLabel}` : day.dateLabel}
           </h3>
-          <GameList games={day.games} tracks="fit" />
+          <GameList games={day.games} tracks="fit" bracket={false} />
         </section>
       ))}
     </div>

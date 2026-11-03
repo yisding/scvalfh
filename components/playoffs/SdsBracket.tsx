@@ -48,7 +48,7 @@ export function SdsBracket({ divisions, source, today, className }: SdsBracketPr
         return (
           <section key={view.id} aria-label={view.label} className="mt-section min-w-0">
             <SectionHeader as="h3" kicker={view.label} meta={`${view.size} teams`} className="mb-4" />
-            <BracketView division={view} label={`${view.label} bracket`} />
+            <BracketView division={view} label={`${view.label} bracket`} anchorPrefix="sds-" />
           </section>
         );
       })}

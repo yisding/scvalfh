@@ -77,7 +77,8 @@ describe('PlayoffBracket on the 2025 championship', () => {
     expect(d.split(WINNER_RULE).length - 1, COMPONENT).toBe(7);
     // The final: Los Gatos 3-0 Saint Francis — Los Gatos' line carries the rule, Saint Francis' does not.
     const final = d.slice(d.lastIndexOf('<li class="flex min-w-0 items-center">'));
-    const lines = [...final.matchAll(/<span class="flex items-center gap-2 py-1 pr-2 pl-2"( style="[^"]*")?>/g)];
+    // Each line carries its team's slug, so the pinned team's line can be tinted (app/globals.css .sx-pinnable).
+    const lines = [...final.matchAll(/<span class="sx-pinnable flex items-center gap-2 py-1 pr-2 pl-2"( style="[^"]*")?( data-team-slug="[^"]*")?>/g)];
     expect(lines).toHaveLength(2);
     expect(lines.map((m) => (m[1] ?? '').includes(WINNER_RULE)), COMPONENT).toEqual([false, true]);
     expect(textOf(final), COMPONENT).toMatch(/Saint Francis.*Los Gatos/);
@@ -106,7 +107,7 @@ describe('PlayoffBracket on the 2025 championship', () => {
 });
 
 describe('PlayoffBracket before the games exist', () => {
-  it('seeds alone: four pairings with both seeds and names, "Winner of 1 v 8" semifinals, a TBD final, no link', () => {
+  it('seeds alone: four pairings with both seeds and names, semifinals naming the two schools each, a TBD final, no link', () => {
     const [d1] = paths([]);
     const html = render(d1);
     const text = textOf(html);
@@ -114,14 +115,15 @@ describe('PlayoffBracket before the games exist', () => {
     for (const name of ['St. Ignatius', 'Palo Alto', 'Saint Francis', 'Gilroy', 'Leigh', 'Mitty', 'Los Gatos', 'Christopher']) {
       expect(text, COMPONENT).toContain(name);
     }
-    expect(text, COMPONENT).toContain('Winner of 1 v 8');
-    expect(text, COMPONENT).toContain('Winner of 4 v 5');
-    expect(text, COMPONENT).toContain('Winner of 3 v 6');
-    expect(text, COMPONENT).toContain('Winner of 2 v 7');
+    // A semifinal place names the quarterfinal's two schools (2026-11-03), not "Winner of 1 v 8".
+    for (const place of ['St. Ignatius or Palo Alto', 'Saint Francis or Gilroy', 'Leigh or Mitty', 'Los Gatos or Christopher']) {
+      expect(text, COMPONENT).toContain(place);
+    }
+    expect(text, COMPONENT).not.toContain('Winner of');
     expect(text, COMPONENT).toContain('TBD');
     // The sentence a screen reader hears for a pairing.
     expect(text, COMPONENT).toContain('Quarterfinal: 8 Palo Alto v 1 St. Ignatius. Not listed on MaxPreps yet.');
-    expect(text, COMPONENT).toContain('Semifinal: the winner of 4 v 5 v the winner of 1 v 8. Not listed on MaxPreps yet.');
+    expect(text, COMPONENT).toContain('Semifinal: the winner of 4 Saint Francis v 5 Gilroy v the winner of 1 St. Ignatius v 8 Palo Alto. Not listed on MaxPreps yet.');
     expect(html, COMPONENT).not.toContain(WINNER_RULE);
   });
 

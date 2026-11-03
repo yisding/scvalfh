@@ -486,6 +486,22 @@
     font-size: var(--text-meta); line-height: 1.25rem; font-weight: 500; letter-spacing: 0;
   }
 
+  /* A bracket card or pairing a game links to (components/playoffs/bracket-link.ts: `/playoffs#sds-division-2-0-1`,
+     `#mcal-qf-1`, `#scval-crossover-1`, a CCS division `#ccs-division-2`): when it is the URL's target, an accent
+     ring says "this one" after the jump. An outline, so nothing moves; rounded like the cards it rings. */
+  /* The pinned team's line in a bracket (the pin script sets `data-pinned` on its `[data-team-slug]`): a tint, not the
+     usual inset accent rule, which a winner's line already uses (2px --sx-text) and would collide with. */
+  .sx-pinnable[data-team-slug][data-pinned] {
+    background: var(--sx-accent-wash);
+    box-shadow: none;
+  }
+
+  .sx-target:target {
+    outline: 2px solid var(--sx-accent);
+    outline-offset: 4px;
+    border-radius: 0.75rem;
+  }
+
   /* Long lists stay in the HTML without costing layout on first paint.
      `scroll-margin-top: -3rem` cancels the 48px date header that html's scroll-padding-top
      reserves (see `html` above): that header is the group's OWN first child, sticky inside it,

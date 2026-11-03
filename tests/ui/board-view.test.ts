@@ -23,6 +23,7 @@ const row = (r: Partial<ThisWeekRow> & Pick<ThisWeekRow, 'dateKey' | 'text' | 'l
   time: null,
   label: '',
   href: null,
+  bracketHref: null,
   final: false,
   kind: 'game',
   key: r.text,
