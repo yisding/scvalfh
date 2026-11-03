@@ -79,7 +79,7 @@ export function buildUnbracketedResults(leagueId: LeagueId, games: readonly Game
  * The tournament's result, once its final is played: 'Pleasant Valley won the Super Regional, beating Chico on 1 v 1s
  * after a 0–0 tie in the final on Sat Oct 31.' The final is the one game whose own row names it
  * (`roundFromLocation`: MaxPreps' 2026 row says "Super regional championship"), with a final score and a winner;
- * anything else (no such row, two of them, no W) gives null, and the page names no champion. `shootout` is the
+ * anything else (no such row, two of them, no clean W/L pair, a result conflict) gives null, and the page names no champion. `shootout` is the
  * section's (SectionConfig.shootout: '1 v 1s', verified, for the Northern Section); null takes the generic words.
  */
 export function unbracketedChampion(
@@ -97,7 +97,14 @@ export function unbracketedChampion(
   );
   if (finals.length !== 1) return null;
   const g = finals[0];
-  const [winner, loser] = g.home.result === 'W' ? [g.home, g.away] : g.away.result === 'W' ? [g.away, g.home] : [null, null];
+  // Only a clean W/L pair names a champion: a flagged result conflict, W/W or a missing flag names none.
+  if (g.provenance.resultConflict) return null;
+  const [winner, loser] =
+    g.home.result === 'W' && g.away.result === 'L'
+      ? [g.home, g.away]
+      : g.away.result === 'W' && g.home.result === 'L'
+        ? [g.away, g.home]
+        : [null, null];
   if (!winner || !loser || winner.score === null || loser.score === null) return null;
   const score = `${winner.score}\u2013${loser.score}`;
   const how =

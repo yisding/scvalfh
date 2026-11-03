@@ -1568,7 +1568,7 @@ function sdsPostseason(playoffDivisionOf: Readonly<Record<TeamSlug, 'I' | 'II'>>
       // Paraphrased on purpose: the bylaw's play-in sentence names a seed position, which SEED_CLAIM bans.
       seeding: 'CIF-SDS Green Book 2026-27, Bylaw 2000.1 (the Commissioner places teams from the Section’s approved power rankings, with input from the coaches’ advisory committee, and there is no appeal; a designated league champion left out of its division’s bracket hosts a play-in game) and the Green Book’s division-placement bylaw (the eight Open Division teams are drawn from Division I at the end of the regular season)',
       format: 'CIF-SDS Green Book 2026-27, Bylaw 2000.1 (Open 8, Division I 12, Division II 12) and the CIF-SDS 2026-27 Master Calendar (playoffs Nov 2–12, finals Nov 14)',
-      roundDates: 'Round dates and the finals site (La Jolla HS) are from the Section’s bracket sheet.',
+      roundDates: 'Round dates and the finals site (La Jolla HS) are from the Section’s bracket sheet; the SDFHOA calendar lists Divisions I and II the other way round for the rounds before the finals.',
     },
     // Since 2026-11-03 the rounds are the Section's own "2026 CIFSDS Field Hockey Championship Bracket" sheet
     // (bracketSheetUrl): one play-in (Division II, Mon Nov 2); Division I's first round Tue Nov 3 and Division II's

@@ -5,31 +5,22 @@ import { notFound } from 'next/navigation';
 import PageHeader from '../../../components/layout/PageHeader';
 import { OG_BASE } from '../../../components/layout/site';
 import LeagueTournament from '../../../components/playoffs/LeagueTournament';
-import { buildTournamentView, type TournamentView } from '../../../components/playoffs/playoff-view';
 import {
+  titleSentence,
   tournamentLeague,
   tournamentStaticParams,
+  tournamentView,
   type TournamentConfig,
 } from '../../../components/playoffs/tournament-league';
 import Arrow from '../../../components/ui/Arrow';
 import ExternalLink from '../../../components/ui/ExternalLink';
 import LeagueHealthNote from '../../../components/ui/LeagueHealthNote';
 import SectionHeader from '../../../components/ui/SectionHeader';
-import {
-  getCcsField,
-  getLeagueTournament,
-  getSections,
-  getStandingContext,
-  getStandings,
-  getTeamById,
-  getTeamBySlug,
-} from '../../../lib/data';
+import { getCcsField, getLeagueTournament, getSections } from '../../../lib/data';
 import type { LeagueSummary } from '../../../lib/data';
 import { shortDate } from '../../../lib/format';
-import { getDivision, getLeague, type LeagueConfig } from '../../../lib/leagues';
-import { tournamentHeadline, tournamentOutcome, tournamentOutcomeCopy } from '../../../lib/postseason';
-import { outcomesFor, playoffOutcomeLabel } from '../../../lib/standings';
-import type { LeagueTournamentProjection, Team } from '../../../lib/types';
+import { getLeague, type LeagueConfig } from '../../../lib/leagues';
+import { tournamentHeadline } from '../../../lib/postseason';
 
 /**
  * /playoffs/<league> — a league's own tournament (SPEC §6.2, §6.3, §10.7): "MCAL tournament — who
@@ -53,28 +44,6 @@ export function generateStaticParams(): { league: string }[] {
 
 function roundDate(ps: TournamentConfig, round: string): string | null {
   return ps.rounds.find((r) => r.round === round)?.date ?? null;
-}
-
-/**
- * The league's title rule applied to the result (config `titleNote`, MCAL General Rules Pennants 1–3): the
- * regular-season points leader (seed 1) is MCAL Champion; when a different team wins the tournament it also
- * receives a pennant, and the sentence names both.
- */
-function titleSentence(projection: LeagueTournamentProjection, ps: TournamentConfig): string {
-  const champion = projection.champion;
-  if (!champion) return ps.titleNote;
-  const leader = projection.seeds.find((s) => s.seed === 1)?.seat;
-  const leaderSlug = leader && leader.length === 1 ? leader[0].slug : null;
-  const leaderName = leaderSlug ? (getTeamBySlug(leaderSlug)?.name ?? leaderSlug) : null;
-  const championName = getTeamBySlug(champion.slug)?.name ?? champion.slug;
-  const title = ps.name.replace(/ tournament$/, '');
-  if (leaderName && leaderSlug === champion.slug) {
-    return `${championName} is the regular-season ${title} Champion (the points leader) and the tournament champion.`;
-  }
-  if (leaderName) {
-    return `${leaderName} is the regular-season ${title} Champion (the points leader); ${championName} won the tournament and also receives a pennant.`;
-  }
-  return ps.titleNote;
 }
 
 /**
@@ -112,48 +81,13 @@ export async function generateMetadata({ params }: PageProps<'/playoffs/[league]
   };
 }
 
-function viewFor(summary: LeagueSummary, ps: TournamentConfig, config: LeagueConfig): TournamentView {
-  const projection = getLeagueTournament(summary.id);
-  const rows = summary.divisions.flatMap((d) => {
-    const context = getStandingContext(d.id);
-    return getStandings(d.id).flatMap((standing) => {
-      const team = getTeamById(standing.teamId);
-      if (!team) return [];
-      const ctx = context.get(standing.teamId);
-      // The status column reads the results once the tournament is under way ('In the MCAL final', 'Lost in the
-      // semifinal'); the table's ladder rung ('Semifinal bye') only while the picture is projected (DESIGN §24.13).
-      const ladderLabel = playoffOutcomeLabel(d.id, outcomesFor(standing));
-      const label = tournamentOutcomeCopy(tournamentOutcome(projection, team.slug), team.slug, config, { label: ladderLabel, sentence: '' }).label;
-      return [
-        {
-          team,
-          standing,
-          counted: ctx?.counted ?? standing.computed.gp,
-          scheduled: ctx?.scheduled ?? getDivision(d.id).gamesPerTeam,
-          label,
-        },
-      ];
-    });
-  });
-  // A league tournament is single-division (MCAL); its one division's ladder line is the tournament line.
-  const division = getDivision(summary.divisions[0].id);
-  return buildTournamentView({
-    projection,
-    rows,
-    teamOf: (slug): Team | undefined => getTeamBySlug(slug),
-    lastPlace: ps.lastSpot.place,
-    ladderLine: division.ladderLine,
-    finalSite: ps.finalSite,
-  });
-}
-
 export default async function LeagueTournamentPage({ params }: PageProps<'/playoffs/[league]'>) {
   const { league } = await params;
   const found = tournamentLeague(league);
   if (!found) notFound();
   const { summary, config, ps } = found;
   const section = getSections().find((s) => s.id === summary.section.id);
-  const view = viewFor(summary, ps, config);
+  const view = tournamentView(summary, ps, config);
   const headline = tournamentHeadline(getLeagueTournament(summary.id), config);
   const projection = getLeagueTournament(summary.id);
   const ccsLeagues = getCcsField().byLeague.map((l) => l.shortName);

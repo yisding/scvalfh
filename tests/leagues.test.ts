@@ -1067,7 +1067,7 @@ describe('leagues: the San Diego Section (City, North County, Metro)', () => {
           '2nd or lower — no league route; the Section places Division I teams in the Open or Division I bracket and picks 12 Division II teams, from its power rankings (Green Book 2000.1)'],
       ]);
       expect(ps.citations.roundDates).toBe(
-        'Round dates and the finals site (La Jolla HS) are from the Section’s bracket sheet.',
+        'Round dates and the finals site (La Jolla HS) are from the Section’s bracket sheet; the SDFHOA calendar lists Divisions I and II the other way round for the rounds before the finals.',
       );
       // The round calendar (the Section's bracket sheet since Nov 3), the links, and the bracket-sheet switch.
       expect(ps.rounds.map((r) => [r.date, r.label, r.time, r.site])).toEqual([

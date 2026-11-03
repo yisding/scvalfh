@@ -75,8 +75,9 @@ describe('ccsBracketGames: the derivation of playoffs.games', () => {
 });
 
 describe('getCcsSeeds: the owner-file switch', () => {
-  it('is null while data/ccs-bracket-2026.json is the placeholder, so no seed is printed', () => {
-    expect(getCcsSeeds()).toBeNull();
+  it('reads the committed file (MaxPreps’ 2026 seeds), and null seeds print none', () => {
+    expect(ccsSeedOf(getCcsSeeds(), 'Division 1', 'los-gatos')).toBe(5);
+    expect(ccsSeedOf(getCcsSeeds(), 'Division 2', 'leigh')).toBe(1);
     expect(ccsSeedOf(null, 'Division 1', 'los-gatos')).toBeNull();
   });
 

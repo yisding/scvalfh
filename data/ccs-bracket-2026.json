@@ -1,6 +1,84 @@
 {
   "season": "2026-27",
-  "retrievedOn": null,
-  "source": null,
-  "divisions": []
+  "retrievedOn": "2026-11-03",
+  "source": {
+    "label": "2026 Central Coast Section Field Hockey Championship (MaxPreps)",
+    "url": "https://www.maxpreps.com/tournament/3jB4uWWtwk20vrdggAkzMA/field-hockey-26/2026-central-coast-section-field-hockey-championship.htm"
+  },
+  "divisions": [
+    {
+      "name": "Division 1",
+      "seeds": [
+        {
+          "seed": 1,
+          "slug": "st-ignatius"
+        },
+        {
+          "seed": 2,
+          "slug": "saint-francis"
+        },
+        {
+          "seed": 3,
+          "slug": "mitty"
+        },
+        {
+          "seed": 4,
+          "slug": "christopher"
+        },
+        {
+          "seed": 5,
+          "slug": "los-gatos"
+        },
+        {
+          "seed": 6,
+          "slug": "stevenson"
+        },
+        {
+          "seed": 7,
+          "slug": "gilroy"
+        },
+        {
+          "seed": 8,
+          "slug": "valley-christian"
+        }
+      ]
+    },
+    {
+      "name": "Division 2",
+      "seeds": [
+        {
+          "seed": 1,
+          "slug": "leigh"
+        },
+        {
+          "seed": 2,
+          "slug": "los-altos"
+        },
+        {
+          "seed": 3,
+          "slug": "palo-alto"
+        },
+        {
+          "seed": 4,
+          "slug": "homestead"
+        },
+        {
+          "seed": 5,
+          "slug": "willow-glen"
+        },
+        {
+          "seed": 6,
+          "slug": "hollister"
+        },
+        {
+          "seed": 7,
+          "slug": "prospect"
+        },
+        {
+          "seed": 8,
+          "slug": "santa-clara"
+        }
+      ]
+    }
+  ]
 }

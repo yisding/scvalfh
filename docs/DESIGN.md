@@ -4821,7 +4821,8 @@ One strip per region: on `/playoffs` `#this-week-norcal` after the CCS intro and
   with both files filled `/playoffs` lands near the new line: the PR that fills a file re-measures
   (`scripts/assert-budgets.ts`). On 2026-11-03, with the CCS bracket drawn from MaxPreps' games and the San Diego
   file filled from the Section's sheet, the page measured 76,383 B (123 % of 62,017); the line moved to 4.6 ×
-  (86,448 B, 88%).
+  (86,448 B, 88%). With the CCS seeds filled and the MCAL tournament drawn in its `#mcal` section the same day,
+  83,822 B (97 %), so 5.0 × (93,965 B, 89%).
 
 ### 31.4 MCAL: the shootout, the venue and the results
 

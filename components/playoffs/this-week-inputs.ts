@@ -176,17 +176,19 @@ export function norcalEvents(
       leagueId: league.id,
     });
   }
-  // Once the bracket is drawn (the page's own test, `seeded`), the meeting reads as done and links the bracket.
+  // Once the bracket is drawn (the page's own test, `seeded`) and the meeting's day has come, it reads as done and
+  // links the bracket. No "Division 2 seeded": SEED_CLAIM reads a number before "seeded" as a seed claim.
   const divisions = listWords(playoffs.format.ccsDivisions.map((d) => `CCS ${d.name}`));
+  const met = seeded && today >= keyDates.seedingMeeting.slice(0, 10);
   events.push({
     dateKey: keyDates.seedingMeeting.slice(0, 10),
     time: timeOfDayPT(keyDates.seedingMeeting),
     title: 'CCS seeding meeting',
-    detail: seeded ? `${divisions} seeded; the bracket is posted` : divisions,
-    href: seeded ? '/playoffs#bracket' : '/playoffs#key-dates',
+    detail: met ? `Bracket posted: ${divisions}` : divisions,
+    href: met ? '/playoffs#bracket' : '/playoffs#key-dates',
     leagueId: null,
     scope: blocks.map((b) => b.summary.id),
-    done: seeded,
+    done: met,
   });
   for (const id of getTournamentLeagueIds()) {
     const league = getLeague(id);
