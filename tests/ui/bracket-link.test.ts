@@ -7,7 +7,7 @@
 
 import type { ReactElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { beforeAll, describe, expect, it } from 'vitest';
+import { beforeAll, describe, expect, it, vi } from 'vitest';
 
 import { getBracketLink } from '../../components/playoffs/bracket-link';
 import { getBracketPlace } from '../../components/playoffs/bracket-place';
@@ -112,5 +112,47 @@ describe('an unbracketed postseason that is over (the EAL Super Regional, Oct 30
     const after = leagueCopy('eal', '2026-11-01');
     expect(after.seasonEndSentence, 'components/teams/team-view.ts leagueCopy').toContain('the Super Regional followed, Oct 30–31.');
     expect(after.bracketSentence).toBe('Its games and result are on the playoffs page.');
+  });
+});
+
+describe('getBracketPlace on a decided CCS quarterfinal (Codex review, 2026-11-03)', () => {
+  // A quarterfinal played 3–1 for the home side whose MaxPreps flags say the opposite: the score decides.
+  async function placeWith(seeded: boolean) {
+    vi.resetModules();
+    const data = await import('../../lib/data');
+    const playoffs = data.getPlayoffs();
+    const [first, ...rest] = playoffs.games;
+    const decided: Game = {
+      ...first,
+      status: 'final',
+      home: { ...first.home, score: 3, result: 'L' },
+      away: { ...first.away, score: 1, result: 'W' },
+    };
+    vi.doMock('../../lib/data', async (importOriginal) => {
+      const actual = await importOriginal<typeof import('../../lib/data')>();
+      return { ...actual, getPlayoffs: () => ({ ...playoffs, games: [decided, ...rest] }) };
+    });
+    if (!seeded) {
+      vi.doMock('../../lib/ccs-bracket', async (importOriginal) => {
+        const actual = await importOriginal<typeof import('../../lib/ccs-bracket')>();
+        return { ...actual, getCcsSeeds: () => null };
+      });
+    }
+    const { getBracketPlace: place } = await import('../../components/playoffs/bracket-place');
+    const result = place(decided);
+    vi.doUnmock('../../lib/data');
+    vi.doUnmock('../../lib/ccs-bracket');
+    vi.resetModules();
+    return { result, home: data.getTeamBySlug(decided.home.slug!)!.name };
+  }
+
+  it('advances the side with more goals, whatever the flags say', async () => {
+    const { result, home } = await placeWith(true);
+    expect(result?.next, PLACE).toMatch(new RegExp(`^${home.replace('.', '\\.')} plays .+ in the semifinal`));
+  });
+
+  it('names no division winner while the quarterfinals are the last round drawn (no seed file)', async () => {
+    const { result } = await placeWith(false);
+    expect(result?.next ?? '', PLACE).not.toMatch(/ won /);
   });
 });

@@ -220,7 +220,8 @@ function gameSeeds(card: BracketGame): number[] {
 }
 
 /** The winner of a final, by slug (null for a side outside the registry, a level score with no W flag, or no result). */
-function winnerSlug(game: Game): string | null {
+/** The winner: the higher score, then a lone W on a level score (the shootout convention); null when undecided. */
+export function winnerSlug(game: Game): string | null {
   if (game.status !== 'final') return null;
   const h = game.home.score;
   const a = game.away.score;

@@ -17,7 +17,7 @@ import { getTeamBySlug } from '../../lib/teams';
 import type { Game, TeamSlug } from '../../lib/types';
 
 import { getBracketLink, type BracketLink } from './bracket-link';
-import { buildBrackets, isSeedSide, isWinnerOf, type BracketRound, type PairingSide } from './bracket-model';
+import { buildBrackets, isSeedSide, isWinnerOf, winnerSlug, type BracketRound, type PairingSide } from './bracket-model';
 
 export interface BracketPlace {
   /** 'CCS Division 2 quarterfinal · 8 v 1', 'Division II first round'; null when the game's round is not known. */
@@ -44,12 +44,6 @@ function nextSentence(winner: TeamSlug | null, opponent: string | null, roundWor
 
 // ---------------------------------------------------------------- CCS
 
-function ccsWinner(game: Game): TeamSlug | null {
-  if (game.status !== 'final' || game.home.score === null || game.away.score === null) return null;
-  if (game.home.result === 'W') return game.home.slug;
-  if (game.away.result === 'W') return game.away.slug;
-  return null;
-}
 
 /** The words for the side of a later CCS card that is not this game's: 'Leigh', 'Willow Glen or Homestead'. */
 function ccsSideWords(side: PairingSide): string | null {
@@ -66,10 +60,14 @@ function ccsPlace(game: Game, link: BracketLink): BracketPlace | null {
     const card = round.cards.find((c) => c.kind === 'game' && c.game.contestId === game.contestId);
     const seeds = card?.kind === 'game' && card.seeds.away !== null && card.seeds.home !== null ? ` · ${card.seeds.away} v ${card.seeds.home}` : '';
     const label = round.key === 'other' ? path.name : `${path.name} ${singular(round.name)}${seeds}`;
-    const winner = ccsWinner(game);
+    // Score first, then a lone W (bracket-model.ts winnerSlug), so the words agree with the side the bracket advances.
+    const winner = winnerSlug(game);
     const later: BracketRound | undefined = path.rounds[r + 1];
     if (!later) {
-      return { round: label, next: winner ? `${nameOf(winner)} won ${path.name}.` : null, link };
+      // Only the final names a division winner: without the seed file a bracket has only the rounds MaxPreps lists,
+      // so a quarterfinal can be the last round drawn for a day or two.
+      const final = round.key === 'finals';
+      return { round: label, next: final && winner ? `${nameOf(winner)} won ${path.name}.` : null, link };
     }
     const teams = new Set([game.home.slug, game.away.slug].filter((s): s is TeamSlug => s !== null));
     let opponent: string | null = null;
