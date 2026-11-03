@@ -25,8 +25,7 @@
  * ever reads them. Pure: no I/O, no clock — `today` is an input.
  */
 
-import { datesOf } from '../crosscheck/backfill';
-import { byDateThenId, dayDiff } from '../format';
+import { byDateThenId, datesOf, dayDiff } from '../format';
 import type { JvSbliveRow } from './jv-schema';
 import { JV_OUTSIDE_TEAMS, jvSlotTeamFor, type JvSlotTeam } from './jv-teams';
 import { getTeamBySlug } from '../teams';

@@ -19,6 +19,7 @@
  * either matches MaxPreps and is set aside otherwise (`ambiguous`).
  */
 
+import { CIFSS_NOTES } from './cifss-notes';
 import { gamePairKey } from './crosscheck';
 import { dayNumber } from '../format';
 import { cifssListingUrl, type CifssRow, type CifssSide } from '../sources/cifss';
@@ -48,13 +49,6 @@ export interface CompareCifssResult {
   /** Scored widget games with no MaxPreps contest that match a Deleted or dropped one (not reported). */
   nonGameMatches: number;
 }
-
-export const CIFSS_NOTES = {
-  pending: 'MaxPreps lists the game with no score yet, so it stays unreported here.',
-  postponed: 'MaxPreps lists the game as postponed, so it stays unreported here.',
-  notOnMaxPreps:
-    'MaxPreps has no game between these teams within three days of this date. Schools enter their own rows on cifsshome.org, so this may be a scrimmage or a game played on another date; nothing is published from it.',
-} as const;
 
 const sidePairKey = (r: Pick<CifssRow, 'home' | 'away'>): string =>
   unorderedPairKey(sideJoinKey(r.home), sideJoinKey(r.away));

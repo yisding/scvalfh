@@ -13,7 +13,8 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { CIFSS_NOTES, carryCifssCrossCheck, compareCifss } from '../lib/crosscheck/cifss-crosscheck';
+import { carryCifssCrossCheck, compareCifss } from '../lib/crosscheck/cifss-crosscheck';
+import { CIFSS_NOTES } from '../lib/crosscheck/cifss-notes';
 import { gamePairKey } from '../lib/crosscheck/crosscheck';
 import {
   CIFSS_NO_SECTION_TEAMS,

@@ -35,7 +35,6 @@ import type {
   GameSide,
   GameStatus,
   Outcome,
-  SeasonWindow,
   SourceId,
 } from './types';
 import { TBA_TEAM_ID, splitTbaRows, type ContestTeam, type ScheduleRow } from './sources/maxpreps';
@@ -782,15 +781,4 @@ export function dedupePhantomPairs(
     }
   }
   return { games: games.filter((g) => !losers.has(g.contestId)), dropped };
-}
-
-/** The season window, computed from the games and never hardcoded (SPEC §5.8). */
-export function seasonWindowOf(games: readonly Game[]): SeasonWindow {
-  const dates = games.map((g) => g.dateLocal).sort();
-  const leagueDates = games.filter((g) => g.isLeague).map((g) => g.dateLocal).sort();
-  return {
-    firstGame: dates[0] ?? null,
-    lastGame: dates[dates.length - 1] ?? null,
-    lastLeagueGame: leagueDates[leagueDates.length - 1] ?? null,
-  };
 }

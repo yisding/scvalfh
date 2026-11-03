@@ -28,7 +28,7 @@
  * Final, integer scores, and a non-junk row. Pure: no I/O, no clock — `today` is an input.
  */
 
-import { dayDiff, monthDay, shiftDateKey, shootoutPhrases, toLocalTimestamp } from '../format';
+import { datesOf, dayDiff, monthDay, shiftDateKey, shootoutPhrases } from '../format';
 import { DATA_QUALITY, LEAGUES, getLeague, getSection, leagueOfDivision, type SectionConfig } from '../leagues';
 import {
   isCaliforniaGameRow,
@@ -506,32 +506,6 @@ export function backfillRowOf(g: Game): BackfillRow | null {
 
 function sideOf(team: Team, score: number, other: number): GameSide {
   return { teamId: team.id, slug: team.slug, name: team.name, score, result: outcome(score, other) };
-}
-
-/**
- * si.com's instant → our naive local timestamp and UTC instant; 16:00 local when si.com gives no time.
- * Exported for lib/jv/jv-merge.ts, which builds a si.com-only JV game the same way.
- */
-export function datesOf(row: Pick<SbliveGame, 'dateIso' | 'dateKey'>): { dateLocal: string; dateUtc: string; dateKey: string; isTimeTba: boolean } {
-  const hasTime = /T\d{2}:\d{2}/.test(row.dateIso);
-  const instant = hasTime ? new Date(row.dateIso) : null;
-  if (instant && !Number.isNaN(instant.getTime())) {
-    const dateUtc = instant.toISOString().replace(/\.000Z$/, 'Z');
-    const dateLocal = toLocalTimestamp(dateUtc);
-    return { dateLocal, dateUtc, dateKey: dateLocal.slice(0, 10), isTimeTba: false };
-  }
-  const dateLocal = `${row.dateKey}T16:00:00`;
-  // Pacific time is UTC-7 (PDT) or UTC-8 (PST); take whichever round-trips to 16:00 local.
-  const dateUtc =
-    [7, 8]
-      .map((h) => new Date(Date.UTC(...ymd(row.dateKey), 16 + h)).toISOString().replace(/\.000Z$/, 'Z'))
-      .find((iso) => toLocalTimestamp(iso) === dateLocal) ?? `${row.dateKey}T23:00:00Z`;
-  return { dateLocal, dateUtc, dateKey: row.dateKey, isTimeTba: true };
-}
-
-function ymd(dateKey: string): [number, number, number] {
-  const [y, m, d] = dateKey.split('-').map(Number);
-  return [y, m - 1, d];
 }
 
 function absentFixtureGame(

@@ -1,4 +1,4 @@
-import { CIFSS_NOTES } from '../../lib/crosscheck/cifss-crosscheck';
+import { CIFSS_NOTES } from '../../lib/crosscheck/cifss-notes';
 import { formatStamp, shortDate } from '../../lib/format';
 import type { CifssCrossCheck, CifssOnlyRow } from '../../lib/types';
 

@@ -286,6 +286,34 @@ export function hoursBetween(aIso: string, bIso: string): number {
   return Math.abs(new Date(bIso).getTime() - new Date(aIso).getTime()) / 3_600_000;
 }
 
+/**
+ * si.com's instant → our naive local timestamp and UTC instant; 16:00 local when si.com gives no time.
+ * Typed by shape (a si.com row's `dateIso` and `dateKey`) so this module never loads the si.com
+ * scraper: lib/crosscheck/backfill.ts builds an absent-fixture game with it and lib/jv/jv-merge.ts a
+ * si.com-only JV game, the same way.
+ */
+export function datesOf(row: { dateIso: string; dateKey: string }): { dateLocal: string; dateUtc: string; dateKey: string; isTimeTba: boolean } {
+  const hasTime = /T\d{2}:\d{2}/.test(row.dateIso);
+  const instant = hasTime ? new Date(row.dateIso) : null;
+  if (instant && !Number.isNaN(instant.getTime())) {
+    const dateUtc = instant.toISOString().replace(/\.000Z$/, 'Z');
+    const dateLocal = toLocalTimestamp(dateUtc);
+    return { dateLocal, dateUtc, dateKey: dateLocal.slice(0, 10), isTimeTba: false };
+  }
+  const dateLocal = `${row.dateKey}T16:00:00`;
+  // Pacific time is UTC-7 (PDT) or UTC-8 (PST); take whichever round-trips to 16:00 local.
+  const dateUtc =
+    [7, 8]
+      .map((h) => new Date(Date.UTC(...ymd(row.dateKey), 16 + h)).toISOString().replace(/\.000Z$/, 'Z'))
+      .find((iso) => toLocalTimestamp(iso) === dateLocal) ?? `${row.dateKey}T23:00:00Z`;
+  return { dateLocal, dateUtc, dateKey: row.dateKey, isTimeTba: true };
+}
+
+function ymd(dateKey: string): [number, number, number] {
+  const [y, m, d] = dateKey.split('-').map(Number);
+  return [y, m - 1, d];
+}
+
 // ---------------------------------------------------------------- records & numbers
 
 /**

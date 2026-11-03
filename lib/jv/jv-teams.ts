@@ -16,7 +16,7 @@
  * Pure config: no I/O.
  */
 
-import { SBLIVE_WEB } from '../sources/sblive';
+import { SBLIVE_WEB } from '../season';
 import { TEAMS } from '../teams';
 import type { Team, TeamSlug } from '../types';
 

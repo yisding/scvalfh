@@ -10,6 +10,8 @@
 
 export const MAXPREPS_API = 'https://production.api.maxpreps.com';
 export const MAXPREPS_WEB = 'https://www.maxpreps.com';
+/** si.com's California field hockey root (ex-SBLive): team, scoreboard and league pages sit under it. */
+export const SBLIVE_WEB = 'https://www.si.com/high-school/stats/california/field-hockey';
 
 /** The bootstrap page whose __NEXT_DATA__ carries ssid + allSeasonId (SPEC §1.1h, verdict 5). */
 export const BOOTSTRAP_URL = `${MAXPREPS_WEB}/ca/field-hockey/`;
@@ -45,7 +47,7 @@ export const CCS_BRACKET_URL =
 /** Section-wide deep links rendered by the Attribution component. League links live in lib/leagues.ts. */
 export const SOURCE_LINKS = {
   maxpreps: `${MAXPREPS_WEB}/ca/field-hockey/`,
-  sblive: 'https://www.si.com/high-school/stats/california/field-hockey',
+  sblive: SBLIVE_WEB,
   ccs: 'https://cifccs.org/sports/fh/index',
   ccsCalendar: 'https://cifccs.org/calendar/Field_Hockey?print=ical',
   cifss: 'https://www.cifsshome.org/widget/schedule-score',

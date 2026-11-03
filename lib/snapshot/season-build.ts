@@ -1,11 +1,10 @@
 /**
  * The Season record written into every snapshot (SPEC §5.9). Server-only: it reads the league
- * config, the registry and lib/normalize, so it is NOT part of lib/season.ts, which stays a
- * dependency-free constants leaf that client modules reach through lib/format.
+ * config and the registry, so it is NOT part of lib/season.ts, which stays a dependency-free
+ * constants leaf that client modules reach through lib/format.
  */
 
 import { LEAGUES, SECTIONS } from '../leagues';
-import { seasonWindowOf } from '../normalize';
 import {
   ALL_SEASON_ID, GENDER_SPORT, SEASON_LABEL, SEASON_YEAR, SPORT_SEASON_ID, TEAM_LEVEL,
 } from '../season';
@@ -22,6 +21,17 @@ const maxOf = (dates: readonly string[]): string | null =>
 const minOf = (dates: readonly string[]): string | null =>
   dates.length === 0 ? null : dates.reduce((a, b) => (b < a ? b : a));
 
+/** The season window, computed from the games and never hardcoded (SPEC §5.8). */
+export function seasonWindowOf(games: readonly Game[]): SeasonWindow {
+  const dates = games.map((g) => g.dateLocal).sort();
+  const leagueDates = games.filter((g) => g.isLeague).map((g) => g.dateLocal).sort();
+  return {
+    firstGame: dates[0] ?? null,
+    lastGame: dates[dates.length - 1] ?? null,
+    lastLeagueGame: leagueDates[leagueDates.length - 1] ?? null,
+  };
+}
+
 /**
  * One league's window: over games with at least one registry side in the league AND
  * `postseason === null` (crossover, play-in, MCAL tournament, EAL Super Regional, San Diego Section playoff
@@ -36,7 +46,7 @@ export function leagueWindowOf(games: readonly Game[], leagueId: LeagueId): Seas
       && (leagueOfSide(g.home) === leagueId || leagueOfSide(g.away) === leagueId),
   );
   const dates = inScope.map((g) => g.dateLocal);
-  // Same key order as lib/normalize seasonWindowOf.
+  // Same key order as seasonWindowOf.
   return {
     firstGame: minOf(dates),
     lastGame: maxOf(dates),
@@ -46,7 +56,7 @@ export function leagueWindowOf(games: readonly Game[], leagueId: LeagueId): Seas
   };
 }
 
-/** Global window (the original single-league semantics, unchanged, via lib/normalize seasonWindowOf) + per-league windows over non-postseason games + postseasonKind (§5.9). */
+/** Global window (the original single-league semantics, unchanged, via seasonWindowOf) + per-league windows over non-postseason games + postseasonKind (§5.9). */
 export function buildSeason(games: readonly Game[]): Season {
   const leagues: SeasonLeague[] = LEAGUES.map((l) => ({
     id: l.id,

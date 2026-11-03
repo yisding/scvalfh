@@ -26,11 +26,11 @@ import { z } from 'zod';
 
 import { localDateKey } from '../format';
 import { DATA_QUALITY, LEAGUES } from '../leagues';
+import { SBLIVE_WEB } from '../season';
 import { TEAMS, isWithdrawnSchool, normalizeTeamKey, resolveTeam, sideJoinKey } from '../teams';
 import type { Team, TeamSlug } from '../types';
 import { CHROME_USER_AGENT, type HttpClientOptions, htmlUnescape } from './http';
 
-export const SBLIVE_WEB = 'https://www.si.com/high-school/stats/california/field-hockey';
 export const SBLIVE_HOST = 'https://www.si.com';
 
 export function sbliveTeamGamesUrl(sbliveSlug: string): string {

@@ -12,12 +12,12 @@ import {
   dedupePhantomPairs,
   normalizeGames,
   pacificMidnightUtc,
-  seasonWindowOf,
   overtimeFromNote,
   splitLocation,
   toUtcIso,
 } from '../lib/normalize';
 import { ScheduleResponseSchema, splitTbaRows, type ScheduleRow } from '../lib/sources/maxpreps';
+import { seasonWindowOf } from '../lib/snapshot/season-build';
 import { getTeamBySlug, resolveTeam } from '../lib/teams';
 import type { Game } from '../lib/types';
 import { allScheduleRows, corpusDir } from './helpers';
