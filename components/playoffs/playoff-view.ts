@@ -53,6 +53,7 @@ import type {
   LeagueTournamentProjection,
   PlayoffStatus,
   Standing,
+  StreetAddress,
   Team,
   TeamSlug,
   TiebreakStage,
@@ -145,16 +146,22 @@ export function ccsHostingSentence(hostsThrough: CcsConfig['highSeedHostsThrough
   return `${homePart}${words(neutral)} ${neutral.length === 1 ? 'is' : 'are'} at neutral sites set by CCS (the CIF-CCS field hockey calendar).`;
 }
 
+/** The seeding meeting's detail before the bracket exists, and once its games (or seeds) are drawn above. */
+export const SEEDING_AHEAD_DETAIL = 'The committee seeds both CCS divisions; the games appear here as MaxPreps lists them, after the next update.';
+export const SEEDING_DONE_DETAIL = 'The committee seeded both CCS divisions; the bracket above is drawn from the games MaxPreps lists.';
+
 /**
  * Every CCS key date plus each CCS league's own postseason date, in date order. The CCS dates come
  * from the CCS playoff-dates release (cross-confirmed by the CCS iCal feed once it is polled); the
  * league dates come from the official league schedules and by-laws (config pairings). Round details
- * say where each round is played, from `CCS.highSeedHostsThrough`.
+ * say where each round is played, from `CCS.highSeedHostsThrough`. `seeded` (the page's own test: a bracket path
+ * to draw) puts the seeding meeting's detail in the past tense.
  */
 export function keyDateRows(
   k: CcsKeyDates,
   leagueDates: readonly LeagueKeyDate[] = [],
   hostsThrough: CcsConfig['highSeedHostsThrough'] = CCS.highSeedHostsThrough,
+  seeded = false,
 ): KeyDateRow[] {
   const ccs = (
     key: KeyDateKey,
@@ -175,7 +182,7 @@ export function keyDateRows(
   const rows: KeyDateRow[] = [
     ccs('end-of-league-season', k.endOfLeagueSeason, 'CCS end of league season', 'The last day a league game or league postseason game may be played.'),
     ccs('entries', k.entriesDue, 'CCS entries due', 'Leagues submit their qualifiers and at-large candidates.', { time: true }),
-    ccs('seeding', k.seedingMeeting, 'CCS seeding meeting', 'The committee seeds both CCS divisions; the games appear here as MaxPreps lists them, after the next update.', { time: true }),
+    ccs('seeding', k.seedingMeeting, 'CCS seeding meeting', seeded ? SEEDING_DONE_DETAIL : SEEDING_AHEAD_DETAIL, { time: true }),
     ccs('quarterfinals', k.quarterfinals, 'Quarterfinals', roundSiteDetail('quarterfinals', hostsThrough), { isRound: true }),
     ccs('semifinals', k.semifinals, 'Semifinals', roundSiteDetail('semifinals', hostsThrough), { isRound: true }),
     ccs('finals', k.finals, 'Finals', roundSiteDetail('finals', hostsThrough), { isRound: true }),
@@ -617,6 +624,10 @@ export function sectionBracketSentence(ps: SectionPlayoffsConfig, seedingDate: s
   if (seedingDate && today < seedingDate) {
     return `The Section places teams at its ${seeding} seeding meeting and posts its brackets on its field hockey page afterwards; this site draws no bracket and projects no places.`;
   }
+  // The day after the meeting it has happened (its hour is in no config field, so the day itself keeps the sentence above).
+  if (seedingDate && today > seedingDate) {
+    return `The Section placed teams at its ${seeding} seeding meeting and posts its brackets on its field hockey page; this site draws no bracket and projects no places. Its playoff games appear on team pages and schedules as MaxPreps lists them.`;
+  }
   return `The Section posts its brackets on its field hockey page${seeding ? ` after its ${seeding} seeding meeting` : ''}; this site draws no bracket and projects no places. Its playoff games appear on team pages and schedules as MaxPreps lists them.`;
 }
 
@@ -793,11 +804,12 @@ export interface TournamentInput {
    */
   ladderLine: { after: number; label: string } | null;
   /**
-   * The final's fixed site from config (the host school's slug, venue, address, admission); omitted ⇒ the round
+   * The final's fixed site from config (the host school's slug, venue, admission) with the site school's address
+   * from data/schools.json; omitted ⇒ the round
    * shows no venue block and the final reads 'vs' (no host known). The slug makes the final 'at' when the site team
    * is a finalist (lib/postseason.ts fixedSiteHost).
    */
-  finalSite?: { slug?: TeamSlug; venue: string; address: { street: string; city: string; region: string; postalCode: string }; admission: string | null; admissionSource: string | null };
+  finalSite?: { slug?: TeamSlug; venue: string; address: StreetAddress; admission: string | null; admissionSource: string | null };
 }
 
 /** A bracket round's title, for the page's round headers and the OG card's round line alike. */

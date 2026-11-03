@@ -212,7 +212,7 @@ export function PlayoffBracket({ path, headingLevel: RoundHeading = 'h4', classN
                   {/* Every CCS game is a postseason game, so the NL tag would mark the whole
                       bracket — marking the majority is noise (DESIGN §5.4). */}
                   {card.kind === 'game' ? (
-                    <GameRow game={card.game} showRecap={false} showChips={false} />
+                    <GameRow game={card.game} showRecap={false} showChips={false} seeds={card.seeds} />
                   ) : (
                     <PairingCard card={card} round={round} flush />
                   )}

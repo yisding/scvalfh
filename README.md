@@ -950,7 +950,7 @@ pnpm gate:d              # the full gate: Next, vinext and Cloudflare builds, sm
 ```
 
 `pnpm build` and `next dev` both read the snapshot already checked into `data/`, so you can
-develop and build without ever calling a live upstream API. Every build bundles twelve data files
+develop and build without ever calling a live upstream API. Every build bundles thirteen data files
 into its server code, each imported by its read module, so no server reads `data/` at run time:
 
 | File | Read by |
@@ -966,6 +966,7 @@ into its server code, each imported by its read module, so no server reads `data
 | `data/commits.json` | `lib/commits.ts` |
 | `data/ccs-bracket-2026.json` | `lib/ccs-bracket.ts` |
 | `data/sds-brackets-2026.json` | `lib/sds-bracket.ts` |
+| `data/schools.json` (each registry school's campus address, by slug) | `lib/schools.ts` |
 
 The vinext scripts read the
 same `app/` and `next.config.ts`; vinext adds `vite.config.ts`, `cloudflare.config.ts` for the

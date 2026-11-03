@@ -1,10 +1,11 @@
 import Link from 'next/link';
 
 import { getStandingFor } from '../../lib/data';
-import { EM_DASH, matchupJoiner, monthDay, recordString, recordWords, shortDate, timeOfDay } from '../../lib/format';
+import { EM_DASH, mapsSearchHref, matchupJoiner, monthDay, recordString, recordWords, shortDate, timeOfDay } from '../../lib/format';
 import { gameHref } from '../../lib/game-id';
 import { TEAMS, getTeamBySlug } from '../../lib/teams';
 import type { Game, LeagueId, Record3, TeamSlug } from '../../lib/types';
+import { gameAddress } from '../../lib/venue';
 
 import ExternalLink from './ExternalLink';
 import GhostMonogram from './GhostMonogram';
@@ -92,6 +93,11 @@ export interface GameViewProps {
    */
   linkStyle?: 'text' | 'pills';
   defaultExpanded?: boolean;
+  /**
+   * GameRow only: each side's seed, printed before its name in 13px mono ink-3, as the desktop bracket card prints
+   * it (components/playoffs/PlayoffBracket.tsx). Only the CCS bracket passes it, and only once the seeds are known.
+   */
+  seeds?: { away: number | null; home: number | null };
   className?: string;
 }
 
@@ -167,8 +173,11 @@ function TeamLine({
   monogram = true,
   showRecord = false,
   scopeLeague,
+  seed = null,
 }: {
   side: SideView;
+  /** The side's bracket seed (`GameViewProps.seeds`), or null. */
+  seed?: number | null;
   showScore: boolean;
   /** false drops the chip column entirely (a GameCard where neither side has a chip). */
   chipSlot?: boolean;
@@ -205,6 +214,7 @@ function TeamLine({
       ) : (
         <GhostMonogram name={side.name} size={24} title={NON_MEMBER_NOTE} />
       )}
+      {seed !== null ? <span className="sx-num w-4 shrink-0 text-meta text-ink-3">{seed}</span> : null}
       <span className={`sx-teamname ${nameClass(side)}`}>
         {/* The dense row renders the SHORT name (DESIGN §3.3's wireframe writes "Mitty", not
             "Archbishop Mitty High School"). `display.sentence` keeps the full name for a screen
@@ -327,11 +337,13 @@ export function SummaryTeams({
   showRecords = false,
   scopeLeague = null,
   monogram = true,
+  seeds,
 }: {
   display: GameDisplay;
   showRecords?: boolean;
   scopeLeague?: LeagueId | null;
   monogram?: boolean;
+  seeds?: { away: number | null; home: number | null };
 }) {
   return (
     <span className="min-w-0 space-y-1" aria-hidden="true">
@@ -341,6 +353,7 @@ export function SummaryTeams({
         monogram={monogram}
         showRecord={showRecords}
         scopeLeague={scopeLeague}
+        seed={seeds?.away ?? null}
       />
       <TeamLine
         side={display.home}
@@ -348,6 +361,7 @@ export function SummaryTeams({
         monogram={monogram}
         showRecord={showRecords}
         scopeLeague={scopeLeague}
+        seed={seeds?.home ?? null}
       />
     </span>
   );
@@ -355,12 +369,9 @@ export function SummaryTeams({
 
 /** The pills in an expanded panel: real links only, never a dead affordance. */
 function GameLinks({ game }: { game: Game }) {
-  const address = game.venue.address;
-  const directions = address
-    ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-        `${address.street}, ${address.city}, ${address.region} ${address.postalCode}`,
-      )}`
-    : null;
+  // lib/venue.ts: the game's own address, else the venue's or host's school (data/schools.json).
+  const address = gameAddress(game)?.address;
+  const directions = address ? mapsSearchHref(address) : null;
   const links: Array<{ href: string; label: string }> = [];
   if (directions) links.push({ href: directions, label: 'Directions' });
   if (game.urls.nfhsStream) links.push({ href: game.urls.nfhsStream, label: 'NFHS stream' });
@@ -424,6 +435,7 @@ export function GameRow({
   scopeLeague = null,
   showRecords = false,
   defaultExpanded = false,
+  seeds,
   className,
 }: GameViewProps) {
   const display = describeGame(game, perspective);
@@ -465,7 +477,7 @@ export function GameRow({
           showTime={showTime}
           showChips={showChips}
         />
-        <SummaryTeams display={display} showRecords={withRecords} scopeLeague={scopeLeague} />
+        <SummaryTeams display={display} showRecords={withRecords} scopeLeague={scopeLeague} seeds={seeds} />
         <svg
           className="sx-chevron text-ink-3"
           width="16"

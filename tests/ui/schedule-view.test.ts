@@ -58,6 +58,8 @@ afterAll(() => {
 });
 
 const leagueOfSlug = (slug: string | null) => (slug ? data.getTeamBySlug(slug)?.league : undefined);
+/** 'YYYY-MM-DD' plus `n` days. */
+const shiftDays = (key: string, n: number) => new Date(Date.parse(`${key}T12:00:00Z`) + n * 86_400_000).toISOString().slice(0, 10);
 
 describe('league scoping (/schedule/<league>)', () => {
   it('lists every game with a side in the league exactly once, and a cross-league game in both leagues', () => {
@@ -227,13 +229,15 @@ describe('the /schedule index', () => {
     }
   });
 
-  it('builds Recent and Next around today, at most three rows per league, and per-league day counts', () => {
+  it('builds Recent and Next around today, at most three rows per league, and per-league day counts', async () => {
     const today = data.getToday();
+    const { postseasonPlace } = await import('../../components/schedule/day-summary');
     const built = index.buildScheduleIndex({
       games: data.getGames(),
       leagues: data.getLeagueSummaries(),
       leagueOf: (slug) => data.getTeamBySlug(slug)?.league,
       today,
+      placeOf: postseasonPlace,
     });
     expect(built.recent.length).toBeLessThanOrEqual(3);
     expect(built.next.length).toBeLessThanOrEqual(3);
@@ -243,12 +247,40 @@ describe('the /schedule index', () => {
       const games = data.getGames({ date: d.date });
       expect(d.total).toBe(games.length);
       for (const l of d.byLeague) {
-        const id = data.getLeagueSummaries().find((x) => x.shortName === l.shortName)!.id;
+        const id = data.getLeagueSummaries().find((x) => x.shortName === l.shortName)?.id;
+        if (!id) continue; // an event's group ('CCS'): checked below
+        // A league's count: its sides' games, less the postseason games listed once elsewhere.
         expect(l.games, `components/schedule/schedule-view.ts ${d.date} ${id}`).toBe(
-          games.filter((g) => leagueOfSlug(g.home.slug) === id || leagueOfSlug(g.away.slug) === id).length,
+          games.filter((g) => {
+            const place = postseasonPlace(g);
+            if (place) return place.kind === 'league' && place.id === id;
+            return leagueOfSlug(g.home.slug) === id || leagueOfSlug(g.away.slug) === id;
+          }).length,
         );
       }
     }
+    // A postseason game is listed once on a Recent or Next day (2026-11-03: a CCS game between two leagues was
+    // listed under both): the corpus is from before the postseason, so a cross-league game is re-tagged as a
+    // CCS game, which goes to the 'CCS' group alone, while the game left as it was stays under both leagues.
+    const cross = data.getGames().filter((g) => {
+      const a = leagueOfSlug(g.away.slug);
+      const h = leagueOfSlug(g.home.slug);
+      return a && h && a !== h && g.dateKey > today;
+    });
+    expect(cross.length, 'the corpus has a cross-league game to come').toBeGreaterThan(1);
+    const [asCcs, asIs] = cross.filter((g) => g.dateKey === cross[0].dateKey).length > 1 ? cross : [cross[0], cross[0]];
+    const ccs = { ...asCcs, countsFor: null, postseason: { kind: 'ccs' as const, leagueId: null, via: 'maxpreps-bracket' as const } };
+    const withCcs = index.buildScheduleIndex({
+      games: data.getGames().map((g) => (g === asCcs ? ccs : g)),
+      leagues: data.getLeagueSummaries(),
+      leagueOf: (slug) => data.getTeamBySlug(slug)?.league,
+      today: shiftDays(asCcs.dateKey, -1),
+      placeOf: postseasonPlace,
+    });
+    const first = withCcs.next[0];
+    expect(first.leagues.filter((l) => l.games.includes(ccs)).map((l) => l.id)).toEqual(['postseason-ccs']);
+    expect(first.leagues.find((l) => l.id === 'postseason-ccs')).toMatchObject({ leagueId: null, shortName: 'CCS' });
+    if (asIs !== asCcs) expect(first.leagues.filter((l) => l.games.includes(asIs)).length).toBe(2);
     expect(built.cards.map((c) => c.id)).toEqual(data.getLeagueIds());
     for (const card of built.cards) {
       expect(card.games, `components/schedule/schedule-view.ts card ${card.id}`).toBe(

@@ -3,7 +3,7 @@
  * Section's published sheet once it is linked after the Sat Oct 31 seeding meeting — and its contract,
  * lib/sds-brackets-schema.ts (plan final-07, 2026-10-29).
  *
- * The committed file is the placeholder until the owner fills it. The contract is exercised on last
+ * The committed file holds the Section's 2026 brackets (transcribed 2026-11-03). The contract is exercised on last
  * season's brackets in the same shape (tests/fixtures/sds/brackets-2025.ts seedsFromHistory), and every
  * slip the owner could make in a 20-minute transcription is refused here before it reaches /playoffs.
  */
@@ -44,9 +44,21 @@ const placedIn2025 = new Set(
 const unplacedII = [...divisionOf].filter(([slug, d]) => d === 'II' && !placedIn2025.has(slug)).map(([slug]) => slug);
 
 describe('the committed file', () => {
-  it('is the placeholder until the Section publishes', () => {
-    expect(raw).toEqual({ season: '2026-27', retrievedOn: null, source: null, divisions: [] });
-    expect(SdsBracketsSchema.parse(raw).divisions).toEqual([]);
+  it('holds the Section’s published 2026 brackets (its sheet, read Tue Nov 3)', () => {
+    const file = SdsBracketsSchema.parse(raw);
+    expect(file.retrievedOn).toBe('2026-11-03');
+    expect(file.divisions.map((d) => [d.id, d.size, d.rounds.map((r) => r.date), d.seeds.map((s) => s.slug)])).toEqual([
+      ['open', 8, ['2026-11-05', '2026-11-10', '2026-11-14'],
+        ['bishops', 'canyon-hills', 'torrey-pines', 'scripps-ranch', 'la-jolla', 'del-norte', 'la-costa-canyon', 'eastlake']],
+      ['division-1', 12, ['2026-11-03', '2026-11-06', '2026-11-10', '2026-11-14'],
+        ['clairemont', 'san-marcos', 'san-dieguito-academy', 'university-city', 'mt-carmel', 'cathedral-catholic', 'mission-bay',
+          'poway', 'canyon-crest-academy', 'la-jolla-country-day', 'rancho-bernardo', 'fallbrook']],
+      ['division-2', 12, ['2026-11-04', '2026-11-07', '2026-11-11', '2026-11-14'],
+        ['point-loma', 'mission-hills', 'mission-vista', 'olympian', 'otay-ranch', 'westview', 'san-pasqual', 'hilltop', 'helix',
+          'mira-mesa', 'patrick-henry']],
+    ]);
+    // The 12th place of Division II is the Mon Nov 2 play-in, at Granite Hills (MaxPreps and the NFHS Network list it there).
+    expect(file.divisions[2].playIn).toEqual({ date: '2026-11-02', forSeed: 12, home: 'granite-hills', away: 'sage-creek' });
   });
 
   it('is checked against the config’s playoffs window, Nov 2–14', () => {

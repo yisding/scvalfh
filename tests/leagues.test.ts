@@ -18,6 +18,7 @@ import {
   seasonWindowBounds, sectionOf, sectionsInRegion, standingsLabel, statusesOf, tiebreakChainFor,
   type LeagueConfig, type SectionConfig,
 } from '../lib/leagues';
+import { schoolAddress } from '../lib/schools';
 import { getTeamById } from '../lib/teams';
 import { CCS_BRACKET_URL } from '../lib/season';
 import type { PlayoffStatus, RegionId, TiebreakStage } from '../lib/types';
@@ -234,9 +235,12 @@ describe('leagues: ids and helpers (SPEC §2.3)', () => {
     if (mcal.postseason.kind !== 'league-tournament') throw new Error('MCAL runs a tournament');
     expect(mcal.postseason.finalSite).toEqual({
       slug: 'tamalpais', label: 'Tamalpais', venue: 'Tamalpais High School',
-      address: { street: '700 Miller Ave', city: 'Mill Valley', region: 'CA', postalCode: '94941' },
       admission: 'Adults $10; students, children and seniors $5; pre-sale on GoFan. No booster passes or student body cards; lifetime MCAL, NCS and CIF passes are honored.',
       admissionSource: 'MCAL 2026 Field Hockey Play-off sheet',
+    });
+    // The address is the site school's own record (data/schools.json), as the HomeCampus calendars give it.
+    expect(schoolAddress(mcal.postseason.finalSite.slug)).toEqual({
+      street: '700 Miller Ave', city: 'Mill Valley', region: 'CA', postalCode: '94941',
     });
     expect(mcal.postseason.resultNotes['7bb048ba-9e33-4ad1-a743-2348c6637602']).toContain('Marin Independent Journal');
     expect(mcal.postseason.citations.pennant).toMatch(/^MCAL General Rules, Pennants 1–3/);
@@ -1067,25 +1071,25 @@ describe('leagues: the San Diego Section (City, North County, Metro)', () => {
           '2nd or lower — no league route; the Section places Division I teams in the Open or Division I bracket and picks 12 Division II teams, from its power rankings (Green Book 2000.1)'],
       ]);
       expect(ps.citations.roundDates).toBe(
-        'Round dates and the finals site (La Jolla HS) are from the San Diego Field Hockey Officials Association’s calendar.',
+        'Round dates and the finals site (La Jolla HS) are from the Section’s bracket sheet; the SDFHOA calendar lists Divisions I and II the other way round for the rounds before the finals.',
       );
-      // The round calendar (SDFHOA), the links, and the bracket-sheet switch (null until the Section publishes).
+      // The round calendar (the Section's bracket sheet since Nov 3), the links, and the bracket-sheet switch.
       expect(ps.rounds.map((r) => [r.date, r.label, r.time, r.site])).toEqual([
-        ['2026-11-02', 'Play-in games (only if needed)', null, null],
-        ['2026-11-03', 'First round, Division II', null, null],
-        ['2026-11-04', 'First round, Division I', null, null],
+        ['2026-11-02', 'Play-in, Division II', null, null],
+        ['2026-11-03', 'First round, Division I', null, null],
+        ['2026-11-04', 'First round, Division II', null, null],
         ['2026-11-05', 'Quarterfinals, Open Division', null, null],
-        ['2026-11-06', 'Quarterfinals, Division II', null, null],
-        ['2026-11-07', 'Quarterfinals, Division I', null, null],
-        ['2026-11-10', 'Semifinals, Open Division and Division II', null, null],
-        ['2026-11-11', 'Semifinals, Division I', null, null],
+        ['2026-11-06', 'Quarterfinals, Division I', null, null],
+        ['2026-11-07', 'Quarterfinals, Division II', null, null],
+        ['2026-11-10', 'Semifinals, Open Division and Division I', null, null],
+        ['2026-11-11', 'Semifinals, Division II', null, null],
         ['2026-11-14', 'Final, Division II', '13:00', 'La Jolla High School'],
         ['2026-11-14', 'Final, Division I', '15:30', 'La Jolla High School'],
         ['2026-11-14', 'Final, Open Division', '18:00', 'La Jolla High School'],
       ]);
       expect(ps.calendarUrl).toBe('https://sdfhoa.weebly.com/calendar.html');
       expect(ps.bracketsPageUrl).toBe('https://www.cifsds.org/sports/fh/index');
-      expect(ps.bracketSheetUrl).toBeNull();
+      expect(ps.bracketSheetUrl).toBe('https://docs.google.com/spreadsheets/d/1A8tsHqwGiRLD5EBSnCFoAAK5Qg13v6wQlen3HEGspeU/edit');
       expect(Object.keys(ps.playoffDivisionOf)).toHaveLength(l.divisions.reduce((n, d) => n + d.expectedTeams, 0));
       expect(l.phases).toEqual([{ phase: 'regular', through: 'league-play' }, { phase: 'tournament', through: '2026-11-14' }]);
       expect(l.keyDates.map((k) => [k.id, k.date])).toEqual([

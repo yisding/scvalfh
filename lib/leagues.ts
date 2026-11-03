@@ -374,16 +374,15 @@ export type PostseasonConfig =
       rounds: readonly TournamentRoundConfig[];
       /**
        * The final's fixed site: the host school's slug and short label (the bracket's "at Tamalpais"), the venue's
-       * name and street address (the Directions link on the bracket and on a finalist's Next card, since MaxPreps
-       * gives no address), and the league's admission sentence with its source, or null when the league publishes
-       * none. MCAL: the play-off sheet and the General Rules admission table; the address from the schools'
-       * HomeCampus calendars (cifncshome.org).
+       * name, and the league's admission sentence with its source, or null when the league publishes none. The
+       * street address (the Directions link on the bracket and on a finalist's Next card) is the site school's own
+       * record in data/schools.json, read through `slug`. MCAL: the play-off sheet and the General Rules admission
+       * table.
        */
       finalSite: {
         slug: TeamSlug;
         label: string;
         venue: string;
-        address: { street: string; city: string; region: string; postalCode: string };
         admission: string | null;
         admissionSource: string | null;
       };
@@ -638,6 +637,8 @@ const SDS_FIELD_HOCKEY_URL = 'https://www.cifsds.org/sports/fh/index';
 /** [V] the CIFSDS Green Book 2026-27 ("Revised June 16, 2026"), a Google Doc; Bylaw 2000.1 is Girls Field Hockey. */
 const SDS_GREEN_BOOK_URL = 'https://docs.google.com/document/d/1JE9fAJPGJSnCi0r398lSJZknG54O3gZ3vSc24gPOr90/edit';
 /** [V] the CIFSDS 2026-27 League Alignment workbook (field hockey blocks on the CITY, NORTH COUNTY and METRO tabs). */
+/** [V] the Section's 2026 bracket sheet, "2026 CIFSDS Field Hockey Championship Bracket" (read 2026-11-03). */
+const SDS_BRACKET_SHEET_URL = 'https://docs.google.com/spreadsheets/d/1A8tsHqwGiRLD5EBSnCFoAAK5Qg13v6wQlen3HEGspeU/edit';
 const SDS_ALIGNMENT_URL = 'https://docs.google.com/spreadsheets/d/1nGxmrWBpD1-Ms1idHy-n1zHwq7D06o1vfoFC7_cGgaI/edit#gid=1838785864';
 /** [V] the Section's power-rankings page (it embeds the cifsdshome.org widget the Commissioner places teams from). */
 const SDS_POWER_RANKINGS_URL = 'https://www.cifsds.org/school-resources/CIFSDS_Power_Rankings';
@@ -1208,10 +1209,10 @@ const MCAL: LeagueConfig = {
     finalSite: {
       slug: 'tamalpais', label: 'Tamalpais',
       venue: 'Tamalpais High School',
-      // The schools' HomeCampus calendars (cifncshome.org; Redwood's Oct 30 event "MCAL Championship Game", facility
-      // Tamalpais, 700 Miller Ave, Mill Valley, California, 94941; Tam's Oct 28 semifinal names the turf: "Tam Turf at
-      // Bruce Grant Field/Sam Chapman Stadium"). Research of 2026-10-29.
-      address: { street: '700 Miller Ave', city: 'Mill Valley', region: 'CA', postalCode: '94941' },
+      // On campus: the schools' HomeCampus calendars (cifncshome.org; Redwood's Oct 30 event "MCAL Championship Game",
+      // facility Tamalpais, 700 Miller Ave, Mill Valley, California, 94941, the address data/schools.json holds for
+      // tamalpais; Tam's Oct 28 semifinal names the turf: "Tam Turf at Bruce Grant Field/Sam Chapman Stadium").
+      // Research of 2026-10-29.
       admission: 'Adults $10; students, children and seniors $5; pre-sale on GoFan. No booster passes or student body cards; lifetime MCAL, NCS and CIF passes are honored.',
       admissionSource: 'MCAL 2026 Field Hockey Play-off sheet',
     },
@@ -1354,7 +1355,9 @@ const EAL: LeagueConfig = {
       { label: 'Part 2, Sat Oct 31, 1:30 PM PT', href: 'https://www.nfhsnetwork.com/events/pleasant-valley-high-school-chico-ca/gamf48300713a' },
     ],
     admission: `There is no admission fee (${NS_FH}, Game Management §VII).`,
-    note: 'The Northern Section’s field hockey postseason is the Super Regional, Oct 30–31: the top six schools qualify, and all six EAL teams are in it. The coaches set its format and seeding, and no pairings are published. The NFHS Network lists its games at Pleasant Valley High School, Chico, on Sat Oct 31, with streams at 8:30 AM and 1:30 PM PT. There is no admission fee. There is no NorCal or State path.',
+    // Past tense from 2026-11-03: the Super Regional was played on Sat Oct 31 (MaxPreps lists both games, the second
+    // "Super regional championship"), so the note reads as a finished event.
+    note: 'The Northern Section’s field hockey postseason was the Super Regional, Oct 30–31: the top six schools qualified, and all six EAL teams were in it. The coaches set its format and seeding, and no pairings were published. The NFHS Network listed its games at Pleasant Valley High School, Chico, on Sat Oct 31, with streams at 8:30 AM and 1:30 PM PT. There was no admission fee. There is no NorCal or State path.',
     sourceUrl: NS_GUIDELINES_URL,
   },
   phases: [
@@ -1564,30 +1567,37 @@ function sdsPostseason(playoffDivisionOf: Readonly<Record<TeamSlug, 'I' | 'II'>>
       // Paraphrased on purpose: the bylaw's play-in sentence names a seed position, which SEED_CLAIM bans.
       seeding: 'CIF-SDS Green Book 2026-27, Bylaw 2000.1 (the Commissioner places teams from the Section’s approved power rankings, with input from the coaches’ advisory committee, and there is no appeal; a designated league champion left out of its division’s bracket hosts a play-in game) and the Green Book’s division-placement bylaw (the eight Open Division teams are drawn from Division I at the end of the regular season)',
       format: 'CIF-SDS Green Book 2026-27, Bylaw 2000.1 (Open 8, Division I 12, Division II 12) and the CIF-SDS 2026-27 Master Calendar (playoffs Nov 2–12, finals Nov 14)',
-      roundDates: 'Round dates and the finals site (La Jolla HS) are from the San Diego Field Hockey Officials Association’s calendar.',
+      roundDates: 'Round dates and the finals site (La Jolla HS) are from the Section’s bracket sheet; the SDFHOA calendar lists Divisions I and II the other way round for the rounds before the finals.',
     },
+    // Since 2026-11-03 the rounds are the Section's own "2026 CIFSDS Field Hockey Championship Bracket" sheet
+    // (bracketSheetUrl): one play-in (Division II, Mon Nov 2); Division I's first round Tue Nov 3 and Division II's
+    // Wed Nov 4; quarterfinals Thu Nov 5 (Open), Fri Nov 6 (I), Sat Nov 7 (II); semifinals Tue Nov 10 (Open and I),
+    // Wed Nov 11 (II). The SDFHOA calendar below had Divisions I and II the other way round on every round but the
+    // final; the sheet, MaxPreps' listed games and 2025's brackets agree on this order. The finals are unchanged.
+    // Before (superseded):
     // The SDFHOA calendar (https://sdfhoa.weebly.com/calendar.html, read 2026-10-29, unchanged since the preseason):
     // play-ins Mon Nov 2; first round Tue Nov 3 (Division II) and Wed Nov 4 (Division I); quarterfinals Thu Nov 5
     // (Open), Fri Nov 6 (II), Sat Nov 7 (I); semifinals Tue Nov 10 (Open and II), Wed Nov 11 (I); finals Sat Nov 14 at
     // La Jolla High School, 1:00 PM (II), 3:30 PM (I), 6:00 PM (Open). The Section's bulletin says where earlier
     // rounds are played; it is unreadable, so no row names a host (and "higher seed" would trip SEED_CLAIM).
     rounds: [
-      { id: 'play-in', date: '2026-11-02', label: 'Play-in games (only if needed)', time: null, site: null },
-      { id: 'r1-ii', date: '2026-11-03', label: 'First round, Division II', time: null, site: null },
-      { id: 'r1-i', date: '2026-11-04', label: 'First round, Division I', time: null, site: null },
+      { id: 'play-in', date: '2026-11-02', label: 'Play-in, Division II', time: null, site: null },
+      { id: 'r1-i', date: '2026-11-03', label: 'First round, Division I', time: null, site: null },
+      { id: 'r1-ii', date: '2026-11-04', label: 'First round, Division II', time: null, site: null },
       { id: 'qf-open', date: '2026-11-05', label: 'Quarterfinals, Open Division', time: null, site: null },
-      { id: 'qf-ii', date: '2026-11-06', label: 'Quarterfinals, Division II', time: null, site: null },
-      { id: 'qf-i', date: '2026-11-07', label: 'Quarterfinals, Division I', time: null, site: null },
-      { id: 'sf-open-ii', date: '2026-11-10', label: 'Semifinals, Open Division and Division II', time: null, site: null },
-      { id: 'sf-i', date: '2026-11-11', label: 'Semifinals, Division I', time: null, site: null },
+      { id: 'qf-i', date: '2026-11-06', label: 'Quarterfinals, Division I', time: null, site: null },
+      { id: 'qf-ii', date: '2026-11-07', label: 'Quarterfinals, Division II', time: null, site: null },
+      { id: 'sf-open-i', date: '2026-11-10', label: 'Semifinals, Open Division and Division I', time: null, site: null },
+      { id: 'sf-ii', date: '2026-11-11', label: 'Semifinals, Division II', time: null, site: null },
       { id: 'final-ii', date: '2026-11-14', label: 'Final, Division II', time: '13:00', site: 'La Jolla High School' },
       { id: 'final-i', date: '2026-11-14', label: 'Final, Division I', time: '15:30', site: 'La Jolla High School' },
       { id: 'final-open', date: '2026-11-14', label: 'Final, Open Division', time: '18:00', site: 'La Jolla High School' },
     ],
     calendarUrl: 'https://sdfhoa.weebly.com/calendar.html',
     bracketsPageUrl: SDS_FIELD_HOCKEY_URL,
-    bracketSheetUrl: null,
-    note: 'The San Diego Section’s field hockey playoffs run Nov 2–14, with the finals on Nov 14 at La Jolla HS: Open 8, Division I 12, Division II 12. The Section places teams from its power rankings at its Oct 31 seeding meeting; until it publishes its brackets, this site draws none and projects no places. A designated league champion is guaranteed at least a play-in game; the league names its champion, not this table.',
+    // The Section's published brackets (read 2026-11-03; transcribed into data/sds-brackets-2026.json).
+    bracketSheetUrl: SDS_BRACKET_SHEET_URL,
+    note: 'The San Diego Section’s field hockey playoffs run Nov 2–14, with the finals on Nov 14 at La Jolla HS: Open 8, Division I 12, Division II 12. The Section placed teams from its power rankings at its Oct 31 seeding meeting and has published its brackets; this site draws them and projects no places. A designated league champion is guaranteed at least a play-in game; the league names its champion, not this table.',
     sourceLabel: 'CIF-SDS Green Book 2026-27, Bylaw 2000.1',
     sourceUrl: SDS_GREEN_BOOK_URL,
     powerRankingsUrl: SDS_POWER_RANKINGS_URL,
@@ -1611,7 +1621,7 @@ function sdsKeyDates(): LeagueConfig['keyDates'] {
   return [
     { id: 'league-play-ends', date: '2026-10-30', label: 'Last day of the San Diego Section regular season' },
     { id: 'seeding-meeting', date: '2026-10-31', label: 'Section seeding meeting' },
-    { id: 'play-in', date: '2026-11-02', label: 'Section play-in games (only if needed)' },
+    { id: 'play-in', date: '2026-11-02', label: 'Section play-in game (Division II)' },
     { id: 'finals', date: '2026-11-14', label: 'Section finals at La Jolla HS' },
   ];
 }
@@ -2782,10 +2792,8 @@ export function assertLeagues(): void {
         if (!ps.citations.pennant.trim()) fail(`${l.id}: citations.pennant names the title rule's source`);
         {
           const site = ps.finalSite;
-          const a = site.address;
-          if (!site.venue.trim() || !a.street.trim() || !a.city.trim() || !a.region.trim() || !a.postalCode.trim()) {
-            fail(`${l.id}: finalSite needs a venue and a four-part address`);
-          }
+          // The address is the site school's (data/schools.json); lib/teams.ts checks the slug is a member.
+          if (!site.venue.trim()) fail(`${l.id}: finalSite needs a venue`);
           if ((site.admission === null) !== (site.admissionSource === null)) fail(`${l.id}: finalSite admission and admissionSource are set together or not at all`);
         }
         break;

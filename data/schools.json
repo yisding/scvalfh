@@ -1,0 +1,621 @@
+{
+  "builtBy": "Harvested on 2026-11-03 from the school fields (address, city, state, zipCode) MaxPreps publishes on each team of a contest in its schedule payloads (the committed corpus under tests/fixtures/corpus, captured 2026-10-02 to 2026-10-06); every school had exactly one address across all of its rows. Normalized only by lower-casing ordinal suffixes (\"37Th\" to \"37th\") and cutting ZIP+4 codes to five digits.",
+  "capturedAt": "2026-10-06",
+  "notes": [
+    "The address of each registry school's campus, keyed by team slug. It is where the school is, not necessarily the field a game is played on: a page that shows it as a game's address says it is the host school's."
+  ],
+  "schools": {
+    "st-ignatius": {
+      "street": "2001 37th Ave",
+      "city": "San Francisco",
+      "region": "CA",
+      "postalCode": "94116"
+    },
+    "saint-francis": {
+      "street": "1885 Miramonte Ave",
+      "city": "Mountain View",
+      "region": "CA",
+      "postalCode": "94040"
+    },
+    "los-altos": {
+      "street": "201 Almond Ave",
+      "city": "Los Altos",
+      "region": "CA",
+      "postalCode": "94022"
+    },
+    "valley-christian": {
+      "street": "100 Skyway Dr",
+      "city": "San Jose",
+      "region": "CA",
+      "postalCode": "95111"
+    },
+    "fremont": {
+      "street": "575 W. Fremont Avenue",
+      "city": "Sunnyvale",
+      "region": "CA",
+      "postalCode": "94087"
+    },
+    "cupertino": {
+      "street": "10100 Finch Ave",
+      "city": "Cupertino",
+      "region": "CA",
+      "postalCode": "95014"
+    },
+    "homestead": {
+      "street": "21370 Homestead Rd",
+      "city": "Cupertino",
+      "region": "CA",
+      "postalCode": "95014"
+    },
+    "mitty": {
+      "street": "5000 Mitty Wy",
+      "city": "San Jose",
+      "region": "CA",
+      "postalCode": "95129"
+    },
+    "los-gatos": {
+      "street": "20 High School Ct",
+      "city": "Los Gatos",
+      "region": "CA",
+      "postalCode": "95030"
+    },
+    "palo-alto": {
+      "street": "50 Embarcadero Rd",
+      "city": "Palo Alto",
+      "region": "CA",
+      "postalCode": "94301"
+    },
+    "presentation": {
+      "street": "2281 Plummer Ave",
+      "city": "San Jose",
+      "region": "CA",
+      "postalCode": "95125"
+    },
+    "santa-clara": {
+      "street": "3000 Benton St",
+      "city": "Santa Clara",
+      "region": "CA",
+      "postalCode": "95051"
+    },
+    "saratoga": {
+      "street": "20300 Herriman Ave",
+      "city": "Saratoga",
+      "region": "CA",
+      "postalCode": "95070"
+    },
+    "lynbrook": {
+      "street": "1280 Johnson Ave",
+      "city": "San Jose",
+      "region": "CA",
+      "postalCode": "95129"
+    },
+    "monta-vista": {
+      "street": "21840 McClellan Road",
+      "city": "Cupertino",
+      "region": "CA",
+      "postalCode": "95014"
+    },
+    "branham": {
+      "street": "1570 Branham Ln",
+      "city": "San Jose",
+      "region": "CA",
+      "postalCode": "95118"
+    },
+    "christopher": {
+      "street": "850 Day Rd",
+      "city": "Gilroy",
+      "region": "CA",
+      "postalCode": "95020"
+    },
+    "gilroy": {
+      "street": "750 W 10th St",
+      "city": "Gilroy",
+      "region": "CA",
+      "postalCode": "95020"
+    },
+    "leigh": {
+      "street": "5210 Leigh Ave",
+      "city": "San Jose",
+      "region": "CA",
+      "postalCode": "95124"
+    },
+    "leland": {
+      "street": "6677 Camden Ave",
+      "city": "San Jose",
+      "region": "CA",
+      "postalCode": "95120"
+    },
+    "willow-glen": {
+      "street": "2001 Cottle Ave",
+      "city": "San Jose",
+      "region": "CA",
+      "postalCode": "95125"
+    },
+    "del-mar": {
+      "street": "1224 Del Mar Ave",
+      "city": "San Jose",
+      "region": "CA",
+      "postalCode": "95128"
+    },
+    "live-oak": {
+      "street": "1505 E Main St",
+      "city": "Morgan Hill",
+      "region": "CA",
+      "postalCode": "95037"
+    },
+    "prospect": {
+      "street": "18900 Prospect Rd",
+      "city": "Saratoga",
+      "region": "CA",
+      "postalCode": "95070"
+    },
+    "silver-creek": {
+      "street": "3434 Silver Creek Rd",
+      "city": "San Jose",
+      "region": "CA",
+      "postalCode": "95121"
+    },
+    "sobrato": {
+      "street": "401 Burnett Ave",
+      "city": "Morgan Hill",
+      "region": "CA",
+      "postalCode": "95037"
+    },
+    "westmont": {
+      "street": "4805 Westmont Ave",
+      "city": "Campbell",
+      "region": "CA",
+      "postalCode": "95008"
+    },
+    "carmel": {
+      "street": "3600 Ocean Ave",
+      "city": "Carmel",
+      "region": "CA",
+      "postalCode": "93922"
+    },
+    "greenfield": {
+      "street": "225 El Camino Real",
+      "city": "Greenfield",
+      "region": "CA",
+      "postalCode": "93927"
+    },
+    "hollister": {
+      "street": "1220 Monterey St",
+      "city": "Hollister",
+      "region": "CA",
+      "postalCode": "95023"
+    },
+    "monterey": {
+      "street": "101 Herrmann Dr",
+      "city": "Monterey",
+      "region": "CA",
+      "postalCode": "93940"
+    },
+    "salinas": {
+      "street": "726 S Main St",
+      "city": "Salinas",
+      "region": "CA",
+      "postalCode": "93901"
+    },
+    "santa-catalina": {
+      "street": "1500 Mark Thomas Drive",
+      "city": "Monterey",
+      "region": "CA",
+      "postalCode": "93940"
+    },
+    "stevenson": {
+      "street": "3152 Forest Lake Rd",
+      "city": "Pebble Beach",
+      "region": "CA",
+      "postalCode": "93953"
+    },
+    "archie-williams": {
+      "street": "1327 Sir Francis Drake Blvd",
+      "city": "San Anselmo",
+      "region": "CA",
+      "postalCode": "94960"
+    },
+    "redwood": {
+      "street": "395 Doherty Dr",
+      "city": "Larkspur",
+      "region": "CA",
+      "postalCode": "94939"
+    },
+    "tamalpais": {
+      "street": "700 Miller Ave",
+      "city": "Mill Valley",
+      "region": "CA",
+      "postalCode": "94941"
+    },
+    "berkeley": {
+      "street": "1980 Allston Way",
+      "city": "Berkeley",
+      "region": "CA",
+      "postalCode": "94704"
+    },
+    "lick-wilmerding": {
+      "street": "755 Ocean Ave",
+      "city": "San Francisco",
+      "region": "CA",
+      "postalCode": "94112"
+    },
+    "university-sf": {
+      "street": "3150 California Street",
+      "city": "San Francisco",
+      "region": "CA",
+      "postalCode": "94115"
+    },
+    "marin-catholic": {
+      "street": "675 Sir Francis Drake Blvd",
+      "city": "Kentfield",
+      "region": "CA",
+      "postalCode": "94904"
+    },
+    "convent-sacred-heart": {
+      "street": "2222 Broadway",
+      "city": "San Francisco",
+      "region": "CA",
+      "postalCode": "94115"
+    },
+    "marin-academy": {
+      "street": "1600 Mission Ave",
+      "city": "San Rafael",
+      "region": "CA",
+      "postalCode": "94901"
+    },
+    "bella-vista": {
+      "street": "8301 Madison Ave",
+      "city": "Fair Oaks",
+      "region": "CA",
+      "postalCode": "95628"
+    },
+    "chico": {
+      "street": "901 Esplanade",
+      "city": "Chico",
+      "region": "CA",
+      "postalCode": "95926"
+    },
+    "corning": {
+      "street": "643 Blackburn Ave",
+      "city": "Corning",
+      "region": "CA",
+      "postalCode": "96021"
+    },
+    "davis": {
+      "street": "315 W 14th St",
+      "city": "Davis",
+      "region": "CA",
+      "postalCode": "95616"
+    },
+    "lassen": {
+      "street": "1110 Main St",
+      "city": "Susanville",
+      "region": "CA",
+      "postalCode": "96130"
+    },
+    "pleasant-valley": {
+      "street": "1475 East Ave",
+      "city": "Chico",
+      "region": "CA",
+      "postalCode": "95926"
+    },
+    "chaparral": {
+      "street": "27215 Nicolas Rd",
+      "city": "Temecula",
+      "region": "CA",
+      "postalCode": "92591"
+    },
+    "edison": {
+      "street": "21400 Magnolia St",
+      "city": "Huntington Beach",
+      "region": "CA",
+      "postalCode": "92646"
+    },
+    "fountain-valley": {
+      "street": "17816 Bushard St",
+      "city": "Fountain Valley",
+      "region": "CA",
+      "postalCode": "92708"
+    },
+    "great-oak": {
+      "street": "32555 Deer Hollow Wy",
+      "city": "Temecula",
+      "region": "CA",
+      "postalCode": "92592"
+    },
+    "huntington-beach": {
+      "street": "1905 Main St",
+      "city": "Huntington Beach",
+      "region": "CA",
+      "postalCode": "92648"
+    },
+    "marina": {
+      "street": "15871 Springdale St",
+      "city": "Huntington Beach",
+      "region": "CA",
+      "postalCode": "92649"
+    },
+    "newport-harbor": {
+      "street": "600 Irvine Ave",
+      "city": "Newport Beach",
+      "region": "CA",
+      "postalCode": "92663"
+    },
+    "temecula-valley": {
+      "street": "31555 Rancho Vista Rd",
+      "city": "Temecula",
+      "region": "CA",
+      "postalCode": "92592"
+    },
+    "bishops": {
+      "street": "7607 La Jolla Blvd",
+      "city": "La Jolla",
+      "region": "CA",
+      "postalCode": "92037"
+    },
+    "canyon-hills": {
+      "street": "5156 Santo Rd",
+      "city": "San Diego",
+      "region": "CA",
+      "postalCode": "92124"
+    },
+    "cathedral-catholic": {
+      "street": "5555 Del Mar Heights Rd",
+      "city": "San Diego",
+      "region": "CA",
+      "postalCode": "92130"
+    },
+    "la-jolla": {
+      "street": "750 Nautilus St",
+      "city": "La Jolla",
+      "region": "CA",
+      "postalCode": "92037"
+    },
+    "mission-bay": {
+      "street": "2475 Grand Ave",
+      "city": "San Diego",
+      "region": "CA",
+      "postalCode": "92109"
+    },
+    "scripps-ranch": {
+      "street": "10410 Falcon Way",
+      "city": "San Diego",
+      "region": "CA",
+      "postalCode": "92131"
+    },
+    "clairemont": {
+      "street": "4150 Ute Dr",
+      "city": "San Diego",
+      "region": "CA",
+      "postalCode": "92117"
+    },
+    "la-jolla-country-day": {
+      "street": "9490 Genesee Ave",
+      "city": "La Jolla",
+      "region": "CA",
+      "postalCode": "92037"
+    },
+    "mira-mesa": {
+      "street": "10510 Marauder Way",
+      "city": "San Diego",
+      "region": "CA",
+      "postalCode": "92126"
+    },
+    "patrick-henry": {
+      "street": "6702 Wandermere Dr",
+      "city": "San Diego",
+      "region": "CA",
+      "postalCode": "92120"
+    },
+    "point-loma": {
+      "street": "2335 Chatsworth Blvd",
+      "city": "San Diego",
+      "region": "CA",
+      "postalCode": "92106"
+    },
+    "university-city": {
+      "street": "6949 Genesee Ave",
+      "city": "San Diego",
+      "region": "CA",
+      "postalCode": "92122"
+    },
+    "canyon-crest-academy": {
+      "street": "5951 E Village Center Loop Road",
+      "city": "San Diego",
+      "region": "CA",
+      "postalCode": "92130"
+    },
+    "la-costa-canyon": {
+      "street": "1 Maverick Wy",
+      "city": "Carlsbad",
+      "region": "CA",
+      "postalCode": "92009"
+    },
+    "mt-carmel": {
+      "street": "9550 Carmel Mtn Rd",
+      "city": "San Diego",
+      "region": "CA",
+      "postalCode": "92129"
+    },
+    "rancho-bernardo": {
+      "street": "13010 Paseo Lucido",
+      "city": "San Diego",
+      "region": "CA",
+      "postalCode": "92128"
+    },
+    "san-marcos": {
+      "street": "1615 San Marcos Blvd",
+      "city": "San Marcos",
+      "region": "CA",
+      "postalCode": "92069"
+    },
+    "torrey-pines": {
+      "street": "3710 Del Mar Heights Rd",
+      "city": "San Diego",
+      "region": "CA",
+      "postalCode": "92130"
+    },
+    "del-norte": {
+      "street": "16601 Nighthawk Ln",
+      "city": "San Diego",
+      "region": "CA",
+      "postalCode": "92127"
+    },
+    "fallbrook": {
+      "street": "2400 S Stage Coach Ln",
+      "city": "Fallbrook",
+      "region": "CA",
+      "postalCode": "92028"
+    },
+    "mission-vista": {
+      "street": "1306 Melrose Drive",
+      "city": "Oceanside",
+      "region": "CA",
+      "postalCode": "92057"
+    },
+    "poway": {
+      "street": "15500 Espola Rd",
+      "city": "Poway",
+      "region": "CA",
+      "postalCode": "92064"
+    },
+    "rancho-buena-vista": {
+      "street": "1601 Longhorn Dr",
+      "city": "Vista",
+      "region": "CA",
+      "postalCode": "92081"
+    },
+    "san-dieguito-academy": {
+      "street": "800 Santa Fe Dr",
+      "city": "Encinitas",
+      "region": "CA",
+      "postalCode": "92024"
+    },
+    "valley-center": {
+      "street": "31322 Cole Grade Rd",
+      "city": "Valley Center",
+      "region": "CA",
+      "postalCode": "92082"
+    },
+    "escondido": {
+      "street": "1535 N Broadway",
+      "city": "Escondido",
+      "region": "CA",
+      "postalCode": "92026"
+    },
+    "mission-hills": {
+      "street": "1 Mission Hills Ct",
+      "city": "San Marcos",
+      "region": "CA",
+      "postalCode": "92069"
+    },
+    "sage-creek": {
+      "street": "3900 Cannon Road",
+      "city": "Carlsbad",
+      "region": "CA",
+      "postalCode": "92010"
+    },
+    "san-pasqual": {
+      "street": "3300 Bear Valley Pkwy",
+      "city": "Escondido",
+      "region": "CA",
+      "postalCode": "92025"
+    },
+    "vista": {
+      "street": "1 Panther Wy",
+      "city": "Vista",
+      "region": "CA",
+      "postalCode": "92084"
+    },
+    "westview": {
+      "street": "13500 Camino Del Sur",
+      "city": "San Diego",
+      "region": "CA",
+      "postalCode": "92129"
+    },
+    "bonita-vista": {
+      "street": "751 Otay Lakes Rd",
+      "city": "Chula Vista",
+      "region": "CA",
+      "postalCode": "91913"
+    },
+    "eastlake": {
+      "street": "1120 Eastlake Pkwy",
+      "city": "Chula Vista",
+      "region": "CA",
+      "postalCode": "91915"
+    },
+    "helix": {
+      "street": "7323 University Ave",
+      "city": "La Mesa",
+      "region": "CA",
+      "postalCode": "91941"
+    },
+    "olympian": {
+      "street": "1925 Magdalena Ave",
+      "city": "Chula Vista",
+      "region": "CA",
+      "postalCode": "91913"
+    },
+    "otay-ranch": {
+      "street": "1250 Olympic Pkwy",
+      "city": "Chula Vista",
+      "region": "CA",
+      "postalCode": "91913"
+    },
+    "el-capitan": {
+      "street": "10410 Ashwood St",
+      "city": "Lakeside",
+      "region": "CA",
+      "postalCode": "92040"
+    },
+    "granite-hills": {
+      "street": "1719 E Madison Ave",
+      "city": "El Cajon",
+      "region": "CA",
+      "postalCode": "92019"
+    },
+    "hilltop": {
+      "street": "555 Claire Ave",
+      "city": "Chula Vista",
+      "region": "CA",
+      "postalCode": "91910"
+    },
+    "southwest": {
+      "street": "1685 Hollister St",
+      "city": "San Diego",
+      "region": "CA",
+      "postalCode": "92154"
+    },
+    "bonita": {
+      "street": "3102 D St",
+      "city": "La Verne",
+      "region": "CA",
+      "postalCode": "91750"
+    },
+    "chaminade": {
+      "street": "7500 Chaminade Ave",
+      "city": "West Hills",
+      "region": "CA",
+      "postalCode": "91304"
+    },
+    "glendora": {
+      "street": "1600 E Foothill Blvd",
+      "city": "Glendora",
+      "region": "CA",
+      "postalCode": "91741"
+    },
+    "harvard-westlake": {
+      "street": "3700 Coldwater Canyon",
+      "city": "Studio City",
+      "region": "CA",
+      "postalCode": "91604"
+    },
+    "thousand-oaks": {
+      "street": "2323 N Moorpark Rd",
+      "city": "Thousand Oaks",
+      "region": "CA",
+      "postalCode": "91360"
+    }
+  }
+}

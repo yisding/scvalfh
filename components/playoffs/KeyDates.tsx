@@ -27,11 +27,13 @@ export interface KeyDatesProps {
   leagueDates?: readonly LeagueKeyDate[];
   /** true once the CCS iCal feed has corroborated the dates; undefined before the Oct 25 gate. */
   confirmed?: boolean;
+  /** true once the page draws a CCS bracket: the seeding meeting is over. */
+  seeded?: boolean;
   className?: string;
 }
 
-export function KeyDates({ keyDates, leagueDates = [], confirmed, className }: KeyDatesProps) {
-  const rows = keyDateRows(keyDates, leagueDates);
+export function KeyDates({ keyDates, leagueDates = [], confirmed, seeded = false, className }: KeyDatesProps) {
+  const rows = keyDateRows(keyDates, leagueDates, undefined, seeded);
 
   return (
     <div className={className}>

@@ -155,6 +155,16 @@ describe('buildThisWeek — NorCal on Thu Oct 29', () => {
     expect(rows.map((r) => r.label).at(-1), VIEW).toBe('MCAL final');
   });
 
+  it('shows every row when the cap would hide only one (never "+1 more")', () => {
+    // Eight rows: a cap of 7 would hide one, so all eight are shown; a cap of 6 hides two.
+    const all = norcal({ cap: 7 });
+    expect(all.days.flatMap((d) => d.rows), VIEW).toHaveLength(8);
+    expect(all.more, VIEW).toBe(0);
+    const capped = norcal({ cap: 6 });
+    expect(capped.days.flatMap((d) => d.rows), VIEW).toHaveLength(6);
+    expect(capped.more, VIEW).toBe(2);
+  });
+
   it('renders the strip: one link per row with its whole sentence, the badge, and the overflow link', () => {
     const html = renderToStaticMarkup(createElement(ThisWeek, { id: 'this-week-norcal', view: norcal({ cap: 5 }) }));
     const text = textOf(html);

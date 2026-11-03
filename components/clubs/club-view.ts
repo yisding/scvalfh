@@ -595,14 +595,14 @@ export function buildClubPageView(slug: string): ClubPageView | null {
   if (!club) return null;
   const name = clubDisplayName(club);
 
-  // School, then the roster's own name order (lib/rosters.ts sortedPlayers' byName).
+  // By last name (the roster's own name order, lib/rosters.ts sortedPlayers' byName), then school.
   const ties = [...getClubAffiliations(slug)]
     .map((a) => ({ a, p: getAffiliatedPlayer(a), school: schoolName(a.teamSlug) }))
     .sort(
       (x, y) =>
-        x.school.localeCompare(y.school) ||
         (x.p.lastName ?? x.p.fullName).localeCompare(y.p.lastName ?? y.p.fullName) ||
-        x.p.fullName.localeCompare(y.p.fullName),
+        x.p.fullName.localeCompare(y.p.fullName) ||
+        x.school.localeCompare(y.school),
     )
     .map(({ a }) => a);
   const current = ties.filter((a) => a.status === 'current');

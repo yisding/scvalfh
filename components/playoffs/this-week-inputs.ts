@@ -34,11 +34,12 @@ import {
   getLeague,
 } from '../../lib/leagues';
 import type { LeagueConfig } from '../../lib/leagues';
+import { getCcsSeeds } from '../../lib/ccs-bracket';
 import { tournamentGameLine } from '../../lib/postseason';
 import { withLocationRound } from '../../lib/postseason-rounds';
 import type { CcsPlayoffs, ContestId, Game, LeagueId, RegionId } from '../../lib/types';
 
-import { roundKeyFor } from './bracket-model';
+import { buildBrackets, roundKeyFor } from './bracket-model';
 import { buildPairingView, pairingNotesFor, pairingSentence, type PairingView } from './playoff-view';
 import { buildThisWeek, type ThisWeekEvent, type ThisWeekView } from './this-week';
 
@@ -136,7 +137,12 @@ export function postseasonLabels(
  * `site`/`streams`), the CCS seeding meeting, and a league tournament's round still ahead with no game. Each
  * gives way to its league's game on its day (buildThisWeek).
  */
-export function norcalEvents(blocks: readonly CcsPairingBlock[], playoffs: CcsPlayoffs, today: string): ThisWeekEvent[] {
+export function norcalEvents(
+  blocks: readonly CcsPairingBlock[],
+  playoffs: CcsPlayoffs,
+  today: string,
+  seeded = false,
+): ThisWeekEvent[] {
   const { keyDates } = playoffs;
   const events: ThisWeekEvent[] = [];
   for (const block of blocks) {
@@ -170,14 +176,19 @@ export function norcalEvents(blocks: readonly CcsPairingBlock[], playoffs: CcsPl
       leagueId: league.id,
     });
   }
+  // Once the bracket is drawn (the page's own test, `seeded`) and the meeting's day has come, it reads as done and
+  // links the bracket. No "Division 2 seeded": SEED_CLAIM reads a number before "seeded" as a seed claim.
+  const divisions = listWords(playoffs.format.ccsDivisions.map((d) => `CCS ${d.name}`));
+  const met = seeded && today >= keyDates.seedingMeeting.slice(0, 10);
   events.push({
     dateKey: keyDates.seedingMeeting.slice(0, 10),
     time: timeOfDayPT(keyDates.seedingMeeting),
     title: 'CCS seeding meeting',
-    detail: listWords(playoffs.format.ccsDivisions.map((d) => `CCS ${d.name}`)),
-    href: '/playoffs#key-dates',
+    detail: met ? `Bracket posted: ${divisions}` : divisions,
+    href: met ? '/playoffs#bracket' : '/playoffs#key-dates',
     leagueId: null,
     scope: blocks.map((b) => b.summary.id),
+    done: met,
   });
   for (const id of getTournamentLeagueIds()) {
     const league = getLeague(id);
@@ -205,13 +216,24 @@ export function norcalEvents(blocks: readonly CcsPairingBlock[], playoffs: CcsPl
  * (and the finals' site) as its detail. The meeting's 10 AM is in no config field yet, so its row prints no time.
  * No row names a seed or a host (SEED_CLAIM; the Section's bulletin is unreadable).
  */
-export function socalEvents(sds: NonNullable<ReturnType<typeof sectionPlayoffs>>): ThisWeekEvent[] {
+export function socalEvents(sds: NonNullable<ReturnType<typeof sectionPlayoffs>>, today = ''): ThisWeekEvent[] {
   const { ps, seeding } = sds;
   const href = '/playoffs#sds-playoffs';
   const scope = sds.leagues.map((l) => l.id);
+  // The meeting's hour is in no config field, so it reads as done from the day after.
+  const held = seeding !== null && today > seeding;
   return [
     ...(seeding
-      ? [{ dateKey: seeding, time: null, title: ps.name, detail: 'Section seeding meeting', href, leagueId: null, scope }]
+      ? [{
+          dateKey: seeding,
+          time: null,
+          title: ps.name,
+          detail: held ? 'Section seeding meeting held' : 'Section seeding meeting',
+          href,
+          leagueId: null,
+          scope,
+          done: held,
+        }]
       : []),
     ...ps.rounds.map((r) => ({
       dateKey: r.date,
@@ -249,6 +271,8 @@ export function thisWeekByRegion(input: {
     new Map(field.byLeague.map((l) => [l.leagueId, l.auto])),
   );
   const sds = sectionPlayoffs();
+  // The page's own test for "seeded": a CCS bracket path to draw, from the bracket games or the seed file.
+  const seeded = buildBrackets(playoffs, getCcsSeeds()).length > 0;
   // The games a pairing or a bracket slot has joined: an event gives way only to a game of its league no slot claims.
   const claimed = new Set<ContestId>([
     ...blocks.flatMap((b) => b.pairings.flatMap((p) => (p.game ? [p.game.contestId] : []))),
@@ -258,7 +282,7 @@ export function thisWeekByRegion(input: {
     }),
   ]);
   return {
-    norcal: buildThisWeek({ games, today, region: 'norcal', labels, events: norcalEvents(blocks, playoffs, today), claimed, cap }),
-    socal: buildThisWeek({ games, today, region: 'socal', labels, events: sds ? socalEvents(sds) : [], claimed, cap }),
+    norcal: buildThisWeek({ games, today, region: 'norcal', labels, events: norcalEvents(blocks, playoffs, today, seeded), claimed, cap }),
+    socal: buildThisWeek({ games, today, region: 'socal', labels, events: sds ? socalEvents(sds, today) : [], claimed, cap }),
   };
 }

@@ -418,6 +418,11 @@ describe('keyDateRows', () => {
     expect(detail('semifinals'), VIEW).toBe('At neutral sites set by CCS (CCS calendar: “at Neutral Sites”); each game’s site appears here once MaxPreps lists it.');
     expect(detail('finals'), VIEW).toBe('At a neutral site set by CCS (CCS calendar: “at Neutral Site”); the site appears here once MaxPreps lists the game.');
     expect(detail('seeding'), VIEW).toBe('The committee seeds both CCS divisions; the games appear here as MaxPreps lists them, after the next update.');
+    // Once the page draws a bracket, the meeting is over.
+    const seededRows = view.keyDateRows(data.getPlayoffs().keyDates, [], undefined, true);
+    expect(seededRows.find((r) => r.key === 'seeding')?.detail, VIEW).toBe(
+      'The committee seeded both CCS divisions; the bracket above is drawn from the games MaxPreps lists.',
+    );
     expect(rows.map((r) => r.detail).join(' '), VIEW).not.toMatch(/that evening|Higher seed hosts\./);
     // The footer sentence follows the same config value.
     expect(view.ccsHostingSentence(), VIEW).toBe(
@@ -527,12 +532,19 @@ describe('/playoffs (rendered)', () => {
 
   it('carries the MCAL section, the field and the verbatim at-large paragraph', () => {
     const text = textOf(html);
-    // The league tournament has its own section like every other league (DESIGN §32.2), which links on to its page.
+    // The league tournament has its own section like every other league (DESIGN §32.2), with the whole tournament
+    // drawn in it (since 2026-11-03) and its rules one link away.
     expect(html, PAGE).toMatch(/<section[^>]*\sid="mcal"/);
     expect(text, PAGE).toContain(
-      'The North Coast Section holds no field hockey championship, so the MCAL tournament is the MCAL postseason. MCAL tournament: bracket and seeds →',
+      'The North Coast Section holds no field hockey championship, so the MCAL tournament is the MCAL postseason. How the MCAL tournament works →',
     );
-    expect(html, PAGE).toContain('href="/playoffs/mcal"');
+    expect(html, PAGE).toContain('href="/playoffs/mcal#how-it-works"');
+    const mcal = html.slice(html.search(/<section[^>]*\sid="mcal"/), html.search(/<section[^>]*\sid="eal"/));
+    for (const id of ['mcal-seeds', 'mcal-bracket']) expect(mcal, PAGE).toContain(`id="${id}"`);
+    // Its ids are prefixed, so the CCS #bracket stays the page's only one; its headings sit under the section's h2.
+    expect(html.match(/\sid="bracket"/g)?.length, PAGE).toBe(1);
+    expect(mcal, PAGE).not.toMatch(/<h2[^>]*>(Seeds|Bracket)<\/h2>/);
+    expect(mcal, PAGE).toMatch(/<h3[^>]*>Seeds<\/h3>/);
     expect(html, PAGE).toContain('href="#mcal"');
     expect(text, PAGE).toContain('Central Coast Section · 16 teams · SCVAL 7, BVAL 4, PCAL 2, 3 at-large');
     // The field is said once, in the CCS header's meta and each league's intro; no berth meters (DESIGN §32.3).
@@ -558,7 +570,7 @@ describe('/playoffs (rendered)', () => {
     const text = textOf(html);
     expect(text, PAGE).toContain('EAL — Eastern Athletic League');
     expect(text, PAGE).toContain(
-      'The Northern Section’s field hockey postseason is the Super Regional, Oct 30–31: the top six schools qualify, and all six EAL teams are in it. The coaches set its format and seeding, and no pairings are published. The NFHS Network lists its games at Pleasant Valley High School, Chico, on Sat Oct 31, with streams at 8:30 AM and 1:30 PM PT. There is no admission fee. There is no NorCal or State path.',
+      'The Northern Section’s field hockey postseason was the Super Regional, Oct 30–31: the top six schools qualified, and all six EAL teams were in it. The coaches set its format and seeding, and no pairings were published. The NFHS Network listed its games at Pleasant Valley High School, Chico, on Sat Oct 31, with streams at 8:30 AM and 1:30 PM PT. There was no admission fee. There is no NorCal or State path.',
     );
     expect(text, PAGE).toContain(
       'CIF Northern Section Field Hockey Guidelines 2026-28 §III.E.1 and §IV (the top six EAL/SRL schools compete; varsity only). Northern Section Field Hockey Guidelines (PDF)',
@@ -611,8 +623,8 @@ describe('/playoffs by region (DESIGN-socal §2.4)', () => {
     if (city.kind !== 'section-playoffs') throw new Error('city: section-playoffs');
     expect(text, PAGE).toContain(city.qualificationLine);
     expect(text, PAGE).toContain(city.citations.roundDates);
-    // The corpus is from Oct 2, before the seeding meeting: the pre-meeting sentence, then the round calendar.
-    expect(text, PAGE).toContain('The Section places teams at its Sat Oct 31 seeding meeting and posts its brackets on its field hockey page afterwards; this site draws no bracket and projects no places.');
+    // The Section's brackets are transcribed (data/sds-brackets-2026.json), so the block says they are drawn below.
+    expect(text, PAGE).toContain('The Section has published its brackets; the brackets below are the Section’s, with results as MaxPreps posts them.');
     expect(view.sectionBracketSentence(city, '2026-10-31', '2026-10-29'), VIEW).not.toMatch(/\bseed(ed|s)?\b(?! ?ing meeting)/i);
     expect(socal, PAGE).toContain(`href="${city.powerRankingsUrl}"`);
     expect(socal, PAGE).toContain(`href="${city.calendarUrl}"`);
@@ -622,8 +634,14 @@ describe('/playoffs by region (DESIGN-socal §2.4)', () => {
       expect(text, PAGE).toContain(line);
     }
     // The sentence chooser on each day of the Section's week.
-    expect(view.sectionBracketSentence(city, '2026-10-31', '2026-11-03'), VIEW).toBe(
+    const unpublished = { ...city, bracketSheetUrl: null };
+    expect(view.sectionBracketSentence(unpublished, '2026-10-31', '2026-10-31'), VIEW).toBe(
       'The Section posts its brackets on its field hockey page after its Sat Oct 31 seeding meeting; this site draws no bracket and projects no places. Its playoff games appear on team pages and schedules as MaxPreps lists them.',
+    );
+    // From the day after, the meeting has happened.
+    expect(view.sectionBracketSentence(unpublished, '2026-10-31', '2026-11-01'), VIEW).toMatch(/^The Section placed teams at its Sat Oct 31 seeding meeting/);
+    expect(view.sectionBracketSentence(unpublished, '2026-10-31', '2026-11-03'), VIEW).toBe(
+      'The Section placed teams at its Sat Oct 31 seeding meeting and posts its brackets on its field hockey page; this site draws no bracket and projects no places. Its playoff games appear on team pages and schedules as MaxPreps lists them.',
     );
     expect(view.sectionBracketSentence({ ...city, bracketSheetUrl: 'https://docs.google.com/spreadsheets/d/x' }, '2026-10-31', '2026-11-03'), VIEW).toBe(
       'The Section has published its brackets; this site draws no bracket and projects no places.',
@@ -726,7 +744,18 @@ describe('/playoffs seeded (a stubbed snapshot: the 2025 championship on 2026’
     expect(seededHtml, PAGE).not.toMatch(/eliminat/i);
   });
 
-  it('the Oct 2 corpus page is unchanged: not seeded, the bracket "not yet posted", nothing official until the meeting', () => {
+  it('the Oct 2 corpus page is unchanged: not seeded, the bracket "not yet posted", nothing official until the meeting', async () => {
+    // The committed seed file (filled Nov 3) would draw a bracket on any snapshot; the corpus is from before the
+    // meeting, so the placeholder file is what this page had.
+    process.env.SCVAL_SNAPSHOT = corpusSnapshotPath('all-2026-10-02');
+    vi.resetModules();
+    vi.doMock('../../lib/ccs-bracket', async (importOriginal) => {
+      const actual = await importOriginal<typeof import('../../lib/ccs-bracket')>();
+      return { ...actual, getCcsSeeds: () => null };
+    });
+    const unseeded = renderToStaticMarkup((await import('../../app/playoffs/page')).default() as ReactElement);
+    vi.doUnmock('../../lib/ccs-bracket');
+    const html = unseeded;
     const text = textOf(html);
     expect(text, PAGE).toContain('Not seeded yet:');
     expect(text, PAGE).toContain('CCS seeds CCS Division 1 and CCS Division 2 at the Mon Nov 2 meeting; the games appear here as MaxPreps lists them, after the next update. Official CCS bracket ↗ (opens in a new tab) — not yet posted.');

@@ -27,6 +27,7 @@ import { SCVAL_SEEDS } from './registry/scval';
 import type { Seed } from './registry/seed';
 import { SUNSET_SEEDS } from './registry/sunset';
 import { SLUG_PATTERN } from './schema-primitives';
+import { SCHOOL_ADDRESSES } from './schools';
 import type { DivisionId, GameSide, LeagueId, Team, TeamId } from './types';
 
 const MP = 'https://www.maxpreps.com';
@@ -392,5 +393,12 @@ function assertRegistry(): void {
   if (ACRONYM_COLLISIONS.join() !== EXPECTED_ACRONYM_COLLISIONS.join()) {
     fail(`ACRONYM_COLLISIONS is [${ACRONYM_COLLISIONS.join(', ')}], expected [${EXPECTED_ACRONYM_COLLISIONS.join(', ')}]`);
   }
+
+  // 6. data/schools.json has one record per registry school, and none for a slug that is not a team
+  const teamSlugs = new Set(TEAMS.map((t) => t.slug));
+  const missing = TEAMS.filter((t) => !Object.hasOwn(SCHOOL_ADDRESSES, t.slug)).map((t) => t.slug);
+  if (missing.length) fail(`data/schools.json has no address for ${missing.join(', ')}`);
+  const extra = Object.keys(SCHOOL_ADDRESSES).filter((slug) => !teamSlugs.has(slug));
+  if (extra.length) fail(`data/schools.json has a record for ${extra.join(', ')}, which is not a registry team`);
 }
 assertRegistry();

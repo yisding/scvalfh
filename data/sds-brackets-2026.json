@@ -1,6 +1,218 @@
 {
   "season": "2026-27",
-  "retrievedOn": null,
-  "source": null,
-  "divisions": []
+  "retrievedOn": "2026-11-03",
+  "source": {
+    "label": "2026 CIFSDS Field Hockey Championship Bracket (Google Sheet)",
+    "url": "https://docs.google.com/spreadsheets/d/1A8tsHqwGiRLD5EBSnCFoAAK5Qg13v6wQlen3HEGspeU/edit"
+  },
+  "divisions": [
+    {
+      "id": "open",
+      "label": "Open Division",
+      "size": 8,
+      "rounds": [
+        {
+          "name": "Quarterfinals",
+          "date": "2026-11-05"
+        },
+        {
+          "name": "Semifinals",
+          "date": "2026-11-10"
+        },
+        {
+          "name": "Final",
+          "date": "2026-11-14",
+          "time": "18:00",
+          "site": "La Jolla High School"
+        }
+      ],
+      "seeds": [
+        {
+          "seed": 1,
+          "slug": "bishops"
+        },
+        {
+          "seed": 2,
+          "slug": "canyon-hills"
+        },
+        {
+          "seed": 3,
+          "slug": "torrey-pines"
+        },
+        {
+          "seed": 4,
+          "slug": "scripps-ranch"
+        },
+        {
+          "seed": 5,
+          "slug": "la-jolla"
+        },
+        {
+          "seed": 6,
+          "slug": "del-norte"
+        },
+        {
+          "seed": 7,
+          "slug": "la-costa-canyon"
+        },
+        {
+          "seed": 8,
+          "slug": "eastlake"
+        }
+      ]
+    },
+    {
+      "id": "division-1",
+      "label": "Division I",
+      "size": 12,
+      "rounds": [
+        {
+          "name": "First round",
+          "date": "2026-11-03"
+        },
+        {
+          "name": "Quarterfinals",
+          "date": "2026-11-06"
+        },
+        {
+          "name": "Semifinals",
+          "date": "2026-11-10"
+        },
+        {
+          "name": "Final",
+          "date": "2026-11-14",
+          "time": "15:30",
+          "site": "La Jolla High School"
+        }
+      ],
+      "seeds": [
+        {
+          "seed": 1,
+          "slug": "clairemont"
+        },
+        {
+          "seed": 2,
+          "slug": "san-marcos"
+        },
+        {
+          "seed": 3,
+          "slug": "san-dieguito-academy"
+        },
+        {
+          "seed": 4,
+          "slug": "university-city"
+        },
+        {
+          "seed": 5,
+          "slug": "mt-carmel"
+        },
+        {
+          "seed": 6,
+          "slug": "cathedral-catholic"
+        },
+        {
+          "seed": 7,
+          "slug": "mission-bay"
+        },
+        {
+          "seed": 8,
+          "slug": "poway"
+        },
+        {
+          "seed": 9,
+          "slug": "canyon-crest-academy"
+        },
+        {
+          "seed": 10,
+          "slug": "la-jolla-country-day"
+        },
+        {
+          "seed": 11,
+          "slug": "rancho-bernardo"
+        },
+        {
+          "seed": 12,
+          "slug": "fallbrook"
+        }
+      ]
+    },
+    {
+      "id": "division-2",
+      "label": "Division II",
+      "size": 12,
+      "playIn": {
+        "date": "2026-11-02",
+        "forSeed": 12,
+        "home": "granite-hills",
+        "away": "sage-creek"
+      },
+      "rounds": [
+        {
+          "name": "First round",
+          "date": "2026-11-04"
+        },
+        {
+          "name": "Quarterfinals",
+          "date": "2026-11-07",
+          "time": "13:00"
+        },
+        {
+          "name": "Semifinals",
+          "date": "2026-11-11"
+        },
+        {
+          "name": "Final",
+          "date": "2026-11-14",
+          "time": "13:00",
+          "site": "La Jolla High School"
+        }
+      ],
+      "seeds": [
+        {
+          "seed": 1,
+          "slug": "point-loma"
+        },
+        {
+          "seed": 2,
+          "slug": "mission-hills"
+        },
+        {
+          "seed": 3,
+          "slug": "mission-vista"
+        },
+        {
+          "seed": 4,
+          "slug": "olympian"
+        },
+        {
+          "seed": 5,
+          "slug": "otay-ranch"
+        },
+        {
+          "seed": 6,
+          "slug": "westview"
+        },
+        {
+          "seed": 7,
+          "slug": "san-pasqual"
+        },
+        {
+          "seed": 8,
+          "slug": "hilltop"
+        },
+        {
+          "seed": 9,
+          "slug": "helix"
+        },
+        {
+          "seed": 10,
+          "slug": "mira-mesa"
+        },
+        {
+          "seed": 11,
+          "slug": "patrick-henry"
+        }
+      ]
+    }
+  ]
 }

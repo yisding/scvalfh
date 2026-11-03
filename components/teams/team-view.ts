@@ -78,6 +78,7 @@ import type {
   Team,
   TeamSlug,
 } from '../../lib/types';
+import { gameAddress } from '../../lib/venue';
 import { getEloBoardForTeam } from '../leaders/elo-board';
 import { buildOverviewDivision, type OverviewDivision } from '../standings/standings-view';
 import type { FormEntry } from '../ui/FormStrip';
@@ -777,24 +778,11 @@ function placeLine(game: Game, team: Team): string | null {
   return host ? `${host.city}, CA` : null;
 }
 
-/**
- * The address a Directions pill points at: the game's own (MaxPreps' game-page Place, fetched lazily), else, for a
- * league tournament's final at its fixed site (the MCAL final at Tamalpais), the site's address from config: a
- * fan going to the final needs it and MaxPreps gives none (0 of 928 games carry one on 2026-10-29).
- */
-function directionsAddress(game: Game): { street: string; city: string; region: string; postalCode: string } | null {
-  if (game.venue.address) return game.venue.address;
-  if (game.postseason?.kind !== 'mcal-tournament' || !game.postseason.leagueId) return null;
-  const league = getLeague(game.postseason.leagueId);
-  if (league.postseason.kind !== 'league-tournament') return null;
-  const final = getLeagueTournament(league.id).games.find((tg) => tg.round === 'final');
-  return final?.game?.contestId === game.contestId ? league.postseason.finalSite.address : null;
-}
-
 /** The NEXT card's external pills (named apart from describe-game's private `chipsFor`). */
 function nextChips(game: Game): NextChip[] {
   const chips: NextChip[] = [];
-  const address = directionsAddress(game);
+  // lib/venue.ts: the game's own address, else the final's fixed site or the venue's or host's school.
+  const address = gameAddress(game)?.address;
   if (address) chips.push({ href: mapsSearchHref(address), label: 'Directions' });
   // Named for what is behind them: 'Stream' and 'MaxPreps' did not say which stream or which page.
   if (game.urls.nfhsStream) chips.push({ href: game.urls.nfhsStream, label: 'NFHS stream' });
