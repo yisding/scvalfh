@@ -1,12 +1,12 @@
 {
   "counts": {
-    "errors": 1,
+    "errors": 0,
     "goalkeepers": 140,
-    "players": 921,
+    "players": 922,
     "teams": 102,
     "teamsWithStats": 69
   },
-  "fetchedAt": "2026-11-03T12:33:58.432Z",
+  "fetchedAt": "2026-11-03T15:32:38.504Z",
   "season": "26-27",
   "source": {
     "builtBy": "scripts/fetch-player-stats.ts",
@@ -24,7 +24,7 @@
   "teams": [
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "games": [
         {
           "contestId": "04bcfb64-9b80-429a-b586-78a74e70d9f3",
@@ -2096,7 +2096,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "games": [
         {
           "contestId": "0849d198-8ba8-4dbf-bae5-84a05091e8f6",
@@ -3953,7 +3953,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "lastUpdated": null,
       "maxprepsTeamId": "0279f2de-d5ce-484d-b210-2286ded42058",
       "name": "Los Altos",
@@ -3974,7 +3974,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "games": [
         {
           "contestId": "0822b76c-ff94-473d-95cc-b00483835457",
@@ -5551,7 +5551,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "games": [
         {
           "contestId": "05ad4605-869c-4fa8-b254-30fd4eb2eaaf",
@@ -6623,7 +6623,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "lastUpdated": null,
       "maxprepsTeamId": "97ffffbe-54ba-4c25-86bb-41332627f64e",
       "name": "Cupertino",
@@ -6644,7 +6644,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "gameTotals": [
         {
           "assists": 0,
@@ -6997,7 +6997,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "games": [
         {
           "contestId": "029c55ad-77cf-42f0-96ff-7193d9edf29a",
@@ -8637,7 +8637,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "lastUpdated": null,
       "maxprepsTeamId": "bdb0b593-ef7f-4c69-8c2a-e0a48c934ca7",
       "name": "Los Gatos",
@@ -8658,7 +8658,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "games": [
         {
           "contestId": "0e514547-6fda-4d35-a6ee-98c47c3a0e34",
@@ -10619,7 +10619,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "games": [
         {
           "contestId": "394a0f97-f724-4ab7-a2b9-8160c1f4a0f2",
@@ -10987,7 +10987,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "games": [
         {
           "contestId": "06dff81f-eb29-408f-8c31-99a32c3ea188",
@@ -12104,7 +12104,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "lastUpdated": null,
       "maxprepsTeamId": "12a470ab-e17d-4e5a-b74b-055d1f46d46b",
       "name": "Saratoga",
@@ -12125,7 +12125,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "lastUpdated": null,
       "maxprepsTeamId": "d7c7f7a1-06be-44fb-a4a2-64599519aa4c",
       "name": "Lynbrook",
@@ -12146,7 +12146,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "games": [
         {
           "contestId": "0ba78e7d-c32b-4ab1-8fa6-5f8af479cb2c",
@@ -14083,7 +14083,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "games": [
         {
           "contestId": "05c6438b-1bcd-4008-9e51-920a3cb7fb3b",
@@ -14998,7 +14998,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "games": [
         {
           "contestId": "0601c615-4ac0-4466-950a-a9a0ca53cd21",
@@ -16171,7 +16171,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "games": [
         {
           "contestId": "0630811e-fe8b-452c-8546-3f5de7122634",
@@ -18129,7 +18129,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "games": [
         {
           "contestId": "0601c615-4ac0-4466-950a-a9a0ca53cd21",
@@ -19247,7 +19247,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "games": [
         {
           "contestId": "05c6438b-1bcd-4008-9e51-920a3cb7fb3b",
@@ -19818,7 +19818,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "games": [
         {
           "contestId": "132dce81-25ee-494c-b439-ef935ed26624",
@@ -20774,7 +20774,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "lastUpdated": null,
       "maxprepsTeamId": "8c56113f-9229-43a2-a56e-4f8443494857",
       "name": "Del Mar",
@@ -20795,7 +20795,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "games": [
         {
           "contestId": "7dff058a-02ad-4928-aaea-0c6c1d9fc3ab",
@@ -20873,7 +20873,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "games": [
         {
           "contestId": "258b9301-ddeb-48f1-a1ad-2b3d01e4ab7d",
@@ -21751,7 +21751,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "lastUpdated": null,
       "maxprepsTeamId": "30d65e43-1478-45b5-90de-fd69689344f8",
       "name": "Silver Creek",
@@ -21772,7 +21772,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "games": [
         {
           "contestId": "228e6b7e-b240-4a99-9d0e-09a97fd8983d",
@@ -22230,7 +22230,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "games": [
         {
           "contestId": "052883f9-a609-49f9-87bd-2c4312a37644",
@@ -23322,7 +23322,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "games": [
         {
           "contestId": "1c87e5c3-5a06-4ed4-b661-d3fc2cb21a4f",
@@ -24505,7 +24505,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "lastUpdated": null,
       "maxprepsTeamId": "0bb5dbd8-6792-415b-8118-196ee0132b56",
       "name": "Greenfield",
@@ -24526,7 +24526,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "games": [
         {
           "contestId": "3865e937-2367-4f25-96f3-5d011e1bf9ec",
@@ -25711,7 +25711,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "lastUpdated": null,
       "maxprepsTeamId": "1ddbdf6d-84fd-4dfa-942f-f833193e2626",
       "name": "Monterey",
@@ -25732,7 +25732,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "lastUpdated": null,
       "maxprepsTeamId": "1f152b3b-38dc-4d34-b260-9663dc3006a4",
       "name": "Salinas",
@@ -25753,7 +25753,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "lastUpdated": null,
       "maxprepsTeamId": "c3f83b47-6bab-4e25-ba49-9c3ffda74be8",
       "name": "Santa Catalina",
@@ -25774,7 +25774,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "games": [
         {
           "contestId": "00dbc5f4-5ea3-4ea9-9b67-62a95ef5e29f",
@@ -27854,7 +27854,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "games": [
         {
           "contestId": "5349e47b-baa9-466e-9e14-975bc2a5fde9",
@@ -27976,7 +27976,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "games": [
         {
           "contestId": "080c46eb-a736-4942-9a5a-3a0874d5820e",
@@ -29545,7 +29545,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "games": [
         {
           "contestId": "001d6bdc-3eac-4c56-8033-82b985e6d803",
@@ -32326,7 +32326,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "games": [
         {
           "contestId": "19c1fbca-90c3-471f-8c5e-84169b0432c8",
@@ -33491,7 +33491,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "games": [
         {
           "contestId": "14aa4af0-d2c0-453c-8c5f-e878a4bd9efd",
@@ -36517,7 +36517,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "games": [
         {
           "contestId": "001d6bdc-3eac-4c56-8033-82b985e6d803",
@@ -38501,7 +38501,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "games": [
         {
           "contestId": "0304889a-916b-49a1-aa03-3b6ae7f5f829",
@@ -39426,7 +39426,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "games": [
         {
           "contestId": "0129b056-f5da-4c46-81b1-ac2a5d4b842c",
@@ -41213,7 +41213,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "games": [
         {
           "contestId": "d575e13b-1c2a-4b28-b736-cfa1caa57147",
@@ -41351,7 +41351,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "games": [
         {
           "contestId": "03c722d4-7404-4e14-b0a2-d749ce01915b",
@@ -43412,7 +43412,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "games": [
         {
           "contestId": "1c6b0722-0e72-4e18-baf5-a330e5a61976",
@@ -45959,7 +45959,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "lastUpdated": null,
       "maxprepsTeamId": "8f1a8024-2d40-4cab-bcba-3b9b367c6873",
       "name": "Corning",
@@ -45980,7 +45980,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "games": [
         {
           "contestId": "0c891660-1d87-44a1-8e17-b3d76e6555b3",
@@ -48798,7 +48798,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "games": [
         {
           "contestId": "03c722d4-7404-4e14-b0a2-d749ce01915b",
@@ -49639,7 +49639,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "games": [
         {
           "contestId": "0f69c9f3-660e-4f88-aa4a-9ede091bf61e",
@@ -52573,7 +52573,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "lastUpdated": null,
       "maxprepsTeamId": "d9fa2972-0bc2-4d7b-baa4-aaa7d69c119e",
       "name": "Chaparral",
@@ -52594,7 +52594,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "games": [
         {
           "contestId": "232831ce-9b4f-4ad1-be52-1fa816543888",
@@ -53276,7 +53276,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "lastUpdated": null,
       "maxprepsTeamId": "79582922-a3b0-44a5-b210-8e51f3cfb731",
       "name": "Fountain Valley",
@@ -53297,7 +53297,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "games": [
         {
           "contestId": "5c969601-9039-4b04-a853-8aad5388d882",
@@ -53435,12 +53435,1516 @@
       ]
     },
     {
-      "error": "player stats: Field Stats / V. D'Angelo: gamesPlayed is 24 here, 2 in another table",
-      "fetchedAt": "2026-10-13T12:24:00.599Z",
-      "lastUpdated": "2026-10-01T11:22:57",
+      "error": null,
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
+      "games": [
+        {
+          "contestId": "0576edfb-374a-4451-bb5e-fa191071058c",
+          "players": [
+            {
+              "field": null,
+              "goalkeeping": {
+                "saves": 2
+              },
+              "jersey": "24",
+              "name": "Eden Wingate"
+            }
+          ],
+          "rowKey": "67657ab8",
+          "tracked": {
+            "field": [],
+            "goalkeeping": [
+              "saves"
+            ]
+          },
+          "warnings": []
+        },
+        {
+          "contestId": "0ba419c5-ceae-470e-9194-817944196372",
+          "players": [
+            {
+              "field": {
+                "goals": 1,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": "23",
+              "name": "Sarah Moniak"
+            },
+            {
+              "field": {
+                "assists": 2,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": "7",
+              "name": "Grace Moniak"
+            },
+            {
+              "field": {
+                "goals": 1,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": "22",
+              "name": "Kailey Kosai"
+            },
+            {
+              "field": {
+                "assists": 1,
+                "goals": 2,
+                "points": 5
+              },
+              "goalkeeping": null,
+              "jersey": "11",
+              "name": "Stella Patz"
+            },
+            {
+              "field": {
+                "assists": 1,
+                "points": 1
+              },
+              "goalkeeping": null,
+              "jersey": "12",
+              "name": "Addyson Asher"
+            },
+            {
+              "field": {
+                "goals": 1,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": "1",
+              "name": "Valentina D'Angelo"
+            },
+            {
+              "field": {
+                "goals": 1,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": "3",
+              "name": "Lulu Guevera"
+            },
+            {
+              "field": {
+                "assists": 1,
+                "points": 1
+              },
+              "goalkeeping": null,
+              "jersey": "29",
+              "name": "Alana Williams"
+            }
+          ],
+          "rowKey": "677d4c46",
+          "tracked": {
+            "field": [
+              "goals",
+              "assists",
+              "points"
+            ],
+            "goalkeeping": []
+          },
+          "warnings": []
+        },
+        {
+          "contestId": "1032d052-d976-49a1-8155-7ce728e6f612",
+          "players": [
+            {
+              "field": {
+                "assists": 1,
+                "goals": 1,
+                "points": 3
+              },
+              "goalkeeping": null,
+              "jersey": "23",
+              "name": "Sarah Moniak"
+            },
+            {
+              "field": {
+                "assists": 2,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": "7",
+              "name": "Grace Moniak"
+            },
+            {
+              "field": {
+                "goals": 1,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": "22",
+              "name": "Kailey Kosai"
+            },
+            {
+              "field": {
+                "goals": 1,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": "1",
+              "name": "Valentina D'Angelo"
+            }
+          ],
+          "rowKey": "7cd0c7d1",
+          "tracked": {
+            "field": [
+              "goals",
+              "assists",
+              "points"
+            ],
+            "goalkeeping": []
+          },
+          "warnings": []
+        },
+        {
+          "contestId": "1f555407-8f04-4f4c-b450-a966082727af",
+          "players": [
+            {
+              "field": {
+                "goals": 1,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "H. Lu"
+            },
+            {
+              "field": {
+                "goals": 1,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": "7",
+              "name": "Grace Moniak"
+            },
+            {
+              "field": {
+                "assists": 1,
+                "points": 1
+              },
+              "goalkeeping": null,
+              "jersey": "29",
+              "name": "Alana Williams"
+            }
+          ],
+          "rowKey": "e916e88f",
+          "tracked": {
+            "field": [
+              "goals",
+              "assists",
+              "points"
+            ],
+            "goalkeeping": []
+          },
+          "warnings": [
+            "H. Lu has stats but is not on the MaxPreps roster"
+          ]
+        },
+        {
+          "contestId": "24c14fe7-e13c-4dac-9e9d-5af34a59ae6f",
+          "players": [
+            {
+              "field": {
+                "assists": 1,
+                "goals": 1,
+                "points": 3
+              },
+              "goalkeeping": null,
+              "jersey": "23",
+              "name": "Sarah Moniak"
+            },
+            {
+              "field": {
+                "assists": 1,
+                "points": 1
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Valentina D'Angelo"
+            },
+            {
+              "field": {
+                "assists": 1,
+                "goals": 1,
+                "points": 3
+              },
+              "goalkeeping": null,
+              "jersey": "7",
+              "name": "Grace Moniak"
+            },
+            {
+              "field": {
+                "goals": 1,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": "22",
+              "name": "Kailey Kosai"
+            }
+          ],
+          "rowKey": "c0ad6323",
+          "tracked": {
+            "field": [
+              "goals",
+              "assists",
+              "points"
+            ],
+            "goalkeeping": []
+          },
+          "warnings": []
+        },
+        {
+          "contestId": "2c9832a9-3bdf-444f-b9f0-0da5dcd9c416",
+          "players": [
+            {
+              "field": {
+                "goals": 1,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": "14",
+              "name": "Ryann Ratliff"
+            },
+            {
+              "field": {
+                "assists": 1,
+                "goals": 2,
+                "points": 5
+              },
+              "goalkeeping": null,
+              "jersey": "23",
+              "name": "Sarah Moniak"
+            },
+            {
+              "field": {
+                "assists": 4,
+                "points": 4
+              },
+              "goalkeeping": null,
+              "jersey": "7",
+              "name": "Grace Moniak"
+            },
+            {
+              "field": {
+                "assists": 1,
+                "goals": 1,
+                "points": 3
+              },
+              "goalkeeping": null,
+              "jersey": "22",
+              "name": "Kailey Kosai"
+            },
+            {
+              "field": {
+                "goals": 2,
+                "points": 4
+              },
+              "goalkeeping": null,
+              "jersey": "1",
+              "name": "Valentina D'Angelo"
+            }
+          ],
+          "rowKey": "cf95efba",
+          "tracked": {
+            "field": [
+              "goals",
+              "assists",
+              "points"
+            ],
+            "goalkeeping": []
+          },
+          "warnings": []
+        },
+        {
+          "contestId": "2e09fbe4-d136-4fb4-9e85-830c35d62a74",
+          "players": [
+            {
+              "field": {
+                "assists": 2,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": "23",
+              "name": "Sarah Moniak"
+            },
+            {
+              "field": {
+                "goals": 1,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": "7",
+              "name": "Grace Moniak"
+            },
+            {
+              "field": {
+                "assists": 1,
+                "points": 1
+              },
+              "goalkeeping": null,
+              "jersey": "11",
+              "name": "Stella Patz"
+            },
+            {
+              "field": {
+                "goals": 2,
+                "points": 4
+              },
+              "goalkeeping": null,
+              "jersey": "1",
+              "name": "Valentina D'Angelo"
+            },
+            {
+              "field": null,
+              "goalkeeping": {
+                "saves": 6,
+                "wins": 1
+              },
+              "jersey": "24",
+              "name": "Eden Wingate"
+            }
+          ],
+          "rowKey": "85ea1168",
+          "tracked": {
+            "field": [
+              "goals",
+              "assists",
+              "points"
+            ],
+            "goalkeeping": [
+              "saves",
+              "wins"
+            ]
+          },
+          "warnings": []
+        },
+        {
+          "contestId": "30e25289-482c-4682-b2da-0540ad17fbd8",
+          "players": [
+            {
+              "field": {
+                "assists": 1,
+                "points": 1
+              },
+              "goalkeeping": null,
+              "jersey": "23",
+              "name": "Sarah Moniak"
+            },
+            {
+              "field": {
+                "goals": 1,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": "7",
+              "name": "Grace Moniak"
+            },
+            {
+              "field": null,
+              "goalkeeping": {
+                "saves": 8
+              },
+              "jersey": "30",
+              "name": "Charlotte Johnson"
+            }
+          ],
+          "rowKey": "6fb64455",
+          "tracked": {
+            "field": [
+              "goals",
+              "assists",
+              "points"
+            ],
+            "goalkeeping": [
+              "saves"
+            ]
+          },
+          "warnings": []
+        },
+        {
+          "contestId": "4418a135-892f-4726-aed1-f453546655f2",
+          "players": [
+            {
+              "field": {
+                "assists": 1,
+                "goals": 1,
+                "points": 3
+              },
+              "goalkeeping": null,
+              "jersey": "14",
+              "name": "Ryann Ratliff"
+            },
+            {
+              "field": {
+                "assists": 2,
+                "goals": 2,
+                "points": 6
+              },
+              "goalkeeping": null,
+              "jersey": "23",
+              "name": "Sarah Moniak"
+            },
+            {
+              "field": {
+                "goals": 1,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": "24",
+              "name": "Eden Wingate"
+            },
+            {
+              "field": {
+                "assists": 1,
+                "points": 1
+              },
+              "goalkeeping": null,
+              "jersey": "15",
+              "name": "Alexandra Perkins"
+            },
+            {
+              "field": {
+                "assists": 3,
+                "goals": 2,
+                "points": 7
+              },
+              "goalkeeping": null,
+              "jersey": "7",
+              "name": "Grace Moniak"
+            },
+            {
+              "field": {
+                "assists": 2,
+                "goals": 1,
+                "points": 4
+              },
+              "goalkeeping": null,
+              "jersey": "22",
+              "name": "Kailey Kosai"
+            },
+            {
+              "field": {
+                "assists": 1,
+                "goals": 2,
+                "points": 5
+              },
+              "goalkeeping": null,
+              "jersey": "11",
+              "name": "Stella Patz"
+            },
+            {
+              "field": {
+                "assists": 2,
+                "goals": 1,
+                "points": 4
+              },
+              "goalkeeping": null,
+              "jersey": "1",
+              "name": "Valentina D'Angelo"
+            },
+            {
+              "field": {
+                "goals": 1,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": "29",
+              "name": "Alana Williams"
+            }
+          ],
+          "rowKey": "b97558d8",
+          "tracked": {
+            "field": [
+              "goals",
+              "assists",
+              "points"
+            ],
+            "goalkeeping": []
+          },
+          "warnings": []
+        },
+        {
+          "contestId": "48129675-d755-4525-bfd9-b631756d9603",
+          "players": [
+            {
+              "field": {
+                "goals": 2,
+                "points": 4
+              },
+              "goalkeeping": null,
+              "jersey": "7",
+              "name": "Grace Moniak"
+            },
+            {
+              "field": {
+                "assists": 1,
+                "goals": 1,
+                "points": 3
+              },
+              "goalkeeping": null,
+              "jersey": "34",
+              "name": "Melody Shahroudi"
+            },
+            {
+              "field": {
+                "assists": 1,
+                "points": 1
+              },
+              "goalkeeping": null,
+              "jersey": "22",
+              "name": "Kailey Kosai"
+            },
+            {
+              "field": {
+                "goals": 1,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": "11",
+              "name": "Stella Patz"
+            },
+            {
+              "field": {
+                "assists": 1,
+                "goals": 1,
+                "points": 3
+              },
+              "goalkeeping": null,
+              "jersey": "1",
+              "name": "Valentina D'Angelo"
+            },
+            {
+              "field": {
+                "goals": 1,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": "3",
+              "name": "Lulu Guevera"
+            },
+            {
+              "field": {
+                "assists": 2,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": "29",
+              "name": "Alana Williams"
+            }
+          ],
+          "rowKey": "804eafb7",
+          "tracked": {
+            "field": [
+              "goals",
+              "assists",
+              "points"
+            ],
+            "goalkeeping": []
+          },
+          "warnings": []
+        },
+        {
+          "contestId": "48c4fe72-cfc7-45e0-b7ce-cd26fa78084d",
+          "players": [
+            {
+              "field": null,
+              "goalkeeping": {
+                "goalsAgainst": 1
+              },
+              "jersey": "24",
+              "name": "Eden Wingate"
+            },
+            {
+              "field": null,
+              "goalkeeping": {
+                "goalsAgainst": 2
+              },
+              "jersey": "30",
+              "name": "Charlotte Johnson"
+            }
+          ],
+          "rowKey": "67600747",
+          "tracked": {
+            "field": [],
+            "goalkeeping": [
+              "goalsAgainst"
+            ]
+          },
+          "warnings": []
+        },
+        {
+          "contestId": "4b5cf22f-9dd9-4675-b0ad-02793dc99738",
+          "players": [
+            {
+              "field": null,
+              "goalkeeping": {
+                "saves": 2
+              },
+              "jersey": "24",
+              "name": "Eden Wingate"
+            },
+            {
+              "field": null,
+              "goalkeeping": {
+                "saves": 2
+              },
+              "jersey": "30",
+              "name": "Charlotte Johnson"
+            }
+          ],
+          "rowKey": "ee2c910a",
+          "tracked": {
+            "field": [],
+            "goalkeeping": [
+              "saves"
+            ]
+          },
+          "warnings": []
+        },
+        {
+          "contestId": "613520f2-f0f8-46c6-a348-16b63bf123c4",
+          "players": [
+            {
+              "field": {
+                "goals": 1,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": "15",
+              "name": "Alexandra Perkins"
+            },
+            {
+              "field": {
+                "assists": 1,
+                "points": 1
+              },
+              "goalkeeping": null,
+              "jersey": "7",
+              "name": "Grace Moniak"
+            },
+            {
+              "field": null,
+              "goalkeeping": {
+                "saves": 1
+              },
+              "jersey": "24",
+              "name": "Eden Wingate"
+            },
+            {
+              "field": null,
+              "goalkeeping": {
+                "saves": 4
+              },
+              "jersey": "30",
+              "name": "Charlotte Johnson"
+            }
+          ],
+          "rowKey": "1664bad1",
+          "tracked": {
+            "field": [
+              "goals",
+              "assists",
+              "points"
+            ],
+            "goalkeeping": [
+              "saves"
+            ]
+          },
+          "warnings": []
+        },
+        {
+          "contestId": "633c4265-2ad8-4767-8a2a-716e077b13e4",
+          "players": [
+            {
+              "field": {
+                "assists": 1,
+                "points": 1
+              },
+              "goalkeeping": null,
+              "jersey": "14",
+              "name": "Ryann Ratliff"
+            },
+            {
+              "field": {
+                "goals": 4,
+                "points": 8
+              },
+              "goalkeeping": null,
+              "jersey": "23",
+              "name": "Sarah Moniak"
+            },
+            {
+              "field": {
+                "goals": 2,
+                "points": 4
+              },
+              "goalkeeping": null,
+              "jersey": "24",
+              "name": "Eden Wingate"
+            },
+            {
+              "field": {
+                "goals": 1,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": "15",
+              "name": "Alexandra Perkins"
+            },
+            {
+              "field": {
+                "assists": 3,
+                "goals": 1,
+                "points": 5
+              },
+              "goalkeeping": null,
+              "jersey": "7",
+              "name": "Grace Moniak"
+            },
+            {
+              "field": {
+                "assists": 2,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": "22",
+              "name": "Kailey Kosai"
+            },
+            {
+              "field": {
+                "assists": 2,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": "11",
+              "name": "Stella Patz"
+            },
+            {
+              "field": {
+                "goals": 1,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": "9",
+              "name": "Natalie Carroll"
+            },
+            {
+              "field": {
+                "assists": 2,
+                "goals": 1,
+                "points": 4
+              },
+              "goalkeeping": null,
+              "jersey": "1",
+              "name": "Valentina D'Angelo"
+            },
+            {
+              "field": {
+                "goals": 1,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": "29",
+              "name": "Alana Williams"
+            }
+          ],
+          "rowKey": "df2b6555",
+          "tracked": {
+            "field": [
+              "goals",
+              "assists",
+              "points"
+            ],
+            "goalkeeping": []
+          },
+          "warnings": []
+        },
+        {
+          "contestId": "7b43f9e6-bf73-46cc-8fc8-065d18c14713",
+          "players": [
+            {
+              "field": {
+                "goals": 1,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": "23",
+              "name": "Sarah Moniak"
+            },
+            {
+              "field": {
+                "assists": 2,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": "7",
+              "name": "Grace Moniak"
+            },
+            {
+              "field": {
+                "goals": 1,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": "1",
+              "name": "Valentina D'Angelo"
+            },
+            {
+              "field": null,
+              "goalkeeping": {
+                "saves": 7
+              },
+              "jersey": "30",
+              "name": "Charlotte Johnson"
+            }
+          ],
+          "rowKey": "1f577e0b",
+          "tracked": {
+            "field": [
+              "goals",
+              "assists",
+              "points"
+            ],
+            "goalkeeping": [
+              "saves"
+            ]
+          },
+          "warnings": []
+        },
+        {
+          "contestId": "7d1a55de-00dd-41dd-b5a0-473d3af086a3",
+          "players": [
+            {
+              "field": {
+                "assists": 2,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": "23",
+              "name": "Sarah Moniak"
+            },
+            {
+              "field": {
+                "goals": 1,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": "11",
+              "name": "Stella Patz"
+            },
+            {
+              "field": {
+                "goals": 1,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": "1",
+              "name": "Valentina D'Angelo"
+            },
+            {
+              "field": null,
+              "goalkeeping": {
+                "saves": 8
+              },
+              "jersey": "30",
+              "name": "Charlotte Johnson"
+            }
+          ],
+          "rowKey": "c8b7a7f0",
+          "tracked": {
+            "field": [
+              "goals",
+              "assists",
+              "points"
+            ],
+            "goalkeeping": [
+              "saves"
+            ]
+          },
+          "warnings": []
+        },
+        {
+          "contestId": "9334abd9-5a81-47ef-b8d4-1a33869f24d6",
+          "players": [
+            {
+              "field": {
+                "assists": 1,
+                "points": 1
+              },
+              "goalkeeping": null,
+              "jersey": "14",
+              "name": "Ryann Ratliff"
+            },
+            {
+              "field": {
+                "assists": 1,
+                "points": 1
+              },
+              "goalkeeping": null,
+              "jersey": "23",
+              "name": "Sarah Moniak"
+            },
+            {
+              "field": {
+                "goals": 1,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": "15",
+              "name": "Alexandra Perkins"
+            },
+            {
+              "field": {
+                "goals": 1,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": "7",
+              "name": "Grace Moniak"
+            },
+            {
+              "field": {
+                "assists": 1,
+                "goals": 1,
+                "points": 3
+              },
+              "goalkeeping": null,
+              "jersey": "1",
+              "name": "Valentina D'Angelo"
+            },
+            {
+              "field": null,
+              "goalkeeping": {
+                "saves": 5
+              },
+              "jersey": "24",
+              "name": "Eden Wingate"
+            }
+          ],
+          "rowKey": "441128df",
+          "tracked": {
+            "field": [
+              "goals",
+              "assists",
+              "points"
+            ],
+            "goalkeeping": [
+              "saves"
+            ]
+          },
+          "warnings": []
+        },
+        {
+          "contestId": "942d1e2d-bd43-4414-95f3-ddaa002d3b3b",
+          "players": [
+            {
+              "field": {
+                "goals": 1,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": "23",
+              "name": "Sarah Moniak"
+            },
+            {
+              "field": {
+                "assists": 2,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": "11",
+              "name": "Stella Patz"
+            },
+            {
+              "field": {
+                "goals": 1,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": "1",
+              "name": "Valentina D'Angelo"
+            }
+          ],
+          "rowKey": "430459bf",
+          "tracked": {
+            "field": [
+              "goals",
+              "assists",
+              "points"
+            ],
+            "goalkeeping": []
+          },
+          "warnings": []
+        },
+        {
+          "contestId": "95a91c87-abfe-418e-9c40-bda8bdfef138",
+          "players": [
+            {
+              "field": {
+                "assists": 1,
+                "points": 1
+              },
+              "goalkeeping": null,
+              "jersey": "23",
+              "name": "Sarah Moniak"
+            },
+            {
+              "field": {
+                "goals": 1,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": "7",
+              "name": "Grace Moniak"
+            },
+            {
+              "field": null,
+              "goalkeeping": {
+                "saves": 5
+              },
+              "jersey": "30",
+              "name": "Charlotte Johnson"
+            }
+          ],
+          "rowKey": "edc53923",
+          "tracked": {
+            "field": [
+              "goals",
+              "assists",
+              "points"
+            ],
+            "goalkeeping": [
+              "saves"
+            ]
+          },
+          "warnings": []
+        },
+        {
+          "contestId": "baebc5c3-f82c-49e4-a8fc-39871ed2a62e",
+          "players": [
+            {
+              "field": {
+                "assists": 1,
+                "goals": 1,
+                "points": 3
+              },
+              "goalkeeping": null,
+              "jersey": "23",
+              "name": "Sarah Moniak"
+            },
+            {
+              "field": {
+                "assists": 1,
+                "goals": 1,
+                "points": 3
+              },
+              "goalkeeping": null,
+              "jersey": "7",
+              "name": "Grace Moniak"
+            },
+            {
+              "field": {
+                "assists": 1,
+                "points": 1
+              },
+              "goalkeeping": null,
+              "jersey": "22",
+              "name": "Kailey Kosai"
+            },
+            {
+              "field": {
+                "assists": 1,
+                "points": 1
+              },
+              "goalkeeping": null,
+              "jersey": "9",
+              "name": "Natalie Carroll"
+            },
+            {
+              "field": {
+                "goals": 1,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": "12",
+              "name": "Addyson Asher"
+            }
+          ],
+          "rowKey": "9ffd2636",
+          "tracked": {
+            "field": [
+              "goals",
+              "assists",
+              "points"
+            ],
+            "goalkeeping": []
+          },
+          "warnings": []
+        },
+        {
+          "contestId": "bcff2573-0ccd-4911-8943-3969ef2a3fa3",
+          "players": [
+            {
+              "field": {
+                "assists": 3,
+                "points": 3
+              },
+              "goalkeeping": null,
+              "jersey": "23",
+              "name": "Sarah Moniak"
+            },
+            {
+              "field": {
+                "goals": 1,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": "15",
+              "name": "Alexandra Perkins"
+            },
+            {
+              "field": {
+                "assists": 1,
+                "goals": 2,
+                "points": 5
+              },
+              "goalkeeping": null,
+              "jersey": "7",
+              "name": "Grace Moniak"
+            },
+            {
+              "field": {
+                "goals": 1,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": "34",
+              "name": "Melody Shahroudi"
+            },
+            {
+              "field": {
+                "goals": 2,
+                "points": 4
+              },
+              "goalkeeping": null,
+              "jersey": "22",
+              "name": "Kailey Kosai"
+            },
+            {
+              "field": {
+                "goals": 1,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": "11",
+              "name": "Stella Patz"
+            },
+            {
+              "field": {
+                "assists": 1,
+                "goals": 1,
+                "points": 3
+              },
+              "goalkeeping": null,
+              "jersey": "12",
+              "name": "Addyson Asher"
+            }
+          ],
+          "rowKey": "1499b287",
+          "tracked": {
+            "field": [
+              "goals",
+              "assists",
+              "points"
+            ],
+            "goalkeeping": []
+          },
+          "warnings": []
+        },
+        {
+          "contestId": "e7c099f7-636e-448d-8bf8-2950bef3d797",
+          "players": [
+            {
+              "field": {
+                "assists": 3,
+                "points": 3
+              },
+              "goalkeeping": null,
+              "jersey": "23",
+              "name": "Sarah Moniak"
+            },
+            {
+              "field": {
+                "goals": 1,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": "15",
+              "name": "Alexandra Perkins"
+            },
+            {
+              "field": {
+                "assists": 1,
+                "goals": 3,
+                "points": 7
+              },
+              "goalkeeping": null,
+              "jersey": "7",
+              "name": "Grace Moniak"
+            },
+            {
+              "field": {
+                "goals": 1,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": "22",
+              "name": "Kailey Kosai"
+            },
+            {
+              "field": {
+                "goals": 1,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": "11",
+              "name": "Stella Patz"
+            },
+            {
+              "field": {
+                "assists": 1,
+                "points": 1
+              },
+              "goalkeeping": null,
+              "jersey": "1",
+              "name": "Valentina D'Angelo"
+            }
+          ],
+          "rowKey": "a6a6e9db",
+          "tracked": {
+            "field": [
+              "goals",
+              "assists",
+              "points"
+            ],
+            "goalkeeping": []
+          },
+          "warnings": []
+        },
+        {
+          "contestId": "e861b6d5-68f7-4824-b2c0-ae995588ccdc",
+          "players": [
+            {
+              "field": {
+                "assists": 2,
+                "goals": 1,
+                "points": 4
+              },
+              "goalkeeping": null,
+              "jersey": "23",
+              "name": "Sarah Moniak"
+            },
+            {
+              "field": {
+                "assists": 2,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": "7",
+              "name": "Grace Moniak"
+            },
+            {
+              "field": {
+                "assists": 1,
+                "goals": 3,
+                "points": 7
+              },
+              "goalkeeping": null,
+              "jersey": "22",
+              "name": "Kailey Kosai"
+            },
+            {
+              "field": {
+                "goals": 1,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": "1",
+              "name": "Valentina D'Angelo"
+            },
+            {
+              "field": null,
+              "goalkeeping": {
+                "saves": 2
+              },
+              "jersey": "24",
+              "name": "Eden Wingate"
+            },
+            {
+              "field": null,
+              "goalkeeping": {
+                "saves": 2
+              },
+              "jersey": "30",
+              "name": "Charlotte Johnson"
+            }
+          ],
+          "rowKey": "18282b96",
+          "tracked": {
+            "field": [
+              "goals",
+              "assists",
+              "points"
+            ],
+            "goalkeeping": [
+              "saves"
+            ]
+          },
+          "warnings": []
+        },
+        {
+          "contestId": "eea8072e-823f-41ec-9039-8339488aa1d5",
+          "players": [
+            {
+              "field": {
+                "assists": 2,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": "14",
+              "name": "Ryann Ratliff"
+            },
+            {
+              "field": {
+                "assists": 2,
+                "goals": 3,
+                "points": 8
+              },
+              "goalkeeping": null,
+              "jersey": "23",
+              "name": "Sarah Moniak"
+            },
+            {
+              "field": {
+                "assists": 4,
+                "goals": 2,
+                "points": 8
+              },
+              "goalkeeping": null,
+              "jersey": "7",
+              "name": "Grace Moniak"
+            },
+            {
+              "field": {
+                "assists": 2,
+                "goals": 4,
+                "points": 10
+              },
+              "goalkeeping": null,
+              "jersey": "22",
+              "name": "Kailey Kosai"
+            },
+            {
+              "field": {
+                "goals": 1,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": "9",
+              "name": "Natalie Carroll"
+            },
+            {
+              "field": {
+                "goals": 1,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": "1",
+              "name": "Valentina D'Angelo"
+            }
+          ],
+          "rowKey": "dac66a98",
+          "tracked": {
+            "field": [
+              "goals",
+              "assists",
+              "points"
+            ],
+            "goalkeeping": []
+          },
+          "warnings": []
+        }
+      ],
+      "lastUpdated": "2026-10-30T08:33:18",
       "maxprepsTeamId": "f60cf593-eddc-4900-b1c9-b6362f852856",
       "name": "Huntington Beach",
       "players": [
+        {
+          "athleteId": "7bf8a1a4-7d57-4967-946a-99d1a476ea95",
+          "careerId": "5hn1rnj4ban22",
+          "careerUrl": "https://www.maxpreps.com/ca/huntington-beach/huntington-beach-oilers/athletes/ryann-ratliff/?careerid=5hn1rnj4ban22",
+          "field": {
+            "assists": 5,
+            "gameWinningGoals": null,
+            "gamesPlayed": 23,
+            "goals": 2,
+            "minutes": null,
+            "points": 9,
+            "shots": null,
+            "shotsOnGoal": null,
+            "steals": null
+          },
+          "fullName": "Ryann Ratliff",
+          "goalkeeping": null,
+          "jersey": "14",
+          "onRoster": true,
+          "shortName": "R. Ratliff"
+        },
+        {
+          "athleteId": null,
+          "careerId": "b27bg959hp7ff",
+          "careerUrl": "https://www.maxpreps.com/ca/huntington-beach/huntington-beach-oilers/athletes/hana-lu/?careerid=b27bg959hp7ff",
+          "field": {
+            "assists": 0,
+            "gameWinningGoals": null,
+            "gamesPlayed": 1,
+            "goals": 1,
+            "minutes": null,
+            "points": 2,
+            "shots": null,
+            "shotsOnGoal": null,
+            "steals": null
+          },
+          "fullName": "H. Lu",
+          "goalkeeping": null,
+          "jersey": null,
+          "onRoster": false,
+          "shortName": "H. Lu"
+        },
+        {
+          "athleteId": "2a35aafa-87d9-4ab4-bbc3-a001250e378f",
+          "careerId": "a7179bs0id2rb",
+          "careerUrl": "https://www.maxpreps.com/ca/huntington-beach/huntington-beach-oilers/athletes/sarah-moniak/?careerid=a7179bs0id2rb",
+          "field": {
+            "assists": 23,
+            "gameWinningGoals": null,
+            "gamesPlayed": 25,
+            "goals": 18,
+            "minutes": null,
+            "points": 59,
+            "shots": null,
+            "shotsOnGoal": null,
+            "steals": null
+          },
+          "fullName": "Sarah Moniak",
+          "goalkeeping": null,
+          "jersey": "23",
+          "onRoster": true,
+          "shortName": "S. Moniak"
+        },
         {
           "athleteId": "99a520d5-bfc8-4f03-87b6-a1e763030643",
           "careerId": "6cli67225sf66",
@@ -53448,17 +54952,17 @@
           "field": {
             "assists": 0,
             "gameWinningGoals": null,
-            "gamesPlayed": 15,
-            "goals": 2,
+            "gamesPlayed": 17,
+            "goals": 3,
             "minutes": null,
-            "points": 4,
+            "points": 6,
             "shots": null,
             "shotsOnGoal": null,
             "steals": null
           },
           "fullName": "Eden Wingate",
           "goalkeeping": {
-            "gamesPlayed": 15,
+            "gamesPlayed": 17,
             "goalsAgainst": 1,
             "losses": null,
             "minutes": null,
@@ -53478,12 +54982,12 @@
           "careerId": "dk79t67dde455",
           "careerUrl": "https://www.maxpreps.com/ca/huntington-beach/huntington-beach-oilers/athletes/alexandra-perkins/?careerid=dk79t67dde455",
           "field": {
-            "assists": 0,
+            "assists": 1,
             "gameWinningGoals": null,
-            "gamesPlayed": 16,
+            "gamesPlayed": 22,
             "goals": 5,
             "minutes": null,
-            "points": 10,
+            "points": 11,
             "shots": null,
             "shotsOnGoal": null,
             "steals": null
@@ -53495,58 +54999,37 @@
           "shortName": "A. Perkins"
         },
         {
-          "athleteId": "2a35aafa-87d9-4ab4-bbc3-a001250e378f",
-          "careerId": "a7179bs0id2rb",
-          "careerUrl": "https://www.maxpreps.com/ca/huntington-beach/huntington-beach-oilers/athletes/sarah-moniak/?careerid=a7179bs0id2rb",
+          "athleteId": "4635b28e-d7bf-4b93-ade9-60234eff4981",
+          "careerId": "k0qcpr2eeq0n7",
+          "careerUrl": "https://www.maxpreps.com/ca/huntington-beach/huntington-beach-oilers/athletes/valentina-dangelo/?careerid=k0qcpr2eeq0n7",
           "field": {
-            "assists": 17,
+            "assists": 8,
             "gameWinningGoals": null,
-            "gamesPlayed": 18,
-            "goals": 13,
+            "gamesPlayed": 24,
+            "goals": 15,
             "minutes": null,
-            "points": 43,
+            "points": 38,
             "shots": null,
             "shotsOnGoal": null,
             "steals": null
           },
-          "fullName": "Sarah Moniak",
+          "fullName": "Valentina D'Angelo",
           "goalkeeping": null,
-          "jersey": "23",
+          "jersey": null,
           "onRoster": true,
-          "shortName": "S. Moniak"
-        },
-        {
-          "athleteId": "7bf8a1a4-7d57-4967-946a-99d1a476ea95",
-          "careerId": "5hn1rnj4ban22",
-          "careerUrl": "https://www.maxpreps.com/ca/huntington-beach/huntington-beach-oilers/athletes/ryann-ratliff/?careerid=5hn1rnj4ban22",
-          "field": {
-            "assists": 4,
-            "gameWinningGoals": null,
-            "gamesPlayed": 18,
-            "goals": 1,
-            "minutes": null,
-            "points": 6,
-            "shots": null,
-            "shotsOnGoal": null,
-            "steals": null
-          },
-          "fullName": "Ryann Ratliff",
-          "goalkeeping": null,
-          "jersey": "14",
-          "onRoster": true,
-          "shortName": "R. Ratliff"
+          "shortName": "V. D'Angelo"
         },
         {
           "athleteId": "baaa1d5d-3092-45a4-9ac4-3cef55a29a1a",
           "careerId": "bvi9id0rpkaff",
           "careerUrl": "https://www.maxpreps.com/ca/huntington-beach/huntington-beach-oilers/athletes/grace-moniak/?careerid=bvi9id0rpkaff",
           "field": {
-            "assists": 22,
+            "assists": 27,
             "gameWinningGoals": null,
-            "gamesPlayed": 18,
-            "goals": 12,
+            "gamesPlayed": 25,
+            "goals": 19,
             "minutes": null,
-            "points": 46,
+            "points": 65,
             "shots": null,
             "shotsOnGoal": null,
             "steals": null
@@ -53564,7 +55047,7 @@
           "field": {
             "assists": 1,
             "gameWinningGoals": null,
-            "gamesPlayed": 7,
+            "gamesPlayed": 8,
             "goals": 2,
             "minutes": null,
             "points": 5,
@@ -53583,12 +55066,12 @@
           "careerId": "chko4i04h5qrb",
           "careerUrl": "https://www.maxpreps.com/ca/huntington-beach/huntington-beach-oilers/athletes/kailey-kosai/?careerid=chko4i04h5qrb",
           "field": {
-            "assists": 7,
+            "assists": 10,
             "gameWinningGoals": null,
-            "gamesPlayed": 18,
-            "goals": 13,
+            "gamesPlayed": 24,
+            "goals": 15,
             "minutes": null,
-            "points": 33,
+            "points": 40,
             "shots": null,
             "shotsOnGoal": null,
             "steals": null
@@ -53604,12 +55087,12 @@
           "careerId": "87nd87pt6lp22",
           "careerUrl": "https://www.maxpreps.com/ca/huntington-beach/huntington-beach-oilers/athletes/stella-patz/?careerid=87nd87pt6lp22",
           "field": {
-            "assists": 4,
+            "assists": 7,
             "gameWinningGoals": null,
-            "gamesPlayed": 18,
-            "goals": 6,
+            "gamesPlayed": 24,
+            "goals": 8,
             "minutes": null,
-            "points": 16,
+            "points": 23,
             "shots": null,
             "shotsOnGoal": null,
             "steals": null
@@ -53625,12 +55108,12 @@
           "careerId": "rpon8acme46ue",
           "careerUrl": "https://www.maxpreps.com/ca/huntington-beach/huntington-beach-oilers/athletes/natalie-carroll/?careerid=rpon8acme46ue",
           "field": {
-            "assists": 0,
+            "assists": 1,
             "gameWinningGoals": null,
-            "gamesPlayed": 18,
+            "gamesPlayed": 24,
             "goals": 2,
             "minutes": null,
-            "points": 4,
+            "points": 5,
             "shots": null,
             "shotsOnGoal": null,
             "steals": null
@@ -53648,10 +55131,10 @@
           "field": {
             "assists": 2,
             "gameWinningGoals": null,
-            "gamesPlayed": 17,
-            "goals": 1,
+            "gamesPlayed": 22,
+            "goals": 2,
             "minutes": null,
-            "points": 4,
+            "points": 6,
             "shots": null,
             "shotsOnGoal": null,
             "steals": null
@@ -53663,34 +55146,13 @@
           "shortName": "A. Asher"
         },
         {
-          "athleteId": "4635b28e-d7bf-4b93-ade9-60234eff4981",
-          "careerId": "k0qcpr2eeq0n7",
-          "careerUrl": "https://www.maxpreps.com/ca/huntington-beach/huntington-beach-oilers/athletes/valentina-dangelo/?careerid=k0qcpr2eeq0n7",
-          "field": {
-            "assists": 5,
-            "gameWinningGoals": null,
-            "gamesPlayed": 18,
-            "goals": 13,
-            "minutes": null,
-            "points": 31,
-            "shots": null,
-            "shotsOnGoal": null,
-            "steals": null
-          },
-          "fullName": "Valentina D'Angelo",
-          "goalkeeping": null,
-          "jersey": "1",
-          "onRoster": true,
-          "shortName": "V. D'Angelo"
-        },
-        {
           "athleteId": "4b6e1b2f-5b5a-46d2-a56a-721dcb87c564",
           "careerId": "89ad10j3h6l99",
           "careerUrl": "https://www.maxpreps.com/ca/huntington-beach/huntington-beach-oilers/athletes/lulu-guevera/?careerid=89ad10j3h6l99",
           "field": {
             "assists": 0,
             "gameWinningGoals": null,
-            "gamesPlayed": 18,
+            "gamesPlayed": 24,
             "goals": 2,
             "minutes": null,
             "points": 4,
@@ -53709,12 +55171,12 @@
           "careerId": "jvsh2g46huibb",
           "careerUrl": "https://www.maxpreps.com/ca/huntington-beach/huntington-beach-oilers/athletes/alana-williams/?careerid=jvsh2g46huibb",
           "field": {
-            "assists": 3,
+            "assists": 4,
             "gameWinningGoals": null,
-            "gamesPlayed": 18,
-            "goals": 1,
+            "gamesPlayed": 24,
+            "goals": 2,
             "minutes": null,
-            "points": 5,
+            "points": 8,
             "shots": null,
             "shotsOnGoal": null,
             "steals": null
@@ -53732,13 +55194,13 @@
           "field": null,
           "fullName": "Charlotte Johnson",
           "goalkeeping": {
-            "gamesPlayed": 14,
+            "gamesPlayed": 21,
             "goalsAgainst": 2,
             "losses": null,
             "minutes": null,
             "opponentShotsOnGoal": null,
             "overtimeMinutes": null,
-            "saves": 23,
+            "saves": 36,
             "shutouts": null,
             "ties": null,
             "wins": null
@@ -53750,19 +55212,19 @@
       ],
       "slug": "huntington-beach",
       "statsUrl": "https://www.maxpreps.com/ca/huntington-beach/huntington-beach-oilers/field-hockey/stats/",
-      "status": "carried-forward",
+      "status": "ok",
       "teamId": "f60cf593-eddc-4900-b1c9-b6362f852856",
       "totals": {
         "field": {
-          "assists": 65,
-          "gamesPlayed": 19,
-          "goals": 73,
-          "points": 211
+          "assists": 89,
+          "gamesPlayed": 25,
+          "goals": 96,
+          "points": 281
         },
         "goalkeeping": {
-          "gamesPlayed": 19,
+          "gamesPlayed": 25,
           "goalsAgainst": 3,
-          "saves": 41,
+          "saves": 54,
           "wins": 1
         }
       },
@@ -53780,11 +55242,14 @@
           "wins"
         ]
       },
-      "warnings": []
+      "warnings": [
+        "V. D'Angelo: MaxPreps lists 2 records for one player; their counts are added, games played is the larger",
+        "H. Lu has stats but is not on the MaxPreps roster"
+      ]
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "lastUpdated": null,
       "maxprepsTeamId": "96f0228e-b1db-4993-ad1e-5427b5592bcf",
       "name": "Marina",
@@ -53805,7 +55270,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "lastUpdated": null,
       "maxprepsTeamId": "86009247-6ae1-40e1-acfa-58c200528743",
       "name": "Newport Harbor",
@@ -53826,7 +55291,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "games": [
         {
           "contestId": "0994415b-6a76-45f1-8d63-0347a8f03e08",
@@ -55062,7 +56527,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "games": [
         {
           "contestId": "13ee596b-cb7f-42eb-8010-c8b155e67be8",
@@ -57156,7 +58621,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "games": [
         {
           "contestId": "0b350af5-a08d-486d-b679-9701a6e9d57a",
@@ -58876,7 +60341,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "games": [
         {
           "contestId": "1302bba1-cac4-48f0-acce-a9854b5090fd",
@@ -61229,7 +62694,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "games": [
         {
           "contestId": "1302bba1-cac4-48f0-acce-a9854b5090fd",
@@ -63677,7 +65142,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "games": [
         {
           "contestId": "3299d07c-3dc0-4e5c-8121-4195e4248111",
@@ -64290,7 +65755,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "games": [
         {
           "contestId": "1830c1da-4013-4771-bf46-c62df5a8418d",
@@ -65931,7 +67396,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "lastUpdated": null,
       "maxprepsTeamId": "50ebec25-d857-4178-9f5a-1a6241c43b85",
       "name": "Clairemont",
@@ -65952,7 +67417,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "games": [
         {
           "contestId": "3f6f5373-c03e-4745-a68e-e7d0ab6ed19f",
@@ -66099,7 +67564,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "lastUpdated": null,
       "maxprepsTeamId": "e551f0f0-28a3-4c13-8ade-1b9909ffa28c",
       "name": "Mira Mesa",
@@ -66120,7 +67585,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "games": [
         {
           "contestId": "1de2a579-ce95-4066-8c82-05993b09b96f",
@@ -67222,7 +68687,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "lastUpdated": null,
       "maxprepsTeamId": "91a74b43-700f-4e74-819e-d62b6dba12f7",
       "name": "Point Loma",
@@ -67243,7 +68708,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "games": [
         {
           "contestId": "16c532a9-11de-4844-9e3d-09a30cdc40e3",
@@ -68368,7 +69833,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "lastUpdated": null,
       "maxprepsTeamId": "91a207da-721f-4acf-a69c-cd7fa50a1f7a",
       "name": "Canyon Crest Academy",
@@ -68389,7 +69854,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "games": [
         {
           "contestId": "14fb2c49-2dc2-4972-944c-57416937595a",
@@ -69545,7 +71010,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "games": [
         {
           "contestId": "0756fd09-d5df-47ec-959c-02a91338558c",
@@ -70019,7 +71484,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "lastUpdated": null,
       "maxprepsTeamId": "132d806e-7fa4-4bce-b92a-9db38786cf7b",
       "name": "Rancho Bernardo",
@@ -70040,7 +71505,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "games": [
         {
           "contestId": "00cb9691-5d6b-434f-84d9-c19e4a7ba2b0",
@@ -71487,7 +72952,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "games": [
         {
           "contestId": "0bbaaaae-6295-4b20-b8f4-b0943109a1db",
@@ -72945,7 +74410,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "games": [
         {
           "contestId": "33049a94-7357-4559-bba5-366472642278",
@@ -74056,7 +75521,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "lastUpdated": null,
       "maxprepsTeamId": "7453dc74-befb-4c36-92ec-35bf99c3c718",
       "name": "Fallbrook",
@@ -74077,7 +75542,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "games": [
         {
           "contestId": "0420a070-260d-4b62-8a5f-db24fd501107",
@@ -75660,7 +77125,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "games": [
         {
           "contestId": "0b3cfb7d-df5e-44af-a9e3-812677ab1857",
@@ -76747,7 +78212,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "lastUpdated": null,
       "maxprepsTeamId": "f1f0e644-5c98-4d70-bd3c-ae7fb8992410",
       "name": "Rancho Buena Vista",
@@ -76768,7 +78233,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "lastUpdated": null,
       "maxprepsTeamId": "a7064567-f2fe-442d-8200-34a28326d1b9",
       "name": "San Dieguito Academy",
@@ -76789,7 +78254,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "games": [
         {
           "contestId": "01923d22-da93-4d90-8dc4-835264aa51d6",
@@ -78304,7 +79769,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "games": [
         {
           "contestId": "7551a71d-3c34-4efc-9b8c-d406ef4ba0f5",
@@ -78463,7 +79928,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "games": [
         {
           "contestId": "00238ba3-1cd2-4a8c-a763-43eefd02acc0",
@@ -80499,7 +81964,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "games": [
         {
           "contestId": "045dadec-b4d3-4073-8560-114cfe0c030a",
@@ -81976,7 +83441,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "lastUpdated": null,
       "maxprepsTeamId": "a1109c06-7436-4b72-a30e-459eb6d00925",
       "name": "San Pasqual",
@@ -81997,7 +83462,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "games": [
         {
           "contestId": "00ed1ac5-9f7b-4496-a513-3965513b56c9",
@@ -83205,7 +84670,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "games": [
         {
           "contestId": "00a11121-c2f0-446f-9f0e-4ed88d6056dd",
@@ -84722,7 +86187,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "lastUpdated": null,
       "maxprepsTeamId": "7f4d50f0-8690-493c-b4bc-262b512e8851",
       "name": "Bonita Vista",
@@ -84743,7 +86208,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "games": [
         {
           "contestId": "07d1ae31-eaf9-4ac8-9302-6332336b0d8f",
@@ -85944,7 +87409,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "lastUpdated": null,
       "maxprepsTeamId": "186dcece-fefd-4b67-b4c7-877b3e12beb2",
       "name": "Helix",
@@ -85965,7 +87430,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "games": [
         {
           "contestId": "2efd2496-8366-45b5-ba7b-f1521ed3cb0e",
@@ -86977,7 +88442,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "games": [
         {
           "contestId": "0775eef9-7302-4f57-84eb-112120b2b72a",
@@ -87999,7 +89464,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "lastUpdated": null,
       "maxprepsTeamId": "15d5e874-4af2-4d24-8e6b-be895937cb8c",
       "name": "El Capitan",
@@ -88020,7 +89485,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "lastUpdated": null,
       "maxprepsTeamId": "aa2f89a2-0150-4223-89b4-ac73cbf343e9",
       "name": "Granite Hills",
@@ -88041,7 +89506,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "games": [
         {
           "contestId": "1fb5657d-2979-4e32-817c-a1a41c6aa65c",
@@ -88744,7 +90209,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "lastUpdated": null,
       "maxprepsTeamId": "19409229-6768-4537-b8d7-4a7d2814aaad",
       "name": "Southwest",
@@ -88765,7 +90230,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "lastUpdated": null,
       "maxprepsTeamId": "4c2dd7e8-2f3e-43aa-891b-9218932cdf9d",
       "name": "Bonita",
@@ -88786,7 +90251,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "games": [
         {
           "contestId": "232831ce-9b4f-4ad1-be52-1fa816543888",
@@ -89074,7 +90539,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "lastUpdated": null,
       "maxprepsTeamId": "1228375e-e4c0-453e-aed4-d0b0693b3c52",
       "name": "Glendora",
@@ -89095,7 +90560,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "games": [
         {
           "contestId": "00b87940-3763-43a3-ad1d-df2d58bd9e21",
@@ -90960,7 +92425,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-03T12:33:58.432Z",
+      "fetchedAt": "2026-11-03T15:32:38.504Z",
       "lastUpdated": null,
       "maxprepsTeamId": "70a363e2-26b8-4ef5-8ad0-20979f66399a",
       "name": "Thousand Oaks",

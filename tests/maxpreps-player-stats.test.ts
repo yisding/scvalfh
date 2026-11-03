@@ -282,6 +282,19 @@ describe('parsePlayerStats: loud on drift', () => {
     expect(run(split)).toThrow(/in another table/);
   });
 
+  it('still throws when a row with no career link disagrees with a row of the same name and jersey', () => {
+    // Without a career id the name and jersey could be two players, so their rows are never merged.
+    const twin = mutable('palo-alto');
+    const sub = twin.data.groups[0].subgroups[0];
+    const gpAt = sub.stats.columns.findIndex((c) => c.name === 'GamesPlayed');
+    const nameAt = sub.stats.columns.findIndex((c) => c.name === 'Name');
+    sub.stats.rows[0].columns[nameAt].href = null;
+    const copy = structuredClone(sub.stats.rows[0]);
+    copy.columns[gpAt].value = String(Number(copy.columns[gpAt].value) + 3);
+    sub.stats.rows.push(copy);
+    expect(run(twin)).toThrow(/in another table/);
+  });
+
   it('treats only the 400 "no data" envelope as no stats', () => {
     expect(parsePlayerStats(raw('cupertino'))).toBeNull();
     expect(() => parsePlayerStats({ status: 500, data: null })).toThrow(/no data and status 500/);
@@ -392,5 +405,81 @@ describe('pendingPlayerStats', () => {
       counts: countPlayerStats(teams),
     };
     expect(PlayerStatsFileSchema.safeParse(file).success).toBe(true);
+  });
+});
+
+// ---------------------------------------------------------------- two records under one career
+
+/**
+ * MaxPreps can keep two athlete records under one career id (Huntington Beach's Valentina D'Angelo,
+ * a second record created 2026-10-01: games played 24 on one, 2 on the other). Every refresh from
+ * then on threw "gamesPlayed is 24 here, 2 in another table" and carried the team's three-week-old
+ * rows forward. Here L. Davis of Palo Alto gets a second record (2 games, 1 goal, 1 assist) in both
+ * Field Stats subgroups, with the team totals raised to count it as MaxPreps' do.
+ */
+describe('parsePlayerStats: two records under one career id', () => {
+  const teamId = rosterOf('palo-alto').maxprepsTeamId!;
+  const DAVIS = 'qc33mqjhjj0n7';
+  type Body = ReturnType<typeof mutable>;
+  type Sub = Body['data']['groups'][number]['subgroups'][number];
+
+  /**
+   * Palo Alto with a second L. Davis record whose cells are `values` (by column name) in each Field
+   * Stats subgroup, listed after the first record, or before it in the subgroups `firstIn` names.
+   */
+  function withSecondRecord(values: Array<Record<string, string>>, firstIn: number[] = []): Body {
+    const body = mutable('palo-alto');
+    body.data.groups[0].subgroups.forEach((sub: Sub, i) => {
+      const at = (name: string) => sub.stats.columns.findIndex((c) => c.name === name);
+      const davis = sub.stats.rows.find((r) => r.columns[at('Name')].href?.includes(DAVIS))!;
+      const copy = structuredClone(davis);
+      for (const c of copy.columns) if (c.value !== null && /^[0-9.]+$/.test(c.value)) c.value = '0';
+      copy.columns[at('Jersey')].value = davis.columns[at('Jersey')].value;
+      for (const [name, value] of Object.entries(values[i]!)) {
+        copy.columns[at(name)].value = value;
+        const col = sub.stats.columns[at(name)];
+        // Totals from the main subgroup's values, so both subgroups agree on the team's totals.
+        if (name !== 'GamesPlayed') col.overallValue = String(Number(col.overallValue) + Number(values[0]![name] ?? value));
+      }
+      if (firstIn.includes(i)) sub.stats.rows.splice(sub.stats.rows.indexOf(davis), 0, copy);
+      else sub.stats.rows.push(copy);
+    });
+    return body;
+  }
+  const davisOf = (page: ReturnType<typeof parsePlayerStats>) => page!.players.find((p) => p.careerId === DAVIS)!;
+
+  // Huntington Beach's overflow subgroup lists the two records in the other order (2026-11-03:
+  // "Field Stats / Field Stats (2) / V. D'Angelo: gamesPlayed is 24 here, 2 in another table" once
+  // records were told apart by occurrence), so both orders are read.
+  it.each([
+    ['in the same order in both subgroups', []],
+    ['in the other order in the overflow subgroup', [1]],
+  ])('merges them into one line, %s: the counts added, games played the larger, and says so once', (_, firstIn) => {
+    const before = parsePlayerStats(raw('palo-alto'), { expectedTeamId: teamId })!;
+    const body = withSecondRecord([
+      { GamesPlayed: '2', Goals: '1', Assists: '1', Points: '3' },
+      { GamesPlayed: '2', Goals: '1' },
+    ], firstIn);
+    const after = parsePlayerStats(body, { expectedTeamId: teamId })!;
+    const was = davisOf(before).field!;
+    const now = davisOf(after).field!;
+    expect(now.goals).toBe(was.goals! + 1);
+    expect(now.assists).toBe(was.assists! + 1);
+    expect(now.points).toBe(was.points! + 3);
+    expect(now.gamesPlayed).toBe(Math.max(was.gamesPlayed!, 2));
+    expect(after.players).toHaveLength(before.players.length);
+    expect(after.players.filter((p) => p.careerId === DAVIS)).toHaveLength(1);
+    // The totals hold: the only new warning is the merge itself.
+    expect(after.warnings.filter((w) => !before.warnings.includes(w))).toEqual([
+      'L. Davis: MaxPreps lists 2 records for one player; their counts are added, games played is the larger',
+    ]);
+  });
+
+  it('still compares each record across the subgroups, so a disagreement within one record throws', () => {
+    const body = withSecondRecord([
+      { GamesPlayed: '2', Goals: '1', Points: '2' },
+      { GamesPlayed: '2', Goals: '2' },
+    ]);
+    expect(() => parsePlayerStats(body, { expectedTeamId: teamId })).toThrow(/L\. Davis: goals is 2 here, 1 in another table/);
   });
 });

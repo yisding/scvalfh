@@ -1528,7 +1528,17 @@ Gotchas, all **[V]**:
 - A player can be in one subgroup and not the other (Palo Alto lists two players in the overflow
   table only): their stats from the missing table are null, shown as a dash.
 - `Goals` and `GamesPlayed` appear in both field subgroups and always agree; the parser throws if
-  they ever do not.
+  they ever do not. It compares them record by record: a career's row in the overflow table joins
+  the record of that career whose `GamesPlayed` and `Goals` it agrees with, since the two tables need
+  not list a career's records in the same order (Huntington Beach's do not).
+- One player can have two athlete records under one career id **[V]** (Huntington Beach's Valentina
+  D'Angelo, a second record created 2026-10-01: 24 games played on one, 2 on the other; the roster
+  lists both). Before 2026-11-03 the parser read them as one row disagreeing with itself, threw, and
+  every refresh carried Huntington Beach's rows of 2026-10-13 forward. Now each record is read on its
+  own and the two are merged into one line (`mergeDuplicateRecords`): the counts are added, as
+  MaxPreps' team totals add them, and games played is the larger of the two, since the records' games
+  can overlap (Huntington Beach had played 25 games, and 24 + 2 is 26). The team's `warnings` names
+  the merge. Rows with no career link are never merged: a name and jersey could be two players.
 - Coverage on 2026-10-03, all four leagues: 28 of the 43 teams, 312 players, 41 goalkeepers (SCVAL 10
   of 15 teams / 122 players / 13 goalkeepers, BVAL 8 of 12 / 67 / 12, PCAL 3 of 7 / 29 / 4, MCAL 7
   of 9 / 94 / 12); the other 15 are `none` (MaxPreps: "No data was found"). The SCVAL fixture build

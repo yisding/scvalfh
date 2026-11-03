@@ -32,7 +32,10 @@
  *
  * Loud on drift, like the roster adapter: a missing Name column, a row whose cell count differs
  * from the header, a non-numeric count, or two subgroups disagreeing about the same player's
- * goals all THROW, which the fetch script turns into a per-team failure.
+ * goals all THROW, which the fetch script turns into a per-team failure. Two athlete records
+ * MaxPreps keeps under one career id are not drift: each is read as its own record (a later
+ * subgroup's row joins the record its shared columns agree with, whatever order the subgroups list
+ * them in), then the two are merged into one line (mergeDuplicateRecords), with a warning.
  */
 
 import { z } from 'zod';
@@ -275,8 +278,14 @@ export function parsePlayerStats(
   const warnings: string[] = [];
   const tracked = { field: new Set<FieldStatKey>(), goalkeeping: new Set<GoalieStatKey>() };
   const totals: PlayerStatsPage['totals'] = { field: {}, goalkeeping: {} };
+  // One entry per RECORD, so a player MaxPreps lists twice (two athlete records under one career)
+  // stays two records until mergeDuplicateRecords below. A career's rows in a later subgroup are
+  // matched to its records by value (recordFor), since the subgroups need not list them in the same
+  // order; a row no record agrees with is drift and still throws.
   const byKey = new Map<string, StatsSheetPlayer>();
   const order: string[] = [];
+  const playerKeyOf = new Map<string, string>();
+  const recordsOf = new Map<string, string[]>();
 
   for (const group of data.groups) {
     const spec = GROUPS[group.name as keyof typeof GROUPS];
@@ -286,6 +295,7 @@ export function parsePlayerStats(
     }
     for (const sub of group.subgroups) {
       const where = `${group.name}${sub.name ? ` / ${sub.name}` : ''}`;
+      const claimed = new Set<string>();
       const cols = sub.stats.columns;
       const nameAt = cols.findIndex((c) => c.name === 'Name');
       const jerseyAt = cols.findIndex((c) => c.name === 'Jersey');
@@ -321,13 +331,33 @@ export function parsePlayerStats(
         const careerUrl = nameCell.href?.trim() || null;
         const careerId = careerIdFromUrl(careerUrl);
         const jersey = jerseyAt >= 0 ? row.columns[jerseyAt].value?.trim() || null : null;
-        const key = careerId ?? `${shortName}|${jersey ?? ''}`;
+        const playerKey = careerId ?? `${shortName}|${jersey ?? ''}`;
+        // Only a career id names one person for certain: a name-and-jersey key could be two players,
+        // so those rows stay one record and a disagreement between them still throws.
+        let key = playerKey;
+        if (careerId) {
+          // The first record of this career not yet used in this subgroup whose numbers this row
+          // agrees with; else the first free one (where a disagreement throws below); else a new one.
+          const free = (recordsOf.get(playerKey) ?? []).filter((k) => !claimed.has(k));
+          const agrees = (k: string) => {
+            const line = spec.kind === 'field' ? byKey.get(k)!.field : byKey.get(k)!.goalkeeping;
+            return !line || kept.every(({ at, key: stat }) => {
+              const value = toNumber(row.columns[at].value, stat, `${where} / ${shortName}`, url);
+              const was = (line as Record<string, number | null>)[stat];
+              return was === null || value === null || was === value;
+            });
+          };
+          key = free.find(agrees) ?? free[0] ?? `${playerKey}#${recordsOf.get(playerKey)?.length ?? 0}`;
+          claimed.add(key);
+        }
 
         let player = byKey.get(key);
         if (!player) {
           player = { careerId, careerUrl, shortName, jersey, field: null, goalkeeping: null };
           byKey.set(key, player);
           order.push(key);
+          playerKeyOf.set(key, playerKey);
+          recordsOf.set(playerKey, [...(recordsOf.get(playerKey) ?? []), key]);
         }
         let line: Record<string, number | null>;
         if (spec.kind === 'field') line = player.field ??= emptyField();
@@ -343,7 +373,7 @@ export function parsePlayerStats(
     }
   }
 
-  const players = order.map((k) => byKey.get(k)!);
+  const players = mergeDuplicateRecords(order.map((k) => [playerKeyOf.get(k)!, byKey.get(k)!] as const), warnings);
   for (const p of players) {
     const f = p.field;
     if (f && f.points !== null && f.goals !== null && f.assists !== null && f.points !== 2 * f.goals + f.assists) {
@@ -363,6 +393,50 @@ export function parsePlayerStats(
     players,
     warnings,
   });
+}
+
+/**
+ * One line per player from the records the tables listed, in first-seen order. MaxPreps can hold
+ * two athlete records under one career (Huntington Beach's Valentina D'Angelo, 2026-10-01: a second
+ * record created mid-season, 24 games played on one and 2 on the other), and its team totals count
+ * both, so the records' counts are ADDED. Games played is the exception: the two records' games can
+ * overlap (Huntington Beach had played 25 games, and 24 + 2 is 26), so it is the larger of the two,
+ * which never exceeds the games the player really played. Each merge is named in `warnings`.
+ */
+function mergeDuplicateRecords(
+  records: ReadonlyArray<readonly [string, StatsSheetPlayer]>,
+  warnings: string[],
+): StatsSheetPlayer[] {
+  const merged = new Map<string, StatsSheetPlayer>();
+  const count = new Map<string, number>();
+  for (const [key, record] of records) {
+    count.set(key, (count.get(key) ?? 0) + 1);
+    const into = merged.get(key);
+    if (!into) {
+      merged.set(key, { ...record, field: record.field && { ...record.field }, goalkeeping: record.goalkeeping && { ...record.goalkeeping } });
+      continue;
+    }
+    into.field = mergeLines(into.field, record.field);
+    into.goalkeeping = mergeLines(into.goalkeeping, record.goalkeeping);
+  }
+  for (const [key, n] of count) {
+    if (n > 1) {
+      warnings.push(`${merged.get(key)!.shortName}: MaxPreps lists ${n} records for one player; their counts are added, games played is the larger`);
+    }
+  }
+  return [...merged.values()];
+}
+
+function mergeLines<T extends Record<string, number | null>>(a: T | null, b: T | null): T | null {
+  if (!a) return b && { ...b };
+  if (!b) return a;
+  const out = { ...a } as Record<string, number | null>;
+  for (const [stat, value] of Object.entries(b)) {
+    const was = out[stat] ?? null;
+    if (value === null) continue;
+    out[stat] = was === null ? value : stat === 'gamesPlayed' ? Math.max(was, value) : was + value;
+  }
+  return out as T;
 }
 
 /** Counts that add up across players; games, minutes and overtime minutes do not, so are not compared. */
