@@ -7,7 +7,7 @@
     "notOnMaxPreps": 2
   },
   "commitSummary": "SCVAL +0 finals · BVAL +0 · PCAL +0 · MCAL +0 · EAL +0 · Sunset +0 · City +0 · North +0 · Metro +0 · LA +0",
-  "contentHash": "7e5536b1ba9b27968362f6d89b03215b552aeac16c5ab2570a2166630464e4bd",
+  "contentHash": "4ce7a03355c24871a4c05537e132020a6bcb2ecc0ae3a9e21bb027497a1fc356",
   "counts": {
     "byLeague": {
       "bval": {
@@ -47,14 +47,14 @@
       },
       "metro": {
         "backfilled": 0,
-        "finals": 104,
+        "finals": 105,
         "games": 109,
         "leagueGames": 32,
         "teams": 9
       },
       "north-county": {
         "backfilled": 1,
-        "finals": 258,
+        "finals": 259,
         "games": 262,
         "leagueGames": 103,
         "teams": 19
@@ -81,7 +81,7 @@
         "teams": 8
       }
     },
-    "finals": 927,
+    "finals": 928,
     "games": 945,
     "leagueGames": 552,
     "mismatches": 30,
@@ -89,13 +89,13 @@
     "teams": 102
   },
   "crossCheck": {
-    "agreements": 215,
+    "agreements": 201,
     "backfilled": 4,
-    "compared": 248,
-    "conflicts": 7,
-    "sbliveOnlyScored": 8
+    "compared": 233,
+    "conflicts": 8,
+    "sbliveOnlyScored": 7
   },
-  "fetchedAt": "2026-11-02T22:35:31.434Z",
+  "fetchedAt": "2026-11-03T12:31:04.372Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -912,11 +912,6 @@
       "status": "ok"
     },
     {
-      "label": "sblive scoreboard 2026-10-19",
-      "rowCount": 9,
-      "status": "ok"
-    },
-    {
       "label": "sblive scoreboard 2026-10-20",
       "rowCount": 24,
       "status": "ok"
@@ -963,7 +958,7 @@
     },
     {
       "label": "sblive scoreboard 2026-10-30",
-      "rowCount": 14,
+      "rowCount": 10,
       "status": "ok"
     },
     {
@@ -977,6 +972,11 @@
       "status": "ok"
     },
     {
+      "label": "sblive scoreboard 2026-11-03",
+      "rowCount": 3,
+      "status": "ok"
+    },
+    {
       "label": "sblive bonita-vista games",
       "rowCount": 22,
       "status": "ok"
@@ -987,6 +987,11 @@
       "status": "ok"
     },
     {
+      "label": "sblive el-capitan games",
+      "rowCount": 18,
+      "status": "ok"
+    },
+    {
       "label": "sblive gilroy games",
       "rowCount": 17,
       "status": "ok"
@@ -994,11 +999,6 @@
     {
       "label": "sblive lick-wilmerding games",
       "rowCount": 17,
-      "status": "ok"
-    },
-    {
-      "label": "sblive los-altos games",
-      "rowCount": 24,
       "status": "ok"
     },
     {
@@ -1053,7 +1053,7 @@
     },
     {
       "label": "cifsshome.org San Diego Section field hockey",
-      "rowCount": 766,
+      "rowCount": 767,
       "status": "ok"
     },
     {
@@ -1067,8 +1067,8 @@
       "status": "ok"
     }
   ],
-  "today": "2026-11-02",
-  "warnings": 44,
+  "today": "2026-11-03",
+  "warnings": 45,
   "window": {
     "firstGame": "2026-08-12T17:15:00",
     "lastGame": "2026-11-07T13:00:00",

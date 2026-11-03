@@ -3892,8 +3892,8 @@ The columns:
 | Largest `/standings/<league>` | — | 39,466 (SCVAL) | 50,431 (North County) | 59,630 (1.8 ×, was 1.25 ×; 85%) |
 | Largest `/schedule/<league>` | — | 143,078 (SCVAL) | 213,698 (North County) | 240,888 (2.0 ×, was 1.25 ×; 89%) |
 | `/schedule` | 39,113 | 38,622 | 62,263 | 72,266 (0.6 ×, was 0.5 ×; 86%) |
-| `/teams` | 27,546 | 28,165 | 44,318 | 50,341 (5.2 ×, was 3.0 ×; 88%) |
-| `/playoffs` | 29,585 | 29,970 | 37,375 | 43,224 (2.3 ×, was 2.0 ×; 86%; 3.3 × since 2026-10-30, below) |
+| `/teams` | 27,546 | 28,165 | 44,318 | 50,341 (5.2 ×, was 3.0 ×; 88%; 5.6 × since 2026-11-03, below) |
+| `/playoffs` | 29,585 | 29,970 | 37,375 | 43,224 (2.3 ×, was 2.0 ×; 86%; 3.3 × since 2026-10-30, 4.0 × since 2026-11-03, below) |
 | `/leaders` | 35,499 | 38,549 | 66,035 | 76,194 (2.3 ×, was 1.2 ×; 87%) |
 | Largest team page (Tamalpais) | 41,605 | 45,893 | 49,311 | 58,086 (6.0 ×, unchanged; 85%) |
 
@@ -3915,6 +3915,11 @@ ceil10(measured × 1.12 / baseline) / 10, one line at a time. Before the raise, 
 games, the SCVAL crossovers and the EAL results, each in the site's twin game-row markup, built to 54,338 B on
 the committed snapshot (126% of 43,224), so 2.3 × → 3.3 × (62,017 B; 88%). The drawn brackets will add about
 8 KB (§31.3).
+
+**2026-11-03.** By the same rule, built on that day's committed snapshot (both bracket files still empty):
+`/playoffs` had grown with the postseason games the data refreshes added since Oct 30 to 66,694 B (107.5% of
+62,017), so 3.3 × → 4.0 × (75,172 B; 89%); `/teams`, at 47,931 B (95.2% of 50,341), was within 5% of its
+line, so 5.2 × → 5.6 × (54,214 B; 88%). Every other multiplier line had more than 5% left.
 
 `tests/golden/page-weights-main.json` is untouched. The design review's estimates were not used
 (`/` 3.3–3.5 ×, `/teams` 6.5 ×, `/standings` 1.5 ×, `/schedule` 0.75 ×, `/leaders` 2.4 ×).
@@ -4819,10 +4824,9 @@ One strip per region: on `/playoffs` `#this-week-norcal` after the CCS intro and
   (43,224); by §24.6's rule the line moved to 3.3 × (62,017 B, 88%). Measured on the rendered page body (no
   layout), the full 2025-shaped bracket adds about 3.8 KB gzip and the San Diego bracket (§31.5) about 4.2 KB, so
   with both files filled `/playoffs` lands near the new line: the PR that fills a file re-measures
-  (`scripts/assert-budgets.ts`). On 2026-11-03, with the CCS bracket drawn from MaxPreps' games and the San Diego
-  file filled from the Section's sheet, the page measured 76,383 B (123 % of 62,017); the line moved to 4.6 ×
-  (86,448 B, 88%). With the CCS seeds filled and the MCAL tournament drawn in its `#mcal` section the same day,
-  83,822 B (97 %), so 5.0 × (93,965 B, 89%).
+  (`scripts/assert-budgets.ts`). On 2026-11-03 the line moved to 4.0 × (75,172 B), §24.6. Later that day, with the
+  CCS seeds and the San Diego brackets filled and the MCAL tournament drawn in its `#mcal` section, the page measured
+  83,957 B (111.7 %), so 5.1 × (95,844 B, 88%).
 
 ### 31.4 MCAL: the shootout, the venue and the results
 

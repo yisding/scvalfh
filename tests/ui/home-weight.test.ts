@@ -119,7 +119,8 @@ describe('the home "This week" strip weight (components/home/home-view.ts thisWe
     expect(cap, 'components/home/home-view.ts: HOME_THIS_WEEK_CAP').toBe(8);
     for (const region of ['norcal', 'socal'] as const) {
       const rows = view.thisWeek[region].days.flatMap((d) => d.rows);
-      expect(rows.length, `components/home/home-view.ts: thisWeek.${region} rows`).toBeLessThanOrEqual(cap);
+      // One row over the cap is shown rather than "+1 more" (components/playoffs/this-week.ts, 2026-11-03).
+      expect(rows.length, `components/home/home-view.ts: thisWeek.${region} rows`).toBeLessThanOrEqual(cap + 1);
     }
     const bytes = Buffer.byteLength(JSON.stringify(view.thisWeek), 'utf8');
     const message = `components/home/home-view.ts: serialized thisWeek is ${bytes} bytes on the bundled snapshot (budget ${STRIP_BUDGET})`;
