@@ -2226,8 +2226,9 @@ tables of their own are computed (`lib/jv-standings.ts`, last bullet). Read 2026
 - **si.com.** Each varsity games page's level switcher (`level.name` "Junior Varsity", `webPath`)
   names the school's JV team page; the 48 NorCal paths are in `lib/jv-teams.ts` (Marin Academy, which
   had no si.com page on 2026-10-05, has one since: JV 575146, varsity 575124, read 2026-11-03; its JV
-  page's four finals all agree with MaxPreps). The registry's varsity si.com id for Marin Academy is
-  still unset (`tests/teams.test.ts`), a varsity follow-up. A JV side is one of ours only by those ids (`JV_SLUG_BY_SBLIVE_ID`), never by
+  page's four finals all agree with MaxPreps, read live on 2026-11-03). The registry has the varsity ids
+  since the same day (team 575124, school 257, `lib/registry/mcal.ts`): before, si.com's varsity Marin
+  Academy rows resolved by name only (Marin Academy v Marin Catholic, Sep 8, `sbliveOnlyScored`). A JV side is one of ours only by those ids (`JV_SLUG_BY_SBLIVE_ID`), never by
   name or by the varsity resolver (which ignores Tamalpais JV and York on purpose). Kept: scored
   finals on `/california/field-hockey/games/` pages; the page must be the JV team asked for. On
   2026-10-05: 68 scored JV finals; no EAL JV page has a score. Matched against MaxPreps by pair and
@@ -2248,8 +2249,8 @@ tables of their own are computed (`lib/jv-standings.ts`, last bullet). Read 2026
     varsity scores of Oct 9 and Sep 16; Edison cannot have played at Harvard-Westlake and at home to
     Fountain Valley on Oct 1). Archie Williams v Marin Catholic on Sep 9 is the MCAL schedule's original
     date of the Sep 16 game MaxPreps has (same score). All correctly unused.
-  - `opponent-not-registry`: Marin Academy (no si.com path then; all four finals agree with MaxPreps)
-    and York (below).
+  - `opponent-not-registry`: Marin Academy (no si.com path then; with it, the live read of 2026-11-03
+    resolves all four finals on both pages, and they agree with MaxPreps) and York (below).
   - Uncounted (`no-varsity-counterpart`, 20): same-division games with no varsity game within ±3 days,
     mostly early-season or extra JV-only games (Edison v Newport Harbor Sep 24 and Oct 6, both
     "Non League" on si.com), and a few that may be a league fixture's JV leg played on another day (Los
@@ -2556,7 +2557,7 @@ Metro South Bay 4, independents 5 = 53 in SoCal; 102 in all.
 | university-sf | UN | mcal | marin-county | `7ad2b4f5-955e-4a92-ac1f-a1acced4df4b` | San Francisco University | 456869 | 259 |
 | marin-catholic | MC | mcal | marin-county | `69e24861-fa93-42a2-acb5-be60e01ee555` | Marin Catholic | 456834 | 163 |
 | convent-sacred-heart | CS | mcal | marin-county | `d15d09d0-f8a6-463e-86d4-d998dbee7751` | Convent of the Sacred Heart | 512325 | 6922 |
-| marin-academy | MA | mcal | marin-county | `9f489fa8-a23a-4924-a2a0-5c5cff3c0fdc` | Marin Academy | — | — |
+| marin-academy | MA | mcal | marin-county | `9f489fa8-a23a-4924-a2a0-5c5cff3c0fdc` | Marin Academy | 575124 | 257 |
 | bella-vista | BV | eal | eal | `204d6632-16ce-41fc-a733-dd11ec3af582` | Bella Vista | 459060 | 12991 |
 | chico | CI | eal | eal | `041ef7b7-089b-4e7d-9c9c-9ff1f833f829` | Chico | 458564 | 10335 |
 | corning | CR | eal | eal | `8f1a8024-2d40-4cab-bcba-3b9b367c6873` | Corning | 458585 | 10501 |

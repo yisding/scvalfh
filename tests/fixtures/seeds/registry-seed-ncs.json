@@ -586,9 +586,12 @@
         "scheduleRows": 17,
         "liveLeagueRows": 17,
         "deletedRows": 0,
-        "sbliveCandidate": "575124-marin-academy-wildcats (from WebSearch player URLs; varsity vs JV UNVERIFIED, so not seeded)",
+        "sbliveCandidate": "575124-marin-academy-wildcats (from WebSearch player URLs; varsity vs JV UNVERIFIED, so not seeded). Verified 2026-11-03 on the games page: level Varsity, school 257, JV 575146 in otherTeams; seeded.",
         "notes": "liveLeagueRows includes spurious 5cf5e3df-6e72-4f44-9b8d-e69da30b85c5 (8/18 vs AW, state 5) to exclude; 16 real. Omitted from handbook member list (rev 10/19/24) but on 2026 schedule and MaxPreps league."
-      }
+      },
+      "sbliveTeamId": "575124",
+      "sbliveSlug": "575124-marin-academy-wildcats",
+      "sbliveSchoolId": "257"
     }
   ],
   "excludedTeams": [
