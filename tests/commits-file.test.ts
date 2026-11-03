@@ -187,7 +187,7 @@ describe('the research of 2026-10-03, 2026-10-04, 2026-10-06, 2026-10-12, 2026-1
   const socal = raw.commitments.filter((c) => SOCAL.has(getTeamBySlug(c.teamSlug)!.league));
   const norcal = raw.commitments.filter((c) => !SOCAL.has(getTeamBySlug(c.teamSlug)!.league));
 
-  it('holds 35 commitments from 21 schools to 27 colleges (30 programs), all "committed", 28 high and 7 medium', () => {
+  it('holds 35 commitments from 21 schools to 27 colleges (30 programs), all "committed", 29 high and 6 medium', () => {
     expect(raw.capturedAt).toBe('2026-11-03');
     expect(raw.commitments).toHaveLength(35);
     expect(raw.colleges).toHaveLength(27);
@@ -215,8 +215,9 @@ describe('the research of 2026-10-03, 2026-10-04, 2026-10-06, 2026-10-12, 2026-1
     );
     expect(socal).toHaveLength(14);
     expect(raw.commitments.every((c) => c.status === 'committed')).toBe(true);
-    expect(raw.commitments.filter((c) => c.confidence === 'medium').map((c) => c.fullName)).toEqual(['Rylie Storm', 'Reese Roldan', 'Sami Lee', 'Shyla Paredes', 'Kendall Gann', 'Frankie Lemieux', 'Clara Froemming']);
+    expect(raw.commitments.filter((c) => c.confidence === 'medium').map((c) => c.fullName)).toEqual(['Reese Roldan', 'Sami Lee', 'Shyla Paredes', 'Kendall Gann', 'Frankie Lemieux', 'Clara Froemming']);
     // Frankie Lemieux's (2026-11-03) rests on one line of the SF Hawks' committed-players table, the class year and the club.
+    // Rylie Storm's went from medium to high on 2026-11-03: her own SportsRecruits profile now shows Harvard.
     // Clara Froemming's (2026-11-03) rests on Play College Field Hockey's sheet line, published on the owner's
     // confirmation from an Instagram post the file cannot cite: the one entry the rule alone would not admit.
     // Ryan Hemeon's went from medium to high on 2026-10-22: Stick Together's Oct 6 issue names her school.
@@ -262,13 +263,13 @@ describe('the research of 2026-10-03, 2026-10-04, 2026-10-06, 2026-10-12, 2026-1
     expect([level('ncaa-d1'), level('ncaa-d2'), level('ncaa-d3'), level('naia')]).toEqual([23, 3, 9, 0]);
   });
 
-  it('rests on 94 source entries on 73 distinct URLs (the SF Hawks table and the Play College Field Hockey sheet were already cited; SoCal: 41 on 34), and 13 commitments carry a date', () => {
+  it('rests on 95 source entries on 74 distinct URLs (SoCal: 42 on 35), and 13 commitments carry a date', () => {
     const entries = raw.commitments.flatMap((c) => c.sources);
-    expect(entries).toHaveLength(94);
-    expect(new Set(entries.map((s) => s.url)).size).toBe(73);
+    expect(entries).toHaveLength(95);
+    expect(new Set(entries.map((s) => s.url)).size).toBe(74);
     const socalEntries = socal.flatMap((c) => c.sources);
-    expect(socalEntries).toHaveLength(41);
-    expect(new Set(socalEntries.map((s) => s.url)).size).toBe(34);
+    expect(socalEntries).toHaveLength(42);
+    expect(new Set(socalEntries.map((s) => s.url)).size).toBe(35);
     expect(raw.commitments.filter((c) => c.asOf !== null).map((c) => c.asOf).sort()).toEqual([
       '2025-09-22',
       '2026-02',
