@@ -712,13 +712,13 @@ describe('the home page "This week in the postseason" (home-view.ts <- playoffs/
 
   const rows = (region: 'norcal' | 'socal') => week[region].days.flatMap((d) => d.rows);
 
-  it('holds the cap of 8 rows a region, drops the oldest result first and says how many more', () => {
-    expect(rows('norcal').length, `${HV}: thisWeek.norcal rows`).toBe(8);
-    expect(week.norcal.more, `${HV}: thisWeek.norcal more`).toBe(1);
+  it('holds the cap of 8 rows a region, but shows a ninth rather than say "+1 more"', () => {
     // Nine rows from Wed Oct 28 to Mon Nov 2 (the semifinal result, five games, the EAL's Super Regional, the BVAL
-    // play-in and the CCS seeding meeting); one over the cap, and the oldest, the result, is the one to go.
-    expect(week.norcal.days[0].dateLabel, `${HV}: first day`).toBe('Today · Thu Oct 29');
-    expect(rows('norcal').map((r) => r.text), `${HV}: NorCal texts`).not.toContain('Tamalpais 3, Marin Catholic 1, final.');
+    // play-in and the CCS seeding meeting): one over the cap, so all nine are shown (2026-11-03), the result too.
+    expect(rows('norcal').length, `${HV}: thisWeek.norcal rows`).toBe(9);
+    expect(week.norcal.more, `${HV}: thisWeek.norcal more`).toBe(0);
+    expect(week.norcal.days[0].dateLabel, `${HV}: first day`).toBe('Wed Oct 28');
+    expect(rows('norcal').map((r) => r.text), `${HV}: NorCal texts`).toContain('Tamalpais 3, Marin Catholic 1, final.');
     expect(week.socal.more, `${HV}: thisWeek.socal more`).toBeGreaterThanOrEqual(0);
     expect(rows('socal').length, `${HV}: thisWeek.socal rows`).toBeLessThanOrEqual(8);
   });
@@ -761,7 +761,7 @@ describe('the home page "This week in the postseason" (home-view.ts <- playoffs/
     const north = strip('this-week');
     const south = strip('this-week-socal');
     expect(textOf(north), 'components/home/HomeThisWeek.tsx').toContain('St. Ignatius at Mitty');
-    expect(textOf(north), 'components/home/HomeThisWeek.tsx').toContain('+1 more on the schedule');
+    expect(textOf(north), 'components/home/HomeThisWeek.tsx: one row over the cap is shown').not.toContain('more on the schedule');
     expect(north, 'components/home/HomeThisWeek.tsx: no GameRow').not.toMatch(/<details|aria-expanded/);
     for (const text of [textOf(north), textOf(south)]) {
       expect(text).not.toMatch(SEED_CLAIM);

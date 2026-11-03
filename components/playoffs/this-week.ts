@@ -19,7 +19,7 @@
  *
  * Order: by day, then time (a time to be announced last), then contest id. The strip holds `cap` rows (12): past
  * the cap the OLDEST results go first (a parent wants what is next), then the latest future rows, and the
- * strip ends with "+N more on the schedule". An empty window renders nothing at all (DESIGN §8: no empty-state
+ * strip ends with "+N more on the schedule" — never "+1 more": one row over the cap is simply shown. An empty window renders nothing at all (DESIGN §8: no empty-state
  * box and no skeleton; the key dates list covers a quiet week). Added 2026-10-29 (plan final-03).
  */
 
@@ -215,7 +215,9 @@ export function buildThisWeek(input: ThisWeekInput): ThisWeekView {
 
   let rows = [...games.map((g) => gameRow(g, labels)), ...events.map(eventRow)].sort(byWhen);
   let more = 0;
-  if (rows.length > cap) {
+  // A cap that would hide a single row hides none: "+1 more on the schedule" takes a line to say what the row
+  // itself would (2026-11-03), so one row over the cap is shown.
+  if (rows.length > cap + 1) {
     more = rows.length - cap;
     // Oldest results first, then the latest rows of the window.
     const past = rows.filter((r) => r.dateKey < today).length;
