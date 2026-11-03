@@ -8,7 +8,7 @@ import {
   officialFixtureHeadline,
   placeScope,
 } from '../../../components/teams/team-view';
-import { OG, OG_SIZE } from '../../../components/layout/og-theme';
+import { OG, OG_SIZE } from '../../../components/metadata/og-theme';
 import { SITE_NAME } from '../../../components/layout/site';
 import { getFetchedAt, getTeamSlugs } from '../../../lib/data';
 import {

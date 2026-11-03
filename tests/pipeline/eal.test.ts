@@ -13,9 +13,10 @@ import path from 'node:path';
 import { beforeAll, describe, expect, it } from 'vitest';
 
 import { localDateKey, sideOutcome } from '../../lib/format';
-import { DATA_QUALITY, LEAGUES } from '../../lib/leagues';
+import { DATA_QUALITY } from '../../lib/league-config/data-quality';
+import { LEAGUES } from '../../lib/leagues';
 import { readManifest } from '../../lib/pipeline/corpus';
-import { loadSnapshot } from '../../lib/snapshot-schema';
+import { loadSnapshot } from '../../lib/snapshot/snapshot-schema';
 import type { ScheduleRow } from '../../lib/sources/maxpreps';
 import { parseScoresPage, parseTeamGamesPage, type SbliveGame } from '../../lib/sources/sblive';
 import { divisionGames } from '../../lib/standings';
@@ -88,8 +89,8 @@ describe('the EAL corpus run', () => {
   });
 
   it('publishes nine leagues and the independents: the EAL fresh, the other nine frozen "not fetched in this run"', () => {
-    expect(snapshot.season.leagues.map((l) => l.id), 'lib/season-build.ts').toEqual(LEAGUES.map((l) => l.id));
-    expect(snapshot.season.leagues, 'lib/season-build.ts').toHaveLength(10);
+    expect(snapshot.season.leagues.map((l) => l.id), 'lib/snapshot/season-build.ts').toEqual(LEAGUES.map((l) => l.id));
+    expect(snapshot.season.leagues, 'lib/snapshot/season-build.ts').toHaveLength(10);
     for (const h of snapshot.leagueHealth) {
       if (h.leagueId === LEAGUE) {
         expect(h.state, 'lib/pipeline/steps/standings.ts: EAL health').toBe('fresh');
@@ -171,10 +172,10 @@ describe('the EAL games', () => {
     // A played final does not leave a re-capture: a missing contest is a failure, never a silent pass.
     expect(corpusHas('9afebd05'), 'tests/fixtures/corpus/eal-*: the 9/28 Chico-Davis 1 v 1 game').toBe(true);
     const g = gameOf('9afebd05');
-    expect(g, 'lib/normalize.ts: game present').toBeDefined();
-    expect(g!.decider, 'lib/normalize.ts: decider').toBe('SO');
-    expect(g!.shootout, 'lib/normalize.ts: no tally stored').toBeNull();
-    expect(g!.provenance.resultConflict, 'lib/normalize.ts: resultConflict').toBeUndefined();
+    expect(g, 'lib/pipeline/normalize.ts: game present').toBeDefined();
+    expect(g!.decider, 'lib/pipeline/normalize.ts: decider').toBe('SO');
+    expect(g!.shootout, 'lib/pipeline/normalize.ts: no tally stored').toBeNull();
+    expect(g!.provenance.resultConflict, 'lib/pipeline/normalize.ts: resultConflict').toBeUndefined();
     expect(g!.countsFor, 'lib/classify.ts').toBe(DIVISION);
     expect(divisionGames(snapshot.games, DIVISION).map((x) => x.contestId)).toContain(g!.contestId);
     const chico = g!.home.slug === 'chico' ? 'home' : 'away';
@@ -186,9 +187,9 @@ describe('the EAL games', () => {
   it('keeps MaxPreps three overtime periods on the 9/2 game as it has them (8a4d7c70)', () => {
     expect(corpusHas('8a4d7c70'), 'tests/fixtures/corpus/eal-*: the 9/2 PV @ Chico 3-overtime game').toBe(true);
     const g = gameOf('8a4d7c70');
-    expect(g, 'lib/normalize.ts: game present').toBeDefined();
-    expect(g!.otPeriods, 'lib/normalize.ts: otPeriods').toBe(3);
-    expect(g!.decider, 'lib/normalize.ts: decider').toBe('2OT');
+    expect(g, 'lib/pipeline/normalize.ts: game present').toBeDefined();
+    expect(g!.otPeriods, 'lib/pipeline/normalize.ts: otPeriods').toBe(3);
+    expect(g!.decider, 'lib/pipeline/normalize.ts: decider').toBe('2OT');
   });
 
   it('counts no game of contestType 2, 4 or 5 in the EAL table', () => {
@@ -203,7 +204,7 @@ describe('the EAL games', () => {
 
   it('never resolves a si.com side to Red Bluff or its placeholder', () => {
     for (const id of IGNORED_SBLIVE_IDS) {
-      expect(DATA_QUALITY.sbliveIgnoredTeamIds, `lib/leagues.ts: ${id}`).toHaveProperty(id);
+      expect(DATA_QUALITY.sbliveIgnoredTeamIds, `lib/league-config/data-quality.ts: ${id}`).toHaveProperty(id);
       expect(
         TEAMS.some((t) => t.external.sbliveTeamId === id),
         `lib/teams.ts: ${id} is not a registry team`,
@@ -221,12 +222,12 @@ describe('the EAL games', () => {
       expect(s.slug, `lib/sources/sblive.ts: ${s.sbliveTeamId}`).toBeNull();
       expect(s.refused, `lib/sources/sblive.ts: ${s.sbliveTeamId}`).toBe('ignored-team');
     }
-    expect(JSON.stringify(snapshot.sbliveCrossCheck ?? null), 'lib/backfill.ts: cross-check rows').not.toMatch(
+    expect(JSON.stringify(snapshot.sbliveCrossCheck ?? null), 'lib/crosscheck/backfill.ts: cross-check rows').not.toMatch(
       /Red Bluff|Educational Outreach/,
     );
     expect(
       snapshot.games.some((g) => [g.home, g.away].some((s) => /Red Bluff|Educational Outreach/.test(s.name))),
-      'lib/normalize.ts: games',
+      'lib/pipeline/normalize.ts: games',
     ).toBe(false);
   });
 });

@@ -1,5 +1,5 @@
 /**
- * lib/backfill.ts — owner decision D2 (SPEC §7.9): si.com backfills MaxPreps exactly when rules 2-4
+ * lib/crosscheck/backfill.ts — owner decision D2 (SPEC §7.9): si.com backfills MaxPreps exactly when rules 2-4
  * say, and never otherwise. Every rule needs both si.com sides resolved by si.com id, a si.com Final,
  * integer scores and a non-junk row. Fixtures here are hand-built OfficialFixture objects; the corpus
  * si.com pages are used only as parser/resolver facts (the end-to-end PCAL fills are asserted in the
@@ -15,22 +15,19 @@ import {
   BACKFILL_TEAM_PAGE_CAP,
   applyBackfill,
   cleanSbliveRows,
-  dayDiff,
   eligibleItems,
   isIdResolved,
   planBackfill,
   scoreboardCoverage,
-  shiftDateKey,
-  supersededGamesOf,
   type BackfillInput,
-} from '../lib/backfill';
-import { scoreSentence } from '../lib/format';
+} from '../lib/crosscheck/backfill';
+import { dayDiff, scoreSentence, shiftDateKey } from '../lib/format';
 import { getDivision } from '../lib/leagues';
 import { FixtureMissing, TransportError, resourcePath, type ResourceKey, type RunContext } from '../lib/pipeline/contract';
 import { unknownFixtureMoves } from '../lib/pipeline/steps/official';
 import { scoreboardDates, stepSblive } from '../lib/pipeline/steps/sblive';
 import { parseScoresPage, parseTeamGamesPage, type SbliveGame, type SbliveSide } from '../lib/sources/sblive';
-import { loadSnapshot, parseSnapshot } from '../lib/snapshot-schema';
+import { loadSnapshot, parseSnapshot } from '../lib/snapshot/snapshot-schema';
 import { getTeamBySlug } from '../lib/teams';
 import type { DivisionId, Game, OfficialFixture, Snapshot, SourceStatus } from '../lib/types';
 import { game } from './game-builder';
@@ -793,21 +790,14 @@ describe('backfill rule 8: planBackfill', () => {
 describe('backfill rule 10: supersede and carry-forward', () => {
   const filled = applyBackfill(input({ unmatched: [GRE_AT_CAT], sblive: [sb('2026-09-04', ['greenfield', 0], ['santa-catalina', 1], { sbliveGameId: '6541425' })] })).games[0];
 
-  it('a MaxPreps contest that now matches the filled fixture wins; the sblive: id maps to it', () => {
+  // The sblive: id's map to the contest that superseded it is the snapshot's (tests/pipeline/assemble.test.ts).
+  it('a MaxPreps contest that now matches the filled fixture wins', () => {
     const contest = game({ home: 'santa-catalina', away: 'greenfield', date: '2026-09-04', hs: 1, as: 0, official: { fixtureId: GRE_AT_CAT.id } });
     const res = applyBackfill(
       input({ games: [contest], unmatched: [], sblive: [sb('2026-09-04', ['greenfield', 0], ['santa-catalina', 1], { sbliveGameId: '6541425' })], previous: previousWith([filled]) }),
     );
     expect(res.games).toEqual([contest]);
     expect(res.rows).toEqual([]);
-    expect(res.supersededGames).toEqual({ 'sblive:6541425': contest.contestId });
-    expect(supersededGamesOf(res.games, previousWith([filled]))).toEqual(res.supersededGames);
-  });
-
-  it('carries the previous map while both ends hold', () => {
-    const contest = game({ home: 'santa-catalina', away: 'greenfield', date: '2026-09-04', hs: 1, as: 0 });
-    const prev = previousWith([], { 'sblive:6541425': contest.contestId, 'sblive:1': 'gone' });
-    expect(applyBackfill(input({ games: [contest], previous: prev })).supersededGames).toEqual({ 'sblive:6541425': contest.contestId });
   });
 
   it('when every si.com request failed, re-applies earlier fills that are still eligible', () => {

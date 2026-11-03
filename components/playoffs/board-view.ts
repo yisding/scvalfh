@@ -22,7 +22,8 @@
  */
 
 import { dateSpan, numberWord, plural, shortDate } from '../../lib/format';
-import { getSection, type LeagueConfig } from '../../lib/leagues';
+import type { LeagueConfig } from '../../lib/league-config/shape';
+import { getSection } from '../../lib/leagues';
 import type { LeagueId } from '../../lib/types';
 
 import type { ThisWeekRow } from './this-week';

@@ -18,15 +18,16 @@
  * 12 league games, the Sunset has no fixed schedule, and Metro South Bay's first league game is Oct 7.
  */
 
-import { computeAdjustedScoring, getAdjustedScoring, type AdjustedScoring } from '../../lib/adjusted-scoring';
+import { computeAdjustedScoring, getAdjustedScoring, type AdjustedScoring } from '../../lib/ratings/adjusted-scoring';
 import { getSnapshot } from '../../lib/data';
 import { shortDate } from '../../lib/format';
-import { REGIONS, regionOf } from '../../lib/leagues';
-import { getAllPlayerStatsWithNotes } from '../../lib/player-stats';
-import { getPriorSeason } from '../../lib/prior-season';
-import { getAllEnrichedRosters } from '../../lib/rosters';
-import { computeRatings, getRatings } from '../../lib/ratings';
-import type { TeamPlayerStats } from '../../lib/player-stats-schema';
+import { REGIONS } from '../../lib/league-config/sections';
+import { regionOf } from '../../lib/leagues';
+import { getAllPlayerStatsWithNotes } from '../../lib/players/player-stats';
+import { getPriorSeason } from '../../lib/history/prior-season';
+import { getAllEnrichedRosters } from '../../lib/players/rosters';
+import { computeRatings, getRatings } from '../../lib/ratings/ratings';
+import type { TeamPlayerStats } from '../../lib/players/player-stats-schema';
 import type { Game, RegionId, Standing, Team, TeamId } from '../../lib/types';
 import { buildEloBoard, crossRegionFinals, getCrossRegionFinals, getEloBoard, type EloBoardView } from './elo-board';
 import { buildPlayerBoards } from './player-boards';
@@ -62,7 +63,7 @@ interface RegionInput {
   games: readonly Game[];
   rosters: readonly RosterSource[];
   elo: EloBoardView;
-  /** lib/adjusted-scoring.ts over the same one Elo table, by team id. */
+  /** lib/ratings/adjusted-scoring.ts over the same one Elo table, by team id. */
   adjusted: ReadonlyMap<TeamId, AdjustedScoring>;
 }
 

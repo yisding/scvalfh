@@ -6,7 +6,7 @@ import path from 'node:path';
 import { describe, expect, it, vi } from 'vitest';
 
 import { postseasonTagOf } from '../components/ui/describe-game';
-import { CCS } from '../lib/leagues';
+import { CCS } from '../lib/league-config/sections';
 import {
   classifyGame,
   classifyGames,

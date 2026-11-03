@@ -1,6 +1,6 @@
 /**
  * data/clubs.json (SPEC §1.1j2, DESIGN §17): the committed file validates and holds every
- * load-time invariant; lib/clubs.ts serves it in display order (DESIGN §17.5); and a bad file —
+ * load-time invariant; lib/players/clubs.ts serves it in display order (DESIGN §17.5); and a bad file —
  * built in memory from the real one, never written to disk — is refused at load with a message
  * that names what is wrong (the path, or the team, player and club).
  *
@@ -22,7 +22,7 @@ import {
   isBannedHost,
   clubSiteKey,
   type ClubsFile,
-} from '../lib/clubs-schema';
+} from '../lib/players/clubs-schema';
 import {
   SEARCHED_REGIONS,
   clubDisplayName,
@@ -37,9 +37,9 @@ import {
   getPlayerClubs,
   getTeamClubAffiliations,
   loadClubs,
-} from '../lib/clubs';
+} from '../lib/players/clubs';
 import { LEAGUES } from '../lib/leagues';
-import { classOf, getAllEnrichedRosters, getRosters } from '../lib/rosters';
+import { classOf, getAllEnrichedRosters, getRosters } from '../lib/players/rosters';
 import { isHttpsUrl } from '../lib/schema-primitives';
 import { getTeamBySlug } from '../lib/teams';
 import { REPO } from './helpers';
@@ -53,7 +53,7 @@ const SOCAL_CLUBS: ReadonlySet<string> = new Set([
 const teams = getAllEnrichedRosters();
 const season = getRosters().season;
 
-/** The merged roster row an affiliation names, looked up here rather than through lib/clubs.ts. */
+/** The merged roster row an affiliation names, looked up here rather than through lib/players/clubs.ts. */
 function rowOf(a: { teamSlug: string; athleteId: string }) {
   return teams.find((t) => t.slug === a.teamSlug)?.players.find((p) => p.athleteId === a.athleteId);
 }
@@ -99,7 +99,7 @@ const countBy = <T>(xs: readonly T[], key: (x: T) => string) =>
   xs.reduce<Record<string, number>>((acc, x) => ({ ...acc, [key(x)]: (acc[key(x)] ?? 0) + 1 }), {});
 
 describe('data/clubs.json', () => {
-  it('validates against the contract, drops nothing in the parse, and is what lib/clubs.ts serves', () => {
+  it('validates against the contract, drops nothing in the parse, and is what lib/players/clubs.ts serves', () => {
     expect(refusals(raw)).toEqual([]);
     // Zod strips keys it does not know: equality proves the contract covers every key in the file.
     expect(loadClubs(raw)).toEqual(raw);
@@ -539,7 +539,7 @@ describe('data/clubs.json: jvAffiliations', () => {
   });
 });
 
-describe('lib/clubs.ts', () => {
+describe('lib/players/clubs.ts', () => {
   it('orders clubs by region, then most tied players, then display name (DESIGN §17.5)', () => {
     expect(getClubSlugs()).toEqual([
       'sf-hawks',
@@ -649,7 +649,7 @@ describe('lib/clubs.ts', () => {
   });
 });
 
-describe('lib/clubs-schema.ts helpers', () => {
+describe('lib/players/clubs-schema.ts helpers', () => {
   it('isBannedHost matches a social host or its subdomain, never a substring', () => {
     expect(isBannedHost('https://www.instagram.com/p/abc')).toBe(true);
     expect(isBannedHost('https://x.com/club')).toBe(true);

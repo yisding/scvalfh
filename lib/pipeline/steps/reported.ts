@@ -22,7 +22,7 @@ import { divisionLabel, getLeague } from '../../leagues';
 import { StandingsResponseSchema, type StandingsRow } from '../../sources/maxpreps';
 import { toReportedRecord } from '../../standings';
 import { resolveTeam, teamsInDivision } from '../../teams';
-import type { DivisionConfig } from '../../leagues';
+import type { DivisionConfig } from '../../league-config/shape';
 import type { LeagueId, SourceStatus } from '../../types';
 import { asOfDay, carriedFromOf, type PipelineContext, type RunState } from '../ledger';
 import { classifyFetchError, parseJsonBody } from '../read';

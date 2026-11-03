@@ -13,9 +13,9 @@ import path from 'node:path';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
 import { getLeague } from '../lib/leagues';
-import { buildSeason } from '../lib/season-build';
-import { countsOf } from '../lib/snapshot-migrate';
-import { loadSnapshot } from '../lib/snapshot-schema';
+import { buildSeason } from '../lib/snapshot/season-build';
+import { countsOf } from '../lib/snapshot/snapshot-migrate';
+import { loadSnapshot } from '../lib/snapshot/snapshot-schema';
 import { computeStandings, leaguePairings } from '../lib/standings';
 import type { Game, Snapshot } from '../lib/types';
 import { game } from './game-builder';

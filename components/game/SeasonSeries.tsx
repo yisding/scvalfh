@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { gameHref } from '../../lib/game-id';
 import { GameLogRowBody, gameLogRowClass } from '../ui/GameRow';
 import SectionHeader from '../ui/SectionHeader';
-import { plural } from '../ui/plural';
+import { plural } from '../words/plural';
 
 import type { GameModel } from './game-view';
 

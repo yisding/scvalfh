@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
 
-import LeagueSwitcher from '../../../components/layout/LeagueSwitcher';
+import LeagueSwitcher from '../../../components/prefs/LeagueSwitcher';
 import PageHeader from '../../../components/layout/PageHeader';
 import { leagueChips, leagueHrefs } from '../../../components/layout/league-chips';
 import { OG_BASE } from '../../../components/layout/site';

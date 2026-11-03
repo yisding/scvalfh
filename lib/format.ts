@@ -11,7 +11,7 @@
 
 import { TIME_ZONE } from './season';
 // Type-only: erased at build, so this module stays client-safe (it never loads the league config).
-import type { ShootoutInference } from './leagues';
+import type { ShootoutInference } from './league-config/shape';
 import type { Game, OfficialSourceId, Outcome, Record3, ScoreView } from './types';
 
 const WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] as const;
@@ -122,7 +122,7 @@ export function dateWithYear(value: string): string {
 
 /**
  * The five shapes a partial date takes in the hand-researched files (data/clubs.json's `asOf`,
- * lib/clubs-schema.ts `isAsOf`): a day, a month, a year, a season ("2025-26": the second year is
+ * lib/players/clubs-schema.ts `isAsOf`): a day, a month, a year, a season ("2025-26": the second year is
  * the first + 1) or a range of years ("2015-2018"). `YYYY-MM` is a month when MM is 01-12 and a
  * season otherwise, the order isAsOf reads it in; the two can only collide before 2012.
  */
@@ -233,6 +233,14 @@ export function byDateThenId(
   return a.dateLocal.localeCompare(b.dateLocal) || a.contestId.localeCompare(b.contestId);
 }
 
+/** Cross-check and backfill rows oldest first by date key, then by contest id. */
+export function byDateKey(
+  a: { dateKey: string; contestId: string },
+  b: { dateKey: string; contestId: string },
+): number {
+  return a.dateKey.localeCompare(b.dateKey) || a.contestId.localeCompare(b.contestId);
+}
+
 // ---------------------------------------------------------------- instants
 
 /** An ISO UTC instant, expressed in America/Los_Angeles. This is the only Intl use here. */
@@ -286,11 +294,39 @@ export function hoursBetween(aIso: string, bIso: string): number {
   return Math.abs(new Date(bIso).getTime() - new Date(aIso).getTime()) / 3_600_000;
 }
 
+/**
+ * si.com's instant → our naive local timestamp and UTC instant; 16:00 local when si.com gives no time.
+ * Typed by shape (a si.com row's `dateIso` and `dateKey`) so this module never loads the si.com
+ * scraper: lib/crosscheck/backfill.ts builds an absent-fixture game with it and lib/jv/jv-merge.ts a
+ * si.com-only JV game, the same way.
+ */
+export function datesOf(row: { dateIso: string; dateKey: string }): { dateLocal: string; dateUtc: string; dateKey: string; isTimeTba: boolean } {
+  const hasTime = /T\d{2}:\d{2}/.test(row.dateIso);
+  const instant = hasTime ? new Date(row.dateIso) : null;
+  if (instant && !Number.isNaN(instant.getTime())) {
+    const dateUtc = instant.toISOString().replace(/\.000Z$/, 'Z');
+    const dateLocal = toLocalTimestamp(dateUtc);
+    return { dateLocal, dateUtc, dateKey: dateLocal.slice(0, 10), isTimeTba: false };
+  }
+  const dateLocal = `${row.dateKey}T16:00:00`;
+  // Pacific time is UTC-7 (PDT) or UTC-8 (PST); take whichever round-trips to 16:00 local.
+  const dateUtc =
+    [7, 8]
+      .map((h) => new Date(Date.UTC(...ymd(row.dateKey), 16 + h)).toISOString().replace(/\.000Z$/, 'Z'))
+      .find((iso) => toLocalTimestamp(iso) === dateLocal) ?? `${row.dateKey}T23:00:00Z`;
+  return { dateLocal, dateUtc, dateKey: row.dateKey, isTimeTba: true };
+}
+
+function ymd(dateKey: string): [number, number, number] {
+  const [y, m, d] = dateKey.split('-').map(Number);
+  return [y, m - 1, d];
+}
+
 // ---------------------------------------------------------------- records & numbers
 
 /**
  * Count copy with real plurals (SPEC §0.4): `plural(1, 'game')` → '1 game', `plural(3, 'game')` →
- * '3 games', `plural(2, 'loss', 'losses')` → '2 losses'. components/ui/plural.ts re-exports it.
+ * '3 games', `plural(2, 'loss', 'losses')` → '2 losses'. components/words/plural.ts re-exports it.
  */
 export function plural(n: number, one: string, many: string = `${one}s`): string {
   return `${n} ${n === 1 ? one : many}`;
@@ -410,7 +446,7 @@ export function streakString(streak: { count: number; result: Outcome } | null):
  * a stored shootout tally decides when present; a decider 'SO' with complementary result flags
  * {W, L} (an EAL 1 v 1 win, or a San Diego Section shootout win MaxPreps records as a level score:
  * no tally stored) takes that side's flag; anything else is read off the score. Section-free on
- * purpose: `decider` 'SO' is only ever written by lib/normalize.ts for two teams of a section whose
+ * purpose: `decider` 'SO' is only ever written by lib/pipeline/normalize.ts for two teams of a section whose
  * `shootout` rule is set, so nothing here needs the config.
  */
 export function sideOutcome(
@@ -460,7 +496,7 @@ export function renderScore(g: Game): ScoreView {
 
 /**
  * The phrases copy builds around a section's shootout words (SectionConfig.shootout.words in
- * lib/leagues.ts, which this client-safe module cannot import, so callers pass the words in):
+ * lib/league-config/sections.ts, which this client-safe module cannot import, so callers pass the words in):
  *
  *   words        noun        onPhrase          wonOn               decidedOn               decidedIt               win               tally
  *   '1 v 1s'     '1 v 1'     'on 1 v 1s'       'won on 1 v 1s'     'decided on 1 v 1s'     '1 v 1s decided it'     'a 1 v 1 win'     'the 1 v 1 tally'
@@ -484,7 +520,7 @@ export function renderScore(g: Game): ScoreView {
  * noun, win, tally and pronoun do not describe what happened in a game ('no shootout winner flagged', 'may
  * have recorded a shootout win as a goal'), so they stay the rule's words. A sentence that states the RULE
  * ('a varsity game there outside a tournament is decided by a shootout', components/game/GameSources.tsx;
- * lib/backfill.ts's D24 note) calls this with the default: the rule is sourced whatever MaxPreps recorded.
+ * lib/crosscheck/backfill.ts's D24 note) calls this with the default: the rule is sourced whatever MaxPreps recorded.
  */
 export interface ShootoutPhrases {
   /** '1 v 1' | 'shootout': the thing itself, singular, no article ('no 1 v 1 winner flagged'). */

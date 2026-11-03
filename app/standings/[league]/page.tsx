@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
-import LeagueSwitcher from '../../../components/layout/LeagueSwitcher';
+import LeagueSwitcher from '../../../components/prefs/LeagueSwitcher';
 import PageHeader from '../../../components/layout/PageHeader';
 import { leagueChips, leagueHrefs } from '../../../components/layout/league-chips';
 import { OG_BASE } from '../../../components/layout/site';
@@ -15,7 +15,7 @@ import ExternalLink from '../../../components/ui/ExternalLink';
 import { biggestGoalDiff } from '../../../components/ui/StandingsTable';
 import { getLeagueIds, getLeagueSummary } from '../../../lib/data';
 import { shortDate } from '../../../lib/format';
-import { hasHistory } from '../../../lib/history';
+import { hasHistory } from '../../../lib/history/history';
 import { getLeague, leagueSportWords, standingsLabel } from '../../../lib/leagues';
 
 /**

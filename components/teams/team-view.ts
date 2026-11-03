@@ -48,22 +48,20 @@ import {
   mapsSearchHref,
   noMoreGamesSentence,
 } from '../../lib/format';
+import { CCS, REGIONS } from '../../lib/league-config/sections';
+import type { LeagueRules, PostseasonConfig } from '../../lib/league-config/shape';
 import {
-  CCS,
   divisionHeading,
   getDivision,
   getLeague,
   pairingWindow,
-  REGIONS,
   getRegion,
   leaguePlayEnds,
   leaguesInRegion,
   regionOf,
-  type LeagueRules,
-  type PostseasonConfig,
   standingsLabel,
 } from '../../lib/leagues';
-import { pinLabel } from '../../lib/pin-label';
+import { pinLabel } from '../words/pin-label';
 import { outcomesFor, pairingDatesLabel } from '../../lib/standings';
 import type {
   DivisionId,
@@ -79,13 +77,14 @@ import type {
   Team,
   TeamSlug,
 } from '../../lib/types';
-import { gameAddress } from '../../lib/venue';
+import { gameAddress } from '../../lib/schools/venue';
 import { getEloBoardForTeam } from '../leaders/elo-board';
 import { getBracketPlace } from '../playoffs/bracket-place';
 import { buildOverviewDivision, type OverviewDivision } from '../standings/standings-view';
 import type { FormEntry } from '../ui/FormStrip';
 import { describeGame, shootoutSectionOf } from '../ui/describe-game';
-import { maxPrepsLabel } from '../ui/maxpreps-label';
+import { capitalized } from '../words/capitalized';
+import { maxPrepsLabel } from '../words/maxpreps-label';
 
 /** One opponent in this team's table that it has not beaten yet (DESIGN §3.7). */
 export interface UnbeatenOpponent {
@@ -114,7 +113,7 @@ export interface UnbeatenOpponent {
 }
 
 /**
- * The team page's Elo card (DESIGN §20): this team's rating from lib/ratings.ts, and its place on
+ * The team page's Elo card (DESIGN §20): this team's rating from lib/ratings/ratings.ts, and its place on
  * /leaders' Elo board when the board lists it, read off that board so the two cannot disagree.
  */
 export interface TeamEloView {
@@ -227,7 +226,7 @@ export interface TeamPageView {
   divisionSize: number;
   /** `Red-Tailed Hawks · MCAL · Mill Valley` | `Pirates · De Anza · SCVAL · San Jose` */
   identityLine: string;
-  /** PinControl's accessible name, from lib/pin-label.ts. */
+  /** PinControl's accessible name, from components/words/pin-label.ts. */
   pinLabel: string;
   /** `/standings/<league>#<division>` */
   standingsHref: string;
@@ -341,7 +340,7 @@ export type NextCard =
  */
 export interface PendingPairing {
   leagueId: LeagueId;
-  /** 'BVAL play-in' | 'SCVAL crossover' — the chip's words (lib/postseason-round-label.ts). */
+  /** 'BVAL play-in' | 'SCVAL crossover' — the chip's words (lib/postseason/postseason-round-label.ts). */
   kindLabel: string;
   /** 'Play-in for BVAL’s 4th automatic CCS berth': the config label's purpose. */
   purpose: string;
@@ -388,7 +387,7 @@ export function pendingPairingFor(team: Team, today: string): PendingPairing | n
     return {
       leagueId: league.id,
       kindLabel: `${league.shortName} ${p.isPlayIn ? 'play-in' : 'crossover'}`,
-      purpose: `${tail[0].toUpperCase()}${tail.slice(1)}`,
+      purpose: capitalized(tail),
       dateKey: p.date,
       // The league's own clock words ('11 AM PT'), as the pairing card and the strip on /playoffs print it.
       timeLabel: p.time ? leagueClockPT(p.time) : null,
@@ -788,7 +787,7 @@ function placeLine(game: Game, team: Team): string | null {
 /** The NEXT card's external pills (named apart from describe-game's private `chipsFor`). */
 function nextChips(game: Game): NextChip[] {
   const chips: NextChip[] = [];
-  // lib/venue.ts: the game's own address, else the final's fixed site or the venue's or host's school.
+  // lib/schools/venue.ts: the game's own address, else the final's fixed site or the venue's or host's school.
   const address = gameAddress(game)?.address;
   if (address) chips.push({ href: mapsSearchHref(address), label: 'Directions' });
   // Named for what is behind them: 'Stream' and 'MaxPreps' did not say which stream or which page.

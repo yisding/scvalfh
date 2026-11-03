@@ -10,7 +10,6 @@ import {
   tournamentLeague,
   tournamentStaticParams,
   tournamentView,
-  type TournamentConfig,
 } from '../../../components/playoffs/tournament-league';
 import Arrow from '../../../components/ui/Arrow';
 import ExternalLink from '../../../components/ui/ExternalLink';
@@ -19,8 +18,9 @@ import SectionHeader from '../../../components/ui/SectionHeader';
 import { getCcsField, getLeagueTournament, getSections } from '../../../lib/data';
 import type { LeagueSummary } from '../../../lib/data';
 import { shortDate } from '../../../lib/format';
-import { getLeague, type LeagueConfig } from '../../../lib/leagues';
-import { tournamentHeadline } from '../../../lib/postseason';
+import type { LeagueConfig, TournamentConfig } from '../../../lib/league-config/shape';
+import { getLeague } from '../../../lib/leagues';
+import { tournamentHeadline } from '../../../lib/postseason/postseason';
 
 /**
  * /playoffs/<league> — a league's own tournament (SPEC §6.2, §6.3, §10.7): "MCAL tournament — who
@@ -49,7 +49,7 @@ function roundDate(ps: TournamentConfig, round: string): string | null {
 /**
  * 'Marin County Athletic League · 6 teams · Quarterfinals Mon Oct 26 · Final Fri Oct 30' while the picture is
  * projected; once the tournament is under way, the next round's matchups ('… · Final Fri Oct 30, 4 PM PT at
- * Tamalpais: 3 Redwood at 1 Tamalpais') and, after the final, the champion (lib/postseason.ts tournamentHeadline).
+ * Tamalpais: 3 Redwood at 1 Tamalpais') and, after the final, the champion (lib/postseason/postseason.ts tournamentHeadline).
  */
 function headerMeta(summary: LeagueSummary, ps: TournamentConfig, config: LeagueConfig, opts: { live?: boolean } = {}): string {
   const headline = tournamentHeadline(getLeagueTournament(summary.id), config);

@@ -44,6 +44,7 @@ import {
   timeOfDayPT,
 } from '../../lib/format';
 import { gameHref, gameIdToParam, paramToGameId } from '../../lib/game-id';
+import type { LeagueConfig } from '../../lib/league-config/shape';
 import {
   divisionDisplay,
   divisionHeading,
@@ -53,10 +54,9 @@ import {
   getSection,
   leagueOfDivision,
   leagueSportWords,
-  type LeagueConfig,
 } from '../../lib/leagues';
-import { SHOOTOUT_NOTE, mayHideShootout } from '../../lib/postseason';
-import { withLocationRound } from '../../lib/postseason-rounds';
+import { SHOOTOUT_NOTE, mayHideShootout } from '../../lib/postseason/postseason';
+import { withLocationRound } from '../../lib/postseason/postseason-rounds';
 import { SEASON_DISPLAY } from '../../lib/season';
 import type {
   BackfillProvenance,
@@ -83,6 +83,7 @@ import {
   type GameDisplay,
   type SideView,
 } from '../ui/describe-game';
+import { capitalized } from '../words/capitalized';
 
 // ---------------------------------------------------------------- types
 
@@ -475,7 +476,7 @@ function hasResultConflict(g: Game): boolean {
  */
 function resultConflictNoteFor(game: Game): string | null {
   if (!hasResultConflict(game)) return null;
-  // The stored note (lib/crosscheck.ts, lib/cifss-crosscheck.ts) spells "MaxPreps' " with a straight
+  // The stored note (lib/crosscheck/crosscheck.ts, lib/crosscheck/cifss-crosscheck.ts) spells "MaxPreps' " with a straight
   // apostrophe; the page's copy is curly, notes already in the snapshot included.
   const note = (game.provenance.resultConflict as string)
     .trim()
@@ -685,7 +686,7 @@ function postseasonView(game: Game, league: LeagueConfig | null): PostseasonView
   }
   if (tag.kind === 'league-postseason' && league && league.postseason.kind === 'unbracketed-tournament') {
     // The EAL Super Regional: a counted-nowhere game with no bracket slot to name. The round, when the row's own
-    // location field names one ('Semi Final', 'Championship Final': MaxPreps' 2025 rows, lib/postseason-rounds.ts),
+    // location field names one ('Semi Final', 'Championship Final': MaxPreps' 2025 rows, lib/postseason/postseason-rounds.ts),
     // joins the label, 'EAL Super Regional semifinal', as an MCAL slot's does; with none, the event's name alone.
     const sentence = `${league.postseason.name} game — it does not count in the league table.`;
     const label = withLocationRound(`${league.shortName} ${league.postseason.name}`, game.venue.text);
@@ -696,7 +697,7 @@ function postseasonView(game: Game, league: LeagueConfig | null): PostseasonView
     };
   }
   if ((tag.kind === 'scval-crossover' || tag.kind === 'bval-play-in') && league) {
-    // 'SCVAL play-in' for the 4th-place play-in, which carries the crossover's tag (lib/postseason-round-label.ts).
+    // 'SCVAL play-in' for the 4th-place play-in, which carries the crossover's tag (lib/postseason/postseason-round-label.ts).
     const label = postseasonTagOf(game) ?? `${league.shortName} ${tag.kind === 'scval-crossover' ? 'crossover' : 'play-in'}`;
     const sentence = `${league.shortName} postseason game — it does not count in the league table.`;
     return {
@@ -754,7 +755,7 @@ function postseasonView(game: Game, league: LeagueConfig | null): PostseasonView
 
 /**
  * `scoreNote` (D7): what this site does with a score the feed cannot state plainly. The rule it
- * cites is the section's (SectionConfig.shootout, keyed on the section as lib/normalize.ts keys decider
+ * cites is the section's (SectionConfig.shootout, keyed on the section as lib/pipeline/normalize.ts keys decider
  * 'SO'): the Northern Section's Guidelines for the EAL (a 10-minute sudden-victory period, then 1 v 1s)
  * and the San Diego Field Hockey Officials Association's procedures for the San Diego Section (a
  * 10-minute 7 v 7 sudden-victory period, then 1 v 1 shootouts), whose rule covers a game between two of
@@ -782,7 +783,7 @@ function scoreNoteFor(
         // asserted. si.com and the Section's power rankings record Mt. Carmel–Poway (Sep 11) as 2-0 where
         // MaxPreps has 0-0 marked W/L, so this note says what MaxPreps lists and why the win counts, then
         // what the other sources record (`disagreement`). "Outside a tournament": the SDFHOA procedures do
-        // not cover invitational tournaments (coversTournaments false), and lib/normalize.ts reads no 'SO'
+        // not cover invitational tournaments (coversTournaments false), and lib/pipeline/normalize.ts reads no 'SO'
         // from a tournament row.
         const scope = section.shootout.coversTournaments ? '' : ' outside a tournament';
         notes.push(
@@ -1024,7 +1025,7 @@ export function gameDescription(model: GameModel): string {
   if (recap) {
     // Dated: the sentence carries no date, so a rematch with the same score would have the same
     // description as the first meeting. It already names the context, so the tail names the league.
-    return `${dateWithYear(game.dateLocal)}: ${recap} ${where.charAt(0).toUpperCase()}${where.slice(1)} — ${
+    return `${dateWithYear(game.dateLocal)}: ${recap} ${capitalized(where)} — ${
       model.source ? 'score via High School on SI (si.com); unofficial.' : 'unofficial, rebuilt twice daily from MaxPreps.'
     }`;
   }

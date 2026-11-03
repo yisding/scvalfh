@@ -5,11 +5,11 @@
  * `disabled:opacity-60${className ? … : ''}` it never sees `disabled:opacity-60`, so the rule is
  * silently never generated unless the same class happens to appear unglued in some other file.
  * That is how the team page's stat tile lost its min-height and the pressed Pin button its
- * accent-ink text. components/layout/PageHeader.tsx and components/ui/StatTile.tsx state the rule;
+ * accent-ink text. components/layout/PageHeader.tsx and components/teams/StatTile.tsx state the rule;
  * this test is what holds it. Class strings are built with `[…].filter(Boolean).join(' ')`.
  *
  * One shape is allowed: an `sx-` class completed by an id (`sx-jump-${league.id}`). That is a
- * plain CSS hook written by components/layout/league-scope-css.ts, not a Tailwind utility, so
+ * plain CSS hook written by components/prefs/league-scope-css.ts, not a Tailwind utility, so
  * there is no candidate to lose.
  *
  * Modelled on tests/ui/prefetch-policy.test.ts: a source scan over app/ and components/.

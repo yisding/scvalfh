@@ -115,9 +115,10 @@ beforeAll(async () => {
   teamView = await import('../../components/teams/team-view');
   gameView = await import('../../components/game/game-view');
   home = h.buildHomeView();
+  const sections = await import('../../lib/league-config/sections');
   markConfig(leagues.LEAGUES);
-  markConfig(leagues.SECTIONS);
-  markConfig(leagues.CCS);
+  markConfig(sections.SECTIONS);
+  markConfig(sections.CCS);
   markSnapshot(data.getSnapshot());
 
   const leagueOfSlug = new Map(data.getTeams().map((t) => [t.slug, t.league]));
@@ -185,9 +186,10 @@ async function collectEal(): Promise<EalCorpus> {
   const schedulePage = (await import('../../app/schedule/[league]/page')).default;
   const playoffsPage = (await import('../../app/playoffs/page')).default;
   const teamPage = (await import('../../app/teams/[slug]/page')).default;
+  const sec = await import('../../lib/league-config/sections');
   markConfig(l.LEAGUES);
-  markConfig(l.SECTIONS);
-  markConfig(l.CCS);
+  markConfig(sec.SECTIONS);
+  markConfig(sec.CCS);
   markSnapshot(d.getSnapshot());
 
   const ids = new Set(l.UNBRACKETED_LEAGUE_IDS);
@@ -300,7 +302,7 @@ function expectNone(subject: Subject, rule: string, test: (s: string) => boolean
 }
 
 /**
- * The league rules' and postseason citations that mention co-champions (lib/leagues.ts
+ * The league rules' and postseason citations that mention co-champions (lib/league-config/<league>.ts
  * `rules.citations`, e.g. the EAL's "a tie for first means co-champions (§VII.C)", and
  * `postseason.citations`, e.g. the San Diego Section's "not co-champions or tri-champions"). A builder that quotes one in a footnote
  * states the rule; the co-champion rule is about declaring them, so these are taken out of a value

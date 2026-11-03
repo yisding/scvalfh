@@ -41,9 +41,10 @@ import {
   shortDate,
   timeOfDayPT,
 } from '../../lib/format';
-import { CCS, divisionHeading, getDivision, getLeague, ladderFor, leagueOfDivision } from '../../lib/leagues';
-import { fixedSiteHost, winnerOf } from '../../lib/postseason';
-import type { CcsConfig, LeagueConfig, OutsideTournamentConfig } from '../../lib/leagues';
+import { CCS } from '../../lib/league-config/sections';
+import { divisionHeading, getDivision, getLeague, ladderFor, leagueOfDivision } from '../../lib/leagues';
+import { fixedSiteHost, winnerOf } from '../../lib/postseason/postseason';
+import type { CcsConfig, LeagueConfig, OutsideTournamentConfig, SectionPlayoffsConfig } from '../../lib/league-config/shape';
 import type {
   CcsKeyDates,
   CrossoverSeat,
@@ -62,7 +63,8 @@ import type {
 } from '../../lib/types';
 
 import { ladderLineAfter, ladderRow } from '../standings/standings-view';
-import { membershipSource } from '../ui/membership-words';
+import { capitalized } from '../words/capitalized';
+import { membershipSource } from '../words/membership-words';
 
 // ---------------------------------------------------------------- small helpers
 
@@ -141,8 +143,7 @@ export function ccsHostingSentence(hostsThrough: CcsConfig['highSeedHostsThrough
   const neutral = CCS_ROUNDS.filter((r) => ccsRoundSite(r, hostsThrough) === 'neutral');
   const words = (rounds: readonly CcsRound[]) => listWords(rounds.map((r) => (r === 'finals' ? 'the final' : `the ${r}`)));
   if (neutral.length === 0) return 'Every round is at the higher seed’s field (the CIF-CCS field hockey calendar).';
-  const homeWords = words(home);
-  const homePart = home.length > 0 ? `${homeWords[0].toUpperCase()}${homeWords.slice(1)} are at the higher seed’s field; ` : '';
+  const homePart = home.length > 0 ? `${capitalized(words(home))} are at the higher seed’s field; ` : '';
   return `${homePart}${words(neutral)} ${neutral.length === 1 ? 'is' : 'are'} at neutral sites set by CCS (the CIF-CCS field hockey calendar).`;
 }
 
@@ -346,7 +347,7 @@ export function buildDivisionProjection(
     // the play-in notes below would be false rather than merely empty.
     // A league with no documents of its own (`official.mode: 'none'`) publishes no alignment. "As
     // MaxPreps lists it" only where MaxPreps' table for this division lists every row (the EAL);
-    // otherwise the league's membership source (components/ui/membership-words.ts).
+    // otherwise the league's membership source (components/words/membership-words.ts).
     const source = membershipSource(division, rows.map((r) => r.team.slug));
     const roster =
       source.kind === 'maxpreps'
@@ -586,8 +587,6 @@ export function pairingSentence(view: PairingView): string {
 
 // ---------------------------------------------------------------- section playoffs (the San Diego Section)
 
-type SectionPlayoffsConfig = Extract<LeagueConfig['postseason'], { kind: 'section-playoffs' }>;
-
 /**
  * The Section's round calendar as DateList rows: a round's label, its league clock time where published (the
  * finals) and its site as the detail (La Jolla High School). Rounds and finals are set in ink (`isRound`), the
@@ -613,7 +612,7 @@ export function sectionRoundRows(ps: SectionPlayoffsConfig): KeyDateRow[] {
  * places, since the Section places teams.
  *
  * The third state (2026-10-30, plan final-08): once the owner has transcribed the Section's published brackets
- * (data/sds-brackets-2026.json, so lib/sds-bracket.ts getSdsBrackets() is non-null and the page draws them under
+ * (data/sds-brackets-2026.json, so lib/postseason/sds-bracket.ts getSdsBrackets() is non-null and the page draws them under
  * `#sds-bracket`), `drawn` is true and the sentence says the brackets below are the Section's, with MaxPreps'
  * results. Still no place is projected: the brackets are the Section's own.
  */
@@ -717,14 +716,14 @@ export interface TournamentGameView {
   home: TournamentSlotView;
   away: TournamentSlotView;
   /**
-   * 'at' (the higher seed's field, or a fixed site that is one finalist's own: lib/postseason.ts fixedSiteHost) or
+   * 'at' (the higher seed's field, or a fixed site that is one finalist's own: lib/postseason/postseason.ts fixedSiteHost) or
    * 'vs' (a fixed site neither finalist calls home). The final reads '3 Redwood at 1 Tamalpais', the game page's words.
    */
   connector: 'at' | 'vs';
   /** '5 Convent at 4 Marin Catholic' — what the page prints. */
   line: string;
   /**
-   * The side that won the matched game (lib/postseason.ts winnerOf: the higher score, else the side MaxPreps marks
+   * The side that won the matched game (lib/postseason/postseason.ts winnerOf: the higher score, else the side MaxPreps marks
    * W), as this view's `home`/`away`; null with no result or a level game with no W flag. The bracket marks it with
    * the site's winner rule (600 weight and the 2px left rule, DESIGN §8 accessibility).
    */
@@ -807,7 +806,7 @@ export interface TournamentInput {
    * The final's fixed site from config (the host school's slug, venue, admission) with the site school's address
    * from data/schools.json; omitted ⇒ the round
    * shows no venue block and the final reads 'vs' (no host known). The slug makes the final 'at' when the site team
-   * is a finalist (lib/postseason.ts fixedSiteHost).
+   * is a finalist (lib/postseason/postseason.ts fixedSiteHost).
    */
   finalSite?: { slug?: TeamSlug; venue: string; address: StreetAddress; admission: string | null; admissionSource: string | null };
 }

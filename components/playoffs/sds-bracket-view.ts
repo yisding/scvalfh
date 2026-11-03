@@ -1,6 +1,6 @@
 import { EN_DASH, leagueClockPT, monthDay, renderScore, shortDate } from '../../lib/format';
 import { gameHref } from '../../lib/game-id';
-import type { LiveBracketCard, LiveBracketDivision, LiveBracketRound, LiveBracketSlot } from '../../lib/sds-bracket';
+import type { LiveBracketCard, LiveBracketDivision, LiveBracketRound, LiveBracketSlot } from '../../lib/postseason/sds-bracket';
 import { getTeamBySlug } from '../../lib/teams';
 import {
   isTbdSide,
@@ -9,9 +9,10 @@ import {
   type BracketRoundView,
   type BracketSideView,
 } from '../history/bracket-view';
+import { capitalized } from '../words/capitalized';
 
 /**
- * The San Diego Section's published brackets as the shared bracket model (plan final-08, 2026-10-30): lib/sds-bracket.ts
+ * The San Diego Section's published brackets as the shared bracket model (plan final-08, 2026-10-30): lib/postseason/sds-bracket.ts
  * LiveBracketDivision → components/history/bracket-view.ts BracketDivisionView, drawn on /playoffs#sds-bracket by
  * components/playoffs/SdsBracket.tsx with the archive's drawer (HistoryBracket.tsx BracketView). Pure, so
  * tests/ui/sds-bracket.test.ts reads every word it prints.
@@ -45,7 +46,7 @@ function sideView(slot: LiveBracketSlot): BracketSideView {
 
 /**
  * "Torrey Pines (1)", "the winner of Poway v Canyon Crest", "the winner of 1 v 8/9", "a team to be decided": a side
- * inside a sentence. A place named by its two schools (lib/sds-bracket.ts tbdText: "Poway or Canyon Crest") reads as
+ * inside a sentence. A place named by its two schools (lib/postseason/sds-bracket.ts tbdText: "Poway or Canyon Crest") reads as
  * the winner of their game.
  */
 function sideWords(side: BracketSideView): string {
@@ -54,8 +55,6 @@ function sideWords(side: BracketSideView): string {
   if (!/^Winner\b/.test(side.tbd)) return `the winner of ${side.tbd.replace(' or ', ' v ')}`;
   return `the ${side.tbd.charAt(0).toLowerCase()}${side.tbd.slice(1)}`;
 }
-
-const capitalized = (words: string): string => `${words.charAt(0).toUpperCase()}${words.slice(1)}`;
 
 /**
  * Goals, top then bottom, oriented to the card from the joined game; null before a final score. Read through

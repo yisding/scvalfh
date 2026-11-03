@@ -8,22 +8,20 @@
 import type { Metadata } from 'next';
 
 import { listWords, numberWord } from '../../lib/format';
+import { REGIONS, SECTIONS } from '../../lib/league-config/sections';
+import type { LeagueConfig, SectionConfig } from '../../lib/league-config/shape';
 import {
   INDEPENDENT_LEAGUES,
   LEAGUES_PROPER,
-  REGIONS,
-  SECTIONS,
   getSection,
   regionOf,
   sectionsInRegion,
-  type LeagueConfig,
-  type SectionConfig,
 } from '../../lib/leagues';
 import type { RegionId } from '../../lib/types';
 import { SEASON_CALENDAR_YEAR } from '../../lib/season';
 import { TEAMS } from '../../lib/teams';
 
-import { OG_SIZE } from './og-theme';
+import { OG_SIZE } from '../metadata/og-theme';
 
 /**
  * The site's own origin, used by `metadataBase`, `robots.txt` and `sitemap.xml`.

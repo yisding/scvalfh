@@ -9,7 +9,7 @@ schedule at all: this site orders their tables by its own 3-1-0 points and says 
 (`orderScope: 'site'`). The Southern Section's three independents (Glendora, Harvard-Westlake and
 Thousand Oaks) are not a league and have no table at all: see "LA independents" below.
 The leagues differ in the tiebreak chain, in how a tie among three or more teams is worked through, in how a division champion is
-named and in what the postseason looks like. Every rule below is data in `lib/leagues.ts` with the
+named and in what the postseason looks like. Every rule below is data in `lib/league-config/` (a file per league) with the
 by-law citation beside it; one engine (`lib/standings.ts`) runs them, and `/about#rules-<league>`
 prints them on the site. Where the documents say something this site cannot compute (a coin flip,
 a blind draw, a play-in game), the teams **share a place** and the page says which rule decides it.
@@ -80,12 +80,12 @@ On **Fri Oct 30** the four De Anza places meet the four El Camino places (#1 v #
 schools played two of the four a day early: #1 St. Ignatius at Mitty and #3 Palo Alto at Valley
 Christian (MaxPreps' venue field reads "SCVAL Crossover Game", and it marks the game a playoff) are
 Thu Oct 29, #2 Saint Francis at Los Gatos and the #4 play-in Fri Oct 30. So each pairing in
-`lib/leagues.ts` keeps the schedule's `date` (Oct 30) and carries a `window` (Oct 29–30): a De Anza–El
+`lib/league-config/scval.ts` keeps the schedule's `date` (Oct 30) and carries a `window` (Oct 29–30): a De Anza–El
 Camino game dated inside it is the crossover (`lib/classify.ts` rule 1, ahead of MaxPreps' playoff
 flag), the pairing card takes the game's own date, and a seat two level teams spanned (Mitty and
 Los Gatos, co-leaders of El Camino) narrows to the one the league paired. The CCS
 championship follows (entries due Nov 2, quarterfinals Nov 7, semifinals Nov 11, final Nov 14).
-The site's words (2026-10-29/30, `lib/postseason-outcomes.ts`, `lib/data.ts`): a crossover card reads "For CCS
+The site's words (2026-10-29/30, `lib/postseason/postseason-outcomes.ts`, `lib/data.ts`): a crossover card reads "For CCS
 seeding, not qualification."; only a team with an automatic berth, the play-in or at-large consideration gets the
 crossover sentence on its team line, and 6th and lower read "No automatic berth; at-large berths are the CCS
 committee’s call."; once the play-in is final its winner reads "Won the play-in" ("Won the 4th-place play-in: an
@@ -142,7 +142,7 @@ label is "Division co-champions".
 
 BVAL's by-laws do not say whom it submits for at-large berths. The site never writes "eliminated";
 places off the ladder read "No automatic berth". Once the play-in is final (2026-10-30,
-`lib/postseason-outcomes.ts`) its winner reads "Won the play-in" ("Won the play-in: BVAL’s fourth automatic CCS
+`lib/postseason/postseason-outcomes.ts`) its winner reads "Won the play-in" ("Won the play-in: BVAL’s fourth automatic CCS
 berth.") and its loser "Lost the play-in" ("Lost the play-in; no automatic berth remains, and at-large berths
 are the CCS committee’s call."), and the play-in card adds "Winner: <team> — BVAL’s 4th automatic CCS berth".
 
@@ -279,12 +279,12 @@ Turf at Bruce Grant Field/Sam Chapman Stadium"); admission is adults $10, studen
 seniors $5, pre-sale on GoFan, no booster passes or student body cards, lifetime MCAL, NCS and CIF
 passes honored (the 2026 play-off sheet and the General Rules admission table); the General Rules add
 that a playoff game at a higher seed's site "should not be considered" a home contest. The bracket
-prints the venue, a Directions link and the admission line under the final (`finalSite`, lib/leagues.ts),
+prints the venue, a Directions link and the admission line under the final (`finalSite`, lib/league-config/mcal.ts),
 and a finalist's Next card gets the Directions pill from the same address, since MaxPreps gives none.
 Tournament games tied after two
 overtimes go to a shootout (Handbook §9), and MaxPreps records the shootout tally as the score of a
 regulation game: a one-goal result MaxPreps does not mark as overtime carries the shootout caveat
-(`mayHideShootout`, lib/postseason.ts), an overtime goal (decider OT) carries none, and a result the
+(`mayHideShootout`, lib/postseason/postseason.ts), an overtime goal (decider OT) carries none, and a result the
 config sources in `resultNotes` prints that sentence instead. 2026: Tamalpais 3-1 Marin Catholic
 (Wed Oct 28 semifinal) was 0-0 after two overtimes and a 3-1 shootout (Marin Independent Journal,
 Oct 28, 2026); the two overtime wins (Marin Catholic 2-1 Lick-Wilmerding, Redwood 1-0 at
@@ -292,7 +292,7 @@ University) were overtime goals [V: Marin IJ]. The title rule's source is the MC
 Pennants 1–3 (`https://www.mcalsports.org/Gen_rules/GeneralRules.pdf`): "If the winner of the playoffs
 is different than the regular season winner, they will also be awarded a pennant."
 Once the tournament is under way the site reads its results: each team's line says it is in the final, lost in a
-round, or is the champion or runner-up (`tournamentOutcome`, lib/postseason.ts: "In the MCAL tournament final",
+round, or is the champion or runner-up (`tournamentOutcome`, lib/postseason/postseason.ts: "In the MCAL tournament final",
 "Lost in the semifinal", "MCAL tournament champion"; a team lost, it is never "eliminated"), the home card and the
 page lead with the next round's matchups or the champion, and after the final the title rule is applied in words
 (the seed-1 points leader is the regular-season MCAL Champion; a different tournament winner also receives a
@@ -466,7 +466,7 @@ Beach High School [V: Harvard-Westlake Chronicle, Aug 25 2026 ("the Los Angeles 
 (LAFHA) Tournament of Champions"); Bonita's and Huntington Beach's own schedules name the rounds and sites;
 MaxPreps, si.com and the CIF-SS widget carry the games]. No organizer publishes a site, a bracket or seeds,
 so the site lists the games and never a seed. It is `SectionConfig.outsideTournament` (`TOC` in
-`lib/leagues.ts`, window Oct 22–29): every game between two Southern Section teams dated inside the window
+`lib/league-config/sections.ts`, window Oct 22–29): every game between two Southern Section teams dated inside the window
 is tagged `outside-tournament` (ahead of MaxPreps' flag, which marks only Huntington Beach's rows as
 playoffs) and counts in no table, so Edison's 3-0 over Great Oak on Oct 22 (round 1) is not a Sunset game.
 Harvard-Westlake won the 2025 edition, 4-0 over Newport Harbor on Oct 25, 2025 [V: Chronicle, Nov 15 2025].
@@ -563,7 +563,7 @@ decided it (`SectionConfig.shootout.inference: 'unverified'`; the EAL's 'verifie
 box score's "SO Win" column). How each source encodes a shootout in general is [U]. The rule is a varsity rule: the same procedures say "JV—No overtime", and the officials'
 association's game format says of JV and frosh games "Teams tied at the end of regulation, game over"
 [V], so a level JV final stays a tie, and the JV pipeline (`pnpm fetch-jv`, `level: 'jv'` in
-`lib/normalize.ts`) never reads one as a shootout win, whatever MaxPreps flags.
+`lib/pipeline/normalize.ts`) never reads one as a shootout win, whatever MaxPreps flags.
 
 **Chain** (multi-team procedure: `partition-restart`):
 
@@ -606,7 +606,7 @@ by the Section" (badge "By selection"; the historical label until 2026-10-29 was
 `data/sds-brackets-2026.json` (the three divisions' sizes, places, a play-in if any and the round dates, which
 default to the officials' calendar and follow the sheet where it differs; the 2025 sheet put Division II's play-in on
 Mon Nov 3 and its first round on Thu Nov 5) and runs `pnpm test` before committing it. The schema
-(`lib/sds-brackets-schema.ts`) refuses a school outside the San Diego registry or listed twice, a field size other
+(`lib/postseason/sds-brackets-schema.ts`) refuses a school outside the San Diego registry or listed twice, a field size other
 than Open 8 / Division I 12 / Division II 12, a play-in on an 8-team field, rounds outside Nov 2–14, and an Open
 Division school the Divisions sheet does not put in Division I. The site then draws those brackets on `/playoffs`
 with MaxPreps' results joined to them, places as bare numerals and never the word "seed" (the pairings are the

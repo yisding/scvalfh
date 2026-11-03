@@ -3,7 +3,7 @@ import Link from 'next/link';
 import EmptyState from '../ui/EmptyState';
 import { GameLine } from '../ui/GameRow';
 import SectionHeader from '../ui/SectionHeader';
-import { plural } from '../ui/plural';
+import { plural } from '../words/plural';
 import { gameKind } from '../ui/describe-game';
 import { shortDate } from '../../lib/format';
 import type { Game } from '../../lib/types';

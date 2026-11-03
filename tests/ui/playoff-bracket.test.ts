@@ -15,7 +15,7 @@ import { describe, expect, it } from 'vitest';
 import { PlayoffBracket } from '../../components/playoffs/PlayoffBracket';
 import { buildBrackets, type BracketPath } from '../../components/playoffs/bracket-model';
 import { gameHref } from '../../lib/game-id';
-import { CCS } from '../../lib/leagues';
+import { CCS } from '../../lib/league-config/sections';
 import type { CcsPlayoffs, Game } from '../../lib/types';
 import { ccsGames2025, ccsSeeds2025, unplayed } from '../fixtures/ccs/bracket-2025';
 import { textOf } from './html-text';

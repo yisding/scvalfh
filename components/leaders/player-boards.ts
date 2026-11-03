@@ -2,30 +2,30 @@
  * The /leaders player boards (data/player-stats.json): most points, Elo-adjusted points, assists, saves
  * and clean sheets, plus the notes under them. A player's numbers are exactly what the team page shows:
  * season totals as the coach entered them on MaxPreps, plus the goals and saves the coach wrote in game
- * notes instead (lib/note-stats.ts). Their grade and position are the team page's roster row's
- * (lib/rosters.ts, joined on the stat line's athleteId), in the roster's words; a player the join misses
+ * notes instead (lib/players/note-stats.ts). Their grade and position are the team page's roster row's
+ * (lib/players/rosters.ts, joined on the stat line's athleteId), in the roster's words; a player the join misses
  * shows neither. Only teams whose coach tracks a stat can appear on its board, so every board says how
  * many teams it covers and names the ones it leaves out, and the section says whose totals are behind the
  * scores. A 0 never leads a board, and an untracked stat is never read as a 0.
  *
- * A player's Elo-adjusted points (lib/adjusted-scoring.ts) are their points times their team's schedule
+ * A player's Elo-adjusted points (lib/ratings/adjusted-scoring.ts) are their points times their team's schedule
  * factor, so only a player whose team is past the Elo board's minimum is ranked: a factor from two games
  * is mostly noise.
  */
 
-import type { AdjustedScoring } from '../../lib/adjusted-scoring';
+import type { AdjustedScoring } from '../../lib/ratings/adjusted-scoring';
 import { gradeWord, listWords, shortDate } from '../../lib/format';
-import { notedKinds } from '../../lib/note-stats';
+import { notedKinds } from '../../lib/players/note-stats';
 import type {
   FieldStatKey,
   GoalieStatKey,
   PlayerStatLine,
   TeamPlayerStats,
-} from '../../lib/player-stats-schema';
+} from '../../lib/players/player-stats-schema';
 import type { Game, Team, TeamId } from '../../lib/types';
 import { gamesSinceUpdate, savePercent } from '../teams/player-stats-view';
-import { plural } from '../ui/plural';
-import { positionWords } from '../ui/position-words';
+import { plural } from '../words/plural';
+import { positionWords } from '../words/position-words';
 import { UNADJUSTED_NOTE, names, num, teamRef } from './board-kit';
 import { BOARD_PLACES, EXPANDED_PLACES, byName, rankBoard } from './ranking';
 import type { BoardScope } from './scope';
@@ -40,7 +40,7 @@ interface PlayerEntry {
   /** LeaderRow.facts: the grade and position on the player's roster row. */
   facts: string[];
   /**
-   * The team's schedule factor (lib/adjusted-scoring.ts), or null when the team is under the Elo
+   * The team's schedule factor (lib/ratings/adjusted-scoring.ts), or null when the team is under the Elo
    * board's minimum: too few games for one.
    */
   factor: number | null;

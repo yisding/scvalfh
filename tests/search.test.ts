@@ -2,7 +2,9 @@
 
 import { describe, expect, it } from 'vitest';
 
-import { DATA_QUALITY, LEAGUES, SECTIONS } from '../lib/leagues';
+import { DATA_QUALITY } from '../lib/league-config/data-quality';
+import { SECTIONS } from '../lib/league-config/sections';
+import { LEAGUES } from '../lib/leagues';
 import { buildSearchIndex, normalizeQuery, searchTeams } from '../lib/search';
 import { TEAMS } from '../lib/teams';
 

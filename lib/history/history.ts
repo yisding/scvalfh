@@ -1,0 +1,319 @@
+/**
+ * The read API for data/history-2025-26.json — the prior-season archive (DESIGN §3.9), validated
+ * against lib/history/history-schema.ts.
+ *
+ * Why this is a separate file and not part of the snapshot: the 2025-26 standings exist ONLY in each
+ * league's own end-of-season documents (SCVAL's two PDFs, BVAL's Google Sheet and all-league
+ * documents; for PCAL, MCAL and EAL we found no official final standings, so they are marked
+ * 'unavailable' with the reason, never filled from a third party). MaxPreps cannot serve a prior season at all — the year segment of
+ * a league URL is cosmetic and always returns the CURRENT table (SPEC §1.1h) — so the daily cron has
+ * nothing to fetch and this file is committed, built once by `scripts/build-history.ts`.
+ *
+ * Loaded and validated once at module scope, like lib/data.ts (and bundled at build time the same
+ * way), so a bad file fails at import time rather than half-way through a render.
+ */
+
+import { readFileSync } from 'node:fs';
+
+import bundledBrackets from '../../data/history-brackets-2025-26.json';
+import bundledHistory from '../../data/history-2025-26.json';
+import {
+  BRACKET_SECTION_IDS,
+  BRACKET_TOURNAMENT_IDS,
+  HistoryBracketsSchema,
+  type BracketSectionId,
+  type BracketTournamentId,
+  type HistoryBracketGame,
+  type HistoryBracketSide,
+  type SectionBracket,
+  type TournamentBracket,
+} from './history-brackets-schema';
+import {
+  HistorySchema,
+  type AvailableLeagueHistory,
+  type History,
+  type HistoryAwards,
+  type HistoryDivision,
+  type HistoryLevel,
+  type HistoryRow,
+  type LeagueHistory,
+  type UnavailableLeagueHistory,
+} from './history-schema';
+import { listWords } from '../format';
+import { LEAGUE_IDS, getLeague, getSection, isIndependentLeague } from '../leagues';
+import { failValidation } from '../schema-primitives';
+import { getTeamBySlug } from '../teams';
+import type { DivisionId, LeagueId, SectionId, TeamSlug } from '../types';
+
+export type {
+  AvailableLeagueHistory,
+  History,
+  HistoryAwards,
+  HistoryDivision,
+  HistoryLevel,
+  HistoryPlayer,
+  HistoryRow,
+  LeagueHistory,
+  UnavailableLeagueHistory,
+} from './history-schema';
+export type {
+  BracketSectionId,
+  BracketTournamentId,
+  HistoryBracketDivision,
+  HistoryBracketGame,
+  HistoryBracketRound,
+  HistoryBracketSide,
+  SectionBracket,
+  TournamentBracket,
+} from './history-brackets-schema';
+
+/**
+ * data/history-2025-26.json is imported, so the build bundles it, for the reason given in
+ * lib/data.ts: a Worker has no project filesystem, and this module loads on the first
+ * /history/2025-26 request in every Worker instance, cached page or not (the route's modules load
+ * before the cache read). A missing file is a build error: run `pnpm build-history`. SCVAL_HISTORY
+ * still swaps in another file through node:fs (Node only; never set it on a Worker).
+ */
+function load(): History {
+  const override = process.env.SCVAL_HISTORY;
+  let raw: unknown = bundledHistory;
+  if (override) {
+    let text: string;
+    try {
+      text = readFileSync(override, 'utf8');
+    } catch (err) {
+      throw new Error(
+        `lib/history/history.ts: cannot read SCVAL_HISTORY=${override} (${(err as Error).message})`,
+      );
+    }
+    raw = JSON.parse(text) as unknown;
+  }
+  const parsed = HistorySchema.safeParse(raw);
+  if (!parsed.success) failValidation('history', parsed.error.issues);
+  return parsed.data;
+}
+
+const history = load();
+
+export function getHistorySeason(): string {
+  return history.season;
+}
+
+/** Every league's entry, in lib/leagues.ts order (SCVAL, BVAL, PCAL, MCAL, EAL). */
+export function getHistoryLeagues(): Array<{ id: LeagueId; entry: LeagueHistory }> {
+  return LEAGUE_IDS.map((leagueId) => ({ id: leagueId, entry: history.leagues[leagueId] }));
+}
+
+/** The leagues that have final standings, in config order. */
+export function getAvailableHistoryLeagues(): Array<{ id: LeagueId; entry: AvailableLeagueHistory }> {
+  return getHistoryLeagues().filter(
+    (x): x is { id: LeagueId; entry: AvailableLeagueHistory } => x.entry.status === 'available',
+  );
+}
+
+/** The leagues marked unavailable, in config order. */
+export function getUnavailableHistoryLeagues(): Array<{ id: LeagueId; entry: UnavailableLeagueHistory }> {
+  return getHistoryLeagues().filter(
+    (x): x is { id: LeagueId; entry: UnavailableLeagueHistory } => x.entry.status === 'unavailable',
+  );
+}
+
+/**
+ * "The LA independents are this site’s grouping, so no table of them was published.", or null with no such
+ * group: the unavailable groups of independents (DESIGN §24.9, §24.10) are said apart from the unavailable
+ * leagues, since nobody published a table of a group this site made. /history/2025-26's header
+ * (components/history/history-page-view.ts) and /about's archive paragraph
+ * (components/about/sections/SourcesSection.tsx) both print it.
+ */
+export function historyGroupsSentence(): string | null {
+  const groups = getUnavailableHistoryLeagues().filter((l) => isIndependentLeague(l.id));
+  return groups.length
+    ? `${listWords(groups.map((l) => `the ${getLeague(l.id).name}`)).replace(/^t/, 'T')} are this site’s grouping, so no table of them was published.`
+    : null;
+}
+
+export function hasHistory(leagueId: LeagueId): boolean {
+  return history.leagues[leagueId]?.status === 'available';
+}
+
+/**
+ * The last day any of the archive's sources was read or checked (YYYY-MM-DD): the latest
+ * `retrievedOn` of a league's sources or a section's bracket, or `checkedOn` of an unavailable
+ * league. It is the /history/2025-26 sitemap `lastmod` (app/sitemap.ts): the archive is a finished
+ * season, so it changes only when a maintainer rebuilds it, never with the twice-daily snapshot.
+ */
+export function getHistoryLastChecked(): string {
+  const leagueDays = getHistoryLeagues().flatMap(({ entry }) =>
+    entry.status === 'unavailable'
+      ? [entry.checkedOn]
+      : 'retrievedOn' in entry.provenance
+        ? [entry.provenance.retrievedOn]
+        : [],
+  );
+  const bracketDays = [...getHistoryBrackets(), ...getHistoryTournaments()].map((b) => b.bracket.retrievedOn);
+  // Every section bracket has a `retrievedOn` (the schema requires one), so the list is never empty.
+  return [...leagueDays, ...bracketDays].sort().at(-1)!;
+}
+
+/** The source credit of an available league (SCVAL's two PDFs, BVAL's sheet and documents). */
+export function getHistoryProvenance(leagueId: LeagueId): AvailableLeagueHistory['provenance'] | null {
+  const entry = history.leagues[leagueId];
+  return entry?.status === 'available' ? entry.provenance : null;
+}
+
+/**
+ * The name the page prints for a school in the archive: the registry's canonical `name`, the one
+ * every other page uses. The file keeps each source's own spelling ("Saint Ignatius" in the team
+ * table, "St Ignatius" in the awards block, "MItty", "Presentation HS"), and `slug` is the join
+ * key; only a school with no slug prints as the source wrote it.
+ */
+export function historySchoolName(slug: TeamSlug | null, sourceName: string): string {
+  return (slug ? getTeamBySlug(slug)?.name : undefined) ?? sourceName;
+}
+
+function divisionEntry(division: DivisionId): HistoryDivision | undefined {
+  for (const { entry } of getAvailableHistoryLeagues()) {
+    const found = entry.divisions.find((d) => d.division === division);
+    if (found) return found;
+  }
+  return undefined;
+}
+
+export function getHistoryStandings(division: DivisionId, level: HistoryLevel = 'varsity'): HistoryRow[] {
+  return divisionEntry(division)?.standings[level] ?? [];
+}
+
+export function getHistoryAwards(
+  division: DivisionId,
+  level: HistoryLevel = 'varsity',
+): HistoryAwards | null {
+  return divisionEntry(division)?.awards[level] ?? null;
+}
+
+/** Every 2025-26 row for one school, across divisions and levels. */
+export function getHistoryFor(slug: TeamSlug): Array<{
+  division: DivisionId;
+  level: HistoryLevel;
+  row: HistoryRow;
+}> {
+  const out: Array<{ division: DivisionId; level: HistoryLevel; row: HistoryRow }> = [];
+  for (const { entry } of getAvailableHistoryLeagues()) {
+    for (const d of entry.divisions) {
+      for (const level of ['varsity', 'jv'] as const) {
+        const row = d.standings[level].find((r) => r.slug === slug);
+        if (row) out.push({ division: d.division, level, row });
+      }
+    }
+  }
+  return out;
+}
+
+/** One league's first-place varsity rows, for a one-line archive summary. */
+export function getHistoryChampions(leagueId: LeagueId): Array<{ division: DivisionId; row: HistoryRow }> {
+  const entry = history.leagues[leagueId];
+  if (entry?.status !== 'available') return [];
+  return entry.divisions
+    .map((d) => ({ division: d.division, row: d.standings.varsity[0] }))
+    .filter((x): x is { division: DivisionId; row: HistoryRow } => !!x.row);
+}
+
+/**
+ * Teams whose 2025-26 division (as the source printed it) is not the division the registry lists
+ * today (the 2026-27 alignment), e.g. Leland: Santa Teresa in the 2025-26 sheet, Mt. Hamilton in
+ * the registry. The history keeps the source's division; the page says that the team moved.
+ */
+export function getHistoryDivisionChanges(
+  leagueId: LeagueId,
+): Array<{ slug: TeamSlug; name: string; historyDivision: DivisionId; registryDivision: DivisionId }> {
+  const entry = history.leagues[leagueId];
+  if (entry?.status !== 'available') return [];
+  const out: Array<{ slug: TeamSlug; name: string; historyDivision: DivisionId; registryDivision: DivisionId }> = [];
+  for (const d of entry.divisions) {
+    for (const r of d.standings.varsity) {
+      const team = r.slug ? getTeamBySlug(r.slug) : undefined;
+      if (r.slug && team && team.division !== d.division) {
+        out.push({ slug: r.slug, name: team.name, historyDivision: d.division, registryDivision: team.division });
+      }
+    }
+  }
+  return out;
+}
+
+/** Varsity rows whose source record has no ties field (`t` is null), by division. */
+export function getHistoryUnpublishedTies(leagueId: LeagueId): HistoryRow[] {
+  const entry = history.leagues[leagueId];
+  if (entry?.status !== 'available') return [];
+  return entry.divisions.flatMap((d) => d.standings.varsity.filter((r) => r.t === null));
+}
+
+// ---------------------------------------------------------------- section playoff brackets
+
+/**
+ * data/history-brackets-2025-26.json: the 2025 CCS and San Diego Section brackets, transcribed by
+ * hand from each section's own documents, and the 2025 Tournament of Champions, assembled from a
+ * school newspaper and MaxPreps' schedules (lib/history/history-brackets-schema.ts). Bundled and validated at
+ * module scope, like the standings above.
+ */
+function loadBrackets() {
+  const parsed = HistoryBracketsSchema.safeParse(bundledBrackets);
+  if (!parsed.success) failValidation('history brackets', parsed.error.issues);
+  return parsed.data;
+}
+
+const brackets = loadBrackets();
+
+/**
+ * Each section with a 2025 bracket, with the league its block follows on /history/2025-26: the
+ * section's last league in lib/leagues.ts order (PCAL for the CCS, Metro for the San Diego Section),
+ * so the bracket sits after the leagues that fed it and inside their region.
+ */
+export function getHistoryBrackets(): Array<{ id: BracketSectionId; bracket: SectionBracket; afterLeague: LeagueId }> {
+  return BRACKET_SECTION_IDS.map((id) => {
+    const leagues = LEAGUE_IDS.filter((l) => getLeague(l).sectionId === id);
+    return { id, bracket: brackets.sections[id], afterLeague: leagues[leagues.length - 1] };
+  });
+}
+
+/** The section bracket of a league's section, or null when its section held none (NCS, NS, SS). */
+export function getHistoryBracketFor(leagueId: LeagueId): { id: BracketSectionId; bracket: SectionBracket } | null {
+  const sectionId: SectionId = getLeague(leagueId).sectionId;
+  return getHistoryBrackets().find((b) => b.id === sectionId) ?? null;
+}
+
+/**
+ * Each postseason with a 2025 bracket that no CIF section runs (the Tournament of Champions), with the
+ * league its block follows on /history/2025-26: the last of the leagues whose teams play in it in
+ * lib/leagues.ts order (the LA independents, after the Sunset), so it sits after both, in their region.
+ */
+export function getHistoryTournaments(): Array<{
+  id: BracketTournamentId;
+  bracket: TournamentBracket;
+  afterLeague: LeagueId;
+  /** The leagues whose postseason it is (the Sunset and the LA independents), in config order. */
+  leagues: LeagueId[];
+}> {
+  return BRACKET_TOURNAMENT_IDS.map((id) => {
+    // The no-postseason leagues of the section whose teams play it (DESIGN §24.13): the Sunset and the LA
+    // independents. Asserted in tests/history-brackets.test.ts.
+    const leagues = LEAGUE_IDS.filter((l) => {
+      const league = getLeague(l);
+      return getSection(league.sectionId).outsideTournament?.id === id && league.postseason.kind === 'no-postseason';
+    });
+    return { id, bracket: brackets.tournaments[id], afterLeague: leagues[leagues.length - 1], leagues };
+  });
+}
+
+/** The 2025 tournament bracket a league's teams played in (the Sunset's and the LA independents'), or null. */
+export function getHistoryTournamentFor(leagueId: LeagueId): ReturnType<typeof getHistoryTournaments>[number] | null {
+  return getHistoryTournaments().find((t) => t.leagues.includes(leagueId)) ?? null;
+}
+
+/** The section's name for a bracket block ("Central Coast Section"). */
+export function bracketSectionName(id: BracketSectionId): string {
+  return getSection(id).name;
+}
+
+/** A game's winning and losing sides. */
+export function bracketSides(game: HistoryBracketGame): { winner: HistoryBracketSide; loser: HistoryBracketSide } {
+  return game.winner === 'top' ? { winner: game.top, loser: game.bottom } : { winner: game.bottom, loser: game.top };
+}

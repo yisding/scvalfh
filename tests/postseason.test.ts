@@ -1,4 +1,4 @@
-/** lib/postseason.ts — the MCAL tournament (SPEC §6.2): every sixthPlaceRule branch, the builders and status. */
+/** lib/postseason/postseason.ts — the MCAL tournament (SPEC §6.2): every sixthPlaceRule branch, the builders and status. */
 
 import { describe, expect, it } from 'vitest';
 
@@ -8,7 +8,7 @@ import {
   seedsFromStandings, semifinals, sixthPlaceRule,
   mayHideShootout, tournamentHeadline, tournamentOutcome, tournamentOutcomeCopy,
   fixedSiteHost, tournamentGameLine, winnerOf,
-} from '../lib/postseason';
+} from '../lib/postseason/postseason';
 import { getTeamBySlug } from '../lib/teams';
 import type { Game, Standing, TiebreakStage } from '../lib/types';
 

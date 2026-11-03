@@ -1,12 +1,12 @@
 import Link from 'next/link';
 
 import ExternalLink from '../ui/ExternalLink';
-import LastUpdated from '../ui/LastUpdated';
+import LastUpdated from './LastUpdated';
 import { getSitePhase } from '../../lib/data';
 import type { LeagueId, TeamSlug } from '../../lib/types';
 
 import { DATA_CORRECTIONS_URL, SITE_WORDMARK } from './site';
-import ThemeToggle from './ThemeToggle';
+import ThemeToggle from '../prefs/ThemeToggle';
 import TopNav from './TopNav';
 
 /**

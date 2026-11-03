@@ -5,13 +5,14 @@
  * line.
  */
 
-import { ccsBracketGames } from '../../ccs-bracket';
-import { contentRemovalsOf, stampContentChanges } from '../../content-dates';
+import { ccsBracketGames } from '../../postseason/ccs-bracket';
+import { contentRemovalsOf, stampContentChanges } from '../../snapshot/content-dates';
 import { byDateThenId } from '../../format';
-import { CCS, getLeague } from '../../leagues';
-import { buildSeason } from '../../season-build';
-import { countsOf } from '../../snapshot-migrate';
-import { parseSnapshot, snapshotContentHash } from '../../snapshot-schema';
+import { CCS } from '../../league-config/sections';
+import { getLeague } from '../../leagues';
+import { buildSeason } from '../../snapshot/season-build';
+import { countsOf } from '../../snapshot/snapshot-migrate';
+import { parseSnapshot, snapshotContentHash } from '../../snapshot/snapshot-schema';
 import { stableStringify } from '../../stable-json';
 import { TEAMS } from '../../teams';
 import type { ContestId, Game, LeagueHealth, OfficialFixture, Snapshot } from '../../types';
@@ -105,9 +106,9 @@ export function stepAssemble(
   ctx: PipelineContext,
   { state, table, requests }: AssembleInput,
 ): { snapshot: Snapshot; meta: SnapshotMeta } {
-  // Each game's contentChangedAt, against the previous snapshot's copy (lib/content-dates.ts).
+  // Each game's contentChangedAt, against the previous snapshot's copy (lib/snapshot/content-dates.ts).
   const games = stampContentChanges([...state.games].sort(byDateThenId), ctx.previous?.games ?? null, ctx.fetchedAt);
-  // …and the contests that left a date since, which no game left on it records (lib/content-dates.ts).
+  // …and the contests that left a date since, which no game left on it records (lib/snapshot/content-dates.ts).
   const contentRemovals = contentRemovalsOf(games, ctx.previous, ctx.fetchedAt);
   const sources = ctx.sources.ordered();
   const official = state.official;
@@ -139,7 +140,7 @@ export function stepAssemble(
       ...(secondary.divisionsPublished ? { divisionsPublished: { ...secondary.divisionsPublished } } : {}),
       bracketUrl: CCS.bracketUrl,
       // The bracket games are the 'ccs'-tagged games on or after the quarterfinals, or marked published by
-      // MaxPreps' feed: the same objects as `games` (lib/ccs-bracket.ts). Empty until the committee enters them.
+      // MaxPreps' feed: the same objects as `games` (lib/postseason/ccs-bracket.ts). Empty until the committee enters them.
       games: ccsBracketGames(games, CCS.keyDates),
     },
     sources,

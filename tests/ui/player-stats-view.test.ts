@@ -25,13 +25,13 @@ import {
   type PlayerStatsView,
 } from '../../components/teams/player-stats-view';
 import { buildTeamPageView } from '../../components/teams/team-view';
-import { getAllPlayerStatsWithNotes } from '../../lib/player-stats';
+import { getAllPlayerStatsWithNotes } from '../../lib/players/player-stats';
 import { LEAGUE_IDS } from '../../lib/leagues';
 import type {
   GoalieStatKey,
   PlayerStatLine,
   TeamPlayerStats as TeamStats,
-} from '../../lib/player-stats-schema';
+} from '../../lib/players/player-stats-schema';
 import { TEAMS, teamsInLeague } from '../../lib/teams';
 import type { Game } from '../../lib/types';
 import { buildFixturePlayerStats } from '../helpers';
@@ -52,7 +52,7 @@ function casesFor(teams: readonly TeamStats[]): Case[] {
   });
 }
 
-// The pages read MaxPreps' numbers with the coaches' game notes added (lib/note-stats.ts).
+// The pages read MaxPreps' numbers with the coaches' game notes added (lib/players/note-stats.ts).
 const live = casesFor(getAllPlayerStatsWithNotes());
 const fixture = casesFor(buildFixturePlayerStats().teams);
 const at = (slug: string) => fixture.find((c) => c.slug === slug)!;

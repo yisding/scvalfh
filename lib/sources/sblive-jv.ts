@@ -1,5 +1,5 @@
 /**
- * si.com JV team pages → the scored JV finals data/jv.json keeps (lib/jv-schema.ts JvSbliveRow).
+ * si.com JV team pages → the scored JV finals data/jv.json keeps (lib/jv/jv-schema.ts JvSbliveRow).
  *
  * The page is the same `teams/Games` payload as a varsity team's (lib/sources/sblive.ts
  * TeamGamesPropsSchema); what differs is identity. A JV side is ours only when its si.com team id
@@ -14,8 +14,8 @@
  */
 
 import { localDateKey } from '../format';
-import { JV_SLUG_BY_SBLIVE_ID } from '../jv-teams';
-import type { JvSbliveRow } from '../jv-schema';
+import { JV_SLUG_BY_SBLIVE_ID } from '../jv/jv-teams';
+import type { JvSbliveRow } from '../jv/jv-schema';
 import type { TeamSlug } from '../types';
 import {
   SbliveError,

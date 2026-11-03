@@ -2,8 +2,8 @@ import { notFound } from 'next/navigation';
 import { ImageResponse } from 'next/og';
 
 import { dayCardTitle, dayLines, headlineGame, orderedForPreview } from '../../../components/schedule/day-summary';
-import { gameWord, plural } from '../../../components/ui/plural';
-import { OG, OG_SIZE } from '../../../components/layout/og-theme';
+import { gameWord, plural } from '../../../components/words/plural';
+import { OG, OG_SIZE } from '../../../components/metadata/og-theme';
 import { SITE_NAME } from '../../../components/layout/site';
 import { getGameDates, getGames } from '../../../lib/data';
 import { EN_DASH, shortDate } from '../../../lib/format';

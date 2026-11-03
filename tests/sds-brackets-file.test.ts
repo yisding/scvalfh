@@ -1,7 +1,7 @@
 /**
  * data/sds-brackets-2026.json — the San Diego Section's 2026 brackets, transcribed by hand from the
  * Section's published sheet once it is linked after the Sat Oct 31 seeding meeting — and its contract,
- * lib/sds-brackets-schema.ts (plan final-07, 2026-10-29).
+ * lib/postseason/sds-brackets-schema.ts (plan final-07, 2026-10-29).
  *
  * The committed file holds the Section's 2026 brackets (transcribed 2026-11-03). The contract is exercised on last
  * season's brackets in the same shape (tests/fixtures/sds/brackets-2025.ts seedsFromHistory), and every
@@ -14,7 +14,7 @@ import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 import { LEAGUE_IDS, getLeague } from '../lib/leagues';
-import { SdsBracketsSchema, sdsPlayoffWindow, type SdsBracketsFile } from '../lib/sds-brackets-schema';
+import { SdsBracketsSchema, sdsPlayoffWindow, type SdsBracketsFile } from '../lib/postseason/sds-brackets-schema';
 import { sds2025Schema, seedsFromHistory } from './fixtures/sds/brackets-2025';
 import { REPO } from './helpers';
 

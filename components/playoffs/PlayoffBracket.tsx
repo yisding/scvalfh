@@ -93,7 +93,7 @@ function BracketLine({ side, seed, showScore }: { side: SideView; seed: number |
       data-team-slug={team?.slug}
     >
       {/* A seed is information before a score (DESIGN §7.11): it prints as soon as the owner file names
-          it (lib/ccs-bracket.ts getCcsSeeds), and nothing is printed in its place before that. */}
+          it (lib/postseason/ccs-bracket.ts getCcsSeeds), and nothing is printed in its place before that. */}
       {seed !== null ? <span className="sx-num w-4 shrink-0 text-meta text-ink-3">{seed}</span> : null}
       {team ? <TeamMonogram team={team} size={20} /> : <span className="inline-block shrink-0" style={{ width: 20 }} />}
       <span className={`min-w-0 flex-1 truncate text-meta ${nameClass(side)}`}>{sideLabel(side)}</span>

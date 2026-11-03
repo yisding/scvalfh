@@ -9,15 +9,15 @@
  * left out of goals as lib/standings.ts leaves them out (DESIGN §11.6). Records and rates need a minimum
  * number of results (ranking.ts qualifyingMinimum); the teams below it are named in the notes.
  *
- * The Elo-adjusted goals board (lib/adjusted-scoring.ts) weighs each game by the opponent's defense: its
+ * The Elo-adjusted goals board (lib/ratings/adjusted-scoring.ts) weighs each game by the opponent's defense: its
  * rating in the one Elo table, corrected by the goals it has allowed. It counts the games the Elo rating
  * counts, past the Elo board's minimum.
  */
 
-import type { AdjustedScoring } from '../../lib/adjusted-scoring';
+import type { AdjustedScoring } from '../../lib/ratings/adjusted-scoring';
 import { listWords, recordString, recordWords, signedGd, winPct } from '../../lib/format';
 import type { ComputedRecord, Game, Standing, Team, TeamId } from '../../lib/types';
-import { plural } from '../ui/plural';
+import { plural } from '../words/plural';
 import { UNADJUSTED_NOTE, num, schoolBoard } from './board-kit';
 import type { EloBoardView } from './elo-board';
 import { byName, qualifyingMinimum } from './ranking';
@@ -153,7 +153,7 @@ function rateBoard(
 }
 
 /**
- * The `#adjusted-goals` board: goals per game against an average team (lib/adjusted-scoring.ts), over the
+ * The `#adjusted-goals` board: goals per game against an average team (lib/ratings/adjusted-scoring.ts), over the
  * games the Elo board counts and past its minimum `min`, with the raw rate over the same games beside it.
  * Ranked on the adjusted rate as printed (two places), then more games, as the raw goals board splits
  * equal rates; a school that has not scored is never listed.

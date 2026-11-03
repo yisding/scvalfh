@@ -13,8 +13,8 @@ import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
-import { countsOf } from '../../lib/snapshot-migrate';
-import { loadSnapshot } from '../../lib/snapshot-schema';
+import { countsOf } from '../../lib/snapshot/snapshot-migrate';
+import { loadSnapshot } from '../../lib/snapshot/snapshot-schema';
 import type { Snapshot } from '../../lib/types';
 import { game } from '../game-builder';
 import { corpusSnapshotPath } from '../helpers';
@@ -302,7 +302,7 @@ describe('home panels (components/home/home-view.ts → LeaguePanel)', () => {
     expect(bval?.link?.href).toBe('/playoffs#bval');
     const scval = lead('scval', 'crossover', '2026-10-29');
     expect(`${scval?.lead} ${scval?.body}`, `${HV}: SCVAL crossover`).toBe(
-      // The pairings' window (lib/leagues.ts): two 2026 crossovers moved to Thu Oct 29, so both days are named.
+      // The pairings' window (lib/league-config/scval.ts): two 2026 crossovers moved to Thu Oct 29, so both days are named.
       'League play is over. The crossover games and the fourth-place play-in for SCVAL’s seventh automatic CCS berth are Thu Oct 29 and Fri Oct 30; the CCS seeding meeting is Mon Nov 2.',
     );
     const pcal = lead('pcal', 'playoffs', '2026-11-03');
@@ -611,7 +611,7 @@ describe('the pinned card (components/home/MyTeamCard.tsx ← home-view.ts team 
  * tournament outcome does, and fits the card's one 288px line. A fresh module instance; the corpus views above are
  * already built.
  */
-describe('the pinned card after the SCVAL play-in (home-view.ts ← lib/postseason-outcomes.ts)', () => {
+describe('the pinned card after the SCVAL play-in (home-view.ts ← lib/postseason/postseason-outcomes.ts)', () => {
   let views: ReturnType<HomeView['buildTeamViews']>;
   const prior = process.env.SCVAL_SNAPSHOT;
 

@@ -24,10 +24,11 @@ import path from 'node:path';
 import { beforeAll, describe, expect, it } from 'vitest';
 
 import { localDateKey, sideOutcome } from '../../lib/format';
-import { DATA_QUALITY, LEAGUES, getDivision, getLeague, getSection } from '../../lib/leagues';
+import { DATA_QUALITY } from '../../lib/league-config/data-quality';
+import { LEAGUES, getDivision, getLeague, getSection } from '../../lib/leagues';
 import { readManifest } from '../../lib/pipeline/corpus';
 import { NO_MAXPREPS_TABLE_REASON } from '../../lib/pipeline/steps/league-meta';
-import { loadSnapshot } from '../../lib/snapshot-schema';
+import { loadSnapshot } from '../../lib/snapshot/snapshot-schema';
 import { ScheduleResponseSchema, type ScheduleRow } from '../../lib/sources/maxpreps';
 import { parseScoresPage, parseTeamGamesPage } from '../../lib/sources/sblive';
 import { divisionGames } from '../../lib/standings';
@@ -164,7 +165,7 @@ describeIfCaptured('the SoCal corpus run', () => {
   });
 
   it('publishes per-league counts (the frozen NorCal leagues hold only the SoCal feeds’ games against them)', () => {
-    expect(snapshot.counts.byLeague, 'lib/snapshot-migrate.ts countsOf').toEqual({
+    expect(snapshot.counts.byLeague, 'lib/snapshot/snapshot-migrate.ts countsOf').toEqual({
       scval: { teams: 15, games: 10, leagueGames: 0, finals: 5, backfilled: 0 },
       bval: { teams: 12, games: 0, leagueGames: 0, finals: 0, backfilled: 0 },
       pcal: { teams: 7, games: 0, leagueGames: 0, finals: 0, backfilled: 0 },
@@ -184,7 +185,7 @@ describeIfCaptured('the SoCal corpus run', () => {
 
 describeIfCaptured('the San Diego Valley division: MaxPreps publishes no table', () => {
   it('has meta and reported table skipped, no reported rows, and no MaxPreps source row', () => {
-    expect(getDivision('valley').maxprepsLeagueId, 'lib/leagues.ts').toBeNull();
+    expect(getDivision('valley').maxprepsLeagueId, 'lib/league-config/north-county.ts').toBeNull();
     const valley = snapshot.leagueHealth.flatMap((h) => h.divisions).find((d) => d.divisionId === 'valley');
     expect(valley, 'lib/pipeline/steps/standings.ts').toMatchObject({
       meta: 'skipped',
@@ -286,7 +287,7 @@ describeIfCaptured('the membership classification (the San Diego divisions)', ()
     const eastern = new Set(teamsInDivision('city-eastern').map((t) => t.slug));
     const games = snapshot.games.filter((g) => g.home.slug === ph.slug || g.away.slug === ph.slug);
     const divisionGamesOfPh = games.filter((g) => eastern.has(g.home.slug!) && eastern.has(g.away.slug!));
-    expect(divisionGamesOfPh, 'lib/normalize.ts').toHaveLength(10);
+    expect(divisionGamesOfPh, 'lib/pipeline/normalize.ts').toHaveLength(10);
     for (const g of divisionGamesOfPh) {
       expect(g.isLeague, `MaxPreps' flag: ${g.contestId}`).toBe(false);
       expect(g.countsFor, `lib/classify.ts: ${g.contestId}`).toBe('city-eastern');
@@ -307,7 +308,7 @@ describeIfCaptured('the membership classification (the San Diego divisions)', ()
         [g.home.slug, g.away.slug].some((s) => getTeamBySlug(s ?? '')?.division === 'city-eastern'),
     );
     const flagged = mb.filter((g) => g.isLeague);
-    expect(flagged, 'lib/normalize.ts: Mission Bay’s league-flagged City Eastern games').toHaveLength(5);
+    expect(flagged, 'lib/pipeline/normalize.ts: Mission Bay’s league-flagged City Eastern games').toHaveLength(5);
     for (const g of flagged) {
       expect(g.countsFor, `lib/classify.ts: ${g.contestId}`).toBeNull();
       expect(g.provenance.classificationNote, `lib/classify.ts crossDivisionNote: ${g.contestId}`).toBe(note);
@@ -332,16 +333,16 @@ describeIfCaptured('the section shootout and level games', () => {
   }
 
   it('decides a level San Diego final MaxPreps marks W and L as a shootout win, across conferences too', () => {
-    expect(getSection('sds').shootout, 'lib/leagues.ts').not.toBeNull();
+    expect(getSection('sds').shootout, 'lib/league-config/sections.ts').not.toBeNull();
     const games = levelWithResult();
     // The eight in the design inventory (Clairemont–Eastlake 9/1 … Westview–San Pasqual 10/2).
-    expect(games.map((g) => g.contestId.slice(0, 8)).sort(), 'lib/normalize.ts').toEqual(
+    expect(games.map((g) => g.contestId.slice(0, 8)).sort(), 'lib/pipeline/normalize.ts').toEqual(
       ['f99ce5ed', '7551a71d', 'ce29e835', 'd8aad805', 'ae312fa8', 'e6488575', '829af66a', 'fb944ba7'].sort(),
     );
     for (const g of games) {
-      expect(g.decider, `lib/normalize.ts: ${g.contestId}`).toBe('SO');
-      expect(g.shootout, `lib/normalize.ts: no tally stored: ${g.contestId}`).toBeNull();
-      expect(g.provenance.resultConflict, `lib/normalize.ts: ${g.contestId}`).toBeUndefined();
+      expect(g.decider, `lib/pipeline/normalize.ts: ${g.contestId}`).toBe('SO');
+      expect(g.shootout, `lib/pipeline/normalize.ts: no tally stored: ${g.contestId}`).toBeNull();
+      expect(g.provenance.resultConflict, `lib/pipeline/normalize.ts: ${g.contestId}`).toBeUndefined();
       const winner = g.home.result === 'W' ? 'home' : 'away';
       expect(sideOutcome(g, winner), `lib/format.ts sideOutcome: ${g.contestId}`).toBe('W');
       expect(sideOutcome(g, winner === 'home' ? 'away' : 'home'), `lib/format.ts sideOutcome: ${g.contestId}`).toBe('L');
@@ -356,13 +357,13 @@ describeIfCaptured('the section shootout and level games', () => {
   });
 
   it('never decides a level Sunset game by shootout: the Southern Section has no shootout rule', () => {
-    expect(getSection('ss').shootout, 'lib/leagues.ts').toBeNull();
+    expect(getSection('ss').shootout, 'lib/league-config/sections.ts').toBeNull();
     const sunset = new Set(teamsInLeague('sunset').map((t) => t.slug));
     const level = snapshot.games.filter(
       (g) => g.status === 'final' && sunset.has(g.home.slug ?? '') && sunset.has(g.away.slug ?? '') && g.home.score === g.away.score,
     );
     expect(level.length, 'the corpus: Sunset games that ended level').toBeGreaterThan(0);
-    for (const g of level) expect(g.decider, `lib/normalize.ts: ${g.contestId}`).not.toBe('SO');
+    for (const g of level) expect(g.decider, `lib/pipeline/normalize.ts: ${g.contestId}`).not.toBe('SO');
   });
 });
 

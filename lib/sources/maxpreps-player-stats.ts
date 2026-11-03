@@ -42,7 +42,7 @@ import { z } from 'zod';
 
 import { MaxPrepsError, type MaxPrepsClient } from './maxpreps';
 import { careerIdFromUrl } from './maxpreps-roster';
-import { recaseName } from '../person-name';
+import { recaseName } from './person-name';
 import {
   FIELD_STAT_KEYS,
   GOALIE_STAT_KEYS,
@@ -51,7 +51,7 @@ import {
   type GoalieStatKey,
   type GoalieStats,
   type TeamPlayerStats,
-} from '../player-stats-schema';
+} from '../players/player-stats-schema';
 import type { Team } from '../types';
 import { MAXPREPS_API, SPORT_SEASON_ID } from '../season';
 
@@ -550,7 +550,7 @@ export async function fetchPlayerStats(
 
 // ---------------------------------------------------------------- the roster join
 
-/** The roster fields the join reads (a subset of lib/rosters-schema.ts' RosterPlayer). */
+/** The roster fields the join reads (a subset of lib/players/rosters-schema.ts' RosterPlayer). */
 export interface RosterJoinPlayer {
   careerId: string | null;
   athleteId: string | null;

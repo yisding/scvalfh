@@ -3,9 +3,11 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
 import TeamElo from '../../../components/teams/TeamElo';
+import TeamElsewhere from '../../../components/teams/TeamElsewhere';
+import TeamFormMargin from '../../../components/teams/TeamFormMargin';
 import TeamGameLog from '../../../components/teams/TeamGameLog';
 import TeamIdentity from '../../../components/teams/TeamIdentity';
-import TeamJvGames from '../../../components/teams/TeamJvGames';
+import TeamJvGames from '../../../components/jv/TeamJvGames';
 import TeamNextGame from '../../../components/teams/TeamNextGame';
 import TeamOfficialFixtures from '../../../components/teams/TeamOfficialFixtures';
 import TeamPlayerStats from '../../../components/teams/TeamPlayerStats';
@@ -14,33 +16,30 @@ import TeamRoster from '../../../components/teams/TeamRoster';
 import TeamSplits from '../../../components/teams/TeamSplits';
 import TeamStatTiles from '../../../components/teams/TeamStatTiles';
 import TeamUnbeaten from '../../../components/teams/TeamUnbeaten';
+import { buildPlayerStatsView } from '../../../components/teams/player-stats-view';
+import { buildRosterView } from '../../../components/teams/roster-view';
 import {
-  buildPlayerStatsView,
-  type PlayerStatsView,
-} from '../../../components/teams/player-stats-view';
-import { teamJvStanding } from '../../../components/standings/jv-standings-view';
-import { buildTeamJvView } from '../../../components/teams/jv-view';
-import { buildRosterView, type RosterView } from '../../../components/teams/roster-view';
-import { buildTeamPageView, type TeamPageView } from '../../../components/teams/team-view';
+  buildTeamPageParts,
+  postseasonDescription,
+  postseasonKicker,
+  rosterExtras,
+} from '../../../components/teams/team-page-view';
+import { buildTeamPageView } from '../../../components/teams/team-view';
 import { regionIdSuffix } from '../../../components/leaders/scope';
 import Arrow from '../../../components/ui/Arrow';
 import EmptyState from '../../../components/ui/EmptyState';
 import ExternalLink from '../../../components/ui/ExternalLink';
-import FormStrip from '../../../components/ui/FormStrip';
 import { gameKindLabel } from '../../../components/ui/describe-game';
 import { GameCard, GameRow } from '../../../components/ui/GameRow';
 import LeagueHealthNote from '../../../components/ui/LeagueHealthNote';
-import MarginStrip from '../../../components/ui/MarginStrip';
-import { formStripName, plural } from '../../../components/ui/plural';
+import { plural } from '../../../components/words/plural';
 import SectionHeader from '../../../components/ui/SectionHeader';
-import JsonLd from '../../../components/layout/JsonLd';
-import { DATA_CORRECTIONS_URL, OG_BASE } from '../../../components/layout/site';
-import { teamJsonLd } from '../../../components/layout/structured-data';
-import { getTeamSlugs, getToday } from '../../../lib/data';
-import { ordinal, recordString, shortDate } from '../../../lib/format';
-import { getHistoryFor, getHistorySeason, getHistoryStandings } from '../../../lib/history';
-import { divisionHeading, getLeague, leagueOfDivision, regionOf } from '../../../lib/leagues';
-import type { DivisionId, LeagueId } from '../../../lib/types';
+import JsonLd from '../../../components/metadata/JsonLd';
+import { OG_BASE } from '../../../components/layout/site';
+import { teamJsonLd } from '../../../components/metadata/structured-data';
+import { getTeamSlugs } from '../../../lib/data';
+import { recordString, shortDate } from '../../../lib/format';
+import { getLeague, regionOf } from '../../../lib/leagues';
 
 /**
  * /teams/[slug] — "How is MY team doing?" (DESIGN §3.7).
@@ -74,7 +73,8 @@ import type { DivisionId, LeagueId } from '../../../lib/types';
  *     Postseason     | Who we haven't beaten
  *     League log (2) | On <SHORT>’s schedule only
  *        ″           | Non-league
- *     Elsewhere (both columns, or under Non-league — see `logOutweighs` below)
+ *     Elsewhere (both columns, or under Non-league — see `logOutweighs` below and in
+ *     components/teams/team-page-view.ts)
  *     JV games (both columns)
  *     Player stats (both columns)
  *     Roster (both columns)
@@ -160,113 +160,26 @@ export async function generateMetadata({ params }: PageProps<'/teams/[slug]'>): 
   };
 }
 
-/**
- * `player stats, roster, ` for the description, naming only what this page shows: stats when the
- * coach has entered some, the roster when it lists players. Empty for a team that has neither
- * (a coach who published nothing, or a team no update has covered yet), so its description does not
- * promise what the page lacks.
- */
-function rosterExtras(stats: PlayerStatsView | null, roster: RosterView | null): string {
-  const parts: string[] = [];
-  if (stats && (stats.scoring || stats.more || stats.goalies.length > 0)) parts.push('player stats');
-  if (roster && roster.rows.length > 0) parts.push('roster');
-  return parts.map((p) => `${p}, `).join('');
-}
-
-/**
- * `CCS picture` (SCVAL, BVAL, PCAL) | `MCAL tournament picture` | `Super Regional picture` (EAL) |
- * `San Diego Section playoffs picture` (City, North County, Metro) | `Postseason` (the Sunset and the LA
- * independents, whose postseason is the Tournament of Champions: no table place leads into it, so there is no
- * picture to draw), by `postseason.kind`.
- */
-function postseasonKicker(view: TeamPageView): string {
-  const { postseasonKind, postseasonName, shortName } = view.league;
-  switch (postseasonKind) {
-    case 'ccs-ladder':
-      return 'CCS picture';
-    case 'league-tournament':
-      return `${shortName} tournament picture`;
-    case 'unbracketed-tournament':
-    case 'section-playoffs':
-      return `${postseasonName} picture`;
-    case 'no-postseason':
-      return 'Postseason';
-  }
-}
-
-/** The meta description's last words: the kicker, except for the Sunset and the LA independents, whose postseason is the Tournament of Champions. */
-function postseasonDescription(view: TeamPageView): string {
-  return view.league.postseasonKind === 'no-postseason' ? 'the Tournament of Champions' : postseasonKicker(view);
-}
-
-/**
- * Where last season's row sat: the division heading (`El Camino`), prefixed by that division's
- * league when this team plays in another league now, so no page reads as if "El Camino" were a
- * division of its own league.
- */
-function lastSeasonScope(division: DivisionId, league: LeagueId): string {
-  const owner = leagueOfDivision(division);
-  const heading = divisionHeading(division);
-  if (heading === null) return owner.shortName;
-  return owner.id === league ? heading : `${owner.shortName} ${heading}`;
-}
-
 export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
   const { slug } = await params;
   const view = buildTeamPageView(slug);
   if (!view) notFound();
 
+  const { team, last, leagueLog, nonLeagueLog, officialFixtures, leaguePlayed, leagueScheduled } = view;
+  // Last season's row, the roster, JV and player-stats views and the grid's layout decisions
+  // (components/teams/team-page-view.ts).
+  const parts = buildTeamPageParts(view);
   const {
-    team,
-    last,
-    leagueLog,
-    nonLeagueLog,
-    marginEntries,
-    formEntries,
-    officialFixtures,
-    leaguePlayed,
-    leagueScheduled,
-  } = view;
-  // Last season's varsity row from the league's own 2025-26 standings (SCVAL's PDF, BVAL's sheet;
-  // PCAL, MCAL and the EAL are unavailable, so their slugs have no rows), and the size of that
-  // division as it was then (the alignment can change between seasons: Leland played in Santa
-  // Teresa in 2025-26 and is in Mt. Hamilton now).
-  const history = getHistoryFor(team.slug).find((entry) => entry.level === 'varsity');
-  const historySize = history ? getHistoryStandings(history.division).length : 0;
-  const historyScope = history ? lastSeasonScope(history.division, team.league) : '';
-  const sblive = team.external.sbliveGamesUrl;
-  // Both exist for every registry team; an empty or pending team gets a stated empty state.
-  const roster = buildRosterView(team.slug);
-  // The school's JV games (MaxPreps, supplemented by si.com): listed apart from every varsity count.
-  const jv = buildTeamJvView(team.slug);
-  // Its JV place, when its division's JV table is shown (lib/jv-standings.ts), and that table's anchor.
-  const jvStanding = teamJvStanding(team.slug);
-  const playerStats = buildPlayerStatsView(team.slug, [...leagueLog, ...nonLeagueLog]);
-  const rosterCount = roster && roster.status !== 'error' ? roster.rows.length : 0;
-  // A team whose every league game is still to come (Metro South Bay before Oct 7, Newport Harbor before
-  // Oct 13) has no league result for MaxPreps to have either, so its empty state names the first game
-  // instead of "MaxPreps may have results we have not picked up yet" (review 2026-10-06). That hedge stays
-  // for a league game dated on or before the snapshot's Pacific day that has no score.
-  const today = getToday();
-  const earliestLeague = leagueLog.reduce<(typeof leagueLog)[number] | null>(
-    (first, g) => (first === null || g.dateLocal < first.dateLocal ? g : first),
-    null,
-  );
-  const firstLeagueGame = earliestLeague !== null && earliestLeague.dateKey > today ? earliestLeague : null;
-  const hasPlayedLeagueGames = marginEntries.some(
-    (entry) => entry.margin !== null && !entry.excludedFromMargin,
-  );
-
-  const leagueLogSpans = hasPlayedLeagueGames && officialFixtures.length > 0;
-  const fixturesSpan = !leagueLogSpans && officialFixtures.length > 6;
-  const logOutweighs =
-    hasPlayedLeagueGames &&
-    officialFixtures.length === 0 &&
-    leagueLog.length - nonLeagueLog.length >= 4;
-
-  const maxprepsAction = team.external.maxprepsScheduleUrl
-    ? { href: team.external.maxprepsScheduleUrl, label: 'Check MaxPreps', external: true }
-    : undefined;
+    roster,
+    jv,
+    jvStanding,
+    playerStats,
+    rosterCount,
+    leagueLogSpans,
+    fixturesSpan,
+    logOutweighs,
+    maxprepsAction,
+  } = parts;
 
   return (
     <div className="pb-section-lg">
@@ -332,84 +245,12 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
           </p>
         </div>
 
-        {/* A team with no reported results gets ONE empty state here, not an empty form strip
-            beside an empty chart (DESIGN §8). */}
-        {hasPlayedLeagueGames ? (
-          <>
-            <section className="min-w-0 md:max-lg:col-span-2">
-              <SectionHeader kicker="Form" meta="League, oldest to newest" />
-              {/* 24px chips fill more of their 40px tap boxes, so the five read as one sequence;
-                  the direction is in the heading's meta, and the non-league count gets its own
-                  line instead of trailing off the end of the strip. */}
-              <div className="sx-card p-4 md:p-5">
-                <div className="flex min-h-11 items-center">
-                  <FormStrip
-                    className="-ml-2"
-                    entries={formEntries}
-                    size={24}
-                    label={formStripName(team.name, formEntries.length)}
-                  />
-                </div>
-                {nonLeagueLog.length > 0 ? (
-                  <p className="mt-2 mb-0 text-meta text-ink-3">
-                    {`+ ${plural(nonLeagueLog.length, 'other game')}, not counted here`}
-                  </p>
-                ) : null}
-              </div>
-            </section>
-
-            <section className="min-w-0 md:max-lg:col-span-2 lg:row-span-2">
-              <SectionHeader
-                kicker="Margin by league game"
-                meta={`${leaguePlayed} played`}
-              />
-              {/* `slots`: the team's real league slate (`leagueScheduled`, from the official
-                  schedule or the league's games per team). A league with no fixed schedule (the
-                  Sunset) has no slate to draw ahead, so its axis is the games it has: no `?` slots. */}
-              <div className="sx-card p-4 md:p-5">
-                <div data-twin className="hidden md:block">
-                  <MarginStrip
-                    entries={marginEntries}
-                    teamName={team.name}
-                    slots={leagueScheduled ?? marginEntries.length}
-                    height={200}
-                  />
-                </div>
-                <div data-twin className="md:hidden">
-                  <MarginStrip
-                    entries={marginEntries}
-                    teamName={team.name}
-                    slots={leagueScheduled ?? marginEntries.length}
-                    height={160}
-                  />
-                </div>
-              </div>
-            </section>
-          </>
-        ) : (
-          <section className="min-w-0 md:col-span-2">
-            <SectionHeader kicker="Form and goal margin" />
-            {firstLeagueGame ? (
-              <EmptyState
-                heading={`${team.name} has not played a ${view.scopeLabel} game yet.`}
-                action={maxprepsAction}
-              >
-                The first is {shortDate(firstLeagueGame.dateLocal)}{' '}
-                {firstLeagueGame.away.slug === team.slug && firstLeagueGame.site !== 'neutral' ? 'at' : 'vs'}{' '}
-                {firstLeagueGame.away.slug === team.slug ? firstLeagueGame.home.name : firstLeagueGame.away.name}. Their
-                schedule is below.
-              </EmptyState>
-            ) : (
-              <EmptyState
-                heading={`No league results reported for ${team.name}.`}
-                action={maxprepsAction}
-              >
-                Their schedule is below, and MaxPreps may have results we have not picked up yet. We
-                do not fill the gap with zeroes.
-              </EmptyState>
-            )}
-          </section>
-        )}
+        <TeamFormMargin
+          view={view}
+          hasPlayedLeagueGames={parts.hasPlayedLeagueGames}
+          firstLeagueGame={parts.firstLeagueGame}
+          maxprepsAction={maxprepsAction}
+        />
 
         <section className="min-w-0 md:max-lg:col-span-2">
           <SectionHeader kicker="Splits" />
@@ -494,78 +335,14 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
             />
           </section>
 
-          <section
-            className={logOutweighs ? 'min-w-0 md:max-lg:col-span-2' : 'min-w-0 md:col-span-2'}
-          >
-            <SectionHeader kicker="Elsewhere" />
-            {/* Pills (40px), not bare text links: three standalone links stacked at text height
-                were 17px tall and 21px apart, which axe reported as a serious WCAG 2.5.8 failure
-                on /teams/st-ignatius. A link inside a sentence stays as it is; these are not. They
-                sit on the canvas, not in a card, where the grey pill fill barely differs from it
-                and the capsules disappeared in light mode, so they take the card's surface and
-                ring (surface-2 on hover). */}
-            <ul className="m-0 flex list-none flex-wrap gap-2 p-0">
-              {team.external.maxprepsTeamUrl ? (
-                <li>
-                  <ExternalLink
-                    href={team.external.maxprepsTeamUrl}
-                    className="sx-pill sx-pill-ring"
-                  >
-                    MaxPreps: {team.name} field hockey
-                  </ExternalLink>
-                </li>
-              ) : null}
-              {team.external.maxprepsScheduleUrl ? (
-                <li>
-                  <ExternalLink
-                    href={team.external.maxprepsScheduleUrl}
-                    className="sx-pill sx-pill-ring"
-                  >
-                    MaxPreps schedule &amp; scores
-                  </ExternalLink>
-                </li>
-              ) : null}
-              {sblive ? (
-                <li>
-                  <ExternalLink
-                    href={sblive}
-                    className="sx-pill sx-pill-ring"
-                  >
-                    High School on SI (si.com): {team.name}
-                  </ExternalLink>
-                </li>
-              ) : null}
-              {/* Last, beside the sources a reader checks a wrong score or roster entry against;
-                  the one accent pill in the row, so it reads as the action rather than a source.
-                  `text-accent-ink!`: ExternalLink's `text-accent` would otherwise win, and accent
-                  on the wash is under AA in dark mode (components/layout/Attribution.tsx). */}
-              <li>
-                <ExternalLink href={DATA_CORRECTIONS_URL} className="sx-pill sx-pill-accent text-accent-ink!">
-                  Report a data error
-                </ExternalLink>
-              </li>
-            </ul>
-            {/* Last season in one line, record exactly as the league's 2025-26 standings
-                printed it ("1-13": SCVAL's PDF drops a zero tie count on some rows; BVAL's sheet
-                has no tie field for one row). The site-wide disclaimer that sat here is the
-                footer's, so it is no longer repeated on every team page. The link text keeps
-                "2025-26" on one line rather than breaking at its hyphen. */}
-            {history ? (
-              <p className="mt-3 mb-0 max-w-prose text-meta text-ink-2">
-                Last season ({getHistorySeason()}): {ordinal(history.row.place)} of {historySize} in{' '}
-                {historyScope}, <span className="whitespace-nowrap">{history.row.leagueRecord}.</span>{' '}
-                {/* A sentence break, not a dash: a wrapped dash dangled at the end of line 1 at
-                    phone widths (or opened line 2 when kept with the link). */}
-                <Link
-                  href={`/history/2025-26#${history.division}`}
-                  prefetch={false}
-                  className="whitespace-nowrap"
-                >
-                  Full {getHistorySeason()} standings
-                </Link>
-              </p>
-            ) : null}
-          </section>
+          <TeamElsewhere
+            team={team}
+            sblive={parts.sblive}
+            history={parts.history}
+            historySize={parts.historySize}
+            historyScope={parts.historyScope}
+            logOutweighs={logOutweighs}
+          />
         </div>
 
         {/* The JV list comes after every varsity game section and before the players: it is the

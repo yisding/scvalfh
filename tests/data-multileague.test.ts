@@ -15,7 +15,7 @@ import { readFileSync } from 'node:fs';
 
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
-import { loadSnapshot } from '../lib/snapshot-schema';
+import { loadSnapshot } from '../lib/snapshot/snapshot-schema';
 import type { DivisionId, LeagueId, Snapshot, Standing } from '../lib/types';
 import { corpusSnapshotPath } from './helpers';
 
@@ -186,12 +186,12 @@ describe('both runs: the corpus leagues through lib/data', () => {
   it("getLeagueTournament('mcal'): seeds Tamalpais, University, Redwood, Marin Catholic, Convent, Lick-Wilmerding", () => {
     for (const v of variants) {
       const t = v.data.getLeagueTournament('mcal');
-      expect(t.status, `lib/postseason.ts buildLeagueTournament: status [${v.name}]`).toBe('projected');
+      expect(t.status, `lib/postseason/postseason.ts buildLeagueTournament: status [${v.name}]`).toBe('projected');
       expect(
         t.seeds.map((s) => s.seat.map((x) => x.slug).join('|')),
-        `lib/postseason.ts buildLeagueTournament: seeds [${v.name}]`,
+        `lib/postseason/postseason.ts buildLeagueTournament: seeds [${v.name}]`,
       ).toEqual(MCAL_SEEDS);
-      expect(t.playInNeeded, `lib/postseason.ts: play-in [${v.name}]`).toBe('no');
+      expect(t.playInNeeded, `lib/postseason/postseason.ts: play-in [${v.name}]`).toBe('no');
     }
   });
 
@@ -201,7 +201,7 @@ describe('both runs: the corpus leagues through lib/data', () => {
       const fromSblive = v.snapshot.games.filter(
         (g) => g.provenance.scores === 'sblive' && (mcal.has(g.home.teamId ?? '') || mcal.has(g.away.teamId ?? '')),
       );
-      expect(fromSblive.map((g) => g.contestId), `lib/backfill.ts: MCAL fills [${v.name}]`).toEqual([]);
+      expect(fromSblive.map((g) => g.contestId), `lib/crosscheck/backfill.ts: MCAL fills [${v.name}]`).toEqual([]);
       const health = v.snapshot.leagueHealth.find((h) => h.leagueId === 'mcal');
       expect(health?.divisions.map((d) => d.backfilled), `lib/pipeline/steps/standings.ts: MCAL backfilled [${v.name}]`).toEqual([0]);
     }
@@ -225,14 +225,14 @@ describe('with si.com (the cron default): D2 fills exactly three PCAL games', ()
     const rows = withSblive().snapshot.sbliveCrossCheck?.backfilled ?? [];
     expect(
       rows.map((b) => `${b.rule} ${b.dateKey} ${b.label} ${b.contestId} si.com ${b.sbliveUrl.match(/\/games\/(\d+)-/)?.[1]} ${b.sblive.away}-${b.sblive.home}`),
-      'lib/backfill.ts: PCAL fills (BackfillRow list)',
+      'lib/crosscheck/backfill.ts: PCAL fills (BackfillRow list)',
     ).toEqual([
       'absent-fixture 2026-09-04 Greenfield at Santa Catalina sblive:6541425 si.com 6541425 0-1',
       'score-pending 2026-09-29 Carmel at Stevenson f06f9d76-c8a1-4358-b7a9-1c97c2d686f0 si.com 6499423 0-9',
       'absent-fixture 2026-09-30 Hollister at Greenfield sblive:6543072 si.com 6543072 3-1',
     ]);
     // Rules 2 and 3 replace no MaxPreps score (rule 4 would record MaxPreps' value here).
-    expect(rows.map((b) => b.maxpreps), 'lib/backfill.ts: BackfillRow.maxpreps').toEqual([null, null, null]);
+    expect(rows.map((b) => b.maxpreps), 'lib/crosscheck/backfill.ts: BackfillRow.maxpreps').toEqual([null, null, null]);
   });
 
   it('the filled games are counted PCAL finals with si.com provenance; nothing else is si.com-sourced', () => {
@@ -240,16 +240,16 @@ describe('with si.com (the cron default): D2 fills exactly three PCAL games', ()
     const filled = snapshot.games.filter((g) => g.provenance.scores === 'sblive');
     expect(
       filled.map((g) => `${g.contestId} ${g.status} ${g.away.slug} ${g.away.score} @ ${g.home.slug} ${g.home.score} counts ${g.countsFor} ${g.provenance.backfill?.rule}`),
-      'lib/backfill.ts applyBackfill (classified by lib/classify.ts)',
+      'lib/crosscheck/backfill.ts applyBackfill (classified by lib/classify.ts)',
     ).toEqual([
       'sblive:6541425 final greenfield 0 @ santa-catalina 1 counts pcal absent-fixture',
       'f06f9d76-c8a1-4358-b7a9-1c97c2d686f0 final carmel 0 @ stevenson 9 counts pcal score-pending',
       'sblive:6543072 final hollister 3 @ greenfield 1 counts pcal absent-fixture',
     ]);
     for (const g of filled.filter((x) => x.contestId.startsWith('sblive:'))) {
-      expect(g.urls.maxpreps, `lib/backfill.ts: ${g.contestId} urls.maxpreps`).toBeNull();
-      expect(g.urls.sblive, `lib/backfill.ts: ${g.contestId} urls.sblive`).toMatch(/^https:\/\/www\.si\.com\/high-school\/stats\/california\/field-hockey\/games\//);
-      expect(g.official?.source, `lib/backfill.ts: ${g.contestId} official stamp`).toBe('pcal-pdf');
+      expect(g.urls.maxpreps, `lib/crosscheck/backfill.ts: ${g.contestId} urls.maxpreps`).toBeNull();
+      expect(g.urls.sblive, `lib/crosscheck/backfill.ts: ${g.contestId} urls.sblive`).toMatch(/^https:\/\/www\.si\.com\/high-school\/stats\/california\/field-hockey\/games\//);
+      expect(g.official?.source, `lib/crosscheck/backfill.ts: ${g.contestId} official stamp`).toBe('pcal-pdf');
     }
     const pcal = snapshot.leagueHealth.find((h) => h.leagueId === 'pcal')?.divisions[0];
     expect(pcal?.backfilled, 'lib/pipeline/steps/standings.ts: PCAL DivisionHealth.backfilled').toBe(3);

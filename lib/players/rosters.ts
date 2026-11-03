@@ -1,0 +1,309 @@
+/**
+ * The read API for data/rosters.json and data/rosters-enrichment.json — every registry team's
+ * roster, all nine leagues and the five independents (SPEC §1.1j).
+ *
+ * Two files, one view:
+ *   - data/rosters.json is the MaxPreps roster, rebuilt by `scripts/fetch-rosters.ts` (by hand or
+ *     on a weekly schedule, not by the twice-daily cron).
+ *   - data/rosters-enrichment.json is what other public sources add — school athletics sites, a
+ *     school roster PDF, school and local papers, MaxPreps career, JV and earlier-season pages — joined on team slug +
+ *     MaxPreps athleteId. It only ever fills a blank; where a source disagrees with MaxPreps,
+ *     MaxPreps stays and the disagreement is recorded. It also links players' own recruiting
+ *     profiles (NCSA and the like, and MaxPreps career pages the player has claimed). `getEnrichedTeamRoster` merges the two and says, per field,
+ *     where each value came from. Both files hold one entry per registry team (102); a team no run
+ *     has covered yet is status 'pending', and a team nothing was found for has an empty overlay.
+ *     A team's entry may also say what other public sources showed for its current roster
+ *     (`otherRosters`, below), which is what a team page with no MaxPreps players may claim.
+ *
+ * Both are imported so the build bundles them, for the reason lib/history/history.ts and lib/data.ts give:
+ * a Worker has no project filesystem. Both are validated once at module scope, and the merge rules
+ * are asserted at load time too, so a bad file fails at import time rather than half-way through a
+ * render. `SCVAL_ROSTERS` / `SCVAL_ROSTERS_ENRICHMENT` swap in other files through node:fs (Node
+ * only; never set them on a Worker).
+ */
+
+import { readFileSync } from 'node:fs';
+
+import { z } from 'zod';
+import bundledEnrichment from '../../data/rosters-enrichment.json';
+import bundledRosters from '../../data/rosters.json';
+import {
+  RosterEnrichmentSchema,
+  RostersSchema,
+  type EnrichedGrade,
+  type EnrichedHeight,
+  type EnrichedJersey,
+  type EnrichedPlayer,
+  type EnrichedPositions,
+  type EnrichedTeam,
+  type EnrichmentSource,
+  type PlayerProfile,
+  type RosterCoach,
+  type RosterConflict,
+  type RosterEnrichment,
+  type RosterPlayer,
+  type Rosters,
+  type TeamRoster,
+} from './rosters-schema';
+import { dateKey, failValidation, httpsUrl } from '../schema-primitives';
+import type { TeamSlug } from '../types';
+
+export type {
+  EnrichedGrade,
+  EnrichedHeight,
+  EnrichedJersey,
+  EnrichedPlayer,
+  EnrichedPositions,
+  EnrichedTeam,
+  EnrichmentSource,
+  PlayerProfile,
+  ProfilePlatform,
+  RosterCoach,
+  RosterConflict,
+  RosterEnrichment,
+  RosterPlayer,
+  Rosters,
+  TeamRoster,
+} from './rosters-schema';
+
+function readOverride(envName: string, bundled: unknown): unknown {
+  const override = process.env[envName];
+  if (!override) return bundled;
+  let text: string;
+  try {
+    text = readFileSync(override, 'utf8');
+  } catch (err) {
+    throw new Error(`lib/players/rosters.ts: cannot read ${envName}=${override} (${(err as Error).message})`);
+  }
+  return JSON.parse(text) as unknown;
+}
+
+/**
+ * What other public sources showed for a team's CURRENT roster — the one claim a team page with
+ * no MaxPreps players makes about them, so it is recorded per team rather than inferred:
+ *   none         looked, and no other source publishes a current roster (`note`: what was looked at)
+ *   partial      a source lists current players, but not in a form that can be joined to MaxPreps
+ *                rows (Marin Academy: first name, last initial and class year); `summary` says what
+ *                it lists and `source` links it
+ *   not-checked  nobody looked; the default for a team whose entry does not say
+ * It sits beside lib/players/rosters-schema.ts' team record (whose schema ignores unknown keys) and is
+ * validated here, at load.
+ */
+export const OtherRostersSchema = z.discriminatedUnion('status', [
+  z.object({ status: z.literal('none'), checkedOn: dateKey, note: z.string().min(1) }).strict(),
+  z
+    .object({ status: z.literal('partial'), checkedOn: dateKey, source: httpsUrl, summary: z.string().min(1) })
+    .strict(),
+  z.object({ status: z.literal('not-checked') }).strict(),
+]);
+export type OtherRosters = z.infer<typeof OtherRostersSchema>;
+
+const NOT_CHECKED: OtherRosters = { status: 'not-checked' };
+
+const OtherRostersFileSchema = z.object({
+  teams: z.array(z.object({ slug: z.string(), otherRosters: OtherRostersSchema.optional() })),
+});
+
+function loadOtherRosters(): Map<string, OtherRosters> {
+  const parsed = OtherRostersFileSchema.safeParse(readOverride('SCVAL_ROSTERS_ENRICHMENT', bundledEnrichment));
+  if (!parsed.success) failValidation('rosters-enrichment otherRosters', parsed.error.issues);
+  return new Map(parsed.data.teams.map((t) => [t.slug, t.otherRosters ?? NOT_CHECKED]));
+}
+
+function loadRosters(): Rosters {
+  const parsed = RostersSchema.safeParse(readOverride('SCVAL_ROSTERS', bundledRosters));
+  if (!parsed.success) failValidation('rosters', parsed.error.issues);
+  return parsed.data;
+}
+
+/**
+ * The overlay's rules, asserted against the base at load time (the schema alone cannot see both
+ * files): every record joins to a MaxPreps row of the same team, a filled field was null on
+ * MaxPreps, a recorded conflict's `kept` value is MaxPreps' own, a recruiting profile that
+ * states a class year agrees with the grade the row shows, and a claimed MaxPreps profile is the
+ * row's own career page.
+ */
+function loadEnrichment(base: Rosters): RosterEnrichment {
+  const parsed = RosterEnrichmentSchema.safeParse(
+    readOverride('SCVAL_ROSTERS_ENRICHMENT', bundledEnrichment),
+  );
+  if (!parsed.success) failValidation('rosters-enrichment', parsed.error.issues);
+  const enrichment = parsed.data;
+  if (enrichment.season !== base.season) {
+    throw new Error(`rosters-enrichment is for season ${enrichment.season}, rosters for ${base.season}`);
+  }
+  const fail = (slug: string, who: string, what: string): never => {
+    throw new Error(`rosters-enrichment: ${slug} / ${who}: ${what}`);
+  };
+  for (const team of enrichment.teams) {
+    const baseTeam = base.teams.find((t) => t.slug === team.slug);
+    if (!baseTeam) fail(team.slug, '-', 'no such team in rosters.json');
+    const byId = new Map(baseTeam!.players.map((p) => [p.athleteId, p]));
+    for (const e of team.players) {
+      const p = byId.get(e.athleteId);
+      if (!p) fail(team.slug, e.fullName, `athleteId ${e.athleteId} is not a MaxPreps row of this team`);
+      if (e.fullName !== p!.fullName) fail(team.slug, e.fullName, `MaxPreps spells this player "${p!.fullName}"`);
+      if (e.grade && p!.grade !== null) fail(team.slug, e.fullName, 'grade would overwrite a MaxPreps value');
+      if (e.positions && p!.position !== null) fail(team.slug, e.fullName, 'positions would overwrite a MaxPreps value');
+      if (e.jersey && p!.jersey !== null) fail(team.slug, e.fullName, 'jersey would overwrite a MaxPreps value');
+      if (e.height && p!.height !== null) fail(team.slug, e.fullName, 'height would overwrite a MaxPreps value');
+      for (const c of e.conflicts) {
+        const own =
+          c.field === 'grade' ? (p!.grade === null ? (e.grade ? String(e.grade.value) : null) : String(p!.grade))
+          : c.field === 'jersey' ? p!.jersey
+          : c.field === 'position' ? p!.position
+          : p!.height;
+        if (c.kept !== own) {
+          fail(team.slug, e.fullName, `conflict on ${c.field} says kept="${c.kept}" but the roster shows "${own}"`);
+        }
+      }
+      const grade = p!.grade ?? e.grade?.value ?? null;
+      for (const x of e.profiles) {
+        if (x.platform === 'maxpreps' && x.url !== p!.careerUrl) {
+          fail(team.slug, e.fullName, `maxpreps profile ${x.url} is not this row's career page (${p!.careerUrl})`);
+        }
+        if (x.classOf !== null && grade !== null && x.classOf !== classOf(base.season, grade)) {
+          fail(team.slug, e.fullName, `${x.platform} profile says class of ${x.classOf}, the roster shows grade ${grade}`);
+        }
+      }
+    }
+  }
+  return enrichment;
+}
+
+/** The graduation year of a player in `grade` during `season`: in "26-27" a senior is class of 2027. */
+export function classOf(season: string, grade: number): number {
+  const m = /^(\d{2})-(\d{2})$/.exec(season);
+  if (!m) throw new Error(`lib/players/rosters.ts: cannot read season "${season}"`);
+  return 2000 + Number(m[2]) + (12 - grade);
+}
+
+const rosters = loadRosters();
+const enrichment = loadEnrichment(rosters);
+const OTHER_ROSTERS = loadOtherRosters();
+const BASE_BY_SLUG = new Map<string, TeamRoster>(rosters.teams.map((t) => [t.slug, t]));
+const ENRICHMENT_BY_SLUG = new Map<string, EnrichedTeam>(enrichment.teams.map((t) => [t.slug, t]));
+
+export function getRosters(): Rosters {
+  return rosters;
+}
+
+export function getRosterEnrichment(): RosterEnrichment {
+  return enrichment;
+}
+
+/** The MaxPreps roster alone, as fetched. */
+export function getTeamRoster(slug: TeamSlug): TeamRoster | undefined {
+  return BASE_BY_SLUG.get(slug);
+}
+
+// ---------------------------------------------------------------- the merged view
+
+/** Where a merged value came from: MaxPreps, an enrichment record, or nowhere. */
+export type FieldProvenance<E> = 'maxpreps' | E | null;
+
+export interface MergedPlayer extends RosterPlayer {
+  /** As a non-MaxPreps source spells the name, when it differs. */
+  sourceName: string | null;
+  /** Only where a school source says which squad the row belongs to (Los Gatos). */
+  level: 'varsity' | 'jv' | null;
+  provenance: {
+    grade: FieldProvenance<EnrichedGrade>;
+    positions: FieldProvenance<EnrichedPositions>;
+    jersey: FieldProvenance<EnrichedJersey>;
+    height: FieldProvenance<EnrichedHeight>;
+  };
+  /** Sources that disagree with the value shown. */
+  conflicts: RosterConflict[];
+  /** The player's own recruiting pages (NCSA and the like), in the enrichment file's order. */
+  profiles: PlayerProfile[];
+}
+
+export interface MergedTeamRoster extends Omit<TeamRoster, 'players'> {
+  players: MergedPlayer[];
+  coaches: RosterCoach[];
+  /** The non-MaxPreps sources consulted for this team. */
+  sources: EnrichmentSource[];
+  /** The enrichment file's notes for this team (what was tried, what was left out). */
+  enrichmentNotes: string[];
+  /** What other public sources showed for the current roster ('not-checked' unless the file says). */
+  otherRosters: OtherRosters;
+}
+
+function mergePlayer(p: RosterPlayer, e: EnrichedPlayer | undefined): MergedPlayer {
+  const base: MergedPlayer = {
+    ...p,
+    sourceName: e?.sourceName ?? null,
+    level: e?.level ?? null,
+    provenance: {
+      grade: p.grade !== null ? 'maxpreps' : null,
+      positions: p.position !== null ? 'maxpreps' : null,
+      jersey: p.jersey !== null ? 'maxpreps' : null,
+      height: p.height !== null ? 'maxpreps' : null,
+    },
+    conflicts: e?.conflicts ?? [],
+    profiles: e?.profiles ?? [],
+  };
+  if (!e) return base;
+  if (e.grade) {
+    base.grade = e.grade.value;
+    base.gradeClass = (['Fr.', 'So.', 'Jr.', 'Sr.'] as const)[e.grade.value - 9];
+    base.provenance.grade = e.grade;
+  }
+  if (e.positions) {
+    base.positions = [...e.positions.value];
+    base.position = e.positions.value.join(', ');
+    base.provenance.positions = e.positions;
+  }
+  if (e.jersey) {
+    base.jersey = e.jersey.value;
+    base.provenance.jersey = e.jersey;
+  }
+  if (e.height) {
+    base.height = e.height.value;
+    base.heightInches = e.height.inches;
+    base.provenance.height = e.height;
+  }
+  return base;
+}
+
+/** The MaxPreps roster with every blank the enrichment file can fill, each value tagged. */
+export function getEnrichedTeamRoster(slug: TeamSlug): MergedTeamRoster | undefined {
+  const team = BASE_BY_SLUG.get(slug);
+  if (!team) return undefined;
+  const extra = ENRICHMENT_BY_SLUG.get(slug);
+  const byId = new Map((extra?.players ?? []).map((e) => [e.athleteId, e]));
+  const { players, ...rest } = team;
+  return {
+    ...rest,
+    players: players.map((p) => mergePlayer(p, p.athleteId === null ? undefined : byId.get(p.athleteId))),
+    coaches: extra?.coaches ?? [],
+    sources: extra?.sources ?? [],
+    enrichmentNotes: extra?.notes ?? [],
+    otherRosters: OTHER_ROSTERS.get(slug) ?? NOT_CHECKED,
+  };
+}
+
+export function getAllEnrichedRosters(): MergedTeamRoster[] {
+  return rosters.teams.map((t) => getEnrichedTeamRoster(t.slug)!);
+}
+
+/**
+ * Display order: by jersey number when at least half the roster has one (numeric part first, so
+ * "00" < "1" < "21/88"; blanks last), otherwise by last name. The files keep MaxPreps' own order.
+ */
+export function sortedPlayers<P extends RosterPlayer>(team: { players: P[] }): P[] {
+  const players = [...team.players];
+  const numbered = players.filter((p) => p.jersey !== null).length;
+  const byName = (a: P, b: P) =>
+    (a.lastName ?? a.fullName).localeCompare(b.lastName ?? b.fullName) ||
+    a.fullName.localeCompare(b.fullName);
+  if (numbered * 2 < players.length) return players.sort(byName);
+  const num = (j: string | null) => {
+    const m = j === null ? null : /^\d+/.exec(j);
+    return m ? Number(m[0]) : Number.POSITIVE_INFINITY;
+  };
+  return players.sort(
+    (a, b) => num(a.jersey) - num(b.jersey) || (a.jersey ?? '').localeCompare(b.jersey ?? '') || byName(a, b),
+  );
+}

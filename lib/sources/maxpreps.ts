@@ -135,7 +135,7 @@ export const ContestSchema = z.looseObject({
   /**
    * The tournament and bracket GUIDs of a bracket game, else the all-zero GUID (TBA_TEAM_ID) on every ordinary
    * row read 2026-10-29, including the crossovers and 2025's EAL Super Regional rows; the 2025 CCS rows carry
-   * the championship's id (CCS.tournament.id's 2025 counterpart). lib/normalize.ts copies a real GUID into
+   * the championship's id (CCS.tournament.id's 2025 counterpart). lib/pipeline/normalize.ts copies a real GUID into
    * Game.bracket; lib/classify.ts rule 1c tags on it.
    */
   tournamentId: z.string().nullable().optional(),

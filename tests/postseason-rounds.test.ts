@@ -1,5 +1,5 @@
 /**
- * `lib/postseason-rounds.ts` roundFromLocation, and the EAL card's results block that reads it
+ * `lib/postseason/postseason-rounds.ts` roundFromLocation, and the EAL card's results block that reads it
  * (`components/playoffs/unbracketed-view.ts` buildUnbracketedResults; plan final-04, 2026-10-29). The location
  * strings are MaxPreps' own: the 2025 Super Regional rows said "Semi Final" and "Championship Final" (both on
  * Sat Nov 1, entered the day after; docs/DATA-SOURCES.md §1.4), and the field is a note field, so "Senior Night"
@@ -12,12 +12,12 @@ import { describe, expect, it } from 'vitest';
 
 import UnbracketedResults from '../components/playoffs/UnbracketedResults';
 import { NO_UNBRACKETED_GAME, buildUnbracketedResults } from '../components/playoffs/unbracketed-view';
-import { roundFromLocation, withLocationRound } from '../lib/postseason-rounds';
+import { roundFromLocation, withLocationRound } from '../lib/postseason/postseason-rounds';
 import type { Game, PostseasonTag } from '../lib/types';
 import { game as built } from './game-builder';
 import { textOf } from './ui/html-text';
 
-const LIB = 'lib/postseason-rounds.ts';
+const LIB = 'lib/postseason/postseason-rounds.ts';
 const VIEW = 'components/playoffs/unbracketed-view.ts';
 
 describe('roundFromLocation', () => {

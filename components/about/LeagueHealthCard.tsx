@@ -1,7 +1,9 @@
 import { formatStamp, officialSourceFormat } from '../../lib/format';
 import type { LeagueHealth, LeagueRunState, OfficialSourceId } from '../../lib/types';
 import ExternalLink from '../ui/ExternalLink';
-import { plural } from '../ui/plural';
+import { plural } from '../words/plural';
+
+import type { HealthDivision } from './about-view';
 
 /**
  * One league's data health on /about#health (SPEC §10.8): how the last run went for THIS league,
@@ -20,42 +22,6 @@ import { plural } from '../ui/plural';
  * A server component with plain props: the page reads `getLeagueHealth()`, `getSources({ league })`
  * and `getDropped()` and hands the numbers down. No hue: the state is a word.
  */
-export interface HealthDivision {
-  id: string;
-  /** Division heading, or null for a single-division league (no division label). */
-  heading: string | null;
-  /**
-   * MaxPreps league standings page, or null where MaxPreps publishes no table for the division (the San
-   * Diego Section's Valley: lib/leagues.ts leagueStandingsUrl). The card then says so, and that the
-   * cross-check is skipped, instead of linking anything.
-   */
-  maxprepsUrl: string | null;
-  /** Why there is no table (lib/standings.ts crossCheckSkipReason); null when there is one. */
-  skipReason?: string | null;
-  /**
-   * The division's standings rows that carry MaxPreps' reported record: the member rows its table
-   * matched, read this run or carried. Counted from the standings rather than taken from the stored
-   * `reportedRows`, which a snapshot written before 2026-10-04 counted with MaxPreps' extra
-   * non-member row (EAL: Red Bluff).
-   */
-  memberRows: number;
-  knownCause: string | null;
-  official:
-    | {
-        source: OfficialSourceId;
-        url: string;
-        /** 'live-pdf' = read every run; 'bundled' = our transcription, sha256-checked against upstream. */
-        mode: 'live-pdf' | 'bundled';
-        revisedOn: string | null;
-      }
-    | {
-        /** The league publishes no schedule (EAL, the Sunset, the San Diego leagues). */
-        mode: 'none';
-        /** `DivisionConfig.official.note`: where its league games come from instead. */
-        note: string;
-      };
-}
-
 export interface LeagueHealthCardProps {
   shortName: string;
   name: string;

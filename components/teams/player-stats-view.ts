@@ -10,7 +10,7 @@
  *   - Goalkeeping: one card per goalkeeper, since a team can track up to ten goalie stats and a
  *     table that wide cannot reflow at 320px (DESIGN §10.8).
  *
- * A column the team does not track never appears (lib/player-stats-schema.ts: untracked is null
+ * A column the team does not track never appears (lib/players/player-stats-schema.ts: untracked is null
  * for everyone). A tracked stat a player has no entry for prints as a dash, never as 0.
  *
  * Goalkeeping is printed as entered, with one figure this module works out: Save %, saves over
@@ -20,20 +20,20 @@
  * on goal, 36 saves, 9 against). The card says the figures disagree instead.
  *
  * Some coaches write goals, assists and saves in MaxPreps' game note rather than on the stats sheet
- * (Homestead: "goals scored Gabby Molly, Emry Borges"). lib/note-stats.ts adds those to the
+ * (Homestead: "goals scored Gabby Molly, Emry Borges"). lib/players/note-stats.ts adds those to the
  * MaxPreps numbers; every row or card they changed is marked, and the section lists each noted
  * game with the note as written, so a reader can tell the two sources apart.
  */
 
 import { listWords, numberWord, plural, shortDate } from '../../lib/format';
-import type { NoteCredit, NoteStatKind } from '../../lib/note-stats';
-import { getTeamPlayerStatsWithNotes } from '../../lib/player-stats';
+import type { NoteCredit, NoteStatKind } from '../../lib/players/note-stats';
+import { getTeamPlayerStatsWithNotes } from '../../lib/players/player-stats';
 import type {
   FieldStatKey,
   GoalieStatKey,
   PlayerStatLine,
   TeamPlayerStats,
-} from '../../lib/player-stats-schema';
+} from '../../lib/players/player-stats-schema';
 import type { Game, TeamSlug } from '../../lib/types';
 
 export interface StatColumn {
@@ -338,7 +338,7 @@ export function gamesSinceUpdate(lastUpdated: string | null, games: readonly Gam
  * @param games the team's league and non-league contests, to count finals played after MaxPreps'
  *   last stats update.
  * @param team the team's stats; defaults to data/player-stats.json's with the team's game notes
- *   added (lib/note-stats.ts). Tests pass a fixture build, since the committed file moves with
+ *   added (lib/players/note-stats.ts). Tests pass a fixture build, since the committed file moves with
  *   every refresh. A team without `noteCredits` is shown as MaxPreps has it.
  */
 export function buildPlayerStatsView(

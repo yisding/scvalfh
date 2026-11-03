@@ -1,11 +1,11 @@
-import { CIFSS_NOTES } from '../../lib/cifss-crosscheck';
+import { CIFSS_NOTES } from '../../lib/crosscheck/cifss-notes';
 import { formatStamp, shortDate } from '../../lib/format';
 import type { CifssCrossCheck, CifssOnlyRow } from '../../lib/types';
 
 import ExternalLink from '../ui/ExternalLink';
 
 /**
- * The cifsshome.org score cross-check (/about#cross-check, lib/cifss-crosscheck.ts). Report only:
+ * The cifsshome.org score cross-check (/about#cross-check, lib/crosscheck/cifss-crosscheck.ts). Report only:
  * MaxPreps' score always stands and nothing from the widget is published as a result. Schools enter
  * their own rows there, so the summary says what a missing row does NOT mean, and lists only what
  * a scored row says: disagreements, scores MaxPreps lacks, and games MaxPreps has no contest for.

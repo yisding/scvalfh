@@ -1,4 +1,4 @@
-import { getTeamPlayerStatsWithNotes } from '../../lib/player-stats';
+import { getTeamPlayerStatsWithNotes } from '../../lib/players/player-stats';
 import SectionHeader from '../ui/SectionHeader';
 import { StatsTable } from '../teams/TeamPlayerStats';
 

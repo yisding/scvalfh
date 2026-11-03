@@ -2,7 +2,7 @@ import EmptyState from '../ui/EmptyState';
 import ExternalLink from '../ui/ExternalLink';
 import MissingValue from '../ui/MissingValue';
 import SectionHeader from '../ui/SectionHeader';
-import { plural } from '../ui/plural';
+import { plural } from '../words/plural';
 import type { GoalieCard, PlayerStatsView, StatTable } from './player-stats-view';
 import { statText } from './player-stats-view';
 
@@ -17,7 +17,7 @@ import { statText } from './player-stats-view';
  * Column heads are abbreviations a reader may not know (GWG, SOG), so each head carries its full
  * name for a screen reader and the legend under the tables spells every one out.
  *
- * Goals, assists and saves a coach wrote in a game note instead (lib/note-stats.ts) are added in, and every
+ * Goals, assists and saves a coach wrote in a game note instead (lib/players/note-stats.ts) are added in, and every
  * row or card holding one carries a mark that the list of noted games under the tables explains.
  */
 

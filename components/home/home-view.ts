@@ -2,7 +2,7 @@
  * Everything `/` renders, assembled once on the server (SPEC §10.1, DESIGN §3.1).
  *
  * This is the only module the home page reads data through, and it reads the snapshot ONLY through
- * `lib/data.ts` (plus the pure config helpers of `lib/leagues.ts` and `lib/pin-label.ts`). "Today"
+ * `lib/data.ts` (plus the pure config helpers of `lib/leagues.ts` and `components/words/pin-label.ts`). "Today"
  * is always `getToday()` — derived from `snapshot.fetchedAt` in America/Los_Angeles, never
  * `Date.now()` — so the build is reproducible and the "as of" stamp in the header is honest.
  *
@@ -36,7 +36,6 @@ import {
   getStandingFor,
   getStandings,
   getTeamById,
-  getTeamBySlug,
   getTeamPostseasonLine,
   getTeamSearchIndex,
   getTeams,
@@ -62,13 +61,19 @@ import {
   timeOfDayPT,
 } from '../../lib/format';
 import { gameHref } from '../../lib/game-id';
-import { hasHistory } from '../../lib/history';
-import { tournamentHeadline } from '../../lib/postseason';
-import { ccsOutcomeFor } from '../../lib/postseason-outcomes';
+import { hasHistory } from '../../lib/history/history';
+import { tournamentHeadline } from '../../lib/postseason/postseason';
+import { ccsOutcomeFor } from '../../lib/postseason/postseason-outcomes';
 import { outcomesFor, pairingDatesLabel, playoffOutcomeLabel, statusBadge } from '../../lib/standings';
+import { CCS, REGIONS } from '../../lib/league-config/sections';
+import type {
+  DivisionConfig,
+  LeagueConfig,
+  PostseasonConfig,
+  RegionConfig,
+  TournamentConfig,
+} from '../../lib/league-config/shape';
 import {
-  CCS,
-  REGIONS,
   divisionHeading,
   getDivision,
   getLeague,
@@ -78,23 +83,20 @@ import {
   leaguePlayStarts,
   sectionOf,
   standaloneName,
-  type DivisionConfig,
-  type LeagueConfig,
-  type PostseasonConfig,
-  type RegionConfig,
 } from '../../lib/leagues';
-import { pickerName, pinLabel } from '../../lib/pin-label';
+import { pickerName, pinLabel } from '../words/pin-label';
 import type { SearchIndex } from '../../lib/search';
 import { teamOfSide } from '../../lib/teams';
 import type { DivisionId, Game, LeagueId, RegionId, SeasonPhase, Team } from '../../lib/types';
-import { gameAddress } from '../../lib/venue';
-import type { LeagueChip } from '../layout/LeagueSwitcher';
+import { gameAddress } from '../../lib/schools/venue';
+import type { LeagueChip } from '../layout/league-chips';
 import { leagueChips } from '../layout/league-chips';
 import { thisWeekByRegion } from '../playoffs/this-week-inputs';
 import type { ThisWeekView } from '../playoffs/this-week';
 import { fixtureOpponent, nextOfficialFixture, pendingPairingFor } from '../teams/team-view';
 import { describeGame, gameKind, postseasonTagOf, type GameDisplay, type SideView } from '../ui/describe-game';
-import { plural } from '../ui/plural';
+import { plural } from '../words/plural';
+import { shortNameOf } from '../words/team-short-name';
 
 import type {
   HomeLastDisplay,
@@ -113,10 +115,6 @@ import { POSTSEASON_LEAD, rungCardText } from './home-types';
 /** Kickoff order, then away name, so a slate is stable between builds. */
 function byKickoff(a: Game, b: Game): number {
   return a.dateLocal.localeCompare(b.dateLocal) || a.away.name.localeCompare(b.away.name);
-}
-
-function shortNameOf(side: Game['home']): string {
-  return (side.slug ? getTeamBySlug(side.slug)?.shortName : undefined) ?? side.name;
 }
 
 /** The league a game is filed under on the home page: its counted division's, else the first side's in config order. */
@@ -296,7 +294,7 @@ export function phaseLead(league: LeagueConfig, phase: SeasonPhase, today: strin
 
   if (phase === 'tournament' && ps.kind === 'league-tournament') {
     // Results first (DESIGN §24.13): the champion once the final has a winner, else the next round's matchups
-    // (lib/postseason.ts tournamentHeadline); the static round list only while the picture is projected.
+    // (lib/postseason/postseason.ts tournamentHeadline); the static round list only while the picture is projected.
     const headline = tournamentHeadline(getLeagueTournament(league.id), league);
     if (headline.champion) {
       return { lead: headline.champion, body: '', link: { href: `/playoffs/${league.id}`, label: 'Bracket' } };
@@ -543,7 +541,7 @@ function postseasonView(league: LeagueConfig, phase: SeasonPhase, sectionNote: s
 
 function leagueTournamentView(
   league: LeagueConfig,
-  ps: Extract<PostseasonConfig, { kind: 'league-tournament' }>,
+  ps: TournamentConfig,
   sectionNote: string | null,
 ): PostseasonView {
   // Results first (DESIGN §24.13): 'MCAL tournament · Champion: Tamalpais won the MCAL tournament, beating …' or
@@ -838,7 +836,7 @@ function nextGameView(game: Game, slug: string): HomeNextGame {
   const mineIsHome = game.home.slug === slug;
   const theirs = mineIsHome ? game.away : game.home;
   const links: HomeNextGame['links'] = [];
-  // lib/venue.ts: the game's own address, else the venue's or host's school (data/schools.json).
+  // lib/schools/venue.ts: the game's own address, else the venue's or host's school (data/schools.json).
   const address = gameAddress(game)?.address;
   if (address) links.push({ label: 'Directions', href: mapsSearchHref(address) });
   if (game.urls.nfhsStream) links.push({ label: 'Stream', href: game.urls.nfhsStream });
@@ -848,7 +846,7 @@ function nextGameView(game: Game, slug: string): HomeNextGame {
     dateTime: dateTimeAttr(game),
     timeLabel: game.isTimeTba ? 'Time TBA' : timeOfDayPT(game.dateLocal),
     versus: describeGame(game, slug).versus ?? 'vs',
-    opponent: shortNameOf(theirs),
+    opponent: shortNameOf(theirs.slug, theirs.name),
     kindLabel: postseasonTagOf(game) ?? (gameKind(game) === 'league' ? 'league' : 'non-league'),
     href: gameHref(game.contestId),
     // Two external chips at most plus "Game page": three chips, one row, the same height for every
@@ -915,7 +913,7 @@ export function buildTeamViews(): HomeTeamView[] {
     const lead = projected ? POSTSEASON_LEAD.projected : POSTSEASON_LEAD.final;
     // A league tournament under way: the line is the team's outcome ('In the MCAL final', 'Lost in the
     // semifinal'), its own sentence, not a 'Final place:' ladder rung (DESIGN §24.13). The same for a CCS ladder
-    // team whose play-in is final ('Won the play-in', 'Lost the play-in'; lib/postseason-outcomes.ts, plan
+    // team whose play-in is final ('Won the play-in', 'Lost the play-in'; lib/postseason/postseason-outcomes.ts, plan
     // final-10, 2026-10-30); a crossover result changes no label, so its team keeps the 'Final place:' rung.
     let pairings = pairingsByLeague.get(league.id);
     if (league.postseason.kind === 'ccs-ladder' && !pairings) {

@@ -7,7 +7,7 @@
  * the test's own.
  *
  * - The SCVAL play-in reads "SCVAL play-in" (chip, game page), the crossover "SCVAL crossover"
- *   (lib/postseason-round-label.ts through describe-game postseasonTagOf).
+ *   (lib/postseason/postseason-round-label.ts through describe-game postseasonTagOf).
  * - A team seated in a play-in MaxPreps has not listed gets that game as Next (team page and home card), never "no
  *   more games", even with a later game listed (the test gives the Mt. Hamilton #4 visitor, Willow Glen in 2026, a non-league game on Tue Nov 3); the empty state names the seeding meeting's day and the team's own played crossover.
  * - The team page's "CCS playoffs →" goes to `/playoffs#<league>-pairings` while the team has a pairing to play.
@@ -18,8 +18,8 @@ import path from 'node:path';
 
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
-import { countsOf } from '../../lib/snapshot-migrate';
-import { loadSnapshot } from '../../lib/snapshot-schema';
+import { countsOf } from '../../lib/snapshot/snapshot-migrate';
+import { loadSnapshot } from '../../lib/snapshot/snapshot-schema';
 import { leaguePairings, playoffStatusFor } from '../../lib/standings';
 import type { Snapshot, Standing } from '../../lib/types';
 import { game } from '../game-builder';

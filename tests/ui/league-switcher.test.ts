@@ -1,5 +1,5 @@
 /**
- * `components/layout/LeagueSwitcher.tsx`: the hairline between two sections' chip lists.
+ * `components/prefs/LeagueSwitcher.tsx`: the hairline between two sections' chip lists.
  *
  * With five leagues, `All` plus the five chips no longer fit one row at 320-360px (DESIGN §22.3), so
  * the Northern Section's list wraps alone onto a second row. A hairline drawn as its own flex item
@@ -11,7 +11,8 @@ import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 
-import LeagueSwitcher, { RegionSwitcher, type LeagueChip } from '../../components/layout/LeagueSwitcher';
+import type { LeagueChip } from '../../components/layout/league-chips';
+import LeagueSwitcher, { RegionSwitcher } from '../../components/prefs/LeagueSwitcher';
 
 const CHIPS: LeagueChip[] = [
   { id: 'scval', shortName: 'SCVAL', sectionShort: 'CCS', region: 'norcal' },
@@ -48,7 +49,7 @@ describe.each([
 
   it('draws each section divider on the list it introduces, never as a separate flex item', () => {
     const uls = lists(html);
-    expect(uls.map((u) => /aria-label="([^"]+)"/.exec(u)?.[1]), 'components/layout/LeagueSwitcher.tsx').toEqual([
+    expect(uls.map((u) => /aria-label="([^"]+)"/.exec(u)?.[1]), 'components/prefs/LeagueSwitcher.tsx').toEqual([
       'Central Coast Section',
       'North Coast Section',
       'Northern Section',
@@ -56,7 +57,7 @@ describe.each([
     expect(uls[0], 'the first section has no divider').not.toContain('before:bg-hairline');
     for (const ul of uls.slice(1)) expect(ul, 'a later section leads with its divider').toContain('before:bg-hairline');
     // No stray element between two lists that a wrap could strand at the end of a line.
-    expect(html, 'components/layout/LeagueSwitcher.tsx').not.toMatch(/<\/ul><(?!ul\b)[^>]*>(?:<\/[^>]+>)?<ul\b/);
+    expect(html, 'components/prefs/LeagueSwitcher.tsx').not.toMatch(/<\/ul><(?!ul\b)[^>]*>(?:<\/[^>]+>)?<ul\b/);
     expect(html).not.toContain('w-px shrink-0 self-center bg-hairline');
   });
 });
@@ -189,7 +190,7 @@ describe('the chip check', () => {
     const chips = chipsOf(html);
     expect(chips).toHaveLength(CHIPS.length + 1);
     for (const chip of chips) {
-      expect(chip, 'components/layout/LeagueSwitcher.tsx').toMatch(/^<span aria-hidden="true" class="sx-check sx-chip-check"><\/span>/);
+      expect(chip, 'components/prefs/LeagueSwitcher.tsx').toMatch(/^<span aria-hidden="true" class="sx-check sx-chip-check"><\/span>/);
     }
     expect(html.match(/aria-current="page"/g)).toHaveLength(1);
   });

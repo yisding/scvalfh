@@ -1,7 +1,7 @@
 import type { MetadataRoute } from 'next';
 
 import { SITE_DESCRIPTION, SITE_NAME, SITE_SHORT_NAME } from '../components/layout/site';
-import { THEME_COLOR } from '../components/layout/theme-script';
+import { THEME_COLOR } from '../components/prefs/theme-script';
 import { SEASON_CALENDAR_YEAR } from '../lib/season';
 
 /**
@@ -27,7 +27,7 @@ export default function manifest(): MetadataRoute.Manifest {
     // LARGE icon: /icon is the 32px favicon and /apple-icon is iOS's 180px tile, so on their own
     // this manifest declared nothing at or above Chromium's threshold. /icon-192 and /icon-512 are
     // the pair Next's own PWA guide lists, generated from the same monogram
-    // (components/layout/monogram-image.tsx) and referenced from here only — they are routes rather
+    // (components/metadata/monogram-image.tsx) and referenced from here only — they are routes rather
     // than `icon` files precisely so no page's head asks a browser to fetch a 512px PNG for a 16px
     // tab glyph.
     icons: [

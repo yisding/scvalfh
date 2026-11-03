@@ -4,7 +4,8 @@
  * board link's id suffix), so they live apart from the page's assembly.
  */
 
-import { INDEPENDENT_LEAGUES, LEAGUES_PROPER, REGIONS, getSection, leaguesInRegion } from '../../lib/leagues';
+import { REGIONS } from '../../lib/league-config/sections';
+import { INDEPENDENT_LEAGUES, LEAGUES_PROPER, getSection, leaguesInRegion } from '../../lib/leagues';
 import { numberWord } from '../../lib/format';
 import type { RegionId } from '../../lib/types';
 

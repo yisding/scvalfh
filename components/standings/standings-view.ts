@@ -40,6 +40,7 @@
 import type { MissingOfficialResult, StandingContext } from '../../lib/data';
 import { monthDay, officialSourceFormat, ordinal, shortDate } from '../../lib/format';
 import { gameHref } from '../../lib/game-id';
+import type { DivisionConfig, LeagueConfig } from '../../lib/league-config/shape';
 import {
   divisionHeading,
   getDivision,
@@ -50,8 +51,6 @@ import {
   sectionOf,
   standaloneName,
   statusesOf,
-  type DivisionConfig,
-  type LeagueConfig,
 } from '../../lib/leagues';
 import {
   crossCheckSkipReason,

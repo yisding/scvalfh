@@ -16,14 +16,17 @@
  */
 
 import { matchupJoiner } from '../../lib/format';
-import { DEFAULT_REGION, LEAGUES, REGIONS, findDivision, regionOf } from '../../lib/leagues';
+import { DEFAULT_REGION, REGIONS } from '../../lib/league-config/sections';
+import { LEAGUES, findDivision, regionOf } from '../../lib/leagues';
 import { getTeamBySlug } from '../../lib/teams';
 import type { Game, LeagueId, RegionId } from '../../lib/types';
 import { getBracketLink } from '../playoffs/bracket-link';
 import { describeGame, postseasonTagOf } from '../ui/describe-game';
-import { gameWord, plural } from '../ui/plural';
+import { gameWord, plural } from '../words/plural';
+import { shortNameOf } from '../words/team-short-name';
 
 import { countGames, type ScheduleCounts } from './filter-data';
+import { slugOf } from './schedule-view';
 
 export interface DayLine {
   contestId: string;
@@ -42,18 +45,13 @@ export interface DayLine {
   versus: 'at' | 'vs';
 }
 
-function displayName(slug: string | null, fallback: string): string {
-  const team = slug ? getTeamBySlug(slug) : undefined;
-  return team ? team.shortName : fallback;
-}
-
 export function dayLines(games: readonly Game[]): DayLine[] {
   return games.map((game) => {
     const display = describeGame(game);
     return {
       contestId: game.contestId,
-      awayName: displayName(game.away.slug, game.away.name),
-      homeName: displayName(game.home.slug, game.home.name),
+      awayName: shortNameOf(game.away.slug, game.away.name),
+      homeName: shortNameOf(game.home.slug, game.home.name),
       awayGlyph: display.away.glyph,
       homeGlyph: display.home.glyph,
       awayWinner: display.away.weight === 'winner',
@@ -190,14 +188,6 @@ export interface DayGroup {
   games: Game[];
   /** The games' shared place on /playoffs ('CCS bracket' at `#ccs-division-2`), linked from the group's header. */
   bracket: { href: string; label: string } | null;
-}
-
-/** `tournament-of-champions`, for a `postseason-` group id (the anchor the pills link to). */
-function slugOf(name: string): string {
-  return name
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-|-$/g, '');
 }
 
 /** Where an event's group sits when a day has several: the CCS, the San Diego Section, the outside tournament. */

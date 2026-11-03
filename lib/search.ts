@@ -1,7 +1,7 @@
 /**
  * Team search (SPEC §9.1-§9.2): a pure, zero-network matcher over a pre-serialized index of every registry
  * team (102: both regions, whatever the region switcher shows, so a NorCal visitor can still find a San Diego
- * school). Its "not covered" entries come from DATA_QUALITY.notCovered (lib/leagues.ts), whole sentences
+ * school). Its "not covered" entries come from DATA_QUALITY.notCovered (lib/league-config/data-quality.ts), whole sentences
  * printed verbatim.
  *
  * Client-safe: its one runtime import is lib/format's `plural`, itself client-safe. Result order is
@@ -11,7 +11,7 @@
  */
 
 import { plural } from './format';
-import type { SectionConfig } from './leagues';
+import type { SectionConfig } from './league-config/shape';
 
 export interface TeamSearchEntry {
   kind: 'team';

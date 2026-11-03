@@ -4,7 +4,8 @@ import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 import { sideOutcome } from '../lib/format';
-import { DATA_QUALITY, type DataQualityConfig } from '../lib/leagues';
+import { DATA_QUALITY } from '../lib/league-config/data-quality';
+import type { DataQualityConfig } from '../lib/league-config/shape';
 import {
   applyDateOverride,
   applyExclusions,
@@ -12,12 +13,12 @@ import {
   dedupePhantomPairs,
   normalizeGames,
   pacificMidnightUtc,
-  seasonWindowOf,
   overtimeFromNote,
   splitLocation,
   toUtcIso,
-} from '../lib/normalize';
+} from '../lib/pipeline/normalize';
 import { ScheduleResponseSchema, splitTbaRows, type ScheduleRow } from '../lib/sources/maxpreps';
+import { seasonWindowOf } from '../lib/snapshot/season-build';
 import { getTeamBySlug, resolveTeam } from '../lib/teams';
 import type { Game } from '../lib/types';
 import { allScheduleRows, corpusDir } from './helpers';
@@ -284,7 +285,7 @@ const corpusById = new Map(corpus.games.map((g) => [g.contestId, g]));
 
 /**
  * DATA_QUALITY.excludedContestIds' two duplicate Palomar rows (Poway vs Fallbrook Oct 9, Mission Vista vs
- * Fallbrook Oct 30: lib/leagues.ts), in config order. Neither is in the 2026-10-02 NorCal corpus, so
+ * Fallbrook Oct 30: lib/league-config/data-quality.ts), in config order. Neither is in the 2026-10-02 NorCal corpus, so
  * applyExclusions reports both as unused there.
  */
 /** Exclusions for Southern California rows, which this NorCal corpus never holds: the two duplicate Palomar rows
@@ -437,7 +438,7 @@ describe('normalize: provenance.resultConflict (D2 rule 4a evidence)', () => {
     const flagged = corpus.games.filter((g) => g.provenance.resultConflict);
     expect(flagged.map((g) => g.contestId)).toEqual(['747082fd-259d-4fb8-8837-ece21a945993']);
     expect(flagged[0].provenance.resultConflict).toMatch(/W and Gilroy L on a 0-0 score/);
-    // The score is still published as MaxPreps has it; lib/backfill decides whether si.com overrides.
+    // The score is still published as MaxPreps has it; lib/crosscheck/backfill decides whether si.com overrides.
     expect(flagged[0].status).toBe('final');
     expect([flagged[0].home.score, flagged[0].away.score]).toEqual([0, 0]);
   });
@@ -698,7 +699,7 @@ describe('normalize: a level final in a 1 v 1 league (EAL)', () => {
     const id = 'eeeeeeee-0000-4000-8000-0000000000a9';
     const res = jv([pairRow(id, ['clairemont', 0, 'L'], ['eastlake', 0, 'W'])]);
     const [g] = res.games;
-    expect(g.decider, 'lib/normalize.ts level jv').toBe('REG');
+    expect(g.decider, 'lib/pipeline/normalize.ts level jv').toBe('REG');
     expect(g.provenance.resultConflict).toBe('MaxPreps marks Clairemont L and Eastlake W on a 0-0 score.');
     expect(sideOutcome(g, 'home'), 'a JV tie stands').toBe('T');
     expect(res.warnings.filter((w) => w.startsWith(`contest ${id}`))).toEqual([

@@ -5,11 +5,11 @@
  * ten issues, each as `path: message`).
  *
  * One declaration each, so a dataset's validation messages and strictness never depend on which
- * file declared it: lib/snapshot-schema.ts, lib/rosters-schema.ts, lib/player-stats-schema.ts,
- * lib/clubs-schema.ts, lib/commits-schema.ts, lib/history-schema.ts, lib/prior-season-schema.ts and
+ * file declared it: lib/snapshot/snapshot-schema.ts, lib/players/rosters-schema.ts, lib/players/player-stats-schema.ts,
+ * lib/players/clubs-schema.ts, lib/players/commits-schema.ts, lib/history/history-schema.ts, lib/history/prior-season-schema.ts and
  * lib/official/schema.ts all import from here. A schema that deliberately differs keeps its own
- * declaration (commits' and clubs' calendar-strict `asOf` shapes, their https-without-social-media
- * URLs). SLUG_PATTERN and DATE_PATTERN are plain RegExps for the config and registry asserts
+ * declaration (commits' and clubs' calendar-strict `asOf` shapes, and their https-without-social-media
+ * `sourceUrl`, which lib/players/clubs-schema.ts declares beside its banned hosts). SLUG_PATTERN and DATE_PATTERN are plain RegExps for the config and registry asserts
  * (lib/leagues.ts, lib/teams.ts), which use no zod schema.
  *
  * zod is the only runtime import, so any contract can take these without a dependency cycle.
@@ -29,6 +29,9 @@ export const slugId = z.string().regex(SLUG_PATTERN, 'expected a lower-case id')
 /** A date key, YYYY-MM-DD (shape only, as DATE_PATTERN). */
 export const dateKey = z.string().regex(DATE_PATTERN, 'expected YYYY-MM-DD');
 
+/** A real calendar day, YYYY-MM-DD (isCalendarDate: no 2026-02-30), with dateKey's message. */
+export const calendarDateKey = z.string().refine(isCalendarDate, 'expected YYYY-MM-DD');
+
 /**
  * Every URL in a data file that ends up in an `href`.
  *
@@ -37,7 +40,7 @@ export const dateKey = z.string().regex(DATE_PATTERN, 'expected YYYY-MM-DD');
  * scraped out of scval.com's HTML — and React does NOT filter a URL scheme, so a `javascript:` or
  * `data:` value from upstream would be emitted verbatim into a clickable link on a prerendered page.
  * The scheme check belongs at the same chokepoint that refuses a 0-0 non-final: it is the one place
- * the whole snapshot has to pass through. `lib/normalize.ts` drops a non-conforming URL to null with
+ * the whole snapshot has to pass through. `lib/pipeline/normalize.ts` drops a non-conforming URL to null with
  * a warning rather than failing the whole run over one bad row.
  */
 export const httpUrl = z

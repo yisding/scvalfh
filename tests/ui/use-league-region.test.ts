@@ -1,5 +1,5 @@
 /**
- * `setRegion` (components/ui/use-league.ts) against the real prefs script (DESIGN-socal §2.4).
+ * `setRegion` (components/prefs/use-league.ts) against the real prefs script (DESIGN-socal §2.4).
  *
  * The 2026-10-06 review found that a NorCal → SoCal → NorCal round trip lost the pinned team's
  * league for good: setRegion wrote `scvalfh.league = 'all'` when the stamped league was in the other
@@ -12,10 +12,11 @@ import vm from 'node:vm';
 
 import { afterEach, describe, expect, it } from 'vitest';
 
-import { LEAGUE_KEY, REGION_KEY, buildPrefsScript } from '../../components/layout/prefs-script';
-import { PINNED_TEAM_KEY } from '../../components/layout/pinned-team-script';
-import { setRegion } from '../../components/ui/use-league';
-import { DEFAULT_REGION, LEAGUE_IDS, regionOf } from '../../lib/leagues';
+import { LEAGUE_KEY, REGION_KEY, buildPrefsScript } from '../../components/prefs/prefs-script';
+import { PINNED_TEAM_KEY } from '../../components/prefs/pinned-team-script';
+import { setRegion } from '../../components/prefs/use-league';
+import { DEFAULT_REGION } from '../../lib/league-config/sections';
+import { LEAGUE_IDS, regionOf } from '../../lib/leagues';
 import { TEAMS } from '../../lib/teams';
 
 const SCRIPT = buildPrefsScript({

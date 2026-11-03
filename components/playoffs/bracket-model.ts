@@ -5,12 +5,12 @@
  * in data/prior-season.json and its sixteen seeds in data/history-brackets-2025-26.json) is rebuilt on 2026's
  * dates in tests/fixtures/ccs/bracket-2025.ts, and tests/ui/bracket-model.test.ts holds this model to it.
  *
- * WHAT THE SNAPSHOT CARRIES NOW. `playoffs.games` is the `Game[]` lib/ccs-bracket.ts derives: every game
+ * WHAT THE SNAPSHOT CARRIES NOW. `playoffs.games` is the `Game[]` lib/postseason/ccs-bracket.ts derives: every game
  * tagged 'ccs' that is dated in the bracket or that MaxPreps marks published. Since 2026-10-29 a game can
- * carry `Game.bracket` (lib/normalize.ts): MaxPreps' `bracketName`, 'Division 1' / 'Division 2' for the CCS,
+ * carry `Game.bracket` (lib/pipeline/normalize.ts): MaxPreps' `bracketName`, 'Division 1' / 'Division 2' for the CCS,
  * which is the division label the feed gives and nothing else does (`Game.leagueDivision` is a LEAGUE
  * division, meaningless for a field drawn from SCVAL, BVAL and PCAL). Seeds come only from the owner file
- * (lib/ccs-bracket.ts getCcsSeeds; null until it is filled). The CCS's own two divisions are `format.ccsDivisions`
+ * (lib/postseason/ccs-bracket.ts getCcsSeeds; null until it is filled). The CCS's own two divisions are `format.ccsDivisions`
  * and are always called "CCS Division 1" / "CCS Division 2" in copy, never a bare "Division 1" that could be
  * read as a league division. So:
  *
@@ -42,7 +42,7 @@
 
 import { isoDateKey, shortDate, timeOfDayPT } from '../../lib/format';
 import { getTeamBySlug } from '../../lib/teams';
-import type { CcsSeeds } from '../../lib/ccs-bracket-schema';
+import type { CcsSeeds } from '../../lib/postseason/ccs-bracket-schema';
 import type { CcsDivisionName, CcsPlayoffs, Game, GameSide } from '../../lib/types';
 
 export type RoundKey = 'quarterfinals' | 'semifinals' | 'finals' | 'other';

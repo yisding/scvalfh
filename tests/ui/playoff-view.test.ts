@@ -675,8 +675,8 @@ describe('/playoffs by region (DESIGN-socal §2.4)', () => {
 describe('/playoffs seeded (a stubbed snapshot: the 2025 championship on 2026’s dates, with 2025’s seeds)', () => {
   // The Oct 2 corpus with the fourteen 2025 CCS games on 2026's dates added (tests/fixtures/ccs/bracket-2025.ts),
   // the MaxPreps page's answer set to both divisions posted, and the snapshot's day moved to Tue Nov 3, the day
-  // after the seeding meeting. `playoffs.games` rebuilds itself on load (lib/snapshot-migrate.ts
-  // needsPlayoffGames). The seeds come through lib/ccs-bracket.ts getCcsSeeds, mocked to the 2025 field the
+  // after the seeding meeting. `playoffs.games` rebuilds itself on load (lib/snapshot/snapshot-migrate.ts
+  // needsPlayoffGames). The seeds come through lib/postseason/ccs-bracket.ts getCcsSeeds, mocked to the 2025 field the
   // way a filled owner file would answer; the committed file is the placeholder and must stay so.
   let seededHtml = '';
   let seededDescription = '';
@@ -696,8 +696,8 @@ describe('/playoffs seeded (a stubbed snapshot: the 2025 championship on 2026’
     writeFileSync(file, JSON.stringify(snap));
     process.env.SCVAL_SNAPSHOT = file;
     vi.resetModules();
-    vi.doMock('../../lib/ccs-bracket', async (importOriginal) => {
-      const actual = await importOriginal<typeof import('../../lib/ccs-bracket')>();
+    vi.doMock('../../lib/postseason/ccs-bracket', async (importOriginal) => {
+      const actual = await importOriginal<typeof import('../../lib/postseason/ccs-bracket')>();
       return { ...actual, getCcsSeeds: () => seeds };
     });
     const page = await import('../../app/playoffs/page');
@@ -707,7 +707,7 @@ describe('/playoffs seeded (a stubbed snapshot: the 2025 championship on 2026’
   }, 600_000);
 
   afterAll(() => {
-    vi.doUnmock('../../lib/ccs-bracket');
+    vi.doUnmock('../../lib/postseason/ccs-bracket');
     process.env.SCVAL_SNAPSHOT = corpusSnapshotPath('all-2026-10-02');
     vi.resetModules();
   });
@@ -749,12 +749,12 @@ describe('/playoffs seeded (a stubbed snapshot: the 2025 championship on 2026’
     // meeting, so the placeholder file is what this page had.
     process.env.SCVAL_SNAPSHOT = corpusSnapshotPath('all-2026-10-02');
     vi.resetModules();
-    vi.doMock('../../lib/ccs-bracket', async (importOriginal) => {
-      const actual = await importOriginal<typeof import('../../lib/ccs-bracket')>();
+    vi.doMock('../../lib/postseason/ccs-bracket', async (importOriginal) => {
+      const actual = await importOriginal<typeof import('../../lib/postseason/ccs-bracket')>();
       return { ...actual, getCcsSeeds: () => null };
     });
     const unseeded = renderToStaticMarkup((await import('../../app/playoffs/page')).default() as ReactElement);
-    vi.doUnmock('../../lib/ccs-bracket');
+    vi.doUnmock('../../lib/postseason/ccs-bracket');
     const html = unseeded;
     const text = textOf(html);
     expect(text, PAGE).toContain('Not seeded yet:');

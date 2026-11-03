@@ -38,7 +38,7 @@ group of independents. The North County Conference's short name is "North" (owne
 control's target or a sentence's subject it reads "North County" (`standaloneName`), so it never reads
 as a direction ("Jump to North County ↓"). The LA independents are not a league: five
 Los Angeles-area Southern Section schools in no field hockey league, grouped by this site (short name "LA",
-`independents: true` in `lib/leagues.ts`; the id and URL stay `independents`). Glendora, Harvard-Westlake and Thousand Oaks are each the
+`independents: true` in `lib/league-config/independents.ts`; the id and URL stay `independents`). Glendora, Harvard-Westlake and Thousand Oaks are each the
 only field hockey team in their all-sports league on MaxPreps (the Palomares League, League B and the
 Marmonte League); Bonita and Chaminade sit in MaxPreps' and si.com's Sunset tables, but MaxPreps marks
 none of their games against the five Orange County Sunset teams as a league game and both play every
@@ -50,7 +50,10 @@ Sunset are single-division leagues, so the site shows no division picker and no 
 them. A San Diego conference is a league here and the Section's leagues are its divisions (the
 Section's 2026-27 League Alignment; the division names are ours). Every league fact (ids, MaxPreps
 ids, rules, tiebreak chains with their citations, postseason ladders, official sources,
-data-quality lists) lives in `lib/leagues.ts`, along with the regions (`REGIONS`, `regionOf`); the
+data-quality lists) lives in `lib/league-config/`: one file per league, named as its registry file, beside
+`sections.ts` (the regions, the sections and the CCS block), `sds.ts` (what the San Diego leagues share),
+`data-quality.ts` and `shape.ts` (the types). `lib/leagues.ts` assembles them into `LEAGUES` and holds the
+lookups (`getLeague`, `regionOf`, …) and `assertLeagues()`; the
 teams live in `lib/registry/{scval,bval,pcal,mcal,eal,sunset,city,north-county,metro,independents}.ts`, assembled
 by `lib/teams.ts`. The CCS holds a 16-team championship fed by SCVAL (7 berths), BVAL (4), PCAL (2)
 and three at-large berths; the NCS holds no field hockey championship, so MCAL's own six-team
@@ -224,7 +227,7 @@ restricted to Aug-Dec so it rarely fires out of season; the cron's months are UT
 is there only for the Nov 30 10:00 PM Pacific run, which is already December 1 in UTC). The
 season itself is bounded by the scripts' own Aug 1 - Nov 30 Pacific window guard
 (`inSeasonWindow` in `lib/pipeline/steps/window.ts`, over the sections' season windows in
-`lib/leagues.ts`; `fetch-player-stats` imports the same function): a run outside it exits without
+`lib/league-config/sections.ts`; `fetch-player-stats` imports the same function): a run outside it exits without
 writing anything. Right after `fetch-data` it runs `pnpm fetch-player-stats` (all 102 teams; see
 "Player stats" below) and then `pnpm fetch-jv` (see "JV games" below), each allowed to fail without
 stopping the run. It runs the test suite against what it just wrote; if the suite fails, it tests
@@ -342,8 +345,8 @@ validated by a Zod schema whose header comment shows the filled shape:
 
 | File | Filled by the owner | From | Schema / reader |
 |---|---|---|---|
-| `data/sds-brackets-2026.json` | after the San Diego Section's Sat Oct 31 seeding meeting (about 20 minutes) | the Section's bracket sheet, linked from cifsds.org/sports/fh/index | `lib/sds-brackets-schema.ts` / `lib/sds-bracket.ts` |
-| `data/ccs-bracket-2026.json` | after the CCS seeding meeting, Mon Nov 2 at 1 PM (about 10 minutes) | the MaxPreps CCS tournament page (`CCS.bracketUrl`), each division numbered 1-8 | `lib/ccs-bracket-schema.ts` / `lib/ccs-bracket.ts` |
+| `data/sds-brackets-2026.json` | after the San Diego Section's Sat Oct 31 seeding meeting (about 20 minutes) | the Section's bracket sheet, linked from cifsds.org/sports/fh/index | `lib/postseason/sds-brackets-schema.ts` / `lib/postseason/sds-bracket.ts` |
+| `data/ccs-bracket-2026.json` | after the CCS seeding meeting, Mon Nov 2 at 1 PM (about 10 minutes) | the MaxPreps CCS tournament page (`CCS.bracketUrl`), each division numbered 1-8 | `lib/postseason/ccs-bracket-schema.ts` / `lib/postseason/ccs-bracket.ts` |
 
 **Run `pnpm test` before committing a bracket file.** The suite runs the files' tests (wrong counts, a repeated
 or out-of-league school, seeds 9-16, a play-in on an 8-team field, rounds outside the playoffs' dates and an Open
@@ -396,7 +399,7 @@ Academy's first-name-and-initial list); a team without it says "we have not chec
 sources" rather than claim there are none. It only ever fills a blank; where a source disagrees
 with MaxPreps, MaxPreps stays and the disagreement is recorded; where sources disagree with each
 other on a grade MaxPreps leaves blank, the grade stays blank and each source is recorded the same
-way, under the player's `conflicts`. Every value carries its source URL, kind and a confidence. `lib/rosters.ts` is the read API:
+way, under the player's `conflicts`. Every value carries its source URL, kind and a confidence. `lib/players/rosters.ts` is the read API:
 `getTeamRoster(slug)` is MaxPreps alone, `getEnrichedTeamRoster(slug)` the merged view with
 per-field provenance, conflicts and coaches, `sortedPlayers(team)` the display order. Every team
 page, in all nine leagues and the five independents, renders it in a Roster section (`components/teams/TeamRoster.tsx`,
@@ -457,7 +460,7 @@ dropped. On 2026-10-03, 28 of the 43 teams had published stats (312 players, 41 
 (404 players, 63 goalkeepers; five EAL teams, Corning none); on 2026-10-06, with the 50 Southern
 California teams, 62 of the 99 (758 players); on 2026-10-06, with the three independents,
 63 of the 102 (776 players; Harvard-Westlake's 18, Glendora and Thousand Oaks none); where MaxPreps answers "No data was found" the file says `status: "none"`, and a team no
-run has covered yet is `status: "pending"`. `lib/player-stats.ts` is the read API; each team page
+run has covered yet is `status: "pending"`. `lib/players/player-stats.ts` is the read API; each team page
 renders it in a Player stats section (`components/teams/TeamPlayerStats.tsx`, built by
 `components/teams/player-stats-view.ts`), which says when MaxPreps last updated and how many games
 the team has played since. See `docs/DATA-SOURCES.md` §1.1k.
@@ -474,7 +477,7 @@ tiebreak gets one sentence saying the two need not agree instead). A followed si
 show says whether its coach entered nothing or its stats could not be read, and a game with no table
 on either side (a box score can list a lineup alone) gets no section. Goals, assists and saves a
 coach wrote in the game's note instead (see "Stats in the game note" in `docs/DATA-SOURCES.md`) are
-added on the game page exactly as on the team page: the credits `lib/note-stats.ts` keeps after its
+added on the game page exactly as on the team page: the credits `lib/players/note-stats.ts` keeps after its
 guards go into the player's line (or a line of their own, so a side with no box score can have a
 table from its note alone), each such row is marked, and the note is quoted under the tables. For each team with stats, `fetch-player-stats` also
 reads MaxPreps' per-game team table (`team-season-game-stats/rollup/v1`, one call) and, for each
@@ -537,9 +540,9 @@ place when its table is shown and links it.
 
 #### JV standings
 
-`lib/jv-standings.ts` builds one JV table per division, in three steps, and `/jv` prints them, one
-section per league (`app/jv/page.tsx`, `components/standings/JvStandings.tsx`, built by
-`components/standings/jv-standings-view.ts`). They are a page of their own, linked from each
+`lib/jv/jv-standings.ts` builds one JV table per division, in three steps, and `/jv` prints them, one
+section per league (`app/jv/page.tsx`, `components/jv/JvStandings.tsx`, built by
+`components/jv/jv-standings-view.ts`). They are a page of their own, linked from each
 `/standings/<league>` page and from team pages, because the SCVAL standings page is at its weight
 budget and the JV tables are a different kind of claim, stated once at the top of `/jv`:
 
@@ -571,7 +574,7 @@ each said:
 
 - **MaxPreps** (`games`): the same `schedule-calculated` call as the varsity feed, with the JV
   season id (`JV_SPORT_SEASON_ID` in `lib/season.ts`, read from `maxpreps.com/ca/field-hockey/jv/`)
-  and the school's own registry id; each row becomes a `Game` through `lib/normalize.ts`, exactly
+  and the school's own registry id; each row becomes a `Game` through `lib/pipeline/normalize.ts`, exactly
   as a varsity row does, except that a level JV final is never read as a shootout win (the San
   Diego shootout procedure is varsity only). On 2026-10-05: 260 games for 45 of the 49 schools, 91
   with a score (Del Mar, Live Oak, Sobrato and Silver Creek have none). On 2026-10-06, with the
@@ -579,10 +582,10 @@ each said:
   independents (Glendora 8 games, Harvard-Westlake 13, Thousand Oaks none), 533 games for 93 of the
   102, 209 of them final.
 - **si.com** (`sblive`): each school's JV team page (all 102 schools; Marin Academy's, 575146, since 2026-11-03),
-  scored finals only. A JV side is one of ours only by its si.com JV team id (`lib/jv-teams.ts`,
+  scored finals only. A JV side is one of ours only by its si.com JV team id (`lib/jv/jv-teams.ts`,
   read from each varsity page's level switcher), never by name.
 
-What the pages show is `mergeJv` (`lib/jv-merge.ts`) over the two, decided again on every build
+What the pages show is `mergeJv` (`lib/jv/jv-merge.ts`) over the two, decided again on every build
 from the file's own `fetchedAt`. **MaxPreps comes first**; si.com only supplements it, for a game
 between two registry schools matched by pair and date (±1 day): it fills a past game MaxPreps has no
 score for, and adds a game MaxPreps does not list when MaxPreps has no JV game of that pair within
@@ -592,14 +595,14 @@ or two si.com games equally near one MaxPreps game, is never used. On 2026-10-05
 scores, added 12 games (mostly PCAL, where MaxPreps had one JV score) and disagreed on 3.
 Around that merge, three hand-checked layers (audit of 2026-11-03, `docs/DATA-SOURCES.md` §1.7):
 
-- **Corrections** (`lib/jv-corrections.ts`, before the merge, by contest id): 12 MaxPreps JV rows are left
+- **Corrections** (`lib/jv/jv-corrections.ts`, before the merge, by contest id): 12 MaxPreps JV rows are left
   out, 10 of them a second copy of a game entered against the wrong school of the same name (the boys'
   Stuart Hall for Convent & Stuart Hall, another Stevenson, St. Francis or Santa Clara), which showed as
   phantom unscored non-league games; 6 Salinas league games si.com shows as cancelled (Stevenson Sep 11
   and Oct 12, Greenfield Sep 18 and Oct 16, Carmel Oct 21, Hollister Oct 27) are left out, as MaxPreps'
   deleted rows are, instead of reading as played games with no score; and St. Ignatius at Los Altos,
   which MaxPreps still dates Sep 9, is moved to Oct 8, when St. Ignatius' schedule says it was played.
-- **York in Santa Catalina's JV slot** (`JV_OUTSIDE_TEAMS` in `lib/jv-teams.ts`). PCAL's schedule, Note 1:
+- **York in Santa Catalina's JV slot** (`JV_OUTSIDE_TEAMS` in `lib/jv/jv-teams.ts`). PCAL's schedule, Note 1:
   "Santa Catalina is Varsity only. York is JV only. They are paired together in this schedule as CAT/YOR."
   So York holds the PCAL JV table row in Santa Catalina's place (name only, no page), a JV row MaxPreps or
   si.com files under Santa Catalina is York's, a York game is classified by Santa Catalina's varsity game
@@ -609,14 +612,14 @@ Around that merge, three hand-checked layers (audit of 2026-11-03, `docs/DATA-SO
   its si.com league record; with the cancellations left out the PCAL JV table is shown (18 of 28).
   York's row carries York's own athletics logo (york.org), drawn into `public/mascots/york-<px>.webp` by
   `pnpm fetch-mascots --only york`.
-- **School athletics sites** (`lib/jv-school-sites.ts`, after the si.com merge, same rules): Saint
+- **School athletics sites** (`lib/jv/jv-school-sites.ts`, after the si.com merge, same rules): Saint
   Francis' and St. Ignatius' JV schedule pages list results, transcribed on 2026-11-03 once JV league
   play had ended. They fill 12 scores and add 3 games (marked †, "Score via the school's athletics
   site"), and disagree with MaxPreps once (St. Ignatius at Homestead, Sep 21: 6-0 against MaxPreps'
   5-0; MaxPreps' score is shown and the other noted). With them the De Anza JV table is shown (26 of 30).
 
-`lib/jv.ts` is the read API; `components/teams/jv-view.ts` builds both lists
-(`components/teams/TeamJvGames.tsx`, `components/schedule/JvDayGames.tsx`).
+`lib/jv/jv.ts` is the read API; `components/jv/jv-view.ts` builds both lists
+(`components/jv/TeamJvGames.tsx`, `components/jv/JvDayGames.tsx`).
 
 `update-data.yml` runs it after `fetch-player-stats`, on the same terms: it may fail without
 stopping the run, writes nothing outside the season window unless `--force`, leaves the file alone
@@ -673,14 +676,14 @@ The rules:
   excerpt of one whose text is not just public names (`affiliationLeaks` in `scripts/copy-rules.ts`,
   with `scripts/public-terms.ts`), because both can name people who are not on the rosters.
 - **No social media**: no source or website on Instagram, Facebook, TikTok, X (Twitter), Threads,
-  YouTube, Snapchat or LinkedIn, or their short links (`BANNED_HOSTS` in `lib/clubs-schema.ts`),
+  YouTube, Snapchat or LinkedIn, or their short links (`BANNED_HOSTS` in `lib/players/clubs-schema.ts`),
   and every URL is https.
 - **`unknown` is never called current.** A club a source names without saying whether the player
   is still with it reads "Listed by NCSA, 2025" (the date or season the source gives) on the club
   page and "Listed club" on the roster; a `past` one reads "Earlier".
 
-Checked at load, so a bad file fails `pnpm test` and the build (`lib/clubs-schema.ts`, then the
-join in `lib/clubs.ts`): club slugs are unique, every affiliation names a club, and
+Checked at load, so a bad file fails `pnpm test` and the build (`lib/players/clubs-schema.ts`, then the
+join in `lib/players/clubs.ts`): club slugs are unique, every affiliation names a club, and
 (team, athlete, club) is unique; https only, never social media; at least one source per club and
 per affiliation; `asOf` is a date, a month, a year, a season (`2025-26`) or a range (`2015-2018`);
 the file's `season` is `data/rosters.json`'s; every affiliation joins a row of that team under the
@@ -741,14 +744,14 @@ club records (each re-read from the club's own site).
 Nothing refreshes it, and re-running it is research. Recall is partial: see `docs/DATA-SOURCES.md`
 §1.1j2 for the sources, the gotchas and the count by school.
 
-**When a roster refetch breaks it.** `lib/clubs.ts` throws at import if `pnpm fetch-rosters` drops
+**When a roster refetch breaks it.** `lib/players/clubs.ts` throws at import if `pnpm fetch-rosters` drops
 or respells a tied player's row, if the overlay marks that row JV, or if a season rollover moves
 `data/rosters.json` to a season `data/clubs.json` is not for; `pnpm test` and the build then fail
 with `clubs: <team> / <player> (<club>): <what>`. Re-check that affiliation's sources, then edit or
 drop it by hand (on a rollover, redo the research for the new season). Never prune it
 automatically.
 
-`lib/clubs.ts` is the read API: `getClubs()` and `getClubSlugs()` in display order (region, then
+`lib/players/clubs.ts` is the read API: `getClubs()` and `getClubSlugs()` in display order (region, then
 most tied players, then name), `getClub(slug)`, `getClubAffiliations(slug)`,
 `getTeamClubAffiliations(team)` and `getPlayerClubs(team, athleteId)` (current, then listed, then
 earlier). `components/clubs/club-view.ts` builds every view and chooses every word the pages say
@@ -787,7 +790,7 @@ college's club team. A commitment in another sport counts (since 2026-10-04): th
 field hockey, but its players commit to lacrosse, soccer and other college teams too, and every
 page names the sport.
 
-Checked at load (`lib/commits-schema.ts`, then the join in `lib/commits.ts`): college slugs are
+Checked at load (`lib/players/commits-schema.ts`, then the join in `lib/players/commits.ts`): college slugs are
 unique, every commitment names a college that has a program in its sport, every college and every
 program has a commitment, a college has one program per sport, one commitment per player; https only, never social media except an `official-social` source that is a post by the account it names; a source for every college and commitment; the file's
 `season` is `data/rosters.json`'s; every commitment joins a non-JV row of that team under its own
@@ -904,13 +907,13 @@ search for every row, as 2026-10-22 ran). It found Frankie Lemieux and Rylie Sto
 Froemming was added on the owner's word; Sophie Sant (Torrey Pines, Bowdoin) stays a near miss on the
 same sheet; no signing or decommitment (the class of 2027's fall signing day is Nov 11).
 
-**When a roster refetch breaks it.** `lib/commits.ts` throws at import, as `lib/clubs.ts` does, if
+**When a roster refetch breaks it.** `lib/players/commits.ts` throws at import, as `lib/players/clubs.ts` does, if
 `pnpm fetch-rosters` drops or respells a committed player's row, if the overlay marks it JV, or if a
 season rollover moves `data/rosters.json` to another season; `pnpm test` and the build then fail
 with `commits: <team> / <player> (<college>): <what>`. Re-check the commitment's sources, then edit
 or drop it by hand. On a rollover the seniors graduate: redo the research for the new season.
 
-`lib/commits.ts` is the read API: `getCommitments()` in display order (class, then school, then
+`lib/players/commits.ts` is the read API: `getCommitments()` in display order (class, then school, then
 name), `getColleges()` (most players first), `getCollege(slug)`, `commitProgram(commitment)` (its
 college's team in its sport, with that team's level), `getCollegeCommitments(slug)`,
 `getTeamCommitments(team)`, `getPlayerCommitment(team, athleteId)` and `commitClassOf(commitment)`.
@@ -921,6 +924,64 @@ that player's facts ("Committed: Colgate", or "Committed: St. Lawrence (soccer)"
 linking the player's row there. The gates know the
 page: `assert:prerender`, `assert-vinext-prerender.ts` and `smoke-server.sh` expect it among the
 fixed pages, and `a11y-axe.mjs` checks it.
+
+## Code layout
+
+```
+app/                   routes: each page reads data, builds its view and composes components
+components/<feature>/  one folder per area of the site; React components (PascalCase .tsx) beside
+                       the view models that decide what they show (kebab-case .ts, mostly *-view.ts)
+components/{ui,layout,metadata,prefs,words}/   shared across features (below)
+lib/                   data, config and engines; no React
+data/                  the committed JSON the site is built from
+scripts/               the data refresh, the build assertions and dev tools
+```
+
+Imports run `app/` → `components/` → `lib/`, never back up: nothing in `lib/` imports a component,
+and no feature folder imports a route. Inside `components/`, features build on the shared folders,
+with two deliberate exceptions: `metadata/` draws each feature's OG card and JSON-LD, so it reads
+those features' view models, and `ui/GameRow.tsx` links a playoff game to its place in the bracket
+through `playoffs/bracket-link.ts`.
+
+**`components/`.** Features: `about`, `clubs`, `commits`, `game`, `history`, `home`, `jv`,
+`leaders`, `playoffs`, `recruiting`, `schedule` (also `/scores/<date>`), `search` (the team finder),
+`standings`, `teams`. Shared folders:
+
+| Folder | Holds |
+|---|---|
+| `ui/` | presentational building blocks used by several features (game rows, standings tables, chips, strips) and `describe-game.ts`, their view model |
+| `layout/` | the page chrome: header, nav, tab bar, page header, attribution, site constants, the league chips' targets |
+| `metadata/` | what crawlers and link previews see: the OG and icon image renderers (kebab-case, like Next's own `opengraph-image.tsx`) and JSON-LD |
+| `prefs/` | the remembered league, theme and pinned team: the inline `<head>` scripts that apply them before paint, the client hooks that read them and the controls that change them (league and region switchers, theme toggle, pin) |
+| `words/` | copy helpers shared across features: plurals, capitalizing, membership and position words, team short names, pin labels, MaxPreps and source-host labels |
+
+A component used by one feature lives in that feature's folder, not in `ui/`.
+
+**`lib/`.** The modules the rest of the site leans on sit at the root: `types`, `season`, `leagues`
+(the league table, its lookups and `assertLeagues`), `teams`, `data` (the one read API over the
+snapshot, SPEC §13.3), `format`, `classify`, `standings`, `schema-primitives`, `stable-json`,
+`game-id` and `search`. The rest is grouped by domain:
+
+| Folder | Holds |
+|---|---|
+| `league-config/` | each league's facts (one file per league, as in `registry/`), the sections and regions, the config shapes and `DATA_QUALITY` |
+| `registry/` | each league's teams, assembled by `lib/teams.ts` |
+| `snapshot/` | the snapshot's Zod schema, its migrations, the season build and the content dates |
+| `postseason/` | postseason state, rounds and outcomes, and the CCS and San Diego bracket files |
+| `jv/` | the JV games file, its merge, corrections and standings |
+| `history/` | the 2025-26 archive and last season's records |
+| `players/` | rosters, player stats, clubs and college commitments |
+| `ratings/` | Elo and Elo-adjusted scoring |
+| `schools/` | school addresses, venues and mascots |
+| `crosscheck/` | the si.com backfill and the cross-checks against si.com and cifsshome.org (build-time only, but for the `cifss-notes` leaf /about prints) |
+| `official/` | the official-fixtures bundles and their matching (build-time only) |
+| `pipeline/`, `sources/` | the data refresh: the pipeline, its steps and row normalization, and the per-source fetchers and parsers (build-time only) |
+
+There are no `index.ts` barrels: several `lib/` modules read a data file or assert their config when
+imported, and a barrel would run all of that (and pull in zod) for any one symbol. Two tests hold the
+boundaries: `tests/ui/client-boundary.test.ts` keeps every `'use client'` module to a short allowlist
+of client-safe `lib/` modules, and `tests/build-only-boundary.test.ts` keeps `app/` and
+`components/` from reaching the build-time-only folders above.
 
 ## Local development
 
@@ -960,17 +1021,17 @@ into its server code, each imported by its read module, so no server reads `data
 | File | Read by |
 |---|---|
 | `data/snapshot.json` | `lib/data.ts` |
-| `data/history-2025-26.json` | `lib/history.ts` |
-| `data/history-brackets-2025-26.json` | `lib/history.ts` |
-| `data/prior-season.json` | `lib/prior-season.ts` |
-| `data/player-stats.json` | `lib/player-stats.ts` |
-| `data/jv.json` | `lib/jv.ts` |
-| `data/rosters.json`, `data/rosters-enrichment.json` | `lib/rosters.ts` |
-| `data/clubs.json` | `lib/clubs.ts` |
-| `data/commits.json` | `lib/commits.ts` |
-| `data/ccs-bracket-2026.json` | `lib/ccs-bracket.ts` |
-| `data/sds-brackets-2026.json` | `lib/sds-bracket.ts` |
-| `data/schools.json` (each registry school's campus address, by slug) | `lib/schools.ts` |
+| `data/history-2025-26.json` | `lib/history/history.ts` |
+| `data/history-brackets-2025-26.json` | `lib/history/history.ts` |
+| `data/prior-season.json` | `lib/history/prior-season.ts` |
+| `data/player-stats.json` | `lib/players/player-stats.ts` |
+| `data/jv.json` | `lib/jv/jv.ts` |
+| `data/rosters.json`, `data/rosters-enrichment.json` | `lib/players/rosters.ts` |
+| `data/clubs.json` | `lib/players/clubs.ts` |
+| `data/commits.json` | `lib/players/commits.ts` |
+| `data/ccs-bracket-2026.json` | `lib/postseason/ccs-bracket.ts` |
+| `data/sds-brackets-2026.json` | `lib/postseason/sds-bracket.ts` |
+| `data/schools.json` (each registry school's campus address, by slug) | `lib/schools/schools.ts` |
 
 The vinext scripts read the
 same `app/` and `next.config.ts`; vinext adds `vite.config.ts`, `cloudflare.config.ts` for the
@@ -1046,7 +1107,7 @@ captured from real (offline) MaxPreps/SCVAL responses live under `tests/fixtures
 ## Next-season bootstrap
 
 MaxPreps' season ids are **never hardcoded into more than one place** — they live in
-`lib/season.ts`, and the MaxPreps league ids (and every other league fact) in `lib/leagues.ts`; both
+`lib/season.ts`, and the MaxPreps league ids (and every other league fact) in `lib/league-config/`; both
 are re-asserted on every `fetch-data` run. The season ids are global, but **MaxPreps' league ids change
 every season**: the nine leagues have 15 divisions and 14 MaxPreps league ids, because the San Diego
 Section's Valley division has no MaxPreps table (`maxprepsLeagueId: null`); the independents' group
@@ -1064,14 +1125,14 @@ pnpm discover-season --help                   # usage; makes no request
 independents (each sits alone in its own all-sports league, so the script lists their leagues and asks
 for a check by hand that each is still its league's only field hockey team), asserts they agree with
 `leagues/{id}/v1`, reports whether a member of a null-table division (Valley) now carries a league,
-and prints a diff against `lib/season.ts` and `lib/leagues.ts` plus a
+and prints a diff against `lib/season.ts` and `lib/league-config/` plus a
 ready-to-paste constants block. **It never writes a file** — a human reviews the diff and edits
-`lib/season.ts` and `lib/leagues.ts`, because a wrong season id would silently publish last
+`lib/season.ts` and `lib/league-config/`, because a wrong season id would silently publish last
 year's table under this year's URL. The official schedules, by-laws and fixture files are
 re-transcribed by hand each season (see `docs/DATA-SOURCES.md`). So are the postseason pieces: the CCS
-tournament and division bracket ids (`CCS.tournament` in `lib/leagues.ts`, from the new MaxPreps tournament
+tournament and division bracket ids (`CCS.tournament` in `lib/league-config/sections.ts`, from the new MaxPreps tournament
 page's URL keys), and two new owner files, `data/ccs-bracket-<year>.json` and `data/sds-brackets-<year>.json`,
-which the imports in `lib/ccs-bracket.ts` and `lib/sds-bracket.ts` name (see "Postseason bracket files").
+which the imports in `lib/postseason/ccs-bracket.ts` and `lib/postseason/sds-bracket.ts` name (see "Postseason bracket files").
 
 Once a season is finished, its final standings are only available from each league's own
 end-of-season documents (a MaxPreps league URL's year segment is cosmetic and always serves the
@@ -1080,7 +1141,7 @@ current season). Run `pnpm build-history` once, by hand, after they are publishe
 from the Google Sheet and the two all-league documents linked from `https://bval.org/standings/`
 and `https://bval.org/all-league/` (`pnpm build-history --from tests/fixtures/scval --bval-from
 tests/fixtures/bval --retrieved-on 2026-10-03` rebuilds the committed file offline; `--retrieved-on`
-is required with `--bval-from`). The script validates the result against the schema in `lib/history-schema.ts`
+is required with `--bval-from`). The script validates the result against the schema in `lib/history/history-schema.ts`
 and writes nothing if it fails or any school does not resolve. It is a record-only file (final W-L-T, and BVAL's overall record, as published; no
 recomputed points, since neither source has game-level data to recompute from), has one entry per
 league (`available`, or `unavailable` with the reason: PCAL, MCAL, EAL, Sunset, City, North County,
@@ -1132,7 +1193,7 @@ points rule, no standings and no table order that we could find, so the order is
 3-1-0 points and every page says so (`orderScope: 'site'`). SCVAL, BVAL, PCAL, MCAL and the Sunset
 can end a league game in a tie; the EAL and the San Diego Section decide a level varsity game by
 1 v 1s or a shootout. They differ in the tiebreak chain, in how a tie among three or more
-teams is worked through and in the postseason, so every rule is data in `lib/leagues.ts` (with the
+teams is worked through and in the postseason, so every rule is data in `lib/league-config/` (with the
 by-law citation next to it) and one engine in `lib/standings.ts` runs them. Only games that count
 toward a division table count: a team's non-league and postseason games never do. The full rules,
 with citations, are in `docs/LEAGUE-RULES.md`; the site prints them on `/about#rules-<league>`.
@@ -1263,7 +1324,7 @@ Association's Tournament of Champions, Oct 22–29, the postseason for both the 
 CIF does not run it: the Southern Section holds no field hockey championship (Blue Book 2026-27 Bylaws 2011.1
 and 3500.2) and CIF no regional or state one. Its eight teams are five Sunset and three LA independents; a
 Sunset team not in it ends its season with its last game. The site names it, lists its games on `/playoffs#toc`, tags them
-`outside-tournament` and counts them in no table (`TOC` in `lib/leagues.ts`, DESIGN §24.13). MaxPreps' 2026-27
+`outside-tournament` and counts them in no table (`TOC` in `lib/league-config/sections.ts`, DESIGN §24.13). MaxPreps' 2026-27
 Sunset table lists three of the eight with Bonita and Chaminade, ordered by winning percentage, and
 si.com's lists six of the eight with Bonita, Chaminade and two 0-0 rows; both are shown as informational
 only, and Great Oak's Aug 27 win over Bonita, which MaxPreps marks as a league game, is not counted
@@ -1272,7 +1333,7 @@ here.
 ### LA independents
 
 Five Los Angeles-area Southern Section schools in no field hockey league, grouped by this site as "LA
-independents" (short name "LA", `independents: true` in `lib/leagues.ts`; the id and URL stay
+independents" (short name "LA", `independents: true` in `lib/league-config/independents.ts`; the id and URL stay
 `independents`). Glendora,
 Harvard-Westlake and Thousand Oaks are the only field hockey teams in their all-sports leagues (the
 Palomares League, League B and the Marmonte League on MaxPreps' 2026-27 team pages; MaxPreps' 2025-26
@@ -1387,7 +1448,7 @@ page becomes a link to it. `--no-sblive` turns the whole thing off. The exact ru
 
 ## How Elo ratings are computed
 
-Each team's Elo rating (`lib/ratings.ts`, DESIGN §20) is on its team page behind a closed "Elo
+Each team's Elo rating (`lib/ratings/ratings.ts`, DESIGN §20) is on its team page behind a closed "Elo
 rating" disclosure under the stat tiles (`#elo`), kept low on purpose so a family checking its
 team meets the record first, and the ten highest in each region are a board on `/leaders`
 (`#elo-rating` for NorCal, `#elo-rating-socal` for SoCal). The ratings are on one scale across all
@@ -1452,7 +1513,7 @@ at once, at every build, starting from last season's:
 ## Elo-adjusted goals and points
 
 Two `/leaders` boards per region weigh scoring by the defenses it came against
-(`lib/adjusted-scoring.ts`, DESIGN §27), with the one Elo table at the core:
+(`lib/ratings/adjusted-scoring.ts`, DESIGN §27), with the one Elo table at the core:
 
 - **The defenses.** A Poisson goal model over every counted final: a side's expected goals are
   `exp(μ + h·host + a·s_team + u_team − (d·s_opp + v_opp))`, where `s` is a team's Elo strength in
@@ -1503,7 +1564,7 @@ Two `/leaders` boards per region weigh scoring by the defenses it came against
   on the one Elo table the site already shows, which links the leagues' few cross-league games and
   carries last season over. On the board's teams, standard deviations of 0.25-0.4 and 0.5-2 games
   of shrinkage scored within 0.01 of the chosen pair; capping each game's weight at 3, 5 or 8 games scored worse. The
-  Elo constants (`lib/ratings.ts`) were tuned on these same two seasons, which flatters every Elo
+  Elo constants (`lib/ratings/ratings.ts`) were tuned on these same two seasons, which flatters every Elo
   row a little.
 - **What it does not know.** Ratings and defenses are today's, from every counted game, the one
   being weighed included: taking each top team's own games out of both fits keeps every board's top
@@ -1546,7 +1607,7 @@ Two `/leaders` boards per region weigh scoring by the defenses it came against
   De Anza grid still lists it, but it is not in the team registry, its 14 grid fixtures are
   dropped when the PDF is parsed, and De Anza is shown as 7 teams. York plays JV field hockey only
   (PCAL's grid slot `CAT/YOR` is Santa Catalina), so it has no varsity results. Both are in the
-  `withdrawnNames` of their league in `lib/leagues.ts`, and the team search says so. Red Bluff is not
+  `withdrawnNames` of their league in `lib/league-config/` (`scval.ts`, `pcal.ts`), and the team search says so. Red Bluff is not
   fielding a varsity team in 2026 either (MaxPreps' EAL table still lists it as a 0-0-0 row; a JV
   game of its own exists, so the site says only "not fielding a varsity team in 2026").
   In Southern California, Madison, Santana, Castle Park, Chula Vista, Montgomery and Sweetwater have a
@@ -1589,7 +1650,7 @@ Two `/leaders` boards per region weigh scoring by the defenses it came against
   brackets on its field hockey page after the Sat Oct 31 seeding meeting (in 2025 a link-shared Google
   Sheet, readable as CSV without a login). `/playoffs` prints the officials' association's round calendar
   and links that page; the owner pastes the sheet's URL into `bracketSheetUrl` (`sdsPostseason` in
-  `lib/leagues.ts`) and transcribes the placed teams and round dates into `data/sds-brackets-2026.json`, after
+  `lib/league-config/sds.ts`) and transcribes the placed teams and round dates into `data/sds-brackets-2026.json`, after
   which the site draws the Section's brackets (see "Postseason bracket files"). Nothing reads the sheet itself (its
   2026 id is unknown until published and docs.google.com has never been read from Actions), so the drawing is only
   as current as the file: a later change to the sheet does not show until the file is edited, and the schema
@@ -1598,7 +1659,7 @@ Two `/leaders` boards per region weigh scoring by the defenses it came against
 - **The San Diego playoff divisions can go stale.** Each team's Division I or II on `/playoffs` and its
   team page comes from the Section's 2026 Divisions sheet (dated 2025-12-23), kept in config; nothing
   re-checks it, so a re-sheet before the Oct 31 seeding meeting would not show until someone edits
-  `lib/leagues.ts`. Once `data/sds-brackets-2026.json` is filled, the drawn bracket shows the Section's own
+  `lib/league-config/{city,north-county,metro}.ts`. Once `data/sds-brackets-2026.json` is filled, the drawn bracket shows the Section's own
   placement, but the conference cards and team pages still read `playoffDivisionOf`, and the file's schema refuses
   an Open Division school that config does not put in Division I, so a re-sheet means editing both.
 - **MaxPreps' manual entry lags.** Coaches enter scores by hand; at times only a fraction of
@@ -1727,7 +1788,7 @@ Two `/leaders` boards per region weigh scoring by the defenses it came against
 - **axe-core is pinned to the 4.13 line in CI.** axe-core 4.14.0 (published 2026-10-05) widened its
   `label-content-name-mismatch` rule: it now compares the visible text of `aria-hidden` descendants
   and keeps the soft hyphens of the team-picker tiles, so it flags three patterns that predate this
-  change and whose accessible names are deliberate sentences: the home pin tiles (`lib/pin-label.ts`),
+  change and whose accessible names are deliberate sentences: the home pin tiles (`components/words/pin-label.ts`),
   the "Who we haven't beaten" rows and the pinned card's last-game link. With 4.13 the pass is clean
   (176 page loads, 0 serious or critical). Reworking those three names for 4.14 is a follow-up.
 - MaxPreps' season-year URL segment is cosmetic (it always serves the current

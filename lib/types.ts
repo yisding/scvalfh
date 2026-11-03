@@ -1,6 +1,6 @@
 /**
  * The normalized domain model: sections → leagues → divisions → teams, games, standings.
- * League facts (rules, chains, ladders, dates) are NOT here; they are config in lib/leagues.ts.
+ * League facts (rules, chains, ladders, dates) are NOT here; they are config in lib/league-config/.
  * Everything is exported; nothing here is a class and nothing here has behaviour.
  */
 
@@ -11,21 +11,21 @@ export type TeamId = string;
 
 /**
  * MaxPreps `contestId` GUID, or `sblive:<digits>` for a game that only si.com has and that D2 rule 2
- * published (lib/backfill.ts). URL params map ':' to '-' (lib/game-id.ts).
+ * published (lib/crosscheck/backfill.ts). URL params map ':' to '-' (lib/game-id.ts).
  */
 export type ContestId = string;
 
 /**
  * The five CIF sections with a covered league: three in Northern California (CCS, NCS, NS) and two in
  * Southern California (the Southern Section's 'ss' and the San Diego Section's 'sds'). The snapshot
- * schema's `sectionId` enum is this list (lib/snapshot-schema.ts proves the two agree at compile time).
+ * schema's `sectionId` enum is this list (lib/snapshot/snapshot-schema.ts proves the two agree at compile time).
  */
 export type SectionId = 'ccs' | 'ncs' | 'ns' | 'ss' | 'sds';
 
 /**
  * The site's two halves, the NorCal/SoCal toggle (DESIGN-socal §2.1.1). A property of a SECTION
- * (SectionConfig.region in lib/leagues.ts), so a league's or a team's region is always derived from its
- * section and never stored in the snapshot. Not the clubs' CLUB_REGIONS (lib/clubs-schema.ts) and not a
+ * (SectionConfig.region in lib/league-config/sections.ts), so a league's or a team's region is always derived from its
+ * section and never stored in the snapshot. Not the clubs' CLUB_REGIONS (lib/players/clubs-schema.ts) and not a
  * venue's `address.region` (a state code): those are separate concepts that happen to share the word.
  */
 export type RegionId = 'norcal' | 'socal';
@@ -59,7 +59,7 @@ export type OfficialSourceId = (typeof OFFICIAL_SOURCE_IDS)[number];
 export type SourceId =
   | 'maxpreps-api' | 'maxpreps-html' | 'sblive' | OfficialSourceId
   | 'ccs-pdf' | 'ccs-ical' | 'vnn-ics' | 'cifss' | 'derived'
-  /** A JV result transcribed from a school's own athletics site (lib/jv-school-sites.ts); JV only. */
+  /** A JV result transcribed from a school's own athletics site (lib/jv/jv-school-sites.ts); JV only. */
   | 'school-site';
 
 // ---------- season ----------
@@ -96,7 +96,7 @@ export interface SeasonDivision {
 }
 
 /**
- * Every LeagueConfig['postseason']['kind'] (lib/leagues.ts), as the snapshot stores it. 'no-postseason' is
+ * Every LeagueConfig['postseason']['kind'] (lib/league-config/shape.ts), as the snapshot stores it. 'no-postseason' is
  * the Sunset (the CIF Southern Section holds no field hockey playoffs: Blue Book 2026-27 Bylaws 2011.1 and
  * 3500.2); 'section-playoffs' is the three San Diego Section leagues (the Section's own Open/I/II
  * playoffs, placed from its power rankings: Green Book 2026-27 Bylaw 2000.1).
@@ -223,7 +223,7 @@ export type Outcome = 'W' | 'L' | 'T';
 
 /**
  * 'SO' = a level final that MaxPreps flags W/L between two teams of a SECTION whose `shootout` rule is set
- * (SectionConfig.shootout in lib/leagues.ts): the Northern Section's EAL (1 v 1s, NS Guidelines §VII.E.4)
+ * (SectionConfig.shootout in lib/league-config/sections.ts): the Northern Section's EAL (1 v 1s, NS Guidelines §VII.E.4)
  * and the San Diego Section (a 5-player shootout; the San Diego Field Hockey Officials Association 2026
  * Mercy & Overtime Procedures credit the winner one goal, but MaxPreps often keeps the level score and
  * marks it W and L). Keyed on the section, not the league, because the San Diego rule covers every varsity
@@ -271,7 +271,7 @@ export interface GameVenue {
 export interface PostseasonTag {
   /**
    * 'mcal-tournament' is the tag of any league whose postseason.kind is 'league-tournament' (MCAL today); the
-   * literal is kept for snapshot stability (lib/snapshot-schema.ts PostseasonTagSchema). lib/classify.ts assigns.
+   * literal is kept for snapshot stability (lib/snapshot/snapshot-schema.ts PostseasonTagSchema). lib/classify.ts assigns.
    * 'section-playoffs' is the San Diego Section's playoffs (DESIGN-socal §2.1.7): any game between two
    * teams of a section whose leagues' postseason.kind is 'section-playoffs', dated on or after the
    * leagues' `postseasonFrom` (Nov 2) or carrying contestType 4, whether or not the two share a conference;
@@ -301,7 +301,7 @@ export interface PostseasonTag {
 /**
  * What MaxPreps' schedule-calculated feed says about the tournament bracket a game belongs to, copied from the
  * row's `contest.tournamentId` / `tournamentBracketId` and `calculatedFields.bracketName` / `bracketIsPublished` /
- * `bracketMatchupID` / `tournamentName` / `tournamentCanonicalUrl`. Set by lib/normalize.ts only when the
+ * `bracketMatchupID` / `tournamentName` / `tournamentCanonicalUrl`. Set by lib/pipeline/normalize.ts only when the
  * tournamentId is a real GUID: every 2026 crossover, Tournament of Champions and EAL row, and 2025's Super
  * Regional rows, carry the all-zero GUID with every bracket field null (read 2026-10-29), while the 2025 CCS
  * rows of Los Gatos carry the CCS championship's id, `bracketName 'Division 1'`, `bracketIsPublished true`.
@@ -383,7 +383,7 @@ export interface Game {
   shootout: { home: number; away: number } | null;
   /**
    * MaxPreps' bracket fields for a tournament game (GameBracket); absent when the row's tournamentId is null or
-   * the all-zero GUID. lib/classify.ts rule 1c reads it; lib/ccs-bracket.ts ccsBracketGames puts a published
+   * the all-zero GUID. lib/classify.ts rule 1c reads it; lib/postseason/ccs-bracket.ts ccsBracketGames puts a published
    * CCS bracket game into `playoffs.games` before the quarterfinal date.
    */
   bracket?: GameBracket;
@@ -394,7 +394,7 @@ export interface Game {
   urls: {
     maxpreps: string | null;
     sblive?: string;
-    /** The school athletics page a JV score came from (lib/jv-school-sites.ts). */
+    /** The school athletics page a JV score came from (lib/jv/jv-school-sites.ts). */
     school?: string;
     nfhsStream: string | null;
     goFan: string | null;
@@ -412,7 +412,7 @@ export interface Game {
     /**
      * When the pipeline last saw this game's published content change (ISO UTC, a run's `fetchedAt`):
      * set by lib/pipeline/steps/assemble.ts against the previous snapshot's copy of the game, every
-     * field compared but the fetch stamps and MaxPreps' own `maxprepsModifiedOn` (lib/content-dates.ts
+     * field compared but the fetch stamps and MaxPreps' own `maxprepsModifiedOn` (lib/snapshot/content-dates.ts
      * stampContentChanges). Absent on a game unchanged since the stamp was introduced. Read by the
      * sitemap's `lastmod`, never shown.
      */
@@ -424,14 +424,14 @@ export interface Game {
     /** NEW. Why a same-division game does NOT count (e.g. "Not on the official BVAL schedule; not counted"). */
     classificationNote?: string;
     /**
-     * NEW. Set when DATA_QUALITY.contestDateOverrides (lib/leagues.ts) moved this contest off MaxPreps' date:
+     * NEW. Set when DATA_QUALITY.contestDateOverrides (lib/league-config/data-quality.ts) moved this contest off MaxPreps' date:
      * MaxPreps' own `dateLocal` and the override's source sentence, so the game page can say the date was
      * corrected, from what, and on whose word.
      */
     dateCorrection?: { maxprepsDateLocal: string; maxprepsTimeTba: boolean; source: string };
     /**
      * NEW. Set when MaxPreps records no overtime but the coach's game note says the game went to it
-     * (lib/normalize.ts overtimeFromNote): the note, so the game page can say where the OT came from.
+     * (lib/pipeline/normalize.ts overtimeFromNote): the note, so the game page can say where the OT came from.
      */
     overtimeNote?: string;
   };
@@ -439,7 +439,7 @@ export interface Game {
 
 // ---------- standings ----------
 
-/** Each member is code in lib/standings.ts. The ORDER of a chain is config (lib/leagues.ts). */
+/** Each member is code in lib/standings.ts. The ORDER of a chain is config (lib/league-config/). */
 export type TiebreakStage =
   | 'points'                   // placed on points alone
   | 'head-to-head'             // SCVAL §3, BVAL §6b, PCAL §23.3 — SCVAL's original stage
@@ -609,7 +609,7 @@ export interface CcsPlayoffs {
   divisionsPublished?: Record<CcsDivisionName, boolean>;
   bracketUrl: string;
   /**
-   * The CCS bracket games: lib/ccs-bracket.ts ccsBracketGames over `games` — every game tagged 'ccs' that is
+   * The CCS bracket games: lib/postseason/ccs-bracket.ts ccsBracketGames over `games` — every game tagged 'ccs' that is
    * dated on or after the quarterfinals or that MaxPreps' feed marks published (`Game.bracket.published`), the
    * same objects as in `games`. Empty until the bracket is published (the committed file of 2026-10-29).
    */
@@ -935,7 +935,7 @@ export interface ContentRemoval {
 }
 
 export interface Snapshot {
-  /** NEW. v1 files (no field) are upgraded in memory by lib/snapshot-migrate.ts. */
+  /** NEW. v1 files (no field) are upgraded in memory by lib/snapshot/snapshot-migrate.ts. */
   schemaVersion: 2;
   /** ISO UTC, when the run started. 'today' everywhere is derived from this. */
   fetchedAt: string;
@@ -967,7 +967,7 @@ export interface Snapshot {
    */
   supersededGames: Record<ContestId, ContestId>;
   /**
-   * Contests that left a date: deleted, superseded, or moved to another day (lib/content-dates.ts
+   * Contests that left a date: deleted, superseded, or moved to another day (lib/snapshot/content-dates.ts
    * contentRemovalsOf). The pages that showed one still changed when it went, though no game left on
    * them did, so the sitemap's `lastmod` counts these too. Carried for the season; never shown.
    */

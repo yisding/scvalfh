@@ -1,5 +1,5 @@
 /**
- * lib/sources/cifss.ts and lib/cifss-crosscheck.ts — the cifsshome.org score cross-check
+ * lib/sources/cifss.ts and lib/crosscheck/cifss-crosscheck.ts — the cifsshome.org score cross-check
  * (docs/DATA-SOURCES.md §1.2a). The rules under test:
  *   1. a widget page parses into rows; a TBA opponent is skipped; the pagination names the last page;
  *   2. team identity is Section-scoped: a bare name resolves only within the listing's Section, a
@@ -13,8 +13,9 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { CIFSS_NOTES, carryCifssCrossCheck, compareCifss } from '../lib/cifss-crosscheck';
-import { gamePairKey } from '../lib/crosscheck';
+import { carryCifssCrossCheck, compareCifss } from '../lib/crosscheck/cifss-crosscheck';
+import { CIFSS_NOTES } from '../lib/crosscheck/cifss-notes';
+import { gamePairKey } from '../lib/crosscheck/crosscheck';
 import {
   CIFSS_NO_SECTION_TEAMS,
   CIFSS_SECTION_OVERRIDES,

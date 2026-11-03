@@ -21,16 +21,14 @@ import {
   getTournamentLeagueIds,
   type LeagueSummary,
 } from '../../lib/data';
-import { getDivision, getLeague, type LeagueConfig } from '../../lib/leagues';
-import { tournamentOutcome, tournamentOutcomeCopy } from '../../lib/postseason';
-import { schoolAddress } from '../../lib/schools';
+import type { LeagueConfig, TournamentConfig } from '../../lib/league-config/shape';
+import { getDivision, getLeague } from '../../lib/leagues';
+import { tournamentOutcome, tournamentOutcomeCopy } from '../../lib/postseason/postseason';
+import { schoolAddress } from '../../lib/schools/schools';
 import { outcomesFor, playoffOutcomeLabel } from '../../lib/standings';
 import type { LeagueTournamentProjection, Team } from '../../lib/types';
 
 import { buildTournamentView, type TournamentView } from './playoff-view';
-
-/** A league-tournament league's postseason config (MCAL's). */
-export type TournamentConfig = Extract<LeagueConfig['postseason'], { kind: 'league-tournament' }>;
 
 /** One param per league-tournament league (today `mcal`): the page's and the OG card's `generateStaticParams`. */
 export function tournamentStaticParams(): { league: string }[] {

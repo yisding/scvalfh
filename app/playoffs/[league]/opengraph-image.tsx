@@ -1,13 +1,13 @@
 import { ImageResponse } from 'next/og';
 import { notFound } from 'next/navigation';
 
-import { OG, OG_SIZE } from '../../../components/layout/og-theme';
+import { OG, OG_SIZE } from '../../../components/metadata/og-theme';
 import { SITE_NAME } from '../../../components/layout/site';
 import { ROUND_TITLES, type TournamentRoundView } from '../../../components/playoffs/playoff-view';
 import { tournamentLeague, tournamentStaticParams } from '../../../components/playoffs/tournament-league';
 import { getLeagueTournament, getTeamBySlug } from '../../../lib/data';
 import { getLeague } from '../../../lib/leagues';
-import { tournamentHeadline } from '../../../lib/postseason';
+import { tournamentHeadline } from '../../../lib/postseason/postseason';
 import { listWords, shortDate } from '../../../lib/format';
 
 /**
@@ -50,7 +50,7 @@ export default async function Image({ params }: PageProps<'/playoffs/[league]'>)
       return out;
     }, [])
     .map((r) => `${ROUND_TITLES[r.round]} ${shortDate(r.date)}${r.round === 'final' ? ` at ${ps.finalSite.label}` : ''}`);
-  // The champion or the next round first (lib/postseason.ts tournamentHeadline), else the seeds' caption.
+  // The champion or the next round first (lib/postseason/postseason.ts tournamentHeadline), else the seeds' caption.
   const headline = tournamentHeadline(projection, getLeague(summary.id));
   const sub = headline.champion
     ? `Champion: ${headline.champion.replace(/\.$/, '')}`

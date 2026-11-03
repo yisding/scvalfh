@@ -8,11 +8,11 @@ import path from 'node:path';
 import sharp from 'sharp';
 import { describe, expect, it } from 'vitest';
 
-import { JV_OUTSIDE_TEAMS } from '../lib/jv-teams';
-import { MASCOT_FILE_SIZES, MASCOT_TILE_SIZES, mascotFile } from '../lib/mascots';
+import { JV_OUTSIDE_TEAMS } from '../lib/jv/jv-teams';
+import { MASCOT_FILE_SIZES, MASCOT_TILE_SIZES, mascotFile } from '../lib/schools/mascots';
 import { TEAMS } from '../lib/teams';
 
-/** Every tile stem: the registry's slugs, then each JV slot team's (York, lib/jv-teams.ts). */
+/** Every tile stem: the registry's slugs, then each JV slot team's (York, lib/jv/jv-teams.ts). */
 const STEMS = [...TEAMS.map((t) => t.slug), ...Object.values(JV_OUTSIDE_TEAMS).map((t) => t.mascot)];
 
 const PUBLIC = path.resolve(import.meta.dirname, '..', 'public');

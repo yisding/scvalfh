@@ -18,7 +18,7 @@
  * --retrieved-on is the day the BVAL documents were read. A live run defaults it to today; with
  * --bval-from it is required (YYYY-MM-DD), because only the person who saved the fixtures knows it.
  *
- * Nothing is written unless the assembled file passes lib/history-schema.ts' schema and the build
+ * Nothing is written unless the assembled file passes lib/history/history-schema.ts' schema and the build
  * found no problem (an unresolved school, a missing block): it exits 1 instead.
  *
  * Run once per season, by hand — NOT from the cron. These documents are published once a year and
@@ -54,7 +54,7 @@ import {
   type BvalStandingsBlock,
 } from '../lib/sources/bval-sheet';
 import { HttpClient } from '../lib/sources/http';
-import { HistorySchema } from '../lib/history-schema';
+import { HistorySchema } from '../lib/history/history-schema';
 import { divisionsOf, getLeague } from '../lib/leagues';
 import { isCalendarDate } from '../lib/schema-primitives';
 import { stableStringify } from '../lib/stable-json';
@@ -383,7 +383,7 @@ async function main(argv: readonly string[]): Promise<number> {
   // season (leagues/{id}/standings/v1?sportseasonid=8ae4cbab-…): Glendora's, Harvard-Westlake's and Thousand
   // Oaks' all-sports league tables for that season (the league ids are those in each team's MaxPreps
   // team-context lastYearStandingsData) list that school and no other field hockey team, and MaxPreps' 2025-26
-  // Sunset table lists Bonita and Chaminade with the eight Sunset teams (lib/leagues.ts SUNSET). The links are
+  // Sunset table lists Bonita and Chaminade with the eight Sunset teams (lib/league-config/sunset.ts SUNSET). The links are
   // MaxPreps' public pages for those tables (the canonical URLs team-context gives).
   const independents = {
     status: 'unavailable',
@@ -422,8 +422,8 @@ async function main(argv: readonly string[]): Promise<number> {
   }
   console.log('PCAL, MCAL, EAL, Sunset, City, North County, Metro, LA independents: unavailable (see reasons in the file)');
 
-  // Validate against the contract before anything is written. lib/history-schema.ts does not load
-  // the committed file (lib/history.ts does), so a broken committed file cannot block the rebuild
+  // Validate against the contract before anything is written. lib/history/history-schema.ts does not load
+  // the committed file (lib/history/history.ts does), so a broken committed file cannot block the rebuild
   // that replaces it.
   const json = stableStringify(history);
   const parsed = HistorySchema.safeParse(JSON.parse(json));

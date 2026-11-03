@@ -20,7 +20,8 @@
 
 import { classifyGames } from '../../classify';
 import { byDateThenId } from '../../format';
-import { LEAGUES, getLeague, type LeagueConfig } from '../../leagues';
+import type { LeagueConfig } from '../../league-config/shape';
+import { LEAGUES, getLeague } from '../../leagues';
 import { divisionGames } from '../../standings';
 import { teamsInLeague } from '../../teams';
 import type { DivisionHealth, DivisionId, Game, LeagueId } from '../../types';

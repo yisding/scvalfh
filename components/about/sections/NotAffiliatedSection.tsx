@@ -1,0 +1,35 @@
+import SectionHeader from '../../ui/SectionHeader';
+import { listWords } from '../../../lib/format';
+import type { AboutDisclaimer, AboutNoDocument } from '../about-view';
+
+/**
+ * /about#not-affiliated: the disclaimer, naming every league and section, and what is the source of
+ * truth for anything that matters competitively.
+ */
+export function NotAffiliatedSection({ disclaimer, noDocument }: { disclaimer: AboutDisclaimer; noDocument: AboutNoDocument }) {
+  const { tabled, sections } = disclaimer;
+  const { norcal, socal } = noDocument;
+  return (
+    <section id="not-affiliated" className="mt-16 mb-2">
+      <SectionHeader size="lg" kicker="Not affiliated" />
+      <div className="sx-prose">
+        <p>
+          This is an unofficial fan site. It is not affiliated with, endorsed by, or operated by{' '}
+          {listWords(tabled.map((l) => `the ${l.name} (${l.shortName})`))}, the CIF{' '}
+          {listWords(sections.map((s) => `${s.name} (${s.shortName})`))}, MaxPreps or Sports
+          Illustrated. All team names, colors and marks belong to their respective schools. Records
+          here are computed from published game results and, while we cross-check them and publish
+          every disagreement we find, they may differ from an official ruling &mdash; each
+          league&rsquo;s own standings
+          {norcal.leagues.length > 0 &&
+            ` (or, for ${norcal.who}, which ${norcal.leagues.length === 1 ? 'publishes' : 'publish'} none, the scores ${norcal.leagues.length === 1 ? 'its' : 'their'} schools report for seeding under ${norcal.guidelines})`}{' '}
+          are always the
+          source of truth for anything that matters competitively, such as playoff seeding.
+          {socal.leagues.length > 0 ? ` ${socal.competitive}` : null}
+        </p>
+      </div>
+    </section>
+  );
+}
+
+export default NotAffiliatedSection;

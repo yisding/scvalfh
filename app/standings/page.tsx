@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 import LeagueJumpLinks from '../../components/layout/LeagueJumpLinks';
-import LeagueSwitcher, { RegionSwitcher } from '../../components/layout/LeagueSwitcher';
+import LeagueSwitcher, { RegionSwitcher } from '../../components/prefs/LeagueSwitcher';
 import PageHeader from '../../components/layout/PageHeader';
 import { leagueChips, leagueHrefs } from '../../components/layout/league-chips';
 import { OG_BASE } from '../../components/layout/site';
@@ -21,7 +21,7 @@ import type { LeagueId } from '../../lib/types';
  * The old SCVAL anchors keep resolving with no JavaScript and no redirect: `#de-anza` and
  * `#el-camino` are real elements here, as are `#ccs`/`#ncs`/`#ns`/`#ss`/`#sds` (sections), every league
  * id and every division id, and `#norcal`/`#socal` (the region wrappers, DESIGN-socal §2.4: a deep link
- * into the hidden region opens it, components/layout/league-scope-css.ts). A single-division league whose division id equals its league id (PCAL, EAL) has ONE
+ * into the hidden region opens it, components/prefs/league-scope-css.ts). A single-division league whose division id equals its league id (PCAL, EAL) has ONE
  * element carrying the id; every id on the page is unique.
  *
  * Heading outline (SPEC §10.0): each section is a `<section aria-labelledby>` with an h2 → each

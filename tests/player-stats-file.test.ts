@@ -17,7 +17,7 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { getPlayerStats, getTeamPlayerStats } from '../lib/player-stats';
+import { getPlayerStats, getTeamPlayerStats } from '../lib/players/player-stats';
 import {
   FIELD_STAT_KEYS,
   PLAYER_STATS_TEAM_COUNT,
@@ -26,9 +26,9 @@ import {
   countPlayerStats,
   playerStatsContentKey,
   type PlayerStatsFile,
-} from '../lib/player-stats-schema';
-import { getRosters } from '../lib/rosters';
-import { RostersSchema, countRosters, type Rosters } from '../lib/rosters-schema';
+} from '../lib/players/player-stats-schema';
+import { getRosters } from '../lib/players/rosters';
+import { RostersSchema, countRosters, type Rosters } from '../lib/players/rosters-schema';
 import { pendingRoster } from '../lib/sources/maxpreps-roster';
 import { pendingPlayerStats } from '../lib/sources/maxpreps-player-stats';
 import { TEAMS, teamsInLeague } from '../lib/teams';

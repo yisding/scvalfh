@@ -2,10 +2,10 @@ import Link from 'next/link';
 
 import { dateTimeAttr, longDate, mapsSearchHref, monthDay, parseLocal, timeOfDayPT } from '../../lib/format';
 import { findDivision, findLeague, standingsLabel } from '../../lib/leagues';
-import { addressLine, gameAddress } from '../../lib/venue';
+import { addressLine, gameAddress } from '../../lib/schools/venue';
 import ExternalLink from '../ui/ExternalLink';
 import SectionHeader from '../ui/SectionHeader';
-import { maxPrepsLabel } from '../ui/maxpreps-label';
+import { maxPrepsLabel } from '../words/maxpreps-label';
 
 import type { GameModel } from './game-view';
 
@@ -29,7 +29,7 @@ import type { GameModel } from './game-view';
  *
  * 1. **`contest.location` is a NOTE field, not a venue field.** Live values include "Senior Night"
  *    and a coach's scoring note, so it is printed as a note and never labelled "Venue" (SPEC §4).
- * 2. **The address is lib/venue.ts `gameAddress`'s, and Directions appear only when there is one.**
+ * 2. **The address is lib/schools/venue.ts `gameAddress`'s, and Directions appear only when there is one.**
  *    MaxPreps gives a game no address in the sweep, so it is almost always a school's campus from
  *    data/schools.json: the named venue's school, the league final's fixed site, or the host. A neutral
  *    site, a venue that is not a registry school, and a disputed host have none, and print no address
@@ -109,7 +109,7 @@ export function GameDetails({ model, className }: GameDetailsProps) {
                 {monthDay(movedFrom)}.
               </span>
             ) : null}
-            {/* DATA_QUALITY.contestDateOverrides (lib/normalize.ts): the date shown is a better source's,
+            {/* DATA_QUALITY.contestDateOverrides (lib/pipeline/normalize.ts): the date shown is a better source's,
                 not MaxPreps'; say so, from what, and on whose word (the override's source sentence). */}
             {game.provenance.dateCorrection ? (
               <span className="mt-1 block text-meta text-ink-3">
@@ -186,7 +186,7 @@ export function GameDetails({ model, className }: GameDetailsProps) {
             {/* MaxPreps' `location` field, verbatim. It is a note, not a venue. */}
             <dd className="mt-1 mb-0 ml-0 text-body text-ink-2">
               {game.venue.text}
-              {/* lib/normalize.ts overtimeFromNote: the OT on this page is the note's, not MaxPreps'. */}
+              {/* lib/pipeline/normalize.ts overtimeFromNote: the OT on this page is the note's, not MaxPreps'. */}
               {game.provenance.overtimeNote ? (
                 <span className="mt-1 block text-meta text-ink-3">
                   MaxPreps records no overtime for this game; the overtime shown here is from this note.

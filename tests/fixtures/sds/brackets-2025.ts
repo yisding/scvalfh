@@ -1,6 +1,6 @@
 /**
  * Last season's San Diego Section brackets in this season's file shape, and last season's MaxPreps rows as
- * games, so tests can run lib/sds-bracket.ts against a bracket that was really played (plan final-07,
+ * games, so tests can run lib/postseason/sds-bracket.ts against a bracket that was really played (plan final-07,
  * 2026-10-29). Nothing on the site reads this module.
  *
  * - `seedsFromHistory('sds')` turns the 2025 brackets in data/history-brackets-2025-26.json (transcribed from
@@ -16,16 +16,16 @@
  *   (Division II quarterfinal).
  */
 
-import { getHistoryBrackets } from '../../../lib/history';
-import type { SectionBracketDivision } from '../../../lib/history-brackets-schema';
+import { getHistoryBrackets } from '../../../lib/history/history';
+import type { SectionBracketDivision } from '../../../lib/history/history-brackets-schema';
 import { LEAGUE_IDS, getLeague } from '../../../lib/leagues';
-import { getPriorSeason } from '../../../lib/prior-season';
+import { getPriorSeason } from '../../../lib/history/prior-season';
 import {
   sdsBracketsSchema,
   type SdsBracketsDivision,
   type SdsBracketsFile,
   type SdsDivisionId,
-} from '../../../lib/sds-brackets-schema';
+} from '../../../lib/postseason/sds-brackets-schema';
 import { teamsInLeague } from '../../../lib/teams';
 import type { Game, TeamSlug } from '../../../lib/types';
 import { game } from '../../game-builder';

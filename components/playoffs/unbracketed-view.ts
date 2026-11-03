@@ -7,7 +7,7 @@
  * draws none and names no seed (SEED_CLAIM covers the card): it lists the games tagged 'league-postseason'
  * for the league (lib/classify.ts tags a game between two EAL teams on or after the Super Regional's first
  * day), grouped by day in date order. A day is headed by the rounds its games' own rows name
- * (`roundFromLocation(venue.text)`, lib/postseason-rounds.ts: MaxPreps' 2025 rows said "Semi Final" and
+ * (`roundFromLocation(venue.text)`, lib/postseason/postseason-rounds.ts: MaxPreps' 2025 rows said "Semi Final" and
  * "Championship Final" in the location field, both on Sat Nov 1, so one day can hold two rounds: 'Semifinals
  * and final'), in round order, else by its date alone. With no game yet, one sentence says so and when 2025's
  * rows arrived (the day after: 2025-11-01's games were entered on 2025-11-02; docs/DATA-SOURCES.md §1.4). The
@@ -16,8 +16,8 @@
  */
 
 import { byDateThenId, listWords, shootoutPhrases, shortDate } from '../../lib/format';
-import { LOCATION_ROUND_HEADING, roundFromLocation, type LocationRound } from '../../lib/postseason-rounds';
-import type { ShootoutInference } from '../../lib/leagues';
+import { LOCATION_ROUND_HEADING, roundFromLocation, type LocationRound } from '../../lib/postseason/postseason-rounds';
+import type { ShootoutInference } from '../../lib/league-config/shape';
 import type { Game, LeagueId } from '../../lib/types';
 
 export interface UnbracketedDayView {

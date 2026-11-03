@@ -24,7 +24,7 @@
  * tournament, `game/<param>` for every game plus one stub per `supersededGames` key (param =
  * lib/game-id.ts gameIdToParam: `sblive:N` → `sblive-N`), `scores/<date>` for every distinct game
  * date and `teams/<slug>` for the registry's teams; data/clubs.json (DESIGN §17, SPEC §1.1j2,
- * through lib/clubs.ts) gives `clubs/<slug>` for exactly its slugs, with no OG card (they take the
+ * through lib/players/clubs.ts) gives `clubs/<slug>` for exactly its slugs, with no OG card (they take the
  * root one); `clubs` and `commits` (DESIGN §21) are fixed pages with the root card.
  * No prerendered path may contain ':'. Every family with an image has
  * OG/page parity BY NAME (`game/X.html` ⇔ `game/X/opengraph-image.route`, and the same for

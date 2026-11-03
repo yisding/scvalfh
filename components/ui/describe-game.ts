@@ -17,6 +17,7 @@
  */
 
 import { EN_DASH, MINUS, renderScore, scoreGlyph, scoreSentence, shootoutPhrases, timeOfDay } from '../../lib/format';
+import type { SectionConfig, ShootoutInference } from '../../lib/league-config/shape';
 import {
   LEAGUES,
   divisionHeading,
@@ -24,10 +25,8 @@ import {
   findLeague,
   getSection,
   leagueOfDivision,
-  type SectionConfig,
-  type ShootoutInference,
 } from '../../lib/leagues';
-import { pairingRoundOf } from '../../lib/postseason-round-label';
+import { pairingRoundOf } from '../../lib/postseason/postseason-round-label';
 import { getTeamBySlug } from '../../lib/teams';
 import type { Game, LeagueId, Outcome, PostseasonTag, ScoreView, TeamSlug } from '../../lib/types';
 
@@ -97,7 +96,7 @@ export interface GameDisplay {
   postseasonTag: string | null;
   /**
    * 'si.com' when D2 published si.com's score (`provenance.scores === 'sblive'`): the † marker. 'school site'
-   * for a JV score from a school's own athletics site (lib/jv-school-sites.ts), marked † with its own words.
+   * for a JV score from a school's own athletics site (lib/jv/jv-school-sites.ts), marked † with its own words.
    */
   sourceMark: 'si.com' | 'school site' | null;
   /** A forfeit is excluded from GF/GA/GD and from MarginStrip; the row prints a dagger. */
@@ -257,7 +256,7 @@ function chipsFor(game: Game): Pick<GameDisplay, 'isNonLeague' | 'leagueTag' | '
 /**
  * The section both sides are teams of when it ends a level varsity game with a shootout
  * (SectionConfig.shootout: the Northern Section's 1 v 1s, the San Diego Section's shootout), else null.
- * The same rule lib/normalize.ts writes decider 'SO' by, so every 'SO' game has one.
+ * The same rule lib/pipeline/normalize.ts writes decider 'SO' by, so every 'SO' game has one.
  */
 export function shootoutSectionOf(game: Pick<Game, 'home' | 'away'>): SectionConfig | null {
   const home = game.home.slug ? getTeamBySlug(game.home.slug) : undefined;
@@ -271,7 +270,7 @@ export function shootoutSectionOf(game: Pick<Game, 'home' | 'away'>): SectionCon
  * What shootout copy calls the teams a section's rule covers: the section's one covered league when it
  * has just one ('EAL': every EAL string has always said "the EAL’s rules", "two EAL teams"), else the
  * section ('San Diego Section': its rule covers the City, North County and Metro conferences alike, and
- * a game between two of them). lib/backfill.ts words its D24 note by the same rule.
+ * a game between two of them). lib/crosscheck/backfill.ts words its D24 note by the same rule.
  */
 export function shootoutGroupName(section: Pick<SectionConfig, 'id' | 'name'>): string {
   const leagues = LEAGUES.filter((l) => l.sectionId === section.id);
@@ -296,7 +295,7 @@ export function shootoutCitationParts(citation: string): { source: string; proce
  * The section whose shootout rule covers this game: `shootoutSectionOf`, unless the game is a tournament
  * row (contestType 2 on either side) and the rule does not reach tournaments (SectionConfig.shootout.
  * coversTournaments false: the SDFHOA procedures cover the regular season and the playoffs only). The
- * same rule lib/normalize.ts reads 'SO' by.
+ * same rule lib/pipeline/normalize.ts reads 'SO' by.
  */
 export function shootoutRuleSectionOf(game: Pick<Game, 'home' | 'away' | 'contestTypes'>): SectionConfig | null {
   const section = shootoutSectionOf(game);
@@ -312,7 +311,7 @@ export function shootoutRuleSectionOf(game: Pick<Game, 'home' | 'away' | 'contes
  * recorded. MaxPreps may have stored the shootout win as a goal, so the view shows the score as MaxPreps
  * has it with no overtime tag and no "after overtime".
  *
- * Keyed on the section, as lib/normalize.ts keys 'SO', not on the table the game counts in: Mission Hills
+ * Keyed on the section, as lib/pipeline/normalize.ts keys 'SO', not on the table the game counts in: Mission Hills
  * 1, Del Norte 2 (Sep 14, 59b0f6a5, Valley v Palomar, countsFor null) has 2 overtime periods recorded and
  * read '(2 OT)', which the San Diego rule of one period then a shootout cannot give. A postseason-tagged
  * game is left alone: the SDFHOA playoff procedure is one full 10-minute period, then a 10-minute
@@ -330,7 +329,7 @@ function shootoutInferenceOf(game: Pick<Game, 'home' | 'away'>): ShootoutInferen
 
 /**
  * The accessible words of an 'SO' decider tag (GameDisplay.shootoutLabel). Every 'SO' game has a
- * shootout section (lib/normalize.ts writes 'SO' by the same rule), so the generic 'a shootout' — true
+ * shootout section (lib/pipeline/normalize.ts writes 'SO' by the same rule), so the generic 'a shootout' — true
  * of any shootout — is reached only by a hand-built game whose sides are outside the registry.
  */
 function shootoutLabelFor(game: Game, deciderTag: string | null): string | null {

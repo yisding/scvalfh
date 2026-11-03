@@ -1,5 +1,5 @@
 /**
- * lib/person-name.ts: an all-caps or all-lowercase name is recased, a cased name is kept apart from a lowercase letter
+ * lib/sources/person-name.ts: an all-caps or all-lowercase name is recased, a cased name is kept apart from a lowercase letter
  * after a hyphen, "O'", "D'" or "Mc", and no committed roster or stats sheet still carries a name to recase.
  */
 
@@ -8,7 +8,7 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { recaseName, recaseNameParts } from '../lib/person-name';
+import { recaseName, recaseNameParts } from '../lib/sources/person-name';
 import { REPO } from './helpers';
 
 describe('recaseName', () => {

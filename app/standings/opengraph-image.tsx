@@ -1,7 +1,7 @@
 import { ImageResponse } from 'next/og';
 
-import { OG_SIZE } from '../../components/layout/og-theme';
-import { RegionCard, standingsCardProps } from '../../components/layout/og-region-card';
+import { OG_SIZE } from '../../components/metadata/og-theme';
+import { RegionCard, standingsCardProps } from '../../components/metadata/og-region-card';
 import { SITE_NAME } from '../../components/layout/site';
 
 /**
@@ -9,7 +9,7 @@ import { SITE_NAME } from '../../components/layout/site';
  * "Standings — every league" at 44px, then the root card's two region columns — one row per league,
  * `SCVAL  De Anza: St. Ignatius 18 pts · El Camino: Los Gatos 21 pts` (short name and points;
  * co-leaders at most two names joined with " & ", then ` +<n>`; `No league results yet` before a
- * league's first result). Layout and words: components/layout/og-region-card.tsx, shared with the
+ * league's first result). Layout and words: components/metadata/og-region-card.tsx, shared with the
  * root card so the two cannot drift; render-tested with every leader line at its longest.
  *
  * TEXT ONLY, like every card on this site: no logo file, no school colors and no third-party image

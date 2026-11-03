@@ -1,6 +1,6 @@
 /**
  * The /game/[id] view model and route params (SPEC §10.6, §8.1, §8.4):
- * `components/game/game-view.ts`, `components/game/*`, `components/ui/ScoreBoard.tsx`,
+ * `components/game/game-view.ts`, `components/game/*`, `components/game/ScoreBoard.tsx`,
  * `app/game/[id]/page.tsx` and `app/game/[id]/opengraph-image.tsx`.
  *
  * League-specific values are asserted on the all-2026-10-02 CORPUS snapshot (SPEC §13.6; it holds
@@ -182,7 +182,7 @@ describe('si.com source line and the conflict block (components/game/GameSources
     const html = await L.renderPage(L.ids.gameIdToParam(g.contestId));
     const text = textOf(html);
     expect(text, 'components/game/GameSources.tsx source line').toContain(`Score via High School on SI (si.com): ${note}.`);
-    expect(text, 'components/ui/ScoreBoard.tsx † mark').toContain('† Score via si.com');
+    expect(text, 'components/game/ScoreBoard.tsx † mark').toContain('† Score via si.com');
     expect(html, 'app/game/[id]/page.tsx').not.toContain('sblive:');
     expect(L.m.gameDescription(model), 'components/game/game-view.ts PCAL description').toContain(
       'Pacific Coast Athletic League girls varsity field hockey, Fall 2026',
@@ -206,7 +206,7 @@ describe('si.com source line and the conflict block (components/game/GameSources
     expect(model.conflict?.sblive, 'components/game/game-view.ts conflict si.com value').toEqual(g!.provenance.scoreConflict!.sblive);
     const text = textOf(await L.renderPage(g!.contestId));
     expect(text, 'components/game/GameSources.tsx conflict').toContain(g!.provenance.scoreConflict!.note);
-    expect(text, 'components/ui/ScoreBoard.tsx no † on a MaxPreps score').not.toContain('Score via si.com');
+    expect(text, 'components/game/ScoreBoard.tsx no † on a MaxPreps score').not.toContain('Score via si.com');
   });
 });
 
@@ -260,7 +260,7 @@ describe('MCAL postseason note and superseded stubs (corpus copy)', () => {
         Math.abs((g.home.score ?? 0) - (g.away.score ?? 0)) === 1,
     )!;
     // MaxPreps' playoff type (4) on the row, so the tag is the one the config derives: a snapshot whose
-    // tags differ from the current config is reclassified on load (lib/snapshot-migrate.ts).
+    // tags differ from the current config is reclassified on load (lib/snapshot/snapshot-migrate.ts).
     oneGoal.contestTypes = { home: 4, away: 4 };
     oneGoal.postseason = { kind: 'mcal-tournament', leagueId: 'mcal', via: 'contest-type-4' };
     oneGoal.countsFor = null;
@@ -323,7 +323,7 @@ describe('MCAL postseason note and superseded stubs (corpus copy)', () => {
 
   it('an MCAL tournament game: the not-counted sentence and the shootout caveat', async () => {
     const model = S.m.buildGameView(tournament.contestId)!;
-    const { SHOOTOUT_NOTE } = await import('../../lib/postseason');
+    const { SHOOTOUT_NOTE } = await import('../../lib/postseason/postseason');
     expect(model.postseasonNotes, 'components/game/game-view.ts MCAL postseason notes').toEqual([
       'MCAL tournament game — it does not count in the league table.',
       SHOOTOUT_NOTE,
@@ -379,9 +379,9 @@ describe('Southern California games (corpus copy with synthetic SoCal games, DES
 
   beforeAll(async () => {
     const { game } = await import('../game-builder');
-    const { loadSnapshot } = await import('../../lib/snapshot-schema');
+    const { loadSnapshot } = await import('../../lib/snapshot/snapshot-schema');
     const { computeStandings } = await import('../../lib/standings');
-    const { countsOf } = await import('../../lib/snapshot-migrate');
+    const { countsOf } = await import('../../lib/snapshot/snapshot-migrate');
     const { getLeague } = await import('../../lib/leagues');
     const base = loadSnapshot(JSON.parse(readFileSync(corpusPath, 'utf8')) as unknown);
     // Clairemont (City Eastern) 0, Eastlake (Metro Mesa) 0, flagged W/L, Sep 1: a San Diego shootout win

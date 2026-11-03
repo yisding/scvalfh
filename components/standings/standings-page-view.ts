@@ -29,7 +29,15 @@ import {
   type LeagueSummary,
 } from '../../lib/data';
 import { plural, recordString, shortDate } from '../../lib/format';
-import { REGIONS, getLeague, isIndependentLeague, leagueOfDivision, leaguePlayStarts, standaloneName, type RegionConfig } from '../../lib/leagues';
+import { REGIONS } from '../../lib/league-config/sections';
+import type { RegionConfig } from '../../lib/league-config/shape';
+import {
+  getLeague,
+  isIndependentLeague,
+  leagueOfDivision,
+  leaguePlayStarts,
+  standaloneName,
+} from '../../lib/leagues';
 import type { DivisionId, Game, LeagueId, RegionId } from '../../lib/types';
 import {
   buildDivisionView,

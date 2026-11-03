@@ -16,7 +16,7 @@ import path from 'node:path';
 
 import { beforeAll, describe, expect, it } from 'vitest';
 
-import { loadSnapshot, parseSnapshot } from '../../lib/snapshot-schema';
+import { loadSnapshot, parseSnapshot } from '../../lib/snapshot/snapshot-schema';
 import type { Game, LeagueHealth, LeagueId, Snapshot } from '../../lib/types';
 import { corpusSnapshotPath, runFixtureCli, type BuildOptions, type CliRun } from '../helpers';
 import { REGRESSED_FINALS } from './support/finals-regression';
@@ -88,9 +88,9 @@ describe('the corpus run', () => {
   it('publishes the Del Norte ghost duplicate and 5cf5e3df in dropped', () => {
     const byId = new Map(corpus.dropped.map((d) => [d.contestId, d]));
     const ghost = byId.get('5b9ff911-a640-4947-b9fd-8a629e775b33');
-    expect(ghost?.reason, 'lib/normalize.ts applyExclusions: Del Norte ghost').toBe('ghost-team');
-    expect(ghost?.teams, 'lib/normalize.ts applyExclusions: Del Norte ghost teams').toEqual(['Tamalpais', 'Del Norte']);
-    expect(byId.get('5cf5e3df-6e72-4f44-9b8d-e69da30b85c5')?.reason, 'lib/normalize.ts applyExclusions: 5cf5e3df').toBe('excluded-by-config');
+    expect(ghost?.reason, 'lib/pipeline/normalize.ts applyExclusions: Del Norte ghost').toBe('ghost-team');
+    expect(ghost?.teams, 'lib/pipeline/normalize.ts applyExclusions: Del Norte ghost teams').toEqual(['Tamalpais', 'Del Norte']);
+    expect(byId.get('5cf5e3df-6e72-4f44-9b8d-e69da30b85c5')?.reason, 'lib/pipeline/normalize.ts applyExclusions: 5cf5e3df').toBe('excluded-by-config');
     expect(corpus.games.some((g) => byId.has(g.contestId)), 'lib/pipeline/steps/normalize.ts: dropped contests never published').toBe(false);
   });
 
@@ -238,9 +238,9 @@ describe('mcal-postseason: tournament games after Oct 22 and a league game MaxPr
 
   it('on the corpus date: no si.com MCAL game; the late games are tournament play; the moved game is reported once', () => {
     const { snapshot } = run({ variants: ['mcal-postseason'] });
-    expect(mcalSbliveGames(snapshot), 'lib/backfill.ts: MCAL sblive: games').toEqual([]);
+    expect(mcalSbliveGames(snapshot), 'lib/crosscheck/backfill.ts: MCAL sblive: games').toEqual([]);
     // The only si.com games anywhere are the two accepted PCAL fills (§7.9).
-    expect(snapshot.games.filter((g) => g.contestId.startsWith('sblive:')).map((g) => g.contestId).sort(), 'lib/backfill.ts').toEqual([
+    expect(snapshot.games.filter((g) => g.contestId.startsWith('sblive:')).map((g) => g.contestId).sort(), 'lib/crosscheck/backfill.ts').toEqual([
       'sblive:6541425',
       'sblive:6543072',
     ]);
@@ -268,17 +268,17 @@ describe('mcal-postseason: tournament games after Oct 22 and a league game MaxPr
 
   it('after Oct 22, with si.com carrying the moved game as a Final: still no fill (MaxPreps has the contest)', () => {
     const { snapshot } = run({ variants: ['mcal-postseason'], fetchedAt: '2026-10-24T15:00:00.000Z' });
-    expect(mcalSbliveGames(snapshot), 'lib/backfill.ts: D2 rule 2 never fills when a MaxPreps contest of the pair exists').toEqual([]);
-    expect(universityRedwood(snapshot).map((g) => g.contestId), 'lib/backfill.ts: not duplicated').toEqual([MOVED]);
+    expect(mcalSbliveGames(snapshot), 'lib/crosscheck/backfill.ts: D2 rule 2 never fills when a MaxPreps contest of the pair exists').toEqual([]);
+    expect(universityRedwood(snapshot).map((g) => g.contestId), 'lib/crosscheck/backfill.ts: not duplicated').toEqual([MOVED]);
     const read = snapshot.sources.find((s) => s.kind === 'sblive-scoreboard' && s.url.endsWith('date=2026-10-23'));
     expect(read?.status, 'lib/pipeline/steps/sblive.ts: the Oct 23 scoreboard was read').toBe('ok');
     const row = snapshot.sbliveCrossCheck?.sbliveOnlyScored.find((r) => r.contestId === MOVED);
-    expect(row?.note, 'lib/backfill.ts: the "MaxPreps has this game" row').toMatch(
+    expect(row?.note, 'lib/crosscheck/backfill.ts: the "MaxPreps has this game" row').toMatch(
       new RegExp(`^MaxPreps has this game \\(${MOVED}\\) but it is not counted: `),
     );
     expect(
       (snapshot.sbliveCrossCheck?.backfilled ?? []).filter((b) => b.dateKey >= '2026-10-15'),
-      'lib/backfill.ts: no late fill',
+      'lib/crosscheck/backfill.ts: no late fill',
     ).toEqual([]);
   });
 });

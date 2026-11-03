@@ -13,9 +13,8 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { postseasonSourceLink } from '../components/layout/source-labels';
 import { SITE_SCOPE_NOTE } from '../components/layout/site';
-import { getHistoryLeagues } from '../lib/history';
+import { getHistoryLeagues } from '../lib/history/history';
 import { LEAGUES, getLeague } from '../lib/leagues';
 import {
   EAL_SCHOOL_CLAIM,
@@ -939,27 +938,6 @@ describe('the SoCal leagues’ own config strings pass every rule', () => {
     expect(all).toMatch(/all-sports Sunset League/);
     expect(all).toMatch(/seeding/i);
     expect(all).toMatch(/Sunset/);
-  });
-});
-
-describe('postseasonSourceLink (components/layout/source-labels.ts): the source link’s words', () => {
-  it('keeps the EAL’s link text byte-identical', () => {
-    expect(postseasonSourceLink('eal')?.text).toBe('Northern Section Field Hockey Guidelines (PDF)');
-  });
-
-  it('names the SoCal documents from config, never a "Field Hockey Guidelines" the sections do not publish', () => {
-    expect(postseasonSourceLink('sunset')?.text).toBe('CIF-SS Blue Book 2026-27 (PDF)');
-    for (const id of ['city', 'north-county', 'metro']) {
-      expect(postseasonSourceLink(id)?.text, id).toBe('CIF-SDS Green Book 2026-27, Bylaw 2000.1 (Google Doc)');
-    }
-    for (const id of ['sunset', 'city', 'north-county', 'metro']) {
-      expect(postseasonSourceLink(id)?.text, id).not.toMatch(/Field Hockey Guidelines/);
-      expect(postseasonSourceLink(id)?.href, id).toMatch(/^https:\/\//);
-    }
-  });
-
-  it('is null for the leagues whose pages word their own links', () => {
-    for (const id of ['scval', 'bval', 'pcal', 'mcal']) expect(postseasonSourceLink(id), id).toBeNull();
   });
 });
 

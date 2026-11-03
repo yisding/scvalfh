@@ -1,5 +1,5 @@
 /**
- * JV standings (lib/jv-standings.ts): which JV games are league games (by their varsity
+ * JV standings (lib/jv/jv-standings.ts): which JV games are league games (by their varsity
  * counterpart, else an unmatched official fixture), how a JV table is ordered (points, level teams
  * share a place), when it is shown (the reported-share gate), and what the read API and the views
  * serve from the committed files.
@@ -12,24 +12,24 @@ import {
   buildJvTablesView,
   jvTableTitle,
   teamJvStanding,
-} from '../components/standings/jv-standings-view';
-import { buildTeamJvView } from '../components/teams/jv-view';
+} from '../components/jv/jv-standings-view';
+import { buildTeamJvView } from '../components/jv/jv-view';
 import { getSnapshot } from '../lib/data';
-import { getJvClassification, getJvGamesForTeam, getJvMerge, getJvTables } from '../lib/jv';
+import { getJvClassification, getJvGamesForTeam, getJvMerge, getJvTables } from '../lib/jv/jv';
 import {
   JV_COUNTERPART_WINDOW_DAYS,
   JV_STANDINGS_MIN_REPORTED_SHARE,
   classifyJvGames,
   computeJvStandings,
   withJvClassification,
-} from '../lib/jv-standings';
-import { jvSlotTeamFor } from '../lib/jv-teams';
+} from '../lib/jv/jv-standings';
+import { jvSlotTeamFor } from '../lib/jv/jv-teams';
 import { LEAGUES } from '../lib/leagues';
 import { TEAMS, teamsInDivision } from '../lib/teams';
 import type { Game, OfficialFixture } from '../lib/types';
 import { game } from './game-builder';
 
-/** A JV game as lib/jv.ts receives it from the merge: unclassified. */
+/** A JV game as lib/jv/jv.ts receives it from the merge: unclassified. */
 function jv(spec: Parameters<typeof game>[0]): Game {
   const { official: _official, ...g } = game({ league: false, official: null, ...spec });
   void _official;

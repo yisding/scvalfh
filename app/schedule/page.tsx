@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 
 import LeagueJumpLinks from '../../components/layout/LeagueJumpLinks';
-import { RegionSwitcher } from '../../components/layout/LeagueSwitcher';
+import { RegionSwitcher } from '../../components/prefs/LeagueSwitcher';
 import PageHeader from '../../components/layout/PageHeader';
 import { OG_BASE, ROOT_OG_IMAGE, coveredLeagueWords } from '../../components/layout/site';
 import ScheduleIndex from '../../components/schedule/ScheduleIndex';

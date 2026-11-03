@@ -3,7 +3,7 @@ import { Fragment } from 'react';
 
 import { EM_DASH, recordString, scoreSentence } from '../../lib/format';
 import { gameHref } from '../../lib/game-id';
-import { playInWinnerPurpose, winningSide } from '../../lib/postseason-outcomes';
+import { playInWinnerPurpose, winningSide } from '../../lib/postseason/postseason-outcomes';
 import type { Game, Standing, Team } from '../../lib/types';
 import TeamMonogram from '../ui/TeamMonogram';
 
@@ -23,7 +23,7 @@ import TeamMonogram from '../ui/TeamMonogram';
  * Under a FINAL play-in for an automatic berth the card also names the winner and what it won, one sentence:
  * 'Winner: Los Altos — SCVAL’s 7th automatic qualifier', 'Winner: Westmont — BVAL’s 4th automatic CCS berth'
  * (plan final-10, 2026-10-30). The berth words come from the purpose prop, which is the pairing's config label
- * (lib/postseason-outcomes.ts playInWinnerPurpose), so a crossover ('For CCS seeding, not qualification.') and the
+ * (lib/postseason/postseason-outcomes.ts playInWinnerPurpose), so a crossover ('For CCS seeding, not qualification.') and the
  * MCAL play-in (its rule) print none: no CCS concept reaches the NCS page. The winner is the higher score, else the
  * side MaxPreps marks 'W'; a level final with no flag names nobody.
  */

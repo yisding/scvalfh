@@ -19,7 +19,7 @@ import { pathToFileURL } from 'node:url';
 import { plural } from '../lib/format';
 import type { SnapshotMeta } from '../lib/pipeline/contract';
 import { TIME_ZONE } from '../lib/season';
-import { loadSnapshot } from '../lib/snapshot-schema';
+import { loadSnapshot } from '../lib/snapshot/snapshot-schema';
 import type { Snapshot } from '../lib/types';
 import { runCli } from './cli';
 

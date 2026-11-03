@@ -27,6 +27,7 @@
  */
 
 import { byDateThenId, recordString, shortDate, sideOutcome } from './format';
+import type { LadderRung, LeagueConfig, LeagueRules, PairingConfig } from './league-config/shape';
 import {
   LEAGUES,
   divisionLabel,
@@ -41,7 +42,6 @@ import {
   pairingWindow,
   tiebreakChainFor,
 } from './leagues';
-import type { LadderRung, LeagueConfig, LeagueRules, PairingConfig } from './leagues';
 import { TEAMS, getTeamById, teamsInDivision } from './teams';
 import type {
   ComputedRecord,
@@ -183,7 +183,7 @@ function toComputed(tally: Tally, place: number, points: Points): ComputedRecord
 /**
  * One team's record over `games` (finals, oldest first), with the league's `points` and a given
  * `place`: the same accumulation every varsity row goes through (forfeits in W-L-T, not in goals).
- * lib/jv-standings.ts builds the JV tables with it.
+ * lib/jv/jv-standings.ts builds the JV tables with it.
  */
 export function recordOver(games: readonly Game[], teamId: TeamId, points: Points, place: number): ComputedRecord {
   const tally = emptyTally();
@@ -616,7 +616,7 @@ function lastSpotSeed(group: readonly TeamId[], place: number, above: readonly T
  * points reaches past it (or the league has no league tournament). It runs this engine's own
  * seed-one-restart over the points bucket holding the last place, with the division's counted finals
  * (`divisionGames`) and the same chain lookup, so a play-in pair is exactly the pair the table shows
- * sharing the place with `resolvedBy: 'play-in'`. lib/postseason.ts builds the bracket's play-in on it.
+ * sharing the place with `resolvedBy: 'play-in'`. lib/postseason/postseason.ts builds the bracket's play-in on it.
  */
 export function lastSpotOutcome(
   rows: readonly Standing[],
@@ -723,7 +723,7 @@ export function computeStandings(
 ): Standing[] {
   const out: Standing[] = [];
   // Sorted like divisionGames: the overall record's last5 and streak read the order (si.com-only games
-  // lib/backfill.ts builds are appended to the array, not placed by date).
+  // lib/crosscheck/backfill.ts builds are appended to the array, not placed by date).
   const allFinals = games.filter((g) => g.status === 'final').sort(byDateThenId);
   for (const league of LEAGUES) {
     for (const div of league.divisions) {

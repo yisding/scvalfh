@@ -3,7 +3,7 @@ import { Fragment } from 'react';
 
 import { listWords } from '../../lib/format';
 import BerthMeter from '../ui/BerthMeter';
-import { articleFor, membershipSource } from '../ui/membership-words';
+import { articleFor, membershipSource } from '../words/membership-words';
 import PlaceMark from '../ui/PlaceMark';
 import SectionHeader from '../ui/SectionHeader';
 import StatusChip from '../ui/StatusChip';
@@ -167,7 +167,7 @@ export function PlayoffProjection({
     const single = noData.length === 1;
     // A league with no documents of its own (`official.mode: 'none'`) publishes no alignment. "As
     // MaxPreps lists it" only where MaxPreps' table for this division lists every one of them (the
-    // EAL); otherwise the league's membership source (components/ui/membership-words.ts).
+    // EAL); otherwise the league's membership source (components/words/membership-words.ts).
     const source = membershipSource(
       projection.division,
       rows.filter((r) => !r.standing.hasReportedResults).map((r) => r.team.slug),

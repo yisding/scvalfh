@@ -33,7 +33,7 @@
 > example below predates the news that Wilcox is not fielding a team this season. The site now
 > had 15 teams (De Anza 7, El Camino 8) at that point, and since the multi-league amendment (§15)
 > SCVAL's 15 are four of the site's 43; Wilcox's grid fixtures are dropped at parse time (it is in
-> SCVAL's `withdrawnNames` in `lib/leagues.ts`, which replaced `WITHDRAWN_SCHOOL_NAMES`). The
+> SCVAL's `withdrawnNames` in `lib/league-config/scval.ts`, which replaced `WITHDRAWN_SCHOOL_NAMES`). The
 > no-results state itself still applies to any fielded team with nothing reported.
 >
 > One number in it is **not reachable as written**: §13's "`/` under **120 KB** gzipped including
@@ -1381,7 +1381,7 @@ export interface Snapshot {
 }
 ```
 
-**Zod invariants that fail the cron rather than the reader** (`lib/snapshot.ts`):
+**Zod invariants that fail the cron rather than the reader** (`lib/snapshot/snapshot-schema.ts`):
 
 ```ts
 // 1. A final game must have two numbers.
@@ -1896,7 +1896,7 @@ client modules in the whole app, counted honestly: `ThemeToggle`, `PinControl`, 
 
 > **Amended 2026-10-13 (§12.4).** The tile is now the school's MaxPreps mascot, self-hosted as
 > square WebPs in `public/mascots/`, written by `pnpm fetch-mascots` (scripts/fetch-mascots.ts):
-> one file per tile size at 1× and at 2× (lib/mascots.ts, 20–128px), each resized from the full
+> one file per tile size at 1× and at 2× (lib/schools/mascots.ts, 20–128px), each resized from the full
 > source and lightly sharpened, so the browser draws it pixel for pixel (`src` 1×, `srcset` 2×)
 > instead of resampling a larger file into a blurred 24px row tile. It is an `<img>` with an empty
 > alt, the same rounded square (`border-radius: 25%`) and a 1px `--sx-border` ring drawn as an
@@ -2234,7 +2234,7 @@ The browser chrome follows an explicit choice too. The layout's two `theme-color
 the OS (`media`), so for Light or Dark the script, and `applyTheme` on a tap, prepend one
 media-less `<meta id="sx-theme-color">` with that theme's `--sx-bg` (the first matching meta wins);
 System removes it. The two hex values are one exported constant (`THEME_COLOR` in
-components/layout/theme-script.ts) that the layout and both scripts read; the added meta writes
+components/prefs/theme-script.ts) that the layout and both scripts read; the added meta writes
 them in upper case, because React 19 adopts an existing meta with the same name and content (it
 ignores `media`) and then drops it on the next client-side navigation. Rewriting the layout's own
 metas does not hold either: Next re-creates them on every client-side navigation.
@@ -2635,7 +2635,7 @@ Nothing in a later step can be correct before the step above it. Each step ends 
 verifiable.
 
 **1 — Data contract.** `lib/teams.ts` (the 16-team membership constant + slug/abbr map, with
-the build-time uniqueness assert) and `lib/snapshot.ts` (the Zod schema and all five
+the build-time uniqueness assert) and `lib/snapshot/snapshot-schema.ts` (the Zod schema and all five
 invariants of §5.1, the left-join against the feed, the cross-check step, and the recap
 cleanup of §5.8). *Done when:* the schema **rejects** a final game with a null score, a
 non-final carrying a score, and a feed that yields fewer than 16 teams — and the cross-check
@@ -2933,7 +2933,7 @@ opens to 25th.)
   equal rate over the same number of games. (Superseded by §23: a board lists every row tied for
   its last place, however many, and no line counts a tie instead.)
 - **Player boards rank only what coaches enter.** A stat a team does not track is null for its
-  players (lib/player-stats-schema.ts) and never ranks as a 0; a 0 never makes a board. The heading
+  players (lib/players/player-stats-schema.ts) and never ranks as a 0; a 0 never makes a board. The heading
   meta says how many teams a board covers ("From 11 teams"), the note under it names the shorter of
   the two lists (the teams that do enter the stat, or the teams with stats that do not), the section
   names every team with no stats at all, and every team whose totals are behind its finals, by the
@@ -3201,7 +3201,7 @@ Every team gets an Elo rating: on its own page, and the ten highest on `/leaders
 wins where §1-§19 disagree. Everything else stands: static rendering, "today" from the snapshot,
 no new hue (§6.4, §15.5) and no new chart (decision 8: the rating is a card and a table). It is the
 first number on the site that comes from a model, so it keeps §19.2: computed from the snapshot's
-results by a documented model (`lib/ratings.ts`; README "How Elo ratings are computed"), read as
+results by a documented model (`lib/ratings/ratings.ts`; README "How Elo ratings are computed"), read as
 an estimate, linked to its method, and never a status: it orders no table, berth or seed.
 
 ### 20.1 The rating
@@ -3787,8 +3787,8 @@ layout never shifts. With JavaScript, `league-scope-css.ts` hides the other regi
 `[data-region-scope]` blocks. A deep link to an anchor inside a hidden region opens it (`:has(:target)`,
 plus `:target` on the wrapper itself). On `/teams`, a search shows both regions' lists.
 
-**The control.** `RegionSwitcher` lives in `components/layout/LeagueSwitcher.tsx`, with its state in
-`components/ui/use-league.ts`. There is no new client module and no header toggle.
+**The control.** `RegionSwitcher` lives in `components/prefs/LeagueSwitcher.tsx`, with its state in
+`components/prefs/use-league.ts`. There is no new client module and no header toggle.
 
 - Markup: `<div role="group" aria-label="Region">` around two `aria-pressed` buttons, "NorCal" and "SoCal".
 - Style: a segmented control at `min-h-11 min-w-11`, `sx-js-only`, disabled until hydrated.
@@ -4231,7 +4231,7 @@ committed flag-based snapshot: `readPrevious` caught the validation error and ra
 existing final as newly added: "SCVAL +50 finals"). The regenerated file was complete, so nothing was lost,
 but a transient feed failure during such a run would have dropped a league's published data. `loadSnapshot`
 now has a third upgrade beside v1 → v2 and "league added" (`needsReclassification` / `reclassify`,
-lib/snapshot-migrate.ts): when a v2 file's games no longer classify as written (a rule changed, or a team moved
+lib/snapshot/snapshot-migrate.ts): when a v2 file's games no longer classify as written (a rule changed, or a team moved
 between divisions, as Bonita and Chaminade did in §24.10; since 2026-10-29 also a `postseason` tag that differs
 from the config's, as the SCVAL crossovers played Oct 29 did before their pairings had a window), every game is re-resolved and reclassified under the
 current config and the affected divisions' standings rows, cross-check rows, health counts, season windows and
@@ -4267,7 +4267,7 @@ checker and, separately, by a refuter, and only what both kept is in the files.
   `elsewhere` to `san-diego` (every HTC California season trains in La Jolla or Chula Vista), so no club
   is `elsewhere` now and its heading does not render; its page gains the region label "San Diego".
   `/clubs/[slug]` goes from 16 pages to 28.
-- **`/clubs` and the region toggle.** `CLUB_REGION_SITE_REGION` (`lib/clubs-schema.ts`) gives each club
+- **`/clubs` and the region toggle.** `CLUB_REGION_SITE_REGION` (`lib/players/clubs-schema.ts`) gives each club
   region its half of the site; each region's section carries that `data-region-scope`, under a
   `RegionSwitcher` row below the page header (the §24.3 pattern), so a reader sees their own half's
   clubs; `elsewhere` would show under both. Without JavaScript every section renders, NorCal's first.
@@ -4536,7 +4536,7 @@ The owner asked for two more rankings: Elo-adjusted points for players and Elo-a
 teams. This section wins where §16, §20 and §23 disagree. Everything else stands: the boards are
 tables ranked 1, 2, 2, 4, once per region with suffixed ids (§24), and the page ships no client
 component. Like the Elo rating (§19.2, §20), both are estimates from a documented model
-(`lib/adjusted-scoring.ts`; README "Elo-adjusted goals and points"), never a status.
+(`lib/ratings/adjusted-scoring.ts`; README "Elo-adjusted goals and points"), never a status.
 
 - **The model.** A Poisson attack-defense model anchored on Elo (Maher 1982; Dixon-Coles 1997;
   shrinkage as Baio-Blangiardo 2010): log expected goals = μ + h·host + a·s_team + u_team −
@@ -4726,7 +4726,7 @@ The product test is §0's parent on the turf: who plays whom, when, where, how t
 result was, who goes on, and what it means for my team. Every rule of §15.8, §22.5 and §24.5 stands: no
 "eliminat…", no seed word on an EAL, San Diego or Sunset surface (SEED_CLAIM; "seeding meeting" and bare numerals
 pass), no CCS word outside the CCS surfaces, "EAL teams", whole sentences as single text nodes, every league fact
-in `lib/leagues.ts`, today from `getToday()`, `prefetch={false}` and `sx-action` on standalone links, server
+in `lib/league-config/`, today from `getToday()`, `prefetch={false}` and `sx-action` on standalone links, server
 components only.
 
 ### 31.1 "This week in the postseason", on `/playoffs` and the home page
@@ -4766,7 +4766,7 @@ One strip per region: on `/playoffs` `#this-week-norcal` after the CCS intro and
 - **Who gets the crossover sentence.** Only a team whose ladder status is an automatic berth, the play-in or
   at-large consideration; SCVAL 6th and lower ('out') read "No automatic berth; at-large berths are the CCS
   committee’s call." (§32.4) (Cupertino, 7th, no longer reads that it plays a crossover).
-- **Play-in and crossover results** (`lib/postseason-outcomes.ts ccsOutcomeFor`, from the pairing's matched,
+- **Play-in and crossover results** (`lib/postseason/postseason-outcomes.ts ccsOutcomeFor`, from the pairing's matched,
   final game): the winner's label "Won the play-in" with "Won the 4th-place play-in: an automatic CCS qualifier."
   (SCVAL) or "Won the play-in: BVAL’s fourth automatic CCS berth."; the loser's "Lost the play-in" with "Lost the
   play-in; SCVAL submits the loser for at-large consideration." (Article VII §2) or "Lost the play-in; no
@@ -4797,14 +4797,14 @@ One strip per region: on `/playoffs` `#this-week-norcal` after the CCS intro and
 - **Data.** A MaxPreps row whose `contest.tournamentId` is a real GUID gets `Game.bracket` (division name,
   published flag, tournament, matchup, canonical URL); rule 1c tags a game in the CCS championship `ccs` via
   `maxpreps-bracket`; MaxPreps' playoff flag makes a CCS game only from Nov 7; `playoffs.games` is derived
-  (`lib/ccs-bracket.ts`): tagged `ccs` and dated from the quarterfinals, or marked published. The MaxPreps
+  (`lib/postseason/ccs-bracket.ts`): tagged `ccs` and dated from the quarterfinals, or marked published. The MaxPreps
   tournament page is read per division and positively (`playoffs.divisionsPublished`); a page it does not
   recognise carries the previous state. DATA-SOURCES §1.4 has the fields, the 2025 evidence and the rules.
 - **The seed file.** `data/ccs-bracket-2026.json` holds the sixteen seeds the owner copies from the published
   MaxPreps page after the Mon Nov 2 meeting: `{ "season", "retrievedOn", "source": { "label", "url" },
   "divisions": [ { "name": "Division 1", "seeds": [ { "seed": 1, "slug": "…" }, … 8 ] }, { "name": "Division 2", … } ]
   }`, each division numbered 1-8 as MaxPreps and CCS print them (the committee's 9-16 is Division 2's grouping,
-  never a printed number). `lib/ccs-bracket-schema.ts` refuses anything else (eight seeds a division, 1..8 once
+  never a printed number). `lib/postseason/ccs-bracket-schema.ts` refuses anything else (eight seeds a division, 1..8 once
   each, CCS-league registry slugs, none twice, `retrievedOn` and `source` once filled). Until it is filled
   `getCcsSeeds()` is null and the bracket prints no seed. **Run `pnpm test` before committing a bracket file.**
 - **The model** (`components/playoffs/bracket-model.ts buildBrackets(playoffs, seeds)`, rewritten 2026-10-30 and
@@ -4882,11 +4882,11 @@ One strip per region: on `/playoffs` `#this-week-norcal` after the CCS intro and
   "name", "date", "time"?, "site"? } ], "seeds": [ { "seed": n, "slug" } ], "playIn"?: { "date", "forSeed": 11 |
   12, "home", "away" } }` plus `retrievedOn` and `source { label, url }`. The round dates live in the file (they
   default to the officials' calendar; in 2025 the Division II play-in was Mon Nov 3 and its first round Thu Nov 5).
-  `lib/sds-brackets-schema.ts` refuses a field size the config does not give, a place out of order, a school
+  `lib/postseason/sds-brackets-schema.ts` refuses a field size the config does not give, a place out of order, a school
   outside the San Diego registry or in two places, a play-in on an 8-team field, rounds out of order or outside
   Nov 2–14, and an Open Division school that the Divisions sheet does not put in Division I. **Run `pnpm test`
   before committing a bracket file.** The "seed" in the file's keys is never printed.
-- **The builder** (`lib/sds-bracket.ts buildSdsBrackets`, `getSdsBrackets()` null on the placeholder): the
+- **The builder** (`lib/postseason/sds-bracket.ts buildSdsBrackets`, `getSdsBrackets()` null on the placeholder): the
   Section's fixed template (12 teams: 8v9, 5v12, 6v11, 7v10, then 1, 4, 3 and 2 against those winners; 8 teams:
   1v8, 4v5, 3v6, 2v7), each card joined to the `section-playoffs` game between the teams that can stand in its two
   places, dated from the day before its round to the day before the next (the Section moves single games by a
@@ -4912,7 +4912,7 @@ The Super Regional card and lines name the NFHS Network's listing (Pleasant Vall
 has a "How to watch" row. Under it, the results list (`components/playoffs/UnbracketedResults.tsx` over
 `buildUnbracketedResults`): the league's `league-postseason` games by day (`#eal-results-<date>`), each day
 headed by the rounds its rows' locations name ("Semifinals and final", since 2025's were on one day;
-`lib/postseason-rounds.ts roundFromLocation`), each game a `GameList` row with its chips, directions, stream and
+`lib/postseason/postseason-rounds.ts roundFromLocation`), each game a `GameList` row with its chips, directions, stream and
 tickets. With no game yet, from the first tournament day: "No Super Regional game is on MaxPreps yet; in 2025 the
 results were entered the day after." A game page's kicker reads "EAL Super Regional semifinal" when the row's
 location names the round. No pairing, bracket or seed is drawn (§22.4, §22.8).
@@ -5006,7 +5006,7 @@ NorCal: board → This week → CCS playoffs (intro) → Bracket → SCVAL, BVAL
   badge `No AQ`); the divider after the automatic places reads **"Automatic-berth line"**. Kept: "Automatic
   qualifier", "At-large consideration", "Play-in game Oct 30", "Hosts the play-in Oct 31", "Play-in host",
   "Tournament line". Never "eliminat…".
-- **A crossover-day game is named by its pairing** (`lib/postseason-round-label.ts pairingRoundOf`): the SCVAL #4 v
+- **A crossover-day game is named by its pairing** (`lib/postseason/postseason-round-label.ts pairingRoundOf`): the SCVAL #4 v
   #4 game is "SCVAL play-in" on its game page, its chip, `/scores` and the home card; the others "SCVAL crossover".
 - **A matchup card reads as its game** once MaxPreps lists it: visitor first, then `at` the home side (`vs` at a
   neutral site), so the card, its screen-reader sentence and its own link agree ("Santa Clara at Los Altos"); "(host)"

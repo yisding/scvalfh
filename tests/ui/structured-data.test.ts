@@ -1,5 +1,5 @@
 /**
- * The JSON-LD the pages carry (components/layout/structured-data.ts, components/layout/JsonLd.tsx):
+ * The JSON-LD the pages carry (components/metadata/structured-data.ts, components/metadata/JsonLd.tsx):
  * the escaping that keeps free text inside its <script>, the WebSite node on `/`, a SportsTeam per
  * registry team and a SportsEvent per game of the corpus snapshot — each property the page shows,
  * and nothing the data does not have (no score property, no venue from MaxPreps' note field, no
@@ -12,7 +12,7 @@ import { beforeAll, describe, expect, it } from 'vitest';
 
 import { stubCorpusSnapshot } from '../helpers';
 
-type StructuredData = typeof import('../../components/layout/structured-data');
+type StructuredData = typeof import('../../components/metadata/structured-data');
 type GameView = typeof import('../../components/game/game-view');
 type Data = typeof import('../../lib/data');
 
@@ -23,21 +23,21 @@ let data: Data;
 stubCorpusSnapshot('all-2026-10-02');
 
 beforeAll(async () => {
-  sd = await import('../../components/layout/structured-data');
+  sd = await import('../../components/metadata/structured-data');
   gv = await import('../../components/game/game-view');
   data = await import('../../lib/data');
 }, 600_000);
 
 /** The node back out of the rendered <script>, the way a crawler reads it. */
 async function roundTrip(node: Record<string, unknown>): Promise<{ html: string; parsed: unknown }> {
-  const JsonLd = (await import('../../components/layout/JsonLd')).default;
+  const JsonLd = (await import('../../components/metadata/JsonLd')).default;
   const html = renderToStaticMarkup(createElement(JsonLd, { data: node as never }));
   const body = /^<script type="application\/ld\+json">([\s\S]*)<\/script>$/.exec(html)?.[1];
-  if (body === undefined) throw new Error(`components/layout/JsonLd.tsx: not one ld+json script: ${html}`);
+  if (body === undefined) throw new Error(`components/metadata/JsonLd.tsx: not one ld+json script: ${html}`);
   return { html, parsed: JSON.parse(body) };
 }
 
-describe('JsonLd (components/layout/JsonLd.tsx)', () => {
+describe('JsonLd (components/metadata/JsonLd.tsx)', () => {
   it('writes every < as \\u003c, so free text cannot close the script, and parses back unchanged', async () => {
     const node = { '@type': 'Thing', description: 'Senior Night </script><img src=x onerror=alert(1)>' };
     const { html, parsed } = await roundTrip(node);
@@ -65,7 +65,7 @@ describe('teamJsonLd', () => {
     const { getLeague, isIndependentLeague } = await import('../../lib/leagues');
     for (const team of TEAMS) {
       const node = sd.teamJsonLd(team, getLeague(team.league));
-      const where = `components/layout/structured-data.ts teamJsonLd ${team.slug}`;
+      const where = `components/metadata/structured-data.ts teamJsonLd ${team.slug}`;
       expect(node['@type'], where).toBe('SportsTeam');
       expect(node['@id'], where).toBe(sd.teamNodeId(team.slug));
       expect(node.name, where).toBe(team.name);
@@ -87,7 +87,7 @@ describe('gameJsonLd', () => {
       if (!model) continue; // a superseded stub: no event of its own
       const { game } = model;
       const node = sd.gameJsonLd(model);
-      const where = `components/layout/structured-data.ts gameJsonLd ${id}`;
+      const where = `components/metadata/structured-data.ts gameJsonLd ${id}`;
       expect(node['@type'], where).toBe('SportsEvent');
       expect(node.name, where).toBe(gv.gameTitle(model));
       expect(node.startDate, where).toBe(game.isDateTba ? undefined : dateTimeAttr(game));

@@ -9,7 +9,7 @@ import path from 'node:path';
 import { afterAll, beforeAll, vi } from 'vitest';
 
 import { readManifest } from '../lib/pipeline/corpus';
-import { PlayerStatsFileSchema, type PlayerStatsFile } from '../lib/player-stats-schema';
+import { PlayerStatsFileSchema, type PlayerStatsFile } from '../lib/players/player-stats-schema';
 import { ScheduleResponseSchema, type ScheduleRow } from '../lib/sources/maxpreps';
 import { TEAMS } from '../lib/teams';
 import type { DivisionId, LeagueId } from '../lib/types';
