@@ -41,7 +41,8 @@ import type { LeagueSummary } from '../../lib/data';
 import { dateWithYear, formatStamp, listWords, numberWord, ordinal, plural, shortDate, timeOfDayPT } from '../../lib/format';
 import { getAvailableHistoryLeagues, getHistorySeason, getUnavailableHistoryLeagues } from '../../lib/history';
 import { jvTableTitle } from '../../components/standings/jv-standings-view';
-import { getJvFile, getJvMerge, getJvTables } from '../../lib/jv';
+import { getJvCorrections, getJvFile, getJvMerge, getJvSchoolSiteMerge, getJvTables } from '../../lib/jv';
+import { JV_SCHOOL_SITES } from '../../lib/jv-school-sites';
 import { JV_STANDINGS_MIN_REPORTED_SHARE } from '../../lib/jv-standings';
 import {
   CCS,
@@ -635,6 +636,8 @@ export default function AboutPage() {
   const TOC = toc(leagues);
   const jvFile = getJvFile();
   const jvMerge = getJvMerge();
+  const jvSchool = getJvSchoolSiteMerge();
+  const jvCorrections = getJvCorrections();
   const jvAllTables = leagues.flatMap((l) => getJvTables(l.id));
   const jvShown = jvAllTables.filter((t) => t.status === 'shown');
   const jvUncounted = jvAllTables.reduce((n, t) => n + t.uncounted.length, 0);
@@ -1276,7 +1279,7 @@ export default function AboutPage() {
 
         {/* ---------------------------------------------------------------- JV */}
         <section id="jv" className="mt-16">
-          <SectionHeader size="lg" kicker="JV games" meta={plural(jvMerge.games.length, 'game', 'games')} />
+          <SectionHeader size="lg" kicker="JV games" meta={plural(jvSchool.games.length, 'game', 'games')} />
           <div className="sx-prose">
             <p>
               Each team page and each day&rsquo;s scores also list the school&rsquo;s junior varsity
@@ -1322,6 +1325,29 @@ export default function AboutPage() {
               a score, MaxPreps&rsquo; is shown and si.com&rsquo;s is noted under the game (today{' '}
               {plural(jvMerge.differs.length, 'game', 'games')}). A game si.com lists twice with two
               different scores is not used.
+            </p>
+            <p>
+              Two schools publish their JV results on their own athletics sites,{' '}
+              {JV_SCHOOL_SITES.map((s, i) => (
+                <span key={s.school}>
+                  {i === 0 ? '' : i === JV_SCHOOL_SITES.length - 1 ? ' and ' : ', '}
+                  <ExternalLink href={s.url}>
+                    {getTeamBySlug(s.school)?.name ?? s.school}
+                  </ExternalLink>
+                </span>
+              ))}
+              , read by hand once JV league play ended. They are used on the same terms as si.com, after it: today
+              they fill {plural(jvSchool.filled.length, 'score', 'scores')}, add{' '}
+              {plural(jvSchool.added.length, 'game', 'games')} and disagree with MaxPreps on{' '}
+              {plural(jvSchool.differs.length, 'score', 'scores')} (also &dagger;, and noted under the game).
+              Some MaxPreps JV rows are not taken as they stand: {plural(jvCorrections.excluded.length, 'row is', 'rows are')}{' '}
+              left out, most of them a second copy of a game entered against the wrong school of the same name
+              (the boys&rsquo; Stuart Hall for Convent &amp; Stuart Hall, another Stevenson or St. Francis);{' '}
+              {plural(jvCorrections.fixed.length, 'game names', 'games name')} the right opponent; and{' '}
+              {plural(jvCorrections.moved.length, 'game is', 'games are')} moved to the day a school&rsquo;s
+              schedule says it was played. York, which plays PCAL JV games in Santa Catalina&rsquo;s place but fields
+              no varsity team, is matched on si.com by its JV team id; its games are listed and named under the
+              PCAL JV table, not counted in it.
             </p>
           </div>
         </section>

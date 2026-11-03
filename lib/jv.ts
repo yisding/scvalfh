@@ -1,6 +1,7 @@
 /**
- * The read API for data/jv.json — every registry school's JV games (MaxPreps, supplemented by
- * si.com: lib/jv-merge.ts).
+ * The read API for data/jv.json — every registry school's JV games (MaxPreps, corrected by
+ * lib/jv-corrections.ts and supplemented by si.com: lib/jv-merge.ts, then by the school athletics
+ * sites transcribed in lib/jv-school-sites.ts).
  *
  * Built by `scripts/fetch-jv.ts`. Imported so the build bundles it, for the reason lib/rosters.ts
  * gives: a Worker has no project filesystem. Validated and merged once at module scope, so a bad
@@ -21,7 +22,9 @@ import { readFileSync } from 'node:fs';
 import bundled from '../data/jv.json';
 import { getOfficialFixtures, getSnapshot } from './data';
 import { byDateThenId, localDateKey } from './format';
+import { applyJvCorrections, type JvCorrectionResult } from './jv-corrections';
 import { mergeJv, type JvMergeResult } from './jv-merge';
+import { mergeJvSchoolSites, type JvSchoolSiteMergeResult } from './jv-school-sites';
 import { JvFileSchema, type JvFile, type JvTeam } from './jv-schema';
 import {
   classifyJvGames,
@@ -51,18 +54,25 @@ function load(): JvFile {
 }
 
 const file = load();
+const corrections: JvCorrectionResult = applyJvCorrections(file.games);
 const merged: JvMergeResult = mergeJv({
-  games: file.games,
+  games: corrections.games,
   sblive: file.sblive,
   today: localDateKey(file.fetchedAt),
   fetchedAt: file.fetchedAt,
 });
+const schoolSites: JvSchoolSiteMergeResult = mergeJvSchoolSites({
+  games: merged.games,
+  today: localDateKey(file.fetchedAt),
+  fetchedAt: file.fetchedAt,
+});
+const SCHOOL_SITE_DIFFERS = new Map(schoolSites.differs.map((d) => [d.contestId, d.note]));
 const classes: ReadonlyMap<ContestId, JvClassification> = classifyJvGames(
-  merged.games,
+  schoolSites.games,
   getSnapshot().games,
   getOfficialFixtures(),
 );
-const games: Game[] = withJvClassification(merged.games, classes);
+const games: Game[] = withJvClassification(schoolSites.games, classes);
 const tables: JvDivisionTable[] = computeJvStandings(games, classes, localDateKey(file.fetchedAt));
 const TEAM_BY_SLUG = new Map<string, JvTeam>(file.teams.map((t) => [t.slug, t]));
 
@@ -73,6 +83,21 @@ export function getJvFile(): JvFile {
 /** The merge's outcome, before classification: every published JV game and what si.com changed. */
 export function getJvMerge(): JvMergeResult {
   return merged;
+}
+
+/** MaxPreps JV rows left out or re-pointed by lib/jv-corrections.ts, before the merge. */
+export function getJvCorrections(): JvCorrectionResult {
+  return corrections;
+}
+
+/** What the school athletics sites (lib/jv-school-sites.ts) filled, added and disagreed with, after the si.com merge. */
+export function getJvSchoolSiteMerge(): JvSchoolSiteMergeResult {
+  return schoolSites;
+}
+
+/** The sentence under a JV final a school's own page scores differently, or null. */
+export function getJvSchoolSiteDiffersNote(contestId: ContestId): string | null {
+  return SCHOOL_SITE_DIFFERS.get(contestId) ?? null;
 }
 
 /** One school's JV entry (its two sources' status and pages); undefined only for a non-registry slug. */

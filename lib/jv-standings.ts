@@ -16,7 +16,10 @@
  *   2. otherwise a fixture on the league's official schedule that no varsity contest matched
  *      (`snapshot.officialFixtures`), same pair, within ±3 days: it counts for that division;
  *   3. otherwise a game between two schools of different divisions or leagues, or against a school
- *      outside the registry, is non-league, exactly as a varsity game would be;
+ *      outside the registry, is non-league, exactly as a varsity game would be, except that
+ *   3a. a game against a JV-only member of the school's own JV league (lib/jv-teams.ts
+ *      JV_OUTSIDE_TEAMS: York in PCAL) is a league fixture with no table row for one side, so it is
+ *      left uncounted and named under the table;
  *   4. and a game between two schools of one division with no varsity counterpart is left
  *      uncounted and named on the standings page, never guessed into a table.
  *
@@ -37,6 +40,7 @@
  */
 
 import { byDateThenId, dayDiff } from './format';
+import { jvOutsideTeamByMaxprepsId } from './jv-teams';
 import { LEAGUES, getLeague } from './leagues';
 import { recordOver } from './standings';
 import { getTeamBySlug, teamsInDivision } from './teams';
@@ -50,7 +54,11 @@ export const JV_STANDINGS_MIN_REPORTED_SHARE = 0.6;
 export type JvClassification =
   | { kind: 'league'; division: DivisionId; via: 'varsity-game' | 'official-fixture'; ref: string }
   | { kind: 'non-league'; reason: 'varsity-non-league' | 'different-divisions' | 'outside-registry' }
-  | { kind: 'uncounted'; reason: 'no-varsity-counterpart' | 'ambiguous' | 'varsity-postseason'; division: DivisionId };
+  | {
+      kind: 'uncounted';
+      reason: 'no-varsity-counterpart' | 'ambiguous' | 'varsity-postseason' | 'outside-jv-member';
+      division: DivisionId;
+    };
 
 function pairOf(g: { home: { slug: string | null }; away: { slug: string | null } }): string | null {
   return g.home.slug && g.away.slug ? [g.home.slug, g.away.slug].sort().join('~') : null;
@@ -90,7 +98,16 @@ export function classifyJvGames(
     const home = g.home.slug ? getTeamBySlug(g.home.slug) : undefined;
     const away = g.away.slug ? getTeamBySlug(g.away.slug) : undefined;
     if (!key || !home || !away) {
-      out.set(g.contestId, { kind: 'non-league', reason: 'outside-registry' });
+      // Rule 3a: a JV league member outside the registry (lib/jv-teams.ts JV_OUTSIDE_TEAMS, York in PCAL)
+      // against a school of that division: a league fixture with no table row for one side.
+      const member = home ?? away;
+      const outside = jvOutsideTeamByMaxprepsId(home ? g.away.teamId : g.home.teamId);
+      out.set(
+        g.contestId,
+        member && outside && outside.division === member.division
+          ? { kind: 'uncounted', reason: 'outside-jv-member', division: member.division }
+          : { kind: 'non-league', reason: 'outside-registry' },
+      );
       continue;
     }
     const sameDivision = home.division === away.division;
@@ -164,6 +181,8 @@ export interface JvDivisionTable {
   reported: number;
   /** Counted finals whose score is si.com's (lib/jv-merge.ts). */
   sbliveScores: number;
+  /** Counted finals whose score is a school athletics site's (lib/jv-school-sites.ts). */
+  schoolSiteScores: number;
   /** League games still to come (not final, dated today or later). */
   toCome: number;
   /** Same-division JV games with no varsity counterpart, which no table counts. */
@@ -219,6 +238,7 @@ export function computeJvStandings(
         played,
         reported,
         sbliveScores: finals.filter((g) => g.provenance.scores === 'sblive').length,
+        schoolSiteScores: finals.filter((g) => g.provenance.scores === 'school-site').length,
         toCome: leagueGames.filter((g) => g.status !== 'final' && g.dateKey >= today).length,
         uncounted: games
           .filter((g) => {

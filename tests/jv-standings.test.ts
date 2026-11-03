@@ -65,6 +65,19 @@ describe('classifyJvGames: a JV game takes its varsity counterpart’s classific
     expect(c.get(far.contestId)).toEqual({ kind: 'uncounted', reason: 'no-varsity-counterpart', division: 'de-anza' });
   });
 
+  it('leaves a game against York, PCAL’s JV-only member, uncounted under the PCAL table (rule 3a)', () => {
+    const york = { teamId: 'e9a91bc8-5999-4321-9e21-d6cdc8aafcb2', slug: null, name: 'York', score: 0, result: 'L' as const };
+    const other = { teamId: '00000000-0000-0000-0000-00000000aaaa', slug: null, name: 'Somewhere Else', score: 0, result: 'L' as const };
+    const base = jv({ home: 'carmel', away: 'monterey', date: '2026-09-10' });
+    const vsYork: Game = { ...base, contestId: 'york-1', away: york };
+    const vsElse: Game = { ...base, contestId: 'else-1', away: other };
+    const outOfLeague: Game = { ...jv({ home: 'saint-francis', away: 'fremont', date: '2026-09-10' }), contestId: 'york-2', away: york };
+    const c = classifyJvGames([vsYork, vsElse, outOfLeague], [], []);
+    expect(c.get('york-1')).toEqual({ kind: 'uncounted', reason: 'outside-jv-member', division: 'pcal' });
+    expect(c.get('else-1')).toEqual({ kind: 'non-league', reason: 'outside-registry' });
+    expect(c.get('york-2')).toEqual({ kind: 'non-league', reason: 'outside-registry' });
+  });
+
   it('is non-league when the varsity game is, and uncounted when it is a postseason game', () => {
     const nonLeague = game({ home: 'saint-francis', away: 'fremont', date: '2026-08-28', league: false, official: null });
     // A postseason varsity game between two division mates (a synthetic case: counted for no table).
@@ -236,7 +249,12 @@ describe('the JV tables served from the committed files', () => {
         }
       }
     }
-    expect(Object.keys(UNCOUNTED_REASON_WORDS).sort()).toEqual(['ambiguous', 'no-varsity-counterpart', 'varsity-postseason']);
+    expect(Object.keys(UNCOUNTED_REASON_WORDS).sort()).toEqual([
+      'ambiguous',
+      'no-varsity-counterpart',
+      'outside-jv-member',
+      'varsity-postseason',
+    ]);
   });
 
   it('chips a JV row by its classification, and none for an uncounted game', () => {

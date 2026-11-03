@@ -72,9 +72,15 @@ export function JvFootnote({ summary, className }: { summary: JvListSummary; cla
     <p className={['mt-3 mb-0 max-w-prose text-meta text-ink-3', className].filter(Boolean).join(' ')}>
       JV league games count only in the JV tables, never in the varsity ones. Scores are
       MaxPreps&rsquo;
-      {summary.sbliveScores > 0 ? (
+      {summary.sbliveScores > 0 || summary.schoolSiteScores > 0 ? (
         <>
-          ; a &dagger; marks a score from si.com where MaxPreps has none
+          ; a &dagger; marks a score from{' '}
+          {summary.sbliveScores > 0 && summary.schoolSiteScores > 0
+            ? 'si.com or a school’s own athletics site'
+            : summary.sbliveScores > 0
+              ? 'si.com'
+              : 'a school’s own athletics site'}{' '}
+          where MaxPreps has none
         </>
       ) : null}
       .{' '}

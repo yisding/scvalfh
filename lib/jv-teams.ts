@@ -9,7 +9,8 @@
  * registry. Each path below was read on 2026-10-05 from the level switcher (`level.name` "Junior
  * Varsity", `webPath`) on that school's varsity si.com games page, never guessed (DATA-SOURCES
  * §1.2 caveat 5); the 53 Southern California paths were read the same way on 2026-10-06. Marin
- * Academy has no si.com page at all, so it has no JV path. A JV side is identified only by these
+ * Academy, which had no si.com page then, has one since: its JV path was read on 2026-11-03 from the
+ * JV page's own header and `otherTeams` link. A JV side is identified only by these
  * ids, never by name: si.com names a JV team as it names the varsity one.
  *
  * Pure config: no I/O.
@@ -17,7 +18,7 @@
 
 import { SBLIVE_WEB } from './sources/sblive';
 import { TEAMS } from './teams';
-import type { Team, TeamSlug } from './types';
+import type { DivisionId, Team, TeamSlug } from './types';
 
 /** Registry slug → the JV team's si.com web path segment (`<id>-<slug>-jv`), or null when si.com has none. */
 export const JV_SBLIVE_PATHS: Readonly<Record<TeamSlug, string | null>> = {
@@ -64,7 +65,9 @@ export const JV_SBLIVE_PATHS: Readonly<Record<TeamSlug, string | null>> = {
   'marin-catholic': '456833-marin-catholic-wildcats-jv',
   // si.com files Convent & Stuart Hall's JV under the joint name; it is the JV on Convent's own page.
   'convent-sacred-heart': '487181-convent-stuart-hall-jv',
-  'marin-academy': null,
+  // Marin Academy had no si.com page on 2026-10-05; on 2026-11-03 its JV page (read, not guessed)
+  // named itself "Marin Academy Wildcats Junior Varsity" and listed varsity team 575124 in `otherTeams`.
+  'marin-academy': '575146-marin-academy-wildcats-jv',
   'bella-vista': '459059-bella-vista-broncos-jv',
   chico: '458563-chico-panthers-jv',
   corning: '485808-corning-cardinals-jv',
@@ -150,6 +153,31 @@ export const JV_SLUG_BY_SBLIVE_ID: ReadonlyMap<string, TeamSlug> = new Map(
     return id ? [[id, t.slug] as const] : [];
   }),
 );
+
+/**
+ * JV teams outside the registry that registry schools play in their JV league, identified on both
+ * sources by id, never by name: si.com JV team id → the MaxPreps team id its opponents' JV rows name.
+ * lib/jv-merge.ts matches a si.com row against such a team as it matches one between two registry
+ * schools, so its scores fill MaxPreps' rows and its games MaxPreps lacks are added. `division` is the
+ * JV league it plays in: a game against a school of that division is a JV league fixture, but the team
+ * has no registry row to stand in a table, so lib/jv-standings.ts leaves it uncounted and names it under
+ * the table ('outside-jv-member') rather than calling it non-league.
+ *
+ * York (Monterey) fields JV field hockey only, in PCAL's `CAT/YOR` slot (DATA-SOURCES §2.2). Its si.com
+ * JV page (456850, read 2026-11-03) is "York Falcons Junior Varsity", Monterey, and links the varsity
+ * listing 456851 that DATA_QUALITY.sbliveIgnoredTeamIds ignores; MaxPreps' JV rows name it e9a91bc8.
+ * Its si.com games (marked "League" there) fall on Santa Catalina's PCAL fixture dates against the
+ * same schools (Greenfield Sep 4, Carmel Sep 10, Stevenson Sep 16, Greenfield Oct 6; MaxPreps' Monterey
+ * Oct 26).
+ */
+export const JV_OUTSIDE_TEAMS: Readonly<Record<string, { name: string; maxprepsTeamId: string; division: DivisionId }>> = {
+  '456850': { name: 'York', maxprepsTeamId: 'e9a91bc8-5999-4321-9e21-d6cdc8aafcb2', division: 'pcal' },
+};
+
+/** The JV_OUTSIDE_TEAMS team a MaxPreps team id names, or undefined. */
+export function jvOutsideTeamByMaxprepsId(teamId: string | null): (typeof JV_OUTSIDE_TEAMS)[string] | undefined {
+  return teamId ? Object.values(JV_OUTSIDE_TEAMS).find((t) => t.maxprepsTeamId === teamId) : undefined;
+}
 
 /** MaxPreps' JV schedule page for a school: `<varsity team URL>jv/schedule/`, or null without a MaxPreps page. */
 export function jvMaxprepsScheduleUrl(team: Pick<Team, 'external'>): string | null {

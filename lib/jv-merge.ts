@@ -15,8 +15,10 @@
  * A si.com row is matched to a MaxPreps game by the unordered pair of registry schools and a date
  * within ±1 day (a posted reschedule), and is used at most once. Both sides must be registry
  * schools identified by their si.com JV team id (JV_SBLIVE_PATHS), never by name, and a row two JV
- * pages list with different scores is never used. A row against a school outside the registry is
- * not matched: there is no id to match it by.
+ * pages list with different scores is never used. One side may instead be a JV team outside the
+ * registry that lib/jv-teams.ts JV_OUTSIDE_TEAMS ties to a MaxPreps team id (York): it is matched by
+ * those two ids. Any other row against a school outside the registry is not matched: there is no id
+ * to match it by.
  *
  * Nothing here decides a table: the merged games are unclassified (countsFor and postseason stay
  * null); lib/jv-standings.ts classifies them for the JV tables, and no varsity table or postseason
@@ -26,6 +28,7 @@
 import { datesOf } from './backfill';
 import { byDateThenId, dayDiff } from './format';
 import type { JvSbliveRow } from './jv-schema';
+import { JV_OUTSIDE_TEAMS } from './jv-teams';
 import { getTeamBySlug } from './teams';
 import type { BackfillProvenance, ContestId, Game, GameSide, Outcome, Team, TeamSlug } from './types';
 
@@ -57,18 +60,42 @@ export interface JvMergeResult {
   unused: Array<{ sbliveGameId: string; reason: JvUnusedReason }>;
 }
 
-function pairKey(a: TeamSlug, b: TeamSlug): string {
+/** The MaxPreps ids of JV_OUTSIDE_TEAMS: a side naming one is matched by that id. */
+const OUTSIDE_MAXPREPS_IDS: ReadonlySet<string> = new Set(Object.values(JV_OUTSIDE_TEAMS).map((t) => t.maxprepsTeamId));
+
+/** A side's identity for matching: the registry slug, or `outside:<MaxPreps id>` for a JV_OUTSIDE_TEAMS team. */
+type SideKey = string;
+
+function pairKey(a: SideKey, b: SideKey): string {
   return [a, b].sort().join('~');
 }
 
-function rowPair(row: JvSbliveRow): string | null {
-  const [a, b] = row.sides;
-  return a.slug && b.slug ? pairKey(a.slug, b.slug) : null;
+function gameSideKey(side: Pick<GameSide, 'slug' | 'teamId'>): SideKey | null {
+  if (side.slug) return side.slug;
+  return side.teamId && OUTSIDE_MAXPREPS_IDS.has(side.teamId) ? `outside:${side.teamId}` : null;
 }
 
-function scoreOf(row: JvSbliveRow, slug: TeamSlug): number {
-  const side = row.sides.find((s) => s.slug === slug);
-  if (!side) throw new Error(`jv-merge: si.com row ${row.sbliveGameId} has no side ${slug}`);
+function rowSideKey(side: JvSbliveRow['sides'][number]): SideKey | null {
+  if (side.slug) return side.slug;
+  const outside = side.sbliveTeamId ? JV_OUTSIDE_TEAMS[side.sbliveTeamId] : undefined;
+  return outside ? `outside:${outside.maxprepsTeamId}` : null;
+}
+
+/** The pair a game is matched by; null unless both sides are registry or JV_OUTSIDE_TEAMS teams and one is registry. */
+function gamePair(g: Pick<Game, 'home' | 'away'>): string | null {
+  const a = gameSideKey(g.home);
+  const b = gameSideKey(g.away);
+  return a && b && (g.home.slug || g.away.slug) ? pairKey(a, b) : null;
+}
+
+function rowPair(row: JvSbliveRow): string | null {
+  const [a, b] = row.sides.map(rowSideKey);
+  return a && b && (row.sides[0].slug || row.sides[1].slug) ? pairKey(a, b) : null;
+}
+
+function scoreOf(row: JvSbliveRow, key: SideKey): number {
+  const side = row.sides.find((s) => rowSideKey(s) === key);
+  if (!side) throw new Error(`jv-merge: si.com row ${row.sbliveGameId} has no side ${key}`);
   return side.score;
 }
 
@@ -119,16 +146,25 @@ function annotated(g: Game, row: JvSbliveRow, score: { home: number; away: numbe
   };
 }
 
-function sideOf(team: Team, score: number, other: number): GameSide {
+/** A registry team, or a JV_OUTSIDE_TEAMS team by its MaxPreps id and si.com's name for it. */
+type SideTeam = Pick<Team, 'id' | 'name'> & { slug: TeamSlug | null; division: Team['division'] | null };
+
+function sideOf(team: SideTeam, score: number, other: number): GameSide {
   return { teamId: team.id, slug: team.slug, name: team.name, score, result: outcome(score, other) };
+}
+
+function sideTeam(side: JvSbliveRow['sides'][number]): SideTeam | undefined {
+  if (side.slug) return getTeamBySlug(side.slug);
+  const outside = side.sbliveTeamId ? JV_OUTSIDE_TEAMS[side.sbliveTeamId] : undefined;
+  return outside ? { id: outside.maxprepsTeamId, slug: null, name: outside.name, division: null } : undefined;
 }
 
 /** Rule 3: a si.com-only JV game. The host is si.com's `isHome` when exactly one side says so. */
 function sbliveOnlyGame(row: JvSbliveRow, fetchedAt: string): Game | null {
   const [a, b] = row.sides;
-  const ta = a.slug ? getTeamBySlug(a.slug) : undefined;
-  const tb = b.slug ? getTeamBySlug(b.slug) : undefined;
-  if (!ta || !tb) return null;
+  const ta = sideTeam(a);
+  const tb = sideTeam(b);
+  if (!ta || !tb || (!ta.slug && !tb.slug)) return null;
   const aHosts = a.isHome === true && b.isHome !== true;
   const bHosts = b.isHome === true && a.isHome !== true;
   const [home, away, homeTeam, awayTeam] = bHosts ? [b, a, tb, ta] : [a, b, ta, tb];
@@ -145,7 +181,7 @@ function sbliveOnlyGame(row: JvSbliveRow, fetchedAt: string): Game | null {
     site: aHosts || bHosts ? 'home' : 'neutral',
     status: 'final',
     isLeague: false,
-    leagueDivision: homeTeam.division === awayTeam.division ? homeTeam.division : null,
+    leagueDivision: homeTeam.division && homeTeam.division === awayTeam.division ? homeTeam.division : null,
     contestTypes: { home: null, away: null },
     countsFor: null,
     postseason: null,
@@ -186,8 +222,10 @@ export function mergeJv(input: {
   const differs: ContestId[] = [];
 
   const games = input.games.map((g) => {
-    if (!g.home.slug || !g.away.slug) return g;
-    const key = pairKey(g.home.slug, g.away.slug);
+    const key = gamePair(g);
+    const homeKey = gameSideKey(g.home);
+    const awayKey = gameSideKey(g.away);
+    if (!key || !homeKey || !awayKey) return g;
     const near = usable
       .filter((r) => !used.has(r.sbliveGameId) && rowPair(r) === key)
       .map((r) => ({ r, d: Math.abs(dayDiff(g.dateKey, r.dateKey)) }))
@@ -204,7 +242,7 @@ export function mergeJv(input: {
     }
     const row = near[0].r;
     used.add(row.sbliveGameId);
-    const score = { home: scoreOf(row, g.home.slug), away: scoreOf(row, g.away.slug) };
+    const score = { home: scoreOf(row, homeKey), away: scoreOf(row, awayKey) };
     if (g.status === 'final') {
       if (g.home.score === score.home && g.away.score === score.away) {
         unused.push({ sbliveGameId: row.sbliveGameId, reason: 'not-needed' });
@@ -226,11 +264,7 @@ export function mergeJv(input: {
     if (used.has(row.sbliveGameId)) continue;
     const key = rowPair(row);
     const nearby = games.some(
-      (g) =>
-        g.home.slug &&
-        g.away.slug &&
-        pairKey(g.home.slug, g.away.slug) === key &&
-        Math.abs(dayDiff(g.dateKey, row.dateKey)) <= JV_MAXPREPS_PAIR_WINDOW_DAYS,
+      (g) => gamePair(g) === key && Math.abs(dayDiff(g.dateKey, row.dateKey)) <= JV_MAXPREPS_PAIR_WINDOW_DAYS,
     );
     if (nearby) {
       unused.push({ sbliveGameId: row.sbliveGameId, reason: 'maxpreps-pair-nearby' });

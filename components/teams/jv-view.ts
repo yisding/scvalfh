@@ -10,7 +10,14 @@
  */
 
 import { localDateKey } from '../../lib/format';
-import { getJvClassification, getJvFetchedAt, getJvGamesForTeam, getJvGamesOn, getJvTeam } from '../../lib/jv';
+import {
+  getJvClassification,
+  getJvFetchedAt,
+  getJvGamesForTeam,
+  getJvGamesOn,
+  getJvSchoolSiteDiffersNote,
+  getJvTeam,
+} from '../../lib/jv';
 import { regionOf } from '../../lib/leagues';
 import { getTeamBySlug } from '../../lib/teams';
 import type { Game, GameSide, RegionId, TeamSlug } from '../../lib/types';
@@ -28,6 +35,8 @@ export interface JvRowView {
 export interface JvListSummary {
   /** Games with a score from si.com (the † rows). */
   sbliveScores: number;
+  /** Games with a score from a school's own athletics site (also †; lib/jv-school-sites.ts). */
+  schoolSiteScores: number;
   /** MaxPreps finals si.com reports differently. */
   differs: number;
 }
@@ -57,10 +66,10 @@ function shortName(side: GameSide): string {
   return team ? team.shortName : side.name;
 }
 
-/** The sentence beside a MaxPreps JV final si.com reports differently, or null. */
+/** The sentence beside a MaxPreps JV final si.com, or a school's own site, reports differently, or null. */
 export function jvDiffersNote(game: Game): string | null {
   const conflict = game.provenance.scoreConflict;
-  if (!conflict || game.provenance.scores === 'sblive') return null;
+  if (!conflict || game.provenance.scores === 'sblive') return getJvSchoolSiteDiffersNote(game.contestId);
   return (
     `si.com has ${shortName(game.away)} ${conflict.sblive.away}, ${shortName(game.home)} ${conflict.sblive.home}; ` +
     'MaxPreps’ score is shown.'
@@ -70,6 +79,7 @@ export function jvDiffersNote(game: Game): string | null {
 function summarize(games: readonly Game[]): JvListSummary {
   return {
     sbliveScores: games.filter((g) => g.provenance.scores === 'sblive').length,
+    schoolSiteScores: games.filter((g) => g.provenance.scores === 'school-site').length,
     differs: games.filter((g) => jvDiffersNote(g) !== null).length,
   };
 }

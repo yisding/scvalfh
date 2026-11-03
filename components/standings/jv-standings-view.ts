@@ -46,6 +46,7 @@ export const UNCOUNTED_REASON_WORDS: Readonly<Record<UncountedReason, string>> =
   'no-varsity-counterpart': 'no varsity game matches it',
   ambiguous: 'two varsity games are equally near it',
   'varsity-postseason': 'its varsity game is a postseason game',
+  'outside-jv-member': 'the opponent fields a JV team only, so it has no row in this table',
 };
 
 type UncountedReason = Extract<JvClassification, { kind: 'uncounted' }>['reason'];
@@ -66,7 +67,11 @@ export function jvTableTitle(division: DivisionId): string {
 function viewOf(t: JvDivisionTable): JvTableView {
   const title = jvTableTitle(t.division);
   const isAre = (n: number) => `${n} ${n === 1 ? 'is' : 'are'}`;
-  const sblive = t.sbliveScores > 0 ? ` (${isAre(t.sbliveScores)} si.com’s †)` : '';
+  const marked = [
+    t.sbliveScores > 0 ? `${isAre(t.sbliveScores)} si.com’s` : null,
+    t.schoolSiteScores > 0 ? `${t.schoolSiteScores} from a school’s own athletics site` : null,
+  ].filter((p): p is string => p !== null);
+  const sblive = marked.length ? ` (${marked.join(', ')} †)` : '';
   const coverage =
     t.played === 0
       ? `No ${title} league game has been played yet${t.toCome > 0 ? `; ${isAre(t.toCome)} to come` : ''}.`

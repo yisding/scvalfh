@@ -46,13 +46,17 @@ function deciderLabel(display: Pick<GameDisplay, 'deciderTag' | 'shootoutLabel'>
   return 'after overtime';
 }
 
-/** The † beside a score published from si.com: a title for a pointer, words for a screen reader. */
+/**
+ * The † beside a score published from si.com, or (JV only) from a school's own athletics site: a title
+ * for a pointer, words for a screen reader.
+ */
 function SourceMark({ display }: { display: Pick<GameDisplay, 'sourceMark'> }) {
-  if (display.sourceMark !== 'si.com') return null;
+  if (display.sourceMark === null) return null;
+  const words = display.sourceMark === 'si.com' ? 'Score via si.com' : 'Score via the school’s athletics site';
   return (
-    <span className="font-sans text-micro font-semibold text-ink-3" title="Score via si.com">
+    <span className="font-sans text-micro font-semibold text-ink-3" title={words}>
       <span aria-hidden="true">&dagger;</span>
-      <span className="sr-only">Score via si.com</span>
+      <span className="sr-only">{words}</span>
     </span>
   );
 }

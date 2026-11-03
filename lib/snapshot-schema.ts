@@ -70,6 +70,7 @@ const sourceId = z.enum([
   'vnn-ics',
   'cifss',
   'derived',
+  'school-site',
 ]);
 const gameStatus = z.enum(['scheduled', 'live', 'final', 'score-pending', 'postponed']);
 const decider = z.enum(['REG', 'OT', '2OT', 'SO', 'FORFEIT']);
