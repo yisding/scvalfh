@@ -4324,6 +4324,17 @@ sentence adds "Edison is one of its eight teams." (or "is not"). A game page rea
 kicker and "Tournament of Champions game (Los Angeles Field Hockey Association, not a CIF event) — it does not
 count in any league table." as its note; the chip in every list is "Tournament of Champions".
 
+**The 2025 tournament on /history/2025-26 (2026-11-03).** Owner request: "Add the 2025 Tournament of Champions
+to the historical data." `data/history-brackets-2025-26.json` gains `tournaments.toc`, drawn as `#toc` after the
+LA independents (pill "TOC", SoCal-scoped) with the section brackets' drawer: a champion card ("Tournament of
+Champions champion · Harvard-Westlake · Beat Newport Harbor 4-0 in the final"), one bracket of three rounds
+(First round Oct 21, Semifinals Oct 23, Final Oct 25 at Ted Slavin Field), the third-place game as one line
+under it, and a source line saying the bracket is drawn from the games because none was published. No seed:
+the sides carry `seed: null` and the drawn lines leave the number column empty. The one level game no source
+explains (Bonita 1-1 Newport Harbor) reads "Newport Harbor and Bonita drew 1-1; Newport Harbor went through."
+with "Tiebreak not reported" under the card, never a shootout it cannot cite. The Sunset and LA unavailable
+cards point to it; the "no champion on an unavailable card" check reads past the event's name.
+
 **MCAL copy reads the results (2026-10-29).** `LeagueTournamentProjection.champion` is the final's winner once it
 has one (a level final with no W flag completes nothing); `tournamentOutcome(projection, slug)` is one team's
 standing in the bracket (champion, runner-up, in the final, lost in a round, alive, below the line, or projected),

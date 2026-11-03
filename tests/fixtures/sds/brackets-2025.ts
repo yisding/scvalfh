@@ -17,7 +17,7 @@
  */
 
 import { getHistoryBrackets } from '../../../lib/history';
-import type { HistoryBracketDivision } from '../../../lib/history-brackets-schema';
+import type { SectionBracketDivision } from '../../../lib/history-brackets-schema';
 import { LEAGUE_IDS, getLeague } from '../../../lib/leagues';
 import { getPriorSeason } from '../../../lib/prior-season';
 import {
@@ -36,7 +36,7 @@ export const SDS_2025_WINDOW = { first: '2025-11-02', last: '2025-11-15' } as co
 /** The 2025 file shape's schema. */
 export const sds2025Schema = sdsBracketsSchema(SDS_2025_WINDOW);
 
-function divisionFromHistory(d: HistoryBracketDivision): SdsBracketsDivision {
+function divisionFromHistory(d: SectionBracketDivision): SdsBracketsDivision {
   const playInRound = d.rounds.find((r) => r.playIn);
   const main = d.rounds.filter((r) => !r.playIn);
   const playInGame = playInRound?.games[0];

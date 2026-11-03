@@ -397,6 +397,16 @@ describe('historyPageProblems: the history page holds what the history data says
     expect(award[0]).toMatch(new RegExp(`^${id}: an unavailable league shows a result or award — “…`));
   });
 
+  it('lets an unavailable league name the Tournament of Champions, and still catches a champion beside it', () => {
+    if (!unavailable) throw new Error('no unavailable league in the history data');
+    const { id } = unavailable;
+    const pointer = '<p>The 2025 Tournament of Champions, the postseason of the Sunset, is on this page: <a href="#toc">TOC bracket</a>.</p>';
+    expect(historyPageProblems(page({ id, tail: pointer }), leagues)).toEqual([]);
+    const claim = historyPageProblems(page({ id, tail: `${pointer}<p>Tournament of Champions champion: Example</p>` }), leagues);
+    expect(claim).toHaveLength(1);
+    expect(claim[0]).toMatch(new RegExp(`^${id}: an unavailable league shows a result or award`));
+  });
+
   it('reads the reason as React escapes it, decoding each entity once', () => {
     if (unavailable?.entry.status !== 'unavailable') throw new Error('no unavailable league in the history data');
     const { id } = unavailable;

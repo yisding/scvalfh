@@ -1884,8 +1884,9 @@ redirects.
     the league's own registry slugs and divisions (PCAL, MCAL and EAL are single-division).
 - **2025 section playoff brackets** (`data/history-brackets-2025-26.json`, validated by
   `lib/history-brackets-schema.ts`, read by `lib/history.ts`, shown on /history/2025-26 as `#ccs` after
-  PCAL and `#sds` after Metro). Transcribed by hand on 2026-10-07; nothing refreshes it. Each section's
-  `notes` say exactly what was read:
+  PCAL, `#sds` after Metro and `#toc` after the LA independents). Transcribed by hand on 2026-10-07 (the
+  Tournament of Champions on 2026-11-03); nothing refreshes it. Each entry's `notes` say exactly what was
+  read:
   - **CCS** — the two official bracket pages linked from `https://www.cifccs.org/sports/fh/index`
     ("Brackets & Results"): `…/sports/fh/2025-26/2025_Field_Hockey_Division_{1,2}_Bracket`. They are
     PrestoSports shells that draw a MaxPreps bracket widget client-side (tournament
@@ -1903,7 +1904,19 @@ redirects.
     Section's Record Book (Google Doc, linked from the same page). Its Division II table stops at
     2024, so Eastlake's final win over Del Norte has no score.
   - The NCS, the Northern Section and the Southern Section held no 2025 field hockey playoffs, so
-    MCAL, the EAL, the Sunset and the LA independents have no bracket block.
+    MCAL and the EAL have no bracket block.
+  - **Tournament of Champions** (`tournaments.toc`, shown as `#toc` after the LA independents; added
+    2026-11-03) — the Sunset's and the LA independents' postseason, which no CIF section runs (§1.8). No
+    bracket, pairings or seeds were published, so the bracket is assembled from the games and its sides
+    carry `seed: null`: Harvard-Westlake's three games from the Harvard-Westlake Chronicle (Nov 15, 2025:
+    5-1 Fountain Valley in the first round Oct 21, 2-1 Edison in the semifinals Oct 23, 4-0 Newport Harbor
+    in the final Oct 25 at Ted Slavin Field), the other five from MaxPreps' 2025-26 schedules as
+    `data/prior-season.json` holds them (every game between two Southern Section registry teams dated Oct
+    21-25, 2025, asserted in tests/history-brackets.test.ts). Bonita 1-1 Newport Harbor in round 1 is
+    `decidedBy: 'tiebreak-unreported'`: MaxPreps marks it a Bonita loss and Newport Harbor played on, but no
+    source gives a shootout (MaxPreps' game page returned 403 on 2026-11-03). Huntington Beach 1-0 Edison on
+    Oct 25, the two beaten semifinalists, is stored as `thirdPlace` (the 2026 format names a third-place
+    game; no 2025 source does). Each card's top side is MaxPreps' home team.
 - **No 2026-27 standings PDF exists yet** — poll the index for `/2026-27.*field hockey.*standings/i`
   rather than hardcoding a URL.
 
@@ -2282,7 +2295,9 @@ listed on `/playoffs#toc`, the tournament's own section, which holds the Sunset 
 - `https://hwchronicle.com/114175/sports/field-hockey-concentrates-as-a-group/` (Aug 25 2026: "defending their
   title of the Los Angeles Field Hockey Association (LAFHA) Tournament of Champions") and
   `https://hwchronicle.com/112272/sports/field-hockey-wins-tournament-of-champions-2/` (Nov 15 2025: the 2025
-  final, 4-0 over Newport Harbor, Oct 25). A 2023 story called it the "Sunset League Tournament of Champions".
+  final, 4-0 over Newport Harbor, Oct 25, with its first-round and semifinal wins; the 2025 bracket on
+  /history/2025-26 `#toc` is built from it and MaxPreps' 2025-26 schedules, see "2025 section playoff
+  brackets" above). A 2023 story called it the "Sunset League Tournament of Champions".
 - `https://www.hbfieldhockey.com/events` (Huntington Beach's program site): "TOC Playoff - Round 1" Oct 22,
   "Round 2" Oct 27, "Championship (HBHS)" and "3rd Playoff (Miller)" Oct 29.
 - `https://www.bonitaathletics.org/sport/field%20hockey/girls/`: "TOC Round 1" Oct 22, "TOC Round 2" Oct 27,

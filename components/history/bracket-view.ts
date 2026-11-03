@@ -45,7 +45,8 @@ const AFTER: Record<'overtime' | 'double-overtime', string> = {
 /**
  * One game as a sentence, for a screen reader and the champion line: "Los Gatos beat Saint Francis
  * 3-0.", "Mt. Carmel beat Fallbrook 2-1 in overtime.", "Willow Glen and Stevenson drew 1-1; Willow
- * Glen won the shootout 2-1.", "Eastlake beat Del Norte; no score was posted."
+ * Glen won the shootout 2-1.", "Newport Harbor and Bonita drew 1-1; Newport Harbor went through." (no
+ * source says how that tie was broken), "Eastlake beat Del Norte; no score was posted."
  */
 export function gameSentence(game: HistoryBracketGame): string {
   const { winner, loser } = bracketSides(game);
@@ -57,6 +58,7 @@ export function gameSentence(game: HistoryBracketGame): string {
     const so = shootoutWinnerFirst(game);
     return `${w} and ${l} drew ${score}; ${w} won the shootout${so ? ` ${so}` : ''}.`;
   }
+  if (game.decidedBy === 'tiebreak-unreported') return `${w} and ${l} drew ${score}; ${w} went through.`;
   return `${w} beat ${l} ${score}${game.decidedBy ? ` ${AFTER[game.decidedBy]}` : ''}.`;
 }
 
@@ -74,6 +76,7 @@ export function gameNote(game: HistoryBracketGame, round: HistoryBracketRound): 
     const so = game.shootout ? `${game.shootout[0]}-${game.shootout[1]}` : null;
     parts.push(so ? `Shootout ${so}` : 'Shootout');
   }
+  if (game.decidedBy === 'tiebreak-unreported') parts.push('Tiebreak not reported');
   if (!game.score) parts.push('No score posted');
   parts.push(...whenWhere(game, round));
   return parts.length ? parts.join(' · ') : null;
@@ -108,7 +111,7 @@ export function roundByes(division: HistoryBracketDivision, roundIndex: number):
   return next.games
     .flatMap((g) => [g.top, g.bottom])
     .filter((s) => !played.has(s.slug))
-    .sort((a, b) => a.seed - b.seed);
+    .sort((a, b) => (a.seed ?? 0) - (b.seed ?? 0));
 }
 
 /** The final and its winner, for the champion card. */
@@ -134,7 +137,17 @@ export function finalLine(final: HistoryBracketGame): string {
     const so = shootoutWinnerFirst(final);
     return `Drew ${score} with ${l} in the final and won the shootout${so ? ` ${so}` : ''}`;
   }
+  if (final.decidedBy === 'tiebreak-unreported') return `Drew ${score} with ${l} in the final and won the tiebreak`;
   return `Beat ${l} ${score} in the final${final.decidedBy ? ` ${AFTER[final.decidedBy]}` : ''}`;
+}
+
+/**
+ * The third-place game's line under a bracket that held one (the Tournament of Champions), or null:
+ * "Third place, Oct 25: Huntington Beach beat Edison 1-0."
+ */
+export function thirdPlaceLine(division: HistoryBracketDivision): string | null {
+  const third = division.thirdPlace;
+  return third ? `Third place, ${monthDay(third.date)}: ${gameSentence(third.game)}` : null;
 }
 
 /** A round's heading date: "Nov 5". */
@@ -144,10 +157,11 @@ export const roundDate = (round: HistoryBracketRound): string => monthDay(round.
 
 /**
  * One side of a card: a placed team with its number in the bracket (a bare numeral: the San Diego copy never
- * says "seed", scripts/copy-rules.ts SEED_CLAIM), or a place still to be decided, in words ("Winner of 8 v 9").
+ * says "seed", scripts/copy-rules.ts SEED_CLAIM; null in a bracket with no seeds, the Tournament of Champions,
+ * whose lines then print none), or a place still to be decided, in words ("Winner of 8 v 9").
  * `name` is the full name the screen-reader sentence uses; the drawn line prints the registry's short name.
  */
-export type BracketSideView = { seed: number; slug: string; name: string } | { tbd: string };
+export type BracketSideView = { seed: number | null; slug: string; name: string } | { tbd: string };
 
 export const isTbdSide = (side: BracketSideView): side is { tbd: string } => 'tbd' in side;
 
@@ -207,7 +221,10 @@ export function historyBracketView(division: HistoryBracketDivision): BracketDiv
         key: round.name,
         name: round.name,
         dateLabel: roundDate(round),
-        byes: byes.length > 0 ? byes.map((s) => `${sideName(s)} (${s.seed})`).join(', ') : null,
+        byes:
+          byes.length > 0
+            ? byes.map((s) => (s.seed === null ? sideName(s) : `${sideName(s)} (${s.seed})`)).join(', ')
+            : null,
         cards: round.games.map((game) => ({
           key: `${game.top.slug}-${game.bottom.slug}`,
           top: side(game.top),

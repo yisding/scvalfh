@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 import AwardsBlock from '../../../components/history/AwardsBlock';
-import { divisionChampion, finalLine, sideName } from '../../../components/history/bracket-view';
+import { divisionChampion, finalLine, sideName, thirdPlaceLine } from '../../../components/history/bracket-view';
 import HistoryBracket from '../../../components/history/HistoryBracket';
 import HistoryStandingsTable, { leagueHasOverall } from '../../../components/history/HistoryStandingsTable';
 import ExternalLink from '../../../components/ui/ExternalLink';
@@ -19,6 +19,8 @@ import {
   getHistoryBracketFor,
   getHistoryBrackets,
   getHistoryChampions,
+  getHistoryTournamentFor,
+  getHistoryTournaments,
   getHistoryDivisionChanges,
   getHistoryLeagues,
   getHistorySeason,
@@ -28,10 +30,11 @@ import {
   type AvailableLeagueHistory,
   type BracketSectionId,
   type SectionBracket,
+  type TournamentBracket,
   type UnavailableLeagueHistory,
 } from '../../../lib/history';
 import { dateWithYear, listWords } from '../../../lib/format';
-import { getDivision, getLeague, getSection, isIndependentLeague, regionOf } from '../../../lib/leagues';
+import { TOC, getDivision, getLeague, getSection, isIndependentLeague, regionOf } from '../../../lib/leagues';
 import type { LeagueId, Team } from '../../../lib/types';
 
 /**
@@ -47,7 +50,10 @@ import type { LeagueId, Team } from '../../../lib/types';
  * built once by `scripts/build-history.ts`. After each section's last league comes that section's
  * 2025 playoff bracket (`#ccs` after PCAL, `#sds` after Metro: data/history-brackets-2025-26.json,
  * transcribed from the sections' own pages), so SoCal, where no league published standings, still
- * has last season's results; the unavailable cards of those leagues point to it. MaxPreps cannot serve a prior season at all — the year
+ * has last season's results; the unavailable cards of those leagues point to it. After the LA
+ * independents comes the 2025 Tournament of Champions (`#toc`), the postseason the Sunset and the LA
+ * independents share, which no CIF section runs (DESIGN §24.13): one unseeded bracket assembled from a
+ * school newspaper and MaxPreps' schedules, since its organizer publishes none; their cards point to it. MaxPreps cannot serve a prior season at all — the year
  * segment of its league URL is cosmetic and always returns the CURRENT table (SPEC §1.1h) — so this
  * page is the only place last season's numbers live, and it is not part of the snapshot the
  * scheduled update rebuilds.
@@ -60,8 +66,15 @@ import type { LeagueId, Team } from '../../../lib/types';
 const SEASON = getHistorySeason();
 const HISTORY_LEAGUES = getHistoryLeagues();
 const BRACKETS = getHistoryBrackets();
-/** "the CCS and San Diego Section": the sections whose brackets the page shows. */
-const BRACKET_SECTIONS = listWords(BRACKETS.map((b) => getSection(b.id).briefLabel));
+const TOURNAMENTS = getHistoryTournaments();
+/**
+ * "the CCS and San Diego Section playoff brackets and the Tournament of Champions": the brackets the page
+ * shows, the sections' and the tournaments'.
+ */
+const BRACKET_WORDS = [
+  `the ${listWords(BRACKETS.map((b) => getSection(b.id).briefLabel))} playoff brackets`,
+  ...TOURNAMENTS.map(() => `the ${TOC.name}`),
+].join(' and ');
 const AVAILABLE = getAvailableHistoryLeagues();
 const UNAVAILABLE = getUnavailableHistoryLeagues();
 const short = (id: LeagueId) => getLeague(id).shortName;
@@ -88,8 +101,8 @@ export const metadata: Metadata = {
   title: PAGE_TITLE,
   description:
     `Final ${listWords(AVAILABLE.map((l) => short(l.id)))} girls field hockey standings` +
-    ` and all-league awards from the ${SEASON} season, from each league’s own documents, and the` +
-    ` ${BRACKET_SECTIONS} playoff brackets.` +
+    ` and all-league awards from the ${SEASON} season, from each league’s own documents, and` +
+    ` ${BRACKET_WORDS}.` +
     (UNAVAILABLE_SUBJECT
       ? ` ${UNAVAILABLE_SUBJECT} marked unavailable: we found no official ${SEASON} final standings.`
       : '') +
@@ -366,6 +379,69 @@ function SectionBracketBlock({ id, bracket }: { id: BracketSectionId; bracket: S
   );
 }
 
+/**
+ * The 2025 Tournament of Champions (`#toc`, DESIGN §24.13): the postseason of the Sunset and the LA
+ * independents, run by the Los Angeles Field Hockey Association, not by CIF. The same champion card and
+ * bracket drawer as a section's block, with no seeds (none is published, and copy rule 5 bans a seed word on
+ * these leagues' pages), the third-place game under the bracket, and a source line that says the bracket is
+ * this site's assembly of the games, not a published one.
+ */
+function TournamentBracketBlock({ bracket, leagues }: { bracket: TournamentBracket; leagues: readonly LeagueId[] }) {
+  const d = bracket.divisions[0];
+  const { champion, final } = divisionChampion(d);
+  const team = getTeamBySlug(champion.slug);
+  const third = thirdPlaceLine(d);
+  const links = bracket.sources.map((doc, i) => (
+    <span key={doc.url}>
+      {i > 0 ? ' · ' : ''}
+      <ExternalLink href={doc.url}>{doc.label}</ExternalLink>
+    </span>
+  ));
+  const whose = listWords(leagues.map((l) => `the ${getLeague(l).name}`));
+  return (
+    <section id={TOC.id} data-region-scope="socal" aria-label={`${TOC.name} ${SEASON}`} className="min-w-0">
+      <SectionHeader
+        size="lg"
+        kicker={`${TOC.shortName} · ${TOC.name}`}
+        meta={<span className="whitespace-nowrap">{SEASON}</span>}
+      />
+      <p className="m-0 mt-2 max-w-prose text-body text-ink-2">
+        The 2025 postseason for {whose}: eight teams, run by the {bracket.organizer}, not by CIF.
+      </p>
+      <div className="mt-4 grid gap-3 sm:grid-cols-2 sm:gap-4">
+        <ChampionCard team={team}>
+          <p className="m-0 text-micro font-medium text-ink-3">{TOC.name} champion</p>
+          <p className="m-0 mt-0.5 text-lead text-ink sm:text-title">{sideName(champion)}</p>
+          <p className="m-0 mt-0.5 text-meta text-ink-2">{finalLine(final)}</p>
+        </ChampionCard>
+      </div>
+
+      <section id={`${TOC.id}-${d.id}`} aria-label={`${TOC.shortName} bracket`} className="mt-section min-w-0 md:mt-section-lg">
+        <SectionHeader
+          as="h3"
+          size="section"
+          kicker={`${TOC.shortName} · bracket`}
+          meta={<span className="whitespace-nowrap">{SEASON}</span>}
+          className="mb-4"
+        />
+        <HistoryBracket division={d} label={`${TOC.name} bracket, ${SEASON}`} />
+        {third ? <p className="m-0 mt-4 text-meta text-ink-2">{third}</p> : null}
+      </section>
+
+      <div className="mt-section max-w-prose space-y-3 text-meta text-ink-3 md:mt-section-lg">
+        <p className="m-0">
+          Source: {links}. Read on {dateWithYear(bracket.retrievedOn)}. No bracket, pairings or seeds were
+          published, so this bracket is drawn from the games: Harvard-Westlake&rsquo;s three are the
+          Chronicle&rsquo;s, the other five MaxPreps&rsquo; 2025-26 schedules, and each card lists the home team
+          first. MaxPreps gives Newport Harbor the 1-1 game with Bonita, and Newport Harbor played on, but no
+          source says how the tie was broken. The third-place game is the two beaten semifinalists&rsquo; game
+          two days later.
+        </p>
+      </div>
+    </section>
+  );
+}
+
 function UnavailableLeague({ leagueId, entry }: { leagueId: LeagueId; entry: UnavailableLeagueHistory }) {
   const league = getLeague(leagueId);
   // A league with no website of its own (EAL) links its section's field hockey page instead.
@@ -375,6 +451,8 @@ function UnavailableLeague({ leagueId, entry }: { leagueId: LeagueId; entry: Una
   const publisher = ownSite ? league.shortName : `the ${getSection(league.sectionId).name}`;
   // The CCS and San Diego Section brackets are on this page: the card says where.
   const bracket = isIndependentLeague(leagueId) ? null : getHistoryBracketFor(leagueId);
+  // So is the Tournament of Champions, the Sunset's and the LA independents' postseason.
+  const tournament = getHistoryTournamentFor(leagueId);
   return (
     <section
       id={leagueId}
@@ -407,6 +485,16 @@ function UnavailableLeague({ leagueId, entry }: { leagueId: LeagueId; entry: Una
             The {bracketSectionName(bracket.id)}&rsquo;s 2025 playoff results are on this page:{' '}
             <a href={`#${bracket.id}`} className="text-accent hover:underline">
               {getSection(bracket.id).briefLabel} playoffs
+            </a>
+            .
+          </p>
+        ) : null}
+        {tournament ? (
+          <p className="m-0 mt-3 max-w-prose text-body text-ink-2">
+            The 2025 {TOC.name}, the postseason of{' '}
+            {listWords(tournament.leagues.map((l) => `the ${getLeague(l).name}`))}, is on this page:{' '}
+            <a href={`#${tournament.id}`} className="text-accent hover:underline">
+              {TOC.shortName} bracket
             </a>
             .
           </p>
@@ -449,6 +537,11 @@ export default function HistoryPage() {
       label: `${getSection(b.id).shortName} playoffs`,
       region: getSection(b.id).region,
     })),
+    ...TOURNAMENTS.filter((t) => t.afterLeague === id).map((t) => ({
+      href: `#${t.id}`,
+      label: TOC.shortName,
+      region: regionOf(id),
+    })),
   ]);
   const available = listWords(AVAILABLE.map((l) => short(l.id)));
 
@@ -462,7 +555,7 @@ export default function HistoryPage() {
         description={
           <>
             Final standings and all-league awards for {available}, from each league&rsquo;s own documents,
-            and the {BRACKET_SECTIONS} playoff brackets.{' '}
+            and {BRACKET_WORDS}.{' '}
             {UNAVAILABLE_SUBJECT ? (
               <>
                 {UNAVAILABLE_SUBJECT} unavailable: we found no official {SEASON} final standings.{' '}
@@ -493,6 +586,9 @@ export default function HistoryPage() {
           ),
           ...BRACKETS.filter((b) => b.afterLeague === id).map((b) => (
             <SectionBracketBlock key={b.id} id={b.id} bracket={b.bracket} />
+          )),
+          ...TOURNAMENTS.filter((t) => t.afterLeague === id).map((t) => (
+            <TournamentBracketBlock key={t.id} bracket={t.bracket} leagues={t.leagues} />
           )),
         ])}
       </div>

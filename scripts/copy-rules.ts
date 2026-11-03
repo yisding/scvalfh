@@ -698,7 +698,10 @@ export function historyPageProblems(
       if (!section.includes('Unavailable')) problems.push(`${id}: unavailable league has no "Unavailable" card`);
       if (!decodeEntities(section).includes(entry.reason.slice(0, 40))) problems.push(`${id}: the reason is not on the page`);
       if (/<table/.test(section)) problems.push(`${id}: an unavailable league shows a table`);
-      const award = /champion|winner|all-league|MVP|first team/i.exec(section);
+      // The Sunset's and the LA independents' cards name their postseason, the Tournament of Champions, to point
+      // to its bracket (#toc): the event's name is no result, so it is read as a blank of the same length.
+      const unnamed = section.replace(/Tournament of Champions/g, (name) => ' '.repeat(name.length));
+      const award = /champion|winner|all-league|MVP|first team/i.exec(unnamed);
       if (award) problems.push(`${id}: an unavailable league shows a result or award — “…${around(section, award.index)}…”`);
     }
   }
