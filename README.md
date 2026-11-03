@@ -605,6 +605,8 @@ Around that merge, three hand-checked layers (audit of 2026-11-03, `docs/DATA-SO
   id and MaxPreps id (5 si.com finals added). Its two Stevenson games, played on the schedule's dates
   after the varsity games moved, are named league games in `JV_CORRECTIONS.leagueGames`. York's 4-0-1 is
   its si.com league record; with the cancellations left out the PCAL JV table is shown (18 of 28).
+  York's row carries York's own athletics logo (york.org), drawn into `public/mascots/york-<px>.webp` by
+  `pnpm fetch-mascots --only york`.
 - **School athletics sites** (`lib/jv-school-sites.ts`, after the si.com merge, same rules): Saint
   Francis' and St. Ignatius' JV schedule pages list results, transcribed on 2026-11-03 once JV league
   play had ended. They fill 12 scores and add 3 games (marked †, "Score via the school's athletics

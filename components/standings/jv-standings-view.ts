@@ -29,8 +29,8 @@ export interface JvTableView {
   /** `De Anza JV` for a multi-division league, `SCVAL JV` for a single-division one. */
   title: string;
   status: JvDivisionTable['status'];
-  /** `team` is null for a JV slot team (York), which has no page. */
-  rows: Array<{ row: JvStandingRow; team: Team | null }>;
+  /** `team` is null for a JV slot team (York), which has no page; `mascot` is then its tile stem. */
+  rows: Array<{ row: JvStandingRow; team: Team | null; mascot: string | null }>;
   /** "York plays the JV games of Santa Catalina, which fields varsity only, …" when the table has such a team. */
   slotNote: string | null;
   /** "12 of the 18 El Camino JV league games played so far have a score (2 are si.com’s †)." */
@@ -95,7 +95,11 @@ function viewOf(t: JvDivisionTable): JvTableView {
     anchor: isSingleDivision(t.league) ? null : t.division,
     title,
     status: t.status,
-    rows: t.rows.map((row) => ({ row, team: row.slug ? getTeamBySlug(row.slug)! : null })),
+    rows: t.rows.map((row) => ({
+      row,
+      team: row.slug ? getTeamBySlug(row.slug)! : null,
+      mascot: row.slug ? null : (jvSlotTeamFor(row.jvFor ?? null)?.mascot ?? null),
+    })),
     slotNote: slotNoteOf(t),
     coverage: noneListed
       ? `No ${title.replace(/ JV$/, '')} school has a JV league game on MaxPreps or si.com.`

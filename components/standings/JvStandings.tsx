@@ -74,7 +74,7 @@ function JvTable({ view }: { view: JvTableView }) {
           </tr>
         </thead>
         <tbody>
-          {view.rows.map(({ row, team }) => {
+          {view.rows.map(({ row, team, mascot }) => {
             const has = row.record.gp > 0;
             return (
               <tr key={row.teamId} data-team-slug={team?.slug} className="relative">
@@ -96,14 +96,18 @@ function JvTable({ view }: { view: JvTableView }) {
                       <span className="min-w-0 line-clamp-2 text-ellipsis text-body">{team.shortName}</span>
                     </Link>
                   ) : (
-                    // A JV slot team (York): no page here, so no link; a lettered tile in the monogram's place.
+                    // A JV slot team (York): no page here, so no link; its own tile, or a letter without one.
                     <span className="flex min-h-11 items-center gap-2 text-ink">
-                      <span
-                        aria-hidden="true"
-                        className="inline-flex size-6 shrink-0 items-center justify-center rounded-md bg-surface-3 text-micro font-semibold text-ink-2"
-                      >
-                        {row.name.charAt(0)}
-                      </span>
+                      {mascot ? (
+                        <TeamMonogram team={{ slug: mascot, name: row.name }} size={24} />
+                      ) : (
+                        <span
+                          aria-hidden="true"
+                          className="inline-flex size-6 shrink-0 items-center justify-center rounded-md bg-surface-3 text-micro font-semibold text-ink-2"
+                        >
+                          {row.name.charAt(0)}
+                        </span>
+                      )}
                       <span className="min-w-0 line-clamp-2 text-ellipsis text-body">{row.name}</span>
                     </span>
                   )}

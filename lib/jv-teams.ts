@@ -162,6 +162,10 @@ export interface JvSlotTeam {
   jvFor: TeamSlug;
   /** One sentence: the league's own words, for the pages. */
   source: string;
+  /** The stem of its tiles in public/mascots/ (`<mascot>-<px>.webp`), written by scripts/fetch-mascots.ts. */
+  mascot: string;
+  /** The logo the tiles are drawn from: the school's own site. */
+  mascotSource: string;
 }
 
 /**
@@ -185,6 +189,9 @@ export const JV_OUTSIDE_TEAMS: Readonly<Record<string, JvSlotTeam>> = {
     maxprepsTeamId: 'e9a91bc8-5999-4321-9e21-d6cdc8aafcb2',
     jvFor: 'santa-catalina',
     source: 'PCAL’s schedule pairs Santa Catalina (varsity only) with York (JV only), so York plays the JV games of Santa Catalina’s fixtures.',
+    mascot: 'york',
+    // York's athletics logo, from york.org (the owner's choice, 2026-11-03).
+    mascotSource: 'https://www.york.org/uploads/images/Athletics/orig_photo564035_5539708.webp?v=1742499788252',
   },
 };
 
