@@ -1,6 +1,6 @@
 {
   "builtBy": "research in two rounds, written by hand from what survived. 2026-10-03, field hockey: four source-family sweeps (commitment lists, NorCal clubs and media, school and local news for each league) and a player-by-player sweep of every junior, senior and ungraded varsity row on the 37 teams with roster rows; every candidate re-opened by a checker and, independently, by a refuter trying to break it; a completeness critic's follow-ups; a final audit that re-opened every source. 2026-10-04, every sport and more field hockey recall: sweeps of SportsRecruits' college pages for field hockey (290), women's lacrosse (643) and women's soccer (1,670) with their committed profiles, a SportsRecruits profile-address probe for all 716 varsity players, FH College Path's six class lists, Stick Together's whole archive, MAX Field Hockey, club commitment lists, lacrosse and soccer commitment databases, other-sport databases, every 2025-26 story of 18 student papers and 8 local papers, and the club-tied players one by one; every candidate again re-opened by a checker and an independent refuter, and the final file's sources re-opened once more. 2026-10-04, the six Eastern Athletic League teams' schools: a field hockey sweep, then the every-sport round over their 95 varsity rows with the same rule and source families (SportsRecruits' college pages for field hockey, women's lacrosse and women's soccer, FH College Path, Stick Together, MAX Field Hockey and the other field hockey lists, TopDrawerSoccer, SoccerWire, ClubLax and the NorCal lacrosse, soccer, volleyball, softball and basketball club lists, MileSplit, the local and student papers that cover these schools, the schools' sites, and two web searches for each junior and senior), with the same day's recruiting-profiles research supplying a SportsRecruits profile-address probe for all 95 in every sport and NCSA and FieldLevel probes for field hockey; it found no commitment, and SportsRecruits' athlete search was not run for those rows. 2026-10-06, the 53 Southern California teams' schools: the same every-sport round over their 842 varsity rows (field hockey and other-sport lists read whole, local and school news, a SportsRecruits profile-address probe in every sport for every row, and web searches for 840 of the 842 rows), every candidate re-opened by a checker and an independent refuter. 2026-10-12, at the owner's request after Shyla Paredes' softball commitment was missing, a round over all 1,673 varsity rows with each player's other sports read from her MaxPreps career page (508 rows play another: 183 lacrosse, 115 soccer, 106 softball, 68 basketball, 21 water polo and fewer in other sports), the rule revised to cite official accounts' social-media posts, and every source in the file re-opened. 2026-10-22, another round over every row: a SportsRecruits sweep (its commits feed for every college program, 87,015 records in every sport, matched to the rosters by name, and a profile-address probe in every sport for the 1,406 class-of-2027, class-of-2028 and ungraded rows), compiled field hockey and other-sport lists and club commitment pages re-read whole, news and school sites since August, and an extended web search for every class-of-2027, class-of-2028 and ungraded row; each candidate re-read by hand and, for the one resting on a list, by an independent refuter",
-  "capturedAt": "2026-10-22",
+  "capturedAt": "2026-11-03",
   "season": "26-27",
   "notes": [
     "Which players on the tracked varsity rosters (the 43 teams of the four leagues swept on 2026-10-03 and 2026-10-04, the six Eastern Athletic League teams swept on 2026-10-04, and the 53 Southern California teams swept on 2026-10-06) a public page says have committed to play a sport in college, joined to data/rosters.json on team slug + MaxPreps athleteId. Field hockey is the site's sport, but a commitment in any sport counts (since 2026-10-04): many players here also play lacrosse, soccer or basketball, and commit there. Only players on those rosters are named (varsity rows; rows the overlay marks JV, graduates, and players at schools with no MaxPreps rows are out of scope: six of the 43, Corning, one of the six EAL teams' schools, and eight of the 53 Southern California teams), each under the roster's own spelling.",
@@ -825,6 +825,36 @@
         }
       ],
       "checkedOn": "2026-10-22"
+    },
+    {
+      "slug": "dartmouth",
+      "name": "Dartmouth College",
+      "shortName": "Dartmouth",
+      "city": "Hanover",
+      "state": "NH",
+      "programs": [
+        {
+          "sport": "field-hockey",
+          "division": "ncaa-d1",
+          "conference": "Ivy League",
+          "url": "https://dartmouthsports.com/sports/field-hockey"
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://dartmouthsports.com/sports/field-hockey",
+          "what": "Dartmouth athletics field hockey page, titled 'Field Hockey - Dartmouth College Athletics' (HTTP 200 to curl); its embedded page data gives the location 'Hanover, N.H.'."
+        },
+        {
+          "url": "https://ivyleague.com/standings.aspx?path=fhockey",
+          "what": "Ivy League '2026 Field Hockey Standings' (read through WebFetch): Harvard 7-0, Princeton 6-1, Yale 4-3, Cornell 4-3, Columbia 3-4, Dartmouth 2-5, Brown 2-5, Penn 0-7, so Dartmouth's field hockey team plays in the Ivy League."
+        },
+        {
+          "url": "https://www.ncaa.com/schools/dartmouth",
+          "what": "NCAA.com's school page (HTTP 200 to curl): 'Division I - Hanover, NH', 'Dartmouth College', 'Conference The Ivy League', nickname Big Green."
+        }
+      ],
+      "checkedOn": "2026-11-03"
     }
   ],
   "commitments": [
@@ -1992,6 +2022,27 @@
         }
       ],
       "basis": "Her own SportsRecruits lacrosse profile (class of 2028, defense and midfield, The Tenacity Project, San Francisco, CA) says committed to University of California - Davis, and its bio says she plays lacrosse and field hockey for St. Ignatius College Prep: the player, the college and the school, so rule (a), high. Class 2028 agrees with the roster's grade 11. SportsRecruits' UC Davis women's lacrosse page lists her among its committed athletes (class of 2028), next to Molly Waltz and Gianna Rinaldi. The Tenacity Project's SportsRecruits commitments page lists the same line with her school, but it draws its list with a script, so it is not cited. Earlier probes read only her field hockey profile (kaye_zilinskas3), which shows no commitment; found on 2026-10-22 by both a web-search sweep and the SportsRecruits sweep (its commits feed and profile-address probe), each independently. No date."
+    },
+    {
+      "teamSlug": "lick-wilmerding",
+      "athleteId": "5930e3d6-9b1b-4c28-a98e-c232c3be8beb",
+      "fullName": "Frankie Lemieux",
+      "college": "dartmouth",
+      "sport": "field-hockey",
+      "status": "committed",
+      "asOf": null,
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://sfyouthfieldhockey.com/alumni-and-committed-players/",
+          "kind": "club-site",
+          "quote": "Alumni and committed players Player Name Grad Year College … Olivia Van De Braak 2028 University of Iowa Frankie Lemieux 2028 Dartmouth University",
+          "statedSchool": null,
+          "statedClassYear": 2028,
+          "sourceDate": null
+        }
+      ],
+      "basis": "One line on the SF Hawks' (San Francisco Youth Field Hockey Club's) alumni and committed players table: 'Frankie Lemieux 2028 Dartmouth University' (the table's spelling; the college is Dartmouth College). The table names no school, so the match rests on the class year (2028, the roster's junior grade) plus a San Francisco club she is already tied to in data/clubs.json (high: her own SportsRecruits profile names Lick-Wilmerding and the SF Hawks; MaxPreps titles her 'Francine \"Frankie\" Lemieux'; the NFHCA watchlist lists her under San Francisco Hawks; the club's current-players page lists Frankie Lemieux, class of 2028). Medium: one compiled club line. The page gives no date; WordPress reports it modified 2026-11-02, so the line is likely new since the 2026-10-22 round, whose club sweep found no line for her (the same edit added Olivia Van De Braak's Iowa line, which the table lacked before). Her own SportsRecruits profile (re-read 2026-11-03) shows no commitment, and MAX Field Hockey, FH College Path and Play College Field Hockey do not list her: absences, not contradictions. No other Frankie or Francine Lemieux is on any list read. Found by the 2026-11-03 list sweep and re-read by hand."
     }
   ]
 }
