@@ -1,7 +1,8 @@
 import Link from 'next/link';
 
-import { dateTimeAttr, longDate, monthDay, parseLocal, timeOfDayPT } from '../../lib/format';
+import { dateTimeAttr, longDate, mapsSearchHref, monthDay, parseLocal, timeOfDayPT } from '../../lib/format';
 import { findDivision, findLeague, standingsLabel } from '../../lib/leagues';
+import { addressLine, gameAddress } from '../../lib/venue';
 import ExternalLink from '../ui/ExternalLink';
 import SectionHeader from '../ui/SectionHeader';
 import { maxPrepsLabel } from '../ui/maxpreps-label';
@@ -28,11 +29,14 @@ import type { GameModel } from './game-view';
  *
  * 1. **`contest.location` is a NOTE field, not a venue field.** Live values include "Senior Night"
  *    and a coach's scoring note, so it is printed as a note and never labelled "Venue" (SPEC §4).
- * 2. **Directions appear only when a street address exists.** The per-game address is a lazy fetch
- *    that the scheduled sweep does not make, so today no game has one and no map chip is rendered.
- *    A chip that cannot resolve a location is a dead affordance.
+ * 2. **The address is lib/venue.ts `gameAddress`'s, and Directions appear only when there is one.**
+ *    MaxPreps gives a game no address in the sweep, so it is almost always a school's campus from
+ *    data/schools.json: the named venue's school, the league final's fixed site, or the host. A neutral
+ *    site, a venue that is not a registry school, and a disputed host have none, and print no address
+ *    line and no Directions chip: a chip that cannot resolve a location is a dead affordance.
  * 3. **The venue we do know is the host school, not the field.** When the `.ics` feeds gave a real
- *    venue name it is shown; otherwise the line says who hosted, which is all MaxPreps published.
+ *    venue name it is shown; otherwise the line says who hosted, then that school's address. A school
+ *    can play off campus, so the address sits under the school's name and is never labelled the field.
  * 4. **Where the two sources disagree about the host, the page says so.** Home and away are always
  *    MaxPreps' (SPEC §5.5.4 — it is the only source that states them), but where a league's official
  *    schedule names the other school the host line was the one claim on this page stated as settled
@@ -48,18 +52,16 @@ export interface GameDetailsProps {
   className?: string;
 }
 
-function mapsHref(address: NonNullable<GameModel['game']['venue']['address']>): string {
-  const query = `${address.street}, ${address.city}, ${address.region} ${address.postalCode}`;
-  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
-}
-
 export function GameDetails({ model, className }: GameDetailsProps) {
   const { game, home, countsAs } = model;
   const officialLeague = game.official
     ? findLeague(findDivision(game.official.division)?.leagueId ?? '')?.shortName
     : undefined;
-  const address = game.venue.address;
+  const where = gameAddress(game);
+  const address = where?.address ?? null;
   const host = game.site === 'neutral' ? null : home;
+  // A league final at its fixed site that is not the listed home team's school names the site instead.
+  const site = where?.source === 'final-site' && where.school?.slug !== home.team?.slug ? where.school : null;
   const movedFrom =
     game.official && game.official.scheduledDate !== game.dateKey
       ? game.official.scheduledDate
@@ -69,7 +71,7 @@ export function GameDetails({ model, className }: GameDetailsProps) {
   // link appears twice on the page.
   const elsewhere = new Set(model.resultLinks.map((link) => link.href));
   const links: Array<{ href: string; label: string }> = [];
-  if (address) links.push({ href: mapsHref(address), label: 'Directions' });
+  if (address) links.push({ href: mapsSearchHref(address), label: 'Directions' });
   if (game.urls.nfhsStream) links.push({ href: game.urls.nfhsStream, label: 'NFHS stream' });
   if (game.urls.goFan) links.push({ href: game.urls.goFan, label: 'Tickets' });
   if (game.urls.maxpreps) links.push({ href: game.urls.maxpreps, label: maxPrepsLabel(game.status) });
@@ -123,23 +125,22 @@ export function GameDetails({ model, className }: GameDetailsProps) {
           <dd className="mt-1 mb-0 ml-0 text-body text-ink">
             {game.venue.name ? (
               <span className="block">{game.venue.name}</span>
+            ) : site ? (
+              <span className="block">At {site.name}, the league final&rsquo;s site</span>
             ) : host ? (
               <span className="block">
                 Hosted by {host.name}
-                {host.team ? `, ${host.team.city}, CA` : ''}
+                {/* The address line below already says the city. */}
+                {host.team && !address ? `, ${host.team.city}, CA` : ''}
               </span>
             ) : (
               <span className="block">Neutral site — the venue is not published.</span>
             )}
             {address ? (
               <span className="mt-1 block text-meta text-ink-2">
-                {address.street}, {address.city}, {address.region} {address.postalCode}
+                {addressLine(address)}
               </span>
-            ) : (
-              <span className="mt-1 block text-meta text-ink-3">
-                No street address published for this contest.
-              </span>
-            )}
+            ) : null}
             {game.provenance.hostConflict ? (
               <span className="mt-1 block text-meta text-ink-3">
                 Hosts disagree — {game.provenance.hostConflict}

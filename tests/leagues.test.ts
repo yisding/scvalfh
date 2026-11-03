@@ -18,6 +18,7 @@ import {
   seasonWindowBounds, sectionOf, sectionsInRegion, standingsLabel, statusesOf, tiebreakChainFor,
   type LeagueConfig, type SectionConfig,
 } from '../lib/leagues';
+import { schoolAddress } from '../lib/schools';
 import { getTeamById } from '../lib/teams';
 import { CCS_BRACKET_URL } from '../lib/season';
 import type { PlayoffStatus, RegionId, TiebreakStage } from '../lib/types';
@@ -234,9 +235,12 @@ describe('leagues: ids and helpers (SPEC §2.3)', () => {
     if (mcal.postseason.kind !== 'league-tournament') throw new Error('MCAL runs a tournament');
     expect(mcal.postseason.finalSite).toEqual({
       slug: 'tamalpais', label: 'Tamalpais', venue: 'Tamalpais High School',
-      address: { street: '700 Miller Ave', city: 'Mill Valley', region: 'CA', postalCode: '94941' },
       admission: 'Adults $10; students, children and seniors $5; pre-sale on GoFan. No booster passes or student body cards; lifetime MCAL, NCS and CIF passes are honored.',
       admissionSource: 'MCAL 2026 Field Hockey Play-off sheet',
+    });
+    // The address is the site school's own record (data/schools.json), as the HomeCampus calendars give it.
+    expect(schoolAddress(mcal.postseason.finalSite.slug)).toEqual({
+      street: '700 Miller Ave', city: 'Mill Valley', region: 'CA', postalCode: '94941',
     });
     expect(mcal.postseason.resultNotes['7bb048ba-9e33-4ad1-a743-2348c6637602']).toContain('Marin Independent Journal');
     expect(mcal.postseason.citations.pennant).toMatch(/^MCAL General Rules, Pennants 1–3/);

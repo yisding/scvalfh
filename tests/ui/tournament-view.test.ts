@@ -16,6 +16,7 @@ import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import { buildTournamentView, type TournamentView } from '../../components/playoffs/playoff-view';
 import { getDivision, getLeague } from '../../lib/leagues';
 import { buildLeagueTournament, SHOOTOUT_NOTE } from '../../lib/postseason';
+import { schoolAddress } from '../../lib/schools';
 import { computeStandings, outcomesFor, playoffOutcomeLabel } from '../../lib/standings';
 import { getTeamBySlug } from '../../lib/teams';
 import type { Game, LeagueTournamentProjection, PostseasonTag, SeasonPhase, Standing, Team } from '../../lib/types';
@@ -87,8 +88,9 @@ function view(games: readonly Game[], phase: SeasonPhase = 'regular'): { v: Tour
     teamOf: (slug) => getTeamBySlug(slug),
     lastPlace: ps.lastSpot.place,
     ladderLine: getDivision(DIV).ladderLine,
-    // As the page passes it (app/playoffs/[league]/page.tsx): the slug makes the final "at" when Tamalpais is in it.
-    finalSite: ps.finalSite,
+    // As the page passes it (components/playoffs/tournament-league.ts): the slug makes the final "at" when Tamalpais
+    // is in it, and the address is the site school's (data/schools.json).
+    finalSite: { ...ps.finalSite, address: schoolAddress(ps.finalSite.slug) },
   });
   return { v, p, rows };
 }

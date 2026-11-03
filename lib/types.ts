@@ -245,12 +245,21 @@ export interface GameSide {
   result: Outcome | null;
 }
 
+/** A US street address, as the Directions link and the JSON-LD PostalAddress need it. */
+export interface StreetAddress {
+  street: string;
+  city: string;
+  /** A state code ('CA'), not a RegionId. */
+  region: string;
+  postalCode: string;
+}
+
 export interface GameVenue {
   /** `contest.location` — a NOTE field, not a venue field ("Senior Night", "Too be rescheduled"). */
   text: string | null;
   /** Only from a game page's ld+json Place. Fetched lazily, never in the sweep. */
   name?: string;
-  address?: { street: string; city: string; region: string; postalCode: string };
+  address?: StreetAddress;
 }
 
 /**
