@@ -422,8 +422,12 @@ sport and either names the school or shows the class year the roster shows plus 
 agree with the row's grade (checked at load). On 2026-10-13 every row's MaxPreps career page was
 read for MaxPreps' own claimed flag (`isClaimed`, a page the player or a parent has claimed): the 260
 claimed pages, on 73 teams, are linked as "MaxPreps profile" (`platform: "maxpreps"`, always the row's
-own `careerUrl`, checked at load), 159 of them for players with no other profile, so the file holds
-779 profiles for 569 players. The roster shows them as a line of links under the
+own `careerUrl`, checked at load), 159 of them for players with no other profile, so the file held
+779 profiles for 569 players. On 2026-11-03 another SportsRecruits address probe in every sport, over
+all 1,673 rows, linked 30 more pages for 30 players (26 lacrosse, 3 field hockey, 1 soccer; 14 NorCal,
+16 SoCal), each re-read by an independent refuter, and re-linked two lacrosse pages whose addresses had
+moved: the file now holds 809 profiles for 583 players. The claimed-MaxPreps read was not repeated
+(MaxPreps answered 403). The roster shows them as a line of links under the
 player's facts. Recall is partial: see `docs/DATA-SOURCES.md` §1.1j, which also has the column map,
 the per-school sources and the overlay's rules.
 
@@ -763,8 +767,15 @@ program has a commitment, a college has one program per sport, one commitment pe
 `fullName`; every stated class year agrees with the row's grade, or, for a row with no grade, the
 sources agree with each other on a class a high school roster of the season can hold.
 
-Coverage on 2026-10-22, counted from the file: **33 commitments, 33 players at 19 of the 102 schools, to
-25 colleges (28 programs).** The 2026-10-22 round (see below) added two: Kendall Gann, Temecula
+Coverage on 2026-11-03, counted from the file: **35 commitments, 35 players at 21 of the 102 schools, to
+27 colleges (30 programs).** The 2026-11-03 round (see below) added two, both in field hockey: Frankie
+Lemieux, Lick-Wilmerding, class of 2028, to Dartmouth (NCAA Division I, Ivy League; medium: one line on
+the SF Hawks' committed-players table, matched by the class year and the San Francisco club she is
+already tied to), and Clara Froemming, Leigh, class of 2027, to Wellesley (NCAA Division III, NEWMAC;
+medium), published on the owner's confirmation from an Instagram post: the only page the file can
+cite is Play College Field Hockey's sheet line, which names no school or place, so she is the one
+entry the rule alone would not admit. It also raised Rylie Storm (Canyon Hills, Harvard) to high: her
+own SportsRecruits profile now shows the commitment. The 2026-10-22 round (see below) added two: Kendall Gann, Temecula
 Valley, class of 2027, to Barton College (NCAA Division II, South Atlantic Conference) in field hockey
 (medium: MAX Field Hockey's player page, now served as HTML, names her school and the college, but MAX
 takes the commitments its users report and nothing else confirms it), and Kaye Zilinskas, St. Ignatius,
@@ -857,6 +868,14 @@ of the 1,375 class-of-2027, class-of-2028 and ungraded rows not already in the f
 Gann (re-read by hand and by an independent refuter, who kept it as medium) and Kaye Zilinskas (found
 separately by a web search and by the SportsRecruits sweep, and re-read by hand), and no signing or
 decommitment.
+The round of 2026-11-03 went over every row again: SportsRecruits' commits feed read whole (87,494
+records; the feed is ordered by sport, then class, so every page was read) and a profile-address probe
+in every sport for all 1,673 rows; the field hockey and other-sport lists and the clubs' commitment
+pages, read whole and matched against every row; news since mid-October; and web searches school by
+school for all 102 schools, with name searches where they surfaced recruiting news (no extended name
+search for every row, as 2026-10-22 ran). It found Frankie Lemieux and Rylie Storm's profile change; Clara
+Froemming was added on the owner's word; Sophie Sant (Torrey Pines, Bowdoin) stays a near miss on the
+same sheet; no signing or decommitment (the class of 2027's fall signing day is Nov 11).
 
 **When a roster refetch breaks it.** `lib/commits.ts` throws at import, as `lib/clubs.ts` does, if
 `pnpm fetch-rosters` drops or respells a committed player's row, if the overlay marks it JV, or if a
@@ -1650,8 +1669,8 @@ Two `/leaders` boards per region weigh scoring by the defenses it came against
   players; the 21 rows MaxPreps added to Marin Academy and Westmont on 2026-10-07, one tie), and nothing
   refreshes them. See `docs/DATA-SOURCES.md` §1.1j2.
 - **Commitment recall is partial, and the list does not update itself.** A commitment is listed
-  only when a public page meets the linking rule, and social media counts only from an official account, so on 2026-10-22 33 of
-  the 1,673 varsity rows have a commitment line (in any sport) and 83 of the 102 schools have none; a player with no
+  only when a public page meets the linking rule, and social media counts only from an official account, so on 2026-11-03 35 of
+  the 1,673 varsity rows have a commitment line (in any sport) and 81 of the 102 schools have none; a player with no
   line may still have committed. It was researched on 2026-10-03 and 2026-10-04 (the six EAL teams'
   schools on 2026-10-04, for field hockey and then every sport, with none found, though without
   SportsRecruits' athlete search or web searches for freshmen and sophomores): a later signing,
@@ -1661,7 +1680,9 @@ Two `/leaders` boards per region weigh scoring by the defenses it came against
   commitments were already found) but without SportsRecruits' athlete search. The latest round, on
   2026-10-22, gave each of the 1,375 class-of-2027, class-of-2028 and ungraded rows not already in the
   file an extended web search, and none to the 267 rows the roster grades as sophomores or freshmen
-  (Southern California's had theirs on 2026-10-06). See `docs/DATA-SOURCES.md` §1.1j3.
+  (Southern California's had theirs on 2026-10-06). The round of 2026-11-03 re-read the SportsRecruits
+  feed and lists and searched school by school, without a name search for every row. See
+  `docs/DATA-SOURCES.md` §1.1j3.
 - JV tables are unofficial and computed: no league publishes JV standings in season, a JV league game
   is identified by its varsity counterpart, and a table is shown only once 60% of its division's played
   JV league games have a score (on 2026-10-05: El Camino, MCAL and the EAL). There are no JV leaders or

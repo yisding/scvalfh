@@ -1,6 +1,6 @@
 {
-  "builtBy": "research on 2026-10-02 (SCVAL) and 2026-10-03 (BVAL 12 teams, PCAL 7, MCAL 9) and 2026-10-04 (EAL 6 teams, recruiting pages only) and 2026-10-06 (the 53 Southern California teams, recruiting pages only): official school athletics sites, school papers, MaxPreps team, career and JV pages; transformed by a script, reviewed by hand, and spot-checked against the cited source URLs and 2026-10-12 (recruiting pages only: a SportsRecruits profile-address probe in every sport) and 2026-10-13 (claimed MaxPreps career pages: every roster row's career page read for its isClaimed flag)",
-  "capturedAt": "2026-10-13",
+  "builtBy": "research on 2026-10-02 (SCVAL) and 2026-10-03 (BVAL 12 teams, PCAL 7, MCAL 9) and 2026-10-04 (EAL 6 teams, recruiting pages only) and 2026-10-06 (the 53 Southern California teams, recruiting pages only): official school athletics sites, school papers, MaxPreps team, career and JV pages; transformed by a script, reviewed by hand, and spot-checked against the cited source URLs and 2026-10-12 (recruiting pages only: a SportsRecruits profile-address probe in every sport) and 2026-10-13 (claimed MaxPreps career pages: every roster row's career page read for its isClaimed flag) and 2026-11-03 (recruiting pages only: a SportsRecruits profile-address probe in every sport, re-read by an independent refuter)",
+  "capturedAt": "2026-11-03",
   "notes": [
     "An overlay on data/rosters.json, joined on team slug + MaxPreps athleteId. It never replaces a MaxPreps value: a field is filled only where MaxPreps has null, and where another source disagrees with MaxPreps the disagreement is recorded under conflicts and MaxPreps stays. The same rules apply to every league; a team with no public source beyond MaxPreps has empty lists.",
     "Every filled value names its source URL, its kind (school-site, school-pdf, news, maxpreps-jv, maxpreps-career, maxpreps-team; maxpreps-career also covers MaxPreps' earlier-season roster pages, such as /field-hockey/25-26/roster/, which give a dated class year the same way, and maxpreps-jv is a JV roster page of either season) and a confidence: high = an official 2026-27 school roster or MaxPreps' own data for the same career; medium = a school-site profile field that is not season-dated, a school-paper statement, or a grade derived from a dated MaxPreps class year plus the years elapsed (derived: true); low = a profile field not tied to the season. For BVAL, PCAL and MCAL, a position that MaxPreps lists only for a PRIOR season (2025-26 roster, same career id) is not filled: positions change between seasons.",
@@ -13,7 +13,8 @@
     "2026-10-12: profiles in any sport. Until then only field hockey profiles were linked; since 2026-10-12 a profile in another sport is linked too and names its sport (a field hockey profile names none), at most one per platform in each sport. A SportsRecruits profile-address probe ran in every sport (the first_last slug and its numbered variants) for all 1,673 varsity rows (1,355 at first, the other 318 later the same day, after the environment's two-hour limit stopped the first run). A page was kept when its title names the player, its class year agrees with the roster (2027-2030 for a row with no grade), and it names the school's own team or gives a hometown in the school's own area (San Diego County, Greater Los Angeles, the Bay Area and Central Coast, or the Sacramento Valley and north state). A player whose matching pages disagree on the hometown kept only the pages in the school's own city, and a known namesake (the other class-of-2027 Phoebe Miller, in San Francisco) was left out. Soccer, track and volleyball pages were kept only where the club named is a girls' club (one volleyball page, from Santa Maria for a La Verne school, was left out). 119 pages for 117 players were kept, each re-read (one, Grace Martinez's softball page, was unlinked later that day when Thousand Oaks' roster gave her another class; 118 for 116 remain): 91 lacrosse, 16 softball, 6 field hockey, 5 soccer, 1 track and field. NCSA, Hudl and FieldLevel were not probed in other sports: their addresses cannot be guessed.",
     "2026-10-12: grades from MaxPreps' own pages for the 413 varsity rows MaxPreps' 2026-27 roster leaves ungraded and nothing had filled. Each row's MaxPreps career page (graduatingClass, and the grade of every team it lists for a dated season, in any sport) and the team's 2025-26 and 2024-25 MaxPreps field hockey rosters (matched on careerId, or on the name where the page has one row of it) were read; the grade is that season's plus the seasons since. 137 rows got a grade where every such page agreed (kind maxpreps-career, derived, medium; each note ends 'Added 2026-10-12.'). Two rows whose pages disagree are left blank with both recorded under conflicts (Izabel Gaytan, Ellie Kay); three whose 2025-26 or 2024-25 roster would make them 13th-graders are left blank (Emma Steingraber, Brooke Flesuras, Sarah Anton); seven rows that already carried grade conflicts were left as they were; and Michelle MacOubray's grade stays blank because her career page and her SportsRecruits page disagree.",
     "2026-10-12, second pass: the rows still ungraded after the MaxPreps pass (266) were looked up on their schools' own athletics sites (2026-27 rosters first, then 2025-26 ones carried forward), in school papers and in local news, by the rule above. 113 got a grade: 95 from school sites (Glendora's, Granite Hills' and Southwest's player pages, Helix's, Bonita's, Cathedral Catholic's and Great Oak's rosters, Thousand Oaks' 2025-26 roster, Clairemont's and Saratoga's sites, Huntington Beach's program site) and 18 from school papers and news (the Talon, the Epitaph, the Pitch, the Redwood Bark, the San Diego Union-Tribune, Times of San Diego). Medium, not high, where the page is not the school's own season roster: Southwest's Home Campus site, which the school homepage does not link; Cathedral Catholic's site, which keeps one grade per player rather than per season; three Great Oak players its site lists on JV while MaxPreps has them on varsity; and every paper. A story that is not about field hockey was used only for an exact name at the same school, and says so. Left blank and recorded under conflicts: Paula Mata (Glendora; her profile's grade disagrees with its own team history), Teagan Dickison Elias (Salinas; two profiles of her disagree), and Emma Steingraber and Brooke Flesuras (Granite Hills' site says grade 12, MaxPreps' 2025-26 roster had them as seniors). Not used: a story read only from a search engine's copy (Elsie Edelson), and grades for three duplicate MaxPreps rows whose twin MaxPreps already grades. Grace Martinez's SportsRecruits softball page (class of 2029) was unlinked when Thousand Oaks' roster made her grade 11. 164 varsity rows still have no grade from any source.",
-    "2026-10-13: claimed MaxPreps pages. Every row's MaxPreps career page (1,702, the careerUrl in data/rosters.json) was read for its isClaimed flag, which marks a page the player or a parent has claimed on MaxPreps (the page then shows MaxPreps' Claimed badge). The 260 claimed pages, on 73 teams, are linked as profiles with platform maxpreps: the row's own careerUrl, no sport (one page covers every sport), classOf the page's graduatingClass where it gives one (221). They need no name match, being the page the row comes from; lib/rosters.ts refuses one whose URL is not its row's careerUrl. One page (Marin Catholic's Alexandra Schmidt) answered 403 and is not linked. An unclaimed career page is not linked: MaxPreps keeps one for every rostered player."
+    "2026-10-13: claimed MaxPreps pages. Every row's MaxPreps career page (1,702, the careerUrl in data/rosters.json) was read for its isClaimed flag, which marks a page the player or a parent has claimed on MaxPreps (the page then shows MaxPreps' Claimed badge). The 260 claimed pages, on 73 teams, are linked as profiles with platform maxpreps: the row's own careerUrl, no sport (one page covers every sport), classOf the page's graduatingClass where it gives one (221). They need no name match, being the page the row comes from; lib/rosters.ts refuses one whose URL is not its row's careerUrl. One page (Marin Catholic's Alexandra Schmidt) answered 403 and is not linked. An unclaimed career page is not linked: MaxPreps keeps one for every rostered player.",
+    "2026-11-03: another SportsRecruits profile-address probe in every sport over all 1,673 varsity rows (23,270 addresses: the first_last slug, hyphen and multi-word variants, each with no suffix and 1 to 12; 670 live, 649 pages read after dropping men's lacrosse). A page was kept by the 2026-10-12 rule (title names the player, class year agrees, and it names the school's own team or gives a hometown in the school's own area), at most one per platform in each sport, and each kept page was re-read by an independent refuter, who kept all of them. 30 pages for 30 players were linked (14 NorCal, 16 SoCal): 26 lacrosse, 3 field hockey and 1 soccer. Most were live before 2026-10-12 and that day's probe did not link them (among them the own profiles of six committed players: Storey Lewis' lacrosse page and those of Gigi Colant, Catherine Cecchini, Kaye Zilinskas, Violet Potts and Emerson Davis); Charlotte Painter's field hockey page (Fremont) was created 2026-10-25. Two lacrosse pages linked on 2026-10-12 had moved (abigail_wisbach and reagan_roach now answer Page Not Found) and were re-linked at their new addresses. Bare pages (a class year and no school or place: Anaai Trujillo, Elliot Gould, a second Emerson Davis page) and namesakes in other states were not linked. Every SportsRecruits page already linked was re-read: all 228 answer, and none shows a commitment the file lacks. NCSA, Hudl and FieldLevel were not probed, and the claimed-MaxPreps read of 2026-10-13 was not repeated: MaxPreps answered the career-page re-read with HTTP 403 after a few dozen pages, so it was stopped."
   ],
   "season": "26-27",
   "teams": [
@@ -56,6 +57,13 @@
               "note": null,
               "platform": "sportsrecruits",
               "url": "https://nfhca.sportsrecruits.com/athlete/storey_lewis3"
+            },
+            {
+              "classOf": 2027,
+              "note": "SportsRecruits lacrosse profile: class of 2027, San Francisco, CA. It names the school's own team (St. Ignatius College Preparatory Girls' Lacrosse), so it is linked on that. Found by the 2026-11-03 address probe and re-read.",
+              "platform": "sportsrecruits",
+              "sport": "lacrosse",
+              "url": "https://iwlca.sportsrecruits.com/athlete/storey_lewis2"
             },
             {
               "classOf": 2027,
@@ -124,6 +132,13 @@
               "note": null,
               "platform": "sportsrecruits",
               "url": "https://nfhca.sportsrecruits.com/athlete/gabriella_colant3"
+            },
+            {
+              "classOf": 2027,
+              "note": "SportsRecruits soccer profile: class of 2027, San Francisco, CA; listed as Gabriella Colant, and its bio says 'My name is Gigi Colant'. It names the school's own team (St. Ignatius College Preparatory Girls Soccer), so it is linked on that. It says 'Committed to St. Lawrence University' (data/commits.json). Found by the 2026-11-03 address probe and re-read.",
+              "platform": "sportsrecruits",
+              "sport": "soccer",
+              "url": "https://my.sportsrecruits.com/athlete/gabriella_colant4"
             },
             {
               "classOf": 2027,
@@ -626,6 +641,13 @@
               "note": null,
               "platform": "sportsrecruits",
               "url": "https://nfhca.sportsrecruits.com/athlete/catherine_cecchini2"
+            },
+            {
+              "classOf": 2027,
+              "note": "SportsRecruits lacrosse profile: class of 2027. It names the school's own team (St. Ignatius College Preparatory Girls' Lacrosse), so it is linked on that. Found by the 2026-11-03 address probe and re-read.",
+              "platform": "sportsrecruits",
+              "sport": "lacrosse",
+              "url": "https://iwlca.sportsrecruits.com/athlete/catherine_cecchini"
             }
           ],
           "sourceName": null
@@ -654,6 +676,13 @@
               "note": null,
               "platform": "sportsrecruits",
               "url": "https://nfhca.sportsrecruits.com/athlete/kaye_zilinskas3"
+            },
+            {
+              "classOf": 2028,
+              "note": "SportsRecruits lacrosse profile: class of 2028, San Francisco, CA, The Tenacity Project. Its bio names the school (St. Ignatius College Prep), so it is linked on that. It says 'Committed to University of California - Davis' (data/commits.json). A sparser second page (kaye_zilinskas2) is not linked. Found by the 2026-11-03 address probe and re-read.",
+              "platform": "sportsrecruits",
+              "sport": "lacrosse",
+              "url": "https://iwlca.sportsrecruits.com/athlete/kaye_zilinskas"
             }
           ],
           "sourceName": null
@@ -772,6 +801,13 @@
               "note": null,
               "platform": "sportsrecruits",
               "url": "https://nfhca.sportsrecruits.com/athlete/stella_strain"
+            },
+            {
+              "classOf": 2027,
+              "note": "SportsRecruits lacrosse profile: class of 2027. It names the school's own team (St. Ignatius College Preparatory Girls' Lacrosse), so it is linked on that. Found by the 2026-11-03 address probe and re-read.",
+              "platform": "sportsrecruits",
+              "sport": "lacrosse",
+              "url": "https://iwlca.sportsrecruits.com/athlete/stella_strain2"
             },
             {
               "classOf": 2027,
@@ -1780,6 +1816,12 @@
           "note": null,
           "positions": null,
           "profiles": [
+            {
+              "classOf": 2028,
+              "note": "SportsRecruits field hockey profile: class of 2028, goalie, Sunnyvale, CA; created 2026-10-25. Its summary line names no school, so it is linked on the class year plus a hometown in the school's own area. Found by the 2026-11-03 address probe and re-read.",
+              "platform": "sportsrecruits",
+              "url": "https://nfhca.sportsrecruits.com/athlete/charlotte_painter"
+            },
             {
               "classOf": 2028,
               "note": "The player's own MaxPreps career page, which MaxPreps marks claimed (isClaimed) by the player or a parent; read 2026-10-13.",
@@ -7451,6 +7493,13 @@
           "profiles": [
             {
               "classOf": 2028,
+              "note": "SportsRecruits lacrosse profile: class of 2028, Morgan Hill, CA; titled 'Mariposa Bella Serrano'; its bio says 'I am a 2008 goalie', read as a typo for 2028 since the page's class and MaxPreps both say 2028. Its bio names the school (Live Oak High School in Morgan Hill), so it is linked on that. Found by the 2026-11-03 address probe and re-read.",
+              "platform": "sportsrecruits",
+              "sport": "lacrosse",
+              "url": "https://iwlca.sportsrecruits.com/athlete/mariposa_serrano"
+            },
+            {
+              "classOf": 2028,
               "note": "The player's own MaxPreps career page, which MaxPreps marks claimed (isClaimed) by the player or a parent; read 2026-10-13.",
               "platform": "maxpreps",
               "url": "https://www.maxpreps.com/ca/morgan-hill/live-oak-acorns/athletes/mariposa-serrano/?careerid=q54i8alf0ve11"
@@ -9327,7 +9376,15 @@
           "levelSource": null,
           "note": "Grade left blank: the sources disagree (11 against 10); see the conflicts.",
           "positions": null,
-          "profiles": [],
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "SportsRecruits lacrosse profile: class of 2028, Greenbrae, CA. Its summary line names no school, so it is linked on the class year plus a hometown in the school's own area. The row's grade is blank because its sources disagree (see conflicts); this page agrees with the Redwood Bark's junior. Found by the 2026-11-03 address probe and re-read.",
+              "platform": "sportsrecruits",
+              "sport": "lacrosse",
+              "url": "https://iwlca.sportsrecruits.com/athlete/eloise_tonderys"
+            }
+          ],
           "sourceName": null
         },
         {
@@ -9588,6 +9645,91 @@
       ],
       "players": [
         {
+          "athleteId": "53396be7-949c-4d4e-a3bb-40e7db3067e6",
+          "conflicts": [],
+          "fullName": "Ella Ames",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2029,
+              "note": "SportsRecruits lacrosse profile: class of 2029, Mill Valley, CA. Its summary line names no school, so it is linked on the class year plus a hometown in the school's own area. The other ella_ames page is class of 2019, in Maryland. Found by the 2026-11-03 address probe and re-read.",
+              "platform": "sportsrecruits",
+              "sport": "lacrosse",
+              "url": "https://iwlca.sportsrecruits.com/athlete/ella_ames2"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "cfbaf4db-28d0-400a-ad46-fb9c6018f46e",
+          "conflicts": [],
+          "fullName": "Sadie Baker",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "SportsRecruits field hockey profile: class of 2028, Mill Valley, CA. Its summary line names no school, so it is linked on the class year plus a hometown in the school's own area. The other rostered Sadie Baker (Lick-Wilmerding) is class of 2027. Found by the 2026-11-03 address probe and re-read.",
+              "platform": "sportsrecruits",
+              "url": "https://nfhca.sportsrecruits.com/athlete/sadie_baker12"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "f6c5e4c7-e181-43e6-b95d-5da916e83668",
+          "conflicts": [],
+          "fullName": "Spencer White",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "SportsRecruits field hockey profile: class of 2028, Mill Valley, CA, San Francisco Youth Field Hockey Club. Its summary line names no school, so it is linked on the class year plus a hometown in the school's own area. Found by the 2026-10-12 address probe and re-read.",
+              "platform": "sportsrecruits",
+              "url": "https://nfhca.sportsrecruits.com/athlete/spencer_white5"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "ff39f74c-7195-4f89-a47c-3fc021b439aa",
+          "conflicts": [],
+          "fullName": "Tashi Perkins",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2029,
+              "note": "SportsRecruits field hockey profile: class of 2029, Strawberry, CA, San Francisco Youth Field Hockey Club. Its bio names the school (Tamalpais High School), so it is linked on that. Found by the 2026-11-03 address probe and re-read.",
+              "platform": "sportsrecruits",
+              "url": "https://nfhca.sportsrecruits.com/athlete/tashi_perkins2"
+            }
+          ],
+          "sourceName": null
+        },
+        {
           "athleteId": "2a35051c-7428-474f-b0e7-162088b960d4",
           "conflicts": [],
           "fullName": "Josie Stout",
@@ -9621,30 +9763,9 @@
           "sourceName": null
         },
         {
-          "athleteId": "e229f106-be2b-40bc-a5d5-b751bf6187b5",
+          "athleteId": "49573645-0661-4df7-be54-e0c0727e02d7",
           "conflicts": [],
-          "fullName": "Savannah Houck",
-          "grade": null,
-          "height": null,
-          "jersey": null,
-          "level": null,
-          "levelSource": null,
-          "note": null,
-          "positions": null,
-          "profiles": [
-            {
-              "classOf": 2027,
-              "note": "NCSA profile names Tamalpais High School, Mill Valley, CA; class of 2027, goalkeeper.",
-              "platform": "ncsa",
-              "url": "https://www.ncsasports.org/field-hockey-recruiting/california/mill-valley/tamalpais-high-school/savannah-houck3"
-            }
-          ],
-          "sourceName": null
-        },
-        {
-          "athleteId": "7844f156-ab2e-4d55-a45d-34a1ed6de3b5",
-          "conflicts": [],
-          "fullName": "Sierra Duncan",
+          "fullName": "Ava Lanigan",
           "grade": null,
           "height": null,
           "jersey": null,
@@ -9655,30 +9776,9 @@
           "profiles": [
             {
               "classOf": 2028,
-              "note": "The page names no school; matched on name, field hockey, goalie, class of 2028 and Mill Valley, CA.",
-              "platform": "sportsrecruits",
-              "url": "https://nfhca.sportsrecruits.com/athlete/sierra_duncan"
-            }
-          ],
-          "sourceName": null
-        },
-        {
-          "athleteId": "f6c5e4c7-e181-43e6-b95d-5da916e83668",
-          "conflicts": [],
-          "fullName": "Spencer White",
-          "grade": null,
-          "height": null,
-          "jersey": null,
-          "level": null,
-          "levelSource": null,
-          "note": null,
-          "positions": null,
-          "profiles": [
-            {
-              "classOf": 2028,
-              "note": "SportsRecruits field hockey profile: class of 2028, Mill Valley, CA, San Francisco Youth Field Hockey Club. Its summary line names no school, so it is linked on the class year plus a hometown in the school's own area. Found by the 2026-10-12 address probe and re-read.",
-              "platform": "sportsrecruits",
-              "url": "https://nfhca.sportsrecruits.com/athlete/spencer_white5"
+              "note": "The player's own MaxPreps career page, which MaxPreps marks claimed (isClaimed) by the player or a parent; read 2026-10-13.",
+              "platform": "maxpreps",
+              "url": "https://www.maxpreps.com/ca/mill-valley/tamalpais-red-tailed-hawks/athletes/ava-lanigan/?careerid=5kh4ar1tdocl5"
             }
           ],
           "sourceName": null
@@ -9728,9 +9828,30 @@
           "sourceName": null
         },
         {
-          "athleteId": "49573645-0661-4df7-be54-e0c0727e02d7",
+          "athleteId": "e229f106-be2b-40bc-a5d5-b751bf6187b5",
           "conflicts": [],
-          "fullName": "Ava Lanigan",
+          "fullName": "Savannah Houck",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "NCSA profile names Tamalpais High School, Mill Valley, CA; class of 2027, goalkeeper.",
+              "platform": "ncsa",
+              "url": "https://www.ncsasports.org/field-hockey-recruiting/california/mill-valley/tamalpais-high-school/savannah-houck3"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "7844f156-ab2e-4d55-a45d-34a1ed6de3b5",
+          "conflicts": [],
+          "fullName": "Sierra Duncan",
           "grade": null,
           "height": null,
           "jersey": null,
@@ -9741,9 +9862,9 @@
           "profiles": [
             {
               "classOf": 2028,
-              "note": "The player's own MaxPreps career page, which MaxPreps marks claimed (isClaimed) by the player or a parent; read 2026-10-13.",
-              "platform": "maxpreps",
-              "url": "https://www.maxpreps.com/ca/mill-valley/tamalpais-red-tailed-hawks/athletes/ava-lanigan/?careerid=5kh4ar1tdocl5"
+              "note": "The page names no school; matched on name, field hockey, goalie, class of 2028 and Mill Valley, CA.",
+              "platform": "sportsrecruits",
+              "url": "https://nfhca.sportsrecruits.com/athlete/sierra_duncan"
             }
           ],
           "sourceName": null
@@ -10112,7 +10233,15 @@
           "levelSource": null,
           "note": null,
           "positions": null,
-          "profiles": [],
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "SportsRecruits lacrosse profile: class of 2027, Berkeley, CA, ADVNC Lacrosse. Its summary line names no school, so it is linked on the class year plus a hometown in the school's own area. It says 'Committed to Vassar College' (data/commits.json). Found by the 2026-11-03 address probe and re-read.",
+              "platform": "sportsrecruits",
+              "sport": "lacrosse",
+              "url": "https://iwlca.sportsrecruits.com/athlete/violet_potts"
+            }
+          ],
           "sourceName": null
         },
         {
@@ -11299,6 +11428,50 @@
       },
       "players": [
         {
+          "athleteId": "2924586a-5516-40f0-8b71-dd48b91a5b0e",
+          "conflicts": [],
+          "fullName": "Paige Fredrickson",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "SportsRecruits lacrosse profile: class of 2027, San Anselmo, CA. Its summary line names no school, so it is linked on the class year plus a hometown in the school's own area. Found by the 2026-10-12 address probe and re-read.",
+              "platform": "sportsrecruits",
+              "sport": "lacrosse",
+              "url": "https://iwlca.sportsrecruits.com/athlete/paige_fredrickson"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "385965e1-34ed-4a61-b44d-fc880ceecc57",
+          "conflicts": [],
+          "fullName": "Camilla Olbres",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2029,
+              "note": "SportsRecruits lacrosse profile: class of 2029, Greenbrae, CA, ADVNC Lacrosse. Its bio names the school (Marin Academy in San Rafael), so it is linked on that. Found by the 2026-11-03 address probe and re-read.",
+              "platform": "sportsrecruits",
+              "sport": "lacrosse",
+              "url": "https://iwlca.sportsrecruits.com/athlete/camilla_olbres"
+            }
+          ],
+          "sourceName": null
+        },
+        {
           "athleteId": "1016286c-b02f-41e3-8137-c2b408b8bd88",
           "conflicts": [
             {
@@ -11330,9 +11503,9 @@
           "sourceName": null
         },
         {
-          "athleteId": "2924586a-5516-40f0-8b71-dd48b91a5b0e",
+          "athleteId": "33fa4f88-f6a1-4da4-915b-a16554c843f8",
           "conflicts": [],
-          "fullName": "Paige Fredrickson",
+          "fullName": "Josie Marvel",
           "grade": null,
           "height": null,
           "jersey": null,
@@ -11342,33 +11515,11 @@
           "positions": null,
           "profiles": [
             {
-              "classOf": 2027,
-              "note": "SportsRecruits lacrosse profile: class of 2027, San Anselmo, CA. Its summary line names no school, so it is linked on the class year plus a hometown in the school's own area. Found by the 2026-10-12 address probe and re-read.",
+              "classOf": 2029,
+              "note": "SportsRecruits lacrosse profile: class of 2029, San Rafael, CA, ADVNC Lacrosse; titled 'Jocelyn Marvel', at the address josie_marvel7. Its summary line names no school, so it is linked on the class year plus a hometown in the school's own area. A sparser josie_marvel9 page (class of 2029, nothing else) is not linked. Found by the 2026-11-03 address probe and re-read.",
               "platform": "sportsrecruits",
               "sport": "lacrosse",
-              "url": "https://iwlca.sportsrecruits.com/athlete/paige_fredrickson"
-            }
-          ],
-          "sourceName": null
-        },
-        {
-          "athleteId": "088a7761-9ba6-476b-89ad-345bf0add8b5",
-          "conflicts": [],
-          "fullName": "Tessa Urban",
-          "grade": null,
-          "height": null,
-          "jersey": null,
-          "level": null,
-          "levelSource": null,
-          "note": null,
-          "positions": null,
-          "profiles": [
-            {
-              "classOf": 2028,
-              "note": "SportsRecruits lacrosse profile: class of 2028, San Rafael, CA, STEPS California. Its summary line names no school, so it is linked on the class year plus a hometown in the school's own area. Found by the 2026-10-12 address probe and re-read.",
-              "platform": "sportsrecruits",
-              "sport": "lacrosse",
-              "url": "https://iwlca.sportsrecruits.com/athlete/tessa_urban"
+              "url": "https://iwlca.sportsrecruits.com/athlete/josie_marvel7"
             }
           ],
           "sourceName": null
@@ -11391,6 +11542,28 @@
               "platform": "sportsrecruits",
               "sport": "lacrosse",
               "url": "https://iwlca.sportsrecruits.com/athlete/hailey_rabb"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "088a7761-9ba6-476b-89ad-345bf0add8b5",
+          "conflicts": [],
+          "fullName": "Tessa Urban",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "SportsRecruits lacrosse profile: class of 2028, San Rafael, CA, STEPS California. Its summary line names no school, so it is linked on the class year plus a hometown in the school's own area. Found by the 2026-10-12 address probe and re-read.",
+              "platform": "sportsrecruits",
+              "sport": "lacrosse",
+              "url": "https://iwlca.sportsrecruits.com/athlete/tessa_urban"
             }
           ],
           "sourceName": null
@@ -12511,6 +12684,49 @@
       ],
       "players": [
         {
+          "athleteId": "c53a069f-20cc-444e-983b-db830b055c39",
+          "conflicts": [],
+          "fullName": "Rylee Adamo",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "The player's own MaxPreps career page, which MaxPreps marks claimed (isClaimed) by the player or a parent; read 2026-10-13.",
+              "platform": "maxpreps",
+              "url": "https://www.maxpreps.com/ca/huntington-beach/edison-chargers/athletes/rylee-adamo/?careerid=ekoahd14g4saa"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "ace60897-65fd-46e9-b65d-078c8ddf226e",
+          "conflicts": [],
+          "fullName": "Anna Chin",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "SportsRecruits lacrosse profile: class of 2028, Huntington Beach, CA. Its summary line names no school, so it is linked on the class year plus a hometown in the school's own area. Found by the 2026-10-12 address probe and re-read.",
+              "platform": "sportsrecruits",
+              "sport": "lacrosse",
+              "url": "https://iwlca.sportsrecruits.com/athlete/anna_chin"
+            }
+          ],
+          "sourceName": null
+        },
+        {
           "athleteId": "90b27b2e-21e9-4a96-b533-e8a3ad10be2e",
           "conflicts": [],
           "fullName": "Peyton Makros",
@@ -12544,70 +12760,6 @@
           "sourceName": null
         },
         {
-          "athleteId": "fefd6ea5-5f95-40a0-b0d3-716314cf1a15",
-          "conflicts": [],
-          "fullName": "Peyton Loughridge",
-          "grade": null,
-          "height": null,
-          "jersey": null,
-          "level": null,
-          "levelSource": null,
-          "note": null,
-          "positions": null,
-          "profiles": [
-            {
-              "classOf": 2028,
-              "note": "NCSA page (Peyton Loughridge '28) names Edison High School, Huntington Beach, CA, Field Hockey (forward); class year agrees with roster grade 11.",
-              "platform": "ncsa",
-              "url": "https://www.ncsasports.org/field-hockey-recruiting/california/huntington-beach/edison-high-school18/peyton-loughridge3"
-            }
-          ],
-          "sourceName": null
-        },
-        {
-          "athleteId": "55821886-3a58-40f2-92a0-1af11139dc1b",
-          "conflicts": [],
-          "fullName": "Hayven Medeiros-Schomberg",
-          "grade": null,
-          "height": null,
-          "jersey": null,
-          "level": null,
-          "levelSource": null,
-          "note": null,
-          "positions": null,
-          "profiles": [
-            {
-              "classOf": 2027,
-              "note": "NCSA page (Hayven Medeiros- Schomberg '27) names Edison High School (Huntington Beach), Huntington Beach, CA, Field Hockey (midfielder); spelled with a space after the hyphen.",
-              "platform": "ncsa",
-              "url": "https://www.ncsasports.org/field-hockey-recruiting/california/huntington-beach/edison-high-school-huntington-beach/hayven-medeiros-schomberg"
-            }
-          ],
-          "sourceName": "Hayven Medeiros- Schomberg"
-        },
-        {
-          "athleteId": "ace60897-65fd-46e9-b65d-078c8ddf226e",
-          "conflicts": [],
-          "fullName": "Anna Chin",
-          "grade": null,
-          "height": null,
-          "jersey": null,
-          "level": null,
-          "levelSource": null,
-          "note": null,
-          "positions": null,
-          "profiles": [
-            {
-              "classOf": 2028,
-              "note": "SportsRecruits lacrosse profile: class of 2028, Huntington Beach, CA. Its summary line names no school, so it is linked on the class year plus a hometown in the school's own area. Found by the 2026-10-12 address probe and re-read.",
-              "platform": "sportsrecruits",
-              "sport": "lacrosse",
-              "url": "https://iwlca.sportsrecruits.com/athlete/anna_chin"
-            }
-          ],
-          "sourceName": null
-        },
-        {
           "athleteId": "e422221e-742f-4601-b209-c2a296e73ea2",
           "conflicts": [],
           "fullName": "Grace Aguayo",
@@ -12625,28 +12777,6 @@
               "platform": "sportsrecruits",
               "sport": "lacrosse",
               "url": "https://iwlca.sportsrecruits.com/athlete/grace_aguayo"
-            }
-          ],
-          "sourceName": null
-        },
-        {
-          "athleteId": "a642464c-8a82-4bbf-98fa-66fe0268c2a2",
-          "conflicts": [],
-          "fullName": "Avery Haught",
-          "grade": null,
-          "height": null,
-          "jersey": null,
-          "level": null,
-          "levelSource": null,
-          "note": null,
-          "positions": null,
-          "profiles": [
-            {
-              "classOf": 2027,
-              "note": "SportsRecruits lacrosse profile: class of 2027, HUNTINGTON BEACH, CA. Its summary line names no school, so it is linked on the class year plus a hometown in the school's own area. Found by the 2026-10-12 address probe and re-read.",
-              "platform": "sportsrecruits",
-              "sport": "lacrosse",
-              "url": "https://iwlca.sportsrecruits.com/athlete/avery_haught"
             }
           ],
           "sourceName": null
@@ -12674,6 +12804,92 @@
           "sourceName": null
         },
         {
+          "athleteId": "fefd6ea5-5f95-40a0-b0d3-716314cf1a15",
+          "conflicts": [],
+          "fullName": "Peyton Loughridge",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "NCSA page (Peyton Loughridge '28) names Edison High School, Huntington Beach, CA, Field Hockey (forward); class year agrees with roster grade 11.",
+              "platform": "ncsa",
+              "url": "https://www.ncsasports.org/field-hockey-recruiting/california/huntington-beach/edison-high-school18/peyton-loughridge3"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "c7c86bb6-8b6e-497b-8f6a-31ad74a077ba",
+          "conflicts": [],
+          "fullName": "Emery Chapman",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "SportsRecruits lacrosse profile: class of 2027, Huntington Beach, CA. Its summary line names no school, so it is linked on the class year plus a hometown in the school's own area. Found by the 2026-11-03 address probe and re-read.",
+              "platform": "sportsrecruits",
+              "sport": "lacrosse",
+              "url": "https://iwlca.sportsrecruits.com/athlete/emery_chapman"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "a642464c-8a82-4bbf-98fa-66fe0268c2a2",
+          "conflicts": [],
+          "fullName": "Avery Haught",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "SportsRecruits lacrosse profile: class of 2027, HUNTINGTON BEACH, CA. Its summary line names no school, so it is linked on the class year plus a hometown in the school's own area. Found by the 2026-10-12 address probe and re-read.",
+              "platform": "sportsrecruits",
+              "sport": "lacrosse",
+              "url": "https://iwlca.sportsrecruits.com/athlete/avery_haught"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "55821886-3a58-40f2-92a0-1af11139dc1b",
+          "conflicts": [],
+          "fullName": "Hayven Medeiros-Schomberg",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "NCSA page (Hayven Medeiros- Schomberg '27) names Edison High School (Huntington Beach), Huntington Beach, CA, Field Hockey (midfielder); spelled with a space after the hyphen.",
+              "platform": "ncsa",
+              "url": "https://www.ncsasports.org/field-hockey-recruiting/california/huntington-beach/edison-high-school-huntington-beach/hayven-medeiros-schomberg"
+            }
+          ],
+          "sourceName": "Hayven Medeiros- Schomberg"
+        },
+        {
           "athleteId": "f9197ade-9688-4874-850f-3788e3ec9bbc",
           "conflicts": [],
           "fullName": "Riley Haller",
@@ -12691,27 +12907,6 @@
               "platform": "sportsrecruits",
               "sport": "soccer",
               "url": "https://sportsrecruits.com/athlete/riley_haller"
-            }
-          ],
-          "sourceName": null
-        },
-        {
-          "athleteId": "c53a069f-20cc-444e-983b-db830b055c39",
-          "conflicts": [],
-          "fullName": "Rylee Adamo",
-          "grade": null,
-          "height": null,
-          "jersey": null,
-          "level": null,
-          "levelSource": null,
-          "note": null,
-          "positions": null,
-          "profiles": [
-            {
-              "classOf": 2027,
-              "note": "The player's own MaxPreps career page, which MaxPreps marks claimed (isClaimed) by the player or a parent; read 2026-10-13.",
-              "platform": "maxpreps",
-              "url": "https://www.maxpreps.com/ca/huntington-beach/edison-chargers/athletes/rylee-adamo/?careerid=ekoahd14g4saa"
             }
           ],
           "sourceName": null
@@ -13587,6 +13782,13 @@
               "note": "Hudl profile lists \"Girls' Varsity Field Hockey\" (The Bishops School, 2024 - Present), class of 2028, La Jolla, CA, jersey 4; page name \"Emerson Davis\".",
               "platform": "hudl",
               "url": "https://www.hudl.com/profile/23417317/Emerson-Davis"
+            },
+            {
+              "classOf": 2028,
+              "note": "SportsRecruits lacrosse profile: class of 2028, San Diego, CA, Mad Dog Girls Lacrosse - West Elite. Its summary line names no school, so it is linked on the class year plus a hometown in the school's own area. It says 'Committed to Harvard University' (data/commits.json, where the profile's script-drawn TEAMS block names The Bishops School). Found by the 2026-11-03 address probe and re-read.",
+              "platform": "sportsrecruits",
+              "sport": "lacrosse",
+              "url": "https://iwlca.sportsrecruits.com/athlete/emerson_davis8"
             }
           ],
           "sourceName": null
@@ -13746,6 +13948,13 @@
             },
             {
               "classOf": 2028,
+              "note": "SportsRecruits lacrosse profile: class of 2028, San Diego, CA, West Coast Starz Girls. Its bio names the school (The Bishop's School), so it is linked on that. Found by the 2026-11-03 address probe and re-read.",
+              "platform": "sportsrecruits",
+              "sport": "lacrosse",
+              "url": "https://iwlca.sportsrecruits.com/athlete/kate_watkins4"
+            },
+            {
+              "classOf": 2028,
               "note": "Hudl profile lists \"Girls' Varsity Field Hockey\" (The Bishops School, 2024 - Present), class of 2028, La Jolla, CA, jersey 10; page name \"Kate Watkins\". Duplicate Hudl profile(s) for this player not linked: 26603711.",
               "platform": "hudl",
               "url": "https://www.hudl.com/profile/23454142/Kate-Watkins"
@@ -13773,10 +13982,10 @@
             },
             {
               "classOf": 2030,
-              "note": "SportsRecruits lacrosse profile: class of 2030, San Diego, CA. Its summary line names no school, so it is linked on the class year plus a hometown in the school's own area. Found by the 2026-10-12 address probe and re-read.",
+              "note": "SportsRecruits lacrosse profile: class of 2030, San Diego, CA. Its summary line names no school, so it is linked on the class year plus a hometown in the school's own area. Found by the 2026-10-12 address probe and re-read. Its address moved: on 2026-11-03 the 2026-10-12 address (reagan_roach) answered Page Not Found, and the same player's page (class of 2030, San Diego, Mad Dog Girls Lacrosse - West Elite) is at reagan_roach2, re-linked that day.",
               "platform": "sportsrecruits",
               "sport": "lacrosse",
-              "url": "https://iwlca.sportsrecruits.com/athlete/reagan_roach"
+              "url": "https://iwlca.sportsrecruits.com/athlete/reagan_roach2"
             }
           ],
           "sourceName": null
@@ -13798,6 +14007,13 @@
               "note": "Hudl profile lists \"Girls' Varsity Field Hockey\" (The Bishops School, 2026 - Present), class of 2029, La Jolla, CA; page name \"Athena Apostolides\". The page's headline team is another sport; the field hockey team is in its Team History.",
               "platform": "hudl",
               "url": "https://www.hudl.com/profile/30033317/Athena-Apostolides"
+            },
+            {
+              "classOf": 2029,
+              "note": "SportsRecruits lacrosse profile: class of 2029, Rancho Santa Fe, CA, Alliance Lacrosse. Its summary line names no school, so it is linked on the class year plus a hometown in the school's own area. Found by the 2026-11-03 address probe and re-read.",
+              "platform": "sportsrecruits",
+              "sport": "lacrosse",
+              "url": "https://iwlca.sportsrecruits.com/athlete/athena_apostolides"
             }
           ],
           "sourceName": null
@@ -13873,6 +14089,13 @@
               "note": "Field hockey page for Kaylyn Witt, class of 2030, San Diego-area: the TEAMS block lists \"The Bishop's School\" (La Jolla , CA).",
               "platform": "sportsrecruits",
               "url": "https://nfhca.sportsrecruits.com/athlete/kaylyn_witt2"
+            },
+            {
+              "classOf": 2030,
+              "note": "SportsRecruits lacrosse profile: class of 2030, San Diego, CA. Its summary line names no school, so it is linked on the class year plus a hometown in the school's own area. Found by the 2026-11-03 address probe and re-read.",
+              "platform": "sportsrecruits",
+              "sport": "lacrosse",
+              "url": "https://iwlca.sportsrecruits.com/athlete/kaylyn_witt"
             },
             {
               "classOf": 2030,
@@ -16492,6 +16715,49 @@
       ],
       "players": [
         {
+          "athleteId": "f54ec066-fa6b-4718-8039-d0c64e8b3795",
+          "conflicts": [],
+          "fullName": "Arianna Gonzalez",
+          "grade": {
+            "confidence": "medium",
+            "derived": true,
+            "kind": "maxpreps-career",
+            "note": "MaxPreps career page (graduatingClass null): JV flag football 25-26 as Freshman (/ca/san-diego/mira-mesa-marauders/flag-football/girls/jv/fall/25-26/schedule/) -> grade 10 in 2026-27. Added 2026-10-12.",
+            "source": "https://www.maxpreps.com/ca/san-diego/mira-mesa-marauders/athletes/arianna-gonzalez/?careerid=jvf5r4suvar11",
+            "value": 10
+          },
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "f4225ce7-a615-4297-b358-76e1a0c33bc4",
+          "conflicts": [],
+          "fullName": "Clara Vickers",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "SportsRecruits lacrosse profile: class of 2028, San Diego, CA. Its summary line names no school, so it is linked on the class year plus a hometown in the school's own area. The row has no grade, so any class of 2027-2030 is accepted. Found by the 2026-11-03 address probe and re-read.",
+              "platform": "sportsrecruits",
+              "sport": "lacrosse",
+              "url": "https://iwlca.sportsrecruits.com/athlete/clara_vickers"
+            }
+          ],
+          "sourceName": null
+        },
+        {
           "athleteId": "f575b0d2-71bb-419d-8ddb-52215a25080f",
           "conflicts": [],
           "fullName": "Kaylie Brou",
@@ -16511,27 +16777,6 @@
               "url": "https://iwlca.sportsrecruits.com/athlete/kaylie_brou"
             }
           ],
-          "sourceName": null
-        },
-        {
-          "athleteId": "f54ec066-fa6b-4718-8039-d0c64e8b3795",
-          "conflicts": [],
-          "fullName": "Arianna Gonzalez",
-          "grade": {
-            "confidence": "medium",
-            "derived": true,
-            "kind": "maxpreps-career",
-            "note": "MaxPreps career page (graduatingClass null): JV flag football 25-26 as Freshman (/ca/san-diego/mira-mesa-marauders/flag-football/girls/jv/fall/25-26/schedule/) -> grade 10 in 2026-27. Added 2026-10-12.",
-            "source": "https://www.maxpreps.com/ca/san-diego/mira-mesa-marauders/athletes/arianna-gonzalez/?careerid=jvf5r4suvar11",
-            "value": 10
-          },
-          "height": null,
-          "jersey": null,
-          "level": null,
-          "levelSource": null,
-          "note": null,
-          "positions": null,
-          "profiles": [],
           "sourceName": null
         }
       ],
@@ -16876,7 +17121,15 @@
           "levelSource": null,
           "note": null,
           "positions": null,
-          "profiles": [],
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "SportsRecruits lacrosse profile: class of 2027, San Diego, CA. Its summary line names no school, so it is linked on the class year plus a hometown in the school's own area. Found by the 2026-11-03 address probe and re-read.",
+              "platform": "sportsrecruits",
+              "sport": "lacrosse",
+              "url": "https://iwlca.sportsrecruits.com/athlete/nicole_bettencourt"
+            }
+          ],
           "sourceName": null
         },
         {
@@ -17064,6 +17317,13 @@
               "note": "Hudl profile lists \"Womens Varsity FieldHockey\" (University City High School, 2026), class of 2028, San Diego, CA; page name \"Sydney Eiskamp\".",
               "platform": "hudl",
               "url": "https://www.hudl.com/profile/32379501/Sydney-Eiskamp"
+            },
+            {
+              "classOf": 2028,
+              "note": "SportsRecruits lacrosse profile: class of 2028, San Diego, CA. Its summary line names no school, so it is linked on the class year plus a hometown in the school's own area. A sparser sydney_eiskamp2 page (no hometown) is not linked. Found by the 2026-11-03 address probe and re-read.",
+              "platform": "sportsrecruits",
+              "sport": "lacrosse",
+              "url": "https://iwlca.sportsrecruits.com/athlete/sydney_eiskamp"
             }
           ],
           "sourceName": null
@@ -17723,6 +17983,28 @@
           "sourceName": null
         },
         {
+          "athleteId": "27e20900-1aec-4e4f-81c1-12ebf37fb31d",
+          "conflicts": [],
+          "fullName": "Emery Williams",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "SportsRecruits lacrosse profile: class of 2028, Carlsbad, CA, Mad Dog Girls Lacrosse - West Elite. Its summary line names no school, so it is linked on the class year plus a hometown in the school's own area. Found by the 2026-11-03 address probe and re-read.",
+              "platform": "sportsrecruits",
+              "sport": "lacrosse",
+              "url": "https://iwlca.sportsrecruits.com/athlete/emery_williams4"
+            }
+          ],
+          "sourceName": null
+        },
+        {
           "athleteId": "fb779b19-2c0f-4d26-a8d6-acee12b84030",
           "conflicts": [],
           "fullName": "Paige McKenery",
@@ -17767,27 +18049,13 @@
               "note": "Hudl page names La Costa Canyon High School - Girls Varsity Field Hockey, Class of 2027, Carlsbad, CA; class year agrees with the roster.",
               "platform": "hudl",
               "url": "https://www.hudl.com/profile/23923301/Kayla-Waters"
-            }
-          ],
-          "sourceName": null
-        },
-        {
-          "athleteId": "256b6ddd-fab1-4586-b63c-7cff31619c96",
-          "conflicts": [],
-          "fullName": "Madeline Wilcox",
-          "grade": null,
-          "height": null,
-          "jersey": null,
-          "level": null,
-          "levelSource": null,
-          "note": null,
-          "positions": null,
-          "profiles": [
+            },
             {
-              "classOf": 2029,
-              "note": "Field Hockey page, class of 2029, Encinitas, CA; TEAMS block lists La Costa Canyon, Carlsbad, CA, and the class year agrees with the roster.",
+              "classOf": 2027,
+              "note": "SportsRecruits lacrosse profile: class of 2027, Carlsbad, CA; its bio mentions varsity field hockey ('24, '25). Its summary line names no school, so it is linked on the class year plus a hometown in the school's own area. Found by the 2026-11-03 address probe and re-read.",
               "platform": "sportsrecruits",
-              "url": "https://nfhca.sportsrecruits.com/athlete/madeline_wilcox"
+              "sport": "lacrosse",
+              "url": "https://iwlca.sportsrecruits.com/athlete/kayla_waters2"
             }
           ],
           "sourceName": null
@@ -17831,6 +18099,27 @@
               "note": "The player's own MaxPreps career page, which MaxPreps marks claimed (isClaimed) by the player or a parent; read 2026-10-13.",
               "platform": "maxpreps",
               "url": "https://www.maxpreps.com/ca/carlsbad/la-costa-canyon-mavericks/athletes/elle-cannis/?careerid=n8387dv7gqgg0"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "256b6ddd-fab1-4586-b63c-7cff31619c96",
+          "conflicts": [],
+          "fullName": "Madeline Wilcox",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2029,
+              "note": "Field Hockey page, class of 2029, Encinitas, CA; TEAMS block lists La Costa Canyon, Carlsbad, CA, and the class year agrees with the roster.",
+              "platform": "sportsrecruits",
+              "url": "https://nfhca.sportsrecruits.com/athlete/madeline_wilcox"
             }
           ],
           "sourceName": null
@@ -19029,10 +19318,10 @@
           "profiles": [
             {
               "classOf": 2030,
-              "note": "SportsRecruits lacrosse profile: class of 2030, SAN DIEGO, CA. Its summary line names no school, so it is linked on the class year plus a hometown in the school's own area. Found by the 2026-10-12 address probe and re-read.",
+              "note": "SportsRecruits lacrosse profile: class of 2030, SAN DIEGO, CA. Its summary line names no school, so it is linked on the class year plus a hometown in the school's own area. Found by the 2026-10-12 address probe and re-read. Its address moved: on 2026-11-03 the 2026-10-12 address (abigail_wisbach) answered Page Not Found, and the same player's page (class of 2030, San Diego, Mad Dog Girls Lacrosse - West Elite) is at abigail_wisbach2, re-linked that day.",
               "platform": "sportsrecruits",
               "sport": "lacrosse",
-              "url": "https://iwlca.sportsrecruits.com/athlete/abigail_wisbach"
+              "url": "https://iwlca.sportsrecruits.com/athlete/abigail_wisbach2"
             }
           ],
           "sourceName": null
@@ -19073,9 +19362,9 @@
       ],
       "players": [
         {
-          "athleteId": "dffc230b-477e-4bd4-a800-1ad694c0715f",
+          "athleteId": "4c09cf64-b30d-4a22-8b69-6985df60b274",
           "conflicts": [],
-          "fullName": "Chandler Moyer",
+          "fullName": "Abbigail Francis",
           "grade": null,
           "height": null,
           "jersey": null,
@@ -19085,25 +19374,19 @@
           "positions": null,
           "profiles": [
             {
-              "classOf": 2028,
-              "note": "NCSA field hockey page headed 'CHANDLER MOYER '28 RECRUITING PROFILE', Del Norte High School - San Diego, San Diego, CA; class year agrees with the roster.",
-              "platform": "ncsa",
-              "url": "https://www.ncsasports.org/field-hockey-recruiting/california/san-diego/del-norte-high-school--san-diego/chandler-moyer1"
-            },
-            {
-              "classOf": 2028,
-              "note": "SportsRecruits lacrosse profile: class of 2028, San Diego, CA, Diamond Cut Crew Lacrosse. Its summary line names no school, so it is linked on the class year plus a hometown in the school's own area. Found by the 2026-10-12 address probe and re-read.",
+              "classOf": 2027,
+              "note": "SportsRecruits lacrosse profile: class of 2027, San Diego, CA. Its summary line names no school, so it is linked on the class year plus a hometown in the school's own area. Found by the 2026-11-03 address probe and re-read.",
               "platform": "sportsrecruits",
               "sport": "lacrosse",
-              "url": "https://iwlca.sportsrecruits.com/athlete/chandler_moyer"
+              "url": "https://iwlca.sportsrecruits.com/athlete/abbigail_francis"
             }
           ],
           "sourceName": null
         },
         {
-          "athleteId": "075f1549-091b-40dd-8b8f-8cb92cc707df",
+          "athleteId": "c4bf824c-09da-46d4-9282-cff6532cc02e",
           "conflicts": [],
-          "fullName": "Katie Hickson",
+          "fullName": "Annalise Boles",
           "grade": null,
           "height": null,
           "jersey": null,
@@ -19113,10 +19396,17 @@
           "positions": null,
           "profiles": [
             {
-              "classOf": 2028,
-              "note": "NCSA field hockey page headed 'KATIE HICKSON '28 RECRUITING PROFILE', Del Norte High School - San Diego, San Diego, CA; class year agrees with the roster.",
-              "platform": "ncsa",
-              "url": "https://www.ncsasports.org/field-hockey-recruiting/california/san-diego/del-norte-high-school--san-diego/katie-hickson1"
+              "classOf": 2027,
+              "note": "SportsRecruits lacrosse profile: class of 2027, San Diego, CA, Diamond Cut Crew Lacrosse. Its summary line names no school, so it is linked on the class year plus a hometown in the school's own area. Found by the 2026-11-03 address probe and re-read.",
+              "platform": "sportsrecruits",
+              "sport": "lacrosse",
+              "url": "https://iwlca.sportsrecruits.com/athlete/annalise_boles"
+            },
+            {
+              "classOf": 2027,
+              "note": "The player's own MaxPreps career page, which MaxPreps marks claimed (isClaimed) by the player or a parent; read 2026-10-13.",
+              "platform": "maxpreps",
+              "url": "https://www.maxpreps.com/ca/san-diego/del-norte-nighthawks/athletes/annalise-boles/?careerid=hlio4au8u0f44"
             }
           ],
           "sourceName": null
@@ -19166,6 +19456,78 @@
           "sourceName": null
         },
         {
+          "athleteId": "ea337af7-60b9-411f-bb21-220baeedd1c6",
+          "conflicts": [],
+          "fullName": "Teagan Wilkes",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "SportsRecruits lacrosse profile: class of 2028, San Diego, CA. Its summary line names no school, so it is linked on the class year plus a hometown in the school's own area. Found by the 2026-11-03 address probe and re-read.",
+              "platform": "sportsrecruits",
+              "sport": "lacrosse",
+              "url": "https://iwlca.sportsrecruits.com/athlete/teagan_wilkes"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "98742a41-3a60-4f58-80a8-d0a82fc4183d",
+          "conflicts": [],
+          "fullName": "Zara Sediqi",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "SportsRecruits lacrosse profile: class of 2028, San Diego, CA. Its summary line names no school, so it is linked on the class year plus a hometown in the school's own area. A sparser zara_sediqi2 page (no hometown) is not linked. Found by the 2026-11-03 address probe and re-read.",
+              "platform": "sportsrecruits",
+              "sport": "lacrosse",
+              "url": "https://iwlca.sportsrecruits.com/athlete/zara_sediqi"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "dffc230b-477e-4bd4-a800-1ad694c0715f",
+          "conflicts": [],
+          "fullName": "Chandler Moyer",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "NCSA field hockey page headed 'CHANDLER MOYER '28 RECRUITING PROFILE', Del Norte High School - San Diego, San Diego, CA; class year agrees with the roster.",
+              "platform": "ncsa",
+              "url": "https://www.ncsasports.org/field-hockey-recruiting/california/san-diego/del-norte-high-school--san-diego/chandler-moyer1"
+            },
+            {
+              "classOf": 2028,
+              "note": "SportsRecruits lacrosse profile: class of 2028, San Diego, CA, Diamond Cut Crew Lacrosse. Its summary line names no school, so it is linked on the class year plus a hometown in the school's own area. Found by the 2026-10-12 address probe and re-read.",
+              "platform": "sportsrecruits",
+              "sport": "lacrosse",
+              "url": "https://iwlca.sportsrecruits.com/athlete/chandler_moyer"
+            }
+          ],
+          "sourceName": null
+        },
+        {
           "athleteId": "b7080dbb-b5dc-45a6-8ee8-02161c13fdc9",
           "conflicts": [],
           "fullName": "Claire Guier",
@@ -19188,27 +19550,6 @@
           "sourceName": null
         },
         {
-          "athleteId": "c4bf824c-09da-46d4-9282-cff6532cc02e",
-          "conflicts": [],
-          "fullName": "Annalise Boles",
-          "grade": null,
-          "height": null,
-          "jersey": null,
-          "level": null,
-          "levelSource": null,
-          "note": null,
-          "positions": null,
-          "profiles": [
-            {
-              "classOf": 2027,
-              "note": "The player's own MaxPreps career page, which MaxPreps marks claimed (isClaimed) by the player or a parent; read 2026-10-13.",
-              "platform": "maxpreps",
-              "url": "https://www.maxpreps.com/ca/san-diego/del-norte-nighthawks/athletes/annalise-boles/?careerid=hlio4au8u0f44"
-            }
-          ],
-          "sourceName": null
-        },
-        {
           "athleteId": "7e13b0af-355c-4603-aedc-4146bfbe971b",
           "conflicts": [],
           "fullName": "Rana Babaei-Aznaveh",
@@ -19225,6 +19566,27 @@
               "note": "The player's own MaxPreps career page, which MaxPreps marks claimed (isClaimed) by the player or a parent; read 2026-10-13.",
               "platform": "maxpreps",
               "url": "https://www.maxpreps.com/ca/san-diego/del-norte-nighthawks/athletes/rana-babaei-aznaveh/?careerid=5ooo8bjff7d99"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "075f1549-091b-40dd-8b8f-8cb92cc707df",
+          "conflicts": [],
+          "fullName": "Katie Hickson",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "NCSA field hockey page headed 'KATIE HICKSON '28 RECRUITING PROFILE', Del Norte High School - San Diego, San Diego, CA; class year agrees with the roster.",
+              "platform": "ncsa",
+              "url": "https://www.ncsasports.org/field-hockey-recruiting/california/san-diego/del-norte-high-school--san-diego/katie-hickson1"
             }
           ],
           "sourceName": null
@@ -20796,6 +21158,13 @@
           "note": null,
           "positions": null,
           "profiles": [
+            {
+              "classOf": 2027,
+              "note": "SportsRecruits lacrosse profile: class of 2027, Carlsbad, CA; titled 'Madeline Orlando'. Its summary line names no school, so it is linked on the class year plus a hometown in the school's own area. Found by the 2026-11-03 address probe and re-read.",
+              "platform": "sportsrecruits",
+              "sport": "lacrosse",
+              "url": "https://iwlca.sportsrecruits.com/athlete/maddie_orlando"
+            },
             {
               "classOf": 2027,
               "note": "The player's own MaxPreps career page, which MaxPreps marks claimed (isClaimed) by the player or a parent; read 2026-10-13.",
@@ -22731,6 +23100,13 @@
           "note": null,
           "positions": null,
           "profiles": [
+            {
+              "classOf": 2028,
+              "note": "SportsRecruits lacrosse profile: class of 2028, Chula Vista, CA. Its summary line names no school, so it is linked on the class year plus a hometown in the school's own area. Found by the 2026-11-03 address probe and re-read.",
+              "platform": "sportsrecruits",
+              "sport": "lacrosse",
+              "url": "https://iwlca.sportsrecruits.com/athlete/ileana_covarrubias"
+            },
             {
               "classOf": 2028,
               "note": "The player's own MaxPreps career page, which MaxPreps marks claimed (isClaimed) by the player or a parent; read 2026-10-13.",

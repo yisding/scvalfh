@@ -62,12 +62,15 @@ const raw = JSON.parse(
 const claimed1013 = (x: { platform: string }) => x.platform === 'maxpreps';
 /** A profile the 2026-10-12 SportsRecruits address probe added: its note says so. */
 const fromProbe1012 = (x: { note: string | null }) => x.note?.includes('Found by the 2026-10-12 address probe') ?? false;
+/** A profile the 2026-11-03 SportsRecruits address probe added: its note says so. */
+const fromProbe1103 = (x: { note: string | null }) => x.note?.includes('Found by the 2026-11-03 address probe') ?? false;
 /** A grade, a conflict or a record note added on 2026-10-12 from MaxPreps' career and 2025-26 pages: its note says so. */
 const from1012 = (note: string | null | undefined) => (note ?? '').includes('Added 2026-10-12') || (note ?? '').endsWith('(2026-10-12).');
 
 /**
  * The file as the captures before 2026-10-12 left it: without that day's profiles, grades,
- * conflicts and notes, without the claimed MaxPreps pages linked on 2026-10-13, and without the
+ * conflicts and notes, without the claimed MaxPreps pages linked on 2026-10-13 or the profiles the
+ * 2026-11-03 probe linked, and without the
  * records that hold nothing else. The tests that pin what each
  * earlier capture found read this.
  */
@@ -82,7 +85,7 @@ const pre: RosterEnrichment = {
         grade: p.grade && from1012(p.grade.note) ? null : p.grade,
         conflicts: p.conflicts.filter((c) => !from1012(c.note)),
         note: from1012(p.note) ? null : p.note,
-        profiles: p.profiles.filter((x) => !fromProbe1012(x) && !claimed1013(x)),
+        profiles: p.profiles.filter((x) => !fromProbe1012(x) && !claimed1013(x) && !fromProbe1103(x)),
       }))
       .filter(
         (p) =>
@@ -157,7 +160,7 @@ describe('data/rosters-enrichment.json', () => {
     // SportsRecruits probe in every sport 2026-10-12, and the claimed MaxPreps pages 2026-10-13,
     // against the roster file read 2026-10-07). The athleteId join below is what keeps the two
     // files in step.
-    expect(raw.capturedAt).toBe('2026-10-13');
+    expect(raw.capturedAt).toBe('2026-11-03');
     expect(base.fetchedAt.slice(0, 10) <= raw.capturedAt).toBe(true);
   });
 
@@ -712,6 +715,29 @@ describe('recruiting profiles', () => {
     expect(sofie.profiles.filter((x) => x.platform === 'sportsrecruits').map((x) => x.sport)).toEqual([undefined, 'lacrosse']);
   });
 
+  it('what the 2026-11-03 SportsRecruits probe found, in every sport', () => {
+    const probe = raw.teams.flatMap((t) => t.players.flatMap((p) => p.profiles.filter(fromProbe1103).map((x) => ({ slug: t.slug, name: p.fullName, x }))));
+    // 30 pages for 30 players (14 NorCal, 16 SoCal), each re-read by an independent refuter.
+    expect(probe).toHaveLength(30);
+    expect(new Set(probe.map((r) => `${r.slug} ${r.name}`)).size).toBe(30);
+    const bySport = (s: string | undefined) => probe.filter((r) => r.x.sport === s).length;
+    expect([bySport('lacrosse'), bySport(undefined), bySport('soccer')]).toEqual([26, 3, 1]);
+    for (const r of probe) {
+      expect(r.x.platform, r.name).toBe('sportsrecruits');
+      expect(r.x.classOf, r.name).not.toBeNull();
+    }
+    // Two pages the 2026-10-12 probe linked moved: the old addresses answer Page Not Found.
+    const moved = raw.teams.flatMap((t) => t.players.flatMap((p) => p.profiles.filter((x) => x.note?.includes('Its address moved'))));
+    expect(moved.map((x) => x.url).sort()).toEqual([
+      'https://iwlca.sportsrecruits.com/athlete/abigail_wisbach2',
+      'https://iwlca.sportsrecruits.com/athlete/reagan_roach2',
+    ]);
+    // 809 profiles for 583 players in all (779 for 569 before the probe).
+    const all = raw.teams.flatMap((t) => t.players);
+    expect(all.flatMap((p) => p.profiles)).toHaveLength(809);
+    expect(all.filter((p) => p.profiles.length > 0)).toHaveLength(583);
+  });
+
   it('what the 2026-10-13 read of every MaxPreps career page found: the claimed ones', () => {
     const rows = new Map(base.teams.flatMap((t) => t.players.map((p) => [`${t.slug} ${p.athleteId}`, p])));
     const claimed = raw.teams.flatMap((t) =>
@@ -721,8 +747,8 @@ describe('recruiting profiles', () => {
     expect(claimed).toHaveLength(260);
     expect(new Set(claimed.map((r) => `${r.slug} ${r.p.athleteId}`)).size).toBe(260);
     expect(new Set(claimed.map((r) => r.slug)).size).toBe(73);
-    // 159 players have no other profile.
-    expect(claimed.filter((r) => r.p.profiles.length === 1)).toHaveLength(159);
+    // 159 players had no other profile on 2026-10-13 (the 2026-11-03 probe has since linked more).
+    expect(claimed.filter((r) => r.p.profiles.filter((x) => !fromProbe1103(x)).length === 1)).toHaveLength(159);
     for (const { slug, p, x } of claimed) {
       // The row's own career page, never a namesake's: it needs no name match.
       expect(x.url, `${slug} / ${p.fullName}`).toBe(rows.get(`${slug} ${p.athleteId}`)!.careerUrl);
