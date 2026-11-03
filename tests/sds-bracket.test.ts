@@ -226,9 +226,9 @@ describe('what never joins', () => {
   });
 });
 
-describe('the committed placeholder', () => {
-  it('draws no San Diego bracket today', () => {
-    expect(getSdsBrackets()).toBeNull();
-    expect(getSdsBracketsSource()).toBeNull();
+describe('the committed 2026 brackets', () => {
+  it('draws the Section’s three brackets, sourced to its sheet', () => {
+    expect(getSdsBrackets()?.map((d) => d.id)).toEqual(['open', 'division-1', 'division-2']);
+    expect(getSdsBracketsSource()?.url).toBe('https://docs.google.com/spreadsheets/d/1A8tsHqwGiRLD5EBSnCFoAAK5Qg13v6wQlen3HEGspeU/edit');
   });
 });

@@ -17,7 +17,7 @@
  * | each `/schedule/<league>` HTML gzip                            | ≤ 2.0 × baseline `schedule`        |
  * | `/schedule` (index) HTML gzip                                  | ≤ 0.6 × baseline `schedule`        |
  * | `/teams` HTML gzip                                             | ≤ 5.2 × baseline `teams`           |
- * | `/playoffs` HTML gzip                                          | ≤ 3.3 × baseline `playoffs`        |
+ * | `/playoffs` HTML gzip                                          | ≤ 4.6 × baseline `playoffs`        |
  * | each `/teams/<slug>` HTML gzip (Roster + Player stats sections)  | ≤ 6.0 × baseline `teams`           |
  * | `/leaders` HTML gzip                                           | ≤ 2.7 × baseline `standings`       |
  * | Worker gzip (`build:cloudflare`)                               | ≤ baseline + 1300 KB               |
@@ -71,6 +71,13 @@
  * (88 %). The two brackets add about 8 KB gzip when their owner files are filled (the 2025 CCS and
  * SDS fixtures render 3.8 and 4.2 KB): whoever commits a filled data/ccs-bracket-2026.json or
  * data/sds-brackets-2026.json re-measures this line in the same PR.
+ *
+ * THE BRACKETS AMENDMENT (2026-11-03): the `/playoffs` line alone, by the same rule, 3.3 → 4.6 ×. The CCS
+ * bracket (drawn from MaxPreps' bracket games since the Nov 2 seeding meeting) and the San Diego Section's three
+ * brackets (data/sds-brackets-2026.json, transcribed from the Section's sheet on 2026-11-03) are both drawn: built
+ * on the committed snapshot (fetched 2026-11-02, "today" Nov 2) at 76,383 B against the 62,017 B line (123 %;
+ * the tree before the San Diego file measured 66,780 B, 108 %, the CCS bracket alone), so the line is 86,448 B
+ * (88 %).
  *
  * The first-load JS budget is what catches config, the registry or zod leaking into the browser
  * through a 'use client' import. The Worker check reads .cloudflare/output when it exists (it is
@@ -176,7 +183,9 @@ if (!workerOnly) {
   // 3.3 × since 2026-10-30 (it was 2.3 ×): the postseason's games listed in game rows (the two "This
   // week" strips, the Tournament of Champions, the SCVAL crossovers, the EAL results), 54,338 B,
   // 126 % of the old line and 88 % of 62,017 B. The drawn brackets add about 8 KB more (header comment).
-  check('/playoffs HTML gzip', gz(file('playoffs.html')), 3.3 * baseline.playoffs.htmlGzip, '3.3 × playoffs');
+  // 4.6 × since 2026-11-03 (it was 3.3 ×): the CCS bracket and the San Diego Section's three brackets drawn,
+  // 76,383 B, 123 % of the old line and 88 % of 86,448 B (header comment).
+  check('/playoffs HTML gzip', gz(file('playoffs.html')), 4.6 * baseline.playoffs.htmlGzip, '4.6 × playoffs');
   // Six school boards of 10 places and four player boards of 25 (seven and five since DESIGN §27), 15 of them behind "Show N more"
   // (components/leaders/leaders-view.ts): ~28 KB on 2026-10-03. The player boards' places to 25th
   // (DESIGN §23) took it from 29,328 to 34,664 B on 2026-10-04 (51 more rows), over the 1.0 × line,

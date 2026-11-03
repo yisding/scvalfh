@@ -206,7 +206,7 @@ describe('/playoffs with the Section’s brackets (lib/sds-bracket mocked to the
   });
 });
 
-describe('the committed placeholder: nothing is drawn', () => {
+describe('the committed 2026 brackets: drawn under #sds-bracket', () => {
   const priorEnv = process.env.SCVAL_SNAPSHOT;
   let html = '';
 
@@ -223,12 +223,12 @@ describe('the committed placeholder: nothing is drawn', () => {
     vi.resetModules();
   });
 
-  it('has no brackets, no source and no #sds-bracket, and the dated sentence is unchanged', () => {
-    expect(getSdsBrackets(), 'lib/sds-bracket.ts').toBeNull();
-    expect(getSdsBracketsSource(), 'lib/sds-bracket.ts').toBeNull();
-    expect(html, PAGE).not.toContain('sds-bracket');
+  it('draws the three brackets with their source, and the sentence says they are the Section’s', () => {
+    expect(getSdsBrackets()?.length, 'lib/sds-bracket.ts').toBe(3);
+    expect(getSdsBracketsSource(), 'lib/sds-bracket.ts').not.toBeNull();
+    expect(html, PAGE).toContain('id="sds-bracket"');
     expect(textOf(html), PAGE).toContain(
-      'The Section places teams at its Sat Oct 31 seeding meeting and posts its brackets on its field hockey page afterwards; this site draws no bracket and projects no places.',
+      'The Section has published its brackets; the brackets below are the Section’s, with results as MaxPreps posts them.',
     );
   });
 });

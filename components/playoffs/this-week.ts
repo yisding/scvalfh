@@ -74,6 +74,11 @@ export interface ThisWeekEvent {
   leagueId: LeagueId | null;
   /** The leagues an event no single league owns is about (the CCS seeding meeting: the CCS leagues); default `[leagueId]`. */
   scope?: readonly LeagueId[];
+  /**
+   * The event has happened (the CCS seeding meeting once the bracket is drawn, the San Diego meeting after its
+   * day): its row reads as done, like a final, with no time, and the status board looks past it.
+   */
+  done?: boolean;
 }
 
 export interface ThisWeekInput {
@@ -158,7 +163,7 @@ function eventRow(event: ThisWeekEvent): ThisWeekRow {
     text: event.detail ?? event.title,
     label: event.detail ? event.title : '',
     href: event.href,
-    final: false,
+    final: event.done ?? false,
     kind: 'event',
     key: event.title,
     leagueIds: [...(event.scope ?? (event.leagueId ? [event.leagueId] : []))],

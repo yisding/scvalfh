@@ -4819,7 +4819,9 @@ One strip per region: on `/playoffs` `#this-week-norcal` after the CCS intro and
   (43,224); by §24.6's rule the line moved to 3.3 × (62,017 B, 88%). Measured on the rendered page body (no
   layout), the full 2025-shaped bracket adds about 3.8 KB gzip and the San Diego bracket (§31.5) about 4.2 KB, so
   with both files filled `/playoffs` lands near the new line: the PR that fills a file re-measures
-  (`scripts/assert-budgets.ts`).
+  (`scripts/assert-budgets.ts`). On 2026-11-03, with the CCS bracket drawn from MaxPreps' games and the San Diego
+  file filled from the Section's sheet, the page measured 76,383 B (123 % of 62,017); the line moved to 4.6 ×
+  (86,448 B, 88%).
 
 ### 31.4 MCAL: the shootout, the venue and the results
 

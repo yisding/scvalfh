@@ -418,6 +418,11 @@ describe('keyDateRows', () => {
     expect(detail('semifinals'), VIEW).toBe('At neutral sites set by CCS (CCS calendar: “at Neutral Sites”); each game’s site appears here once MaxPreps lists it.');
     expect(detail('finals'), VIEW).toBe('At a neutral site set by CCS (CCS calendar: “at Neutral Site”); the site appears here once MaxPreps lists the game.');
     expect(detail('seeding'), VIEW).toBe('The committee seeds both CCS divisions; the games appear here as MaxPreps lists them, after the next update.');
+    // Once the page draws a bracket, the meeting is over.
+    const seededRows = view.keyDateRows(data.getPlayoffs().keyDates, [], undefined, true);
+    expect(seededRows.find((r) => r.key === 'seeding')?.detail, VIEW).toBe(
+      'The committee seeded both CCS divisions; the bracket above is drawn from the games MaxPreps lists.',
+    );
     expect(rows.map((r) => r.detail).join(' '), VIEW).not.toMatch(/that evening|Higher seed hosts\./);
     // The footer sentence follows the same config value.
     expect(view.ccsHostingSentence(), VIEW).toBe(
@@ -558,7 +563,7 @@ describe('/playoffs (rendered)', () => {
     const text = textOf(html);
     expect(text, PAGE).toContain('EAL — Eastern Athletic League');
     expect(text, PAGE).toContain(
-      'The Northern Section’s field hockey postseason is the Super Regional, Oct 30–31: the top six schools qualify, and all six EAL teams are in it. The coaches set its format and seeding, and no pairings are published. The NFHS Network lists its games at Pleasant Valley High School, Chico, on Sat Oct 31, with streams at 8:30 AM and 1:30 PM PT. There is no admission fee. There is no NorCal or State path.',
+      'The Northern Section’s field hockey postseason was the Super Regional, Oct 30–31: the top six schools qualified, and all six EAL teams were in it. The coaches set its format and seeding, and no pairings were published. The NFHS Network listed its games at Pleasant Valley High School, Chico, on Sat Oct 31, with streams at 8:30 AM and 1:30 PM PT. There was no admission fee. There is no NorCal or State path.',
     );
     expect(text, PAGE).toContain(
       'CIF Northern Section Field Hockey Guidelines 2026-28 §III.E.1 and §IV (the top six EAL/SRL schools compete; varsity only). Northern Section Field Hockey Guidelines (PDF)',
@@ -611,8 +616,8 @@ describe('/playoffs by region (DESIGN-socal §2.4)', () => {
     if (city.kind !== 'section-playoffs') throw new Error('city: section-playoffs');
     expect(text, PAGE).toContain(city.qualificationLine);
     expect(text, PAGE).toContain(city.citations.roundDates);
-    // The corpus is from Oct 2, before the seeding meeting: the pre-meeting sentence, then the round calendar.
-    expect(text, PAGE).toContain('The Section places teams at its Sat Oct 31 seeding meeting and posts its brackets on its field hockey page afterwards; this site draws no bracket and projects no places.');
+    // The Section's brackets are transcribed (data/sds-brackets-2026.json), so the block says they are drawn below.
+    expect(text, PAGE).toContain('The Section has published its brackets; the brackets below are the Section’s, with results as MaxPreps posts them.');
     expect(view.sectionBracketSentence(city, '2026-10-31', '2026-10-29'), VIEW).not.toMatch(/\bseed(ed|s)?\b(?! ?ing meeting)/i);
     expect(socal, PAGE).toContain(`href="${city.powerRankingsUrl}"`);
     expect(socal, PAGE).toContain(`href="${city.calendarUrl}"`);
@@ -622,8 +627,13 @@ describe('/playoffs by region (DESIGN-socal §2.4)', () => {
       expect(text, PAGE).toContain(line);
     }
     // The sentence chooser on each day of the Section's week.
-    expect(view.sectionBracketSentence(city, '2026-10-31', '2026-11-03'), VIEW).toBe(
+    const unpublished = { ...city, bracketSheetUrl: null };
+    expect(view.sectionBracketSentence(unpublished, '2026-10-31', '2026-10-31'), VIEW).toBe(
       'The Section posts its brackets on its field hockey page after its Sat Oct 31 seeding meeting; this site draws no bracket and projects no places. Its playoff games appear on team pages and schedules as MaxPreps lists them.',
+    );
+    // From the day after, the meeting has happened.
+    expect(view.sectionBracketSentence(unpublished, '2026-10-31', '2026-11-03'), VIEW).toBe(
+      'The Section placed teams at its Sat Oct 31 seeding meeting and posts its brackets on its field hockey page; this site draws no bracket and projects no places. Its playoff games appear on team pages and schedules as MaxPreps lists them.',
     );
     expect(view.sectionBracketSentence({ ...city, bracketSheetUrl: 'https://docs.google.com/spreadsheets/d/x' }, '2026-10-31', '2026-11-03'), VIEW).toBe(
       'The Section has published its brackets; this site draws no bracket and projects no places.',
