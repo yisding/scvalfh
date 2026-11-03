@@ -809,7 +809,7 @@ function slimDisplay(display: GameDisplay): HomeLastDisplay {
   if (display.deciderTag) marks.deciderTag = display.deciderTag;
   if (display.shootoutLabel) marks.shootoutLabel = display.shootoutLabel;
   if (display.shootoutText) marks.shootoutText = display.shootoutText;
-  if (display.sourceMark) marks.sourceMark = display.sourceMark;
+  if (display.sourceMark === 'si.com') marks.sourceMark = display.sourceMark;
   if (display.leagueTag) marks.leagueTag = display.leagueTag;
   if (display.postseasonTag) marks.postseasonTag = display.postseasonTag;
   return {

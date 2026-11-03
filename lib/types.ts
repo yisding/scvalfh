@@ -58,7 +58,9 @@ export type OfficialSourceId = (typeof OFFICIAL_SOURCE_IDS)[number];
 
 export type SourceId =
   | 'maxpreps-api' | 'maxpreps-html' | 'sblive' | OfficialSourceId
-  | 'ccs-pdf' | 'ccs-ical' | 'vnn-ics' | 'cifss' | 'derived';
+  | 'ccs-pdf' | 'ccs-ical' | 'vnn-ics' | 'cifss' | 'derived'
+  /** A JV result transcribed from a school's own athletics site (lib/jv-school-sites.ts); JV only. */
+  | 'school-site';
 
 // ---------- season ----------
 
@@ -392,6 +394,8 @@ export interface Game {
   urls: {
     maxpreps: string | null;
     sblive?: string;
+    /** The school athletics page a JV score came from (lib/jv-school-sites.ts). */
+    school?: string;
     nfhsStream: string | null;
     goFan: string | null;
   };

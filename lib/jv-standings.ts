@@ -9,6 +9,7 @@
  * BVAL and MCAL give a JV time per fixture), so a JV game takes the classification the varsity
  * pipeline already gave its varsity counterpart:
  *
+ *   0. a game lib/jv-corrections.ts names (leagueGames, each with its evidence) counts for that division;
  *   1. a varsity game between the same two schools within ±3 days (the nearest; two equally near
  *      decide nothing): the JV game counts for that game's division table when the varsity game
  *      does (`countsFor`), is non-league when the varsity game is, and is left uncounted when the
@@ -28,6 +29,11 @@
  * so teams level on points share a place. A school is in its division's JV table when it has at least
  * one JV league game (played or not); a school with none is named under the table instead.
  *
+ * A JV slot team. PCAL pairs Santa Catalina (varsity only) with York (JV only) as one schedule slot
+ * (lib/jv-teams.ts JV_OUTSIDE_TEAMS), so a York game is classified as Santa Catalina's (its varsity
+ * counterpart is Santa Catalina's game of the day) and York holds the table row: no registry page, its
+ * MaxPreps team id, its own name. Santa Catalina is then neither a row nor named as absent.
+ *
  * When a JV table is shown. Coaches enter JV scores far less often than varsity ones, and a table
  * built on a few of a division's games would rank teams on whichever coaches enter scores. So a
  * table is shown only when at least JV_STANDINGS_MIN_REPORTED_SHARE of the division's JV league
@@ -37,10 +43,11 @@
  */
 
 import { byDateThenId, dayDiff } from './format';
+import { jvOutsideTeamByMaxprepsId, jvSlotTeamFor } from './jv-teams';
 import { LEAGUES, getLeague } from './leagues';
 import { recordOver } from './standings';
 import { getTeamBySlug, teamsInDivision } from './teams';
-import type { ComputedRecord, ContestId, DivisionId, Game, LeagueId, OfficialFixture, TeamSlug } from './types';
+import type { ComputedRecord, ContestId, DivisionId, Game, GameSide, LeagueId, OfficialFixture, TeamSlug } from './types';
 
 /** A varsity game or official fixture this many days either side of the JV date can be its counterpart. */
 export const JV_COUNTERPART_WINDOW_DAYS = 3;
@@ -48,12 +55,20 @@ export const JV_COUNTERPART_WINDOW_DAYS = 3;
 export const JV_STANDINGS_MIN_REPORTED_SHARE = 0.6;
 
 export type JvClassification =
-  | { kind: 'league'; division: DivisionId; via: 'varsity-game' | 'official-fixture'; ref: string }
+  | { kind: 'league'; division: DivisionId; via: 'varsity-game' | 'official-fixture' | 'correction'; ref: string }
   | { kind: 'non-league'; reason: 'varsity-non-league' | 'different-divisions' | 'outside-registry' }
   | { kind: 'uncounted'; reason: 'no-varsity-counterpart' | 'ambiguous' | 'varsity-postseason'; division: DivisionId };
 
 function pairOf(g: { home: { slug: string | null }; away: { slug: string | null } }): string | null {
   return g.home.slug && g.away.slug ? [g.home.slug, g.away.slug].sort().join('~') : null;
+}
+
+/**
+ * The registry school a JV side plays for: its own slug, or, for a team that plays a school's JV slot
+ * (lib/jv-teams.ts JV_OUTSIDE_TEAMS: York for Santa Catalina), that school.
+ */
+function slotSlug(side: Pick<GameSide, 'slug' | 'teamId'>): TeamSlug | null {
+  return side.slug ?? jvOutsideTeamByMaxprepsId(side.teamId)?.jvFor ?? null;
 }
 
 /** The nearest candidate within the window, `ambiguous` when two are equally near, or null. */
@@ -72,6 +87,8 @@ export function classifyJvGames(
   jvGames: readonly Game[],
   varsityGames: readonly Game[],
   officialFixtures: readonly OfficialFixture[],
+  /** Rule 0: a JV league game a source shows that no rule below can (lib/jv-corrections.ts leagueGames). */
+  leagueGames: Readonly<Record<ContestId, { division: DivisionId; source: string }>> = {},
 ): Map<ContestId, JvClassification> {
   const varsityByPair = new Map<string, Game[]>();
   for (const g of varsityGames) {
@@ -86,9 +103,16 @@ export function classifyJvGames(
 
   const out = new Map<ContestId, JvClassification>();
   for (const g of jvGames) {
-    const key = pairOf(g);
-    const home = g.home.slug ? getTeamBySlug(g.home.slug) : undefined;
-    const away = g.away.slug ? getTeamBySlug(g.away.slug) : undefined;
+    const named = leagueGames[g.contestId];
+    if (named) {
+      out.set(g.contestId, { kind: 'league', division: named.division, via: 'correction', ref: named.source });
+      continue;
+    }
+    const homeSlug = slotSlug(g.home);
+    const awaySlug = slotSlug(g.away);
+    const key = pairOf({ home: { slug: homeSlug }, away: { slug: awaySlug } });
+    const home = homeSlug ? getTeamBySlug(homeSlug) : undefined;
+    const away = awaySlug ? getTeamBySlug(awaySlug) : undefined;
     if (!key || !home || !away) {
       out.set(g.contestId, { kind: 'non-league', reason: 'outside-registry' });
       continue;
@@ -138,8 +162,12 @@ export function withJvClassification(games: readonly Game[], classes: ReadonlyMa
 }
 
 export interface JvStandingRow {
-  slug: TeamSlug;
+  /** null for a JV slot team (York), which has no registry page. */
+  slug: TeamSlug | null;
   teamId: string;
+  name: string;
+  /** For a JV slot team: the registry school whose slot it plays. */
+  jvFor?: TeamSlug;
   record: ComputedRecord;
   /** Level on points with another team: the two share `record.place`. */
   shared: boolean;
@@ -164,6 +192,8 @@ export interface JvDivisionTable {
   reported: number;
   /** Counted finals whose score is si.com's (lib/jv-merge.ts). */
   sbliveScores: number;
+  /** Counted finals whose score is a school athletics site's (lib/jv-school-sites.ts). */
+  schoolSiteScores: number;
   /** League games still to come (not final, dated today or later). */
   toCome: number;
   /** Same-division JV games with no varsity counterpart, which no table counts. */
@@ -187,11 +217,19 @@ export function computeJvStandings(
       const played = leagueGames.filter(
         (g) => g.status === 'final' || (g.dateKey < today && g.status !== 'postponed'),
       ).length;
-      const members = new Set(leagueGames.flatMap((g) => [g.home.slug, g.away.slug]).filter((s): s is string => s !== null));
+      const members = new Set(
+        leagueGames.flatMap((g) => [slotSlug(g.home), slotSlug(g.away)]).filter((s): s is string => s !== null),
+      );
       const teams = teamsInDivision(div.id);
       const records = teams
         .filter((t) => members.has(t.slug))
-        .map((t) => ({ team: t, record: recordOver(finals, t.id, points, 0) }));
+        .map((t) => {
+          const slot = jvSlotTeamFor(t.slug);
+          const team: { slug: TeamSlug | null; id: string; name: string; jvFor?: TeamSlug } = slot
+            ? { slug: null, id: slot.maxprepsTeamId, name: slot.name, jvFor: t.slug }
+            : { slug: t.slug, id: t.id, name: t.name };
+          return { team, record: recordOver(finals, team.id, points, 0) };
+        });
       // By points; level teams share a place (no league publishes a JV tiebreak); teams with no
       // result yet go last, by name.
       records.sort(
@@ -206,7 +244,14 @@ export function computeJvStandings(
         const level = prev !== undefined && record.gp > 0 && prev.record.gp > 0 && prev.record.pts === record.pts;
         const place = level ? prev.record.place : i + 1;
         if (level) prev.shared = true;
-        rows.push({ slug: team.slug, teamId: team.id, record: { ...record, place }, shared: level });
+        rows.push({
+          slug: team.slug,
+          teamId: team.id,
+          name: team.name,
+          ...(team.jvFor ? { jvFor: team.jvFor } : {}),
+          record: { ...record, place },
+          shared: level,
+        });
       });
       const reported = finals.length;
       out.push({
@@ -215,10 +260,11 @@ export function computeJvStandings(
         status:
           played === 0 ? 'none-played' : reported / played >= JV_STANDINGS_MIN_REPORTED_SHARE ? 'shown' : 'too-few',
         rows,
-        absent: teams.filter((t) => !members.has(t.slug)).map((t) => t.slug),
+        absent: teams.filter((t) => !members.has(t.slug) && !jvSlotTeamFor(t.slug)).map((t) => t.slug),
         played,
         reported,
         sbliveScores: finals.filter((g) => g.provenance.scores === 'sblive').length,
+        schoolSiteScores: finals.filter((g) => g.provenance.scores === 'school-site').length,
         toCome: leagueGames.filter((g) => g.status !== 'final' && g.dateKey >= today).length,
         uncounted: games
           .filter((g) => {

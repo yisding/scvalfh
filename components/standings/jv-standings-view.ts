@@ -18,7 +18,8 @@ import {
   type JvStandingRow,
 } from '../../lib/jv-standings';
 import { divisionHeading, getDivision, getLeague, isSingleDivision } from '../../lib/leagues';
-import { getTeamBySlug } from '../../lib/teams';
+import { jvSlotTeamFor } from '../../lib/jv-teams';
+import { getTeamBySlug, teamsInDivision } from '../../lib/teams';
 import type { DivisionId, LeagueId, Team, TeamSlug } from '../../lib/types';
 
 export interface JvTableView {
@@ -28,7 +29,10 @@ export interface JvTableView {
   /** `De Anza JV` for a multi-division league, `SCVAL JV` for a single-division one. */
   title: string;
   status: JvDivisionTable['status'];
-  rows: Array<{ row: JvStandingRow; team: Team }>;
+  /** `team` is null for a JV slot team (York), which has no page; `mascot` is then its tile stem. */
+  rows: Array<{ row: JvStandingRow; team: Team | null; mascot: string | null }>;
+  /** "York plays the JV games of Santa Catalina, which fields varsity only, …" when the table has such a team. */
+  slotNote: string | null;
   /** "12 of the 18 El Camino JV league games played so far have a score (2 are si.com’s †)." */
   coverage: string;
   /** "Through Sep 30." when the table is shown and has a counted final. */
@@ -66,7 +70,11 @@ export function jvTableTitle(division: DivisionId): string {
 function viewOf(t: JvDivisionTable): JvTableView {
   const title = jvTableTitle(t.division);
   const isAre = (n: number) => `${n} ${n === 1 ? 'is' : 'are'}`;
-  const sblive = t.sbliveScores > 0 ? ` (${isAre(t.sbliveScores)} si.com’s †)` : '';
+  const marked = [
+    t.sbliveScores > 0 ? `${isAre(t.sbliveScores)} si.com’s` : null,
+    t.schoolSiteScores > 0 ? `${t.schoolSiteScores} from a school’s own athletics site` : null,
+  ].filter((p): p is string => p !== null);
+  const sblive = marked.length ? ` (${marked.join(', ')} †)` : '';
   const coverage =
     t.played === 0
       ? `No ${title} league game has been played yet${t.toCome > 0 ? `; ${isAre(t.toCome)} to come` : ''}.`
@@ -87,7 +95,12 @@ function viewOf(t: JvDivisionTable): JvTableView {
     anchor: isSingleDivision(t.league) ? null : t.division,
     title,
     status: t.status,
-    rows: t.rows.map((row) => ({ row, team: getTeamBySlug(row.slug)! })),
+    rows: t.rows.map((row) => ({
+      row,
+      team: row.slug ? getTeamBySlug(row.slug)! : null,
+      mascot: row.slug ? null : (jvSlotTeamFor(row.jvFor ?? null)?.mascot ?? null),
+    })),
+    slotNote: slotNoteOf(t),
     coverage: noneListed
       ? `No ${title.replace(/ JV$/, '')} school has a JV league game on MaxPreps or si.com.`
       : t.status === 'too-few'
@@ -109,6 +122,17 @@ function viewOf(t: JvDivisionTable): JvTableView {
           .join('; ')}.`
       : null,
   };
+}
+
+/** The sentence that says who plays a varsity-only school's JV slot, when a division has one. */
+function slotNoteOf(t: JvDivisionTable): string | null {
+  const notes = teamsInDivision(t.division).flatMap((school) => {
+    const slot = jvSlotTeamFor(school.slug);
+    return slot
+      ? [`${slot.name}, which fields JV only, plays the JV games of ${school.shortName}, which fields varsity only, in its place on ${getLeague(t.league).shortName}’s schedule.`]
+      : [];
+  });
+  return notes.length ? notes.join(' ') : null;
 }
 
 /** A league's JV tables, in division order. */

@@ -348,13 +348,8 @@ describe('teams: the registry is the nine leagues and the LA independents', () =
     expect(la.external.maxprepsScheduleUrl).toMatch(/\/schedule\/$/);
     expect(la.external.sbliveGamesUrl).toContain('458850-los-altos-eagles');
     expect(la.external.sbliveSchoolId).toBe('12174');
-    // si.com ids and slugs are never guessed: Marin Academy has none observed.
+    // si.com ids and slugs are never guessed: each was read from si.com (Marin Academy's, the last, on 2026-11-03).
     for (const t of TEAMS) {
-      if (t.slug === 'marin-academy') {
-        expect(t.external.sbliveTeamId).toBeUndefined();
-        expect(t.external.sbliveGamesUrl).toBeUndefined();
-        continue;
-      }
       expect(t.external.sbliveTeamId, t.slug).toBeTruthy();
       expect(t.external.sbliveGamesUrl, t.slug).toContain(`/${t.external.sbliveTeamId}-`);
       expect(t.external.sbliveGamesUrl, t.slug).toMatch(
@@ -363,6 +358,7 @@ describe('teams: the registry is the nine leagues and the LA independents', () =
       if (t.external.sbliveSchoolId !== undefined) expect(t.external.sbliveSchoolId).toMatch(/^\d+$/);
     }
     expect(resolveTeam('homestead')!.external.sbliveGamesUrl).toContain('458667-homestead-mustangs');
+    expect(resolveTeam('marin-academy')!.external).toMatchObject({ sbliveTeamId: '575124', sbliveSchoolId: '257' });
     expect(resolveTeam('santa-clara')!.external.sbliveGamesUrl).toContain('496839-santa-clara-bruins');
     // Only the two VERIFIED VNN siteIds exist.
     expect(resolveTeam('palo-alto')!.external.vnnIcsUrl).toContain('2635290');

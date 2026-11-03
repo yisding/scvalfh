@@ -23,6 +23,7 @@ import {
   computeJvStandings,
   withJvClassification,
 } from '../lib/jv-standings';
+import { jvSlotTeamFor } from '../lib/jv-teams';
 import { LEAGUES } from '../lib/leagues';
 import { TEAMS, teamsInDivision } from '../lib/teams';
 import type { Game, OfficialFixture } from '../lib/types';
@@ -63,6 +64,27 @@ describe('classifyJvGames: a JV game takes its varsity counterpart’s classific
     expect(c.get(near.contestId)?.kind).toBe('league');
     expect(JV_COUNTERPART_WINDOW_DAYS).toBe(3);
     expect(c.get(far.contestId)).toEqual({ kind: 'uncounted', reason: 'no-varsity-counterpart', division: 'de-anza' });
+  });
+
+  it('classifies a York game as Santa Catalina’s, whose JV slot York plays on PCAL’s schedule', () => {
+    const york = { teamId: 'e9a91bc8-5999-4321-9e21-d6cdc8aafcb2', slug: null, name: 'York', score: 6, result: 'W' as const };
+    const other = { teamId: '00000000-0000-0000-0000-00000000aaaa', slug: null, name: 'Somewhere Else', score: 0, result: 'L' as const };
+    const varsity = game({ home: 'santa-catalina', away: 'greenfield', date: '2026-09-04', hs: 2, as: 0 });
+    expect(varsity.countsFor).toBe('pcal');
+    const base = jv({ home: 'santa-catalina', away: 'greenfield', date: '2026-09-04', hs: 6, as: 0 });
+    const vsYork: Game = { ...base, contestId: 'york-1', home: york };
+    const vsElse: Game = { ...base, contestId: 'else-1', home: other };
+    const c = classifyJvGames([vsYork, vsElse], [varsity], []);
+    expect(c.get('york-1')).toEqual({ kind: 'league', division: 'pcal', via: 'varsity-game', ref: varsity.contestId });
+    expect(c.get('else-1')).toEqual({ kind: 'non-league', reason: 'outside-registry' });
+    // York holds the table row, by its MaxPreps id; Santa Catalina is neither a row nor absent.
+    const tables = computeJvStandings(withJvClassification([vsYork], c), c, '2026-11-03');
+    const pcal = tables.find((t) => t.division === 'pcal')!;
+    expect(pcal.rows.map((r) => [r.slug, r.name, r.jvFor ?? null, r.record.w])).toEqual([
+      [null, 'York', 'santa-catalina', 1],
+      ['greenfield', 'Greenfield', null, 0],
+    ]);
+    expect(pcal.absent).not.toContain('santa-catalina');
   });
 
   it('is non-league when the varsity game is, and uncounted when it is a postseason game', () => {
@@ -177,8 +199,10 @@ describe('the JV tables served from the committed files', () => {
     for (const t of tables) {
       expect(t.reported).toBeLessThanOrEqual(t.played);
       const members = new Set(teamsInDivision(t.division).map((x) => x.slug));
-      for (const r of t.rows) expect(members.has(r.slug)).toBe(true);
-      expect(t.rows.length + t.absent.length).toBe(members.size);
+      for (const r of t.rows) expect(members.has(r.slug ?? r.jvFor!)).toBe(true);
+      // A varsity-only school whose JV slot another team plays (Santa Catalina, York's) is never absent.
+      const slotOnly = teamsInDivision(t.division).filter((x) => jvSlotTeamFor(x.slug) && !t.rows.some((r) => r.jvFor === x.slug));
+      expect(t.rows.length + t.absent.length + slotOnly.length).toBe(members.size);
       if (t.status === 'shown') expect(t.reported / t.played).toBeGreaterThanOrEqual(JV_STANDINGS_MIN_REPORTED_SHARE);
     }
   });
@@ -236,7 +260,11 @@ describe('the JV tables served from the committed files', () => {
         }
       }
     }
-    expect(Object.keys(UNCOUNTED_REASON_WORDS).sort()).toEqual(['ambiguous', 'no-varsity-counterpart', 'varsity-postseason']);
+    expect(Object.keys(UNCOUNTED_REASON_WORDS).sort()).toEqual([
+      'ambiguous',
+      'no-varsity-counterpart',
+      'varsity-postseason',
+    ]);
   });
 
   it('chips a JV row by its classification, and none for an uncounted game', () => {

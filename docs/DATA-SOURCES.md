@@ -2224,8 +2224,11 @@ tables of their own are computed (`lib/jv-standings.ts`, last bullet). Read 2026
   the parameter is ignored for JV. SCVAL publishes JV final standings and JV all-league awards only
   at season's end (§1.3; the 2025-26 ones are on `/history/2025-26`).
 - **si.com.** Each varsity games page's level switcher (`level.name` "Junior Varsity", `webPath`)
-  names the school's JV team page; the 48 paths (all but Marin Academy, which has no si.com page) are
-  in `lib/jv-teams.ts`. A JV side is one of ours only by those ids (`JV_SLUG_BY_SBLIVE_ID`), never by
+  names the school's JV team page; the 48 NorCal paths are in `lib/jv-teams.ts` (Marin Academy, which
+  had no si.com page on 2026-10-05, has one since: JV 575146, varsity 575124, read 2026-11-03; its JV
+  page's four finals all agree with MaxPreps, read live on 2026-11-03). The registry has the varsity ids
+  since the same day (team 575124, school 257, `lib/registry/mcal.ts`): before, si.com's varsity Marin
+  Academy rows resolved by name only (Marin Academy v Marin Catholic, Sep 8, `sbliveOnlyScored`). A JV side is one of ours only by those ids (`JV_SLUG_BY_SBLIVE_ID`), never by
   name or by the varsity resolver (which ignores Tamalpais JV and York on purpose). Kept: scored
   finals on `/california/field-hockey/games/` pages; the page must be the JV team asked for. On
   2026-10-05: 68 scored JV finals; no EAL JV page has a score. Matched against MaxPreps by pair and
@@ -2239,6 +2242,49 @@ tables of their own are computed (`lib/jv-standings.ts`, last bullet). Read 2026
   `sblive:<id>` game (rule `absent-fixture`, host from si.com's `isHome`). Never used: a game two JV
   pages list with different scores, a row against a school outside the registry, two rows equally
   near one game. On 2026-10-05: 7 filled, 12 added (8 involve PCAL schools), 3 differ.
+- **Audit of 2026-11-03: what the merge left out, and why.**
+  - si.com rows unused: Edison v Harvard-Westlake twice on Sep 3 (1-0 and 4-0; `ambiguous`) and Edison v
+    Fountain Valley on Sep 11, Oct 1 and Oct 15 (`maxpreps-pair-nearby`) are Edison-entered copies of
+    other games under new dates (the 4-0 is the Oct 1 game at Harvard-Westlake; 11-0 and 7-0 are the
+    varsity scores of Oct 9 and Sep 16; Edison cannot have played at Harvard-Westlake and at home to
+    Fountain Valley on Oct 1). Archie Williams v Marin Catholic on Sep 9 is the MCAL schedule's original
+    date of the Sep 16 game MaxPreps has (same score). All correctly unused.
+  - `opponent-not-registry`: Marin Academy (no si.com path then; with it, the live read of 2026-11-03
+    resolves all four finals on both pages, and they agree with MaxPreps) and York (below).
+  - Uncounted (`no-varsity-counterpart`, 20): same-division games with no varsity game within ±3 days,
+    mostly early-season or extra JV-only games (Edison v Newport Harbor Sep 24 and Oct 6, both
+    "Non League" on si.com), and a few that may be a league fixture's JV leg played on another day (Los
+    Gatos at Lynbrook Oct 26, Homestead at Los Altos Oct 26, Harvard-Westlake at Glendora Oct 19). No
+    source says which, so they stay uncounted.
+  - MaxPreps rows naming the wrong school, a reschedule's leftover row, and a stale Palomar row: left out
+    or corrected in `lib/jv-corrections.ts` (each entry names its evidence). Every correction is by
+    contest id and reported unused once MaxPreps changes the row.
+  - **York** (MaxPreps e9a91bc8, si.com JV 456850 "York Falcons Junior Varsity", Monterey, linking
+    varsity 456851). PCAL's schedule PDF, Note 1: "Santa Catalina is Varsity only. York is JV only. They
+    are paired together in this schedule as CAT/YOR. The V contest will take priority in event of time
+    or site limitations." Its schools line: "Santa Catalina V only (SCAT) … York (YOR) - JV ONLY". So York
+    is PCAL's JV member in Santa Catalina's slot: it holds the PCAL JV table row (`JV_OUTSIDE_TEAMS.jvFor`),
+    the two MaxPreps rows (and si.com's Santa Catalina JV page, 458108, with the same two unscored Salinas
+    games) filed under Santa Catalina are York's, and a York game takes Santa Catalina's varsity game of
+    the day as its counterpart. York v Stevenson Sep 16 (the schedule's date; the varsity game moved to
+    Sep 23) and Oct 30 (its Oct 16 home game is cancelled on si.com) are named league games
+    (`leagueGames`). York's computed 4-0-1 is its si.com league record.
+  - **Cancelled Salinas games.** Salinas' si.com JV page marks six league games "Cancelled" (each game
+    page read 2026-11-03: Stevenson Sep 11 and Oct 12, Greenfield Sep 18 and Oct 16, Carmel Oct 21,
+    Hollister Oct 27); MaxPreps still lists them, unscored. They are left out, as a deleted MaxPreps row
+    is. The JV si.com parser keeps scored finals only, so it does not read "Cancelled"; other schools'
+    cancellations were not swept.
+- **School athletics sites** (`lib/jv-school-sites.ts`, transcribed 2026-11-03). A sweep of school,
+  league and press sites for every past JV league game with no score found two that publish JV results:
+  `sfhsathletics.com/sports/jv-field-hockey/schedule` (Saint Francis, Sidearm; also a text export at
+  `/services/schedule_txt.ashx?schedule=1182`) and `siwildcats.com/sports/jv-field-hockey/schedule` (St.
+  Ignatius, Sidearm, with forfeit and reschedule notes). Of their results MaxPreps or si.com also score,
+  all agree but one (St. Ignatius at Homestead, Sep 21: 6-0 vs MaxPreps' 5-0); the two pages agree on
+  both of their meetings. Schedules only, no results: Cupertino's PDF (chs.fuhsd.org), Mitty's Google
+  Doc (from mitty.com), hbfieldhockey.com, mcalsports.org, BVAL's Google Docs, Leigh's site. Nothing
+  found for BVAL, PCAL, the EAL or the San Diego and Southern Section schools (public-school
+  Edlio/Finalsite calendars post schedules, not results); Valley Christian's Sidearm site
+  (gowarriors.net) is the next one to try.
 - **Rosters and stats** (not shown): MaxPreps' `/jv/roster/` lists players for 11 schools (Homestead
   25, Palo Alto 25, Monta Vista 12, Los Gatos 2, Leigh 18, Greenfield 3, Salinas 1, Tamalpais 22,
   Bella Vista 19, Davis 19, Lassen 15) and `/jv/stats/` has leaders for 4 (Monta Vista, Bella Vista,
@@ -2511,7 +2557,7 @@ Metro South Bay 4, independents 5 = 53 in SoCal; 102 in all.
 | university-sf | UN | mcal | marin-county | `7ad2b4f5-955e-4a92-ac1f-a1acced4df4b` | San Francisco University | 456869 | 259 |
 | marin-catholic | MC | mcal | marin-county | `69e24861-fa93-42a2-acb5-be60e01ee555` | Marin Catholic | 456834 | 163 |
 | convent-sacred-heart | CS | mcal | marin-county | `d15d09d0-f8a6-463e-86d4-d998dbee7751` | Convent of the Sacred Heart | 512325 | 6922 |
-| marin-academy | MA | mcal | marin-county | `9f489fa8-a23a-4924-a2a0-5c5cff3c0fdc` | Marin Academy | — | — |
+| marin-academy | MA | mcal | marin-county | `9f489fa8-a23a-4924-a2a0-5c5cff3c0fdc` | Marin Academy | 575124 | 257 |
 | bella-vista | BV | eal | eal | `204d6632-16ce-41fc-a733-dd11ec3af582` | Bella Vista | 459060 | 12991 |
 | chico | CI | eal | eal | `041ef7b7-089b-4e7d-9c9c-9ff1f833f829` | Chico | 458564 | 10335 |
 | corning | CR | eal | eal | `8f1a8024-2d40-4cab-bcba-3b9b367c6873` | Corning | 458585 | 10501 |
@@ -2633,7 +2679,7 @@ the school Santa Teresa High School fields no team. If it ever does, its slug mu
 | School | Why | Handling |
 |---|---|---|
 | Wilcox (SCVAL De Anza grid) | not fielding a team | in SCVAL's `withdrawnNames`; its 14 grid fixtures are dropped when the PDF is parsed; si.com id 485528 ignored |
-| York (PCAL grid slot `CAT/YOR`) | plays JV field hockey only | in PCAL's `withdrawnNames`; the `CAT/YOR` token maps to Santa Catalina; si.com id 456851 ignored; team search answers "not covered" |
+| York (PCAL grid slot `CAT/YOR`) | plays JV field hockey only | in PCAL's `withdrawnNames`; the `CAT/YOR` token maps to Santa Catalina; si.com id 456851 ignored; team search answers "not covered". JV: PCAL's JV member in Santa Catalina's slot (the schedule's Note 1); matched by MaxPreps e9a91bc8 and si.com JV 456850 and shown in the PCAL JV table in Santa Catalina's place (`JV_OUTSIDE_TEAMS`, §1.7) |
 | Red Bluff (EAL) `4d3da788-bbe2-4ab9-b854-d95aa9786cda` | not fielding a varsity team in 2026 (§3.2) | still a 0-0-0 row in MaxPreps' EAL table (`maxprepsExtraRows`, skipped silently); in the EAL's `withdrawnNames`; si.com ids 490259, 490260 and 635037 ignored; team search answers "not covered" |
 | Del Norte (Crescent City) `8396a0d3-8021-458d-b592-a5cb2c4a366d` | a MaxPreps ghost team (no league, team size 0) | every contest with this side is dropped and listed in the snapshot's `dropped` list. si.com also has a Crescent City Del Norte (458609), which it shows playing Tamalpais and Davis on 2026-10-16, the games MaxPreps gives Del Norte of San Diego (a registry team since the SoCal amendment, §2.1); "Del Norte" is in `STATEWIDE_AMBIGUOUS`, so neither si.com row resolves by name |
 | Irvington, Gunn, San Jose, North Monterey County, University Prep Academy | no 2026-27 varsity team | nothing to do |

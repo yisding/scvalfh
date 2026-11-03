@@ -95,8 +95,11 @@ export interface GameDisplay {
    * playoffs` · `CCS` when `postseason` is set.
    */
   postseasonTag: string | null;
-  /** 'si.com' when D2 published si.com's score (`provenance.scores === 'sblive'`): the † marker. */
-  sourceMark: 'si.com' | null;
+  /**
+   * 'si.com' when D2 published si.com's score (`provenance.scores === 'sblive'`): the † marker. 'school site'
+   * for a JV score from a school's own athletics site (lib/jv-school-sites.ts), marked † with its own words.
+   */
+  sourceMark: 'si.com' | 'school site' | null;
   /** A forfeit is excluded from GF/GA/GD and from MarginStrip; the row prints a dagger. */
   isForfeit: boolean;
   /** true ⇒ render the two score cells. false ⇒ the time/label takes the column. */
@@ -246,7 +249,8 @@ function chipsFor(game: Game): Pick<GameDisplay, 'isNonLeague' | 'leagueTag' | '
     isNonLeague: gameKind(game) === 'non-league',
     leagueTag: leagueTagOf(game),
     postseasonTag: postseasonTagOf(game),
-    sourceMark: game.provenance.scores === 'sblive' ? 'si.com' : null,
+    sourceMark:
+      game.provenance.scores === 'sblive' ? 'si.com' : game.provenance.scores === 'school-site' ? 'school site' : null,
   };
 }
 

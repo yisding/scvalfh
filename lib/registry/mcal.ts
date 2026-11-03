@@ -218,5 +218,11 @@ export const MCAL_SEEDS: readonly Seed[] = [
     aliases: [
       'Marin Academy', 'MARIN ACADEMY', 'Marin Academy Wildcats', 'Marin Academy (San Rafael)',
     ],
+    // No si.com page on 2026-10-02. Read 2026-11-03: the varsity games page (team 575124, level
+    // "Varsity", school 257 "/california/schools/257-marin-academy") lists JV 575146 in `otherTeams`,
+    // and the JV page lists this one back.
+    sbliveTeamId: '575124',
+    sbliveSlug: '575124-marin-academy-wildcats',
+    sbliveSchoolId: '257',
   },
 ];

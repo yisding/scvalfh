@@ -28,6 +28,10 @@
  * tile's rounded corners never clip it. A logo on a solid colour block (Leigh, Del Mar, Westview)
  * or a full-bleed square (Bishop's, Canyon Crest) is drawn to the edge instead; see `framing`.
  *
+ * A JV slot team (lib/jv-teams.ts JV_OUTSIDE_TEAMS: York, which plays Santa Catalina's PCAL JV games)
+ * has no registry row or MaxPreps mascot; its tiles (`<mascot>-<px>.webp`) are drawn the same way from
+ * the logo it names (`--only york`).
+ *
  * Node's built-in fetch ignores HTTPS_PROXY; behind a proxy run it with NODE_USE_ENV_PROXY=1.
  */
 
@@ -36,6 +40,7 @@ import path from 'node:path';
 
 import sharp, { type Sharp } from 'sharp';
 
+import { JV_OUTSIDE_TEAMS } from '../lib/jv-teams';
 import { MASCOT_FILE_SIZES } from '../lib/mascots';
 import { CHROME_USER_AGENT, HttpClient } from '../lib/sources/http';
 import { TEAMS } from '../lib/teams';
@@ -221,9 +226,15 @@ async function main(argv: readonly string[]): Promise<number> {
     console.log(USAGE);
     return 0;
   }
-  const unknown = [...args.only, ...Object.keys(SOURCE_OVERRIDES)].filter((s) => !TEAMS.some((t) => t.slug === s));
-  if (unknown.length > 0) throw new Error(`not a registry slug: ${unknown.join(', ')}`);
-  const teams: readonly Team[] = args.only.length > 0 ? TEAMS.filter((t) => args.only.includes(t.slug)) : TEAMS;
+  // Every registry team, then each JV slot team (York), which has no MaxPreps mascot of its own: its tiles
+  // are drawn from the logo lib/jv-teams.ts names.
+  const targets: ReadonlyArray<{ slug: string; url: string }> = [
+    ...TEAMS.map((t) => ({ slug: t.slug, url: mascotUrl(t) })),
+    ...Object.values(JV_OUTSIDE_TEAMS).map((t) => ({ slug: t.mascot, url: t.mascotSource })),
+  ];
+  const unknown = [...args.only, ...Object.keys(SOURCE_OVERRIDES)].filter((s) => !targets.some((t) => t.slug === s));
+  if (unknown.length > 0) throw new Error(`not a registry slug or JV slot team: ${unknown.join(', ')}`);
+  const teams = args.only.length > 0 ? targets.filter((t) => args.only.includes(t.slug)) : targets;
 
   const onLog = (line: string) => console.log(`  ${line}`);
   const http = new HttpClient({ onLog });
@@ -231,8 +242,8 @@ async function main(argv: readonly string[]): Promise<number> {
   const sblive = new HttpClient({ onLog, userAgent: CHROME_USER_AGENT });
   const results = await Promise.all(
     teams.map(async (team) => {
-      const url = mascotUrl(team);
-      const res = await (url.startsWith(SBLIVE) ? sblive : http).bytes(url, 'image/gif,image/png,image/*');
+      const url = team.url;
+      const res = await (url.startsWith(SBLIVE) ? sblive : http).bytes(url, 'image/gif,image/png,image/webp,image/*');
       if (!res.contentType?.startsWith('image/')) {
         throw new Error(`${team.slug}: ${res.url} answered ${res.contentType ?? 'no content type'}`);
       }
