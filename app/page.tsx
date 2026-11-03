@@ -8,7 +8,7 @@ import LeagueCard from '../components/home/LeagueCard';
 import LeaguePanel from '../components/home/LeaguePanel';
 import MyTeamCard from '../components/home/MyTeamCard';
 import { buildHomeView } from '../components/home/home-view';
-import LeagueSwitcher, { RegionSwitcher } from '../components/layout/LeagueSwitcher';
+import LeagueSwitcher, { RegionSwitcher } from '../components/prefs/LeagueSwitcher';
 import PageHeader from '../components/layout/PageHeader';
 import JsonLd from '../components/metadata/JsonLd';
 import { OG_BASE, SITE_NAME, leaguesBySectionWords } from '../components/layout/site';

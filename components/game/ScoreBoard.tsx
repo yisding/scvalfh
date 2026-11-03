@@ -4,12 +4,12 @@ import { shortDate, timeOfDayPT } from '../../lib/format';
 import { getTeamBySlug } from '../../lib/teams';
 import type { Game } from '../../lib/types';
 
-import { NON_MEMBER_NOTE } from './GameRow';
-import GhostMonogram from './GhostMonogram';
-import { ScoreGlyph, nameClass } from './ScoreGlyph';
-import StatusLabel, { GameChips } from './StatusLabel';
-import TeamMonogram from './TeamMonogram';
-import { describeGame, statusLabelIsTime, type SideView } from './describe-game';
+import { NON_MEMBER_NOTE } from '../ui/GameRow';
+import GhostMonogram from '../ui/GhostMonogram';
+import { ScoreGlyph, nameClass } from '../ui/ScoreGlyph';
+import StatusLabel, { GameChips } from '../ui/StatusLabel';
+import TeamMonogram from '../ui/TeamMonogram';
+import { describeGame, statusLabelIsTime, type SideView } from '../ui/describe-game';
 
 /**
  * The /game/[id] hero (DESIGN §3.5, §7.4; modernization brief §4.16). A final score is the

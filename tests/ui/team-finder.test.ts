@@ -17,7 +17,7 @@ import {
   resultDetail,
 } from '../../components/search/TeamFinder';
 import { getTeamSearchIndex } from '../../lib/data';
-import { pinLabel } from '../../lib/pin-label';
+import { pinLabel } from '../../components/words/pin-label';
 import { searchTeams } from '../../lib/search';
 
 import { decodeEntities, stripTags } from './html-text';

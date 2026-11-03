@@ -15,7 +15,7 @@ import PostseasonSection from '../../components/about/sections/PostseasonSection
 import PrivacySection from '../../components/about/sections/PrivacySection';
 import SourcesSection from '../../components/about/sections/SourcesSection';
 import StandingsSection from '../../components/about/sections/StandingsSection';
-import { RegionSwitcher } from '../../components/layout/LeagueSwitcher';
+import { RegionSwitcher } from '../../components/prefs/LeagueSwitcher';
 import PageHeader from '../../components/layout/PageHeader';
 import { OG_BASE, ROOT_OG_IMAGE } from '../../components/layout/site';
 

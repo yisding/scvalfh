@@ -7,7 +7,7 @@ import Arrow from '../ui/Arrow';
 import { plural } from '../words/plural';
 import { usePinnedTeam } from '../prefs/use-pinned-team';
 import { listWords } from '../../lib/format';
-import { pinLabel } from '../../lib/pin-label';
+import { pinLabel } from '../words/pin-label';
 import {
   normalizeQuery,
   searchTeams,
@@ -31,7 +31,7 @@ import {
  * - `pin` (home): renders its own results — up to `limit` teams in relevance order, then
  *   `Search all 102 on Teams →` when more match. Each result is a `<button>` with NO aria-label:
  *   the visible short name and `<division heading> · <league short>` line sit inside a name that
- *   reads exactly like the pin tiles' (`pinLabel`, lib/pin-label.ts: `Pin Leigh, Mt. Hamilton ·
+ *   reads exactly like the pin tiles' (`pinLabel`, components/words/pin-label.ts: `Pin Leigh, Mt. Hamilton ·
  *   BVAL`), the extra words being sr-only, so the accessible name contains the visible text in
  *   order (WCAG 2.5.3). A tap pins the team (which remembers its league) and calls `onPin`; the
  *   caller moves focus. When this browser stores nothing (`localStorage` throws), each result is

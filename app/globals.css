@@ -966,7 +966,7 @@
     .sx-gridcell:nth-child(3) { border-top-width: 0; }
   }
 
-  /* ── League chips (components/layout/LeagueSwitcher.tsx, SPEC §8.3). text-micro at weight 600,
+  /* ── League chips (components/prefs/LeagueSwitcher.tsx, SPEC §8.3). text-micro at weight 600,
         a 44px target, 6px of side padding and 3px between the check and the word (8px until a
         per-league row had to fit one line at 390 with every chip carrying its check; the drawn
         check's own 1px side bearing makes the visible gap 4px). The current chip is inverse ink +

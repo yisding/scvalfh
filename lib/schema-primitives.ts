@@ -40,7 +40,7 @@ export const calendarDateKey = z.string().refine(isCalendarDate, 'expected YYYY-
  * scraped out of scval.com's HTML — and React does NOT filter a URL scheme, so a `javascript:` or
  * `data:` value from upstream would be emitted verbatim into a clickable link on a prerendered page.
  * The scheme check belongs at the same chokepoint that refuses a 0-0 non-final: it is the one place
- * the whole snapshot has to pass through. `lib/normalize.ts` drops a non-conforming URL to null with
+ * the whole snapshot has to pass through. `lib/pipeline/normalize.ts` drops a non-conforming URL to null with
  * a warning rather than failing the whole run over one bad row.
  */
 export const httpUrl = z

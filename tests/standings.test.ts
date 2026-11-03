@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import { classifyGames } from '../lib/classify';
 import { ALL_DIVISIONS, divisionsOf } from '../lib/leagues';
-import { normalizeGames } from '../lib/normalize';
+import { normalizeGames } from '../lib/pipeline/normalize';
 import {
   computeStandings,
   divisionGames,

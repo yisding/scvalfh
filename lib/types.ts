@@ -301,7 +301,7 @@ export interface PostseasonTag {
 /**
  * What MaxPreps' schedule-calculated feed says about the tournament bracket a game belongs to, copied from the
  * row's `contest.tournamentId` / `tournamentBracketId` and `calculatedFields.bracketName` / `bracketIsPublished` /
- * `bracketMatchupID` / `tournamentName` / `tournamentCanonicalUrl`. Set by lib/normalize.ts only when the
+ * `bracketMatchupID` / `tournamentName` / `tournamentCanonicalUrl`. Set by lib/pipeline/normalize.ts only when the
  * tournamentId is a real GUID: every 2026 crossover, Tournament of Champions and EAL row, and 2025's Super
  * Regional rows, carry the all-zero GUID with every bracket field null (read 2026-10-29), while the 2025 CCS
  * rows of Los Gatos carry the CCS championship's id, `bracketName 'Division 1'`, `bracketIsPublished true`.
@@ -431,7 +431,7 @@ export interface Game {
     dateCorrection?: { maxprepsDateLocal: string; maxprepsTimeTba: boolean; source: string };
     /**
      * NEW. Set when MaxPreps records no overtime but the coach's game note says the game went to it
-     * (lib/normalize.ts overtimeFromNote): the note, so the game page can say where the OT came from.
+     * (lib/pipeline/normalize.ts overtimeFromNote): the note, so the game page can say where the OT came from.
      */
     overtimeNote?: string;
   };

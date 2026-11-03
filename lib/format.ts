@@ -446,7 +446,7 @@ export function streakString(streak: { count: number; result: Outcome } | null):
  * a stored shootout tally decides when present; a decider 'SO' with complementary result flags
  * {W, L} (an EAL 1 v 1 win, or a San Diego Section shootout win MaxPreps records as a level score:
  * no tally stored) takes that side's flag; anything else is read off the score. Section-free on
- * purpose: `decider` 'SO' is only ever written by lib/normalize.ts for two teams of a section whose
+ * purpose: `decider` 'SO' is only ever written by lib/pipeline/normalize.ts for two teams of a section whose
  * `shootout` rule is set, so nothing here needs the config.
  */
 export function sideOutcome(

@@ -95,13 +95,13 @@ sportSeasonId/year/season/level/stateCode`, plus freshness probes
 |---|---|---|---|
 | `teams[].homeAwayType` | `0` | home | **[V]** |
 | | `1` | away | **[V]** |
-| | `2` | neutral (both sides `2`; `lib/normalize.ts` reads it as `site: 'neutral'`) | **[V]** observed 2026-10-29 on 2025 postseason rows: both rows of the 2025 EAL Super Regional (Nov 1 2025; a real capture, `tests/fixtures/maxpreps/postseason-2025/sched-davis-2025-super-regional.json`) and both sides of the 2025 CCS Division 1 final at Los Altos HS (`e6091e07`, Los Gatos's feed, transcribed; §1.4). Not seen on a regular-season row |
+| | `2` | neutral (both sides `2`; `lib/pipeline/normalize.ts` reads it as `site: 'neutral'`) | **[V]** observed 2026-10-29 on 2025 postseason rows: both rows of the 2025 EAL Super Regional (Nov 1 2025; a real capture, `tests/fixtures/maxpreps/postseason-2025/sched-davis-2025-super-regional.json`) and both sides of the 2025 CCS Division 1 final at Los Altos HS (`e6091e07`, Los Gatos's feed, transcribed; §1.4). Not seen on a regular-season row |
 | `teams[].contestType` | `0` | league/conference game | **[V]** 21/21 agreement with prose |
 | | `1` | non-conference | **[V]** |
 | `calculatedFields.contestState` | `0` | unknown | **[U]** not observed |
 | | `1` | **Deleted** — `canonicalUrl` null, may still carry a real score (observed: a scrimmage with a 0-4 score) — **must be dropped before constructing a `Game`** | **[V]** |
 | | `2` | Pregame / scheduled | **[V]** |
-| | `3` | ContestInProgress (live): observed on three Southern California contests dated 2026-10-05, read that evening (~17:05 PT) while they were being played or had just ended: Otay Ranch at Eastlake `601ffe30-7e13-4bac-92f0-d03c53bac7ea`, Chaparral at Temecula Valley `37865d67-1dd6-480f-b1ca-e36d2bb275e9`, University City at Point Loma `c65dd446-70ac-4df9-9859-b6c62a81b091`. `lib/normalize.ts` reads it as `live` | **[V]** 3 contests, 2026-10-05 |
+| | `3` | ContestInProgress (live): observed on three Southern California contests dated 2026-10-05, read that evening (~17:05 PT) while they were being played or had just ended: Otay Ranch at Eastlake `601ffe30-7e13-4bac-92f0-d03c53bac7ea`, Chaparral at Temecula Valley `37865d67-1dd6-480f-b1ca-e36d2bb275e9`, University City at Point Loma `c65dd446-70ac-4df9-9859-b6c62a81b091`. `lib/pipeline/normalize.ts` reads it as `live` | **[V]** 3 contests, 2026-10-05 |
 | | `4` | Boxscore / final | **[V]** |
 | | `5` | ScoreNotReported | **[V]** |
 | `contest.dateCode` | `0` | date+time known | **[V]** |
@@ -1603,7 +1603,7 @@ Gotchas, all **[V]**:
     marks each changed row and quotes the note (`components/game/game-stats-view.ts`).
   - **Overtime.** A final MaxPreps records with 0 overtime periods counts as one period of
     overtime (two for "double OT" / "2OT") when its note says so: "OT" in capitals as a word of
-    its own, or "overtime", never right after "no", "not", "without" or "never" (`overtimeFromNote` in `lib/normalize.ts`, the same
+    its own, or "overtime", never right after "no", "not", "without" or "never" (`overtimeFromNote` in `lib/pipeline/normalize.ts`, the same
     place the "reschedul…" note already marks a postponement). Only a level score or a one-goal
     margin can come out of sudden victory, so a note on any other score is reported, not read. The
     game keeps the note in `provenance.overtimeNote`, and its page says the OT is the note's.
@@ -2096,7 +2096,7 @@ the untested plan the paragraph carried since the preseason).
   (`https://www.nfhsnetwork.com/events/cifccs/gamd457a295b4`) **[V]**. `bracketGameIndex` is 0 on every row
   and says nothing about the slot. Every 2026 crossover, Tournament of Champions and EAL row carries the
   all-zero GUID as `tournamentId` **[V]**.
-- **What the pipeline does with them** (since 2026-10-29). `lib/normalize.ts` sets `Game.bracket` only for a
+- **What the pipeline does with them** (since 2026-10-29). `lib/pipeline/normalize.ts` sets `Game.bracket` only for a
   real `tournamentId` (`isRealGuid` refuses null and the all-zero id); when two feeds disagree on
   `bracketName` it warns and keeps the copy with `bracketIsPublished` true. `lib/classify.ts` rule 1c tags a
   game whose `bracket.tournamentId` is `CCS.tournament.id` (or whose tournament name says "Central Coast

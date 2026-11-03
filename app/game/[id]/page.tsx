@@ -26,7 +26,7 @@ import { gameJsonLd } from '../../../components/metadata/structured-data';
 import { getBracketPlace } from '../../../components/playoffs/bracket-place';
 import Arrow from '../../../components/ui/Arrow';
 import ExternalLink from '../../../components/ui/ExternalLink';
-import ScoreBoard from '../../../components/ui/ScoreBoard';
+import ScoreBoard from '../../../components/game/ScoreBoard';
 
 /**
  * `/game/[id]` — the shareable scoreboard (DESIGN §1.1, §3.5, R-4).

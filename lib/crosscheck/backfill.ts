@@ -307,7 +307,7 @@ function sameLeagueOf(g: Pick<Game, 'home' | 'away'>): string | null {
 /**
  * The section `g`'s two sides are both teams of when it ends a level varsity game with a shootout
  * (SectionConfig.shootout set: the Northern Section, the San Diego Section), else null. Keyed on the section
- * as lib/normalize.ts keys decider 'SO', so a San Diego game between two conferences is covered too, and with
+ * as lib/pipeline/normalize.ts keys decider 'SO', so a San Diego game between two conferences is covered too, and with
  * the same tournament exception: a row MaxPreps marks contestType 2 on either side, in a section whose rule
  * does not reach tournaments (`shootout.coversTournaments` false: the SDFHOA procedures cover the regular
  * season and the playoffs, not invitational tournaments), is governed by no shootout rule, so normalize
@@ -350,7 +350,7 @@ function offScheduleDate(g: Game): string | null {
  * the league's games have none. The Sunset keeps rule 4c (`leagueOvertime` 'none': a level game is recorded
  * as reported) but publishes no rule at all, and its games HAVE been decided in overtime (Great Oak 2-1
  * Temecula Valley, Oct 2), so its note claims no rule: only that si.com has a final score with a winner the same day. A
- * 'site' league (orderScope, lib/leagues.ts) is exactly one that publishes no rules.
+ * 'site' league (orderScope, lib/league-config/<league>.ts) is exactly one that publishes no rules.
  */
 function phantomTieNote(short: string, noPublishedRules: boolean): string {
   return noPublishedRules
@@ -551,7 +551,7 @@ function absentFixtureGame(
   };
 }
 
-/** The decider of a final decided in play, from MaxPreps' overtime count (lib/normalize.ts). */
+/** The decider of a final decided in play, from MaxPreps' overtime count (lib/pipeline/normalize.ts). */
 function overtimeDecider(otPeriods: number): Decider {
   return otPeriods >= 2 ? '2OT' : otPeriods === 1 ? 'OT' : 'REG';
 }

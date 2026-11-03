@@ -3,7 +3,7 @@
  *
  * `ccsBracketGames` is the one derivation of `playoffs.games` (lib/types.ts CcsPlayoffs): every game tagged
  * 'ccs' (lib/classify.ts rules 1c, 2 and 2b) that is dated on or after the quarterfinals (CCS.keyDates), or
- * that MaxPreps' own feed marks as a published bracket game (`Game.bracket.published`, lib/normalize.ts) —
+ * that MaxPreps' own feed marks as a published bracket game (`Game.bracket.published`, lib/pipeline/normalize.ts) —
  * the committee enters the bracket on Mon Nov 2 and the games appear on the team feeds that evening, five
  * days before the first round, so the date alone would leave the bracket empty until Nov 7. The result holds
  * the SAME `Game` objects as `snapshot.games`, in `byDateThenId` order, so every `gameHref` resolves and a

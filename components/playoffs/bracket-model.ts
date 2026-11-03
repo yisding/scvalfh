@@ -7,7 +7,7 @@
  *
  * WHAT THE SNAPSHOT CARRIES NOW. `playoffs.games` is the `Game[]` lib/postseason/ccs-bracket.ts derives: every game
  * tagged 'ccs' that is dated in the bracket or that MaxPreps marks published. Since 2026-10-29 a game can
- * carry `Game.bracket` (lib/normalize.ts): MaxPreps' `bracketName`, 'Division 1' / 'Division 2' for the CCS,
+ * carry `Game.bracket` (lib/pipeline/normalize.ts): MaxPreps' `bracketName`, 'Division 1' / 'Division 2' for the CCS,
  * which is the division label the feed gives and nothing else does (`Game.leagueDivision` is a LEAGUE
  * division, meaningless for a field drawn from SCVAL, BVAL and PCAL). Seeds come only from the owner file
  * (lib/postseason/ccs-bracket.ts getCcsSeeds; null until it is filled). The CCS's own two divisions are `format.ccsDivisions`

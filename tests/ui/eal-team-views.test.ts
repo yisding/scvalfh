@@ -210,8 +210,8 @@ describe('an EAL team page (/teams/davis)', () => {
 describe('the 9/28 Chico-Davis game page (decider SO, no stored tally)', () => {
   it('names Chico first, tags it (SO), and says MaxPreps marks Chico the winner and the tally is not shown', async () => {
     const game = gameOn(eal, 'chico', 'davis', '2026-09-28');
-    expect(game.decider, 'lib/normalize.ts decider').toBe('SO');
-    expect(game.shootout, 'lib/normalize.ts shootout').toBeNull();
+    expect(game.decider, 'lib/pipeline/normalize.ts decider').toBe('SO');
+    expect(game.shootout, 'lib/pipeline/normalize.ts shootout').toBeNull();
     const model = eal.gm.buildGameView(game.contestId)!;
     const title = eal.gm.gameTitle(model);
     expect(title.startsWith('Chico 1, Davis 1 (SO)'), `components/game/game-view.ts gameTitle: ${title}`).toBe(true);
@@ -249,7 +249,7 @@ describe('the 9/28 Chico-Davis game page (decider SO, no stored tally)', () => {
 describe('the 9/2 Pleasant Valley at Chico game page (3 overtime periods, impossible under the rules)', () => {
   it('shows no overtime tag, and carries the note that MaxPreps may have recorded a 1 v 1 as a goal', async () => {
     const game = gameOn(eal, 'chico', 'pleasant-valley', '2026-09-02');
-    expect(game.otPeriods, 'lib/normalize.ts otPeriods as MaxPreps has it').toBe(3);
+    expect(game.otPeriods, 'lib/pipeline/normalize.ts otPeriods as MaxPreps has it').toBe(3);
     const model = eal.gm.buildGameView(game.contestId)!;
     expect(model.display.deciderTag, 'components/ui/describe-game.ts deciderTag').toBeNull();
     expect(eal.gm.gameTitle(model), 'components/game/game-view.ts gameTitle').not.toMatch(/\bOT\b|overtime/i);
@@ -292,9 +292,9 @@ describe('the cross-check paragraph under Elsewhere (components/game/GameSources
   it('on a counted EAL final: "a league game", never "official", plus the 1 v 1 exception', async () => {
     const game = gameOn(eal, 'chico', 'davis', '2026-09-28');
     expect(game.countsFor, 'lib/classify.ts: the game counts').not.toBeNull();
-    expect(eal.l.getDivision(game.countsFor!).official.mode, 'lib/leagues.ts official.mode').toBe('none');
+    expect(eal.l.getDivision(game.countsFor!).official.mode, 'lib/league-config/eal.ts official.mode').toBe('none');
     const league = eal.l.leagueOfDivision(game.countsFor!);
-    expect(league.rules.leagueOvertime, 'lib/leagues.ts leagueOvertime').toBe('shootout');
+    expect(league.rules.leagueOvertime, 'lib/league-config/eal.ts leagueOvertime').toBe('shootout');
     const text = elsewhereText(await eal.renderGame(game.contestId));
     expect(text, 'components/game/GameSources.tsx').toContain(
       'When MaxPreps has no result for a league game, or its row is clearly wrong, we publish si.com’s score and mark it;',
@@ -326,8 +326,8 @@ describe('the cross-check paragraph under Elsewhere (components/game/GameSources
     expect(taggedFinal.postseason?.kind, 'the hand-tagged corpus copy').toBe('league-postseason');
     expect(taggedFinal.countsFor, 'the hand-tagged corpus copy').toBeNull();
     const league = withTag.l.getLeague(taggedFinal.postseason!.leagueId!);
-    expect(league.divisions.every((d) => d.official.mode === 'none'), 'lib/leagues.ts official.mode').toBe(true);
-    expect(league.rules.leagueOvertime, 'lib/leagues.ts leagueOvertime').toBe('shootout');
+    expect(league.divisions.every((d) => d.official.mode === 'none'), 'lib/league-config/eal.ts official.mode').toBe(true);
+    expect(league.rules.leagueOvertime, 'lib/league-config/eal.ts leagueOvertime').toBe('shootout');
     const text = elsewhereText(await withTag.renderGame(taggedFinal.contestId));
     expect(text, 'components/game/GameSources.tsx').toContain('When MaxPreps has no result for a league game,');
     expect(text, 'components/game/GameSources.tsx: no official schedule (D23)').not.toMatch(/\bofficial\b/i);

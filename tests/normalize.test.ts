@@ -16,7 +16,7 @@ import {
   overtimeFromNote,
   splitLocation,
   toUtcIso,
-} from '../lib/normalize';
+} from '../lib/pipeline/normalize';
 import { ScheduleResponseSchema, splitTbaRows, type ScheduleRow } from '../lib/sources/maxpreps';
 import { seasonWindowOf } from '../lib/snapshot/season-build';
 import { getTeamBySlug, resolveTeam } from '../lib/teams';
@@ -699,7 +699,7 @@ describe('normalize: a level final in a 1 v 1 league (EAL)', () => {
     const id = 'eeeeeeee-0000-4000-8000-0000000000a9';
     const res = jv([pairRow(id, ['clairemont', 0, 'L'], ['eastlake', 0, 'W'])]);
     const [g] = res.games;
-    expect(g.decider, 'lib/normalize.ts level jv').toBe('REG');
+    expect(g.decider, 'lib/pipeline/normalize.ts level jv').toBe('REG');
     expect(g.provenance.resultConflict).toBe('MaxPreps marks Clairemont L and Eastlake W on a 0-0 score.');
     expect(sideOutcome(g, 'home'), 'a JV tie stands').toBe('T');
     expect(res.warnings.filter((w) => w.startsWith(`contest ${id}`))).toEqual([

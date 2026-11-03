@@ -4,7 +4,7 @@ import Link from 'next/link';
 import CollegeList from '../../components/commits/CollegeList';
 import CommitList from '../../components/commits/CommitList';
 import { buildCommitsView } from '../../components/commits/commit-view';
-import { RegionSwitcher } from '../../components/layout/LeagueSwitcher';
+import { RegionSwitcher } from '../../components/prefs/LeagueSwitcher';
 import PageHeader from '../../components/layout/PageHeader';
 import { OG_BASE, ROOT_OG_IMAGE } from '../../components/layout/site';
 import EmptyState from '../../components/ui/EmptyState';

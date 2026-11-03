@@ -15,9 +15,17 @@
  * index is where the other region is one tap away.
  */
 import { getLeagueSummaries, type LeagueSummary } from '../../lib/data';
-import type { RegionId } from '../../lib/types';
+import type { SectionConfig } from '../../lib/league-config/shape';
+import type { LeagueId, RegionId } from '../../lib/types';
 
-import type { LeagueChip } from './LeagueSwitcher';
+/** One chip of the switcher (components/prefs/LeagueSwitcher.tsx), as the server hands it over. */
+export interface LeagueChip {
+  id: LeagueId;
+  shortName: string;
+  sectionShort: SectionConfig['shortName'];
+  /** The league's region (its section's): the `data-region-scope` of the list it sits in. */
+  region: RegionId;
+}
 
 function toLeagueChip(summary: LeagueSummary): LeagueChip {
   return {

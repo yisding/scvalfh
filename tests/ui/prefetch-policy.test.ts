@@ -188,7 +188,7 @@ describe('prefetch policy: a link that repeats per row never prefetches', () => 
       // The team finder's "Divisions and leagues" results and the link-mode league chips are
       // per-row links rendered by a helper inside a .map().
       ['components/search/TeamFinder.tsx', 'href={group.href}'],
-      ['components/layout/LeagueSwitcher.tsx', 'href={href}'],
+      ['components/prefs/LeagueSwitcher.tsx', 'href={href}'],
       ['components/layout/LeagueJumpLinks.tsx', 'href={href}'],
       // The clubs pages (DESIGN §17): a club line per roster row, a link per club on /clubs, and a
       // school link per player row on a club page.

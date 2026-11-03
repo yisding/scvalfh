@@ -3,11 +3,12 @@
 import Link from 'next/link';
 import { useState } from 'react';
 
-import { setLeague, setRegion, useEffectiveLeague, useEffectiveRegion } from '../prefs/use-league';
+import { setLeague, setRegion, useEffectiveLeague, useEffectiveRegion } from './use-league';
 import type { SectionConfig } from '../../lib/league-config/shape';
 import type { LeagueId, RegionId } from '../../lib/types';
 
-import { ALL_LEAGUES } from '../prefs/prefs-script';
+import type { LeagueChip } from '../layout/league-chips';
+import { ALL_LEAGUES } from './prefs-script';
 
 /**
  * The league chips (SPEC §8.3). One component, three modes:
@@ -47,14 +48,6 @@ import { ALL_LEAGUES } from '../prefs/prefs-script';
  * in components/prefs/use-league.ts on purpose: every page that renders it already ships both, so the
  * toggle adds no client module to first-load JS (design-review UI budgets §2).
  */
-export interface LeagueChip {
-  id: LeagueId;
-  shortName: string;
-  sectionShort: SectionConfig['shortName'];
-  /** The league's region (its section's): the `data-region-scope` of the list it sits in. */
-  region: RegionId;
-}
-
 export interface LeagueSwitcherProps {
   mode: 'scope' | 'link' | 'anchor';
   /** Config order. */

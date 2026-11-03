@@ -2,9 +2,9 @@
 
 import { useSyncExternalStore } from 'react';
 
-import { useIsHydrated, useStoredValue, writeStored } from '../prefs/local-store';
+import { useIsHydrated, useStoredValue, writeStored } from './local-store';
 
-import { THEME_META_ID, THEME_STORAGE_KEY, themeMetaColor } from '../prefs/theme-script';
+import { THEME_META_ID, THEME_STORAGE_KEY, themeMetaColor } from './theme-script';
 
 /**
  * System / Light / Dark, cycled by one 44×44 button (DESIGN §7.14).

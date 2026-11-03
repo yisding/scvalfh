@@ -109,7 +109,7 @@ function outsideTournamentPair(home: Team | undefined, away: Team | undefined, d
  *     entrants, both in a 'no-postseason' league, game.dateKey inside its window (the Southern Section's Tournament of Champions, Oct
  *     22-29) → { kind: 'outside-tournament', leagueId: the shared league or null, via: 'outside-tournament-window' }.
  *     Ahead of rule 2 for the same reason: MaxPreps marks two of its rows as playoffs and the rest as non-league.
- *  1c. MAXPREPS BRACKET (added 2026-10-29): `game.bracket` is set (lib/normalize.ts: the row's tournamentId is a
+ *  1c. MAXPREPS BRACKET (added 2026-10-29): `game.bracket` is set (lib/pipeline/normalize.ts: the row's tournamentId is a
  *     real GUID) and names the CCS championship — `bracket.tournamentId === CCS.tournament.id`, the exact test,
  *     or a `tournament` name containing "Central Coast Section", the fallback should MaxPreps re-create the
  *     tournament under a new id — and at least one side is a registry team, every registry side in a CCS league

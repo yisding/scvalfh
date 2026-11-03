@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
-import LeagueSwitcher, { RegionSwitcher } from '../../components/layout/LeagueSwitcher';
+import LeagueSwitcher, { RegionSwitcher } from '../../components/prefs/LeagueSwitcher';
 import PageHeader from '../../components/layout/PageHeader';
 import { leagueChips, leagueHrefs } from '../../components/layout/league-chips';
 import { OG_BASE, ROOT_OG_IMAGE, leaguesBySectionWords } from '../../components/layout/site';

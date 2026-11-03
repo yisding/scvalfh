@@ -2,7 +2,7 @@
  * Everything `/` renders, assembled once on the server (SPEC §10.1, DESIGN §3.1).
  *
  * This is the only module the home page reads data through, and it reads the snapshot ONLY through
- * `lib/data.ts` (plus the pure config helpers of `lib/leagues.ts` and `lib/pin-label.ts`). "Today"
+ * `lib/data.ts` (plus the pure config helpers of `lib/leagues.ts` and `components/words/pin-label.ts`). "Today"
  * is always `getToday()` — derived from `snapshot.fetchedAt` in America/Los_Angeles, never
  * `Date.now()` — so the build is reproducible and the "as of" stamp in the header is honest.
  *
@@ -84,12 +84,12 @@ import {
   sectionOf,
   standaloneName,
 } from '../../lib/leagues';
-import { pickerName, pinLabel } from '../../lib/pin-label';
+import { pickerName, pinLabel } from '../words/pin-label';
 import type { SearchIndex } from '../../lib/search';
 import { teamOfSide } from '../../lib/teams';
 import type { DivisionId, Game, LeagueId, RegionId, SeasonPhase, Team } from '../../lib/types';
 import { gameAddress } from '../../lib/schools/venue';
-import type { LeagueChip } from '../layout/LeagueSwitcher';
+import type { LeagueChip } from '../layout/league-chips';
 import { leagueChips } from '../layout/league-chips';
 import { thisWeekByRegion } from '../playoffs/this-week-inputs';
 import type { ThisWeekView } from '../playoffs/this-week';

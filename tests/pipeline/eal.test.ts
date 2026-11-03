@@ -172,10 +172,10 @@ describe('the EAL games', () => {
     // A played final does not leave a re-capture: a missing contest is a failure, never a silent pass.
     expect(corpusHas('9afebd05'), 'tests/fixtures/corpus/eal-*: the 9/28 Chico-Davis 1 v 1 game').toBe(true);
     const g = gameOf('9afebd05');
-    expect(g, 'lib/normalize.ts: game present').toBeDefined();
-    expect(g!.decider, 'lib/normalize.ts: decider').toBe('SO');
-    expect(g!.shootout, 'lib/normalize.ts: no tally stored').toBeNull();
-    expect(g!.provenance.resultConflict, 'lib/normalize.ts: resultConflict').toBeUndefined();
+    expect(g, 'lib/pipeline/normalize.ts: game present').toBeDefined();
+    expect(g!.decider, 'lib/pipeline/normalize.ts: decider').toBe('SO');
+    expect(g!.shootout, 'lib/pipeline/normalize.ts: no tally stored').toBeNull();
+    expect(g!.provenance.resultConflict, 'lib/pipeline/normalize.ts: resultConflict').toBeUndefined();
     expect(g!.countsFor, 'lib/classify.ts').toBe(DIVISION);
     expect(divisionGames(snapshot.games, DIVISION).map((x) => x.contestId)).toContain(g!.contestId);
     const chico = g!.home.slug === 'chico' ? 'home' : 'away';
@@ -187,9 +187,9 @@ describe('the EAL games', () => {
   it('keeps MaxPreps three overtime periods on the 9/2 game as it has them (8a4d7c70)', () => {
     expect(corpusHas('8a4d7c70'), 'tests/fixtures/corpus/eal-*: the 9/2 PV @ Chico 3-overtime game').toBe(true);
     const g = gameOf('8a4d7c70');
-    expect(g, 'lib/normalize.ts: game present').toBeDefined();
-    expect(g!.otPeriods, 'lib/normalize.ts: otPeriods').toBe(3);
-    expect(g!.decider, 'lib/normalize.ts: decider').toBe('2OT');
+    expect(g, 'lib/pipeline/normalize.ts: game present').toBeDefined();
+    expect(g!.otPeriods, 'lib/pipeline/normalize.ts: otPeriods').toBe(3);
+    expect(g!.decider, 'lib/pipeline/normalize.ts: decider').toBe('2OT');
   });
 
   it('counts no game of contestType 2, 4 or 5 in the EAL table', () => {
@@ -227,7 +227,7 @@ describe('the EAL games', () => {
     );
     expect(
       snapshot.games.some((g) => [g.home, g.away].some((s) => /Red Bluff|Educational Outreach/.test(s.name))),
-      'lib/normalize.ts: games',
+      'lib/pipeline/normalize.ts: games',
     ).toBe(false);
   });
 });

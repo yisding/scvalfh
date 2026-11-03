@@ -1,4 +1,4 @@
-import MissingValue from './MissingValue';
+import MissingValue from '../ui/MissingValue';
 
 /**
  * A headline number (DESIGN §7.7, modernization brief §4.17). No sparkline anywhere on this site

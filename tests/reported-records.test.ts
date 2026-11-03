@@ -14,7 +14,7 @@ import { describe, expect, it } from 'vitest';
 
 import { classifyGames } from '../lib/classify';
 import { ALL_DIVISIONS, getDivision } from '../lib/leagues';
-import { normalizeGames } from '../lib/normalize';
+import { normalizeGames } from '../lib/pipeline/normalize';
 import { readManifest } from '../lib/pipeline/corpus';
 import { StandingsResponseSchema } from '../lib/sources/maxpreps';
 import { buildCrossCheck, computeStandings, toReportedRecord } from '../lib/standings';

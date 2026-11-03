@@ -61,7 +61,7 @@ import {
   regionOf,
   standingsLabel,
 } from '../../lib/leagues';
-import { pinLabel } from '../../lib/pin-label';
+import { pinLabel } from '../words/pin-label';
 import { outcomesFor, pairingDatesLabel } from '../../lib/standings';
 import type {
   DivisionId,
@@ -225,7 +225,7 @@ export interface TeamPageView {
   divisionSize: number;
   /** `Red-Tailed Hawks · MCAL · Mill Valley` | `Pirates · De Anza · SCVAL · San Jose` */
   identityLine: string;
-  /** PinControl's accessible name, from lib/pin-label.ts. */
+  /** PinControl's accessible name, from components/words/pin-label.ts. */
   pinLabel: string;
   /** `/standings/<league>#<division>` */
   standingsHref: string;

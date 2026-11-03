@@ -168,7 +168,7 @@ export function GameElsewhere({ model, className }: GameElsewhereProps) {
   const isFinal = display.kind === 'final';
   if (teamRows.length === 0 && !isFinal) return null;
   // D24 (lib/crosscheck/backfill.ts): the section BOTH sides are teams of, when it ends a level game with a shootout
-  // (keyed on the section, as lib/normalize.ts keys decider 'SO'). Lookups here never throw: the snapshot
+  // (keyed on the section, as lib/pipeline/normalize.ts keys decider 'SO'). Lookups here never throw: the snapshot
   // schema checks a tag's league id only for shape, so an id no longer configured reads as no league (and
   // the page renders) rather than failing the build.
   const pairLeague =

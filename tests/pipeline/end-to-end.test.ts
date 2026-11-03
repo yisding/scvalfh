@@ -88,9 +88,9 @@ describe('the corpus run', () => {
   it('publishes the Del Norte ghost duplicate and 5cf5e3df in dropped', () => {
     const byId = new Map(corpus.dropped.map((d) => [d.contestId, d]));
     const ghost = byId.get('5b9ff911-a640-4947-b9fd-8a629e775b33');
-    expect(ghost?.reason, 'lib/normalize.ts applyExclusions: Del Norte ghost').toBe('ghost-team');
-    expect(ghost?.teams, 'lib/normalize.ts applyExclusions: Del Norte ghost teams').toEqual(['Tamalpais', 'Del Norte']);
-    expect(byId.get('5cf5e3df-6e72-4f44-9b8d-e69da30b85c5')?.reason, 'lib/normalize.ts applyExclusions: 5cf5e3df').toBe('excluded-by-config');
+    expect(ghost?.reason, 'lib/pipeline/normalize.ts applyExclusions: Del Norte ghost').toBe('ghost-team');
+    expect(ghost?.teams, 'lib/pipeline/normalize.ts applyExclusions: Del Norte ghost teams').toEqual(['Tamalpais', 'Del Norte']);
+    expect(byId.get('5cf5e3df-6e72-4f44-9b8d-e69da30b85c5')?.reason, 'lib/pipeline/normalize.ts applyExclusions: 5cf5e3df').toBe('excluded-by-config');
     expect(corpus.games.some((g) => byId.has(g.contestId)), 'lib/pipeline/steps/normalize.ts: dropped contests never published').toBe(false);
   });
 

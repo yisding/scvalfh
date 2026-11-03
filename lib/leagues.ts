@@ -425,7 +425,7 @@ export function assertLeagues(): void {
       for (const src of event.sources) if (!src.href.startsWith('https://') || !src.label.trim()) fail(`${s.id}.outsideTournament ${event.id}: a source needs a label and an https URL`);
     }
     // The level-W/L → 'SO' rule is the section's: every league in it must decide level games the same way,
-    // and a league that does must sit in a section that says how (lib/normalize.ts keys on the section).
+    // and a league that does must sit in a section that says how (lib/pipeline/normalize.ts keys on the section).
     for (const l of LEAGUES) {
       if (l.sectionId !== s.id) continue;
       if ((s.shootout !== null) !== (l.rules.leagueOvertime === 'shootout')) {

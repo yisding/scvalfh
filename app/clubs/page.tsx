@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 import ClubList from '../../components/clubs/ClubList';
-import { RegionSwitcher } from '../../components/layout/LeagueSwitcher';
+import { RegionSwitcher } from '../../components/prefs/LeagueSwitcher';
 import { buildClubsIndexView } from '../../components/clubs/club-view';
 import PageHeader from '../../components/layout/PageHeader';
 import { OG_BASE, ROOT_OG_IMAGE } from '../../components/layout/site';

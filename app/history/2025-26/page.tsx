@@ -16,7 +16,7 @@ import {
   UNAVAILABLE_SUBJECT,
   short,
 } from '../../../components/history/history-page-view';
-import { RegionSwitcher } from '../../../components/layout/LeagueSwitcher';
+import { RegionSwitcher } from '../../../components/prefs/LeagueSwitcher';
 import PageHeader from '../../../components/layout/PageHeader';
 import DivisionTabs from '../../../components/standings/DivisionTabs';
 import { OG_BASE, ROOT_OG_IMAGE } from '../../../components/layout/site';

@@ -302,7 +302,7 @@ function expectNone(subject: Subject, rule: string, test: (s: string) => boolean
 }
 
 /**
- * The league rules' and postseason citations that mention co-champions (lib/leagues.ts
+ * The league rules' and postseason citations that mention co-champions (lib/league-config/<league>.ts
  * `rules.citations`, e.g. the EAL's "a tie for first means co-champions (§VII.C)", and
  * `postseason.citations`, e.g. the San Diego Section's "not co-champions or tri-champions"). A builder that quotes one in a footnote
  * states the rule; the co-champion rule is about declaring them, so these are taken out of a value

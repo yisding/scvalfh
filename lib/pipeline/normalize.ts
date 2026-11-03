@@ -22,11 +22,11 @@
  *   4. `dedupePhantomPairs` — same-division phantom duplicates only
  */
 
-import { byDateThenId, shootoutPhrases, toLocalTimestamp } from './format';
-import { DATA_QUALITY } from './league-config/data-quality';
-import type { DataQualityConfig, SectionConfig } from './league-config/shape';
-import { getLeague, getSection } from './leagues';
-import { getTeamById, resolveTeam } from './teams';
+import { byDateThenId, shootoutPhrases, toLocalTimestamp } from '../format';
+import { DATA_QUALITY } from '../league-config/data-quality';
+import type { DataQualityConfig, SectionConfig } from '../league-config/shape';
+import { getLeague, getSection } from '../leagues';
+import { getTeamById, resolveTeam } from '../teams';
 import type {
   ContestId,
   Decider,
@@ -38,8 +38,8 @@ import type {
   GameStatus,
   Outcome,
   SourceId,
-} from './types';
-import { TBA_TEAM_ID, splitTbaRows, type ContestTeam, type ScheduleRow } from './sources/maxpreps';
+} from '../types';
+import { TBA_TEAM_ID, splitTbaRows, type ContestTeam, type ScheduleRow } from '../sources/maxpreps';
 
 export interface NormalizeOptions {
   /** ISO UTC stamp written into every Game.provenance.fetchedAt. */

@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
-import { RegionSwitcher } from '../../components/layout/LeagueSwitcher';
+import { RegionSwitcher } from '../../components/prefs/LeagueSwitcher';
 import PageHeader from '../../components/layout/PageHeader';
 import { OG_BASE, ROOT_OG_IMAGE } from '../../components/layout/site';
 import JvStandings from '../../components/jv/JvStandings';

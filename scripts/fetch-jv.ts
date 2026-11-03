@@ -16,7 +16,7 @@
  * The MaxPreps call is the varsity pipeline's own schedule-calculated read with the JV season id
  * (JV_SPORT_SEASON_ID) and the school's registry id, through the MaxPreps client's budget
  * (concurrency <= 3, 500 ms between request starts); each JV row becomes a Game exactly as a
- * varsity row does (lib/normalize.ts normalizeGames), except that no JV game is read as a shootout
+ * varsity row does (lib/pipeline/normalize.ts normalizeGames), except that no JV game is read as a shootout
  * win (`level: 'jv'`: the sections' shootout rules are varsity rules). si.com pages go through the si.com client's
  * own gate (one at a time, 1 s apart, the browser User-Agent si.com requires). The file keeps what
  * each source said; lib/jv/jv-merge.ts decides what the site shows, MaxPreps first.
@@ -78,7 +78,7 @@ import {
 } from '../lib/jv/jv-schema';
 import { jvMaxprepsScheduleUrl, jvSbliveGamesUrl, jvSbliveTeamId } from '../lib/jv/jv-teams';
 import { INDEPENDENT_LEAGUES, LEAGUES_PROPER, seasonWindowBounds } from '../lib/leagues';
-import { normalizeGames } from '../lib/normalize';
+import { normalizeGames } from '../lib/pipeline/normalize';
 import { inSeasonWindow } from '../lib/pipeline/steps/window';
 import { formatIssues } from '../lib/schema-primitives';
 import { JV_SPORT_SEASON_ID, SEASON_YEAR } from '../lib/season';
@@ -340,7 +340,7 @@ async function main(argv: readonly string[]): Promise<number> {
   }
 
   // ---- games: this run's feeds, plus the previous games of every school whose feed was not read.
-  // level 'jv': the sections' shootout rules are varsity rules (lib/normalize.ts NormalizeOptions), so
+  // level 'jv': the sections' shootout rules are varsity rules (lib/pipeline/normalize.ts NormalizeOptions), so
   // a level JV final stays a tie whatever MaxPreps flags, and is never read as a shootout win.
   const norm = normalizeGames(mpRows, { fetchedAt, level: 'jv' });
   for (const w of norm.warnings) console.warn(`WARN ${w}`);

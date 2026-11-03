@@ -11,7 +11,7 @@
  */
 
 import { carryCifssCrossCheck, compareCifss, type NonGame } from '../../crosscheck/cifss-crosscheck';
-import { dateKeyOf } from '../../normalize';
+import { dateKeyOf } from '../normalize';
 import {
   CIFSS_SECTIONS,
   CIFSS_SEASON_FROM,

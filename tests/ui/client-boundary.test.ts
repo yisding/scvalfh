@@ -11,8 +11,8 @@
  * time) and fails with the chain that reached a banned module. Anything under data/ is banned outright.
  *
  * Client-safe: lib/types (types), lib/season (a constants leaf), lib/format, lib/game-id,
- * lib/search, lib/pin-label, lib/schools/mascots (the mascot tile sizes, a constants leaf); every
- * other lib/ module is banned (CLIENT_SAFE_LIB below).
+ * lib/search, lib/schools/mascots (the mascot tile sizes, a constants leaf); every other lib/ module
+ * is banned (CLIENT_SAFE_LIB below).
  */
 import { readFileSync } from 'node:fs';
 import { builtinModules } from 'node:module';
@@ -44,7 +44,6 @@ const CLIENT_SAFE_LIB = new Set([
   'lib/format',
   'lib/game-id',
   'lib/search',
-  'lib/pin-label',
   'lib/schools/mascots',
 ]);
 const NODE_BUILTINS = new Set(builtinModules);

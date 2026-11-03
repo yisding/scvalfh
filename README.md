@@ -574,7 +574,7 @@ each said:
 
 - **MaxPreps** (`games`): the same `schedule-calculated` call as the varsity feed, with the JV
   season id (`JV_SPORT_SEASON_ID` in `lib/season.ts`, read from `maxpreps.com/ca/field-hockey/jv/`)
-  and the school's own registry id; each row becomes a `Game` through `lib/normalize.ts`, exactly
+  and the school's own registry id; each row becomes a `Game` through `lib/pipeline/normalize.ts`, exactly
   as a varsity row does, except that a level JV final is never read as a shootout win (the San
   Diego shootout procedure is varsity only). On 2026-10-05: 260 games for 45 of the 49 schools, 91
   with a score (Del Mar, Live Oak, Sobrato and Silver Creek have none). On 2026-10-06, with the
@@ -927,53 +927,61 @@ fixed pages, and `a11y-axe.mjs` checks it.
 
 ## Code layout
 
-The code is layered, and imports only point down:
-
 ```
-app/                   routes only: each page reads data, builds its view and composes components
-components/<feature>/  one folder per page family; React components (PascalCase .tsx) beside the
-                       view models that decide what they show (kebab-case .ts, mostly *-view.ts)
-components/{ui,layout,metadata,prefs,words}/   shared by every feature (below)
+app/                   routes: each page reads data, builds its view and composes components
+components/<feature>/  one folder per area of the site; React components (PascalCase .tsx) beside
+                       the view models that decide what they show (kebab-case .ts, mostly *-view.ts)
+components/{ui,layout,metadata,prefs,words}/   shared across features (below)
 lib/                   data, config and engines; no React
 data/                  the committed JSON the site is built from
+scripts/               the data refresh, the build assertions and dev tools
 ```
 
+Imports run `app/` → `components/` → `lib/`, never back up: nothing in `lib/` imports a component,
+and no feature folder imports a route. Inside `components/`, features build on the shared folders,
+with two deliberate exceptions: `metadata/` draws each feature's OG card and JSON-LD, so it reads
+those features' view models, and `ui/GameRow.tsx` links a playoff game to its place in the bracket
+through `playoffs/bracket-link.ts`.
+
 **`components/`.** Features: `about`, `clubs`, `commits`, `game`, `history`, `home`, `jv`,
-`leaders`, `playoffs`, `recruiting`, `schedule`, `search`, `standings`, `teams`. Shared folders:
+`leaders`, `playoffs`, `recruiting`, `schedule` (also `/scores/<date>`), `search` (the team finder),
+`standings`, `teams`. Shared folders:
 
 | Folder | Holds |
 |---|---|
-| `ui/` | presentational building blocks used across features (game rows, standings tables, chips, tiles) and `describe-game.ts`, their view model |
-| `layout/` | the page chrome: header, nav, tab bar, page header, attribution, site constants |
-| `metadata/` | what crawlers and link previews see: the OG and icon image renderers and JSON-LD |
-| `prefs/` | the remembered league, theme and pinned team: the inline `<head>` scripts that apply them before paint and the client hooks and controls that change them |
-| `words/` | copy helpers shared across features (plurals, membership and position words, source labels) |
+| `ui/` | presentational building blocks used by several features (game rows, standings tables, chips, strips) and `describe-game.ts`, their view model |
+| `layout/` | the page chrome: header, nav, tab bar, page header, attribution, site constants, the league chips' targets |
+| `metadata/` | what crawlers and link previews see: the OG and icon image renderers (kebab-case, like Next's own `opengraph-image.tsx`) and JSON-LD |
+| `prefs/` | the remembered league, theme and pinned team: the inline `<head>` scripts that apply them before paint, the client hooks that read them and the controls that change them (league and region switchers, theme toggle, pin) |
+| `words/` | copy helpers shared across features: plurals, capitalizing, membership and position words, team short names, pin labels, MaxPreps and source-host labels |
 
-**`lib/`.** The modules everything leans on sit at the root: `types`, `season`, `leagues` (the league
-table, its lookups and `assertLeagues`), `teams`, `data` (the one read API over the snapshot, SPEC
-§13.3), `format`, `classify`, `normalize`, `standings`, `schema-primitives`, `stable-json`, `game-id`,
-`search` and `pin-label`. The rest is grouped by domain:
+A component used by one feature lives in that feature's folder, not in `ui/`.
+
+**`lib/`.** The modules the rest of the site leans on sit at the root: `types`, `season`, `leagues`
+(the league table, its lookups and `assertLeagues`), `teams`, `data` (the one read API over the
+snapshot, SPEC §13.3), `format`, `classify`, `standings`, `schema-primitives`, `stable-json`,
+`game-id` and `search`. The rest is grouped by domain:
 
 | Folder | Holds |
 |---|---|
 | `league-config/` | each league's facts (one file per league, as in `registry/`), the sections and regions, the config shapes and `DATA_QUALITY` |
 | `registry/` | each league's teams, assembled by `lib/teams.ts` |
-| `snapshot/` | the snapshot's Zod schema, its migrations and season build |
+| `snapshot/` | the snapshot's Zod schema, its migrations, the season build and the content dates |
 | `postseason/` | postseason state, rounds and outcomes, and the CCS and San Diego bracket files |
 | `jv/` | the JV games file, its merge, corrections and standings |
 | `history/` | the 2025-26 archive and last season's records |
 | `players/` | rosters, player stats, clubs and college commitments |
 | `ratings/` | Elo and Elo-adjusted scoring |
 | `schools/` | school addresses, venues and mascots |
-| `crosscheck/` | the si.com backfill and the cross-checks against si.com and CIF-SS |
-| `official/` | the official-fixtures bundles and their matching |
-| `pipeline/`, `sources/` | the data refresh: the pipeline steps and the per-source fetchers and parsers (build-time only) |
+| `crosscheck/` | the si.com backfill and the cross-checks against si.com and cifsshome.org (build-time only, but for the `cifss-notes` leaf /about prints) |
+| `official/` | the official-fixtures bundles and their matching (build-time only) |
+| `pipeline/`, `sources/` | the data refresh: the pipeline, its steps and row normalization, and the per-source fetchers and parsers (build-time only) |
 
 There are no `index.ts` barrels: several `lib/` modules read a data file or assert their config when
 imported, and a barrel would run all of that (and pull in zod) for any one symbol. Two tests hold the
 boundaries: `tests/ui/client-boundary.test.ts` keeps every `'use client'` module to a short allowlist
 of client-safe `lib/` modules, and `tests/build-only-boundary.test.ts` keeps `app/` and
-`components/` from reaching `lib/pipeline/`, `lib/sources/` or `lib/official/`.
+`components/` from reaching the build-time-only folders above.
 
 ## Local development
 
@@ -1780,7 +1788,7 @@ Two `/leaders` boards per region weigh scoring by the defenses it came against
 - **axe-core is pinned to the 4.13 line in CI.** axe-core 4.14.0 (published 2026-10-05) widened its
   `label-content-name-mismatch` rule: it now compares the visible text of `aria-hidden` descendants
   and keeps the soft hyphens of the team-picker tiles, so it flags three patterns that predate this
-  change and whose accessible names are deliberate sentences: the home pin tiles (`lib/pin-label.ts`),
+  change and whose accessible names are deliberate sentences: the home pin tiles (`components/words/pin-label.ts`),
   the "Who we haven't beaten" rows and the pinned card's last-game link. With 4.13 the pass is clean
   (176 page loads, 0 serious or critical). Reworking those three names for 4.14 is a follow-up.
 - MaxPreps' season-year URL segment is cosmetic (it always serves the current

@@ -3787,7 +3787,7 @@ layout never shifts. With JavaScript, `league-scope-css.ts` hides the other regi
 `[data-region-scope]` blocks. A deep link to an anchor inside a hidden region opens it (`:has(:target)`,
 plus `:target` on the wrapper itself). On `/teams`, a search shows both regions' lists.
 
-**The control.** `RegionSwitcher` lives in `components/layout/LeagueSwitcher.tsx`, with its state in
+**The control.** `RegionSwitcher` lives in `components/prefs/LeagueSwitcher.tsx`, with its state in
 `components/prefs/use-league.ts`. There is no new client module and no header toggle.
 
 - Markup: `<div role="group" aria-label="Region">` around two `aria-pressed` buttons, "NorCal" and "SoCal".

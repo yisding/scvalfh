@@ -169,9 +169,9 @@ export interface PinTileView {
   slug: string;
   leagueId: LeagueId;
   name: string;
-  /** The visible tile text, with soft hyphens where it needs them (lib/pin-label.ts `pickerName`). */
+  /** The visible tile text, with soft hyphens where it needs them (components/words/pin-label.ts `pickerName`). */
   pickerName: string;
-  /** The pin button's accessible name (lib/pin-label.ts `pinLabel`): 'Pin Leigh, Mt. Hamilton · BVAL'. */
+  /** The pin button's accessible name (components/words/pin-label.ts `pinLabel`): 'Pin Leigh, Mt. Hamilton · BVAL'. */
   pinLabel: string;
 }
 

@@ -256,7 +256,7 @@ function chipsFor(game: Game): Pick<GameDisplay, 'isNonLeague' | 'leagueTag' | '
 /**
  * The section both sides are teams of when it ends a level varsity game with a shootout
  * (SectionConfig.shootout: the Northern Section's 1 v 1s, the San Diego Section's shootout), else null.
- * The same rule lib/normalize.ts writes decider 'SO' by, so every 'SO' game has one.
+ * The same rule lib/pipeline/normalize.ts writes decider 'SO' by, so every 'SO' game has one.
  */
 export function shootoutSectionOf(game: Pick<Game, 'home' | 'away'>): SectionConfig | null {
   const home = game.home.slug ? getTeamBySlug(game.home.slug) : undefined;
@@ -295,7 +295,7 @@ export function shootoutCitationParts(citation: string): { source: string; proce
  * The section whose shootout rule covers this game: `shootoutSectionOf`, unless the game is a tournament
  * row (contestType 2 on either side) and the rule does not reach tournaments (SectionConfig.shootout.
  * coversTournaments false: the SDFHOA procedures cover the regular season and the playoffs only). The
- * same rule lib/normalize.ts reads 'SO' by.
+ * same rule lib/pipeline/normalize.ts reads 'SO' by.
  */
 export function shootoutRuleSectionOf(game: Pick<Game, 'home' | 'away' | 'contestTypes'>): SectionConfig | null {
   const section = shootoutSectionOf(game);
@@ -311,7 +311,7 @@ export function shootoutRuleSectionOf(game: Pick<Game, 'home' | 'away' | 'contes
  * recorded. MaxPreps may have stored the shootout win as a goal, so the view shows the score as MaxPreps
  * has it with no overtime tag and no "after overtime".
  *
- * Keyed on the section, as lib/normalize.ts keys 'SO', not on the table the game counts in: Mission Hills
+ * Keyed on the section, as lib/pipeline/normalize.ts keys 'SO', not on the table the game counts in: Mission Hills
  * 1, Del Norte 2 (Sep 14, 59b0f6a5, Valley v Palomar, countsFor null) has 2 overtime periods recorded and
  * read '(2 OT)', which the San Diego rule of one period then a shootout cannot give. A postseason-tagged
  * game is left alone: the SDFHOA playoff procedure is one full 10-minute period, then a 10-minute
@@ -329,7 +329,7 @@ function shootoutInferenceOf(game: Pick<Game, 'home' | 'away'>): ShootoutInferen
 
 /**
  * The accessible words of an 'SO' decider tag (GameDisplay.shootoutLabel). Every 'SO' game has a
- * shootout section (lib/normalize.ts writes 'SO' by the same rule), so the generic 'a shootout' — true
+ * shootout section (lib/pipeline/normalize.ts writes 'SO' by the same rule), so the generic 'a shootout' — true
  * of any shootout — is reached only by a hand-built game whose sides are outside the registry.
  */
 function shootoutLabelFor(game: Game, deciderTag: string | null): string | null {

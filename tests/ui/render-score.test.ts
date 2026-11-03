@@ -504,21 +504,21 @@ describe('rendered rows and the scoreboard (GameRow, ScoreBoard: UI pass, league
     });
 
   it('a side outside the registry carries NON_MEMBER_NOTE on the scoreboard, counted from the registry', async () => {
-    const { ScoreBoard } = await import('../../components/ui/ScoreBoard');
+    const { ScoreBoard } = await import('../../components/game/ScoreBoard');
     const { NON_MEMBER_NOTE } = await import('../../components/ui/GameRow');
     const { TEAMS } = await import('../../lib/teams');
     expect(NON_MEMBER_NOTE, 'components/ui/GameRow.tsx NON_MEMBER_NOTE').toBe(
       `Not one of the ${TEAMS.length} teams this site follows`,
     );
     const html = renderToStaticMarkup(createElement(ScoreBoard, { game: nonMember() }));
-    expect(html, 'components/ui/ScoreBoard.tsx non-member sub').toContain(NON_MEMBER_NOTE);
+    expect(html, 'components/game/ScoreBoard.tsx non-member sub').toContain(NON_MEMBER_NOTE);
     expect(html).not.toMatch(/SCVAL school/);
   });
 
   it('each registry side of the scoreboard taps through to its team page; a non-member side stays inert', async () => {
-    const { ScoreBoard } = await import('../../components/ui/ScoreBoard');
+    const { ScoreBoard } = await import('../../components/game/ScoreBoard');
     const html = renderToStaticMarkup(createElement(ScoreBoard, { game: nonMember() }));
-    expect(html, 'components/ui/ScoreBoard.tsx home side').toContain('href="/teams/homestead"');
+    expect(html, 'components/game/ScoreBoard.tsx home side').toContain('href="/teams/homestead"');
     // Out of the tab order: the board is aria-hidden, and the page's pill row is the keyboard route.
     expect(html).toMatch(/<a[^>]*href="\/teams\/homestead"[^>]*tabindex="-1"|<a[^>]*tabindex="-1"[^>]*href="\/teams\/homestead"/);
     expect(html.match(/<a\b/g)?.length, 'only the registry side links').toBe(1);

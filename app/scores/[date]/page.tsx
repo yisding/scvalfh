@@ -14,7 +14,7 @@ import { buildDayJvView } from '../../../components/jv/jv-view';
 import EmptyState from '../../../components/ui/EmptyState';
 import SectionHeader from '../../../components/ui/SectionHeader';
 import { gameWord } from '../../../components/words/plural';
-import { RegionSwitcher } from '../../../components/layout/LeagueSwitcher';
+import { RegionSwitcher } from '../../../components/prefs/LeagueSwitcher';
 import PageHeader from '../../../components/layout/PageHeader';
 import { OG_BASE } from '../../../components/layout/site';
 import { getGameDates, getGames, getLeagueSummaries, getOfficialFixtures, getToday } from '../../../lib/data';

@@ -109,7 +109,7 @@ export function GameDetails({ model, className }: GameDetailsProps) {
                 {monthDay(movedFrom)}.
               </span>
             ) : null}
-            {/* DATA_QUALITY.contestDateOverrides (lib/normalize.ts): the date shown is a better source's,
+            {/* DATA_QUALITY.contestDateOverrides (lib/pipeline/normalize.ts): the date shown is a better source's,
                 not MaxPreps'; say so, from what, and on whose word (the override's source sentence). */}
             {game.provenance.dateCorrection ? (
               <span className="mt-1 block text-meta text-ink-3">
@@ -186,7 +186,7 @@ export function GameDetails({ model, className }: GameDetailsProps) {
             {/* MaxPreps' `location` field, verbatim. It is a note, not a venue. */}
             <dd className="mt-1 mb-0 ml-0 text-body text-ink-2">
               {game.venue.text}
-              {/* lib/normalize.ts overtimeFromNote: the OT on this page is the note's, not MaxPreps'. */}
+              {/* lib/pipeline/normalize.ts overtimeFromNote: the OT on this page is the note's, not MaxPreps'. */}
               {game.provenance.overtimeNote ? (
                 <span className="mt-1 block text-meta text-ink-3">
                   MaxPreps records no overtime for this game; the overtime shown here is from this note.

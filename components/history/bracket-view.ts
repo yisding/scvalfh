@@ -10,7 +10,7 @@ import {
 
 /**
  * The words of a 2025 section bracket on /history/2025-26 (components/history/HistoryBracket.tsx):
- * pure, so tests/ui/history-bracket-view.test.ts can read every sentence the page prints.
+ * pure, so tests/history-brackets.test.ts can read every sentence the page prints.
  *
  * Schools print by their registry name (historySchoolName), as everywhere else on the page: the file
  * keeps the source's "Mt. Carmel HS" and "The Bishop's School" as provenance only.
