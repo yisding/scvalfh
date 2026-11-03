@@ -36,6 +36,7 @@ export function JvStandings({ views, multi }: { views: readonly JvTableView[]; m
           ) : (
             <EmptyState heading={view.emptyHeading ?? ''}>{view.coverage}</EmptyState>
           )}
+          {view.slotNote ? <p className="mt-2 mb-0 max-w-prose text-meta text-ink-3">{view.slotNote}</p> : null}
           {view.absentNote ? <p className="mt-2 mb-0 max-w-prose text-meta text-ink-3">{view.absentNote}</p> : null}
           {view.uncountedNote ? <p className="mt-2 mb-0 max-w-prose text-meta text-ink-3">{view.uncountedNote}</p> : null}
         </div>
@@ -76,23 +77,36 @@ function JvTable({ view }: { view: JvTableView }) {
           {view.rows.map(({ row, team }) => {
             const has = row.record.gp > 0;
             return (
-              <tr key={team.id} data-team-slug={team.slug} className="relative">
+              <tr key={row.teamId} data-team-slug={team?.slug} className="relative">
                 <td className="sx-num w-[2.75rem] pl-gutter pr-2 text-ink-3">
                   <PlaceMark place={row.record.place} shared={row.shared} ranked={has} />
                 </td>
                 <th scope="row" className="max-w-0 text-left font-normal">
-                  <Link
-                    href={`/teams/${team.slug}#jv`}
-                    prefetch={false}
-                    className="flex min-h-11 items-center gap-2 text-ink no-underline hover:underline after:absolute after:inset-0 after:content-['']"
-                  >
-                    {/* As in CompactStandingsTable: only the pinned team's row displays this. */}
-                    <span className="sr-only">
-                      <span className="sx-pin-note" hidden>Your team. </span>
+                  {team ? (
+                    <Link
+                      href={`/teams/${team.slug}#jv`}
+                      prefetch={false}
+                      className="flex min-h-11 items-center gap-2 text-ink no-underline hover:underline after:absolute after:inset-0 after:content-['']"
+                    >
+                      {/* As in CompactStandingsTable: only the pinned team's row displays this. */}
+                      <span className="sr-only">
+                        <span className="sx-pin-note" hidden>Your team. </span>
+                      </span>
+                      <TeamMonogram team={team} size={24} />
+                      <span className="min-w-0 line-clamp-2 text-ellipsis text-body">{team.shortName}</span>
+                    </Link>
+                  ) : (
+                    // A JV slot team (York): no page here, so no link; a lettered tile in the monogram's place.
+                    <span className="flex min-h-11 items-center gap-2 text-ink">
+                      <span
+                        aria-hidden="true"
+                        className="inline-flex size-6 shrink-0 items-center justify-center rounded-md bg-surface-3 text-micro font-semibold text-ink-2"
+                      >
+                        {row.name.charAt(0)}
+                      </span>
+                      <span className="min-w-0 line-clamp-2 text-ellipsis text-body">{row.name}</span>
                     </span>
-                    <TeamMonogram team={team} size={24} />
-                    <span className="min-w-0 line-clamp-2 text-ellipsis text-body">{team.shortName}</span>
-                  </Link>
+                  )}
                 </th>
                 <td className="sx-num w-10 text-right text-ink-2">{row.record.gp}</td>
                 <td className="sx-num w-[4.5rem] text-right font-medium text-ink">

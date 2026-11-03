@@ -2259,10 +2259,20 @@ tables of their own are computed (`lib/jv-standings.ts`, last bullet). Read 2026
     or corrected in `lib/jv-corrections.ts` (each entry names its evidence). Every correction is by
     contest id and reported unused once MaxPreps changes the row.
   - **York** (MaxPreps e9a91bc8, si.com JV 456850 "York Falcons Junior Varsity", Monterey, linking
-    varsity 456851): its si.com games ("League" there, 4-0-1) fall on Santa Catalina's PCAL fixtures
-    (Greenfield Sep 4 and Oct 6, Carmel Sep 10, Stevenson Sep 16, Monterey Oct 26) and Stevenson Oct
-    30. `JV_OUTSIDE_TEAMS` matches it by both ids; its games are uncounted under the PCAL table
-    (`outside-jv-member`). Whether York belongs in the PCAL JV table is an owner decision.
+    varsity 456851). PCAL's schedule PDF, Note 1: "Santa Catalina is Varsity only. York is JV only. They
+    are paired together in this schedule as CAT/YOR. The V contest will take priority in event of time
+    or site limitations." Its schools line: "Santa Catalina V only (SCAT) … York (YOR) - JV ONLY". So York
+    is PCAL's JV member in Santa Catalina's slot: it holds the PCAL JV table row (`JV_OUTSIDE_TEAMS.jvFor`),
+    the two MaxPreps rows (and si.com's Santa Catalina JV page, 458108, with the same two unscored Salinas
+    games) filed under Santa Catalina are York's, and a York game takes Santa Catalina's varsity game of
+    the day as its counterpart. York v Stevenson Sep 16 (the schedule's date; the varsity game moved to
+    Sep 23) and Oct 30 (its Oct 16 home game is cancelled on si.com) are named league games
+    (`leagueGames`). York's computed 4-0-1 is its si.com league record.
+  - **Cancelled Salinas games.** Salinas' si.com JV page marks six league games "Cancelled" (each game
+    page read 2026-11-03: Stevenson Sep 11 and Oct 12, Greenfield Sep 18 and Oct 16, Carmel Oct 21,
+    Hollister Oct 27); MaxPreps still lists them, unscored. They are left out, as a deleted MaxPreps row
+    is. The JV si.com parser keeps scored finals only, so it does not read "Cancelled"; other schools'
+    cancellations were not swept.
 - **School athletics sites** (`lib/jv-school-sites.ts`, transcribed 2026-11-03). A sweep of school,
   league and press sites for every past JV league game with no score found two that publish JV results:
   `sfhsathletics.com/sports/jv-field-hockey/schedule` (Saint Francis, Sidearm; also a text export at
@@ -2668,7 +2678,7 @@ the school Santa Teresa High School fields no team. If it ever does, its slug mu
 | School | Why | Handling |
 |---|---|---|
 | Wilcox (SCVAL De Anza grid) | not fielding a team | in SCVAL's `withdrawnNames`; its 14 grid fixtures are dropped when the PDF is parsed; si.com id 485528 ignored |
-| York (PCAL grid slot `CAT/YOR`) | plays JV field hockey only | in PCAL's `withdrawnNames`; the `CAT/YOR` token maps to Santa Catalina; si.com id 456851 ignored; team search answers "not covered". JV: matched by MaxPreps e9a91bc8 and si.com JV 456850 (`JV_OUTSIDE_TEAMS`, §1.7); its games are named under the PCAL JV table, not counted |
+| York (PCAL grid slot `CAT/YOR`) | plays JV field hockey only | in PCAL's `withdrawnNames`; the `CAT/YOR` token maps to Santa Catalina; si.com id 456851 ignored; team search answers "not covered". JV: PCAL's JV member in Santa Catalina's slot (the schedule's Note 1); matched by MaxPreps e9a91bc8 and si.com JV 456850 and shown in the PCAL JV table in Santa Catalina's place (`JV_OUTSIDE_TEAMS`, §1.7) |
 | Red Bluff (EAL) `4d3da788-bbe2-4ab9-b854-d95aa9786cda` | not fielding a varsity team in 2026 (§3.2) | still a 0-0-0 row in MaxPreps' EAL table (`maxprepsExtraRows`, skipped silently); in the EAL's `withdrawnNames`; si.com ids 490259, 490260 and 635037 ignored; team search answers "not covered" |
 | Del Norte (Crescent City) `8396a0d3-8021-458d-b592-a5cb2c4a366d` | a MaxPreps ghost team (no league, team size 0) | every contest with this side is dropped and listed in the snapshot's `dropped` list. si.com also has a Crescent City Del Norte (458609), which it shows playing Tamalpais and Davis on 2026-10-16, the games MaxPreps gives Del Norte of San Diego (a registry team since the SoCal amendment, §2.1); "Del Norte" is in `STATEWIDE_AMBIGUOUS`, so neither si.com row resolves by name |
 | Irvington, Gunn, San Jose, North Monterey County, University Prep Academy | no 2026-27 varsity team | nothing to do |

@@ -242,7 +242,7 @@ describe('mergeJv: MaxPreps first, si.com supplements', () => {
 
   it('matches York, a JV team outside the registry, by its si.com and MaxPreps ids, never by name', () => {
     const YORK_MP = 'e9a91bc8-5999-4321-9e21-d6cdc8aafcb2';
-    expect(JV_OUTSIDE_TEAMS['456850']).toMatchObject({ name: 'York', maxprepsTeamId: YORK_MP, division: 'pcal' });
+    expect(JV_OUTSIDE_TEAMS['456850']).toMatchObject({ name: 'York', maxprepsTeamId: YORK_MP, jvFor: 'santa-catalina' });
     const york = (score: number, isHome: boolean) => ({ slug: null, sbliveTeamId: '456850', name: 'York', score, isHome });
     const yorkRow = (id: string, date: string, mine: [string, number], theirs: number): JvSbliveRow => ({
       ...row(id, date, mine, [null, theirs]),
@@ -322,6 +322,15 @@ describe('applyJvCorrections: MaxPreps JV rows left out or re-pointed by contest
     expect(fixed.leagueDivision).toBe('pcal');
     expect(r.fixed.map((f) => f.game.contestId)).toEqual(['wrong-1']);
     expect(r.unused).toEqual(['gone-1']);
+  });
+
+  it('gives every row filed under Santa Catalina, which fields no JV team, to York, whose JV slot it is', () => {
+    const g = jvGame({ home: 'salinas', away: 'santa-catalina', date: '2026-09-30', status: 'score-pending' });
+    const r = applyJvCorrections([g], { excludedContestIds: {}, opponentFixes: {} });
+    expect(r.games[0].away).toMatchObject({ teamId: 'e9a91bc8-5999-4321-9e21-d6cdc8aafcb2', slug: null, name: 'York' });
+    expect(r.games[0].home.slug).toBe('salinas');
+    expect(r.fixed.map((f) => f.game.contestId)).toEqual([g.contestId]);
+    expect(buildTeamJvView('santa-catalina')).toMatchObject({ rows: [], emptyHeading: 'Santa Catalina fields no JV team.' });
   });
 
   it('leaves a row MaxPreps has fixed alone, and reports its entry unused', () => {

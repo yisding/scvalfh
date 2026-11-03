@@ -1342,12 +1342,16 @@ export default function AboutPage() {
               {plural(jvSchool.differs.length, 'score', 'scores')} (also &dagger;, and noted under the game).
               Some MaxPreps JV rows are not taken as they stand: {plural(jvCorrections.excluded.length, 'row is', 'rows are')}{' '}
               left out, most of them a second copy of a game entered against the wrong school of the same name
-              (the boys&rsquo; Stuart Hall for Convent &amp; Stuart Hall, another Stevenson or St. Francis);{' '}
-              {plural(jvCorrections.fixed.length, 'game names', 'games name')} the right opponent; and{' '}
-              {plural(jvCorrections.moved.length, 'game is', 'games are')} moved to the day a school&rsquo;s
-              schedule says it was played. York, which plays PCAL JV games in Santa Catalina&rsquo;s place but fields
-              no varsity team, is matched on si.com by its JV team id; its games are listed and named under the
-              PCAL JV table, not counted in it.
+              (the boys&rsquo; Stuart Hall for Convent &amp; Stuart Hall, another Stevenson or St. Francis) or a
+              game si.com shows was cancelled, and {plural(jvCorrections.moved.length, 'game is', 'games are')} moved
+              to the day a school&rsquo;s schedule says it was played.
+            </p>
+            <p>
+              PCAL pairs two schools in one schedule slot: Santa Catalina fields varsity only and York fields JV
+              only, so the JV game of every Santa Catalina fixture is York&rsquo;s. York stands in the PCAL JV table
+              in Santa Catalina&rsquo;s place (it has no page here), a JV game MaxPreps files under Santa Catalina is
+              shown as York&rsquo;s, and a York game counts when Santa Catalina&rsquo;s varsity game of the day does.
+              York is matched on si.com by its own JV team id.
             </p>
           </div>
         </section>

@@ -18,6 +18,7 @@ import {
   getJvSchoolSiteDiffersNote,
   getJvTeam,
 } from '../../lib/jv';
+import { jvSlotTeamFor } from '../../lib/jv-teams';
 import { regionOf } from '../../lib/leagues';
 import { getTeamBySlug } from '../../lib/teams';
 import type { Game, GameSide, RegionId, TeamSlug } from '../../lib/types';
@@ -98,14 +99,17 @@ export function buildTeamJvView(slug: TeamSlug): TeamJvView | null {
   const games = getJvGamesForTeam(slug);
   const today = localDateKey(getJvFetchedAt());
   const status = entry.maxpreps.status === 'unavailable' ? 'ok' : entry.maxpreps.status;
-  const emptyHeading =
-    status === 'error'
+  const slot = jvSlotTeamFor(slug);
+  const emptyHeading = slot
+    ? `${team.name} fields no JV team.`
+    : status === 'error'
       ? `${team.name}’s JV games could not be read.`
       : status === 'pending'
         ? `${team.name}’s JV games have not been read yet.`
         : `MaxPreps lists no JV games for ${team.name}.`;
-  const emptyBody =
-    status === 'error'
+  const emptyBody = slot
+    ? `${slot.source} Its JV games are on its opponents’ pages and in the JV table.`
+    : status === 'error'
       ? 'The last update could not reach MaxPreps for them and had nothing earlier to fall back on.'
       : status === 'pending'
         ? 'No update has covered this team’s JV schedule yet.'

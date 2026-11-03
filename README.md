@@ -593,13 +593,18 @@ Around that merge, three hand-checked layers (audit of 2026-11-03, `docs/DATA-SO
 - **Corrections** (`lib/jv-corrections.ts`, before the merge, by contest id): 12 MaxPreps JV rows are left
   out, 10 of them a second copy of a game entered against the wrong school of the same name (the boys'
   Stuart Hall for Convent & Stuart Hall, another Stevenson, St. Francis or Santa Clara), which showed as
-  phantom unscored non-league games; Salinas at Stevenson (Oct 12), entered against the wrong Stevenson,
-  names the right one and counts as a PCAL JV league game; and St. Ignatius at Los Altos, which MaxPreps
-  still dates Sep 9, is moved to Oct 8, when St. Ignatius' schedule says it was played.
-- **York** (`JV_OUTSIDE_TEAMS` in `lib/jv-teams.ts`): PCAL's JV-only school is matched on si.com by its JV
-  team id and on MaxPreps by its team id, so its si.com finals fill and add games as a registry school's
-  would (5 added). Its games fall on Santa Catalina's PCAL fixtures (the `CAT/YOR` slot), so they are
-  named under the PCAL JV table as not counted (`outside-jv-member`), not called non-league.
+  phantom unscored non-league games; 6 Salinas league games si.com shows as cancelled (Stevenson Sep 11
+  and Oct 12, Greenfield Sep 18 and Oct 16, Carmel Oct 21, Hollister Oct 27) are left out, as MaxPreps'
+  deleted rows are, instead of reading as played games with no score; and St. Ignatius at Los Altos,
+  which MaxPreps still dates Sep 9, is moved to Oct 8, when St. Ignatius' schedule says it was played.
+- **York in Santa Catalina's JV slot** (`JV_OUTSIDE_TEAMS` in `lib/jv-teams.ts`). PCAL's schedule, Note 1:
+  "Santa Catalina is Varsity only. York is JV only. They are paired together in this schedule as CAT/YOR."
+  So York holds the PCAL JV table row in Santa Catalina's place (name only, no page), a JV row MaxPreps or
+  si.com files under Santa Catalina is York's, a York game is classified by Santa Catalina's varsity game
+  of the day, and Santa Catalina's team page says it fields no JV team. York is matched by its si.com JV
+  id and MaxPreps id (5 si.com finals added). Its two Stevenson games, played on the schedule's dates
+  after the varsity games moved, are named league games in `JV_CORRECTIONS.leagueGames`. York's 4-0-1 is
+  its si.com league record; with the cancellations left out the PCAL JV table is shown (18 of 28).
 - **School athletics sites** (`lib/jv-school-sites.ts`, after the si.com merge, same rules): Saint
   Francis' and St. Ignatius' JV schedule pages list results, transcribed on 2026-11-03 once JV league
   play had ended. They fill 12 scores and add 3 games (marked †, "Score via the school's athletics

@@ -22,7 +22,7 @@ import { readFileSync } from 'node:fs';
 import bundled from '../data/jv.json';
 import { getOfficialFixtures, getSnapshot } from './data';
 import { byDateThenId, localDateKey } from './format';
-import { applyJvCorrections, type JvCorrectionResult } from './jv-corrections';
+import { JV_CORRECTIONS, applyJvCorrections, type JvCorrectionResult } from './jv-corrections';
 import { mergeJv, type JvMergeResult } from './jv-merge';
 import { mergeJvSchoolSites, type JvSchoolSiteMergeResult } from './jv-school-sites';
 import { JvFileSchema, type JvFile, type JvTeam } from './jv-schema';
@@ -71,6 +71,7 @@ const classes: ReadonlyMap<ContestId, JvClassification> = classifyJvGames(
   schoolSites.games,
   getSnapshot().games,
   getOfficialFixtures(),
+  JV_CORRECTIONS.leagueGames,
 );
 const games: Game[] = withJvClassification(schoolSites.games, classes);
 const tables: JvDivisionTable[] = computeJvStandings(games, classes, localDateKey(file.fetchedAt));

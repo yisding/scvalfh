@@ -28,7 +28,7 @@
 import { datesOf } from './backfill';
 import { byDateThenId, dayDiff } from './format';
 import type { JvSbliveRow } from './jv-schema';
-import { JV_OUTSIDE_TEAMS } from './jv-teams';
+import { JV_OUTSIDE_TEAMS, jvSlotTeamFor, type JvSlotTeam } from './jv-teams';
 import { getTeamBySlug } from './teams';
 import type { BackfillProvenance, ContestId, Game, GameSide, Outcome, Team, TeamSlug } from './types';
 
@@ -75,10 +75,19 @@ function gameSideKey(side: Pick<GameSide, 'slug' | 'teamId'>): SideKey | null {
   return side.teamId && OUTSIDE_MAXPREPS_IDS.has(side.teamId) ? `outside:${side.teamId}` : null;
 }
 
+/** A si.com side's JV slot team: one named by its si.com id, or a school whose JV slot it plays. */
+function rowOutside(side: JvSbliveRow['sides'][number]): JvSlotTeam | undefined {
+  return (side.sbliveTeamId ? JV_OUTSIDE_TEAMS[side.sbliveTeamId] : undefined) ?? jvSlotTeamFor(side.slug);
+}
+
+function rowSlug(side: JvSbliveRow['sides'][number]): TeamSlug | null {
+  return rowOutside(side) ? null : side.slug;
+}
+
 function rowSideKey(side: JvSbliveRow['sides'][number]): SideKey | null {
-  if (side.slug) return side.slug;
-  const outside = side.sbliveTeamId ? JV_OUTSIDE_TEAMS[side.sbliveTeamId] : undefined;
-  return outside ? `outside:${outside.maxprepsTeamId}` : null;
+  const outside = rowOutside(side);
+  if (outside) return `outside:${outside.maxprepsTeamId}`;
+  return side.slug;
 }
 
 /** The pair a game is matched by; null unless both sides are registry or JV_OUTSIDE_TEAMS teams and one is registry. */
@@ -90,7 +99,7 @@ function gamePair(g: Pick<Game, 'home' | 'away'>): string | null {
 
 function rowPair(row: JvSbliveRow): string | null {
   const [a, b] = row.sides.map(rowSideKey);
-  return a && b && (row.sides[0].slug || row.sides[1].slug) ? pairKey(a, b) : null;
+  return a && b && (rowSlug(row.sides[0]) || rowSlug(row.sides[1])) ? pairKey(a, b) : null;
 }
 
 function scoreOf(row: JvSbliveRow, key: SideKey): number {
@@ -154,9 +163,9 @@ function sideOf(team: SideTeam, score: number, other: number): GameSide {
 }
 
 function sideTeam(side: JvSbliveRow['sides'][number]): SideTeam | undefined {
-  if (side.slug) return getTeamBySlug(side.slug);
-  const outside = side.sbliveTeamId ? JV_OUTSIDE_TEAMS[side.sbliveTeamId] : undefined;
-  return outside ? { id: outside.maxprepsTeamId, slug: null, name: outside.name, division: null } : undefined;
+  const outside = rowOutside(side);
+  if (outside) return { id: outside.maxprepsTeamId, slug: null, name: outside.name, division: null };
+  return side.slug ? getTeamBySlug(side.slug) : undefined;
 }
 
 /** Rule 3: a si.com-only JV game. The host is si.com's `isHome` when exactly one side says so. */

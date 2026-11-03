@@ -18,7 +18,7 @@
 
 import { SBLIVE_WEB } from './sources/sblive';
 import { TEAMS } from './teams';
-import type { DivisionId, Team, TeamSlug } from './types';
+import type { Team, TeamSlug } from './types';
 
 /** Registry slug → the JV team's si.com web path segment (`<id>-<slug>-jv`), or null when si.com has none. */
 export const JV_SBLIVE_PATHS: Readonly<Record<TeamSlug, string | null>> = {
@@ -154,29 +154,48 @@ export const JV_SLUG_BY_SBLIVE_ID: ReadonlyMap<string, TeamSlug> = new Map(
   }),
 );
 
+export interface JvSlotTeam {
+  name: string;
+  /** The MaxPreps team id the JV rows name it by. */
+  maxprepsTeamId: string;
+  /** The registry school whose league slot it fills at JV level; that school fields no JV team. */
+  jvFor: TeamSlug;
+  /** One sentence: the league's own words, for the pages. */
+  source: string;
+}
+
 /**
- * JV teams outside the registry that registry schools play in their JV league, identified on both
- * sources by id, never by name: si.com JV team id → the MaxPreps team id its opponents' JV rows name.
- * lib/jv-merge.ts matches a si.com row against such a team as it matches one between two registry
- * schools, so its scores fill MaxPreps' rows and its games MaxPreps lacks are added. `division` is the
- * JV league it plays in: a game against a school of that division is a JV league fixture, but the team
- * has no registry row to stand in a table, so lib/jv-standings.ts leaves it uncounted and names it under
- * the table ('outside-jv-member') rather than calling it non-league.
+ * JV teams outside the registry that play a registry school's JV slot in its league, keyed by si.com JV
+ * team id and identified on both sources by id, never by name.
  *
- * York (Monterey) fields JV field hockey only, in PCAL's `CAT/YOR` slot (DATA-SOURCES §2.2). Its si.com
- * JV page (456850, read 2026-11-03) is "York Falcons Junior Varsity", Monterey, and links the varsity
- * listing 456851 that DATA_QUALITY.sbliveIgnoredTeamIds ignores; MaxPreps' JV rows name it e9a91bc8.
- * Its si.com games (marked "League" there) fall on Santa Catalina's PCAL fixture dates against the
- * same schools (Greenfield Sep 4, Carmel Sep 10, Stevenson Sep 16, Greenfield Oct 6; MaxPreps' Monterey
- * Oct 26).
+ * York (Monterey). PCAL's 2026 schedule (pcalathletics.org, the bundled PDF), Note 1: "Santa Catalina is
+ * Varsity only. York is JV only. They are paired together in this schedule as CAT/YOR." Its schools line
+ * reads "Santa Catalina V only (SCAT) … York (YOR) - JV ONLY". So the JV game of every Santa Catalina
+ * fixture is York's: York stands in the PCAL JV table in Santa Catalina's place, a JV row filed under
+ * Santa Catalina is York's (lib/jv-corrections.ts), and a York game takes the classification of Santa
+ * Catalina's varsity game of the day (lib/jv-standings.ts). York's si.com JV page (456850, read
+ * 2026-11-03) is "York Falcons Junior Varsity", Monterey, linking the varsity listing 456851 that
+ * DATA_QUALITY.sbliveIgnoredTeamIds ignores; MaxPreps' JV rows name it e9a91bc8. Its si.com games fall on
+ * Santa Catalina's fixture dates (Greenfield Sep 4 and Oct 6, Carmel Sep 10, Stevenson Sep 16; MaxPreps'
+ * Monterey Oct 26).
  */
-export const JV_OUTSIDE_TEAMS: Readonly<Record<string, { name: string; maxprepsTeamId: string; division: DivisionId }>> = {
-  '456850': { name: 'York', maxprepsTeamId: 'e9a91bc8-5999-4321-9e21-d6cdc8aafcb2', division: 'pcal' },
+export const JV_OUTSIDE_TEAMS: Readonly<Record<string, JvSlotTeam>> = {
+  '456850': {
+    name: 'York',
+    maxprepsTeamId: 'e9a91bc8-5999-4321-9e21-d6cdc8aafcb2',
+    jvFor: 'santa-catalina',
+    source: 'PCAL’s schedule pairs Santa Catalina (varsity only) with York (JV only), so York plays the JV games of Santa Catalina’s fixtures.',
+  },
 };
 
 /** The JV_OUTSIDE_TEAMS team a MaxPreps team id names, or undefined. */
-export function jvOutsideTeamByMaxprepsId(teamId: string | null): (typeof JV_OUTSIDE_TEAMS)[string] | undefined {
+export function jvOutsideTeamByMaxprepsId(teamId: string | null): JvSlotTeam | undefined {
   return teamId ? Object.values(JV_OUTSIDE_TEAMS).find((t) => t.maxprepsTeamId === teamId) : undefined;
+}
+
+/** The team that plays a registry school's JV slot because the school fields no JV team, or undefined. */
+export function jvSlotTeamFor(slug: TeamSlug | null): JvSlotTeam | undefined {
+  return slug ? Object.values(JV_OUTSIDE_TEAMS).find((t) => t.jvFor === slug) : undefined;
 }
 
 /** MaxPreps' JV schedule page for a school: `<varsity team URL>jv/schedule/`, or null without a MaxPreps page. */
