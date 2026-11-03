@@ -34,7 +34,7 @@ import {
   getHistoryTournamentFor,
   getHistoryTournaments,
 } from '../lib/history/history';
-import { TOC } from '../lib/leagues';
+import { TOC } from '../lib/league-config/sections';
 import { getPriorSeason } from '../lib/history/prior-season';
 import { teamsInLeague } from '../lib/teams';
 import { SEED_CLAIM } from '../scripts/copy-rules';

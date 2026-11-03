@@ -25,7 +25,7 @@
  * whose score may leave out or include a tiebreak (a shootout decider, an overtime count the
  * section's rules rule out, an MCAL tournament game whose shootout MaxPreps may record as goals)
  * gets one sentence for the section instead, which says the two need not agree without saying a
- * shootout was played (the San Diego Section's are inferred, never asserted: lib/leagues.ts).
+ * shootout was played (the San Diego Section's are inferred, never asserted: lib/league-config/sections.ts).
  *
  * Game notes. Some coaches write goals, assists and saves in MaxPreps' note for the game instead
  * (Homestead's "goals scored Gabby Molly, Emry Borges"). The game page adds what the team page adds,

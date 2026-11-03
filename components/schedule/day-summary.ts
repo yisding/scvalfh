@@ -16,7 +16,8 @@
  */
 
 import { matchupJoiner } from '../../lib/format';
-import { DEFAULT_REGION, LEAGUES, REGIONS, findDivision, regionOf } from '../../lib/leagues';
+import { DEFAULT_REGION, REGIONS } from '../../lib/league-config/sections';
+import { LEAGUES, findDivision, regionOf } from '../../lib/leagues';
 import { getTeamBySlug } from '../../lib/teams';
 import type { Game, LeagueId, RegionId } from '../../lib/types';
 import { getBracketLink } from '../playoffs/bracket-link';

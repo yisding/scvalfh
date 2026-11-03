@@ -38,7 +38,7 @@ group of independents. The North County Conference's short name is "North" (owne
 control's target or a sentence's subject it reads "North County" (`standaloneName`), so it never reads
 as a direction ("Jump to North County ↓"). The LA independents are not a league: five
 Los Angeles-area Southern Section schools in no field hockey league, grouped by this site (short name "LA",
-`independents: true` in `lib/leagues.ts`; the id and URL stay `independents`). Glendora, Harvard-Westlake and Thousand Oaks are each the
+`independents: true` in `lib/league-config/independents.ts`; the id and URL stay `independents`). Glendora, Harvard-Westlake and Thousand Oaks are each the
 only field hockey team in their all-sports league on MaxPreps (the Palomares League, League B and the
 Marmonte League); Bonita and Chaminade sit in MaxPreps' and si.com's Sunset tables, but MaxPreps marks
 none of their games against the five Orange County Sunset teams as a league game and both play every
@@ -50,7 +50,10 @@ Sunset are single-division leagues, so the site shows no division picker and no 
 them. A San Diego conference is a league here and the Section's leagues are its divisions (the
 Section's 2026-27 League Alignment; the division names are ours). Every league fact (ids, MaxPreps
 ids, rules, tiebreak chains with their citations, postseason ladders, official sources,
-data-quality lists) lives in `lib/leagues.ts`, along with the regions (`REGIONS`, `regionOf`); the
+data-quality lists) lives in `lib/league-config/`: one file per league, named as its registry file, beside
+`sections.ts` (the regions, the sections and the CCS block), `sds.ts` (what the San Diego leagues share),
+`data-quality.ts` and `shape.ts` (the types). `lib/leagues.ts` assembles them into `LEAGUES` and holds the
+lookups (`getLeague`, `regionOf`, …) and `assertLeagues()`; the
 teams live in `lib/registry/{scval,bval,pcal,mcal,eal,sunset,city,north-county,metro,independents}.ts`, assembled
 by `lib/teams.ts`. The CCS holds a 16-team championship fed by SCVAL (7 berths), BVAL (4), PCAL (2)
 and three at-large berths; the NCS holds no field hockey championship, so MCAL's own six-team
@@ -224,7 +227,7 @@ restricted to Aug-Dec so it rarely fires out of season; the cron's months are UT
 is there only for the Nov 30 10:00 PM Pacific run, which is already December 1 in UTC). The
 season itself is bounded by the scripts' own Aug 1 - Nov 30 Pacific window guard
 (`inSeasonWindow` in `lib/pipeline/steps/window.ts`, over the sections' season windows in
-`lib/leagues.ts`; `fetch-player-stats` imports the same function): a run outside it exits without
+`lib/league-config/sections.ts`; `fetch-player-stats` imports the same function): a run outside it exits without
 writing anything. Right after `fetch-data` it runs `pnpm fetch-player-stats` (all 102 teams; see
 "Player stats" below) and then `pnpm fetch-jv` (see "JV games" below), each allowed to fail without
 stopping the run. It runs the test suite against what it just wrote; if the suite fails, it tests
@@ -1046,7 +1049,7 @@ captured from real (offline) MaxPreps/SCVAL responses live under `tests/fixtures
 ## Next-season bootstrap
 
 MaxPreps' season ids are **never hardcoded into more than one place** — they live in
-`lib/season.ts`, and the MaxPreps league ids (and every other league fact) in `lib/leagues.ts`; both
+`lib/season.ts`, and the MaxPreps league ids (and every other league fact) in `lib/league-config/`; both
 are re-asserted on every `fetch-data` run. The season ids are global, but **MaxPreps' league ids change
 every season**: the nine leagues have 15 divisions and 14 MaxPreps league ids, because the San Diego
 Section's Valley division has no MaxPreps table (`maxprepsLeagueId: null`); the independents' group
@@ -1064,12 +1067,12 @@ pnpm discover-season --help                   # usage; makes no request
 independents (each sits alone in its own all-sports league, so the script lists their leagues and asks
 for a check by hand that each is still its league's only field hockey team), asserts they agree with
 `leagues/{id}/v1`, reports whether a member of a null-table division (Valley) now carries a league,
-and prints a diff against `lib/season.ts` and `lib/leagues.ts` plus a
+and prints a diff against `lib/season.ts` and `lib/league-config/` plus a
 ready-to-paste constants block. **It never writes a file** — a human reviews the diff and edits
-`lib/season.ts` and `lib/leagues.ts`, because a wrong season id would silently publish last
+`lib/season.ts` and `lib/league-config/`, because a wrong season id would silently publish last
 year's table under this year's URL. The official schedules, by-laws and fixture files are
 re-transcribed by hand each season (see `docs/DATA-SOURCES.md`). So are the postseason pieces: the CCS
-tournament and division bracket ids (`CCS.tournament` in `lib/leagues.ts`, from the new MaxPreps tournament
+tournament and division bracket ids (`CCS.tournament` in `lib/league-config/sections.ts`, from the new MaxPreps tournament
 page's URL keys), and two new owner files, `data/ccs-bracket-<year>.json` and `data/sds-brackets-<year>.json`,
 which the imports in `lib/postseason/ccs-bracket.ts` and `lib/postseason/sds-bracket.ts` name (see "Postseason bracket files").
 
@@ -1132,7 +1135,7 @@ points rule, no standings and no table order that we could find, so the order is
 3-1-0 points and every page says so (`orderScope: 'site'`). SCVAL, BVAL, PCAL, MCAL and the Sunset
 can end a league game in a tie; the EAL and the San Diego Section decide a level varsity game by
 1 v 1s or a shootout. They differ in the tiebreak chain, in how a tie among three or more
-teams is worked through and in the postseason, so every rule is data in `lib/leagues.ts` (with the
+teams is worked through and in the postseason, so every rule is data in `lib/league-config/` (with the
 by-law citation next to it) and one engine in `lib/standings.ts` runs them. Only games that count
 toward a division table count: a team's non-league and postseason games never do. The full rules,
 with citations, are in `docs/LEAGUE-RULES.md`; the site prints them on `/about#rules-<league>`.
@@ -1263,7 +1266,7 @@ Association's Tournament of Champions, Oct 22–29, the postseason for both the 
 CIF does not run it: the Southern Section holds no field hockey championship (Blue Book 2026-27 Bylaws 2011.1
 and 3500.2) and CIF no regional or state one. Its eight teams are five Sunset and three LA independents; a
 Sunset team not in it ends its season with its last game. The site names it, lists its games on `/playoffs#toc`, tags them
-`outside-tournament` and counts them in no table (`TOC` in `lib/leagues.ts`, DESIGN §24.13). MaxPreps' 2026-27
+`outside-tournament` and counts them in no table (`TOC` in `lib/league-config/sections.ts`, DESIGN §24.13). MaxPreps' 2026-27
 Sunset table lists three of the eight with Bonita and Chaminade, ordered by winning percentage, and
 si.com's lists six of the eight with Bonita, Chaminade and two 0-0 rows; both are shown as informational
 only, and Great Oak's Aug 27 win over Bonita, which MaxPreps marks as a league game, is not counted
@@ -1272,7 +1275,7 @@ here.
 ### LA independents
 
 Five Los Angeles-area Southern Section schools in no field hockey league, grouped by this site as "LA
-independents" (short name "LA", `independents: true` in `lib/leagues.ts`; the id and URL stay
+independents" (short name "LA", `independents: true` in `lib/league-config/independents.ts`; the id and URL stay
 `independents`). Glendora,
 Harvard-Westlake and Thousand Oaks are the only field hockey teams in their all-sports leagues (the
 Palomares League, League B and the Marmonte League on MaxPreps' 2026-27 team pages; MaxPreps' 2025-26
@@ -1546,7 +1549,7 @@ Two `/leaders` boards per region weigh scoring by the defenses it came against
   De Anza grid still lists it, but it is not in the team registry, its 14 grid fixtures are
   dropped when the PDF is parsed, and De Anza is shown as 7 teams. York plays JV field hockey only
   (PCAL's grid slot `CAT/YOR` is Santa Catalina), so it has no varsity results. Both are in the
-  `withdrawnNames` of their league in `lib/leagues.ts`, and the team search says so. Red Bluff is not
+  `withdrawnNames` of their league in `lib/league-config/` (`scval.ts`, `pcal.ts`), and the team search says so. Red Bluff is not
   fielding a varsity team in 2026 either (MaxPreps' EAL table still lists it as a 0-0-0 row; a JV
   game of its own exists, so the site says only "not fielding a varsity team in 2026").
   In Southern California, Madison, Santana, Castle Park, Chula Vista, Montgomery and Sweetwater have a
@@ -1589,7 +1592,7 @@ Two `/leaders` boards per region weigh scoring by the defenses it came against
   brackets on its field hockey page after the Sat Oct 31 seeding meeting (in 2025 a link-shared Google
   Sheet, readable as CSV without a login). `/playoffs` prints the officials' association's round calendar
   and links that page; the owner pastes the sheet's URL into `bracketSheetUrl` (`sdsPostseason` in
-  `lib/leagues.ts`) and transcribes the placed teams and round dates into `data/sds-brackets-2026.json`, after
+  `lib/league-config/sds.ts`) and transcribes the placed teams and round dates into `data/sds-brackets-2026.json`, after
   which the site draws the Section's brackets (see "Postseason bracket files"). Nothing reads the sheet itself (its
   2026 id is unknown until published and docs.google.com has never been read from Actions), so the drawing is only
   as current as the file: a later change to the sheet does not show until the file is edited, and the schema
@@ -1598,7 +1601,7 @@ Two `/leaders` boards per region weigh scoring by the defenses it came against
 - **The San Diego playoff divisions can go stale.** Each team's Division I or II on `/playoffs` and its
   team page comes from the Section's 2026 Divisions sheet (dated 2025-12-23), kept in config; nothing
   re-checks it, so a re-sheet before the Oct 31 seeding meeting would not show until someone edits
-  `lib/leagues.ts`. Once `data/sds-brackets-2026.json` is filled, the drawn bracket shows the Section's own
+  `lib/league-config/{city,north-county,metro}.ts`. Once `data/sds-brackets-2026.json` is filled, the drawn bracket shows the Section's own
   placement, but the conference cards and team pages still read `playoffDivisionOf`, and the file's schema refuses
   an Open Division school that config does not put in Division I, so a re-sheet means editing both.
 - **MaxPreps' manual entry lags.** Coaches enter scores by hand; at times only a fraction of

@@ -15,7 +15,8 @@
 
 import { z } from 'zod';
 
-import { LEAGUE_IDS, TOC, getLeague } from '../leagues';
+import { TOC } from '../league-config/sections';
+import { LEAGUE_IDS, getLeague } from '../leagues';
 import { dateKey, slugId } from '../schema-primitives';
 import { teamsInLeague } from '../teams';
 import type { SectionId } from '../types';

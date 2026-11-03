@@ -17,7 +17,7 @@
  */
 
 import { byDateThenId } from '../../format';
-import { DATA_QUALITY } from '../../leagues';
+import { DATA_QUALITY } from '../../league-config/data-quality';
 import { applyExclusions, dedupePhantomPairs, normalizeGames } from '../../normalize';
 import type { Game } from '../../types';
 import type { PipelineContext, RunState } from '../ledger';

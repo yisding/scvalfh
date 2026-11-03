@@ -18,7 +18,8 @@ import {
   getHistoryTournaments,
   getUnavailableHistoryLeagues,
 } from '../../lib/history/history';
-import { TOC, getLeague, getSection, isIndependentLeague } from '../../lib/leagues';
+import { TOC } from '../../lib/league-config/sections';
+import { getLeague, getSection, isIndependentLeague } from '../../lib/leagues';
 import type { LeagueId } from '../../lib/types';
 
 export const SEASON = getHistorySeason();

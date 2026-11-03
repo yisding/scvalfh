@@ -9,7 +9,7 @@ schedule at all: this site orders their tables by its own 3-1-0 points and says 
 (`orderScope: 'site'`). The Southern Section's three independents (Glendora, Harvard-Westlake and
 Thousand Oaks) are not a league and have no table at all: see "LA independents" below.
 The leagues differ in the tiebreak chain, in how a tie among three or more teams is worked through, in how a division champion is
-named and in what the postseason looks like. Every rule below is data in `lib/leagues.ts` with the
+named and in what the postseason looks like. Every rule below is data in `lib/league-config/` (a file per league) with the
 by-law citation beside it; one engine (`lib/standings.ts`) runs them, and `/about#rules-<league>`
 prints them on the site. Where the documents say something this site cannot compute (a coin flip,
 a blind draw, a play-in game), the teams **share a place** and the page says which rule decides it.
@@ -80,7 +80,7 @@ On **Fri Oct 30** the four De Anza places meet the four El Camino places (#1 v #
 schools played two of the four a day early: #1 St. Ignatius at Mitty and #3 Palo Alto at Valley
 Christian (MaxPreps' venue field reads "SCVAL Crossover Game", and it marks the game a playoff) are
 Thu Oct 29, #2 Saint Francis at Los Gatos and the #4 play-in Fri Oct 30. So each pairing in
-`lib/leagues.ts` keeps the schedule's `date` (Oct 30) and carries a `window` (Oct 29–30): a De Anza–El
+`lib/league-config/scval.ts` keeps the schedule's `date` (Oct 30) and carries a `window` (Oct 29–30): a De Anza–El
 Camino game dated inside it is the crossover (`lib/classify.ts` rule 1, ahead of MaxPreps' playoff
 flag), the pairing card takes the game's own date, and a seat two level teams spanned (Mitty and
 Los Gatos, co-leaders of El Camino) narrows to the one the league paired. The CCS
@@ -279,7 +279,7 @@ Turf at Bruce Grant Field/Sam Chapman Stadium"); admission is adults $10, studen
 seniors $5, pre-sale on GoFan, no booster passes or student body cards, lifetime MCAL, NCS and CIF
 passes honored (the 2026 play-off sheet and the General Rules admission table); the General Rules add
 that a playoff game at a higher seed's site "should not be considered" a home contest. The bracket
-prints the venue, a Directions link and the admission line under the final (`finalSite`, lib/leagues.ts),
+prints the venue, a Directions link and the admission line under the final (`finalSite`, lib/league-config/mcal.ts),
 and a finalist's Next card gets the Directions pill from the same address, since MaxPreps gives none.
 Tournament games tied after two
 overtimes go to a shootout (Handbook §9), and MaxPreps records the shootout tally as the score of a
@@ -466,7 +466,7 @@ Beach High School [V: Harvard-Westlake Chronicle, Aug 25 2026 ("the Los Angeles 
 (LAFHA) Tournament of Champions"); Bonita's and Huntington Beach's own schedules name the rounds and sites;
 MaxPreps, si.com and the CIF-SS widget carry the games]. No organizer publishes a site, a bracket or seeds,
 so the site lists the games and never a seed. It is `SectionConfig.outsideTournament` (`TOC` in
-`lib/leagues.ts`, window Oct 22–29): every game between two Southern Section teams dated inside the window
+`lib/league-config/sections.ts`, window Oct 22–29): every game between two Southern Section teams dated inside the window
 is tagged `outside-tournament` (ahead of MaxPreps' flag, which marks only Huntington Beach's rows as
 playoffs) and counts in no table, so Edison's 3-0 over Great Oak on Oct 22 (round 1) is not a Sunset game.
 Harvard-Westlake won the 2025 edition, 4-0 over Newport Harbor on Oct 25, 2025 [V: Chronicle, Nov 15 2025].

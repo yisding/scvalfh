@@ -23,7 +23,9 @@
  */
 
 import { byDateThenId, shootoutPhrases, toLocalTimestamp } from './format';
-import { DATA_QUALITY, getLeague, getSection, type DataQualityConfig, type SectionConfig } from './leagues';
+import { DATA_QUALITY } from './league-config/data-quality';
+import type { DataQualityConfig, SectionConfig } from './league-config/shape';
+import { getLeague, getSection } from './leagues';
 import { getTeamById, resolveTeam } from './teams';
 import type {
   ContestId,

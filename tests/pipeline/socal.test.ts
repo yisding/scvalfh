@@ -24,7 +24,8 @@ import path from 'node:path';
 import { beforeAll, describe, expect, it } from 'vitest';
 
 import { localDateKey, sideOutcome } from '../../lib/format';
-import { DATA_QUALITY, LEAGUES, getDivision, getLeague, getSection } from '../../lib/leagues';
+import { DATA_QUALITY } from '../../lib/league-config/data-quality';
+import { LEAGUES, getDivision, getLeague, getSection } from '../../lib/leagues';
 import { readManifest } from '../../lib/pipeline/corpus';
 import { NO_MAXPREPS_TABLE_REASON } from '../../lib/pipeline/steps/league-meta';
 import { loadSnapshot } from '../../lib/snapshot/snapshot-schema';
@@ -184,7 +185,7 @@ describeIfCaptured('the SoCal corpus run', () => {
 
 describeIfCaptured('the San Diego Valley division: MaxPreps publishes no table', () => {
   it('has meta and reported table skipped, no reported rows, and no MaxPreps source row', () => {
-    expect(getDivision('valley').maxprepsLeagueId, 'lib/leagues.ts').toBeNull();
+    expect(getDivision('valley').maxprepsLeagueId, 'lib/league-config/north-county.ts').toBeNull();
     const valley = snapshot.leagueHealth.flatMap((h) => h.divisions).find((d) => d.divisionId === 'valley');
     expect(valley, 'lib/pipeline/steps/standings.ts').toMatchObject({
       meta: 'skipped',
@@ -332,7 +333,7 @@ describeIfCaptured('the section shootout and level games', () => {
   }
 
   it('decides a level San Diego final MaxPreps marks W and L as a shootout win, across conferences too', () => {
-    expect(getSection('sds').shootout, 'lib/leagues.ts').not.toBeNull();
+    expect(getSection('sds').shootout, 'lib/league-config/sections.ts').not.toBeNull();
     const games = levelWithResult();
     // The eight in the design inventory (Clairemont–Eastlake 9/1 … Westview–San Pasqual 10/2).
     expect(games.map((g) => g.contestId.slice(0, 8)).sort(), 'lib/normalize.ts').toEqual(
@@ -356,7 +357,7 @@ describeIfCaptured('the section shootout and level games', () => {
   });
 
   it('never decides a level Sunset game by shootout: the Southern Section has no shootout rule', () => {
-    expect(getSection('ss').shootout, 'lib/leagues.ts').toBeNull();
+    expect(getSection('ss').shootout, 'lib/league-config/sections.ts').toBeNull();
     const sunset = new Set(teamsInLeague('sunset').map((t) => t.slug));
     const level = snapshot.games.filter(
       (g) => g.status === 'final' && sunset.has(g.home.slug ?? '') && sunset.has(g.away.slug ?? '') && g.home.score === g.away.score,

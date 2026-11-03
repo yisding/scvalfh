@@ -17,7 +17,7 @@ import { describe, expect, it } from 'vitest';
 import { CcsSeedFileSchema, type CcsSeedFile } from '../lib/postseason/ccs-bracket-schema';
 import { ccsSeedOf, getCcsSeeds, seedsFromHistory } from '../lib/postseason/ccs-bracket';
 import { HistoryBracketsSchema } from '../lib/history/history-brackets-schema';
-import { CCS } from '../lib/leagues';
+import { CCS } from '../lib/league-config/sections';
 import { REPO } from './helpers';
 
 const committed = JSON.parse(readFileSync(path.join(REPO, 'data', 'ccs-bracket-2026.json'), 'utf8')) as unknown;

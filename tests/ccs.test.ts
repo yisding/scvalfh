@@ -27,7 +27,7 @@ import {
   parseCcsIcal,
   readTournamentPage,
 } from '../lib/sources/ccs';
-import { CCS } from '../lib/leagues';
+import { CCS } from '../lib/league-config/sections';
 import { CcsCalendarEventSchema } from '../lib/snapshot/snapshot-schema';
 import { REPO } from './helpers';
 

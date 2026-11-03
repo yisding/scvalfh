@@ -4,7 +4,8 @@ import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 import { sideOutcome } from '../lib/format';
-import { DATA_QUALITY, type DataQualityConfig } from '../lib/leagues';
+import { DATA_QUALITY } from '../lib/league-config/data-quality';
+import type { DataQualityConfig } from '../lib/league-config/shape';
 import {
   applyDateOverride,
   applyExclusions,
@@ -284,7 +285,7 @@ const corpusById = new Map(corpus.games.map((g) => [g.contestId, g]));
 
 /**
  * DATA_QUALITY.excludedContestIds' two duplicate Palomar rows (Poway vs Fallbrook Oct 9, Mission Vista vs
- * Fallbrook Oct 30: lib/leagues.ts), in config order. Neither is in the 2026-10-02 NorCal corpus, so
+ * Fallbrook Oct 30: lib/league-config/data-quality.ts), in config order. Neither is in the 2026-10-02 NorCal corpus, so
  * applyExclusions reports both as unused there.
  */
 /** Exclusions for Southern California rows, which this NorCal corpus never holds: the two duplicate Palomar rows

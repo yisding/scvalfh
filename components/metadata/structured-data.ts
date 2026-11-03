@@ -30,7 +30,8 @@
 import type { GameModel } from '../game/game-view';
 import { gameDescription, gameTitle } from '../game/game-view';
 import { dateTimeAttr } from '../../lib/format';
-import { isIndependentLeague, type LeagueConfig } from '../../lib/leagues';
+import type { LeagueConfig } from '../../lib/league-config/shape';
+import { isIndependentLeague } from '../../lib/leagues';
 import type { Team } from '../../lib/types';
 import { gameAddress } from '../../lib/schools/venue';
 

@@ -10,7 +10,8 @@
 import { describe, expect, it } from 'vitest';
 
 import bracket2025 from './fixtures/mcal/bracket-2025.json';
-import { getLeague, type LeagueConfig } from '../lib/leagues';
+import type { LeagueConfig } from '../lib/league-config/shape';
+import { getLeague } from '../lib/leagues';
 import {
   SHOOTOUT_NOTE, buildLeagueTournament, finalGame, quarterfinals, seedsFromStandings, semifinals,
 } from '../lib/postseason/postseason';

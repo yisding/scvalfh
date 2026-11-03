@@ -27,6 +27,7 @@
  */
 
 import { byDateThenId, recordString, shortDate, sideOutcome } from './format';
+import type { LadderRung, LeagueConfig, LeagueRules, PairingConfig } from './league-config/shape';
 import {
   LEAGUES,
   divisionLabel,
@@ -41,7 +42,6 @@ import {
   pairingWindow,
   tiebreakChainFor,
 } from './leagues';
-import type { LadderRung, LeagueConfig, LeagueRules, PairingConfig } from './leagues';
 import { TEAMS, getTeamById, teamsInDivision } from './teams';
 import type {
   ComputedRecord,

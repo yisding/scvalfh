@@ -25,14 +25,19 @@ import {
   shortDate,
   sideOutcome,
 } from './format';
+import { DATA_QUALITY } from './league-config/data-quality';
+import { CCS, REGIONS, SECTIONS } from './league-config/sections';
+import type {
+  LeagueConfig,
+  PairingConfig,
+  PostseasonConfig,
+  RegionConfig,
+  SectionConfig,
+} from './league-config/shape';
 import {
   ALL_DIVISIONS,
-  CCS,
   CCS_LEAGUE_IDS,
-  DATA_QUALITY,
   LEAGUES,
-  REGIONS,
-  SECTIONS,
   TOURNAMENT_LEAGUE_IDS,
   divisionHeading,
   findDivision,
@@ -44,7 +49,6 @@ import {
   leaguesInRegion,
   pairingWindow,
 } from './leagues';
-import type { LeagueConfig, PairingConfig, PostseasonConfig, RegionConfig, SectionConfig } from './leagues';
 import { buildLeagueTournament, tournamentOutcome, tournamentOutcomeCopy } from './postseason/postseason';
 import { ccsOutcomeFor } from './postseason/postseason-outcomes';
 import { buildSearchIndex } from './search';
@@ -1121,7 +1125,7 @@ export function getTeamPostseasonLine(ref: string): TeamPostseasonLine | null {
       // The crossover sentence is for a team those games are about: an automatic berth (the crossover orders
       // them), the 4th-place play-in, or the 5th-place at-large candidate. A team below that (SCVAL 'out', 6th or
       // lower: Cupertino, 7th in De Anza on 2026-10-29) has no game left that changes its place, so it reads the
-      // ladder's own words instead (lib/leagues.ts SCVAL rung 'No automatic berth'; DESIGN §15.8 "never eliminat…").
+      // ladder's own words instead (lib/league-config/scval.ts SCVAL rung 'No automatic berth'; DESIGN §15.8 "never eliminat…").
       const candidate = statuses.some((s) => s === 'aq' || s === 'play-in' || s === 'at-large');
       let sentence: string;
       if (crossover && candidate) {

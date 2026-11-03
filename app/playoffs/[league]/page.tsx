@@ -19,7 +19,8 @@ import SectionHeader from '../../../components/ui/SectionHeader';
 import { getCcsField, getLeagueTournament, getSections } from '../../../lib/data';
 import type { LeagueSummary } from '../../../lib/data';
 import { shortDate } from '../../../lib/format';
-import { getLeague, type LeagueConfig } from '../../../lib/leagues';
+import type { LeagueConfig } from '../../../lib/league-config/shape';
+import { getLeague } from '../../../lib/leagues';
 import { tournamentHeadline } from '../../../lib/postseason/postseason';
 
 /**

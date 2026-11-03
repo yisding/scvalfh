@@ -18,8 +18,8 @@ import {
 } from '../../lib/data';
 import type { LeagueSummary } from '../../lib/data';
 import { listWords, monthDay, shortDate } from '../../lib/format';
+import type { LeagueConfig } from '../../lib/league-config/shape';
 import { getLeague, isIndependentLeague, sectionOf } from '../../lib/leagues';
-import type { LeagueConfig } from '../../lib/leagues';
 import type { PlayoffProjection as Projection } from '../../lib/types';
 import {
   buildDivisionProjection,

@@ -18,7 +18,8 @@ import path from 'node:path';
 
 import { z } from 'zod';
 
-import { getDivision, getLeague, leagueOfDivision, type DivisionConfig } from '../leagues';
+import type { DivisionConfig } from '../league-config/shape';
+import { getDivision, getLeague, leagueOfDivision } from '../leagues';
 import { dateKey } from '../schema-primitives';
 import { resolveOfficialName } from '../teams';
 import {

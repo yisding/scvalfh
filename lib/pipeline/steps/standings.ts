@@ -9,8 +9,8 @@
  * from the same function, as `missingLeaguePast`; no other division has that field.
  */
 
+import type { LeagueConfig } from '../../league-config/shape';
 import { LEAGUES } from '../../leagues';
-import type { LeagueConfig } from '../../leagues';
 import {
   assertFullTable,
   buildCrossCheck,

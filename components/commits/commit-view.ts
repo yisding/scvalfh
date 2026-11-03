@@ -41,7 +41,8 @@ import {
 import { clubSiteKey } from '../../lib/players/clubs-schema';
 import { COLLEGE_DIVISIONS, COMMIT_SPORTS, type SocialPlatform } from '../../lib/players/commits-schema';
 import { dateWithYear, gradeWord, listWords, partialDate } from '../../lib/format';
-import { REGIONS, regionOf } from '../../lib/leagues';
+import { REGIONS } from '../../lib/league-config/sections';
+import { regionOf } from '../../lib/leagues';
 import { getRosters } from '../../lib/players/rosters';
 import { getTeamBySlug } from '../../lib/teams';
 import type { RegionId, TeamSlug } from '../../lib/types';

@@ -2,7 +2,8 @@ import { buildStandingsOverviewView, leaderLine } from '../standings/standings-p
 import { leaderClause, type LeaderLine } from '../standings/standings-view';
 import { getLatestResultsDate, getLeagueSummaries, getTeams } from '../../lib/data';
 import { shortDate } from '../../lib/format';
-import { INDEPENDENT_LEAGUES, LEAGUES_PROPER, REGIONS, isIndependentLeague } from '../../lib/leagues';
+import { REGIONS } from '../../lib/league-config/sections';
+import { INDEPENDENT_LEAGUES, LEAGUES_PROPER, isIndependentLeague } from '../../lib/leagues';
 import { SEASON_CALENDAR_YEAR } from '../../lib/season';
 import type { LeagueId, RegionId } from '../../lib/types';
 

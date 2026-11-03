@@ -48,19 +48,17 @@ import {
   mapsSearchHref,
   noMoreGamesSentence,
 } from '../../lib/format';
+import { CCS, REGIONS } from '../../lib/league-config/sections';
+import type { LeagueRules, PostseasonConfig } from '../../lib/league-config/shape';
 import {
-  CCS,
   divisionHeading,
   getDivision,
   getLeague,
   pairingWindow,
-  REGIONS,
   getRegion,
   leaguePlayEnds,
   leaguesInRegion,
   regionOf,
-  type LeagueRules,
-  type PostseasonConfig,
   standingsLabel,
 } from '../../lib/leagues';
 import { pinLabel } from '../../lib/pin-label';

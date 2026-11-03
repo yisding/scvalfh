@@ -14,7 +14,8 @@
  * munging. `assertRegistry()` runs at module load and throws `lib/teams.ts: …` on any violation.
  */
 
-import { LEAGUES, SECTIONS, findLeague, getLeague } from './leagues';
+import { SECTIONS } from './league-config/sections';
+import { LEAGUES, findLeague, getLeague } from './leagues';
 import { BVAL_SEEDS } from './registry/bval';
 import { CITY_SEEDS } from './registry/city';
 import { EAL_SEEDS } from './registry/eal';

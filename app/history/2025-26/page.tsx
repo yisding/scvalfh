@@ -21,7 +21,8 @@ import PageHeader from '../../../components/layout/PageHeader';
 import DivisionTabs from '../../../components/standings/DivisionTabs';
 import { OG_BASE, ROOT_OG_IMAGE } from '../../../components/layout/site';
 import { listWords } from '../../../lib/format';
-import { TOC, getSection, regionOf } from '../../../lib/leagues';
+import { TOC } from '../../../lib/league-config/sections';
+import { getSection, regionOf } from '../../../lib/leagues';
 
 /**
  * `/history/2025-26` (DESIGN §1.1, §3.9; SPEC §10.8) — last season's final standings, one section

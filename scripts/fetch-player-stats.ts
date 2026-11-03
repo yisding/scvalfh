@@ -27,7 +27,7 @@
  * teamId is checked against it); its rows are then all "not on the roster".
  *
  * Two guards keep the scheduled run from churning the repository. Outside the season window
- * (the pipeline's own guard, lib/pipeline/steps/window.ts over lib/leagues.ts' section windows,
+ * (the pipeline's own guard, lib/pipeline/steps/window.ts over lib/league-config/sections.ts' section windows,
  * Aug 1 – Nov 30 Pacific, on the date of `--fetched-at`) it fetches and writes nothing. And when the
  * new file differs from the previous one only in its `fetchedAt` stamps, the previous file is left
  * exactly as it was (`playerStatsContentKey`), so there is nothing to commit.

@@ -115,9 +115,10 @@ beforeAll(async () => {
   teamView = await import('../../components/teams/team-view');
   gameView = await import('../../components/game/game-view');
   home = h.buildHomeView();
+  const sections = await import('../../lib/league-config/sections');
   markConfig(leagues.LEAGUES);
-  markConfig(leagues.SECTIONS);
-  markConfig(leagues.CCS);
+  markConfig(sections.SECTIONS);
+  markConfig(sections.CCS);
   markSnapshot(data.getSnapshot());
 
   const leagueOfSlug = new Map(data.getTeams().map((t) => [t.slug, t.league]));
@@ -185,9 +186,10 @@ async function collectEal(): Promise<EalCorpus> {
   const schedulePage = (await import('../../app/schedule/[league]/page')).default;
   const playoffsPage = (await import('../../app/playoffs/page')).default;
   const teamPage = (await import('../../app/teams/[slug]/page')).default;
+  const sec = await import('../../lib/league-config/sections');
   markConfig(l.LEAGUES);
-  markConfig(l.SECTIONS);
-  markConfig(l.CCS);
+  markConfig(sec.SECTIONS);
+  markConfig(sec.CCS);
   markSnapshot(d.getSnapshot());
 
   const ids = new Set(l.UNBRACKETED_LEAGUE_IDS);

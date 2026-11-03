@@ -44,6 +44,7 @@ import {
   timeOfDayPT,
 } from '../../lib/format';
 import { gameHref, gameIdToParam, paramToGameId } from '../../lib/game-id';
+import type { LeagueConfig } from '../../lib/league-config/shape';
 import {
   divisionDisplay,
   divisionHeading,
@@ -53,7 +54,6 @@ import {
   getSection,
   leagueOfDivision,
   leagueSportWords,
-  type LeagueConfig,
 } from '../../lib/leagues';
 import { SHOOTOUT_NOTE, mayHideShootout } from '../../lib/postseason/postseason';
 import { withLocationRound } from '../../lib/postseason/postseason-rounds';

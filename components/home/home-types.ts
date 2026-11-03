@@ -11,7 +11,7 @@
  * This file imports TYPES ONLY, so it is safe on both sides of the boundary.
  */
 
-import type { SectionConfig } from '../../lib/leagues';
+import type { SectionConfig } from '../../lib/league-config/shape';
 import type { TeamSearchEntry } from '../../lib/search';
 import type { LeagueId, Outcome, RegionId } from '../../lib/types';
 import type { GameDisplay, SideView } from '../ui/describe-game';

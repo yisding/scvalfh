@@ -21,7 +21,8 @@
 import { computeAdjustedScoring, getAdjustedScoring, type AdjustedScoring } from '../../lib/ratings/adjusted-scoring';
 import { getSnapshot } from '../../lib/data';
 import { shortDate } from '../../lib/format';
-import { REGIONS, regionOf } from '../../lib/leagues';
+import { REGIONS } from '../../lib/league-config/sections';
+import { regionOf } from '../../lib/leagues';
 import { getAllPlayerStatsWithNotes } from '../../lib/players/player-stats';
 import { getPriorSeason } from '../../lib/history/prior-season';
 import { getAllEnrichedRosters } from '../../lib/players/rosters';

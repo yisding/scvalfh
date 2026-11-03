@@ -9,7 +9,7 @@
 
 import { describe, expect, it } from 'vitest';
 
-import { CCS } from '../lib/leagues';
+import { CCS } from '../lib/league-config/sections';
 import { ccsBracketGames, ccsSeedOf, getCcsSeeds, playoffGamesStale } from '../lib/postseason/ccs-bracket';
 import type { Game, GameBracket } from '../lib/types';
 import { game } from './game-builder';

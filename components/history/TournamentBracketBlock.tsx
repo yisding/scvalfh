@@ -3,7 +3,8 @@ import SectionHeader from '../ui/SectionHeader';
 import { getTeamBySlug } from '../../lib/data';
 import { dateWithYear, listWords } from '../../lib/format';
 import type { TournamentBracket } from '../../lib/history/history';
-import { TOC, getLeague } from '../../lib/leagues';
+import { TOC } from '../../lib/league-config/sections';
+import { getLeague } from '../../lib/leagues';
 import type { LeagueId } from '../../lib/types';
 
 import ChampionCard from './ChampionCard';

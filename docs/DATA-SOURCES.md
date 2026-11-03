@@ -15,7 +15,7 @@ below, are 2026-10-04; the Southern California captures, and every Sunset and Sa
 
 See also `docs/LEAGUE-RULES.md` (each league's points, tiebreak chain, postseason and the by-law
 citations), `docs/BYLAWS-2026-27.md` (the verified SCVAL by-laws, which override anything below
-that touches SCVAL ordering) and `lib/leagues.ts` (every league constant as shipped; the season
+that touches SCVAL ordering) and `lib/league-config/` (every league constant as shipped; the season
 ids are in `lib/season.ts`).
 
 
@@ -1827,7 +1827,7 @@ redirects.
   rows do not all sit on the grid's day: on 2026-10-29 MaxPreps had #1 v #1 (St. Ignatius at Mitty,
   contestType 5) and #3 v #3 (Palo Alto at Valley Christian, contestType 4, venue "SCVAL Crossover
   Game") on Thu Oct 29 and the other two on Fri Oct 30, so the pairings carry a `window` of Oct
-  29–30 (`PairingConfig.window`, lib/leagues.ts) and the tagger reads the window, not the day.
+  29–30 (`PairingConfig.window`, lib/league-config/scval.ts) and the tagger reads the window, not the day.
 - **Standings PDF:** 4 stacked blocks (DeAnza V, El Camino V, DeAnza JV, El Camino JV), row regex
   `/([A-Za-z .]+?)\s{2,}(\d+-\d+(?:-\d+)?)\s*$/`. ⚠️ The "Overall record" column is empty in the
   25-26 file. 2025-26 varsity final: DA — St. Ignatius 11-0-1, St. Francis 10-1-1, Los Altos
@@ -1981,7 +1981,7 @@ never applied automatically. A failed fetch is an `error` row and nothing else.
    validates each division as a double round robin before writing anything.
 4. **Review the diff** of `data/official/*.json` (`git diff`): only the fixtures that really moved
    may change.
-5. Update `bundledSha256` and `revisedOn` for that division in `lib/leagues.ts` (the sha256 of the
+5. Update `bundledSha256` and `revisedOn` for that division in its `lib/league-config/<league>.ts` (the sha256 of the
    new document's bytes: `sha256sum <file>`); for MCAL's changes cell update
    `officialChanges.sha256` to the hash of the cell text. Update the matching
    `official/revision/<division>.txt` (or `official/changes/mcal.txt`) in the test corpus so the
@@ -2345,7 +2345,7 @@ Found 2026-10-29 while asking what MaxPreps' two contestType-4 Huntington Beach 
 Field Hockey Association's Tournament of Champions ("TOC") is an eight-team end-of-season bracket for Southern
 Section teams that CIF does not run: 2026 round 1 Thu Oct 22, semifinals Tue Oct 27, final and third-place game
 Thu Oct 29 at Huntington Beach High School (third place at Miller Field). Config: `TOC` /
-`SectionConfig.outsideTournament` in `lib/leagues.ts`; tag `outside-tournament` (`lib/classify.ts` rule 1b, a
+`SectionConfig.outsideTournament` in `lib/league-config/sections.ts`; tag `outside-tournament` (`lib/classify.ts` rule 1b, a
 window Oct 22–29 over every game between two Southern Section registry teams, ahead of the contestType rule);
 listed on `/playoffs#toc`, the tournament's own section, which holds the Sunset and LA independents cards. Sources, none official:
 - `https://hwchronicle.com/114175/sports/field-hockey-concentrates-as-a-group/` (Aug 25 2026: "defending their
@@ -2404,7 +2404,7 @@ TEAM_LEVEL         = "Varsity"
 ```
 
 Shipped verbatim in `lib/season.ts`, re-asserted on every fetch run (§5), never hardcoded
-elsewhere. Everything that differs by league lives in `lib/leagues.ts`.
+elsewhere. Everything that differs by league lives in `lib/league-config/`.
 
 **Sections** (MaxPreps section ids, asserted against every league's metadata):
 
@@ -2965,7 +2965,7 @@ scores, and a si.com game that is not a junk row (rule 7).**
    new game with `contestId: 'sblive:<si.com game id>'`, `provenance.scores: 'sblive'`, no MaxPreps
    URL, the si.com URL, counted in the league table exactly like a MaxPreps final, with home/away
    and `official` taken from the fixture. A fixture listed in `DATA_QUALITY.fixtureMoves`
-   (`lib/leagues.ts`: a league game that another source, named in the entry, shows was played on another date
+   (`lib/league-config/data-quality.ts`: a league game that another source, named in the entry, shows was played on another date
    and maybe at the other school) is searched on its played date instead, for both windows, and published with
    the entry's host; `official.scheduledDate` keeps the league's date and the entry's source sentence is added to
    the backfill note (2026-10-22: SCVAL's Sep 9 Homestead at Cupertino, played Oct 13 at Homestead, 3-0,
@@ -3073,7 +3073,7 @@ team/{id}-v…/` image path. League slugs used to harvest team pages are never u
 
 ### 5.4 What is dropped on purpose
 
-All three lists are config (`DATA_QUALITY` in `lib/leagues.ts` and each league's `withdrawnNames`)
+All three lists are config (`DATA_QUALITY` in `lib/league-config/data-quality.ts` and each league's `withdrawnNames`)
 and everything dropped is published in the snapshot's `dropped` list and on `/about#dropped`.
 
 - **Ghost teams** (`ghostTeamIds`): a MaxPreps team that is not a real team. Del Norte (Crescent
@@ -3142,7 +3142,7 @@ never touches the network.
 Two fixture directories are provenance, not test input. `tests/fixtures/maxpreps/ghosts/` holds
 the two MaxPreps schedule captures (Del Norte of Crescent City and Del Norte of San Diego) behind the
 Del Norte (Crescent City) entries in `DATA_QUALITY.ghostTeamIds` and `excludedContestIds`
-(`lib/leagues.ts`): the ghost's one contest, `5b9ff911`, duplicates Tamalpais vs Del Norte (San
+(`lib/league-config/data-quality.ts`): the ghost's one contest, `5b9ff911`, duplicates Tamalpais vs Del Norte (San
 Diego), `a05bedf5`. `tests/fixtures/sblive/pcal-1002/` is the research record for the PCAL si.com
 fills of 2026-10-02: `fill-candidates.json` (how the pages were captured, the si.com team ids, the
 fills, the rows dropped and the cross-check against MaxPreps) and `games-verified.json` (what each

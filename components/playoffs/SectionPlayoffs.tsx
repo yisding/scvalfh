@@ -9,8 +9,8 @@ import { getTeams, getToday } from '../../lib/data';
 import type { LeagueSummary } from '../../lib/data';
 import { getSdsBrackets, getSdsBracketsSource } from '../../lib/postseason/sds-bracket';
 import { dateSpan } from '../../lib/format';
+import type { LeagueConfig } from '../../lib/league-config/shape';
 import { getLeague } from '../../lib/leagues';
-import type { LeagueConfig } from '../../lib/leagues';
 
 import DateList from './DateList';
 import SdsBracket from './SdsBracket';

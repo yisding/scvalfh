@@ -17,7 +17,7 @@
 
 import { byDateThenId, listWords, shootoutPhrases, shortDate } from '../../lib/format';
 import { LOCATION_ROUND_HEADING, roundFromLocation, type LocationRound } from '../../lib/postseason/postseason-rounds';
-import type { ShootoutInference } from '../../lib/leagues';
+import type { ShootoutInference } from '../../lib/league-config/shape';
 import type { Game, LeagueId } from '../../lib/types';
 
 export interface UnbracketedDayView {

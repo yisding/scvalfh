@@ -4,7 +4,8 @@
  * constants leaf that client modules reach through lib/format.
  */
 
-import { LEAGUES, SECTIONS } from '../leagues';
+import { SECTIONS } from '../league-config/sections';
+import { LEAGUES } from '../leagues';
 import {
   ALL_SEASON_ID, GENDER_SPORT, SEASON_LABEL, SEASON_YEAR, SPORT_SEASON_ID, TEAM_LEVEL,
 } from '../season';

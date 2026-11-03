@@ -9,7 +9,8 @@ import {
   getHistoryTournamentFor,
   type UnavailableLeagueHistory,
 } from '../../lib/history/history';
-import { TOC, getLeague, getSection, isIndependentLeague, regionOf } from '../../lib/leagues';
+import { TOC } from '../../lib/league-config/sections';
+import { getLeague, getSection, isIndependentLeague, regionOf } from '../../lib/leagues';
 import type { LeagueId } from '../../lib/types';
 
 import { SEASON } from './history-page-view';

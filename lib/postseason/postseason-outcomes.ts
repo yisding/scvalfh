@@ -26,7 +26,8 @@
  */
 
 import { EN_DASH, ordinal, ordinalWord, shortDate } from '../format';
-import { getLeague, type LeagueConfig, type PairingConfig } from '../leagues';
+import type { LeagueConfig, PairingConfig } from '../league-config/shape';
+import { getLeague } from '../leagues';
 import { getTeamBySlug } from '../teams';
 import type { Game, LeaguePairing, TeamSlug } from '../types';
 

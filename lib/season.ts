@@ -1,6 +1,6 @@
 /**
  * Verified season constants: a dependency-free constants leaf (no imports), because client
- * modules reach it through lib/format. League, division and CCS facts live in lib/leagues.ts; the
+ * modules reach it through lib/format. League, division and CCS facts live in lib/league-config/; the
  * Season record is built by lib/snapshot/season-build.ts (SPEC §13.3).
  *
  * Every value below was read from a live response or an official PDF and carries its citation.
@@ -44,7 +44,7 @@ export const CCS_BRACKET_URL =
   `${MAXPREPS_WEB}/tournament/3jB4uWWtwk20vrdggAkzMA/field-hockey-26/` +
   '2026-central-coast-section-field-hockey-championship.htm';
 
-/** Section-wide deep links rendered by the Attribution component. League links live in lib/leagues.ts. */
+/** Section-wide deep links rendered by the Attribution component. League links live in lib/league-config/. */
 export const SOURCE_LINKS = {
   maxpreps: `${MAXPREPS_WEB}/ca/field-hockey/`,
   sblive: SBLIVE_WEB,

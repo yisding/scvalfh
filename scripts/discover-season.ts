@@ -13,9 +13,9 @@
  *      through `team-context/v1` (or every team named by --teams)
  *   3. asserts `leagues/{leagueId}/v1`'s `sportSeasonId` and `year` agree with step 1
  *   4. matches each division by `maxprepsLeagueId`, guesses by `maxprepsName`, prints a DIFF against
- *      lib/season.ts and lib/leagues.ts and a ready-to-paste block
+ *      lib/season.ts and lib/league-config/ and a ready-to-paste block
  *
- * It NEVER writes a file. `lib/season.ts` and `lib/leagues.ts` are edited by a human who has read
+ * It NEVER writes a file. `lib/season.ts` and `lib/league-config/` are edited by a human who has read
  * the diff, because a wrong season id would silently publish last year's table.
  *
  * Cost warning: `team-context/v1` is ~738 KB per team (a school's whole 844-season history), so the
@@ -226,14 +226,14 @@ async function main(argv: readonly string[]): Promise<number> {
   const failed = rows.filter((r) => r.error);
   if (failed.length) console.log(`  (failed: ${failed.map((r) => r.slug).join(', ')})`);
 
-  // ---- 4. the diff against lib/leagues.ts (match by maxprepsLeagueId, guess by maxprepsName)
-  console.log('\ndiff against lib/leagues.ts divisions:');
+  // ---- 4. the diff against lib/league-config/ (match by maxprepsLeagueId, guess by maxprepsName)
+  console.log('\ndiff against the lib/league-config/ divisions:');
   const guesses = new Map<string, { leagueId: string; name: string } | null>();
   for (const division of ALL_DIVISIONS) {
     const probed = wanted.some((t) => t.division === division.id);
     if (isIndependentDivision(division.id)) {
       // Each independent has a MaxPreps league upstream (Bonita and Chaminade the Sunset; the other three each
-      // the only field hockey team in their all-sports league, lib/leagues.ts INDEPENDENTS), so one is expected.
+      // the only field hockey team in their all-sports league, lib/league-config/independents.ts INDEPENDENTS), so one is expected.
       // Whether the grouping still holds is a question for a human: a league's MaxPreps standings page lists
       // every field hockey team it has.
       const members = rows.filter((r) => wanted.some((t) => t.slug === r.slug && t.division === division.id));
@@ -298,7 +298,7 @@ async function main(argv: readonly string[]): Promise<number> {
   console.log(`export const TEAM_LEVEL = '${boot.data.teamLevel ?? TEAM_LEVEL}' as const;`);
   console.log('--- end paste block ---');
 
-  console.log('\n--- divisions block for lib/leagues.ts (only the two MaxPreps fields per division) ---');
+  console.log('\n--- divisions block for lib/league-config/<league>.ts (only the two MaxPreps fields per division) ---');
   for (const division of ALL_DIVISIONS) {
     const g = guesses.get(division.id) ?? null;
     console.log(`  // ${division.id}`);

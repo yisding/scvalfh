@@ -8,7 +8,7 @@ import type { PriorSeason } from '../../lib/history/prior-season-schema';
 import type { MergedPlayer } from '../../lib/players/rosters';
 import type { TeamPlayerStats } from '../../lib/players/player-stats-schema';
 import type { Game, RegionId, Standing, Team } from '../../lib/types';
-import type { RegionConfig } from '../../lib/leagues';
+import type { RegionConfig } from '../../lib/league-config/shape';
 
 /**
  * Every column a board can print. LeaderBoardTable sizes its `<colgroup>` by key, so a key is a

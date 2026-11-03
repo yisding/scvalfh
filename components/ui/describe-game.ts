@@ -17,6 +17,7 @@
  */
 
 import { EN_DASH, MINUS, renderScore, scoreGlyph, scoreSentence, shootoutPhrases, timeOfDay } from '../../lib/format';
+import type { SectionConfig, ShootoutInference } from '../../lib/league-config/shape';
 import {
   LEAGUES,
   divisionHeading,
@@ -24,8 +25,6 @@ import {
   findLeague,
   getSection,
   leagueOfDivision,
-  type SectionConfig,
-  type ShootoutInference,
 } from '../../lib/leagues';
 import { pairingRoundOf } from '../../lib/postseason/postseason-round-label';
 import { getTeamBySlug } from '../../lib/teams';

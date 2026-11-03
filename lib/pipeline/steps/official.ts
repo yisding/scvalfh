@@ -21,7 +21,9 @@
  */
 
 import { postseasonTag } from '../../classify';
-import { DATA_QUALITY, LEAGUES, divisionDisplay, divisionHeading, type DivisionConfig, type LeagueConfig } from '../../leagues';
+import { DATA_QUALITY } from '../../league-config/data-quality';
+import type { DivisionConfig, LeagueConfig } from '../../league-config/shape';
+import { LEAGUES, divisionDisplay, divisionHeading } from '../../leagues';
 import { matchOfficialFixtures } from '../../official/match';
 import { hasOfficialDocument, loadBundledFixtures, type DocumentDivision } from '../../official/schema';
 import { assertDoubleRoundRobin } from '../../official/validate';

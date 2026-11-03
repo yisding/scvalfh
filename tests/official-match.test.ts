@@ -18,7 +18,8 @@ import path from 'node:path';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { classifyGames, postseasonTag } from '../lib/classify';
-import { DATA_QUALITY, LEAGUES, getLeague } from '../lib/leagues';
+import { DATA_QUALITY } from '../lib/league-config/data-quality';
+import { LEAGUES, getLeague } from '../lib/leagues';
 import { applyExclusions, normalizeGames } from '../lib/normalize';
 import { matchOfficialFixtures, type MatchOptions, type MatchResult } from '../lib/official/match';
 import { loadBundledFixtures, officialDocumentOf } from '../lib/official/schema';

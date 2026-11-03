@@ -24,7 +24,8 @@
 import { getCcsSeeds, seedsFromHistory } from '../../../lib/postseason/ccs-bracket';
 import type { CcsSeeds } from '../../../lib/postseason/ccs-bracket-schema';
 import { getHistoryBrackets } from '../../../lib/history/history';
-import { CCS, LEAGUE_IDS, getLeague } from '../../../lib/leagues';
+import { CCS } from '../../../lib/league-config/sections';
+import { LEAGUE_IDS, getLeague } from '../../../lib/leagues';
 import { getPriorSeason } from '../../../lib/history/prior-season';
 import { getTeamBySlug, teamsInLeague } from '../../../lib/teams';
 import type { CcsDivisionName, Game, GameBracket } from '../../../lib/types';

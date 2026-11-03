@@ -10,7 +10,8 @@ import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 import { ccsBracketGames } from '../lib/postseason/ccs-bracket';
-import { CCS, LEAGUES, leaguesInRegion } from '../lib/leagues';
+import { CCS } from '../lib/league-config/sections';
+import { LEAGUES, leaguesInRegion } from '../lib/leagues';
 import { buildSeason } from '../lib/snapshot/season-build';
 import {
   addConfiguredLeagues,

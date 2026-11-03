@@ -144,7 +144,7 @@ function scanSource(file: string, text: string): Finding[] {
       node.expression.text === 'SOURCE_LINKS' &&
       /^scval/.test(node.name.text)
     ) {
-      at(node, `reads deleted \`SOURCE_LINKS.${node.name.text}\` (league links moved to lib/leagues.ts)`);
+      at(node, `reads deleted \`SOURCE_LINKS.${node.name.text}\` (league links moved to lib/league-config/)`);
     }
 
     if (pageCode) {

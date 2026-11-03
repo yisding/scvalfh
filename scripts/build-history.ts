@@ -383,7 +383,7 @@ async function main(argv: readonly string[]): Promise<number> {
   // season (leagues/{id}/standings/v1?sportseasonid=8ae4cbab-…): Glendora's, Harvard-Westlake's and Thousand
   // Oaks' all-sports league tables for that season (the league ids are those in each team's MaxPreps
   // team-context lastYearStandingsData) list that school and no other field hockey team, and MaxPreps' 2025-26
-  // Sunset table lists Bonita and Chaminade with the eight Sunset teams (lib/leagues.ts SUNSET). The links are
+  // Sunset table lists Bonita and Chaminade with the eight Sunset teams (lib/league-config/sunset.ts SUNSET). The links are
   // MaxPreps' public pages for those tables (the canonical URLs team-context gives).
   const independents = {
     status: 'unavailable',

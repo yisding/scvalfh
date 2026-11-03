@@ -22,7 +22,7 @@ import {
   type BracketCard,
   type BracketPath,
 } from '../../components/playoffs/bracket-model';
-import { CCS } from '../../lib/leagues';
+import { CCS } from '../../lib/league-config/sections';
 import { resolveTeam } from '../../lib/teams';
 import type { CcsPlayoffs, Game } from '../../lib/types';
 import { ccsGames2025, ccsSeeds2025, unplayed } from '../fixtures/ccs/bracket-2025';

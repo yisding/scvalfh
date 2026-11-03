@@ -3,7 +3,7 @@ import Link from 'next/link';
 import Arrow from '../ui/Arrow';
 import ExternalLink from '../ui/ExternalLink';
 import { ordinal, shortDate } from '../../lib/format';
-import type { LeagueConfig } from '../../lib/leagues';
+import type { LeagueConfig } from '../../lib/league-config/shape';
 import { statusLegend } from '../../lib/standings';
 import type { TiebreakStage } from '../../lib/types';
 import { isQuotedLeague } from './about-view';

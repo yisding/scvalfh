@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 
 import { setLeague, setRegion, useEffectiveLeague, useEffectiveRegion } from '../prefs/use-league';
-import type { SectionConfig } from '../../lib/leagues';
+import type { SectionConfig } from '../../lib/league-config/shape';
 import type { LeagueId, RegionId } from '../../lib/types';
 
 import { ALL_LEAGUES } from '../prefs/prefs-script';
@@ -83,7 +83,7 @@ const SECTION_NAMES: Readonly<Record<SectionConfig['shortName'], string>> = {
 };
 
 /**
- * The two regions' words, spelled out for the same reason (lib/leagues.ts REGIONS: `shortName` on the
+ * The two regions' words, spelled out for the same reason (lib/league-config/sections.ts REGIONS: `shortName` on the
  * buttons, `name` in the live-region sentence). `Record<RegionId, …>` makes a new region a compile
  * error here. NorCal first: the default view and the JS-free reading order.
  */

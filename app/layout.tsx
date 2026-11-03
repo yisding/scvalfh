@@ -14,7 +14,8 @@ import { THEME_COLOR, THEME_SCRIPT } from '../components/prefs/theme-script';
 import PinnedTeamMarks from '../components/prefs/PinnedTeamMarks';
 import TwinMarks from '../components/layout/TwinMarks';
 import { getFetchedAt, getTeams } from '../lib/data';
-import { DEFAULT_REGION, LEAGUE_IDS, regionOf } from '../lib/leagues';
+import { DEFAULT_REGION } from '../lib/league-config/sections';
+import { LEAGUE_IDS, regionOf } from '../lib/leagues';
 
 import './globals.css';
 

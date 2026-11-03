@@ -33,7 +33,7 @@
 > example below predates the news that Wilcox is not fielding a team this season. The site now
 > had 15 teams (De Anza 7, El Camino 8) at that point, and since the multi-league amendment (§15)
 > SCVAL's 15 are four of the site's 43; Wilcox's grid fixtures are dropped at parse time (it is in
-> SCVAL's `withdrawnNames` in `lib/leagues.ts`, which replaced `WITHDRAWN_SCHOOL_NAMES`). The
+> SCVAL's `withdrawnNames` in `lib/league-config/scval.ts`, which replaced `WITHDRAWN_SCHOOL_NAMES`). The
 > no-results state itself still applies to any fielded team with nothing reported.
 >
 > One number in it is **not reachable as written**: §13's "`/` under **120 KB** gzipped including
@@ -4726,7 +4726,7 @@ The product test is §0's parent on the turf: who plays whom, when, where, how t
 result was, who goes on, and what it means for my team. Every rule of §15.8, §22.5 and §24.5 stands: no
 "eliminat…", no seed word on an EAL, San Diego or Sunset surface (SEED_CLAIM; "seeding meeting" and bare numerals
 pass), no CCS word outside the CCS surfaces, "EAL teams", whole sentences as single text nodes, every league fact
-in `lib/leagues.ts`, today from `getToday()`, `prefetch={false}` and `sx-action` on standalone links, server
+in `lib/league-config/`, today from `getToday()`, `prefetch={false}` and `sx-action` on standalone links, server
 components only.
 
 ### 31.1 "This week in the postseason", on `/playoffs` and the home page

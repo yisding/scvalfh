@@ -10,7 +10,8 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { DATA_QUALITY, LEAGUES, getDivision, getLeague } from '../../lib/leagues';
+import { DATA_QUALITY } from '../../lib/league-config/data-quality';
+import { LEAGUES, getDivision, getLeague } from '../../lib/leagues';
 import {
   FixtureMissing,
   TransportError,

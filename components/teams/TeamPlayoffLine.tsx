@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-import { CCS } from '../../lib/leagues';
+import { CCS } from '../../lib/league-config/sections';
 import { splitStatusLabel } from '../playoffs/playoff-view';
 import Arrow from '../ui/Arrow';
 import EmptyState from '../ui/EmptyState';

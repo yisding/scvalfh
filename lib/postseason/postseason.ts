@@ -27,11 +27,12 @@
  * rankings, Green Book 2026-27 Bylaw 2000.1) have 'tournament' for 1st (a designated champion's
  * guaranteed play-in) and 'selection' below, and no bracket is drawn before the Section publishes one.
  *
- * Imports the standings engine (lib/standings.ts), lib/format.ts, lib/leagues.ts, lib/teams.ts and types.
+ * Imports the standings engine (lib/standings.ts), lib/format.ts, lib/leagues.ts, lib/teams.ts and types (lib/league-config/shape.ts, lib/types.ts).
  */
 
 import { EN_DASH, byDateThenId, leagueClockPT, numberWord, shortDate, sideOutcome } from '../format';
-import { drawNumberOf, type LeagueConfig } from '../leagues';
+import type { LeagueConfig } from '../league-config/shape';
+import { drawNumberOf } from '../leagues';
 import { lastSpotOutcome } from '../standings';
 import { getTeamById, getTeamBySlug } from '../teams';
 import type {

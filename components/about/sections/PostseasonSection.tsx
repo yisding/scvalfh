@@ -3,7 +3,8 @@ import Link from 'next/link';
 import ExternalLink from '../../ui/ExternalLink';
 import SectionHeader from '../../ui/SectionHeader';
 import { dateWithYear, timeOfDayPT } from '../../../lib/format';
-import { CCS, getLeague, isIndependentLeague } from '../../../lib/leagues';
+import { CCS } from '../../../lib/league-config/sections';
+import { getLeague, isIndependentLeague } from '../../../lib/leagues';
 import { SOURCE_LINKS } from '../../../lib/season';
 import type { AboutSectionProps } from '../about-view';
 

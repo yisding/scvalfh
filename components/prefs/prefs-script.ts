@@ -95,7 +95,7 @@ export const REGION_KEY = 'scvalfh.region';
 
 /**
  * The region an absent `data-region` means: NorCal, the first-visit view and the JS-free reading
- * order (lib/leagues.ts DEFAULT_REGION, which this client-safe module cannot import; the root layout
+ * order (lib/league-config/sections.ts DEFAULT_REGION, which this client-safe module cannot import; the root layout
  * passes that constant as `defaultRegion` and the script throws at build time if they differ).
  */
 export const STAMPLESS_REGION = 'norcal';

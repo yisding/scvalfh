@@ -24,6 +24,7 @@ import type { LeagueSummary } from '../../lib/data';
 import { listWords, numberWord } from '../../lib/format';
 import { getAvailableHistoryLeagues, getHistorySeason, getUnavailableHistoryLeagues } from '../../lib/history/history';
 import { getJvCorrections, getJvFile, getJvMerge, getJvSchoolSiteMerge, getJvTables } from '../../lib/jv/jv';
+import type { LeagueConfig, SectionConfig } from '../../lib/league-config/shape';
 import {
   UNBRACKETED_LEAGUE_IDS,
   getLeague,
@@ -32,7 +33,6 @@ import {
   leagueStandingsUrl,
   regionOf,
 } from '../../lib/leagues';
-import type { LeagueConfig, SectionConfig } from '../../lib/leagues';
 import { crossCheckSkipReason } from '../../lib/standings';
 import type { CrossCheckRow, DroppedContest, SourceStatus } from '../../lib/types';
 import type { CrossCheckGroup } from './CrossCheckTable';

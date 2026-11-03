@@ -1,6 +1,6 @@
 /**
  * The normalized domain model: sections → leagues → divisions → teams, games, standings.
- * League facts (rules, chains, ladders, dates) are NOT here; they are config in lib/leagues.ts.
+ * League facts (rules, chains, ladders, dates) are NOT here; they are config in lib/league-config/.
  * Everything is exported; nothing here is a class and nothing here has behaviour.
  */
 
@@ -24,7 +24,7 @@ export type SectionId = 'ccs' | 'ncs' | 'ns' | 'ss' | 'sds';
 
 /**
  * The site's two halves, the NorCal/SoCal toggle (DESIGN-socal §2.1.1). A property of a SECTION
- * (SectionConfig.region in lib/leagues.ts), so a league's or a team's region is always derived from its
+ * (SectionConfig.region in lib/league-config/sections.ts), so a league's or a team's region is always derived from its
  * section and never stored in the snapshot. Not the clubs' CLUB_REGIONS (lib/players/clubs-schema.ts) and not a
  * venue's `address.region` (a state code): those are separate concepts that happen to share the word.
  */
@@ -96,7 +96,7 @@ export interface SeasonDivision {
 }
 
 /**
- * Every LeagueConfig['postseason']['kind'] (lib/leagues.ts), as the snapshot stores it. 'no-postseason' is
+ * Every LeagueConfig['postseason']['kind'] (lib/league-config/shape.ts), as the snapshot stores it. 'no-postseason' is
  * the Sunset (the CIF Southern Section holds no field hockey playoffs: Blue Book 2026-27 Bylaws 2011.1 and
  * 3500.2); 'section-playoffs' is the three San Diego Section leagues (the Section's own Open/I/II
  * playoffs, placed from its power rankings: Green Book 2026-27 Bylaw 2000.1).
@@ -223,7 +223,7 @@ export type Outcome = 'W' | 'L' | 'T';
 
 /**
  * 'SO' = a level final that MaxPreps flags W/L between two teams of a SECTION whose `shootout` rule is set
- * (SectionConfig.shootout in lib/leagues.ts): the Northern Section's EAL (1 v 1s, NS Guidelines §VII.E.4)
+ * (SectionConfig.shootout in lib/league-config/sections.ts): the Northern Section's EAL (1 v 1s, NS Guidelines §VII.E.4)
  * and the San Diego Section (a 5-player shootout; the San Diego Field Hockey Officials Association 2026
  * Mercy & Overtime Procedures credit the winner one goal, but MaxPreps often keeps the level score and
  * marks it W and L). Keyed on the section, not the league, because the San Diego rule covers every varsity
@@ -424,7 +424,7 @@ export interface Game {
     /** NEW. Why a same-division game does NOT count (e.g. "Not on the official BVAL schedule; not counted"). */
     classificationNote?: string;
     /**
-     * NEW. Set when DATA_QUALITY.contestDateOverrides (lib/leagues.ts) moved this contest off MaxPreps' date:
+     * NEW. Set when DATA_QUALITY.contestDateOverrides (lib/league-config/data-quality.ts) moved this contest off MaxPreps' date:
      * MaxPreps' own `dateLocal` and the override's source sentence, so the game page can say the date was
      * corrected, from what, and on whose word.
      */
@@ -439,7 +439,7 @@ export interface Game {
 
 // ---------- standings ----------
 
-/** Each member is code in lib/standings.ts. The ORDER of a chain is config (lib/leagues.ts). */
+/** Each member is code in lib/standings.ts. The ORDER of a chain is config (lib/league-config/). */
 export type TiebreakStage =
   | 'points'                   // placed on points alone
   | 'head-to-head'             // SCVAL §3, BVAL §6b, PCAL §23.3 — SCVAL's original stage

@@ -12,7 +12,8 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { ALL_DIVISIONS, DATA_QUALITY, LEAGUES, getDivision } from '../../lib/leagues';
+import { DATA_QUALITY } from '../../lib/league-config/data-quality';
+import { ALL_DIVISIONS, LEAGUES, getDivision } from '../../lib/leagues';
 import { RunAbort, resourcePath, type SnapshotMeta, type Transport } from '../../lib/pipeline/contract';
 import { loadCorpus } from '../../lib/pipeline/corpus';
 import { SILENT_SINK, emptyRunState } from '../../lib/pipeline/ledger';

@@ -13,7 +13,7 @@
  *
  * What this contract guards is the same as lib/history/history-brackets-schema.ts's: a slip cannot reach the page.
  * Every school is a registry team of a San Diego league, appears once in the whole file, and fills one
- * numbered place in a field of the size lib/leagues.ts gives (Open 8, Division I 12, Division II 12; Green
+ * numbered place in a field of the size lib/league-config/sds.ts gives (Open 8, Division I 12, Division II 12; Green
  * Book 2026-27 Bylaw 2000.1); a play-in fills exactly one place of a 12-team field; the rounds are the
  * template's count and fall in date order inside the playoffs' published dates (the league config's `dates`);
  * and every Open Division team is a Division I team on the Section's 2026 Divisions sheet (the Green Book's
@@ -46,7 +46,7 @@ function sdsLeagueIds(): LeagueId[] {
   return LEAGUE_IDS.filter((l) => getLeague(l).postseason.kind === 'section-playoffs');
 }
 
-/** The section-playoffs config every San Diego league shares (lib/leagues.ts sdsPostseason builds one per league). */
+/** The section-playoffs config every San Diego league shares (lib/league-config/sds.ts sdsPostseason builds one per league). */
 function sdsPostseasonConfig() {
   const ps = getLeague(sdsLeagueIds()[0]).postseason;
   if (ps.kind !== 'section-playoffs') throw new Error('no section-playoffs league');

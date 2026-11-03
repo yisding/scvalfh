@@ -21,11 +21,10 @@ import { createHash } from 'node:crypto';
 import { z } from 'zod';
 
 import { classifyGame } from '../classify';
+import { CCS, SECTIONS } from '../league-config/sections';
 import {
-  CCS,
   CCS_LEAGUE_IDS,
   LEAGUES,
-  SECTIONS,
   findDivision,
   findLeague,
   getSection,

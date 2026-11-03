@@ -8,7 +8,8 @@
 import { ccsBracketGames } from '../../postseason/ccs-bracket';
 import { contentRemovalsOf, stampContentChanges } from '../../snapshot/content-dates';
 import { byDateThenId } from '../../format';
-import { CCS, getLeague } from '../../leagues';
+import { CCS } from '../../league-config/sections';
+import { getLeague } from '../../leagues';
 import { buildSeason } from '../../snapshot/season-build';
 import { countsOf } from '../../snapshot/snapshot-migrate';
 import { parseSnapshot, snapshotContentHash } from '../../snapshot/snapshot-schema';

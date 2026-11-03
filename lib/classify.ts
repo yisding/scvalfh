@@ -27,8 +27,9 @@
  *    sides share a conference.
  */
 
-import { CCS, LEAGUES, SECTIONS, inPairingWindow } from './leagues';
-import type { LeagueConfig, OutsideTournamentConfig } from './leagues';
+import { CCS, SECTIONS } from './league-config/sections';
+import type { LeagueConfig, OutsideTournamentConfig } from './league-config/shape';
+import { LEAGUES, inPairingWindow } from './leagues';
 import { teamOfSide } from './teams';
 import type { DivisionId, Game, LeagueId, PostseasonTag, Team } from './types';
 

@@ -33,7 +33,8 @@
 
 import { ccsBracketGames, playoffGamesStale } from '../postseason/ccs-bracket';
 import { classifyGame, classifyGames, postseasonTag } from '../classify';
-import { CCS, LEAGUES, LEAGUE_IDS, findDivision, leagueOfDivision } from '../leagues';
+import { CCS } from '../league-config/sections';
+import { LEAGUES, LEAGUE_IDS, findDivision, leagueOfDivision } from '../leagues';
 import { buildSeason, leagueWindowOf } from './season-build';
 import { assertFullTable, buildCrossCheck, computeStandings, divisionGames } from '../standings';
 import { TEAMS, getTeamById, getTeamBySlug, teamOfSide, teamsInLeague } from '../teams';

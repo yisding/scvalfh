@@ -19,7 +19,8 @@ import PageHeader from '../../../components/layout/PageHeader';
 import { OG_BASE } from '../../../components/layout/site';
 import { getGameDates, getGames, getLeagueSummaries, getOfficialFixtures, getToday } from '../../../lib/data';
 import { longDate, monthDay, parseLocal, shortDate } from '../../../lib/format';
-import { REGIONS, regionOf } from '../../../lib/leagues';
+import { REGIONS } from '../../../lib/league-config/sections';
+import { regionOf } from '../../../lib/leagues';
 
 /**
  * `/scores/[date]` — one day's slate (DESIGN §1.1, §3.4).

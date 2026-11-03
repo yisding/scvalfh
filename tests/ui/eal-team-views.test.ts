@@ -131,7 +131,7 @@ describe('an EAL team page (/teams/davis)', () => {
   it('reads Super Regional picture, states the Super Regional line, and carries no CCS concept or seed word', async () => {
     const league = eal.l.getLeague('eal');
     const ps = league.postseason;
-    if (ps.kind !== 'unbracketed-tournament') throw new Error('lib/leagues.ts: the EAL postseason is unbracketed');
+    if (ps.kind !== 'unbracketed-tournament') throw new Error('lib/league-config/eal.ts: the EAL postseason is unbracketed');
     const html = await eal.renderTeam('davis');
     const text = textOf(html);
     expect(text, 'app/teams/[slug]/page.tsx kicker').toContain(`${ps.name} picture`);

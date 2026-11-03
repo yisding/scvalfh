@@ -1,7 +1,8 @@
 import Link from 'next/link';
 
 import { dateSpan, longDate, monthDay, parseLocal } from '../../lib/format';
-import { CCS, getLeague } from '../../lib/leagues';
+import { CCS } from '../../lib/league-config/sections';
+import { getLeague } from '../../lib/leagues';
 import type { LeagueId } from '../../lib/types';
 
 import Arrow from '../ui/Arrow';

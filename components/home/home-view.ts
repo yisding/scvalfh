@@ -66,9 +66,14 @@ import { hasHistory } from '../../lib/history/history';
 import { tournamentHeadline } from '../../lib/postseason/postseason';
 import { ccsOutcomeFor } from '../../lib/postseason/postseason-outcomes';
 import { outcomesFor, pairingDatesLabel, playoffOutcomeLabel, statusBadge } from '../../lib/standings';
+import { CCS, REGIONS } from '../../lib/league-config/sections';
+import type {
+  DivisionConfig,
+  LeagueConfig,
+  PostseasonConfig,
+  RegionConfig,
+} from '../../lib/league-config/shape';
 import {
-  CCS,
-  REGIONS,
   divisionHeading,
   getDivision,
   getLeague,
@@ -78,10 +83,6 @@ import {
   leaguePlayStarts,
   sectionOf,
   standaloneName,
-  type DivisionConfig,
-  type LeagueConfig,
-  type PostseasonConfig,
-  type RegionConfig,
 } from '../../lib/leagues';
 import { pickerName, pinLabel } from '../../lib/pin-label';
 import type { SearchIndex } from '../../lib/search';

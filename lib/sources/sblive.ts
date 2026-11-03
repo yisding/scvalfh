@@ -25,7 +25,8 @@
 import { z } from 'zod';
 
 import { localDateKey } from '../format';
-import { DATA_QUALITY, LEAGUES } from '../leagues';
+import { DATA_QUALITY } from '../league-config/data-quality';
+import { LEAGUES } from '../leagues';
 import { SBLIVE_WEB } from '../season';
 import { TEAMS, isWithdrawnSchool, normalizeTeamKey, resolveTeam, sideJoinKey } from '../teams';
 import type { Team, TeamSlug } from '../types';

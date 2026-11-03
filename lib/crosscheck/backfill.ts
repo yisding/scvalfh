@@ -31,7 +31,9 @@
  */
 
 import { byDateKey, datesOf, dayDiff, monthDay, shootoutPhrases } from '../format';
-import { DATA_QUALITY, LEAGUES, getLeague, getSection, leagueOfDivision, type SectionConfig } from '../leagues';
+import { DATA_QUALITY } from '../league-config/data-quality';
+import type { SectionConfig } from '../league-config/shape';
+import { LEAGUES, getLeague, getSection, leagueOfDivision } from '../leagues';
 import {
   isCaliforniaGameRow,
   isIgnoredSbliveSide,

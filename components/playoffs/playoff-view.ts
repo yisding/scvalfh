@@ -41,9 +41,10 @@ import {
   shortDate,
   timeOfDayPT,
 } from '../../lib/format';
-import { CCS, divisionHeading, getDivision, getLeague, ladderFor, leagueOfDivision } from '../../lib/leagues';
+import { CCS } from '../../lib/league-config/sections';
+import { divisionHeading, getDivision, getLeague, ladderFor, leagueOfDivision } from '../../lib/leagues';
 import { fixedSiteHost, winnerOf } from '../../lib/postseason/postseason';
-import type { CcsConfig, LeagueConfig, OutsideTournamentConfig } from '../../lib/leagues';
+import type { CcsConfig, LeagueConfig, OutsideTournamentConfig } from '../../lib/league-config/shape';
 import type {
   CcsKeyDates,
   CrossoverSeat,

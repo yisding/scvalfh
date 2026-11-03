@@ -11,7 +11,7 @@
 
 import { TIME_ZONE } from './season';
 // Type-only: erased at build, so this module stays client-safe (it never loads the league config).
-import type { ShootoutInference } from './leagues';
+import type { ShootoutInference } from './league-config/shape';
 import type { Game, OfficialSourceId, Outcome, Record3, ScoreView } from './types';
 
 const WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] as const;
@@ -496,7 +496,7 @@ export function renderScore(g: Game): ScoreView {
 
 /**
  * The phrases copy builds around a section's shootout words (SectionConfig.shootout.words in
- * lib/leagues.ts, which this client-safe module cannot import, so callers pass the words in):
+ * lib/league-config/sections.ts, which this client-safe module cannot import, so callers pass the words in):
  *
  *   words        noun        onPhrase          wonOn               decidedOn               decidedIt               win               tally
  *   '1 v 1s'     '1 v 1'     'on 1 v 1s'       'won on 1 v 1s'     'decided on 1 v 1s'     '1 v 1s decided it'     'a 1 v 1 win'     'the 1 v 1 tally'

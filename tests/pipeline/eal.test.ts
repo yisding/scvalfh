@@ -13,7 +13,8 @@ import path from 'node:path';
 import { beforeAll, describe, expect, it } from 'vitest';
 
 import { localDateKey, sideOutcome } from '../../lib/format';
-import { DATA_QUALITY, LEAGUES } from '../../lib/leagues';
+import { DATA_QUALITY } from '../../lib/league-config/data-quality';
+import { LEAGUES } from '../../lib/leagues';
 import { readManifest } from '../../lib/pipeline/corpus';
 import { loadSnapshot } from '../../lib/snapshot/snapshot-schema';
 import type { ScheduleRow } from '../../lib/sources/maxpreps';
@@ -203,7 +204,7 @@ describe('the EAL games', () => {
 
   it('never resolves a si.com side to Red Bluff or its placeholder', () => {
     for (const id of IGNORED_SBLIVE_IDS) {
-      expect(DATA_QUALITY.sbliveIgnoredTeamIds, `lib/leagues.ts: ${id}`).toHaveProperty(id);
+      expect(DATA_QUALITY.sbliveIgnoredTeamIds, `lib/league-config/data-quality.ts: ${id}`).toHaveProperty(id);
       expect(
         TEAMS.some((t) => t.external.sbliveTeamId === id),
         `lib/teams.ts: ${id} is not a registry team`,

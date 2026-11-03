@@ -28,12 +28,12 @@ import {
 } from '../../lib/data';
 import type { LeagueSummary } from '../../lib/data';
 import { leagueClockPT, listWords, ordinal, timeOfDayPT } from '../../lib/format';
+import type { LeagueConfig } from '../../lib/league-config/shape';
 import {
   SECTION_PLAYOFFS_LEAGUE_IDS,
   UNBRACKETED_LEAGUE_IDS,
   getLeague,
 } from '../../lib/leagues';
-import type { LeagueConfig } from '../../lib/leagues';
 import { getCcsSeeds } from '../../lib/postseason/ccs-bracket';
 import { tournamentGameLine } from '../../lib/postseason/postseason';
 import { withLocationRound } from '../../lib/postseason/postseason-rounds';

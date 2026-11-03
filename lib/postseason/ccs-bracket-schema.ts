@@ -25,7 +25,8 @@
 
 import { z } from 'zod';
 
-import { CCS, LEAGUE_IDS, getLeague } from '../leagues';
+import { CCS } from '../league-config/sections';
+import { LEAGUE_IDS, getLeague } from '../leagues';
 import { dateKey, httpsUrl, slugId } from '../schema-primitives';
 import { teamsInLeague } from '../teams';
 import type { CcsDivisionName } from '../types';

@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
 import { longDate, plural, shortDate } from '../../lib/format';
-import { REGIONS } from '../../lib/leagues';
+import { REGIONS } from '../../lib/league-config/sections';
 import type { RegionId } from '../../lib/types';
 import Arrow from '../ui/Arrow';
 import { GameRow } from '../ui/GameRow';
