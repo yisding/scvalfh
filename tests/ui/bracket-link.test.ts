@@ -82,6 +82,8 @@ describe('getBracketPlace (the game page)', () => {
       expect(place.round, `${PLACE}: ${g.contestId}`).toMatch(/^(Open Division|Division I|Division II) (play-in|first round|quarterfinal|semifinal|final)$/);
       expect(`${place.round} ${place.next ?? ''}`, PLACE).not.toMatch(SEED_CLAIM);
       expect(`${place.round} ${place.next ?? ''}`, PLACE).not.toMatch(/\bseed|eliminat/i);
+      // Every card but the final feeds another, so a game before the final always says what comes next.
+      if (!/ final$/.test(place.round!)) expect(place.next, `${PLACE}: ${g.contestId}`).not.toBeNull();
     }
   });
 
@@ -111,7 +113,7 @@ describe('an unbracketed postseason that is over (the EAL Super Regional, Oct 30
     expect(before.bracketSentence).toMatch(/^No pairings are published/);
     const after = leagueCopy('eal', '2026-11-01');
     expect(after.seasonEndSentence, 'components/teams/team-view.ts leagueCopy').toContain('the Super Regional followed, Oct 30–31.');
-    expect(after.bracketSentence).toBe('Its games and result are on the playoffs page.');
+    expect(after.bracketSentence).toBe('Its games and results, as MaxPreps posts them, are on the playoffs page.');
   });
 });
 

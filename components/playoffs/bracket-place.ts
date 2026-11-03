@@ -69,7 +69,8 @@ function ccsPlace(game: Game, link: BracketLink): BracketPlace | null {
       const final = round.key === 'finals';
       return { round: label, next: final && winner ? `${nameOf(winner)} won ${path.name}.` : null, link };
     }
-    const teams = new Set([game.home.slug, game.away.slug].filter((s): s is TeamSlug => s !== null));
+    // A decided game's winner alone goes on; before a result, either side may.
+    const teams = new Set((winner ? [winner] : [game.home.slug, game.away.slug]).filter((s): s is TeamSlug => s !== null));
     let opponent: string | null = null;
     for (const c of later.cards) {
       if (c.kind === 'game') {

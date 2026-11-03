@@ -564,7 +564,7 @@ export function leagueCopy(
         postseasonName: ps.name,
         seasonEndSentence: `${ended}; the ${ps.name} ${over ? 'followed' : 'follows'}, ${dateSpan(ps.dates.first, ps.dates.last)}.`,
         bracketSentence: over
-          ? `Its games and result are on the playoffs page.`
+          ? `Its games and results, as MaxPreps posts them, are on the playoffs page.`
           : ps.site
             ? `No pairings are published; we list each ${ps.name} game as MaxPreps posts it.`
             : `We will not guess a bracket: the ${ps.name}\u2019s format and site are not published yet.`,
@@ -923,7 +923,7 @@ function bracketAwareLine(line: TeamPostseasonLine | null, team: Team, games: re
   const other = mineIsHome ? game.away : game.home;
   const opponent = (other.slug ? getTeamBySlug(other.slug)?.shortName : undefined) ?? other.name;
   const what = upcoming
-    ? `${mineIsHome ? 'vs' : 'at'} ${opponent}, ${shortDate(game.dateKey)}${game.isTimeTba ? '' : `, ${timeOfDayPT(game.dateLocal)}`}.`
+    ? `${game.site === 'neutral' || mineIsHome ? 'vs' : 'at'} ${opponent}, ${shortDate(game.dateKey)}${game.isTimeTba ? '' : `, ${timeOfDayPT(game.dateLocal)}`}.`
     : scoreSentence(game);
   return {
     label: place.round.split(' · ')[0],
