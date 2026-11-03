@@ -5,6 +5,7 @@ import { RegionSwitcher } from '../../components/layout/LeagueSwitcher';
 import PageHeader from '../../components/layout/PageHeader';
 import { OG_BASE, ROOT_OG_IMAGE, coveredLeagueWords } from '../../components/layout/site';
 import ScheduleIndex from '../../components/schedule/ScheduleIndex';
+import { postseasonPlace } from '../../components/schedule/day-summary';
 import { countGames } from '../../components/schedule/filter-data';
 import { buildScheduleIndex } from '../../components/schedule/schedule-view';
 import { getGames, getLeagueSummaries, getTeamBySlug, getToday } from '../../lib/data';
@@ -32,6 +33,7 @@ function indexData() {
       leagues,
       leagueOf: (slug) => getTeamBySlug(slug)?.league,
       today: getToday(),
+      placeOf: postseasonPlace,
     }),
   };
 }

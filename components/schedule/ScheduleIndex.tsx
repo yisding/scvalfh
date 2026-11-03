@@ -16,8 +16,9 @@ import type { IndexDay, LeagueCardData, ScheduleIndexView } from './schedule-vie
  *  - League cards: `<n> games · <m> results · next <date> →` → `/schedule/<league>`
  *    (each card carries `id=<league>`, the jump links' target).
  *  - `Recent` (the last three game days up to today) and `Next` (the next three): each day grouped
- *    by league, at most three rows per league and `+<n> more →` the day's page. A cross-league game
- *    appears under both leagues, as it does on each league's schedule.
+ *    by league, at most three rows per league and `+<n> more →` the day's page. A regular-season
+ *    cross-league game appears under both leagues, as it does on each league's schedule; a postseason
+ *    game appears once, under its league or its event ('CCS'), as on the day page (2026-11-03).
  *  - `Every game day`: one row per date with `id="YYYY-MM-DD"`, so an old `/schedule#2026-09-24`
  *    link lands on that day's row, which links `/scores/2026-09-24`.
  *
@@ -112,7 +113,7 @@ function DayBlock({
             <ol className="sx-list sx-bleed bg-surface md:max-w-3xl shadow-[0_-1px_0_var(--sx-border),0_1px_0_var(--sx-border)]">
               {league.games.slice(0, perLeague).map((game) => (
                 <li key={game.contestId}>
-                  <GameRow game={game} scopeLeague={league.id} showRecap={false} />
+                  <GameRow game={game} scopeLeague={league.leagueId} showRecap={false} />
                 </li>
               ))}
             </ol>
