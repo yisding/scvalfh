@@ -75,8 +75,11 @@ function sideLeagues(game: Game, leagueOf: SlugLeague): Set<LeagueId> {
   return out;
 }
 
-/** `ccs`, `san-diego-section-playoffs`: an event group's id tail. */
-function slugOf(name: string): string {
+/**
+ * `ccs`, `san-diego-section-playoffs`, `tournament-of-champions`: an event group's id tail (`postseason-<slug>`,
+ * the anchor the pills link to), here and on the day page (day-summary.ts).
+ */
+export function slugOf(name: string): string {
   return name
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')

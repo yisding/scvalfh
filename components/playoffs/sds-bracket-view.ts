@@ -9,6 +9,7 @@ import {
   type BracketRoundView,
   type BracketSideView,
 } from '../history/bracket-view';
+import { capitalized } from '../words/capitalized';
 
 /**
  * The San Diego Section's published brackets as the shared bracket model (plan final-08, 2026-10-30): lib/postseason/sds-bracket.ts
@@ -54,8 +55,6 @@ function sideWords(side: BracketSideView): string {
   if (!/^Winner\b/.test(side.tbd)) return `the winner of ${side.tbd.replace(' or ', ' v ')}`;
   return `the ${side.tbd.charAt(0).toLowerCase()}${side.tbd.slice(1)}`;
 }
-
-const capitalized = (words: string): string => `${words.charAt(0).toUpperCase()}${words.slice(1)}`;
 
 /**
  * Goals, top then bottom, oriented to the card from the joined game; null before a final score. Read through

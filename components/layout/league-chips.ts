@@ -15,7 +15,7 @@
  * index is where the other region is one tap away.
  */
 import { getLeagueSummaries, type LeagueSummary } from '../../lib/data';
-import type { LeagueId, RegionId } from '../../lib/types';
+import type { RegionId } from '../../lib/types';
 
 import type { LeagueChip } from './LeagueSwitcher';
 
@@ -47,11 +47,4 @@ export function leagueHrefs(base: string | null, region?: RegionId): Record<stri
   if (base) out.all = base;
   for (const { id } of summariesIn(region)) out[id] = base ? `${base}/${id}` : `#${id}`;
   return out;
-}
-
-/** The region of a league, from the summaries (for a per-league page building its switcher). */
-export function regionOfLeague(id: LeagueId): RegionId {
-  const summary = getLeagueSummaries().find((s) => s.id === id);
-  if (!summary) throw new Error(`league-chips: unknown league ${JSON.stringify(id)}`);
-  return summary.region;
 }

@@ -1,44 +1,40 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { Fragment } from 'react';
 
 import LeagueJumpLinks from '../../components/layout/LeagueJumpLinks';
 import LeagueSwitcher, { RegionSwitcher } from '../../components/layout/LeagueSwitcher';
 import PageHeader from '../../components/layout/PageHeader';
 import { leagueChips } from '../../components/layout/league-chips';
 import { OG_BASE, ROOT_OG_IMAGE } from '../../components/layout/site';
-import DateList from '../../components/playoffs/DateList';
 import KeyDates from '../../components/playoffs/KeyDates';
 import LeagueTournament from '../../components/playoffs/LeagueTournament';
 import LeaguePairings from '../../components/playoffs/LeaguePairings';
+import NoPostseasonCard from '../../components/playoffs/NoPostseasonCard';
 import OutsideTournament from '../../components/playoffs/OutsideTournament';
 import PlayoffBracket from '../../components/playoffs/PlayoffBracket';
 import PostseasonBoard from '../../components/playoffs/PostseasonBoard';
 import { buildBoard, type BoardLeagueInput } from '../../components/playoffs/board-view';
 import PlayoffProjection, { ProjectionKey } from '../../components/playoffs/PlayoffProjection';
-import SdsBracket from '../../components/playoffs/SdsBracket';
+import SectionPlayoffs from '../../components/playoffs/SectionPlayoffs';
 import ThisWeek from '../../components/playoffs/ThisWeek';
 import UnbracketedResults from '../../components/playoffs/UnbracketedResults';
 import { buildBrackets, ccsDivisionLabels, pendingRounds } from '../../components/playoffs/bracket-model';
+import { buildOutsideTournamentView, type LeagueKeyDate } from '../../components/playoffs/playoff-view';
 import {
-  buildDivisionProjection,
-  buildOutsideTournamentView,
-  buildPairingView,
-  ladderFactsFor,
-  sectionBracketSentence,
-  sectionRoundRows,
-  type LeagueKeyDate,
-  type PairingView,
-  type ProjectionRow,
-} from '../../components/playoffs/playoff-view';
-import { pairingViewsFor, sectionPlayoffs, thisWeekByRegion } from '../../components/playoffs/this-week-inputs';
+  AT_LARGE_PARAGRAPH,
+  asOfPhrase,
+  leagueBlock,
+  leagueGamesAhead,
+  leagueKeyDate,
+  postseasonWords,
+} from '../../components/playoffs/playoffs-page-view';
+import { sectionPlayoffs, thisWeekByRegion } from '../../components/playoffs/this-week-inputs';
 import { titleSentence, tournamentLeague, tournamentView } from '../../components/playoffs/tournament-league';
 import { buildUnbracketedResults, unbracketedChampion } from '../../components/playoffs/unbracketed-view';
 import Arrow from '../../components/ui/Arrow';
 import ExternalLink from '../../components/ui/ExternalLink';
 import LeagueHealthNote from '../../components/ui/LeagueHealthNote';
 import SectionHeader from '../../components/ui/SectionHeader';
-import { leaderLine } from '../../components/standings/standings-page-view';
 import {
   areKeyDatesConfirmed,
   getCcsField,
@@ -46,19 +42,14 @@ import {
   getLastLeagueResultDate,
   getLeagueTournament,
   getLeagueSummaries,
-  getPlayoffProjection,
   getPlayoffs,
-  getStandingFor,
-  getTeamById,
-  getTeams,
   getToday,
   getTournamentLeagueIds,
 } from '../../lib/data';
 import type { LeagueSummary } from '../../lib/data';
 import { getCcsSeeds } from '../../lib/postseason/ccs-bracket';
 import { tournamentHeadline } from '../../lib/postseason/postseason';
-import { getSdsBrackets, getSdsBracketsSource } from '../../lib/postseason/sds-bracket';
-import { dateSpan, listWords, monthDay, numberWord, shortDate } from '../../lib/format';
+import { listWords, shortDate } from '../../lib/format';
 import {
   NO_POSTSEASON_LEAGUE_IDS,
   UNBRACKETED_LEAGUE_IDS,
@@ -66,8 +57,7 @@ import {
   isIndependentLeague,
   sectionOf,
 } from '../../lib/leagues';
-import type { LeagueConfig } from '../../lib/leagues';
-import type { LeagueId, PlayoffProjection as Projection } from '../../lib/types';
+import type { LeagueId } from '../../lib/types';
 
 /**
  * /playoffs — "Are we in, and who do we play?" (SPEC §6.3, §10.7; DESIGN-socal §2.4): every league's
@@ -124,164 +114,6 @@ import type { LeagueId, PlayoffProjection as Projection } from '../../lib/types'
  */
 
 const PAGE_TITLE = 'Playoffs';
-
-/** SPEC §10.7 item 8, verbatim. */
-const AT_LARGE_PARAGRAPH =
-  'Three at-large berths are the CCS committee’s call. SCVAL submits its play-in loser and both fifth-place teams (Article VII §2); PCAL teams placed 3rd or lower may apply (PCAL By-laws §23.4); BVAL’s by-laws do not say whom it submits.';
-
-/** "through Sep 29" / "so far", from the last day a LEAGUE result was reported (never getToday()). */
-function asOfPhrase(lastResult: string | null): string {
-  return lastResult ? `through ${monthDay(lastResult)}` : 'so far';
-}
-
-function projectionRows(projection: Projection, division: string): ProjectionRow[] {
-  return (projection.byDivision[division] ?? []).flatMap((row) => {
-    const team = getTeamById(row.teamId);
-    const standing = getStandingFor(row.teamId);
-    if (!team || !standing) return [];
-    return [{ team, standing, status: row.status, statuses: row.statuses, label: row.label, shared: row.shared }];
-  });
-}
-
-/**
- * Whether the league still has a league game to play (a game of one of its divisions' tables, not final, dated today
- * or later): the pairings follow the tables only until then. Read from the games, not the phase window, which a
- * team's late non-league game can stretch.
- */
-function leagueGamesAhead(summary: LeagueSummary): boolean {
-  const today = getToday();
-  const divisions = new Set<string>(summary.divisions.map((d) => d.id));
-  return getGames().some((g) => g.countsFor !== null && divisions.has(g.countsFor) && g.status !== 'final' && g.dateKey >= today);
-}
-
-/**
- * One CCS league's dates on the CCS calendar: its crossover / play-in, from config pairings. The row sits
- * on the schedule's day (`date`); when a game the pairings matched is dated off that day (the 2026 SCVAL
- * crossovers #1 and #3, Thu Oct 29), the detail says which, by seat labels, so the row stays true.
- */
-function leagueKeyDate(league: LeagueConfig, played: readonly PairingView[]): LeagueKeyDate | null {
-  if (league.postseason.kind !== 'ccs-ladder' || league.postseason.pairings.length === 0) return null;
-  const pairings = league.postseason.pairings;
-  const first = pairings[0];
-  const entry = league.keyDates.find((k) => k.date === first.date);
-  const label = (entry?.label ?? `${league.shortName} postseason`).replace(/,\s*\d{1,2}(:\d{2})?\s*[AP]M$/, '');
-  const purposes = [...new Set(pairings.map((p) => {
-    const at = p.label.indexOf(' — ');
-    const tail = at < 0 ? p.label : p.label.slice(at + 3);
-    return `${tail[0].toUpperCase()}${tail.slice(1)}`;
-  }))];
-  const moved = new Map<string, string[]>();
-  for (const p of played) {
-    const configured = pairings.find((c) => c.id === p.id);
-    if (!p.game || !configured || p.dateKey === configured.date) continue;
-    const seats = `${p.seats[0].label} v ${p.seats[1].label}`;
-    moved.set(p.dateKey, [...(moved.get(p.dateKey) ?? []), seats]);
-  }
-  const movedWords = [...moved.entries()]
-    .sort(([a], [b]) => a.localeCompare(b))
-    .map(([dateKey, seats]) => ` ${listWords(seats)} ${seats.length === 1 ? 'is' : 'are'} ${shortDate(dateKey)}.`)
-    .join('');
-  const detail = `${pairings.length === 1 ? `${first.label}.` : `${purposes.join('. ')}.`}${movedWords}`;
-  return { id: league.id, leagueShort: league.shortName, date: first.date, time: first.time, label, detail };
-}
-
-interface LeagueBlock {
-  summary: LeagueSummary;
-  config: LeagueConfig;
-  divisions: Array<{
-    id: string;
-    heading: string;
-    anchor: string | undefined;
-    asOf: string;
-    projection: ReturnType<typeof buildDivisionProjection>;
-  }>;
-  meterNote: string | null;
-  pairings: ReturnType<typeof buildPairingView>[];
-  pairingDate: string | null;
-}
-
-function leagueBlock(summary: LeagueSummary): LeagueBlock {
-  const config = getLeague(summary.id);
-  const projection = getPlayoffProjection(summary.id);
-  const divisions = summary.divisions.map((d) => {
-    const facts = ladderFactsFor(d.id);
-    return {
-      id: d.id,
-      heading: d.heading ?? 'League table',
-      // A single-division league whose division id equals the league id: ONE element carries it.
-      anchor: d.id === summary.id ? undefined : d.id,
-      asOf: asOfPhrase(getLastLeagueResultDate({ division: d.id })),
-      projection: buildDivisionProjection(d.id, d.heading ?? summary.shortName, projectionRows(projection, d.id), facts),
-      aq: facts.aqPlaces,
-    };
-  });
-  const aqs = [...new Set(divisions.map((d) => d.aq))];
-  const meterNote =
-    divisions.length > 1 && aqs.length === 1 && aqs[0] > 0
-      ? `${aqs[0]} per division qualify automatically.`
-      : null;
-  const pairings = pairingViewsFor(summary.id);
-  return {
-    summary,
-    config,
-    divisions,
-    meterNote,
-    pairings,
-    // 'Fri Oct 30', or 'Thu Oct 29 – Fri Oct 30' when the games are spread over days (the SCVAL crossovers).
-    pairingDate: (() => {
-      const days = [...new Set(pairings.map((p) => p.dateKey))].sort();
-      if (days.length === 0) return null;
-      return days.length === 1 ? shortDate(days[0]) : `${shortDate(days[0])} – ${shortDate(days[days.length - 1])}`;
-    })(),
-  };
-}
-
-/**
- * Where each league's season leads, from config, in config order: 'the CCS championships (SCVAL, BVAL
- * and PCAL), the MCAL tournament, the EAL’s Super Regional, the Tournament of Champions (the Sunset and the
- * LA independents) and the San Diego Section playoffs (City, North and Metro)'. A group with no table
- * is named in full (its short name, 'LA', alone names a place).
- */
-function postseasonWords(): string {
-  const parts: Array<{ key: string; words: (shorts: string[]) => string; shorts: string[] }> = [];
-  const add = (key: string, short: string, words: (shorts: string[]) => string) => {
-    const part = parts.find((p) => p.key === key);
-    if (part) part.shorts.push(short);
-    else parts.push({ key, words, shorts: [short] });
-  };
-  for (const summary of getLeagueSummaries()) {
-    const ps = getLeague(summary.id).postseason;
-    switch (ps.kind) {
-      case 'ccs-ladder':
-        add('ccs', summary.shortName, (shorts) => `the CCS championships (${listWords(shorts)})`);
-        break;
-      case 'league-tournament':
-        add(summary.id, summary.shortName, () => `the ${ps.name}`);
-        break;
-      case 'unbracketed-tournament':
-        add(summary.id, summary.shortName, () => `the ${summary.shortName}’s ${ps.name}`);
-        break;
-      case 'no-postseason': {
-        // The section's outside tournament is their postseason (the Tournament of Champions: the Sunset and the
-        // LA independents).
-        const event = sectionOf(summary.id).outsideTournament;
-        add(
-          event ? `outside:${event.id}` : 'no-postseason',
-          isIndependentLeague(summary.id) ? summary.name : summary.shortName,
-          (shorts) =>
-            event
-              ? `the ${event.name} (${listWords(shorts.map((s) => `the ${s}`))})`
-              : `no playoffs for ${listWords(shorts.map((s) => `the ${s}`), 'or')}`,
-        );
-        break;
-      }
-      case 'section-playoffs':
-        add(ps.name, summary.shortName, (shorts) => `the ${ps.name} (${listWords(shorts)})`);
-        break;
-    }
-  }
-  return listWords(parts.map((p) => p.words(p.shorts)));
-}
 
 export async function generateMetadata(): Promise<Metadata> {
   const playoffs = getPlayoffs();
@@ -652,7 +484,7 @@ export default function PlayoffsPage() {
         <PostseasonBoard id="board-socal" rows={board.socal} className="mt-section md:mt-section-lg" />
         {/* This week in SoCal's postseason, ahead of the San Diego block (the same strip as NorCal's). */}
         <ThisWeek id="this-week-socal" view={week.socal} className="mt-section md:mt-section-lg" />
-        {sds ? <SectionPlayoffsBlock {...sds} /> : null}
+        {sds ? <SectionPlayoffs {...sds} /> : null}
         {/* A section's outside tournament (the Tournament of Champions) is the postseason its no-postseason
             leagues share (the Sunset and the LA independents): one section of its own, with their cards inside it
             side by side and its games under both. A no-postseason league with no such tournament gets its card alone. */}
@@ -677,224 +509,4 @@ export default function PlayoffsPage() {
       </div>
     </div>
   );
-}
-
-/**
- * The San Diego Section's playoffs (DESIGN-socal §2.4): the Section's rule from config, where its
- * dates come from, its power rankings and when its brackets come, then one card per conference. No
- * seed and no projection: the Section places teams from its power rankings, and the one place a
- * league table decides (a designated champion's play-in) is the league's to designate. The Section's
- * own brackets, once transcribed (lib/postseason/sds-bracket.ts getSdsBrackets, null on the placeholder), are drawn
- * between the round dates and the cards (plan final-08, 2026-10-30).
- */
-function SectionPlayoffsBlock({
-  ps,
-  seeding,
-  leagues,
-}: {
-  ps: Extract<LeagueConfig['postseason'], { kind: 'section-playoffs' }>;
-  seeding: string | null;
-  leagues: LeagueSummary[];
-}) {
-  const brackets = getSdsBrackets();
-  const bracketSource = getSdsBracketsSource();
-  const drawn = brackets !== null && bracketSource !== null;
-  return (
-    <section aria-labelledby="sds-playoffs" className="mt-section md:mt-section-lg">
-      <SectionHeader
-        id="sds-playoffs"
-        kicker={ps.name}
-        meta={`${dateSpan(ps.dates.first, ps.dates.last)} · ${ps.divisions.map((d) => `${d.name} ${d.teams}`).join(', ')}`}
-      />
-      <div className="max-w-prose text-body text-ink-2">
-        <p className="m-0">{ps.qualificationLine}</p>
-        {/* Date-aware (getToday, never Date.now): the "until then" of Oct 29 would read as if the Section had not
-            published from Nov 1 on. The brackets' own link appears once the owner pastes the sheet's URL. */}
-        <p className="mb-0">
-          {sectionBracketSentence(ps, seeding, getToday(), drawn)}{' '}
-          {ps.citations.roundDates}
-        </p>
-        <p className="mb-0 flex flex-wrap gap-x-4 gap-y-1 text-meta">
-          {ps.bracketSheetUrl ? (
-            <ExternalLink href={ps.bracketSheetUrl} className="sx-action gap-1">
-              Official CIF-SDS brackets (Google Sheet)
-            </ExternalLink>
-          ) : null}
-          <ExternalLink href={ps.bracketsPageUrl} className="sx-action gap-1">
-            CIF-SDS field hockey page (brackets are posted here)
-          </ExternalLink>
-          <ExternalLink href={ps.calendarUrl} className="sx-action gap-1">
-            SDFHOA playoff calendar
-          </ExternalLink>
-          <ExternalLink href={ps.sourceUrl} className="sx-action gap-1">
-            {ps.sourceLabel}
-          </ExternalLink>
-          <ExternalLink href={ps.powerRankingsUrl} className="sx-action gap-1">
-            CIF-SDS power rankings
-          </ExternalLink>
-        </p>
-      </div>
-      {/* The Section's round calendar (config `rounds`, the officials' association's), the SoCal counterpart of
-          the CCS key dates: a fan reads "Quarterfinals, Division II · Fri Nov 6" and the finals' times and site
-          here instead of in the docs. */}
-      <section id="sds-round-dates" className="mt-section">
-        <SectionHeader as="h3" kicker="Round dates" meta="all times PT" />
-        <DateList rows={sectionRoundRows(ps)} className="max-w-3xl" />
-      </section>
-      {/* The Section's published brackets with MaxPreps' results, once the owner has transcribed its sheet; nothing on
-          the placeholder file. */}
-      {drawn ? <SdsBracket divisions={brackets} source={bracketSource} today={getToday()} className="mt-section" /> : null}
-      {leagues.map((league) => (
-        <SectionPlayoffsLeagueCard key={league.id} summary={league} />
-      ))}
-      {/* Said once for the three cards (it was repeated in each until 2026-10-29): where the divisions come from,
-          and that a league, not its table, names the champion the Green Book guarantees a play-in. */}
-      <p className="mt-4 mb-0 max-w-prose text-meta text-ink-3">
-        {'Each team’s playoff division is from the Section’s 2026 Divisions sheet; the Open Division’s eight are drawn from Division I at the end of the regular season. A designated league champion (not co-champions) is guaranteed at least a play-in game, and each league names its champion, not its table.'}
-      </p>
-    </section>
-  );
-}
-
-/**
- * Team names as `listWords` words them ("A, B and C"), each one a link to its team page, as the
- * same teams are in the NorCal leagues' rows on this page (PlayoffProjection) and the standings
- * tables. A name with no slug prints as text.
- */
-function TeamNames({ teams, conj }: { teams: ReadonlyArray<{ name: string; slug?: string }>; conj: 'and' | '&' }) {
-  return teams.map((team, i) => (
-    <Fragment key={team.slug ?? team.name}>
-      {i === 0 ? null : i === teams.length - 1 ? ` ${conj} ` : ', '}
-      {team.slug ? (
-        <Link href={`/teams/${team.slug}`} prefetch={false} className="text-inherit hover:underline">
-          {team.name}
-        </Link>
-      ) : (
-        team.name
-      )}
-    </Fragment>
-  ));
-}
-
-/**
- * One San Diego conference's card (`id=<league>`, the target of its chip and jump link): per division,
- * the table's leaders as things stand, and each team's playoff division from the Section's 2026 Divisions
- * sheet. Open Division teams are drawn from Division I at the end of the regular season, so the card
- * names Division I and Division II only, and never an Open place.
- */
-function SectionPlayoffsLeagueCard({ summary }: { summary: LeagueSummary }) {
-  const ps = getLeague(summary.id).postseason;
-  if (ps.kind !== 'section-playoffs') return null;
-  return (
-    <div id={summary.id} className="sx-card mt-6 p-5 md:p-6">
-      <h3 className="m-0 text-lead text-ink">{`${summary.shortName} — ${summary.name}`}</h3>
-      <div className="mt-2 grid gap-5 md:grid-cols-2">
-        {summary.divisions.map((d) => {
-          const leaders = leaderLine(d.id, d.heading);
-          const teams = getTeams(d.id);
-          const byDivision = (which: 'I' | 'II') =>
-            teams
-              .filter((t) => ps.playoffDivisionOf[t.slug] === which)
-              .map((t) => ({ name: t.shortName, slug: t.slug }));
-          return (
-            <div key={d.id} className="min-w-0">
-              {d.heading ? <h4 className="m-0 text-body font-semibold text-ink">{d.heading}</h4> : null}
-              <p className="mt-1 mb-0 text-meta text-ink-2">
-                {leaders.teams.length > 0 ? (
-                  <>
-                    <TeamNames teams={leaders.teams} conj="&" />
-                    {` ${leaders.teams.length === 1 ? 'leads' : 'lead'} the table, ${leaders.teams[0].pts} pts.`}
-                  </>
-                ) : (
-                  'No league results yet.'
-                )}{' '}
-                <Link href={`/standings/${summary.id}#${d.id}`} prefetch={false} className="text-accent hover:underline">
-                  Table <Arrow />
-                </Link>
-              </p>
-              <dl className="mt-2 mb-0 text-meta">
-                {(['I', 'II'] as const).map((which) =>
-                  byDivision(which).length > 0 ? (
-                    <div key={which} className="mt-1 flex flex-wrap gap-x-2">
-                      <dt className="font-semibold text-ink">{`Division ${which}:`}</dt>
-                      <dd className="m-0 text-ink-2">
-                        <TeamNames teams={byDivision(which)} conj="and" />
-                      </dd>
-                    </div>
-                  ) : null,
-                )}
-              </dl>
-            </div>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
-
-/**
- * A league whose section runs no field hockey championship (the Sunset, the LA independents; `id=<league>`, the
- * target of the nav and the league chips). With the section's outside tournament (the Tournament of Champions,
- * DESIGN §24.13) the card sits inside that tournament's section (OutsideTournament.tsx), beside the other
- * league's: it names the tournament as the league's postseason (the config's note), says which of its teams play
- * in it and which do not, and links the Blue Book for why CIF runs none. The LA independents' card adds the
- * group's own note (schools in no league, whose table is their games against each other). No seed and no
- * bracket. Without such a tournament the card is the note and its source alone.
- */
-function NoPostseasonCard({ summary }: { summary: LeagueSummary }) {
-  const league = getLeague(summary.id);
-  const ps = league.postseason;
-  if (ps.kind !== 'no-postseason') return null;
-  const independent = isIndependentLeague(summary.id);
-  const groupNote = independent && league.divisions[0]?.official.mode === 'none' ? league.divisions[0].official.note : null;
-  const event = sectionOf(summary.id).outsideTournament;
-  const teams = getTeams({ league: summary.id });
-  const inIt = event ? teams.filter((t) => event.entrants.includes(t.slug)) : [];
-  const notInIt = event ? teams.filter((t) => !event.entrants.includes(t.slug)) : [];
-  const who = independent ? summary.name : `${summary.shortName} teams`;
-  const heading = independent ? summary.name : `${summary.shortName} — ${summary.name}`;
-  const body = (
-    <>
-      <p className="m-0">{ps.note}</p>
-      {event && inIt.length > 0 ? (
-        <p className="mt-2 mb-0">
-          {`${capitalized(numberWord(inIt.length))} of the ${numberWord(teams.length)} ${who} play in it: ${listWords(inIt.map((t) => t.name))}.`}
-          {notInIt.length > 0 ? ` Not in it: ${listWords(notInIt.map((t) => t.name))}.` : null}
-        </p>
-      ) : null}
-      {groupNote ? <p className="mt-2 mb-0 text-meta">{groupNote}</p> : null}
-      <p className="mt-2 mb-0 text-meta">
-        {event ? 'Why CIF does not run it: ' : `${ps.citations.noPlayoffs}. `}
-        <ExternalLink href={ps.sourceUrl}>{ps.sourceLabel}</ExternalLink>
-      </p>
-      {event ? (
-        <p className="mt-2 mb-0 text-meta">
-          <Link href={`#${event.id}-games`} prefetch={false} className="sx-action text-accent hover:underline">
-            {`${event.name} games`} <Arrow />
-          </Link>
-        </p>
-      ) : null}
-    </>
-  );
-  if (event) {
-    return (
-      <section id={summary.id} aria-labelledby={`${summary.id}-heading`} className="sx-card flex flex-col p-5 md:p-6">
-        <h3 id={`${summary.id}-heading`} className="m-0 text-lead text-ink">
-          {heading}
-        </h3>
-        <div className="mt-2 text-body text-ink-2">{body}</div>
-      </section>
-    );
-  }
-  return (
-    <section id={summary.id} aria-labelledby={`${summary.id}-heading`} className="mt-section md:mt-section-lg">
-      <SectionHeader id={`${summary.id}-heading`} kicker={heading} />
-      <div className="sx-inset max-w-3xl text-body text-ink-2">{body}</div>
-    </section>
-  );
-}
-
-/** 'Five' from 'five'. */
-function capitalized(word: string): string {
-  return word.charAt(0).toUpperCase() + word.slice(1);
 }

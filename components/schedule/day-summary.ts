@@ -24,6 +24,7 @@ import { describeGame, postseasonTagOf } from '../ui/describe-game';
 import { gameWord, plural } from '../words/plural';
 
 import { countGames, type ScheduleCounts } from './filter-data';
+import { slugOf } from './schedule-view';
 
 export interface DayLine {
   contestId: string;
@@ -190,14 +191,6 @@ export interface DayGroup {
   games: Game[];
   /** The games' shared place on /playoffs ('CCS bracket' at `#ccs-division-2`), linked from the group's header. */
   bracket: { href: string; label: string } | null;
-}
-
-/** `tournament-of-champions`, for a `postseason-` group id (the anchor the pills link to). */
-function slugOf(name: string): string {
-  return name
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-|-$/g, '');
 }
 
 /** Where an event's group sits when a day has several: the CCS, the San Diego Section, the outside tournament. */

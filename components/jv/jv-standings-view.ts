@@ -21,6 +21,7 @@ import { divisionHeading, getDivision, getLeague, isSingleDivision } from '../..
 import { jvSlotTeamFor } from '../../lib/jv/jv-teams';
 import { getTeamBySlug, teamsInDivision } from '../../lib/teams';
 import type { DivisionId, LeagueId, Team, TeamSlug } from '../../lib/types';
+import { shortNameOf } from '../words/team-short-name';
 
 export interface JvTableView {
   division: DivisionId;
@@ -55,11 +56,6 @@ export const UNCOUNTED_REASON_WORDS: Readonly<Record<UncountedReason, string>> =
 type UncountedReason = Extract<JvClassification, { kind: 'uncounted' }>['reason'];
 
 const SHARE_WORDS = `${Math.round(JV_STANDINGS_MIN_REPORTED_SHARE * 100)}%`;
-
-function shortNameOf(slug: TeamSlug | null, fallback: string): string {
-  const team = slug ? getTeamBySlug(slug) : undefined;
-  return team ? team.shortName : fallback;
-}
 
 /** `De Anza JV` | `MCAL JV`. */
 export function jvTableTitle(division: DivisionId): string {
