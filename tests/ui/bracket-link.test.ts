@@ -24,10 +24,12 @@ const postseason = getGames().filter((g) => g.postseason !== null && g.postseaso
 const byKind = (kind: NonNullable<Game['postseason']>['kind']) => postseason.filter((g) => g.postseason?.kind === kind);
 
 let ids: string[] = [];
+let playoffsHtml = '';
 
 beforeAll(async () => {
   const Page = (await import('../../app/playoffs/page')).default;
   const html = renderToStaticMarkup(Page() as ReactElement);
+  playoffsHtml = html;
   ids = [...html.matchAll(/\sid="([^"]+)"/g)].map((m) => m[1]);
 }, 600_000);
 
@@ -156,5 +158,44 @@ describe('getBracketPlace on a decided CCS quarterfinal (Codex review, 2026-11-0
   it('names no division winner while the quarterfinals are the last round drawn (no seed file)', async () => {
     const { result } = await placeWith(false);
     expect(result?.next ?? '', PLACE).not.toMatch(/ won /);
+  });
+});
+
+describe('follow-ups: the day page, the status board and the division jumps (2026-11-03)', () => {
+  it('files every CCS game of a day under its division, never under a league, with the division’s bracket linked', async () => {
+    const { dayGroups } = await import('../../components/schedule/day-summary');
+    const days = [...new Set(byKind('ccs').map((g) => g.dateKey))];
+    for (const day of days) {
+      const groups = dayGroups(getGames().filter((g) => g.dateKey === day));
+      for (const g of byKind('ccs').filter((x) => x.dateKey === day)) {
+        const group = groups.find((gr) => gr.games.includes(g))!;
+        expect(group.id, `components/schedule/day-summary.ts ${g.contestId}`).toMatch(/^postseason-ccs/);
+        expect(group.leagueId).toBeNull();
+        if (group.id.startsWith('postseason-ccs-division-')) {
+          expect(group.kicker).toMatch(/^CCS Division [12] · \d+$/);
+          expect(group.bracket, 'its division is linked').toEqual({ href: `/playoffs#${group.id.replace('postseason-', '')}`, label: 'CCS bracket' });
+        }
+      }
+    }
+  });
+
+  it('names a day of one round on the board ("8 CCS quarterfinals") and links the bracket', async () => {
+    const { buildBoard } = await import('../../components/playoffs/board-view');
+    const { getLeague } = await import('../../lib/leagues');
+    const row = (n: number, division: 1 | 2) => ({
+      dateKey: '2026-11-07', time: '10:00 AM PT', text: `Game ${n}`, label: 'CCS quarterfinal', href: `/game/${n}`,
+      bracket: `ccs-division-${division}`, final: false, kind: 'game' as const, key: String(n), leagueIds: ['scval' as const],
+    });
+    const rows = [row(1, 1), row(2, 1), row(3, 2)];
+    const [scval] = buildBoard([{ leagueId: 'scval', shortName: 'SCVAL', config: getLeague('scval') }], rows, '2026-11-03');
+    expect(scval.next).toEqual({ term: 'Next', text: 'Sat Nov 7 · 3 CCS quarterfinals', href: '/playoffs#bracket' });
+    const [one] = buildBoard([{ leagueId: 'scval', shortName: 'SCVAL', config: getLeague('scval') }], [row(1, 2)], '2026-11-03');
+    expect(one.next?.href, 'a lone game links its place').toBe('/playoffs#ccs-division-2');
+  });
+
+  it('draws a jump to each CCS division above the bracket when there are two', () => {
+    if (!ids.includes('ccs-division-1') || !ids.includes('ccs-division-2')) return;
+    const nav = playoffsHtml.slice(playoffsHtml.indexOf('aria-label="CCS divisions"'));
+    expect(nav, 'app/playoffs/page.tsx division jumps').toMatch(/^aria-label="CCS divisions"[^>]*>\s*<a href="#ccs-division-1"[^>]*>Division 1<\/a><a href="#ccs-division-2"[^>]*>Division 2<\/a>/);
   });
 });

@@ -435,6 +435,16 @@ export default function PlayoffsPage() {
           />
           {seeded ? (
             <>
+              {/* With two divisions, a jump to each (2026-11-03): Division 2 starts a phone-screen or two down. */}
+              {paths.length > 1 ? (
+                <nav aria-label="CCS divisions" className="mb-4 flex flex-wrap gap-2">
+                  {paths.map((path) => (
+                    <a key={path.id} href={`#${path.id}`} className="sx-pill">
+                      {path.name.replace(/^CCS /, '')}
+                    </a>
+                  ))}
+                </nav>
+              ) : null}
               <div className="space-y-stack">
                 {paths.map((path) => (
                   // The path's id is the anchor a CCS game links to (components/playoffs/bracket-link.ts): the cards are
