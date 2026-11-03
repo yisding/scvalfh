@@ -28,7 +28,7 @@ import {
 } from '../../lib/data';
 import type { LeagueSummary } from '../../lib/data';
 import { leagueClockPT, listWords, ordinal, timeOfDayPT } from '../../lib/format';
-import type { LeagueConfig } from '../../lib/league-config/shape';
+import type { SectionPlayoffsConfig } from '../../lib/league-config/shape';
 import {
   SECTION_PLAYOFFS_LEAGUE_IDS,
   UNBRACKETED_LEAGUE_IDS,
@@ -62,7 +62,7 @@ export function pairingViewsFor(leagueId: LeagueId): PairingView[] {
 
 /** The San Diego Section's playoffs: the config every San Diego league shares, and its leagues. */
 export function sectionPlayoffs(): {
-  ps: Extract<LeagueConfig['postseason'], { kind: 'section-playoffs' }>;
+  ps: SectionPlayoffsConfig;
   seeding: string | null;
   leagues: LeagueSummary[];
 } | null {

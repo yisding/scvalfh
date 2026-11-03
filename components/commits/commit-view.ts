@@ -46,6 +46,7 @@ import { regionOf } from '../../lib/leagues';
 import { getRosters } from '../../lib/players/rosters';
 import { getTeamBySlug } from '../../lib/teams';
 import type { RegionId, TeamSlug } from '../../lib/types';
+import { capitalized } from '../words/capitalized';
 import { plural } from '../words/plural';
 import { OUTLETS, hostOf, numbered, pathOf, schoolName } from '../words/source-hosts';
 
@@ -101,8 +102,7 @@ export const SPORT_WORDS: Record<CommitSport, string> = {
 
 /** "Field hockey", "Lacrosse": a sport at the start of a line. */
 export function sportLabel(sport: CommitSport): string {
-  const words = SPORT_WORDS[sport];
-  return words.charAt(0).toUpperCase() + words.slice(1);
+  return capitalized(SPORT_WORDS[sport]);
 }
 
 /**

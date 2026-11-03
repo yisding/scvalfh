@@ -195,9 +195,8 @@ export default async function ScoresByDatePage({ params }: PageProps<'/scores/[d
               ) : null}
               <ScoresRegionBlock
                 region={region}
-                first={i === 0}
+                firstRegion={i === 0}
                 betweenCount={between.length}
-                betweenBelow={i === 0}
                 jvCount={jvBlocks.find((block) => block.region === region.id)?.view.rows.length ?? 0}
                 date={date}
                 today={today}

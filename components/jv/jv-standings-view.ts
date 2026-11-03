@@ -83,7 +83,7 @@ function viewOf(t: JvDivisionTable): JvTableView {
           ? `No ${title} league games are listed.`
           : `No ${title} league games have been played yet.`
         : `Not enough ${title} results for a table yet.`;
-  const absent = t.absent.map((slug) => getTeamBySlug(slug)?.shortName ?? slug);
+  const absent = t.absent.map((slug) => shortNameOf(slug, slug));
   // No school of the division has a JV league game at all: one heading, one line, nothing else.
   const noneListed = t.rows.length === 0;
   return {

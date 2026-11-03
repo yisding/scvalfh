@@ -1,4 +1,5 @@
 import { matchupJoiner } from '../../lib/format';
+import { capitalized } from '../words/capitalized';
 
 import PlayInCard, { type PlayInSide } from './PlayInCard';
 import { pairingSentence, type PairingView, type SeatView } from './playoff-view';
@@ -39,7 +40,7 @@ function purposeOf(label: string, title: string): string | null {
   const titleWord = title.split(/\s/)[0].toLowerCase();
   const [first, ...rest] = tail.split(' ');
   if (rest.length > 0 && first.toLowerCase() === titleWord) tail = rest.join(' ').replace(/^\((.*)\)$/, '$1');
-  return tail ? `${tail[0].toUpperCase()}${tail.slice(1)}.` : null;
+  return tail ? `${capitalized(tail)}.` : null;
 }
 
 /**

@@ -30,6 +30,7 @@ import { getTeamBySlug } from '../../lib/teams';
 import type { ContestId, Game, LeagueId, RegionId, Team } from '../../lib/types';
 
 import { postseasonTagOf } from '../ui/describe-game';
+import { shortNameOf } from '../words/team-short-name';
 
 export interface ThisWeekRow {
   dateKey: string;
@@ -133,16 +134,12 @@ function inRegion(game: Game, region: RegionId): boolean {
   });
 }
 
-function shortNameOf(side: Game['home']): string {
-  return registryTeam(side)?.shortName ?? side.name;
-}
-
 function gameRow(game: Game, labels: ReadonlyMap<ContestId, string>, bracketOf: (game: Game) => string | null): ThisWeekRow {
   const bracket = bracketOf(game);
   const view = renderScore(game);
   const text =
     view.kind === 'scheduled'
-      ? `${shortNameOf(game.away)} ${matchupJoiner(game)} ${shortNameOf(game.home)}`
+      ? `${shortNameOf(game.away.slug, game.away.name)} ${matchupJoiner(game)} ${shortNameOf(game.home.slug, game.home.name)}`
       : scoreSentence(game);
   return {
     dateKey: game.dateKey,

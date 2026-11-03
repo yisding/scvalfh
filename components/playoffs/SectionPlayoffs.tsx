@@ -9,7 +9,7 @@ import { getTeams, getToday } from '../../lib/data';
 import type { LeagueSummary } from '../../lib/data';
 import { getSdsBrackets, getSdsBracketsSource } from '../../lib/postseason/sds-bracket';
 import { dateSpan } from '../../lib/format';
-import type { LeagueConfig } from '../../lib/league-config/shape';
+import type { SectionPlayoffsConfig } from '../../lib/league-config/shape';
 import { getLeague } from '../../lib/leagues';
 
 import DateList from './DateList';
@@ -29,7 +29,7 @@ export default function SectionPlayoffs({
   seeding,
   leagues,
 }: {
-  ps: Extract<LeagueConfig['postseason'], { kind: 'section-playoffs' }>;
+  ps: SectionPlayoffsConfig;
   seeding: string | null;
   leagues: LeagueSummary[];
 }) {

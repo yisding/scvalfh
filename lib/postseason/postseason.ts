@@ -31,7 +31,7 @@
  */
 
 import { EN_DASH, byDateThenId, leagueClockPT, numberWord, shortDate, sideOutcome } from '../format';
-import type { LeagueConfig } from '../league-config/shape';
+import type { LeagueConfig, TournamentConfig } from '../league-config/shape';
 import { drawNumberOf } from '../leagues';
 import { lastSpotOutcome } from '../standings';
 import { getTeamById, getTeamBySlug } from '../teams';
@@ -54,7 +54,6 @@ export interface SixthPlaceDecision {
   note: string | null;
 }
 
-type TournamentConfig = Extract<LeagueConfig['postseason'], { kind: 'league-tournament' }>;
 type Seeds = ReadonlyArray<{ seed: number; seat: CrossoverSeat }>;
 
 /**

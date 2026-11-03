@@ -83,6 +83,7 @@ import {
   type GameDisplay,
   type SideView,
 } from '../ui/describe-game';
+import { capitalized } from '../words/capitalized';
 
 // ---------------------------------------------------------------- types
 
@@ -1024,7 +1025,7 @@ export function gameDescription(model: GameModel): string {
   if (recap) {
     // Dated: the sentence carries no date, so a rematch with the same score would have the same
     // description as the first meeting. It already names the context, so the tail names the league.
-    return `${dateWithYear(game.dateLocal)}: ${recap} ${where.charAt(0).toUpperCase()}${where.slice(1)} — ${
+    return `${dateWithYear(game.dateLocal)}: ${recap} ${capitalized(where)} — ${
       model.source ? 'score via High School on SI (si.com); unofficial.' : 'unofficial, rebuilt twice daily from MaxPreps.'
     }`;
   }

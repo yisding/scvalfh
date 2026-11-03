@@ -21,10 +21,12 @@ import { listWords, monthDay, shortDate } from '../../lib/format';
 import type { LeagueConfig } from '../../lib/league-config/shape';
 import { getLeague, isIndependentLeague, sectionOf } from '../../lib/leagues';
 import type { PlayoffProjection as Projection } from '../../lib/types';
+import { capitalized } from '../words/capitalized';
+
 import {
   buildDivisionProjection,
-  buildPairingView,
   ladderFactsFor,
+  type DivisionProjection,
   type LeagueKeyDate,
   type PairingView,
   type ProjectionRow,
@@ -74,7 +76,7 @@ export function leagueKeyDate(league: LeagueConfig, played: readonly PairingView
   const purposes = [...new Set(pairings.map((p) => {
     const at = p.label.indexOf(' — ');
     const tail = at < 0 ? p.label : p.label.slice(at + 3);
-    return `${tail[0].toUpperCase()}${tail.slice(1)}`;
+    return capitalized(tail);
   }))];
   const moved = new Map<string, string[]>();
   for (const p of played) {
@@ -91,7 +93,7 @@ export function leagueKeyDate(league: LeagueConfig, played: readonly PairingView
   return { id: league.id, leagueShort: league.shortName, date: first.date, time: first.time, label, detail };
 }
 
-export interface LeagueBlock {
+interface LeagueBlock {
   summary: LeagueSummary;
   config: LeagueConfig;
   divisions: Array<{
@@ -99,18 +101,21 @@ export interface LeagueBlock {
     heading: string;
     anchor: string | undefined;
     asOf: string;
-    projection: ReturnType<typeof buildDivisionProjection>;
+    projection: DivisionProjection;
   }>;
   meterNote: string | null;
-  pairings: ReturnType<typeof buildPairingView>[];
+  pairings: PairingView[];
   pairingDate: string | null;
 }
 
 export function leagueBlock(summary: LeagueSummary): LeagueBlock {
   const config = getLeague(summary.id);
   const projection = getPlayoffProjection(summary.id);
+  // Each division's automatic places, for the meter note: read with its projection, not carried in the block.
+  const aqPlaces: number[] = [];
   const divisions = summary.divisions.map((d) => {
     const facts = ladderFactsFor(d.id);
+    aqPlaces.push(facts.aqPlaces);
     return {
       id: d.id,
       heading: d.heading ?? 'League table',
@@ -118,10 +123,9 @@ export function leagueBlock(summary: LeagueSummary): LeagueBlock {
       anchor: d.id === summary.id ? undefined : d.id,
       asOf: asOfPhrase(getLastLeagueResultDate({ division: d.id })),
       projection: buildDivisionProjection(d.id, d.heading ?? summary.shortName, projectionRows(projection, d.id), facts),
-      aq: facts.aqPlaces,
     };
   });
-  const aqs = [...new Set(divisions.map((d) => d.aq))];
+  const aqs = [...new Set(aqPlaces)];
   const meterNote =
     divisions.length > 1 && aqs.length === 1 && aqs[0] > 0
       ? `${aqs[0]} per division qualify automatically.`

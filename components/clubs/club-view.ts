@@ -37,6 +37,7 @@ import {
 import { CLUB_REGIONS, CLUB_REGION_SITE_REGION, clubSiteKey } from '../../lib/players/clubs-schema';
 import { getRosters } from '../../lib/players/rosters';
 import type { RegionId, TeamSlug } from '../../lib/types';
+import { capitalized } from '../words/capitalized';
 import { plural } from '../words/plural';
 import { OUTLETS, hostOf, numbered, pathOf, schoolName } from '../words/source-hosts';
 
@@ -409,7 +410,7 @@ export function buildClubsIndexView(): ClubsIndexView {
 /** "The Sacramento area and the North State were not searched for every club, so other clubs may be based there." */
 function notSearchedSentence(regions: readonly ClubRegion[]): string {
   const places = listWords(regions.map((r) => REGION_WORDS[r].place));
-  return `${places[0].toUpperCase()}${places.slice(1)} ${regions.length === 1 ? 'was' : 'were'} not searched for every club, so other clubs may be based there.`;
+  return `${capitalized(places)} ${regions.length === 1 ? 'was' : 'were'} not searched for every club, so other clubs may be based there.`;
 }
 
 /** "26-27" → "2025-26 or 2026-27". */

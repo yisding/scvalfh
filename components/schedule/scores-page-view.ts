@@ -10,7 +10,7 @@ import type { DayRegion } from './day-summary';
 import { countGames, type ScheduleCounts } from './filter-data';
 
 /** One fact badge beside the h1; `region` scopes it to that region's view. */
-export interface DayBadge {
+interface DayBadge {
   key: string;
   text: string;
   region?: RegionId;

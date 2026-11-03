@@ -44,7 +44,7 @@ import {
 import { CCS } from '../../lib/league-config/sections';
 import { divisionHeading, getDivision, getLeague, ladderFor, leagueOfDivision } from '../../lib/leagues';
 import { fixedSiteHost, winnerOf } from '../../lib/postseason/postseason';
-import type { CcsConfig, LeagueConfig, OutsideTournamentConfig } from '../../lib/league-config/shape';
+import type { CcsConfig, LeagueConfig, OutsideTournamentConfig, SectionPlayoffsConfig } from '../../lib/league-config/shape';
 import type {
   CcsKeyDates,
   CrossoverSeat,
@@ -63,6 +63,7 @@ import type {
 } from '../../lib/types';
 
 import { ladderLineAfter, ladderRow } from '../standings/standings-view';
+import { capitalized } from '../words/capitalized';
 import { membershipSource } from '../words/membership-words';
 
 // ---------------------------------------------------------------- small helpers
@@ -142,8 +143,7 @@ export function ccsHostingSentence(hostsThrough: CcsConfig['highSeedHostsThrough
   const neutral = CCS_ROUNDS.filter((r) => ccsRoundSite(r, hostsThrough) === 'neutral');
   const words = (rounds: readonly CcsRound[]) => listWords(rounds.map((r) => (r === 'finals' ? 'the final' : `the ${r}`)));
   if (neutral.length === 0) return 'Every round is at the higher seed’s field (the CIF-CCS field hockey calendar).';
-  const homeWords = words(home);
-  const homePart = home.length > 0 ? `${homeWords[0].toUpperCase()}${homeWords.slice(1)} are at the higher seed’s field; ` : '';
+  const homePart = home.length > 0 ? `${capitalized(words(home))} are at the higher seed’s field; ` : '';
   return `${homePart}${words(neutral)} ${neutral.length === 1 ? 'is' : 'are'} at neutral sites set by CCS (the CIF-CCS field hockey calendar).`;
 }
 
@@ -586,8 +586,6 @@ export function pairingSentence(view: PairingView): string {
 }
 
 // ---------------------------------------------------------------- section playoffs (the San Diego Section)
-
-type SectionPlayoffsConfig = Extract<LeagueConfig['postseason'], { kind: 'section-playoffs' }>;
 
 /**
  * The Section's round calendar as DateList rows: a round's label, its league clock time where published (the

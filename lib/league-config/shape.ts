@@ -476,6 +476,12 @@ export type PostseasonConfig =
       powerRankingsUrl: string;
     };
 
+/** A league-tournament league's postseason config (MCAL's). */
+export type TournamentConfig = Extract<PostseasonConfig, { kind: 'league-tournament' }>;
+
+/** A section-playoffs league's postseason config (the San Diego leagues'). */
+export type SectionPlayoffsConfig = Extract<PostseasonConfig, { kind: 'section-playoffs' }>;
+
 /** Ordered phase steps. 'data' = SCVAL's legacy formula; 'league-play' = max(last division leaguePlay.last, last league game of the league). */
 export interface PhaseStep { phase: SeasonPhase; through: string | 'data' | 'league-play' }
 

@@ -19,7 +19,7 @@ export const REGIONS = [
 export const DEFAULT_REGION: RegionId = 'norcal';
 
 /** [V] the CCS Field Hockey Bylaws 2026-27 (also CCS.sources.bylaws below). */
-export const CCS_BYLAWS_URL = 'https://cifccs.org/sports/fh/field_hockey_bylaws_2026-27.pdf';
+const CCS_BYLAWS_URL = 'https://cifccs.org/sports/fh/field_hockey_bylaws_2026-27.pdf';
 /** [V] the Northern Section Field Hockey Guidelines 2026-28 (the EAL's rules and its Super Regional). */
 export const NS_GUIDELINES_URL = 'https://www.cifns.org/guidelines-playoffs-Divisions-archives/26-28_Guidelines/Field_Hockey_Guidelines_26-28.pdf';
 /**

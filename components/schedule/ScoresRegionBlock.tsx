@@ -2,9 +2,9 @@ import EmptyState from '../ui/EmptyState';
 import SectionHeader from '../ui/SectionHeader';
 import { gameWord } from '../words/plural';
 import { shortNameOf } from '../words/team-short-name';
-import { getLeagueSummaries, getOfficialFixtures } from '../../lib/data';
+import type { LeagueSummary } from '../../lib/data';
 import { shortDate } from '../../lib/format';
-import type { Game } from '../../lib/types';
+import type { Game, OfficialFixture } from '../../lib/types';
 
 import GameList from './GameList';
 import OfficialFixtures from './OfficialFixtures';
@@ -12,8 +12,8 @@ import type { DayRegion } from './day-summary';
 
 /** One league's unreported official fixtures of the day (the day page's `fixtureLeagues`). */
 interface FixtureBlock {
-  league: ReturnType<typeof getLeagueSummaries>[number];
-  rows: ReturnType<typeof getOfficialFixtures>;
+  league: LeagueSummary;
+  rows: OfficialFixture[];
 }
 
 /**
@@ -63,20 +63,21 @@ export function MovedNote({ games, date }: { games: readonly Game[]; date: strin
  */
 export default function ScoresRegionBlock({
   region,
-  first,
+  firstRegion,
   betweenCount,
-  betweenBelow,
   jvCount,
   date,
   today,
   fixtureLeagues,
 }: {
   region: DayRegion;
-  first: boolean;
+  /**
+   * The page's first region block (NorCal's): it takes the top margin, and the NorCal vs SoCal block sits
+   * below it (above the second).
+   */
+  firstRegion: boolean;
   /** The day's NorCal vs SoCal games, for the empty sentence. */
   betweenCount: number;
-  /** Where that block sits from this one: below NorCal's, above SoCal's. */
-  betweenBelow: boolean;
   /** The region's JV games that day (its `#jv` block below), for the empty sentence. */
   jvCount: number;
   date: string;
@@ -87,7 +88,7 @@ export default function ScoresRegionBlock({
   const labelledBy = (groupId: string) =>
     region.idSuffix === '' ? `${groupId}-heading` : `${groupId}-heading ${headingId}`;
   const besides =
-    betweenCount === 0 ? '' : ` besides the NorCal vs SoCal ${gameWord(betweenCount)} ${betweenBelow ? 'below' : 'above'}`;
+    betweenCount === 0 ? '' : ` besides the NorCal vs SoCal ${gameWord(betweenCount)} ${firstRegion ? 'below' : 'above'}`;
   const jvNote = jvCount === 0 ? '' : `; the JV ${gameWord(jvCount)} ${jvCount === 1 ? 'is' : 'are'} below`;
   const varsity = jvCount === 0 ? '' : 'varsity ';
   // A league's official fixture with no source behind it (the blocks at the end of this one) is still a
@@ -104,7 +105,7 @@ export default function ScoresRegionBlock({
       id={region.id}
       data-region-scope={region.id}
       aria-labelledby={headingId}
-      className={first ? 'mt-8 md:mt-10' : 'mt-section md:mt-section-lg'}
+      className={firstRegion ? 'mt-8 md:mt-10' : 'mt-section md:mt-section-lg'}
     >
       <SectionHeader id={headingId} kicker={region.name} />
 

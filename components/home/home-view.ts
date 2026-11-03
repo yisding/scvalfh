@@ -36,7 +36,6 @@ import {
   getStandingFor,
   getStandings,
   getTeamById,
-  getTeamBySlug,
   getTeamPostseasonLine,
   getTeamSearchIndex,
   getTeams,
@@ -72,6 +71,7 @@ import type {
   LeagueConfig,
   PostseasonConfig,
   RegionConfig,
+  TournamentConfig,
 } from '../../lib/league-config/shape';
 import {
   divisionHeading,
@@ -96,6 +96,7 @@ import type { ThisWeekView } from '../playoffs/this-week';
 import { fixtureOpponent, nextOfficialFixture, pendingPairingFor } from '../teams/team-view';
 import { describeGame, gameKind, postseasonTagOf, type GameDisplay, type SideView } from '../ui/describe-game';
 import { plural } from '../words/plural';
+import { shortNameOf } from '../words/team-short-name';
 
 import type {
   HomeLastDisplay,
@@ -114,10 +115,6 @@ import { POSTSEASON_LEAD, rungCardText } from './home-types';
 /** Kickoff order, then away name, so a slate is stable between builds. */
 function byKickoff(a: Game, b: Game): number {
   return a.dateLocal.localeCompare(b.dateLocal) || a.away.name.localeCompare(b.away.name);
-}
-
-function shortNameOf(side: Game['home']): string {
-  return (side.slug ? getTeamBySlug(side.slug)?.shortName : undefined) ?? side.name;
 }
 
 /** The league a game is filed under on the home page: its counted division's, else the first side's in config order. */
@@ -544,7 +541,7 @@ function postseasonView(league: LeagueConfig, phase: SeasonPhase, sectionNote: s
 
 function leagueTournamentView(
   league: LeagueConfig,
-  ps: Extract<PostseasonConfig, { kind: 'league-tournament' }>,
+  ps: TournamentConfig,
   sectionNote: string | null,
 ): PostseasonView {
   // Results first (DESIGN §24.13): 'MCAL tournament · Champion: Tamalpais won the MCAL tournament, beating …' or
@@ -849,7 +846,7 @@ function nextGameView(game: Game, slug: string): HomeNextGame {
     dateTime: dateTimeAttr(game),
     timeLabel: game.isTimeTba ? 'Time TBA' : timeOfDayPT(game.dateLocal),
     versus: describeGame(game, slug).versus ?? 'vs',
-    opponent: shortNameOf(theirs),
+    opponent: shortNameOf(theirs.slug, theirs.name),
     kindLabel: postseasonTagOf(game) ?? (gameKind(game) === 'league' ? 'league' : 'non-league'),
     href: gameHref(game.contestId),
     // Two external chips at most plus "Game page": three chips, one row, the same height for every

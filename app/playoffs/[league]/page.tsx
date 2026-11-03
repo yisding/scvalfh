@@ -10,7 +10,6 @@ import {
   tournamentLeague,
   tournamentStaticParams,
   tournamentView,
-  type TournamentConfig,
 } from '../../../components/playoffs/tournament-league';
 import Arrow from '../../../components/ui/Arrow';
 import ExternalLink from '../../../components/ui/ExternalLink';
@@ -19,7 +18,7 @@ import SectionHeader from '../../../components/ui/SectionHeader';
 import { getCcsField, getLeagueTournament, getSections } from '../../../lib/data';
 import type { LeagueSummary } from '../../../lib/data';
 import { shortDate } from '../../../lib/format';
-import type { LeagueConfig } from '../../../lib/league-config/shape';
+import type { LeagueConfig, TournamentConfig } from '../../../lib/league-config/shape';
 import { getLeague } from '../../../lib/leagues';
 import { tournamentHeadline } from '../../../lib/postseason/postseason';
 

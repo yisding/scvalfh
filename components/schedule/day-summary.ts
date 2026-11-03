@@ -23,6 +23,7 @@ import type { Game, LeagueId, RegionId } from '../../lib/types';
 import { getBracketLink } from '../playoffs/bracket-link';
 import { describeGame, postseasonTagOf } from '../ui/describe-game';
 import { gameWord, plural } from '../words/plural';
+import { shortNameOf } from '../words/team-short-name';
 
 import { countGames, type ScheduleCounts } from './filter-data';
 import { slugOf } from './schedule-view';
@@ -44,18 +45,13 @@ export interface DayLine {
   versus: 'at' | 'vs';
 }
 
-function displayName(slug: string | null, fallback: string): string {
-  const team = slug ? getTeamBySlug(slug) : undefined;
-  return team ? team.shortName : fallback;
-}
-
 export function dayLines(games: readonly Game[]): DayLine[] {
   return games.map((game) => {
     const display = describeGame(game);
     return {
       contestId: game.contestId,
-      awayName: displayName(game.away.slug, game.away.name),
-      homeName: displayName(game.home.slug, game.home.name),
+      awayName: shortNameOf(game.away.slug, game.away.name),
+      homeName: shortNameOf(game.home.slug, game.home.name),
       awayGlyph: display.away.glyph,
       homeGlyph: display.home.glyph,
       awayWinner: display.away.weight === 'winner',

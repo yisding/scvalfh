@@ -83,6 +83,7 @@ import { getBracketPlace } from '../playoffs/bracket-place';
 import { buildOverviewDivision, type OverviewDivision } from '../standings/standings-view';
 import type { FormEntry } from '../ui/FormStrip';
 import { describeGame, shootoutSectionOf } from '../ui/describe-game';
+import { capitalized } from '../words/capitalized';
 import { maxPrepsLabel } from '../words/maxpreps-label';
 
 /** One opponent in this team's table that it has not beaten yet (DESIGN §3.7). */
@@ -386,7 +387,7 @@ export function pendingPairingFor(team: Team, today: string): PendingPairing | n
     return {
       leagueId: league.id,
       kindLabel: `${league.shortName} ${p.isPlayIn ? 'play-in' : 'crossover'}`,
-      purpose: `${tail[0].toUpperCase()}${tail.slice(1)}`,
+      purpose: capitalized(tail),
       dateKey: p.date,
       // The league's own clock words ('11 AM PT'), as the pairing card and the strip on /playoffs print it.
       timeLabel: p.time ? leagueClockPT(p.time) : null,
