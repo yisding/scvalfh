@@ -164,7 +164,7 @@ export function sdsBracketsSchema(window: { first: string; last: string }) {
       { message: 'divisions are [] or open, division-1, division-2 in that order', path: ['divisions'] },
     )
     .refine((f) => f.divisions.every((d, i) => d.size === configSizes[i]), {
-      message: 'a field size disagrees with lib/leagues.ts (Open 8, Division I 12, Division II 12)',
+      message: 'a field size disagrees with lib/league-config/sds.ts (Open 8, Division I 12, Division II 12)',
       path: ['divisions'],
     })
     .refine(

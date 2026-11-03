@@ -925,6 +925,56 @@ linking the player's row there. The gates know the
 page: `assert:prerender`, `assert-vinext-prerender.ts` and `smoke-server.sh` expect it among the
 fixed pages, and `a11y-axe.mjs` checks it.
 
+## Code layout
+
+The code is layered, and imports only point down:
+
+```
+app/                   routes only: each page reads data, builds its view and composes components
+components/<feature>/  one folder per page family; React components (PascalCase .tsx) beside the
+                       view models that decide what they show (kebab-case .ts, mostly *-view.ts)
+components/{ui,layout,metadata,prefs,words}/   shared by every feature (below)
+lib/                   data, config and engines; no React
+data/                  the committed JSON the site is built from
+```
+
+**`components/`.** Features: `about`, `clubs`, `commits`, `game`, `history`, `home`, `jv`,
+`leaders`, `playoffs`, `recruiting`, `schedule`, `search`, `standings`, `teams`. Shared folders:
+
+| Folder | Holds |
+|---|---|
+| `ui/` | presentational building blocks used across features (game rows, standings tables, chips, tiles) and `describe-game.ts`, their view model |
+| `layout/` | the page chrome: header, nav, tab bar, page header, attribution, site constants |
+| `metadata/` | what crawlers and link previews see: the OG and icon image renderers and JSON-LD |
+| `prefs/` | the remembered league, theme and pinned team: the inline `<head>` scripts that apply them before paint and the client hooks and controls that change them |
+| `words/` | copy helpers shared across features (plurals, membership and position words, source labels) |
+
+**`lib/`.** The modules everything leans on sit at the root: `types`, `season`, `leagues` (the league
+table, its lookups and `assertLeagues`), `teams`, `data` (the one read API over the snapshot, SPEC
+§13.3), `format`, `classify`, `normalize`, `standings`, `schema-primitives`, `stable-json`, `game-id`,
+`search` and `pin-label`. The rest is grouped by domain:
+
+| Folder | Holds |
+|---|---|
+| `league-config/` | each league's facts (one file per league, as in `registry/`), the sections and regions, the config shapes and `DATA_QUALITY` |
+| `registry/` | each league's teams, assembled by `lib/teams.ts` |
+| `snapshot/` | the snapshot's Zod schema, its migrations and season build |
+| `postseason/` | postseason state, rounds and outcomes, and the CCS and San Diego bracket files |
+| `jv/` | the JV games file, its merge, corrections and standings |
+| `history/` | the 2025-26 archive and last season's records |
+| `players/` | rosters, player stats, clubs and college commitments |
+| `ratings/` | Elo and Elo-adjusted scoring |
+| `schools/` | school addresses, venues and mascots |
+| `crosscheck/` | the si.com backfill and the cross-checks against si.com and CIF-SS |
+| `official/` | the official-fixtures bundles and their matching |
+| `pipeline/`, `sources/` | the data refresh: the pipeline steps and the per-source fetchers and parsers (build-time only) |
+
+There are no `index.ts` barrels: several `lib/` modules read a data file or assert their config when
+imported, and a barrel would run all of that (and pull in zod) for any one symbol. Two tests hold the
+boundaries: `tests/ui/client-boundary.test.ts` keeps every `'use client'` module to a short allowlist
+of client-safe `lib/` modules, and `tests/build-only-boundary.test.ts` keeps `app/` and
+`components/` from reaching `lib/pipeline/`, `lib/sources/` or `lib/official/`.
+
 ## Local development
 
 ```bash
