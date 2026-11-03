@@ -1,13 +1,19 @@
 import SectionHeader from '../../ui/SectionHeader';
 import { plural } from '../../../lib/format';
-import { shootoutTeamsWho, type AboutSectionProps } from '../about-view';
+import type { BackfillRow } from '../../../lib/types';
+import { shootoutTeamsWho, type ShootoutSection } from '../about-view';
 import BackfillTable from '../BackfillTable';
 
 /**
  * /about#backfills: the fixed rules under which a score is taken from si.com, and every score that was.
  */
-export function BackfillsSection({ view }: AboutSectionProps) {
-  const { backfilled, shootoutSections } = view;
+export function BackfillsSection({
+  backfilled,
+  shootoutSections,
+}: {
+  backfilled: readonly BackfillRow[];
+  shootoutSections: readonly ShootoutSection[];
+}) {
   return (
     <section id="backfills" className="mt-16">
       <SectionHeader

@@ -10,7 +10,6 @@ import type { LeagueId } from '../../lib/types';
 import ChampionCard from './ChampionCard';
 import HistoryBracket from './HistoryBracket';
 import { divisionChampion, finalLine, sideName, thirdPlaceLine } from './bracket-view';
-import { SEASON } from './history-page-view';
 
 /**
  * The 2025 Tournament of Champions (`#toc`, DESIGN §24.13): the postseason of the Sunset and the LA
@@ -19,7 +18,16 @@ import { SEASON } from './history-page-view';
  * these leagues' pages), the third-place game under the bracket, and a source line that says the bracket is
  * this site's assembly of the games, not a published one.
  */
-export default function TournamentBracketBlock({ bracket, leagues }: { bracket: TournamentBracket; leagues: readonly LeagueId[] }) {
+export default function TournamentBracketBlock({
+  bracket,
+  leagues,
+  season,
+}: {
+  bracket: TournamentBracket;
+  leagues: readonly LeagueId[];
+  /** The archive's season ('2025-26'). */
+  season: string;
+}) {
   const d = bracket.divisions[0];
   const { champion, final } = divisionChampion(d);
   const team = getTeamBySlug(champion.slug);
@@ -32,11 +40,11 @@ export default function TournamentBracketBlock({ bracket, leagues }: { bracket: 
   ));
   const whose = listWords(leagues.map((l) => `the ${getLeague(l).name}`));
   return (
-    <section id={TOC.id} data-region-scope="socal" aria-label={`${TOC.name} ${SEASON}`} className="min-w-0">
+    <section id={TOC.id} data-region-scope="socal" aria-label={`${TOC.name} ${season}`} className="min-w-0">
       <SectionHeader
         size="lg"
         kicker={`${TOC.shortName} · ${TOC.name}`}
-        meta={<span className="whitespace-nowrap">{SEASON}</span>}
+        meta={<span className="whitespace-nowrap">{season}</span>}
       />
       <p className="m-0 mt-2 max-w-prose text-body text-ink-2">
         The 2025 postseason for {whose}: eight teams, run by the {bracket.organizer}, not by CIF.
@@ -54,10 +62,10 @@ export default function TournamentBracketBlock({ bracket, leagues }: { bracket: 
           as="h3"
           size="section"
           kicker={`${TOC.shortName} · bracket`}
-          meta={<span className="whitespace-nowrap">{SEASON}</span>}
+          meta={<span className="whitespace-nowrap">{season}</span>}
           className="mb-4"
         />
-        <HistoryBracket division={d} label={`${TOC.name} bracket, ${SEASON}`} />
+        <HistoryBracket division={d} label={`${TOC.name} bracket, ${season}`} />
         {third ? <p className="m-0 mt-4 text-meta text-ink-2">{third}</p> : null}
       </section>
 

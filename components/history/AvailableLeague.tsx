@@ -15,7 +15,6 @@ import type { LeagueId } from '../../lib/types';
 import AwardsBlock from './AwardsBlock';
 import ChampionCard from './ChampionCard';
 import HistoryStandingsTable, { leagueHasOverall } from './HistoryStandingsTable';
-import { SEASON } from './history-page-view';
 
 /** `lg:grid-rows-[repeat(N,auto)]` for the subgrid, spelled out so Tailwind can see each class. */
 const ROWS_CLASS: Record<number, string> = {
@@ -54,7 +53,16 @@ function Champions({ leagueId }: { leagueId: LeagueId }) {
   );
 }
 
-export default function AvailableLeague({ leagueId, entry }: { leagueId: LeagueId; entry: AvailableLeagueHistory }) {
+export default function AvailableLeague({
+  leagueId,
+  entry,
+  season,
+}: {
+  leagueId: LeagueId;
+  entry: AvailableLeagueHistory;
+  /** The archive's season ('2025-26'). */
+  season: string;
+}) {
   const league = getLeague(leagueId);
   const divisions = entry.divisions;
   // Which of the four blocks a division has is a property of the league: SCVAL has all four,
@@ -77,7 +85,7 @@ export default function AvailableLeague({ leagueId, entry }: { leagueId: LeagueI
       <SectionHeader
         size="lg"
         kicker={`${league.shortName} · ${league.name}`}
-        meta={<span className="whitespace-nowrap">{SEASON}</span>}
+        meta={<span className="whitespace-nowrap">{season}</span>}
       />
       <Champions leagueId={leagueId} />
 
@@ -102,7 +110,7 @@ export default function AvailableLeague({ leagueId, entry }: { leagueId: LeagueI
               <SectionHeader as="h3" size="section" kicker={`${label} · varsity final standings`} />
               <HistoryStandingsTable
                 rows={d.standings.varsity}
-                caption={`${league.shortName} ${label} varsity final standings, ${SEASON}`}
+                caption={`${league.shortName} ${label} varsity final standings, ${season}`}
                 emptyLabel="No varsity standings were published for this division."
                 hasOverall={hasOverall}
               />
@@ -112,7 +120,7 @@ export default function AvailableLeague({ leagueId, entry }: { leagueId: LeagueI
                   <SectionHeader as="h3" size="section" kicker={`${label} · JV final standings`} className="mt-section" />
                   <HistoryStandingsTable
                     rows={d.standings.jv}
-                    caption={`${league.shortName} ${label} JV final standings, ${SEASON}`}
+                    caption={`${league.shortName} ${label} JV final standings, ${season}`}
                     emptyLabel="No JV standings were published for this division."
                     hasOverall={hasOverall}
                   />
@@ -146,8 +154,8 @@ export default function AvailableLeague({ leagueId, entry }: { leagueId: LeagueI
         {p.source === 'scval-pdf' ? (
           <p className="m-0">
             Source: scval.com &mdash;{' '}
-            <ExternalLink href={p.standingsPdf}>{SEASON} final standings (PDF)</ExternalLink> and{' '}
-            <ExternalLink href={p.allLeaguePdf}>{SEASON} all-league awards (PDF)</ExternalLink>. This page comes
+            <ExternalLink href={p.standingsPdf}>{season} final standings (PDF)</ExternalLink> and{' '}
+            <ExternalLink href={p.allLeaguePdf}>{season} all-league awards (PDF)</ExternalLink>. This page comes
             from those PDFs, not from the MaxPreps data the rest of the site uses &mdash;
             MaxPreps only ever serves the current season. {league.shortName}&rsquo;s final PDFs list league
             records only; their overall-record column was empty for this season.
@@ -157,7 +165,7 @@ export default function AvailableLeague({ leagueId, entry }: { leagueId: LeagueI
             Source: bval.org &mdash;{' '}
             {/* `standingsSheet` is the CSV export the build reads; readers get the sheet itself. */}
             <ExternalLink href={p.standingsSheetView}>
-              {SEASON} final standings (Google Sheet)
+              {season} final standings (Google Sheet)
             </ExternalLink>
             {Object.entries(p.allLeagueDocs).map(([division, url], i, all) =>
               url ? (
@@ -185,7 +193,7 @@ export default function AvailableLeague({ leagueId, entry }: { leagueId: LeagueI
         ) : null}
         {changes.map((c) => (
           <p key={c.slug} className="m-0">
-            {c.name} played in {getDivision(c.historyDivision)?.label ?? c.historyDivision} in {SEASON}, as the
+            {c.name} played in {getDivision(c.historyDivision)?.label ?? c.historyDivision} in {season}, as the
             source lists it. {league.shortName}&rsquo;s current alignment on this site lists {c.name} in {getDivision(c.registryDivision)?.label ?? c.registryDivision}, so {c.name} moved.
           </p>
         ))}

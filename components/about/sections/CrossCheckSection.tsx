@@ -1,7 +1,7 @@
 import EmptyState from '../../ui/EmptyState';
 import SectionHeader from '../../ui/SectionHeader';
 import { isIndependentLeague } from '../../../lib/leagues';
-import type { AboutSectionProps } from '../about-view';
+import type { AboutCrossCheck } from '../about-view';
 import CifssCrossCheckSummary from '../CifssCrossCheckSummary';
 import CrossCheckTable from '../CrossCheckTable';
 import SbliveCrossCheckSummary from '../SbliveCrossCheckSummary';
@@ -11,8 +11,8 @@ import SbliveCrossCheckSummary from '../SbliveCrossCheckSummary';
  * (those with a known cause listed apart, under the cause), then the si.com and cifsshome.org score
  * comparisons.
  */
-export function CrossCheckSection({ view }: AboutSectionProps) {
-  const { perLeague, sbliveCross, cifssCross } = view;
+export function CrossCheckSection({ crossCheck }: { crossCheck: AboutCrossCheck }) {
+  const { perLeague, sbliveCross, cifssCross } = crossCheck;
   return (
     <section id="cross-check" className="mt-16">
       <SectionHeader size="lg" kicker="Cross-check log" />

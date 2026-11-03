@@ -1,21 +1,14 @@
 import SectionHeader from '../../ui/SectionHeader';
 import { listWords } from '../../../lib/format';
-import type { AboutSectionProps } from '../about-view';
+import type { AboutDisclaimer, AboutNoDocument } from '../about-view';
 
 /**
  * /about#not-affiliated: the disclaimer, naming every league and section, and what is the source of
  * truth for anything that matters competitively.
  */
-export function NotAffiliatedSection({ view }: AboutSectionProps) {
-  const {
-    tabled,
-    sections,
-    noDocumentLeagues,
-    noDocumentWho,
-    noDocumentGuidelines,
-    socalNoDocument,
-    socalCompetitive,
-  } = view;
+export function NotAffiliatedSection({ disclaimer, noDocument }: { disclaimer: AboutDisclaimer; noDocument: AboutNoDocument }) {
+  const { tabled, sections } = disclaimer;
+  const { norcal, socal } = noDocument;
   return (
     <section id="not-affiliated" className="mt-16 mb-2">
       <SectionHeader size="lg" kicker="Not affiliated" />
@@ -28,11 +21,11 @@ export function NotAffiliatedSection({ view }: AboutSectionProps) {
           here are computed from published game results and, while we cross-check them and publish
           every disagreement we find, they may differ from an official ruling &mdash; each
           league&rsquo;s own standings
-          {noDocumentLeagues.length > 0 &&
-            ` (or, for ${noDocumentWho}, which ${noDocumentLeagues.length === 1 ? 'publishes' : 'publish'} none, the scores ${noDocumentLeagues.length === 1 ? 'its' : 'their'} schools report for seeding under ${noDocumentGuidelines})`}{' '}
+          {norcal.leagues.length > 0 &&
+            ` (or, for ${norcal.who}, which ${norcal.leagues.length === 1 ? 'publishes' : 'publish'} none, the scores ${norcal.leagues.length === 1 ? 'its' : 'their'} schools report for seeding under ${norcal.guidelines})`}{' '}
           are always the
           source of truth for anything that matters competitively, such as playoff seeding.
-          {socalNoDocument.length > 0 ? ` ${socalCompetitive}` : null}
+          {socal.leagues.length > 0 ? ` ${socal.competitive}` : null}
         </p>
       </div>
     </section>

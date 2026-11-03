@@ -1,15 +1,15 @@
 import SectionHeader from '../../ui/SectionHeader';
 import { listWords, numberWord } from '../../../lib/format';
 import { isIndependentLeague } from '../../../lib/leagues';
-import { leagueRef, type AboutSectionProps } from '../about-view';
+import { leagueRef, type AboutStandings } from '../about-view';
 import LeagueRules from '../LeagueRules';
 
 /**
  * /about#standings: how standings are computed, in one paragraph for every league, then each league's
  * rules block (`#rules-<league>`, the anchor standings footnotes link; components/about/LeagueRules.tsx).
  */
-export function StandingsSection({ view }: AboutSectionProps) {
-  const { siteOrdered, anyTableless, ruleLeagues, tabled, titleOnly, tableOrdered, perLeague } = view;
+export function StandingsSection({ standings }: { standings: AboutStandings }) {
+  const { siteOrdered, anyTableless, ruleLeagues, tabled, titleOnly, tableOrdered, perLeague } = standings;
   return (
     <section id="standings" className="mt-16">
       <SectionHeader size="lg" kicker="Standings, points &amp; tiebreaks" />

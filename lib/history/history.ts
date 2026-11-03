@@ -39,7 +39,8 @@ import {
   type LeagueHistory,
   type UnavailableLeagueHistory,
 } from './history-schema';
-import { LEAGUE_IDS, getLeague, getSection } from '../leagues';
+import { listWords } from '../format';
+import { LEAGUE_IDS, getLeague, getSection, isIndependentLeague } from '../leagues';
 import { failValidation } from '../schema-primitives';
 import { getTeamBySlug } from '../teams';
 import type { DivisionId, LeagueId, SectionId, TeamSlug } from '../types';
@@ -115,6 +116,20 @@ export function getUnavailableHistoryLeagues(): Array<{ id: LeagueId; entry: Una
   return getHistoryLeagues().filter(
     (x): x is { id: LeagueId; entry: UnavailableLeagueHistory } => x.entry.status === 'unavailable',
   );
+}
+
+/**
+ * "The LA independents are this site’s grouping, so no table of them was published.", or null with no such
+ * group: the unavailable groups of independents (DESIGN §24.9, §24.10) are said apart from the unavailable
+ * leagues, since nobody published a table of a group this site made. /history/2025-26's header
+ * (components/history/history-page-view.ts) and /about's archive paragraph
+ * (components/about/sections/SourcesSection.tsx) both print it.
+ */
+export function historyGroupsSentence(): string | null {
+  const groups = getUnavailableHistoryLeagues().filter((l) => isIndependentLeague(l.id));
+  return groups.length
+    ? `${listWords(groups.map((l) => `the ${getLeague(l.id).name}`)).replace(/^t/, 'T')} are this site’s grouping, so no table of them was published.`
+    : null;
 }
 
 export function hasHistory(leagueId: LeagueId): boolean {

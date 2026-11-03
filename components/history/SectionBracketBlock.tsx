@@ -8,7 +8,6 @@ import { getSection } from '../../lib/leagues';
 import ChampionCard from './ChampionCard';
 import HistoryBracket from './HistoryBracket';
 import { divisionChampion, finalLine, sideName } from './bracket-view';
-import { SEASON } from './history-page-view';
 
 /** The source line of a section's bracket block, in that section's words. */
 function BracketSources({ id, bracket }: { id: BracketSectionId; bracket: SectionBracket }) {
@@ -34,7 +33,16 @@ function BracketSources({ id, bracket }: { id: BracketSectionId; bracket: Sectio
   );
 }
 
-export default function SectionBracketBlock({ id, bracket }: { id: BracketSectionId; bracket: SectionBracket }) {
+export default function SectionBracketBlock({
+  id,
+  bracket,
+  season,
+}: {
+  id: BracketSectionId;
+  bracket: SectionBracket;
+  /** The archive's season ('2025-26'). */
+  season: string;
+}) {
   const section = getSection(id);
   const name = bracketSectionName(id);
   return (
@@ -42,7 +50,7 @@ export default function SectionBracketBlock({ id, bracket }: { id: BracketSectio
       <SectionHeader
         size="lg"
         kicker={`${section.shortName} playoffs · ${name}`}
-        meta={<span className="whitespace-nowrap">{SEASON}</span>}
+        meta={<span className="whitespace-nowrap">{season}</span>}
       />
       <div className={`mt-4 grid gap-3 sm:grid-cols-2 sm:gap-4 ${bracket.divisions.length > 2 ? 'lg:grid-cols-3' : ''}`}>
         {bracket.divisions.map((d) => {
@@ -64,10 +72,10 @@ export default function SectionBracketBlock({ id, bracket }: { id: BracketSectio
             as="h3"
             size="section"
             kicker={`${d.label} · bracket`}
-            meta={<span className="whitespace-nowrap">{SEASON}</span>}
+            meta={<span className="whitespace-nowrap">{season}</span>}
             className="mb-4"
           />
-          <HistoryBracket division={d} label={`${name} ${d.label} bracket, ${SEASON}`} />
+          <HistoryBracket division={d} label={`${name} ${d.label} bracket, ${season}`} />
         </section>
       ))}
 

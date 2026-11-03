@@ -1,14 +1,14 @@
 import SectionHeader from '../../ui/SectionHeader';
 import { getFetchedAt } from '../../../lib/data';
 import { formatStamp, plural } from '../../../lib/format';
-import type { AboutSectionProps } from '../about-view';
+import type { AboutFreshness } from '../about-view';
 
 /**
  * /about#freshness (and `#updates`, the anchor a "last updated" stamp links): the update cadence, the
  * last update's time, and the most recent run by source.
  */
-export function FreshnessSection({ view }: AboutSectionProps) {
-  const { counted, erroring } = view;
+export function FreshnessSection({ freshness }: { freshness: AboutFreshness }) {
+  const { counted, erroring } = freshness;
   return (
     <section id="freshness" className="mt-16">
       <span id="updates" className="block" />

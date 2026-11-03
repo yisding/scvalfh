@@ -3,11 +3,12 @@ import Link from 'next/link';
 import { independentsWords, SITE_SCOPE_NOTE } from '../../layout/site';
 import ExternalLink from '../../ui/ExternalLink';
 import SectionHeader from '../../ui/SectionHeader';
+import { capitalized } from '../../words/capitalized';
 import { getClubs } from '../../../lib/players/clubs';
 import { listWords, numberWord, plural } from '../../../lib/format';
 import { getLeague, getSection, isIndependentLeague } from '../../../lib/leagues';
 import { SOURCE_LINKS } from '../../../lib/season';
-import { isQuotedLeague, leagueRef, rulesDocument, type AboutSectionProps } from '../about-view';
+import { isQuotedLeague, leagueRef, rulesDocument, type AboutSources } from '../about-view';
 import { officialSourceLabel } from '../LeagueHealthCard';
 
 /**
@@ -18,7 +19,7 @@ import { officialSourceLabel } from '../LeagueHealthCard';
  * archive (`#history-coverage`), the club data (`#clubs-coverage`) and the college commitments
  * (`#commits-coverage`).
  */
-export function SourcesSection({ view }: AboutSectionProps) {
+export function SourcesSection({ sources }: { sources: AboutSources }) {
   const {
     counts,
     tabled,
@@ -32,15 +33,9 @@ export function SourcesSection({ view }: AboutSectionProps) {
     socalSections,
     leagues,
     officialFixtures,
-    historySeason,
-    historyAvailable,
-    historyUnavailableLeagues,
-    historyUnavailableGroups,
-    historyPublishedOnly,
-    historyPublishers,
-    historyPublishedDocs,
+    archive,
     commitCount,
-  } = view;
+  } = sources;
   return (
     <section id="sources">
       <SectionHeader size="lg" kicker="Data sources" />
@@ -278,7 +273,7 @@ export function SourcesSection({ view }: AboutSectionProps) {
               </dt>
               <dd className="m-0 mt-2 flex flex-1 flex-col text-body text-ink-2">
                 <span className="block">
-                  {`${rulesDocument(section)[0].toUpperCase()}${rulesDocument(section).slice(1)}`} sets the
+                  {capitalized(rulesDocument(section))} sets the
                   section&rsquo;s rules for {listWords(sectionLeagues.map(leagueRef))}; we found no league
                   rules, schedule or standings document for {noDocumentFor}
                   {sectionGroups.length > 0 ? ', and the independents play in no league' : ''}.{' '}
@@ -304,32 +299,30 @@ export function SourcesSection({ view }: AboutSectionProps) {
         &mdash; it is listed as scheduled per the league rather than silently dropped.
       </p>
       <p id="history-coverage" className="mt-stack max-w-prose text-meta text-ink-2">
-        Last season ({historySeason}): the{' '}
+        Last season ({archive.season}): the{' '}
         <Link href="/history/2025-26" prefetch={false} className="text-accent hover:underline">
-          {historySeason} archive
+          {archive.season} archive
         </Link>{' '}
         has final standings and all-league awards for{' '}
-        {listWords(historyAvailable.map((l) => getLeague(l.id).shortName))}, each from that
+        {listWords(archive.available.map((l) => getLeague(l.id).shortName))}, each from that
         league&rsquo;s own documents (SCVAL&rsquo;s two PDFs; BVAL&rsquo;s standings sheet and all-league
         documents), because MaxPreps only ever serves the current season.
-        {historyUnavailableLeagues.length > 0 ? (
+        {archive.unavailableLeagues.length > 0 ? (
           <>
             {' '}
-            {listWords(historyUnavailableLeagues.map((l) => getLeague(l.id).shortName))}{' '}
-            {historyUnavailableLeagues.length === 1 ? 'is' : 'are'} marked unavailable: we found no official{' '}
-            {historySeason} final standings, and we do not fill the gap with standings or awards from third-party
+            {listWords(archive.unavailableLeagues.map((l) => getLeague(l.id).shortName))}{' '}
+            {archive.unavailableLeagues.length === 1 ? 'is' : 'are'} marked unavailable: we found no official{' '}
+            {archive.season} final standings, and we do not fill the gap with standings or awards from third-party
             sites or newspapers.
           </>
         ) : null}
         {/* The independents are this site's grouping (DESIGN §24.10): said apart, not as a gap. */}
-        {historyUnavailableGroups.length > 0
-          ? ` ${listWords(historyUnavailableGroups.map((l) => `the ${getLeague(l.id).name}`)).replace(/^t/, 'T')} are this site’s grouping, so no table of them was published.`
-          : null}
-        {historyPublishedOnly.length > 0 ? (
+        {archive.groupsSentence ? ` ${archive.groupsSentence}` : null}
+        {archive.publishedOnly.length > 0 ? (
           <>
             {' '}
-            The archive links what {listWords([...historyPublishers.keys()])} did publish officially (
-            {listWords(historyPublishedDocs)}), without reproducing it.
+            The archive links what {listWords([...archive.publishers.keys()])} did publish officially (
+            {listWords(archive.publishedDocs)}), without reproducing it.
           </>
         ) : null}
       </p>

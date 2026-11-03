@@ -6,14 +6,14 @@ import { dateWithYear, timeOfDayPT } from '../../../lib/format';
 import { CCS } from '../../../lib/league-config/sections';
 import { getLeague, isIndependentLeague } from '../../../lib/leagues';
 import { SOURCE_LINKS } from '../../../lib/season';
-import type { AboutSectionProps } from '../about-view';
+import type { AboutPostseason } from '../about-view';
 
 /**
  * /about#playoffs: the CCS field, each section's postseason in a paragraph (a league tournament, the
  * EAL's Super Regional, the Southern California postseasons from config), and the CCS key dates.
  */
-export function PostseasonSection({ view }: AboutSectionProps) {
-  const { field, leagues, tournamentIds, sections, unbracketed, playoffs, ccsCalendar, keyDatesConfirmed } = view;
+export function PostseasonSection({ postseason }: { postseason: AboutPostseason }) {
+  const { field, leagues, tournamentIds, sections, unbracketed, playoffs, ccsCalendar, keyDatesConfirmed } = postseason;
   return (
     <section id="playoffs" className="mt-16">
       <SectionHeader size="lg" kicker="Postseason" />

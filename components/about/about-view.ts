@@ -22,8 +22,20 @@ import {
 } from '../../lib/data';
 import type { LeagueSummary } from '../../lib/data';
 import { listWords, numberWord } from '../../lib/format';
-import { getAvailableHistoryLeagues, getHistorySeason, getUnavailableHistoryLeagues } from '../../lib/history/history';
+import {
+  getAvailableHistoryLeagues,
+  getHistorySeason,
+  getUnavailableHistoryLeagues,
+  historyGroupsSentence,
+  type AvailableLeagueHistory,
+  type UnavailableLeagueHistory,
+} from '../../lib/history/history';
 import { getJvCorrections, getJvFile, getJvMerge, getJvSchoolSiteMerge, getJvTables } from '../../lib/jv/jv';
+import type { JvCorrectionResult } from '../../lib/jv/jv-corrections';
+import type { JvMergeResult } from '../../lib/jv/jv-merge';
+import type { JvFile } from '../../lib/jv/jv-schema';
+import type { JvSchoolSiteMergeResult } from '../../lib/jv/jv-school-sites';
+import type { JvDivisionTable } from '../../lib/jv/jv-standings';
 import type { LeagueConfig, SectionConfig } from '../../lib/league-config/shape';
 import {
   UNBRACKETED_LEAGUE_IDS,
@@ -34,22 +46,292 @@ import {
   regionOf,
 } from '../../lib/leagues';
 import { crossCheckSkipReason } from '../../lib/standings';
-import type { CrossCheckRow, DroppedContest, SourceStatus } from '../../lib/types';
-import type { CrossCheckGroup } from './CrossCheckTable';
-import type { HealthDivision } from './LeagueHealthCard';
+import type {
+  BackfillRow,
+  CcsCalendarEvent,
+  CcsPlayoffs,
+  CifssCrossCheck,
+  CrossCheckRow,
+  DroppedContest,
+  LeagueHealth,
+  LeagueId,
+  OfficialFixture,
+  OfficialSourceId,
+  SbliveCrossCheck,
+  Snapshot,
+  SourceStatus,
+  Team,
+} from '../../lib/types';
 
 /**
  * What /about (app/about/page.tsx) says, read once: `buildAboutView()` makes every data read the page's
  * top level made, in the same order, and works out each sentence and list that more than one section
  * reads or that is more than a lookup (the per-league source, rules, health and cross-check entries,
- * the NorCal and Southern California no-document sentences, the JV and 2025-26 archive counts). The
- * sections under components/about/sections/ take the whole view (`AboutSectionProps`) and print it;
+ * the NorCal and Southern California no-document sentences, the JV and 2025-26 archive counts). The view
+ * is one slice per consumer (`AboutView`): each section under components/about/sections/ takes its own
+ * slice, or the shared one it prints (the shootout sections, the no-document sentences), and prints it;
  * the reads that sit inside a sentence (`getClubs()`, `getFetchedAt()`, a team's name) stay in theirs.
+ * The shapes the cross-check table and the health card draw (`CrossCheckGroup`, `HealthDivision`) are
+ * declared here, so the view model imports no component.
  *
  * The helpers beside it are the page's own wording rules: how a sentence names a section's rules
- * document (`rulesDocument`) and a league (`leagueRef`), the jump list (`toc`), a dropped contest's
+ * document (`rulesDocument`) and a league (`leagueRef`), the jump list (`jumpListOf`), a dropped contest's
  * reason in words, and which league's by-laws are quoted verbatim (`isQuotedLeague`).
  */
+
+// ---------------------------------------------------------------- the view's shapes
+
+/** One team's group in a cross-check table (components/about/CrossCheckTable.tsx). */
+export interface CrossCheckGroup {
+  team: Team;
+  /** The one-sentence summary from `Standing.mismatchDetail`, when the snapshot carries one. */
+  detail?: string;
+  /** The field-by-field rows for this team from `snapshot.crossCheck`. */
+  rows: CrossCheckRow[];
+}
+
+/** One division's line on a league's health card (components/about/LeagueHealthCard.tsx). */
+export interface HealthDivision {
+  id: string;
+  /** Division heading, or null for a single-division league (no division label). */
+  heading: string | null;
+  /**
+   * MaxPreps league standings page, or null where MaxPreps publishes no table for the division (the San
+   * Diego Section's Valley: lib/leagues.ts leagueStandingsUrl). The card then says so, and that the
+   * cross-check is skipped, instead of linking anything.
+   */
+  maxprepsUrl: string | null;
+  /** Why there is no table (lib/standings.ts crossCheckSkipReason); null when there is one. */
+  skipReason?: string | null;
+  /**
+   * The division's standings rows that carry MaxPreps' reported record: the member rows its table
+   * matched, read this run or carried. Counted from the standings rather than taken from the stored
+   * `reportedRows`, which a snapshot written before 2026-10-04 counted with MaxPreps' extra
+   * non-member row (EAL: Red Bluff).
+   */
+  memberRows: number;
+  knownCause: string | null;
+  official:
+    | {
+        source: OfficialSourceId;
+        url: string;
+        /** 'live-pdf' = read every run; 'bundled' = our transcription, sha256-checked against upstream. */
+        mode: 'live-pdf' | 'bundled';
+        revisedOn: string | null;
+      }
+    | {
+        /** The league publishes no schedule (EAL, the Sunset, the San Diego leagues). */
+        mode: 'none';
+        /** `DivisionConfig.official.note`: where its league games come from instead. */
+        note: string;
+      };
+}
+
+/** The page header's lede (app/about/page.tsx). */
+export interface AboutLede {
+  /** Every team on the site. */
+  teams: number;
+  /** 'SCVAL, BVAL, …, Metro and the Southern Section’s five independents': the leagues, then each group by name. */
+  leagueWords: string;
+}
+
+/** One entry of the jump list (components/about/AboutJumpList.tsx); a league's rules entry carries its region. */
+export interface JumpListItem {
+  id: string;
+  label: string;
+  region?: LeagueSummary['region'];
+}
+
+/** A league and its config: what its rules block (`#rules-<league>`) prints. */
+export interface LeagueRulesEntry {
+  summary: LeagueSummary;
+  config: LeagueConfig;
+}
+
+/** A league's source card on /about#sources. */
+export interface LeagueSourceCard extends LeagueRulesEntry {
+  /** No division of it publishes a schedule document (`official.mode: 'none'`: the EAL, the Southern California leagues). */
+  noDocument: boolean;
+  /** Its divisions' `official.note`s, once each: where its league games come from instead. */
+  officialNotes: string[];
+}
+
+/** Last season's archive, in /about#history-coverage. */
+export interface AboutArchive {
+  season: string;
+  available: Array<{ id: LeagueId; entry: AvailableLeagueHistory }>;
+  /** The leagues we found no official final standings for (not the groups of independents). */
+  unavailableLeagues: Array<{ id: LeagueId; entry: UnavailableLeagueHistory }>;
+  /** The groups of independents, said apart (lib/history/history.ts `historyGroupsSentence`), or null. */
+  groupsSentence: string | null;
+  /** The unavailable leagues that published something officially (MCAL's all-league team, the San Diego bracket sheet). */
+  publishedOnly: Array<{ id: LeagueId; entry: UnavailableLeagueHistory }>;
+  /** Those documents by publisher ('MCAL', 'the San Diego Section'), each keyed by URL, once. */
+  publishers: Map<string, Map<string, string>>;
+  /** The documents' labels, once each. */
+  publishedDocs: string[];
+}
+
+/** /about#sources (components/about/sections/SourcesSection.tsx). */
+export interface AboutSources {
+  counts: Snapshot['counts'];
+  /** The leagues proper, and the groups of independents (the LA independents, DESIGN §24.10). */
+  tabled: LeagueSummary[];
+  independentGroups: LeagueSummary[];
+  /** Every league and group, in config order. */
+  leagues: LeagueSummary[];
+  perLeague: LeagueSourceCard[];
+  officialStandingsPdfUrl: string | null | undefined;
+  field: CcsField;
+  /** The section that holds no field hockey championship (the NCS). */
+  ncs: SectionConfig | undefined;
+  /** The leagues whose postseason is an unbracketed tournament (the EAL's Super Regional), and their sections. */
+  unbracketed: LeagueSummary[];
+  unbracketedSections: SectionConfig[];
+  /** Every Southern California section with a league in it: each gets its own rules card. */
+  socalSections: SectionConfig[];
+  officialFixtures: OfficialFixture[];
+  archive: AboutArchive;
+  commitCount: number;
+}
+
+/** /about#standings (components/about/sections/StandingsSection.tsx). */
+export interface AboutStandings {
+  tabled: LeagueSummary[];
+  /** Leagues that use their points only to decide a title and publish no standings (EAL). */
+  titleOnly: LeagueSummary[];
+  tableOrdered: LeagueSummary[];
+  /** Leagues that publish no points rule or standings (the Sunset, the San Diego leagues): this site's 3-1-0. */
+  siteOrdered: LeagueSummary[];
+  /** Every league that publishes its points rule. */
+  ruleLeagues: LeagueSummary[];
+  /** A division MaxPreps publishes no table for (crossCheckSkipReason), whose cross-check is skipped. */
+  anyTableless: boolean;
+  perLeague: LeagueRulesEntry[];
+}
+
+/** One league's card on /about#health (components/about/sections/HealthSection.tsx). */
+export interface LeagueHealthEntry {
+  summary: LeagueSummary;
+  health: LeagueHealth;
+  healthDivisions: HealthDivision[];
+  /** Contests the pipeline removed on purpose that involve this league's teams. */
+  dropped: number;
+  /** Source rows for this league that were stale or failed in the last run (`status` 'failed' or 'stale'). */
+  problems: Array<{ label: string; status: string; error?: string }>;
+}
+
+/** One league's cross-check on /about#cross-check (components/about/sections/CrossCheckSection.tsx). */
+export interface LeagueCrossCheckEntry {
+  summary: LeagueSummary;
+  plainGroups: CrossCheckGroup[];
+  /** The rows with a known cause, under the cause. */
+  causeGroups: Array<{ cause: string; groups: CrossCheckGroup[] }>;
+  /** Replaces the agreement sentence where agreement must not be claimed (CrossCheckTable `emptyText`). */
+  emptyText: string | null;
+}
+
+/** /about#cross-check. */
+export interface AboutCrossCheck {
+  perLeague: LeagueCrossCheckEntry[];
+  sbliveCross: SbliveCrossCheck | undefined;
+  cifssCross: CifssCrossCheck | undefined;
+}
+
+/**
+ * A section whose level varsity games end in a shootout (SectionConfig.shootout), with its leagues: one item
+ * of /about#conventions and one sentence of /about#backfills each.
+ */
+export interface ShootoutSection {
+  section: SectionConfig;
+  leagues: LeagueSummary[];
+}
+
+/** /about#jv (components/about/sections/JvSection.tsx): the JV file, its merges and corrections, and its tables. */
+export interface AboutJv {
+  file: JvFile;
+  merge: JvMergeResult;
+  school: JvSchoolSiteMergeResult;
+  corrections: JvCorrectionResult;
+  /** The JV tables shown. */
+  shown: JvDivisionTable[];
+  /** JV games between two schools of one division with no varsity counterpart, over every table. */
+  uncounted: number;
+}
+
+/** /about#freshness (components/about/sections/FreshnessSection.tsx): the last run, by source status. */
+export interface AboutFreshness {
+  counted: Record<SourceStatus['status'], number>;
+  erroring: SourceStatus[];
+}
+
+/** /about#playoffs (components/about/sections/PostseasonSection.tsx). */
+export interface AboutPostseason {
+  field: CcsField;
+  leagues: LeagueSummary[];
+  sections: readonly SectionConfig[];
+  /** The leagues that run a league tournament (MCAL). */
+  tournamentIds: ReadonlySet<LeagueId>;
+  unbracketed: LeagueSummary[];
+  playoffs: CcsPlayoffs;
+  ccsCalendar: readonly CcsCalendarEvent[] | undefined;
+  keyDatesConfirmed: boolean | undefined;
+}
+
+/**
+ * The leagues that publish no schedule or standings, in the sentences /about#contact and /about#not-affiliated
+ * both print. NorCal's (the EAL's) are unchanged word for word; the Southern California leagues get their own.
+ */
+export interface AboutNoDocument {
+  norcal: {
+    leagues: LeagueSummary[];
+    /** 'the EAL' */
+    who: string;
+    /** 'the Northern Section’s Field Hockey Guidelines' */
+    guidelines: string;
+  };
+  socal: {
+    leagues: LeagueSummary[];
+    /** 'the Sunset, City, North County and Metro' */
+    who: string;
+    /** Their sections' rules documents (`rulesDocument`). */
+    rulesDocuments: string;
+    /** The disclaimer's sentence: this site's tables are its own count, and what decides anything competitive. */
+    competitive: string;
+  };
+}
+
+/** /about#not-affiliated (components/about/sections/NotAffiliatedSection.tsx): every league and section, by name. */
+export interface AboutDisclaimer {
+  tabled: LeagueSummary[];
+  sections: readonly SectionConfig[];
+}
+
+/** Everything /about prints that is read from the data, one slice per consumer; see the module comment. */
+export interface AboutView {
+  lede: AboutLede;
+  jumpList: JumpListItem[];
+  sources: AboutSources;
+  standings: AboutStandings;
+  health: LeagueHealthEntry[];
+  /** Shared by /about#conventions and /about#backfills. */
+  shootoutSections: ShootoutSection[];
+  crossCheck: AboutCrossCheck;
+  /** Every score taken from si.com (/about#backfills). */
+  backfilled: BackfillRow[];
+  jv: AboutJv;
+  /** Every contest the last update left out on purpose (/about#dropped). */
+  dropped: readonly DroppedContest[];
+  freshness: AboutFreshness;
+  postseason: AboutPostseason;
+  /** Shared by /about#contact and /about#not-affiliated. */
+  noDocument: AboutNoDocument;
+  disclaimer: AboutDisclaimer;
+}
+
+type CcsField = ReturnType<typeof getCcsField>;
+
+// ---------------------------------------------------------------- wording rules
 
 /**
  * How a sentence names a section's rules document: 'the CIF Northern Section’s Field Hockey Guidelines
@@ -74,7 +356,7 @@ export function leagueRef(summary: Pick<LeagueSummary, 'id' | 'name' | 'shortNam
 }
 
 /** The jump list; a league's rules entry carries its region, so the reader's region's entries show. */
-export function toc(leagues: readonly LeagueSummary[]): Array<{ id: string; label: string; region?: LeagueSummary['region'] }> {
+function jumpListOf(leagues: readonly LeagueSummary[]): JumpListItem[] {
   return [
     { id: 'sources', label: 'Data sources' },
     { id: 'standings', label: 'Standings, points & tiebreaks' },
@@ -137,8 +419,10 @@ export function isQuotedLeague(league: LeagueConfig): boolean {
   return league.rules.matcher === 'legacy';
 }
 
+// ---------------------------------------------------------------- the view
+
 /** Everything /about prints that is read from the data; see the module comment. */
-export function buildAboutView() {
+export function buildAboutView(): AboutView {
   const counts = getCounts();
   const sources = getSources();
   const counted = statusCounts(sources);
@@ -278,7 +562,7 @@ export function buildAboutView() {
   });
   const socalCompetitive = `For ${socalNoDocumentWho}, which publish no standings, this site’s tables are its own count: ${listWords(socalSectionFacts)}.`;
 
-  const TOC = toc(leagues);
+  const jumpList = jumpListOf(leagues);
   const jvFile = getJvFile();
   const jvMerge = getJvMerge();
   const jvSchool = getJvSchoolSiteMerge();
@@ -297,7 +581,7 @@ export function buildAboutView() {
   // A league we found no standings for, and a group that never had a table (the Southern Section
   // independents, DESIGN §24.9): the coverage paragraph says each its own way.
   const historyUnavailableLeagues = historyUnavailable.filter((l) => !isIndependentLeague(l.id));
-  const historyUnavailableGroups = historyUnavailable.filter((l) => isIndependentLeague(l.id));
+  const historyGroups = historyGroupsSentence();
   const historyPublishedOnly = historyUnavailable.filter((l) => (l.entry.alsoPublished?.length ?? 0) > 0);
   // What was published officially, by PUBLISHER and once per document: a league with no site of its own
   // links its section's document (the San Diego Section's 2025 bracket sheet for City, North County and
@@ -318,69 +602,73 @@ export function buildAboutView() {
   ];
 
   return {
-    counts,
-    counted,
-    erroring,
-    leagues,
-    tabled,
-    independentGroups,
-    sections,
-    commitCount,
-    sbliveCross,
-    cifssCross,
-    backfilled,
-    dropped,
-    officialFixtures,
-    officialStandingsPdfUrl,
-    ccsCalendar,
-    keyDatesConfirmed,
-    playoffs,
-    field,
-    tournamentIds,
-    ncs,
-    unbracketed,
-    unbracketedSections,
-    titleOnly,
-    tableOrdered,
-    siteOrdered,
-    anyTableless,
-    ruleLeagues,
+    lede: { teams: counts.teams, leagueWords },
+    jumpList,
+    sources: {
+      counts,
+      tabled,
+      independentGroups,
+      leagues,
+      perLeague: perLeague.map(({ summary, config, noDocument, officialNotes }) => ({ summary, config, noDocument, officialNotes })),
+      officialStandingsPdfUrl,
+      field,
+      ncs,
+      unbracketed,
+      unbracketedSections,
+      socalSections,
+      officialFixtures,
+      archive: {
+        season: historySeason,
+        available: historyAvailable,
+        unavailableLeagues: historyUnavailableLeagues,
+        groupsSentence: historyGroups,
+        publishedOnly: historyPublishedOnly,
+        publishers: historyPublishers,
+        publishedDocs: historyPublishedDocs,
+      },
+      commitCount,
+    },
+    standings: {
+      tabled,
+      titleOnly,
+      tableOrdered,
+      siteOrdered,
+      ruleLeagues,
+      anyTableless,
+      perLeague: perLeague.map(({ summary, config }) => ({ summary, config })),
+    },
+    health: perLeague.map(({ summary, health, healthDivisions, dropped: leagueDropped, problems }) => ({
+      summary,
+      health,
+      healthDivisions,
+      dropped: leagueDropped.length,
+      problems,
+    })),
     shootoutSections,
-    socalSections,
-    perLeague,
-    noDocumentLeagues,
-    noDocumentWho,
-    noDocumentGuidelines,
-    socalNoDocument,
-    socalNoDocumentWho,
-    socalRulesDocuments,
-    socalCompetitive,
-    toc: TOC,
-    jvFile,
-    jvMerge,
-    jvSchool,
-    jvCorrections,
-    jvShown,
-    jvUncounted,
-    leagueWords,
-    historySeason,
-    historyAvailable,
-    historyUnavailableLeagues,
-    historyUnavailableGroups,
-    historyPublishedOnly,
-    historyPublishers,
-    historyPublishedDocs,
+    crossCheck: {
+      perLeague: perLeague.map(({ summary, plainGroups, causeGroups, emptyText }) => ({ summary, plainGroups, causeGroups, emptyText })),
+      sbliveCross,
+      cifssCross,
+    },
+    backfilled,
+    jv: { file: jvFile, merge: jvMerge, school: jvSchool, corrections: jvCorrections, shown: jvShown, uncounted: jvUncounted },
+    dropped,
+    freshness: { counted, erroring },
+    postseason: { field, leagues, sections, tournamentIds, unbracketed, playoffs, ccsCalendar, keyDatesConfirmed },
+    noDocument: {
+      norcal: { leagues: noDocumentLeagues, who: noDocumentWho, guidelines: noDocumentGuidelines },
+      socal: {
+        leagues: socalNoDocument,
+        who: socalNoDocumentWho,
+        rulesDocuments: socalRulesDocuments,
+        competitive: socalCompetitive,
+      },
+    },
+    disclaimer: { tabled, sections },
   };
 }
 
-export type AboutView = ReturnType<typeof buildAboutView>;
-
 /** 'EAL' (a one-league section names its league) | 'San Diego Section' (several name the section). */
-export function shootoutTeamsWho(g: AboutView['shootoutSections'][number]): string {
+export function shootoutTeamsWho(g: ShootoutSection): string {
   return g.leagues.length === 1 ? g.leagues[0].shortName : g.section.name;
-}
-
-/** Every /about section takes the whole view. */
-export interface AboutSectionProps {
-  view: AboutView;
 }

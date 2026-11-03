@@ -2,7 +2,8 @@ import Link from 'next/link';
 
 import ExternalLink from '../ui/ExternalLink';
 import TeamMonogram from '../ui/TeamMonogram';
-import type { CrossCheckRow, Team } from '../../lib/types';
+
+import type { CrossCheckGroup } from './about-view';
 
 /**
  * The published MaxPreps STANDINGS cross-check (DESIGN §9, /about#cross-check), for one scope —
@@ -21,14 +22,6 @@ import type { CrossCheckRow, Team } from '../../lib/types';
  * content and no scrollable data table, so the link moved up to the team's own line, where it is
  * said once and reads better.
  */
-export interface CrossCheckGroup {
-  team: Team;
-  /** The one-sentence summary from `Standing.mismatchDetail`, when the snapshot carries one. */
-  detail?: string;
-  /** The field-by-field rows for this team from `snapshot.crossCheck`. */
-  rows: CrossCheckRow[];
-}
-
 export interface CrossCheckTableProps {
   groups: CrossCheckGroup[];
   /** Teams in scope (a league, or the whole site): "all <n> teams" in the agreement sentence. */

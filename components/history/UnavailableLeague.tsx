@@ -13,9 +13,16 @@ import { TOC } from '../../lib/league-config/sections';
 import { getLeague, getSection, isIndependentLeague, regionOf } from '../../lib/leagues';
 import type { LeagueId } from '../../lib/types';
 
-import { SEASON } from './history-page-view';
-
-export default function UnavailableLeague({ leagueId, entry }: { leagueId: LeagueId; entry: UnavailableLeagueHistory }) {
+export default function UnavailableLeague({
+  leagueId,
+  entry,
+  season,
+}: {
+  leagueId: LeagueId;
+  entry: UnavailableLeagueHistory;
+  /** The archive's season ('2025-26'). */
+  season: string;
+}) {
   const league = getLeague(leagueId);
   // A league with no website of its own (EAL) links its section's field hockey page instead.
   const ownSite = league.officialUrl !== getSection(league.sectionId).officialUrl;
@@ -36,7 +43,7 @@ export default function UnavailableLeague({ leagueId, entry }: { leagueId: Leagu
       <SectionHeader
         size="lg"
         kicker={`${league.shortName} · ${league.name}`}
-        meta={<span className="whitespace-nowrap">{SEASON}</span>}
+        meta={<span className="whitespace-nowrap">{season}</span>}
       />
       <div className="sx-card mt-4 p-4 sm:p-5">
         <p className="m-0 text-lead text-ink">Unavailable</p>

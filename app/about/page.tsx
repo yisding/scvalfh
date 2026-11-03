@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 
-import AboutToc from '../../components/about/AboutToc';
+import AboutJumpList from '../../components/about/AboutJumpList';
 import { buildAboutView } from '../../components/about/about-view';
 import BackfillsSection from '../../components/about/sections/BackfillsSection';
 import ContactSection from '../../components/about/sections/ContactSection';
@@ -46,8 +46,8 @@ import { OG_BASE, ROOT_OG_IMAGE } from '../../components/layout/site';
  *
  * The page is a composition: components/about/about-view.ts reads the data once (`buildAboutView()`, in
  * the order the page always read it) and works out the sentences more than one section shares; each
- * `<section>` is a server component under components/about/sections/, in page order, taking the view;
- * a league's rules block is components/about/LeagueRules.tsx and the jump list AboutToc.
+ * `<section>` is a server component under components/about/sections/, in page order, taking its slice of
+ * the view; a league's rules block is components/about/LeagueRules.tsx and the jump list AboutJumpList.
  */
 
 const DESCRIPTION =
@@ -65,7 +65,7 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
   const view = buildAboutView();
-  const { counts, leagueWords } = view;
+  const { teams, leagueWords } = view.lede;
 
   return (
     // Three grid children, placed explicitly, so ONE DOM order serves both breakpoints
@@ -75,31 +75,31 @@ export default function AboutPage() {
       <PageHeader
         className="lg:col-start-1 lg:row-start-1"
         title="About & sources"
-        description={`${DESCRIPTION} This is an unofficial, fan-built scoreboard for the ${counts.teams} girls varsity field hockey teams in ${leagueWords}. Every number on it is either read from a public source and shown as-is, or computed from public game results by rules published below. Nothing is guessed, and every disagreement we find with a source is published rather than quietly resolved.`}
+        description={`${DESCRIPTION} This is an unofficial, fan-built scoreboard for the ${teams} girls varsity field hockey teams in ${leagueWords}. Every number on it is either read from a public source and shown as-is, or computed from public game results by rules published below. Nothing is guessed, and every disagreement we find with a source is published rather than quietly resolved.`}
       />
 
-      <AboutToc variant="disclosure" items={view.toc} />
+      <AboutJumpList variant="disclosure" items={view.jumpList} />
 
-      <AboutToc variant="rail" items={view.toc} />
+      <AboutJumpList variant="rail" items={view.jumpList} />
 
       <div className="mt-8 md:mt-10 lg:col-start-1 lg:row-start-2">
         {/* The region control (DESIGN-socal §2.4): the first row of the content column, so the page's
             three-child grid keeps its placement. Each league's source card, rules, health card and
             cross-check carry its region's `data-region-scope`; the site-wide sections show for both. */}
         <RegionSwitcher className="mb-8" />
-        <SourcesSection view={view} />
-        <StandingsSection view={view} />
-        <HealthSection view={view} />
-        <ConventionsSection view={view} />
-        <CrossCheckSection view={view} />
-        <BackfillsSection view={view} />
-        <JvSection view={view} />
-        <DroppedSection view={view} />
-        <FreshnessSection view={view} />
-        <PostseasonSection view={view} />
+        <SourcesSection sources={view.sources} />
+        <StandingsSection standings={view.standings} />
+        <HealthSection leagues={view.health} />
+        <ConventionsSection shootoutSections={view.shootoutSections} />
+        <CrossCheckSection crossCheck={view.crossCheck} />
+        <BackfillsSection backfilled={view.backfilled} shootoutSections={view.shootoutSections} />
+        <JvSection jv={view.jv} />
+        <DroppedSection dropped={view.dropped} />
+        <FreshnessSection freshness={view.freshness} />
+        <PostseasonSection postseason={view.postseason} />
         <PrivacySection />
-        <ContactSection view={view} />
-        <NotAffiliatedSection view={view} />
+        <ContactSection noDocument={view.noDocument} />
+        <NotAffiliatedSection disclaimer={view.disclaimer} noDocument={view.noDocument} />
       </div>
     </div>
   );

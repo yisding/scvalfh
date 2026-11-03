@@ -14,7 +14,7 @@ import {
   SEASON,
   TOURNAMENTS,
   UNAVAILABLE_SUBJECT,
-  short,
+  leagueShortName,
 } from '../../../components/history/history-page-view';
 import { RegionSwitcher } from '../../../components/prefs/LeagueSwitcher';
 import PageHeader from '../../../components/layout/PageHeader';
@@ -57,7 +57,7 @@ const PAGE_TITLE = `${SEASON} final standings`;
 export const metadata: Metadata = {
   title: PAGE_TITLE,
   description:
-    `Final ${listWords(AVAILABLE.map((l) => short(l.id)))} girls field hockey standings` +
+    `Final ${listWords(AVAILABLE.map((l) => leagueShortName(l.id)))} girls field hockey standings` +
     ` and all-league awards from the ${SEASON} season, from each league’s own documents, and` +
     ` ${BRACKET_WORDS}.` +
     (UNAVAILABLE_SUBJECT
@@ -72,7 +72,7 @@ export default function HistoryPage() {
   // Each pill is region-scoped (DESIGN-socal §2.4): the reader's region's leagues only.
   // A section's bracket pill follows its last league's, as the block does.
   const tabs = HISTORY_LEAGUES.flatMap(({ id }) => [
-    { href: `#${id}`, label: short(id), region: regionOf(id) },
+    { href: `#${id}`, label: leagueShortName(id), region: regionOf(id) },
     ...BRACKETS.filter((b) => b.afterLeague === id).map((b) => ({
       href: `#${b.id}`,
       label: `${getSection(b.id).shortName} playoffs`,
@@ -84,7 +84,7 @@ export default function HistoryPage() {
       region: regionOf(id),
     })),
   ]);
-  const available = listWords(AVAILABLE.map((l) => short(l.id)));
+  const available = listWords(AVAILABLE.map((l) => leagueShortName(l.id)));
 
   return (
     // The sticky table heads park under the 48px top bar plus the 48px jump bar on a phone
@@ -121,15 +121,15 @@ export default function HistoryPage() {
       <div className="mt-8 grid gap-y-section md:mt-10 md:gap-y-section-lg">
         {HISTORY_LEAGUES.flatMap(({ id, entry }) => [
           entry.status === 'available' ? (
-            <AvailableLeague key={id} leagueId={id} entry={entry} />
+            <AvailableLeague key={id} leagueId={id} entry={entry} season={SEASON} />
           ) : (
-            <UnavailableLeague key={id} leagueId={id} entry={entry} />
+            <UnavailableLeague key={id} leagueId={id} entry={entry} season={SEASON} />
           ),
           ...BRACKETS.filter((b) => b.afterLeague === id).map((b) => (
-            <SectionBracketBlock key={b.id} id={b.id} bracket={b.bracket} />
+            <SectionBracketBlock key={b.id} id={b.id} bracket={b.bracket} season={SEASON} />
           )),
           ...TOURNAMENTS.filter((t) => t.afterLeague === id).map((t) => (
-            <TournamentBracketBlock key={t.id} bracket={t.bracket} leagues={t.leagues} />
+            <TournamentBracketBlock key={t.id} bracket={t.bracket} leagues={t.leagues} season={SEASON} />
           )),
         ])}
       </div>

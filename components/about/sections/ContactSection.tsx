@@ -1,20 +1,13 @@
 import { DATA_CORRECTIONS_URL } from '../../layout/site';
 import ExternalLink from '../../ui/ExternalLink';
 import SectionHeader from '../../ui/SectionHeader';
-import type { AboutSectionProps } from '../about-view';
+import type { AboutNoDocument } from '../about-view';
 
 /**
  * /about#contact (and `#corrections`): where to send a correction, and what to check first.
  */
-export function ContactSection({ view }: AboutSectionProps) {
-  const {
-    noDocumentLeagues,
-    noDocumentWho,
-    noDocumentGuidelines,
-    socalNoDocument,
-    socalNoDocumentWho,
-    socalRulesDocuments,
-  } = view;
+export function ContactSection({ noDocument }: { noDocument: AboutNoDocument }) {
+  const { norcal, socal } = noDocument;
   return (
     <section id="contact" className="mt-16">
       <span id="corrections" className="block" />
@@ -32,9 +25,9 @@ export function ContactSection({ view }: AboutSectionProps) {
           Before posting, it is worth comparing against the primary source &mdash; every team,
           standings table and game on this site links back to its MaxPreps page, and the league
           documents above link straight to each league&rsquo;s own files
-          {noDocumentLeagues.length > 0 && `, or, for ${noDocumentWho}, to ${noDocumentGuidelines}`}
-          {socalNoDocument.length > 0 &&
-            `; for ${socalNoDocumentWho}, which publish no schedule or standings, they link ${socalRulesDocuments}`}
+          {norcal.leagues.length > 0 && `, or, for ${norcal.who}, to ${norcal.guidelines}`}
+          {socal.leagues.length > 0 &&
+            `; for ${socal.who}, which publish no schedule or standings, they link ${socal.rulesDocuments}`}
           . Most
           scores here come from MaxPreps, so if MaxPreps has it wrong too, the school can correct it
           there and the next update picks it up. If a number here disagrees with one of those

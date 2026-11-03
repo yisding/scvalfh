@@ -1,12 +1,11 @@
 import SectionHeader from '../../ui/SectionHeader';
-import type { AboutSectionProps } from '../about-view';
+import type { ShootoutSection } from '../about-view';
 
 /**
  * /about#conventions: how a score is shown, with one item per section whose level games end in a
  * shootout (SectionConfig.shootout).
  */
-export function ConventionsSection({ view }: AboutSectionProps) {
-  const { shootoutSections } = view;
+export function ConventionsSection({ shootoutSections }: { shootoutSections: readonly ShootoutSection[] }) {
   return (
     <section id="conventions" className="mt-16">
       <SectionHeader size="lg" kicker="How a score is shown" />

@@ -1,4 +1,4 @@
-import type { AboutView } from './about-view';
+import type { JumpListItem } from './about-view';
 
 /**
  * The /about jump list, rendered twice as two of the page's grid children (DESIGN §10.5): the "On this
@@ -6,7 +6,7 @@ import type { AboutView } from './about-view';
  * `lg` (`variant="rail"`). Each entry carries its league's region (`data-region-scope`), so the reader's
  * region's rules entries show.
  */
-export function AboutToc({ items, variant }: { items: AboutView['toc']; variant: 'disclosure' | 'rail' }) {
+export function AboutJumpList({ items, variant }: { items: readonly JumpListItem[]; variant: 'disclosure' | 'rail' }) {
   if (variant === 'disclosure') {
     return (
       <details data-twin className="sx-inset sx-disclosure mt-8 lg:hidden">
@@ -47,4 +47,4 @@ export function AboutToc({ items, variant }: { items: AboutView['toc']; variant:
   );
 }
 
-export default AboutToc;
+export default AboutJumpList;

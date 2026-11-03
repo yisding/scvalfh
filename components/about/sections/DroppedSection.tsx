@@ -1,12 +1,12 @@
 import SectionHeader from '../../ui/SectionHeader';
 import { plural, shortDate } from '../../../lib/format';
-import { DROP_REASON_WORDS, type AboutSectionProps } from '../about-view';
+import type { DroppedContest } from '../../../lib/types';
+import { DROP_REASON_WORDS } from '../about-view';
 
 /**
  * /about#dropped: every contest the most recent update left out on purpose, with its reason.
  */
-export function DroppedSection({ view }: AboutSectionProps) {
-  const { dropped } = view;
+export function DroppedSection({ dropped }: { dropped: readonly DroppedContest[] }) {
   return (
     <section id="dropped" className="mt-16">
       <SectionHeader size="lg" kicker="Dropped contests" meta={plural(dropped.length, 'contest', 'contests')} />
