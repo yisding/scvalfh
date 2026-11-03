@@ -19,6 +19,7 @@ import { matchupJoiner } from '../../lib/format';
 import { DEFAULT_REGION, LEAGUES, REGIONS, findDivision, regionOf } from '../../lib/leagues';
 import { getTeamBySlug } from '../../lib/teams';
 import type { Game, LeagueId, RegionId } from '../../lib/types';
+import { getBracketLink } from '../playoffs/bracket-link';
 import { describeGame, postseasonTagOf } from '../ui/describe-game';
 import { gameWord, plural } from '../ui/plural';
 
@@ -139,12 +140,34 @@ export function dayDescription(games: readonly Game[], longDateText: string): st
  * (`section-playoffs` between two San Diego conferences, `ccs` between two leagues; lib/classify.ts).
  * The name is `postseasonTagOf(game)`, the chip's own words, so the heading and the chip cannot disagree;
  * a tag with no name ('other') has no event and falls to Non-league as before.
+ *
+ * A CCS game is always the event's, filed by its division once the bracket proves it ('CCS Division 2',
+ * components/playoffs/bracket-link.ts), whatever leagues its sides are in (2026-11-03): St. Ignatius v Valley
+ * Christian, two SCVAL schools, sat apart under "SCVAL · 1 postseason game" from the other seven quarterfinals.
  */
 function eventOf(game: Game): string | null {
   const tag = game.postseason;
   if (game.countsFor !== null || !tag) return null;
+  if (tag.kind === 'ccs') return getBracketLink(game)?.division ?? postseasonTagOf(game);
   if (tag.kind !== 'outside-tournament' && tag.leagueId !== null) return null;
   return postseasonTagOf(game);
+}
+
+/**
+ * Where a group of a day's games sits on /playoffs, for its header's link: the one place every game links to (a
+ * CCS division), else the bracket they share ('Section bracket' → `#sds-bracket`); null when they share none.
+ */
+function groupBracket(games: readonly Game[]): { href: string; label: string } | null {
+  const links = games.map((g) => getBracketLink(g));
+  if (links.length === 0 || links.some((l) => l === null)) return null;
+  const hrefs = new Set(links.map((l) => l!.href));
+  if (hrefs.size === 1) return { href: links[0]!.href, label: links[0]!.label };
+  const labels = new Set(links.map((l) => l!.label));
+  if (labels.size !== 1) return null;
+  const label = links[0]!.label;
+  if (label === 'Section bracket') return { href: '/playoffs#sds-bracket', label };
+  const league = links[0]!.href.match(/^\/playoffs#([a-z-]+?)-(?:qf|sf|final|play-in)/)?.[1];
+  return league && / bracket$/.test(label) ? { href: `/playoffs#${league}-bracket`, label } : null;
 }
 
 /** The league a game belongs to on a day page: its counted division's league, else its postseason league (never an event's). */
@@ -165,6 +188,8 @@ export interface DayGroup {
   /** The league's id; null for an event's group and for Non-league. */
   leagueId: LeagueId | null;
   games: Game[];
+  /** The games' shared place on /playoffs ('CCS bracket' at `#ccs-division-2`), linked from the group's header. */
+  bracket: { href: string; label: string } | null;
 }
 
 /** `tournament-of-champions`, for a `postseason-` group id (the anchor the pills link to). */
@@ -202,7 +227,14 @@ export function dayGroups(games: readonly Game[]): DayGroup[] {
       ...(played > 0 ? [plural(played, 'league game')] : []),
       ...(post > 0 ? [plural(post, 'postseason game')] : []),
     ];
-    groups.push({ id: league.id, leagueId: league.id, kicker: [league.shortName, ...clauses].join(' · '), games: mine });
+    groups.push({
+      id: league.id,
+      leagueId: league.id,
+      kicker: [league.shortName, ...clauses].join(' · '),
+      games: mine,
+      // A league's group links a bracket only when it holds nothing but postseason games (the MCAL tournament's day).
+      bracket: played === 0 ? groupBracket(mine) : null,
+    });
   }
 
   const events = new Map<string, { rank: number; games: Game[] }>();
@@ -219,12 +251,13 @@ export function dayGroups(games: readonly Game[]): DayGroup[] {
       leagueId: null,
       kicker: `${name} · ${event.games.length}`,
       games: event.games,
+      bracket: groupBracket(event.games),
     });
   }
 
   const rest = games.filter((g) => gameLeague(g) === null && eventOf(g) === null);
   if (rest.length > 0) {
-    groups.push({ id: 'non-league', leagueId: null, kicker: `Non-league · ${rest.length}`, games: rest });
+    groups.push({ id: 'non-league', leagueId: null, kicker: `Non-league · ${rest.length}`, games: rest, bracket: null });
   }
   return groups;
 }

@@ -21,7 +21,7 @@
  * Pure: the page hands down the leagues, their configs and the strip's rows; "today" is the caller's.
  */
 
-import { dateSpan, numberWord, shortDate } from '../../lib/format';
+import { dateSpan, numberWord, plural, shortDate } from '../../lib/format';
 import { getSection, type LeagueConfig } from '../../lib/leagues';
 import type { LeagueId } from '../../lib/types';
 
@@ -90,9 +90,30 @@ function rowWords(row: ThisWeekRow, path: string): string {
   return [shortDate(row.dateKey), row.time, what].filter(Boolean).join(' · ');
 }
 
-/** 'games' when every row of the day is a game, 'dates' otherwise (a seeding meeting beside a play-in). */
+/**
+ * '8 CCS quarterfinals' when every row of the day is a game of one round (2026-11-03: the round says more than
+ * '8 games'), else '8 games', or 'postseason dates' when an event shares the day (a seeding meeting beside a play-in).
+ */
 function countWords(rows: readonly ThisWeekRow[]): string {
-  return `${rows.length} ${rows.every((r) => r.kind === 'game') ? 'games' : 'postseason dates'}`;
+  if (!rows.every((r) => r.kind === 'game')) return `${rows.length} postseason dates`;
+  const labels = new Set(rows.map((r) => r.label));
+  const [label] = [...labels];
+  if (labels.size === 1 && label && /(final|round|crossover|play-in)$/.test(label)) return `${rows.length} ${label}s`;
+  return plural(rows.length, 'game');
+}
+
+/**
+ * Where a day's rows sit on /playoffs: their one bracket place, else the bracket they share (every CCS game →
+ * `#bracket`, every San Diego game → `#sds-bracket`); null when they share none (the caller keeps the section).
+ */
+function dayBracketHref(rows: readonly ThisWeekRow[]): string | null {
+  const hrefs = rows.map((r) => (r.bracket ? `/playoffs#${r.bracket}` : null));
+  if (hrefs.some((h) => h === null)) return null;
+  const unique = new Set(hrefs);
+  if (unique.size === 1) return hrefs[0];
+  if (hrefs.every((h) => h!.startsWith('/playoffs#ccs-division-'))) return '/playoffs#bracket';
+  if (hrefs.every((h) => h!.startsWith('/playoffs#sds-'))) return '/playoffs#sds-bracket';
+  return null;
 }
 
 /**
@@ -135,8 +156,9 @@ export function buildBoard(leagues: readonly BoardLeagueInput[], rows: readonly 
     const day = ahead.filter((r) => r.dateKey === ahead[0]?.dateKey);
     let next: BoardNext | null = null;
     if (first.champion) next = { term: 'Result', text: first.champion, href };
-    else if (day.length === 1) next = { term: 'Next', text: rowWords(day[0], path), href: day[0].href ?? href };
-    else if (day.length > 1) next = { term: 'Next', text: `${shortDate(day[0].dateKey)} · ${countWords(day)}`, href };
+    // A game links its place in the bracket (where it stands), else its game page; a day of games their bracket.
+    else if (day.length === 1) next = { term: 'Next', text: rowWords(day[0], path), href: day[0].bracket ? `/playoffs#${day[0].bracket}` : (day[0].href ?? href) };
+    else if (day.length > 1) next = { term: 'Next', text: `${shortDate(day[0].dateKey)} · ${countWords(day)}`, href: dayBracketHref(day) ?? href };
     return {
       key: first.leagueId,
       names: group.map((g) => g.shortName).join(' · '),

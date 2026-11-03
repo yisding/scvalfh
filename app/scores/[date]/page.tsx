@@ -491,7 +491,13 @@ function RegionBlock({
             aria-labelledby={labelledBy(group.id)}
             className={index === 0 ? 'mt-6' : 'mt-8 md:mt-10'}
           >
-            <SectionHeader as="h3" id={`${group.id}-heading`} kicker={group.kicker} />
+            {/* A postseason group links its place on /playoffs ('CCS Division 2 · 4' → its division's bracket). */}
+            <SectionHeader
+              as="h3"
+              id={`${group.id}-heading`}
+              kicker={group.kicker}
+              action={group.bracket ? { href: group.bracket.href, label: group.bracket.label } : undefined}
+            />
             {/* Two or more cards fill the row, so they end where the pager, the fixtures card
                 and the disclosure below end; a lone card stays card-sized rather than 1200px wide. */}
             <GameList games={group.games} tracks={group.games.length > 1 ? 'fit' : 'fill'} />

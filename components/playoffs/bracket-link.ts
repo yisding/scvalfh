@@ -39,6 +39,8 @@ export interface BracketLink {
   href: string;
   /** 'CCS bracket', 'Section bracket', 'MCAL bracket', 'SCVAL crossovers', 'Super Regional results'. */
   label: string;
+  /** A CCS game's division path, 'CCS Division 2' (or 'Bracket 1' while unproven); absent for any other game. */
+  division?: string;
 }
 
 let index: Map<ContestId, BracketLink> | null = null;
@@ -48,7 +50,7 @@ function buildIndex(): Map<ContestId, BracketLink> {
   for (const path of buildBrackets(getPlayoffs(), getCcsSeeds())) {
     for (const round of path.rounds) {
       for (const card of round.cards) {
-        if (card.kind === 'game') out.set(card.game.contestId, { href: `/playoffs#${path.id}`, label: 'CCS bracket' });
+        if (card.kind === 'game') out.set(card.game.contestId, { href: `/playoffs#${path.id}`, label: 'CCS bracket', division: path.name });
       }
     }
   }
