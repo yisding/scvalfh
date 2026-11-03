@@ -1129,7 +1129,8 @@ export function buildHomeView(): HomeView {
   const leagueIds = summaries.map((s) => s.id);
   const teams = getTeams();
   const leagueCards = summaries.map(leagueCardView);
-  const thisWeek = thisWeekByRegion({ games: getGames(), today, cap: HOME_THIS_WEEK_CAP });
+  // No bracket links on the home strip: it points to /playoffs, where they are (this-week-inputs.ts bracketLinks).
+  const thisWeek = thisWeekByRegion({ games: getGames(), today, cap: HOME_THIS_WEEK_CAP, bracketLinks: false });
   return {
     today,
     thisWeek,

@@ -41,8 +41,12 @@ export interface ThisWeekRow {
   label: string;
   /** The game page, or the event's anchor on /playoffs. */
   href: string | null;
-  /** A game's place on /playoffs (its bracket card), which the badge links; null for an event or a game with none. */
-  bracketHref: string | null;
+  /**
+   * A game's place on /playoffs, the fragment only ('ccs-division-2', for `/playoffs#ccs-division-2`), which the badge
+   * links; absent for an event or a game with none. A fragment and no null: the home page's strip is serialized into
+   * its RSC payload and held to 5 KiB (tests/ui/home-weight.test.ts).
+   */
+  bracket?: string;
   /** A game with a final score. */
   final: boolean;
   /** A game row or an event row (an event with no time prints no "Time TBA"). */
@@ -100,7 +104,7 @@ export interface ThisWeekInput {
   claimed?: ReadonlySet<ContestId>;
   /** Rows per region; default 12. */
   cap?: number;
-  /** A game's place on /playoffs (components/playoffs/bracket-link.ts), passed in so this module stays pure. */
+  /** A game's place on /playoffs as a fragment (components/playoffs/bracket-link.ts), passed in so this module stays pure. */
   bracketOf?: (game: Game) => string | null;
 }
 
@@ -134,6 +138,7 @@ function shortNameOf(side: Game['home']): string {
 }
 
 function gameRow(game: Game, labels: ReadonlyMap<ContestId, string>, bracketOf: (game: Game) => string | null): ThisWeekRow {
+  const bracket = bracketOf(game);
   const view = renderScore(game);
   const text =
     view.kind === 'scheduled'
@@ -145,7 +150,7 @@ function gameRow(game: Game, labels: ReadonlyMap<ContestId, string>, bracketOf: 
     text,
     label: labels.get(game.contestId) ?? postseasonTagOf(game) ?? '',
     href: gameHref(game.contestId),
-    bracketHref: bracketOf(game),
+    ...(bracket ? { bracket } : {}),
     final: view.kind === 'final',
     kind: 'game',
     key: game.contestId,
@@ -168,7 +173,6 @@ function eventRow(event: ThisWeekEvent): ThisWeekRow {
     text: event.detail ?? event.title,
     label: event.detail ? event.title : '',
     href: event.href,
-    bracketHref: null,
     final: event.done ?? false,
     kind: 'event',
     key: event.title,

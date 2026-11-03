@@ -257,8 +257,14 @@ export function thisWeekByRegion(input: {
   games: readonly Game[];
   today: string;
   cap?: number;
+  /**
+   * Link each game's badge to its place on /playoffs (default true). The home page passes false: its strip is a
+   * pointer to /playoffs, serialized into its RSC payload and held to 5 KiB (tests/ui/home-weight.test.ts), and the
+   * links cost about 23 bytes a row.
+   */
+  bracketLinks?: boolean;
 }): Record<RegionId, ThisWeekView> {
-  const { games, today, cap } = input;
+  const { games, today, cap, bracketLinks = true } = input;
   const playoffs = getPlayoffs();
   const field = getCcsField();
   const ccsIds = new Set<LeagueId>(field.byLeague.map((l) => l.leagueId));
@@ -273,7 +279,7 @@ export function thisWeekByRegion(input: {
   );
   const sds = sectionPlayoffs();
   // Each game row's badge links its place on /playoffs (bracket-link.ts).
-  const bracketOf = (game: Game) => getBracketLink(game)?.href ?? null;
+  const bracketOf = (game: Game) => (bracketLinks ? (getBracketLink(game)?.href.replace(/^\/playoffs#/, '') ?? null) : null);
   // The page's own test for "seeded": a CCS bracket path to draw, from the bracket games or the seed file.
   const seeded = buildBrackets(playoffs, getCcsSeeds()).length > 0;
   // The games a pairing or a bracket slot has joined: an event gives way only to a game of its league no slot claims.

@@ -55,8 +55,8 @@ export function ThisWeek({ view, id, className }: ThisWeekProps) {
                   )}
                   {/* A game's badge (its round) links its place in the bracket (bracket-link.ts); the sr-only tail
                       tells the many "CCS quarterfinal" links apart. */}
-                  {row.label && row.bracketHref ? (
-                    <Link href={row.bracketHref} prefetch={false} className="sx-badge no-underline hover:underline">
+                  {row.label && row.bracket ? (
+                    <Link href={`/playoffs#${row.bracket}`} prefetch={false} className="sx-badge no-underline hover:underline">
                       {row.label}
                       <span className="sr-only"> in the bracket: {row.text}</span>
                     </Link>
