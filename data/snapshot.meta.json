@@ -7,7 +7,7 @@
     "notOnMaxPreps": 2
   },
   "commitSummary": "SCVAL +0 finals · BVAL +0 · PCAL +0 · MCAL +0 · EAL +0 · Sunset +0 · City +0 · North +0 · Metro +0 · LA +0",
-  "contentHash": "495e07fc677cd8d22cada348d7c3723a6764edc32a2075ff5805dceb28048e9e",
+  "contentHash": "e35ba8cc49d7558772ed2f3b82add0f38ff939b27a0789550a58afb60d79ca6b",
   "counts": {
     "byLeague": {
       "bval": {
@@ -48,14 +48,14 @@
       "metro": {
         "backfilled": 0,
         "finals": 105,
-        "games": 109,
+        "games": 110,
         "leagueGames": 32,
         "teams": 9
       },
       "north-county": {
         "backfilled": 1,
         "finals": 259,
-        "games": 262,
+        "games": 264,
         "leagueGames": 103,
         "teams": 19
       },
@@ -82,7 +82,7 @@
       }
     },
     "finals": 928,
-    "games": 945,
+    "games": 947,
     "leagueGames": 552,
     "mismatches": 30,
     "pending": 3,
@@ -91,11 +91,11 @@
   "crossCheck": {
     "agreements": 201,
     "backfilled": 4,
-    "compared": 233,
+    "compared": 234,
     "conflicts": 8,
     "sbliveOnlyScored": 7
   },
-  "fetchedAt": "2026-11-03T15:29:57.439Z",
+  "fetchedAt": "2026-11-03T20:25:39.312Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -738,7 +738,7 @@
     },
     {
       "label": "mt-carmel schedule",
-      "rowCount": 23,
+      "rowCount": 24,
       "status": "ok"
     },
     {
@@ -763,7 +763,7 @@
     },
     {
       "label": "fallbrook schedule",
-      "rowCount": 26,
+      "rowCount": 27,
       "status": "ok"
     },
     {
@@ -798,12 +798,12 @@
     },
     {
       "label": "mission-hills schedule",
-      "rowCount": 32,
+      "rowCount": 33,
       "status": "ok"
     },
     {
       "label": "sage-creek schedule",
-      "rowCount": 25,
+      "rowCount": 26,
       "status": "ok"
     },
     {
@@ -863,7 +863,7 @@
     },
     {
       "label": "otay-ranch schedule",
-      "rowCount": 17,
+      "rowCount": 18,
       "status": "ok"
     },
     {
@@ -963,12 +963,12 @@
     },
     {
       "label": "sblive scoreboard 2026-10-31",
-      "rowCount": 1,
+      "rowCount": 10,
       "status": "ok"
     },
     {
       "label": "sblive scoreboard 2026-11-02",
-      "rowCount": 1,
+      "rowCount": 10,
       "status": "ok"
     },
     {
@@ -993,7 +993,7 @@
     },
     {
       "label": "sblive gilroy games",
-      "rowCount": 17,
+      "rowCount": 18,
       "status": "ok"
     },
     {
@@ -1018,7 +1018,7 @@
     },
     {
       "label": "los-gatos school calendar",
-      "rowCount": 0,
+      "rowCount": 1,
       "status": "ok"
     },
     {
@@ -1053,7 +1053,7 @@
     },
     {
       "label": "cifsshome.org San Diego Section field hockey",
-      "rowCount": 767,
+      "rowCount": 768,
       "status": "ok"
     },
     {
