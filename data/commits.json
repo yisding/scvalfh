@@ -15,7 +15,8 @@
     "Recall is partial: a commitment announced only on social media, on a page the sweeps could not read, or not yet published anywhere is not here. Re-running this is research, not a script; the class of 2027's signing period (November 2026) and the class of 2028's commitments are when it would change most.",
     "On 2026-10-07 the 21 rows MaxPreps had added since the sweeps (Marin Academy's 18, now that MaxPreps lists them; Westmont's Kaylee True, Lexi True and Savannah Murdoch) were swept in every sport by the same rule: their MaxPreps career pages, SportsRecruits addresses in every sport and their rendered pages, NCSA, FH College Path's class lists for 2026 to 2030, STEPS California's and ADVNC's commitment pages, Lacrosse Masters, MAX Field Hockey, the NFHCA watchlists, the Marin IJ, Stick Together, and a web search for every junior and senior. None was found. Not run for these rows: SportsRecruits' college commit pages and athlete search, TopDrawerSoccer and SoccerWire (none of the 21 plays soccer on MaxPreps), and ClubLax (unreachable). A different Paige Fredrickson, class of 2028, plays water polo for Archie Williams.",
     "On 2026-10-12 the owner reported that Shyla Paredes (Valley Christian) had committed to Cal Baptist in softball, an Instagram commitment the file lacked, and the rule was revised so that an official account's post (a college's, the player's high school's, a club's) can be cited; a player's own post still cannot. The round that followed read every varsity row's MaxPreps career page for the sports she plays (508 of the 1,673 rows play another sport besides field hockey) and ran eight player-by-player sweeps, a softball-list sweep, an other-sports-list sweep (basketball, volleyball, water polo, lacrosse and soccer club commit pages) and a school-pages and official-accounts sweep. The web-search tool's per-turn budget (1,000 searches shared by every sweep) ran out early, so a second pass the same day, at the owner's request, ran one web search for each of the 917 class-of-2027, class-of-2028 and ungraded rows the first had not reached (\"<name>\" <school> <city> committed, with her other sport), and one search for each of the 55 official X accounts the school sweep found on the schools' own sites (X's search results never surfaced a post). In all, 1,336 rows got a name search; the 309 sophomores and freshmen (classes 2029 and 2030), whom NCAA contact rules mostly keep from committing yet, got none, nor did the 28 rows already in the file (1,336 + 309 + 28 = 1,673), and for about fifteen rows the search tool rewrote or dropped the query. The second pass found no new commitment; it found Molly Waltz again, through her own profile. It found two commitments: Shyla Paredes to Cal Baptist in softball, on her travel club Cal Nuggets' commitment list and 18U Woods roster, tied to her by her own MaxPreps page naming that club (medium), and Molly Waltz (Archbishop Mitty, class of 2028) to UC Davis in lacrosse, on ADVNC Lacrosse's commits page, which names her school, and her own SportsRecruits lacrosse profile (high). Both were re-opened by a second read. Every source already in the file was re-opened the same day; one, SportsRecruits' Colgate field hockey page, no longer listed Storey Lewis and was dropped, her own profile still showing the commitment. No source said any player had signed. Later that day the SportsRecruits address probe in every sport (see data/rosters-enrichment.json) found a third: Campbell Trocha (Cathedral Catholic, class of 2028) to Florida Tech in lacrosse, on her own profile (high).",
-    "On 2026-10-22 another round ran over all 1,673 varsity rows by the same rule. SportsRecruits: its commits feed for every college program (ids 1 to 3,299; 87,015 records over 1,549 programs, men's and women's, in every sport), matched to the rosters by full name and by surname, initial and class, with every match's profile opened (425); a profile-address probe in every sport for the 1,406 class-of-2027, class-of-2028 and ungraded rows (15,052 addresses, 1,322 live pages read), and every profile already linked in data/rosters-enrichment.json re-read. Lists: FH College Path's classes 2026 to 2031, Play College Field Hockey's sheet, MAX Field Hockey's whole commitments table (now served as HTML), the NFHCA watchlist, Stick Together, the field hockey clubs in data/clubs.json, lacrosse (STEPS, ADVNC, Lacrosse Masters, Prep Girls Lacrosse), soccer (TopDrawerSoccer, SoccerWire, Prep Soccer), softball (Cal Nuggets, Extra Inning Softball, Prep Softball and travel clubs), volleyball, water polo, basketball (the Prep Network directories) and MileSplit, all matched against every row. News: the Bay Area News Group and SCNG papers' high school sections and searches since August, other local papers, Patch, student papers and school athletics sites. Web searches: one extended search for each of the 1,375 class-of-2027, class-of-2028 and ungraded rows not already in the file (\"<name>\" <school> <city> committed); the 267 rows data/rosters.json grades as sophomores or freshmen got none (1,375 + the 31 already in the file + 267 = 1,673; the class years are the roster's grades, so rows the 2026-10-12 round placed in those classes from other pages were searched here as ungraded). It found two: Kendall Gann (Temecula Valley, class of 2027) to Barton College in field hockey, on MAX Field Hockey's player page and California table (medium: MAX takes the commitments its users report, and nothing else confirms it), and Kaye Zilinskas (St. Ignatius, class of 2028) to UC Davis in lacrosse, on her own SportsRecruits lacrosse profile and SportsRecruits' UC Davis page (high). Stick Together's issue of Oct 6, 2026 names Ryan Hemeon's school, raising hers to high, and backs Olivia Van De Braak's. No source said any player had signed or decommitted. Near misses: a Leigh senior whom only Play College Field Hockey's sheet lists (Wellesley), with no page tying that line to her; a Southwest player's Prep Soccer line (Loyola Marymount) that names no school, where her earlier profiles give another; a La Costa Canyon junior on a lacrosse list of uncommitted players; and same-name commitments with another class year, state or school. Not reached: ClubLax (its certificate does not match its host), Mad Dog West, SoCal Express and NorCal Starz (proxy errors), The Tenacity Project's own site, Cal's athletics site, X and Instagram."
+    "On 2026-10-22 another round ran over all 1,673 varsity rows by the same rule. SportsRecruits: its commits feed for every college program (ids 1 to 3,299; 87,015 records over 1,549 programs, men's and women's, in every sport), matched to the rosters by full name and by surname, initial and class, with every match's profile opened (425); a profile-address probe in every sport for the 1,406 class-of-2027, class-of-2028 and ungraded rows (15,052 addresses, 1,322 live pages read), and every profile already linked in data/rosters-enrichment.json re-read. Lists: FH College Path's classes 2026 to 2031, Play College Field Hockey's sheet, MAX Field Hockey's whole commitments table (now served as HTML), the NFHCA watchlist, Stick Together, the field hockey clubs in data/clubs.json, lacrosse (STEPS, ADVNC, Lacrosse Masters, Prep Girls Lacrosse), soccer (TopDrawerSoccer, SoccerWire, Prep Soccer), softball (Cal Nuggets, Extra Inning Softball, Prep Softball and travel clubs), volleyball, water polo, basketball (the Prep Network directories) and MileSplit, all matched against every row. News: the Bay Area News Group and SCNG papers' high school sections and searches since August, other local papers, Patch, student papers and school athletics sites. Web searches: one extended search for each of the 1,375 class-of-2027, class-of-2028 and ungraded rows not already in the file (\"<name>\" <school> <city> committed); the 267 rows data/rosters.json grades as sophomores or freshmen got none (1,375 + the 31 already in the file + 267 = 1,673; the class years are the roster's grades, so rows the 2026-10-12 round placed in those classes from other pages were searched here as ungraded). It found two: Kendall Gann (Temecula Valley, class of 2027) to Barton College in field hockey, on MAX Field Hockey's player page and California table (medium: MAX takes the commitments its users report, and nothing else confirms it), and Kaye Zilinskas (St. Ignatius, class of 2028) to UC Davis in lacrosse, on her own SportsRecruits lacrosse profile and SportsRecruits' UC Davis page (high). Stick Together's issue of Oct 6, 2026 names Ryan Hemeon's school, raising hers to high, and backs Olivia Van De Braak's. No source said any player had signed or decommitted. Near misses: a Leigh senior whom only Play College Field Hockey's sheet lists (Wellesley), with no page tying that line to her; a Southwest player's Prep Soccer line (Loyola Marymount) that names no school, where her earlier profiles give another; a La Costa Canyon junior on a lacrosse list of uncommitted players; and same-name commitments with another class year, state or school. Not reached: ClubLax (its certificate does not match its host), Mad Dog West, SoCal Express and NorCal Starz (proxy errors), The Tenacity Project's own site, Cal's athletics site, X and Instagram.",
+    "On 2026-11-03 another round ran over every row (see builtBy). It found Frankie Lemieux (Lick-Wilmerding, class of 2028) to Dartmouth in field hockey, on the SF Hawks' alumni and committed players table (edited 2026-11-02), matched by the class year and the San Francisco club she is already tied to (medium). The same day the owner confirmed from Instagram that Clara Froemming (Leigh, class of 2027) committed to Wellesley in field hockey, the Play College Field Hockey sheet line earlier rounds had kept as a near miss; she is published on the owner's confirmation, citing the sheet (medium), the one entry the rule alone would not admit. Sophie Sant (Torrey Pines, Bowdoin) stays a near miss: the same sheet's line is all that names a college for her."
   ],
   "colleges": [
     {
@@ -852,6 +853,36 @@
         {
           "url": "https://www.ncaa.com/schools/dartmouth",
           "what": "NCAA.com's school page (HTTP 200 to curl): 'Division I - Hanover, NH', 'Dartmouth College', 'Conference The Ivy League', nickname Big Green."
+        }
+      ],
+      "checkedOn": "2026-11-03"
+    },
+    {
+      "slug": "wellesley",
+      "name": "Wellesley College",
+      "shortName": "Wellesley",
+      "city": "Wellesley",
+      "state": "MA",
+      "programs": [
+        {
+          "sport": "field-hockey",
+          "division": "ncaa-d3",
+          "conference": "NEWMAC",
+          "url": "https://wellesleyblue.com/sports/field-hockey"
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://wellesleyblue.com/sports/field-hockey",
+          "what": "Wellesley athletics field hockey page, titled 'Field Hockey - Wellesley College' (HTTP 200 to curl). Its menus list 'Prospect Student-Athletes NCAA Division III' and 'NEWMAC Championships'; the footer gives 'Wellesley College 106 Central Street Wellesley, MA 02481'."
+        },
+        {
+          "url": "https://newmacsports.com/standings.aspx?path=fhockey",
+          "what": "NEWMAC's '2026 Field Hockey Standings - New England Women's and Men's Athletic Conference' (read through WebFetch): MIT 8-1, Babson 8-1, Wellesley 6-3, Smith, WPI, Springfield, Wheaton, Mount Holyoke, Salve Regina, Clark, so Wellesley's field hockey team plays in NEWMAC."
+        },
+        {
+          "url": "https://www.ncaa.com/schools/wellesley",
+          "what": "NCAA.com's school page (HTTP 200 to curl): 'Division III - Wellesley, MA', 'Wellesley College', site wellesleyblue.com."
         }
       ],
       "checkedOn": "2026-11-03"
@@ -2043,6 +2074,27 @@
         }
       ],
       "basis": "One line on the SF Hawks' (San Francisco Youth Field Hockey Club's) alumni and committed players table: 'Frankie Lemieux 2028 Dartmouth University' (the table's spelling; the college is Dartmouth College). The table names no school, so the match rests on the class year (2028, the roster's junior grade) plus a San Francisco club she is already tied to in data/clubs.json (high: her own SportsRecruits profile names Lick-Wilmerding and the SF Hawks; MaxPreps titles her 'Francine \"Frankie\" Lemieux'; the NFHCA watchlist lists her under San Francisco Hawks; the club's current-players page lists Frankie Lemieux, class of 2028). Medium: one compiled club line. The page gives no date; WordPress reports it modified 2026-11-02, so the line is likely new since the 2026-10-22 round, whose club sweep found no line for her (the same edit added Olivia Van De Braak's Iowa line, which the table lacked before). Her own SportsRecruits profile (re-read 2026-11-03) shows no commitment, and MAX Field Hockey, FH College Path and Play College Field Hockey do not list her: absences, not contradictions. No other Frankie or Francine Lemieux is on any list read. Found by the 2026-11-03 list sweep and re-read by hand."
+    },
+    {
+      "teamSlug": "leigh",
+      "athleteId": "03bb6a58-9af8-4d16-998f-e7e29f4125ea",
+      "fullName": "Clara Froemming",
+      "college": "wellesley",
+      "sport": "field-hockey",
+      "status": "committed",
+      "asOf": "2026-07-12",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://docs.google.com/spreadsheets/d/e/2PACX-1vTuUu-d08EmqUxIT9EIkcTngF8GMVor9zILxrOotoA6yN_jI9AUYWwcXgZA7fsgbEzddjzT69nt8LhZ/pub?gid=1142398457&single=true&output=csv",
+          "kind": "event",
+          "quote": "Clara,Froemming,Wellesley,2027,\"July 12, 2026\",",
+          "statedSchool": null,
+          "statedClassYear": 2027,
+          "sourceDate": "July 12, 2026"
+        }
+      ],
+      "basis": "Play College Field Hockey's commitments sheet (the published Google Sheet that playcollegefieldhockey.com/commitments embeds; first name, last name, college, class and date committed, no school or place) has 'Clara,Froemming,Wellesley,2027,\"July 12, 2026\",' (asOf, the day the sheet calls the date committed). Class 2027 agrees with roster grade 12, and data/clubs.json ties her to NorCal Impact at Leigh. The sheet alone does not meet the rule (no school and no place), so the 2026-10-12 and 2026-10-22 rounds kept her as a near miss. On 2026-11-03 the owner confirmed the commitment from an Instagram post, which the research environment cannot read and the file does not cite; she is published on that confirmation, the one entry the rule alone would not admit. Medium. No other Clara Froemming is on any list read; the Leah Froemming of NorCal Impact's pages (Johns Hopkins) is an older Leigh player. No signing wording."
     }
   ]
 }

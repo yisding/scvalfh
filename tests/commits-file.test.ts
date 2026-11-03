@@ -181,21 +181,22 @@ describe('the committed data/commits.json', () => {
   });
 });
 
-describe('the research of 2026-10-03, 2026-10-04, 2026-10-06, 2026-10-12, 2026-10-22 and 2026-11-03 (the EAL sweeps found no row; the Southern California round twelve; the 2026-10-12 round three; the 2026-10-22 round two; the 2026-11-03 round one), as counted in README "College commitments" and DATA-SOURCES §1.1j3', () => {
+describe('the research of 2026-10-03, 2026-10-04, 2026-10-06, 2026-10-12, 2026-10-22 and 2026-11-03 (the EAL sweeps found no row; the Southern California round twelve; the 2026-10-12 round three; the 2026-10-22 round two; the 2026-11-03 round two, one of them on the owner confirming it), as counted in README "College commitments" and DATA-SOURCES §1.1j3', () => {
   // Pinned: change these only with a new sweep, together with those two documents.
   const SOCAL = new Set(['sunset', 'city', 'north-county', 'metro', 'independents']);
   const socal = raw.commitments.filter((c) => SOCAL.has(getTeamBySlug(c.teamSlug)!.league));
   const norcal = raw.commitments.filter((c) => !SOCAL.has(getTeamBySlug(c.teamSlug)!.league));
 
-  it('holds 34 commitments from 20 schools to 26 colleges (29 programs), all "committed", 28 high and 6 medium', () => {
+  it('holds 35 commitments from 21 schools to 27 colleges (30 programs), all "committed", 28 high and 7 medium', () => {
     expect(raw.capturedAt).toBe('2026-11-03');
-    expect(raw.commitments).toHaveLength(34);
-    expect(raw.colleges).toHaveLength(26);
-    expect(raw.colleges.flatMap((c) => c.programs)).toHaveLength(29);
+    expect(raw.commitments).toHaveLength(35);
+    expect(raw.colleges).toHaveLength(27);
+    expect(raw.colleges.flatMap((c) => c.programs)).toHaveLength(30);
     expect(new Set(norcal.map((c) => c.teamSlug))).toEqual(
       new Set([
         'berkeley',
         'christopher',
+        'leigh',
         'lick-wilmerding',
         'los-altos',
         'marin-catholic',
@@ -208,14 +209,16 @@ describe('the research of 2026-10-03, 2026-10-04, 2026-10-06, 2026-10-12, 2026-1
         'valley-christian',
       ]),
     );
-    expect(norcal).toHaveLength(20);
+    expect(norcal).toHaveLength(21);
     expect(new Set(socal.map((c) => c.teamSlug))).toEqual(
       new Set(['bishops', 'canyon-hills', 'cathedral-catholic', 'harvard-westlake', 'san-dieguito-academy', 'scripps-ranch', 'temecula-valley', 'torrey-pines']),
     );
     expect(socal).toHaveLength(14);
     expect(raw.commitments.every((c) => c.status === 'committed')).toBe(true);
-    expect(raw.commitments.filter((c) => c.confidence === 'medium').map((c) => c.fullName)).toEqual(['Rylie Storm', 'Reese Roldan', 'Sami Lee', 'Shyla Paredes', 'Kendall Gann', 'Frankie Lemieux']);
+    expect(raw.commitments.filter((c) => c.confidence === 'medium').map((c) => c.fullName)).toEqual(['Rylie Storm', 'Reese Roldan', 'Sami Lee', 'Shyla Paredes', 'Kendall Gann', 'Frankie Lemieux', 'Clara Froemming']);
     // Frankie Lemieux's (2026-11-03) rests on one line of the SF Hawks' committed-players table, the class year and the club.
+    // Clara Froemming's (2026-11-03) rests on Play College Field Hockey's sheet line, published on the owner's
+    // confirmation from an Instagram post the file cannot cite: the one entry the rule alone would not admit.
     // Ryan Hemeon's went from medium to high on 2026-10-22: Stick Together's Oct 6 issue names her school.
     // Kendall Gann's rests on MAX Field Hockey alone, whose commitments its users report.
     // Sami Lee's rests on the revised nickname rule (2026-10-06): the pages say Samantha; her own MaxPreps page backs the club.
@@ -231,9 +234,9 @@ describe('the research of 2026-10-03, 2026-10-04, 2026-10-06, 2026-10-12, 2026-1
     expect(raw.commitments.filter((c) => ealSlugs.has(c.teamSlug))).toEqual([]);
   });
 
-  it('by sport: 19 field hockey, 12 lacrosse, 1 soccer, 1 basketball, 1 softball (SoCal: 11 field hockey, 3 lacrosse)', () => {
+  it('by sport: 20 field hockey, 12 lacrosse, 1 soccer, 1 basketball, 1 softball (SoCal: 11 field hockey, 3 lacrosse)', () => {
     const sport = (s: string, list = raw.commitments) => list.filter((c) => c.sport === s).length;
-    expect([sport('field-hockey'), sport('lacrosse'), sport('soccer'), sport('basketball'), sport('softball')]).toEqual([19, 12, 1, 1, 1]);
+    expect([sport('field-hockey'), sport('lacrosse'), sport('soccer'), sport('basketball'), sport('softball')]).toEqual([20, 12, 1, 1, 1]);
     expect([sport('field-hockey', socal), sport('lacrosse', socal)]).toEqual([11, 3]);
     // Three colleges hold two programs: UC Davis (field hockey in the MPSF, lacrosse in the Big 12),
     // Cal (field hockey and lacrosse, both ACC) and Harvard (both Ivy League).
@@ -251,17 +254,17 @@ describe('the research of 2026-10-03, 2026-10-04, 2026-10-06, 2026-10-12, 2026-1
     ]);
   });
 
-  it('by class: 21 from 2027 and 13 from 2028; by level: 23 Division I, 3 Division II, 8 Division III', () => {
+  it('by class: 22 from 2027 and 13 from 2028; by level: 23 Division I, 3 Division II, 9 Division III', () => {
     const classes = getCommitments().map((c) => commitClassOf(c));
-    expect(classes.filter((y) => y === 2027)).toHaveLength(21);
+    expect(classes.filter((y) => y === 2027)).toHaveLength(22);
     expect(classes.filter((y) => y === 2028)).toHaveLength(13);
     const level = (d: string) => raw.commitments.filter((c) => commitProgram(c).program.division === d).length;
-    expect([level('ncaa-d1'), level('ncaa-d2'), level('ncaa-d3'), level('naia')]).toEqual([23, 3, 8, 0]);
+    expect([level('ncaa-d1'), level('ncaa-d2'), level('ncaa-d3'), level('naia')]).toEqual([23, 3, 9, 0]);
   });
 
-  it('rests on 93 source entries on 73 distinct URLs (the SF Hawks table was already cited) (SoCal: 41 on 34), and 12 commitments carry a date', () => {
+  it('rests on 94 source entries on 73 distinct URLs (the SF Hawks table and the Play College Field Hockey sheet were already cited; SoCal: 41 on 34), and 13 commitments carry a date', () => {
     const entries = raw.commitments.flatMap((c) => c.sources);
-    expect(entries).toHaveLength(93);
+    expect(entries).toHaveLength(94);
     expect(new Set(entries.map((s) => s.url)).size).toBe(73);
     const socalEntries = socal.flatMap((c) => c.sources);
     expect(socalEntries).toHaveLength(41);
@@ -274,6 +277,7 @@ describe('the research of 2026-10-03, 2026-10-04, 2026-10-06, 2026-10-12, 2026-1
       '2026-04-23',
       '2026-06-19',
       '2026-07',
+      '2026-07-12',
       '2026-08-06',
       '2026-09-16',
       '2026-09-18',
@@ -289,6 +293,7 @@ describe('the research of 2026-10-03, 2026-10-04, 2026-10-06, 2026-10-12, 2026-1
       'Reese Roldan',
       'Alyssa Montejano',
       'Margaux Schlumberger',
+      'Clara Froemming',
       'Katarina Smith',
       'Claire Johnson',
       'Phoebe Miller',
@@ -346,6 +351,7 @@ describe('the research of 2026-10-03, 2026-10-04, 2026-10-06, 2026-10-12, 2026-1
       'st-lawrence',
       'trinity-ct',
       'vassar',
+      'wellesley',
     ]);
   });
 });
@@ -381,7 +387,7 @@ describe('lib/commits.ts read API', () => {
     const latest = [raw.capturedAt, ...raw.colleges.map((c) => c.checkedOn)].sort().at(-1);
     expect(getCommitsLastChecked()).toBe(latest);
     expect(getCommitsLastChecked() >= raw.capturedAt).toBe(true);
-    // The 2026-11-03 round added Frankie Lemieux (and Dartmouth).
+    // The 2026-11-03 round added Frankie Lemieux (and Dartmouth) and Clara Froemming (and Wellesley).
     expect(getCommitsLastChecked()).toBe('2026-11-03');
   });
 
