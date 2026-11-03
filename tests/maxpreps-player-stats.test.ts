@@ -423,8 +423,11 @@ describe('parsePlayerStats: two records under one career id', () => {
   type Body = ReturnType<typeof mutable>;
   type Sub = Body['data']['groups'][number]['subgroups'][number];
 
-  /** Palo Alto with a second L. Davis record whose cells are `values` (by column name) in each Field Stats subgroup. */
-  function withSecondRecord(values: Array<Record<string, string>>): Body {
+  /**
+   * Palo Alto with a second L. Davis record whose cells are `values` (by column name) in each Field
+   * Stats subgroup, listed after the first record, or before it in the subgroups `firstIn` names.
+   */
+  function withSecondRecord(values: Array<Record<string, string>>, firstIn: number[] = []): Body {
     const body = mutable('palo-alto');
     body.data.groups[0].subgroups.forEach((sub: Sub, i) => {
       const at = (name: string) => sub.stats.columns.findIndex((c) => c.name === name);
@@ -438,18 +441,25 @@ describe('parsePlayerStats: two records under one career id', () => {
         // Totals from the main subgroup's values, so both subgroups agree on the team's totals.
         if (name !== 'GamesPlayed') col.overallValue = String(Number(col.overallValue) + Number(values[0]![name] ?? value));
       }
-      sub.stats.rows.push(copy);
+      if (firstIn.includes(i)) sub.stats.rows.splice(sub.stats.rows.indexOf(davis), 0, copy);
+      else sub.stats.rows.push(copy);
     });
     return body;
   }
   const davisOf = (page: ReturnType<typeof parsePlayerStats>) => page!.players.find((p) => p.careerId === DAVIS)!;
 
-  it('merges them into one line: the counts added, games played the larger, and says so once', () => {
+  // Huntington Beach's overflow subgroup lists the two records in the other order (2026-11-03:
+  // "Field Stats / Field Stats (2) / V. D'Angelo: gamesPlayed is 24 here, 2 in another table" once
+  // records were told apart by occurrence), so both orders are read.
+  it.each([
+    ['in the same order in both subgroups', []],
+    ['in the other order in the overflow subgroup', [1]],
+  ])('merges them into one line, %s: the counts added, games played the larger, and says so once', (_, firstIn) => {
     const before = parsePlayerStats(raw('palo-alto'), { expectedTeamId: teamId })!;
     const body = withSecondRecord([
       { GamesPlayed: '2', Goals: '1', Assists: '1', Points: '3' },
       { GamesPlayed: '2', Goals: '1' },
-    ]);
+    ], firstIn);
     const after = parsePlayerStats(body, { expectedTeamId: teamId })!;
     const was = davisOf(before).field!;
     const now = davisOf(after).field!;

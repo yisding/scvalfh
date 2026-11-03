@@ -1528,8 +1528,9 @@ Gotchas, all **[V]**:
 - A player can be in one subgroup and not the other (Palo Alto lists two players in the overflow
   table only): their stats from the missing table are null, shown as a dash.
 - `Goals` and `GamesPlayed` appear in both field subgroups and always agree; the parser throws if
-  they ever do not. It compares them record by record: a row's career id and its occurrence in its
-  table.
+  they ever do not. It compares them record by record: a career's row in the overflow table joins
+  the record of that career whose `GamesPlayed` and `Goals` it agrees with, since the two tables need
+  not list a career's records in the same order (Huntington Beach's do not).
 - One player can have two athlete records under one career id **[V]** (Huntington Beach's Valentina
   D'Angelo, a second record created 2026-10-01: 24 games played on one, 2 on the other; the roster
   lists both). Before 2026-11-03 the parser read them as one row disagreeing with itself, threw, and

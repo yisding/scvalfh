@@ -33,8 +33,9 @@
  * Loud on drift, like the roster adapter: a missing Name column, a row whose cell count differs
  * from the header, a non-numeric count, or two subgroups disagreeing about the same player's
  * goals all THROW, which the fetch script turns into a per-team failure. Two athlete records
- * MaxPreps keeps under one career id are not drift: each is read as its own record, then the two
- * are merged into one line (mergeDuplicateRecords), with a warning.
+ * MaxPreps keeps under one career id are not drift: each is read as its own record (a later
+ * subgroup's row joins the record its shared columns agree with, whatever order the subgroups list
+ * them in), then the two are merged into one line (mergeDuplicateRecords), with a warning.
  */
 
 import { z } from 'zod';
@@ -277,13 +278,14 @@ export function parsePlayerStats(
   const warnings: string[] = [];
   const tracked = { field: new Set<FieldStatKey>(), goalkeeping: new Set<GoalieStatKey>() };
   const totals: PlayerStatsPage['totals'] = { field: {}, goalkeeping: {} };
-  // One entry per RECORD: a player key (career id, else name and jersey) and its occurrence in the
-  // table, so a player MaxPreps lists twice (two athlete records under one career) stays two records
-  // until mergeDuplicateRecords below, and the overflow subgroup's rows still line up with the main
-  // subgroup's record by record.
+  // One entry per RECORD, so a player MaxPreps lists twice (two athlete records under one career)
+  // stays two records until mergeDuplicateRecords below. A career's rows in a later subgroup are
+  // matched to its records by value (recordFor), since the subgroups need not list them in the same
+  // order; a row no record agrees with is drift and still throws.
   const byKey = new Map<string, StatsSheetPlayer>();
   const order: string[] = [];
   const playerKeyOf = new Map<string, string>();
+  const recordsOf = new Map<string, string[]>();
 
   for (const group of data.groups) {
     const spec = GROUPS[group.name as keyof typeof GROUPS];
@@ -293,7 +295,7 @@ export function parsePlayerStats(
     }
     for (const sub of group.subgroups) {
       const where = `${group.name}${sub.name ? ` / ${sub.name}` : ''}`;
-      const occurrences = new Map<string, number>();
+      const claimed = new Set<string>();
       const cols = sub.stats.columns;
       const nameAt = cols.findIndex((c) => c.name === 'Name');
       const jerseyAt = cols.findIndex((c) => c.name === 'Jersey');
@@ -330,11 +332,24 @@ export function parsePlayerStats(
         const careerId = careerIdFromUrl(careerUrl);
         const jersey = jerseyAt >= 0 ? row.columns[jerseyAt].value?.trim() || null : null;
         const playerKey = careerId ?? `${shortName}|${jersey ?? ''}`;
-        const nth = occurrences.get(playerKey) ?? 0;
-        occurrences.set(playerKey, nth + 1);
         // Only a career id names one person for certain: a name-and-jersey key could be two players,
         // so those rows stay one record and a disagreement between them still throws.
-        const key = careerId ? `${playerKey}#${nth}` : playerKey;
+        let key = playerKey;
+        if (careerId) {
+          // The first record of this career not yet used in this subgroup whose numbers this row
+          // agrees with; else the first free one (where a disagreement throws below); else a new one.
+          const free = (recordsOf.get(playerKey) ?? []).filter((k) => !claimed.has(k));
+          const agrees = (k: string) => {
+            const line = spec.kind === 'field' ? byKey.get(k)!.field : byKey.get(k)!.goalkeeping;
+            return !line || kept.every(({ at, key: stat }) => {
+              const value = toNumber(row.columns[at].value, stat, `${where} / ${shortName}`, url);
+              const was = (line as Record<string, number | null>)[stat];
+              return was === null || value === null || was === value;
+            });
+          };
+          key = free.find(agrees) ?? free[0] ?? `${playerKey}#${recordsOf.get(playerKey)?.length ?? 0}`;
+          claimed.add(key);
+        }
 
         let player = byKey.get(key);
         if (!player) {
@@ -342,6 +357,7 @@ export function parsePlayerStats(
           byKey.set(key, player);
           order.push(key);
           playerKeyOf.set(key, playerKey);
+          recordsOf.set(playerKey, [...(recordsOf.get(playerKey) ?? []), key]);
         }
         let line: Record<string, number | null>;
         if (spec.kind === 'field') line = player.field ??= emptyField();
