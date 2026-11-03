@@ -10,7 +10,7 @@
  *   - honesty: a tie that is only listed is never worded as current, and every row links the
  *     pages it rests on, each labelled by its kind and host, never by its path;
  *   - order: regions in CLUB_REGIONS order, clubs in lib/clubs.ts' display order (DESIGN §17.5),
- *     players current first, then by school and name.
+ *     players current first, then by last name.
  *
  * The data is hand research that changes only with a new sweep (tests/clubs-file.test.ts), so the
  * words pinned below (status lines, link labels, counts) are pinned to it: when a sweep lands,
@@ -37,6 +37,7 @@ import {
 } from '../../components/clubs/club-view';
 import {
   clubDisplayName,
+  getAffiliatedPlayer,
   getClub,
   getClubAffiliations,
   getClubSlugs,
@@ -163,8 +164,8 @@ describe('source labels: the kind and the host, never the path', () => {
     ]);
     expect(labels('chico-hotshots')).toEqual([
       ['Quinn Karolyi', ['NCSA profile']],
-      ['Evie Nielsen', ['SportsRecruits profile']],
       ['Lilah Letcher', ['MaxPreps profile']],
+      ['Evie Nielsen', ['SportsRecruits profile']],
       ['Kate Panighetti', ['MaxPreps profile']],
       ['Olivia Council', ['NCSA profile']],
     ]);
@@ -314,20 +315,27 @@ describe('buildClubPageView (/clubs/[slug])', () => {
     expect(buildClubPageView('nope')).toBeNull();
   });
 
-  it('lists current ties first, then the rest, each by school, then the roster’s name order', () => {
+  it('lists current ties first, then the rest, each by last name, then school', () => {
     for (const { slug, view } of views) {
       expect(view.groups.map((g) => g.id), slug).toEqual(
         [view.groups.some((g) => g.id === 'current') ? 'current' : null, view.groups.some((g) => g.id === 'other') ? 'other' : null].filter(Boolean),
       );
+      const ties = getClubAffiliations(slug);
       for (const g of view.groups) {
         expect(g.rows.every((r) => (g.id === 'current') === (r.statusKind === 'current')), `${slug} ${g.id}`).toBe(true);
-        const schools = g.rows.map((r) => r.school.name);
-        expect(schools, `${slug} ${g.id}`).toEqual([...schools].sort((a, b) => a.localeCompare(b)));
+        const keys = g.rows.map((r) => {
+          const p = getAffiliatedPlayer(ties.find((a) => `${a.teamSlug}-${a.athleteId}` === r.key)!);
+          return { last: p.lastName ?? p.fullName, full: p.fullName, school: r.school.name };
+        });
+        const sorted = [...keys].sort(
+          (x, y) => x.last.localeCompare(y.last) || x.full.localeCompare(y.full) || x.school.localeCompare(y.school),
+        );
+        expect(keys, `${slug} ${g.id}`).toEqual(sorted);
       }
     }
     expect(viewOf('fly-fhc').groups.map((g) => g.heading)).toEqual(['Current', 'Earlier, or not known to be current']);
     expect(viewOf('sf-hawks').groups.map((g) => g.heading)).toEqual(['Current']);
-    // Within St. Ignatius on the SF Hawks page: by last name.
+    // Across schools on the SF Hawks page: by last name, not grouped by school.
     const si = viewOf('sf-hawks').groups[0].rows.filter((r) => r.school.name.startsWith('St. Ignatius')).map((r) => r.name);
     expect(si.slice(0, 4)).toEqual(['Clara Brunello', 'Samantha Brunsell', 'Gigi Colant', 'Scarlett Gammack']);
   });
@@ -396,8 +404,8 @@ describe('buildClubPageView (/clubs/[slug])', () => {
     expect(viewOf('chico-hotshots').groups.map((g) => g.heading)).toEqual(['Current', 'Earlier, or not known to be current']);
     expect(viewOf('chico-hotshots').groups[0].rows.map((r) => [r.name, r.facts, r.status])).toEqual([
       ['Quinn Karolyi', ['Junior', 'U16'], 'Current'],
-      ['Evie Nielsen', ['Junior', 'Hotshots u19'], 'Current'],
       ['Lilah Letcher', ['Junior', 'U19'], 'Current, as of Sep 29, 2026'],
+      ['Evie Nielsen', ['Junior', 'Hotshots u19'], 'Current'],
       ['Kate Panighetti', ['Senior', 'U19'], 'Current, as of May 20, 2026'],
     ]);
   });
