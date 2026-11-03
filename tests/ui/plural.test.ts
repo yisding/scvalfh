@@ -1,5 +1,5 @@
 /**
- * Real plurals in count copy (SPEC §0.4): components/ui/plural.ts, and a source guard against the
+ * Real plurals in count copy (SPEC §0.4): components/words/plural.ts, and a source guard against the
  * '1 league games' / '1 games' templates it replaced (StandingsTable, MyTeamCard, the team page,
  * TeamStatTiles).
  */
@@ -8,7 +8,7 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { formStripName, gameWord, plural } from '../../components/ui/plural';
+import { formStripName, gameWord, plural } from '../../components/words/plural';
 import { REPO as ROOT } from '../helpers';
 
 function walk(dir: string): string[] {

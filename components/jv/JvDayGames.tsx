@@ -1,6 +1,6 @@
 import { timeOfDay } from '../../lib/format';
-import { JvFootnote } from '../teams/TeamJvGames';
-import type { JvListSummary, JvRowView } from '../teams/jv-view';
+import { JvFootnote } from './TeamJvGames';
+import type { JvListSummary, JvRowView } from './jv-view';
 import { describeGame, statusLabelIsTime, type SideView } from '../ui/describe-game';
 import { ScoreGlyph, nameClass } from '../ui/ScoreGlyph';
 import StatusLabel, { GameChips } from '../ui/StatusLabel';

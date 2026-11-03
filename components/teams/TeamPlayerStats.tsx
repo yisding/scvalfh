@@ -2,7 +2,7 @@ import EmptyState from '../ui/EmptyState';
 import ExternalLink from '../ui/ExternalLink';
 import MissingValue from '../ui/MissingValue';
 import SectionHeader from '../ui/SectionHeader';
-import { plural } from '../ui/plural';
+import { plural } from '../words/plural';
 import type { GoalieCard, PlayerStatsView, StatTable } from './player-stats-view';
 import { statText } from './player-stats-view';
 

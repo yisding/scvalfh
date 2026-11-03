@@ -2,8 +2,8 @@
 
 import { useSyncExternalStore } from 'react';
 
-import { ALL_LEAGUES, LEAGUE_KEY, PREFS_RESTAMP, REGION_KEY, REGION_OF, STAMPLESS_REGION } from '../layout/prefs-script';
-import { PINNED_TEAM_KEY } from '../layout/pinned-team-script';
+import { ALL_LEAGUES, LEAGUE_KEY, PREFS_RESTAMP, REGION_KEY, REGION_OF, STAMPLESS_REGION } from './prefs-script';
+import { PINNED_TEAM_KEY } from './pinned-team-script';
 import type { LeagueId, RegionId } from '../../lib/types';
 
 import { UNAVAILABLE, notifyStore, subscribeStore, useIsHydrated, useStoredValue, writeStored } from './local-store';
@@ -12,7 +12,7 @@ import { UNAVAILABLE, notifyStore, subscribeStore, useIsHydrated, useStoredValue
  * The remembered league and region, the client half (SPEC §8.2; DESIGN-socal §2.4).
  *
  * The SOURCE OF TRUTH on the client is `<html data-league>` and `<html data-region>`, which the
- * prefs script stamped before first paint (components/layout/prefs-script.ts) and which the scope
+ * prefs script stamped before first paint (components/prefs/prefs-script.ts) and which the scope
  * stylesheet already obeys. The hooks read those attributes through `useSyncExternalStore` with a
  * server snapshot of `null` (league) and `'norcal'` (region), so the hydrating render matches the
  * static HTML exactly and React re-renders once afterwards. Neither hook reads storage for the value:

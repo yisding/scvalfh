@@ -1,5 +1,5 @@
 /**
- * The pre-paint prefs stamp (components/layout/prefs-script.ts, SPEC §8.2), evaluated as the
+ * The pre-paint prefs stamp (components/prefs/prefs-script.ts, SPEC §8.2), evaluated as the
  * browser would run it: the exact script string in a `node:vm` context with a fake `localStorage`,
  * `document.documentElement` and `window`.
  */
@@ -15,8 +15,8 @@ import {
   REGION_OPEN,
   REGION_PICKED,
   buildPrefsScript,
-} from '../../components/layout/prefs-script';
-import { PINNED_TEAM_KEY, PINNED_TEAM_SCRIPT } from '../../components/layout/pinned-team-script';
+} from '../../components/prefs/prefs-script';
+import { PINNED_TEAM_KEY, PINNED_TEAM_SCRIPT } from '../../components/prefs/pinned-team-script';
 import { TEAMS } from '../../lib/teams';
 import { DEFAULT_REGION, LEAGUE_IDS, regionOf } from '../../lib/leagues';
 
@@ -261,7 +261,7 @@ describe('buildPrefsScript: the region', () => {
     expect(Object.fromEntries(html.attrs)).toEqual({ 'data-js': '' });
     const regionOfLeague = context[REGION_OF] as (l: string) => string | null;
     const team = TEAMS.find((t) => t.slug === metroSlug)!;
-    // What components/ui/use-league.ts setLeague does, in order: stamp the league, stamp its region.
+    // What components/prefs/use-league.ts setLeague does, in order: stamp the league, stamp its region.
     html.setAttribute('data-league', team.league);
     const region = regionOfLeague(team.league);
     expect(region).toBe('socal');
@@ -291,7 +291,7 @@ describe('buildPrefsScript: the region', () => {
 });
 
 /**
- * The row-marking pass (components/layout/pinned-team-script.ts) must stay registry-agnostic: a
+ * The row-marking pass (components/prefs/pinned-team-script.ts) must stay registry-agnostic: a
  * hard-coded slug list there once made the script bail before marking any row for a pin on a team
  * outside one league. Validating the pin against the registry is the prefs script's job.
  */

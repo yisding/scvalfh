@@ -62,7 +62,7 @@ import type {
 } from '../../lib/types';
 
 import { ladderLineAfter, ladderRow } from '../standings/standings-view';
-import { membershipSource } from '../ui/membership-words';
+import { membershipSource } from '../words/membership-words';
 
 // ---------------------------------------------------------------- small helpers
 
@@ -346,7 +346,7 @@ export function buildDivisionProjection(
     // the play-in notes below would be false rather than merely empty.
     // A league with no documents of its own (`official.mode: 'none'`) publishes no alignment. "As
     // MaxPreps lists it" only where MaxPreps' table for this division lists every row (the EAL);
-    // otherwise the league's membership source (components/ui/membership-words.ts).
+    // otherwise the league's membership source (components/words/membership-words.ts).
     const source = membershipSource(division, rows.map((r) => r.team.slug));
     const roster =
       source.kind === 'maxpreps'

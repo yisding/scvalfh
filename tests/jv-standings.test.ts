@@ -12,8 +12,8 @@ import {
   buildJvTablesView,
   jvTableTitle,
   teamJvStanding,
-} from '../components/standings/jv-standings-view';
-import { buildTeamJvView } from '../components/teams/jv-view';
+} from '../components/jv/jv-standings-view';
+import { buildTeamJvView } from '../components/jv/jv-view';
 import { getSnapshot } from '../lib/data';
 import { getJvClassification, getJvGamesForTeam, getJvMerge, getJvTables } from '../lib/jv/jv';
 import {

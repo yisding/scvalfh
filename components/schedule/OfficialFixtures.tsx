@@ -3,7 +3,7 @@ import { divisionHeading, getLeague } from '../../lib/leagues';
 import { getTeamBySlug } from '../../lib/teams';
 import type { LeagueId, OfficialFixture } from '../../lib/types';
 import ExternalLink from '../ui/ExternalLink';
-import { plural } from '../ui/plural';
+import { plural } from '../words/plural';
 import { officialScheduleLabel } from '../standings/standings-view';
 
 /**

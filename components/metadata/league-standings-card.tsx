@@ -1,6 +1,6 @@
 import { ImageResponse } from 'next/og';
 
-import { OG, OG_SIZE } from '../layout/og-theme';
+import { OG, OG_SIZE } from './og-theme';
 import { SITE_WORDMARK } from '../layout/site';
 import { getFetchedAt, getLastLeagueResultDate, getLeagueSummary, getStandings, getTeams } from '../../lib/data';
 import { formatStamp, placeMark, recordString, shortDate } from '../../lib/format';
@@ -67,7 +67,7 @@ function rowTracks(divisions: number) {
  */
 export function leagueStandingsCard(leagueId: string): ImageResponse {
   const league = getLeagueSummary(leagueId);
-  if (!league) throw new Error(`components/standings/league-standings-card.tsx: unknown league ${leagueId}`);
+  if (!league) throw new Error(`components/metadata/league-standings-card.tsx: unknown league ${leagueId}`);
   const teams = getTeams();
   const single = league.divisions.length === 1;
   const through = getLastLeagueResultDate({ league: league.id });

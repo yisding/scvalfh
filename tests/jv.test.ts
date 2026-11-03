@@ -14,7 +14,7 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { buildDayJvView, buildTeamJvView, jvDiffersNote } from '../components/teams/jv-view';
+import { buildDayJvView, buildTeamJvView, jvDiffersNote } from '../components/jv/jv-view';
 import { getJvCorrections, getJvFile, getJvGamesForTeam, getJvMerge, getJvTeam } from '../lib/jv/jv';
 import { JV_CORRECTIONS, applyJvCorrections } from '../lib/jv/jv-corrections';
 import { JV_FILL_NOTE, mergeJv } from '../lib/jv/jv-merge';
@@ -515,7 +515,7 @@ describe('the JV views', () => {
     for (const t of TEAMS) {
       const v = buildTeamJvView(t.slug);
       if (!v) continue;
-      expect(v.played + v.toCome + v.noScore, `components/teams/jv-view.ts ${t.slug}`).toBe(v.rows.length);
+      expect(v.played + v.toCome + v.noScore, `components/jv/jv-view.ts ${t.slug}`).toBe(v.rows.length);
     }
     expect(view.sbliveScores).toBe(view.rows.filter((r) => r.game.provenance.scores === 'sblive').length);
     expect(buildTeamJvView('not-a-school')).toBeNull();

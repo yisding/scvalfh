@@ -5,7 +5,7 @@ import { findDivision, findLeague, standingsLabel } from '../../lib/leagues';
 import { addressLine, gameAddress } from '../../lib/schools/venue';
 import ExternalLink from '../ui/ExternalLink';
 import SectionHeader from '../ui/SectionHeader';
-import { maxPrepsLabel } from '../ui/maxpreps-label';
+import { maxPrepsLabel } from '../words/maxpreps-label';
 
 import type { GameModel } from './game-view';
 

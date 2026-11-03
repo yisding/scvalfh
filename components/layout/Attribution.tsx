@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { Fragment } from 'react';
 
 import ExternalLink from '../ui/ExternalLink';
-import LastUpdated from '../ui/LastUpdated';
+import LastUpdated from './LastUpdated';
 import { getSitePhase } from '../../lib/data';
 import { listWords } from '../../lib/format';
 import { LEAGUES_PROPER, SECTIONS, getSection } from '../../lib/leagues';

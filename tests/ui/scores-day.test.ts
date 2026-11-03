@@ -32,14 +32,14 @@ type Day = typeof import('../../components/schedule/day-summary');
 
 let data: Data;
 let day: Day;
-let jvView: typeof import('../../components/teams/jv-view');
+let jvView: typeof import('../../components/jv/jv-view');
 let renderDay: (date: string) => Promise<string>;
 let describeDay: (date: string) => Promise<string>;
 
 beforeAll(async () => {
   data = await import('../../lib/data');
   day = await import('../../components/schedule/day-summary');
-  jvView = await import('../../components/teams/jv-view');
+  jvView = await import('../../components/jv/jv-view');
   const page = await import('../../app/scores/[date]/page');
   renderDay = async (date) =>
     renderToStaticMarkup((await page.default({ params: Promise.resolve({ date }) } as never)) as ReactElement);

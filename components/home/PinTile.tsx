@@ -3,7 +3,7 @@
 import Link from 'next/link';
 
 import TeamMonogram from '../ui/TeamMonogram';
-import { usePinnedTeam } from '../ui/use-pinned-team';
+import { usePinnedTeam } from '../prefs/use-pinned-team';
 
 import type { PinTileView } from './home-types';
 

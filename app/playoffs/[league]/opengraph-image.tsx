@@ -1,7 +1,7 @@
 import { ImageResponse } from 'next/og';
 import { notFound } from 'next/navigation';
 
-import { OG, OG_SIZE } from '../../../components/layout/og-theme';
+import { OG, OG_SIZE } from '../../../components/metadata/og-theme';
 import { SITE_NAME } from '../../../components/layout/site';
 import { ROUND_TITLES, type TournamentRoundView } from '../../../components/playoffs/playoff-view';
 import { tournamentLeague, tournamentStaticParams } from '../../../components/playoffs/tournament-league';

@@ -11,8 +11,8 @@ import SectionHeader from '../ui/SectionHeader';
 import StatusLabel from '../ui/StatusLabel';
 import TeamMonogram from '../ui/TeamMonogram';
 import type { GameDisplay } from '../ui/describe-game';
-import { formStripName } from '../ui/plural';
-import { isNearViewport, unpinFallbackTarget, usePinnedTeam } from '../ui/use-pinned-team';
+import { formStripName } from '../words/plural';
+import { isNearViewport, unpinFallbackTarget, usePinnedTeam } from '../prefs/use-pinned-team';
 import type { SearchIndex } from '../../lib/search';
 
 import {

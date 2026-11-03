@@ -6,7 +6,7 @@ import type { RegionId } from '../../lib/types';
 import Arrow from '../ui/Arrow';
 import { GameRow } from '../ui/GameRow';
 import SectionHeader from '../ui/SectionHeader';
-import { gameWord } from '../ui/plural';
+import { gameWord } from '../words/plural';
 import type { IndexDay, LeagueCardData, ScheduleIndexView } from './schedule-view';
 
 /**
@@ -28,7 +28,7 @@ import type { IndexDay, LeagueCardData, ScheduleIndexView } from './schedule-vie
  * index stays one list, so each `id="YYYY-MM-DD"` exists once, and each row's counts are scoped per
  * region. A card grid sits inside a plain region `<div>`: the jump links target a card's id, and a
  * region-scoped grid holding the target would be forced to `display:block` by the deep-link rule
- * (components/layout/league-scope-css.ts).
+ * (components/prefs/league-scope-css.ts).
  *
  * A server component over plain data; every row link carries `prefetch={false}`.
  */

@@ -1,4 +1,4 @@
-import PinControl from '../ui/PinControl';
+import PinControl from '../prefs/PinControl';
 import PlaceMark from '../ui/PlaceMark';
 import TeamMonogram from '../ui/TeamMonogram';
 import type { TeamPageView } from './team-view';

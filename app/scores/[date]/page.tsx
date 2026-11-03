@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation';
 import { Fragment } from 'react';
 
 import GameList from '../../../components/schedule/GameList';
-import JvDayGames from '../../../components/schedule/JvDayGames';
+import JvDayGames from '../../../components/jv/JvDayGames';
 import OfficialFixtures from '../../../components/schedule/OfficialFixtures';
 import SeasonCalendar from '../../../components/schedule/SeasonCalendar';
 import {
@@ -15,10 +15,10 @@ import {
   type DayRegion,
 } from '../../../components/schedule/day-summary';
 import { countGames } from '../../../components/schedule/filter-data';
-import { buildDayJvView } from '../../../components/teams/jv-view';
+import { buildDayJvView } from '../../../components/jv/jv-view';
 import EmptyState from '../../../components/ui/EmptyState';
 import SectionHeader from '../../../components/ui/SectionHeader';
-import { gameWord, plural } from '../../../components/ui/plural';
+import { gameWord, plural } from '../../../components/words/plural';
 import { RegionSwitcher } from '../../../components/layout/LeagueSwitcher';
 import PageHeader from '../../../components/layout/PageHeader';
 import { OG_BASE } from '../../../components/layout/site';

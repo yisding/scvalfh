@@ -14,7 +14,7 @@
  * `DOMContentLoaded` fires ONCE PER DOCUMENT, so this pass covers hard loads only — on a client-
  * side navigation (the bottom tab bar, which is the primary phone path) React renders the new page
  * from the RSC payload and nothing here runs again, which left the pinned row unmarked on exactly
- * the journeys a phone takes. `components/ui/PinnedTeamMarks.tsx` is pass two: it re-applies the
+ * the journeys a phone takes. `components/prefs/PinnedTeamMarks.tsx` is pass two: it re-applies the
  * same attribute after every navigation and whenever the pin itself changes. This script stays
  * because it is the only pass that can run before the first paint.
  *

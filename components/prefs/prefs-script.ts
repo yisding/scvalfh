@@ -3,7 +3,7 @@
  * DESIGN-socal §2.4).
  *
  * A SEPARATE inline `<head>` script, beside the theme stamp and today's pinned-team marker script
- * (components/layout/pinned-team-script.ts, unchanged). It stamps five attributes on `<html>`:
+ * (components/prefs/pinned-team-script.ts, unchanged). It stamps five attributes on `<html>`:
  *
  * - `data-js`         — always, first: JS is running, so `.sx-js-only` controls (the team finder,
  *                       the scope chips, the region switcher) are shown from the first paint with
@@ -27,19 +27,19 @@
  * pinning (through `setLeague`). Links never write it.
  *
  * The script also leaves `window.__sxRegionOf(leagueId)` behind: the ONE copy of the league→region
- * map the client needs. `setLeague` (components/ui/use-league.ts) calls it to stamp `data-region` in
+ * map the client needs. `setLeague` (components/prefs/use-league.ts) calls it to stamp `data-region` in
  * the same tick as `data-league`, so pinning a team of the other region never leaves the page with a
  * league panel inside a hidden region; and no client bundle carries the map or imports lib/leagues
  * (tests/ui/client-boundary.test.ts). The map ships as `R={"socal":"sunset city north-county
  * metro"}`: only the non-default regions, their leagues space-joined.
  *
- * The generated stylesheet (components/layout/league-scope-css.ts) keys off those attributes, so the
+ * The generated stylesheet (components/prefs/league-scope-css.ts) keys off those attributes, so the
  * right home panel is the one painted first: CLS 0, no reordering, and with JS off or storage
  * blocked nothing is stamped and the first-visit view (with every link working) is what renders.
  *
  * This module imports only the import-free pinned-team-script leaf, on purpose: the league ids, the
  * league→region map and the 102-entry `{slug: league}` map are arguments, so it is safe to import
- * from a client module (components/ui/use-league.ts reads `LEAGUE_KEY`, `REGION_KEY`,
+ * from a client module (components/prefs/use-league.ts reads `LEAGUE_KEY`, `REGION_KEY`,
  * `PREFS_RESTAMP` and `REGION_OF`) and from the root layout alike.
  *
  * The region pick (`data-region-picked`, REGION_PICKED). A jump link leaves a `:target` in the URL
@@ -107,7 +107,7 @@ export const REGION_OF = '__sxRegionOf';
  * `<html data-region-picked>`: the reader tapped a region switcher button on THIS page view. Never
  * stored; set by the script's click listener and cleared by its `hashchange` and `popstate`
  * listeners (see the header). While it is set the scope stylesheet's deep-link rule is off
- * (components/layout/league-scope-css.ts).
+ * (components/prefs/league-scope-css.ts).
  */
 export const REGION_PICKED = 'data-region-picked';
 
@@ -115,7 +115,7 @@ export const REGION_PICKED = 'data-region-picked';
  * `data-region-open` on a region block: a client-side navigation landed on a hidden fragment inside
  * it (`/leaders#players-socal` from a SoCal team page, read in NorCal). Set by the script's link-tap
  * listener, cleared by a region pick, an in-page jump, Back and Forward (see the header). The scope
- * stylesheet shows a block that carries it (components/layout/league-scope-css.ts).
+ * stylesheet shows a block that carries it (components/prefs/league-scope-css.ts).
  */
 export const REGION_OPEN = 'data-region-open';
 

@@ -10,7 +10,7 @@ import { gameAddress } from '../../lib/schools/venue';
 
 import ExternalLink from './ExternalLink';
 import GhostMonogram from './GhostMonogram';
-import { maxPrepsLabel } from './maxpreps-label';
+import { maxPrepsLabel } from '../words/maxpreps-label';
 import ResultChip from './ResultChip';
 import { ScoreGlyph, nameClass } from './ScoreGlyph';
 import StatusLabel, { GameChips } from './StatusLabel';
@@ -753,7 +753,7 @@ export function GameLine({ game, perspective, showChips = true, className }: Gam
  * phone row (288px of content at 320) is wider than that. The fixed tracks are `minmax(0, …)` so
  * they give way before the row overflows.
  */
-/** The log row's four-column grid, shared with the team page's JV list (components/teams/TeamJvGames.tsx). */
+/** The log row's four-column grid, shared with the team page's JV list (components/jv/TeamJvGames.tsx). */
 export const GAME_LOG_ROW_GRID =
   'relative @container grid min-h-row-1 grid-cols-[minmax(0,3.5rem)_minmax(0,1.25rem)_minmax(0,3.25rem)_minmax(0,1fr)] items-center gap-x-3 px-gutter py-2 text-meta';
 

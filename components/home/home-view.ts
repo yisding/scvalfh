@@ -94,7 +94,7 @@ import { thisWeekByRegion } from '../playoffs/this-week-inputs';
 import type { ThisWeekView } from '../playoffs/this-week';
 import { fixtureOpponent, nextOfficialFixture, pendingPairingFor } from '../teams/team-view';
 import { describeGame, gameKind, postseasonTagOf, type GameDisplay, type SideView } from '../ui/describe-game';
-import { plural } from '../ui/plural';
+import { plural } from '../words/plural';
 
 import type {
   HomeLastDisplay,

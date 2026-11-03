@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
 import ExternalLink from '../ui/ExternalLink';
-import LastUpdated from '../ui/LastUpdated';
+import LastUpdated from './LastUpdated';
 import { getSitePhase } from '../../lib/data';
 import type { LeagueId, TeamSlug } from '../../lib/types';
 

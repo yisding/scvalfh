@@ -24,8 +24,8 @@ import type {
 } from '../../lib/players/player-stats-schema';
 import type { Game, Team, TeamId } from '../../lib/types';
 import { gamesSinceUpdate, savePercent } from '../teams/player-stats-view';
-import { plural } from '../ui/plural';
-import { positionWords } from '../ui/position-words';
+import { plural } from '../words/plural';
+import { positionWords } from '../words/position-words';
 import { UNADJUSTED_NOTE, names, num, teamRef } from './board-kit';
 import { BOARD_PLACES, EXPANDED_PLACES, byName, rankBoard } from './ranking';
 import type { BoardScope } from './scope';

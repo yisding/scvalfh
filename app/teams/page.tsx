@@ -79,7 +79,7 @@ export default function TeamsPage() {
 
       {/* The region control, its own row under the header (DESIGN-socal §2.4). The finder below stays
           outside the region blocks and searches all 99 teams; while it is searching, both regions'
-          lists show (the /teams lift, components/layout/league-scope-css.ts). */}
+          lists show (the /teams lift, components/prefs/league-scope-css.ts). */}
       <RegionSwitcher className="mt-4" />
 
       {/* The finder is client-rendered on the server too, so its 48px field is in the first paint

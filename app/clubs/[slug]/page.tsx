@@ -9,7 +9,7 @@ import { buildClubPageView } from '../../../components/clubs/club-view';
 import PageHeader from '../../../components/layout/PageHeader';
 import { OG_BASE, ROOT_OG_IMAGE } from '../../../components/layout/site';
 import ExternalLink from '../../../components/ui/ExternalLink';
-import { plural } from '../../../components/ui/plural';
+import { plural } from '../../../components/words/plural';
 import SectionHeader from '../../../components/ui/SectionHeader';
 import { clubDisplayName, getClub, getClubAffiliations, getClubSlugs } from '../../../lib/players/clubs';
 

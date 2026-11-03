@@ -8,7 +8,7 @@ import { RegionSwitcher } from '../../components/layout/LeagueSwitcher';
 import PageHeader from '../../components/layout/PageHeader';
 import { OG_BASE, ROOT_OG_IMAGE } from '../../components/layout/site';
 import EmptyState from '../../components/ui/EmptyState';
-import { plural } from '../../components/ui/plural';
+import { plural } from '../../components/words/plural';
 import SectionHeader from '../../components/ui/SectionHeader';
 import { getRosters } from '../../lib/players/rosters';
 

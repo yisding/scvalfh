@@ -25,7 +25,7 @@ import { buildLeadersView } from '../../components/leaders/leaders-view';
 import { BOARD_PLACES, EXPANDED_PLACES, qualifyingMinimum, rankBoard } from '../../components/leaders/ranking';
 import type { LeaderBoard, LeaderSources, LeadersView, RegionLeadersView } from '../../components/leaders/types';
 import { statText } from '../../components/teams/player-stats-view';
-import { positionWords } from '../../components/ui/position-words';
+import { positionWords } from '../../components/words/position-words';
 import { getGames, getStandingFor, getTeams } from '../../lib/data';
 import { gradeWord, recordString } from '../../lib/format';
 import { regionOf } from '../../lib/leagues';

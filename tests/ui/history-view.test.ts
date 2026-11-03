@@ -17,7 +17,7 @@ import {
   rosterYear,
   splitOverallValue,
 } from '../../components/history/history-view';
-import { positionFromText } from '../../components/ui/position-words';
+import { positionFromText } from '../../components/words/position-words';
 import { getAvailableHistoryLeagues, type HistoryAwards } from '../../lib/history/history';
 import { getTeamBySlug } from '../../lib/teams';
 import { SEED_CLAIM, sectionById } from '../../scripts/copy-rules';

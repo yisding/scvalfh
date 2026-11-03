@@ -7,7 +7,7 @@ import { SEASON_CALENDAR_YEAR } from '../../lib/season';
 import type { LeagueId, RegionId } from '../../lib/types';
 
 import { OG, OG_SIZE } from './og-theme';
-import { SITE_WORDMARK } from './site';
+import { SITE_WORDMARK } from '../layout/site';
 
 /**
  * The two-region leaders card shared by the root OG card (app/opengraph-image.tsx) and the /standings

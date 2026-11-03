@@ -1,5 +1,5 @@
 import { EM_DASH, perGame, placeMark, placeWords, recordString, signedGd, streakString } from '../../lib/format';
-import { plural } from '../ui/plural';
+import { plural } from '../words/plural';
 import StatTile from '../ui/StatTile';
 import type { TeamPageView } from './team-view';
 import { placeSub } from './team-view';

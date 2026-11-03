@@ -1,6 +1,6 @@
 /**
  * The OG cards' size and palette, shared by every `opengraph-image.tsx` route and the league
- * standings card (components/standings/league-standings-card.tsx).
+ * standings card (components/metadata/league-standings-card.tsx).
  *
  * Every card is a dark, text-only `ImageResponse` (DESIGN §12.4). Its colours are the DARK theme's
  * tokens and are named after them (app/globals.css, the `--sx-*` block under

@@ -37,8 +37,8 @@ import {
 import { CLUB_REGIONS, CLUB_REGION_SITE_REGION, clubSiteKey } from '../../lib/players/clubs-schema';
 import { getRosters } from '../../lib/players/rosters';
 import type { RegionId, TeamSlug } from '../../lib/types';
-import { plural } from '../ui/plural';
-import { OUTLETS, hostOf, numbered, pathOf, schoolName } from '../ui/source-hosts';
+import { plural } from '../words/plural';
+import { OUTLETS, hostOf, numbered, pathOf, schoolName } from '../words/source-hosts';
 
 // ---------------------------------------------------------------- wording tables
 

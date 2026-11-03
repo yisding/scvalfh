@@ -5,7 +5,7 @@
  * always wins over a component's own classes.
  *
  * Everything keys off the attributes the prefs script stamps on `<html>` before first paint
- * (components/layout/prefs-script.ts):
+ * (components/prefs/prefs-script.ts):
  *
  * - `[data-scope="<id>"]`  shown only when that league is the effective league;
  *   `[data-scope="none"]`  shown only when there is none (the first-visit view);

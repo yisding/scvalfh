@@ -14,7 +14,7 @@
 
 import { SPORT_WORDS } from '../components/commits/commit-view';
 import { overallAwards, splitOverallValue } from '../components/history/history-view';
-import { positionFromText } from '../components/ui/position-words';
+import { positionFromText } from '../components/words/position-words';
 import { getClubs } from '../lib/players/clubs';
 import { getColleges } from '../lib/players/commits';
 import { getAvailableHistoryLeagues } from '../lib/history/history';

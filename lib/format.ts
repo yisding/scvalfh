@@ -290,7 +290,7 @@ export function hoursBetween(aIso: string, bIso: string): number {
 
 /**
  * Count copy with real plurals (SPEC §0.4): `plural(1, 'game')` → '1 game', `plural(3, 'game')` →
- * '3 games', `plural(2, 'loss', 'losses')` → '2 losses'. components/ui/plural.ts re-exports it.
+ * '3 games', `plural(2, 'loss', 'losses')` → '2 losses'. components/words/plural.ts re-exports it.
  */
 export function plural(n: number, one: string, many: string = `${one}s`): string {
   return `${n} ${n === 1 ? one : many}`;

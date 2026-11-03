@@ -2234,7 +2234,7 @@ The browser chrome follows an explicit choice too. The layout's two `theme-color
 the OS (`media`), so for Light or Dark the script, and `applyTheme` on a tap, prepend one
 media-less `<meta id="sx-theme-color">` with that theme's `--sx-bg` (the first matching meta wins);
 System removes it. The two hex values are one exported constant (`THEME_COLOR` in
-components/layout/theme-script.ts) that the layout and both scripts read; the added meta writes
+components/prefs/theme-script.ts) that the layout and both scripts read; the added meta writes
 them in upper case, because React 19 adopts an existing meta with the same name and content (it
 ignores `media`) and then drops it on the next client-side navigation. Rewriting the layout's own
 metas does not hold either: Next re-creates them on every client-side navigation.
@@ -3788,7 +3788,7 @@ layout never shifts. With JavaScript, `league-scope-css.ts` hides the other regi
 plus `:target` on the wrapper itself). On `/teams`, a search shows both regions' lists.
 
 **The control.** `RegionSwitcher` lives in `components/layout/LeagueSwitcher.tsx`, with its state in
-`components/ui/use-league.ts`. There is no new client module and no header toggle.
+`components/prefs/use-league.ts`. There is no new client module and no header toggle.
 
 - Markup: `<div role="group" aria-label="Region">` around two `aria-pressed` buttons, "NorCal" and "SoCal".
 - Style: a segmented control at `min-h-11 min-w-11`, `sx-js-only`, disabled until hydrated.

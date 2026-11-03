@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useSyncExternalStore } from 'react';
 
-import { PINNED_TEAM_KEY } from '../layout/pinned-team-script';
+import { PINNED_TEAM_KEY } from './pinned-team-script';
 import type { LeagueId } from '../../lib/types';
 
 import {
@@ -25,7 +25,7 @@ import { focusAfterWrite, setLeague, type LeagueFocus } from './use-league';
  * (pinned, unpinned, storage blocked).
  *
  * The pin is mirrored on `<html>` as `data-pin` (the slug) — stamped before first paint by the prefs
- * script (components/layout/prefs-script.ts) and kept in step here — because the home page's
+ * script (components/prefs/prefs-script.ts) and kept in step here — because the home page's
  * scope stylesheet reserves the My-team slot from it.
  *
  * Pinning a team ALSO remembers its league (`setLeague(leagueId)`): pinning is one of the three

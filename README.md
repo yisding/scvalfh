@@ -538,8 +538,8 @@ place when its table is shown and links it.
 #### JV standings
 
 `lib/jv/jv-standings.ts` builds one JV table per division, in three steps, and `/jv` prints them, one
-section per league (`app/jv/page.tsx`, `components/standings/JvStandings.tsx`, built by
-`components/standings/jv-standings-view.ts`). They are a page of their own, linked from each
+section per league (`app/jv/page.tsx`, `components/jv/JvStandings.tsx`, built by
+`components/jv/jv-standings-view.ts`). They are a page of their own, linked from each
 `/standings/<league>` page and from team pages, because the SCVAL standings page is at its weight
 budget and the JV tables are a different kind of claim, stated once at the top of `/jv`:
 
@@ -615,8 +615,8 @@ Around that merge, three hand-checked layers (audit of 2026-11-03, `docs/DATA-SO
   site"), and disagree with MaxPreps once (St. Ignatius at Homestead, Sep 21: 6-0 against MaxPreps'
   5-0; MaxPreps' score is shown and the other noted). With them the De Anza JV table is shown (26 of 30).
 
-`lib/jv/jv.ts` is the read API; `components/teams/jv-view.ts` builds both lists
-(`components/teams/TeamJvGames.tsx`, `components/schedule/JvDayGames.tsx`).
+`lib/jv/jv.ts` is the read API; `components/jv/jv-view.ts` builds both lists
+(`components/jv/TeamJvGames.tsx`, `components/jv/JvDayGames.tsx`).
 
 `update-data.yml` runs it after `fetch-player-stats`, on the same terms: it may fail without
 stopping the run, writes nothing outside the season window unless `--force`, leaves the file alone

@@ -4,8 +4,8 @@ import Link from 'next/link';
 import { Fragment, useEffect, useId, useMemo, useState } from 'react';
 
 import Arrow from '../ui/Arrow';
-import { plural } from '../ui/plural';
-import { usePinnedTeam } from '../ui/use-pinned-team';
+import { plural } from '../words/plural';
+import { usePinnedTeam } from '../prefs/use-pinned-team';
 import { listWords } from '../../lib/format';
 import { pinLabel } from '../../lib/pin-label';
 import {

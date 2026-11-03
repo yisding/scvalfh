@@ -203,7 +203,7 @@ describe('prefetch policy: a link that repeats per row never prefetches', () => 
       ['components/layout/NavLink.tsx', 'href={target}'],
       ['components/layout/Attribution.tsx', 'href="/about"'],
       ['components/layout/Attribution.tsx', 'href="/history/2025-26"'],
-      ['components/ui/LastUpdated.tsx', '/about#updates'],
+      ['components/layout/LastUpdated.tsx', '/about#updates'],
     ];
     for (const [rel, href] of WANT) {
       const src = readFileSync(path.join(ROOT, rel), 'utf8');

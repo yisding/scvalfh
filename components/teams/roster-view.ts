@@ -40,7 +40,7 @@ import {
 import type { TeamSlug } from '../../lib/types';
 import { playerClubGroups, type RosterClubGroup } from '../clubs/club-view';
 import { SPORT_WORDS, playerCommitLine, sportLabel, type RosterCommitLine } from '../commits/commit-view';
-import { positionWords } from '../ui/position-words';
+import { positionWords } from '../words/position-words';
 
 /**
  * How a conflict sentence names the source that disagrees. A MaxPreps roster page of an earlier

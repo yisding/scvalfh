@@ -40,7 +40,7 @@ import {
 import type { LeagueSummary } from '../../lib/data';
 import { dateWithYear, formatStamp, listWords, numberWord, ordinal, plural, shortDate, timeOfDayPT } from '../../lib/format';
 import { getAvailableHistoryLeagues, getHistorySeason, getUnavailableHistoryLeagues } from '../../lib/history/history';
-import { jvTableTitle } from '../../components/standings/jv-standings-view';
+import { jvTableTitle } from '../../components/jv/jv-standings-view';
 import { getJvCorrections, getJvFile, getJvMerge, getJvSchoolSiteMerge, getJvTables } from '../../lib/jv/jv';
 import { JV_SCHOOL_SITES } from '../../lib/jv/jv-school-sites';
 import { JV_STANDINGS_MIN_REPORTED_SHARE } from '../../lib/jv/jv-standings';

@@ -20,9 +20,9 @@ import {
   gameStaticParams,
   gameTitle,
 } from '../../../components/game/game-view';
-import JsonLd from '../../../components/layout/JsonLd';
+import JsonLd from '../../../components/metadata/JsonLd';
 import { OG_BASE } from '../../../components/layout/site';
-import { gameJsonLd } from '../../../components/layout/structured-data';
+import { gameJsonLd } from '../../../components/metadata/structured-data';
 import { getBracketPlace } from '../../../components/playoffs/bracket-place';
 import Arrow from '../../../components/ui/Arrow';
 import ExternalLink from '../../../components/ui/ExternalLink';

@@ -32,7 +32,7 @@ import { REGIONS, getLeague } from '../../lib/leagues';
 import { getRosterEnrichment, getRosters } from '../../lib/players/rosters';
 import type { RegionId, TeamSlug } from '../../lib/types';
 import { buildRosterView, type RosterRow } from '../teams/roster-view';
-import { plural } from '../ui/plural';
+import { plural } from '../words/plural';
 
 /** A roster row with something to show here: its commitment, clubs and profiles, as the team page has them. */
 export interface RecruitingRow extends Pick<RosterRow, 'key' | 'name' | 'commitment' | 'clubs' | 'profiles'> {

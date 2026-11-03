@@ -21,7 +21,7 @@ import { getTeamBySlug } from '../../lib/teams';
 import type { Game, LeagueId, RegionId } from '../../lib/types';
 import { getBracketLink } from '../playoffs/bracket-link';
 import { describeGame, postseasonTagOf } from '../ui/describe-game';
-import { gameWord, plural } from '../ui/plural';
+import { gameWord, plural } from '../words/plural';
 
 import { countGames, type ScheduleCounts } from './filter-data';
 

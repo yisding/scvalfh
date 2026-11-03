@@ -5,8 +5,8 @@ import { gameHref } from '../../lib/game-id';
 import type { FormGame } from '../../lib/data';
 import { getTeamBySlug } from '../../lib/teams';
 
-import EmptyState from './EmptyState';
-import { signedMargin } from './describe-game';
+import EmptyState from '../ui/EmptyState';
+import { signedMargin } from '../ui/describe-game';
 
 /**
  * The second and last chart on the site (DESIGN §5.7, §7.9).

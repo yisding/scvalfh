@@ -7,7 +7,7 @@ import {
   gameKicker,
   gameStaticParams,
 } from '../../../components/game/game-view';
-import { OG, OG_SIZE } from '../../../components/layout/og-theme';
+import { OG, OG_SIZE } from '../../../components/metadata/og-theme';
 import { SITE_NAME } from '../../../components/layout/site';
 import { dateWithYear, timeOfDayPT } from '../../../lib/format';
 

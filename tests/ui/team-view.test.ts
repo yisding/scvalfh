@@ -452,7 +452,7 @@ describe('/teams/[slug] pages (app/teams/[slug]/page.tsx)', () => {
   it('the margin strip spans the division\'s scheduled league games, never a phantom 14-game season', async () => {
     const PHONE_CELL = 'flex flex-col items-center min-w-3 max-w-14 flex-1';
     // A slate longer than 14 (MCAL's 16) takes the 20px desktop floor at a 24px pitch, so it fits
-    // the 380px plot of a half-width card at 1024px (components/ui/MarginStrip.tsx).
+    // the 380px plot of a half-width card at 1024px (components/teams/MarginStrip.tsx).
     const desktopCell = (slots: number) =>
       `flex flex-col items-center ${slots > 14 ? 'min-w-5' : 'min-w-6'} max-w-14 flex-1`;
     let checked = 0;

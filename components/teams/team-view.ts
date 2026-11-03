@@ -85,7 +85,7 @@ import { getBracketPlace } from '../playoffs/bracket-place';
 import { buildOverviewDivision, type OverviewDivision } from '../standings/standings-view';
 import type { FormEntry } from '../ui/FormStrip';
 import { describeGame, shootoutSectionOf } from '../ui/describe-game';
-import { maxPrepsLabel } from '../ui/maxpreps-label';
+import { maxPrepsLabel } from '../words/maxpreps-label';
 
 /** One opponent in this team's table that it has not beaten yet (DESIGN §3.7). */
 export interface UnbeatenOpponent {

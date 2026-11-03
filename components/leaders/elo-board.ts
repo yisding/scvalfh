@@ -26,7 +26,7 @@ import {
   type TeamRating,
 } from '../../lib/ratings/ratings';
 import type { Game, RegionId, Team, TeamSlug } from '../../lib/types';
-import { plural } from '../ui/plural';
+import { plural } from '../words/plural';
 import { num, schoolBoard } from './board-kit';
 import { byName, qualifyingMinimum } from './ranking';
 import { AND_INDEPENDENTS, LEAGUE_COUNT, regionScope } from './scope';

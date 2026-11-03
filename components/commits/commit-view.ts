@@ -45,8 +45,8 @@ import { REGIONS, regionOf } from '../../lib/leagues';
 import { getRosters } from '../../lib/players/rosters';
 import { getTeamBySlug } from '../../lib/teams';
 import type { RegionId, TeamSlug } from '../../lib/types';
-import { plural } from '../ui/plural';
-import { OUTLETS, hostOf, numbered, pathOf, schoolName } from '../ui/source-hosts';
+import { plural } from '../words/plural';
+import { OUTLETS, hostOf, numbered, pathOf, schoolName } from '../words/source-hosts';
 
 // ---------------------------------------------------------------- wording tables
 

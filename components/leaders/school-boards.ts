@@ -17,7 +17,7 @@
 import type { AdjustedScoring } from '../../lib/ratings/adjusted-scoring';
 import { listWords, recordString, recordWords, signedGd, winPct } from '../../lib/format';
 import type { ComputedRecord, Game, Standing, Team, TeamId } from '../../lib/types';
-import { plural } from '../ui/plural';
+import { plural } from '../words/plural';
 import { UNADJUSTED_NOTE, num, schoolBoard } from './board-kit';
 import type { EloBoardView } from './elo-board';
 import { byName, qualifyingMinimum } from './ranking';

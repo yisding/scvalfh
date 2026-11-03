@@ -1,7 +1,7 @@
 import { ImageResponse } from 'next/og';
 
-import { OG_SIZE } from '../components/layout/og-theme';
-import { RegionCard, rootCardProps } from '../components/layout/og-region-card';
+import { OG_SIZE } from '../components/metadata/og-theme';
+import { RegionCard, rootCardProps } from '../components/metadata/og-region-card';
 import { ROOT_OG_ALT } from '../components/layout/site';
 
 /**
@@ -15,7 +15,7 @@ import { ROOT_OG_ALT } from '../components/layout/site';
  * league has no division label (`PCAL  Stevenson 18 pts`). Co-leaders: at most two names joined with
  * " & ", then ` +<n>`. A league with no counted result reads `No league results yet`. No league hue.
  * The layout, the words and the row are shared with the /standings card
- * (components/layout/og-region-card.tsx), which says why nine rows needed two columns; the fit is
+ * (components/metadata/og-region-card.tsx), which says why nine rows needed two columns; the fit is
  * render-tested with every leader line at its longest (tests/ui/og-region-card.test.ts).
  */
 export const alt = ROOT_OG_ALT;

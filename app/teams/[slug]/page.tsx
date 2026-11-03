@@ -5,7 +5,7 @@ import { notFound } from 'next/navigation';
 import TeamElo from '../../../components/teams/TeamElo';
 import TeamGameLog from '../../../components/teams/TeamGameLog';
 import TeamIdentity from '../../../components/teams/TeamIdentity';
-import TeamJvGames from '../../../components/teams/TeamJvGames';
+import TeamJvGames from '../../../components/jv/TeamJvGames';
 import TeamNextGame from '../../../components/teams/TeamNextGame';
 import TeamOfficialFixtures from '../../../components/teams/TeamOfficialFixtures';
 import TeamPlayerStats from '../../../components/teams/TeamPlayerStats';
@@ -18,8 +18,8 @@ import {
   buildPlayerStatsView,
   type PlayerStatsView,
 } from '../../../components/teams/player-stats-view';
-import { teamJvStanding } from '../../../components/standings/jv-standings-view';
-import { buildTeamJvView } from '../../../components/teams/jv-view';
+import { teamJvStanding } from '../../../components/jv/jv-standings-view';
+import { buildTeamJvView } from '../../../components/jv/jv-view';
 import { buildRosterView, type RosterView } from '../../../components/teams/roster-view';
 import { buildTeamPageView, type TeamPageView } from '../../../components/teams/team-view';
 import { regionIdSuffix } from '../../../components/leaders/scope';
@@ -30,12 +30,12 @@ import FormStrip from '../../../components/ui/FormStrip';
 import { gameKindLabel } from '../../../components/ui/describe-game';
 import { GameCard, GameRow } from '../../../components/ui/GameRow';
 import LeagueHealthNote from '../../../components/ui/LeagueHealthNote';
-import MarginStrip from '../../../components/ui/MarginStrip';
-import { formStripName, plural } from '../../../components/ui/plural';
+import MarginStrip from '../../../components/teams/MarginStrip';
+import { formStripName, plural } from '../../../components/words/plural';
 import SectionHeader from '../../../components/ui/SectionHeader';
-import JsonLd from '../../../components/layout/JsonLd';
+import JsonLd from '../../../components/metadata/JsonLd';
 import { DATA_CORRECTIONS_URL, OG_BASE } from '../../../components/layout/site';
-import { teamJsonLd } from '../../../components/layout/structured-data';
+import { teamJsonLd } from '../../../components/metadata/structured-data';
 import { getTeamSlugs, getToday } from '../../../lib/data';
 import { ordinal, recordString, shortDate } from '../../../lib/format';
 import { getHistoryFor, getHistorySeason, getHistoryStandings } from '../../../lib/history/history';

@@ -1,5 +1,5 @@
 /**
- * The schema.org JSON-LD the pages carry (rendered by components/layout/JsonLd.tsx): a `WebSite` on
+ * The schema.org JSON-LD the pages carry (rendered by components/metadata/JsonLd.tsx): a `WebSite` on
  * `/`, a `SportsTeam` on each team page and a `SportsEvent` on each game page. Nothing here renders.
  * Server-only: it reads the site constants and the league config.
  *
@@ -34,7 +34,7 @@ import { isIndependentLeague, type LeagueConfig } from '../../lib/leagues';
 import type { Team } from '../../lib/types';
 import { gameAddress } from '../../lib/schools/venue';
 
-import { SITE_DESCRIPTION, SITE_NAME, SITE_SHORT_NAME, SITE_URL, SITE_WORDMARK } from './site';
+import { SITE_DESCRIPTION, SITE_NAME, SITE_SHORT_NAME, SITE_URL, SITE_WORDMARK } from '../layout/site';
 
 /** A JSON-LD node: plain JSON, nothing a `JSON.stringify` would drop. */
 export type JsonLdNode = { [key: string]: JsonLdValue };
