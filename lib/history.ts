@@ -19,11 +19,14 @@ import bundledBrackets from '../data/history-brackets-2025-26.json';
 import bundledHistory from '../data/history-2025-26.json';
 import {
   BRACKET_SECTION_IDS,
+  BRACKET_TOURNAMENT_IDS,
   HistoryBracketsSchema,
   type BracketSectionId,
+  type BracketTournamentId,
   type HistoryBracketGame,
   type HistoryBracketSide,
   type SectionBracket,
+  type TournamentBracket,
 } from './history-brackets-schema';
 import {
   HistorySchema,
@@ -54,11 +57,13 @@ export type {
 } from './history-schema';
 export type {
   BracketSectionId,
+  BracketTournamentId,
   HistoryBracketDivision,
   HistoryBracketGame,
   HistoryBracketRound,
   HistoryBracketSide,
   SectionBracket,
+  TournamentBracket,
 } from './history-brackets-schema';
 
 /**
@@ -130,7 +135,7 @@ export function getHistoryLastChecked(): string {
         ? [entry.provenance.retrievedOn]
         : [],
   );
-  const bracketDays = getHistoryBrackets().map((b) => b.bracket.retrievedOn);
+  const bracketDays = [...getHistoryBrackets(), ...getHistoryTournaments()].map((b) => b.bracket.retrievedOn);
   // Every section bracket has a `retrievedOn` (the schema requires one), so the list is never empty.
   return [...leagueDays, ...bracketDays].sort().at(-1)!;
 }
@@ -230,7 +235,8 @@ export function getHistoryUnpublishedTies(leagueId: LeagueId): HistoryRow[] {
 
 /**
  * data/history-brackets-2025-26.json: the 2025 CCS and San Diego Section brackets, transcribed by
- * hand from each section's own documents (lib/history-brackets-schema.ts). Bundled and validated at
+ * hand from each section's own documents, and the 2025 Tournament of Champions, assembled from a
+ * school newspaper and MaxPreps' schedules (lib/history-brackets-schema.ts). Bundled and validated at
  * module scope, like the standings above.
  */
 function loadBrackets() {
@@ -257,6 +263,34 @@ export function getHistoryBrackets(): Array<{ id: BracketSectionId; bracket: Sec
 export function getHistoryBracketFor(leagueId: LeagueId): { id: BracketSectionId; bracket: SectionBracket } | null {
   const sectionId: SectionId = getLeague(leagueId).sectionId;
   return getHistoryBrackets().find((b) => b.id === sectionId) ?? null;
+}
+
+/**
+ * Each postseason with a 2025 bracket that no CIF section runs (the Tournament of Champions), with the
+ * league its block follows on /history/2025-26: the last of the leagues whose teams play in it in
+ * lib/leagues.ts order (the LA independents, after the Sunset), so it sits after both, in their region.
+ */
+export function getHistoryTournaments(): Array<{
+  id: BracketTournamentId;
+  bracket: TournamentBracket;
+  afterLeague: LeagueId;
+  /** The leagues whose postseason it is (the Sunset and the LA independents), in config order. */
+  leagues: LeagueId[];
+}> {
+  return BRACKET_TOURNAMENT_IDS.map((id) => {
+    // The no-postseason leagues of the section whose teams play it (DESIGN §24.13): the Sunset and the LA
+    // independents. Asserted in tests/history-brackets.test.ts.
+    const leagues = LEAGUE_IDS.filter((l) => {
+      const league = getLeague(l);
+      return getSection(league.sectionId).outsideTournament?.id === id && league.postseason.kind === 'no-postseason';
+    });
+    return { id, bracket: brackets.tournaments[id], afterLeague: leagues[leagues.length - 1], leagues };
+  });
+}
+
+/** The 2025 tournament bracket a league's teams played in (the Sunset's and the LA independents'), or null. */
+export function getHistoryTournamentFor(leagueId: LeagueId): ReturnType<typeof getHistoryTournaments>[number] | null {
+  return getHistoryTournaments().find((t) => t.leagues.includes(leagueId)) ?? null;
 }
 
 /** The section's name for a bracket block ("Central Coast Section"). */

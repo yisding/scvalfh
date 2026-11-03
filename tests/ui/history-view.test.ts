@@ -20,7 +20,7 @@ import {
 import { positionFromText } from '../../components/ui/position-words';
 import { getAvailableHistoryLeagues, type HistoryAwards } from '../../lib/history';
 import { getTeamBySlug } from '../../lib/teams';
-import { sectionById } from '../../scripts/copy-rules';
+import { SEED_CLAIM, sectionById } from '../../scripts/copy-rules';
 import { textOf } from './html-text';
 
 const blocks: Array<{ leagueId: string; division: string; awards: HistoryAwards }> = getAvailableHistoryLeagues()
@@ -191,9 +191,34 @@ describe('/history/2025-26 by region (app/history/2025-26/page.tsx, DESIGN-socal
     expect(text).toContain('Official, from the San Diego Section: 2025 CIFSDS playoff brackets (Google Sheet)');
     expect(text).toContain('year_id=175');
     // An unavailable SoCal card never claims a champion, a place or a record from the documents it links.
-    // The San Diego Section's bracket is its own section (#sds), not part of any league's card.
+    // The San Diego Section's bracket is its own section (#sds), not part of any league's card; so is the
+    // Tournament of Champions' (#toc), which the Sunset and LA cards name only to point to it.
     for (const id of ['sunset', 'city', 'north-county', 'metro', 'independents']) {
-      expect(textOf(sectionById(html, id)), `#${id}`).not.toMatch(/champion|all-league|\d+-\d+-\d+ league record/i);
+      const card = textOf(sectionById(html, id)).replace(/Tournament of Champions/g, '');
+      expect(card, `#${id}`).not.toMatch(/champion|all-league|\d+-\d+-\d+ league record/i);
     }
+    for (const id of ['sunset', 'independents']) {
+      expect(sectionById(html, id), `#${id} points to #toc`).toContain('href="#toc"');
+    }
+    for (const id of ['city', 'north-county', 'metro']) expect(sectionById(html, id)).not.toContain('href="#toc"');
+  });
+
+  it('draws the 2025 Tournament of Champions after the LA independents, in SoCal, with no seed', async () => {
+    const { default: HistoryPage } = await import('../../app/history/2025-26/page');
+    const html = renderToStaticMarkup(createElement(HistoryPage));
+    expect(html).toMatch(/<section id="toc" data-region-scope="socal"/);
+    expect(html).toMatch(/href="#toc" data-region-scope="socal"/);
+    expect(html.indexOf('<section id="toc"')).toBeGreaterThan(html.indexOf('<section id="independents"'));
+    const toc = sectionById(html, 'toc')!;
+    const text = textOf(toc);
+    expect(text).toContain('Tournament of Champions champion');
+    expect(text).toContain('Harvard-Westlake');
+    expect(text).toContain('Beat Newport Harbor 4-0 in the final');
+    expect(text).toContain('Newport Harbor and Bonita drew 1-1; Newport Harbor went through.');
+    expect(text).toContain('Third place, Oct 25: Huntington Beach beat Edison 1-0.');
+    expect(text).toContain('run by the Los Angeles Field Hockey Association, not by CIF');
+    expect(text).not.toMatch(SEED_CLAIM);
+    // The seed column of every drawn line is empty.
+    expect(toc).not.toMatch(/<span class="sx-num w-5 shrink-0 text-right text-meta text-ink-3">\d+<\/span>/);
   });
 });

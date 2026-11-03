@@ -1,11 +1,13 @@
 /**
- * data/history-brackets-2025-26.json — the 2025 CCS and San Diego Section brackets on
- * /history/2025-26 — and its contract, lib/history-brackets-schema.ts.
+ * data/history-brackets-2025-26.json — the 2025 CCS and San Diego Section brackets and the 2025
+ * Tournament of Champions on /history/2025-26 — and its contract, lib/history-brackets-schema.ts.
  *
  * The file is a hand transcription, so the results it must reproduce are asserted literally from
  * the sources its `notes` name (read 2026-10-07): the CCS bracket pages on cifccs.org and the CCS
  * Field Hockey History PDF; the San Diego Section's "2025 Championship Brackets" Google Sheet and
- * its Record Book. If a value here changes, the page changes with it.
+ * its Record Book; for the Tournament of Champions (read 2026-11-03), the Harvard-Westlake Chronicle
+ * and MaxPreps' 2025-26 schedules, which data/prior-season.json holds. If a value here changes, the
+ * page changes with it.
  */
 
 import { readFileSync } from 'node:fs';
@@ -19,17 +21,30 @@ import {
   gameNote,
   gameSentence,
   gameSentenceTail,
+  historyBracketView,
   roundByes,
   sideName,
+  thirdPlaceLine,
 } from '../components/history/bracket-view';
 import { HistoryBracketsSchema, type HistoryBrackets } from '../lib/history-brackets-schema';
-import { getHistoryBracketFor, getHistoryBrackets } from '../lib/history';
+import {
+  getHistoryBracketFor,
+  getHistoryBrackets,
+  getHistoryLastChecked,
+  getHistoryTournamentFor,
+  getHistoryTournaments,
+} from '../lib/history';
+import { TOC } from '../lib/leagues';
+import { getPriorSeason } from '../lib/prior-season';
+import { teamsInLeague } from '../lib/teams';
+import { SEED_CLAIM } from '../scripts/copy-rules';
 import { REPO } from './helpers';
 
 const raw = JSON.parse(readFileSync(path.join(REPO, 'data', 'history-brackets-2025-26.json'), 'utf8')) as HistoryBrackets;
 const brackets = HistoryBracketsSchema.parse(raw);
 const ccs = brackets.sections.ccs;
 const sds = brackets.sections.sds;
+const toc = brackets.tournaments.toc;
 const division = (s: typeof ccs, id: string) => s.divisions.find((d) => d.id === id)!;
 
 /** Every game of a division as "winner beat loser" sentences, round by round. */
@@ -166,9 +181,85 @@ describe('the 2025 San Diego Section brackets', () => {
   });
 });
 
+describe('the 2025 Tournament of Champions', () => {
+  const d = toc.divisions[0];
+
+  it('is the Los Angeles Field Hockey Association’s eight-team bracket, three rounds, no seeds', () => {
+    expect(toc.organizer).toBe('Los Angeles Field Hockey Association');
+    expect(d.rounds.map((r) => `${r.name} ${r.date}`)).toEqual([
+      'First round 2025-10-21',
+      'Semifinals 2025-10-23',
+      'Final 2025-10-25',
+    ]);
+    expect(d.rounds.map((r) => r.games.length)).toEqual([4, 2, 1]);
+    const sides = d.rounds.flatMap((r) => r.games.flatMap((g) => [g.top, g.bottom]));
+    expect(new Set(d.rounds[0].games.flatMap((g) => [g.top.slug, g.bottom.slug])).size).toBe(8);
+    expect(sides.every((s) => s.seed === null)).toBe(true);
+  });
+
+  it('reproduces the games, Harvard-Westlake’s as the Chronicle reports them', () => {
+    expect(d.rounds.map((r) => r.games.map(gameSentence))).toEqual([
+      [
+        'Harvard-Westlake beat Fountain Valley 5-1.',
+        'Edison beat Great Oak 2-0.',
+        'Huntington Beach beat Glendora 1-0.',
+        'Newport Harbor and Bonita drew 1-1; Newport Harbor went through.',
+      ],
+      ['Harvard-Westlake beat Edison 2-1.', 'Newport Harbor beat Huntington Beach 2-1.'],
+      ['Harvard-Westlake beat Newport Harbor 4-0.'],
+    ]);
+    const { champion, final } = divisionChampion(d);
+    expect(sideName(champion)).toBe('Harvard-Westlake');
+    expect(finalLine(final)).toBe('Beat Newport Harbor 4-0 in the final');
+    expect(gameNote(final, d.rounds[2])).toBe('At Ted Slavin Field, Harvard-Westlake');
+    expect(gameNote(d.rounds[0].games[3], d.rounds[0])).toBe('Tiebreak not reported');
+    expect(thirdPlaceLine(d)).toBe('Third place, Oct 25: Huntington Beach beat Edison 1-0.');
+  });
+
+  it('is every game between two Southern Section teams of Oct 21-25, 2025 in MaxPreps’ schedules, home team on top', () => {
+    // Every team of the leagues whose postseason it is, not only the eight: a ninth team's game in that week
+    // would be a game the bracket left out.
+    const ss: ReadonlySet<string> = new Set(getHistoryTournaments()[0].leagues.flatMap((l) => teamsInLeague(l).map((t) => t.slug)));
+    const prior = getPriorSeason().games.filter(
+      (g) => g.date >= '2025-10-21' && g.date <= '2025-10-25' && ss.has(g.homeSlug) && ss.has(g.awaySlug),
+    );
+    const games = [
+      ...d.rounds.flatMap((r) => r.games.map((g) => ({ g, date: r.date }))),
+      ...(d.thirdPlace ? [{ g: d.thirdPlace.game, date: d.thirdPlace.date }] : []),
+    ];
+    const asFile = games.map(({ g, date }) => `${date} ${g.top.slug} ${g.score![0]}-${g.score![1]} ${g.bottom.slug}`).sort();
+    const asMaxPreps = prior.map((g) => `${g.date} ${g.homeSlug} ${g.homeScore}-${g.awayScore} ${g.awaySlug}`).sort();
+    expect(asFile).toEqual(asMaxPreps);
+  });
+
+  it('draws no seed: no number on a line, no seed word, no byes', () => {
+    const view = historyBracketView(d);
+    for (const round of view.rounds) {
+      expect(round.byes).toBeNull();
+      for (const card of round.cards) {
+        for (const side of [card.top, card.bottom]) expect('seed' in side ? side.seed : null).toBeNull();
+        expect(card.sentence.join('')).not.toMatch(SEED_CLAIM);
+      }
+    }
+  });
+});
+
 describe('lib/history bracket reads', () => {
   it('places the CCS bracket after PCAL and the San Diego Section’s after Metro', () => {
     expect(getHistoryBrackets().map((b) => `${b.id}:${b.afterLeague}`)).toEqual(['ccs:pcal', 'sds:metro']);
+  });
+
+  it('places the Tournament of Champions after the LA independents, the postseason of them and the Sunset', () => {
+    expect(getHistoryTournaments().map((t) => `${t.id}:${t.afterLeague}:${t.leagues.join('+')}`)).toEqual([
+      `${TOC.id}:independents:sunset+independents`,
+    ]);
+    expect(getHistoryTournamentFor('sunset')?.id).toBe('toc');
+    expect(getHistoryTournamentFor('independents')?.id).toBe('toc');
+    for (const id of ['scval', 'mcal', 'city', 'north-county', 'metro'] as const) expect(getHistoryTournamentFor(id)).toBeNull();
+  });
+
+  it('dates the archive by the latest read, the Tournament of Champions’ included', () => {
+    expect(getHistoryLastChecked() >= toc.retrievedOn).toBe(true);
   });
 
   it('finds a league’s section bracket, and none for a section that held no playoffs', () => {
@@ -213,6 +304,27 @@ describe('the bracket contract refuses a transcription slip', () => {
     const h = clone();
     h.sections.sds.divisions[0].rounds[0].games[0].top.slug = 'los-gatos';
     expect(issues(h).join('\n')).toMatch(/not a registry slug of a sds league/);
+  });
+
+  it('refuses a seed in the Tournament of Champions, and a school outside its leagues', () => {
+    const h = clone();
+    (h.tournaments.toc.divisions[0].rounds[0].games[0].top as { seed: number | null }).seed = 1;
+    expect(issues(h).length).toBeGreaterThan(0);
+    const h2 = clone();
+    h2.tournaments.toc.divisions[0].rounds[0].games[0].bottom.slug = 'eastlake';
+    expect(issues(h2).join('\n')).toMatch(/not a registry slug of a Sunset or LA independents team/);
+  });
+
+  it('refuses a third-place game that is not between the beaten semifinalists', () => {
+    const h = clone();
+    h.tournaments.toc.divisions[0].thirdPlace!.game.top = { seed: null, name: 'Great Oak', slug: 'great-oak' };
+    expect(issues(h).join('\n')).toMatch(/third-place game/);
+  });
+
+  it('refuses an unreported tiebreak on a game that was not level', () => {
+    const h = clone();
+    h.sections.ccs.divisions[0].rounds[0].games[0].decidedBy = 'tiebreak-unreported';
+    expect(issues(h).join('\n')).toMatch(/winner, score/);
   });
 
   it('refuses a division that does not end in one final', () => {

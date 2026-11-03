@@ -1042,5 +1042,212 @@
         }
       ]
     }
+  },
+  "tournaments": {
+    "toc": {
+      "tournament": "toc",
+      "organizer": "Los Angeles Field Hockey Association",
+      "title": "2025 Tournament of Champions",
+      "retrievedOn": "2026-11-03",
+      "sources": [
+        {
+          "label": "Harvard-Westlake Chronicle: “Field Hockey wins Tournament of Champions” (Nov 15, 2025)",
+          "url": "https://hwchronicle.com/112272/sports/field-hockey-wins-tournament-of-champions-2/"
+        },
+        {
+          "label": "Harvard-Westlake Chronicle on the organizer (Aug 25, 2026)",
+          "url": "https://hwchronicle.com/114175/sports/field-hockey-concentrates-as-a-group/"
+        }
+      ],
+      "notes": [
+        "No organizer site, bracket, pairings or seeding was found (DATA-SOURCES §1.8), so the bracket is assembled from the games, and its sides carry no seed. Read 2026-11-03.",
+        "Harvard-Westlake’s three games are the Chronicle’s (Nov 15, 2025, Jack Turetzky): 5-1 over Fountain Valley “in the first round on Oct. 21”, 2-1 over Edison “in the semi-finals on Oct. 23”, and 4-0 over Newport Harbor “in the 2025 Los Angeles Field Hockey Association (LAFHA) Tournament of Champions (TOC) championship game at Ted Slavin Field on Oct. 25”, the site stored on the final. MaxPreps gives the same three scores.",
+        "The other five games are MaxPreps’ 2025-26 schedules, as data/prior-season.json holds them (fetched 2026-10-06): every game between two Southern Section registry teams dated Oct 21-25, 2025, and no other. Round 1, Oct 21: Edison 2-0 Great Oak (contest 8133dc93-78c5-45a1-ae7b-0ed7a4214c62), Huntington Beach 1-0 Glendora (fe22cc04-b57b-4064-8355-c1ae0180c58f), Bonita 1-1 Newport Harbor (f88dfa34-7a02-4a22-881e-d53cbdd477c2), Harvard-Westlake 5-1 Fountain Valley (695c3425-e754-484b-bd20-fcafb9e1e7c8). Semifinals, Oct 23: Harvard-Westlake 2-1 Edison (90fb61cd-9bc8-4f75-9a4a-92346247d24a), Newport Harbor 2-1 at Huntington Beach (cd408c12-1054-462d-87b6-2c17e1424f56). Oct 25: the final (1fcc4412-70a9-42a6-97fe-aa400cd03512) and Huntington Beach 1-0 at Edison (7d304b62-5983-464e-b51b-be5f2ea6a3d8), the two beaten semifinalists, stored as the third-place game (the 2026 format names one; no 2025 source does).",
+        "Bonita 1-1 Newport Harbor: MaxPreps marks it a Bonita loss, Newport Harbor played the semifinal, and the Chronicle says Newport Harbor “came into the championship game with a three-game win streak”. No source gives a shootout or its score (MaxPreps’ game page was not reachable on 2026-11-03), so decidedBy is tiebreak-unreported.",
+        "Each game’s top side is MaxPreps’ home team; the pairing order puts each semifinal under the two round-1 games that fed it."
+      ],
+      "divisions": [
+        {
+          "id": "toc",
+          "label": "Tournament of Champions",
+          "rounds": [
+            {
+              "name": "First round",
+              "date": "2025-10-21",
+              "games": [
+                {
+                  "top": {
+                    "seed": null,
+                    "name": "Harvard-Westlake",
+                    "slug": "harvard-westlake"
+                  },
+                  "bottom": {
+                    "seed": null,
+                    "name": "Fountain Valley",
+                    "slug": "fountain-valley"
+                  },
+                  "winner": "top",
+                  "score": [
+                    5,
+                    1
+                  ],
+                  "decidedBy": null,
+                  "shootout": null
+                },
+                {
+                  "top": {
+                    "seed": null,
+                    "name": "Edison",
+                    "slug": "edison"
+                  },
+                  "bottom": {
+                    "seed": null,
+                    "name": "Great Oak",
+                    "slug": "great-oak"
+                  },
+                  "winner": "top",
+                  "score": [
+                    2,
+                    0
+                  ],
+                  "decidedBy": null,
+                  "shootout": null
+                },
+                {
+                  "top": {
+                    "seed": null,
+                    "name": "Huntington Beach",
+                    "slug": "huntington-beach"
+                  },
+                  "bottom": {
+                    "seed": null,
+                    "name": "Glendora",
+                    "slug": "glendora"
+                  },
+                  "winner": "top",
+                  "score": [
+                    1,
+                    0
+                  ],
+                  "decidedBy": null,
+                  "shootout": null
+                },
+                {
+                  "top": {
+                    "seed": null,
+                    "name": "Bonita",
+                    "slug": "bonita"
+                  },
+                  "bottom": {
+                    "seed": null,
+                    "name": "Newport Harbor",
+                    "slug": "newport-harbor"
+                  },
+                  "winner": "bottom",
+                  "score": [
+                    1,
+                    1
+                  ],
+                  "decidedBy": "tiebreak-unreported",
+                  "shootout": null
+                }
+              ]
+            },
+            {
+              "name": "Semifinals",
+              "date": "2025-10-23",
+              "games": [
+                {
+                  "top": {
+                    "seed": null,
+                    "name": "Harvard-Westlake",
+                    "slug": "harvard-westlake"
+                  },
+                  "bottom": {
+                    "seed": null,
+                    "name": "Edison",
+                    "slug": "edison"
+                  },
+                  "winner": "top",
+                  "score": [
+                    2,
+                    1
+                  ],
+                  "decidedBy": null,
+                  "shootout": null
+                },
+                {
+                  "top": {
+                    "seed": null,
+                    "name": "Huntington Beach",
+                    "slug": "huntington-beach"
+                  },
+                  "bottom": {
+                    "seed": null,
+                    "name": "Newport Harbor",
+                    "slug": "newport-harbor"
+                  },
+                  "winner": "bottom",
+                  "score": [
+                    1,
+                    2
+                  ],
+                  "decidedBy": null,
+                  "shootout": null
+                }
+              ]
+            },
+            {
+              "name": "Final",
+              "date": "2025-10-25",
+              "games": [
+                {
+                  "top": {
+                    "seed": null,
+                    "name": "Harvard-Westlake",
+                    "slug": "harvard-westlake"
+                  },
+                  "bottom": {
+                    "seed": null,
+                    "name": "Newport Harbor",
+                    "slug": "newport-harbor"
+                  },
+                  "winner": "top",
+                  "score": [
+                    4,
+                    0
+                  ],
+                  "decidedBy": null,
+                  "shootout": null,
+                  "site": "Ted Slavin Field, Harvard-Westlake"
+                }
+              ]
+            }
+          ],
+          "thirdPlace": {
+            "date": "2025-10-25",
+            "game": {
+              "top": {
+                "seed": null,
+                "name": "Edison",
+                "slug": "edison"
+              },
+              "bottom": {
+                "seed": null,
+                "name": "Huntington Beach",
+                "slug": "huntington-beach"
+              },
+              "winner": "bottom",
+              "score": [
+                0,
+                1
+              ],
+              "decidedBy": null,
+              "shootout": null
+            }
+          }
+        }
+      ]
+    }
   }
 }
