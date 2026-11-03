@@ -188,5 +188,3 @@ export const SdsBracketsSchema = sdsBracketsSchema(sdsPlayoffWindow());
 
 export type SdsBracketsFile = z.infer<typeof SdsBracketsSchema>;
 export type SdsBracketsDivision = SdsBracketsFile['divisions'][number];
-export type SdsBracketsRound = SdsBracketsDivision['rounds'][number];
-export type SdsPlayIn = NonNullable<SdsBracketsDivision['playIn']>;

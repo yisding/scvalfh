@@ -233,6 +233,14 @@ export function byDateThenId(
   return a.dateLocal.localeCompare(b.dateLocal) || a.contestId.localeCompare(b.contestId);
 }
 
+/** Cross-check and backfill rows oldest first by date key, then by contest id. */
+export function byDateKey(
+  a: { dateKey: string; contestId: string },
+  b: { dateKey: string; contestId: string },
+): number {
+  return a.dateKey.localeCompare(b.dateKey) || a.contestId.localeCompare(b.contestId);
+}
+
 // ---------------------------------------------------------------- instants
 
 /** An ISO UTC instant, expressed in America/Los_Angeles. This is the only Intl use here. */

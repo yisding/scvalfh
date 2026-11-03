@@ -25,7 +25,7 @@
  * Nothing here mutates its input: `reconcile()` returns a new `Game[]`.
  */
 
-import { dayNumber } from '../format';
+import { byDateKey, dayNumber } from '../format';
 import { sblivePairKey, type SbliveGame, type SbliveSide } from '../sources/sblive';
 import { getTeamBySlug, sideJoinKey, unorderedPairKey } from '../teams';
 import type { BackfillRow, Game, SbliveCrossCheck, ScoreConflictRow, SbliveOnlyRow } from '../types';
@@ -75,10 +75,6 @@ export const NOT_PUBLISHED = {
 } as const;
 
 const idResolved = (s: SbliveSide) => s.slug !== null && (s.via === 'team-id' || s.via === 'school-id');
-
-/** Report rows oldest first by date key, then by contest id. */
-const byDateKey = (a: { dateKey: string; contestId: string }, b: { dateKey: string; contestId: string }): number =>
-  a.dateKey.localeCompare(b.dateKey) || a.contestId.localeCompare(b.contestId);
 
 function whyNotPublished(game: Game, match: SbliveGame, today: string | undefined): string {
   if (!game.home.slug || !game.away.slug) return NOT_PUBLISHED.notOurTeam;

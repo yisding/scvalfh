@@ -35,7 +35,7 @@
 
 import { z } from 'zod';
 
-import { isCalendarDate, isHttpsUrl, slugId } from '../schema-primitives';
+import { calendarDateKey, isCalendarDate, isHttpsUrl, slugId } from '../schema-primitives';
 import { TEAMS } from '../teams';
 import type { RegionId } from '../types';
 
@@ -210,10 +210,11 @@ export function isAsOf(v: string): boolean {
 const TEAM_SLUGS: ReadonlySet<string> = new Set(TEAMS.map((t) => t.slug));
 const teamSlug = slugId.refine((slug) => TEAM_SLUGS.has(slug), 'not a registry team slug');
 
-const dateOnly = z.string().refine(isCalendarDate, 'expected YYYY-MM-DD');
-
-/** Two refusals, two messages: not an https URL at all, or a social-media host. */
-const httpsUrl = z
+/**
+ * A URL a club or commit row cites or links to. Two refusals, two messages: not an https URL at all,
+ * or a social-media host. lib/players/commits-schema.ts takes it from here.
+ */
+export const sourceUrl = z
   .string()
   .refine(isHttpsUrl, 'expected an https URL')
   .refine((v) => !isBannedHost(v), 'social media is not a source');
@@ -226,12 +227,12 @@ const text = z.string().min(1);
 export const ClubProgramSchema = z.object({
   name: text,
   detail: text.nullable(),
-  source: httpsUrl,
+  source: sourceUrl,
 });
 
 /** A page the club record was read from, and what it gave. */
 export const ClubSourceSchema = z.object({
-  url: httpsUrl,
+  url: sourceUrl,
   what: text,
 });
 
@@ -243,7 +244,7 @@ export const ClubSchema = z.object({
   shortName: text.nullable(),
   /** Other names sources use for the club or its teams. Kept for maintainers; not rendered. */
   aliases: z.array(text),
-  website: httpsUrl.nullable(),
+  website: sourceUrl.nullable(),
   city: text.nullable(),
   region: z.enum(CLUB_REGIONS),
   youth: z.boolean(),
@@ -252,15 +253,15 @@ export const ClubSchema = z.object({
   founded: z.number().int().nullable(),
   programs: z.array(ClubProgramSchema),
   /** The club's own public roster pages: linked instead of naming players who are not tracked here. */
-  rosterPages: z.array(httpsUrl),
+  rosterPages: z.array(sourceUrl),
   sources: z.array(ClubSourceSchema).min(1, 'a club needs at least one source'),
-  checkedOn: dateOnly,
+  checkedOn: calendarDateKey,
 });
 
 // ---------------------------------------------------------------- affiliations
 
 export const AffiliationSourceSchema = z.object({
-  url: httpsUrl,
+  url: sourceUrl,
   kind: z.enum(CLUB_SOURCE_KINDS),
   /** Verbatim from the page. Kept in the file so a maintainer can re-check it; never rendered. */
   quote: text.max(300),
@@ -293,7 +294,7 @@ export const ClubAffiliationSchema = z.object({
 const ClubsFileObject = z.object({
   /** How the file was made. */
   builtBy: text,
-  capturedAt: dateOnly,
+  capturedAt: calendarDateKey,
   /** The roster season the affiliations join to ("26-27"); lib/players/clubs.ts checks it is rosters.json's. */
   season: z.string().regex(/^\d{2}-\d{2}$/, 'expected a season like 26-27'),
   /** Method, rules and recall, in words. */

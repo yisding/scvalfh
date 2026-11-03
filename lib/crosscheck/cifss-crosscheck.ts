@@ -21,7 +21,7 @@
 
 import { CIFSS_NOTES } from './cifss-notes';
 import { gamePairKey } from './crosscheck';
-import { dayNumber } from '../format';
+import { byDateKey, dayNumber } from '../format';
 import { cifssListingUrl, type CifssRow, type CifssSide } from '../sources/cifss';
 import { getTeamBySlug, sideJoinKey, unorderedPairKey } from '../teams';
 import type { CifssConflictRow, CifssCrossCheck, CifssOnlyRow, Game } from '../types';
@@ -68,9 +68,6 @@ function sameScores(a: CifssRow, b: CifssRow): boolean {
   const y = scoreByKey(b);
   return [...x].every(([k, v]) => y.get(k) === v);
 }
-
-const byDateKey = (a: { dateKey: string; contestId: string }, b: { dateKey: string; contestId: string }): number =>
-  a.dateKey.localeCompare(b.dateKey) || a.contestId.localeCompare(b.contestId);
 
 function displayName(side: CifssSide): string {
   return (side.slug ? getTeamBySlug(side.slug)?.name : undefined) ?? side.name;

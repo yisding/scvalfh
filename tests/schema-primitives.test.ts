@@ -9,6 +9,7 @@ import { describe, expect, it } from 'vitest';
 import {
   DATE_PATTERN,
   SLUG_PATTERN,
+  calendarDateKey,
   dateKey,
   failValidation,
   formatIssues,
@@ -31,13 +32,15 @@ describe('schema primitives', () => {
     expect(messageOf(slugId, 'los_altos')).toBe('expected a lower-case id');
   });
 
-  it('a date key is YYYY-MM-DD by shape; isCalendarDate also wants a real day', () => {
+  it('a date key is YYYY-MM-DD by shape; isCalendarDate and calendarDateKey also want a real day', () => {
     expect(DATE_PATTERN.test('2026-02-30')).toBe(true);
     expect(messageOf(dateKey, '2026-10-04')).toBeNull();
     expect(messageOf(dateKey, '2026-10-4')).toBe('expected YYYY-MM-DD');
     expect(isCalendarDate('2026-02-28')).toBe(true);
     expect(isCalendarDate('2026-02-30')).toBe(false);
     expect(isCalendarDate('2026-2-28')).toBe(false);
+    expect(messageOf(calendarDateKey, '2026-02-28')).toBeNull();
+    expect(messageOf(calendarDateKey, '2026-02-30')).toBe('expected YYYY-MM-DD');
   });
 
   it('an href URL is http(s); an https URL is https', () => {

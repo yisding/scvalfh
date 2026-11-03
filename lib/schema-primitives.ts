@@ -8,8 +8,8 @@
  * file declared it: lib/snapshot/snapshot-schema.ts, lib/players/rosters-schema.ts, lib/players/player-stats-schema.ts,
  * lib/players/clubs-schema.ts, lib/players/commits-schema.ts, lib/history/history-schema.ts, lib/history/prior-season-schema.ts and
  * lib/official/schema.ts all import from here. A schema that deliberately differs keeps its own
- * declaration (commits' and clubs' calendar-strict `asOf` shapes, their https-without-social-media
- * URLs). SLUG_PATTERN and DATE_PATTERN are plain RegExps for the config and registry asserts
+ * declaration (commits' and clubs' calendar-strict `asOf` shapes, and their https-without-social-media
+ * `sourceUrl`, which lib/players/clubs-schema.ts declares beside its banned hosts). SLUG_PATTERN and DATE_PATTERN are plain RegExps for the config and registry asserts
  * (lib/leagues.ts, lib/teams.ts), which use no zod schema.
  *
  * zod is the only runtime import, so any contract can take these without a dependency cycle.
@@ -28,6 +28,9 @@ export const slugId = z.string().regex(SLUG_PATTERN, 'expected a lower-case id')
 
 /** A date key, YYYY-MM-DD (shape only, as DATE_PATTERN). */
 export const dateKey = z.string().regex(DATE_PATTERN, 'expected YYYY-MM-DD');
+
+/** A real calendar day, YYYY-MM-DD (isCalendarDate: no 2026-02-30), with dateKey's message. */
+export const calendarDateKey = z.string().refine(isCalendarDate, 'expected YYYY-MM-DD');
 
 /**
  * Every URL in a data file that ends up in an `href`.

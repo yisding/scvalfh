@@ -16,8 +16,9 @@
  * still true of this run's games (lib/crosscheck/crosscheck.ts `carryCrossCheck`).
  */
 
-import { applyBackfill, cleanSbliveRows, planBackfill, playedFixture, scoreboardCoverage, shiftDateKey } from '../../crosscheck/backfill';
+import { applyBackfill, cleanSbliveRows, planBackfill, playedFixture, scoreboardCoverage } from '../../crosscheck/backfill';
 import { carryCrossCheck, emptyCrossCheck, reconcile, withBackfill } from '../../crosscheck/crosscheck';
+import { shiftDateKey } from '../../format';
 import {
   dedupeSbliveGames,
   parseScoresPage,

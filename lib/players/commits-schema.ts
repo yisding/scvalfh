@@ -39,8 +39,8 @@
 
 import { z } from 'zod';
 
-import { isBannedHost } from './clubs-schema';
-import { isCalendarDate, isHttpsUrl, slugId } from '../schema-primitives';
+import { isBannedHost, sourceUrl } from './clubs-schema';
+import { calendarDateKey, isCalendarDate, isHttpsUrl, slugId } from '../schema-primitives';
 import { TEAMS } from '../teams';
 
 /**
@@ -160,14 +160,6 @@ export function isCommitDate(v: string): boolean {
 const TEAM_SLUGS: ReadonlySet<string> = new Set(TEAMS.map((t) => t.slug));
 const teamSlug = slugId.refine((slug) => TEAM_SLUGS.has(slug), 'not a registry team slug');
 
-const dateOnly = z.string().refine(isCalendarDate, 'expected YYYY-MM-DD');
-
-/** Two refusals, two messages: not an https URL at all, or a social-media host. */
-const httpsUrl = z
-  .string()
-  .refine(isHttpsUrl, 'expected an https URL')
-  .refine((v) => !isBannedHost(v), 'social media is not a source');
-
 /**
  * The social platforms an official account can post on, and the hosts each one's posts live at
  * (every one in BANNED_HOSTS, so a post on any other is refused as social media).
@@ -183,7 +175,6 @@ export type SocialPlatform = keyof typeof SOCIAL_PLATFORMS;
 
 /** Who an official account belongs to: never a person. */
 export const ACCOUNT_OWNERS = ['college', 'school', 'club'] as const;
-export type AccountOwner = (typeof ACCOUNT_OWNERS)[number];
 
 /**
  * Whether `url` is a post on `platform` by `handle`: on one of the platform's hosts, with the
@@ -210,7 +201,7 @@ const text = z.string().min(1);
 
 /** A page the college record was read from, and what it gave. */
 export const CollegeSourceSchema = z.object({
-  url: httpsUrl,
+  url: sourceUrl,
   what: text,
 });
 
@@ -227,7 +218,7 @@ export const CollegeProgramSchema = z.object({
   /** This team's conference, as the college's athletics site names it, when it has one. */
   conference: text.nullable(),
   /** This sport's page on the college's own athletics site. */
-  url: httpsUrl.nullable(),
+  url: sourceUrl.nullable(),
 });
 
 export const CollegeSchema = z.object({
@@ -244,7 +235,7 @@ export const CollegeSchema = z.object({
   programs: z.array(CollegeProgramSchema).min(1, 'a college needs at least one program'),
   /** The pages the college's place and every program's level, conference and page were read from. */
   sources: z.array(CollegeSourceSchema).min(1, 'a college needs at least one source'),
-  checkedOn: dateOnly,
+  checkedOn: calendarDateKey,
 });
 
 // ---------------------------------------------------------------- commitments
@@ -260,7 +251,7 @@ export const OfficialAccountSchema = z.object({
   owner: z.enum(ACCOUNT_OWNERS),
   /** The account's owner as the site names it: "Valley Christian athletics", "CBU softball". Rendered. */
   ownerName: text,
-  proof: httpsUrl,
+  proof: sourceUrl,
 });
 
 /**
@@ -317,7 +308,7 @@ export const CommitmentSchema = z.object({
 const CommitsFileObject = z.object({
   /** How the file was made. */
   builtBy: text,
-  capturedAt: dateOnly,
+  capturedAt: calendarDateKey,
   /** The roster season the commitments join to ("26-27"); lib/players/commits.ts checks it is rosters.json's. */
   season: z.string().regex(/^\d{2}-\d{2}$/, 'expected a season like 26-27'),
   /** Method, rules and recall, in words. */

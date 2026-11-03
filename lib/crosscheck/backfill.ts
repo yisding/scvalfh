@@ -16,7 +16,9 @@
  *   7. junk-row guards: non-`/california/field-hockey/games/` rows, duplicate ids, JV-only/withdrawn sides,
  *                        and every side not resolved BY SI.COM ID are ignored.
  *   8. budget: planBackfill picks the few team pages that cover what the scoreboard did not (cap 8).
- *  10. supersede and carry-forward.
+ *  10. supersede and carry-forward: carry-forward here; the supersede map (an earlier `sblive:<id>` game → the
+ *                        MaxPreps contest now matching its fixture) is built over the run's final games by
+ *                        lib/pipeline/steps/assemble.ts supersededGamesOf.
  *
  * A level si.com score between two teams of a section that ends a level varsity game with a shootout
  * (SectionConfig.shootout: the Northern Section's EAL, 1 v 1s; the San Diego Section, a shootout, across its
@@ -28,7 +30,7 @@
  * Final, integer scores, and a non-junk row. Pure: no I/O, no clock — `today` is an input.
  */
 
-import { datesOf, dayDiff, monthDay, shiftDateKey, shootoutPhrases } from '../format';
+import { byDateKey, datesOf, dayDiff, monthDay, shootoutPhrases } from '../format';
 import { DATA_QUALITY, LEAGUES, getLeague, getSection, leagueOfDivision, type SectionConfig } from '../leagues';
 import {
   isCaliforniaGameRow,
@@ -116,16 +118,11 @@ export interface BackfillResult {
   /** si.com Finals D2 looked at and did NOT publish, with the reason. */
   skipped: SbliveOnlyRow[];
   warnings: string[];
-  /** Rule 10: `sblive:<id>` → the MaxPreps contest that superseded it (carried from the previous snapshot). */
-  supersededGames: Record<ContestId, ContestId>;
   /** Rule 10: the games whose si.com value was carried from the previous snapshot rather than read this run. */
   carried: ContestId[];
 }
 
 // ---------------------------------------------------------------- dates and keys
-
-// dayDiff and shiftDateKey live in lib/format; re-exported for lib/pipeline/steps/sblive.ts.
-export { dayDiff, shiftDateKey };
 
 function within(a: string, b: string, days: number): boolean {
   return Math.abs(dayDiff(a, b)) <= days;
@@ -156,10 +153,6 @@ export function playedFixture(f: OfficialFixture): { dateKey: string; homeSlug: 
 }
 
 const isSbliveContest = (id: string) => id.startsWith('sblive:');
-
-/** Rows oldest first by date key, then by contest id. */
-const byDateKey = (a: { dateKey: string; contestId: string }, b: { dateKey: string; contestId: string }): number =>
-  a.dateKey.localeCompare(b.dateKey) || a.contestId.localeCompare(b.contestId);
 
 // ---------------------------------------------------------------- si.com rows
 
@@ -879,7 +872,6 @@ export function applyBackfill(input: BackfillInput): BackfillResult {
     rows,
     skipped: skippedOut,
     warnings,
-    supersededGames: supersededGamesOf(games, input.previous),
     carried: [...carriedIds].sort(),
   };
 }
@@ -888,31 +880,6 @@ function dedupeSkipped(rows: readonly SbliveOnlyRow[]): SbliveOnlyRow[] {
   const byId = new Map<string, SbliveOnlyRow>();
   for (const r of rows) if (!byId.has(r.contestId)) byId.set(r.contestId, r);
   return [...byId.values()].sort(byDateKey);
-}
-
-// ---------------------------------------------------------------- rule 10
-
-/**
- * Rule 10: an earlier run's `sblive:<id>` game whose fixture a MaxPreps contest now matches maps to that
- * contest; the previous snapshot's map is carried while both ends still hold (the key is no longer a
- * game, the value still is).
- */
-export function supersededGamesOf(games: readonly Game[], previous: Snapshot | null): Record<ContestId, ContestId> {
-  const ids = new Set(games.map((g) => g.contestId));
-  const out: Record<ContestId, ContestId> = {};
-  for (const [from, to] of Object.entries(previous?.supersededGames ?? {})) {
-    if (!ids.has(from) && ids.has(to)) out[from] = to;
-  }
-  const byFixture = new Map<string, ContestId>();
-  for (const g of games) {
-    if (g.official && !isSbliveContest(g.contestId)) byFixture.set(g.official.fixtureId, g.contestId);
-  }
-  for (const g of previous?.games ?? []) {
-    if (!isSbliveContest(g.contestId) || ids.has(g.contestId) || !g.official) continue;
-    const winner = byFixture.get(g.official.fixtureId);
-    if (winner) out[g.contestId] = winner;
-  }
-  return Object.fromEntries(Object.entries(out).sort(([a], [b]) => a.localeCompare(b)));
 }
 
 // ---------------------------------------------------------------- carry-forward (every si.com request failed)
