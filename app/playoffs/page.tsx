@@ -9,6 +9,7 @@ import { leagueChips } from '../../components/layout/league-chips';
 import { OG_BASE, ROOT_OG_IMAGE } from '../../components/layout/site';
 import DateList from '../../components/playoffs/DateList';
 import KeyDates from '../../components/playoffs/KeyDates';
+import LeagueTournament from '../../components/playoffs/LeagueTournament';
 import LeaguePairings from '../../components/playoffs/LeaguePairings';
 import OutsideTournament from '../../components/playoffs/OutsideTournament';
 import PlayoffBracket from '../../components/playoffs/PlayoffBracket';
@@ -31,7 +32,8 @@ import {
   type ProjectionRow,
 } from '../../components/playoffs/playoff-view';
 import { pairingViewsFor, sectionPlayoffs, thisWeekByRegion } from '../../components/playoffs/this-week-inputs';
-import { buildUnbracketedResults } from '../../components/playoffs/unbracketed-view';
+import { titleSentence, tournamentLeague, tournamentView } from '../../components/playoffs/tournament-league';
+import { buildUnbracketedResults, unbracketedChampion } from '../../components/playoffs/unbracketed-view';
 import Arrow from '../../components/ui/Arrow';
 import ExternalLink from '../../components/ui/ExternalLink';
 import LeagueHealthNote from '../../components/ui/LeagueHealthNote';
@@ -356,10 +358,17 @@ export default function PlayoffsPage() {
   // The league intros' tail, dated on the snapshot's day against the seeding meeting (whole sentences as single
   // text nodes, so the built HTML carries them verbatim).
   const seedingDay = keyDates.seedingMeeting.slice(0, 10);
+  // The meeting is over: a bracket to draw and its day reached (the seed file alone can draw one on an older snapshot).
+  const met = seeded && today >= seedingDay;
   const ladderNote =
     today < seedingDay
       ? `Ordered by league points; nothing here is official until ${shortDate(keyDates.seedingMeeting)}.`
       : `Ordered by league points. CCS seeded the field on ${shortDate(keyDates.seedingMeeting)}; results update twice a day.`;
+  // An unbracketed league's result (the EAL's Super Regional), once the game its row calls the final is played.
+  const unbracketedResult = (id: LeagueId): string | null => {
+    const ps = getLeague(id).postseason;
+    return ps.kind === 'unbracketed-tournament' ? unbracketedChampion(ps.name, id, games, sectionOf(id).shootout) : null;
+  };
   const week = thisWeekByRegion({ games, today });
   // The board reads the same rows as the strip, uncapped, so a league's next row is never cut by the strip's cap.
   const allWeek = thisWeekByRegion({ games, today, cap: Number.POSITIVE_INFINITY });
@@ -371,7 +380,7 @@ export default function PlayoffsPage() {
       shortName: s.shortName,
       config,
       berths: berths ? { auto: berths.auto, total: field.total } : undefined,
-      champion: tournamentIds.has(s.id) ? tournamentHeadline(getLeagueTournament(s.id), config).champion : null,
+      champion: tournamentIds.has(s.id) ? tournamentHeadline(getLeagueTournament(s.id), config).champion : unbracketedResult(s.id),
     };
   };
   const rowsOf = (view: typeof allWeek.norcal) => view.days.flatMap((d) => d.rows);
@@ -410,9 +419,9 @@ export default function PlayoffsPage() {
         <section aria-labelledby="ccs-playoffs" className="mt-section md:mt-section-lg">
           <SectionHeader id="ccs-playoffs" kicker="CCS playoffs" meta={fieldMeta} />
           <p className="m-0 max-w-prose text-body text-ink-2">
-            Central Coast Section championships, {shortDate(keyDates.quarterfinals)} to{' '}
-            {shortDate(keyDates.finals)}. This page tracks each CCS league&rsquo;s share of the field
-            and, once CCS seeds it, the bracket itself, right below.
+            {met
+              ? `Central Coast Section championships, ${shortDate(keyDates.quarterfinals)} to ${shortDate(keyDates.finals)}. CCS seeded the field at its ${shortDate(keyDates.seedingMeeting)} meeting; the bracket is right below, and each CCS league’s share of the field after it.`
+              : `Central Coast Section championships, ${shortDate(keyDates.quarterfinals)} to ${shortDate(keyDates.finals)}. This page tracks each CCS league’s share of the field and, once CCS seeds it, the bracket itself, right below.`}
           </p>
         </section>
 
@@ -540,30 +549,44 @@ export default function PlayoffsPage() {
             keyDates={keyDates}
             leagueDates={leagueDates}
             confirmed={areKeyDatesConfirmed()}
+            seeded={met}
             className="max-w-3xl"
           />
         </section>
 
-        {/* 7. One section per league tournament (MCAL): its status from the bracket and the way to its page. */}
+        {/* 7. One section per league tournament (MCAL): its result, then the whole tournament (play-in, bracket, seeds)
+            drawn here like every other league's postseason (2026-11-03), with the rules on its own page. */}
         {tournamentLeagues.map((league) => {
-          const config = getLeague(league.id);
-          const ps = config.postseason;
-          const name = ps.kind === 'league-tournament' ? ps.name : `${league.shortName} postseason`;
-          const headline = tournamentHeadline(getLeagueTournament(league.id), config);
+          const found = tournamentLeague(league.id);
+          if (!found) return null;
+          const { config, ps } = found;
+          const projection = getLeagueTournament(league.id);
+          const headline = tournamentHeadline(projection, config);
           const status = headline.champion ?? (headline.next ? `${headline.next}.` : null);
+          const playInRound = ps.rounds.find((r) => r.round === 'play-in');
           return (
             <section key={league.id} id={league.id} aria-labelledby={`${league.id}-heading`} className="mt-section md:mt-section-lg">
               <SectionHeader kicker={`${league.shortName} — ${league.name}`} id={`${league.id}-heading`} />
               <div className="max-w-prose text-body text-ink-2">
                 {status ? <p className="m-0 text-ink">{status}</p> : null}
+                {headline.champion && projection.champion ? <p className="mb-0">{titleSentence(projection, ps)}</p> : null}
                 {/* Whole sentences as single text nodes, so the built HTML carries them verbatim. */}
                 <p className={status ? 'mb-0' : 'm-0'}>
-                  {`The ${league.section.name} holds no field hockey championship, so the ${name} is the ${league.shortName} postseason. `}
-                  <Link href={`/playoffs/${league.id}`} prefetch={false} className="sx-action text-accent hover:underline">
-                    {`${name}: bracket and seeds`} <Arrow />
+                  {`The ${league.section.name} holds no field hockey championship, so the ${ps.name} is the ${league.shortName} postseason. `}
+                  <Link href={`/playoffs/${league.id}#how-it-works`} prefetch={false} className="sx-action text-accent hover:underline">
+                    {`How the ${ps.name} works`} <Arrow />
                   </Link>
                 </p>
               </div>
+              <LeagueTournament
+                view={tournamentView(league, ps, config)}
+                leagueShort={league.shortName}
+                standingsHref={`/standings/${league.id}`}
+                beforeSeeds={<LeagueHealthNote leagueId={league.id} className="mb-4" />}
+                playInRule={playInRound ? `${playInRound.pairing}.` : null}
+                idPrefix={`${league.id}-`}
+                nested
+              />
             </section>
           );
         })}
@@ -576,11 +599,13 @@ export default function PlayoffsPage() {
           const ps = getLeague(league.id).postseason;
           if (ps.kind !== 'unbracketed-tournament') return null;
           const results = buildUnbracketedResults(league.id, games);
+          const champion = unbracketedResult(league.id);
           return (
             <section key={league.id} id={league.id} aria-labelledby={`${league.id}-heading`} className="mt-section md:mt-section-lg">
               <SectionHeader kicker={`${league.shortName} — ${league.name}`} id={`${league.id}-heading`} />
               <div className="max-w-3xl text-body text-ink-2">
-              <p className="m-0">{ps.note}</p>
+              {champion ? <p className="m-0 text-ink">{champion}</p> : null}
+              <p className={champion ? 'mb-0' : 'm-0'}>{ps.note}</p>
               {/* How to watch: the listing's streams and the listing itself (config `streams`, `site.url`). */}
               {ps.streams.length > 0 || ps.site ? (
                 <p className="mb-0 flex flex-wrap gap-x-4 gap-y-1 text-meta">

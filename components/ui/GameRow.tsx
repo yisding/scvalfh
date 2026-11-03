@@ -92,6 +92,11 @@ export interface GameViewProps {
    */
   linkStyle?: 'text' | 'pills';
   defaultExpanded?: boolean;
+  /**
+   * GameRow only: each side's seed, printed before its name in 13px mono ink-3, as the desktop bracket card prints
+   * it (components/playoffs/PlayoffBracket.tsx). Only the CCS bracket passes it, and only once the seeds are known.
+   */
+  seeds?: { away: number | null; home: number | null };
   className?: string;
 }
 
@@ -167,8 +172,11 @@ function TeamLine({
   monogram = true,
   showRecord = false,
   scopeLeague,
+  seed = null,
 }: {
   side: SideView;
+  /** The side's bracket seed (`GameViewProps.seeds`), or null. */
+  seed?: number | null;
   showScore: boolean;
   /** false drops the chip column entirely (a GameCard where neither side has a chip). */
   chipSlot?: boolean;
@@ -205,6 +213,7 @@ function TeamLine({
       ) : (
         <GhostMonogram name={side.name} size={24} title={NON_MEMBER_NOTE} />
       )}
+      {seed !== null ? <span className="sx-num w-4 shrink-0 text-meta text-ink-3">{seed}</span> : null}
       <span className={`sx-teamname ${nameClass(side)}`}>
         {/* The dense row renders the SHORT name (DESIGN §3.3's wireframe writes "Mitty", not
             "Archbishop Mitty High School"). `display.sentence` keeps the full name for a screen
@@ -327,11 +336,13 @@ export function SummaryTeams({
   showRecords = false,
   scopeLeague = null,
   monogram = true,
+  seeds,
 }: {
   display: GameDisplay;
   showRecords?: boolean;
   scopeLeague?: LeagueId | null;
   monogram?: boolean;
+  seeds?: { away: number | null; home: number | null };
 }) {
   return (
     <span className="min-w-0 space-y-1" aria-hidden="true">
@@ -341,6 +352,7 @@ export function SummaryTeams({
         monogram={monogram}
         showRecord={showRecords}
         scopeLeague={scopeLeague}
+        seed={seeds?.away ?? null}
       />
       <TeamLine
         side={display.home}
@@ -348,6 +360,7 @@ export function SummaryTeams({
         monogram={monogram}
         showRecord={showRecords}
         scopeLeague={scopeLeague}
+        seed={seeds?.home ?? null}
       />
     </span>
   );
@@ -424,6 +437,7 @@ export function GameRow({
   scopeLeague = null,
   showRecords = false,
   defaultExpanded = false,
+  seeds,
   className,
 }: GameViewProps) {
   const display = describeGame(game, perspective);
@@ -465,7 +479,7 @@ export function GameRow({
           showTime={showTime}
           showChips={showChips}
         />
-        <SummaryTeams display={display} showRecords={withRecords} scopeLeague={scopeLeague} />
+        <SummaryTeams display={display} showRecords={withRecords} scopeLeague={scopeLeague} seeds={seeds} />
         <svg
           className="sx-chevron text-ink-3"
           width="16"

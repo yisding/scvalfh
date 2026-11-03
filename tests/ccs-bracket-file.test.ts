@@ -39,9 +39,14 @@ function withSeeds(index: 0 | 1, seeds: CcsSeedFile['divisions'][number]['seeds'
 }
 
 describe('the committed seed file', () => {
-  it('is the placeholder today: it parses, and getCcsSeeds() is null', () => {
-    expect(CcsSeedFileSchema.parse(committed)).toEqual({ season: '2026-27', retrievedOn: null, source: null, divisions: [] });
-    expect(getCcsSeeds()).toBeNull();
+  it('holds the 2026 seeds from the MaxPreps tournament page (read Tue Nov 3)', () => {
+    const parsed = CcsSeedFileSchema.parse(committed);
+    expect(parsed.retrievedOn).toBe('2026-11-03');
+    expect(parsed.divisions.map((d) => [d.name, d.seeds.map((s) => s.slug)])).toEqual([
+      ['Division 1', ['st-ignatius', 'saint-francis', 'mitty', 'christopher', 'los-gatos', 'stevenson', 'gilroy', 'valley-christian']],
+      ['Division 2', ['leigh', 'los-altos', 'palo-alto', 'homestead', 'willow-glen', 'hollister', 'prospect', 'santa-clara']],
+    ]);
+    expect(getCcsSeeds()).not.toBeNull();
   });
 });
 

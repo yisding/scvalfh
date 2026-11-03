@@ -229,6 +229,23 @@ export function dayGroups(games: readonly Game[]): DayGroup[] {
   return groups;
 }
 
+/**
+ * Where a postseason game is listed ONCE in a list grouped by league (the `/schedule` index's Recent and Next,
+ * 2026-11-03), by the day page's own rule above: its event's group (`CCS`, `San Diego Section playoffs`,
+ * `Tournament of Champions`, ranked as the day page ranks them) or its league's (the MCAL tournament, the
+ * EAL's Super Regional, a CCS league's crossover or play-in). Null for any other game: a league game, or a
+ * regular-season game between two leagues, which such a list shows under each of its sides' leagues.
+ */
+export type PostseasonPlace = { kind: 'event'; name: string; rank: number } | { kind: 'league'; id: LeagueId };
+
+export function postseasonPlace(game: Game): PostseasonPlace | null {
+  if (game.countsFor !== null || !game.postseason) return null;
+  const name = eventOf(game);
+  if (name !== null) return { kind: 'event', name, rank: EVENT_RANK[game.postseason.kind] ?? 3 };
+  const league = gameLeague(game);
+  return league ? { kind: 'league', id: league } : null;
+}
+
 /** The leagues with at least one side in these games, config order. */
 export function leaguesInvolved(games: readonly Game[]): LeagueId[] {
   const ids = new Set<string>();

@@ -35,6 +35,13 @@ export interface LeagueTournamentProps {
   beforeSeeds?: React.ReactNode;
   /** The play-in round's written rule from config, shown on the play-in card. */
   playInRule?: string | null;
+  /**
+   * Inside another page's league section (the MCAL section on /playoffs, since 2026-11-03): the ids take this
+   * prefix ('mcal-seeds', 'mcal-bracket'), so they never collide with that page's own (#bracket is the CCS
+   * bracket there), and every heading drops one level (Seeds, Play-in and Bracket h3, the rounds h4).
+   */
+  idPrefix?: string;
+  nested?: boolean;
 }
 
 function PlaceCell({ row }: { row: SeedRowView }) {
@@ -258,14 +265,27 @@ function playInSides(game: TournamentGameView): [PlayInSide, PlayInSide] {
   return [side(game.away, false), side(game.home, true)];
 }
 
-export function LeagueTournament({ view, leagueShort, standingsHref, beforeSeeds, playInRule = null }: LeagueTournamentProps) {
+export function LeagueTournament({
+  view,
+  leagueShort,
+  standingsHref,
+  beforeSeeds,
+  playInRule = null,
+  idPrefix = '',
+  nested = false,
+}: LeagueTournamentProps) {
+  const sectionHeading = nested ? 'h3' : 'h2';
+  const roundHeading = nested ? 'h4' : 'h3';
+  // Nested sections sit closer together: they are parts of one league section, not page sections.
+  const gap = nested ? 'mt-8' : 'mt-section md:mt-section-lg';
   // Phase order (DESIGN §32.3): while the picture is projected the seeds lead, since they are the news; once the
   // tournament is seeded or under way the games do, and the seeds table sits under the bracket it fed. The data-health
   // note (`beforeSeeds`) always comes first, above whatever leads, since it qualifies everything below it.
   const projected = view.status === 'projected';
   const seeds = (
-      <section id="seeds" className="mt-section md:mt-section-lg">
+      <section id={`${idPrefix}seeds`} className={gap}>
         <SectionHeader
+          as={sectionHeading}
           kicker="Seeds"
           meta={view.seedsMeta ?? undefined}
           action={{ href: standingsHref, label: 'Full table' }}
@@ -287,8 +307,8 @@ export function LeagueTournament({ view, leagueShort, standingsHref, beforeSeeds
   const games = (
     <>
       {view.playIn ? (
-        <section id="play-in" className="mt-section md:mt-section-lg">
-          <SectionHeader kicker="Play-in" meta={view.playIn.dateLabel} />
+        <section id={`${idPrefix}play-in`} className={gap}>
+          <SectionHeader as={sectionHeading} kicker="Play-in" meta={view.playIn.dateLabel} />
           <PlayInCard
             title={`For seed ${view.playIn.home.seed ?? ''}`.trim()}
             when={{ dateKey: view.playIn.dateKey, dateLabel: view.playIn.dateLabel, timeLabel: view.playIn.timeLabel }}
@@ -303,14 +323,14 @@ export function LeagueTournament({ view, leagueShort, standingsHref, beforeSeeds
         </section>
       ) : null}
 
-      <section id="bracket" className="mt-section md:mt-section-lg">
-        <SectionHeader kicker="Bracket" />
+      <section id={`${idPrefix}bracket`} className={gap}>
+        <SectionHeader as={sectionHeading} kicker="Bracket" />
         {/* A bracket line is ~220px of text: from md the rounds stop at 48rem rather than run the
             full column. */}
         <ol className="m-0 list-none space-y-6 p-0 md:max-w-3xl">
           {view.rounds.map((round) => (
             <li key={round.round}>
-              <SectionHeader as="h3" kicker={round.title} meta={round.meta} />
+              <SectionHeader as={roundHeading} kicker={round.title} meta={round.meta} />
               {/* The final's where and how much (config finalSite): the venue and address as one sentence with a
                   Directions link, then admission with its source. Whole sentences as single text nodes. */}
               {round.venue ? (
@@ -349,7 +369,7 @@ export function LeagueTournament({ view, leagueShort, standingsHref, beforeSeeds
     </>
   ) : (
     <>
-      {beforeSeeds ? <div className="mt-section md:mt-section-lg">{beforeSeeds}</div> : null}
+      {beforeSeeds ? <div className={gap}>{beforeSeeds}</div> : null}
       {games}
       {seeds}
     </>

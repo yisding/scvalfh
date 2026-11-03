@@ -15,8 +15,9 @@
  * playoff-view.ts).
  */
 
-import { byDateThenId, listWords, shortDate } from '../../lib/format';
+import { byDateThenId, listWords, shootoutPhrases, shortDate } from '../../lib/format';
 import { LOCATION_ROUND_HEADING, roundFromLocation, type LocationRound } from '../../lib/postseason-rounds';
+import type { ShootoutInference } from '../../lib/leagues';
 import type { Game, LeagueId } from '../../lib/types';
 
 export interface UnbracketedDayView {
@@ -72,4 +73,45 @@ export function buildUnbracketedResults(leagueId: LeagueId, games: readonly Game
     toCome: own.filter((g) => g.status === 'scheduled').length,
     empty: own.length === 0 ? NO_UNBRACKETED_GAME : null,
   };
+}
+
+/**
+ * The tournament's result, once its final is played: 'Pleasant Valley won the Super Regional, beating Chico on 1 v 1s
+ * after a 0–0 tie in the final on Sat Oct 31.' The final is the one game whose own row names it
+ * (`roundFromLocation`: MaxPreps' 2026 row says "Super regional championship"), with a final score and a winner;
+ * anything else (no such row, two of them, no clean W/L pair, a result conflict) gives null, and the page names no champion. `shootout` is the
+ * section's (SectionConfig.shootout: '1 v 1s', verified, for the Northern Section); null takes the generic words.
+ */
+export function unbracketedChampion(
+  name: string,
+  leagueId: LeagueId,
+  games: readonly Game[],
+  shootout: { words: string; inference: ShootoutInference } | null,
+): string | null {
+  const finals = games.filter(
+    (g) =>
+      g.postseason?.kind === 'league-postseason' &&
+      g.postseason.leagueId === leagueId &&
+      roundFromLocation(g.venue.text) === 'final' &&
+      g.status === 'final',
+  );
+  if (finals.length !== 1) return null;
+  const g = finals[0];
+  // Only a clean W/L pair names a champion: a flagged result conflict, W/W or a missing flag names none.
+  if (g.provenance.resultConflict) return null;
+  const [winner, loser] =
+    g.home.result === 'W' && g.away.result === 'L'
+      ? [g.home, g.away]
+      : g.away.result === 'W' && g.home.result === 'L'
+        ? [g.away, g.home]
+        : [null, null];
+  if (!winner || !loser || winner.score === null || loser.score === null) return null;
+  const score = `${winner.score}\u2013${loser.score}`;
+  const how =
+    g.decider === 'SO'
+      ? `${shootoutPhrases(shootout?.words ?? 'a shootout', shootout?.inference).onPhrase} after a ${score} tie`
+      : g.decider === 'OT' || g.decider === '2OT'
+        ? `${score} in overtime`
+        : score;
+  return `${winner.name} won the ${name}, beating ${loser.name} ${how} in the final on ${shortDate(g.dateKey)}.`;
 }

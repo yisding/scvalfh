@@ -27,7 +27,8 @@ export interface SectionHeaderProps {
   meta?: React.ReactNode;
   /** Sentence case with its context: "All 3 games", "Full table", "Change team". */
   action?: { href: string; label: string };
-  as?: 'h2' | 'h3';
+  /** 'h4' takes the h3 style: a round inside a section that is itself an h3 (the MCAL tournament on /playoffs). */
+  as?: 'h2' | 'h3' | 'h4';
   /** Defaults to `section`, or the h3 style when `as="h3"`. */
   size?: 'section' | 'lg' | 'label';
   /** An id for a `#de-anza` style anchor target. */
@@ -51,7 +52,7 @@ export function SectionHeader({
   id,
   className,
 }: SectionHeaderProps) {
-  const headingClass = HEADING[size ?? (Heading === 'h3' ? 'h3' : 'section')];
+  const headingClass = HEADING[size ?? (Heading === 'h2' ? 'section' : 'h3')];
   return (
     <div
       className={[
