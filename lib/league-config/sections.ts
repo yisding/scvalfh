@@ -206,7 +206,7 @@ export const CCS: CcsConfig = {
     evaluationMeeting: '2026-11-19T16:00:00', endOfLeagueSeason: '2026-10-31',
   },
   highSeedHostsThrough: 'quarterfinals',
-  // CCS_BRACKET_URL is imported from lib/season.ts, which keeps it as a literal (season stays a dependency-free leaf).
+  // CCS_BRACKET_URL is imported from lib/season.ts, which builds it from FIELD_HOCKEY_GIRLS_2026.ccsBracketPath (lib/sports/field-hockey.ts).
   bracketUrl: CCS_BRACKET_URL,
   tournament: {
     id: 'b97830de-ad65-4dc2-b4be-b76080093330',

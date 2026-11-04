@@ -1,6 +1,7 @@
 > **Note on this copy.** This is the implementation-ready design record produced during the
 > design stage, kept verbatim below for history. **Sections 1-14 describe the single-league
-> (SCVAL, 15-team) site as designed; the site now covers four leagues and 43 teams, and §15
+> (SCVAL, 15-team) site as designed; §15 took it to four leagues and 43 teams (today's counts are in
+> the later paragraphs of this note), and §15
 > ("Multi-league amendment (2026-10)") at the end of this file records what that changed and
 > which decisions below it reverses. Where §15 and an earlier section disagree, §15 wins.** One
 > decision in it was later overridden by
@@ -23,6 +24,10 @@
 > (§24.9). Later still, Bonita and Chaminade moved from the Sunset to the independents, and the
 > group of five got a table of its games against each other (§24.10, which wins over §24.9).
 >
+> **§25-§32 follow** (2026-10 to 2026-10-31: recruiting, the visual refresh, Elo-adjusted scoring, the
+> leaders reading, the independents on /leaders, text width, the postseason week and brackets, and one
+> postseason shape for every league). Each dated amendment wins over anything above it.
+>
 > **`SPEC §n` and `BUILD-BRIEF` in code comments** refer to the build-time research spec and
 > build brief, which are not kept in this repo. Their §1.x sections survive, condensed, as
 > `docs/DATA-SOURCES.md` §1.x; every other section number does NOT match DATA-SOURCES' numbering,
@@ -30,9 +35,9 @@
 > sections instead.
 >
 > **Wilcox has since been removed.** Every Wilcox row, wireframe and "no results reported"
-> example below predates the news that Wilcox is not fielding a team this season. The site now
-> had 15 teams (De Anza 7, El Camino 8) at that point, and since the multi-league amendment (§15)
-> SCVAL's 15 are four of the site's 43; Wilcox's grid fixtures are dropped at parse time (it is in
+> example below predates the news that Wilcox is not fielding a team this season. The site then
+> had 15 teams (De Anza 7, El Camino 8), and since the multi-league amendment (§15) SCVAL's 15 were
+> 15 of the site's 43 (102 since §24); Wilcox's grid fixtures are dropped at parse time (it is in
 > SCVAL's `withdrawnNames` in `lib/league-config/scval.ts`, which replaced `WITHDRAWN_SCHOOL_NAMES`). The
 > no-results state itself still applies to any fielded team with nothing reported.
 >
@@ -4864,7 +4869,9 @@ One strip per region: on `/playoffs` `#this-week-norcal` after the CCS intro and
 
 ### 31.5 San Diego: round dates, "Placed by the Section" and the published bracket
 
-- **Round dates and links** (config `rounds`, the San Diego Field Hockey Officials Association's calendar):
+- **Round dates and links** (config `rounds`, the San Diego Field Hockey Officials Association's calendar;
+  since 2026-11-03 the Section's own bracket sheet, which swaps Divisions I and II before the finals and is
+  linked as `bracketSheetUrl`, `docs/LEAGUE-RULES.md`):
   `#sds-round-dates` lists the eleven rows (play-ins Mon Nov 2 to the finals Sat Nov 14 at La Jolla HS) with
   links to that calendar, to the Section's field hockey page (`bracketsPageUrl`, where the brackets are posted)
   and, once the owner pastes it, to the Section's sheet (`bracketSheetUrl`). The block's sentence is dated: before

@@ -1,9 +1,9 @@
 #!/usr/bin/env tsx
 /**
  * Fetch every registry school's JV games into data/jv.json: MaxPreps' JV schedule feed for all 102
- * schools, and si.com's JV team page for the 101 that have one (lib/jv/jv-teams.ts).
+ * schools, and si.com's JV team page for each of the 102 (lib/jv/jv-teams.ts).
  *
- *   pnpm fetch-jv                       live: 102 MaxPreps JSON calls + up to 101 si.com pages
+ *   pnpm fetch-jv                       live: 102 MaxPreps JSON calls + up to 102 si.com pages
  *   pnpm fetch-jv --leagues scval,bval  only these leagues; the others keep their previous rows
  *   pnpm fetch-jv --no-sblive           MaxPreps only; si.com rows are carried from the previous file
  *   pnpm fetch-jv --fixtures <dir>      offline: read jv-sched-<slug>.json and jv-sblive-<slug>.html captures

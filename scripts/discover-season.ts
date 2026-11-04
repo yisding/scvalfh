@@ -13,10 +13,12 @@
  *      through `team-context/v1` (or every team named by --teams)
  *   3. asserts `leagues/{leagueId}/v1`'s `sportSeasonId` and `year` agree with step 1
  *   4. matches each division by `maxprepsLeagueId`, guesses by `maxprepsName`, prints a DIFF against
- *      lib/season.ts and lib/league-config/ and a ready-to-paste block
+ *      the season constants (lib/season.ts, derived from FIELD_HOCKEY_GIRLS_2026 in
+ *      lib/sports/field-hockey.ts) and lib/league-config/, and a ready-to-paste block
  *
- * It NEVER writes a file. `lib/season.ts` and `lib/league-config/` are edited by a human who has read
- * the diff, because a wrong season id would silently publish last year's table.
+ * It NEVER writes a file. `FIELD_HOCKEY_GIRLS_2026` in `lib/sports/field-hockey.ts` (and the values
+ * tests/sports.test.ts pins) and `lib/league-config/` are edited by a human who has read the diff,
+ * because a wrong season id would silently publish last year's table.
  *
  * Cost warning: `team-context/v1` is ~738 KB per team (a school's whole 844-season history), so the
  * default pass (one team per division of the 15 league divisions, plus each of the three
@@ -289,13 +291,13 @@ async function main(argv: readonly string[]): Promise<number> {
     }
   }
 
-  console.log('\n--- paste into lib/season.ts (after checking every line) ---');
-  console.log(`export const SEASON_YEAR = '${rows.find((r) => r.year)?.year ?? SEASON_YEAR}';`);
-  console.log(`export const SEASON_LABEL = '${sportSeasonName ?? SEASON_LABEL}';`);
-  console.log(`export const SPORT_SEASON_ID = '${ssid}';`);
-  console.log(`export const ALL_SEASON_ID = '${boot.data.allSeasonId ?? ALL_SEASON_ID}';`);
-  console.log(`export const GENDER_SPORT = '${boot.data.genderSport ?? GENDER_SPORT}' as const;`);
-  console.log(`export const TEAM_LEVEL = '${boot.data.teamLevel ?? TEAM_LEVEL}' as const;`);
+  console.log('\n--- paste into FIELD_HOCKEY_GIRLS_2026 in lib/sports/field-hockey.ts (after checking every line) ---');
+  console.log(`  year: '${rows.find((r) => r.year)?.year ?? SEASON_YEAR}',`);
+  console.log(`  label: '${sportSeasonName ?? SEASON_LABEL}',`);
+  console.log(`  sportSeasonId: '${ssid}',`);
+  console.log(`  allSeasonId: '${boot.data.allSeasonId ?? ALL_SEASON_ID}',`);
+  console.log(`  genderSport: '${boot.data.genderSport ?? GENDER_SPORT}',`);
+  console.log(`  level: '${boot.data.teamLevel ?? TEAM_LEVEL}',`);
   console.log('--- end paste block ---');
 
   console.log('\n--- divisions block for lib/league-config/<league>.ts (only the two MaxPreps fields per division) ---');
@@ -312,7 +314,7 @@ async function main(argv: readonly string[]): Promise<number> {
   console.log('--- end divisions block ---');
 
   console.log(
-    `\n${diffs.length === 0 ? 'NO CHANGES: lib/season.ts still matches upstream.' : `${diffs.length} change(s) to apply:`}`,
+    `\n${diffs.length === 0 ? 'NO CHANGES: the season constants still match upstream.' : `${diffs.length} change(s) to apply:`}`,
   );
   for (const d of diffs) console.log(`  - ${d}`);
   console.log(
