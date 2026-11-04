@@ -15,7 +15,8 @@
  *   pnpm fetch-data --leagues scval,bval     fetch only these; the others are carried forward, frozen
  *   pnpm fetch-data --accept-regression bval skip the finals-regression guard for BVAL this run
  *   pnpm fetch-data --out <path> · --dry-run · --fetched-at <iso> · --force
- *   pnpm fetch-data --no-sblive · --sblive-full · --no-official (alias --no-scval) · --no-ccs · --no-vnn
+ *   pnpm fetch-data --no-sblive · --sblive-full · --no-official (alias --no-scval) · --no-ccs · --no-vnn ·
+ *                                            --no-cifss
  *
  * Modules load inside main() so that a config or registry invariant failing at import
  * (assertLeagues / assertRegistry, §7.5 run-abort trigger 2) is reported as an abort, not a crash.

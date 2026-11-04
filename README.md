@@ -64,8 +64,8 @@ Sunset and the LA independents share one postseason, the Tournament of Champions
 Los Angeles Field Hockey Association runs because the Southern Section holds no field hockey championship;
 the San Diego Section playoffs (Nov 2-14, Open 8,
 Division I 12, Division II 12) are placed by the Section from its power rankings, a designated league
-champion is guaranteed at least a play-in, and the site states that rule and never projects a seed; once
-the Section publishes its brackets, the owner transcribes them into `data/sds-brackets-2026.json` and the
+champion is guaranteed at least a play-in, and the site states that rule and never projects a seed; the
+owner transcribed the Section's published brackets into `data/sds-brackets-2026.json` on 2026-11-03, and the
 site draws them (see "Postseason bracket files").
 The 2025-26 history covers SCVAL (official PDFs) and BVAL (official
 Google Sheet and all-league documents); PCAL, MCAL, EAL, the Sunset, City, North County and Metro are
@@ -124,23 +124,23 @@ Per-league pages show their own region's league chips.
 
 | Route | What it shows |
 |---|---|
-| `/` | "What just happened in my league, and when is my team's next game?" Find-your-team on a first visit (one finder over all 102, a card grid per region), then one panel per league of the region shown: latest scores, mini standings, next games, teams and the postseason card (the independents' panel has their group note and team links where the mini standings would be, and its card's link is their schedule). In the postseason weeks each region's "This week in the postseason" strip (`#this-week`, `#this-week-socal`; at most 8 rows of games and dated events from two days back to a week ahead, outside every league panel) sits above the latest results |
-| `/standings` | Every division as a compact full table, grouped region → section → league → division; `#norcal`, `#socal`, `#de-anza`, `#el-camino`, `#bval`, `#mcal`, `#ns`, `#eal`, `#ss`, `#sds`, `#sunset`, `#independents`, `#city`, `#north-county`, `#metro`, `#city-western`, `#palomar` and the other division anchors resolve with no JavaScript (`#independents` is the group's note and team links, with no table). Kept for links; the nav's Teams page carries the same tables |
-| `/standings/[league]` | One league's full standings page (10 pages: `scval`, `bval`, `pcal`, `mcal`, `eal`, `sunset`, `city`, `north-county`, `metro`, `independents`), with PTS, W-L-T, GF/GA/GD, GP, games left and the most points a team can finish with (the Sunset, with no fixed schedule, shows GP alone); a pill links its JV tables on `/jv`. `/standings/independents` has no table: it says why ("No league table"), links the three team pages and gives the no-postseason card |
+| `/` | "What just happened in my league, and when is my team's next game?" Find-your-team on a first visit (one finder over all 102, a card grid per region), then one panel per league of the region shown: latest scores, mini standings, next games, teams and the postseason card (the independents' mini standings are headed "Table" and count their games against each other, and their card's link is their schedule). In the postseason weeks each region's "This week in the postseason" strip (`#this-week`, `#this-week-socal`; at most 8 rows of games and dated events from two days back to a week ahead, outside every league panel) sits above the latest results |
+| `/standings` | Every division as a compact full table, grouped region → section → league → division; `#norcal`, `#socal`, `#de-anza`, `#el-camino`, `#bval`, `#mcal`, `#ns`, `#eal`, `#ss`, `#sds`, `#sunset`, `#independents`, `#city`, `#north-county`, `#metro`, `#city-western`, `#palomar` and the other division anchors resolve with no JavaScript (`#independents` is the group's table of their games against each other). Kept for links; the nav's Teams page carries the same tables |
+| `/standings/[league]` | One league's full standings page (10 pages: `scval`, `bval`, `pcal`, `mcal`, `eal`, `sunset`, `city`, `north-county`, `metro`, `independents`), with PTS, W-L-T, GF/GA/GD, GP, games left and the most points a team can finish with (the Sunset and the independents, with no fixed schedule, show GP alone); a pill links its JV tables on `/jv`. `/standings/independents` is the group's table of their games against each other, with the group's note and the no-postseason card |
 | `/jv` | JV standings: every league's JV tables (`#scval`, …; `#de-anza`, … in a multi-division league), computed and unofficial, each shown once enough of its JV league games have a score |
 | `/schedule` | A light index: league cards, recent and next game days per region, and one "every game day" list (its game rows region-scoped) whose `#YYYY-MM-DD` rows keep old date links working |
-| `/schedule/[league]` | One league's whole season, filterable client-side (10 pages; `/schedule/independents` is "LA teams: schedule and results", every contest involving the independents, all of them non-league games) |
+| `/schedule/[league]` | One league's whole season, filterable client-side (10 pages; `/schedule/independents` is "LA teams: schedule and results", every contest involving the independents; their games against each other count for their table) |
 | `/scores/[date]` | One day's scoreboard (one static page per date with a game; OG card per date), the regions kept apart: `#norcal` ("Northern California": its leagues in config order, each counting its league and postseason games apart, "MCAL · 1 postseason game"; then an event group for a postseason game no league owns, "CCS", "San Diego Section playoffs" or "Tournament of Champions", `#postseason-<slug>`; then its Non-league games), then, on a day that has one, `#between-regions` ("NorCal vs SoCal", shown in both views), then `#socal` (its repeated ids suffixed, `#non-league-socal`); a region with no game says so in one sentence. Then the day's JV games, one block per region (`#jv`, `#jv-socal`), kept apart from the varsity counts. The header counts each region when both have a game ("NorCal: 6 games" … "SoCal: 9 games") |
 | `/game/[id]` | One game's detail page (one static page per game; OG card per game). On a final, a Game stats section (`#game-stats-kicker`) shows each followed side's box score as its coach entered it on MaxPreps, where one did: scorers, assists, shots and goalkeeping (see "Player stats"). A game whose score came from si.com has an id like `sblive-123`; one that MaxPreps later published is a stub that links to it |
-| `/teams` | Teams and standings: all 102 teams, a search box, and each division's compact standings table (the independents: their group's note and team links, no table) (place, team, GP, W-L-T, PTS, the ladder line, a link to the full league table), grouped region → section → league → division. The search filters the tables' rows in place and searches both regions |
-| `/teams/[slug]` | One team's record, Elo rating (collapsed, `#elo`, with its place on its own region's board), schedule, results, splits and postseason line, then the school's JV games (`#jv`, kept apart from the varsity counts), its player stats and roster (102 pages, all nine leagues and the three independents; an independent's page counts every figure over all its games, with no place, league record, GP or ladder); a player a public page ties to a club gets a club line linking that club's page |
+| `/teams` | Teams and standings: all 102 teams, a search box, and each division's compact standings table, the independents' included (place, team, GP, W-L-T, PTS, the ladder line, a link to the full league table), grouped region → section → league → division. The search filters the tables' rows in place and searches both regions |
+| `/teams/[slug]` | One team's record, Elo rating (collapsed, `#elo`, with its place on its own region's board), schedule, results, splits and postseason line, then the school's JV games (`#jv`, kept apart from the varsity counts), its player stats and roster (102 pages, all nine leagues and the five independents; an independent's "league" figures are its games against the other four); a player a public page ties to a club gets a club line linking that club's page |
 | `/clubs` | "Which clubs do players here play for?" The 28 youth field hockey clubs by region, each region's section scoped to its half of the site under the NorCal/SoCal switcher; for each, how many players on the tracked varsity rosters a public page ties to it (current and earlier counted separately) and from which schools, then how a player is matched (`#how-matched`). All 102 teams' schools have been swept for clubs |
 | `/clubs/[slug]` | One club (28 pages, a club with no tied player included): what it is, the players from the tracked varsity rosters a public page ties to it, each with a status and the pages it rests on, its teams and programs, and its own roster pages |
 | `/commits` | "Who here has committed to play in college, and where?" The players on the tracked varsity rosters (all 102 teams' have been swept) a public page says have committed to (or signed with) a college team, in field hockey or any other sport, split NorCal/SoCal by the region toggle, each region by class year (`#norcal-class-2027`), each with the college, the sport, its level and the pages it rests on, then that region's colleges (`#norcal-colleges`); then how a commitment is matched (`#how-matched`). A team page's roster links each committed player's row |
 | `/recruiting` | "Who here has a recruiting profile, a club or a college commitment?" Every school's recruiting data on one page, under the NorCal/SoCal switcher: region → league (`#scval`, …) → school (`#<team slug>`), each listed player with the commitment line, club line and recruiting-profile links their team page's roster shows (the same rows and words), then how the page is built (`#how-matched`). Only schools with a listed player appear: a school with none is not named or counted. Every team roster with a listed player links its school's block |
-| `/playoffs` | "Playoffs", one block per region, each opening with "Where every league stands" (`#board-norcal`, `#board-socal`: one row per postseason with what it is and its next dated item, linking its section) and "This week in the postseason" (`#this-week-norcal`, `#this-week-socal`: the region's postseason games and dated events from two days back to a week ahead, at most 12 rows, each linking its game page or block). Every league has a section of the same shape (DESIGN §32). `#norcal`: the CCS intro and `#bracket` under it (one path per proven CCS division, "CCS Division 1" and "CCS Division 2", from the games MaxPreps lists, with seeds and pairing cards once `data/ccs-bracket-2026.json` is filled; before seeding, one sentence), then `#scval #bval #pcal` (each league's crossover and play-in cards first, `#<league>-pairings`, with their results, then its division tables), the at-large berths, the key dates with each round's site in the CCS calendar's words, `#mcal` (the tournament's next round or champion, linking `/playoffs/mcal`) and `#eal` (the Super Regional's dates, the top-six rule, the listed site and streams, the Guidelines and the results by day as MaxPreps posts them; no bracket). `#socal`: the San Diego Section playoffs (the qualification rule, the round dates (`#sds-round-dates`) and links to the officials' calendar, the Section's field hockey page and, once pasted, its brackets sheet; `#sds-bracket`, the Section's published brackets with MaxPreps' results, once `data/sds-brackets-2026.json` is filled; never a projected place or a seed word), with `#city`, `#north-county` and `#metro` cards giving each team's playoff division (I or II), and a `#sunset` card (with the Tournament of Champions, `#toc`, the postseason for both the Sunset and the LA independents) and an `#independents` card pointing to it |
+| `/playoffs` | "Playoffs", one block per region, each opening with "Where every league stands" (`#board-norcal`, `#board-socal`: one row per postseason with what it is and its next dated item, linking its section) and "This week in the postseason" (`#this-week-norcal`, `#this-week-socal`: the region's postseason games and dated events from two days back to a week ahead, at most 12 rows, each linking its game page or block). Every league has a section of the same shape (DESIGN §32). `#norcal`: the CCS intro and `#bracket` under it (one path per proven CCS division, "CCS Division 1" and "CCS Division 2", from the games MaxPreps lists, with seeds and pairing cards from `data/ccs-bracket-2026.json`; before seeding, one sentence), then `#scval #bval #pcal` (each league's crossover and play-in cards first, `#<league>-pairings`, with their results, then its division tables), the at-large berths, the key dates with each round's site in the CCS calendar's words, `#mcal` (the tournament's next round or champion, linking `/playoffs/mcal`) and `#eal` (the Super Regional's dates, the top-six rule, the listed site and streams, the Guidelines and the results by day as MaxPreps posts them; no bracket). `#socal`: the San Diego Section playoffs (the qualification rule, the round dates (`#sds-round-dates`) and links to the Section's brackets sheet, the officials' calendar and the Section's field hockey page; `#sds-bracket`, the Section's published brackets with MaxPreps' results, from `data/sds-brackets-2026.json`; never a projected place or a seed word), with `#city`, `#north-county` and `#metro` cards giving each team's playoff division (I or II), and a `#sunset` card (with the Tournament of Champions, `#toc`, the postseason for both the Sunset and the LA independents) and an `#independents` card pointing to it |
 | `/playoffs/[league]` | League tournaments: `/playoffs/mcal` is the MCAL six-team tournament (the only league that has a bracket; `/playoffs/eal`, `/playoffs/sunset`, `/playoffs/city` and `/playoffs/independents` are 404s). Once it is under way it reads the results, the bracket before the seeds: a `#headline` block ("Next" with the next round, "3 Redwood at 1 Tamalpais", or "Champion"), each seed's outcome in the Status column, the winner of each decided game marked, the final's venue, Directions link and admission, and the same headline in its title and OG card |
-| `/leaders` | Season leaders per region (`#schools`, `#players` for NorCal; `#schools-socal`, `#players-socal` for SoCal; and one anchor per board, suffixed the same way): the schools with the best overall and league records, the most goals per game (raw and Elo-adjusted, `#adjusted-goals`) and fewest allowed, the most clean sheets and, last, the highest Elo rating (top 10, `#elo-rating` / `#elo-rating-socal`; one rating scale across all nine leagues and the five independents, who are on every SoCal board except league record), from every final in the snapshot; then the players with the most points (raw and Elo-adjusted, `#adjusted-points`), assists, saves and clean sheets, from the coaches' MaxPreps stats (top 10, opening to 25) |
+| `/leaders` | Season leaders per region (`#schools`, `#players` for NorCal; `#schools-socal`, `#players-socal` for SoCal; and one anchor per board, suffixed the same way): the schools with the best overall and league records, the most goals per game (raw and Elo-adjusted, `#adjusted-goals`) and fewest allowed, the most clean sheets and, last, the highest Elo rating (top 10, `#elo-rating` / `#elo-rating-socal`; one rating scale across all nine leagues and the five independents, who are on every SoCal board, league record included), from every final in the snapshot; then the players with the most points (raw and Elo-adjusted, `#adjusted-points`), assists, saves and clean sheets, from the coaches' MaxPreps stats (top 10, opening to 25) |
 | `/history/2025-26` | Prior-season final standings by league (`#scval #bval #pcal #mcal #eal #sunset #city #north-county #metro #independents`): SCVAL (official PDFs, 15 teams) and BVAL (official sheet, 12 teams) as record-only tables plus all-league awards; the other seven leagues shown as unavailable, with the reason, and the independents' card saying they had no league table in 2025-26 either; the 2025 CCS bracket (`#ccs`, after PCAL), the San Diego Section's (`#sds`, after Metro) and the 2025 Tournament of Champions (`#toc`, after the LA independents, unseeded, its third-place game under it; the Sunset and LA cards link it) |
 | `/about` | Per-league rules (`#rules-scval`, … `#rules-metro`), per-league health (`#health`), sources, the cross-checks (MaxPreps' tables, si.com scores and cifsshome.org scores, `#cross-check`), every si.com backfill (`#backfills`), how JV games are sourced and shown (`#jv`) and every dropped contest (`#dropped`) |
 
@@ -173,7 +173,7 @@ cifsshome.org         ──┘  (cross-check only)
    schedules, at most 3 at a time and at least 500 ms apart. There are 15 divisions, but North
    County's Valley division has no MaxPreps table, so its metadata and table are never requested
    (never a `/leagues/null/v1` URL) and its cross-check is reported as skipped; the Southern Section
-   independents have no table either, so only their three schedules are read. Failures are scoped, so one league
+   independents have no MaxPreps table either, so only their five schedules are read. Failures are scoped, so one league
    never blocks the others:
    - **Run abort** (exit 1, nothing written, the previous snapshot stays): the season ids changed,
      the league or team registry is inconsistent, the assembled snapshot fails validation, or
@@ -194,10 +194,10 @@ cifsshome.org         ──┘  (cross-check only)
    means a game MaxPreps counts for the league, dated before today, with no counted result (the
    umpires' grid for the EAL, which equalled MaxPreps' 30 league games on 2026-10-04, is a
    cross-check only and is never called official). The four Southern California leagues have none
-   either: a Sunset league game is one MaxPreps marks as a league game, and a San Diego division game
-   is one between two members of the division (the Section's 2026-27 League Alignment), whatever
-   MaxPreps' flag says. No game counts for the independents (`classification: 'independent'`): every game
-   they play is non-league. Secondary sources (si.com, the two VNN
+   either: a Sunset league game is one between two Sunset teams inside league play, and a San Diego
+   division game is one between two members of the division (the Section's 2026-27 League Alignment),
+   whatever MaxPreps' flag says (`classification: 'membership'`). The same holds for the independents: a
+   game between two of the five counts for their table, and every other game they play is non-league. Secondary sources (si.com, the two VNN
    `.ics` feeds, the CCS calendar and bracket poll) are optional and failure-tolerant. So is the
    third score cross-check, cifsshome.org (the CIF Southern Section's schedule-and-score widget, which
    carries every Section our teams play in): schools enter their own rows there, so it never
@@ -238,7 +238,8 @@ was restored). It then commits `data/snapshot.json` +
 `data/snapshot.meta.json`, `data/player-stats.json` and `data/jv.json` **only where they changed**,
 in one commit. The commit is what triggers
 your hosting provider's rebuild — that's the entire point of the job, so it deliberately does not
-carry `[skip ci]`. The job fails, and commits nothing, only on a run abort; a frozen or partial
+carry `[skip ci]`. The job fails, and commits nothing, only on a run abort or when the test suite still
+fails after this run's JV and stats files are restored; a frozen or partial
 league still publishes (with its reasons on the site). After a successful run it opens or updates
 one issue per official schedule revised upstream and one per league frozen in this run and the
 previous one, never more than one open issue per title.
@@ -277,8 +278,8 @@ pnpm start         # or redeploy the .next output to your host
                    # for the Worker; see "Deploy notes")
 ```
 
-Flags on `fetch-data` (`pnpm fetch-data --help` prints them; the header of `scripts/fetch-data.ts`
-has the same list):
+Flags on `fetch-data` (`pnpm fetch-data --help` prints them, as does the header of
+`scripts/fetch-data.ts`):
 
 | Flag | Effect |
 |---|---|
@@ -290,7 +291,7 @@ has the same list):
 | `--out <path>`, `--dry-run`, `--fetched-at <iso>` | write elsewhere; validate and report without writing (captures included); pin the run's stamp |
 | `--force` | bypass the Aug 1 - Nov 30 season-window guard |
 | `--no-sblive`, `--sblive-full` | skip si.com; or also read every si.com team page (manual, never the cron default) |
-| `--no-official` (alias `--no-scval`), `--no-ccs`, `--no-vnn` | skip individual secondary sources |
+| `--no-official` (alias `--no-scval`), `--no-ccs`, `--no-vnn`, `--no-cifss` | skip individual secondary sources (`--no-cifss`: the cifsshome.org cross-check) |
 
 The fetch scripts (`fetch-data`, the other `fetch-*` scripts, `build-history` and
 `discover-season`) identify themselves with one descriptive User-Agent that carries a contact
@@ -339,9 +340,10 @@ bundled fixtures are still used until someone re-transcribes them (the runbook i
 ### Postseason bracket files
 
 Two small JSON files are the switches for the brackets the sections publish and no feed carries in a form the
-pipeline reads (2026-10-29/30; DESIGN §31.3, §31.5). Both are committed as placeholders
-(`{ "season": "2026-27", "retrievedOn": null, "source": null, "divisions": [] }`), bundled at build time, and
-validated by a Zod schema whose header comment shows the filled shape:
+pipeline reads (2026-10-29/30; DESIGN §31.3, §31.5). Both were committed as placeholders
+(`{ "season": "2026-27", "retrievedOn": null, "source": null, "divisions": [] }`) and both were filled on
+2026-11-03; they are bundled at build time and validated by a Zod schema whose header comment shows the filled
+shape:
 
 | File | Filled by the owner | From | Schema / reader |
 |---|---|---|---|
@@ -355,8 +357,8 @@ gates its commit on the suite. A filled San Diego file draws the Section's brack
 with MaxPreps' results joined to them; a filled CCS file puts seeds and pairing cards on `/playoffs#bracket`. The
 CCS bracket's games come from the team feeds either way: MaxPreps' bracket fields on a row (`Game.bracket`) and
 the CCS tournament id tag it `ccs`, and `playoffs.games` is derived from the tagged games (`docs/DATA-SOURCES.md`
-§1.4). Neither section's sheet or page is parsed: no published MaxPreps bracket page has been captured, and the
-Section's 2026 sheet id is unknown until it is published.
+§1.4). Neither section's sheet or page is parsed: no published MaxPreps bracket page has been captured, and
+docs.google.com has never been read from Actions, so each file is only as current as its last hand edit.
 
 ### Rosters
 
@@ -627,12 +629,12 @@ when only its stamps would change, takes `--leagues`, and scopes failures to the
 source (a failed MaxPreps feed or si.com page keeps that school's previous rows, `carried-forward`).
 The previous file is salvaged row by row, as for rosters and stats: each team row, game and si.com row
 is held to its own schema and one that fails costs only itself, so a registry that grew (which fails
-the whole-file schema) no longer sends every team outside a `--leagues` run to `pending`. Cost per run: 102 small MaxPreps calls through the MaxPreps client's gate and up to 101 si.com pages,
-one at a time, 1 s apart (about a minute for the 48 NorCal pages; the 101 now take at least 101 seconds of that spacing alone). A day page exists only for a date with a varsity game, so
+the whole-file schema) no longer sends every team outside a `--leagues` run to `pending`. Cost per run: 102 small MaxPreps calls through the MaxPreps client's gate and up to 102 si.com pages,
+one at a time, 1 s apart (about a minute for the 48 NorCal pages; the 102 now take at least 102 seconds of that spacing alone). A day page exists only for a date with a varsity game, so
 a JV-only date (Aug 18 in 2026) is on the team pages alone.
 
 ```bash
-pnpm fetch-jv                                   # live: 102 MaxPreps JV feeds + 101 si.com JV pages → data/jv.json
+pnpm fetch-jv                                   # live: 102 MaxPreps JV feeds + 102 si.com JV pages → data/jv.json
 pnpm fetch-jv --leagues bval,pcal               # only these leagues; the others keep their rows
 pnpm fetch-jv --no-sblive                       # MaxPreps only; si.com rows are carried
 pnpm fetch-jv --fixtures tests/fixtures/jv --leagues pcal   # offline, from the PCAL captures
@@ -962,7 +964,8 @@ A component used by one feature lives in that feature's folder, not in `ui/`.
 **`lib/`.** The modules the rest of the site leans on sit at the root: `types`, `season`, `leagues`
 (the league table, its lookups and `assertLeagues`), `teams`, `data` (the one read API over the
 snapshot, SPEC §13.3), `format`, `classify`, `standings`, `schema-primitives`, `stable-json`,
-`game-id` and `search`. The rest is grouped by domain:
+`game-id`, `search` and `time-zone` (the IANA zone, an import-free leaf so `format` does not load the
+sport definition). The rest is grouped by domain:
 
 | Folder | Holds |
 |---|---|
@@ -1049,7 +1052,7 @@ To point at a different snapshot file (e.g. a fixture-built one), set
 `data/jv.json`, and `SCVAL_ROSTERS` and `SCVAL_ROSTERS_ENRICHMENT` for `data/rosters.json` and
 `data/rosters-enrichment.json`. All six are read with `node:fs` when the module loads, so they work under Next, vitest, tsx and vinext's
 Node target, never on a Worker, which has no filesystem to read them from: leave them unset for the
-Cloudflare scripts. The other three files have no override.
+Cloudflare scripts. The other seven files have no override.
 
 `pnpm typecheck` runs `next typegen` first because the global `PageProps`/`LayoutProps` types used
 by the dynamic pages, their OG images and `app/layout.tsx` are generated into
@@ -1109,7 +1112,8 @@ captured from real (offline) MaxPreps/SCVAL responses live under `tests/fixtures
 ## Next-season bootstrap
 
 MaxPreps' season ids are **never hardcoded into more than one place** — they live in
-`lib/season.ts`, and the MaxPreps league ids (and every other league fact) in `lib/league-config/`; both
+`FIELD_HOCKEY_GIRLS_2026` in `lib/sports/field-hockey.ts` (`lib/season.ts` derives its constants from
+it, and `tests/sports.test.ts` pins each value), and the MaxPreps league ids (and every other league fact) in `lib/league-config/`; both
 are re-asserted on every `fetch-data` run. The season ids are global, but **MaxPreps' league ids change
 every season**: the nine leagues have 15 divisions and 14 MaxPreps league ids, because the San Diego
 Section's Valley division has no MaxPreps table (`maxprepsLeagueId: null`); the independents' group
@@ -1127,13 +1131,16 @@ pnpm discover-season --help                   # usage; makes no request
 independents (each sits alone in its own all-sports league, so the script lists their leagues and asks
 for a check by hand that each is still its league's only field hockey team), asserts they agree with
 `leagues/{id}/v1`, reports whether a member of a null-table division (Valley) now carries a league,
-and prints a diff against `lib/season.ts` and `lib/league-config/` plus a
+and prints a diff against the season constants and `lib/league-config/` plus a
 ready-to-paste constants block. **It never writes a file** — a human reviews the diff and edits
-`lib/season.ts` and `lib/league-config/`, because a wrong season id would silently publish last
+`FIELD_HOCKEY_GIRLS_2026` in `lib/sports/field-hockey.ts` (and the values `tests/sports.test.ts` pins)
+and `lib/league-config/`, because a wrong season id would silently publish last
 year's table under this year's URL. The official schedules, by-laws and fixture files are
-re-transcribed by hand each season (see `docs/DATA-SOURCES.md`). So are the postseason pieces: the CCS
-tournament and division bracket ids (`CCS.tournament` in `lib/league-config/sections.ts`, from the new MaxPreps tournament
-page's URL keys), and two new owner files, `data/ccs-bracket-<year>.json` and `data/sds-brackets-<year>.json`,
+re-transcribed by hand each season (see `docs/DATA-SOURCES.md`). So are the JV season id
+(`jvSportSeasonId` in `lib/sports/field-hockey.ts`, which `discover-season` does not print) and the
+postseason pieces: the MaxPreps tournament page's path (`ccsBracketPath` in `lib/sports/field-hockey.ts`),
+the CCS tournament and division bracket ids (`CCS.tournament` in `lib/league-config/sections.ts`, from
+that page's URL keys), and two new owner files, `data/ccs-bracket-<year>.json` and `data/sds-brackets-<year>.json`,
 which the imports in `lib/postseason/ccs-bracket.ts` and `lib/postseason/sds-bracket.ts` name (see "Postseason bracket files").
 
 Once a season is finished, its final standings are only available from each league's own
@@ -1152,12 +1159,12 @@ to the repo, not regenerated by the cron.
 
 Last season's results seed the Elo rating (see "How Elo ratings are computed"), and unlike its
 standings they are on MaxPreps: the schedule read takes a season id, and each team's
-`team-context/v1` lists every season it has played. Once the new season is in `lib/season.ts`, run
-`pnpm fetch-prior-season` once to replace `data/prior-season.json` with the season just finished
-(a test fails until the file is the season before `lib/season.ts`'):
+`team-context/v1` lists every season it has played. Once the new season is in
+`lib/sports/field-hockey.ts`, run `pnpm fetch-prior-season` once to replace `data/prior-season.json`
+with the season just finished (a test fails until the file is the season before `SEASON_YEAR`):
 
 ```bash
-pnpm fetch-prior-season                  # the season before lib/season.ts': 1 season lookup + 102 schedules
+pnpm fetch-prior-season                  # the season before SEASON_YEAR: 1 season lookup + 102 schedules
 pnpm fetch-prior-season --year 24-25     # another season
 pnpm fetch-prior-season --dry-run        # fetch and report, write nothing
 ```
@@ -1388,13 +1395,14 @@ league designates its own champion, and teams level at the top read "{conference
 league play is over. **Postseason:** the San Diego Section playoffs, Nov 2-14, finals Nov 14 at La Jolla
 HS (Green Book 2026-27 Bylaw 2000.1): Open 8, Division I 12 and Division II 12, placed by the Section
 from its power rankings with no appeal. A designated league champion (not co-champions) is guaranteed
-at least a play-in, and every other team's only route is selection. Round dates come from the
-officials' association's calendar, which `/playoffs` lists with links to that calendar, the Section's
-field hockey page and, once the owner pastes it, the Section's brackets sheet. Each team's playoff division (I or
+at least a play-in, and every other team's only route is selection. Round dates and the finals site come
+from the Section's 2026 bracket sheet (`SDS_BRACKET_SHEET_URL` in `lib/league-config/sections.ts`, read
+2026-11-03; the officials' association's calendar lists Divisions I and II the other way round before the
+finals), which `/playoffs` lists with links to the sheet, that calendar and the Section's field hockey page. Each team's playoff division (I or
 II) is from the Section's 2026 Divisions sheet; the site projects no place and prints no seed word. From 2nd
 place down the ladder reads "Placed by the Section" (badge "By selection"). Once the Section publishes its
-brackets after the Sat Oct 31 seeding meeting, the owner transcribes them into `data/sds-brackets-2026.json` and
-`/playoffs#sds-bracket` draws them, places as bare numerals, with MaxPreps' results joined to each card (see
+brackets after the Sat Oct 31 seeding meeting; the owner transcribed them into `data/sds-brackets-2026.json` on
+2026-11-03, and `/playoffs#sds-bracket` draws them, places as bare numerals, with MaxPreps' results joined to each card (see
 "Postseason bracket files"). MaxPreps' San Diego tables do not
 follow the alignment (it has no Valley table, files Metro Mesa's five teams under "Metro- South Bay",
 and its City Eastern, Avocado and "Grossmont" tables each leave out or add teams), so every San Diego table is
@@ -1566,7 +1574,7 @@ Two `/leaders` boards per region weigh scoring by the defenses it came against
   on the one Elo table the site already shows, which links the leagues' few cross-league games and
   carries last season over. On the board's teams, standard deviations of 0.25-0.4 and 0.5-2 games
   of shrinkage scored within 0.01 of the chosen pair; capping each game's weight at 3, 5 or 8 games scored worse. The
-  Elo constants (`lib/ratings/ratings.ts`) were tuned on these same two seasons, which flatters every Elo
+  Elo constants (`FIELD_HOCKEY.ratings` in `lib/sports/field-hockey.ts`, read by `lib/ratings/ratings.ts`) were tuned on these same two seasons, which flatters every Elo
   row a little.
 - **What it does not know.** Ratings and defenses are today's, from every counted game, the one
   being weighed included: taking each top team's own games out of both fits keeps every board's top
@@ -1650,11 +1658,11 @@ Two `/leaders` boards per region weigh scoring by the defenses it came against
   are this site's own 3-1-0 points.
 - **The San Diego brackets are typed in by hand from the Section's Google Sheet.** The Section posts its
   brackets on its field hockey page after the Sat Oct 31 seeding meeting (in 2025 a link-shared Google
-  Sheet, readable as CSV without a login). `/playoffs` prints the officials' association's round calendar
-  and links that page; the owner pastes the sheet's URL into `bracketSheetUrl` (`sdsPostseason` in
-  `lib/league-config/sds.ts`) and transcribes the placed teams and round dates into `data/sds-brackets-2026.json`, after
-  which the site draws the Section's brackets (see "Postseason bracket files"). Nothing reads the sheet itself (its
-  2026 id is unknown until published and docs.google.com has never been read from Actions), so the drawing is only
+  Sheet, readable as CSV without a login). The owner pasted 2026's sheet into `SDS_BRACKET_SHEET_URL`
+  (`lib/league-config/sections.ts`, which `bracketSheetUrl` in `sdsPostseason`, `lib/league-config/sds.ts`, reads)
+  and transcribed the placed teams and round dates into `data/sds-brackets-2026.json` on 2026-11-03, from which the
+  site draws the Section's brackets (see "Postseason bracket files"). Nothing reads the sheet itself
+  (docs.google.com has never been read from Actions), so the drawing is only
   as current as the file: a later change to the sheet does not show until the file is edited, and the schema
   cannot tell two teams typed into each other's places. Results come from MaxPreps, so a game it lacks leaves its
   card without a score (four of 2025's 30 bracket games never reached MaxPreps).
@@ -1682,18 +1690,19 @@ Two `/leaders` boards per region weigh scoring by the defenses it came against
   under the narrow backfill rules above, a source of scores MaxPreps lacks or has plainly wrong;
   division membership, league records and standings order are **never** taken from it, and a team is
   matched only by si.com's own ids.
-- **The CCS playoff bracket doesn't exist until after entries close on Nov 2, and its seeds are typed in by
-  hand.** Before then, `/playoffs` shows a projection built from the by-laws' auto-qualifier rules and the
-  standings as they stand. From Oct 25 every run reads the CCS calendar and MaxPreps' tournament page, division
+- **The CCS playoff bracket's seeds are typed in by hand.** Before entries closed on Nov 2, `/playoffs`
+  showed a projection built from the by-laws' auto-qualifier rules and the standings as they stood. From Oct 25 every run reads the CCS calendar and MaxPreps' tournament page, division
   by division (a page it does not recognise, such as a WAF block, carries the previous state). The bracket's games
   come from the team feeds: MaxPreps' bracket fields (`bracketName`, `bracketIsPublished`, the tournament id) were
   verified on Los Gatos's 2025 CCS rows, read 2026-10-29 through WebFetch and kept as a transcribed fixture, and the
   bracket model and component are tested on the whole 2025 championship (its 14 games and 16 seeds) moved to
   2026's dates (`tests/fixtures/ccs/bracket-2025.ts`), not yet on a live 2026 bracket. Games between CCS teams from
   Nov 7 are tagged by that date window even without the bracket fields (cross-league rounds included). No feed
-  carries a seed and no published MaxPreps bracket page has been captured to parse, so the seeds appear only once
-  the owner fills `data/ccs-bracket-2026.json` (see "Postseason bracket files"); until then the bracket draws the
-  games MaxPreps lists, unseeded, and a division the feed does not name is drawn without a division label. The
+  carries a seed and no published MaxPreps bracket page has been captured to parse, so the seeds come only from
+  `data/ccs-bracket-2026.json`, which the owner filled on 2026-11-03 from MaxPreps' tournament page (see
+  "Postseason bracket files"); a later change to that page shows only once the file is edited. Without the file
+  the bracket draws the games MaxPreps lists, unseeded, and a division the feed does not name is drawn without a
+  division label. The
   page never promises a same-evening bracket: the data refresh runs twice a day, observed 3-6 hours late, so it
   says the games appear "after the next update". Where a round is played comes from the CCS calendar's own words
   (quarterfinals at home sites, semifinals and finals at neutral sites), which `confirmKeyDates` checks against the
@@ -1730,8 +1739,9 @@ Two `/leaders` boards per region weigh scoring by the defenses it came against
   except one whose single page contradicts itself. **Positions are the
   real gap**: no current-season public source lists them for most programs in any league. A
   position MaxPreps lists only for the 2025-26 roster is deliberately not filled, since positions
-  change between seasons. Del Mar, Silver Creek, Sobrato, Monterey, Santa Catalina and Corning have
-  no players on MaxPreps, so there is nothing to join to. Marin Academy had none either until its 18
+  change between seasons. Fourteen teams have no players on MaxPreps, so there is nothing to join to:
+  Del Mar, Silver Creek, Sobrato, Monterey, Santa Catalina and Corning, and in Southern California
+  Chaparral, Fountain Valley, Marina, Newport Harbor, Fallbrook, San Pasqual, Bonita Vista and El Capitan. Marin Academy had none either until its 18
   appeared on 2026-10-07; they agree with the school's own list (first names, last initials and class
   years) and were swept on 2026-10-07 (no profile, club or commitment found for any of them). Los Altos and Homestead publish no roster anywhere, and
   si.com's rosters were rejected as a source (names only, and often a different list of names).
@@ -1855,7 +1865,7 @@ Copy `.env.example` to `.env` (or set the same variables in the host's dashboard
 `SITE_URL` defaults to `http://localhost:3000` (`components/layout/site.ts`) when unset, so
 `metadataBase`, `robots.txt` and `sitemap.xml` will point at localhost until it's set in the
 deploy environment — no production domain is hardcoded anywhere in the repo. `.env.example` lists
-it and the six optional variables; copy it to `.env` for a local production build.
+it, `SCVAL_BUILD_AT` and the six file overrides; copy it to `.env` for a local production build.
 
 ### vinext
 
@@ -2030,8 +2040,8 @@ behaviour it matches, and `pnpm-workspace.yaml` lists them (file paths below are
 - **`notFound()` in a metadata route** (`server/metadata-route-response.js`): the per-game, date
   and team OG images answered an unknown param with a 500 instead of a 404.
 - **ISR lifetime** (`build/prerender.js`, `server/app-page-response.js`): the prerender read the
-  `s-maxage=300` rule back as each page's revalidate time, so `vinext start` re-rendered every
-  "static" page after five minutes; pages are `revalidate: false`, as on Next.
+  `headers()` Cache-Control rule back as each page's revalidate time, so under the earlier
+  `s-maxage=300` rule `vinext start` re-rendered every "static" page after five minutes; pages are `revalidate: false`, as on Next.
 - **404 caching** (`server/app-rsc-response-finalizer.js`, `server/app-fallback-renderer.js`):
   the same rule overwrote the no-store header on 404 pages, so a CDN could cache a 404. A Route
   Handler's own 404 keeps its headers, as on Next.

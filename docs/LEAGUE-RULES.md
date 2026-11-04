@@ -6,8 +6,9 @@ standings, so this site extends them to the table). Four of them can end a leagu
 decides a level varsity game with 1 v 1s. The four Southern California leagues (the Sunset and the San
 Diego Section's City, North County and Metro conferences) publish no points rule, no standings and no
 schedule at all: this site orders their tables by its own 3-1-0 points and says so on every page
-(`orderScope: 'site'`). The Southern Section's three independents (Glendora, Harvard-Westlake and
-Thousand Oaks) are not a league and have no table at all: see "LA independents" below.
+(`orderScope: 'site'`). The Southern Section's five LA independents (Bonita, Chaminade, Glendora,
+Harvard-Westlake and Thousand Oaks) are not a league; the site tables their games against each other by its
+own 3-1-0 points: see "LA independents" below.
 The leagues differ in the tiebreak chain, in how a tie among three or more teams is worked through, in how a division champion is
 named and in what the postseason looks like. Every rule below is data in `lib/league-config/` (a file per league) with the
 by-law citation beside it; one engine (`lib/standings.ts`) runs them, and `/about#rules-<league>`
@@ -34,9 +35,9 @@ are also quoted in `docs/BYLAWS-2026-27.md`.
    `no-rule`) ends the walk: the remaining teams share a place, listed by name, with the league's
    citation as the footnote.
 5. Only games that count toward the division table are used: two teams of the same division, a
-   league game by the league's own evidence (SCVAL, EAL and Sunset: MaxPreps' league flag; BVAL, PCAL
-   and MCAL: it is on the official schedule; the San Diego divisions: any game between two members
-   inside league play, whatever MaxPreps' flag says), never a tournament, neutral or postseason game.
+   league game by the league's own evidence (SCVAL and EAL: MaxPreps' league flag; BVAL, PCAL
+   and MCAL: it is on the official schedule; the Sunset, the LA independents and the San Diego divisions:
+   any game between two members inside league play, whatever MaxPreps' flag says), never a tournament, neutral or postseason game.
 6. A team with no results is named and listed last, never ranked by merit and never shown as 0-0-0.
 7. A tie at the top is shown as "Level on points at the top" until the league's regular phase is
    over; only then does the league's co-champion label appear.
@@ -589,14 +590,16 @@ in Division II [V]; each team's division is `playoffDivisionOf` in config. Open 
 20 places for 20 Division I schools, so every Division I team may well play [U: our arithmetic; the
 Championship Bulletin that would say so returns the site shell instead of a PDF]. Division II has 12
 places for its 20. Dates: Master Calendar playoffs Nov 2–12, finals Nov 14 [V]; seeding meeting Oct 31,
-10 AM, by Zoom [V: advisory calendar]. Round dates come only from the officials' association's calendar
-[V page, not a Section document]: play-ins (if necessary) Mon Nov 2; first round Tue Nov 3 (Division II)
-and Wed Nov 4 (Division I); quarterfinals Thu Nov 5 (Open), Fri Nov 6 (II), Sat Nov 7 (I); semifinals Tue
-Nov 10 (Open and II), Wed Nov 11 (I); finals Sat Nov 14 at La Jolla HS, 1:00 (II), 3:30 (I), 6:00 (Open).
-The site attributes them to the association in the same sentence and, since 2026-10-29, prints them as the
+10 AM, by Zoom [V: advisory calendar]. Round dates come from the Section's 2026 Championship Bracket sheet
+(since 2026-11-03; `SDS_BRACKET_SHEET_URL`) [V]: play-in (Division II) Mon Nov 2; first round Tue Nov 3
+(Division I) and Wed Nov 4 (Division II); quarterfinals Thu Nov 5 (Open), Fri Nov 6 (I), Sat Nov 7 (II);
+semifinals Tue Nov 10 (Open and I), Wed Nov 11 (II); finals Sat Nov 14 at La Jolla HS, 1:00 (II), 3:30 (I),
+6:00 (Open). Until then they came from the officials' association's calendar [V page, not a Section
+document], which lists Divisions I and II the other way round on every round before the finals. The site
+attributes them to the sheet in the same sentence (`citations.roundDates`) and, since 2026-10-29, prints them as the
 block's "Round dates" list on `/playoffs` (config `rounds`, the CCS key-dates list's markup), with links to the
-association's calendar, to the Section's field hockey page (where the brackets are posted) and, once the owner
-pastes it into `bracketSheetUrl`, to the Section's published brackets sheet; the block's sentence is dated
+association's calendar, to the Section's field hockey page (where the brackets are posted) and, since the owner
+pasted it into `bracketSheetUrl` on 2026-11-03, to the Section's published brackets sheet; the block's sentence is dated
 (before the meeting, when the Section seeds; from it on, where it posts) and the "bulletin is not reachable"
 clause lives here and in DATA-SOURCES, not in fan copy. The ladder: 1st, "1st: at least a play-in if
 named league champion" (the designated champion, which the league names, not this table); 2nd or lower, "Placed
@@ -716,11 +719,11 @@ it was published.
 | | Sunset | City | North County | Metro | Independents |
 |---|---|---|---|---|---|
 | Section | SS | SDS | SDS | SDS | SS |
-| Teams / divisions | 10 / 1 | 12 / 2 | 19 / 3 | 9 / 2 | 3 / no league |
-| League games a team | no fixed number (2 to 7 flagged) | 10 | 10 or 12 | 6 or 8 | none |
-| Points (W / T / L) | this site's 3 / 1 / 0 (no league rule) | this site's 3 / 1 / 0 | this site's 3 / 1 / 0 | this site's 3 / 1 / 0 | none (no table) |
-| First tiebreak | none (no rule) | none (no rule) | none (no rule) | none (no rule) | — |
-| League evidence | MaxPreps league flag | division membership | division membership | division membership | none: every game is non-league |
+| Teams / divisions | 8 / 1 | 12 / 2 | 19 / 3 | 9 / 2 | 5 / 1 (no league) |
+| League games a team | no fixed number | 10 | 10 or 12 | 6 or 8 | no fixed number (games against each other) |
+| Points (W / T / L) | this site's 3 / 1 / 0 (no league rule) | this site's 3 / 1 / 0 | this site's 3 / 1 / 0 | this site's 3 / 1 / 0 | this site's 3 / 1 / 0 |
+| First tiebreak | none (no rule) | none (no rule) | none (no rule) | none (no rule) | none (no rule) |
+| League evidence | division membership | division membership | division membership | division membership | division membership |
 | Level games | stand as reported | Section shootout (a win) | Section shootout (a win) | Section shootout (a win) | stand as reported |
-| Postseason | none (Blue Book 2011.1, 3500.2); five teams play the non-CIF Tournament of Champions, Oct 22–29 | Section playoffs Nov 2–14 (seeding meeting Oct 31; finals Nov 14 at La Jolla HS): Open 8, I 12, II 12, placed by the Section; the published bracket is drawn once the owner file is filled | same | same | none (Blue Book 2011.1, 3500.2); three teams play the Tournament of Champions |
+| Postseason | none (Blue Book 2011.1, 3500.2); five teams play the non-CIF Tournament of Champions, Oct 22–29 | Section playoffs Nov 2–14 (seeding meeting Oct 31; finals Nov 14 at La Jolla HS): Open 8, I 12, II 12, placed by the Section; the published bracket is drawn (owner file filled 2026-11-03) | same | same | none (Blue Book 2011.1, 3500.2); three teams play the Tournament of Champions |
 | MaxPreps' table is trusted for | informational only | informational only | informational only (Valley: no table) | informational only | no table |
