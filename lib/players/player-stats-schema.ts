@@ -24,6 +24,7 @@
 import { z } from 'zod';
 
 import { httpUrl, slugId } from '../schema-primitives';
+import { SPORT } from '../sports/current';
 import { contentKey } from '../stable-json';
 import { TEAMS, getTeamBySlug } from '../teams';
 
@@ -33,31 +34,10 @@ const STATS_SLUGS: ReadonlySet<string> = new Set(TEAMS.map((t) => t.slug));
 export const PLAYER_STATS_TEAM_COUNT = STATS_SLUGS.size;
 
 /** What a field player's line can hold, in display order. */
-export const FIELD_STAT_KEYS = [
-  'gamesPlayed',
-  'minutes',
-  'goals',
-  'assists',
-  'points',
-  'shots',
-  'shotsOnGoal',
-  'gameWinningGoals',
-  'steals',
-] as const;
+export const FIELD_STAT_KEYS = SPORT.stats.fieldKeys;
 
 /** What a goalkeeper's line can hold, in display order. */
-export const GOALIE_STAT_KEYS = [
-  'gamesPlayed',
-  'minutes',
-  'overtimeMinutes',
-  'opponentShotsOnGoal',
-  'saves',
-  'goalsAgainst',
-  'shutouts',
-  'wins',
-  'losses',
-  'ties',
-] as const;
+export const GOALIE_STAT_KEYS = SPORT.stats.goalieKeys;
 
 export type FieldStatKey = (typeof FIELD_STAT_KEYS)[number];
 export type GoalieStatKey = (typeof GOALIE_STAT_KEYS)[number];

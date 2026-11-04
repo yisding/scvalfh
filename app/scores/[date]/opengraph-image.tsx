@@ -7,6 +7,7 @@ import { OG, OG_SIZE } from '../../../components/metadata/og-theme';
 import { SITE_NAME } from '../../../components/layout/site';
 import { getGameDates, getGames } from '../../../lib/data';
 import { EN_DASH, shortDate } from '../../../lib/format';
+import { SPORT_AUDIENCE } from '../../../lib/sports/current';
 
 /**
  * The per-date OG card (DESIGN §3.4) — the thing a link pasted into a group text previews with.
@@ -19,7 +20,7 @@ import { EN_DASH, shortDate } from '../../../lib/format';
  * The title is `<Thu Sep 24> · <n> games in <k> leagues` (SPEC §8.4) and the day's headline result
  * — the final with the largest margin — leads the lines.
  */
-export const alt = 'One day of girls varsity field hockey scores';
+export const alt = `One day of ${SPORT_AUDIENCE} scores`;
 export const size = OG_SIZE;
 export const contentType = 'image/png';
 

@@ -1,4 +1,5 @@
 import { ImageResponse } from 'next/og';
+import { SPORT } from '../../lib/sports/current';
 
 /**
  * The `FH` monogram as a PNG, at whatever size the caller needs (DESIGN §7.1's language applied to
@@ -27,7 +28,7 @@ export function monogramImage(size: number): ImageResponse {
           letterSpacing: '-0.04em',
         }}
       >
-        FH
+        {SPORT.abbr}
       </div>
     ),
     { width: size, height: size },

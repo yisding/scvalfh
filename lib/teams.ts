@@ -29,10 +29,11 @@ import type { Seed } from './registry/seed';
 import { SUNSET_SEEDS } from './registry/sunset';
 import { SLUG_PATTERN } from './schema-primitives';
 import { SCHOOL_ADDRESSES } from './schools/schools';
+import { MAXPREPS_WEB, SBLIVE_WEB } from './season';
 import type { DivisionId, GameSide, LeagueId, Team, TeamId } from './types';
 
-const MP = 'https://www.maxpreps.com';
-const SI = 'https://www.si.com/high-school/stats/california/field-hockey';
+const MP = MAXPREPS_WEB;
+const SI = SBLIVE_WEB;
 const VNN = 'https://mmboltapi.azurewebsites.net/api/v2/events/calendar';
 
 /** Relative luminance per WCAG 2.x, on a 6-digit hex without '#'. */

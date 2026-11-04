@@ -17,6 +17,7 @@ import { getLeagueIds, getLeagueSummary } from '../../../lib/data';
 import { shortDate } from '../../../lib/format';
 import { hasHistory } from '../../../lib/history/history';
 import { getLeague, leagueSportWords, standingsLabel } from '../../../lib/leagues';
+import { SPORT } from '../../../lib/sports/current';
 
 /**
  * /standings/<league> — "Where do WE stand?" (SPEC §8.1, §10.3): one league's full tables.
@@ -60,7 +61,7 @@ export async function generateMetadata({ params }: PageProps<'/standings/[league
     .at(-1);
   // The <title> names the sport, the page's h1 (standingsLabel) does not need to: a search result
   // has only the title to say this is field hockey, and "SCVAL standings" alone could be any sport.
-  const title = `${summary.shortName} field hockey standings`;
+  const title = `${summary.shortName} ${SPORT.noun} standings`;
   // A 'site' league publishes no points rule (the Sunset, the San Diego leagues): the points are this site's.
   const site = getLeague(summary.id).rules.orderScope === 'site';
   const description = `${leagueSportWords(summary.id)} standings, ordered on ${site ? 'this site’s ' : ''}points (3 a win, 1 a tie). ${leaderClause(leaders)}.${

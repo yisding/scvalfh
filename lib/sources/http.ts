@@ -11,6 +11,8 @@
  *   concurrency <= 3 · >= 500 ms between request starts · 15 s timeout · retry 429/5xx only.
  */
 
+import { SPORT, SPORT_SEASON } from '../sports/current';
+
 /**
  * Descriptive UA for sources that do not gate on a browser (SPEC §5.3).
  *
@@ -34,7 +36,7 @@ const UA_HOMEPAGE = (() => {
 })();
 
 export const POLITE_USER_AGENT =
-  'scvalfh/1.0 (NorCal girls field hockey scoreboard; unofficial fan site; ' +
+  `scvalfh/1.0 (NorCal ${SPORT_SEASON.gender} ${SPORT.noun} scoreboard; unofficial fan site; ` +
   `+${UA_HOMEPAGE}; contact: ${UA_CONTACT})`;
 
 /**

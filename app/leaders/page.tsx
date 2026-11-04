@@ -10,6 +10,8 @@ import { RegionSwitcher } from '../../components/prefs/LeagueSwitcher';
 import PageHeader from '../../components/layout/PageHeader';
 import { OG_BASE, ROOT_OG_IMAGE, coveredLeagueWords } from '../../components/layout/site';
 import DivisionTabs from '../../components/standings/DivisionTabs';
+import { capitalized } from '../../components/words/capitalized';
+import { SPORT_AUDIENCE } from '../../lib/sports/current';
 
 /**
  * `/leaders` (DESIGN §16, §23, §28) — "Who leads the whole site?" Leaderboards across every covered
@@ -38,7 +40,7 @@ const PAGE_TITLE = 'Season leaders';
 
 export const metadata: Metadata = {
   title: PAGE_TITLE,
-  description: `Girls varsity field hockey leaders across ${SHORT_NAMES}, unofficial: the schools with the best records, the most goals per game (raw and Elo-adjusted) and the highest Elo ratings, and the players with the most points (raw and Elo-adjusted), assists, saves and clean sheets.`,
+  description: `${capitalized(SPORT_AUDIENCE)} leaders across ${SHORT_NAMES}, unofficial: the schools with the best records, the most goals per game (raw and Elo-adjusted) and the highest Elo ratings, and the players with the most points (raw and Elo-adjusted), assists, saves and clean sheets.`,
   alternates: { canonical: '/leaders' },
   openGraph: { ...OG_BASE, ...ROOT_OG_IMAGE, title: PAGE_TITLE, url: '/leaders' },
 };

@@ -8,6 +8,7 @@ import { getHistorySeason } from '../../lib/history/history';
 import type { Team } from '../../lib/types';
 
 import type { TeamPageParts } from './team-page-view';
+import { SPORT } from '../../lib/sports/current';
 
 /**
  * The team page's Elsewhere section: the team's pages on MaxPreps and si.com, the data-error thread, and
@@ -42,7 +43,7 @@ export function TeamElsewhere({
               href={team.external.maxprepsTeamUrl}
               className="sx-pill sx-pill-ring"
             >
-              MaxPreps: {team.name} field hockey
+              MaxPreps: {team.name} {SPORT.noun}
             </ExternalLink>
           </li>
         ) : null}

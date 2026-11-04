@@ -34,9 +34,8 @@ import type {
 // Besides lib/league-config/, the runtime imports are two leaves: lib/season.ts (dependency-free constants)
 // and lib/schema-primitives.ts, for its date-key RegExp (that module imports nothing of ours, only zod).
 import { DATE_PATTERN, SLUG_PATTERN } from './schema-primitives';
-import { SEASON_YEAR } from './season';
-
-const MP = 'https://www.maxpreps.com';
+import { MAXPREPS_SPORT_WEB, SEASON_YEAR } from './season';
+import { PROGRAM_WORDS, SPORT, SPORT_AUDIENCE } from './sports/current';
 
 /**
  * Config order: NorCal (CCS, NCS, NS) first, then SoCal (the Sunset, then the San Diego leagues, then the Southern
@@ -104,7 +103,7 @@ export function isIndependentLeague(id: LeagueId): boolean {
  */
 export function leagueSportWords(id: LeagueId): string {
   const { name } = getLeague(id);
-  return /field hockey/i.test(name) ? `${name}, girls varsity` : `${name} girls varsity field hockey`;
+  return name.toLowerCase().includes(SPORT.noun) ? `${name}, ${PROGRAM_WORDS}` : `${name} ${SPORT_AUDIENCE}`;
 }
 
 /** '<SHORT> standings' as a link's or a title's words ('LA standings' for the LA independents). */
@@ -235,7 +234,7 @@ export function divisionDisplay(id: DivisionId): string {
 export function leagueStandingsUrl(id: DivisionId): string | null {
   const d = getDivision(id);
   if (d.maxprepsLeagueId === null || d.maxprepsSlug === null) return null;
-  return `${MP}/ca/field-hockey/${SEASON_YEAR}/league/${d.maxprepsSlug}/?leagueid=${d.maxprepsLeagueId}`;
+  return `${MAXPREPS_SPORT_WEB}/${SEASON_YEAR}/league/${d.maxprepsSlug}/?leagueid=${d.maxprepsLeagueId}`;
 }
 
 /** The rungs of the division's league ladder that apply to this division, in ladder order. */

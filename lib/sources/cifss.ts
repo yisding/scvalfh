@@ -20,20 +20,21 @@
  */
 
 import { SEASON_CALENDAR_YEAR } from '../season';
+import { SPORT } from '../sports/current';
 import { getTeamBySlug, normalizeTeamKey, resolveTeam } from '../teams';
 import type { Team, TeamSlug } from '../types';
 import { htmlUnescape } from './http';
 
 export const CIFSS_WIDGET_URL = 'https://www.cifsshome.org/widget/schedule-score';
 
-/** The widget's sport id for field hockey (its Sport select: "Field Hockey" = 30). */
-export const CIFSS_FIELD_HOCKEY_SPORT_ID = 30;
+/** The widget's sport id (its Sport select: "Field Hockey" = 30). */
+export const CIFSS_SPORT_ID = SPORT.cifss.sportId;
 
 /** The widget's school-year id: the fall calendar year (2026 = "2026-27"). */
 export const CIFSS_YEAR = Number(SEASON_CALENDAR_YEAR);
 
 /** The first date of the season window read (no field hockey game is played before it). */
-export const CIFSS_SEASON_FROM = `${SEASON_CALENDAR_YEAR}-08-01`;
+export const CIFSS_SEASON_FROM = `${SEASON_CALENDAR_YEAR}-${SPORT.cifss.seasonFrom}`;
 
 /** The Sections our teams play in, as the widget names and numbers them. */
 export const CIFSS_SECTIONS = [
@@ -82,7 +83,7 @@ export function cifssListingUrl(section: CifssSectionKey, opts: { from: string; 
   const params = new URLSearchParams({
     section_id: String(s.sectionId),
     year: String(CIFSS_YEAR),
-    sport_id: String(CIFSS_FIELD_HOCKEY_SPORT_ID),
+    sport_id: String(CIFSS_SPORT_ID),
     date_from: dateParam(opts.from),
     date_to: dateParam(opts.to),
   });
@@ -186,7 +187,7 @@ export function parseCifssPage(html: string, section: CifssSectionKey, onSkip?: 
       onSkip?.(`row ${id}: ${cells.length} cells, expected 12`);
       continue;
     }
-    if (!/field hockey/i.test(cellText(cells[0]))) continue;
+    if (!cellText(cells[0]).toLowerCase().includes(SPORT.noun)) continue;
     const dateKey = dateKeyOfCell(cells[8]);
     const home = resolveCifssName(cellText(cells[1]), section);
     const away = resolveCifssName(cellText(cells[5]), section);

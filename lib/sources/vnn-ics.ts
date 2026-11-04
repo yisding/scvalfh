@@ -18,6 +18,7 @@
  */
 
 import { localDateKey, toLocalTimestamp } from '../format';
+import { GENDER_NAME, SPORT } from '../sports/current';
 import { resolveTeam, sideJoinKey, unorderedPairKey } from '../teams';
 import type { Game, TeamSlug } from '../types';
 import { icsLine, unfoldIcs } from './http';
@@ -33,7 +34,7 @@ export function vnnIcsUrl(siteId: string): string {
 }
 
 /** Group 2 = Varsity | JV · group 3 = vs (home) | at (away) · group 4 = opponent. Verified 19/19. */
-export const VNN_SUMMARY_RE = /^(Girls (Varsity|JV) Field Hockey) (vs|at) (.+)$/;
+export const VNN_SUMMARY_RE = new RegExp(`^(${GENDER_NAME} (Varsity|JV) ${SPORT.name}) (vs|at) (.+)$`);
 
 export interface VnnEvent {
   uid: string | null;

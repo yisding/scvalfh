@@ -22,6 +22,7 @@ import { SEASON_CALENDAR_YEAR } from '../../lib/season';
 import { TEAMS } from '../../lib/teams';
 
 import { OG_SIZE } from '../metadata/og-theme';
+import { SPORT, SPORT_AUDIENCE } from '../../lib/sports/current';
 
 /**
  * The site's own origin, used by `metadataBase`, `robots.txt` and `sitemap.xml`.
@@ -45,11 +46,11 @@ export const SITE_URL: string = (process.env.SITE_URL ?? 'http://localhost:3000'
  * region is in the words that describe the site rather than the name: SITE_DESCRIPTION names both
  * regions, NorCal first, and SITE_SCOPE_NOTE names every section and league covered.
  */
-export const SITE_NAME = 'NorCal High School Field Hockey';
+export const SITE_NAME = `NorCal High School ${SPORT.name}`;
 /** The header wordmark: SITE_NAME with "High School" shortened to "HS" to fit the top bar. */
-export const SITE_WORDMARK = 'NorCal HS Field Hockey';
+export const SITE_WORDMARK = `NorCal HS ${SPORT.name}`;
 /** The manifest `short_name` (≤ 12 characters, so a home-screen label never truncates). */
-export const SITE_SHORT_NAME = 'NorCal FH';
+export const SITE_SHORT_NAME = `NorCal ${SPORT.abbr}`;
 
 /**
  * A group of independents in a list of what is covered: `five LA independents`, from the config
@@ -137,7 +138,7 @@ function sectionCoverage(section: SectionConfig, leagues: readonly LeagueConfig[
 export const SITE_DESCRIPTION = (() => {
   const clauses = REGIONS.map((region, i) => {
     const count = TEAMS.filter((t) => regionOf(t.league) === region.id).length;
-    const noun = i === 0 ? `${region.shortName} girls varsity field hockey teams` : `${region.name} teams`;
+    const noun = i === 0 ? `${region.shortName} ${SPORT_AUDIENCE} teams` : `${region.name} teams`;
     return `the ${count} ${noun} in ${leaguesBySectionWords('short', region.id)}`;
   });
   // Two regions: 'for A, and for B'. The comma keeps the second 'for' from reading as part of A's list.
@@ -165,7 +166,7 @@ export const SITE_SCOPE_NOTE = (() => {
   const plus = INDEPENDENT_LEAGUES.map((g) => {
     const names = TEAMS.filter((t) => t.league === g.id).map((t) => t.name).sort();
     const teams = g.divisions.reduce((n, d) => n + d.expectedTeams, 0);
-    return `the ${getSection(g.sectionId).name}’s ${numberWord(teams)} independents (${listWords(names)}), schools in no field hockey league`;
+    return `the ${getSection(g.sectionId).name}’s ${numberWord(teams)} independents (${listWords(names)}), schools in no ${SPORT.noun} league`;
   });
   const covers = `Covers ${listWords(parts)}${plus.length ? `, plus ${listWords(plus)}` : ''}.`;
   return `${covers} Other teams appear only as opponents.`;

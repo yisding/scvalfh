@@ -36,15 +36,16 @@ import type { Team } from '../../lib/types';
 import { gameAddress } from '../../lib/schools/venue';
 
 import { SITE_DESCRIPTION, SITE_NAME, SITE_SHORT_NAME, SITE_URL, SITE_WORDMARK } from '../layout/site';
+import { SPORT, SPORT_SEASON } from '../../lib/sports/current';
 
 /** A JSON-LD node: plain JSON, nothing a `JSON.stringify` would drop. */
 export type JsonLdNode = { [key: string]: JsonLdValue };
 type JsonLdValue = string | number | boolean | JsonLdNode | JsonLdValue[];
 
 const CONTEXT = 'https://schema.org';
-const SPORT = 'Field hockey';
-/** Every team the site covers is a girls varsity team (SEASON_LABEL). */
-const FEMALE = 'https://schema.org/Female';
+const SPORT_NAME = SPORT.schemaOrgSport;
+/** Every team the site covers is of one program (SEASON_LABEL): a girls varsity team, today. */
+const GENDER = SPORT_SEASON.gender === 'girls' ? 'https://schema.org/Female' : 'https://schema.org/Male';
 
 const absolute = (path: string) => `${SITE_URL}${path}`;
 
@@ -76,7 +77,7 @@ function leagueNode(league: LeagueConfig): JsonLdNode | null {
     alternateName: league.shortName,
     // The league's own site, which the footer links on every page (components/layout/Attribution.tsx).
     url: league.officialUrl,
-    sport: SPORT,
+    sport: SPORT_NAME,
   };
 }
 
@@ -98,8 +99,8 @@ export function teamJsonLd(team: Team, league: LeagueConfig): JsonLdNode {
     name: team.name,
     ...(alternateName.length > 0 ? { alternateName } : {}),
     url: absolute(`/teams/${team.slug}`),
-    sport: SPORT,
-    gender: FEMALE,
+    sport: SPORT_NAME,
+    gender: GENDER,
     location: { '@type': 'Place', address: cityAddress(team.city) },
     ...(memberOf ? { memberOf } : {}),
     ...(sameAs ? { sameAs: [sameAs] } : {}),
@@ -114,10 +115,10 @@ function sideNode(side: GameModel['home']): JsonLdNode {
         '@id': teamNodeId(side.team.slug),
         name: side.name,
         url: absolute(`/teams/${side.team.slug}`),
-        sport: SPORT,
-        gender: FEMALE,
+        sport: SPORT_NAME,
+        gender: GENDER,
       }
-    : { '@type': 'SportsTeam', name: side.name, sport: SPORT, gender: FEMALE };
+    : { '@type': 'SportsTeam', name: side.name, sport: SPORT_NAME, gender: GENDER };
 }
 
 /** Where the game is, exactly as the DETAILS card says it (see the header); null on a neutral site. */
@@ -163,7 +164,7 @@ export function gameJsonLd(model: GameModel): JsonLdNode {
     name: gameTitle(model),
     description: gameDescription(model),
     url: absolute(model.canonical),
-    sport: SPORT,
+    sport: SPORT_NAME,
     // The <time datetime> the page prints: the UTC instant, or the date alone when the time is TBA.
     // A game whose date is TBA has no start to state.
     ...(game.isDateTba ? {} : { startDate: dateTimeAttr(game) }),

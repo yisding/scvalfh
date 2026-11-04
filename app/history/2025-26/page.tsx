@@ -23,6 +23,7 @@ import { OG_BASE, ROOT_OG_IMAGE } from '../../../components/layout/site';
 import { listWords } from '../../../lib/format';
 import { TOC } from '../../../lib/league-config/sections';
 import { getSection, regionOf } from '../../../lib/leagues';
+import { SPORT, SPORT_SEASON } from '../../../lib/sports/current';
 
 /**
  * `/history/2025-26` (DESIGN §1.1, §3.9; SPEC §10.8) — last season's final standings, one section
@@ -57,7 +58,7 @@ const PAGE_TITLE = `${SEASON} final standings`;
 export const metadata: Metadata = {
   title: PAGE_TITLE,
   description:
-    `Final ${listWords(AVAILABLE.map((l) => leagueShortName(l.id)))} girls field hockey standings` +
+    `Final ${listWords(AVAILABLE.map((l) => leagueShortName(l.id)))} ${SPORT_SEASON.gender} ${SPORT.noun} standings` +
     ` and all-league awards from the ${SEASON} season, from each league’s own documents, and` +
     ` ${BRACKET_WORDS}.` +
     (UNAVAILABLE_SUBJECT

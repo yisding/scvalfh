@@ -16,10 +16,11 @@
  */
 
 import { CCS } from '../league-config/sections';
+import { SOURCE_LINKS } from '../season';
 import type { CcsCalendarEvent, CcsDivisionName, CcsEventKind } from '../types';
 import { icsLine, unfoldIcs } from './http';
 
-export const CCS_ICAL_URL = 'https://cifccs.org/calendar/Field_Hockey?print=ical';
+export const CCS_ICAL_URL = SOURCE_LINKS.ccsCalendar;
 
 /**
  * Both CCS reads are gated to the run-up to the playoffs: nothing changes before the league season

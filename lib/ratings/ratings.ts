@@ -56,18 +56,19 @@
 import { getSnapshot } from '../data';
 import { getPriorSeason } from '../history/prior-season';
 import type { PriorSeason } from '../history/prior-season-schema';
+import { SPORT } from '../sports/current';
 import type { Game, Team, TeamId, TeamSlug } from '../types';
 
 /** The average rated team. */
 export const ELO_BASE = 1500;
 /** Elo points per goal of expected margin (see above for how it was set). */
-export const ELO_PER_GOAL = 175;
+export const ELO_PER_GOAL = SPORT.ratings.eloPerUnit;
 /** A margin counts up to this many goals either way. */
-export const MARGIN_CAP = 5;
+export const MARGIN_CAP = SPORT.ratings.marginCap;
 /** How hard the fit pulls a team toward its start, in games' worth. */
-export const START_WEIGHT = 1;
+export const START_WEIGHT = SPORT.ratings.startWeight;
 /** The share of last season's strength a team starts this season with. */
-export const CARRYOVER = 1;
+export const CARRYOVER = SPORT.ratings.carryover;
 
 export interface TeamRating {
   teamId: TeamId;

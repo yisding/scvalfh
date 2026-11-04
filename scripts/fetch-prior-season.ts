@@ -42,6 +42,7 @@ import {
   type PriorSeason,
 } from '../lib/history/prior-season-schema';
 import { SEASON_YEAR, SPORT_SEASON_ID } from '../lib/season';
+import { GENDER_NAME, SPORT, SPORT_AUDIENCE, SPORT_SEASON } from '../lib/sports/current';
 import { MaxPrepsClient, type ScheduleRow } from '../lib/sources/maxpreps';
 import { TEAMS } from '../lib/teams';
 import type { TeamSlug } from '../lib/types';
@@ -101,10 +102,10 @@ async function findSeasonId(client: MaxPrepsClient, year: string): Promise<strin
   const res = await client.getTeamContext(probe.id, SPORT_SEASON_ID);
   const seasons = SportSeasonsSchema.parse((res.data as Record<string, unknown>).schoolSportSeasonsData);
   const match = seasons.filter(
-    (s) => s.sport === 'Field Hockey' && s.gender === 'Girls' && s.level === 'Varsity' && s.year === year,
+    (s) => s.sport === SPORT.maxpreps.sportName && s.gender === GENDER_NAME && s.level === SPORT_SEASON.level && s.year === year,
   );
   if (match.length !== 1) {
-    throw new Error(`${probe.name}'s season list has ${match.length} girls varsity field hockey seasons for ${year}`);
+    throw new Error(`${probe.name}'s season list has ${match.length} ${SPORT_AUDIENCE} seasons for ${year}`);
   }
   return match[0].sportSeasonId;
 }

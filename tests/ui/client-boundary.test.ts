@@ -10,7 +10,8 @@
  * `import type` / `export type` and all-type specifier lists are ignored, since they vanish at compile
  * time) and fails with the chain that reached a banned module. Anything under data/ is banned outright.
  *
- * Client-safe: lib/types (types), lib/season (a constants leaf), lib/format, lib/game-id,
+ * Client-safe: lib/types (types), lib/season (a constants leaf), lib/sports/* (the sport definition it
+ * derives from), lib/format, lib/game-id,
  * lib/search, lib/schools/mascots (the mascot tile sizes, a constants leaf); every other lib/ module
  * is banned (CLIENT_SAFE_LIB below).
  */
@@ -45,6 +46,9 @@ const CLIENT_SAFE_LIB = new Set([
   'lib/game-id',
   'lib/search',
   'lib/schools/mascots',
+  'lib/sports/current',
+  'lib/sports/field-hockey',
+  'lib/sports/shape',
 ]);
 const NODE_BUILTINS = new Set(builtinModules);
 

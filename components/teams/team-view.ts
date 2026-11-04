@@ -85,6 +85,7 @@ import type { FormEntry } from '../ui/FormStrip';
 import { describeGame, shootoutSectionOf } from '../ui/describe-game';
 import { capitalized } from '../words/capitalized';
 import { maxPrepsLabel } from '../words/maxpreps-label';
+import { SPORT_AUDIENCE } from '../../lib/sports/current';
 
 /** One opponent in this team's table that it has not beaten yet (DESIGN §3.7). */
 export interface UnbeatenOpponent {
@@ -472,7 +473,7 @@ export function placeSub(view: TeamPageView): string {
  */
 export function identityLine(team: Pick<Team, 'mascot' | 'city' | 'division'>, leagueShort: string): string {
   const heading = divisionHeading(team.division);
-  return [`${team.mascot} girls varsity field hockey`, heading, leagueShort, team.city]
+  return [`${team.mascot} ${SPORT_AUDIENCE}`, heading, leagueShort, team.city]
     .filter((p): p is string => !!p)
     .join(' · ');
 }

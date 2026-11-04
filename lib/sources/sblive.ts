@@ -28,6 +28,7 @@ import { localDateKey } from '../format';
 import { DATA_QUALITY } from '../league-config/data-quality';
 import { LEAGUES } from '../leagues';
 import { SBLIVE_WEB } from '../season';
+import { SPORT } from '../sports/current';
 import { TEAMS, isWithdrawnSchool, normalizeTeamKey, resolveTeam, sideJoinKey } from '../teams';
 import type { Team, TeamSlug } from '../types';
 import { CHROME_USER_AGENT, type HttpClientOptions, htmlUnescape } from './http';
@@ -652,7 +653,7 @@ export function dedupeSbliveGames(games: readonly SbliveGame[]): SbliveGame[] {
 // ---------------------------------------------------------------- junk-row guards (D2 rule 7)
 
 /** A real California field hockey game page. Anything else (e.g. a `/new-york/` duplicate) is junk. */
-export const SBLIVE_GAME_PATH_PREFIX = '/california/field-hockey/games/';
+export const SBLIVE_GAME_PATH_PREFIX = `/california/${SPORT.sblive.slug}/games/`;
 
 /** True when the row links a `/california/field-hockey/games/…` page (D2 rule 7). */
 export function isCaliforniaGameRow(game: Pick<SbliveGame, 'url'>): boolean {
