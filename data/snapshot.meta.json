@@ -1,13 +1,13 @@
 {
   "cifssCrossCheck": {
-    "agreements": 759,
+    "agreements": 758,
     "cifssOnlyScored": 1,
-    "compared": 765,
+    "compared": 764,
     "conflicts": 6,
     "notOnMaxPreps": 2
   },
-  "commitSummary": "SCVAL +0 finals · BVAL +0 · PCAL +0 · MCAL +0 · EAL +0 · Sunset +0 · City +0 · North +0 · Metro +0 · LA +0",
-  "contentHash": "76903312d953c6aef23b447a33196e3cc8210e198f752910541c6b8c03d223e2",
+  "commitSummary": "SCVAL +0 finals · BVAL +0 · PCAL +0 · MCAL +0 · EAL +0 · Sunset +0 · City +0 · North -1 · Metro +0 · LA +0",
+  "contentHash": "b111326b73982d748e5d4c0d095d6f6468eee4e4897a8b2ad7229c716fb48288",
   "counts": {
     "byLeague": {
       "bval": {
@@ -54,9 +54,9 @@
       },
       "north-county": {
         "backfilled": 1,
-        "finals": 261,
-        "games": 264,
-        "leagueGames": 103,
+        "finals": 260,
+        "games": 263,
+        "leagueGames": 102,
         "teams": 19
       },
       "pcal": {
@@ -81,10 +81,10 @@
         "teams": 8
       }
     },
-    "finals": 930,
-    "games": 947,
-    "leagueGames": 552,
-    "mismatches": 30,
+    "finals": 929,
+    "games": 946,
+    "leagueGames": 551,
+    "mismatches": 29,
     "pending": 3,
     "teams": 102
   },
@@ -95,7 +95,7 @@
     "conflicts": 8,
     "sbliveOnlyScored": 7
   },
-  "fetchedAt": "2026-11-04T12:41:05.430Z",
+  "fetchedAt": "2026-11-04T20:41:02.007Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -162,12 +162,14 @@
     },
     {
       "backfilled": 0,
-      "countedFinals": 103,
-      "finalsDelta": 0,
+      "countedFinals": 102,
+      "finalsDelta": -1,
       "id": "north-county",
       "missingPast": 0,
-      "reasons": [],
-      "state": "fresh"
+      "reasons": [
+        "1 North result that was final in the last update is missing from MaxPreps now (38b1311a-4585-4019-9aa5-2d5d523bd6f7); the table is computed without it."
+      ],
+      "state": "partial"
     },
     {
       "backfilled": 0,
@@ -1018,13 +1020,13 @@
     },
     {
       "label": "los-gatos school calendar",
-      "rowCount": 1,
-      "status": "ok"
+      "rowCount": null,
+      "status": "stale"
     },
     {
       "label": "palo-alto school calendar",
-      "rowCount": 0,
-      "status": "ok"
+      "rowCount": null,
+      "status": "stale"
     },
     {
       "label": "cifsshome.org Central Coast Section field hockey",
@@ -1068,7 +1070,7 @@
     }
   ],
   "today": "2026-11-04",
-  "warnings": 44,
+  "warnings": 47,
   "window": {
     "firstGame": "2026-08-12T17:15:00",
     "lastGame": "2026-11-07T13:00:00",
