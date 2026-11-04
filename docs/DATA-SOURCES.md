@@ -2316,8 +2316,8 @@ tables of their own are computed (`lib/jv/jv-standings.ts`, last bullet). Read 2
 - **Official documents** list JV only as start times on the varsity fixtures (SCVAL "Varsity 4:00
   followed by JV"; BVAL a JV time per game; MCAL's change notes), and PCAL's `CAT/YOR` slot is York's
   JV in Santa Catalina's place. None is read for JV.
-- **Cost:** 102 MaxPreps JSON calls through the MaxPreps client's gate and up to 101 si.com pages one at
-  a time, 1 s apart (§1.2's client options); the 98 pages take at least 98 seconds of that spacing alone
+- **Cost:** 102 MaxPreps JSON calls through the MaxPreps client's gate and up to 102 si.com pages one at
+  a time, 1 s apart (§1.2's client options); the 102 pages take at least 101 seconds of that spacing alone
   (about a minute in all when it was 49 calls and 48 pages). A failure is scoped to the school and the
   source: its previous rows are carried (`carried-forward`). The previous file is salvaged row by row,
   as fetch-rosters and fetch-player-stats salvage theirs: each team row, game and si.com row is held to

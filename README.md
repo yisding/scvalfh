@@ -630,7 +630,7 @@ source (a failed MaxPreps feed or si.com page keeps that school's previous rows,
 The previous file is salvaged row by row, as for rosters and stats: each team row, game and si.com row
 is held to its own schema and one that fails costs only itself, so a registry that grew (which fails
 the whole-file schema) no longer sends every team outside a `--leagues` run to `pending`. Cost per run: 102 small MaxPreps calls through the MaxPreps client's gate and up to 102 si.com pages,
-one at a time, 1 s apart (about a minute for the 48 NorCal pages; the 102 now take at least 102 seconds of that spacing alone). A day page exists only for a date with a varsity game, so
+one at a time, 1 s apart (about a minute for the 48 NorCal pages; the 102 now take at least 101 seconds of that spacing alone). A day page exists only for a date with a varsity game, so
 a JV-only date (Aug 18 in 2026) is on the team pages alone.
 
 ```bash
