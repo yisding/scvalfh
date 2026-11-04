@@ -1,6 +1,7 @@
 /**
  * Verified season constants: a leaf whose only import is the sport switch (lib/sports/current.ts, itself
- * import-free), because client modules reach it through lib/format. League, division and CCS facts live in lib/league-config/; the
+ * import-free). Client modules may reach it, but lib/format takes TIME_ZONE from lib/time-zone.ts so
+ * that pages do not bundle the sport definition. League, division and CCS facts live in lib/league-config/; the
  * Season record is built by lib/snapshot/season-build.ts (SPEC §13.3).
  *
  * Every value below is derived from the sport definition (lib/sports/field-hockey.ts), where each one
@@ -57,5 +58,5 @@ export const SOURCE_LINKS = {
   cifss: 'https://www.cifsshome.org/widget/schedule-score',
 } as const;
 
-/** The IANA zone every date on the site is formatted in. */
-export const TIME_ZONE = 'America/Los_Angeles';
+/** The IANA zone every date on the site is formatted in (lib/time-zone.ts, the leaf lib/format loads). */
+export { TIME_ZONE } from './time-zone';

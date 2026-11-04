@@ -157,3 +157,7 @@ byte-identical to the build before the seam.
 - `tests/legacy-imports.test.ts`. No deleted `lib/season` name may come back.
 - `tests/maxpreps-client.test.ts` and the si.com corpus fixtures, which hold exact URLs.
 - `pnpm assert:prerender`, `assert:budgets` and `assert:copy` on the built site.
+- First-load JS. Turbopack keeps a whole `as const` sport object once any of its fields is read,
+  so client modules must not reach `lib/sports/` through a hot leaf. `lib/format` takes `TIME_ZONE`
+  from `lib/time-zone.ts`, not from `lib/season.ts`, for this reason. Reaching the sport definition
+  through `lib/format` put `/teams` 190 B over its budget.

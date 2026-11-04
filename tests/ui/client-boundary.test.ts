@@ -42,6 +42,7 @@ import {
 const CLIENT_SAFE_LIB = new Set([
   'lib/types',
   'lib/season',
+  'lib/time-zone',
   'lib/format',
   'lib/game-id',
   'lib/search',
