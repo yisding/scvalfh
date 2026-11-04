@@ -43,7 +43,7 @@ export function TeamElsewhere({
               href={team.external.maxprepsTeamUrl}
               className="sx-pill sx-pill-ring"
             >
-              MaxPreps: {team.name} {SPORT.noun}
+              MaxPreps: {team.name}{` ${SPORT.noun}`}
             </ExternalLink>
           </li>
         ) : null}
