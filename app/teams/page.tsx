@@ -12,6 +12,7 @@ import SectionHeader from '../../components/ui/SectionHeader';
 import { getCounts, getTeamSearchIndex } from '../../lib/data';
 import { listWords } from '../../lib/format';
 import { LEAGUES_PROPER } from '../../lib/leagues';
+import { SPORT_AUDIENCE } from '../../lib/sports/current';
 
 /** The page's title, and its og:title too: og:title never carries the site-name suffix (OG_BASE). */
 const PAGE_TITLE = 'Teams and standings';
@@ -59,7 +60,7 @@ const WHERE_LISTED = 'each in its division’s standings table';
 
 export const metadata: Metadata = {
   title: PAGE_TITLE,
-  description: `All ${getCounts().teams} girls varsity field hockey teams in ${leaguesBySectionWords('name')}, ${WHERE_LISTED}. Find your school.`,
+  description: `All ${getCounts().teams} ${SPORT_AUDIENCE} teams in ${leaguesBySectionWords('name')}, ${WHERE_LISTED}. Find your school.`,
   alternates: { canonical: '/teams' },
   openGraph: { ...OG_BASE, ...ROOT_OG_IMAGE, title: PAGE_TITLE, url: '/teams' },
 };

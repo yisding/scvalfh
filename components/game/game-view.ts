@@ -84,6 +84,7 @@ import {
   type SideView,
 } from '../ui/describe-game';
 import { capitalized } from '../words/capitalized';
+import { SPORT, SPORT_AUDIENCE } from '../../lib/sports/current';
 
 // ---------------------------------------------------------------- types
 
@@ -989,7 +990,7 @@ export function gameTitle(model: GameModel): string {
     // Winner first on a decided game; a draw keeps the site's away-then-home order.
     const [first, second] = home.view.weight === 'winner' ? [home, away] : [away, home];
     const decider = display.deciderTag ? ` (${display.deciderTag})` : '';
-    return `${first.label} ${first.view.glyph}, ${second.label} ${second.view.glyph}${decider} — field hockey, ${date}`;
+    return `${first.label} ${first.view.glyph}, ${second.label} ${second.view.glyph}${decider} — ${SPORT.noun}, ${date}`;
   }
   const joiner = matchupJoiner(game);
   const suffix =
@@ -998,7 +999,7 @@ export function gameTitle(model: GameModel): string {
         ? 'time TBA'
         : timeOfDayPT(game.dateLocal)
       : display.statusLabel.toLowerCase();
-  return `${away.label} ${joiner} ${home.label} field hockey — ${date}, ${suffix}`;
+  return `${away.label} ${joiner} ${home.label} ${SPORT.noun} — ${date}, ${suffix}`;
 }
 
 /** `De Anza Division league game` | `MCAL league game` | `MCAL semifinal` | `non-league game`. */
@@ -1020,7 +1021,7 @@ export function gameRecap(model: GameModel): string | null {
 export function gameDescription(model: GameModel): string {
   const { game, display, away, home, league } = model;
   const context = contextNoun(model);
-  const where = `${league ? leagueSportWords(league.id) : 'girls varsity field hockey'}, ${SEASON_DISPLAY}`;
+  const where = `${league ? leagueSportWords(league.id) : SPORT_AUDIENCE}, ${SEASON_DISPLAY}`;
   const recap = gameRecap(model);
   if (recap) {
     // Dated: the sentence carries no date, so a rematch with the same score would have the same

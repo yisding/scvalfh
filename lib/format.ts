@@ -9,7 +9,7 @@
  * converting `snapshot.fetchedAt` (ISO UTC) into a local date — via `zonedParts`.
  */
 
-import { TIME_ZONE } from './season';
+import { TIME_ZONE } from './time-zone';
 // Type-only: erased at build, so this module stays client-safe (it never loads the league config).
 import type { ShootoutInference } from './league-config/shape';
 import type { Game, OfficialSourceId, Outcome, Record3, ScoreView } from './types';

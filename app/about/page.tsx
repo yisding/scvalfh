@@ -18,6 +18,7 @@ import StandingsSection from '../../components/about/sections/StandingsSection';
 import { RegionSwitcher } from '../../components/prefs/LeagueSwitcher';
 import PageHeader from '../../components/layout/PageHeader';
 import { OG_BASE, ROOT_OG_IMAGE } from '../../components/layout/site';
+import { SPORT_AUDIENCE } from '../../lib/sports/current';
 
 /**
  * `/about` (DESIGN §3.10, SPEC §10.8) — where the data comes from for every league, how each
@@ -75,7 +76,7 @@ export default function AboutPage() {
       <PageHeader
         className="lg:col-start-1 lg:row-start-1"
         title="About & sources"
-        description={`${DESCRIPTION} This is an unofficial, fan-built scoreboard for the ${teams} girls varsity field hockey teams in ${leagueWords}. Every number on it is either read from a public source and shown as-is, or computed from public game results by rules published below. Nothing is guessed, and every disagreement we find with a source is published rather than quietly resolved.`}
+        description={`${DESCRIPTION} This is an unofficial, fan-built scoreboard for the ${teams} ${SPORT_AUDIENCE} teams in ${leagueWords}. Every number on it is either read from a public source and shown as-is, or computed from public game results by rules published below. Nothing is guessed, and every disagreement we find with a source is published rather than quietly resolved.`}
       />
 
       <AboutJumpList variant="disclosure" items={view.jumpList} />

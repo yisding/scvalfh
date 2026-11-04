@@ -20,11 +20,12 @@ import { getColleges } from '../lib/players/commits';
 import { getAvailableHistoryLeagues } from '../lib/history/history';
 import { gradeWord } from '../lib/format';
 import { getAllEnrichedRosters } from '../lib/players/rosters';
+import { SPORT } from '../lib/sports/current';
 import { TEAMS, getTeamBySlug } from '../lib/teams';
 import type { ArchiveLine } from './copy-rules';
 import type { TeamSlug } from '../lib/types';
 
-const terms = new Set<string>(['Field Hockey', ...Object.values(SPORT_WORDS)]);
+const terms = new Set<string>([SPORT.name, ...Object.values(SPORT_WORDS)]);
 const add = (...values: Array<string | null | undefined>) => {
   for (const v of values) if (v) terms.add(v);
 };

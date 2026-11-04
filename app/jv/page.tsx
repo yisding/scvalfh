@@ -10,6 +10,7 @@ import Arrow from '../../components/ui/Arrow';
 import SectionHeader from '../../components/ui/SectionHeader';
 import { listWords } from '../../lib/format';
 import { LEAGUES, LEAGUES_PROPER, leaguesInRegion, regionOf } from '../../lib/leagues';
+import { GENDER_NAME, SPORT } from '../../lib/sports/current';
 
 /**
  * `/jv` — "Where does our JV stand?" Every league's JV tables, computed (lib/jv/jv-standings.ts) and
@@ -34,7 +35,7 @@ const PAGE_TITLE = 'JV standings';
 
 export const metadata: Metadata = {
   title: PAGE_TITLE,
-  description: `Girls junior varsity field hockey standings for ${SHORT_NAMES}, unofficial: computed from MaxPreps’ JV results (si.com filling gaps), shown for each division once enough of its JV league games have a score.`,
+  description: `${GENDER_NAME} junior varsity ${SPORT.noun} standings for ${SHORT_NAMES}, unofficial: computed from MaxPreps’ JV results (si.com filling gaps), shown for each division once enough of its JV league games have a score.`,
   alternates: { canonical: '/jv' },
   openGraph: { ...OG_BASE, ...ROOT_OG_IMAGE, title: PAGE_TITLE, url: '/jv' },
 };

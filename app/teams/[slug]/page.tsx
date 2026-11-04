@@ -40,6 +40,7 @@ import { teamJsonLd } from '../../../components/metadata/structured-data';
 import { getTeamSlugs } from '../../../lib/data';
 import { recordString, shortDate } from '../../../lib/format';
 import { getLeague, regionOf } from '../../../lib/leagues';
+import { SPORT, SPORT_AUDIENCE } from '../../../lib/sports/current';
 
 /**
  * /teams/[slug] — "How is MY team doing?" (DESIGN §3.7).
@@ -148,13 +149,13 @@ export async function generateMetadata({ params }: PageProps<'/teams/[slug]'>): 
   return {
     // With the mascot, as the school's teams are known and searched ("Fremont Firebirds"): the bare
     // name is ambiguous for a school named for its city (Fremont, Christopher, Prospect).
-    title: `${team.name} ${team.mascot} field hockey`,
-    description: `${team.name} ${team.mascot} girls varsity field hockey (${view.league.shortName}), unofficial: ${record}. Schedule, results, ${extras}goal margins and ${postseasonDescription(view)}.`,
+    title: `${team.name} ${team.mascot} ${SPORT.noun}`,
+    description: `${team.name} ${team.mascot} ${SPORT_AUDIENCE} (${view.league.shortName}), unofficial: ${record}. Schedule, results, ${extras}goal margins and ${postseasonDescription(view)}.`,
     alternates: { canonical: `/teams/${team.slug}` },
     openGraph: {
       ...OG_BASE,
       title: `${team.name} — ${record}`,
-      description: `Scores, schedule and standings for ${team.name} girls varsity field hockey.`,
+      description: `Scores, schedule and standings for ${team.name} ${SPORT_AUDIENCE}.`,
       url: `/teams/${team.slug}`,
     },
   };

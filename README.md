@@ -933,6 +933,8 @@ components/<feature>/  one folder per area of the site; React components (Pascal
                        the view models that decide what they show (kebab-case .ts, mostly *-view.ts)
 components/{ui,layout,metadata,prefs,words}/   shared across features (below)
 lib/                   data, config and engines; no React
+lib/sports/            the sport this build covers (current.ts) and its definition: ids, words,
+                       rating constants, stat lines (docs/MULTI-SPORT.md)
 data/                  the committed JSON the site is built from
 scripts/               the data refresh, the build assertions and dev tools
 ```
@@ -2084,6 +2086,8 @@ compatibility date follows, so bump the two together and re-run the Workers buil
 
 - `docs/DATA-SOURCES.md` — every upstream endpoint, JSON path, enum and known gotcha, condensed
   from the build-time research spec.
+- `docs/MULTI-SPORT.md` — extending the site to other sports: one sport per build, what is
+  shared across sports and what is field hockey's, and the order of work after the `lib/sports/` seam.
 - `docs/LEAGUE-RULES.md` — per league: points, order, tiebreak chain with citations, how
   multi-team ties are resolved, co-champions, the postseason, official sources and known data gaps.
 - `docs/BYLAWS-2026-27.md` — the verified SCVAL by-laws excerpt that governs standings, points,

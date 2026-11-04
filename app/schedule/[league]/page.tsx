@@ -26,6 +26,7 @@ import {
 import { monthDay, plural } from '../../../lib/format';
 import { isIndependentLeague, leagueSportWords, standaloneName } from '../../../lib/leagues';
 import { SEASON_DISPLAY } from '../../../lib/season';
+import { SPORT, SPORT_AUDIENCE } from '../../../lib/sports/current';
 
 
 /**
@@ -69,10 +70,10 @@ export async function generateMetadata({ params }: PageProps<'/schedule/[league]
   if (!summary) return { title: 'League not found' };
   const counts = countGames(getGamesByDate({ league: summary.id }).flatMap((group) => group.games));
   // The h1 is scheduleTitle; the <title> adds the sport, which a search result has no other way to show.
-  const title = scheduleTitle(summary).replace('schedule and results', 'field hockey schedule and results');
+  const title = scheduleTitle(summary).replace('schedule and results', `${SPORT.noun} schedule and results`);
   // 'involving SCVAL teams'; the LA independents are named by their standaloneName: 'involving the LA independents'.
   const involving = isIndependentLeague(summary.id) ? standaloneName(summary.id) : `${summary.shortName} teams`;
-  const description = `All ${plural(counts.total, 'girls varsity field hockey game')} involving ${involving} for ${SEASON_DISPLAY}, grouped by date: ${plural(counts.final, 'final score')}, ${counts.upcoming} still to come. Filter by team, game type or status.`;
+  const description = `All ${plural(counts.total, `${SPORT_AUDIENCE} game`)} involving ${involving} for ${SEASON_DISPLAY}, grouped by date: ${plural(counts.final, 'final score')}, ${counts.upcoming} still to come. Filter by team, game type or status.`;
   return {
     title,
     description,

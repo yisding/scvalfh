@@ -52,6 +52,7 @@ import {
   type PlayerStatLine,
   type TeamPlayerStats,
 } from './player-stats-schema';
+import { SPORT } from '../sports/current';
 import type { Game, TeamSlug } from '../types';
 
 // ---------------------------------------------------------------- parsing
@@ -612,12 +613,12 @@ export function withNoteStats(team: TeamPlayerStats, notes: TeamNoteStats): Note
     if (c.goals > 0) {
       field.add('goals');
       addField(line, 'goals', c.goals);
-      if (field.has('points')) addField(line, 'points', 2 * c.goals);
+      if (field.has('points')) addField(line, 'points', SPORT.stats.pointsPerGoal * c.goals);
     }
     if (c.assists > 0) {
       field.add('assists');
       addField(line, 'assists', c.assists);
-      if (field.has('points')) addField(line, 'points', c.assists);
+      if (field.has('points')) addField(line, 'points', SPORT.stats.pointsPerAssist * c.assists);
     }
     if (c.saves > 0) {
       goalie.add('saves');

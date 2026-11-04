@@ -27,6 +27,8 @@ import { shortNameOf } from '../words/team-short-name';
 
 import { countGames, type ScheduleCounts } from './filter-data';
 import { slugOf } from './schedule-view';
+import { capitalized } from '../words/capitalized';
+import { SPORT_AUDIENCE } from '../../lib/sports/current';
 
 export interface DayLine {
   contestId: string;
@@ -87,7 +89,7 @@ export function daySummary(games: readonly Game[], longDateText: string): DaySum
     .join(' · ');
 
   const parts: string[] = [
-    `${counts.total} girls varsity field hockey ${gameWord(counts.total)} on ${longDateText}.`,
+    `${counts.total} ${SPORT_AUDIENCE} ${gameWord(counts.total)} on ${longDateText}.`,
   ];
   if (headline) parts.push(`${headline}.`);
   parts.push(...stateSentences(counts));
@@ -118,7 +120,7 @@ function stateSentences(counts: ScheduleCounts): string[] {
 export function dayDescription(games: readonly Game[], longDateText: string): string {
   const present = dayRegions(games).regions.filter((r) => r.withSide.length > 0);
   if (present.length < 2) return daySummary(games, longDateText).sentence;
-  const parts = [`Girls varsity field hockey on ${longDateText}.`];
+  const parts = [`${capitalized(SPORT_AUDIENCE)} on ${longDateText}.`];
   for (const region of present) {
     const { headline } = daySummary(region.withSide, longDateText);
     parts.push(`${region.shortName}: ${plural(region.withSide.length, 'game')}${headline ? `; ${headline}` : ''}.`);

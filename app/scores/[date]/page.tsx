@@ -21,6 +21,8 @@ import { getGameDates, getGames, getLeagueSummaries, getOfficialFixtures, getTod
 import { longDate, monthDay, parseLocal, shortDate } from '../../../lib/format';
 import { REGIONS } from '../../../lib/league-config/sections';
 import { regionOf } from '../../../lib/leagues';
+import { capitalized } from '../../../components/words/capitalized';
+import { SPORT, SPORT_AUDIENCE } from '../../../lib/sports/current';
 
 /**
  * `/scores/[date]` — one day's slate (DESIGN §1.1, §3.4).
@@ -75,7 +77,7 @@ export async function generateMetadata({
   const year = parseLocal(date).year;
   const description = dayDescription(games, `${longDate(date)}, ${year}`);
   // The sport first: "Scores for Thu Sep 24" alone could be any sport's scores page.
-  const title = `Field hockey scores — ${shortDate(date)}, ${year}`;
+  const title = `${capitalized(SPORT.noun)} scores — ${shortDate(date)}, ${year}`;
   return {
     title,
     description,
@@ -133,7 +135,7 @@ export default async function ScoresByDatePage({ params }: PageProps<'/scores/[d
       <PageHeader
         // What the page is, above the date the h1 names: the h1 alone ("Thursday, September 24,
         // 2026") never said which sport's scores these are.
-        eyebrow="Girls varsity field hockey scores"
+        eyebrow={`${capitalized(SPORT_AUDIENCE)} scores`}
         title={
           <time dateTime={date}>
             {/* The trailing space keeps the h1's text content "Thursday, Sep 24 Thursday, September

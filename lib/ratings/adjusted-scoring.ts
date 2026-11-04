@@ -77,21 +77,22 @@
 
 import { getSnapshot } from '../data';
 import { ELO_BASE, ELO_PER_GOAL, getRatings, ratingGames, type RatingTable } from './ratings';
+import { SPORT } from '../sports/current';
 import type { Game, Team, TeamId, TeamSlug } from '../types';
 
 /** The prior standard deviation of a team's attack and defense corrections to its Elo, in log goals. */
-export const RIDGE_SIGMA = 0.3;
+export const RIDGE_SIGMA = SPORT.ratings.adjustedScoring.ridgeSigma;
 /**
  * Games against an average defense, at the season's average rate against one, added to every team's
  * adjusted rate and schedule factor.
  */
-export const SHRINK_GAMES = 1;
+export const SHRINK_GAMES = SPORT.ratings.adjustedScoring.shrinkGames;
 /**
  * The prior standard deviation of the two Elo slopes a and d, centred on 0: so weak that a full
  * season's fit is unchanged (both come out near 0.4 in 2025-26 and 2026), but a season of a few
  * games, which a large slope can explain perfectly, stays near no adjustment instead of running off.
  */
-export const SLOPE_SIGMA = 0.5;
+export const SLOPE_SIGMA = SPORT.ratings.adjustedScoring.slopeSigma;
 /**
  * The fit has converged when a full Newton step moves no parameter by more than this, in log goals (a
  * millionth of a scoring rate). On the bundled season the steps fall from 1.6 to 2e-4 in five
