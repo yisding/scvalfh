@@ -1,13 +1,13 @@
 {
   "cifssCrossCheck": {
-    "agreements": 757,
+    "agreements": 759,
     "cifssOnlyScored": 1,
-    "compared": 763,
+    "compared": 765,
     "conflicts": 6,
     "notOnMaxPreps": 2
   },
   "commitSummary": "SCVAL +0 finals · BVAL +0 · PCAL +0 · MCAL +0 · EAL +0 · Sunset +0 · City +0 · North +0 · Metro +0 · LA +0",
-  "contentHash": "e35ba8cc49d7558772ed2f3b82add0f38ff939b27a0789550a58afb60d79ca6b",
+  "contentHash": "76903312d953c6aef23b447a33196e3cc8210e198f752910541c6b8c03d223e2",
   "counts": {
     "byLeague": {
       "bval": {
@@ -54,7 +54,7 @@
       },
       "north-county": {
         "backfilled": 1,
-        "finals": 259,
+        "finals": 261,
         "games": 264,
         "leagueGames": 103,
         "teams": 19
@@ -81,7 +81,7 @@
         "teams": 8
       }
     },
-    "finals": 928,
+    "finals": 930,
     "games": 947,
     "leagueGames": 552,
     "mismatches": 30,
@@ -89,13 +89,13 @@
     "teams": 102
   },
   "crossCheck": {
-    "agreements": 201,
+    "agreements": 182,
     "backfilled": 4,
-    "compared": 234,
+    "compared": 217,
     "conflicts": 8,
     "sbliveOnlyScored": 7
   },
-  "fetchedAt": "2026-11-03T20:25:39.312Z",
+  "fetchedAt": "2026-11-04T12:41:05.430Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -912,11 +912,6 @@
       "status": "ok"
     },
     {
-      "label": "sblive scoreboard 2026-10-20",
-      "rowCount": 24,
-      "status": "ok"
-    },
-    {
       "label": "sblive scoreboard 2026-10-21",
       "rowCount": 12,
       "status": "ok"
@@ -974,6 +969,11 @@
     {
       "label": "sblive scoreboard 2026-11-03",
       "rowCount": 3,
+      "status": "ok"
+    },
+    {
+      "label": "sblive scoreboard 2026-11-04",
+      "rowCount": 5,
       "status": "ok"
     },
     {
@@ -1053,7 +1053,7 @@
     },
     {
       "label": "cifsshome.org San Diego Section field hockey",
-      "rowCount": 768,
+      "rowCount": 771,
       "status": "ok"
     },
     {
@@ -1067,8 +1067,8 @@
       "status": "ok"
     }
   ],
-  "today": "2026-11-03",
-  "warnings": 45,
+  "today": "2026-11-04",
+  "warnings": 44,
   "window": {
     "firstGame": "2026-08-12T17:15:00",
     "lastGame": "2026-11-07T13:00:00",
