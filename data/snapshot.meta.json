@@ -7,7 +7,7 @@
     "notOnMaxPreps": 2
   },
   "commitSummary": "SCVAL +0 finals · BVAL +0 · PCAL +0 · MCAL +0 · EAL +0 · Sunset +0 · City +0 · North +0 · Metro +0 · LA +0",
-  "contentHash": "951c370716c7042cdc2a92c553eb84efe07a31d28dc4eeef38ae66200dcb97d8",
+  "contentHash": "13d6e54efa79af3f059dd19f3c332e97c3f5445cef83e2d02613f182c24f0334",
   "counts": {
     "byLeague": {
       "bval": {
@@ -55,7 +55,7 @@
       "north-county": {
         "backfilled": 1,
         "finals": 263,
-        "games": 265,
+        "games": 266,
         "leagueGames": 102,
         "teams": 19
       },
@@ -82,7 +82,7 @@
       }
     },
     "finals": 933,
-    "games": 948,
+    "games": 949,
     "leagueGames": 551,
     "mismatches": 29,
     "pending": 3,
@@ -95,7 +95,7 @@
     "conflicts": 8,
     "sbliveOnlyScored": 6
   },
-  "fetchedAt": "2026-11-05T12:51:34.192Z",
+  "fetchedAt": "2026-11-05T20:56:55.438Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -808,7 +808,7 @@
     },
     {
       "label": "san-pasqual schedule",
-      "rowCount": 27,
+      "rowCount": 28,
       "status": "ok"
     },
     {
