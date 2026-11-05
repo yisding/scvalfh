@@ -6,7 +6,7 @@
     "teams": 102,
     "teamsWithStats": 69
   },
-  "fetchedAt": "2026-11-04T20:45:33.650Z",
+  "fetchedAt": "2026-11-05T12:54:20.324Z",
   "season": "26-27",
   "source": {
     "builtBy": "scripts/fetch-player-stats.ts",
@@ -24,7 +24,7 @@
   "teams": [
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "games": [
         {
           "contestId": "04bcfb64-9b80-429a-b586-78a74e70d9f3",
@@ -2096,7 +2096,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "games": [
         {
           "contestId": "0849d198-8ba8-4dbf-bae5-84a05091e8f6",
@@ -2750,6 +2750,66 @@
               "assists",
               "points",
               "shotsOnGoal"
+            ],
+            "goalkeeping": [
+              "saves"
+            ]
+          },
+          "warnings": []
+        },
+        {
+          "contestId": "6d418027-0887-463d-bab3-9536bdfa7709",
+          "players": [
+            {
+              "field": {
+                "assists": 1,
+                "points": 1
+              },
+              "goalkeeping": null,
+              "jersey": "6",
+              "name": "Carolyn Cordoni"
+            },
+            {
+              "field": {
+                "goals": 1,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": "8",
+              "name": "Melanie Henderson"
+            },
+            {
+              "field": {
+                "goals": 1,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": "13",
+              "name": "Annie Boyd"
+            },
+            {
+              "field": null,
+              "goalkeeping": {
+                "saves": 4
+              },
+              "jersey": "44",
+              "name": "Nora Lagenfeld"
+            },
+            {
+              "field": null,
+              "goalkeeping": {
+                "saves": 4
+              },
+              "jersey": "42",
+              "name": "Nikki Kalina"
+            }
+          ],
+          "rowKey": "72b07983",
+          "tracked": {
+            "field": [
+              "goals",
+              "assists",
+              "points"
             ],
             "goalkeeping": [
               "saves"
@@ -3511,7 +3571,7 @@
           "warnings": []
         }
       ],
-      "lastUpdated": "2026-10-30T19:07:15",
+      "lastUpdated": "2026-11-04T13:27:15",
       "maxprepsTeamId": "de6d3780-e8f6-4a2a-93f2-b5d89499f9b0",
       "name": "Saint Francis",
       "players": [
@@ -3522,7 +3582,7 @@
           "field": {
             "assists": 2,
             "gameWinningGoals": null,
-            "gamesPlayed": 18,
+            "gamesPlayed": 19,
             "goals": 1,
             "minutes": null,
             "points": 4,
@@ -3543,7 +3603,7 @@
           "field": {
             "assists": 6,
             "gameWinningGoals": null,
-            "gamesPlayed": 18,
+            "gamesPlayed": 19,
             "goals": 8,
             "minutes": null,
             "points": 22,
@@ -3564,7 +3624,7 @@
           "field": {
             "assists": 2,
             "gameWinningGoals": null,
-            "gamesPlayed": 18,
+            "gamesPlayed": 19,
             "goals": 1,
             "minutes": null,
             "points": 4,
@@ -3583,12 +3643,12 @@
           "careerId": "o1c6a2ig5u7bb",
           "careerUrl": "https://www.maxpreps.com/ca/mountain-view/saint-francis-lancers/athletes/carolyn-cordoni/?careerid=o1c6a2ig5u7bb",
           "field": {
-            "assists": 7,
+            "assists": 8,
             "gameWinningGoals": null,
-            "gamesPlayed": 18,
+            "gamesPlayed": 19,
             "goals": 8,
             "minutes": null,
-            "points": 23,
+            "points": 24,
             "shots": 0,
             "shotsOnGoal": 11,
             "steals": null
@@ -3606,7 +3666,7 @@
           "field": {
             "assists": 3,
             "gameWinningGoals": null,
-            "gamesPlayed": 18,
+            "gamesPlayed": 19,
             "goals": 14,
             "minutes": null,
             "points": 31,
@@ -3627,10 +3687,10 @@
           "field": {
             "assists": 8,
             "gameWinningGoals": null,
-            "gamesPlayed": 18,
-            "goals": 13,
+            "gamesPlayed": 19,
+            "goals": 14,
             "minutes": null,
-            "points": 34,
+            "points": 36,
             "shots": 0,
             "shotsOnGoal": 17,
             "steals": null
@@ -3648,7 +3708,7 @@
           "field": {
             "assists": 2,
             "gameWinningGoals": null,
-            "gamesPlayed": 18,
+            "gamesPlayed": 19,
             "goals": 2,
             "minutes": null,
             "points": 6,
@@ -3669,7 +3729,7 @@
           "field": {
             "assists": 1,
             "gameWinningGoals": null,
-            "gamesPlayed": 17,
+            "gamesPlayed": 18,
             "goals": 7,
             "minutes": null,
             "points": 15,
@@ -3690,7 +3750,7 @@
           "field": {
             "assists": 0,
             "gameWinningGoals": null,
-            "gamesPlayed": 13,
+            "gamesPlayed": 14,
             "goals": 1,
             "minutes": null,
             "points": 2,
@@ -3711,7 +3771,7 @@
           "field": {
             "assists": 2,
             "gameWinningGoals": null,
-            "gamesPlayed": 12,
+            "gamesPlayed": 13,
             "goals": 3,
             "minutes": null,
             "points": 8,
@@ -3732,7 +3792,7 @@
           "field": {
             "assists": 0,
             "gameWinningGoals": null,
-            "gamesPlayed": 18,
+            "gamesPlayed": 19,
             "goals": 1,
             "minutes": null,
             "points": 2,
@@ -3753,10 +3813,10 @@
           "field": {
             "assists": 2,
             "gameWinningGoals": null,
-            "gamesPlayed": 17,
-            "goals": 4,
+            "gamesPlayed": 18,
+            "goals": 5,
             "minutes": null,
-            "points": 10,
+            "points": 12,
             "shots": 0,
             "shotsOnGoal": 5,
             "steals": null
@@ -3774,7 +3834,7 @@
           "field": {
             "assists": 0,
             "gameWinningGoals": null,
-            "gamesPlayed": 17,
+            "gamesPlayed": 18,
             "goals": 1,
             "minutes": null,
             "points": 2,
@@ -3795,7 +3855,7 @@
           "field": {
             "assists": 1,
             "gameWinningGoals": null,
-            "gamesPlayed": 18,
+            "gamesPlayed": 19,
             "goals": 11,
             "minutes": null,
             "points": 23,
@@ -3816,7 +3876,7 @@
           "field": {
             "assists": 7,
             "gameWinningGoals": null,
-            "gamesPlayed": 17,
+            "gamesPlayed": 18,
             "goals": 13,
             "minutes": null,
             "points": 33,
@@ -3837,7 +3897,7 @@
           "field": {
             "assists": 0,
             "gameWinningGoals": null,
-            "gamesPlayed": 11,
+            "gamesPlayed": 12,
             "goals": 5,
             "minutes": null,
             "points": 10,
@@ -3858,7 +3918,7 @@
           "field": {
             "assists": null,
             "gameWinningGoals": null,
-            "gamesPlayed": 12,
+            "gamesPlayed": 13,
             "goals": 0,
             "minutes": null,
             "points": null,
@@ -3879,13 +3939,13 @@
           "field": null,
           "fullName": "Nora Lagenfeld",
           "goalkeeping": {
-            "gamesPlayed": 18,
+            "gamesPlayed": 19,
             "goalsAgainst": null,
             "losses": null,
             "minutes": null,
             "opponentShotsOnGoal": null,
             "overtimeMinutes": null,
-            "saves": 38,
+            "saves": 42,
             "shutouts": null,
             "ties": null,
             "wins": null
@@ -3901,13 +3961,13 @@
           "field": null,
           "fullName": "Nikki Kalina",
           "goalkeeping": {
-            "gamesPlayed": 18,
+            "gamesPlayed": 19,
             "goalsAgainst": null,
             "losses": null,
             "minutes": null,
             "opponentShotsOnGoal": null,
             "overtimeMinutes": null,
-            "saves": 33,
+            "saves": 37,
             "shutouts": null,
             "ties": null,
             "wins": null
@@ -3923,16 +3983,16 @@
       "teamId": "de6d3780-e8f6-4a2a-93f2-b5d89499f9b0",
       "totals": {
         "field": {
-          "assists": 43,
+          "assists": 44,
           "gamesPlayed": 19,
-          "goals": 93,
-          "points": 229,
+          "goals": 95,
+          "points": 234,
           "shots": 6,
           "shotsOnGoal": 122
         },
         "goalkeeping": {
           "gamesPlayed": 19,
-          "saves": 71
+          "saves": 79
         }
       },
       "tracked": {
@@ -3953,7 +4013,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "lastUpdated": null,
       "maxprepsTeamId": "0279f2de-d5ce-484d-b210-2286ded42058",
       "name": "Los Altos",
@@ -3974,7 +4034,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "games": [
         {
           "contestId": "0822b76c-ff94-473d-95cc-b00483835457",
@@ -5551,7 +5611,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "games": [
         {
           "contestId": "05ad4605-869c-4fa8-b254-30fd4eb2eaaf",
@@ -6623,7 +6683,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "lastUpdated": null,
       "maxprepsTeamId": "97ffffbe-54ba-4c25-86bb-41332627f64e",
       "name": "Cupertino",
@@ -6644,7 +6704,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "gameTotals": [
         {
           "assists": 0,
@@ -6997,7 +7057,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "games": [
         {
           "contestId": "029c55ad-77cf-42f0-96ff-7193d9edf29a",
@@ -8637,7 +8697,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "lastUpdated": null,
       "maxprepsTeamId": "bdb0b593-ef7f-4c69-8c2a-e0a48c934ca7",
       "name": "Los Gatos",
@@ -8658,7 +8718,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "games": [
         {
           "contestId": "0e514547-6fda-4d35-a6ee-98c47c3a0e34",
@@ -10619,7 +10679,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "games": [
         {
           "contestId": "394a0f97-f724-4ab7-a2b9-8160c1f4a0f2",
@@ -10987,7 +11047,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "games": [
         {
           "contestId": "06dff81f-eb29-408f-8c31-99a32c3ea188",
@@ -12104,7 +12164,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "lastUpdated": null,
       "maxprepsTeamId": "12a470ab-e17d-4e5a-b74b-055d1f46d46b",
       "name": "Saratoga",
@@ -12125,7 +12185,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "lastUpdated": null,
       "maxprepsTeamId": "d7c7f7a1-06be-44fb-a4a2-64599519aa4c",
       "name": "Lynbrook",
@@ -12146,7 +12206,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "games": [
         {
           "contestId": "0ba78e7d-c32b-4ab1-8fa6-5f8af479cb2c",
@@ -14083,7 +14143,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "games": [
         {
           "contestId": "05c6438b-1bcd-4008-9e51-920a3cb7fb3b",
@@ -14998,7 +15058,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "games": [
         {
           "contestId": "0601c615-4ac0-4466-950a-a9a0ca53cd21",
@@ -16171,7 +16231,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "games": [
         {
           "contestId": "0630811e-fe8b-452c-8546-3f5de7122634",
@@ -18129,7 +18189,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "games": [
         {
           "contestId": "0601c615-4ac0-4466-950a-a9a0ca53cd21",
@@ -19247,7 +19307,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "games": [
         {
           "contestId": "05c6438b-1bcd-4008-9e51-920a3cb7fb3b",
@@ -19818,7 +19878,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "games": [
         {
           "contestId": "132dce81-25ee-494c-b439-ef935ed26624",
@@ -20774,7 +20834,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "lastUpdated": null,
       "maxprepsTeamId": "8c56113f-9229-43a2-a56e-4f8443494857",
       "name": "Del Mar",
@@ -20795,7 +20855,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "games": [
         {
           "contestId": "7dff058a-02ad-4928-aaea-0c6c1d9fc3ab",
@@ -20873,7 +20933,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "games": [
         {
           "contestId": "258b9301-ddeb-48f1-a1ad-2b3d01e4ab7d",
@@ -21751,7 +21811,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "lastUpdated": null,
       "maxprepsTeamId": "30d65e43-1478-45b5-90de-fd69689344f8",
       "name": "Silver Creek",
@@ -21772,7 +21832,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "games": [
         {
           "contestId": "228e6b7e-b240-4a99-9d0e-09a97fd8983d",
@@ -22230,7 +22290,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "games": [
         {
           "contestId": "052883f9-a609-49f9-87bd-2c4312a37644",
@@ -23322,7 +23382,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "games": [
         {
           "contestId": "1c87e5c3-5a06-4ed4-b661-d3fc2cb21a4f",
@@ -24505,7 +24565,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "lastUpdated": null,
       "maxprepsTeamId": "0bb5dbd8-6792-415b-8118-196ee0132b56",
       "name": "Greenfield",
@@ -24526,7 +24586,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "games": [
         {
           "contestId": "3865e937-2367-4f25-96f3-5d011e1bf9ec",
@@ -25726,7 +25786,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "lastUpdated": null,
       "maxprepsTeamId": "1ddbdf6d-84fd-4dfa-942f-f833193e2626",
       "name": "Monterey",
@@ -25747,7 +25807,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "lastUpdated": null,
       "maxprepsTeamId": "1f152b3b-38dc-4d34-b260-9663dc3006a4",
       "name": "Salinas",
@@ -25768,7 +25828,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "lastUpdated": null,
       "maxprepsTeamId": "c3f83b47-6bab-4e25-ba49-9c3ffda74be8",
       "name": "Santa Catalina",
@@ -25789,7 +25849,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "games": [
         {
           "contestId": "00dbc5f4-5ea3-4ea9-9b67-62a95ef5e29f",
@@ -27869,7 +27929,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "games": [
         {
           "contestId": "5349e47b-baa9-466e-9e14-975bc2a5fde9",
@@ -27991,7 +28051,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "games": [
         {
           "contestId": "080c46eb-a736-4942-9a5a-3a0874d5820e",
@@ -29560,7 +29620,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "games": [
         {
           "contestId": "001d6bdc-3eac-4c56-8033-82b985e6d803",
@@ -32341,7 +32401,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "games": [
         {
           "contestId": "19c1fbca-90c3-471f-8c5e-84169b0432c8",
@@ -33506,7 +33566,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "games": [
         {
           "contestId": "14aa4af0-d2c0-453c-8c5f-e878a4bd9efd",
@@ -36532,7 +36592,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "games": [
         {
           "contestId": "001d6bdc-3eac-4c56-8033-82b985e6d803",
@@ -38516,7 +38576,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "games": [
         {
           "contestId": "0304889a-916b-49a1-aa03-3b6ae7f5f829",
@@ -39441,7 +39501,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "games": [
         {
           "contestId": "0129b056-f5da-4c46-81b1-ac2a5d4b842c",
@@ -41228,7 +41288,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "games": [
         {
           "contestId": "d575e13b-1c2a-4b28-b736-cfa1caa57147",
@@ -41366,7 +41426,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "games": [
         {
           "contestId": "03c722d4-7404-4e14-b0a2-d749ce01915b",
@@ -43427,7 +43487,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "games": [
         {
           "contestId": "1c6b0722-0e72-4e18-baf5-a330e5a61976",
@@ -45974,7 +46034,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "lastUpdated": null,
       "maxprepsTeamId": "8f1a8024-2d40-4cab-bcba-3b9b367c6873",
       "name": "Corning",
@@ -45995,7 +46055,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "games": [
         {
           "contestId": "0c891660-1d87-44a1-8e17-b3d76e6555b3",
@@ -48813,7 +48873,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "games": [
         {
           "contestId": "03c722d4-7404-4e14-b0a2-d749ce01915b",
@@ -49654,7 +49714,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "games": [
         {
           "contestId": "0f69c9f3-660e-4f88-aa4a-9ede091bf61e",
@@ -52588,7 +52648,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "lastUpdated": null,
       "maxprepsTeamId": "d9fa2972-0bc2-4d7b-baa4-aaa7d69c119e",
       "name": "Chaparral",
@@ -52609,7 +52669,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "games": [
         {
           "contestId": "232831ce-9b4f-4ad1-be52-1fa816543888",
@@ -53291,7 +53351,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "lastUpdated": null,
       "maxprepsTeamId": "79582922-a3b0-44a5-b210-8e51f3cfb731",
       "name": "Fountain Valley",
@@ -53312,7 +53372,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "games": [
         {
           "contestId": "5c969601-9039-4b04-a853-8aad5388d882",
@@ -53451,7 +53511,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "games": [
         {
           "contestId": "0576edfb-374a-4451-bb5e-fa191071058c",
@@ -55264,7 +55324,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "lastUpdated": null,
       "maxprepsTeamId": "96f0228e-b1db-4993-ad1e-5427b5592bcf",
       "name": "Marina",
@@ -55285,7 +55345,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "lastUpdated": null,
       "maxprepsTeamId": "86009247-6ae1-40e1-acfa-58c200528743",
       "name": "Newport Harbor",
@@ -55306,7 +55366,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "games": [
         {
           "contestId": "0994415b-6a76-45f1-8d63-0347a8f03e08",
@@ -56542,7 +56602,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "games": [
         {
           "contestId": "13ee596b-cb7f-42eb-8010-c8b155e67be8",
@@ -58636,7 +58696,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "games": [
         {
           "contestId": "0b350af5-a08d-486d-b679-9701a6e9d57a",
@@ -60356,7 +60416,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "games": [
         {
           "contestId": "1302bba1-cac4-48f0-acce-a9854b5090fd",
@@ -60885,6 +60945,151 @@
             "goalkeeping": []
           },
           "warnings": []
+        },
+        {
+          "contestId": "61166d12-621e-4177-a12b-2e093da5c476",
+          "players": [
+            {
+              "field": {
+                "minutes": 10
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "M. Clark"
+            },
+            {
+              "field": {
+                "minutes": 60
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Samantha Cohen"
+            },
+            {
+              "field": {
+                "minutes": 50
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Kate Friedman"
+            },
+            {
+              "field": {
+                "minutes": 54
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Bella Campos"
+            },
+            {
+              "field": {
+                "minutes": 30
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Emily Zettle"
+            },
+            {
+              "field": {
+                "minutes": 60
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Emily MacDonald"
+            },
+            {
+              "field": {
+                "minutes": 6
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Sophia Adajar"
+            },
+            {
+              "field": {
+                "minutes": 6
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Annemarie Derheimer"
+            },
+            {
+              "field": {
+                "minutes": 10
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Kaylie Ardissone"
+            },
+            {
+              "field": {
+                "minutes": 60
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Lilly Morton"
+            },
+            {
+              "field": {
+                "minutes": 10
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Sophie Schliff"
+            },
+            {
+              "field": {
+                "minutes": 20
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Roma Schwarz"
+            },
+            {
+              "field": {
+                "minutes": 60
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Phoebe Young"
+            },
+            {
+              "field": {
+                "minutes": 60
+              },
+              "goalkeeping": null,
+              "jersey": null,
+              "name": "Mileva Sesepasara"
+            },
+            {
+              "field": null,
+              "goalkeeping": {
+                "goalsAgainst": 1,
+                "losses": 1,
+                "minutes": 60,
+                "opponentShotsOnGoal": 4,
+                "saves": 3
+              },
+              "jersey": null,
+              "name": "Emma Forster"
+            }
+          ],
+          "rowKey": "05d99adf",
+          "tracked": {
+            "field": [
+              "minutes"
+            ],
+            "goalkeeping": [
+              "minutes",
+              "opponentShotsOnGoal",
+              "saves",
+              "goalsAgainst",
+              "losses"
+            ]
+          },
+          "warnings": [
+            "M. Clark has stats but is not on the MaxPreps roster"
+          ]
         },
         {
           "contestId": "616f6676-a97b-4de2-a12b-f381348e9921",
@@ -62210,7 +62415,7 @@
           "warnings": []
         }
       ],
-      "lastUpdated": "2026-10-29T22:48:09",
+      "lastUpdated": "2026-11-04T20:38:07",
       "maxprepsTeamId": "15c34e49-1a29-4298-8a84-00a2ec6ae36b",
       "name": "Cathedral Catholic",
       "players": [
@@ -62221,7 +62426,7 @@
           "field": {
             "assists": 0,
             "gameWinningGoals": null,
-            "gamesPlayed": 1,
+            "gamesPlayed": 2,
             "goals": 0,
             "minutes": null,
             "points": 0,
@@ -62242,7 +62447,7 @@
           "field": {
             "assists": 0,
             "gameWinningGoals": 1,
-            "gamesPlayed": 15,
+            "gamesPlayed": 16,
             "goals": 3,
             "minutes": null,
             "points": 6,
@@ -62284,7 +62489,7 @@
           "field": {
             "assists": 1,
             "gameWinningGoals": null,
-            "gamesPlayed": 16,
+            "gamesPlayed": 17,
             "goals": 0,
             "minutes": null,
             "points": 1,
@@ -62326,7 +62531,7 @@
           "field": {
             "assists": 0,
             "gameWinningGoals": 1,
-            "gamesPlayed": 17,
+            "gamesPlayed": 18,
             "goals": 1,
             "minutes": null,
             "points": 2,
@@ -62347,7 +62552,7 @@
           "field": {
             "assists": 1,
             "gameWinningGoals": null,
-            "gamesPlayed": 17,
+            "gamesPlayed": 18,
             "goals": 0,
             "minutes": null,
             "points": 1,
@@ -62389,7 +62594,7 @@
           "field": {
             "assists": 0,
             "gameWinningGoals": null,
-            "gamesPlayed": 16,
+            "gamesPlayed": 17,
             "goals": 0,
             "minutes": null,
             "points": 0,
@@ -62410,7 +62615,7 @@
           "field": {
             "assists": 1,
             "gameWinningGoals": null,
-            "gamesPlayed": 12,
+            "gamesPlayed": 13,
             "goals": 0,
             "minutes": null,
             "points": 1,
@@ -62431,7 +62636,7 @@
           "field": {
             "assists": 0,
             "gameWinningGoals": null,
-            "gamesPlayed": 13,
+            "gamesPlayed": 14,
             "goals": 0,
             "minutes": null,
             "points": 0,
@@ -62473,7 +62678,7 @@
           "field": {
             "assists": 0,
             "gameWinningGoals": null,
-            "gamesPlayed": 6,
+            "gamesPlayed": 7,
             "goals": 0,
             "minutes": null,
             "points": 0,
@@ -62494,7 +62699,7 @@
           "field": {
             "assists": 1,
             "gameWinningGoals": 1,
-            "gamesPlayed": 18,
+            "gamesPlayed": 19,
             "goals": 1,
             "minutes": null,
             "points": 3,
@@ -62515,7 +62720,7 @@
           "field": {
             "assists": 1,
             "gameWinningGoals": 2,
-            "gamesPlayed": 14,
+            "gamesPlayed": 15,
             "goals": 3,
             "minutes": null,
             "points": 7,
@@ -62536,7 +62741,7 @@
           "field": {
             "assists": 1,
             "gameWinningGoals": 0,
-            "gamesPlayed": 17,
+            "gamesPlayed": 18,
             "goals": 1,
             "minutes": null,
             "points": 3,
@@ -62557,7 +62762,7 @@
           "field": {
             "assists": 0,
             "gameWinningGoals": null,
-            "gamesPlayed": 18,
+            "gamesPlayed": 19,
             "goals": 0,
             "minutes": null,
             "points": 0,
@@ -62578,7 +62783,7 @@
           "field": {
             "assists": 0,
             "gameWinningGoals": null,
-            "gamesPlayed": 17,
+            "gamesPlayed": 18,
             "goals": 0,
             "minutes": null,
             "points": 0,
@@ -62643,13 +62848,13 @@
           "field": null,
           "fullName": "Emma Forster",
           "goalkeeping": {
-            "gamesPlayed": 17,
-            "goalsAgainst": 56,
-            "losses": 12,
-            "minutes": 1011,
-            "opponentShotsOnGoal": 364,
+            "gamesPlayed": 18,
+            "goalsAgainst": 57,
+            "losses": 13,
+            "minutes": 1071,
+            "opponentShotsOnGoal": 368,
             "overtimeMinutes": 20,
-            "saves": 322,
+            "saves": 325,
             "shutouts": 2,
             "ties": null,
             "wins": 5
@@ -62667,18 +62872,18 @@
         "field": {
           "assists": 6,
           "gameWinningGoals": 5,
-          "gamesPlayed": 18,
+          "gamesPlayed": 19,
           "goals": 10,
           "points": 26
         },
         "goalkeeping": {
-          "gamesPlayed": 18,
-          "goalsAgainst": 67,
-          "losses": 15,
-          "minutes": 1090,
-          "opponentShotsOnGoal": 399,
+          "gamesPlayed": 19,
+          "goalsAgainst": 68,
+          "losses": 16,
+          "minutes": 1150,
+          "opponentShotsOnGoal": 403,
           "overtimeMinutes": 20,
-          "saves": 339,
+          "saves": 342,
           "shutouts": 2,
           "wins": 5
         }
@@ -62709,7 +62914,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "games": [
         {
           "contestId": "1302bba1-cac4-48f0-acce-a9854b5090fd",
@@ -65157,7 +65362,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "games": [
         {
           "contestId": "3299d07c-3dc0-4e5c-8121-4195e4248111",
@@ -65770,7 +65975,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "games": [
         {
           "contestId": "1830c1da-4013-4771-bf46-c62df5a8418d",
@@ -66439,6 +66644,29 @@
           "warnings": []
         },
         {
+          "contestId": "91db2fdc-a7cb-48df-9836-3bb2e4256555",
+          "players": [
+            {
+              "field": null,
+              "goalkeeping": {
+                "losses": 1,
+                "saves": 12
+              },
+              "jersey": null,
+              "name": "Abigail Martin"
+            }
+          ],
+          "rowKey": "70e5d722",
+          "tracked": {
+            "field": [],
+            "goalkeeping": [
+              "saves",
+              "losses"
+            ]
+          },
+          "warnings": []
+        },
+        {
           "contestId": "9fa317b1-0932-4683-9e2f-13d7ff40fed4",
           "players": [
             {
@@ -67071,7 +67299,7 @@
           "warnings": []
         }
       ],
-      "lastUpdated": "2026-11-04T12:45:09",
+      "lastUpdated": "2026-11-04T12:46:12",
       "maxprepsTeamId": "7a80ea9f-8ed1-4b25-99cf-ad1b0fcd41a5",
       "name": "Scripps Ranch",
       "players": [
@@ -67145,7 +67373,7 @@
           "field": {
             "assists": 0,
             "gameWinningGoals": 1,
-            "gamesPlayed": 23,
+            "gamesPlayed": 24,
             "goals": 7,
             "minutes": null,
             "points": 14,
@@ -67187,7 +67415,7 @@
           "field": {
             "assists": 1,
             "gameWinningGoals": null,
-            "gamesPlayed": 21,
+            "gamesPlayed": 22,
             "goals": 0,
             "minutes": null,
             "points": 1,
@@ -67208,7 +67436,7 @@
           "field": {
             "assists": 6,
             "gameWinningGoals": 0,
-            "gamesPlayed": 21,
+            "gamesPlayed": 22,
             "goals": 3,
             "minutes": null,
             "points": 12,
@@ -67229,7 +67457,7 @@
           "field": {
             "assists": 10,
             "gameWinningGoals": 7,
-            "gamesPlayed": 23,
+            "gamesPlayed": 24,
             "goals": 30,
             "minutes": null,
             "points": 70,
@@ -67250,7 +67478,7 @@
           "field": {
             "assists": 3,
             "gameWinningGoals": 1,
-            "gamesPlayed": 21,
+            "gamesPlayed": 22,
             "goals": 5,
             "minutes": null,
             "points": 13,
@@ -67271,7 +67499,7 @@
           "field": {
             "assists": 1,
             "gameWinningGoals": 2,
-            "gamesPlayed": 20,
+            "gamesPlayed": 21,
             "goals": 4,
             "minutes": null,
             "points": 9,
@@ -67292,7 +67520,7 @@
           "field": {
             "assists": 12,
             "gameWinningGoals": 2,
-            "gamesPlayed": 19,
+            "gamesPlayed": 20,
             "goals": 3,
             "minutes": null,
             "points": 18,
@@ -67313,7 +67541,7 @@
           "field": {
             "assists": 0,
             "gameWinningGoals": 0,
-            "gamesPlayed": 17,
+            "gamesPlayed": 18,
             "goals": 1,
             "minutes": null,
             "points": 2,
@@ -67334,7 +67562,7 @@
           "field": {
             "assists": 4,
             "gameWinningGoals": 0,
-            "gamesPlayed": 16,
+            "gamesPlayed": 17,
             "goals": 6,
             "minutes": null,
             "points": 16,
@@ -67355,13 +67583,13 @@
           "field": null,
           "fullName": "Abigail Martin",
           "goalkeeping": {
-            "gamesPlayed": 21,
+            "gamesPlayed": 22,
             "goalsAgainst": null,
-            "losses": 5,
+            "losses": 6,
             "minutes": null,
             "opponentShotsOnGoal": null,
             "overtimeMinutes": null,
-            "saves": 66,
+            "saves": 78,
             "shutouts": 12,
             "ties": null,
             "wins": 14
@@ -67385,8 +67613,8 @@
         },
         "goalkeeping": {
           "gamesPlayed": 24,
-          "losses": 5,
-          "saves": 66,
+          "losses": 6,
+          "saves": 78,
           "shutouts": 12,
           "wins": 14
         }
@@ -67411,7 +67639,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "lastUpdated": null,
       "maxprepsTeamId": "50ebec25-d857-4178-9f5a-1a6241c43b85",
       "name": "Clairemont",
@@ -67432,7 +67660,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "games": [
         {
           "contestId": "3f6f5373-c03e-4745-a68e-e7d0ab6ed19f",
@@ -67579,7 +67807,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "lastUpdated": null,
       "maxprepsTeamId": "e551f0f0-28a3-4c13-8ade-1b9909ffa28c",
       "name": "Mira Mesa",
@@ -67600,7 +67828,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "games": [
         {
           "contestId": "1de2a579-ce95-4066-8c82-05993b09b96f",
@@ -68702,7 +68930,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "lastUpdated": null,
       "maxprepsTeamId": "91a74b43-700f-4e74-819e-d62b6dba12f7",
       "name": "Point Loma",
@@ -68723,7 +68951,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "games": [
         {
           "contestId": "16c532a9-11de-4844-9e3d-09a30cdc40e3",
@@ -69848,7 +70076,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "lastUpdated": null,
       "maxprepsTeamId": "91a207da-721f-4acf-a69c-cd7fa50a1f7a",
       "name": "Canyon Crest Academy",
@@ -69869,7 +70097,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "games": [
         {
           "contestId": "14fb2c49-2dc2-4972-944c-57416937595a",
@@ -71025,7 +71253,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "games": [
         {
           "contestId": "0756fd09-d5df-47ec-959c-02a91338558c",
@@ -71499,7 +71727,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "lastUpdated": null,
       "maxprepsTeamId": "132d806e-7fa4-4bce-b92a-9db38786cf7b",
       "name": "Rancho Bernardo",
@@ -71520,7 +71748,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "games": [
         {
           "contestId": "00cb9691-5d6b-434f-84d9-c19e4a7ba2b0",
@@ -72967,7 +73195,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "games": [
         {
           "contestId": "0bbaaaae-6295-4b20-b8f4-b0943109a1db",
@@ -74425,7 +74653,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "games": [
         {
           "contestId": "33049a94-7357-4559-bba5-366472642278",
@@ -75536,7 +75764,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "lastUpdated": null,
       "maxprepsTeamId": "7453dc74-befb-4c36-92ec-35bf99c3c718",
       "name": "Fallbrook",
@@ -75557,7 +75785,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "games": [
         {
           "contestId": "0420a070-260d-4b62-8a5f-db24fd501107",
@@ -77140,7 +77368,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "games": [
         {
           "contestId": "0b3cfb7d-df5e-44af-a9e3-812677ab1857",
@@ -78284,7 +78512,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "lastUpdated": null,
       "maxprepsTeamId": "f1f0e644-5c98-4d70-bd3c-ae7fb8992410",
       "name": "Rancho Buena Vista",
@@ -78305,7 +78533,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "lastUpdated": null,
       "maxprepsTeamId": "a7064567-f2fe-442d-8200-34a28326d1b9",
       "name": "San Dieguito Academy",
@@ -78326,7 +78554,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "games": [
         {
           "contestId": "01923d22-da93-4d90-8dc4-835264aa51d6",
@@ -79841,7 +80069,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "games": [
         {
           "contestId": "7551a71d-3c34-4efc-9b8c-d406ef4ba0f5",
@@ -80000,7 +80228,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "games": [
         {
           "contestId": "00238ba3-1cd2-4a8c-a763-43eefd02acc0",
@@ -82104,7 +82332,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "games": [
         {
           "contestId": "045dadec-b4d3-4073-8560-114cfe0c030a",
@@ -83709,7 +83937,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "lastUpdated": null,
       "maxprepsTeamId": "a1109c06-7436-4b72-a30e-459eb6d00925",
       "name": "San Pasqual",
@@ -83730,7 +83958,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "games": [
         {
           "contestId": "00ed1ac5-9f7b-4496-a513-3965513b56c9",
@@ -84938,7 +85166,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "games": [
         {
           "contestId": "00a11121-c2f0-446f-9f0e-4ed88d6056dd",
@@ -86001,6 +86229,94 @@
           "warnings": []
         },
         {
+          "contestId": "df1e0e8e-f6f0-4f5f-a963-525ed10a7a29",
+          "players": [
+            {
+              "field": {
+                "goals": 1,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": "29",
+              "name": "Tuuli Bostrom"
+            },
+            {
+              "field": {
+                "goals": 2,
+                "points": 4
+              },
+              "goalkeeping": null,
+              "jersey": "21",
+              "name": "Viviana Ochoa"
+            },
+            {
+              "field": {
+                "goals": 2,
+                "points": 4
+              },
+              "goalkeeping": null,
+              "jersey": "36",
+              "name": "Brooke Lanski"
+            },
+            {
+              "field": {
+                "assists": 2,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": "33",
+              "name": "Greta Schneider"
+            },
+            {
+              "field": {
+                "goals": 1,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": "8",
+              "name": "Chloe Lestyk"
+            },
+            {
+              "field": {
+                "assists": 2,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": "42",
+              "name": "Camryn Warren"
+            },
+            {
+              "field": {
+                "goals": 2,
+                "points": 4
+              },
+              "goalkeeping": null,
+              "jersey": "9",
+              "name": "Amelia Edu"
+            },
+            {
+              "field": {
+                "assists": 1,
+                "goals": 1,
+                "points": 3
+              },
+              "goalkeeping": null,
+              "jersey": "48",
+              "name": "Eva Velasquez"
+            }
+          ],
+          "rowKey": "f398cfb0",
+          "tracked": {
+            "field": [
+              "goals",
+              "assists",
+              "points"
+            ],
+            "goalkeeping": []
+          },
+          "warnings": []
+        },
+        {
           "contestId": "e6f4f39e-1ab8-4148-abff-e9887e9946cf",
           "players": [
             {
@@ -86057,7 +86373,7 @@
           "warnings": []
         }
       ],
-      "lastUpdated": "2026-11-02T19:21:10",
+      "lastUpdated": "2026-11-04T23:14:07",
       "maxprepsTeamId": "9ef67997-7f5d-4899-b500-2d0b5c758105",
       "name": "Westview",
       "players": [
@@ -86110,10 +86426,10 @@
           "field": {
             "assists": 0,
             "gameWinningGoals": null,
-            "gamesPlayed": 19,
-            "goals": 3,
+            "gamesPlayed": 20,
+            "goals": 4,
             "minutes": null,
-            "points": 6,
+            "points": 8,
             "shots": null,
             "shotsOnGoal": null,
             "steals": null
@@ -86131,10 +86447,10 @@
           "field": {
             "assists": 13,
             "gameWinningGoals": null,
-            "gamesPlayed": 21,
-            "goals": 10,
+            "gamesPlayed": 22,
+            "goals": 12,
             "minutes": null,
-            "points": 33,
+            "points": 37,
             "shots": null,
             "shotsOnGoal": null,
             "steals": null
@@ -86152,10 +86468,10 @@
           "field": {
             "assists": 9,
             "gameWinningGoals": null,
-            "gamesPlayed": 21,
-            "goals": 6,
+            "gamesPlayed": 22,
+            "goals": 8,
             "minutes": null,
-            "points": 21,
+            "points": 25,
             "shots": null,
             "shotsOnGoal": null,
             "steals": null
@@ -86192,12 +86508,12 @@
           "careerId": "hvfa43b7asnqa",
           "careerUrl": "https://www.maxpreps.com/ca/san-diego/westview-wolverines/athletes/greta-schneider/?careerid=hvfa43b7asnqa",
           "field": {
-            "assists": 5,
+            "assists": 7,
             "gameWinningGoals": null,
-            "gamesPlayed": 22,
+            "gamesPlayed": 23,
             "goals": 14,
             "minutes": null,
-            "points": 33,
+            "points": 35,
             "shots": null,
             "shotsOnGoal": null,
             "steals": null
@@ -86215,10 +86531,10 @@
           "field": {
             "assists": 7,
             "gameWinningGoals": null,
-            "gamesPlayed": 21,
-            "goals": 4,
+            "gamesPlayed": 22,
+            "goals": 5,
             "minutes": null,
-            "points": 15,
+            "points": 17,
             "shots": null,
             "shotsOnGoal": null,
             "steals": null
@@ -86234,12 +86550,12 @@
           "careerId": "3qj9gif2lla11",
           "careerUrl": "https://www.maxpreps.com/ca/san-diego/westview-wolverines/athletes/camryn-warren/?careerid=3qj9gif2lla11",
           "field": {
-            "assists": 5,
+            "assists": 7,
             "gameWinningGoals": null,
-            "gamesPlayed": 20,
+            "gamesPlayed": 21,
             "goals": 9,
             "minutes": null,
-            "points": 23,
+            "points": 25,
             "shots": null,
             "shotsOnGoal": null,
             "steals": null
@@ -86257,10 +86573,10 @@
           "field": {
             "assists": 2,
             "gameWinningGoals": null,
-            "gamesPlayed": 17,
-            "goals": 5,
+            "gamesPlayed": 18,
+            "goals": 7,
             "minutes": null,
-            "points": 12,
+            "points": 16,
             "shots": null,
             "shotsOnGoal": null,
             "steals": null
@@ -86381,12 +86697,12 @@
           "careerId": "7h6stubjo7d44",
           "careerUrl": "https://www.maxpreps.com/ca/san-diego/westview-wolverines/athletes/eva-velasquez/?careerid=7h6stubjo7d44",
           "field": {
-            "assists": 6,
+            "assists": 7,
             "gameWinningGoals": null,
-            "gamesPlayed": 14,
-            "goals": 8,
+            "gamesPlayed": 15,
+            "goals": 9,
             "minutes": null,
-            "points": 22,
+            "points": 25,
             "shots": null,
             "shotsOnGoal": null,
             "steals": null
@@ -86426,13 +86742,13 @@
       "teamId": "9ef67997-7f5d-4899-b500-2d0b5c758105",
       "totals": {
         "field": {
-          "assists": 52,
-          "gamesPlayed": 26,
-          "goals": 70,
-          "points": 192
+          "assists": 57,
+          "gamesPlayed": 27,
+          "goals": 79,
+          "points": 215
         },
         "goalkeeping": {
-          "gamesPlayed": 26,
+          "gamesPlayed": 27,
           "saves": 9
         }
       },
@@ -86455,7 +86771,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "lastUpdated": null,
       "maxprepsTeamId": "7f4d50f0-8690-493c-b4bc-262b512e8851",
       "name": "Bonita Vista",
@@ -86476,7 +86792,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "games": [
         {
           "contestId": "07d1ae31-eaf9-4ac8-9302-6332336b0d8f",
@@ -87677,7 +87993,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "lastUpdated": null,
       "maxprepsTeamId": "186dcece-fefd-4b67-b4c7-877b3e12beb2",
       "name": "Helix",
@@ -87698,7 +88014,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "games": [
         {
           "contestId": "0dd55a09-b127-40cd-8a66-7be9c87e56cf",
@@ -89100,7 +89416,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "games": [
         {
           "contestId": "0775eef9-7302-4f57-84eb-112120b2b72a",
@@ -90122,7 +90438,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "lastUpdated": null,
       "maxprepsTeamId": "15d5e874-4af2-4d24-8e6b-be895937cb8c",
       "name": "El Capitan",
@@ -90143,7 +90459,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "lastUpdated": null,
       "maxprepsTeamId": "aa2f89a2-0150-4223-89b4-ac73cbf343e9",
       "name": "Granite Hills",
@@ -90164,7 +90480,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "games": [
         {
           "contestId": "1fb5657d-2979-4e32-817c-a1a41c6aa65c",
@@ -90517,6 +90833,29 @@
           "warnings": []
         },
         {
+          "contestId": "67755591-9f51-40b1-a387-f9e605f96d5b",
+          "players": [
+            {
+              "field": {
+                "goals": 1,
+                "points": 2
+              },
+              "goalkeeping": null,
+              "jersey": "17",
+              "name": "Hannah Gomez"
+            }
+          ],
+          "rowKey": "c735131f",
+          "tracked": {
+            "field": [
+              "goals",
+              "points"
+            ],
+            "goalkeeping": []
+          },
+          "warnings": []
+        },
+        {
           "contestId": "8da3ca59-8de3-4036-a865-40b797cd3083",
           "players": [
             {
@@ -90621,7 +90960,7 @@
           "warnings": []
         }
       ],
-      "lastUpdated": "2026-10-28T21:18:10",
+      "lastUpdated": "2026-11-04T22:59:06",
       "maxprepsTeamId": "ec21ffde-b216-47cc-9923-6308e239e9e0",
       "name": "Hilltop",
       "players": [
@@ -90632,7 +90971,7 @@
           "field": {
             "assists": 0,
             "gameWinningGoals": null,
-            "gamesPlayed": 8,
+            "gamesPlayed": 9,
             "goals": 1,
             "minutes": null,
             "points": 2,
@@ -90653,7 +90992,7 @@
           "field": {
             "assists": 0,
             "gameWinningGoals": null,
-            "gamesPlayed": 10,
+            "gamesPlayed": 12,
             "goals": 4,
             "minutes": null,
             "points": 8,
@@ -90674,7 +91013,7 @@
           "field": {
             "assists": 0,
             "gameWinningGoals": null,
-            "gamesPlayed": 10,
+            "gamesPlayed": 11,
             "goals": 1,
             "minutes": null,
             "points": 2,
@@ -90695,7 +91034,7 @@
           "field": {
             "assists": 0,
             "gameWinningGoals": null,
-            "gamesPlayed": 10,
+            "gamesPlayed": 12,
             "goals": 3,
             "minutes": null,
             "points": 6,
@@ -90716,7 +91055,7 @@
           "field": {
             "assists": 2,
             "gameWinningGoals": null,
-            "gamesPlayed": 12,
+            "gamesPlayed": 14,
             "goals": 2,
             "minutes": null,
             "points": 6,
@@ -90737,7 +91076,7 @@
           "field": {
             "assists": 0,
             "gameWinningGoals": null,
-            "gamesPlayed": 7,
+            "gamesPlayed": 8,
             "goals": 1,
             "minutes": null,
             "points": 2,
@@ -90758,7 +91097,7 @@
           "field": {
             "assists": 0,
             "gameWinningGoals": null,
-            "gamesPlayed": 11,
+            "gamesPlayed": 12,
             "goals": 2,
             "minutes": null,
             "points": 4,
@@ -90779,7 +91118,7 @@
           "field": {
             "assists": 2,
             "gameWinningGoals": null,
-            "gamesPlayed": 14,
+            "gamesPlayed": 16,
             "goals": 6,
             "minutes": null,
             "points": 14,
@@ -90800,10 +91139,10 @@
           "field": {
             "assists": 5,
             "gameWinningGoals": null,
-            "gamesPlayed": 13,
-            "goals": 21,
+            "gamesPlayed": 15,
+            "goals": 23,
             "minutes": null,
-            "points": 47,
+            "points": 51,
             "shots": null,
             "shotsOnGoal": null,
             "steals": null
@@ -90821,7 +91160,7 @@
           "field": {
             "assists": 3,
             "gameWinningGoals": null,
-            "gamesPlayed": 14,
+            "gamesPlayed": 16,
             "goals": 8,
             "minutes": null,
             "points": 19,
@@ -90843,9 +91182,9 @@
       "totals": {
         "field": {
           "assists": 10,
-          "gamesPlayed": 15,
-          "goals": 44,
-          "points": 98
+          "gamesPlayed": 18,
+          "goals": 45,
+          "points": 100
         },
         "goalkeeping": {}
       },
@@ -90859,15 +91198,15 @@
         "goalkeeping": []
       },
       "warnings": [
-        "field goals: players add up to 49, above MaxPreps' team total of 44; both as published",
+        "field goals: players add up to 51, above MaxPreps' team total of 45; both as published",
         "field assists: players add up to 12, above MaxPreps' team total of 10; both as published",
-        "field points: players add up to 110, above MaxPreps' team total of 98; both as published",
-        "goalkeeping gamesPlayed: team total is 15 but no player has any; not shown rather than as zeros"
+        "field points: players add up to 114, above MaxPreps' team total of 100; both as published",
+        "goalkeeping gamesPlayed: team total is 18 but no player has any; not shown rather than as zeros"
       ]
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "lastUpdated": null,
       "maxprepsTeamId": "19409229-6768-4537-b8d7-4a7d2814aaad",
       "name": "Southwest",
@@ -90888,7 +91227,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "lastUpdated": null,
       "maxprepsTeamId": "4c2dd7e8-2f3e-43aa-891b-9218932cdf9d",
       "name": "Bonita",
@@ -90909,7 +91248,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "games": [
         {
           "contestId": "232831ce-9b4f-4ad1-be52-1fa816543888",
@@ -91197,7 +91536,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "lastUpdated": null,
       "maxprepsTeamId": "1228375e-e4c0-453e-aed4-d0b0693b3c52",
       "name": "Glendora",
@@ -91218,7 +91557,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "games": [
         {
           "contestId": "00b87940-3763-43a3-ad1d-df2d58bd9e21",
@@ -93083,7 +93422,7 @@
     },
     {
       "error": null,
-      "fetchedAt": "2026-11-04T20:45:33.650Z",
+      "fetchedAt": "2026-11-05T12:54:20.324Z",
       "lastUpdated": null,
       "maxprepsTeamId": "70a363e2-26b8-4ef5-8ad0-20979f66399a",
       "name": "Thousand Oaks",
