@@ -186,9 +186,12 @@ aside), and the field hockey tests, golden files and asserts pass as they were.
 
 Not done yet, for the owner to decide or schedule:
 
-- **Deploy and refresh.** No workflow builds, deploys or refreshes the soccer site. It needs its own origin
-  (a Worker name and domain, `cloudflare.config.ts`) and a cron job like `update-data.yml` that runs
-  Nov-Mar with `SCVAL_SPORT=soccer`, writes `data/soccer/*` and is pinned by `tests/workflows.test.ts`.
+- **Deploy.** The soccer site is a second Vercel project on soccer.ncfh.net (README, "Deploy notes"):
+  `SCVAL_SPORT=soccer`, its own `SITE_URL`, and `scripts/vercel-ignore-build.sh` as each project's Ignored
+  Build Step. `update-data-soccer.yml` refreshes `data/soccer/` Nov–Mar, and ci's `soccer` job builds and
+  asserts it. Not done: a soccer Cloudflare Worker (`cloudflare.config.ts` names one Worker), and the
+  smoke and axe passes on the soccer build (`scripts/smoke-server.sh` and `scripts/a11y-axe.mjs` name field
+  hockey's leagues and regions).
 - **The CCS Soccer Bylaws' allocation and hosting rule**, read by a person, to fill the nulls above, and
   MaxPreps' 2027 CCS tournament page once it exists.
 - **Mascot tiles** for Gunn, Mountain View, MacDonald, Milpitas and Wilcox: MaxPreps' image host answered

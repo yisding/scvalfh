@@ -36,6 +36,13 @@
 #
 # scripts/stage-gate-d.sh (`pnpm gate:d`) runs this whole job list on one machine, against all three
 # servers in turn.
+#
+# The soccer job builds the girls soccer site (SCVAL_SPORT=soccer; docs/MULTI-SPORT.md), the second
+# build of this code, with Next and with vinext, and runs the same build assertions on it: every route
+# prerendered, the weight budgets, copy honesty. The typecheck, lint and test suite are sport-independent
+# (tests/soccer.test.ts loads the soccer configuration), so gates runs them once. The smoke and axe
+# passes are not run on soccer yet: scripts/smoke-server.sh and scripts/a11y-axe.mjs name field hockey's
+# leagues, regions and pages.
 
 name: ci
 
@@ -366,3 +373,53 @@ jobs:
         run: node scripts/a11y-axe.mjs
         env:
           SCVAL_BASE_URL: http://127.0.0.1:3119
+
+  soccer:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    env:
+      SCVAL_SPORT: soccer
+
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
+      # pnpm BEFORE setup-node (see the gates job).
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # data/soccer/snapshot.json, pinned as the field hockey builds are.
+      - name: Build
+        run: pnpm build
+        env:
+          SCVAL_BUILD_AT: ${{ github.event.repository.updated_at }}
+
+      # The same three assertions as gates, on the soccer build: each reads data/soccer/ through
+      # lib/sports/current.ts DATA_DIR, and the routes only field hockey has (lib/sports/current.ts
+      # HAS_HISTORY, HAS_RECRUITING) are expected to be absent.
+      - name: Assert every route is static
+        run: pnpm assert:prerender
+
+      - name: Assert the weight budgets
+        run: pnpm assert:budgets
+
+      - name: Assert copy honesty in the built pages
+        run: pnpm assert:copy
+
+      - name: Build with vinext
+        run: pnpm build:vinext
+        env:
+          SCVAL_BUILD_AT: ${{ github.event.repository.updated_at }}
+
+      - name: Assert every route is prerendered (vinext)
+        run: pnpm exec tsx scripts/assert-vinext-prerender.ts

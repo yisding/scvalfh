@@ -16,6 +16,9 @@ type Modules = {
   sections: typeof import('../lib/league-config/sections');
   data: typeof import('../lib/data');
   official: typeof import('../lib/official/schema');
+  playerStats: typeof import('../lib/players/player-stats');
+  jv: typeof import('../lib/jv/jv');
+  rosters: typeof import('../lib/players/rosters');
 };
 
 let m: Modules;
@@ -31,6 +34,10 @@ beforeAll(async () => {
     sections: await import('../lib/league-config/sections'),
     data: await import('../lib/data'),
     official: await import('../lib/official/schema'),
+    // Each validates its bundled data/soccer/ file at import (update-data-soccer.yml runs this file on what it fetched).
+    playerStats: await import('../lib/players/player-stats'),
+    jv: await import('../lib/jv/jv'),
+    rosters: await import('../lib/players/rosters'),
   };
 });
 
@@ -110,6 +117,13 @@ describe('the soccer data files', () => {
     expect(snapshot.season.genderSport).toBe('girls,soccer');
     expect(snapshot.season.sportSeasonId).toBe(m.current.SPORT_SEASON.sportSeasonId);
     expect(snapshot.teams.map((t) => t.slug)).toEqual(m.teams.TEAMS.map((t) => t.slug));
+  });
+
+  it('loads the player stats, JV games and rosters of the same 15 teams', () => {
+    const slugs = m.teams.TEAMS.map((t) => t.slug).sort();
+    expect(m.playerStats.getPlayerStats().teams.map((t) => t.slug).sort()).toEqual(slugs);
+    expect(m.jv.getJvFile().teams.map((t) => t.slug).sort()).toEqual(slugs);
+    expect(m.rosters.getRosters().teams.map((t) => t.slug).sort()).toEqual(slugs);
   });
 
   it('transcribes each official schedule as a double round robin inside its league-play window', () => {

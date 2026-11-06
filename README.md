@@ -1903,6 +1903,20 @@ Copy `.env.example` to `.env` (or set the same variables in the host's dashboard
   `metadataBase`, `robots.txt` and every absolute URL in `sitemap.xml`. Each of these hosts
   redeploys automatically on a push to `main`, which is exactly what `update-data.yml`'s commit
   triggers.
+- **The girls soccer site on Vercel (soccer.ncfh.net).** One sport per build, so soccer is a second
+  Vercel project imported from the same repo, beside the field hockey one:
+  - Build command `pnpm build`, as for field hockey. Environment variables `SCVAL_SPORT=soccer` and
+    `SITE_URL=https://soccer.ncfh.net` (set before the first build: both are baked in), and the domain
+    `soccer.ncfh.net` added to the project.
+  - Settings → Git → Ignored Build Step, on each project, naming its sport:
+    `bash scripts/vercel-ignore-build.sh soccer` on the soccer project and
+    `bash scripts/vercel-ignore-build.sh field-hockey` on the field hockey one. Both projects see every
+    push to `main`; the script skips a build whose changes are only the other sport's data
+    (`update-data-soccer.yml` writes only `data/soccer/`, `update-data.yml` only `data/` outside it).
+  - `update-data-soccer.yml` refreshes the soccer data Nov–Mar, half an hour after each field hockey
+    refresh, in the same concurrency group, and ci's `soccer` job builds and asserts the soccer site
+    on every PR. The Cloudflare Worker deploy (`deploy-cloudflare.yml`) is field hockey's only; it
+    lets soccer data commits through its gate so they never hold up a field hockey deploy.
 - **Self-host:** `pnpm build && pnpm start` runs Next.js's own production server behind any
   reverse proxy that can talk to a Node process. Set `SITE_URL` the same way. Pair with the cron
   line under "Self-hosting the cron" above to keep data fresh without GitHub Actions at all.
