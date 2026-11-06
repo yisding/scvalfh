@@ -23,15 +23,18 @@ import { REPO, runScript } from './helpers';
 
 const read = (name: string) => readFileSync(path.join(REPO, '.github', 'workflows', name), 'utf8');
 const update = read('update-data.yml');
+/** The soccer site's refresh (SCVAL_SPORT=soccer): its commits pass the same gate. */
+const updateSoccer = read('update-data-soccer.yml');
 const deploy = read('deploy-cloudflare.yml');
+const updates = [update, updateSoccer];
 
-/** Every path update-data stages: the arguments of its `git add` lines. */
+/** Every path the refreshes stage: the arguments of their `git add` lines. */
 const committedFiles = new Set(
-  [...update.matchAll(/^\s*git add ([^\n]+)$/gm)].flatMap((m) => m[1].trim().split(/\s+/)),
+  updates.flatMap((u) => [...u.matchAll(/^\s*git add ([^\n]+)$/gm)].flatMap((m) => m[1].trim().split(/\s+/))),
 );
 
-/** The literal start of every message update-data commits with, up to its first `$`. */
-const messagePrefixes = [...update.matchAll(/git commit -m "([^"$]+)/g)].map((m) => m[1]);
+/** The literal start of every message the refreshes commit with, up to its first `$`. */
+const messagePrefixes = updates.flatMap((u) => [...u.matchAll(/git commit -m "([^"$]+)/g)].map((m) => m[1]));
 
 /** The prefixes the gate accepts, from its `startswith("…")` tests. */
 const gatePrefixes = [...deploy.matchAll(/startswith\("([^"]+)"\)/g)].map((m) => m[1]);
@@ -57,6 +60,10 @@ describe('the update-data commit and the deploy gate', () => {
       'data/player-stats.json',
       'data/snapshot.json',
       'data/snapshot.meta.json',
+      'data/soccer/jv.json',
+      'data/soccer/player-stats.json',
+      'data/soccer/snapshot.json',
+      'data/soccer/snapshot.meta.json',
     ]);
   });
 
@@ -73,7 +80,7 @@ describe('the update-data commit and the deploy gate', () => {
   });
 
   it('commits as the bot the gate looks for', () => {
-    expect(update).toMatch(/git config user\.name {2}"github-actions\[bot\]"/);
+    for (const u of updates) expect(u).toMatch(/git config user\.name {2}"github-actions\[bot\]"/);
     expect(deploy).toContain('(.author.login // "") == "github-actions[bot]"');
   });
 });
@@ -317,7 +324,29 @@ describe('the teamViews budget gates ci, never the data cron', () => {
 
   it('update-data.yml and deploy-cloudflare.yml never set CI_GATE', () => {
     expect(stepBody(update, 'Test')).toMatch(/^\s*pnpm test$/m);
-    for (const text of [update, deploy]) expect(text).not.toMatch(/^\s*CI_GATE:/m);
+    for (const text of [update, updateSoccer, deploy]) expect(text).not.toMatch(/^\s*CI_GATE:/m);
+  });
+});
+
+describe('the soccer refresh', () => {
+  it('builds the soccer data: SCVAL_SPORT=soccer for the whole job', () => {
+    expect(updateSoccer).toMatch(/^ {4}env:\n {6}SCVAL_SPORT: soccer$/m);
+  });
+
+  it('never runs beside the field hockey refresh: one concurrency group, never cancelled', () => {
+    for (const u of updates) {
+      expect(u).toMatch(/^concurrency:\n {2}group: update-data\n {2}cancel-in-progress: false$/m);
+    }
+  });
+
+  it('commits and restores only data/soccer/ files', () => {
+    const paths = [...updateSoccer.matchAll(/\bdata\/[\w./-]+\.json/g)].map((m) => m[0]);
+    expect(paths.length).toBeGreaterThan(0);
+    for (const p of paths) expect(p.startsWith('data/soccer/'), p).toBe(true);
+  });
+
+  it('tests the soccer data files it just wrote', () => {
+    expect(stepBody(updateSoccer, 'Test')).toContain('vitest run tests/soccer.test.ts');
   });
 });
 
