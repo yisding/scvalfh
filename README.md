@@ -450,23 +450,28 @@ pnpm fetch-rosters --level jv                           # the 102 MaxPreps JV ro
 #### JV rosters
 
 A team page lists the school's JV roster in a "JV roster" section (`#jv-roster`) after its varsity
-roster, where one was found: 36 schools on 2026-11-06 (`lib/jv/jv-rosters.ts`, shown by
+roster, where one was found: 48 schools on 2026-11-06 (`lib/jv/jv-rosters.ts`, shown by
 `components/jv/TeamJvRoster.tsx`). Two files feed it:
 
 - `data/jv-rosters.json`: each school's MaxPreps JV roster page (`<team URL>jv/roster/`, the JV sport
   season), read by `pnpm fetch-rosters --level jv` with the varsity parser and the varsity file's contract,
   by hand like the varsity rosters. On 2026-11-06 it lists 508 players for 34 of the 102 schools.
-- `data/jv-rosters-school-sites.json`: the JV lists the schools' own athletics sites publish for 2026-27,
-  transcribed by hand with the evidence for the season and the day each was read: Saint Francis (sfhsathletics.com) and St. Ignatius (siwildcats.com), both Sidearm, and Los Gatos, Helix and Bonita, whose 5 Star sites serve the JV list by team id and school year.
+- `data/jv-rosters-school-sites.json`: the 2026-27 JV lists 28 schools publish on their own athletics
+  sites (or a page the school links as its roster), transcribed on 2026-11-06 with the evidence for each
+  list's season: Sidearm (Saint Francis, St. Ignatius), 5 Star (Los Gatos, Palo Alto, Helix, Bonita), 14
+  homecampus sites (`/lower/field-hockey-junior-varsity/roster/?selected_year=2026`), and one page each
+  for Fremont (a Google Sheet), Branham (a Google Doc), Cupertino and Bishop's (Finalsite), Lick-Wilmerding
+  and Marin Catholic (Blackbaud), Great Oak (SportsEngine) and Poway (its program's site). 482 players.
 
-A school's own list is shown where the file holds one (it is never shorter than MaxPreps' JV list for
-the same school, checked at load), else MaxPreps'. A player on the varsity roster the page shows is not
-repeated on the JV list, which counts them: several MaxPreps JV pages carry the whole program (Marin
-Academy's lists its 18 varsity players with their varsity numbers; Huntington Beach's 13 are all on
-its varsity roster, so its section says so in place of a list). MaxPreps rows match the varsity roster
-by career id or name, a school's list by name. JV players feed nothing else: not the clubs, commitments
-or recruiting pages, which are built from the varsity rosters. York, which plays Santa Catalina's PCAL
-JV slot, has no roster on MaxPreps (its JV roster page lists nobody) or york.org (a schedule only).
+A player on the varsity roster the page shows is not repeated on the JV list, which counts them: several
+MaxPreps JV pages carry the whole program (Marin Academy's lists its 18 varsity players with their
+varsity numbers; Huntington Beach's 13 are all on its varsity roster, so its section says so in place
+of a list). MaxPreps rows match the varsity roster by career id or name, a school's list by name. Where
+both sources list a school, the page shows the one with more JV players once those are taken out (the
+school's own on a tie: 25 school lists and 23 MaxPreps lists are shown) and names the other with its
+count. JV players feed nothing else: not the clubs, commitments or recruiting pages. York, which plays
+Santa Catalina's PCAL JV slot, has no roster on MaxPreps (its JV roster page lists nobody) or york.org
+(a schedule only), so Santa Catalina's page has no JV roster.
 
 ### Player stats
 

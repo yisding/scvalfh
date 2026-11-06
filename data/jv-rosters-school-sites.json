@@ -1,9 +1,10 @@
 {
-  "builtBy": "Read on 2026-11-06 from each school’s own athletics site (the pages under readUrl), transformed by a script and checked against the page by hand: one entry per school whose site publishes a current-season JV field hockey roster.",
+  "builtBy": "Read on 2026-11-06 from each school’s own athletics site or the page it links as its roster (readUrl), transformed by a script and checked against the page by hand: one entry per school whose site publishes a current-season JV field hockey roster.",
   "capturedAt": "2026-11-06",
   "notes": [
     "A school’s own JV list, transcribed as the school printed it: name, number, grade, position and height where the page gives them, null where it does not. Nothing is guessed. A name printed all in lower case or all in capitals is re-cased the way MaxPreps roster rows are (lib/sources/person-name.ts recaseName).",
-    "The team page shows this list in place of MaxPreps’ JV roster (data/jv-rosters.json) for these schools: the school’s own page is its JV list, and where MaxPreps lists JV players for the same school it lists fewer.",
+    "The team page shows the fuller of this list and MaxPreps’ JV roster (data/jv-rosters.json), each counted without the players on the varsity roster; the school’s own list on a tie (lib/jv/jv-rosters.ts).",
+    "Grades come from the page’s grade or class word, or from a graduating year (the class of 2030 are 2026-27’s freshmen). A captain is marked only where the page marks one.",
     "Not refreshed by any scheduled job. Re-read by hand; checkedOn says when each list was read."
   ],
   "teams": [
@@ -12,6 +13,7 @@
       "pageUrl": "https://siwildcats.com/sports/jv-field-hockey/roster",
       "players": [
         {
+          "captain": false,
           "grade": 10,
           "height": null,
           "jersey": "3",
@@ -19,6 +21,7 @@
           "position": null
         },
         {
+          "captain": false,
           "grade": 10,
           "height": null,
           "jersey": "4",
@@ -26,6 +29,7 @@
           "position": null
         },
         {
+          "captain": false,
           "grade": 10,
           "height": null,
           "jersey": "7",
@@ -33,6 +37,7 @@
           "position": null
         },
         {
+          "captain": false,
           "grade": 9,
           "height": null,
           "jersey": "8",
@@ -40,6 +45,7 @@
           "position": null
         },
         {
+          "captain": false,
           "grade": 10,
           "height": null,
           "jersey": "9",
@@ -47,6 +53,7 @@
           "position": null
         },
         {
+          "captain": false,
           "grade": 10,
           "height": null,
           "jersey": "10",
@@ -54,6 +61,7 @@
           "position": null
         },
         {
+          "captain": false,
           "grade": 9,
           "height": null,
           "jersey": "11",
@@ -61,6 +69,7 @@
           "position": null
         },
         {
+          "captain": false,
           "grade": 9,
           "height": null,
           "jersey": "12",
@@ -68,6 +77,7 @@
           "position": null
         },
         {
+          "captain": false,
           "grade": 9,
           "height": null,
           "jersey": "13",
@@ -75,6 +85,7 @@
           "position": null
         },
         {
+          "captain": false,
           "grade": 10,
           "height": null,
           "jersey": "14",
@@ -82,6 +93,7 @@
           "position": null
         },
         {
+          "captain": false,
           "grade": 9,
           "height": null,
           "jersey": "15",
@@ -89,6 +101,7 @@
           "position": null
         },
         {
+          "captain": false,
           "grade": 9,
           "height": null,
           "jersey": "16",
@@ -96,6 +109,7 @@
           "position": null
         },
         {
+          "captain": false,
           "grade": 9,
           "height": null,
           "jersey": "17",
@@ -103,6 +117,7 @@
           "position": null
         },
         {
+          "captain": false,
           "grade": 9,
           "height": null,
           "jersey": "18",
@@ -110,6 +125,7 @@
           "position": null
         },
         {
+          "captain": false,
           "grade": 9,
           "height": null,
           "jersey": "20",
@@ -117,6 +133,7 @@
           "position": null
         },
         {
+          "captain": false,
           "grade": 9,
           "height": null,
           "jersey": "21",
@@ -124,6 +141,7 @@
           "position": null
         },
         {
+          "captain": false,
           "grade": 10,
           "height": null,
           "jersey": "22",
@@ -131,6 +149,7 @@
           "position": null
         },
         {
+          "captain": false,
           "grade": 9,
           "height": null,
           "jersey": "23",
@@ -138,6 +157,7 @@
           "position": null
         },
         {
+          "captain": false,
           "grade": 11,
           "height": null,
           "jersey": "24",
@@ -145,6 +165,7 @@
           "position": null
         },
         {
+          "captain": false,
           "grade": 9,
           "height": null,
           "jersey": "27",
@@ -152,6 +173,7 @@
           "position": null
         },
         {
+          "captain": false,
           "grade": 11,
           "height": null,
           "jersey": "28",
@@ -159,6 +181,7 @@
           "position": null
         },
         {
+          "captain": false,
           "grade": 10,
           "height": null,
           "jersey": "29",
@@ -166,6 +189,7 @@
           "position": null
         },
         {
+          "captain": false,
           "grade": 9,
           "height": null,
           "jersey": "30",
@@ -173,6 +197,7 @@
           "position": null
         },
         {
+          "captain": false,
           "grade": 9,
           "height": null,
           "jersey": "G",
@@ -180,6 +205,7 @@
           "position": null
         },
         {
+          "captain": false,
           "grade": 9,
           "height": null,
           "jersey": "Manager",
@@ -197,6 +223,7 @@
       "pageUrl": "https://sfhsathletics.com/sports/jv-field-hockey/roster",
       "players": [
         {
+          "captain": false,
           "grade": 10,
           "height": null,
           "jersey": "2",
@@ -204,6 +231,7 @@
           "position": "Forward"
         },
         {
+          "captain": false,
           "grade": 9,
           "height": "5'2\"",
           "jersey": "3",
@@ -211,6 +239,7 @@
           "position": "Forward"
         },
         {
+          "captain": false,
           "grade": 9,
           "height": null,
           "jersey": "4",
@@ -218,6 +247,7 @@
           "position": "Midfield"
         },
         {
+          "captain": false,
           "grade": 10,
           "height": null,
           "jersey": "5",
@@ -225,6 +255,7 @@
           "position": "Forward"
         },
         {
+          "captain": false,
           "grade": 10,
           "height": null,
           "jersey": "6",
@@ -232,6 +263,7 @@
           "position": "Midfield"
         },
         {
+          "captain": false,
           "grade": 10,
           "height": null,
           "jersey": "7",
@@ -239,6 +271,7 @@
           "position": "Defense/Midfield"
         },
         {
+          "captain": false,
           "grade": 10,
           "height": "5'2\"",
           "jersey": "8",
@@ -246,6 +279,7 @@
           "position": "Forward"
         },
         {
+          "captain": false,
           "grade": 10,
           "height": "5'0\"",
           "jersey": "9",
@@ -253,6 +287,7 @@
           "position": "Defense"
         },
         {
+          "captain": false,
           "grade": 10,
           "height": null,
           "jersey": "10",
@@ -260,6 +295,7 @@
           "position": "Defense"
         },
         {
+          "captain": false,
           "grade": 10,
           "height": "5'0\"",
           "jersey": "11",
@@ -267,6 +303,7 @@
           "position": "Defense/Midfield"
         },
         {
+          "captain": false,
           "grade": 10,
           "height": null,
           "jersey": "17",
@@ -274,6 +311,7 @@
           "position": "Defense"
         },
         {
+          "captain": false,
           "grade": 10,
           "height": null,
           "jersey": "18",
@@ -281,6 +319,7 @@
           "position": "Forward"
         },
         {
+          "captain": false,
           "grade": 10,
           "height": "5'5\"",
           "jersey": "19",
@@ -288,6 +327,7 @@
           "position": "Midfield"
         },
         {
+          "captain": false,
           "grade": 10,
           "height": "5'2\"",
           "jersey": "20",
@@ -295,6 +335,7 @@
           "position": "Midfield"
         },
         {
+          "captain": false,
           "grade": 10,
           "height": "5'4\"",
           "jersey": "21",
@@ -302,6 +343,7 @@
           "position": "Midfield"
         },
         {
+          "captain": false,
           "grade": 10,
           "height": null,
           "jersey": "22",
@@ -309,6 +351,7 @@
           "position": "Midfield"
         },
         {
+          "captain": false,
           "grade": 10,
           "height": null,
           "jersey": "23",
@@ -316,6 +359,7 @@
           "position": "Midfield"
         },
         {
+          "captain": false,
           "grade": 10,
           "height": null,
           "jersey": "24",
@@ -323,6 +367,7 @@
           "position": "Forward"
         },
         {
+          "captain": false,
           "grade": 9,
           "height": null,
           "jersey": "26",
@@ -330,6 +375,7 @@
           "position": "Midfield"
         },
         {
+          "captain": false,
           "grade": 10,
           "height": "5'4\"",
           "jersey": "27",
@@ -337,6 +383,7 @@
           "position": "Defense"
         },
         {
+          "captain": false,
           "grade": 10,
           "height": null,
           "jersey": "28",
@@ -344,6 +391,7 @@
           "position": "Midfield"
         },
         {
+          "captain": false,
           "grade": 10,
           "height": "5'2\"",
           "jersey": "29",
@@ -358,9 +406,278 @@
     },
     {
       "checkedOn": "2026-11-06",
+      "pageUrl": "https://fremontathletics.org/field-hockey-roster.html",
+      "players": [
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": "16",
+          "name": "Kalia Scott",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 11,
+          "height": null,
+          "jersey": null,
+          "name": "Mariam Altemimi",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 11,
+          "height": null,
+          "jersey": null,
+          "name": "Sarah Chang",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 11,
+          "height": null,
+          "jersey": null,
+          "name": "Szeniah Currie",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "name": "Bronwyn Dawson",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "Charlee Dolan",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 11,
+          "height": null,
+          "jersey": null,
+          "name": "Sophia Espinoza",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 11,
+          "height": null,
+          "jersey": null,
+          "name": "Emma Liu",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 11,
+          "height": null,
+          "jersey": null,
+          "name": "Casandra Hernandez Mozo",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Emily Orozco",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 11,
+          "height": null,
+          "jersey": null,
+          "name": "Sofia Ortega",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "Sanuga Sathish",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 11,
+          "height": null,
+          "jersey": null,
+          "name": "Shakthi Vinoth",
+          "position": null
+        }
+      ],
+      "readUrl": "https://docs.google.com/spreadsheets/d/1DceDTiVPpWf2r1WtWK4IVfmo2V_ihZj7gLyGaxPCVEI/gviz/tq?tqx=out:json&sheet=JV",
+      "season": "2026-27",
+      "seasonEvidence": "The roster page is headed “2026–27”; its JV button reads the sheet named JV from the same spreadsheet as the varsity list, which matches MaxPreps’ 2026-27 roster.",
+      "slug": "fremont"
+    },
+    {
+      "checkedOn": "2026-11-06",
+      "pageUrl": "https://chs.fuhsd.org/student-life/athletics/fall-sports/field-hockey",
+      "players": [
+        {
+          "captain": false,
+          "grade": 11,
+          "height": null,
+          "jersey": null,
+          "name": "Nour Bahnas",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "Isabella Delgado",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "Hiromi Hommo",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "Madeline Jiang",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "Aditi Kartikeya",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "Sulha Kim",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "name": "Somin Kim",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "Joshua Kollati",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "name": "Zoey Lim",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "Kristen McCarthy",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "Maria Ohanjanyan",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "Kashvi Pradeep",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "Rebeca Sophia Romero",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "Ananya Satish",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "name": "Ahana Shukla",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "name": "Brianna Sulocha",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "Jumie Yang",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "Bengisu Yilgin",
+          "position": null
+        }
+      ],
+      "readUrl": "https://chs.fuhsd.org/student-life/athletics/fall-sports/field-hockey",
+      "season": "2026-27",
+      "seasonEvidence": "The page names no season; its Varsity tab matches MaxPreps’ 2026-27 roster, 15 of 15.",
+      "slug": "cupertino"
+    },
+    {
+      "checkedOn": "2026-11-06",
       "pageUrl": "https://www.losgatosathletics.org/sport/field%20hockey/girls/?tab=roster",
       "players": [
         {
+          "captain": false,
           "grade": 9,
           "height": null,
           "jersey": null,
@@ -368,6 +685,7 @@
           "position": null
         },
         {
+          "captain": false,
           "grade": 9,
           "height": null,
           "jersey": null,
@@ -375,6 +693,7 @@
           "position": null
         },
         {
+          "captain": false,
           "grade": 9,
           "height": null,
           "jersey": null,
@@ -382,6 +701,7 @@
           "position": null
         },
         {
+          "captain": false,
           "grade": 10,
           "height": null,
           "jersey": null,
@@ -389,6 +709,7 @@
           "position": null
         },
         {
+          "captain": false,
           "grade": 9,
           "height": null,
           "jersey": null,
@@ -396,6 +717,7 @@
           "position": null
         },
         {
+          "captain": false,
           "grade": 10,
           "height": null,
           "jersey": null,
@@ -403,6 +725,7 @@
           "position": null
         },
         {
+          "captain": false,
           "grade": 9,
           "height": null,
           "jersey": null,
@@ -410,6 +733,7 @@
           "position": null
         },
         {
+          "captain": false,
           "grade": 9,
           "height": null,
           "jersey": null,
@@ -417,6 +741,7 @@
           "position": null
         },
         {
+          "captain": false,
           "grade": 9,
           "height": null,
           "jersey": null,
@@ -424,6 +749,7 @@
           "position": null
         },
         {
+          "captain": false,
           "grade": 10,
           "height": null,
           "jersey": null,
@@ -431,6 +757,7 @@
           "position": null
         },
         {
+          "captain": false,
           "grade": 9,
           "height": null,
           "jersey": null,
@@ -438,6 +765,7 @@
           "position": null
         },
         {
+          "captain": false,
           "grade": 10,
           "height": null,
           "jersey": null,
@@ -445,6 +773,7 @@
           "position": null
         },
         {
+          "captain": false,
           "grade": 10,
           "height": null,
           "jersey": null,
@@ -452,6 +781,7 @@
           "position": null
         },
         {
+          "captain": false,
           "grade": 9,
           "height": null,
           "jersey": null,
@@ -459,6 +789,7 @@
           "position": null
         },
         {
+          "captain": false,
           "grade": 9,
           "height": null,
           "jersey": null,
@@ -466,6 +797,7 @@
           "position": null
         },
         {
+          "captain": false,
           "grade": 9,
           "height": null,
           "jersey": null,
@@ -473,6 +805,7 @@
           "position": null
         },
         {
+          "captain": false,
           "grade": 9,
           "height": null,
           "jersey": null,
@@ -480,6 +813,7 @@
           "position": null
         },
         {
+          "captain": false,
           "grade": 9,
           "height": null,
           "jersey": null,
@@ -487,6 +821,7 @@
           "position": null
         },
         {
+          "captain": false,
           "grade": 9,
           "height": null,
           "jersey": null,
@@ -494,6 +829,7 @@
           "position": null
         },
         {
+          "captain": false,
           "grade": 9,
           "height": null,
           "jersey": null,
@@ -501,6 +837,7 @@
           "position": null
         },
         {
+          "captain": false,
           "grade": 10,
           "height": null,
           "jersey": null,
@@ -508,6 +845,7 @@
           "position": null
         },
         {
+          "captain": false,
           "grade": 9,
           "height": null,
           "jersey": null,
@@ -515,6 +853,7 @@
           "position": null
         },
         {
+          "captain": false,
           "grade": 10,
           "height": null,
           "jersey": null,
@@ -522,6 +861,7 @@
           "position": null
         },
         {
+          "captain": false,
           "grade": 10,
           "height": null,
           "jersey": null,
@@ -529,6 +869,7 @@
           "position": null
         },
         {
+          "captain": false,
           "grade": 9,
           "height": null,
           "jersey": null,
@@ -536,6 +877,7 @@
           "position": null
         },
         {
+          "captain": false,
           "grade": 9,
           "height": null,
           "jersey": null,
@@ -543,6 +885,7 @@
           "position": null
         },
         {
+          "captain": false,
           "grade": 9,
           "height": null,
           "jersey": null,
@@ -550,6 +893,7 @@
           "position": null
         },
         {
+          "captain": false,
           "grade": 10,
           "height": null,
           "jersey": null,
@@ -557,6 +901,7 @@
           "position": null
         },
         {
+          "captain": false,
           "grade": 9,
           "height": null,
           "jersey": null,
@@ -564,6 +909,7 @@
           "position": null
         },
         {
+          "captain": false,
           "grade": 12,
           "height": null,
           "jersey": null,
@@ -571,6 +917,7 @@
           "position": null
         },
         {
+          "captain": false,
           "grade": 10,
           "height": null,
           "jersey": null,
@@ -578,6 +925,7 @@
           "position": null
         },
         {
+          "captain": false,
           "grade": 10,
           "height": null,
           "jersey": null,
@@ -585,6 +933,7 @@
           "position": null
         },
         {
+          "captain": false,
           "grade": 9,
           "height": null,
           "jersey": null,
@@ -599,9 +948,2794 @@
     },
     {
       "checkedOn": "2026-11-06",
+      "pageUrl": "https://www.palyathletics.com/sport/field%20hockey/girls/?tab=roster",
+      "players": [
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "Ava Burrell",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "name": "Norah Cronin",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "name": "Maya Galant",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "name": "Sejal Kulkarni-Patel",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "name": "Ana Larrain",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "name": "Emilia Pinnell",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": "5",
+          "name": "Ava Simpson",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": "7",
+          "name": "Alexia Dawson",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 11,
+          "height": null,
+          "jersey": "7",
+          "name": "Jingran Ruan",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": "8",
+          "name": "Peri Tepper",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": "9",
+          "name": "Nadalin Jiang",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": "12",
+          "name": "Valerie Chiang",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": "13",
+          "name": "Zoe Stavn",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": "16",
+          "name": "Piya Gupta",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": "18",
+          "name": "Risa Newman",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": "19",
+          "name": "Eyara Gargate",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": "20",
+          "name": "Suki Neequaye",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": "21",
+          "name": "Abby Lee",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 11,
+          "height": null,
+          "jersey": "22",
+          "name": "Grace Hawes",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": "23",
+          "name": "Helena Moran",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": "24",
+          "name": "Annie Zheng",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": "25",
+          "name": "Lilly Omar",
+          "position": null
+        }
+      ],
+      "readUrl": "https://www.palyathletics.com/sport/RefreshRosterAthleteStyle2ViewComponent/148391?schoolYear=2026-2027",
+      "season": "2026-27",
+      "seasonEvidence": "Read with schoolYear=2026-2027 for the team the page’s level selector names “Junior Varsity” (148391); schoolYear=2025-2026 lists nobody.",
+      "slug": "palo-alto"
+    },
+    {
+      "checkedOn": "2026-11-06",
+      "pageUrl": "https://www.schsathletics.com/lower/field-hockey-junior-varsity/roster/?selected_year=2026",
+      "players": [
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "name": "Myra Bisnik",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "name": "Anika Chandak",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "Marie Gendler",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "name": "Anushka Jain",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "Safiya Jawad",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "name": "Maahi Kale",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "name": "Lavisha Kejriwal",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "Mrunmayee Kulkarni",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "Ines Lim",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "name": "Reyna Mehta",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "name": "Aanya Mittal",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "name": "Noor Narang",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "name": "Aadya Pal",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "name": "Anusha Qamra",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "name": "Mehaavi Shah",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "name": "Tanya Sharma",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "name": "Roslyn Tajii",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "name": "Rujuta Tambe",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "name": "Elly To",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "name": "Kelly To",
+          "position": null
+        }
+      ],
+      "readUrl": "https://www.schsathletics.com/lower/field-hockey-junior-varsity/roster/?selected_year=2026",
+      "season": "2026-27",
+      "seasonEvidence": "The JV roster page has “2026-27” selected in its season picker.",
+      "slug": "santa-clara"
+    },
+    {
+      "checkedOn": "2026-11-06",
+      "pageUrl": "https://www.matadorathletics.org/lower/field-hockey-junior-varsity/roster/?selected_year=2026",
+      "players": [
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Oishee Banerjee",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Tina Brumand",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Matilda Constantinescu",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Navya C. Kari",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Srinidhi Madabushi",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Giada Madamba",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Gia Mathew",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Shruti Shiv Mishra",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Tvisha Ray",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Surya Vamsini Senthilkumar",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Avantika Singh",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Khushi Siroya",
+          "position": null
+        }
+      ],
+      "readUrl": "https://www.matadorathletics.org/lower/field-hockey-junior-varsity/roster/?selected_year=2026",
+      "season": "2026-27",
+      "seasonEvidence": "The JV roster page has “2026-27” selected in its season picker.",
+      "slug": "monta-vista"
+    },
+    {
+      "checkedOn": "2026-11-06",
+      "pageUrl": "https://docs.google.com/document/d/1rcSt38ep9vwc9AvIwZpn_cJt4idmdnglD4gYwjzVFd4/edit",
+      "players": [
+        {
+          "captain": false,
+          "grade": 11,
+          "height": null,
+          "jersey": null,
+          "name": "Christina Ada",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "name": "Catherine Ada",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "Sabrina Bugliarello",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "Nube Ceniceros",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "Annalise Clayton",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "name": "Emily Drag",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "name": "Allison Fahreddin",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "name": "Megan Griggs",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "Jayline Hernandez",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "Baella Lopez",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "Liyat Moges",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "Fiona Neddersen",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "Marcelina Pantoja",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "name": "Rylynn Rojas-Dorsey",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "Brianna Tan",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 11,
+          "height": null,
+          "jersey": null,
+          "name": "Anoushka Vennelakant",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 11,
+          "height": null,
+          "jersey": null,
+          "name": "Chloe Ward",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "Kathryn Wehrmaker",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "name": "Emma William",
+          "position": null
+        }
+      ],
+      "readUrl": "https://docs.google.com/document/d/1rcSt38ep9vwc9AvIwZpn_cJt4idmdnglD4gYwjzVFd4/export?format=txt",
+      "season": "2026-27",
+      "seasonEvidence": "The document is headed “BRANHAM GIRLS JV FIELD HOCKEY 2026-2027 ROSTER”; branham.cuhsd.org links it as the JV roster.",
+      "slug": "branham"
+    },
+    {
+      "checkedOn": "2026-11-06",
+      "pageUrl": "https://www.lelandathletics.com/lower/field-hockey-junior-varsity/roster/?selected_year=2026",
+      "players": [
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Jiya Agarwal",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Anvika Boppana",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Kathy Chen",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Chloe Doan",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Xochitl Earhart",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Brittany Ebrahimi",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Scarlett Eliasi",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Tabitha Goodger",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Grace Gu",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Yena Im",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Arya Khan",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Arya Mandke",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Allison Piramoon",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Kyriaki Pries",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Olivia Rai",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Riley Salgado",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Allison Tang",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Alayna Wang",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Arianna Paola Wheeler",
+          "position": null
+        }
+      ],
+      "readUrl": "https://www.lelandathletics.com/lower/field-hockey-junior-varsity/roster/?selected_year=2026",
+      "season": "2026-27",
+      "seasonEvidence": "The JV roster page has “2026-27” selected in its season picker.",
+      "slug": "leland"
+    },
+    {
+      "checkedOn": "2026-11-06",
+      "pageUrl": "http://m.lwhs.org/team-detail?Team=399240",
+      "players": [
+        {
+          "captain": true,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "Teagan Burns",
+          "position": null
+        },
+        {
+          "captain": true,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "Mira Mathus",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "Emily Brown",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "Camila Casey",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "name": "Ella Cohen",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "Edith Feldman",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "Saskia Hilgraf",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "name": "Gemma Martinez Bandarrae",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 11,
+          "height": null,
+          "jersey": null,
+          "name": "Tessa Mocci",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 11,
+          "height": null,
+          "jersey": null,
+          "name": "Wyeth Nice",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 11,
+          "height": null,
+          "jersey": null,
+          "name": "Hannah Weinberg",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "Jocelyn Wu",
+          "position": null
+        }
+      ],
+      "readUrl": "http://m.lwhs.org/team-detail?Team=399240",
+      "season": "2026-27",
+      "seasonEvidence": "The team page, “Field Hockey- JV, Girls”, has “2026 - 2027” selected in its season picker.",
+      "slug": "lick-wilmerding"
+    },
+    {
+      "checkedOn": "2026-11-06",
+      "pageUrl": "https://www.marincatholic.org/team-pages-detail?team=120937",
+      "players": [
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "name": "Harriet Bedford",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "Amelia Boord",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "name": "Lucia Crane",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "Arianna Feridani",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "name": "Alexandra Fleishman",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "name": "Liliana Kacer",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "Lola Kurz",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "name": "Zoe Little",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "name": "Kendall Nissim",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "name": "Bailey Peterson-McFarland",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "name": "Reese Pinksa",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "name": "Penelope Porter",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "Caitlin Ryan",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "name": "Jestina Urrea",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "Charlotte Wafer",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "name": "Eva Walker",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "name": "Laurel Wu",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "name": "Scarlett Wu",
+          "position": null
+        }
+      ],
+      "readUrl": "https://www.marincatholic.org/team-pages-detail?team=120937",
+      "season": "2026-27",
+      "seasonEvidence": "The team page, “Field Hockey - JV”, has “2026 - 2027” selected in its season picker.",
+      "slug": "marin-catholic"
+    },
+    {
+      "checkedOn": "2026-11-06",
+      "pageUrl": "https://www.gohsathletics.com/fieldhockey-roster",
+      "players": [
+        {
+          "captain": false,
+          "grade": 12,
+          "height": null,
+          "jersey": null,
+          "name": "Cherry Chen",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 12,
+          "height": null,
+          "jersey": null,
+          "name": "Oliver Chia",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "name": "Alexandria Clarke",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "Raphaela De Mata",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "name": "Emma Doyle",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "name": "Emma Gamester",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 11,
+          "height": null,
+          "jersey": null,
+          "name": "London Harvey",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "name": "Savannah Malm",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 11,
+          "height": null,
+          "jersey": null,
+          "name": "Zoe McCreary",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "name": "Veronica Morrison",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "Melina Mousiadis",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "name": "Abigail Oh",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "name": "Alexa Oliveri",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 11,
+          "height": null,
+          "jersey": null,
+          "name": "Callie Robinson",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "name": "Shiloh Williams",
+          "position": null
+        }
+      ],
+      "readUrl": "https://www.gohsathletics.com/fieldhockey-roster",
+      "season": "2026-27",
+      "seasonEvidence": "The list is headed “Junior Varsity Field Hockey 2026”.",
+      "slug": "great-oak"
+    },
+    {
+      "checkedOn": "2026-11-06",
+      "pageUrl": "https://www.bishops.com/athletics/athletic-details-page/~athletics-team-id/200",
+      "players": [
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "name": "Brooke Donnelly",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 11,
+          "height": null,
+          "jersey": null,
+          "name": "Aska Enomoto",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "name": "Kate Guess",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "name": "Olivia Kelly",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "name": "Anoushka Kukreja",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "name": "Rylan Lees",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "name": "Leila McBride",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "name": "Siyona Mohan",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "name": "Olivia Peterson",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "name": "Mariam Sedky",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "name": "Mariah Tims",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "name": "Ella Vanstone",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "Kaia Wood",
+          "position": null
+        }
+      ],
+      "readUrl": "https://www.bishops.com/athletics/athletic-details-page/~athletics-team-id/200",
+      "season": "2026-27",
+      "seasonEvidence": "The page, “Field Hockey (JV)”, names no season; its players are classes of 2028 to 2030, and the class of 2030 are this fall’s freshmen.",
+      "slug": "bishops"
+    },
+    {
+      "checkedOn": "2026-11-06",
+      "pageUrl": "https://www.chrattlers.com/lower/field-hockey-junior-varsity/roster/?selected_year=2026",
+      "players": [
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Amelia Berard",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Naya Boyd",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Naima Castro",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Brooke Clapham",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Skylar Jones",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Taylor Mahre",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Naomi Marians",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Lily McCracken",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Natalia Morgan",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Brooke Myers",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Sydney Pappenfus",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Chloe Riordan",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Zoey Riordan",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Emma Ruelas",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Yasmeen Sabbagh",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Fallon Torres",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Skylar Van Bemmel",
+          "position": null
+        }
+      ],
+      "readUrl": "https://www.chrattlers.com/lower/field-hockey-junior-varsity/roster/?selected_year=2026",
+      "season": "2026-27",
+      "seasonEvidence": "The JV roster page has “2026-27” selected in its season picker.",
+      "slug": "canyon-hills"
+    },
+    {
+      "checkedOn": "2026-11-06",
+      "pageUrl": "https://www.cchsdonsathletics.com/lower/field-hockey-junior-varsity/roster/?selected_year=2026",
+      "players": [
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "Lucy Beeken",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "Victoria Bustos",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "name": "Catalina Cabezuela",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "Emma Firicano",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "Amanda Gruytch",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "Phoebe Hensien",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "Marie Violet Hertzog",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "Ana Natalia Kincart",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "Elsie Mazza",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "Natalie McCormack",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "Zulma Morales",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "Finnley Nolan",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "Olivia Ramsey",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "Amelia Ries",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "Mila Shatzko",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 10,
+          "height": null,
+          "jersey": null,
+          "name": "Alexa Soriano",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": 9,
+          "height": null,
+          "jersey": null,
+          "name": "Kara Vignevic",
+          "position": null
+        }
+      ],
+      "readUrl": "https://www.cchsdonsathletics.com/lower/field-hockey-junior-varsity/roster/?selected_year=2026",
+      "season": "2026-27",
+      "seasonEvidence": "The JV roster page has “2026-27” selected in its season picker.",
+      "slug": "cathedral-catholic"
+    },
+    {
+      "checkedOn": "2026-11-06",
+      "pageUrl": "https://www.ljvikings.com/lower/field-hockey-junior-varsity/roster/?selected_year=2026",
+      "players": [
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Audrey Burroughs",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Corrina Colvin",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Annabel D'Agostino",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Lucy Ferrari",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Stella Hill",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Tessa Leek",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Sadie Lipsher",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Josephine Losay",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Payton Lukasik",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Elise Prochnow",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Charlotte Putnam",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Emily Sherman",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Anya Shut",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Ellie Thomson",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Ava Vizmeg",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Charlotte Wright",
+          "position": null
+        }
+      ],
+      "readUrl": "https://www.ljvikings.com/lower/field-hockey-junior-varsity/roster/?selected_year=2026",
+      "season": "2026-27",
+      "seasonEvidence": "The JV roster page has “2026-27” selected in its season picker.",
+      "slug": "la-jolla"
+    },
+    {
+      "checkedOn": "2026-11-06",
+      "pageUrl": "https://www.mbbuccaneers.com/lower/field-hockey-junior-varsity/roster/?selected_year=2026",
+      "players": [
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Saki Aihara",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Victoria Barum",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Sarah Curulla",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Layla Filali",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Jayla Gerrard",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Mei-An Haltigan",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Kaia Jacoway",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Christine Lam",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Ruby Lopez",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Sienna Nixon",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Dominique Ryder",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Tallulah Severino",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Olivia Spencer",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Claire Stiles",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Nina Trnka",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Mikayla Weinstein",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Violet Westwood",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Scarlett Winter",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Maia Wright",
+          "position": null
+        }
+      ],
+      "readUrl": "https://www.mbbuccaneers.com/lower/field-hockey-junior-varsity/roster/?selected_year=2026",
+      "season": "2026-27",
+      "seasonEvidence": "The JV roster page has “2026-27” selected in its season picker.",
+      "slug": "mission-bay"
+    },
+    {
+      "checkedOn": "2026-11-06",
+      "pageUrl": "https://www.srfalcons.org/lower/field-hockey-junior-varsity/roster/?selected_year=2026",
+      "players": [
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Devon Abbott",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Eliana Aldana",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Haya Ambriss",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Adalynn Babka",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Kaitlyn Kirkendall",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Kendall Kustra",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Hadley Parker",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Elsa Rouhana",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Annalise Sigdestad",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Kara Sumagaysay",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Alice Thompson",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Katherine Todd",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Navneen Wimmer",
+          "position": null
+        }
+      ],
+      "readUrl": "https://www.srfalcons.org/lower/field-hockey-junior-varsity/roster/?selected_year=2026",
+      "season": "2026-27",
+      "seasonEvidence": "The JV roster page has “2026-27” selected in its season picker.",
+      "slug": "scripps-ranch"
+    },
+    {
+      "checkedOn": "2026-11-06",
+      "pageUrl": "https://www.chscaptains.com/lower/field-hockey-junior-varsity/roster/?selected_year=2026",
+      "players": [
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Charlotte Baumann",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Addison Cartwright",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Vanessa Chavarria",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Sienna Dobek",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Aniston Domingo",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Ella Farrer-Coolidge",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Kylee Fox",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Alyza Hokanson",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Charlotte Horstman",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Grace Klein",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Genevieve Lawriw",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Emma Maher",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Penelope McCormack",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Makayla Smith",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Charlotte Strickler",
+          "position": null
+        }
+      ],
+      "readUrl": "https://www.chscaptains.com/lower/field-hockey-junior-varsity/roster/?selected_year=2026",
+      "season": "2026-27",
+      "seasonEvidence": "The JV roster page has “2026-27” selected in its season picker.",
+      "slug": "clairemont"
+    },
+    {
+      "checkedOn": "2026-11-06",
+      "pageUrl": "https://www.plhsfightingpointers.com/lower/field-hockey-junior-varsity/roster/?selected_year=2026",
+      "players": [
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Adeline Buller",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Stella Burger",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Raemona Hatfield",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Elli Huerta",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Anderson Lilley",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Fara Madigan",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Vanessa Mellinger",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Myka Ondre",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Iyla Peterson",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Marina Serra",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Chloe Zakaria",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Chloe Zakaria",
+          "position": null
+        }
+      ],
+      "readUrl": "https://www.plhsfightingpointers.com/lower/field-hockey-junior-varsity/roster/?selected_year=2026",
+      "season": "2026-27",
+      "seasonEvidence": "The JV roster page has “2026-27” selected in its season picker.",
+      "slug": "point-loma"
+    },
+    {
+      "checkedOn": "2026-11-06",
+      "pageUrl": "https://www.uchscenturions.com/lower/field-hockey-junior-varsity/roster/?selected_year=2026",
+      "players": [
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Lauren Coetzee",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Sloan Dietrich",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Avery Eldridge",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Macey Huntsman",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Taylor MacAloney",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Tessa Magnuson",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Paula Neira Munoz",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Ava Nelson",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Cameron Pearce",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Clara Perkins",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Agnes Puthuvalil",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Kira Soonthornnon",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Sienna Szymczak",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Ava Weaver",
+          "position": null
+        }
+      ],
+      "readUrl": "https://www.uchscenturions.com/lower/field-hockey-junior-varsity/roster/?selected_year=2026",
+      "season": "2026-27",
+      "seasonEvidence": "The JV roster page has “2026-27” selected in its season picker.",
+      "slug": "university-city"
+    },
+    {
+      "checkedOn": "2026-11-06",
+      "pageUrl": "https://mtcarmel.homecampus.com/lower/field-hockey-junior-varsity/roster/?selected_year=2026",
+      "players": [
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Lillie Atterbury",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Ryleigh Black",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Madelyn Christian",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Annika Cohen",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Emily DeVicariis",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Malaya Estela",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Olivia Fernandez-Price",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Josephine Fluty",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Avery Grantham",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Vedalyn Homa",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Sierra Jones",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Callie McFarlin",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Emily Orr",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Juliette Regardie",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Zola Steadry",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Abigail Teuben",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Jillian Tognetti",
+          "position": null
+        }
+      ],
+      "readUrl": "https://mtcarmel.homecampus.com/lower/field-hockey-junior-varsity/roster/?selected_year=2026",
+      "season": "2026-27",
+      "seasonEvidence": "The JV roster page has “2026-27” selected in its season picker.",
+      "slug": "mt-carmel"
+    },
+    {
+      "checkedOn": "2026-11-06",
+      "pageUrl": "https://powayfieldhockey.com/teams/",
+      "players": [
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Adeline Burk",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Khloe Mitchell",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Cora Humphreys",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Olivia Garcia",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Vienna D’Alessandro",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Addisyn Loucas",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Hana Haroun",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Jaidalynn Fonseca",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Jillian Ward",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Andrea Rothenhausler",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Julianna Chaney",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Ava Burr",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Cadence Neal",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Lily Caparatta",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Aliyah Archuleta",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Mia Cruz",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Isabelle Carlson",
+          "position": null
+        }
+      ],
+      "readUrl": "https://powayfieldhockey.com/teams/",
+      "season": "2026-27",
+      "seasonEvidence": "The list is headed “JUNIOR VARSITY 2026” on the program’s site, which Poway High’s athletics page links as “Girls Field Hockey”.",
+      "slug": "poway"
+    },
+    {
+      "checkedOn": "2026-11-06",
+      "pageUrl": "https://sagecreek.homecampus.com/lower/field-hockey-junior-varsity/roster/?selected_year=2026",
+      "players": [
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Hayes Alexander",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Meisha Andrioff",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Katherine \"Kate\" Barsily",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Skylar Bohannon",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Sophia Fasone",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Madeleine Grimsley",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Alessia Irwin",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Ally Lu",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Alexandra MacFreier",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Elise Madello",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Lauren Meek",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Phoebe Nicholes",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Emily Oseguera",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Helena Thompson",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Greta Tornielli",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Jackelyn Trifilo",
+          "position": null
+        }
+      ],
+      "readUrl": "https://sagecreek.homecampus.com/lower/field-hockey-junior-varsity/roster/?selected_year=2026",
+      "season": "2026-27",
+      "seasonEvidence": "The JV roster page has “2026-27” selected in its season picker.",
+      "slug": "sage-creek"
+    },
+    {
+      "checkedOn": "2026-11-06",
       "pageUrl": "https://www.helixathletics.net/sport/field%20hockey/girls/?tab=roster",
       "players": [
         {
+          "captain": false,
           "grade": 11,
           "height": null,
           "jersey": null,
@@ -609,6 +3743,7 @@
           "position": null
         },
         {
+          "captain": false,
           "grade": 9,
           "height": null,
           "jersey": null,
@@ -616,6 +3751,7 @@
           "position": null
         },
         {
+          "captain": false,
           "grade": 10,
           "height": null,
           "jersey": null,
@@ -623,6 +3759,7 @@
           "position": null
         },
         {
+          "captain": false,
           "grade": 9,
           "height": null,
           "jersey": null,
@@ -630,6 +3767,7 @@
           "position": null
         },
         {
+          "captain": false,
           "grade": 9,
           "height": null,
           "jersey": null,
@@ -637,6 +3775,7 @@
           "position": null
         },
         {
+          "captain": false,
           "grade": 10,
           "height": null,
           "jersey": null,
@@ -644,6 +3783,7 @@
           "position": null
         },
         {
+          "captain": false,
           "grade": 9,
           "height": null,
           "jersey": null,
@@ -651,6 +3791,7 @@
           "position": null
         },
         {
+          "captain": false,
           "grade": 10,
           "height": null,
           "jersey": null,
@@ -658,6 +3799,7 @@
           "position": null
         },
         {
+          "captain": false,
           "grade": 11,
           "height": null,
           "jersey": null,
@@ -665,6 +3807,7 @@
           "position": null
         },
         {
+          "captain": false,
           "grade": 10,
           "height": null,
           "jersey": null,
@@ -672,6 +3815,7 @@
           "position": null
         },
         {
+          "captain": false,
           "grade": 12,
           "height": null,
           "jersey": null,
@@ -679,6 +3823,7 @@
           "position": null
         },
         {
+          "captain": false,
           "grade": 10,
           "height": null,
           "jersey": null,
@@ -696,6 +3841,7 @@
       "pageUrl": "https://www.bonitaathletics.org/sport/field%20hockey/girls/?tab=roster",
       "players": [
         {
+          "captain": false,
           "grade": 10,
           "height": null,
           "jersey": null,
@@ -703,6 +3849,7 @@
           "position": null
         },
         {
+          "captain": false,
           "grade": 10,
           "height": null,
           "jersey": null,
@@ -710,6 +3857,7 @@
           "position": null
         },
         {
+          "captain": false,
           "grade": 11,
           "height": null,
           "jersey": null,
@@ -717,6 +3865,7 @@
           "position": null
         },
         {
+          "captain": false,
           "grade": 10,
           "height": null,
           "jersey": null,
@@ -724,6 +3873,7 @@
           "position": null
         },
         {
+          "captain": false,
           "grade": 9,
           "height": null,
           "jersey": null,
@@ -731,6 +3881,7 @@
           "position": null
         },
         {
+          "captain": false,
           "grade": 9,
           "height": null,
           "jersey": null,
@@ -738,6 +3889,7 @@
           "position": null
         },
         {
+          "captain": false,
           "grade": 9,
           "height": null,
           "jersey": null,
@@ -745,6 +3897,7 @@
           "position": null
         },
         {
+          "captain": false,
           "grade": 11,
           "height": null,
           "jersey": null,
@@ -752,6 +3905,7 @@
           "position": null
         },
         {
+          "captain": false,
           "grade": 9,
           "height": null,
           "jersey": null,
@@ -759,6 +3913,7 @@
           "position": null
         },
         {
+          "captain": false,
           "grade": 10,
           "height": null,
           "jersey": null,
@@ -766,6 +3921,7 @@
           "position": null
         },
         {
+          "captain": false,
           "grade": 10,
           "height": null,
           "jersey": null,
@@ -773,6 +3929,7 @@
           "position": null
         },
         {
+          "captain": false,
           "grade": 9,
           "height": null,
           "jersey": null,
@@ -780,6 +3937,7 @@
           "position": null
         },
         {
+          "captain": false,
           "grade": 9,
           "height": null,
           "jersey": null,
@@ -787,6 +3945,7 @@
           "position": null
         },
         {
+          "captain": false,
           "grade": 10,
           "height": null,
           "jersey": null,
@@ -794,6 +3953,7 @@
           "position": null
         },
         {
+          "captain": false,
           "grade": 10,
           "height": null,
           "jersey": null,
@@ -801,6 +3961,7 @@
           "position": null
         },
         {
+          "captain": false,
           "grade": 11,
           "height": null,
           "jersey": null,
@@ -808,6 +3969,7 @@
           "position": null
         },
         {
+          "captain": false,
           "grade": 10,
           "height": null,
           "jersey": null,
@@ -819,6 +3981,168 @@
       "season": "2026-27",
       "seasonEvidence": "Read with schoolYear=2026-2027 for the team the page’s level selector names “Junior Varsity” (130951); schoolYear=2025-2026 returns a different list.",
       "slug": "bonita"
+    },
+    {
+      "checkedOn": "2026-11-06",
+      "pageUrl": "https://www.glendoraathletics.com/lower/field-hockey-junior-varsity/roster/?selected_year=2026",
+      "players": [
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Noelle Benken",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Alexa Carrillo",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Taylor Elliott",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Sofia Flororita",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Dorothy Hahn",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Abigael Hoffman",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Emelyn Hoffman",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Lexie Lee",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Emerson Mittskus",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Christine Nasrallah",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Bailey Newton",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Rylee Ocampo",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Lucy Ojeda",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Linley Osborne",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Samyuktha Parvatini",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Aisha Patel",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Eumi Soedomo",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Leanne Yassine",
+          "position": null
+        },
+        {
+          "captain": false,
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "name": "Madison Chavez",
+          "position": null
+        }
+      ],
+      "readUrl": "https://www.glendoraathletics.com/lower/field-hockey-junior-varsity/roster/?selected_year=2026",
+      "season": "2026-27",
+      "seasonEvidence": "The JV roster page has “2026-27” selected in its season picker.",
+      "slug": "glendora"
     }
   ]
 }

@@ -150,7 +150,7 @@ const JV_NOTES = [
   `One entry per registry school, all ${LEAGUES_PROPER.length} leagues and the ${INDEPENDENT_LEAGUES.map((l) => l.name).join(', ')}: the school's JV roster page on MaxPreps (<team URL>jv/roster/, the JV sport season). A school whose JV page lists nobody has status empty: MaxPreps publishes no JV roster for it, which is not a claim that the school fields no JV team.`,
   'Rows are decoded exactly as the varsity roster rows are (GSSP_ROSTER_SERIALIZE_KEYS, cross-checked against the rendered table), and the page must be for the JV sport season.',
   'Grade, position, jersey and height are whatever the coach entered on MaxPreps; blanks are null, never guessed.',
-  "A school's own athletics site can publish a fuller JV list: those are transcribed in data/jv-rosters-school-sites.json, which the team page prefers (lib/jv/jv-rosters.ts).",
+  "A school's own athletics site can publish its JV list too: those are transcribed in data/jv-rosters-school-sites.json, and the team page shows the fuller of the two (lib/jv/jv-rosters.ts).",
   "A team with status carried-forward keeps the previous file's rows after a failed fetch; its own fetchedAt says when those rows were read.",
 ];
 

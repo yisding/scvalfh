@@ -99,9 +99,10 @@ export function JvSection({ jv }: { jv: AboutJv }) {
         </p>
         <p>
           A team page also lists the school&rsquo;s JV roster, after its varsity roster, where we found
-          one: today {plural(rosters.schools, 'school', 'schools')}. It is the school&rsquo;s own JV list
-          where its athletics site publishes one ({rosters.siteSchools} of them, read by hand), and
-          otherwise MaxPreps&rsquo; JV roster page. A player on the school&rsquo;s varsity roster is not
+          one: today {plural(rosters.schools, 'school', 'schools')}. The lists come from MaxPreps&rsquo; JV
+          roster pages and from the schools&rsquo; own athletics sites, which were read by hand; where both
+          have a list, the page shows the one with more JV players and names the other ({rosters.siteSchools}{' '}
+          of the lists shown are a school&rsquo;s own). A player on the school&rsquo;s varsity roster is not
           repeated on its JV list, which says how many it leaves out: several MaxPreps JV pages list the
           whole program.
         </p>

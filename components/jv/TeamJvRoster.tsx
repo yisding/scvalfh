@@ -89,11 +89,7 @@ export function TeamJvRoster({ view }: { view: TeamJvRosterView }) {
             <>What the coach entered on MaxPreps&rsquo; JV roster as of {view.asOf}.</>
           ) : (
             <>
-              {view.teamName}&rsquo;s own JV list on {view.sourceLabel}, read {view.asOf}
-              {view.maxprepsCount ? (
-                <>; MaxPreps&rsquo; JV roster lists {view.maxprepsCount === 1 ? 'one player' : `${view.maxprepsCount} players`}</>
-              ) : null}
-              .
+              {view.teamName}&rsquo;s own JV list on {view.sourceLabel}, as read {view.asOf}.
             </>
           )}{' '}
           Anything the source leaves blank is left blank, never guessed.
@@ -104,6 +100,18 @@ export function TeamJvRoster({ view }: { view: TeamJvRosterView }) {
             </>
           ) : null}
         </p>
+        {view.other ? (
+          <p className="mt-1 mb-0">
+            The other list we found,{' '}
+            <ExternalLink href={view.other.url}>{view.other.words}</ExternalLink>, has{' '}
+            {view.other.count === 0
+              ? 'no JV player who is not on the varsity roster'
+              : view.other.count === 1
+                ? 'one'
+                : String(view.other.count)}
+            ; the fuller list is shown.
+          </p>
+        ) : null}
         {view.onVarsity > 0 ? (
           <p className="mt-1 mb-0">
             {view.onVarsity === 1 ? 'One more player' : `${view.onVarsity} more players`} on {sourceName}{' '}

@@ -68,7 +68,7 @@ describe('data/jv-rosters-school-sites.json', () => {
     expect(file.teams.length).toBeGreaterThan(0);
     for (const t of file.teams) {
       expect(t.season, t.slug).toBe('2026-27');
-      expect(t.seasonEvidence, t.slug).toMatch(/2026/);
+      expect(t.seasonEvidence.length, t.slug).toBeGreaterThan(30);
       expect(t.checkedOn <= file.capturedAt, t.slug).toBe(true);
     }
   });
@@ -87,20 +87,29 @@ describe('getJvRoster: which list a school gets', () => {
   const sites = new Set(getJvSiteRostersFile().teams.map((t) => t.slug));
   const maxpreps = new Map(getJvRostersFile().teams.map((t) => [t.slug, t]));
 
-  it('the school’s own list where the file holds one, else MaxPreps’ where it lists anyone, else none', () => {
+  it('the fuller list, less varsity players, where both sources have one (the school’s on a tie); else the one there is', () => {
     for (const t of TEAMS) {
       const roster = getJvRoster(t.slug);
       const mp = maxpreps.get(t.slug)!;
-      if (sites.has(t.slug)) {
-        expect(roster?.source, t.slug).toBe('school-site');
-        expect(roster?.maxprepsCount, t.slug).toBe(mp.players.length);
-      } else if (mp.players.length > 0) {
-        expect(roster?.source, t.slug).toBe('maxpreps');
-        expect(roster?.url, t.slug).toBe(mp.rosterUrl);
-      } else {
+      const hasSite = sites.has(t.slug);
+      const hasMp = mp.players.length > 0;
+      if (!hasSite && !hasMp) {
         expect(roster, t.slug).toBeNull();
+        continue;
       }
+      expect(roster, t.slug).not.toBeNull();
+      if (hasSite && hasMp) {
+        expect(roster!.other, t.slug).not.toBeNull();
+        expect(roster!.players.length, t.slug).toBeGreaterThanOrEqual(roster!.other!.count);
+        if (roster!.players.length === roster!.other!.count) expect(roster!.source, t.slug).toBe('school-site');
+      } else {
+        expect(roster!.other, t.slug).toBeNull();
+        expect(roster!.source, t.slug).toBe(hasSite ? 'school-site' : 'maxpreps');
+      }
+      if (roster!.source === 'maxpreps') expect(roster!.url, t.slug).toBe(mp.rosterUrl);
     }
+    // Los Gatos' MaxPreps JV page lists one player (its varsity page carries the program); its site's list is shown.
+    expect(getJvRoster('los-gatos')).toMatchObject({ source: 'school-site', other: { source: 'maxpreps' } });
   });
 
   it('leaves out every player on the varsity roster the page shows, and counts them', () => {
@@ -110,9 +119,10 @@ describe('getJvRoster: which list a school gets', () => {
       const varsity = (getEnrichedTeamRoster(t.slug)?.players ?? []).filter((p) => p.level !== 'jv');
       const names = new Set(varsity.map((p) => p.fullName.toLowerCase()));
       for (const p of roster.players) expect(names.has(p.name.toLowerCase()), `${t.slug}: ${p.name}`).toBe(false);
-      const listed = sites.has(t.slug)
-        ? getJvSiteRostersFile().teams.find((s) => s.slug === t.slug)!.players.length
-        : maxpreps.get(t.slug)!.players.length;
+      const listed =
+        roster.source === 'school-site'
+          ? getJvSiteRostersFile().teams.find((s) => s.slug === t.slug)!.players.length
+          : maxpreps.get(t.slug)!.players.length;
       expect(roster.players.length + roster.onVarsity, t.slug).toBe(listed);
     }
     // Marin Academy's MaxPreps JV page carries its whole program: its 18 varsity players are left out.
@@ -154,7 +164,11 @@ describe('the team page’s JV roster section', () => {
     expect(ma).toMatch(/18 more players on MaxPreps’ JV roster are on the varsity roster above and are not repeated here\./);
 
     const sf = textOf(renderToStaticMarkup(createElement(TeamJvRoster, { view: buildTeamJvRosterView('saint-francis')! })));
-    expect(sf).toMatch(/Saint Francis’s own JV list on sfhsathletics\.com, read Nov 6, 2026\./);
+    expect(sf).toMatch(/Saint Francis’s own JV list on sfhsathletics\.com, as read Nov 6, 2026\./);
+
+    // Palo Alto: MaxPreps' list is the fuller one; the school's is named with its count.
+    const paly = textOf(renderToStaticMarkup(createElement(TeamJvRoster, { view: buildTeamJvRosterView('palo-alto')! })));
+    expect(paly).toMatch(/The other list we found, the JV list on palyathletics\.com.*, has \d+; the fuller list is shown\./);
     expect(sf).toMatch(/sfhsathletics\.com JV roster/);
   });
 

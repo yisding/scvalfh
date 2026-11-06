@@ -1,6 +1,6 @@
 /**
- * A team page's JV roster section: the school's JV list from lib/jv/jv-rosters.ts (the school's own
- * athletics site where it publishes one, else MaxPreps' JV roster page), in the varsity roster's
+ * A team page's JV roster section: the school's JV list from lib/jv/jv-rosters.ts (the fuller of the
+ * school's own athletics site's and MaxPreps' JV roster page), in the varsity roster's
  * order and words, less the players on the varsity roster the page shows above it. JV players stay
  * apart from varsity: nothing here feeds the varsity roster, the clubs, the commitments or the
  * recruiting pages, which are built from the varsity rosters alone.
@@ -36,8 +36,12 @@ export interface TeamJvRosterView {
   sourceUrl: string;
   /** "Fri Nov 6" (MaxPreps' read) or "Nov 6, 2026" (the day a school's page was read). */
   asOf: string;
-  /** A school-site list: how many JV players MaxPreps lists for the same school (0 when none). */
-  maxprepsCount: number | null;
+  /**
+   * The other source's list, when it has one (lib/jv/jv-rosters.ts shows the fuller): its words for the
+   * footnote ("MaxPreps’ JV roster", "the JV list on palyathletics.com"), its page and how many JV
+   * players it lists, less the varsity ones.
+   */
+  other: { words: string; url: string; count: number } | null;
   /** Players the source lists who are on the varsity roster above: not repeated (lib/jv/jv-rosters.ts). */
   onVarsity: number;
 }
@@ -88,7 +92,13 @@ export function buildTeamJvRosterView(slug: TeamSlug): TeamJvRosterView | null {
     sourceLabel: roster.sourceLabel,
     sourceUrl: roster.url,
     asOf: roster.source === 'maxpreps' ? shortDate(toLocalTimestamp(roster.readAt)) : dateWithYear(`${roster.readAt}T12:00:00`),
-    maxprepsCount: roster.maxprepsCount,
+    other: roster.other
+      ? {
+          words: roster.other.source === 'maxpreps' ? 'MaxPreps’ JV roster' : `the JV list on ${roster.other.sourceLabel}`,
+          url: roster.other.url,
+          count: roster.other.count,
+        }
+      : null,
     onVarsity: roster.onVarsity,
   };
 }

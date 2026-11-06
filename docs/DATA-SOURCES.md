@@ -2355,10 +2355,32 @@ tables of their own are computed (`lib/jv/jv-standings.ts`, last bullet). Read 2
   Clairemont's 19 of its 20 and Harvard-Westlake's 22 of its 25, and all 13 of Huntington Beach's are on
   its varsity roster; Hollister has one player under two career records, one on each page. So a player on
   the varsity roster the page shows is not repeated on the JV list, which counts them (MaxPreps rows match
-  by career id or name). The schools' own athletics sites publishing a 2026-27 JV list are transcribed in
-  `data/jv-rosters-school-sites.json` (read 2026-11-06, each with its evidence for the season) and shown in
-  place of MaxPreps' JV list, which is never longer: Saint Francis (`sfhsathletics.com/sports/jv-field-hockey/roster`, 22, "2026-2027 Women's JV Field Hockey Roster") and St. Ignatius (`siwildcats.com/sports/jv-field-hockey/roster`, 25, "2026 Field Hockey (JV) Roster"), both Sidearm, which MaxPreps lists none for; Los Gatos (33; MaxPreps 1), Helix (12; MaxPreps 2) and Bonita (17; MaxPreps 2), whose 5 Star sites serve the list at `/sport/RefreshRosterAthleteStyle2ViewComponent/<JV team id>?schoolYear=2026-2027` (the id from the page's level selector; `2025-2026` returns a different list). Checked and found no JV list:
-  the homecampus sites of Granite Hills, Southwest, Cathedral Catholic, Glendora, Leland, Lynbrook, Monta Vista, Salinas, Santa Clara, Saratoga and Willow Glen (varsity field hockey only), Thousand Oaks (no JV level), Valley Christian (no `/sports/jv-field-hockey/roster`) and York. `/jv/stats/` (leaders for 4 schools on 2026-10-05) is still not read.
+  by career id or name). The 2026-27 JV lists the schools' own sites publish (or a page the school
+  links as its roster) are transcribed in `data/jv-rosters-school-sites.json` (read 2026-11-06, each with
+  its evidence for the season; 28 schools, 482 players): Saint Francis and St. Ignatius (Sidearm
+  `/sports/jv-field-hockey/roster`, season selector); Los Gatos, Palo Alto, Helix and Bonita (5 Star:
+  `/sport/RefreshRosterAthleteStyle2ViewComponent/<JV team id>?schoolYear=2026-2027`, the id from the
+  page's level selector, `2025-2026` returning a different list or none); University City, La Jolla,
+  Scripps Ranch, Point Loma, Clairemont, Mission Bay, Canyon Hills, Sage Creek, Mt. Carmel, Cathedral
+  Catholic, Glendora, Leland, Monta Vista and Santa Clara (homecampus: the JV level is
+  `/lower/field-hockey-junior-varsity/roster/?selected_year=2026`, not `/jv/…`, with "2026-27" selected);
+  Fremont (the JV sheet of the Google Sheet fremontathletics.org's "2026–27" roster page reads), Branham
+  (a Google Doc headed "BRANHAM GIRLS JV FIELD HOCKEY 2026-2027 ROSTER"), Cupertino (chs.fuhsd.org's JV
+  tab: no season named, its Varsity tab matches MaxPreps' 2026-27 roster 15 of 15), Bishop's (Finalsite:
+  no season named, classes of 2028-30), Lick-Wilmerding and Marin Catholic (Blackbaud, "2026 - 2027"
+  selected; Lick-Wilmerding's m.lwhs.org serves http only), Great Oak (SportsEngine, "Junior Varsity
+  Field Hockey 2026") and Poway (powayfieldhockey.com, the program's site, "JUNIOR VARSITY 2026"). Left
+  out: Marin Academy's own JV page (first names and last initials; MaxPreps lists the same 19 in full)
+  and Convent & Stuart Hall's Ballfrog page (its numbered list is the 2025 roster; the 2026 one names
+  four people). Where both sources list a school, the page shows the one with more JV players once
+  the varsity players are out, the school's on a tie, and names the other. Checked with no 2026-27 JV
+  list: Homestead, Valley Christian, Los Altos, Mitty, Presentation (its 2026-27 PDF is varsity only),
+  the homecampus JV pages of Granite Hills, Lynbrook, Salinas, Willow Glen, Marina and Mira Mesa (empty
+  for 2026-27), Southwest and Saratoga (varsity only), Thousand Oaks, Berkeley (newest JV list 2025),
+  Torrey Pines (last season's list), Canyon Crest Academy (2025 only), York, and most other schools'
+  sites, which publish none. Not reachable: hw.com and Valley Center's district site (bot challenge),
+  edisonfieldhockey.com and Monterey's site (the proxy cannot reach them); Bonita Vista has no athletics
+  site we found. `/jv/stats/` (leaders for 4 schools on 2026-10-05) is still not read.
 - **Official documents** list JV only as start times on the varsity fixtures (SCVAL "Varsity 4:00
   followed by JV"; BVAL a JV time per game; MCAL's change notes), and PCAL's `CAT/YOR` slot is York's
   JV in Santa Catalina's place. None is read for JV.
