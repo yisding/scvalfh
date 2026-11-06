@@ -1,11 +1,308 @@
 {
   "season": "26-27",
-  "builtBy": "research by hand, 2026-11-06: NCSA's field hockey school pages for the 45 schools with a JV roster and a FieldLevel address probe for the 746 JV players the team pages list, each kept page re-read by an independent refuter. A SportsRecruits profile-address probe for the JV players was still running (SportsRecruits answered HTTP 429) and is not in this file yet.",
+  "builtBy": "research by hand, 2026-11-06: a SportsRecruits profile-address probe in every sport for the 746 JV players the team pages list (3,800 addresses: each name's slug bare and with the suffixes 2 to 5; 111 live pages read), NCSA's field hockey school pages for the 45 schools with a JV roster and a FieldLevel address probe, each kept page re-read by an independent refuter",
   "capturedAt": "2026-11-06",
   "notes": [
-    "The JV players' own recruiting pages, linked by the rule of data/rosters-enrichment.json's profiles[] (lib/players/rosters-schema.ts PlayerProfileSchema): the page names the player and a sport, and either names the school or shows a class year that agrees with the JV list's grade plus a hometown in the school's own area. Joined on team slug + the name the team page's JV list gives (lib/jv/jv-profiles.ts). SportsRecruits, NCSA, Hudl and FieldLevel; no claimed-MaxPreps pages. Recall is partial."
+    "The JV players' own recruiting pages, linked by the rule of data/rosters-enrichment.json's profiles[] (lib/players/rosters-schema.ts PlayerProfileSchema): the page names the player and a sport, and either names the school or shows a class year that agrees with the JV list's grade plus a hometown in the school's own area. Joined on team slug + the name the team page's JV list gives (lib/jv/jv-profiles.ts). SportsRecruits, NCSA, Hudl and FieldLevel; no claimed-MaxPreps pages. Recall is partial.",
+    "2026-11-06, SportsRecruits: an address probe for the JV players (the first_last slug, and a hyphen-free one for a hyphenated name, bare and with the suffixes 2 to 5, which hold 252 of the 261 SportsRecruits pages the varsity overlay links; 3,800 addresses, one at a time, waiting out SportsRecruits' HTTP 429s). 111 live pages were read and kept by the 2026-10-12 rule (title names the player, class year agrees with the JV grade or is 2027-2030 for a player with none, and it names the school's own team or gives a hometown in the school's own area), at most one per platform in each sport, and each kept page was re-read by an independent refuter, who kept all: 33 pages for 33 players (32 lacrosse, 1 field hockey). Not linked: men's lacrosse pages; pages with a class year and no school or place (Anna Shapiro, Cora Gallagher and Zoe Shetti at St. Ignatius, Emersyn Manion and Kaleigh Houghton at Saint Francis, Kieara Reno, Nina Wimmer) or a place and no class year (Ella Gunthermaher, Fair Oaks; Sophie McRae; Frankie Rivinus; a second Eva Walker); a class that disagrees (Lauren Chow, Isabella Park, Tessa Lambert's Utah page); and namesakes in other states or classes, several of them committed. No page linked shows a college commitment. Three of the Los Gatos pages it found (Beatrix Monk's, Casey Moorehouse's and Colette von Klemperer's) were already linked in data/rosters-enrichment.json."
   ],
   "teams": [
+    {
+      "slug": "berkeley",
+      "players": [
+        {
+          "name": "Sage Murphy",
+          "profiles": [
+            {
+              "platform": "sportsrecruits",
+              "url": "https://iwlca.sportsrecruits.com/athlete/sage_murphy",
+              "classOf": 2029,
+              "note": "SportsRecruits lacrosse profile: class of 2029, Berkeley, CA; it gives a hometown in the school's own area. The JV list gives no grade. Found by the 2026-11-06 address probe and re-read by an independent refuter.",
+              "sport": "lacrosse"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "cathedral-catholic",
+      "players": [
+        {
+          "name": "Alexa Soriano",
+          "profiles": [
+            {
+              "platform": "sportsrecruits",
+              "url": "https://iwlca.sportsrecruits.com/athlete/alexa_soriano",
+              "classOf": 2029,
+              "note": "SportsRecruits lacrosse profile: class of 2029, San Diego, CA; it gives a hometown in the school's own area. Found by the 2026-11-06 address probe and re-read by an independent refuter.",
+              "sport": "lacrosse"
+            }
+          ]
+        },
+        {
+          "name": "Olivia Ramsey",
+          "profiles": [
+            {
+              "platform": "sportsrecruits",
+              "url": "https://iwlca.sportsrecruits.com/athlete/olivia_ramsey4",
+              "classOf": 2029,
+              "note": "SportsRecruits lacrosse profile: class of 2029, Carlsbad, CA; it gives a hometown in the school's own area. Found by the 2026-11-06 address probe and re-read by an independent refuter.",
+              "sport": "lacrosse"
+            }
+          ]
+        },
+        {
+          "name": "Victoria Bustos",
+          "profiles": [
+            {
+              "platform": "sportsrecruits",
+              "url": "https://iwlca.sportsrecruits.com/athlete/victoria_bustos2",
+              "classOf": 2029,
+              "note": "SportsRecruits lacrosse profile: class of 2029, San Diego, CA; it gives a hometown in the school's own area. Found by the 2026-11-06 address probe and re-read by an independent refuter.",
+              "sport": "lacrosse"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "leland",
+      "players": [
+        {
+          "name": "Riley Salgado",
+          "profiles": [
+            {
+              "platform": "sportsrecruits",
+              "url": "https://iwlca.sportsrecruits.com/athlete/riley_salgado",
+              "classOf": 2030,
+              "note": "SportsRecruits lacrosse profile: class of 2030, San Jose, CA (club: Alliance Lacrosse); it gives a hometown in the school's own area. Its bio says she is a varsity field hockey player; the team page's JV list has her (no grade). Found by the 2026-11-06 address probe and re-read by an independent refuter.",
+              "sport": "lacrosse"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "lick-wilmerding",
+      "players": [
+        {
+          "name": "Mira Mathus",
+          "profiles": [
+            {
+              "platform": "sportsrecruits",
+              "url": "https://iwlca.sportsrecruits.com/athlete/mira_mathus",
+              "classOf": 2029,
+              "note": "SportsRecruits lacrosse profile: class of 2029, Oakland, CA (club: ADVNC Lacrosse); it names Lick-Wilmerding (her bio: a sophomore at Lick-Wilmerding High School). Found by the 2026-11-06 address probe and re-read by an independent refuter.",
+              "sport": "lacrosse"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "los-gatos",
+      "players": [
+        {
+          "name": "Bree Werdebaugh",
+          "profiles": [
+            {
+              "platform": "sportsrecruits",
+              "url": "https://iwlca.sportsrecruits.com/athlete/bree_werdebaugh",
+              "classOf": 2029,
+              "note": "SportsRecruits lacrosse profile: class of 2029, Los Gatos, CA; it gives a hometown in the school's own area. Found by the 2026-11-06 address probe and re-read by an independent refuter.",
+              "sport": "lacrosse"
+            }
+          ]
+        },
+        {
+          "name": "Eleanora Tremblay",
+          "profiles": [
+            {
+              "platform": "sportsrecruits",
+              "url": "https://iwlca.sportsrecruits.com/athlete/eleanora_tremblay",
+              "classOf": 2029,
+              "note": "SportsRecruits lacrosse profile: class of 2029, Los Gatos, CA (club: Alliance Lacrosse); it gives a hometown in the school's own area. Found by the 2026-11-06 address probe and re-read by an independent refuter.",
+              "sport": "lacrosse"
+            }
+          ]
+        },
+        {
+          "name": "Sienna Vernacchia",
+          "profiles": [
+            {
+              "platform": "sportsrecruits",
+              "url": "https://iwlca.sportsrecruits.com/athlete/sienna_vernacchia",
+              "classOf": 2030,
+              "note": "SportsRecruits lacrosse profile: class of 2030, Los Gatos, CA; it gives a hometown in the school's own area. Found by the 2026-11-06 address probe and re-read by an independent refuter.",
+              "sport": "lacrosse"
+            }
+          ]
+        },
+        {
+          "name": "Zoe Ruelas",
+          "profiles": [
+            {
+              "platform": "sportsrecruits",
+              "url": "https://iwlca.sportsrecruits.com/athlete/zoe_ruelas",
+              "classOf": 2029,
+              "note": "SportsRecruits lacrosse profile: class of 2029, Los Gatos, CA; it gives a hometown in the school's own area. Found by the 2026-11-06 address probe and re-read by an independent refuter.",
+              "sport": "lacrosse"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "marin-catholic",
+      "players": [
+        {
+          "name": "Bailey Peterson-McFarland",
+          "profiles": [
+            {
+              "platform": "sportsrecruits",
+              "url": "https://iwlca.sportsrecruits.com/athlete/bailey_peterson_mcfarland",
+              "classOf": 2030,
+              "note": "SportsRecruits lacrosse profile: class of 2030, Novato, CA; it gives a hometown in the school's own area. Found by the 2026-11-06 address probe and re-read by an independent refuter.",
+              "sport": "lacrosse"
+            }
+          ]
+        },
+        {
+          "name": "Laurel Wu",
+          "profiles": [
+            {
+              "platform": "sportsrecruits",
+              "url": "https://iwlca.sportsrecruits.com/athlete/laurel_wu",
+              "classOf": 2030,
+              "note": "SportsRecruits lacrosse profile: class of 2030, Corte Madera, CA (club: STEPS California); it names Marin Catholic (her bio: a student at Marin Catholic). Its bio lists Marin Catholic varsity field hockey, 2026; the team page's JV list has her. Found by the 2026-11-06 address probe and re-read by an independent refuter.",
+              "sport": "lacrosse"
+            }
+          ]
+        },
+        {
+          "name": "Scarlett Wu",
+          "profiles": [
+            {
+              "platform": "sportsrecruits",
+              "url": "https://iwlca.sportsrecruits.com/athlete/scarlett_wu",
+              "classOf": 2030,
+              "note": "SportsRecruits lacrosse profile: class of 2030, Corte Madera, CA (club: STEPS California); it names Marin Catholic (her bio: a student at Marin Catholic). Its bio lists Marin Catholic varsity field hockey, 2026; the team page's JV list has her. Found by the 2026-11-06 address probe and re-read by an independent refuter.",
+              "sport": "lacrosse"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "mission-bay",
+      "players": [
+        {
+          "name": "Jayla Gerrard",
+          "profiles": [
+            {
+              "platform": "sportsrecruits",
+              "url": "https://nfhca.sportsrecruits.com/athlete/jayla_gerrard",
+              "classOf": 2029,
+              "note": "SportsRecruits field hockey profile: class of 2029, San Diego, CA; it gives a hometown in the school's own area. The JV list gives no grade. Found by the 2026-11-06 address probe and re-read by an independent refuter."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "redwood",
+      "players": [
+        {
+          "name": "Stella Finkelstein",
+          "profiles": [
+            {
+              "platform": "sportsrecruits",
+              "url": "https://iwlca.sportsrecruits.com/athlete/stella_finkelstein",
+              "classOf": 2030,
+              "note": "SportsRecruits lacrosse profile: class of 2030, Greenbrae, CA; it gives a hometown in the school's own area. Found by the 2026-11-06 address probe and re-read by an independent refuter.",
+              "sport": "lacrosse"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "saint-francis",
+      "players": [
+        {
+          "name": "Aoife O'Connor",
+          "profiles": [
+            {
+              "platform": "sportsrecruits",
+              "url": "https://iwlca.sportsrecruits.com/athlete/aoife_oconnor2",
+              "classOf": 2029,
+              "note": "SportsRecruits lacrosse profile: class of 2029, Santa Clara, CA; it gives a hometown in the school's own area. The page spells her Aoife Oconnor; another of her addresses (aoife_oconnor) says class of 2027 and is not linked. Found by the 2026-11-06 address probe and re-read by an independent refuter.",
+              "sport": "lacrosse"
+            }
+          ]
+        },
+        {
+          "name": "Josefina Eriksen",
+          "profiles": [
+            {
+              "platform": "sportsrecruits",
+              "url": "https://iwlca.sportsrecruits.com/athlete/josefina_eriksen",
+              "classOf": 2029,
+              "note": "SportsRecruits lacrosse profile: class of 2029, Los Gatos, CA; it gives a hometown in the school's own area. Found by the 2026-11-06 address probe and re-read by an independent refuter.",
+              "sport": "lacrosse"
+            }
+          ]
+        },
+        {
+          "name": "Perry George",
+          "profiles": [
+            {
+              "platform": "sportsrecruits",
+              "url": "https://iwlca.sportsrecruits.com/athlete/perry_george",
+              "classOf": 2029,
+              "note": "SportsRecruits lacrosse profile: class of 2029, Sunnyvale, CA; it gives a hometown in the school's own area. Found by the 2026-11-06 address probe and re-read by an independent refuter.",
+              "sport": "lacrosse"
+            }
+          ]
+        },
+        {
+          "name": "Quinn Gossett",
+          "profiles": [
+            {
+              "platform": "sportsrecruits",
+              "url": "https://iwlca.sportsrecruits.com/athlete/quinn_gossett2",
+              "classOf": 2029,
+              "note": "SportsRecruits lacrosse profile: class of 2029, San Jose, CA; it gives a hometown in the school's own area. Found by the 2026-11-06 address probe and re-read by an independent refuter.",
+              "sport": "lacrosse"
+            }
+          ]
+        },
+        {
+          "name": "Tessa Madrigal",
+          "profiles": [
+            {
+              "platform": "sportsrecruits",
+              "url": "https://iwlca.sportsrecruits.com/athlete/tessa_madrigal",
+              "classOf": 2030,
+              "note": "SportsRecruits lacrosse profile: class of 2030, Menlo Park, CA; it gives a hometown in the school's own area. Found by the 2026-11-06 address probe and re-read by an independent refuter.",
+              "sport": "lacrosse"
+            }
+          ]
+        },
+        {
+          "name": "Wren Hains",
+          "profiles": [
+            {
+              "platform": "sportsrecruits",
+              "url": "https://iwlca.sportsrecruits.com/athlete/wren_hains",
+              "classOf": 2029,
+              "note": "SportsRecruits lacrosse profile: class of 2029, Emerald Hills, CA; it gives a hometown in the school's own area. Found by the 2026-11-06 address probe and re-read by an independent refuter.",
+              "sport": "lacrosse"
+            }
+          ]
+        }
+      ]
+    },
     {
       "slug": "scripps-ranch",
       "players": [
@@ -17,6 +314,170 @@
               "url": "https://www.ncsasports.org/field-hockey-recruiting/california/san-diego/scripps-ranch-high-school/katherine-todd",
               "classOf": 2029,
               "note": "NCSA field hockey profile, titled 'Katherine Todd '29': class of 2029, San Diego, CA; it names Scripps Ranch High School. MaxPreps' JV roster, which the team page shows, lists her as Katie Todd (grade 10); the school's own JV list names her Katherine Todd. Found by the 2026-11-06 NCSA school-page sweep and re-read by an independent refuter."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "st-ignatius",
+      "players": [
+        {
+          "name": "Allison McCarthy",
+          "profiles": [
+            {
+              "platform": "sportsrecruits",
+              "url": "https://iwlca.sportsrecruits.com/athlete/allison_mccarthy3",
+              "classOf": 2030,
+              "note": "SportsRecruits lacrosse profile: class of 2030, San Mateo, CA (club: STEPS California); it gives a hometown in the school's own area. Found by the 2026-11-06 address probe and re-read by an independent refuter.",
+              "sport": "lacrosse"
+            }
+          ]
+        },
+        {
+          "name": "Brooke Lewis",
+          "profiles": [
+            {
+              "platform": "sportsrecruits",
+              "url": "https://iwlca.sportsrecruits.com/athlete/brooke_lewis5",
+              "classOf": 2030,
+              "note": "SportsRecruits lacrosse profile: class of 2030, San Mateo, CA (club: STEPS California); it gives a hometown in the school's own area. Found by the 2026-11-06 address probe and re-read by an independent refuter.",
+              "sport": "lacrosse"
+            }
+          ]
+        },
+        {
+          "name": "Delaney Lewis",
+          "profiles": [
+            {
+              "platform": "sportsrecruits",
+              "url": "https://iwlca.sportsrecruits.com/athlete/delaney_lewis",
+              "classOf": 2030,
+              "note": "SportsRecruits lacrosse profile: class of 2030, San Mateo, CA (club: STEPS California); it gives a hometown in the school's own area. Found by the 2026-11-06 address probe and re-read by an independent refuter.",
+              "sport": "lacrosse"
+            }
+          ]
+        },
+        {
+          "name": "Luciana Bennett",
+          "profiles": [
+            {
+              "platform": "sportsrecruits",
+              "url": "https://iwlca.sportsrecruits.com/athlete/luciana_bennett",
+              "classOf": 2030,
+              "note": "SportsRecruits lacrosse profile: class of 2030, Kentfield, CA; it gives a hometown in the school's own area. Found by the 2026-11-06 address probe and re-read by an independent refuter.",
+              "sport": "lacrosse"
+            }
+          ]
+        },
+        {
+          "name": "Maeve Leung",
+          "profiles": [
+            {
+              "platform": "sportsrecruits",
+              "url": "https://iwlca.sportsrecruits.com/athlete/maeve_leung",
+              "classOf": 2030,
+              "note": "SportsRecruits lacrosse profile: class of 2030, San Francisco, CA (club: ADVNC Lacrosse); it gives a hometown in the school's own area. Found by the 2026-11-06 address probe and re-read by an independent refuter.",
+              "sport": "lacrosse"
+            }
+          ]
+        },
+        {
+          "name": "Mika Nejasmich",
+          "profiles": [
+            {
+              "platform": "sportsrecruits",
+              "url": "https://iwlca.sportsrecruits.com/athlete/mika_nejasmich3",
+              "classOf": 2029,
+              "note": "SportsRecruits lacrosse profile: class of 2029; it names the school's own team, St. Ignatius College Preparatory Girls' Lacrosse. Found by the 2026-11-06 address probe and re-read by an independent refuter.",
+              "sport": "lacrosse"
+            }
+          ]
+        },
+        {
+          "name": "Simone Stiefel",
+          "profiles": [
+            {
+              "platform": "sportsrecruits",
+              "url": "https://iwlca.sportsrecruits.com/athlete/simone_stiefel2",
+              "classOf": 2029,
+              "note": "SportsRecruits lacrosse profile: class of 2029; it names the school's own team, St. Ignatius College Preparatory Girls' Lacrosse. Found by the 2026-11-06 address probe and re-read by an independent refuter.",
+              "sport": "lacrosse"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "tamalpais",
+      "players": [
+        {
+          "name": "Allie Schluensen",
+          "profiles": [
+            {
+              "platform": "sportsrecruits",
+              "url": "https://iwlca.sportsrecruits.com/athlete/allie_schluensen",
+              "classOf": 2029,
+              "note": "SportsRecruits lacrosse profile: class of 2029, Mill Valley, CA; it gives a hometown in the school's own area. Found by the 2026-11-06 address probe and re-read by an independent refuter.",
+              "sport": "lacrosse"
+            }
+          ]
+        },
+        {
+          "name": "Clover Douglass",
+          "profiles": [
+            {
+              "platform": "sportsrecruits",
+              "url": "https://iwlca.sportsrecruits.com/athlete/clover_douglass",
+              "classOf": 2030,
+              "note": "SportsRecruits lacrosse profile: class of 2030, Mill Valley, CA; it gives a hometown in the school's own area. Found by the 2026-11-06 address probe and re-read by an independent refuter.",
+              "sport": "lacrosse"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "temecula-valley",
+      "players": [
+        {
+          "name": "Julia Talarzyk",
+          "profiles": [
+            {
+              "platform": "sportsrecruits",
+              "url": "https://iwlca.sportsrecruits.com/athlete/julia_talarzyk",
+              "classOf": 2029,
+              "note": "SportsRecruits lacrosse profile: class of 2029, Temecula, CA; it gives a hometown in the school's own area. Found by the 2026-11-06 address probe and re-read by an independent refuter.",
+              "sport": "lacrosse"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "westview",
+      "players": [
+        {
+          "name": "Mia Essey",
+          "profiles": [
+            {
+              "platform": "sportsrecruits",
+              "url": "https://iwlca.sportsrecruits.com/athlete/mia_essey",
+              "classOf": 2030,
+              "note": "SportsRecruits lacrosse profile: class of 2030, San Diego, CA; it gives a hometown in the school's own area. Found by the 2026-11-06 address probe and re-read by an independent refuter.",
+              "sport": "lacrosse"
+            }
+          ]
+        },
+        {
+          "name": "Olivia Pineda",
+          "profiles": [
+            {
+              "platform": "sportsrecruits",
+              "url": "https://iwlca.sportsrecruits.com/athlete/olivia_pineda",
+              "classOf": 2029,
+              "note": "SportsRecruits lacrosse profile: class of 2029, San Diego, CA; it gives a hometown in the school's own area. Found by the 2026-11-06 address probe and re-read by an independent refuter.",
+              "sport": "lacrosse"
             }
           ]
         }
