@@ -7,26 +7,26 @@
     "notOnMaxPreps": 0
   },
   "commitSummary": "SCVAL +0 finals",
-  "contentHash": "d9ed66b8fd9ab1b27918b9455635d2cb1676e6adec5e022974eb05da190c6a81",
+  "contentHash": "92a817ec4c79006841bf4f3d76ca522af0c9e5274e959ba97a44707dfd3ca889",
   "counts": {
     "byLeague": {
       "scval": {
         "backfilled": 0,
         "finals": 0,
-        "games": 129,
-        "leagueGames": 65,
+        "games": 138,
+        "leagueGames": 74,
         "teams": 15
       }
     },
     "finals": 0,
-    "games": 129,
-    "leagueGames": 65,
+    "games": 138,
+    "leagueGames": 74,
     "mismatches": 0,
     "pending": 0,
     "teams": 15
   },
   "crossCheck": null,
-  "fetchedAt": "2026-11-06T11:03:01.805Z",
+  "fetchedAt": "2026-11-06T20:30:58.069Z",
   "leagues": [
     {
       "backfilled": 0,
@@ -38,7 +38,7 @@
       "state": "fresh"
     }
   ],
-  "officialFixturesUnmatched": 33,
+  "officialFixturesUnmatched": 24,
   "officialStandingsPdfUrl": null,
   "requests": {
     "maxpreps": 20,
@@ -108,17 +108,17 @@
     },
     {
       "label": "cupertino schedule",
-      "rowCount": 7,
+      "rowCount": 9,
       "status": "ok"
     },
     {
       "label": "fremont schedule",
-      "rowCount": 9,
+      "rowCount": 11,
       "status": "ok"
     },
     {
       "label": "lynbrook schedule",
-      "rowCount": 9,
+      "rowCount": 18,
       "status": "ok"
     },
     {
@@ -128,12 +128,12 @@
     },
     {
       "label": "milpitas schedule",
-      "rowCount": 7,
+      "rowCount": 9,
       "status": "ok"
     },
     {
       "label": "monta-vista schedule",
-      "rowCount": 9,
+      "rowCount": 11,
       "status": "ok"
     },
     {
@@ -143,7 +143,7 @@
     },
     {
       "label": "wilcox schedule",
-      "rowCount": 9,
+      "rowCount": 10,
       "status": "ok"
     },
     {
