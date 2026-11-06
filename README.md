@@ -438,10 +438,12 @@ own `careerUrl`, checked at load), 159 of them for players with no other profile
 all 1,673 rows, linked 30 more pages for 30 players (26 lacrosse, 3 field hockey, 1 soccer; 14 NorCal,
 16 SoCal), each re-read by an independent refuter, and re-linked two lacrosse pages whose addresses had
 moved: the file then held 809 profiles for 583 players. On 2026-11-06 a sweep of NCSA's field hockey
-school pages (for the schools with JV rosters) linked six more NCSA pages, each naming the player's
+school pages (for the schools with JV rosters) linked seven more NCSA pages, each naming the player's
 school and re-read by an independent refuter (Saint Francis' Abby Scharrenberg and Carolyn Cordoni, Monta
-Vista's Ruhee Bhatnagar, Santa Clara's Bintu Deen, Greenfield's Evelyn Jaimes and Los Gatos' Colette von
-Klemperer, a row the school marks JV): 815 profiles for 587 players. The claimed-MaxPreps read was not
+Vista's Ruhee Bhatnagar, Santa Clara's Bintu Deen, Greenfield's Evelyn Jaimes, Glendora's Evalina MacLennan,
+whose page says "Evie Maclennan" and fits both of Glendora's Maclennan seniors, so it is linked on the
+owner's word, and Los Gatos' Colette von Klemperer, a row the school marks JV): 816 profiles for 588
+players. The claimed-MaxPreps read was not
 repeated (MaxPreps answered 403). The roster shows them as a line of links under the
 player's facts. Recall is partial: see `docs/DATA-SOURCES.md` §1.1j, which also has the column map,
 the per-school sources and the overlay's rules.

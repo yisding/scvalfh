@@ -734,15 +734,16 @@ describe('recruiting profiles', () => {
       'https://iwlca.sportsrecruits.com/athlete/abigail_wisbach2',
       'https://iwlca.sportsrecruits.com/athlete/reagan_roach2',
     ]);
-    // 809 profiles for 583 players once it was linked (779 for 569 before it); the 2026-11-06 NCSA sweep, below, added 6.
+    // 809 profiles for 583 players once it was linked (779 for 569 before it); the 2026-11-06 NCSA sweep, below, added 7.
     const all = raw.teams.flatMap((t) => t.players);
     expect(all.flatMap((p) => p.profiles.filter((x) => !fromSweep1106(x)))).toHaveLength(809);
     expect(all.filter((p) => p.profiles.some((x) => !fromSweep1106(x)))).toHaveLength(583);
   });
 
-  it('what the 2026-11-06 NCSA school-page sweep found: six field hockey pages, each naming the school', () => {
+  it('what the 2026-11-06 NCSA school-page sweep found: seven field hockey pages, each naming the school', () => {
     const found = raw.teams.flatMap((t) => t.players.flatMap((p) => p.profiles.filter(fromSweep1106).map((x) => ({ slug: t.slug, p, x }))));
     expect(found.map((r) => `${r.slug} ${r.p.fullName}`).sort()).toEqual([
+      'glendora Evalina MacLennan',
       'greenfield Evelyn Jaimes',
       'los-gatos Colette Von Klemperer',
       'monta-vista Ruhee Bhatnagar',
@@ -758,10 +759,12 @@ describe('recruiting profiles', () => {
     }
     // Colette von Klemperer is a Los Gatos row the school marks JV: her pages show on the JV roster.
     expect(found.find((r) => r.slug === 'los-gatos')!.p.level).toBe('jv');
-    // 815 profiles for 587 players in all.
+    // Evalina MacLennan's page says "Evie Maclennan" and fits both Maclennan seniors: it is linked on the owner's word.
+    expect(found.find((r) => r.slug === 'glendora')!.x.note).toMatch(/the owner identified her as Evalina/);
+    // 816 profiles for 588 players in all.
     const all = raw.teams.flatMap((t) => t.players);
-    expect(all.flatMap((p) => p.profiles)).toHaveLength(815);
-    expect(all.filter((p) => p.profiles.length > 0)).toHaveLength(587);
+    expect(all.flatMap((p) => p.profiles)).toHaveLength(816);
+    expect(all.filter((p) => p.profiles.length > 0)).toHaveLength(588);
   });
 
   it('what the 2026-10-13 read of every MaxPreps career page found: the claimed ones', () => {

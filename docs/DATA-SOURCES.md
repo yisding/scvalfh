@@ -553,13 +553,13 @@ list each school's athletes; the 45 schools with a JV roster were read (with the
 redirect to a namesake school elsewhere, as `st-ignatius-college-preparatory` does to Chicago; Canyon Hills is
 filed under `serra-high-school`, Hollister under `san-benito-high-school1`) and matched against the varsity
 and JV names, along with 25 schools' women's lacrosse pages. Each match was re-read by an independent refuter.
-Linked, all field hockey and each naming the school: six pages for varsity-file rows (Abby Scharrenberg and
+Linked, all field hockey and each naming the school: seven pages for varsity-file rows (Abby Scharrenberg and
 Carolyn Cordoni, Saint Francis; Ruhee Bhatnagar, Monta Vista; Bintu Deen, Santa Clara; Evelyn Jaimes,
-Greenfield; Colette von Klemperer, Los Gatos, a row the school marks JV, under her nickname page
+Greenfield; Evalina MacLennan, Glendora, whose page says "Evie Maclennan", class of 2027: the roster has two
+Maclennan seniors, Evalina and Brielle (MacLennan on MaxPreps, Maclennan on the school's site), the page does
+not say which, and the owner identified her as Evalina on 2026-11-06, which the link rests on; Colette von Klemperer, Los Gatos, a row the school marks JV, under her nickname page
 `coco-von-klemperer`, whose statement gives "Colette (Coco)") and one for a JV player with no varsity-file row
-(Scripps Ranch's Katie Todd, whose page and school's list say Katherine). Left out: Glendora's "Evie Maclennan"
-(class of 2027: the roster has two Maclennan seniors, Evalina and Brielle, spelled MacLennan on MaxPreps and
-Maclennan on the school's site, and nothing on the page says which), and Fremont's Charlotte Painter and Helix's Kasia
+(Scripps Ranch's Katie Todd, whose page and school's list say Katherine). Left out: Fremont's Charlotte Painter and Helix's Kasia
 Umholtz, listed with no address that answers. The lists seem to leave out older athletes, so recall is partial.
 A FieldLevel address probe (`fieldlevel.com/app/profile/<first.last>/fieldhockeywomen`, 809 addresses for the
 746 JV players) found one page, a Massachusetts namesake; hyphenated names redirect to sign-in and numbered
