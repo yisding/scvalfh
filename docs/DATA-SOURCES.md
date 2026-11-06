@@ -573,6 +573,23 @@ linked twice or also to a varsity row, and a player with a varsity-file row the 
 keeps her profiles in the overlay, which the JV roster shows (Beatrix Monk's, Casey Moorehouse's and Colette
 von Klemperer's SportsRecruits pages, linked since 2026-10-02, had been shown nowhere).
 
+*The 2026-11-06 SportsRecruits probe of the JV players.* The 746 JV players the team pages list, by the
+varsity probe's method cut to the addresses that pay: the `first_last` slug (and a hyphen-free one for a
+hyphenated name), bare and with the suffixes 2 to 5, which hold 252 of the 261 SportsRecruits pages the
+overlay links (suffix 1 holds one, 6 to 12 the other eight): 3,800 addresses, read one at a time because
+SportsRecruits answered this machine with HTTP 429 for the first hour (the 2026-11-03 probe ran four at a
+time). 111 were live, all read. Kept by the 2026-10-12 rule and re-read by an independent refuter, who kept
+every one: 33 pages for 33 players at 14 schools, 32 women's lacrosse and one field hockey (Mission Bay's
+Jayla Gerrard). Five rest on the school named (St. Ignatius' team page for Mika Nejasmich and Simone
+Stiefel; the bio for Marin Catholic's Laurel and Scarlett Wu and Lick-Wilmerding's Mira Mathus), the rest on
+a hometown in the school's own area. The three Los Gatos pages already in the overlay turned up too. Not
+linked: men's lacrosse pages (`imlca`), pages with a class and no school or place (Anna Shapiro, Cora
+Gallagher, Zoe Shetti, Emersyn Manion, Kaleigh Houghton, Kieara Reno, Nina Wimmer) or a place and no class
+(Ella Gunthermaher in Fair Oaks, Bella Vista's own town), a class that disagrees (Lauren Chow, Isabella Park,
+a Utah Tessa Lambert), and namesakes elsewhere, several committed. No linked page shows a commitment.
+`data/jv-profiles.json` holds 34 JV players with a profile at 14 schools. The varsity rows were not probed
+again this day.
+
 Gotchas, all **[V]**:
 - **NCSA** (`ncsasports.org/field-hockey-recruiting/california/<city>/<school>/<first-last[N]>`)
   answers curl and WebFetch with a Cloudflare challenge (403, "Just a moment..."). Its six

@@ -482,7 +482,9 @@ school's own on a tie: 25 school lists and 23 MaxPreps lists are shown) and name
 count. A JV player's own recruiting pages are linked under their row, by the varsity rule
 (`data/jv-profiles.json`, `lib/jv/jv-profiles.ts`, joined on the name the shown list gives; a Los Gatos row
 the varsity overlay marks JV keeps its profiles there), and `/recruiting` lists those players after each
-school's varsity rows, marked "JV". JV players feed nothing else: not the clubs or the commitments. York, which plays
+school's varsity rows, marked "JV": on 2026-11-06, 34 JV players at 14 schools (33 SportsRecruits pages from an
+address probe of the 746 JV players, 32 of them lacrosse, and one NCSA page), plus the three Los Gatos rows.
+JV players feed nothing else: not the clubs or the commitments. York, which plays
 Santa Catalina's PCAL JV slot, has no roster on MaxPreps (its JV roster page lists nobody) or york.org
 (a schedule only), so Santa Catalina's page has no JV roster.
 

@@ -79,6 +79,19 @@ describe('data/jv-profiles.json', () => {
     for (const u of urls) expect(varsity.has(u), u).toBe(false);
   });
 
+  it('holds what the 2026-11-06 research found: 33 SportsRecruits pages from the address probe and one NCSA page', () => {
+    const all = fileEntries.flatMap((e) => e.profiles.map((x) => ({ e, x })));
+    const probe = all.filter(({ x }) => x.note?.includes('Found by the 2026-11-06 address probe'));
+    expect(probe).toHaveLength(33);
+    expect(new Set(probe.map(({ e }) => `${e.slug} ${e.name}`)).size).toBe(33);
+    expect(probe.every(({ x }) => x.platform === 'sportsrecruits' && x.classOf !== null)).toBe(true);
+    expect(probe.filter(({ x }) => x.sport === 'lacrosse')).toHaveLength(32);
+    expect(probe.filter(({ x }) => x.sport === undefined).map(({ e }) => e.name)).toEqual(['Jayla Gerrard']);
+    expect(all.filter(({ x }) => x.platform === 'ncsa').map(({ e }) => e.name)).toEqual(['Katie Todd']);
+    expect(fileEntries).toHaveLength(34);
+    expect(new Set(fileEntries.map((e) => e.slug)).size).toBe(14);
+  });
+
   it('refuses a claimed-MaxPreps profile, two profiles on one platform in one sport, and a player listed twice', () => {
     const profile = (over: object) => ({ platform: 'sportsrecruits', url: 'https://nfhca.sportsrecruits.com/athlete/a_b', classOf: 2029, note: null, ...over });
     const one = (players: unknown[]) => ({ ...file, teams: [{ slug: 'st-ignatius', players }] });
