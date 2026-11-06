@@ -27,7 +27,7 @@ import { z } from 'zod';
 import { htmlUnescape } from './http';
 import { MaxPrepsError, NEXT_DATA_RE } from './maxpreps';
 import { recaseNameParts } from './person-name';
-import { SPORT_SEASON_ID } from '../season';
+import { SPORT_SEASON_ID, maxprepsJvTeamUrl } from '../season';
 import { GRADE_CLASSES, type RosterPlayer, type TeamRoster } from '../players/rosters-schema';
 import type { Team } from '../types';
 
@@ -152,7 +152,7 @@ export function rosterUrl(team: Team): string | null {
 export function jvRosterUrl(team: Pick<Team, 'external'>): string | null {
   const base = team.external.maxprepsTeamUrl;
   if (!base) return null;
-  return `${base.replace(/\/+$/, '')}/jv/roster/`;
+  return `${maxprepsJvTeamUrl(base.replace(/\/+$/, ''))}roster/`;
 }
 
 /**

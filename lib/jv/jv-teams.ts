@@ -16,7 +16,7 @@
  * Pure config: no I/O.
  */
 
-import { SBLIVE_WEB } from '../season';
+import { SBLIVE_WEB, maxprepsJvTeamUrl } from '../season';
 import { IS_FIELD_HOCKEY } from '../sports/current';
 import { TEAMS } from '../teams';
 import type { Team, TeamSlug } from '../types';
@@ -220,5 +220,5 @@ export function jvSlotTeamFor(slug: TeamSlug | null): JvSlotTeam | undefined {
 /** MaxPreps' JV schedule page for a school: `<varsity team URL>jv/schedule/`, or null without a MaxPreps page. */
 export function jvMaxprepsScheduleUrl(team: Pick<Team, 'external'>): string | null {
   const base = team.external.maxprepsTeamUrl;
-  return base ? `${base.endsWith('/') ? base : `${base}/`}jv/schedule/` : null;
+  return base ? `${maxprepsJvTeamUrl(base)}schedule/` : null;
 }

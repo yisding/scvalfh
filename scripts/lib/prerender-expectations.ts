@@ -180,7 +180,8 @@ export function makeFamilyChecker(
     family('game', [...expected.gameParams, ...expected.stubParams], { og: true });
     family('scores', expected.dates, { og: true });
     family('teams', expected.slugs, { og: true });
-    family('history', HAS_HISTORY ? ['2025-26'] : [], { og: false });
+    // Not checked in a build without the archive: `next build` writes its 404 there and vinext skips the route.
+    if (HAS_HISTORY) family('history', ['2025-26'], { og: false });
     // One page per club of data/clubs.json, a club with no tied player included; no OG card (the
     // clubs pages take the root one), so no parity check either.
     family('clubs', expected.clubSlugs, { og: false });

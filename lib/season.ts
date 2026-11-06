@@ -67,5 +67,16 @@ export const SOURCE_LINKS = {
   cifss: 'https://www.cifsshome.org/widget/schedule-score',
 } as const;
 
+/**
+ * A school's JV team page on MaxPreps, from its varsity team URL: `<varsity URL>jv/` for a sport MaxPreps files by
+ * gender alone (field hockey: `/field-hockey/jv/`), or the level put before the season segment where the URL has
+ * one (girls soccer: `/soccer/girls/winter/` → `/soccer/girls/jv/winter/`). Ends in '/'.
+ */
+export function maxprepsJvTeamUrl(varsityUrl: string): string {
+  const base = varsityUrl.endsWith('/') ? varsityUrl : `${varsityUrl}/`;
+  const m = /^(.*\/)(fall|winter|spring)\/$/.exec(base);
+  return m ? `${m[1]}jv/${m[2]}/` : `${base}jv/`;
+}
+
 /** The IANA zone every date on the site is formatted in (lib/time-zone.ts, the leaf lib/format loads). */
 export { TIME_ZONE } from './time-zone';
