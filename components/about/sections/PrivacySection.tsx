@@ -1,4 +1,5 @@
 import SectionHeader from '../../ui/SectionHeader';
+import { IS_FIELD_HOCKEY } from '../../../lib/sports/current';
 
 /**
  * /about#a11y (and `#privacy`): what the site stores, and its accessibility floor. Static.
@@ -12,7 +13,7 @@ export function PrivacySection() {
         <p>
           This site stores exactly four things, all only in your browser: a theme choice, a pinned
           team, the league you chose to see on the home page, and the region you chose (Northern or
-          Southern California). None of it is ever sent anywhere &mdash; there are no accounts, no
+          Southern California{IS_FIELD_HOCKEY ? '' : '; this soccer site covers Northern California only'}). None of it is ever sent anywhere &mdash; there are no accounts, no
           analytics, no tracking cookies and no requests to other sites from any page. School
           colors come from MaxPreps&rsquo; data, never an image copied from another site, and the
           fonts ship with the site.

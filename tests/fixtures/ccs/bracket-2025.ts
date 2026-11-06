@@ -74,13 +74,13 @@ const LEVEL_WINNER: Readonly<Record<string, 'home' | 'away'>> = {
 
 export function bracketFor(division: CcsDivisionName): GameBracket {
   return {
-    tournamentId: CCS.tournament.id,
-    bracketId: division === 'Division 1' ? CCS.tournament.division1BracketId : CCS.tournament.division2BracketId,
+    tournamentId: CCS.tournament!.id,
+    bracketId: division === 'Division 1' ? CCS.tournament!.division1BracketId : CCS.tournament!.division2BracketId,
     tournament: '2026 Central Coast Section Field Hockey Championship',
     name: division,
     published: true,
     matchupId: null,
-    url: CCS.bracketUrl,
+    url: CCS.bracketUrl!,
   };
 }
 

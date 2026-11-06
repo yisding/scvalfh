@@ -53,7 +53,7 @@ export interface BoardLeagueInput {
   shortName: string;
   config: LeagueConfig;
   /** CCS leagues: the league's automatic berths and the field's size. */
-  berths?: { auto: number; total: number };
+  berths?: { auto: number; total: number | null };
   /** A league tournament's champion sentence ('Tamalpais won the MCAL tournament, beating …'), when decided. */
   champion?: string | null;
 }
@@ -63,7 +63,11 @@ export function pathPhrase(input: BoardLeagueInput): string {
   const ps = input.config.postseason;
   switch (ps.kind) {
     case 'ccs-ladder':
-      return input.berths ? `CCS championship · ${input.berths.auto} of ${input.berths.total} berths` : 'CCS championship';
+      if (!input.berths) return 'CCS championship';
+      // total null: the CCS field size is unread (soccer), so only the league's own automatic berths are counted.
+      return input.berths.total === null
+        ? `CCS championship · ${plural(input.berths.auto, 'automatic berth')}`
+        : `CCS championship · ${input.berths.auto} of ${input.berths.total} berths`;
     case 'league-tournament':
       return `${ps.name} · ${ps.qualifiers} teams`;
     case 'unbracketed-tournament':

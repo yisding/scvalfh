@@ -7,6 +7,7 @@ import { getTeamBySlug } from '../../../lib/data';
 import { listWords, plural } from '../../../lib/format';
 import { JV_SCHOOL_SITES } from '../../../lib/jv/jv-school-sites';
 import { JV_STANDINGS_MIN_REPORTED_SHARE } from '../../../lib/jv/jv-standings';
+import { IS_FIELD_HOCKEY } from '../../../lib/sports/current';
 import type { AboutJv } from '../about-view';
 
 /**
@@ -53,6 +54,9 @@ export function JvSection({ jv }: { jv: AboutJv }) {
           {shown.length > 0 ? listWords(shown.map((t) => jvTableTitle(t.division))) : 'none'}.
           The others say how many of their games have a score.
         </p>
+        {/* si.com, the two school sites, the hand corrections and the PCAL pairing are field hockey's sources and
+            facts: the soccer build reads MaxPreps alone (lib/sports/current.ts). */}
+        {IS_FIELD_HOCKEY ? (<>
         <p>
           MaxPreps comes first, as for varsity. Each school&rsquo;s JV page on High School on SI
           (si.com) supplements it, matched only by si.com&rsquo;s own JV team ids and only for a game
@@ -106,6 +110,7 @@ export function JvSection({ jv }: { jv: AboutJv }) {
           repeated on its JV list, which says how many it leaves out: several MaxPreps JV pages list the
           whole program.
         </p>
+        </>) : null}
       </div>
     </section>
   );

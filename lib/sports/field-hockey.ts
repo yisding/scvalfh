@@ -76,6 +76,9 @@ export const FIELD_HOCKEY_GIRLS_2026 = {
   sportSeasonId: 'e302eb3e-1a32-4f2d-934b-6f9d454f721e',
   /** [V] verdicts 5, 33 */
   allSeasonId: 'bfacc9ec-145e-4659-ba7e-0824d163d5fc',
+  /** [V] verdict 5: the bootstrap page, whose ssid is `sportSeasonId` */
+  hubPath: '/ca/field-hockey/',
+  hubSportSeasonId: null,
   /** [V] `__NEXT_DATA__.query.ssid` of maxpreps.com/ca/field-hockey/jv/ (teamLevel 'JV', read 2026-10-05). */
   jvSportSeasonId: 'fae4fc22-6de6-47ae-972d-e290b0ec31ef',
   /** MaxPreps' CCS tournament page — currently `<div class="not-published">` (SPEC §1.4). */

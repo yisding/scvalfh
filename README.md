@@ -13,6 +13,10 @@ note, `SITE_SCOPE_NOTE` in `components/layout/site.ts`). A static Next.js site r
 snapshot, refreshed twice a day in season by a scheduled GitHub Actions job. The same source also
 builds and serves on vinext (Vite), on Node and as a Cloudflare Worker; see "Deploy notes".
 
+**Girls soccer (SCVAL only, 2026-27).** The same code builds a second site, NorCal High School Girls Soccer,
+when `SCVAL_SPORT=soccer` is set: the SCVAL's 15 girls soccer teams (De Anza 7, El Camino 8), winter 2026-27,
+from the data under `data/soccer/`. See "Girls soccer" under "Local development" and docs/MULTI-SPORT.md.
+
 Unofficial. Not affiliated with SCVAL, BVAL, PCAL, MCAL, EAL, the Sunset, City, North County or Metro
 leagues, CIF-CCS, CIF-NCS, CIF-NS, CIF-SS, CIF-SDS, the San Diego Field Hockey Officials
 Association, MaxPreps or Sports Illustrated. See "Attribution and legal posture" below.
@@ -1119,6 +1123,29 @@ top level of the upload but `_headers`, `_next/` and `_vinext/` unless `.assetsi
 out. Then each starts its server (`vinext start`, or the Worker in workerd through `vite preview`)
 and runs the same `scripts/smoke-server.sh` and axe passes against it. Uploading the Worker is
 `.github/workflows/deploy-cloudflare.yml`'s job (see "Cloudflare Workers").
+
+### Girls soccer
+
+One sport per build (docs/MULTI-SPORT.md). `SCVAL_SPORT` picks it: unset (or `field-hockey`) builds this
+site; `soccer` builds the SCVAL girls soccer site from `data/soccer/`. Every command takes it:
+
+```bash
+SCVAL_SPORT=soccer pnpm fetch-data --no-sblive --no-vnn   # data/soccer/snapshot.json (si.com and VNN are field hockey's)
+SCVAL_SPORT=soccer pnpm fetch-rosters                      # data/soccer/rosters.json
+SCVAL_SPORT=soccer pnpm fetch-jv --no-sblive               # data/soccer/jv.json
+SCVAL_SPORT=soccer pnpm fetch-player-stats                 # data/soccer/player-stats.json
+SCVAL_SPORT=soccer pnpm fetch-prior-season                 # data/soccer/prior-season.json (2025-26, seeds the ratings)
+SCVAL_SPORT=soccer pnpm build                              # or pnpm build:vinext / build:cloudflare
+SCVAL_SPORT=soccer pnpm exec tsx scripts/assert-prerender.ts   # and assert-budgets, assert-copy
+```
+
+What the soccer build has: SCVAL's two divisions from the official 2026-27 girls schedules (transcribed to
+`data/soccer/official/scval-2026.json`), the SCVAL Soccer By-Laws' 3-1-0 points, head-to-head tiebreak and
+CCS ladder (De Anza 1-3 and El Camino 1 are automatic), standings, schedules, scores, team and game pages,
+leaders, JV and /playoffs. What it leaves out: /history/2025-26, /clubs, /commits and /recruiting (field
+hockey's research; each renders a 404), si.com, the VNN calendars and the region toggle. The CCS dates come
+from the CCS 2026-27 Playoff Calendar and Soccer Committee report; the field size, at-large count and hosting
+rule (the CCS Soccer Bylaws') are still `null` in `lib/league-config/soccer/sections.ts`.
 
 ## Tests
 

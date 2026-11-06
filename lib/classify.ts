@@ -177,7 +177,7 @@ export function postseasonTag(game: Game): PostseasonTag | null {
   if (
     bracket &&
     ccsPair &&
-    (bracket.tournamentId === CCS.tournament.id || /central coast section/i.test(bracket.tournament ?? ''))
+    ((CCS.tournament !== null && bracket.tournamentId === CCS.tournament.id) || /central coast section/i.test(bracket.tournament ?? ''))
   ) {
     return { kind: 'ccs', leagueId: league ? league.id : null, via: 'maxpreps-bracket' };
   }

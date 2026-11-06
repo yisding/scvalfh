@@ -118,6 +118,7 @@ import { stableStringify } from '../lib/stable-json';
 import { TEAMS } from '../lib/teams';
 import type { Game, LeagueId } from '../lib/types';
 import { runCli } from './cli';
+import { DATA_DIR } from '../lib/sports/current';
 
 interface Args {
   fixtures: string | null;
@@ -137,9 +138,9 @@ function parseArgs(argv: readonly string[]): Args {
     fixtures: null,
     capture: null,
     leagues: null,
-    rosters: path.join(process.cwd(), 'data', 'rosters.json'),
-    snapshot: path.join(process.cwd(), 'data', 'snapshot.json'),
-    out: path.join(process.cwd(), 'data', 'player-stats.json'),
+    rosters: path.join(process.cwd(), DATA_DIR, 'rosters.json'),
+    snapshot: path.join(process.cwd(), DATA_DIR, 'snapshot.json'),
+    out: path.join(process.cwd(), DATA_DIR, 'player-stats.json'),
     dryRun: false,
     fetchedAt: null,
     force: false,

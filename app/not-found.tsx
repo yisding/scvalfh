@@ -6,6 +6,7 @@ import { OG_BASE } from '../components/layout/site';
 import { listWords, numberWord } from '../lib/format';
 import { getAvailableHistoryLeagues } from '../lib/history/history';
 import { LEAGUES_PROPER, getLeague } from '../lib/leagues';
+import { HAS_HISTORY } from '../lib/sports/current';
 
 export const metadata: Metadata = {
   title: 'Page not found',
@@ -21,7 +22,7 @@ export const metadata: Metadata = {
  * the leagues with a table: the LA independents have none (DESIGN §24.9), so "every table in
  * the nine leagues" stays exact.
  */
-const LEAGUE_COUNT = `the ${numberWord(LEAGUES_PROPER.length)} leagues`;
+const LEAGUE_COUNT = LEAGUES_PROPER.length === 1 ? LEAGUES_PROPER[0].shortName : `the ${numberWord(LEAGUES_PROPER.length)} leagues`;
 
 const LINKS: Array<{ href: string; name: string; description: string }> = [
   { href: '/', name: 'Home', description: 'What just happened, and when the next game is' },
@@ -29,11 +30,13 @@ const LINKS: Array<{ href: string; name: string; description: string }> = [
   { href: '/teams', name: 'Teams and standings', description: `Find your school; every table in ${LEAGUE_COUNT}` },
   { href: '/leaders', name: 'Season leaders', description: 'Top scorers, keepers and records, every league' },
   { href: '/playoffs', name: 'Playoffs', description: 'Who is in, and the key dates' },
-  {
-    href: '/history/2025-26',
-    name: 'History',
-    description: `Last season’s final ${listWords(getAvailableHistoryLeagues().map((l) => getLeague(l.id).shortName))} tables and awards`,
-  },
+  ...(HAS_HISTORY
+    ? [{
+        href: '/history/2025-26',
+        name: 'History',
+        description: `Last season’s final ${listWords(getAvailableHistoryLeagues().map((l) => getLeague(l.id).shortName))} tables and awards`,
+      }]
+    : []),
   { href: '/about', name: 'About', description: 'Where this data comes from' },
 ];
 

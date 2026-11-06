@@ -61,7 +61,11 @@ export function PostseasonCard({ view, className }: PostseasonCardProps) {
       <SectionHeader as="h3" kicker="CCS playoffs" />
       <div className="sx-card sx-bleed px-gutter py-5 md:p-6">
         <p className="m-0 max-w-prose text-meta text-ink-2">{view.intro}</p>
-        <BerthMeter className="mt-4" claimed={view.meter.claimed} total={view.meter.total} label={view.meter.label} />
+        {view.meter.total === null ? (
+          <p className="mt-4 mb-0 max-w-prose text-body text-ink">{view.meter.label}</p>
+        ) : (
+          <BerthMeter className="mt-4" claimed={view.meter.claimed} total={view.meter.total} label={view.meter.label} />
+        )}
         <dl className="mt-5 mb-0 grid grid-cols-3 gap-3">
           {view.dates.map(({ term, date }) => (
             <div key={term} className="min-w-0">

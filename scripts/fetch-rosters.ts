@@ -70,6 +70,7 @@ import { stableStringify } from '../lib/stable-json';
 import { TEAMS } from '../lib/teams';
 import type { LeagueId } from '../lib/types';
 import { runCli } from './cli';
+import { DATA_DIR } from '../lib/sports/current';
 
 type Level = 'varsity' | 'jv';
 
@@ -89,7 +90,7 @@ function parseArgs(argv: readonly string[]): Args {
     fixtures: null,
     capture: null,
     leagues: null,
-    out: path.join(process.cwd(), 'data', 'rosters.json'),
+    out: path.join(process.cwd(), DATA_DIR, 'rosters.json'),
     outGiven: false,
     dryRun: false,
     fetchedAt: null,
@@ -118,7 +119,7 @@ function parseArgs(argv: readonly string[]): Args {
     else throw new Error(`unknown flag: ${arg}`);
   }
   if (out.fixtures && out.capture) throw new Error('--capture records live pages; it cannot be combined with --fixtures');
-  if (out.level === 'jv' && !out.outGiven) out.out = path.join(process.cwd(), 'data', 'jv-rosters.json');
+  if (out.level === 'jv' && !out.outGiven) out.out = path.join(process.cwd(), DATA_DIR, 'jv-rosters.json');
   return out;
 }
 

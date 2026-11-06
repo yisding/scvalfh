@@ -129,7 +129,7 @@ export interface Season {
   label: string;
   sportSeasonId: string;
   allSeasonId: string;
-  genderSport: 'girls,fieldhockey';
+  genderSport: 'girls,fieldhockey' | 'girls,soccer';
   teamLevel: 'Varsity' | 'JV';
   /** Config order: ccs, ncs, ns, ss, sds. */
   sections: SeasonSection[];
@@ -571,6 +571,13 @@ export interface CcsKeyDates {
   quarterfinals: string;       // '2026-11-07'
   semifinals: string;          // '2026-11-11'
   finals: string;              // '2026-11-14'
+  /**
+   * The last day of a round some divisions play later (soccer: Division 1's semifinal Tue Feb 23 and final Fri
+   * Feb 26, Divisions 2-5's Wed Feb 24 and Sat Feb 27). `semifinals` and `finals` stay each round's first day.
+   * Absent where every division plays a round the same day (field hockey).
+   */
+  semifinalsLast?: string;
+  finalsLast?: string;
   evaluationMeeting: string;   // '2026-11-19T16:00:00'
   /** NEW: CCS end of league season. `crossover` MOVED to LEAGUES.scval (pairings + phases). */
   endOfLeagueSeason: string;   // '2026-10-31'
@@ -578,9 +585,10 @@ export interface CcsKeyDates {
 
 /** Numbers only. Keys = every league whose postseason.kind is 'ccs-ladder', plus atLarge and total. */
 export interface CcsAutoQualifiers {
-  [leagueId: string]: number;
-  atLarge: number;
-  total: number;
+  [leagueId: string]: number | null;
+  /** null where only the CCS's own bylaws give the number (soccer). */
+  atLarge: number | null;
+  total: number | null;
 }
 
 /** One VEVENT from `cifccs.org/calendar/Field_Hockey?print=ical` (SPEC §1.4). */
@@ -613,7 +621,7 @@ export interface CcsPlayoffs {
     ccsDivisions: Array<{ name: CcsDivisionName; seeds: [number, number] }>;
     autoQualifiers: CcsAutoQualifiers;
     /** The last round the higher seed hosts (CCS config; 'semifinals' in files written before 2026-10-29). */
-    highSeedHostsThrough: 'quarterfinals' | 'semifinals';
+    highSeedHostsThrough: 'quarterfinals' | 'semifinals' | null;
   };
   /**
    * Some CCS division's bracket is published on the MaxPreps tournament page (lib/sources/ccs.ts
@@ -626,7 +634,8 @@ export interface CcsPlayoffs {
    * written before and in a run that never read a recognised page with no previous value to carry).
    */
   divisionsPublished?: Record<CcsDivisionName, boolean>;
-  bracketUrl: string;
+  /** null until MaxPreps makes a tournament page for the season (soccer, 2026-11-06). */
+  bracketUrl: string | null;
   /**
    * The CCS bracket games: lib/postseason/ccs-bracket.ts ccsBracketGames over `games` — every game tagged 'ccs' that is
    * dated on or after the quarterfinals or that MaxPreps' feed marks published (`Game.bracket.published`), the
@@ -674,7 +683,8 @@ export interface PlayoffProjection {
   asOf: string;
   leagueId: LeagueId;
   /** { auto: autoQualifiers[league], total: 16 } */
-  berths: { auto: number; total: number };
+  /** `total` is null where the CCS field size is unread (soccer). */
+  berths: { auto: number; total: number | null };
   byDivision: Record<DivisionId, LadderRow[]>;
   /** SCVAL: 4 crossover pairings; BVAL: the play-in; PCAL: []. */
   pairings: LeaguePairing[];

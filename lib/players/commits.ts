@@ -30,7 +30,8 @@
  * season, not carried.)
  */
 
-import bundled from '../../data/commits.json';
+import bundledFieldHockey from '../../data/commits.json';
+import bundledSoccer from '../../data/soccer/commits.json';
 import {
   COLLEGE_DIVISIONS,
   CommitsFileSchema,
@@ -44,6 +45,10 @@ import { classOf, getAllEnrichedRosters, getRosters, type MergedPlayer, type Mer
 import { failValidation } from '../schema-primitives';
 import { getTeamBySlug } from '../teams';
 import type { TeamSlug } from '../types';
+import { IS_FIELD_HOCKEY } from '../sports/current';
+
+/** This build's copy (data/ for field hockey, data/soccer/ for soccer: lib/sports/current.ts DATA_DIR). */
+const bundled = IS_FIELD_HOCKEY ? bundledFieldHockey : bundledSoccer;
 
 export type {
   College,

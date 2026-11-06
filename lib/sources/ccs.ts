@@ -128,7 +128,9 @@ export function calendarSiteOf(summary: string): 'home' | 'neutral' | null {
 }
 
 /** Where config says a round is played: the higher seed's field through `highSeedHostsThrough`, neutral after. */
-export function configSiteOf(round: (typeof ROUND_KINDS)[number], hostsThrough = CCS.highSeedHostsThrough): 'home' | 'neutral' {
+export function configSiteOf(round: (typeof ROUND_KINDS)[number], hostsThrough = CCS.highSeedHostsThrough): 'home' | 'neutral' | null {
+  // null: the config does not say who hosts (soccer: the CCS bylaws are unread).
+  if (hostsThrough === null) return null;
   return ROUND_KINDS.indexOf(round) <= ROUND_KINDS.indexOf(hostsThrough) ? 'home' : 'neutral';
 }
 
@@ -167,7 +169,7 @@ export function confirmKeyDates(
     const summary = summaryByKind.get(round);
     const theirs = summary ? calendarSiteOf(summary) : null;
     const ours = configSiteOf(round, hostsThrough);
-    if (theirs !== null && theirs !== ours) {
+    if (ours !== null && theirs !== null && theirs !== ours) {
       differences.push(`${round}: we say ${ours === 'home' ? 'the higher seed hosts' : 'a neutral site'}, CCS calendar says "${summary}"`);
     }
   }
@@ -210,7 +212,7 @@ export function readTournamentPage(html: string, tournament = CCS.tournament): T
   if (html.length < 2000) {
     return { recognised: false, divisions: [], reason: `page body is only ${html.length} bytes — not recognised` };
   }
-  const configured: Array<[CcsDivisionName, string]> = [
+  const configured: Array<[CcsDivisionName, string]> = tournament === null ? [] : [
     ['Division 1', tournament.division1BracketId],
     ['Division 2', tournament.division2BracketId],
   ];

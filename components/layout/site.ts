@@ -18,11 +18,11 @@ import {
   sectionsInRegion,
 } from '../../lib/leagues';
 import type { RegionId } from '../../lib/types';
-import { SEASON_CALENDAR_YEAR } from '../../lib/season';
+import { SEASON_YEARS_DISPLAY } from '../../lib/season';
 import { TEAMS } from '../../lib/teams';
 
 import { OG_SIZE } from '../metadata/og-theme';
-import { SPORT, SPORT_AUDIENCE } from '../../lib/sports/current';
+import { GENDER_NAME, IS_FIELD_HOCKEY, SPORT, SPORT_AUDIENCE } from '../../lib/sports/current';
 
 /**
  * The site's own origin, used by `metadataBase`, `robots.txt` and `sitemap.xml`.
@@ -32,6 +32,12 @@ import { SPORT, SPORT_AUDIENCE } from '../../lib/sports/current';
  * domain would put a wrong canonical and wrong OG URLs into the HTML.
  */
 export const SITE_URL: string = (process.env.SITE_URL ?? 'http://localhost:3000').replace(/\/$/, '');
+
+/**
+ * The program as a title names it: 'Field Hockey' (a girls' sport only here, so the gender goes unsaid),
+ * 'Girls Soccer' (a sport with a boys' program too).
+ */
+const PROGRAM_TITLE = IS_FIELD_HOCKEY ? SPORT.name : `${GENDER_NAME} ${SPORT.name}`;
 
 /**
  * Branding (SPEC §11). "NorCal" is the term local field hockey coverage uses: "Bay Area" is false
@@ -46,9 +52,9 @@ export const SITE_URL: string = (process.env.SITE_URL ?? 'http://localhost:3000'
  * region is in the words that describe the site rather than the name: SITE_DESCRIPTION names both
  * regions, NorCal first, and SITE_SCOPE_NOTE names every section and league covered.
  */
-export const SITE_NAME = `NorCal High School ${SPORT.name}`;
+export const SITE_NAME = `NorCal High School ${PROGRAM_TITLE}`;
 /** The header wordmark: SITE_NAME with "High School" shortened to "HS" to fit the top bar. */
-export const SITE_WORDMARK = `NorCal HS ${SPORT.name}`;
+export const SITE_WORDMARK = `NorCal HS ${PROGRAM_TITLE}`;
 /** The manifest `short_name` (≤ 12 characters, so a home-screen label never truncates). */
 export const SITE_SHORT_NAME = `NorCal ${SPORT.abbr}`;
 
@@ -180,7 +186,7 @@ export const SITE_SCOPE_NOTE = (() => {
 export const DATA_CORRECTIONS_URL = 'https://ncfh.freeflarum.com/d/3-data-errors';
 
 /** The root OG card's alt: app/opengraph-image.tsx's `alt`, and ROOT_OG_IMAGE's for the routes that borrow it. */
-export const ROOT_OG_ALT = `${SITE_NAME} — ${SEASON_CALENDAR_YEAR} standings, scores and playoffs`;
+export const ROOT_OG_ALT = `${SITE_NAME} — ${SEASON_YEARS_DISPLAY} standings, scores and playoffs`;
 
 /**
  * The `openGraph` fields every page has to repeat.

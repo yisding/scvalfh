@@ -86,8 +86,8 @@ export function TeamPlayoffLine({ view }: TeamPlayoffLineProps) {
           {line.linkText} <Arrow />
         </Link>
         {league.postseasonKind === 'ccs-ladder' ? (
-          <ExternalLink href={CCS.bracketUrl} className="sx-pill">
-            Official CCS bracket
+          <ExternalLink href={CCS.bracketUrl ?? CCS.sources.index} className="sx-pill">
+            {CCS.bracketUrl ? 'Official CCS bracket' : 'CCS playoffs'}
           </ExternalLink>
         ) : null}
       </p>

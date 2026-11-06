@@ -13,7 +13,8 @@
  */
 
 import { getSnapshot } from '../../lib/data';
-import { regionOf } from '../../lib/leagues';
+import { REGIONS } from '../../lib/league-config/sections';
+import { LEAGUES_PROPER, regionOf } from '../../lib/leagues';
 import { getPriorSeason } from '../../lib/history/prior-season';
 import type { PriorSeason } from '../../lib/history/prior-season-schema';
 import {
@@ -29,7 +30,7 @@ import type { Game, RegionId, Team, TeamSlug } from '../../lib/types';
 import { plural } from '../words/plural';
 import { num, schoolBoard } from './board-kit';
 import { byName, qualifyingMinimum } from './ranking';
-import { AND_INDEPENDENTS, LEAGUE_COUNT, regionScope } from './scope';
+import { AND_INDEPENDENTS, LEAGUE_COUNT, THE_LEAGUES, regionScope } from './scope';
 import type { CrossRegionFinals, LeaderBoard } from './types';
 
 /**
@@ -74,9 +75,12 @@ export function crossRegionFinals(
   return {
     thisSeason,
     lastSeason,
+    // One region (soccer: SCVAL alone) has no cross-region comparison to qualify.
     sentence:
-      `The ratings are on one scale across all ${LEAGUE_COUNT} leagues${AND_INDEPENDENTS}; comparisons between NorCal and SoCal rest on ` +
-      `${plural(thisSeason, 'game')} between the regions this season and ${lastSeason} last season, so treat them as rough.`,
+      REGIONS.length < 2
+        ? `The ratings are on one scale across ${LEAGUES_PROPER.length === 1 ? `${LEAGUES_PROPER[0].shortName}’s divisions` : `all ${LEAGUE_COUNT} leagues`}${AND_INDEPENDENTS}.`
+        : `The ratings are on one scale across all ${LEAGUE_COUNT} leagues${AND_INDEPENDENTS}; comparisons between NorCal and SoCal rest on ` +
+          `${plural(thisSeason, 'game')} between the regions this season and ${lastSeason} last season, so treat them as rough.`,
   };
 }
 
@@ -131,7 +135,7 @@ export function buildEloBoard(
         `${ELO_SCALE}, so a team rated 400 points higher is about a 10-to-1 favorite.`,
       method:
         `The ratings are the ones that best explain each game’s goal margin, counted up to ${MARGIN_CAP} goals${homeEdge}.` +
-        `${seeded}${across} Forfeits and games against schools outside the ${LEAGUE_COUNT} leagues${AND_INDEPENDENTS} are left out.`,
+        `${seeded}${across} Forfeits and games against schools outside ${THE_LEAGUES}${AND_INDEPENDENTS} are left out.`,
       empty: lines.some((l) => l.rating.games > 0)
         ? `No team has played ${plural(minimum.min, 'game')} yet.`
         : `No completed game between two of the ${plural(fitTeams, 'team')} yet this season.`,

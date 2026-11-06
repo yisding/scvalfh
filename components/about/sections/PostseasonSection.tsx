@@ -2,10 +2,11 @@ import Link from 'next/link';
 
 import ExternalLink from '../../ui/ExternalLink';
 import SectionHeader from '../../ui/SectionHeader';
-import { dateWithYear, timeOfDayPT } from '../../../lib/format';
-import { CCS } from '../../../lib/league-config/sections';
+import { dateWithYear, monthDay, timeOfDayPT } from '../../../lib/format';
+import { CCS, ccsRoundDays } from '../../../lib/league-config/sections';
 import { getLeague, isIndependentLeague } from '../../../lib/leagues';
 import { SOURCE_LINKS } from '../../../lib/season';
+import { IS_FIELD_HOCKEY } from '../../../lib/sports/current';
 import type { AboutPostseason } from '../about-view';
 
 /**
@@ -19,8 +20,10 @@ export function PostseasonSection({ postseason }: { postseason: AboutPostseason 
       <SectionHeader size="lg" kicker="Postseason" />
       <div className="sx-prose">
         <p>
-          The CCS field is {field.total} teams: {field.byLeague.map((l) => `${l.shortName} ${l.auto}`).join(', ')} and{' '}
-          {field.atLarge} at-large ({CCS.citations.allocation}; {CCS.citations.change}). Each
+          {field.total === null
+            ? `Automatic CCS berths: ${field.byLeague.map((l) => `${l.shortName} ${l.auto}`).join(', ')} (${CCS.citations.allocation}; ${CCS.citations.change}).`
+            : `The CCS field is ${field.total} teams: ${field.byLeague.map((l) => `${l.shortName} ${l.auto}`).join(', ')} and ${field.atLarge} at-large (${CCS.citations.allocation}; ${CCS.citations.change}).`}{' '}
+          Each
           league&rsquo;s own route to its automatic berths is under its rules above; the live,
           team-by-team picture is on the{' '}
           <Link href="/playoffs" className="text-accent hover:underline">
@@ -89,10 +92,10 @@ export function PostseasonSection({ postseason }: { postseason: AboutPostseason 
             Quarterfinals: <span className="tabular-nums">{dateWithYear(playoffs.keyDates.quarterfinals)}</span>
           </li>
           <li>
-            Semifinals: <span className="tabular-nums">{dateWithYear(playoffs.keyDates.semifinals)}</span>
+            Semifinals: <span className="tabular-nums">{ccsRoundDays(playoffs.keyDates, 'semifinals', dateWithYear)}</span>
           </li>
           <li>
-            Final: <span className="tabular-nums">{dateWithYear(playoffs.keyDates.finals)}</span>
+            Final: <span className="tabular-nums">{ccsRoundDays(playoffs.keyDates, 'finals', dateWithYear)}</span>
           </li>
           <li>
             Committee evaluation:{' '}
@@ -101,14 +104,15 @@ export function PostseasonSection({ postseason }: { postseason: AboutPostseason 
             </span>
           </li>
         </ul>
+        {CCS.roundDaysNote ? <p>{CCS.roundDaysNote}</p> : null}
         <p className="text-meta text-ink-3">
           {ccsCalendar === undefined
-            ? 'The CCS office also publishes a machine-readable calendar for these dates; this site starts polling it in late October and will note here whether it confirms the dates above.'
+            ? `The CCS office also publishes a machine-readable calendar for these dates; this site starts polling it ${IS_FIELD_HOCKEY ? 'in late October' : `on ${monthDay(CCS.pollFrom)}`} and will note here whether it confirms the dates above.`
             : keyDatesConfirmed
               ? "The CCS office's own calendar confirms every date above."
               : "The CCS office's own calendar shows at least one difference from the dates above — check it directly."}{' '}
           <ExternalLink href={SOURCE_LINKS.ccsCalendar}>CCS calendar</ExternalLink>. Official bracket:{' '}
-          <ExternalLink href={playoffs.bracketUrl}>{playoffs.bracketPublished ? 'view it' : 'not yet published'}</ExternalLink>.
+          <ExternalLink href={playoffs.bracketUrl ?? SOURCE_LINKS.ccs}>{playoffs.bracketPublished ? 'view it' : 'not yet published'}</ExternalLink>.
         </p>
       </div>
     </section>

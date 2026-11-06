@@ -25,8 +25,10 @@
 import { readFileSync } from 'node:fs';
 
 import { z } from 'zod';
-import bundledEnrichment from '../../data/rosters-enrichment.json';
-import bundledRosters from '../../data/rosters.json';
+import bundledEnrichmentFieldHockey from '../../data/rosters-enrichment.json';
+import bundledEnrichmentSoccer from '../../data/soccer/rosters-enrichment.json';
+import bundledRostersFieldHockey from '../../data/rosters.json';
+import bundledRostersSoccer from '../../data/soccer/rosters.json';
 import {
   RosterEnrichmentSchema,
   RostersSchema,
@@ -47,6 +49,12 @@ import {
 } from './rosters-schema';
 import { dateKey, failValidation, httpsUrl } from '../schema-primitives';
 import type { TeamSlug } from '../types';
+import { IS_FIELD_HOCKEY } from '../sports/current';
+
+/** This build's copy (data/ for field hockey, data/soccer/ for soccer: lib/sports/current.ts DATA_DIR). */
+const bundledEnrichment = IS_FIELD_HOCKEY ? bundledEnrichmentFieldHockey : bundledEnrichmentSoccer;
+/** This build's copy (data/ for field hockey, data/soccer/ for soccer: lib/sports/current.ts DATA_DIR). */
+const bundledRosters = IS_FIELD_HOCKEY ? bundledRostersFieldHockey : bundledRostersSoccer;
 
 export type {
   EnrichedGrade,

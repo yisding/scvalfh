@@ -2,7 +2,8 @@
 
 The owner wants the site to cover more California high school sports, with basketball and soccer first.
 This note records how the code divides between sports (an audit of every layer, 2026-11-04) and the
-order of work. The first step, the sport seam in `lib/sports/`, has landed. The rest is a plan.
+order of work. The first step, the sport seam in `lib/sports/`, has landed, and so has a first soccer
+build: SCVAL girls soccer, 2026-27 ("Girls soccer: SCVAL" below). The rest is a plan.
 
 ## Decision: one sport per build
 
@@ -144,9 +145,55 @@ byte-identical to the build before the seam.
    - Make standings columns config: points tables or win percentage, and GF/GA/GD or PF/PA/PD.
    - Make `adjustedScoring` nullable and stat columns per sport.
    - Hold the golden files (`tests/golden/`) for field hockey to byte equality throughout.
-6. **The second sport.** Add soccer first: its rules are closest to field hockey's (ties, 3-1-0, goal
+6. **The second sport.** Soccer first (SCVAL girls soccer is built: see above): its rules are closest to field hockey's (ties, 3-1-0, goal
    difference, goalkeepers). Then basketball. Each needs its own `SportSeason` read by
    `scripts/discover-season.ts`, league configs with citations, a registry and copy rules.
+
+## Girls soccer: SCVAL (2026-11-06)
+
+The owner asked for a girls soccer site covering SCVAL only. It is built ahead of steps 2-5, by switching
+whole modules on the sport rather than splitting them, so field hockey's build is unchanged: every
+prerendered page has the same text and markup as before (compared page by page, script chunk names
+aside), and the field hockey tests, golden files and asserts pass as they were.
+
+- **The switch.** `SCVAL_SPORT` (unset or `field-hockey`, or `soccer`), read once in
+  `lib/sports/current.ts` (`SPORT_ID`, `IS_FIELD_HOCKEY`, `DATA_DIR`, `HAS_HISTORY`, `HAS_RECRUITING`).
+  `next.config.ts` (`env`) and `vite.config.ts` (`define`) inline it, so the browser, the prerender and a
+  Worker agree.
+- **The sport.** `lib/sports/soccer.ts` (`SOCCER`, `SOCCER_GIRLS_2026`), its MaxPreps ids read live.
+  `SportSeason` gained `hubPath` (the girls' hub is `/ca/soccer/girls/`; `/ca/soccer/` is the boys') and
+  `hubSportSeasonId` (the hub's ssid is not the team season's, so the bootstrap step accepts exactly the one
+  observed). The rating constants are field hockey's, not refitted.
+- **The league and registry.** `lib/league-config/soccer/scval.ts` (from the SCVAL Soccer By-Laws and the
+  two 2026-27 girls schedules) and `lib/registry/soccer/scval.ts` (15 seeds; MaxPreps keeps Fremont in no
+  league, so El Camino's table has seven rows and `maxprepsMissing: ['fremont']`). `lib/leagues.ts`,
+  `lib/teams.ts`, `lib/league-config/sections.ts` (`SECTIONS`, `REGIONS`, `CCS`) and `data-quality.ts`
+  pick the sport's entries.
+- **The CCS block.** `lib/league-config/soccer/sections.ts`, from the CCS 2026-27 Playoff Calendar, the
+  Soccer Committee report of March 11, 2026 and the 2026-27 league alignments. Division 1 plays its
+  semifinals and final a day before Divisions 2-5, so `CcsKeyDates` gained optional `semifinalsLast` /
+  `finalsLast`, and `ccsRoundDays()` / `ccsLastDay()` print a round's days. What none of those documents
+  says is null: the field's size and at-large count (`autoQualifiers.atLarge` / `total`), who hosts
+  (`highSeedHostsThrough`), and MaxPreps' tournament (`tournament`, `bracketUrl`). Those fields are nullable
+  in `CcsConfig`, the snapshot schema and every reader.
+- **Data.** Under `data/soccer/`: the snapshot, JV, rosters, player stats and last season's games come
+  from the usual fetchers (README, "Girls soccer"); the official fixtures are transcribed; clubs,
+  commits, history and the bracket files are empty placeholders the loaders serve without field hockey's
+  validation.
+- **Pages.** /history/2025-26, /clubs, /clubs/[slug], /commits and /recruiting render a 404 and are
+  linked from nowhere; the region toggle is hidden; copy that named field hockey's leagues or counted
+  "N leagues" reads from config.
+
+Not done yet, for the owner to decide or schedule:
+
+- **Deploy and refresh.** No workflow builds, deploys or refreshes the soccer site. It needs its own origin
+  (a Worker name and domain, `cloudflare.config.ts`) and a cron job like `update-data.yml` that runs
+  Nov-Mar with `SCVAL_SPORT=soccer`, writes `data/soccer/*` and is pinned by `tests/workflows.test.ts`.
+- **The CCS Soccer Bylaws' allocation and hosting rule**, read by a person, to fill the nulls above, and
+  MaxPreps' 2027 CCS tournament page once it exists.
+- **Mascot tiles** for Gunn, Mountain View, MacDonald, Milpitas and Wilcox: MaxPreps' image host answered
+  `pnpm fetch-mascots` with 403, so `NO_MASCOT_TILE` (`lib/schools/mascots.ts`) draws their initials.
+- **Steps 2-5 below** still stand; the soccer build's per-module switches are what they would replace.
 
 ## Guards that must keep passing
 

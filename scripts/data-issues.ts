@@ -22,6 +22,7 @@ import { TIME_ZONE } from '../lib/season';
 import { loadSnapshot } from '../lib/snapshot/snapshot-schema';
 import type { Snapshot } from '../lib/types';
 import { runCli } from './cli';
+import { DATA_DIR } from '../lib/sports/current';
 
 const REPO = path.resolve(import.meta.dirname, '..');
 
@@ -102,8 +103,8 @@ function main(argv: readonly string[]): number {
     console.error('usage: pnpm exec tsx scripts/data-issues.ts <previous-meta.json> <out-dir>');
     return 1;
   }
-  const snapshot = loadSnapshot(JSON.parse(readFileSync(path.join(REPO, 'data/snapshot.json'), 'utf8')));
-  const meta = JSON.parse(readFileSync(path.join(REPO, 'data/snapshot.meta.json'), 'utf8')) as SnapshotMeta;
+  const snapshot = loadSnapshot(JSON.parse(readFileSync(path.join(REPO, DATA_DIR, 'snapshot.json'), 'utf8')));
+  const meta = JSON.parse(readFileSync(path.join(REPO, DATA_DIR, 'snapshot.meta.json'), 'utf8')) as SnapshotMeta;
   const issues = buildDataIssues(snapshot, meta, readPreviousMeta(prevPath));
   mkdirSync(outDir, { recursive: true });
   issues.forEach((issue, i) => {

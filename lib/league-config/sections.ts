@@ -6,14 +6,19 @@
  */
 
 import { CCS_BRACKET_URL } from '../season';
-import type { RegionId } from '../types';
+import { IS_FIELD_HOCKEY } from '../sports/current';
+import type { CcsKeyDates, RegionId } from '../types';
 import type { CcsConfig, OutsideTournamentConfig, RegionConfig, SectionConfig } from './shape';
+import { SOCCER_CCS, SOCCER_SECTIONS } from './soccer/sections';
 
 /** NorCal first: it is the default view (DEFAULT_REGION) and the reading order with JavaScript off. */
-export const REGIONS = [
+const ALL_REGIONS = [
   { id: 'norcal', name: 'Northern California', shortName: 'NorCal' },
   { id: 'socal', name: 'Southern California', shortName: 'SoCal' },
 ] as const satisfies readonly RegionConfig[];
+
+/** The regions this build covers: both for field hockey, Northern California alone for soccer (SCVAL only). */
+export const REGIONS: readonly RegionConfig[] = IS_FIELD_HOCKEY ? ALL_REGIONS : ALL_REGIONS.slice(0, 1);
 
 /** The view a first visit gets, and the one a page renders before any stored preference is read. */
 export const DEFAULT_REGION: RegionId = 'norcal';
@@ -93,7 +98,7 @@ export const TOC: OutsideTournamentConfig = {
   ],
 };
 
-export const SECTIONS = [
+const FIELD_HOCKEY_SECTIONS = [
   {
     id: 'ccs', name: 'Central Coast Section', shortName: 'CCS', briefLabel: 'CCS', region: 'norcal',
     maxprepsSectionId: 'd9a9ef9c-db12-4669-888b-40ac8462a575',
@@ -199,6 +204,9 @@ export const SECTIONS = [
   },
 ] as const satisfies readonly SectionConfig[];
 
+/** The sections this build covers (lib/sports/current.ts): field hockey's five, or soccer's one. */
+export const SECTIONS: readonly SectionConfig[] = IS_FIELD_HOCKEY ? FIELD_HOCKEY_SECTIONS : SOCCER_SECTIONS;
+
 // ---------- Southern California (DESIGN-socal §2.1; research-cifss.md, research-cifsds.md) ----------
 //
 // No SoCal league publishes a schedule, standings or a points rule, so all four are 'site' leagues: the
@@ -212,7 +220,7 @@ export const SITE_POINTS_CITATIONS = {
 } as const;
 
 /** The CCS section block (section data, not league data). */
-export const CCS: CcsConfig = {
+const FIELD_HOCKEY_CCS: CcsConfig = {
   autoQualifiers: { scval: 7, bval: 4, pcal: 2, atLarge: 3, total: 16 },
   ccsDivisions: [
     { name: 'Division 1', seeds: [1, 8] },
@@ -237,9 +245,36 @@ export const CCS: CcsConfig = {
     allocation: 'CCS Field Hockey Bylaws 2026-27 §4a (BVAL 4, PCAL 2, SCVAL 7, 3 at-large)',
     change: 'CCS Field Hockey Committee report 2025-11-20 §IV (PCAL reduced from 3 automatic berths to 2)',
   },
+  // SPEC §10.7 item 8, verbatim.
+  laterDivisions: null,
+  roundDaysNote: null,
+  atLargeParagraph:
+    'Three at-large berths are the CCS committee’s call. SCVAL submits its play-in loser and both fifth-place teams (Article VII §2); PCAL teams placed 3rd or lower may apply (PCAL By-laws §23.4); BVAL’s by-laws do not say whom it submits.',
   sources: {
     bylaws: CCS_BYLAWS_URL,
     index: 'https://cifccs.org/sports/fh/index',
     ical: 'https://cifccs.org/calendar/Field_Hockey?print=ical',
   },
 };
+
+/** The CCS block of this build's sport. */
+export const CCS: CcsConfig = IS_FIELD_HOCKEY ? FIELD_HOCKEY_CCS : SOCCER_CCS;
+
+/**
+ * A CCS round's days as copy prints them: one day ('Tue Feb 23'), or first to last where divisions play it on
+ * different days (soccer: 'Tue Feb 23 to Wed Feb 24'). `fmt` formats each day.
+ */
+export function ccsRoundDays(
+  keyDates: Pick<CcsKeyDates, 'semifinals' | 'finals' | 'semifinalsLast' | 'finalsLast'>,
+  round: 'semifinals' | 'finals',
+  fmt: (date: string) => string,
+): string {
+  const first = keyDates[round];
+  const last = round === 'semifinals' ? keyDates.semifinalsLast : keyDates.finalsLast;
+  return last === undefined || last === first ? fmt(first) : `${fmt(first)} to ${fmt(last)}`;
+}
+
+/** The last day of CCS games: the last finals day. */
+export function ccsLastDay(keyDates: Pick<CcsKeyDates, 'finals' | 'finalsLast'>): string {
+  return keyDates.finalsLast ?? keyDates.finals;
+}

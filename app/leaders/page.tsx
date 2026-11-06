@@ -11,6 +11,7 @@ import PageHeader from '../../components/layout/PageHeader';
 import { OG_BASE, ROOT_OG_IMAGE, coveredLeagueWords } from '../../components/layout/site';
 import DivisionTabs from '../../components/standings/DivisionTabs';
 import { capitalized } from '../../components/words/capitalized';
+import { LEAGUES_PROPER } from '../../lib/leagues';
 import { SPORT_AUDIENCE } from '../../lib/sports/current';
 
 /**
@@ -61,7 +62,7 @@ export default function LeadersPage() {
     // (6rem); from md the pills sit in the title row and do not stick (as on /history).
     <div className="pb-section-lg [--sx-sticky-top:6rem] md:[--sx-sticky-top:var(--spacing-topbar-lg)]">
       <PageHeader
-        eyebrow={`All ${LEAGUE_COUNT} leagues${AND_INDEPENDENTS_SHORT}`}
+        eyebrow={LEAGUES_PROPER.length === 1 ? LEAGUES_PROPER[0].name : `All ${LEAGUE_COUNT} leagues${AND_INDEPENDENTS_SHORT}`}
         title={PAGE_TITLE}
         description={
           // Two sentences before the first table (DESIGN §28): what is ranked and where the numbers

@@ -17,9 +17,14 @@
 
 import { z } from 'zod';
 
-import bundled from '../../data/schools.json';
+import bundledFieldHockey from '../../data/schools.json';
+import bundledSoccer from '../../data/soccer/schools.json';
 import { dateKey, failValidation, isCalendarDate, slugId } from '../schema-primitives';
 import type { StreetAddress, TeamSlug } from '../types';
+import { IS_FIELD_HOCKEY } from '../sports/current';
+
+/** This build's copy (data/ for field hockey, data/soccer/ for soccer: lib/sports/current.ts DATA_DIR). */
+const bundled = IS_FIELD_HOCKEY ? bundledFieldHockey : bundledSoccer;
 
 const nonEmpty = z.string().trim().min(1);
 

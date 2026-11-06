@@ -19,12 +19,17 @@
  * real sixteen-seed field before the 2026 file exists.
  */
 
-import bundledFile from '../../data/ccs-bracket-2026.json';
+import bundledFileFieldHockey from '../../data/ccs-bracket-2026.json';
+import bundledFileSoccer from '../../data/soccer/ccs-bracket-2026.json';
 import { CcsSeedFileSchema, type CcsSeedFile, type CcsSeeds } from './ccs-bracket-schema';
 import { byDateThenId } from '../format';
 import type { SectionBracket } from '../history/history-brackets-schema';
 import { failValidation } from '../schema-primitives';
 import type { CcsDivisionName, CcsKeyDates, Game } from '../types';
+import { IS_FIELD_HOCKEY } from '../sports/current';
+
+/** This build's copy (data/ for field hockey, data/soccer/ for soccer: lib/sports/current.ts DATA_DIR). */
+const bundledFile = IS_FIELD_HOCKEY ? bundledFileFieldHockey : bundledFileSoccer;
 
 /**
  * The CCS bracket games among `games`: tagged 'ccs' and (dated on or after the quarterfinals, or marked

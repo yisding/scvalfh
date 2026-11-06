@@ -21,7 +21,9 @@ export const MAXPREPS_SPORT_WEB = `${MAXPREPS_WEB}/ca/${SPORT.maxpreps.slug}`;
 export const SBLIVE_WEB = `https://www.si.com/high-school/stats/california/${SPORT.sblive.slug}`;
 
 /** The bootstrap page whose __NEXT_DATA__ carries ssid + allSeasonId (SPEC §1.1h, verdict 5). */
-export const BOOTSTRAP_URL = `${MAXPREPS_SPORT_WEB}/`;
+export const BOOTSTRAP_URL = `${MAXPREPS_WEB}${SPORT_SEASON.hubPath}`;
+/** The ssid the bootstrap page serves for this season (SportSeason.hubSportSeasonId, else the season's own). */
+export const HUB_SPORT_SEASON_ID: string = SPORT_SEASON.hubSportSeasonId ?? SPORT_SEASON.sportSeasonId;
 
 /** [V] leagues/{id}/v1 .year; team-context .year */
 export const SEASON_YEAR: string = SPORT_SEASON.year;
@@ -29,8 +31,14 @@ export const SEASON_YEAR: string = SPORT_SEASON.year;
 export const SEASON_LABEL: string = SPORT_SEASON.label;
 /** '2026': the calendar year the fall season is played in. Derived from SEASON_YEAR, not read. */
 export const SEASON_CALENDAR_YEAR = `20${SEASON_YEAR.slice(0, 2)}`;
-/** 'Fall 2026': the season as the site's own copy names it. Derived from SEASON_YEAR, not read. */
-export const SEASON_DISPLAY = `${SPORT_SEASON.term} ${SEASON_CALENDAR_YEAR}`;
+/**
+ * The season's years as the site's own copy names them: '2026' for a fall season, '2026-27' for one that
+ * runs into the next calendar year. Derived from SEASON_YEAR, not read.
+ */
+export const SEASON_YEARS_DISPLAY =
+  SPORT_SEASON.term === 'Fall' ? SEASON_CALENDAR_YEAR : `${SEASON_CALENDAR_YEAR}-${SEASON_YEAR.slice(3, 5)}`;
+/** 'Fall 2026', 'Winter 2026-27': the season as the site's own copy names it. Derived from SEASON_YEAR, not read. */
+export const SEASON_DISPLAY = `${SPORT_SEASON.term} ${SEASON_YEARS_DISPLAY}`;
 /** [V] verdicts 25/28/33/36/37/52 */
 export const SPORT_SEASON_ID: string = SPORT_SEASON.sportSeasonId;
 /** [V] verdicts 5, 33 */
@@ -46,8 +54,9 @@ export const TEAM_LEVEL = SPORT_SEASON.level;
  */
 export const JV_SPORT_SEASON_ID: string = SPORT_SEASON.jvSportSeasonId;
 
-/** MaxPreps' CCS tournament page — currently `<div class="not-published">` (SPEC §1.4). */
-export const CCS_BRACKET_URL = `${MAXPREPS_WEB}${SPORT_SEASON.ccsBracketPath}`;
+/** MaxPreps' CCS tournament page — currently `<div class="not-published">` (SPEC §1.4); null before MaxPreps makes one. */
+export const CCS_BRACKET_URL: string | null =
+  SPORT_SEASON.ccsBracketPath === null ? null : `${MAXPREPS_WEB}${SPORT_SEASON.ccsBracketPath}`;
 
 /** Section-wide deep links rendered by the Attribution component. League links live in lib/league-config/. */
 export const SOURCE_LINKS = {
@@ -57,6 +66,17 @@ export const SOURCE_LINKS = {
   ccsCalendar: `https://cifccs.org/calendar/${SPORT.ccs.calendar}?print=ical`,
   cifss: 'https://www.cifsshome.org/widget/schedule-score',
 } as const;
+
+/**
+ * A school's JV team page on MaxPreps, from its varsity team URL: `<varsity URL>jv/` for a sport MaxPreps files by
+ * gender alone (field hockey: `/field-hockey/jv/`), or the level put before the season segment where the URL has
+ * one (girls soccer: `/soccer/girls/winter/` → `/soccer/girls/jv/winter/`). Ends in '/'.
+ */
+export function maxprepsJvTeamUrl(varsityUrl: string): string {
+  const base = varsityUrl.endsWith('/') ? varsityUrl : `${varsityUrl}/`;
+  const m = /^(.*\/)(fall|winter|spring)\/$/.exec(base);
+  return m ? `${m[1]}jv/${m[2]}/` : `${base}jv/`;
+}
 
 /** The IANA zone every date on the site is formatted in (lib/time-zone.ts, the leaf lib/format loads). */
 export { TIME_ZONE } from './time-zone';

@@ -9,6 +9,7 @@ import { listWords, numberWord, plural } from '../../../lib/format';
 import { getLeague, getSection, isIndependentLeague } from '../../../lib/leagues';
 import { SDS_BRACKET_SHEET_URL } from '../../../lib/league-config/sections';
 import { SOURCE_LINKS } from '../../../lib/season';
+import { HAS_HISTORY, HAS_RECRUITING, SPORT } from '../../../lib/sports/current';
 import { isQuotedLeague, leagueRef, rulesDocument, type AboutSources } from '../about-view';
 import { officialSourceLabel } from '../LeagueHealthCard';
 
@@ -58,7 +59,7 @@ export function SourcesSection({ sources }: { sources: AboutSources }) {
               pages. We read it and never write to it. Each school&rsquo;s mascot comes from MaxPreps too
               (or, where that image is too small to show well, from SBLive/SI or the school&rsquo;s own website),
               copied to this site rather than hotlinked, so pages never load images from elsewhere. Each team page&rsquo;s roster and season player stats come from MaxPreps
-              too, for all {counts.teams} teams in all {numberWord(tabled.length)} leagues{independentGroups.length > 0
+              too, for all {counts.teams} teams in {tabled.length === 1 ? tabled[0].shortName : `all ${numberWord(tabled.length)} leagues`}{independentGroups.length > 0
                 ? ` and the ${listWords(independentGroups.map((g) => independentsWords(getLeague(g.id))))}`
                 : ''}: whatever the coach entered,
               with anything nobody published left blank. Other public sources, such as a school&rsquo;s
@@ -68,7 +69,7 @@ export function SourcesSection({ sources }: { sources: AboutSources }) {
             </span>
             <span className="mt-auto flex flex-wrap gap-2 pt-3">
               <ExternalLink href={SOURCE_LINKS.maxpreps} className="sx-pill">
-                MaxPreps field hockey
+                MaxPreps {SPORT.noun}
               </ExternalLink>
             </span>
           </dd>
@@ -90,7 +91,7 @@ export function SourcesSection({ sources }: { sources: AboutSources }) {
             </span>
             <span className="mt-auto flex flex-wrap gap-2 pt-3">
               <ExternalLink href={SOURCE_LINKS.sblive} className="sx-pill">
-                si.com field hockey
+                si.com {SPORT.noun}
               </ExternalLink>
             </span>
           </dd>
@@ -206,7 +207,7 @@ export function SourcesSection({ sources }: { sources: AboutSources }) {
             </span>
             <span className="mt-auto flex flex-wrap gap-2 pt-3">
               <ExternalLink href={SOURCE_LINKS.ccs} className="sx-pill">
-                CCS field hockey
+                CCS {SPORT.noun}
               </ExternalLink>
             </span>
           </dd>
@@ -307,6 +308,8 @@ export function SourcesSection({ sources }: { sources: AboutSources }) {
         schedule says was scheduled &mdash; today that is {plural(officialFixtures.length, 'game', 'games')}{' '}
         &mdash; it is listed as scheduled per the league rather than silently dropped.
       </p>
+      {/* The archive and the hand-researched recruiting pages are field hockey's alone (lib/sports/current.ts). */}
+      {HAS_HISTORY ? (
       <p id="history-coverage" className="mt-stack max-w-prose text-meta text-ink-2">
         Last season ({archive.season}): the{' '}
         <Link href="/history/2025-26" prefetch={false} className="text-accent hover:underline">
@@ -335,6 +338,8 @@ export function SourcesSection({ sources }: { sources: AboutSources }) {
           </>
         ) : null}
       </p>
+      ) : null}
+      {HAS_RECRUITING ? (<>
       <p id="clubs-coverage" className="mt-stack max-w-prose text-meta text-ink-2">
         Club field hockey: the{' '}
         <Link href="/clubs" prefetch={false} className="text-accent hover:underline">
@@ -363,6 +368,7 @@ export function SourcesSection({ sources }: { sources: AboutSources }) {
         counts only from an official college, school or club account, so a commitment announced
         only on a player&rsquo;s own account is not listed, and recall is partial.
       </p>
+      </>) : null}
     </section>
   );
 }

@@ -993,6 +993,9 @@ export function buildCrossCheck(standings: readonly Standing[]): CrossCheckRow[]
     push('league goals for', String(s.computed.gf), String(r.conferencePoints));
     push('league goals against', String(s.computed.ga), String(r.conferencePointsAgainst));
     if (trust === 'records-only') continue;
+    // Before a team's first league game neither table has a place for it (ours shows it unranked, MaxPreps lists
+    // every team first), so places and the rest of the ordering fields are not compared yet.
+    if (s.computed.gp === 0 && r.conferenceContestsPlayed === 0) continue;
     push(
       `place (we order on points, ${getLeague(div.leagueId).rules.citations.pointsShort}; MaxPreps orders on win pct)`,
       String(s.computed.place),

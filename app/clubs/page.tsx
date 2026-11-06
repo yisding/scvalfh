@@ -8,6 +8,8 @@ import PageHeader from '../../components/layout/PageHeader';
 import { OG_BASE, ROOT_OG_IMAGE } from '../../components/layout/site';
 import SectionHeader from '../../components/ui/SectionHeader';
 import { getRosters } from '../../lib/players/rosters';
+import { notFound } from 'next/navigation';
+import { HAS_RECRUITING } from '../../lib/sports/current';
 
 /** The page's title, and its og:title too: og:title never carries the site-name suffix (OG_BASE). */
 const PAGE_TITLE = 'Club teams';
@@ -49,6 +51,8 @@ export const metadata: Metadata = {
 };
 
 export default function ClubsPage() {
+  // Field hockey's alone (club teams): a soccer build renders this route as a 404 (lib/sports/current.ts HAS_RECRUITING).
+  if (!HAS_RECRUITING) notFound();
   const view = buildClubsIndexView();
 
   return (

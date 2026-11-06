@@ -12,7 +12,7 @@ import SectionHeader from '../../components/ui/SectionHeader';
 import { getCounts, getTeamSearchIndex } from '../../lib/data';
 import { listWords } from '../../lib/format';
 import { LEAGUES_PROPER } from '../../lib/leagues';
-import { SPORT_AUDIENCE } from '../../lib/sports/current';
+import { HAS_RECRUITING, SPORT_AUDIENCE } from '../../lib/sports/current';
 
 /** The page's title, and its og:title too: og:title never carries the site-name suffix (OG_BASE). */
 const PAGE_TITLE = 'Teams and standings';
@@ -151,6 +151,7 @@ export default function TeamsPage() {
           How standings are computed
         </Link>
       </p>
+      {HAS_RECRUITING ? (<>
       <p className="mt-2 mb-0 max-w-prose text-meta text-ink-3">
         Club field hockey: the{' '}
         <Link href="/clubs" prefetch={false} className="text-accent hover:underline">
@@ -173,6 +174,7 @@ export default function TeamsPage() {
         </Link>{' '}
         page gathers every school&rsquo;s recruiting profiles, clubs and commitments in one place.
       </p>
+      </>) : null}
     </div>
   );
 }

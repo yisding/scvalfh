@@ -85,7 +85,7 @@ import type { FormEntry } from '../ui/FormStrip';
 import { describeGame, shootoutSectionOf } from '../ui/describe-game';
 import { capitalized } from '../words/capitalized';
 import { maxPrepsLabel } from '../words/maxpreps-label';
-import { SPORT_AUDIENCE } from '../../lib/sports/current';
+import { IS_FIELD_HOCKEY, SPORT_AUDIENCE } from '../../lib/sports/current';
 
 /** One opponent in this team's table that it has not beaten yet (DESIGN §3.7). */
 export interface UnbeatenOpponent {
@@ -1085,8 +1085,10 @@ export function buildTeamsByRegion(): TeamsRegionGroup[] {
  * Red Bluff). The SoCal half names each source with the leagues that use it, in config order.
  */
 export function alignmentSentence(): string {
-  const norcal =
-    'League and division alignment comes from each league’s official schedule; the EAL publishes none, so its six teams are the ones MaxPreps lists in its EAL table, less Red Bluff, which is not fielding a varsity team in 2026.';
+  // The EAL clause is field hockey's (the soccer build covers SCVAL, whose official schedules give the alignment).
+  const norcal = IS_FIELD_HOCKEY
+    ? 'League and division alignment comes from each league’s official schedule; the EAL publishes none, so its six teams are the ones MaxPreps lists in its EAL table, less Red Bluff, which is not fielding a varsity team in 2026.'
+    : 'League and division alignment comes from each league’s official schedule.';
   const groups: Array<{ source: string; leagues: string[] }> = [];
   for (const league of leaguesInRegion('socal')) {
     const group = groups.find((g) => g.source === league.alignmentSource);

@@ -6,10 +6,15 @@
  * and places. Nothing here reads the snapshot.
  */
 
-import bundledFile from '../../data/sds-brackets-2026.json';
+import bundledFileFieldHockey from '../../data/sds-brackets-2026.json';
+import bundledFileSoccer from '../../data/soccer/sds-brackets-2026.json';
 import { failValidation } from '../schema-primitives';
 import type { TeamSlug } from '../types';
+import { IS_FIELD_HOCKEY } from '../sports/current';
 import { SdsBracketsSchema, type SdsBracketsDivision, type SdsBracketsFile } from './sds-brackets-schema';
+
+/** This build's copy (data/ for field hockey, data/soccer/ for soccer: lib/sports/current.ts DATA_DIR). */
+const bundledFile = IS_FIELD_HOCKEY ? bundledFileFieldHockey : bundledFileSoccer;
 
 function loadFile(): SdsBracketsFile {
   const parsed = SdsBracketsSchema.safeParse(bundledFile);

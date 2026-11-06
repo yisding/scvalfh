@@ -21,6 +21,7 @@
 import { z } from 'zod';
 
 import { dateKey } from '../schema-primitives';
+import { SPORT_SEASON } from '../sports/current';
 import type { ScheduleRow } from '../sources/maxpreps';
 import { TEAMS } from '../teams';
 import type { Team, TeamSlug } from '../types';
@@ -106,10 +107,15 @@ export function previousMaxprepsYear(maxprepsYear: string): string {
   return `${two(a - 1)}-${two(b - 1)}`;
 }
 
-/** A fall season's dates, generously: Jul 1 to Jan 31 ("2025-26" → 2025-07-01 … 2026-01-31). */
+/**
+ * A season's dates, generously: a fall season Jul 1 to Jan 31 ("2025-26" → 2025-07-01 … 2026-01-31), a winter
+ * season (soccer) Oct 1 to Apr 30 ("2025-26" → 2025-10-01 … 2026-04-30, past the CCS and CIF NorCal games).
+ */
 export function seasonWindow(season: string): { from: string; to: string } {
   const start = Number(season.slice(0, 4));
-  return { from: `${start}-07-01`, to: `${start + 1}-01-31` };
+  return SPORT_SEASON.term === 'Fall'
+    ? { from: `${start}-07-01`, to: `${start + 1}-01-31` }
+    : { from: `${start}-10-01`, to: `${start + 1}-04-30` };
 }
 
 /**

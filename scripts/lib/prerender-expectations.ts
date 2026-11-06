@@ -18,11 +18,12 @@
 import { getClubSlugs } from '../../lib/players/clubs';
 import { gameIdToParam } from '../../lib/game-id';
 import { LEAGUE_IDS, TOURNAMENT_LEAGUE_IDS } from '../../lib/leagues';
+import { HAS_HISTORY, HAS_RECRUITING } from '../../lib/sports/current';
 import { TEAMS } from '../../lib/teams';
 import type { Snapshot } from '../../lib/types';
 
 /** The pages with no params (`index` is `/`), by their prerendered file name without `.html`. */
-export const FIXED_PAGES = [
+const ALL_FIXED_PAGES = [
   'index',
   'about',
   'standings',
@@ -36,6 +37,22 @@ export const FIXED_PAGES = [
   'recruiting',
   'jv',
 ] as const;
+
+/**
+ * The fixed pages this build prerenders: a route only field hockey has (lib/sports/current.ts HAS_HISTORY,
+ * HAS_RECRUITING) is a 404 in another sport's build, which `next build` writes as a not-found page and vinext
+ * skips, so it is not expected.
+ */
+export const FIXED_PAGES = ALL_FIXED_PAGES.filter(
+  (p) => (HAS_HISTORY || p !== 'history/2025-26') && (HAS_RECRUITING || !['clubs', 'commits', 'recruiting'].includes(p)),
+);
+
+/** vinext route patterns a soccer build skips because they render a 404 or have no params (no tournament league). */
+export const SKIPPED_ROUTES: readonly string[] = [
+  ...(HAS_HISTORY ? [] : ['/history/2025-26']),
+  ...(HAS_RECRUITING ? [] : ['/clubs', '/clubs/:slug', '/commits', '/recruiting']),
+  ...(TOURNAMENT_LEAGUE_IDS.length > 0 ? [] : ['/playoffs/:league']),
+];
 
 /** The params each dynamic family must prerender, exactly. */
 export interface ExpectedFamilies {
@@ -163,7 +180,8 @@ export function makeFamilyChecker(
     family('game', [...expected.gameParams, ...expected.stubParams], { og: true });
     family('scores', expected.dates, { og: true });
     family('teams', expected.slugs, { og: true });
-    family('history', ['2025-26'], { og: false });
+    // Not checked in a build without the archive: `next build` writes its 404 there and vinext skips the route.
+    if (HAS_HISTORY) family('history', ['2025-26'], { og: false });
     // One page per club of data/clubs.json, a club with no tied player included; no OG card (the
     // clubs pages take the root one), so no parity check either.
     family('clubs', expected.clubSlugs, { og: false });

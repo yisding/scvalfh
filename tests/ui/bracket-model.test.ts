@@ -39,7 +39,7 @@ const playoffs: CcsPlayoffs = {
     highSeedHostsThrough: 'quarterfinals',
   },
   bracketPublished: false,
-  bracketUrl: CCS.bracketUrl,
+  bracketUrl: CCS.bracketUrl!,
   games: [],
 };
 const QF = playoffs.keyDates.quarterfinals.slice(0, 10);
@@ -93,7 +93,7 @@ describe('the 2025 CCS championship on 2026’s dates (tests/fixtures/ccs/bracke
     expect(GAMES_2025.filter((g) => g.dateKey === QF), 'quarterfinals').toHaveLength(8);
     expect(GAMES_2025.filter((g) => g.dateKey === SF), 'semifinals').toHaveLength(4);
     expect(GAMES_2025.filter((g) => g.dateKey === F), 'finals').toHaveLength(2);
-    expect(GAMES_2025.every((g) => g.postseason?.kind === 'ccs' && g.bracket?.published === true && g.bracket.tournamentId === CCS.tournament.id)).toBe(true);
+    expect(GAMES_2025.every((g) => g.postseason?.kind === 'ccs' && g.bracket?.published === true && g.bracket.tournamentId === CCS.tournament!.id)).toBe(true);
     expect(new Set(GAMES_2025.map((g) => g.bracket?.name))).toEqual(new Set(['Division 1', 'Division 2']));
     expect(SEEDS_2025.divisions.map((d) => d.seeds.length)).toEqual([8, 8]);
   });

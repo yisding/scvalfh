@@ -21,7 +21,7 @@ import { plural } from '../words/plural';
 import { UNADJUSTED_NOTE, num, schoolBoard } from './board-kit';
 import type { EloBoardView } from './elo-board';
 import { byName, qualifyingMinimum } from './ranking';
-import { AND_INDEPENDENTS, LEAGUE_COUNT, type BoardScope } from './scope';
+import { AND_INDEPENDENTS, THE_LEAGUES_POSSESSIVE, type BoardScope } from './scope';
 import type { LeaderBoard, LeaderCell } from './types';
 
 interface SchoolLine {
@@ -343,7 +343,7 @@ export function buildSchoolBoards(input: SchoolBoardsInput): { boards: LeaderBoa
   }
   if (elo.minimum.median > 0) {
     notes.push(
-      `The Elo-adjusted goals board and the Elo board need at least ${plural(elo.minimum.min, 'game')} against the ${LEAGUE_COUNT} leagues’ teams${AND_INDEPENDENTS}, half the median of ${elo.minimum.median}${notYet(elo.below)}`,
+      `The Elo-adjusted goals board and the Elo board need at least ${plural(elo.minimum.min, 'game')} against ${THE_LEAGUES_POSSESSIVE} teams${AND_INDEPENDENTS}, half the median of ${elo.minimum.median}${notYet(elo.below)}`,
     );
   }
   return { boards, notes };

@@ -364,7 +364,7 @@ export const SeasonSchema = z.object({
   label: z.string(),
   sportSeasonId: z.string(),
   allSeasonId: z.string(),
-  genderSport: z.literal('girls,fieldhockey'),
+  genderSport: z.enum(['girls,fieldhockey', 'girls,soccer']),
   teamLevel: z.enum(['Varsity', 'JV']),
   sections: z.array(
     z.object({
@@ -417,6 +417,9 @@ export const PlayoffsSchema = z.object({
     quarterfinals: dateOnly,
     semifinals: dateOnly,
     finals: dateOnly,
+    // A round some divisions play later (soccer); absent for field hockey.
+    semifinalsLast: dateOnly.optional(),
+    finalsLast: dateOnly.optional(),
     evaluationMeeting: z.string(),
     endOfLeagueSeason: dateOnly,
   }),
@@ -432,14 +435,14 @@ export const PlayoffsSchema = z.object({
     ),
     // Numbers only: one key per CCS-ladder league, plus atLarge and total (checked against config).
     autoQualifiers: z
-      .object({ atLarge: z.number().int().min(0), total: z.number().int().min(0) })
-      .catchall(z.number().int().min(0)),
-    highSeedHostsThrough: z.enum(['quarterfinals', 'semifinals']),
+      .object({ atLarge: z.number().int().min(0).nullable(), total: z.number().int().min(0).nullable() })
+      .catchall(z.number().int().min(0).nullable()),
+    highSeedHostsThrough: z.enum(['quarterfinals', 'semifinals']).nullable(),
   }),
   bracketPublished: z.boolean(),
   // Per CCS division, when the run read a recognised tournament page or carried one (lib/sources/ccs.ts readTournamentPage).
   divisionsPublished: z.object({ 'Division 1': z.boolean(), 'Division 2': z.boolean() }).optional(),
-  bracketUrl: httpUrl,
+  bracketUrl: httpUrl.nullable(),
   games: z.array(GameSchema),
 });
 
@@ -925,7 +928,7 @@ function checkAgainstConfig(s: z.infer<typeof SnapshotObject>, ctx: Ctx): void {
     }
     sum += aq[leagueId] ?? 0;
   }
-  if (sum !== aq.total) issue(ctx, ['playoffs', 'format', 'autoQualifiers'], `autoQualifiers sum ${sum} != total ${aq.total}`);
+  if (aq.total !== null && sum !== aq.total) issue(ctx, ['playoffs', 'format', 'autoQualifiers'], `autoQualifiers sum ${sum} != total ${aq.total}`);
 
   // 8. one leagueHealth row per league, config order, with that league's divisions.
   if (s.leagueHealth.map((h) => h.leagueId).join('|') !== LEAGUES.map((l) => l.id).join('|')) {

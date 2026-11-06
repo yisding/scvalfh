@@ -12,7 +12,8 @@
 
 import { readFileSync } from 'node:fs';
 
-import bundledSnapshot from '../data/snapshot.json';
+import bundledSnapshotFieldHockey from '../data/snapshot.json';
+import bundledSnapshotSoccer from '../data/soccer/snapshot.json';
 
 import {
   dateSpan,
@@ -97,6 +98,10 @@ import type {
   TeamId,
   TeamSlug,
 } from './types';
+import { IS_FIELD_HOCKEY } from './sports/current';
+
+/** This build's copy (data/ for field hockey, data/soccer/ for soccer: lib/sports/current.ts DATA_DIR). */
+const bundledSnapshot = IS_FIELD_HOCKEY ? bundledSnapshotFieldHockey : bundledSnapshotSoccer;
 
 /**
  * data/snapshot.json is IMPORTED, so every toolchain bundles it into the server code at build time:
@@ -966,14 +971,15 @@ export function getLeaguePairings(leagueId: LeagueId): LeaguePairing[] {
 /** The 16-team CCS field: numbers only. */
 export function getCcsField(): {
   byLeague: Array<{ leagueId: LeagueId; shortName: string; auto: number }>;
-  atLarge: number;
-  total: number;
+  /** null, with `total`, where the CCS's own bylaws are the only source (soccer). */
+  atLarge: number | null;
+  total: number | null;
 } {
   return {
     byLeague: CCS_LEAGUE_IDS.map((id) => ({
       leagueId: id,
       shortName: getLeague(id).shortName,
-      auto: CCS.autoQualifiers[id],
+      auto: CCS.autoQualifiers[id] ?? 0,
     })),
     atLarge: CCS.autoQualifiers.atLarge,
     total: CCS.autoQualifiers.total,

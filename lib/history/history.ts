@@ -15,8 +15,10 @@
 
 import { readFileSync } from 'node:fs';
 
-import bundledBrackets from '../../data/history-brackets-2025-26.json';
-import bundledHistory from '../../data/history-2025-26.json';
+import bundledBracketsFieldHockey from '../../data/history-brackets-2025-26.json';
+import bundledBracketsSoccer from '../../data/soccer/history-brackets-2025-26.json';
+import bundledHistoryFieldHockey from '../../data/history-2025-26.json';
+import bundledHistorySoccer from '../../data/soccer/history-2025-26.json';
 import {
   BRACKET_SECTION_IDS,
   BRACKET_TOURNAMENT_IDS,
@@ -44,6 +46,12 @@ import { LEAGUE_IDS, getLeague, getSection, isIndependentLeague } from '../leagu
 import { failValidation } from '../schema-primitives';
 import { getTeamBySlug } from '../teams';
 import type { DivisionId, LeagueId, SectionId, TeamSlug } from '../types';
+import { IS_FIELD_HOCKEY } from '../sports/current';
+
+/** This build's copy (data/ for field hockey, data/soccer/ for soccer: lib/sports/current.ts DATA_DIR). */
+const bundledBrackets = IS_FIELD_HOCKEY ? bundledBracketsFieldHockey : bundledBracketsSoccer;
+/** This build's copy (data/ for field hockey, data/soccer/ for soccer: lib/sports/current.ts DATA_DIR). */
+const bundledHistory = IS_FIELD_HOCKEY ? bundledHistoryFieldHockey : bundledHistorySoccer;
 
 export type {
   AvailableLeagueHistory,
@@ -93,7 +101,9 @@ function load(): History {
   return parsed.data;
 }
 
-const history = load();
+// The 2025-26 archive is field hockey's alone: the soccer build's file (data/soccer/history-2025-26.json) is an
+// empty placeholder with no league entries, so hasHistory() is false for every soccer league.
+const history = IS_FIELD_HOCKEY ? load() : (bundledHistory as unknown as History);
 
 export function getHistorySeason(): string {
   return history.season;
@@ -101,7 +111,11 @@ export function getHistorySeason(): string {
 
 /** Every league's entry, in lib/leagues.ts order (SCVAL, BVAL, PCAL, MCAL, EAL). */
 export function getHistoryLeagues(): Array<{ id: LeagueId; entry: LeagueHistory }> {
-  return LEAGUE_IDS.map((leagueId) => ({ id: leagueId, entry: history.leagues[leagueId] }));
+  // A league with no entry (every league of a build without the archive: soccer) is left out.
+  return LEAGUE_IDS.flatMap((leagueId) => {
+    const entry = history.leagues[leagueId];
+    return entry === undefined ? [] : [{ id: leagueId, entry }];
+  });
 }
 
 /** The leagues that have final standings, in config order. */
@@ -260,7 +274,9 @@ function loadBrackets() {
   return parsed.data;
 }
 
-const brackets = loadBrackets();
+const brackets = IS_FIELD_HOCKEY
+  ? loadBrackets()
+  : (bundledBrackets as unknown as ReturnType<typeof loadBrackets>);
 
 /**
  * Each section with a 2025 bracket, with the league its block follows on /history/2025-26: the
@@ -268,7 +284,8 @@ const brackets = loadBrackets();
  * so the bracket sits after the leagues that fed it and inside their region.
  */
 export function getHistoryBrackets(): Array<{ id: BracketSectionId; bracket: SectionBracket; afterLeague: LeagueId }> {
-  return BRACKET_SECTION_IDS.map((id) => {
+  // A section the archive has no bracket for (every section of a build without the archive: soccer) is left out.
+  return BRACKET_SECTION_IDS.filter((id) => brackets.sections[id] !== undefined).map((id) => {
     const leagues = LEAGUE_IDS.filter((l) => getLeague(l).sectionId === id);
     return { id, bracket: brackets.sections[id], afterLeague: leagues[leagues.length - 1] };
   });
@@ -292,7 +309,7 @@ export function getHistoryTournaments(): Array<{
   /** The leagues whose postseason it is (the Sunset and the LA independents), in config order. */
   leagues: LeagueId[];
 }> {
-  return BRACKET_TOURNAMENT_IDS.map((id) => {
+  return BRACKET_TOURNAMENT_IDS.filter((id) => brackets.tournaments[id] !== undefined).map((id) => {
     // The no-postseason leagues of the section whose teams play it (DESIGN §24.13): the Sunset and the LA
     // independents. Asserted in tests/history-brackets.test.ts.
     const leagues = LEAGUE_IDS.filter((l) => {

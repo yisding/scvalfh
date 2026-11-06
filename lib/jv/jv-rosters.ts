@@ -37,13 +37,20 @@ import { readFileSync } from 'node:fs';
 
 import { z } from 'zod';
 
-import bundledMaxPreps from '../../data/jv-rosters.json';
-import bundledSites from '../../data/jv-rosters-school-sites.json';
+import bundledMaxPrepsFieldHockey from '../../data/jv-rosters.json';
+import bundledSitesFieldHockey from '../../data/jv-rosters-school-sites.json';
+import bundledMaxPrepsSoccer from '../../data/soccer/jv-rosters.json';
+import bundledSitesSoccer from '../../data/soccer/jv-rosters-school-sites.json';
 import { getEnrichedTeamRoster } from '../players/rosters';
 import { RostersSchema, type Rosters, type TeamRoster } from '../players/rosters-schema';
 import { dateKey, failValidation, httpUrl } from '../schema-primitives';
 import { getTeamBySlug } from '../teams';
+import { IS_FIELD_HOCKEY } from '../sports/current';
 import type { TeamSlug } from '../types';
+
+/** This build's copies (data/ for field hockey, data/soccer/ for soccer: lib/sports/current.ts DATA_DIR). */
+const bundledMaxPreps = IS_FIELD_HOCKEY ? bundledMaxPrepsFieldHockey : bundledMaxPrepsSoccer;
+const bundledSites = IS_FIELD_HOCKEY ? bundledSitesFieldHockey : bundledSitesSoccer;
 
 export const JvSiteRosterPlayerSchema = z
   .object({

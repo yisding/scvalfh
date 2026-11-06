@@ -25,11 +25,13 @@ import { METRO_SEEDS } from './registry/metro';
 import { NORTH_COUNTY_SEEDS } from './registry/north-county';
 import { PCAL_SEEDS } from './registry/pcal';
 import { SCVAL_SEEDS } from './registry/scval';
+import { SCVAL_SOCCER_SEEDS } from './registry/soccer/scval';
 import type { Seed } from './registry/seed';
 import { SUNSET_SEEDS } from './registry/sunset';
 import { SLUG_PATTERN } from './schema-primitives';
 import { SCHOOL_ADDRESSES } from './schools/schools';
 import { MAXPREPS_WEB, SBLIVE_WEB } from './season';
+import { IS_FIELD_HOCKEY } from './sports/current';
 import type { DivisionId, GameSide, LeagueId, Team, TeamId } from './types';
 
 const MP = MAXPREPS_WEB;
@@ -97,7 +99,7 @@ function toTeam(s: Seed): Team {
   };
 }
 
-const SEEDS_BY_LEAGUE: Readonly<Record<LeagueId, readonly Seed[]>> = {
+const SEEDS_BY_LEAGUE: Readonly<Record<LeagueId, readonly Seed[]>> = IS_FIELD_HOCKEY ? {
   scval: SCVAL_SEEDS,
   bval: BVAL_SEEDS,
   pcal: PCAL_SEEDS,
@@ -108,6 +110,8 @@ const SEEDS_BY_LEAGUE: Readonly<Record<LeagueId, readonly Seed[]>> = {
   'north-county': NORTH_COUNTY_SEEDS,
   metro: METRO_SEEDS,
   independents: INDEPENDENTS_SEEDS,
+} : {
+  scval: SCVAL_SOCCER_SEEDS,
 };
 
 /** The registry (102), in LEAGUES order; within a league, the seed file's order. */
@@ -290,9 +294,13 @@ export function teamsInLeague(leagueId: LeagueId): readonly Team[] {
  * league-scoped in LeagueConfig.officialCodes), and every one of the seven keeps its name, aliases,
  * slug and MaxPreps GUID as keys. Recomputed by running this module over the 102 seeds.
  */
-const EXPECTED_ACRONYM_COLLISIONS = [
-  'BHS', 'BVHS', 'CHS', 'EHS', 'FHS', 'GHS', 'HHS', 'LHS', 'MCHS', 'MHS', 'MVHS', 'PHS', 'SCHS', 'SHS', 'VCHS', 'WHS',
-];
+const EXPECTED_ACRONYM_COLLISIONS = IS_FIELD_HOCKEY
+  ? ['BHS', 'BVHS', 'CHS', 'EHS', 'FHS', 'GHS', 'HHS', 'LHS', 'MCHS', 'MHS', 'MVHS', 'PHS', 'SCHS', 'SHS', 'VCHS', 'WHS']
+  : // The soccer registry's 15 SCVAL schools: Mountain View and Monta Vista are both MVHS.
+    ['MVHS'];
+
+/** The registry's size: field hockey's 102 teams, or soccer's 15 (SCVAL only). */
+const EXPECTED_TEAMS = IS_FIELD_HOCKEY ? 102 : 15;
 
 function assertRegistry(): void {
   const fail = (m: string): never => {
@@ -341,8 +349,8 @@ function assertRegistry(): void {
     }
   }
   const expectedTotal = LEAGUES.reduce((n, l) => n + l.divisions.reduce((m, d) => m + d.expectedTeams, 0), 0);
-  if (TEAMS.length !== expectedTotal || TEAMS.length !== 102) {
-    fail(`expected 102 teams, got ${TEAMS.length}`);
+  if (TEAMS.length !== expectedTotal || TEAMS.length !== EXPECTED_TEAMS) {
+    fail(`expected ${EXPECTED_TEAMS} teams, got ${TEAMS.length}`);
   }
   if (FETCHABLE_TEAMS.length !== TEAMS.length) {
     fail(`expected ${TEAMS.length} fetchable teams, got ${FETCHABLE_TEAMS.length}`);

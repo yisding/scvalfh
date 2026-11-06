@@ -167,7 +167,7 @@ async function stepCcs(ctx: PipelineContext): Promise<CcsState> {
     kind: 'ccs-bracket' as const,
     scope: { section: 'ccs' as const },
     label: 'ccs bracket',
-    url: CCS.bracketUrl,
+    url: CCS.bracketUrl ?? CCS.sources.index,
     fetchedAt: ctx.fetchedAt,
   };
   // No CCS league in the run, or the season gate is closed: nothing to poll.
@@ -197,7 +197,10 @@ async function stepCcs(ctx: PipelineContext): Promise<CcsState> {
     ctx.source({ ...calendarBase, ...failed });
     missed.push(failed.status === 'skipped' ? 'calendar not in corpus' : 'calendar failed');
   }
-  try {
+  if (CCS.bracketUrl === null) {
+    // No MaxPreps tournament page exists for the season yet (soccer, 2026-11-06): nothing to read.
+    ctx.source({ ...bracketBase, status: 'skipped', error: 'no MaxPreps CCS tournament page for this season yet' });
+  } else try {
     const res = await ctx.transport.get({ kind: 'ccs-bracket' });
     const page = readTournamentPage(res.body);
     if (!page.recognised) {

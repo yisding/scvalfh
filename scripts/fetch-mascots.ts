@@ -46,6 +46,7 @@ import { CHROME_USER_AGENT, HttpClient } from '../lib/sources/http';
 import { TEAMS } from '../lib/teams';
 import type { Team } from '../lib/types';
 import { runCli } from './cli';
+import { IS_FIELD_HOCKEY } from '../lib/sports/current';
 
 const USAGE = 'Usage: pnpm fetch-mascots [--only <slug>]... [--dry-run]';
 
@@ -232,7 +233,9 @@ async function main(argv: readonly string[]): Promise<number> {
     ...TEAMS.map((t) => ({ slug: t.slug, url: mascotUrl(t) })),
     ...Object.values(JV_OUTSIDE_TEAMS).map((t) => ({ slug: t.mascot, url: t.mascotSource })),
   ];
-  const unknown = [...args.only, ...Object.keys(SOURCE_OVERRIDES)].filter((s) => !targets.some((t) => t.slug === s));
+  // The overrides name field hockey's schools; a soccer build (SCVAL alone) checks only the slugs it was given.
+  const overrides = IS_FIELD_HOCKEY ? Object.keys(SOURCE_OVERRIDES) : [];
+  const unknown = [...args.only, ...overrides].filter((s) => !targets.some((t) => t.slug === s));
   if (unknown.length > 0) throw new Error(`not a registry slug or JV slot team: ${unknown.join(', ')}`);
   const teams = args.only.length > 0 ? targets.filter((t) => args.only.includes(t.slug)) : targets;
 
