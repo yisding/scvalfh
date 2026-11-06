@@ -1,11 +1,49 @@
 import Link from 'next/link';
 
 import { EM_DASH, recordString } from '../../lib/format';
+import type { Team } from '../../lib/types';
 import EmptyState from '../ui/EmptyState';
 import PlaceMark from '../ui/PlaceMark';
 import SectionHeader from '../ui/SectionHeader';
 import TeamMonogram from '../ui/TeamMonogram';
 import type { JvTableView } from './jv-standings-view';
+
+/**
+ * A JV slot team's name cell (York): its tile, or a letter without one, and its name, linking the
+ * JV section of the school whose slot it plays, where its games are listed. The link's accessible
+ * name says whose page it opens, so "York" is not read as a page of its own.
+ */
+function SlotTeamCell({ name, mascot, host }: { name: string; mascot: string | null; host: Team | null }) {
+  const body = (
+    <>
+      {mascot ? (
+        <TeamMonogram team={{ slug: mascot, name }} size={24} />
+      ) : (
+        <span
+          aria-hidden="true"
+          className="inline-flex size-6 shrink-0 items-center justify-center rounded-md bg-surface-3 text-micro font-semibold text-ink-2"
+        >
+          {name.charAt(0)}
+        </span>
+      )}
+      <span className="min-w-0 line-clamp-2 text-ellipsis text-body">
+        {name}
+        {host ? <span className="sr-only">, JV games on {host.shortName}&rsquo;s page</span> : null}
+      </span>
+    </>
+  );
+  return host ? (
+    <Link
+      href={`/teams/${host.slug}#jv`}
+      prefetch={false}
+      className="flex min-h-11 items-center gap-2 text-ink no-underline hover:underline after:absolute after:inset-0 after:content-['']"
+    >
+      {body}
+    </Link>
+  ) : (
+    <span className="flex min-h-11 items-center gap-2 text-ink">{body}</span>
+  );
+}
 
 /**
  * One league's JV tables on `/jv` (`#<division>` each): its divisions' blocks, in config order.
@@ -74,7 +112,7 @@ function JvTable({ view }: { view: JvTableView }) {
           </tr>
         </thead>
         <tbody>
-          {view.rows.map(({ row, team, mascot }) => {
+          {view.rows.map(({ row, team, mascot, slotHost }) => {
             const has = row.record.gp > 0;
             return (
               <tr key={row.teamId} data-team-slug={team?.slug} className="relative">
@@ -96,20 +134,10 @@ function JvTable({ view }: { view: JvTableView }) {
                       <span className="min-w-0 line-clamp-2 text-ellipsis text-body">{team.shortName}</span>
                     </Link>
                   ) : (
-                    // A JV slot team (York): no page here, so no link; its own tile, or a letter without one.
-                    <span className="flex min-h-11 items-center gap-2 text-ink">
-                      {mascot ? (
-                        <TeamMonogram team={{ slug: mascot, name: row.name }} size={24} />
-                      ) : (
-                        <span
-                          aria-hidden="true"
-                          className="inline-flex size-6 shrink-0 items-center justify-center rounded-md bg-surface-3 text-micro font-semibold text-ink-2"
-                        >
-                          {row.name.charAt(0)}
-                        </span>
-                      )}
-                      <span className="min-w-0 line-clamp-2 text-ellipsis text-body">{row.name}</span>
-                    </span>
+                    // A JV slot team (York): no page of its own. Its JV games are on the page of the school
+                    // whose slot it plays (Santa Catalina's `#jv`), so the row links there, and says so
+                    // to a screen reader; its own tile, or a letter without one.
+                    <SlotTeamCell name={row.name} mascot={mascot} host={slotHost} />
                   )}
                 </th>
                 <td className="sx-num w-10 text-right text-ink-2">{row.record.gp}</td>

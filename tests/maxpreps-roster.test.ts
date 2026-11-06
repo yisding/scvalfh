@@ -291,7 +291,7 @@ describe('maxpreps roster: drift is loud', () => {
     const driftedRow = withPageProps(html, (pp) => {
       rows(pp)[0][COL.sportSeasonId] = 'another-season';
     });
-    expect(() => parseIt(driftedRow)).toThrow(/not the current sportSeasonId/);
+    expect(() => parseIt(driftedRow)).toThrow(/not the page's sportSeasonId/);
     expect(SPORT_SEASON_ID).toBe('e302eb3e-1a32-4f2d-934b-6f9d454f721e');
   });
 

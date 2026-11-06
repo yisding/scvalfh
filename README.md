@@ -133,7 +133,7 @@ Per-league pages show their own region's league chips.
 | `/scores/[date]` | One day's scoreboard (one static page per date with a game; OG card per date), the regions kept apart: `#norcal` ("Northern California": its leagues in config order, each counting its league and postseason games apart, "MCAL · 1 postseason game"; then an event group for a postseason game no league owns, "CCS", "San Diego Section playoffs" or "Tournament of Champions", `#postseason-<slug>`; then its Non-league games), then, on a day that has one, `#between-regions` ("NorCal vs SoCal", shown in both views), then `#socal` (its repeated ids suffixed, `#non-league-socal`); a region with no game says so in one sentence. Then the day's JV games, one block per region (`#jv`, `#jv-socal`), kept apart from the varsity counts. The header counts each region when both have a game ("NorCal: 6 games" … "SoCal: 9 games") |
 | `/game/[id]` | One game's detail page (one static page per game; OG card per game). On a final, a Game stats section (`#game-stats-kicker`) shows each followed side's box score as its coach entered it on MaxPreps, where one did: scorers, assists, shots and goalkeeping (see "Player stats"). A game whose score came from si.com has an id like `sblive-123`; one that MaxPreps later published is a stub that links to it |
 | `/teams` | Teams and standings: all 102 teams, a search box, and each division's compact standings table, the independents' included (place, team, GP, W-L-T, PTS, the ladder line, a link to the full league table), grouped region → section → league → division. The search filters the tables' rows in place and searches both regions |
-| `/teams/[slug]` | One team's record, Elo rating (collapsed, `#elo`, with its place on its own region's board), schedule, results, splits and postseason line, then the school's JV games (`#jv`, kept apart from the varsity counts), its player stats and roster (102 pages, all nine leagues and the five independents; an independent's "league" figures are its games against the other four); a player a public page ties to a club gets a club line linking that club's page |
+| `/teams/[slug]` | One team's record, Elo rating (collapsed, `#elo`, with its place on its own region's board), schedule, results, splits and postseason line, then the school's JV games (`#jv`, kept apart from the varsity counts; Santa Catalina's are York's, which plays its PCAL JV slot, each read from York's side, with York's JV table line), its player stats and roster, then its JV roster where one was found (`#jv-roster`) (102 pages, all nine leagues and the five independents; an independent's "league" figures are its games against the other four); a player a public page ties to a club gets a club line linking that club's page |
 | `/clubs` | "Which clubs do players here play for?" The 28 youth field hockey clubs by region, each region's section scoped to its half of the site under the NorCal/SoCal switcher; for each, how many players on the tracked varsity rosters a public page ties to it (current and earlier counted separately) and from which schools, then how a player is matched (`#how-matched`). All 102 teams' schools have been swept for clubs |
 | `/clubs/[slug]` | One club (28 pages, a club with no tied player included): what it is, the players from the tracked varsity rosters a public page ties to it, each with a status and the pages it rests on, its teams and programs, and its own roster pages |
 | `/commits` | "Who here has committed to play in college, and where?" The players on the tracked varsity rosters (all 102 teams' have been swept) a public page says have committed to (or signed with) a college team, in field hockey or any other sport, split NorCal/SoCal by the region toggle, each region by class year (`#norcal-class-2027`), each with the college, the sport, its level and the pages it rests on, then that region's colleges (`#norcal-colleges`); then how a commitment is matched (`#how-matched`). A team page's roster links each committed player's row |
@@ -444,7 +444,34 @@ pnpm fetch-rosters --leagues bval,pcal                  # only these leagues; th
 pnpm fetch-rosters --fixtures tests/fixtures/maxpreps   # offline, from the captured pages (SCVAL's: add --leagues scval)
 pnpm fetch-rosters --capture <dir>                      # live, and save each page read as <dir>/roster-<slug>.html
 pnpm fetch-rosters --dry-run                            # parse and report, write nothing
+pnpm fetch-rosters --level jv                           # the 102 MaxPreps JV roster pages → data/jv-rosters.json
 ```
+
+#### JV rosters
+
+A team page lists the school's JV roster in a "JV roster" section (`#jv-roster`) after its varsity
+roster, where one was found: 48 schools on 2026-11-06 (`lib/jv/jv-rosters.ts`, shown by
+`components/jv/TeamJvRoster.tsx`). Two files feed it:
+
+- `data/jv-rosters.json`: each school's MaxPreps JV roster page (`<team URL>jv/roster/`, the JV sport
+  season), read by `pnpm fetch-rosters --level jv` with the varsity parser and the varsity file's contract,
+  by hand like the varsity rosters. On 2026-11-06 it lists 508 players for 34 of the 102 schools.
+- `data/jv-rosters-school-sites.json`: the 2026-27 JV lists 28 schools publish on their own athletics
+  sites (or a page the school links as its roster), transcribed on 2026-11-06 with the evidence for each
+  list's season: Sidearm (Saint Francis, St. Ignatius), 5 Star (Los Gatos, Palo Alto, Helix, Bonita), 14
+  homecampus sites (`/lower/field-hockey-junior-varsity/roster/?selected_year=2026`), and one page each
+  for Fremont (a Google Sheet), Branham (a Google Doc), Cupertino and Bishop's (Finalsite), Lick-Wilmerding
+  and Marin Catholic (Blackbaud), Great Oak (SportsEngine) and Poway (its program's site). 482 players.
+
+A player on the varsity roster the page shows is not repeated on the JV list, which counts them: several
+MaxPreps JV pages carry the whole program (Marin Academy's lists its 18 varsity players with their
+varsity numbers; Huntington Beach's 13 are all on its varsity roster, so its section says so in place
+of a list). MaxPreps rows match the varsity roster by career id or name, a school's list by name. Where
+both sources list a school, the page shows the one with more JV players once those are taken out (the
+school's own on a tie: 25 school lists and 23 MaxPreps lists are shown) and names the other with its
+count. JV players feed nothing else: not the clubs, commitments or recruiting pages. York, which plays
+Santa Catalina's PCAL JV slot, has no roster on MaxPreps (its JV roster page lists nobody) or york.org
+(a schedule only), so Santa Catalina's page has no JV roster.
 
 ### Player stats
 

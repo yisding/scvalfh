@@ -8,6 +8,7 @@ import TeamFormMargin from '../../../components/teams/TeamFormMargin';
 import TeamGameLog from '../../../components/teams/TeamGameLog';
 import TeamIdentity from '../../../components/teams/TeamIdentity';
 import TeamJvGames from '../../../components/jv/TeamJvGames';
+import TeamJvRoster from '../../../components/jv/TeamJvRoster';
 import TeamNextGame from '../../../components/teams/TeamNextGame';
 import TeamOfficialFixtures from '../../../components/teams/TeamOfficialFixtures';
 import TeamPlayerStats from '../../../components/teams/TeamPlayerStats';
@@ -79,6 +80,7 @@ import { SPORT, SPORT_AUDIENCE } from '../../../lib/sports/current';
  *     JV games (both columns)
  *     Player stats (both columns)
  *     Roster (both columns)
+ *     JV roster (both columns), only for a school some source lists JV players for
  *
  * The League log spans only when the official-only fixtures card exists and there are league
  * results. Without results the log is a short empty state and the official-fixtures list
@@ -174,6 +176,7 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
     roster,
     jv,
     jvStanding,
+    jvRoster,
     playerStats,
     rosterCount,
     leagueLogSpans,
@@ -368,7 +371,7 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
               }
               action={jvStanding ? { href: jvStanding.href, label: 'JV standings' } : undefined}
             />
-            <TeamJvGames view={jv} perspective={team.slug} />
+            <TeamJvGames view={jv} />
           </section>
         ) : null}
 
@@ -394,6 +397,19 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
               action={{ href: '/clubs', label: 'Club teams' }}
             />
             <TeamRoster view={roster} />
+          </section>
+        ) : null}
+
+        {/* The JV roster, last: the school's other team, apart from the varsity roster above it, as
+            the JV games are apart from the varsity games. Only a school some source lists JV players
+            for has the section (components/jv/jv-roster-view.ts). */}
+        {jvRoster ? (
+          <section className="min-w-0 md:col-span-2" id="jv-roster">
+            <SectionHeader
+              kicker="JV roster"
+              meta={jvRoster.rows.length > 0 ? `${plural(jvRoster.rows.length, 'player')} · ${jvRoster.sourceLabel}` : jvRoster.sourceLabel}
+            />
+            <TeamJvRoster view={jvRoster} />
           </section>
         ) : null}
       </div>

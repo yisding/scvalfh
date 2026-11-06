@@ -109,6 +109,16 @@ export function getJvGamesForTeam(slug: TeamSlug): Game[] {
   return games.filter((g) => g.home.slug === slug || g.away.slug === slug).sort(byDateThenId);
 }
 
+/**
+ * A JV team outside the registry's games, by its MaxPreps id, classified, oldest first: York's
+ * (lib/jv/jv-teams.ts JV_OUTSIDE_TEAMS), which Santa Catalina's page lists, since York plays its JV slot.
+ */
+export function getJvGamesForOutsideTeam(maxprepsTeamId: string): Game[] {
+  return games
+    .filter((g) => g.home.teamId === maxprepsTeamId || g.away.teamId === maxprepsTeamId)
+    .sort(byDateThenId);
+}
+
 /** Every JV game on one date (YYYY-MM-DD), classified, by time. */
 export function getJvGamesOn(dateKey: string): Game[] {
   return games.filter((g) => g.dateKey === dateKey);

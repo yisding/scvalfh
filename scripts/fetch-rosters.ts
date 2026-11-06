@@ -10,6 +10,9 @@
  *   pnpm fetch-rosters --out <path>        write somewhere else
  *   pnpm fetch-rosters --dry-run           parse and report, write nothing (captures included)
  *   pnpm fetch-rosters --fetched-at <iso>  pin the stamp (reproducible fixture builds)
+ *   pnpm fetch-rosters --level jv          the JV roster pages instead (`<team URL>jv/roster/`, the
+ *                                          JV sport season) into data/jv-rosters.json; every other
+ *                                          flag works the same (fixtures: jv-roster-<slug>.html)
  *
  * A run whose rows equal the previous file's apart from fetchedAt / error text leaves it as it was.
  *
@@ -50,7 +53,7 @@ import {
   type PreviousFile,
 } from '../lib/pipeline/fetch-scope';
 import { MaxPrepsClient } from '../lib/sources/maxpreps';
-import { parseRosterPage, pendingRoster, rosterUrl } from '../lib/sources/maxpreps-roster';
+import { jvRosterUrl, parseRosterPage, pendingRoster, rosterUrl } from '../lib/sources/maxpreps-roster';
 import {
   RostersPartialSchema,
   RostersSchema,
@@ -62,13 +65,16 @@ import {
 } from '../lib/players/rosters-schema';
 import { INDEPENDENT_LEAGUES, LEAGUES_PROPER } from '../lib/leagues';
 import { formatIssues } from '../lib/schema-primitives';
-import { SEASON_YEAR } from '../lib/season';
+import { JV_SPORT_SEASON_ID, SEASON_YEAR, SPORT_SEASON_ID } from '../lib/season';
 import { stableStringify } from '../lib/stable-json';
 import { TEAMS } from '../lib/teams';
 import type { LeagueId } from '../lib/types';
 import { runCli } from './cli';
 
+type Level = 'varsity' | 'jv';
+
 interface Args {
+  level: Level;
   fixtures: string | null;
   capture: string | null;
   leagues: LeagueId[] | null;
@@ -78,11 +84,13 @@ interface Args {
 }
 
 function parseArgs(argv: readonly string[]): Args {
-  const out: Args = {
+  const out: Args & { outGiven: boolean } = {
+    level: 'varsity',
     fixtures: null,
     capture: null,
     leagues: null,
     out: path.join(process.cwd(), 'data', 'rosters.json'),
+    outGiven: false,
     dryRun: false,
     fetchedAt: null,
   };
@@ -97,12 +105,20 @@ function parseArgs(argv: readonly string[]): Args {
     if (arg === '--fixtures') out.fixtures = path.resolve(next());
     else if (arg === '--capture') out.capture = path.resolve(next());
     else if (arg === '--leagues') out.leagues = parseLeaguesFlag(next(), arg);
-    else if (arg === '--out') out.out = path.resolve(next());
+    else if (arg === '--out') {
+      out.out = path.resolve(next());
+      out.outGiven = true;
+    } else if (arg === '--level') {
+      const level = next();
+      if (level !== 'varsity' && level !== 'jv') throw new Error(`--level must be varsity or jv, not ${level}`);
+      out.level = level;
+    }
     else if (arg === '--dry-run') out.dryRun = true;
     else if (arg === '--fetched-at') out.fetchedAt = parseFetchedAtFlag(next(), arg);
     else throw new Error(`unknown flag: ${arg}`);
   }
   if (out.fixtures && out.capture) throw new Error('--capture records live pages; it cannot be combined with --fixtures');
+  if (out.level === 'jv' && !out.outGiven) out.out = path.join(process.cwd(), 'data', 'jv-rosters.json');
   return out;
 }
 
@@ -121,7 +137,7 @@ function loadPrevious(file: string): PreviousFile<TeamRoster, Rosters> | null {
   });
 }
 
-const NOTES = [
+const VARSITY_NOTES = [
   `One entry per registry team, all ${LEAGUES_PROPER.length} leagues (${LEAGUES_PROPER.map((l) => l.shortName).join(', ')}) and the ${INDEPENDENT_LEAGUES.map((l) => l.name).join(', ')}, read the same way. A team with status pending has not been covered by any run yet: nothing was fetched and nothing is claimed for it.`,
   "Rows come from each team's MaxPreps roster page (__NEXT_DATA__ athleteData), decoded with MaxPreps' own GSSP_ROSTER_SERIALIZE_KEYS column list and cross-checked row by row against the page's rendered table; a disagreement fails the team rather than publishing a wrong value.",
   'Grade, position, jersey and height are whatever the coach entered on MaxPreps; blanks are null, never guessed. Several programs publish names only.',
@@ -129,8 +145,21 @@ const NOTES = [
   "A team with status carried-forward keeps the previous file's rows after a failed fetch; its own fetchedAt says when those rows were read.",
 ];
 
+/** data/jv-rosters.json: the same pages one level down, read the same way. */
+const JV_NOTES = [
+  `One entry per registry school, all ${LEAGUES_PROPER.length} leagues and the ${INDEPENDENT_LEAGUES.map((l) => l.name).join(', ')}: the school's JV roster page on MaxPreps (<team URL>jv/roster/, the JV sport season). A school whose JV page lists nobody has status empty: MaxPreps publishes no JV roster for it, which is not a claim that the school fields no JV team.`,
+  'Rows are decoded exactly as the varsity roster rows are (GSSP_ROSTER_SERIALIZE_KEYS, cross-checked against the rendered table), and the page must be for the JV sport season.',
+  'Grade, position, jersey and height are whatever the coach entered on MaxPreps; blanks are null, never guessed.',
+  "A school's own athletics site can publish its JV list too: those are transcribed in data/jv-rosters-school-sites.json, and the team page shows the fuller of the two (lib/jv/jv-rosters.ts).",
+  "A team with status carried-forward keeps the previous file's rows after a failed fetch; its own fetchedAt says when those rows were read.",
+];
+
 async function main(argv: readonly string[]): Promise<number> {
   const args = parseArgs(argv);
+  const jv = args.level === 'jv';
+  const sportSeasonId = jv ? JV_SPORT_SEASON_ID : SPORT_SEASON_ID;
+  const pageUrl = jv ? jvRosterUrl : rosterUrl;
+  const filePrefix = jv ? 'jv-roster' : 'roster';
   const fetchedAt = args.fetchedAt ?? new Date().toISOString();
   const loaded = loadPrevious(args.out);
   if (loaded && !loaded.readable) {
@@ -150,7 +179,7 @@ async function main(argv: readonly string[]): Promise<number> {
   console.log(
     args.fixtures
       ? `fetch-rosters: offline, from ${args.fixtures}`
-      : `fetch-rosters: ${teamsInScope(args.leagues).length} MaxPreps roster pages` +
+      : `fetch-rosters: ${teamsInScope(args.leagues).length} MaxPreps ${jv ? 'JV ' : ''}roster pages` +
           (args.leagues ? ` (${args.leagues.join(', ')} only)` : ''),
   );
   // --dry-run writes nothing, --capture included.
@@ -161,9 +190,9 @@ async function main(argv: readonly string[]): Promise<number> {
     TEAMS.map(async (team): Promise<TeamRoster> => {
       // A league outside this run is not fetched: its previous row stays as it was.
       if (!inScope(team, args.leagues)) {
-        return previous?.rows.get(team.slug) ?? pendingRoster(team);
+        return previous?.rows.get(team.slug) ?? pendingRoster(team, pageUrl(team));
       }
-      const url = rosterUrl(team);
+      const url = pageUrl(team);
       const base = {
         slug: team.slug,
         teamId: team.id,
@@ -175,14 +204,14 @@ async function main(argv: readonly string[]): Promise<number> {
         let html: string;
         if (args.fixtures) {
           html = readFileSync(
-            path.join(args.fixtures, `roster-${team.slug}.html`),
+            path.join(args.fixtures, `${filePrefix}-${team.slug}.html`),
             'utf8',
           );
         } else {
           if (!url) throw new Error('no MaxPreps team URL in the registry');
           html = (await client.text(url)).data;
           if (capture) {
-            writeFileSync(path.join(capture, `roster-${team.slug}.html`), html, 'utf8');
+            writeFileSync(path.join(capture, `${filePrefix}-${team.slug}.html`), html, 'utf8');
           }
         }
         // A team with no data coverage has a placeholder registry id (no standings row to read a
@@ -190,6 +219,7 @@ async function main(argv: readonly string[]): Promise<number> {
         const page = parseRosterPage(html, {
           expectedTeamId: team.dataCoverage === 'none' ? undefined : team.id,
           url: url ?? team.slug,
+          sportSeasonId,
         });
         return {
           ...base,
@@ -242,7 +272,7 @@ async function main(argv: readonly string[]): Promise<number> {
     source: {
       id: 'maxpreps-html',
       builtBy: 'scripts/fetch-rosters.ts',
-      notes: NOTES,
+      notes: jv ? JV_NOTES : VARSITY_NOTES,
     },
     teams,
     counts: countRosters(teams),
