@@ -166,6 +166,10 @@ export interface JvSlotTeam {
   mascot: string;
   /** The logo the tiles are drawn from: the school's own site. */
   mascotSource: string;
+  /** Its MaxPreps JV schedule page, which Santa Catalina's JV section links in place of its own. */
+  maxprepsJvScheduleUrl: string;
+  /** Its si.com JV games page. */
+  sbliveJvGamesUrl: string;
 }
 
 /**
@@ -192,6 +196,10 @@ export const JV_OUTSIDE_TEAMS: Readonly<Record<string, JvSlotTeam>> = {
     mascot: 'york',
     // York's athletics logo, from york.org (the owner's choice, 2026-11-03).
     mascotSource: 'https://www.york.org/uploads/images/Athletics/orig_photo564035_5539708.webp?v=1742499788252',
+    // Both read 2026-11-06: MaxPreps' York JV roster page reports team e9a91bc8 (its schedule is the same
+    // team's), and the si.com page is team 456850's.
+    maxprepsJvScheduleUrl: 'https://www.maxpreps.com/ca/monterey/york-falcons/field-hockey/jv/schedule/',
+    sbliveJvGamesUrl: `${SBLIVE_WEB}/teams/456850-york-falcons-jv/games`,
   },
 };
 

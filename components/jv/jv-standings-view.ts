@@ -30,8 +30,11 @@ export interface JvTableView {
   /** `De Anza JV` for a multi-division league, `SCVAL JV` for a single-division one. */
   title: string;
   status: JvDivisionTable['status'];
-  /** `team` is null for a JV slot team (York), which has no page; `mascot` is then its tile stem. */
-  rows: Array<{ row: JvStandingRow; team: Team | null; mascot: string | null }>;
+  /**
+   * `team` is null for a JV slot team (York), which has no page; `mascot` is then its tile stem and
+   * `slotHost` the school whose slot it plays (Santa Catalina), whose page lists its JV games.
+   */
+  rows: Array<{ row: JvStandingRow; team: Team | null; mascot: string | null; slotHost: Team | null }>;
   /** "York plays the JV games of Santa Catalina, which fields varsity only, …" when the table has such a team. */
   slotNote: string | null;
   /** "12 of the 18 El Camino JV league games played so far have a score (2 are si.com’s †)." */
@@ -95,6 +98,7 @@ function viewOf(t: JvDivisionTable): JvTableView {
       row,
       team: row.slug ? getTeamBySlug(row.slug)! : null,
       mascot: row.slug ? null : (jvSlotTeamFor(row.jvFor ?? null)?.mascot ?? null),
+      slotHost: !row.slug && row.jvFor ? (getTeamBySlug(row.jvFor) ?? null) : null,
     })),
     slotNote: slotNoteOf(t),
     coverage: noneListed
@@ -138,7 +142,8 @@ export function buildJvTablesView(league: LeagueId): JvTableView[] {
 
 /**
  * A team's JV line for its team page: `2nd in El Camino JV · 3-0-0` when its table is shown and it
- * has a result there; null otherwise. `href` is the table's anchor on /jv.
+ * has a result there; null otherwise. `href` is the table's anchor on /jv. On the page of a school whose
+ * JV slot another team plays, that team's line, named: `York: 1st in PCAL JV · 4-0-1`.
  */
 export function teamJvStanding(slug: TeamSlug): { line: string | null; href: string } | null {
   const team = getTeamBySlug(slug);
@@ -146,10 +151,12 @@ export function teamJvStanding(slug: TeamSlug): { line: string | null; href: str
   const table = getJvTable(team.division);
   if (!table) return null;
   const href = `/jv#${isSingleDivision(team.league) ? team.league : team.division}`;
-  const row = table.rows.find((r) => r.slug === slug);
+  // A school whose JV slot another team plays (Santa Catalina) shows that team's row, named.
+  const row = table.rows.find((r) => r.slug === slug) ?? table.rows.find((r) => r.slug === null && r.jvFor === slug);
   if (table.status !== 'shown' || !row || row.record.gp === 0) return { line: null, href };
+  const whose = row.slug === slug ? '' : `${row.name}: `;
   return {
-    line: `${row.shared ? 'T-' : ''}${ordinal(row.record.place)} in ${jvTableTitle(team.division)} · ${recordString(row.record)}`,
+    line: `${whose}${row.shared ? 'T-' : ''}${ordinal(row.record.place)} in ${jvTableTitle(team.division)} · ${recordString(row.record)}`,
     href,
   };
 }

@@ -148,19 +148,26 @@ export function rosterUrl(team: Team): string | null {
   return `${base.replace(/\/+$/, '')}/roster/`;
 }
 
+/** The school's JV roster page, `<team URL>jv/roster/`: read with JV_SPORT_SEASON_ID (data/jv-rosters.json). */
+export function jvRosterUrl(team: Pick<Team, 'external'>): string | null {
+  const base = team.external.maxprepsTeamUrl;
+  if (!base) return null;
+  return `${base.replace(/\/+$/, '')}/jv/roster/`;
+}
+
 /**
  * The entry for a team no run has covered yet: nothing fetched, so nothing claimed (status
  * 'pending', no players, no counts). Built by scripts/fetch-rosters.ts for a team its `--leagues`
  * scope leaves out when the previous file held no row for it.
  */
-export function pendingRoster(team: Team): TeamRoster {
+export function pendingRoster(team: Team, url: string | null = rosterUrl(team)): TeamRoster {
   return {
     slug: team.slug,
     teamId: team.id,
     maxprepsTeamId: null,
     name: team.name,
     division: team.division,
-    rosterUrl: rosterUrl(team),
+    rosterUrl: url,
     status: 'pending',
     athleteCount: null,
     staffCount: null,
@@ -241,6 +248,11 @@ export interface ParseRosterOptions {
   expectedTeamId?: string;
   /** For error messages. */
   url?: string;
+  /**
+   * The MaxPreps sport season the page must be for: the varsity season (SPORT_SEASON_ID) unless
+   * given. A JV roster page (`<team URL>jv/roster/`) is read with JV_SPORT_SEASON_ID.
+   */
+  sportSeasonId?: string;
 }
 
 /**
@@ -250,6 +262,7 @@ export interface ParseRosterOptions {
  */
 export function parseRosterPage(html: string, opts: ParseRosterOptions = {}): RosterPage {
   const url = opts.url ?? 'roster-page';
+  const sportSeasonId = opts.sportSeasonId ?? SPORT_SEASON_ID;
   const fail = (message: string): never => {
     throw new MaxPrepsError(message, { url });
   };
@@ -273,8 +286,8 @@ export function parseRosterPage(html: string, opts: ParseRosterOptions = {}): Ro
     // The Presentation URL once served Los Gatos (SPEC §2.1): a wrong team here is the same bug.
     fail(`page is for team ${teamId}, expected ${opts.expectedTeamId}`);
   }
-  if (countData.sportSeasonId && countData.sportSeasonId !== SPORT_SEASON_ID) {
-    fail(`page is for sportSeasonId ${countData.sportSeasonId}, expected ${SPORT_SEASON_ID}`);
+  if (countData.sportSeasonId && countData.sportSeasonId !== sportSeasonId) {
+    fail(`page is for sportSeasonId ${countData.sportSeasonId}, expected ${sportSeasonId}`);
   }
 
   const warnings: string[] = [];
@@ -285,7 +298,7 @@ export function parseRosterPage(html: string, opts: ParseRosterOptions = {}): Ro
       fail(`athleteData[${i}] has ${row.length} columns, expected ${ROSTER_ROW_LENGTH} — the positional schema drifted`);
     }
     if (row[COL.schoolId] !== teamId) fail(`athleteData[${i}].schoolId is not the page's teamId`);
-    if (row[COL.sportSeasonId] !== SPORT_SEASON_ID) fail(`athleteData[${i}].sportSeasonId is not the current sportSeasonId`);
+    if (row[COL.sportSeasonId] !== sportSeasonId) fail(`athleteData[${i}].sportSeasonId is not the page's sportSeasonId`);
     if (typeof row[COL.isDeleted] !== 'boolean') fail(`athleteData[${i}].isDeleted is not a boolean`);
     if (row[COL.isDeleted] === true) {
       deletedRows += 1;

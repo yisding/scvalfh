@@ -33,6 +33,7 @@ import {
 import { getJvCorrections, getJvFile, getJvMerge, getJvSchoolSiteMerge, getJvTables } from '../../lib/jv/jv';
 import type { JvCorrectionResult } from '../../lib/jv/jv-corrections';
 import type { JvMergeResult } from '../../lib/jv/jv-merge';
+import { getJvRoster } from '../../lib/jv/jv-rosters';
 import type { JvFile } from '../../lib/jv/jv-schema';
 import type { JvSchoolSiteMergeResult } from '../../lib/jv/jv-school-sites';
 import type { JvDivisionTable } from '../../lib/jv/jv-standings';
@@ -257,6 +258,8 @@ export interface AboutJv {
   shown: JvDivisionTable[];
   /** JV games between two schools of one division with no varsity counterpart, over every table. */
   uncounted: number;
+  /** Schools whose team page lists a JV roster, and how many of those lists are the school's own site's. */
+  rosters: { schools: number; siteSchools: number };
 }
 
 /** /about#freshness (components/about/sections/FreshnessSection.tsx): the last run, by source status. */
@@ -601,6 +604,10 @@ export function buildAboutView(): AboutView {
     ...new Map([...historyPublishers.values()].flatMap((docs) => [...docs])).values(),
   ];
 
+  const jvRosters = getTeams().flatMap((t) => {
+    const r = getJvRoster(t.slug);
+    return r ? [r] : [];
+  });
   return {
     lede: { teams: counts.teams, leagueWords },
     jumpList,
@@ -651,7 +658,18 @@ export function buildAboutView(): AboutView {
       cifssCross,
     },
     backfilled,
-    jv: { file: jvFile, merge: jvMerge, school: jvSchool, corrections: jvCorrections, shown: jvShown, uncounted: jvUncounted },
+    jv: {
+      file: jvFile,
+      merge: jvMerge,
+      school: jvSchool,
+      corrections: jvCorrections,
+      shown: jvShown,
+      uncounted: jvUncounted,
+      rosters: {
+        schools: jvRosters.length,
+        siteSchools: jvRosters.filter((r) => r.source === 'school-site').length,
+      },
+    },
     dropped,
     freshness: { counted, erroring },
     postseason: { field, leagues, sections, tournamentIds, unbracketed, playoffs, ccsCalendar, keyDatesConfirmed },

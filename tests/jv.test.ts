@@ -15,7 +15,7 @@ import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 import { buildDayJvView, buildTeamJvView, jvDiffersNote } from '../components/jv/jv-view';
-import { getJvCorrections, getJvFile, getJvGamesForTeam, getJvMerge, getJvTeam } from '../lib/jv/jv';
+import { getJvCorrections, getJvFile, getJvGamesForTeam, getJvMerge, getJvTables, getJvTeam } from '../lib/jv/jv';
 import { JV_CORRECTIONS, applyJvCorrections } from '../lib/jv/jv-corrections';
 import { JV_FILL_NOTE, mergeJv } from '../lib/jv/jv-merge';
 import { JV_SCHOOL_SITES, mergeJvSchoolSites, schoolSiteResults, type JvSchoolSite } from '../lib/jv/jv-school-sites';
@@ -330,7 +330,26 @@ describe('applyJvCorrections: MaxPreps JV rows left out or re-pointed by contest
     expect(r.games[0].away).toMatchObject({ teamId: 'e9a91bc8-5999-4321-9e21-d6cdc8aafcb2', slug: null, name: 'York' });
     expect(r.games[0].home.slug).toBe('salinas');
     expect(r.fixed.map((f) => f.game.contestId)).toEqual([g.contestId]);
-    expect(buildTeamJvView('santa-catalina')).toMatchObject({ rows: [], emptyHeading: 'Santa Catalina fields no JV team.' });
+  });
+
+  it('lists York’s JV games on Santa Catalina’s page, each read from York’s side, and says why', () => {
+    const view = buildTeamJvView('santa-catalina')!;
+    expect(view.perspective).toEqual({ teamId: 'e9a91bc8-5999-4321-9e21-d6cdc8aafcb2' });
+    expect(view.slot?.name).toBe('York');
+    expect(view.slot?.note).toMatch(/^PCAL’s schedule pairs Santa Catalina .* These are York’s JV games/);
+    // Its pills are York's pages, not Santa Catalina's (which list no JV games).
+    expect(view.maxprepsUrl).toBe('https://www.maxpreps.com/ca/monterey/york-falcons/field-hockey/jv/schedule/');
+    expect(view.sbliveUrl).toMatch(/\/teams\/456850-york-falcons-jv\/games$/);
+    expect(view.rows.length).toBeGreaterThan(0);
+    for (const { game } of view.rows) {
+      expect([game.home.teamId, game.away.teamId]).toContain('e9a91bc8-5999-4321-9e21-d6cdc8aafcb2');
+      expect(game.home.slug === 'santa-catalina' || game.away.slug === 'santa-catalina').toBe(false);
+    }
+    // Every York game counted in the PCAL JV table is on the list.
+    const york = getJvTables('pcal')[0].rows.find((r) => r.jvFor === 'santa-catalina')!;
+    expect(view.played).toBeGreaterThanOrEqual(york.record.gp);
+    // Every other school's list reads from its own slug.
+    expect(buildTeamJvView('stevenson')).toMatchObject({ slot: null, perspective: 'stevenson' });
   });
 
   it('leaves a row MaxPreps has fixed alone, and reports its entry unused', () => {

@@ -2326,7 +2326,12 @@ tables of their own are computed (`lib/jv/jv-standings.ts`, last bullet). Read 2
     games) filed under Santa Catalina are York's, and a York game takes Santa Catalina's varsity game of
     the day as its counterpart. York v Stevenson Sep 16 (the schedule's date; the varsity game moved to
     Sep 23) and Oct 30 (its Oct 16 home game is cancelled on si.com) are named league games
-    (`leagueGames`). York's computed 4-0-1 is its si.com league record.
+    (`leagueGames`). York's computed 4-0-1 is its si.com league record. York has no page of its own (it is
+    not a registry school): since 2026-11-06 its JV games and JV table line are listed in Santa Catalina's
+    JV section (`/teams/santa-catalina#jv`), each read from York's side, with its MaxPreps JV schedule
+    (`/ca/monterey/york-falcons/field-hockey/jv/schedule/`) and si.com JV page linked, and its PCAL JV table
+    row links there. Its MaxPreps JV roster page lists nobody and york.org's field hockey page is a
+    schedule only (both read 2026-11-06), so it has no roster here.
   - **Cancelled Salinas games.** Salinas' si.com JV page marks six league games "Cancelled" (each game
     page read 2026-11-03: Stevenson Sep 11 and Oct 12, Greenfield Sep 18 and Oct 16, Carmel Oct 21,
     Hollister Oct 27); MaxPreps still lists them, unscored. They are left out, as a deleted MaxPreps row
@@ -2343,10 +2348,17 @@ tables of their own are computed (`lib/jv/jv-standings.ts`, last bullet). Read 2
   found for BVAL, PCAL, the EAL or the San Diego and Southern Section schools (public-school
   Edlio/Finalsite calendars post schedules, not results); Valley Christian's Sidearm site
   (gowarriors.net) is the next one to try.
-- **Rosters and stats** (not shown): MaxPreps' `/jv/roster/` lists players for 11 schools (Homestead
-  25, Palo Alto 25, Monta Vista 12, Los Gatos 2, Leigh 18, Greenfield 3, Salinas 1, Tamalpais 22,
-  Bella Vista 19, Davis 19, Lassen 15) and `/jv/stats/` has leaders for 4 (Monta Vista, Bella Vista,
-  Davis, Lassen).
+- **Rosters** (shown since 2026-11-06, `lib/jv/jv-rosters.ts`): MaxPreps' `/jv/roster/` pages, read for
+  all 102 schools by `pnpm fetch-rosters --level jv` into `data/jv-rosters.json` (the varsity parser,
+  with the JV sport season id), list 508 players for 34 schools on 2026-11-06 (11 on 2026-10-05). Several
+  carry the whole program: Marin Academy's lists all 18 varsity players with their varsity numbers,
+  Clairemont's 19 of its 20 and Harvard-Westlake's 22 of its 25, and all 13 of Huntington Beach's are on
+  its varsity roster; Hollister has one player under two career records, one on each page. So a player on
+  the varsity roster the page shows is not repeated on the JV list, which counts them (MaxPreps rows match
+  by career id or name). The schools' own athletics sites publishing a 2026-27 JV list are transcribed in
+  `data/jv-rosters-school-sites.json` (read 2026-11-06, each with its evidence for the season) and shown in
+  place of MaxPreps' JV list, which is never longer: Saint Francis (`sfhsathletics.com/sports/jv-field-hockey/roster`, 22, "2026-2027 Women's JV Field Hockey Roster") and St. Ignatius (`siwildcats.com/sports/jv-field-hockey/roster`, 25, "2026 Field Hockey (JV) Roster"), both Sidearm, which MaxPreps lists none for; Los Gatos (33; MaxPreps 1), Helix (12; MaxPreps 2) and Bonita (17; MaxPreps 2), whose 5 Star sites serve the list at `/sport/RefreshRosterAthleteStyle2ViewComponent/<JV team id>?schoolYear=2026-2027` (the id from the page's level selector; `2025-2026` returns a different list). Checked and found no JV list:
+  the homecampus sites of Granite Hills, Southwest, Cathedral Catholic, Glendora, Leland, Lynbrook, Monta Vista, Salinas, Santa Clara, Saratoga and Willow Glen (varsity field hockey only), Thousand Oaks (no JV level), Valley Christian (no `/sports/jv-field-hockey/roster`) and York. `/jv/stats/` (leaders for 4 schools on 2026-10-05) is still not read.
 - **Official documents** list JV only as start times on the varsity fixtures (SCVAL "Varsity 4:00
   followed by JV"; BVAL a JV time per game; MCAL's change notes), and PCAL's `CAT/YOR` slot is York's
   JV in Santa Catalina's place. None is read for JV.

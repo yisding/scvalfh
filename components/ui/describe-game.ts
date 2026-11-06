@@ -34,6 +34,19 @@ import type { SourceMark } from './source-mark';
 /** The chip a side or a row carries. `none` = no chip at all (a scheduled game). */
 export type ChipKind = Outcome | 'pending' | 'cancelled' | 'postponed' | 'none';
 
+/**
+ * Whose side a row reads from: one of our team slugs, or a team outside the registry by its MaxPreps
+ * id (`{ teamId }`), for the one list that needs it: Santa Catalina's JV section is York's games
+ * (lib/jv/jv-teams.ts JV_OUTSIDE_TEAMS), and York has no slug.
+ */
+export type Perspective = TeamSlug | { teamId: string };
+
+/** Whether the home side is `perspective`'s; null without a perspective. */
+export function perspectiveIsHome(game: Game, perspective: Perspective | null | undefined): boolean | null {
+  if (!perspective) return null;
+  return typeof perspective === 'string' ? game.home.slug === perspective : game.home.teamId === perspective.teamId;
+}
+
 export type StatusTone = 'ink' | 'ink-2' | 'ink-3';
 
 export interface SideView {
@@ -382,10 +395,10 @@ function sideView(
  * Everything a game row needs in order to render, derived once. `perspective` is one of our
  * team slugs; it orients "vs / at" and the W/L/T without changing the away-on-top layout.
  */
-export function describeGame(game: Game, perspective?: TeamSlug | null): GameDisplay {
+export function describeGame(game: Game, perspective?: Perspective | null): GameDisplay {
   const view = renderScore(game);
   const isForfeit = game.isForfeit;
-  const mineIsHome = perspective ? game.home.slug === perspective : null;
+  const mineIsHome = perspectiveIsHome(game, perspective);
   const versus: GameDisplay['versus'] =
     mineIsHome === null ? null : game.site === 'neutral' ? 'vs' : mineIsHome ? 'vs' : 'at';
 
