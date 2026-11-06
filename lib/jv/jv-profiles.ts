@@ -26,13 +26,18 @@
 
 import { z } from 'zod';
 
-import bundled from '../../data/jv-profiles.json';
+import bundledFieldHockey from '../../data/jv-profiles.json';
+import bundledSoccer from '../../data/soccer/jv-profiles.json';
 import { classOf, getRosterEnrichment } from '../players/rosters';
 import { PlayerProfileSchema, type PlayerProfile } from '../players/rosters-schema';
 import { dateKey, failValidation } from '../schema-primitives';
+import { IS_FIELD_HOCKEY } from '../sports/current';
 import { getTeamBySlug } from '../teams';
 import type { TeamSlug } from '../types';
 import { getJvRoster, nameKey } from './jv-rosters';
+
+/** This build's copy (data/ for field hockey, data/soccer/ for soccer: lib/sports/current.ts DATA_DIR). */
+const bundled = IS_FIELD_HOCKEY ? bundledFieldHockey : bundledSoccer;
 
 export const JvProfilePlayerSchema = z
   .object({
