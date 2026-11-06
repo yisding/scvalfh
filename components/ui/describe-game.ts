@@ -332,7 +332,9 @@ export function overtimeInDoubt(game: Game): boolean {
 }
 
 /** The section's shootout inference for an 'SO' game ('verified' when no section rule is found). */
-function shootoutInferenceOf(game: Pick<Game, 'home' | 'away'>): ShootoutInference {
+function shootoutInferenceOf(game: Pick<Game, 'home' | 'away' | 'provenance'>): ShootoutInference {
+  // The San Diego Section's own bracket sheet writes the shootout ("1-1 (2-1 SO)"): the shootout is confirmed.
+  if (game.provenance.scores === 'cifsds-sheet') return 'verified';
   return shootoutSectionOf(game)?.shootout?.inference ?? 'verified';
 }
 
@@ -399,7 +401,7 @@ export function describeGame(game: Game, perspective?: TeamSlug | null): GameDis
     sentence: scoreSentence(game, {
       quietOvertime: overtimeInDoubt(game),
       shootoutWords: shootoutSectionOf(game)?.shootout?.words ?? null,
-      shootoutInference: shootoutSectionOf(game)?.shootout?.inference ?? null,
+      shootoutInference: shootoutSectionOf(game)?.shootout ? shootoutInferenceOf(game) : null,
     }),
   };
 
@@ -583,7 +585,7 @@ export function resultSentence(game: Game, noun: string = gameContextNoun(game))
   const score = `${w}${EN_DASH}${l}`;
   if (view.decider === 'SO' || view.shootout) {
     const rule = shootoutSectionOf(game)?.shootout;
-    if (rule?.inference === 'unverified' && !view.shootout) {
+    if (rule && shootoutInferenceOf(game) === 'unverified' && !view.shootout) {
       return `MaxPreps credits ${winner.name} with the win in ${against}, level at ${score}.`;
     }
     const { onPhrase } = shootoutPhrases(rule?.words ?? 'a shootout');

@@ -11,6 +11,7 @@
  * This file imports TYPES ONLY, so it is safe on both sides of the boundary.
  */
 
+import type { SourceMark } from '../ui/source-mark';
 import type { SectionConfig } from '../../lib/league-config/shape';
 import type { TeamSearchEntry } from '../../lib/search';
 import type { LeagueId, Outcome, RegionId } from '../../lib/types';
@@ -48,7 +49,8 @@ export interface HomeLastDisplay {
     /** GameDisplay.shootoutLabel: the section's words for an 'SO' tag ('decided by a shootout'). */
     shootoutLabel: string;
     shootoutText: string;
-    sourceMark: 'si.com';
+    /** The † of a score that is not MaxPreps' own (components/ui/source-mark.ts). */
+    sourceMark: SourceMark;
     leagueTag: string;
     postseasonTag: string;
   }>;

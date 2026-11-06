@@ -6,6 +6,7 @@ import {
   buildSupersededStub,
   gameKicker,
   gameStaticParams,
+  type GameModel,
 } from '../../../components/game/game-view';
 import { OG, OG_SIZE } from '../../../components/metadata/og-theme';
 import { SITE_NAME } from '../../../components/layout/site';
@@ -33,6 +34,14 @@ import { dateWithYear, timeOfDayPT } from '../../../lib/format';
  * that went with that score, exactly as the page does. A regular-season non-league game shows each
  * side's current league record instead.
  */
+
+
+/** The card's source words: where a score that is not MaxPreps' own came from (the game page's source line). */
+function ogSourceWords(source: GameModel['source']): string {
+  if (!source) return 'data from MaxPreps';
+  if (source.sheetUrl) return source.marked ? 'Score via the CIF San Diego Section' : 'Listed by the CIF San Diego Section';
+  return 'Score via si.com';
+}
 
 export const alt = `${SITE_NAME} — game score card`;
 export const size = OG_SIZE;
@@ -146,7 +155,7 @@ export default async function Image({ params }: PageProps<'/game/[id]'>) {
         <div style={{ display: 'flex', flexDirection: 'column', color: OG.TEXT_3, fontSize: 22 }}>
           <div style={{ display: 'flex' }}>{when}</div>
           <div style={{ display: 'flex', marginTop: 6 }}>
-            {model.source ? `${SITE_NAME} · unofficial · Score via si.com` : `${SITE_NAME} · unofficial · data from MaxPreps`}
+            {`${SITE_NAME} · unofficial · ${ogSourceWords(model.source)}`}
           </div>
         </div>
       </div>

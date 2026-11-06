@@ -11,7 +11,11 @@ import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 import { supersededGamesOf } from '../lib/pipeline/steps/assemble';
-import { keepUnread } from '../lib/pipeline/steps/sds-sheet';
+import { keepUnread, staleTab } from '../lib/pipeline/steps/sds-sheet';
+import { describeGame } from '../components/ui/describe-game';
+import { datesAtLocal } from '../lib/format';
+import { SnapshotSchema } from '../lib/snapshot/snapshot-schema';
+import { getSnapshot } from '../lib/data';
 import { buildSdsBrackets } from '../lib/postseason/sds-bracket';
 import { sdsDivisionTeams } from '../lib/postseason/sds-brackets-file';
 import { applySdsSheetResults, sheetResultsFromGames } from '../lib/postseason/sds-sheet-results';
@@ -256,6 +260,52 @@ describe('a corrected sheet score', () => {
       provenance: { scores: 'cifsds-sheet' },
     });
     expect(second.disagreements).toEqual([]);
+  });
+});
+
+describe('review follow-ups', () => {
+  it('stores the sheet’s shootout tally, and says the shootout decided it', () => {
+    const so = results.find((r) => r.shootout)!;
+    expect(so).toMatchObject({ winner: 'canyon-crest-academy', loser: 'torrey-pines', shootoutTally: [2, 1] });
+    const without = maxpreps.filter((g) => !(g.home.slug === 'torrey-pines' && g.away.slug === 'canyon-crest-academy'));
+    const g = apply(without, [so]).added[0];
+    expect(g).toMatchObject({
+      home: { slug: 'torrey-pines', score: 1, result: 'L' },
+      away: { slug: 'canyon-crest-academy', score: 1, result: 'W' },
+      decider: 'SO',
+      shootout: { home: 1, away: 2 },
+    });
+    expect(GameSchema.safeParse(g).success).toBe(true);
+    const words = describeGame(g).sentence;
+    expect(words).not.toContain('MaxPreps');
+  });
+
+  it('keeps the host of a carried game, so its id and home side do not change', () => {
+    const r = results.find((x) => x.winner === 'del-norte' && x.loser === 'bonita-vista')!;
+    const without = maxpreps.filter((g) => !(g.home.slug === 'del-norte' && g.away.slug === 'bonita-vista'));
+    // The sheet put the game at Bonita Vista's field: the first run publishes it there.
+    const first = apply(without, [{ ...r, venue: 'Bonita Vista HS' }]).added[0];
+    expect(first.contestId).toBe('cifsds:del-norte-at-bonita-vista');
+    const carried = sheetResultsFromGames([first], file);
+    expect(apply(without, carried).added[0]).toMatchObject({ contestId: first.contestId, home: { slug: 'bonita-vista' }, site: 'home' });
+  });
+
+  it('reads a tab dated in another year as not recognised', () => {
+    const read = { recognised: true as const, results, fixtures: [], warnings: [] };
+    expect(staleTab(read, '2025-11-02')).toBe(read);
+    expect(staleTab(read, '2026-11-02')).toMatchObject({ recognised: false });
+  });
+
+  it('claims no time in the hour daylight time skips', () => {
+    expect(datesAtLocal('2027-03-14', '02:30')).toMatchObject({ isTimeTba: true });
+    expect(datesAtLocal('2026-11-06', '17:00')).toMatchObject({ dateLocal: '2026-11-06T17:00:00', dateUtc: '2026-11-07T01:00:00Z', isTimeTba: false });
+  });
+
+  it('accepts a cifsds: game superseded by a MaxPreps contest in the snapshot', () => {
+    const snapshot = getSnapshot();
+    const to = snapshot.games.find((g) => !g.contestId.includes(':'))!.contestId;
+    const out = SnapshotSchema.safeParse({ ...snapshot, supersededGames: { 'cifsds:del-norte-at-torrey-pines-x': to } });
+    expect(out.success ? [] : out.error.issues.map((i) => i.message)).toEqual([]);
   });
 });
 

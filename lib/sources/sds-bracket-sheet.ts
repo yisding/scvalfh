@@ -57,6 +57,13 @@ export interface SdsSheetResult {
   otPeriods: number;
   /** A level score decided by a shootout ("1-1 (2-1 SO)"). */
   shootout: boolean;
+  /** The shootout's tally, winner first ("(2-1 SO)"), when the sheet prints one. */
+  shootoutTally?: [number, number];
+  /**
+   * The host an earlier run published (only on a result read back from a game, lib/postseason/sds-sheet-results.ts
+   * sheetResultsFromGames), so a carried game keeps its home side and its `cifsds:` id. Never set by the parser.
+   */
+  host?: TeamSlug;
   /** The score cell as the sheet prints it, trimmed. */
   scoreText: string;
 }
@@ -73,6 +80,8 @@ export interface SdsSheetFixture {
   venue: string | null;
   /** The two teams, top to bottom as the sheet lists them. */
   teams: [TeamSlug, TeamSlug];
+  /** As SdsSheetResult.host: set only on a fixture read back from a game. */
+  host?: TeamSlug;
 }
 
 export type SdsSheetRead =
@@ -129,6 +138,8 @@ interface Score {
   loserGoals: number;
   otPeriods: number;
   shootout: boolean;
+  /** Winner first, when printed. */
+  tally: [number, number] | null;
   text: string;
 }
 
@@ -138,7 +149,8 @@ export function parseScore(text: string): Score | null {
   if (!m) return null;
   const shootout = /\b(?:SO|PK|shootout)\b/i.test(t);
   const otPeriods = shootout || !/OT\b/i.test(t) ? 0 : m[3] ? Number(m[3]) : 1;
-  return { winnerGoals: Number(m[1]), loserGoals: Number(m[2]), otPeriods, shootout, text: t };
+  const tally: [number, number] | null = shootout && m[4] !== undefined && m[5] !== undefined ? [Number(m[4]), Number(m[5])] : null;
+  return { winnerGoals: Number(m[1]), loserGoals: Number(m[2]), otPeriods, shootout, tally, text: t };
 }
 
 type Cell =
@@ -338,7 +350,11 @@ export function parseSdsBracketTab(csv: string, division: SdsSheetDivision): Sds
         continue;
       }
       const score = scoreCell.score;
-      if (score.winnerGoals < score.loserGoals || (score.winnerGoals === score.loserGoals) !== score.shootout) {
+      if (
+        score.winnerGoals < score.loserGoals ||
+        (score.winnerGoals === score.loserGoals) !== score.shootout ||
+        (score.tally !== null && score.tally[0] <= score.tally[1])
+      ) {
         warnings.push(`${division.label}: ${winner} won ${a.slug} v ${b.slug} but the score reads ${JSON.stringify(score.text)}; not read`);
         continue;
       }
@@ -350,6 +366,7 @@ export function parseSdsBracketTab(csv: string, division: SdsSheetDivision): Sds
         loserGoals: score.loserGoals,
         otPeriods: score.otPeriods,
         shootout: score.shootout,
+        ...(score.tally ? { shootoutTally: score.tally } : {}),
         scoreText: score.text,
       });
     }

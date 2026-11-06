@@ -62,8 +62,8 @@ describe('cells', () => {
     expect(parseScore('3-1')).toMatchObject({ winnerGoals: 3, loserGoals: 1, otPeriods: 0, shootout: false });
     expect(parseScore('3-2(OT)')).toMatchObject({ winnerGoals: 3, loserGoals: 2, otPeriods: 1, shootout: false });
     expect(parseScore('1-0 (2OT)')).toMatchObject({ winnerGoals: 1, loserGoals: 0, otPeriods: 2, shootout: false });
-    expect(parseScore('1-1 (2-1 SO)')).toMatchObject({ winnerGoals: 1, loserGoals: 1, otPeriods: 0, shootout: true });
-    expect(parseScore('2-2 (SO)')).toMatchObject({ shootout: true });
+    expect(parseScore('1-1 (2-1 SO)')).toMatchObject({ winnerGoals: 1, loserGoals: 1, otPeriods: 0, shootout: true, tally: [2, 1] });
+    expect(parseScore('2-2 (SO)')).toMatchObject({ shootout: true, tally: null });
     expect(parseScore('Game Time: 6:00 PM')).toBeNull();
     expect(parseScore('3:15PM')).toBeNull();
   });

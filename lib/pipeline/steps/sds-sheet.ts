@@ -21,7 +21,7 @@ import { LEAGUES } from '../../leagues';
 import { SDS_BRACKETS_FILE, sdsDivisionTeams } from '../../postseason/sds-brackets-file';
 import { sdsPlayoffWindow } from '../../postseason/sds-brackets-schema';
 import { applySdsSheetResults, sheetFixturesFromGames, sheetResultsFromGames } from '../../postseason/sds-sheet-results';
-import { parseSdsBracketTab, type SdsSheetFixture, type SdsSheetResult } from '../../sources/sds-bracket-sheet';
+import { parseSdsBracketTab, type SdsSheetFixture, type SdsSheetRead, type SdsSheetResult } from '../../sources/sds-bracket-sheet';
 import type { Game } from '../../types';
 import { carriedFromOf, type PipelineContext } from '../ledger';
 import { classifyFetchError } from '../read';
@@ -37,6 +37,16 @@ export function keepUnread<T extends SdsSheetResult | SdsSheetFixture>(
 ): T[] {
   const read = new Set(fresh.map(pairOf));
   return previous.filter((r) => !read.has(pairOf(r)));
+}
+
+/**
+ * A tab dated in another year than the playoffs' (last season's sheet left in place, a template not yet filled in)
+ * is not this season's bracket: it is read as not recognised, so the division keeps its previous results.
+ */
+export function staleTab(read: Extract<SdsSheetRead, { recognised: true }>, windowFirst: string): SdsSheetRead {
+  const year = windowFirst.slice(0, 4);
+  const other = [...read.results, ...read.fixtures].find((x) => x.dateKey.slice(0, 4) !== year);
+  return other ? { recognised: false, reason: `dated ${other.dateKey}, not the ${year} playoffs` } : read;
 }
 
 function label(division: string): string {
@@ -90,7 +100,8 @@ export async function stepSdsSheet(ctx: PipelineContext, games: readonly Game[])
     }
     try {
       const res = await ctx.transport.get(key);
-      const read = parseSdsBracketTab(res.body, { id: div.id, label: div.label, teams: sdsDivisionTeams(div) });
+      const parsed = parseSdsBracketTab(res.body, { id: div.id, label: div.label, teams: sdsDivisionTeams(div) });
+      const read = parsed.recognised ? staleTab(parsed, window.first) : parsed;
       if (!read.recognised) {
         ctx.warn(`sds bracket sheet ${div.id}: tab not recognised (${read.reason})`);
         ctx.source({ ...base, status: 'error', httpStatus: res.httpStatus, error: `tab not recognised: ${read.reason}` });

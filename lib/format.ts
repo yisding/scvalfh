@@ -326,11 +326,11 @@ export function datesAtLocal(dateKey: string, time: string | null): { dateLocal:
   const [h, m] = time.split(':').map(Number);
   const dateLocal = `${dateKey}T${time}:00`;
   // Pacific time is UTC-7 (PDT) or UTC-8 (PST); take whichever round-trips to the wall clock.
-  const dateUtc =
-    [7, 8]
-      .map((off) => new Date(Date.UTC(...ymd(dateKey), h + off, m)).toISOString().replace(/\.000Z$/, 'Z'))
-      .find((iso) => toLocalTimestamp(iso) === dateLocal) ??
-    new Date(Date.UTC(...ymd(dateKey), h + 8, m)).toISOString().replace(/\.000Z$/, 'Z');
+  const dateUtc = [7, 8]
+    .map((off) => new Date(Date.UTC(...ymd(dateKey), h + off, m)).toISOString().replace(/\.000Z$/, 'Z'))
+    .find((iso) => toLocalTimestamp(iso) === dateLocal);
+  // A wall-clock time that does not exist (the hour skipped when daylight time starts): no time is claimed.
+  if (dateUtc === undefined) return datesOf({ dateIso: dateKey, dateKey });
   return { dateLocal, dateUtc, dateKey, isTimeTba: false };
 }
 

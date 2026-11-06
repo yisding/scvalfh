@@ -809,7 +809,8 @@ function scoreNoteFor(
     const outcome = sideOutcome(game, 'home');
     if (outcome === 'W' || outcome === 'L') {
       const winner = outcome === 'W' ? home.name : away.name;
-      if (section.shootout.inference === 'unverified') {
+      // A score from the Section's own bracket sheet confirms the shootout ("2-2 (SO)"): the verified wording.
+      if (section.shootout.inference === 'unverified' && game.provenance.scores !== 'cifsds-sheet') {
         // The San Diego Section (SectionConfig.shootout.inference): the rule is cited, the shootout is not
         // asserted. si.com and the Section's power rankings record Mt. Carmel–Poway (Sep 11) as 2-0 where
         // MaxPreps has 0-0 marked W/L, so this note says what MaxPreps lists and why the win counts, then

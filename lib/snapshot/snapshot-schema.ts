@@ -946,7 +946,9 @@ function checkAgainstConfig(s: z.infer<typeof SnapshotObject>, ctx: Ctx): void {
 
   // 10. superseded si.com games.
   for (const [from, to] of Object.entries(s.supersededGames)) {
-    if (!SBLIVE_ID_RE.test(from)) issue(ctx, ['supersededGames', from], 'a superseded key must be sblive:<digits>');
+    if (!SBLIVE_ID_RE.test(from) && !CIFSDS_ID_RE.test(from)) {
+      issue(ctx, ['supersededGames', from], 'a superseded key must be sblive:<digits> or cifsds:<away>-at-<home>');
+    }
     if (contestIds.has(from)) issue(ctx, ['supersededGames', from], 'a superseded game is still in games');
     if (!contestIds.has(to)) issue(ctx, ['supersededGames', from], `superseding contest ${to} is not in games`);
   }

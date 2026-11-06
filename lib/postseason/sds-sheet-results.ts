@@ -142,7 +142,14 @@ function withSheetScore(g: Game, r: SdsSheetResult, sectionSheet: SectionSheetPr
     isForfeit: false,
     forfeitBy: null,
     decider: deciderOf(r),
-    shootout: null,
+    // The sheet's tally, winner first, onto the two sides; none when it prints none ("2-2 (SO)").
+    shootout:
+      r.shootout && r.shootoutTally
+        ? {
+            home: g.home.slug === r.winner ? r.shootoutTally[0] : r.shootoutTally[1],
+            away: g.away.slug === r.winner ? r.shootoutTally[0] : r.shootoutTally[1],
+          }
+        : null,
     urls: { ...g.urls, cifsds: sheetUrl },
     provenance: { ...g.provenance, scores: 'cifsds-sheet', sectionSheet, fetchedAt },
   };
@@ -165,16 +172,21 @@ interface When {
   dateKey: string;
   time: string | null;
   venue: string | null;
+  /** The host an earlier run published, kept when a result or fixture is carried forward. */
+  host?: TeamSlug;
 }
 
 /** Rules 3 and 5: a game MaxPreps has no contest for, from the sheet, not yet scored. */
 function sheetGame(div: SdsBracketsDivision, a: TeamSlug, b: TeamSlug, r: When, sheetUrl: string, fetchedAt: string): Game | null {
-  let { home: homeSlug, away: awaySlug } = hostOf(div, a, b);
+  let { home: homeSlug, away: awaySlug } =
+    r.host === a ? { home: a, away: b } : r.host === b ? { home: b, away: a } : hostOf(div, a, b);
   let home = getTeamBySlug(homeSlug);
   let away = getTeamBySlug(awaySlug);
   if (!home || !away) return null;
   let site: Game['site'] = 'home';
-  if (r.venue) {
+  // A carried game (host known) has a venue only when it was at a neutral site.
+  if (r.venue && r.host !== undefined) site = 'neutral';
+  else if (r.venue) {
     const host = venueHost(r.venue, home, away);
     if (host === null) site = 'neutral';
     else if (host.slug === away.slug) {
@@ -268,7 +280,11 @@ export function applySdsSheetResults(input: SdsSheetApplyInput): SdsSheetApplyRe
         goalsFor(r, scored.home.slug) === scored.home.score &&
         goalsFor(r, scored.away.slug) === scored.away.score;
       if (same) agreed += 1;
-      else disagreements.push(`${scored.contestId} (${scored.dateKey}): MaxPreps has ${scoreText(scored)}; the Section's sheet has ${sheetText(r)}. MaxPreps' score is kept.`);
+      else {
+        // A score si.com filled in step 08 (owner decision D2) is si.com's, not MaxPreps': the warning says whose.
+        const who = scored.provenance.scores === 'sblive' ? 'si.com' : 'MaxPreps';
+        disagreements.push(`${scored.contestId} (${scored.dateKey}): ${who} has ${scoreText(scored)}; the Section's sheet has ${sheetText(r)}. ${who === 'si.com' ? 'si.com’s' : 'MaxPreps’'} score is kept.`);
+      }
       continue;
     }
     const pending = candidates[0];
@@ -341,6 +357,7 @@ export function sheetFixturesFromGames(games: readonly Game[], file: SdsBrackets
       time: g.isTimeTba ? null : g.dateLocal.slice(11, 16),
       venue: g.site === 'neutral' ? g.venue.text : null,
       teams: [g.home.slug, g.away.slug],
+      host: g.home.slug,
     });
   }
   return out;
@@ -369,6 +386,11 @@ export function sheetResultsFromGames(games: readonly Game[], file: SdsBracketsF
     const winnerGoals = (winner === g.home.slug ? g.home.score : g.away.score) ?? 0;
     const loserGoals = (winner === g.home.slug ? g.away.score : g.home.score) ?? 0;
     const shootout = g.decider === 'SO';
+    const tally: [number, number] | null = g.shootout
+      ? winner === g.home.slug
+        ? [g.shootout.home, g.shootout.away]
+        : [g.shootout.away, g.shootout.home]
+      : null;
     out.push({
       division: div.id,
       dateKey: g.dateKey,
@@ -380,7 +402,9 @@ export function sheetResultsFromGames(games: readonly Game[], file: SdsBracketsF
       loserGoals,
       otPeriods: g.otPeriods,
       shootout,
-      scoreText: `${winnerGoals}-${loserGoals}${shootout ? ' (SO)' : g.otPeriods >= 2 ? ` (${g.otPeriods}OT)` : g.otPeriods === 1 ? ' (OT)' : ''}`,
+      ...(tally ? { shootoutTally: tally } : {}),
+      host: g.home.slug,
+      scoreText: `${winnerGoals}-${loserGoals}${shootout ? ` (${tally ? `${tally[0]}-${tally[1]} ` : ''}SO)` : g.otPeriods >= 2 ? ` (${g.otPeriods}OT)` : g.otPeriods === 1 ? ' (OT)' : ''}`,
     });
   }
   return out;
