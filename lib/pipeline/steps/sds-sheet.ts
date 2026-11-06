@@ -7,7 +7,8 @@
  * Diego league is in the run and data/sds-brackets-2026.json has its brackets. PER TAB carry-forward: a tab not
  * read this run (the gate, `--leagues` without a San Diego league, not in the corpus, a failed request, a tab
  * whose title is not its division's) keeps the results the previous snapshot took from it, read back from its
- * games, so a failed read never takes a result off the site. Every tab is a source row ('ok' with its result
+ * games, so a failed read never takes a result off the site; a tab read with a warning (a column the parser could
+ * not place) keeps the previous results for the pairs it did not read. Every tab is a source row ('ok' with its result
  * count, else 'skipped' / 'error' / 'stale').
  *
  * Runs before step 10, so the games it adds are classified as every other game is (lib/classify.ts tags a game
@@ -24,6 +25,14 @@ import type { Game } from '../../types';
 import { carriedFromOf, type PipelineContext } from '../ledger';
 import { classifyFetchError } from '../read';
 import { resourceUrl } from '../transport';
+
+const pairOf = (r: SdsSheetResult) => [r.winner, r.loser].sort().join('~');
+
+/** The earlier results for pairs this run's read of the tab does not have. */
+export function keepUnread(previous: readonly SdsSheetResult[], fresh: readonly SdsSheetResult[]): SdsSheetResult[] {
+  const read = new Set(fresh.map(pairOf));
+  return previous.filter((r) => !read.has(pairOf(r)));
+}
 
 function label(division: string): string {
   return `sds bracket sheet ${division}`;
@@ -83,6 +92,13 @@ export async function stepSdsSheet(ctx: PipelineContext, games: readonly Game[])
       for (const w of read.warnings) ctx.warn(`sds bracket sheet: ${w}`);
       results.push(...read.results);
       ctx.source({ ...base, status: 'ok', httpStatus: res.httpStatus, rowCount: read.results.length });
+      // Part of the tab could not be read (a warning): the games it held keep the previous run's results, and
+      // only the pairs read this run replace theirs.
+      if (read.warnings.length > 0) {
+        const kept = keepUnread(previous.filter((r) => r.division === div.id), read.results);
+        results.push(...kept);
+        if (kept.length > 0) carried.push(`${div.label} (${kept.length}, part of the tab not read)`);
+      }
     } catch (err) {
       const failed = classifyFetchError(err);
       if (failed.status === 'error') ctx.warn(`sds bracket sheet ${div.id} failed: ${failed.error}`);

@@ -11,6 +11,7 @@ import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 import { supersededGamesOf } from '../lib/pipeline/steps/assemble';
+import { keepUnread } from '../lib/pipeline/steps/sds-sheet';
 import { buildSdsBrackets } from '../lib/postseason/sds-bracket';
 import { sdsDivisionTeams } from '../lib/postseason/sds-brackets-file';
 import { applySdsSheetResults, sheetResultsFromGames } from '../lib/postseason/sds-sheet-results';
@@ -134,7 +135,36 @@ describe('MaxPreps first', () => {
   });
 });
 
+describe('a corrected sheet score', () => {
+  it('replaces the score an earlier run wrote onto a carried MaxPreps contest, even when the winner changes', () => {
+    const target = maxpreps.find((g) => g.home.slug === 'del-norte' && g.away.slug === 'mira-mesa')!;
+    const pending: Game = { ...target, status: 'scheduled', home: { ...target.home, score: null, result: null }, away: { ...target.away, score: null, result: null }, decider: null, otPeriods: 0, isOt: false };
+    const first = apply(maxpreps.map((g) => (g.contestId === target.contestId ? pending : g)));
+    // The contest comes back carried with the sheet's 1-0 Del Norte; the sheet now says Mira Mesa won 2-1.
+    const corrected = results.map((r) =>
+      r.winner === 'del-norte' && r.loser === 'mira-mesa'
+        ? { ...r, winner: 'mira-mesa', loser: 'del-norte', winnerGoals: 2, loserGoals: 1, otPeriods: 0, scoreText: '2-1' }
+        : r,
+    );
+    const second = apply(first.games, corrected);
+    expect(second.games.find((g) => g.contestId === target.contestId)).toMatchObject({
+      home: { slug: 'del-norte', score: 1, result: 'L' },
+      away: { slug: 'mira-mesa', score: 2, result: 'W' },
+      decider: 'REG',
+      provenance: { scores: 'cifsds-sheet' },
+    });
+    expect(second.disagreements).toEqual([]);
+  });
+});
+
 describe('carry-forward and supersede', () => {
+  it('keeps the earlier results of the pairs a partly unreadable tab did not give', () => {
+    const d2 = results.filter((r) => r.division === 'division-2');
+    const freshPart = d2.slice(0, 3);
+    expect(keepUnread(d2, freshPart)).toEqual(d2.slice(3));
+    expect(keepUnread(d2, d2)).toEqual([]);
+  });
+
   it('reads the results back from the games, so a run that cannot read the sheet publishes the same games', () => {
     const back = sheetResultsFromGames(applied.games, file);
     expect(back).toHaveLength(4);

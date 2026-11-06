@@ -7,8 +7,9 @@
  * (the Section moves a game by a day; a postponed row is no contest), decide:
  *   1. a MaxPreps final with a score: MaxPreps' score is published as MaxPreps has it. A different winner or
  *      score is returned as a disagreement for the run log.
- *   2. a MaxPreps contest with no score yet (scheduled, live or score pending): the sheet's score is written onto
- *      it, the contest id and MaxPreps' other fields kept (`provenance.sectionSheet.rule 'score-pending'`).
+ *   2. a MaxPreps contest with no score yet (scheduled, live or score pending), or with a score an earlier run
+ *      took from the sheet: the sheet's score is written onto it, the contest id and MaxPreps' other fields kept
+ *      (`provenance.sectionSheet.rule 'score-pending'`).
  *   3. no MaxPreps contest: a new game `cifsds:<away>-at-<home>` is published from the sheet
  *      (`provenance.sectionSheet.rule 'absent-game'`). Two teams meet at most once in the Section's playoffs, so
  *      the id names the pair alone and stays the same if the Section moves the game. The team with the better
@@ -220,14 +221,18 @@ export function applySdsSheetResults(input: SdsSheetApplyInput): SdsSheetApplyRe
           Math.abs(dayDiff(g.dateKey, r.dateKey)) <= SDS_SHEET_DATE_TOLERANCE_DAYS,
       )
       .sort((a, b) => Math.abs(dayDiff(a.dateKey, r.dateKey)) - Math.abs(dayDiff(b.dateKey, r.dateKey)) || a.contestId.localeCompare(b.contestId));
-    const scored = candidates.find((g) => g.status === 'final' && g.home.score !== null && g.away.score !== null);
+    // A score an earlier run took from the sheet (a contest carried forward from the previous snapshot) is not
+    // MaxPreps' own: the sheet's current result is written over it, so a corrected sheet score always lands.
+    const scored = candidates.find(
+      (g) => g.status === 'final' && g.home.score !== null && g.away.score !== null && g.provenance.scores !== 'cifsds-sheet',
+    );
     if (scored) {
       // Rule 1: MaxPreps' final stands.
       const same =
         winnerOf(scored) === r.winner &&
         goalsFor(r, scored.home.slug) === scored.home.score &&
         goalsFor(r, scored.away.slug) === scored.away.score;
-      if (same || scored.provenance.scores === 'cifsds-sheet') agreed += 1;
+      if (same) agreed += 1;
       else disagreements.push(`${scored.contestId} (${scored.dateKey}): MaxPreps has ${scoreText(scored)}; the Section's sheet has ${sheetText(r)}. MaxPreps' score is kept.`);
       continue;
     }
