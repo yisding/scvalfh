@@ -1,17 +1,20 @@
 /**
  * A team page's JV roster section: the school's JV list from lib/jv/jv-rosters.ts (the fuller of the
  * school's own athletics site's and MaxPreps' JV roster page), in the varsity roster's
- * order and words, less the players on the varsity roster the page shows above it. JV players stay
- * apart from varsity: nothing here feeds the varsity roster, the clubs, the commitments or the
- * recruiting pages, which are built from the varsity rosters alone.
+ * order and words, less the players on the varsity roster the page shows above it, with the JV
+ * players' own recruiting pages (data/jv-profiles.json, lib/jv/jv-profiles.ts) linked as the varsity
+ * roster links its players'. JV players stay apart from varsity otherwise: nothing here feeds the
+ * varsity roster, the clubs or the commitments, which are built from the varsity rosters alone.
  *
  * SERVER-ONLY: reads lib/jv/jv-rosters, which imports the data files.
  */
 
 import { dateWithYear, gradeWord, shortDate, toLocalTimestamp } from '../../lib/format';
+import { getJvPlayerProfiles, getJvProfilesFile } from '../../lib/jv/jv-profiles';
 import { getJvRoster, type JvRosterPlayer } from '../../lib/jv/jv-rosters';
 import { getTeamBySlug } from '../../lib/teams';
 import type { TeamSlug } from '../../lib/types';
+import { profileLinks, profilePlatformWords, type RosterProfileLink } from '../teams/roster-view';
 import { positionFromText, positionWords } from '../words/position-words';
 
 export interface JvRosterRow {
@@ -21,6 +24,8 @@ export interface JvRosterRow {
   captain: boolean;
   /** Grade, position, height: only the ones the source gives, in that order. */
   facts: string[];
+  /** The player's own recruiting pages, in the varsity roster's order and words; [] for most. */
+  profiles: RosterProfileLink[];
 }
 
 export interface TeamJvRosterView {
@@ -44,6 +49,10 @@ export interface TeamJvRosterView {
   other: { words: string; url: string; count: number } | null;
   /** Players the source lists who are on the varsity roster above: not repeated (lib/jv/jv-rosters.ts). */
   onVarsity: number;
+  /** The platforms the rows' profile links go to, for the footnote ("SportsRecruits"); [] when none. */
+  profilePlatforms: string[];
+  /** When the JV profiles were looked for: "Nov 6, 2026". */
+  profilesCheckedOn: string;
 }
 
 /** By number when most players have one (the varsity roster's rule), else by last name. */
@@ -73,6 +82,7 @@ export function buildTeamJvRosterView(slug: TeamSlug): TeamJvRosterView | null {
   const team = getTeamBySlug(slug);
   const roster = getJvRoster(slug);
   if (!team || !roster) return null;
+  const linked = new Map(roster.players.map((p) => [p, getJvPlayerProfiles(slug, p.name)]));
   const rows = sorted(roster.players).map((p, i): JvRosterRow => {
     const position = positionText(p, roster.source);
     return {
@@ -81,6 +91,7 @@ export function buildTeamJvRosterView(slug: TeamSlug): TeamJvRosterView | null {
       jersey: p.jersey,
       captain: p.isCaptain,
       facts: [p.grade === null ? null : gradeWord(p.grade), position, p.height].filter((f): f is string => f !== null),
+      profiles: profileLinks(linked.get(p) ?? []),
     };
   });
   return {
@@ -100,5 +111,7 @@ export function buildTeamJvRosterView(slug: TeamSlug): TeamJvRosterView | null {
         }
       : null,
     onVarsity: roster.onVarsity,
+    profilePlatforms: profilePlatformWords([...linked.values()].flat().map((x) => x.platform)),
+    profilesCheckedOn: dateWithYear(`${getJvProfilesFile().capturedAt}T12:00:00`),
   };
 }

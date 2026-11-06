@@ -4422,6 +4422,17 @@ every team roster with a listed player, whose footnote links its own school's bl
 (`/recruiting#<slug>`; a block in the hidden region opens it, `:has(:target)`). The sitemap dates it by
 the latest of the clubs file, the commitments file and the roster overlay.
 
+### 25.3a JV players' recruiting profiles (2026-11-06)
+
+The JV players' own recruiting pages (`data/jv-profiles.json`, read by `lib/jv/jv-profiles.ts`) are
+linked by the varsity rule and drawn by the same `Profiles` line: on the team page, under the JV
+roster row's facts (`components/jv/TeamJvRoster.tsx`), with a footnote naming the platforms, the day
+they were looked for and that recall is partial; on `/recruiting`, after the school's varsity rows,
+each a row of the JV roster view whose facts lead with "JV" ("JV · Sophomore"). A JV row has profile
+links only: the clubs and commitments are researched and joined on the varsity rows. The school's
+meta counts it among its players and profiles, and the lede adds "and every JV player with a
+recruiting profile" once one is listed. A school with only JV rows is listed like any other.
+
 ### 25.4 Not built
 
 - **No filters** (committed only, by class year, by club): the page is static and adds no client

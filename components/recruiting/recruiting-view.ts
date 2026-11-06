@@ -10,9 +10,12 @@
  *
  * What it promises, and this module enforces:
  *   - the same rows and the same words as the team pages: every row here is a row of
- *     components/teams/roster-view.ts buildRosterView (varsity only, the roster's own spelling and
- *     order), so its commitment line, club line and profile links are the ones the school's page
- *     shows, with nothing the data files keep but never render (a quote, a basis, a confidence);
+ *     components/teams/roster-view.ts buildRosterView (the varsity roster's own spelling and order),
+ *     so its commitment line, club line and profile links are the ones the school's page shows, with
+ *     nothing the data files keep but never render (a quote, a basis, a confidence). After them come
+ *     the JV players with a recruiting profile (data/jv-profiles.json), each a row of the team page's
+ *     JV roster (components/jv/jv-roster-view.ts), its facts led by "JV"; a JV row has profile links
+ *     only, since commitments and clubs are researched for the varsity rosters;
  *   - a player is listed only when one of the three exists for them, and a school or league only
  *     when it has a listed player. A school with none is not named or counted anywhere on the page
  *     (no "nothing found" line, no "of 15 schools"): the page is about who is listed, and recall is
@@ -32,11 +35,14 @@ import { REGIONS } from '../../lib/league-config/sections';
 import { getLeague } from '../../lib/leagues';
 import { getRosterEnrichment, getRosters } from '../../lib/players/rosters';
 import type { RegionId, TeamSlug } from '../../lib/types';
+import { buildTeamJvRosterView, type JvRosterRow } from '../jv/jv-roster-view';
 import { buildRosterView, type RosterRow } from '../teams/roster-view';
 import { plural } from '../words/plural';
 
 /** A roster row with something to show here: its commitment, clubs and profiles, as the team page has them. */
 export interface RecruitingRow extends Pick<RosterRow, 'key' | 'name' | 'commitment' | 'clubs' | 'profiles'> {
+  /** true for a JV player (listed for a profile alone); "JV" leads its facts. */
+  jv: boolean;
   /** Grade, position(s), height: the team page's facts as plain text. */
   facts: string[];
 }
@@ -83,6 +89,8 @@ export interface RecruitingCounts {
   /** Tied to any club: current, listed or earlier. */
   withClub: number;
   withProfile: number;
+  /** Of `players`, the JV players listed (each for a profile); 0 when none. */
+  jvWithProfile?: number;
 }
 
 export interface RecruitingView {
@@ -101,9 +109,23 @@ function recruitingRow(row: RosterRow): RecruitingRow {
   return {
     key: row.key,
     name: row.name,
+    jv: false,
     facts: row.facts.map((f) => f.text),
     commitment: row.commitment,
     clubs: row.clubs,
+    profiles: row.profiles,
+  };
+}
+
+/** A JV roster row with a profile: "JV" leads its facts, and it has no commitment or club line. */
+function jvRecruitingRow(row: JvRosterRow): RecruitingRow {
+  return {
+    key: `jv-${row.key}`,
+    name: row.name,
+    jv: true,
+    facts: ['JV', ...row.facts],
+    commitment: null,
+    clubs: [],
     profiles: row.profiles,
   };
 }
@@ -116,6 +138,7 @@ function countRows(rows: readonly RecruitingRow[]): Omit<RecruitingCounts, 'scho
     committed: rows.filter((r) => r.commitment !== null).length,
     withClub: rows.filter((r) => r.clubs.length > 0).length,
     withProfile: rows.filter((r) => r.profiles.length > 0).length,
+    jvWithProfile: rows.filter((r) => r.jv).length,
   };
 }
 
@@ -158,7 +181,11 @@ export function regionSummary(name: string, c: RecruitingCounts): string {
 
 /** The page's one-paragraph answer: what it gathers, then how many, and of what kind. */
 export function ledeWords(trackedTeams: number, c: RecruitingCounts): string {
-  const opening = `Every player on this site’s ${trackedTeams} varsity rosters with a recruiting profile, a youth club or a college commitment that a public page shows, school by school.`;
+  const jv = c.jvWithProfile ?? 0;
+  const opening =
+    jv > 0
+      ? `Every player on this site’s ${trackedTeams} varsity rosters with a recruiting profile, a youth club or a college commitment that a public page shows, and every JV player with a recruiting profile, school by school.`
+      : `Every player on this site’s ${trackedTeams} varsity rosters with a recruiting profile, a youth club or a college commitment that a public page shows, school by school.`;
   if (c.players === 0) return `${opening} No public page we found shows one for a player here yet.`;
   return `${opening} ${plural(c.players, 'player')} from ${plural(c.schools, 'school')} ${c.players === 1 ? 'is' : 'are'} listed: ${breakdownWords(c)}.`;
 }
@@ -180,7 +207,10 @@ export function buildRecruitingView(): RecruitingView {
           .sort((a, b) => a.name.localeCompare(b.name));
         const schools: RecruitingSchool[] = [];
         for (const team of teams) {
-          const rows = (buildRosterView(team.slug)?.rows ?? []).filter(hasAny).map(recruitingRow);
+          const rows = [
+            ...(buildRosterView(team.slug)?.rows ?? []).filter(hasAny).map(recruitingRow),
+            ...(buildTeamJvRosterView(team.slug)?.rows ?? []).filter((r) => r.profiles.length > 0).map(jvRecruitingRow),
+          ];
           if (rows.length === 0) continue;
           const href = `/teams/${team.slug}#roster`;
           schools.push({ slug: team.slug, id: team.slug, name: team.name, href, meta: schoolMeta(rows), rows });

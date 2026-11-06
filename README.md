@@ -1051,7 +1051,7 @@ pnpm gate:d              # the full gate: Next, vinext and Cloudflare builds, sm
 ```
 
 `pnpm build` and `next dev` both read the snapshot already checked into `data/`, so you can
-develop and build without ever calling a live upstream API. Every build bundles thirteen data files
+develop and build without ever calling a live upstream API. Every build bundles sixteen data files
 into its server code, each imported by its read module, so no server reads `data/` at run time:
 
 | File | Read by |
@@ -1063,6 +1063,8 @@ into its server code, each imported by its read module, so no server reads `data
 | `data/player-stats.json` | `lib/players/player-stats.ts` |
 | `data/jv.json` | `lib/jv/jv.ts` |
 | `data/rosters.json`, `data/rosters-enrichment.json` | `lib/players/rosters.ts` |
+| `data/jv-rosters.json`, `data/jv-rosters-school-sites.json` | `lib/jv/jv-rosters.ts` |
+| `data/jv-profiles.json` (JV players' recruiting profiles) | `lib/jv/jv-profiles.ts` |
 | `data/clubs.json` | `lib/players/clubs.ts` |
 | `data/commits.json` | `lib/players/commits.ts` |
 | `data/ccs-bracket-2026.json` | `lib/postseason/ccs-bracket.ts` |
@@ -1080,10 +1082,10 @@ never `.env.production`.
 To point at a different snapshot file (e.g. a fixture-built one), set
 `SCVAL_SNAPSHOT=/path/to/snapshot.json`; `SCVAL_HISTORY` does the same for
 `data/history-2025-26.json`, `SCVAL_PLAYER_STATS` for `data/player-stats.json`, `SCVAL_JV` for
-`data/jv.json`, and `SCVAL_ROSTERS` and `SCVAL_ROSTERS_ENRICHMENT` for `data/rosters.json` and
-`data/rosters-enrichment.json`. All six are read with `node:fs` when the module loads, so they work under Next, vitest, tsx and vinext's
+`data/jv.json`, `SCVAL_JV_ROSTERS` for `data/jv-rosters.json`, and `SCVAL_ROSTERS` and
+`SCVAL_ROSTERS_ENRICHMENT` for `data/rosters.json` and `data/rosters-enrichment.json`. All seven are read with `node:fs` when the module loads, so they work under Next, vitest, tsx and vinext's
 Node target, never on a Worker, which has no filesystem to read them from: leave them unset for the
-Cloudflare scripts. The other seven files have no override.
+Cloudflare scripts. The other nine files have no override.
 
 `pnpm typecheck` runs `next typegen` first because the global `PageProps`/`LayoutProps` types used
 by the dynamic pages, their OG images and `app/layout.tsx` are generated into

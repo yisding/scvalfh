@@ -1,3 +1,5 @@
+import { listWords } from '../../lib/format';
+import { Profiles } from '../teams/TeamRoster';
 import ExternalLink from '../ui/ExternalLink';
 import GridRowFiller from '../ui/GridRowFiller';
 import { MissingValue } from '../ui/MissingValue';
@@ -6,8 +8,9 @@ import type { TeamJvRosterView } from './jv-roster-view';
 
 /**
  * A team page's JV roster: the varsity roster's list (components/teams/TeamRoster.tsx: one card of
- * grid cells, number, name and one line of the facts that exist, a blank never printed as a guess),
- * with none of its recruiting lines, which are for the varsity rosters. The footnote names the source
+ * grid cells, number, name and one line of the facts that exist, a blank never printed as a guess).
+ * Of its recruiting lines only the profile links appear (the same Profiles line, data/jv-profiles.json):
+ * commitments and clubs are for the varsity rosters. The footnote names the source
  * and when it was read, and the pill links it. A player on the varsity roster above is not repeated
  * (lib/jv/jv-rosters.ts): the footnote counts them, and a list that is all varsity players says so in
  * place of the grid. Only a school some source lists JV players for gets this section
@@ -77,6 +80,7 @@ export function TeamJvRoster({ view }: { view: TeamJvRosterView }) {
                   ))}
                 </span>
               ) : null}
+              {row.profiles.length > 0 ? <Profiles row={row} /> : null}
             </span>
           </li>
         ))}
@@ -110,6 +114,14 @@ export function TeamJvRoster({ view }: { view: TeamJvRosterView }) {
                 ? 'one'
                 : String(view.other.count)}
             ; the fuller list is shown.
+          </p>
+        ) : null}
+        {view.profilePlatforms.length > 0 ? (
+          <p className="mt-1 mb-0">
+            Profile links go to JV players&rsquo; own recruiting pages on {listWords(view.profilePlatforms)},
+            each matched to a player here by name, sport, and school or class year. They were looked for
+            by hand on {view.profilesCheckedOn}, and recall is partial: a player with no link may still
+            have a profile.
           </p>
         ) : null}
         {view.onVarsity > 0 ? (

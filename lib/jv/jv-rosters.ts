@@ -156,7 +156,7 @@ const MAXPREPS_BY_SLUG = new Map<string, TeamRoster>(maxpreps.teams.map((t) => [
 const SITE_BY_SLUG = new Map<string, JvSiteRoster>(sites.teams.map((t) => [t.slug, t]));
 
 /** "Zoë  O'Brien" → "zoe obrien": a name compared across two sources' spellings. */
-function nameKey(name: string): string {
+export function nameKey(name: string): string {
   return name
     .normalize('NFD')
     .replace(/[̀-ͯ]/g, '')

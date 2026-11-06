@@ -24,6 +24,7 @@ import {
 import { gameHref } from '../lib/game-id';
 import { getHistoryLastChecked } from '../lib/history/history';
 import { getJvFetchedAt, getJvGamesOn } from '../lib/jv/jv';
+import { getJvProfilesFile } from '../lib/jv/jv-profiles';
 import { HAS_HISTORY, HAS_RECRUITING } from '../lib/sports/current';
 
 /**
@@ -55,15 +56,17 @@ import { HAS_HISTORY, HAS_RECRUITING } from '../lib/sports/current';
  * they are hand research, not part of the twice-daily snapshot, and change only with a new sweep.
  * /commits takes the last day data/commits.json was checked (`getCommitsLastChecked`: its
  * `capturedAt`, or a later college `checkedOn`) for the same reason (DESIGN §21.4). /recruiting gathers
- * the clubs, the commitments and the roster overlay's recruiting profiles (DESIGN §25), so it takes
- * the latest of the three files' dates.
+ * the clubs, the commitments, the roster overlay's recruiting profiles and the JV players' (DESIGN §25),
+ * so it takes the latest of the four files' dates.
  */
 export default function sitemap(): MetadataRoute.Sitemap {
   const lastModified = new Date(getFetchedAt());
   const clubsStamp = new Date(getClubsLastChecked());
   const commitsStamp = new Date(getCommitsLastChecked());
   const recruitingStamp = new Date(
-    [getClubsLastChecked(), getCommitsLastChecked(), getRosterEnrichment().capturedAt].sort().at(-1)!,
+    [getClubsLastChecked(), getCommitsLastChecked(), getRosterEnrichment().capturedAt, getJvProfilesFile().capturedAt]
+      .sort()
+      .at(-1)!,
   );
   const url = (path: string) => `${SITE_URL}${path}`;
 
