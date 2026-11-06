@@ -12,7 +12,14 @@ import { describe, expect, it } from 'vitest';
 
 import { getHistoryBrackets } from '../lib/history/history';
 import { SDS_BRACKETS_FILE, sdsDivisionTeams } from '../lib/postseason/sds-brackets-file';
-import { headerDate, parseScore, parseSdsBracketTab, type SdsSheetDivision, type SdsSheetResult } from '../lib/sources/sds-bracket-sheet';
+import {
+  headerDate,
+  parseScore,
+  parseSdsBracketTab,
+  type SdsSheetDivision,
+  type SdsSheetFixture,
+  type SdsSheetResult,
+} from '../lib/sources/sds-bracket-sheet';
 import { seedsFromHistory } from './fixtures/sds/brackets-2025';
 import { REPO } from './helpers';
 
@@ -22,18 +29,23 @@ const csv = (year: 2025 | 2026, division: string) =>
 const divisionsOf = (file: typeof SDS_BRACKETS_FILE): SdsSheetDivision[] =>
   file.divisions.map((d) => ({ id: d.id, label: d.label, teams: sdsDivisionTeams(d) }));
 
-function readAll(year: 2025 | 2026): { results: SdsSheetResult[]; warnings: string[] } {
+function readAll(year: 2025 | 2026): { results: SdsSheetResult[]; fixtures: SdsSheetFixture[]; warnings: string[] } {
   const divisions = divisionsOf(year === 2026 ? SDS_BRACKETS_FILE : seedsFromHistory('sds'));
   const results: SdsSheetResult[] = [];
+  const fixtures: SdsSheetFixture[] = [];
   const warnings: string[] = [];
   for (const d of divisions) {
     const read = parseSdsBracketTab(csv(year, d.id), d);
     if (!read.recognised) throw new Error(`${year} ${d.id}: ${read.reason}`);
     results.push(...read.results);
+    fixtures.push(...read.fixtures);
     warnings.push(...read.warnings);
   }
-  return { results, warnings };
+  return { results, fixtures, warnings };
 }
+
+const fixtureLine = (f: SdsSheetFixture) =>
+  `${f.division} ${f.dateKey} ${f.time ?? '--:--'} ${f.teams.join(' v ')}${f.venue ? ` @ ${f.venue}` : ''}`;
 
 const line = (r: SdsSheetResult) =>
   `${r.division} ${r.dateKey} ${r.time ?? '--:--'} ${r.winner} ${r.winnerGoals}-${r.loserGoals} ${r.loser}` +
@@ -58,7 +70,26 @@ describe('cells', () => {
 });
 
 describe('the 2026 sheet (read 2026-11-06)', () => {
-  const { results, warnings } = readAll(2026);
+  const { results, fixtures, warnings } = readAll(2026);
+
+  it('lists every game with both teams known and no score, with its date, time and place', () => {
+    expect(fixtures.map(fixtureLine)).toEqual([
+      // Played, the winner written with no score under it.
+      'open 2026-11-05 15:15 bishops v eastlake',
+      'open 2026-11-10 14:30 bishops v scripps-ranch',
+      'open 2026-11-10 --:-- torrey-pines v canyon-hills',
+      'division-1 2026-11-06 17:00 clairemont v poway',
+      'division-1 2026-11-06 18:00 mt-carmel v university-city',
+      'division-1 2026-11-06 17:00 rancho-bernardo v san-dieguito-academy',
+      'division-1 2026-11-06 18:00 mission-bay v san-marcos',
+      'division-2 2026-11-02 17:30 sage-creek v granite-hills',
+      'division-2 2026-11-07 13:00 point-loma v helix',
+      // "Game Moved to Friday, November 6th".
+      'division-2 2026-11-06 16:30 sage-creek v olympian',
+      'division-2 2026-11-07 10:00 westview v mission-vista @ Vista High School',
+      'division-2 2026-11-06 20:00 san-pasqual v mission-hills',
+    ]);
+  });
 
   it('reads every posted result, and nothing it cannot place', () => {
     expect(warnings).toEqual([]);
@@ -113,7 +144,12 @@ describe('the 2026 sheet (read 2026-11-06)', () => {
 });
 
 describe('the 2025 sheet', () => {
-  const { results, warnings } = readAll(2025);
+  const { results, fixtures, warnings } = readAll(2025);
+
+  it('lists the three finals, whose champions it writes with no score, as games without a result', () => {
+    expect(fixtures.map((f) => `${f.dateKey} ${f.time}`)).toEqual(['2025-11-15 18:00', '2025-11-15 15:30', '2025-11-15 13:00']);
+    expect(fixtures.every((f) => f.venue === 'La Jolla High School')).toBe(true);
+  });
   const pair = (a: string, b: string) => [a, b].sort().join(' v ');
   const history = getHistoryBrackets()
     .find((b) => b.id === 'sds')!

@@ -2187,7 +2187,13 @@ place every result reached **[V, 2026-11-06]**. So the pipeline reads it (step 0
   (`'absent-game'`), the better-placed team hosting as "@ Higher Seed" says. Each carries `provenance.scores
   'cifsds-sheet'` and `urls.cifsds`, prints † "Score via the CIF San Diego Section", and says on its game page
   why. A tab not read keeps the previous snapshot's results for its division; a `cifsds:` game MaxPreps posts
-  later is superseded (`supersededGames`).
+  later is superseded (`supersededGames`);
+- the sheet's games with both teams known and no score yet ("fixtures": date, "Game Time", "@ <place>") give the
+  times: a MaxPreps contest on the same date with no time takes the sheet's (`provenance.schedule
+  'cifsds-sheet'`; one MaxPreps times keeps its own), and a game MaxPreps has not posted is listed as a scheduled
+  `cifsds:` game (score pending once its day passes) that its result later turns final under the same id. On
+  2026-11-06 that listed the Division I quarterfinals Clairemont v Poway (5 PM), San Dieguito Academy v Rancho
+  Bernardo (5 PM) and San Marcos v Mission Bay (6 PM), and the Open semifinals.
 
 **The EAL Super Regional's site and streams** (read 2026-10-29): the NFHS Network's CIFNS field hockey
 page (`https://www.nfhsnetwork.com/associations/cifns/field-hockey`) lists two events at Pleasant Valley

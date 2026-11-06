@@ -61,7 +61,7 @@ export function GameSourceLine({ model, className }: GameSourceLineProps) {
       aria-label="Where this score comes from"
     >
       <p className="m-0">
-        <span aria-hidden="true">&dagger; </span>
+        {source.marked ? <span aria-hidden="true">&dagger; </span> : null}
         {source.text}
       </p>
       {sbliveUrl || maxprepsUrl || sheetUrl ? (

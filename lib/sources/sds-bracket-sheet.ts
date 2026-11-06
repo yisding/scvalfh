@@ -21,6 +21,9 @@
  *   - the winner is written into the next column, on a row between the two, and the score on the row under
  *     the winner's name, winner's goals first: "3-1", "3-2(OT)", "1-0 (2OT)", "1-1 (2-1 SO)".
  * A winner with no score under it (the Section wrote who went through but not the score) is no result here.
+ * A game with both teams known and no score is a FIXTURE: its date, its time and its place, which fill the
+ * games MaxPreps has not posted yet (2026-11-06: three of the six Division I and II quarterfinals) or posts with
+ * no time.
  *
  * Every cell of a round's column must be one of those things. A cell this parser cannot place (a school name it
  * cannot resolve, a note in a new wording) makes that column unreadable: no game in it, and none fed from it, is
@@ -28,8 +31,8 @@
  * resolve only to the teams of that division in data/sds-brackets-2026.json, after the sheet's " HS" and
  * "Charter" are dropped ("Helix Charter HS" is Helix).
  *
- * Pure: no I/O. lib/pipeline/steps/secondary.ts fetches the tabs and lib/postseason/sds-sheet-results.ts turns
- * the results into games.
+ * Pure: no I/O. lib/pipeline/steps/sds-sheet.ts fetches the tabs and lib/postseason/sds-sheet-results.ts turns
+ * the results and fixtures into games.
  */
 
 import { normalizeTeamKey, getTeamBySlug } from '../teams';
@@ -58,8 +61,22 @@ export interface SdsSheetResult {
   scoreText: string;
 }
 
+/**
+ * One game the sheet lists with both teams known and no score yet (to be played, or played with no score posted):
+ * its date, time and place, for the games MaxPreps has not posted or posts with no time.
+ */
+export interface SdsSheetFixture {
+  division: string;
+  dateKey: string;
+  /** 'HH:MM' (Pacific) from the game's "Game Time" note, else the round's header; null when neither has one. */
+  time: string | null;
+  venue: string | null;
+  /** The two teams, top to bottom as the sheet lists them. */
+  teams: [TeamSlug, TeamSlug];
+}
+
 export type SdsSheetRead =
-  | { recognised: true; results: SdsSheetResult[]; warnings: string[] }
+  | { recognised: true; results: SdsSheetResult[]; fixtures: SdsSheetFixture[]; warnings: string[] }
   | { recognised: false; reason: string };
 
 /** What the parser needs of one division: its id, the tab's title, and the division's teams. */
@@ -264,15 +281,16 @@ export function parseSdsBracketTab(csv: string, division: SdsSheetDivision): Sds
 
   const warnings: string[] = [];
   const results: SdsSheetResult[] = [];
+  const fixtures: SdsSheetFixture[] = [];
   const letter = (c: number) => String.fromCharCode(65 + c);
   for (const col of columns) {
     if (col.unreadable) warnings.push(`${division.label}: column ${letter(col.index)} not read (${col.unreadable})`);
   }
 
-  for (let i = 0; i + 1 < columns.length; i += 1) {
+  for (let i = 0; i < columns.length; i += 1) {
     const col = columns[i];
-    const next = columns[i + 1];
-    if (col.date === null || col.unreadable || next.unreadable) continue;
+    const next: Column | null = columns[i + 1] ?? null;
+    if (col.date === null || col.unreadable) continue;
     const entrants = [...col.cells.entries()].filter(([, c]) => c.kind === 'team' || c.kind === 'bye').sort((a, b) => a[0] - b[0]);
     if (entrants.length % 2 !== 0) {
       warnings.push(`${division.label}: column ${letter(col.index)} lists ${entrants.length} places, an odd number; not read`);
@@ -286,22 +304,6 @@ export function parseSdsBracketTab(csv: string, division: SdsSheetDivision): Sds
         warnings.push(`${division.label}: ${a.slug} on both sides of one game in column ${letter(col.index)}; not read`);
         continue;
       }
-      // The winner: the team written into the next column between the two.
-      const advanced = [...next.cells.entries()].filter(([r, c]) => r > rowA && r < rowB && c.kind === 'team');
-      if (advanced.length === 0) continue;
-      const [winRow, winCell] = advanced[0];
-      const winner = winCell.kind === 'team' ? winCell.slug : null;
-      if (advanced.length > 1 || (winner !== a.slug && winner !== b.slug)) {
-        warnings.push(`${division.label}: the winner of ${a.slug} v ${b.slug} (column ${letter(next.index)}) is not one of the two; not read`);
-        continue;
-      }
-      const scoreCell = next.cells.get(winRow + 1);
-      if (!scoreCell || scoreCell.kind !== 'score') continue;
-      const score = scoreCell.score;
-      if (score.winnerGoals < score.loserGoals || (score.winnerGoals === score.loserGoals) !== score.shootout) {
-        warnings.push(`${division.label}: ${winner} won ${a.slug} v ${b.slug} but the score reads ${JSON.stringify(score.text)}; not read`);
-        continue;
-      }
 
       // The game's own notes, on the rows between its two teams.
       let dateKey = col.date;
@@ -313,11 +315,35 @@ export function parseSdsBracketTab(csv: string, division: SdsSheetDivision): Sds
         else if (c.kind === 'time' && c.time !== null) time = c.time;
         else if (c.kind === 'venue') venue = c.text;
       }
+      const when = { division: division.id, dateKey, time: time ?? col.header.time, venue: venue ?? col.header.venue };
+      const fixture = () => fixtures.push({ ...when, teams: [a.slug, b.slug] });
+
+      // The winner: the team written into the next column between the two. The next column must be readable to
+      // say anything; with none (the final, before a champion is written) the game is a fixture.
+      if (next !== null && next.unreadable) continue;
+      const advanced = next ? [...next.cells.entries()].filter(([r, c]) => r > rowA && r < rowB && c.kind === 'team') : [];
+      if (advanced.length === 0) {
+        fixture();
+        continue;
+      }
+      const [winRow, winCell] = advanced[0];
+      const winner = winCell.kind === 'team' ? winCell.slug : null;
+      if (advanced.length > 1 || (winner !== a.slug && winner !== b.slug)) {
+        warnings.push(`${division.label}: the winner of ${a.slug} v ${b.slug} (column ${letter(next!.index)}) is not one of the two; not read`);
+        continue;
+      }
+      const scoreCell = next!.cells.get(winRow + 1);
+      if (!scoreCell || scoreCell.kind !== 'score') {
+        fixture();
+        continue;
+      }
+      const score = scoreCell.score;
+      if (score.winnerGoals < score.loserGoals || (score.winnerGoals === score.loserGoals) !== score.shootout) {
+        warnings.push(`${division.label}: ${winner} won ${a.slug} v ${b.slug} but the score reads ${JSON.stringify(score.text)}; not read`);
+        continue;
+      }
       results.push({
-        division: division.id,
-        dateKey,
-        time: time ?? col.header.time,
-        venue: venue ?? col.header.venue,
+        ...when,
         winner: winner as TeamSlug,
         loser: winner === a.slug ? b.slug : a.slug,
         winnerGoals: score.winnerGoals,
@@ -328,5 +354,5 @@ export function parseSdsBracketTab(csv: string, division: SdsSheetDivision): Sds
       });
     }
   }
-  return { recognised: true, results, warnings };
+  return { recognised: true, results, fixtures, warnings };
 }

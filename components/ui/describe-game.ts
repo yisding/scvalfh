@@ -257,7 +257,8 @@ function chipsFor(game: Game): Pick<GameDisplay, 'isNonLeague' | 'leagueTag' | '
     isNonLeague: gameKind(game) === 'non-league',
     leagueTag: leagueTagOf(game),
     postseasonTag: postseasonTagOf(game),
-    sourceMark: SOURCE_MARKS[game.provenance.scores] ?? null,
+    // A † names where a SCORE came from: a game the Section's sheet lists but nobody has scored yet has none.
+    sourceMark: game.status === 'final' || game.provenance.scores !== 'cifsds-sheet' ? (SOURCE_MARKS[game.provenance.scores] ?? null) : null,
   };
 }
 

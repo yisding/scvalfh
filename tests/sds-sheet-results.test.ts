@@ -135,6 +135,108 @@ describe('MaxPreps first', () => {
   });
 });
 
+describe('the sheet’s games with no score yet', () => {
+  const at = (date: string, time: string | null) => ({ division: 'division-2', dateKey: date, time, venue: null });
+  it('lists a game MaxPreps has not posted, with the sheet’s time, the better place hosting', () => {
+    const out = apply(maxpreps, []);
+    expect(out.listed).toEqual([]);
+    const listed = applySdsSheetResults({
+      games: maxpreps,
+      results: [],
+      fixtures: [{ ...at('2025-11-12', '19:00'), teams: ['mira-mesa', 'del-norte'] }],
+      today: '2025-11-10',
+      file,
+      windowFirst: SDS_2025_WINDOW.first,
+      sheetUrl: SHEET,
+      fetchedAt: AT,
+    });
+    // MaxPreps has Del Norte v Mira Mesa on Nov 12: nothing is listed and its time stays MaxPreps'.
+    expect(listed.listed).toEqual([]);
+    expect(listed.timed).toEqual([]);
+
+    const without = maxpreps.filter((g) => !(g.home.slug === 'del-norte' && g.away.slug === 'mira-mesa'));
+    const fresh = applySdsSheetResults({
+      games: without,
+      results: [],
+      fixtures: [{ ...at('2025-11-12', '19:00'), teams: ['mira-mesa', 'del-norte'] }],
+      today: '2025-11-10',
+      file,
+      windowFirst: SDS_2025_WINDOW.first,
+      sheetUrl: SHEET,
+      fetchedAt: AT,
+    });
+    expect(fresh.listed).toHaveLength(1);
+    const g = fresh.listed[0];
+    expect(GameSchema.safeParse(g).success).toBe(true);
+    expect(g).toMatchObject({
+      contestId: 'cifsds:mira-mesa-at-del-norte',
+      dateLocal: '2025-11-12T19:00:00',
+      isTimeTba: false,
+      status: 'scheduled',
+      home: { slug: 'del-norte', score: null },
+      away: { slug: 'mira-mesa', score: null },
+      urls: { maxpreps: null, cifsds: SHEET },
+      provenance: { scores: 'cifsds-sheet', schedule: 'cifsds-sheet', sectionSheet: { rule: 'absent-game' } },
+    });
+    // Its day passed with no score posted: score pending.
+    const later = applySdsSheetResults({
+      games: without,
+      results: [],
+      fixtures: [{ ...at('2025-11-12', '19:00'), teams: ['mira-mesa', 'del-norte'] }],
+      today: '2025-11-13',
+      file,
+      windowFirst: SDS_2025_WINDOW.first,
+      sheetUrl: SHEET,
+      fetchedAt: AT,
+    });
+    expect(later.listed[0].status).toBe('score-pending');
+  });
+
+  it('times a MaxPreps contest that has none, on the same date, and only that', () => {
+    const target = maxpreps.find((g) => g.home.slug === 'del-norte' && g.away.slug === 'mira-mesa')!;
+    const tba: Game = {
+      ...target,
+      status: 'scheduled',
+      isTimeTba: true,
+      dateLocal: `${target.dateKey}T16:00:00`,
+      home: { ...target.home, score: null, result: null },
+      away: { ...target.away, score: null, result: null },
+      decider: null,
+      otPeriods: 0,
+      isOt: false,
+    };
+    const games = maxpreps.map((g) => (g.contestId === target.contestId ? tba : g));
+    const run = (date: string) =>
+      applySdsSheetResults({
+        games,
+        results: [],
+        fixtures: [{ ...at(date, '19:00'), teams: ['del-norte', 'mira-mesa'] }],
+        file,
+        windowFirst: SDS_2025_WINDOW.first,
+        sheetUrl: SHEET,
+        fetchedAt: AT,
+      });
+    const timed = run(target.dateKey);
+    expect(timed.timed.map((g) => g.contestId)).toEqual([target.contestId]);
+    expect(timed.games.find((g) => g.contestId === target.contestId)).toMatchObject({
+      dateLocal: `${target.dateKey}T19:00:00`,
+      isTimeTba: false,
+      provenance: { scores: tba.provenance.scores, schedule: 'cifsds-sheet' },
+    });
+    expect(timed.listed).toEqual([]);
+    // A different date on the sheet: MaxPreps' date stands and the time is not guessed.
+    expect(run('2025-11-11').timed).toEqual([]);
+  });
+
+  it('turns a listed game final with the same id once its result is posted', () => {
+    const without = maxpreps.filter((g) => !(g.home.slug === 'del-norte' && g.away.slug === 'mira-mesa'));
+    const result = results.find((r) => r.winner === 'del-norte' && r.loser === 'mira-mesa')!;
+    const out = apply(without, [result]);
+    expect(out.added.map((g) => g.contestId)).toEqual(['cifsds:mira-mesa-at-del-norte']);
+    expect(out.added[0].status).toBe('final');
+  });
+});
+
 describe('a corrected sheet score', () => {
   it('replaces the score an earlier run wrote onto a carried MaxPreps contest, even when the winner changes', () => {
     const target = maxpreps.find((g) => g.home.slug === 'del-norte' && g.away.slug === 'mira-mesa')!;

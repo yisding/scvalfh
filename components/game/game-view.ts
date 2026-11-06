@@ -161,8 +161,10 @@ export interface GameSourceLine {
   rule: BackfillProvenance['rule'] | null;
   sbliveUrl: string | null;
   maxprepsUrl: string | null;
-  /** The Section's bracket sheet, for a score from it. */
+  /** The Section's bracket sheet, for a score or a game from it. */
   sheetUrl: string | null;
+  /** The line explains a † on the score (a final); a game the sheet lists with no score yet has no †. */
+  marked: boolean;
 }
 
 /** How the game counts, in words (GameDetails "Counts as"). */
@@ -635,14 +637,15 @@ function conflictFor(game: Game): GameConflict | null {
 function sourceFor(game: Game): GameSourceLine | null {
   if (game.provenance.scores === 'cifsds-sheet') {
     const note = game.provenance.sectionSheet?.note?.trim().replace(/[.\s]+$/, '');
+    // A game the sheet lists that nobody has scored yet: the sheet is where the game itself comes from.
+    const head = game.status === 'final' ? 'Score via the CIF San Diego Section’s bracket sheet' : 'Listed on the CIF San Diego Section’s bracket sheet';
     return {
-      text: note
-        ? `Score via the CIF San Diego Section’s bracket sheet: ${note}.`
-        : 'Score via the CIF San Diego Section’s bracket sheet.',
+      text: note ? `${head}: ${note}.` : `${head}.`,
       rule: null,
       sbliveUrl: null,
       maxprepsUrl: game.urls.maxpreps,
       sheetUrl: game.urls.cifsds ?? null,
+      marked: game.status === 'final',
     };
   }
   if (game.provenance.scores !== 'sblive') return null;
@@ -655,6 +658,7 @@ function sourceFor(game: Game): GameSourceLine | null {
     sbliveUrl: game.urls.sblive ?? null,
     maxprepsUrl: game.urls.maxpreps,
     sheetUrl: null,
+    marked: true,
   };
 }
 
