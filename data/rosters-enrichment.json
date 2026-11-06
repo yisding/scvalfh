@@ -1,6 +1,6 @@
 {
-  "builtBy": "research on 2026-10-02 (SCVAL) and 2026-10-03 (BVAL 12 teams, PCAL 7, MCAL 9) and 2026-10-04 (EAL 6 teams, recruiting pages only) and 2026-10-06 (the 53 Southern California teams, recruiting pages only): official school athletics sites, school papers, MaxPreps team, career and JV pages; transformed by a script, reviewed by hand, and spot-checked against the cited source URLs and 2026-10-12 (recruiting pages only: a SportsRecruits profile-address probe in every sport) and 2026-10-13 (claimed MaxPreps career pages: every roster row's career page read for its isClaimed flag) and 2026-11-03 (recruiting pages only: a SportsRecruits profile-address probe in every sport, re-read by an independent refuter)",
-  "capturedAt": "2026-11-03",
+  "builtBy": "research on 2026-10-02 (SCVAL) and 2026-10-03 (BVAL 12 teams, PCAL 7, MCAL 9) and 2026-10-04 (EAL 6 teams, recruiting pages only) and 2026-10-06 (the 53 Southern California teams, recruiting pages only): official school athletics sites, school papers, MaxPreps team, career and JV pages; transformed by a script, reviewed by hand, and spot-checked against the cited source URLs and 2026-10-12 (recruiting pages only: a SportsRecruits profile-address probe in every sport) and 2026-10-13 (claimed MaxPreps career pages: every roster row's career page read for its isClaimed flag) and 2026-11-03 (recruiting pages only: a SportsRecruits profile-address probe in every sport, re-read by an independent refuter) and 2026-11-06 (recruiting pages only: NCSA's field hockey school pages for the schools with JV rosters, each page re-read by an independent refuter)",
+  "capturedAt": "2026-11-06",
   "notes": [
     "An overlay on data/rosters.json, joined on team slug + MaxPreps athleteId. It never replaces a MaxPreps value: a field is filled only where MaxPreps has null, and where another source disagrees with MaxPreps the disagreement is recorded under conflicts and MaxPreps stays. The same rules apply to every league; a team with no public source beyond MaxPreps has empty lists.",
     "Every filled value names its source URL, its kind (school-site, school-pdf, news, maxpreps-jv, maxpreps-career, maxpreps-team; maxpreps-career also covers MaxPreps' earlier-season roster pages, such as /field-hockey/25-26/roster/, which give a dated class year the same way, and maxpreps-jv is a JV roster page of either season) and a confidence: high = an official 2026-27 school roster or MaxPreps' own data for the same career; medium = a school-site profile field that is not season-dated, a school-paper statement, or a grade derived from a dated MaxPreps class year plus the years elapsed (derived: true); low = a profile field not tied to the season. For BVAL, PCAL and MCAL, a position that MaxPreps lists only for a PRIOR season (2025-26 roster, same career id) is not filled: positions change between seasons.",
@@ -14,7 +14,8 @@
     "2026-10-12: grades from MaxPreps' own pages for the 413 varsity rows MaxPreps' 2026-27 roster leaves ungraded and nothing had filled. Each row's MaxPreps career page (graduatingClass, and the grade of every team it lists for a dated season, in any sport) and the team's 2025-26 and 2024-25 MaxPreps field hockey rosters (matched on careerId, or on the name where the page has one row of it) were read; the grade is that season's plus the seasons since. 137 rows got a grade where every such page agreed (kind maxpreps-career, derived, medium; each note ends 'Added 2026-10-12.'). Two rows whose pages disagree are left blank with both recorded under conflicts (Izabel Gaytan, Ellie Kay); three whose 2025-26 or 2024-25 roster would make them 13th-graders are left blank (Emma Steingraber, Brooke Flesuras, Sarah Anton); seven rows that already carried grade conflicts were left as they were; and Michelle MacOubray's grade stays blank because her career page and her SportsRecruits page disagree.",
     "2026-10-12, second pass: the rows still ungraded after the MaxPreps pass (266) were looked up on their schools' own athletics sites (2026-27 rosters first, then 2025-26 ones carried forward), in school papers and in local news, by the rule above. 113 got a grade: 95 from school sites (Glendora's, Granite Hills' and Southwest's player pages, Helix's, Bonita's, Cathedral Catholic's and Great Oak's rosters, Thousand Oaks' 2025-26 roster, Clairemont's and Saratoga's sites, Huntington Beach's program site) and 18 from school papers and news (the Talon, the Epitaph, the Pitch, the Redwood Bark, the San Diego Union-Tribune, Times of San Diego). Medium, not high, where the page is not the school's own season roster: Southwest's Home Campus site, which the school homepage does not link; Cathedral Catholic's site, which keeps one grade per player rather than per season; three Great Oak players its site lists on JV while MaxPreps has them on varsity; and every paper. A story that is not about field hockey was used only for an exact name at the same school, and says so. Left blank and recorded under conflicts: Paula Mata (Glendora; her profile's grade disagrees with its own team history), Teagan Dickison Elias (Salinas; two profiles of her disagree), and Emma Steingraber and Brooke Flesuras (Granite Hills' site says grade 12, MaxPreps' 2025-26 roster had them as seniors). Not used: a story read only from a search engine's copy (Elsie Edelson), and grades for three duplicate MaxPreps rows whose twin MaxPreps already grades. Grace Martinez's SportsRecruits softball page (class of 2029) was unlinked when Thousand Oaks' roster made her grade 11. 164 varsity rows still have no grade from any source.",
     "2026-10-13: claimed MaxPreps pages. Every row's MaxPreps career page (1,702, the careerUrl in data/rosters.json) was read for its isClaimed flag, which marks a page the player or a parent has claimed on MaxPreps (the page then shows MaxPreps' Claimed badge). The 260 claimed pages, on 73 teams, are linked as profiles with platform maxpreps: the row's own careerUrl, no sport (one page covers every sport), classOf the page's graduatingClass where it gives one (221). They need no name match, being the page the row comes from; lib/rosters.ts refuses one whose URL is not its row's careerUrl. One page (Marin Catholic's Alexandra Schmidt) answered 403 and is not linked. An unclaimed career page is not linked: MaxPreps keeps one for every rostered player.",
-    "2026-11-03: another SportsRecruits profile-address probe in every sport over all 1,673 varsity rows (23,270 addresses: the first_last slug, hyphen and multi-word variants, each with no suffix and 1 to 12; 670 live, 649 pages read after dropping men's lacrosse). A page was kept by the 2026-10-12 rule (title names the player, class year agrees, and it names the school's own team or gives a hometown in the school's own area), at most one per platform in each sport, and each kept page was re-read by an independent refuter, who kept all of them. 30 pages for 30 players were linked (14 NorCal, 16 SoCal): 26 lacrosse, 3 field hockey and 1 soccer. Most were live before 2026-10-12 and that day's probe did not link them (among them the own profiles of six committed players: Storey Lewis' lacrosse page and those of Gigi Colant, Catherine Cecchini, Kaye Zilinskas, Violet Potts and Emerson Davis); Charlotte Painter's field hockey page (Fremont) was created 2026-10-25. Two lacrosse pages linked on 2026-10-12 had moved (abigail_wisbach and reagan_roach now answer Page Not Found) and were re-linked at their new addresses. Bare pages (a class year and no school or place: Anaai Trujillo, Elliot Gould, a second Emerson Davis page) and namesakes in other states were not linked. Every SportsRecruits page already linked was re-read: all 228 answer, and none shows a commitment the file lacks. NCSA, Hudl and FieldLevel were not probed, and the claimed-MaxPreps read of 2026-10-13 was not repeated: MaxPreps answered the career-page re-read with HTTP 403 after a few dozen pages, so it was stopped."
+    "2026-11-03: another SportsRecruits profile-address probe in every sport over all 1,673 varsity rows (23,270 addresses: the first_last slug, hyphen and multi-word variants, each with no suffix and 1 to 12; 670 live, 649 pages read after dropping men's lacrosse). A page was kept by the 2026-10-12 rule (title names the player, class year agrees, and it names the school's own team or gives a hometown in the school's own area), at most one per platform in each sport, and each kept page was re-read by an independent refuter, who kept all of them. 30 pages for 30 players were linked (14 NorCal, 16 SoCal): 26 lacrosse, 3 field hockey and 1 soccer. Most were live before 2026-10-12 and that day's probe did not link them (among them the own profiles of six committed players: Storey Lewis' lacrosse page and those of Gigi Colant, Catherine Cecchini, Kaye Zilinskas, Violet Potts and Emerson Davis); Charlotte Painter's field hockey page (Fremont) was created 2026-10-25. Two lacrosse pages linked on 2026-10-12 had moved (abigail_wisbach and reagan_roach now answer Page Not Found) and were re-linked at their new addresses. Bare pages (a class year and no school or place: Anaai Trujillo, Elliot Gould, a second Emerson Davis page) and namesakes in other states were not linked. Every SportsRecruits page already linked was re-read: all 228 answer, and none shows a commitment the file lacks. NCSA, Hudl and FieldLevel were not probed, and the claimed-MaxPreps read of 2026-10-13 was not repeated: MaxPreps answered the career-page re-read with HTTP 403 after a few dozen pages, so it was stopped.",
+    "2026-11-06: NCSA's field hockey school pages (ncsasports.org/field-hockey-recruiting/california/<city>/<school>/), read for the 45 schools with a JV roster, each athlete list matched against the varsity and JV names. Six pages for varsity-file rows were linked, each naming the school and re-read by an independent refuter: Abby Scharrenberg and Carolyn Cordoni (Saint Francis), Ruhee Bhatnagar (Monta Vista), Bintu Deen (Santa Clara), Evelyn Jaimes (Greenfield) and Colette von Klemperer (Los Gatos, a row the school marks JV, whose profiles the team page shows on its JV roster; of her two NCSA pages the fuller, coco-von-klemperer, is linked). Not linked: Glendora's 'Evie Maclennan' (class of 2027, Glendora High School), since the roster has two Maclennan seniors, Evalina and Brielle (MacLennan on MaxPreps, Maclennan on the school's site), and nothing on the page says which; Charlotte Painter (Fremont) and Kasia Umholtz (Helix), named on their school's NCSA page with no profile address that answers. JV players with no row here are in data/jv-profiles.json."
   ],
   "season": "26-27",
   "teams": [
@@ -916,6 +917,12 @@
           "profiles": [
             {
               "classOf": 2027,
+              "note": "NCSA field hockey profile: class of 2027, Mountain View, CA; it names Saint Francis High School (Mountain View). It shows no commitment (data/commits.json has her Bates commitment from other pages). Found by the 2026-11-06 NCSA school-page sweep and re-read by an independent refuter.",
+              "platform": "ncsa",
+              "url": "https://www.ncsasports.org/field-hockey-recruiting/california/mountain-view/saint-francis-high-school/carolyn-cordoni"
+            },
+            {
+              "classOf": 2027,
               "note": null,
               "platform": "sportsrecruits",
               "url": "https://nfhca.sportsrecruits.com/athlete/carolyn_cordoni"
@@ -1075,6 +1082,27 @@
               "platform": "sportsrecruits",
               "sport": "lacrosse",
               "url": "https://iwlca.sportsrecruits.com/athlete/ellie_boyd2"
+            }
+          ],
+          "sourceName": null
+        },
+        {
+          "athleteId": "63bbce23-3e4d-4944-a855-4f4af401e4e6",
+          "conflicts": [],
+          "fullName": "Abby Scharrenberg",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2029,
+              "note": "NCSA field hockey profile: class of 2029, Mountain View, CA; it names Saint Francis High School (Mountain View). Found by the 2026-11-06 NCSA school-page sweep and re-read by an independent refuter.",
+              "platform": "ncsa",
+              "url": "https://www.ncsasports.org/field-hockey-recruiting/california/mountain-view/saint-francis-high-school/abby-scharrenberg"
             }
           ],
           "sourceName": null
@@ -3962,6 +3990,12 @@
           "profiles": [
             {
               "classOf": 2029,
+              "note": "NCSA field hockey profile, titled 'Coco von Klemperer '29': class of 2029, Los Gatos, CA; it names Los Gatos High School, and its statement begins 'My name is Colette (Coco) von Klemperer'. A second NCSA page of hers (colette-von-klemperer, the same school and class, with no statement) is not linked: one per platform. Found by the 2026-11-06 NCSA school-page sweep and re-read by an independent refuter.",
+              "platform": "ncsa",
+              "url": "https://www.ncsasports.org/field-hockey-recruiting/california/los-gatos/los-gatos-high-school1/coco-von-klemperer"
+            },
+            {
+              "classOf": 2029,
               "note": null,
               "platform": "sportsrecruits",
               "url": "https://nfhca.sportsrecruits.com/athlete/colette_von_klemperer"
@@ -4450,7 +4484,14 @@
           "levelSource": null,
           "note": null,
           "positions": null,
-          "profiles": [],
+          "profiles": [
+            {
+              "classOf": 2028,
+              "note": "NCSA field hockey profile: class of 2028, Santa Clara, CA; it names Santa Clara High School (Santa Clara). Found by the 2026-11-06 NCSA school-page sweep and re-read by an independent refuter.",
+              "platform": "ncsa",
+              "url": "https://www.ncsasports.org/field-hockey-recruiting/california/santa-clara/santa-clara-high-school1/bintu-deen"
+            }
+          ],
           "sourceName": null
         },
         {
@@ -5990,7 +6031,14 @@
           "levelSource": null,
           "note": null,
           "positions": null,
-          "profiles": [],
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "NCSA field hockey profile: class of 2027, Cupertino, CA; it names Monta Vista High School. Found by the 2026-11-06 NCSA school-page sweep and re-read by an independent refuter.",
+              "platform": "ncsa",
+              "url": "https://www.ncsasports.org/field-hockey-recruiting/california/cupertino/monta-vista-high-school/ruhee-bhatnagar"
+            }
+          ],
           "sourceName": null
         },
         {
@@ -7880,6 +7928,27 @@
           "note": null,
           "positions": null,
           "profiles": [],
+          "sourceName": null
+        },
+        {
+          "athleteId": "ed13ec39-e066-4199-a9b2-76627455a9d5",
+          "conflicts": [],
+          "fullName": "Evelyn Jaimes",
+          "grade": null,
+          "height": null,
+          "jersey": null,
+          "level": null,
+          "levelSource": null,
+          "note": null,
+          "positions": null,
+          "profiles": [
+            {
+              "classOf": 2027,
+              "note": "NCSA field hockey profile: class of 2027 (the roster gives no grade), Greenfield, CA; it names Greenfield High School. Found by the 2026-11-06 NCSA school-page sweep and re-read by an independent refuter.",
+              "platform": "ncsa",
+              "url": "https://www.ncsasports.org/field-hockey-recruiting/california/greenfield/greenfield-high-school/evelyn-jaimes"
+            }
+          ],
           "sourceName": null
         }
       ],

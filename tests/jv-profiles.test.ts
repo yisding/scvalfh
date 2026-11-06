@@ -14,7 +14,7 @@ import { describe, expect, it } from 'vitest';
 import TeamJvRoster from '../components/jv/TeamJvRoster';
 import { buildTeamJvRosterView } from '../components/jv/jv-roster-view';
 import { buildRecruitingView } from '../components/recruiting/recruiting-view';
-import { JvProfilesFileSchema, getJvPlayerProfiles, getJvProfilesFile } from '../lib/jv/jv-profiles';
+import { JvProfilesFileSchema, getJvPlayerProfiles, getJvProfilesFile, getOverlayJvProfileRows } from '../lib/jv/jv-profiles';
 import { getJvRoster, nameKey } from '../lib/jv/jv-rosters';
 import { classOf, getEnrichedTeamRoster, getRosterEnrichment } from '../lib/players/rosters';
 import type { TeamSlug } from '../lib/types';
@@ -24,7 +24,12 @@ import { textOf } from './ui/html-text';
 const file = JvProfilesFileSchema.parse(
   JSON.parse(readFileSync(path.join(REPO, 'data', 'jv-profiles.json'), 'utf8')) as unknown,
 );
-const entries = file.teams.flatMap((t) => t.players.map((p) => ({ slug: t.slug as TeamSlug, ...p })));
+const fileEntries = file.teams.flatMap((t) => t.players.map((p) => ({ slug: t.slug as TeamSlug, ...p })));
+/** Every JV player with a profile: this file's, and the overlay's JV-marked rows (Los Gatos'). */
+const entries = [
+  ...fileEntries,
+  ...getOverlayJvProfileRows().map((r) => ({ ...r, profiles: [...getJvPlayerProfiles(r.slug, r.name)] })),
+];
 
 describe('data/jv-profiles.json', () => {
   it('validates, and is the file the site reads', () => {
@@ -38,9 +43,19 @@ describe('data/jv-profiles.json', () => {
       const roster = getJvRoster(e.slug);
       expect(roster, e.slug).not.toBeNull();
       expect(roster!.players.some((p) => nameKey(p.name) === nameKey(e.name)), `${e.slug}: ${e.name}`).toBe(true);
-      const varsity = (getEnrichedTeamRoster(e.slug)?.players ?? []).map((p) => nameKey(p.fullName));
+      const varsity = (getEnrichedTeamRoster(e.slug)?.players ?? []).filter((p) => p.level !== 'jv').map((p) => nameKey(p.fullName));
       expect(varsity, `${e.slug}: ${e.name}`).not.toContain(nameKey(e.name));
       expect(getJvPlayerProfiles(e.slug, e.name)).toEqual(e.profiles);
+    }
+  });
+
+  it('leaves to the overlay the JV players it has a row for, and shows their profiles on the JV list', () => {
+    const overlay = getOverlayJvProfileRows();
+    expect(overlay.length).toBeGreaterThan(0);
+    for (const r of overlay) {
+      expect(fileEntries.some((e) => e.slug === r.slug && nameKey(e.name) === nameKey(r.name)), `${r.slug}: ${r.name}`).toBe(false);
+      expect(getJvRoster(r.slug)!.players.some((p) => nameKey(p.name) === nameKey(r.name)), `${r.slug}: ${r.name}`).toBe(true);
+      expect(getJvPlayerProfiles(r.slug, r.name).length).toBeGreaterThan(0);
     }
   });
 
@@ -59,7 +74,7 @@ describe('data/jv-profiles.json', () => {
     const varsity = new Set(
       getRosterEnrichment().teams.flatMap((t) => t.players.flatMap((p) => p.profiles.map((x) => x.url))),
     );
-    const urls = entries.flatMap((e) => e.profiles.map((x) => x.url));
+    const urls = fileEntries.flatMap((e) => e.profiles.map((x) => x.url));
     expect(new Set(urls).size).toBe(urls.length);
     for (const u of urls) expect(varsity.has(u), u).toBe(false);
   });

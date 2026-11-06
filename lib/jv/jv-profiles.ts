@@ -15,6 +15,11 @@
  *   - no profile is linked twice, in this file or across it and the varsity overlay;
  *   - no `maxpreps` profile: the claimed-page read of 2026-10-13 covered the varsity rows only.
  *
+ * A row of data/rosters.json that a school source marks JV (Los Gatos': its MaxPreps list is the whole
+ * program) keeps its profiles in data/rosters-enrichment.json, joined on its MaxPreps id like any
+ * other row; the varsity roster leaves that row out, so its profiles are shown here, on the JV list
+ * row of the same name. This file holds the JV players who have no such row, and refuses one who has.
+ *
  * Commitments and clubs stay varsity-only (data/commits.json and data/clubs.json join on the varsity
  * rows' MaxPreps ids): this file holds profiles alone.
  */
@@ -70,6 +75,18 @@ export const JvProfilesFileSchema = z
 
 export type JvProfilesFile = z.infer<typeof JvProfilesFileSchema>;
 
+/**
+ * The overlay's JV-marked rows with profiles, by `<slug> <name key>` (the MaxPreps spelling and the
+ * school source's, when it gives one).
+ */
+const OVERLAY_JV: ReadonlyMap<string, readonly PlayerProfile[]> = new Map(
+  getRosterEnrichment().teams.flatMap((t) =>
+    t.players
+      .filter((p) => p.level === 'jv' && p.profiles.length > 0)
+      .flatMap((p) => [p.fullName, ...(p.sourceName ? [p.sourceName] : [])].map((n) => [`${t.slug} ${nameKey(n)}`, p.profiles] as const)),
+  ),
+);
+
 function load(): JvProfilesFile {
   const parsed = JvProfilesFileSchema.safeParse(bundled);
   if (!parsed.success) failValidation('jv-profiles', parsed.error.issues);
@@ -79,6 +96,7 @@ function load(): JvProfilesFile {
     throw new Error(`jv-profiles is for season ${file.season}, the rosters for ${enrichment.season}`);
   }
   const varsityUrls = new Set(enrichment.teams.flatMap((t) => t.players.flatMap((p) => p.profiles.map((x) => x.url))));
+  const overlayJv = new Set(OVERLAY_JV.keys());
   const fail = (slug: string, who: string, what: string): never => {
     throw new Error(`jv-profiles: ${slug} / ${who}: ${what}`);
   };
@@ -88,6 +106,9 @@ function load(): JvProfilesFile {
     for (const e of team.players) {
       const p = byName.get(nameKey(e.name));
       if (!p) fail(team.slug, e.name, 'not a player on the JV list the team page shows (or now on the varsity roster)');
+      if (overlayJv.has(`${team.slug} ${nameKey(e.name)}`)) {
+        fail(team.slug, e.name, 'data/rosters-enrichment.json marks this MaxPreps row JV: link the profile there');
+      }
       for (const x of e.profiles) {
         if (varsityUrls.has(x.url)) fail(team.slug, e.name, `${x.url} is already linked to a varsity player`);
         if (x.classOf !== null && p!.grade !== null && x.classOf !== classOf(file.season, p!.grade)) {
@@ -108,7 +129,19 @@ export function getJvProfilesFile(): JvProfilesFile {
   return file;
 }
 
-/** A JV player's own recruiting pages, by the name the team page's JV list gives; [] for most. */
+/**
+ * A JV player's own recruiting pages, by the name the team page's JV list gives: this file's, or the
+ * overlay's for a row it marks JV; [] for most.
+ */
 export function getJvPlayerProfiles(slug: TeamSlug, name: string): readonly PlayerProfile[] {
-  return BY_TEAM.get(slug)?.get(nameKey(name)) ?? [];
+  return BY_TEAM.get(slug)?.get(nameKey(name)) ?? OVERLAY_JV.get(`${slug} ${nameKey(name)}`) ?? [];
+}
+
+/** The overlay's JV-marked rows that carry profiles, as `{ slug, name }` (for the tests and the docs' counts). */
+export function getOverlayJvProfileRows(): { slug: TeamSlug; name: string }[] {
+  return getRosterEnrichment().teams.flatMap((t) =>
+    t.players
+      .filter((p) => p.level === 'jv' && p.profiles.length > 0)
+      .map((p) => ({ slug: t.slug as TeamSlug, name: p.fullName })),
+  );
 }

@@ -52,11 +52,13 @@ describe('buildRecruitingView', () => {
   it('lists each school’s roster rows that have a profile, a club or a commitment, in roster order', () => {
     for (const s of schools) {
       const roster = buildRosterView(s.slug)!;
+      // The varsity rows; the JV rows after them are tests/jv-profiles.test.ts'.
+      const varsityRows = s.rows.filter((r) => !r.jv);
       expect(
-        s.rows.map((r) => r.key),
+        varsityRows.map((r) => r.key),
         s.slug,
       ).toEqual(roster.rows.filter(listed).map((r) => r.key));
-      for (const row of s.rows) {
+      for (const row of varsityRows) {
         const rosterRow = roster.rows.find((r) => r.key === row.key)!;
         expect(row.commitment, `${s.slug} / ${row.name}`).toEqual(rosterRow.commitment);
         expect(row.clubs).toEqual(rosterRow.clubs);

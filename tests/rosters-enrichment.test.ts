@@ -64,6 +64,8 @@ const claimed1013 = (x: { platform: string }) => x.platform === 'maxpreps';
 const fromProbe1012 = (x: { note: string | null }) => x.note?.includes('Found by the 2026-10-12 address probe') ?? false;
 /** A profile the 2026-11-03 SportsRecruits address probe added: its note says so. */
 const fromProbe1103 = (x: { note: string | null }) => x.note?.includes('Found by the 2026-11-03 address probe') ?? false;
+/** A profile the 2026-11-06 NCSA school-page sweep linked: its note says so. */
+const fromSweep1106 = (x: { note: string | null }) => x.note?.includes('Found by the 2026-11-06 NCSA school-page sweep') ?? false;
 /** A grade, a conflict or a record note added on 2026-10-12 from MaxPreps' career and 2025-26 pages: its note says so. */
 const from1012 = (note: string | null | undefined) => (note ?? '').includes('Added 2026-10-12') || (note ?? '').endsWith('(2026-10-12).');
 
@@ -85,7 +87,7 @@ const pre: RosterEnrichment = {
         grade: p.grade && from1012(p.grade.note) ? null : p.grade,
         conflicts: p.conflicts.filter((c) => !from1012(c.note)),
         note: from1012(p.note) ? null : p.note,
-        profiles: p.profiles.filter((x) => !fromProbe1012(x) && !claimed1013(x) && !fromProbe1103(x)),
+        profiles: p.profiles.filter((x) => !fromProbe1012(x) && !claimed1013(x) && !fromProbe1103(x) && !fromSweep1106(x)),
       }))
       .filter(
         (p) =>
@@ -160,7 +162,7 @@ describe('data/rosters-enrichment.json', () => {
     // SportsRecruits probe in every sport 2026-10-12, and the claimed MaxPreps pages 2026-10-13,
     // against the roster file read 2026-10-07). The athleteId join below is what keeps the two
     // files in step.
-    expect(raw.capturedAt).toBe('2026-11-03');
+    expect(raw.capturedAt).toBe('2026-11-06');
     expect(base.fetchedAt.slice(0, 10) <= raw.capturedAt).toBe(true);
   });
 
@@ -732,10 +734,34 @@ describe('recruiting profiles', () => {
       'https://iwlca.sportsrecruits.com/athlete/abigail_wisbach2',
       'https://iwlca.sportsrecruits.com/athlete/reagan_roach2',
     ]);
-    // 809 profiles for 583 players in all (779 for 569 before the probe).
+    // 809 profiles for 583 players once it was linked (779 for 569 before it); the 2026-11-06 NCSA sweep, below, added 6.
     const all = raw.teams.flatMap((t) => t.players);
-    expect(all.flatMap((p) => p.profiles)).toHaveLength(809);
-    expect(all.filter((p) => p.profiles.length > 0)).toHaveLength(583);
+    expect(all.flatMap((p) => p.profiles.filter((x) => !fromSweep1106(x)))).toHaveLength(809);
+    expect(all.filter((p) => p.profiles.some((x) => !fromSweep1106(x)))).toHaveLength(583);
+  });
+
+  it('what the 2026-11-06 NCSA school-page sweep found: six field hockey pages, each naming the school', () => {
+    const found = raw.teams.flatMap((t) => t.players.flatMap((p) => p.profiles.filter(fromSweep1106).map((x) => ({ slug: t.slug, p, x }))));
+    expect(found.map((r) => `${r.slug} ${r.p.fullName}`).sort()).toEqual([
+      'greenfield Evelyn Jaimes',
+      'los-gatos Colette Von Klemperer',
+      'monta-vista Ruhee Bhatnagar',
+      'saint-francis Abby Scharrenberg',
+      'saint-francis Carolyn Cordoni',
+      'santa-clara Bintu Deen',
+    ]);
+    for (const { p, x } of found) {
+      expect(x.platform, p.fullName).toBe('ncsa');
+      expect(x.sport, p.fullName).toBeUndefined();
+      expect(x.classOf, p.fullName).not.toBeNull();
+      expect(x.note, p.fullName).toMatch(/it names [A-Z].* High School/);
+    }
+    // Colette von Klemperer is a Los Gatos row the school marks JV: her pages show on the JV roster.
+    expect(found.find((r) => r.slug === 'los-gatos')!.p.level).toBe('jv');
+    // 815 profiles for 587 players in all.
+    const all = raw.teams.flatMap((t) => t.players);
+    expect(all.flatMap((p) => p.profiles)).toHaveLength(815);
+    expect(all.filter((p) => p.profiles.length > 0)).toHaveLength(587);
   });
 
   it('what the 2026-10-13 read of every MaxPreps career page found: the claimed ones', () => {
