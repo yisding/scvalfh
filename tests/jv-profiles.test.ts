@@ -88,8 +88,17 @@ describe('data/jv-profiles.json', () => {
     expect(probe.filter(({ x }) => x.sport === 'lacrosse')).toHaveLength(32);
     expect(probe.filter(({ x }) => x.sport === undefined).map(({ e }) => e.name)).toEqual(['Jayla Gerrard']);
     expect(all.filter(({ x }) => x.platform === 'ncsa').map(({ e }) => e.name)).toEqual(['Katie Todd']);
+    // The probe's 33 pages are at 13 schools; Scripps Ranch, the fourteenth, is here for Katie Todd's NCSA page.
+    expect(new Set(probe.map(({ e }) => e.slug)).size).toBe(13);
     expect(fileEntries).toHaveLength(34);
     expect(new Set(fileEntries.map((e) => e.slug)).size).toBe(14);
+    // Where a player had more than one live page, the one the rule kept is linked, not the other.
+    const url = (slug: string, name: string) => getJvPlayerProfiles(slug as TeamSlug, name).map((x) => x.url);
+    expect(url('saint-francis', "Aoife O'Connor")).toEqual(['https://iwlca.sportsrecruits.com/athlete/aoife_oconnor2']);
+    expect(url('st-ignatius', 'Mika Nejasmich')).toEqual(['https://iwlca.sportsrecruits.com/athlete/mika_nejasmich3']);
+    expect(url('st-ignatius', 'Simone Stiefel')).toEqual(['https://iwlca.sportsrecruits.com/athlete/simone_stiefel2']);
+    expect(url('lick-wilmerding', 'Mira Mathus')).toEqual(['https://iwlca.sportsrecruits.com/athlete/mira_mathus']);
+    expect(url('st-ignatius', 'Luciana Bennett')).toEqual(['https://iwlca.sportsrecruits.com/athlete/luciana_bennett']);
   });
 
   it('refuses a claimed-MaxPreps profile, two profiles on one platform in one sport, and a player listed twice', () => {
