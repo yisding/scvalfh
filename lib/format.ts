@@ -317,6 +317,23 @@ export function datesOf(row: { dateIso: string; dateKey: string }): { dateLocal:
   return { dateLocal, dateUtc, dateKey: row.dateKey, isTimeTba: true };
 }
 
+/**
+ * A Pacific wall-clock date and 'HH:MM' (a source that prints local times, like the San Diego Section's bracket
+ * sheet) → the game's three date fields; a null time is time-TBA, stored at 16:00 local as datesOf stores it.
+ */
+export function datesAtLocal(dateKey: string, time: string | null): { dateLocal: string; dateUtc: string; dateKey: string; isTimeTba: boolean } {
+  if (time === null) return datesOf({ dateIso: dateKey, dateKey });
+  const [h, m] = time.split(':').map(Number);
+  const dateLocal = `${dateKey}T${time}:00`;
+  // Pacific time is UTC-7 (PDT) or UTC-8 (PST); take whichever round-trips to the wall clock.
+  const dateUtc = [7, 8]
+    .map((off) => new Date(Date.UTC(...ymd(dateKey), h + off, m)).toISOString().replace(/\.000Z$/, 'Z'))
+    .find((iso) => toLocalTimestamp(iso) === dateLocal);
+  // A wall-clock time that does not exist (the hour skipped when daylight time starts): no time is claimed.
+  if (dateUtc === undefined) return datesOf({ dateIso: dateKey, dateKey });
+  return { dateLocal, dateUtc, dateKey, isTimeTba: false };
+}
+
 function ymd(dateKey: string): [number, number, number] {
   const [y, m, d] = dateKey.split('-').map(Number);
   return [y, m - 1, d];

@@ -12,6 +12,7 @@ import { getHistoryFor, getHistoryStandings, type HistoryRow } from '../../lib/h
 import { divisionHeading, leagueOfDivision } from '../../lib/leagues';
 import type { DivisionId, Game, LeagueId } from '../../lib/types';
 import { teamJvStanding } from '../jv/jv-standings-view';
+import { buildTeamJvRosterView, type TeamJvRosterView } from '../jv/jv-roster-view';
 import { buildTeamJvView, type TeamJvView } from '../jv/jv-view';
 import { buildPlayerStatsView, type PlayerStatsView } from './player-stats-view';
 import { buildRosterView, type RosterView } from './roster-view';
@@ -81,6 +82,8 @@ export interface TeamPageParts {
   roster: RosterView | null;
   jv: TeamJvView | null;
   jvStanding: { line: string | null; href: string } | null;
+  /** The school's JV roster, or null when no source lists its JV players (the section is left out). */
+  jvRoster: TeamJvRosterView | null;
   playerStats: PlayerStatsView | null;
   /** The roster's players, 0 for an errored roster. */
   rosterCount: number;
@@ -113,6 +116,7 @@ export function buildTeamPageParts(view: TeamPageView): TeamPageParts {
   const jv = buildTeamJvView(team.slug);
   // Its JV place, when its division's JV table is shown (lib/jv/jv-standings.ts), and that table's anchor.
   const jvStanding = teamJvStanding(team.slug);
+  const jvRoster = buildTeamJvRosterView(team.slug);
   const playerStats = buildPlayerStatsView(team.slug, [...leagueLog, ...nonLeagueLog]);
   const rosterCount = roster && roster.status !== 'error' ? roster.rows.length : 0;
   // A team whose every league game is still to come (Metro South Bay before Oct 7, Newport Harbor before
@@ -148,6 +152,7 @@ export function buildTeamPageParts(view: TeamPageView): TeamPageParts {
     roster,
     jv,
     jvStanding,
+    jvRoster,
     playerStats,
     rosterCount,
     firstLeagueGame,

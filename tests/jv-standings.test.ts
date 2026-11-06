@@ -226,9 +226,11 @@ describe('the JV tables served from the committed files', () => {
       const single = LEAGUES.find((l) => l.id === t.league)!.divisions.length === 1;
       expect(s.href).toBe(`/jv#${single ? t.league : t.division}`);
       const table = getJvTables(t.league).find((x) => x.division === t.division)!;
-      const row = table.rows.find((r) => r.slug === t.slug);
+      // Santa Catalina's line is York's, whose JV slot it is, named.
+      const row = table.rows.find((r) => r.slug === t.slug) ?? table.rows.find((r) => r.slug === null && r.jvFor === t.slug);
+      const whose = row && row.slug === null ? `${row.name}: ` : '';
       if (table.status === 'shown' && row && row.record.gp > 0) {
-        expect(s.line).toMatch(new RegExp(`^(T-)?\\d+(st|nd|rd|th) in ${jvTableTitle(t.division)} · \\d+-\\d+-\\d+$`));
+        expect(s.line).toMatch(new RegExp(`^${whose}(T-)?\\d+(st|nd|rd|th) in ${jvTableTitle(t.division)} · \\d+-\\d+-\\d+$`));
       } else {
         expect(s.line).toBeNull();
       }

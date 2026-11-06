@@ -151,13 +151,20 @@ export interface GameConflict {
   maxprepsUrl: string | null;
 }
 
-/** The si.com source line (owner decision D2): shown whenever the published score is si.com's. */
+/**
+ * The source line: shown whenever the published score is not MaxPreps' own, si.com's (owner decision D2) or the
+ * San Diego Section's, from its bracket sheet (lib/postseason/sds-sheet-results.ts).
+ */
 export interface GameSourceLine {
-  /** `Score via High School on SI (si.com): <rule note>.` */
+  /** `Score via High School on SI (si.com): <rule note>.` · `Score via the CIF San Diego Section's bracket sheet: <note>.` */
   text: string;
   rule: BackfillProvenance['rule'] | null;
   sbliveUrl: string | null;
   maxprepsUrl: string | null;
+  /** The Section's bracket sheet, for a score or a game from it. */
+  sheetUrl: string | null;
+  /** The line explains a † on the score (a final); a game the sheet lists with no score yet has no †. */
+  marked: boolean;
 }
 
 /** How the game counts, in words (GameDetails "Counts as"). */
@@ -377,20 +384,25 @@ function recordsCaptionFor(
 
 /**
  * A final's result links (`GameModel.resultLinks`). The accent pill is the source the score came
- * from: si.com's game page when the published score is si.com's (D2), else the MaxPreps box score.
+ * from: si.com's game page when the published score is si.com's (D2), the Section's bracket sheet when it is
+ * the San Diego Section's, else the MaxPreps box score.
  */
 function resultLinksFor(game: Game): GameLink[] {
   if (game.status !== 'final') return [];
   const links: GameLink[] = [];
   const sbliveScored = game.provenance.scores === 'sblive';
+  const sheetScored = game.provenance.scores === 'cifsds-sheet';
   if (sbliveScored && game.urls.sblive) {
     links.push({ href: game.urls.sblive, label: 'si.com game', accent: true });
   }
+  if (sheetScored && game.urls.cifsds) {
+    links.push({ href: game.urls.cifsds, label: 'CIF-SDS bracket', accent: true });
+  }
   if (game.urls.maxpreps) {
-    // Beside a si.com score, MaxPreps' contest page may carry no score (or a wrong one): it is the
+    // Beside a si.com or Section score, MaxPreps' contest page carries no score (or a wrong one): it is the
     // contest page, not "the box score", and never the accent pill.
     links.push(
-      sbliveScored
+      sbliveScored || sheetScored
         ? { href: game.urls.maxpreps, label: 'MaxPreps game' }
         : { href: game.urls.maxpreps, label: 'MaxPreps box score', accent: true },
     );
@@ -618,8 +630,24 @@ function conflictFor(game: Game): GameConflict | null {
   };
 }
 
-/** `Score via High School on SI (si.com): <rule note>.` — only when the published score is si.com's. */
+/**
+ * `Score via High School on SI (si.com): <rule note>.` when the published score is si.com's;
+ * `Score via the CIF San Diego Section’s bracket sheet: <note>.` when it is the Section's.
+ */
 function sourceFor(game: Game): GameSourceLine | null {
+  if (game.provenance.scores === 'cifsds-sheet') {
+    const note = game.provenance.sectionSheet?.note?.trim().replace(/[.\s]+$/, '');
+    // A game the sheet lists that nobody has scored yet: the sheet is where the game itself comes from.
+    const head = game.status === 'final' ? 'Score via the CIF San Diego Section’s bracket sheet' : 'Listed on the CIF San Diego Section’s bracket sheet';
+    return {
+      text: note ? `${head}: ${note}.` : `${head}.`,
+      rule: null,
+      sbliveUrl: null,
+      maxprepsUrl: game.urls.maxpreps,
+      sheetUrl: game.urls.cifsds ?? null,
+      marked: game.status === 'final',
+    };
+  }
   if (game.provenance.scores !== 'sblive') return null;
   const note = game.provenance.backfill?.note?.trim().replace(/[.\s]+$/, '');
   return {
@@ -629,6 +657,8 @@ function sourceFor(game: Game): GameSourceLine | null {
     rule: game.provenance.backfill?.rule ?? null,
     sbliveUrl: game.urls.sblive ?? null,
     maxprepsUrl: game.urls.maxpreps,
+    sheetUrl: null,
+    marked: true,
   };
 }
 
@@ -779,7 +809,8 @@ function scoreNoteFor(
     const outcome = sideOutcome(game, 'home');
     if (outcome === 'W' || outcome === 'L') {
       const winner = outcome === 'W' ? home.name : away.name;
-      if (section.shootout.inference === 'unverified') {
+      // A score from the Section's own bracket sheet confirms the shootout ("2-2 (SO)"): the verified wording.
+      if (section.shootout.inference === 'unverified' && game.provenance.scores !== 'cifsds-sheet') {
         // The San Diego Section (SectionConfig.shootout.inference): the rule is cited, the shootout is not
         // asserted. si.com and the Section's power rankings record Mt. Carmel–Poway (Sep 11) as 2-0 where
         // MaxPreps has 0-0 marked W/L, so this note says what MaxPreps lists and why the win counts, then

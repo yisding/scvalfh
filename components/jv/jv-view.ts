@@ -13,6 +13,7 @@ import { localDateKey } from '../../lib/format';
 import {
   getJvClassification,
   getJvFetchedAt,
+  getJvGamesForOutsideTeam,
   getJvGamesForTeam,
   getJvGamesOn,
   getJvSchoolSiteDiffersNote,
@@ -22,6 +23,7 @@ import { jvSlotTeamFor } from '../../lib/jv/jv-teams';
 import { regionOf } from '../../lib/leagues';
 import { getTeamBySlug } from '../../lib/teams';
 import type { Game, GameSide, RegionId, TeamSlug } from '../../lib/types';
+import type { Perspective } from '../ui/describe-game';
 
 export interface JvRowView {
   game: Game;
@@ -44,6 +46,13 @@ export interface JvListSummary {
 
 export interface TeamJvView extends JvListSummary {
   teamName: string;
+  /**
+   * The team whose games these are, when it is not this school: York on Santa Catalina's page, since
+   * PCAL pairs the two in one schedule slot (lib/jv/jv-teams.ts JV_OUTSIDE_TEAMS). `note` says so.
+   */
+  slot: { name: string; note: string } | null;
+  /** Whose side the rows read from: the school, or its slot team by MaxPreps id. */
+  perspective: Perspective;
   rows: JvRowView[];
   /** Finals. */
   played: number;
@@ -91,24 +100,29 @@ const rowsOf = (games: readonly Game[]): JvRowView[] =>
     return { game, differsNote: jvDiffersNote(game), chips: kind !== 'uncounted', nonLeague: kind === 'non-league' };
   });
 
-/** A team page's JV section; null only for a slug that is not a registry team. */
+/**
+ * A team page's JV section; null only for a slug that is not a registry team. A school that fields no
+ * JV team of its own but whose league slot another team plays at JV level (Santa Catalina, whose PCAL
+ * JV games are York's) lists that team's games, read from its side, with a sentence saying whose they
+ * are: PCAL's schedule names the slot "CAT/YOR", so the school's page is where its JV fixtures are.
+ */
 export function buildTeamJvView(slug: TeamSlug): TeamJvView | null {
   const team = getTeamBySlug(slug);
   const entry = getJvTeam(slug);
   if (!team || !entry) return null;
-  const games = getJvGamesForTeam(slug);
+  const slot = jvSlotTeamFor(slug);
+  const games = slot ? getJvGamesForOutsideTeam(slot.maxprepsTeamId) : getJvGamesForTeam(slug);
   const today = localDateKey(getJvFetchedAt());
   const status = entry.maxpreps.status === 'unavailable' ? 'ok' : entry.maxpreps.status;
-  const slot = jvSlotTeamFor(slug);
   const emptyHeading = slot
-    ? `${team.name} fields no JV team.`
+    ? `${team.name} fields no JV team, and no ${slot.name} JV game is listed yet.`
     : status === 'error'
       ? `${team.name}’s JV games could not be read.`
       : status === 'pending'
         ? `${team.name}’s JV games have not been read yet.`
         : `MaxPreps lists no JV games for ${team.name}.`;
   const emptyBody = slot
-    ? `${slot.source} Its JV games are on its opponents’ pages and in the JV table.`
+    ? slot.source
     : status === 'error'
       ? 'The last update could not reach MaxPreps for them and had nothing earlier to fall back on.'
       : status === 'pending'
@@ -116,13 +130,20 @@ export function buildTeamJvView(slug: TeamSlug): TeamJvView | null {
         : 'The school may not field a JV team this season, or no JV schedule has been entered.';
   return {
     teamName: team.name,
+    slot: slot
+      ? {
+          name: slot.name,
+          note: `${slot.source} These are ${slot.name}’s JV games, each result from ${slot.name}’s side.`,
+        }
+      : null,
+    perspective: slot ? { teamId: slot.maxprepsTeamId } : slug,
     rows: rowsOf(games),
     played: games.filter((g) => g.status === 'final').length,
     toCome: games.filter((g) => g.status !== 'final' && g.dateKey >= today).length,
     noScore: games.filter((g) => g.status !== 'final' && g.dateKey < today).length,
     status,
-    maxprepsUrl: entry.maxprepsScheduleUrl,
-    sbliveUrl: entry.sbliveUrl,
+    maxprepsUrl: slot ? slot.maxprepsJvScheduleUrl : entry.maxprepsScheduleUrl,
+    sbliveUrl: slot ? slot.sbliveJvGamesUrl : entry.sbliveUrl,
     emptyHeading,
     emptyBody,
     ...summarize(games),

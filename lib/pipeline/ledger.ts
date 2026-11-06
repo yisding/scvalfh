@@ -12,6 +12,7 @@
 
 import { localDateKey, shortDate, timeOfDay, toLocalTimestamp } from '../format';
 import { LEAGUES, findDivision } from '../leagues';
+import { SDS_BRACKET_SHEET_TABS } from '../league-config/sections';
 import { CIFSS_SECTIONS } from '../sources/cifss';
 import type { ScheduleRow } from '../sources/maxpreps';
 import { TEAMS, getTeamBySlug } from '../teams';
@@ -84,7 +85,15 @@ function sortKey(row: SourceStatus, seq: number): SortKey {
   if (kind === 'cifss-scores') return [3, 1, cifssSectionIndex(row.url), 0, '', seq];
   if (kind === 'ccs-calendar') return [4, 0, 0, 0, '', seq];
   if (kind === 'ccs-bracket') return [4, 1, 0, 0, '', seq];
+  if (kind === 'sds-bracket-sheet') return [4, 2, sdsTabIndex(row.url), 0, '', seq];
   return [5, 0, 0, 0, '', seq];
+}
+
+/** A San Diego bracket sheet row's division in SDS_BRACKET_SHEET_TABS order (open, Division I, II), read from its gid. */
+function sdsTabIndex(url: string): number {
+  const gid = /[?&]gid=(\d+)/.exec(url)?.[1];
+  const i = Object.values(SDS_BRACKET_SHEET_TABS).indexOf(gid ?? '');
+  return i === -1 ? 99 : i;
 }
 
 /** A cifsshome.org row's Section in CIFSS_SECTIONS order, read from its listing URL's section_id. */

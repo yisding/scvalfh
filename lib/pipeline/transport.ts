@@ -18,12 +18,13 @@
  *   vnn-ics               vnnIcsUrl(VNN_SITE_IDS[team].siteId) → HttpClient.text
  *   ccs-ical, ccs-bracket CCS_ICAL_URL, CCS.bracketUrl → HttpClient.text
  *   cifss-scores          cifssListingUrl(section, season start → through, page) → HttpClient.text
+ *   sds-bracket-sheet     sdsBracketSheetCsvUrl(division) (the Section's bracket sheet, one tab as CSV) → HttpClient.text
  */
 
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 
-import { CCS } from '../league-config/sections';
+import { CCS, sdsBracketSheetCsvUrl } from '../league-config/sections';
 import { getDivision, getLeague } from '../leagues';
 import { officialChangesCellText, sha256Hex } from '../official/validate';
 import { BOOTSTRAP_URL } from '../season';
@@ -145,6 +146,8 @@ export function resourceUrl(key: ResourceKey): string {
       return CCS.bracketUrl;
     case 'cifss-scores':
       return cifssListingUrl(key.section, { from: CIFSS_SEASON_FROM, to: key.through, page: key.page });
+    case 'sds-bracket-sheet':
+      return sdsBracketSheetCsvUrl(key.division);
   }
 }
 
@@ -249,6 +252,10 @@ export class LiveTransport implements Transport {
           const res = await this.http.text(url);
           return { url: res.url, httpStatus: res.httpStatus, body: res.body };
         }
+        case 'sds-bracket-sheet': {
+          const res = await this.http.text(url, 'text/csv,text/plain,*/*');
+          return { url: res.url, httpStatus: res.httpStatus, body: res.body };
+        }
       }
     } catch (err) {
       throw asTransportError(err, url);
@@ -310,6 +317,8 @@ export function recordedExtension(key: ResourceKey): string {
     case 'official-revision':
     case 'official-changes':
       return '.txt';
+    case 'sds-bracket-sheet':
+      return '.csv';
   }
 }
 

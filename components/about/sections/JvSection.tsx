@@ -12,10 +12,11 @@ import type { AboutJv } from '../about-view';
 
 /**
  * /about#jv: where the JV games come from (MaxPreps, then si.com, then two schools' own sites), how a JV
- * game counts for a JV table, when a table is shown, and the PCAL's York / Santa Catalina pairing.
+ * game counts for a JV table, when a table is shown, the PCAL's York / Santa Catalina pairing, and
+ * the JV rosters on the team pages.
  */
 export function JvSection({ jv }: { jv: AboutJv }) {
-  const { school, file, uncounted, shown, merge, corrections } = jv;
+  const { school, file, uncounted, shown, merge, corrections, rosters } = jv;
   return (
     <section id="jv" className="mt-16">
       <SectionHeader size="lg" kicker="JV games" meta={plural(school.games.length, 'game', 'games')} />
@@ -91,9 +92,23 @@ export function JvSection({ jv }: { jv: AboutJv }) {
         <p>
           PCAL pairs two schools in one schedule slot: Santa Catalina fields varsity only and York fields JV
           only, so the JV game of every Santa Catalina fixture is York&rsquo;s. York stands in the PCAL JV table
-          in Santa Catalina&rsquo;s place (it has no page here), a JV game MaxPreps files under Santa Catalina is
-          shown as York&rsquo;s, and a York game counts when Santa Catalina&rsquo;s varsity game of the day does.
-          York is matched on si.com by its own JV team id.
+          in Santa Catalina&rsquo;s place, a JV game MaxPreps files under Santa Catalina is shown as
+          York&rsquo;s, and a York game counts when Santa Catalina&rsquo;s varsity game of the day does. York
+          has no page of its own here: its JV games and its JV table line are in{' '}
+          <Link href="/teams/santa-catalina#jv" prefetch={false} className="text-accent hover:underline">
+            Santa Catalina&rsquo;s JV section
+          </Link>
+          , each result from York&rsquo;s side, and its row in the PCAL JV table links there. York is
+          matched on si.com by its own JV team id.
+        </p>
+        <p>
+          A team page also lists the school&rsquo;s JV roster, after its varsity roster, where we found
+          one: today {plural(rosters.schools, 'school', 'schools')}. The lists come from MaxPreps&rsquo; JV
+          roster pages and from the schools&rsquo; own athletics sites, which were read by hand; where both
+          have a list, the page shows the one with more JV players and names the other ({rosters.siteSchools}{' '}
+          of the lists shown are a school&rsquo;s own). A player on the school&rsquo;s varsity roster is not
+          repeated on its JV list, which says how many it leaves out: several MaxPreps JV pages list the
+          whole program.
         </p>
         </>) : null}
       </div>

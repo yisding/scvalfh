@@ -5,7 +5,7 @@ import { EM_DASH, mapsSearchHref, matchupJoiner, monthDay, recordString, recordW
 import { gameHref } from '../../lib/game-id';
 import { getBracketLink } from '../playoffs/bracket-link';
 import { TEAMS, getTeamBySlug } from '../../lib/teams';
-import type { Game, LeagueId, Record3, TeamSlug } from '../../lib/types';
+import type { Game, LeagueId, Record3 } from '../../lib/types';
 import { gameAddress } from '../../lib/schools/venue';
 
 import ExternalLink from './ExternalLink';
@@ -20,9 +20,11 @@ import {
   describeGame,
   gameKind,
   otherLeagueSuffix,
+  perspectiveIsHome,
   resultSentence,
   statusLabelIsTime,
   type GameDisplay,
+  type Perspective,
   type SideView,
 } from './describe-game';
 
@@ -54,7 +56,7 @@ import {
 export interface GameViewProps {
   game: Game;
   /** Orients "vs / at" and the W/L/T from this team's side. */
-  perspective?: TeamSlug | null;
+  perspective?: Perspective | null;
   showDate?: boolean;
   showTime?: boolean;
   /** Default true on /schedule and /; false in dense tables. */
@@ -782,7 +784,7 @@ export function GameLogRowBody({
   isThisGame = false,
 }: GameLogRowProps) {
   const display = describeGame(game, perspective);
-  const mineIsHome = perspective ? game.home.slug === perspective : true;
+  const mineIsHome = perspectiveIsHome(game, perspective) ?? true;
   const opponent = mineIsHome ? display.away : display.home;
   const mine = mineIsHome ? display.home : display.away;
   const opponentTeam = opponent.slug ? getTeamBySlug(opponent.slug) : undefined;

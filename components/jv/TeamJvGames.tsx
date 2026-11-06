@@ -1,6 +1,5 @@
 import Link from 'next/link';
 
-import type { TeamSlug } from '../../lib/types';
 import EmptyState from '../ui/EmptyState';
 import ExternalLink from '../ui/ExternalLink';
 import { GAME_LOG_ROW_GRID, GameLogRowBody } from '../ui/GameRow';
@@ -15,8 +14,12 @@ import type { JvListSummary, TeamJvView } from './jv-view';
  * same-division game no varsity game matched carries neither: it counts nowhere and we do not
  * guess. A score from si.com carries the †, as everywhere else; a MaxPreps score si.com reports
  * differently gets one line under its row saying so. The footnote says what the list is and is not.
+ *
+ * On Santa Catalina's page the list is York's (the view's `slot`): one line above it says why, and
+ * each row reads from York's side (`perspective` is York's MaxPreps id).
  */
-export function TeamJvGames({ view, perspective }: { view: TeamJvView; perspective: TeamSlug }) {
+export function TeamJvGames({ view }: { view: TeamJvView }) {
+  const { perspective } = view;
   if (view.rows.length === 0) {
     return (
       <EmptyState
@@ -29,6 +32,7 @@ export function TeamJvGames({ view, perspective }: { view: TeamJvView; perspecti
   }
   return (
     <>
+      {view.slot ? <p className="mt-0 mb-3 max-w-prose text-meta text-ink-2">{view.slot.note}</p> : null}
       <div className="sx-card sx-flush sx-bleed">
         <ol className="sx-list">
           {view.rows.map(({ game, differsNote, chips, nonLeague }) => (
@@ -46,14 +50,14 @@ export function TeamJvGames({ view, perspective }: { view: TeamJvView; perspecti
         {view.maxprepsUrl ? (
           <li>
             <ExternalLink href={view.maxprepsUrl} className="sx-pill sx-pill-ring">
-              MaxPreps JV schedule
+              {view.slot ? `${view.slot.name}’s MaxPreps JV schedule` : 'MaxPreps JV schedule'}
             </ExternalLink>
           </li>
         ) : null}
         {view.sbliveUrl ? (
           <li>
             <ExternalLink href={view.sbliveUrl} className="sx-pill sx-pill-ring">
-              si.com JV page
+              {view.slot ? `${view.slot.name}’s si.com JV page` : 'si.com JV page'}
             </ExternalLink>
           </li>
         ) : null}

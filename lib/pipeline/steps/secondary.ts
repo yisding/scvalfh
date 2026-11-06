@@ -16,6 +16,9 @@
  *    bracket is unpublished and there is no calendar. The source rows are unchanged ('skipped' /
  *    'error'): the carry only shows in the run log.
  *
+ *  - The San Diego Section's bracket sheet (steps/sds-sheet.ts): the playoff results MaxPreps lacks, PER TAB
+ *    carry-forward.
+ *
  * Every failure becomes a SourceStatus row; a resource the corpus lacks is 'skipped' ('not in
  * corpus'), which is how an offline run skips these steps.
  */
@@ -30,6 +33,7 @@ import type { SecondaryStepResult } from '../contract';
 import { carriedFromOf, type PipelineContext } from '../ledger';
 import { classifyFetchError } from '../read';
 import { resourceUrl } from '../transport';
+import { stepSdsSheet } from './sds-sheet';
 
 async function stepVnn(ctx: PipelineContext, input: readonly Game[]): Promise<Game[]> {
   let games = [...input];
@@ -228,5 +232,6 @@ async function stepCcs(ctx: PipelineContext): Promise<CcsState> {
 export async function stepSecondary(ctx: PipelineContext, games: readonly Game[]): Promise<SecondaryStepResult> {
   const withVnn = await stepVnn(ctx, games);
   const ccs = await stepCcs(ctx);
-  return { games: withVnn, ...ccs };
+  const withSheet = await stepSdsSheet(ctx, withVnn);
+  return { games: withSheet, ...ccs };
 }

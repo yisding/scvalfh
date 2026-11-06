@@ -29,9 +29,23 @@ import {
 import { pairingRoundOf } from '../../lib/postseason/postseason-round-label';
 import { getTeamBySlug } from '../../lib/teams';
 import type { Game, LeagueId, Outcome, PostseasonTag, ScoreView, TeamSlug } from '../../lib/types';
+import type { SourceMark } from './source-mark';
 
 /** The chip a side or a row carries. `none` = no chip at all (a scheduled game). */
 export type ChipKind = Outcome | 'pending' | 'cancelled' | 'postponed' | 'none';
+
+/**
+ * Whose side a row reads from: one of our team slugs, or a team outside the registry by its MaxPreps
+ * id (`{ teamId }`), for the one list that needs it: Santa Catalina's JV section is York's games
+ * (lib/jv/jv-teams.ts JV_OUTSIDE_TEAMS), and York has no slug.
+ */
+export type Perspective = TeamSlug | { teamId: string };
+
+/** Whether the home side is `perspective`'s; null without a perspective. */
+export function perspectiveIsHome(game: Game, perspective: Perspective | null | undefined): boolean | null {
+  if (!perspective) return null;
+  return typeof perspective === 'string' ? game.home.slug === perspective : game.home.teamId === perspective.teamId;
+}
 
 export type StatusTone = 'ink' | 'ink-2' | 'ink-3';
 
@@ -96,9 +110,11 @@ export interface GameDisplay {
   postseasonTag: string | null;
   /**
    * 'si.com' when D2 published si.com's score (`provenance.scores === 'sblive'`): the † marker. 'school site'
-   * for a JV score from a school's own athletics site (lib/jv/jv-school-sites.ts), marked † with its own words.
+   * for a JV score from a school's own athletics site (lib/jv/jv-school-sites.ts), and 'CIF-SDS' for a San Diego
+   * Section playoff score from the Section's bracket sheet (lib/postseason/sds-sheet-results.ts), each marked †
+   * with its own words (sourceMarkWords).
    */
-  sourceMark: 'si.com' | 'school site' | null;
+  sourceMark: SourceMark | null;
   /** A forfeit is excluded from GF/GA/GD and from MarginStrip; the row prints a dagger. */
   isForfeit: boolean;
   /** true ⇒ render the two score cells. false ⇒ the time/label takes the column. */
@@ -243,13 +259,19 @@ export function gameKindLabel(game: Pick<Game, 'countsFor' | 'postseason'>): 'Le
   return GAME_KIND_LABEL[gameKind(game)];
 }
 
+const SOURCE_MARKS: Partial<Record<Game['provenance']['scores'], SourceMark>> = {
+  sblive: 'si.com',
+  'school-site': 'school site',
+  'cifsds-sheet': 'CIF-SDS',
+};
+
 function chipsFor(game: Game): Pick<GameDisplay, 'isNonLeague' | 'leagueTag' | 'postseasonTag' | 'sourceMark'> {
   return {
     isNonLeague: gameKind(game) === 'non-league',
     leagueTag: leagueTagOf(game),
     postseasonTag: postseasonTagOf(game),
-    sourceMark:
-      game.provenance.scores === 'sblive' ? 'si.com' : game.provenance.scores === 'school-site' ? 'school site' : null,
+    // A † names where a SCORE came from: a game the Section's sheet lists but nobody has scored yet has none.
+    sourceMark: game.status === 'final' || game.provenance.scores !== 'cifsds-sheet' ? (SOURCE_MARKS[game.provenance.scores] ?? null) : null,
   };
 }
 
@@ -323,7 +345,9 @@ export function overtimeInDoubt(game: Game): boolean {
 }
 
 /** The section's shootout inference for an 'SO' game ('verified' when no section rule is found). */
-function shootoutInferenceOf(game: Pick<Game, 'home' | 'away'>): ShootoutInference {
+function shootoutInferenceOf(game: Pick<Game, 'home' | 'away' | 'provenance'>): ShootoutInference {
+  // The San Diego Section's own bracket sheet writes the shootout ("1-1 (2-1 SO)"): the shootout is confirmed.
+  if (game.provenance.scores === 'cifsds-sheet') return 'verified';
   return shootoutSectionOf(game)?.shootout?.inference ?? 'verified';
 }
 
@@ -371,10 +395,10 @@ function sideView(
  * Everything a game row needs in order to render, derived once. `perspective` is one of our
  * team slugs; it orients "vs / at" and the W/L/T without changing the away-on-top layout.
  */
-export function describeGame(game: Game, perspective?: TeamSlug | null): GameDisplay {
+export function describeGame(game: Game, perspective?: Perspective | null): GameDisplay {
   const view = renderScore(game);
   const isForfeit = game.isForfeit;
-  const mineIsHome = perspective ? game.home.slug === perspective : null;
+  const mineIsHome = perspectiveIsHome(game, perspective);
   const versus: GameDisplay['versus'] =
     mineIsHome === null ? null : game.site === 'neutral' ? 'vs' : mineIsHome ? 'vs' : 'at';
 
@@ -390,7 +414,7 @@ export function describeGame(game: Game, perspective?: TeamSlug | null): GameDis
     sentence: scoreSentence(game, {
       quietOvertime: overtimeInDoubt(game),
       shootoutWords: shootoutSectionOf(game)?.shootout?.words ?? null,
-      shootoutInference: shootoutSectionOf(game)?.shootout?.inference ?? null,
+      shootoutInference: shootoutSectionOf(game)?.shootout ? shootoutInferenceOf(game) : null,
     }),
   };
 
@@ -574,7 +598,7 @@ export function resultSentence(game: Game, noun: string = gameContextNoun(game))
   const score = `${w}${EN_DASH}${l}`;
   if (view.decider === 'SO' || view.shootout) {
     const rule = shootoutSectionOf(game)?.shootout;
-    if (rule?.inference === 'unverified' && !view.shootout) {
+    if (rule && shootoutInferenceOf(game) === 'unverified' && !view.shootout) {
       return `MaxPreps credits ${winner.name} with the win in ${against}, level at ${score}.`;
     }
     const { onPhrase } = shootoutPhrases(rule?.words ?? 'a shootout');

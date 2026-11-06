@@ -51,10 +51,15 @@ import { OFFICIAL_SOURCE_IDS, type DivisionId, type Snapshot, type TiebreakStage
 const id = slugId;
 const GUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const SBLIVE_ID_RE = /^sblive:\d+$/;
-/** A MaxPreps contest GUID, or `sblive:<digits>` (owner decision D2, rule 2). */
+/** A San Diego Section playoff game only the Section's bracket sheet has (lib/postseason/sds-sheet-results.ts). */
+const CIFSDS_ID_RE = /^cifsds:[a-z0-9]+(?:-[a-z0-9]+)*-at-[a-z0-9]+(?:-[a-z0-9]+)*$/;
+/** A MaxPreps contest GUID, `sblive:<digits>` (owner decision D2, rule 2) or `cifsds:<away>-at-<home>`. */
 const contestId = z
   .string()
-  .refine((v) => GUID_RE.test(v) || SBLIVE_ID_RE.test(v), 'expected a contest GUID or sblive:<digits>');
+  .refine(
+    (v) => GUID_RE.test(v) || SBLIVE_ID_RE.test(v) || CIFSDS_ID_RE.test(v),
+    'expected a contest GUID, sblive:<digits> or cifsds:<away>-at-<home>',
+  );
 const outcome = z.enum(['W', 'L', 'T']);
 // SectionId (lib/types.ts); the compile-time proof at the end of this file fails if the two lists drift.
 const sectionId = z.enum(['ccs', 'ncs', 'ns', 'ss', 'sds']);
@@ -70,6 +75,7 @@ const sourceId = z.enum([
   'cifss',
   'derived',
   'school-site',
+  'cifsds-sheet',
 ]);
 const gameStatus = z.enum(['scheduled', 'live', 'final', 'score-pending', 'postponed']);
 const decider = z.enum(['REG', 'OT', '2OT', 'SO', 'FORFEIT']);
@@ -233,6 +239,7 @@ export const GameSchema = z
     urls: z.object({
       maxpreps: httpUrl.nullable(),
       sblive: httpUrl.optional(),
+      cifsds: httpUrl.optional(),
       nfhsStream: httpUrl.nullable(),
       goFan: httpUrl.nullable(),
     }),
@@ -246,6 +253,7 @@ export const GameSchema = z
         })
         .optional(),
       backfill: backfillProvenance.optional(),
+      sectionSheet: z.object({ rule: z.enum(['absent-game', 'score-pending']), note: z.string().min(1) }).optional(),
       fetchedAt: z.string(),
       maxprepsModifiedOn: z.string().optional(),
       contentChangedAt: z.string().min(20).optional(),
@@ -456,6 +464,7 @@ export const SourceStatusSchema = z.object({
       'ccs-bracket',
       'school-calendar',
       'cifss-scores',
+      'sds-bracket-sheet',
     ])
     .optional(),
   scope: z
@@ -830,6 +839,20 @@ function checkAgainstConfig(s: z.infer<typeof SnapshotObject>, ctx: Ctx): void {
     if (g.provenance.backfill && g.provenance.scores !== 'sblive') {
       issue(ctx, ['games', i, 'provenance', 'scores'], 'a backfilled game must carry sblive scores');
     }
+    // The San Diego Section's bracket sheet (lib/postseason/sds-sheet-results.ts): a sheet score always says how it
+    // got there and links the sheet, and a `cifsds:` game is a sheet game MaxPreps has no contest for.
+    if ((g.provenance.scores === 'cifsds-sheet') !== (g.provenance.sectionSheet !== undefined)) {
+      issue(ctx, ['games', i, 'provenance', 'sectionSheet'], 'a cifsds-sheet score needs its sectionSheet record, and only it has one');
+    }
+    if (g.provenance.scores === 'cifsds-sheet' && !g.urls.cifsds) {
+      issue(ctx, ['games', i, 'urls', 'cifsds'], 'a cifsds-sheet score needs the bracket sheet URL');
+    }
+    if (CIFSDS_ID_RE.test(g.contestId)) {
+      if (g.provenance.sectionSheet?.rule !== 'absent-game') {
+        issue(ctx, ['games', i, 'provenance', 'sectionSheet'], "a cifsds: game needs sectionSheet rule 'absent-game'");
+      }
+      if (g.urls.maxpreps !== null) issue(ctx, ['games', i, 'urls', 'maxpreps'], 'a cifsds: game has no MaxPreps URL');
+    }
     // One official fixture is one game: where the official schedule decides what counts, two counted
     // games stamped with the same fixture would count it twice.
     if (g.countsFor !== null && g.official) {
@@ -925,7 +948,9 @@ function checkAgainstConfig(s: z.infer<typeof SnapshotObject>, ctx: Ctx): void {
 
   // 10. superseded si.com games.
   for (const [from, to] of Object.entries(s.supersededGames)) {
-    if (!SBLIVE_ID_RE.test(from)) issue(ctx, ['supersededGames', from], 'a superseded key must be sblive:<digits>');
+    if (!SBLIVE_ID_RE.test(from) && !CIFSDS_ID_RE.test(from)) {
+      issue(ctx, ['supersededGames', from], 'a superseded key must be sblive:<digits> or cifsds:<away>-at-<home>');
+    }
     if (contestIds.has(from)) issue(ctx, ['supersededGames', from], 'a superseded game is still in games');
     if (!contestIds.has(to)) issue(ctx, ['supersededGames', from], `superseding contest ${to} is not in games`);
   }
