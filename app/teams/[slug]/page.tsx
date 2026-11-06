@@ -40,7 +40,7 @@ import { teamJsonLd } from '../../../components/metadata/structured-data';
 import { getTeamSlugs } from '../../../lib/data';
 import { recordString, shortDate } from '../../../lib/format';
 import { getLeague, regionOf } from '../../../lib/leagues';
-import { SPORT, SPORT_AUDIENCE } from '../../../lib/sports/current';
+import { HAS_RECRUITING, SPORT, SPORT_AUDIENCE } from '../../../lib/sports/current';
 
 /**
  * /teams/[slug] — "How is MY team doing?" (DESIGN §3.7).
@@ -391,7 +391,7 @@ export default async function TeamPage({ params }: PageProps<'/teams/[slug]'>) {
             <SectionHeader
               kicker="Roster"
               meta={rosterCount > 0 ? plural(rosterCount, 'player') : undefined}
-              action={{ href: '/clubs', label: 'Club teams' }}
+              action={HAS_RECRUITING ? { href: '/clubs', label: 'Club teams' } : undefined}
             />
             <TeamRoster view={roster} />
           </section>

@@ -2,7 +2,7 @@ import type { MetadataRoute } from 'next';
 
 import { SITE_DESCRIPTION, SITE_NAME, SITE_SHORT_NAME } from '../components/layout/site';
 import { THEME_COLOR } from '../components/prefs/theme-script';
-import { SEASON_CALENDAR_YEAR } from '../lib/season';
+import { SEASON_YEARS_DISPLAY } from '../lib/season';
 
 /**
  * /manifest.webmanifest (DESIGN §1.1). Installable, standalone, and themed to `--sx-bg` so the
@@ -13,7 +13,7 @@ import { SEASON_CALENDAR_YEAR } from '../lib/season';
  */
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: `${SITE_NAME} — ${SEASON_CALENDAR_YEAR}`,
+    name: `${SITE_NAME} — ${SEASON_YEARS_DISPLAY}`,
     short_name: SITE_SHORT_NAME,
     description: SITE_DESCRIPTION,
     start_url: '/',

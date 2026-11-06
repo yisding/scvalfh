@@ -4,10 +4,11 @@
  * lib/leagues.ts assertLeagues() checks them against the config.
  */
 
+import { IS_FIELD_HOCKEY } from '../sports/current';
 import type { DataQualityConfig } from './shape';
 
 /** The captures behind the ghost and si.com entries are named in docs/DATA-SOURCES.md §5.5 (fixture provenance). */
-export const DATA_QUALITY: DataQualityConfig = {
+const FIELD_HOCKEY_DATA_QUALITY: DataQualityConfig = {
   ghostTeamIds: {
     '8396a0d3-8021-458d-b592-a5cb2c4a366d': 'Del Norte (Crescent City): a MaxPreps ghost (no league, team size 0); its contest duplicates Tamalpais vs Del Norte (San Diego)',
   },
@@ -115,3 +116,17 @@ export const DATA_QUALITY: DataQualityConfig = {
     { name: 'Mayfair', keys: ['Mayfair High School'], reason: 'Mayfair has no 2026 varsity game on MaxPreps and is not on the Southern Section’s list of participating schools.' },
   ],
 };
+
+/** Soccer's: nothing yet. Every entry above names a field hockey contest, team or fixture. */
+const SOCCER_DATA_QUALITY: DataQualityConfig = {
+  ghostTeamIds: {},
+  excludedContestIds: {},
+  sbliveIgnoredTeamIds: {},
+  ignoredMaxprepsLeagueIds: {},
+  contestDateOverrides: {},
+  fixtureMoves: {},
+  notCovered: [],
+};
+
+/** This build's sport's corrections (lib/sports/current.ts). */
+export const DATA_QUALITY: DataQualityConfig = IS_FIELD_HOCKEY ? FIELD_HOCKEY_DATA_QUALITY : SOCCER_DATA_QUALITY;

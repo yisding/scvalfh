@@ -171,8 +171,8 @@ describe('ccs: the tournament page, read per division and positively', () => {
     const read = readTournamentPage(live);
     expect(read.recognised).toBe(true);
     expect(read.divisions).toEqual([
-      { name: 'Division 1', bracketId: CCS.tournament.division1BracketId, published: false },
-      { name: 'Division 2', bracketId: CCS.tournament.division2BracketId, published: false },
+      { name: 'Division 1', bracketId: CCS.tournament!.division1BracketId, published: false },
+      { name: 'Division 2', bracketId: CCS.tournament!.division2BracketId, published: false },
     ]);
     expect(read.reason).toBe('Division 1 not published · Division 2 not published');
   });
@@ -187,7 +187,7 @@ describe('ccs: the tournament page, read per division and positively', () => {
 
   it('is not fooled by the links list inside each block’s header (the first </ul> is not the block’s end)', () => {
     // Division 1's block holds `<ul class="links">…</ul>` ahead of its marker: cutting there would call it published.
-    const start = live.indexOf(`<li id="bracket_${CCS.tournament.division1BracketId}"`);
+    const start = live.indexOf(`<li id="bracket_${CCS.tournament!.division1BracketId}"`);
     const firstUlClose = live.indexOf('</ul>', start);
     const marker = live.indexOf('not-published', start);
     expect(firstUlClose).toBeLessThan(marker);
@@ -223,7 +223,7 @@ describe('ccs: the tournament page, read per division and positively', () => {
   });
 
   it('reports a division whose block is missing as missing, and still recognises the page', () => {
-    const d2 = live.indexOf(`<li id="bracket_${CCS.tournament.division2BracketId}"`);
+    const d2 = live.indexOf(`<li id="bracket_${CCS.tournament!.division2BracketId}"`);
     const withoutD2 = live.slice(0, d2) + live.slice(live.indexOf('</ul>', live.indexOf('</li>', d2)));
     const read = readTournamentPage(withoutD2);
     expect(read.recognised).toBe(true);

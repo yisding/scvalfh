@@ -17,6 +17,12 @@ import type { RegionId } from '../../lib/types';
  */
 export const LEAGUE_COUNT = numberWord(LEAGUES_PROPER.length);
 
+/** 'the nine leagues', or the league's own short name when there is one (the soccer build: 'SCVAL'). */
+export const THE_LEAGUES = LEAGUES_PROPER.length === 1 ? LEAGUES_PROPER[0].shortName : `the ${LEAGUE_COUNT} leagues`;
+/** 'the nine leagues’', or 'SCVAL’s' when there is one league. */
+export const THE_LEAGUES_POSSESSIVE =
+  LEAGUES_PROPER.length === 1 ? `${LEAGUES_PROPER[0].shortName}’s` : `the ${LEAGUE_COUNT} leagues’`;
+
 const independentTeams = (group: { divisions: readonly { expectedTeams: number }[] }) =>
   group.divisions.reduce((n, d) => n + d.expectedTeams, 0);
 
@@ -69,15 +75,17 @@ export function regionScope(region: RegionId): RegionScope {
   const leagues = all.filter((l) => !l.independents).length;
   const independents = all.filter((l) => l.independents).reduce((n, l) => n + independentTeams(l), 0);
   const andIndependents = independents > 0 ? ` and ${numberWord(independents)} independents` : '';
+  // A region of one league and no independents (the soccer build's SCVAL) is named by the league.
+  const single = leagues === 1 && independents === 0 ? all[0].shortName : null;
   return {
     config,
     leagues,
     independents,
     board: {
       suffix: regionIdSuffix(region),
-      leagues: `all ${numberWord(leagues)} ${config.shortName} leagues${andIndependents}`,
+      leagues: single ?? `all ${numberWord(leagues)} ${config.shortName} leagues${andIndependents}`,
       independents,
     },
-    sectionWords: `${config.shortName}’s ${numberWord(leagues)} leagues${andIndependents}`,
+    sectionWords: single ?? `${config.shortName}’s ${numberWord(leagues)} leagues${andIndependents}`,
   };
 }

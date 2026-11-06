@@ -23,7 +23,8 @@ import { OG_BASE, ROOT_OG_IMAGE } from '../../../components/layout/site';
 import { listWords } from '../../../lib/format';
 import { TOC } from '../../../lib/league-config/sections';
 import { getSection, regionOf } from '../../../lib/leagues';
-import { SPORT, SPORT_SEASON } from '../../../lib/sports/current';
+import { HAS_HISTORY, SPORT, SPORT_SEASON } from '../../../lib/sports/current';
+import { notFound } from 'next/navigation';
 
 /**
  * `/history/2025-26` (DESIGN §1.1, §3.9; SPEC §10.8) — last season's final standings, one section
@@ -70,6 +71,8 @@ export const metadata: Metadata = {
 };
 
 export default function HistoryPage() {
+  // Field hockey's alone (the 2025-26 archive): a soccer build renders this route as a 404 (lib/sports/current.ts HAS_HISTORY).
+  if (!HAS_HISTORY) notFound();
   // Each pill is region-scoped (DESIGN-socal §2.4): the reader's region's leagues only.
   // A section's bracket pill follows its last league's, as the block does.
   const tabs = HISTORY_LEAGUES.flatMap(({ id }) => [

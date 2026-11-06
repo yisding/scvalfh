@@ -19,7 +19,8 @@
 
 import { readFileSync } from 'node:fs';
 
-import bundled from '../../data/jv.json';
+import bundledFieldHockey from '../../data/jv.json';
+import bundledSoccer from '../../data/soccer/jv.json';
 import { getOfficialFixtures, getSnapshot } from '../data';
 import { byDateThenId, localDateKey } from '../format';
 import { JV_CORRECTIONS, applyJvCorrections, type JvCorrectionResult } from './jv-corrections';
@@ -35,6 +36,10 @@ import {
 } from './jv-standings';
 import { failValidation } from '../schema-primitives';
 import type { ContestId, DivisionId, Game, LeagueId, TeamSlug } from '../types';
+import { IS_FIELD_HOCKEY } from '../sports/current';
+
+/** This build's copy (data/ for field hockey, data/soccer/ for soccer: lib/sports/current.ts DATA_DIR). */
+const bundled = IS_FIELD_HOCKEY ? bundledFieldHockey : bundledSoccer;
 
 function load(): JvFile {
   const override = process.env.SCVAL_JV;

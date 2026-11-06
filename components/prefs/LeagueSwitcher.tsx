@@ -85,6 +85,12 @@ const REGION_WORDS: Readonly<Record<RegionId, { shortName: string; name: string 
   socal: { shortName: 'SoCal', name: 'Southern California' },
 };
 const REGION_ORDER: readonly RegionId[] = ['norcal', 'socal'];
+/**
+ * The soccer build covers one region (lib/league-config/sections.ts REGIONS: Northern California), so it has no
+ * region to switch to. Read from the inlined SCVAL_SPORT (next.config.ts `env`), not lib/sports/current, so this
+ * client module bundles no sport definition.
+ */
+const SINGLE_REGION = process.env.SCVAL_SPORT === 'soccer';
 
 const CHIP = 'sx-league-chip';
 
@@ -284,6 +290,7 @@ export function RegionSwitcher({ className, label = 'Region', separated = false 
     setRegion(id);
     setSaid(`Showing ${REGION_WORDS[id].name}.`);
   };
+  if (SINGLE_REGION) return null;
 
   return (
     <div

@@ -11,6 +11,8 @@ import EmptyState from '../../components/ui/EmptyState';
 import { plural } from '../../components/words/plural';
 import SectionHeader from '../../components/ui/SectionHeader';
 import { getRosters } from '../../lib/players/rosters';
+import { notFound } from 'next/navigation';
+import { HAS_RECRUITING } from '../../lib/sports/current';
 
 /** The page's title, and its og:title too: og:title never carries the site-name suffix (OG_BASE). */
 const PAGE_TITLE = 'College commitments';
@@ -47,6 +49,8 @@ export const metadata: Metadata = {
 };
 
 export default function CommitsPage() {
+  // Field hockey's alone (college commitments): a soccer build renders this route as a 404 (lib/sports/current.ts HAS_RECRUITING).
+  if (!HAS_RECRUITING) notFound();
   const view = buildCommitsView();
 
   return (

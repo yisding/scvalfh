@@ -15,13 +15,13 @@ import type { Game, GameBracket } from '../lib/types';
 import { game } from './game-builder';
 
 const BRACKET: GameBracket = {
-  tournamentId: CCS.tournament.id,
-  bracketId: CCS.tournament.division1BracketId,
+  tournamentId: CCS.tournament!.id,
+  bracketId: CCS.tournament!.division1BracketId,
   tournament: '2026 Central Coast Section Field Hockey Championship',
   name: 'Division 1',
   published: true,
   matchupId: null,
-  url: CCS.bracketUrl,
+  url: CCS.bracketUrl!,
 };
 
 describe('ccsBracketGames: the derivation of playoffs.games', () => {
@@ -85,7 +85,7 @@ describe('getCcsSeeds: the owner-file switch', () => {
     const seeds = getCcsSeeds({
       season: '2026-27',
       retrievedOn: '2026-11-02',
-      source: { label: 'CCS field hockey brackets (MaxPreps tournament page)', url: CCS.bracketUrl },
+      source: { label: 'CCS field hockey brackets (MaxPreps tournament page)', url: CCS.bracketUrl! },
       divisions: [
         { name: 'Division 1', seeds: [{ seed: 1, slug: 'st-ignatius' }, { seed: 8, slug: 'palo-alto' }] },
         { name: 'Division 2', seeds: [{ seed: 1, slug: 'los-altos' }] },

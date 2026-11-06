@@ -65,7 +65,7 @@ import { hasHistory } from '../../lib/history/history';
 import { tournamentHeadline } from '../../lib/postseason/postseason';
 import { ccsOutcomeFor } from '../../lib/postseason/postseason-outcomes';
 import { outcomesFor, pairingDatesLabel, playoffOutcomeLabel, statusBadge } from '../../lib/standings';
-import { CCS, REGIONS } from '../../lib/league-config/sections';
+import { CCS, REGIONS, ccsWindowStart } from '../../lib/league-config/sections';
 import type {
   DivisionConfig,
   LeagueConfig,
@@ -344,20 +344,24 @@ export function phaseLead(league: LeagueConfig, phase: SeasonPhase, today: strin
 
   // The CCS tournament: only a league whose postseason is the CCS ladder reaches it.
   if (phase === 'playoffs' && ps.kind === 'ccs-ladder') {
-    if (today < keyDates.quarterfinals) {
+    const { quarterfinals, semifinals } = keyDates;
+    if (today < ccsWindowStart(keyDates)) {
+      // Rounds and field size the config leaves null (soccer: the CCS bylaws are unread) are not printed.
+      const seeds = CCS.autoQualifiers.total === null ? 'CCS seeds the field' : `CCS seeds the ${CCS.autoQualifiers.total}-team field`;
+      const first = quarterfinals !== null ? `quarterfinals are ${shortDate(quarterfinals)}` : `CCS games start ${shortDate(ccsWindowStart(keyDates))}`;
       return {
         lead: `${short} league play is over.`,
-        body: `CCS seeds the ${CCS.autoQualifiers.total}-team field on ${shortDate(
-          keyDates.seedingMeeting,
-        )}; quarterfinals are ${shortDate(keyDates.quarterfinals)}.`,
+        body: `${seeds} on ${shortDate(keyDates.seedingMeeting)}; ${first}.`,
         link: { href: `/playoffs#${league.id}`, label: 'Who is in' },
       };
     }
     return {
       lead: 'The CCS tournament is under way.',
-      body: `Quarterfinals ${shortDate(keyDates.quarterfinals)}, semifinals ${shortDate(
-        keyDates.semifinals,
-      )}, final ${shortDate(keyDates.finals)}. League standings below are final.`,
+      body: `${
+        quarterfinals !== null && semifinals !== null
+          ? `Quarterfinals ${shortDate(quarterfinals)}, semifinals ${shortDate(semifinals)}, final ${shortDate(keyDates.finals)}.`
+          : `CCS games ${shortDate(ccsWindowStart(keyDates))} to ${shortDate(keyDates.finals)}.`
+      } League standings below are final.`,
       link: { href: `/playoffs#${league.id}`, label: 'Bracket' },
     };
   }
@@ -450,7 +454,8 @@ export type PostseasonView =
       leagueId: LeagueId;
       /** One sentence about this league's own pre-CCS games, or the seeding date. */
       intro: string;
-      meter: { claimed: number; total: number; label: string };
+      /** `total` null: the CCS field size is unread (soccer), so the card states the label without a meter. */
+      meter: { claimed: number; total: number | null; label: string };
       dates: Array<{ term: string; date: string }>;
       bracket: { published: boolean; url: string };
       /**
@@ -607,6 +612,17 @@ function ccsLadderView(
     label = `${short} holds ${ps.autoBerths} of the ${total} CCS berths automatically: ${
       aqDivision ? `${aqDivision}’s` : 'the'
     } top ${numberWord(aqTop)}, plus the winner of the ${monthDay(playIn.date)} play-in (${playIn.seatLabels[1]} at the ${host} champion).`;
+  } else if (total === null) {
+    // Each division's own automatic places (soccer SCVAL: De Anza's top three, El Camino's champion).
+    const perDivision = ps.ladder
+      .filter((r) => r.status === 'aq' && r.divisions !== '*')
+      .flatMap((r) => (r.divisions === '*' ? [] : r.divisions).map((d) => {
+        const top = r.places[1];
+        return `${getDivision(d).label}’s ${top === 1 ? 'champion' : `top ${numberWord(top)}`}`;
+      }));
+    label = `${short} holds ${plural(ps.autoBerths, 'automatic CCS berth')}: ${
+      perDivision.length > 0 ? listWords(perDivision) : `the top ${numberWord(aqTop)} of the final standings`
+    }.`;
   } else {
     label = `${short} holds ${ps.autoBerths} of the ${total} CCS berths automatically: the top ${numberWord(
       aqTop,
@@ -634,12 +650,19 @@ function ccsLadderView(
     leagueId: league.id,
     intro,
     meter: { claimed: ps.autoBerths, total, label },
-    dates: [
-      { term: 'Quarterfinals', date: CCS.keyDates.quarterfinals },
-      { term: 'Semifinals', date: CCS.keyDates.semifinals },
-      { term: 'Final', date: CCS.keyDates.finals },
-    ],
-    bracket: { published: playoffs.bracketPublished, url: playoffs.bracketUrl },
+    dates:
+      CCS.keyDates.quarterfinals !== null && CCS.keyDates.semifinals !== null
+        ? [
+            { term: 'Quarterfinals', date: CCS.keyDates.quarterfinals },
+            { term: 'Semifinals', date: CCS.keyDates.semifinals },
+            { term: 'Final', date: CCS.keyDates.finals },
+          ]
+        : [
+            { term: 'Seeding', date: CCS.keyDates.seedingMeeting.slice(0, 10) },
+            { term: 'First games', date: ccsWindowStart(CCS.keyDates) },
+            { term: 'Final', date: CCS.keyDates.finals },
+          ],
+    bracket: { published: playoffs.bracketPublished, url: playoffs.bracketUrl ?? CCS.sources.index },
     official,
     link: { href: `/playoffs#${league.id}`, label: 'CCS playoffs' },
   };

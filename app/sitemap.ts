@@ -24,6 +24,7 @@ import {
 import { gameHref } from '../lib/game-id';
 import { getHistoryLastChecked } from '../lib/history/history';
 import { getJvFetchedAt, getJvGamesOn } from '../lib/jv/jv';
+import { HAS_HISTORY, HAS_RECRUITING } from '../lib/sports/current';
 
 /**
  * /sitemap.xml — every route family (SPEC §8.1): the fixed pages, `/standings/<id>` and
@@ -81,16 +82,17 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'daily',
       priority: 0.5,
     },
-    {
-      url: url('/history/2025-26'),
-      lastModified: new Date(getHistoryLastChecked()),
-      changeFrequency: 'yearly',
-      priority: 0.3,
-    },
+    ...(HAS_HISTORY
+      ? [{ url: url('/history/2025-26'), lastModified: new Date(getHistoryLastChecked()), changeFrequency: 'yearly' as const, priority: 0.3 }]
+      : []),
     { url: url('/about'), lastModified, changeFrequency: 'monthly', priority: 0.3 },
-    { url: url('/clubs'), lastModified: clubsStamp, changeFrequency: 'monthly', priority: 0.4 },
-    { url: url('/commits'), lastModified: commitsStamp, changeFrequency: 'monthly', priority: 0.4 },
-    { url: url('/recruiting'), lastModified: recruitingStamp, changeFrequency: 'monthly', priority: 0.4 },
+    ...(HAS_RECRUITING
+      ? [
+          { url: url('/clubs'), lastModified: clubsStamp, changeFrequency: 'monthly' as const, priority: 0.4 },
+          { url: url('/commits'), lastModified: commitsStamp, changeFrequency: 'monthly' as const, priority: 0.4 },
+          { url: url('/recruiting'), lastModified: recruitingStamp, changeFrequency: 'monthly' as const, priority: 0.4 },
+        ]
+      : []),
   ];
 
   const leagueRoutes: MetadataRoute.Sitemap = getLeagueIds().flatMap((id) => [

@@ -596,10 +596,13 @@ export interface CcsConfig {
    * higher seed's field, so copy quotes the calendar and shows each game's own site once MaxPreps lists it;
    * lib/sources/ccs.ts confirmKeyDates reports a calendar whose site words disagree with this value.
    */
-  highSeedHostsThrough: 'quarterfinals' | 'semifinals';
-  bracketUrl: string;
-  tournament: { id: string; division1BracketId: string; division2BracketId: string };
+  highSeedHostsThrough: 'quarterfinals' | 'semifinals' | null;
+  /** null until MaxPreps makes a tournament page for the season. */
+  bracketUrl: string | null;
+  tournament: { id: string; division1BracketId: string; division2BracketId: string } | null;
   pollFrom: string;
   citations: { allocation: string; change: string };
+  /** /playoffs' at-large paragraph: who decides the at-large berths and whom each league submits. */
+  atLargeParagraph: string;
   sources: { bylaws: string; index: string; ical: string };
 }

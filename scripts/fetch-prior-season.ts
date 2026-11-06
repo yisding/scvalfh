@@ -42,7 +42,7 @@ import {
   type PriorSeason,
 } from '../lib/history/prior-season-schema';
 import { SEASON_YEAR, SPORT_SEASON_ID } from '../lib/season';
-import { GENDER_NAME, SPORT, SPORT_AUDIENCE, SPORT_SEASON } from '../lib/sports/current';
+import { DATA_DIR, GENDER_NAME, SPORT, SPORT_AUDIENCE, SPORT_SEASON } from '../lib/sports/current';
 import { MaxPrepsClient, type ScheduleRow } from '../lib/sources/maxpreps';
 import { TEAMS } from '../lib/teams';
 import type { TeamSlug } from '../lib/types';
@@ -64,7 +64,7 @@ function parseArgs(argv: readonly string[]): Args {
   const args: Args = {
     year: previousMaxprepsYear(SEASON_YEAR),
     ssid: null,
-    out: path.resolve(import.meta.dirname, '..', 'data', 'prior-season.json'),
+    out: path.resolve(import.meta.dirname, '..', DATA_DIR, 'prior-season.json'),
     dryRun: false,
     help: false,
   };

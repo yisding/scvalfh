@@ -462,13 +462,13 @@ describe('classify: helpers', () => {
 
 describe('classify: the CCS bracket (rule 1c, the rule-2 gate and the widened 2b; 2026-10-29)', () => {
   const BRACKET: Game['bracket'] = {
-    tournamentId: CCS.tournament.id,
-    bracketId: CCS.tournament.division1BracketId,
+    tournamentId: CCS.tournament!.id,
+    bracketId: CCS.tournament!.division1BracketId,
     tournament: '2026 Central Coast Section Field Hockey Championship',
     name: 'Division 1',
     published: true,
     matchupId: null,
-    url: CCS.bracketUrl,
+    url: CCS.bracketUrl!,
   };
 
   it('(a) tags a game whose MaxPreps row names the CCS tournament as the bracket, across two CCS leagues', () => {

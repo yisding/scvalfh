@@ -77,7 +77,7 @@ export interface Sport {
     readonly slug: string;
   };
   readonly cifss: {
-    /** The cifsshome.org widget's Sport select value. */
+    /** The cifsshome.org widget's Sport select value (one per gender for soccer: "Soccer, Girls" = 25). */
     readonly sportId: number;
     /** The month and day (MM-DD) of the fall calendar year before which no game of the sport is played. */
     readonly seasonFrom: string;
@@ -110,8 +110,15 @@ export interface SportSeason {
   readonly term: SportTerm;
   readonly sportSeasonId: string;
   readonly allSeasonId: string;
+  /** MaxPreps' California hub for the program, under maxpreps.com: the bootstrap page (SPEC §1.1h). */
+  readonly hubPath: string;
+  /**
+   * The ssid the hub's `__NEXT_DATA__` serves when it is not `sportSeasonId` (null when they agree). The
+   * bootstrap step accepts exactly this value, so a hub that changes again still stops the run.
+   */
+  readonly hubSportSeasonId: string | null;
   /** The JV season of the same sport and gender (scripts/fetch-jv.ts). */
   readonly jvSportSeasonId: string;
-  /** MaxPreps' CCS tournament page, its path under maxpreps.com. */
-  readonly ccsBracketPath: string;
+  /** MaxPreps' CCS tournament page, its path under maxpreps.com; null until MaxPreps creates it. */
+  readonly ccsBracketPath: string | null;
 }

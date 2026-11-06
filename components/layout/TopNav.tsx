@@ -2,6 +2,7 @@ import type { LeagueId, TeamSlug } from '../../lib/types';
 
 import NavLink from './NavLink';
 import { navLeagueHrefs } from './nav-targets';
+import { HAS_HISTORY } from '../../lib/sports/current';
 
 /**
  * The desktop nav: seven links, no sidebar, no bottom bar (DESIGN §1.3, §16, §18). It matches the
@@ -15,7 +16,7 @@ const TOP_LINKS: ReadonlyArray<{ href: string; label: string; srSuffix?: string 
   { href: '/teams', label: 'Teams' },
   { href: '/leaders', label: 'Leaders' },
   { href: '/playoffs', label: 'Playoffs' },
-  { href: '/history/2025-26', label: 'History', srSuffix: ' (2025-26 final standings)' },
+  ...(HAS_HISTORY ? [{ href: '/history/2025-26', label: 'History', srSuffix: ' (2025-26 final standings)' }] : []),
   { href: '/about', label: 'About' },
 ];
 

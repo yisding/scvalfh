@@ -61,6 +61,7 @@ import {
   RecordingTransport,
   type RequestCounts,
 } from './transport';
+import { DATA_DIR } from '../sports/current';
 
 // ---------------------------------------------------------------- the run context
 
@@ -215,7 +216,7 @@ export function parseRunArgs(argv: readonly string[], opts: ParseOptions): RunAr
     fixtures: null,
     variants: [],
     capture: null,
-    out: path.join(opts.cwd, 'data', 'snapshot.json'),
+    out: path.join(opts.cwd, DATA_DIR, 'snapshot.json'),
     dryRun: false,
     fetchedAt: '',
     force: false,

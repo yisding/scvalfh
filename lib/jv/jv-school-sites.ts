@@ -27,6 +27,7 @@
 import { dayDiff, byDateThenId, toLocalTimestamp } from '../format';
 import { getTeamBySlug } from '../teams';
 import type { ContestId, Game, GameSide, Outcome, TeamSlug } from '../types';
+import { IS_FIELD_HOCKEY } from '../sports/current';
 
 export interface JvSchoolSiteGame {
   dateKey: string;
@@ -51,7 +52,7 @@ export interface JvSchoolSite {
   games: readonly JvSchoolSiteGame[];
 }
 
-export const JV_SCHOOL_SITES: readonly JvSchoolSite[] = [
+const FIELD_HOCKEY_JV_SCHOOL_SITES: readonly JvSchoolSite[] = [
   {
     school: 'saint-francis',
     url: 'https://sfhsathletics.com/sports/jv-field-hockey/schedule',
@@ -95,6 +96,9 @@ export const JV_SCHOOL_SITES: readonly JvSchoolSite[] = [
     ],
   },
 ];
+
+/** This build's school JV sites: field hockey's; none yet for soccer. */
+export const JV_SCHOOL_SITES: readonly JvSchoolSite[] = IS_FIELD_HOCKEY ? FIELD_HOCKEY_JV_SCHOOL_SITES : [];
 
 /** Rule 2: a school-site game within this many days of a JV game of the pair matches it. */
 export const JV_SCHOOL_SITE_DATE_TOLERANCE_DAYS = 1;

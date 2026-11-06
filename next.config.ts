@@ -19,6 +19,13 @@ import type { NextConfig } from 'next';
  */
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+
+  /**
+   * The sport this build covers (lib/sports/current.ts; docs/MULTI-SPORT.md): `SCVAL_SPORT=soccer pnpm build`
+   * builds the soccer site, anything unset builds field hockey. `env` inlines it into the browser bundles as
+   * well as the server's, so a client component never reads a different sport from the page it hydrates.
+   */
+  env: { SCVAL_SPORT: process.env.SCVAL_SPORT || 'field-hockey' },
   // Nothing about this site benefits from advertising the framework.
   poweredByHeader: false,
 

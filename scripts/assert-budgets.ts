@@ -99,12 +99,13 @@ import { gzipSync } from 'node:zlib';
 
 import { LEAGUE_IDS } from '../lib/leagues';
 import { SNAPSHOT_MAX_BYTES, SNAPSHOT_WARN_BYTES, budgetLabel } from '../lib/pipeline/steps/assemble';
+import { DATA_DIR } from '../lib/sports/current';
 
 const APP = '.next/server/app';
 const STATS = '.next/diagnostics/route-bundle-stats.json';
 const WORKER_BUNDLE = '.cloudflare/output/v0/workers/default/bundle';
 // An empty SCVAL_SNAPSHOT means the bundled file, as lib/data.ts load() (the canonical rule) reads it.
-const SNAPSHOT = process.env.SCVAL_SNAPSHOT || 'data/snapshot.json';
+const SNAPSHOT = process.env.SCVAL_SNAPSHOT || `${DATA_DIR}/snapshot.json`;
 const KB = 1024;
 
 interface Weights { html: number; htmlGzip: number; rsc: number; rscGzip: number; firstLoadJs: number }

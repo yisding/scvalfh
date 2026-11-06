@@ -31,7 +31,8 @@
  * then edit or drop it by hand. Never prune it automatically.
  */
 
-import bundled from '../../data/clubs.json';
+import bundledFieldHockey from '../../data/clubs.json';
+import bundledSoccer from '../../data/soccer/clubs.json';
 import {
   CLUB_REGIONS,
   ClubsFileSchema,
@@ -44,6 +45,10 @@ import { joinToRoster, playerKey } from './roster-join';
 import { getAllEnrichedRosters, getRosters, type MergedPlayer, type MergedTeamRoster } from './rosters';
 import { failValidation } from '../schema-primitives';
 import type { TeamSlug } from '../types';
+import { IS_FIELD_HOCKEY } from '../sports/current';
+
+/** This build's copy (data/ for field hockey, data/soccer/ for soccer: lib/sports/current.ts DATA_DIR). */
+const bundled = IS_FIELD_HOCKEY ? bundledFieldHockey : bundledSoccer;
 
 export type {
   AffiliationConfidence,
@@ -97,7 +102,11 @@ function loadAndJoin(
 }
 
 /** The file, and the merged roster row each tied player joined to at load time, by `playerKey`. */
-const { file, rows: ROW_BY_PLAYER } = loadAndJoin(bundled, getAllEnrichedRosters(), getRosters().season);
+// Club affiliations are field hockey's research alone: the soccer build's file is an empty placeholder
+// (data/soccer/clubs.json) that the schema's at-least-one-club rule would refuse, so it is served as it is.
+const { file, rows: ROW_BY_PLAYER } = IS_FIELD_HOCKEY
+  ? loadAndJoin(bundled, getAllEnrichedRosters(), getRosters().season)
+  : { file: bundled as unknown as ClubsFile, rows: new Map<string, MergedPlayer>() };
 
 function push<V>(map: Map<string, V[]>, key: string, value: V): void {
   const list = map.get(key);

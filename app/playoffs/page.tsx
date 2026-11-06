@@ -49,7 +49,7 @@ import {
 import type { LeagueSummary } from '../../lib/data';
 import { getCcsSeeds } from '../../lib/postseason/ccs-bracket';
 import { tournamentHeadline } from '../../lib/postseason/postseason';
-import { listWords, shortDate } from '../../lib/format';
+import { listWords, plural, shortDate } from '../../lib/format';
 import {
   NO_POSTSEASON_LEAGUE_IDS,
   UNBRACKETED_LEAGUE_IDS,
@@ -58,6 +58,8 @@ import {
   sectionOf,
 } from '../../lib/leagues';
 import type { LeagueId } from '../../lib/types';
+import { CCS, ccsWindowStart } from '../../lib/league-config/sections';
+import { SPORT } from '../../lib/sports/current';
 
 /**
  * /playoffs — "Are we in, and who do we play?" (SPEC §6.3, §10.7; DESIGN-socal §2.4): every league's
@@ -122,15 +124,20 @@ export async function generateMetadata(): Promise<Metadata> {
   // The same test the page uses: a path to draw, from the bracket games or the seed file (never the page flag alone).
   const seeded = buildBrackets(playoffs, getCcsSeeds()).length > 0;
   const shares = field.byLeague.map((l) => `${l.shortName} ${l.auto}`).join(', ');
+  // Rounds the config does not date (soccer: the CCS bylaws are unread) read as one span from the first CCS games.
+  const rounds =
+    keyDates.quarterfinals !== null && keyDates.semifinals !== null
+      ? { bracket: `quarterfinals ${shortDate(keyDates.quarterfinals)}, semifinals ${shortDate(keyDates.semifinals)}, final ${shortDate(keyDates.finals)}`,
+          field: `quarterfinals ${shortDate(keyDates.quarterfinals)}, final ${shortDate(keyDates.finals)}` }
+      : { bracket: `${shortDate(ccsWindowStart(keyDates))} to ${shortDate(keyDates.finals)}`,
+          field: `CCS games ${shortDate(ccsWindowStart(keyDates))} to ${shortDate(keyDates.finals)}` };
+  const fieldWords =
+    field.total === null
+      ? `The CCS ${SPORT.noun} field’s automatic berths: ${shares}.`
+      : `The ${field.total}-team CCS field: ${shares}, ${field.atLarge} at-large.`;
   const description = seeded
-    ? `The CCS field hockey bracket: quarterfinals ${shortDate(keyDates.quarterfinals)}, semifinals ${shortDate(
-        keyDates.semifinals,
-      )}, final ${shortDate(keyDates.finals)}. Unofficial, computed from published results.`
-    : `The ${field.total}-team CCS field: ${shares}, ${field.atLarge} at-large. Seeding meeting ${shortDate(
-        keyDates.seedingMeeting,
-      )}; quarterfinals ${shortDate(keyDates.quarterfinals)}, final ${shortDate(
-        keyDates.finals,
-      )}. Projected from league results ${asOfPhrase(getLastLeagueResultDate())} — unofficial.`;
+    ? `The CCS ${SPORT.noun} bracket: ${rounds.bracket}. Unofficial, computed from published results.`
+    : `${fieldWords} Seeding meeting ${shortDate(keyDates.seedingMeeting)}; ${rounds.field}. Projected from league results ${asOfPhrase(getLastLeagueResultDate())} — unofficial.`;
   const all = `${description} Every league’s postseason: ${postseasonWords()}.`;
   return {
     title: PAGE_TITLE,
@@ -175,9 +182,12 @@ export default function PlayoffsPage() {
   // Every league has a section on this page (DESIGN §32.2), the league tournament's included: its chip lands there,
   // and the section links on to the tournament's own page.
   const hrefs: Record<string, string> = Object.fromEntries(summaries.map((s) => [s.id, `#${s.id}`]));
-  const fieldMeta = `${ccsSection?.name ?? 'Central Coast Section'} · ${field.total} teams · ${field.byLeague
-    .map((l) => `${l.shortName} ${l.auto}`)
-    .join(', ')}, ${field.atLarge} at-large`;
+  const shareList = field.byLeague.map((l) => `${l.shortName} ${l.auto}`).join(', ');
+  // A field the config does not size (soccer: the CCS bylaws are unread) states only the automatic berths.
+  const fieldMeta =
+    field.total === null
+      ? `${ccsSection?.name ?? 'Central Coast Section'} · automatic berths: ${shareList}`
+      : `${ccsSection?.name ?? 'Central Coast Section'} · ${field.total} teams · ${shareList}, ${field.atLarge} at-large`;
 
   const noPostseasonLeagues = summaries.filter((s) => NO_POSTSEASON_LEAGUE_IDS.includes(s.id));
   const sds = sectionPlayoffs();
@@ -252,8 +262,8 @@ export default function PlayoffsPage() {
           <SectionHeader id="ccs-playoffs" kicker="CCS playoffs" meta={fieldMeta} />
           <p className="m-0 max-w-prose text-body text-ink-2">
             {met
-              ? `Central Coast Section championships, ${shortDate(keyDates.quarterfinals)} to ${shortDate(keyDates.finals)}. CCS seeded the field at its ${shortDate(keyDates.seedingMeeting)} meeting; the bracket is right below, and each CCS league’s share of the field after it.`
-              : `Central Coast Section championships, ${shortDate(keyDates.quarterfinals)} to ${shortDate(keyDates.finals)}. This page tracks each CCS league’s share of the field and, once CCS seeds it, the bracket itself, right below.`}
+              ? `Central Coast Section championships, ${shortDate(ccsWindowStart(keyDates))} to ${shortDate(keyDates.finals)}. CCS seeded the field at its ${shortDate(keyDates.seedingMeeting)} meeting; the bracket is right below, and each CCS league’s share of the field after it.`
+              : `Central Coast Section championships, ${shortDate(ccsWindowStart(keyDates))} to ${shortDate(keyDates.finals)}. This page tracks each CCS league’s share of the field and, once CCS seeds it, the bracket itself, right below.`}
           </p>
         </section>
 
@@ -302,7 +312,7 @@ export default function PlayoffsPage() {
                   {divisionsKnown && overall
                     ? `CCS numbers each division’s eight teams 1-8; CCS ${overall.name} holds the committee’s overall seeds ${overall.seeds[0]}-${overall.seeds[1]}. `
                     : `The CCS field is two eight-team divisions, ${listWords(ccsDivisionLabels(playoffs))}. Our data does not say which division a game belongs to, so the games above are grouped by round and, where the bracket splits into independent paths, by path. `}
-                  <ExternalLink href={bracketUrl}>Official CCS bracket</ExternalLink>
+                  <ExternalLink href={bracketUrl ?? CCS.sources.index}>{bracketUrl ? 'Official CCS bracket' : `CCS ${SPORT.noun} page`}</ExternalLink>
                 </p>
               </div>
             </>
@@ -311,7 +321,7 @@ export default function PlayoffsPage() {
               <p className="m-0 max-w-prose text-body text-ink-2">
                 <span className="text-ink">Not seeded yet:</span>{' '}
                 {`CCS seeds ${listWords(ccsDivisionLabels(playoffs))} at the ${shortDate(keyDates.seedingMeeting)} meeting; the games appear here as MaxPreps lists them, after the next update. `}
-                <ExternalLink href={bracketUrl}>Official CCS bracket</ExternalLink>
+                <ExternalLink href={bracketUrl ?? CCS.sources.index}>{bracketUrl ? 'Official CCS bracket' : `CCS ${SPORT.noun} page`}</ExternalLink>
                 {/* "not yet posted" only while the MaxPreps tournament page still says so (playoffs.bracketPublished). */}
                 {bracketPublished ? null : <> &mdash; not yet posted.</>}
               </p>
@@ -331,7 +341,9 @@ export default function PlayoffsPage() {
             <section key={summary.id} id={summary.id} className="mt-section md:mt-section-lg" aria-labelledby={`${summary.id}-heading`}>
               <SectionHeader kicker={`${summary.shortName} — ${summary.name}`} id={`${summary.id}-heading`} />
               <p className="m-0 max-w-prose text-meta text-ink-2">
-                {`${summary.shortName} holds ${field.byLeague.find((l) => l.leagueId === summary.id)?.auto ?? 0} of the ${field.total} CCS berths. ${ladderNote}`}
+                {field.total === null
+                  ? `${summary.shortName} holds ${plural(field.byLeague.find((l) => l.leagueId === summary.id)?.auto ?? 0, 'automatic CCS berth')}. ${ladderNote}`
+                  : `${summary.shortName} holds ${field.byLeague.find((l) => l.leagueId === summary.id)?.auto ?? 0} of the ${field.total} CCS berths. ${ladderNote}`}
               </p>
               <LeagueHealthNote leagueId={summary.id} className="mt-stack" />
               {/* The deciding games first (DESIGN §32.3): the crossover and play-in cards, then the tables behind them. */}

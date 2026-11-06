@@ -1,0 +1,99 @@
+{
+  "builtBy": "Copied on 2026-11-06 from data/schools.json for the ten schools the field hockey registry has; Gunn, Mountain View, MacDonald, Milpitas and Wilcox from the address, city and zipCode fields of MaxPreps' team-context payload for each school's girls soccer team (read 2026-11-06).",
+  "capturedAt": "2026-11-06",
+  "notes": [
+    "The address of each registry school's campus, keyed by team slug. It is where the school is, not necessarily the field a game is played on: a page that shows it as a game's address says it is the host school's."
+  ],
+  "schools": {
+    "cupertino": {
+      "street": "10100 Finch Ave",
+      "city": "Cupertino",
+      "region": "CA",
+      "postalCode": "95014"
+    },
+    "fremont": {
+      "street": "575 W. Fremont Avenue",
+      "city": "Sunnyvale",
+      "region": "CA",
+      "postalCode": "94087"
+    },
+    "gunn": {
+      "street": "780 Arastradero Rd",
+      "city": "Palo Alto",
+      "region": "CA",
+      "postalCode": "94306"
+    },
+    "homestead": {
+      "street": "21370 Homestead Rd",
+      "city": "Cupertino",
+      "region": "CA",
+      "postalCode": "95014"
+    },
+    "los-altos": {
+      "street": "201 Almond Ave",
+      "city": "Los Altos",
+      "region": "CA",
+      "postalCode": "94022"
+    },
+    "los-gatos": {
+      "street": "20 High School Ct",
+      "city": "Los Gatos",
+      "region": "CA",
+      "postalCode": "95030"
+    },
+    "lynbrook": {
+      "street": "1280 Johnson Ave",
+      "city": "San Jose",
+      "region": "CA",
+      "postalCode": "95129"
+    },
+    "macdonald": {
+      "street": "3588 Zanker Rd.",
+      "city": "San Jose",
+      "region": "CA",
+      "postalCode": "95134"
+    },
+    "milpitas": {
+      "street": "1285 Escuela Pkwy",
+      "city": "Milpitas",
+      "region": "CA",
+      "postalCode": "95035"
+    },
+    "monta-vista": {
+      "street": "21840 McClellan Road",
+      "city": "Cupertino",
+      "region": "CA",
+      "postalCode": "95014"
+    },
+    "mountain-view": {
+      "street": "3535 Truman Ave",
+      "city": "Mountain View",
+      "region": "CA",
+      "postalCode": "94040"
+    },
+    "palo-alto": {
+      "street": "50 Embarcadero Rd",
+      "city": "Palo Alto",
+      "region": "CA",
+      "postalCode": "94301"
+    },
+    "santa-clara": {
+      "street": "3000 Benton St",
+      "city": "Santa Clara",
+      "region": "CA",
+      "postalCode": "95051"
+    },
+    "saratoga": {
+      "street": "20300 Herriman Ave",
+      "city": "Saratoga",
+      "region": "CA",
+      "postalCode": "95070"
+    },
+    "wilcox": {
+      "street": "3250 Monroe St",
+      "city": "Santa Clara",
+      "region": "CA",
+      "postalCode": "95051"
+    }
+  }
+}

@@ -21,6 +21,7 @@ import { METRO } from './league-config/metro';
 import { NORTH_COUNTY } from './league-config/north-county';
 import { PCAL } from './league-config/pcal';
 import { SCVAL } from './league-config/scval';
+import { SCVAL_SOCCER } from './league-config/soccer/scval';
 import { CCS, REGIONS, SECTIONS } from './league-config/sections';
 import {
   SHOOTOUT_INFERENCES,
@@ -35,13 +36,16 @@ import type {
 // and lib/schema-primitives.ts, for its date-key RegExp (that module imports nothing of ours, only zod).
 import { DATE_PATTERN, SLUG_PATTERN } from './schema-primitives';
 import { MAXPREPS_SPORT_WEB, SEASON_YEAR } from './season';
-import { PROGRAM_WORDS, SPORT, SPORT_AUDIENCE } from './sports/current';
+import { IS_FIELD_HOCKEY, PROGRAM_WORDS, SPORT, SPORT_AUDIENCE } from './sports/current';
 
 /**
  * Config order: NorCal (CCS, NCS, NS) first, then SoCal (the Sunset, then the San Diego leagues, then the Southern
  * Section independents, a group of schools in no league with a table of their games against each other).
  */
-export const LEAGUES: readonly LeagueConfig[] = [SCVAL, BVAL, PCAL, MCAL, EAL, SUNSET, CITY, NORTH_COUNTY, METRO, INDEPENDENTS];
+export const LEAGUES: readonly LeagueConfig[] = IS_FIELD_HOCKEY
+  ? [SCVAL, BVAL, PCAL, MCAL, EAL, SUNSET, CITY, NORTH_COUNTY, METRO, INDEPENDENTS]
+  : // The soccer build (SCVAL_SPORT=soccer) covers SCVAL alone for now.
+    [SCVAL_SOCCER];
 
 /**
  * Route segments a league id may never equal (siblings of /standings/[league], /schedule/[league],
@@ -787,7 +791,11 @@ export function assertLeagues(): void {
   if (aqKeys.join() !== expectedKeys.join()) {
     fail(`CCS.autoQualifiers keys ${aqKeys.join(', ')} != ${expectedKeys.join(', ')}`);
   }
-  let sum = CCS.autoQualifiers.atLarge;
+  // atLarge and total are known together or not at all (soccer: the CCS bylaws are unread).
+  if ((CCS.autoQualifiers.atLarge === null) !== (CCS.autoQualifiers.total === null)) {
+    fail('CCS.autoQualifiers: atLarge and total must both be numbers or both be null');
+  }
+  let sum = CCS.autoQualifiers.atLarge ?? 0;
   for (const l of LEAGUES) {
     if (l.postseason.kind !== 'ccs-ladder') continue;
     if (l.postseason.autoBerths !== CCS.autoQualifiers[l.id]) {
@@ -796,10 +804,13 @@ export function assertLeagues(): void {
     if (l.sectionId !== 'ccs') fail(`${l.id}: a CCS ladder league outside the CCS`);
     sum += l.postseason.autoBerths;
   }
-  if (sum !== CCS.autoQualifiers.total) fail(`CCS field sums to ${sum}, not ${CCS.autoQualifiers.total}`);
+  if (CCS.autoQualifiers.total !== null && sum !== CCS.autoQualifiers.total) {
+    fail(`CCS field sums to ${sum}, not ${CCS.autoQualifiers.total}`);
+  }
   const ccs = SECTION_BY_ID.get('ccs');
   if (ccs) {
     for (const [k, v] of Object.entries(CCS.keyDates)) {
+      if (v === null || v === undefined) continue; // a date only the CCS's own bylaws give (soccer)
       const day = v.slice(0, 10);
       if (day < ccs.seasonWindow.start || day > ccs.seasonWindow.end) fail(`CCS.keyDates.${k} outside the CCS season window`);
     }

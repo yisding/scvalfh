@@ -26,6 +26,7 @@ import { byDateThenId, toLocalTimestamp } from '../format';
 import { jvSlotTeamFor, type JvSlotTeam } from './jv-teams';
 import { getTeamBySlug } from '../teams';
 import type { ContestId, DivisionId, Game, TeamId, TeamSlug } from '../types';
+import { IS_FIELD_HOCKEY } from '../sports/current';
 
 export interface JvOpponentFix {
   side: 'home' | 'away';
@@ -56,7 +57,7 @@ export interface JvCorrections {
   leagueGames?: Readonly<Record<ContestId, { division: DivisionId; source: string }>>;
 }
 
-export const JV_CORRECTIONS: JvCorrections = {
+const FIELD_HOCKEY_JV_CORRECTIONS: JvCorrections = {
   excludedContestIds: {
     // Convent & Stuart Hall's JV, entered by the opponent against MaxPreps' boys' Stuart Hall team
     // (4d85fca8): every one has Convent's own row of the same pair on the same day, which stays.
@@ -108,6 +109,11 @@ export const JV_CORRECTIONS: JvCorrections = {
     },
   },
 };
+
+/** This build's JV corrections: field hockey's (each names a field hockey contest); none for soccer. */
+export const JV_CORRECTIONS: JvCorrections = IS_FIELD_HOCKEY
+  ? FIELD_HOCKEY_JV_CORRECTIONS
+  : { excludedContestIds: {}, opponentFixes: {} };
 
 /**
  * A row filed under a school that fields no JV team (Santa Catalina) is its slot team's (York's): the side

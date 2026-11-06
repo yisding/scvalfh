@@ -32,13 +32,18 @@
  * final-08's (components/playoffs/), not this module's.
  */
 
-import bundledFile from '../../data/sds-brackets-2026.json';
+import bundledFileFieldHockey from '../../data/sds-brackets-2026.json';
+import bundledFileSoccer from '../../data/soccer/sds-brackets-2026.json';
 import { getGames } from '../data';
 import { shiftDateKey } from '../format';
 import { getTeamBySlug } from '../teams';
 import { failValidation } from '../schema-primitives';
 import { SdsBracketsSchema, type SdsBracketsDivision, type SdsBracketsFile, type SdsDivisionId } from './sds-brackets-schema';
 import type { Game, TeamSlug } from '../types';
+import { IS_FIELD_HOCKEY } from '../sports/current';
+
+/** This build's copy (data/ for field hockey, data/soccer/ for soccer: lib/sports/current.ts DATA_DIR). */
+const bundledFile = IS_FIELD_HOCKEY ? bundledFileFieldHockey : bundledFileSoccer;
 
 /** One place on a card: a placed team with the Section's number, or a place still to be decided. */
 export type LiveBracketSlot = { seed: number; slug: TeamSlug } | { tbd: true; text: string };

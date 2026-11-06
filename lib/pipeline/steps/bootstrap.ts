@@ -5,7 +5,7 @@
  * error only warns, and a corpus without the page records the row as skipped.
  */
 
-import { ALL_SEASON_ID, BOOTSTRAP_URL, SPORT_SEASON_ID } from '../../season';
+import { ALL_SEASON_ID, BOOTSTRAP_URL, HUB_SPORT_SEASON_ID } from '../../season';
 import { parseBootstrap } from '../../sources/maxpreps';
 import { RunAbort, type RunContext } from '../contract';
 import { classifyFetchError } from '../read';
@@ -44,8 +44,8 @@ export async function stepBootstrap(ctx: RunContext): Promise<void> {
     ctx.source({ ...base, status: 'error', httpStatus, error: (err as Error).message });
     return;
   }
-  if (boot.sportSeasonId && boot.sportSeasonId !== SPORT_SEASON_ID) {
-    throw new RunAbort(`sportSeasonId changed: page says ${boot.sportSeasonId}, we expect ${SPORT_SEASON_ID}`);
+  if (boot.sportSeasonId && boot.sportSeasonId !== HUB_SPORT_SEASON_ID) {
+    throw new RunAbort(`sportSeasonId changed: page says ${boot.sportSeasonId}, we expect ${HUB_SPORT_SEASON_ID}`);
   }
   if (boot.allSeasonId && boot.allSeasonId !== ALL_SEASON_ID) {
     throw new RunAbort(`allSeasonId changed: page says ${boot.allSeasonId}, we expect ${ALL_SEASON_ID}`);

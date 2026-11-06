@@ -79,7 +79,8 @@ const CLOCK = /^([01]\d|2[0-3]):[0-5]\d$/;
 export function sdsBracketsSchema(window: { first: string; last: string }) {
   const registry: ReadonlySet<string> = new Set(sdsLeagueIds().flatMap((l) => teamsInLeague(l).map((t) => t.slug)));
   const divisionOf = playoffDivisions();
-  const configSizes = sdsPostseasonConfig().divisions.map((d) => d.teams);
+  // A build with no San Diego league (soccer) has no field sizes: only the placeholder file is valid.
+  const configSizes = sdsLeagueIds().length > 0 ? sdsPostseasonConfig().divisions.map((d) => d.teams) : [];
   const inWindow = (d: string) => d >= window.first && d <= window.last;
 
   const teamSlug = slugId.refine((slug) => registry.has(slug), 'not a registry slug of a San Diego league');
@@ -183,8 +184,13 @@ export function sdsBracketsSchema(window: { first: string; last: string }) {
     });
 }
 
-/** The committed file's schema: the config's playoffs window. */
-export const SdsBracketsSchema = sdsBracketsSchema(sdsPlayoffWindow());
+/**
+ * The committed file's schema: the config's playoffs window. A build with no San Diego league (soccer) gets an
+ * empty window, so only the placeholder (`divisions: []`) passes.
+ */
+export const SdsBracketsSchema = sdsBracketsSchema(
+  sdsLeagueIds().length > 0 ? sdsPlayoffWindow() : { first: '9999-12-31', last: '0000-01-01' },
+);
 
 export type SdsBracketsFile = z.infer<typeof SdsBracketsSchema>;
 export type SdsBracketsDivision = SdsBracketsFile['divisions'][number];

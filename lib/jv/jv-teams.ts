@@ -17,11 +17,12 @@
  */
 
 import { SBLIVE_WEB } from '../season';
+import { IS_FIELD_HOCKEY } from '../sports/current';
 import { TEAMS } from '../teams';
 import type { Team, TeamSlug } from '../types';
 
 /** Registry slug → the JV team's si.com web path segment (`<id>-<slug>-jv`), or null when si.com has none. */
-export const JV_SBLIVE_PATHS: Readonly<Record<TeamSlug, string | null>> = {
+const FIELD_HOCKEY_JV_SBLIVE_PATHS: Readonly<Record<TeamSlug, string | null>> = {
   'st-ignatius': '456832-st-ignatius-wildcats-jv',
   'saint-francis': '457983-saint-francis-lancers-jv',
   'los-altos': '458849-los-altos-eagles-jv',
@@ -133,6 +134,9 @@ export const JV_SBLIVE_PATHS: Readonly<Record<TeamSlug, string | null>> = {
   'harvard-westlake': '482355-harvardwestlake-wolverines-jv',
   'thousand-oaks': '482332-thousand-oaks-lancers-jv',
 };
+
+/** This build's paths: field hockey's JV pages; none for soccer, whose build reads no si.com page. */
+export const JV_SBLIVE_PATHS: Readonly<Record<TeamSlug, string | null>> = IS_FIELD_HOCKEY ? FIELD_HOCKEY_JV_SBLIVE_PATHS : {};
 
 /** The numeric si.com JV team id of a registry team, or null. */
 export function jvSbliveTeamId(slug: TeamSlug): string | null {

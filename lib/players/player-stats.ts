@@ -14,7 +14,8 @@
 
 import { readFileSync } from 'node:fs';
 
-import bundled from '../../data/player-stats.json';
+import bundledFieldHockey from '../../data/player-stats.json';
+import bundledSoccer from '../../data/soccer/player-stats.json';
 import { getSnapshot } from '../data';
 import {
   noteStatsFor,
@@ -32,6 +33,10 @@ import {
 import { getTeamRoster } from './rosters';
 import { failValidation } from '../schema-primitives';
 import type { TeamSlug } from '../types';
+import { IS_FIELD_HOCKEY } from '../sports/current';
+
+/** This build's copy (data/ for field hockey, data/soccer/ for soccer: lib/sports/current.ts DATA_DIR). */
+const bundled = IS_FIELD_HOCKEY ? bundledFieldHockey : bundledSoccer;
 
 function load(): PlayerStatsFile {
   const override = process.env.SCVAL_PLAYER_STATS;

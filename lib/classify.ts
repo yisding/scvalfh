@@ -27,7 +27,7 @@
  *    sides share a conference.
  */
 
-import { CCS, SECTIONS } from './league-config/sections';
+import { CCS, SECTIONS, ccsWindowStart } from './league-config/sections';
 import type { LeagueConfig, OutsideTournamentConfig } from './league-config/shape';
 import { LEAGUES, inPairingWindow } from './leagues';
 import { teamOfSide } from './teams';
@@ -169,7 +169,7 @@ export function postseasonTag(game: Game): PostseasonTag | null {
     .filter((t): t is Team => t !== undefined)
     .map((t) => leagueById(t.league)?.sectionId ?? null);
   const ccsPair = sections.length > 0 && sections.every((s) => s === 'ccs');
-  const inCcsWindow = game.dateKey >= CCS.keyDates.quarterfinals;
+  const inCcsWindow = game.dateKey >= ccsWindowStart(CCS.keyDates);
 
   // 1c. MaxPreps' own bracket fields name the CCS championship (the GUID is the exact test; the name is the
   //     fallback for a re-created tournament). Ahead of the flag: the feed says which bracket, not just "playoff".
@@ -177,7 +177,7 @@ export function postseasonTag(game: Game): PostseasonTag | null {
   if (
     bracket &&
     ccsPair &&
-    (bracket.tournamentId === CCS.tournament.id || /central coast section/i.test(bracket.tournament ?? ''))
+    ((CCS.tournament !== null && bracket.tournamentId === CCS.tournament.id) || /central coast section/i.test(bracket.tournament ?? ''))
   ) {
     return { kind: 'ccs', leagueId: league ? league.id : null, via: 'maxpreps-bracket' };
   }

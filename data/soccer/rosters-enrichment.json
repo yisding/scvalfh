@@ -1,0 +1,143 @@
+{
+  "builtBy": "One placeholder entry per soccer registry team (data/soccer/rosters.json had no rows on 2026-11-06); no roster is enriched by hand for the soccer build yet.",
+  "capturedAt": "2026-11-06",
+  "notes": [],
+  "season": "26-27",
+  "teams": [
+    {
+      "coaches": [],
+      "notes": [
+        "MaxPreps lists no 2026-27 girls soccer roster yet (status empty), so there are no rows to enrich."
+      ],
+      "players": [],
+      "slug": "gunn",
+      "sources": []
+    },
+    {
+      "coaches": [],
+      "notes": [
+        "MaxPreps lists no 2026-27 girls soccer roster yet (status empty), so there are no rows to enrich."
+      ],
+      "players": [],
+      "slug": "homestead",
+      "sources": []
+    },
+    {
+      "coaches": [],
+      "notes": [
+        "MaxPreps lists no 2026-27 girls soccer roster yet (status empty), so there are no rows to enrich."
+      ],
+      "players": [],
+      "slug": "los-altos",
+      "sources": []
+    },
+    {
+      "coaches": [],
+      "notes": [
+        "MaxPreps lists no 2026-27 girls soccer roster yet (status empty), so there are no rows to enrich."
+      ],
+      "players": [],
+      "slug": "los-gatos",
+      "sources": []
+    },
+    {
+      "coaches": [],
+      "notes": [
+        "MaxPreps lists no 2026-27 girls soccer roster yet (status empty), so there are no rows to enrich."
+      ],
+      "players": [],
+      "slug": "mountain-view",
+      "sources": []
+    },
+    {
+      "coaches": [],
+      "notes": [
+        "MaxPreps lists no 2026-27 girls soccer roster yet (status empty), so there are no rows to enrich."
+      ],
+      "players": [],
+      "slug": "palo-alto",
+      "sources": []
+    },
+    {
+      "coaches": [],
+      "notes": [
+        "MaxPreps lists no 2026-27 girls soccer roster yet (status empty), so there are no rows to enrich."
+      ],
+      "players": [],
+      "slug": "santa-clara",
+      "sources": []
+    },
+    {
+      "coaches": [],
+      "notes": [
+        "MaxPreps lists no 2026-27 girls soccer roster yet (status empty), so there are no rows to enrich."
+      ],
+      "players": [],
+      "slug": "cupertino",
+      "sources": []
+    },
+    {
+      "coaches": [],
+      "notes": [
+        "MaxPreps lists no 2026-27 girls soccer roster yet (status empty), so there are no rows to enrich."
+      ],
+      "players": [],
+      "slug": "fremont",
+      "sources": []
+    },
+    {
+      "coaches": [],
+      "notes": [
+        "MaxPreps lists no 2026-27 girls soccer roster yet (status empty), so there are no rows to enrich."
+      ],
+      "players": [],
+      "slug": "lynbrook",
+      "sources": []
+    },
+    {
+      "coaches": [],
+      "notes": [
+        "MaxPreps lists no 2026-27 girls soccer roster yet (status empty), so there are no rows to enrich."
+      ],
+      "players": [],
+      "slug": "macdonald",
+      "sources": []
+    },
+    {
+      "coaches": [],
+      "notes": [
+        "MaxPreps lists no 2026-27 girls soccer roster yet (status empty), so there are no rows to enrich."
+      ],
+      "players": [],
+      "slug": "milpitas",
+      "sources": []
+    },
+    {
+      "coaches": [],
+      "notes": [
+        "MaxPreps lists no 2026-27 girls soccer roster yet (status empty), so there are no rows to enrich."
+      ],
+      "players": [],
+      "slug": "monta-vista",
+      "sources": []
+    },
+    {
+      "coaches": [],
+      "notes": [
+        "MaxPreps lists no 2026-27 girls soccer roster yet (status empty), so there are no rows to enrich."
+      ],
+      "players": [],
+      "slug": "saratoga",
+      "sources": []
+    },
+    {
+      "coaches": [],
+      "notes": [
+        "MaxPreps lists no 2026-27 girls soccer roster yet (status empty), so there are no rows to enrich."
+      ],
+      "players": [],
+      "slug": "wilcox",
+      "sources": []
+    }
+  ]
+}

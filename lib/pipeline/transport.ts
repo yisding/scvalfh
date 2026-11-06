@@ -141,6 +141,7 @@ export function resourceUrl(key: ResourceKey): string {
     case 'ccs-ical':
       return CCS_ICAL_URL;
     case 'ccs-bracket':
+      if (CCS.bracketUrl === null) throw new Error('no MaxPreps CCS tournament page is configured for this season');
       return CCS.bracketUrl;
     case 'cifss-scores':
       return cifssListingUrl(key.section, { from: CIFSS_SEASON_FROM, to: key.through, page: key.page });

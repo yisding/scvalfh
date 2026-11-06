@@ -4,7 +4,7 @@ import { getLatestResultsDate, getLeagueSummaries, getTeams } from '../../lib/da
 import { shortDate } from '../../lib/format';
 import { REGIONS } from '../../lib/league-config/sections';
 import { INDEPENDENT_LEAGUES, LEAGUES_PROPER, isIndependentLeague } from '../../lib/leagues';
-import { SEASON_CALENDAR_YEAR } from '../../lib/season';
+import { SEASON_YEARS_DISPLAY } from '../../lib/season';
 import type { LeagueId, RegionId } from '../../lib/types';
 
 import { OG, OG_SIZE } from './og-theme';
@@ -218,7 +218,7 @@ export const REGION_CARD_SIZE = OG_SIZE;
 export function rootCardProps(columns: readonly RegionCardColumn[] = regionCardColumns()): RegionCardProps {
   const through = getLatestResultsDate();
   return {
-    title: `${SITE_WORDMARK} · ${SEASON_CALENDAR_YEAR}`,
+    title: `${SITE_WORDMARK} · ${SEASON_YEARS_DISPLAY}`,
     columns,
     footer: `${leagueCountWords()} · ${getTeams().length} teams · ${
       through ? `results through ${shortDate(through)}` : 'no results yet'

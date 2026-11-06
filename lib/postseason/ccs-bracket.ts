@@ -19,21 +19,28 @@
  * real sixteen-seed field before the 2026 file exists.
  */
 
-import bundledFile from '../../data/ccs-bracket-2026.json';
+import bundledFileFieldHockey from '../../data/ccs-bracket-2026.json';
+import bundledFileSoccer from '../../data/soccer/ccs-bracket-2026.json';
 import { CcsSeedFileSchema, type CcsSeedFile, type CcsSeeds } from './ccs-bracket-schema';
 import { byDateThenId } from '../format';
 import type { SectionBracket } from '../history/history-brackets-schema';
+import { ccsWindowStart } from '../league-config/sections';
 import { failValidation } from '../schema-primitives';
 import type { CcsDivisionName, CcsKeyDates, Game } from '../types';
+import { IS_FIELD_HOCKEY } from '../sports/current';
+
+/** This build's copy (data/ for field hockey, data/soccer/ for soccer: lib/sports/current.ts DATA_DIR). */
+const bundledFile = IS_FIELD_HOCKEY ? bundledFileFieldHockey : bundledFileSoccer;
 
 /**
  * The CCS bracket games among `games`: tagged 'ccs' and (dated on or after the quarterfinals, or marked
  * published by MaxPreps' feed). The same objects, sorted by date then id. A crossover or play-in is never one,
  * whatever its date: its tag is its league's.
  */
-export function ccsBracketGames(games: readonly Game[], keyDates: Pick<CcsKeyDates, 'quarterfinals'>): Game[] {
+export function ccsBracketGames(games: readonly Game[], keyDates: Pick<CcsKeyDates, 'quarterfinals' | 'seedingMeeting' | 'firstGames'>): Game[] {
+  const from = ccsWindowStart(keyDates);
   return games
-    .filter((g) => g.postseason?.kind === 'ccs' && (g.bracket?.published === true || g.dateKey >= keyDates.quarterfinals))
+    .filter((g) => g.postseason?.kind === 'ccs' && (g.bracket?.published === true || g.dateKey >= from))
     .sort(byDateThenId);
 }
 
@@ -41,7 +48,7 @@ export function ccsBracketGames(games: readonly Game[], keyDates: Pick<CcsKeyDat
 export function playoffGamesStale(
   games: readonly Game[],
   playoffGames: readonly Pick<Game, 'contestId'>[],
-  keyDates: Pick<CcsKeyDates, 'quarterfinals'>,
+  keyDates: Pick<CcsKeyDates, 'quarterfinals' | 'seedingMeeting' | 'firstGames'>,
 ): boolean {
   const derived = ccsBracketGames(games, keyDates).map((g) => g.contestId);
   return derived.length !== playoffGames.length || derived.some((id, i) => id !== playoffGames[i].contestId);

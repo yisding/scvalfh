@@ -54,6 +54,8 @@ export default defineConfig(({ mode }) => {
   return {
     define: {
       'process.env.SCVAL_BUILD_AT': JSON.stringify(buildAt),
+      // The build's sport (lib/sports/current.ts), inlined like next.config.ts's `env` does for `next build`.
+      'process.env.SCVAL_SPORT': JSON.stringify(env.SCVAL_SPORT || 'field-hockey'),
       'process.env.SITE_URL':
         env.SITE_URL === undefined ? 'undefined' : JSON.stringify(env.SITE_URL),
     },

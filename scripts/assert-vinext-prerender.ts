@@ -52,7 +52,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 import { getSnapshot } from '../lib/data';
-import { FIXED_PAGES, expectedFamilies, makeFamilyChecker, sample } from './lib/prerender-expectations';
+import { FIXED_PAGES, expectedFamilies, makeFamilyChecker, sample, SKIPPED_ROUTES } from './lib/prerender-expectations';
 
 interface PrerenderRoute {
   route: string;
@@ -76,9 +76,9 @@ const problems: string[] = [];
 const fail = (msg: string) => problems.push(msg);
 
 const { routes } = JSON.parse(fs.readFileSync(PRERENDER, 'utf8')) as { routes: PrerenderRoute[] };
-const notRendered = routes.filter((r) => r.status !== 'rendered');
+const notRendered = routes.filter((r) => r.status !== 'rendered' && !SKIPPED_ROUTES.includes(r.route));
 if (notRendered.length) fail('not rendered by the build: ' + notRendered.map((r) => `${r.route} (${r.status})`).join(', '));
-const revalidating = routes.filter((r) => r.revalidate !== false);
+const revalidating = routes.filter((r) => r.revalidate !== false && !SKIPPED_ROUTES.includes(r.route));
 if (revalidating.length) fail('revalidates at runtime: ' + revalidating.map((r) => `${r.route} (${r.revalidate})`).join(', '));
 const files = (fs.readdirSync(dir, { recursive: true }) as string[]).map((f) => f.split(path.sep).join('/'));
 const fileSet = new Set(files);

@@ -18,6 +18,7 @@ import {
 } from '../../lib/data';
 import type { LeagueSummary } from '../../lib/data';
 import { listWords, monthDay, shortDate } from '../../lib/format';
+import { CCS } from '../../lib/league-config/sections';
 import type { LeagueConfig } from '../../lib/league-config/shape';
 import { getLeague, isIndependentLeague, sectionOf } from '../../lib/leagues';
 import type { PlayoffProjection as Projection } from '../../lib/types';
@@ -33,9 +34,8 @@ import {
 } from './playoff-view';
 import { pairingViewsFor } from './this-week-inputs';
 
-/** SPEC §10.7 item 8, verbatim. */
-export const AT_LARGE_PARAGRAPH =
-  'Three at-large berths are the CCS committee’s call. SCVAL submits its play-in loser and both fifth-place teams (Article VII §2); PCAL teams placed 3rd or lower may apply (PCAL By-laws §23.4); BVAL’s by-laws do not say whom it submits.';
+/** SPEC §10.7 item 8, verbatim for field hockey: the sport's CCS config holds it (CcsConfig.atLargeParagraph). */
+export const AT_LARGE_PARAGRAPH = CCS.atLargeParagraph;
 
 /** "through Sep 29" / "so far", from the last day a LEAGUE result was reported (never getToday()). */
 export function asOfPhrase(lastResult: string | null): string {

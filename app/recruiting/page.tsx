@@ -9,6 +9,8 @@ import RecruitingList from '../../components/recruiting/RecruitingList';
 import { buildRecruitingView } from '../../components/recruiting/recruiting-view';
 import SectionHeader from '../../components/ui/SectionHeader';
 import { getRosters } from '../../lib/players/rosters';
+import { notFound } from 'next/navigation';
+import { HAS_RECRUITING } from '../../lib/sports/current';
 
 /** The page's title, and its og:title too: og:title never carries the site-name suffix (OG_BASE). */
 const PAGE_TITLE = 'Recruiting';
@@ -44,6 +46,8 @@ export const metadata: Metadata = {
 };
 
 export default function RecruitingPage() {
+  // Field hockey's alone (recruiting): a soccer build renders this route as a 404 (lib/sports/current.ts HAS_RECRUITING).
+  if (!HAS_RECRUITING) notFound();
   const view = buildRecruitingView();
   const shown = new Set(view.regions.flatMap((r) => r.leagues.map((l) => l.id)));
 

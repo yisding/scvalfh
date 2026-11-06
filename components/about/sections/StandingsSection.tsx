@@ -32,8 +32,10 @@ export function StandingsSection({ standings }: { standings: AboutStandings }) {
               3-1-0 to the rest (never that their rules require it). */}
           {siteOrdered.length > 0
             ? listWords(ruleLeagues.map((l) => l.shortName))
-            : `All ${numberWord(tabled.length)} leagues`}{' '}
-          award 3 points for a win and 1 for a tie
+            : tabled.length === 1
+              ? tabled[0].shortName
+              : `All ${numberWord(tabled.length)} leagues`}{' '}
+          {tabled.length === 1 && siteOrdered.length === 0 ? 'awards' : 'award'} 3 points for a win and 1 for a tie
           {titleOnly.length === 0 ? (
             ' and order their tables by points'
           ) : (

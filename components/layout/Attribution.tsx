@@ -12,6 +12,7 @@ import { LEAGUES_PROPER, getSection } from '../../lib/leagues';
 import { SOURCE_LINKS } from '../../lib/season';
 
 import { DATA_CORRECTIONS_URL, SITE_SCOPE_NOTE } from './site';
+import { HAS_HISTORY } from '../../lib/sports/current';
 
 /**
  * The footer that ends EVERY page (DESIGN §1.3, §7.15; SPEC §6).
@@ -187,9 +188,11 @@ export function Attribution({ snapshotAt, now, className }: AttributionProps) {
           </Link>
           {/* The phone's only way to last season: the five-tab bar has no History entry (the
               desktop nav does), so the footer carries it at every width. */}
-          <Link href="/history/2025-26" prefetch={false} className="sx-action text-accent hover:underline">
-            2025-26 archive
-          </Link>
+          {HAS_HISTORY ? (
+            <Link href="/history/2025-26" prefetch={false} className="sx-action text-accent hover:underline">
+              2025-26 archive
+            </Link>
+          ) : null}
         </div>
         {/* The divider spans the whole footer grid; only the sentence is capped at the prose
             measure (32em, `--max-width-prose`). */}

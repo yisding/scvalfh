@@ -42,6 +42,7 @@ import {
   timeOfDayPT,
 } from '../../lib/format';
 import { CCS } from '../../lib/league-config/sections';
+import { SPORT } from '../../lib/sports/current';
 import { divisionHeading, getDivision, getLeague, ladderFor, leagueOfDivision } from '../../lib/leagues';
 import { fixedSiteHost, winnerOf } from '../../lib/postseason/postseason';
 import type { CcsConfig, LeagueConfig, OutsideTournamentConfig, SectionPlayoffsConfig } from '../../lib/league-config/shape';
@@ -75,6 +76,7 @@ function dateOnly(value: string): string {
 // ---------------------------------------------------------------- key dates
 
 export type KeyDateKey =
+  | 'first-games'
   | 'entries'
   | 'seeding'
   | 'quarterfinals'
@@ -118,7 +120,9 @@ type CcsRound = 'quarterfinals' | 'semifinals' | 'finals';
 const CCS_ROUNDS: readonly CcsRound[] = ['quarterfinals', 'semifinals', 'finals'];
 
 /** Where a CCS round is played, from config: the higher seed's field through `highSeedHostsThrough`, neutral after. */
-export function ccsRoundSite(round: CcsRound, hostsThrough: CcsConfig['highSeedHostsThrough'] = CCS.highSeedHostsThrough): 'home' | 'neutral' {
+export function ccsRoundSite(round: CcsRound, hostsThrough: CcsConfig['highSeedHostsThrough'] = CCS.highSeedHostsThrough): 'home' | 'neutral' | null {
+  // null: the config does not say who hosts (soccer: the CCS bylaws are unread).
+  if (hostsThrough === null) return null;
   return CCS_ROUNDS.indexOf(round) <= CCS_ROUNDS.indexOf(hostsThrough) ? 'home' : 'neutral';
 }
 
@@ -127,7 +131,9 @@ export function ccsRoundSite(round: CcsRound, hostsThrough: CcsConfig['highSeedH
  * site appears once MaxPreps lists it (the calendar names no venue).
  */
 function roundSiteDetail(round: CcsRound, hostsThrough: CcsConfig['highSeedHostsThrough']): string {
-  if (ccsRoundSite(round, hostsThrough) === 'home') return 'At the higher seed’s field (CCS calendar: “at Home Sites”).';
+  const site = ccsRoundSite(round, hostsThrough);
+  if (site === null) return 'CCS sets the site; each game’s site appears here once MaxPreps lists it.';
+  if (site === 'home') return 'At the higher seed’s field (CCS calendar: “at Home Sites”).';
   return round === 'finals'
     ? 'At a neutral site set by CCS (CCS calendar: “at Neutral Site”); the site appears here once MaxPreps lists the game.'
     : 'At neutral sites set by CCS (CCS calendar: “at Neutral Sites”); each game’s site appears here once MaxPreps lists it.';
@@ -142,9 +148,10 @@ export function ccsHostingSentence(hostsThrough: CcsConfig['highSeedHostsThrough
   const home = CCS_ROUNDS.filter((r) => ccsRoundSite(r, hostsThrough) === 'home');
   const neutral = CCS_ROUNDS.filter((r) => ccsRoundSite(r, hostsThrough) === 'neutral');
   const words = (rounds: readonly CcsRound[]) => listWords(rounds.map((r) => (r === 'finals' ? 'the final' : `the ${r}`)));
-  if (neutral.length === 0) return 'Every round is at the higher seed’s field (the CIF-CCS field hockey calendar).';
+  if (hostsThrough === null) return 'CCS sets each round’s sites; each game’s site appears here once MaxPreps lists it.';
+  if (neutral.length === 0) return `Every round is at the higher seed’s field (the CIF-CCS ${SPORT.noun} calendar).`;
   const homePart = home.length > 0 ? `${capitalized(words(home))} are at the higher seed’s field; ` : '';
-  return `${homePart}${words(neutral)} ${neutral.length === 1 ? 'is' : 'are'} at neutral sites set by CCS (the CIF-CCS field hockey calendar).`;
+  return `${homePart}${words(neutral)} ${neutral.length === 1 ? 'is' : 'are'} at neutral sites set by CCS (the CIF-CCS ${SPORT.noun} calendar).`;
 }
 
 /** The seeding meeting's detail before the bracket exists, and once its games (or seeds) are drawn above. */
@@ -184,10 +191,14 @@ export function keyDateRows(
     ccs('end-of-league-season', k.endOfLeagueSeason, 'CCS end of league season', 'The last day a league game or league postseason game may be played.'),
     ccs('entries', k.entriesDue, 'CCS entries due', 'Leagues submit their qualifiers and at-large candidates.', { time: true }),
     ccs('seeding', k.seedingMeeting, 'CCS seeding meeting', seeded ? SEEDING_DONE_DETAIL : SEEDING_AHEAD_DETAIL, { time: true }),
-    ccs('quarterfinals', k.quarterfinals, 'Quarterfinals', roundSiteDetail('quarterfinals', hostsThrough), { isRound: true }),
-    ccs('semifinals', k.semifinals, 'Semifinals', roundSiteDetail('semifinals', hostsThrough), { isRound: true }),
+    // A round or meeting the config leaves null (soccer: the CCS bylaws are unread) has no row; its first games do.
+    ...(k.quarterfinals === null && k.firstGames !== undefined
+      ? [ccs('first-games', k.firstGames, 'First CCS games', roundSiteDetail('quarterfinals', hostsThrough), { isRound: true })]
+      : []),
+    ...(k.quarterfinals === null ? [] : [ccs('quarterfinals', k.quarterfinals, 'Quarterfinals', roundSiteDetail('quarterfinals', hostsThrough), { isRound: true })]),
+    ...(k.semifinals === null ? [] : [ccs('semifinals', k.semifinals, 'Semifinals', roundSiteDetail('semifinals', hostsThrough), { isRound: true })]),
     ccs('finals', k.finals, 'Finals', roundSiteDetail('finals', hostsThrough), { isRound: true }),
-    ccs('evaluation', k.evaluationMeeting, 'CCS evaluation meeting', 'The season review that closes the tournament.', { time: true }),
+    ...(k.evaluationMeeting === null ? [] : [ccs('evaluation', k.evaluationMeeting, 'CCS evaluation meeting', 'The season review that closes the tournament.', { time: true })]),
     ...leagueDates.map(
       (d): KeyDateRow => ({
         key: `league:${d.id}`,
